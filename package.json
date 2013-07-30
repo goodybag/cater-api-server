@@ -1,15 +1,12 @@
 {
-  "name": "cater-api-server",
-  "version": "0.0.0",
-  "description": "goodybag food catering api server",
-  "main": "index.js",
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "test": "mocha"
+    "start": "node app"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/goodybag/cater-api-server.git"
-  },
-  "author": "",
-  "license": "MIT"
+  "dependencies": {
+    "express": "3.0.3",
+    "jade": "*"
+  }
 }

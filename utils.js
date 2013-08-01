@@ -5,8 +5,8 @@ var
 , request = require('request')
 , async = require('async')
 , nodemailer = require('nodemailer')
-, config    = require('./config')
-, errors    = require('./errors')
+, config = require('./config')
+, errors = require('./errors')
 
 ;
 

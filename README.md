@@ -9,6 +9,9 @@ hacking this together as fast as possible
 * `/resturants`
   + `/resturants/:id`
     - `/resturants/:id/items`
+    - `/resturants/:id/categories`
+    - `/resturants/:id/categories/:id`
+      * `/resturants/:id/categories/:id/items`
 * `/items`
   + `/items/:id`
 * `/orders`

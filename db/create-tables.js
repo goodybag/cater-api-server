@@ -1,5 +1,6 @@
 var
-  async = require('async')
+  fs = require('fs')
+, async = require('async')
 , utils = require('./utils')
 ;
 
@@ -8,8 +9,12 @@ var definitions = [
 , 'restaurants'
 , 'menus'
 , 'menu-categories'
+, 'menu-items'
+, 'orders'
+, 'order-items'
 ];
 
+// var definitions = fs.readdirSync(__dirname + '/definitions');
 
 var iterator = function(name, callback){
   utils.createTable(require('./definitions/'+name), notify(name, callback));
@@ -17,7 +22,10 @@ var iterator = function(name, callback){
 
 var notify =  function(name, callback) {
   return function(error, response){
-    if (error) return callback(error);
+    if (error) {
+      console.log('Error creating table:', name);
+      return callback(error);
+    }
     console.log('Successfully created table:', name);
     return callback();
   }

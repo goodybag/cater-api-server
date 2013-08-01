@@ -14,7 +14,7 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'menus_categories';
+  definition.name = 'menu_categories';
 
   definition.schema = {
     id: {

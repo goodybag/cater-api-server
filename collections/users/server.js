@@ -3,7 +3,7 @@ var routes = require('./routes');
 
 server.get(
   '/v1/users'
-, routes.get
+, routes.list
 );
 
 server.get(

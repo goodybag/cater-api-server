@@ -19,6 +19,7 @@
     "jade": "0.34.x",
     "pg-parse-float": "0.0.x",
     "pg-transaction": "1.0.x",
-    "pg": "2.3.x"
+    "pg": "2.3.x",
+    "when": "2.2.x"
   }
 }

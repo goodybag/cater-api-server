@@ -6,6 +6,8 @@
 
 var errors = {};
 
+module.exports = errors;
+
 /**
  * Internal Errors
  */

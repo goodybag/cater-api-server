@@ -55,7 +55,7 @@ module.exports.create = function(req, res) {
     }
   }
 
-  async.waterfall([ flow.encrypt, flow.create]);
+  async.waterfall([flow.encrypt, flow.create]);
 }
 
 module.exports.get = function(req, res) {

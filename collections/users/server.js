@@ -6,6 +6,11 @@ server.get(
 , routes.list
 );
 
+server.post(
+  '/v1/users'
+, routes.create
+);
+
 server.get(
   '/v1/users/:id'
 , routes.get

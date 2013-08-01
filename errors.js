@@ -82,3 +82,12 @@ errors.auth.INVALID_PASSWORD = {
 , message:  "Invalid Password. Please try again."
 };
 errors[errors.auth.INVALID_PASSWORD.code] = errors.auth.INVALID_PASSWORD;
+
+errors.auth.DECRYPTION_FAILURE = {
+  type:     "auth"
+, code:     "0104"
+, httpCode: "401"
+, name:     "DECRYPTION_FAILURE"
+, message:  "Unable to successfully decrypt password. Please try again."
+};
+errors[errors.auth.DECRYPTION_FAILURE.code] = errors.auth.DECRYPTION_FAILURE;

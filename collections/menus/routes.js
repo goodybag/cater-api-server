@@ -1,15 +1,13 @@
 var
   db          = require('../../db')
-// , sql         = require('../../lib/sql')
 // , errors      = require('../../lib/error')
-// , Transaction = require('pg-transaction')
 ;
 
 module.exports.list = function(req, res) {
 
   var query = {
     type: 'select'
-  , table: 'users'
+  , table: 'restaurants'
   , columns: (req.query.fields != null && req.query.field != '') ? req.query.fields.split(',') : ['*']
   }
 
@@ -24,7 +22,7 @@ module.exports.get = function(req, res) {
 
   var query = {
     type: 'select'
-  , table: 'users'
+  , table: 'restaurants'
   , columns: (req.query.fields != null && req.query.field != '') ? req.query.fields.split(',') : ['*']
   , where: {id: parseInt(req.params.id)}
   }

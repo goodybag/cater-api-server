@@ -62,6 +62,10 @@ define(function(require) {
       type: types.int
     , nullable: false
     }
+  , subtotal: {
+      type: types.int
+    , nullable: false
+    }
   };
 
   definition.indices = {};

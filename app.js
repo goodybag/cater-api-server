@@ -6,6 +6,7 @@
 var
   express = require('express')
 , http = require('http')
+, utils = require('./utils')
 ;
 
 var middleware = {
@@ -38,6 +39,16 @@ app.configure(function(){
   app.use(middleware.domains);
   app.use(middleware.cors);
   app.use(app.router);
+
+  /**
+   * Request & Response prototype updates
+   */
+  app.response.error = function(error, details) {
+    utils.sendError(this, error, details);
+  };
+  app.response.noContent = function() {
+    this.status(204).send('{}');
+  };
 });
 
 app.configure('development', function(){

@@ -23,14 +23,7 @@ app.configure(function(){
   app.use(express.logger('dev'));
 
   //JSON-ify the body incase the content is not JSON. We only work w/json
-  app.use(function(req, res, next){
-    if (!req.header('Content-Type') || req.header('Content-Type') == 'text/html'|| req.header('Content-Type') == 'text/plain'){
-      req.headers['Content-Type'] = 'application/json';
-      if (typeof req.body == 'string') req.body = JSON.parse(req.body);
-    }
-    res.header('Content-Type', 'application/json');
-    next();
-  });
+  app.use(middleware.jsonify);
 
   app.use(express.bodyParser());
   app.use(express.methodOverride());

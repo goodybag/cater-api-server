@@ -13,6 +13,7 @@ var middleware = {
   cors: require('./middleware/cors')
 , domains: require('./middleware/domains')
 , uuid: require('./middleware/uuid')
+, jsonify: require('./middleware/jsonify')
 };
 
 var app = express();

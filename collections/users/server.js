@@ -16,4 +16,9 @@ server.get(
 , routes.get
 );
 
+server.del(
+  '/v1/users/:id'
+, routes.del
+);
+
 module.exports = server;

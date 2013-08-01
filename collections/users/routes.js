@@ -10,7 +10,9 @@ module.exports.list = function(req, res) {
   var query = {
     type: 'select'
   , table: 'users'
-  , columns: (req.query.fields != null && req.query.field != '') ? req.query.fields.split(',') : ['*']
+  , columns: (utils.isNotBlank(req.query.fields)) ? req.query.fields.split(',') : ['*']
+  , limit: (utils.isNotBlank(req.query.limit) && !isNaN(req.query.limit) && req.query.limit+0<100) ? parseInt(req.query.limit) : 100
+  , offset: (utils.isNotBlank(req.query.offset) && !isNaN(req.query.offset) && req.query.offset+0<100) ? parseInt(req.query.offset) : 0
   };
 
   var sql = db.builder.sql(query);
@@ -31,7 +33,7 @@ module.exports.create = function(req, res) {
         return callback(error, encrypted, salt);
       });
     }
-  , create: function(encrypted, salt, callback) {
+  , create: function(encrypted, callback) {
       var query = {
         type: 'insert'
       , table: 'users'
@@ -40,7 +42,6 @@ module.exports.create = function(req, res) {
         , last_name: req.body.last_name
         , email: req.body.email
         , password: encrypted
-        , salt: salt
         , organization: req.body.organization
         }
       , returning: ['id']
@@ -68,6 +69,20 @@ module.exports.get = function(req, res) {
   var sql = db.builder.sql(query);
   db.query(sql.query, sql.values, function(error, response){
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(response);
+    return res.send(response);
+  });
+}
+
+module.exports.del = function(req, res) {
+  var query = {
+    type: 'delete'
+  , table: 'users'
+  , where: {id: parseInt(req.params.id)}
+  };
+
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, function(error, response){
+    if (error) return res.error(errors.internal.DB_FAILURE, error);
+    return res.noContent();
   });
 }

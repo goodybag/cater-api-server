@@ -9,7 +9,9 @@ module.exports.list = function(req, res) {
   var query = {
     type: 'select'
   , table: 'restaurants'
-  , columns: (req.query.fields != null && req.query.field != '') ? req.query.fields.split(',') : ['*']
+  , columns: (utils.isNotBlank(req.query.fields)) ? req.query.fields.split(',') : ['*']
+  , limit: (utils.isNotBlank(req.query.limit) && !isNaN(req.query.limit) && req.query.limit+0<100) ? parseInt(req.query.limit) : 0
+  , offset: (utils.isNotBlank(req.query.offset) && !isNaN(req.query.offset) && req.query.offset+0<100) ? parseInt(req.query.offset) : 0
   }
 
   var sql = db.builder.sql(query);
@@ -24,7 +26,7 @@ module.exports.get = function(req, res) {
   var query = {
     type: 'select'
   , table: 'restaurants'
-  , columns: (req.query.fields != null && req.query.field != '') ? req.query.fields.split(',') : ['*']
+  , columns: (utils.isNotBlank(req.query.fields)) ? req.query.fields.split(',') : ['*']
   , where: {id: parseInt(req.params.id)}
   }
 

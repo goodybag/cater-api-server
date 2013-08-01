@@ -43,10 +43,6 @@ define(function(require) {
       type: types.text
     , nullable: false
     }
-  , salt: {
-      type: types.text
-    , nullable: false
-    }
   , organization: {
       type: types.text
     , nullable: true

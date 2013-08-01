@@ -92,6 +92,11 @@ utils.sendMail = function(to, from, subject, body, callback) {
   nodemailer.send_mail(params, callback);
 }
 
+utils.isNotBlank = function (value) {
+  if(value != null && value !="") return true;
+  return false;
+}
+
 utils.parseBool = function(value){
   if (value == 'true' || value == '1') return true;
   if (value == 'false' || value == '0') return false;

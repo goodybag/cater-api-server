@@ -1,3 +1,13 @@
+
+var arg = function(type) {
+  return function() {
+
+    var args = Array.prototype.slice.call(arguments);
+    if (args.length==0) return type;
+    return type + '(' + args.join(',') + ')';
+  }
+}
+
 module.exports = {
   bigint: 'int8'
 , int8: 'int8'
@@ -45,13 +55,4 @@ module.exports = {
 , uuid: 'uuid'
 , xml: 'xml'
 , json: 'json'
-}
-
-var arg = function(type) {
-  return function() {
-
-    var args = Array.prototype.slice.call(arguments);
-    if (args.length==0) return type;
-    return type + '(' + args.join(',') + ')';
-  }
 }

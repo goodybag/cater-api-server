@@ -10,7 +10,7 @@ module.exports.get = function(req, res) {
   var query = {
     type: 'select'
   , table: 'users'
-  , columns: ['id', 'created_at', 'name', 'email', 'password', 'organization', 'phone'] || req.query.fields
+  , columns: ['id', 'created_at', 'name', 'email', 'password', 'organization', 'phone'] || req.query.fields.split(',')
   , where: {id: parseInt(req.params.id)}
   }
 

@@ -9,7 +9,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 }
 
 var
-  types = require('./data-types')
+  types = require('../data-types')
 ;
 
 define(function(require) {
@@ -24,6 +24,7 @@ define(function(require) {
   , created_at: {
       type: types.timestamp
     , nullable: false
+    , default: 'NOW()'
     }
   , first_name: {
       type: types.text

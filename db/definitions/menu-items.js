@@ -26,14 +26,14 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , order: {
-      type: types.int
-    , nullable: false
-    }
   , menu_category_id: {
       type: types.int
     , nullable: false
     , references: {table: 'menu_categories', column: 'id'}
+    }
+  , order: {
+      type: types.int
+    , nullable: false
     }
   , name: {
       type: types.text

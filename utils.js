@@ -1,13 +1,18 @@
 var
   // Third Party Dependencies
-  bcrypt = require('bcrypt')
+  _ = require('lodash')
+, bcrypt = require('bcrypt')
 , ok = require('okay')
 , request = require('request')
 , async = require('async')
 , nodemailer = require('nodemailer')
+
+  // Module Dependencies
 , config = require('./config')
 , errors = require('./errors')
 
+  // Make underscores/async functionality available on utils
+, utils     = _.extend({}, _, async)
 ;
 
 

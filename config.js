@@ -25,6 +25,11 @@ var config = {
     }
   , numWorkers: os.cpus().length
   , outputActivePoolIds: false
+
+  , amazon: {
+      awsId: "AKIAJZTPY46ZWGWU5JRQ"
+    , awsSecret: "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"
+    }
   }
 
 , dev: {

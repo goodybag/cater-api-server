@@ -9,7 +9,6 @@ var
 
   // Database
 , pg = require('pg')
-, sql = require('sql')
 , builder = require('mongo-sql')
 , pooler = require('generic-pool')
 , Transaction = require('pg-transaction')
@@ -28,7 +27,6 @@ require('pg-parse-float')(pg);
 pg.defaults.hideDeprecationWarnings = config.pg.hideDeprecationWarnings;
 pg.defaults.poolSize = config.pg.poolSize;
 
-exports.sql = sql;
 exports.builder = builder;
 
 // var logQuery = function(query) {

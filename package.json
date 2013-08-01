@@ -6,7 +6,19 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "3.0.3",
-    "jade": "*"
+    "express": "3.0.x",
+    "async": "0.2.x",
+    "generic-pool": "2.0.x",
+    "lodash": "1.3.x",
+    "node-uuid": "1.4.x",
+    "bcrypt": "0.7.x",
+    "nodemailer": "0.5.x",
+    "okay": "0.3.x",
+    "request": "2.25.x",
+    "mongo-sql": "2.1.x",
+    "jade": "0.34.x",
+    "pg-parse-float": "0.0.x",
+    "pg-transaction": "1.0.x",
+    "pg": "2.3.x"
   }
 }

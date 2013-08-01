@@ -1,4 +1,4 @@
-**
+/**
  * Errors
  *
  * Please refer to https://github.com/goodybag/magic/wiki/Error-Convention for spec

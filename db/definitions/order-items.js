@@ -1,5 +1,5 @@
 /**
- * Orders Schema
+ * Order Items Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -31,27 +31,12 @@ define(function(require) {
     , nullable: false
     , references: {table: 'orders', column: 'id'}
     }
-  , menu_item_id: {
+  , item_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'orders', column: 'id'}
+    , references: {table: 'items', column: 'id'}
     }
-  , name: {
-      type: types.text
-    , nullable: false
-    }
-  , description: {
-      type: types.text
-    , nullable: true
-    }
-  , price: {
-      type: types.int
-    , nullable: false
-    }
-  , notes: {
-      type: types.text
-    , nullable: true
-    }
+
   };
 
   definition.indices = {};

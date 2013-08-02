@@ -6,6 +6,7 @@
 var
   express = require('express')
 , http = require('http')
+, hbs = require('hbs')
 , utils = require('./utils')
 , routes = require('./routes')
 ;
@@ -34,6 +35,8 @@ app.configure(function(){
   app.use(middleware.domains);
   app.use(middleware.cors);
   app.use(app.router);
+
+  app.set('view engine', 'hbs');
 
   /**
    * Request & Response prototype updates

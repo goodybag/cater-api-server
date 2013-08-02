@@ -36,3 +36,7 @@ module.exports.get = function(req, res) {
     res.send(response);
   });
 }
+
+module.exports.listItems = function(req, res) {
+  res.send(501);  //not implemented
+}

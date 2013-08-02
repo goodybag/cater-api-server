@@ -2,6 +2,11 @@
   "name": "cater",
   "version": "0.0.1",
   "private": true,
+  "author": "Goodybag Inc.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goodybag/cater-api-server"
+  },
   "scripts": {
     "start": "node app"
   },
@@ -21,6 +26,7 @@
     "pg-transaction": "1.0.x",
     "pg": "2.3.x",
     "when": "2.2.x",
-    "node-static": "0.6.x"
+    "node-static": "0.6.x",
+    "hbs": "2.3.x"
   }
 }

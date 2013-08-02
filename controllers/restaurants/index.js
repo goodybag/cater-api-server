@@ -10,7 +10,13 @@ module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
   models.Restaurant.find(req.query, function(error, response) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(response);
+    res.render('businesses', {businesses: response}, function(error, html) {
+      if (error) return res.error(errors.internal.UNKNOWN, error);
+      res.render('index', {content: html}, function(errror, html) {
+        if (error) return res.error(errors.internal.UNKNOWN, error);
+        res.send(html);
+      });
+    });
   });
 }
 

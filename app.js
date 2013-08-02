@@ -37,8 +37,9 @@ app.configure(function(){
   /**
    * Request & Response prototype updates
    */
-  app.response.error = function(error, details) {
+  app.response.error = function(error, details, callback) {
     utils.sendError(this, error, details);
+    if (callback) callback(error);
   };
   app.response.noContent = function() {
     this.status(204).send('{}');

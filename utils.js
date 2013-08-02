@@ -1,6 +1,6 @@
 var
   // Third Party Dependencies
-  _ = require('lodash')
+  lodash = require('lodash')
 , bcrypt = require('bcrypt')
 , ok = require('okay')
 , request = require('request')
@@ -12,7 +12,7 @@ var
 , errors = require('./errors')
 
   // Make underscores/async functionality available on utils
-, utils     = _.extend({}, _, async)
+, utils     = lodash.extend({}, lodash, {async: async})
 ;
 
 

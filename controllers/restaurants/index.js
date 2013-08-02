@@ -21,7 +21,6 @@ module.exports.list = function(req, res) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       res.render('index', {main: html}, function(errror, html) {
         if (error) return res.error(errors.internal.UNKNOWN, error);
-        res.set('Content-Type', 'text/html');
         res.send(html);
       });
     });

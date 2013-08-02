@@ -26,6 +26,11 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
+  , restaurant_id: {
+      type: types.int
+    , nullable: false
+    , references: {table: 'restaurants', column: 'id'}
+    }
   , menu_category_id: {
       type: types.int
     , nullable: false

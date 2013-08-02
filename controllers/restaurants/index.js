@@ -4,34 +4,18 @@ var
 , utils = require('../../utils')
 ;
 
+var models = require('../../models');
+
 module.exports.list = function(req, res) {
-
-  var query = {
-    type: 'select'
-  , table: 'restaurants'
-  , columns: (utils.isNotBlank(req.query.fields)) ? req.query.fields.split(',') : ['*']
-  , limit: (utils.isNotBlank(req.query.limit) && !isNaN(req.query.limit) && req.query.limit+0<100) ? parseInt(req.query.limit) : 100
-  , offset: (utils.isNotBlank(req.query.offset) && !isNaN(req.query.offset) && req.query.offset+0<100) ? parseInt(req.query.offset) : 0
-  }
-
-  var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, function(error, response){
+  //TODO: middleware to validate and sanitize query object
+  models.Restaurant.find(req.query, function(error, response) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.send(response);
   });
 }
 
 module.exports.get = function(req, res) {
-
-  var query = {
-    type: 'select'
-  , table: 'restaurants'
-  , columns: (utils.isNotBlank(req.query.fields)) ? req.query.fields.split(',') : ['*']
-  , where: {id: parseInt(req.params.id)}
-  }
-
-  var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, function(error, response){
+  models.Restaurant.findOne(parseInt(req.params.id), function(error, response) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.send(response);
   });

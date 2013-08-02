@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "cater",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -20,6 +20,7 @@
     "pg-parse-float": "0.0.x",
     "pg-transaction": "1.0.x",
     "pg": "2.3.x",
-    "when": "2.2.x"
+    "when": "2.2.x",
+    "node-static": "0.6.x"
   }
 }

@@ -7,7 +7,7 @@ var
   express = require('express')
 , http = require('http')
 , utils = require('./utils')
-, routes = require('.routes')
+, routes = require('./routes')
 ;
 
 var middleware = {

@@ -6,28 +6,7 @@ Restaurant = Model.extend({
     //TODO: validate using schema.  probably ought to put that part in super
   }
 }, {
-  table: 'restaurants',
-  schema: {
-    id: {},
-    name: {
-      type: 'string'
-    },
-    street: {
-      type: 'string'
-    },
-    city: {
-      type: 'string'
-    },
-    state: {
-      type: 'string'
-    },
-    zip: {
-      type: 'string'
-    },
-    phone: {
-      type: 'string'
-    }
-  }
+  table: 'restaurants'
 })
 
 module.exports = Restaurant;

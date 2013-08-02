@@ -38,7 +38,11 @@ var extend = function(protoProps, staticProps) {
 var Model = function(attrs, opts) {
 }
 
-Model.extend = extend;
+Model.extend = function() {
+  var child = extend.apply(this, arguments);
+  if (child.table) child.schema = (require('../db/definitions/' + child.table)||0).schema;
+  return child;
+}
 
 Model.defaultFindQuery = {
   type: 'select',

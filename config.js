@@ -43,7 +43,7 @@ var config = {
         devConsole: true
       }
     }
-  , postgresConnStr:  "postgres://lalit@localhost:5432/cater"
+  , postgresConnStr:  "postgres://localhost:5432/cater"
   , baseUrl: 'http://localhost:3000'
 
   , emailEnabled: false

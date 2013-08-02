@@ -45,7 +45,6 @@ Model.extend = function() {
 }
 
 Model.defaultFindQuery = {
-  type: 'select',
   columns: ['*'],
   limit: 100,
   offset: 0
@@ -53,6 +52,7 @@ Model.defaultFindQuery = {
 
 Model.find = function(query, callback) {
   utils.defaults(query, this.defaultFindQuery, {table: this.table});
+  query.type = 'select';
 
   var cols = utils.keys(this.schema);
   query.columns  = utils.intersection(query.columns, cols.concat('*'));

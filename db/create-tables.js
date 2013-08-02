@@ -11,7 +11,6 @@ var definitions = [
 , 'orders'
 , 'menu-categories'
 , 'items'
-, 'menu-items'
 , 'order-items'
 ];
 

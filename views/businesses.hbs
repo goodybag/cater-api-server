@@ -1,14 +1,47 @@
 <div class="row">
-  <ul class="col-lg-3 list-group filters-sidebar">
-  </ul>
+  <div class="col-lg-4">
+    <form class="panel filters-sidebar">
+      <div class="panel-heading">
+        <h2 class="panel-title">Filters</h2>
+      </div>
 
-  <ul class="col-lg-9 list-group businesses">
-    {{#each businesses}}
-    <li class="list-group-item">
-      <a href="/businesses/{{this.id}}/items">
+      <fieldset>
+        <legend>Text Search</legend>
+        <div class="input-group">
+          <input type="text" class="form-control search input-small">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary btn-small">Go</button>
+          </span>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Other Options</legend>
+        <div>
+          <label><input type="checkbox"> Option 1</label>
+        </div>
+        <div>
+          <label><input type="checkbox"> Option 2</label>
+        </div>
+        <div>
+          <label><input type="checkbox"> Another Option</label>
+        </div>
+        <div>
+          <label><input type="checkbox"> etc.</label>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="list-group businesses">
+      {{#each businesses}}
+      <a href="/businesses/{{this.id}}/items" class="list-group-item">
         <h4>{{this.name}}</h4>
       </a>
-    </li>
-    {{/each}}
-  </ul>
+      {{else}}
+      <h1 class="text-center">No Businesses</h1>
+      {{/each}}
+    </ul>
+  </div>
 </div>

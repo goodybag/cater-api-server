@@ -2,10 +2,18 @@
   "name": "cater",
   "version": "0.0.1",
   "private": true,
-  "author": "Goodybag Inc.",
+  "author": "Goodybag Inc. <support@goodybag.com> (http://goodybag.com)",
+  "contributors": [
+    "Lalit Kapoor <lalit@goodybag.com>",
+    "Geoffrey Parker <geoff@goodybag.com>"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/goodybag/cater-api-server"
+    "url": "https://github.com/goodybag/cater-api-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/goodybag/cater-api-server/issues",
+    "email": "support@cater.goodybag.com"
   },
   "scripts": {
     "start": "node app"
@@ -28,5 +36,9 @@
     "when": "2.2.x",
     "node-static": "0.6.x",
     "hbs": "2.3.x"
+  },
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-compile-handlebars": "0.6.x"
   }
 }

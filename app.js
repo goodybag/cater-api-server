@@ -24,9 +24,6 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
 
-  //JSON-ify the body incase the content is not JSON. We only work w/json
-  app.use(middleware.jsonify);
-
   app.use(express.bodyParser());
   app.use(express.methodOverride());
 
@@ -38,8 +35,9 @@ app.configure(function(){
   /**
    * Request & Response prototype updates
    */
-  app.response.error = function(error, details) {
+  app.response.error = function(error, details, callback) {
     utils.sendError(this, error, details);
+    if (callback) callback(error);
   };
   app.response.noContent = function() {
     this.status(204).send('{}');

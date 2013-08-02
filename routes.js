@@ -8,7 +8,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants', controllers.restaurants.get);
 
-  app.get('/restaurants/:id/items', controllers.restaurants.listItems);
+  app.get('/restaurants/:id/menu', controllers.restaurants.menu);
 
   app.get('/*', function(req, res) {
     file.serve(req, res);

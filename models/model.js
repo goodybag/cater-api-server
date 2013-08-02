@@ -51,7 +51,12 @@ utils.extend(Model.prototype, {
 
 Model.extend = function() {
   var child = extend.apply(this, arguments);
-  if (child.table) child.schema = (require('../db/definitions/' + child.table)||0).schema;
+  if (child.table) {
+    var defPath = String.prototype.replace.call('../db/definitions/' + child.table, '_', '-');
+    try {
+      child.schema = (require(defPath)||0).schema;
+    } catch(e) {}
+  }
   return child;
 }
 

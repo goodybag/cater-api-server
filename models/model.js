@@ -36,7 +36,18 @@ var extend = function(protoProps, staticProps) {
 };
 
 var Model = function(attrs, opts) {
+  this.attributes = attrs || {};
 }
+
+utils.extend(Model.prototype, {
+  attributes: {},
+  validate: function() {
+    //TODO validate against schema if present
+  },
+  toJSON: function() {
+    return utils.clone(this.attributes);
+  }
+});
 
 Model.extend = function() {
   var child = extend.apply(this, arguments);
@@ -59,13 +70,21 @@ Model.find = function(query, callback) {
   if (query.where) query.where = utils.pick(query.where, cols);
 
   var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, callback);
+  var self = this
+
+  db.query(sql.query, sql.values, function(err, rows, result){
+    if (err) return callback(err);
+    callback(null, utils.map(rows, function(obj) { return new self(obj); }));
+  });
 };
 
 Model.findOne = function(query, callback) {
   if (!utils.isObject(query)) query = {where: {id: query}};
   query.limit = 1;
-  return this.find(query, callback);
+  return this.find(query, function(err, models) {
+    if (err) return callback(err);
+    callback(null, models[0]);
+  });
 };
 
 module.exports = Model;

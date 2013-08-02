@@ -6,11 +6,14 @@ hacking this together as fast as possible
 
 * `/users`
   + `/users/:id`
-* `/resturants`
-  + `/resturants/:id`
-    - `/resturants/:id/items`
+* `/restaurants`
+  + `/restaurants/:id`
+     - `/restaurants/:id/items`
+     - `/restaurants/:id/categories`
+         * `/restaurants/:id/categories/:id`
+              + `/restaurants/:id/categories/:id/items`
 * `/items`
   + `/items/:id`
 * `/orders`
   + `/orders/:id`
-    - `/orders/:id/items`
+     - `/orders/:id/items`

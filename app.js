@@ -6,6 +6,7 @@
 var
   express = require('express')
 , http = require('http')
+, hbs = require('hbs')
 , utils = require('./utils')
 , routes = require('./routes')
 ;
@@ -14,7 +15,6 @@ var middleware = {
   cors: require('./middleware/cors')
 , domains: require('./middleware/domains')
 , uuid: require('./middleware/uuid')
-, jsonify: require('./middleware/jsonify')
 };
 
 var app = express();
@@ -24,9 +24,6 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
 
-  //JSON-ify the body incase the content is not JSON. We only work w/json
-  app.use(middleware.jsonify);
-
   app.use(express.bodyParser());
   app.use(express.methodOverride());
 
@@ -34,6 +31,8 @@ app.configure(function(){
   app.use(middleware.domains);
   app.use(middleware.cors);
   app.use(app.router);
+
+  app.set('view engine', 'hbs');
 
   /**
    * Request & Response prototype updates

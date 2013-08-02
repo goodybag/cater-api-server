@@ -7,6 +7,7 @@ var
   express = require('express')
 , http = require('http')
 , utils = require('./utils')
+, routes = require('./routes')
 ;
 
 var middleware = {
@@ -49,7 +50,9 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.use(require('./collections/users/server'));
+//app.use(require('./collections/users/server'));
+
+routes.register(app);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

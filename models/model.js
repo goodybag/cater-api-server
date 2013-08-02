@@ -46,6 +46,9 @@ utils.extend(Model.prototype, {
   },
   toJSON: function() {
     return utils.clone(this.attributes);
+  },
+  save: function() {
+    // TODO: upsert current attribute state into database
   }
 });
 

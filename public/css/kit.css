@@ -1,0 +1,19 @@
+.container {
+  max-width: 960px;
+}
+
+.no-margin {
+  margin: 0 0 0 0px;
+}
+
+.no-padding {
+  padding: 0 0 0 0px;
+}
+
+.border {
+  border: 1px solid #000;
+}
+
+.full-width {
+  width: 100%;
+}

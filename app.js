@@ -15,7 +15,6 @@ var middleware = {
   cors: require('./middleware/cors')
 , domains: require('./middleware/domains')
 , uuid: require('./middleware/uuid')
-, jsonify: require('./middleware/jsonify')
 };
 
 var app = express();
@@ -24,9 +23,6 @@ app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.use(express.favicon());
   app.use(express.logger('dev'));
-
-  //JSON-ify the body incase the content is not JSON. We only work w/json
-  app.use(middleware.jsonify);
 
   app.use(express.bodyParser());
   app.use(express.methodOverride());

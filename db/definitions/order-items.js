@@ -26,17 +26,40 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , order_id: {
-      type: types.int
-    , nullable: false
-    , references: {table: 'orders', column: 'id'}
-    }
   , item_id: {
       type: types.int
     , nullable: false
     , references: {table: 'items', column: 'id'}
     }
-
+  , order_id {
+      type: types.int
+    , nullable: false
+    , references: {table: 'orders', column: 'id'}
+    }
+  , name: {
+      type: types.text
+    , nullable: false
+    }
+  , description: {
+      type: types.text
+    , nullable: true
+    }
+  , price: {
+      type: types.int
+    , nullable: false
+    }
+  , feeds_min: {
+      type: types.int
+    , nullable: false
+    }
+  , feeds_max: {
+      type: types.int
+    , nullable: false
+    }
+  , notes: {
+      type: types.text
+    , nullable: true
+    }
   };
 
   definition.indices = {};

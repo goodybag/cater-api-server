@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-lg-8">
+    <h1>Menu</h1>
+    {{#each menu}}
+      <h2>{{name}}</h2>
+      <div class="list-group">
+      {{#each items}}
+        <div class="list-group-item">
+          <div>
+            <div><strong>{{name}}</strong> <i class="pull-right">${{price}}.00</i></div>
+            <div>{{description}}</div>
+          </div>
+        </div>
+      {{/each}}
+      </div>
+    {{/each}}
+  </div>
+  <div class="col-lg-4">
+    <h1>Orders</h1>
+  </div>
+</div>

@@ -40,12 +40,14 @@ module.exports.menu = function(req, res) {
         type: 'select'
       , table: 'menu_categories'
       , columns: ['*']
-      , where: {id: parseInt(req.params.id)}
+      , where: {restaurant_id: parseInt(req.params.id)}
+      , order: {order: 'asc'}
       }
       var sql = db.builder.sql(query);
-      db.query(sql.query, sql.values, function(error, response) {
+      console.log(sql.query);
+      db.query(sql.query, sql.values, function(error, results) {
         if (error) return res.error(errors.internal.DB_FAILURE, error, callback);
-        data.categories = response;
+        data.categories = results;
         return callback();
       });
     }
@@ -54,20 +56,43 @@ module.exports.menu = function(req, res) {
         type: 'select'
       , table: 'menu_items'
       , columns: ['*']
-      , where: {id: parseInt(req.params.id)}
+      , where: {restaurant_id: parseInt(req.params.id)}
+      , order: {order: 'asc'}
       }
       var sql = db.builder.sql(query);
-      db.query(sql.query, sql.values, function(error, response) {
+      db.query(sql.query, sql.values, function(error, results) {
         if (error) return res.error(errors.internal.DB_FAILURE, error, callback);
-        data.items = response;
+        data.items = results;
         return callback();
       });
     }
   }
 
-  var done = function(error, results){
+  var done = function(error, results) {
     if(error) return;
-    res.send(data);
+    var menu = [];
+    var menuMap = {};
+
+    for(var i=0; i<data.categories.length; i++) {
+      var category = data.categories[i];
+      category.items = [];
+      menu.push(category);
+      menuMap[category.id] = i;
+    }
+
+    for(var i=0; i<data.items.length; i ++) {
+      var item = data.items[i];
+      var category = menu[menuMap[item.menu_category_id]];
+      category.items.push(item);
+    }
+    console.log(menu);
+    res.render('menu', {menu: menu}, function(error, html) {
+      if (error) return res.error(errors.internal.UNKNOWN, error);
+      res.render('index', {content: html}, function(error, html) {
+        if (error) return res.error(errors.internal.UNKNOWN, error);
+        return res.send(html);
+      })
+    });
   }
 
   async.parallel(tasks, done);

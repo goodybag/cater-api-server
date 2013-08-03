@@ -28,11 +28,11 @@ define(function(require) {
     }
   , first_name: {
       type: types.text
-    , nullable: false
+    , nullable: true
     }
   , last_name: {
       type: types.text
-    , nullable: false
+    , nullable: true
     }
   , email: {
       type: types.text

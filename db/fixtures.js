@@ -86,7 +86,7 @@ async.series(
       async.timesSeries(10, function(n, callback){
         query(inserts.restaurants(), callback);
       }, function(error, results){
-        console.log('called1');
+        // console.log('called1');
         cb(error);
       });
     }
@@ -96,11 +96,11 @@ async.series(
           async.timesSeries(10, function(x, callback2){
             query(inserts.menu_categories(results[n].id), callback2);
           }, function(error, results){
-            console.log('called-sub-2');
+            // console.log('called-sub-2');
             callback(error);
           });
         }, function(error, results){
-          console.log('called2');
+          // console.log('called2');
           cb(error);
         });
       });
@@ -111,11 +111,11 @@ async.series(
           async.timesSeries(10, function(x, callback2){
             query(inserts.menu_items(results[n].restaurant_id, results[n].id), callback2);
           }, function(error, results){
-            console.log('called-sub-3');
+            // console.log('called-sub-3');
             callback(error);
           });
         }, function(error, results){
-          console.log('called3');
+          // console.log('called3');
           cb(error);
         });
       });
@@ -123,5 +123,6 @@ async.series(
   }
 , function(error, results){
   console.log('done');
+  process.exit(0);
   }
 );

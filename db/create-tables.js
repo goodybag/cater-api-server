@@ -9,7 +9,7 @@ var definitions = [
 , 'restaurants'
 , 'menus'
 , 'orders'
-, 'menu-categories'
+, 'categories'
 , 'items'
 , 'order-items'
 ];

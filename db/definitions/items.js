@@ -26,10 +26,10 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , menu_category_id: {
+  , category_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'menu_categories', column: 'id'}
+    , references: {table: 'categories', column: 'id'}
     }
   , order: {
       type: types.int

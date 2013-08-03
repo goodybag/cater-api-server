@@ -6,7 +6,6 @@ var
 ;
 
 module.exports.list = function(req, res) {
-
   var query = {
     type: 'select'
   , table: 'restaurants'
@@ -29,7 +28,6 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.get = function(req, res) {
-
   var query = {
     type: 'select'
   , table: 'restaurants'

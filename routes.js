@@ -4,6 +4,9 @@ var static = require('node-static');
 var file = new static.Server('./public');
 
 module.exports.register = function(app) {
+  //Static
+
+  //Dynamic
   app.get('/restaurants', controllers.restaurants.list);
 
   app.get('/restaurants/:id', controllers.restaurants.get);

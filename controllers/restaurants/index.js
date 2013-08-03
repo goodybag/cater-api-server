@@ -30,12 +30,29 @@ module.exports.get = function(req, res) {
 
 module.exports.menu = function(req, res) {
   var data = {
-    categories: null
+    restaurant: null
+  , categories: null
   , items: null
   };
 
   var tasks = {
-    getCategories: function(callback) {
+    getRestaurant: function(callback) {
+      var query = {
+        type: 'select'
+      , table: 'restaurants'
+      , columns: ['*']
+      , where: {id: parseInt(req.params.id)}
+      }
+
+      var sql = db.builder.sql(query);
+      console.log(sql.query);
+      db.query(sql.query, sql.values, function(error, results) {
+        if (error) return res.error(errors.internal.DB_FAILURE, error, callback);
+        data.restaurant = results[0];
+        return callback();
+      });
+    }
+  , getCategories: function(callback) {
       var query = {
         type: 'select'
       , table: 'menu_categories'
@@ -71,22 +88,22 @@ module.exports.menu = function(req, res) {
   var done = function(error, results) {
     if(error) return;
     var menu = [];
-    var menuMap = {};
+    var categoryIdMenuIndex = {};
 
     for(var i=0; i<data.categories.length; i++) {
       var category = data.categories[i];
       category.items = [];
       menu.push(category);
-      menuMap[category.id] = i;
+      categoryIdMenuIndex[category.id] = i;
     }
 
     for(var i=0; i<data.items.length; i ++) {
       var item = data.items[i];
-      var category = menu[menuMap[item.menu_category_id]];
+      var category = menu[categoryIdMenuIndex[item.menu_category_id]];
       category.items.push(item);
     }
     console.log(menu);
-    res.render('menu', {menu: menu}, function(error, html) {
+    res.render('menu', {restaurant: data.restaurant, menu: menu}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       res.render('index', {content: html}, function(error, html) {
         if (error) return res.error(errors.internal.UNKNOWN, error);

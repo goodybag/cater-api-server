@@ -1,3 +1,4 @@
 module.exports = {
-  Restaurant: require('./restaurant')
+  Restaurant: require('./restaurant'),
+  Order: require('./order')
 }

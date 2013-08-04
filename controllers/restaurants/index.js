@@ -11,7 +11,7 @@ module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
   models.Restaurant.find(req.query, function(error, models) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('businesses', {businesses: utils.invoke(models, 'toJSON')}, function(error, html) {
+    res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON')}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       res.render('index', {content: html}, function(errror, html) {
         if (error) return res.error(errors.internal.UNKNOWN, error);
@@ -102,7 +102,7 @@ module.exports.menu = function(req, res) {
       var category = menu[categoryIdMenuIndex[item.menu_category_id]];
       category.items.push(item);
     }
-    console.log(menu);
+
     res.render('menu', {restaurant: data.restaurant, menu: menu}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       res.render('index', {content: html}, function(error, html) {

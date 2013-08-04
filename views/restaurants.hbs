@@ -34,13 +34,13 @@
   </div>
 
   <div class="col-lg-8">
-    <div class="list-group businesses">
-      {{#each businesses}}
-      <a href="/businesses/{{this.id}}/items" class="list-group-item">
+    <div class="list-group restaurants">
+      {{#each restaurants}}
+      <a href="/restaurants/{{this.id}}/menu" class="list-group-item">
         <h4>{{this.name}}</h4>
       </a>
       {{else}}
-      <h1 class="text-center">No Businesses</h1>
+      <h1 class="text-center">No Restaurants</h1>
       {{/each}}
     </ul>
   </div>

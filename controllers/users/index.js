@@ -50,7 +50,7 @@ module.exports.create = function(req, res) {
         var user = results[0];
         req.session = {};
         req.session.user = {id: user.id, email: user.email};
-        return res.redirect(req.query.next || '/');
+        return res.redirect('/');
       });
     }
   }

@@ -43,6 +43,7 @@ app.configure(function(){
    */
   app.response.error = function(error, details, callback) {
     utils.sendError(this, error, details);
+    console.log(callback);
     if (callback) callback(error);
   };
   app.response.noContent = function() {

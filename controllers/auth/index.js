@@ -6,8 +6,10 @@ var
 ;
 
 module.exports.index = function(req, res) {
-  if(req.session) console.log(req.session.userId);
-  if (req.session.userId != null) return res.redirect(req.query.next || '/');
+  console.log(req.session);
+  if (req.session && req.session.user && req.session.user.id != null)
+    return res.redirect(req.query.next || '/');
+
   res.render('auth', function(error, html) {
     if (error) return res.error(errors.internal.UNKNOWN, error);
     res.render('index', {content: html}, function(errror, html) {
@@ -29,7 +31,7 @@ module.exports.login = function(req, res) {
         type: 'select'
       , table: 'users'
       , columns: ['id', 'email', 'password']
-      , where: {email: req.body.email}
+      , where: {email: req.body.email.toLowerCase()}
       }
 
       var sql = db.builder.sql(query);
@@ -39,7 +41,8 @@ module.exports.login = function(req, res) {
         var user = results[0];
         utils.comparePasswords(req.body.password, user.password, function(error, success) {
           if (!success) return res.error(errors.auth.INVALID_PASSWORD, error, callback);
-          req.session.userId = user.id;
+          req.session = {};
+          req.session.user = {id: user.id, email: user.email}
           return res.redirect(req.query.next || '/');
         });
       });

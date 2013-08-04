@@ -106,12 +106,3 @@ errors.registration.EMAIL_TAKEN = {
 , message:  "This email has already been registered."
 };
 errors["0101"] = errors.registration.EMAIL_TAKEN;
-
-errors.registration.EMAIL_REGISTERED = {
-  type:     "registration"
-, code:     "0202"
-, httpCode: "400"
-, name:     "EMAIL_REGISTERED"
-, message:  "This email is already registered"
-}
-errors["0102"] = errors.registration.EMAIL_REGISTERED;

@@ -42,7 +42,7 @@ module.exports.login = function(req, res) {
         utils.comparePasswords(req.body.password, user.password, function(error, success) {
           if (!success) return res.error(errors.auth.INVALID_PASSWORD, error, callback);
           req.session = {};
-          req.session.user = {id: user.id, email: user.email}
+          req.session.user = {id: user.id}
           return res.redirect(req.query.next || '/');
         });
       });

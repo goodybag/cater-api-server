@@ -1,5 +1,5 @@
 /**
- * Orders Schema
+ * Order Items Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -26,12 +26,12 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , order_id: {
+  , item_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'orders', column: 'id'}
+    , references: {table: 'items', column: 'id'}
     }
-  , menu_item_id: {
+  , order_id {
       type: types.int
     , nullable: false
     , references: {table: 'orders', column: 'id'}
@@ -45,6 +45,14 @@ define(function(require) {
     , nullable: true
     }
   , price: {
+      type: types.int
+    , nullable: false
+    }
+  , feeds_min: {
+      type: types.int
+    , nullable: false
+    }
+  , feeds_max: {
       type: types.int
     , nullable: false
     }

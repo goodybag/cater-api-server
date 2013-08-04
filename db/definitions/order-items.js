@@ -31,7 +31,7 @@ define(function(require) {
     , nullable: false
     , references: {table: 'items', column: 'id'}
     }
-  , order_id {
+  , order_id: {
       type: types.int
     , nullable: false
     , references: {table: 'orders', column: 'id'}

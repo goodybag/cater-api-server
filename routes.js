@@ -12,7 +12,7 @@ module.exports.register = function(app) {
 
   app.get('/auth', controllers.auth.index);
   app.post('/auth/login', controllers.auth.login);
-  app.post('/auth/logout', controllers.auth.logout);
+  app.get('/auth/logout', controllers.auth.logout);
 
   app.post('/users', controllers.users.create);
 

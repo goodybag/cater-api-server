@@ -1,21 +1,25 @@
 <div class="row">
   <div class="col-lg-5">
     <ul class="nav nav-tabs">
-      <li class="active"><a href="#login" data-toggle="tab">Login</a></li>
-      <li><a href="#register" data-toggle="tab">Register</a></li>
+      <li class="active"><a href="#login" data-toggle="tab">Log In</a></li>
+      <li><a href="#register" data-toggle="tab">Sign Up</a></li>
     </ul>
     <div class="tabbable">
       <div class="tab-content">
         <div class="tab-pane active" id="login">
-          <form>
+          <br />
+          {{#if error}}
+            <div class="alert alert-danger">Invalid email address or password. Try again.</div>
+          {{/if}}
+          <form method="POST" action="/auth/login">
             <fieldset>
               <div class="form-group">
                 <label for="email">Email address</label>
-                <input type="email" class="form-control" id="email" placeholder="email address">
+                <input type="email" name="email" class="form-control" id="email" placeholder="email address" value="{{email}}">
               </div>
               <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="password">
+                <input type="password" name="password" class="form-control" id="password" placeholder="password">
               </div>
               <div class="form-group">
                 <a href="#">forgot password</a>
@@ -28,17 +32,18 @@
                 </div>
               </div>
               <div class="form-group">
-                <button type="submit" class="btn btn-default">Sign in</button>
+                <button type="submit" class="btn btn-default">Log in</button>
               </div>
             </fieldset>
           </form>
         </div>
         <div class="tab-pane" id="register">
+          <br />
           <form>
             <fieldset>
               <div class="form-group">
                 <label for="email">Email address</label>
-                <input type="email" class="form-control" id="email" placeholder="email address">
+                <input type="email" class="form-control" id="email" placeholder="email address" value="{{email}}">
               </div>
               <div class="form-group">
                 <label for="password">Password</label>
@@ -56,7 +61,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <button type="submit" class="btn btn-default">Sign up</button>
+                <button type="submit" class="btn btn-default">Sign Up</button>
               </div>
             </fieldset>
           </form>

@@ -45,7 +45,6 @@ module.exports.menu = function(req, res) {
       }
 
       var sql = db.builder.sql(query);
-      console.log(sql.query);
       db.query(sql.query, sql.values, function(error, results) {
         if (error) return res.error(errors.internal.DB_FAILURE, error, callback);
         data.restaurant = results[0];
@@ -61,7 +60,6 @@ module.exports.menu = function(req, res) {
       , order: {order: 'asc'}
       }
       var sql = db.builder.sql(query);
-      console.log(sql.query);
       db.query(sql.query, sql.values, function(error, results) {
         if (error) return res.error(errors.internal.DB_FAILURE, error, callback);
         data.categories = results;

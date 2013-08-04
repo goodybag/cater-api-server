@@ -10,12 +10,12 @@
       <h2>{{name}}</h2>
       <div class="list-group">
       {{#each items}}
-        <div class="list-group-item">
+        <a class="list-group-item">
           <div>
-            <div><strong>{{name}}</strong> <i class="pull-right">feeds {{feeds_min}}-{{feeds_max}} &nbsp;   &nbsp; price {{dollars price}}</i></div>
-            <div>{{description}}</div>
+            <div><h4 class="list-group-item-heading">{{name}}</h4> <i class="list-group-item-text pull-right">feeds {{feeds_min}}-{{feeds_max}} &nbsp;   &nbsp; price {{dollars price}}</i></div>
+            <div class="list-group-item-text">{{description}}</div>
           </div>
-        </div>
+        </a>
       {{/each}}
       </div>
     {{/each}}

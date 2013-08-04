@@ -102,7 +102,6 @@ module.exports.menu = function(req, res) {
       var category = menu[categoryIdMenuIndex[item.menu_category_id]];
       category.items.push(item);
     }
-    console.log(menu);
     res.render('menu', {restaurant: data.restaurant, menu: menu}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       res.render('index', {content: html}, function(error, html) {

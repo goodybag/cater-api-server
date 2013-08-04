@@ -17,6 +17,14 @@ var middleware = {
 , uuid: require('./middleware/uuid')
 };
 
+hbs.registerHelper('dollars', function(pennies, options) {
+  if (typeof(pennies) === 'string') { pennies = options.contexts[0].get(pennies); }
+  var dec = pennies % 100;
+  var whole = Math.floor(pennies / 100);
+  var decStr = '' + dec;
+  return whole + '.' + decStr + ( decStr.length < 2 ? '0' : '');
+});
+
 var app = express();
 
 app.configure(function(){

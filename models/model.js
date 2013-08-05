@@ -47,8 +47,17 @@ utils.extend(Model.prototype, {
   toJSON: function() {
     return utils.clone(this.attributes);
   },
-  save: function() {
-    // TODO: upsert current attribute state into database
+  save: function(callback) {
+    var attrs = utils.omit(utils.pick(this.attributes, utils.keys(this.constructor.schema)), ['id', 'created_at']);
+    query = {
+      type: attrs.id ? 'update' : 'insert',
+      table: this.constructor.table,
+      values: attrs,
+      returning: '*'
+    };
+
+    var sql = db.builder.sql(query);
+    db.query(sql.query, sql.values, callback);
   }
 });
 

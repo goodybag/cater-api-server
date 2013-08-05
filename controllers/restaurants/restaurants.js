@@ -23,7 +23,11 @@ module.exports.list = function(req, res) {
 module.exports.get = function(req, res) {
   models.Restaurant.findOne(parseInt(req.params.rid), function(error, response) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(response ? response.toJSON() : 404);
+    if (!response) return res.send(404);
+    response.getItems(function(err, items) {
+      if (error) return res.error(errors.internal.DB_FAILURE, error);
+      res.send(response.toJSON());
+    });
   });
 }
 

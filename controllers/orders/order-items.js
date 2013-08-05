@@ -3,11 +3,9 @@ var errors = require('../../errors');
 var utils  = require('../../utils');
 
 module.exports.list = function(req, res, next) {
-  var query = utils.extend({where: {}}, req.qurey);
-  utils.extend(query.where, {'order_id': req.params.oid});
-  models.OrderItem.find(query, function(err, results) {
+  (new models.Order({id: req.oid})).getItems(function(err, items) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(utils.invoke(results, 'toJSON'));
+    res.send(utils.invoke(items, 'toJSON'));
   });
 }
 

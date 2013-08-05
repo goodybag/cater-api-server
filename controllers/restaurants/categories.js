@@ -21,9 +21,8 @@ module.exports.get = function(req, res) {
 }
 
 module.exports.listItems = function(req, res) {
-  var query = {where: {'category_id': req.params.cid}};
-  models.Item.find(query, function(err, results) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(utils.invoke(results, 'toJSON'));
+  (new models.Category({id: req.params.cid})).getItems(function(err, items) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    res.send(utils.invoke(items, 'toJSON'));
   });
 }

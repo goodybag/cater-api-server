@@ -6,9 +6,9 @@ var file = new static.Server('./public');
 module.exports.register = function(app) {
   app.get('/restaurants', controllers.restaurants.list);
 
-  app.get('/restaurants/:id', controllers.restaurants.get);
+  app.get('/restaurants/:rid', controllers.restaurants.get);
 
-  app.get('/restaurants/:id/items', controllers.restaurants.listItems);
+  app.get('/restaurants/:rid/items', controllers.restaurants.listItems);
 
   app.get('/restaurants/:rid/categories', controllers.restaurants.categories.list);
 

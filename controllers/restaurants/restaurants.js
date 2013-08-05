@@ -21,12 +21,19 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.get = function(req, res) {
-  models.Restaurant.findOne(parseInt(req.params.id), function(error, response) {
+  models.Restaurant.findOne(parseInt(req.params.rid), function(error, response) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(response ? response.toJSON() : 404);
+    if (!response) return res.send(404);
+    response.getItems(function(err, items) {
+      if (error) return res.error(errors.internal.DB_FAILURE, error);
+      res.send(response.toJSON());
+    });
   });
 }
 
 module.exports.listItems = function(req, res) {
-  res.send(501);  //not implemented
+  (new models.Restaurant({id: req.params.rid})).getItems(function(err, items) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    res.send(utils.invoke(items, 'toJSON'));
+  });
 }

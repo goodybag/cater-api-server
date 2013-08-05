@@ -32,6 +32,7 @@ var notify =  function(name, callback) {
 
 var done = function(error, results) {
   if (error) return console.log(error);
+  process.exit(0);
 }
 
 async.mapSeries(definitions, iterator, done);

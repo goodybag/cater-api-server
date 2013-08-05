@@ -57,7 +57,11 @@ utils.extend(Model.prototype, {
     };
 
     var sql = db.builder.sql(query);
-    db.query(sql.query, sql.values, callback);
+    var self = this;
+    db.query(sql.query, sql.values, function(err, rows, result) {
+      if (!err && rows && rows[0]) utils.extend(self.attributes, rows[0]);
+      callback.apply(this, arguments);
+    })
   }
 });
 

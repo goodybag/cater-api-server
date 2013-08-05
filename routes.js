@@ -20,6 +20,11 @@ module.exports.register = function(app) {
 
   app.post('/restaurants/:rid/orders', controllers.restaurants.orders.create);
 
+  app.all('/restaurants/:rid/orders', function(req, res, next) {
+    res.set('Allow', 'GET, POST');
+    res.send(405);
+  });
+
   app.get('/items', controllers.items.list);
 
   app.get('/items/:id', controllers.items.get);
@@ -30,11 +35,14 @@ module.exports.register = function(app) {
 
   app.put('/orders/:id', controllers.orders.update);
 
-  app.del('/orders/:id', controllers.orders.cancel);
+  app.del('/orders/:id', function(req, res, next) {
+    req.body = {status: 'canceled'};
+    next();
+  }, controllers.orders.changeStatus);
 
-  app.get('/orders/:id/status-history', controllers.orders.listStatus); // latest is on order
+  app.get('/orders/:oid/status-history', controllers.orders.listStatus); // latest is on order
 
-  app.post('/orders/:id/status-history', controllers.orders.changeStatus);
+  app.post('/orders/:oid/status-history', controllers.orders.changeStatus);
 
   app.all('/orders/:id/status-history', function(req, res, next) {
     res.set('Allow', 'GET, POST');

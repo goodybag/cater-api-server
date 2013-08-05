@@ -20,3 +20,22 @@ module.exports.get = function(req, res) {
     res.send(response ? response.toJSON() : 404);
   });
 }
+
+module.exports.listStatus = function(req, res) {
+  models.OrderStatus.find(
+    {where: {order_id: req.params.oid},
+     order: {created_at: 'desc'}},
+    function(err, results) {
+      if (err) return res.error(errors.internal.DB_FAILURE, error);
+      res.send(utils.invoke(results, 'toJSON'));
+    }
+  );
+}
+
+module.exports.changeStatus = function(req, res) {
+  var status = models.OrderSatus(req.body);
+  status.save(function(err, rows, result) {
+    if (err) return res.error(errors.internal.DB_FAILURE, error);
+    res.send(201, status.toJSON());
+  });
+}

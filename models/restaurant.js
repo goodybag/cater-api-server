@@ -6,7 +6,8 @@ module.exports = Model.extend({
     var self = this;
     callback = callback || function() {};
     require('./category').find(
-      {where: {'restaurant_id': this.attributes.id}},
+      {where: {'restaurant_id': this.attributes.id},
+       order: {order: 'asc'}},
       function(err, results) {
         if (err) return callback(err);
         self.categories = results;
@@ -23,7 +24,8 @@ module.exports = Model.extend({
         return callback(null, null);
       var categories = utils.map(self.categories, function(cat) { return cat.toJSON().id; });
       require('./item').find(
-        {where: {'category_id': {$in: categories}}},
+        {where: {'category_id': {$in: categories}},
+         order: {order: 'asc'}},
         function(err, results) {
           if (err) return callback(err);
           self.items = results;

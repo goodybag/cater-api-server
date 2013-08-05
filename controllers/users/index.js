@@ -16,41 +16,40 @@ module.exports.list = function(req, res) {
   };
 
   var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, function(error, response){
+  db.query(sql.query, sql.values, function(error, results){
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(response);
+    res.send(results);
   });
 }
 
 module.exports.create = function(req, res) {
-  console.log('0');
-  console.log(req.body);
-
   var flow = {
     encrypt: function(callback) {
-      utils.encryptPassword(req.body.password, function(error, encrypted, salt) {
+      utils.encryptPassword(req.body.password, function(error, hash, salt) {
         if (error) res.send(errors.internal.UNKNOWN, error);
-        return callback(error, encrypted, salt);
+        return callback(error, hash);
       });
     }
-  , create: function(encrypted, callback) {
+  , create: function(hash, callback) {
       var query = {
         type: 'insert'
       , table: 'users'
       , values: {
-          first_name: req.body.first_name 
+          first_name: req.body.first_name
         , last_name: req.body.last_name
-        , email: req.body.email
-        , password: encrypted
+        , email: req.body.email.toLowerCase()
+        , password: hash
         , organization: req.body.organization
         }
       , returning: ['id']
       };
 
       var sql = db.builder.sql(query);
-      db.query(sql.query, sql.values, function(error, response){
-        if (error){ res.error(errors.internal.DB_FAILURE, error); return callback(error); }
-        res.send(response); return callback();
+      db.query(sql.query, sql.values, function(error, results){
+        if (error) return res.error(parseInt(error.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, error, callback);
+        var user = results[0];
+        req.session = utils.extend({}, req.session, {user: {id: user.id}});
+        return res.redirect('/');
       });
     }
   }
@@ -67,9 +66,9 @@ module.exports.get = function(req, res) {
   };
 
   var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, function(error, response){
+  db.query(sql.query, sql.values, function(error, results){
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    return res.send(response);
+    return res.send(results);
   });
 }
 
@@ -81,7 +80,7 @@ module.exports.del = function(req, res) {
   };
 
   var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, function(error, response){
+  db.query(sql.query, sql.values, function(error, results){
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     return res.noContent();
   });

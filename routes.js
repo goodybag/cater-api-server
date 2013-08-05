@@ -57,6 +57,14 @@ module.exports.register = function(app) {
 
   app.del('/orders/:oid/items/:iid', controllers.orders.orderItems.remove);
 
+  app.get('/auth', controllers.auth.index);
+  app.get('/auth/logout', controllers.session.del);
+
+  app.post('/session', controllers.session.create);
+  app.del('/session', controllers.session.del)
+
+  app.post('/users', controllers.users.create);
+
   app.get('/*', function(req, res) {
     file.serve(req, res);
   });

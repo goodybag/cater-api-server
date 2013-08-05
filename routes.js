@@ -10,6 +10,10 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:id/items', controllers.restaurants.listItems);
 
+  app.get('/items', controllers.items.list);
+
+  app.get('/items/:id', controllers.items.get);
+
   app.get('/*', function(req, res) {
     file.serve(req, res);
   });

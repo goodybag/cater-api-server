@@ -20,7 +20,7 @@ var query = function(query, callback) {
 }
 
 var incrementHolder = {};
-var incrementer = function(key, starting){
+var incrementer = function(key, starting) {
   if(incrementHolder[key] == null){
     incrementHolder[key] = starting;
     return starting;
@@ -67,8 +67,7 @@ var inserts = {
       type:'insert'
     , table: 'items'
     , values: {
-        restaurant_id: restaurant_id
-      , category_id: category_id
+        category_id: category_id
       , order: incrementer('items_order_'+restaurant_id+'_'+category_id, 1)
       , name: faker.Lorem.words()[0]
       , description: faker.Lorem.sentence()

@@ -5,9 +5,9 @@
 </div>
 <div class="row">
   <div class="col-lg-8">
-    <h3>Menu</h3>
-    {{#each menu}}
-      <h2>{{name}}</h2>
+    <h2>Menu</h2>
+    {{#each restaurant.categories}}
+      <h3>{{name}}</h3>
       <div class="list-group">
       {{#each items}}
         <a class="list-group-item">
@@ -21,6 +21,6 @@
     {{/each}}
   </div>
   <div class="col-lg-4">
-    <h3>Orders</h3>
+    <h2>Orders</h2>
   </div>
 </div>

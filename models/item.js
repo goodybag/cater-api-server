@@ -1,3 +1,3 @@
 var Model = require('./model');
 
-module.exports = Model.extend({}, {table: 'item'});
+module.exports = Model.extend({}, {table: 'items'});

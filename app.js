@@ -17,6 +17,11 @@ var middleware = {
 , uuid: require('./middleware/uuid')
 };
 
+hbs.registerHelper('dollars', function(pennies, options) {
+  if (typeof(pennies) === 'string') { pennies = options.contexts[0].get(pennies); }
+  return (pennies / 100).toFixed(2);
+});
+
 var app = express();
 
 app.configure(function(){
@@ -43,7 +48,6 @@ app.configure(function(){
    */
   app.response.error = function(error, details, callback) {
     utils.sendError(this, error, details);
-    console.log(callback);
     if (callback) callback(error);
   };
   app.response.noContent = function() {

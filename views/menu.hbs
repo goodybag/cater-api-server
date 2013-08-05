@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1>{{restaurant.name}}</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-8">
+    <h2>Menu</h2>
+    {{#each restaurant.categories}}
+      <h3>{{name}}</h3>
+      <div class="list-group">
+      {{#each items}}
+        <a class="list-group-item">
+          <div>
+            <div><h4 class="list-group-item-heading">{{name}}</h4> <i class="list-group-item-text pull-right">feeds {{feeds_min}}-{{feeds_max}} &nbsp;   &nbsp; price {{dollars price}}</i></div>
+            <div class="list-group-item-text">{{description}}</div>
+          </div>
+        </a>
+      {{/each}}
+      </div>
+    {{/each}}
+  </div>
+  <div class="col-lg-4">
+    <h2>Orders</h2>
+  </div>
+</div>

@@ -1,9 +1,9 @@
 var
-  async = require('async')
 , db = require('../../db')
 , errors = require('../../errors')
 , utils = require('../../utils')
 ;
+
 
 var models = require('../../models');
 
@@ -109,5 +109,5 @@ module.exports.menu = function(req, res) {
     });
   }
 
-  async.parallel(tasks, done);
+  utils.async.parallel(tasks, done);
 }

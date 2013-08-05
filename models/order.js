@@ -1,5 +1,5 @@
 var Model = require('./model');
-var utils = require('./utils');
+var utils = require('../utils');
 
 module.exports = Model.extend({
   getOrderItems: function(callback) {

@@ -35,7 +35,7 @@ module.exports.create = function(req, res) {
         type: 'insert'
       , table: 'users'
       , values: {
-          first_name: req.body.first_name 
+          first_name: req.body.first_name
         , last_name: req.body.last_name
         , email: req.body.email.toLowerCase()
         , password: hash
@@ -48,8 +48,7 @@ module.exports.create = function(req, res) {
       db.query(sql.query, sql.values, function(error, results){
         if (error) return res.error(parseInt(error.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, error, callback);
         var user = results[0];
-        req.session = {};
-        req.session.user = {id: user.id};
+        req.session = {user: {id: user.id}};
         return res.redirect('/');
       });
     }

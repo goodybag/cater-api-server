@@ -6,7 +6,6 @@ var
 ;
 
 module.exports.index = function(req, res) {
-  console.log(req.session);
   if (req.session && req.session.user && req.session.user.id != null)
     return res.redirect(req.query.next || '/');
 
@@ -41,20 +40,14 @@ module.exports.login = function(req, res) {
         var user = results[0];
         utils.comparePasswords(req.body.password, user.password, function(error, success) {
           if (!success) return res.error(errors.auth.INVALID_PASSWORD, error, callback);
-          req.session = {};
-          req.session.user = {id: user.id}
-          return res.redirect(req.query.next || '/');
+          req.session = {user: {id: user.id}};
+          return callback();
         });
       });
     }
-  , render: function(callback) {
-      res.render('auth', function(error, html) {
-        if (error) return res.error(errors.internal.UNKNOWN, error);
-        res.render('index', {content: html}, function(errror, html) {
-          if (error) return res.error(errors.internal.UNKNOWN, error);
-          res.send(html);
-        });
-      });
+  , redirect: function(callback) {
+      res.redirect(req.query.next || '/');
+      return callback();
     }
   }
 

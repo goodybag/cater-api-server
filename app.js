@@ -19,10 +19,7 @@ var middleware = {
 
 hbs.registerHelper('dollars', function(pennies, options) {
   if (typeof(pennies) === 'string') { pennies = options.contexts[0].get(pennies); }
-  var dec = pennies % 100;
-  var whole = Math.floor(pennies / 100);
-  var decStr = '' + dec;
-  return whole + '.' + decStr + ( decStr.length < 2 ? '0' : '');
+  return (pennies / 100).toFixed(2);
 });
 
 var app = express();

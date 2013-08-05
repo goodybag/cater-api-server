@@ -27,8 +27,14 @@ define(function(require) {
     , default: 'NOW()'
     }
   , user_id: {
-    type: types.text
+      type: types.int
     , nullable: false
+    , references: {table: 'users', column: 'id'}
+    }
+  , restaurant_id: {
+      type: types.int
+    , nullable: false
+    , references: {table: 'restaurants', column: 'id'}
     }
   , street: {
       type: types.text
@@ -44,7 +50,7 @@ define(function(require) {
     }
   , zip: {
       type: types.numeric(5)
-    , nullable: false
+    , nullable: true
     }
   , phone: {
       type: types.numeric(10)
@@ -52,17 +58,13 @@ define(function(require) {
     }
   , notes: {
       type: types.text
-    , nullable: false
+    , nullable: true
     }
   , datetime: {
       type: types.timestamp
     , nullable: false
     }
   , guests: {
-      type: types.int
-    , nullable: false
-    }
-  , subtotal: {
       type: types.int
     , nullable: false
     }

@@ -14,7 +14,7 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'menu_categories';
+  definition.name = 'categories';
 
   definition.schema = {
     id: {
@@ -26,10 +26,10 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , menu_id: {
+  , restaurant_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'menus', column: 'id'}
+    , references: {table: 'restaurants', column: 'id'}
     }
   , name: {
       type: types.text

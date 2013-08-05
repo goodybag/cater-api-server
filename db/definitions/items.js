@@ -1,5 +1,5 @@
 /**
- * Users Schema
+ * Items Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -14,7 +14,7 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'menus';
+  definition.name = 'items';
 
   definition.schema = {
     id: {
@@ -26,10 +26,14 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , restaurant_id: {
-      type: types.int4
+  , category_id: {
+      type: types.int
     , nullable: false
-    , references: {table: 'restaurants', column: 'id'}
+    , references: {table: 'categories', column: 'id'}
+    }
+  , order: {
+      type: types.int
+    , nullable: false
     }
   , name: {
       type: types.text
@@ -38,6 +42,18 @@ define(function(require) {
   , description: {
       type: types.text
     , nullable: true
+    }
+  , price: {
+      type: types.int
+    , nullable: false
+    }
+  , feeds_min: {
+      type: types.int
+    , nullable: false
+    }
+  , feeds_max: {
+      type: types.int
+    , nullable: false
     }
   };
 

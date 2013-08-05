@@ -16,7 +16,7 @@ module.exports = Model.extend({
   },
 
   toJSON: function() {
-    var obj = Model.toJSON.apply(this, arguments);
+    var obj = Model.prototype.toJSON.apply(this, arguments);
     if (this.items) obj.items = utils.invoke(this.items, 'toJSON');
     return obj;
   }

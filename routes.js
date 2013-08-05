@@ -24,7 +24,9 @@ module.exports.register = function(app) {
 
   app.get('/orders/:id', controllers.orders.get);
 
-  app.get('/orders/:id/items', controllers.orders.listItems);
+  app.get('/orders/:oid/items', controllers.orders.orderItems.list);
+
+  app.get('/orders/:oid/items/:iid', controllers.orders.orderItems.get);
 
   app.get('/*', function(req, res) {
     file.serve(req, res);

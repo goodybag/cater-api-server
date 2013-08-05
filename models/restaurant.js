@@ -25,6 +25,16 @@ module.exports = Model.extend({
         function(err, results) {
           if (err) return callback(err);
           self.items = results;
+
+          var catIndex = utils.object(utils.map(self.categories, function(cat) {
+            return cat.attributes.id;
+          }), self.categories);
+
+          utils.each(results, function(item) {
+            var cat = catIndex[item.attributes.category_id];
+            cat.items ? cat.items.push(item) : cat.items = [item];
+          });
+
           callback(null, results);
         }
       );

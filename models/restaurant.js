@@ -19,6 +19,8 @@ module.exports = Model.extend({
     callback = callback || function() {};
     var items = function(err) {
       if (err) return callback(err);
+      if (!self.categories || self.categories.length === 0)
+        return callback(null, null);
       var categories = utils.map(self.categories, function(cat) { return cat.toJSON().id; });
       require('./item').find(
         {where: {'category_id': {$in: categories}}},

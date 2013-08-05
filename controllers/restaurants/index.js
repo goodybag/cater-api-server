@@ -1,5 +1,5 @@
 var
-, db = require('../../db')
+  db = require('../../db')
 , errors = require('../../errors')
 , utils = require('../../utils')
 ;
@@ -54,7 +54,7 @@ module.exports.menu = function(req, res) {
   , getCategories: function(callback) {
       var query = {
         type: 'select'
-      , table: 'menu_categories'
+      , table: 'categories'
       , columns: ['*']
       , where: {restaurant_id: parseInt(req.params.id)}
       , order: {order: 'asc'}
@@ -69,7 +69,7 @@ module.exports.menu = function(req, res) {
   , getItems: function(callback) {
       var query = {
         type: 'select'
-      , table: 'menu_items'
+      , table: 'items'
       , columns: ['*']
       , where: {restaurant_id: parseInt(req.params.id)}
       , order: {order: 'asc'}
@@ -97,7 +97,7 @@ module.exports.menu = function(req, res) {
 
     for(var i=0; i<data.items.length; i ++) {
       var item = data.items[i];
-      var category = menu[categoryIdMenuIndex[item.menu_category_id]];
+      var category = menu[categoryIdMenuIndex[item.category_id]];
       category.items.push(item);
     }
     res.render('menu', {restaurant: data.restaurant, menu: menu}, function(error, html) {

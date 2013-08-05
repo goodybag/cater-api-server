@@ -50,26 +50,26 @@ var inserts = {
       }
     }
   }
-, menu_categories: function(restaurant_id) {
+, categories: function(restaurant_id) {
     return {
       type:'insert'
-    , table: 'menu_categories'
+    , table: 'categories'
     , values: {
         restaurant_id: restaurant_id
       , name: faker.Lorem.words()[0]
       , description: faker.Lorem.sentence()
-      , order: incrementer('menu_categories_order_'+restaurant_id, 1)
+      , order: incrementer('categories_order_'+restaurant_id, 1)
       }
     }
   }
-, menu_items: function(restaurant_id, menu_category_id) {
+, items: function(restaurant_id, category_id) {
     return {
       type:'insert'
-    , table: 'menu_items'
+    , table: 'items'
     , values: {
         restaurant_id: restaurant_id
-      , menu_category_id: menu_category_id
-      , order: incrementer('menu_items_order_'+restaurant_id+'_'+menu_category_id, 1)
+      , category_id: category_id
+      , order: incrementer('items_order_'+restaurant_id+'_'+category_id, 1)
       , name: faker.Lorem.words()[0]
       , description: faker.Lorem.sentence()
       , price: faker.Helpers.randomNumber(1000)
@@ -90,11 +90,11 @@ async.series(
         cb(error);
       });
     }
-  , menu_categories: function(cb) {
+  , categories: function(cb) {
       query(select('restaurants'), function(error, results){
         async.timesSeries(results.length, function(n, callback){
           async.timesSeries(10, function(x, callback2){
-            query(inserts.menu_categories(results[n].id), callback2);
+            query(inserts.categories(results[n].id), callback2);
           }, function(error, results){
             // console.log('called-sub-2');
             callback(error);
@@ -105,11 +105,11 @@ async.series(
         });
       });
     }
-  , menu_items: function(cb) {
-      query(select('menu_categories'), function(error, results){
+  , items: function(cb) {
+      query(select('categories'), function(error, results){
         async.timesSeries(results.length, function(n, callback){
           async.timesSeries(10, function(x, callback2){
-            query(inserts.menu_items(results[n].restaurant_id, results[n].id), callback2);
+            query(inserts.items(results[n].restaurant_id, results[n].id), callback2);
           }, function(error, results){
             // console.log('called-sub-3');
             callback(error);

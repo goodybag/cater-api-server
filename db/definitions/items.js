@@ -1,5 +1,5 @@
 /**
- * Menu Items Schema
+ * Items Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -14,7 +14,7 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'menu_items';
+  definition.name = 'items';
 
   definition.schema = {
     id: {
@@ -31,10 +31,10 @@ define(function(require) {
     , nullable: false
     , references: {table: 'restaurants', column: 'id'}
     }
-  , menu_category_id: {
+  , category_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'menu_categories', column: 'id'}
+    , references: {table: 'categories', column: 'id'}
     }
   , order: {
       type: types.int

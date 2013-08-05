@@ -17,6 +17,10 @@ module.exports.register = function(app) {
 
   app.get('/items/:id', controllers.items.get);
 
+  app.get('/items', controllers.items.list);
+
+  app.get('/items/:id', controllers.items.get);
+
   app.get('/*', function(req, res) {
     file.serve(req, res);
   });

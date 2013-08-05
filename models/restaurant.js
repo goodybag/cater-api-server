@@ -45,5 +45,11 @@ module.exports = Model.extend({
     }
 
     self.categories ? items() : self.getCategories(items);
+  },
+
+  toJSON: function() {
+    var obj = Model.toJSON.apply(this, arguments);
+    if (this.categories) obj.categories = utils.invoke(this.categories, 'toJSON');
+    return obj;
   }
 }, {table: 'restaurants'});

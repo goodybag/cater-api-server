@@ -13,5 +13,12 @@ module.exports = Model.extend({
         callback(null, items);
       }
     );
+  },
+
+  toJSON: function() {
+    var obj = Model.toJSON.apply(this, arguments);
+    if (this.items) obj.items = utils.invoke(this.items, 'toJSON');
+    return obj;
   }
+
 }, {table: 'categories'});

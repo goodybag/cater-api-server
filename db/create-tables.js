@@ -11,6 +11,7 @@ var definitions = [
 , 'categories'
 , 'items'
 , 'order-items'
+, 'order-statuses'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');

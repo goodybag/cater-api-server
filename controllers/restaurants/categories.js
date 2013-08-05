@@ -6,7 +6,7 @@ var models = require('../../models');
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
   var query = utils.extend({where: {}}, req.query);
-  utils.extend(query.where, {'menu_id': req.params.rid});
+  utils.extend(query.where, {'restaurant_id': req.params.rid});
   models.Category.find(query, function(error, results) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.send(utils.invoke(results, 'toJSON'));

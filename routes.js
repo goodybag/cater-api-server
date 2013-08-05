@@ -28,6 +28,14 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid/items/:iid', controllers.orders.orderItems.get);
 
+  app.get('/auth', controllers.auth.index);
+  app.get('/auth/logout', controllers.auth.logout);
+
+  app.post('/session', controllers.session.create);
+  app.del('/session', controllers.session.del)
+
+  app.post('/users', controllers.users.create);
+
   app.get('/*', function(req, res) {
     file.serve(req, res);
   });

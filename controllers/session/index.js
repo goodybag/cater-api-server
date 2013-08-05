@@ -26,7 +26,7 @@ module.exports.create = function(req, res) {
         var user = results[0];
         utils.comparePasswords(req.body.password, user.password, function(error, success) {
           if (!success) return res.error(errors.auth.INVALID_PASSWORD, error, callback);
-          req.session = {user: {id: user.id}};
+          req.session = utils.extend({}, req.session, {user: {id: user.id}});
           return callback();
         });
       });

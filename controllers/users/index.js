@@ -48,7 +48,7 @@ module.exports.create = function(req, res) {
       db.query(sql.query, sql.values, function(error, results){
         if (error) return res.error(parseInt(error.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, error, callback);
         var user = results[0];
-        req.session = {user: {id: user.id}};
+        req.session = utils.extend({}, req.session, {user: {id: user.id}});
         return res.redirect('/');
       });
     }

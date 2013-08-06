@@ -47,7 +47,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid/categories', controllers.restaurants.categories.list);  // not currently used
 
-  app.post('/restaurants/:rid/categories', function(req, res) { res.send(501); });
+  app.post('/restaurants/:rid/categories', controllers.restaurants.categories.create);
 
   app.all('/restaurants/:rid/categories', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -60,7 +60,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.get);  // not currently used
 
-  app.put('/restaurants/:rid/categories/:cid', function(req, res) { res.send(501); });
+  app.put('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.update);
 
   app.del('/restaurants/:rid/categories/:cid', function(req, res) { res.send(501); });
 

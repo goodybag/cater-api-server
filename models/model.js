@@ -49,12 +49,15 @@ utils.extend(Model.prototype, {
   },
   save: function(callback) {
     var attrs = utils.omit(utils.pick(this.attributes, utils.keys(this.constructor.schema)), ['id', 'created_at']);
+    var id = this.attributes.id;
     query = {
-      type: attrs.id ? 'update' : 'insert',
+      type: id ? 'update' : 'insert',
       table: this.constructor.table,
-      values: attrs,
       returning: '*'
     };
+
+    if (id) query.where = {id: id};
+    query[id ? 'updates' : 'values'] = attrs;
 
     var sql = db.builder.sql(query);
     var self = this;

@@ -5,7 +5,6 @@
 
 var
   express = require('express')
-, http = require('http')
 , hbs = require('hbs')
 , utils = require('./utils')
 , routes = require('./routes')
@@ -22,7 +21,7 @@ hbs.registerHelper('dollars', function(pennies, options) {
   return (pennies / 100).toFixed(2);
 });
 
-var app = express();
+var app = module.exports = express();
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -62,7 +61,3 @@ app.configure('development', function(){
 //app.use(require('./collections/users/server'));
 
 routes.register(app);
-
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
-});

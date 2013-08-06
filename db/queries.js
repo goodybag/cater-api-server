@@ -1,7 +1,7 @@
 var utils = require('../utils');
 
 var defaultSelect = {
-  type: select,
+  type: 'select',
   columns: '[*]',
   limit: '100',
   offset: '0'
@@ -9,7 +9,7 @@ var defaultSelect = {
 
 var upcert = function(table, values) {
   return {
-    type: values.id ? update : insert,
+    type: values.id ? 'update' : 'insert',
     values: values,
     table, table
   };

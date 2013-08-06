@@ -53,9 +53,21 @@ module.exports.register = function(app) {
 
   app.post('/orders/:oid/items', controllers.orders.orderItems.add);
 
+  app.all('/orders/:oid/items', function(req, res, next) {
+    res.set('Allow', 'GET, POST');
+    res.send(405);
+  });
+
   app.get('/orders/:oid/items/:iid', controllers.orders.orderItems.get);
 
+  app.put('/orders/:oid/items/:iid', controllers.orders.orderItems.update);
+
   app.del('/orders/:oid/items/:iid', controllers.orders.orderItems.remove);
+
+  app.all('/orders/:oid/items/:iid', function(req, res, next) {
+    res.set('Allow', 'GET, PUT, PATCH, DELETE');  // TODO: PATCH
+    res.send(405);
+  });
 
   app.get('/auth', controllers.auth.index);
   app.get('/auth/logout', controllers.session.del);

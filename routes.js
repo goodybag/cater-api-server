@@ -112,7 +112,7 @@ module.exports.register = function(app) {
 
   app.get('/items/:id', controllers.items.get);  // not currently used
 
-  app.put('/items/:id', function(req, res) { res.send(501); });
+  app.put('/items/:id', controllers.items.update);
 
   app.del('/items/:id', function(req, res) { res.send(501); });
 

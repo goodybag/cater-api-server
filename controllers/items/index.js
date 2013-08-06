@@ -15,3 +15,12 @@ module.exports.get = function(req, res, next) {
     res.send(result ? result.toJSON() : 404);
   });
 }
+
+module.exports.update = function(req, res) {
+  var query = queries.items.update(req.body, req.params.id);
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return res.error(errors.internal.UNKNOWN, error);
+    res.send(200, rows[0]);
+  });
+}

@@ -62,6 +62,16 @@ utils.extend(Model.prototype, {
       if (!err && rows && rows[0]) utils.extend(self.attributes, rows[0]);
       callback.apply(this, arguments);
     })
+  },
+  destroy: function(callback) {
+    if (!this.attributes.id) return callback('need an id');
+    var query = {
+      type: 'delete',
+      table: this.constructor.table,
+      where: {id: this.attributes.id}
+    }
+    var sql = db.builder.sql(query);
+    db.query(sql.query, sql.values, callback);
   }
 });
 

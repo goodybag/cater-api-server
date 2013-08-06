@@ -11,7 +11,8 @@ var upsert = function(table, values) {
   return {
     type: values.id ? 'update' : 'insert',
     values: values,
-    table, table
+    table: table,
+    returning: '*'
   };
 }
 

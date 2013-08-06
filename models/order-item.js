@@ -12,18 +12,18 @@ module.exports = Model.extend({
   save: function(callback) {
     if (!this.attributes.id) Model.prototype.save.apply(this, arguments);
     else {
-      this.isMutable(err, mutable) {
+      this.isMutable(function (err, mutable) {
         if (err) return callback(err);
         if (!mutable) return callback({code: 403, message: "can't update non-pending orders"});
         Model.prototype.save.apply(this, arguments);
-      }
+      });
     }
   },
-  destroy function(callback) {
-    this.isMutable(err, mutable) {
+  destroy: function(callback) {
+    this.isMutable(function (err, mutable) {
       if (err) return callback(err);
       if (!mutable) return callback({code: 403, message: "can't remove items from non-pending orders"});
       Model.prototype.destroy.apply(this, arguments);
-    }
+    });
   }
 }, {table: 'order_items'});

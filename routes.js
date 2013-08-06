@@ -114,7 +114,7 @@ module.exports.register = function(app) {
 
   app.put('/items/:id', controllers.items.update);
 
-  app.del('/items/:id', function(req, res) { res.send(501); });
+  app.del('/items/:id', controllers.items.remove);
 
   app.all('/items/:id', function(req, res, next) {
     res.set('Allow', 'GET, POST, DELETE');

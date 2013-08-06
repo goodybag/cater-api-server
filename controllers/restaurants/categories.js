@@ -53,3 +53,12 @@ module.exports.listItems = function(req, res) {
     res.send(utils.invoke(items, 'toJSON'));
   });
 }
+
+module.exports.addItem = function(req, res) {
+  var query = qures.items.add(req.body, req.params.cid);
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return res.error(errors.internal.UNKNOWN, error);
+    res.send(201, rows[0]);
+  });
+}

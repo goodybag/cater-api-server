@@ -75,7 +75,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.listItems);  // not currently used
 
-  app.post('/restaurants/:rid/categories/:cid/items', function(req, res) { res.send(501); });
+  app.post('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.addItem);
 
   app.all('/restaurants/:rid/categories/:cid/items', function(req, res, next) {
     res.set('Allow', 'GET, POST');

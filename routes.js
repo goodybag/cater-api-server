@@ -23,7 +23,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid', controllers.restaurants.get);
 
-  app.put('/restaurants/:rid', function(req, res) { res.send(501); });
+  app.put('/restaurants/:rid', controllers.restaurants.update);
 
   app.all('/restaurants/:rid', function(req, res, next) {
     res.set('Allow', 'GET, PUT');

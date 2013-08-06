@@ -43,6 +43,15 @@ module.exports.create = function(req, res) {
   });
 }
 
+module.exports.update = function(req, res) {
+  var query = queries.restaurant.update(req.body, req.params.rid);
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return res.error(errors.internal.UNKNOWN, error);
+    res.send(200, rows[0]);
+  });
+}
+
 module.exports.listItems = function(req, res) {
   (new models.Restaurant({id: req.params.rid})).getItems(function(error, items) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);

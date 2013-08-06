@@ -7,13 +7,17 @@ var defaultSelect = {
   offset: '0'
 }
 
-var upsert = function(table, values) {
-  return {
-    type: values.id ? 'update' : 'insert',
-    values: values,
+var upsert = function(table, values, id) {
+  var query = {
+    type: id ? 'update' : 'insert',
     table: table,
     returning: '*'
   };
+
+  if (id) query.where = {id: id};
+  query[id ? 'updates' : 'values'] = values;
+
+  return query;
 }
 
 var del = function(table, id) {

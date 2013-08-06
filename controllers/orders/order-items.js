@@ -33,10 +33,21 @@ module.exports.add = function(req, res, next) {
 module.exports.update = function(req, res, next) {
   var update = new models.OrderItem(utils.extend({id: req.params.iid}, req.body));
   update.save(function(err, rows, result) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (err) {
+      if (err.code === 403 || err.code === 404) return res.send(err.code, err.message);
+      return res.error(errors.internal.DB_FAILURE, err);
+    }
     res.send(orderItem.toJSON());
   });
 }
 
 module.exports.remove = function(req, res, next) {
+  var item = new models.OrderItem({id: req.params.iid});
+  item.destroy(function(err, rows, result) {
+    if (err) {
+      if (err.code === 403 || err.code === 404) return res.send(err.code, err.message);
+      return res.error(errors.internal.DB_FAILURE, err);
+    }
+    res.send(200);
+  });
 }

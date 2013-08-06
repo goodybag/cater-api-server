@@ -62,7 +62,7 @@ module.exports.register = function(app) {
 
   app.put('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.update);
 
-  app.del('/restaurants/:rid/categories/:cid', function(req, res) { res.send(501); });
+  app.del('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.remove);
 
   app.all('/restaurants/:rid/categories/:cid', function(req, res, next) {
     res.set('Allow', 'GET, PUT, DELETE');

@@ -38,6 +38,15 @@ module.exports.update = function(req, res) {
   });
 }
 
+module.exports.remove = function(req, res) {
+  var query = queries.category.del(req.params.cid);
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return res.error(errors.internal.UNKNOWN, error);
+    res.send(200);
+  });
+}
+
 module.exports.listItems = function(req, res) {
   (new models.Category({id: req.params.cid})).getItems(function(err, items) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);

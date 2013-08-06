@@ -36,6 +36,11 @@ define(function(require) {
     , nullable: false
     , references: {table: 'orders', column: 'id'}
     }
+  , quantity: {
+      type: types.int
+    , nullable: false
+    , default: 1
+    }
   , name: {
       type: types.text
     , nullable: false

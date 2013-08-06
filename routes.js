@@ -10,7 +10,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants', controllers.restaurants.list);
 
-  app.post('/restaurants', function(req, res) { res.send(501); });
+  app.post('/restaurants', controllers.restaurants.create);
 
   app.all('/restaurants', function(req, res, next) {
     res.set('Allow', 'GET, POST');

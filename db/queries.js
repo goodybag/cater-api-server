@@ -7,7 +7,7 @@ var defaultSelect = {
   offset: '0'
 }
 
-var upcert = function(table, values) {
+var upsert = function(table, values) {
   return {
     type: values.id ? 'update' : 'insert',
     values: values,
@@ -23,24 +23,27 @@ var del = function(table, id) {
   }
 }
 
-module.exports.addRestaurant = utils.partial(upcert, 'restaurants');
+module.exports = {
+  restaurant: {
+    create: utils.partial(upsert, 'restaurants'),
+    update: utils.partial(upsert, 'restaurants')
+  },
 
-module.exports.updateRestaurant = utils.partial(upcert, 'restaurants');
+  category: {
+    create: function(restaurantId, category) {
+      category.restaurant_id = restaurantId;
+      return upsert('categories', category);
+    },
+    update: utils.partial(upsert, 'categories'),
+    del: utils.partial(del, 'categories')
+  },
 
-module.exports.restaurantAddCategory = function(restaurantId, category) {
-  category.restaurant_id = restaurantId;
-  return upcert('categories', category);
+  item: {
+    create: function(categoryId, item) {
+      item.category_id = categoryId;
+      return upsert('items', item);
+    },
+    update: utils.partial(upsert, 'items'),
+    del: utils.partial(del, 'items')
+  }
 };
-
-module.exports.updateCategory = utils.partial(upcert, 'categories');
-
-module.exports.removeCategory = utils.partial(del, 'categories');
-
-module.exports.addItem = function(categoryId, item) {
-  item.category_id = categoryId;
-  return upcert('items', item);
-}
-
-module.exports.updateItem = utils.partial(upcert, 'items');
-
-module.exports.removeItem = utils.partial(del, 'items');

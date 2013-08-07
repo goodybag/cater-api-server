@@ -1,5 +1,5 @@
 /**
- * Order Items Schema
+ * Order Statuses Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -14,7 +14,7 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'order_items';
+  definition.name = 'order_statuses';
 
   definition.schema = {
     id: {
@@ -26,44 +26,15 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , item_id: {
-      type: types.int
-    , nullable: false
-    , references: {table: 'items', column: 'id'}
-    }
   , order_id: {
       type: types.int
     , nullable: false
     , references: {table: 'orders', column: 'id'}
     }
-  , quantity: {
-      type: types.int
+  , status: {
+      type: types.orderstatus
     , nullable: false
-    , default: 1
-    }
-  , name: {
-      type: types.text
-    , nullable: false
-    }
-  , description: {
-      type: types.text
-    , nullable: true
-    }
-  , price: {
-      type: types.int
-    , nullable: false
-    }
-  , feeds_min: {
-      type: types.int
-    , nullable: false
-    }
-  , feeds_max: {
-      type: types.int
-    , nullable: false
-    }
-  , notes: {
-      type: types.text
-    , nullable: true
+    , default: "'pending'"
     }
   };
 

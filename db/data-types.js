@@ -1,3 +1,4 @@
+var db = require('./index');
 
 var arg = function(type) {
   return function() {
@@ -7,6 +8,10 @@ var arg = function(type) {
     return type + '(' + args.join(',') + ')';
   }
 }
+
+// custom type
+
+db.query("CREATE TYPE order_status AS ENUM('canceled', 'pending', 'submitted', 'denied', 'accepted', 'delivered');", function(){});
 
 module.exports = {
   bigint: 'int8'
@@ -55,4 +60,5 @@ module.exports = {
 , uuid: 'uuid'
 , xml: 'xml'
 , json: 'json'
+, orderstatus: 'order_status'
 }

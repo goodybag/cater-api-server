@@ -12,5 +12,10 @@ module.exports = Model.extend({
         self.orderItems = results;
         callback(null, results);
       });
+  },
+
+  find: function(query, callback) {
+    // TODO: alter query to add latest status
+    Model.prototype.find.apply(this, arguments);
   }
 }, {table: 'orders'});

@@ -47,8 +47,31 @@ utils.extend(Model.prototype, {
   toJSON: function() {
     return utils.clone(this.attributes);
   },
-  save: function() {
-    // TODO: upsert current attribute state into database
+  save: function(callback) {
+    var attrs = utils.omit(utils.pick(this.attributes, utils.keys(this.constructor.schema)), ['id', 'created_at']);
+    query = {
+      type: attrs.id ? 'update' : 'insert',
+      table: this.constructor.table,
+      values: attrs,
+      returning: '*'
+    };
+
+    var sql = db.builder.sql(query);
+    var self = this;
+    db.query(sql.query, sql.values, function(err, rows, result) {
+      if (!err && rows && rows[0]) utils.extend(self.attributes, rows[0]);
+      callback.apply(this, arguments);
+    })
+  },
+  destroy: function(callback) {
+    if (!this.attributes.id) return callback('need an id');
+    var query = {
+      type: 'delete',
+      table: this.constructor.table,
+      where: {id: this.attributes.id}
+    }
+    var sql = db.builder.sql(query);
+    db.query(sql.query, sql.values, callback);
   }
 });
 

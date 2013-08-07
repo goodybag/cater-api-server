@@ -79,8 +79,11 @@ module.exports.del = function(req, res) {
 }
 
 module.exports.listOrders = function(req, res) {
-  models.Order.find({where: {user_id: req.session.user.id}}, function(err, orders) {
+  models.Order.find({where: {user_id: req.params.uid}}, function(err, orders) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.json(200, orders);
+    res.render('user-orders', {orders: utils.invoke(orders, 'toJSON')}, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, err);
+      res.send(html);
+    });
   });
 }

@@ -78,8 +78,26 @@ module.exports = Model.extend({
       , table: 'order_items'
       , groupBy: 'order_id'
       }
+    };
+
+    query.columns.push('restaurants.name');
+
+    query.joins.restaurants = {
+      type: 'inner'
+    , on: {'id': '$orders.restaurant_id$'}
     }
 
-    Model.find.call(this, query, callback);
+    Model.find.call(this, query, function(err, orders) {
+      if (!err) {
+        utils.each(orders, function(order) {
+          order.attributes.restaurant = {
+            id: order.attributes.restaurant_id,
+            name: order.attributes.name
+          };
+          delete order.attributes.name;
+        });
+      }
+      callback.call(this, err, orders);
+    });
   }
 });

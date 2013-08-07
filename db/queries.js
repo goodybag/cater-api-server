@@ -65,5 +65,13 @@ module.exports = {
     },
     update: utils.partial(upsert, 'items'),
     del: utils.partial(del, 'items')
+  },
+
+  user: {
+    list: utils.partial(find, 'users'),
+    get: utils.partial(fineOne, 'users'),
+    create: utils.partial(upcert, 'users'),
+    update: utils.partial(upcert, 'users'),
+    del: utils.partial(del, 'users')
   }
 };

@@ -66,6 +66,20 @@ module.exports = Model.extend({
       }
     };
 
+    query.columns.push('totals.sub_total');
+
+    query.joins.totals = {
+      type: 'left'
+    , columns: ['order_id', 'sub_total']
+    , on: {'order_id': '$orders.id$'}
+    , target: {
+        type: 'select'
+      , columns: ['order_id', 'avg(price) as sub_total']
+      , table: 'order_items'
+      , groupBy: 'order_id'
+      }
+    }
+
     Model.find.call(this, query, callback);
   }
 });

@@ -1,5 +1,6 @@
 var
   db = require('../../db')
+, queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
 ;
@@ -25,6 +26,24 @@ module.exports.get = function(req, res) {
         return res.send(html);
       });
     });
+  });
+}
+
+module.exports.create = function(req, res) {
+  var query = queries.restaurant.create(req.body);
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return res.error(errors.internal.UNKNOWN, error);
+    res.send(201, rows[0]);
+  });
+}
+
+module.exports.update = function(req, res) {
+  var query = queries.restaurant.update(req.body, req.params.rid);
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return res.error(errors.internal.UNKNOWN, error);
+    res.send(200, rows[0]);
   });
 }
 

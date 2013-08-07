@@ -2,7 +2,7 @@ var utils = require('../utils');
 
 var defaultSelect = {
   type: 'select',
-  columns: '[*]',
+  columns: ['*'],
   limit: '100',
   offset: '0'
 }

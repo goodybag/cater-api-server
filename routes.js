@@ -36,7 +36,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid/items', controllers.restaurants.listItems);  // not currently used
 
-  app.all('/restaurants/:rid/:items', function(req, res, next) {
+  app.all('/restaurants/:rid/items', function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);
   });

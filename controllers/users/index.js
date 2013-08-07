@@ -1,15 +1,14 @@
 var db = require('../../db');
-var queryies = require('../../db/queries');
+var queries = require('../../db/queries');
 var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
 
 
 module.exports.list = function(req, res) {
-  var inputs = utils.pick(JSON.parse(req.query), ['columns', 'limit', 'offset']) || {};
-  var query = queries.user.list(inputs.columns, inputs.limit, inputs.offset);
-
+  var query = queries.user.list(req.query.columns, req.query.limit, req.query.offset);
   var sql = db.builder.sql(query);
+
   db.query(sql.query, sql.values, function(error, results){
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.send(results);
@@ -17,13 +16,13 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.get = function(req, res) {
-  var inputs = JSON.parse(req.query) || {};
-  var query = queries.user.get(inputs.columns);
-
+  var query = queries.user.get(req.params.uid, req.query.columns);
   var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, function(error, results){
+
+  db.query(sql.query, sql.values, function(error, rows, results){
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    return res.send(results);
+    if (!rows || !rows[0]) return res.send(404);
+    return res.json(200, rows[0]);
   });
 }
 

@@ -15,3 +15,39 @@ module.exports.get = function(req, res, next) {
     res.send(result ? result.toJSON() : 404);
   });
 }
+
+module.exports.add = function(req, res, next) {
+  models.Item.findOne(parseInt(req.body.item), function(err, item) {
+    if (!item) return res.send(404);
+    var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes']));
+    utils.extend(attrs, {item_id: attrs.id, order_id: req.params.oid});
+    var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
+    orderItem.save(function(err, rows, result) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      orderItem.attributes = utils.clone(rows[0]);
+      res.send(201, orderItem.toJSON());
+    });
+  });
+}
+
+module.exports.update = function(req, res, next) {
+  var update = new models.OrderItem(utils.extend({id: req.params.iid}, req.body));
+  update.save(function(err, rows, result) {
+    if (err) {
+      if (err.code === 403 || err.code === 404) return res.send(err.code, err.message);
+      return res.error(errors.internal.DB_FAILURE, err);
+    }
+    res.send(orderItem.toJSON());
+  });
+}
+
+module.exports.remove = function(req, res, next) {
+  var item = new models.OrderItem({id: req.params.iid});
+  item.destroy(function(err, rows, result) {
+    if (err) {
+      if (err.code === 403 || err.code === 404) return res.send(err.code, err.message);
+      return res.error(errors.internal.DB_FAILURE, err);
+    }
+    res.send(200);
+  });
+}

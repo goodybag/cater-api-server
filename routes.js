@@ -16,6 +16,15 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.listItems);
 
+  app.get('/restaurants/:rid/orders', controllers.restaurants.orders.list);
+
+  app.post('/restaurants/:rid/orders', controllers.restaurants.orders.create);
+
+  app.all('/restaurants/:rid/orders', function(req, res, next) {
+    res.set('Allow', 'GET, POST');
+    res.send(405);
+  });
+
   app.get('/items', controllers.items.list);
 
   app.get('/items/:id', controllers.items.get);
@@ -24,12 +33,44 @@ module.exports.register = function(app) {
 
   app.get('/orders/:id', controllers.orders.get);
 
+  app.put('/orders/:id', controllers.orders.update);
+
+  app.del('/orders/:id', function(req, res, next) {
+    req.body = {status: 'canceled'};
+    next();
+  }, controllers.orders.changeStatus);
+
+  app.get('/orders/:oid/status-history', controllers.orders.listStatus); // latest is on order
+
+  app.post('/orders/:oid/status-history', controllers.orders.changeStatus);
+
+  app.all('/orders/:id/status-history', function(req, res, next) {
+    res.set('Allow', 'GET, POST');
+    res.send(405);
+  });
+
   app.get('/orders/:oid/items', controllers.orders.orderItems.list);
+
+  app.post('/orders/:oid/items', controllers.orders.orderItems.add);
+
+  app.all('/orders/:oid/items', function(req, res, next) {
+    res.set('Allow', 'GET, POST');
+    res.send(405);
+  });
 
   app.get('/orders/:oid/items/:iid', controllers.orders.orderItems.get);
 
+  app.put('/orders/:oid/items/:iid', controllers.orders.orderItems.update);
+
+  app.del('/orders/:oid/items/:iid', controllers.orders.orderItems.remove);
+
+  app.all('/orders/:oid/items/:iid', function(req, res, next) {
+    res.set('Allow', 'GET, PUT, PATCH, DELETE');  // TODO: PATCH
+    res.send(405);
+  });
+
   app.get('/auth', controllers.auth.index);
-  app.get('/auth/logout', controllers.auth.logout);
+  app.get('/auth/logout', controllers.session.del);
 
   app.post('/session', controllers.session.create);
   app.del('/session', controllers.session.del)

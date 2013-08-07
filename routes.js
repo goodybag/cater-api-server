@@ -36,7 +36,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid/items', controllers.restaurants.listItems);  // not currently used
 
-  app.all('/restaurants/:rid/:items', function(req, res, next) {
+  app.all('/restaurants/:rid/items', function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);
   });
@@ -188,17 +188,77 @@ module.exports.register = function(app) {
   app.del('/orders/:oid/items/:iid', controllers.orders.orderItems.remove);
 
   app.all('/orders/:oid/items/:iid', function(req, res, next) {
-    res.set('Allow', 'GET, PUT, PATCH, DELETE');  // TODO: PATCH
+    res.set('Allow', 'GET, PUT, DELETE');  // TODO: PATCH
     res.send(405);
   });
 
+  /**
+   *  Auth page resource.  Simple static login/register page.
+   *  Also includes /logout route as a convienence so people can logout by loading a url.
+   */
+
   app.get('/auth', controllers.auth.index);
-  app.get('/auth/logout', controllers.session.del);
+
+  app.all('/auth', function(req, res, next) {
+    res.set('Allow', 'GET');
+    res.send(405);
+  });
+
+  app.all('/auth/logout', controllers.session.del);
+
+  /**
+   *  Session resource.  Create and delete session to log in / out.
+   */
+
+  app.get('/session', controllers.session.get);
 
   app.post('/session', controllers.session.create);
+
   app.del('/session', controllers.session.del)
 
+  app.all('/session', function(req, res, next) {
+    res.set('Allow', 'GET, POST, DELETE');
+    res.send(405);
+  });
+
+  /**
+   *  Users resource.  All the users.
+   */
+
+  app.get('/users', controllers.users.list);
+
   app.post('/users', controllers.users.create);
+
+  app.all('/users', function(req, res, next) {
+    res.set('Allow', 'GET, POST');
+    res.send(405);
+  });
+
+  /**
+   *  Individual user resource.
+   */
+
+  app.get('/users/:uid', controllers.users.get);
+
+  app.put('/users/:uid', controllers.users.update);
+
+  app.del('/users/:uid', function(req, res) { res.send(501); });
+
+  app.all('/users/:uid', function(req, res, next) {
+    res.set('Allow', 'GET, PUT, DELETE');
+    res.send(405);
+  });
+
+  /**
+   *  User Orders resource.  All the orders placed by an individual user.
+   */
+
+  app.get('/users/:uid/orders', controllers.users.listOrders);
+
+  app.all('/users/:uid', function(req, res, next) {
+    res.set('Allow', 'GET');
+    res.send(405);
+  });
 
   app.get('/*', function(req, res) {
     file.serve(req, res);

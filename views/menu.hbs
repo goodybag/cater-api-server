@@ -64,11 +64,12 @@
     initialize: function(options) {
       this.template = templates.itemModal;
       this.render();
-    },
-    render: function() {
-      console.log(this.options.item);
-      $(".modals").append(this.template(this.options.item));
-     }
+    }
+  , render: function() {
+      this.$el = $(this.template(this.options.item));
+      $(".modals").append(this.$el);
+      this.$el.modal('show');
+    }
   })
 
   $(function() {
@@ -82,7 +83,6 @@
 
       var item = restaurant.categories[categoryIndex].items[itemIndex];
       var itemModalView = new ItemModalView({item: item});
-      itemModalView.$el.modal();
     });
   });
 </script>

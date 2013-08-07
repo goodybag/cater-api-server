@@ -1,23 +1,14 @@
 var
   db = require('../../db')
+, queries = require('../../queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
 ;
 
 module.exports.create = function(req, res) {
-  var data = {
-    error: null
-  , email: req.body.email
-  }
-
   var tasks = {
     comparePassword: function(callback) {
-      var query = {
-        type: 'select'
-      , table: 'users'
-      , columns: ['id', 'email', 'password']
-      , where: {email: req.body.email.toLowerCase()}
-      }
+      var query = queries.user.get({email: req.body.email.toLowerCase()})
 
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results) {

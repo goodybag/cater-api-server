@@ -2,6 +2,7 @@ var db = require('../../db');
 var queryies = require('../../db/queries');
 var errors = require('../../errors');
 var utils = require('../../utils');
+var models = require('../../models');
 
 
 module.exports.list = function(req, res) {
@@ -75,5 +76,12 @@ module.exports.del = function(req, res) {
   db.query(sql.query, sql.values, function(error, results){
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     return res.noContent();
+  });
+}
+
+module.exports.listOrders = function(req, res) {
+  models.Order.find({where: {user_id: req.session.user.id}}, function(err, orders) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    res.json(200, orders);
   });
 }

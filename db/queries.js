@@ -7,6 +7,21 @@ var defaultSelect = {
   offset: '0'
 }
 
+var find = function(table, columns, limit, offset) {
+  return utils.defaults({
+    table: table,
+    columns: columns,
+    limit: limit,
+    offset: offset
+  }, defaultSelect);
+}
+
+var findOne = function(table, id, columns) {
+  var query = find(table, columns, 1, 0);
+  query.where = {id: id};
+  return query;
+}
+
 var upsert = function(table, values, id) {
   var query = {
     type: id ? 'update' : 'insert',

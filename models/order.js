@@ -13,6 +13,20 @@ module.exports = Model.extend({
         callback(null, results);
       });
   },
+  save: function(callback) {
+    var insert = this.attributes.id == null;
+    var order = this
+    Model.prototype.save.call(this, function(err) {
+      if (!err && insert) {
+        var OrderStatus = require('./order-status');
+        var status = new OrderStatus({order_id: order.attributes.id});
+        status.save(callback);
+      } else
+        callback.apply(this, arguments);
+    });
+  }
+}, {
+  table: 'orders',
 
   find: function(query, callback) {
     // TODO: alter query to add latest status
@@ -27,7 +41,7 @@ module.exports = Model.extend({
       type: 'left'
     , columns: ['order_id', 'status']
     , on: {
-        'orderId': '$orders.id$'
+        'order_id': '$orders.id$'
       }
     , target: {
         type: 'select'
@@ -52,6 +66,6 @@ module.exports = Model.extend({
       }
     };
 
-    Model.prototype.find.apply(this, arguments);
+    Model.find.call(this, query, callback);
   }
-}, {table: 'orders'});
+});

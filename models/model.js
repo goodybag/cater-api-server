@@ -99,12 +99,14 @@ Model.find = function(query, callback) {
   utils.defaults(query, this.defaultFindQuery, {table: this.table});
   query.type = 'select';
 
-  var cols = utils.keys(this.schema);
-  query.columns  = utils.intersection(query.columns, cols.concat('*'));
-  if (query.where) query.where = utils.pick(query.where, cols);
+  // var cols = utils.keys(this.schema);
+  // query.columns  = utils.intersection(query.columns, cols.concat('*'));
+  // if (query.where) query.where = utils.pick(query.where, cols);
 
   var sql = db.builder.sql(query);
   var self = this
+
+  console.log('statement:', sql.query.toString(), '| values:', sql.values);
 
   db.query(sql.query, sql.values, function(err, rows, result){
     if (err) return callback(err);

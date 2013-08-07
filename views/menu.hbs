@@ -4,15 +4,15 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-lg-8">
-    <h2>Menu</h2>
+  <div class="col-lg-8 panel">
+    <h2 class="panel-heading">Menu</h2>
     {{#each restaurant.categories}}
       <h3>{{name}}</h3>
-      <div class="list-group">
+      <div class="list-group list-group-flush category" data-id="{{id}}" data-index="{{@index}}">
       {{#each items}}
-        <a class="list-group-item">
+        <a class="list-group-item item" data-id="{{id}}" data-index="{{@index}}">
           <div>
-            <div><h4 class="list-group-item-heading">{{name}}</h4> <i class="list-group-item-text pull-right">feeds {{feeds_min}}-{{feeds_max}} &nbsp;   &nbsp; price {{dollars price}}</i></div>
+            <div><strong class="list-group-item-heading">{{name}}</strong> <i class="list-group-item-text pull-right">feeds {{feeds_min}}-{{feeds_max}} &nbsp;   &nbsp; price {{dollars price}}</i></div>
             <div class="list-group-item-text">{{description}}</div>
           </div>
         </a>
@@ -20,7 +20,70 @@
       </div>
     {{/each}}
   </div>
-  <div class="col-lg-4">
-    <h2>Orders</h2>
+  <div class="col-lg-4 panel">
+    <h2 class="panel-heading">Orders</h2>
+    <div class="list-group list-group-flush order-items">
+    </div>
   </div>
 </div>
+<div class="modals">
+</div>
+
+{{#extend "views"}}
+<script id="hbs-item-modal" type="text/x-handlebars-template">
+<div class="modal item-modal" data-show="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">\{{name}}</h4>
+      </div>
+      <div class="modal-body">
+        quantity: <input type="text" name="quantity" value="\{{quantity}}" />
+        <em>\{{description}}</em>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  var templates = {};
+  templates.itemModal = Handlebars.compile($("#hbs-item-modal").html());
+
+
+  var restaurant = {{{json restaurant}}};
+
+  var ItemModalView = Backbone.View.extend({
+    initialize: function(options) {
+      this.template = templates.itemModal;
+      this.render();
+    },
+    render: function() {
+      console.log(this.options.item);
+      $(".modals").append(this.template(this.options.item));
+     }
+  })
+
+  $(function() {
+    $(".item").click(function() {
+      var $this = $(this);
+      var categoryId = $this.parent(".category").data("id");
+      var categoryIndex = $this.parent(".category").data("index");
+
+      var itemId = $this.data("id");
+      var itemIndex = $this.data("index");
+
+      var item = restaurant.categories[categoryIndex].items[itemIndex];
+      var itemModalView = new ItemModalView({item: item});
+      itemModalView.$el.modal();
+    });
+  });
+</script>
+{{/extend}}

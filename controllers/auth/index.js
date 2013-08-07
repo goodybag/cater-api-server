@@ -14,8 +14,3 @@ module.exports.index = function(req, res) {
     return res.send(html);
   });
 }
-
-module.exports.logout = function(req, res) {
-  req.session = null;
-  return res.redirect(req.query.next || '/');
-}

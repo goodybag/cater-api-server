@@ -3,5 +3,6 @@ module.exports = {
   Item: require('./item'),
   Order: require('./order'),
   OrderItem: require('./order-item'),
+  OrderStatus: require('./order-status'),
   Category: require('./category')
 }

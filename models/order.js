@@ -24,6 +24,11 @@ module.exports = Model.extend({
       } else
         callback.apply(this, arguments);
     });
+  },
+  toJSON: function() {
+    var obj = Model.prototype.toJSON.apply(this, arguments);
+    if (this.items) obj.items = utils.invoke(this.items, 'toJSON');
+    return obj;
   }
 }, {
   table: 'orders',

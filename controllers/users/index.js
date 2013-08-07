@@ -5,7 +5,7 @@ var utils = require('../../utils');
 
 
 module.exports.list = function(req, res) {
-  var inputs = utils.pick(JSON.parse(req.query), ['columns', 'limit', 'offset']);
+  var inputs = utils.pick(JSON.parse(req.query), ['columns', 'limit', 'offset']) || {};
   var query = queries.user.list(inputs.columns, inputs.limit, inputs.offset);
 
   var sql = db.builder.sql(query);
@@ -15,22 +15,27 @@ module.exports.list = function(req, res) {
   });
 }
 
+module.exports.get = function(req, res) {
+  var inputs = JSON.parse(req.query) || {};
+  var query = queries.user.get(inputs.columns);
+
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, function(error, results){
+    if (error) return res.error(errors.internal.DB_FAILURE, error);
+    return res.send(results);
+  });
+}
+
 module.exports.create = function(req, res) {
   var flow = {
     encrypt: function(callback) {
       utils.encryptPassword(req.body.password, function(error, hash, salt) {
-        if (error) res.send(errors.internal.UNKNOWN, error);
+        if (error) res.error(errors.internal.UNKNOWN, error);
         return callback(error, hash);
       });
     }
   , create: function(hash, callback) {
-      var query queries.user.create({
-        first_name: req.body.first_name
-      , last_name: req.body.last_name
-      , email: req.body.email.toLowerCase()
-      , password: hash
-      , organization: req.body.organization
-      });
+      var query queries.user.create(utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash}));
 
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results){
@@ -45,14 +50,20 @@ module.exports.create = function(req, res) {
   utils.async.waterfall([flow.encrypt, flow.create]);
 }
 
-module.exports.get = function(req, res) {
-  var inputs = JSON.parse(req.query);
-  var query = queries.user.get(inputs.columns);
-
-  var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, function(error, results){
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    return res.send(results);
+module.exports.update = function(req, res) {
+  // TODO: require auth header with old password for password update
+  var update = function() {
+    var query = queries.user.update(req.body, req.params.uid);
+    var sql = db.builder.sql(query);
+    db.query(sql.query, sql.values, function(err, rows, result) {
+      if (err) return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
+      res.json(200, rows[0]);
+    });
+  }
+  req.body.password == null ? update() : utils.encryptPassword(req.body.password, function(err, hash, salt) {
+    if (err) return res.error(errors.internal.UNKNOWN, err);
+    req.body.password = hash;
+    update();
   });
 }
 

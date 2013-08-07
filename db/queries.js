@@ -16,9 +16,9 @@ var find = function(table, columns, limit, offset) {
   }, defaultSelect);
 }
 
-var findOne = function(table, id, columns) {
+var findOne = function(table, where, columns) {
   var query = find(table, columns, 1, 0);
-  query.where = {id: id};
+  query.where = utils.isObject(where) ? where : {id: where};
   return query;
 }
 

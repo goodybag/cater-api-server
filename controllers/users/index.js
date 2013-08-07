@@ -36,7 +36,7 @@ module.exports.create = function(req, res) {
       });
     }
   , create: function(hash, callback) {
-      var query queries.user.create(utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash}));
+      var query = queries.user.create(utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash}));
 
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results){

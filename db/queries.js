@@ -69,9 +69,9 @@ module.exports = {
 
   user: {
     list: utils.partial(find, 'users'),
-    get: utils.partial(fineOne, 'users'),
-    create: utils.partial(upcert, 'users'),
-    update: utils.partial(upcert, 'users'),
+    get: utils.partial(findOne, 'users'),
+    create: utils.partial(upsert, 'users'),
+    update: utils.partial(upsert, 'users'),
     del: utils.partial(del, 'users')
   }
 };

@@ -1,6 +1,6 @@
 var
   db = require('../../db')
-, queries = require('../../queries')
+, queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
 ;

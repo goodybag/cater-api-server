@@ -27,7 +27,7 @@ module.exports = Model.extend({
   },
   toJSON: function() {
     var obj = Model.prototype.toJSON.apply(this, arguments);
-    if (this.items) obj.items = utils.invoke(this.items, 'toJSON');
+    if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     return obj;
   }
 }, {

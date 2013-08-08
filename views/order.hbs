@@ -1,0 +1,49 @@
+<div class="row">
+  <h1 class="text-center">Order</h1>
+</div>
+
+<div class="row order-info">
+  <div class="row">
+    {{order.restaurant.name}}
+    <span class="label status {{statusLabel order.status}}">{{order.status}}</span>
+    <span class="badge">{{#if order.subtotal}}${{dollars order.subTotal}}{{/if}}</span>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="row">
+        <p>Date: {{order.created_at}}</p>
+        <p>Delivery Date: {{order.datetime}}</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          {{{address order}}}
+        </div>
+        <div class="col-lg-6">
+          {{order.phone}}
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <h4 class="text-center">Notes</h4>
+      <p class="text-center">{{order.notes}}</p>
+    </div>
+  </div>
+</div>
+
+<ul class="row order-items list-group">
+  {{#each order.orderItems}}
+  <li class="list-group-item row">
+    <div class="col-lg-5">
+      <h4 class="list-group-item-heading">{{this.name}}</h4>
+      <p>{{this.description}}</p>
+      x {{this.quantity}}
+    </div>
+    <div class="col-lg-5">
+      <p>{{this.notes}}</p>
+    </div>
+    <span class="badge">{{#if this.price}}${{dollars this.price}}{{/if}}</span>
+  </li>
+  {{else}}
+  <h2 class="text-center">No Items</h2>
+  {{/each}}
+</ul>

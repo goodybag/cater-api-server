@@ -46,12 +46,14 @@
     <div class="col-lg-5">
       <textarea {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
     </div>
-    <span class="badge">{{#if this.price}}${{dollars this.price}}{{/if}}</span>
+    <span class="badge">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
   </li>
   {{else}}
   <h2 class="text-center">No Items</h2>
   {{/each}}
 </ul>
+
+
 
 {{#if restaurantReview}}
 <div class="row">

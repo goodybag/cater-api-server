@@ -26,5 +26,10 @@ module.exports = Model.extend({
       if (!mutable) return callback({code: 403, message: "can't remove items from non-pending orders"});
       Model.prototype.destroy.apply(this, arguments);
     });
+  },
+  toJSON: function() {
+    var obj = Model.prototype.toJSON.apply(this, arguments);
+    obj.sub_total = this.attributes.price * this.attributes.quantity;
+    return obj;
   }
 }, {table: 'order_items'});

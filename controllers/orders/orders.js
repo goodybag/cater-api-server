@@ -20,7 +20,8 @@ module.exports.get = function(req, res) {
     if (!order) return res.send(404);
     order.getOrderItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      res.render('order', {order: order.toJSON()}, function(err, html) {
+      var review = order.attributes.status === 'submitted'; // TODO: And user is order restaurant.
+      res.render('order', {order: order.toJSON(), restaurantReview: review}, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
       });

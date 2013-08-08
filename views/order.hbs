@@ -51,3 +51,14 @@
   <h2 class="text-center">No Items</h2>
   {{/each}}
 </ul>
+
+{{#if restaurantReview}}
+<div class="row">
+  <div class="col-lg-6">
+    <button class="btn btn-lg btn-danger">Reject</button>
+  </div>
+  <div class="col-lg-6">
+    <button class="btn btn-lg btn-success">Accept</button>
+  </div>
+</div>
+{{/if}}

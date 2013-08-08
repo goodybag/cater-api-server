@@ -56,7 +56,10 @@
   <p class="text-right">subtotal: ${{dollars order.sub_total}}</p>
   <p class="text-right">tax: ${{tax order.sub_total}}</p>
   <p class="text-right">total: ${{total order.sub_total}}</p>
-  {{#if order.editable}}<button class="btn btn-lg btn-primary pull-right">Submit</button>{{/if}}
+  <div class="btn-toolbar pull-right">
+    {{#if order.cancelable}}<button class="btn btn-lg btn-danger">Cancel</button>{{/if}}
+    {{#if order.editable}}<button class="btn btn-lg btn-primary">Submit</button>{{/if}}
+  </div>
 </div>
 
 {{#if restaurantReview}}

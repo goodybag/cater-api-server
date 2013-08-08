@@ -28,6 +28,8 @@ module.exports = Model.extend({
   toJSON: function() {
     var obj = Model.prototype.toJSON.apply(this, arguments);
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
+    obj.editable = this.attributes.status === 'pending';
+    obj.submitted = this.attributes.status === 'submitted';
     return obj;
   }
 }, {

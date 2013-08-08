@@ -6,7 +6,7 @@
   <div class="row">
     {{order.restaurant.name}}
     <span class="label status {{statusLabel order.status}}">{{order.status}}</span>
-    <span class="badge">{{#if order.subtotal}}${{dollars order.subTotal}}{{/if}}</span>
+    <span class="badge">{{#if order.sub_total}}${{dollars order.sub_total}}{{/if}}</span>
   </div>
   <div class="row">
     <div class="col-lg-6">
@@ -25,10 +25,11 @@
     </div>
     <div class="col-lg-6">
       <h4 class="text-center">Notes</h4>
-      <p class="text-center">{{order.notes}}</p>
+      <textarea {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
     </div>
   </div>
 </div>
+
 
 <ul class="row order-items list-group">
   {{#each order.orderItems}}
@@ -36,10 +37,10 @@
     <div class="col-lg-5">
       <h4 class="list-group-item-heading">{{this.name}}</h4>
       <p>{{this.description}}</p>
-      x {{this.quantity}}
+      x <input type="number" min="1" value="{{this.quantity}}" {{#unless ../order.editable}}disabled{{/unless}}>
     </div>
     <div class="col-lg-5">
-      <p>{{this.notes}}</p>
+      <textarea {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
     </div>
     <span class="badge">{{#if this.price}}${{dollars this.price}}{{/if}}</span>
   </li>

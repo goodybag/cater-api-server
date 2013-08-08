@@ -20,3 +20,25 @@ module.exports.create = function(req, res) {
     res.send(201, order.toJSON());
   });
 }
+
+module.exports.current = function(req, res, next) {
+  if (!req.session.user) return res.send(404);
+  var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, status: 'pending'};
+  models.Order.findOne(where, function(err, order) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    var done = function(order) {
+      req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.attributes.id);
+      next();
+    }
+
+    if (!order) {
+      order = new models.Order({user_id: req.session.user.id, restaurant_id: req.params.rid});
+      order.save(function(err) {
+        if (err) return res.error(errors.internal.DB_FAILURE, err);
+        done(order);
+      });
+    }
+    else
+      done(order);
+  });
+};

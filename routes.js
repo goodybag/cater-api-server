@@ -235,8 +235,13 @@ module.exports.register = function(app) {
   });
 
   /**
-   *  Individual user resource.
+   *  Current user resource.
    */
+
+  app.all ('/users/me*', function(req, res, next) {
+    req.url = req.url.replace(/^\/users\/me/, '/users/' + req.session.user.id);
+    next();
+  });
 
   app.get('/users/:uid', controllers.users.get);
 

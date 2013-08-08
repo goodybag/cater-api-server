@@ -40,7 +40,8 @@
     <div class="col-lg-5">
       <h4 class="list-group-item-heading">{{this.name}}</h4>
       <p>{{this.description}}</p>
-      x <input type="number" min="1" value="{{this.quantity}}" {{#unless ../order.editable}}disabled{{/unless}}>
+      <p>x <input type="number" min="1" value="{{this.quantity}}" {{#unless ../order.editable}}disabled{{/unless}}></p>
+      <a href="javascript:void(0)">delete</a>
     </div>
     <div class="col-lg-5">
       <textarea {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>

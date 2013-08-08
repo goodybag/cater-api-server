@@ -84,5 +84,8 @@ hbs.registerHelper('json', function(context) {
   return JSON.stringify(context);
 });
 
+hbs.registerHelper('or', function(value1, value2) {
+  return value1 || value2;
+});
 
 routes.register(app);

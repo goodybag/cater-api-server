@@ -26,26 +26,22 @@
     </div>
   </div>
 </div>
-<div class="modals">
-</div>
 
 {{#extend "views"}}
-<script id="hbs-item-modal" type="text/x-handlebars-template">
-<div class="modal item-modal" data-show="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">\{{name}}</h4>
-      </div>
-      <div class="modal-body">
-        quantity: <input type="text" name="quantity" value="\{{quantity}}" />
-        <em>\{{description}}</em>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+<script id="hbs-item-modal-dialog" type="text/x-handlebars-template">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close destroy" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">\{{name}} &dash; $\{{dollars price}} (feeds \{{feeds_min}} - \{{feeds_max}})</h4>
+    </div>
+    <div class="modal-body">
+      <em>\{{description}}</em>
+    </div>
+    <div class="modal-footer">
+      <span class="pull-left"> quantity: <input type="text" name="quantity" value="\{{or quantity 1}}" maxlength="4" size="4" /></span>
+      <button type="button" class="btn btn-default destroy" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary">Add to order</button>
     </div>
   </div>
 </div>
@@ -54,35 +50,63 @@
 
 {{#extend "scripts"}}
 <script>
-  var templates = {};
-  templates.itemModal = Handlebars.compile($("#hbs-item-modal").html());
+  //helpers
+  Handlebars.registerHelper('or', function(value1, value2) {
+    return value1 || value2;
+  });
 
+  Handlebars.registerHelper('dollars', function(pennies, options) {
+    if (typeof(pennies) === 'string') pennies = options.contexts[0].get(pennies);
+    return (pennies / 100).toFixed(2);
+  });
+
+  var templates = {};
+  var views = {};
+  var models = {};
+  var collections = {};
 
   var restaurant = {{{json restaurant}}};
 
-  var ItemModalView = Backbone.View.extend({
-    initialize: function(options) {
-      this.template = templates.itemModal;
+  templates.itemModalDialog = Handlebars.compile($("#hbs-item-modal-dialog").html());
+
+  views.ItemModal = Backbone.View.extend({
+    tag: "div"
+  , className: 'modal fade'
+  , template: templates.itemModalDialog
+  , events: {
+      'click .destroy': 'teardown'
+    }
+  , initialize: function(options) {
       this.render();
     }
   , render: function() {
-      this.$el = $(this.template(this.options.item));
-      $(".modals").append(this.$el);
+      this.$el.html(this.template(this.options.item));
+      return this;
+    }
+  , show: function() {
       this.$el.modal('show');
     }
+  , teardown: function() {
+      this.remove();
+    }
+  });
+
+  $.getJSON('/restaurant/{{restaurant.id}}/order/current/items', function(data){
+    var items = [];
   })
 
   $(function() {
-    $(".item").click(function() {
+    $('.item').click(function() {
       var $this = $(this);
-      var categoryId = $this.parent(".category").data("id");
-      var categoryIndex = $this.parent(".category").data("index");
+      var categoryId = $this.parent('.category').data('id');
+      var categoryIndex = $this.parent('.category').data('index');
 
-      var itemId = $this.data("id");
-      var itemIndex = $this.data("index");
+      var itemId = $this.data('id');
+      var itemIndex = $this.data('index');
 
       var item = restaurant.categories[categoryIndex].items[itemIndex];
-      var itemModalView = new ItemModalView({item: item});
+      var itemModalView = new views.ItemModal({item: item});
+      itemModalView.show();
     });
   });
 </script>

@@ -5,8 +5,7 @@
 <div class="row order-info">
   <div class="row">
     {{order.restaurant.name}}
-    <span class="label status {{statusLabel order.status}}">{{order.status}}</span>
-    <span class="badge">{{#if order.sub_total}}${{dollars order.sub_total}}{{/if}}</span>
+    <span class="label status {{statusLabel order.status}} pull-right">{{order.status}}</span>
   </div>
   <div class="row">
     <div class="col-lg-6">
@@ -53,7 +52,12 @@
   {{/each}}
 </ul>
 
-
+<div class="row">
+  <p class="text-right">subtotal: ${{dollars order.sub_total}}</p>
+  <p class="text-right">tax: ${{tax order.sub_total}}</p>
+  <p class="text-right">total: ${{total order.sub_total}}</p>
+  {{#if order.editable}}<button class="btn btn-lg btn-primary pull-right">Submit</button>{{/if}}
+</div>
 
 {{#if restaurantReview}}
 <div class="row">

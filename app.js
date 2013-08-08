@@ -17,7 +17,6 @@ var middleware = {
 };
 
 hbs.registerHelper('dollars', function(pennies, options) {
-  if (typeof(pennies) === 'string') { pennies = options.contexts[0].get(pennies); }
   return (pennies / 100).toFixed(2);
 });
 

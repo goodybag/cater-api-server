@@ -243,6 +243,13 @@ module.exports.register = function(app) {
     next();
   });
 
+  app.all('/users/:uid/*', function(req, res, next) {
+    if (''+req.params.uid !== ''+req.session.user.id)
+      res.send(404);
+    else
+      next();
+  });
+
   app.get('/users/:uid', controllers.users.get);
 
   app.put('/users/:uid', controllers.users.update);

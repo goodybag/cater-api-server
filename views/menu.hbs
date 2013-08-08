@@ -67,6 +67,10 @@
 
   var restaurant = {{{json restaurant}}};
 
+  models.OrderItem = Backbone.Model.extend({
+
+  });
+
   templates.itemModalDialog = Handlebars.compile($("#hbs-item-modal-dialog").html());
 
   views.ItemModal = Backbone.View.extend({
@@ -92,7 +96,7 @@
   });
 
   $.getJSON('/restaurant/{{restaurant.id}}/order/current/items', function(data){
-    var items = [];
+
   })
 
   $(function() {

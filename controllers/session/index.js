@@ -32,7 +32,7 @@ module.exports.create = function(req, res) {
       });
     }
   , redirect: function(callback) {
-      res.redirect(req.query.next || '/');
+      res.redirect(req.query.next || '/restaurants');
       return callback();
     }
   }
@@ -42,5 +42,5 @@ module.exports.create = function(req, res) {
 
 module.exports.del = function(req, res) {
   req.session = null;
-  return res.redirect(req.query.next || '/');
+  return res.redirect(req.query.next || '/restaurants');
 }

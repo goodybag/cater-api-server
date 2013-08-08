@@ -80,7 +80,7 @@ module.exports = Model.extend({
     , on: {'order_id': '$orders.id$'}
     , target: {
         type: 'select'
-      , columns: ['order_id', 'sum(price) as sub_total']
+      , columns: ['order_id', 'sum(price * quantity) as sub_total']
       , table: 'order_items'
       , groupBy: 'order_id'
       }

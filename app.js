@@ -75,8 +75,7 @@ hbs.registerHelper('block', function(name) {
   return val;
 });
 
-hbs.registerHelper('dollars', function(pennies, options) {
-  if (typeof(pennies) === 'string') { pennies = options.contexts[0].get(pennies); }
+hbs.registerHelper('dollars', function(pennies) {
   return (pennies / 100).toFixed(2);
 });
 

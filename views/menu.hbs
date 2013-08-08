@@ -67,9 +67,10 @@
 
   var restaurant = {{{json restaurant}}};
 
-  models.OrderItem = Backbone.Model.extend({
+  collections.OrderItems = Backbone.Collections.extend({url:'/restaurants/{{restaurant.id}}/orders/current/items/'});
+  var orderItems = new collections.OrderItems();
 
-  });
+  models.OrderItem = Backbone.Model.extend();
 
   templates.itemModalDialog = Handlebars.compile($("#hbs-item-modal-dialog").html());
 

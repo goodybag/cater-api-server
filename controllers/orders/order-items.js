@@ -37,7 +37,7 @@ module.exports.update = function(req, res, next) {
       if (err.code === 403 || err.code === 404) return res.send(err.code, err.message);
       return res.error(errors.internal.DB_FAILURE, err);
     }
-    res.send(orderItem.toJSON());
+    res.send(update.toJSON());
   });
 }
 

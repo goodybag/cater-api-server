@@ -10,12 +10,13 @@ module.exports = Model.extend({
     });
   },
   save: function(callback) {
+    var self = this, args = arguments;
     if (!this.attributes.id) Model.prototype.save.apply(this, arguments);
     else {
       this.isMutable(function (err, mutable) {
         if (err) return callback(err);
         if (!mutable) return callback({code: 403, message: "can't update non-pending orders"});
-        Model.prototype.save.apply(this, arguments);
+        Model.prototype.save.apply(self, args);
       });
     }
   },

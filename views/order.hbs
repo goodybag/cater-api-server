@@ -26,12 +26,12 @@
       <div class="row">
         <h4 class="text-center col-lg-10">Notes</h4>
       </div>
-      <form class="form-inline row">
+      <form class="form-inline row order-form">
         <div class="col-lg-10">
           <textarea class="form-control order-notes" {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
         </div>
         <div class="col-lg-2">
-          <button type="submit" class="btn btn-lg btn-success hide">Save</button>
+          <button type="submit" class="btn btn-lg btn-success hide order-save-btn">Save</button>
         </div>
       </form>
     </div>
@@ -89,3 +89,16 @@
   </div>
 </div>
 {{/if}}
+
+{{#extend "scripts"}}
+<script src="/js/models/order-item.js"></script>
+<script src="/js/models/order.js"></script>
+<script>
+  var order = new Order({{{json order}}});
+</script>
+<script>
+  $('.order-notes').keyup(function(e) {
+    $('.order-save-btn').removeClass('hide');
+  });
+</script>
+{{/extend}}

@@ -13,6 +13,7 @@
     <!-- Moar Convenient CSS Stuff -->
     <link href="/css/kit.css" rel="stylesheet">
 
+    {{{block "css"}}}
   </head>
   <body>
     <header id="header" class="navbar">
@@ -31,7 +32,12 @@
       {{{body}}}
     </div>
 
-    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="//code.jquery.com/jquery.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    {{{block "views"}}}
+    {{{block "scripts"}}}
   </body>
 </html>

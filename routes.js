@@ -235,8 +235,20 @@ module.exports.register = function(app) {
   });
 
   /**
-   *  Individual user resource.
+   *  Current user resource.
    */
+
+  app.all ('/users/me*', function(req, res, next) {
+    req.url = req.url.replace(/^\/users\/me/, '/users/' + req.session.user.id);
+    next();
+  });
+
+  app.all('/users/:uid/*', function(req, res, next) {
+    if (''+req.params.uid !== ''+req.session.user.id)
+      res.send(404);
+    else
+      next();
+  });
 
   app.get('/users/:uid', controllers.users.get);
 

@@ -17,8 +17,19 @@ var middleware = {
 };
 
 hbs.registerHelper('dollars', function(pennies, options) {
-  if (typeof(pennies) === 'string') { pennies = options.contexts[0].get(pennies); }
   return (pennies / 100).toFixed(2);
+});
+
+hbs.registerHelper('statusLabel', function(status) {
+  if (!status) return 'label-default';
+  return 'label-' + {
+    canceled: 'danger',
+    pending: 'info',
+    submitted: 'info',
+    denied: 'danger',
+    accepted: 'info',
+    delivered: 'success'
+  }[status];
 });
 
 var app = module.exports = express();
@@ -28,7 +39,7 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.compress());
-  
+
   app.use(express.cookieParser('WOOT THE FUCK'));
   app.use(express.cookieSession());
 

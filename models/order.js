@@ -13,6 +13,20 @@ module.exports = Model.extend({
         callback(null, results);
       });
   },
+  save: function(callback) {
+    var insert = this.attributes.id == null;
+    var order = this
+    Model.prototype.save.call(this, function(err) {
+      if (!err && insert) {
+        var OrderStatus = require('./order-status');
+        var status = new OrderStatus({order_id: order.attributes.id});
+        status.save(callback);
+      } else
+        callback.apply(this, arguments);
+    });
+  }
+}, {
+  table: 'orders',
 
   find: function(query, callback) {
     // TODO: alter query to add latest status
@@ -27,7 +41,7 @@ module.exports = Model.extend({
       type: 'left'
     , columns: ['order_id', 'status']
     , on: {
-        'orderId': '$orders.id$'
+        'order_id': '$orders.id$'
       }
     , target: {
         type: 'select'
@@ -52,6 +66,38 @@ module.exports = Model.extend({
       }
     };
 
-    Model.prototype.find.apply(this, arguments);
+    query.columns.push('totals.sub_total');
+
+    query.joins.totals = {
+      type: 'left'
+    , columns: ['order_id', 'sub_total']
+    , on: {'order_id': '$orders.id$'}
+    , target: {
+        type: 'select'
+      , columns: ['order_id', 'sum(price * quantity) as sub_total']
+      , table: 'order_items'
+      , groupBy: 'order_id'
+      }
+    };
+
+    query.columns.push('restaurants.name');
+
+    query.joins.restaurants = {
+      type: 'inner'
+    , on: {'id': '$orders.restaurant_id$'}
+    }
+
+    Model.find.call(this, query, function(err, orders) {
+      if (!err) {
+        utils.each(orders, function(order) {
+          order.attributes.restaurant = {
+            id: order.attributes.restaurant_id,
+            name: order.attributes.name
+          };
+          delete order.attributes.name;
+        });
+      }
+      callback.call(this, err, orders);
+    });
   }
-}, {table: 'orders'});
+});

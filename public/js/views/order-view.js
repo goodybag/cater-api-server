@@ -36,9 +36,11 @@ var OrderView = Backbone.View.extend({
   },
 
   onSave: function(e) {
+    e.preventDefault();
+    var view = this;
     this.model.save('notes', $('.order-notes').val(), {
       error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
-      success: function(data, textStatus, jqXHR) { this.$el.find('.order-save-btn').addClass('hide'); }
+      success: function(data, textStatus, jqXHR) { view.$el.find('.order-save-btn').addClass('hide'); }
     });
   },
 

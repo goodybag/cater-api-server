@@ -7,7 +7,7 @@ var OrderItems = Backbone.Collection.extend({
 });
 
 var Order = Backbone.Model.extend({
-  urlBase: '/orders',
+  urlRoot: '/orders',
   initialize: function(attrs, options) {
     if (this.id) {
       this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id});

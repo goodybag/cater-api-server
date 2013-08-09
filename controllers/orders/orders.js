@@ -50,7 +50,6 @@ module.exports.listStatus = function(req, res) {
 
 module.exports.changeStatus = function(req, res) {
   var status = new models.OrderStatus({status: req.body.status, order_id: req.params.oid});
-  console.log('new status:', status);
   status.save(function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(201, status.toJSON());

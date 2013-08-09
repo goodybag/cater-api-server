@@ -7,11 +7,14 @@
     {{order.restaurant.name}}
     <span class="label status {{statusLabel order.status}} pull-right">{{order.status}}</span>
   </h3>
-  <div class="row">
+  <form class="row order-form">
     <div class="col-lg-6">
       <div class="row">
-        <p>Date: {{order.created_at}}</p>
-        <p>Delivery Date: {{order.datetime}}</p>
+        <p>Created: {{order.created_at}}</p>
+        <div class="form-group">
+          <label for="order-datetime">Delivery Date</label>
+          <input type="text" id="order-datetime" class="form-control" value="{{order.datetime}}"></diff>
+        </div>
       </div>
       <div class="row">
         <div class="col-lg-6">
@@ -26,16 +29,16 @@
       <div class="row">
         <h4 class="text-center col-lg-10">Notes</h4>
       </div>
-      <form class="form-inline row order-form">
+      <div class="row">
         <div class="col-lg-10">
           <textarea class="form-control order-notes" {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
         </div>
         <div class="col-lg-2">
           <button type="submit" class="btn btn-lg btn-success hide order-save-btn">Save</button>
         </div>
-      </form>
+      </div>
     </div>
-  </div>
+  </form>
 </div>
 
 <ul class="row order-items list-group">

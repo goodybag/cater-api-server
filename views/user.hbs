@@ -28,13 +28,13 @@
     <div class="form-group">
       <label for="input-pass1" class="col-lg-2 control-label">Password</label>
       <div class="col-lg-10">
-        <input type="text" id="input-pass1" class="form-control password">
+        <input type="password" id="input-pass1" class="form-control password">
       </div>
     </div>
     <div class="form-group">
       <label for="input-pass2" class="col-lg-2 control-label">Confirm Password</label>
       <div class="col-lg-10">
-        <input type="text" id="input-pass2" class="form-control confirm_password">
+        <input type="password" id="input-pass2" class="form-control confirm_password">
       </div>
     </div>
   </fieldset>
@@ -45,21 +45,22 @@
   <a href="/users/me/orders" class="btn btn-lg btn-default">My Orders</a>
 </div>
 
-{{!-- {{#extend "scripts"}} --}}
+{{#extend "scripts"}}
 <script>
   $('.user-settings-form').on('submit', function(e) {
     e.preventDefault();
     var fields = ['first_name', 'last_name', 'email', 'organization', 'password'];
     var data = {};
     for (var i=0, l=fields.length; i<l; i++)
-      data[fields[i]] = $('.user-settings-form .' + fields[i]).val();
-    if (data.password && data.password !== $('.user-settings-form .confirm-password').val())
+      data[fields[i]] = $('.user-settings-form .' + fields[i]).val() || undefined;
+    if (data.password && data.password !== $('.user-settings-form .confirm_password').val())
       return alert('passwords must match');
 
     $.ajax({
       url: '/users/me',
-      data: data,
-      contentType: 'application/javascript',
+      type: 'PUT',
+      data: JSON.stringify(data),
+      contentType: 'application/json',
       error: function(jqXHR, textStatus, errorThrown) {
         alert(errorThrown);
       },
@@ -69,4 +70,4 @@
     });
   });
 </script>
-{{!-- {{/extend}} --}}
+{{/extend}}

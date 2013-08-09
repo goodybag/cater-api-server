@@ -1,0 +1,67 @@
+<div class="row">
+  <h1 class="text-center">Order</h1>
+</div>
+
+<div class="row order-info">
+  <div class="row">
+    {{order.restaurant.name}}
+    <span class="label status {{statusLabel order.status}}">{{order.status}}</span>
+    <span class="badge">{{#if order.sub_total}}${{dollars order.sub_total}}{{/if}}</span>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="row">
+        <p>Date: {{order.created_at}}</p>
+        <p>Delivery Date: {{order.datetime}}</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          {{{address order}}}
+        </div>
+        <div class="col-lg-6">
+          {{order.phone}}
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <h4 class="text-center">Notes</h4>
+      <textarea {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
+    </div>
+  </div>
+  <div class="row">
+    <button type="button" class="btn btn-primary pull-right hide">Save</button>
+  </div>
+</div>
+
+
+<ul class="row order-items list-group">
+  {{#each order.orderItems}}
+  <li class="list-group-item row">
+    <div class="col-lg-5">
+      <h4 class="list-group-item-heading">{{this.name}}</h4>
+      <p>{{this.description}}</p>
+      <p>x <input type="number" min="1" value="{{this.quantity}}" {{#unless ../order.editable}}disabled{{/unless}}></p>
+      <a href="javascript:void(0)">delete</a>
+    </div>
+    <div class="col-lg-5">
+      <textarea {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
+    </div>
+    <span class="badge">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
+  </li>
+  {{else}}
+  <h2 class="text-center">No Items</h2>
+  {{/each}}
+</ul>
+
+
+
+{{#if restaurantReview}}
+<div class="row">
+  <div class="col-lg-6">
+    <button class="btn btn-lg btn-danger">Reject</button>
+  </div>
+  <div class="col-lg-6">
+    <button class="btn btn-lg btn-success">Accept</button>
+  </div>
+</div>
+{{/if}}

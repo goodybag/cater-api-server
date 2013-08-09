@@ -10,12 +10,13 @@ module.exports = Model.extend({
     });
   },
   save: function(callback) {
+    var self = this, args = arguments;
     if (!this.attributes.id) Model.prototype.save.apply(this, arguments);
     else {
       this.isMutable(function (err, mutable) {
         if (err) return callback(err);
         if (!mutable) return callback({code: 403, message: "can't update non-pending orders"});
-        Model.prototype.save.apply(this, arguments);
+        Model.prototype.save.apply(self, args);
       });
     }
   },
@@ -25,5 +26,10 @@ module.exports = Model.extend({
       if (!mutable) return callback({code: 403, message: "can't remove items from non-pending orders"});
       Model.prototype.destroy.apply(this, arguments);
     });
+  },
+  toJSON: function() {
+    var obj = Model.prototype.toJSON.apply(this, arguments);
+    obj.sub_total = this.attributes.price * this.attributes.quantity;
+    return obj;
   }
 }, {table: 'order_items'});

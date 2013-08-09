@@ -1,23 +1,25 @@
 var
   db = require('../../db')
+, queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
 ;
 
-module.exports.create = function(req, res) {
-  var data = {
-    error: null
-  , email: req.body.email
-  }
+module.exports.get = function(req, res) {
+  var query = queries.user.get(req.session.user.id);
+  var sql = db.builder.sql(query);
 
+  db.query(sql.query, sql.values, function(err, rows, results) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (!rows || !rows[0]) return res.send(404);
+    res.json(200, rows[0]);
+  });
+}
+
+module.exports.create = function(req, res) {
   var tasks = {
     comparePassword: function(callback) {
-      var query = {
-        type: 'select'
-      , table: 'users'
-      , columns: ['id', 'email', 'password']
-      , where: {email: req.body.email.toLowerCase()}
-      }
+      var query = queries.user.get({email: req.body.email.toLowerCase()})
 
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results) {

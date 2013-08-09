@@ -17,8 +17,37 @@ var middleware = {
 };
 
 hbs.registerHelper('dollars', function(pennies, options) {
-  if (typeof(pennies) === 'string') { pennies = options.contexts[0].get(pennies); }
   return (pennies / 100).toFixed(2);
+});
+
+hbs.registerHelper('tax', function(cents) {
+  return (cents * 0.000825).toFixed(2);
+});
+
+hbs.registerHelper('total', function(cents) {
+  return (cents * 0.010825).toFixed(2);
+});
+
+hbs.registerHelper('statusLabel', function(status) {
+  if (!status) return 'label-default';
+  return 'label-' + {
+    canceled: 'danger',
+    pending: 'info',
+    submitted: 'warning',
+    denied: 'danger',
+    accepted: 'warning',
+    delivered: 'success'
+  }[status];
+});
+
+// TODO: make this a partial
+hbs.registerHelper('address', function(loc) {
+  if (!loc) return '';
+  var line1 = loc.street ? loc.street : utils.joinIf([loc.street1, loc.street2], ', ');
+  // TODO: put in <abbr> tag for state
+  var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), loc.state.toUpperCase()], ', '), loc.zip], ' ');
+  return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
+                       line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
 });
 
 var app = module.exports = express();
@@ -28,7 +57,7 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.compress());
-  
+
   app.use(express.cookieParser('WOOT THE FUCK'));
   app.use(express.cookieSession());
 
@@ -58,6 +87,24 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-//app.use(require('./collections/users/server'));
+
+// handle these bars
+var blocks = {};
+hbs.registerHelper('extend', function(name, context) {
+  var block = blocks[name];
+  if (!block) {
+    block = blocks[name] = [];
+  }
+
+  block.push(context.fn(this)); // for older versions of handlebars, use block.push(context(this));
+});
+
+hbs.registerHelper('block', function(name) {
+  var val = (blocks[name] || []).join('\n');
+
+  // clear the block
+  blocks[name] = [];
+  return val;
+});
 
 routes.register(app);

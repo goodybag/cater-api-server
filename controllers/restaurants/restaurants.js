@@ -33,7 +33,7 @@ module.exports.create = function(req, res) {
   var query = queries.restaurant.create(req.body);
   var sql = db.builder.sql(query);
   db.query(sql.query, sql.values, function(err, rows, result) {
-    if (err) return res.error(errors.internal.UNKNOWN, error);
+    if (err) return res.error(errors.internal.UNKNOWN, err);
     res.send(201, rows[0]);
   });
 }

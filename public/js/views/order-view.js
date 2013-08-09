@@ -46,8 +46,8 @@ var OrderView = Backbone.View.extend({
 
   changeStatus: function(status, token) {
     $.ajax({
-      url: this.model.url + '/status-history',
-      type: post,
+      url: this.model.url() + '/status-history',
+      type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({status: status}),
       error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },

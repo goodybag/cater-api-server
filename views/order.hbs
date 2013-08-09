@@ -18,7 +18,31 @@
       </div>
       <div class="row">
         <div class="col-lg-6">
-          {{{address order}}}
+          <div class="row">
+            <h5 class="col-lg-9">Address</h5>
+            <button type="button" class="btn btn-default btn-sm edit-address-btn pull-right">Edit</button>
+          </div>
+          <div class="row">
+            <div class="well order-address">{{{address order}}}</div>
+            <div class="order-address hide" action="/">
+              <div class="form-group">
+                <label for="address-street">Street</label>
+                <input type="text" id="#address-street" class="form-control address-input address-street" value="{{order.street}}">
+              </div>
+              <div class="form-group">
+                <label for="address-city">City</label>
+                <input type="text" id="#address-city" class="form-control address-input address-city" value="{{order.city}}">
+              </div>
+              <div class="form-group">
+                <label for="address-state">State</label>
+                <input type="text" id="#address-state" class="form-control address-input address-state" value="{{order.state}}">
+              </div>
+              <div class="form-group">
+                <label for="address-zip">Zip</label>
+                <input type="text" id="#address-zip" class="form-control address-input address-zip" value="{{order.zip}}">
+              </div>
+            </div>
+          </div>
         </div>
         <div class="col-lg-6">
           {{order.phone}}

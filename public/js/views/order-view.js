@@ -4,6 +4,7 @@ var OrderView = Backbone.View.extend({
   events: {
     'keyup .order-notes': 'onNotesChange',
     'submit .order-form': 'onSave',
+    'click .edit-address-btn': 'editAddress'
   },
 
   initialize: function(options) {
@@ -29,8 +30,20 @@ var OrderView = Backbone.View.extend({
     this.$el.find('.price.total').val(tot);
   },
 
+  changeStatus: function(status, token) {
+    // TODO: the token is for #40
+    $.ajax({
+      url: this.model.url() + '/status-history',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({status: status}),
+      error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
+      success: function(data, textStatus, jqXHR) { window.location.reload() }
+    });
+  },
+
   onNotesChange: function() {
-    var notes = this.$el.find('.order-notes').val();
+    var notes = this.$el.find('.order-notes').val().trim();
     var different = (notes || this.model.get('notes')) && notes !== this.model.get('notes');
     this.$el.find('.order-save-btn').toggleClass('hide', !different);
   },
@@ -44,15 +57,7 @@ var OrderView = Backbone.View.extend({
     });
   },
 
-  changeStatus: function(status, token) {
-    $.ajax({
-      url: this.model.url() + '/status-history',
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify({status: status}),
-      error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
-      success: function(data, textStatus, jqXHR) { window.location.reload() }
-    });
+  editAddress: function(e) {
+    $('.order-address').toggleClass('hide');
   }
-
 });

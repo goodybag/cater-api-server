@@ -1,0 +1,74 @@
+<form class="form-horizontal col-lg-8 user-settings-form">
+  <fieldset>
+    <legend>User Settings</legend>
+    <div class="form-group">
+      <label for="input-first-name" class="col-lg-2 control-label">First Name</label>
+      <div class="col-lg-10">
+        <input type="text" id="input-first-name" class="form-control first_name" value="{{user.first_name}}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="input-last-name" class="col-lg-2 control-label">Last Name</label>
+      <div class="col-lg-10">
+        <input type="text" id="input-last-name" class="form-control last_name" value="{{user.last_name}}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="input-email" class="col-lg-2 control-label">Email</label>
+      <div class="col-lg-10">
+        <input type="email" id="input-email" class="form-control email" value="{{user.email}}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="input-org" class="col-lg-2 control-label">Organization</label>
+      <div class="col-lg-10">
+        <input type="text" id="input-org" class="form-control organization" value="{{user.orginization}}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="input-pass1" class="col-lg-2 control-label">Password</label>
+      <div class="col-lg-10">
+        <input type="password" id="input-pass1" class="form-control password">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="input-pass2" class="col-lg-2 control-label">Confirm Password</label>
+      <div class="col-lg-10">
+        <input type="password" id="input-pass2" class="form-control confirm_password">
+      </div>
+    </div>
+  </fieldset>
+  <button type="submit" class="btn btn-lg btn-primary pull-right">Save</button>
+</form>
+
+<div class="col-lg-2 col-offset-1">
+  <a href="/users/me/orders" class="btn btn-lg btn-default">My Orders</a>
+</div>
+
+{{#extend "scripts"}}
+<script>
+  $('.user-settings-form').on('submit', function(e) {
+    e.preventDefault();
+    var fields = ['first_name', 'last_name', 'email', 'organization', 'password'];
+    var data = {};
+    for (var i=0, l=fields.length; i<l; i++)
+      data[fields[i]] = $('.user-settings-form .' + fields[i]).val();
+    if (data.password && data.password !== $('.user-settings-form .confirm_password').val())
+      return alert('passwords must match');
+    if (!data.password) delete data.password;
+
+    $.ajax({
+      url: '/users/me',
+      type: 'PUT',
+      data: JSON.stringify(data),
+      contentType: 'application/json',
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert(errorThrown);
+      },
+      success: function(data, textStatus, jqXHR) {
+        alert('update successful');
+      }
+    });
+  });
+</script>
+{{/extend}}

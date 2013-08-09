@@ -22,7 +22,10 @@ module.exports.get = function(req, res) {
   db.query(sql.query, sql.values, function(error, rows, results){
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     if (!rows || !rows[0]) return res.send(404);
-    return res.json(200, rows[0]);
+    res.render('user', {user: rows[0]}, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, err);
+      return res.send(200, html);
+    });
   });
 }
 

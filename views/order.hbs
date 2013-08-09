@@ -20,10 +20,13 @@
         <div class="col-lg-6">
           <div class="row">
             <h4 class="col-lg-9">Address</h4>
-            {{#if order.editable}}<button type="button" class="btn btn-default btn-sm edit-address-btn pull-right">Edit</button>{{/if}}
+            {{#if order.editable}}
+            <button type="button" class="btn btn-default btn-sm edit-address-btn pull-right">Edit</button>
+            {{/if}}
           </div>
           <div class="row">
             <div class="well order-address">{{{address order}}}</div>
+            {{#if order.editable}}
             <fieldgroup class="order-address hide">
               <div class="form-group">
                 <label for="address-street">Street</label>
@@ -42,6 +45,7 @@
                 <input type="text" id="address-zip" class="form-control address-input address-zip" value="{{order.zip}}">
               </div>
             </fieldgroup>
+            {{/if}}
           </div>
         </div>
         <div class="col-lg-6">

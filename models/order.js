@@ -29,6 +29,7 @@ module.exports = Model.extend({
     var obj = Model.prototype.toJSON.apply(this, arguments);
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
+    obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
     return obj;
   }
 }, {

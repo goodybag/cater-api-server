@@ -96,6 +96,12 @@ module.exports.register = function(app) {
   });
 
   /**
+   *  Current order resource.  The current pending order for the given restaurant and logged in user.
+   */
+
+  app.all('/restaurants/:rid/orders/current', controllers.restaurants.orders.current);
+
+  /**
    *  Items resource.  The collection of all items.
    */
 
@@ -239,12 +245,15 @@ module.exports.register = function(app) {
    */
 
   app.all ('/users/me*', function(req, res, next) {
-    req.url = req.url.replace(/^\/users\/me/, '/users/' + req.session.user.id);
-    next();
+    if (!req.session.user) res.send(404);
+    else {
+      req.url = req.url.replace(/^\/users\/me/, '/users/' + req.session.user.id);
+      next();
+    }
   });
 
-  app.all('/users/:uid/*', function(req, res, next) {
-    if (''+req.params.uid !== ''+req.session.user.id)
+  app.all('/users/:uid/?*', function(req, res, next) {
+    if (!req.session.user || ''+req.params.uid !== ''+req.session.user.id)
       res.send(404);
     else
       next();

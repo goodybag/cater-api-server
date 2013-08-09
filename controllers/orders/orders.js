@@ -15,9 +15,17 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.get = function(req, res) {
-  models.Order.findOne(parseInt(req.params.id), function(error, response) {
+  models.Order.findOne(parseInt(req.params.id), function(error, order) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(response ? response.toJSON() : 404);
+    if (!order) return res.send(404);
+    order.getOrderItems(function(err, items) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      var review = order.attributes.status === 'submitted'; // TODO: And user is order restaurant.
+      res.render('order', {order: order.toJSON(), restaurantReview: review}, function(err, html) {
+        if (err) return res.error(errors.internal.UNKNOWN, err);
+        res.send(html);
+      });
+    });
   });
 }
 

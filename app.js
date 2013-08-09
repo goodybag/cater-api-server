@@ -32,6 +32,16 @@ hbs.registerHelper('statusLabel', function(status) {
   }[status];
 });
 
+// TODO: make this a partial
+hbs.registerHelper('address', function(loc) {
+  if (!loc) return '';
+  var line1 = loc.street ? loc.street : utils.joinIf([loc.street1, loc.street2], ', ');
+  // TODO: put in <abbr> tag for state
+  var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), loc.state.toUpperCase()], ', '), loc.zip], ' ');
+  return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
+                       line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
+});
+
 var app = module.exports = express();
 
 app.configure(function(){

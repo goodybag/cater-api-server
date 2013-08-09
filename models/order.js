@@ -24,6 +24,12 @@ module.exports = Model.extend({
       } else
         callback.apply(this, arguments);
     });
+  },
+  toJSON: function() {
+    var obj = Model.prototype.toJSON.apply(this, arguments);
+    if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
+    obj.editable = this.attributes.status === 'pending';
+    return obj;
   }
 }, {
   table: 'orders',

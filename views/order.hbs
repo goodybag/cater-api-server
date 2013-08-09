@@ -3,11 +3,10 @@
 </div>
 
 <div class="row order-info">
-  <div class="row">
+  <h3 class="row">
     {{order.restaurant.name}}
-    <span class="label status {{statusLabel order.status}}">{{order.status}}</span>
-    <span class="badge">{{#if order.sub_total}}${{dollars order.sub_total}}{{/if}}</span>
-  </div>
+    <span class="label status {{statusLabel order.status}} pull-right">{{order.status}}</span>
+  </h3>
   <div class="row">
     <div class="col-lg-6">
       <div class="row">
@@ -24,36 +23,61 @@
       </div>
     </div>
     <div class="col-lg-6">
-      <h4 class="text-center">Notes</h4>
-      <textarea {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
+      <div class="row">
+        <h4 class="text-center col-lg-10">Notes</h4>
+      </div>
+      <form class="form-inline row">
+        <div class="col-lg-10">
+          <textarea class="form-control order-notes" {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
+        </div>
+        <div class="col-lg-2">
+          <button type="submit" class="btn btn-lg btn-success hide">Save</button>
+        </div>
+      </form>
     </div>
   </div>
-  <div class="row">
-    <button type="button" class="btn btn-primary pull-right hide">Save</button>
-  </div>
 </div>
-
 
 <ul class="row order-items list-group">
   {{#each order.orderItems}}
   <li class="list-group-item row">
-    <div class="col-lg-5">
-      <h4 class="list-group-item-heading">{{this.name}}</h4>
-      <p>{{this.description}}</p>
-      <p>x <input type="number" min="1" value="{{this.quantity}}" {{#unless ../order.editable}}disabled{{/unless}}></p>
-      <a href="javascript:void(0)">delete</a>
-    </div>
-    <div class="col-lg-5">
-      <textarea {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
-    </div>
-    <span class="badge">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
+    <form id="order-item-form#{{this.id}}" class="order-item-form form-inline">
+      <div class="col-lg-5">
+        <h4 class="list-group-item-heading">{{this.name}}</h4>
+        <p>{{this.description}}</p>
+        <div class="input-group">
+          <span class="input-group-addon input-sm">x</span>
+          <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm" {{#unless ../order.editable}}disabled{{/unless}}>
+        </div>
+        <a href="javascript:void(0)">delete</a>
+      </div>
+      <div class="col-lg-5">
+        <textarea class="form-control" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
+      </div>
+      <div class="col-lg-2">
+        <div class="row">
+          <span class="badge pull-right">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
+        </div>
+        <div class="row">
+          <button type="submit" class="btn btn-success pull-right hide">Save</button>
+        </div>
+      </div>
+    </form>
   </li>
   {{else}}
   <h2 class="text-center">No Items</h2>
   {{/each}}
 </ul>
 
-
+<div class="row">
+  <p class="text-right">subtotal: ${{dollars order.sub_total}}</p>
+  <p class="text-right">tax: ${{tax order.sub_total}}</p>
+  <p class="text-right">total: ${{total order.sub_total}}</p>
+  <div class="btn-toolbar pull-right">
+    {{#if order.cancelable}}<button class="btn btn-lg btn-danger">Cancel</button>{{/if}}
+    {{#if order.editable}}<button class="btn btn-lg btn-primary">Submit</button>{{/if}}
+  </div>
+</div>
 
 {{#if restaurantReview}}
 <div class="row">

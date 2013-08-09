@@ -20,14 +20,22 @@ hbs.registerHelper('dollars', function(pennies, options) {
   return (pennies / 100).toFixed(2);
 });
 
+hbs.registerHelper('tax', function(cents) {
+  return (cents * 0.000825).toFixed(2);
+});
+
+hbs.registerHelper('total', function(cents) {
+  return (cents * 0.010825).toFixed(2);
+});
+
 hbs.registerHelper('statusLabel', function(status) {
   if (!status) return 'label-default';
   return 'label-' + {
     canceled: 'danger',
     pending: 'info',
-    submitted: 'info',
+    submitted: 'warning',
     denied: 'danger',
-    accepted: 'info',
+    accepted: 'warning',
     delivered: 'success'
   }[status];
 });

@@ -47,12 +47,12 @@
         <p>{{this.description}}</p>
         <div class="input-group">
           <span class="input-group-addon input-sm">x</span>
-          <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm" {{#unless ../order.editable}}disabled{{/unless}}>
+          <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm order-item-input quantity" {{#unless ../order.editable}}disabled{{/unless}}>
         </div>
         <a href="javascript:void(0)">delete</a>
       </div>
       <div class="col-lg-5">
-        <textarea class="form-control" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
+        <textarea class="form-control order-item-input order-item-notes" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
       </div>
       <div class="col-lg-2">
         <div class="row">

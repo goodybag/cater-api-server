@@ -10,9 +10,10 @@ var Order = Backbone.Model.extend({
   initialize: function(attrs, options) {
     if (this.id) {
       this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id});
+      this.unset('orderItems');
       //TODO: maybe get a new collection on id change?
-      this.listenTo(this.orderItems, 'change: sub_total add remove', function() {
-        this.set(sub_total, _.reduce(this.orderItems.pluck('sub_total'), function(a, b) { return a + b; }, 0));
+      this.listenTo(this.orderItems, 'change:sub_total add remove', function() {
+        this.set('sub_total', _.reduce(this.orderItems.pluck('sub_total'), function(a, b) { return a + b; }, 0));
       }, this);
     }
   }

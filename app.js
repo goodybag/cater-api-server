@@ -16,40 +16,6 @@ var middleware = {
 , uuid: require('./middleware/uuid')
 };
 
-hbs.registerHelper('dollars', function(pennies, options) {
-  return (pennies / 100).toFixed(2);
-});
-
-hbs.registerHelper('tax', function(cents) {
-  return (cents * 0.000825).toFixed(2);
-});
-
-hbs.registerHelper('total', function(cents) {
-  return (cents * 0.010825).toFixed(2);
-});
-
-hbs.registerHelper('statusLabel', function(status) {
-  if (!status) return 'label-default';
-  return 'label-' + {
-    canceled: 'danger',
-    pending: 'info',
-    submitted: 'warning',
-    denied: 'danger',
-    accepted: 'warning',
-    delivered: 'success'
-  }[status];
-});
-
-// TODO: make this a partial
-hbs.registerHelper('address', function(loc) {
-  if (!loc) return '';
-  var line1 = loc.street ? loc.street : utils.joinIf([loc.street1, loc.street2], ', ');
-  // TODO: put in <abbr> tag for state
-  var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), loc.state.toUpperCase()], ', '), loc.zip], ' ');
-  return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
-                       line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
-});
-
 var app = module.exports = express();
 
 app.configure(function(){
@@ -105,6 +71,48 @@ hbs.registerHelper('block', function(name) {
   // clear the block
   blocks[name] = [];
   return val;
+});
+
+hbs.registerHelper('dollars', function(pennies) {
+  return (pennies / 100).toFixed(2);
+});
+
+hbs.registerHelper('json', function(context) {
+  return JSON.stringify(context);
+});
+
+hbs.registerHelper('or', function(value1, value2) {
+  return value1 || value2;
+});
+
+hbs.registerHelper('tax', function(cents) {
+  return (cents * 0.000825).toFixed(2);
+});
+
+hbs.registerHelper('total', function(cents) {
+  return (cents * 0.010825).toFixed(2);
+});
+
+hbs.registerHelper('statusLabel', function(status) {
+  if (!status) return 'label-default';
+  return 'label-' + {
+    canceled: 'danger',
+    pending: 'info',
+    submitted: 'warning',
+    denied: 'danger',
+    accepted: 'warning',
+    delivered: 'success'
+  }[status];
+});
+
+// TODO: make this a partial
+hbs.registerHelper('address', function(loc) {
+  if (!loc) return '';
+  var line1 = loc.street ? loc.street : utils.joinIf([loc.street1, loc.street2], ', ');
+  // TODO: put in <abbr> tag for state
+  var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), loc.state.toUpperCase()], ', '), loc.zip], ' ');
+  return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
+                       line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
 });
 
 routes.register(app);

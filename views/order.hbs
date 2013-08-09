@@ -20,7 +20,7 @@
         <div class="col-lg-6">
           <div class="row">
             <h5 class="col-lg-9">Address</h5>
-            <button type="button" class="btn btn-default btn-sm edit-address-btn pull-right">Edit</button>
+            {{#if order.editable}}<button type="button" class="btn btn-default btn-sm edit-address-btn pull-right">Edit</button>{{/if}}
           </div>
           <div class="row">
             <div class="well order-address">{{{address order}}}</div>

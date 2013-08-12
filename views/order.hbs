@@ -141,7 +141,7 @@
   var view = new OrderView({el: $('#main'), model: new Order({{{json order}}})});
   var items = [
     {{#each order.orderItems}}
-    {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: new OrderItem({{{json this}}})})
+    {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})
     {{/each}}
   ];
 </script>

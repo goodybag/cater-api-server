@@ -10,7 +10,10 @@ var OrderItemView = Backbone.View.extend({
 
   initialize: function(options) {
     if (this.model)
-      this.listenTo(this.model, 'change:sub_total', this.onPriceChange, this);
+      this.listenTo(this.model, {
+        'change:sub_total': this.onPriceChange,
+        'destroy': this.remove
+      }, this);
   },
 
   onPriceChange: function(e) {
@@ -60,10 +63,6 @@ var OrderItemView = Backbone.View.extend({
   },
 
   onDelete: function(e) {
-    this.model.destroy({
-      success: function(data, textStatus, jqXHR) {
-        this.remove();
-      }
-    });
+    this.model.destroy();
   }
 });

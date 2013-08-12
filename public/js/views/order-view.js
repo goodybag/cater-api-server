@@ -26,9 +26,9 @@ var OrderView = Backbone.View.extend({
     var tax = (value * .000825).toFixed(2);
     var tot = (value * .010825).toFixed(2);
 
-    this.$el.find('.price.sub-total').val(sub);
-    this.$el.find('.price.tax').val(tax);
-    this.$el.find('.price.total').val(tot);
+    this.$el.find('.price.sub-total').text(sub);
+    this.$el.find('.price.tax').text(tax);
+    this.$el.find('.price.total').text(tot);
   },
 
   changeStatus: function(status, token) {

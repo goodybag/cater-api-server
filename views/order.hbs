@@ -59,7 +59,7 @@
           </div>
           <div class="form-group">
             <label for="order-guests">Guests</label>
-            <input type="number" id="order-guests" class="form-control order-form-field order-guests" value="{{order.guests}}" {{#unless order.editable}}disabled{{/unless}}>
+            <input type="number" min="1" id="order-guests" class="form-control order-form-field order-guests" value="{{order.guests}}" {{#unless order.editable}}disabled{{/unless}}>
           </div>
         </div>
       </div>
@@ -82,26 +82,26 @@
 
 <ul class="row order-items list-group">
   {{#each order.orderItems}}
-  <li class="list-group-item row">
-    <form id="order-item-form#{{this.id}}" class="order-item-form form-inline">
+  <li class="list-group-item row" id="order-item-{{this.id}}">
+    <form id="order-item-form-{{this.id}}" class="order-item-form form-inline">
       <div class="col-lg-5">
         <h4 class="list-group-item-heading">{{this.name}}</h4>
         <p>{{this.description}}</p>
         <div class="input-group">
           <span class="input-group-addon input-sm">x</span>
-          <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm order-item-input quantity" {{#unless ../order.editable}}disabled{{/unless}}>
+          <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm order-item-field order-item-quantity"{{#unless ../order.editable}} disabled{{/unless}}>
         </div>
-        <a href="javascript:void(0)">delete</a>
+        <a href="javascript:void(0)" class="remove-order-item-btn">delete</a>
       </div>
       <div class="col-lg-5">
-        <textarea class="form-control order-item-input order-item-notes" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
+        <textarea class="form-control order-item-field order-item-notes" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
       </div>
       <div class="col-lg-2">
         <div class="row">
-          <span class="badge pull-right">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
+          <span class="badge pull-right order-item-price">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
         </div>
         <div class="row">
-          <button type="submit" class="btn btn-success pull-right hide">Save</button>
+          <button type="submit" class="btn btn-success order-item-save-btn pull-right hide">Save</button>
         </div>
       </div>
     </form>
@@ -136,7 +136,13 @@
 <script src="/js/models/order-item.js"></script>
 <script src="/js/models/order.js"></script>
 <script src="/js/views/order-view.js"></script>
+<script src="/js/views/order-item-view.js"></script>
 <script>
   var view = new OrderView({el: $('#main'), model: new Order({{{json order}}})});
+  var items = [
+    {{#each order.orderItems}}
+    {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: new OrderItem({{{json this}}})})
+    {{/each}}
+  ];
 </script>
 {{/extend}}

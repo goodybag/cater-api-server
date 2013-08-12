@@ -22,7 +22,7 @@ module.exports.get = function(req, res) {
     order.getOrderItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       var review = order.attributes.status === 'submitted'; // TODO: And user is order restaurant.
-      utils.findWhere(states, {abbr: order.state || 'TX'}).default = true;
+      utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
       res.render('order', {order: order.toJSON(), restaurantReview: review, states: states}, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);

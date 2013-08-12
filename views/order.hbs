@@ -1,3 +1,7 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
+{{/extend}}
+
 <div class="row">
   <h1 class="text-center">Order</h1>
 </div>
@@ -13,7 +17,12 @@
         <p>Created: {{order.created_at}}</p>
         <div class="form-group">
           <label for="order-datetime">Delivery Date</label>
-          <input type="text" id="order-datetime" class="form-control order-form-field" value="{{order.datetime}}" {{#unless order.editable}}disabled{{/unless}}></diff>
+          <div id="order-datetime-picker" class="input-group input-append">
+            <input type="text" data-format="MM/dd/yyyy HH:mm:ss PP" id="order-datetime" class="form-control order-form-field" value="{{order.datetime}}" {{#unless order.editable}}disabled{{/unless}}>
+            <span class="input-group-addon add-on">
+              <i data-tiem-icon="icon-time" data-date-icon="icon-calendar"></i>
+            </span>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -133,12 +142,19 @@
 {{/if}}
 
 {{#extend "scripts"}}
+<script src="/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/js/models/order-item.js"></script>
 <script src="/js/models/order.js"></script>
 <script src="/js/views/order-view.js"></script>
 <script src="/js/views/order-item-view.js"></script>
 <script>
+  $('#order-datetime-picker').datetimepicker({
+    language: 'en',
+    pick12HourFormat: true
+  });
+
   var view = new OrderView({el: $('#main'), model: new Order({{{json order}}})});
+
   var items = [
     {{#each order.orderItems}}
     {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})

@@ -2,9 +2,8 @@ var OrderView = Backbone.View.extend({
   model: Order,
 
   events: {
-    'keyup .order-form textarea': 'onOrderChange',
-    'keyup .order-form input': 'onOrderChange',
-    'change .order-form input': 'onOrderChange',
+    'keyup .order-form .order-form-field': 'onOrderChange',
+    'change .order-form .order-form-field': 'onOrderChange',
     'submit .order-form': 'onSave',
     'click .edit-address-btn': 'editAddress'
   },
@@ -72,6 +71,7 @@ var OrderView = Backbone.View.extend({
     for (var key in this.fieldMap) {
       var getter = this.fieldGetters[key];
       var val = getter ? getter.apply(this) : this.$el.find('.order-form #' + this.fieldMap[key]).val().trim();
+      //TODO: validate
       if ((this.model.get(key) || val) && this.model.get(key) != val)
         diff[key] = val;
     }
@@ -80,7 +80,6 @@ var OrderView = Backbone.View.extend({
   },
 
   onOrderChange: function(e) {
-    //TODO: validate
     this.$el.find('.order-save-btn').toggleClass('hide', _.size(this.getDiff()) === 0);
   },
 

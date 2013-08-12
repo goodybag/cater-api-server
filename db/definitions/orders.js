@@ -68,6 +68,14 @@ define(function(require) {
       type: types.int
     , nullable: false
     }
+  , review_token: {
+      type: types.text
+    , nullable: false
+    }
+  , token_used: {
+      type: types.timestamp
+    , nullable: true
+    }
   };
 
   definition.indices = {};

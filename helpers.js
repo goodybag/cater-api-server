@@ -1,4 +1,5 @@
 var utils = require('./utils');
+var states = require('./public/states');
 
 module.exports.register = function(handlebars) {
   var blocks = {};
@@ -55,8 +56,9 @@ module.exports.register = function(handlebars) {
   handlebars.registerHelper('address', function(loc) {
     if (!loc) return '';
     var line1 = loc.street ? loc.street : utils.joinIf([loc.street1, loc.street2], ', ');
-    // TODO: put in <abbr> tag for state
-    var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), (loc.state||'').toUpperCase()], ', '), loc.zip], ' ');
+    var state = utils.findWhere(states, {abbr: loc.state.toUpperCase()});
+    var stateStr = state ? '<abbr title="' + state.name + '">' + state.abbr + '</abbr>' : '';
+    var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
     return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
                          line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
   });

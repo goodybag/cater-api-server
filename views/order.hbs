@@ -66,7 +66,7 @@
       </div>
       <div class="row">
         <div class="col-lg-10">
-          <textarea class="form-control order-notes" rows="6" {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
+          <textarea id="order-notes" class="form-control order-notes" rows="6" {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
         </div>
         <div class="col-lg-2">
           <button type="submit" class="btn btn-lg btn-success hide order-save-btn">Save</button>

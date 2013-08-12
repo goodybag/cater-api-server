@@ -2,7 +2,9 @@ var OrderView = Backbone.View.extend({
   model: Order,
 
   events: {
-    'keyup .order-notes': 'onNotesChange',
+    'keyup .order-form textarea': 'onOrderChange',
+    'keyup .order-form input': 'onOrderChange',
+    'change .order-form input': 'onOrderChange',
     'submit .order-form': 'onSave',
     'click .edit-address-btn': 'editAddress'
   },
@@ -42,16 +44,50 @@ var OrderView = Backbone.View.extend({
     });
   },
 
-  onNotesChange: function() {
-    var notes = this.$el.find('.order-notes').val().trim();
-    var different = (notes || this.model.get('notes')) && notes !== this.model.get('notes');
-    this.$el.find('.order-save-btn').toggleClass('hide', !different);
+  fieldMap: {
+    datetime: 'order-datetime',
+    street: 'address-street',
+    city: 'address-city',
+    state: 'address-state',
+    zip: 'address-zip',
+    phone: 'order-phone',
+    guests: 'order-guests',
+    notes: 'order-notes'
+  },
+
+  fieldGetters: {
+    guests: function() {
+      return parseInt(this.$el.find('.order-form #order-guests').val());
+    },
+    datetime: function() {
+      var date = new Date(this.$el.find('.order-form #order-datetime').val().trim());
+      return date.toString() !== 'Invalid Date' ? date.toISOString() : null;
+    }
+
+  },
+
+  getDiff: function() {
+    var diff = {}
+
+    for (var key in this.fieldMap) {
+      var getter = this.fieldGetters[key];
+      var val = getter ? getter.apply(this) : this.$el.find('.order-form #' + this.fieldMap[key]).val().trim();
+      if ((this.model.get(key) || val) && this.model.get(key) != val)
+        diff[key] = val;
+    }
+
+    return diff;
+  },
+
+  onOrderChange: function(e) {
+    //TODO: validate
+    this.$el.find('.order-save-btn').toggleClass('hide', _.size(this.getDiff()) === 0);
   },
 
   onSave: function(e) {
     e.preventDefault();
     var view = this;
-    this.model.save('notes', $('.order-notes').val(), {
+    this.model.save(this.getDiff(), {
       error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
       success: function(data, textStatus, jqXHR) { view.$el.find('.order-save-btn').addClass('hide'); }
     });

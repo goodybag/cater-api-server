@@ -56,7 +56,7 @@ module.exports.register = function(handlebars) {
   handlebars.registerHelper('address', function(loc) {
     if (!loc) return '';
     var line1 = loc.street ? loc.street : utils.joinIf([loc.street1, loc.street2], ', ');
-    var state = utils.findWhere(states, {abbr: loc.state.toUpperCase()});
+    var state = loc.state ? utils.findWhere(states, {abbr: loc.state.toUpperCase()}) : null;
     var stateStr = state ? '<abbr title="' + state.name + '">' + state.abbr + '</abbr>' : '';
     var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
     return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,

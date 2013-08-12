@@ -106,5 +106,15 @@ module.exports = Model.extend({
       }
       callback.call(this, err, orders);
     });
+  },
+
+  // this is a FSM definition
+  statusFSM: {
+    canceled: [],
+    pending: ['canceled', 'submitted'],
+    submitted: ['canceled', 'denied', 'accepted'],
+    denied: [],
+    accepted: ['delivered'],
+    delivered: []
   }
 });

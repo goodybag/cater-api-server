@@ -48,23 +48,13 @@ module.exports.listStatus = function(req, res) {
   );
 }
 
-// this is a FSM definition
-var transitions = {
-  canceled: [],
-  pending: ['canceled', 'submitted'],
-  submitted: ['canceled', 'denied', 'accepted'],
-  denied: [],
-  accepted: ['delivered'],
-  delivered: []
-}
-
 module.exports.changeStatus = function(req, res) {
-  if (!req.body.status || !utils.has(transitions, req.body.status))
+  if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (!order) res.send(404);
-    if (!utils.contains(transitions[order.attributes.status], req.body.status))
+    if (!order) return res.send(404);
+    if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
       return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
     var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
     status.save(function(err, rows, result) {

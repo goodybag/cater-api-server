@@ -7,18 +7,60 @@
     {{order.restaurant.name}}
     <span class="label status {{statusLabel order.status}} pull-right">{{order.status}}</span>
   </h3>
-  <div class="row">
+  <form id="order-form" class="row order-form">
     <div class="col-lg-6">
       <div class="row">
-        <p>Date: {{order.created_at}}</p>
-        <p>Delivery Date: {{order.datetime}}</p>
+        <p>Created: {{order.created_at}}</p>
+        <div class="form-group">
+          <label for="order-datetime">Delivery Date</label>
+          <input type="text" id="order-datetime" class="form-control order-form-field" value="{{order.datetime}}" {{#unless order.editable}}disabled{{/unless}}></diff>
+        </div>
       </div>
       <div class="row">
         <div class="col-lg-6">
-          {{{address order}}}
+          <div class="row">
+            <h4 class="col-lg-9">Address</h4>
+            {{#if order.editable}}
+            <button type="button" class="btn btn-default btn-sm edit-address-btn pull-right">Edit</button>
+            {{/if}}
+          </div>
+          <div class="row">
+            <div class="well order-address">{{{address order}}}</div>
+            {{#if order.editable}}
+            <fieldgroup class="order-address hide">
+              <div class="form-group">
+                <label for="address-street">Street</label>
+                <input type="text" id="address-street" class="form-control order-form-field address-input address-street" value="{{order.street}}">
+              </div>
+              <div class="form-group">
+                <label for="address-city">City</label>
+                <input type="text" id="address-city" class="form-control order-form-field address-input address-city" value="{{order.city}}">
+              </div>
+              <div class="form-group">
+                <label for="address-state">State</label>
+                <select id="address-state" class="form-control order-form-field address-input address-state" form="order-form">
+                  {{#each states}}
+                  <option value="{{this.abbr}}" label="{{this.abbr}}"{{#if this.default}} selected="selected"{{/if}}>{{this.name}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="address-zip">Zip</label>
+                <input type="text" maxlength="5" id="address-zip" class="form-control order-form-field address-input address-zip" value="{{order.zip}}">
+              </div>
+            </fieldgroup>
+            {{/if}}
+          </div>
         </div>
         <div class="col-lg-6">
-          {{order.phone}}
+          <div class="form-group">
+            <label for="order-phone">Phone</label>
+            <input type="tel" id="order-phone" class="form-control order-form-field order-phone" {{#unless order.editable}}disabled{{/unless}} value="{{order.phone}}">
+          </div>
+          <div class="form-group">
+            <label for="order-guests">Guests</label>
+            <input type="number" min="1" id="order-guests" class="form-control order-form-field order-guests" value="{{order.guests}}" {{#unless order.editable}}disabled{{/unless}}>
+          </div>
         </div>
       </div>
     </div>
@@ -26,40 +68,40 @@
       <div class="row">
         <h4 class="text-center col-lg-10">Notes</h4>
       </div>
-      <form class="form-inline row">
+      <div class="row">
         <div class="col-lg-10">
-          <textarea class="form-control order-notes" {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
+          <textarea id="order-notes" class="form-control order-form-field order-notes" rows="6" {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
         </div>
         <div class="col-lg-2">
-          <button type="submit" class="btn btn-lg btn-success hide">Save</button>
+          <button type="submit" class="btn btn-lg btn-success hide order-save-btn">Save</button>
         </div>
-      </form>
+      </div>
     </div>
-  </div>
+  </form>
 </div>
 
 <ul class="row order-items list-group">
   {{#each order.orderItems}}
-  <li class="list-group-item row">
-    <form id="order-item-form#{{this.id}}" class="order-item-form form-inline">
+  <li class="list-group-item row" id="order-item-{{this.id}}">
+    <form id="order-item-form-{{this.id}}" class="order-item-form form-inline">
       <div class="col-lg-5">
         <h4 class="list-group-item-heading">{{this.name}}</h4>
         <p>{{this.description}}</p>
         <div class="input-group">
           <span class="input-group-addon input-sm">x</span>
-          <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm" {{#unless ../order.editable}}disabled{{/unless}}>
+          <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm order-item-field order-item-quantity"{{#unless ../order.editable}} disabled{{/unless}}>
         </div>
-        <a href="javascript:void(0)">delete</a>
+        <a href="javascript:void(0)" class="remove-order-item-btn">delete</a>
       </div>
       <div class="col-lg-5">
-        <textarea class="form-control" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
+        <textarea class="form-control order-item-field order-item-notes" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
       </div>
       <div class="col-lg-2">
         <div class="row">
-          <span class="badge pull-right">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
+          <span class="badge pull-right order-item-price">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
         </div>
         <div class="row">
-          <button type="submit" class="btn btn-success pull-right hide">Save</button>
+          <button type="submit" class="btn btn-success order-item-save-btn pull-right hide">Save</button>
         </div>
       </div>
     </form>
@@ -70,22 +112,37 @@
 </ul>
 
 <div class="row">
-  <p class="text-right">subtotal: ${{dollars order.sub_total}}</p>
-  <p class="text-right">tax: ${{tax order.sub_total}}</p>
-  <p class="text-right">total: ${{total order.sub_total}}</p>
+  <p class="text-right">subtotal: $<span class="price sub-total">{{dollars order.sub_total}}</span></p>
+  <p class="text-right">tax: $<span class="price tax">{{tax order.sub_total}}</span></p>
+  <p class="text-right">total: $<span class="price total">{{total order.sub_total}}</span></p>
   <div class="btn-toolbar pull-right">
-    {{#if order.cancelable}}<button class="btn btn-lg btn-danger">Cancel</button>{{/if}}
-    {{#if order.editable}}<button class="btn btn-lg btn-primary">Submit</button>{{/if}}
+    {{#if order.cancelable}}<button class="btn btn-lg btn-danger cancel-btn">Cancel</button>{{/if}}
+    {{#if order.editable}}<button class="btn btn-lg btn-primary submit-btn">Submit</button>{{/if}}
   </div>
 </div>
 
 {{#if restaurantReview}}
 <div class="row">
   <div class="col-lg-6">
-    <button class="btn btn-lg btn-danger">Reject</button>
+    <button class="btn btn-lg btn-danger reject-btn">Reject</button>
   </div>
   <div class="col-lg-6">
-    <button class="btn btn-lg btn-success">Accept</button>
+    <button class="btn btn-lg btn-success accept-btn">Accept</button>
   </div>
 </div>
 {{/if}}
+
+{{#extend "scripts"}}
+<script src="/js/models/order-item.js"></script>
+<script src="/js/models/order.js"></script>
+<script src="/js/views/order-view.js"></script>
+<script src="/js/views/order-item-view.js"></script>
+<script>
+  var view = new OrderView({el: $('#main'), model: new Order({{{json order}}})});
+  var items = [
+    {{#each order.orderItems}}
+    {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})
+    {{/each}}
+  ];
+</script>
+{{/extend}}

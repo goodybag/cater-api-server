@@ -2,6 +2,7 @@ var
   db = require('../../db')
 , errors = require('../../errors')
 , utils = require('../../utils')
+, states = require('../../public/states');
 ;
 
 var models = require('../../models');
@@ -21,7 +22,8 @@ module.exports.get = function(req, res) {
     order.getOrderItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       var review = order.attributes.status === 'submitted'; // TODO: And user is order restaurant.
-      res.render('order', {order: order.toJSON(), restaurantReview: review}, function(err, html) {
+      utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+      res.render('order', {order: order.toJSON(), restaurantReview: review, states: states}, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
       });
@@ -49,7 +51,7 @@ module.exports.listStatus = function(req, res) {
 }
 
 module.exports.changeStatus = function(req, res) {
-  var status = new models.OrderStatus(req.body);
+  var status = new models.OrderStatus({status: req.body.status, order_id: req.params.oid});
   status.save(function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(201, status.toJSON());

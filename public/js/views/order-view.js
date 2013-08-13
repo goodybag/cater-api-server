@@ -31,13 +31,12 @@ var OrderView = Backbone.View.extend({
     this.$el.find('.price.total').text(tot);
   },
 
-  changeStatus: function(status, token) {
-    // TODO: the token is for #40
+  changeStatus: function(status) {
     $.ajax({
       url: this.model.url() + '/status-history',
       type: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({status: status}),
+      data: JSON.stringify({status: status, review_token: this.options.token}),
       error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
       success: function(data, textStatus, jqXHR) { window.location.reload() }
     });

@@ -138,7 +138,8 @@
 <script src="/js/views/order-view.js"></script>
 <script src="/js/views/order-item-view.js"></script>
 <script>
-  var view = new OrderView({el: $('#main'), model: new Order({{{json order}}})});
+  var query = window.location.search ? _.object(_.map(window.location.search.substring(1).split('&'), function(obj) { return obj.split('='); })) : {};
+  var view = new OrderView( {el: $('#main'), model: new Order( {{{json order}}} ), token: query.token} );
   var items = [
     {{#each order.orderItems}}
     {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})

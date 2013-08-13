@@ -1,8 +1,13 @@
 if (typeof require !== 'undefined') {
-  var states = require('../states');
   var utils  = require('../../utils');
-} else
+  var states = require('../states');
+} else {
   utils = _;
+  var states
+  $.get('/states.json', null, function(data, textStatus, jqXHR) {
+    states = data;
+  }, 'json');
+}
 
 var joinIf = function(arr, sep) {
   return Array.prototype.join.call(utils.compact(arr), sep);

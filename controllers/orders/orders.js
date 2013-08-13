@@ -65,6 +65,9 @@ module.exports.changeStatus = function(req, res) {
     if (review && req.body.review_token !== order.attributes.review_token)
       return res.send(401, 'bad review token');
 
+    if (req.body.status === 'submitted' && !order.isComplete())
+      return res.send(403, 'order not complete');
+
     var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
     console.log('changing status:', status);
     status.save(function(err, rows, result) {

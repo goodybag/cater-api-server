@@ -115,10 +115,12 @@
   <p class="text-right">subtotal: $<span class="price sub-total">{{dollars order.sub_total}}</span></p>
   <p class="text-right">tax: $<span class="price tax">{{tax order.sub_total}}</span></p>
   <p class="text-right">total: $<span class="price total">{{total order.sub_total}}</span></p>
+  {{#if owner}}
   <div class="btn-toolbar pull-right">
     {{#if order.cancelable}}<button class="btn btn-lg btn-danger cancel-btn">Cancel</button>{{/if}}
     {{#if order.editable}}<button class="btn btn-lg btn-primary submit-btn">Submit</button>{{/if}}
   </div>
+  {{/if}}
 </div>
 
 {{#if restaurantReview}}

@@ -23,8 +23,9 @@ module.exports.get = function(req, res) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
 
       var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
+      var isOwner = req.session.user.id = order.attributes.user_id;
       utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
-      res.render('order', {order: order.toJSON(), restaurantReview: review, states: states}, function(err, html) {
+      res.render('order', {order: order.toJSON(), restaurantReview: review, owner: isOwner, states: states}, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
       });

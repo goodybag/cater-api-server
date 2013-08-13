@@ -33,6 +33,12 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.js"></script>
+    <script src="/js/hb-helpers.js"></script>
+    <script>
+      for (var key in helpers) {
+        Handlebars.registerHelper(key, helpers[key]);
+      }
+    </script>
     <script src="/js/bootstrap.min.js"></script>
     {{{block "views"}}}
     {{{block "scripts"}}}

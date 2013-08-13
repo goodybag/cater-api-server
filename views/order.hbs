@@ -10,7 +10,7 @@
   <form id="order-form" class="row order-form">
     <div class="col-lg-6">
       <div class="row">
-        <p>Created: {{order.created_at}}</p>
+        <p>Submitted: {{order.submitted}}</p>
         <div class="form-group">
           <label for="order-datetime">Delivery Date</label>
           <input type="text" id="order-datetime" class="form-control order-form-field" value="{{order.datetime}}" {{#unless order.editable}}disabled{{/unless}}></diff>

@@ -32,6 +32,25 @@ var OrderView = Backbone.View.extend({
   },
 
   changeStatus: function(status) {
+    if (status = 'submitted') {
+      var vals = _.pick(this.model.toJSON(), this.model.requiredFields)
+      this.$el.find('.order-form-field').parent().removeClass('has-error');
+      var err = false;
+
+      for (var key in vals) {
+        if (vals[key] == null) {
+          this.$el.find(this.fieldMap[key]).parent().addClass('has-error');
+          err = true
+        }
+      }
+
+      if (err) {
+        this.$el.find('.order-address-form').removeClass('hide');
+        this.$el.find('.order-address-block').addClass('hide');
+        return;
+      }
+    }
+
     var url = this.model.url();
     $.ajax({
       url: this.model.url() + '/status-history',
@@ -44,22 +63,22 @@ var OrderView = Backbone.View.extend({
   },
 
   fieldMap: {
-    datetime: 'order-datetime',
-    street: 'address-street',
-    city: 'address-city',
-    state: 'address-state',
-    zip: 'address-zip',
-    phone: 'order-phone',
-    guests: 'order-guests',
-    notes: 'order-notes'
+    datetime: '#order-datetime',
+    street: '#address-street',
+    city: '#address-city',
+    state: '#address-state',
+    zip: '#address-zip',
+    phone: '#order-phone',
+    guests: '#order-guests',
+    notes: '#order-notes'
   },
 
   fieldGetters: {
     guests: function() {
-      return parseInt(this.$el.find('.order-form #order-guests').val());
+      return parseInt(this.$el.find('.order-form ' + this.fieldMap.guests).val());
     },
     datetime: function() {
-      var date = new Date(this.$el.find('.order-form #order-datetime').val().trim());
+      var date = new Date(this.$el.find('.order-form ' + this.fieldMap.datetime).val().trim());
       return date.toString() !== 'Invalid Date' ? date.toISOString() : null;
     }
 
@@ -70,17 +89,17 @@ var OrderView = Backbone.View.extend({
 
     for (var key in this.fieldMap) {
       var getter = this.fieldGetters[key];
-      var val = getter ? getter.apply(this) : this.$el.find('.order-form #' + this.fieldMap[key]).val().trim();
+      var val = getter ? getter.apply(this) : this.$el.find('.order-form ' + this.fieldMap[key]).val().trim();
       //TODO: validate
       if ((this.model.get(key) || val) && this.model.get(key) != val)
         diff[key] = val;
     }
 
-    return diff;
+    return _.size(diff) > 0 ? diff : null;
   },
 
   onOrderChange: function(e) {
-    this.$el.find('.order-save-btn').toggleClass('hide', _.size(this.getDiff()) === 0);
+    this.$el.find('.order-save-btn').toggleClass('hide', !this.getDiff());
   },
 
   onSave: function(e) {

@@ -20,7 +20,20 @@
       <div class="container">
         <div class="row">
           <a class="navbar-brand" href="#">Goodybag</a>
+          {{#if user.id}}
+          <div class="btn-group pull-right">
+            <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
+              My Account <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="/users/me">My Settings</a></li>
+              <li><a href="/users/me/orders">My Orders</a></li>
+              <li><a href="/auth/logout">Logout</a></li>
+            </ul>
+          </div>
+          {{else}}
           <a href="/auth" class="btn btn-default navbar-btn login-btn pull-right">Get Started</a>
+          {{/if}}
         </div>
       </div>
     </header>
@@ -33,6 +46,12 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.js"></script>
+    <script src="/js/hb-helpers.js"></script>
+    <script>
+      for (var key in helpers) {
+        Handlebars.registerHelper(key, helpers[key]);
+      }
+    </script>
     <script src="/js/bootstrap.min.js"></script>
     {{{block "views"}}}
     {{{block "scripts"}}}

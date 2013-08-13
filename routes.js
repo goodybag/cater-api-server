@@ -193,10 +193,12 @@ module.exports.register = function(app) {
 
   app.put('/orders/:oid/items/:iid', controllers.orders.orderItems.update);
 
+  app.patch('/orders/:oid/items/:iid', controllers.orders.orderItems.update);
+
   app.del('/orders/:oid/items/:iid', controllers.orders.orderItems.remove);
 
   app.all('/orders/:oid/items/:iid', function(req, res, next) {
-    res.set('Allow', 'GET, PUT, DELETE');  // TODO: PATCH
+    res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
 

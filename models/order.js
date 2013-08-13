@@ -1,5 +1,6 @@
 var Model = require('./model');
 var utils = require('../utils');
+var uuid  = require('node-uuid');
 
 module.exports = Model.extend({
   getOrderItems: function(callback) {
@@ -15,6 +16,7 @@ module.exports = Model.extend({
   },
   save: function(callback) {
     var insert = this.attributes.id == null;
+    if (insert) this.attributes.review_token = uuid.v4();
     var order = this
     Model.prototype.save.call(this, function(err) {
       if (!err && insert) {
@@ -26,11 +28,28 @@ module.exports = Model.extend({
     });
   },
   toJSON: function() {
-    var obj = Model.prototype.toJSON.apply(this, arguments);
+    var obj = utils.omit(Model.prototype.toJSON.apply(this, arguments), ['review_token', 'token_used']);
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
     return obj;
+  },
+  requiredFields: [
+    'datetime',
+    'street',
+    'city',
+    'state',
+    'zip',
+    'phone',
+    'guests'
+  ],
+  isComplete: function() {
+    var vals = utils.pick(this.attributes, this.requiredFields);
+    for (var key in vals) {
+      if (vals[key] == null)
+        return false
+    }
+    return true;
   }
 }, {
   table: 'orders',
@@ -92,6 +111,14 @@ module.exports = Model.extend({
     query.joins.restaurants = {
       type: 'inner'
     , on: {'id': '$orders.restaurant_id$'}
+    }
+
+    query.columns.push('(submitted.created_at) as submitted');
+
+    query.joins.order_statuses = {
+      type: 'left'
+    , alias: 'submitted'
+    , on: {'order_id': '$orders.id$', 'status': 'submitted'}
     }
 
     Model.find.call(this, query, function(err, orders) {

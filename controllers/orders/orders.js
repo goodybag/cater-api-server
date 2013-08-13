@@ -2,6 +2,7 @@ var
   db = require('../../db')
 , errors = require('../../errors')
 , utils = require('../../utils')
+, states = require('../../public/states');
 ;
 
 var models = require('../../models');
@@ -20,8 +21,11 @@ module.exports.get = function(req, res) {
     if (!order) return res.send(404);
     order.getOrderItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      var review = order.attributes.status === 'submitted'; // TODO: And user is order restaurant.
-      res.render('order', {order: order.toJSON(), restaurantReview: review}, function(err, html) {
+
+      var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
+      var isOwner = req.session.user.id = order.attributes.user_id;
+      utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+      res.render('order', {order: order.toJSON(), restaurantReview: review, owner: isOwner, states: states}, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
       });
@@ -56,10 +60,28 @@ module.exports.changeStatus = function(req, res) {
     if (!order) return res.send(404);
     if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
       return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
+
+    var review = utils.contains(['accepted', 'denied'], req.body.status);
+    if (review && req.body.review_token !== order.attributes.review_token)
+      return res.send(401, 'bad review token');
+
+    if (req.body.status === 'submitted' && !order.isComplete())
+      return res.send(403, 'order not complete');
+
     var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
+    console.log('changing status:', status);
     status.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      res.send(201, status.toJSON());
+      console.log('review:', review);
+      if (review) {
+        order.attributes.token_used = 'now()';
+        order.save(function(err) {
+          if (err) return res.error(errors.internal.DB_FAILURE, err);
+          res.send(201, status.toJSON());
+        });
+      }
+      else
+        res.send(201, status.toJSON());
     });
   });
 }

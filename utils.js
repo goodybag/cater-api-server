@@ -185,13 +185,4 @@ utils.error = function(message, type){
   };
 };
 
-utils.joinIf = function(arr, sep) {
-  return Array.prototype.join.call(utils.compact(arr), sep);
-}
-
-utils.capitalize = function(str) {
-  if (!str) return '';
-  return str[0].toUpperCase() + str.substring(1);
-}
-
 module.exports = utils;

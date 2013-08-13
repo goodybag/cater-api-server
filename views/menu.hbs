@@ -4,15 +4,15 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-lg-8">
-    <h2>Menu</h2>
+  <div class="col-lg-8 panel">
+    <h2 class="panel-heading">Menu</h2>
     {{#each restaurant.categories}}
       <h3>{{name}}</h3>
-      <div class="list-group">
+      <div class="list-group list-group-flush category" data-id="{{id}}" data-index="{{@index}}">
       {{#each items}}
-        <a class="list-group-item">
+        <a class="list-group-item item" data-id="{{id}}" data-index="{{@index}}">
           <div>
-            <div><h4 class="list-group-item-heading">{{name}}</h4> <i class="list-group-item-text pull-right">feeds {{feeds_min}}-{{feeds_max}} &nbsp;   &nbsp; price {{dollars price}}</i></div>
+            <div><strong class="list-group-item-heading">{{name}}</strong> <i class="list-group-item-text pull-right">feeds {{feeds_min}}-{{feeds_max}} &nbsp;   &nbsp; price {{dollars price}}</i></div>
             <div class="list-group-item-text">{{description}}</div>
           </div>
         </a>
@@ -20,7 +20,170 @@
       </div>
     {{/each}}
   </div>
-  <div class="col-lg-4">
-    <h2>Orders</h2>
+  <div class="col-lg-4 panel">
+    <h2 class="panel-heading">Orders</h2>
+    <div class="list-group list-group-flush order-items">
+    </div>
   </div>
 </div>
+
+{{#extend "views"}}
+<script id="hbs-item-modal-dialog" type="text/x-handlebars-template">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close destroy" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">\{{item.name}} &dash; $\{{dollars item.price}} (feeds \{{item.feeds_min}} - \{{item.feeds_max}})</h4>
+    </div>
+    <div class="modal-body">
+      <em>\{{item.description}}</em>
+    </div>
+    <div class="modal-footer">
+      <span class="pull-left"> quantity: <input type="text" name="quantity" value="\{{or quantity 1}}" maxlength="4" size="4" /></span>
+      <button type="button" class="btn btn-default destroy" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary add-to-order" data-dismiss="modal">Add to order</button>
+    </div>
+  </div>
+</div>
+</script>
+
+<script id="hbs-order-item" type="text/x-handlebars-template">
+<div>
+  <strong class="list-group-item-heading">\{{name}}</strong>
+  <i class="list-group-item-text pull-right">$\{{dollars price}} x\{{quantity}}</i>
+</div>
+</script>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  //helpers
+  Handlebars.registerHelper('or', function(value1, value2) {
+    return value1 || value2;
+  });
+
+  Handlebars.registerHelper('dollars', function(pennies, options) {
+    return (pennies / 100).toFixed(2);
+  });
+
+  var menu = {{{json restaurant.categories}}};
+  var templates = {};
+  var views = {};
+  var models = {};
+  var collections = {};
+
+  var app = {};
+  app.views = {};
+  app.collections = {};
+
+  collections.OrderItems = Backbone.Collection.extend({url:'/restaurants/{{restaurant.id}}/orders/current/items/'});
+
+  models.OrderItem = Backbone.Model.extend();
+
+  templates.itemModalDialog = Handlebars.compile($("#hbs-item-modal-dialog").html());
+  templates.orderItem = Handlebars.compile($("#hbs-order-item").html());
+
+  views.ItemModal = Backbone.View.extend({
+    tag: "div"
+  , className: 'modal fade'
+  , template: templates.itemModalDialog
+  , events: {
+      'click .destroy': 'remove'
+    , 'click .add-to-order': 'addToOrder'
+    , 'keypress input[type=text]': 'addToOrderKeyPress'
+    }
+  , initialize: function(options) {
+      this.render();
+    }
+  , render: function() {
+      this.$el.html(this.template({item: this.options.item, quantity: this.options.quantity}));
+      return this;
+    }
+  , show: function() {
+      this.$el.modal('show');
+    }
+  , hide: function() {
+      this.$el.modal('hide');
+    }
+  , close: function() {
+      this.$('.close').click();
+    }
+  , addToOrder: function() {
+      var quantity = parseInt(this.$("input[name='quantity']").val());
+
+      var orderItem = app.collections.orderItems.findWhere({item_id: this.options.item.id});
+
+      if (orderItem) {
+        orderItem.save({quantity: quantity}, {wait: true});
+        this.close();
+        return;
+      }
+
+      orderItem = new models.OrderItem({item_id: this.options.item.id, quantity: quantity});
+      app.collections.orderItems.create(orderItem, {wait: true});
+      this.close();
+    }
+  , addToOrderKeyPress: function(e) {
+      if (e && e.keyCode != 13) return;
+      this.addToOrder();
+    }
+  });
+
+  views.OrderItems = Backbone.View.extend({
+    el: '.order-items'
+  , initialize: function() {
+      this.collection = app.collections.orderItems;
+      this.listenTo(this.collection, 'add', this.renderOrderItem);
+    }
+  , renderOrderItem: function(orderItemModel) {
+      var orderItem = new views.OrderItem({model: orderItemModel});
+      this.$el.append(orderItem.render().el);
+    }
+  });
+
+  views.OrderItem = Backbone.View.extend({
+    tag: "div"
+  , className: 'list-group-item order-item'
+  , template: templates.orderItem
+  , events: {
+      'click .remove': 'destroy'
+    , 'click .edit': 'edit'
+    }
+  , initialize: function(options) {
+      this.model = options.model;
+      this.render();
+    }
+  , render: function() {
+      console.log(this.model.toJSON());
+      this.$el.html(this.template(this.model.toJSON()));
+      return this;
+    }
+  , destroy: function() {
+      this.model.destroy();
+      this.remove();
+    }
+  });
+
+  app.collections.orderItems = new collections.OrderItems();
+  app.collections.orderItems.fetch();
+  app.views.orderItems = new views.OrderItems();
+
+
+  $(function() {
+    $('.item').click(function() {
+      var $this = $(this);
+      var categoryId = $this.parent('.category').data('id');
+      var categoryIndex = $this.parent('.category').data('index');
+
+      var itemId = $this.data('id');
+      var itemIndex = $this.data('index');
+
+      var item = menu[categoryIndex].items[itemIndex];
+
+      var orderItem = app.collections.orderItems.findWhere({item_id: item.id});
+      var itemModalView = new views.ItemModal({item: item, quantity: (orderItem && orderItem.toJSON().quantity) || 1});
+      itemModalView.show();
+    });
+  });
+</script>
+{{/extend}}

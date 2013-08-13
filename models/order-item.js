@@ -5,7 +5,7 @@ module.exports = Model.extend({
     if (!this.attributes.order_id) return callback(null, true);
     require('./order').findOne(this.attributes.order_id, function(err, order) {
       if (err) return callback(err);
-      if (!error) return callback({code:404, message: 'order not found'});
+      if (!err) return callback({code:404, message: 'order not found'});
       callback(null, order.attributes.status === 'pending');
     });
   },

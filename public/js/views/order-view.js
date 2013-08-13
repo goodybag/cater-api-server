@@ -32,13 +32,14 @@ var OrderView = Backbone.View.extend({
   },
 
   changeStatus: function(status) {
+    var url = this.model.url();
     $.ajax({
       url: this.model.url() + '/status-history',
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({status: status, review_token: this.options.token}),
       error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
-      success: function(data, textStatus, jqXHR) { window.location.reload() }
+      success: function(data, textStatus, jqXHR) { window.location.href = url }
     });
   },
 

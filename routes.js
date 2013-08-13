@@ -100,7 +100,9 @@ module.exports.register = function(app) {
    */
 
   app.all('/restaurants/:rid/orders/current', controllers.restaurants.orders.current);
+
   app.all('/restaurants/:rid/orders/current/items', controllers.restaurants.orders.current);
+
   app.all('/restaurants/:rid/orders/current/items/:iid', controllers.restaurants.orders.current);
 
   /**

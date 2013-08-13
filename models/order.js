@@ -33,6 +33,23 @@ module.exports = Model.extend({
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
     return obj;
+  },
+  requiredFields: [
+    'datetime',
+    'street',
+    'city',
+    'state',
+    'zip',
+    'phone',
+    'guests'
+  ],
+  isComplete: function() {
+    var vals = utils.pick(this.attributes, this.requiredFields);
+    for (var key in vals) {
+      if (vals[key] == null)
+        return false
+    }
+    return true;
   }
 }, {
   table: 'orders',

@@ -17,5 +17,14 @@ var Order = Backbone.Model.extend({
         this.set('sub_total', _.reduce(this.orderItems.pluck('sub_total'), function(a, b) { return a + b; }, 0));
       }, this);
     }
-  }
+  },
+  requiredFields: [
+    'datetime',
+    'street',
+    'city',
+    'state',
+    'zip',
+    'phone',
+    'guests'
+  ]
 });

@@ -46,15 +46,15 @@ var helpers = {
     return value1 || value2;
   },
 
-  tax: function(cents, rate) {
+  tax: function(cents, rate, options) {
     if (!cents) return '0.00';
-    var mul = rate ? rate / 100 : 0.000825;
+    var mul = options ? rate / 100 : 0.000825;
     return (cents * mul).toFixed(2);
   },
 
-  total: function(cents, rate) {
+  total: function(cents, rate, options) {
     if (!cents) return '0.00';
-    var mul = rate ? (1 + rate) / 100 : 0.000825;
+    var mul = options ? (1 + rate) / 100 : 0.010825;
     return (cents * mul).toFixed(2);
   },
 

@@ -21,10 +21,11 @@ module.exports = Model.extend({
     }
   },
   destroy: function(callback) {
+    var model = this, args = arguments;
     this.isMutable(function (err, mutable) {
       if (err) return callback(err);
       if (!mutable) return callback({code: 403, message: "can't remove items from non-pending orders"});
-      Model.prototype.destroy.apply(this, arguments);
+      Model.prototype.destroy.apply(model, args);
     });
   },
   toJSON: function() {

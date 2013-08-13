@@ -38,15 +38,15 @@ define(function(require) {
     }
   , street: {
       type: types.text
-    , nullable: false
+    , nullable: true
     }
   , city: {
       type: types.text
-    , nullable: false
+    , nullable: true
     }
   , state: {
       type: types.varchar(2)
-    , nullable: false
+    , nullable: true
     }
   , zip: {
       type: types.numeric(5)
@@ -54,7 +54,7 @@ define(function(require) {
     }
   , phone: {
       type: types.numeric(10)
-    , nullable: false
+    , nullable: true
     }
   , notes: {
       type: types.text
@@ -62,11 +62,11 @@ define(function(require) {
     }
   , datetime: {
       type: types.timestamp
-    , nullable: false
+    , nullable: true
     }
   , guests: {
       type: types.int
-    , nullable: false
+    , nullable: true
     }
   };
 

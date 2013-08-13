@@ -48,6 +48,13 @@ app.configure(function(){
   app.response.noContent = function() {
     this.status(204).send('{}');
   };
+
+  var render = app.response.render;
+  app.response.render = function(path, options, callback) {
+    var options = utils.extend(options || {}, {user: this.req.session.user});
+    render.call(this, path, options, callback);
+  }
+
 });
 
 app.configure('development', function(){

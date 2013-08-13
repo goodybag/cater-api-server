@@ -20,6 +20,14 @@ module.exports.register = function(app) {
 
   app.post('/restaurants/:rid/orders', controllers.restaurants.orders.create);
 
+  app.get('/restaurants/:rid/orders/current/items', controllers.restaurants.orders.current.listItems);
+
+  app.post('/restaurants/:rid/orders/current/items', controllers.restaurants.orders.current.addItem);
+
+  app.put('/restaurants/:rid/orders/current/items/:iid', controllers.restaurants.orders.current.updateItem);
+
+  app.del('/restaurants/:rid/orders/current/items/:iid', controllers.restaurants.orders.current.removeItem);
+
   app.all('/restaurants/:rid/orders', function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);

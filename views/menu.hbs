@@ -6,7 +6,7 @@
 <div class="row">
   <div class="col-lg-8 panel">
     <h2 class="panel-heading">Menu</h2>
-    {{#each restaurant.categories}}
+    {{#each menu}}
       <h3>{{name}}</h3>
       <div class="list-group list-group-flush category" data-id="{{id}}" data-index="{{@index}}">
       {{#each items}}
@@ -33,17 +33,24 @@
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close destroy" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h4 class="modal-title">\{{name}} &dash; $\{{dollars price}} (feeds \{{feeds_min}} - \{{feeds_max}})</h4>
+      <h4 class="modal-title">\{{item.name}} &dash; $\{{dollars item.price}} (feeds \{{item.feeds_min}} - \{{item.feeds_max}})</h4>
     </div>
     <div class="modal-body">
-      <em>\{{description}}</em>
+      <em>\{{item.description}}</em>
     </div>
     <div class="modal-footer">
       <span class="pull-left"> quantity: <input type="text" name="quantity" value="\{{or quantity 1}}" maxlength="4" size="4" /></span>
       <button type="button" class="btn btn-default destroy" data-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary">Add to order</button>
+      <button type="button" class="btn btn-primary add-to-order" data-dismiss="modal">Add to order</button>
     </div>
   </div>
+</div>
+</script>
+
+<script id="hbs-order-item" type="text/x-handlebars-template">
+<div>
+  <strong class="list-group-item-heading">{{name}}</strong>
+  <i class="list-group-item-text pull-right">price {{dollars price}}</i>
 </div>
 </script>
 {{/extend}}
@@ -56,49 +63,107 @@
   });
 
   Handlebars.registerHelper('dollars', function(pennies, options) {
-    if (typeof(pennies) === 'string') pennies = options.contexts[0].get(pennies);
     return (pennies / 100).toFixed(2);
   });
 
+  var menu = {{{json menu}}};
   var templates = {};
   var views = {};
   var models = {};
   var collections = {};
 
-  var restaurant = {{{json restaurant}}};
+  var app = {};
+  app.views = {};
+  app.collections = {};
 
-  collections.OrderItems = Backbone.Collections.extend({url:'/restaurants/{{restaurant.id}}/orders/current/items/'});
-  var orderItems = new collections.OrderItems();
+  collections.OrderItems = Backbone.Collection.extend({url:'/restaurants/{{restaurant.id}}/orders/current/items/'});
 
   models.OrderItem = Backbone.Model.extend();
 
   templates.itemModalDialog = Handlebars.compile($("#hbs-item-modal-dialog").html());
+  templates.orderItem = Handlebars.compile($("#hbs-order-item").html());
 
   views.ItemModal = Backbone.View.extend({
     tag: "div"
   , className: 'modal fade'
   , template: templates.itemModalDialog
   , events: {
-      'click .destroy': 'teardown'
+      'click .destroy': 'remove'
+    , 'click .add-to-order': 'addToOrder'
+    , 'keypress input[type=text]': 'addToOrder'
     }
   , initialize: function(options) {
       this.render();
     }
   , render: function() {
-      this.$el.html(this.template(this.options.item));
+      this.$el.html(this.template({item: this.options.item, quantity: this.options.quantity}));
       return this;
     }
   , show: function() {
       this.$el.modal('show');
     }
-  , teardown: function() {
+  , hide: function() {
+      this.$el.modal('hide');
+    }
+  , close: function() {
+      this.$('.close').click();
+    }
+  , addToOrder: function(e) {
+      if (e && e.keyCode != 13) return;
+
+      var quantity = parseInt(this.$("input[name='quantity']").val());
+
+      var orderItem = app.collections.orderItems.findWhere({item_id: this.options.item.id});
+
+      if (orderItem) {
+        this.close();
+        return orderItem.save({quantity: quantity});
+      }
+
+      orderItem = new models.OrderItem({item_id: this.options.item.id, quantity: quantity});
+      app.collections.orderItems.create(orderItem, {wait: true});
+      this.close();
+    }
+  });
+
+  views.OrderItems = Backbone.View.extend({
+    el: '.order-items'
+  , initialize: function() {
+      this.collection = app.collections.orderItems;
+      this.listenTo(this.collection, 'add', this.renderItem);
+      this.collection.fetch();
+    }
+  , renderOrderItem: function(orderItemModel) {
+      var orderItem = new models.OrderItem({model: orderItemModel});
+      this.$el.append(orderItem.render().el);
+    }
+  });
+
+  views.OrderItem = Backbone.View.extend({
+    tag: "div"
+  , className: 'list-group-item order-item'
+  , template: templates.orderItem
+  , events: {
+      'click .remove': 'destroy'
+    , 'click .edit': 'edit'
+    }
+  , initialize: function(options) {
+      this.model = options.model;
+      this.render();
+    }
+  , render: function() {
+      this.$el.html(this.template(this.model.toJSON()));
+      return this;
+    }
+  , destroy: function() {
+      this.model.destroy();
       this.remove();
     }
   });
 
-  $.getJSON('/restaurant/{{restaurant.id}}/order/current/items', function(data){
+  app.collections.orderItems = new collections.OrderItems();
+  app.views.orderItems = new views.OrderItems();
 
-  })
 
   $(function() {
     $('.item').click(function() {
@@ -109,8 +174,10 @@
       var itemId = $this.data('id');
       var itemIndex = $this.data('index');
 
-      var item = restaurant.categories[categoryIndex].items[itemIndex];
-      var itemModalView = new views.ItemModal({item: item});
+      var item = menu[categoryIndex].items[itemIndex];
+
+      var orderItem = app.collections.orderItems.findWhere({item_id: item.id});
+      var itemModalView = new views.ItemModal({item: item, quantity: (orderItem && orderItem.toJSON().quantity) || 1});
       itemModalView.show();
     });
   });

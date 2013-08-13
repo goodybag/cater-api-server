@@ -29,7 +29,8 @@
     "when": "2.2.x",
     "node-static": "0.6.x",
     "hbs": "2.3.x",
-    "Faker": "0.5.x"
+    "Faker": "0.5.x",
+    "sprintf-js": "0.0.x"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

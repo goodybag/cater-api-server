@@ -59,17 +59,25 @@ module.exports.changeStatus = function(req, res) {
     if (!order) return res.send(404);
     if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
       return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
-    if (utils.contains(['accepted', 'denied'], req.body.status) && req.body.review_token !== order.attributes.review_token)
+
+    var review = utils.contains(['accepted', 'denied'], req.body.status);
+    if (review && req.body.review_token !== order.attributes.review_token)
       return res.send(401, 'bad review token');
 
     var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
+    console.log('changing status:', status);
     status.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      order.attributes.token_used = 'now()';
-       order.save(function(err) {
-         if (err) return res.error(errors.internal.DB_FAILURE, err);
-         res.send(201, status.toJSON());
-       });
+      console.log('review:', review);
+      if (review) {
+        order.attributes.token_used = 'now()';
+        order.save(function(err) {
+          if (err) return res.error(errors.internal.DB_FAILURE, err);
+          res.send(201, status.toJSON());
+        });
+      }
+      else
+        res.send(201, status.toJSON());
     });
   });
 }

@@ -79,15 +79,6 @@
 
 {{#extend "scripts"}}
 <script>
-  //helpers
-  Handlebars.registerHelper('or', function(value1, value2) {
-    return value1 || value2;
-  });
-
-  Handlebars.registerHelper('dollars', function(pennies, options) {
-    return (pennies / 100).toFixed(2);
-  });
-
   var menu = {{{json restaurant.categories}}};
   var templates = {};
   var views = {};

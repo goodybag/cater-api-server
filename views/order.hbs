@@ -12,7 +12,7 @@
       <div class="row">
         <p>Submitted: {{order.submitted}}</p>
         <div class="form-group">
-          <label for="order-datetime">Delivery Date</label>
+          <label for="order-datetime" class="control-label">Delivery Date</label>
           <input type="text" id="order-datetime" class="form-control order-form-field" value="{{order.datetime}}" {{#unless order.editable}}disabled{{/unless}}></diff>
         </div>
       </div>
@@ -29,15 +29,15 @@
             {{#if order.editable}}
             <fieldgroup class="order-address order-address-form hide">
               <div class="form-group">
-                <label for="address-street">Street</label>
+                <label for="address-street" class="control-label">Street</label>
                 <input type="text" id="address-street" class="form-control order-form-field address-input address-street" value="{{order.street}}">
               </div>
               <div class="form-group">
-                <label for="address-city">City</label>
+                <label for="address-city" class="control-label">City</label>
                 <input type="text" id="address-city" class="form-control order-form-field address-input address-city" value="{{order.city}}">
               </div>
               <div class="form-group">
-                <label for="address-state">State</label>
+                <label for="address-state" class="control-label">State</label>
                 <select id="address-state" class="form-control order-form-field address-input address-state" form="order-form">
                   {{#each states}}
                   <option value="{{this.abbr}}" label="{{this.abbr}}"{{#if this.default}} selected="selected"{{/if}}>{{this.name}}</option>
@@ -45,7 +45,7 @@
                 </select>
               </div>
               <div class="form-group">
-                <label for="address-zip">Zip</label>
+                <label for="address-zip" class="control-label">Zip</label>
                 <input type="text" maxlength="5" id="address-zip" class="form-control order-form-field address-input address-zip" value="{{order.zip}}">
               </div>
             </fieldgroup>
@@ -54,11 +54,11 @@
         </div>
         <div class="col-lg-6">
           <div class="form-group">
-            <label for="order-phone">Phone</label>
+            <label for="order-phone" class="control-label">Phone</label>
             <input type="tel" id="order-phone" class="form-control order-form-field order-phone" {{#unless order.editable}}disabled{{/unless}} value="{{order.phone}}">
           </div>
           <div class="form-group">
-            <label for="order-guests">Guests</label>
+            <label for="order-guests" class="control-label">Guests</label>
             <input type="number" min="1" id="order-guests" class="form-control order-form-field order-guests" value="{{order.guests}}" {{#unless order.editable}}disabled{{/unless}}>
           </div>
         </div>

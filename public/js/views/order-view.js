@@ -32,6 +32,25 @@ var OrderView = Backbone.View.extend({
   },
 
   changeStatus: function(status) {
+    if (status = 'submitted') {
+      var vals = _.pick(this.model.toJSON(), this.model.requiredFields)
+      this.$el.find('.order-form-field').parent().removeClass('has-error');
+      var err = false;
+
+      for (var key in vals) {
+        if (vals[key] == null) {
+          this.$el.find(this.fieldMap[key]).parent().addClass('has-error');
+          err = true
+        }
+      }
+
+      if (err) {
+        this.$el.find('.order-address-form').removeClass('hide');
+        this.$el.find('.order-address-block').addClass('hide');
+        return;
+      }
+    }
+
     var url = this.model.url();
     $.ajax({
       url: this.model.url() + '/status-history',

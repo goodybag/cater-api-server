@@ -96,6 +96,14 @@ module.exports = Model.extend({
     , on: {'id': '$orders.restaurant_id$'}
     }
 
+    query.columns.push('(submitted.created_at) as submitted');
+
+    query.joins.order_statuses = {
+      type: 'left'
+    , alias: 'submitted'
+    , on: {'order_id': '$orders.id$', 'status': 'submitted'}
+    }
+
     Model.find.call(this, query, function(err, orders) {
       if (!err) {
         utils.each(orders, function(order) {

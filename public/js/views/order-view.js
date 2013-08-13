@@ -93,6 +93,13 @@ var OrderView = Backbone.View.extend({
   },
 
   editAddress: function(e) {
-    $('.order-address').toggleClass('hide');
+    this.$el.find('.order-address').toggleClass('hide');
+    var addr = {
+      street: this.$el.find('.address-street').val(),
+      city: this.$el.find('.address-city').val(),
+      state: this.$el.find('.address-state').val(),
+      zip: this.$el.find('.address-zip').val()
+    }
+    $('.order-address-block').html(Handlebars.helpers.address(addr));
   }
 });

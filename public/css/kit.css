@@ -17,3 +17,17 @@
 .full-width {
   width: 100%;
 }
+
+.x {
+  background : none;
+  border: none;
+  cursor: pointer;
+  color: gray;
+}
+
+.order-item .edit {
+  color: gray;
+  text-transform:uppercase;
+  font-size: 0.75em;
+  cursor: pointer;
+}

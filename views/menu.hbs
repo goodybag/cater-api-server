@@ -32,16 +32,35 @@
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
-      <button type="button" class="close destroy" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <button type="button" class="close remove" data-dismiss="modal" aria-hidden="true">&times;</button>
       <h4 class="modal-title">\{{item.name}} &dash; $\{{dollars item.price}} (feeds \{{item.feeds_min}} - \{{item.feeds_max}})</h4>
     </div>
     <div class="modal-body">
       <em>\{{item.description}}</em>
     </div>
     <div class="modal-footer">
-      <span class="pull-left"> quantity: <input type="text" name="quantity" value="\{{or quantity 1}}" maxlength="4" size="4" /></span>
-      <button type="button" class="btn btn-default destroy" data-dismiss="modal">Close</button>
+      <span class="pull-left"> quantity: <input type="number" name="quantity" value="\{{or quantity 1}}" maxlength="4" min="0" /></span>
+      <button type="button" class="btn btn-default remove" data-dismiss="modal">Close</button>
       <button type="button" class="btn btn-primary add-to-order" data-dismiss="modal">Add to order</button>
+    </div>
+  </div>
+</div>
+</script>
+
+<script id="hbs-order-item-modal-dialog" type="text/x-handlebars-template">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close remove" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">\{{item.name}} &dash; $\{{dollars item.price}} (feeds \{{item.feeds_min}} - \{{item.feeds_max}})</h4>
+    </div>
+    <div class="modal-body">
+      <em>\{{item.description}}</em>
+    </div>
+    <div class="modal-footer">
+      <span class="pull-left"> quantity: <input type="number" name="quantity" value="\{{item.quantity}}" maxlength="4" min="0" /></span>
+      <button type="button" class="btn btn-default remove" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary update-order-item">Update item</button>
     </div>
   </div>
 </div>
@@ -49,8 +68,11 @@
 
 <script id="hbs-order-item" type="text/x-handlebars-template">
 <div>
+  <button class="x">&times;</button>
+  <span class="quantity">\{{quantity}}x </span>
   <strong class="list-group-item-heading">\{{name}}</strong>
-  <i class="list-group-item-text pull-right">$\{{dollars price}} x\{{quantity}}</i>
+  <span class="edit">edit</span>
+  <i class="list-group-item-text pull-right">$\{{dollars price}}</i>
 </div>
 </script>
 {{/extend}}
@@ -78,9 +100,11 @@
 
   collections.OrderItems = Backbone.Collection.extend({url:'/restaurants/{{restaurant.id}}/orders/current/items/'});
 
+  models.Item = Backbone.Model.extend();
   models.OrderItem = Backbone.Model.extend();
 
   templates.itemModalDialog = Handlebars.compile($("#hbs-item-modal-dialog").html());
+  templates.orderItemModalDialog = Handlebars.compile($("#hbs-order-item-modal-dialog").html());
   templates.orderItem = Handlebars.compile($("#hbs-order-item").html());
 
   views.ItemModal = Backbone.View.extend({
@@ -88,15 +112,17 @@
   , className: 'modal fade'
   , template: templates.itemModalDialog
   , events: {
-      'click .destroy': 'remove'
+      'click .remove': 'remove'
     , 'click .add-to-order': 'addToOrder'
-    , 'keypress input[type=text]': 'addToOrderKeyPress'
+    , 'keypress input[type=number]': 'addToOrderKeyPress'
     }
   , initialize: function(options) {
+      this.model = this.options.model;
+      this.quantity = this.options.quantity;
       this.render();
     }
   , render: function() {
-      this.$el.html(this.template({item: this.options.item, quantity: this.options.quantity}));
+      this.$el.html(this.template({item: this.model.toJSON(), quantity: this.quantity}));
       return this;
     }
   , show: function() {
@@ -111,7 +137,7 @@
   , addToOrder: function() {
       var quantity = parseInt(this.$("input[name='quantity']").val());
 
-      var orderItem = app.collections.orderItems.findWhere({item_id: this.options.item.id});
+      var orderItem = app.collections.orderItems.findWhere({item_id: this.model.attributes.id});
 
       if (orderItem) {
         orderItem.save({quantity: quantity}, {wait: true});
@@ -119,13 +145,60 @@
         return;
       }
 
-      orderItem = new models.OrderItem({item_id: this.options.item.id, quantity: quantity});
+      orderItem = new models.OrderItem({item_id: this.model.id, quantity: quantity});
       app.collections.orderItems.create(orderItem, {wait: true});
       this.close();
     }
   , addToOrderKeyPress: function(e) {
       if (e && e.keyCode != 13) return;
       this.addToOrder();
+    }
+  });
+
+  views.OrderItemModal = Backbone.View.extend({
+    tag: "div"
+  , className: 'modal fade'
+  , template: templates.orderItemModalDialog
+  , events: {
+      'click .remove': 'remove'
+    , 'click .update-order-item': 'updateOrderItem'
+    , 'keypress input[type=number]': 'updateOrderItemKeyPress'
+    }
+  , initialize: function(options) {
+      this.model = this.options.model;
+      this.render();
+    }
+  , render: function() {
+      this.$el.html(this.template({item: this.model.toJSON()}));
+      return this;
+    }
+  , show: function() {
+      this.$el.modal('show');
+    }
+  , hide: function() {
+      this.$el.modal('hide');
+    }
+  , close: function() {
+      this.$('.close').click();
+    }
+  , updateOrderItem: function() {
+      console.log('hi');
+      var quantity = parseInt(this.$("input[name='quantity']").val());
+      console.log(quantity);
+
+      if(quantity <= 0) {
+        this.model.destroy();
+        this.close();
+        return;
+      }
+
+      this.model.save({quantity: quantity}, {wait: true});
+      this.close();
+      return;
+    }
+  , updateOrderItemKeyPress: function(e) {
+      if (e && e.keyCode != 13) return;
+      this.updateOrderItem();
     }
   });
 
@@ -146,11 +219,13 @@
   , className: 'list-group-item order-item'
   , template: templates.orderItem
   , events: {
-      'click .remove': 'destroy'
-    , 'click .edit': 'edit'
+      'click .edit': 'edit'
+    , 'click .x': 'destroy'
     }
   , initialize: function(options) {
       this.model = options.model;
+      this.listenTo(this.model, 'change:quantity', this.render);
+      this.listenTo(this.model, 'destroy', this.remove);
       this.render();
     }
   , render: function() {
@@ -158,9 +233,12 @@
       this.$el.html(this.template(this.model.toJSON()));
       return this;
     }
+  , edit: function() {
+      var orderItemModal = new views.OrderItemModal({model: this.model});
+      orderItemModal.show();
+    }
   , destroy: function() {
       this.model.destroy();
-      this.remove();
     }
   });
 
@@ -178,11 +256,11 @@
       var itemId = $this.data('id');
       var itemIndex = $this.data('index');
 
-      var item = menu[categoryIndex].items[itemIndex];
+      var item = new models.Item(menu[categoryIndex].items[itemIndex]);
 
       var orderItem = app.collections.orderItems.findWhere({item_id: item.id});
-      var itemModalView = new views.ItemModal({item: item, quantity: (orderItem && orderItem.toJSON().quantity) || 1});
-      itemModalView.show();
+      var itemModal = new views.ItemModal({model: item, quantity: (orderItem && orderItem.attributes.quantity) || 1});
+      itemModal.show();
     });
   });
 </script>

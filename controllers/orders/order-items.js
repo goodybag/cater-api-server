@@ -45,12 +45,11 @@ module.exports.update = function(req, res, next) {
 }
 
 module.exports.remove = function(req, res, next) {
-  var item = new models.OrderItem({id: req.params.iid});
-  item.destroy(function(error, rows, result) {
-    if (error) {
-      if (error.code === 403 || error.code === 404) return res.send(error.code, error.message);
-      return res.error(errors.internal.DB_FAILURE, error);
-    }
+  var query = queries.orderItem.del(parseInt(req.params.iid));
+  var sql = db.builder.sql(query);
+
+  db.query(sql.query, sql.values, function(error, rows, result) {
+    if(error) return res.error(errors.internal.DB_FAILURE, error);
     res.send(200);
   });
 }

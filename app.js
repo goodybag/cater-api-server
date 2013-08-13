@@ -35,6 +35,10 @@ hbs.registerHelper('block', function(name) {
   return val;
 });
 
+hbs.registerHelper('json', function(context) {
+  return JSON.stringify(context);
+});
+
 hbs.registerHelper('dollars', function(pennies, options) {
   return (pennies / 100).toFixed(2);
 });
@@ -64,7 +68,7 @@ hbs.registerHelper('address', function(loc) {
   if (!loc) return '';
   var line1 = loc.street ? loc.street : utils.joinIf([loc.street1, loc.street2], ', ');
   // TODO: put in <abbr> tag for state
-  var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), loc.state.toUpperCase()], ', '), loc.zip], ' ');
+  var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), (loc.state && loc.state.toUpperCase())], ', '), loc.zip], ' ');
   return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
                        line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
 });

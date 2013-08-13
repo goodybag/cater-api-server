@@ -1,5 +1,6 @@
 var Model = require('./model');
 var utils = require('../utils');
+var uuid  = require('node-uuid');
 
 module.exports = Model.extend({
   getOrderItems: function(callback) {
@@ -15,6 +16,7 @@ module.exports = Model.extend({
   },
   save: function(callback) {
     var insert = this.attributes.id == null;
+    if (insert) this.attributes.review_token = uuid.v4();
     var order = this
     Model.prototype.save.call(this, function(err) {
       if (!err && insert) {
@@ -26,7 +28,7 @@ module.exports = Model.extend({
     });
   },
   toJSON: function() {
-    var obj = Model.prototype.toJSON.apply(this, arguments);
+    var obj = utils.omit(Model.prototype.toJSON.apply(this, arguments), ['review_token', 'token_used']);
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);

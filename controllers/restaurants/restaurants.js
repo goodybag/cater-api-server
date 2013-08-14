@@ -12,6 +12,7 @@ module.exports.list = function(req, res) {
   models.Restaurant.find(req.query, function(error, models) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON')}, function(error, html) {
+      console.log(error);
       if (error) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
     });

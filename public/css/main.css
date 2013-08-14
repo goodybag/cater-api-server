@@ -11,7 +11,7 @@
   color: #dedede;
 }
 
-#order-params {
+.order-params-bar {
   background-color: #f8f8f8;
   border: 1px solid #e6e6e6;
   margin-bottom: 20px;
@@ -22,6 +22,6 @@
           border-radius: 4px;
 }
 
-#order-params .form-control {
+.order-params-bar .form-control {
   width: 125px;
 }

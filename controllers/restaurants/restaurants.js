@@ -22,12 +22,17 @@ module.exports.get = function(req, res) {
   var tasks = [
     function(callback) {
       var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'latest.status': 'pending'};
-      models.Order.findOne({where: where}, callback);
+      models.Order.findOne({where: where}, function(err, order) {
+        if (err) return callback(err);
+        order.getOrderItems(function(err, items) {
+          callback(err, order);
+        });
+      });
     },
 
     function(callback) {
-      models.Restaurant.findOne(parseInt(req.params.rid), function(error, restaurant) {
-        if (error) return callback(err);
+      models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
+        if (err) return callback(err);
         restaurant.getItems(function(err, items) {
           callback(err, restaurant);
         });

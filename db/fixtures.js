@@ -47,6 +47,7 @@ var inserts = {
       , state: faker.Address.usState(true)
       , zip: faker.Address.zipCodeFormat(0)
       , phone: parseInt(faker.PhoneNumber.phoneNumberFormat(faker.definitions.phone_formats.length-1))
+      , price: faker.Helpers.randomNumber(4) + 1
       }
     }
   }

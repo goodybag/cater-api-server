@@ -52,9 +52,8 @@ define(function(require) {
     }
   , minimum_order: {
       type: types.int
-    , nullable: false
-    , default: 0
-    , checks: ['>= 0']
+    , nullable: true
+    , checks: ['> 0']
     }
   , price: {
       type: types.smallint

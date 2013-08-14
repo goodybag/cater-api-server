@@ -229,6 +229,12 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+
+  // For the order params
+  app.get('/session/order-params', controllers.session.getOrderParams);
+
+  app.put('/session/order-params', controllers.session.updateOrderParams);
+
   /**
    *  Users resource.  All the users.
    */

@@ -50,6 +50,10 @@ define(function(require) {
       type: types.numeric(10)
     , nullable: false
     }
+  , cuisine: {
+      type: types.text + '[]'
+    , nullable: true
+    }
   };
 
   definition.indices = {};

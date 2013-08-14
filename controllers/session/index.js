@@ -6,14 +6,7 @@ var
 ;
 
 module.exports.get = function(req, res) {
-  var query = queries.user.get(req.session.user.id);
-  var sql = db.builder.sql(query);
-
-  db.query(sql.query, sql.values, function(err, rows, results) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (!rows || !rows[0]) return res.send(404);
-    res.json(200, rows[0]);
-  });
+  res.json(200, req.session);
 }
 
 module.exports.create = function(req, res) {
@@ -46,3 +39,22 @@ module.exports.del = function(req, res) {
   req.session = null;
   return res.redirect(req.query.next || '/restaurants');
 }
+
+module.exports.patch = function(req, res) {
+  return res.redirect(req.query.next || '/restaurants');
+}
+
+module.exports.getOrderParams = function(req, res) {
+  res.send(req.session.orderParams);
+};
+
+module.exports.updateOrderParams = function(req, res) {
+  req.session.orderParams = {
+    zip: parseInt(req.body.zip, 10)
+  , date: req.body.date
+  , time: req.body.time
+  , guests: parseInt(req.body.guests, 10)
+  }
+  console.log(req.session.orderParams);
+  res.send(req.session.orderParams);
+};

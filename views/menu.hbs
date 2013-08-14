@@ -8,9 +8,9 @@
     <h2 class="panel-heading">Menu</h2>
     {{#each restaurant.categories}}
       <h3>{{name}}</h3>
-      <div class="list-group list-group-flush category" data-id="{{id}}" data-index="{{@index}}">
+      <div class="list-group list-group-flush category" id="category-{{id}}">
       {{#each items}}
-        <a class="list-group-item item" data-id="{{id}}" data-index="{{@index}}">
+        <a class="list-group-item item" id="item-{{id}}">
           <div>
             <div><strong class="list-group-item-heading">{{name}}</strong> <i class="list-group-item-text pull-right">feeds {{feeds_min}}-{{feeds_max}} &nbsp;   &nbsp; price {{dollars price}}</i></div>
             <div class="list-group-item-text">{{description}}</div>
@@ -79,7 +79,6 @@
 
 {{#extend "scripts"}}
 <script>
-  var menu = {{{json restaurant.categories}}};
   var templates = {};
   var views = {};
   var models = {};
@@ -103,7 +102,7 @@
   , className: 'modal fade'
   , template: templates.itemModalDialog
   , events: {
-      'click .remove': 'remove'
+      'hidden.bs.modal': 'cleanup'
     , 'click .add-to-order': 'addToOrder'
     , 'keypress input[type=number]': 'addToOrderKeyPress'
     }
@@ -114,6 +113,7 @@
     }
   , render: function() {
       this.$el.html(this.template({item: this.model.toJSON(), quantity: this.quantity}));
+      $('body').append(this.$el);
       return this;
     }
   , show: function() {
@@ -122,8 +122,9 @@
   , hide: function() {
       this.$el.modal('hide');
     }
-  , close: function() {
-      this.$('.close').click();
+  , cleanup: function() {
+      $('body').removeClass('modal-open');
+      this.remove();
     }
   , addToOrder: function() {
       var quantity = parseInt(this.$("input[name='quantity']").val());
@@ -132,13 +133,13 @@
 
       if (orderItem) {
         orderItem.save({quantity: quantity}, {wait: true});
-        this.close();
+        this.hide();
         return;
       }
 
       orderItem = new models.OrderItem({item_id: this.model.id, quantity: quantity});
       app.collections.orderItems.create(orderItem, {wait: true});
-      this.close();
+      this.hide();
     }
   , addToOrderKeyPress: function(e) {
       if (e && e.keyCode != 13) return;
@@ -151,7 +152,7 @@
   , className: 'modal fade'
   , template: templates.orderItemModalDialog
   , events: {
-      'click .remove': 'remove'
+      'hidden.bs.modal': 'cleanup'
     , 'click .update-order-item': 'updateOrderItem'
     , 'keypress input[type=number]': 'updateOrderItemKeyPress'
     }
@@ -169,22 +170,21 @@
   , hide: function() {
       this.$el.modal('hide');
     }
-  , close: function() {
-      this.$('.close').click();
+  , cleanup: function() {
+      $('body').removeClass('modal-open');
+      this.remove();
     }
   , updateOrderItem: function() {
-      console.log('hi');
       var quantity = parseInt(this.$("input[name='quantity']").val());
-      console.log(quantity);
 
       if(quantity <= 0) {
         this.model.destroy();
-        this.close();
+        this.hide();
         return;
       }
 
       this.model.save({quantity: quantity}, {wait: true});
-      this.close();
+      this.hide();
       return;
     }
   , updateOrderItemKeyPress: function(e) {
@@ -220,7 +220,6 @@
       this.render();
     }
   , render: function() {
-      console.log(this.model.toJSON());
       this.$el.html(this.template(this.model.toJSON()));
       return this;
     }
@@ -233,26 +232,30 @@
     }
   });
 
+  views.Item = Backbone.View.extend({
+    events: {
+      'click': 'showModal'
+    }
+  , initialize: function(options) {
+      this.model = options.model;
+    }
+  , showModal: function() {
+      var orderItem = app.collections.orderItems.findWhere({item_id: this.model.get('id')});
+      var itemModal = new views.ItemModal({model: this.model, quantity: (orderItem && orderItem.attributes.quantity) || 1});
+      itemModal.show();
+    }
+  });
+
   app.collections.orderItems = new collections.OrderItems();
   app.collections.orderItems.fetch();
   app.views.orderItems = new views.OrderItems();
 
-
-  $(function() {
-    $('.item').click(function() {
-      var $this = $(this);
-      var categoryId = $this.parent('.category').data('id');
-      var categoryIndex = $this.parent('.category').data('index');
-
-      var itemId = $this.data('id');
-      var itemIndex = $this.data('index');
-
-      var item = new models.Item(menu[categoryIndex].items[itemIndex]);
-
-      var orderItem = app.collections.orderItems.findWhere({item_id: item.id});
-      var itemModal = new views.ItemModal({model: item, quantity: (orderItem && orderItem.attributes.quantity) || 1});
-      itemModal.show();
-    });
-  });
+  var itemViews = [
+    {{#each restaurant.categories}}
+      {{#each items}}
+        new views.Item({el: $('#item-{{this.id}}'), model: new models.Item( {{{json this}}} )}),
+      {{/each}}
+    {{/each}}
+  ];
 </script>
 {{/extend}}

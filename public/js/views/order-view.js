@@ -21,14 +21,7 @@ var OrderView = Backbone.View.extend({
   },
 
   onPriceChange: function(model, value, options) {
-    // TODO: replace this with a handlebars partial, shared between server and client
-    var sub = (value / 100).toFixed(2);
-    var tax = (value * .000825).toFixed(2);
-    var tot = (value * .010825).toFixed(2);
-
-    this.$el.find('.price.sub-total').text(sub);
-    this.$el.find('.price.tax').text(tax);
-    this.$el.find('.price.total').text(tot);
+    this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));
   },
 
   changeStatus: function(status) {

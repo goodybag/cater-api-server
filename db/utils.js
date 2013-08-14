@@ -49,6 +49,13 @@ function createTable(definition, callback) {
     if (schema[field].nullable === false) parts.push('NOT NULL');
     if (schema[field].unique === true) parts.push('UNIQUE');
     if (schema[field].default != null) parts.push('DEFAULT ' + schema[field].default);
+    if (schema[field].checks != null) {
+      var checks = [];
+      for (var i=0, l=schema[field].checks.length; i<l; i++)
+        checks.push('CHECK (' + field + ' ' + schema[field].checks[i] + ')');
+      parts.push(checks.join(', '));
+    }
+
     if (schema[field].references && schema[field].references.table && schema[field].references.column)
       parts.push(['REFERENCES', schema[field].references.table, '("' + schema[field].references.column + '")'].join(' '));
 

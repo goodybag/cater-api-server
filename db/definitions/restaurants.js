@@ -51,7 +51,7 @@ define(function(require) {
     , nullable: false
     }
   , price: {
-      type: types.numeric(1)
+      type: types.smallint
     , checks: [ '> 0', '<= 5']
     , nullable: false
     }

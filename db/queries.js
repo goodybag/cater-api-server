@@ -73,5 +73,10 @@ module.exports = {
     create: utils.partial(upsert, 'users'),
     update: utils.partial(upsert, 'users'),
     del: utils.partial(del, 'users')
+  },
+
+  orderItem: {
+    update: utils.partial(upsert, 'order_items'),
+    del: utils.partial(del, 'order_items')
   }
 };

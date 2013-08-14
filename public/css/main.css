@@ -1,0 +1,6 @@
+.order-item .edit {
+  color: gray;
+  text-transform:uppercase;
+  font-size: 0.75em;
+  cursor: pointer;
+}

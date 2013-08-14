@@ -21,6 +21,21 @@ var capitalize = function(str) {
 
 var blocks = {};
 
+var tax = function(subtotal, deliveryFee, rate, options) {
+  var numArgs = arguments.length;
+  if (numArgs === 0) return '0.00';
+  if (numArgs < 4) {
+    if (numArgs === 2) {
+      options = deliveryFee;
+      deliveryFee = 0
+    } else {
+      options = rate;
+    }
+    rate = 0.0825;
+  }
+  return ((subtotal + deliveryFee) * rate / 100).toFixed(2);
+}
+
 var helpers = {
   extend: function(name, context) {
     var block = blocks[name];
@@ -51,16 +66,16 @@ var helpers = {
     return value1 || value2;
   },
 
-  tax: function(cents, rate, options) {
-    if (!cents) return '0.00';
-    var mul = options ? rate / 100 : 0.000825;
-    return (cents * mul).toFixed(2);
-  },
+  tax: tax,
 
-  total: function(cents, rate, options) {
-    if (!cents) return '0.00';
-    var mul = options ? (1 + rate) / 100 : 0.010825;
-    return (cents * mul).toFixed(2);
+  total: function(cents, deliveryFee, rate, options) {
+    if (options === undefined) {
+      options = rate;
+      rate = null;
+    }
+
+    rate = rate ? rate + 1 : 1.0825;
+    return tax.call(this, cents, deliveryFee, rate, options);
   },
 
   statusLabel: function(status) {

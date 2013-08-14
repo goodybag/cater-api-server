@@ -50,6 +50,12 @@ define(function(require) {
       type: types.numeric(10)
     , nullable: false
     }
+  , delivery_fee {
+      type: types.int
+    , nullable: false
+    , default: 0
+    , checks: ['>= 0']
+    }
   };
 
   definition.indices = {};

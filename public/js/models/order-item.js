@@ -1,5 +1,5 @@
 var OrderItem = Backbone.Model.extend({
-  url: function() { return '/orders/' + this.get('order_id') + '/items/' + this.id; },
+  urlRoot: function() { return '/orders/' + this.get('order_id') + '/items/'},
 
   initialize: function(attrs, options) {
     this.on('change:price change:quantity', function() {

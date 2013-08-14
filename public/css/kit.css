@@ -17,3 +17,10 @@
 .full-width {
   width: 100%;
 }
+
+.x {
+  background : none;
+  border: none;
+  cursor: pointer;
+  color: gray;
+}

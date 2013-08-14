@@ -38,6 +38,9 @@
       {{#each restaurants}}
       <a href="/restaurants/{{this.id}}" class="list-group-item">
         <h4>{{this.name}}</h4>
+        {{#each cuisine}}
+        <h5 class="label label-info">{{this}}</h5>
+        {{/each}}
       </a>
       {{else}}
       <h1 class="text-center">No Restaurants</h1>

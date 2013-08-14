@@ -61,6 +61,10 @@ define(function(require) {
     , default: 0
     , checks: ['>= 0']
     }
+  , cuisine: {
+      type: types.text + '[]'
+    , nullable: true
+    }
   };
 
   definition.indices = {};

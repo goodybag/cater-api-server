@@ -36,10 +36,17 @@
   <div class="col-lg-8">
     <div class="list-group restaurants">
       {{#each restaurants}}
-      <a href="/restaurants/{{this.id}}" class="list-group-item row">
-        <h4 class="col-lg-10">{{this.name}}</h4>
-        <div class="col-lg-2">
-          <span class="badge pull-right">{{price$ price}}</span>
+      <a href="/restaurants/{{this.id}}" class="list-group-item">
+        <div class="row">
+          <h4 class="col-lg-10">{{this.name}}</h4>
+          <div class="col-lg-2">
+            <span class="badge pull-right">{{price$ price}}</span>
+          </div>
+        </div>
+        <div class="row">
+          {{#each cuisine}}
+          <h5 class="label label-info">{{this}}</h5>
+          {{/each}}
         </div>
       </a>
       {{else}}

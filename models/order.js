@@ -107,6 +107,7 @@ module.exports = Model.extend({
     };
 
     query.columns.push('restaurants.name');
+    query.columns.push('restaurants.delivery_fee')
 
     query.joins.restaurants = {
       type: 'inner'
@@ -126,9 +127,11 @@ module.exports = Model.extend({
         utils.each(orders, function(order) {
           order.attributes.restaurant = {
             id: order.attributes.restaurant_id,
-            name: order.attributes.name
+            name: order.attributes.name,
+            delivery_fee: order.attributes.delivery_fee
           };
           delete order.attributes.name;
+          delete order.attributes.delivery_fee;
         });
       }
       callback.call(this, err, orders);

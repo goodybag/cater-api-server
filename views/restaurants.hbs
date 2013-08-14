@@ -1,6 +1,6 @@
 <div class="row">
-  <div id="order-parameters" class="col-lg-12">
-      <form class="form-inline" role="form">
+  <div id="order-params" class="col-lg-12">
+      <form class="form-inline" role="form" method="">
         <div class="form-group">
           <input type="text" class="form-control" name="zip" placeholder="zip code" maxlength="5" />
           <i class="gb-input-icon icon-map-marker"></i>
@@ -20,7 +20,7 @@
           <i class="gb-input-icon icon-user"></i>
         </div>
 
-        <button class="btn btn-primary">Save</button>
+        <button class="btn btn-primary save">Save</button>
       </form>
   </div>
 </div>
@@ -41,3 +41,54 @@
     </ul>
   </div>
 </div>
+
+{{#extend "scripts"}}
+<script>
+
+var views = {};
+var models = {};
+
+var app = {};
+app.views = {};
+app.models = {};
+
+models.OrderParams = Backbone.Model.extend({
+  url: '/session/order-params'
+});
+
+views.OrderParams = Backbone.View.extend({
+  el: '#order-params'
+, events: {
+    'submit form': 'submit'
+  , 'click .save': 'submit'
+  }
+, initialize: function() {
+    this.model = app.models.orderParams;
+    this.listenTo(this.model, 'sync', this.updateFields);
+    this.model.fetch();
+  }
+, updateFields: function(orderParams) {
+    console.log(orderParams);
+    this.$("input[name='zip']").val(orderParams.get('zip'));
+    this.$("input[name='date']").val(orderParams.get('date'));
+    this.$("input[name='time']").val(orderParams.get('time'));
+    this.$("input[name='guests']").val(orderParams.get('guests'));
+  }
+, submit: function (e) {
+    e.preventDefault();
+
+    var form = {
+      zip: this.$("input[name='zip']").val()
+    , date: this.$("input[name='date']").val()
+    , time: this.$("input[name='time']").val()
+    , guests: this.$("input[name='guests']").val()
+    }
+    this.model.save(form);
+  }
+});
+
+app.models.orderParams = new models.OrderParams({id:-1});
+app.views.orderParams = new views.OrderParams();
+
+</script>
+{{/extend}}

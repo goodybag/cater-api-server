@@ -55,6 +55,10 @@ define(function(require) {
     , checks: [ '> 0', '<= 5']
     , nullable: false
     }
+  , cuisine: {
+      type: types.text + '[]'
+    , nullable: true
+    }
   };
 
   definition.indices = {};

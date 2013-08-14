@@ -75,6 +75,10 @@ var helpers = {
     }[status];
   },
 
+  price$: function(price) {
+    return new Array(price + 1).join('$');
+  },
+
   // TODO: make this a partial
   address: function(loc) {
     if (!loc) return '';

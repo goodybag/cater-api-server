@@ -72,12 +72,13 @@
   <span class="quantity">\{{quantity}}x </span>
   <strong class="list-group-item-heading">\{{name}}</strong>
   <span class="edit">edit</span>
-  <i class="list-group-item-text pull-right">$\{{dollars price}}</i>
+  <i class="list-group-item-text pull-right">$\{{dollars sub_total}}</i>
 </div>
 </script>
 {{/extend}}
 
 {{#extend "scripts"}}
+<script type="text/javascript" src="/js/models/order-item.js"></script>
 <script>
   var templates = {};
   var views = {};
@@ -89,7 +90,7 @@
   app.collections = {};
 
   models.Item = Backbone.Model.extend();
-  models.OrderItem = Backbone.Model.extend();
+  models.OrderItem = OrderItem;
 
   collections.OrderItems = Backbone.Collection.extend({url:'/restaurants/{{restaurant.id}}/orders/current/items/', model: models.OrderItem});
 

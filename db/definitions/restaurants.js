@@ -50,6 +50,17 @@ define(function(require) {
       type: types.numeric(10)
     , nullable: false
     }
+  , price: {
+      type: types.smallint
+    , checks: [ '> 0', '<= 5']
+    , nullable: false
+    }
+  , delivery_fee: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    , checks: ['>= 0']
+    }
   , cuisine: {
       type: types.text + '[]'
     , nullable: true

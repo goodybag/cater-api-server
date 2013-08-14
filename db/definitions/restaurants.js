@@ -50,6 +50,11 @@ define(function(require) {
       type: types.numeric(10)
     , nullable: false
     }
+  , price: {
+      type: types.numeric(1)
+    , checks: [ '> 0', '<= 5']
+    , nullable: false
+    }
   };
 
   definition.indices = {};

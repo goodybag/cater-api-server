@@ -1,0 +1,4 @@
+<p class="text-right">subtotal: $<span class="price sub-total">{{dollars order.sub_total}}</span></p>
+<p class="text-right">delivery fee: $<span class="price delivery-fee">{{dollars order.restaurant.delivery_fee}}</span></p>
+<p class="text-right">tax: $<span class="price tax">{{tax order.sub_total order.restaurant.delivery_fee}}</span></p>
+<p class="text-right">total: $<span class="price total">{{total order.sub_total order.restaurant.delivery_fee}}</span></p>

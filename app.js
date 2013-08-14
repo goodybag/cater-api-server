@@ -62,4 +62,5 @@ app.configure('development', function(){
 });
 
 helpers.register(hbs);
+hbs.registerPartials('./public/partials');
 routes.register(app);

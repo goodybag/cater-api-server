@@ -90,7 +90,7 @@
   app.collections = {};
 
   models.Item = Backbone.Model.extend();
-  models.OrderItem = OrderItem;
+  models.OrderItem = OrderItem.extend({urlRoot: ''});
 
   collections.OrderItems = Backbone.Collection.extend({url:'/restaurants/{{restaurant.id}}/orders/current/items/', model: models.OrderItem});
 
@@ -130,7 +130,7 @@
   , addToOrder: function() {
       var quantity = parseInt(this.$("input[name='quantity']").val());
 
-      var orderItem = app.collections.orderItems.findWhere({item_id: this.model.attributes.id});
+      var orderItem = app.collections.orderItems.findWhere({item_id: this.model.id});
 
       if (orderItem) {
         orderItem.save({quantity: quantity}, {wait: true});
@@ -138,7 +138,8 @@
         return;
       }
 
-      orderItem = new models.OrderItem({item_id: this.model.id, quantity: quantity});
+      orderItem = new models.OrderItem({item_id: this.model.attributes.id, quantity: quantity});
+      console.log(app.collections.orderItems.url);
       app.collections.orderItems.create(orderItem, {wait: true});
       this.hide();
     }

@@ -56,6 +56,15 @@ define(function(require) {
     , default: 0
     , checks: ['>= 0']
     }
+  , price: {
+      type: types.smallint
+    , checks: [ '> 0', '<= 5']
+    , nullable: false
+    }
+  , cuisine: {
+      type: types.text + '[]'
+    , nullable: true
+    }
   };
 
   definition.indices = {};

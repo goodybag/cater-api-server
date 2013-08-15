@@ -4,6 +4,9 @@ var static = require('node-static');
 var file = new static.Server('./public');
 
 module.exports.register = function(app) {
+
+  app.get('/', function(req, res) { res.redirect('/restaurants'); });
+
   /**
    * Restaurants resource.  The collection of all restaurants.
    */

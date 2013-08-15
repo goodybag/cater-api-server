@@ -87,7 +87,6 @@ module.exports.changeStatus = function(req, res) {
       return res.send(403, 'order not complete');
 
     var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
-    console.log('changing status:', status);
     status.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       console.log('review:', review);

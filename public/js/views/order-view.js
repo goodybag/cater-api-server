@@ -16,6 +16,8 @@ var OrderView = Backbone.View.extend({
 
   initialize: function(options) {
     if (this.model) this.listenTo(this.model, 'change:sub_total', this.onPriceChange, this)
+    this.onOrderChange();
+    this.updateAddressBlock();
   },
 
   onPriceChange: function(model, value, options) {
@@ -107,12 +109,16 @@ var OrderView = Backbone.View.extend({
 
   editAddress: function(e) {
     this.$el.find('.order-address').toggleClass('hide');
+    this.updateAddressBlock();
+  },
+
+  updateAddressBlock: function() {
     var addr = {
       street: this.$el.find('.address-street').val(),
       city: this.$el.find('.address-city').val(),
       state: this.$el.find('.address-state').val(),
       zip: this.$el.find('.address-zip').val()
     }
-    $('.order-address-block').html(Handlebars.helpers.address(addr));
+    this.$el.find('.order-address-block').html(Handlebars.helpers.address(addr));
   }
 });

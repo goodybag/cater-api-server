@@ -7,6 +7,16 @@ var
 
 var models = require('../../models');
 
+module.exports.auth = function(req, res, next) {
+  models.Order.findOne(req.params.id, function(err, order) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    var reviewToken = req.query.review_token || req.body.review_token;
+    if (order.attributes.user_id !== (req.session.user||0).id && order.attributes.review_token !== reviewToken)
+      return res.send(404);
+    next();
+  });
+}
+
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
   models.Order.find(req.query, function(error, models) {

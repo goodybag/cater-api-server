@@ -11,9 +11,13 @@
     <div class="col-lg-6">
       <div class="row">
         <p>Submitted: {{order.submitted}}</p>
-        <div class="form-group">
-          <label for="order-datetime" class="control-label">Delivery Date</label>
-          <input type="text" id="order-datetime" class="form-control order-form-field" value="{{order.datetime}}" {{#unless order.editable}}disabled{{/unless}}></diff>
+        <div class="form-group col-lg-6">
+          <label for="order-date" class="control-label">Delivery Date</label>
+          <input type="text" id="order-date" class="form-control order-form-field order-datetime" value="{{datepart order.datetime}}" {{#unless order.editable}}disabled{{/unless}}></diff>
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="order-time" class="control-label">Delivery Time</label>
+          <input type="text" id="order-time" class="form-control order-form-field order-datetime" value="{{timepart order.datetime}}" {{#unless order.editable}}disabled{{/unless}}></diff>
         </div>
       </div>
       <div class="row">

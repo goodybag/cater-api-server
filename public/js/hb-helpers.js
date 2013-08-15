@@ -94,6 +94,14 @@ var helpers = {
     return new Array(price + 1).join('$');
   },
 
+  datepart: function(date) {
+    return date ? (new Date(date)).toDateString() : '';
+  },
+
+  timepart: function(date) {
+    return date ? (new Date(date)).toTimeString() : '';
+  },
+
   // TODO: make this a partial
   address: function(loc) {
     if (!loc) return '';

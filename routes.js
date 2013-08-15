@@ -4,6 +4,9 @@ var static = require('node-static');
 var file = new static.Server('./public');
 
 module.exports.register = function(app) {
+
+  app.get('/', function(req, res) { res.redirect('/restaurants'); });
+
   /**
    * Restaurants resource.  The collection of all restaurants.
    */
@@ -228,6 +231,12 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, POST, DELETE');
     res.send(405);
   });
+
+
+  // For the order params
+  app.get('/session/order-params', controllers.session.getOrderParams);
+
+  app.put('/session/order-params', controllers.session.updateOrderParams);
 
   /**
    *  Users resource.  All the users.

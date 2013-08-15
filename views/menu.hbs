@@ -29,7 +29,9 @@
     <h2 class="panel-heading">Order</h2>
     <div class="list-group list-group-flush order-items">
       {{#each order.orderItems}}
-      {{> order_item_summary}}
+      <div class="list-group-item order-item" id="order-item-{{id}}">
+        {{> order_item_summary}}
+      </div>
       {{else}}
       <h4>No Items Yet</h4>
       {{/each}}
@@ -112,7 +114,8 @@
       'click': 'showModal'
     }
   , showModal: function() {
-      this.options.itemModalView.provideModel(this.model).show();
+      var orderItem = orderView.model.orderItems.findWhere({item_id: this.model.id});
+      this.options.itemModalView.provideModel(orderItem || this.model).show();
     }
   });
 

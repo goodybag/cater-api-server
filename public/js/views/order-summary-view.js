@@ -8,7 +8,7 @@ var OrderSummaryView = Backbone.View.extend({
 
   addItem: function(model, collection, options) {
     var subview = new OrderItemSummaryView({model: model});
-    this.$el.append(subview.render().el);
+    this.$el.find('.order-items').append(subview.render().el);
   },
 
   subTotalChange: function(model, value, options) {

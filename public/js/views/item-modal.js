@@ -6,7 +6,7 @@ var ItemModal = Backbone.View.extend({
   render: function() {
     this.$el.find('.modal-title').html(Handlebars.partials.item_modal_title(this.model.toJSON()));
     this.$el.find('.item-description').text(this.model.get('description'));
-    var quantity = this.modal instanceof OrderItem ? this.model.get('quantity') : 1;
+    var quantity = this.model instanceof OrderItem ? this.model.get('quantity') : 1;
     this.$el.find('.item-modal-quantity').val(quantity);
 
     var submitBtnText = this.model instanceof OrderItem ? 'Update Item' : 'Add To Order';

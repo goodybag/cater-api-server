@@ -54,10 +54,6 @@
       for (var key in helpers) {
         Handlebars.registerHelper(key, helpers[key]);
       }
-
-      $.get('/partials/totals.hbs', null, function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial('totals', Handlebars.compile(data));
-      }, 'html')
     </script>
     <script src="/js/bootstrap.min.js"></script>
     {{{block "views"}}}

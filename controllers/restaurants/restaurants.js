@@ -19,14 +19,36 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.get = function(req, res) {
-  models.Restaurant.findOne(parseInt(req.params.rid), function(error, restaurant) {
-    restaurant.getItems(function(error, items) {
-      res.render('menu', {restaurant: restaurant.toJSON()}, function(error, html) {
-        if (error) return res.error(errors.internal.UNKNOWN, error);
-        return res.send(html);
+  var tasks = [
+    function(callback) {
+      var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'latest.status': 'pending'};
+      models.Order.findOne({where: where}, function(err, order) {
+        if (err) return callback(err);
+        order.getOrderItems(function(err, items) {
+          callback(err, order);
+        });
       });
+    },
+
+    function(callback) {
+      models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
+        if (err) return callback(err);
+        restaurant.getItems(function(err, items) {
+          callback(err, restaurant);
+        });
+      });
+    }
+  ];
+
+  var done = function(err, results) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    res.render('menu', {restaurant: results[1].toJSON(), order: results[0].toJSON()}, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, error);
+      return res.send(html);
     });
-  });
+  };
+
+  utils.async.parallel(tasks, done);
 }
 
 module.exports.create = function(req, res) {

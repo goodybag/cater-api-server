@@ -78,6 +78,17 @@ var inserts = {
       }
     }
   }
+, restaurantLeadTimes: function(restaurant_id, max_guests, hours) {
+    return {
+      type: 'insert'
+    , table: 'restaurant_lead_times'
+    , values: {
+        restaurant_id: restaurant_id
+      , max_guests: max_guests
+      , hours: hours
+      }
+    }
+  }
 }
 
 async.series(
@@ -116,6 +127,23 @@ async.series(
           });
         }, function(error, results){
           // console.log('called3');
+          cb(error);
+        });
+      });
+    }
+  , leadTimes: function(cb) {
+      query(select('restaurants'), function(error, results){
+        async.timesSeries(results.length, function(n, callback){
+          async.series({
+            '50-guests-24-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, 50, 24), callback2);}
+          , '100-guests-48-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, 100, 48), callback2);}
+          , '300-guests-72-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, 300, 72), callback2);}
+          }, function(error, results){
+              // console.log('called-sub-4');
+              callback(error);
+          });
+        }, function(error, results){
+          // console.log('called4');
           cb(error);
         });
       });

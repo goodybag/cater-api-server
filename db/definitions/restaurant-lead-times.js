@@ -37,7 +37,6 @@ define(function(require) {
     }
   , hours: {
       type: types.int
-    , default: 0
     , nullable: false
     }
   };

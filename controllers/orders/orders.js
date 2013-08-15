@@ -80,7 +80,7 @@ module.exports.changeStatus = function(req, res) {
       return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
 
     var review = utils.contains(['accepted', 'denied'], req.body.status);
-    if (review && req.body.review_token !== order.attributes.review_token)
+    if (review && req.body.review_token !== order.attributes.review_token || order.attributes.token_used == null)
       return res.send(401, 'bad review token');
 
     if (req.body.status === 'submitted' && !order.isComplete())

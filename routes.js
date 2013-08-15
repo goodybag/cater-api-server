@@ -37,7 +37,7 @@ module.exports.register = function(app) {
    * Restaurant items resource.  The collection of all items belonging to a restaurant.
    */
 
-  app.get('/restaurants/:rid/items', controllers.restaurants.listItems);  // not currently used
+  // app.get('/restaurants/:rid/items', controllers.restaurants.listItems);  // not currently used
 
   app.all('/restaurants/:rid/items', function(req, res, next) {
     res.set('Allow', 'GET');
@@ -48,7 +48,7 @@ module.exports.register = function(app) {
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
    */
 
-  app.get('/restaurants/:rid/categories', controllers.restaurants.categories.list);  // not currently used
+  // app.get('/restaurants/:rid/categories', controllers.restaurants.categories.list);  // not currently used
 
   app.post('/restaurants/:rid/categories', controllers.restaurants.categories.create);
 
@@ -61,7 +61,7 @@ module.exports.register = function(app) {
    * Individual category resource.  A single restaurant category.
    */
 
-  app.get('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.get);  // not currently used
+  // app.get('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.get);  // not currently used
 
   app.put('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.update);
 
@@ -76,7 +76,7 @@ module.exports.register = function(app) {
    *  Category items resource.  The collection of all items belonging to a single category.
    */
 
-  app.get('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.listItems);  // not currently used
+  // app.get('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.listItems);  // not currently used
 
   app.post('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.addItem);
 
@@ -112,7 +112,7 @@ module.exports.register = function(app) {
    *  Items resource.  The collection of all items.
    */
 
-  app.get('/items', controllers.items.list);  // not currently used
+  // app.get('/items', controllers.items.list);  // not currently used
 
   app.all('/items', function(req, res, next) {
     res.set('Allow', 'GET');
@@ -123,7 +123,7 @@ module.exports.register = function(app) {
    *  Item resource.  An individual item.
    */
 
-  app.get('/items/:id', controllers.items.get);  // not currently used
+  // app.get('/items/:id', controllers.items.get);  // not currently used
 
   app.put('/items/:id', controllers.items.update);
 
@@ -138,7 +138,7 @@ module.exports.register = function(app) {
    *  Orders resource.  The collection of all orders.
    */
 
-  app.get('/orders', controllers.orders.list);  // not currently used
+  // app.get('/orders', controllers.orders.list);  // not currently used
 
   app.post('/orders', controllers.orders.create);
 
@@ -250,7 +250,7 @@ module.exports.register = function(app) {
    *  Users resource.  All the users.
    */
 
-  app.get('/users', controllers.users.list);
+  // app.get('/users', controllers.users.list); // not currently used
 
   app.post('/users', controllers.users.create);
 

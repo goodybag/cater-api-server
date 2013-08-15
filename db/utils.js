@@ -66,39 +66,33 @@ function createTable(definition, callback) {
   db.query(statement, callback);
 }
 
-function buildDropIndexSql(log, schemaFile) {
-  return function() {
-    if (verbose) { console.log(log); }
-    var sql = [];
-    var definition = require(__dirname + '/definitions/' + name);
-    var indices = definition.indices;
+function dropIndex(definition, callback) {
+  var sql = [];
+  var indices = definition.indices;
 
-    // assemble the DROP INDEX command from the schema structure
-    for (var name in indices) {
-      sql.push('DROP INDEX IF EXISTS '+name+';');
-    }
-    return sql.join(' ');
-  };
+  // assemble the DROP INDEX command from the schema structure
+  for (var name in indices) {
+    sql.push('DROP INDEX IF EXISTS '+name+';');
+  }
+  var statement = sql.join(' ');
+  db.query(statement, callback);
 }
 
-function buildCreateIndexSql(log, schemaFile) {
-  return function() {
-    if (verbose) { console.log(log); }
-    var sql = [];
-    var definition = require(__dirname + '/definitions/' + name);
-    var indices = definition.indices;
+function createIndex(definition, callback) {
+  var sql = [];
+  var indices = definition.indices;
 
-    // assemble the CREATE INDEX command from the schema structure
-    for (var name in indices) {
-      var index = indices[name];
-      sql.push([
-        'CREATE', (index.type) ? index.type : '', 'INDEX', '"'+name+'"', 'ON', '"'+definition.name+'"',
-          (index.using) ? 'USING '+index.using : '',
-          '(', index.columns.join(','), ')'
-      ].join(' '));
-    }
-    return sql.join('; ');
-  };
+  // assemble the CREATE INDEX command from the schema structure
+  for (var name in indices) {
+    var index = indices[name];
+    sql.push([
+      'CREATE', (index.type) ? index.type : '', 'INDEX', '"'+name+'"', 'ON', '"'+definition.name+'"',
+        (index.using) ? 'USING '+index.using : '',
+        '(', index.columns.join(','), ')'
+    ].join(' '));
+  }
+  var statement = sql.join('; ');
+  db.query(statement, callback);
 }
 
 function query(log, sql) {
@@ -144,3 +138,5 @@ function loadSqlFile(name, path, message) {
 }
 
 module.exports.createTable = createTable;
+module.exports.createIndex = createIndex;
+module.exports.dropIndex = dropIndex;

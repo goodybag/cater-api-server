@@ -8,6 +8,7 @@ var definitions = [
   'users'
 , 'restaurants'
 , 'restaurant-lead-times'
+, 'restaurant-delivery-zips'
 , 'orders'
 , 'categories'
 , 'items'
@@ -17,17 +18,47 @@ var definitions = [
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');
 
-var iterator = function(name, callback){
-  utils.createTable(require('./definitions/'+name), notify(name, callback));
+var messages = {
+  createTable: {
+    success: 'Successfully created table:'
+  , error: 'Error creating table for:'
+  }
+, dropIndex: {
+    success: 'Successfully droped indicies for table:'
+  , error: 'Error droping index for table:'
+  }
+, createIndex: {
+    success: 'Successfully created indicies for table:'
+  , error: 'Error creating index for table:'
+  }
 }
 
-var notify =  function(name, callback) {
+var iterator = function(name, callback){
+  async.series([
+    // create table
+    function(cb) {
+      utils.createTable(require('./definitions/'+name), notify(name, messages.createTable, cb));
+    }
+    // drop index
+  , function(cb) {
+      utils.dropIndex(require('./definitions/'+name), notify(name, messages.dropIndex, cb));
+    }
+    // create index
+  , function(cb) {
+      utils.createIndex(require('./definitions/'+name), notify(name, messages.createIndex, cb));
+    }
+  ], function(error, results) {
+      callback(error, results);
+  });
+}
+
+var notify =  function(name, message, callback) {
   return function(error, response){
     if (error) {
-      console.log('Error creating table:', name);
+      console.log(message.error, name);
       return callback(error);
     }
-    console.log('Successfully created table:', name);
+    console.log(message.success, name);
     return callback();
   }
 };

@@ -4,9 +4,13 @@ if (typeof require !== 'undefined') {
 } else {
   utils = _;
   var states
-  $.get('/states.json', null, function(data, textStatus, jqXHR) {
-    states = data;
-  }, 'json');
+  $.ajax({
+    url:'/states.json',
+    success: function(data, textStatus, jqXHR) {
+      states = data;
+    },
+    async: false
+  });
 }
 
 var joinIf = function(arr, sep) {
@@ -110,7 +114,7 @@ var helpers = {
     var stateStr = state ? '<abbr title="' + state.name + '">' + state.abbr + '</abbr>' : '';
     var line2 = joinIf([joinIf([capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
     return joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
-                         line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
+                   line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
   }
 }
 

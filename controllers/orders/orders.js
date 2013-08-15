@@ -33,6 +33,14 @@ module.exports.get = function(req, res) {
   });
 }
 
+module.exports.create = function(req, res) {
+  var order = new models.Order(utils.extend({user_id: req.session.user.id}, req.body));
+  order.save(function(err) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    res.send(201, order.toJSON());
+  });
+}
+
 module.exports.update = function(req, res) {
   var order = new models.Order(utils.extend({id: req.params.id}, req.body));
   order.save(function(err, rows, result) {

@@ -91,7 +91,11 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid/orders', controllers.restaurants.orders.list);
 
-  app.post('/restaurants/:rid/orders', controllers.restaurants.orders.create);
+  app.post('/restaurants/:rid/orders', function(req, res, next) {
+    req.body.restaurant_id = req.params.rid;
+    req.url = '/orders';
+    next();
+  });
 
   app.all('/restaurants/:rid/orders', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -135,6 +139,8 @@ module.exports.register = function(app) {
    */
 
   app.get('/orders', controllers.orders.list);  // not currently used
+
+  app.post('/orders', controllers.orders.create);
 
   app.all('/orders', function(req, res, next) {
     res.set('Allow', 'GET');

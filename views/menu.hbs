@@ -1,5 +1,3 @@
-{{{json order}}}
-
 <div class="row">
   <div class="col-lg-12 order-params-bar">
     {{> order_params_bar}}
@@ -8,6 +6,7 @@
     <h1>{{restaurant.name}}</h1>
   </div>
 </div>
+
 <div class="row">
   <div class="col-lg-8 panel">
     <h2 class="panel-heading">Menu</h2>
@@ -25,7 +24,8 @@
     </div>
     {{/each}}
   </div>
-  <div class="col-lg-4 panel panel-success">
+
+  <div class="col-lg-4 panel panel-success order-summary">
     <h2 class="panel-heading">Order</h2>
     <div class="list-group list-group-flush order-items">
       {{#each order.orderItems}}
@@ -36,10 +36,7 @@
     </div>
     <div class="panel-footer">
       <div class="row">
-        <div class="col-lg-6">
-          {{#if restaurant.minimum_order}}min: ${{dollars restaurant.minimum_order}}{{/if}}
-        </div>
-        <div  class="col-lg-6">
+        <div  class="col-lg-6 col-lg-offset-6">
           <span class="pull-right">subtotal: $<span id="subtotal">{{dollars order.sub_total}}</span></span>
         </div>
       </div>
@@ -49,241 +46,85 @@
   </div>
 </div>
 
-{{#extend "views"}}
-<script id="hbs-item-modal-dialog" type="text/x-handlebars-template">
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close remove" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h4 class="modal-title">\{{item.name}} &dash; $\{{dollars item.price}} (feeds \{{item.feeds_min}} - \{{item.feeds_max}})</h4>
-    </div>
-    <div class="modal-body">
-      <em>\{{item.description}}</em>
-    </div>
-    <div class="modal-footer">
-      <span class="pull-left"> quantity: <input type="number" name="quantity" value="\{{or quantity 1}}" maxlength="4" min="0" /></span>
-      <button type="button" class="btn btn-default remove" data-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary add-to-order" data-dismiss="modal">Add to order</button>
-    </div>
-  </div>
-</div>
-</script>
-
-<script id="hbs-order-item-modal-dialog" type="text/x-handlebars-template">
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close remove" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h4 class="modal-title">\{{item.name}} &dash; $\{{dollars item.price}} (feeds \{{item.feeds_min}} - \{{item.feeds_max}})</h4>
-    </div>
-    <div class="modal-body">
-      <em>\{{item.description}}</em>
-    </div>
-    <div class="modal-footer">
-      <span class="pull-left"> quantity: <input type="number" name="quantity" value="\{{item.quantity}}" maxlength="4" min="0" /></span>
-      <button type="button" class="btn btn-default remove" data-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary update-order-item">Update item</button>
+<div class="modal fade" id="item-modal" role="dialog" aria-labelledby="itemModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close remove" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+        <p class="item-description"></p>
+      </div>
+      <form class="modal-footer item-modal-form form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-lg-2" for="item-modal-quantity">quantity</label>
+          <div class="col-lg-5">
+            <input type="number" class="form-control item-modal-quantity" id="item-modal-quantity" maxlength="4" min="0" />
+          </div>
+          <div class="col-lg-5">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary item-modal-submit">Add to order</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
-</script>
-{{/extend}}
 
 {{#extend "scripts"}}
-<script type="text/javascript" src="/js/models/order-item.js"></script>
-<script type="text/javascript" src="/js/models/order-params.js"></script>
-<script type="text/javascript" src="/js/views/order-params-view.js"></script>
 <script>
-  $.ajax({
-    type: 'GET',
-    url: '/partials/order-item-summary.hbs',
-    success: function(data, textStatus, jqXHR) {
-      Handlebars.registerPartial('order_item_summary', Handlebars.compile(data));
-    },
-    dataType: 'html',
-    async: false
-  });
+  var partials = {order_item_summary: 'order-item-summary.hbs', item_modal_title: 'item-modal-title.hbs'};
+  for (var name in partials) {
+    $.ajax({
+      type: 'GET',
+      url: '/partials/' + partials[name],
+      success: function(data, textStatus, jqXHR) {
+        Handlebars.registerPartial(name, Handlebars.compile(data));
+      },
+      dataType: 'html',
+      async: false
+    });
+  }
+</script>
 
-  var templates = {};
+<script type="text/javascript" src="/js/models/order-item.js"></script>
+<script src="/js/models/order.js"></script>
+<script type="text/javascript" src="/js/models/order-params.js"></script>
+
+<script type="text/javascript" src="/js/views/order-item-summary-view.js"></script>
+<script type="text/javascript" src="/js/views/order-summary-view.js"></script>
+<script type="text/javascript" src="/js/views/order-params-view.js"></script>
+<script type="text/javascript" src="/js/views/item-modal.js"></script>
+
+<script>
+  var orderView = new OrderSummaryView({el: '.order-summary', model: new Order( {{{json order}}} )});
+
+  var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderView.model.orderItems});
+
+  {{#each order.orderItems}}
+  new OrderItemSummaryView({el: '#order-item-{{id}}', model: orderView.model.orderItems.get({{id}}), itemModalView: itemModalView});
+  {{/each}}
+
   var views = {};
-  var models = {};
-  var collections = {};
-
-  var app = {};
-  app.views = {};
-  app.collections = {};
-
-  models.Item = Backbone.Model.extend();
-  models.OrderItem = OrderItem.extend({urlRoot: ''});
-
-  collections.OrderItems = Backbone.Collection.extend({url:'/restaurants/{{restaurant.id}}/orders/current/items/', model: models.OrderItem});
-
-  templates.itemModalDialog = Handlebars.compile($("#hbs-item-modal-dialog").html());
-  templates.orderItemModalDialog = Handlebars.compile($("#hbs-order-item-modal-dialog").html());
-
-  views.ItemModal = Backbone.View.extend({
-    tag: "div"
-  , className: 'modal fade'
-  , template: templates.itemModalDialog
-  , events: {
-      'hidden.bs.modal': 'cleanup'
-    , 'click .add-to-order': 'addToOrder'
-    , 'keypress input[type=number]': 'addToOrderKeyPress'
-    }
-  , initialize: function(options) {
-      this.model = this.options.model;
-      this.quantity = this.options.quantity;
-      this.render();
-    }
-  , render: function() {
-      this.$el.html(this.template({item: this.model.toJSON(), quantity: this.quantity}));
-      $('body').append(this.$el);
-      return this;
-    }
-  , show: function() {
-      this.$el.modal('show');
-    }
-  , hide: function() {
-      this.$el.modal('hide');
-    }
-  , cleanup: function() {
-      $('body').removeClass('modal-open');
-      this.remove();
-    }
-  , addToOrder: function() {
-      var quantity = parseInt(this.$("input[name='quantity']").val());
-
-      var orderItem = app.collections.orderItems.findWhere({item_id: this.model.id});
-
-      if (orderItem) {
-        orderItem.save({quantity: quantity}, {wait: true});
-        this.hide();
-        return;
-      }
-
-      orderItem = new models.OrderItem({item_id: this.model.attributes.id, quantity: quantity});
-      console.log(app.collections.orderItems.url);
-      app.collections.orderItems.create(orderItem, {wait: true});
-      this.hide();
-    }
-  , addToOrderKeyPress: function(e) {
-      if (e && e.keyCode != 13) return;
-      this.addToOrder();
-    }
-  });
-
-  views.OrderItemModal = Backbone.View.extend({
-    tag: "div"
-  , className: 'modal fade'
-  , template: templates.orderItemModalDialog
-  , events: {
-      'hidden.bs.modal': 'cleanup'
-    , 'click .update-order-item': 'updateOrderItem'
-    , 'keypress input[type=number]': 'updateOrderItemKeyPress'
-    }
-  , initialize: function(options) {
-      this.model = this.options.model;
-      this.render();
-    }
-  , render: function() {
-      this.$el.html(this.template({item: this.model.toJSON()}));
-      return this;
-    }
-  , show: function() {
-      this.$el.modal('show');
-    }
-  , hide: function() {
-      this.$el.modal('hide');
-    }
-  , cleanup: function() {
-      $('body').removeClass('modal-open');
-      this.remove();
-    }
-  , updateOrderItem: function() {
-      var quantity = parseInt(this.$("input[name='quantity']").val());
-
-      if(quantity <= 0) {
-        this.model.destroy();
-        this.hide();
-        return;
-      }
-
-      this.model.save({quantity: quantity}, {wait: true});
-      this.hide();
-      return;
-    }
-  , updateOrderItemKeyPress: function(e) {
-      if (e && e.keyCode != 13) return;
-      this.updateOrderItem();
-    }
-  });
-
-  views.OrderItems = Backbone.View.extend({
-    el: '.order-items'
-  , initialize: function() {
-      this.collection = app.collections.orderItems;
-      this.listenTo(this.collection, 'add', this.renderOrderItem);
-    }
-  , renderOrderItem: function(orderItemModel) {
-      var orderItem = new views.OrderItem({model: orderItemModel});
-      this.$el.append(orderItem.render().el);
-    }
-  });
-
-  views.OrderItem = Backbone.View.extend({
-    tag: "div"
-  , className: 'list-group-item order-item'
-  , template: Handlebars.partials.order_item_summary
-  , events: {
-      'click .edit': 'edit'
-    , 'click .x': 'destroy'
-    }
-  , initialize: function(options) {
-      this.model = options.model;
-      this.listenTo(this.model, 'change:quantity', this.render);
-      this.listenTo(this.model, 'destroy', this.remove);
-      this.render();
-    }
-  , render: function() {
-      this.$el.html(this.template(this.model.toJSON()));
-      return this;
-    }
-  , edit: function() {
-      var orderItemModal = new views.OrderItemModal({model: this.model});
-      orderItemModal.show();
-    }
-  , destroy: function() {
-      this.model.destroy();
-    }
-  });
-
   views.Item = Backbone.View.extend({
     events: {
       'click': 'showModal'
     }
-  , initialize: function(options) {
-      this.model = options.model;
-    }
   , showModal: function() {
-      var orderItem = app.collections.orderItems.findWhere({item_id: this.model.get('id')});
-      var itemModal = new views.ItemModal({model: this.model, quantity: (orderItem && orderItem.attributes.quantity) || 1});
-      itemModal.show();
+      this.options.itemModalView.provideModel(this.model).show();
     }
   });
 
-  app.collections.orderItems = new collections.OrderItems();
-  app.collections.orderItems.fetch();
-  app.views.orderItems = new views.OrderItems();
-
   var itemViews = [
     {{#each restaurant.categories}}
-      {{#each items}}
-        new views.Item({el: $('#item-{{this.id}}'), model: new models.Item( {{{json this}}} )}),
-      {{/each}}
+    {{#each items}}
+    new views.Item({el: $('#item-{{id}}'), model: new Backbone.Model( {{{json this}}} ), itemModalView: itemModalView}),
+    {{/each}}
     {{/each}}
   ];
 
-var orderParams = new OrderParams({id:-1});
-var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
+  var orderParams = new OrderParams({id:-1});
+  var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
 </script>
 {{/extend}}

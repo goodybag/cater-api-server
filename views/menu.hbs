@@ -1,6 +1,9 @@
 {{{json order}}}
 
 <div class="row">
+  <div class="col-lg-12 order-params-bar">
+    {{> order_params_bar}}
+  </div>
   <div class="col-lg-12">
     <h1>{{restaurant.name}}</h1>
   </div>
@@ -88,6 +91,8 @@
 
 {{#extend "scripts"}}
 <script type="text/javascript" src="/js/models/order-item.js"></script>
+<script type="text/javascript" src="/js/models/order-params.js"></script>
+<script type="text/javascript" src="/js/views/order-params-view.js"></script>
 <script>
   $.ajax({
     type: 'GET',
@@ -277,5 +282,8 @@
       {{/each}}
     {{/each}}
   ];
+
+var orderParams = new OrderParams({id:-1});
+var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
 </script>
 {{/extend}}

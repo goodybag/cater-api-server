@@ -1,9 +1,7 @@
 var OrderSummaryView = Backbone.View.extend({
   initialize: function(options) {
-    this.listenTo(this.model.orderItems, {
-      'add': this.addItem,
-      'change:sub_total': this.subTotalChange
-    }, this);
+    this.listenTo(this.model, 'change:sub_total', this.subTotalChange, this);
+    this.listenTo(this.model.orderItems, 'add', this.addItem, this);
   },
 
   addItem: function(model, collection, options) {
@@ -12,6 +10,6 @@ var OrderSummaryView = Backbone.View.extend({
   },
 
   subTotalChange: function(model, value, options) {
-    //TODO: update dom
+    this.$el.find('#subtotal').text((value / 100).toFixed(2));
   }
 });

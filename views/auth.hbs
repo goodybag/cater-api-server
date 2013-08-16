@@ -11,7 +11,7 @@
           {{#if error}}
             <div class="alert alert-danger">Invalid email address or password. Try again.</div>
           {{/if}}
-          <form method="POST" action="/session">
+          <form method="POST" action="/session{{query}}">
             <fieldset>
               <div class="form-group">
                 <label for="email">Email address</label>

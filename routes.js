@@ -13,7 +13,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants', controllers.restaurants.list);
 
-  app.post('/restaurants', controllers.restaurants.create);
+  // app.post('/restaurants', controllers.restaurants.create);
 
   app.all('/restaurants', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -28,7 +28,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid', controllers.restaurants.get);
 
-  app.put('/restaurants/:rid', controllers.restaurants.update);
+  // app.put('/restaurants/:rid', controllers.restaurants.update);
 
   app.all('/restaurants/:rid', function(req, res, next) {
     res.set('Allow', 'GET, PUT');
@@ -52,7 +52,7 @@ module.exports.register = function(app) {
 
   // app.get('/restaurants/:rid/categories', controllers.restaurants.categories.list);  // not currently used
 
-  app.post('/restaurants/:rid/categories', controllers.restaurants.categories.create);
+  // app.post('/restaurants/:rid/categories', controllers.restaurants.categories.create);
 
   app.all('/restaurants/:rid/categories', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -65,9 +65,9 @@ module.exports.register = function(app) {
 
   // app.get('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.get);  // not currently used
 
-  app.put('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.update);
+  // app.put('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.update);
 
-  app.del('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.remove);
+  // app.del('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.remove);
 
   app.all('/restaurants/:rid/categories/:cid', function(req, res, next) {
     res.set('Allow', 'GET, PUT, DELETE');
@@ -80,7 +80,7 @@ module.exports.register = function(app) {
 
   // app.get('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.listItems);  // not currently used
 
-  app.post('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.addItem);
+  // app.post('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.addItem);
 
   app.all('/restaurants/:rid/categories/:cid/items', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -91,7 +91,7 @@ module.exports.register = function(app) {
    *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
    */
 
-  app.get('/restaurants/:rid/orders', controllers.restaurants.orders.list);
+  // app.get('/restaurants/:rid/orders', controllers.restaurants.orders.list);
 
   app.post('/restaurants/:rid/orders', function(req, res, next) {
     req.body.restaurant_id = req.params.rid;
@@ -127,9 +127,9 @@ module.exports.register = function(app) {
 
   // app.get('/items/:id', controllers.items.get);  // not currently used
 
-  app.put('/items/:id', controllers.items.update);
+  // app.put('/items/:id', controllers.items.update);
 
-  app.del('/items/:id', controllers.items.remove);
+  // app.del('/items/:id', controllers.items.remove);
 
   app.all('/items/:id', function(req, res, next) {
     res.set('Allow', 'GET, POST, DELETE');

@@ -32,6 +32,7 @@ module.exports = Model.extend({
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
+    obj.below_min = obj.sub_total < obj.restaurant.minimum_order;
     return obj;
   },
   requiredFields: [
@@ -108,6 +109,7 @@ module.exports = Model.extend({
 
     query.columns.push('restaurants.name');
     query.columns.push('restaurants.delivery_fee')
+    query.columns.push('restaurants.minimum_order');
 
     query.joins.restaurants = {
       type: 'inner'
@@ -128,10 +130,12 @@ module.exports = Model.extend({
           order.attributes.restaurant = {
             id: order.attributes.restaurant_id,
             name: order.attributes.name,
-            delivery_fee: order.attributes.delivery_fee
+            delivery_fee: order.attributes.delivery_fee,
+            minimum_order: order.attributes.minimum_order
           };
           delete order.attributes.name;
           delete order.attributes.delivery_fee;
+          delete order.attributes.minimum_order;
         });
       }
       callback.call(this, err, orders);

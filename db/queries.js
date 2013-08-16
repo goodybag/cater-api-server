@@ -72,7 +72,8 @@ module.exports = {
     get: utils.partial(findOne, 'users'),
     create: utils.partial(upsert, 'users'),
     update: utils.partial(upsert, 'users'),
-    del: utils.partial(del, 'users')
+    del: utils.partial(del, 'users'),
+    setGroup: utils.partial(upsert, 'users_groups')
   },
 
   orderItem: {

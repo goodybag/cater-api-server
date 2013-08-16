@@ -1,23 +1,23 @@
 var OrderView = Backbone.View.extend({
   model: Order,
 
-  events: {
-    'keyup .order-form .order-form-field': 'onOrderChange',
-    'change .order-form .order-form-field': 'onOrderChange',
-    'submit .order-form': 'onSave',
-    'click .edit-address-btn': 'editAddress'
-  },
-
-  initialize: function(options) {
-    if (this.model) this.listenTo(this.model, 'change:sub_total', this.onPriceChange, this)
-
-    // events that need this
-    _.extend(this.events, {
+  events: function() {
+    return {
+      'keyup .order-form .order-form-field': 'onOrderChange',
+      'change .order-form .order-form-field': 'onOrderChange',
+      'submit .order-form': 'onSave',
+      'click .edit-address-btn': 'editAddress',
       'click .cancel-btn': _.bind(this.changeStatus, this, 'canceled'),
       'click .submit-btn': _.bind(this.changeStatus, this, 'submitted'),
       'click .reject-btn': _.bind(this.changeStatus, this, 'denied', this.options.token),
       'click .accept-btn': _.bind(this.changeStatus, this, 'accepted', this.options.token)
-    });
+    }
+  },
+
+  initialize: function(options) {
+    if (this.model) this.listenTo(this.model, 'change:sub_total', this.onPriceChange, this)
+    this.onOrderChange();
+    this.updateAddressBlock();
   },
 
   onPriceChange: function(model, value, options) {
@@ -56,7 +56,7 @@ var OrderView = Backbone.View.extend({
   },
 
   fieldMap: {
-    datetime: '#order-datetime',
+    datetime: '.order-datetime',
     street: '#address-street',
     city: '#address-city',
     state: '#address-state',
@@ -71,7 +71,10 @@ var OrderView = Backbone.View.extend({
       return parseInt(this.$el.find('.order-form ' + this.fieldMap.guests).val());
     },
     datetime: function() {
-      var date = new Date(this.$el.find('.order-form ' + this.fieldMap.datetime).val().trim());
+      var datepart = this.$el.find('.order-form #order-date').val().trim();
+      var timepart = this.$el.find('.order-form #order-time').val().trim();
+
+      var date = new Date(datepart + ' ' + timepart);
       return date.toString() !== 'Invalid Date' ? date.toISOString() : null;
     }
 
@@ -106,12 +109,16 @@ var OrderView = Backbone.View.extend({
 
   editAddress: function(e) {
     this.$el.find('.order-address').toggleClass('hide');
+    this.updateAddressBlock();
+  },
+
+  updateAddressBlock: function() {
     var addr = {
       street: this.$el.find('.address-street').val(),
       city: this.$el.find('.address-city').val(),
       state: this.$el.find('.address-state').val(),
       zip: this.$el.find('.address-zip').val()
     }
-    $('.order-address-block').html(Handlebars.helpers.address(addr));
+    this.$el.find('.order-address-block').html(Handlebars.helpers.address(addr));
   }
 });

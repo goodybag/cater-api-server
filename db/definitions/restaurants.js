@@ -50,6 +50,11 @@ define(function(require) {
       type: types.numeric(10)
     , nullable: false
     }
+  , minimum_order: {
+      type: types.int
+    , nullable: true
+    , checks: ['> 0']
+    }
   , price: {
       type: types.smallint
     , checks: [ '> 0', '<= 5']

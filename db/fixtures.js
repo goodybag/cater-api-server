@@ -44,7 +44,8 @@ var inserts = {
       , state: faker.Address.usState(true)
       , zip: faker.Address.zipCodeFormat(0)
       , phone: parseInt(faker.PhoneNumber.phoneNumberFormat(faker.definitions.phone_formats.length-1))
-      , price: faker.Helpers.randomNumber(4) + 1
+      , price: faker.Helpers.randomNumber(5) + 1
+      , minimum_order: Math.random() < .3 ? faker.Helpers.randomNumber(501) * 100 : null
       }
     }
   }

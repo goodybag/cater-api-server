@@ -11,9 +11,17 @@
     <div class="col-lg-6">
       <div class="row">
         <p>Submitted: {{order.submitted}}</p>
-        <div class="form-group">
-          <label for="order-datetime" class="control-label">Delivery Date</label>
-          <input type="text" id="order-datetime" class="form-control order-form-field" value="{{order.datetime}}" {{#unless order.editable}}disabled{{/unless}}></diff>
+        <div class="form-group col-lg-6">
+          <label for="order-date" class="control-label">Delivery Date</label>
+          <input type="text" id="order-date" class="form-control order-form-field order-datetime"
+                 value="{{#if order.datetime}}{{datepart order.datetime}}{{else}}{{orderParams.date}}{{/if}}"
+                 {{#unless order.editable}} disabled{{/unless}}>
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="order-time" class="control-label">Delivery Time</label>
+          <input type="text" id="order-time" class="form-control order-form-field order-datetime"
+                 value="{{#if order.datetime}}{{timepart order.datetime}}{{else}}{{orderParams.date}}{{/if}}"
+                 {{#unless order.editable}} disabled{{/unless}}>
         </div>
       </div>
       <div class="row">
@@ -46,7 +54,8 @@
               </div>
               <div class="form-group">
                 <label for="address-zip" class="control-label">Zip</label>
-                <input type="text" maxlength="5" id="address-zip" class="form-control order-form-field address-input address-zip" value="{{order.zip}}">
+                <input type="text" maxlength="5" id="address-zip" class="form-control order-form-field address-input address-zip"
+                       value="{{#if order.zip}}{{order.zip}}{{else}}{{orderParams.zip}}{{/if}}">
               </div>
             </fieldgroup>
             {{/if}}
@@ -59,7 +68,9 @@
           </div>
           <div class="form-group">
             <label for="order-guests" class="control-label">Guests</label>
-            <input type="number" min="1" id="order-guests" class="form-control order-form-field order-guests" value="{{order.guests}}" {{#unless order.editable}}disabled{{/unless}}>
+            <input type="number" min="1" id="order-guests" class="form-control order-form-field order-guests"
+                   value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"
+                   {{#unless order.editable}} disabled{{/unless}}>
           </div>
         </div>
       </div>
@@ -112,7 +123,7 @@
 </ul>
 
 <div class="row">
-  <div class="totals">{{> totals}}</div>
+  <div class="totals col-lg-3 col-offset-9">{{> totals}}</div>
   {{#if owner}}
   <div class="btn-toolbar pull-right">
     {{#if order.cancelable}}<button class="btn btn-lg btn-danger cancel-btn">Cancel</button>{{/if}}

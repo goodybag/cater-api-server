@@ -43,6 +43,25 @@ var del = function(table, id) {
   }
 }
 
+// The point of models is to prevent this sort of thing
+var userGroups = function(query) {
+  query.columns.push({
+    type: 'array_agg',
+    as: 'groups',
+    expression: '"users_groups"."group"'
+  });
+  utils.extend(query, {
+    joins: {
+      users_groups: {
+        type: 'left',
+        on: {'user_id': '$users.id$'}
+      }
+    },
+    groupBy:'id'
+  });
+  return query;
+}
+
 module.exports = {
   restaurant: {
     create: utils.partial(upsert, 'restaurants'),
@@ -68,11 +87,12 @@ module.exports = {
   },
 
   user: {
-    list: utils.partial(find, 'users'),
-    get: utils.partial(findOne, 'users'),
+    list: utils.compose(userGroups, utils.partial(find, 'users')),
+    get: utils.compose(userGroups, utils.partial(findOne, 'users')),
     create: utils.partial(upsert, 'users'),
     update: utils.partial(upsert, 'users'),
-    del: utils.partial(del, 'users')
+    del: utils.partial(del, 'users'),
+    setGroup: utils.partial(upsert, 'users_groups')
   },
 
   orderItem: {

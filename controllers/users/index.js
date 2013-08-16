@@ -42,15 +42,26 @@ module.exports.create = function(req, res) {
 
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results){
-        if (error) return res.error(parseInt(error.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, error, callback);
+        if (error) {
+          res.error(parseInt(error.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, error, callback);
+          return callback(error);
+        }
         var user = results[0];
         utils.extend(req.session, {user: {id: user.id}});
+        return callback(null, user);
+      });
+    }
+  , group: function(user, callback) {
+      var query = queries.user.setGroup({user_id: user.id, group: 'client'});
+      var sql = db.builder.sql(query);
+      db.query(sql.query, sql.values, function(error, results){
+        if (error) return res.error(errors.internal.DB_FAILURE, error);
         return res.redirect('/');
       });
     }
   }
 
-  utils.async.waterfall([flow.encrypt, flow.create]);
+  utils.async.waterfall([flow.encrypt, flow.create, flow.group]);
 }
 
 module.exports.update = function(req, res) {

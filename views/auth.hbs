@@ -3,7 +3,7 @@
     {{#if error}}
     <div class="alert alert-danger">Invalid email address or password. Try again.</div>
     {{/if}}
-    <form method="POST" action="/session">
+    <form method="POST" action="/session{{query}}">
       <fieldset>
         <legend>Log In</legend>
         <div class="form-group">

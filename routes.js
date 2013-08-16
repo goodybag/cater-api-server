@@ -1,5 +1,6 @@
 var controllers = require('./controllers');
 var static = require('node-static');
+var restrict = require('./middleware/restrict');
 
 var file = new static.Server('./public');
 
@@ -13,7 +14,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants', controllers.restaurants.list);
 
-  // app.post('/restaurants', controllers.restaurants.create);
+  app.post('/restaurants', restrict('admin'), controllers.restaurants.create);
 
   app.all('/restaurants', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -28,7 +29,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid', controllers.restaurants.get);
 
-  // app.put('/restaurants/:rid', controllers.restaurants.update);
+  app.put('/restaurants/:rid', restrict('admin'), controllers.restaurants.update);
 
   app.all('/restaurants/:rid', function(req, res, next) {
     res.set('Allow', 'GET, PUT');
@@ -39,7 +40,7 @@ module.exports.register = function(app) {
    * Restaurant items resource.  The collection of all items belonging to a restaurant.
    */
 
-  // app.get('/restaurants/:rid/items', controllers.restaurants.listItems);  // not currently used
+  app.get('/restaurants/:rid/items', controllers.restaurants.listItems);  // not currently used
 
   app.all('/restaurants/:rid/items', function(req, res, next) {
     res.set('Allow', 'GET');
@@ -50,9 +51,9 @@ module.exports.register = function(app) {
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
    */
 
-  // app.get('/restaurants/:rid/categories', controllers.restaurants.categories.list);  // not currently used
+  app.get('/restaurants/:rid/categories', controllers.restaurants.categories.list);  // not currently used
 
-  // app.post('/restaurants/:rid/categories', controllers.restaurants.categories.create);
+  app.post('/restaurants/:rid/categories', restrict('admin'), controllers.restaurants.categories.create);
 
   app.all('/restaurants/:rid/categories', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -63,11 +64,11 @@ module.exports.register = function(app) {
    * Individual category resource.  A single restaurant category.
    */
 
-  // app.get('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.get);  // not currently used
+  app.get('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.get);  // not currently used
 
-  // app.put('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.update);
+  app.put('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.update);
 
-  // app.del('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.remove);
+  app.del('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.remove);
 
   app.all('/restaurants/:rid/categories/:cid', function(req, res, next) {
     res.set('Allow', 'GET, PUT, DELETE');
@@ -78,9 +79,9 @@ module.exports.register = function(app) {
    *  Category items resource.  The collection of all items belonging to a single category.
    */
 
-  // app.get('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.listItems);  // not currently used
+  app.get('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.listItems);  // not currently used
 
-  // app.post('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.addItem);
+  app.post('/restaurants/:rid/categories/:cid/items', restrict('admin'), controllers.restaurants.categories.addItem);
 
   app.all('/restaurants/:rid/categories/:cid/items', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -91,7 +92,7 @@ module.exports.register = function(app) {
    *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
    */
 
-  // app.get('/restaurants/:rid/orders', controllers.restaurants.orders.list);
+  app.get('/restaurants/:rid/orders', restrict('admin'), controllers.restaurants.orders.list);
 
   app.post('/restaurants/:rid/orders', function(req, res, next) {
     req.body.restaurant_id = req.params.rid;
@@ -114,7 +115,7 @@ module.exports.register = function(app) {
    *  Items resource.  The collection of all items.
    */
 
-  // app.get('/items', controllers.items.list);  // not currently used
+  app.get('/items', controllers.items.list);  // not currently used
 
   app.all('/items', function(req, res, next) {
     res.set('Allow', 'GET');
@@ -125,11 +126,11 @@ module.exports.register = function(app) {
    *  Item resource.  An individual item.
    */
 
-  // app.get('/items/:id', controllers.items.get);  // not currently used
+  app.get('/items/:id', controllers.items.get);  // not currently used
 
-  // app.put('/items/:id', controllers.items.update);
+  app.put('/items/:id', restrict('admin'), controllers.items.update);
 
-  // app.del('/items/:id', controllers.items.remove);
+  app.del('/items/:id', restrict('admin'), controllers.items.remove);
 
   app.all('/items/:id', function(req, res, next) {
     res.set('Allow', 'GET, POST, DELETE');
@@ -140,7 +141,7 @@ module.exports.register = function(app) {
    *  Orders resource.  The collection of all orders.
    */
 
-  // app.get('/orders', controllers.orders.list);  // not currently used
+  app.get('/orders', restrict('admin'), controllers.orders.list);  // not currently used
 
   app.post('/orders', controllers.orders.create);
 
@@ -252,7 +253,7 @@ module.exports.register = function(app) {
    *  Users resource.  All the users.
    */
 
-  // app.get('/users', controllers.users.list); // not currently used
+  app.get('/users', restrict('admin'), controllers.users.list); // not currently used
 
   app.post('/users', controllers.users.create);
 
@@ -274,7 +275,8 @@ module.exports.register = function(app) {
   });
 
   app.all('/users/:uid/?*', function(req, res, next) {
-    if (!req.session.user || ''+req.params.uid !== ''+req.session.user.id)
+    console.log(req.session.user);
+    if (!req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params.uid !== ''+req.session.user.id))
       res.send(404);
     else
       next();

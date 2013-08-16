@@ -8,6 +8,8 @@ var
 var models = require('../../models');
 
 module.exports.auth = function(req, res, next) {
+  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin'))
+    return next();
   models.Order.findOne(req.params.id, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     var reviewToken = req.query.review_token || req.body.review_token;

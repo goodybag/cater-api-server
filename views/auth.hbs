@@ -1,73 +1,47 @@
 <div class="row">
   <div class="col-lg-5">
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#login" data-toggle="tab">Log In</a></li>
-      <li><a href="#register" data-toggle="tab">Sign Up</a></li>
-    </ul>
-    <div class="tabbable">
-      <div class="tab-content">
-        <div class="tab-pane active" id="login">
-          <br />
-          {{#if error}}
-            <div class="alert alert-danger">Invalid email address or password. Try again.</div>
-          {{/if}}
-          <form method="POST" action="/session">
-            <fieldset>
-              <div class="form-group">
-                <label for="email">Email address</label>
-                <input type="email" name="email" class="form-control" id="email" placeholder="email address" value="{{email}}">
-              </div>
-              <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" class="form-control" id="password" placeholder="password">
-              </div>
-              <div class="form-group">
-                <a href="#">forgot password</a>
-              </div>
-              <div class="form-group">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox"> Remember me
-                  </label>
-                </div>
-              </div>
-              <div class="form-group">
-                <button type="submit" class="btn btn-default">Log in</button>
-              </div>
-            </fieldset>
-          </form>
+    {{#if error}}
+    <div class="alert alert-danger">Invalid email address or password. Try again.</div>
+    {{/if}}
+    <form method="POST" action="/session">
+      <fieldset>
+        <legend>Log In</legend>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" name="email" class="form-control" id="email" placeholder="email address" value="{{email}}">
         </div>
-        <div class="tab-pane" id="register">
-          <br />
-          <form method="POST" action="/users">
-            <fieldset>
-              <div class="form-group">
-                <label for="email">Email address</label>
-                <input type="email" name="email" class="form-control" id="email" placeholder="email address" value="{{email}}">
-              </div>
-              <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" class="form-control" id="password" placeholder="password">
-              </div>
-              <div class="form-group">
-                <label for="confirm-password">Confirm Password</label>
-                <input type="password" class="form-control" id="confirm-password" placeholder="password again">
-              </div>
-              <div class="form-group">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox"> Remember me
-                  </label>
-                </div>
-              </div>
-              <div class="form-group">
-                <button type="submit" class="btn btn-default">Sign Up</button>
-              </div>
-            </fieldset>
-          </form>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" name="password" class="form-control" id="password" placeholder="password">
         </div>
-      </div>
-    </div>
+        <div class="row">
+          <div class="col-lg-6 form-group">
+            <a href="#">forgot password</a>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox"> Remember me
+              </label>
+            </div>
+          </div>
+          <div class="col-lg-6 form-group">
+            <button type="submit" class="btn btn-primary btn-lg">Log in</button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    <hr>
+    <form>
+      <fieldset>
+        <span class="help-block">Give us your email and we'll let you know when Goodybag is available.</span>
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" class="form-control"placeholder="email address" value="{{email}}">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-lg">Sign Up for Waitlist</button>
+        </div>
+      </fieldset>
+    </form>
   </div>
   <div class="col-lg-7">
     <img src="http://images4.alphacoders.com/169/169978.jpg" width="575px" height="300px" class="img-rounded" />

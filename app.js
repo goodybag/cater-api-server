@@ -51,7 +51,7 @@ app.configure(function(){
 
   var render = app.response.render;
   app.response.render = function(path, options, callback) {
-    var options = utils.extend(options || {}, {user: this.req.session.user});
+    var options = utils.extend(options || {}, {user: utils.extend(this.req.session.user, options.user)});
     render.call(this, path, options, callback);
   }
 

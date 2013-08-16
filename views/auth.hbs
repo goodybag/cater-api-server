@@ -30,12 +30,12 @@
       </fieldset>
     </form>
     <hr>
-    <form>
+    <form method="POST" action="/waitlist">
       <fieldset>
         <span class="help-block">Give us your email and we'll let you know when Goodybag is available.</span>
         <div class="form-group">
           <label>Email address</label>
-          <input type="email" class="form-control"placeholder="email address" value="{{email}}">
+          <input type="email" name="email" class="form-control"placeholder="email address" value="{{email}}">
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-primary btn-lg">Sign Up for Waitlist</button>

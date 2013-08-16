@@ -303,6 +303,15 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+  /**
+   *  Waitlist resource
+   */
+
+  app.post('/waitlist', controllers.waitlist.add);
+
+  // needs to be get for one click links in email.
+  app.get('/unsubscribe', controllers.waitlist.remove);
+
   app.get('/*', function(req, res) {
     file.serve(req, res);
   });

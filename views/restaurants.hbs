@@ -19,6 +19,7 @@
           {{#each cuisine}}
           <h5 class="label label-info">{{this}}</h5>
           {{/each}}
+          {{#if minimum_order}}<span class="pull-right">minimum order: ${{dollars minimum_order}}</span>{{/if}}
         </div>
       </a>
       {{else}}

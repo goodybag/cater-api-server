@@ -1,3 +1,4 @@
+{{#if order.restaurant.minimum_order}}<p class="text-right{{#if order.below_min}} alert alert-danger{{/if}}">minimum: $<span class="price minimum-order">{{dollars order.restaurant.minimum_order}}</span></p>{{/if}}
 <p class="text-right">subtotal: $<span class="price sub-total">{{dollars order.sub_total}}</span></p>
 <p class="text-right">delivery fee: $<span class="price delivery-fee">{{dollars order.restaurant.delivery_fee}}</span></p>
 <p class="text-right">tax: $<span class="price tax">{{tax order.sub_total order.restaurant.delivery_fee}}</span></p>

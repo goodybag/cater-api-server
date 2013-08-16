@@ -10,6 +10,7 @@ module.exports.add = function(req, res, next) {
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     //TODO: send first email
+    //TODO: render waitlist confirmed page
     res.send(201);
   });
 }

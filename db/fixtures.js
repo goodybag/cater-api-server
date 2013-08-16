@@ -120,6 +120,24 @@ async.series(
         });
       });
     }
+  , userGroups: function(cb) {
+      async.series({
+        clients: function(callback) {
+          query({
+            type: 'insert'
+          , table: 'groups'
+          , values: {name: 'client'}
+          }, callback);
+        }
+      , admins: function(callback) {
+          query({
+            type: 'insert'
+          , table: 'groups'
+          , values: {name: 'admin'}
+          }, callback);
+        }
+      }, cb)
+    }
   }
 , function(error, results){
   console.log('done');

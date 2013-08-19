@@ -103,9 +103,16 @@ module.exports = {
   },
 
   waitlist: {
-    create: function(values) {
-      utils.defaults(values, {token: uuid.v4()});
-      return upsert('waitlist', values);
+    get: utils.compose(utils.partial(findOne, 'waitlist'), function(email) {
+      return !utils.isObject(email) ? {email: email} : email;
+    }),
+    create: utils.compose(utils.partial(upsert, 'waitlist'), function(values) {
+      return utils.defaults(values, {token: uuid.v4()});
+    }),
+    reAdd: function(where, org) {
+      var values = {token_used: null, created_at: 'now()'};
+      if (org) values.organization = org;
+      return upsert.call(this, 'waitlist', values, utils.isObject(where) ? where : {email: where});
     },
     unsubscribe: function(token) {
       return upsert('waitlist', {token_used: 'now()'}, {token: token});

@@ -113,7 +113,7 @@ module.exports = {
 
     }, utils.partial(findOne, 'password_resets'), function(token) {
       return {token: token};
-    },
+    }),
     create: function(email) {
       var values = {
         token: uuid.v4(),
@@ -130,7 +130,7 @@ module.exports = {
 
     redeem: utils.compose(utils.partial(upsert, 'password-resets', {token_used: 'now()'}), function(token) {
       return {token: token};
-    });
+    })
   }
 
 };

@@ -19,7 +19,7 @@ module.exports.get = function(req, res, next) {
 
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var context = rows.length > 0 ? {email: rows[0].email, token, req.params.token} : {badToken: true};
+    var context = rows.length > 0 ? {email: rows[0].email, token: req.params.token} : {badToken: true};
     res.render('reset-password', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
       res.send(html);

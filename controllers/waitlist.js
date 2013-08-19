@@ -10,8 +10,10 @@ module.exports.add = function(req, res, next) {
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     //TODO: send first email
-    //TODO: render waitlist confirmed page
-    res.send(201);
+    res.render('waitlist-confirm', {email: req.body.email}, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWON, err);
+      res.send(201, html);
+    });
   });
 }
 

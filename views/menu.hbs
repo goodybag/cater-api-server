@@ -38,7 +38,10 @@
     </div>
     <div class="panel-footer">
       <div class="row">
-        <div  class="col-lg-6 col-lg-offset-6">
+        <div class="col-lg-6">
+          {{#if restaurant.minimum_order}}min: ${{dollars restaurant.minimum_order}}{{/if}}
+        </div>
+        <div  class="col-lg-6">
           <span class="pull-right">subtotal: $<span id="subtotal">{{dollars order.sub_total}}</span></span>
         </div>
       </div>

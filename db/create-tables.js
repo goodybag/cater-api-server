@@ -6,6 +6,8 @@ var
 
 var definitions = [
   'users'
+, 'groups'
+, 'users-groups'
 , 'restaurants'
 , 'orders'
 , 'categories'

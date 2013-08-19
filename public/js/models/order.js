@@ -16,6 +16,10 @@ var Order = Backbone.Model.extend({
       this.listenTo(this.orderItems, 'change:sub_total add remove', function() {
         this.set('sub_total', _.reduce(this.orderItems.pluck('sub_total'), function(a, b) { return a + b; }, 0));
       }, this);
+
+      this.on('change:sub_total', function(model, value, options) {
+        model.set('below_min', value < model.get('restaurant').minimum_order);
+      }, this);
     }
   },
   requiredFields: [

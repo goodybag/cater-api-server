@@ -35,9 +35,9 @@ module.exports.remove = function(req, res, next) {
   var sql = db.builder.sql(query);
 
   db.query(sql.query, sql.values, function(err, rows, result) {
-    // TODO: bad token error
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.render('waitlist-unsubscribe', {email: rows[0].email}, function(err, html) {
+    var context = rows.length > 0 ? {email: rows[0].email} : {badToken: true};
+    res.render('waitlist-unsubscribe', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWON, err);
       res.send(html);
     });

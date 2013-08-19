@@ -37,6 +37,9 @@ module.exports.remove = function(req, res, next) {
   db.query(sql.query, sql.values, function(err, rows, result) {
     // TODO: bad token error
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(200); // TODO: render unsubscribe confirmed page
+    res.render('waitlist-unsubscribe', {email: rows[0].email}, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWON, err);
+      res.send(html);
+    });
   });
 }

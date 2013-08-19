@@ -1,4 +1,5 @@
 var utils = require('../utils');
+var uuid  = require('node-uuid');
 
 var defaultSelect = {
   type: 'select',
@@ -111,6 +112,7 @@ module.exports = {
         }
       };
 
+      return query;
     }, utils.partial(findOne, 'password_resets'), function(token) {
       return {token: token};
     }),
@@ -118,8 +120,8 @@ module.exports = {
       var values = {
         token: uuid.v4(),
         user_id: {
-          type: select,
-          table: users,
+          type: 'select',
+          table: 'users',
           columns: ['id'],
           where: {email: email}
         }
@@ -128,7 +130,7 @@ module.exports = {
       return upsert.call(this, 'password_resets', values);
     },
 
-    redeem: utils.compose(utils.partial(upsert, 'password-resets', {token_used: 'now()'}), function(token) {
+    redeem: utils.compose(utils.partial(upsert, 'password_resets', {token_used: 'now()'}), function(token) {
       return {token: token};
     })
   }

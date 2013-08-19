@@ -38,8 +38,8 @@ module.exports.redeem = function(req, res, next) {
 
     function(hash, callback) {
       var query = queries.user.update({password: hash}, {
-        user_id: '$users.id$',
-        token: req.params.token
+        id: '$password_resets.user_id$',
+        'password_resets.token': req.params.token
       });
 
       query.from = ['password_resets'];
@@ -54,7 +54,7 @@ module.exports.redeem = function(req, res, next) {
     },
 
     function(callback) {
-      var sql = db.builder.sql(queryies.passwordReset.redeem(req.params.token));
+      var sql = db.builder.sql(queries.passwordReset.redeem(req.params.token));
       db.query(sql.query, sql.values, function(err, rows, result) {
         if (err) return res.error(errors.internal.DB_FAILURE, err);
         res.send(200);

@@ -98,5 +98,26 @@ module.exports = {
   orderItem: {
     update: utils.partial(upsert, 'order_items'),
     del: utils.partial(del, 'order_items')
+  },
+
+  passwordReset: {
+    create: function(email) {
+      var values = {
+        token: uuid.v4(),
+        user_id: {
+          type: select,
+          table: users,
+          columns: ['id'],
+          where: {email: email}
+        }
+      };
+
+      return upsert.call(this, 'password_resets', values);
+    },
+
+    redeem: utils.compose(utils.partial(upsert, 'password-resets', {token_used: 'now()'}), function(token) {
+      return {token: token};
+    });
   }
+
 };

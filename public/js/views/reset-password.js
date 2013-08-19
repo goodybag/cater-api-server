@@ -26,9 +26,15 @@ var ResetPasswordView = Backbone.View.extend({
 
     $.ajax({
       url: window.location.pathname,
-      method: 'PUT',
+      type: 'PUT',
       contentType: 'application/json',
-      data: JSON.stringify({password: pass1})
+      data: JSON.stringify({password: pass1}),
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert(errorThrown);
+      },
+      success: function(data, textStatus, jqXHR) {
+        location.href = '/';
+      }
     });
   }
 });

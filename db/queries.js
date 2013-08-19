@@ -114,7 +114,7 @@ module.exports = {
 
       return query;
     }, utils.partial(findOne, 'password_resets'), function(token) {
-      return {token: token};
+      return {token: token, token_used: {$null: true}};
     }),
     create: function(email) {
       var values = {

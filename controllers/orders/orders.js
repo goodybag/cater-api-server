@@ -1,11 +1,10 @@
-var
-  db = require('../../db')
-, errors = require('../../errors')
-, utils = require('../../utils')
-, states = require('../../public/states');
-;
-
+var db = require('../../db');
+var errors = require('../../errors');
+var utils = require('../../utils');
+var states = require('../../public/states');
 var models = require('../../models');
+var Mailgun = require('mailgun');
+var Mailcomposer = require('mailcomposer').Mailcomposer
 
 module.exports.auth = function(req, res, next) {
   if (req.session.user != null && utils.contains(req.session.user.groups, 'admin'))
@@ -79,6 +78,28 @@ module.exports.listStatus = function(req, res) {
   );
 }
 
+
+var sendOrderEmail = function(order) {
+  var mg = new Mailgun(); // TODO: api key goes here
+  var composer = new MailComposer();
+
+  composer.setMessageOption({
+    from: 'orders@goodybag.com',
+    to: order.restaurant.email,
+    subject: 'New Order from Goodybag - ' + order.guests + ' Guest' + order.guests !== 1 ? 's' : '',
+    body: 'We have received a new order for you.  The order is for ' + order.guests + ' guests with a subtotal of $' + order.sub_total.toFixed(2)
+  });
+
+  composer.buildMessage(function(err, msg) {
+
+    mg.sendRaw(
+      'orders@goodybag.com',
+      [order.restaurant.email],
+      msg);
+  });
+
+}
+
 module.exports.changeStatus = function(req, res) {
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
@@ -95,6 +116,12 @@ module.exports.changeStatus = function(req, res) {
     if (req.body.status === 'submitted' && !order.isComplete())
       return res.send(403, 'order not complete');
 
+    var done = function(status) {
+      if (utils.contains(['accepted', 'denied', 'delivered'], status.attributes.status)) {
+      }
+      res.send(201, status.toJSON();
+    }
+
     var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
     status.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
@@ -103,11 +130,10 @@ module.exports.changeStatus = function(req, res) {
         order.attributes.token_used = 'now()';
         order.save(function(err) {
           if (err) return res.error(errors.internal.DB_FAILURE, err);
-          res.send(201, status.toJSON());
+          done();
         });
       }
-      else
-        res.send(201, status.toJSON());
+      else done();
     });
   });
 }

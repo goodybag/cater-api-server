@@ -101,6 +101,19 @@ module.exports = {
   },
 
   passwordReset: {
+    get: utils.compose(function(query) {
+      query.columns.push('users.email');
+
+      query.joins = {
+        users: {
+          type: 'inner',
+          on: {id: '$user_id$'}
+        }
+      };
+
+    }, utils.partial(findOne, 'password_resets'), function(token) {
+      return {token: token};
+    },
     create: function(email) {
       var values = {
         token: uuid.v4(),

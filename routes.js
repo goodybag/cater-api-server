@@ -309,7 +309,7 @@ module.exports.register = function(app) {
 
   app.post('/password-resets', controllers.users.passwordResets.create);
 
-  // app.get('/password-resets/:token', controllers.users.passwordResets.get);
+  app.get('/password-resets/:token', controllers.users.passwordResets.get);
 
   app.put('/password-resets/:token', controllers.users.passwordResets.redeem);
 

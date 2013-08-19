@@ -303,6 +303,17 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+  /**
+   *  Password reset resource
+   */
+
+  app.post('/password-resets', controllers.users.passwordResets.create);
+
+  // app.get('/password-resets/:token', controllers.users.passwordResets.get);
+
+  app.put('/password-resets/:token', controllers.users.passwordResets.redeem);
+
+
   app.get('/*', function(req, res) {
     file.serve(req, res);
   });

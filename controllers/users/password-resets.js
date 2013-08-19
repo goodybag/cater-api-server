@@ -9,6 +9,7 @@ module.exports.create = function(req, res, next) {
 
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+    // TODO: email
     res.send(201);
   });
 }

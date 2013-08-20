@@ -2,56 +2,65 @@
   <div class="col-lg-12 order-params-bar">
     {{> order_params_bar}}
   </div>
-  <div class="col-lg-12">
-    <h1>{{restaurant.name}}</h1>
-  </div>
 </div>
 
 <div class="row">
-  <div class="col-lg-8 panel">
-    <h2 class="panel-heading">Menu</h2>
-    {{#each restaurant.categories}}
-    <h3>{{name}}</h3>
-    <div class="list-group list-group-flush category" id="category-{{id}}">
-      {{#each items}}
-      <a class="list-group-item item" id="item-{{id}}">
-        <div>
-          <div><strong class="list-group-item-heading">{{name}}</strong> <i class="list-group-item-text pull-right">feeds {{feeds_min}}-{{feeds_max}} &nbsp;   &nbsp; price {{dollars price}}</i></div>
-          <div class="list-group-item-text">{{description}}</div>
-        </div>
-      </a>
+  <h1 class="col-lg-12">{{restaurant.name}}</h1>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="panel">
+      <div class="panel-heading">
+        <h2 class="panel-title">Menu</h2>
+      </div>
+      {{#each restaurant.categories}}
+      <h3 class="col-lg-12">{{name}}</h3>
+      <div class="list-group list-group-flush category" id="category-{{id}}">
+        {{#each items}}
+        <a class="list-group-item item" id="item-{{id}}">
+          <div>
+            <div><strong class="list-group-item-heading">{{name}}</strong> <i class="list-group-item-text pull-right">feeds {{feeds_min}}-{{feeds_max}} &nbsp;   &nbsp; price {{dollars price}}</i></div>
+            <div class="list-group-item-text">{{description}}</div>
+          </div>
+        </a>
+        {{/each}}
+      </div>
       {{/each}}
     </div>
-    {{/each}}
   </div>
 
-  <div class="col-lg-4 panel panel-success order-summary">
-    <h2 class="panel-heading">Order</h2>
-    <div class="list-group list-group-flush order-items">
-      {{#each order.orderItems}}
-      <div class="list-group-item order-item" id="order-item-{{id}}">
-        {{> order_item_summary}}
+  <div class="col-lg-4">
+    <div class="panel panel-success order-summary">
+      <div class="panel-heading">
+        <h2 class="panel-title">Order</h2>
       </div>
-      {{else}}
-      <h4>No Items Yet</h4>
-      {{/each}}
-    </div>
-    <div class="panel-footer">
-      <div class="row">
-        <div class="col-lg-6">
-          {{#if restaurant.minimum_order}}min: ${{dollars restaurant.minimum_order}}{{/if}}
+      <div class="list-group list-group-flush order-items">
+        {{#each order.orderItems}}
+        <div class="list-group-item order-item" id="order-item-{{id}}">
+          {{> order_item_summary}}
         </div>
-        <div  class="col-lg-6">
-          <span class="pull-right">subtotal: $<span id="subtotal">{{dollars order.sub_total}}</span></span>
+        {{else}}
+        <h4 class="col-lg-12">No Items Yet</h4>
+        {{/each}}
+      </div>
+      <div class="panel-footer">
+        <div class="row">
+          <div class="col-lg-6">
+            {{#if restaurant.minimum_order}}min: ${{dollars restaurant.minimum_order}}{{/if}}
+          </div>
+          <div  class="col-lg-6">
+            <span class="pull-right">subtotal: $<span id="subtotal">{{dollars order.sub_total}}</span></span>
+          </div>
         </div>
+        {{#unless order.below_min}}
+        {{#if order.sub_total}}
+        <div class="row">
+          <a href="/orders/{{order.id}}" class="btn btn-primary pull-right">Check Out</a>
+        </div>
+        {{/if}}
+        {{/unless}}
       </div>
-      {{#unless order.below_min}}
-      {{#if order.sub_total}}
-      <div class="row">
-        <a href="/orders/{{order.id}}" class="btn btn-primary pull-right">Check Out</a>
-      </div>
-      {{/if}}
-      {{/unless}}
     </div>
   </div>
 </div>
@@ -87,7 +96,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Cannot place order</h4>
+        <h4 class="modal-title">Cannot add items to order</h4>
       </div>
       <form>
         <div class="modal-body">

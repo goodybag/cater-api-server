@@ -178,6 +178,7 @@
 <script type="text/javascript" src="/js/views/order-item-summary-view.js"></script>
 <script type="text/javascript" src="/js/views/order-summary-view.js"></script>
 <script type="text/javascript" src="/js/views/order-params-view.js"></script>
+<script type="text/javascript" src="/js/views/item-view.js"></script>
 <script type="text/javascript" src="/js/views/item-modal.js"></script>
 
 <script>
@@ -189,21 +190,17 @@
   new OrderItemSummaryView({el: '#order-item-{{id}}', model: orderView.model.orderItems.get({{id}}), itemModalView: itemModalView});
   {{/each}}
 
-  var views = {};
-  views.Item = Backbone.View.extend({
-    events: {
-      'click': 'showModal'
-    }
-  , showModal: function() {
-      var orderItem = orderView.model.orderItems.findWhere({item_id: this.model.id});
-      this.options.itemModalView.provideModel(orderItem || this.model).show();
-    }
-  });
-
+  var orderParamsModal = $('#order-params-modal');
   var itemViews = [
     {{#each restaurant.categories}}
     {{#each items}}
-    new views.Item({el: $('#item-{{id}}'), model: new Backbone.Model( {{{json this}}} ), itemModalView: itemModalView}),
+    new ItemView({
+      el: $('#item-{{id}}'),
+      model: new Backbone.Model( {{{json this}}} ),
+      itemModalView: itemModalView,
+      addItemReady: {{{json ../../addItemReady}}},
+      orderParamsModal: orderParamsModal
+      }),
     {{/each}}
     {{/each}}
   ];

@@ -44,13 +44,21 @@ module.exports.get = function(req, res) {
 
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+
     var orderParams = utils.clone(req.session.orderParams) || {};
     orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
       return memo && this[key] != null;
     }, true, orderParams);
-    var order = results[0] ? results[0].toJSON() : null;
-    res.render('menu', {restaurant: results[1].toJSON(), order: order, orderParams: orderParams}, function(err, html) {
-      if (err) return res.error(errors.internal.UNKNOWN, error);
+
+    var context = {
+      restaurant: results[1].toJSON(),
+      order: results[0] ? results[0].toJSON() : null,
+      orderParams: orderParams,
+      addItemReady: !!(req.session.user && req.session.user.id && orderParams.complete)
+    }
+
+    res.render('menu', context, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, err);
       return res.send(html);
     });
   };

@@ -8,7 +8,7 @@ ItemView = Backbone.View.extend({
       var orderItem = orderView.model.orderItems.findWhere({item_id: this.model.id});
       this.options.itemModalView.provideModel(orderItem || this.model).show();
     } else {
-      this.options.orderParamsModal.modal('show');
+      this.options.orderParamsModal.show()
     }
   }
 });

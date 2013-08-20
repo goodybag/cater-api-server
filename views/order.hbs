@@ -102,7 +102,7 @@
           <span class="input-group-addon input-sm">x</span>
           <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm order-item-field order-item-quantity"{{#unless ../order.editable}} disabled{{/unless}}>
         </div>
-        <a href="javascript:void(0)" class="remove-order-item-btn">delete</a>
+        {{#if order.editable}}<a href="javascript:void(0)" class="remove-order-item-btn">delete</a>{{/if}}
       </div>
       <div class="col-lg-5">
         <textarea class="form-control order-item-field order-item-notes" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>

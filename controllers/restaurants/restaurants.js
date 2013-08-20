@@ -11,7 +11,13 @@ module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
   models.Restaurant.find(req.query, function(error, models) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON')}, function(error, html) {
+
+    var orderParams = utils.clone(req.session.orderParams) || {};
+    orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
+      return memo && this[key] != null;
+    }, true, orderParams);
+
+    res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON'), orderParams: orderParams}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
     });
@@ -44,9 +50,20 @@ module.exports.get = function(req, res) {
 
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var order = results[0] ? results[0].toJSON() : null;
-    res.render('menu', {restaurant: results[1].toJSON(), order: order}, function(err, html) {
-      if (err) return res.error(errors.internal.UNKNOWN, error);
+
+    var orderParams = utils.clone(req.session.orderParams) || {};
+    orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
+      return memo && this[key] != null;
+    }, true, orderParams);
+
+    var context = {
+      restaurant: results[1].toJSON(),
+      order: results[0] ? results[0].toJSON() : null,
+      orderParams: orderParams
+    }
+
+    res.render('menu', context, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, err);
       return res.send(html);
     });
   };

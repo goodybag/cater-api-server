@@ -1,3 +1,7 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/order.css">
+{{/extend}}
+
 <div class="row">
   <h1 class="text-center">Order</h1>
 </div>
@@ -102,7 +106,7 @@
           <span class="input-group-addon input-sm">x</span>
           <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm order-item-field order-item-quantity"{{#unless ../order.editable}} disabled{{/unless}}>
         </div>
-        <a href="javascript:void(0)" class="remove-order-item-btn">delete</a>
+        {{#if order.editable}}<a href="javascript:void(0)" class="remove-order-item-btn">delete</a>{{/if}}
       </div>
       <div class="col-lg-5">
         <textarea class="form-control order-item-field order-item-notes" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
@@ -123,7 +127,7 @@
 </ul>
 
 <div class="row">
-  <div class="totals col-lg-3 col-offset-9">{{> totals}}</div>
+  <div class="totals col-lg-3 col-lg-offset-9">{{> totals}}</div>
   {{#if owner}}
   <div class="btn-toolbar pull-right">
     {{#if order.cancelable}}<button class="btn btn-lg btn-danger cancel-btn">Cancel</button>{{/if}}
@@ -133,7 +137,7 @@
 </div>
 
 {{#if restaurantReview}}
-<div class="row">
+<div class="row restaurant-review-buttons">
   <div class="col-lg-6">
     <button class="btn btn-lg btn-danger reject-btn">Reject</button>
   </div>

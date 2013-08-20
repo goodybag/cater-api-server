@@ -1,7 +1,6 @@
 var OrderParamsView = Backbone.View.extend({
   events: {
     'submit form': 'submit'
-  , 'click .save': 'submit'
   }
 , initialize: function() {
     // the OrderParams model should be passed in

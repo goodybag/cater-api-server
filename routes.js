@@ -255,7 +255,7 @@ module.exports.register = function(app) {
 
   app.get('/users', restrict('admin'), controllers.users.list); // not currently used
 
-  app.post('/users', controllers.users.create);
+  app.post('/users', restrict('admin'), controllers.users.create);
 
   app.all('/users', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -302,6 +302,15 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET');
     res.send(405);
   });
+
+  /**
+   *  Waitlist resource
+   */
+
+  app.post('/waitlist', controllers.waitlist.add);
+
+  // needs to be get for one click links in email.
+  app.get('/unsubscribe', controllers.waitlist.remove);
 
   app.get('/*', function(req, res) {
     file.serve(req, res);

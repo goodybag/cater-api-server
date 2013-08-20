@@ -5,4 +5,5 @@ module.exports = {
 , auth: require('./auth')
 , users: require('./users')
 , session: require('./session')
+, waitlist: require('./waitlist')
 }

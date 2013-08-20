@@ -1,9 +1,6 @@
-var
-  async = require('async')
-, faker = require('Faker')
-
-  db = require('../db')
-;
+var utils = require('../utils');
+var faker = require('Faker');
+var db = require('../db');
 
 faker.definitions.phone_formats.push('##########');
 
@@ -81,10 +78,10 @@ var inserts = {
   }
 }
 
-async.series(
+utils.async.series(
   {
     restaurants: function(cb) {
-      async.timesSeries(10, function(n, callback){
+      utils.async.timesSeries(10, function(n, callback){
         query(inserts.restaurants(), callback);
       }, function(error, results){
         // console.log('called1');
@@ -93,8 +90,8 @@ async.series(
     }
   , categories: function(cb) {
       query(select('restaurants'), function(error, results){
-        async.timesSeries(results.length, function(n, callback){
-          async.timesSeries(10, function(x, callback2){
+        utils.async.timesSeries(results.length, function(n, callback){
+          utils.async.timesSeries(10, function(x, callback2){
             query(inserts.categories(results[n].id), callback2);
           }, function(error, results){
             // console.log('called-sub-2');
@@ -108,8 +105,8 @@ async.series(
     }
   , items: function(cb) {
       query(select('categories'), function(error, results){
-        async.timesSeries(results.length, function(n, callback){
-          async.timesSeries(10, function(x, callback2){
+        utils.async.timesSeries(results.length, function(n, callback){
+          utils.async.timesSeries(10, function(x, callback2){
             query(inserts.items(results[n].restaurant_id, results[n].id), callback2);
           }, function(error, results){
             // console.log('called-sub-3');
@@ -122,7 +119,7 @@ async.series(
       });
     }
   , userGroups: function(cb) {
-      async.series({
+      utils.async.series({
         clients: function(callback) {
           query({
             type: 'insert'
@@ -139,8 +136,28 @@ async.series(
         }
       }, cb)
     }
+  , users: function(cb) {
+      utils.async.waterfall([
+        utils.partial(utils.encryptPassword, 'password')
+      , function(hash, salt, callback) {
+          query({
+            type: 'insert'
+          , table: 'users'
+          , values: {email: 'admin@goodybag.com', password: hash}
+          , returning: ['id']
+          }, callback);
+        }
+      , function(rows, callback) {
+          query({
+            type: 'insert'
+          , table: 'users_groups'
+          , values: {user_id: rows[0].id, group: 'admin'}
+          }, callback);
+        }
+      ], cb);
+    }
   }
-, function(error, results){
+, function(error, results) {
   console.log('done');
   process.exit(0);
   }

@@ -103,11 +103,11 @@
             <legend>You must be logged in to add items to an order</legend>
             <div class="form-group">
               <label class="control-label">Email</label>
-              <input type="email" class="form-control">
+              <input type="email" class="form-control email">
             </div>
             <div class="form-group">
               <label class="control-label">Password</label>
-              <input type="password" class="form-control">
+              <input type="password" class="form-control password">
             </div>
           </fieldset>
           {{/unless}}
@@ -124,25 +124,26 @@
             <div class="row">
               <div class="form-group col-lg-6">
                 <label class="control-label">Zip Code</label>
-                <input type="text" maxlength="5" class="form-control" value="{{orderParams.zip}}">
+                <input type="text" maxlength="5" class="form-control zip" value="{{orderParams.zip}}">
               </div>
               <div class="form-group col-lg-6">
                 <label class="control-label">Guests</label>
-                <input type="number" min="1" class="form-control" value="{{orderParams.guests}}">
+                <input type="number" min="1" class="form-control guests" value="{{orderParams.guests}}">
               </div>
             </div>
             <div class="row">
               <div class="form-group col-lg-6">
                 <label class="control-label">Delivery Date</label>
-                <input type="text" class="form-control" value="{{orderParams.date}}">
+                <input type="text" class="form-control date" value="{{orderParams.date}}">
               </div>
               <div class="form-group col-lg-6">
                 <label class="control-label">Delivery Time</label>
-                <input type="text" class="form-control" value="{{orderParams.time}}">
+                <input type="text" class="form-control time" value="{{orderParams.time}}">
               </div>
             </div>
           </fieldset>
           {{/unless}}
+          <div class="alert alert-danger hide">You must fill out all fields</div>
         </div>
         <div class="modal-footer">
           <div class="btn-toolbar pull-right">

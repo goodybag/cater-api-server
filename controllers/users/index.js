@@ -100,3 +100,5 @@ module.exports.listOrders = function(req, res) {
     });
   });
 }
+
+module.exports.passwordResets = require('./password-resets');

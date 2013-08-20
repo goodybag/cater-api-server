@@ -304,6 +304,16 @@ module.exports.register = function(app) {
   });
 
   /**
+   *  Password reset resource
+   */
+
+  app.post('/password-resets', controllers.users.passwordResets.create);
+
+  app.get('/password-resets/:token', controllers.users.passwordResets.get);
+
+  app.put('/password-resets/:token', controllers.users.passwordResets.redeem);
+
+  /**
    *  Waitlist resource
    */
 
@@ -311,6 +321,7 @@ module.exports.register = function(app) {
 
   // needs to be get for one click links in email.
   app.get('/unsubscribe', controllers.waitlist.remove);
+
 
   app.get('/*', function(req, res) {
     file.serve(req, res);

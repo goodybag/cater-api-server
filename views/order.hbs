@@ -1,3 +1,7 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/order.css">
+{{/extend}}
+
 <div class="row">
   <h1 class="text-center">Order</h1>
 </div>
@@ -133,7 +137,7 @@
 </div>
 
 {{#if restaurantReview}}
-<div class="row">
+<div class="row restaurant-review-buttons">
   <div class="col-lg-6">
     <button class="btn btn-lg btn-danger reject-btn">Reject</button>
   </div>

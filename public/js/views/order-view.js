@@ -87,7 +87,7 @@ var OrderView = Backbone.View.extend({
 
     for (var key in this.fieldMap) {
       var getter = this.fieldGetters[key];
-      var val = getter ? getter.apply(this) : this.$el.find('.order-form ' + this.fieldMap[key]).val().trim();
+      var val = getter ? getter.apply(this) : (this.$el.find('.order-form ' + this.fieldMap[key]).val()||'').trim();
       //TODO: validate
       if ((this.model.get(key) || val) && this.model.get(key) != val)
         diff[key] = val;

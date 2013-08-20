@@ -32,7 +32,7 @@ var OrderParamsModal = Backbone.View.extend({
 
     this.clear();
 
-    var blank = this.$el.find('form input').filter(function(index) { return $(this).val() === '' });
+    var blank = this.$el.find('form input:visible').filter(function(index) { return $(this).val() === '' });
     if (blank.length > 0) {
       blank.parent().addClass('has-error');
       this.$el.find('.alert-danger').removeClass('hide');

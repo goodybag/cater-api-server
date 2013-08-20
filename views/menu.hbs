@@ -82,11 +82,53 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Cannot place order</h4>
       </div>
       <div class="modal-body">
+        <form>
+          <fieldset>
+            <legend>You must be logged in to add items to an order</legend>
+            <div class="form-group">
+              <label class="control-label">Email</label>
+              <input type="email" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="control-label">Password</label>
+              <input type="password" class="form-control">
+            </div>
+          </fieldset>
+          <hr>
+          <fieldset>
+            <legend>You must supply order info to add items to an order</legend>
+            <div class="row">
+              <div class="form-group col-lg-6">
+                <label class="control-label">Zip Code</label>
+                <input type="text" maxlength="5" class="form-control">
+              </div>
+              <div class="form-group col-lg-6">
+                <label class="control-label">Guests</label>
+                <input type="number" min="1" class="form-control">
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-lg-6">
+                <label class="control-label">Delivery Date</label>
+                <input type="text" class="form-control">
+              </div>
+              <div class="form-group col-lg-6">
+                <label class="control-label">Delivery Time</label>
+                <input type="text" class="form-control">
+              </div>
+            </div>
+          </fieldset>
+        </form>
       </div>
       <div class="modal-footer">
+        <div class="btn-toolbar pull-right">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
       </div>
     </div>
   </div>

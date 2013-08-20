@@ -11,7 +11,13 @@ module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
   models.Restaurant.find(req.query, function(error, models) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON')}, function(error, html) {
+
+    var orderParams = utils.clone(req.session.orderParams) || {};
+    orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
+      return memo && this[key] != null;
+    }, true, orderParams);
+
+    res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON'), orderParams: orderParams}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
     });

@@ -206,7 +206,7 @@
     {{/each}}
   ];
 
-  var orderParams = new OrderParams();
+  var orderParams = new OrderParams({{{json orderParams}}});
   var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
 </script>
 {{/extend}}

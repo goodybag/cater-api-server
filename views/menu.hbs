@@ -45,9 +45,13 @@
           <span class="pull-right">subtotal: $<span id="subtotal">{{dollars order.sub_total}}</span></span>
         </div>
       </div>
+      {{#unless order.below_min}}
+      {{#if order.sub_total}}
       <div class="row">
         <a href="/orders/{{order.id}}" class="btn btn-primary pull-right">Check Out</a>
       </div>
+      {{/if}}
+      {{/unless}}
     </div>
   </div>
 </div>

@@ -21,9 +21,11 @@ module.exports.list = function(req, res) {
 module.exports.get = function(req, res) {
   var tasks = [
     function(callback) {
+      if (!req.session.user) return callback(null, null);
       var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'latest.status': 'pending'};
       models.Order.findOne({where: where}, function(err, order) {
         if (err) return callback(err);
+        if (order == null) return callback(err, order);
         order.getOrderItems(function(err, items) {
           callback(err, order);
         });
@@ -46,7 +48,8 @@ module.exports.get = function(req, res) {
     orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
       return memo && this[key] != null;
     }, true, orderParams);
-    res.render('menu', {restaurant: results[1].toJSON(), order: results[0].toJSON(), orderParams: orderParams}, function(err, html) {
+    var order = results[0] ? results[0].toJSON() : null;
+    res.render('menu', {restaurant: results[1].toJSON(), order: order, orderParams: orderParams}, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
     });

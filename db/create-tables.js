@@ -14,6 +14,7 @@ var definitions = [
 , 'items'
 , 'order-items'
 , 'order-statuses'
+, 'waitlist'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');

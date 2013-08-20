@@ -1,4 +1,5 @@
 var utils = require('../utils');
+var uuid  = require('node-uuid');
 
 var defaultSelect = {
   type: 'select',
@@ -22,23 +23,24 @@ var findOne = function(table, where, columns) {
   return query;
 }
 
-var upsert = function(table, values, id) {
+var upsert = function(table, values, where) {
   var query = {
-    type: id ? 'update' : 'insert',
+    type: where != null ? 'update' : 'insert',
     table: table,
     returning: '*'
   };
 
-  if (id) query.where = {id: id};
-  query[id ? 'updates' : 'values'] = values;
+  if (where != null) query.where = utils.isObject(where) ? where : {id: where};
+  query[where != null ? 'updates' : 'values'] = values;
 
   return query;
 }
 
-var del = function(table, id) {
+var del = function(table, where) {
+  if (!utils.isObject(where)) where = {id: where}
   return {
     type: 'delete',
-    where: {id: id},
+    where: where,
     table: table
   }
 }
@@ -98,5 +100,22 @@ module.exports = {
   orderItem: {
     update: utils.partial(upsert, 'order_items'),
     del: utils.partial(del, 'order_items')
+  },
+
+  waitlist: {
+    get: utils.compose(utils.partial(findOne, 'waitlist'), function(email) {
+      return !utils.isObject(email) ? {email: email} : email;
+    }),
+    create: utils.compose(utils.partial(upsert, 'waitlist'), function(values) {
+      return utils.defaults(values, {token: uuid.v4()});
+    }),
+    reAdd: function(where, org) {
+      var values = {token_used: null, created_at: 'now()'};
+      if (org) values.organization = org;
+      return upsert.call(this, 'waitlist', values, utils.isObject(where) ? where : {email: where});
+    },
+    unsubscribe: function(token) {
+      return upsert('waitlist', {token_used: 'now()'}, {token: token});
+    }
   }
 };

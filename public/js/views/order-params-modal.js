@@ -1,6 +1,15 @@
 var OrderParamsModal = Backbone.View.extend({
   events: {
-    'submit form': 'submit'
+    'submit form': 'submit',
+    'click button[data-dismiss="modal"]': 'hide'
+  },
+
+  show: function() {
+    this.$el.modal('show');
+  },
+
+  hide: function() {
+    this.$el.modal('hide');
   },
 
   submit: function(e) {

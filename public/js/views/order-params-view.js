@@ -15,10 +15,10 @@ var OrderParamsView = Backbone.View.extend({
     e.preventDefault();
 
     var form = {
-      zip: this.$("input[name='zip']").val()
-    , date: this.$("input[name='date']").val()
-    , time: this.$("input[name='time']").val()
-    , guests: this.$("input[name='guests']").val()
+      zip: this.$("input[name='zip']").val() || null
+    , date: this.$("input[name='date']").val() || null
+    , time: this.$("input[name='time']").val() || null
+    , guests: this.$("input[name='guests']").val() || null
     };
 
     this.model.save(form);

@@ -59,8 +59,7 @@ module.exports.get = function(req, res) {
     var context = {
       restaurant: results[1].toJSON(),
       order: results[0] ? results[0].toJSON() : null,
-      orderParams: orderParams,
-      addItemReady: !!(req.session.user && req.session.user.id && orderParams.complete)
+      orderParams: orderParams
     }
 
     res.render('menu', context, function(err, html) {

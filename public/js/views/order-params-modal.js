@@ -6,6 +6,8 @@ var OrderParamsModal = Backbone.View.extend({
 
   show: function() {
     this.clear();
+    this.fillFields();
+    this.$el.find('form fieldset.order-params-fieldset').toggleClass('hide', this.model.isComplete());
     this.$el.modal('show');
   },
 
@@ -16,6 +18,13 @@ var OrderParamsModal = Backbone.View.extend({
   clear: function() {
     this.$el.find('input').parent().removeClass('has-error');
     this.$el.find('.alert-danger').addClass('hide');
+  },
+
+  fillFields: function() {
+    for (var key in this.model.toJSON()) {
+      var $input = this.$el.find('form input.' + key);
+      if ($input) $input.val(this.model.get(key));
+    }
   },
 
   submit: function(e) {
@@ -42,10 +51,10 @@ var OrderParamsModal = Backbone.View.extend({
 
     if (this.options.orderParamsNeeded) {
       var orderParams = {
-        zip: this.$el.find('input.zip').val().trim(),
-        guests: this.$el.find('input.guests').val().trim(),
-        date: this.$el.find('input.date').val().trim(),
-        time: this.$el.find('input.time').val().trim()
+        zip: this.$el.find('input.zip').val().trim() || null,
+        guests: this.$el.find('input.guests').val().trim() || null,
+        date: this.$el.find('input.date').val().trim() || null,
+        time: this.$el.find('input.time').val().trim() || null
       };
       this.model.save(orderParams, {success: done});
     }

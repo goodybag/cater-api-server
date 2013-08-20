@@ -97,8 +97,7 @@
       </div>
       <form>
         <div class="modal-body">
-          {{#unless user.id}}
-          <fieldset>
+          <fieldset class="login-fieldset{{#if user.id}} hide{{/if}}">
             <legend>You must be logged in to add items to an order</legend>
             <div class="form-group">
               <label class="control-label">Email</label>
@@ -109,16 +108,10 @@
               <input type="password" class="form-control password">
             </div>
           </fieldset>
-          {{/unless}}
 
-          {{#unless user.id}}
-          {{#unless orderParams.complete}}
-          <hr>
-          {{/unless}}
-          {{/unless}}
+          <hr{{#if user.id}} class="hide"{{/if}}{{#if orderParams.complete}} class="hide"{{/if}}>
 
-          {{#unless orderParams.complete}}
-          <fieldset>
+          <fieldset class="order-params-fieldset{{#if orderParams.complete}} hide{{/if}}">
             <legend>You must supply order info to add items to an order</legend>
             <div class="row">
               <div class="form-group col-lg-6">
@@ -141,7 +134,7 @@
               </div>
             </div>
           </fieldset>
-          {{/unless}}
+
           <div class="alert alert-danger hide">You must fill out all fields</div>
         </div>
         <div class="modal-footer">
@@ -202,7 +195,6 @@
       el: $('#item-{{id}}'),
       model: new Backbone.Model( {{{json this}}} ),
       itemModalView: itemModalView,
-      addItemReady: {{{json ../../addItemReady}}},
       orderParamsModal: orderParamsModal
       }),
     {{/each}}

@@ -16,8 +16,10 @@ var OrderView = Backbone.View.extend({
 
   initialize: function(options) {
     if (this.model) this.listenTo(this.model, 'change:sub_total', this.onPriceChange, this)
-    this.onOrderChange();
-    this.updateAddressBlock();
+    if (this.model.get('isEditable')) {
+      this.onOrderChange();
+      this.updateAddressBlock();
+    }
   },
 
   onPriceChange: function(model, value, options) {

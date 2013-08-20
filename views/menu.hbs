@@ -8,12 +8,11 @@
 
 <div class="row">
   <div class="col-lg-8">
+    {{#each restaurant.categories}}
     <div class="panel">
       <div class="panel-heading">
-        <h2 class="panel-title">Menu</h2>
+        <h3 class="panel-title">{{name}}</h3>
       </div>
-      {{#each restaurant.categories}}
-      <h3 class="col-lg-12">{{name}}</h3>
       <div class="list-group list-group-flush category" id="category-{{id}}">
         {{#each items}}
         <a class="list-group-item item" id="item-{{id}}">
@@ -24,8 +23,8 @@
         </a>
         {{/each}}
       </div>
-      {{/each}}
     </div>
+    {{/each}}
   </div>
 
   <div class="col-lg-4">

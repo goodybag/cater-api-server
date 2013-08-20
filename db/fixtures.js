@@ -34,7 +34,7 @@ var select = function(table) {
 
 var inserts = {
   restaurants: function() {
-    return {
+    var query =  {
       type:'insert'
     , table: 'restaurants'
     , values: {
@@ -45,9 +45,10 @@ var inserts = {
       , zip: faker.Address.zipCodeFormat(0)
       , phone: parseInt(faker.PhoneNumber.phoneNumberFormat(faker.definitions.phone_formats.length-1))
       , price: faker.Helpers.randomNumber(5) + 1
-      , minimum_order: Math.random() < .3 ? faker.Helpers.randomNumber(501) * 100 : null
       }
-    }
+    };
+    if (Math.random() < .3) query.minimum_order = faker.Helpers.randomNumber(501) * 100
+    return query;
   }
 , categories: function(restaurant_id) {
     return {

@@ -25,7 +25,7 @@ module.exports.register = function(app) {
    * Restaurant resource.  An individual restaurant.
    */
 
-  app.get('restaurants/:rid', controllers.restaurants.orders.current);  // individual restaurant needs current order.
+  app.get('/restaurants/:rid', controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
   app.get('/restaurants/:rid', controllers.restaurants.get);
 

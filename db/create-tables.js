@@ -14,6 +14,7 @@ var definitions = [
 , 'items'
 , 'order-items'
 , 'order-statuses'
+, 'password-resets'
 , 'waitlist'
 ];
 

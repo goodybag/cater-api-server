@@ -55,6 +55,5 @@ module.exports.updateOrderParams = function(req, res) {
   , time: req.body.time
   , guests: parseInt(req.body.guests, 10)
   }
-  console.log(req.session.orderParams);
   res.send(req.session.orderParams);
 };

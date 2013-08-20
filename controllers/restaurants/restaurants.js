@@ -44,7 +44,7 @@ module.exports.get = function(req, res) {
 
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var orderParams = req.session.orderParams || {};
+    var orderParams = utils.clone(req.session.orderParams) || {};
     orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
       return memo && this[key] != null;
     }, true, orderParams);

@@ -42,7 +42,11 @@ module.exports.get = function(req, res) {
 
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.render('menu', {restaurant: results[1].toJSON(), order: results[0].toJSON()}, function(err, html) {
+    var orderParams = req.session.orderParams;
+    orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
+      return memo && this[key] != null;
+    }, true, orderParams);
+    res.render('menu', {restaurant: results[1].toJSON(), order: results[0].toJSON(), orderParams: orderParams}, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
     });

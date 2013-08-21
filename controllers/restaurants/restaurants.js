@@ -9,9 +9,45 @@ var models = require('../../models');
 
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
-  models.Restaurant.find(req.query, function(error, models) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON')}, function(error, html) {
+  var query = queries.restaurant.list(['restaurants.*']);
+
+  var joins = {};
+
+  if (req.session.orderParams && req.session.orderParams.zip) {
+    joins.zips = {
+      type: 'inner'
+    , on: {'restaurants.id': '$zips.restaurant_id$'}
+    , target: {
+        type: 'select'
+      , table: 'restaurant_delivery_zips'
+      , columns: ['restaurant_id']
+      , where: {zip: req.session.orderParams.zip}
+      }
+    }
+  }
+  if (req.session.orderParams && req.session.orderParams.guests) {
+    // SELECT * FROM restaurants
+    // INNER JOIN (SELECT restaurant_id FROM restaurant_lead_times
+    // WHERE max_guests >= X GROUP BY restaurant_id) AS rlt ON restaurants.id=rlt.restaurant_id;
+    joins.rlt = {
+      type: 'inner'
+    , on: {'restaurants.id': '$rlt.restaurant_id$'}
+    , target: {
+        type: 'select'
+      , table: 'restaurant_lead_times'
+      , columns: ['restaurant_id']
+      , where: {max_guests: {$gte: req.session.orderParams.guests}}
+      , groupBy: ['restaurant_id']
+      }
+    }
+  }
+
+  query.joins = utils.extend({}, query.joins, joins);
+
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, function(err, results) {
+    if (err) return res.error(errors.internal.UNKNOWN, err);
+    res.render('restaurants', {restaurants: results}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
     });

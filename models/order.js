@@ -33,6 +33,7 @@ module.exports = Model.extend({
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
     obj.below_min = obj.sub_total < obj.restaurant.minimum_order;
+    obj.submittable = this.attributes.status === 'pending' && this.attributes.sub_total > 0 && !obj.below_min;
     return obj;
   },
   requiredFields: [

@@ -24,6 +24,10 @@ var OrderParamsView = Backbone.View.extend({
     , time: this.$("input[name='time']").val()
     , guests: this.$("input[name='guests']").val()
     }
-    this.model.save(form);
+    this.model.save(form, {
+      success: function(model, response, options) {
+        window.location.reload();
+      }
+    });
   }
 });

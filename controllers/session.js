@@ -1,8 +1,8 @@
 var
-  db = require('../../db')
-, queries = require('../../db/queries')
-, errors = require('../../errors')
-, utils = require('../../utils')
+  db = require('../db')
+, queries = require('../db/queries')
+, errors = require('../errors')
+, utils = require('../utils')
 ;
 
 module.exports.get = function(req, res) {

@@ -47,7 +47,6 @@ module.exports.create = function(req, res) {
           return callback(error);
         }
         var user = results[0];
-        utils.extend(req.session, {user: {id: user.id}});
         return callback(null, user);
       });
     }
@@ -56,7 +55,7 @@ module.exports.create = function(req, res) {
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results){
         if (error) return res.error(errors.internal.DB_FAILURE, error);
-        return res.redirect('/');
+        return res.send(204);
       });
     }
   }
@@ -101,3 +100,5 @@ module.exports.listOrders = function(req, res) {
     });
   });
 }
+
+module.exports.passwordResets = require('./password-resets');

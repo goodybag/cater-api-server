@@ -34,7 +34,7 @@ module.exports.get = function(req, res) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
 
       var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
-      var isOwner = req.session.user.id = order.attributes.user_id;
+      var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
       utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
       var context = {
         order: order.toJSON(),
@@ -110,7 +110,7 @@ module.exports.changeStatus = function(req, res) {
       return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
 
     var review = utils.contains(['accepted', 'denied'], req.body.status);
-    if (review && req.body.review_token !== order.attributes.review_token || order.attributes.token_used == null)
+    if (review && (req.body.review_token !== order.attributes.review_token || order.attributes.token_used == null))
       return res.send(401, 'bad review token');
 
     if (req.body.status === 'submitted' && !order.isComplete())

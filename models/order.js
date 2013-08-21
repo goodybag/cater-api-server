@@ -27,8 +27,10 @@ module.exports = Model.extend({
         callback.apply(this, arguments);
     });
   },
-  toJSON: function() {
-    var obj = utils.omit(Model.prototype.toJSON.apply(this, arguments), ['review_token', 'token_used']);
+  toJSON: function(options) {
+    var obj = Model.prototype.toJSON.apply(this, arguments);
+    if (!options || !options.review)
+      obj = utils.omit(obj, ['review_token', 'token_used']);
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);

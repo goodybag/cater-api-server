@@ -80,23 +80,6 @@ module.exports.listStatus = function(req, res) {
 }
 
 
-var sendOrderEmail = function(order) {
-  var mg = new Mailgun(config.mailgun.apiKey);
-  var composer = new MailComposer();
-
-  composer.setMessageOption({
-    from: 'orders@goodybag.com',
-    to: order.restaurant.email,
-    subject: 'New Order from Goodybag - ' + order.guests + ' Guest' + order.guests !== 1 ? 's' : '',
-    body: 'We have received a new order for you.  The order is for ' + order.guests + ' guests with a subtotal of $' + order.sub_total.toFixed(2),
-    html: '<a href="' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token + '">Click here</a> to review the order.'
-  });
-
-  composer.buildMessage(function(err, msg) {
-    mg.sendRaw('orders@goodybag.com', [order.restaurant.email], msg);
-  });
-}
-
 module.exports.changeStatus = function(req, res) {
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
@@ -115,7 +98,13 @@ module.exports.changeStatus = function(req, res) {
       return res.send(403, 'order not complete');
 
     var done = function(status) {
-      if (status.attributes.status === 'submitted') sendOrderEmail(order);
+      if (status.attributes.status === 'submitted') {
+        res.render('order-submitted-email', {order: order.toJSON({review: true}), config: config, layout: false}, function(err, html) {
+          // TODO: error handling
+          utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new order - Goodybag', html);
+        });
+      }
+
       if (utils.contains(['accepted', 'denied', 'delivered'], status.attributes.status)) {
         // TODO: send status update email
       }

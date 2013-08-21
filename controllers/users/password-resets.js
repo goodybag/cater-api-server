@@ -2,15 +2,21 @@ var db = require('../../db');
 var queries = require('../../db/queries');
 var errors = require('../../errors');
 var utils = require('../../utils');
-
+var config = require('../../config');
 
 module.exports.create = function(req, res, next) {
   var sql = db.builder.sql(queries.passwordReset.create(req.body.email));
 
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    // TODO: email
-    res.send(201);
+    if (rows.length === 0) return res.error(errors.internal.DB_FAILURE, 'failed to create password reset');
+    res.render('password-reset-email', {layout: false, token: rows[0].token, config: config}, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, err);
+      utils.sendMail(rows[0].email, 'support@goodybag.com', 'Goodybag Cater password reset', html, function(err) {
+        if (err) return res.error(errors.internal.UNKNOWN, err);
+        res.send(201);
+      });
+    });
   });
 }
 

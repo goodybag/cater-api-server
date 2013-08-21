@@ -30,6 +30,16 @@ var config = {
       awsId: "AKIAJZTPY46ZWGWU5JRQ"
     , awsSecret: "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"
     }
+  , baseUrl: 'http://cater.goodybag.com'
+  , mailgun: {
+      apiKey: 'key-8ffj79wzb2dda3s6r7u93o4yz07oxxu8'
+    , publicApiKey: 'pubkey-45a1-ynm6dw4tmk8egc6izhgqntwir79'
+    }
+  , emails: {
+      support: 'support@goodybag.com'
+    , orders: 'orders@goodybag.com'
+    , waitlist: 'waitlist@goodybag.com'
+    }
   }
 
 , dev: {
@@ -53,5 +63,5 @@ var config = {
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';
 if (GB_ENV == null || !config.hasOwnProperty(GB_ENV)) GB_ENV = 'dev';
 
-module.exports = _.extend(config.defaults, config[GB_ENV]);
+module.exports = _.defaults(config[GB_ENV], config.defaults);
 console.log('Loading ' + GB_ENV + ' config');

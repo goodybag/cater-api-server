@@ -56,6 +56,8 @@ var config = {
   , postgresConnStr:  "postgres://localhost:5432/cater"
   , baseUrl: 'http://localhost:3000'
 
+  , testEmail: 'geoff@goodybag.com'
+
   , emailEnabled: false
   }
 };

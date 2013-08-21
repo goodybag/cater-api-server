@@ -2,10 +2,15 @@ var db = require('../db');
 var queries = require('../db/queries');
 var errors = require('../errors');
 var utils = require('../utils');
+var config = require('../config');
 
 module.exports.add = function(req, res, next) {
-  var done = function(email) {
-    //TODO: send first email
+  var done = function(email, token) {
+    res.render('waitlist-initial-email', {layout: false, email: email, token: token, config: config}, function(err, html) {
+      // TODO: error handling
+      utils.sendMail(email, 'waitlist@goodybag.com', 'You have been added to the Goodybag waitlist', html);
+    });
+
     res.render('waitlist-confirm', {email: email}, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWON, err);
       res.send(201, html);
@@ -25,7 +30,7 @@ module.exports.add = function(req, res, next) {
     //TODO: transaction.  not needed yet though.
     db.query(insertSql.query, insertSql.values, function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      done(rows[0].email);
+      done(rows[0].email, rows[0].token);
     });
   });
 }

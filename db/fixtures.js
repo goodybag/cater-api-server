@@ -157,10 +157,13 @@ async.series(
       console.log("populating restaurant_lead_times");
       query(select('restaurants'), function(error, results){
         async.timesSeries(results.length, function(n, callback){
+          var max1 = Math.floor(Math.random() * 50)+50;
+          var max2 = Math.floor(Math.random() * 50)+50+max1;
+          var max3 = Math.floor(Math.random() * 50)+50+max2;
           async.series({
-            '50-guests-24-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, 50, 24), callback2);}
-          , '100-guests-48-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, 100, 48), callback2);}
-          , '300-guests-72-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, 300, 72), callback2);}
+            '24-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, max1 , 24), callback2);}
+          , '48-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, max2, 48), callback2);}
+          , '72-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, max3, 72), callback2);}
           }, function(error, results){
               // console.log('called-sub-4');
               callback(error);

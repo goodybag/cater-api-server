@@ -37,7 +37,7 @@ var tax = function(subtotal, deliveryFee, rate, options) {
     }
     rate = 0.0825;
   }
-  return ((subtotal + deliveryFee) * rate / 100).toFixed(2);
+  return ((parseInt(subtotal) + parseInt(deliveryFee)) * parseFloat(rate) / 100).toFixed(2);
 }
 
 var helpers = {

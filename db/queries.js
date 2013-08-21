@@ -45,6 +45,7 @@ var del = function(table, id) {
 
 module.exports = {
   restaurant: {
+    list: utils.partial(find, 'restaurants'),
     create: utils.partial(upsert, 'restaurants'),
     update: utils.partial(upsert, 'restaurants')
   },

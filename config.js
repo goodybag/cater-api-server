@@ -58,7 +58,7 @@ var config = {
 
   , testEmail: 'geoff@goodybag.com'
 
-  , emailEnabled: false
+  , emailEnabled: true
   }
 };
 

@@ -5,7 +5,8 @@ var
 , ok = require('okay')
 , request = require('request')
 , async = require('async')
-, nodemailer = require('nodemailer')
+, MailComposer = require('mailcomposer').MailComposer
+, Mailgun = require('mailgun').Mailgun
 
   // Module Dependencies
 , config = require('./config')
@@ -14,12 +15,6 @@ var
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
-
-
-nodemailer.SES = {
-  AWSAccessKeyID: config.amazon.awsId,
-  AWSSecretKey: config.amazon.awsSecret
-}
 
 utils.get = function(url, options, callback){
   if (typeof options === "function"){
@@ -74,22 +69,33 @@ utils.del = function(url, callback){
   request(options, callback);
 };
 
-utils.sendMail = function(to, from, subject, body, callback) {
+var mailgun = new Mailgun(config.mailgun.apiKey);
+
+utils.sendMail = function(to, from, subject, html, text, callback) {
   if (!callback) callback = function(){};
   if (!config.emailEnabled) return callback(); // :TODO: log or output an event so that we can test against the event
-  if (typeof to == 'string') {
-    params = {
-      to: to
-    , from: from
-    , reply_to: from
-    , subject: subject
-    , html: body
-    }
-  } else {
-    params = to;
-    callback = from;
-  }
-  nodemailer.send_mail(params, callback);
+
+  var send = function(mimeBody) {
+    mailgun.sendRaw(mimeBody, callback)
+  };
+
+  var composer = new MailComposer();
+
+  var options = lodash.isObject(to) ? to : {
+    to: to
+  , from: from
+  , reply_to: from
+  , subject: subject
+  , html: html
+  , body: text
+  };
+
+  composer.setMessageOption(options);
+
+  composer.buildMessage(function(err, msg) {
+    if (err && lodash.isFunction(callback)) return callback(err);
+    mailgun.sendRaw(from, to, msg, callback);
+  });
 }
 
 utils.isNotBlank = function (value) {

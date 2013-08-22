@@ -21,7 +21,6 @@ module.exports.add = function(req, res, next) {
   var updateQuery = queries.waitlist.reAdd(req.body.email, req.body.organization);
   var updateSql = db.builder.sql(updateQuery);
 
-  console.log(updateSql.query.toString());
   db.query(updateSql.query, updateSql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (rows.length !== 0) return done(rows[0].email);
@@ -30,7 +29,6 @@ module.exports.add = function(req, res, next) {
     var insertSql = db.builder.sql(insertQuery);
 
     //TODO: transaction.  not needed yet though.
-    console.log(insertSql.query.toString());
     db.query(insertSql.query, insertSql.values, function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       done(rows[0].email, rows[0].token);

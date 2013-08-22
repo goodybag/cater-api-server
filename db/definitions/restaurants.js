@@ -50,6 +50,10 @@ define(function(require) {
       type: types.numeric(10)
     , nullable: false
     }
+  , email: {
+      type: types.text
+    , nullable: false
+    }
   , minimum_order: {
       type: types.int
     , nullable: true

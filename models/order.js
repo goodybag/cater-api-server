@@ -27,8 +27,10 @@ module.exports = Model.extend({
         callback.apply(this, arguments);
     });
   },
-  toJSON: function() {
-    var obj = utils.omit(Model.prototype.toJSON.apply(this, arguments), ['review_token', 'token_used']);
+  toJSON: function(options) {
+    var obj = Model.prototype.toJSON.apply(this, arguments);
+    if (!options || !options.review)
+      obj = utils.omit(obj, ['review_token', 'token_used']);
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
@@ -111,6 +113,7 @@ module.exports = Model.extend({
     query.columns.push('restaurants.name');
     query.columns.push('restaurants.delivery_fee')
     query.columns.push('restaurants.minimum_order');
+    query.columns.push('restaurants.email');
 
     query.joins.restaurants = {
       type: 'inner'
@@ -132,11 +135,13 @@ module.exports = Model.extend({
             id: order.attributes.restaurant_id,
             name: order.attributes.name,
             delivery_fee: order.attributes.delivery_fee,
-            minimum_order: order.attributes.minimum_order
+            minimum_order: order.attributes.minimum_order,
+            email: order.attributes.email
           };
           delete order.attributes.name;
           delete order.attributes.delivery_fee;
           delete order.attributes.minimum_order;
+          delete order.attributes.email;
         });
       }
       callback.call(this, err, orders);

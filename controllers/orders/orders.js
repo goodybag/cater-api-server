@@ -1,11 +1,11 @@
-var
-  db = require('../../db')
-, errors = require('../../errors')
-, utils = require('../../utils')
-, states = require('../../public/states');
-;
-
+var db = require('../../db');
+var errors = require('../../errors');
+var utils = require('../../utils');
+var config = require('../../config');
+var states = require('../../public/states');
 var models = require('../../models');
+var Mailgun = require('mailgun').Mailgun;
+var MailComposer = require('mailcomposer').MailComposer
 
 module.exports.auth = function(req, res, next) {
   if (req.session.user != null && utils.contains(req.session.user.groups, 'admin'))
@@ -79,9 +79,11 @@ module.exports.listStatus = function(req, res) {
   );
 }
 
+
 module.exports.changeStatus = function(req, res) {
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
+
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
@@ -95,19 +97,34 @@ module.exports.changeStatus = function(req, res) {
     if (req.body.status === 'submitted' && !order.isComplete())
       return res.send(403, 'order not complete');
 
+    var done = function(status) {
+      if (status.attributes.status === 'submitted') {
+        res.render('order-submitted-email', {order: order.toJSON({review: true}), config: config, layout: false}, function(err, html) {
+          // TODO: error handling
+          utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new order.', html);
+        });
+      }
+
+      if (utils.contains(['submitted', 'accepted', 'denied', 'delivered'], status.attributes.status)) {
+        res.render('order-status-change-email', {layout: false, status: status.toJSON(), config: config, order: order.toJSON()}, function(err, html) {
+          //TODO: error handling
+          utils.sendMail(req.session.user.email, 'orders@goodybag.com', 'Your order has been ' + status.attributes.status + '.', html);
+        });
+      }
+      res.send(201, status.toJSON());
+    }
+
     var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
     status.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      console.log('review:', review);
       if (review) {
         order.attributes.token_used = 'now()';
         order.save(function(err) {
           if (err) return res.error(errors.internal.DB_FAILURE, err);
-          res.send(201, status.toJSON());
+          done(status);
         });
       }
-      else
-        res.send(201, status.toJSON());
+      else done(status);
     });
   });
 }

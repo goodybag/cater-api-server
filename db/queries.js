@@ -144,12 +144,14 @@ module.exports = {
       return utils.defaults(values, {token: uuid.v4()});
     }),
     reAdd: function(where, org) {
-      var values = {token_used: null, created_at: 'now()'};
-      if (org) values.organization = org;
+      var values = {unsubscribed: null, confirmed: null, created_at: 'now()', organization: org || null};
       return upsert.call(this, 'waitlist', values, utils.isObject(where) ? where : {email: where});
     },
+    confirm: function(token) {
+      return upsert('waitlist', {confirmed: 'now()'}, {token: token});
+    },
     unsubscribe: function(token) {
-      return upsert('waitlist', {token_used: 'now()'}, {token: token});
+      return upsert('waitlist', {unsubscribed: 'now()'}, {token: token});
     }
   }
 

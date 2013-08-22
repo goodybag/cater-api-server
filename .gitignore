@@ -8,6 +8,8 @@ lib-cov
 *.pid
 *.gz
 
+*.sublime-workspace
+
 pids
 logs
 results

@@ -72,6 +72,34 @@ utils.del = function(url, callback){
 var mailgun = new Mailgun(config.mailgun.apiKey);
 
 utils.sendMail = function(to, from, subject, html, text, callback) {
+  console.log(arguments);
+  if (lodash.isFunction(text) && callback === undefined) {
+    callback = text;
+    text = undefined;
+  }
+
+  var options;
+
+  if (lodash.isObject(to)) {
+    callback = from;
+    from = undefined;
+    options = to;
+    from = options.from;
+    to = options.to;
+    subject = options.subject;
+    html = options.html;
+    text = options.body
+  } else {
+    options = {
+      to: to
+    , from: from
+    , reply_to: from
+    , subject: subject
+    , html: html
+    , body: text
+    }
+  }
+
   if (!callback) callback = function(){};
   if (!config.emailEnabled) return callback(); // :TODO: log or output an event so that we can test against the event
 
@@ -81,19 +109,11 @@ utils.sendMail = function(to, from, subject, html, text, callback) {
 
   var composer = new MailComposer();
 
-  var options = lodash.isObject(to) ? to : {
-    to: to
-  , from: from
-  , reply_to: from
-  , subject: subject
-  , html: html
-  , body: text
-  };
-
   composer.setMessageOption(options);
 
   composer.buildMessage(function(err, msg) {
     if (err && lodash.isFunction(callback)) return callback(err);
+    console.log(from, to, msg, callback);
     mailgun.sendRaw(from, to, msg, callback);
   });
 }

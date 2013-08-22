@@ -15,7 +15,11 @@ var OrderView = Backbone.View.extend({
   },
 
   initialize: function(options) {
-    if (this.model) this.listenTo(this.model, 'change:sub_total', this.onPriceChange, this)
+    if (this.model) this.listenTo(this.model, {
+      'change:sub_total': this.onPriceChange,
+      'change:submittable': this.onSubmittableChange
+    }, this);
+
     if (this.model.get('editable')) {
       this.onOrderChange();
       this.updateAddressBlock();
@@ -24,6 +28,11 @@ var OrderView = Backbone.View.extend({
 
   onPriceChange: function(model, value, options) {
     this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));
+  },
+
+  onSubmittableChange: function(model, value, options) {
+    var $btn = this.$el.find('.submit-btn');
+    value ? $btn.removeAttr('disabled') : $btn.attr('disabled', 'disabled');
   },
 
   changeStatus: function(status) {

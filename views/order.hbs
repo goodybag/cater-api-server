@@ -131,7 +131,7 @@
   {{#if owner}}
   <div class="btn-toolbar pull-right">
     {{#if order.cancelable}}<button class="btn btn-lg btn-danger cancel-btn">Cancel</button>{{/if}}
-    {{#if order.editable}}<button class="btn btn-lg btn-primary submit-btn">Submit</button>{{/if}}
+    {{#if order.editable}}<button class="btn btn-lg btn-primary submit-btn"{{#unless order.submittable}} disabled="disabled"{{/unless}}>Submit</button>{{/if}}
   </div>
   {{/if}}
 </div>

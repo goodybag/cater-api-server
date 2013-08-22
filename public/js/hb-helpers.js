@@ -23,6 +23,11 @@ var capitalize = function(str) {
 }
 
 
+// taken from here: http://stackoverflow.com/a/4467559
+var mod = function(a, n) {
+  return ((a % n) + n) % n;
+}
+
 var blocks = {};
 
 var tax = function(subtotal, deliveryFee, rate, options) {
@@ -37,7 +42,7 @@ var tax = function(subtotal, deliveryFee, rate, options) {
     }
     rate = 0.0825;
   }
-  return ((subtotal + deliveryFee) * rate / 100).toFixed(2);
+  return ((parseInt(subtotal) + parseInt(deliveryFee)) * parseFloat(rate) / 100).toFixed(2);
 }
 
 var helpers = {
@@ -103,7 +108,11 @@ var helpers = {
   },
 
   timepart: function(date) {
-    return date ? (new Date(date)).toTimeString() : '';
+    if (!date) return '';
+    var d = new Date(date);
+    if (d.toString() === 'Invalid Date') throw new Error('Invalid Date');
+    var hours = mod(d.getHours() - 1, 12) + 1;
+    return hours + ':' + ('0' + d.getMinutes()).slice(-2) + ' ' + (d.getHours() - 12 >= 0 ? 'AM' : 'PM');
   },
 
   // TODO: make this a partial

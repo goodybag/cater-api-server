@@ -1,5 +1,6 @@
 var utils = require('../utils');
 var faker = require('Faker');
+var config = require('../config');
 var db = require('../db');
 
 faker.definitions.phone_formats.push('##########');
@@ -44,10 +45,12 @@ var inserts = {
       , state: faker.Address.usState(true)
       , zip: faker.Address.zipCodeFormat(0)
       , phone: parseInt(faker.PhoneNumber.phoneNumberFormat(faker.definitions.phone_formats.length-1))
+      , email: config.testEmail || faker.Internet.email()
       , price: faker.Helpers.randomNumber(5) + 1
+      , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
       }
     };
-    if (Math.random() < .3) query.minimum_order = faker.Helpers.randomNumber(501) * 100
+    if (Math.random() < .3) query.values.minimum_order = faker.Helpers.randomNumber(501) * 100;
     return query;
   }
 , categories: function(restaurant_id) {

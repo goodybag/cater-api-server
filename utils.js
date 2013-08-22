@@ -5,7 +5,8 @@ var
 , ok = require('okay')
 , request = require('request')
 , async = require('async')
-, nodemailer = require('nodemailer')
+, MailComposer = require('mailcomposer').MailComposer
+, Mailgun = require('mailgun').Mailgun
 
   // Module Dependencies
 , config = require('./config')
@@ -14,12 +15,6 @@ var
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
-
-
-nodemailer.SES = {
-  AWSAccessKeyID: config.amazon.awsId,
-  AWSSecretKey: config.amazon.awsSecret
-}
 
 utils.get = function(url, options, callback){
   if (typeof options === "function"){
@@ -74,22 +69,53 @@ utils.del = function(url, callback){
   request(options, callback);
 };
 
-utils.sendMail = function(to, from, subject, body, callback) {
-  if (!callback) callback = function(){};
-  if (!config.emailEnabled) return callback(); // :TODO: log or output an event so that we can test against the event
-  if (typeof to == 'string') {
-    params = {
+var mailgun = new Mailgun(config.mailgun.apiKey);
+
+utils.sendMail = function(to, from, subject, html, text, callback) {
+  console.log(arguments);
+  if (lodash.isFunction(text) && callback === undefined) {
+    callback = text;
+    text = undefined;
+  }
+
+  var options;
+
+  if (lodash.isObject(to)) {
+    callback = from;
+    from = undefined;
+    options = to;
+    from = options.from;
+    to = options.to;
+    subject = options.subject;
+    html = options.html;
+    text = options.body
+  } else {
+    options = {
       to: to
     , from: from
     , reply_to: from
     , subject: subject
-    , html: body
+    , html: html
+    , body: text
     }
-  } else {
-    params = to;
-    callback = from;
   }
-  nodemailer.send_mail(params, callback);
+
+  if (!callback) callback = function(){};
+  if (!config.emailEnabled) return callback(); // :TODO: log or output an event so that we can test against the event
+
+  var send = function(mimeBody) {
+    mailgun.sendRaw(mimeBody, callback)
+  };
+
+  var composer = new MailComposer();
+
+  composer.setMessageOption(options);
+
+  composer.buildMessage(function(err, msg) {
+    if (err && lodash.isFunction(callback)) return callback(err);
+    console.log(from, to, msg, callback);
+    mailgun.sendRaw(from, to, msg, callback);
+  });
 }
 
 utils.isNotBlank = function (value) {

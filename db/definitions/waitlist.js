@@ -34,7 +34,11 @@ define(function(require) {
       type: types.text
     , nullable: false
     }
-  , token_used: {
+  , confirmed: {
+      type: types.timestamp
+    , nullable: true
+    }
+  , unsubscribed: {
       type: types.timestamp
     , nullable: true
     }

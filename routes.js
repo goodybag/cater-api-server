@@ -320,7 +320,9 @@ module.exports.register = function(app) {
   app.post('/waitlist', controllers.waitlist.add);
 
   // needs to be get for one click links in email.
-  app.get('/unsubscribe', controllers.waitlist.remove);
+  app.get('/waitlist/unsubscribe', controllers.waitlist.remove);
+
+  app.get('/waitlist/confirm', controllers.waitlist.confirm);
 
 
   app.get('/*', function(req, res) {

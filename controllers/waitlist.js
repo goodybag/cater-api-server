@@ -9,7 +9,7 @@ module.exports.add = function(req, res, next) {
     var context = {layout: false, email: email, token: token, config: config};
     res.render('waitlist-initial-email', context, function(err, html) {
       // TODO: error handling
-      utils.sendMail(email, 'waitlist@goodybag.com', 'You have been added to the Goodybag waitlist', html);
+      utils.sendMail(email, 'waitlist@goodybag.com', 'Verify your email with Goodybag', html);
     });
 
     res.render('waitlist-add', {email: email}, function(err, html) {

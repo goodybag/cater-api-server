@@ -1,3 +1,7 @@
-<p>You have recieved an order for {{order.guests}} guests with a subtotal of ${{dollars order.sub_total}}.</p>
-
-<p>To review this this order please <a href="{{config.baseUrl}}/orders/{{order.id}}?review_token={{order.review_token}}">click here</a>.</p>
+<p>View order <a href="{{config.baseUrl}}/orders/{{order.id}}?review_token={{order.review_token}}">here</a>.</p>
+<br>
+<p><em>Order Details</em></p>
+<p>Delivery Date: {{datepart order.datetime}}</p>
+<p>Delivery Time: {{timepart order.datetime}}</p>
+<p>Guests: {{order.guests}}</p>
+<p>Subtotal: ${{dollars order.sub_total}}<p>

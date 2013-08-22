@@ -8,7 +8,7 @@
         <legend>Log In</legend>
         <div class="form-group">
           <label for="email">Email address</label>
-          <input type="email" name="email" class="form-control" id="email" placeholder="email address" value="{{email}}">
+          <input type="email" name="email" class="form-control" id="email" placeholder="email address" value="{{email}}" autofocus="autofocus">
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -29,9 +29,11 @@
         </div>
       </fieldset>
     </form>
-    <form method="POST" action="/password-resets" class="forgot-password-form top-form hide">
+    <form class="forgot-password-form top-form hide">
       <fieldset>
         <legend>Forgot Password</legend>
+        <div class="alert alert-danger hide"></div>
+        <div class="alert alert-success hide">Password reset link sent.  Check your email.</div>
         <div class="form-group">
           <label for="email">Email address</label>
           <input type="email" name="email" class="form-control" placeholder="email address" value="{{email}}">

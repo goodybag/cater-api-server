@@ -3,7 +3,8 @@ var
 , queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
-, moment = require('moment')
+, moment = require('moment-timezone');
+
 ;
 
 var models = require('../../models');
@@ -50,7 +51,7 @@ module.exports.list = function(req, res) {
     // for now use tz America/Chicago, in future store this zoneinfo in the database
     // set the query paramaters
     var timezone = 'America/Chicago';
-    var hours = moment.duration(new moment(datetime).tz(timezone) - new moment().tz(timezone)).as('hours');
+    var hours = Math.floor(moment.duration(new moment(datetime).tz(timezone) - new moment().tz(timezone)).as('hours'));
 
     joins.datetime = {
       type: 'inner'
@@ -68,8 +69,7 @@ module.exports.list = function(req, res) {
   query.joins = utils.extend({}, query.joins, joins);
 
   var sql = db.builder.sql(query);
-  console.log(sql);
-  db.query(sql.query, sql.values, function(err, results) {
+  db.query(sql, function(err, results) {
     if (err) return res.error(errors.internal.UNKNOWN, err);
     res.render('restaurants', {restaurants: results}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);

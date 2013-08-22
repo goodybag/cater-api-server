@@ -3,6 +3,7 @@ var
 , queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
+, moment = require('moment')
 ;
 
 var models = require('../../models');
@@ -25,19 +26,41 @@ module.exports.list = function(req, res) {
       }
     }
   }
+
   if (req.session.orderParams && req.session.orderParams.guests) {
-    // SELECT * FROM restaurants
-    // INNER JOIN (SELECT restaurant_id FROM restaurant_lead_times
-    // WHERE max_guests >= X GROUP BY restaurant_id) AS rlt ON restaurants.id=rlt.restaurant_id;
     joins.rlt = {
       type: 'inner'
     , on: {'restaurants.id': '$rlt.restaurant_id$'}
     , target: {
         type: 'select'
       , table: 'restaurant_lead_times'
+      , distinct: true
       , columns: ['restaurant_id']
       , where: {max_guests: {$gte: req.session.orderParams.guests}}
-      , groupBy: ['restaurant_id']
+      }
+    }
+  }
+
+  // only worry about time if date is set, otherwise don't worry about time
+  if (req.session.orderParams && req.session.orderParams.date) {
+    // get order date and time from session
+    var datetime = req.session.orderParams.date;
+    if(req.session.orderParams.time) datetime += ' ' + req.session.orderParams.time;
+
+    // for now use tz America/Chicago, in future store this zoneinfo in the database
+    // set the query paramaters
+    var timezone = 'America/Chicago';
+    var hours = moment.duration(new moment(datetime).tz(timezone) - new moment().tz(timezone)).as('hours');
+
+    joins.datetime = {
+      type: 'inner'
+    , on: {'restaurants.id': '$datetime.restaurant_id$'}
+    , target: {
+        type: 'select'
+      , table: 'restaurant_lead_times'
+      , distinct: true
+      , columns: ['restaurant_id']
+      , where: {hours: {$lte: hours}}
       }
     }
   }
@@ -45,6 +68,7 @@ module.exports.list = function(req, res) {
   query.joins = utils.extend({}, query.joins, joins);
 
   var sql = db.builder.sql(query);
+  console.log(sql);
   db.query(sql.query, sql.values, function(err, results) {
     if (err) return res.error(errors.internal.UNKNOWN, err);
     res.render('restaurants', {restaurants: results}, function(error, html) {

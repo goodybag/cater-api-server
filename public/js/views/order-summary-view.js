@@ -1,13 +1,23 @@
 var OrderSummaryView = Backbone.View.extend({
   initialize: function(options) {
     if (this.model) {
-      this.listenTo(this.model, 'change:sub_total', this.subTotalChange, this);
+      this.listenTo(this.model, {
+        'change:sub_total': this.subTotalChange,
+        'change:submittable': this.onSubmittableChange
+      }, this);
+
       if (this.model.orderItems) this.listenTo(this.model.orderItems, {
         'add': this.addItem,
         'remove': this.removeItem
       }, this);
     }
   },
+
+  onSubmittableChange: function(model, value, options) {
+    var $btn = this.$el.find('.checkout-btn');
+    value ? $btn.removeAttr('disabled') : $btn.attr('disabled', 'disabled');
+  },
+
 
   addItem: function(model, collection, options) {
     this.$el.find('.no-items').addClass('hide');

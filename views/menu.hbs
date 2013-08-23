@@ -26,6 +26,27 @@
 
 <div class="row">
   <div class="col-lg-8">
+    <div class="row">
+      <div class="col-lg-6">
+        delivery zips: {{restaurant.zips}}
+      </div>
+      <div class="col-lg-6">
+        delivery hours: {{ restaurant.hours}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        max guests: {{restaurant.max_guests}}
+      </div>
+      <div class="col-lg-6">
+        lead times: {{restaurant.lead_times}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
     {{#each restaurant.categories}}
     <div class="panel">
       <div class="panel-heading">

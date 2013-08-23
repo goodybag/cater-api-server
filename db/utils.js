@@ -10,7 +10,8 @@
  */
 
 var
-  fs          = require('fs')
+    fs        = require('fs')
+  , _         = require('lodash')
   , pg        = require('pg')
   , when      = require('when')
   , pipeline  = require('when/pipeline')
@@ -43,7 +44,10 @@ function createTable(definition, callback) {
 
   // assemble the CREATE TABLE command from the schema structure
   for (var field in schema) {
-    var parts = ['"'+field+'"', schema[field].type];
+    var type = schema[field].type;
+    if (_.isFunction(type)) type = type();
+
+    var parts = ['"'+field+'"', type];
 
     if (schema[field].pk === true) parts.push('PRIMARY KEY');
     if (schema[field].nullable === false) parts.push('NOT NULL');

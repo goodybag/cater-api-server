@@ -9,6 +9,7 @@ var definitions = [
 , 'restaurants'
 , 'restaurant-lead-times'
 , 'restaurant-delivery-zips'
+, 'restaurant-delivery-times'
 , 'orders'
 , 'categories'
 , 'items'

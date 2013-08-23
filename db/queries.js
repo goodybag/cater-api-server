@@ -1,4 +1,5 @@
 var utils = require('../utils');
+var uuid  = require('node-uuid');
 
 var defaultSelect = {
   type: 'select',
@@ -22,25 +23,45 @@ var findOne = function(table, where, columns) {
   return query;
 }
 
-var upsert = function(table, values, id) {
+var upsert = function(table, values, where) {
   var query = {
-    type: id ? 'update' : 'insert',
+    type: where != null ? 'update' : 'insert',
     table: table,
     returning: '*'
   };
 
-  if (id) query.where = {id: id};
-  query[id ? 'updates' : 'values'] = values;
+  if (where != null) query.where = utils.isObject(where) ? where : {id: where};
+  query[where != null ? 'updates' : 'values'] = values;
 
   return query;
 }
 
-var del = function(table, id) {
+var del = function(table, where) {
+  if (!utils.isObject(where)) where = {id: where}
   return {
     type: 'delete',
-    where: {id: id},
+    where: where,
     table: table
   }
+}
+
+// The point of models is to prevent this sort of thing
+var userGroups = function(query) {
+  query.columns.push({
+    type: 'array_agg',
+    as: 'groups',
+    expression: '"users_groups"."group"'
+  });
+  utils.extend(query, {
+    joins: {
+      users_groups: {
+        type: 'left',
+        on: {'user_id': '$users.id$'}
+      }
+    },
+    groupBy:'id'
+  });
+  return query;
 }
 
 module.exports = {
@@ -69,15 +90,70 @@ module.exports = {
   },
 
   user: {
-    list: utils.partial(find, 'users'),
-    get: utils.partial(findOne, 'users'),
+    list: utils.compose(userGroups, utils.partial(find, 'users')),
+    get: utils.compose(userGroups, utils.partial(findOne, 'users')),
     create: utils.partial(upsert, 'users'),
     update: utils.partial(upsert, 'users'),
-    del: utils.partial(del, 'users')
+    del: utils.partial(del, 'users'),
+    setGroup: utils.partial(upsert, 'users_groups')
   },
 
   orderItem: {
     update: utils.partial(upsert, 'order_items'),
     del: utils.partial(del, 'order_items')
+  },
+
+  passwordReset: {
+    get: utils.compose(function(query) {
+      query.columns.push('users.email');
+
+      query.joins = {
+        users: {
+          type: 'inner',
+          on: {id: '$user_id$'}
+        }
+      };
+
+      return query;
+    }, utils.partial(findOne, 'password_resets'), function(token) {
+      return {token: token, token_used: {$null: true}};
+    }),
+    create: function(email) {
+      var values = {
+        token: uuid.v4(),
+        user_id: {
+          type: 'select',
+          table: 'users',
+          columns: ['id'],
+          where: {email: email}
+        }
+      };
+
+      return upsert.call(this, 'password_resets', values);
+    },
+
+    redeem: utils.compose(utils.partial(upsert, 'password_resets', {token_used: 'now()'}), function(token) {
+      return {token: token};
+    })
+  },
+
+  waitlist: {
+    get: utils.compose(utils.partial(findOne, 'waitlist'), function(email) {
+      return !utils.isObject(email) ? {email: email} : email;
+    }),
+    create: utils.compose(utils.partial(upsert, 'waitlist'), function(values) {
+      return utils.defaults(values, {token: uuid.v4()});
+    }),
+    reAdd: function(where, org) {
+      var values = {unsubscribed: null, confirmed: null, created_at: 'now()', organization: org || null};
+      return upsert.call(this, 'waitlist', values, utils.isObject(where) ? where : {email: where});
+    },
+    confirm: function(token) {
+      return upsert('waitlist', {confirmed: 'now()'}, {token: token});
+    },
+    unsubscribe: function(token) {
+      return upsert('waitlist', {unsubscribed: 'now()'}, {token: token});
+    }
   }
+
 };

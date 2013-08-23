@@ -1,3 +1,7 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/order.css">
+{{/extend}}
+
 <div class="row">
   <h1 class="text-center">Order</h1>
 </div>
@@ -11,9 +15,17 @@
     <div class="col-lg-6">
       <div class="row">
         <p>Submitted: {{order.submitted}}</p>
-        <div class="form-group">
-          <label for="order-datetime" class="control-label">Delivery Date</label>
-          <input type="text" id="order-datetime" class="form-control order-form-field" value="{{order.datetime}}" {{#unless order.editable}}disabled{{/unless}}></diff>
+        <div class="form-group col-lg-6">
+          <label for="order-date" class="control-label">Delivery Date</label>
+          <input type="text" id="order-date" class="form-control order-form-field order-datetime"
+                 value="{{#if order.datetime}}{{datepart order.datetime}}{{else}}{{orderParams.date}}{{/if}}"
+                 {{#unless order.editable}} disabled{{/unless}}>
+        </div>
+        <div class="form-group col-lg-6">
+          <label for="order-time" class="control-label">Delivery Time</label>
+          <input type="text" id="order-time" class="form-control order-form-field order-datetime"
+                 value="{{#if order.datetime}}{{timepart order.datetime}}{{else}}{{orderParams.date}}{{/if}}"
+                 {{#unless order.editable}} disabled{{/unless}}>
         </div>
       </div>
       <div class="row">
@@ -46,7 +58,8 @@
               </div>
               <div class="form-group">
                 <label for="address-zip" class="control-label">Zip</label>
-                <input type="text" maxlength="5" id="address-zip" class="form-control order-form-field address-input address-zip" value="{{order.zip}}">
+                <input type="text" maxlength="5" id="address-zip" class="form-control order-form-field address-input address-zip"
+                       value="{{#if order.zip}}{{order.zip}}{{else}}{{orderParams.zip}}{{/if}}">
               </div>
             </fieldgroup>
             {{/if}}
@@ -59,7 +72,9 @@
           </div>
           <div class="form-group">
             <label for="order-guests" class="control-label">Guests</label>
-            <input type="number" min="1" id="order-guests" class="form-control order-form-field order-guests" value="{{order.guests}}" {{#unless order.editable}}disabled{{/unless}}>
+            <input type="number" min="1" id="order-guests" class="form-control order-form-field order-guests"
+                   value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"
+                   {{#unless order.editable}} disabled{{/unless}}>
           </div>
         </div>
       </div>
@@ -91,7 +106,7 @@
           <span class="input-group-addon input-sm">x</span>
           <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm order-item-field order-item-quantity"{{#unless ../order.editable}} disabled{{/unless}}>
         </div>
-        <a href="javascript:void(0)" class="remove-order-item-btn">delete</a>
+        {{#if ../order.editable}}<a href="javascript:void(0)" class="remove-order-item-btn">delete</a>{{/if}}
       </div>
       <div class="col-lg-5">
         <textarea class="form-control order-item-field order-item-notes" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
@@ -112,17 +127,17 @@
 </ul>
 
 <div class="row">
-  <div class="totals">{{> totals}}</div>
+  <div class="totals col-lg-3 col-lg-offset-9">{{> totals}}</div>
   {{#if owner}}
   <div class="btn-toolbar pull-right">
     {{#if order.cancelable}}<button class="btn btn-lg btn-danger cancel-btn">Cancel</button>{{/if}}
-    {{#if order.editable}}<button class="btn btn-lg btn-primary submit-btn">Submit</button>{{/if}}
+    {{#if order.editable}}<button class="btn btn-lg btn-primary submit-btn"{{#unless order.submittable}} disabled="disabled"{{/unless}}>Submit</button>{{/if}}
   </div>
   {{/if}}
 </div>
 
 {{#if restaurantReview}}
-<div class="row">
+<div class="row restaurant-review-buttons">
   <div class="col-lg-6">
     <button class="btn btn-lg btn-danger reject-btn">Reject</button>
   </div>
@@ -138,6 +153,9 @@
 <script src="/js/views/order-view.js"></script>
 <script src="/js/views/order-item-view.js"></script>
 <script>
+  $.get('/partials/totals.hbs', null, function(data, textStatus, jqXHR) {
+    Handlebars.registerPartial('totals', Handlebars.compile(data));
+  }, 'html')
   var query = window.location.search ? _.object(_.map(window.location.search.substring(1).split('&'), function(obj) { return obj.split('='); })) : {};
   var view = new OrderView( {el: $('#main'), model: new Order( {{{json order}}} ), token: query.token} );
   var items = [

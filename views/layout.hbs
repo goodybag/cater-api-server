@@ -22,7 +22,7 @@
     <header id="header" class="navbar">
       <div class="container">
         <div class="row">
-          <a class="navbar-brand" href="#">Goodybag</a>
+          <a class="navbar-brand" href="/">Goodybag</a>
           {{#if user.id}}
           <div class="btn-group pull-right">
             <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
@@ -54,10 +54,6 @@
       for (var key in helpers) {
         Handlebars.registerHelper(key, helpers[key]);
       }
-
-      $.get('/partials/totals.hbs', null, function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial('totals', Handlebars.compile(data));
-      }, 'html')
     </script>
     <script src="/js/bootstrap.min.js"></script>
     {{{block "views"}}}

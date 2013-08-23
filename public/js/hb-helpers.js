@@ -4,9 +4,13 @@ if (typeof require !== 'undefined') {
 } else {
   utils = _;
   var states
-  $.get('/states.json', null, function(data, textStatus, jqXHR) {
-    states = data;
-  }, 'json');
+  $.ajax({
+    url:'/states.json',
+    success: function(data, textStatus, jqXHR) {
+      states = data;
+    },
+    async: false
+  });
 }
 
 var joinIf = function(arr, sep) {
@@ -18,6 +22,11 @@ var capitalize = function(str) {
   return str[0].toUpperCase() + str.substring(1);
 }
 
+
+// taken from here: http://stackoverflow.com/a/4467559
+var mod = function(a, n) {
+  return ((a % n) + n) % n;
+}
 
 var blocks = {};
 
@@ -33,7 +42,7 @@ var tax = function(subtotal, deliveryFee, rate, options) {
     }
     rate = 0.0825;
   }
-  return ((subtotal + deliveryFee) * rate / 100).toFixed(2);
+  return ((parseInt(subtotal) + parseInt(deliveryFee)) * parseFloat(rate) / 100).toFixed(2);
 }
 
 var helpers = {
@@ -94,6 +103,18 @@ var helpers = {
     return new Array(price + 1).join('$');
   },
 
+  datepart: function(date) {
+    return date ? (new Date(date)).toDateString() : '';
+  },
+
+  timepart: function(date) {
+    if (!date) return '';
+    var d = new Date(date);
+    if (d.toString() === 'Invalid Date') throw new Error('Invalid Date');
+    var hours = mod(d.getHours() - 1, 12) + 1;
+    return hours + ':' + ('0' + d.getMinutes()).slice(-2) + ' ' + (d.getHours() - 12 >= 0 ? 'AM' : 'PM');
+  },
+
   // TODO: make this a partial
   address: function(loc) {
     if (!loc) return '';
@@ -102,7 +123,7 @@ var helpers = {
     var stateStr = state ? '<abbr title="' + state.name + '">' + state.abbr + '</abbr>' : '';
     var line2 = joinIf([joinIf([capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
     return joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
-                         line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
+                   line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
   }
 }
 

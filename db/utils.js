@@ -65,6 +65,9 @@ function createTable(definition, callback) {
 
     sql.push(parts.join(' '));
   }
+
+  if (definition.extras) sql = sql.concat(definition.extras);
+
   var statement = 'CREATE TABLE IF NOT EXISTS "'+definition.name+'" ( '+sql.join(', ')+' );';
   // console.log(statement);
   db.query(statement, callback);

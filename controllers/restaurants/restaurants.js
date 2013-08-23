@@ -3,8 +3,6 @@ var
 , queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
-, moment = require('moment-timezone');
-
 ;
 
 var models = require('../../models');
@@ -12,7 +10,10 @@ var models = require('../../models');
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
 
-  var orderParams = req.session.orderParams;
+  var orderParams = req.session.orderParams || {};
+  orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
+    return memo && this[key] != null;
+  }, true, orderParams);
 
   var columns = ['restaurants.*'];
   var query = queries.restaurant.list(columns);
@@ -131,14 +132,50 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.get = function(req, res) {
-  models.Restaurant.findOne(parseInt(req.params.rid), function(error, restaurant) {
-    restaurant.getItems(function(error, items) {
-      res.render('menu', {restaurant: restaurant.toJSON()}, function(error, html) {
-        if (error) return res.error(errors.internal.UNKNOWN, error);
-        return res.send(html);
+  var tasks = [
+    function(callback) {
+      if (!req.session.user) return callback(null, null);
+      var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'latest.status': 'pending'};
+      models.Order.findOne({where: where}, function(err, order) {
+        if (err) return callback(err);
+        if (order == null) return callback(err, order);
+        order.getOrderItems(function(err, items) {
+          callback(err, order);
+        });
       });
+    },
+
+    function(callback) {
+      models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
+        if (err) return callback(err);
+        restaurant.getItems(function(err, items) {
+          callback(err, restaurant);
+        });
+      });
+    }
+  ];
+
+  var done = function(err, results) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+
+    var orderParams = utils.clone(req.session.orderParams) || {};
+    orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
+      return memo && this[key] != null;
+    }, true, orderParams);
+
+    var context = {
+      restaurant: results[1].toJSON(),
+      order: results[0] ? results[0].toJSON() : null,
+      orderParams: orderParams
+    }
+
+    res.render('menu', context, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, err);
+      return res.send(html);
     });
-  });
+  };
+
+  utils.async.parallel(tasks, done);
 }
 
 module.exports.create = function(req, res) {

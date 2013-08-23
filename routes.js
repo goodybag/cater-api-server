@@ -1,21 +1,22 @@
 var controllers = require('./controllers');
 var static = require('node-static');
+var restrict = require('./middleware/restrict');
 
 var file = new static.Server('./public');
 
 module.exports.register = function(app) {
 
-  app.get('/', function(req, res) { res.redirect('/restaurants'); });
+  app.get('/', restrict(['client', 'admin']), function(req, res) { res.redirect('/restaurants'); });
 
   /**
    * Restaurants resource.  The collection of all restaurants.
    */
 
-  app.get('/restaurants', controllers.restaurants.list);
+  app.get('/restaurants', restrict(['client', 'admin']), controllers.restaurants.list);
 
-  app.post('/restaurants', controllers.restaurants.create);
+  app.post('/restaurants', restrict('admin'), controllers.restaurants.create);
 
-  app.all('/restaurants', function(req, res, next) {
+  app.all('/restaurants', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -24,11 +25,13 @@ module.exports.register = function(app) {
    * Restaurant resource.  An individual restaurant.
    */
 
-  app.get('/restaurants/:rid', controllers.restaurants.get);
+  app.get('/restaurants/:rid', restrict(['client', 'admin']), controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
-  app.put('/restaurants/:rid', controllers.restaurants.update);
+  app.get('/restaurants/:rid', restrict(['client', 'admin']), controllers.restaurants.get);
 
-  app.all('/restaurants/:rid', function(req, res, next) {
+  app.put('/restaurants/:rid', restrict('admin'), controllers.restaurants.update);
+
+  app.all('/restaurants/:rid', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT');
     res.send(405);
   });
@@ -37,9 +40,9 @@ module.exports.register = function(app) {
    * Restaurant items resource.  The collection of all items belonging to a restaurant.
    */
 
-  app.get('/restaurants/:rid/items', controllers.restaurants.listItems);  // not currently used
+  app.get('/restaurants/:rid/items', restrict(['client', 'admin']), controllers.restaurants.listItems);  // not currently used
 
-  app.all('/restaurants/:rid/items', function(req, res, next) {
+  app.all('/restaurants/:rid/items', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);
   });
@@ -48,11 +51,11 @@ module.exports.register = function(app) {
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
    */
 
-  app.get('/restaurants/:rid/categories', controllers.restaurants.categories.list);  // not currently used
+  app.get('/restaurants/:rid/categories', restrict(['client', 'admin']), controllers.restaurants.categories.list);  // not currently used
 
-  app.post('/restaurants/:rid/categories', controllers.restaurants.categories.create);
+  app.post('/restaurants/:rid/categories', restrict('admin'), controllers.restaurants.categories.create);
 
-  app.all('/restaurants/:rid/categories', function(req, res, next) {
+  app.all('/restaurants/:rid/categories', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -61,13 +64,13 @@ module.exports.register = function(app) {
    * Individual category resource.  A single restaurant category.
    */
 
-  app.get('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.get);  // not currently used
+  app.get('/restaurants/:rid/categories/:cid', restrict(['client', 'admin']), controllers.restaurants.categories.get);  // not currently used
 
-  app.put('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.update);
+  app.put('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.update);
 
-  app.del('/restaurants/:rid/categories/:cid', controllers.restaurants.categories.remove);
+  app.del('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.remove);
 
-  app.all('/restaurants/:rid/categories/:cid', function(req, res, next) {
+  app.all('/restaurants/:rid/categories/:cid', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, DELETE');
     res.send(405);
   });
@@ -76,11 +79,11 @@ module.exports.register = function(app) {
    *  Category items resource.  The collection of all items belonging to a single category.
    */
 
-  app.get('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.listItems);  // not currently used
+  app.get('/restaurants/:rid/categories/:cid/items', restrict(['client', 'admin']), controllers.restaurants.categories.listItems);  // not currently used
 
-  app.post('/restaurants/:rid/categories/:cid/items', controllers.restaurants.categories.addItem);
+  app.post('/restaurants/:rid/categories/:cid/items', restrict('admin'), controllers.restaurants.categories.addItem);
 
-  app.all('/restaurants/:rid/categories/:cid/items', function(req, res, next) {
+  app.all('/restaurants/:rid/categories/:cid/items', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -89,11 +92,15 @@ module.exports.register = function(app) {
    *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
    */
 
-  app.get('/restaurants/:rid/orders', controllers.restaurants.orders.list);
+  app.get('/restaurants/:rid/orders', restrict('admin'), controllers.restaurants.orders.list);
 
-  app.post('/restaurants/:rid/orders', controllers.restaurants.orders.create);
+  app.post('/restaurants/:rid/orders', restrict(['client', 'admin']), function(req, res, next) {
+    req.body.restaurant_id = req.params.rid;
+    req.url = '/orders';
+    next();
+  });
 
-  app.all('/restaurants/:rid/orders', function(req, res, next) {
+  app.all('/restaurants/:rid/orders', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -102,15 +109,15 @@ module.exports.register = function(app) {
    *  Current order resource.  The current pending order for the given restaurant and logged in user.
    */
 
-  app.all('/restaurants/:rid/orders/current(/*)?', controllers.restaurants.orders.current);
+  app.all('/restaurants/:rid/orders/current(/*)?', restrict(['client', 'admin']), controllers.restaurants.orders.current);
 
   /**
    *  Items resource.  The collection of all items.
    */
 
-  app.get('/items', controllers.items.list);  // not currently used
+  app.get('/items', restrict(['client', 'admin']), controllers.items.list);  // not currently used
 
-  app.all('/items', function(req, res, next) {
+  app.all('/items', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);
   });
@@ -119,13 +126,13 @@ module.exports.register = function(app) {
    *  Item resource.  An individual item.
    */
 
-  app.get('/items/:id', controllers.items.get);  // not currently used
+  app.get('/items/:id', restrict(['client', 'admin']), controllers.items.get);  // not currently used
 
-  app.put('/items/:id', controllers.items.update);
+  app.put('/items/:id', restrict('admin'), controllers.items.update);
 
-  app.del('/items/:id', controllers.items.remove);
+  app.del('/items/:id', restrict('admin'), controllers.items.remove);
 
-  app.all('/items/:id', function(req, res, next) {
+  app.all('/items/:id', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST, DELETE');
     res.send(405);
   });
@@ -134,7 +141,9 @@ module.exports.register = function(app) {
    *  Orders resource.  The collection of all orders.
    */
 
-  app.get('/orders', controllers.orders.list);  // not currently used
+  app.get('/orders', restrict('admin'), controllers.orders.list);  // not currently used
+
+  app.post('/orders', restrict(['client', 'admin']), controllers.orders.create);
 
   app.all('/orders', function(req, res, next) {
     res.set('Allow', 'GET');
@@ -145,16 +154,18 @@ module.exports.register = function(app) {
    *  Order resource.  An individual order.
    */
 
+  app.all('/orders/:id/?*', controllers.orders.auth);
+
   app.get('/orders/:id', controllers.orders.get);
 
-  app.put('/orders/:id', controllers.orders.update);
+  app.put('/orders/:id', restrict(['client', 'admin']), controllers.orders.update);
 
-  app.del('/orders/:id', function(req, res, next) {
+  app.del('/orders/:id', restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
     next();
   }, controllers.orders.changeStatus);
 
-  app.all('/orders/:id', function(req, res, next) {
+  app.all('/orders/:id', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST, DELETE');
     res.send(405);
   });
@@ -163,11 +174,11 @@ module.exports.register = function(app) {
    *  Order status resource.  The collection of all statuses on a single order.
    */
 
-  app.get('/orders/:oid/status-history', controllers.orders.listStatus); // latest is on order.  not currently used.
+  app.get('/orders/:oid/status-history', restrict(['client', 'admin']), controllers.orders.listStatus); // latest is on order.  not currently used.
 
-  app.post('/orders/:oid/status-history', controllers.orders.changeStatus);
+  app.post('/orders/:oid/status-history', restrict(['client', 'admin']), controllers.orders.changeStatus);
 
-  app.all('/orders/:id/status-history', function(req, res, next) {
+  app.all('/orders/:id/status-history', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -177,11 +188,11 @@ module.exports.register = function(app) {
    *  This is a collection of OrderItems, not Items.
    */
 
-  app.get('/orders/:oid/items', controllers.orders.orderItems.list);  // not currently used
+  app.get('/orders/:oid/items', restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
 
-  app.post('/orders/:oid/items', controllers.orders.orderItems.add);
+  app.post('/orders/:oid/items', restrict(['client', 'admin']), controllers.orders.orderItems.add);
 
-  app.all('/orders/:oid/items', function(req, res, next) {
+  app.all('/orders/:oid/items', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -190,15 +201,15 @@ module.exports.register = function(app) {
    *  Order item resource.  A single order item.
    */
 
-  app.get('/orders/:oid/items/:iid', controllers.orders.orderItems.get);  // not currently used
+  app.get('/orders/:oid/items/:iid', restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
 
-  app.put('/orders/:oid/items/:iid', controllers.orders.orderItems.update);
+  app.put('/orders/:oid/items/:iid', restrict(['client', 'admin']), controllers.orders.orderItems.update);
 
-  app.patch('/orders/:oid/items/:iid', controllers.orders.orderItems.update);
+  app.patch('/orders/:oid/items/:iid', restrict(['client', 'admin']), controllers.orders.orderItems.update);
 
-  app.del('/orders/:oid/items/:iid', controllers.orders.orderItems.remove);
+  app.del('/orders/:oid/items/:iid', restrict(['client', 'admin']), controllers.orders.orderItems.remove);
 
-  app.all('/orders/:oid/items/:iid', function(req, res, next) {
+  app.all('/orders/:oid/items/:iid', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
@@ -234,17 +245,17 @@ module.exports.register = function(app) {
 
 
   // For the order params
-  app.get('/session/order-params', controllers.session.getOrderParams);
+  app.get('/session/order-params', restrict(['client', 'admin']), controllers.session.getOrderParams);
 
-  app.put('/session/order-params', controllers.session.updateOrderParams);
+  app.put('/session/order-params', restrict(['client', 'admin']), controllers.session.updateOrderParams);
 
   /**
    *  Users resource.  All the users.
    */
 
-  app.get('/users', controllers.users.list);
+  app.get('/users', restrict('admin'), controllers.users.list); // not currently used
 
-  app.post('/users', controllers.users.create);
+  app.post('/users', restrict('admin'), controllers.users.create);
 
   app.all('/users', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -255,7 +266,7 @@ module.exports.register = function(app) {
    *  Current user resource.
    */
 
-  app.all ('/users/me*', function(req, res, next) {
+  app.all ('/users/me/?*', function(req, res, next) {
     if (!req.session.user) res.send(404);
     else {
       req.url = req.url.replace(/^\/users\/me/, '/users/' + req.session.user.id);
@@ -264,7 +275,7 @@ module.exports.register = function(app) {
   });
 
   app.all('/users/:uid/?*', function(req, res, next) {
-    if (!req.session.user || ''+req.params.uid !== ''+req.session.user.id)
+    if (!req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params.uid !== ''+req.session.user.id))
       res.send(404);
     else
       next();
@@ -291,6 +302,28 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET');
     res.send(405);
   });
+
+  /**
+   *  Password reset resource
+   */
+
+  app.post('/password-resets', controllers.users.passwordResets.create);
+
+  app.get('/password-resets/:token', controllers.users.passwordResets.get);
+
+  app.put('/password-resets/:token', controllers.users.passwordResets.redeem);
+
+  /**
+   *  Waitlist resource
+   */
+
+  app.post('/waitlist', controllers.waitlist.add);
+
+  // needs to be get for one click links in email.
+  app.get('/waitlist/unsubscribe', controllers.waitlist.remove);
+
+  app.get('/waitlist/confirm', controllers.waitlist.confirm);
+
 
   app.get('/*', function(req, res) {
     file.serve(req, res);

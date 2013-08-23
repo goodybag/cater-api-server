@@ -5,8 +5,12 @@
   cursor: pointer;
 }
 
+.order-params-bar .form-group {
+  position: relative;
+}
+
 .gb-input-icon {
-  display:inline-block;
+  display: inline-block;
   margin-left: -27px;
   color: #dedede;
 }

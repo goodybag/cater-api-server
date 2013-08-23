@@ -6,6 +6,8 @@ var
 
 var definitions = [
   'users'
+, 'groups'
+, 'users-groups'
 , 'restaurants'
 , 'restaurant-lead-times'
 , 'restaurant-delivery-zips'
@@ -15,6 +17,8 @@ var definitions = [
 , 'items'
 , 'order-items'
 , 'order-statuses'
+, 'password-resets'
+, 'waitlist'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');

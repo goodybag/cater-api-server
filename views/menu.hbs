@@ -2,19 +2,19 @@
   {{> order_params_bar}}
 </div>
 
-{{#if restaurant.zipUnacceptable}}
+{{#if restaurant.zip_unacceptable}}
 <div class="alert alert-danger">We're sorry, this restaurant does not deliver to that zip code.</div>
 {{/if}}
 
-{{#if restaurant.datetimeUnacceptable}}
+{{#if restaurant.datetime_unacceptable}}
 <div class="alert alert-danger">We're sorry, this restaurant does not deliver for that date and time.</div>
 {{/if}}
 
-{{#if restaurant.guestsUnacceptable}}
+{{#if restaurant.guests_unacceptable}}
 <div class="alert alert-danger">We're sorry, this restaurant cannot fulfill orders for this many guests.</div>
 {{/if}}
 
-{{#if rrestaurant.leadtimeUnacceptable}}
+{{#if rrestaurant.leadtime_unacceptable}}
 <div class="alert alert-danger">We're sorry, this restaurant cannot fulfill an order for this many guests without more lead time.</div>
 {{/if}}
 

@@ -64,7 +64,7 @@ module.exports.update = function(req, res) {
   var order = new models.Order(utils.extend({id: req.params.id}, req.body));
   order.save(function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(order.toJSON());
+    res.send(order.toJSON({plain:true}));
   });
 }
 

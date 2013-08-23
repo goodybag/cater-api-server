@@ -2,6 +2,25 @@ var Model = require('./model');
 var utils = require('../utils');
 var uuid  = require('node-uuid');
 
+var modifyAttributes = function(callback, err, orders) {
+  if (!err) {
+    utils.each(orders, function(order) {
+      order.attributes.restaurant = {
+        id: order.attributes.restaurant_id,
+        name: order.attributes.name,
+        delivery_fee: order.attributes.delivery_fee,
+        minimum_order: order.attributes.minimum_order,
+        email: order.attributes.email
+      };
+      delete order.attributes.name;
+      delete order.attributes.delivery_fee;
+      delete order.attributes.minimum_order;
+      delete order.attributes.email;
+    });
+  }
+  callback.call(this, err, orders);
+}
+
 module.exports = Model.extend({
   getOrderItems: function(callback) {
     var self = this;
@@ -31,6 +50,9 @@ module.exports = Model.extend({
     var obj = Model.prototype.toJSON.apply(this, arguments);
     if (!options || !options.review)
       obj = utils.omit(obj, ['review_token', 'token_used']);
+    if (options && options.plain)
+      return obj;
+
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
@@ -128,24 +150,7 @@ module.exports = Model.extend({
     , on: {'order_id': '$orders.id$', 'status': 'submitted'}
     }
 
-    Model.find.call(this, query, function(err, orders) {
-      if (!err) {
-        utils.each(orders, function(order) {
-          order.attributes.restaurant = {
-            id: order.attributes.restaurant_id,
-            name: order.attributes.name,
-            delivery_fee: order.attributes.delivery_fee,
-            minimum_order: order.attributes.minimum_order,
-            email: order.attributes.email
-          };
-          delete order.attributes.name;
-          delete order.attributes.delivery_fee;
-          delete order.attributes.minimum_order;
-          delete order.attributes.email;
-        });
-      }
-      callback.call(this, err, orders);
-    });
+    Model.find.call(this, query, utils.partial(modifyAttributes, callback));
   },
 
   // this is a FSM definition

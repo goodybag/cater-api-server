@@ -96,7 +96,7 @@ var OrderView = Backbone.View.extend({
 
     for (var key in this.fieldMap) {
       var getter = this.fieldGetters[key];
-      var val = getter ? getter.apply(this) : (this.$el.find('.order-form ' + this.fieldMap[key]).val()||'').trim();
+      var val = (getter ? getter.apply(this) : (this.$el.find('.order-form ' + this.fieldMap[key]).val()||'').trim()) || null;
       //TODO: validate
       if ((this.model.get(key) || val) && this.model.get(key) != val)
         diff[key] = val;
@@ -114,7 +114,8 @@ var OrderView = Backbone.View.extend({
     var view = this;
     this.model.save(this.getDiff(), {
       error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
-      success: function(data, textStatus, jqXHR) { view.$el.find('.order-save-btn').addClass('hide'); }
+      success: function(data, textStatus, jqXHR) { view.$el.find('.order-save-btn').addClass('hide'); },
+      patch: true
     });
   },
 

@@ -11,7 +11,9 @@ var models = require('../../models');
 
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
-  var query = queries.restaurant.list(['restaurants.*']);
+
+  var columns = ['restaurants.*'];
+  var query = queries.restaurant.list(columns);
 
   var joins = {};
 
@@ -28,18 +30,32 @@ module.exports.list = function(req, res) {
     }
   }
 
-  if (req.session.orderParams && req.session.orderParams.guests) {
-    joins.rlt = {
-      type: 'inner'
-    , on: {'restaurants.id': '$rlt.restaurant_id$'}
-    , target: {
-        type: 'select'
-      , table: 'restaurant_lead_times'
-      , distinct: true
-      , columns: ['restaurant_id']
-      , where: {max_guests: {$gte: req.session.orderParams.guests}}
-      }
+  var joinRlt = {
+    type: 'inner'
+  , on: {'restaurants.id': '$rlt.restaurant_id$'}
+  , target: {
+      type: 'select'
+    , table: 'restaurant_lead_times'
+    , distinct: true
+    , columns: ['restaurant_id']
+    , where: {}
     }
+  }
+
+  var joinRdt = {
+    type: 'inner'
+  , on: {'restaurants.id': '$rdt.restaurant_id$'}
+  , target: {
+      type: 'select'
+    , table: 'restaurant_delivery_times'
+    , columns: ['restaurant_id']
+    , where: {}
+    }
+  }
+
+  if (req.session.orderParams && req.session.orderParams.guests) {
+    joinRlt.target.where.max_guests = {$gte: req.session.orderParams.guests};
+    joins.rlt = joinRlt;
   }
 
   // only worry about time if date is set, otherwise don't worry about time
@@ -53,17 +69,15 @@ module.exports.list = function(req, res) {
     var timezone = 'America/Chicago';
     var hours = Math.floor(moment.duration(new moment(datetime).tz(timezone) - new moment().tz(timezone)).as('hours'));
 
-    joins.datetime = {
-      type: 'inner'
-    , on: {'restaurants.id': '$datetime.restaurant_id$'}
-    , target: {
-        type: 'select'
-      , table: 'restaurant_lead_times'
-      , distinct: true
-      , columns: ['restaurant_id']
-      , where: {hours: {$lte: hours}}
-      }
+    joinRlt.target.where.hours = {$lte: hours};
+    joins.rlt = joinRlt;
+
+    joinRdt.target.where.day = moment(datetime).format('dddd');
+    if(req.session.orderParams.time) {
+      joinRdt.target.where.$custom = ["'" + moment(datetime).format('HH:mm') + "'::time between start_time::time and end_time::time"];
     }
+
+    joins.rdt = joinRdt;
   }
 
   query.joins = utils.extend({}, query.joins, joins);

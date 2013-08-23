@@ -25,3 +25,13 @@
 .order-params-bar .form-control {
   width: 125px;
 }
+
+.restaurants .disabled {
+  color: #bebebe;
+}
+
+.restaurants .restaurant.disabled {
+  color: #bebebe;
+  pointer-events: none;
+  cursor: default;
+}

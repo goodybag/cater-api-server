@@ -1,6 +1,7 @@
 if (typeof require !== 'undefined') {
   var utils  = require('../../utils');
   var states = require('../states');
+  var moment = require('moment');
 } else {
   utils = _;
   var states
@@ -109,10 +110,7 @@ var helpers = {
 
   timepart: function(date) {
     if (!date) return '';
-    var d = new Date(date);
-    if (d.toString() === 'Invalid Date') throw new Error('Invalid Date');
-    var hours = mod(d.getHours() - 1, 12) + 1;
-    return hours + ':' + ('0' + d.getMinutes()).slice(-2) + ' ' + (d.getHours() - 12 >= 0 ? 'AM' : 'PM');
+    return moment(date).format('h:mm A');
   },
 
   // TODO: make this a partial

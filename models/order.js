@@ -128,6 +128,70 @@ module.exports = Model.extend({
     , on: {'order_id': '$orders.id$', 'status': 'submitted'}
     }
 
+
+    // check zip
+    query.joins.zips = {
+      type: 'left'
+    , alias: 'zips'
+    , target: 'restaurant_delivery_zips'
+    , on: {
+        'orders.restaurant_id': '$zips.restaurant_id$'
+      , 'orders.zip': '$zips.zip$'
+      }
+    }
+
+    query.columns.push('(zips.zip IS NULL) AS zip_unacceptable');
+
+    // check # guests
+    query.joins.guests = {
+      type: 'left'
+    , alias: 'guests'
+    , target: 'restaurant_lead_times'
+    , on: {'orders.restaurant_id': '$guests.restaurant_id$'}
+    , target: {
+        type: 'select'
+      , table: 'restaurant_lead_times'
+      , distinct: true
+      , columns: ['restaurant_id', 'max_guests']
+      }
+    }
+
+    query.where['"guests"."max_guests"'] = {$gte: '$orders.guests$'};
+    query.columns.push('(guests.restaurant_id IS NULL) AS guests_unacceptable');
+
+    // check lead time
+    query.joins.lead_times = {
+      type: 'left'
+    , alias: 'lead_times'
+    , target: 'restaurant_lead_times'
+    , on: {'orders.restaurant_id': '$lead_times.restaurant_id$'}
+    , target: {
+        type: 'select'
+      , table: 'restaurant_lead_times'
+      , distinct: true
+      , columns: ['restaurant_id', 'max_guests', 'lead_time']
+      }
+    }
+
+    query.where['"lead_times"."max_guests"'] = {$gte: '$orders.guests$'};
+    query.where['"lead_times"."lead_time"'] = {$custom: ['"lead_times"."lead_time" < EXTRACT(EPOCH FROM ("orders"."datetime" - now())/3600)']};
+    query.columns.push('(lead_times.restaurant_id IS NULL) AS lead_time_unacceptable');
+
+    // check delivery days and times
+    query.joins.delivery_times = {
+      type: 'left'
+    , alias: 'delivery_times'
+    , target: 'restaurant_delivery_times'
+    , on: {
+        'orders.restaurant_id': '$delivery_times.restaurant_id$'
+      , 'delivery_times.day': {$custom: ['"delivery_times"."day" = EXTRACT(DOW FROM "orders"."datetime")']}
+      , 'delivery_times.start_time': {$custom: ['"delivery_times"."start_time" <= "orders"."datetime"::time']}
+      , 'delivery_times.end_time': {$custom: ['"delivery_times"."end_time" >= "orders"."datetime"::time']}
+      }
+    }
+
+    query.columns.push('(delivery_times.id IS NULL) AS delivery_time_unacceptable');
+
     Model.find.call(this, query, function(err, orders) {
       if (!err) {
         utils.each(orders, function(order) {

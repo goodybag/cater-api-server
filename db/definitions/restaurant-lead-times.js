@@ -1,5 +1,5 @@
 /**
- * Users Schema
+ * Restaurant Lead Times Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {

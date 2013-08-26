@@ -1,5 +1,5 @@
 /**
- * Users Schema
+ * Restaurant Delivery Zips Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {

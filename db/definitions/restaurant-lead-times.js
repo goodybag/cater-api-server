@@ -35,7 +35,7 @@ define(function(require) {
       type: types.int
     , nullable: false
     }
-  , hours: {
+  , lead_time: {
       type: types.int
     , nullable: false
     }

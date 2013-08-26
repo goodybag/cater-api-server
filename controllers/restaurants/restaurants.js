@@ -1,5 +1,6 @@
 var
-  db = require('../../db')
+  moment = require('moment')
+, db = require('../../db')
 , queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
@@ -54,34 +55,60 @@ module.exports.list = function(req, res) {
     columns.push('(guests.restaurant_id IS NULL) AS guests_unacceptable');
   }
 
-  if (orderParams && orderParams.date) {
-    var datetime = orderParams.date;
-    if(orderParams.time) datetime += ' ' + orderParams.time;
+  if (orderParams && (orderParams.date || orderParams.time)) {
 
-    var timezone = 'America/Chicago';
-    var hours = Math.floor(moment.duration(new moment(datetime).tz(timezone) - new moment().tz(timezone)).as('hours'));
+    var datetime = null;
 
-    joins.lead_times = {
-      type: 'left'
-    , alias: 'lead_times'
-    , target: 'restaurant_lead_times'
-    , on: {'restaurants.id': '$lead_times.restaurant_id$'}
-    , target: {
-        type: 'select'
-      , table: 'restaurant_lead_times'
-      , distinct: true
-      , columns: ['restaurant_id']
-      , where: {
-          'max_guests': {$gte: ((orderParams.guests) ? orderParams.guests : 0)}
-        , 'hours': {$lte: hours}
-        }
-      }
+    if (orderParams.time) {//ISO-8601 string
+      datetime = moment(orderParams.time);
     }
 
-    columns.push('(lead_times.restaurant_id IS NULL) AS lead_time_unacceptable');
+    // determine if lead time is unacceptable only if date is provided
+    if (orderParams.date) {
+      // if date specified then update existing datetime object with date
+      // or create a new datetime object and set the time to be 23:59:59
+      // new datetime object is created only if an order time wasn't specified.
+      var date = moment(orderParams.date);
+      if(datetime == null) {
+        datetime = date;
+        datetime.hour(23);
+        datetime.minute(59);
+        datetime.second(59);
+      } else {
+        datetime.month(date.month());
+        datetime.date(date.date());
+        datetime.year(date.year());
+      }
 
-    var day = moment(datetime).tz(timezone).format('dddd');
-    var time = moment(datetime).tz(timezone).format('HH:mm');
+
+      // mongo-sql can't do the following in a nice way yet:
+      // hours: {$lte: "$EXTRACT(EPOCH FROM ('"+datetime.toISOString()+"' - now())/3600)$"}
+      // current work around in mongo-sql is this, but not going to do that:
+      // hours: {$custom: ['"hours" < EXTRACT(EPOCH FROM ($1 - now())/3600)', datetime.toISOString()]}
+      // instead going to calculating it in code
+      var hours = Math.floor(moment.duration(new moment(datetime) - new moment()).as('hours'));
+
+      joins.lead_times = {
+        type: 'left'
+      , alias: 'lead_times'
+      , target: 'restaurant_lead_times'
+      , on: {'restaurants.id': '$lead_times.restaurant_id$'}
+      , target: {
+          type: 'select'
+        , table: 'restaurant_lead_times'
+        , distinct: true
+        , columns: ['restaurant_id']
+        , where: {
+            'max_guests': {$gte: ((orderParams.guests) ? orderParams.guests : 0)}
+          }
+        }
+      }
+
+      columns.push('(lead_times.restaurant_id IS NULL) AS lead_time_unacceptable');
+    }
+
+    var day = moment(datetime).utc().format('dddd');
+    var time = moment(datetime).utc().format('HH:mm');
 
     joins.delivery_times = {
       type: 'left'
@@ -89,8 +116,11 @@ module.exports.list = function(req, res) {
     , target: 'restaurant_delivery_times'
     , on: {
         'restaurants.id': '$delivery_times.restaurant_id$'
-      , 'delivery_times.day': day
       }
+    }
+
+    if (orderParams.date) {
+      joins.delivery_times.on['delivery_times.day'] = day;
     }
 
     if (orderParams.time) {
@@ -106,7 +136,6 @@ module.exports.list = function(req, res) {
   var sql = db.builder.sql(query);
   db.query(sql, function(err, results) {
     if (err) return res.error(errors.internal.UNKNOWN, err);
-
     // determine which businesses to disable in the listing
     // because they don't meet the order parameters
     var enabled = [];
@@ -124,7 +153,7 @@ module.exports.list = function(req, res) {
     }
 
     var restaurants = enabled.concat(disabled);
-    res.render('restaurants', {restaurants: restaurants}, function(error, html) {
+    res.render('restaurants', {restaurants: restaurants, orderParams: orderParams}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
     });

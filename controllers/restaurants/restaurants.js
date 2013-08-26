@@ -3,6 +3,7 @@ var
 , queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
+, states = require('../../public/states')
 ;
 
 var models = require('../../models');
@@ -79,8 +80,8 @@ module.exports.edit = function(req, res) {
       var selectedPrice = utils.object(utils.map([1, 2, 3, 4], function(i) {
         return [new Array(i+1).join('$'), restaurant.attributes.price === i];
       }));
-      res.render('edit-restaurant', {restaurant: restaurant.toJSON(), selectedPrice: selectedPrice}, function(err, html) {
-        console.log(err);
+      utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
+      res.render('edit-restaurant', {restaurant: restaurant.toJSON(), selectedPrice: selectedPrice, states: states}, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
       });

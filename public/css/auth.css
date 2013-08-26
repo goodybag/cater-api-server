@@ -1,0 +1,16 @@
+header.navbar {
+  margin-bottom: 0;
+}
+
+#main {
+  background-image: url('/img/auth-page-background.png');
+  min-height: 1000px;
+}
+
+.auth-title-row {
+  color: white;
+}
+
+label {
+  font-size: 12px;
+}

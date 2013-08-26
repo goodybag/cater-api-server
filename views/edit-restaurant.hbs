@@ -1,0 +1,34 @@
+<form>
+  <fieldset>
+    <legend>Edit Restaurant</legend>
+    <div class="form-group">
+      <label class="control-label">Name</label>
+      <input type="text" class="form-control" placeholder="Name of Restaurant" value="{{restaurant.name}}">
+    </div>
+    <div class="form-group">
+      <label class="control-label">Phone</label>
+      <input type="text" maxlength="10" class="form-control" value="{{restaurant.phone}}" placeholder="5125551234">
+      <span class="help-block">Please enter phone number as 10 digit string with no spaces or dashes.</span>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Email</label>
+      <input type="email" class="form-control" value="{{restaurant.email}}" placeholder="name@example.com">
+    </div>
+    <div class="form-group">
+      <label class="control-label">Price</label>
+      <select class="form-control">
+        <option value="1"{{#if selectedPrice.$}} selected="selected"{{/if}}>$</option>
+        <option value="2"{{#if selectedPrice.$$}} selected="selected"{{/if}}>$$</option>
+        <option value="3"{{#if selectedPrice.$$$}} selected="selected"{{/if}}>$$$</option>
+        <option value="4"{{#if selectedPrice.$$$$}} selected="selected"{{/if}}>$$$$</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Delivery Fee</label>
+      <div class="input-group">
+        <span class="input-group-addon">$</span>
+        <input type="text" class="form-control" value="{{dollars restaurant.delivery_fee}}" placeholder="500">
+      </div>
+    </div>
+  </fieldset>
+</form>

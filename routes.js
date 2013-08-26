@@ -6,6 +6,9 @@ var file = new static.Server('./public');
 
 module.exports.register = function(app) {
 
+  // just going to put this here until I figure out where it should go.
+  app.get('/edit-restaurant/:rid', controllers.restaurants.edit);
+
   app.get('/', restrict(['client', 'admin']), function(req, res) { res.redirect('/restaurants'); });
 
   /**

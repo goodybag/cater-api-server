@@ -100,6 +100,7 @@ module.exports.list = function(req, res) {
         , columns: ['restaurant_id']
         , where: {
             'max_guests': {$gte: ((orderParams.guests) ? orderParams.guests : 0)}
+          , 'lead_time': {$lte: hours}
           }
         }
       }

@@ -5,25 +5,10 @@
   cursor: pointer;
 }
 
-.order-params-bar .form-group {
-  position: relative;
-}
-
 .gb-input-icon {
   display: inline-block;
   margin-left: -27px;
   color: #dedede;
-}
-
-.order-params-bar {
-  background-color: #f8f8f8;
-  border: 1px solid #e6e6e6;
-  margin-bottom: 20px;
-  padding: 10px;
-
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
 }
 
 .order-params-bar .form-control {

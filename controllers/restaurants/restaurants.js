@@ -1,5 +1,5 @@
 var
-  moment = require('moment')
+  moment = require('moment-timezone')
 , db = require('../../db')
 , queries = require('../../db/queries')
 , errors = require('../../errors')
@@ -108,7 +108,7 @@ module.exports.list = function(req, res) {
       columns.push('(lead_times.restaurant_id IS NULL) AS lead_time_unacceptable');
     }
 
-    var day = moment(datetime).utc().format('dddd');
+    var day = moment(datetime).tz('America/Chicago').day();
     var time = moment(datetime).utc().format('HH:mm');
 
     joins.delivery_times = {
@@ -135,6 +135,7 @@ module.exports.list = function(req, res) {
   query.joins = utils.extend({}, query.joins, joins);
 
   var sql = db.builder.sql(query);
+  console.log(sql);
   db.query(sql, function(err, results) {
     if (err) return res.error(errors.internal.UNKNOWN, err);
     // determine which businesses to disable in the listing

@@ -21,7 +21,14 @@ var Order = Backbone.Model.extend({
       model.set('below_min', value < model.get('restaurant').minimum_order);
       model.set('submittable', value > 0 && !model.get('below_min'));
     }, this);
+
+    this.on({
+      'change:zip': this.zipChanged,
+      'change:datetime': this.datetimeChanged,
+      'chage:guests', this.guestsChanged
+    }, this);
   },
+
   requiredFields: [
     'datetime',
     'street',
@@ -30,5 +37,32 @@ var Order = Backbone.Model.extend({
     'zip',
     'phone',
     'guests'
-  ]
+  ],
+
+  zipChanged: function(model, value, options) {
+    var restaurant = model.get('restaurant');
+    restaurant.zip_unacceptable = _.contains(restaurant.zips, value);
+    model.set('restaurant', restaurant);
+  },
+
+  datetimeChanged: function(model, value, options) {
+    var restaurant = model.get('restaurant');
+    var guests = model.get('guests');
+
+    var limit = _.find(_.sortBy(restaurant.lead_times,  'guests'), function(obj) { return obj.guests >= guests; });
+
+
+    // TODO: check against restaurant hours
+    // TODO: check against lead times
+  },
+
+  guestsChanged: function(model, value, options) {
+    var restaurant = model.get('restaurant');
+    if (value > restaurant.max_guests) {
+      restaurant.guests_unacceptable = true;
+      models.set('restaurant', restaurant);
+    }
+
+    // TODO: check lead times
+  }
 });

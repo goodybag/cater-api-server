@@ -136,18 +136,16 @@
   }
 </script>
 <script src="/js/models/item.js"></script>
+<script src="/js/views/edit-category-view.js"></script>
 <script src="/js/views/edit-item-view.js"></script>
 <script>
   var categories = [];
   {{#each restaurant.categories}}
-  var category{{this.id}} = new EditCategoryView({el:
-
-  {
-    items: [{{#each items}}
-      new EditItemView({el: '#edit-item-{{id}}', model: new Item({{{json this}}}),  }),
-    {{/each}}]
-  },
+  var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}'});
+  category{{id}}.items = [{{#each items}}
+    new EditItemView({el: '#edit-item-{{id}}', model: new Item({{{json this}}}),  category: category{{../id}} }),
+  {{/each}}];
+  categories.push(category{{id}});
   {{/each}}
-  ]
 </script>
 {{/extend}}

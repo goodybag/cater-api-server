@@ -15,7 +15,7 @@ var EditItemView = Backbone.View.extend({
 
   attach: function() {
     this.$el.hide();
-    $(this.options.tbody).append(this.$el)
+    this.options.category.$el.find('tbody').append(this.$el);
     this.$el.fadeIn();
   }
 

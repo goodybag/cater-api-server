@@ -19,8 +19,14 @@
   color: #bebebe;
 }
 
+/* TODO: restaurants.css */
 .restaurants .restaurant.disabled {
   color: #bebebe;
   pointer-events: none;
   cursor: default;
+}
+
+#footer {
+  padding-bottom: 40px;
+  padding-top: 100px;
 }

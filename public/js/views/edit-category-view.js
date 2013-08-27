@@ -1,2 +1,2 @@
-var EditCategoryView = Backbone.View.extend({
+var EditCategoryView = View.extend({
 });

@@ -133,7 +133,6 @@ module.exports.list = function(req, res) {
   query.joins = utils.extend({}, query.joins, joins);
 
   var sql = db.builder.sql(query);
-  console.log(sql);
   db.query(sql, function(err, results) {
     if (err) return res.error(errors.internal.UNKNOWN, err);
     // determine which businesses to disable in the listing

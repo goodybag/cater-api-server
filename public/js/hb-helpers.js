@@ -105,7 +105,7 @@ var helpers = {
   },
 
   datepart: function(date) {
-    return date ? (new Date(date)).toDateString() : '';
+    return date ? moment(date).format('l') : '';
   },
 
   timepart: function(date) {

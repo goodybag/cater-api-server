@@ -14,7 +14,7 @@ module.exports.list = function(req, res) {
   var orderParams = req.session.orderParams || {};
 
   models.Restaurant.find({}, orderParams, function(err, models) {
-    var restaurants = utils.invoke(models, 'toJSON')
+    var restaurants = utils.invoke(models, 'toJSON');
     if (err) return res.error(errors.internal.UNKNOWN, err);
     // determine which businesses to disable in the listing
     // because they don't meet the order parameters
@@ -24,7 +24,6 @@ module.exports.list = function(req, res) {
     for(var i=0; i< restaurants.length; i++){
       var restaurant = restaurants[i];
 
-      console.log(restaurant);
       if(restaurant.zip_unacceptable
         || restaurant.guests_unacceptable
         || restaurant.lead_time_unacceptable

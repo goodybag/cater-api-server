@@ -10,8 +10,6 @@ var staticRender = function(view, req, res) {
 
 module.exports.contactUs = utils.partial(staticRender, 'contact-us');
 
-module.exports.aboutUs = utils.partial(staticRender, 'about-us');
-
 module.exports.legal = utils.partial(staticRender, 'legal');
 
 module.exports.privacy = utils.partial(staticRender, 'privacy');

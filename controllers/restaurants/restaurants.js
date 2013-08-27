@@ -160,6 +160,8 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.get = function(req, res) {
+  var orderParams = req.session.orderParams || {};
+
   var tasks = [
     function(callback) {
       if (!req.session.user) return callback(null, null);
@@ -174,7 +176,7 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
-      models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
+      models.Restaurant.findOne(parseInt(req.params.rid), orderParams, function(err, restaurant) {
         if (err) return callback(err);
         restaurant.getItems(function(err, items) {
           callback(err, restaurant);

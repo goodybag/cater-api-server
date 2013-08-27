@@ -101,14 +101,14 @@ module.exports.changeStatus = function(req, res) {
       if (status.attributes.status === 'submitted') {
         res.render('order-submitted-email', {order: order.toJSON({review: true}), config: config, layout: false}, function(err, html) {
           // TODO: error handling
-          utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new order.', html);
+          utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order.', html);
         });
       }
 
       if (utils.contains(['submitted', 'accepted', 'denied', 'delivered'], status.attributes.status)) {
         res.render('order-status-change-email', {layout: false, status: status.toJSON(), config: config, order: order.toJSON()}, function(err, html) {
           //TODO: error handling
-          utils.sendMail(req.session.user.email, 'orders@goodybag.com', 'Your order has been ' + status.attributes.status + '.', html);
+          utils.sendMail(req.session.user.email, 'orders@goodybag.com', 'Your Goodybag order has been ' + status.attributes.status + '.', html);
         });
       }
       res.send(201, status.toJSON());

@@ -1,22 +1,32 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/auth.css">
+{{/extend}}
+
+<div class="row auth-title-row">
+  <div class="col-lg-6 col-lg-offset-1">
+    <h1>Find catering for your office.</h1>
+    <p class="lead">Easily search restaurants and have food delivered to your next meeting.</p>
+  </div>
+</div>
+
 <div class="row auth">
-  <div class="col-lg-5">
+  <div class="col-lg-4 col-lg-offset-1">
     {{#if error}}
     <div class="alert alert-danger">Invalid email address or password. Try again.</div>
     {{/if}}
-    <form method="POST" action="/session{{query}}" class="login-form top-form">
+    <form method="POST" action="/session{{query}}" class="login-form top-form well">
       <fieldset>
-        <legend>Log In</legend>
         <div class="form-group">
           <label for="email">Email address</label>
-          <input type="email" name="email" class="form-control" id="email" placeholder="email address" value="{{email}}" autofocus="autofocus">
+          <input type="email" name="email" class="form-control" id="email" placeholder="user@example.com" value="{{email}}" autofocus="autofocus">
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" name="password" class="form-control" id="password" placeholder="password">
+          <input type="password" name="password" class="form-control" id="password">
         </div>
         <div class="row">
           <div class="col-lg-6 form-group">
-            <a href="javascript:void(0);" id="forgot-password" class="top-form-toggle">forgot password</a>
+            <a href="javascript:void(0);" id="forgot-password" class="top-form-toggle">Forgot Password?</a>
             <div class="checkbox hide">
               <label>
                 <input type="checkbox"> Remember me
@@ -29,14 +39,14 @@
         </div>
       </fieldset>
     </form>
-    <form class="forgot-password-form top-form hide">
+    <form class="forgot-password-form top-form well hide">
       <fieldset>
         <legend>Forgot Password</legend>
         <div class="alert alert-danger hide"></div>
         <div class="alert alert-success hide">Password reset link sent.  Check your email.</div>
         <div class="form-group">
           <label for="email">Email address</label>
-          <input type="email" name="email" class="form-control" placeholder="email address" value="{{email}}">
+          <input type="email" name="email" class="form-control" placeholder="user@example.com" value="{{email}}">
         </div>
         <div class="row">
           <div class="col-lg-6">
@@ -48,33 +58,29 @@
         </div>
       </fieldset>
     </form>
-    <hr>
-    <form method="POST" action="/waitlist">
+
+    <form method="POST" action="/waitlist" class="well">
       <fieldset>
-        <span class="help-block">Give us your email and we'll let you know when Goodybag is available.</span>
+        <span class="help-block waitlist-help"><strong>Don't have an account yet?</strong>  Request an invite!</span>
         <div class="form-group">
           <label>Email address</label>
-          <input type="email" name="email" class="form-control"placeholder="email address" value="{{email}}">
+          <input type="email" name="email" class="form-control"placeholder="user@example.com" value="{{email}}">
         </div>
         <div class="form-group">
           <label>Organization</label>
           <input type="text" name="organization" class="form-control"placeholder="your organization" value="{{organization}}">
         </div>
        <div class="form-group">
-          <button type="submit" class="btn btn-primary btn-lg pull-right">Sign Up for Waitlist</button>
+          <button type="submit" class="btn btn-primary btn-lg pull-right">Request Invite</button>
         </div>
       </fieldset>
     </form>
-  </div>
-  <div class="col-lg-7">
-    <img src="http://images4.alphacoders.com/169/169978.jpg" width="575px" height="300px" class="img-rounded" />
   </div>
 </div>
 
 {{#extend "scripts"}}
 <script src="/js/views/auth-view.js"></script>
 <script>
-  console.log('hi');
   var view = new AuthView({el: '.auth', query: '{{query}}' });
 </script>
 {{/extend}}

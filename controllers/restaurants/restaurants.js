@@ -1,5 +1,5 @@
 var
-  moment = require('moment')
+  moment = require('moment-timezone')
 , db = require('../../db')
 , queries = require('../../db/queries')
 , errors = require('../../errors')
@@ -40,7 +40,6 @@ module.exports.list = function(req, res) {
     joins.guests = {
       type: 'left'
     , alias: 'guests'
-    , target: 'restaurant_lead_times'
     , on: {'restaurants.id': '$guests.restaurant_id$'}
     , target: {
         type: 'select'
@@ -92,7 +91,6 @@ module.exports.list = function(req, res) {
       joins.lead_times = {
         type: 'left'
       , alias: 'lead_times'
-      , target: 'restaurant_lead_times'
       , on: {'restaurants.id': '$lead_times.restaurant_id$'}
       , target: {
           type: 'select'
@@ -109,7 +107,7 @@ module.exports.list = function(req, res) {
       columns.push('(lead_times.restaurant_id IS NULL) AS lead_time_unacceptable');
     }
 
-    var day = moment(datetime).utc().format('dddd');
+    var day = moment(datetime).tz('America/Chicago').day();
     var time = moment(datetime).utc().format('HH:mm');
 
     joins.delivery_times = {

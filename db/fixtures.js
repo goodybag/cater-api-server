@@ -89,14 +89,14 @@ var inserts = {
       }
     }
   }
-, restaurantLeadTimes: function(restaurant_id, max_guests, hours) {
+, restaurantLeadTimes: function(restaurant_id, max_guests, lead_time) {
     return {
       type: 'insert'
     , table: 'restaurant_lead_times'
     , values: {
         restaurant_id: restaurant_id
       , max_guests: max_guests
-      , hours: hours
+      , lead_time: lead_time
       }
     }
   }
@@ -114,6 +114,7 @@ var inserts = {
 
 utils.async.series(
   {
+    console.log("populating restaurants");
     restaurants: function(cb) {
       utils.async.timesSeries(10, function(n, callback){
         query(inserts.restaurants(), callback);

@@ -76,10 +76,11 @@ module.exports = Model.extend({
 
     query = query || {};
     query.columns = query.columns || ['*'];
-    query.orderBy = query.orderBy || ["restaurants.id"];
+    query.order = query.order || ["restaurants.id"];
     query.joins = query.joins || {};
     query.distinct = true;
 
+    var unacceptable = [];
     if (orderParams && orderParams.zip) {
       query.joins.zips = {
         type: 'left'
@@ -92,6 +93,7 @@ module.exports = Model.extend({
       }
 
       query.columns.push('(zips.zip IS NULL) AS zip_unacceptable');
+      unacceptable.push('(zips.zip IS NULL)::int');
     }
 
     if (orderParams && orderParams.guests) {
@@ -111,6 +113,7 @@ module.exports = Model.extend({
       }
 
       query.columns.push('(guests.restaurant_id IS NULL) AS guests_unacceptable');
+      unacceptable.push('(guests.restaurant_id IS NULL)::int');
     }
 
     if (orderParams && (orderParams.date || orderParams.time)) {
@@ -163,6 +166,7 @@ module.exports = Model.extend({
         }
 
         query.columns.push('(lead_times.restaurant_id IS NULL) AS lead_time_unacceptable');
+        unacceptable.push('(lead_times.restaurant_id IS NULL)::int');
       }
 
       var day = moment(datetime).tz('America/Chicago').day();
@@ -187,7 +191,10 @@ module.exports = Model.extend({
       }
 
       query.columns.push('(delivery_times.id IS NULL) AS delivery_time_unacceptable');
+      unacceptable.push('(delivery_times.id IS NULL)::int');
     }
+
+    query.columns.push('('+unacceptable.join('|')+')::boolean as unacceptable');
 
     Model.find.call(this, query, function(err, restaurants) {
       callback.call(this, err, restaurants);

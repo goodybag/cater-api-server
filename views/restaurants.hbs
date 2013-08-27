@@ -6,8 +6,8 @@
   <div class="col-lg-8">
     <div class="list-group restaurants">
       {{#each restaurants}}
-      <a href="{{#if disabled}}javascript: void(0);{{else}}/restaurants/{{this.id}}{{/if}}"
-        class="list-group-item restaurant{{#if disabled}} disabled{{/if}}">
+      <a href="{{#if unacceptable}}javascript: void(0);{{else}}/restaurants/{{this.id}}{{/if}}"
+        class="list-group-item restaurant{{#if unacceptable}} disabled{{/if}}">
         <div class="row">
           <h4 class="col-lg-10">{{this.name}}</h4>
           <div class="col-lg-2">

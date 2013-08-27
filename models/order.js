@@ -40,10 +40,7 @@ module.exports = Model.extend({
     obj.submittable = this.attributes.status === 'pending'
       && this.attributes.sub_total > 0
       && !obj.below_min
-      && !this.attributes.zip_unacceptable
-      && !this.attributes.guests_unacceptable
-      && !this.attributes.lead_time_unacceptable
-      && !this.attributes.delivery_time_unacceptable
+      && !this.attributes.unacceptable
     ;
 
     return obj;
@@ -73,7 +70,7 @@ module.exports = Model.extend({
     query = query || {};
     query.distinct = true;
     query.columns = query.columns || ['*'];
-    query.orderBy = query.orderBy || ["orders.id"];
+    query.order = query.order || ["orders.id"];
 
     query.columns.push('latest.status');
 
@@ -140,7 +137,7 @@ module.exports = Model.extend({
     , on: {'order_id': '$orders.id$', 'status': 'submitted'}
     }
 
-
+    var unacceptable = [];
     // check zip
     query.joins.zips = {
       type: 'left'
@@ -153,6 +150,7 @@ module.exports = Model.extend({
     }
 
     query.columns.push('(zips.zip IS NULL) AS zip_unacceptable');
+    unacceptable.push('(zips.zip IS NULL)::int');
 
     // check # guests
     query.joins.guests = {
@@ -166,6 +164,7 @@ module.exports = Model.extend({
     }
 
     query.columns.push('(guests.restaurant_id IS NULL) AS guests_unacceptable');
+    unacceptable.push('(guests.restaurant_id IS NULL)::int');
 
     // check lead time
     query.joins.lead_times = {
@@ -180,6 +179,7 @@ module.exports = Model.extend({
     }
 
     query.columns.push('(lead_times.restaurant_id IS NULL) AS lead_time_unacceptable');
+    unacceptable.push('(lead_times.restaurant_id IS NULL)::int');
 
 
     // check delivery days and times
@@ -196,6 +196,9 @@ module.exports = Model.extend({
     }
 
     query.columns.push('(delivery_times.id IS NULL) AS delivery_time_unacceptable');
+    unacceptable.push('(delivery_times.id IS NULL)::int');
+
+    query.columns.push('('+unacceptable.join('|')+')::boolean as unacceptable');
 
     Model.find.call(this, query, function(err, orders) {
       if (!err) {

@@ -189,7 +189,6 @@ module.exports = Model.extend({
       query.columns.push('(delivery_times.id IS NULL) AS delivery_time_unacceptable');
     }
 
-    console.log(query);
     Model.find.call(this, query, function(err, restaurants) {
       callback.call(this, err, restaurants);
     });

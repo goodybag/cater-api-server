@@ -39,7 +39,6 @@ module.exports.list = function(req, res) {
     joins.guests = {
       type: 'left'
     , alias: 'guests'
-    , target: 'restaurant_lead_times'
     , on: {'restaurants.id': '$guests.restaurant_id$'}
     , target: {
         type: 'select'
@@ -91,7 +90,6 @@ module.exports.list = function(req, res) {
       joins.lead_times = {
         type: 'left'
       , alias: 'lead_times'
-      , target: 'restaurant_lead_times'
       , on: {'restaurants.id': '$lead_times.restaurant_id$'}
       , target: {
           type: 'select'

@@ -1,6 +1,7 @@
 var Model = require('./model');
 var utils = require('../utils');
 var uuid  = require('node-uuid');
+var db = require('../db');
 
 module.exports = Model.extend({
   getOrderItems: function(callback) {
@@ -35,7 +36,16 @@ module.exports = Model.extend({
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
     obj.below_min = obj.sub_total < obj.restaurant.minimum_order;
-    obj.submittable = this.attributes.status === 'pending' && this.attributes.sub_total > 0 && !obj.below_min;
+
+    obj.submittable = this.attributes.status === 'pending'
+      && this.attributes.sub_total > 0
+      && !obj.below_min
+      && !this.attributes.zip_unacceptable
+      && !this.attributes.guests_unacceptable
+      && !this.attributes.lead_time_unacceptable
+      && !this.attributes.delivery_time_unacceptable
+    ;
+
     return obj;
   },
   requiredFields: [
@@ -61,7 +71,9 @@ module.exports = Model.extend({
   find: function(query, callback) {
     // TODO: alter query to add latest status
     query = query || {};
+    query.distinct = true;
     query.columns = query.columns || ['*'];
+    query.orderBy = query.orderBy || ["orders.id"];
 
     query.columns.push('latest.status');
 
@@ -147,16 +159,12 @@ module.exports = Model.extend({
       type: 'left'
     , alias: 'guests'
     , target: 'restaurant_lead_times'
-    , on: {'orders.restaurant_id': '$guests.restaurant_id$'}
-    , target: {
-        type: 'select'
-      , table: 'restaurant_lead_times'
-      , distinct: true
-      , columns: ['restaurant_id', 'max_guests']
+    , on: {
+      'orders.restaurant_id': '$guests.restaurant_id$'
+    , 'guests.max_guests' : {$gte: '$orders.guests$'}
       }
     }
 
-    query.where['"guests"."max_guests"'] = {$gte: '$orders.guests$'};
     query.columns.push('(guests.restaurant_id IS NULL) AS guests_unacceptable');
 
     // check lead time
@@ -164,18 +172,15 @@ module.exports = Model.extend({
       type: 'left'
     , alias: 'lead_times'
     , target: 'restaurant_lead_times'
-    , on: {'orders.restaurant_id': '$lead_times.restaurant_id$'}
-    , target: {
-        type: 'select'
-      , table: 'restaurant_lead_times'
-      , distinct: true
-      , columns: ['restaurant_id', 'max_guests', 'lead_time']
+    , on: {
+        'orders.restaurant_id': '$lead_times.restaurant_id$'
+      , 'lead_times.max_guests': {$gte: '$orders.guests$'}
+      , 'lead_times.lead_time': {$custom: ['"lead_times"."lead_time" < EXTRACT(EPOCH FROM ("orders"."datetime" - now())/3600)']}
       }
     }
 
-    query.where['"lead_times"."max_guests"'] = {$gte: '$orders.guests$'};
-    query.where['"lead_times"."lead_time"'] = {$custom: ['"lead_times"."lead_time" < EXTRACT(EPOCH FROM ("orders"."datetime" - now())/3600)']};
     query.columns.push('(lead_times.restaurant_id IS NULL) AS lead_time_unacceptable');
+
 
     // check delivery days and times
     query.joins.delivery_times = {

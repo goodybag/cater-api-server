@@ -32,7 +32,8 @@ define(function(require) {
     , references: {table: 'restaurants', column: 'id'}
     }
   , day: {
-      type: types.day
+      type: types.int
+    , checks: [ '>= 0', '<= 6']
     , nullable: false
     }
   , start_time: {

@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="/css/edit-restaurant.css">
 {{/extend}}
 
-<form>
+<form id="restaurant-{{restaurant.id}}">
   <fieldset>
     <legend>Edit Restaurant</legend>
     <div class="form-group">
@@ -144,16 +144,19 @@
 <script src="/js/collections/items.js"></script>
 
 <script src="/js/views/view.js"></script>
+<script src="/js/views/edit-restaurant-view.js"></script>
 <script src="/js/views/edit-category-view.js"></script>
 <script src="/js/views/edit-item-view.js"></script>
 <script>
-  var categories = [];
+  var restaurant = new EditRestaurantView({ el: '#restaurant-{{restaurant.id}}', model: new Restaurant({{{json restaurant}}}) });
+
+  restaurant.categories = [];
   {{#each restaurant.categories}}
-  var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', collection: new Items({{{json items}}}) });
+  var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', model: restaurant.model.categories.get({{id}}) });
   category{{id}}.items = [{{#each items}}
-    new EditItemView({el: '#edit-item-{{id}}', model: new Item({{{json this}}}),  category: category{{../id}} }),
+    new EditItemView({el: '#edit-item-{{id}}', model: category{{../id}}.model.items.get({{id}}),  category: category{{../id}} }),
   {{/each}}];
-  categories.push(category{{id}});
+  restaurant.categories.push(category{{id}});
   {{/each}}
 </script>
 {{/extend}}

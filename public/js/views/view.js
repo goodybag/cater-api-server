@@ -1,4 +1,4 @@
-var View = Backbone.view.extend({
+var View = Backbone.View.extend({
   getDiff: function() {
     var diff = {};
 

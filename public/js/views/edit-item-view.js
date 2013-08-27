@@ -3,6 +3,10 @@ var EditItemView = View.extend({
 
   template: Handlebars.partials.edit_item_row,
 
+  events: {
+    'click .item-remove': 'onItemRemove'
+  },
+
   initialize: function(options) {
     if (this.model) this.id = 'edit-item-' + this.model.id;
     if (this.$el) this.$el.attr('id', this.id);
@@ -18,7 +22,7 @@ var EditItemView = View.extend({
       var val = this.$el.find(this.fieldMap.price).val().trim();
       return val ? parseInt(val / 100) : null;
     }
-  }
+  },
 
   fieldMap: {
     order: '.item-order',
@@ -32,6 +36,14 @@ var EditItemView = View.extend({
     this.$el.hide();
     this.options.category.$el.find('tbody').append(this.$el);
     this.$el.fadeIn();
+  },
+
+  onItemRemove: function(e) {
+    var view = this;
+    this.model.destroy({success: function(model, response, options) {
+      view.$el.fadeOut();
+      view.remove();
+    }});
   }
 
 });

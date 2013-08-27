@@ -1,0 +1,27 @@
+<td>
+  <input type="number" value="{{this.order}}" class="form-control">
+</td>
+<td>
+  <input type="text" value="{{this.name}}" class="form-control">
+</td>
+<td>
+  <div class="input-group">
+    <span class="input-group-addon">$</span>
+    <input type="text" class="form-control" value="{{dollars this.price}}" placeholder="8.50">
+  </div>
+</td>
+<td>
+  <input type="number" min="1" value="{{this.feeds_min}}" class="form-control">
+</td>
+<td>
+  <input type="number" min="1" value="{{this.feeds_max}}" class="form-control">
+</td>
+<td class="row">
+  <textarea class="form-control">{{this.description}}</textarea>
+  <div class="col-lg-2 col-lg-offset-8 item-button">
+    <button type="button" class="btn btn-danger pull-right">Remove</button>
+  </div>
+  <div class="col-lg-2 item-button">
+    <button type="submit" class="btn btn-success pull-right hide">Save</button>
+  </div>
+</td>

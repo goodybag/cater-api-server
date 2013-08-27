@@ -69,7 +69,7 @@
 
 
 {{#each restaurant.categories}}
-<div class="panel">
+<div id="category-{{this.id}}" class="panel">
   <div class="panel-heading">
     <h3 class="panel-title">Category</h3>
     <form class="form-inline row">
@@ -91,7 +91,8 @@
       </div>
     </form>
   </div>
-  <table class="table">
+  <table class="table table-striped">
+    <caption>Items</caption>
     <thead>
       <th class="order-column">Order</th>
       <th class="name-column">Name</th>
@@ -102,39 +103,51 @@
     </thead>
     <tbody>
     {{#each items}}
-    <form>
-      <tr>
-        <td>
-          <input type="number" value="{{this.order}}" class="form-control">
-        </td>
-        <td>
-          <input type="text" value="{{this.name}}" class="form-control">
-        </td>
-        <td>
-          <div class="input-group">
-            <span class="input-group-addon">$</span>
-            <input type="text" class="form-control" value="{{dollars this.price}}" placeholder="8.50">
-          </div>
-        </td>
-        <td>
-          <input type="number" value="{{this.feeds_min}}" class="form-control">
-        </td>
-        <td>
-          <input type="number" value="{{this.feeds_max}}" class="form-control">
-        </td>
-        <td class="row">
-          <textarea class="form-control">{{this.description}}</textarea>
-          <div class="col-lg-2 col-lg-offset-8 item-button">
-            <button type="button" class="btn btn-danger pull-right">Remove</button>
-          </div>
-          <div class="col-lg-2 item-button">
-            <button type="submit" class="btn btn-success pull-right hide">Save</button>
-          </div>
-        </td>
-      </tr>
-    </form>
+    <tr id="edit-item-{{this.id}}">
+      {{> edit_item_row}}
+    </tr>
     {{/each}}
     </tbody>
   </table>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="bnt-toolbar col-lg-1 col-lg-offset-11">
+        <button type="button" class="btn btn-primary pull-right">New Item</button>
+      </div>
+    </div>
+  </div>
 </div>
 {{/each}}
+
+
+{{#extend "scripts"}}
+<script>
+  var partials = {'edit_item_row': 'edit-item-row.hbs'};
+  for (var name in partials) {
+    $.ajax({
+      type: 'GET',
+      url: '/partials/' + partials[name],
+      success: function(data, textStatus, jqXHR) {
+        Handlebars.registerPartial(name, Handlebars.compile(data));
+      },
+      dataType: 'html',
+      async: false
+    });
+  }
+</script>
+<script src="/js/models/item.js"></script>
+<script src="/js/views/edit-item-view.js"></script>
+<script>
+  var categories = [];
+  {{#each restaurant.categories}}
+  var category{{this.id}} = new EditCategoryView({el:
+
+  {
+    items: [{{#each items}}
+      new EditItemView({el: '#edit-item-{{id}}', model: new Item({{{json this}}}),  }),
+    {{/each}}]
+  },
+  {{/each}}
+  ]
+</script>
+{{/extend}}

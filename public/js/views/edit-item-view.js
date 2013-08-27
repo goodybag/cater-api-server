@@ -1,4 +1,4 @@
-var EditItemView = Backbone.View.extend({
+var EditItemView = View.extend({
   tagName: 'tr',
 
   template: Handlebars.partials.edit_item_row,
@@ -11,6 +11,21 @@ var EditItemView = Backbone.View.extend({
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
     return this;
+  },
+
+  getters: {
+    price: function() {
+      var val = this.$el.find(this.fieldMap.price).val().trim();
+      return val ? parseInt(val / 100) : null;
+    }
+  }
+
+  fieldMap: {
+    order: '.item-order',
+    name: '.item-name',
+    price: '.item-price',
+    feeds_min: '.item-feeds-min',
+    feeds_max: '.item-feeds-max'
   },
 
   attach: function() {

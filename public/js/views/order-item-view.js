@@ -1,4 +1,4 @@
-var OrderItemView = Backbone.View.extend({
+var OrderItemView = View.extend({
   model: OrderItem,
 
   events: {
@@ -30,19 +30,6 @@ var OrderItemView = Backbone.View.extend({
     quantity: function() {
       return parseInt(this.$el.find(this.fieldMap.quantity).val());
     }
-  },
-
-  getDiff: function() {
-    var diff = {};
-
-    for (var key in this.fieldMap) {
-      var getter = this.fieldGetters[key];
-      var val = getter ? getter.apply(this) : this.$el.find(this.fieldMap[key]).val().trim();
-      if ((val || this.model.get(key)) && val != this.model.get(key))
-        diff[key] = val;
-    }
-
-    return _.size(diff) > 0 ? diff : null;
   },
 
   onFieldChange: function(e) {

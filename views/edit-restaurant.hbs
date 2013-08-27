@@ -135,14 +135,21 @@
     });
   }
 </script>
+
+<script src="/js/models/restaurant.js"></script>
+<script src="/js/models/category.js"></script>
 <script src="/js/models/item.js"></script>
+
+<script src="/js/collections/categories.js"></script>
+<script src="/js/collections/items.js"></script>
+
 <script src="/js/views/view.js"></script>
 <script src="/js/views/edit-category-view.js"></script>
 <script src="/js/views/edit-item-view.js"></script>
 <script>
   var categories = [];
   {{#each restaurant.categories}}
-  var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}'});
+  var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', collection: new Items({{{json items}}}) });
   category{{id}}.items = [{{#each items}}
     new EditItemView({el: '#edit-item-{{id}}', model: new Item({{{json this}}}),  category: category{{../id}} }),
   {{/each}}];

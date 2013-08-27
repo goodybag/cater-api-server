@@ -325,6 +325,18 @@ module.exports.register = function(app) {
   app.get('/waitlist/confirm', controllers.waitlist.confirm);
 
 
+  /**
+   *  Static pages
+   */
+
+  app.get('/contact-us', controllers.statics.contactUs);
+
+  app.get('/about-us', controllers.statics.aboutUs);
+
+  app.get('/legal', controllers.statics.legal);
+
+  app.get('/privacy', controllers.statics.privacy);
+
   app.get('/*', function(req, res) {
     file.serve(req, res);
   });

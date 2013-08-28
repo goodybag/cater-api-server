@@ -65,7 +65,8 @@ var helpers = {
   },
 
   dollars: function(pennies) {
-    return (pennies / 100).toFixed(2);
+    var cents = parseInt(pennies);
+    return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2);
   },
 
   json: function(context) {

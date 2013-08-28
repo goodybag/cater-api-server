@@ -14,6 +14,8 @@ var EditItemView = View.extend({
 
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
+    if (this.model.isNew() || this.getDiff())
+      this.$el.find('.item-save').removeClass('hide');
     return this;
   },
 

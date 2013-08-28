@@ -114,8 +114,8 @@ var inserts = {
 
 utils.async.series(
   {
-    console.log("populating restaurants");
     restaurants: function(cb) {
+      console.log("populating restaurants");
       utils.async.timesSeries(10, function(n, callback){
         query(inserts.restaurants(), callback);
       }, function(error, results){

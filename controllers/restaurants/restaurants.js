@@ -15,6 +15,7 @@ module.exports.list = function(req, res) {
   var orderParams = req.session.orderParams || {};
 
   models.Restaurant.find({order:['unacceptable ASC']}, orderParams, function(err, models) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON'), orderParams: orderParams}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);

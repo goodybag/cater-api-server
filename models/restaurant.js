@@ -194,7 +194,7 @@ module.exports = Model.extend({
       unacceptable.push('(delivery_times.id IS NULL)::int');
     }
 
-    query.columns.push('('+unacceptable.join('|')+')::boolean as unacceptable');
+    query.columns.push(unacceptable.length ? '(' + unacceptable.join('|') + ')::boolean as unacceptable' : '(false) as unacceptable');
 
     Model.find.call(this, query, function(err, restaurants) {
       callback.call(this, err, restaurants);

@@ -4,7 +4,8 @@ var EditItemView = View.extend({
   template: Handlebars.partials.edit_item_row,
 
   events: {
-    'click .item-remove': 'onItemRemove'
+    'click .item-remove': 'onItemRemove',
+    'click .item-save': 'onSave'
   },
 
   initialize: function(options) {
@@ -47,6 +48,9 @@ var EditItemView = View.extend({
         view.$el.fadeOut({complete: _.bind(view.remove, view)});
       }
     });
-  }
+  },
 
+  onSave: function(e) {
+    this.model.save(this.getDiff());
+  }
 });

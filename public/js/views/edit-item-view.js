@@ -44,7 +44,8 @@ var EditItemView = View.extend({
     name: '.item-name',
     price: '.item-price',
     feeds_min: '.item-feeds-min',
-    feeds_max: '.item-feeds-max'
+    feeds_max: '.item-feeds-max',
+    description: '.item-description'
   },
 
   attach: function() {

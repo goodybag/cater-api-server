@@ -40,10 +40,11 @@ var EditItemView = View.extend({
 
   onItemRemove: function(e) {
     var view = this;
-    this.model.destroy({success: function(model, response, options) {
-      view.$el.fadeOut();
-      view.remove();
-    }});
+    this.model.destroy({
+      success: function(model, response, options) {
+        view.$el.fadeOut({complete: _.bind(view.remove, view)});
+      }
+    });
   }
 
 });

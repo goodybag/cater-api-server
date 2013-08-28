@@ -6,7 +6,10 @@ var EditCategoryView = View.extend({
   newItem: function(e) {
     var itemModel = new Item({category_id: this.model.id}, {category: this.model})
     var itemView = new EditItemView({model: itemModel, category: this});
-    itemView.render().attach();
+
+    this.model.items.add(itemModel);
     this.items.push(itemView);
+
+    itemView.render().attach();
   }
 });

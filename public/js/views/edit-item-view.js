@@ -28,6 +28,14 @@ var EditItemView = View.extend({
     order: function() {
       var val = this.$el.find(this.fieldMap.order).val().trim();
       return val ? parseInt(val) : null;
+    },
+    feeds_min: function() {
+      var val = this.$el.find(this.fieldMap.feeds_min).val().trim();
+      return val ? parseInt(val) : null;
+    },
+    feeds_max: function() {
+      var val = this.$el.find(this.fieldMap.feeds_max).val().trim();
+      return val ? parseInt(val) : null;
     }
   },
 

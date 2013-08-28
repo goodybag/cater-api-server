@@ -60,6 +60,11 @@ module.exports = Model.extend({
   table: 'restaurants',
 
   findOne: function(query, orderParams, callback) {
+    if (utils.isFunction(orderParams)) {
+      callback = orderParams;
+      orderParams = null;
+    }
+
     if (!utils.isObject(query)) query = {where: {id: query}};
     query.limit = 1;
     return this.find(query, orderParams, function(err, models) {
@@ -196,9 +201,7 @@ module.exports = Model.extend({
 
     query.columns.push(unacceptable.length ? '(' + unacceptable.join('|') + ')::boolean as unacceptable' : '(false) as unacceptable');
 
-    Model.find.call(this, query, function(err, restaurants) {
-      callback.call(this, err, restaurants);
-    });
+    Model.find.call(this, query, callback);
   },
 
 

@@ -23,7 +23,7 @@ var EditItemView = View.extend({
   fieldGetters: {
     price: function() {
       var val = this.$el.find(this.fieldMap.price).val().trim();
-      return val ? parseInt(val / 100) : null;
+      return val ? Math.round(parseFloat(val) * 100) : null;
     },
     order: function() {
       var val = this.$el.find(this.fieldMap.order).val().trim();

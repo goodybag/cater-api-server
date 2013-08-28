@@ -24,6 +24,10 @@ var EditItemView = View.extend({
     price: function() {
       var val = this.$el.find(this.fieldMap.price).val().trim();
       return val ? parseInt(val / 100) : null;
+    },
+    order: function() {
+      var val = this.$el.find(this.fieldMap.order).val().trim();
+      return val ? parseInt(val) : null;
     }
   },
 
@@ -50,7 +54,21 @@ var EditItemView = View.extend({
     });
   },
 
+  clearErrors: function() {
+    this.$el.find('.form-control').parent().removeClass('has-error');
+  },
+
   onSave: function(e) {
-    this.model.save(this.getDiff());
+    this.clearErrors();
+    var success = this.model.save(this.getDiff(), {
+      patch: true,
+      singleError: false
+    });
+
+    if (!success) {
+      var badFields =  _.uniq(_.pluck(_.pick(this.model.validationError, _.range(this.model.validationError.length)), 'property'));
+      var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
+      this.$el.find(selector).parent().addClass('has-error');
+    }
   }
 });

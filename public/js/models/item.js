@@ -35,9 +35,10 @@ var Item = Backbone.Model.extend({
     }
   },
 
-  validate: function() {
-    //TODO: amanda
+  validator: amanda('json'),
 
+  validate: function(attrs, options) {
+    return this.validator.validate(attrs, this.schema, options || {}, function(err) { return err; });
   },
 
   urlRoot: function() { return this.isNew() ? undefined : '/items'; },

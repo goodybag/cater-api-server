@@ -4,8 +4,8 @@ var View = Backbone.View.extend({
 
     for (var key in this.fieldMap) {
       var getter = this.fieldGetters[key];
-      var val = getter ? getter.apply(this) : this.$el.find(this.fieldMap[key]).val().trim();
-      if ((val || this.model.get(key)) && val != this.model.get(key))
+      var val = getter ? getter.apply(this) : this.$el.find(this.fieldMap[key]).val().trim() || null;
+      if (val != this.model.get(key))
         diff[key] = val;
     }
 

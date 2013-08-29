@@ -36,7 +36,7 @@ var FormView = Backbone.View.extend({
     e.preventDefault();
     this.clearErrors();
     var view = this;
-    var sent = this.model.save(this.getDiff(), {
+    var sent = this.model.save(this.getDiff() || {}, {
       patch: true,
       wait: true,
       singleError: false,

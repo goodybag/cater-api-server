@@ -6,12 +6,12 @@
         <i class="gb-input-icon icon-map-marker"></i>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="date" placeholder="delivery date" maxlength="10" value="{{orderParams.date}}"/>
+        <input type="text" class="form-control" name="date" placeholder="delivery date" maxlength="10" value="{{formatDate orderParams.date "MM/DD/YYYY"}}"/>
         <i class="gb-input-icon icon-calendar"></i>
       </div>
 
       <div class="form-group">
-        <input type="text" class="form-control" name="time" placeholder="delivery time" maxlength="8" value="{{orderParams.time}}"/>
+        <input type="text" class="form-control" name="time" placeholder="delivery time" maxlength="8" value="{{formatTime orderParams.time "hh:mm A"}}"/>
         <i class="gb-input-icon icon-time"></i>
       </div>
 

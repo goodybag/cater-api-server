@@ -24,6 +24,21 @@ var OrderParamsView = Backbone.View.extend({
 
 , updateFields: function(model, value, options) {
     for (var key in model.changed) {
+       // date
+      if(key == 'date' && model.changed[key]){
+        var date = dateFormatter(model.changed[key], 'MM/DD/YYYY');
+        this.$el.find('input[name=' + key + ']').val(date);
+        continue;
+      }
+
+      // time
+      if(key == 'time' && model.changed[key]){
+        var time = timeFormatter(model.changed[key], 'hh:mm A');
+        this.$el.find('input[name=' + key + ']').val(time);
+        continue;
+      }
+
+      // otherwise
       this.$el.find('input[name=' + key + ']').val(model.changed[key]);
     }
   }
@@ -33,8 +48,8 @@ var OrderParamsView = Backbone.View.extend({
 
     var form = {
       zip: this.$("input[name='zip']").val() || null
-    , date: this.datepicker.get() || null
-    , time: this.timepicker.get() || null
+    , date: (this.datepicker.get()) ? dateFormatter(this.datepicker.get()) : null
+    , time: (this.timepicker.get()) ? timeFormatter(this.timepicker.get()) : null
     , guests: this.$("input[name='guests']").val() || null
     };
     this.model.save(form, {

@@ -15,6 +15,11 @@
   width: 125px;
 }
 
+.order-params-bar .form-control[readonly] {
+  cursor: default;
+  background-color: #fff;
+}
+
 .restaurants .disabled {
   color: #bebebe;
 }

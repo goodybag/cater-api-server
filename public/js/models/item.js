@@ -14,7 +14,7 @@ var Item = Backbone.Model.extend({
         required: true
       },
       description: {
-        type: 'string',
+        type: ['string', 'null'],
         minLength: 1
       },
       price: {

@@ -5,7 +5,9 @@ var EditItemView = View.extend({
 
   events: {
     'click .item-remove': 'onItemRemove',
-    'click .item-save': 'onSave'
+    'click .item-save': 'onSave',
+    'keyup .form-control': 'onChange',
+    'change .form-control': 'onChange'
   },
 
   initialize: function(options) {
@@ -54,6 +56,10 @@ var EditItemView = View.extend({
     this.$el.fadeIn();
   },
 
+  onChange: function(e) {
+    this.$el.find('.item-save').toggleClass('hide', !this.getDiff());
+  },
+
   onItemRemove: function(e) {
     var view = this;
     this.model.destroy({
@@ -67,17 +73,23 @@ var EditItemView = View.extend({
     this.$el.find('.form-control').parent().removeClass('has-error');
   },
 
+  displayErrors: function() {
+    var badFields =  _.uniq(_.pluck(_.pick(this.model.validationError, _.range(this.model.validationError.length)), 'property'));
+    var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
+    this.$el.find(selector).parent().addClass('has-error');
+  },
+
   onSave: function(e) {
     this.clearErrors();
-    var success = this.model.save(this.getDiff(), {
+    var view = this;
+    var sent = this.model.save(this.getDiff(), {
       patch: true,
-      singleError: false
+      singleError: false,
+      success: function(model, response, options) {
+        view.$el.find('.item-save').addClass('hide');
+      }
     });
 
-    if (!success) {
-      var badFields =  _.uniq(_.pluck(_.pick(this.model.validationError, _.range(this.model.validationError.length)), 'property'));
-      var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
-      this.$el.find(selector).parent().addClass('has-error');
-    }
+    if (!sent) this.displayErrors();
   }
 });

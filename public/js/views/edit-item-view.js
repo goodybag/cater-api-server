@@ -52,6 +52,7 @@ var EditItemView = FormView.extend({
 
   attach: function() {
     this.$el.hide();
+    this.delegateEvents();
     this.options.category.$el.find('tbody').append(this.$el);
     this.$el.fadeIn();
   },

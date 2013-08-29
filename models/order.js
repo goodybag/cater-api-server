@@ -149,8 +149,15 @@ module.exports = Model.extend({
       }
     }
 
-    query.columns.push('(zips.zip IS NULL) AS zip_unacceptable');
-    unacceptable.push('(zips.zip IS NULL)::int');
+    var caseIsBadZip = '(CASE '
+      + ' WHEN (orders.zip IS NULL) THEN NULL'
+      + ' WHEN (zips.zip IS NULL) THEN TRUE'
+      + ' ELSE FALSE'
+      + ' END)'
+    ;
+
+    query.columns.push(caseIsBadZip+' AS is_bad_zip');
+    unacceptable.push('(zips.zip IS NULL)');
 
     // check # guests
     query.joins.guests = {
@@ -163,8 +170,15 @@ module.exports = Model.extend({
       }
     }
 
-    query.columns.push('(guests.restaurant_id IS NULL) AS guests_unacceptable');
-    unacceptable.push('(guests.restaurant_id IS NULL)::int');
+    var caseIsBadGuests = '(CASE '
+      + ' WHEN (orders.guests IS NULL) THEN NULL'
+      + ' WHEN (guests.restaurant_id IS NULL) THEN TRUE'
+      + ' ELSE FALSE'
+      + ' END)'
+    ;
+
+    query.columns.push(caseIsBadGuests+' AS is_bad_guests');
+    unacceptable.push('(guests.restaurant_id IS NULL)');
 
     // check lead time
     query.joins.lead_times = {
@@ -178,9 +192,15 @@ module.exports = Model.extend({
       }
     }
 
-    query.columns.push('(lead_times.restaurant_id IS NULL) AS lead_time_unacceptable');
-    unacceptable.push('(lead_times.restaurant_id IS NULL)::int');
+    var caseIsBadLeadTime = '(CASE '
+      + ' WHEN (orders.datetime IS NULL) THEN NULL'
+      + ' WHEN (lead_times.restaurant_id IS NULL) THEN TRUE'
+      + ' ELSE FALSE'
+      + ' END)'
+    ;
 
+    query.columns.push(caseIsBadLeadTime+' AS is_bad_lead_time');
+    unacceptable.push('(lead_times.restaurant_id IS NULL)');
 
     // check delivery days and times
     query.joins.delivery_times = {
@@ -195,10 +215,18 @@ module.exports = Model.extend({
       }
     }
 
-    query.columns.push('(delivery_times.id IS NULL) AS delivery_time_unacceptable');
-    unacceptable.push('(delivery_times.id IS NULL)::int');
+    var caseIsBadDeliveryTime = '(CASE '
+      + ' WHEN (orders.datetime IS NULL) THEN NULL'
+      + ' WHEN (delivery_times.restaurant_id IS NULL) THEN TRUE'
+      + ' ELSE FALSE'
+      + ' END)'
+    ;
 
-    query.columns.push('('+unacceptable.join('|')+')::boolean as unacceptable');
+    query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
+    unacceptable.push('(delivery_times.id IS NULL)');
+
+
+    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' AND')+') as is_unacceptable' : '(false) as is_unacceptable');
 
     Model.find.call(this, query, function(err, orders) {
       if (!err) {

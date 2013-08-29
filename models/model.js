@@ -104,7 +104,7 @@ Model.find = function(query, callback) {
   // if (query.where) query.where = utils.pick(query.where, cols);
 
   var sql = db.builder.sql(query);
-  var self = this
+  var self = this;
 
   db.query(sql.query, sql.values, function(err, rows, result){
     if (err) return callback(err);

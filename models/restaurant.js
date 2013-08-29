@@ -97,8 +97,8 @@ module.exports = Model.extend({
         }
       }
 
-      query.columns.push('(zips.zip IS NULL) AS zip_unacceptable');
-      unacceptable.push('(zips.zip IS NULL)::int');
+      query.columns.push('(zips.zip IS NULL) AS is_bad_zip');
+      unacceptable.push('(zips.zip IS NULL)');
     }
 
     if (orderParams && orderParams.guests) {
@@ -117,8 +117,8 @@ module.exports = Model.extend({
         }
       }
 
-      query.columns.push('(guests.restaurant_id IS NULL) AS guests_unacceptable');
-      unacceptable.push('(guests.restaurant_id IS NULL)::int');
+      query.columns.push('(guests.restaurant_id IS NULL) AS is_bad_guests');
+      unacceptable.push('(guests.restaurant_id IS NULL)');
     }
 
     if (orderParams && (orderParams.date || orderParams.time)) {
@@ -170,8 +170,8 @@ module.exports = Model.extend({
           }
         }
 
-        query.columns.push('(lead_times.restaurant_id IS NULL) AS lead_time_unacceptable');
-        unacceptable.push('(lead_times.restaurant_id IS NULL)::int');
+        query.columns.push('(lead_times.restaurant_id IS NULL) AS is_bad_lead_time');
+        unacceptable.push('(lead_times.restaurant_id IS NULL)');
       }
 
       var day = moment(datetime).tz('America/Chicago').day();
@@ -195,11 +195,11 @@ module.exports = Model.extend({
         query.joins.delivery_times.on['delivery_times.end_time'] = {$gte: time};
       }
 
-      query.columns.push('(delivery_times.id IS NULL) AS delivery_time_unacceptable');
-      unacceptable.push('(delivery_times.id IS NULL)::int');
+      query.columns.push('(delivery_times.id IS NULL) AS is_bad_delivery_time');
+      unacceptable.push('(delivery_times.id IS NULL)');
     }
 
-    query.columns.push(unacceptable.length ? '(' + unacceptable.join('|') + ')::boolean as unacceptable' : '(false) as unacceptable');
+    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' AND ')+') as is_unacceptable' : '(false) as is_unacceptable');
 
     Model.find.call(this, query, callback);
   },

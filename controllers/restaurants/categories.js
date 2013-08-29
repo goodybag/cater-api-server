@@ -2,6 +2,7 @@ var db = require('../../db');
 var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
+var queries = require('../../db/queries');
 
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
@@ -55,7 +56,7 @@ module.exports.listItems = function(req, res) {
 }
 
 module.exports.addItem = function(req, res) {
-  var query = qures.items.add(req.body, req.params.cid);
+  var query = queries.item.create(req.body, req.params.cid);
   var sql = db.builder.sql(query);
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.UNKNOWN, error);

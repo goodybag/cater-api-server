@@ -5,7 +5,7 @@ var Item = Backbone.Model.extend({
     properties: {
       order: {
         type: 'integer',
-        minimum: 1,
+        minimum: 0,
         required: true
       },
       name: {

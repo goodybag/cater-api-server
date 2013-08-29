@@ -30,7 +30,7 @@ var Restaurant = Backbone.Model.extend({
         items: {
           type: 'string',
           minLength: 1,
-          pattern: /^[\w-]*$/ // consists only of word characters or hyphen
+          pattern: /^[\w\-]*$/ // consists only of word characters or hyphen
         }
       },
       minimum_order: {

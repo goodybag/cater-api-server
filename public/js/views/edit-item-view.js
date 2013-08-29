@@ -1,4 +1,4 @@
-var EditItemView = View.extend({
+var EditItemView = FormView.extend({
   tagName: 'tr',
 
   template: Handlebars.partials.edit_item_row,

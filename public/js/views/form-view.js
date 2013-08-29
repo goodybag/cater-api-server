@@ -1,4 +1,4 @@
-var View = Backbone.View.extend({
+var FormView = Backbone.View.extend({
   getDiff: function() {
     var diff = {};
 

@@ -1,4 +1,4 @@
-var EditCategoryView = View.extend({
+var EditCategoryView = FormView.extend({
   events: {
     'click .new-item': 'newItem'
   },

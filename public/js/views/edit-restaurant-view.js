@@ -1,2 +1,2 @@
-var EditRestaurantView = View.extend({
+var EditRestaurantView = FormView.extend({
 });

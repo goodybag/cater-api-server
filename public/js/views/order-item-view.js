@@ -1,4 +1,4 @@
-var OrderItemView = View.extend({
+var OrderItemView = FormView.extend({
   model: OrderItem,
 
   events: {

@@ -104,10 +104,14 @@ Model.find = function(query, callback) {
   // if (query.where) query.where = utils.pick(query.where, cols);
 
   var sql = db.builder.sql(query);
-  var self = this
+  var self = this;
+
+  console.log(sql);
 
   db.query(sql.query, sql.values, function(err, rows, result){
+    console.log(err);
     if (err) return callback(err);
+    console.log(rows);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
 };

@@ -47,4 +47,13 @@ var FormView = Backbone.View.extend({
 
     if (!sent) this.displayErrors();
   }
+}, {
+  intGetter: function(field) {
+    var val = this.$el.find(this.fieldMap[field]).val().trim();
+    return val ? parseInt(val) : null;
+  },
+  floatGetter: function(field) {
+    var val = this.$el.find(this.fieldMap[field]).val().trim();
+    return val ? parseFloat(val) : null;
+  }
 });

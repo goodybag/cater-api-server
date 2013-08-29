@@ -41,7 +41,7 @@ var FormView = Backbone.View.extend({
       wait: true,
       singleError: false,
       success: function(model, response, options) {
-        view.$el.find(this.submitSelector).addClass('hide');
+        view.$el.find(view.submitSelector).addClass('hide');
       }
     });
 

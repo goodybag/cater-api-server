@@ -72,22 +72,22 @@
 <div id="category-{{this.id}}" class="panel">
   <div class="panel-heading">
     <h3 class="panel-title">Category</h3>
-    <form class="form-inline row">
+    <form class="form-inline category-form row">
       <div class="form-group col-lg-3">
         <label class="control-label">Name</label>
-        <input type="text" value="{{this.name}}" class="form-control">
+        <input type="text" value="{{this.name}}" class="form-control category-name">
       </div>
       <div class="form-group col-lg-4">
         <label class="control-label">Description</label>
-        <textarea class="form-control">{{this.description}}</textarea>
+        <textarea class="form-control category-description">{{this.description}}</textarea>
       </div>
       <div class="form-group col-lg-2">
         <label class="control-label">Order</label>
-        <input type="number" value="{{this.order}}" class="form-control">
+        <input type="number" value="{{this.order}}" class="form-control category-order">
       </div>
       <div class="btn-toolbar col-lg-3 category-buttons">
-        <button type="button" class="btn btn-danger">Remove</button>
-        <button type="submit" class="btn btn-success hide">Save</button>
+        <button type="button" class="btn btn-danger category-remove">Remove</button>
+        <button type="submit" class="btn btn-success category-save hide">Save</button>
       </div>
     </form>
   </div>

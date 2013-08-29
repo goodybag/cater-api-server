@@ -10,5 +10,19 @@ var FormView = Backbone.View.extend({
     }
 
     return _.size(diff) > 0 ? diff : null;
+  },
+
+  fieldGetters: {},
+
+  fieldMap: {},
+
+  clearErrors: function() {
+    this.$el.find('.form-control').parent().removeClass('has-error');
+  },
+
+  displayErrors: function() {
+    var badFields =  _.uniq(_.pluck(_.pick(this.model.validationError, _.range(this.model.validationError.length)), 'property'));
+    var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
+    this.$el.find(selector).parent().addClass('has-error');
   }
 });

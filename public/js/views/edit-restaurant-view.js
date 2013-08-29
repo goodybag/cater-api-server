@@ -7,6 +7,13 @@ var EditRestaurantView = FormView.extend({
     'submit .restaurant-form': 'onSave'
   },
 
+  initialize: function(options) {
+    if (!this.model) this.model = new Restaurant();
+    this.listenTo(this.model, 'sync', function() {
+      this.$el.find('.restaurant-form .form-control').parent().removeClass('has-success');
+    });
+  },
+
   fieldMap: {
     name: '.restaurant-form .restaurant-name',
     phone: '.restaurant-form .restaurant-phone',

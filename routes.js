@@ -133,10 +133,12 @@ module.exports.register = function(app) {
 
   app.put('/items/:id', restrict('admin'), controllers.items.update);
 
+  app.patch('/items/:id', restrict('admin'), controllers.items.update);
+
   app.del('/items/:id', restrict('admin'), controllers.items.remove);
 
   app.all('/items/:id', restrict(['client', 'admin']), function(req, res, next) {
-    res.set('Allow', 'GET, POST, DELETE');
+    res.set('Allow', 'GET, PUT, PATCH,  DELETE');
     res.send(405);
   });
 

@@ -24,5 +24,27 @@ var FormView = Backbone.View.extend({
     var badFields =  _.uniq(_.pluck(_.pick(this.model.validationError, _.range(this.model.validationError.length)), 'property'));
     var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
     this.$el.find(selector).parent().addClass('has-error');
+  },
+
+  onChange: function(e) {
+    var diff = this.getDiff();
+    this.$el.find(this.submitSelector).toggleClass('hide', !diff);
+    return diff;
+  },
+
+  onSave: function(e) {
+    e.preventDefault();
+    this.clearErrors();
+    var view = this;
+    var sent = this.model.save(this.getDiff(), {
+      patch: true,
+      wait: true,
+      singleError: false,
+      success: function(model, response, options) {
+        view.$el.find(this.submitSelector).addClass('hide');
+      }
+    });
+
+    if (!sent) this.displayErrors();
   }
 });

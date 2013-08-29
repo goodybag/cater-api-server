@@ -3,6 +3,8 @@ var EditItemView = FormView.extend({
 
   template: Handlebars.partials.edit_item_row,
 
+  submitSelector: '.item-save',
+
   events: {
     'click .item-remove': 'onItemRemove',
     'click .item-save': 'onSave',
@@ -57,10 +59,6 @@ var EditItemView = FormView.extend({
     this.$el.fadeIn();
   },
 
-  onChange: function(e) {
-    this.$el.find('.item-save').toggleClass('hide', !this.getDiff());
-  },
-
   onItemRemove: function(e) {
     var view = this;
     this.model.destroy({
@@ -68,19 +66,5 @@ var EditItemView = FormView.extend({
         view.$el.fadeOut({complete: _.bind(view.remove, view)});
       }
     });
-  },
-
-  onSave: function(e) {
-    this.clearErrors();
-    var view = this;
-    var sent = this.model.save(this.getDiff(), {
-      patch: true,
-      singleError: false,
-      success: function(model, response, options) {
-        view.$el.find('.item-save').addClass('hide');
-      }
-    });
-
-    if (!sent) this.displayErrors();
   }
 });

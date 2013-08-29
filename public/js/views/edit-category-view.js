@@ -1,4 +1,6 @@
 var EditCategoryView = FormView.extend({
+  submitSelector: '.category-form .category-save',
+
   events: {
     'click .new-item': 'newItem',
     'keyup .category-form .form-control': 'onChange',
@@ -30,10 +32,6 @@ var EditCategoryView = FormView.extend({
     }
   },
 
-  onChange: function(e) {
-    this.$el.find('.category-form .category-save').toggleClass('hide', !this.getDiff());
-  },
-
   onRemove: function(e) {
     var view = this;
     this.model.destroy({
@@ -41,22 +39,6 @@ var EditCategoryView = FormView.extend({
         view.remove();
       }
     });
-  },
-
-  // TODO: consider extracting to superclass
-  onSave: function(e) {
-    e.preventDefault();
-    this.clearErrors();
-    var view = this;
-    var sent = this.model.save(this.getDiff(), {
-      patch: true,
-      singleError: false,
-      success: function(model, response, options) {
-        view.$el.find('.category-form .category-save').addClass('hide');
-      }
-    });
-
-    if (!sent) this.displayErrors();
   },
 
   newItem: function(e) {

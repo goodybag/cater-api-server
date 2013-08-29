@@ -107,6 +107,10 @@ module.exports.update = function(req, res) {
   });
 }
 
+module.exports.remove = function(req, res) {
+  res.send(501);
+}
+
 module.exports.listItems = function(req, res) {
   (new models.Restaurant({id: req.params.rid})).getItems(function(error, items) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);

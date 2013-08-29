@@ -34,8 +34,12 @@ module.exports.register = function(app) {
 
   app.put('/restaurants/:rid', restrict('admin'), controllers.restaurants.update);
 
+  app.patch('/restaurants/:rid', restrict('admin'), controllers.restaurants.update);
+
+  app.del('/restaurants/:rid', restrict('admin'), controllers.restaurants.remove);
+
   app.all('/restaurants/:rid', restrict(['client', 'admin']), function(req, res, next) {
-    res.set('Allow', 'GET, PUT');
+    res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
 

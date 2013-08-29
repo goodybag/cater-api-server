@@ -77,6 +77,10 @@ var helpers = {
     return value1 || value2;
   },
 
+  array: function(arr) {
+    return arr.join(', ');
+  },
+
   tax: tax,
 
   total: function(cents, deliveryFee, rate, options) {

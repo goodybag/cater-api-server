@@ -71,10 +71,12 @@ module.exports.register = function(app) {
 
   app.put('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.update);
 
+  app.patch('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.update);
+
   app.del('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.remove);
 
   app.all('/restaurants/:rid/categories/:cid', restrict(['client', 'admin']), function(req, res, next) {
-    res.set('Allow', 'GET, PUT, DELETE');
+    res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
 

@@ -1,4 +1,31 @@
 var Category = Backbone.Model.extend({
+  schema: {
+    type: 'object',
+    properties: {
+      order: {
+        type: 'integer',
+        minimum: 0,
+        required: true
+      },
+      name: {
+        type: 'string',
+        minLength: 1,
+        required: true
+      },
+      description: {
+        type: ['string', 'null'],
+        minLength: 1
+      }
+    }
+  },
+
+  // TODO: extract to superclass
+  validator: amanda('json'),
+
+  validate: function(attrs, options) {
+    return this.validator.validate(attrs, this.schema, options || {}, function(err) { return err; });
+  },
+
   initialize: function(attrs, options) {
     attrs = attrs || {};
     options = options || {};

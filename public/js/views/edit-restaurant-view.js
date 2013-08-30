@@ -13,6 +13,7 @@ var EditRestaurantView = FormView.extend({
     this.listenTo(this.model, 'sync', function() {
       this.$el.find('.restaurant-form .form-control').parent().removeClass('has-success');
     });
+    this.listenTo(this.model.categories, 'sort', this.sortCategories, this);
   },
 
   remove: function() {
@@ -61,5 +62,14 @@ var EditRestaurantView = FormView.extend({
     this.model.categories.add(categoryView.model, {sort: false});
 
     categoryView.render().attach();
+  },
+
+  sortCategories: function(collection, options) {
+    this.categories = _.sortBy(this.categories, function(cat) {
+      return cat.model.get('order');
+    });
+
+    _.invoke(this.categories, 'remove');
+    _.invoke(this.categories, 'attach');
   }
 });

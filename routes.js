@@ -6,9 +6,6 @@ var file = new static.Server('./public');
 
 module.exports.register = function(app) {
 
-  // just going to put this here until I figure out where it should go.
-  app.get('/edit-restaurant/:rid', controllers.restaurants.edit);
-
   app.get('/', restrict(['client', 'admin']), function(req, res) { res.redirect('/restaurants'); });
 
   /**
@@ -30,7 +27,12 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid', restrict(['client', 'admin']), controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
-  app.get('/restaurants/:rid', restrict(['client', 'admin']), controllers.restaurants.get);
+  app.get('/restaurants/:rid', restrict(['client', 'admin']), function(req, res, next) {
+    if (req.query.edit) return next();
+    controllers.restaurants.get.apply(this, arguments);
+  });
+
+  app.get('/restaurants/:rid', restrict('admin'), controllers.restaurants.edit);
 
   app.put('/restaurants/:rid', restrict('admin'), controllers.restaurants.update);
 

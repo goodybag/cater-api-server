@@ -9,6 +9,8 @@ var
 
 var models = require('../../models');
 
+utils.findWhere(states, {abbr: 'TX'}).default = true;
+
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
 
@@ -90,7 +92,13 @@ module.exports.edit = function(req, res) {
 }
 
 module.exports.editAll = function(req, res, next) {
-  res.send(501);
+  models.Restaurant.find({}, function(err, models) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    res.render('edit-restaurants', {restaurants: utils.invoke(models, 'toJSON'), states: states, isNew: true}, function(error, html) {
+      if (error) return res.error(errors.internal.UNKNOWN, error);
+      return res.send(html);
+    });
+  });
 };
 
 module.exports.create = function(req, res) {

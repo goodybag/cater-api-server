@@ -78,7 +78,7 @@ var helpers = {
   },
 
   array: function(arr) {
-    return arr.join(', ');
+    return arr ? arr.join(', ') : '';
   },
 
   tax: tax,

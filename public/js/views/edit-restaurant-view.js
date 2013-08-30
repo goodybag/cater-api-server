@@ -10,16 +10,22 @@ var EditRestaurantView = FormView.extend({
 
   initialize: function(options) {
     this.categories = [];
-    if (!this.model) this.model = new Restaurant();
-    this.listenTo(this.model, 'sync', function() {
-      this.$el.find('.restaurant-form .form-control').parent().removeClass('has-success');
-    });
-    this.listenTo(this.model.categories, 'sort', this.sortCategories, this);
+    this.setModel(this.model || new Restaurant());
   },
 
   remove: function() {
     _.invoke(this.categories, 'remove');
     FormView.prototype.remove.apply(this, arguments);
+  },
+
+  setModel: function(model) {
+    this.stopListening(this.model);
+    this.model = model;
+    this.listenTo(this.model, 'sync', function() {
+      this.$el.find('.restaurant-form .form-control').parent().removeClass('has-success');
+    });
+    this.listenTo(this.model.categories, 'sort', this.sortCategories, this);
+    return this;
   },
 
   fieldMap: {
@@ -39,8 +45,8 @@ var EditRestaurantView = FormView.extend({
   // TODO: do this automatically based on the model schema
   fieldGetters: {
     price: _.partial(FormView.intGetter, 'price'),
-    minimum_order: _.compose(function(cents) { return Math.round(cents * 100); }, _.partial(FormView.floatGetter, 'minimum_order')),
-    delivery_fee: _.compose(function(cents) { return Math.round(cents * 100); }, _.partial(FormView.floatGetter, 'delivery_fee')),
+    minimum_order: _.compose(function(cents) { return cents != null ? Math.round(cents * 100) : null; }, _.partial(FormView.floatGetter, 'minimum_order')),
+    delivery_fee: _.compose(function(cents) { return cents != null ? Math.round(cents * 100) : null; }, _.partial(FormView.floatGetter, 'delivery_fee')),
     cuisine: function() {
       var val = this.$el.find(this.fieldMap.cuisine).val().trim();
       return val ? _.invoke(val.split(','), 'trim') : [];

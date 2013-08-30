@@ -82,5 +82,9 @@ var Restaurant = Backbone.Model.extend({
 
     this.categories = attrs.categories instanceof Categories ? attrs.categories : new Categories(attrs.categories || [], {restaurant: this});
     this.unset('categories');
+  },
+
+  defaults: {
+    cuisine: []
   }
 });

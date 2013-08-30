@@ -26,14 +26,14 @@ var EditCategoryView = FormView.extend({
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
     if (this.model.isNew() || this.getDiff())
-      this.$el.find(submitSelector).removeClass('hide');
+      this.$el.find(this.submitSelector).removeClass('hide');
     return this;
   },
 
   attach: function() {
     this.$el.hide();
-    this.delegeateEvents();
-    this.restaurant.$el.append(this.$el);
+    this.delegateEvents();
+    this.restaurant.$el.find('.categories').append(this.$el);
     this.$el.fadeIn();
     return this;
   },

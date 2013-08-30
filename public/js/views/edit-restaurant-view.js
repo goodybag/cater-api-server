@@ -4,7 +4,8 @@ var EditRestaurantView = FormView.extend({
   events: {
     'keyup .restaurant-form .form-control': 'onChange',
     'change .restaurant-form .form-control': 'onChange',
-    'submit .restaurant-form': 'onSave'
+    'submit .restaurant-form': 'onSave',
+    'click .new-category': 'newCategory'
   },
 
   initialize: function(options) {

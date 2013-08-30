@@ -12,7 +12,12 @@ module.exports.register = function(app) {
    * Restaurants resource.  The collection of all restaurants.
    */
 
-  app.get('/restaurants', restrict(['client', 'admin']), controllers.restaurants.list);
+  app.get('/restaurants', restrict(['client', 'admin']), function(req, res, next) {
+    if (req.query.edit) return next();
+    controllers.restaurants.list.apply(this, arguments);
+  });
+
+  app.get('/restaurants', restrict('admin'), controllers.restaurants.editAll);
 
   app.post('/restaurants', restrict('admin'), controllers.restaurants.create);
 

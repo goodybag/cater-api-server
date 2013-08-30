@@ -89,6 +89,10 @@ module.exports.edit = function(req, res) {
   });
 }
 
+module.exports.editAll = function(req, res, next) {
+  res.send(501);
+};
+
 module.exports.create = function(req, res) {
   var query = queries.restaurant.create(req.body);
   var sql = db.builder.sql(query);

@@ -5,7 +5,7 @@ var EditCategoryView = FormView.extend({
 
   submitSelector: '.category-form .category-save',
 
-  template: function() {}, //TODO: handlebars partial
+  template: Handlebars.partials.edit_category,
 
   events: {
     'click .new-item': 'newItem',

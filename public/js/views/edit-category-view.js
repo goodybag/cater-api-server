@@ -1,5 +1,11 @@
 var EditCategoryView = FormView.extend({
+  tagName: 'div',
+
+  className: 'panel',
+
   submitSelector: '.category-form .category-save',
+
+  template: function() {}, //TODO: handlebars partial
 
   events: {
     'click .new-item': 'newItem',
@@ -10,8 +16,26 @@ var EditCategoryView = FormView.extend({
   },
 
   initialize: function(options) {
+    this.restaurant = options.restaurant;
+    if (this.model == null) this.model = new Category({restaurant_id: this.restaurant.model.id}, {restaurant: this.model});
+    if (this.model.id) this.id = 'category-' + this.model.id;
     this.items = [];
     this.listenTo(this.model.items, 'sort', this.sortItems, this);
+  },
+
+  render: function() {
+    this.$el.html(this.template(this.model.toJSON()));
+    if (this.model.isNew() || this.getDiff())
+      this.$el.find(submitSelector).removeClass('hide');
+    return this;
+  },
+
+  attach: function() {
+    this.$el.hide();
+    this.delegeateEvents();
+    this.restaurant.$el.append(this.$el);
+    this.$el.fadeIn();
+    return this;
   },
 
   remove: function() {

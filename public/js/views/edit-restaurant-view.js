@@ -8,10 +8,16 @@ var EditRestaurantView = FormView.extend({
   },
 
   initialize: function(options) {
+    this.categories = [];
     if (!this.model) this.model = new Restaurant();
     this.listenTo(this.model, 'sync', function() {
       this.$el.find('.restaurant-form .form-control').parent().removeClass('has-success');
     });
+  },
+
+  remove: function() {
+    _.invoke(this.categories, 'remove');
+    FormView.prototype.remove.apply(this, arguments);
   },
 
   fieldMap: {
@@ -46,5 +52,14 @@ var EditRestaurantView = FormView.extend({
       var changed = _.values(_.pick(this.fieldMap, _.keys(diff))).join(', ');
       this.$el.find(changed).parent().filter(':not(.has-error)').addClass('has-success');
     }
+  },
+
+  newCategory: function() {
+    var categoryView = new EditCategoryView({restaurant: restaurant});
+
+    this.categories.push(categoryView);
+    this.model.categories.add(categoryView.model, {sort: false});
+
+    categoryView.render().attach();
   }
 });

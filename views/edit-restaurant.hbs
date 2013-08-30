@@ -162,9 +162,8 @@
 <script>
   var restaurant = new EditRestaurantView({ el: '#main', model: new Restaurant({{{json restaurant}}}) });
 
-  restaurant.categories = [];
   {{#each restaurant.categories}}
-  var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', model: restaurant.model.categories.get({{id}}) });
+  var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', model: restaurant.model.categories.get({{id}}), restaurant: restaurant });
   category{{id}}.items = [{{#each items}}
     new EditItemView({el: '#edit-item-{{id}}', model: category{{../id}}.model.items.get({{id}}),  category: category{{../id}} }),
   {{/each}}];

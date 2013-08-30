@@ -35,6 +35,7 @@ var EditCategoryView = FormView.extend({
     this.delegateEvents();
     this.restaurant.$el.find('.categories').append(this.$el);
     this.$el.fadeIn();
+    _.invoke(this.items, 'attach');
     return this;
   },
 

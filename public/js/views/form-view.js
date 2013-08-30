@@ -23,7 +23,7 @@ var FormView = Backbone.View.extend({
   displayErrors: function() {
     var badFields =  _.uniq(_.pluck(_.pick(this.model.validationError, _.range(this.model.validationError.length)), 'property'));
     var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
-    this.$el.find(selector).parent().addClass('has-error');
+    this.$el.find(selector).parent().removeClass('has-success').addClass('has-error');
   },
 
   onChange: function(e) {

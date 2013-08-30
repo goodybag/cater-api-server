@@ -44,7 +44,7 @@ var EditRestaurantView = FormView.extend({
     var diff = FormView.prototype.onChange.apply(this, arguments);
     if (diff) {
       var changed = _.values(_.pick(this.fieldMap, _.keys(diff))).join(', ');
-      this.$el.find(changed).parent().addClass('has-success');
+      this.$el.find(changed).parent().filter(':not(.has-error)').addClass('has-success');
     }
   }
 });

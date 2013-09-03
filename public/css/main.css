@@ -1,3 +1,12 @@
+body {
+  font-family: 'Proxima Nova';
+}
+
+h1 {
+  font-family: 'Aleo';
+  font-weight: 300;
+}
+
 .order-item .edit {
   color: gray;
   text-transform:uppercase;

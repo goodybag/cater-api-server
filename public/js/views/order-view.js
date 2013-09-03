@@ -24,6 +24,20 @@ var OrderView = Backbone.View.extend({
       this.onOrderChange();
       this.updateAddressBlock();
     }
+
+    this.render();
+  },
+
+  render: function() {
+    this.datepicker = this.$el.find(".order-form #order-date").eq(0).pickadate({
+      format: 'mm/dd/yyyy'
+    , min: new Date()
+    }).pickadate('picker');
+
+    this.timepicker = this.$el.find(".order-form #order-time").eq(0).pickatime({
+      format: 'hh:i A'
+    , interval: 15
+    }).pickatime('picker');
   },
 
   onPriceChange: function(model, value, options) {
@@ -82,8 +96,13 @@ var OrderView = Backbone.View.extend({
       return parseInt(this.$el.find('.order-form ' + this.fieldMap.guests).val());
     },
     datetime: function() {
-      var datepart = this.$el.find('.order-form #order-date').val().trim();
-      var timepart = this.$el.find('.order-form #order-time').val().trim();
+      $date = this.$el.find(".order-form #order-date").eq(0);
+      $time = this.$el.find(".order-form #order-time").eq(0);
+      var datepart = ($date.val()) ? dateTimeFormatter($date.val()) : null;
+      var timepart = ($time.val()) ? timeFormatter($time.val()) : null;
+
+
+      if(!datepart || !timepart) return null;
 
       var date = new Date(datepart + ' ' + timepart);
       return date.toString() !== 'Invalid Date' ? date.toISOString() : null;

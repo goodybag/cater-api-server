@@ -1,9 +1,14 @@
+body {
+  background: url('/img/auth-page-background.png');
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
 header.navbar {
   margin-bottom: 0;
 }
 
 #main {
-  background-image: url('/img/auth-page-background.png');
   min-height: 1000px;
 }
 

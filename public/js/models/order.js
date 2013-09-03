@@ -25,7 +25,7 @@ var Order = Backbone.Model.extend({
     this.on({
       'change:zip': this.zipChanged,
       'change:datetime': this.datetimeChanged,
-      'chage:guests', this.guestsChanged
+      'change:guests': this.guestsChanged
     }, this);
   },
 

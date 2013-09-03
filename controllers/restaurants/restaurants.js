@@ -1,5 +1,6 @@
 var
-  db = require('../../db')
+  moment = require('moment-timezone')
+, db = require('../../db')
 , queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
@@ -9,14 +10,11 @@ var models = require('../../models');
 
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
-  models.Restaurant.find(req.query, function(error, models) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
 
-    var orderParams = utils.clone(req.session.orderParams) || {};
-    orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
-      return memo && this[key] != null;
-    }, true, orderParams);
+  var orderParams = req.session.orderParams || {};
 
+  models.Restaurant.find({order:['is_unacceptable ASC']}, orderParams, function(err, models) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON'), orderParams: orderParams}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
@@ -25,6 +23,8 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.get = function(req, res) {
+  var orderParams = req.session.orderParams || {};
+
   var tasks = [
     function(callback) {
       if (!req.session.user) return callback(null, null);
@@ -39,7 +39,7 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
-      models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
+      models.Restaurant.findOne(parseInt(req.params.rid), orderParams, function(err, restaurant) {
         if (err) return callback(err);
         restaurant.getItems(function(err, items) {
           callback(err, restaurant);

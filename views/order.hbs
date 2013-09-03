@@ -46,7 +46,7 @@
         <div class="form-group col-lg-6">
           <label for="order-time" class="control-label">Delivery Time</label>
           <input type="text" id="order-time" class="form-control order-form-field order-datetime"
-                 value="{{#if order.datetime}}{{timepart order.datetime}}{{else}}{{orderParams.date}}{{/if}}"
+                 value="{{#if order.datetime}}{{timepart order.datetime}}{{else}}{{timepart orderParams.time}}{{/if}}"
                  {{#unless order.editable}} disabled{{/unless}}>
         </div>
       </div>

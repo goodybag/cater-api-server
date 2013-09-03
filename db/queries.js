@@ -66,6 +66,7 @@ var userGroups = function(query) {
 
 module.exports = {
   restaurant: {
+    list: utils.partial(find, 'restaurants'),
     create: utils.partial(upsert, 'restaurants'),
     update: utils.partial(upsert, 'restaurants')
   },

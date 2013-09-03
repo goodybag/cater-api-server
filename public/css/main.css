@@ -5,13 +5,28 @@
   cursor: pointer;
 }
 
-.order-params-bar .form-group {
-  position: relative;
+.gb-input-icon {
+  display: inline-block;
+  margin-left: -27px;
+  color: #dedede;
 }
 
-.gb-input-icon {
-  color: #dedede;
-  position: absolute;
-  top: 10px;
-  right: 10px;
+.order-params-bar .form-control {
+  width: 125px;
+}
+
+.restaurants .disabled {
+  color: #bebebe;
+}
+
+/* TODO: restaurants.css */
+.restaurants .restaurant.disabled {
+  color: #bebebe;
+  pointer-events: none;
+  cursor: default;
+}
+
+#footer {
+  padding-bottom: 40px;
+  padding-top: 100px;
 }

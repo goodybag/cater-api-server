@@ -22,21 +22,25 @@
     <header id="header" class="navbar">
       <div class="container">
         <div class="row">
-          <a class="navbar-brand" href="/">Goodybag</a>
-          {{#if user.id}}
-          <div class="btn-group pull-right">
-            <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
-              My Account <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="/users/me">My Settings</a></li>
-              <li><a href="/users/me/orders">My Orders</a></li>
-              <li><a href="/auth/logout">Logout</a></li>
-            </ul>
+          <div class="col-lg-2 col-lg-offset-1">
+            <a class="navbar-brand" href="/">Goodybag</a>
           </div>
-          {{else}}
-          <a href="/auth" class="btn btn-default navbar-btn login-btn pull-right">Get Started</a>
-          {{/if}}
+          <div class="col-lg-2 col-lg-offset-6">
+            {{#if user.id}}
+            <div class="btn-group pull-right">
+              <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
+                My Account <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="/users/me">My Settings</a></li>
+                <li><a href="/users/me/orders">My Orders</a></li>
+                <li><a href="/auth/logout">Logout</a></li>
+              </ul>
+            </div>
+            {{else}}
+            <a href="/auth" class="btn btn-default navbar-btn login-btn pull-right">Get Started</a>
+            {{/if}}
+          </div>
         </div>
       </div>
     </header>
@@ -45,10 +49,22 @@
       {{{body}}}
     </div>
 
+    <footer id="footer">
+      <hr>
+      <div class="container">
+        <div class="row">
+          <a href="/contact-us" class="col-lg-2 col-lg-offset-3 text-center">Contact Us</a>
+          <a href="/legal" class="col-lg-2 text-center">Terms of Service</a>
+          <a href="/privacy" class="col-lg-2 text-center">Privacy Policy</a>
+        </div>
+      </div>
+    </footer>
+
     <script src="//code.jquery.com/jquery.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js"></script>
     <script src="/js/hb-helpers.js"></script>
     <script>
       for (var key in helpers) {

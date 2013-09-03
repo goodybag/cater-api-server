@@ -1,6 +1,7 @@
 var Model = require('./model');
 var utils = require('../utils');
 var uuid  = require('node-uuid');
+var db = require('../db');
 
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
@@ -57,7 +58,13 @@ module.exports = Model.extend({
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
     obj.below_min = obj.sub_total < obj.restaurant.minimum_order;
-    obj.submittable = this.attributes.status === 'pending' && this.attributes.sub_total > 0 && !obj.below_min;
+
+    obj.submittable = this.attributes.status === 'pending'
+      && this.attributes.sub_total > 0
+      && !obj.below_min
+      && !this.attributes.unacceptable
+    ;
+
     return obj;
   },
   requiredFields: [
@@ -83,7 +90,9 @@ module.exports = Model.extend({
   find: function(query, callback) {
     // TODO: alter query to add latest status
     query = query || {};
+    query.distinct = true;
     query.columns = query.columns || ['*'];
+    query.order = query.order || ["orders.id"];
 
     query.columns.push('latest.status');
 
@@ -149,6 +158,98 @@ module.exports = Model.extend({
     , alias: 'submitted'
     , on: {'order_id': '$orders.id$', 'status': 'submitted'}
     }
+
+    var unacceptable = [];
+    // check zip
+    query.joins.zips = {
+      type: 'left'
+    , alias: 'zips'
+    , target: 'restaurant_delivery_zips'
+    , on: {
+        'orders.restaurant_id': '$zips.restaurant_id$'
+      , 'orders.zip': '$zips.zip$'
+      }
+    }
+
+    var caseIsBadZip = '(CASE '
+      + ' WHEN (orders.zip IS NULL) THEN NULL'
+      + ' WHEN (zips.zip IS NULL) THEN TRUE'
+      + ' ELSE FALSE'
+      + ' END)'
+    ;
+
+    query.columns.push(caseIsBadZip+' AS is_bad_zip');
+    unacceptable.push('(zips.zip IS NULL)');
+
+    // check # guests
+    query.joins.guests = {
+      type: 'left'
+    , alias: 'guests'
+    , target: 'restaurant_lead_times'
+    , on: {
+      'orders.restaurant_id': '$guests.restaurant_id$'
+    , 'guests.max_guests' : {$gte: '$orders.guests$'}
+      }
+    }
+
+    var caseIsBadGuests = '(CASE '
+      + ' WHEN (orders.guests IS NULL) THEN NULL'
+      + ' WHEN (guests.restaurant_id IS NULL) THEN TRUE'
+      + ' ELSE FALSE'
+      + ' END)'
+    ;
+
+    query.columns.push(caseIsBadGuests+' AS is_bad_guests');
+    unacceptable.push('(guests.restaurant_id IS NULL)');
+
+    // check lead time
+    query.joins.lead_times = {
+      type: 'left'
+    , alias: 'lead_times'
+    , target: 'restaurant_lead_times'
+    , on: {
+        'orders.restaurant_id': '$lead_times.restaurant_id$'
+      , 'lead_times.max_guests': {$gte: '$orders.guests$'}
+      , 'lead_times.lead_time': {$custom: ['"lead_times"."lead_time" < EXTRACT(EPOCH FROM ("orders"."datetime" - now())/3600)']}
+      }
+    }
+
+    var caseIsBadLeadTime = '(CASE '
+      + ' WHEN (orders.datetime IS NULL) THEN NULL'
+      + ' WHEN (lead_times.restaurant_id IS NULL) THEN TRUE'
+      + ' ELSE FALSE'
+      + ' END)'
+    ;
+
+    query.columns.push(caseIsBadLeadTime+' AS is_bad_lead_time');
+    unacceptable.push('(lead_times.restaurant_id IS NULL)');
+
+    // check delivery days and times
+    query.joins.delivery_times = {
+      type: 'left'
+    , alias: 'delivery_times'
+    , target: 'restaurant_delivery_times'
+    , on: {
+        'orders.restaurant_id': '$delivery_times.restaurant_id$'
+      , 'delivery_times.day': {$custom: ['"delivery_times"."day" = EXTRACT(DOW FROM "orders"."datetime")']}
+      , 'delivery_times.start_time': {$custom: ['"delivery_times"."start_time" <= "orders"."datetime"::time']}
+      , 'delivery_times.end_time': {$custom: ['"delivery_times"."end_time" >= "orders"."datetime"::time']}
+      }
+    }
+
+    var caseIsBadDeliveryTime = '(CASE '
+      + ' WHEN (orders.datetime IS NULL) THEN NULL'
+      + ' WHEN (delivery_times.restaurant_id IS NULL) THEN TRUE'
+      + ' ELSE FALSE'
+      + ' END)'
+    ;
+
+    query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
+    unacceptable.push('(delivery_times.id IS NULL)');
+
+
+    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' AND')+') as is_unacceptable' : '(false) as is_unacceptable');
+
 
     Model.find.call(this, query, utils.partial(modifyAttributes, callback));
   },

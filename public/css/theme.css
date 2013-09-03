@@ -1,0 +1,15 @@
+body {
+  background: #FBF9E5;
+  color: #340F02;
+}
+
+.navbar {
+  background: #FCFDF6;
+  border-color: #CCCCC0;
+}
+
+.panel,
+.panel .panel-heading,
+.panel .list-group-item {
+  border-color: #CCCCC0;
+}

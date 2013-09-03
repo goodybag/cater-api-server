@@ -15,6 +15,9 @@
 
     <!-- Goodybag Catering CSS Stuff -->
     <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/components.css" rel="stylesheet">
+    <link href="/css/theme.css" rel="stylesheet">
+
 
     {{{block "css"}}}
   </head>
@@ -23,7 +26,9 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-2 col-lg-offset-1">
-            <a class="navbar-brand" href="/">Goodybag</a>
+            <a class="navbar-brand" href="/">
+              <img src="/img/logo.png" alt="Goodybag">
+            </a>
           </div>
           <div class="col-lg-2 col-lg-offset-6">
             {{#if user.id}}

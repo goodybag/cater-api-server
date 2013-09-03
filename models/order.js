@@ -5,18 +5,10 @@ var db = require('../db');
 
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
+    var restaurantFields = ['name', 'delivery_fee', 'minimum_order', 'email', 'is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time'];
     utils.each(orders, function(order) {
-      order.attributes.restaurant = {
-        id: order.attributes.restaurant_id,
-        name: order.attributes.name,
-        delivery_fee: order.attributes.delivery_fee,
-        minimum_order: order.attributes.minimum_order,
-        email: order.attributes.email
-      };
-      delete order.attributes.name;
-      delete order.attributes.delivery_fee;
-      delete order.attributes.minimum_order;
-      delete order.attributes.email;
+      order.attributes.restaurant = utils.extend({ id: order.attributes.restaurant_id } , utils.pick(order.attributes, restaurantFields));
+      utils.each(restaurantFields, function(field) { delete order.attributes.field; });
     });
   }
   callback.call(this, err, orders);

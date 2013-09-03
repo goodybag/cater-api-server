@@ -23,7 +23,7 @@ var capitalize = function(str) {
   return str[0].toUpperCase() + str.substring(1);
 }
 
-var dateFormatter = function(date, format) {
+var dateTimeFormatter = function(date, format) {
   if (!date) return '';
   return moment(date).format(format || 'YYYY-MM-DD');
 }
@@ -129,8 +129,8 @@ var helpers = {
     return moment(date).format('h:mm A');
   },
 
-  formatDate: function(date, format) {
-    return dateFormatter(date, format);
+  formatDateTime: function(date, format) {
+    return dateTimeFormatter(date, format);
   },
 
   formatTime: function(time, format) {

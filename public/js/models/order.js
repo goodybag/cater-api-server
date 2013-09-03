@@ -41,7 +41,7 @@ var Order = Backbone.Model.extend({
 
   zipChanged: function(model, value, options) {
     var restaurant = model.get('restaurant');
-    restaurant.zip_unacceptable = _.contains(restaurant.zips, value);
+    restaurant.is_zip_bad = _.contains(restaurant.zips, value);
     model.set('restaurant', restaurant);
   },
 
@@ -59,7 +59,7 @@ var Order = Backbone.Model.extend({
   guestsChanged: function(model, value, options) {
     var restaurant = model.get('restaurant');
     if (value > restaurant.max_guests) {
-      restaurant.guests_unacceptable = true;
+      restaurant.is_guests_bad = true;
       models.set('restaurant', restaurant);
     }
 

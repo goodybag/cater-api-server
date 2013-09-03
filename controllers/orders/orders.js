@@ -6,6 +6,7 @@ var states = require('../../public/states');
 var models = require('../../models');
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer
+var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 
 module.exports.auth = function(req, res, next) {
   if (req.session.user != null && utils.contains(req.session.user.groups, 'admin'))
@@ -102,6 +103,11 @@ module.exports.changeStatus = function(req, res) {
         res.render('order-submitted-email', {order: order.toJSON({review: true}), config: config, layout: false}, function(err, html) {
           // TODO: error handling
           utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order.', html);
+        });
+        twilio.sendSms({
+          to: order.attributes.restaurant.phone,
+          from: config.phone.orders,
+          body: 'You have received a new Goodybag order.\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
         });
       }
 

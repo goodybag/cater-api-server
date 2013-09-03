@@ -26,7 +26,7 @@ var OrderParamsView = Backbone.View.extend({
     for (var key in model.changed) {
        // date
       if(key == 'date' && model.changed[key]){
-        var date = dateFormatter(model.changed[key], 'MM/DD/YYYY');
+        var date = dateTimeFormatter(model.changed[key], 'MM/DD/YYYY');
         this.$el.find('input[name=' + key + ']').val(date);
         continue;
       }
@@ -49,7 +49,7 @@ var OrderParamsView = Backbone.View.extend({
     // formatting date to be YYYY-MM-DD and time to be HH:MM (24 hour time)
     var form = {
       zip: this.$("input[name='zip']").val() || null
-    , date: (this.datepicker.get()) ? dateFormatter(this.datepicker.get()) : null
+    , date: (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
     , time: (this.timepicker.get()) ? timeFormatter(this.timepicker.get()) : null
     , guests: this.$("input[name='guests']").val() || null
     };

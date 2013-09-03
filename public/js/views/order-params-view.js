@@ -46,6 +46,7 @@ var OrderParamsView = Backbone.View.extend({
 , submit: function (e) {
     e.preventDefault();
 
+    // formatting date to be YYYY-MM-DD and time to be HH:MM (24 hour time)
     var form = {
       zip: this.$("input[name='zip']").val() || null
     , date: (this.datepicker.get()) ? dateFormatter(this.datepicker.get()) : null

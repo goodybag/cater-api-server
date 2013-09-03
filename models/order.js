@@ -123,6 +123,7 @@ module.exports = Model.extend({
     query.columns.push('restaurants.delivery_fee')
     query.columns.push('restaurants.minimum_order');
     query.columns.push('restaurants.email');
+    query.columns.push('restaurants.phone');
 
     query.joins.restaurants = {
       type: 'inner'
@@ -236,12 +237,14 @@ module.exports = Model.extend({
             name: order.attributes.name,
             delivery_fee: order.attributes.delivery_fee,
             minimum_order: order.attributes.minimum_order,
-            email: order.attributes.email
+            email: order.attributes.email,
+            phone: order.attributes.phone
           };
           delete order.attributes.name;
           delete order.attributes.delivery_fee;
           delete order.attributes.minimum_order;
           delete order.attributes.email;
+          delete order.attributes.phone;
         });
       }
       callback.call(this, err, orders);

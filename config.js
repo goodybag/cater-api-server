@@ -44,6 +44,11 @@ var config = {
     , waitlist: 'waitlist@goodybag.com'
     }
   }
+  , phone: {
+      main: '5126674224'
+    , support: undefined // TODO: support phone number
+    , orders: undefined // TODO: order phone number
+    }
 
 , dev: {
     http: {
@@ -60,6 +65,8 @@ var config = {
   , baseUrl: 'http://localhost:3000'
 
   , testEmail: 'geoff@goodybag.com'
+
+  , testPhone: '5129236299'
 
   , emailEnabled: true
   }

@@ -1,4 +1,27 @@
 /**
+ * Forms
+ */
+.form-inline {
+  font-size: 0;
+}
+
+.form-inline .form-group {
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.form-inline .form-group:first-child {
+  margin-left: 0;
+}
+
+.form-inline .form-group .gb-input-icon {
+  font-size: 18px;
+  vertical-align: bottom;
+  margin-bottom: 8px;
+  color: #aaa;
+}
+
+/**
  * Navbar
  */
 .navbar-brand {
@@ -33,6 +56,20 @@
   display: table;
   margin: 0 auto;
   padding: 15px 18px;
+}
+
+.order-params-bar .form-group {
+
+}
+
+.order-params-bar .btn.save {
+  margin-left: 32px;
+}
+
+@media ( max-width: 768px ){
+  .order-params-bar .btn.save {
+    margin-left: 0;
+  }
 }
 
 /**

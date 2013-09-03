@@ -24,6 +24,7 @@ var capitalize = function(str) {
 }
 
 var dateFormatter = function(date, format) {
+  if (!date) return '';
   return moment(date).format(format || 'YYYY-MM-DD');
 }
 
@@ -34,7 +35,6 @@ var timeFormatter = function(time, format) {
   var datetime = new moment();
 
   time = time.match(/(\d+)(?::(\d\d))?\s*(PM?|pm?|p?)/);
-  console.log(time);
   datetime.hours( parseInt(time[1]) + (time[3] ? 12 : 0) );
   datetime.minutes( parseInt(time[2]) || 0 );
   return datetime.format(format || 'HH:mm');

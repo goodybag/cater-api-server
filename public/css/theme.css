@@ -13,3 +13,25 @@ body {
 .panel .list-group-item {
   border-color: #CCCCC0;
 }
+
+/**
+ * Buttons
+ */
+
+.btn-primary {
+  background-color: #DC0500;
+  border-color: #B80300;
+}
+
+.btn-primary:hover, .btn-primary:focus,
+.btn-primary:active, .btn-primary.active {
+  background-color: #CF0F0B;
+  border-color: #9E0200;
+}
+
+/**
+ * List Groups
+ */
+a.list-group-item {
+  color: #8B8983;
+}

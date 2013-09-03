@@ -1,3 +1,14 @@
+/**
+ * Navbar
+ */
+.navbar-brand {
+  padding-top: 15px;
+  padding-bottom: 11px;
+}
+
+/**
+ * Panels
+ */
 .panel {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
@@ -13,4 +24,38 @@
 .panel .panel-title {
   font-size: 25px;
   font-weight: 300;
+}
+
+/**
+ * Order params bar
+ */
+.order-params-bar {
+  display: table;
+  margin: 0 auto;
+  padding: 15px 18px;
+}
+
+/**
+ * Buttons
+ */
+.btn {
+  font-weight: 500;
+}
+
+/**
+ * Menu
+ */
+
+.menu .list-item-legend {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.menu .list-item-legend dd,
+.menu .list-item-legend dt {
+  display: inline-block;
+  vertical-align: baseline;
 }

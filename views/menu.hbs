@@ -93,7 +93,7 @@
           </div>
         </div>
         <div class="row checkout-btn-row{{#if order.below_min}} hide{{/if}}{{#unless order.sub_total}} hide{{/unless}}">
-          <a href="/orders/{{order.id}}" class="btn btn-primary pull-right checkout-btn"{{#unless order.submittable}} disabled="disabled"{{/unless}}>Check Out</a>
+          <a href="/orders/{{order.id}}" class="btn btn-primary pull-right checkout-btn"{{#unless order.submittable}} disabled="disabled"{{/unless}}{{#if restaurant.is_unacceptable}} disabled="disabled"{{/if}}>Check Out</a>
         </div>
       </div>
     </div>

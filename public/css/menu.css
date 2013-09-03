@@ -1,0 +1,10 @@
+.order-summary.affix {
+  width: 360px;
+  top: 30px;
+}
+
+@media (max-width: 1200px) {
+  .order-summary.affix {
+    position: static;
+  }
+}

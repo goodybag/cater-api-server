@@ -1,3 +1,7 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/menu.css">
+{{/extend}}
+
 <div class="row">
   {{> order_params_bar}}
 </div>
@@ -28,7 +32,7 @@
   </div>
 
   <div class="col-lg-4">
-    <div class="panel panel-success order-summary">
+    <div class="panel panel-success order-summary" data-spy="affix" data-offset-top="190">
       <div class="panel-heading">
         <h2 class="panel-title">Order</h2>
       </div>

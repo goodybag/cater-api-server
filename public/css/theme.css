@@ -35,3 +35,7 @@ body {
 a.list-group-item {
   color: #8B8983;
 }
+
+a.list-group-item .list-group-item-heading {
+  color: #432011;
+}

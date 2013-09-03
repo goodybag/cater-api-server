@@ -43,6 +43,15 @@
 }
 
 /**
+ * List Group Items
+ */
+
+a.list-group-item .list-group-item-heading {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/**
  * Menu
  */
 
@@ -58,4 +67,13 @@
 .menu .list-item-legend dt {
   display: inline-block;
   vertical-align: baseline;
+}
+
+.menu .list-group-item-heading {
+  font-weight: 700;
+}
+
+.menu .list-group-item-text {
+  font-weight: 300;
+  font-size: 13px;
 }

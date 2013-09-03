@@ -183,7 +183,7 @@ module.exports = Model.extend({
       query.joins.delivery_times.on['delivery_times.end_time'] = {$gte: orderParams.time};
     }
 
-    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' AND ')+') as is_unacceptable' : '(false) as is_unacceptable');
+    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR ')+') as is_unacceptable' : '(false) as is_unacceptable');
 
     Model.find.call(this, query, function(err, restaurants) {
       callback.call(this, err, restaurants);

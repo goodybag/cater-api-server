@@ -54,7 +54,7 @@ module.exports = Model.extend({
     obj.submittable = this.attributes.status === 'pending'
       && this.attributes.sub_total > 0
       && !obj.below_min
-      && !this.attributes.unacceptable
+      && !this.attributes.is_unacceptable
     ;
 
     return obj;
@@ -240,7 +240,7 @@ module.exports = Model.extend({
     unacceptable.push('(delivery_times.id IS NULL)');
 
 
-    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' AND')+') as is_unacceptable' : '(false) as is_unacceptable');
+    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
 
 
     Model.find.call(this, query, utils.partial(modifyAttributes, callback));

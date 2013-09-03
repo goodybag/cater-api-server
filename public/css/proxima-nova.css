@@ -43,7 +43,7 @@
     url('../font/proxima-nova/proximanovaregularitalic-webfont.ttf') format('truetype'),
     url('../font/proxima-nova/proximanovaregularitalic-webfont.svg#proxima_nova_regular_italicIt') format('svg');
   font-weight: 500;
-  font-style: normal;
+  font-style: italic;
 }
 
 /* Bold */

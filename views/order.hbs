@@ -6,6 +6,22 @@
   <h1 class="text-center">Order</h1>
 </div>
 
+{{#if order.restaurant.is_bad_zip}}
+<div class="alert alert-danger">This order cannot be delivered to that zip code.</div>
+{{/if}}
+
+{{#if order.restaurant.is_bad_delivery_time}}
+<div class="alert alert-danger">This order cannot be delivered for that date and time.</div>
+{{/if}}
+
+{{#if order.restaurant.is_bad_guests}}
+<div class="alert alert-danger">This order cannot be delivered for that many guests.</div>
+{{/if}}
+
+{{#if order.restaurant.is_bad_lead_time}}
+<div class="alert alert-danger">This order cannot be delivered for that many guests without more lead time.</div>
+{{/if}}
+
 <div class="row">
   <div class="col-lg-12">
     <div class="row">

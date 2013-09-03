@@ -38,10 +38,16 @@
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="panel order-summary" data-spy="affix" data-offset-top="190">
-        <div class="panel-heading">
-          <h2 class="panel-title">Order</h2>
+  <div class="col-lg-4">
+    <div class="panel panel-success order-summary" data-spy="affix" data-offset-top="190">
+      <div class="panel-heading">
+        <h2 class="panel-title">Order</h2>
+      </div>
+      <div class="list-group list-group-flush order-items">
+        <h4 class="col-lg-12 no-items{{#if order.orderItems}} hide{{/if}}">No Items Yet</h4>
+        {{#each order.orderItems}}
+        <div class="list-group-item order-item" id="order-item-{{id}}">
+          {{> order_item_summary}}
         </div>
         <div class="list-group list-group-flush order-items">
           <h4 class="col-lg-12 no-items{{#if order.orderItems}} hide{{/if}}">No Items Yet</h4>

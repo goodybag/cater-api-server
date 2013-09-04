@@ -104,11 +104,13 @@ module.exports.changeStatus = function(req, res) {
           // TODO: error handling
           utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order.', html);
         });
-        twilio.sendSms({
-          to: order.attributes.restaurant.phone,
-          from: config.phone.orders,
-          body: 'You have received a new Goodybag order.\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
-        }, function(err, result) { /* TODO: error handling */ });
+        if (order.attributes.restaurant.sms_phone) {
+          twilio.sendSms({
+            to: order.attributes.restaurant.sms_phone,
+            from: config.phone.orders,
+            body: 'You have received a new Goodybag order.\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
+          }, function(err, result) { /* TODO: error handling */ });
+        }
       }
 
       if (utils.contains(['submitted', 'accepted', 'denied', 'delivered'], status.attributes.status)) {

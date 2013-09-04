@@ -53,6 +53,7 @@
  * Order params bar
  */
 .order-params-bar {
+  position: relative; /* So datepicker doesn't bleed */
   display: table;
   margin: 0 auto;
   padding: 15px 18px;

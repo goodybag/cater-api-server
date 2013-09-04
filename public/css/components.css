@@ -75,9 +75,19 @@
 /**
  * Buttons
  */
+
 .btn {
   font-weight: 500;
 }
+
+.btn-search .btn-search-icon {
+  font-size: 17px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 2px;
+  margin-left: 1px;
+}
+
 
 /**
  * List Group Items

@@ -112,7 +112,6 @@ utils.sendMail = function(to, from, subject, html, text, callback) {
 
   composer.buildMessage(function(err, msg) {
     if (err && lodash.isFunction(callback)) return callback(err);
-    console.log(from, to, msg, callback);
     mailgun.sendRaw(from, to, msg, callback);
   });
 }

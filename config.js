@@ -72,6 +72,13 @@ var config = {
 
   , emailEnabled: true
   }
+, staging: {
+    http: {
+      port: process.env['PORT'] || 5000
+    }
+  , baseUrl: 'http://cater.staging.goodybag.com'
+  , postgresConnStr: process.env['DATABASE_URL']
+  }
 };
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';

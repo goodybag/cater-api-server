@@ -83,8 +83,16 @@
  * List Group Items
  */
 
+a.list-group-item {
+  cursor: pointer;
+}
+
+a.list-group-item:hover {
+  background-color: #F8F8EC;
+}
+
 a.list-group-item .list-group-item-heading {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -104,6 +112,14 @@ a.list-group-item .list-group-item-heading {
 .menu .list-item-legend dt {
   display: inline-block;
   vertical-align: baseline;
+}
+
+.menu .list-item-legend dt {
+  font-weight: 300;
+}
+
+.menu .list-item-legend dd {
+  color: #000;
 }
 
 .menu .list-group-item-heading {

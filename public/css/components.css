@@ -222,7 +222,7 @@ a.list-group-item .list-group-item-heading {
 }
 
 .order-table tr > td:first-child ~ td {
-  padding-left: 6px;
+  padding-left: 4px;
 }
 
 .order-table .item-name {

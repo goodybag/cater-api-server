@@ -3,9 +3,30 @@ var utils = require('../utils');
 var uuid  = require('node-uuid');
 var db = require('../db');
 
+'delivery_zips',
+'delivery_times',
+'lead_times',
+'max_guests'
+
+
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
-    var restaurantFields = ['name', 'delivery_fee', 'minimum_order', 'email', 'is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time'];
+    var restaurantFields = [
+      'name',
+      'delivery_fee',
+      'minimum_order',
+      'email',
+      'sms_phone',
+      'voice_phone',
+      'is_bad_zip',
+      'is_bad_guests',
+      'is_bad_lead_time',
+      'is_bad_delivery_time',
+      'delivery_zips',
+      'delivery_times',
+      'lead_times',
+      'max_guests'
+    ];
     utils.each(orders, function(order) {
       order.attributes.restaurant = utils.extend({ id: order.attributes.restaurant_id } , utils.pick(order.attributes, restaurantFields));
       utils.each(restaurantFields, function(field) { delete order.attributes.field; });
@@ -137,11 +158,18 @@ module.exports = Model.extend({
     query.columns.push('restaurants.delivery_fee')
     query.columns.push('restaurants.minimum_order');
     query.columns.push('restaurants.email');
+    query.columns.push('restaurants.sms_phone');
+    query.columns.push('restaurants.voice_phone');
 
     query.joins.restaurants = {
       type: 'inner'
     , on: {'id': '$orders.restaurant_id$'}
     }
+
+    query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = orders.restaurant_id)) AS delivery_zips");
+    query.columns.push("(SELECT row_to_json(r) FROM (SELECT start_time, end_time FROM restaurant_delivery_times WHERE restaurant_id = orders.restaurant_id) r) AS delivery_times");
+    query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id ORDER BY lead_time ASC) r ) AS lead_times");
+    query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id) AS max_guests");
 
     query.columns.push('(submitted.created_at) as submitted');
 
@@ -241,7 +269,6 @@ module.exports = Model.extend({
 
 
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
-
 
     Model.find.call(this, query, utils.partial(modifyAttributes, callback));
   },

@@ -1,0 +1,158 @@
+/**
+ * Forms
+ */
+.form-inline {
+  font-size: 0;
+}
+
+.form-inline .form-group {
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.form-inline .form-group:first-child {
+  margin-left: 0;
+}
+
+.form-inline .form-group .gb-input-icon {
+  font-size: 18px;
+  vertical-align: bottom;
+  margin-bottom: 8px;
+  color: #aaa;
+}
+
+/**
+ * Navbar
+ */
+.navbar-brand {
+  padding-top: 15px;
+  padding-bottom: 11px;
+}
+
+/**
+ * Panels
+ */
+.panel {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: solid #ccc 1px;
+}
+
+.panel .panel-heading {
+  background: none;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.panel .panel-title {
+  font-size: 25px;
+  font-weight: 300;
+}
+
+/**
+ * Order params bar
+ */
+.order-params-bar {
+  display: table;
+  margin: 0 auto;
+  padding: 15px 18px;
+}
+
+.order-params-bar .form-group {
+
+}
+
+.order-params-bar .btn.save {
+  margin-left: 32px;
+}
+
+@media ( max-width: 768px ){
+  .order-params-bar .btn.save {
+    margin-left: 0;
+  }
+}
+
+/**
+ * Buttons
+ */
+
+.btn {
+  font-weight: 500;
+}
+
+.btn-search .btn-search-icon {
+  font-size: 17px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 2px;
+  margin-left: 1px;
+}
+
+
+/**
+ * List Group Items
+ */
+
+a.list-group-item {
+  cursor: pointer;
+}
+
+a.list-group-item:hover {
+  background-color: #F8F8EC;
+}
+
+a.list-group-item .list-group-item-heading {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/**
+ * Menu
+ */
+
+.menu .list-item-legend {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.menu .list-item-legend dd,
+.menu .list-item-legend dt {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.menu .list-item-legend dt {
+  font-weight: 300;
+}
+
+.menu .list-item-legend dd {
+  color: #000;
+}
+
+.menu .list-group-item-heading {
+  font-weight: 700;
+}
+
+.menu .list-group-item-text {
+  font-weight: 300;
+  font-size: 13px;
+}
+
+/**
+ * Order Summary
+ */
+
+.order-summary .panel-heading {
+  border-bottom: none;
+}
+
+/**
+ * Pages
+ */
+
+.page-menu .page-title {
+  font-size: 32px;
+}

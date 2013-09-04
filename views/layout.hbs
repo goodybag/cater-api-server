@@ -5,16 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
-    <!-- Font Awesome -->
-    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    {{! <link href="/css/font-awesome.min.css" rel="stylesheet"> }}
+    <link href="/css/gb-icon.css" rel="stylesheet">
+    <link href="/css/aleo.css" rel="stylesheet">
+    <link href="/css/proxima-nova.css" rel="stylesheet">
+
+    <!-- pickadate -->
+    <link href="/components/pickadate/lib/themes/classic.css" rel="stylesheet">
+    <link href="/components/pickadate/lib/themes/classic.date.css" rel="stylesheet">
+    <link href="/components/pickadate/lib/themes/classic.time.css" rel="stylesheet">
+
 
     <!-- Moar Convenient CSS Stuff -->
     <link href="/css/kit.css" rel="stylesheet">
 
     <!-- Goodybag Catering CSS Stuff -->
     <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/components.css" rel="stylesheet">
+    <link href="/css/theme.css" rel="stylesheet">
+
 
     {{{block "css"}}}
   </head>
@@ -22,10 +34,12 @@
     <header id="header" class="navbar">
       <div class="container">
         <div class="row">
-          <div class="col-lg-2 col-lg-offset-1">
-            <a class="navbar-brand" href="/">Goodybag</a>
+          <div class="col-lg-2">
+            <a class="navbar-brand" href="/">
+              <img src="/img/logo.png" alt="Goodybag">
+            </a>
           </div>
-          <div class="col-lg-2 col-lg-offset-6">
+          <div class="col-lg-2 col-lg-offset-8">
             {{#if user.id}}
             <div class="btn-group pull-right">
               <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
@@ -60,18 +74,25 @@
       </div>
     </footer>
 
-    <script src="//code.jquery.com/jquery.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js"></script>
+
+    <!-- pickadate -->
+    <script src="/components/pickadate/lib/picker.js"></script>
+    <script src="/components/pickadate/lib/picker.date.js"></script>
+    <script src="/components/pickadate/lib/picker.time.js"></script>
+    <script src="/components/pickadate/lib/legacy.js"></script>
+
     <script src="/js/hb-helpers.js"></script>
     <script>
       for (var key in helpers) {
         Handlebars.registerHelper(key, helpers[key]);
       }
     </script>
-    <script src="/js/bootstrap.min.js"></script>
     {{{block "views"}}}
     {{{block "scripts"}}}
   </body>

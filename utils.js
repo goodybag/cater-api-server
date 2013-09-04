@@ -72,7 +72,6 @@ utils.del = function(url, callback){
 var mailgun = new Mailgun(config.mailgun.apiKey);
 
 utils.sendMail = function(to, from, subject, html, text, callback) {
-  console.log(arguments);
   if (lodash.isFunction(text) && callback === undefined) {
     callback = text;
     text = undefined;
@@ -113,7 +112,6 @@ utils.sendMail = function(to, from, subject, html, text, callback) {
 
   composer.buildMessage(function(err, msg) {
     if (err && lodash.isFunction(callback)) return callback(err);
-    console.log(from, to, msg, callback);
     mailgun.sendRaw(from, to, msg, callback);
   });
 }

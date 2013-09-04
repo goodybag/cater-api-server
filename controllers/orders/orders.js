@@ -6,6 +6,8 @@ var states = require('../../public/states');
 var models = require('../../models');
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer
+var twilio = require('twilio')(config.twilio.account, config.twilio.token);
+var moment = require('moment');
 
 module.exports.auth = function(req, res, next) {
   if (req.session.user != null && utils.contains(req.session.user.groups, 'admin'))
@@ -79,7 +81,6 @@ module.exports.listStatus = function(req, res) {
   );
 }
 
-
 module.exports.changeStatus = function(req, res) {
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
@@ -103,6 +104,26 @@ module.exports.changeStatus = function(req, res) {
           // TODO: error handling
           utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order.', html);
         });
+
+        if (order.attributes.restaurant.sms_phone) {
+          var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
+          + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY HH:mm a') + '.'
+          + '\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
+          twilio.sendSms({
+            to: order.attributes.restaurant.sms_phone,
+            from: config.phone.orders,
+            body: msg
+          }, function(err, result) { /* TODO: error handling */ });
+        }
+
+        if (order.attributes.restaurant.voice_phone) {
+          twilio.makeCall({
+            to: order.attributes.restaurant.voice_phone,
+            from: config.phone.orders,
+            url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
+            method: 'GET'
+          }, function(err, result) { /* TODO: error handling */ })
+        }
       }
 
       if (utils.contains(['submitted', 'accepted', 'denied', 'delivered'], status.attributes.status)) {
@@ -127,4 +148,16 @@ module.exports.changeStatus = function(req, res) {
       else done(status);
     });
   });
-}
+};
+
+module.exports.voice = function(req, res, next) {
+  models.Order.findOne(parseInt(req.params.oid), function(err, order) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (!order) return res.send(404);
+    res.render('order-voice', {layout:false, order: order.toJSON()}, function(err, xml) {
+      console.log(err);
+      if (err) return res.error(errors.internal.UNKNOWN, err);
+      res.send(xml);
+    });
+  });
+};

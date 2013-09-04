@@ -81,7 +81,6 @@ module.exports.listStatus = function(req, res) {
   );
 }
 
-
 module.exports.changeStatus = function(req, res) {
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
@@ -106,7 +105,7 @@ module.exports.changeStatus = function(req, res) {
           utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order.', html);
         });
         if (order.attributes.restaurant.sms_phone) {
-          var msg = 'You have received a new Goodybag order for $' + order.attributes.sub_total.toFixed(2)
+          var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
           + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY HH:mm a') + '.'
           + '\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
           twilio.sendSms({

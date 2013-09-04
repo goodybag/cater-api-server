@@ -3,6 +3,22 @@ var faker = require('Faker');
 var config = require('../config');
 var db = require('../db');
 
+var fakeCategories = [
+  'Breakfast'
+, 'Lunch'
+, 'Dinner'
+, 'Tacos'
+, 'Plates'
+, 'Tour De France'
+, 'Crepes'
+];
+
+fakeCategories.random = function(){
+  return fakeCategories[
+    parseInt( Math.random() * fakeCategories.length )
+  ];
+};
+
 faker.definitions.phone_formats.push('##########');
 
 // number of records to create
@@ -68,26 +84,36 @@ var inserts = {
     , table: 'categories'
     , values: {
         restaurant_id: restaurant_id
-      , name: faker.Lorem.words()[0]
+      , name: fakeCategories.random() //faker.Lorem.words()[0]
       , description: faker.Lorem.sentence()
       , order: incrementer('categories_order_'+restaurant_id, 1)
       }
     }
   }
 , items: function(restaurant_id, category_id) {
-    return {
+    var item = {
       type:'insert'
     , table: 'items'
     , values: {
         category_id: category_id
       , order: incrementer('items_order_'+restaurant_id+'_'+category_id, 1)
-      , name: faker.Lorem.words()[0]
+      , name: faker.Lorem.words().slice(0, parseInt( Math.random() * 4 ) + 1 ).join(' ')
       , description: faker.Lorem.sentence()
       , price: faker.Helpers.randomNumber(1000)
       , feeds_min: 3
       , feeds_max: 5
       }
     }
+
+    if ( item.values.name ){
+      item.values.name = item.values.name[0].toUpperCase() + item.values.name.substring(1);
+    }
+
+    if ( item.values.description ){
+      item.values.description = item.values.description[0].toUpperCase() + item.values.description.substring(1);
+    }
+
+    return item;
   }
 , restaurantLeadTimes: function(restaurant_id, max_guests, lead_time) {
     return {

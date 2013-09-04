@@ -3,7 +3,7 @@
   top: 30px;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 992px) {
   .order-summary.affix {
     position: static;
     width: 100%;

@@ -5,7 +5,7 @@ var OrderItemSummaryView = Backbone.View.extend({
 
   id: function() { return 'order-item-' + this.model.id; },
 
-  template: Handlebars.partials.order_summary,
+  template: Handlebars.partials.order_item_summary,
 
   events: {
     'click .edit': 'openEditModal',

@@ -215,6 +215,8 @@ a.list-group-item .list-group-item-heading {
 .order-table > tbody > tr > td,
 .order-table > tfoot > tr > td {
   border: none;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .order-table > tbody > tr:last-child > td {
@@ -222,7 +224,7 @@ a.list-group-item .list-group-item-heading {
 }
 
 .order-table tr > td:first-child ~ td {
-  padding-left: 4px;
+  /*padding-left: 4px;*/
 }
 
 .order-table .item-name {

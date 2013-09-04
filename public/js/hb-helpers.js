@@ -142,12 +142,20 @@ var helpers = {
     return moment(date).format('h:mm A');
   },
 
-  formatDateTime: function(date, format) {
-    return dateTimeFormatter(date, format);
+  formatDateTime: function(date, format, options) {
+    if (options === undefined) {
+      options = format;
+      format = undefined;
+    }
+    return dateTimeFormatter(date, format || "MM/DD/YYYY");
   },
 
-  formatTime: function(time, format) {
-    return timeFormatter(time, format);
+  formatTime: function(time, format, options) {
+    if (options === undefined) {
+      options = format;
+      format = undefined;
+    }
+    return timeFormatter(time, format || "hh:mm A");
   },
 
   // TODO: make this a partial

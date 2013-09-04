@@ -195,6 +195,10 @@ a.list-group-item .list-group-item-heading {
   padding: 10px 12px;
 }
 
+.order-summary .list-group-item-checkout {
+  text-align: right;
+}
+
 .order-summary .order-table {
   width: 100%;
 }
@@ -212,10 +216,12 @@ a.list-group-item .list-group-item-heading {
 
 .order-table .item-name {
   font-weight: 700;
+  line-height: 14px;
 }
 
 .order-table .item-name .item-edit {
   font-weight: 300;
+  text-decoration: underline;
 }
 
 .order-table .item-name .item-edit:before {
@@ -230,11 +236,6 @@ a.list-group-item .list-group-item-heading {
 .order-table .item-price {
   width: 40px;
   text-align: right;
-}
-
-.order-table .item-edit {
-  color: #A29893;
-  text-decoration: underline;
 }
 
 /**

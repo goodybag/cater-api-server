@@ -81,3 +81,7 @@ a.list-group-item .list-group-item-heading {
 .order-summary {
   color: #7A756D;
 }
+
+.order-table .item-edit {
+  color: #A29893;
+}

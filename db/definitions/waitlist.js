@@ -18,7 +18,7 @@ define(function(require) {
 
   definition.schema = {
     created_at: {
-      type: types.timestamp
+      type: types.timestamptz
     , nullable: false
     , default: 'NOW()'
     }
@@ -35,11 +35,11 @@ define(function(require) {
     , nullable: false
     }
   , confirmed: {
-      type: types.timestamp
+      type: types.timestamptz
     , nullable: true
     }
   , unsubscribed: {
-      type: types.timestamp
+      type: types.timestamptz
     , nullable: true
     }
   };

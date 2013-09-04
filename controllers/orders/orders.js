@@ -108,7 +108,7 @@ module.exports.changeStatus = function(req, res) {
           to: order.attributes.restaurant.phone,
           from: config.phone.orders,
           body: 'You have received a new Goodybag order.\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
-        });
+        }, function(err, result) { /* TODO: error handling */ });
       }
 
       if (utils.contains(['submitted', 'accepted', 'denied', 'delivered'], status.attributes.status)) {

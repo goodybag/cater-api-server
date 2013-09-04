@@ -66,7 +66,9 @@ var config = {
 
   , testEmail: 'geoff@goodybag.com'
 
-  , testPhone: '5129236299'
+  , testPhoneSms: '5129236299'
+
+  , testPhoneVoice: '5125390612'
 
   , emailEnabled: true
   }

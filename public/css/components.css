@@ -149,6 +149,7 @@ a.list-group-item .list-group-item-heading {
   top: 12px;
   margin: 0;
   padding: 0;
+  font-size: 13px;
 }
 
 .menu .list-item-legend dd,
@@ -208,6 +209,11 @@ a.list-group-item .list-group-item-heading {
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
+}
+
+.order-table > tbody > tr > td,
+.order-table > tfoot > tr > td {
+  border: none;
 }
 
 .order-table tr > td:first-child ~ td {

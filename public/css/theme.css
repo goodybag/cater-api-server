@@ -85,3 +85,11 @@ a.list-group-item .list-group-item-heading {
 .order-table .item-edit {
   color: #A29893;
 }
+
+/**
+ * Menu
+ */
+
+.menu .list-item-legend dt {
+  color: #8B8983;
+}

@@ -23,6 +23,22 @@ var capitalize = function(str) {
   return str[0].toUpperCase() + str.substring(1);
 }
 
+var dateTimeFormatter = function(date, format) {
+  if (!date) return '';
+  return moment(date).format(format || 'YYYY-MM-DD');
+}
+
+var timeFormatter = function(time, format) {
+  if (!time) return '';
+  if(typeof time == "object") time = time.toString();
+
+  var datetime = new moment();
+
+  time = time.match(/(\d+)(?::(\d\d))?\s*(PM?|pm?|p?)/);
+  datetime.hours( parseInt(time[1]) + (time[3] ? 12 : 0) );
+  datetime.minutes( parseInt(time[2]) || 0 );
+  return datetime.format(format || 'HH:mm');
+}
 
 // taken from here: http://stackoverflow.com/a/4467559
 var mod = function(a, n) {
@@ -65,7 +81,8 @@ var helpers = {
   },
 
   dollars: function(pennies) {
-    return (pennies / 100).toFixed(2);
+    var cents = parseInt(pennies);
+    return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2);
   },
 
   json: function(context) {
@@ -74,6 +91,10 @@ var helpers = {
 
   or: function(value1, value2) {
     return value1 || value2;
+  },
+
+  array: function(arr) {
+    return arr ? arr.join(', ') : '';
   },
 
   tax: tax,
@@ -111,6 +132,14 @@ var helpers = {
   timepart: function(date) {
     if (!date) return '';
     return moment(date).format('h:mm A');
+  },
+
+  formatDateTime: function(date, format) {
+    return dateTimeFormatter(date, format);
+  },
+
+  formatTime: function(time, format) {
+    return timeFormatter(time, format);
   },
 
   // TODO: make this a partial

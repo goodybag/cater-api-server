@@ -18,13 +18,13 @@
         <div class="form-group col-lg-6">
           <label for="order-date" class="control-label">Delivery Date</label>
           <input type="text" id="order-date" class="form-control order-form-field order-datetime"
-                 value="{{#if order.datetime}}{{datepart order.datetime}}{{else}}{{orderParams.date}}{{/if}}"
+                 value="{{#if order.datetime}}{{formatDateTime order.datetime "MM/DD/YYYY"}}{{else}}{{formatDateTime orderParams.date "MM/DD/YYYY"}}{{/if}}"
                  {{#unless order.editable}} disabled{{/unless}}>
         </div>
         <div class="form-group col-lg-6">
           <label for="order-time" class="control-label">Delivery Time</label>
           <input type="text" id="order-time" class="form-control order-form-field order-datetime"
-                 value="{{#if order.datetime}}{{timepart order.datetime}}{{else}}{{timepart orderParams.time}}{{/if}}"
+                 value="{{#if order.datetime}}{{formatDateTime order.datetime "hh:mm A"}}{{else}}{{formatTime orderParams.time "hh:mm A"}}{{/if}}"
                  {{#unless order.editable}} disabled{{/unless}}>
         </div>
       </div>
@@ -150,6 +150,7 @@
 {{#extend "scripts"}}
 <script src="/js/models/order-item.js"></script>
 <script src="/js/models/order.js"></script>
+<script src="/js/views/form-view.js"></script>
 <script src="/js/views/order-view.js"></script>
 <script src="/js/views/order-item-view.js"></script>
 <script>

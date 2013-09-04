@@ -60,6 +60,11 @@ module.exports = Model.extend({
   table: 'restaurants',
 
   findOne: function(query, orderParams, callback) {
+    if (utils.isFunction(orderParams)) {
+      callback = orderParams;
+      orderParams = null;
+    }
+
     if (!utils.isObject(query)) query = {where: {id: query}};
     query.limit = 1;
     query.distinct = false;
@@ -123,61 +128,6 @@ module.exports = Model.extend({
     }
 
     if (orderParams && (orderParams.date || orderParams.time)) {
-
-      var datetime = null;
-
-      if (orderParams.time) {//ISO-8601 string
-        datetime = moment(orderParams.time);
-      }
-
-      // determine if lead time is unacceptable only if date is provided
-      if (orderParams.date) {
-        // if date specified then update existing datetime object with date
-        // or create a new datetime object and set the time to be 23:59:59
-        // new datetime object is created only if an order time wasn't specified.
-        var date = moment(orderParams.date);
-        if(datetime == null) {
-          datetime = date;
-          datetime.hour(23);
-          datetime.minute(59);
-          datetime.second(59);
-        } else {
-          datetime.month(date.month());
-          datetime.date(date.date());
-          datetime.year(date.year());
-        }
-
-
-        // mongo-sql can't do the following in a nice way yet:
-        // hours: {$lte: "$EXTRACT(EPOCH FROM ('"+datetime.toISOString()+"' - now())/3600)$"}
-        // current work around in mongo-sql is this, but not going to do that:
-        // hours: {$custom: ['"hours" < EXTRACT(EPOCH FROM ($1 - now())/3600)', datetime.toISOString()]}
-        // instead going to calculating it in code
-        var hours = Math.floor(moment.duration(new moment(datetime) - new moment()).as('hours'));
-
-        query.joins.lead_times = {
-          type: 'left'
-        , alias: 'lead_times'
-        , on: {'restaurants.id': '$lead_times.restaurant_id$'}
-        , target: {
-            type: 'select'
-          , table: 'restaurant_lead_times'
-          , distinct: true
-          , columns: ['restaurant_id']
-          , where: {
-              'max_guests': {$gte: ((orderParams.guests) ? orderParams.guests : 0)}
-            , 'lead_time': {$lte: hours}
-            }
-          }
-        }
-
-        query.columns.push('(lead_times.restaurant_id IS NULL) AS is_bad_lead_time');
-        unacceptable.push('(lead_times.restaurant_id IS NULL)');
-      }
-
-      var day = moment(datetime).tz('America/Chicago').day();
-      var time = moment(datetime).utc().format('HH:mm');
-
       query.joins.delivery_times = {
         type: 'left'
       , alias: 'delivery_times'
@@ -187,25 +137,65 @@ module.exports = Model.extend({
         }
       }
 
-      if (orderParams.date) {
-        query.joins.delivery_times.on['delivery_times.day'] = day;
-      }
-
-      if (orderParams.time) {
-        query.joins.delivery_times.on['delivery_times.start_time'] = {$lte: time};
-        query.joins.delivery_times.on['delivery_times.end_time'] = {$gte: time};
-      }
-
       query.columns.push('(delivery_times.id IS NULL) AS is_bad_delivery_time');
       unacceptable.push('(delivery_times.id IS NULL)');
     }
 
+    // TODO: only allow valid dates in order params, currently assumes so
+    if (orderParams && orderParams.date) {
+      // determine if lead time is unacceptable only if date is provided
+      var datetime = moment(orderParams.date);
+
+      // TODO: only allow valid times in order params, currently assumes so
+      if(orderParams.time) {
+        var timeparts = orderParams.time.split(':');
+        datetime.hour(timeparts[0]);
+        datetime.minute(timeparts[1]);
+        datetime.second(0);
+      } else {
+        datetime.hour(23);
+        datetime.minute(59);
+        datetime.second(59);
+      }
+
+      // mongo-sql can't do the following in a nice way yet:
+      // hours: {$lte: "$EXTRACT(EPOCH FROM ('"+datetime.toISOString()+"' - now())/3600)$"}
+      // current work around in mongo-sql is this, but not going to do that:
+      // hours: {$custom: ['"hours" < EXTRACT(EPOCH FROM ($1 - now())/3600)', datetime.toISOString()]}
+      // instead going to calculating it in code
+      var hours = Math.floor(moment.duration(new moment(datetime) - new moment()).as('hours'));
+
+      query.joins.lead_times = {
+        type: 'left'
+      , alias: 'lead_times'
+      , on: {'restaurants.id': '$lead_times.restaurant_id$'}
+      , target: {
+          type: 'select'
+        , table: 'restaurant_lead_times'
+        , distinct: true
+        , columns: ['restaurant_id']
+        , where: {
+            'max_guests': {$gte: ((orderParams.guests) ? orderParams.guests : 0)}
+          , 'lead_time': {$lte: hours}
+          }
+        }
+      }
+
+      query.columns.push('(lead_times.restaurant_id IS NULL) AS is_bad_lead_time');
+      unacceptable.push('(lead_times.restaurant_id IS NULL)');
+
+      var day = moment(datetime).tz('America/Chicago').day();
+
+      query.joins.delivery_times.on['delivery_times.day'] = day;
+    }
+
+    if (orderParams && orderParams.time) {
+      query.joins.delivery_times.on['delivery_times.start_time'] = {$lte: orderParams.time};
+      query.joins.delivery_times.on['delivery_times.end_time'] = {$gte: orderParams.time};
+    }
+
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR ')+') as is_unacceptable' : '(false) as is_unacceptable');
 
-    Model.find.call(this, query, function(err, restaurants) {
-      callback.call(this, err, restaurants);
-    });
+    Model.find.call(this, query, callback);
   },
-
-
 });

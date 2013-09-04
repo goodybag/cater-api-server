@@ -1,0 +1,19 @@
+.category-buttons {
+  padding-top: 25px;
+}
+
+th.price-column {
+  width: 125px;
+}
+
+th.order-column, th.feeds-min-column, th.feeds-max-column {
+  width: 90px;
+}
+
+th.name-column {
+  width: 300px;
+}
+
+.item-button {
+  padding-top: 10px;
+}

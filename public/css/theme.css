@@ -1,0 +1,70 @@
+/*
+
+red:          #FCFDF6;
+orange:       #F0AD4E;
+blue:         #5BC0DE;
+green:        #5CB85C;
+beige:        #FBF9E5;
+offGray:      #340F02;
+offGrayBrown: #535145;
+
+*/
+
+body {
+  background: #FBF9E5 url('../img/body-bg.png');
+  color: #340F02;
+}
+
+.navbar {
+  background: #FCFDF6;
+  border-color: #CCCCC0;
+}
+
+.panel,
+.panel .panel-heading,
+.panel .list-group-item {
+  border-color: #CCCCC0;
+}
+
+/**
+ * Buttons
+ */
+
+.btn-primary {
+  background-color: #DC0500;
+  border-color: #B80300;
+}
+
+.btn-primary:hover, .btn-primary:focus,
+.btn-primary:active, .btn-primary.active {
+  background-color: #CF0F0B;
+  border-color: #9E0200;
+}
+
+/**
+ * Forms
+ */
+.form-control {
+  border-color: #C2C2BC;
+  font-weight: 300;
+}
+
+/**
+ * List Groups
+ */
+a.list-group-item {
+  color: #8B8983;
+}
+
+a.list-group-item .list-group-item-heading {
+  color: #5F4F10;
+}
+
+/**
+ * Pages
+ */
+
+.page-title {
+  color: #535145;
+  text-shadow: 0 1px 0 #FFF;
+}

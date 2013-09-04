@@ -21,6 +21,7 @@ var Order = Backbone.Model.extend({
       model.set('below_min', value < model.get('restaurant').minimum_order);
       model.set('submittable', value > 0 && !model.get('below_min'));
     }, this);
+    console.log("ORDER MODEL INIT", this.attributes)
   },
   requiredFields: [
     'datetime',

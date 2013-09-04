@@ -63,7 +63,6 @@ module.exports.get = function(req, res) {
     }
 
     res.render('menu', context, function(err, html) {
-      console.log(err)
       if (err) return res.error(errors.internal.UNKNOWN, err);
       return res.send(html);
     });

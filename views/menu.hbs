@@ -44,36 +44,31 @@
         <h2 class="panel-title">Your Order</h2>
       </div>
 
-
-      <div class="list-group list-group-flush order-items">
-        <h4 class="col-lg-12 no-items{{#if order.orderItems}} hide{{/if}}">No Items Yet</h4>
-        {{#each order.orderItems}}
-        <div class="list-group-item order-item" id="order-item-{{id}}">
-          {{> order_item_summary}}
-        </div>
-        <div class="list-group list-group-flush order-items">
-          <h4 class="col-lg-12 no-items{{#if order.orderItems}} hide{{/if}}">No Items Yet</h4>
+      {{#gt order.orderItems.length 0}}
+      <table class="order-table">
+        <tbody>
           {{#each order.orderItems}}
-          <div class="list-group-item order-item" id="order-item-{{id}}">
-            {{> order_item_summary}}
-          </div>
+          <tr>
+            <td class="item-name">
+              {{this.name}}
+              <a class="item-edit" href="#" data-id="{{this.id}}">Edit</a>
+            </td>
+            <td class="item-quantity">x {{this.quantity}}</td>
+            <td class="item-price">{{dollars this.sub_total}}</td>
+          </tr>
           {{/each}}
-        </div>
-        {{/each}}
-        <div class="panel-footer">
-          <div class="row">
-            <div class="col-lg-6">
-              {{#if restaurant.minimum_order}}min: ${{dollars restaurant.minimum_order}}{{/if}}
-            </div>
-            <div  class="col-lg-6">
-              <span class="pull-right">subtotal: $<span id="subtotal">{{dollars order.sub_total}}</span></span>
-            </div>
-          </div>
-          <div class="row checkout-btn-row{{#if order.below_min}} hide{{/if}}{{#unless order.sub_total}} hide{{/unless}}">
-            <a href="/orders/{{order.id}}" class="btn btn-primary pull-right">Check Out</a>
-          </div>
-        </div>
-      </div>
+
+          <tfoot>
+            <tr>
+              <td colspan="2" class="item-name"></td>
+              <td class="item-price"></td>
+            </tr>
+          </tfoot>
+        </tbody>
+      </table>
+      {{else}}
+      <p class="list-item-text no-items">Click a menu item on the left to add it to your order.</p>
+      {{/gt}}
     </div>
   </div>
 

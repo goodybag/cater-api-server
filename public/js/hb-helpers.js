@@ -151,6 +151,25 @@ var helpers = {
     var line2 = joinIf([joinIf([capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
     return joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
                    line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
+  },
+
+  eq: function(a, b, options){
+    return options[a == b ? 'fn' : 'inverse'](this);
+  },
+  dneq: function(a, b, options){
+    return options[a != b ? 'fn' : 'inverse'](this);
+  },
+  lt: function(a, b, options){
+    return options[a < b ? 'fn' : 'inverse'](this);
+  },
+  lte: function(a, b, options){
+    return options[a <= b ? 'fn' : 'inverse'](this);
+  },
+  gt: function(a, b, options){
+    return options[a > b ? 'fn' : 'inverse'](this);
+  },
+  gte: function(a, b, options){
+    return options[a >= b ? 'fn' : 'inverse'](this);
   }
 }
 

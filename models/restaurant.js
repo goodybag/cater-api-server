@@ -139,7 +139,7 @@ module.exports = Model.extend({
     if (orderParams && orderParams.date) {
       // determine if lead time is unacceptable only if date is provided
       var datetime = moment(orderParams.date);
-
+console.log(datetime)
       // TODO: only allow valid times in order params, currently assumes so
       if(orderParams.time) {
         var timeparts = orderParams.time.split(':');
@@ -179,7 +179,7 @@ module.exports = Model.extend({
       unacceptable.push('(lead_times.restaurant_id IS NULL)');
 
       var day = moment(datetime).tz('America/Chicago').day();
-
+console.log("DAY##################", moment(datetime).tz('America/Chicago').day())
       query.joins.delivery_times.on['delivery_times.day'] = day;
     }
 

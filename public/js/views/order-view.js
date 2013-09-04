@@ -25,10 +25,6 @@ var OrderView = Backbone.View.extend({
       this.updateAddressBlock();
     }
 
-    this.render();
-  },
-
-  render: function() {
     this.datepicker = this.$el.find(".order-form #order-date").eq(0).pickadate({
       format: 'mm/dd/yyyy'
     , min: new Date()
@@ -38,6 +34,7 @@ var OrderView = Backbone.View.extend({
       format: 'hh:i A'
     , interval: 15
     }).pickatime('picker');
+
   },
 
   onPriceChange: function(model, value, options) {

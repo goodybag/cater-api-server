@@ -2,15 +2,12 @@ var OrderParamsView = Backbone.View.extend({
   events: {
     'submit form': 'submit'
   }
+
 , initialize: function() {
     // the OrderParams model should be passed in
     // the el should also be passed in
     this.listenTo(this.model, 'change', this.updateFields, this);
 
-    this.render();
-  }
-
-, render: function() {
     this.datepicker = this.$el.find("input[name='date']").eq(0).pickadate({
       format: 'mm/dd/yyyy'
     , min: new Date()

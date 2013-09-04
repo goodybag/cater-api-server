@@ -1,3 +1,15 @@
+/*
+
+red:          #FCFDF6;
+orange:       #F0AD4E;
+blue:         #5BC0DE;
+green:        #5CB85C;
+beige:        #FBF9E5;
+offGray:      #340F02;
+offGrayBrown: #535145;
+
+*/
+
 body {
   background: #FBF9E5 url('../img/body-bg.png');
   color: #340F02;

@@ -1,5 +1,5 @@
 /**
- * Users Schema
+ * Restaurants Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -46,9 +46,13 @@ define(function(require) {
       type: types.varchar(5)
     , nullable: false
     }
-  , phone: {
+  , sms_phone: {
       type: types.varchar(10)
-    , nullable: false
+    , nullable: true
+    }
+  , voice_phone: {
+      type: types.varchar(10)
+    , nullable: true
     }
   , email: {
       type: types.text

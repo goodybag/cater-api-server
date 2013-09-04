@@ -69,7 +69,8 @@ var inserts = {
       , city: faker.Address.city()
       , state: faker.Address.usState(true)
       , zip: faker.Address.zipCodeFormat(0)
-      , phone: parseInt(faker.PhoneNumber.phoneNumberFormat(faker.definitions.phone_formats.length-1))
+      , sms_phone: config.testPhoneSms || parseInt(faker.PhoneNumber.phoneNumberFormat(faker.definitions.phone_formats.length-1))
+      , voice_phone: config.testPhoneVoice || parseInt(faker.PhoneNumber.phoneNumberFormat(faker.definitions.phone_formats.length-1))
       , email: config.testEmail || faker.Internet.email()
       , price: faker.Helpers.randomNumber(5) + 1
       , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))

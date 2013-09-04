@@ -30,7 +30,8 @@ var EditRestaurantView = FormView.extend({
 
   fieldMap: {
     name: '.restaurant-form .restaurant-name',
-    phone: '.restaurant-form .restaurant-phone',
+    sms_phone: '.restaurant-form .restaurant-sms-phone',
+    voice_phone: '.restaurant-form .restaurant-voice-phone',
     email: '.restaurant-form .restaurant-email',
     price: '.restaurant-form .restaurant-price',
     cuisine: '.restaurant-form .restaurant-cuisine',

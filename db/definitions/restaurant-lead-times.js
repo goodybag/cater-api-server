@@ -22,7 +22,7 @@ define(function(require) {
     , pk: true
     }
   , created_at: {
-      type: types.timestamp
+      type: types.timestamptz
     , nullable: false
     , default: 'NOW()'
     }

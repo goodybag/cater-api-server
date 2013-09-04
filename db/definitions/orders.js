@@ -22,7 +22,7 @@ define(function(require) {
     , pk: true
     }
   , created_at: {
-      type: types.timestamp
+      type: types.timestamptz
     , nullable: false
     , default: 'NOW()'
     }
@@ -61,7 +61,7 @@ define(function(require) {
     , nullable: true
     }
   , datetime: {
-      type: types.timestamp
+      type: types.timestamptz
     , nullable: true
     }
   , guests: {

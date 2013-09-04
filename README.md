@@ -2,6 +2,8 @@
 
 hacking this together as fast as possible
 
+```bower install```
+
 ## routes
 
 * `/users`

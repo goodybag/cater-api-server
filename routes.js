@@ -169,6 +169,18 @@ module.exports.register = function(app) {
   });
 
   /**
+   *  Order voice resource.  TwiML for phone notifications of order submitted.
+   */
+
+  app.get('/orders/:oid/voice', controllers.orders.voice);
+
+  app.all('/orders/:oid/voice', function(req, res, next) {
+    res.set('Allow', 'GET');
+    res.send(405);
+  });
+
+
+  /**
    *  Order resource.  An individual order.
    */
 

@@ -1,0 +1,71 @@
+<h1>Edit Restaurants</h1>
+
+<div class="list-group restaurants">
+  {{#each restaurants}}
+  {{> edit_restaurant_list_item}}
+  {{/each}}
+</div>
+
+<div class="row new-restaurant-row">
+  <div class="col-lg-2 col-lg-offset-10">
+    <button type="button" class="btn btn-primary new-restaurant pull-right">New Restaurant</button>
+  </div>
+</div>
+
+<div class="row new-restaurant-form">
+  <form id="restaurant-{{restaurant.id}}" class="restaurant-form hide">
+    {{> edit_restaurant_form}}
+  </form>
+</div>
+
+{{#extend "scripts"}}
+<script>
+  var partials = {'edit_restaurant_list_item': 'edit-restaurant-list-item.hbs'};
+  for (var name in partials) {
+    $.ajax({
+      type: 'GET',
+      url: '/partials/' + partials[name],
+      success: function(data, textStatus, jqXHR) {
+        Handlebars.registerPartial(name, Handlebars.compile(data));
+      },
+      dataType: 'html',
+      async: false
+    });
+  }
+</script>
+
+<script src="/js/amanda.js"></script>
+
+<script src="/js/models/restaurant.js"></script>
+<script src="/js/models/category.js"></script>
+<script src="/js/models/item.js"></script>
+
+<script src="/js/collections/categories.js"></script>
+<script src="/js/collections/items.js"></script>
+
+<script src="/js/views/form-view.js"></script>
+<script src="/js/views/edit-restaurant-view.js"></script>
+<script>
+  $('.new-restaurant').click(function() {
+    $('.new-restaurant-row, .restaurant-form').toggleClass('hide');
+  });
+
+  var restaurant = new (EditRestaurantView.extend({
+    setModel: function(model) {
+      EditRestaurantView.prototype.setModel.apply(this, arguments);
+      this.listenTo(this.model, 'sync', this.created, this);
+    },
+
+    created: function(model, response, options) {
+      this.setModel(new Restaurant());
+      this.$el.find('.form-control').val('');
+      this.trigger('created', model);
+    }
+  }))({el: '.new-restaurant-form'});
+
+  restaurant.on('created', function(model) {
+    $('.restaurants').append(Handlebars.partials.edit_restaurant_list_item(model.toJSON()));
+    $('.new-restaurant-row, .restaurant-form').toggleClass('hide');
+  });
+</script>
+{{/extend}}

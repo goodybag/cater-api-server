@@ -140,3 +140,19 @@ a.list-group-item .list-group-item-heading {
   font-weight: 300;
   font-size: 13px;
 }
+
+/**
+ * Order Summary
+ */
+
+.order-summary .panel-heading {
+  border-bottom: none;
+}
+
+/**
+ * Pages
+ */
+
+.page-menu .page-title {
+  font-size: 32px;
+}

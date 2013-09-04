@@ -66,9 +66,40 @@
   margin-left: 32px;
 }
 
+.order-params-bar .form-control {
+  width: 125px;
+}
+
+.order-params-bar .form-control[readonly] {
+  cursor: default;
+  background-color: #fff;
+}
+
 @media ( max-width: 768px ){
+  .order-params-bar {
+    width: 100%;
+  }
+
   .order-params-bar .btn.save {
     margin-left: 0;
+  }
+
+  .order-params-bar .form-group {
+    margin-left: 0;
+  }
+
+  .order-params-bar .form-control {
+    width: 100%;
+  }
+
+  .order-params-bar .form-group {
+    position: relative;
+  }
+
+  .order-params-bar .gb-input-icon {
+    position: absolute;
+    right: 6px;
+    top: 8px;
   }
 }
 
@@ -93,14 +124,15 @@
  * List Group Items
  */
 
+.list-group-item {
+  padding: 14px 17px;
+}
+
 a.list-group-item {
   cursor: pointer;
 }
 
-a.list-group-item:hover {
-  background-color: #F8F8EC;
-}
-
+.list-group-item .list-group-item-heading,
 a.list-group-item .list-group-item-heading {
   font-size: 14px;
   font-weight: 500;
@@ -150,11 +182,58 @@ a.list-group-item .list-group-item-heading {
  */
 
 .order-summary {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .order-summary .panel-heading {
   border-bottom: none;
+}
+
+.order-summary .list-group-item {
+  border: none;
+  padding: 10px 12px;
+}
+
+.order-summary .order-table {
+  width: 100%;
+}
+
+.order-table td {
+  vertical-align: top;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+.order-table tr > td:first-child ~ td {
+  padding-left: 6px;
+}
+
+.order-table .item-name {
+  font-weight: 700;
+}
+
+.order-table .item-name .item-edit {
+  font-weight: 300;
+}
+
+.order-table .item-name .item-edit:before {
+  content: "";
+  display: block;
+}
+
+.order-table .item-quantity {
+  width: 40px;
+}
+
+.order-table .item-price {
+  width: 40px;
+  text-align: right;
+}
+
+.order-table .item-edit {
+  color: #A29893;
+  text-decoration: underline;
 }
 
 /**

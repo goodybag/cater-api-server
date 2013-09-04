@@ -47,3 +47,12 @@ a.list-group-item {
 a.list-group-item .list-group-item-heading {
   color: #5F4F10;
 }
+
+/**
+ * Pages
+ */
+
+.page-title {
+  color: #535145;
+  text-shadow: 0 1px 0 #FFF;
+}

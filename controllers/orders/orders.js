@@ -7,6 +7,7 @@ var models = require('../../models');
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
+var moment = require('moment');
 
 module.exports.auth = function(req, res, next) {
   if (req.session.user != null && utils.contains(req.session.user.groups, 'admin'))
@@ -105,10 +106,13 @@ module.exports.changeStatus = function(req, res) {
           utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order.', html);
         });
         if (order.attributes.restaurant.sms_phone) {
+          var msg = 'You have received a new Goodybag order for $' + order.attributes.sub_total.toFixed(2)
+          + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY HH:mm a') + '.'
+          + '\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
           twilio.sendSms({
             to: order.attributes.restaurant.sms_phone,
             from: config.phone.orders,
-            body: 'You have received a new Goodybag order.\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
+            body: msg
           }, function(err, result) { /* TODO: error handling */ });
         }
       }

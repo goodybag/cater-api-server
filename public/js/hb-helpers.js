@@ -160,6 +160,19 @@ var helpers = {
     return joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
                    line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
   }
+
+  phoneNumber: function(num, format, options) {
+    if (options === undefined) {
+      options = format;
+      format = null;
+    }
+    if (!/\d{10}/.test(num)) return;
+    var result = format || '(xxx) xxx-xxxx';
+    var str = '' + num;
+    for (var i in str)
+      result = result.replace('x', str[i]);
+    return result;
+  }
 }
 
 if (typeof module !== 'undefined') module.exports = helpers;

@@ -128,6 +128,10 @@ a.list-group-item .list-group-item-heading {
   font-weight: 300;
 }
 
+.menu .list-item-legend dt:first-child ~ dt {
+  margin-left: 20px;
+}
+
 .menu .list-item-legend dd {
   color: #000;
 }
@@ -144,6 +148,10 @@ a.list-group-item .list-group-item-heading {
 /**
  * Order Summary
  */
+
+.order-summary {
+  font-size: 13px;
+}
 
 .order-summary .panel-heading {
   border-bottom: none;

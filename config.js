@@ -43,12 +43,12 @@ var config = {
     , orders: 'orders@goodybag.com'
     , waitlist: 'waitlist@goodybag.com'
     }
-  }
   , phone: {
       main: '5126674224'
-    , support: undefined // TODO: support phone number
-    , orders: undefined // TODO: order phone number
+    , support: '5122706333'
+    , orders: '5122706555'
     }
+  }
 
 , dev: {
     http: {

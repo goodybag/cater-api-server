@@ -72,7 +72,6 @@ utils.del = function(url, callback){
 var mailgun = new Mailgun(config.mailgun.apiKey);
 
 utils.sendMail = function(to, from, subject, html, text, callback) {
-  console.log(arguments);
   if (lodash.isFunction(text) && callback === undefined) {
     callback = text;
     text = undefined;

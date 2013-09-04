@@ -12,7 +12,12 @@ module.exports.register = function(app) {
    * Restaurants resource.  The collection of all restaurants.
    */
 
-  app.get('/restaurants', restrict(['client', 'admin']), controllers.restaurants.list);
+  app.get('/restaurants', restrict(['client', 'admin']), function(req, res, next) {
+    if (req.query.edit) return next();
+    controllers.restaurants.list.apply(this, arguments);
+  });
+
+  app.get('/restaurants', restrict('admin'), controllers.restaurants.editAll);
 
   app.post('/restaurants', restrict('admin'), controllers.restaurants.create);
 
@@ -27,12 +32,21 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid', restrict(['client', 'admin']), controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
-  app.get('/restaurants/:rid', restrict(['client', 'admin']), controllers.restaurants.get);
+  app.get('/restaurants/:rid', restrict(['client', 'admin']), function(req, res, next) {
+    if (req.query.edit) return next();
+    controllers.restaurants.get.apply(this, arguments);
+  });
+
+  app.get('/restaurants/:rid', restrict('admin'), controllers.restaurants.edit);
 
   app.put('/restaurants/:rid', restrict('admin'), controllers.restaurants.update);
 
+  app.patch('/restaurants/:rid', restrict('admin'), controllers.restaurants.update);
+
+  app.del('/restaurants/:rid', restrict('admin'), controllers.restaurants.remove);
+
   app.all('/restaurants/:rid', restrict(['client', 'admin']), function(req, res, next) {
-    res.set('Allow', 'GET, PUT');
+    res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
 
@@ -68,10 +82,12 @@ module.exports.register = function(app) {
 
   app.put('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.update);
 
+  app.patch('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.update);
+
   app.del('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.remove);
 
   app.all('/restaurants/:rid/categories/:cid', restrict(['client', 'admin']), function(req, res, next) {
-    res.set('Allow', 'GET, PUT, DELETE');
+    res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
 
@@ -130,10 +146,12 @@ module.exports.register = function(app) {
 
   app.put('/items/:id', restrict('admin'), controllers.items.update);
 
+  app.patch('/items/:id', restrict('admin'), controllers.items.update);
+
   app.del('/items/:id', restrict('admin'), controllers.items.remove);
 
   app.all('/items/:id', restrict(['client', 'admin']), function(req, res, next) {
-    res.set('Allow', 'GET, POST, DELETE');
+    res.set('Allow', 'GET, PUT, PATCH,  DELETE');
     res.send(405);
   });
 

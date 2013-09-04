@@ -81,7 +81,8 @@ var helpers = {
   },
 
   dollars: function(pennies) {
-    return (pennies / 100).toFixed(2);
+    var cents = parseInt(pennies);
+    return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2);
   },
 
   json: function(context) {
@@ -90,6 +91,10 @@ var helpers = {
 
   or: function(value1, value2) {
     return value1 || value2;
+  },
+
+  array: function(arr) {
+    return arr ? arr.join(', ') : '';
   },
 
   tax: tax,

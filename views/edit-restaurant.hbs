@@ -1,0 +1,64 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/edit-restaurant.css">
+{{/extend}}
+
+<form id="restaurant-{{restaurant.id}}" class="restaurant-form">
+  {{> edit_restaurant_form}}
+</form>
+
+<div class="categories">
+  {{#each restaurant.categories}}
+  <div id="category-{{this.id}}" class="panel">
+    {{> edit_category}}
+  </div>
+  {{/each}}
+</div>
+
+<div class="row">
+  <div class="col-lg-1 col-lg-offset-11">
+    <button type="button" class="btn btn-primary new-category pull-right">New Category</button>
+  </div>
+</div>
+
+
+{{#extend "scripts"}}
+<script>
+  var partials = {'edit_item_row': 'edit-item-row.hbs', 'edit_category': 'edit-category.hbs'};
+  for (var name in partials) {
+    $.ajax({
+      type: 'GET',
+      url: '/partials/' + partials[name],
+      success: function(data, textStatus, jqXHR) {
+        Handlebars.registerPartial(name, Handlebars.compile(data));
+      },
+      dataType: 'html',
+      async: false
+    });
+  }
+</script>
+
+<script src="/js/amanda.js"></script>
+
+<script src="/js/models/restaurant.js"></script>
+<script src="/js/models/category.js"></script>
+<script src="/js/models/item.js"></script>
+
+<script src="/js/collections/categories.js"></script>
+<script src="/js/collections/items.js"></script>
+
+<script src="/js/views/form-view.js"></script>
+<script src="/js/views/edit-restaurant-view.js"></script>
+<script src="/js/views/edit-category-view.js"></script>
+<script src="/js/views/edit-item-view.js"></script>
+<script>
+  var restaurant = new EditRestaurantView({ el: '#main', model: new Restaurant({{{json restaurant}}}) });
+
+  {{#each restaurant.categories}}
+  var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', model: restaurant.model.categories.get({{id}}), restaurant: restaurant });
+  category{{id}}.items = [{{#each items}}
+    new EditItemView({el: '#edit-item-{{id}}', model: category{{../id}}.model.items.get({{id}}),  category: category{{../id}} }),
+  {{/each}}];
+  restaurant.categories.push(category{{id}});
+  {{/each}}
+</script>
+{{/extend}}

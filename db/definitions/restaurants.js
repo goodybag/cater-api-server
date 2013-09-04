@@ -43,11 +43,11 @@ define(function(require) {
     , nullable: false
     }
   , zip: {
-      type: types.numeric(5)
+      type: types.varchar(5)
     , nullable: false
     }
   , phone: {
-      type: types.numeric(10)
+      type: types.varchar(10)
     , nullable: false
     }
   , email: {

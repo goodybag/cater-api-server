@@ -104,6 +104,7 @@ module.exports.changeStatus = function(req, res) {
           // TODO: error handling
           utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order.', html);
         });
+
         if (order.attributes.restaurant.sms_phone) {
           var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
           + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY HH:mm a') + '.'
@@ -113,6 +114,15 @@ module.exports.changeStatus = function(req, res) {
             from: config.phone.orders,
             body: msg
           }, function(err, result) { /* TODO: error handling */ });
+        }
+
+        if (order.attributes.restaurant.voice_phone) {
+          twilio.makeCall({
+            to: order.attributes.restaurant.voice_phone,
+            from: config.phone.orders,
+            url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
+            method: 'GET'
+          }, function(err, result) { /* TODO: error handling */ })
         }
       }
 

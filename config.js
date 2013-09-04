@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies
  */
@@ -35,10 +34,19 @@ var config = {
       apiKey: 'key-8ffj79wzb2dda3s6r7u93o4yz07oxxu8'
     , publicApiKey: 'pubkey-45a1-ynm6dw4tmk8egc6izhgqntwir79'
     }
+  , twilio: {
+      account: 'AC4ec9863aecd8248803144972fc51bac0'
+    , token: 'f45e26c40cd7481c872c3552676b598b'
+    }
   , emails: {
       support: 'support@goodybag.com'
     , orders: 'orders@goodybag.com'
     , waitlist: 'waitlist@goodybag.com'
+    }
+  , phone: {
+      main: '5126674224'
+    , support: '5122706333'
+    , orders: '5122706555'
     }
   }
 
@@ -57,6 +65,10 @@ var config = {
   , baseUrl: 'http://localhost:3000'
 
   , testEmail: 'geoff@goodybag.com'
+
+  , testPhoneSms: '5129236299'
+
+  , testPhoneVoice: '5125390612'
 
   , emailEnabled: true
   }

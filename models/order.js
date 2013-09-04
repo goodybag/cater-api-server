@@ -129,6 +129,11 @@ module.exports = Model.extend({
     , on: {'id': '$orders.restaurant_id$'}
     }
 
+    query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = orders.restaurant_id)) AS delivery_zips");
+    query.columns.push("(SELECT row_to_json(r) FROM (SELECT start_time, end_time FROM restaurant_delivery_times WHERE restaurant_id = orders.restaurant_id) r) AS delivery_times");
+    query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id ORDER BY lead_time ASC) r ) AS lead_times");
+    query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id) AS max_guests");
+
     query.columns.push('(submitted.created_at) as submitted');
 
     query.joins.order_statuses = {

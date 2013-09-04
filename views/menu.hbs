@@ -23,13 +23,13 @@
             {{#each items}}
             <a class="list-group-item item" id="item-{{id}}">
               <h5 class="list-group-item-heading">{{name}}</h5>
+              <p class="list-group-item-text">{{description}}</p>
               <dl class="list-item-legend">
                 <dt>Feeds</dt>
                 <dd>{{feeds_min}}-{{feeds_max}}</dd>
                 <dt>Price</dt>
                 <dd>{{dollars price}}</dd>
               </dl>
-              <p class="list-group-item-text">{{description}}</p>
             </a>
             {{/each}}
           </div>

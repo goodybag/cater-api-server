@@ -137,6 +137,7 @@ a.list-group-item {
 a.list-group-item .list-group-item-heading {
   font-size: 14px;
   font-weight: 500;
+  margin-bottom: 2px;
 }
 
 /**
@@ -216,6 +217,10 @@ a.list-group-item .list-group-item-heading {
   border: none;
 }
 
+.order-table > tbody > tr:last-child > td {
+  padding-bottom: 16px;
+}
+
 .order-table tr > td:first-child ~ td {
   padding-left: 6px;
 }
@@ -223,6 +228,16 @@ a.list-group-item .list-group-item-heading {
 .order-table .item-name {
   font-weight: 700;
   line-height: 14px;
+}
+
+.order-table tfoot {
+  font-weight: 700;
+}
+
+.order-table > tfoot > tr > td {
+  border-top: dotted #ccc 1px;
+  padding-top: 16px;
+  padding-bottom: 0;
 }
 
 .order-table .item-name .item-edit {

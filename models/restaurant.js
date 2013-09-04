@@ -67,6 +67,7 @@ module.exports = Model.extend({
 
     if (!utils.isObject(query)) query = {where: {id: query}};
     query.limit = 1;
+    query.distinct = false;
     return this.find(query, orderParams, function(err, models) {
       if (err) return callback(err);
       callback(null, models[0]);
@@ -83,7 +84,12 @@ module.exports = Model.extend({
     query.columns = query.columns || ['*'];
     query.order = query.order || ["restaurants.id"];
     query.joins = query.joins || {};
-    query.distinct = true;
+    query.distinct = (query.distinct != null) ? query.distinct : true;
+
+    query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id)) AS delivery_zips");
+    query.columns.push("(SELECT row_to_json(r) FROM (SELECT start_time, end_time FROM restaurant_delivery_times WHERE restaurant_id = restaurants.id) r) AS delivery_times");
+    query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
+    query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");
 
     var unacceptable = [];
     if (orderParams && orderParams.zip) {

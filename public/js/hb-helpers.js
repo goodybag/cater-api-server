@@ -23,20 +23,12 @@ var capitalize = function(str) {
   return str[0].toUpperCase() + str.substring(1);
 }
 
-var dateTimeFormatter = function(date, format, options) {
-  if (options === undefined) {
-    options = format;
-    format = undefined;
-  }
+var dateTimeFormatter = function(date, format) {
   if (!date) return '';
   return moment(date).format(format || 'YYYY-MM-DD');
 }
 
-var timeFormatter = function(time, format, options) {
-  if (options === undefined) {
-    options = format;
-    format = undefined;
-  }
+var timeFormatter = function(time, format) {
   if (!time) return '';
   if(typeof time == "object") time = time.toString();
 

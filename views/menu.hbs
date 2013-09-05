@@ -167,12 +167,14 @@
   var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
   var orderParamsModal = new OrderParamsModal({model: orderParams, el: '#order-params-modal', loginNeeded: {{#if user.id}}false{{else}}true{{/if}}, orderParamsNeeded: !{{{json orderParams.complete}}} });
 
-  var orderView = new OrderSummaryView({el: '.order-summary', model: new Order( {{{json order}}} )});
+  var orderModel = new Order( {{{json order}}} );
 
-  var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderView.model.orderItems});
+  var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems});
+
+  var orderView = new OrderSummaryView({el: '.order-summary', model: orderModel, itemModalView: itemModalView});
 
   {{#each order.orderItems}}
-  new OrderItemSummaryView({el: '#order-item-{{id}}', model: orderView.model.orderItems.get({{id}}), itemModalView: itemModalView});
+  new OrderItemSummaryView({el: '#order-item-{{id}}', model: orderModel.orderItems.get({{id}}), itemModalView: itemModalView});
   {{/each}}
 
   var itemViews = [

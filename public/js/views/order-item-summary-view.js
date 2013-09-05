@@ -1,14 +1,14 @@
 var OrderItemSummaryView = Backbone.View.extend({
-  tagName: 'div',
+  tagName: 'tr',
 
-  className: 'list-group-item order-item',
+  className: 'order-item',
 
   id: function() { return 'order-item-' + this.model.id; },
 
   template: Handlebars.partials.order_item_summary,
 
   events: {
-    'click .edit': 'openEditModal',
+    'click .item-edit': 'openEditModal',
     'click .remove-order-item-btn': 'destroy'
   },
 
@@ -20,12 +20,13 @@ var OrderItemSummaryView = Backbone.View.extend({
   },
 
   render: function() {
-    console.log(this.model instanceof Order, this.model.toJSON())
+    // this.setElement( $( '<tr>' + this.template(this.model.toJSON()) + '</tr>') );
     this.$el.html(this.template(this.model.toJSON()));
     return this;
   },
 
-  openEditModal: function() {
+  openEditModal: function(e) {
+    e.preventDefault();
     this.options.itemModalView.provideModel(this.model);
     this.options.itemModalView.show();
   },

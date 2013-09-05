@@ -7,11 +7,17 @@ var Restaurant = Backbone.Model.extend({
         minLength: 1,
         required: true
       },
-      phone: {
-        type: 'string',
+      sms_phone: {
+        type: ['string', 'null'],
         length: 10,
         pattern: /^\d*$/, //contains only digits
-        required: true
+        required: false
+      },
+      voice_phone: {
+        type: ['string', 'null'],
+        length: 10,
+        pattern: /^\d*$/, //contains only digits
+        required: false
       },
       email: {
         type: 'string',

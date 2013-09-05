@@ -21,8 +21,12 @@ var EditRestaurantView = FormView.extend({
   setModel: function(model) {
     this.stopListening(this.model);
     this.model = model;
-    this.listenTo(this.model, 'sync', function() {
-      this.$el.find('.restaurant-form .form-control').parent().removeClass('has-success');
+    this.listenTo(this.model, {
+      sync: function() {
+        this.$el.find('.restaurant-form .form-control').parent().removeClass('has-success');
+      },
+      'change:sms_phone': utils.bind(this.formatPhone, this, 'sms_phone'),
+      'change:voice_phone': utils.bind(this.formatPhone, this, 'voice_phone')
     });
     this.listenTo(this.model.categories, 'sort', this.sortCategories, this);
     return this;
@@ -30,7 +34,8 @@ var EditRestaurantView = FormView.extend({
 
   fieldMap: {
     name: '.restaurant-form .restaurant-name',
-    phone: '.restaurant-form .restaurant-phone',
+    sms_phone: '.restaurant-form .restaurant-sms-phone',
+    voice_phone: '.restaurant-form .restaurant-voice-phone',
     email: '.restaurant-form .restaurant-email',
     price: '.restaurant-form .restaurant-price',
     cuisine: '.restaurant-form .restaurant-cuisine',
@@ -50,6 +55,12 @@ var EditRestaurantView = FormView.extend({
     cuisine: function() {
       var val = this.$el.find(this.fieldMap.cuisine).val().trim();
       return val ? _.invoke(val.split(','), 'trim') : [];
+    },
+    sms_phone: function() {
+      return this.$el.find(this.fieldMap.sms_phone).val().replace(/[^\d]/g, '');
+    },
+    voice_phone: function() {
+      return this.$el.find(this.fieldMap.voice_phone).val().replace(/[^\d]/g, '');
     }
   },
 
@@ -78,5 +89,10 @@ var EditRestaurantView = FormView.extend({
 
     _.invoke(this.categories, 'remove');
     _.invoke(this.categories, 'attach');
+  },
+
+  // TODO: generic field formatter system.
+  formatPhone: function(field, model, value, options) {
+    this.$el.find(this.fieldMap[field]).val(Handlebars.helpers.phoneNumber(value))
   }
 });

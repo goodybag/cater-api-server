@@ -5,9 +5,14 @@
     <input type="text" class="form-control restaurant-name" placeholder="Name of Restaurant" value="{{restaurant.name}}">
   </div>
   <div class="form-group">
-    <label class="control-label">Phone</label>
-    <input type="text" maxlength="10" class="form-control restaurant-phone" value="{{restaurant.phone}}" placeholder="5125551234">
-    <span class="help-block">Please enter phone number as 10 digit string with no spaces or dashes.</span>
+    <label class="control-label">SMS Phone</label>
+    <input type="text" class="form-control restaurant-sms-phone" value="{{phoneNumber restaurant.sms_phone}}" placeholder="(512) 555-1234">
+    <span class="help-block">Ten digit phone number to use for sms order alerts.  Leave blank for no sms order alerts.</span>
+  </div>
+  <div class="form-group">
+    <label class="control-label">Voice Phone</label>
+    <input type="text" class="form-control restaurant-voice-phone" value="{{phoneNumber restaurant.voice_phone}}" placeholder="(512) 555-1234">
+    <span class="help-block">Ten digit phone number to use for voice order alerts.  Leave blank for no phone order alerts.</span>
   </div>
   <div class="form-group">
     <label class="control-label">Email</label>

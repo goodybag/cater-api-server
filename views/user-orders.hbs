@@ -1,13 +1,28 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/order.css">
+{{/extend}}
+
 <div class="row">
   <h1 class="text-center">My Orders</h1>
+  <div class="col-lg-6 col-lg-offset-3">
   <div class="list-group">
     {{#each orders}}
-    <a class="list-group-item" href="/orders/{{this.id}}">
-      <h4 class="list-group-item-heading">{{this.restaurant.name}}</h4>
-      <p>Date: {{this.created_at}}</p>
-      <p>Delivery Date: {{this.datetime}}</p>
-      <span class="label status {{statusLabel this.status}}">{{this.status}}</span>
-      <span class="badge">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
+    <a class="list-group-item order-list-group-item" href="/orders/{{this.id}}">
+      <h4 class="pull-right no-margin">
+        <span class="label order-label status {{statusLabel this.status}}">{{capitalize this.status}}</span>
+      </h4>
+      <h5 class="list-group-item-heading"><strong>{{this.restaurant.name}}</strong></h5>
+      <ul class="list-unstyled">
+        <li>
+          Date Created: {{datepart this.created_at}} {{timepart this.created_at}}
+        </li>
+        <li>
+          Delivery Date: {{datepart this.datetime}} {{timepart this.datetime}}
+        </li>
+        {{#if this.sub_total}}
+          <li>Subtotal: <strong>${{dollars this.sub_total}}</strong></li>
+        {{/if}}
+      </ul>
     </a>
     {{else}}
     <h2 class="text-center">No Orders</h2>

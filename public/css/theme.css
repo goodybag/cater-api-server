@@ -65,6 +65,10 @@ a.list-group-item .list-group-item-heading {
   color: #5F4F10;
 }
 
+a.list-group-item strong {
+  color: #5F4F10;
+}
+
 /**
  * Pages
  */

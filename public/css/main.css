@@ -36,6 +36,11 @@ header.navbar {
   background-color: #fff;
 }
 
+#order-params-modal .form-control[readonly] {
+  cursor: default;
+  background-color: #fff;
+}
+
 .restaurants .disabled {
   color: #bebebe;
 }

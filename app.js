@@ -4,7 +4,8 @@
  */
 
 var
-  express = require('express')
+  config = require('./config')
+, express = require('express')
 , hbs = require('hbs')
 , utils = require('./utils')
 , routes = require('./routes')
@@ -20,7 +21,7 @@ var middleware = {
 var app = module.exports = express();
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', config.http.port || 3000);
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.compress());

@@ -67,8 +67,18 @@ module.exports = Model.extend({
 
   find: function(query, callback) {
     // TODO: alter query to add latest status
+
+    // query.order needs orders.id in order for distinct to work properly, this
+    // messes with the user passing in a query object with different options.
+
+    // TODO: It doesn't make sense to embed all this in the find function.
+    // We should put this logic in another function or move it up to the code
+    // that wants to execute such a query. The problem is that find is starting
+    // to make too many assumptions about data you want back, and is limiting
+    // your ability to actually control that.
+
     query = query || {};
-    query.distinct = true;
+    query.distinct = ["orders.id"];
     query.columns = query.columns || ['*'];
     query.order = query.order || ["orders.id"];
 
@@ -123,11 +133,18 @@ module.exports = Model.extend({
     query.columns.push('restaurants.delivery_fee')
     query.columns.push('restaurants.minimum_order');
     query.columns.push('restaurants.email');
+    query.columns.push('restaurants.sms_phone');
+    query.columns.push('restaurants.voice_phone');
 
     query.joins.restaurants = {
       type: 'inner'
     , on: {'id': '$orders.restaurant_id$'}
     }
+
+    query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = orders.restaurant_id)) AS delivery_zips");
+    query.columns.push("(SELECT row_to_json(r) FROM (SELECT start_time, end_time FROM restaurant_delivery_times WHERE restaurant_id = orders.restaurant_id) r) AS delivery_times");
+    query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id ORDER BY lead_time ASC) r ) AS lead_times");
+    query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id) AS max_guests");
 
     query.columns.push('(submitted.created_at) as submitted');
 
@@ -226,7 +243,7 @@ module.exports = Model.extend({
     unacceptable.push('(delivery_times.id IS NULL)');
 
 
-    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' AND')+') as is_unacceptable' : '(false) as is_unacceptable');
+    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
 
     Model.find.call(this, query, function(err, orders) {
       if (!err) {
@@ -236,12 +253,16 @@ module.exports = Model.extend({
             name: order.attributes.name,
             delivery_fee: order.attributes.delivery_fee,
             minimum_order: order.attributes.minimum_order,
-            email: order.attributes.email
+            email: order.attributes.email,
+            sms_phone: order.attributes.sms_phone,
+            voice_phone: order.attributes.voice_phone
           };
           delete order.attributes.name;
           delete order.attributes.delivery_fee;
           delete order.attributes.minimum_order;
           delete order.attributes.email;
+          delete order.attributes.sms_phone;
+          delete order.attributes.voice_phone;
         });
       }
       callback.call(this, err, orders);

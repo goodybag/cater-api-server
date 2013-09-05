@@ -23,7 +23,6 @@ var modifyAttributes = function(callback, err, orders) {
       'is_bad_lead_time',
       'is_bad_delivery_time',
       'delivery_zips',
-      'delivery_times',
       'lead_times',
       'max_guests'
     ];

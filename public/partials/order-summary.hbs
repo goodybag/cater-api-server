@@ -1,5 +1,9 @@
 {{#gt order.orderItems.length 0}}
 <div class="list-group-item list-group-item-order-table">
+  <div class="list-group-item hide">
+    <p class="list-item-text no-items">Click a menu item on the left to add it to your order.</p>
+  </div>
+
   <table class="table order-table">
     <tbody>
       {{#each order.orderItems}}
@@ -17,10 +21,6 @@
 </div>
 <div class="list-group-item list-group-item-checkout">
   <button class="btn btn-primary btn-checkout">Checkout</button>
-</div>
-
-<div class="list-group-item hide">
-  <p class="list-item-text no-items">Click a menu item on the left to add it to your order.</p>
 </div>
 {{else}}
 <div class="list-group-item">

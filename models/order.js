@@ -28,8 +28,9 @@ var modifyAttributes = function(callback, err, orders) {
       'max_guests'
     ];
     utils.each(orders, function(order) {
-      order.attributes.restaurant = utils.extend({ id: order.attributes.restaurant_id } , utils.pick(order.attributes, restaurantFields));
+      order.attributes.restaurant = utils.extend({ id: order.attributes.restaurant_id, delivery_times: utils.object(order.attributes.delivery_times) } , utils.pick(order.attributes, restaurantFields));
       utils.each(restaurantFields, function(field) { delete order.attributes.field; });
+      o
     });
   }
   callback.call(this, err, orders);
@@ -119,6 +120,48 @@ module.exports = Model.extend({
 
     query.columns.push('latest.status');
 
+    query.with = {
+      dt: {
+        type: 'select'
+      , columns: [
+          'restaurant_id'
+        , {
+            type: 'array_to_json'
+          , as: 'delivery_times'
+          , expression: {
+              type: 'array_agg'
+            , expression: {
+                type: 'array_to_json'
+              , expression: 'array[(day::text)::json, times]'
+              }
+            }
+          }
+        ]
+      , table: {
+          type: 'select'
+        , table: 'restaurant_delivery_times'
+        , columns: [
+            'restaurant_id'
+          , 'day'
+          , {
+              type: 'array_to_json'
+            , as: 'times'
+            , expression: {
+                type: 'array_agg'
+              , expression: {
+                  type: 'array_to_json'
+                , expression: 'array[start_time, end_time]'
+                }
+              }
+            }
+          ]
+        , groupBy: ['restaurant_id', 'day']
+        , alias: 'day_hours'
+        }
+      , groupBy: 'restaurant_id'
+      }
+    };
+
     query.joins = query.joins || {};
 
     query.joins.latest = {
@@ -177,9 +220,15 @@ module.exports = Model.extend({
     }
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = orders.restaurant_id)) AS delivery_zips");
-    query.columns.push("(SELECT row_to_json(r) FROM (SELECT start_time, end_time FROM restaurant_delivery_times WHERE restaurant_id = orders.restaurant_id) r) AS delivery_times");
+    query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id ORDER BY lead_time ASC) r ) AS lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id) AS max_guests");
+
+    query.joins.hours = {
+      type: 'inner'
+    , target: 'dt'
+    , on: { 'orders.restaurant_id': '$hours.restaurant_id$' }
+    }
 
     query.columns.push('(submitted.created_at) as submitted');
 
@@ -276,7 +325,6 @@ module.exports = Model.extend({
 
     query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
     unacceptable.push('(delivery_times.id IS NULL)');
-
 
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
 

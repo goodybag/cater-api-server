@@ -364,6 +364,11 @@ a.list-group-item .list-group-item-heading {
   margin-bottom: 0;
 }
 
+.modal-item .control-label {
+  padding: 0;
+  font-weight: 500;
+}
+
 /* Specific Modal types overrides */
 
 @media (max-width: 800px){
@@ -373,7 +378,7 @@ a.list-group-item .list-group-item-heading {
 }
 
 @media (max-width: 768px){
-  .item-legend-wrapper {
+  .modal-item .item-legend-wrapper {
     text-align: left;
   }
 
@@ -400,5 +405,15 @@ a.list-group-item .list-group-item-heading {
   .modal-footer-right-actions .control-label {
     padding-left: 0;
     padding-right: 0;
+  }
+}
+
+@media (max-width: 540px){
+  /* Sorry for this hackiness */
+  .modal-item .btn + .btn-item-remove {
+    display: block;
+    margin: 0;
+    margin-top: -83px;
+    margin-bottom: 49px;
   }
 }

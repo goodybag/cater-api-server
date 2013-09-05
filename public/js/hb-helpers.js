@@ -172,6 +172,13 @@ var helpers = {
     for (var i in str)
       result = result.replace('x', str[i]);
     return result;
+  },
+
+  capitalize: function(str) {
+    if(str && typeof str === 'string') {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    return str;
   }
 }
 

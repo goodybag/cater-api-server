@@ -29,7 +29,7 @@
         delivery zips: {{array order.restaurant.delivery_zips}}
       </div>
       <div class="col-lg-6">
-        delivery hours: {{order.restaurant.delivery_times}}
+        delivery hours: {{{json order.restaurant.delivery_times}}}
       </div>
     </div>
     <div class="row">
@@ -37,7 +37,7 @@
         max guests: {{order.restaurant.max_guests}}
       </div>
       <div class="col-lg-6">
-        lead times: {{order.restaurant.lead_times}}
+        lead times: {{{json order.restaurant.lead_times}}}
       </div>
     </div>
   </div>

@@ -101,7 +101,7 @@
   }
 
   .order-params-bar .form-control {
-    width: 100%;
+    width: 100% !important;
   }
 
   .order-params-bar .form-group {
@@ -112,6 +112,13 @@
     position: absolute;
     right: 6px;
     top: 8px;
+  }
+}
+
+
+@media ( min-width: 769px ) and ( max-width: 992px ){
+  .form-group-title {
+    display: none!important;
   }
 }
 
@@ -129,6 +136,34 @@
   vertical-align: middle;
   margin-bottom: 2px;
   margin-left: 1px;
+}
+
+/**
+ * Items
+ */
+
+.item-legend {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+}
+
+.item-legend dd,
+.item-legend dt {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.item-legend dt {
+  font-weight: 300;
+}
+
+.item-legend dt:first-child ~ dt {
+  margin-left: 20px;
+}
+
+.item-legend dd {
+  color: #000;
 }
 
 
@@ -159,27 +194,6 @@ a.list-group-item .list-group-item-heading {
   position: absolute;
   right: 12px;
   top: 12px;
-  margin: 0;
-  padding: 0;
-  font-size: 13px;
-}
-
-.menu .list-item-legend dd,
-.menu .list-item-legend dt {
-  display: inline-block;
-  vertical-align: baseline;
-}
-
-.menu .list-item-legend dt {
-  font-weight: 300;
-}
-
-.menu .list-item-legend dt:first-child ~ dt {
-  margin-left: 20px;
-}
-
-.menu .list-item-legend dd {
-  color: #000;
 }
 
 .menu .list-group-item-heading {
@@ -284,20 +298,73 @@ a.list-group-item .list-group-item-heading {
  * Modals
  */
 
-.modal-header {
-  border-bottom: none;
-}
-
-.modal-footer {
-  border-top: none;
-}
-
 .modal-content {
   border: none;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  background: #FCFDF6;
+}
+
+.modal-header,
+.modal-body,
+.modal-footer {
+  padding: 30px;
+}
+
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 6px;
+}
+
+.modal-body {
+  padding-top: 0;
+  padding-bottom: 10px;
+  color: #8B8983;
+  font-weight: 300;
+}
+
+.modal-footer {
+  padding-top: 10px;
+  border-top: none;
 }
 
 .modal-backdrop.in {
   opacity: 0.8;
   filter: alpha(opacity=80);
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.modal-footer-left-actions {
+  text-align: left;
+}
+
+/* Specific Modal types overrides */
+
+@media (max-width: 800px){
+  .modal-item > .modal-dialog {
+    width: auto !important;
+  }
+}
+
+.modal-item > .modal-dialog {
+  width: 800px;
+}
+
+.modal-item .item-legend-wrapper {
+  text-align: right;
+}
+
+.modal-item .item-legend {
+  font-size: 15px;
+}
+
+.modal-item .modal-item-form {
+  margin: 0;
+}
+
+.modal-item .item-quantity {
+  width: 70px;
 }

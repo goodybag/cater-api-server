@@ -12,7 +12,7 @@ offGrayBrown: #535145;
 
 body {
   background: #FBF9E5 url('../img/body-bg.png');
-  color: #340F02;
+  color: #695A42;
 }
 
 .navbar {
@@ -89,9 +89,9 @@ a.list-group-item .list-group-item-heading {
 }
 
 /**
- * Menu
+ * Items
  */
 
-.menu .list-item-legend dt {
+.item-legend dt {
   color: #8B8983;
 }

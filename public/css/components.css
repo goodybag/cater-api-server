@@ -279,3 +279,20 @@ a.list-group-item .list-group-item-heading {
  * Modals
  */
 
+.modal-header {
+  border-bottom: none;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
+.modal-content {
+  border: none;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+}
+
+.modal-backdrop.in {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}

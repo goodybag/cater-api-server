@@ -51,6 +51,12 @@ var EditRestaurantView = FormView.extend({
     cuisine: function() {
       var val = this.$el.find(this.fieldMap.cuisine).val().trim();
       return val ? _.invoke(val.split(','), 'trim') : [];
+    },
+    sms_phone: function() {
+      return this.$el.find(this.fieldMap.sms_phone).val().replace(/[^\d]/g, '');
+    },
+    voice_phone: function() {
+      return this.$el.find(this.fieldMap.voice_phone).val().replace(/[^\d]/g, '');
     }
   },
 

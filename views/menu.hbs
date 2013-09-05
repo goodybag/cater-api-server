@@ -39,7 +39,7 @@
     </div>
 
   <div class="col-md-4">
-    <div class="panel order-summary" data-spy="affix" data-offset-top="190">
+    <div class="panel order-summary" data-spy="affix" data-offset-top="174">
       <div class="panel-heading">
         <h2 class="panel-title">Your Order</h2>
       </div>
@@ -166,7 +166,7 @@
   var orderParams = new OrderParams({{{json orderParams}}});
   var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
   var orderParamsModal = new OrderParamsModal({model: orderParams, el: '#order-params-modal', loginNeeded: {{#if user.id}}false{{else}}true{{/if}}, orderParamsNeeded: !{{{json orderParams.complete}}} });
-console.log({{{json order}}})
+
   var orderView = new OrderSummaryView({el: '.order-summary', model: new Order( {{{json order}}} )});
 
   var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderView.model.orderItems});

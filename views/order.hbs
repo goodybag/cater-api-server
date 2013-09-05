@@ -68,7 +68,7 @@
         <div class="col-lg-6">
           <div class="form-group">
             <label for="order-phone" class="control-label">Phone</label>
-            <input type="tel" id="order-phone" class="form-control order-form-field order-phone" {{#unless order.editable}}disabled{{/unless}} value="{{order.phone}}">
+            <input type="tel" id="order-phone" class="form-control order-form-field order-phone" {{#unless order.editable}}disabled{{/unless}} value="{{phoneNumber order.phone}}">
           </div>
           <div class="form-group">
             <label for="order-guests" class="control-label">Guests</label>

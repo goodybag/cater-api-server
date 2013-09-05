@@ -164,7 +164,7 @@ var helpers = {
   phoneNumber: function(num, format, options) {
     if (options === undefined) {
       options = format;
-      format = null;
+      format = undefined;
     }
     if (!/\d{10}/.test(num)) return;
     var result = format || '(xxx) xxx-xxxx';

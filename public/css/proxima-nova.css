@@ -46,6 +46,30 @@
   font-style: italic;
 }
 
+/* Semi-Bold */
+@font-face {
+  font-family: 'Proxima Nova';
+  src: url('../font/proxima-nova/proximanovasemibold-webfont.eot');
+  src: url('../font/proxima-nova/proximanovasemibold-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../font/proxima-nova/proximanovasemibold-webfont.woff') format('woff'),
+    url('../font/proxima-nova/proximanovasemibold-webfont.ttf') format('truetype'),
+    url('../font/proxima-nova/proximanovasemibold-webfont.svg#proxima_nova_boldbold') format('svg');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Semi-Bold Italic */
+@font-face {
+  font-family: 'Proxima Nova';
+  src: url('../font/proxima-nova/proximanovasemibolditalic-webfont.eot');
+  src: url('../font/proxima-nova/proximanovasemibolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../font/proxima-nova/proximanovasemibolditalic-webfont.woff') format('woff'),
+    url('../font/proxima-nova/proximanovasemibolditalic-webfont.ttf') format('truetype'),
+    url('../font/proxima-nova/proximanovasemibolditalic-webfont.svg#proxima_nova_bold_italicItBd') format('svg');
+  font-weight: 700;
+  font-style: italic;
+}
+
 /* Bold */
 @font-face {
   font-family: 'Proxima Nova';
@@ -54,7 +78,7 @@
     url('../font/proxima-nova/proximanovabold-webfont.woff') format('woff'),
     url('../font/proxima-nova/proximanovabold-webfont.ttf') format('truetype'),
     url('../font/proxima-nova/proximanovabold-webfont.svg#proxima_nova_boldbold') format('svg');
-  font-weight: 700;
+  font-weight: 900;
   font-style: normal;
 }
 
@@ -66,6 +90,6 @@
     url('../font/proxima-nova/proximanovabolditalic-webfont.woff') format('woff'),
     url('../font/proxima-nova/proximanovabolditalic-webfont.ttf') format('truetype'),
     url('../font/proxima-nova/proximanovabolditalic-webfont.svg#proxima_nova_bold_italicItBd') format('svg');
-  font-weight: 700;
+  font-weight: 900;
   font-style: italic;
 }

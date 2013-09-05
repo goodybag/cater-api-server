@@ -159,7 +159,7 @@ var helpers = {
     var line2 = joinIf([joinIf([capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
     return joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
                    line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
-  }
+  },
 
   phoneNumber: function(num, format, options) {
     if (options === undefined) {

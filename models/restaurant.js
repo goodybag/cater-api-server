@@ -80,11 +80,21 @@ module.exports = Model.extend({
       orderParams = null;
     }
 
+    // query.order needs is_unacceptable and restaurants.id in order for
+    // distinct to work properly. This messes with the user passing in a query
+    // object with different options.
+
+    // TODO: It doesn't make sense to embed all this in the find function.
+    // We should put this logic in another function or move it up to the code
+    // that wants to execute such a query. The problem is that find is starting
+    // to make too many assumptions about data you want back, and is limiting
+    // your ability to actually control that.
+
     query = query || {};
     query.columns = query.columns || ['*'];
-    query.order = query.order || ["restaurants.id"];
+    query.order = query.order || ["is_unacceptable ASC", "restaurants.id ASC"];
     query.joins = query.joins || {};
-    query.distinct = (query.distinct != null) ? query.distinct : true;
+    query.distinct = (query.distinct != null) ? query.distinct : ["is_unacceptable", "restaurants.id"];
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id)) AS delivery_zips");
     query.columns.push("(SELECT row_to_json(r) FROM (SELECT start_time, end_time FROM restaurant_delivery_times WHERE restaurant_id = restaurants.id) r) AS delivery_times");
@@ -194,7 +204,7 @@ module.exports = Model.extend({
       query.joins.delivery_times.on['delivery_times.end_time'] = {$gte: orderParams.time};
     }
 
-    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR ')+') as is_unacceptable' : '(false) as is_unacceptable');
+    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
 
     Model.find.call(this, query, callback);
   },

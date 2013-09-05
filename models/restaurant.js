@@ -255,8 +255,8 @@ module.exports = Model.extend({
 
     Model.find.call(this, query, function(err, restaurants) {
       if (!err) {
-        utils.invoke(utils.pluck(restaurants, 'attributes'), function() {
-          this.delivery_times = utils.object(this.delivery_times);
+        utils.invoke(restaurants, function() {
+          this.attributes.delivery_times = utils.object(this.attributes.delivery_times);
         });
       }
       return callback.call(this, err, restaurants);

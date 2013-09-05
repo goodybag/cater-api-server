@@ -102,8 +102,18 @@ module.exports = Model.extend({
 
   find: function(query, callback) {
     // TODO: alter query to add latest status
+
+    // query.order needs orders.id in order for distinct to work properly, this
+    // messes with the user passing in a query object with different options.
+
+    // TODO: It doesn't make sense to embed all this in the find function.
+    // We should put this logic in another function or move it up to the code
+    // that wants to execute such a query. The problem is that find is starting
+    // to make too many assumptions about data you want back, and is limiting
+    // your ability to actually control that.
+
     query = query || {};
-    query.distinct = true;
+    query.distinct = ["orders.id"];
     query.columns = query.columns || ['*'];
     query.order = query.order || ["orders.id"];
 

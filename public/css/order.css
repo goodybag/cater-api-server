@@ -5,3 +5,18 @@
 #main {
   padding-bottom: 60px;
 }
+
+/**
+ * Order List Group
+ */
+.order-list-group-item {
+  padding-left:     25px;
+  padding-top:      20px;
+  padding-right:    25px;
+  padding-bottom:   10px;
+}
+
+.order-label {
+  font-weight: lighter;
+  padding: .35em .9em;
+}

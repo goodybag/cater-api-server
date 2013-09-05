@@ -159,6 +159,26 @@ var helpers = {
     var line2 = joinIf([joinIf([capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
     return joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
                    line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
+  },
+
+  phoneNumber: function(num, format, options) {
+    if (options === undefined) {
+      options = format;
+      format = undefined;
+    }
+    if (!/\d{10}/.test(num)) return;
+    var result = format || '(xxx) xxx-xxxx';
+    var str = '' + num;
+    for (var i in str)
+      result = result.replace('x', str[i]);
+    return result;
+  },
+
+  capitalize: function(str) {
+    if(str && typeof str === 'string') {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    return str;
   }
 }
 

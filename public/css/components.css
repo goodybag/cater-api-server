@@ -24,6 +24,11 @@
 /**
  * Navbar
  */
+
+.navbar {
+  margin-bottom: 32px;
+}
+
 .navbar-brand {
   padding-top: 15px;
   padding-bottom: 11px;
@@ -56,6 +61,7 @@
   position: relative; /* So datepicker doesn't bleed */
   display: table;
   margin: 0 auto;
+  margin-bottom: 20px;
   padding: 15px 18px;
 }
 
@@ -268,3 +274,8 @@ a.list-group-item .list-group-item-heading {
 .page-menu .page-title {
   font-size: 32px;
 }
+
+/**
+ * Modals
+ */
+

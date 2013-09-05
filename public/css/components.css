@@ -77,6 +77,11 @@
   width: 125px;
 }
 
+.order-params-bar .form-control.form-control-zip,
+.order-params-bar .form-control.form-control-guests {
+  width: 100px;
+}
+
 .order-params-bar .form-control[readonly] {
   cursor: default;
   background-color: #fff;

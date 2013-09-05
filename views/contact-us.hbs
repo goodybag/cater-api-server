@@ -1,15 +1,57 @@
-<h1 class="text-center">Contact Us</h1>
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/contact.css">
+{{/extend}}
 
-<div class="row">
-  <div class="col-lg-6 col-lg-offset-3 well">
-    <p class="text-center">We love Hearing from you! Please get in touch with anything at all &mdash; questions, help ideas, or just to say hello.</p>
-    <div class="row">
-      <h5 class="text-center">Email</h5>
-      <p class="text-center"><a href="mailto:support@goodybag.com">support@goodybag.com</a></p>
+{{#extend "banner"}}
+<div class="contact-us-banner"></div>
+{{/extend}}
+
+<div class="contact-us-container">
+  <div class="row">
+
+    <div class="col-lg-3 col-lg-offset-2">
+      <h1>Contact Us</h1>
+      <strong>We love hearing from you!</strong>
+      <p>
+        Please get in touch with anything at all -- questions, help,
+        ideas, or just to say hello.
+      </p>
+
+      <ul class="icons-ul contact-ul">
+        <li>
+          <i class="icon-li icon-envelope"></i>
+          <strong>Email</strong>
+          <p>{{{mailto config.emails.support}}}</p>
+        </li>
+        <li>
+          <i class="icon-li icon-phone"></i>
+          <strong>Phone</strong>
+          <p>{{phoneNumber config.phone.support}}</p>
+        </li>
+      </ul>
     </div>
-    <div class="row">
-      <h5 class="text-center">Phone</h5>
-      <p class="text-center">512-667-4224</p>
+
+    <div class="col-lg-4 col-lg-offset-1">
+      <div class="contact-form">
+        <form role="form">
+          <div class="form-group">
+            <label for="contactName">Name</label>
+            <input type="text" class="form-control" id="contactName" placeholder="Enter Name">
+          </div>
+          <div class="form-group">
+            <label for="contactEmail">Email</label>
+            <input type="text" class="form-control" id="contactEmail" placeholder="Enter Email">
+          </div>
+          <div class="form-group">
+            <label for="contactMessage">Message</label>
+            <textarea class="form-control" rows="5" id="contactMessage" placeholder="Enter Message"></textarea>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary pull-right">Send</button>
+          </div>
+        </form>
+      </div>
     </div>
+
   </div>
 </div>

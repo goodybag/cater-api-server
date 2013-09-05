@@ -39,6 +39,7 @@ app.configure(function(){
 
   app.set('view engine', 'hbs');
 
+  app.locals.config = config;
   /**
    * Request & Response prototype updates
    */

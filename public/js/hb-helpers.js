@@ -179,6 +179,10 @@ var helpers = {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
     return str;
+  },
+
+  mailto: function(email) {
+    return '<a href="mailto:' + email + '">' + email + '</a>';
   }
 }
 

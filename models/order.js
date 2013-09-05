@@ -84,7 +84,7 @@ module.exports = Model.extend({
 
     query.columns.push('latest.status');
 
-        query.with = {
+    query.with = {
       dt: {
         type: 'select'
       , columns: [

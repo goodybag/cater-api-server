@@ -354,12 +354,13 @@ module.exports.register = function(app) {
 
   app.get('/waitlist/confirm', controllers.waitlist.confirm);
 
-
   /**
    *  Static pages
    */
 
   app.get('/contact-us', controllers.statics.contactUs);
+
+  app.post('/contact-us', controllers.contactUs.sendSupportEmail);
 
   app.get('/legal', controllers.statics.legal);
 

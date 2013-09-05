@@ -7,4 +7,5 @@ module.exports = {
 , session: require('./session')
 , waitlist: require('./waitlist')
 , statics: require('./statics')
+, contactUs: require('./contact-us')
 }

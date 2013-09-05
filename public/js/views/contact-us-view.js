@@ -9,11 +9,6 @@ var ContactUsView = FormView.extend({
   initialize: function(options) {
   },
 
-  remove: function() {
-    _.invoke(this.categories, 'remove');
-    FormView.prototype.remove.apply(this, arguments);
-  },
-
   fieldMap: {
     name: '.contact-us-form .contact-us-name',
     email: '.contact-us-form .contact-us-email',
@@ -33,7 +28,7 @@ var ContactUsView = FormView.extend({
         view.$el.find(view.submitSelector).addClass('disabled');
       },
       error: function(model, response, options) {
-        view.$el.find(view.alertSelector).removeClass('hide');
+        view.$el.find(view.alertSelector).show();
       }
     });
 

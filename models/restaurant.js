@@ -139,6 +139,7 @@ module.exports = Model.extend({
     };
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id)) AS delivery_zips");
+    query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");
     query.joins.hours = {
@@ -252,6 +253,13 @@ module.exports = Model.extend({
 
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
 
-    Model.find.call(this, query, callback);
+    Model.find.call(this, query, function(err, restaurants) {
+      if (!err) {
+        utils.invoke(utils.pluck(restaurants, 'attributes'), function() {
+          this.delivery_times = utils.object(this.delivery_times);
+        });
+      }
+      return callback.call(this, err, restaurants);
+    });
   },
 });

@@ -103,8 +103,10 @@ var OrderView = Backbone.View.extend({
 
       var date = new Date(datepart + ' ' + timepart);
       return date.toString() !== 'Invalid Date' ? date.toISOString() : null;
+    },
+    phone: function() {
+      return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '');
     }
-
   },
 
   getDiff: function() {

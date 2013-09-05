@@ -95,3 +95,15 @@ a.list-group-item .list-group-item-heading {
 .item-legend dt {
   color: #8B8983;
 }
+
+.item-legend dd {
+  color: #432012;
+}
+
+/**
+ * Modals
+ */
+
+.modal-body {
+  color: #8B8983;
+}

@@ -318,7 +318,6 @@ a.list-group-item .list-group-item-heading {
 .modal-body {
   padding-top: 0;
   padding-bottom: 10px;
-  color: #8B8983;
   font-weight: 300;
 }
 
@@ -341,14 +340,6 @@ a.list-group-item .list-group-item-heading {
   text-align: left;
 }
 
-/* Specific Modal types overrides */
-
-@media (max-width: 800px){
-  .modal-item > .modal-dialog {
-    width: auto !important;
-  }
-}
-
 .modal-item > .modal-dialog {
   width: 800px;
 }
@@ -367,4 +358,47 @@ a.list-group-item .list-group-item-heading {
 
 .modal-item .item-quantity {
   width: 70px;
+}
+
+.modal-footer-right-actions .form-group:last-child {
+  margin-bottom: 0;
+}
+
+/* Specific Modal types overrides */
+
+@media (max-width: 800px){
+  .modal-item > .modal-dialog {
+    width: auto !important;
+  }
+}
+
+@media (max-width: 768px){
+  .item-legend-wrapper {
+    text-align: left;
+  }
+
+  .modal-footer-actions {
+    font-size: 0;
+  }
+
+  .modal-footer-left-actions,
+  .modal-footer-right-actions {
+    display: inline-block;
+    vertical-align: bottom;
+    float: none;
+  }
+
+  .modal-footer-right-actions .form-group {
+    text-align: right;
+  }
+
+  .modal-footer-right-actions .form-control {
+    text-align: right;
+    display: inline-block;
+  }
+
+  .modal-footer-right-actions .control-label {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

@@ -17,7 +17,8 @@ var OrderView = Backbone.View.extend({
   initialize: function(options) {
     if (this.model) this.listenTo(this.model, {
       'change:sub_total': this.onPriceChange,
-      'change:submittable': this.onSubmittableChange
+      'change:submittable': this.onSubmittableChange,
+      'change:phone': this.onPhoneChange
     }, this);
 
     if (this.model.get('editable')) {
@@ -44,6 +45,10 @@ var OrderView = Backbone.View.extend({
   onSubmittableChange: function(model, value, options) {
     var $btn = this.$el.find('.submit-btn');
     value ? $btn.removeAttr('disabled') : $btn.attr('disabled', 'disabled');
+  },
+
+  onPhoneChange: function(model, value, options) {
+    this.$el.find(this.fieldMap.phone).val(Handlebars.helpers.phoneNumber(value))
   },
 
   changeStatus: function(status) {

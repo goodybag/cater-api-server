@@ -21,8 +21,12 @@ var EditRestaurantView = FormView.extend({
   setModel: function(model) {
     this.stopListening(this.model);
     this.model = model;
-    this.listenTo(this.model, 'sync', function() {
-      this.$el.find('.restaurant-form .form-control').parent().removeClass('has-success');
+    this.listenTo(this.model, {
+      sync: function() {
+        this.$el.find('.restaurant-form .form-control').parent().removeClass('has-success');
+      },
+      'change:sms_phone': utils.bind(this.formatPhone, this, 'sms_phone'),
+      'change:voice_phone': utils.bind(this.formatPhone, this, 'voice_phone')
     });
     this.listenTo(this.model.categories, 'sort', this.sortCategories, this);
     return this;
@@ -85,5 +89,10 @@ var EditRestaurantView = FormView.extend({
 
     _.invoke(this.categories, 'remove');
     _.invoke(this.categories, 'attach');
+  },
+
+  // TODO: generic field formatter system.
+  formatPhone: function(field, model, value, options) {
+    this.$el.find(this.fieldMap[field]).val(Handlebars.helpers.phoneNumber(value))
   }
 });

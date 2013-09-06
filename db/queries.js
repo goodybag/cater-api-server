@@ -81,7 +81,8 @@ module.exports = {
   },
 
   item: {
-    create: function(item, categoryId) {
+    create: function(item, restaurantId, categoryId) {
+      item.restaurant_id = restaurantId;
       item.category_id = categoryId;
       return upsert('items', item);
     },

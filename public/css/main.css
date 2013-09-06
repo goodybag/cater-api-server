@@ -31,15 +31,6 @@ header.navbar {
   color: #dedede;
 }
 
-.order-params-bar .form-control {
-  width: 125px;
-}
-
-.order-params-bar .form-control[readonly] {
-  cursor: default;
-  background-color: #fff;
-}
-
 .order-form .form-control[readonly] {
   cursor: default;
   background-color: #fff;

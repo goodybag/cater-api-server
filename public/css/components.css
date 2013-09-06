@@ -24,6 +24,11 @@
 /**
  * Navbar
  */
+
+.navbar {
+  margin-bottom: 32px;
+}
+
 .navbar-brand {
   padding-top: 15px;
   padding-bottom: 11px;
@@ -53,8 +58,10 @@
  * Order params bar
  */
 .order-params-bar {
+  position: relative; /* So datepicker doesn't bleed */
   display: table;
   margin: 0 auto;
+  margin-bottom: 20px;
   padding: 15px 18px;
 }
 
@@ -62,13 +69,56 @@
 
 }
 
-.order-params-bar .btn.save {
+.order-params-bar .btn-search {
   margin-left: 32px;
 }
 
+.order-params-bar .form-control {
+  width: 125px;
+}
+
+.order-params-bar .form-control.form-control-zip,
+.order-params-bar .form-control.form-control-guests {
+  width: 100px;
+}
+
+.order-params-bar .form-control[readonly] {
+  cursor: default;
+  background-color: #fff;
+}
+
 @media ( max-width: 768px ){
+  .order-params-bar {
+    width: 100%;
+  }
+
   .order-params-bar .btn.save {
     margin-left: 0;
+  }
+
+  .order-params-bar .form-group {
+    margin-left: 0;
+  }
+
+  .order-params-bar .form-control {
+    width: 100% !important;
+  }
+
+  .order-params-bar .form-group {
+    position: relative;
+  }
+
+  .order-params-bar .gb-input-icon {
+    position: absolute;
+    right: 6px;
+    top: 8px;
+  }
+}
+
+
+@media ( min-width: 769px ) and ( max-width: 992px ){
+  .form-group-title {
+    display: none!important;
   }
 }
 
@@ -88,22 +138,52 @@
   margin-left: 1px;
 }
 
+/**
+ * Items
+ */
+
+.item-legend {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+}
+
+.item-legend dd,
+.item-legend dt {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.item-legend dt {
+  font-weight: 300;
+}
+
+.item-legend dt:first-child ~ dt {
+  margin-left: 20px;
+}
+
+.item-legend dd {
+  color: #000;
+}
+
 
 /**
  * List Group Items
  */
 
+.list-group-item {
+  padding: 14px 17px;
+}
+
 a.list-group-item {
   cursor: pointer;
 }
 
-a.list-group-item:hover {
-  background-color: #F8F8EC;
-}
-
+.list-group-item .list-group-item-heading,
 a.list-group-item .list-group-item-heading {
   font-size: 14px;
   font-weight: 500;
+  margin-bottom: 2px;
 }
 
 /**
@@ -114,22 +194,6 @@ a.list-group-item .list-group-item-heading {
   position: absolute;
   right: 12px;
   top: 12px;
-  margin: 0;
-  padding: 0;
-}
-
-.menu .list-item-legend dd,
-.menu .list-item-legend dt {
-  display: inline-block;
-  vertical-align: baseline;
-}
-
-.menu .list-item-legend dt {
-  font-weight: 300;
-}
-
-.menu .list-item-legend dd {
-  color: #000;
 }
 
 .menu .list-group-item-heading {
@@ -145,8 +209,81 @@ a.list-group-item .list-group-item-heading {
  * Order Summary
  */
 
+.order-summary {
+  font-size: 12px;
+}
+
 .order-summary .panel-heading {
   border-bottom: none;
+}
+
+.order-summary .list-group-item {
+  border: none;
+  padding: 10px 12px;
+}
+
+.order-summary .list-group-item-checkout {
+  text-align: right;
+}
+
+.order-summary .order-table {
+  width: 100%;
+}
+
+.order-table td {
+  vertical-align: top;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+.order-table > tbody > tr > td,
+.order-table > tfoot > tr > td {
+  border: none;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.order-table > tbody > tr:last-child > td {
+  padding-bottom: 16px;
+}
+
+.order-table tr > td:first-child ~ td {
+  /*padding-left: 4px;*/
+}
+
+.order-table .item-name {
+  font-weight: 700;
+  line-height: 14px;
+}
+
+.order-table tfoot {
+  font-weight: 700;
+}
+
+.order-table > tfoot > tr > td {
+  border-top: dotted #ccc 1px;
+  padding-top: 16px;
+  padding-bottom: 0;
+}
+
+.order-table .item-name .item-edit {
+  font-weight: 300;
+  text-decoration: underline;
+}
+
+.order-table .item-name .item-edit:before {
+  content: "";
+  display: block;
+}
+
+.order-table .item-quantity {
+  width: 40px;
+}
+
+.order-table .item-price {
+  width: 40px;
+  text-align: right;
 }
 
 /**
@@ -155,4 +292,159 @@ a.list-group-item .list-group-item-heading {
 
 .page-menu .page-title {
   font-size: 32px;
+}
+
+/**
+ * Modals
+ */
+
+.modal-content {
+  border: none;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  background: #FCFDF6;
+}
+
+.modal-header,
+.modal-body,
+.modal-footer {
+  padding: 30px;
+}
+
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 6px;
+}
+
+.modal-body {
+  padding-top: 0;
+  padding-bottom: 10px;
+  font-weight: 300;
+}
+
+.modal-footer {
+  padding-top: 10px;
+  border-top: none;
+}
+
+.modal-backdrop.in {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.modal-footer-left-actions {
+  text-align: left;
+}
+
+@media (max-width: 768px){
+  .modal-footer-actions {
+    font-size: 0;
+  }
+
+  .modal-footer-left-actions,
+  .modal-footer-right-actions {
+    display: inline-block;
+    vertical-align: bottom;
+    float: none;
+  }
+
+  .modal-footer-right-actions .form-group {
+    text-align: right;
+  }
+
+  .modal-footer-right-actions .form-control {
+    text-align: right;
+    display: inline-block;
+  }
+
+  .modal-footer-right-actions .control-label {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/** Item Modal Overrides **/
+.modal-item > .modal-dialog {
+  width: 800px;
+}
+
+.modal-item .item-legend-wrapper {
+  text-align: right;
+}
+
+.modal-item .item-legend {
+  font-size: 15px;
+}
+
+.modal-item .modal-item-form {
+  margin: 0;
+}
+
+.modal-item .item-quantity {
+  width: 70px;
+}
+
+.modal-footer-right-actions .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.modal-item .control-label {
+  padding: 0;
+  font-weight: 500;
+}
+
+@media (max-width: 540px){
+  /* Sorry for this hackiness */
+  .modal-item .btn + .btn-item-remove {
+    display: block;
+    margin: 0;
+    margin-top: -83px;
+    margin-bottom: 49px;
+  }
+}
+
+@media (max-width: 768px){
+  .modal-item .item-legend-wrapper {
+    text-align: left;
+  }
+}
+
+@media (max-width: 800px){
+  .modal-item > .modal-dialog {
+    width: auto !important;
+  }
+}
+
+/** Order Params Modal Overrides **/
+.modal-order-params > .modal-dialog {
+  width: 586px;
+}
+
+.modal-order-params .order-params-bar {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.modal-order-params .form-group-title,
+.modal-order-params .btn-search {
+  display: none;
+}
+
+.modal-order-params .modal-title {
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.modal-order-params .modal-content {
+  text-align: center;
+}
+
+.modal-order-params .modal-footer {
+  margin-top: 0;
 }

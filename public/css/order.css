@@ -7,16 +7,42 @@
 }
 
 /**
- * Order List Group
+ * My Order List Groups
  */
-.order-list-group-item {
-  padding-left:     25px;
-  padding-top:      20px;
-  padding-right:    25px;
-  padding-bottom:   10px;
+
+.order-list-group .list-group-item {
+  padding-left:   25px;
+  padding-top:    26px;
+  padding-right:  25px;
+  padding-bottom: 20px;
 }
 
-.order-label {
-  font-weight: lighter;
-  padding: .35em .9em;
+.order-list-group .list-group-item .list-group-item-heading {
+  font-size: 18px;
+  color: #53442B;
+}
+
+.order-list-group .order-details-list {
+  font-size: 13px;
+  font-weight: 300;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.order-list-group dt,
+.order-list-group dd {
+  line-height: 1.6;
+}
+
+.order-list-group dt {
+  font-weight: 300;
+  color: #A7A4A0;
+}
+
+.definition-group-subtotal {
+  margin-top: 4px;
+}
+
+.definition-group-subtotal > dd {
+  font-weight: 500;
 }

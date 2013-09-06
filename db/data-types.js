@@ -9,15 +9,6 @@ var arg = function(type) {
   }
 }
 
-// custom types
-
-//custom type - order_status
-db.query("CREATE TYPE order_status AS ENUM('canceled', 'pending', 'submitted', 'denied', 'accepted', 'delivered');", function(){});
-
-// custom type - timezone
-db.query("CREATE OR REPLACE FUNCTION is_timezone( tz TEXT ) RETURNS BOOLEAN as $$ DECLARE date TIMESTAMPTZ; BEGIN date := now() AT TIME ZONE tz; RETURN TRUE; EXCEPTION WHEN OTHERS THEN RETURN FALSE; END; $$ language plpgsql STABLE;", function(){});
-db.query("CREATE DOMAIN timezone AS TEXT CHECK ( is_timezone( value ) );", function(){});
-
 module.exports = {
   bigint: 'int8'
 , int8: 'int8'
@@ -65,6 +56,8 @@ module.exports = {
 , uuid: 'uuid'
 , xml: 'xml'
 , json: 'json'
+
+  // custom types
 , orderstatus: 'order_status'
-, 'timezone': 'timezone'
+, timezone: 'timezone'
 }

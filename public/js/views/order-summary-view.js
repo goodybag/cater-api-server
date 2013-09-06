@@ -7,12 +7,19 @@ var OrderSummaryView = Backbone.View.extend({
         'remove': this.removeItem
       }, this);
     }
+
+    this.$tbody = this.$el.find('.order-table tbody');
   },
 
   addItem: function(model, collection, options) {
     this.$el.find('.no-items').addClass('hide');
-    var subview = new OrderItemSummaryView({model: model});
-    this.$el.find('.order-items').append(subview.render().el);
+
+    var subview = new OrderItemSummaryView({
+      model:          model
+    , itemModalView:  this.options.itemModalView
+    });
+
+    this.$tbody.append(subview.render().el);
   },
 
   removeItem: function(model, collection, options) {

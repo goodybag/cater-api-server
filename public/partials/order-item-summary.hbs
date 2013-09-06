@@ -1,5 +1,6 @@
-<button class="x remove-order-item-btn">&times;</button>
-<span class="quantity">{{quantity}}x </span>
-<strong class="list-group-item-heading">{{name}}</strong>
-<span class="edit">edit</span>
-<i class="list-group-item-text pull-right">${{dollars sub_total}}</i>
+<td class="item-name">
+  {{name}}
+  <a class="item-edit" href="#" data-id="{{id}}">Edit</a>
+</td>
+<td class="item-quantity">x {{quantity}}</td>
+<td class="item-price">{{dollars sub_total}}</td>

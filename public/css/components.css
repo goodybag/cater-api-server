@@ -68,6 +68,10 @@
   padding-bottom: 16px;
 }
 
+.panel .panel-footer {
+  background: none;
+}
+
 .panel .panel-title {
   font-size: 25px;
   font-weight: 300;
@@ -253,30 +257,17 @@ a.list-group-item .list-group-item-heading {
   font-size: 12px;
 }
 
-.order-summary .panel-heading {
-  border-bottom: none;
-}
-
-.order-summary .list-group-item {
+.order-summary .panel-heading, .order-summary .panel-footer {
   border: none;
-  padding: 10px 12px;
-}
-
-.order-summary .list-group-item-checkout {
-  text-align: right;
-}
-
-.order-summary .order-table {
-  width: 100%;
 }
 
 .order-table td {
-  vertical-align: top;
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
 
+/* needs high specificity to override bootstrap */
 .order-table > tbody > tr > td,
 .order-table > tfoot > tr > td {
   border: none;
@@ -288,23 +279,17 @@ a.list-group-item .list-group-item-heading {
   padding-bottom: 16px;
 }
 
-.order-table tr > td:first-child ~ td {
-  /*padding-left: 4px;*/
-}
-
 .order-table .item-name {
   font-weight: 700;
   line-height: 14px;
 }
 
-.order-table tfoot {
+.order-summary .subtotal-row {
   font-weight: 700;
 }
 
-.order-table > tfoot > tr > td {
-  border-top: dotted #ccc 1px;
-  padding-top: 16px;
-  padding-bottom: 0;
+.order-summary .checkout-row {
+  padding-top: 30px;
 }
 
 .order-table .item-name .item-edit {

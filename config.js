@@ -45,8 +45,8 @@ var config = {
     }
   , phone: {
       main: '5126674224'
-    , support: '5122706333'
-    , orders: '5122706555'
+    , support: '5122706555'
+    , orders: '5122706333'
     }
   }
 

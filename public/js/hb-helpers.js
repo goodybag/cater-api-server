@@ -181,6 +181,10 @@ var helpers = {
     return str;
   },
 
+  mailto: function(email) {
+    return '<a href="mailto:' + email + '">' + email + '</a>';
+  },
+
   eq: function(a, b, options){
     return options[a == b ? 'fn' : 'inverse'](this);
   },

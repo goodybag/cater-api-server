@@ -1,0 +1,26 @@
+.contact-us-banner {
+  background-image: url('/img/page-background.png');
+  background-position-x: 75%;
+  background-position-y: 16%;
+}
+
+.contact-us-container {
+  margin-top: 50px;
+}
+
+.contact-us-container i {
+  color: #DC0500;
+}
+
+.contact-ul {
+  margin-left: -18px;
+  margin-top:   20px;
+}
+
+.contact-form {
+  margin-top: 20px;
+}
+
+.navbar {
+  margin-bottom: 0;
+}

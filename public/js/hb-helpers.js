@@ -183,6 +183,30 @@ var helpers = {
 
   weekday: function(day) {
     return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day];
+  },
+
+  eq: function(a, b, options){
+    return options[a == b ? 'fn' : 'inverse'](this);
+  },
+
+  dneq: function(a, b, options){
+    return options[a != b ? 'fn' : 'inverse'](this);
+  },
+
+  lt: function(a, b, options){
+    return options[a < b ? 'fn' : 'inverse'](this);
+  },
+
+  lte: function(a, b, options){
+    return options[a <= b ? 'fn' : 'inverse'](this);
+  },
+
+  gt: function(a, b, options){
+    return options[a > b ? 'fn' : 'inverse'](this);
+  },
+
+  gte: function(a, b, options){
+    return options[a >= b ? 'fn' : 'inverse'](this);
   }
 }
 

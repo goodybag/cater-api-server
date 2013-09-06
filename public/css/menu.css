@@ -1,5 +1,4 @@
 .order-summary.affix {
-  width: 360px;
   top: 30px;
 }
 
@@ -21,8 +20,21 @@
   text-decoration: underline;
 }
 
-@media (max-width: 1200px) {
+@media ( min-width: 1200px ){
+  .order-summary.affix {
+    width: 360px;
+  }
+}
+
+@media ( min-width: 992px ) and ( max-width: 1199px ){
+  .order-summary.affix {
+    width: 293px;
+  }
+}
+
+@media ( max-width: 991px ){
   .order-summary.affix {
     position: static;
+    width: 100%;
   }
 }

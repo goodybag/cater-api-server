@@ -223,7 +223,7 @@ module.exports = Model.extend({
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id) AS max_guests");
 
     query.joins.hours = {
-      type: 'inner'
+      type: 'left'
     , target: 'dt'
     , on: { 'orders.restaurant_id': '$hours.restaurant_id$' }
     }

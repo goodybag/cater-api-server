@@ -1,15 +1,30 @@
 var ItemModal = Backbone.View.extend({
   events: {
-    'submit .item-modal-form': 'submit'
+    'submit .modal-item-form': 'submit'
+  , 'click .btn-item-remove':  'onItemRemoveClick'
   },
 
   render: function() {
-    this.$el.find('.modal-title').html(Handlebars.partials.item_modal_title(this.model.toJSON()));
-    this.$el.find('.item-description').text(this.model.get('description'));
-    var quantity = this.model instanceof OrderItem ? this.model.get('quantity') : 1;
-    this.$el.find('.item-modal-quantity').val(quantity);
+    var inOrder = this.model instanceof OrderItem;
 
-    var submitBtnText = this.model instanceof OrderItem ? 'Update Item' : 'Add To Order';
+    this.$el.find('.modal-title').html(this.model.get('name'));
+    this.$el.find('.item-description').text(this.model.get('description'));
+    var quantity = inOrder ? this.model.get('quantity') : 1;
+    this.$el.find('.item-quantity').val(quantity);
+
+    this.$el.find('.item-legend-detail-feeds').html(
+      this.model.get('feeds_min') == this.model.get('feeds_max')
+        ? this.model.get('feeds_min')
+        : ( this.model.get('feeds_min') + '-' + this.model.get('feeds_max') )
+    );
+
+    this.$el.find('.item-legend-detail-price').html(
+      helpers.dollars( this.model.get('price') )
+    );
+
+    this.$el.find('.btn-item-remove').toggle(inOrder)
+
+    var submitBtnText = inOrder ? 'Update Item' : 'Add To Order';
     this.$el.find('.btn.item-modal-submit').text(submitBtnText);
   },
 
@@ -31,7 +46,7 @@ var ItemModal = Backbone.View.extend({
 
   submit: function(e) {
     e.preventDefault();
-    var quantity = parseInt(this.$el.find('.item-modal-quantity').val());
+    var quantity = parseInt(this.$el.find('.item-quantity').val());
 
     var orderItem = this.model instanceof OrderItem ? this.model : this.options.orderItems.findWhere({item_id: this.model.id});
 
@@ -42,6 +57,16 @@ var ItemModal = Backbone.View.extend({
         orderItem.save({quantity: quantity}, {wait: true});
       else
         this.options.orderItems.create({item_id: this.model.attributes.id, quantity: quantity}, {wait: true});
+    }
+
+    this.hide();
+  },
+
+  onItemRemoveClick: function(e) {
+    e.preventDefault();
+
+    if ( this.model instanceof OrderItem ){
+      this.model.destroy();
     }
 
     this.hide();

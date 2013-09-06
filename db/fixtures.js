@@ -100,7 +100,8 @@ var inserts = {
       type:'insert'
     , table: 'items'
     , values: {
-        category_id: category_id
+        restaurant_id: restaurant_id
+      , category_id: category_id
       , order: incrementer('items_order_'+restaurant_id+'_'+category_id, 1)
       , name: faker.Lorem.words().slice(0, parseInt( Math.random() * 4 ) + 1 ).join(' ')
       , description: faker.Lorem.sentence()

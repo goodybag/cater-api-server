@@ -202,6 +202,19 @@ var helpers = {
   },
   gte: function(a, b, options){
     return options[a >= b ? 'fn' : 'inverse'](this);
+  },
+
+  dollarMeter: function( value, max ){
+    max = max || 4;
+
+    var tmpl = '<span class="dollar-meter{{more-class}}">$</span>';
+    var out = [];
+
+    for ( var i = 1; i <= max; i++ ){
+      out.push( tmpl.replace( '{{more-class}}', value >= i ? ' dollar-meter-filled' : '' ) );
+    }
+
+    return out.join('\n');
   }
 }
 

@@ -56,10 +56,10 @@ module.exports.listItems = function(req, res) {
 }
 
 module.exports.addItem = function(req, res) {
-  var query = queries.item.create(req.body, req.params.cid);
+  var query = queries.item.create(req.body, req.params.rid, req.params.cid);
   var sql = db.builder.sql(query);
   db.query(sql.query, sql.values, function(err, rows, result) {
-    if (err) return res.error(errors.internal.UNKNOWN, error);
+    if (err) return res.error(errors.internal.UNKNOWN, err);
     res.send(201, rows[0]);
   });
 }

@@ -12,7 +12,6 @@ var arg = function(type) {
 // custom type
 
 db.query("CREATE TYPE order_status AS ENUM('canceled', 'pending', 'submitted', 'denied', 'accepted', 'delivered');", function(){});
-db.query("CREATE TYPE day AS ENUM('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');", function(){});
 
 module.exports = {
   bigint: 'int8'
@@ -62,5 +61,4 @@ module.exports = {
 , xml: 'xml'
 , json: 'json'
 , orderstatus: 'order_status'
-, day: 'day'
 }

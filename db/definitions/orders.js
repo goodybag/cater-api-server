@@ -61,7 +61,7 @@ define(function(require) {
     , nullable: true
     }
   , datetime: {
-      type: types.timestamptz
+      type: types.timestamp
     , nullable: true
     }
   , guests: {

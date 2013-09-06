@@ -65,3 +65,10 @@ header.navbar {
   padding-bottom: 40px;
   padding-top: 100px;
 }
+
+.banner {
+  background-position-x: 75%;
+  background-position-y: 16%;
+  background-attachment: fixed;
+  height: 150px;
+}

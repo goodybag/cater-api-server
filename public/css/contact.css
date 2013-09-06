@@ -1,9 +1,5 @@
 .contact-us-banner {
-  background: url('/img/page-background.png');
-  background-position-x: 75%;
-  background-position-y: 16%;
-  background-attachment: fixed;
-  height: 150px;
+  background-image: url('/img/page-background.png');
 }
 
 .contact-us-container {

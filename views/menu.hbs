@@ -27,8 +27,8 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>{{restaurant.name}}</h1>
-    <ul class="nav nav-tabs col-lg-2">
+    <h1 class="restaurant-name">{{restaurant.name}}</h1>
+    <ul class="nav nav-tabs menu-info-tabs">
       <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
       <li><a href="#info" data-toggle="tab">Info</a></li>
     </ul>
@@ -96,8 +96,8 @@
   </div>
 
   <div class="tab-pane" id="info">
-    <div class="row">
-      <div class="col-lg-8">
+    <div class="row well">
+      <div class="col-lg-8 col-lg-offset-2">
         <div class="row">
           <div class="col-lg-6">
             delivery zips: {{array restaurant.delivery_zips}}
@@ -105,7 +105,7 @@
           <div class="col-lg-6">
             delivery hours:
             {{#each restaurant.delivery_times}}
-            <p>{{weekday @key}}: {{#each this}}{{formatTime this.[0]}} - {{formatTime this.[1]}}{{/each}}
+            <p>{{weekday @key}}: {{#each this}}{{#if @index}}, {{/if}}{{formatTime this.[0]}} &mdash; {{formatTime this.[1]}}{{/each}}
             {{/each}}
           </div>
         </div>

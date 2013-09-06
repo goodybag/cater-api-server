@@ -3,6 +3,24 @@
   top: 30px;
 }
 
+.restaurant-name {
+  display: inline-block;
+  padding-right: 30px;
+}
+
+.menu-info-tabs {
+  display: inline-block;
+  border: none;
+  vertical-align: bottom;
+}
+
+.menu-info-tabs>li.active>a, .menu-info-tabs>li.active>a:hover, .menu-info-tabs>li.active>a:focus {
+  background: transparent;
+  border: none;
+  color: #428bca; /* TODO: link default */
+  text-decoration: underline;
+}
+
 @media (max-width: 1200px) {
   .order-summary.affix {
     position: static;

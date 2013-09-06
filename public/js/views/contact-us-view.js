@@ -7,31 +7,24 @@ var ContactUsView = FormView.extend({
   },
 
   initialize: function(options) {
+    this.model = this.model || new ContactUs();
+
+    this.listenTo(this.model, 'sync', function(model, options) {
+      this.$el.find(this.alertSelector).addClass('hide');
+      this.$el.find(this.submitSelector).removeClass('hide');
+      this.$el.find(this.submitSelector).addClass('disabled');
+      this.$el.find(this.submitSelector).text('Submitted!');
+    });
+
+    // For server side errors, show a generic bootstrap alert
+    this.listenTo(this.model, 'error', function(model, options) {
+      this.$el.find(this.alertSelector).removeClass('hide');
+    });
   },
 
   fieldMap: {
     name: '.contact-us-form .contact-us-name',
     email: '.contact-us-form .contact-us-email',
     message: '.contact-us-form .contact-us-message'
-  },
-
-  onSave: function(e) {
-    e.preventDefault();
-    this.clearErrors();
-    var view = this;
-    var sent = this.model.save(this.getDiff() || {}, {
-      patch: true,
-      wait: true,
-      singleError: false,
-      success: function(model, response, options) {
-        view.$el.find(view.submitSelector).text('Submitted!');
-        view.$el.find(view.submitSelector).addClass('disabled');
-      },
-      error: function(model, response, options) {
-        view.$el.find(view.alertSelector).show();
-      }
-    });
-
-    if (!sent) this.displayErrors();
   }
 });

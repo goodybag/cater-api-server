@@ -7,10 +7,11 @@
 {{/extend}}
 
 <div class="contact-us-container">
+
+  {{! Server side errors }}
   <div class="row contact-us-alert hide">
     <div class="col-lg-8 col-lg-offset-2">
       <div class="alert alert-danger fade in">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
         <strong>Uh oh!</strong> Something went wrong. Please contact us directly!
       </div>
     </div>
@@ -70,6 +71,6 @@
 <script src="/js/views/form-view.js"></script>
 <script src="/js/views/contact-us-view.js"></script>
 <script>
-  var contactUs = new ContactUsView({ el: '#main', model: new ContactUs()});
+  var contactUs = new ContactUsView({ el: '#main' });
 </script>
 {{/extend}}

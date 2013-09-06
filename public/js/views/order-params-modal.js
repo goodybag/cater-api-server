@@ -1,25 +1,28 @@
 var OrderParamsModal = Backbone.View.extend({
   events: {
     'submit form': 'submit',
+    'click .btn-submit': 'submit',
     'click button[data-dismiss="modal"]': 'hide'
   },
 
   initialize: function() {
-    this.datepicker = this.$el.find("input.date").eq(0).pickadate({
+    this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
       format: 'mm/dd/yyyy'
     , min: new Date()
     }).pickadate('picker');
 
-    this.timepicker = this.$el.find("input.time").eq(0).pickatime({
+    this.timepicker = this.$el.find('input[name="time"]').eq(0).pickatime({
       format: 'hh:i A'
     , interval: 15
     }).pickatime('picker');
+
+    // Remove the paneliness from the order params partial
+    this.$el.find('.order-params-bar').removeClass('panel');
   },
 
   show: function() {
     this.clear();
     this.fillFields();
-    this.$el.find('form fieldset.order-params-fieldset').toggleClass('hide', this.model.isComplete());
     this.$el.modal('show');
   },
 
@@ -79,8 +82,8 @@ var OrderParamsModal = Backbone.View.extend({
 
     if (this.options.orderParamsNeeded) {
       var orderParams = {
-        zip: this.$el.find('input.zip').val().trim() || null,
-        guests: this.$el.find('input.guests').val().trim() || null,
+        zip: this.$el.find('input[name="zip"]').val().trim() || null,
+        guests: this.$el.find('input[name="guests"]').val().trim() || null,
         date: (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null,
         time: (this.timepicker.get()) ? timeFormatter(this.timepicker.get()) : null
       };

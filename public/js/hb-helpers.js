@@ -147,7 +147,7 @@ var helpers = {
       options = format;
       format = undefined;
     }
-    return timeFormatter(time, format || "hh:mm A");
+    return timeFormatter(time, format || "h:mm A");
   },
 
   // TODO: make this a partial

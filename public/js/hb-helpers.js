@@ -179,6 +179,10 @@ var helpers = {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
     return str;
+  },
+
+  weekday: function(day) {
+    return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day];
   }
 }
 

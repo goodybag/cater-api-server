@@ -2,30 +2,43 @@
 <link rel="stylesheet" href="/css/order.css">
 {{/extend}}
 
-<div class="row">
-  <h1 class="text-center">My Orders</h1>
-  <div class="col-lg-6 col-lg-offset-3">
-  <div class="list-group">
-    {{#each orders}}
-    <a class="list-group-item order-list-group-item" href="/orders/{{this.id}}">
-      <h4 class="pull-right no-margin">
-        <span class="label order-label status {{statusLabel this.status}}">{{capitalize this.status}}</span>
-      </h4>
-      <h5 class="list-group-item-heading"><strong>{{this.restaurant.name}}</strong></h5>
-      <ul class="list-unstyled">
-        <li>
-          Date Created: {{datepart this.created_at}} {{timepart this.created_at}}
-        </li>
-        <li>
-          Delivery Date: {{datepart this.datetime}} {{timepart this.datetime}}
-        </li>
-        {{#if this.sub_total}}
-          <li>Subtotal: <strong>${{dollars this.sub_total}}</strong></li>
-        {{/if}}
-      </ul>
-    </a>
-    {{else}}
-    <h2 class="text-center">No Orders</h2>
-    {{/each}}
+<div class="page-my-orders">
+  <div class="row">
+    <h1 class="col-lg-12 page-title">My Orders</h1>
   </div>
-</div>
+
+  <div class="container order-container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="panel">
+          <div class="list-group order-list-group">
+            {{#each orders}}
+            <a class="list-group-item" href="/orders/{{this.id}}">
+              <span class="label order-label status {{statusLabel this.status}}">{{capitalize this.status}}</span>
+              <h4 class="list-group-item-heading">{{this.restaurant.name}}</h4>
+              <dl class="dl-horizontal-inline order-details-list">
+                <div>
+                  <dt>Date Created:</dt>
+                  <dd>{{datepart this.created_at}} {{timepart this.created_at}}</dd>
+                </div>
+                <div>
+                  <dt>Delivery Date:</dt>
+                  <dd>{{datepart this.datetime}} {{timepart this.datetime}}</dd>
+                </div>
+                {{#if this.sub_total}}
+                <div class="definition-group-subtotal">
+                  <dt>Subtotal:</dt>
+                  <dd class="subtotal-detail">${{dollars this.sub_total}}</dd>
+                </div>
+                {{/if}}
+              </dl>
+            </a>
+            {{else}}
+            <h2 class="text-center">No Orders</h2>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>

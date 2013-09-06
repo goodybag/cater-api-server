@@ -64,6 +64,11 @@ define(function(require) {
       type: types.timestamp
     , nullable: true
     }
+  , timezone: {
+      type: types.timezone
+    , nullable: true
+    , default:'America/Chicago'
+    }
   , guests: {
       type: types.int
     , nullable: true

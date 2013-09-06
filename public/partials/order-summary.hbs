@@ -1,5 +1,5 @@
-<div class="list-group-item without-items{{#if order.orderItems.length}} hide{{/if}}">
-  <p class="list-item-text no-items">Click a menu item on the left to add it to your order.</p>
+<div class="without-items col-lg-12{{#if order.orderItems.length}} hide{{/if}}">
+  <p>Click a menu item on the left to add it to your order.</p>
   {{#if order.restaurant.minimum_order}}
   <p class="minimum-order">Minimum order: {{dollars order.restaurant.minimum_order}}</p>
   {{/if}}

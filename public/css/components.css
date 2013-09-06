@@ -22,6 +22,25 @@
 }
 
 /**
+ * Labels
+ */
+
+.label {
+  padding: .4em 1em .4em;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/**
+ * Definition LIsts
+ */
+
+.dl-horizontal-inline dt,
+.dl-horizontal-inline dd {
+  display: inline-block;
+}
+
+/**
  * Navbar
  */
 
@@ -171,8 +190,29 @@
  * List Group Items
  */
 
+/* Also no border for first-child when inside a panel since
+   the panel is taking care of that */
+.panel .list-group .list-group-item:first-child {
+  border-top-width: 0;
+  /* Bootstrap incorrectly assumes this should be 0, but
+     it should only be 0 if there is a panel heading */
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+/* Bootstrap incorrectly assumes this should be 0, but
+   it should only be 0 if there is a panel heading */
+.panel .list-group .panel-heading + .list-group-item:first-child {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
 .list-group-item {
   padding: 14px 17px;
+}
+
+.list-group-item > .label {
+  float: right;
 }
 
 a.list-group-item {
@@ -290,8 +330,23 @@ a.list-group-item .list-group-item-heading {
  * Pages
  */
 
+.page-title {
+  font-size: 40px;
+  text-align: center;
+}
+
 .page-menu .page-title {
   font-size: 32px;
+  text-align: left;
+}
+
+.page-my-orders .page-title {
+  margin-bottom: 40px;
+}
+
+.page-my-orders .order-container {
+  /* 570 + gutters */
+  max-width: 600px;
 }
 
 /**

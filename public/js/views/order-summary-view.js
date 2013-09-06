@@ -46,5 +46,4 @@ var OrderSummaryView = Backbone.View.extend({
     var $btn = this.$el.find('.btn-checkout');
     value ? $btn.removeAttr('disabled') : $btn.attr('disabled', 'disabled');
   }
-
 });

@@ -30,5 +30,11 @@ var Order = Backbone.Model.extend({
     'zip',
     'phone',
     'guests'
-  ]
+  ],
+
+  toJSON: function() {
+    var obj = Backbone.Model.prototype.toJSON.apply(this, arguments);
+    obj.orderItems = this.orderItems.toJSON();
+    return obj;
+  }
 });

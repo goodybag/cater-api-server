@@ -35,10 +35,10 @@
   </div>
 </div>
 
-<div class="tab-content">
-  <div class="tab-pane active" id="menu">
-    <div class="row">
-      <div class="col-md-8">
+<div class="row">
+  <div class="col-md-8">
+    <div class="tab-content">
+      <div class="tab-pane active" id="menu">
         <div class="menu">
           {{#each restaurant.categories}}
           <div class="panel menu-category">
@@ -64,20 +64,7 @@
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="panel order-summary" data-spy="affix" data-offset-top="190">
-          <div class="panel-heading">
-            <h2 class="panel-title">Order</h2>
-          </div>
-          {{> order_summary}}
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="tab-pane" id="info">
-    <div class="row well">
-      <div class="col-lg-8 col-lg-offset-2">
+      <div class="tab-pane well" id="info">
         <div class="row">
           <div class="col-lg-6">
             delivery zips: {{array restaurant.delivery_zips}}
@@ -86,7 +73,7 @@
             delivery hours:
             {{#each restaurant.delivery_times}}
             <p>{{weekday @key}}: {{#each this}}{{#if @index}}, {{/if}}{{formatTime this.[0]}} &mdash; {{formatTime this.[1]}}{{/each}}
-            {{/each}}
+              {{/each}}
           </div>
         </div>
         <div class="row">
@@ -101,6 +88,15 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="panel order-summary" data-spy="affix" data-offset-top="190">
+      <div class="panel-heading">
+        <h2 class="panel-title">Order</h2>
+      </div>
+      {{> order_summary}}
     </div>
   </div>
 </div>

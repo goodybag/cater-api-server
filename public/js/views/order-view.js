@@ -106,8 +106,11 @@ var OrderView = Backbone.View.extend({
 
       if(!datepart || !timepart) return null;
 
-      var date = new Date(datepart + ' ' + timepart);
-      return date.toString() !== 'Invalid Date' ? date.toISOString() : null;
+      // since we cannot determine offset, cannot format as ISO 8601 String
+      // using "YYYY-MM-DD hh:mm" to represent the date and time
+      var datetime = datepart + ' ' + timepart;
+      var date = moment(datetime);
+      return date.isValid() ? datetime : null;
     },
     phone: function() {
       return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '');

@@ -109,7 +109,7 @@ var OrderView = Backbone.View.extend({
       // since we cannot determine offset, cannot format as ISO 8601 String
       // using "YYYY-MM-DD hh:mm" to represent the date and time
       var datetime = datepart + ' ' + timepart;
-      var date = new moment(datetime);
+      var date = moment(datetime);
       return date.isValid() ? datetime : null;
     },
     phone: function() {

@@ -3,6 +3,8 @@ var
 , async = require('async')
 ;
 
+var cli = false;
+
 // custom types
 
 //custom type - order_status
@@ -16,10 +18,20 @@ var types = {
   }
 };
 
-var done = function(error) {
-  console.log( (error) ? "Error creating types" : "Successfully created types");
-  console.log(error);
-  process.exit(0);
-}
+var done = function(callback) {
+  return function(error, results) {
+    console.log( (error) ? "Error creating types" : "Successfully created types");
+    if(error) console.log(error);
+    if (cli) return process.exit( (error) ? 1 : 0 );
+    else if(callback) callback(error, results);
+  }
+};
 
-async.series(types, done);
+module.exports.run = function(callback) {
+  async.series(types, done(callback));
+};
+
+if (require.main === module) {
+  var cli = true;
+  module.exports.run();
+}

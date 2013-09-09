@@ -7,7 +7,77 @@ var OrderItems = Backbone.Collection.extend({
 });
 
 var Order = Backbone.Model.extend({
+  schema: function() {
+    return {
+      type: 'object',
+      properties: {
+        user_id: {
+          type: 'string',
+          minLength: 1,
+          required: true
+        },
+        restaurant_id: {
+          type: 'string',
+          minLength: 1,
+          required: true
+        },
+        street: {
+          type: ['string', 'null'],
+          minLength: 1,
+          required: false
+        },
+        city: {
+          type: ['string', 'null'],
+          minLength: 1,
+          required: false
+        },
+        state: {
+          type: ['string', 'null'],
+          length: 2,
+          enum: _.pluck(states, 'abbr'),
+          required: false
+        },
+        zip: {
+          type: ['string', 'null'],
+          length: 5,
+          required: false,
+          format: /^\d*$/,
+          enum: this.get('restaurant').delivery_zips
+        },
+        phone: {
+          type: ['string', 'null'],
+          length: 10,
+          pattern: /^\d*$/, //contains only digits
+          required: false
+        },
+        guests: {
+          type: ['integer', 'null'],
+          minimum: 1,
+          maximum: this.get('restaurant').max_guests,
+          required: false
+        },
+        notes: {
+          type: ['string', 'null'],
+          required: false
+        },
+       datetime: {
+         type: ['string', 'null'],
+         // TODO: validate against format
+         required: false
+       }
+      }
+    };
+  },
+
+  // TODO: extract to superclass
+  validator: amanda('json'),
+
+  validate: function(attrs, options) {
+    return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
+  },
+
   urlRoot: '/orders',
+
   initialize: function(attrs, options) {
     attrs = attrs || {};
     this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id});

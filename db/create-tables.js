@@ -68,9 +68,20 @@ var notify =  function(name, message, callback) {
   }
 };
 
-var done = function(error, results) {
-  if (error) return console.log(error);
-  process.exit(0);
-}
+var done = function(callback) {
+  return function(error, results) {
+    console.log( (error) ? "Error creating types" : "Successfully created types");
+    if (error) console.log(error);
+    if (cli) return process.exit( (error) ? 1 : 0 );
+    else if(callback) callback(error, results);
+  }
+};
 
-async.mapSeries(definitions, iterator, done);
+module.exports.run = function(callback) {
+  async.mapSeries(definitions, iterator, done(callback));
+};
+
+if (require.main === module) {
+  var cli = true;
+  module.exports.run();
+}

@@ -1,4 +1,11 @@
-<form class="form-horizontal col-lg-8 user-settings-form">
+{{#if alert}}
+  <div class="alert alert-success fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <strong>Settings Saved!</strong>
+  </div>
+{{/if}}
+<form class="form-horizontal col-lg-8 user-settings-form" action="/users/me">
+  <input type="hidden" name="_method" value="post"/>
   <fieldset>
     <legend>User Settings</legend>
     <div class="form-group">
@@ -47,6 +54,7 @@
 
 {{#extend "scripts"}}
 <script>
+  /*
   $('.user-settings-form').on('submit', function(e) {
     e.preventDefault();
     var fields = ['first_name', 'last_name', 'email', 'organization', 'password'];
@@ -57,6 +65,8 @@
       return alert('passwords must match');
     if (!data.password) delete data.password;
 
+    //this.submit();
+    
     $.ajax({
       url: '/users/me',
       type: 'PUT',
@@ -67,8 +77,11 @@
       },
       success: function(data, textStatus, jqXHR) {
         alert('update successful');
+        $(".alert").alert();
       }
     });
+    
   });
+  */
 </script>
 {{/extend}}

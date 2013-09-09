@@ -16,6 +16,7 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.get = function(req, res) {
+  console.log('get');
   var query = queries.user.get(req.params.uid, req.query.columns);
   var sql = db.builder.sql(query);
 
@@ -64,13 +65,18 @@ module.exports.create = function(req, res) {
 }
 
 module.exports.update = function(req, res) {
+  console.log('shit');
   // TODO: require auth header with old password for password update
   var update = function() {
     var query = queries.user.update(req.body, req.params.uid);
     var sql = db.builder.sql(query);
     db.query(sql.query, sql.values, function(err, rows, result) {
       if (err) return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
-      res.json(200, rows[0]);
+      //res.json(200, rows[0]);
+      res.render('poop', {user: rows[0], alert: true}, function(err, html) {
+        if (err) return res.error(errors.internal.UNKNOWN, err);
+        return res.send(200, html);
+      });
     });
   }
   req.body.password == null ? update() : utils.encryptPassword(req.body.password, function(err, hash, salt) {

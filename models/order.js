@@ -329,7 +329,7 @@ module.exports = Model.extend({
     query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
     unacceptable.push('(delivery_times.id IS NULL)');
 
-    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
+    query.columns.push('(' + (unacceptable.length) ? unacceptable.join(' OR') : 'null' + ') as is_unacceptable');
 
     Model.find.call(this, query, utils.partial(modifyAttributes, callback));
   },

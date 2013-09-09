@@ -61,7 +61,7 @@ var Order = Backbone.Model.extend({
     if (value > restaurant.max_guests) {
       restaurant.is_guests_bad = true;
       models.set('restaurant', restaurant);
-    },
+    }
 
     // TODO: check lead times
   },

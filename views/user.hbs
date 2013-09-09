@@ -1,49 +1,35 @@
-<form class="form-horizontal col-lg-8 user-settings-form">
-  <fieldset>
-    <legend>Account Settings</legend>
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/user-settings.css">
+{{/extend}}
+
+<h1 class="text-center page-title">Account Settings</h1>
+<form class="well col-lg-6  col-lg-offset-3 user-settings-form">
     <div class="form-group">
-      <label for="input-first-name" class="col-lg-2 control-label">First Name</label>
-      <div class="col-lg-10">
-        <input type="text" id="input-first-name" class="form-control first_name" value="{{user.first_name}}">
-      </div>
+      <label for="input-first-name" class="control-label">First Name</label>
+      <input type="text" id="input-first-name" class="form-control first_name col-lg-12" value="{{user.first_name}}">
     </div>
     <div class="form-group">
-      <label for="input-last-name" class="col-lg-2 control-label">Last Name</label>
-      <div class="col-lg-10">
-        <input type="text" id="input-last-name" class="form-control last_name" value="{{user.last_name}}">
-      </div>
+      <label for="input-last-name" class="control-label">Last Name</label>
+      <input type="text" id="input-last-name" class="form-control last_name" value="{{user.last_name}}">
     </div>
     <div class="form-group">
-      <label for="input-email" class="col-lg-2 control-label">Email</label>
-      <div class="col-lg-10">
-        <input type="email" id="input-email" class="form-control email" value="{{user.email}}">
-      </div>
+      <label for="input-email" class="control-label">Email</label>
+      <input type="email" id="input-email" class="form-control email" value="{{user.email}}">
     </div>
     <div class="form-group">
-      <label for="input-org" class="col-lg-2 control-label">Organization</label>
-      <div class="col-lg-10">
-        <input type="text" id="input-org" class="form-control organization" value="{{user.orginization}}">
-      </div>
+      <label for="input-org" class="control-label">Organization</label>
+      <input type="text" id="input-org" class="form-control organization" value="{{user.orginization}}">
     </div>
     <div class="form-group">
-      <label for="input-pass1" class="col-lg-2 control-label">Password</label>
-      <div class="col-lg-10">
-        <input type="password" id="input-pass1" class="form-control password">
-      </div>
+      <label for="input-pass1" class="control-label">Password</label>
+      <input type="password" id="input-pass1" class="form-control password">
     </div>
     <div class="form-group">
-      <label for="input-pass2" class="col-lg-2 control-label">Confirm Password</label>
-      <div class="col-lg-10">
-        <input type="password" id="input-pass2" class="form-control confirm_password">
-      </div>
+      <label for="input-pass2" class="control-label">Confirm Password</label>
+      <input type="password" id="input-pass2" class="form-control confirm_password">
     </div>
-  </fieldset>
   <button type="submit" class="btn btn-lg btn-primary pull-right">Save</button>
 </form>
-
-<div class="col-lg-2 col-offset-1">
-  <a href="/users/me/orders" class="btn btn-lg btn-default">My Orders</a>
-</div>
 
 {{#extend "scripts"}}
 <script>

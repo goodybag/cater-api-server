@@ -179,6 +179,29 @@ var helpers = {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
     return str;
+  },
+
+  mailto: function(email) {
+    return '<a href="mailto:' + email + '">' + email + '</a>';
+  },
+
+  eq: function(a, b, options){
+    return options[a == b ? 'fn' : 'inverse'](this);
+  },
+  dneq: function(a, b, options){
+    return options[a != b ? 'fn' : 'inverse'](this);
+  },
+  lt: function(a, b, options){
+    return options[a < b ? 'fn' : 'inverse'](this);
+  },
+  lte: function(a, b, options){
+    return options[a <= b ? 'fn' : 'inverse'](this);
+  },
+  gt: function(a, b, options){
+    return options[a > b ? 'fn' : 'inverse'](this);
+  },
+  gte: function(a, b, options){
+    return options[a >= b ? 'fn' : 'inverse'](this);
   }
 }
 

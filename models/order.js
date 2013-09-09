@@ -19,7 +19,7 @@ module.exports = Model.extend({
     var insert = this.attributes.id == null;
     if (insert) this.attributes.review_token = uuid.v4();
     var order = this
-    Model.prototype.save.call(this, function(err) {
+    Model.prototype.save.call(this, ["*", '("orders"."datetime"::text) as datetime'], function(err) {
       if (!err && insert) {
         var OrderStatus = require('./order-status');
         var status = new OrderStatus({order_id: order.attributes.id});

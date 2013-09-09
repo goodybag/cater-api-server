@@ -33,12 +33,17 @@
     <header id="header" class="navbar">
       <div class="container">
         <div class="row">
-          <div class="col-lg-2">
+          <div class="col-lg-4">
             <a class="navbar-brand" href="/">
               <img src="/img/logo.png" alt="Goodybag">
             </a>
+            {{#unless user.id}}
+              <span class="header-info">
+                Contact Us: <strong class="phone-number">512-667-4224</strong>
+              </span>
+            {{/unless}}
           </div>
-          <div class="col-lg-2 col-lg-offset-8">
+          <div class="col-lg-4 col-lg-offset-4">
             {{#if user.id}}
             <div class="btn-group pull-right">
               <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
@@ -50,8 +55,6 @@
                 <li><a href="/auth/logout">Logout</a></li>
               </ul>
             </div>
-            {{else}}
-            <a href="/auth" class="btn btn-default navbar-btn login-btn pull-right">Get Started</a>
             {{/if}}
           </div>
         </div>
@@ -60,7 +63,7 @@
 
     {{{block "banner"}}}
 
-    <div id="main" class="container">
+    <div id="main">
       {{{body}}}
     </div>
 

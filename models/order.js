@@ -77,6 +77,11 @@ module.exports = Model.extend({
       && !this.attributes.is_unacceptable
     ;
 
+    var ids = ['id', 'restaurant_id', 'user_id'];
+    utils.each(ids, function(key) {
+      obj[key] = '' + obj[key]
+    });
+
     return obj;
   },
   requiredFields: [

@@ -41,7 +41,7 @@ var Order = Backbone.Model.extend({
           type: ['string', 'null'],
           length: 5,
           required: false,
-          format: /^\d*$/,
+          pattern: /^\d*$/,
           enum: this.get('restaurant').delivery_zips
         },
         phone: {

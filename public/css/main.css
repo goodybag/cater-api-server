@@ -4,6 +4,10 @@
   }
 }
 
+html {
+  background: #FCFDF6;
+}
+
 body {
   font-family: 'Proxima Nova';
 }
@@ -16,6 +20,51 @@ h1 {
 header.navbar {
   border-radius: 0;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.07);
+}
+
+#footer {
+  text-align: center;
+  background: #FCFDF6;
+  border-top: solid 1px #CFCFC4;
+  padding-top: 32px;
+  padding-bottom: 8px;
+  margin-top: 60px;
+}
+
+.footer-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /* Normalize footer so heights don't get wonky from line-heights */
+  font-size: 0;
+}
+
+.footer-nav > li {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-nav > li:before {
+  content: "\2022";
+  font-size: 13px;
+}
+
+.footer-nav > li:first-child:before {
+  content: "";
+}
+
+.footer-nav > li > a {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #432012;
+  margin: 0 16px;
+}
+
+.footer-nav > li > a:hover {
+  text-decoration: underline;
 }
 
 .order-item .edit {
@@ -50,11 +99,6 @@ header.navbar {
   color: #bebebe;
   pointer-events: none;
   cursor: default;
-}
-
-#footer {
-  padding-bottom: 40px;
-  padding-top: 100px;
 }
 
 .banner {

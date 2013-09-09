@@ -211,6 +211,20 @@ var helpers = {
 
   gte: function(a, b, options){
     return options[a >= b ? 'fn' : 'inverse'](this);
+  },
+
+  dollarMeter: function( value, max, additionalClass ){
+    max = (/number|string/).test( typeof max ) ? max : 4;
+    additionalClass = typeof additionalClass == "string" ? additionalClass : "";
+
+    var tmpl = '<span class="dollar-meter-item{{more-class}}">$</span>';
+    var out = [];
+
+    for ( var i = 1; i <= max; i++ ){
+      out.push( tmpl.replace( '{{more-class}}', (value >= i ? ' dollar-meter-item-filled' : '') + ' ' + additionalClass ) );
+    }
+
+    return out.join('\n');
   }
 }
 

@@ -1,10 +1,10 @@
-var OrderView = Backbone.View.extend({
-  model: Order,
+var OrderView = FormView.extend({
+  submitSelector: '.order-save-btn',
 
   events: function() {
     return {
-      'keyup .order-form .order-form-field': 'onOrderChange',
-      'change .order-form .order-form-field': 'onOrderChange',
+      'keyup .order-form .order-form-field': 'onChange',
+      'change .order-form .order-form-field': 'onChange',
       'submit .order-form': 'onSave',
       'click .edit-address-btn': 'editAddress',
       'click .cancel-btn': _.bind(this.changeStatus, this, 'canceled'),
@@ -15,14 +15,15 @@ var OrderView = Backbone.View.extend({
   },
 
   initialize: function(options) {
-    if (this.model) this.listenTo(this.model, {
+    if (!this.model) this.model = new Order();
+    this.listenTo(this.model, {
       'change:sub_total': this.onPriceChange,
       'change:submittable': this.onSubmittableChange,
       'change:phone': this.onPhoneChange
     }, this);
 
     if (this.model.get('editable')) {
-      this.onOrderChange();
+      this.onChange();
       this.updateAddressBlock();
     }
 
@@ -94,9 +95,7 @@ var OrderView = Backbone.View.extend({
   },
 
   fieldGetters: {
-    guests: function() {
-      return parseInt(this.$el.find('.order-form ' + this.fieldMap.guests).val());
-    },
+    guests: _.partial(FormView.intGetter, 'guests'),
     datetime: function() {
       $date = this.$el.find(".order-form #order-date").eq(0);
       $time = this.$el.find(".order-form #order-time").eq(0);
@@ -113,36 +112,8 @@ var OrderView = Backbone.View.extend({
       return date.isValid() ? datetime : null;
     },
     phone: function() {
-      return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '');
+      return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
     }
-  },
-
-  getDiff: function() {
-    var diff = {}
-
-    for (var key in this.fieldMap) {
-      var getter = this.fieldGetters[key];
-      var val = (getter ? getter.apply(this) : (this.$el.find('.order-form ' + this.fieldMap[key]).val()||'').trim()) || null;
-      //TODO: validate
-      if ((this.model.get(key) || val) && this.model.get(key) != val)
-        diff[key] = val;
-    }
-
-    return _.size(diff) > 0 ? diff : null;
-  },
-
-  onOrderChange: function(e) {
-    this.$el.find('.order-save-btn').toggleClass('hide', !this.getDiff());
-  },
-
-  onSave: function(e) {
-    e.preventDefault();
-    var view = this;
-    this.model.save(this.getDiff(), {
-      error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
-      success: function(data, textStatus, jqXHR) { view.$el.find('.order-save-btn').addClass('hide'); },
-      patch: true
-    });
   },
 
   editAddress: function(e) {

@@ -28,7 +28,15 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="icon-"] {
 */
-.gb-icon-caret-down, .gb-icon-x-mark, .gb-icon-magnifier, .gb-icon-location, .gb-icon-time, .gb-icon-calendar, .gb-icon-user {
+.gb-icon-caret-down,
+.gb-icon-x-mark,
+.gb-icon-magnifier,
+.gb-icon-location,
+.gb-icon-time,
+.gb-icon-calendar,
+.gb-icon-email,
+.gb-icon-phone,
+.gb-icon-user {
   font-family: 'gb';
   speak: none;
   font-style: normal;
@@ -58,4 +66,10 @@ you can use the generic selector below, but it's slower:
 }
 .gb-icon-user:before {
   content: "\e006";
+}
+.gb-icon-email:before {
+  content: "\e007";
+}
+.gb-icon-phone:before {
+  content: "\e008";
 }

@@ -47,13 +47,17 @@ utils.extend(Model.prototype, {
   toJSON: function() {
     return utils.clone(this.attributes);
   },
-  save: function(callback) {
+  save: function(returning, callback) {
+    if (utils.isFunction(returning)) {
+      callback = returning;
+      returning = null;
+    }
     var attrs = utils.omit(utils.pick(this.attributes, utils.keys(this.constructor.schema)), ['id', 'created_at']);
     var id = this.attributes.id;
     query = {
       type: id ? 'update' : 'insert',
       table: this.constructor.table,
-      returning: '*'
+      returning: returning || '*'
     };
 
     if (id) query.where = {id: id};

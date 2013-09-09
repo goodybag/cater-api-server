@@ -21,6 +21,10 @@
   color: #aaa;
 }
 
+.form-control {
+  height: 36px;
+}
+
 /**
  * Labels
  */

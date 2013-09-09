@@ -5,7 +5,10 @@ header.navbar {
 }
 
 .header-info {
+  display: inline-block;
   vertical-align: middle;
+  padding-top: 8px;
+  margin-left: 14px;
 }
 
 .navbar-brand {

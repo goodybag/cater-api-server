@@ -63,6 +63,12 @@ module.exports = Model.extend({
     var obj = Model.prototype.toJSON.apply(this, arguments);
     if (!options || !options.review)
       obj = utils.omit(obj, ['review_token', 'token_used']);
+
+    var ids = ['id', 'restaurant_id', 'user_id'];
+    utils.each(ids, function(key) {
+      obj[key] = '' + obj[key]
+    });
+
     if (options && options.plain)
       return obj;
 
@@ -76,11 +82,6 @@ module.exports = Model.extend({
       && !obj.below_min
       && !this.attributes.is_unacceptable
     ;
-
-    var ids = ['id', 'restaurant_id', 'user_id'];
-    utils.each(ids, function(key) {
-      obj[key] = '' + obj[key]
-    });
 
     return obj;
   },

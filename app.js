@@ -22,7 +22,7 @@ var app = module.exports = express();
 
 app.configure(function(){
   app.set('port', config.http.port || 3000);
-  app.use(express.favicon());
+  app.use(express.favicon(__dirname + '/public/favicon.ico'));
   app.use(express.logger('dev'));
   app.use(express.compress());
 

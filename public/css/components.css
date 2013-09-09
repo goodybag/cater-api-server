@@ -21,9 +21,17 @@
   color: #aaa;
 }
 
+.form-control {
+  height: 36px;
+}
+
 /**
  * Labels
  */
+
+.form-group label {
+  margin-bottom: 1px;
+}
 
 .label {
   padding: .4em 1em .4em;
@@ -487,4 +495,22 @@ a.list-group-item .list-group-item-heading {
 
 .modal-order-params .modal-footer {
   margin-top: 0;
+}
+
+/**
+ * Dollar Meter
+ */
+
+.dollar-meter {
+  font-size: 0;
+}
+
+.dollar-meter > .dollar-meter-item {
+  font-size: 13px;
+  font-weight: 300;
+  color: #c5bebb;
+}
+
+.dollar-meter > .dollar-meter-item.dollar-meter-item-filled {
+  color: #695A42;
 }

@@ -185,6 +185,10 @@ var helpers = {
     return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day];
   },
 
+  mailto: function(email) {
+    return '<a href="mailto:' + email + '">' + email + '</a>';
+  },
+
   eq: function(a, b, options){
     return options[a == b ? 'fn' : 'inverse'](this);
   },

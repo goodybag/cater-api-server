@@ -61,8 +61,14 @@ var Order = Backbone.Model.extend({
     if (value > restaurant.max_guests) {
       restaurant.is_guests_bad = true;
       models.set('restaurant', restaurant);
-    }
+    },
 
     // TODO: check lead times
+  },
+
+  toJSON: function() {
+    var obj = Backbone.Model.prototype.toJSON.apply(this, arguments);
+    obj.orderItems = this.orderItems.toJSON();
+    return obj;
   }
 });

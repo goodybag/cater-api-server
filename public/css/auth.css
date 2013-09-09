@@ -1,17 +1,20 @@
-body {
-  background: url('/img/auth-page-background.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
 header.navbar {
   margin-bottom: 0;
   border-radius: 0;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
 }
 
-#main {
-  min-height: 1000px;
+.header-info {
+  display: inline-block;
+  vertical-align: middle;
+  padding-top: 8px;
+  margin-left: 14px;
+}
+
+.navbar-brand {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
 }
 
 .auth-title-row {
@@ -21,4 +24,78 @@ header.navbar {
 
 label {
   font-size: 12px;
+}
+
+.page-auth {
+  height: 814px;
+  background: url('/img/auth-page-background.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.page-auth > .container {
+  max-width: 770px;
+  height: 100%;
+  background: rgba(252, 253, 246, 0.84);
+}
+
+.page-title {
+  font-size: 44px;
+}
+
+.lead {
+  text-align: center;
+  font-size: 18px;
+}
+
+#footer {
+  margin-top: 0;
+}
+
+.form-container {
+  max-width: 375px;
+  margin: 0 auto;
+}
+
+.panel {
+  padding: 18px 24px;
+}
+
+.help-block {
+  font-size: 15px;
+}
+
+.page-auth .panel a {
+  color: #432012;
+  text-decoration: underline;
+  font-size: 12px;
+}
+
+#forgot-password {
+  display: inline-block;
+  margin-top: -8px;
+}
+
+.form-remember-forgot-wrapper {
+  margin-top: -10px;
+}
+
+.form-actions {
+  margin-top: 4px;
+}
+
+@media (max-width: 786px) {
+  .page-title {
+    font-size: 34px;
+  }
+
+  .lead {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 486px) {
+  .page-title {
+    font-size: 24px;
+  }
 }

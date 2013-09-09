@@ -51,12 +51,12 @@ define(function(require) {
   , zip: {
       type: types.varchar(5)
     , nullable: true
-    , checks: ["SIMILAR TO '\d{5}'"]
+    , checks: ["SIMILAR TO '[[:digit:]]{5}'"]
     }
   , phone: {
       type: types.varchar(10)
     , nullable: true
-    , checks: ["SIMILAR TO '\d{10}'"]
+    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     }
   , notes: {
       type: types.text

@@ -116,6 +116,11 @@ module.exports = Model.extend({
     query.columns = query.columns || ['*'];
     query.order = query.order || ["orders.id"];
 
+    // making datetime a string on purpose so that the server timezone isn't
+    // applied to it when it is pulled out (there is no ofset set on this
+    // because it cannot be determined due to DST until the datetime in
+    // datetime)
+    query.columns.push('(orders.datetime::text) as datetime');
     query.columns.push('latest.status');
 
     query.with = {

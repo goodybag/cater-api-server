@@ -61,8 +61,13 @@ define(function(require) {
     , nullable: true
     }
   , datetime: {
-      type: types.timestamptz
+      type: types.timestamp
     , nullable: true
+    }
+  , timezone: {
+      type: types.timezone
+    , nullable: true
+    , default:"'America/Chicago'" //TODO: determine timezone based on order info
     }
   , guests: {
       type: types.int

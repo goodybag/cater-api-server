@@ -22,6 +22,23 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icons-ul {
+  margin-left: 2.142857142857143em;
+  list-style-type: none;
+}
+
+.icons-ul>li {
+  position: relative;
+}
+
+.icons-ul .icon-li {
+  position: absolute;
+  left: -2.142857142857143em;
+  width: 2.142857142857143em;
+  text-align: center;
+  line-height: inherit;
+}
+
 /* Use the following CSS code if you want to have a class per icon */
 /*
 Instead of a list of all class selectors,

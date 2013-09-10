@@ -22,13 +22,38 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icons-ul {
+  margin-left: 2.142857142857143em;
+  list-style-type: none;
+}
+
+.icons-ul>li {
+  position: relative;
+}
+
+.icons-ul .icon-li {
+  position: absolute;
+  left: -2.142857142857143em;
+  width: 2.142857142857143em;
+  text-align: center;
+  line-height: inherit;
+}
+
 /* Use the following CSS code if you want to have a class per icon */
 /*
 Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="icon-"] {
 */
-.gb-icon-caret-down, .gb-icon-x-mark, .gb-icon-magnifier, .gb-icon-location, .gb-icon-time, .gb-icon-calendar, .gb-icon-user {
+.gb-icon-caret-down,
+.gb-icon-x-mark,
+.gb-icon-magnifier,
+.gb-icon-location,
+.gb-icon-time,
+.gb-icon-calendar,
+.gb-icon-email,
+.gb-icon-phone,
+.gb-icon-user {
   font-family: 'gb';
   speak: none;
   font-style: normal;
@@ -58,4 +83,10 @@ you can use the generic selector below, but it's slower:
 }
 .gb-icon-user:before {
   content: "\e006";
+}
+.gb-icon-email:before {
+  content: "\e007";
+}
+.gb-icon-phone:before {
+  content: "\e008";
 }

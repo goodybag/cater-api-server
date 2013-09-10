@@ -25,6 +25,16 @@
   height: 36px;
 }
 
+/* Have to go with a non-form-group position relative solution here
+   so that the date picker in order params bar does not get contained
+   to that container. Also, the inline-block solution did not work in
+   Safari */
+.form-group .form-group-icon {
+  position: absolute;
+  margin-left: 77px;
+  margin-top: -26px;
+}
+
 /**
  * Labels
  */
@@ -96,10 +106,6 @@
   padding: 15px 18px;
 }
 
-.order-params-bar .form-group {
-
-}
-
 .order-params-bar .btn-search {
   margin-left: 32px;
 }
@@ -111,6 +117,15 @@
 .order-params-bar .form-control.form-control-zip,
 .order-params-bar .form-control.form-control-guests {
   width: 100px;
+}
+
+.order-params-bar .form-group-icon.gb-icon-calendar {
+  margin-left: 100px;
+  margin-top: -27px;
+}
+
+.order-params-bar .form-group-icon.gb-icon-time {
+  margin-left: 100px
 }
 
 .order-params-bar .form-control[readonly] {
@@ -143,6 +158,7 @@
     position: absolute;
     right: 6px;
     top: 8px;
+    margin-top: 0 !important;
   }
 }
 
@@ -236,6 +252,13 @@ a.list-group-item .list-group-item-heading {
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 2px;
+}
+
+.list-group-item.disabled {
+  font-style: italic;
+  opacity: 0.45;
+  filter: alpha(opacity=45);
+  cursor: default;
 }
 
 /**

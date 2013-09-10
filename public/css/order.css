@@ -84,6 +84,10 @@
   margin-top: 22px;
 }
 
+.form-group.form-group-block.form-group-phone {
+  width: 80%;
+}
+
 .form-group-city {
   width: 60%;
 }

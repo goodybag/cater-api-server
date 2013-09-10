@@ -85,7 +85,7 @@
 }
 
 .form-group.form-group-block.form-group-phone {
-  width: 80%;
+  width: 72%;
 }
 
 .form-group-city {
@@ -101,4 +101,36 @@
 .form-group-zip {
   margin-left: 0 !important;
   width: 120px;
+}
+
+.panel-order-line-item .panel-heading {
+  color: #432012;
+  font-size: 21px;
+  border-bottom: 0;
+}
+
+.order-line-item-table {
+  border-top: solid #CCCCC0 1px;
+  border-bottom: solid #CCCCC0 1px;
+}
+
+.order-line-item-table thead > tr > th {
+  padding: 1px;
+  border-bottom: solid #CCCCC0 1px;
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.order-line-item-table thead > tr > th:first-child,
+.order-line-item-table tbody > tr > td:first-child {
+  padding-left: 24px;
+}
+
+.order-line-item-table thead > tr > th:last-child,
+.order-line-item-table tbody > tr > td:last-child {
+  padding-left: 24px;
+}
+
+.order-line-item-table tbody > tr > td {
+  border: none;
 }

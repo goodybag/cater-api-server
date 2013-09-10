@@ -137,6 +137,14 @@ a.list-group-item .list-group-item-heading {
   background-color: #F0AD4E;
 }
 
+.label-complete {
+  background-color: #5CB85C;
+}
+
+.label-cancelled {
+  background-color: #D9534F;
+}
+
 /**
  * Forms
  */

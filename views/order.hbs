@@ -2,9 +2,31 @@
 <link rel="stylesheet" href="/css/order.css">
 {{/extend}}
 
-<div class="page page-order container">
+<div class="page page-order container container-small">
   <div class="row">
     <h1 class="col-lg-12 page-title">Review Your Order</h1>
+  </div>
+
+  <div class="panel panel-order-details">
+    <div class="row">
+      <div class="col-sm-7 col-left">
+        <div class="panel-body">
+          <h2 class="restaurant-name">{{order.restaurant.name}}</h2>
+          <span class="label label-status label-{{lowercase order.status}}">{{capitalize order.status}}</span>
+          <div class="date-created">
+            Date created:
+            <span class="date-created-value">{{formatDateTime order.created_at "MMMM Do YYYY, h:mm a"}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-5 col-right">
+        <div class="panel-body">ohai</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-order-line-item">
+    <div class="panel-body"></div>
   </div>
 
   <div class="row order-info">

@@ -1,48 +1,15 @@
-.restaurant-review-buttons {
-  text-align: center;
+.panel-order-details .col-right {
+  border-left: solid #CCCCC0 1px;
 }
 
-#main {
-  padding-bottom: 60px;
+.panel-order-details .restaurant-name {
+  font-size: 24px;
+  margin-top: 0;
+  padding-right: 62px;
 }
 
-/**
- * My Order List Groups
- */
-
-.order-list-group .list-group-item {
-  padding-left:   25px;
-  padding-top:    26px;
-  padding-right:  25px;
-  padding-bottom: 20px;
-}
-
-.order-list-group .list-group-item .list-group-item-heading {
-  font-size: 18px;
-  color: #53442B;
-}
-
-.order-list-group .order-details-list {
-  font-size: 13px;
-  font-weight: 300;
-  margin-top: 5px;
-  margin-bottom: 0;
-}
-
-.order-list-group dt,
-.order-list-group dd {
-  line-height: 1.6;
-}
-
-.order-list-group dt {
-  font-weight: 300;
-  color: #A7A4A0;
-}
-
-.definition-group-subtotal {
-  margin-top: 4px;
-}
-
-.definition-group-subtotal > dd {
-  font-weight: 500;
+.panel-order-details .label-status {
+  position: absolute;
+  top: 22px;
+  right: 24px;
 }

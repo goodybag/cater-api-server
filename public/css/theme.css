@@ -128,3 +128,11 @@ a.list-group-item .list-group-item-heading {
 .modal-body {
   color: #8B8983;
 }
+
+/**
+ * Labels
+ */
+
+.label-pending {
+  background-color: #F0AD4E;
+}

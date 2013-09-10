@@ -1,4 +1,12 @@
 /**
+ * Containers
+ */
+
+.container.container-small {
+  max-width: 800px;
+}
+
+/**
  * Forms
  */
 .form-inline {

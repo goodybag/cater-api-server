@@ -49,12 +49,14 @@ define(function(require) {
     , nullable: true
     }
   , zip: {
-      type: types.numeric(5)
+      type: types.varchar(5)
     , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{5}'"]
     }
   , phone: {
-      type: types.numeric(10)
+      type: types.varchar(10)
     , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     }
   , notes: {
       type: types.text

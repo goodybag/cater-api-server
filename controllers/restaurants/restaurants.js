@@ -45,6 +45,7 @@ module.exports.get = function(req, res) {
     function(callback) {
       models.Restaurant.findOne(parseInt(req.params.rid), orderParams, function(err, restaurant) {
         if (err) return callback(err);
+        if (!restaurant) return res.send(404);
         restaurant.getItems(function(err, items) {
           callback(err, restaurant);
         });

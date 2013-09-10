@@ -3,6 +3,37 @@ var utils = require('../utils');
 var uuid  = require('node-uuid');
 var db = require('../db');
 
+'delivery_zips',
+'delivery_times',
+'lead_times',
+'max_guests'
+
+
+var modifyAttributes = function(callback, err, orders) {
+  if (!err) {
+    var restaurantFields = [
+      'name',
+      'delivery_fee',
+      'minimum_order',
+      'email',
+      'sms_phone',
+      'voice_phone',
+      'is_bad_zip',
+      'is_bad_guests',
+      'is_bad_lead_time',
+      'is_bad_delivery_time',
+      'delivery_zips',
+      'lead_times',
+      'max_guests'
+    ];
+    utils.each(orders, function(order) {
+      order.attributes.restaurant = utils.extend({ id: order.attributes.restaurant_id, delivery_times: utils.object(order.attributes.delivery_times) } , utils.pick(order.attributes, restaurantFields));
+      utils.each(restaurantFields, function(field) { delete order.attributes.field; });
+    });
+  }
+  callback.call(this, err, orders);
+}
+
 module.exports = Model.extend({
   getOrderItems: function(callback) {
     var self = this;
@@ -32,6 +63,15 @@ module.exports = Model.extend({
     var obj = Model.prototype.toJSON.apply(this, arguments);
     if (!options || !options.review)
       obj = utils.omit(obj, ['review_token', 'token_used']);
+
+    var ids = ['id', 'restaurant_id', 'user_id'];
+    utils.each(ids, function(key) {
+      obj[key] = '' + obj[key]
+    });
+
+    if (options && options.plain)
+      return obj;
+
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
@@ -40,7 +80,7 @@ module.exports = Model.extend({
     obj.submittable = this.attributes.status === 'pending'
       && this.attributes.sub_total > 0
       && !obj.below_min
-      && !this.attributes.unacceptable
+      && !this.attributes.is_unacceptable
     ;
 
     return obj;
@@ -295,32 +335,9 @@ module.exports = Model.extend({
     query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
     unacceptable.push('(delivery_times.id IS NULL)');
 
-    query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
+    query.columns.push('(' + (unacceptable.length) ? unacceptable.join(' OR') : 'null' + ') as is_unacceptable');
 
-    Model.find.call(this, query, function(err, orders) {
-      if (!err) {
-        utils.each(orders, function(order) {
-          order.attributes.restaurant = {
-            id: order.attributes.restaurant_id,
-            name: order.attributes.name,
-            delivery_fee: order.attributes.delivery_fee,
-            minimum_order: order.attributes.minimum_order,
-            email: order.attributes.email,
-            sms_phone: order.attributes.sms_phone,
-            voice_phone: order.attributes.voice_phone,
-            delivery_times: utils.object(order.attributes.delivery_times)
-          };
-          delete order.attributes.name;
-          delete order.attributes.delivery_fee;
-          delete order.attributes.minimum_order;
-          delete order.attributes.email;
-          delete order.attributes.sms_phone;
-          delete order.attributes.voice_phone;
-          delete order.attributes.delivery_times;
-        });
-      }
-      callback.call(this, err, orders);
-    });
+    Model.find.call(this, query, utils.partial(modifyAttributes, callback));
   },
 
   // this is a FSM definition

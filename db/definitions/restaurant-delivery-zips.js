@@ -32,8 +32,9 @@ define(function(require) {
     , references: {table: 'restaurants', column: 'id'}
     }
   , zip: {
-      type: types.numeric(5)
-    , nullable: false
+      type: types.varchar(5)
+    , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{5}'"]
     }
   };
 

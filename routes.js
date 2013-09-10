@@ -190,13 +190,15 @@ module.exports.register = function(app) {
 
   app.put('/orders/:id', restrict(['client', 'admin']), controllers.orders.update);
 
+  app.patch('/orders/:id', restrict(['client', 'admin']), controllers.orders.update);
+
   app.del('/orders/:id', restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
     next();
   }, controllers.orders.changeStatus);
 
   app.all('/orders/:id', restrict(['client', 'admin']), function(req, res, next) {
-    res.set('Allow', 'GET, POST, DELETE');
+    res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
 

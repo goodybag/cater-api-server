@@ -8,6 +8,7 @@ var OrderSummaryView = Backbone.View.extend({
         'change:below_min': this.belowMinChange,
         'change:submittable': this.submittableChange
       }, this);
+
       if (this.model.orderItems) this.listenTo(this.model.orderItems, {
         'add': this.addItem,
         'remove': this.toggleWithItems

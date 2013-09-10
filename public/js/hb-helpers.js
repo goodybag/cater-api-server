@@ -37,6 +37,7 @@ var timeFormatter = function(time, format) {
   time = time.match(/(\d+)(?::(\d\d))?\s*(PM?|pm?|p?)/);
   datetime.hours( parseInt((time[1]) % 12) + (time[3] ? 12 : 0) );
   datetime.minutes( parseInt(time[2]) || 0 );
+  datetime.seconds(0);
   return datetime.format(format || 'HH:mm');
 }
 
@@ -147,7 +148,7 @@ var helpers = {
       options = format;
       format = undefined;
     }
-    return timeFormatter(time, format || "hh:mm A");
+    return timeFormatter(time, format || "h:mm A");
   },
 
   // TODO: make this a partial
@@ -181,6 +182,10 @@ var helpers = {
     return str;
   },
 
+  weekday: function(day) {
+    return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day];
+  },
+
   mailto: function(email) {
     return '<a href="mailto:' + email + '">' + email + '</a>';
   },
@@ -188,18 +193,23 @@ var helpers = {
   eq: function(a, b, options){
     return options[a == b ? 'fn' : 'inverse'](this);
   },
+
   dneq: function(a, b, options){
     return options[a != b ? 'fn' : 'inverse'](this);
   },
+
   lt: function(a, b, options){
     return options[a < b ? 'fn' : 'inverse'](this);
   },
+
   lte: function(a, b, options){
     return options[a <= b ? 'fn' : 'inverse'](this);
   },
+
   gt: function(a, b, options){
     return options[a > b ? 'fn' : 'inverse'](this);
   },
+
   gte: function(a, b, options){
     return options[a >= b ? 'fn' : 'inverse'](this);
   },

@@ -22,6 +22,13 @@ var OrderView = FormView.extend({
       'change:phone': this.onPhoneChange
     }, this);
 
+    this.listenTo(this.model.restaurant, {
+      'change:is_bad_zip': utils.partial(this.setAlerts, '.alert-bad-zip'),
+      'change:is_bad_delivery_time': utils.partial(this.setAlerts, '.alert-bad-delivery-time'),
+      'change:is_bad_guests': utils.partial(this.setAlerts, '.alert-bad-guests'),
+      'change:is_bad_lead_time': utils.partial(this.setAlerts, '.alert-bad-lead-time')
+    }, this);
+
     if (this.model.get('editable')) {
       this.onChange();
       this.updateAddressBlock();
@@ -50,6 +57,10 @@ var OrderView = FormView.extend({
 
   onPhoneChange: function(model, value, options) {
     this.$el.find(this.fieldMap.phone).val(Handlebars.helpers.phoneNumber(value))
+  },
+
+  setAlerts: function(selector, model, value, options) {
+    this.$el.find(selector).toggleClass('hide', !value);
   },
 
   changeStatus: function(status) {

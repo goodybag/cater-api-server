@@ -254,6 +254,13 @@ a.list-group-item .list-group-item-heading {
   margin-bottom: 2px;
 }
 
+.list-group-item.disabled {
+  font-style: italic;
+  opacity: 0.45;
+  filter: alpha(opacity=45);
+  cursor: default;
+}
+
 /**
  * Menu
  */

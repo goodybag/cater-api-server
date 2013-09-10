@@ -1,10 +1,10 @@
-var OrderView = Backbone.View.extend({
-  model: Order,
+var OrderView = FormView.extend({
+  submitSelector: '.order-save-btn',
 
   events: function() {
     return {
-      'keyup .order-form .order-form-field': 'onOrderChange',
-      'change .order-form .order-form-field': 'onOrderChange',
+      'keyup .order-form .order-form-field': 'onChange',
+      'change .order-form .order-form-field': 'onChange',
       'submit .order-form': 'onSave',
       'click .edit-address-btn': 'editAddress',
       'click .cancel-btn': _.bind(this.changeStatus, this, 'canceled'),
@@ -15,14 +15,22 @@ var OrderView = Backbone.View.extend({
   },
 
   initialize: function(options) {
-    if (this.model) this.listenTo(this.model, {
+    if (!this.model) this.model = new Order();
+    this.listenTo(this.model, {
       'change:sub_total': this.onPriceChange,
       'change:submittable': this.onSubmittableChange,
       'change:phone': this.onPhoneChange
     }, this);
 
+    this.listenTo(this.model.restaurant, {
+      'change:is_bad_zip': utils.partial(this.setAlerts, '.alert-bad-zip'),
+      'change:is_bad_delivery_time': utils.partial(this.setAlerts, '.alert-bad-delivery-time'),
+      'change:is_bad_guests': utils.partial(this.setAlerts, '.alert-bad-guests'),
+      'change:is_bad_lead_time': utils.partial(this.setAlerts, '.alert-bad-lead-time')
+    }, this);
+
     if (this.model.get('editable')) {
-      this.onOrderChange();
+      this.onChange();
       this.updateAddressBlock();
     }
 
@@ -35,7 +43,6 @@ var OrderView = Backbone.View.extend({
       format: 'hh:i A'
     , interval: 15
     }).pickatime('picker');
-
   },
 
   onPriceChange: function(model, value, options) {
@@ -49,6 +56,10 @@ var OrderView = Backbone.View.extend({
 
   onPhoneChange: function(model, value, options) {
     this.$el.find(this.fieldMap.phone).val(Handlebars.helpers.phoneNumber(value))
+  },
+
+  setAlerts: function(selector, model, value, options) {
+    this.$el.find(selector).toggleClass('hide', !value);
   },
 
   changeStatus: function(status) {
@@ -94,54 +105,25 @@ var OrderView = Backbone.View.extend({
   },
 
   fieldGetters: {
-    guests: function() {
-      return parseInt(this.$el.find('.order-form ' + this.fieldMap.guests).val());
-    },
+    guests: _.partial(FormView.intGetter, 'guests'),
     datetime: function() {
-      $date = this.$el.find(".order-form #order-date").eq(0);
-      $time = this.$el.find(".order-form #order-time").eq(0);
-      var datepart = ($date.val()) ? dateTimeFormatter($date.val()) : null;
-      var timepart = ($time.val()) ? timeFormatter($time.val()) : null;
+      var date = this.$el.find(".order-form #order-date").val().trim();
+      var time = this.$el.find(".order-form #order-time").val().trim();
+      var datepart = date ? dateTimeFormatter(date) : null;
+      var timepart = time ? timeFormatter(time, 'HH:mm:ss') : null;
 
 
       if(!datepart || !timepart) return null;
 
       // since we cannot determine offset, cannot format as ISO 8601 String
-      // using "YYYY-MM-DD hh:mm" to represent the date and time
+      // using "YYYY-MM-DD HH:mm:ss" to represent the date and time
       var datetime = datepart + ' ' + timepart;
       var date = moment(datetime);
       return date.isValid() ? datetime : null;
     },
     phone: function() {
-      return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '');
+      return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
     }
-  },
-
-  getDiff: function() {
-    var diff = {}
-
-    for (var key in this.fieldMap) {
-      var getter = this.fieldGetters[key];
-      var val = getter ? getter.apply(this) : (this.$el.find('.order-form ' + this.fieldMap[key]).val()||'').trim();
-      //TODO: validate
-      if ((this.model.get(key) || val) && this.model.get(key) != val)
-        diff[key] = val;
-    }
-
-    return _.size(diff) > 0 ? diff : null;
-  },
-
-  onOrderChange: function(e) {
-    this.$el.find('.order-save-btn').toggleClass('hide', !this.getDiff());
-  },
-
-  onSave: function(e) {
-    e.preventDefault();
-    var view = this;
-    this.model.save(this.getDiff(), {
-      error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
-      success: function(data, textStatus, jqXHR) { view.$el.find('.order-save-btn').addClass('hide'); }
-    });
   },
 
   editAddress: function(e) {

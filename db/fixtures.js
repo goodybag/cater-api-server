@@ -33,6 +33,10 @@ var austinZipCodes = [
 
 var arrayRandomize = function() {return 0.5 - Math.random()};
 
+var randomTime = function(maxHours, maxMinutes) {
+  return utils.map(utils.map([maxHours || 24, maxMinutes || 60], faker.random.number), function(i) { return ('0' + i).slice(-2); }).join(':');
+}
+
 var query = function(query, callback) {
   var sql = db.builder.sql(query);
   // console.log(sql.query, sql.values);
@@ -138,6 +142,20 @@ var inserts = {
       }
     }
   }
+, restaurantDeliveryTimes: function(restaurant_id, day, start, end) {
+    end = end || randomTime();
+    start = start || randomTime.apply(randomTime, (utils.map(end.split(':'), function(i) { return parseInt(i); })));
+    return {
+      type: 'insert'
+    , table: 'restaurant_delivery_times'
+    , values: {
+        restaurant_id: restaurant_id
+      , day: day
+      , start_time: start
+      , end_time: end
+      }
+    }
+  }
 }
 
 utils.async.series(
@@ -219,6 +237,18 @@ utils.async.series(
           // console.log('called4');
           cb(error);
         });
+      });
+    }
+  , restaurantDeliveryTimes: function(cb) {
+      console.log('populating restaurant_delivery_times');
+      query(select('restaurants'), function(error, results) {
+        if (error) return cb(error);
+        utils.async.each(results, function(restaurant, callback) {
+          var days = utils.first(utils.shuffle(utils.range(7)), faker.random.number(7));
+          utils.async.each(days, function(day, callback2) {
+            query(inserts.restaurantDeliveryTimes(restaurant.id, day), callback2);
+          }, callback)
+        }, cb);
       });
     }
   , userGroups: function(cb) {

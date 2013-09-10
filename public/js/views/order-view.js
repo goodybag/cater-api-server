@@ -43,7 +43,6 @@ var OrderView = FormView.extend({
       format: 'hh:i A'
     , interval: 15
     }).pickatime('picker');
-
   },
 
   onPriceChange: function(model, value, options) {

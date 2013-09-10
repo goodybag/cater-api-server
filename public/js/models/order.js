@@ -91,16 +91,26 @@ var Order = Backbone.Model.extend({
       this.set('sub_total', _.reduce(this.orderItems.pluck('sub_total'), function(a, b) { return a + b; }, 0));
     }, this);
 
+    this.listenTo(this.restaurant, 'change:is_bad_zip change:is_bad_delivery_time change:is_bad_lead_time change:is_bad_guests', function(model, value, options) {
+      this.set('is_unacceptable', _.reduce(_.pick(model.toJSON(), ['is_bad_zip', 'is_bad_delivery_time', 'is_bad_lead_time', 'is_bad_guests']), function(a, b) {
+        return a || b;
+      }, false));
+    }, this);
+
     this.on('change:sub_total', function(model, value, options) {
       model.set('below_min', value < model.restaurant.get('minimum_order'));
-      model.set('submittable', value > 0 && !model.get('below_min'));
     }, this);
 
     this.on({
       'change:zip': this.zipChanged,
       'change:datetime': this.datetimeChanged,
-      'change:guests': this.guestsChanged
+      'change:guests': this.guestsChanged,
+      'change:is_unacceptable change:below_min': this.setSubmittable
     }, this);
+  },
+
+  setSubmittable: function(model, value, options) {
+    model.set('submittable', model.get('sub_total') > 0 && !model.get('below_min') && !model.get('is_unacceptable'));
   },
 
   requiredFields: [

@@ -22,7 +22,7 @@ var ItemModal = Backbone.View.extend({
       helpers.dollars( this.model.get('price') )
     );
 
-    this.$el.find('.btn-item-remove')[ inOrder ? 'show' : 'hide' ]();
+    this.$el.find('.btn-item-remove').toggle(inOrder)
 
     var submitBtnText = inOrder ? 'Update Item' : 'Add To Order';
     this.$el.find('.btn.item-modal-submit').text(submitBtnText);

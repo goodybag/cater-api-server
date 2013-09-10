@@ -44,15 +44,18 @@ define(function(require) {
     }
   , zip: {
       type: types.varchar(5)
-    , nullable: false
+    , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{5}'"]
     }
   , sms_phone: {
       type: types.varchar(10)
     , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     }
   , voice_phone: {
       type: types.varchar(10)
     , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     }
   , email: {
       type: types.text

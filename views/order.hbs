@@ -7,6 +7,25 @@
     <h1 class="text-center">Order</h1>
   </div>
 
+  <div class="alert alert-danger alert-bad-zip{{#unless order.restaurant.is_bad_zip}} hide{{/unless}}">
+    This order cannot be delivered to that zip code.
+  </div>
+
+  <div class="alert alert-danger alert-bad-delivery-time{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}">
+    <p>This order cannot be delivered for that date and time.</p>
+    <p>delivery hours: {{{json order.restaurant.delivery_times}}}</p>
+  </div>
+
+  <div class="alert alert-danger alert-bad-guests{{#unless order.restaurant.is_bad_guests}} hide{{/unless}}">
+    <p>This order cannot be delivered for that many guests.</p>
+    <p>max guests: {{order.restaurant.max_guests}}</p>
+  </div>
+
+  <div class="alert alert-danger alert-bad-lead-time{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}">
+    <p>This order cannot be delivered for that many guests without more lead time.</p>
+    <p>lead times: {{{json order.restaurant.lead_times}}}</p>
+  </div>
+
   <div class="row order-info">
     <h3 class="row">
       {{order.restaurant.name}}
@@ -150,8 +169,17 @@
 </div>
 
 {{#extend "scripts"}}
+<script src="/js/amanda.js"></script>
+
+<script src="/js/models/item.js"></script>
+<script src="/js/models/category.js"></script>
+<script src="/js/models/restaurant.js"></script>
 <script src="/js/models/order-item.js"></script>
 <script src="/js/models/order.js"></script>
+
+<script src="/js/collections/items.js"></script>
+<script src="/js/collections/categories.js"></script>
+
 <script src="/js/views/form-view.js"></script>
 <script src="/js/views/order-view.js"></script>
 <script src="/js/views/order-item-view.js"></script>

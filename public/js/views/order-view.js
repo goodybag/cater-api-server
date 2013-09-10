@@ -97,16 +97,16 @@ var OrderView = FormView.extend({
   fieldGetters: {
     guests: _.partial(FormView.intGetter, 'guests'),
     datetime: function() {
-      $date = this.$el.find(".order-form #order-date").eq(0);
-      $time = this.$el.find(".order-form #order-time").eq(0);
-      var datepart = ($date.val()) ? dateTimeFormatter($date.val()) : null;
-      var timepart = ($time.val()) ? timeFormatter($time.val()) : null;
+      var date = this.$el.find(".order-form #order-date").val().trim();
+      var time = this.$el.find(".order-form #order-time").val().trim();
+      var datepart = date ? dateTimeFormatter(date) : null;
+      var timepart = time ? timeFormatter(time, 'HH:mm:ss') : null;
 
 
       if(!datepart || !timepart) return null;
 
       // since we cannot determine offset, cannot format as ISO 8601 String
-      // using "YYYY-MM-DD hh:mm" to represent the date and time
+      // using "YYYY-MM-DD HH:mm:ss" to represent the date and time
       var datetime = datepart + ' ' + timepart;
       var date = moment(datetime);
       return date.isValid() ? datetime : null;

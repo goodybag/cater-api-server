@@ -22,6 +22,7 @@
     "jquery": "1.10.x",
     "handlebars": "1.0.x",
     "bootstrap": "3.0.x",
-    "backbone": "1.0.x"
+    "backbone": "1.0.x",
+    "font-awesome": "3.2.x"
   }
 }

@@ -42,7 +42,7 @@ var Order = Backbone.Model.extend({
           length: 5,
           required: false,
           pattern: /^\d*$/,
-          enum: this.get('restaurant').delivery_zips
+          enum: this.restaurant.get('delivery_zips')
         },
         phone: {
           type: ['string', 'null'],
@@ -53,7 +53,7 @@ var Order = Backbone.Model.extend({
         guests: {
           type: ['integer', 'null'],
           minimum: 1,
-          maximum: this.get('restaurant').max_guests,
+          maximum: this.restaurant.get('max_guests'),
           required: false
         },
         notes: {
@@ -82,13 +82,17 @@ var Order = Backbone.Model.extend({
     attrs = attrs || {};
     this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id});
     this.unset('orderItems');
+
+    this.restaurant = new Restaurant(attrs.restaurant);
+    this.unset('restaurant');
+
     //TODO: maybe get a new collection on id change?
     this.listenTo(this.orderItems, 'change:sub_total add remove', function() {
       this.set('sub_total', _.reduce(this.orderItems.pluck('sub_total'), function(a, b) { return a + b; }, 0));
     }, this);
 
     this.on('change:sub_total', function(model, value, options) {
-      model.set('below_min', value < model.get('restaurant').minimum_order);
+      model.set('below_min', value < model.restaurant.get('minimum_order'));
       model.set('submittable', value > 0 && !model.get('below_min'));
     }, this);
 
@@ -110,48 +114,52 @@ var Order = Backbone.Model.extend({
   ],
 
   zipChanged: function(model, value, options) {
-    var restaurant = model.get('restaurant');
-    restaurant.is_zip_bad = _.contains(restaurant.zips, value);
+    model.restaurant.set('is_bad_zip', _.contains(model.restaurant.get('delivery_zips'), value));
     model.set('restaurant', restaurant);
   },
 
   checkLeadTimes: function() {
-    var restaurant = this.get('restaurant');
     var guests = this.get('guests');
-    var limit = _.find(_.sortBy(restaurant.lead_times, 'max_guests'), function(obj) { return obj.max_guests >= guests; });
+    var limit = _.find(_.sortBy(this.restaurant.get('lead_times'), 'max_guests'), function(obj) {
+      return obj.max_guests >= guests;
+    });
 
     var then = this.get('datetime');
     var now = moment().tz(this.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
     var hours = (new Date(then) - new Date(now)) / 3600000;
 
-    restaurant.is_bad_lead_time = hours <= limit.lead_time;
-    this.set('restaurant', restaurant);
+    this.restaurant.set('is_bad_lead_time', hours <= limit.lead_time);
   },
 
   datetimeChanged: function(model, value, options) {
-    if (!value) return;
-    var restaurant = model.get('restaurant');
+    if (!value) {
+      model.restaurant.set({
+        is_bad_delivery_time: null,
+        is_bad_lead_time: null
+      });
+      return;
+    }
 
     // check against restaurant hours
     var datetime = value.split(' ');
     var dow = new Date(datetime[0]).getDay();
-    restaurant.is_bad_delivery_time = !_.find(restaurant.delivery_times[dow], function(range) {
+    model.restaurant.set('is_bad_delivery_time', !_.find(model.restaurant.get('delivery_times')[dow], function(range) {
       return datetime[1] >= range[0] && datetime[1] <= range[1];
-    });
-
-    this.set('restaurant', restaurant);
+    }));
 
     model.checkLeadTimes();
   },
 
   guestsChanged: function(model, value, options) {
-    var restaurant = model.get('restaurant');
-    if (value > restaurant.max_guests) {
-      restaurant.is_guests_bad = true;
-      models.set('restaurant', restaurant);
+    if (value == null) {
+      model.restaurant.set({
+        is_bad_guests: null,
+        is_bad_lead_time: null
+      });
+      return;
     }
 
-    this.set('restaurant', restaurant);
+    restaurant.set('is_guests_bad', value > restaurant.get('max_guests'));
 
     model.checkLeadTimes();
   },
@@ -159,6 +167,7 @@ var Order = Backbone.Model.extend({
   toJSON: function() {
     var obj = Backbone.Model.prototype.toJSON.apply(this, arguments);
     obj.orderItems = this.orderItems.toJSON();
+    obj.restaurant = this.restaurant.toJSON();
     return obj;
   }
 });

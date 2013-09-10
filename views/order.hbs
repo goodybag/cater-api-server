@@ -17,10 +17,59 @@
             Date created:
             <span class="date-created-value">{{formatDateTime order.created_at "MMMM Do YYYY, h:mm a"}}</span>
           </div>
+
+          <div class="form-inline form-light order-params">
+            <div class="form-group">
+              <label class="control-label" for="order-date">Delivery Date</label>
+              <input type="text" class="form-control" id="order-date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}">
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="order-time">Delivery Time</label>
+              <input type="text" class="form-control" id="order-time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}">
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="order-guests">Guests</label>
+              <input type="text" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}">
+            </div>
+            <div class="form-group form-group-block form-group-order-notes">
+              <label class="control-label" for="order-notes">Notes</label>
+              <textarea name="order-notes" id="order-notes" class="form-control order-notes">{{order.notes}}</textarea>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-sm-5 col-right">
-        <div class="panel-body">ohai</div>
+        <div class="panel-body">
+          <div class="form-inline order-delivery">
+            <div class="form-group form-group-block">
+              <label class="control-label" for="order-phone label-bold">Phone</label>
+              <input type="tel" class="form-control order-phone" id="order-phone" value="{{phoneNumber order.phone}}">
+            </div>
+            <fieldset class="form-light address-info">
+              <legend class="delivery-address-legend">Delivery Address</legend>
+              <div class="form-group form-group-block">
+                <label class="control-label" for="address-street" class="control-label">Street Address</label>
+                <input type="text" id="address-street" class="form-control order-form-field address-input address-street" value="{{order.street}}">
+              </div>
+              <div class="form-group form-group-city">
+                <label class="control-label" for="order-city">City</label>
+                <input type="text" class="form-control" id="order-city" value="{{order.city}}">
+              </div>
+              <div class="form-group form-group-state">
+                <label for="address-state" class="control-label">State</label>
+                <select id="address-state" class="form-control order-form-field address-input address-state" form="order-form">
+                  {{#each states}}
+                  <option value="{{this.abbr}}" label="{{this.abbr}}"{{#if this.default}} selected="selected"{{/if}}>{{this.name}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div class="form-group form-group-zip">
+                <label class="control-label" for="order-zip">Zip</label>
+                <input type="text" class="form-control" id="order-zip" value="{{order.zip}}">
+              </div>
+            </fieldset>
+          </div>
+        </div>
       </div>
     </div>
   </div>

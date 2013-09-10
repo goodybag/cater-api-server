@@ -15,10 +15,13 @@
 
 .form-inline .form-group {
   font-size: 14px;
+}
+
+.form-inline .form-group ~ .form-group {
   margin-left: 10px;
 }
 
-.form-inline .form-group:first-child {
+.form-inline .form-group-block + .form-group {
   margin-left: 0;
 }
 
@@ -41,6 +44,18 @@
   position: absolute;
   margin-left: 77px;
   margin-top: -26px;
+}
+
+.form-light label,
+.form-light .control-label,
+.form-light label.control-label {
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.form-group.form-group-block {
+  display: block;
+  margin-left: 0;
 }
 
 /**

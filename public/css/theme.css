@@ -136,3 +136,11 @@ a.list-group-item .list-group-item-heading {
 .label-pending {
   background-color: #F0AD4E;
 }
+
+/**
+ * Forms
+ */
+
+.form-light label {
+  color: #695A42
+}

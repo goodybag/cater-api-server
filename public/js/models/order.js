@@ -115,6 +115,19 @@ var Order = Backbone.Model.extend({
     model.set('restaurant', restaurant);
   },
 
+  checkLeadTimes: function() {
+    var restaurant = this.get('restaurant');
+    var guests = this.get('guests');
+    var limit = _.find(_.sortBy(restaurant.lead_times, 'max_guests'), function(obj) { return obj.max_guests >= guests; });
+
+    var then = this.get('datetime');
+    var now = moment().tz(this.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
+    var hours = (new Date(then) - new Date(now)) / 3600000;
+
+    restaurant.is_bad_lead_time = hours <= limit.lead_time;
+    this.set('restaurant', restaurant);
+  },
+
   datetimeChanged: function(model, value, options) {
     if (!value) return;
     var restaurant = model.get('restaurant');
@@ -126,10 +139,9 @@ var Order = Backbone.Model.extend({
       return datetime[1] >= range[0] && datetime[1] <= range[1];
     });
 
-    // check against lead times
-    var guests = model.get('guests');
+    this.set('restaurant', restaurant);
 
-    var limit = _.find(_.sortBy(restaurant.lead_times, 'guests'), function(obj) { return obj.guests >= guests; });
+    model.checkLeadTimes();
   },
 
   guestsChanged: function(model, value, options) {
@@ -139,7 +151,9 @@ var Order = Backbone.Model.extend({
       models.set('restaurant', restaurant);
     }
 
-    // TODO: check lead times
+    this.set('restaurant', restaurant);
+
+    model.checkLeadTimes();
   },
 
   toJSON: function() {

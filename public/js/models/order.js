@@ -116,14 +116,20 @@ var Order = Backbone.Model.extend({
   },
 
   datetimeChanged: function(model, value, options) {
+    if (!value) return;
     var restaurant = model.get('restaurant');
+
+    // check against restaurant hours
+    var datetime = value.split(' ');
+    var dow = new Date(datetime[0]).getDay();
+    restaurant.is_bad_delivery_time = !_.find(restaurant.delivery_times[dow], function(range) {
+      return datetime[1] >= range[0] && datetime[1] <= range[1];
+    });
+
+    // check against lead times
     var guests = model.get('guests');
 
-    var limit = _.find(_.sortBy(restaurant.lead_times,  'guests'), function(obj) { return obj.guests >= guests; });
-
-
-    // TODO: check against restaurant hours
-    // TODO: check against lead times
+    var limit = _.find(_.sortBy(restaurant.lead_times, 'guests'), function(obj) { return obj.guests >= guests; });
   },
 
   guestsChanged: function(model, value, options) {

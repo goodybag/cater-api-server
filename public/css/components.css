@@ -21,9 +21,17 @@
   color: #aaa;
 }
 
+.form-control {
+  height: 36px;
+}
+
 /**
  * Labels
  */
+
+.form-group label {
+  margin-bottom: 1px;
+}
 
 .label {
   padding: .4em 1em .4em;

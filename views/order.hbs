@@ -2,187 +2,189 @@
 <link rel="stylesheet" href="/css/order.css">
 {{/extend}}
 
-<div class="row">
-  <h1 class="text-center">Order</h1>
-</div>
+<div class="page page-order container">
+  <div class="row">
+    <h1 class="text-center">Order</h1>
+  </div>
 
-{{#if order.restaurant.is_bad_zip}}
-<div class="alert alert-danger">This order cannot be delivered to that zip code.</div>
-{{/if}}
+  {{#if order.restaurant.is_bad_zip}}
+  <div class="alert alert-danger">This order cannot be delivered to that zip code.</div>
+  {{/if}}
 
-{{#if order.restaurant.is_bad_delivery_time}}
-<div class="alert alert-danger">This order cannot be delivered for that date and time.</div>
-{{/if}}
+  {{#if order.restaurant.is_bad_delivery_time}}
+  <div class="alert alert-danger">This order cannot be delivered for that date and time.</div>
+  {{/if}}
 
-{{#if order.restaurant.is_bad_guests}}
-<div class="alert alert-danger">This order cannot be delivered for that many guests.</div>
-{{/if}}
+  {{#if order.restaurant.is_bad_guests}}
+  <div class="alert alert-danger">This order cannot be delivered for that many guests.</div>
+  {{/if}}
 
-{{#if order.restaurant.is_bad_lead_time}}
-<div class="alert alert-danger">This order cannot be delivered for that many guests without more lead time.</div>
-{{/if}}
+  {{#if order.restaurant.is_bad_lead_time}}
+  <div class="alert alert-danger">This order cannot be delivered for that many guests without more lead time.</div>
+  {{/if}}
 
-<div class="row">
-  <div class="col-lg-12">
-    <div class="row">
-      <div class="col-lg-6">
-        delivery zips: {{array order.restaurant.delivery_zips}}
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-6">
+          delivery zips: {{array order.restaurant.delivery_zips}}
+        </div>
+        <div class="col-lg-6">
+          delivery hours: {{{json order.restaurant.delivery_times}}}
+        </div>
       </div>
-      <div class="col-lg-6">
-        delivery hours: {{{json order.restaurant.delivery_times}}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-6">
-        max guests: {{order.restaurant.max_guests}}
-      </div>
-      <div class="col-lg-6">
-        lead times: {{{json order.restaurant.lead_times}}}
+      <div class="row">
+        <div class="col-lg-6">
+          max guests: {{order.restaurant.max_guests}}
+        </div>
+        <div class="col-lg-6">
+          lead times: {{{json order.restaurant.lead_times}}}
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="row order-info">
-  <h3 class="row">
-    {{order.restaurant.name}}
-    <span class="label status {{statusLabel order.status}} pull-right">{{order.status}}</span>
-  </h3>
-  <form id="order-form" class="row order-form">
-    <div class="col-lg-6">
-      <div class="row">
-        <p>Submitted: {{order.submitted}}</p>
-        <div class="form-group col-lg-6">
-          <label for="order-date" class="control-label">Delivery Date</label>
-          <input type="text" id="order-date" class="form-control order-form-field order-datetime"
-                 value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}"
-                 {{#unless order.editable}} disabled{{/unless}}>
-        </div>
-        <div class="form-group col-lg-6">
-          <label for="order-time" class="control-label">Delivery Time</label>
-          <input type="text" id="order-time" class="form-control order-form-field order-datetime"
-                 value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}"
-                 {{#unless order.editable}} disabled{{/unless}}>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="row">
-            <h4 class="col-lg-9">Address</h4>
-            {{#if order.editable}}
-            <button type="button" class="btn btn-default btn-sm edit-address-btn pull-right">Edit</button>
-            {{/if}}
+  <div class="row order-info">
+    <h3 class="row">
+      {{order.restaurant.name}}
+      <span class="label status {{statusLabel order.status}} pull-right">{{order.status}}</span>
+    </h3>
+    <form id="order-form" class="row order-form">
+      <div class="col-lg-6">
+        <div class="row">
+          <p>Submitted: {{order.submitted}}</p>
+          <div class="form-group col-lg-6">
+            <label for="order-date" class="control-label">Delivery Date</label>
+            <input type="text" id="order-date" class="form-control order-form-field order-datetime"
+                   value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}"
+                   {{#unless order.editable}} disabled{{/unless}}>
           </div>
-          <div class="row">
-            <div class="well order-address order-address-block">{{{address order}}}</div>
-            {{#if order.editable}}
-            <fieldgroup class="order-address order-address-form hide">
-              <div class="form-group">
-                <label for="address-street" class="control-label">Street</label>
-                <input type="text" id="address-street" class="form-control order-form-field address-input address-street" value="{{order.street}}">
-              </div>
-              <div class="form-group">
-                <label for="address-city" class="control-label">City</label>
-                <input type="text" id="address-city" class="form-control order-form-field address-input address-city" value="{{order.city}}">
-              </div>
-              <div class="form-group">
-                <label for="address-state" class="control-label">State</label>
-                <select id="address-state" class="form-control order-form-field address-input address-state" form="order-form">
-                  {{#each states}}
-                  <option value="{{this.abbr}}" label="{{this.abbr}}"{{#if this.default}} selected="selected"{{/if}}>{{this.name}}</option>
-                  {{/each}}
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="address-zip" class="control-label">Zip</label>
-                <input type="text" maxlength="5" id="address-zip" class="form-control order-form-field address-input address-zip"
-                       value="{{#if order.zip}}{{order.zip}}{{else}}{{orderParams.zip}}{{/if}}">
-              </div>
-            </fieldgroup>
-            {{/if}}
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="form-group">
-            <label for="order-phone" class="control-label">Phone</label>
-            <input type="tel" id="order-phone" class="form-control order-form-field order-phone" {{#unless order.editable}}disabled{{/unless}} value="{{phoneNumber order.phone}}">
-          </div>
-          <div class="form-group">
-            <label for="order-guests" class="control-label">Guests</label>
-            <input type="number" min="1" id="order-guests" class="form-control order-form-field order-guests"
-                   value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"
+          <div class="form-group col-lg-6">
+            <label for="order-time" class="control-label">Delivery Time</label>
+            <input type="text" id="order-time" class="form-control order-form-field order-datetime"
+                   value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}"
                    {{#unless order.editable}} disabled{{/unless}}>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="row">
-        <h4 class="text-center col-lg-10">Notes</h4>
-      </div>
-      <div class="row">
-        <div class="col-lg-10">
-          <textarea id="order-notes" class="form-control order-form-field order-notes" rows="6" {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
-        </div>
-        <div class="col-lg-2">
-          <button type="submit" class="btn btn-lg btn-success hide order-save-btn">Save</button>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
-
-<ul class="row order-items list-group">
-  {{#each order.orderItems}}
-  <li class="list-group-item row" id="order-item-{{this.id}}">
-    <form id="order-item-form-{{this.id}}" class="order-item-form form-inline">
-      <div class="col-lg-5">
-        <h4 class="list-group-item-heading">{{this.name}}</h4>
-        <p>{{this.description}}</p>
-        <div class="input-group">
-          <span class="input-group-addon input-sm">x</span>
-          <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm order-item-field order-item-quantity"{{#unless ../order.editable}} disabled{{/unless}}>
-        </div>
-        {{#if ../order.editable}}<a href="javascript:void(0)" class="remove-order-item-btn">delete</a>{{/if}}
-      </div>
-      <div class="col-lg-5">
-        <textarea class="form-control order-item-field order-item-notes" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
-      </div>
-      <div class="col-lg-2">
         <div class="row">
-          <span class="badge pull-right order-item-price">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
+          <div class="col-lg-6">
+            <div class="row">
+              <h4 class="col-lg-9">Address</h4>
+              {{#if order.editable}}
+              <button type="button" class="btn btn-default btn-sm edit-address-btn pull-right">Edit</button>
+              {{/if}}
+            </div>
+            <div class="row">
+              <div class="well order-address order-address-block">{{{address order}}}</div>
+              {{#if order.editable}}
+              <fieldgroup class="order-address order-address-form hide">
+                <div class="form-group">
+                  <label for="address-street" class="control-label">Street</label>
+                  <input type="text" id="address-street" class="form-control order-form-field address-input address-street" value="{{order.street}}">
+                </div>
+                <div class="form-group">
+                  <label for="address-city" class="control-label">City</label>
+                  <input type="text" id="address-city" class="form-control order-form-field address-input address-city" value="{{order.city}}">
+                </div>
+                <div class="form-group">
+                  <label for="address-state" class="control-label">State</label>
+                  <select id="address-state" class="form-control order-form-field address-input address-state" form="order-form">
+                    {{#each states}}
+                    <option value="{{this.abbr}}" label="{{this.abbr}}"{{#if this.default}} selected="selected"{{/if}}>{{this.name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="address-zip" class="control-label">Zip</label>
+                  <input type="text" maxlength="5" id="address-zip" class="form-control order-form-field address-input address-zip"
+                         value="{{#if order.zip}}{{order.zip}}{{else}}{{orderParams.zip}}{{/if}}">
+                </div>
+              </fieldgroup>
+              {{/if}}
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="order-phone" class="control-label">Phone</label>
+              <input type="tel" id="order-phone" class="form-control order-form-field order-phone" {{#unless order.editable}}disabled{{/unless}} value="{{phoneNumber order.phone}}">
+            </div>
+            <div class="form-group">
+              <label for="order-guests" class="control-label">Guests</label>
+              <input type="number" min="1" id="order-guests" class="form-control order-form-field order-guests"
+                     value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"
+                     {{#unless order.editable}} disabled{{/unless}}>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="row">
+          <h4 class="text-center col-lg-10">Notes</h4>
         </div>
         <div class="row">
-          <button type="submit" class="btn btn-success order-item-save-btn pull-right hide">Save</button>
+          <div class="col-lg-10">
+            <textarea id="order-notes" class="form-control order-form-field order-notes" rows="6" {{#unless order.editable}}disabled{{/unless}}>{{order.notes}}</textarea>
+          </div>
+          <div class="col-lg-2">
+            <button type="submit" class="btn btn-lg btn-success hide order-save-btn">Save</button>
+          </div>
         </div>
       </div>
     </form>
-  </li>
-  {{else}}
-  <h2 class="text-center">No Items</h2>
-  {{/each}}
-</ul>
+  </div>
 
-<div class="row">
-  <div class="totals col-lg-3 col-lg-offset-9">{{> totals}}</div>
-  {{#if owner}}
-  <div class="btn-toolbar pull-right">
-    {{#if order.cancelable}}<button class="btn btn-lg btn-danger cancel-btn">Cancel</button>{{/if}}
-    {{#if order.editable}}<button class="btn btn-lg btn-primary submit-btn"{{#unless order.submittable}} disabled="disabled"{{/unless}}>Submit</button>{{/if}}
+  <ul class="row order-items list-group">
+    {{#each order.orderItems}}
+    <li class="list-group-item row" id="order-item-{{this.id}}">
+      <form id="order-item-form-{{this.id}}" class="order-item-form form-inline">
+        <div class="col-lg-5">
+          <h4 class="list-group-item-heading">{{this.name}}</h4>
+          <p>{{this.description}}</p>
+          <div class="input-group">
+            <span class="input-group-addon input-sm">x</span>
+            <input type="number" min="1" value="{{this.quantity}}" class="form-control input-sm order-item-field order-item-quantity"{{#unless ../order.editable}} disabled{{/unless}}>
+          </div>
+          {{#if ../order.editable}}<a href="javascript:void(0)" class="remove-order-item-btn">delete</a>{{/if}}
+        </div>
+        <div class="col-lg-5">
+          <textarea class="form-control order-item-field order-item-notes" rows="4" {{#unless ../order.editable}}disabled{{/unless}}>{{this.notes}}</textarea>
+        </div>
+        <div class="col-lg-2">
+          <div class="row">
+            <span class="badge pull-right order-item-price">{{#if this.sub_total}}${{dollars this.sub_total}}{{/if}}</span>
+          </div>
+          <div class="row">
+            <button type="submit" class="btn btn-success order-item-save-btn pull-right hide">Save</button>
+          </div>
+        </div>
+      </form>
+    </li>
+    {{else}}
+    <h2 class="text-center">No Items</h2>
+    {{/each}}
+  </ul>
+
+  <div class="row">
+    <div class="totals col-lg-3 col-lg-offset-9">{{> totals}}</div>
+    {{#if owner}}
+    <div class="btn-toolbar pull-right">
+      {{#if order.cancelable}}<button class="btn btn-lg btn-danger cancel-btn">Cancel</button>{{/if}}
+      {{#if order.editable}}<button class="btn btn-lg btn-primary submit-btn"{{#unless order.submittable}} disabled="disabled"{{/unless}}>Submit</button>{{/if}}
+    </div>
+    {{/if}}
+  </div>
+
+  {{#if restaurantReview}}
+  <div class="row restaurant-review-buttons">
+    <div class="col-lg-6">
+      <button class="btn btn-lg btn-danger reject-btn">Reject</button>
+    </div>
+    <div class="col-lg-6">
+      <button class="btn btn-lg btn-success accept-btn">Accept</button>
+    </div>
   </div>
   {{/if}}
 </div>
-
-{{#if restaurantReview}}
-<div class="row restaurant-review-buttons">
-  <div class="col-lg-6">
-    <button class="btn btn-lg btn-danger reject-btn">Reject</button>
-  </div>
-  <div class="col-lg-6">
-    <button class="btn btn-lg btn-success accept-btn">Accept</button>
-  </div>
-</div>
-{{/if}}
 
 {{#extend "scripts"}}
 <script src="/js/amanda.js"></script>

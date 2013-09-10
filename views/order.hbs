@@ -12,36 +12,18 @@
   </div>
 
   <div class="alert alert-danger alert-bad-delivery-time{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}">
-    This order cannot be delivered for that date and time.
+    <p>This order cannot be delivered for that date and time.</p>
+    <p>delivery hours: {{{json order.restaurant.delivery_times}}}</p>
   </div>
 
   <div class="alert alert-danger alert-bad-guests{{#unless order.restaurant.is_bad_guests}} hide{{/unless}}">
-    This order cannot be delivered for that many guests.
+    <p>This order cannot be delivered for that many guests.</p>
+    <p>max guests: {{order.restaurant.max_guests}}</p>
   </div>
 
   <div class="alert alert-danger alert-bad-lead-time{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}">
-    This order cannot be delivered for that many guests without more lead time.
-  </div>
-
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="row">
-        <div class="col-lg-6">
-          delivery zips: {{array order.restaurant.delivery_zips}}
-        </div>
-        <div class="col-lg-6">
-          delivery hours: {{{json order.restaurant.delivery_times}}}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-6">
-          max guests: {{order.restaurant.max_guests}}
-        </div>
-        <div class="col-lg-6">
-          lead times: {{{json order.restaurant.lead_times}}}
-        </div>
-      </div>
-    </div>
+    <p>This order cannot be delivered for that many guests without more lead time.</p>
+    <p>lead times: {{{json order.restaurant.lead_times}}}</p>
   </div>
 
   <div class="row order-info">

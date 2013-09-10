@@ -3,27 +3,36 @@
 {{/extend}}
 
 <div class="container">
+
+  {{#if alert}}
+    <div class="alert alert-success fade in">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <strong>Settings Saved!</strong>
+    </div>
+  {{/if}}
+
   <h1 class="text-center page-title">Account Settings</h1>
-  <form class="well col-lg-6  col-lg-offset-3 user-settings-form">
+  <form class="well col-lg-6  col-lg-offset-3 user-settings-form" action="/users/me" method="post">
+      <input type="hidden" name="_method" value="put"/>
       <div class="form-group">
         <label for="input-first-name" class="control-label">First Name</label>
-        <input type="text" id="input-first-name" class="form-control first_name col-lg-12" value="{{user.first_name}}">
+        <input type="text" id="input-first-name" name="first_name" class="form-control first_name col-lg-12" value="{{user.first_name}}">
       </div>
       <div class="form-group">
         <label for="input-last-name" class="control-label">Last Name</label>
-        <input type="text" id="input-last-name" class="form-control last_name" value="{{user.last_name}}">
+        <input type="text" id="input-last-name" name="last_name" class="form-control last_name" value="{{user.last_name}}">
       </div>
       <div class="form-group">
         <label for="input-email" class="control-label">Email</label>
-        <input type="email" id="input-email" class="form-control email" value="{{user.email}}">
+        <input type="email" id="input-email" name="email" class="form-control email" value="{{user.email}}">
       </div>
       <div class="form-group">
         <label for="input-org" class="control-label">Organization</label>
-        <input type="text" id="input-org" class="form-control organization" value="{{user.orginization}}">
+        <input type="text" id="input-org" name="organization" class="form-control organization" value="{{user.orginization}}">
       </div>
       <div class="form-group">
         <label for="input-pass1" class="control-label">Password</label>
-        <input type="password" id="input-pass1" class="form-control password">
+        <input type="password" name="password" id="input-pass1" class="form-control password">
       </div>
       <div class="form-group">
         <label for="input-pass2" class="control-label">Confirm Password</label>
@@ -36,6 +45,7 @@
 {{#extend "scripts"}}
 <script>
   $('.user-settings-form').on('submit', function(e) {
+    // Client side validation
     e.preventDefault();
     var fields = ['first_name', 'last_name', 'email', 'organization', 'password'];
     var data = {};
@@ -45,18 +55,7 @@
       return alert('passwords must match');
     if (!data.password) delete data.password;
 
-    $.ajax({
-      url: '/users/me',
-      type: 'PUT',
-      data: JSON.stringify(data),
-      contentType: 'application/json',
-      error: function(jqXHR, textStatus, errorThrown) {
-        alert(errorThrown);
-      },
-      success: function(data, textStatus, jqXHR) {
-        alert('update successful');
-      }
-    });
+    this.submit();
   });
 </script>
 {{/extend}}

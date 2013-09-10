@@ -65,12 +65,16 @@ module.exports.create = function(req, res) {
 
 module.exports.update = function(req, res) {
   // TODO: require auth header with old password for password update
+  if (!req.body.password) delete req.body.password; // Strip null passwords
   var update = function() {
     var query = queries.user.update(req.body, req.params.uid);
     var sql = db.builder.sql(query);
     db.query(sql.query, sql.values, function(err, rows, result) {
       if (err) return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
-      res.json(200, rows[0]);
+      res.render('user', {user: rows[0], alert: true}, function(err, html) {
+        if (err) return res.error(errors.internal.UNKNOWN, err);
+        return res.send(200, html);
+      });
     });
   }
   req.body.password == null ? update() : utils.encryptPassword(req.body.password, function(err, hash, salt) {

@@ -151,7 +151,9 @@
             {{#if order.cancelable}}
             <button class="btn btn-cancel">Cancel Order</button>
             {{/if}}
-          <button class="btn btn-primary btn-submit">Submit</button>
+            {{#if order.submittable}}
+            <button class="btn btn-primary btn-submit">Submit</button>
+            {{/if}}
           {{/if}}
         </div>
       </div>

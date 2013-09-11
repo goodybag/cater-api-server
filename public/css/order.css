@@ -48,28 +48,29 @@
   height: 34px;
 }
 
-.panel-order-details .order-params {
-  margin-top: 22px;
+.left-fields {
+  margin-top: 32px;
 }
 
-.order-params .form-group {
-  width: 33%;
-  font-size: 14px;
-  margin-left: 0 !important;
-  padding-left: 10px;
+.left-fields .form-group {
+  margin-bottom: 0;
 }
 
-.form-group-order-notes {
-  padding-right: 4px;
+.date-time-guests .form-group {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.date-time-guests .form-group:first-child {
+  padding-left: 15px;
+}
+
+.date-time-guests .form-group:last-child {
+  padding-right: 15px;
 }
 
 .panel-order-details .order-notes {
-  height: 106px;
   resize: none;
-}
-
-.panel-order-details .order-params .form-group:first-child {
-  padding-left: 0;
 }
 
 .delivery-address-legend {

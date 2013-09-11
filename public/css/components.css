@@ -588,7 +588,6 @@ a.list-group-item .list-group-item-heading {
 .list-restaurant-cuisines > li {
   display: inline;
   font-size: 13px;
-  color: #8B8983
 }
 
 .list-restaurant-cuisines > li:before {

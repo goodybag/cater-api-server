@@ -194,6 +194,10 @@ var helpers = {
     return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day];
   },
 
+  shortWeekday: function(day) {
+    return (helpers.weekday(day) || '').substring(0, 3);
+  },
+
   mailto: function(email) {
     return '<a href="mailto:' + email + '">' + email + '</a>';
   },

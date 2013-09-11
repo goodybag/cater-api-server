@@ -181,9 +181,9 @@ a.list-group-item .list-group-item-heading {
  * Tabs
  */
 
-.menu-info-tabs > li.active > a,
-.menu-info-tabs > li.active > a:hover,
-.menu-info-tabs > li.active > a:focus {
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
   color: #432012;
   text-decoration: underline;
   background: none;
@@ -192,6 +192,8 @@ a.list-group-item .list-group-item-heading {
 
 .nav-tabs > li > a {
   border: none;
+  font-size: 13px;
+  padding-bottom: 16px;
 }
 
 .nav > li > a:hover,

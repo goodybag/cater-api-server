@@ -13,6 +13,54 @@
   vertical-align: bottom;
 }
 
+.restaurant-info-item {
+  margin-top: 8px;
+  margin-bottom: 24px;
+  font-size: 13px;
+}
+
+.restaurant-info-item .info-item-title {
+  margin: 0;
+  color: #432012;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.restaurant-info-item .info-item-value {
+  margin-top: 2px;
+}
+
+.delivery-times {
+  margin: 0;
+}
+
+.delivery-times > dt {
+  font-weight: 500;
+  width: 50px;
+  text-align: left;
+}
+
+.delivery-times > dd {
+  margin-left: 60px;
+}
+
+.delivery-day-times {
+  font-size: 0;
+}
+
+.delivery-day-times > .delivery-time {
+  font-size: 13px;
+}
+
+.delivery-day-times > .delivery-time:before {
+  content: ", ";
+}
+
+.delivery-day-times > .delivery-time:first-child:before {
+  content: "";
+}
+
 @media ( min-width: 1200px ){
   .order-summary.affix {
     width: 360px;

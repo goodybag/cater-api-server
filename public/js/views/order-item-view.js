@@ -27,26 +27,7 @@ var OrderItemView = FormView.extend({
   },
 
   fieldGetters: {
-    quantity: function() {
-      return parseInt(this.$el.find(this.fieldMap.quantity).val());
-    }
-  },
-
-  onFieldChange: function(e) {
-    this.$el.find('.order-item-save-btn').toggleClass('hide', !this.getDiff());
-  },
-
-  onSave: function(e) {
-    e.preventDefault();
-    var diff = this.getDiff();
-    if (!diff) return;
-    var view = this;
-    this.model.save(diff, {
-      error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
-      success: function(data, textStatus, jqXHR) { view.$el.find('.order-item-save-btn').addClass('hide'); },
-      patch: true,
-      wait: true
-    });
+    quantity: _.partial(FormView.intGetter, 'quantity')
   },
 
   onDelete: function(e) {

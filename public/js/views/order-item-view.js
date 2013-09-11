@@ -33,5 +33,5 @@ var OrderItemView = FormView.extend({
     this.model.destroy();
   },
 
-  autoSave: _.debounce(FormView.prototype.onSave, 10000)
+  autoSave: _.debounce(FormView.prototype.onSave, 3000)
 });

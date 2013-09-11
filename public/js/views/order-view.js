@@ -141,5 +141,5 @@ var OrderView = FormView.extend({
     this.$el.find('.order-address-block').html(Handlebars.helpers.address(addr));
   },
 
-  autoSave: _.debounce(FormView.prototype.onSave, 10000)
+  autoSave: _.debounce(FormView.prototype.onSave, 3000)
 });

@@ -15,6 +15,15 @@ body {
   color: #695A42;
 }
 
+a {
+  color: #432012;
+}
+
+a:hover {
+  color: #432012;
+  text-decoration: underline;
+}
+
 .navbar {
   background: #FCFDF6;
   border-color: #CCCCC0;
@@ -56,6 +65,7 @@ a.btn {
   border-color: #9E0200;
 }
 
+a.btn-primary.disabled,
 .btn-primary.disabled,
 .btn-primary[disabled],
 fieldset[disabled] .btn-primary,
@@ -73,6 +83,7 @@ fieldset[disabled] .btn-primary:active,
 fieldset[disabled] .btn-primary.active {
   background-color: #CA425D;
   border-color: #BD3566;
+  color: #FFBDCA;
 }
 
 
@@ -158,10 +169,40 @@ a.list-group-item .list-group-item-heading {
   background-color: #D9534F;
 }
 
+.label-submitted {
+  background-color: #5CB85C;
+}
+
 /**
  * Forms
  */
 
 .form-light label {
   color: #695A42
+}
+
+/**
+ * Tabs
+ */
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  color: #432012;
+  text-decoration: underline;
+  background: none;
+  border: none;
+}
+
+.nav-tabs > li > a {
+  border: none;
+  font-size: 13px;
+  padding-bottom: 16px;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background: none;
+  border: none;
+  text-decoration: underline;
 }

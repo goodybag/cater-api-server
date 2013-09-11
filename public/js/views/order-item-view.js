@@ -9,6 +9,7 @@ var OrderItemView = FormView.extend({
   },
 
   initialize: function(options) {
+    console.log("init", options)
     if (this.model)
       this.listenTo(this.model, {
         'change:sub_total': this.onPriceChange,

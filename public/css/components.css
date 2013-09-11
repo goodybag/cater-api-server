@@ -365,9 +365,10 @@ a.list-group-item .list-group-item-heading {
   width: 40px;
 }
 
-.order-table .item-price {
+.order-table > tbody > tr > td.item-price {
   width: 40px;
   text-align: right;
+  padding-right: 0;
 }
 
 /**

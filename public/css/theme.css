@@ -169,6 +169,10 @@ a.list-group-item .list-group-item-heading {
   background-color: #D9534F;
 }
 
+.label-succes {
+  background-color: #5CB85C;
+}
+
 /**
  * Forms
  */

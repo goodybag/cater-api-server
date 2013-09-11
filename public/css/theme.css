@@ -32,6 +32,19 @@ body {
  * Buttons
  */
 
+.btn {
+  border-color: #DDDED8;
+  background-color: #FCFDF6;
+}
+
+a.btn {
+  color: #333;
+}
+
+.btn:hover {
+  background-color: #F3F3F3;
+}
+
 .btn-primary {
   background-color: #DC0500;
   border-color: #B80300;
@@ -127,4 +140,28 @@ a.list-group-item .list-group-item-heading {
 
 .modal-body {
   color: #8B8983;
+}
+
+/**
+ * Labels
+ */
+
+.label-pending {
+  background-color: #F0AD4E;
+}
+
+.label-complete {
+  background-color: #5CB85C;
+}
+
+.label-canceled {
+  background-color: #D9534F;
+}
+
+/**
+ * Forms
+ */
+
+.form-light label {
+  color: #695A42
 }

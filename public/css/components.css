@@ -36,14 +36,26 @@
   height: 36px;
 }
 
-/* Have to go with a non-form-group position relative solution here
-   so that the date picker in order params bar does not get contained
-   to that container. Also, the inline-block solution did not work in
-   Safari */
-.form-group .form-group-icon {
-  position: absolute;
-  margin-left: 77px;
-  margin-top: -26px;
+.form-group[data-icon]:before {
+  position: relative;
+  float: right;
+  margin-top: 10px;
+  /*
+  Large (small) enough margin to ensure that its box
+  dimensions do not take up any space in the form-group */
+  margin-left: -50px;
+  /*
+  Since negative margin-left closes the box-right the icon fills
+  and no more, we need the margin-right to fill the rest */
+  margin-right: 5px;
+  z-index: 1;
+  font-size: 18px;
+  color: #aaa;
+}
+
+.form-group[data-icon="gb-icon-calendar"]:before,
+.form-group[data-icon="gb-icon-user"]:before {
+  margin-top: 9px;
 }
 
 .form-light label,
@@ -140,11 +152,6 @@
 .order-params-bar .form-control.form-control-zip,
 .order-params-bar .form-control.form-control-guests {
   width: 100px;
-}
-
-.order-params-bar .form-group-icon.gb-icon-calendar {
-  margin-left: 100px;
-  margin-top: -27px;
 }
 
 .order-params-bar .form-group-icon.gb-icon-time {

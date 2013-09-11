@@ -113,28 +113,16 @@
               </dl>
             </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="col-lg-6">
-            delivery zips: {{array restaurant.delivery_zips}}
-          </div>
-          <div class="col-lg-6">
-            delivery hours:
-            {{#each restaurant.delivery_times}}
-            <p>{{weekday @key}}: {{#each this}}{{#if @index}}, {{/if}}{{formatTime this.[0]}} &mdash; {{formatTime this.[1]}}{{/each}}
+          <div class="restaurant-info-item restaurant-info-item-zips">
+            <h4 class="info-item-title">Zip Codes within delivery range:</h4>
+            <div class="info-item-value">
+              <ul class="list-delivery-zips">
+              {{#each restaurant.delivery_zips}}
+                <li class="delivery-zip">{{this}}</li>
               {{/each}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6">
-            max guests: {{restaurant.max_guests}}
-          </div>
-          <div class="col-lg-6">
-            lead times:
-            {{#each restaurant.lead_times}}
-            <p>guests: {{max_guests}} - lead time: {{lead_time}} hours</p>
-            {{/each}}
+              </ul>
+            </div>
           </div>
         </div>
       </div>

@@ -2,10 +2,9 @@ var OrderItemView = FormView.extend({
   model: OrderItem,
 
   events: {
-    'submit .order-item-form': 'onSave',
     'click .remove-order-item-btn': 'onDelete',
-    'keyup .order-item-field': 'onFieldChange',
-    'change .order-item-field': 'onFieldChange'
+    'keyup .form-control': 'autoSave',
+    'change .form-control': 'autoSave'
   },
 
   initialize: function(options) {
@@ -32,5 +31,7 @@ var OrderItemView = FormView.extend({
 
   onDelete: function(e) {
     this.model.destroy();
-  }
+  },
+
+  autoSave: _.debounce(FormView.prototype.onSave, 10000)
 });

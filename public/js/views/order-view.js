@@ -7,10 +7,10 @@ var OrderView = FormView.extend({
       'change .order-form .order-form-field': 'onChange',
       'submit .order-form': 'onSave',
       'click .edit-address-btn': 'editAddress',
-      'click .cancel-btn': _.bind(this.changeStatus, this, 'canceled'),
-      'click .submit-btn': _.bind(this.changeStatus, this, 'submitted'),
-      'click .reject-btn': _.bind(this.changeStatus, this, 'denied', this.options.token),
-      'click .accept-btn': _.bind(this.changeStatus, this, 'accepted', this.options.token)
+      'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
+      'click .btn-submit': _.bind(this.changeStatus, this, 'submitted'),
+      'click .btn-reject': _.bind(this.changeStatus, this, 'denied', this.options.token),
+      'click .btn-accept': _.bind(this.changeStatus, this, 'accepted', this.options.token)
     }
   },
 
@@ -50,7 +50,7 @@ var OrderView = FormView.extend({
   },
 
   onSubmittableChange: function(model, value, options) {
-    var $btn = this.$el.find('.submit-btn');
+    var $btn = this.$el.find('.btn-submit');
     value ? $btn.removeAttr('disabled') : $btn.attr('disabled', 'disabled');
   },
 
@@ -63,7 +63,7 @@ var OrderView = FormView.extend({
   },
 
   changeStatus: function(status) {
-    if (status = 'submitted') {
+    if (status == 'submitted') {
       var vals = _.pick(this.model.toJSON(), this.model.requiredFields)
       this.$el.find('.order-form-field').parent().removeClass('has-error');
       var err = false;

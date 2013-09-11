@@ -234,6 +234,18 @@ var helpers = {
     }
 
     return out.join('\n');
+  },
+
+  dump: function( val ){
+    return [ '<pre>', JSON.stringify( val, true, '  ' ), '</pre>' ].join('\n');
+  },
+
+  lowercase: function( val ){
+    return val.toLowerCase();
+  },
+
+  capitalze: function( val ){
+    return val[ 0 ].toUpperCase() + val.substring( 1 );
   }
 }
 

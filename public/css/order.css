@@ -63,6 +63,10 @@
   padding-left: 10px;
 }
 
+.order-params .form-group[data-icon]:before {
+  margin-top: 28px;
+}
+
 .form-group-order-notes {
   padding-right: 4px;
 }

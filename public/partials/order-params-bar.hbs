@@ -3,23 +3,19 @@
     <div class="form-group form-group-title">
       <strong class="form-title">Find Catering</strong>
     </div>
-    <div class="form-group">
+    <div class="form-group" data-icon="gb-icon-location">
       <input type="text" class="form-control form-control-zip" name="zip" placeholder="zip" maxlength="5" value="{{orderParams.zip}}"/>
-      <i class="gb-input-icon form-group-icon gb-icon-location"></i>
     </div>
-    <div class="form-group">
+    <div class="form-group" data-icon="gb-icon-calendar">
       <input type="text" class="form-control" name="date" placeholder="delivery date" maxlength="10" value="{{formatDateTime orderParams.date}}"/>
-      <i class="gb-input-icon form-group-icon gb-icon-calendar"></i>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" data-icon="gb-icon-time">
       <input type="text" class="form-control" name="time" placeholder="delivery time" maxlength="8" value="{{formatTime orderParams.time}}"/>
-      <i class="gb-input-icon form-group-icon gb-icon-time"></i>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" data-icon="gb-icon-user">
       <input type="text" class="form-control form-control-guests" name="guests" placeholder="guests" maxlength="4" value="{{orderParams.guests}}"/>
-      <i class="gb-input-icon form-group-icon gb-icon-user"></i>
     </div>
 
     <button type="submit" class="btn btn-primary btn-search">

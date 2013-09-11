@@ -64,7 +64,20 @@
         </div>
       </div>
 
-      <div class="tab-pane well" id="info">
+      <div class="tab-pane panel" id="info">
+        <div class="panel-body">
+          <div class="restaurant-info-item restuarat-info-item-categories">
+            <div class="info-item-title">
+              <ul class="list-restaurant-cuisines">
+              {{#each restaurant.cuisine}}
+                <li class="cuisine-list-item">{{this}}</li>
+              {{/each}}
+              </ul>
+              <span class="dollar-meter">{{{dollarMeter this.price}}}</span>
+            </div>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-lg-6">
             delivery zips: {{array restaurant.delivery_zips}}

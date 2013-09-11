@@ -15,6 +15,15 @@ body {
   color: #695A42;
 }
 
+a {
+  color: #432012;
+}
+
+a:hover {
+  color: #432012;
+  text-decoration: underline;
+}
+
 .navbar {
   background: #FCFDF6;
   border-color: #CCCCC0;
@@ -164,4 +173,28 @@ a.list-group-item .list-group-item-heading {
 
 .form-light label {
   color: #695A42
+}
+
+/**
+ * Tabs
+ */
+
+.menu-info-tabs > li.active > a,
+.menu-info-tabs > li.active > a:hover,
+.menu-info-tabs > li.active > a:focus {
+  color: #432012;
+  text-decoration: underline;
+  background: none;
+  border: none;
+}
+
+.nav-tabs > li > a {
+  border: none;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background: none;
+  border: none;
+  text-decoration: underline;
 }

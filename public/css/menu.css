@@ -31,18 +31,44 @@
   margin-top: 2px;
 }
 
-.delivery-times {
+.restaurant-info-item .dl-horizontal {
   margin: 0;
+  margin-top: 4px;
+}
+
+.restaurant-info-item .dl-horizontal > dt,
+.restaurant-info-item .dl-horizontal > dd {
+  line-height: 19px;
+}
+
+.restaurant-info-item .dl-horizontal > dt {
+  font-weight: 500;
+  text-align: left;
 }
 
 .delivery-times > dt {
-  font-weight: 500;
   width: 50px;
-  text-align: left;
 }
 
 .delivery-times > dd {
   margin-left: 60px;
+}
+
+.lead-times > dt {
+  width: 120px;
+}
+
+.lead-times > dd {
+  margin-left: 140px;
+}
+
+/**
+ * Delivery times has a font-size: 0 element in so it's making the
+ * line height on all of the dt,dd's larger than it should be
+ */
+.delivery-times.dl-horizontal > dt,
+.delivery-times.dl-horizontal > dd {
+  line-height: 15px;
 }
 
 .delivery-day-times {

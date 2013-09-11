@@ -108,11 +108,7 @@
               <dl class="dl-horizontal lead-times">
               {{#each restaurant.lead_times}}
                 <dt>Up to {{this.max_guests}} guests</dt>
-                <dd class="delivery-day-times">
-                  {{#each this}}
-                    <span class="delivery-time">{{formatTime this.[0] 'h:mma'}} - {{formatTime this.[1] 'h:mma'}}</span>
-                  {{/each}}
-                </dd>
+                <dd>{{this.lead_time}} hrs</dd>
               {{/each}}
               </dl>
             </div>

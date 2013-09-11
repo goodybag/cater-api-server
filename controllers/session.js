@@ -50,7 +50,7 @@ module.exports.getOrderParams = function(req, res) {
 
 module.exports.updateOrderParams = function(req, res) {
   req.session.orderParams = {
-    zip: parseInt(req.body.zip, 10)
+    zip: req.body.zip
   , date: req.body.date
   , time: req.body.time
   , guests: parseInt(req.body.guests, 10)

@@ -8,17 +8,18 @@ var OrderView = FormView.extend({
       'submit .order-form': 'onSave',
       'click .edit-address-btn': 'editAddress',
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
-      'click .btn-submit': _.bind(this.changeStatus, this, 'submitted'),
+      'click .btn-submit': 'submit',
       'click .btn-reject': _.bind(this.changeStatus, this, 'denied', this.options.token),
       'click .btn-accept': _.bind(this.changeStatus, this, 'accepted', this.options.token)
     }
   },
 
   initialize: function(options) {
+    this.items = options.items || [];
+
     if (!this.model) this.model = new Order();
     this.listenTo(this.model, {
       'change:sub_total': this.onPriceChange,
-      'change:submittable': this.onSubmittableChange,
       'change:phone': this.onPhoneChange
     }, this);
 
@@ -47,11 +48,6 @@ var OrderView = FormView.extend({
 
   onPriceChange: function(model, value, options) {
     this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));
-  },
-
-  onSubmittableChange: function(model, value, options) {
-    var $btn = this.$el.find('.btn-submit');
-    value ? $btn.removeAttr('disabled') : $btn.attr('disabled', 'disabled');
   },
 
   onPhoneChange: function(model, value, options) {
@@ -141,5 +137,14 @@ var OrderView = FormView.extend({
     this.$el.find('.order-address-block').html(Handlebars.helpers.address(addr));
   },
 
-  autoSave: _.debounce(FormView.prototype.onSave, 3000)
+  autoSave: _.debounce(FormView.prototype.onSave, 3000),
+
+  submit: function() {
+    async.each(this.items.concat(this), function(view, cb) {
+      view.onSave(null, cb);
+    }, utils.bind(function(err) {
+      if (!err)
+        this.changeStatus('submitted');
+    }, this));
+  }
 });

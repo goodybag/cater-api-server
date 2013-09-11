@@ -199,5 +199,6 @@
     {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})
     {{/each}}
   ];
+  view.items = items;
 </script>
 {{/extend}}

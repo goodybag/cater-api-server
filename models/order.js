@@ -29,6 +29,10 @@ var modifyAttributes = function(callback, err, orders) {
     utils.each(orders, function(order) {
       order.attributes.restaurant = utils.extend({ id: order.attributes.restaurant_id, delivery_times: utils.object(order.attributes.delivery_times) } , utils.pick(order.attributes, restaurantFields));
       utils.each(restaurantFields, function(field) { delete order.attributes.field; });
+      var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
+      order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) {
+        return a || b;
+      }, false);
     });
   }
   callback.call(this, err, orders);
@@ -267,7 +271,6 @@ module.exports = Model.extend({
     ;
 
     query.columns.push(caseIsBadZip+' AS is_bad_zip');
-    unacceptable.push('(zips.zip IS NULL)');
 
     // check # guests
     query.joins.guests = {
@@ -288,7 +291,6 @@ module.exports = Model.extend({
     ;
 
     query.columns.push(caseIsBadGuests+' AS is_bad_guests');
-    unacceptable.push('(guests.restaurant_id IS NULL)');
 
     // check lead time
     query.joins.lead_times = {
@@ -310,7 +312,6 @@ module.exports = Model.extend({
     ;
 
     query.columns.push(caseIsBadLeadTime+' AS is_bad_lead_time');
-    unacceptable.push('(lead_times.restaurant_id IS NULL)');
 
     // check delivery days and times
     query.joins.delivery_times = {
@@ -333,9 +334,8 @@ module.exports = Model.extend({
     ;
 
     query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
-    unacceptable.push('(delivery_times.id IS NULL)');
 
-    query.columns.push('(' + (unacceptable.length) ? unacceptable.join(' OR') : 'null' + ') as is_unacceptable');
+    // query.columns.push('(is_bad_zip OR is_bad_guests OR is_bad_lead_time OR is_bad_delivery_time AS is_unacceptable)');
 
     Model.find.call(this, query, utils.partial(modifyAttributes, callback));
   },

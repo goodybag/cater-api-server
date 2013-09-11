@@ -211,7 +211,7 @@
 
   var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems});
 
-  var orderView = new OrderSummaryView({el: '.order-summary', model: orderModel, itemModalView: itemModalView});
+  var orderView = new OrderSummaryView({el: '.order-summary', model: orderModel, itemModalView: itemModalView, orderParams: orderParams});
 
   {{#each order.orderItems}}
   new OrderItemSummaryView({el: '#order-item-{{id}}', model: orderModel.orderItems.get({{id}}), itemModalView: itemModalView});

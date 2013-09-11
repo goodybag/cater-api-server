@@ -208,6 +208,11 @@
   margin-left: 1px;
 }
 
+.btn.btn-submit {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 /**
  * Items
  */

@@ -32,6 +32,15 @@ body {
  * Buttons
  */
 
+.btn {
+  border-color: #DDDED8;
+  background-color: #FCFDF6;
+}
+
+.btn:hover {
+  background-color: #F3F5E8;
+}
+
 .btn-primary {
   background-color: #DC0500;
   border-color: #B80300;

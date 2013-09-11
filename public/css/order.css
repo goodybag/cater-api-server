@@ -201,3 +201,36 @@
   height: 50px;
   resize: none;
 }
+
+.order-totals {
+  float: right;
+  text-align: right;
+  margin-top: 0;
+}
+
+.order-totals dt,
+.order-totals dd {
+  line-height: 24px;
+  font-size: 13px;
+}
+
+.order-totals dt {
+  font-weight: 300;
+}
+
+.order-totals dd {
+  margin-left: 190px;
+  font-weight: 700;
+}
+
+.panel-actions {
+  margin-top: 10px;
+}
+
+.panel-actions .btn {
+  margin-left: 10px;
+}
+
+.panel-actions > .actions-right {
+  text-align: right;
+}

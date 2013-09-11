@@ -3,8 +3,8 @@ var OrderView = FormView.extend({
 
   events: function() {
     return {
-      'keyup .order-form .order-form-field': 'onChange',
-      'change .order-form .order-form-field': 'onChange',
+      'keyup .order-form .form-control': 'autoSave',
+      'change .order-form .form-control': 'autoSave',
       'submit .order-form': 'onSave',
       'click .edit-address-btn': 'editAddress',
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
@@ -139,5 +139,7 @@ var OrderView = FormView.extend({
       zip: this.$el.find('.address-zip').val()
     }
     this.$el.find('.order-address-block').html(Handlebars.helpers.address(addr));
-  }
+  },
+
+  autoSave: utils.debounce(FormView.prototype.onSave, 10000)
 });

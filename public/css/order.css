@@ -36,7 +36,7 @@
 .panel-order-details .date-created {
   font-size: 13px;
   font-weight: 300;
-  color: #8B8983;
+  color: #918580;
 }
 
 .panel-order-details .date-created-value {
@@ -103,6 +103,10 @@
   width: 120px;
 }
 
+/**
+ * Line Item
+ */
+
 .panel-order-line-item .panel-heading {
   color: #432012;
   font-size: 21px;
@@ -115,7 +119,7 @@
 }
 
 .order-line-item-table thead > tr > th {
-  padding: 1px;
+  padding: 0;
   border-bottom: solid #CCCCC0 1px;
   font-size: 12px;
   font-weight: 300;
@@ -133,4 +137,67 @@
 
 .order-line-item-table tbody > tr > td {
   border: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.order-line-item-table tbody > tr:first-child > td {
+  padding-top: 18px;
+}
+
+.order-line-item-table tbody > tr:last-child > td {
+  padding-bottom: 18px;
+}
+
+.order-line-item-table th.line-item-quantity {
+  padding-left: 37px;
+}
+
+.order-line-item-table th.line-item-notes {
+  padding-left: 10px;
+}
+
+.order-line-item-table .line-item-notes {
+  padding-right: 16px;
+}
+
+.order-line-item-table .line-item-name {
+  width: 38%;
+  vertical-align: middle;
+  line-height: 14px;
+}
+
+.order-line-item-table td.line-item-price {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.order-line-item-table .item-name {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.order-line-item-table .item-remove {
+  color: #A7A4A0;
+  font-size: 13px;
+  font-weight: 300;
+  text-decoration: underline;
+}
+
+.order-line-item-table .item-quantity-input {
+  display: inline-block;
+  width: 50px;
+  margin-left: 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.order-line-item-table .icon-x {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.order-line-item-table .item-notes-textarea {
+  height: 50px;
+  resize: none;
 }

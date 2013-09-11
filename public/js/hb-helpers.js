@@ -29,13 +29,21 @@ var dateTimeFormatter = function(date, format) {
 }
 
 var timeFormatter = function(time, format) {
+  // accepts both 24 hour time and 12 hour time
   if (!time) return '';
   if(typeof time == "object") time = time.toString();
 
   var datetime = new moment();
+  time = time.toLowerCase().match(/(\d+)(?::(\d\d))?\s*(a|p)?/);
 
-  time = time.match(/(\d+)(?::(\d\d))?\s*(PM?|pm?|p?)/);
-  datetime.hours( parseInt((time[1]) % 12) + (time[3] ? 12 : 0) );
+  if (time[3] && time[3] == 'a') { // AM
+    datetime.hours(parseInt(time[1]) % 12);
+  } else if (time[3] && time[3] == 'p') { // PM
+    datetime.hours((parseInt(time[1]) % 12) + 12);
+  } else { // assume 24 hour time
+    datetime.hours(parseInt(time[1]));
+  }
+
   datetime.minutes( parseInt(time[2]) || 0 );
   datetime.seconds(0);
   return datetime.format(format || 'HH:mm');

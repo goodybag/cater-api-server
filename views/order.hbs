@@ -49,7 +49,7 @@
               </div>
               <div class="form-group col-sm-4">
                 <label class="control-label" for="order-guests">Guests</label>
-                <input type="text" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}">
+                <input type="number" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}">
               </div>
             </div>
             <div class="row">
@@ -121,7 +121,7 @@
           </td>
           <td class="line-item-quantity">
             <span class="icon-x">x</span>
-            <input type="text" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}">
+            <input type="number" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}">
           </td>
           <td class="line-item-notes">
             <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>

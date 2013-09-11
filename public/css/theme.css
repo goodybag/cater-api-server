@@ -37,6 +37,10 @@ body {
   background-color: #FCFDF6;
 }
 
+a.btn {
+  color: #333;
+}
+
 .btn:hover {
   background-color: #F3F3F3;
 }
@@ -150,7 +154,7 @@ a.list-group-item .list-group-item-heading {
   background-color: #5CB85C;
 }
 
-.label-cancelled {
+.label-canceled {
   background-color: #D9534F;
 }
 

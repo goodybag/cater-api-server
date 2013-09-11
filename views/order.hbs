@@ -117,14 +117,14 @@
         <tr id="order-item-{{this.id}}">
           <td class="line-item-name">
             <div class="item-name">{{this.name}}</div>
-            <a class="item-remove remove-order-item-btn" href="#">Remove</a>
+            {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
           </td>
           <td class="line-item-quantity">
             <span class="icon-x">x</span>
-            <input type="number" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+            <input type="number" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}"{{#unless ../order.editable}} disabled="disabled"{{/unless}}>
           </td>
           <td class="line-item-notes">
-            <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes"{{#unless order.editable}} disabled="disabled"{{/unless}}>{{this.notes}}</textarea>
+            <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes"{{#unless ../order.editable}} disabled="disabled"{{/unless}}>{{this.notes}}</textarea>
           </td>
           <td class="line-item-price">{{dollars this.price}}</td>
         </tr>

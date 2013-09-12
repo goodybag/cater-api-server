@@ -41,16 +41,12 @@ a:hover {
  * Buttons
  */
 
-.btn {
+.btn-default {
   border-color: #DDDED8;
   background-color: #FCFDF6;
 }
 
-a.btn {
-  color: #333;
-}
-
-.btn:hover {
+.btn-default:hover {
   background-color: #F3F3F3;
 }
 
@@ -84,20 +80,6 @@ fieldset[disabled] .btn-primary.active {
   background-color: #CA425D;
   border-color: #BD3566;
   color: #FFBDCA;
-}
-
-.btn-warning {
-  color: #FFF;
-  background-color: #F0AD4E;
-  border-color: #EEA236;
-}
-
-.btn-warning:hover,
-.btn-warning:focus,
-.btn-warning:active,
-.btn-warning.active,
-.open .dropdown-toggle.btn-warning {
-  background-color: #ED9C28;
 }
 
 

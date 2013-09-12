@@ -33,10 +33,16 @@
     "pg-query": "~0.3.0",
     "mailgun": "0.4.x",
     "twilio": "1.1.x",
-    "mailcomposer":  "0.2.x",
+    "mailcomposer": "0.2.x",
     "moment": "2.1.x",
     "moment-timezone": "0.0.x",
-    "bower": "1.2.x"
+    "bower": "1.2.x",
+    "udp-client": "~0.1.0",
+    "gelf-encode": "~0.2.0",
+    "node.extend": "~1.0.8",
+    "winston-loggly": "~0.6.0",
+    "winston": "~0.7.2",
+    "microtime": "~0.4.0"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

@@ -59,6 +59,7 @@ var config = {
       enabled: true
     , transports: {
         devConsole: true
+      , fileRotate: true
       }
     }
   , postgresConnStr:  "postgres://localhost:5432/cater"
@@ -72,8 +73,23 @@ var config = {
 
   , emailEnabled: true
   }
+
 , staging: {
-    http: {
+    logging: {
+      enabled: true
+    , transports: {
+        loggly: true
+      }
+    }
+  , loggly: {
+      subdomain:'gbstaging'
+    , inputToken: 'e0f6fe9c-8ad3-47ec-9fb2-572aa5ce64dc'
+    , auth: {
+        username: 'gbstaging'
+      , password: 'g00dybag3ng1n33r1ng!'
+      }
+    }
+  , http: {
       port: process.env['PORT'] || 5000
     }
   , baseUrl: 'http://cater.staging.goodybag.com'

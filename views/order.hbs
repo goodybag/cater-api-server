@@ -156,12 +156,12 @@
 
       <div class="row panel-actions">
         <div class="col-lg-6 actions-left">
-          <a class="btn btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add to Order</a>
+          <a class="btn btn-default btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add to Order</a>
         </div>
         <div class="col-lg-6 actions-right">
           {{#if owner}}
             {{#if order.cancelable}}
-            <button class="btn btn-cancel">Cancel Order</button>
+            <button class="btn btn-default btn-cancel">Cancel Order</button>
             {{/if}}
             {{#if order.submittable}}
             <button class="btn btn-primary btn-submit">Submit</button>

@@ -253,3 +253,7 @@
 .panel-actions > .actions-right {
   text-align: right;
 }
+
+.alert-bad-lead-time .lead-times {
+  margin-top: 25px;
+}

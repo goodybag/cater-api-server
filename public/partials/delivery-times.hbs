@@ -1,0 +1,10 @@
+<dl class="dl-horizontal delivery-times">
+{{#each delivery_times}}
+  <dt>{{shortWeekday @key}}</dt>
+  <dd class="delivery-day-times">
+    {{#each this}}
+      <span class="delivery-time">{{formatTime this.[0] 'h:mma'}} - {{formatTime this.[1] 'h:mma'}}</span>
+    {{/each}}
+  </dd>
+{{/each}}
+</dl>

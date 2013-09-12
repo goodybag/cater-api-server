@@ -46,11 +46,7 @@ a:hover {
   background-color: #FCFDF6;
 }
 
-a.btn {
-  color: #333;
-}
-
-.btn:hover {
+.btn-default:hover {
   background-color: #F3F3F3;
 }
 

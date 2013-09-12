@@ -1,0 +1,26 @@
+<div class="list-group order-list-group">
+  {{#each orders}}
+  <a class="list-group-item" href="/orders/{{this.id}}">
+    <span class="label order-label status {{statusLabel this.status}}">{{capitalize this.status}}</span>
+    <h4 class="list-group-item-heading">{{this.restaurant.name}}</h4>
+    <dl class="dl-horizontal-inline order-details-list">
+      <div>
+        <dt>Date Created:</dt>
+        <dd>{{datepart this.created_at}} {{timepart this.created_at}}</dd>
+      </div>
+      <div>
+        <dt>Delivery Date:</dt>
+        <dd>{{datepart this.datetime}} {{timepart this.datetime}}</dd>
+      </div>
+      {{#if this.sub_total}}
+      <div class="definition-group-subtotal">
+        <dt>Subtotal:</dt>
+        <dd class="subtotal-detail">${{dollars this.sub_total}}</dd>
+      </div>
+      {{/if}}
+    </dl>
+  </a>
+  {{else}}
+  <h2 class="text-center">No Orders</h2>
+  {{/each}}
+</div>

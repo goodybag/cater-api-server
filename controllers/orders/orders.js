@@ -101,6 +101,9 @@ module.exports.changeStatus = function(req, res) {
     if (req.body.status === 'submitted' && !order.isComplete())
       return res.send(403, 'order not complete');
 
+    if (req.body.status === 'submitted' && !order.toJSON().submittable)
+      return res.send(403, 'order not submitttable');
+
     var done = function(status) {
       if (status.attributes.status === 'submitted') {
         res.render('order-submitted-email', {order: order.toJSON({review: true}), config: config, layout: false}, function(err, html) {

@@ -39,15 +39,15 @@
 
           <fieldset class="left-fields">
             <div class="row date-time-guests">
-              <div class="form-group col-sm-4">
+              <div class="form-group col-sm-4" data-icon="gb-icon-calendar">
                 <label class="control-label" for="order-date">Delivery Date</label>
                 <input type="text" class="form-control order-datetime" id="order-date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
               </div>
-              <div class="form-group col-sm-4">
+              <div class="form-group col-sm-4" data-icon="gb-icon-time">
                 <label class="control-label" for="order-time">Delivery Time</label>
                 <input type="text" class="form-control order-datetime" id="order-time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
               </div>
-              <div class="form-group col-sm-4">
+              <div class="form-group col-sm-4" data-icon="gb-icon-user">
                 <label class="control-label" for="order-guests">Guests</label>
                 <input type="number" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
               </div>

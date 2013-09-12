@@ -23,6 +23,7 @@
     "handlebars": "1.0.x",
     "bootstrap": "3.0.x",
     "backbone": "1.0.x",
-    "select2": "~3.4.2"
+    "select2": "~3.4.2",
+    "async": "0.2.x"
   }
 }

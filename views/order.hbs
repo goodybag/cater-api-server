@@ -31,7 +31,9 @@
       <div class="col-sm-7 col-left">
         <div class="panel-body">
           <h2 class="restaurant-name">{{order.restaurant.name}}</h2>
-          <span class="label label-status label-{{lowercase order.status}}">{{capitalize order.status}}</span>
+          {{#with order}}
+          {{> status_label}}
+          {{/with}}
           <div class="date-created">
             Date created:
             <span class="date-created-value">{{formatDateTime order.created_at "MMMM Do YYYY, h:mm a"}}</span>

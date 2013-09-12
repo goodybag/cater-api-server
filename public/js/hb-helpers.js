@@ -119,18 +119,6 @@ var helpers = {
     return tax.call(this, cents, deliveryFee, rate, options);
   },
 
-  statusLabel: function(status) {
-    if (!status) return 'label-default';
-    return 'label-' + {
-      canceled: 'danger',
-      pending: 'info',
-      submitted: 'warning',
-      denied: 'danger',
-      accepted: 'warning',
-      delivered: 'success'
-    }[status];
-  },
-
   price$: function(price) {
     return new Array(price + 1).join('$');
   },

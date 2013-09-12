@@ -36,11 +36,6 @@
   margin-top: 4px;
 }
 
-.restaurant-info-item .dl-horizontal > dt,
-.restaurant-info-item .dl-horizontal > dd {
-  line-height: 19px;
-}
-
 /**
  * Delivery times has a font-size: 0 element in so it's making the
  * line height on all of the dt,dd's larger than it should be
@@ -48,19 +43,6 @@
 .delivery-times.dl-horizontal > dt,
 .delivery-times.dl-horizontal > dd {
   line-height: 15px;
-}
-
-.restaurant-info-item .dl-horizontal > dt {
-  font-weight: 500;
-  text-align: left;
-}
-
-.lead-times > dt {
-  width: 120px;
-}
-
-.lead-times > dd {
-  margin-left: 140px;
 }
 
 .list-delivery-zips {

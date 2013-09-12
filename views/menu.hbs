@@ -96,12 +96,7 @@
           <div class="restaurant-info-item restaurant-info-item-lead-times">
             <h4 class="info-item-title">Lead Times:</h4>
             <div class="info-item-value">
-              <dl class="dl-horizontal lead-times">
-              {{#each restaurant.lead_times}}
-                <dt>Up to {{this.max_guests}} guests</dt>
-                <dd>{{this.lead_time}} hrs</dd>
-              {{/each}}
-              </dl>
+              {{> lead_times restaurant}}
             </div>
           </div>
 

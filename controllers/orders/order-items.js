@@ -35,7 +35,7 @@ module.exports.add = function(req, res, next) {
 }
 
 module.exports.update = function(req, res, next) {
-  var query = queries.orderItem.update({quantity: parseInt(req.body.quantity), notes: req.body.notes}, parseInt(req.params.iid));
+  var query = queries.orderItem.update(utils.pick(req.body, ['quantity', 'notes']), parseInt(req.params.iid));
   var sql = db.builder.sql(query);
 
   db.query(sql.query, sql.values, function(error, rows, result) {

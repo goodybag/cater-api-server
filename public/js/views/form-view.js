@@ -32,20 +32,34 @@ var FormView = Backbone.View.extend({
     return diff;
   },
 
-  onSave: function(e) {
-    e.preventDefault();
+  onSave: function(e, callback) {
+    if (callback === undefined && _.isFunction(e)) {
+      callback = e;
+      e = undefined;
+    }
+    if (e && _.isFunction(e.preventDefault)) e.preventDefault();
+    callback = _.isFunction(callback) ? callback : function() {};
     this.clearErrors();
+    var diff = this.getDiff();
+    if (!diff) return callback.call(this);
     var view = this;
-    var sent = this.model.save(this.getDiff() || {}, {
+    var sent = this.model.save(diff, {
       patch: true,
       wait: true,
       singleError: false,
       success: function(model, response, options) {
         view.$el.find(view.submitSelector).addClass('hide');
+        callback.call(view, null, response);
+      },
+      error: function(model, response, options) {
+        callback.call(view, response);
       }
     });
 
-    if (!sent) this.displayErrors();
+    if (!sent) {
+      this.displayErrors();
+      callback.call(this, this.model.validationError);
+    }
   }
 }, {
   intGetter: function(field) {

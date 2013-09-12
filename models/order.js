@@ -28,7 +28,7 @@ var modifyAttributes = function(callback, err, orders) {
     ];
     utils.each(orders, function(order) {
       order.attributes.restaurant = utils.extend({ id: order.attributes.restaurant_id, delivery_times: utils.object(order.attributes.delivery_times) } , utils.pick(order.attributes, restaurantFields));
-      utils.each(restaurantFields, function(field) { delete order.attributes.field; });
+      utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) {
         return a || b;

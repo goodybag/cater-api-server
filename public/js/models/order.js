@@ -99,6 +99,7 @@ var Order = Backbone.Model.extend({
 
     this.on('change:sub_total', function(model, value, options) {
       model.set('below_min', value < model.restaurant.get('minimum_order'));
+      model.setSubmittable(model, value, options);
     }, this);
 
     this.on({

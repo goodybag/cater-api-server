@@ -27,7 +27,7 @@
   </div>
 
   <div class="panel panel-order-details">
-    <div class="row">
+    <form id="order-form" class="form-light order-form row">
       <div class="col-sm-7 col-left">
         <div class="panel-body">
           <h2 class="restaurant-name">{{order.restaurant.name}}</h2>
@@ -37,24 +37,28 @@
             <span class="date-created-value">{{formatDateTime order.created_at "MMMM Do YYYY, h:mm a"}}</span>
           </div>
 
-          <form id="order-form" class="form-inline form-light order-params order-form">
-            <div class="form-group" data-icon="gb-icon-calendar">
-              <label class="control-label" for="order-date">Delivery Date</label>
-              <input type="text" class="form-control order-datetime" id="order-date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}">
+          <fieldset class="left-fields">
+            <div class="row date-time-guests">
+              <div class="form-group col-sm-4" data-icon="gb-icon-calendar">
+                <label class="control-label" for="order-date">Delivery Date</label>
+                <input type="text" class="form-control order-datetime" id="order-date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+              </div>
+              <div class="form-group col-sm-4" data-icon="gb-icon-time">
+                <label class="control-label" for="order-time">Delivery Time</label>
+                <input type="text" class="form-control order-datetime" id="order-time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+              </div>
+              <div class="form-group col-sm-4" data-icon="gb-icon-user">
+                <label class="control-label" for="order-guests">Guests</label>
+                <input type="number" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+              </div>
             </div>
-            <div class="form-group" data-icon="gb-icon-time">
-              <label class="control-label" for="order-time">Delivery Time</label>
-              <input type="text" class="form-control order-datetime" id="order-time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}">
+            <div class="row">
+              <div class="form-group col-sm-12">
+                <label class="control-label" for="order-notes">Notes</label>
+                <textarea id="order-notes" class="form-control order-notes" rows="5"{{#unless order.editable}} disabled="disabled"{{/unless}}>{{order.notes}}</textarea>
+              </div>
             </div>
-            <div class="form-group" data-icon="gb-icon-user">
-              <label class="control-label" for="order-guests">Guests</label>
-              <input type="text" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}">
-            </div>
-            <div class="form-group form-group-block form-group-order-notes">
-              <label class="control-label" for="order-notes">Notes</label>
-              <textarea name="order-notes" id="order-notes" class="form-control order-notes">{{order.notes}}</textarea>
-            </div>
-          </form>
+          </fieldset>
         </div>
       </div>
       <div class="col-sm-5 col-right">
@@ -62,21 +66,21 @@
           <div class="form-inline order-delivery">
             <div class="form-group form-group-block form-group-phone">
               <label class="control-label" for="order-phone label-bold">Phone</label>
-              <input type="tel" class="form-control order-phone" id="order-phone" value="{{phoneNumber order.phone}}">
+              <input type="tel" class="form-control order-phone" id="order-phone" value="{{phoneNumber order.phone}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
             </div>
             <fieldset class="form-light address-info">
               <legend class="delivery-address-legend">Delivery Address</legend>
               <div class="form-group form-group-block">
                 <label class="control-label" for="address-street" class="control-label">Street Address</label>
-                <input type="text" id="address-street" class="form-control order-form-field address-input address-street" value="{{order.street}}">
+                <input type="text" id="address-street" class="form-control address-input address-street" value="{{order.street}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
               </div>
               <div class="form-group form-group-city">
                 <label class="control-label" for="address-city">City</label>
-                <input type="text" class="form-control" id="address-city" value="{{order.city}}">
+                <input type="text" class="form-control" id="address-city" value="{{order.city}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
               </div>
               <div class="form-group form-group-state">
                 <label for="address-state" class="control-label">State</label>
-                <select id="address-state" class="form-control order-form-field address-input address-state" form="order-form">
+                <select id="address-state" class="form-control address-input address-state" form="order-form"{{#unless order.editable}} disabled="disabled"{{/unless}}>
                   {{#each states}}
                   <option value="{{this.abbr}}" label="{{this.abbr}}"{{#if this.default}} selected="selected"{{/if}}>{{this.name}}</option>
                   {{/each}}
@@ -84,13 +88,13 @@
               </div>
               <div class="form-group form-group-zip">
                 <label class="control-label" for="address-zip">Zip</label>
-                <input type="text" class="form-control" id="address-zip" value="{{order.zip}}">
+                <input type="text" class="form-control" id="address-zip" value="{{order.zip}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
               </div>
             </fieldset>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 
   <div class="panel panel-order-line-item">
@@ -113,14 +117,14 @@
         <tr id="order-item-{{this.id}}">
           <td class="line-item-name">
             <div class="item-name">{{this.name}}</div>
-            <a class="item-remove remove-order-item-btn" href="#">Remove</a>
+            {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
           </td>
           <td class="line-item-quantity">
             <span class="icon-x">x</span>
-            <input type="text" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}">
+            <input type="number" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}"{{#unless ../order.editable}} disabled="disabled"{{/unless}}>
           </td>
           <td class="line-item-notes">
-            <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
+            <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes"{{#unless ../order.editable}} disabled="disabled"{{/unless}}>{{this.notes}}</textarea>
           </td>
           <td class="line-item-price">{{dollars this.price}}</td>
         </tr>
@@ -147,7 +151,9 @@
             {{#if order.cancelable}}
             <button class="btn btn-cancel">Cancel Order</button>
             {{/if}}
-          <button class="btn btn-primary btn-submit">Submit</button>
+            {{#if order.submittable}}
+            <button class="btn btn-primary btn-submit">Submit</button>
+            {{/if}}
           {{/if}}
         </div>
       </div>
@@ -168,6 +174,7 @@
 
 {{#extend "scripts"}}
 <script src="/js/amanda.js"></script>
+<script src="/components/async/lib/async.js"></script>
 
 <script src="/js/models/item.js"></script>
 <script src="/js/models/category.js"></script>
@@ -192,5 +199,6 @@
     {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})
     {{/each}}
   ];
+  view.items = items;
 </script>
 {{/extend}}

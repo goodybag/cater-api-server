@@ -9,7 +9,10 @@ module.exports.list = function(req, res) {
   utils.extend(query.where, {'restaurant_id': req.params.rid});
   models.Order.find(query, function(error, results) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(utils.invoke(results, 'toJSON'));
+    res.render('restaurant-orders', {orders: utils.invoke(results, 'toJSON')}, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, error);
+      res.send(html);
+    });
   });
 }
 

@@ -86,6 +86,20 @@ fieldset[disabled] .btn-primary.active {
   color: #FFBDCA;
 }
 
+.btn-warning {
+  color: #FFF;
+  background-color: #F0AD4E;
+  border-color: #EEA236;
+}
+
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active,
+.btn-warning.active,
+.open .dropdown-toggle.btn-warning {
+  background-color: #ED9C28;
+}
+
 
 /**
  * Forms

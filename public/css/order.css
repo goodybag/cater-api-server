@@ -65,6 +65,20 @@
   padding-right: 6px;
 }
 
+.left-fields .form-group[data-icon]:before {
+  margin-top: 28px;
+}
+
+.left-fields input[type=number]::-webkit-inner-spin-button,
+.left-fields input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form-group-order-notes {
+  padding-right: 4px;
+}
+
 .date-time-guests .form-group:first-child {
   padding-left: 15px;
 }

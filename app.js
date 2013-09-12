@@ -52,7 +52,8 @@ app.configure(function(){
 
   var render = app.response.render;
   app.response.render = function(path, options, callback) {
-    var options = utils.extend(options || {}, {user: utils.extend(this.req.session.user, options.user)});
+    var partialConfig = { phone: config.phone, emails: config.emails };
+    var options = utils.extend(options || {}, {user: utils.extend(this.req.session.user, options.user), config: partialConfig });
     render.call(this, path, options, callback);
   }
 

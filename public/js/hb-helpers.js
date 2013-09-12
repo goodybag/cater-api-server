@@ -57,6 +57,7 @@ var mod = function(a, n) {
 var blocks = {};
 
 var tax = function(subtotal, deliveryFee, rate, options) {
+  if (subtotal == null) subtotal = 0;
   var numArgs = arguments.length;
   if (numArgs === 0) return '0.00';
   if (numArgs < 4) {
@@ -90,7 +91,7 @@ var helpers = {
   },
 
   dollars: function(pennies) {
-    var cents = parseInt(pennies);
+    var cents = pennies == null ? 0 : parseInt(pennies);
     return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2);
   },
 

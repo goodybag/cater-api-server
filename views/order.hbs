@@ -12,8 +12,8 @@
   </div>
 
   <div class="alert alert-danger alert-bad-delivery-time{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}">
-    <p>This order cannot be delivered for that date and time.</p>
-    <p>delivery hours: {{{json order.restaurant.delivery_times}}}</p>
+    <p>This order cannot be delivered for that date and time. Please ensure that your delivery time is within the restaurants schedule:</p>
+     {{> delivery_times order.restaurant }}
   </div>
 
   <div class="alert alert-danger alert-bad-guests{{#unless order.restaurant.is_bad_guests}} hide{{/unless}}">

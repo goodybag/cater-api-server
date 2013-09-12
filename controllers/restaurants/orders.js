@@ -5,11 +5,24 @@ var models = require('../../models');
 
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
-  var query = utils.extend({where: {}}, req.query);
-  utils.extend(query.where, {'restaurant_id': req.params.rid});
-  models.Order.find(query, function(error, results) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(utils.invoke(results, 'toJSON'));
+  var tasks = [
+    function(callback) {
+      var query = utils.extend({where: {}}, req.query);
+      utils.extend(query.where, {'restaurant_id': req.params.rid});
+      models.Order.find(query, callback);
+    },
+
+    function(callback) {
+      models.Restaurant.findOne(req.params.rid, callback);
+    }
+  ];
+
+  utils.async.parallel(tasks, function(err, results) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    res.render('restaurant-orders', {orders: utils.invoke(results[0], 'toJSON'), restaurant: results[1].toJSON()}, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, error);
+      res.send(html);
+    });
   });
 }
 

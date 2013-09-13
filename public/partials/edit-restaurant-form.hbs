@@ -52,6 +52,45 @@
     <span class="help-block">List of zip codes restaurant will deliver to.  Please enter as a comma separated list.</span>
   </div>
   <fieldset>
+    <legend>Delivery Hours</legend>
+    {{#each restaurant.delivery_times}}
+    <div class="form-group hours-day row">
+      <strong class="col-lg-1 day">{{weekday @key}}</strong>
+      <div class="col-lg-11">
+        {{#each this}}
+
+        <div class="row">
+          <div class="col-lg-3 hours-input">
+            <div class="row">
+              {{> edit_hours}}
+            </div>
+          </div>
+          {{#unless @index}}
+          <div class="form-group col-lg-1 hours-checkbox">
+            <label class="control-label"><input type="checkbox"> 24 Hours</label>
+          </div>
+          <div class="form-group col-lg-1 hours-checkbox">
+            <label class="control-label"><input type="checkbox"> Closed</label>
+          </div>
+          {{else}}
+          <div class="btn-toolbar col-lg-1">
+            <button type="button" class="btn btn-default">Remove</button>
+          </div>
+          {{/unless}}
+        </div>
+        {{/each}}
+
+        <div class="row">
+          <div class="btn-toolbar col-lg-1">
+            <button type="button" class="btn btn-success">Add</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    {{/each}}
+  </fieldset>
+  <fieldset>
     <legend>Address</legend>
     <div class="form-group">
       <label class="control-label">Street</label>

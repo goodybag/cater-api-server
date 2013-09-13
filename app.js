@@ -37,6 +37,7 @@ app.configure(function(){
   app.use(middleware.domains);
   app.use(middleware.cors);
   app.use(app.router);
+  app.use(logger.expressError);
 
   app.set('view engine', 'hbs');
 
@@ -61,7 +62,7 @@ app.configure(function(){
 
 app.configure('development', function(){
   // app.error(raven.middleware.express('https://c848c777a63d480fb4af4d680db5b971:36b7e97bd52240dbab3068e6d2337e23@app.getsentry.com/13040'));
-  app.use(express.errorHandler());
+  // app.use(express.errorHandler());
 });
 
 helpers.register(hbs);

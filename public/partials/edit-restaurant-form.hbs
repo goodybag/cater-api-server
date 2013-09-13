@@ -54,30 +54,16 @@
   <fieldset>
     <legend>Delivery Hours</legend>
     {{#each restaurant.delivery_times}}
-    <div class="form-group hours-day row">
+    <div id="hours-{{@key}}" class="form-group hours-day row">
       <strong class="col-lg-1 day">{{weekday @key}}</strong>
-      <div class="col-lg-11">
+      <div class="col-lg-11 hours-listing">
+        {{#withNullable this.[0]}}
+        {{> edit_hours}}
+        {{/withNullable}}
         {{#each this}}
-
-        <div class="row">
-          <div class="col-lg-3 hours-input">
-            <div class="row">
-              {{> edit_hours}}
-            </div>
-          </div>
-          {{#unless @index}}
-          <div class="form-group col-lg-1 hours-checkbox">
-            <label class="control-label"><input type="checkbox"> 24 Hours</label>
-          </div>
-          <div class="form-group col-lg-1 hours-checkbox">
-            <label class="control-label"><input type="checkbox"> Closed</label>
-          </div>
-          {{else}}
-          <div class="btn-toolbar col-lg-1">
-            <button type="button" class="btn btn-default">Remove</button>
-          </div>
-          {{/unless}}
-        </div>
+        {{#if @index}}
+        {{> edit_hours}}
+        {{/if}}
         {{/each}}
 
         <div class="row">

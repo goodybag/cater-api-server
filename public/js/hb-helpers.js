@@ -239,6 +239,18 @@ var helpers = {
 
   capitalze: function( val ){
     return val[ 0 ].toUpperCase() + val.substring( 1 );
+  },
+
+  withNullable: function(context, options) {
+    if (utils.isFunction(context)) { context = context.call(this); }
+
+    return options.fn(context != null ? context : [])
+  },
+
+  ifAllDay: function(times, options) {
+    var ref = [[0, 0, 0], [23, 59, 59]];
+    var ints = utils.map(times, function(time) { return utils.map(time.split(':'), function(part) { return parseInt(part); }); });
+    return options[utils.isEqual(ref, ints) ? 'fn' : 'inverse'](this);
   }
 }
 

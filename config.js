@@ -12,8 +12,11 @@ var config = {
     logging: {
       enabled: true
     , transports: {
-        console: false
-      , fileRotate: true
+        console: true
+      , devConsole: false
+      , fileRotate: false
+      , sentry: false
+      , loggly: false
       }
     }
   , http: {
@@ -51,18 +54,28 @@ var config = {
   }
 
 , dev: {
-    http: {
-      port: 3000
-    }
+    env: 'dev'
 
   , logging: {
       enabled: true
     , transports: {
         devConsole: true
       , fileRotate: true
+      , sentry: true
+      }
+    , sentry: {
+        level: 'warn'
+      , dsn: 'https://c848c777a63d480fb4af4d680db5b971:36b7e97bd52240dbab3068e6d2337e23@app.getsentry.com/13040'
+      , patchGlobal: true
       }
     }
+
+  , http: {
+      port: 3000
+    }
+
   , postgresConnStr:  "postgres://localhost:5432/cater"
+
   , baseUrl: 'http://localhost:3000'
 
   , testEmail: 'geoff@goodybag.com'
@@ -75,25 +88,36 @@ var config = {
   }
 
 , staging: {
-    logging: {
+    env: 'staging'
+
+  , logging: {
       enabled: true
     , transports: {
         loggly: true
+      , sentry: true
+      }
+    , loggly: {
+        subdomain:'gbstaging'
+      , inputToken: 'e0f6fe9c-8ad3-47ec-9fb2-572aa5ce64dc'
+      , auth: {
+          username: 'gbstaging'
+        , password: 'g00dybag3ng1n33r1ng!'
+        }
+      }
+    , sentry: {
+        level: 'warn'
+      , dsn: 'https://995cab300c4848f39076fdaf5ef65350:23a0e69b78944d0bbd4821a0cec2d013@app.getsentry.com/12877'
+      , patchGlobal: true
       }
     }
-  , loggly: {
-      subdomain:'gbstaging'
-    , inputToken: 'e0f6fe9c-8ad3-47ec-9fb2-572aa5ce64dc'
-    , auth: {
-        username: 'gbstaging'
-      , password: 'g00dybag3ng1n33r1ng!'
-      }
-    }
+
   , http: {
       port: process.env['PORT'] || 5000
     }
-  , baseUrl: 'http://cater.staging.goodybag.com'
+
   , postgresConnStr: process.env['DATABASE_URL']
+
+  , baseUrl: 'http://cater.staging.goodybag.com'
   }
 };
 

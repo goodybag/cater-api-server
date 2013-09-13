@@ -8,6 +8,7 @@ var
 , express = require('express')
 , hbs = require('hbs')
 , utils = require('./utils')
+, logger = require('./logger')
 , routes = require('./routes')
 , helpers = require('./helpers')
 ;
@@ -59,6 +60,7 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
+  // app.error(raven.middleware.express('https://c848c777a63d480fb4af4d680db5b971:36b7e97bd52240dbab3068e6d2337e23@app.getsentry.com/13040'));
   app.use(express.errorHandler());
 });
 

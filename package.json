@@ -42,7 +42,8 @@
     "node.extend": "~1.0.8",
     "winston-loggly": "~0.6.0",
     "winston": "~0.7.2",
-    "microtime": "~0.4.0"
+    "microtime": "~0.4.0",
+    "winston-sentry": "0.0.4"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

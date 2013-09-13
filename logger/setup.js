@@ -7,6 +7,7 @@ var
   _ = require('lodash')
 , extend = require('node.extend')
 , winston = require('winston')
+, Sentry = require('winston-sentry')
 , Loggly = require('winston-loggly').Loggly
 , gelfEncode = require('gelf-encode')
 , UdpClient = require('udp-client')
@@ -29,12 +30,20 @@ module.exports = function(options){
 
   var useGelf = false;
   if (config.logging.enabled && config.logging.transports) {
+    // console
     if (config.logging.transports.console) {
       defaults.transports.push(
         new (winston.transports.Console)({json: true})
       );
     }
 
+    // dev console
+    if (config.logging.transports.devConsole) {
+      var DevConsoleTransport = require('./dev-console-transport');
+      defaults.transports.push(new DevConsoleTransport());
+    }
+
+    // file rotate
     if (config.logging.transports.fileRotate) {
       defaults.transports.push(
         new FileRotate({
@@ -45,16 +54,24 @@ module.exports = function(options){
       );
     }
 
+    // loggly
     if (config.logging.transports.loggly) {
-      defaults.transports.push(new Loggly(config.loggly));
+      defaults.transports.push(new Loggly(config.logging.loggly));
     }
 
-    if(config.logging.transports.devConsole) {
-      var DevConsoleTransport = require('./dev-console-transport');
-      defaults.transports.push(new DevConsoleTransport());
+    // sentry
+    if (config.logging.transports.sentry) {
+      defaults.transports.push(
+        new Sentry({
+          level: config.logging.sentry.level
+        , dsn: config.logging.sentry.dsn
+        , patchGlobal: config.logging.sentry.patchGlobal
+        })
+      );
     }
 
-    if(config.logging.transports.gelf) {
+    // gelf
+    if (config.logging.transports.gelf) {
       useGelf = true;
     }
   }
@@ -85,9 +102,9 @@ module.exports = function(options){
     emergency: 0, //not use
   };
 
-  var port = 12201;
-  var host = '192.168.13.105';
-  var app = 'magic';
+  var port = null;
+  var host = null;
+  var app = null;
   if(config.gelf) {
     port = config.gelf.port;
     host = config.gelf.host;
@@ -136,7 +153,7 @@ module.exports = function(options){
     // with their readme. having a callback that is undefined messes shit up.
 
     var args = [level, msg, meta, callback];
-    if (!callback) args.pop();
+    if (!args[3]) args.pop();
     winston.Logger.prototype.log.apply(this, args);
 
     if(useGelf) {

@@ -46,6 +46,11 @@
       <input type="text" class="form-control restaurant-minimum-order" value="{{dollars restaurant.minimum_order}}" placeholder="200.00">
     </div>
   </div>
+  <div class="form-group">
+    <label class="control-label">Delivery Zip Codes</label>
+    <input type="text" class="form-control restaurant-delivery-zips" value="{{array restaurant.delivery_zips}}" placeholder="78701, 78704, 78756">
+    <span class="help-block">List of zip codes restaurant will deliver to.  Please enter as a comma separated list.</span>
+  </div>
   <fieldset>
     <legend>Address</legend>
     <div class="form-group">

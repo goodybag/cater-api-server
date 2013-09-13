@@ -11,6 +11,7 @@ var EditRestaurantView = FormView.extend({
   initialize: function(options) {
     this.categories = [];
     this.setModel(this.model || new Restaurant());
+    this.onChange();
   },
 
   remove: function() {
@@ -44,7 +45,8 @@ var EditRestaurantView = FormView.extend({
     street: '.restaurant-form .restaurant-street',
     city: '.restaurant-form .restaurant-city',
     state: '.restaurant-form .restaurant-state',
-    zip: '.restaurant-form .restaurant-zip'
+    zip: '.restaurant-form .restaurant-zip',
+    delivery_zips: '.restaurant-form .restaurant-delivery-zips'
   },
 
   // TODO: do this automatically based on the model schema
@@ -61,6 +63,10 @@ var EditRestaurantView = FormView.extend({
     },
     voice_phone: function() {
       return this.$el.find(this.fieldMap.voice_phone).val().replace(/[^\d]/g, '');
+    },
+    delivery_zips: function() {
+      var val = this.$el.find(this.fieldMap.delivery_zips).val().trim();
+      return val ? _.invoke(val.split(','), 'trim') : [];
     }
   },
 

@@ -56,15 +56,17 @@
     {{#each restaurant.delivery_times}}
     <div id="hours-{{@key}}" class="form-group hours-day row">
       <strong class="col-lg-1 day">{{weekday @key}}</strong>
-      <div class="col-lg-11 hours-listing">
-        {{#withNullable this.[0]}}
-        {{> edit_hours}}
-        {{/withNullable}}
-        {{#each this}}
-        {{#if @index}}
-        {{> edit_hours}}
-        {{/if}}
-        {{/each}}
+      <div class="col-lg-11">
+        <div class="hours-listing">
+          {{#withNullable this.[0]}}
+          {{> edit_hours}}
+          {{/withNullable}}
+          {{#each this}}
+          {{#if @index}}
+          {{> edit_hours}}
+          {{/if}}
+          {{/each}}
+        </div>
 
         <div class="row">
           <div class="btn-toolbar col-lg-1">

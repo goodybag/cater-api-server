@@ -59,11 +59,15 @@
       <div class="col-lg-11">
         <div class="hours-listing">
           {{#withNullable this.[0]}}
-          {{> edit_hours}}
+          <div class="row">
+            {{> edit_hours}}
+          </div>
           {{/withNullable}}
           {{#each this}}
           {{#if @index}}
-          {{> edit_hours}}
+          <div class="row">
+            {{> edit_hours}}
+          </div>
           {{/if}}
           {{/each}}
         </div>

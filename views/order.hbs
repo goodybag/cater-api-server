@@ -11,19 +11,29 @@
     This order cannot be delivered to that zip code.
   </div>
 
-  <div class="alert alert-danger alert-bad-delivery-time{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}">
-    <p>This order cannot be delivered for that date and time.</p>
-    <p>delivery hours: {{{json order.restaurant.delivery_times}}}</p>
+  <div class="alert alert-danger alert-bad-delivery-time row{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}">
+    <div class="col-lg-8 alert-left">
+      <h3 class="alert-header">Invalid Delivery Time :(</h3>
+      <p>This order cannot be delivered for that date and time. Please ensure that your delivery time is within the restaurants schedule.</p>
+    </div>
+    <div class="col-lg-4 alert-right">
+      {{> delivery_times order.restaurant }}
+    </div>
   </div>
 
   <div class="alert alert-danger alert-bad-guests{{#unless order.restaurant.is_bad_guests}} hide{{/unless}}">
     <p>This order cannot be delivered for that many guests.</p>
-    <p>max guests: {{order.restaurant.max_guests}}</p>
+    <p><strong>Maximum guests:</strong> {{order.restaurant.max_guests}}</p>
   </div>
 
-  <div class="alert alert-danger alert-bad-lead-time{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}">
-    <p>This order cannot be delivered for that many guests without more lead time.</p>
-    <p>lead times: {{{json order.restaurant.lead_times}}}</p>
+  <div class="alert alert-danger alert-bad-lead-time row{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}">
+    <div class="col-lg-8 alert-left">
+      <h3 class="alert-header">Invalid Delivery Time :(</h3>
+      <p>This order cannot be delivered for that many guests without more lead time. Please check lead times for this restaurant.</p>
+    </div>
+    <div class="col-lg-4 alert-right">
+      {{> lead_times order.restaurant }}
+    </div>
   </div>
 
   <div class="panel panel-order-details">
@@ -146,12 +156,12 @@
 
       <div class="row panel-actions">
         <div class="col-lg-6 actions-left">
-          <a class="btn btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add to Order</a>
+          <a class="btn btn-default btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add to Order</a>
         </div>
         <div class="col-lg-6 actions-right">
           {{#if owner}}
             {{#if order.cancelable}}
-            <button class="btn btn-cancel">Cancel Order</button>
+            <button class="btn btn-default btn-cancel">Cancel Order</button>
             {{/if}}
             {{#if order.submittable}}
             <button class="btn btn-primary btn-submit">Submit</button>

@@ -156,7 +156,9 @@
 
       <div class="row panel-actions">
         <div class="col-lg-6 actions-left">
+          {{#if order.editable}}
           <a class="btn btn-default btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add to Order</a>
+          {{/if}}
         </div>
         <div class="col-lg-6 actions-right">
           {{#if owner}}

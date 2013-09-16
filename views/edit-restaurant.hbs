@@ -52,7 +52,7 @@
 <script src="/js/views/edit-category-view.js"></script>
 <script src="/js/views/edit-item-view.js"></script>
 <script>
-  var restaurant = new EditRestaurantView({ el: '#main', model: new Restaurant({{{json restaurant}}}) });
+  var restaurant = new EditRestaurantView({ el: '#main', model: new Restaurant({{{json restaurant}}}), hours: hours });
 
   {{#each restaurant.categories}}
   var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', model: restaurant.model.categories.get({{id}}), restaurant: restaurant });

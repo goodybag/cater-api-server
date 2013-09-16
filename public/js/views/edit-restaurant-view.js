@@ -46,7 +46,8 @@ var EditRestaurantView = FormView.extend({
     city: '.restaurant-form .restaurant-city',
     state: '.restaurant-form .restaurant-state',
     zip: '.restaurant-form .restaurant-zip',
-    delivery_zips: '.restaurant-form .restaurant-delivery-zips'
+    delivery_zips: '.restaurant-form .restaurant-delivery-zips',
+    delivery_times: '.restaurant-form .time'
   },
 
   // TODO: do this automatically based on the model schema
@@ -67,6 +68,11 @@ var EditRestaurantView = FormView.extend({
     delivery_zips: function() {
       var val = this.$el.find(this.fieldMap.delivery_zips).val().trim();
       return val ? _.invoke(val.split(','), 'trim') : [];
+    },
+
+    delivery_times: function() {
+      var models = _.pluck(this.options.hours, 'model')
+      return _.object(_.invoke(models, 'get', 'day'), _.invoke(models, 'toJSON'));
     }
   },
 

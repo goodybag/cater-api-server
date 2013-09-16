@@ -8,14 +8,17 @@ var EditHoursView = Backbone.View.extend({
   events: {
     'change .all-day': 'changeAllDay',
     'change .closed':  'changeClosed',
-    'change .time': 'changeTimes'
+    'change .time': 'changeTimes',
+    'click .add-period': 'addPeriod',
+    'click .remove-period': 'removePeriod'
   },
 
   selectors: {
     allDay: '.all-day',
     closed: '.closed',
     open: '.open-time',
-    close: '.close-time'
+    close: '.close-time',
+    timeInputs: 'input.time'
   },
 
   initialize: function(options) {
@@ -37,7 +40,7 @@ var EditHoursView = Backbone.View.extend({
   },
 
   setPickers: function() {
-    this.pickers = _.map(this.$el.find('input.time'), function(input) {
+    this.pickers = _.map(this.$el.find(this.selectors.timeInputs), function(input) {
       return $(input).pickatime({
         format: 'hh:i A',
         interval: 15
@@ -51,15 +54,25 @@ var EditHoursView = Backbone.View.extend({
 
   changeClosed: function(e) {
     this.model.set('times', []);
-    var inputs = this.$el.find('input.time');
+    var inputs = this.$el.find(this.selectors.timeInputs);
     e.target.checked ? inputs.attr('disabled', 'disabled') : inputs.removeAttr('disabled');
   },
 
   changeTimes: function(e) {
     this.model.set('times', _.compact(_.map(this.$el.find('.open-period'), function(el) {
-      var open = $(el).find('.open-time').val() || null;
-      var close = $(el).find('.close-time').val() || null;
+      var open = $(el).find(this.selectors.open).val() || null;
+      var close = $(el).find(this.selectors.close).val() || null;
       return open || close ? [open, close] : null;
     })));
+  },
+
+  addPeriod: function(e) {
+    this.$el.find(this.selectors.closed).attr('checked', false);
+    this.changeClosed({target: {checked: false}});
+    this.$el.find('.hours-listing').append(Handlebars.partials.edit_hours(['', ''], {data: {index: this.model.get('times').length || 1}}));
+  },
+
+  removePeriod: function(e) {
+    $(e.target).closest('.open-period').remove();
   }
 });

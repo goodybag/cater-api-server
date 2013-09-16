@@ -57,3 +57,8 @@ th.name-column {
 .hours-day {
   padding-bottom: 5px;
 }
+
+input.time:not([disabled])[readonly] {
+  background-color: white;
+  cursor: default;
+}

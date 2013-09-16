@@ -22,10 +22,18 @@ var EditHoursView = Backbone.View.extend({
     this.listenTo(this.model, {
       'change': this.render
     }, this);
+
+    this.pickers = _.map(this.$el.find('input.time'), function(input) {
+        return $(input).pickatime({
+          format: 'hh:i A',
+          interval: 15
+        }).pickatime('picker');
+    });
   },
 
   render: function() {
     this.$el.html(this.template( this.model.toJSON(), {data: {key: this.model.get('day')}} ))
+    if (this.model.toJSON().length === 0) _.invoke(this.pickers, 'clear');
   },
 
   attach: function() {
@@ -37,6 +45,8 @@ var EditHoursView = Backbone.View.extend({
   },
 
   changeClosed: function(e) {
-    if (e.target.checked) this.model.set('times', []);
+    this.model.set('times', []);
+    var inputs = this.$el.find('input.time');
+    e.target.checked ? inputs.attr('disabled', 'disabled') : inputs.removeAttr('disabled');
   }
 });

@@ -68,7 +68,7 @@ var EditHoursView = Backbone.View.extend({
 
   addPeriod: function(e) {
     this.$el.find(this.selectors.closed).attr('checked', false);
-    this.changeClosed({target: {checked: false}});
+    this.$el.find(this.selectors.timeInputs).removeAttr('disabled');
     this.$el.find('.hours-listing').append(Handlebars.partials.edit_hours(['', ''], {data: {index: this.model.get('times').length || 1}}));
   },
 

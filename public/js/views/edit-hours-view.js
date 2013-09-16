@@ -7,7 +7,8 @@ var EditHoursView = Backbone.View.extend({
 
   events: {
     'change .all-day': 'changeAllDay',
-    'change .closed':  'changeClosed'
+    'change .closed':  'changeClosed',
+    'change .time': 'changeTimes'
   },
 
   selectors: {
@@ -23,21 +24,25 @@ var EditHoursView = Backbone.View.extend({
       'change': this.render
     }, this);
 
-    this.pickers = _.map(this.$el.find('input.time'), function(input) {
-        return $(input).pickatime({
-          format: 'hh:i A',
-          interval: 15
-        }).pickatime('picker');
-    });
+    this.setPickers();
   },
 
   render: function() {
     this.$el.html(this.template( this.model.toJSON(), {data: {key: this.model.get('day')}} ))
-    if (this.model.toJSON().length === 0) _.invoke(this.pickers, 'clear');
+    this.setPickers();
   },
 
   attach: function() {
     this.options.hoursListing.append(this.$el);
+  },
+
+  setPickers: function() {
+    this.pickers = _.map(this.$el.find('input.time'), function(input) {
+      return $(input).pickatime({
+        format: 'hh:i A',
+        interval: 15
+      }).pickatime('picker');
+    });
   },
 
   changeAllDay: function(e) {
@@ -48,5 +53,13 @@ var EditHoursView = Backbone.View.extend({
     this.model.set('times', []);
     var inputs = this.$el.find('input.time');
     e.target.checked ? inputs.attr('disabled', 'disabled') : inputs.removeAttr('disabled');
+  },
+
+  changeTimes: function(e) {
+    this.model.set('times', _.compact(_.map(this.$el.find('.open-period'), function(el) {
+      var open = $(el).find('.open-time').val() || null;
+      var close = $(el).find('.close-time').val() || null;
+      return open || close ? [open, close] : null;
+    })));
   }
 });

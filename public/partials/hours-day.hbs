@@ -2,13 +2,13 @@
 <div class="col-lg-11">
   <div class="hours-listing">
     {{#withNullable this.[0]}}
-    <div class="row">
+    <div class="row open-period">
       {{> edit_hours}}
     </div>
     {{/withNullable}}
     {{#each this}}
     {{#if @index}}
-    <div class="row">
+    <div class="row open-period">
       {{> edit_hours}}
     </div>
     {{/if}}

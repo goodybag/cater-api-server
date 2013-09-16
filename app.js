@@ -20,11 +20,6 @@ var middleware = {
 , uuid: require('./middleware/uuid')
 };
 
-if (config.rollbar) {
-  rollbar.init(config.rollbar.accessToken, {environment: config.env});
-  rollbar.handleUncaughtExceptions();
-}
-
 var app = module.exports = express();
 
 app.configure(function(){
@@ -43,8 +38,6 @@ app.configure(function(){
   app.use(express.logger('dev'));
   app.use(app.router);
   app.use(logger.expressError);
-
-  if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
 
   app.set('view engine', 'hbs');
   app.set('port', config.http.port || 3000);

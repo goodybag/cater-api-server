@@ -6,7 +6,6 @@ var config = require('../config');
 
 module.exports.add = function(req, res, next) {
   var done = function(email, token) {
-
     var context = { layout: false, email: email, token: token, baseUrl: config.baseUrl };
 
     res.render('waitlist-initial-email', context, function(err, html) {

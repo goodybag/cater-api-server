@@ -61,6 +61,9 @@ var config = {
         devConsole: true
       }
     }
+  , rollbar: {
+      accessToken: 'c7f82820e02c4bd7a759015518948ce3'
+    }
   , postgresConnStr:  "postgres://localhost:5432/cater"
   , baseUrl: 'http://localhost:3000'
 

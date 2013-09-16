@@ -253,7 +253,7 @@ module.exports.register = function(app) {
 
   app.get('/auth', controllers.auth.index);
 
-  app.post('/auth', controllers.auth.createSession);
+  app.post('/auth', controllers.session.create);
 
   app.all('/auth', function(req, res, next) {
     res.set('Allow', 'GET, POST');

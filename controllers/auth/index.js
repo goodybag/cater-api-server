@@ -16,10 +16,3 @@ module.exports.index = function(req, res) {
     return res.send(html);
   });
 }
-
-module.exports.createSession = function(req, res) {
-  if (req.session && req.session.user && req.session.user.id != null)
-    return res.redirect(req.query.next || '/restaurants');
-
-  return session.create(req, res);
-};

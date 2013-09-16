@@ -1,10 +1,4 @@
-var
-  async = require('async')
-, db = require('../../db')
-, errors = require('../../errors')
-, utils = require('../../utils')
-, session = require('../session')
-;
+var utils = require('../../utils');
 
 module.exports.index = function(req, res) {
   if (req.session && req.session.user && req.session.user.id != null)

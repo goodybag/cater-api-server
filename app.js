@@ -11,6 +11,7 @@ var
 , logger = require('./logger')
 , routes = require('./routes')
 , helpers = require('./helpers')
+, rollbar = require('rollbar')
 ;
 
 var middleware = {
@@ -19,12 +20,15 @@ var middleware = {
 , uuid: require('./middleware/uuid')
 };
 
+if (config.rollbar) {
+  rollbar.init(config.rollbar.accessToken, {environment: config.env});
+  rollbar.handleUncaughtExceptions();
+}
+
 var app = module.exports = express();
 
 app.configure(function(){
-  app.set('port', config.http.port || 3000);
   app.use(express.favicon(__dirname + '/public/favicon.ico'));
-  app.use(express.logger('dev'));
   app.use(express.compress());
 
   app.use(express.cookieParser('WOOT THE FUCK'));
@@ -36,10 +40,14 @@ app.configure(function(){
   app.use(middleware.uuid());
   app.use(middleware.domains);
   app.use(middleware.cors);
+  app.use(express.logger('dev'));
   app.use(app.router);
   app.use(logger.expressError);
 
+  if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
+
   app.set('view engine', 'hbs');
+  app.set('port', config.http.port || 3000);
 
   /**
    * Request & Response prototype updates
@@ -61,7 +69,6 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-  // app.error(raven.middleware.express('https://c848c777a63d480fb4af4d680db5b971:36b7e97bd52240dbab3068e6d2337e23@app.getsentry.com/13040'));
   // app.use(express.errorHandler());
 });
 

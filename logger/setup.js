@@ -8,6 +8,7 @@ var
 , extend = require('node.extend')
 , winston = require('winston')
 , Sentry = require('winston-sentry')
+, Rollbar = require('winston-rollbar').Rollbar
 , Loggly = require('winston-loggly').Loggly
 , gelfEncode = require('gelf-encode')
 , UdpClient = require('udp-client')
@@ -22,7 +23,7 @@ var
  * @param  {Object} options {app: String, component: String}
  * @return {[type]}         [description]
  */
-module.exports = function(options){
+module.exports = function(options) {
   var defaults = {
     transports: []
   , meta: {}
@@ -33,7 +34,7 @@ module.exports = function(options){
     // console
     if (config.logging.transports.console) {
       defaults.transports.push(
-        new (winston.transports.Console)({json: true})
+        new (winston.transports.Console)(config.logging.console)
       );
     }
 
@@ -46,28 +47,13 @@ module.exports = function(options){
     // file rotate
     if (config.logging.transports.fileRotate) {
       defaults.transports.push(
-        new FileRotate({
-          filename: 'all.log'
-        , dirname: 'logs'
-        , json: true
-        })
+        new FileRotate(config.logging.fileRotate)
       );
     }
 
     // loggly
     if (config.logging.transports.loggly) {
       defaults.transports.push(new Loggly(config.logging.loggly));
-    }
-
-    // sentry
-    if (config.logging.transports.sentry) {
-      defaults.transports.push(
-        new Sentry({
-          level: config.logging.sentry.level
-        , dsn: config.logging.sentry.dsn
-        , patchGlobal: config.logging.sentry.patchGlobal
-        })
-      );
     }
 
     // gelf

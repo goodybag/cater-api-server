@@ -37,13 +37,13 @@
     "moment": "2.1.x",
     "moment-timezone": "0.0.x",
     "bower": "1.2.x",
-    "udp-client": "~0.1.0",
-    "gelf-encode": "~0.2.0",
-    "node.extend": "~1.0.8",
-    "winston-loggly": "~0.6.0",
-    "winston": "~0.7.2",
-    "microtime": "~0.4.0",
-    "winston-sentry": "0.0.4"
+    "udp-client": "0.1.x",
+    "gelf-encode": "0.2.x",
+    "node.extend": "1.0.x",
+    "winston-loggly": "0.6.x",
+    "winston": "0.7.x",
+    "microtime": "0.4.x",
+    "rollbar": "0.2.x"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

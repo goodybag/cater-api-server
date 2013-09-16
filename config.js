@@ -15,8 +15,10 @@ var config = {
         console: true
       , devConsole: false
       , fileRotate: false
-      , sentry: false
       , loggly: false
+      }
+    , console: {
+        json: true
       }
     }
   , http: {
@@ -61,17 +63,19 @@ var config = {
     , transports: {
         devConsole: true
       , fileRotate: true
-      , sentry: true
       }
-    , sentry: {
-        level: 'warn'
-      , dsn: 'https://c848c777a63d480fb4af4d680db5b971:36b7e97bd52240dbab3068e6d2337e23@app.getsentry.com/13040'
-      , patchGlobal: true
+    , fileRotate: {
+        dirname: 'logs'
+      , filename: 'all.log'
+      , json: true
       }
     }
-
   , http: {
       port: 3000
+    }
+
+  , rollbar: {
+      accessToken: 'c7f82820e02c4bd7a759015518948ce3'
     }
 
   , postgresConnStr:  "postgres://localhost:5432/cater"
@@ -94,7 +98,6 @@ var config = {
       enabled: true
     , transports: {
         loggly: true
-      , sentry: true
       }
     , loggly: {
         subdomain:'gbstaging'
@@ -103,11 +106,6 @@ var config = {
           username: 'gbstaging'
         , password: 'g00dybag3ng1n33r1ng!'
         }
-      }
-    , sentry: {
-        level: 'warn'
-      , dsn: 'https://995cab300c4848f39076fdaf5ef65350:23a0e69b78944d0bbd4821a0cec2d013@app.getsentry.com/12877'
-      , patchGlobal: true
       }
     }
 

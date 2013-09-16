@@ -13,11 +13,6 @@ var
 , helpers = require('./helpers')
 ;
 
-if (config.rollbar) {
-  rollbar.init(config.rollbar.accessToken, {environment: config.env});
-  rollbar.handleUncaughtExceptions();
-}
-
 var middleware = {
   cors: require('./middleware/cors')
 , domains: require('./middleware/domains')

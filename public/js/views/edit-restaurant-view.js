@@ -79,9 +79,11 @@ var EditRestaurantView = FormView.extend({
 
     lead_times: function() {
       return _.map(this.$el.find('.lead-time'), function(el) {
+        var guests = parseInt($(el).find('.lead-max-guests').val());
+        var hours = parseInt($(el).find('.lead-hours').val());
         return {
-          max_guests: $(el).find('.lead-max-guests').val(),
-          lead_time: $(el).find('.lead-hours').val()
+          max_guests: !_.isNaN(guests) ? guests : null,
+          lead_time:!_.isNaN(hours) ? hours : null
         };
       });
     }

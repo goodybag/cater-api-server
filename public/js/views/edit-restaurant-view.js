@@ -5,7 +5,8 @@ var EditRestaurantView = FormView.extend({
     'keyup .restaurant-form .form-control': 'onChange',
     'change .restaurant-form .form-control': 'onChange',
     'submit .restaurant-form': 'onSave',
-    'click .new-category': 'newCategory'
+    'click .new-category': 'newCategory',
+    'click .add-lead-time': 'addLeadTime'
   },
 
   initialize: function(options) {
@@ -47,7 +48,8 @@ var EditRestaurantView = FormView.extend({
     state: '.restaurant-form .restaurant-state',
     zip: '.restaurant-form .restaurant-zip',
     delivery_zips: '.restaurant-form .restaurant-delivery-zips',
-    delivery_times: '.restaurant-form .time'
+    delivery_times: '.restaurant-form .time',
+    lead_times: '.restaurant-form .lead-times'
   },
 
   // TODO: do this automatically based on the model schema
@@ -73,6 +75,15 @@ var EditRestaurantView = FormView.extend({
     delivery_times: function() {
       var models = _.pluck(this.options.hours, 'model')
       return _.object(_.invoke(models, 'get', 'day'), _.invoke(models, 'toJSON'));
+    },
+
+    lead_times: function() {
+      return _.map(this.$el.find('.lead-time'), function(el) {
+        return {
+          max_guests: $(el).find('.lead-max-guests').val(),
+          lead_time: $(el).find('.lead-hours').val()
+        };
+      });
     }
   },
 
@@ -106,5 +117,9 @@ var EditRestaurantView = FormView.extend({
   // TODO: generic field formatter system.
   formatPhone: function(field, model, value, options) {
     this.$el.find(this.fieldMap[field]).val(Handlebars.helpers.phoneNumber(value))
+  },
+
+  addLeadTime: function(e) {
+    this.$el.find('.lead-times').append(Handlebars.partials.lead_time({}));
   }
 });

@@ -14,8 +14,8 @@ var config = {
   , logging: {
       enabled: true
     , transports: {
-        console: false
-      , fileRotate: true
+        console: true
+      , fileRotate: false
       }
     }
 
@@ -59,6 +59,7 @@ var config = {
     }
   }
 
+
 , dev: {
     env: 'dev'
 
@@ -89,6 +90,8 @@ var config = {
 
   , emailEnabled: true
   }
+
+
 , staging: {
     env: 'staging'
 

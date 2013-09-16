@@ -99,6 +99,10 @@ var config = {
       port: process.env['PORT'] || 5000
     }
 
+  , rollbar: {
+      accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+    }
+
   , baseUrl: 'http://cater.staging.goodybag.com'
 
   , postgresConnStr: process.env['DATABASE_URL']

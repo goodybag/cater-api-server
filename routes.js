@@ -369,6 +369,12 @@ module.exports.register = function(app) {
   app.get('/privacy', controllers.statics.privacy);
 
   app.get('/*', function(req, res) {
-    file.serve(req, res);
+    file.serve(req, res, function(error){
+      if ( error && error.status == 404) return res.status(404).render('404');
+    });
   });
+
+  // app.get('*', function(req, res){
+  //   res.status(404).render('404');
+  // });
 }

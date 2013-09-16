@@ -24,7 +24,7 @@
 
 {{#extend "scripts"}}
 <script>
-  var partials = {'edit_item_row': 'edit-item-row.hbs', 'edit_category': 'edit-category.hbs', edit_hours: 'edit-hours.hbs'};
+  var partials = {'edit_item_row': 'edit-item-row.hbs', 'edit_category': 'edit-category.hbs'};
   for (var name in partials) {
     $.ajax({
       type: 'GET',

@@ -36,7 +36,8 @@
     "mailcomposer":  "0.2.x",
     "moment": "2.1.x",
     "moment-timezone": "0.0.x",
-    "bower": "1.2.x"
+    "bower": "1.2.x",
+    "rollbar": "0.2.x"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

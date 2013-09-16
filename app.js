@@ -5,6 +5,7 @@
 
 var
   config = require('./config')
+, rollbar = require('rollbar')
 , express = require('express')
 , hbs = require('hbs')
 , utils = require('./utils')
@@ -21,7 +22,6 @@ var middleware = {
 var app = module.exports = express();
 
 app.configure(function(){
-  app.set('port', config.http.port || 3000);
   app.use(express.favicon(__dirname + '/public/favicon.ico'));
   app.use(express.logger('dev'));
   app.use(express.compress());
@@ -36,7 +36,9 @@ app.configure(function(){
   app.use(middleware.domains);
   app.use(middleware.cors);
   app.use(app.router);
+  if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
 
+  app.set('port', config.http.port || 3000);
   app.set('view engine', 'hbs');
 
   /**
@@ -53,14 +55,18 @@ app.configure(function(){
   var render = app.response.render;
   app.response.render = function(path, options, callback) {
     var partialConfig = { phone: config.phone, emails: config.emails };
-    var options = utils.extend(options || {}, {user: utils.extend(this.req.session.user, options.user), config: partialConfig });
+
+    options = options || {};
+
+    options = utils.extend( options, {
+        user: utils.extend({}, this.req.session ? this.req.session.user : {}, options.user)
+      , config: utils.extend(partialConfig, options.config)
+      }
+    );
+
     render.call(this, path, options, callback);
   }
 
-});
-
-app.configure('development', function(){
-  app.use(express.errorHandler());
 });
 
 helpers.register(hbs);

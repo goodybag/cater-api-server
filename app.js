@@ -53,7 +53,15 @@ app.configure(function(){
   var render = app.response.render;
   app.response.render = function(path, options, callback) {
     var partialConfig = { phone: config.phone, emails: config.emails };
-    var options = utils.extend(options || {}, {user: utils.extend(this.req.session.user, options.user), config: partialConfig });
+
+    options = options || {};
+
+    options = utils.extend( options, {
+        user: utils.extend(this.req.session.user, options.user)
+      , config: utils.extend(partialConfig, options.config)
+      }
+    );
+
     render.call(this, path, options, callback);
   }
 

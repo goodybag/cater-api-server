@@ -373,8 +373,4 @@ module.exports.register = function(app) {
       if ( error && error.status == 404) return res.status(404).render('404');
     });
   });
-
-  // app.get('*', function(req, res){
-  //   res.status(404).render('404');
-  // });
 }

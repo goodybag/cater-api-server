@@ -23,6 +23,7 @@ label {
 .page-auth > .container {
   max-width: 770px;
   height: 100%;
+  background: rgb(252, 253, 246);
   background: rgba(252, 253, 246, 0.84);
 }
 

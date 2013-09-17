@@ -52,6 +52,7 @@ module.exports = Model.extend({
   toJSON: function() {
     var obj = Model.prototype.toJSON.apply(this, arguments);
     if (this.categories) obj.categories = utils.invoke(this.categories, 'toJSON');
+    obj.delivery_times = utils.defaults(obj.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
     return obj;
   }
 },

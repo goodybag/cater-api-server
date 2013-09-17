@@ -78,14 +78,14 @@ var EditRestaurantView = FormView.extend({
     },
 
     lead_times: function() {
-      return _.map(this.$el.find('.lead-time'), function(el) {
+      return _.compact(_.map(this.$el.find('.lead-time'), function(el) {
         var guests = parseInt($(el).find('.lead-max-guests').val());
         var hours = parseInt($(el).find('.lead-hours').val());
-        return {
+        return !_.isNaN(guests) && !_.isNaN(hours) ? {
           max_guests: !_.isNaN(guests) ? guests : null,
           lead_time:!_.isNaN(hours) ? hours : null
-        };
-      });
+        } : null;
+      }));
     }
   },
 
@@ -122,6 +122,6 @@ var EditRestaurantView = FormView.extend({
   },
 
   addLeadTime: function(e) {
-    this.$el.find('.lead-times').append(Handlebars.partials.lead_time({}));
+    this.$el.find('.lead-times-list').append(Handlebars.partials.lead_time({}));
   }
 });

@@ -63,11 +63,11 @@ var EditRestaurantView = FormView.extend({
     },
 
     sms_phone: function() {
-      return this.$el.find(this.fieldMap.sms_phone).val().replace(/[^\d]/g, '');
+      return this.$el.find(this.fieldMap.sms_phone).val().replace(/[^\d]/g, '') || null;
     },
 
     voice_phone: function() {
-      return this.$el.find(this.fieldMap.voice_phone).val().replace(/[^\d]/g, '');
+      return this.$el.find(this.fieldMap.voice_phone).val().replace(/[^\d]/g, '') || null;
     },
 
     delivery_zips: function() {

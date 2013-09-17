@@ -63,7 +63,7 @@ var EditHoursView = Backbone.View.extend({
       var open = $(el).find(this.selectors.open).val() || null;
       var close = $(el).find(this.selectors.close).val() || null;
       return open || close ? [open, close] : null;
-    })));
+    }, this)));
   },
 
   addPeriod: function(e) {

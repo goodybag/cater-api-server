@@ -3,7 +3,7 @@ var EditRestaurantView = FormView.extend({
 
   events: {
     'keyup .restaurant-form .form-control': 'onChange',
-    'change .restaurant-form .form-control': 'onChange',
+    'change .restaurant-form .form-control, .restaurant-form input': 'onChange',
     'submit .restaurant-form': 'onSave',
     'click .new-category': 'newCategory',
     'click .add-lead-time': 'addLeadTime'
@@ -13,6 +13,9 @@ var EditRestaurantView = FormView.extend({
     this.categories = [];
     this.setModel(this.model || new Restaurant());
     this.onChange();
+    _.each(options.hours, function(view) {
+      this.listenTo(view.model, 'change', this.onChange, this);
+    }, this);
   },
 
   remove: function() {

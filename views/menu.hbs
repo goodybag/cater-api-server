@@ -3,27 +3,6 @@
 {{/extend}}
 
 <div class="page page-menu container">
-  <div class="row">
-    <div class="col-lg-12">{{> order_params_bar}}</div>
-  </div>
-
-{{#if restaurant.is_bad_zip}}
-<div class="alert alert-danger">We're sorry, this restaurant does not deliver to that zip code.</div>
-{{/if}}
-
-{{#if restaurant.is_bad_delivery_time}}
-<div class="alert alert-danger">We're sorry, this restaurant does not deliver for that date and time.</div>
-{{/if}}
-
-{{#if restaurant.is_bad_guests}}
-<div class="alert alert-danger">We're sorry, this restaurant cannot fulfill orders for this many guests.</div>
-{{else}}
-
-{{#if restaurant.is_bad_lead_time}}
-<div class="alert alert-danger">We're sorry, this restaurant cannot fulfill an order for this many guests without more lead time.</div>
-{{/if}}
-
-{{/if}}
 
 <div class="row">
   <div class="col-lg-12">
@@ -116,7 +95,7 @@
   </div>
 
   <div class="col-md-4">
-    <div class="panel order-summary" data-spy="affix" data-offset-top="204">
+    <div class="panel order-summary" data-spy="affix" data-offset-top="118">
       <div class="panel-heading">
         <h2 class="panel-title">Your Order</h2>
       </div>
@@ -176,10 +155,22 @@
         <h4 class="modal-title">All info must be entered before creating an order</h4>
       </div>
       <div class="modal-body">
+        <div class="errors">
+          <div class="alert is_bad_zip alert-danger{{#unless restaurant.is_bad_zip}} hide{{/unless}}">We're sorry, this restaurant does not deliver to that zip code.</div>
+
+          <div class="alert is_bad_delivery_time alert-danger{{#unless restaurant.is_bad_delivery_time}} hide{{/unless}}">We're sorry, this restaurant does not deliver for that date and time.</div>
+
+          <div class="alert is_bad_guests alert-danger{{#unless restaurant.is_bad_guests}} hide{{/unless}}">We're sorry, this restaurant cannot fulfill orders for this many guests.</div>
+
+          <div class="alert is_bad_lead_time alert-danger{{#unless restaurant.is_bad_lead_time}} hide{{/unless}}">We're sorry, this restaurant cannot fulfill an order for this many guests without more lead time.</div>
+
+          <div class="alert alert-danger error-blank-fields hide">You must fill out all fields</div>
+        </div>
+
+
         <div class="order-params-wrapper">
           {{> order_params_bar}}
         </div>
-        <div class="alert alert-danger hide">You must fill out all fields</div>
       </div>
       <div class="modal-footer">
         <div class="btn-toolbar pull-right">
@@ -228,11 +219,11 @@
 <script type="text/javascript" src="/js/views/order-params-modal.js"></script>
 
 <script>
+  var orderModel = new Order( {{{json order}}} );
+
   var orderParams = new OrderParams({{{json orderParams}}});
   var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
-  var orderParamsModal = new OrderParamsModal({model: orderParams, el: '#order-params-modal', loginNeeded: {{#if user.id}}false{{else}}true{{/if}}, orderParamsNeeded: !{{{json orderParams.complete}}} });
-
-  var orderModel = new Order( {{{json order}}} );
+  var orderParamsModal = new OrderParamsModal({model: orderParams, orderModel: orderModel, el: '#order-params-modal', loginNeeded: {{#if user.id}}false{{else}}true{{/if}} });
 
   var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems});
 
@@ -249,10 +240,16 @@
       el: $('#item-{{id}}'),
       model: new Backbone.Model( {{{json this}}} ),
       itemModalView: itemModalView,
-      orderParamsModal: orderParamsModal
+      orderModel: orderModel,
+      orderParamsModal: orderParamsModal,
+      orderParams: orderParams
       }),
     {{/each}}
     {{/each}}
   ];
+
+  {{#if restaurant.is_bad_zip}}orderParamsModal.show(){{/if}}
+  {{#if restaurant.is_bad_delivery_time}}orderParamsModal.show(){{/if}}
+  {{#if restaurant.is_bad_guests}}orderParamsModal.show(){{/if}}
 </script>
 {{/extend}}

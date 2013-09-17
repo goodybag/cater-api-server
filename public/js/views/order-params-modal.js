@@ -22,8 +22,10 @@ var OrderParamsModal = Backbone.View.extend({
 
   show: function() {
     this.clear();
+    this.showErrors();
     this.fillFields();
     this.$el.modal('show');
+    console.log(this.model)
   },
 
   hide: function() {
@@ -32,7 +34,20 @@ var OrderParamsModal = Backbone.View.extend({
 
   clear: function() {
     this.$el.find('input').parent().removeClass('has-error');
-    this.$el.find('.alert-danger').addClass('hide');
+    this.$el.find('.alert').addClass('hide');
+  },
+
+  showErrors: function(){
+    this.clear();
+
+    var errors = this.options.orderModel.restaurant.validateOrderParams( this.model );
+    var this_ = this;
+
+    _.each( errors, function( error ){
+      this_.$el.find( '.alert.' + error ).removeClass('hide');
+    });
+
+    return errors.length > 0;
   },
 
   fillFields: function() {
@@ -66,11 +81,9 @@ var OrderParamsModal = Backbone.View.extend({
     var blank = this.$el.find('form input:visible').filter(function(index) { return $(this).val() === '' });
     if (blank.length > 0) {
       blank.parent().addClass('has-error');
-      this.$el.find('.alert-danger').removeClass('hide');
+      this.$el.find('.error-blank-fields').removeClass('hide');
       return;
     }
-
-    var done = _.after(this.options.loginNeeded + this.options.orderParamsNeeded, function() { window.location.reload(); });
 
     if (this.options.loginNeeded) {
       var login = {
@@ -80,14 +93,17 @@ var OrderParamsModal = Backbone.View.extend({
       $.post('/session', login, done);
     }
 
-    if (this.options.orderParamsNeeded) {
-      var orderParams = {
-        zip: this.$el.find('input[name="zip"]').val().trim() || null,
-        guests: this.$el.find('input[name="guests"]').val().trim() || null,
-        date: (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null,
-        time: (this.timepicker.get()) ? timeFormatter(this.timepicker.get()) : null
-      };
-      this.model.save(orderParams, {success: done});
-    }
+    var orderParams = {
+      zip: this.$el.find('input[name="zip"]').val().trim() || null,
+      guests: this.$el.find('input[name="guests"]').val().trim() || null,
+      date: (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null,
+      time: (this.timepicker.get()) ? timeFormatter(this.timepicker.get()) : null
+    };
+
+    this.model.set( orderParams );
+
+    if ( this.showErrors() ) return;
+
+    this.model.save(orderParams, { success: function() { window.location.reload(); } });
   }
 });

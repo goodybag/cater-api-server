@@ -35,9 +35,9 @@ module.exports.current = function(req, res, next) {
       req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.attributes.id);
       next();
     }
-
     if (!order) {
-      order = new models.Order({user_id: req.session.user.id, restaurant_id: req.params.rid});
+      return next();
+      // req.order = new models.Order({user_id: req.session.user.id, restaurant_id: req.params.rid});
     }
 
     done(order);

@@ -34,7 +34,7 @@ var Order = Backbone.Model.extend({
         state: {
           type: ['string', 'null'],
           length: 2,
-          enum: _.pluck(states, 'abbr'),
+          enum: _.pluck(states, 'abbr').concat([undefined, null]),
           required: false
         },
         zip: {
@@ -60,11 +60,11 @@ var Order = Backbone.Model.extend({
           type: ['string', 'null'],
           required: false
         },
-       datetime: {
+        datetime: {
          type: ['string', 'null'],
          // TODO: validate against format
          required: false
-       }
+        }
       }
     };
   },
@@ -85,6 +85,8 @@ var Order = Backbone.Model.extend({
 
     this.restaurant = new Restaurant(attrs.restaurant);
     this.unset('restaurant');
+
+    if (this.get('id') == "undefined") this.unset('id');
 
     //TODO: maybe get a new collection on id change?
     this.listenTo(this.orderItems, 'change:sub_total add remove', function() {
@@ -135,10 +137,10 @@ var Order = Backbone.Model.extend({
     });
 
     var then = this.get('datetime');
-    var now = moment().tz(this.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
+    var now = moment().format('YYYY-MM-DD HH:mm:ss');
     var hours = (new Date(then) - new Date(now)) / 3600000;
 
-    this.restaurant.set('is_bad_lead_time', hours <= limit.lead_time);
+    this.restaurant.set('is_bad_lead_time', !limit ? true : hours <= limit.lead_time);
   },
 
   datetimeChanged: function(model, value, options) {
@@ -172,6 +174,21 @@ var Order = Backbone.Model.extend({
     model.restaurant.set('is_guests_bad', value > model.restaurant.get('max_guests'));
 
     model.checkLeadTimes();
+  },
+
+  isValidMinimumOrder: function(){
+    return this.restaurant.validateOrder( this ).length == 0;
+  },
+
+  validateMinimumOrder: function(){
+    var vals = ['guests', 'zip', 'datetime'].map( this.get.bind( this ) );
+
+    // If they have blank fields, that's the only thing we need to tell them
+    if ( vals.indexOf( null ) + vals.indexOf( undefined ) != -2 ){
+      return ['has_blank_fields'];
+    }
+
+    return this.restaurant.validateOrder( this );
   },
 
   toJSON: function() {

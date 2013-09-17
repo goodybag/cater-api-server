@@ -1,4 +1,4 @@
-var OrderParamsModal = Backbone.View.extend({
+var OrderModal = Backbone.View.extend({
   events: {
     'submit form': 'submit',
     'click .btn-submit': 'submit',
@@ -25,7 +25,6 @@ var OrderParamsModal = Backbone.View.extend({
     this.showErrors();
     this.fillFields();
     this.$el.modal('show');
-    console.log(this.model)
   },
 
   hide: function() {
@@ -40,7 +39,7 @@ var OrderParamsModal = Backbone.View.extend({
   showErrors: function(){
     this.clear();
 
-    var errors = this.options.orderModel.restaurant.validateOrderParams( this.model );
+    var errors = this.model.validateMinimumOrder();
     var this_ = this;
 
     _.each( errors, function( error ){
@@ -52,21 +51,15 @@ var OrderParamsModal = Backbone.View.extend({
 
   fillFields: function() {
     for (var key in this.model.toJSON()) {
-      var $input = this.$el.find('form input.' + key);
-
        // date
-      if (key == 'date' && this.model.get(key) && $input) {
+      if (key == 'datetime' && this.model.get(key)) {
         var date = dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY');
-        $input.val(date);
+        this.$el.find('form input.date').val( dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY') );
+        this.$el.find('form input.time').val( dateTimeFormatter(this.model.get(key), 'hh:mm A') );
         continue;
       }
 
-      // time
-      if (key == 'time' && this.model.get(key)  && $input) {
-        var time = timeFormatter(this.model.get(key), 'hh:mm A');
-        $input.val(time);
-        continue;
-      }
+      var $input = this.$el.find('form input.' + key);
 
       // otherwise
       if ($input) $input.val(this.model.get(key));
@@ -93,17 +86,20 @@ var OrderParamsModal = Backbone.View.extend({
       $.post('/session', login, done);
     }
 
-    var orderParams = {
+    var order = {
       zip: this.$el.find('input[name="zip"]').val().trim() || null,
-      guests: this.$el.find('input[name="guests"]').val().trim() || null,
-      date: (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null,
-      time: (this.timepicker.get()) ? timeFormatter(this.timepicker.get()) : null
+      guests: parseInt(this.$el.find('input[name="guests"]').val()) || null,
+      datetime: !this.datepicker.get() ? null : (
+        dateTimeFormatter(this.datepicker.get()) + " " + (
+          !this.timepicker.get() ? "" : timeFormatter(this.timepicker.get())
+        )
+      )
     };
 
-    this.model.set( orderParams );
+    this.model.set( order, { silent: true } );
 
     if ( this.showErrors() ) return;
 
-    this.model.save(orderParams, { success: function() { window.location.reload(); } });
+    this.model.save( null, { success: function() { window.location.reload(); } });
   }
 });

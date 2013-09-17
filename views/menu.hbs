@@ -216,14 +216,15 @@
 <script type="text/javascript" src="/js/views/order-params-view.js"></script>
 <script type="text/javascript" src="/js/views/item-view.js"></script>
 <script type="text/javascript" src="/js/views/item-modal.js"></script>
-<script type="text/javascript" src="/js/views/order-params-modal.js"></script>
+<script type="text/javascript" src="/js/views/order-modal.js"></script>
 
+{{{dump order}}}
 <script>
   var orderModel = new Order( {{{json order}}} );
 
   var orderParams = new OrderParams({{{json orderParams}}});
   var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
-  var orderParamsModal = new OrderParamsModal({model: orderParams, orderModel: orderModel, el: '#order-params-modal', loginNeeded: {{#if user.id}}false{{else}}true{{/if}} });
+  var orderModal = new OrderModal({model: orderModel, el: '#order-params-modal', loginNeeded: {{#if user.id}}false{{else}}true{{/if}} });
 
   var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems});
 
@@ -241,15 +242,11 @@
       model: new Backbone.Model( {{{json this}}} ),
       itemModalView: itemModalView,
       orderModel: orderModel,
-      orderParamsModal: orderParamsModal,
+      orderModal: orderModal,
       orderParams: orderParams
       }),
     {{/each}}
     {{/each}}
   ];
-
-  {{#if restaurant.is_bad_zip}}orderParamsModal.show(){{/if}}
-  {{#if restaurant.is_bad_delivery_time}}orderParamsModal.show(){{/if}}
-  {{#if restaurant.is_bad_guests}}orderParamsModal.show(){{/if}}
 </script>
 {{/extend}}

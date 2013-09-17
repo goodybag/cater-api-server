@@ -2,6 +2,7 @@ var Model = require('./model');
 var utils = require('../utils');
 var uuid  = require('node-uuid');
 var db = require('../db');
+var Restaurant = require('./restaurant');
 
 'delivery_zips',
 'delivery_times',
@@ -50,6 +51,17 @@ module.exports = Model.extend({
         callback(null, results);
       });
   },
+  getRestaurant: function(callback){
+    var self = this;
+    console.log()
+    Restaurant.findOne({ where: { id: this.attributes.restaurant_id } }, function(error, restaurant){
+      if (error) return callback(error);
+
+      self.attributes.restaurant = restaurant;
+
+      callback(null, restaurant);
+    });
+  },
   save: function(callback) {
     var insert = this.attributes.id == null;
     if (insert) this.attributes.review_token = uuid.v4();
@@ -79,7 +91,10 @@ module.exports = Model.extend({
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
-    obj.below_min = obj.sub_total < obj.restaurant.minimum_order;
+
+    if ( obj.restaurant && obj.restaurant.minimum_order ){
+      obj.below_min = obj.sub_total < obj.restaurant.minimum_order;
+    }
 
     obj.submittable = this.attributes.status === 'pending'
       && this.attributes.sub_total > 0

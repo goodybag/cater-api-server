@@ -91,10 +91,16 @@ var Restaurant = Backbone.Model.extend({
   },
 
   isValidDeliveryTime: function( date ){
+    if ( typeof date === 'string' ) date = new Date(date);
+
+    if ( !(date instanceof Date) ) return false;
+
+    if ( date.toString() === 'Invalid Date' ) return false;
+
     if ( !(date.getDay() in this.get('delivery_times')) ) return false;
 
     var hours = this.get('delivery_times')[ date.getDay() ];
-    var time = moment( date ).format('hh:mm:ss');
+    var time = moment( date ).format('HH:mm:ss');
 
     return _.filter( hours, function( openClose ){
       return time >= openClose[0] && time < openClose[1]
@@ -106,6 +112,12 @@ var Restaurant = Backbone.Model.extend({
   },
 
   isValidGuestDateCombination: function( guests, date ){
+    if ( typeof date === 'string' ) date = new Date(date);
+
+    if ( !(date instanceof Date) ) return false;
+
+    if ( date.toString() === 'Invalid Date' ) return false;
+
     var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
       return obj.max_guests >= guests;
     });
@@ -117,31 +129,31 @@ var Restaurant = Backbone.Model.extend({
     return hours > limit.lead_time;
   },
 
-  isValidOrderParams: function( params ){
-    return this.validateOrderParams( params ).length === 0;
+  isValidOrder: function( order ){
+    return this.validateOrder( order ).length === 0;
   },
 
-  validateOrderParams: function( params ){
+  validateOrder: function( order ){
     var errors = [];
 
     // Check zips
-    if ( this.get( 'delivery_zips' ).indexOf( params.get('zip') ) === -1 ){
+    if ( this.get( 'delivery_zips' ).indexOf( order.get('zip') ) === -1 ){
       errors.push( 'is_bad_zip' );
     }
 
     // Check delivery times
-    if ( !this.isValidDeliveryTime( params.getDateTime() ) ){
+    if ( !this.isValidDeliveryTime( order.get('datetime') ) ){
       errors.push( 'is_bad_delivery_time' );
     }
 
     // Check max_guests
-    if ( !this.isValidMaxGuests( params.get('guests') ) ){
+    if ( !this.isValidMaxGuests( order.get('guests') ) ){
       errors.push( 'is_bad_guests' );
     }
 
     // Check lead times
     if (
-      !this.isValidGuestDateCombination( params.get('guests'), params.getDateTime() ) &&
+      !this.isValidGuestDateCombination( order.get('guests'), order.get('datetime') ) &&
       // Ensure that we do not add this error if we've already got
       // an invalid delivery time
       errors.indexOf( 'is_bad_delivery_time' ) == -1 &&
@@ -157,5 +169,7 @@ var Restaurant = Backbone.Model.extend({
 
   defaults: {
     cuisine: []
+  , delivery_zips: []
+  , lead_times: []
   }
 });

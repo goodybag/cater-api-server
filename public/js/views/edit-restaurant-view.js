@@ -55,18 +55,21 @@ var EditRestaurantView = FormView.extend({
   // TODO: do this automatically based on the model schema
   fieldGetters: {
     price: _.partial(FormView.intGetter, 'price'),
-    minimum_order: _.compose(function(cents) { return cents != null ? Math.round(cents * 100) : null; }, _.partial(FormView.floatGetter, 'minimum_order')),
+    minimum_order: _.compose(function(cents) { return cents ? Math.round(cents * 100) : null; }, _.partial(FormView.floatGetter, 'minimum_order')),
     delivery_fee: _.compose(function(cents) { return cents != null ? Math.round(cents * 100) : null; }, _.partial(FormView.floatGetter, 'delivery_fee')),
     cuisine: function() {
       var val = this.$el.find(this.fieldMap.cuisine).val().trim();
       return val ? _.invoke(val.split(','), 'trim') : [];
     },
+
     sms_phone: function() {
       return this.$el.find(this.fieldMap.sms_phone).val().replace(/[^\d]/g, '');
     },
+
     voice_phone: function() {
       return this.$el.find(this.fieldMap.voice_phone).val().replace(/[^\d]/g, '');
     },
+
     delivery_zips: function() {
       var val = this.$el.find(this.fieldMap.delivery_zips).val().trim();
       return val ? _.invoke(val.split(','), 'trim') : [];

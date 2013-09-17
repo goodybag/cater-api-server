@@ -68,7 +68,10 @@ module.exports = {
   restaurant: {
     list: utils.partial(find, 'restaurants'),
     create: utils.partial(upsert, 'restaurants'),
-    update: utils.partial(upsert, 'restaurants')
+    update: utils.partial(upsert, 'restaurants'),
+    createZips: utils.partial(upsert, 'restaurant_delivery_zips'),
+    createDeliveryTimes: utils.partial(upsert, 'restaurant_delivery_times'),
+    createLeadTimes: utils.partial(upsert, 'restaurant_lead_times')
   },
 
   category: {

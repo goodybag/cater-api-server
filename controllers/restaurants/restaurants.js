@@ -104,12 +104,50 @@ module.exports.editAll = function(req, res, next) {
 };
 
 module.exports.create = function(req, res) {
-  var query = queries.restaurant.create(req.body);
-  var sql = db.builder.sql(query);
+  var fields = ['name', 'street', 'city', 'state', 'zip', 'sms_phone', 'voice_phone', 'email', 'minimum_order', 'price', 'delivery_fee', 'cuisine'];
+  var restaurantQuery = queries.restaurant.create(utils.pick(req.body, fields));
+  var sql = db.builder.sql(restaurantQuery);
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(201, rows[0]);
+    var id = rows[0].id;
+
+    var zips = utils.map(req.body.delivery_zips, function(zip, index, arr) {
+      return {restaurant_id: id,  zip: zip}
+    });
+
+    var deliveryTimes = Array.prototype.concat.apply([], utils.map(req.body.delivery_times, function(times, day, obj) {
+      return utils.map(times, function(period, index, arr) {
+        return {
+          restaurant_id: id,
+          day: day,
+          start_time: period[0],
+          end_time: period[1]
+        };
+      });
+    }));
+
+    var leadTimes = utils.map(req.body.lead_times, function(obj, index, arr) {
+      return utils.extend({restaurant_id: id}, obj);
+    });
+
+    var insert = function(values, method, callback) {
+      if (!values || values.length === 0) return callback();
+      var query = queries.restaurant[method](values);
+      var sql = db.builder.sql(query);
+      db.query(sql.query, sql.values, callback);
+    }
+
+    var tasks = utils.map([[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes']],
+                          function(args) { return utils.partial.apply(utils, [insert].concat(args)); });
+
+    var done = function(err, results) {
+      if (err) return res.error(errors.internal.UNKNOWN, err);
+      res.send(201, rows[0]);
+    };
+
+    utils.async.parallel(tasks, done);
   });
+
 }
 
 module.exports.update = function(req, res) {

@@ -257,3 +257,12 @@
 .alert-bad-lead-time .lead-times {
   margin-top: 25px;
 }
+
+.address-state {
+  width: 100%;
+}
+
+.select2-container .select2-choice {
+  height: 34px;
+  line-height: 34px;
+}

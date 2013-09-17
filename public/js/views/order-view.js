@@ -44,6 +44,8 @@ var OrderView = FormView.extend({
       format: 'hh:i A'
     , interval: 15
     }).pickatime('picker');
+
+    this.$el.find('#address-state').select2();
   },
 
   onPriceChange: function(model, value, options) {

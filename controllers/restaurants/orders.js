@@ -38,10 +38,7 @@ module.exports.current = function(req, res, next) {
 
     if (!order) {
       order = new models.Order({user_id: req.session.user.id, restaurant_id: req.params.rid});
-      order.save(function(err) {
-        if (err) return res.error(errors.internal.DB_FAILURE, err);
-        done(order);
-      });
+      done(order);
     }
     else
       done(order);

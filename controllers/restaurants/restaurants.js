@@ -103,32 +103,37 @@ module.exports.editAll = function(req, res, next) {
   });
 };
 
+var zips = function(body, id) {
+  return utils.map(body.delivery_zips, function(zip, index, arr) {
+    return {restaurant_id: id,  zip: zip}
+  });
+}
+
+var deliveryTimes = function(body, id) {
+  return Array.prototype.concat.apply([], utils.map(body.delivery_times, function(times, day, obj) {
+    return utils.map(times, function(period, index, arr) {
+      return {
+        restaurant_id: id,
+        day: day,
+        start_time: period[0],
+        end_time: period[1]
+      };
+    });
+  }));
+}
+
+var leadTimes = function(body, id) {
+  return utils.map(body.lead_times, function(obj, index, arr) {
+    return utils.extend({restaurant_id: id}, obj);
+  });
+}
+
 module.exports.create = function(req, res) {
   var fields = ['name', 'street', 'city', 'state', 'zip', 'sms_phone', 'voice_phone', 'email', 'minimum_order', 'price', 'delivery_fee', 'cuisine'];
   var restaurantQuery = queries.restaurant.create(utils.pick(req.body, fields));
   var sql = db.builder.sql(restaurantQuery);
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var id = rows[0].id;
-
-    var zips = utils.map(req.body.delivery_zips, function(zip, index, arr) {
-      return {restaurant_id: id,  zip: zip}
-    });
-
-    var deliveryTimes = Array.prototype.concat.apply([], utils.map(req.body.delivery_times, function(times, day, obj) {
-      return utils.map(times, function(period, index, arr) {
-        return {
-          restaurant_id: id,
-          day: day,
-          start_time: period[0],
-          end_time: period[1]
-        };
-      });
-    }));
-
-    var leadTimes = utils.map(req.body.lead_times, function(obj, index, arr) {
-      return utils.extend({restaurant_id: id}, obj);
-    });
 
     var insert = function(values, method, callback) {
       if (!values || values.length === 0) return callback();
@@ -137,8 +142,10 @@ module.exports.create = function(req, res) {
       db.query(sql.query, sql.values, callback);
     }
 
-    var tasks = utils.map([[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes']],
-                          function(args) { return utils.partial.apply(utils, [insert].concat(args)); });
+    var tasks = utils.map(
+      [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes']],
+      function(args) { return utils.partial( insert, args[0](req.body, rows[0].id), args[1]); }
+    );
 
     var done = function(err, results) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
@@ -147,7 +154,6 @@ module.exports.create = function(req, res) {
 
     utils.async.parallel(tasks, done);
   });
-
 }
 
 module.exports.update = function(req, res) {

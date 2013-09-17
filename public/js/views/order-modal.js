@@ -54,12 +54,12 @@ var OrderModal = Backbone.View.extend({
        // date
       if (key == 'datetime' && this.model.get(key)) {
         var date = dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY');
-        this.$el.find('form input.date').val( dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY') );
-        this.$el.find('form input.time').val( dateTimeFormatter(this.model.get(key), 'hh:mm A') );
+        this.$el.find('[name="date"]').val( dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY') );
+        this.$el.find('[name="time"]').val( dateTimeFormatter(this.model.get(key), 'hh:mm A') );
         continue;
       }
 
-      var $input = this.$el.find('form input.' + key);
+      var $input = this.$el.find('[name="' + key + '"]');
 
       // otherwise
       if ($input) $input.val(this.model.get(key));

@@ -60,8 +60,8 @@ var EditHoursView = Backbone.View.extend({
 
   changeTimes: function(e) {
     this.model.set('times', _.compact(_.map(this.$el.find('.open-period'), function(el) {
-      var open = $(el).find(this.selectors.open).val() || null;
-      var close = $(el).find(this.selectors.close).val() || null;
+      var open = timeFormatter($(el).find(this.selectors.open).val()) || null;
+      var close = timeFormatter($(el).find(this.selectors.close).val()) || null;
       return open || close ? [open, close] : null;
     }, this)));
   },

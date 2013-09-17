@@ -38,9 +38,8 @@ module.exports.current = function(req, res, next) {
 
     if (!order) {
       order = new models.Order({user_id: req.session.user.id, restaurant_id: req.params.rid});
-      done(order);
     }
-    else
-      done(order);
+
+    done(order);
   });
 };

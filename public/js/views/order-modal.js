@@ -1,4 +1,4 @@
-var OrderParamsModal = Backbone.View.extend({
+var OrderModal = Backbone.View.extend({
   events: {
     'submit form': 'submit',
     'click .btn-submit': 'submit',
@@ -22,6 +22,7 @@ var OrderParamsModal = Backbone.View.extend({
 
   show: function() {
     this.clear();
+    this.showErrors();
     this.fillFields();
     this.$el.modal('show');
   },
@@ -32,26 +33,33 @@ var OrderParamsModal = Backbone.View.extend({
 
   clear: function() {
     this.$el.find('input').parent().removeClass('has-error');
-    this.$el.find('.alert-danger').addClass('hide');
+    this.$el.find('.alert').addClass('hide');
+  },
+
+  showErrors: function(){
+    this.clear();
+
+    var errors = this.model.validateOrderFulfillability();
+    var this_ = this;
+
+    _.each( errors, function( error ){
+      this_.$el.find( '.alert.' + error ).removeClass('hide');
+    });
+
+    return errors.length > 0;
   },
 
   fillFields: function() {
     for (var key in this.model.toJSON()) {
-      var $input = this.$el.find('form input.' + key);
-
        // date
-      if (key == 'date' && this.model.get(key) && $input) {
+      if (key == 'datetime' && this.model.get(key)) {
         var date = dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY');
-        $input.val(date);
+        this.$el.find('[name="date"]').val( dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY') );
+        this.$el.find('[name="time"]').val( dateTimeFormatter(this.model.get(key), 'hh:mm A') );
         continue;
       }
 
-      // time
-      if (key == 'time' && this.model.get(key)  && $input) {
-        var time = timeFormatter(this.model.get(key), 'hh:mm A');
-        $input.val(time);
-        continue;
-      }
+      var $input = this.$el.find('[name="' + key + '"]');
 
       // otherwise
       if ($input) $input.val(this.model.get(key));
@@ -66,11 +74,9 @@ var OrderParamsModal = Backbone.View.extend({
     var blank = this.$el.find('form input:visible').filter(function(index) { return $(this).val() === '' });
     if (blank.length > 0) {
       blank.parent().addClass('has-error');
-      this.$el.find('.alert-danger').removeClass('hide');
+      this.$el.find('.error-blank-fields').removeClass('hide');
       return;
     }
-
-    var done = _.after(this.options.loginNeeded + this.options.orderParamsNeeded, function() { window.location.reload(); });
 
     if (this.options.loginNeeded) {
       var login = {
@@ -80,14 +86,20 @@ var OrderParamsModal = Backbone.View.extend({
       $.post('/session', login, done);
     }
 
-    if (this.options.orderParamsNeeded) {
-      var orderParams = {
-        zip: this.$el.find('input[name="zip"]').val().trim() || null,
-        guests: this.$el.find('input[name="guests"]').val().trim() || null,
-        date: (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null,
-        time: (this.timepicker.get()) ? timeFormatter(this.timepicker.get()) : null
-      };
-      this.model.save(orderParams, {success: done});
-    }
+    var order = {
+      zip: this.$el.find('input[name="zip"]').val().trim() || null,
+      guests: parseInt(this.$el.find('input[name="guests"]').val()) || null,
+      datetime: !this.datepicker.get() ? null : (
+        dateTimeFormatter(this.datepicker.get()) + " " + (
+          !this.timepicker.get() ? "" : timeFormatter(this.timepicker.get())
+        )
+      )
+    };
+
+    this.model.set( order, { silent: true } );
+
+    if ( this.showErrors() ) return;
+
+    this.model.save( null, { success: function() { window.location.reload(); } });
   }
 });

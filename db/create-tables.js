@@ -19,6 +19,10 @@ var definitions = [
 , 'order-statuses'
 , 'password-resets'
 , 'waitlist'
+, 'options-sets'
+, 'options'
+, 'order-options-sets'
+, 'order-options'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');

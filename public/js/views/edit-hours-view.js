@@ -39,6 +39,10 @@ var EditHoursView = Backbone.View.extend({
     this.options.hoursListing.append(this.$el);
   },
 
+  reset: function() {
+    this.model.set('times', []);
+  },
+
   setPickers: function() {
     this.pickers = _.map(this.$el.find(this.selectors.timeInputs), function(input) {
       return $(input).pickatime({

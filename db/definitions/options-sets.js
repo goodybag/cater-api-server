@@ -36,9 +36,9 @@ define(function(require) {
     , nullable: true
     }
   , type: {
-      type: types.optionsettype,
+      type: types.optionsettype
     , nullable: false
-    , default: 'checkbox'
+    , default: "'checkbox'"
     }
   };
 

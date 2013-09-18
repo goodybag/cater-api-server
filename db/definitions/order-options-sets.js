@@ -34,16 +34,16 @@ define(function(require) {
   , options_set: {
       type: types.int
     , nullable: false
-    , references: {table: 'options_set', column: 'id'}
+    , references: {table: 'options_sets', column: 'id'}
     }
   , name: {
       type: types.text
     , nullable: true
     }
   , type: {
-      type: types.optionsettype,
+      type: types.optionsettype
     , nullable: false
-    , default: 'checkbox'
+    , default: "'checkbox'"
     }
   };
 

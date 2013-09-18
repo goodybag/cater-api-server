@@ -1,21 +1,23 @@
-<h1>Edit Restaurants</h1>
+<div class="container">
+  <h1>Edit Restaurants</h1>
 
-<div class="list-group restaurants">
-  {{#each restaurants}}
-  {{> edit_restaurant_list_item}}
-  {{/each}}
-</div>
-
-<div class="row new-restaurant-row">
-  <div class="col-lg-2 col-lg-offset-10">
-    <button type="button" class="btn btn-primary new-restaurant pull-right">New Restaurant</button>
+  <div class="list-group restaurants">
+    {{#each restaurants}}
+    {{> edit_restaurant_list_item}}
+    {{/each}}
   </div>
-</div>
 
-<div class="row new-restaurant-form">
-  <form id="restaurant-{{restaurant.id}}" class="restaurant-form hide">
-    {{> edit_restaurant_form}}
-  </form>
+  <div class="row new-restaurant-row">
+    <div class="col-lg-2 col-lg-offset-10">
+      <button type="button" class="btn btn-primary new-restaurant pull-right">New Restaurant</button>
+    </div>
+  </div>
+
+  <div class="row new-restaurant-form">
+    <form id="restaurant-{{restaurant.id}}" class="restaurant-form hide">
+      {{> edit_restaurant_form}}
+    </form>
+  </div>
 </div>
 
 {{#extend "scripts"}}
@@ -59,13 +61,15 @@
     created: function(model, response, options) {
       this.setModel(new Restaurant());
       this.$el.find('.form-control').val('');
+      _.invoke(hours, 'reset');
       this.trigger('created', model);
     }
-  }))({el: '.new-restaurant-form'});
+  }))({el: '.new-restaurant-form', hours: hours});
 
   restaurant.on('created', function(model) {
     $('.restaurants').append(Handlebars.partials.edit_restaurant_list_item(model.toJSON()));
     $('.new-restaurant-row, .restaurant-form').toggleClass('hide');
+    window.scrollTo(0);
   });
 </script>
 {{/extend}}

@@ -4,11 +4,11 @@ ItemView = Backbone.View.extend({
   },
 
   showModal: function() {
-    if (this.options.orderParamsModal.model.isComplete()) {
+    if ( this.options.orderModel.isFulfillableOrder() ) {
       var orderItem = orderView.model.orderItems.findWhere({item_id: this.model.id});
       this.options.itemModalView.provideModel(orderItem || this.model).show();
     } else {
-      this.options.orderParamsModal.show()
+      this.options.orderModal.show()
     }
   }
 });

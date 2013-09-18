@@ -35,7 +35,13 @@ module.exports.get = function(req, res) {
       var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'latest.status': 'pending'};
       models.Order.findOne({where: where}, function(err, order) {
         if (err) return callback(err);
-        if (order == null) return callback(err, order);
+        if (order == null) {
+          order = new models.Order({ restaurant_id: req.params.rid, user_id: req.session.user.id });
+          order.getRestaurant(function(error){
+            callback(error, order);
+          });
+          return;
+        }
         order.getOrderItems(function(err, items) {
           callback(err, order);
         });
@@ -96,7 +102,9 @@ module.exports.edit = function(req, res) {
 module.exports.editAll = function(req, res, next) {
   models.Restaurant.find({}, function(err, models) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.render('edit-restaurants', {restaurants: utils.invoke(models, 'toJSON'), states: states, isNew: true}, function(error, html) {
+    var context = {restaurants: utils.invoke(models, 'toJSON'), states: states, isNew: true};
+    context.restaurant = {delivery_times: utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; }))};  // tmp hack
+    res.render('edit-restaurants', context, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
     });

@@ -17,6 +17,7 @@ var middleware = {
   cors: require('./middleware/cors')
 , domains: require('./middleware/domains')
 , uuid: require('./middleware/uuid')
+, requestLogger: require('connect-request-logger-pg')
 };
 
 var app = module.exports = express();
@@ -35,7 +36,16 @@ app.configure(function(){
   app.use(middleware.uuid());
   app.use(middleware.domains);
   app.use(middleware.cors);
+
+  app.use(middleware.requestLogger({
+    connStr: config.requestLogger.connStr
+  , table: config.requestLogger.table
+  , plan: config.requestLogger.plan
+  , customFields: {uuid: 'uuid'}
+  }));
+
   app.use(app.router);
+
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
 
   app.set('port', config.http.port || 3000);

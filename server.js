@@ -1,6 +1,10 @@
 var config = require('./config');
 var rollbar = require('rollbar');
 
+process.on('uncaughtException', function(err) {
+  console.error('Caught exception:', err);
+});
+
 if (config.rollbar) {
   rollbar.init(config.rollbar.accessToken, {environment: config.env});
   rollbar.handleUncaughtExceptions();

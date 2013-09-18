@@ -70,7 +70,7 @@ var notify =  function(name, message, callback) {
 
 var done = function(callback) {
   return function(error, results) {
-    console.log( (error) ? "Error creating types" : "Successfully created types");
+    console.log( (error) ? "Error creating tables" : "Successfully created tables");
     if (error) console.log(error);
     if (cli) return process.exit( (error) ? 1 : 0 );
     else if(callback) callback(error, results);

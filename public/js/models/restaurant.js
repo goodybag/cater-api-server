@@ -91,16 +91,13 @@ var Restaurant = Backbone.Model.extend({
   },
 
   isValidDeliveryTime: function( date ){
-    if ( typeof date === 'string' ) date = new Date(date);
+    // Super pro day-parsing
+    var day = new Date( date.split(' ')[0] ).getDay();
 
-    if ( !(date instanceof Date) ) return false;
+    if ( this.get('delivery_times')[ day ].length === 0 ) return false;
 
-    if ( date.toString() === 'Invalid Date' ) return false;
-
-    if ( !(date.getDay() in this.get('delivery_times')) ) return false;
-
-    var hours = this.get('delivery_times')[ date.getDay() ];
-    var time = moment( date ).format('HH:mm:ss');
+    var hours = this.get('delivery_times')[ day ];
+    var time = date.split(' ')[1];
 
     return _.filter( hours, function( openClose ){
       return time >= openClose[0] && time < openClose[1]
@@ -111,7 +108,9 @@ var Restaurant = Backbone.Model.extend({
     return num <= this.get('max_guests');
   },
 
-  isValidGuestDateCombination: function( guests, date ){
+  isValidGuestDateCombination: function( order ){
+    var date = order.get('datetime');
+
     if ( typeof date === 'string' ) date = new Date(date);
 
     if ( !(date instanceof Date) ) return false;
@@ -119,12 +118,13 @@ var Restaurant = Backbone.Model.extend({
     if ( date.toString() === 'Invalid Date' ) return false;
 
     var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
-      return obj.max_guests >= guests;
+      return obj.max_guests >= order.get('guests');
     });
 
     if ( !limit ) return false;
 
-    var hours = (date - new Date()) / 3600000;
+    var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
+    var hours = (date - new Date(now)) / 3600000;
 
     return hours > limit.lead_time;
   },
@@ -153,7 +153,7 @@ var Restaurant = Backbone.Model.extend({
 
     // Check lead times
     if (
-      !this.isValidGuestDateCombination( order.get('guests'), order.get('datetime') ) &&
+      !this.isValidGuestDateCombination( order ) &&
       // Ensure that we do not add this error if we've already got
       // an invalid delivery time
       errors.indexOf( 'is_bad_delivery_time' ) == -1 &&

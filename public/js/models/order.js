@@ -181,7 +181,7 @@ var Order = Backbone.Model.extend({
   },
 
   isFulfillableOrder: function(){
-    return this.restaurant.validateOrder( this ).length == 0;
+    return this.restaurant.validateOrderFulfillability( this ).length == 0;
   },
 
   validateOrderFulfillability: function(){

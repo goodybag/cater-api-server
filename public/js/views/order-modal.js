@@ -39,7 +39,7 @@ var OrderModal = Backbone.View.extend({
   showErrors: function(){
     this.clear();
 
-    var errors = this.model.validateMinimumOrder();
+    var errors = this.model.validateOrderFulfillability();
     var this_ = this;
 
     _.each( errors, function( error ){

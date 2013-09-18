@@ -133,7 +133,7 @@ var Restaurant = Backbone.Model.extend({
     return this.validateOrder( order ).length === 0;
   },
 
-  validateOrder: function( order ){
+  validateOrderFulfillability: function( order ){
     var errors = [];
 
     // Check zips

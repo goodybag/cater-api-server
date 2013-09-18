@@ -180,11 +180,11 @@ var Order = Backbone.Model.extend({
     model.checkLeadTimes();
   },
 
-  isValidMinimumOrder: function(){
+  isFulfillableOrder: function(){
     return this.restaurant.validateOrder( this ).length == 0;
   },
 
-  validateMinimumOrder: function(){
+  validateOrderFulfillability: function(){
     var vals = ['guests', 'zip', 'datetime'].map( this.get.bind( this ) );
 
     // If they have blank fields, that's the only thing we need to tell them
@@ -192,7 +192,7 @@ var Order = Backbone.Model.extend({
       return ['has_blank_fields'];
     }
 
-    return this.restaurant.validateOrder( this );
+    return this.restaurant.validateOrderFulfillability( this );
   },
 
   toJSON: function() {

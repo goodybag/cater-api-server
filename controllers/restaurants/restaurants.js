@@ -109,21 +109,91 @@ module.exports.editAll = function(req, res, next) {
   });
 };
 
+var zips = function(body, id) {
+  return utils.map(body.delivery_zips, function(zip, index, arr) {
+    return {restaurant_id: id,  zip: zip}
+  });
+}
+
+var deliveryTimes = function(body, id) {
+  return Array.prototype.concat.apply([], utils.map(body.delivery_times, function(times, day, obj) {
+    return utils.map(times, function(period, index, arr) {
+      return {
+        restaurant_id: id,
+        day: day,
+        start_time: period[0],
+        end_time: period[1]
+      };
+    });
+  }));
+}
+
+var leadTimes = function(body, id) {
+  return utils.map(body.lead_times, function(obj, index, arr) {
+    return utils.extend({restaurant_id: id}, obj);
+  });
+}
+
+// maybe this ought to come from the restaurant model?
+var fields = ['name', 'street', 'city', 'state', 'zip', 'sms_phone', 'voice_phone', 'email', 'minimum_order', 'price', 'delivery_fee', 'cuisine'];
+
 module.exports.create = function(req, res) {
-  var query = queries.restaurant.create(req.body);
-  var sql = db.builder.sql(query);
+  var restaurantQuery = queries.restaurant.create(utils.pick(req.body, fields));
+  var sql = db.builder.sql(restaurantQuery);
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(201, rows[0]);
+
+    var insert = function(values, method, callback) {
+      if (!values || values.length === 0) return callback();
+      var query = queries.restaurant[method](values);
+      var sql = db.builder.sql(query);
+      db.query(sql.query, sql.values, callback);
+    }
+
+    var tasks = utils.map(
+      [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes']],
+      function(args) { return utils.partial( insert, args[0](req.body, rows[0].id), args[1]); }
+    );
+
+    var done = function(err, results) {
+      if (err) return res.error(errors.internal.UNKNOWN, err);
+      res.send(201, rows[0]);
+    };
+
+    utils.async.parallel(tasks, done);
   });
 }
 
 module.exports.update = function(req, res) {
-  var query = queries.restaurant.update(req.body, req.params.rid);
-  var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, function(err, rows, result) {
+  // this should be an array of three functions, each an async eachSeries to destroy and recreate
+  // the subrecords associated with this restaurant.
+  // it's a series, so the delete query should always complete before the assocated insert query on the same table.
+  // but each table is independent.
+  var tasks = utils.map([['Zips', zips, 'delivery_zips'], ['DeliveryTimes', deliveryTimes, 'delivery_times'], ['LeadTimes', leadTimes, 'lead_times']], function(args) {
+    if (req.body[args[2]] === undefined) return function(cb) { cb() };
+    var delQuery = queries.restaurant['del' + args[0]](req.params.rid)
+    var values = args[1](req.body, req.params.rid);
+    var createQuery = values.length > 0 ? queries.restaurant['create' + args[0]](values) : null;
+
+    return utils.partial(utils.async.eachSeries, [delQuery, createQuery], function(query, cb) {
+      if (!query) return cb();
+      var sql = db.builder.sql(query);
+      db.query(sql.query, sql.values, cb);
+    });
+  });
+
+  // add the acutal restaurant table update as the fourth parallel function.
+  tasks.push(function(cb) {
+    var updates = utils.pick(req.body, fields);
+    if (utils.size(updates) === 0) return cb();
+    var query = queries.restaurant.update(updates, req.params.rid);
+    var sql = db.builder.sql(query);
+    db.query(sql.query, sql.values, cb);
+  });
+
+  utils.async.parallel(tasks, function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(200, rows[0]);
+    res.send(200, (results[3]||0)[0]); // TODO: better than results[3]
   });
 }
 

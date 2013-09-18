@@ -157,7 +157,7 @@ a.list-group-item .list-group-item-heading {
   background-color: #F0AD4E;
 }
 
-.label-submitted {
+.label-accepted {
   background-color: #5CB85C;
 }
 
@@ -171,6 +171,10 @@ a.list-group-item .list-group-item-heading {
 
 .label-submitted {
   background-color: #5BC0DE;
+}
+
+.label-delivered {
+  background-color: #428BCA;
 }
 
 /**

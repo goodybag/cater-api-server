@@ -97,7 +97,8 @@ var config = {
   , logging: {
       enabled: true
     , transports: {
-        loggly: true
+        console: true
+      , loggly: true
       }
     , loggly: {
         subdomain:'gbstaging'

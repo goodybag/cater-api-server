@@ -30,7 +30,7 @@ var OrderView = FormView.extend({
       'change:is_bad_lead_time': utils.partial(this.setAlerts, '.alert-bad-lead-time')
     }, this);
 
-    this.model.on('change:is_unacceptable', this.onOrderFullfilibilityChange, this);
+    this.model.on('change:submittable', this.onSubmittableChange, this);
 
     if (this.model.get('editable')) {
       this.onChange();
@@ -62,8 +62,8 @@ var OrderView = FormView.extend({
     this.$el.find(selector).toggleClass('hide', !value);
   },
 
-  onOrderFulfilibilityChange: function(model, value, options) {
-    this.$el.find('.btn-submit').toggle( !value );
+  onSubmittableChange: function(model, value, options) {
+    this.$el.find('.btn-submit').toggleClass( 'hide', !value );
   },
 
   changeStatus: function(status) {

@@ -114,7 +114,7 @@ var config = {
   , postgresConnStr: process.env['DATABASE_URL']
 
   , requestLogger: {
-      connStr: process.env['DATABASE_REQUEST_LOGGER']
+      connStr: process.env['HEROKU_POSTGRESQL_SILVER_URL']
     , table: 'requests'
     , plan: 'month'
     }

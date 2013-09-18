@@ -64,7 +64,7 @@
       _.invoke(hours, 'reset');
       this.trigger('created', model);
     }
-  }))({el: '.new-restaurant-form'});
+  }))({el: '.new-restaurant-form', hours: hours});
 
   restaurant.on('created', function(model) {
     $('.restaurants').append(Handlebars.partials.edit_restaurant_list_item(model.toJSON()));

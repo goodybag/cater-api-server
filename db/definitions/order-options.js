@@ -14,7 +14,7 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'options';
+  definition.name = 'order_options';
 
   definition.schema = {
     id: {
@@ -26,10 +26,15 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , options_set_id: {
+  , order_options_set_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'options_sets', column: 'id'}
+    , references: {table: 'order_options_sets', column: 'id'}
+    }
+  , option: {
+      type: types.int
+    , nullable: false
+    , references: {table: 'options', column: 'id'}
     }
   , name: {
       type: types.text

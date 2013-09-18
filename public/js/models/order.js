@@ -69,6 +69,10 @@ var Order = Backbone.Model.extend({
     };
   },
 
+  defaults: {
+    timezone: "America/Chicago"
+  },
+
   // TODO: extract to superclass
   validator: amanda('json'),
 
@@ -137,7 +141,7 @@ var Order = Backbone.Model.extend({
     });
 
     var then = this.get('datetime');
-    var now = moment().format('YYYY-MM-DD HH:mm:ss');
+    var now = moment().tz(this.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
     var hours = (new Date(then) - new Date(now)) / 3600000;
 
     this.restaurant.set('is_bad_lead_time', !limit ? true : hours <= limit.lead_time);

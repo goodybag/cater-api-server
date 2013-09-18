@@ -80,6 +80,12 @@ var config = {
 
   , postgresConnStr:  "postgres://localhost:5432/cater"
 
+  , requestLogger: {
+      connStr: "postgres://localhost:5432/cater"
+    , table: 'requests'
+    , plan: 'month'
+    }
+
   , baseUrl: 'http://localhost:3000'
 
   , testEmail: 'geoff@goodybag.com'
@@ -106,6 +112,12 @@ var config = {
   , baseUrl: 'http://cater.staging.goodybag.com'
 
   , postgresConnStr: process.env['DATABASE_URL']
+
+  , requestLogger: {
+      connStr: process.env['DATABASE_REQUEST_LOGGER']
+    , table: 'requests'
+    , plan: 'month'
+    }
   }
 };
 

@@ -6,6 +6,7 @@ var
 ;
 
 module.exports.run = function( callback ){
+  if(config.env != 'dev') return callback(null);
   console.log("");
   console.log("######################################");
   console.log("#  Running destroy/create database  #");

@@ -33,11 +33,12 @@
     "pg-query": "~0.3.0",
     "mailgun": "0.4.x",
     "twilio": "1.1.x",
-    "mailcomposer":  "0.2.x",
+    "mailcomposer": "0.2.x",
     "moment": "2.1.x",
     "moment-timezone": "0.0.x",
     "bower": "1.2.x",
-    "rollbar": "0.2.x"
+    "rollbar": "0.2.x",
+    "connect-request-logger-pg": "0.0.1"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

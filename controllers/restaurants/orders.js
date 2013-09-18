@@ -31,19 +31,11 @@ module.exports.current = function(req, res, next) {
   var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'latest.status': 'pending'};
   models.Order.findOne({where: where}, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var done = function(order) {
+
+    if (order) {
       req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.attributes.id);
-      next();
     }
 
-    if (!order) {
-      order = new models.Order({user_id: req.session.user.id, restaurant_id: req.params.rid});
-      order.save(function(err) {
-        if (err) return res.error(errors.internal.DB_FAILURE, err);
-        done(order);
-      });
-    }
-    else
-      done(order);
+    next();
   });
 };

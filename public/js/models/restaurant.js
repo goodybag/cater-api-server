@@ -90,7 +90,86 @@ var Restaurant = Backbone.Model.extend({
     this.unset('categories');
   },
 
+  isValidDeliveryTime: function( date ){
+    // Super pro day-parsing
+    var day = new Date( date.split(' ')[0] ).getDay();
+
+    if ( this.get('delivery_times')[ day ].length === 0 ) return false;
+
+    var hours = this.get('delivery_times')[ day ];
+    var time = date.split(' ')[1];
+
+    return _.filter( hours, function( openClose ){
+      return time >= openClose[0] && time < openClose[1]
+    }).length === hours.length;
+  },
+
+  isValidMaxGuests: function( num ){
+    return num <= this.get('max_guests');
+  },
+
+  isValidGuestDateCombination: function( order ){
+    var date = order.get('datetime');
+
+    if ( typeof date === 'string' ) date = new Date(date);
+
+    if ( !(date instanceof Date) ) return false;
+
+    if ( date.toString() === 'Invalid Date' ) return false;
+
+    var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
+      return obj.max_guests >= order.get('guests');
+    });
+
+    if ( !limit ) return false;
+
+    var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
+    var hours = (date - new Date(now)) / 3600000;
+
+    return hours > limit.lead_time;
+  },
+
+  isValidOrder: function( order ){
+    return this.validateOrder( order ).length === 0;
+  },
+
+  validateOrderFulfillability: function( order ){
+    var errors = [];
+
+    // Check zips
+    if ( this.get( 'delivery_zips' ).indexOf( order.get('zip') ) === -1 ){
+      errors.push( 'is_bad_zip' );
+    }
+
+    // Check delivery times
+    if ( !this.isValidDeliveryTime( order.get('datetime') ) ){
+      errors.push( 'is_bad_delivery_time' );
+    }
+
+    // Check max_guests
+    if ( !this.isValidMaxGuests( order.get('guests') ) ){
+      errors.push( 'is_bad_guests' );
+    }
+
+    // Check lead times
+    if (
+      !this.isValidGuestDateCombination( order ) &&
+      // Ensure that we do not add this error if we've already got
+      // an invalid delivery time
+      errors.indexOf( 'is_bad_delivery_time' ) == -1 &&
+      // Also ensure that we do not tell the user that they have a
+      // bad lead time when they're already over the max guests
+      errors.indexOf( 'is_bad_guests' ) == -1
+    ){
+      errors.push( 'is_bad_lead_time' );
+    }
+
+    return errors;
+  },
+
   defaults: {
     cuisine: []
+  , delivery_zips: []
+  , lead_times: []
   }
 });

@@ -35,7 +35,13 @@ module.exports.get = function(req, res) {
       var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'latest.status': 'pending'};
       models.Order.findOne({where: where}, function(err, order) {
         if (err) return callback(err);
-        if (order == null) return callback(err, order);
+        if (order == null) {
+          order = new models.Order({ restaurant_id: req.params.rid, user_id: req.session.user.id });
+          order.getRestaurant(function(error){
+            callback(error, order);
+          });
+          return;
+        }
         order.getOrderItems(function(err, items) {
           callback(err, order);
         });

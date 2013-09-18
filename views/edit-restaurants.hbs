@@ -69,6 +69,7 @@
   restaurant.on('created', function(model) {
     $('.restaurants').append(Handlebars.partials.edit_restaurant_list_item(model.toJSON()));
     $('.new-restaurant-row, .restaurant-form').toggleClass('hide');
+    window.scrollTo(0);
   });
 </script>
 {{/extend}}

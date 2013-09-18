@@ -20,10 +20,8 @@ fakeCategories.random = function(){
 };
 
 fakePhoneNumber = function () {
-  return Math.floor(Math.random() * (9999999999 - 1000000000 + 1) + 1000000000);
+  return ""+Math.floor(Math.random() * (9999999999 - 1000000000 + 1) + 1000000000);
 }
-
-faker.definitions.phone_formats.push('##########');
 
 // number of records to create
 var records = 100;

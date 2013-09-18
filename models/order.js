@@ -53,11 +53,11 @@ module.exports = Model.extend({
   },
   getRestaurant: function(callback){
     var self = this;
-    console.log()
+
     Restaurant.findOne({ where: { id: this.attributes.restaurant_id } }, function(error, restaurant){
       if (error) return callback(error);
 
-      self.attributes.restaurant = restaurant;
+      self.attributes.restaurant = restaurant.toJSON();
 
       callback(null, restaurant);
     });

@@ -61,6 +61,7 @@
     created: function(model, response, options) {
       this.setModel(new Restaurant());
       this.$el.find('.form-control').val('');
+      _.invoke(hours, 'reset');
       this.trigger('created', model);
     }
   }))({el: '.new-restaurant-form'});

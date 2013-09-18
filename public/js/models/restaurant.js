@@ -92,7 +92,7 @@ var Restaurant = Backbone.Model.extend({
 
   isValidDeliveryTime: function( date ){
     // Super pro day-parsing
-    var day = new Date( date.split(' ')[0] ).getDay();
+    var day = moment( date.split(' ')[0] ).day();
 
     if ( this.get('delivery_times')[ day ].length === 0 ) return false;
 

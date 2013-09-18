@@ -158,7 +158,7 @@ var Order = Backbone.Model.extend({
 
     // check against restaurant hours
     var datetime = value.split(' ');
-    var dow = new Date(datetime[0]).getDay();
+    var dow = moment(datetime[0]).day();
     model.restaurant.set('is_bad_delivery_time', !_.find(model.restaurant.get('delivery_times')[dow], function(range) {
       return datetime[1] >= range[0] && datetime[1] <= range[1];
     }));

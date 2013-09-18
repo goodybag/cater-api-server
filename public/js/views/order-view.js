@@ -30,6 +30,8 @@ var OrderView = FormView.extend({
       'change:is_bad_lead_time': utils.partial(this.setAlerts, '.alert-bad-lead-time')
     }, this);
 
+    this.model.on('change:submittable', this.onSubmittableChange, this);
+
     if (this.model.get('editable')) {
       this.onChange();
       this.updateAddressBlock();
@@ -58,6 +60,10 @@ var OrderView = FormView.extend({
 
   setAlerts: function(selector, model, value, options) {
     this.$el.find(selector).toggleClass('hide', !value);
+  },
+
+  onSubmittableChange: function(model, value, options) {
+    this.$el.find('.btn-submit').toggleClass( 'hide', !value );
   },
 
   changeStatus: function(status) {
@@ -139,7 +145,7 @@ var OrderView = FormView.extend({
     this.$el.find('.order-address-block').html(Handlebars.helpers.address(addr));
   },
 
-  autoSave: _.debounce(FormView.prototype.onSave, 3000),
+  autoSave: _.debounce(FormView.prototype.onSave, 600),
 
   submit: function() {
     async.each(this.items.concat(this), function(view, cb) {

@@ -1,21 +1,23 @@
-<h1>Edit Restaurants</h1>
+<div class="container">
+  <h1>Edit Restaurants</h1>
 
-<div class="list-group restaurants">
-  {{#each restaurants}}
-  {{> edit_restaurant_list_item}}
-  {{/each}}
-</div>
-
-<div class="row new-restaurant-row">
-  <div class="col-lg-2 col-lg-offset-10">
-    <button type="button" class="btn btn-primary new-restaurant pull-right">New Restaurant</button>
+  <div class="list-group restaurants">
+    {{#each restaurants}}
+    {{> edit_restaurant_list_item}}
+    {{/each}}
   </div>
-</div>
 
-<div class="row new-restaurant-form">
-  <form id="restaurant-{{restaurant.id}}" class="restaurant-form hide">
-    {{> edit_restaurant_form}}
-  </form>
+  <div class="row new-restaurant-row">
+    <div class="col-lg-2 col-lg-offset-10">
+      <button type="button" class="btn btn-primary new-restaurant pull-right">New Restaurant</button>
+    </div>
+  </div>
+
+  <div class="row new-restaurant-form">
+    <form id="restaurant-{{restaurant.id}}" class="restaurant-form hide">
+      {{> edit_restaurant_form}}
+    </form>
+  </div>
 </div>
 
 {{#extend "scripts"}}

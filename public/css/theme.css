@@ -157,16 +157,20 @@ a.list-group-item .list-group-item-heading {
   background-color: #F0AD4E;
 }
 
-.label-complete {
+.label-submitted {
   background-color: #5CB85C;
 }
 
 .label-canceled {
+  background-color: #B3B3B3;
+}
+
+.label-denied {
   background-color: #D9534F;
 }
 
 .label-submitted {
-  background-color: #5CB85C;
+  background-color: #5BC0DE;
 }
 
 /**

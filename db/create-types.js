@@ -16,6 +16,10 @@ var types = {
 , timezone: function(callback) {
     db.query("CREATE OR REPLACE FUNCTION is_timezone( tz TEXT ) RETURNS BOOLEAN as $$ DECLARE date TIMESTAMPTZ; BEGIN date := now() AT TIME ZONE tz; RETURN TRUE; EXCEPTION WHEN OTHERS THEN RETURN FALSE; END; $$ language plpgsql STABLE; DROP DOMAIN IF EXISTS timezone; CREATE DOMAIN timezone AS TEXT CHECK ( is_timezone( value ) );", callback);
   }
+, option_set_type: function(callback) {
+    db.query("DROP TYPE IF EXISTS option_set_type; CREATE TYPE option_set_type AS ENUM('checkbox', 'radio');", callback);
+  }
+
 };
 
 var done = function(callback) {

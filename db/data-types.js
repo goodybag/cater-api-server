@@ -60,4 +60,5 @@ module.exports = {
   // custom types
 , orderstatus: 'order_status'
 , timezone: 'timezone'
+, optionsettype: 'option_set_type'
 }

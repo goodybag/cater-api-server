@@ -157,8 +157,16 @@ module.exports = {
     create: utils.compose(utils.partial(upsert, 'waitlist'), function(values) {
       return utils.defaults(values, {token: uuid.v4()});
     }),
-    reAdd: function(where, org) {
-      var values = {unsubscribed: null, confirmed: null, created_at: 'now()', organization: org || null};
+    reAdd: function(where, org, token) {
+      var values = {
+        unsubscribed: null,
+        confirmed: null,
+        created_at: 'now()',
+        organization: org || null
+      };
+
+      if (token) values.token = token;
+
       return upsert.call(this, 'waitlist', values, utils.isObject(where) ? where : {email: where});
     },
     confirm: function(token) {

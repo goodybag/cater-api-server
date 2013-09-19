@@ -9,16 +9,18 @@ var
 
 var models = require('../../models');
 
+var logger = require('../../logger');
+
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
 module.exports.list = function(req, res) {
+  var TAGS = ['restaurants-list'];
+  logger.routes.info(TAGS, 'listing restaurants');
+
   //TODO: middleware to validate and sanitize query object
-
   var orderParams = req.session.orderParams || {};
-
-
   models.Restaurant.find({}, orderParams, function(err, models) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
     res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON'), orderParams: orderParams}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
@@ -27,6 +29,9 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.get = function(req, res) {
+  var TAGS = ['restaurants-get'];
+  logger.routes.info(TAGS, 'getting restaurant ' + req.params.rid);
+
   var orderParams = req.session.orderParams || {};
 
   var tasks = [

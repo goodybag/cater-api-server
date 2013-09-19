@@ -44,7 +44,8 @@
     "winston": "0.7.x",
     "microtime": "0.4.x",
     "rollbar": "0.2.x",
-    "connect-request-logger-pg": "0.0.1"
+    "connect-request-logger-pg": "0.0.1",
+    "winston-papertrail": "0.1.x"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

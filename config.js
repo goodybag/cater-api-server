@@ -121,9 +121,14 @@ var config = {
       enabled: true
     , transports: {
         console: true
+      , papertrail: true
       }
     , console: {
         raw: true
+      }
+    , papertrail: {
+        host: 'logs.papertrailapp.com'
+      , port: 34830
       }
     }
 

@@ -54,6 +54,16 @@ module.exports = function(options) {
       defaults.transports.push(new Loggly(config.logging.loggly));
     }
 
+    // papertrail
+    if (config.logging.transports.papertrail) {
+      defaults.transports.push(
+        new Papertrail({
+          host: config.logging.papertrail.host
+        , port: config.logging.papertrail.port
+        })
+      );
+    }
+
     // gelf
     if (config.logging.transports.gelf) {
       useGelf = true;

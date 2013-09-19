@@ -101,7 +101,7 @@ var Restaurant = Backbone.Model.extend({
     if ( this.get('delivery_times')[ day ].length === 0 ) return false;
 
     var hours = this.get('delivery_times')[ day ];
-    var time = date.split(' ')[1] + ':00';
+    var time = (date.split(' ')[1] + ':00').substring( 0, 8 );
 
     return _.filter( hours, function( openClose ){
       return time >= openClose[0] && time < openClose[1]

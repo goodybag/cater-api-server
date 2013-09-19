@@ -5,7 +5,6 @@
 
 var
   _ = require('lodash')
-, extend = require('node.extend')
 , winston = require('winston')
 , Loggly = require('winston-loggly').Loggly
 , gelfEncode = require('gelf-encode')
@@ -74,7 +73,7 @@ module.exports = function(options) {
   if (options === null) throw new Error('options required');
   if (options.app === null) throw new Error('app is required');
 
-  options = extend(defaults, options);
+  options = _.extend(defaults, options);
 
   if (_.isString(options.app)) options.meta.app = options.app;
   if (_.isString(options.component)) options.meta.component = options.component;
@@ -139,7 +138,7 @@ module.exports = function(options) {
   };
 
   logger.log = function(level, msg, meta, callback){
-    msg = (_.isObject(msg)) ? extend(options.msg, msg) : msg;
+    msg = (_.isObject(msg)) ? _.extend(options.msg, msg) : msg;
 
     // Have to remove the callback from the argments sent to the winston logger.
     // Doing it this way because the winston logger.log function is retarded at
@@ -158,7 +157,7 @@ module.exports = function(options) {
 
   //returns base set of meta
   var baseMeta = function(more) {
-    var meta = extend({}, options.meta);
+    var meta = _.extend({}, options.meta);
     if(process.domain) {
       meta.domain = process.domain.name;
       var req = process.domain.members[0];
@@ -205,7 +204,7 @@ module.exports = function(options) {
           }
         }
       }
-      meta = extend(base, meta);
+      meta = _.extend(base, meta);
       tags = !_.isArray(tags) ? [tags] : tags;
       meta.tags = tags;
 

@@ -17,6 +17,9 @@ var config = {
         console: true
       , fileRotate: false
       }
+    , console: {
+        json: true
+      }
     }
 
   , http: {
@@ -70,7 +73,16 @@ var config = {
   , logging: {
       enabled: true
     , transports: {
-        devConsole: true
+        console: true
+      , fileRotate: true
+      }
+    , console: {
+        json: true
+      }
+    , fileRotate: {
+        dirname: 'logs'
+      , filename: 'all.log'
+      , json: true
       }
     }
 
@@ -103,6 +115,21 @@ var config = {
 
   , http: {
       port: process.env['PORT'] || 5000
+    }
+
+  , logging: {
+      enabled: true
+    , transports: {
+        console: true
+      , papertrail: true
+      }
+    , console: {
+        raw: true
+      }
+    , papertrail: {
+        host: 'logs.papertrailapp.com'
+      , port: 34830
+      }
     }
 
   , rollbar: {

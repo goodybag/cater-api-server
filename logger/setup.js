@@ -7,8 +7,6 @@ var
   _ = require('lodash')
 , extend = require('node.extend')
 , winston = require('winston')
-, Sentry = require('winston-sentry')
-, Rollbar = require('winston-rollbar').Rollbar
 , Loggly = require('winston-loggly').Loggly
 , gelfEncode = require('gelf-encode')
 , UdpClient = require('udp-client')

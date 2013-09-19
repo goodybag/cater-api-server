@@ -43,7 +43,6 @@
     "winston-loggly": "0.6.x",
     "winston": "0.7.x",
     "microtime": "0.4.x",
-    "bower": "1.2.x",
     "rollbar": "0.2.x",
     "connect-request-logger-pg": "0.0.1"
   },

@@ -3,22 +3,23 @@ var OrderView = FormView.extend({
 
   events: function() {
     return {
-      'keyup .order-form .order-form-field': 'onChange',
-      'change .order-form .order-form-field': 'onChange',
+      'keyup .order-form .form-control': 'autoSave',
+      'change .order-form .form-control': 'autoSave',
       'submit .order-form': 'onSave',
       'click .edit-address-btn': 'editAddress',
-      'click .cancel-btn': _.bind(this.changeStatus, this, 'canceled'),
-      'click .submit-btn': _.bind(this.changeStatus, this, 'submitted'),
-      'click .reject-btn': _.bind(this.changeStatus, this, 'denied', this.options.token),
-      'click .accept-btn': _.bind(this.changeStatus, this, 'accepted', this.options.token)
+      'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
+      'click .btn-submit': 'submit',
+      'click .btn-reject': _.bind(this.changeStatus, this, 'denied', this.options.token),
+      'click .btn-accept': _.bind(this.changeStatus, this, 'accepted', this.options.token)
     }
   },
 
   initialize: function(options) {
+    this.items = options.items || [];
+
     if (!this.model) this.model = new Order();
     this.listenTo(this.model, {
       'change:sub_total': this.onPriceChange,
-      'change:submittable': this.onSubmittableChange,
       'change:phone': this.onPhoneChange
     }, this);
 
@@ -28,6 +29,8 @@ var OrderView = FormView.extend({
       'change:is_bad_guests': utils.partial(this.setAlerts, '.alert-bad-guests'),
       'change:is_bad_lead_time': utils.partial(this.setAlerts, '.alert-bad-lead-time')
     }, this);
+
+    this.model.on('change:submittable', this.onSubmittableChange, this);
 
     if (this.model.get('editable')) {
       this.onChange();
@@ -43,15 +46,12 @@ var OrderView = FormView.extend({
       format: 'hh:i A'
     , interval: 15
     }).pickatime('picker');
+
+    this.$el.find('#address-state').select2();
   },
 
   onPriceChange: function(model, value, options) {
     this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));
-  },
-
-  onSubmittableChange: function(model, value, options) {
-    var $btn = this.$el.find('.submit-btn');
-    value ? $btn.removeAttr('disabled') : $btn.attr('disabled', 'disabled');
   },
 
   onPhoneChange: function(model, value, options) {
@@ -62,8 +62,12 @@ var OrderView = FormView.extend({
     this.$el.find(selector).toggleClass('hide', !value);
   },
 
+  onSubmittableChange: function(model, value, options) {
+    this.$el.find('.btn-submit').toggleClass( 'hide', !value );
+  },
+
   changeStatus: function(status) {
-    if (status = 'submitted') {
+    if (status == 'submitted') {
       var vals = _.pick(this.model.toJSON(), this.model.requiredFields)
       this.$el.find('.order-form-field').parent().removeClass('has-error');
       var err = false;
@@ -139,5 +143,16 @@ var OrderView = FormView.extend({
       zip: this.$el.find('.address-zip').val()
     }
     this.$el.find('.order-address-block').html(Handlebars.helpers.address(addr));
+  },
+
+  autoSave: _.debounce(FormView.prototype.onSave, 600),
+
+  submit: function() {
+    async.each(this.items.concat(this), function(view, cb) {
+      view.onSave(null, cb);
+    }, utils.bind(function(err) {
+      if (!err)
+        this.changeStatus('submitted');
+    }, this));
   }
 });

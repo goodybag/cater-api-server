@@ -253,8 +253,10 @@ module.exports.register = function(app) {
 
   app.get('/auth', controllers.auth.index);
 
+  app.post('/auth', controllers.session.create);
+
   app.all('/auth', function(req, res, next) {
-    res.set('Allow', 'GET');
+    res.set('Allow', 'GET, POST');
     res.send(405);
   });
 
@@ -369,6 +371,8 @@ module.exports.register = function(app) {
   app.get('/privacy', controllers.statics.privacy);
 
   app.get('/*', function(req, res) {
-    file.serve(req, res);
+    file.serve(req, res, function(error){
+      if ( error && error.status == 404) return res.status(404).render('404');
+    });
   });
 }

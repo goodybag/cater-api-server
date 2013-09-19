@@ -34,7 +34,7 @@ var Order = Backbone.Model.extend({
         state: {
           type: ['string', 'null'],
           length: 2,
-          enum: _.pluck(states, 'abbr'),
+          enum: _.pluck(states, 'abbr').concat([undefined, null]),
           required: false
         },
         zip: {
@@ -60,13 +60,17 @@ var Order = Backbone.Model.extend({
           type: ['string', 'null'],
           required: false
         },
-       datetime: {
+        datetime: {
          type: ['string', 'null'],
          // TODO: validate against format
          required: false
-       }
+        }
       }
     };
+  },
+
+  defaults: {
+    timezone: "America/Chicago"
   },
 
   // TODO: extract to superclass
@@ -86,6 +90,8 @@ var Order = Backbone.Model.extend({
     this.restaurant = new Restaurant(attrs.restaurant);
     this.unset('restaurant');
 
+    if (this.get('id') == "undefined") this.unset('id');
+
     //TODO: maybe get a new collection on id change?
     this.listenTo(this.orderItems, 'change:sub_total add remove', function() {
       this.set('sub_total', _.reduce(this.orderItems.pluck('sub_total'), function(a, b) { return a + b; }, 0));
@@ -99,6 +105,7 @@ var Order = Backbone.Model.extend({
 
     this.on('change:sub_total', function(model, value, options) {
       model.set('below_min', value < model.restaurant.get('minimum_order'));
+      model.setSubmittable(model, value, options);
     }, this);
 
     this.on({
@@ -137,7 +144,7 @@ var Order = Backbone.Model.extend({
     var now = moment().tz(this.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
     var hours = (new Date(then) - new Date(now)) / 3600000;
 
-    this.restaurant.set('is_bad_lead_time', hours <= limit.lead_time);
+    this.restaurant.set('is_bad_lead_time', !limit ? true : hours <= limit.lead_time);
   },
 
   datetimeChanged: function(model, value, options) {
@@ -151,7 +158,7 @@ var Order = Backbone.Model.extend({
 
     // check against restaurant hours
     var datetime = value.split(' ');
-    var dow = new Date(datetime[0]).getDay();
+    var dow = moment(datetime[0]).day();
     model.restaurant.set('is_bad_delivery_time', !_.find(model.restaurant.get('delivery_times')[dow], function(range) {
       return datetime[1] >= range[0] && datetime[1] <= range[1];
     }));
@@ -171,6 +178,21 @@ var Order = Backbone.Model.extend({
     model.restaurant.set('is_guests_bad', value > model.restaurant.get('max_guests'));
 
     model.checkLeadTimes();
+  },
+
+  isFulfillableOrder: function(){
+    return this.restaurant.validateOrderFulfillability( this ).length == 0;
+  },
+
+  validateOrderFulfillability: function(){
+    var vals = ['guests', 'zip', 'datetime'].map( this.get.bind( this ) );
+
+    // If they have blank fields, that's the only thing we need to tell them
+    if ( vals.indexOf( null ) + vals.indexOf( undefined ) != -2 ){
+      return ['has_blank_fields'];
+    }
+
+    return this.restaurant.validateOrderFulfillability( this );
   },
 
   toJSON: function() {

@@ -16,7 +16,7 @@ module.exports.auth = function(req, res, next) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     var reviewToken = req.query.review_token || req.body.review_token;
     if (order.attributes.user_id !== (req.session.user||0).id && order.attributes.review_token !== reviewToken)
-      return res.send(404);
+      return res.status(404).render('404');
     next();
   });
 }
@@ -25,14 +25,17 @@ module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
   models.Order.find(req.query, function(error, models) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(utils.invoke(models, 'toJSON'));
+    res.render('orders', {orders: utils.invoke(models, 'toJSON')}, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, error);
+      res.send(html);
+    });
   });
 }
 
 module.exports.get = function(req, res) {
   models.Order.findOne(parseInt(req.params.id), function(error, order) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    if (!order) return res.send(404);
+    if (!order) return res.status(404).render('404');
     order.getOrderItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
 
@@ -97,6 +100,9 @@ module.exports.changeStatus = function(req, res) {
 
     if (req.body.status === 'submitted' && !order.isComplete())
       return res.send(403, 'order not complete');
+
+    if (req.body.status === 'submitted' && !order.toJSON().submittable)
+      return res.send(403, 'order not submitttable');
 
     var done = function(status) {
       if (status.attributes.status === 'submitted') {

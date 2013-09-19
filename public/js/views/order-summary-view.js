@@ -1,4 +1,8 @@
 var OrderSummaryView = Backbone.View.extend({
+  events: {
+    'click .btn-checkout': 'checkout'
+  },
+
   template: Handlebars.partials.order_summary,
 
   initialize: function(options) {
@@ -46,5 +50,34 @@ var OrderSummaryView = Backbone.View.extend({
   submittableChange: function(model, value, options) {
     var $btn = this.$el.find('.btn-checkout');
     value ? $btn.removeAttr('disabled') : $btn.attr('disabled', 'disabled');
+  },
+
+  checkout: function(e) {
+    var obj = this.options.orderParams.toJSON();
+    var params = {
+      zip: obj.zip || undefined,
+      guests: obj.guests || undefined,
+      datetime: _.compact([obj.date, obj.time]).join(' ') || undefined,
+      state: 'TX'
+    };
+
+    var diff = {};
+    for (var key in params)
+      diff[key] = this.model.get(key) != null ? this.model.get(key) : params[key];
+
+    var view = this;
+    var sent = this.model.save(diff, {
+      patch: true,
+      wait: true,
+      singleError: false,
+      success: function(model, response, options) {
+        // Reset order params
+        _.each( _.keys( orderParams.toJSON() ), _.bind( orderParams.unset, orderParams ) );
+
+        orderParams.save( null, { success: function(){
+          window.location.href = _.result(view.model, 'url');
+        } })
+      }
+    });
   }
 });

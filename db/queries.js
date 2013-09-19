@@ -68,7 +68,19 @@ module.exports = {
   restaurant: {
     list: utils.partial(find, 'restaurants'),
     create: utils.partial(upsert, 'restaurants'),
-    update: utils.partial(upsert, 'restaurants')
+    update: utils.partial(upsert, 'restaurants'),
+    createZips: utils.partial(upsert, 'restaurant_delivery_zips'),
+    createDeliveryTimes: utils.partial(upsert, 'restaurant_delivery_times'),
+    createLeadTimes: utils.partial(upsert, 'restaurant_lead_times'),
+    delZips: function(rid) {
+      return del.call(this, 'restaurant_delivery_zips', {restaurant_id: rid});
+    },
+    delDeliveryTimes: function(rid) {
+      return del.call(this, 'restaurant_delivery_times', {restaurant_id: rid});
+    },
+    delLeadTimes: function(rid) {
+      return del.call(this, 'restaurant_lead_times', {restaurant_id: rid});
+    }
   },
 
   category: {

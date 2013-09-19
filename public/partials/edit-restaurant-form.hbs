@@ -1,3 +1,7 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/restaurant-form.css">
+{{/extend}}
+
 <fieldset>
   <legend>{{#if isNew}}New{{else}}Edit{{/if}} Restaurant</legend>
   <div class="form-group">
@@ -46,6 +50,28 @@
       <input type="text" class="form-control restaurant-minimum-order" value="{{dollars restaurant.minimum_order}}" placeholder="200.00">
     </div>
   </div>
+  <div class="form-group">
+    <label class="control-label">Delivery Zip Codes</label>
+    <input type="text" class="form-control restaurant-delivery-zips" value="{{array restaurant.delivery_zips}}" placeholder="78701, 78704, 78756">
+    <span class="help-block">List of zip codes restaurant will deliver to.  Please enter as a comma separated list.</span>
+  </div>
+  <fieldset>
+    <legend>Delivery Hours</legend>
+    {{#each restaurant.delivery_times}}
+    <div id="hours-{{@key}}" class="form-group hours-day row">
+      {{> hours_day}}
+    </div>
+    {{/each}}
+  </fieldset>
+  <fieldset>
+    <legend>Lead Times</legend>
+    <div class="lead-times-list">
+      {{#each restaurant.lead_times}}
+      {{> lead_time}}
+      {{/each}}
+    </div>
+    <button type="button" class="btn btn-success add-lead-time">Add Restriction</buttton>
+  </fieldset>
   <fieldset>
     <legend>Address</legend>
     <div class="form-group">
@@ -76,3 +102,30 @@
     <button type="submit" class="btn btn-success restaurant-save pull-right{{#unless isNew}} hide{{/unless}}">Save</button>
   </div>
 </fieldset>
+
+{{#extend "scripts"}}
+<script>
+  var partials = { edit_hours: 'edit-hours.hbs', hours_day: 'hours-day.hbs', lead_time: 'lead-time.hbs'};
+  for (var name in partials) {
+    $.ajax({
+      type: 'GET',
+      url: '/partials/' + partials[name],
+      success: function(data, textStatus, jqXHR) {
+        Handlebars.registerPartial(name, Handlebars.compile(data));
+      },
+      dataType: 'html',
+      async: false
+    });
+  }
+</script>
+
+<script src="/js/models/hours.js"></script>
+<script src="/js/views/edit-hours-view.js"></script>
+<script>
+  var hours = [
+  {{#each restaurant.delivery_times}}
+  new EditHoursView({model: new Hours({day: {{@key}}, times: {{{json this}}} }), el: '#hours-{{@key}}'}),
+  {{/each}}
+ ];
+</script>
+{{/extend}}

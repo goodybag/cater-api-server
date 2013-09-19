@@ -10,9 +10,9 @@
 }
 
 /* Use the following CSS code if you want to use data attributes for inserting your icons */
-[data-icon]:before {
+[data-icon]:before,
+[data-icon-after]:after {
   font-family: 'gb';
-  content: attr(data-icon);
   speak: none;
   font-weight: normal;
   font-variant: normal;
@@ -63,30 +63,39 @@ you can use the generic selector below, but it's slower:
   line-height: 1;
   -webkit-font-smoothing: antialiased;
 }
-.gb-icon-caret-down:before {
+.gb-icon-caret-down:before,
+[data-icon="gb-icon-caret-down"]:before {
   content: "\e000";
 }
-.gb-icon-x-mark:before {
+.gb-icon-x-mark:before,
+[data-icon="gb-icon-x-mark"]:before {
   content: "\e001";
 }
-.gb-icon-magnifier:before {
+.gb-icon-magnifier:before,
+[data-icon="gb-icon-magnifier"]:before {
   content: "\e002";
 }
-.gb-icon-location:before {
+.gb-icon-location:before,
+[data-icon="gb-icon-location"]:before {
   content: "\e003";
 }
-.gb-icon-time:before {
+.gb-icon-time:before,
+[data-icon="gb-icon-time"]:before {
   content: "\e004";
 }
-.gb-icon-calendar:before {
+.gb-icon-calendar:before,
+[data-icon="gb-icon-calendar"]:before {
   content: "\e005";
 }
-.gb-icon-user:before {
+.gb-icon-user:before,
+[data-icon="gb-icon-user"]:before {
   content: "\e006";
 }
-.gb-icon-email:before {
+.gb-icon-email:before,
+[data-icon="gb-icon-email"]:before {
   content: "\e007";
 }
-.gb-icon-phone:before {
+.gb-icon-phone:before,
+[data-icon="gb-icon-phone"]:before {
   content: "\e008";
 }

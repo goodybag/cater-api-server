@@ -28,7 +28,7 @@
     "pg": "2.3.x",
     "when": "2.2.x",
     "node-static": "0.6.x",
-    "hbs": "2.3.x",
+    "hbs": "2.4.x",
     "Faker": "0.5.x",
     "pg-query": "~0.3.0",
     "mailgun": "0.4.x",
@@ -43,6 +43,9 @@
     "winston-loggly": "0.6.x",
     "winston": "0.7.x",
     "microtime": "0.4.x"
+    "bower": "1.2.x",
+    "rollbar": "0.2.x",
+    "connect-request-logger-pg": "0.0.1"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

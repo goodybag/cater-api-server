@@ -9,45 +9,52 @@ var
 
 var config = {
   defaults: {
-    logging: {
+    numWorkers: os.cpus().length
+
+  , logging: {
       enabled: true
     , transports: {
         console: true
-      , devConsole: false
       , fileRotate: false
-      , loggly: false
       }
     , console: {
         json: true
       }
     }
+
   , http: {
       port: 3000
     }
+
   , pg: {
       poolSize: 5
     }
-  , numWorkers: os.cpus().length
+
   , outputActivePoolIds: false
+
+  , baseUrl: 'http://cater.goodybag.com'
 
   , amazon: {
       awsId: "AKIAJZTPY46ZWGWU5JRQ"
     , awsSecret: "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"
     }
-  , baseUrl: 'http://cater.goodybag.com'
+
   , mailgun: {
       apiKey: 'key-8ffj79wzb2dda3s6r7u93o4yz07oxxu8'
     , publicApiKey: 'pubkey-45a1-ynm6dw4tmk8egc6izhgqntwir79'
     }
+
   , twilio: {
       account: 'AC4ec9863aecd8248803144972fc51bac0'
     , token: 'f45e26c40cd7481c872c3552676b598b'
     }
+
   , emails: {
       support: 'support@goodybag.com'
     , orders: 'orders@goodybag.com'
     , waitlist: 'waitlist@goodybag.com'
     }
+
   , phone: {
       main: '5126674224'
     , support: '5122706555'
@@ -55,8 +62,13 @@ var config = {
     }
   }
 
+
 , dev: {
     env: 'dev'
+
+  , http: {
+      port: 3000
+    }
 
   , logging: {
       enabled: true
@@ -70,15 +82,18 @@ var config = {
       , json: true
       }
     }
-  , http: {
-      port: 3000
-    }
 
   , rollbar: {
       accessToken: 'c7f82820e02c4bd7a759015518948ce3'
     }
 
   , postgresConnStr:  "postgres://localhost:5432/cater"
+
+  , requestLogger: {
+      connStr: "postgres://localhost:5432/cater"
+    , table: 'requests'
+    , plan: 'month'
+    }
 
   , baseUrl: 'http://localhost:3000'
 
@@ -91,32 +106,27 @@ var config = {
   , emailEnabled: true
   }
 
+
 , staging: {
     env: 'staging'
-
-  , logging: {
-      enabled: true
-    , transports: {
-        console: true
-      , loggly: true
-      }
-    , loggly: {
-        subdomain:'gbstaging'
-      , inputToken: 'e0f6fe9c-8ad3-47ec-9fb2-572aa5ce64dc'
-      , auth: {
-          username: 'gbstaging'
-        , password: 'g00dybag3ng1n33r1ng!'
-        }
-      }
-    }
 
   , http: {
       port: process.env['PORT'] || 5000
     }
 
-  , postgresConnStr: process.env['DATABASE_URL']
+  , rollbar: {
+      accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+    }
 
   , baseUrl: 'http://cater.staging.goodybag.com'
+
+  , postgresConnStr: process.env['DATABASE_URL']
+
+  , requestLogger: {
+      connStr: process.env['HEROKU_POSTGRESQL_SILVER_URL']
+    , table: 'requests'
+    , plan: 'month'
+    }
   }
 };
 

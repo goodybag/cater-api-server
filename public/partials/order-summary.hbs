@@ -29,7 +29,7 @@
       {{/if}}
     </div>
     <div class="col-lg-6">
-      <a href="/orders/{{order.id}}" class="btn btn-primary btn-checkout pull-right"{{#unless order.submittable}} disabled="disabled"{{/unless}}{{#if restaurant.is_unacceptable}} disabled="disabled"{{/if}}>Checkout</a>
+      <button class="btn btn-primary btn-checkout pull-right"{{#unless order.submittable}} disabled="disabled"{{/unless}}{{#if restaurant.is_unacceptable}} disabled="disabled"{{/if}}>Checkout</button>
     </div>
   </div>
 </div>

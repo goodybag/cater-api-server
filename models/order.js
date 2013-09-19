@@ -2,6 +2,7 @@ var Model = require('./model');
 var utils = require('../utils');
 var uuid  = require('node-uuid');
 var db = require('../db');
+var Restaurant = require('./restaurant');
 
 'delivery_zips',
 'delivery_times',
@@ -28,7 +29,8 @@ var modifyAttributes = function(callback, err, orders) {
     ];
     utils.each(orders, function(order) {
       order.attributes.restaurant = utils.extend({ id: order.attributes.restaurant_id, delivery_times: utils.object(order.attributes.delivery_times) } , utils.pick(order.attributes, restaurantFields));
-      utils.each(restaurantFields, function(field) { delete order.attributes.field; });
+      order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
+      utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) {
         return a || b;
@@ -49,6 +51,17 @@ module.exports = Model.extend({
         self.orderItems = results;
         callback(null, results);
       });
+  },
+  getRestaurant: function(callback){
+    var self = this;
+
+    Restaurant.findOne({ where: { id: this.attributes.restaurant_id } }, function(error, restaurant){
+      if (error) return callback(error);
+
+      self.attributes.restaurant = restaurant.toJSON();
+
+      callback(null, restaurant);
+    });
   },
   save: function(callback) {
     var insert = this.attributes.id == null;
@@ -79,7 +92,10 @@ module.exports = Model.extend({
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
     obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
-    obj.below_min = obj.sub_total < obj.restaurant.minimum_order;
+
+    if ( obj.restaurant && obj.restaurant.minimum_order ){
+      obj.below_min = obj.sub_total < obj.restaurant.minimum_order;
+    }
 
     obj.submittable = this.attributes.status === 'pending'
       && this.attributes.sub_total > 0

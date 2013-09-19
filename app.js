@@ -5,19 +5,20 @@
 
 var
   config = require('./config')
+, rollbar = require('rollbar')
 , express = require('express')
 , hbs = require('hbs')
 , utils = require('./utils')
 , logger = require('./logger')
 , routes = require('./routes')
 , helpers = require('./helpers')
-, rollbar = require('rollbar')
 ;
 
 var middleware = {
   cors: require('./middleware/cors')
 , domains: require('./middleware/domains')
 , uuid: require('./middleware/uuid')
+, requestLogger: require('connect-request-logger-pg')
 };
 
 var app = module.exports = express();
@@ -35,10 +36,20 @@ app.configure(function(){
   app.use(middleware.uuid());
   app.use(middleware.domains);
   app.use(middleware.cors);
-  app.use(express.logger('dev'));
+
+  app.use(middleware.requestLogger({
+    connStr: config.requestLogger.connStr
+  , table: config.requestLogger.table
+  , plan: config.requestLogger.plan
+  , customFields: {uuid: 'uuid'}
+  }));
+
   app.use(app.router);
   app.use(logger.expressError);
 
+  if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
+
+  app.set('port', config.http.port || 3000);
   app.set('view engine', 'hbs');
   app.set('port', config.http.port || 3000);
 
@@ -55,14 +66,19 @@ app.configure(function(){
 
   var render = app.response.render;
   app.response.render = function(path, options, callback) {
-    var options = utils.extend(options || {}, {user: utils.extend(this.req.session.user, options.user)});
+    var partialConfig = { phone: config.phone, emails: config.emails };
+
+    options = options || {};
+
+    options = utils.extend( options, {
+        user: utils.extend({}, this.req.session ? this.req.session.user : {}, options.user)
+      , config: utils.extend(partialConfig, options.config)
+      }
+    );
+
     render.call(this, path, options, callback);
   }
 
-});
-
-app.configure('development', function(){
-  // app.use(express.errorHandler());
 });
 
 helpers.register(hbs);

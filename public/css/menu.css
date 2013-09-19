@@ -13,11 +13,50 @@
   vertical-align: bottom;
 }
 
-.menu-info-tabs>li.active>a, .menu-info-tabs>li.active>a:hover, .menu-info-tabs>li.active>a:focus {
-  background: transparent;
-  border: none;
-  color: #428bca; /* TODO: link default */
-  text-decoration: underline;
+.restaurant-info-item {
+  margin-top: 8px;
+  margin-bottom: 24px;
+  font-size: 13px;
+}
+
+.restaurant-info-item .info-item-title {
+  margin: 0;
+  color: #432012;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.restaurant-info-item .info-item-value {
+  margin-top: 2px;
+}
+
+.restaurant-info-item .dl-horizontal {
+  margin: 0;
+  margin-top: 4px;
+}
+
+/**
+ * Delivery times has a font-size: 0 element in so it's making the
+ * line height on all of the dt,dd's larger than it should be
+ */
+.delivery-times.dl-horizontal > dt,
+.delivery-times.dl-horizontal > dd {
+  line-height: 15px;
+}
+
+.list-delivery-zips {
+  width: 400px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list-delivery-zips > .delivery-zip {
+  display: inline-block;
+  width: 62px;
+  margin: 0;
+  padding: 0;
 }
 
 @media ( min-width: 1200px ){

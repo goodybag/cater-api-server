@@ -19,7 +19,9 @@ fakeCategories.random = function(){
   ];
 };
 
-faker.definitions.phone_formats.push('##########');
+fakePhoneNumber = function () {
+  return ""+Math.floor(Math.random() * (9999999999 - 1000000000 + 1) + 1000000000);
+}
 
 // number of records to create
 var records = 100;
@@ -73,8 +75,8 @@ var inserts = {
       , city: faker.Address.city()
       , state: faker.Address.usState(true)
       , zip: faker.Address.zipCodeFormat(0)
-      , sms_phone: config.testPhoneSms || parseInt(faker.PhoneNumber.phoneNumberFormat(faker.definitions.phone_formats.length-1))
-      , voice_phone: config.testPhoneVoice || parseInt(faker.PhoneNumber.phoneNumberFormat(faker.definitions.phone_formats.length-1))
+      , sms_phone: config.testPhoneSms || fakePhoneNumber()
+      , voice_phone: config.testPhoneVoice || fakePhoneNumber()
       , email: config.testEmail || faker.Internet.email()
       , price: faker.Helpers.randomNumber(5) + 1
       , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))

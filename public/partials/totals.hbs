@@ -1,5 +1,14 @@
-{{#if order.restaurant.minimum_order}}<p class="text-right{{#if order.below_min}} alert alert-danger{{/if}}">minimum: $<span class="price minimum-order">{{dollars order.restaurant.minimum_order}}</span></p>{{/if}}
-<p class="text-right">subtotal: $<span class="price sub-total">{{dollars order.sub_total}}</span></p>
-<p class="text-right">delivery fee: $<span class="price delivery-fee">{{dollars order.restaurant.delivery_fee}}</span></p>
-<p class="text-right">tax: $<span class="price tax">{{tax order.sub_total order.restaurant.delivery_fee}}</span></p>
-<p class="text-right">total: $<span class="price total">{{total order.sub_total order.restaurant.delivery_fee}}</span></p>
+<dl class="dl-horizontal order-totals">
+  {{#if order.restaurant.minimum_order}}
+  <dt>Minimum:</dt>
+  <dd>{{dollars order.restaurant.minimum_order}}</dd>
+  {{/if}}
+  <dt>Subtotal:</dt>
+  <dd>{{dollars order.sub_total}}</dd>
+  <dt>Delivery Fee:</dt>
+  <dd>{{dollars order.restaurant.delivery_fee}}</dd>
+  <dt>Tax</dt>
+  <dd>{{tax order.sub_total order.restaurant.delivery_fee}}</dd>
+  <dt>Total:</dt>
+  <dd>{{total order.sub_total order.restaurant.delivery_fee}}</dd>
+</dl>

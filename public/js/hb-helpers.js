@@ -57,6 +57,7 @@ var mod = function(a, n) {
 var blocks = {};
 
 var tax = function(subtotal, deliveryFee, rate, options) {
+  if (subtotal == null) subtotal = 0;
   var numArgs = arguments.length;
   if (numArgs === 0) return '0.00';
   if (numArgs < 4) {
@@ -90,7 +91,7 @@ var helpers = {
   },
 
   dollars: function(pennies) {
-    var cents = parseInt(pennies);
+    var cents = pennies == null ? 0 : parseInt(pennies);
     return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2);
   },
 
@@ -116,18 +117,6 @@ var helpers = {
 
     rate = rate ? rate + 1 : 1.0825;
     return tax.call(this, cents, deliveryFee, rate, options);
-  },
-
-  statusLabel: function(status) {
-    if (!status) return 'label-default';
-    return 'label-' + {
-      canceled: 'danger',
-      pending: 'info',
-      submitted: 'warning',
-      denied: 'danger',
-      accepted: 'warning',
-      delivered: 'success'
-    }[status];
   },
 
   price$: function(price) {
@@ -194,6 +183,10 @@ var helpers = {
     return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day];
   },
 
+  shortWeekday: function(day) {
+    return (helpers.weekday(day) || '').substring(0, 3);
+  },
+
   mailto: function(email) {
     return '<a href="mailto:' + email + '">' + email + '</a>';
   },
@@ -234,6 +227,33 @@ var helpers = {
     }
 
     return out.join('\n');
+  },
+
+  dump: function( val ){
+    return [ '<pre>', JSON.stringify( val, true, '  ' ), '</pre>' ].join('\n');
+  },
+
+  lowercase: function( val ){
+    return val.toLowerCase();
+  },
+
+  capitalze: function( val ){
+    return val[ 0 ].toUpperCase() + val.substring( 1 );
+  },
+
+  withNullable: function(context, options) {
+    if (utils.isFunction(context)) { context = context.call(this); }
+
+    return options.fn(context != null ? context : [])
+  },
+
+  ifAllDay: function(times, options) {
+    if (!times || times.length != 2 || !times[0] || !times[1])
+      return options.inverse(this);
+
+    var ref = [[0, 0, 0], [23, 59, 59]];
+    var ints = utils.map(times, function(time) { return utils.map(time.split(':'), function(part) { return parseInt(part); }); });
+    return options[utils.isEqual(ref, ints) ? 'fn' : 'inverse'](this);
   }
 }
 

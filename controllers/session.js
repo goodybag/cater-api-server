@@ -16,11 +16,11 @@ module.exports.create = function(req, res) {
 
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results) {
-        if (error) return res.error(errors.internal.DB_FAILURE, error, callback);
-        if (results.length != 1) return res.error(errors.auth.INVALID_EMAIL, error, callback);
+        if (error) return res.status(500).render('500');
+        if (results.length != 1) return res.render('auth', { error: errors.auth.INVALID_EMAIL });
         var user = results[0];
         utils.comparePasswords(req.body.password, user.password, function(error, success) {
-          if (!success) return res.error(errors.auth.INVALID_PASSWORD, error, callback);
+          if (!success) return res.render('auth', { error: errors.auth.INVALID_EMAIL });
           req.session = utils.extend({}, req.session, {user: utils.pick(user, ['id', 'groups', 'email'])});
           return callback();
         });
@@ -50,7 +50,7 @@ module.exports.getOrderParams = function(req, res) {
 
 module.exports.updateOrderParams = function(req, res) {
   req.session.orderParams = {
-    zip: parseInt(req.body.zip, 10)
+    zip: req.body.zip
   , date: req.body.date
   , time: req.body.time
   , guests: parseInt(req.body.guests, 10)

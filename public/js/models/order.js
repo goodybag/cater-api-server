@@ -53,7 +53,7 @@ var Order = Backbone.Model.extend({
         guests: {
           type: ['integer', 'null'],
           minimum: 1,
-          maximum: this.restaurant.get('max_guests'),
+          maximum: this.restaurant.get('max_guests') || undefined,
           required: false
         },
         notes: {
@@ -175,7 +175,7 @@ var Order = Backbone.Model.extend({
       return;
     }
 
-    model.restaurant.set('is_guests_bad', value > model.restaurant.get('max_guests'));
+    model.restaurant.set('is_guests_bad', !model.restaurant.isValidMaxGuests(value));
 
     model.checkLeadTimes();
   },

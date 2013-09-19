@@ -26,7 +26,7 @@ var app = module.exports = express();
 app.configure(function(){
   app.use(express.favicon(__dirname + '/public/favicon.ico'));
   app.use(express.compress());
-
+  app.use(logger.expressError);
   app.use(express.cookieParser('WOOT THE FUCK'));
   app.use(express.cookieSession());
 
@@ -45,7 +45,6 @@ app.configure(function(){
   }));
 
   app.use(app.router);
-  app.use(logger.expressError);
 
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
 

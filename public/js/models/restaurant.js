@@ -91,13 +91,17 @@ var Restaurant = Backbone.Model.extend({
   },
 
   isValidDeliveryTime: function( date ){
+    if ( typeof date !== 'string' ) return false;
+
+    if ( new Date(date).toString() === 'Invalid Date' ) return false;
+
     // Super pro day-parsing
     var day = moment( date.split(' ')[0] ).day();
 
     if ( this.get('delivery_times')[ day ].length === 0 ) return false;
 
     var hours = this.get('delivery_times')[ day ];
-    var time = date.split(' ')[1];
+    var time = (date.split(' ')[1] + ':00').substring( 0, 8 );
 
     return _.filter( hours, function( openClose ){
       return time >= openClose[0] && time < openClose[1]
@@ -105,17 +109,30 @@ var Restaurant = Backbone.Model.extend({
   },
 
   isValidMaxGuests: function( num ){
+    // Non-number value, probably null or undefined
+    if ( typeof this.get('max_guests') !== 'number' ) return true;
+
+    // Impossible values, they probably meant to have no restrictions
+    if ( this.get('max_guests') < 0 ) return true;
+
     return num <= this.get('max_guests');
   },
 
   isValidGuestDateCombination: function( order ){
     var date = order.get('datetime');
 
-    if ( typeof date === 'string' ) date = new Date(date);
+    if ( typeof date !== 'string' ) return false;
 
-    if ( !(date instanceof Date) ) return false;
+    if ( new Date(date).toString() === 'Invalid Date' ) return false;
 
-    if ( date.toString() === 'Invalid Date' ) return false;
+    // In case of lead_times being null or an empty array
+    // return true because there is nothing specified, so all must
+    // be a allowed
+    if ( this.get('lead_times') == null ) return true;
+
+    if ( _.isArray( this.get('lead_times') ) && this.get('lead_times').length === 0 ){
+      return true;
+    }
 
     var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
       return obj.max_guests >= order.get('guests');
@@ -124,7 +141,7 @@ var Restaurant = Backbone.Model.extend({
     if ( !limit ) return false;
 
     var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
-    var hours = (date - new Date(now)) / 3600000;
+    var hours = (new Date(date) - new Date(now)) / 3600000;
 
     return hours > limit.lead_time;
   },

@@ -266,3 +266,11 @@
   height: 34px;
   line-height: 34px;
 }
+
+/**
+ * Fix pickadate/select2 container problem
+ */
+ .form-group-delivery-date,
+ .form-group-delivery-time {
+  position: static;
+ }

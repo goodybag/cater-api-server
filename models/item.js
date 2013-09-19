@@ -50,7 +50,11 @@ module.exports = Model.extend({}, {
       }
     }, query.joins);
 
-    query.columns.push('options_sets_agg.sets AS options');
+    query.columns.push({
+      type: 'array_to_json',
+      as: 'options_sets',
+      expression: 'options_sets_agg.options'
+    });
 
     return Model.find.call(this, query, callback);
   }

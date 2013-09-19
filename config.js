@@ -73,8 +73,11 @@ var config = {
   , logging: {
       enabled: true
     , transports: {
-        devConsole: true
+        console: true
       , fileRotate: true
+      }
+    , console: {
+        json: true
       }
     , fileRotate: {
         dirname: 'logs'
@@ -120,7 +123,7 @@ var config = {
         console: true
       }
     , console: {
-        json: true
+        raw: true
       }
     }
 

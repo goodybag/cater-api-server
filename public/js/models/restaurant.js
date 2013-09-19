@@ -91,6 +91,10 @@ var Restaurant = Backbone.Model.extend({
   },
 
   isValidDeliveryTime: function( date ){
+    if ( typeof date !== 'string' ) return false;
+
+    if ( new Date(date).toString() === 'Invalid Date' ) return false;
+
     // Super pro day-parsing
     var day = moment( date.split(' ')[0] ).day();
 
@@ -111,11 +115,9 @@ var Restaurant = Backbone.Model.extend({
   isValidGuestDateCombination: function( order ){
     var date = order.get('datetime');
 
-    if ( typeof date === 'string' ) date = new Date(date);
+    if ( typeof date !== 'string' ) return false;
 
-    if ( !(date instanceof Date) ) return false;
-
-    if ( date.toString() === 'Invalid Date' ) return false;
+    if ( new Date(date).toString() === 'Invalid Date' ) return false;
 
     var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
       return obj.max_guests >= order.get('guests');
@@ -124,7 +126,7 @@ var Restaurant = Backbone.Model.extend({
     if ( !limit ) return false;
 
     var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
-    var hours = (date - new Date(now)) / 3600000;
+    var hours = (new Date(date) - new Date(now)) / 3600000;
 
     return hours > limit.lead_time;
   },

@@ -29,12 +29,12 @@ define(function(require) {
   , order_options_set_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'order_options_sets', column: 'id'}
+    , references: {table: 'order_options_sets', column: 'id', onDelete: 'cascade'}
     }
   , option: {
       type: types.int
     , nullable: false
-    , references: {table: 'options', column: 'id'}
+    , references: {table: 'options', column: 'id', onDelete: 'null'}
     }
   , name: {
       type: types.text

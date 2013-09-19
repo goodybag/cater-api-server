@@ -29,12 +29,12 @@ define(function(require) {
   , item_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'items', column: 'id'}
+    , references: {table: 'items', column: 'id', onDelete: 'null'}
     }
   , order_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'orders', column: 'id'}
+    , references: {table: 'orders', column: 'id', onDelete: 'cascade'}
     }
   , quantity: {
       type: types.int

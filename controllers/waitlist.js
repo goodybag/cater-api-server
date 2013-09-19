@@ -1,3 +1,4 @@
+var uuid = require('node-uuid')
 var db = require('../db');
 var queries = require('../db/queries');
 var errors = require('../errors');
@@ -19,12 +20,12 @@ module.exports.add = function(req, res, next) {
     });
   }
 
-  var updateQuery = queries.waitlist.reAdd(req.body.email, req.body.organization);
+  var updateQuery = queries.waitlist.reAdd(req.body.email, req.body.organization, uuid.v4());
   var updateSql = db.builder.sql(updateQuery);
 
   db.query(updateSql.query, updateSql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (rows.length !== 0) return done(rows[0].email);
+    if (rows.length !== 0) return done(rows[0].email, updateQuery.updates.token);
 
     var insertQuery = queries.waitlist.create(req.body);
     var insertSql = db.builder.sql(insertQuery);

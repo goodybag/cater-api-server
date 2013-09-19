@@ -114,6 +114,16 @@ var config = {
       port: process.env['PORT'] || 5000
     }
 
+  , logging: {
+      enabled: true
+    , transports: {
+        console: true
+      }
+    , console: {
+        json: true
+      }
+    }
+
   , rollbar: {
       accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
     }

@@ -47,7 +47,9 @@ var OrderView = FormView.extend({
     , interval: 15
     }).pickatime('picker');
 
-    this.$el.find('#address-state').select2();
+    // This is causing some width issues with this select
+    // Let's go standard select until we can fix it
+    // this.$el.find('#address-state').select2();
   },
 
   onPriceChange: function(model, value, options) {

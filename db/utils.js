@@ -60,8 +60,17 @@ function createTable(definition, callback) {
       parts.push(checks.join(', '));
     }
 
-    if (schema[field].references && schema[field].references.table && schema[field].references.column)
-      parts.push(['REFERENCES', schema[field].references.table, '("' + schema[field].references.column + '")'].join(' '));
+    var deleteRules = {
+      cascade: 'CASCADE',
+      restrict: 'RESTRICT',
+      null: 'SET NULL',
+      default: 'SET DEFAULT'
+    }
+
+    if (schema[field].references && schema[field].references.table && schema[field].references.column) {
+      var cascade = schema[field].references.cascade ? 'ON DELETE ' + deleteRules[schema[field].references.cascade] : '';
+      parts.push(['REFERENCES', schema[field].references.table, '("' + schema[field].references.column + '")', cascade].join(' '));
+    }
 
     sql.push(parts.join(' '));
   }

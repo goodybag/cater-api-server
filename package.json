@@ -37,8 +37,14 @@
     "moment": "2.1.x",
     "moment-timezone": "0.0.x",
     "bower": "1.2.x",
+    "udp-client": "0.1.x",
+    "gelf-encode": "0.2.x",
+    "winston-loggly": "0.6.x",
+    "winston": "0.7.x",
+    "microtime": "0.4.x",
     "rollbar": "0.2.x",
-    "connect-request-logger-pg": "0.0.1"
+    "connect-request-logger-pg": "0.0.1",
+    "winston-papertrail": "0.1.x"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

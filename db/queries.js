@@ -160,11 +160,12 @@ module.exports = {
     reAdd: function(where, org, token) {
       var values = {
         unsubscribed: null,
-        token: token,
         confirmed: null,
         created_at: 'now()',
         organization: org || null
       };
+
+      if (token) values.token = token;
 
       return upsert.call(this, 'waitlist', values, utils.isObject(where) ? where : {email: where});
     },

@@ -48,7 +48,6 @@ app.configure(function(){
 
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
 
-  app.set('port', config.http.port || 3000);
   app.set('view engine', 'hbs');
   app.set('port', config.http.port || 3000);
 

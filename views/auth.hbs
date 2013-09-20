@@ -25,7 +25,7 @@
                 <input type="password" name="password" class="form-control" id="password">
               </div>
               <div class="form-remember-forgot-wrapper">
-                <a href="javascript:void(0);" id="forgot-password" class="top-form-toggle">Forgot Password?</a>
+                <a href="#" id="forgot-password" class="top-form-toggle">Forgot Password?</a>
                 <div class="checkbox hide">
                   <label>
                     <input type="checkbox"> Remember me
@@ -49,7 +49,7 @@
               </div>
               <div class="row">
                 <div class="col-lg-6">
-                  <a href="javascript:void(0)" id="return-to-login" class="top-form-toggle">Log In</a>
+                  <a href="javascript:void(0)" id="return-to-login" class="top-form-toggle">Go Back</a>
                 </div>
                 <div class="col-lg-6">
                   <button type="submit" class="btn btn-primary pull-right">Reset Password</button>
@@ -83,6 +83,6 @@
 {{#extend "scripts"}}
 <script src="/js/views/auth-view.js"></script>
 <script>
-  var view = new AuthView({el: '.auth', query: '{{query}}' });
+  var view = new AuthView({el: '.page-auth', query: '{{query}}' });
 </script>
 {{/extend}}

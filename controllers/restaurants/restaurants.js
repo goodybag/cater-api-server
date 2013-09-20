@@ -20,7 +20,7 @@ module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.session.orderParams || {};
   models.Restaurant.find({}, orderParams, function(err, models) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
+    if (err) return logger.db.error(err), res.error(errors.internal.DB_FAILURE, err);
     res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON'), orderParams: orderParams}, function(error, html) {
       if (error) return res.error(errors.internal.UNKNOWN, error);
       return res.send(html);
@@ -65,7 +65,7 @@ module.exports.get = function(req, res) {
   ];
 
   var done = function(err, results) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (err) return logger.db.error(err), res.error(errors.internal.DB_FAILURE, err);
 
     var orderParams = utils.clone(req.session.orderParams) || {};
     orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {

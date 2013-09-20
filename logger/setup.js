@@ -7,6 +7,7 @@ var
   _ = require('lodash')
 , winston = require('winston')
 , Loggly = require('winston-loggly').Loggly
+, Papertrail = require('winston-papertrail').Papertrail
 , gelfEncode = require('gelf-encode')
 , UdpClient = require('udp-client')
 , microtime = require('microtime')

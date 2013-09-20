@@ -103,6 +103,11 @@ a.list-group-item:hover {
   background-color: #F8F8F0;
 }
 
+a.list-group-item.disabled:hover,
+a.list-group-item.disabled:focus {
+  background-color: #fff;
+}
+
 a.list-group-item strong,
 a.list-group-item .list-group-item-heading {
   color: #695A42;

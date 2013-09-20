@@ -99,7 +99,19 @@ module.exports = {
       return upsert('items', item);
     },
     update: utils.partial(upsert, 'items'),
-    del: utils.partial(del, 'items')
+    del: utils.partial(del, 'items'),
+    delOptions: function(iid) {
+      return del.call(this, 'options_sets', {'item_id': iid});
+    },
+    createOptionsSets: function(options_sets, iid) {
+      // get rid of the options and add an item_id to each object
+      var values = utils.map(options_sets, utils.compose(utils.partial(utils.extend, {item_id: iid}),
+                                                         utils.partialRight(utils.omit, ['options'])));
+      return upsert.call(this, 'options_sets', values);
+    },
+
+    createOptions: function(options_sets, iid) {
+    }
   },
 
   user: {

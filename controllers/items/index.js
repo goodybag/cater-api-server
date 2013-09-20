@@ -25,6 +25,14 @@ module.exports.update = function(req, res) {
     if (err) return res.error(errors.internal.UNKNOWN, error);
     res.json(200, rows[0]);
   });
+
+  if (req.body.options_sets !== undefined) {
+    // TODO: queries.item.delOptions(req.params.id)
+
+    if (req.body.options_sets) {
+      // TODO: recreate options
+    }
+  }
 }
 
 module.exports.remove = function(req, res) {

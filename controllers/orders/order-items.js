@@ -23,8 +23,8 @@ module.exports.get = function(req, res, next) {
 module.exports.add = function(req, res, next) {
   models.Item.findOne(parseInt(req.body.item_id), function(error, item) {
     if (!item) return res.send(404);
-    var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes']));
-    utils.extend(attrs, {item_id: attrs.id, order_id: req.params.oid});
+    var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'item_id']), {order_id: req.params.oid});
+    // TODO: update item.order_sets from req.body.  but only the selected information, not the price etc.
     var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
     orderItem.save(function(error, rows, result) {
       if (error) return res.error(errors.internal.DB_FAILURE, error);

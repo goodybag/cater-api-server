@@ -25,6 +25,12 @@ module.exports = function(options) {
   var defaults = {
     transports: []
   , meta: {}
+  , levels: {
+      'debug': 3
+    , 'info': 2
+    , 'warn': 1
+    , 'error': 0
+    }
   };
 
   var useGelf = false;
@@ -212,7 +218,7 @@ module.exports = function(options) {
       logger.log(level, msg, meta, callback);
     }
   };
-  ['debug', 'info', 'warn', 'error'].forEach(addLevel);
+  _.keys(defaults.levels).forEach(addLevel);
   var logError = logger.error;
   logger.error = function(tags, message, meta) {
     if(tags instanceof Error) {

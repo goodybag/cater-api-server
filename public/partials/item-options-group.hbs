@@ -1,0 +1,27 @@
+<ul class="list-group list-group-item-options">
+  {{#if this.name}}
+    <h3 class="list-group-heading">{{this.name}}</h3>
+  {{/if}}
+
+  {{#each this.choices}}
+    <li class="list-group-item">
+      <span class="option-price">${{price this.price}}</span>
+      {{#eq this.type 'or'}}
+      <input
+        {{#in ../../selectedOptions this.name}}checked{{/in}}
+        type="checkbox" id="item-option-{{this.name}}"
+        class="form-control"
+        name="{{this.name}}"
+      >
+      {{else}}
+      <input
+        {{#in ../../selectedOptions this.name}}checked{{/in}}
+        type="radio" id="item-option-{{this.name}}"
+        class="form-control"
+        name="{{this.name}}"
+      >
+      {{/eq}}
+      <label for="item-option-{{this.name}}">{{this.name}}</label>
+    </li>
+  {{/each}}
+</ul>

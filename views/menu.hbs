@@ -122,6 +122,7 @@
       </div>
       <div class="modal-body">
         <p class="item-description"></p>
+        <div class="item-options"></div>
       </div>
       <div class="modal-footer">
         <div class="row modal-footer-actions">
@@ -184,7 +185,14 @@
 
 {{#extend "scripts"}}
 <script>
-  var partials = {order_item_summary: 'order-item-summary.hbs', item_modal_title: 'item-modal-title.hbs', order_summary: 'order-summary.hbs'};
+  var partials = {
+    order_item_summary: 'order-item-summary.hbs',
+    item_modal_title:   'item-modal-title.hbs',
+    item_options:       'item-options.hbs',
+    item_options_group: 'item-options-group.hbs',
+    order_summary:      'order-summary.hbs'
+  };
+
   for (var name in partials) {
     $.ajax({
       type: 'GET',
@@ -236,7 +244,7 @@
     {{#each items}}
     new ItemView({
       el: $('#item-{{id}}'),
-      model: new Backbone.Model( {{{json this}}} ),
+      model: new Item( {{{json this}}} ),
       itemModalView: itemModalView,
       orderModel: orderModel,
       orderModal: orderModal,

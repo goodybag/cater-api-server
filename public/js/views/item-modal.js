@@ -26,11 +26,16 @@ var ItemModal = Backbone.View.extend({
 
     var submitBtnText = inOrder ? 'Update Item' : 'Add To Order';
     this.$el.find('.btn.item-modal-submit').text(submitBtnText);
+console.log(this.model);
+    this.$el.find('.item-options').html(
+      Handlebars.partials.item_options( this.model.toJSON() )
+    );
   },
 
   provideModel: function(model) {
     this.stopListening(this.model);
     this.model = model;
+    console.log(model);
     // This is where any model event listeners would go
     this.render();
     return this;

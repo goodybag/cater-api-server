@@ -5,20 +5,20 @@
 
   {{#each this.choices}}
     <li class="list-group-item">
-      <span class="option-price">${{price this.price}}</span>
-      {{#eq this.type 'or'}}
+      <span class="option-price">${{dollars this.price}}</span>
+      {{#eq ../type 'or'}}
       <input
-        {{#in ../../selectedOptions this.name}}checked{{/in}}
-        type="checkbox" id="item-option-{{this.name}}"
+        {{#if this.selected}}checked{{/if}}
+        type="radio" id="item-option-{{this.name}}"
         class="form-control"
-        name="{{this.name}}"
+        name="{{../../name}}"
       >
       {{else}}
       <input
-        {{#in ../../selectedOptions this.name}}checked{{/in}}
-        type="radio" id="item-option-{{this.name}}"
+        {{#if this.selected}}checked{{/if}}
+        type="checkbox" id="item-option-{{this.name}}"
         class="form-control"
-        name="{{this.name}}"
+        name="{{../../name}}"
       >
       {{/eq}}
       <label for="item-option-{{this.name}}">{{this.name}}</label>

@@ -9,7 +9,7 @@ module.exports = function(grunt) {
         src: '<%= files %>',
         options: {
           errorsOnly: false, // show only maintainability errors
-          cyclomatic: 3,
+          cyclomatic: 10,
           halstead: 8,
           maintainability: 100
         }

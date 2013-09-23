@@ -27,7 +27,8 @@ module.exports = Model.extend({
       var categories = utils.map(self.categories, function(cat) { return cat.toJSON().id; });
       require('./item').find(
         {where: {'category_id': {$in: categories}},
-         order: {order: 'asc'}},
+         order: {order: 'asc'},
+         limit: null},
         function(err, results) {
           if (err) return callback(err);
           self.items = results;

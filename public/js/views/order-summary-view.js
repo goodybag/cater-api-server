@@ -8,7 +8,7 @@ var OrderSummaryView = Backbone.View.extend({
   initialize: function(options) {
     if (this.model) {
       this.listenTo(this.model, {
-        'change:sub_total': this.subTotalChange,
+        'change:sub_total': this.render,
         'change:below_min': this.belowMinChange,
         'change:submittable': this.submittableChange
       }, this);
@@ -23,8 +23,22 @@ var OrderSummaryView = Backbone.View.extend({
   },
 
   render: function(){
+    var this_ = this;
+
     this.$el.html( this.template({ order: this.model.toJSON() }) );
     this.delegateEvents();
+
+    // Instantiate child views
+    this.$el.find('tr').each( function(){
+      var $el = $(this);
+      new OrderItemSummaryView({
+        model: this_.model.orderItems.get( $el.data('id') )
+      , orderParams: orderParams
+      , itemModalView: itemModalView
+      , orderModel: this_.model
+      , el: $el[0]
+      });
+    });
     return this;
   },
 

@@ -683,6 +683,7 @@ a.list-group-item .list-group-item-heading {
   font-weight: 500;
   border-bottom: none;
   margin: 4px 0;
+  color: #535145;
 }
 
 .item-options-fieldset .radio,

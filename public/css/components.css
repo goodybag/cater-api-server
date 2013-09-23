@@ -142,6 +142,30 @@
 }
 
 /**
+ * Unordered Lists
+ */
+
+.comma-separated {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0;
+}
+
+.comma-separated > li {
+  display: inline;
+  font-size: 13px;
+}
+
+.comma-separated > li:before {
+  content: ", ";
+}
+
+.comma-separated > li:first-child:before {
+  content: "";
+}
+
+/**
  * Navbar
  */
 
@@ -396,6 +420,12 @@ a.list-group-item .list-group-item-heading {
 .order-table .item-name {
   font-weight: 700;
   line-height: 14px;
+  min-width: 66%;
+}
+
+.order-table .item-options li {
+  font-size: 12px;
+  font-weight: 300;
 }
 
 .order-summary .subtotal-row {

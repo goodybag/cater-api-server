@@ -21,6 +21,7 @@ var OrderItemSummaryView = Backbone.View.extend({
 
   render: function() {
     // this.setElement( $( '<tr>' + this.template(this.model.toJSON()) + '</tr>') );
+    console.log(this.model.attributes)
     this.$el.html(this.template(this.model.toJSON()));
     return this;
   },

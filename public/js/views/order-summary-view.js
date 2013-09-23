@@ -22,6 +22,12 @@ var OrderSummaryView = Backbone.View.extend({
     this.$tbody = this.$el.find('.order-table tbody');
   },
 
+  render: function(){
+    this.$el.html( this.template({ order: this.model.toJSON() }) );
+    this.delegateEvents();
+    return this;
+  },
+
   addItem: function(model, collection, options) {
     this.toggleWithItems();
 

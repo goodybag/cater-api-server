@@ -20,7 +20,7 @@ module.exports.get = function(req, res, next) {
   });
 }
 
-var sanitizeOptions(oldOpts, newOpts) {
+function sanitizeOptions(oldOpts, newOpts) {
   // if new is null or undefined just return that
   if (newOpts == null) return newOpts;
 

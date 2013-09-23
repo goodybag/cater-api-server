@@ -2,11 +2,9 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
 
-    files: ['./**/*.js'],
-
     complexity: {
       generic: {
-        src: '<%= files %>',
+        src: ['./**/*.js'],
         options: {
           errorsOnly: false, // show only maintainability errors
           cyclomatic: 10,

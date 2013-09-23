@@ -4,6 +4,8 @@ var utils = require('../../utils');
 var config = require('../../config');
 var states = require('../../public/states');
 var models = require('../../models');
+var logger = require('../../logger');
+
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
@@ -85,6 +87,7 @@ module.exports.listStatus = function(req, res) {
 }
 
 module.exports.changeStatus = function(req, res) {
+  var TAGS = ['order-change-status'];
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
 
@@ -112,6 +115,8 @@ module.exports.changeStatus = function(req, res) {
         });
 
         if (order.attributes.restaurant.sms_phone) {
+          logger.routes.debug(TAGS, "sending sms for order: " + order.attributes.id);
+
           var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
           + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY HH:mm a') + '.'
           + '\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
@@ -123,12 +128,15 @@ module.exports.changeStatus = function(req, res) {
         }
 
         if (order.attributes.restaurant.voice_phone) {
+          logger.routes.debug(TAGS, "making call for order: " + order.attributes.id);
+
           twilio.makeCall({
             to: order.attributes.restaurant.voice_phone,
             from: config.phone.orders,
             url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
+            ifMachine: 'Continue',
             method: 'GET'
-          }, function(err, result) { /* TODO: error handling */ })
+          }, function(err, result) { /* TODO: error handling */ });
         }
       }
 

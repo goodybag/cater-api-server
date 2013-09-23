@@ -84,6 +84,7 @@ var OrderView = FormView.extend({
       if (err) {
         this.$el.find('.order-address-form').removeClass('hide');
         this.$el.find('.order-address-block').addClass('hide');
+        window.scrollTo(0);
         return;
       }
     }

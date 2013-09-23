@@ -35,6 +35,35 @@ var Item = Backbone.Model.extend({
     }
   },
 
+  defaults: {
+    options: [
+      {
+        type: 'or'
+      , name: 'Buns'
+      , choices: [
+          { name: 'White Bun',  price: 0 }
+        , { name: 'Wheat Bun',  price: 0 }
+        , { name: 'Rye Bun',    price: 50 }
+        ]
+      }
+
+    , {
+        type: 'and'
+      , name: 'Toppings'
+      , choices: [
+          { name: 'Pickles',    price: 0 }
+        , { name: 'Lettuce',    price: 0 }
+        , { name: 'Tomato',     price: 0 }
+        , { name: 'Onion',      price: 0 }
+        , { name: 'Mayonaise',  price: 0 }
+        , { name: 'Mustard',    price: 0 }
+        , { name: 'Ketchup',    price: 0 }
+        , { name: 'Jalapenos',  price: 25 }
+        ]
+      }
+    ]
+  },
+
   validator: amanda('json'),
 
   validate: function(attrs, options) {

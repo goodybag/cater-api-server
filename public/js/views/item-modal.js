@@ -28,7 +28,10 @@ var ItemModal = Backbone.View.extend({
     this.$el.find('.btn.item-modal-submit').text(submitBtnText);
 
     this.$el.find('.item-options').html(
-      Handlebars.partials.item_options( this.model.toJSON() )
+      // If we have options, render the partial, other clear the item-options div
+      (this.model.attributes.options || 0).length
+        ? Handlebars.partials.item_options( this.model.toJSON() )
+        : ''
     );
   },
 

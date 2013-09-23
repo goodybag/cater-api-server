@@ -1,3 +1,30 @@
 {{#each options}}
-  {{>item_options_group this}}
+  <fieldset class="item-options-fieldset">
+    <legend>{{this.name}}</legend>
+    {{#each this.choices}}
+      <div class="{{#eq ../type 'or'}}radio{{else}}checkbox{{/eq}}">
+        <label>
+          {{#eq ../type 'or'}}
+          <input
+            {{#if this.selected}}checked{{/if}}
+            type="radio" id="item-option-{{this.name}}"
+            name="{{../../name}}"
+          >
+          {{else}}
+          <input
+            {{#if this.selected}}checked{{/if}}
+            type="checkbox" id="item-option-{{this.name}}"
+            name="{{../../name}}"
+          >
+          {{/eq}}
+
+          {{this.name}}
+
+          {{#if this.price}}
+          <span class="option-price">(+{{dollars this.price}})</span>
+          {{/if}}
+        </label>
+      </div>
+    {{/each}}
+  </fieldset>
 {{/each}}

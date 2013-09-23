@@ -669,3 +669,28 @@ a.list-group-item .list-group-item-heading {
   box-shadow: -1px 0 0 rgba(255, 255, 255, 0.3);
   color: rgba(50, 0, 0, 0.75);
 }
+
+/**
+ * Order Item Options Fieldset
+ */
+
+.item-options-fieldset {
+  margin-top: 30px;
+}
+
+.item-options-fieldset legend {
+  font-size: 15px;
+  font-weight: 500;
+  border-bottom: none;
+  margin: 4px 0;
+}
+
+.item-options-fieldset .radio,
+.item-options-fieldset .checkbox {
+  margin-left: 8px;
+}
+
+.item-options-fieldset label {
+  vertical-align: middle;
+  font-weight: 300;
+}

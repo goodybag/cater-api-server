@@ -21,9 +21,6 @@ module.exports.get = function(req, res, next) {
 }
 
 function sanitizeOptions(oldOpts, newOpts) {
-  // if new is null or undefined just return that
-  if (newOpts == null) return newOpts;
-
   // get the current state, and only the current state, from each option, keyed by uuid.
   var states = utils.object(utils.map(utils.flatten(utils.pluck(newOpts, 'options'), true), function(option, index, arr) {
     return [option.id, !!option.state];
@@ -32,7 +29,7 @@ function sanitizeOptions(oldOpts, newOpts) {
   // clone the old options, but with the new states
   return utils.map(oldOpts, function(set) {
     return utils.extend({}, set, {options: utils.map(set.options, function(option) {
-      return utils.extend({state: states[option.id]}, utils.pick(option, ['id', 'name', 'price']));
+      return utils.extend({state: !!states[option.id]}, utils.pick(option, ['id', 'name', 'price']));
     })});
   });
 }
@@ -42,7 +39,7 @@ module.exports.add = function(req, res, next) {
     if (!item) return res.send(404);
     var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'item_id']), {order_id: req.params.oid});
 
-    attrs.options_sets = sanitizeOptions(attrs.options_sets, req.body.options_sets);
+    attrs.options_sets = JSON.stringify(sanitizeOptions(attrs.options_sets, req.body.options_sets));
 
     var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
     orderItem.save(function(error, rows, result) {
@@ -56,9 +53,11 @@ module.exports.add = function(req, res, next) {
 module.exports.update = function(req, res, next) {
   models.OrderItem.findOne(parseInt(req.params.iid), function(err, orderItem) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (orderItem == null) return res.send(404);
 
     var updates = utils.pick(req.body, ['quantity', 'notes'])
-    if (req.body.options_sets !== undefined) updates.options_sets = sanitizeOptions(orderItem.options_sets, req.body.options_sets);
+    if (req.body.options_sets !== undefined)
+      updates.options_sets = JSON.stringify(sanitizeOptions(orderItem.attributes.options_sets, req.body.options_sets));
 
     var query = queries.orderItem.update(updates, parseInt(req.params.iid));
     var sql = db.builder.sql(query);

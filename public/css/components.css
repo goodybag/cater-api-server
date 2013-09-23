@@ -695,3 +695,11 @@ a.list-group-item .list-group-item-heading {
   vertical-align: middle;
   font-weight: 300;
 }
+
+.radio input[type="radio"],
+.radio-inline input[type="radio"],
+.checkbox input[type="checkbox"],
+.checkbox-inline input[type="checkbox"] {
+  /* Make radios/checkbox better align for our font */
+  margin-top: 4px;
+}

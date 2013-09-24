@@ -8,7 +8,7 @@ var OrderSummaryView = Backbone.View.extend({
   initialize: function(options) {
     if (this.model) {
       this.listenTo(this.model, {
-        'change:sub_total': this.render,
+        'change:sub_total': this.subTotalChange,
         'change:below_min': this.belowMinChange,
         'change:submittable': this.submittableChange
       }, this);

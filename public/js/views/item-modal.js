@@ -26,6 +26,15 @@ var ItemModal = Backbone.View.extend({
 
     var submitBtnText = inOrder ? 'Update Item' : 'Add To Order';
     this.$el.find('.btn.item-modal-submit').text(submitBtnText);
+
+    this.$el.find('.form-group-item-notes textarea').val( this.model.get('notes') );
+
+    this.$el.find('.item-options').html(
+      // If we have options, render the partial, otherwise clear the item-options div
+      (this.model.attributes.options || 0).length
+        ? Handlebars.partials.item_options( this.model.toJSON() )
+        : ''
+    );
   },
 
   provideModel: function(model) {
@@ -46,17 +55,24 @@ var ItemModal = Backbone.View.extend({
 
   submit: function(e) {
     e.preventDefault();
-    var quantity = parseInt(this.$el.find('.item-quantity').val());
-
     var orderItem = this.model instanceof OrderItem ? this.model : this.options.orderItems.findWhere({item_id: this.model.id});
 
-    if (quantity <= 0) {
+    var data = {
+      quantity: parseInt( this.$el.find('.item-quantity').val() ),
+      notes:    this.$el.find('.form-group-item-notes textarea').val()
+    };
+
+    if (data.quantity <= 0) {
       if (orderItem) orderItem.destroy();
     } else {
       if (orderItem)
-        orderItem.save({quantity: quantity}, {wait: true});
-      else
-        this.options.orderItems.create({item_id: this.model.attributes.id, quantity: quantity}, {wait: true});
+        orderItem.save(data, {wait: true});
+      else {
+        this.options.orderItems.create(
+          _.extend( { item_id: this.model.attributes.id }, data ),
+          { wait: true }
+        );
+      }
     }
 
     this.hide();

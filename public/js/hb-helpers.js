@@ -254,6 +254,10 @@ var helpers = {
     var ref = [[0, 0, 0], [23, 59, 59]];
     var ints = utils.map(times, function(time) { return utils.map(time.split(':'), function(part) { return parseInt(part); }); });
     return options[utils.isEqual(ref, ints) ? 'fn' : 'inverse'](this);
+  },
+
+  log: function( val ){
+    console.log( val );
   }
 }
 

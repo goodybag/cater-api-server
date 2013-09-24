@@ -22,6 +22,26 @@ var OrderSummaryView = Backbone.View.extend({
     this.$tbody = this.$el.find('.order-table tbody');
   },
 
+  render: function(){
+    var this_ = this;
+
+    this.$el.html( this.template({ order: this.model.toJSON() }) );
+    this.delegateEvents();
+
+    // Instantiate child views
+    this.$el.find('tr').each( function(){
+      var $el = $(this);
+      new OrderItemSummaryView({
+        model: this_.model.orderItems.get( $el.data('id') )
+      , orderParams: orderParams
+      , itemModalView: itemModalView
+      , orderModel: this_.model
+      , el: $el[0]
+      });
+    });
+    return this;
+  },
+
   addItem: function(model, collection, options) {
     this.toggleWithItems();
 

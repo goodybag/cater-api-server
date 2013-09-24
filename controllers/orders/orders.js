@@ -4,6 +4,8 @@ var utils = require('../../utils');
 var config = require('../../config');
 var states = require('../../public/states');
 var models = require('../../models');
+var logger = require('../../logger');
+
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
@@ -85,17 +87,21 @@ module.exports.listStatus = function(req, res) {
 }
 
 module.exports.changeStatus = function(req, res) {
+  var TAGS = ['order-change-status'];
+  logger.routes.info(TAGS, 'attempting to change order status for order ' + req.params.oid+' to: '+ req.body.status + ' with review_token: ' + req.body.review_token);
+
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
 
+
   models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (err) return logger.db.error(TAGS, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
     if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
       return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
 
     var review = utils.contains(['accepted', 'denied'], req.body.status);
-    if (review && (req.body.review_token !== order.attributes.review_token || order.attributes.token_used == null))
+    if (review && (req.body.review_token !== order.attributes.review_token || order.attributes.token_used != null))
       return res.send(401, 'bad review token');
 
     if (req.body.status === 'submitted' && !order.isComplete())
@@ -108,10 +114,12 @@ module.exports.changeStatus = function(req, res) {
       if (status.attributes.status === 'submitted') {
         res.render('order-submitted-email', {order: order.toJSON({review: true}), config: config, layout: false}, function(err, html) {
           // TODO: error handling
-          utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order.', html);
+          utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order (#' + order.attributes.id+ ')', html);
         });
 
         if (order.attributes.restaurant.sms_phone) {
+          logger.routes.info(TAGS, "sending sms for order: " + order.attributes.id);
+
           var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
           + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY HH:mm a') + '.'
           + '\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
@@ -123,19 +131,24 @@ module.exports.changeStatus = function(req, res) {
         }
 
         if (order.attributes.restaurant.voice_phone) {
+          logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
+
           twilio.makeCall({
             to: order.attributes.restaurant.voice_phone,
             from: config.phone.orders,
             url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
+            ifMachine: 'Continue',
             method: 'GET'
-          }, function(err, result) { /* TODO: error handling */ })
+          }, function(err, result) { /* TODO: error handling */ });
         }
       }
 
       if (utils.contains(['submitted', 'accepted', 'denied', 'delivered'], status.attributes.status)) {
         res.render('order-status-change-email', {layout: false, status: status.toJSON(), config: config, order: order.toJSON()}, function(err, html) {
           //TODO: error handling
-          utils.sendMail(req.session.user.email, 'orders@goodybag.com', 'Your Goodybag order has been ' + status.attributes.status + '.', html);
+          utils.sendMail(req.session.user.email, 'orders@goodybag.com', 'Your Goodybag order (#'+ order.attributes.id+ ') has been ' + status.attributes.status , html, function(err, result) {
+            if(err) logger.routes.error(TAGS, 'Error sending email', err);
+          });
         });
       }
       res.send(201, status.toJSON());

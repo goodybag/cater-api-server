@@ -9,8 +9,8 @@ var OrderView = FormView.extend({
       'click .edit-address-btn': 'editAddress',
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
       'click .btn-submit': 'submit',
-      'click .btn-reject': _.bind(this.changeStatus, this, 'denied', this.options.token),
-      'click .btn-accept': _.bind(this.changeStatus, this, 'accepted', this.options.token)
+      'click .btn-reject': _.bind(this.changeStatus, this, 'denied', this.options.review_token),
+      'click .btn-accept': _.bind(this.changeStatus, this, 'accepted', this.options.review_token)
     }
   },
 
@@ -84,6 +84,7 @@ var OrderView = FormView.extend({
       if (err) {
         this.$el.find('.order-address-form').removeClass('hide');
         this.$el.find('.order-address-block').addClass('hide');
+        window.scrollTo(0);
         return;
       }
     }
@@ -93,7 +94,7 @@ var OrderView = FormView.extend({
       url: this.model.url() + '/status-history',
       type: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({status: status, review_token: this.options.token}),
+      data: JSON.stringify({status: status, review_token: this.options.review_token}),
       error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
       success: function(data, textStatus, jqXHR) { window.location.href = url }
     });

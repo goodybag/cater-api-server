@@ -1,6 +1,6 @@
 (function(exports){
   var editItemOptionsTmpl = Handlebars.partials.edit_item_options;
-console.log(editItemOptionsTmpl)
+
   var EditItemView = exports.EditItemView = FormView.extend({
     tagName: 'tr',
 

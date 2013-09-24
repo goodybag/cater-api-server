@@ -36,6 +36,11 @@
   height: 36px;
 }
 
+.form-group > label {
+  font-size: 12px;
+  color: #535145;
+}
+
 .form-group[data-icon]:before {
   position: relative;
   float: right;

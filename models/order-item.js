@@ -31,13 +31,6 @@ module.exports = Model.extend({
   toJSON: function() {
     var obj = Model.prototype.toJSON.apply(this, arguments);
     obj.sub_total = this.attributes.price * this.attributes.quantity;
-    // Tmp hack to get defaults on there so I can style chit
-    obj.selectedOptions = [
-      { name: 'Rye Bun',    price: 50 },
-      { name: 'Lettuce',    price: 0 },
-      { name: 'Tomato',     price: 0 },
-      { name: 'Onion',      price: 0 }
-    ];
     return obj;
   }
 }, {table: 'order_items'});

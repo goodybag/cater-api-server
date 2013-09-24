@@ -30,7 +30,7 @@ var ItemModal = Backbone.View.extend({
     this.$el.find('.form-group-item-notes textarea').val( this.model.get('notes') );
 
     this.$el.find('.item-options').html(
-      // If we have options, render the partial, other clear the item-options div
+      // If we have options, render the partial, otherwise clear the item-options div
       (this.model.attributes.options || 0).length
         ? Handlebars.partials.item_options( this.model.toJSON() )
         : ''

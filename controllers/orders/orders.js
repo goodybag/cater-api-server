@@ -126,7 +126,6 @@ module.exports.changeStatus = function(req, res) {
 
           // shorten URL
           bitly.shorten(url, function(err, response) {
-            console.log(arguments);
             if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);
             url = ((response||0).data||0).url || url;
             // send sms

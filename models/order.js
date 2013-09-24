@@ -279,10 +279,9 @@ module.exports = Model.extend({
 
     query.columns.push({"table": "order_subtotals", "name": "sub_total"});
 
-    query.joins.totals = {
+    query.joins.order_subtotals = {
       type: 'left'
     , on: {'order_id': '$orders.id$'}
-    , target: 'order_subtotals'
     };
 
     query.columns.push('restaurants.name');

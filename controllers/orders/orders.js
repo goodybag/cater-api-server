@@ -143,7 +143,7 @@ module.exports.changeStatus = function(req, res) {
       if (utils.contains(['submitted', 'accepted', 'denied', 'delivered'], status.attributes.status)) {
         res.render('order-status-change-email', {layout: false, status: status.toJSON(), config: config, order: order.toJSON()}, function(err, html) {
           //TODO: error handling
-          utils.sendMail(req.session.user.email, 'orders@goodybag.com', 'Your Goodybag order has been ' + status.attributes.status + '.', html);
+          utils.sendMail(req.session.user.email, 'orders@goodybag.com', 'Your Goodybag order (#'+ order.attributes.id+ ') has been ' + status.attributes.status , html);
         });
       }
       res.send(201, status.toJSON());

@@ -149,9 +149,10 @@ module.exports = Model.extend({
     query.columns.push('(orders.datetime::text) as datetime');
     query.columns.push('latest.status');
 
-    query.with = {
-      dt: {
-        type: 'select'
+    query.with = [
+      {
+        name: 'dt'
+      , type: 'select'
       , columns: [
           'restaurant_id'
         , {
@@ -166,6 +167,7 @@ module.exports = Model.extend({
             }
           }
         ]
+        // TODO: convert to with
       , table: {
           type: 'select'
         , table: 'restaurant_delivery_times'
@@ -189,7 +191,59 @@ module.exports = Model.extend({
         }
       , groupBy: 'restaurant_id'
       }
-    };
+    ];
+
+    var itemSubtotals = [
+      {
+        "name": "sets"
+      , "type": "select"
+      , "table": "order_items"
+      , "columns": [
+          {"name": "id", "as": "order_item_id"}
+        , "json_array_elements(options_sets) AS set"
+        ]
+      }
+    , {
+        "name": "options"
+      , "type": "select"
+      , "table": "sets"
+      , "columns": [
+          "order_item_id"
+        , "json_array_elements(set->'options') AS option"
+        ]
+      }
+    , {
+        "name": "subtotals"
+      , "type": "select"
+      , "table": "options"
+      , "columns": [
+          "order_item_id"
+        , {"table": "order_items", "name": "order_id"}
+        , "(quantity * (price + sum((option->>'price')::int))) as sub_total"
+        ]
+      , "where": {
+          "$custom": [" (option->>'state')::bool "]
+        }
+      , "joins": {
+          "order_items": {
+            "on": {"id": "$options.order_item_id$"}
+          }
+        }
+      , "groupBy": ["order_item_id", "order_items.quantity", "order_items.price", "order_items.order_id"]
+      }
+    , {
+        "name": "order_subtotals"
+      , "type": "select"
+      , "table": "subtotals"
+      , "columns": [
+          "order_id"
+        , "sum(sub_total) AS sub_total"
+        ]
+      , "groupBy": "order_id"
+      }
+    ];
+
+    query.with.push.apply(query.with, itemSubtotals);
 
     query.joins = query.joins || {};
 
@@ -199,6 +253,7 @@ module.exports = Model.extend({
     , on: {
         'order_id': '$orders.id$'
       }
+    // TODO: convert to with
     , target: {
         type: 'select'
       , columns: ['order_id', 'status']
@@ -222,18 +277,12 @@ module.exports = Model.extend({
       }
     };
 
-    query.columns.push('totals.sub_total');
+    query.columns.push({"table": "order_subtotals", "name": "sub_total"});
 
     query.joins.totals = {
       type: 'left'
-    , columns: ['order_id', 'sub_total']
     , on: {'order_id': '$orders.id$'}
-    , target: {
-        type: 'select'
-      , columns: ['order_id', 'sum(price * quantity) as sub_total']
-      , table: 'order_items'
-      , groupBy: 'order_id'
-      }
+    , target: 'order_subtotals'
     };
 
     query.columns.push('restaurants.name');

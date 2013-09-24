@@ -127,7 +127,9 @@ module.exports.changeStatus = function(req, res) {
             to: order.attributes.restaurant.sms_phone,
             from: config.phone.orders,
             body: msg
-          }, function(err, result) { /* TODO: error handling */ });
+          }, function(err, result) {
+            if (err) logger.routes.error(TAGS, 'unabled to send SMS', err);
+          });
         }
 
         if (order.attributes.restaurant.voice_phone) {
@@ -139,7 +141,9 @@ module.exports.changeStatus = function(req, res) {
             url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
             ifMachine: 'Continue',
             method: 'GET'
-          }, function(err, result) { /* TODO: error handling */ });
+          }, function(err, result) {
+            if (err) logger.routes.error(TAGS, 'unabled to place call', err);
+          });
         }
       }
 

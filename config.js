@@ -49,6 +49,11 @@ var config = {
     , token: 'f45e26c40cd7481c872c3552676b598b'
     }
 
+  , bitly: {
+      username:'goodybaginc'
+    , apiKey: 'R_174d19bb5c13f986cfa863e18a186441'
+    }
+
   , emails: {
       support: 'support@goodybag.com'
     , orders: 'orders@goodybag.com'

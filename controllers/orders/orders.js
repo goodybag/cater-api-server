@@ -88,11 +88,14 @@ module.exports.listStatus = function(req, res) {
 
 module.exports.changeStatus = function(req, res) {
   var TAGS = ['order-change-status'];
+  logger.routes.info(TAGS, 'attempting to change order status for order ' + req.params.oid+' to: '+ req.body.status + ' with review_token: ' + req.body.review_token);
+
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
 
+
   models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (err) return logger.db.error(TAGS, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
     if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
       return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
@@ -115,7 +118,7 @@ module.exports.changeStatus = function(req, res) {
         });
 
         if (order.attributes.restaurant.sms_phone) {
-          logger.routes.debug(TAGS, "sending sms for order: " + order.attributes.id);
+          logger.routes.info(TAGS, "sending sms for order: " + order.attributes.id);
 
           var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
           + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY HH:mm a') + '.'
@@ -128,7 +131,7 @@ module.exports.changeStatus = function(req, res) {
         }
 
         if (order.attributes.restaurant.voice_phone) {
-          logger.routes.debug(TAGS, "making call for order: " + order.attributes.id);
+          logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
 
           twilio.makeCall({
             to: order.attributes.restaurant.voice_phone,

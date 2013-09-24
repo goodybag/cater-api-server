@@ -145,6 +145,8 @@ var config = {
     , table: 'requests'
     , plan: 'month'
     }
+
+  , emailEnabled: true
   }
 };
 

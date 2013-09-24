@@ -96,9 +96,6 @@
 
   <div class="col-md-4">
     <div class="panel order-summary" data-spy="affix" data-offset-top="118">
-      <div class="panel-heading">
-        <h2 class="panel-title">Your Order</h2>
-      </div>
       {{> order_summary}}
     </div>
   </div>
@@ -122,12 +119,16 @@
       </div>
       <div class="modal-body">
         <p class="item-description"></p>
+        <div class="item-options"></div>
+        <div class="form-group form-group-item-notes">
+          <label for="item-notes">Comments or Instructions</label>
+          <textarea name="notes" id="item-notes" rows="3" class="form-control"></textarea>
+        </div>
       </div>
       <div class="modal-footer">
         <div class="row modal-footer-actions">
           <div class="col-xs-6 modal-footer-left-actions">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button class="btn btn-warning btn-item-remove">Remove from Order</button>
+            <button class="btn btn-default btn-item-remove">Remove from Order</button>
           </div>
           <div class="col-xs-6 modal-footer-right-actions">
             <form class="modal-item-form form-inline">
@@ -136,6 +137,9 @@
               </div>
               <div class="form-group">
                 <input type="number" class="form-control item-quantity col-lg-1" id="item-modal-quantity" maxlength="4" min="0" />
+              </div>
+              <div class="form-group">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
               </div>
               <div class="form-group">
                 <button type="submit" class="btn btn-primary item-modal-submit">Add to order</button>
@@ -184,7 +188,13 @@
 
 {{#extend "scripts"}}
 <script>
-  var partials = {order_item_summary: 'order-item-summary.hbs', item_modal_title: 'item-modal-title.hbs', order_summary: 'order-summary.hbs'};
+  var partials = {
+    order_item_summary: 'order-item-summary.hbs',
+    item_modal_title:   'item-modal-title.hbs',
+    item_options:       'item-options.hbs',
+    order_summary:      'order-summary.hbs'
+  };
+
   for (var name in partials) {
     $.ajax({
       type: 'GET',
@@ -236,7 +246,7 @@
     {{#each items}}
     new ItemView({
       el: $('#item-{{id}}'),
-      model: new Backbone.Model( {{{json this}}} ),
+      model: new Item( {{{json this}}} ),
       itemModalView: itemModalView,
       orderModel: orderModel,
       orderModal: orderModal,
@@ -245,5 +255,7 @@
     {{/each}}
     {{/each}}
   ];
+
+  orderView.render();
 </script>
 {{/extend}}

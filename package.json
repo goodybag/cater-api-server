@@ -21,7 +21,7 @@
     "bcrypt": "0.7.x",
     "okay": "0.3.x",
     "request": "2.25.x",
-    "mongo-sql": "2.1.x",
+    "mongo-sql": "2.2.x",
     "jade": "0.34.x",
     "pg-parse-float": "0.0.x",
     "pg-transaction": "1.0.x",

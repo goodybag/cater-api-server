@@ -13,9 +13,60 @@ var fakeCategories = [
 , 'Crepes'
 ];
 
+var fakeOptions = [
+  {
+    "name": "Toppings",
+    "type": "checkbox",
+    "options" [
+      { "name": "Pepperoni",  "price": 150, "default_state": false }
+    , { "name": "Mushrooms",  "price": 100, "default_state": false }
+    , { "name": "Olives",     "price": 100, "default_state": false }
+    , { "name": "Chicken",    "price": 200, "default_state": false }
+    , { "name": "Jalapenos",  "price": 100, "default_state": false }
+    ]
+  }
+, {
+    "name": "Fixin's",
+    "type": "checkbox",
+    "options" [
+      { "name": "Lettuce",    "price": 0,   "default_state": true }
+    , { "name": "Tomato",     "price": 0,   "default_state": true }
+    , { "name": "Onion",      "price": 0,   "default_state": true }
+    , { "name": "Pickles",    "price": 0,   "default_state": true }
+    , { "name": "Ketkhup",    "price": 0,   "default_state": true }
+    , { "name": "Mustard",    "price": 0,   "default_state": true }
+    , { "name": "Mayo",       "price": 0,   "default_state": false }
+    , { "name": "Jalapenos",  "price": 50,  "default_state": false }
+    , { "name": "Mushroooms", "price": 50,  "default_state": false }
+    ]
+  }
+, {
+    "name": "Buns",
+    "type": "radio",
+    "options" [
+      { "name": "White",    "price": 0,   "default_state": false }
+      { "name": "Wheat",    "price": 0,   "default_state": true }
+      { "name": "Rye",      "price": 50,  "default_state": false }
+    ]
+  }
+];
+
 fakeCategories.random = function(){
-  return fakeCategories[
-    parseInt( Math.random() * fakeCategories.length )
+  var amount = parseInt( Math.random() * fakeCategories.length );
+  var result = [];
+
+  for ( var i = 0; i < amount; ++i ){
+    result.push( fakeCategories[
+      parseInt( Math.random() * fakeCategories.length )
+    ]);
+  }
+
+  return result;
+};
+
+fakeOptions.random = function(){
+  return fakeOptions[
+    parseInt( Math.random() * fakeOptions.length )
   ];
 };
 

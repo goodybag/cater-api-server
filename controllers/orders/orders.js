@@ -11,7 +11,7 @@ var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer;
 
-var Bitly = require('Bitly');
+var Bitly = require('bitly');
 var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 
 module.exports.auth = function(req, res, next) {

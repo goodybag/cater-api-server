@@ -5,6 +5,9 @@ var OrderModal = Backbone.View.extend({
     'click button[data-dismiss="modal"]': 'hide'
   },
 
+  // handle events from model.save on submit
+  submitHandlers: {},
+
   initialize: function() {
     this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
       format: 'mm/dd/yyyy'
@@ -20,7 +23,9 @@ var OrderModal = Backbone.View.extend({
     this.$el.find('.order-params-bar').removeClass('panel');
   },
 
-  show: function() {
+  show: function(submitHandlers) {
+    this.submitHandlers = submitHandlers || {};
+
     this.clear();
     this.showErrors();
     this.fillFields();
@@ -100,6 +105,7 @@ var OrderModal = Backbone.View.extend({
 
     if ( this.showErrors() ) return;
 
-    this.model.save( null, { success: function() { window.location.reload(); } });
+    var self = this;
+    this.model.save( null, this.submitHandlers);
   }
 });

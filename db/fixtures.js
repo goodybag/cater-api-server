@@ -15,9 +15,9 @@ var fakeCategories = [
 
 var fakeOptions = [
   {
-    "name": "Toppings",
-    "type": "checkbox",
-    "options" [
+    "name": "Toppings"
+  , "type": "checkbox"
+  , "options": [
       { "name": "Pepperoni",  "price": 150, "default_state": false }
     , { "name": "Mushrooms",  "price": 100, "default_state": false }
     , { "name": "Olives",     "price": 100, "default_state": false }
@@ -26,9 +26,9 @@ var fakeOptions = [
     ]
   }
 , {
-    "name": "Fixin's",
-    "type": "checkbox",
-    "options" [
+    "name": "Fixin's"
+  , "type": "checkbox"
+  , "options": [
       { "name": "Lettuce",    "price": 0,   "default_state": true }
     , { "name": "Tomato",     "price": 0,   "default_state": true }
     , { "name": "Onion",      "price": 0,   "default_state": true }
@@ -41,32 +41,37 @@ var fakeOptions = [
     ]
   }
 , {
-    "name": "Buns",
-    "type": "radio",
-    "options" [
+    "name": "Buns"
+  , "type": "radio"
+  , "options": [
       { "name": "White",    "price": 0,   "default_state": false }
-      { "name": "Wheat",    "price": 0,   "default_state": true }
-      { "name": "Rye",      "price": 50,  "default_state": false }
+    , { "name": "Wheat",    "price": 0,   "default_state": true }
+    , { "name": "Rye",      "price": 50,  "default_state": false }
     ]
   }
 ];
 
-fakeCategories.random = function(){
-  var amount = parseInt( Math.random() * fakeCategories.length );
+/**
+ * Get a random amount of fakeOptions
+ * @return {Array}    The fake options array
+ */
+fakeOptions.random = function( amount ){
+  amount = amount || parseInt( Math.random() * fakeOptions.length ) + 1;
+
   var result = [];
 
   for ( var i = 0; i < amount; ++i ){
-    result.push( fakeCategories[
-      parseInt( Math.random() * fakeCategories.length )
+    result.push( fakeOptions[
+      parseInt( Math.random() * fakeOptions.length )
     ]);
   }
 
   return result;
 };
 
-fakeOptions.random = function(){
-  return fakeOptions[
-    parseInt( Math.random() * fakeOptions.length )
+fakeCategories.random = function(){
+  return fakeCategories[
+    parseInt( Math.random() * fakeCategories.length )
   ];
 };
 

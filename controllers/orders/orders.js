@@ -6,16 +6,21 @@ var states = require('../../public/states');
 var models = require('../../models');
 var logger = require('../../logger');
 
-var Mailgun = require('mailgun').Mailgun;
-var MailComposer = require('mailcomposer').MailComposer
-var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var moment = require('moment');
+var twilio = require('twilio')(config.twilio.account, config.twilio.token);
+var Mailgun = require('mailgun').Mailgun;
+var MailComposer = require('mailcomposer').MailComposer;
+
+var Bitly = require('bitly');
+var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 
 module.exports.auth = function(req, res, next) {
-  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin'))
-    return next();
+  var TAGS = ['orders-auth'];
+
+  logger.db.info(TAGS, 'auth for order #'+ req.params.id);
+  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) return next();
   models.Order.findOne(req.params.id, function(err, order) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, error), res.error(errors.internal.DB_FAILURE, err);
     var reviewToken = req.query.review_token || req.body.review_token;
     if (order.attributes.user_id !== (req.session.user||0).id && order.attributes.review_token !== reviewToken)
       return res.status(404).render('404');
@@ -87,7 +92,7 @@ module.exports.listStatus = function(req, res) {
 }
 
 module.exports.changeStatus = function(req, res) {
-  var TAGS = ['order-change-status'];
+  var TAGS = ['orders-change-status'];
   logger.routes.info(TAGS, 'attempting to change order status for order ' + req.params.oid+' to: '+ req.body.status + ' with review_token: ' + req.body.review_token);
 
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
@@ -118,16 +123,25 @@ module.exports.changeStatus = function(req, res) {
         });
 
         if (order.attributes.restaurant.sms_phone) {
-          logger.routes.info(TAGS, "sending sms for order: " + order.attributes.id);
+          logger.routes.info(TAGS, "shortening url and sending sms for order: " + order.attributes.id);
+          var url = config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token;
 
-          var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
-          + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY HH:mm a') + '.'
-          + '\n' + config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token
-          twilio.sendSms({
-            to: order.attributes.restaurant.sms_phone,
-            from: config.phone.orders,
-            body: msg
-          }, function(err, result) { /* TODO: error handling */ });
+          // shorten URL
+          bitly.shorten(url, function(err, response) {
+            if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);
+            url = ((response||0).data||0).url || url;
+            // send sms
+            var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
+            + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY HH:mm a') + '.'
+            + '\n' + url;
+            twilio.sendSms({
+              to: order.attributes.restaurant.sms_phone,
+              from: config.phone.orders,
+              body: msg
+            }, function(err, result) {
+              if (err) logger.routes.error(TAGS, 'unabled to send SMS', err);
+            });
+          });
         }
 
         if (order.attributes.restaurant.voice_phone) {
@@ -139,7 +153,9 @@ module.exports.changeStatus = function(req, res) {
             url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
             ifMachine: 'Continue',
             method: 'GET'
-          }, function(err, result) { /* TODO: error handling */ });
+          }, function(err, result) {
+            if (err) logger.routes.error(TAGS, 'unabled to place call', err);
+          });
         }
       }
 

@@ -1,12 +1,16 @@
 <td class="item-name">
   {{name}}
-  {{#if selectedOptions}}
+
   <ul class="comma-separated item-options">
-    {{#each selectedOptions}}
-      <li>{{this.name}}</li>
+  {{#each options_sets}}
+    {{#each this.options}}
+      {{#if this.state}}
+        <li>{{this.name}}</li>
+      {{/if}}
     {{/each}}
+  {{/each}}
   </ul>
-  {{/if}}
+
   <a class="item-edit" href="#" data-id="{{id}}">Edit</a>
 </td>
 <td class="item-quantity">x {{quantity}}</td>

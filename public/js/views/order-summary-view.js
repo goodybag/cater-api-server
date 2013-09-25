@@ -7,16 +7,17 @@ var OrderSummaryView = Backbone.View.extend({
 
   initialize: function(options) {
     if (this.model) {
-      this.listenTo(this.model, {
-        'change:sub_total': this.subTotalChange,
-        'change:below_min': this.belowMinChange,
-        'change:submittable': this.submittableChange
-      }, this);
+      // this.listenTo(this.model, {
+      //   'change:sub_total': this.subTotalChange,
+      //   'change:below_min': this.belowMinChange,
+      //   'change:submittable': this.submittableChange
+      // }, this);
+this.model.on('change', this.render, this)
 
-      if (this.model.orderItems) this.listenTo(this.model.orderItems, {
-        'add': this.addItem,
-        'remove': this.toggleWithItems
-      }, this);
+      // if (this.model.orderItems) this.listenTo(this.model.orderItems, {
+      //   'add': this.addItem,
+      //   'remove': this.toggleWithItems
+      // }, this);
     }
 
     this.$tbody = this.$el.find('.order-table tbody');
@@ -24,7 +25,7 @@ var OrderSummaryView = Backbone.View.extend({
 
   render: function(){
     var this_ = this;
-
+console.log("render");
     this.$el.html( this.template({ order: this.model.toJSON() }) );
     this.delegateEvents();
 

@@ -61,20 +61,18 @@ fakeOptions.random = function( amount ){
   var result = [];
 
   for ( var i = 0, option; i < amount; ++i ){
-    option = utils.clone( fakeOptions[
+    option = JSON.parse( JSON.stringify( fakeOptions[
       parseInt( Math.random() * fakeOptions.length )
-    ] );
+    ]));
 
-    option.name += ' ' + (Math.random() * 1000).toString(36)
-    result.push( option );
-  }
+    option.name += ' ' + (Math.random() * 1000).toString(36);
 
-  // Apply a UUID on each option
-  result.forEach( function( r ){
-    r.options.forEach( function( o ){
+    option.options.forEach( function( o ){
       o.id = utils.uuid();
     });
-  });
+
+    result.push( option );
+  }
 
   return result;
 };

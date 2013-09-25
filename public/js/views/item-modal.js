@@ -76,8 +76,14 @@ var ItemModal = Backbone.View.extend({
     if (data.quantity <= 0) {
       if (orderItem) orderItem.destroy();
     } else {
-      if (orderItem)
+      if (orderItem){
+        // Options_sets is not triggering changed, so trigger it when other things wont
+        if ( data.quantity === orderItem.get('quantity') && data.notes === orderItem.get('notes') ){
+          orderModel.trigger('change');
+        }
+
         orderItem.save(data, {wait: true});
+      }
       else {
         this.options.orderItems.create(
           _.extend( { item_id: this.model.attributes.id }, data ),

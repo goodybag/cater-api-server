@@ -17,6 +17,7 @@ var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
 
+  logger.db.info(TAGS, 'auth for order #'+ req.params.id);
   if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) return next();
   models.Order.findOne(req.params.id, function(err, order) {
     if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, error), res.error(errors.internal.DB_FAILURE, err);

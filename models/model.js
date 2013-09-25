@@ -110,6 +110,8 @@ Model.find = function(query, callback) {
   var sql = db.builder.sql(query);
   var self = this;
 
+  console.log(sql);
+
   db.query(sql.query, sql.values, function(err, rows, result){
     if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));

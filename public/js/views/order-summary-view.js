@@ -6,19 +6,7 @@ var OrderSummaryView = Backbone.View.extend({
   template: Handlebars.partials.order_summary,
 
   initialize: function(options) {
-    if (this.model) {
-      // this.listenTo(this.model, {
-      //   'change:sub_total': this.subTotalChange,
-      //   'change:below_min': this.belowMinChange,
-      //   'change:submittable': this.submittableChange
-      // }, this);
-this.model.on('change', this.render, this)
-
-      // if (this.model.orderItems) this.listenTo(this.model.orderItems, {
-      //   'add': this.addItem,
-      //   'remove': this.toggleWithItems
-      // }, this);
-    }
+    this.model.on('change', this.render, this);
 
     this.$tbody = this.$el.find('.order-table tbody');
   },

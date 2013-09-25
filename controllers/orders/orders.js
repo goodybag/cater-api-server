@@ -15,10 +15,12 @@ var Bitly = require('bitly');
 var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 
 module.exports.auth = function(req, res, next) {
-  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin'))
-    return next();
+  var TAGS = ['orders-auth'];
+
+  logger.db.info(TAGS, 'auth for order #'+ req.params.id);
+  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) return next();
   models.Order.findOne(req.params.id, function(err, order) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, error), res.error(errors.internal.DB_FAILURE, err);
     var reviewToken = req.query.review_token || req.body.review_token;
     if (order.attributes.user_id !== (req.session.user||0).id && order.attributes.review_token !== reviewToken)
       return res.status(404).render('404');
@@ -90,7 +92,7 @@ module.exports.listStatus = function(req, res) {
 }
 
 module.exports.changeStatus = function(req, res) {
-  var TAGS = ['order-change-status'];
+  var TAGS = ['orders-change-status'];
   logger.routes.info(TAGS, 'attempting to change order status for order ' + req.params.oid+' to: '+ req.body.status + ' with review_token: ' + req.body.review_token);
 
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))

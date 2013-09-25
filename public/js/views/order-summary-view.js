@@ -25,7 +25,7 @@ this.model.on('change', this.render, this)
 
   render: function(){
     var this_ = this;
-console.log("render");
+
     this.$el.html( this.template({ order: this.model.toJSON() }) );
     this.delegateEvents();
 

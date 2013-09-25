@@ -4,20 +4,19 @@
     {{#each this.options}}
       <div class="{{#eq ../type 'radio'}}radio{{else}}checkbox{{/eq}}">
         <label>
-          {{{dump this}}}
           {{#eq ../type 'radio'}}
           <input
             {{#if ../state}}checked{{/if}}
             {{#if ../default_state}}checked{{/if}}
-            type="radio" id="item-option-{{../uuid}}"
-            name="{{../../name}}" value="{{../uuid}}"
+            type="radio" id="item-option-{{../id}}"
+            name="{{../../name}}" value="{{../id}}"
           >
           {{else}}
           <input
             {{#if ../state}}checked{{/if}}
             {{#if ../default_state}}checked{{/if}}
-            type="checkbox" id="item-option-{{../uuid}}"
-            name="{{../../name}}" value="{{../uuid}}"
+            type="checkbox" id="item-option-{{../id}}"
+            name="{{../../name}}" value="{{../id}}"
           >
           {{/eq}}
 

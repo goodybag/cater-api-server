@@ -56,21 +56,21 @@ var ItemModal = Backbone.View.extend({
   submit: function(e) {
     e.preventDefault();
     var this_ = this;
-    var orderItem = this.model instanceof OrderItem ? this.model : this.options.orderItems.findWhere({item_id: this.model.id});
+    var orderItem = this.model instanceof OrderItem ? this.model : this.options.orderItems.findWhere({item_id: this.model.get('id')});
 
     var data = {
-      quantity: parseInt( this.$el.find('.item-quantity').val() ),
-      notes:    this.$el.find('.form-group-item-notes textarea').val()
+      quantity:     parseInt( this.$el.find('.item-quantity').val() ),
+      notes:        this.$el.find('.form-group-item-notes textarea').val(),
+      options_sets: _.clone( this.model.get('options_sets') )
     };
 
-    _( this.model.attributes.options_sets ).each( function( set ){
-      console.log(set.name)
-      // console.log( this_.$el.find('form')[0] );
-      // console.log( this_.$el.find('form')[0][set.name + '[]'] );
-      console.log( this_.$el.find('[name="' + set.name + '"]:checked').map(function(){
-        console.log(this)
-        return this.value;
-      }) );
+    // Get checkbox/radio option states
+    _( data.options_sets ).each( function( set ){
+      _( set.options ).each( function( option ){
+        var $el = this_.$el.find( '#item-option-' + option.id );
+        delete option.default_state;
+        option.state = $el.prop('checked');
+      });
     });
 
     if (data.quantity <= 0) {

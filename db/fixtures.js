@@ -72,7 +72,7 @@ fakeOptions.random = function( amount ){
   // Apply a UUID on each option
   result.forEach( function( r ){
     r.options.forEach( function( o ){
-      o.uuid = utils.uuid();
+      o.id = utils.uuid();
     });
   });
 

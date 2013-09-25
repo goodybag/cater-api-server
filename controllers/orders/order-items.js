@@ -38,8 +38,9 @@ module.exports.add = function(req, res, next) {
   models.Item.findOne(parseInt(req.body.item_id), function(error, item) {
     if (!item) return res.send(404);
     var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'item_id']), {order_id: req.params.oid});
-
+console.log( JSON.stringify(attrs.options_sets, true, '  '))
     attrs.options_sets = JSON.stringify(sanitizeOptions(attrs.options_sets, req.body.options_sets));
+console.log( attrs.options_sets, true, '  ')
 
     var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
     orderItem.save(function(error, rows, result) {

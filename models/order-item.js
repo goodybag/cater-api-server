@@ -1,4 +1,5 @@
 var Model = require('./model');
+var utils = require('../utils');
 
 module.exports = Model.extend({
   isMutable: function(callback) {

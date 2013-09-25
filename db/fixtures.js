@@ -60,11 +60,21 @@ fakeOptions.random = function( amount ){
 
   var result = [];
 
-  for ( var i = 0; i < amount; ++i ){
-    result.push( fakeOptions[
+  for ( var i = 0, option; i < amount; ++i ){
+    option = utils.clone( fakeOptions[
       parseInt( Math.random() * fakeOptions.length )
-    ]);
+    ] );
+
+    option.name += ' ' + (Math.random() * 1000).toString(36)
+    result.push( option );
   }
+
+  // Apply a UUID on each option
+  result.forEach( function( r ){
+    r.options.forEach( function( o ){
+      o.uuid = utils.uuid();
+    });
+  });
 
   return result;
 };
@@ -166,6 +176,7 @@ var inserts = {
       , price: faker.Helpers.randomNumber(1000)
       , feeds_min: 3
       , feeds_max: 5
+      , options_sets: JSON.stringify( fakeOptions.random() )
       }
     }
 

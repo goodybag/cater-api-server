@@ -31,7 +31,7 @@ var ItemModal = Backbone.View.extend({
 
     this.$el.find('.item-options').html(
       // If we have options, render the partial, otherwise clear the item-options div
-      (this.model.attributes.options || 0).length
+      (this.model.attributes.options_sets || 0).length
         ? Handlebars.partials.item_options( this.model.toJSON() )
         : ''
     );
@@ -55,12 +55,23 @@ var ItemModal = Backbone.View.extend({
 
   submit: function(e) {
     e.preventDefault();
+    var this_ = this;
     var orderItem = this.model instanceof OrderItem ? this.model : this.options.orderItems.findWhere({item_id: this.model.id});
 
     var data = {
       quantity: parseInt( this.$el.find('.item-quantity').val() ),
       notes:    this.$el.find('.form-group-item-notes textarea').val()
     };
+
+    _( this.model.attributes.options_sets ).each( function( set ){
+      console.log(set.name)
+      // console.log( this_.$el.find('form')[0] );
+      // console.log( this_.$el.find('form')[0][set.name + '[]'] );
+      console.log( this_.$el.find('[name="' + set.name + '"]:checked').map(function(){
+        console.log(this)
+        return this.value;
+      }) );
+    });
 
     if (data.quantity <= 0) {
       if (orderItem) orderItem.destroy();

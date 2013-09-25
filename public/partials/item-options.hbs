@@ -1,20 +1,23 @@
-{{#each options}}
+{{#each options_sets}}
   <fieldset class="item-options-fieldset">
     <legend>{{this.name}}</legend>
-    {{#each this.choices}}
-      <div class="{{#eq ../type 'or'}}radio{{else}}checkbox{{/eq}}">
+    {{#each this.options}}
+      <div class="{{#eq ../type 'radio'}}radio{{else}}checkbox{{/eq}}">
         <label>
-          {{#eq ../type 'or'}}
+          {{{dump this}}}
+          {{#eq ../type 'radio'}}
           <input
-            {{#if this.selected}}checked{{/if}}
-            type="radio" id="item-option-{{this.name}}"
-            name="{{../../name}}"
+            {{#if ../state}}checked{{/if}}
+            {{#if ../default_state}}checked{{/if}}
+            type="radio" id="item-option-{{../uuid}}"
+            name="{{../../name}}" value="{{../uuid}}"
           >
           {{else}}
           <input
-            {{#if this.selected}}checked{{/if}}
-            type="checkbox" id="item-option-{{this.name}}"
-            name="{{../../name}}"
+            {{#if ../state}}checked{{/if}}
+            {{#if ../default_state}}checked{{/if}}
+            type="checkbox" id="item-option-{{../uuid}}"
+            name="{{../../name}}" value="{{../uuid}}"
           >
           {{/eq}}
 

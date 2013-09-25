@@ -8,13 +8,14 @@ var OrderSummaryView = Backbone.View.extend({
   initialize: function(options) {
     this.model.on('change', this.render, this);
 
-    this.$tbody = this.$el.find('.order-table tbody');
   },
 
   render: function(){
     var this_ = this;
 
     this.$el.html( this.template({ order: this.model.toJSON() }) );
+    this.$tbody = this.$el.find('.order-table tbody');
+
     this.delegateEvents();
 
     // Instantiate child views

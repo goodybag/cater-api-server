@@ -11,8 +11,8 @@
   font-size: 13px;
 }
 
-.panel-order-details .col-right {
-  border-left: solid #CCCCC0 1px;
+.panel-order-details .col-left {
+  border-right: solid #CCCCC0 1px;
 }
 
 .panel-order-details .col-left .panel-body {

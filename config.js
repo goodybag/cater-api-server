@@ -129,7 +129,8 @@ var config = {
       , papertrail: true
       }
     , console: {
-        raw: true
+        json: true
+      , raw: true
       }
     , papertrail: {
         host: 'logs.papertrailapp.com'
@@ -147,6 +148,46 @@ var config = {
 
   , requestLogger: {
       connStr: process.env['HEROKU_POSTGRESQL_SILVER_URL']
+    , table: 'requests'
+    , plan: 'month'
+    }
+
+  , emailEnabled: true
+  }
+
+, production: {
+    env: 'production'
+
+  , http: {
+      port: process.env['PORT'] || 5000
+    }
+
+  , logging: {
+      enabled: true
+    , transports: {
+        console: true
+      , papertrail: true
+      }
+    , console: {
+        json: true
+      , raw: true
+      }
+    , papertrail: {
+        host: 'logs.papertrailapp.com'
+      , port: 64774
+      }
+    }
+
+  , rollbar: {
+      accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+    }
+
+  , baseUrl: 'http://www.goodybag.com'
+
+  , postgresConnStr: process.env['DATABASE_URL']
+
+  , requestLogger: {
+      connStr: process.env['HEROKU_POSTGRESQL_PURPLE_URL']
     , table: 'requests'
     , plan: 'month'
     }

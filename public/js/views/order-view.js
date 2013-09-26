@@ -26,7 +26,7 @@ var OrderView = FormView.extend({
     }).pickadate('picker');
 
     this.timepicker = this.$el.find(".order-form #order-time").eq(0).pickatime({
-      format: 'hh:i A'
+      format: 'h:i A'
     , interval: 15
     }).pickatime('picker');
 

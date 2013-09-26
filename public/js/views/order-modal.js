@@ -60,7 +60,7 @@ var OrderModal = Backbone.View.extend({
       if (key == 'datetime' && this.model.get(key)) {
         var date = dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY');
         this.$el.find('[name="date"]').val( dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY') );
-        this.$el.find('[name="time"]').val( dateTimeFormatter(this.model.get(key), 'hh:mm A') );
+        this.$el.find('[name="time"]').val( dateTimeFormatter(this.model.get(key), 'h:mm A') );
         continue;
       }
 

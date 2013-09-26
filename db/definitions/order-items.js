@@ -65,6 +65,10 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , options_sets: {
+      type: types.json
+    , nullable: true
+    }
   };
 
   definition.indices = {};

@@ -13,6 +13,70 @@ var fakeCategories = [
 , 'Crepes'
 ];
 
+var fakeOptions = [
+  {
+    "name": "Toppings"
+  , "type": "checkbox"
+  , "options": [
+      { "name": "Pepperoni",  "price": 150, "default_state": false }
+    , { "name": "Mushrooms",  "price": 100, "default_state": false }
+    , { "name": "Olives",     "price": 100, "default_state": false }
+    , { "name": "Chicken",    "price": 200, "default_state": false }
+    , { "name": "Jalapenos",  "price": 100, "default_state": false }
+    ]
+  }
+, {
+    "name": "Fixin's"
+  , "type": "checkbox"
+  , "options": [
+      { "name": "Lettuce",    "price": 0,   "default_state": true }
+    , { "name": "Tomato",     "price": 0,   "default_state": true }
+    , { "name": "Onion",      "price": 0,   "default_state": true }
+    , { "name": "Pickles",    "price": 0,   "default_state": true }
+    , { "name": "Ketkhup",    "price": 0,   "default_state": true }
+    , { "name": "Mustard",    "price": 0,   "default_state": true }
+    , { "name": "Mayo",       "price": 0,   "default_state": false }
+    , { "name": "Jalapenos",  "price": 50,  "default_state": false }
+    , { "name": "Mushroooms", "price": 50,  "default_state": false }
+    ]
+  }
+, {
+    "name": "Buns"
+  , "type": "radio"
+  , "options": [
+      { "name": "White",    "price": 0,   "default_state": false }
+    , { "name": "Wheat",    "price": 0,   "default_state": true }
+    , { "name": "Rye",      "price": 50,  "default_state": false }
+    ]
+  }
+];
+
+/**
+ * Get a random amount of fakeOptions
+ * @return {Array}    The fake options array
+ */
+fakeOptions.random = function( amount ){
+  amount = amount || parseInt( Math.random() * fakeOptions.length ) + 1;
+
+  var result = [];
+
+  for ( var i = 0, option; i < amount; ++i ){
+    option = JSON.parse( JSON.stringify( fakeOptions[
+      parseInt( Math.random() * fakeOptions.length )
+    ]));
+
+    option.name += ' ' + (Math.random() * 1000).toString(36);
+
+    option.options.forEach( function( o ){
+      o.id = utils.uuid();
+    });
+
+    result.push( option );
+  }
+
+  return result;
+};
+
 fakeCategories.random = function(){
   return fakeCategories[
     parseInt( Math.random() * fakeCategories.length )
@@ -110,6 +174,7 @@ var inserts = {
       , price: faker.Helpers.randomNumber(1000)
       , feeds_min: 3
       , feeds_max: 5
+      , options_sets: JSON.stringify( fakeOptions.random() )
       }
     }
 

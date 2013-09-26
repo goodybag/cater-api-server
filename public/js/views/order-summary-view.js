@@ -6,8 +6,13 @@ var OrderSummaryView = Backbone.View.extend({
   template: Handlebars.partials.order_summary,
 
   initialize: function(options) {
-    this.model.on('change', this.render, this);
+    if (this.model) this.setModel(this.model);
+  },
 
+  setModel: function(model) {
+    if(this.model) this.stopListening(this.model);
+    this.model = model;
+    this.model.on('change', this.render, this);
   },
 
   render: function(){

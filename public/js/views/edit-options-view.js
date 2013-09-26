@@ -1,22 +1,22 @@
 /**
- * Dependencies: EditOptionsGroupView
+ * Dependencies:
  */
 
 (function( exports ){
 
   var EditOptionsView = exports.EditOptionsView = Backbone.View.extend({
-    template: Handlebars.partials.edit_item_options
+    template: Handlebars.partials.edit_options_sets
 
   , tagName: 'tr'
   , className: 'edit-options'
 
   , events: {
-      'click .new-option-group': 'onNewOptionGroupClick'
+      'click .btn-new-group':     'onNewGroupClick'
+    , 'click .btn-cancel':        'onCancelClick'
+    , 'click .btn-save':          'onSaveClick'
     }
 
   , initialize: function( options ){
-      this.model.get('options_sets').on( 'add remove', this.onOptionsSetChange, this );
-
       return this;
     }
 
@@ -29,44 +29,45 @@
         })
       );
 
-      // Attach View to each option group
-      this.$el.find('.option-group').each(function(){
-        var $el = $(this);
-
-        // Find the appropriate model based on the ID from the template
-        var view = new EditOptionsGroupView({
-          model: this_.model.get('options_sets').get( $el.data('id') )
-        });
+      this.$el.find('.option-group').each( function(){
+        new EditOptionsSetView({ el: this });
       });
+
+      this.$optionGroups = this.$el.find('.option-groups');
 
       return this;
     }
 
-  , addNewOptionGroup: function( model ){
-      var model = model || new OptionsSetModel({
-        name: 'New Options Group'
+  , addNewOptionGroup: function(){
+      var view = new EditOptionsSetView({
+        model: { name: null, options: [] }
       });
 
-      var groupView = new EditOptionsGroupView({ model: model });
+      this.$optionGroups.prepend( $el );
 
-      this.model.get('options_sets').add( model, { silent: true } );
-
-      groupView.render();
-      groupView.enterEditMode();
-
-      var $el = $('<div class="col-lg-6"></div>').append( groupView.$el );
-
-      this.$el.find('.option-groups').prepend( $el );
+      $el.find('.options-set-name').focus();
 
       return this;
     }
 
-  , onNewOptionGroupClick: function( e ){
+  , onNewGroupClick: function( e ){
       this.addNewOptionGroup();
     }
 
   , onOptionsSetChange: function( model, collection, operation ){
       this.render();
+    }
+
+  , onCancelClick: function( e ){
+      this.trigger('cancel');
+    }
+
+  , onSaveClick: function( e ){
+
+    }
+
+  , onNewOptionClick: function( e ){
+
     }
   });
 })( window );

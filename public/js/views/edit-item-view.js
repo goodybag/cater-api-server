@@ -73,6 +73,9 @@
       // Create new edit options view, append after this element
       this.editOptions = new EditOptionsView({ model: this.model });
       this.editOptions.render();
+
+      this.editOptions.on( 'cancel', this.toggleEditOptions, this );
+
       this.$el.after( this.editOptions.$el );
 
       this.$el.find('.item-edit-options').text('Close Options');

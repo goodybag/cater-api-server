@@ -27,7 +27,8 @@ module.exports = Model.extend({
       var categories = utils.map(self.categories, function(cat) { return cat.toJSON().id; });
       require('./item').find(
         {where: {'category_id': {$in: categories}},
-         order: {order: 'asc'}},
+         order: {order: 'asc'},
+         limit: null},
         function(err, results) {
           if (err) return callback(err);
           self.items = results;
@@ -139,7 +140,7 @@ module.exports = Model.extend({
       }
     };
 
-    query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id)) AS delivery_zips");
+    query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
     query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");

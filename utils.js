@@ -7,6 +7,7 @@ var
 , async = require('async')
 , MailComposer = require('mailcomposer').MailComposer
 , Mailgun = require('mailgun').Mailgun
+, uuid = require('node-uuid')
 
   // Module Dependencies
 , config = require('./config')
@@ -15,6 +16,8 @@ var
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
+
+utils.uuid = uuid;
 
 utils.get = function(url, options, callback){
   if (typeof options === "function"){

@@ -12,14 +12,6 @@ ItemView = Backbone.View.extend({
       this.options.orderModal.show({
         success: function(model, response, options) {
           self.options.orderModal.hide();
-
-          var order = new Order(model.attributes);
-
-          // there is a fulfillable order model now, so set it
-          self.options.orderModel = order;
-          orderView.setModel(order);
-
-          itemModalView.options.orderItems = order.orderItems;
           self.showModal();
         }
       , error: function(){

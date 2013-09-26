@@ -1,3 +1,4 @@
+var uuid = require('node-uuid');
 var db = require('../../db');
 var errors = require('../../errors');
 var utils = require('../../utils');
@@ -56,7 +57,21 @@ module.exports.listItems = function(req, res) {
 }
 
 module.exports.addItem = function(req, res) {
-  var query = queries.item.create(req.body, req.params.rid, req.params.cid);
+  // insert uuids for every options set and option
+  // will not override id field if already present
+  var ops = JSON.stringify(utils.map(req.body.options_sets, utils.compose(function(set) {
+    // ids for options
+    return utils.extend(set, {options: utils.map(set.options, function(option) {
+      return utils.extend({id: uuid.v4()}, option);
+    })});
+  }, function(set) {
+    // ids for options sets
+    return utils.extend({id: uuid.v4()}, set);
+  })));
+
+  var body = req.body.options_sets != null ? utils.extend(req.body, {options_sets: ops}) : req.body;
+
+  var query = queries.item.create(body, req.params.rid, req.params.cid);
   var sql = db.builder.sql(query);
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.UNKNOWN, err);

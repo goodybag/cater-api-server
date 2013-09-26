@@ -94,7 +94,10 @@ var Order = Backbone.Model.extend({
 
     //TODO: maybe get a new collection on id change?
     this.listenTo(this.orderItems, 'change:sub_total add remove', function() {
-      this.set('sub_total', _.reduce(this.orderItems.pluck('sub_total'), function(a, b) { return a + b; }, 0));
+      this.set('sub_total', _.reduce(
+        this.orderItems.pluck('sub_total'),
+        function(a, b) { return a + b; }, 0)
+      );
     }, this);
 
     this.listenTo(this.restaurant, 'change:is_bad_zip change:is_bad_delivery_time change:is_bad_lead_time change:is_bad_guests', function(model, value, options) {

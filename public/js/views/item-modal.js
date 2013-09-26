@@ -31,7 +31,7 @@ var ItemModal = Backbone.View.extend({
 
     this.$el.find('.item-options').html(
       // If we have options, render the partial, otherwise clear the item-options div
-      (this.model.attributes.options || 0).length
+      (this.model.attributes.options_sets || 0).length
         ? Handlebars.partials.item_options( this.model.toJSON() )
         : ''
     );
@@ -55,18 +55,35 @@ var ItemModal = Backbone.View.extend({
 
   submit: function(e) {
     e.preventDefault();
-    var orderItem = this.model instanceof OrderItem ? this.model : this.options.orderItems.findWhere({item_id: this.model.id});
+    var this_ = this;
+    var orderItem = this.model instanceof OrderItem ? this.model : this.options.orderItems.findWhere({item_id: this.model.get('id')});
 
     var data = {
-      quantity: parseInt( this.$el.find('.item-quantity').val() ),
-      notes:    this.$el.find('.form-group-item-notes textarea').val()
+      quantity:     parseInt( this.$el.find('.item-quantity').val() ),
+      notes:        this.$el.find('.form-group-item-notes textarea').val(),
+      options_sets: _.clone( this.model.get('options_sets') )
     };
+
+    // Get checkbox/radio option states
+    _( data.options_sets ).each( function( set ){
+      _( set.options ).each( function( option ){
+        var $el = this_.$el.find( '#item-option-' + option.id );
+        delete option.default_state;
+        option.state = $el.prop('checked');
+      });
+    });
 
     if (data.quantity <= 0) {
       if (orderItem) orderItem.destroy();
     } else {
-      if (orderItem)
+      if (orderItem){
+        // Options_sets is not triggering changed, so trigger it when other things wont
+        if ( data.quantity === orderItem.get('quantity') && data.notes === orderItem.get('notes') ){
+          orderItem.trigger('change:options_sets');
+        }
+
         orderItem.save(data, {wait: true});
+      }
       else {
         this.options.orderItems.create(
           _.extend( { item_id: this.model.attributes.id }, data ),

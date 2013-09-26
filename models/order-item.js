@@ -1,4 +1,5 @@
 var Model = require('./model');
+var utils = require('../utils');
 
 module.exports = Model.extend({
   isMutable: function(callback) {
@@ -30,7 +31,9 @@ module.exports = Model.extend({
   },
   toJSON: function() {
     var obj = Model.prototype.toJSON.apply(this, arguments);
-    obj.sub_total = this.attributes.price * this.attributes.quantity;
+    var options = utils.flatten(utils.pluck(this.attributes.options_sets, 'options'), true);
+    var addOns = utils.reduce(utils.pluck(utils.where(options, {state: true}), 'price'), function(a, b) { return a + b; }, 0);
+    obj.sub_total = this.attributes.quantity * (this.attributes.price + addOns);
     return obj;
   }
 }, {table: 'order_items'});

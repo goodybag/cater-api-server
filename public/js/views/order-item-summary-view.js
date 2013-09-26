@@ -20,7 +20,6 @@ var OrderItemSummaryView = Backbone.View.extend({
   },
 
   render: function() {
-    // this.setElement( $( '<tr>' + this.template(this.model.toJSON()) + '</tr>') );
     this.$el.html(this.template(this.model.toJSON()));
     return this;
   },

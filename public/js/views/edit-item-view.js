@@ -64,17 +64,22 @@
     },
 
     toggleEditOptions: function(){
-      // If edit options was previously open, close
-      if ( this.$el.find('+ tr.edit-options').length ){
+      // Edit Options is currently open
+      if ( this.editOptions ){
+        this.editOptions.destroy();
+        delete this.editOptions;
         this.$el.find('.item-edit-options').text('Edit Options');
-        return this.$el.find('+ tr.edit-options').remove();
+        return this;
       }
 
-      // Insert the edit options row after this table row
-      var $el = $( editItemOptionsTmpl({ model: this.model.toJSON() }) );
-      this.$el.after( $el );
+      // Create new edit options view, append after this element
+      this.editOptions = new EditOptionsView({ model: this.model });
+      this.editOptions.render();
+      this.$el.after( this.editOptions.$el );
 
       this.$el.find('.item-edit-options').text('Close Options');
+
+      return this;
     },
 
     onItemRemove: function(e) {

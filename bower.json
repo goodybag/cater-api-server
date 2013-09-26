@@ -25,6 +25,7 @@
     "backbone": "1.0.x",
     "select2": "3.4.x",
     "async": "0.2.x",
-    "amanda": "0.4.x"
+    "amanda": "0.4.x",
+    "font-awesome": "~3.2.1"
   }
 }

@@ -132,7 +132,7 @@ module.exports.changeStatus = function(req, res) {
             url = ((response||0).data||0).url || url;
             // send sms
             var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
-            + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY HH:mm a') + '.'
+            + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY hh:mm a') + '.'
             + '\n' + url;
             twilio.sendSms({
               to: order.attributes.restaurant.sms_phone,

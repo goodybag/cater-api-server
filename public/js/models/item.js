@@ -45,5 +45,22 @@ var Item = Backbone.Model.extend({
 
   initialize: function(attrs, options) {
     if (options && options.category) this.category = options.category;
+    this.attributes.options_sets = new OptionsSetCollection( attrs.options_sets );
+  },
+
+  set: function( key, val ){
+    if ( typeof key === 'object' ) return Backbone.Model.prototype.set.apply( this, arguments );
+
+    if ( key === 'options_sets' && !(val instanceof OptionsSetCollection) ){
+      val = new OptionsSetCollection( attrs.options_sets )
+    }
+
+    return Backbone.Model.prototype.set.call( this, key, val );
+  },
+
+  toJSON: function(){
+    return _.extend( {}, this.attributes, {
+      options_sets: this.attributes.options_sets.toJSON()
+    });
   }
 });

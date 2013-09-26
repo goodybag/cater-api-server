@@ -26,9 +26,10 @@
 {{#extend "scripts"}}
 <script>
   var partials = {
-    'edit_item_row':      'edit-item-row.hbs',
-    'edit_category':      'edit-category.hbs',
-    'edit_item_options':  'edit-item-row-options.hbs'
+    'edit_item_row':            'edit-item-row.hbs',
+    'edit_category':            'edit-category.hbs',
+    'edit_item_options':        'edit-item-row-options.hbs',
+    'edit_item_options_group':  'edit-item-options-group.hbs'
   };
 
   for (var name in partials) {
@@ -47,14 +48,20 @@
 <script src="/js/models/restaurant.js"></script>
 <script src="/js/models/category.js"></script>
 <script src="/js/models/item.js"></script>
+<script src="/js/models/options-set.js"></script>
+<script src="/js/models/options-set-option.js"></script>
 
 <script src="/js/collections/categories.js"></script>
 <script src="/js/collections/items.js"></script>
+<script src="/js/collections/options-sets.js"></script>
+<script src="/js/collections/options-set-options.js"></script>
 
 <script src="/js/views/form-view.js"></script>
 <script src="/js/views/edit-restaurant-view.js"></script>
 <script src="/js/views/edit-category-view.js"></script>
 <script src="/js/views/edit-item-view.js"></script>
+<script src="/js/views/edit-options-view.js"></script>
+<script src="/js/views/edit-options-group-view.js"></script>
 <script>
   var restaurant = new EditRestaurantView({ el: '#main', model: new Restaurant({{{json restaurant}}}), hours: hours });
 

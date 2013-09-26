@@ -1,6 +1,4 @@
 (function(exports){
-  var editItemOptionsTmpl = Handlebars.partials.edit_item_options;
-
   var EditItemView = exports.EditItemView = FormView.extend({
     tagName: 'tr',
 
@@ -66,7 +64,7 @@
     toggleEditOptions: function(){
       // Edit Options is currently open
       if ( this.editOptions ){
-        this.editOptions.destroy();
+        this.editOptions.remove();
         delete this.editOptions;
         this.$el.find('.item-edit-options').text('Edit Options');
         return this;

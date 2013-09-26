@@ -17,7 +17,30 @@ var OrderView = FormView.extend({
   initialize: function(options) {
     this.items = options.items || [];
 
-    if (!this.model) this.model = new Order();
+    // please add any model listeners in the setModel function
+    this.setModel((this.model) ? this.model : new Order());
+
+    this.datepicker = this.$el.find(".order-form #order-date").eq(0).pickadate({
+      format: 'mm/dd/yyyy'
+    , min: new Date()
+    }).pickadate('picker');
+
+    this.timepicker = this.$el.find(".order-form #order-time").eq(0).pickatime({
+      format: 'hh:i A'
+    , interval: 15
+    }).pickatime('picker');
+
+    return this;
+    // This is causing some width issues with this select
+    // Let's go standard select until we can fix it
+    // this.$el.find('#address-state').select2();
+  },
+
+  // set the model and add listeners here
+  setModel: function(model) {
+    if (this.model) this.stopListening(this.model);
+    this.model = model;
+
     this.listenTo(this.model, {
       'change:sub_total': this.onPriceChange,
       'change:phone': this.onPhoneChange
@@ -36,20 +59,7 @@ var OrderView = FormView.extend({
       this.onChange();
       this.updateAddressBlock();
     }
-
-    this.datepicker = this.$el.find(".order-form #order-date").eq(0).pickadate({
-      format: 'mm/dd/yyyy'
-    , min: new Date()
-    }).pickadate('picker');
-
-    this.timepicker = this.$el.find(".order-form #order-time").eq(0).pickatime({
-      format: 'hh:i A'
-    , interval: 15
-    }).pickatime('picker');
-
-    // This is causing some width issues with this select
-    // Let's go standard select until we can fix it
-    // this.$el.find('#address-state').select2();
+    return this;
   },
 
   onPriceChange: function(model, value, options) {

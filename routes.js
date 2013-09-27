@@ -1,5 +1,3 @@
-var config = require('./config');
-
 var static = require('node-static');
 var controllers = require('./controllers');
 var restrict = require('./middleware/restrict');
@@ -7,15 +5,6 @@ var restrict = require('./middleware/restrict');
 var file = new static.Server('./public');
 
 module.exports.register = function(app) {
-
-  if (config.isProduction) {
-    app.all('*',function(req,res,next) {
-      if (req.headers['x-forwarded-proto']!='https')
-        res.redirect(config.baseUrl+req.url);
-      else
-        next();
-    });
-  }
 
   app.get('/', restrict(['client', 'admin']), function(req, res) { res.redirect('/restaurants'); });
 

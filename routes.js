@@ -1,5 +1,5 @@
-var controllers = require('./controllers');
 var static = require('node-static');
+var controllers = require('./controllers');
 var restrict = require('./middleware/restrict');
 
 var file = new static.Server('./public');

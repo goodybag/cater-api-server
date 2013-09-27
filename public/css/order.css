@@ -27,15 +27,12 @@
   margin-top: 0;
   margin-bottom: 4px;
   padding-right: 68px;
-  max-width: 400px;
   font-size: 24px;
   color: #432012;
 }
 
 .panel-order-details .label-status {
-  position: absolute;
-  top: 20px;
-  right: 24px;
+  vertical-align: bottom;
 }
 
 .panel-order-details .date-created {

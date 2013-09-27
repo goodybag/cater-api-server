@@ -71,6 +71,8 @@ var config = {
 , dev: {
     env: 'dev'
 
+  , isDev: true
+
   , http: {
       port: 3000
     }
@@ -118,6 +120,8 @@ var config = {
 , staging: {
     env: 'staging'
 
+  , isStaging: true
+
   , http: {
       port: process.env['PORT'] || 5000
     }
@@ -157,6 +161,8 @@ var config = {
 
 , production: {
     env: 'production'
+
+  , isProduction: true
 
   , http: {
       port: process.env['PORT'] || 5000

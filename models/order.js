@@ -215,21 +215,25 @@ module.exports = Model.extend({
     , {
         "name": "subtotals"
       , "type": "select"
-      , "table": "options"
+      , "table": "order_items"
       , "columns": [
-          "order_item_id"
+          {"table": "order_items", "name": "id", "as": "order_item_id"}
         , {"table": "order_items", "name": "order_id"}
-        , "(quantity * (price + sum((option->>'price')::int))) as sub_total"
+        , "(quantity * (price + coalesce(sum((option->>'price')::int), 0))) as sub_total"
         ]
       , "where": {
-          "$custom": [" (option->>'state')::bool "]
-        }
-      , "joins": {
-          "order_items": {
-            "on": {"id": "$options.order_item_id$"}
+          "$or": {
+            "options.option": null,
+            "$custom": [" (option->>'state')::bool "]
           }
         }
-      , "groupBy": ["order_item_id", "order_items.quantity", "order_items.price", "order_items.order_id"]
+      , "joins": {
+          "options": {
+            "type": "left",
+            "on": {"order_item_id": "$order_items.id$"}
+          }
+        }
+      , "groupBy": ["order_items.id", "order_items.quantity", "order_items.price", "order_items.order_id"]
       }
     , {
         "name": "order_subtotals"

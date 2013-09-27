@@ -71,6 +71,8 @@ var config = {
 , dev: {
     env: 'dev'
 
+  , isDev: true
+
   , http: {
       port: 3000
     }
@@ -118,6 +120,8 @@ var config = {
 , staging: {
     env: 'staging'
 
+  , isStaging: true
+
   , http: {
       port: process.env['PORT'] || 5000
     }
@@ -158,6 +162,8 @@ var config = {
 , production: {
     env: 'production'
 
+  , isProduction: true
+
   , http: {
       port: process.env['PORT'] || 5000
     }
@@ -182,7 +188,7 @@ var config = {
       accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
     }
 
-  , baseUrl: 'http://www.goodybag.com'
+  , baseUrl: 'https://www.goodybag.com'
 
   , postgresConnStr: process.env['DATABASE_URL']
 

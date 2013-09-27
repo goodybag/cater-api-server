@@ -188,7 +188,7 @@ var config = {
       accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
     }
 
-  , baseUrl: 'http://www.goodybag.com'
+  , baseUrl: 'https://www.goodybag.com'
 
   , postgresConnStr: process.env['DATABASE_URL']
 

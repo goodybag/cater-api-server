@@ -46,9 +46,7 @@
               <h2 class="restaurant-name">{{order.restaurant.name}}</h2>
             </div>
             <div class="col-sm-3">
-              {{#with order}}
-              {{> status_label}}
-              {{/with}}
+              {{> status_label order}}
             </div>
           </div>
           <div class="date-created">

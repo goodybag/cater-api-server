@@ -18,6 +18,7 @@ var middleware = {
   cors: require('./middleware/cors')
 , domains: require('./middleware/domains')
 , uuid: require('./middleware/uuid')
+, sslRedirect: require('./middleware/ssl-redirect')
 , requestLogger: require('connect-request-logger-pg')
 };
 
@@ -43,6 +44,10 @@ app.configure(function(){
   , plan: config.requestLogger.plan
   , customFields: {uuid: 'uuid'}
   }));
+
+  if (config.isProduction) {
+    app.use(middleware.sslRedirect);
+  }
 
   app.use(app.router);
 

@@ -26,6 +26,6 @@
     "select2": "3.4.x",
     "async": "0.2.x",
     "amanda": "0.4.x",
-    "font-awesome": "~3.2.1"
+    "font-awesome": "3.2.x"
   }
 }

@@ -56,7 +56,7 @@ var ItemModal = Backbone.View.extend({
   submit: function(e) {
     e.preventDefault();
     var this_ = this;
-    var orderItem = this.model instanceof OrderItem ? this.model : this.options.orderItems.findWhere({item_id: this.model.get('id')});
+    var orderItem = this.model instanceof OrderItem ? this.model : null;
 
     var data = {
       quantity:     parseInt( this.$el.find('.item-quantity').val() ),

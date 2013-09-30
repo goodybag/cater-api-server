@@ -140,5 +140,6 @@ var EditRestaurantView = FormView.extend({
   removeLeadTime: function(e) {
     e.preventDefault();
     $(e.target).closest('.lead-time').remove();
+    this.onChange(e);
   }
 });

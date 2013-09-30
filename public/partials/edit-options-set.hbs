@@ -1,0 +1,35 @@
+<div class="col-lg-4">
+  <div class="option-group" data-id="{{this.id}}">
+    <div class="option-group-actions">
+      <div class="btn-delete-option btn btn-danger btn-block btn-lg">Delete Option Group</div>
+    </div>
+    <input
+      class="options-set-name option-group-heading"
+      value="{{this.name}}"
+      placeholder="Enter Option Set Name">
+
+    <div class="option-group-body">
+      <table class="table table-bordered item-options-table">
+        <thead>
+          <tr>
+            <td colspan="3" class="add-wrapper">
+              <button class="btn btn-default btn-new-option btn-block">
+                <i class="icon-plus"></i>
+                Add New Option
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <th colspan="2">Price</th>
+          </tr>
+        </thead>
+        <tbody class="options-set-options">
+        {{#each this.options}}
+          {{>edit_options_set_option}}
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

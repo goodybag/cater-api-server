@@ -27,12 +27,12 @@
     </div>
   </div>
   <div class="row checkout-row">
-    <div class="col-lg-6">
+    <div class="col-xs-6 col-minimum-order">
       {{#if order.restaurant.minimum_order}}
-      <em class="minimum-order{{#unless order.below_min}} hide{{/unless}}">Minimum order: {{dollars order.restaurant.minimum_order}}</em>
+      <em><strong class="minimum-order{{#unless order.below_min}} hide{{/unless}}">Minimum order: {{dollars order.restaurant.minimum_order}}</strong></em>
       {{/if}}
     </div>
-    <div class="col-lg-6">
+    <div class="col-xs-6">
       <button class="btn btn-primary btn-checkout pull-right"{{#unless order.submittable}} disabled="disabled"{{/unless}}{{#if restaurant.is_unacceptable}} disabled="disabled"{{/if}}>Checkout</button>
     </div>
   </div>

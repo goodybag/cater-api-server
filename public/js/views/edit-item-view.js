@@ -74,7 +74,7 @@
       this.editOptions = new EditOptionsView({ model: this.model });
       this.editOptions.render();
 
-      this.editOptions.on( 'cancel', this.toggleEditOptions, this );
+      this.editOptions.on( 'close', this.toggleEditOptions, this );
 
       this.$el.after( this.editOptions.$el );
 

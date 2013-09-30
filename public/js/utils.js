@@ -7,4 +7,9 @@
         return v.toString(16);
     });
   };
+
+  utils.getPrice = function( $el ) {
+    var val = $el.val().trim();
+    return val ? Math.round(parseFloat(val) * 100) : null;
+  };
 })( window );

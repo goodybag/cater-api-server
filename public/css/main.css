@@ -93,12 +93,12 @@ header.navbar {
   color: #dedede;
 }
 
-.order-form .form-control[readonly] {
+.order-form .form-control[readonly]:not([disabled]) {
   cursor: default;
   background-color: #fff;
 }
 
-#order-params-modal .form-control[readonly] {
+#order-params-modal .form-control[readonly]:not([disabled]) {
   cursor: default;
   background-color: #fff;
 }

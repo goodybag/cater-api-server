@@ -14,7 +14,7 @@ var OrderParamsView = Backbone.View.extend({
     }).pickadate('picker');
 
     this.timepicker = this.$el.find("input[name='time']").eq(0).pickatime({
-      format: 'hh:i A'
+      format: 'h:i A'
     , interval: 15
     }).pickatime('picker');
   }
@@ -30,7 +30,7 @@ var OrderParamsView = Backbone.View.extend({
 
       // time
       if(key == 'time' && model.changed[key]){
-        var time = timeFormatter(model.changed[key], 'hh:mm A');
+        var time = timeFormatter(model.changed[key], 'h:mm A');
         this.$el.find('input[name=' + key + ']').val(time);
         continue;
       }

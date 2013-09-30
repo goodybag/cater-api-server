@@ -1,7 +1,7 @@
 var AuthView = Backbone.View.extend({
   events: {
     'click .top-form-toggle': 'toggleTopForm',
-    'keyup .top-form input[type="email"]': 'mirrorEmails',
+    'blur .top-form input[type="email"]': 'mirrorEmails',
     'submit form.forgot-password-form': 'forgotPassword'
   },
 

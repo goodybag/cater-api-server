@@ -8,7 +8,7 @@ var ItemModal = Backbone.View.extend({
     var inOrder = this.model instanceof OrderItem;
 
     this.$el.find('.modal-title').html(this.model.get('name'));
-    this.$el.find('.item-description').text(this.model.get('description'));
+    this.$el.find('.item-description').text(this.model.get('description') || '');
     var quantity = inOrder ? this.model.get('quantity') : 1;
     this.$el.find('.item-quantity').val(quantity);
 

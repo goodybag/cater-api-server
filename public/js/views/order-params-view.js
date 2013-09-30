@@ -1,6 +1,7 @@
 var OrderParamsView = Backbone.View.extend({
   events: {
     'submit form': 'submit'
+  , 'click .form-group': 'focusInputs'
   }
 
 , initialize: function() {
@@ -17,6 +18,12 @@ var OrderParamsView = Backbone.View.extend({
       format: 'h:i A'
     , interval: 15
     }).pickatime('picker');
+  }
+
+, focusInputs: function(e) {
+    // give focus to inputs when clicking icons, text, etc
+    e.stopPropagation();
+    $(e.target).find('input').focus();
   }
 
 , updateFields: function(model, value, options) {

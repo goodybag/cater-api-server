@@ -50,13 +50,31 @@
       return true;
     }
 
+  , remove: function(){
+      this.$el.parent('.col-lg-6').remove();
+      Backbone.View.prototype.remove.call( this );
+    }
+
   , onAddNewOptionClick: function( e ){
       this.addNewOption();
     }
 
   , onDeleteOptionClick: function( e ){
-      this.$el.parent('.col-lg-4').remove();
-      this.remove();
+      var this_ = this;
+      var $el = $(e.target);
+
+      if ( this.deleteTimeout ){
+        clearTimeout( this.deleteTimeout );
+        return this.remove();
+      }
+
+      var oldText = $el.text();
+      $el.text('Are you sure?');
+
+      this.deleteTimeout = setTimeout( function(){
+        $el.text( oldText );
+        delete this_.deleteTimeout;
+      }, 3000);
     }
 
   , onDeleteOptionSetOptionClick: function( e ){

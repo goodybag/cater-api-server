@@ -5,8 +5,7 @@ ItemView = Backbone.View.extend({
 
   showModal: function() {
     if ( this.options.orderModel.isFulfillableOrder() ) {
-      var orderItem = orderView.model.orderItems.findWhere({item_id: this.model.id});
-      this.options.itemModalView.provideModel(orderItem || this.model).show();
+      this.options.itemModalView.provideModel(this.model).show();
     } else {
       var self = this;
       this.options.orderModal.show({

@@ -40,7 +40,7 @@
 
   , addNewOptionGroup: function(){
       var view = new EditOptionsSetView({
-        model: { name: null, options: [] }
+        model: { name: null, options: [], type: 'radio' }
       });
 
       view.render();
@@ -68,6 +68,7 @@
         var $group = $(this);
         var option_set = {
           name:     $group.find('.options-set-name').val()
+        , type:     $group.find('.option-group-type input:checked').val()
         , options:  []
         };
 

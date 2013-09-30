@@ -732,9 +732,13 @@ a.list-group-item .list-group-item-heading {
 }
 
 .radio input[type="radio"],
-.radio-inline input[type="radio"],
-.checkbox input[type="checkbox"],
-.checkbox-inline input[type="checkbox"] {
+.checkbox input[type="checkbox"] {
   /* Make radios/checkbox better align for our font */
   margin-top: 4px;
+}
+
+.radio-inline input[type="radio"],
+.checkbox-inline input[type="checkbox"] {
+  /* Make radios/checkbox better align for our font */
+  margin-top: 2px;
 }

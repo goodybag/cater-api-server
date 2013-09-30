@@ -8,6 +8,24 @@
       value="{{this.name}}"
       placeholder="Enter Option Set Name">
 
+    <div class="form-group option-group-type">
+      <h4 class="option-type-title">Option Type:</h4>
+      <label class="radio-inline">
+        <input type="radio"
+          class="option-type-radio"
+          name="type-{{this.name}}-{{this.id}}"
+          value="radio"
+          {{#eq this.type 'radio'}}checked{{/eq}}> Radio
+      </label>
+      <label class="radio-inline">
+        <input type="radio"
+          name="type-{{this.name}}-{{this.id}}"
+          value="checkbox"
+          {{#eq this.type 'checkbox'}}checked{{/eq}}> Checkbox
+      </label>
+      </label>
+    </div>
+
     <div class="option-group-body">
       <table class="table table-bordered item-options-table">
         <thead>

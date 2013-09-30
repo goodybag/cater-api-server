@@ -12,10 +12,8 @@ var ItemModal = Backbone.View.extend({
     var quantity = inOrder ? this.model.get('quantity') : 1;
     this.$el.find('.item-quantity').val(quantity);
 
-    this.$el.find('.item-legend-detail-feeds').html(
-      this.model.get('feeds_min') == this.model.get('feeds_max')
-        ? this.model.get('feeds_min')
-        : ( this.model.get('feeds_min') + '-' + this.model.get('feeds_max') )
+    this.$el.find('.item-legend-detail-feeds').text(
+      Handlebars.helpers.range(this.model.get('feeds_min'), this.model.get('feeds_max'))
     );
 
     this.$el.find('.item-legend-detail-price').html(
@@ -56,7 +54,7 @@ var ItemModal = Backbone.View.extend({
   submit: function(e) {
     e.preventDefault();
     var this_ = this;
-    var orderItem = this.model instanceof OrderItem ? this.model : this.options.orderItems.findWhere({item_id: this.model.get('id')});
+    var orderItem = this.model instanceof OrderItem ? this.model : null;
 
     var data = {
       quantity:     parseInt( this.$el.find('.item-quantity').val() ),

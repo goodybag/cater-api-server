@@ -65,6 +65,21 @@ th.name-column {
   color: #695A42;
 }
 
+.option-group .option-group-type {
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 8px;
+  padding-bottom: 4px;
+  margin-bottom: 0;
+}
+
+.option-group-type .option-type-title {
+  display: inline-block;
+  margin: 0;
+  margin-right: 20px;
+  font-size: 14px;
+}
+
 .option-group-actions {
   height: 52px;
   border-bottom: solid 10px #C7C1B8;

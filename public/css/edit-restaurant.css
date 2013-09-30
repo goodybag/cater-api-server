@@ -45,7 +45,7 @@ th.name-column {
  */
 
 .option-group {
-  height: 360px;
+  height: 400px;
   margin-bottom: 30px;
   border: solid 1px #CCCCC0;
   border-radius: 2px;
@@ -114,7 +114,6 @@ th.name-column {
 .option-group tr > th:first-child,
 .option-group tr > td:first-child {
   border-left: none!important;
-  width: 64%;
 }
 
 .option-group tr > th:last-child,
@@ -122,14 +121,17 @@ th.name-column {
   border-right: none!important;
 }
 
-.option-group .options-set-option-actions {
-  width: 4px;
+.option-group .column-name {
+  width: 55%;
 }
 
-.option-group .options-set-option-actions .btn-delete-option-set-option {
-  display: none;
+.option-group .column-default,
+.option-group .column-actions {
+  vertical-align: middle;
+  text-align: center;
 }
 
-.option-group .options-set-option-actions:hover .btn-delete-option-set-option {
-  display: inline-block;
+.option-group .column-default label {
+  padding: 5px;
+  cursor: pointer;
 }

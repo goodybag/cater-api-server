@@ -42,3 +42,12 @@ input.time:not([disabled])[readonly] {
   background-color: white;
   cursor: default;
 }
+
+.lead-times-list .lead-time-actions {
+  margin-top: 21px;
+}
+
+.lead-time-actions a:hover {
+  color: #CF0F0B;
+  text-decoration: none;
+}

@@ -30,7 +30,14 @@
       );
 
       this.$el.find('.option-group').each( function(){
-        new EditOptionsSetView({ el: this });
+        var id = $(this).data('id');
+
+        new EditOptionsSetView({
+          el: this
+        , model: _( this_.model.get('options_sets') ).find( function( set ){
+            return set.id == id;
+          })
+        });
       });
 
       this.$optionGroups = this.$el.find('.option-groups');
@@ -79,9 +86,11 @@
 
         $group.find('.options-set-option').each( function( i ){
           var $option = $(this);
+
           var option_set_option = {
-            name:   $option.find('.options-set-option-name').val()
-          , price:  utils.getPrice( $option.find('.options-set-option-price') )
+            name:           $option.find('.options-set-option-name').val()
+          , price:          utils.getPrice( $option.find('.options-set-option-price') )
+          , default_state:  $option.find('.options-set-option-default:checked').length > 0
           };
 
           // If the option is not new, attach the old ID

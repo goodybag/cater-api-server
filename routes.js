@@ -208,7 +208,8 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid/status-history', restrict(['client', 'admin']), controllers.orders.listStatus); // latest is on order.  not currently used.
 
-  app.post('/orders/:oid/status-history', restrict(['client', 'admin']), controllers.orders.changeStatus);
+  // people with restaurant review token can access this route.  leave auth to controllers.orders.auth.
+  app.post('/orders/:oid/status-history', controllers.orders.changeStatus);
 
   app.all('/orders/:id/status-history', restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');

@@ -1,0 +1,14 @@
+<tr data-id="{{this.id}}" class="options-set-option">
+  <td>
+    <input type="text" class="options-set-option-name form-control" placeholder="Option Name" value="{{this.name}}">
+  </td>
+  <td>
+    <div class="input-group">
+      <span class="input-group-addon">$</span>
+      <input type="text" class="options-set-option-price form-control" placeholder="Option Price" value="{{dollars this.price}}">
+    </div>
+  </td>
+  <td class="options-set-option-actions">
+    <button class="btn-delete-option-set-option btn btn-danger">Delete</button>
+  </td>
+</tr>

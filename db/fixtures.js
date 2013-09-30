@@ -66,6 +66,7 @@ fakeOptions.random = function( amount ){
     ]));
 
     option.name += ' ' + (Math.random() * 1000).toString(36);
+    option.id = utils.uuid();
 
     option.options.forEach( function( o ){
       o.id = utils.uuid();

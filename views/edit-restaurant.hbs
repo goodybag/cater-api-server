@@ -1,5 +1,6 @@
 {{#extend "css"}}
 <link rel="stylesheet" href="/css/edit-restaurant.css">
+<link rel="stylesheet" href="/components/font-awesome/css/font-awesome.css">
 {{/extend}}
 
 <div class="container">
@@ -25,9 +26,11 @@
 {{#extend "scripts"}}
 <script>
   var partials = {
-    'edit_item_row':      'edit-item-row.hbs',
-    'edit_category':      'edit-category.hbs',
-    'edit_item_options':  'edit-item-row-options.hbs'
+    'edit_item_row':            'edit-item-row.hbs',
+    'edit_category':            'edit-category.hbs',
+    'edit_options_sets':        'edit-options-sets.hbs',
+    'edit_options_set':         'edit-options-set.hbs',
+    'edit_options_set_option':  'edit-options-set-option.hbs'
   };
 
   for (var name in partials) {
@@ -54,6 +57,8 @@
 <script src="/js/views/edit-restaurant-view.js"></script>
 <script src="/js/views/edit-category-view.js"></script>
 <script src="/js/views/edit-item-view.js"></script>
+<script src="/js/views/edit-options-view.js"></script>
+<script src="/js/views/edit-options-set-view.js"></script>
 <script>
   var restaurant = new EditRestaurantView({ el: '#main', model: new Restaurant({{{json restaurant}}}), hours: hours });
 

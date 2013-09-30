@@ -1,6 +1,4 @@
 (function(exports){
-  var editItemOptionsTmpl = Handlebars.partials.edit_item_options;
-console.log(editItemOptionsTmpl)
   var EditItemView = exports.EditItemView = FormView.extend({
     tagName: 'tr',
 
@@ -64,17 +62,25 @@ console.log(editItemOptionsTmpl)
     },
 
     toggleEditOptions: function(){
-      // If edit options was previously open, close
-      if ( this.$el.find('+ tr.edit-options').length ){
+      // Edit Options is currently open
+      if ( this.editOptions ){
+        this.editOptions.remove();
+        delete this.editOptions;
         this.$el.find('.item-edit-options').text('Edit Options');
-        return this.$el.find('+ tr.edit-options').remove();
+        return this;
       }
 
-      // Insert the edit options row after this table row
-      var $el = $( editItemOptionsTmpl({ model: this.model.toJSON() }) );
-      this.$el.after( $el );
+      // Create new edit options view, append after this element
+      this.editOptions = new EditOptionsView({ model: this.model });
+      this.editOptions.render();
+
+      this.editOptions.on( 'close', this.toggleEditOptions, this );
+
+      this.$el.after( this.editOptions.$el );
 
       this.$el.find('.item-edit-options').text('Close Options');
+
+      return this;
     },
 
     onItemRemove: function(e) {

@@ -29,7 +29,7 @@
   <div class="row checkout-row">
     <div class="col-xs-6 col-minimum-order">
       {{#if order.restaurant.minimum_order}}
-      <em><strong class="minimum-order{{#unless order.below_min}} hide{{/unless}}">Minimum order: {{dollars order.restaurant.minimum_order}}</strong></em>
+      <div class="minimum-order{{#unless order.below_min}} hide{{/unless}}">Minimum order: {{dollars order.restaurant.minimum_order}}</div>
       {{/if}}
     </div>
     <div class="col-xs-6">

@@ -70,6 +70,8 @@
 .checkout-row .col-minimum-order {
   padding-top: 9px;
   color: #DC0500;
+  font-weight: bold;
+  font-style: italic;
 }
 
 @media ( min-width: 1200px ){

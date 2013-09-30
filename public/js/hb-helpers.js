@@ -258,6 +258,10 @@ var helpers = {
 
   log: function( val ){
     console.log( val );
+  },
+
+  range: function(start, end) {
+    return start != end ? [start, '-', end].join('') : start;
   }
 }
 

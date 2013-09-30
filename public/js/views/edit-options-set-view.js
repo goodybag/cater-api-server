@@ -6,11 +6,11 @@
   , optionSetOptionTmpl:  Handlebars.partials.edit_options_set_option
 
   , events: {
-      'click .btn-new-option':                'onAddNewOptionClick'
-    , 'click .btn-delete-option':             'onDeleteOptionClick'
-    , 'click .btn-delete-option-set-option':  'onDeleteOptionSetOptionClick'
+      'click .btn-new-option':                    'onAddNewOptionClick'
+    , 'click .btn-delete-option':                 'onDeleteOptionClick'
+    , 'click .btn-delete-option-set-option':      'onDeleteOptionSetOptionClick'
     , 'change .option-group-type [type="radio"]': 'onTypeChange'
-    , 'change .options-set-option-default':   'onDefaultChange'
+    , 'change .options-set-option-default':       'onDefaultChange'
     }
 
   , render: function(){

@@ -100,6 +100,7 @@ var OrderView = FormView.extend({
     }
 
     var url = this.model.url();
+    if (this.options.review_token) url += '?review_token=' + this.options.review_token;
     $.ajax({
       url: this.model.url() + '/status-history',
       type: 'POST',

@@ -92,7 +92,11 @@ var Order = Backbone.Model.extend({
 
     if (this.get('id') == "undefined") this.unset('id');
 
-    //TODO: maybe get a new collection on id change?
+    this.on('change:id', function(model, value, options) {
+      this.orderItems.reset(model.attributes.orderItems || []);
+      this.orderItems.orderId = model.id;
+    });
+
     this.listenTo(this.orderItems, 'change:sub_total add remove', function() {
       this.set('sub_total', _.reduce(
         this.orderItems.pluck('sub_total'),

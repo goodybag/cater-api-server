@@ -32,9 +32,7 @@
 }
 
 .panel-order-details .label-status {
-  position: absolute;
-  top: 20px;
-  right: 24px;
+  vertical-align: bottom;
 }
 
 .panel-order-details .date-created {

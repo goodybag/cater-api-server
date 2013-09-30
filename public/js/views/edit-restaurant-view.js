@@ -6,16 +6,22 @@ var EditRestaurantView = FormView.extend({
     'change .restaurant-form .form-control, .restaurant-form input': 'onChange',
     'submit .restaurant-form': 'onSave',
     'click .new-category': 'newCategory',
-    'click .add-lead-time': 'addLeadTime'
+    'click .add-lead-time': 'addLeadTime',
+    'click .remove-lead-time': 'removeLeadTime'
   },
 
   initialize: function(options) {
     this.categories = [];
     this.setModel(this.model || new Restaurant());
     this.onChange();
+    this.setTooltips();
     _.each(options.hours, function(view) {
       this.listenTo(view.model, 'change', this.onChange, this);
     }, this);
+  },
+
+  setTooltips: function() {
+    this.$el.find('.remove-lead-time').tooltip();
   },
 
   remove: function() {
@@ -129,5 +135,10 @@ var EditRestaurantView = FormView.extend({
 
   addLeadTime: function(e) {
     this.$el.find('.lead-times-list').append(Handlebars.partials.lead_time({}));
+  },
+
+  removeLeadTime: function(e) {
+    e.preventDefault();
+    $(e.target).closest('.lead-time').remove();
   }
 });

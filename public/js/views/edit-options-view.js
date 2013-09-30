@@ -43,9 +43,11 @@
         model: { name: null, options: [] }
       });
 
-      this.$optionGroups.prepend( $el );
+      view.render();
 
-      $el.find('.options-set-name').focus();
+      this.$optionGroups.prepend( view.$el );
+
+      view.$el.find('.options-set-name').focus();
 
       return this;
     }

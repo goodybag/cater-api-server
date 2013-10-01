@@ -297,8 +297,6 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-  app.get('/users/new', restrict('admin'), controllers.users.new);
-
   /**
    *  Current user resource.
    */
@@ -364,6 +362,8 @@ module.exports.register = function(app) {
   /**
    *  Static pages
    */
+
+  app.get('/signup', restrict('admin'), controllers.statics.createUser);
 
   app.get('/contact-us', controllers.statics.contactUs);
 

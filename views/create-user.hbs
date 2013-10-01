@@ -1,15 +1,15 @@
 <div class="container container-small">
   <h1 class="page-title">Create a new user</h1>
   <div class="panel">
-    <form action="/users" method="post">
+    <form class="create-user-form" action="/users" method="post">
       <div class="panel-body">
         <div class="form-group">
             <label for="inputEmail">Email address</label>
-            <input type="email" class="form-control" id="inputEmail" placeholder="Enter email" name="email">
+            <input type="email" class="form-control create-user-email" id="inputEmail" placeholder="Enter email" name="email">
           </div>
           <div class="form-group">
             <label for="inputPassword">Password</label>
-            <input type="password" class="form-control" id="inputPassword" placeholder="Password" name="password">
+            <input type="password" class="form-control create-user-password" id="inputPassword" placeholder="Password" name="password">
           </div>
           <div class="form-group">
             <label for="inputFirstName">First Name</label>
@@ -38,8 +38,18 @@
               </label>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Create User</button>
+          <button type="submit" class="btn btn-primary create-user-submit">Create User</button>
         </div>
     </form>
   </div>
 </div>
+
+{{#extend "scripts"}}
+<script src="/components/amanda/releases/latest/amanda.min.js"></script>
+<script src="/js/models/create-user.js"></script>
+<script src="/js/views/form-view.js"></script>
+<script src="/js/views/create-user-view.js"></script>
+<script>
+  var createUser = new CreateUserView({ el: '#main' });
+</script>
+{{/extend}}

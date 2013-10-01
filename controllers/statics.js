@@ -14,3 +14,5 @@ module.exports.contactUs = utils.partial(staticRender, 'contact-us');
 module.exports.legal = utils.partial(staticRender, 'legal');
 
 module.exports.privacy = utils.partial(staticRender, 'privacy');
+
+module.exports.createUser = utils.partial(staticRender, 'create-user');

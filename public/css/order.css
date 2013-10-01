@@ -153,7 +153,6 @@
 }
 
 .order-line-item-table tbody > tr > td {
-  border: none;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -205,6 +204,13 @@
   display: inline-block;
   width: 100px;
   margin-left: 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.order-line-item-table .item-quantity-span {
+  display: inline-block;
+  margin-left: 37px;
   font-size: 13px;
   font-weight: 700;
 }

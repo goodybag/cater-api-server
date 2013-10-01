@@ -16,7 +16,6 @@ var modifyAttributes = function(callback, err, orders) {
       'name',
       'delivery_fee',
       'minimum_order',
-      'restaurant_email',
       'sms_phone',
       'voice_phone',
       'is_bad_zip',
@@ -28,7 +27,13 @@ var modifyAttributes = function(callback, err, orders) {
       'max_guests'
     ];
     utils.each(orders, function(order) {
-      order.attributes.restaurant = utils.extend({ id: order.attributes.restaurant_id, delivery_times: utils.object(order.attributes.delivery_times) } , utils.pick(order.attributes, restaurantFields));
+      order.attributes.restaurant = utils.extend(
+        {
+          id: order.attributes.restaurant_id,
+          email: order.attributes.restaurant_email,
+          delivery_times: utils.object(order.attributes.delivery_times)
+        },
+        utils.pick(order.attributes, restaurantFields));
       order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
       utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
 

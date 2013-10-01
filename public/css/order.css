@@ -246,6 +246,16 @@
   font-weight: 700;
 }
 
+.order-totals .minimum {
+  font-style: italic;
+  font-weight: normal;
+  color: #A7A4A0;
+}
+
+.order-totals .error {
+  color: #DC0500;
+}
+
 .panel-actions {
   margin-top: 10px;
 }

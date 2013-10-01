@@ -1,7 +1,9 @@
 <dl class="dl-horizontal order-totals">
   {{#if order.restaurant.minimum_order}}
-  <dt>Minimum:</dt>
-  <dd>{{dollars order.restaurant.minimum_order}}</dd>
+  <div class="minimum {{#unless order.submittable}} error {{/unless}}">
+    <dt>Minimum:</dt>
+    <dd>{{dollars order.restaurant.minimum_order}}</dd>
+  </div>
   {{/if}}
   <dt>Subtotal:</dt>
   <dd>{{dollars order.sub_total}}</dd>

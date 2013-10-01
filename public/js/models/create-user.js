@@ -16,6 +16,22 @@ var CreateUser = Backbone.Model.extend({
         minLength: 1,
         required: true
       },
+      first_name: {
+        type: 'string',
+        required: false
+      },
+      last_name: {
+        type: 'string',
+        required: false
+      },
+      organization: {
+        type: 'string',
+        required: false
+      },
+      group: {
+        type: 'string',
+        required: true
+      }
     }
   },
 

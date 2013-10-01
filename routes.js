@@ -297,6 +297,8 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+  app.get('/users/new', restrict('admin'), controllers.users.new);
+
   /**
    *  Current user resource.
    */

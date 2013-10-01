@@ -29,6 +29,10 @@ module.exports.get = function(req, res) {
   });
 }
 
+module.exports.new = function(req, res) {
+  res.render('user-new');
+};
+
 module.exports.create = function(req, res) {
   var flow = {
     encrypt: function(callback) {

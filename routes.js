@@ -339,6 +339,17 @@ module.exports.register = function(app) {
   });
 
   /**
+   *  User session resource.  Represents a session as a specific user.
+   */
+
+  app.post('/users/:uid/session', controllers.users.createSessionAs);
+
+  app.all('/users/:uid/session', function(req, res, next) {
+    res.set('Allow', 'POST');
+    res.send(405);
+  });
+
+  /**
    *  Password reset resource
    */
 

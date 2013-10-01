@@ -272,3 +272,75 @@
  .form-group-delivery-time {
   position: static;
  }
+
+
+
+/**
+ * http://elvery.net/demo/responsive-tables
+ */
+
+ @media only screen and (max-width: 800px) {
+
+  /* Force table to not be like tables anymore */
+  #order-summary-table-container table,
+  #order-summary-table-container thead,
+  #order-summary-table-container tbody,
+  #order-summary-table-container th,
+  #order-summary-table-container td,
+  #order-summary-table-container tr {
+    display: block;
+  }
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+  #order-summary-table-container thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  #order-summary-table-container tr { border: 1px solid #ccc; }
+
+  #order-summary-table-container td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 25%;
+    white-space: normal;
+    text-align:left;
+  }
+
+  #order-summary-table-container td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align:left;
+    font-weight: bold;
+  }
+
+  #order-summary-table-container .order-line-item-table .line-item-name {
+    width: 100%;
+  }
+
+  #order-summary-table-container .order-line-item-table .line-item-price {
+    text-align: right;
+  }
+
+  #order-summary-table-container .order-line-item-table .line-item-quantity .icon-x {
+    display:none;
+  }
+
+  #order-summary-table-container .order-line-item-table .line-item-quantity .order-item-quantity {
+    margin-left: 0px;
+  }
+
+  /*
+  Label the data
+  */
+  #order-summary-table-container td:before { content: attr(data-title); }
+}

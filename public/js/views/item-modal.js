@@ -62,6 +62,8 @@ var ItemModal = Backbone.View.extend({
       options_sets: _.clone( this.model.get('options_sets') )
     };
 
+    this.clearErrors();
+
     // Get checkbox/radio option states
     _( data.options_sets ).each( function( set ){
       _( set.options ).each( function( option ){
@@ -70,6 +72,8 @@ var ItemModal = Backbone.View.extend({
         option.state = $el.prop('checked');
       });
     });
+
+    var errors;
 
     if (data.quantity <= 0) {
       if (orderItem) orderItem.destroy();
@@ -83,14 +87,40 @@ var ItemModal = Backbone.View.extend({
         orderItem.save(data, {wait: true});
       }
       else {
-        this.options.orderItems.create(
+        orderItem = this.options.orderItems.create(
           _.extend( { item_id: this.model.attributes.id }, data ),
           { wait: true }
         );
       }
     }
 
-    this.hide();
+    if ( !orderItem.validationError ) return this.hide();
+
+    this.displayErrors( orderItem.validationError );
+  },
+
+  displayErrors: function( errors ){
+    var this_       = this;
+    var $errors     = this.$el.find('.errors');
+    var $errorTmpl  = $errors.find('.alert-generic');
+
+    _( errors ).forEach( function( error ){
+      var $error = $errorTmpl.clone().html( error.message ).removeClass('hide');
+
+      if ( error.type = 'OPTIONS_SET_REQUIRED' ){
+        $error.addClass('error-options-set-required');
+        this_.$el.find('[data-options-set-id="' + error.optionSetId + '"]').before( $error );
+      } else {
+        $errors.append( $error );
+      }
+    });
+
+    return this;
+  },
+
+  clearErrors: function(){
+    this.$el.find('.errors > .alert').addClass('hide');
+    return this;
   },
 
   onItemRemoveClick: function(e) {

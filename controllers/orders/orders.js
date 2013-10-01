@@ -117,7 +117,7 @@ module.exports.changeStatus = function(req, res) {
 
     var done = function(status) {
       if (status.attributes.status === 'submitted') {
-        res.render('order-submitted-email', {order: order.toJSON({review: true}), config: config, layout: false}, function(err, html) {
+        res.render('email-order-submitted', {order: order.toJSON({review: true}), config: config, layout: false}, function(err, html) {
           // TODO: error handling
           utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order (#' + order.attributes.id+ ')', html);
         });

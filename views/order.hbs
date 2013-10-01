@@ -198,12 +198,34 @@
   <div class="panel restaurant-review">
     <div class="h2 panel-heading">Review</div>
     <div class="panel-body">
-      <button class="btn btn-lg btn-danger btn-reject">Reject</button>
+      <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject</button>
       <button class="btn btn-lg btn-success btn-accept">Accept</button>
     </div>
   </div>
   {{/if}}
+</div>
 
+<!-- TODO: merge these two modals with a partial -->
+<div id="reject-confirm-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Confirm Reject</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to reject this order?</p>
+        <div class="row">
+          <div class="col-lg-3 col-lg-offset-6">
+            <button type="button" class="btn btn-default" data-dismiss="modal">No, don't reject</button>
+          </div>
+          <div class="col-lg-3">
+            <button type="button" class="btn btn-danger btn-reject">Yes, reject</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="cancel-confirm-modal" class="modal fade">

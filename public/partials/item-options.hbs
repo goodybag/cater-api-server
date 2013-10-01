@@ -1,5 +1,5 @@
 {{#each options_sets}}
-  <fieldset class="item-options-fieldset">
+  <fieldset class="item-options-fieldset" data-options-set-id="{{this.id}}">
     <legend>{{this.name}}</legend>
     {{#each this.options}}
       <div class="{{#eq ../type 'radio'}}radio{{else}}checkbox{{/eq}}">

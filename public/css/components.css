@@ -530,6 +530,12 @@ a.list-group-item .list-group-item-heading {
   text-align: left;
 }
 
+/* Ensure these types of errors are aligned correctly */
+.modal .error-options-set-required {
+  margin-bottom: -20px;
+  margin-top: 30px;
+}
+
 @media (max-width: 768px){
   .modal-footer-actions {
     font-size: 0;

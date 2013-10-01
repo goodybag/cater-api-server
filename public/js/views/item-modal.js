@@ -73,8 +73,6 @@ var ItemModal = Backbone.View.extend({
       });
     });
 
-    var errors;
-
     if (data.quantity <= 0) {
       if (orderItem) orderItem.destroy();
     } else {

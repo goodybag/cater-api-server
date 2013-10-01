@@ -16,7 +16,7 @@ var modifyAttributes = function(callback, err, orders) {
       'name',
       'delivery_fee',
       'minimum_order',
-      'email',
+      'restaurant_email',
       'sms_phone',
       'voice_phone',
       'is_bad_zip',
@@ -31,10 +31,12 @@ var modifyAttributes = function(callback, err, orders) {
       order.attributes.restaurant = utils.extend({ id: order.attributes.restaurant_id, delivery_times: utils.object(order.attributes.delivery_times) } , utils.pick(order.attributes, restaurantFields));
       order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
       utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
+
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
-      order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) {
-        return a || b;
-      }, false);
+      order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
+
+      order.attributes.user = utils.extend({id: order.attributes.id}, utils.pick(order.attributes, ['user_email']));
+      delete order.attributes.email;
     });
   }
   callback.call(this, err, orders);
@@ -291,7 +293,7 @@ module.exports = Model.extend({
     query.columns.push('restaurants.name');
     query.columns.push('restaurants.delivery_fee')
     query.columns.push('restaurants.minimum_order');
-    query.columns.push('restaurants.email');
+    query.columns.push({table: 'restaurants', name: 'email', as: 'restaurant_email'});
     query.columns.push('restaurants.sms_phone');
     query.columns.push('restaurants.voice_phone');
 
@@ -392,6 +394,13 @@ module.exports = Model.extend({
       , 'delivery_times.start_time': {$custom: ['"delivery_times"."start_time" <= "orders"."datetime"::time']}
       , 'delivery_times.end_time': {$custom: ['"delivery_times"."end_time" >= "orders"."datetime"::time']}
       }
+    }
+
+    query.columns.push({table: 'users', name: 'email', as: 'user_email'});
+
+    query.joins.users = {
+      type: 'inner'
+    , on: {id: '$orders.user_id$'}
     }
 
     var caseIsBadDeliveryTime = '(CASE '

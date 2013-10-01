@@ -10,6 +10,10 @@
   border: 1px solid #000;
 }
 
+.no-tbody-cell-borders tbody > tr > td {
+  border: none;
+}
+
 .full-width {
   width: 100%;
 }

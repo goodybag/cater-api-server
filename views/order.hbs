@@ -121,7 +121,7 @@
     <div class="panel-heading">Order Summary</div>
 
     <div id="order-summary-table-container">
-      <table class="table order-line-item-table">
+      <table class="table order-line-item-table{{#if order.editable}} no-tbody-cell-borders{{/if}}">
         <thead>
           <tr>
             <th class="line-item-name">Item</th>
@@ -147,11 +147,19 @@
               {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
             </td>
             <td class="line-item-quantity" data-title="quantity">
-              <span class="icon-x">x</span>
-              <input type="number" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}"{{#unless ../order.editable}} disabled="disabled"{{/unless}}>
+              {{#if ../order.editable}}
+                <span class="icon-x">x</span>
+                <input type="number" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
+              {{else}}
+                <span class="item-quantity-span order-item-field order-item-quantity" />{{this.quantity}}</span>
+              {{/if}}
             </td>
             <td class="line-item-notes" data-title="notes">
-              <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes"{{#unless ../order.editable}} disabled="disabled"{{/unless}}>{{this.notes}}</textarea>
+              {{#if ../order.editable}}
+                <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
+              {{else}}
+                <span name="notes" class="item-notes-span order-item-field order-item-notes">{{this.notes}}</span>
+              {{/if}}
             </td>
             <td class="line-item-price" data-title="price">{{dollars this.sub_total}}</td>
           </tr>

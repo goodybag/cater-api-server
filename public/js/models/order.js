@@ -138,7 +138,7 @@ var Order = Backbone.Model.extend({
   ],
 
   zipChanged: function(model, value, options) {
-    model.restaurant.set('is_bad_zip', _.contains(model.restaurant.get('delivery_zips'), value));
+    model.restaurant.set('is_bad_zip', !_.contains(model.restaurant.get('delivery_zips'), value));
   },
 
   checkLeadTimes: function() {

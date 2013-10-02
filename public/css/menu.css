@@ -45,20 +45,6 @@
   line-height: 15px;
 }
 
-.list-delivery-zips {
-  width: 400px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.list-delivery-zips > .delivery-zip {
-  display: inline-block;
-  width: 62px;
-  margin: 0;
-  padding: 0;
-}
-
 .form-group-item-notes {
   margin-top: 20px;
 }

@@ -8,8 +8,18 @@
     <h1 class="col-lg-12 page-title">Review Your Order</h1>
   </div>
 
-  <div class="alert alert-danger alert-bad-zip{{#unless order.restaurant.is_bad_zip}} hide{{/unless}}">
-    This order cannot be delivered to that zip code.
+  <div class="alert alert-danger row alert-bad-zip{{#unless order.restaurant.is_bad_zip}} hide{{/unless}}">
+    <div class="col-lg-8 alert-left">
+      <h3 class="alert-header">Invalid Delivery Zip :(</h3>
+      <p>This order can only be delivered to the zip codes listed</p>
+    </div>
+    <div class="col-lg-4 alert-right">
+      <ul class="list-delivery-zips">
+      {{#each order.restaurant.delivery_zips}}
+        <li class="delivery-zip">{{this}}</li>
+      {{/each}}
+      </ul>
+    </div>
   </div>
 
   <div class="alert alert-danger alert-bad-delivery-time row{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}">

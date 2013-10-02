@@ -14,8 +14,21 @@
     </div>
   </td>
   <td class="column-actions">
+    <button class="btn-expand-option-set-option btn btn-info btn-sm collapsed">
+      <i class="icon-collapse"></i>
+    </button>
     <button class="btn-delete-option-set-option btn btn-danger btn-sm">
       <i class="icon-remove"></i>
     </button>
+  </td>
+</tr>
+<tr data-id="{{this.id}}" class="option-expanded collapsed">
+  <td colspan="4">
+    <div class="option-expanded-inner">
+      <div class="form-group">
+        <label>Option Description</label>
+        <textarea name="description" class="form-control" placeholder="Option description">{{this.description}}</textarea>
+      </div>
+    </div>
   </td>
 </tr>

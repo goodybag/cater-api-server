@@ -1,7 +1,7 @@
 /**
- * Create User Model
+ * User Model
  */
-var CreateUser = Backbone.Model.extend({
+var User = Backbone.Model.extend({
   schema: {
     type: 'object',
     properties: {
@@ -28,8 +28,8 @@ var CreateUser = Backbone.Model.extend({
         type: 'string',
         required: false
       },
-      group: {
-        type: 'string',
+      groups: {
+        type: 'string',  // Comma delimited string of groups
         required: true
       }
     }

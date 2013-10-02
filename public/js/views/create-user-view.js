@@ -22,7 +22,7 @@ var CreateUserView = FormView.extend({
   },
 
   initialize: function(options) {
-    this.model = this.model || new CreateUser();
+    this.model = this.model || new User();
 
     this.$submit = this.$el.find(this.submitSelector);
 
@@ -41,6 +41,6 @@ var CreateUserView = FormView.extend({
   , first_name: '.create-user-form .create-user-first-name'
   , last_name: '.create-user-form .create-user-last-name'
   , organization: '.create-user-form .create-user-organization'
-  , group: '.create-user-form .create-user-group:checked'
+  , groups: '.create-user-form .create-user-group:checked'
   }
 });

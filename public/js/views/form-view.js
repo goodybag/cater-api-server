@@ -4,12 +4,23 @@ var FormView = Backbone.View.extend({
 
     for (var key in this.fieldMap) {
       var getter = this.fieldGetters[key];
-      var val = getter ? getter.apply(this) : (this.$el.find(this.fieldMap[key]).val()||'').trim() || null;
+      var val = getter ? getter.apply(this) : this.extract(this.fieldMap[key]);
       if (!(val == null && this.model.get(key) == null) && !_.isEqual(val, this.model.get(key)))
         diff[key] = val;
     }
 
     return _.size(diff) > 0 ? diff : null;
+  },
+
+  extract : function(selector) {
+    var data = this.$el.find(selector);
+    if (data.length == 1) {
+      return (data.val()||'').trim() || null;
+    } else {
+      return data.map(function(index, obj){
+        return $(obj).val();
+      }).get().join();
+    }
   },
 
   fieldGetters: {},

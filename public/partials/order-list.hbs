@@ -5,6 +5,10 @@
     <h4 class="list-group-item-heading">{{this.restaurant.name}}</h4>
     <dl class="dl-horizontal-inline order-details-list">
       <div>
+        <dt>User:</dt>
+        <dd>{{this.user.email}}</dd>
+      </div>
+      <div>
         <dt>Date Created:</dt>
         <dd>{{datepart this.created_at}} {{timepart this.created_at}}</dd>
       </div>

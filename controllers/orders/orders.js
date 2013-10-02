@@ -176,7 +176,7 @@ module.exports.changeStatus = function(req, res) {
         res.render('email-order-' + status.attributes.status, viewOptions, function(err, html) {
           //TODO: error handling
           utils.sendMail(
-            req.session.user.email,
+            order.attributes.user.email,
             'orders@goodybag.com',
             'Goodybag order (#'+ order.attributes.id + ') has been ' + status.attributes.status,
             html,

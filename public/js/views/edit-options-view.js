@@ -91,6 +91,7 @@
             name:           $option.find('.options-set-option-name').val()
           , price:          utils.getPrice( $option.find('.options-set-option-price') )
           , default_state:  $option.find('.options-set-option-default:checked').length > 0
+          , description:    $option.find('+ .option-expanded textarea[name="description"]').val()
           };
 
           // If the option is not new, attach the old ID

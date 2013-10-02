@@ -29,7 +29,7 @@ function sanitizeOptions(oldOpts, newOpts) {
   // clone the old options, but with the new states
   return utils.map(oldOpts, function(set) {
     return utils.extend({}, set, {options: utils.map(set.options, function(option) {
-      return utils.extend({state: !!states[option.id]}, utils.pick(option, ['id', 'name', 'price']));
+      return utils.extend({state: !!states[option.id]}, utils.pick(option, ['id', 'name', 'price', 'description']));
     })});
   });
 }

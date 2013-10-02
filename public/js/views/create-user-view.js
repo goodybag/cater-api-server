@@ -35,6 +35,12 @@ var CreateUserView = FormView.extend({
     });
   },
 
+  fieldGetters: {
+    groups: function (selector) {
+      return utils.pluck(this.$el.find(selector), 'value');
+    }
+  },
+
   fieldMap: {
     email: '.create-user-form .create-user-email'
   , password: '.create-user-form .create-user-password'

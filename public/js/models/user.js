@@ -29,7 +29,7 @@ var User = Backbone.Model.extend({
         required: false
       },
       groups: {
-        type: 'string',  // Comma delimited string of groups
+        type: 'array',
         required: true
       }
     }

@@ -38,7 +38,7 @@ module.exports.create = function(req, res) {
       });
     }
   , create: function(hash, callback) {
-      var groups = req.body.groups.split(',') || ['client'];
+      var groups = req.body.groups || ['client'];
       var userData = utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash});
       var query = queries.user.create(utils.omit(userData, 'groups'));
 

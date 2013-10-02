@@ -107,4 +107,16 @@ module.exports.listOrders = function(req, res) {
   });
 }
 
+module.exports.createSessionAs = function(req, res) {
+  var query = queries.user.get(req.params.uid, req.query.columns);
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, function(err, rows, results) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (rows.length === 0) return res.send(404);
+    var user = rows[0];
+    req.session = utils.extend({}, req.session, {user: utils.pick(user, ['id', 'groups', 'email'])});
+    res.redirect(req.query.next || '/restaurants');
+  });
+};
+
 module.exports.passwordResets = require('./password-resets');

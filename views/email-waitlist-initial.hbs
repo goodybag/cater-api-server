@@ -1,0 +1,45 @@
+{{#extend "body"}}
+  <!--<LeadText>-->
+  <table cellpadding="0" cellspacing="0" style="width: 100%;">
+    <tr>
+      <td style="width: 100%; padding-top: 2px; padding-bottom: 32px">
+        <h1 style="line-height: 22px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 24px; font-family: Helvetica, arial, sans-serif; text-align: center; color: #695a42">
+          Hello
+        </h1>
+      </td>
+    </tr>
+  </table>
+  <!--</LeadText>-->
+
+  <!--<LeadSubText>-->
+  <table cellpadding="0" cellspacing="0" style="width: 100%;">
+    <tr>
+      <td class="main-width-gutters-padding" style="width: 100%; padding-top: 2px; padding-bottom: 32px; padding-left: 50px; padding-right: 50px">
+        <p style="line-height: 22px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: center; color: #695a42">
+          Please click the button below to verify your email and confirm your spot on the wait list.
+        </p>
+      </td>
+    </tr>
+  </table>
+  <!--</LeadSubText>-->
+
+  <!--<BigOlButton>-->
+  <table cellpadding="0" cellspacing="0" style="width: 100%;">
+    <tr>
+      <td style="width: 100%; padding-top: 2px; padding-bottom: 32px; font-size: 24px; font-weight: 300; ">
+        <a href="{{baseUrl}}/waitlist/confirm?token={{token}}" style="text-decoration: none; color: #ffffff; font-family: Helvetica, arial, sans-serif;">
+          <table cellpadding="0" cellspacing="0" style="">
+            <tr>
+              <td width="50%"></td>
+              <td style="padding-top: 12px; padding-right: 36px; padding-bottom: 12px; padding-left: 36px; white-space: nowrap; background: #DC0500; border-radius: 4px; border: solid #B80300 1px; font-family: Helvetica, arial, sans-serif; color: #ffffff">
+                <a href="{{baseUrl}}/waitlist/confirm?token={{token}}" style="color: #ffffff; font-size: 24px; text-decoration: none; font-family: Helvetica, arial, sans-serif;">Verify my email</a>
+              </td>
+              <td width="50%"></td>
+            </tr>
+          </table>
+        </a>
+      </td>
+    </tr>
+  </table>
+  <!--</BigOlButton>-->
+{{/extend}}

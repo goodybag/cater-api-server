@@ -196,10 +196,13 @@
 
   {{#if restaurantReview}}
   <div class="panel restaurant-review">
-    <div class="h2 panel-heading">Review</div>
-    <div class="panel-body">
-      <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject</button>
-      <button class="btn btn-lg btn-success btn-accept">Accept</button>
+    <div class="panel-body row">
+      <div class="col-lg-3 col-lg-offset-2">
+        <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
+      </div>
+      <div class="col-lg-3 col-lg-offset-2">
+        <button class="btn btn-lg btn-success btn-accept pull-right">Accept Order</button>
+      </div>
     </div>
   </div>
   {{/if}}
@@ -215,13 +218,13 @@
       </div>
       <div class="modal-body">
         <p>Are you sure you want to reject this order?</p>
-        <div class="row">
-          <div class="col-lg-3 col-lg-offset-6">
-            <button type="button" class="btn btn-default" data-dismiss="modal">No, don't reject</button>
-          </div>
-          <div class="col-lg-3">
-            <button type="button" class="btn btn-danger btn-reject">Yes, reject</button>
-          </div>
+      </div>
+      <div class="row modal-footer">
+        <div class="col-lg-3 col-lg-offset-6">
+          <button type="button" class="btn btn-default" data-dismiss="modal">No, don't reject</button>
+        </div>
+        <div class="col-lg-3">
+          <button type="button" class="btn btn-danger btn-reject">Yes, reject</button>
         </div>
       </div>
     </div>
@@ -237,13 +240,13 @@
       </div>
       <div class="modal-body">
         <p>Are you sure you want to cancel this order?</p>
-        <div class="row">
-          <div class="col-lg-3 col-lg-offset-6">
-            <button type="button" class="btn btn-default" data-dismiss="modal">No, don't cancel</button>
-          </div>
-          <div class="col-lg-3">
-            <button type="button" class="btn btn-danger btn-cancel">Yes, cancel</button>
-          </div>
+      </div>
+      <div class="row modal-footer">
+        <div class="col-lg-3 col-lg-offset-6">
+          <button type="button" class="btn btn-default" data-dismiss="modal">No, don't cancel</button>
+        </div>
+        <div class="col-lg-3">
+          <button type="button" class="btn btn-danger btn-cancel">Yes, cancel</button>
         </div>
       </div>
     </div>

@@ -46,11 +46,7 @@ var FormView = Backbone.View.extend({
     if (!diff) return callback.call(this);
     var view = this;
 
-    // Do a set before save so if the save fails, it does not revert the changes on the model
-    // and the is_bad_* properties get properly set
-    this.model.set(diff);
-
-    var sent = this.model.save(null, {
+    var sent = this.model.save(diff, {
       patch: true,
       wait: true,
       singleError: false,

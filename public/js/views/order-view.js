@@ -70,6 +70,26 @@ var OrderView = FormView.extend({
     this.$el.find(this.fieldMap.phone).val(Handlebars.helpers.phoneNumber(value))
   },
 
+  displayErrors: function(){
+    if ( !this.model.validationError ){
+      return FormView.prototype.displayErrors.apply( this, arguments );
+    }
+
+    // Maps field names to error selectors
+    var fieldSelector = {
+      zip: '.alert-bad-zip'
+    };
+
+    // Show each alert corresponding to an error
+    for (var i = 0, l = this.model.validationError.length; i < l; ++i){
+      if ( !(this.model.validationError[i].property in fieldSelector) ) continue;
+
+      this.$el.find( fieldSelector[ this.model.validationError[i].property ] ).removeClass('hide');
+    }
+
+    return FormView.prototype.displayErrors.apply( this, arguments );
+  },
+
   setAlerts: function(selector, model, value, options) {
     this.$el.find(selector).toggleClass('hide', !value);
   },

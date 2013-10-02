@@ -25,7 +25,7 @@
     }
 
   , addOption: function( option ){
-      this.$el.find('.options-set-options').prepend(
+      this.$el.find('.options-set-options').after(
         this.optionSetOptionTmpl( option )
       );
 

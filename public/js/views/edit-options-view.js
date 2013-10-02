@@ -43,6 +43,10 @@
       this.$optionGroups = this.$el.find('.option-groups');
       this.$optionGroups.sortable();
 
+      this.$el.find('.item-options-table').sortable({
+        items: '.option-set-tr-group'
+      });
+
       return this;
     }
 

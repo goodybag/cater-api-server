@@ -1,34 +1,37 @@
-<tr data-id="{{this.id}}" class="options-set-option">
-  <td class="column-default">
-    <label>
-      <input type="checkbox" class="options-set-option-default"{{#if this.default_state}} checked{{/if}}>
-    </label>
-  </td>
-  <td class="column-name">
-    <input type="text" class="options-set-option-name form-control" placeholder="Option Name" value="{{this.name}}">
-  </td>
-  <td class="column-price">
-    <div class="input-group">
-      <span class="input-group-addon">$</span>
-      <input type="text" class="options-set-option-price form-control" placeholder="Option Price" value="{{dollars this.price}}">
-    </div>
-  </td>
-  <td class="column-actions">
-    <button class="btn-expand-option-set-option btn btn-info btn-sm collapsed">
-      <i class="icon-collapse"></i>
-    </button>
-    <button class="btn-delete-option-set-option btn btn-danger btn-sm">
-      <i class="icon-remove"></i>
-    </button>
-  </td>
-</tr>
-<tr data-id="{{this.id}}" class="option-expanded collapsed">
-  <td colspan="4">
-    <div class="option-expanded-inner">
-      <div class="form-group">
-        <label>Option Description</label>
-        <textarea name="description" class="form-control" placeholder="Option description">{{this.description}}</textarea>
+{{! Hack to get TR's grouped in one element }}
+<tbody class="option-set-tr-group">
+  <tr data-id="{{this.id}}" class="options-set-option">
+    <td class="column-default">
+      <label>
+        <input type="checkbox" class="options-set-option-default"{{#if this.default_state}} checked{{/if}}>
+      </label>
+    </td>
+    <td class="column-name">
+      <input type="text" class="options-set-option-name form-control" placeholder="Option Name" value="{{this.name}}">
+    </td>
+    <td class="column-price">
+      <div class="input-group">
+        <span class="input-group-addon">$</span>
+        <input type="text" class="options-set-option-price form-control" placeholder="Option Price" value="{{dollars this.price}}">
       </div>
-    </div>
-  </td>
-</tr>
+    </td>
+    <td class="column-actions">
+      <button class="btn-expand-option-set-option btn btn-info btn-sm collapsed">
+        <i class="icon-collapse"></i>
+      </button>
+      <button class="btn-delete-option-set-option btn btn-danger btn-sm">
+        <i class="icon-remove"></i>
+      </button>
+    </td>
+  </tr>
+  <tr data-id="{{this.id}}" class="option-expanded collapsed">
+    <td colspan="4">
+      <div class="option-expanded-inner">
+        <div class="form-group">
+          <label>Option Description</label>
+          <textarea name="description" class="form-control" placeholder="Option description">{{this.description}}</textarea>
+        </div>
+      </div>
+    </td>
+  </tr>
+</tbody>

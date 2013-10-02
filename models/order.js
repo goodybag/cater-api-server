@@ -4,12 +4,6 @@ var uuid  = require('node-uuid');
 var db = require('../db');
 var Restaurant = require('./restaurant');
 
-'delivery_zips',
-'delivery_times',
-'lead_times',
-'max_guests'
-
-
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
     var restaurantFields = [
@@ -220,6 +214,13 @@ module.exports = Model.extend({
         ]
       }
     , {
+        "name": "selected_options"
+      , "type": "select"
+      , "table": "options"
+      , "columns": ["*"]
+      , "where": { "$custom": [" (option->>'state')::bool "] }
+    }
+    , {
         "name": "subtotals"
       , "type": "select"
       , "table": "order_items"
@@ -228,14 +229,8 @@ module.exports = Model.extend({
         , {"table": "order_items", "name": "order_id"}
         , "(quantity * (price + coalesce(sum((option->>'price')::int), 0))) as sub_total"
         ]
-      , "where": {
-          "$or": {
-            "options.option": null,
-            "$custom": [" (option->>'state')::bool "]
-          }
-        }
       , "joins": {
-          "options": {
+          "selected_options": {
             "type": "left",
             "on": {"order_item_id": "$order_items.id$"}
           }

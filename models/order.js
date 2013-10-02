@@ -4,12 +4,6 @@ var uuid  = require('node-uuid');
 var db = require('../db');
 var Restaurant = require('./restaurant');
 
-'delivery_zips',
-'delivery_times',
-'lead_times',
-'max_guests'
-
-
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
     var restaurantFields = [

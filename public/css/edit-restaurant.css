@@ -44,12 +44,27 @@ th.name-column {
  * Option Groups
  */
 
+.table tbody.option-set-tr-group {
+  border-top: 0;
+  background: #fff;
+}
+
+.option-set-tr-group.ui-sortable-helper {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
 .option-group {
   height: 400px;
   margin-bottom: 30px;
   border: solid 1px #CCCCC0;
   border-radius: 2px;
   overflow: scroll;
+  background: #fff;
+}
+
+/* onDrag */
+.ui-sortable-helper > .option-group {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .option-group .option-group-heading {

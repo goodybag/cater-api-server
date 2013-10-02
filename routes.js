@@ -8,6 +8,14 @@ module.exports.register = function(app) {
 
   app.get('/', restrict(['client', 'admin']), function(req, res) { res.redirect('/restaurants'); });
 
+  app.get('/email-test', function( req, res ){
+    res.render('email-waitlist-initial', {
+      layout: 'email-layout'
+    , baseUrl: '/poop'
+    , token: 'alkjsdflj'
+    })
+  });
+
   /**
    * Restaurants resource.  The collection of all restaurants.
    */

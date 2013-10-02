@@ -178,7 +178,7 @@ module.exports.changeStatus = function(req, res) {
           utils.sendMail(
             req.session.user.email,
             'orders@goodybag.com',
-            'Goodybag order (#'+ order.attributes.id+ ') has been ' + status.attributes.status,
+            'Goodybag order (#'+ order.attributes.id + ') has been ' + status.attributes.status,
             html,
             function(err, result) {
               if(err) logger.routes.error(TAGS, 'Error sending email', err);

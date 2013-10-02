@@ -196,10 +196,13 @@
 
   {{#if restaurantReview}}
   <div class="panel restaurant-review">
-    <div class="h2 panel-heading">Review</div>
-    <div class="panel-body">
-      <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject</button>
-      <button class="btn btn-lg btn-success btn-accept">Accept</button>
+    <div class="panel-body row">
+      <div class="col-lg-3 col-lg-offset-2">
+        <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
+      </div>
+      <div class="col-lg-3 col-lg-offset-2">
+        <button class="btn btn-lg btn-success btn-accept pull-right">Accept Order</button>
+      </div>
     </div>
   </div>
   {{/if}}

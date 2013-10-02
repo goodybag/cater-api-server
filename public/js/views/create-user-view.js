@@ -28,6 +28,7 @@ var CreateUserView = FormView.extend({
 
     this.listenTo(this.model, 'sync', function(model, options) {
       this.flashSubmitMessage('User created successfully!');
+      this.model.clear();
     });
 
     this.listenTo(this.model, 'error', function(model, options) {

@@ -107,7 +107,7 @@ var config = {
 
   , baseUrl: 'http://localhost:3000'
 
-  , testEmail: 'john@goodybag.com'
+  , testEmail: 'geoff@goodybag.com'
 
   , testPhoneSms: '5129236299'
 

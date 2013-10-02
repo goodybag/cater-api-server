@@ -41,6 +41,7 @@
       });
 
       this.$optionGroups = this.$el.find('.option-groups');
+      this.$optionGroups.sortable();
 
       return this;
     }

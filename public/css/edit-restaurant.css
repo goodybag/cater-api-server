@@ -50,6 +50,12 @@ th.name-column {
   border: solid 1px #CCCCC0;
   border-radius: 2px;
   overflow: scroll;
+  background: #fff;
+}
+
+/* onDrag */
+.ui-sortable-helper > .option-group {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .option-group .option-group-heading {

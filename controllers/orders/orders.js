@@ -117,7 +117,13 @@ module.exports.changeStatus = function(req, res) {
 
     var done = function(status) {
       if (status.attributes.status === 'submitted') {
-        res.render('order-submitted-email', {order: order.toJSON({review: true}), config: config, layout: false}, function(err, html) {
+        var viewOptions = {
+          order: order.toJSON({review: true}),
+          config: config,
+          layout: 'email-layout'
+        };
+
+        res.render('email-order-submitted', viewOptions, function(err, html) {
           // TODO: error handling
           utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order (#' + order.attributes.id+ ')', html);
         });
@@ -160,11 +166,24 @@ module.exports.changeStatus = function(req, res) {
       }
 
       if (utils.contains(['submitted', 'accepted', 'denied', 'delivered'], status.attributes.status)) {
-        res.render('order-status-change-email', {layout: false, status: status.toJSON(), config: config, order: order.toJSON()}, function(err, html) {
+        var viewOptions = {
+          layout: 'email-layout',
+          status: status.toJSON(),
+          config: config,
+          order: order.toJSON()
+        };
+
+        res.render('email-order-' + status.attributes.status, viewOptions, function(err, html) {
           //TODO: error handling
-          utils.sendMail(order.attributes.user.email, 'orders@goodybag.com', 'Your Goodybag order (#'+ order.attributes.id+ ') has been ' + status.attributes.status , html, function(err, result) {
-            if(err) logger.routes.error(TAGS, 'Error sending email', err);
-          });
+          utils.sendMail(
+            order.attributes.user.email,
+            'orders@goodybag.com',
+            'Goodybag order (#'+ order.attributes.id + ') has been ' + status.attributes.status,
+            html,
+            function(err, result) {
+              if(err) logger.routes.error(TAGS, 'Error sending email', err);
+            }
+          );
         });
       }
       res.send(201, status.toJSON());

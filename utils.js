@@ -102,6 +102,9 @@ utils.sendMail = function(to, from, subject, html, text, callback) {
     }
   }
 
+  // Remove whitespace from email to remove possible rendering bugs
+  options.html = options.html.replace(/>\s+</g, '><').trim();
+
   if (!callback) callback = function(){};
   if (!config.emailEnabled) return callback(); // :TODO: log or output an event so that we can test against the event
 

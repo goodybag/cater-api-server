@@ -721,8 +721,13 @@ a.list-group-item .list-group-item-heading {
  * Alerts
  */
 
+.alert {
+  font-size: 13px;
+}
+
 .alert .alert-header {
-  margin-top: 12px;
+  margin-top: 8px;
+  font-size: 16px;
 }
 
 /* Sidebar explanatory thingy */

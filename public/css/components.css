@@ -395,6 +395,7 @@ a.list-group-item .list-group-item-heading {
   color: #8B8983;
   font-weight: 300;
   font-size: 13px;
+  margin-bottom: 0;
 }
 
 .menu .list-item-legend {

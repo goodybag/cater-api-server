@@ -38,7 +38,9 @@ module.exports.create = function(req, res) {
       });
     }
   , create: function(hash, callback) {
-      var query = queries.user.create(utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash}));
+      var groups = req.body.groups || ['client'];
+      var userData = utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash});
+      var query = queries.user.create(utils.omit(userData, 'groups'));
 
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results){
@@ -47,11 +49,14 @@ module.exports.create = function(req, res) {
           return callback(error);
         }
         var user = results[0];
-        return callback(null, user);
+        return callback(null, user, groups);
       });
     }
-  , group: function(user, callback) {
-      var query = queries.user.setGroup({user_id: user.id, group: 'client'});
+  , group: function(user, groups, callback) {
+      groups = utils.map(groups, function(group) {
+        return { user_id: user.id, group: group };
+      });
+      var query = queries.user.setGroup(groups);
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results){
         if (error) return res.error(errors.internal.DB_FAILURE, error);

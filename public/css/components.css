@@ -391,6 +391,12 @@ a.list-group-item .list-group-item-heading {
  * Menu
  */
 
+.menu .category-description {
+  color: #8B8983;
+  font-weight: 300;
+  font-size: 13px;
+}
+
 .menu .list-item-legend {
   position: absolute;
   right: 12px;

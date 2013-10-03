@@ -17,15 +17,15 @@ var User = Backbone.Model.extend({
         required: true
       },
       first_name: {
-        type: 'string',
+        type: ['string', 'null'],
         required: false
       },
       last_name: {
-        type: 'string',
+        type: ['string', 'null'],
         required: false
       },
       organization: {
-        type: 'string',
+        type: ['string', 'null'],
         required: false
       },
       groups: {
@@ -38,7 +38,7 @@ var User = Backbone.Model.extend({
   validator: amanda('json'),
 
   validate: function(attrs, options) {
-    return this.validator.validate(attrs, this.schema, options || {}, function(err) { return err; });
+    return this.validator.validate(attrs, utils.result(this, 'schema'), options || {}, function(err) { return err; });
   },
 
   urlRoot: '/users',

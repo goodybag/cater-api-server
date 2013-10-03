@@ -3,7 +3,8 @@ var CreateUserView = FormView.extend({
 
   events: {
     'submit .create-user-form': 'onSave',
-    'keyup .create-user-form': 'onChange'
+    'keyup .create-user-form': 'onChange',
+    'click .create-user-form': 'onChange'
   },
 
   /* Show a flash message on the submit button */
@@ -37,8 +38,8 @@ var CreateUserView = FormView.extend({
   },
 
   fieldGetters: {
-    groups: function (selector) {
-      return utils.pluck(this.$el.find(selector), 'value');
+    groups: function () {
+      return utils.pluck(this.$el.find(this.fieldMap.groups), 'value');
     }
   },
 

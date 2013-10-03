@@ -14,10 +14,14 @@ var OrderModal = Backbone.View.extend({
     , min: new Date()
     }).pickadate('picker');
 
+    this.datepicker.on( 'open', _(this.onDatePickerOpen).bind( this ) );
+
     this.timepicker = this.$el.find('input[name="time"]').eq(0).pickatime({
       format: 'hh:i A'
     , interval: 15
     }).pickatime('picker');
+
+    this.timepicker.on( 'open', _(this.onTimePickerOpen).bind( this ) );
 
     // Remove the paneliness from the order params partial
     this.$el.find('.order-params-bar').removeClass('panel');
@@ -107,5 +111,55 @@ var OrderModal = Backbone.View.extend({
 
     var self = this;
     this.model.save( null, this.submitHandlers);
+  },
+
+  onDatePickerOpen: function(){
+    // Days of week the restaurant does not deliver
+    var disabledTimes = [];
+
+    _(orderModel.restaurant.get('delivery_times')).forEach( function( t, i ){
+      if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
+    });
+
+    this.datepicker.set( 'disable', disabledTimes );
+  },
+
+  onTimePickerOpen: function(){
+    var day = this.datepicker.get();
+
+    // Don't do anything if we haven't already selected a day
+    if ( !day ) return;
+
+    day = new Date( day ).getDay();
+
+    var times = orderModel.restaurant.get('delivery_times')[ day ];
+
+    // Build a disabled set of values that matches timepickers format
+    var disabled = [];
+    for (var i = 0; i < 24; ++i){
+      disabled.push( [ i, 0  ] );
+      disabled.push( [ i, 15 ] );
+      disabled.push( [ i, 30 ] );
+      disabled.push( [ i, 45 ] );
+    }
+
+    this.timepicker.set(
+      'disable'
+      // Filter the times down to the ones that should be disabled
+    , _(disabled).filter( function( t ){
+        var time = [];
+        // Pad the hh:mm
+        time[ 0 ] = "" + t[ 0 ] < 10 ? '0' + t[ 0 ] : t[ 0 ];
+        time[ 1 ] = "" + t[ 1 ] < 10 ? '0' + t[ 1 ] : t[ 1 ];
+        time[ 2 ] = "00";
+
+        time = time.join(':');
+
+        // Check that `time` is out of bounds for every delivery_time for the day picked
+        return _(times).every( function( t ){
+          return time < t[ 0 ] || time > t[ 1 ];
+        });
+      })
+    );
   }
 });

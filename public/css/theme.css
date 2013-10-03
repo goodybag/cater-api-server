@@ -183,11 +183,45 @@ a.list-group-item .list-group-item-heading {
 }
 
 /**
+ * Status Buttons
+ */
+
+.btn-pending {
+  background-color: #F0AD4E;
+  color: white;
+}
+
+.btn-accepted {
+  background-color: #5CB85C;
+  color: white;
+}
+
+.btn-canceled {
+  background-color: #B3B3B3;
+  color: white;
+}
+
+.btn-denied {
+  background-color: #D9534F;
+  color: white;
+}
+
+.btn-submitted {
+  background-color: #5BC0DE;
+  color: white;
+}
+
+.btn-delivered {
+  background-color: #428BCA;
+  color: white;
+}
+
+/**
  * Forms
  */
 
 .form-light label {
-  color: #695A42
+  color: #695A42;
 }
 
 /**

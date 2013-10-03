@@ -305,7 +305,22 @@ module.exports = Model.extend({
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = orders.restaurant_id)) AS delivery_zips");
     query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id ORDER BY lead_time ASC) r ) AS lead_times");
-    query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id) AS max_guests");
+    query.columns.push("max_guests.max_guests");
+
+    var maxGuests = {
+      name: 'max_guests'
+    , type: 'select'
+    , columns: ['restaurant_id', 'max(max_guests) as max_guests']
+    , groupBy: 'restaurant_id'
+    , table: 'restaurant_lead_times'
+    };
+
+    query.with.push(maxGuests);
+
+    query.joins.max_guests = {
+      type: 'left'
+    , on: { 'orders.restaurant_id': '$max_guests.restaurant_id$' }
+    };
 
     query.joins.hours = {
       type: 'left'
@@ -351,7 +366,7 @@ module.exports = Model.extend({
       'orders.restaurant_id': '$guests.restaurant_id$'
     , 'guests.max_guests' : {$gte: '$orders.guests$'}
       }
-    }
+    };
 
     var caseIsBadGuests = '(CASE '
       + ' WHEN (orders.guests IS NULL) THEN NULL'

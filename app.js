@@ -69,7 +69,7 @@ app.configure(function(){
 
   var render = app.response.render;
   app.response.render = function(path, options, callback) {
-    var partialConfig = { phone: config.phone, emails: config.emails };
+    var partialConfig = { config: config, phone: config.phone, emails: config.emails };
 
     options = options || {};
 

@@ -395,7 +395,7 @@ module.exports = Model.extend({
     , on: {
         'orders.restaurant_id': '$lead_times.restaurant_id$'
       , 'lead_times.max_guests': {$gte: '$orders.guests$'}
-      , 'lead_times.lead_time': {$custom: ['"lead_times"."lead_time" < EXTRACT(EPOCH FROM ("orders"."datetime" - now())/3600)']}
+      , 'lead_times.lead_time': {$custom: ['"lead_times"."lead_time" < EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/3600)']}
       }
     }
 

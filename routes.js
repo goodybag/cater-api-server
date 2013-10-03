@@ -374,6 +374,8 @@ module.exports.register = function(app) {
    *  Static pages
    */
 
+  app.get('/signup', restrict('admin'), controllers.statics.createUser);
+
   app.get('/contact-us', controllers.statics.contactUs);
 
   app.post('/contact-us', controllers.contactUs.sendSupportEmail);

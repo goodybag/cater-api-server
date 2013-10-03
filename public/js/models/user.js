@@ -38,7 +38,7 @@ var User = Backbone.Model.extend({
   validator: amanda('json'),
 
   validate: function(attrs, options) {
-    return this.validator.validate(attrs, utils.result(this, 'schema'), options || {}, function(err) { return err; });
+    return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
   },
 
   urlRoot: '/users',

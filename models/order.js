@@ -140,9 +140,8 @@ module.exports = Model.extend({
     // your ability to actually control that.
 
     query = query || {};
-    query.distinct = ["orders.id"];
     query.columns = query.columns || ['*'];
-    query.order = query.order || ["orders.id"];
+    query.order = query.order || ["submitted.created_at DESC", "orders.created_at DESC"];
 
     // making datetime a string on purpose so that the server timezone isn't
     // applied to it when it is pulled out (there is no ofset set on this

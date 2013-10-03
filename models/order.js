@@ -305,7 +305,22 @@ module.exports = Model.extend({
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = orders.restaurant_id)) AS delivery_zips");
     query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id ORDER BY lead_time ASC) r ) AS lead_times");
-    query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id) AS max_guests");
+    query.columns.push("max_guests.max_guests");
+
+    var maxGuests = {
+      name: 'max_guests'
+    , type: 'select'
+    , columns: ['restaurant_id', 'max(max_guests) as max_guests']
+    , groupBy: 'restaurant_id'
+    , table: 'restaurant_lead_times'
+    };
+
+    query.with.push(maxGuests);
+
+    query.joins.max_guests = {
+      type: 'left'
+    , on: { 'orders.restaurant_id': '$max_guests.restaurant_id$' }
+    };
 
     query.joins.hours = {
       type: 'left'
@@ -343,41 +358,67 @@ module.exports = Model.extend({
     query.columns.push(caseIsBadZip+' AS is_bad_zip');
 
     // check # guests
-    query.joins.guests = {
-      type: 'left'
-    , alias: 'guests'
-    , target: 'restaurant_lead_times'
-    , on: {
-      'orders.restaurant_id': '$guests.restaurant_id$'
-    , 'guests.max_guests' : {$gte: '$orders.guests$'}
-      }
-    }
-
     var caseIsBadGuests = '(CASE '
       + ' WHEN (orders.guests IS NULL) THEN NULL'
-      + ' WHEN (guests.restaurant_id IS NULL) THEN TRUE'
-      + ' ELSE FALSE'
+      + ' WHEN (max_guests.restaurant_id IS NULL) THEN FALSE'
+      + ' ELSE orders.guests > max_guests.max_guests'
       + ' END)'
     ;
 
     query.columns.push(caseIsBadGuests+' AS is_bad_guests');
 
     // check lead time
-    query.joins.lead_times = {
-      type: 'left'
-    , alias: 'lead_times'
-    , target: 'restaurant_lead_times'
-    , on: {
-        'orders.restaurant_id': '$lead_times.restaurant_id$'
-      , 'lead_times.max_guests': {$gte: '$orders.guests$'}
-      , 'lead_times.lead_time': {$custom: ['"lead_times"."lead_time" < EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/3600)']}
+    var leadTimes = [{
+      "name": "sub_lead_times"
+    , "type": "select"
+    , "columns": [
+        { name: 'id', alias: 'order_id' }
+      , { name: 'max_guests', table: 'rlt' }
+      , { name: 'lead_time', table: 'rlt' }
+      , "min(max_guests) OVER (PARTITION by orders.id)"
+      ]
+    , "table": "orders"
+    , "joins": {
+        rlt: {
+          type: 'left'
+        , target: 'restaurant_lead_times'
+        , on: {
+            restaurant_id: '$orders.restaurant_id$'
+          }
+        }
       }
-    }
+    , "where": { 
+        "rlt.max_guests": { $gte: '$orders.guests$' }
+      }
+    },
+
+    {
+      "name": "order_lead_times"
+    , "type": "select"
+    , "columns": [
+        "order_id"
+      , "max_guests"
+      , "lead_time"
+      ]
+    , "table": "sub_lead_times"
+    , "where": {
+        "max_guests": "$sub_lead_times.min$"
+      }
+    }];
+
+    query.with.push.apply(query.with, leadTimes);
+
+    query.joins.order_lead_times = {
+      type: 'left'
+    , on: {
+        'orders.id': '$order_lead_times.order_id$'
+      }
+    };
 
     var caseIsBadLeadTime = '(CASE '
       + ' WHEN (orders.datetime IS NULL) THEN NULL'
-      + ' WHEN (lead_times.restaurant_id IS NULL) THEN TRUE'
-      + ' ELSE FALSE'
+      + ' WHEN (order_lead_times.order_id IS NULL) THEN FALSE'
+      + ' ELSE "order_lead_times"."lead_time" > EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/3600)'
       + ' END)'
     ;
 

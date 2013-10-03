@@ -4,7 +4,14 @@
       <strong class="form-title">Find Catering</strong>
     </div>
     <div class="form-group" data-icon="gb-icon-location">
-      <input type="text" class="form-control form-control-zip" name="zip" placeholder="zip" maxlength="5" value="{{orderParams.zip}}"/>
+      <input list="zips" type="text" class="form-control form-control-zip" name="zip" placeholder="zip" maxlength="5" value="{{orderParams.zip}}"/>
+      {{#if order}}
+      <datalist id="zips">
+        {{#each order.restaurant.delivery_zips}}
+        <option value="{{this}}">
+        {{/each}}
+      </datalist>
+      {{/if}}
     </div>
     <div class="form-group" data-icon="gb-icon-calendar">
       <input type="text" class="form-control" name="date" placeholder="delivery date" maxlength="10" value="{{formatDateTime orderParams.date}}"/>

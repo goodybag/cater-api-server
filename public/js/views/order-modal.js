@@ -117,7 +117,7 @@ var OrderModal = Backbone.View.extend({
     // Days of week the restaurant does not deliver
     var disabledTimes = [];
 
-    _(orderModel.restaurant.get('delivery_times')).forEach( function( t, i ){
+    _(orderModel.restaurant.get('delivery_times')).each( function( t, i ){
       if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
     });
 

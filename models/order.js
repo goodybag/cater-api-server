@@ -193,6 +193,25 @@ module.exports = Model.extend({
         }
       , groupBy: 'restaurant_id'
       }
+    , {
+        name: 'lead_times_json'
+      , type: 'select'
+      , table: 'restaurant_lead_times'
+      , columns: [
+          'restaurant_id'
+        , {
+            type: 'function'
+          , function: 'array_to_json'
+          , as: 'lead_times'
+          , expression: {
+              type: 'function'
+            , function: 'array_agg'
+            , expression: '(\'{"lead_time": \' || lead_time || \', "max_guests": \' || max_guests || \'}\')::json order by max_guests ASC'
+            }
+          }
+        ]
+      , groupBy: 'restaurant_id'
+    }
     ];
 
     var itemSubtotals = [
@@ -305,13 +324,18 @@ module.exports = Model.extend({
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = orders.restaurant_id)) AS delivery_zips");
     query.columns.push('hours.delivery_times');
-    query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id ORDER BY lead_time ASC) r ) AS lead_times");
+    query.columns.push('lead_times_json.lead_times');
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id) AS max_guests");
 
     query.joins.hours = {
       type: 'left'
     , target: 'dt'
     , on: { 'orders.restaurant_id': '$hours.restaurant_id$' }
+    }
+
+    query.joins.lead_times_json = {
+      type: 'left'
+    , on: { restaurant_id: '$orders.restaurant_id$' }
     }
 
     query.columns.push('(submitted.created_at) as submitted');

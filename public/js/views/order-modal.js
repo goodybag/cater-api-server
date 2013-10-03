@@ -127,13 +127,6 @@ var OrderModal = Backbone.View.extend({
   onTimePickerOpen: function(){
     var day = this.datepicker.get();
 
-    // Don't do anything if we haven't already selected a day
-    if ( !day ) return;
-
-    day = new Date( day ).getDay();
-
-    var times = orderModel.restaurant.get('delivery_times')[ day ];
-
     // Build a disabled set of values that matches timepickers format
     var disabled = [];
     for (var i = 0; i < 24; ++i){
@@ -143,17 +136,26 @@ var OrderModal = Backbone.View.extend({
       disabled.push( [ i, 45 ] );
     }
 
+    // Initially reset everything
+    this.timepicker.set( 'enable', disabled );
+
+    // Don't do anything if we haven't already selected a day
+    if ( !day ) return ;
+
+    day = new Date( day ).getDay();
+
+    var times = orderModel.restaurant.get('delivery_times')[ day ];
+
     this.timepicker.set(
       'disable'
       // Filter the times down to the ones that should be disabled
     , _(disabled).filter( function( t ){
-        var time = [];
         // Pad the hh:mm
-        time[ 0 ] = "" + t[ 0 ] < 10 ? '0' + t[ 0 ] : t[ 0 ];
-        time[ 1 ] = "" + t[ 1 ] < 10 ? '0' + t[ 1 ] : t[ 1 ];
-        time[ 2 ] = "00";
-
-        time = time.join(':');
+        var time = [
+          ( '0' + t[0] ).slice( -2 )
+        , ( '0' + t[1] ).slice( -2 )
+        , '00'
+        ].join(':');
 
         // Check that `time` is out of bounds for every delivery_time for the day picked
         return _(times).every( function( t ){
@@ -161,5 +163,7 @@ var OrderModal = Backbone.View.extend({
         });
       })
     );
+
+    ;
   }
 });

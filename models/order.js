@@ -358,20 +358,10 @@ module.exports = Model.extend({
     query.columns.push(caseIsBadZip+' AS is_bad_zip');
 
     // check # guests
-    query.joins.guests = {
-      type: 'left'
-    , alias: 'guests'
-    , target: 'restaurant_lead_times'
-    , on: {
-      'orders.restaurant_id': '$guests.restaurant_id$'
-    , 'guests.max_guests' : {$gte: '$orders.guests$'}
-      }
-    };
-
     var caseIsBadGuests = '(CASE '
       + ' WHEN (orders.guests IS NULL) THEN NULL'
-      + ' WHEN (guests.restaurant_id IS NULL) THEN TRUE'
-      + ' ELSE FALSE'
+      + ' WHEN (max_guests.restaurant_id IS NULL) THEN FALSE'
+      + ' ELSE orders.guests > max_guests.max_guests'
       + ' END)'
     ;
 
@@ -428,7 +418,7 @@ module.exports = Model.extend({
     var caseIsBadLeadTime = '(CASE '
       + ' WHEN (orders.datetime IS NULL) THEN NULL'
       + ' WHEN (order_lead_times.order_id IS NULL) THEN FALSE'
-      + ' ELSE "order_lead_times"."lead_time" < EXTRACT(EPOCH FROM ("orders"."datetime" - now())/3600)'
+      + ' ELSE "order_lead_times"."lead_time" < EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/3600)'
       + ' END)'
     ;
 

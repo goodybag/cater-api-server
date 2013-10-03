@@ -140,7 +140,7 @@ var OrderModal = Backbone.View.extend({
     this.timepicker.set( 'enable', disabled );
 
     // Don't do anything if we haven't already selected a day
-    if ( !day ) return ;
+    if ( !day ) return;
 
     day = new Date( day ).getDay();
 

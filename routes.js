@@ -339,6 +339,17 @@ module.exports.register = function(app) {
   });
 
   /**
+   *  User Addresses resource.  All delivery addresses managed by user
+   */
+
+  app.get('/users/:uid/addresses', controllers.users.addresses.list);
+
+  app.all('/users/:uid', function(req, res, next) {
+    res.set('Allow', 'GET');
+    res.send(405);
+  });
+
+  /**
    *  User session resource.  Represents a session as a specific user.
    */
 

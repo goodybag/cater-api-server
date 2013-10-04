@@ -119,7 +119,12 @@
               </div>
               <div class="form-group form-group-zip">
                 <label class="control-label" for="address-zip">Zip</label>
-                <input type="text" class="form-control" id="address-zip" value="{{order.zip}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+                <input list="zips" type="text" class="form-control" id="address-zip" value="{{order.zip}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+                <datalist id="zips">
+                  {{#each order.restaurant.delivery_zips}}
+                  <option value="{{this}}">
+                  {{/each}}
+                </datalist>
               </div>
             </fieldset>
           </div>

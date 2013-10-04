@@ -30,6 +30,8 @@ var OrderView = FormView.extend({
     , interval: 15
     }).pickatime('picker');
 
+    this.on('save:success', this.onSaveSuccess, this);
+
     return this;
     // This is causing some width issues with this select
     // Let's go standard select until we can fix it
@@ -88,6 +90,11 @@ var OrderView = FormView.extend({
     }
 
     return FormView.prototype.displayErrors.apply( this, arguments );
+  },
+
+  clearErrors: function(){
+    this.$el.find('.alert').addClass('hide');
+    return this;
   },
 
   setAlerts: function(selector, model, value, options) {
@@ -188,5 +195,9 @@ var OrderView = FormView.extend({
       if (!err)
         this.changeStatus('submitted');
     }, this));
+  },
+
+  onSaveSuccess: function() {
+    this.clearErrors();
   }
 });

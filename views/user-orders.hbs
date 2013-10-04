@@ -39,3 +39,10 @@
     </div>
   </div>
 </div>
+
+{{#extend "scripts"}}
+<script src="/js/views/orders-list-view.js"></script>
+<script>
+  var ordersListView = new OrdersListView({el: '.orders-list'});
+</script>
+{{/extend}}

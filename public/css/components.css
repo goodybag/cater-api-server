@@ -331,12 +331,22 @@
   font-weight: 300;
 }
 
-.item-legend dt:first-child ~ dt {
-  margin-left: 20px;
+.item-legend .dt-col {
+  padding-right:0;
 }
 
 .item-legend dd {
   color: #000;
+  padding-left: 10px;
+  padding-right: 0;
+}
+
+.item-legend .feeds-col {
+  padding-right:0;
+}
+
+.item-legend .price-col {
+  padding-left: 0;
 }
 
 
@@ -396,12 +406,6 @@ a.list-group-item .list-group-item-heading {
   font-weight: 300;
   font-size: 13px;
   margin-bottom: 0;
-}
-
-.menu .list-item-legend {
-  position: absolute;
-  right: 12px;
-  top: 12px;
 }
 
 .menu .list-group-item-heading {

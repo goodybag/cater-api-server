@@ -7,6 +7,7 @@ var OrdersListView = Backbone.View.extend({
 
   changeFilter: function() {
     var self = this;
+    // defered to allow active state to be updated before running
     _.defer(function(e) {
       var activeFilter = self.$el.find('.status-buttons .btn.active').attr('data-status');
       var $ordersList = self.$el.find('.order-list-group .list-group-item');

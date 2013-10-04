@@ -157,6 +157,8 @@ var config = {
     }
 
   , emailEnabled: true
+
+  , mixpanel: { token: '107fc556b23f0c1956a57147a9f8742f' }
   }
 
 , production: {
@@ -199,6 +201,8 @@ var config = {
     }
 
   , emailEnabled: true
+
+  , mixpanel: { token: '8c16e69e9d2567170dd73e5446da781f' }
   }
 };
 

@@ -69,7 +69,7 @@ app.configure(function(){
 
   var render = app.response.render;
   app.response.render = function(path, options, callback) {
-    var partialConfig = { phone: config.phone, emails: config.emails };
+    var partialConfig = utils.pick(config, ['phone', 'emails', 'mixpanel']);
 
     options = options || {};
 

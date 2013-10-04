@@ -1,0 +1,17 @@
+<div>
+  <address>
+    {{street}}<br>
+    {{city}}<br>
+    {{state}}<br>
+    {{zip}}<br>
+    {{is_default}}<br>
+  </address>
+  <div class="actions">
+    <button class="btn btn-default">Edit</button>
+    <button class="btn btn-default">Remove</button>
+    {{#unless is_default}}
+      <button class="btn btn-primary">Make default address</button>
+    {{/unless}}
+  </div>
+  <hr>
+</div>

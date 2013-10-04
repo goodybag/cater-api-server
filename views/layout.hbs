@@ -89,6 +89,8 @@
 
       mixpanel.register({ userId: {{user.id}} });
 
+      // track all link clicks
+      mixpanel.track_links('a', 'clicked-link', function(e) { return {href: e.currentTarget.href}; });
     </script>
     <!-- end Mixpanel -->
     {{/if}}

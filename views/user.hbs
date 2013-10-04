@@ -12,34 +12,48 @@
   {{/if}}
 
   <h1 class="text-center page-title">Account Settings</h1>
-  <form class="well col-lg-6  col-lg-offset-3 user-settings-form" action="/users/me" method="post">
-      <input type="hidden" name="_method" value="put"/>
-      <div class="form-group">
-        <label for="input-first-name" class="control-label">First Name</label>
-        <input type="text" id="input-first-name" name="first_name" class="form-control first_name col-lg-12" value="{{user.first_name}}">
-      </div>
-      <div class="form-group">
-        <label for="input-last-name" class="control-label">Last Name</label>
-        <input type="text" id="input-last-name" name="last_name" class="form-control last_name" value="{{user.last_name}}">
-      </div>
-      <div class="form-group">
-        <label for="input-email" class="control-label">Email</label>
-        <input type="email" id="input-email" name="email" class="form-control email" value="{{user.email}}">
-      </div>
-      <div class="form-group">
-        <label for="input-org" class="control-label">Organization</label>
-        <input type="text" id="input-org" name="organization" class="form-control organization" value="{{user.organization}}">
-      </div>
-      <div class="form-group">
-        <label for="input-pass1" class="control-label">Password</label>
-        <input type="password" name="password" id="input-pass1" class="form-control password">
-      </div>
-      <div class="form-group">
-        <label for="input-pass2" class="control-label">Confirm Password</label>
-        <input type="password" id="input-pass2" class="form-control confirm_password">
-      </div>
-    <button type="submit" class="btn btn-lg btn-primary pull-right">Save</button>
-  </form>
+  <div class="row">
+    <form class="well col-lg-6  col-lg-offset-3 user-settings-form" action="/users/me" method="post">
+        <input type="hidden" name="_method" value="put"/>
+        <div class="form-group">
+          <label for="input-first-name" class="control-label">First Name</label>
+          <input type="text" id="input-first-name" name="first_name" class="form-control first_name col-lg-12" value="{{user.first_name}}">
+        </div>
+        <div class="form-group">
+          <label for="input-last-name" class="control-label">Last Name</label>
+          <input type="text" id="input-last-name" name="last_name" class="form-control last_name" value="{{user.last_name}}">
+        </div>
+        <div class="form-group">
+          <label for="input-email" class="control-label">Email</label>
+          <input type="email" id="input-email" name="email" class="form-control email" value="{{user.email}}">
+        </div>
+        <div class="form-group">
+          <label for="input-org" class="control-label">Organization</label>
+          <input type="text" id="input-org" name="organization" class="form-control organization" value="{{user.organization}}">
+        </div>
+        <div class="form-group">
+          <label for="input-pass1" class="control-label">Password</label>
+          <input type="password" name="password" id="input-pass1" class="form-control password">
+        </div>
+        <div class="form-group">
+          <label for="input-pass2" class="control-label">Confirm Password</label>
+          <input type="password" id="input-pass2" class="form-control confirm_password">
+        </div>
+      <button type="submit" class="btn btn-lg btn-primary pull-right">Save</button>
+    </form>
+  </div>
+  
+  <h1 class="text-center page-title">Address Book</h1>
+  <div class="row">
+    <div class="well col-lg-6  col-lg-offset-3 user-settings-form" action="/users/me" method="post">
+
+
+    <button class="btn btn-primary btn-block">Manage Addresses</button>
+    <button class="btn btn-primary btn-block">Add Address</button>
+    </div>
+  </div>
+  
+
 </div>
 
 {{#extend "scripts"}}

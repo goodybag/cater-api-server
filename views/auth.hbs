@@ -9,12 +9,11 @@
         <h1 class="page-title">Find catering for your office.</h1>
         <p class="lead">Easily search restaurants and have food delivered to your next meeting.</p>
 
-        {{#if error}}
-        <div class="alert alert-danger">Invalid email address or password. Try again.</div>
-        {{/if}}
-
         <div class="form-container">
           <form method="POST" action="/auth{{query}}" class="login-form top-form panel">
+            {{#if error}}
+            <div class="alert alert-danger">Invalid email address or password. Try again.</div>
+            {{/if}}
             <fieldset>
               <div class="form-group">
                 <label for="email">Email</label>

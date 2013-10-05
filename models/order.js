@@ -34,8 +34,9 @@ var modifyAttributes = function(callback, err, orders) {
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
 
-      order.attributes.user = {id: order.attributes.id, email: order.attributes.user_email};
+      order.attributes.user = {id: order.attributes.id, email: order.attributes.user_email, organization: order.attributes.organization};
       delete order.attributes.user_email;
+      delete order.attributes.organization;
     });
   }
   callback.call(this, err, orders);
@@ -139,9 +140,8 @@ module.exports = Model.extend({
     // your ability to actually control that.
 
     query = query || {};
-    query.distinct = ["orders.id"];
     query.columns = query.columns || ['*'];
-    query.order = query.order || ["orders.id"];
+    query.order = query.order || ["submitted.created_at DESC", "orders.created_at DESC"];
 
     // making datetime a string on purpose so that the server timezone isn't
     // applied to it when it is pulled out (there is no ofset set on this
@@ -192,6 +192,32 @@ module.exports = Model.extend({
         }
       , groupBy: 'restaurant_id'
       }
+    , {
+        name: 'lead_times_json'
+      , type: 'select'
+      , table: 'restaurant_lead_times'
+      , columns: [
+          'restaurant_id'
+        , {
+            type: 'function'
+          , function: 'array_to_json'
+          , as: 'lead_times'
+          , expression: {
+              type: 'function'
+            , function: 'array_agg'
+            , expression: '(\'{"lead_time": \' || lead_time || \', "max_guests": \' || max_guests || \'}\')::json order by max_guests ASC'
+            }
+          }
+        ]
+      , groupBy: 'restaurant_id'
+    }
+    , {
+        name: 'max_guests'
+      , type: 'select'
+      , columns: ['restaurant_id', 'max(max_guests) as max_guests']
+      , groupBy: 'restaurant_id'
+      , table: 'restaurant_lead_times'
+    }
     ];
 
     var itemSubtotals = [
@@ -304,18 +330,8 @@ module.exports = Model.extend({
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = orders.restaurant_id)) AS delivery_zips");
     query.columns.push('hours.delivery_times');
-    query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = orders.restaurant_id ORDER BY lead_time ASC) r ) AS lead_times");
+    query.columns.push('lead_times_json.lead_times');
     query.columns.push("max_guests.max_guests");
-
-    var maxGuests = {
-      name: 'max_guests'
-    , type: 'select'
-    , columns: ['restaurant_id', 'max(max_guests) as max_guests']
-    , groupBy: 'restaurant_id'
-    , table: 'restaurant_lead_times'
-    };
-
-    query.with.push(maxGuests);
 
     query.joins.max_guests = {
       type: 'left'
@@ -326,6 +342,11 @@ module.exports = Model.extend({
       type: 'left'
     , target: 'dt'
     , on: { 'orders.restaurant_id': '$hours.restaurant_id$' }
+    }
+
+    query.joins.lead_times_json = {
+      type: 'left'
+    , on: { restaurant_id: '$orders.restaurant_id$' }
     }
 
     query.columns.push('(submitted.created_at) as submitted');
@@ -387,7 +408,7 @@ module.exports = Model.extend({
           }
         }
       }
-    , "where": { 
+    , "where": {
         "rlt.max_guests": { $gte: '$orders.guests$' }
       }
     },
@@ -438,6 +459,7 @@ module.exports = Model.extend({
     }
 
     query.columns.push({table: 'users', name: 'email', as: 'user_email'});
+    query.columns.push({table: 'users', name: 'organization'});
 
     query.joins.users = {
       type: 'inner'

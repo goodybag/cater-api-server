@@ -183,11 +183,52 @@ a.list-group-item .list-group-item-heading {
 }
 
 /**
+ * Status Buttons
+ */
+
+.btn-pending {
+  background-color: #F0AD4E;
+}
+
+.btn-accepted {
+  background-color: #5CB85C;
+}
+
+.btn-canceled {
+  background-color: #B3B3B3;
+}
+
+.btn-denied {
+  background-color: #D9534F;
+}
+
+.btn-submitted {
+  background-color: #5BC0DE;
+}
+
+.btn-delivered {
+  background-color: #428BCA;
+}
+
+.btn-pending, .btn-accepted, .btn-canceled, .btn-denied, .btn-submitted, .btn-delivered {
+  color: white;
+}
+
+.btn-pending:hover, .btn-accepted:hover, .btn-canceled:hover, .btn-denied:hover, .btn-submitted:hover, .btn-delivered:hover {
+  color: white;
+}
+
+.btn-pending:focus, .btn-accepted:focus, .btn-canceled:focus, .btn-denied:focus, .btn-submitted:focus, .btn-delivered:focus {
+  color: white;
+}
+
+
+/**
  * Forms
  */
 
 .form-light label {
-  color: #695A42
+  color: #695A42;
 }
 
 /**

@@ -53,9 +53,15 @@ module.exports.get = function(req, res) {
         order: order.toJSON(),
         restaurantReview: review,
         owner: isOwner,
+        admin: utils.contains(req.session.user.groups, 'admin'),
         states: states,
         orderParams: req.session.orderParams
       };
+
+      // orders are always editable for an admin
+      if (utils.contains(req.session.user.groups, 'admin'))
+        context.order.editable = true;
+
       res.render('order', context, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
@@ -103,18 +109,21 @@ module.exports.changeStatus = function(req, res) {
     if (err) return logger.db.error(TAGS, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
 
-    if (!utils.contains(req.session.user.groups, 'admin') && !utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
-      return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
+    // if they're not an admin, check if the status change is ok.
+    if(!utils.contains(req.session.user.groups, 'admin')) {
+      if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
+        return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
 
-    var review = utils.contains(['accepted', 'denied'], req.body.status);
-    if (review && (req.body.review_token !== order.attributes.review_token || order.attributes.token_used != null))
-      return res.send(401, 'bad review token');
+      var review = utils.contains(['accepted', 'denied'], req.body.status);
+      if (review && (req.body.review_token !== order.attributes.review_token || order.attributes.token_used != null))
+        return res.send(401, 'bad review token');
 
-    if (req.body.status === 'submitted' && !order.isComplete())
-      return res.send(403, 'order not complete');
+      if (req.body.status === 'submitted' && !order.isComplete())
+        return res.send(403, 'order not complete');
 
-    if (req.body.status === 'submitted' && !order.toJSON().submittable)
-      return res.send(403, 'order not submitttable');
+      if (req.body.status === 'submitted' && !order.toJSON().submittable)
+        return res.send(403, 'order not submitttable');
+    }
 
     var done = function(status) {
       if (status.attributes.status === 'submitted') {

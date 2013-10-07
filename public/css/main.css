@@ -47,7 +47,9 @@ header.navbar {
 .footer-nav {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 20px;
   /* Normalize footer so heights don't get wonky from line-heights */
   font-size: 0;
 }

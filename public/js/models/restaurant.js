@@ -91,7 +91,6 @@ var Restaurant = Backbone.Model.extend({
   },
 
   isValidDeliveryTime: function( date ){
-    console.log(date)
     if ( typeof date !== 'string' ) return false;
 
     if ( new Date(date).toString() === 'Invalid Date' ) return false;

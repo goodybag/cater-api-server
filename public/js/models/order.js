@@ -77,7 +77,24 @@ var Order = Backbone.Model.extend({
   validator: amanda('json'),
 
   validate: function(attrs, options) {
-    return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
+    var errors = this.validator.validate(
+      attrs,
+      _.result(this, 'schema'),
+      options || {},
+      function(err) { return err; }
+    ) || [];
+
+    if ( typeof errors === 'object' && !_( errors ).isArray() ){
+      errors = Array.prototype.slice.call( errors );
+    }
+
+    errors = errors.concat(
+      // restaurant validate expects an order model and this instance does not
+      // have all the attrs set
+      this.restaurant.validateOrderFulfillability( new Order( attrs ) )
+    );
+
+    return errors.length > 0 ? errors : false;
   },
 
   urlRoot: '/orders',

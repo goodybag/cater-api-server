@@ -91,6 +91,7 @@ var Restaurant = Backbone.Model.extend({
   },
 
   isValidDeliveryTime: function( date ){
+    console.log(date)
     if ( typeof date !== 'string' ) return false;
 
     if ( new Date(date).toString() === 'Invalid Date' ) return false;
@@ -103,9 +104,9 @@ var Restaurant = Backbone.Model.extend({
     var hours = this.get('delivery_times')[ day ];
     var time = (date.split(' ')[1] + ':00').substring( 0, 8 );
 
-    return _.filter( hours, function( openClose ){
+    return _.every( hours, function( openClose ){
       return time >= openClose[0] && time < openClose[1]
-    }).length === hours.length;
+    });
   },
 
   isValidMaxGuests: function( num ){
@@ -120,7 +121,6 @@ var Restaurant = Backbone.Model.extend({
 
   isValidGuestDateCombination: function( order ){
     var date = order.get('datetime');
-
     if ( typeof date !== 'string' ) return false;
 
     if ( new Date(date).toString() === 'Invalid Date' ) return false;

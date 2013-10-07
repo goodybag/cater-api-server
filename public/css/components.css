@@ -237,6 +237,7 @@
 .order-params-bar {
   position: relative; /* So datepicker doesn't bleed */
   display: table;
+  width: 100%;
   margin: 0 auto;
   margin-bottom: 20px;
   padding: 15px 18px;

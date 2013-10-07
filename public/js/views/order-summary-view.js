@@ -7,6 +7,11 @@ var OrderSummaryView = Backbone.View.extend({
 
   initialize: function(options) {
     if (this.model) this.setModel(this.model);
+    this.setMaxHeight();
+    $(window).resize(utils.bind(this.setMaxHeight, this));
+  },
+
+  setMaxHeight: function() {
     this.$el.css('max-height', window.innerHeight - 60);
   },
 

@@ -661,8 +661,10 @@ a.list-group-item .list-group-item-heading {
 }
 
 /** Order Params Modal Overrides **/
-.modal-order-params > .modal-dialog {
-  width: 586px;
+@media (min-width: 768px) {
+  .modal-order-params > .modal-dialog {
+    width: 586px;
+  }
 }
 
 .modal-order-params .order-params-bar {

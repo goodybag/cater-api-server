@@ -15,12 +15,14 @@
   border-right: solid #CCCCC0 1px;
 }
 
-.panel-order-details .col-left .panel-body {
-  padding-right: 4px;
-}
+@media (min-width: 769px){
+  .panel-order-details .col-left .panel-body {
+    padding-right: 4px;
+  }
 
-.panel-order-details .col-right .panel-body {
-  padding-left: 7px;
+  .panel-order-details .col-right .panel-body {
+    padding-left: 7px;
+  }
 }
 
 .panel-order-details .restaurant-name {
@@ -58,9 +60,11 @@
   margin-bottom: 0;
 }
 
-.date-time-guests .form-group {
-  padding-left: 6px;
-  padding-right: 6px;
+@media (min-width: 769px){
+  .date-time-guests .form-group {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
 }
 
 .left-fields .form-group[data-icon]:before {
@@ -101,24 +105,30 @@
   margin-top: 22px;
 }
 
-.form-group.form-group-block.form-group-phone {
-  width: 72%;
-}
-
-.form-group-city {
-  width: 60%;
-}
-
-.form-group-state {
-  width: 40%;
-  margin-left: 0 !important;
-  padding-left: 10px;
-}
-
+.form-group-state,
 .form-group-zip {
   margin-left: 0 !important;
-  width: 120px;
 }
+
+@media (min-width: 769px){
+  .form-group.form-group-block.form-group-phone {
+    width: 72%;
+  }
+
+  .form-group-city {
+    width: 60%;
+  }
+
+  .form-group-state {
+    width: 40%;
+    padding-left: 10px;
+  }
+
+  .form-group-zip {
+    width: 120px;
+  }
+}
+
 
 /**
  * Line Item

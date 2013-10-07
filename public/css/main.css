@@ -127,8 +127,12 @@ header.navbar {
     margin-bottom: 3px;
   }
 
+  .navbar .navbar-brand {
+    padding-top: 10px;
+  }
+
   .navbar .navbar-btn {
-    margin-top: 15px;
+    margin-top: 13px;
   }
 }
 

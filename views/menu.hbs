@@ -28,14 +28,26 @@
             <div class="list-group list-group-flush category" id="category-{{id}}">
               {{#each items}}
               <a class="list-group-item item" id="item-{{id}}">
-                <h5 class="list-group-item-heading">{{name}}</h5>
-                <dl class="list-item-legend item-legend">
-                  <dt>Feeds</dt>
-                  <dd>{{range feeds_min feeds_max}}</dd>
-                  <dt>Price</dt>
-                  <dd>{{dollars price}}</dd>
-                </dl>
-                <p class="list-group-item-text">{{description}}</p>
+                <div class="row">
+                  <h5 class="list-group-item-heading col-md-8">{{name}}</h5>
+                  <dl class="list-item-legend item-legend col-md-4">
+                    <div class="col-md-6 feeds-col">
+                      <div class="col-md-6 dt-col">
+                        <dt class="pull-right">Feeds</dt>
+                      </div>
+                      <dd class="col-md-6">{{range feeds_min feeds_max}}</dd>
+                    </div>
+                    <div class="col-md-6 price-col">
+                      <div class="col-md-6 dt-col">
+                        <dt class="pull-right">Price</dt>
+                      </div>
+                      <dd class="col-md-6">{{dollars price}}</dd>
+                    </div>
+                  </dl>
+                </div>
+                <div class="row">
+                  <p class="list-group-item-text col-md-12">{{description}}</p>
+                </div>
               </a>
               {{/each}}
             </div>

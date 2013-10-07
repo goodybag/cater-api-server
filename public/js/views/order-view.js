@@ -79,24 +79,29 @@ var OrderView = FormView.extend({
   },
 
   displayErrors: function(){
-    if ( !this.model.validationError ){
-      return FormView.prototype.displayErrors.apply( this, arguments );
-    }
-
+    if ( !this.model.validationError ) return this;
     // Maps field names to error selectors
     var fieldSelector = {
       zip: '.alert-bad-zip'
     };
 
     // Show each alert corresponding to an error
-    for (var i = 0, l = this.model.validationError.length; i < l; ++i){
-      if ( !(this.model.validationError[i].property in fieldSelector) ) continue;
+    for (var i = 0, selector, l = this.model.validationError.length; i < l; ++i){
+      if ( typeof this.model.validationError[i] === 'string' ){
+        selector = '[data-error="' + this.model.validationError[i] + '"]';
+      } else if ( typeof this.model.validationError[i] === 'object' ){
+        if ( !(this.model.validationError[i].property in fieldSelector) ) continue;
+        selector = fieldSelector[ this.model.validationError[i].property ];
+      } else continue;
 
-      this.$el.find( fieldSelector[ this.model.validationError[i].property ] ).removeClass('hide');
+      this.$el.find( selector ).removeClass('hide');
     }
 
-    return FormView.prototype.displayErrors.apply( this, arguments );
+    return this;
   },
+
+  // Override onChange to noop because we do not want to hide the submit button
+  onChange: function(){},
 
   clearErrors: function(){
     this.$el.find('.alert').addClass('hide');

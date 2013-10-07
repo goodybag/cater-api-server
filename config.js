@@ -114,6 +114,11 @@ var config = {
   , testPhoneVoice: '5125390612'
 
   , emailEnabled: true
+
+  , analytics: {
+      mixpanel: { token: '19b0f133cb82e5b2ff6b86b20cfb6a9c' }
+    , segmentio: { token: 'e8afjpmvp7'}
+    }
   }
 
 

@@ -168,7 +168,7 @@ module.exports.changeStatus = function(req, res) {
         }
       }
 
-      if (utils.contains(['submitted', 'accepted', 'denied', 'delivered'], status.attributes.status)) {
+      if (utils.contains(['submitted', 'accepted', 'delivered'], status.attributes.status)) {
         var viewOptions = {
           layout: 'email-layout',
           status: status.toJSON(),

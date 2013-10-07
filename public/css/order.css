@@ -249,6 +249,13 @@
 
 .order-totals dt {
   font-weight: 300;
+  float: left;
+  overflow: hidden;
+  clear: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+  width: 160px;
 }
 
 .order-totals dd {
@@ -324,7 +331,7 @@
     left: -9999px;
   }
 
-  #order-summary-table-container tr { border: 1px solid #ccc; }
+  /*#order-summary-table-container tr { border: 1px solid #ccc; }*/
 
   #order-summary-table-container td {
     /* Behave  like a "row" */
@@ -333,15 +340,16 @@
     position: relative;
     padding-left: 25%;
     white-space: normal;
-    text-align:left;
+    text-align:right;
+    padding-right: 16px;
   }
 
   #order-summary-table-container td:before {
     /* Now like a table header */
     position: absolute;
     /* Top/left values mimic padding */
-    top: 6px;
-    left: 6px;
+    top: 16px;
+    left: 16px;
     width: 45%;
     padding-right: 10px;
     white-space: nowrap;
@@ -368,7 +376,10 @@
   /*
   Label the data
   */
-  #order-summary-table-container td:before { content: attr(data-title); }
+  #order-summary-table-container td:before {
+    content: attr(data-title);
+    margin-top: 14px;
+  }
 }
 
 @media (max-width: 768px) {

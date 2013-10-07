@@ -350,17 +350,13 @@
     /* Now like a table header */
     position: absolute;
     /* Top/left values mimic padding */
-    top: 12px;
+    top: 4px;
     left: 16px;
     width: 45%;
     padding-right: 10px;
     white-space: nowrap;
     text-align:left;
     font-weight: bold;
-  }
-
-  #order-summary-table-container td.line-item-price:before {
-    top: 4px;
   }
 
   #order-summary-table-container .order-line-item-table .line-item-name {

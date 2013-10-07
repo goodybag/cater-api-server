@@ -119,7 +119,7 @@ header.navbar {
   height: 150px;
 }
 
-@media (max-width: 526px){
+@media (max-width: 526px) {
   .navbar .btn-group + .header-info {
     display: block;
     padding-top: 0;
@@ -129,5 +129,11 @@ header.navbar {
 
   .navbar .navbar-btn {
     margin-top: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  header.navbar {
+    margin-bottom: 16px;
   }
 }

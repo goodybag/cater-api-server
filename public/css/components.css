@@ -522,6 +522,13 @@ a.list-group-item .list-group-item-heading {
   max-width: 600px;
 }
 
+@media (max-width: 768px) {
+  .page-title,
+  .page-menu .page-title {
+    font-size: 20px;
+  }
+}
+
 /**
  * Modals
  */

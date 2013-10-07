@@ -62,7 +62,23 @@
               <h2 class="restaurant-name">{{order.restaurant.name}}</h2>
             </div>
             <div class="col-sm-3">
+              {{#if admin}}
+              <div class="btn-group">
+                <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
+                  {{order.status}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="javascript:void;" id="change-status-pending">pending</a></li>
+                  <li><a href="javascript:void;" id="change-status-canceled">canceled</a></li>
+                  <li><a href="javascript:void;" id="change-status-submitted">submitted</a></li>
+                  <li><a href="javascript:void;" id="change-status-denied">denied</a></li>
+                  <li><a href="javascript:void;" id="change-status-accepted">accepted</a></li>
+                  <li><a href="javascript:void;" id="change-status-delivered">delivered</a></li>
+                </ul>
+              </div>
+              {{else}}
               {{> status_label order}}
+              {{/if}}
             </div>
           </div>
           <div class="date-created">

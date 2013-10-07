@@ -221,6 +221,16 @@
   font-weight: 300;
 }
 
+.panel-heading.panel-heading-small {
+  padding-top: 6px;
+  padding-bottom: 5px;
+}
+
+.panel-heading-small .panel-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
 /**
  * Order params bar
  */

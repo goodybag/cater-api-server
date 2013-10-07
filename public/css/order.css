@@ -360,3 +360,9 @@
   */
   #order-summary-table-container td:before { content: attr(data-title); }
 }
+
+@media (max-width: 768px) {
+  .panel-order-details .date-created {
+    margin-top: 12px;
+  }
+}

@@ -125,7 +125,10 @@ module.exports.changeStatus = function(req, res) {
 
         res.render('email-order-submitted', viewOptions, function(err, html) {
           // TODO: error handling
-          utils.sendMail(order.attributes.restaurant.email, 'orders@goodybag.com', 'You have received a new Goodybag order (#' + order.attributes.id+ ')', html);
+          utils.sendMail([order.attributes.restaurant.email, 'orders@goodybag.com'],
+                         'orders@goodybag.com',
+                         'You have received a new Goodybag order (#' + order.attributes.id+ ')',
+                         html);
         });
 
         if (order.attributes.restaurant.sms_phone) {

@@ -5,8 +5,26 @@ var AuthView = Backbone.View.extend({
     'submit form.forgot-password-form': 'forgotPassword'
   },
 
+  initialize: function(options) {
+    if (analytics) {
+      analytics.trackForm($('.login-form'), 'Attempted Login', function(form) {
+        return {email: $('.login-form #email').val()};
+      });
+
+      analytics.trackForm($('.waitlist-form'), 'Attempted Add to Waitlist', function(form) {
+        return {
+          email: $('.waitlist-form .email').val(),
+          organization: $('.waitlist-form .organization').val()
+        };
+      });
+}
+  },
+
   toggleTopForm: function(e) {
     e.preventDefault();
+
+    if (analytics) analytics.track('Clicked ' + e.currentTarget.id, {email: this.$el.find('.top-form input[type="email"]').val()});
+
     this.$el.find('form.top-form').toggleClass('hide');
     this.$el.find('.top-form:visible input[type="email"]').focus();
   },
@@ -27,6 +45,8 @@ var AuthView = Backbone.View.extend({
       this.$el.find('form.forgot-password-form input[type="email"]').parent().addClass('has-error');
       return;
     }
+
+    if (analytics) analytics.track('Reset Password', {email: email});
 
     var self = this;
     $.ajax({

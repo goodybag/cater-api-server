@@ -43,6 +43,7 @@ var FormView = Backbone.View.extend({
     callback = _.isFunction(callback) ? callback : function() {};
     this.clearErrors();
     var diff = this.getDiff();
+
     if (!diff) return callback.call(this);
     var view = this;
     var sent = this.model.save(diff, {

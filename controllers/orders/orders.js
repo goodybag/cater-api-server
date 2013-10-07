@@ -125,8 +125,8 @@ module.exports.changeStatus = function(req, res) {
 
         res.render('email-order-submitted', viewOptions, function(err, html) {
           // TODO: error handling
-          utils.sendMail([order.attributes.restaurant.email, 'orders@goodybag.com'],
-                         'orders@goodybag.com',
+          utils.sendMail([order.attributes.restaurant.email, config.emails.orders],
+                         config.emails.orders,
                          'You have received a new Goodybag order (#' + order.attributes.id+ ')',
                          html);
         });
@@ -180,7 +180,7 @@ module.exports.changeStatus = function(req, res) {
           //TODO: error handling
           utils.sendMail(
             order.attributes.user.email,
-            'orders@goodybag.com',
+            config.emails.orders,
             'Goodybag order (#'+ order.attributes.id + ') has been ' + status.attributes.status,
             html,
             function(err, result) {

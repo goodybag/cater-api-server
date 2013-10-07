@@ -9,8 +9,14 @@ var OrderView = FormView.extend({
       'click .edit-address-btn': 'editAddress',
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
       'click .btn-submit': 'submit',
-      'click .btn-reject': _.bind(this.changeStatus, this, 'denied', this.options.review_token),
-      'click .btn-accept': _.bind(this.changeStatus, this, 'accepted', this.options.review_token)
+      'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),
+      'click .btn-accept': _.bind(this.changeStatus, this, 'accepted'),
+      'click #change-status-pending': _.bind(this.changeStatus, this, 'pending', false),
+      'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled', false),
+      'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted', false),
+      'click #change-status-denied': _.bind(this.changeStatus, this, 'denied', false),
+      'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted', false),
+      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', false)
     }
   },
 
@@ -110,8 +116,10 @@ var OrderView = FormView.extend({
     this.$el.find('.btn-submit').toggleClass( 'hide', !value );
   },
 
-  changeStatus: function(status) {
-    if (status == 'submitted') {
+  changeStatus: function(status, checkNulls) {
+    if (checkNulls == null) checkNulls = true;
+    if (status === this.model.get('status')) return;
+    if (checkNulls && status == 'submitted') {
       var vals = _.pick(this.model.toJSON(), this.model.requiredFields)
       this.$el.find('.order-form-field').parent().removeClass('has-error');
       var err = false;

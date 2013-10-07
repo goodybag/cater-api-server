@@ -170,7 +170,7 @@
         <tbody>
           {{#each order.orderItems}}
           <tr id="order-item-{{this.id}}">
-            <td class="line-item-name" data-title="name">
+            <td class="line-item-name" data-title="Name">
               <div class="item-name">{{this.name}}</div>
               <ul class="comma-separated item-options">
                 {{#each options_sets}}
@@ -183,7 +183,7 @@
               </ul>
               {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
             </td>
-            <td class="line-item-quantity" data-title="quantity">
+            <td class="line-item-quantity" data-title="Quantity">
               {{#if ../order.editable}}
                 <span class="icon-x">x</span>
                 <input type="number" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
@@ -191,14 +191,14 @@
                 <span class="item-quantity-span order-item-field order-item-quantity" />{{this.quantity}}</span>
               {{/if}}
             </td>
-            <td class="line-item-notes" data-title="notes">
+            <td class="line-item-notes" data-title="Notes">
               {{#if ../order.editable}}
                 <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
               {{else}}
                 <span name="notes" class="item-notes-span order-item-field order-item-notes">{{this.notes}}</span>
               {{/if}}
             </td>
-            <td class="line-item-price" data-title="price">{{dollars this.sub_total}}</td>
+            <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>
           {{/each}}
         </tbody>
@@ -216,12 +216,12 @@
       {{/if}}
 
       <div class="row panel-actions">
-        <div class="col-lg-6 actions-left">
+        <div class="col-sm-6 actions-left">
           {{#if order.editable}}
           <a class="btn btn-default btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add to Order</a>
           {{/if}}
         </div>
-        <div class="col-lg-6 actions-right">
+        <div class="col-sm-6 actions-right">
           {{#if owner}}
             <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
             <button class="btn btn-primary btn-submit{{#unless order.submittable}} hide{{/unless}}">Submit</button>

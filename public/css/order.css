@@ -277,8 +277,10 @@
   margin-top: 10px;
 }
 
-.panel-actions .btn {
-  margin-left: 10px;
+@media (min-width: 768px) {
+  .panel-actions .btn {
+    margin-left: 10px;
+  }
 }
 
 .panel-actions > .actions-right {
@@ -348,13 +350,17 @@
     /* Now like a table header */
     position: absolute;
     /* Top/left values mimic padding */
-    top: 16px;
+    top: 12px;
     left: 16px;
     width: 45%;
     padding-right: 10px;
     white-space: nowrap;
     text-align:left;
     font-weight: bold;
+  }
+
+  #order-summary-table-container td.line-item-price:before {
+    top: 4px;
   }
 
   #order-summary-table-container .order-line-item-table .line-item-name {

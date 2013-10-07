@@ -386,4 +386,11 @@
   .panel-order-details .date-created {
     margin-top: 12px;
   }
+
+  .panel-actions .btn {
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 }

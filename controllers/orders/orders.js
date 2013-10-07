@@ -102,7 +102,8 @@ module.exports.changeStatus = function(req, res) {
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return logger.db.error(TAGS, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
-    if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
+
+    if (!utils.contains(req.session.user.groups, 'admin') && !utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
       return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
 
     var review = utils.contains(['accepted', 'denied'], req.body.status);

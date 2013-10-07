@@ -84,10 +84,13 @@ var Order = Backbone.Model.extend({
       function(err) { return err; }
     ) || [];
 
+    // Amanda result is not an array, it's just an object that looks like an array
+    // cast it to an array
     if ( typeof errors === 'object' && !_( errors ).isArray() ){
       errors = Array.prototype.slice.call( errors );
     }
 
+    // Add on the restaurant fulfillability errors
     errors = errors.concat(
       // restaurant validate expects an order model and this instance does not
       // have all the attrs set

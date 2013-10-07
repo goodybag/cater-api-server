@@ -126,4 +126,8 @@ header.navbar {
     margin-top: -10px;
     margin-bottom: 3px;
   }
+
+  .navbar .navbar-btn {
+    margin-top: 15px;
+  }
 }

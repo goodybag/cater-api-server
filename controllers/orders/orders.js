@@ -189,6 +189,12 @@ module.exports.changeStatus = function(req, res) {
           );
         });
       }
+
+      if (status.attributes.status === 'denied') {
+        uitls.sendMail(config.emails.orders, config.emails.orders, 'Order #' + order.attributes.id + ' denied',
+                       null, config.baseUrl + '/orders/' + order.attributes.id);
+      }
+
       res.send(201, status.toJSON());
     }
 

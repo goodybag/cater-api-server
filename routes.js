@@ -318,7 +318,6 @@ module.exports.register = function(app) {
   });
 
   app.all('/users/:uid', function(req, res, next) {
-    console.log(req.params);
     if (!req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params.uid !== ''+req.session.user.id))
       res.send(404);
     else

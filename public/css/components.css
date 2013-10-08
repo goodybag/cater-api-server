@@ -136,6 +136,11 @@
 .delivery-times > dt {
   font-weight: 500;
   text-align: left;
+  float: left;
+  overflow: hidden;
+  clear: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .lead-times > dt {
@@ -221,12 +226,23 @@
   font-weight: 300;
 }
 
+.panel-heading.panel-heading-small {
+  padding-top: 6px;
+  padding-bottom: 5px;
+}
+
+.panel-heading-small .panel-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
 /**
  * Order params bar
  */
 .order-params-bar {
   position: relative; /* So datepicker doesn't bleed */
   display: table;
+  width: 100%;
   margin: 0 auto;
   margin-bottom: 20px;
   padding: 15px 18px;
@@ -264,7 +280,7 @@
   }
 
   .order-params-bar .form-group {
-    margin-left: 0;
+    margin-left: 0 !important;
   }
 
   .order-params-bar .form-control {
@@ -331,12 +347,22 @@
   font-weight: 300;
 }
 
-.item-legend dt:first-child ~ dt {
-  margin-left: 20px;
+.item-legend .dt-col {
+  padding-right:0;
 }
 
 .item-legend dd {
   color: #000;
+  padding-left: 10px;
+  padding-right: 0;
+}
+
+.item-legend .feeds-col {
+  padding-right:0;
+}
+
+.item-legend .price-col {
+  padding-left: 0;
 }
 
 
@@ -398,12 +424,6 @@ a.list-group-item .list-group-item-heading {
   margin-bottom: 0;
 }
 
-.menu .list-item-legend {
-  position: absolute;
-  right: 12px;
-  top: 12px;
-}
-
 .menu .list-group-item-heading {
   font-weight: 700;
 }
@@ -419,6 +439,7 @@ a.list-group-item .list-group-item-heading {
 
 .order-summary {
   font-size: 12px;
+  overflow: scroll;
 }
 
 .order-summary .panel-heading, .order-summary .panel-footer {
@@ -503,6 +524,13 @@ a.list-group-item .list-group-item-heading {
 .page-my-orders .order-container {
   /* 570 + gutters */
   max-width: 600px;
+}
+
+@media (max-width: 768px) {
+  .page-title,
+  .page-menu .page-title {
+    font-size: 20px;
+  }
 }
 
 /**
@@ -637,8 +665,10 @@ a.list-group-item .list-group-item-heading {
 }
 
 /** Order Params Modal Overrides **/
-.modal-order-params > .modal-dialog {
-  width: 586px;
+@media (min-width: 768px) {
+  .modal-order-params > .modal-dialog {
+    width: 586px;
+  }
 }
 
 .modal-order-params .order-params-bar {

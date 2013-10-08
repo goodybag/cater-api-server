@@ -43,6 +43,7 @@ var FormView = Backbone.View.extend({
     callback = _.isFunction(callback) ? callback : function() {};
     this.clearErrors();
     var diff = this.getDiff();
+
     if (!diff) return callback.call(this);
     var view = this;
     var sent = this.model.save(diff, {
@@ -51,9 +52,11 @@ var FormView = Backbone.View.extend({
       singleError: false,
       success: function(model, response, options) {
         view.$el.find(view.submitSelector).addClass('hide');
+        view.trigger('save:success', response, view);
         callback.call(view, null, response);
       },
       error: function(model, response, options) {
+        view.trigger('save:error', response, view);
         callback.call(view, response);
       }
     });

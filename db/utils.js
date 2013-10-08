@@ -60,8 +60,19 @@ function createTable(definition, callback) {
       parts.push(checks.join(', '));
     }
 
-    if (schema[field].references && schema[field].references.table && schema[field].references.column)
-      parts.push(['REFERENCES', schema[field].references.table, '("' + schema[field].references.column + '")'].join(' '));
+    if (schema[field].references && schema[field].references.table && schema[field].references.column){
+      var references = [
+        'REFERENCES',
+        schema[field].references.table,
+        '("' + schema[field].references.column + '")'
+      ];
+
+      if (schema[field].references.onDelete){
+        references.push(['on delete', schema[field].references.onDelete].join(' '));
+      }
+
+      parts.push(references.join(' '));
+    }
 
     sql.push(parts.join(' '));
   }

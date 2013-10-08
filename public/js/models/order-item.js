@@ -19,7 +19,6 @@ var OrderItem = Backbone.Model.extend({
           properties: {
             name: {
               type: ['string', 'null'],
-              minLength: 1,
               required: false
             },
             type: {
@@ -39,7 +38,6 @@ var OrderItem = Backbone.Model.extend({
                   },
                   description: {
                     type: ['string', 'null'],
-                    minLength: 1,
                     required: false
                   },
                   price: {

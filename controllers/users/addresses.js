@@ -9,6 +9,9 @@ module.exports.create = function(req, res, next) {
   next();
 };
 
+/**
+ * GET /users/:uid/addresses
+ */
 module.exports.list = function(req, res, next) {
   var query = { 
     where: {
@@ -21,8 +24,20 @@ module.exports.list = function(req, res, next) {
   });
 };
 
+/**
+ * GET /users/:uid/addresses/:aid
+ */
 module.exports.get = function(req, res, next) {
-  next();
+  var query = { 
+    where: {
+      user_id: req.params.uid
+    , id:      req.params.aid
+    }
+  };
+  Address.findOne(query, function(error, address) {
+    if (error) return res.error(errors.internal.DB_FAILURE, error);
+    res.render('address-edit', { address: address.toJSON() });
+  });
 };
 
 module.exports.update = function(req, res, next) {

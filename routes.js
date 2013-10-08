@@ -344,6 +344,8 @@ module.exports.register = function(app) {
 
   app.get('/users/:uid/addresses', controllers.users.addresses.list);
 
+  app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
+
   app.all('/users/:uid', function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);

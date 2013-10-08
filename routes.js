@@ -344,12 +344,18 @@ module.exports.register = function(app) {
 
   app.get('/users/:uid/addresses', controllers.users.addresses.list);
 
+  app.get('/users/:uid/addresses/new', controllers.users.addresses.edit);
+
+  app.post('/users/:uid/addresses', controllers.users.addresses.create);
+
   app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
 
   app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
 
+  //app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
+
   app.all('/users/:uid', function(req, res, next) {
-    res.set('Allow', 'GET', 'PUT');
+    res.set('Allow', 'GET', 'PUT', 'POST', 'DELETE');
     res.send(405);
   });
 

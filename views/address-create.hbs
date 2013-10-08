@@ -1,10 +1,10 @@
 <div class="container">
-  <h1 class="col-lg-12 page-title">Edit Address</h1>
+  <h1 class="col-lg-12 page-title">Enter a new address</h1>
   <div class="row">
     <div class="col-lg-6 col-lg-offset-3">
       <div class="panel">
         <div class="panel-body">
-          <form method="post">
+          <form method="post" action="/users/me/addresses">
             <fieldset>
               {{#if flash}}
                 <div class="alert alert-success fade in">
@@ -12,17 +12,13 @@
                 <strong>{{flash}}</strong>
                 </div>
               {{/if}}
-
-              {{#with address}}
-                <input type="hidden" name="_method" value="put" />
-                {{> edit_address}}
+              {{> edit_address}}
 
               {{#if is_default}}
                 <p class="text-danger">This is your default address</p>
               {{/if}}
               <a href="../addresses" class="btn btn-default pull-left">Back to Address Book</a>
-              <button type="submit" class="btn btn-primary pull-right">Update Address</button>
-              {{/with}}
+              <button type="submit" class="btn btn-primary pull-right">Create Address</button>
             </fieldset>
           </form>
         </div>

@@ -5,8 +5,29 @@ var db = require('../../db')
   , config = require('../../config')
   , Address = require('../../models/address');
 
+/**
+ * POST /users/:uid/addresses
+ */
 module.exports.create = function(req, res, next) {
-  next();
+  var address = new Address({
+    user_id:      req.session.user.id
+  , street:       req.body.street
+  , city:         req.body.city
+  , state:        req.body.state
+  , zip:          req.body.zip
+  , is_default:   false
+  });
+  address.save(function(error, address) {
+    if (error) return res.error(errors.internal.DB_FAILURE, error);
+    res.redirect('/users/me/addresses');
+  });
+};
+
+/**
+ * GET /users/:uid/addresses/new
+ */
+module.exports.edit = function(req, res, next) {
+  res.render('address-create');
 };
 
 /**
@@ -40,6 +61,9 @@ module.exports.get = function(req, res, next) {
   });
 };
 
+/**
+ * PUT /users/:uid/addresses/:aid
+ */
 module.exports.update = function(req, res, next) {
   Address.findOne(parseInt(req.params.aid), function(error, address) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);

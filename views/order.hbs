@@ -207,7 +207,21 @@
     {{/unless}}
 
     <div class="panel-body">
-      {{#if order.orderItems.length}}
+      {{#if order.adjustment}}
+      <div class="row">
+        <div class="col-lg-8">
+          <p>{{order.adjustment.description}}</p>
+        </div>
+        <div class="col-lg-4">
+          <dl class="dl-horizontal pull-right">
+            <dt>Adjustment:</dt>
+            <dd>{{order.adjuctment.amount}}<dd>
+          </dl>
+        </div>
+      </div>
+      <hr>
+      {{/if}}
+      {{#if order.sub_total}}
       <div class="row">
         <div class="col-lg-12 totals">
           {{> totals}}

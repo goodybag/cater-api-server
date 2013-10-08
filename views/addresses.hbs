@@ -5,10 +5,14 @@
       <div class="panel">
         <div class="panel-body">
           {{#each addresses}}
-            <strong>
-              Address {{@index}}
-            </strong>
-            {{> address }}
+            <div class="list-group">
+              <div class="list-item">
+                <strong>
+                  Address {{@index}}
+                </strong>
+                {{> address }}
+              </div>
+            </div>
           {{/each}}
         </div>
       </div>

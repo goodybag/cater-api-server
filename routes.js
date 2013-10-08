@@ -346,8 +346,10 @@ module.exports.register = function(app) {
 
   app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
 
+  app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
+
   app.all('/users/:uid', function(req, res, next) {
-    res.set('Allow', 'GET');
+    res.set('Allow', 'GET', 'PUT');
     res.send(405);
   });
 

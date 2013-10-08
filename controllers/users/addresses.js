@@ -41,8 +41,19 @@ module.exports.get = function(req, res, next) {
 };
 
 module.exports.update = function(req, res, next) {
-  // Todo: If 'default' remove from others 
-  next();
+  Address.findOne(parseInt(req.params.aid), function(error, address) {
+    if (error) return res.error(errors.internal.DB_FAILURE, error);
+    if (address === null) return res.send(404);
+
+    // Replace address fields
+    var updates = utils.pick(req.body, ['street', 'city', 'state', 'zip']);
+    utils.extend(address.attributes, updates);
+
+    address.save(function(error, address) {
+      if (error) return res.error(errors.internal.DB_FAILURE, error);
+      res.render('address-edit', { address: address[0], flash: 'Saved Successfully' });
+    });
+  });
 };
 
 module.exports.del = function(req, res, next) {

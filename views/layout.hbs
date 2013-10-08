@@ -4,28 +4,7 @@
     <title>Goodybag</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap -->
-    <link href="/components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
-
-    <!-- Fonts -->
-    <link href="/css/gb-icon.css" rel="stylesheet">
-    <link href="/css/aleo.css" rel="stylesheet">
-    <link href="/css/proxima-nova.css" rel="stylesheet">
-
-    <!-- pickadate -->
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.css" rel="stylesheet">
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.date.css" rel="stylesheet">
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.time.css" rel="stylesheet">
-
-
-    <!-- Moar Convenient CSS Stuff -->
-    <link href="/css/kit.css" rel="stylesheet">
-
-    <!-- Goodybag Catering CSS Stuff -->
-    <link href="/css/main.css" rel="stylesheet">
-    <link href="/css/components.css" rel="stylesheet">
-    <link href="/css/theme.css" rel="stylesheet">
-
+    <link href="/dist/css/base.min.css" rel="stylesheet" media="screen">
     <!--[if lte IE 9]>
     <link rel="stylesheet" href="/css/ie-lte-9.css">
     <![endif]-->
@@ -80,17 +59,17 @@
       </ul>
     </footer>
 
-    <script src="/dist/js/min.js"></script>
+    <script src="/dist/js/base.min.js"></script>
     <script>
-    // $.ajax({
-    //   type: "GET",
-    //   url: "/components/moment-timezone/moment-timezone.json",
-    //   dataType: "json",
-    //   async: false,
-    //   success: function(data) {
-    //     moment.tz.add(data);
-    //   }
-    // });
+    $.ajax({
+      type: "GET",
+      url: "/components/moment-timezone/moment-timezone.json",
+      dataType: "json",
+      async: false,
+      success: function(data) {
+        moment.tz.add(data);
+      }
+    });
     </script>
     <script>
       for (var key in helpers) {
@@ -99,7 +78,9 @@
     </script>
 
     {{{block "templates"}}}
+
     <script src="/dist/js/mvc.min.js"></script>
+
     {{{block "views"}}}
     {{{block "scripts"}}}
 

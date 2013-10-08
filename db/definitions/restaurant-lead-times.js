@@ -29,7 +29,7 @@ define(function(require) {
   , restaurant_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'restaurants', column: 'id'}
+    , references: {table: 'restaurants', column: 'id', onDelete: 'cascade'}
     }
   , max_guests: {
       type: types.int

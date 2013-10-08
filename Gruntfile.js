@@ -56,7 +56,6 @@ module.exports = function(grunt) {
         files: {
           'public/dist/css/combined.css': [
             'public/components/bootstrap/dist/css/bootstrap.min.css'
-          , 'public/components/font-awesome/css/font-awesome.css'
           , 'public/components/select2/select2.css'
           , 'public/components/lalitkapoor-pickadate/lib/themes/classic.css'
           , 'public/components/lalitkapoor-pickadate/lib/themes/classic.date.css'

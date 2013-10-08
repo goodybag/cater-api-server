@@ -1,12 +1,12 @@
 var
   async     = require('async')
-, utils     = require('./utils')
-, config    = require('../config')
-, db        = require('./')
+, utils     = require('../utils')
+, config    = require('../../config')
+, db        = require('../')
 ;
 
 module.exports.run = function( callback ){
-  if(config.env != 'dev') return callback(null);
+  if ( config.env != 'dev' ) return callback();
   console.log("");
   console.log("######################################");
   console.log("#  Running destroy/create database  #");

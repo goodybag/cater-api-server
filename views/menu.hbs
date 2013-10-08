@@ -271,5 +271,12 @@
   ];
 
   orderView.render();
+
+  // track menu / info tab switches
+  if (analytics) {
+    $('.menu-info-tabs a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+      analytics.track('Menu Page Switch to ' + e.target.innerText, {restaurant_id: {{restaurant.id}} });
+    });
+  }
 </script>
 {{/extend}}

@@ -301,7 +301,7 @@ module.exports.register = function(app) {
    *  Current user resource.
    */
 
-   app.all ('/users/me', function(req, res, next) {
+   app.all (/^\/users\/me(?:\/.*)?$/, function(req, res, next) {
     if (!req.session.user) res.send(404);
     else {
       req.url = req.url.replace(/^\/users\/me/, '/users/' + req.session.user.id);
@@ -309,23 +309,8 @@ module.exports.register = function(app) {
     }
   });
 
-  app.all ('/users/me/*', function(req, res, next) {
-    if (!req.session.user) res.send(404);
-    else {
-      req.url = req.url.replace(/^\/users\/me/, '/users/' + req.session.user.id);
-      next();
-    }
-  });
-
-  app.all('/users/:uid', function(req, res, next) {
-    if (!req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params.uid !== ''+req.session.user.id))
-      res.send(404);
-    else
-      next();
-  });
-
-  app.all('/users/:uid/*', function(req, res, next) {
-    if (!req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params.uid !== ''+req.session.user.id))
+  app.all(/^\/users\/(\d+)(?:\/.*)?$/, function(req, res, next) {
+    if (!req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params[0] !== ''+req.session.user.id))
       res.send(404);
     else
       next();

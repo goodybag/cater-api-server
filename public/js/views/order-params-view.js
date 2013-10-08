@@ -57,9 +57,14 @@ var OrderParamsView = Backbone.View.extend({
     , time: (this.timepicker.get()) ? timeFormatter(this.timepicker.get()) : null
     , guests: this.$("input[name='guests']").val() || null
     };
+
+    // Don't know if date and time are going to work correctly with mixpanel
+    if (analytics) analytics.track('Attempted Order Params Update', form);
     this.model.save(form, {
       success: function(model, response, options) {
-        window.location.reload();
+        if (analytics) analytics.track('Successful Order Params Update', response, null, function() {
+          window.location.reload();
+        });
       }
     });
   }

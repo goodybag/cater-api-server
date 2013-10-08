@@ -58,43 +58,32 @@ var ItemModal = Backbone.View.extend({
 
     var data = {
       quantity:     parseInt( this.$el.find('.item-quantity').val() ),
-      notes:        this.$el.find('.form-group-item-notes textarea').val(),
-      options_sets: _.clone( this.model.get('options_sets') )
+      notes:        (this.$el.find('.form-group-item-notes textarea').val()||0).trim(),
     };
-
-    this.clearErrors();
-
-    // Get checkbox/radio option states
-    _( data.options_sets ).each( function( set ){
-      _( set.options ).each( function( option ){
-        var $el = this_.$el.find( '#item-option-' + option.id );
-        delete option.default_state;
-        option.state = $el.prop('checked');
-      });
-    });
 
     if (data.quantity <= 0) {
       if (orderItem) orderItem.destroy();
-    } else {
-      if (orderItem){
-        // Options_sets is not triggering changed, so trigger it when other things wont
-        if ( data.quantity === orderItem.get('quantity') && data.notes === orderItem.get('notes') ){
-          orderItem.trigger('change:options_sets');
-        }
-
-        orderItem.save(data, {wait: true});
-      }
-      else {
-        orderItem = this.options.orderItems.create(
-          _.extend( { item_id: this.model.attributes.id }, data ),
-          { wait: true }
-        );
-      }
+      return this.hide();
     }
 
-    if ( !orderItem || !orderItem.validationError ) return this.hide();
+    // Get checkbox/radio option states
+    data.options_sets = _( this.model.get('options_sets') ).map( function( set ) {
+      return _.extend({}, set, {
+        options: _( set.options ).map( function( option ) {
+          var state = this_.$el.find( '#item-option-' + option.id ).is(':checked');
+          return _.extend({}, _.omit(option, 'default_state'), {state: state});
+        })
+      });
+    });
 
-    this.displayErrors( orderItem.validationError );
+    this.clearErrors();
+
+    if (orderItem)
+      orderItem.save(data, {wait: true});
+    else
+      orderItem = this.options.orderItems.create(_.extend( { item_id: this.model.attributes.id }, data ), { wait: true });
+
+    orderItem.validationError ? this.displayErrors( orderItem.validationError ) : this.hide();
   },
 
   displayErrors: function( errors ){

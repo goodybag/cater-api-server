@@ -4,7 +4,7 @@
  *  User       <-> Address  1-many
  *  Restaurant <-> Address  1-1
  */
-create table "addresses" (
+create table if not exists "addresses" (
   id            serial primary key,
   user_id       int references users(id) on delete cascade,
   street        text,

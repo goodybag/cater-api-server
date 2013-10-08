@@ -75,15 +75,16 @@ module.exports.update = function(req, res, next) {
       function unmarkPreviousDefault(callback) {
         if (updates.is_default) {
           Address.findOne({ where: {is_default: true}}, function(error, prevAddress) {
-            prevAddress.attributes.is_default = false;
-            prevAddress.save(function(error, prevAddress) {
-              if (error) return res.error(errors.internal.DB_FAILURE, error);
-              callback(null);
-            });
+            if (prevAddress) {
+              prevAddress.attributes.is_default = false;
+              prevAddress.save(function(error, prevAddress) {
+                if (error) return res.error(errors.internal.DB_FAILURE, error);
+                callback(null);
+              });
+            } 
           });
-        } else {
-          callback(null);
         }
+        callback(null);
       },
 
       function updateAddress(callback) {

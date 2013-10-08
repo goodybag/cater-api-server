@@ -61,6 +61,13 @@ module.exports = function(grunt) {
           , 'public/components/lalitkapoor-pickadate/lib/themes/classic.css'
           , 'public/components/lalitkapoor-pickadate/lib/themes/classic.date.css'
           , 'public/components/lalitkapoor-pickadate/lib/themes/classic.time.css'
+          , 'public/css/gb-icon.css'
+          , 'public/css/aleo.css'
+          , 'public/css/proxima-nova.css'
+          , 'public/css/kit.css'
+          , 'public/css/main.css'
+          , 'public/css/components.css'
+          , 'public/css/theme.css'
           ]
         }
       }

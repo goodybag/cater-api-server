@@ -26,6 +26,7 @@ var OrderItemSummaryView = Backbone.View.extend({
 
   openEditModal: function(e) {
     e.preventDefault();
+    if (analytics) analytics.track('Edit Order Item', {order_item_id: this.model.id});
     this.options.itemModalView.provideModel(this.model);
     this.options.itemModalView.show();
   },

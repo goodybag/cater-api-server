@@ -4,6 +4,7 @@ ItemView = Backbone.View.extend({
   },
 
   showModal: function() {
+    if (analytics) analytics.track('Click Item', {item_id: this.model.id});
     if ( this.options.orderModel.isFulfillableOrder() ) {
       this.options.itemModalView.provideModel(this.model).show();
     } else {

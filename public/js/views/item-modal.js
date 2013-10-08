@@ -45,11 +45,16 @@ var ItemModal = Backbone.View.extend({
 
   show: function() {
     this.$el.modal('show');
+
+    var props = {type: this.model instanceof OrderItem ? 'Order Item' : 'Item', id: this.model.id };
+    if (analytics) analytics.track('Show Item Modal', props);
   },
 
   hide: function() {
     this.$el.modal('hide');
-  },
+    var props = {type: this.model instanceof OrderItem ? 'Order Item' : 'Item', id: this.model.id };
+    if (analytics) analytics.track('Hide Item Modal', props);
+ },
 
   submit: function(e) {
     e.preventDefault();
@@ -125,6 +130,7 @@ var ItemModal = Backbone.View.extend({
     e.preventDefault();
 
     if ( this.model instanceof OrderItem ){
+      if (analytics) analytics.track('Remove Order Item From Order', {order_item_id: this.model.id});
       this.model.destroy();
     }
 

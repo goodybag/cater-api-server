@@ -34,6 +34,8 @@ var OrderModal = Backbone.View.extend({
     this.showErrors();
     this.fillFields();
     this.$el.modal('show');
+
+    if (analytics) analytics.track('Show Order Params Modal', {order_id: this.model.id});
   },
 
   hide: function() {

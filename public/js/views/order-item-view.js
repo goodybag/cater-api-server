@@ -17,7 +17,7 @@ var OrderItemView = FormView.extend({
 
   onPriceChange: function(e) {
     if (this.model.get('sub_total'))
-      this.$el.find('.line-item-price').text('$' + (this.model.get('sub_total') / 100).toFixed(2));
+      this.$el.find('.line-item-price').text((this.model.get('sub_total') / 100).toFixed(2));
   },
 
   fieldMap: {

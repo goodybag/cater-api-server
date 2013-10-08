@@ -29,22 +29,19 @@ module.exports = function(grunt) {
           , 'public/components/lalitkapoor-pickadate/lib/picker.js'
           , 'public/components/lalitkapoor-pickadate/lib/picker.date.js'
           , 'public/components/lalitkapoor-pickadate/lib/picker.time.js'
-
           , 'public/components/lalitkapoor-pickadate/lib/legacy.js'
 
           , 'public/components/moment/min/moment.min.js'
-
           , 'public/components/moment-timezone/min/moment-timezone.min.js'
 
           , 'public/components/handlebars/handlebars.js'
-
           , 'public/js/hb-helpers.js'
 
           , 'public/js/utils.js'
           ]
         , 'public/dist/js/mvc.min.js': [
-            'public/js/collections/*.js'
-          , 'public/js/models/*.js'
+            'public/js/models/*.js'
+          , 'public/js/collections/*.js'
           , 'public/js/views/form-view.js'
           , 'public/js/views/*.js'
           ]

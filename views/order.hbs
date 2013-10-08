@@ -8,9 +8,10 @@
     <h1 class="col-lg-12 page-title">Review Your Order</h1>
   </div>
 
+  {{#if order.editable}}
   <div class="row">
     <div class="alerts col-lg-12">
-      <div class="alert alert-danger alert-bad-zip row{{#unless order.restaurant.is_bad_zip}} hide{{/unless}}">
+      <div class="alert alert-danger alert-bad-zip row{{#unless order.restaurant.is_bad_zip}} hide{{/unless}}" data-error="is_bad_zip">
         <div class="col-sm-8 alert-left">
           <h3 class="alert-header">Invalid Delivery Zip :(</h3>
           <p>This order can only be delivered to the zip codes listed</p>
@@ -24,7 +25,7 @@
         </div>
       </div>
 
-      <div class="alert alert-danger alert-bad-delivery-time row{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}">
+      <div class="alert alert-danger alert-bad-delivery-time row{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}" data-error="is_bad_delivery_time">
         <div class="col-sm-8 alert-left">
           <h3 class="alert-header">Invalid Delivery Time :(</h3>
           <p>This order cannot be delivered for that date and time. Please ensure that your delivery time is within the restaurants schedule.</p>
@@ -34,12 +35,12 @@
         </div>
       </div>
 
-      <div class="alert alert-danger alert-bad-guests{{#unless order.restaurant.is_bad_guests}} hide{{/unless}}">
+      <div class="alert alert-danger alert-bad-guests{{#unless order.restaurant.is_bad_guests}} hide{{/unless}}" data-error="is_bad_guests">
         <p>This order cannot be delivered for that many guests.</p>
         <p><strong>Maximum guests:</strong> {{order.restaurant.max_guests}}</p>
       </div>
 
-      <div class="alert alert-danger alert-bad-lead-time row{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}">
+      <div class="alert alert-danger alert-bad-lead-time row{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}" data-error="is_bad_lead_time">
         <div class="col-sm-8 alert-left">
           <h3 class="alert-header">Invalid Delivery Time :(</h3>
           <p>This order cannot be delivered for that many guests without more lead time. Please check lead times for this restaurant.</p>
@@ -50,6 +51,7 @@
       </div>
     </div>
   </div>
+  {{/if}}
 
   <div class="panel panel-order-details">
     <form id="order-form" class="form-light order-form row" method="POST" action="javascript:void(0);">
@@ -60,7 +62,23 @@
               <h2 class="restaurant-name">{{order.restaurant.name}}</h2>
             </div>
             <div class="col-sm-3">
+              {{#if admin}}
+              <div class="btn-group">
+                <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
+                  {{order.status}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="javascript:void;" id="change-status-pending">pending</a></li>
+                  <li><a href="javascript:void;" id="change-status-canceled">canceled</a></li>
+                  <li><a href="javascript:void;" id="change-status-submitted">submitted</a></li>
+                  <li><a href="javascript:void;" id="change-status-denied">denied</a></li>
+                  <li><a href="javascript:void;" id="change-status-accepted">accepted</a></li>
+                  <li><a href="javascript:void;" id="change-status-delivered">delivered</a></li>
+                </ul>
+              </div>
+              {{else}}
               {{> status_label order}}
+              {{/if}}
             </div>
           </div>
           <div class="date-created">
@@ -152,7 +170,7 @@
         <tbody>
           {{#each order.orderItems}}
           <tr id="order-item-{{this.id}}">
-            <td class="line-item-name" data-title="name">
+            <td class="line-item-name" data-title="Name">
               <div class="item-name">{{this.name}}</div>
               <ul class="comma-separated item-options">
                 {{#each options_sets}}
@@ -165,22 +183,22 @@
               </ul>
               {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
             </td>
-            <td class="line-item-quantity" data-title="quantity">
+            <td class="line-item-quantity" data-title="Quantity">
               {{#if ../order.editable}}
                 <span class="icon-x">x</span>
-                <input type="number" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
+                <input type="number" min="1" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
               {{else}}
                 <span class="item-quantity-span order-item-field order-item-quantity" />{{this.quantity}}</span>
               {{/if}}
             </td>
-            <td class="line-item-notes" data-title="notes">
+            <td class="line-item-notes" data-title="Notes">
               {{#if ../order.editable}}
                 <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
               {{else}}
                 <span name="notes" class="item-notes-span order-item-field order-item-notes">{{this.notes}}</span>
               {{/if}}
             </td>
-            <td class="line-item-price" data-title="price">{{dollars this.sub_total}}</td>
+            <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>
           {{/each}}
         </tbody>
@@ -198,12 +216,12 @@
       {{/if}}
 
       <div class="row panel-actions">
-        <div class="col-lg-6 actions-left">
+        <div class="col-sm-6 actions-left">
           {{#if order.editable}}
           <a class="btn btn-default btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add to Order</a>
           {{/if}}
         </div>
-        <div class="col-lg-6 actions-right">
+        <div class="col-sm-6 actions-right">
           {{#if owner}}
             <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
             <button class="btn btn-primary btn-submit{{#unless order.submittable}} hide{{/unless}}">Submit</button>

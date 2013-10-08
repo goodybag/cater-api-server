@@ -38,3 +38,7 @@
 .definition-group-subtotal > dd {
   font-weight: 500;
 }
+
+.status-buttons {
+  width: 100%;
+}

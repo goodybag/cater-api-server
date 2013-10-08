@@ -1,5 +1,5 @@
 var
-  db = require('./index')
+  db = require('../')
 , async = require('async')
 ;
 

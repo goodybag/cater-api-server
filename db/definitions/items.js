@@ -29,12 +29,12 @@ define(function(require) {
   , restaurant_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'restaurants', column: 'id'}
+    , references: {table: 'restaurants', column: 'id', onDelete: 'cascade'}
     }
   , category_id: {
       type: types.int
     , nullable: true
-    , references: {table: 'categories', column: 'id'}
+    , references: {table: 'categories', column: 'id', onDelete: 'cascade'}
     }
   , order: {
       type: types.int

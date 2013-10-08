@@ -9,8 +9,14 @@ var OrderView = FormView.extend({
       'click .edit-address-btn': 'editAddress',
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
       'click .btn-submit': 'submit',
-      'click .btn-reject': _.bind(this.changeStatus, this, 'denied', this.options.review_token),
-      'click .btn-accept': _.bind(this.changeStatus, this, 'accepted', this.options.review_token)
+      'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),
+      'click .btn-accept': _.bind(this.changeStatus, this, 'accepted'),
+      'click #change-status-pending': _.bind(this.changeStatus, this, 'pending', false),
+      'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled', false),
+      'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted', false),
+      'click #change-status-denied': _.bind(this.changeStatus, this, 'denied', false),
+      'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted', false),
+      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', false)
     }
   },
 
@@ -72,25 +78,31 @@ var OrderView = FormView.extend({
     this.$el.find(this.fieldMap.phone).val(Handlebars.helpers.phoneNumber(value))
   },
 
-  displayErrors: function(){
-    if ( !this.model.validationError ){
-      return FormView.prototype.displayErrors.apply( this, arguments );
-    }
-
+  displayErrors: function() {
+    FormView.prototype.displayErrors.apply(this, arguments);
+    if ( !this.model.validationError ) return this;
     // Maps field names to error selectors
     var fieldSelector = {
       zip: '.alert-bad-zip'
     };
 
     // Show each alert corresponding to an error
-    for (var i = 0, l = this.model.validationError.length; i < l; ++i){
-      if ( !(this.model.validationError[i].property in fieldSelector) ) continue;
+    for (var i = 0, selector, l = this.model.validationError.length; i < l; ++i){
+      if ( typeof this.model.validationError[i] === 'string' ){
+        selector = '[data-error="' + this.model.validationError[i] + '"]';
+      } else if ( typeof this.model.validationError[i] === 'object' ){
+        if ( !(this.model.validationError[i].property in fieldSelector) ) continue;
+        selector = fieldSelector[ this.model.validationError[i].property ];
+      } else continue;
 
-      this.$el.find( fieldSelector[ this.model.validationError[i].property ] ).removeClass('hide');
+      this.$el.find( selector ).removeClass('hide');
     }
 
-    return FormView.prototype.displayErrors.apply( this, arguments );
+    return this;
   },
+
+  // Override onChange to noop because we do not want to hide the submit button
+  onChange: function(){},
 
   clearErrors: function(){
     this.$el.find('.alert').addClass('hide');
@@ -105,8 +117,10 @@ var OrderView = FormView.extend({
     this.$el.find('.btn-submit').toggleClass( 'hide', !value );
   },
 
-  changeStatus: function(status) {
-    if (status == 'submitted') {
+  changeStatus: function(status, checkNulls) {
+    if (checkNulls == null) checkNulls = true;
+    if (status === this.model.get('status')) return;
+    if (checkNulls && status == 'submitted') {
       var vals = _.pick(this.model.toJSON(), this.model.requiredFields)
       this.$el.find('.order-form-field').parent().removeClass('has-error');
       var err = false;

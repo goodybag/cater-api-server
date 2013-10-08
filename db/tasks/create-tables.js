@@ -1,7 +1,7 @@
 var
   fs = require('fs')
 , async = require('async')
-, utils = require('./utils')
+, utils = require('../utils')
 ;
 
 var definitions = [
@@ -20,6 +20,7 @@ var definitions = [
 , 'password-resets'
 , 'waitlist'
 , 'addresses'
+, 'deltas'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');
@@ -43,15 +44,15 @@ var iterator = function(name, callback){
   async.series([
     // create table
     function(cb) {
-      utils.createTable(require('./definitions/'+name), notify(name, messages.createTable, cb));
+      utils.createTable(require('../definitions/'+name), notify(name, messages.createTable, cb));
     }
     // drop index
   , function(cb) {
-      utils.dropIndex(require('./definitions/'+name), notify(name, messages.dropIndex, cb));
+      utils.dropIndex(require('../definitions/'+name), notify(name, messages.dropIndex, cb));
     }
     // create index
   , function(cb) {
-      utils.createIndex(require('./definitions/'+name), notify(name, messages.createIndex, cb));
+      utils.createIndex(require('../definitions/'+name), notify(name, messages.createIndex, cb));
     }
   ], function(error, results) {
       callback(error, results);

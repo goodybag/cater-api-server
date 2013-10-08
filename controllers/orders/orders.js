@@ -135,7 +135,7 @@ module.exports.changeStatus = function(req, res) {
 
         res.render('email-order-submitted', viewOptions, function(err, html) {
           // TODO: error handling
-          utils.sendMail([order.attributes.restaurant.email, config.emails.orders],
+          utils.sendMail(order.attributes.restaurant.email,
                          config.emails.orders,
                          'You have received a new Goodybag order (#' + order.attributes.id+ ')',
                          html);

@@ -80,6 +80,17 @@ module.exports.update = function(req, res, next) {
   });
 };
 
-module.exports.del = function(req, res, next) {
-  next();
+/**
+ * DELETE /users/:uid/addresses/:aid
+ */
+module.exports.remove = function(req, res, next) {
+  Address.findOne(parseInt(req.params.aid), function(error, address) {
+    if (error) return res.error(errors.internal.DB_FAILURE, error);
+    if (address === null) return res.send(404);
+
+    address.destroy(function(error, response) {
+      if (error) return res.error(errors.internal.DB_FAILURE, error);
+      res.send(200);
+    });
+  });
 };

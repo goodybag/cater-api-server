@@ -4,20 +4,25 @@
     <div class="col-lg-6 col-lg-offset-3">
       <div class="panel">
         <div class="panel-body">
-          {{#each addresses}}
-            <div class="list-group">
+          <div class="list-group">
+            {{#each addresses}}
               <div class="list-item">
-                <strong>
-                  Address {{@index}}
-                </strong>
                 {{> address }}
                 <hr>
               </div>
-            </div>
-          {{/each}}
+            {{/each}}
+          </div>
           <a href="addresses/new" class="btn btn-primary">Add new address</a>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
+{{#extend "scripts"}}
+<script src="/js/views/address-view.js"></script>
+<script>
+  var addressView = new AddressView({ el: '#main' });
+</script>
+{{/extend}}

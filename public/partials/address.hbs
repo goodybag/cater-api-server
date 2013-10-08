@@ -10,9 +10,9 @@
   </address>
   <div class="actions">
     <a href="addresses/{{id}}" class="btn btn-default">Edit</a>
-    <a href="addresses/{{id}}" class="btn btn-default">Remove</a>
+    <button class="btn btn-default address-remove" data-id="{{id}}">Remove</button>
     {{#unless is_default}}
-      <button class="btn btn-primary">Make default address</button>
+      <button class="btn btn-primary address-default">Make default address</button>
     {{/unless}}
   </div>
 </div>

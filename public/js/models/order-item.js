@@ -57,18 +57,11 @@ var OrderItem = Backbone.Model.extend({
   },
 
   initialize: function(attrs, options) {
-    this.on('change:price change:quantity change:options_sets', function() {
-      var total = this.get('price');
-
-      // Add in all selected options
-      _(this.get('options_sets')).each( function( set ){
-        _(set.options).each( function( option ){
-          if ( option.state ) total += option.price;
-        })
-      });
-
-      this.set('sub_total', total * this.get('quantity'));
-    }, this);
+    this.on('change:price change:quantity change:options_sets', function(model, value, options) {
+      var optPrices = _.pluck(_.where(_.flatten(_.pluck(model.get('options_sets'), 'options')), {state: true}), 'price')
+      var priceEach = _.reduce(optPrices, function(a, b) { return a + b; }, model.get('price'));
+      model.set('sub_total', model.get('quantity') * priceEach);
+    });
   },
 
   validator: amanda('json'),

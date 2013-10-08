@@ -1,7 +1,7 @@
 -- 1.0.0.sql
 
 -- #170: Schema Migration Shtuff
-create table "deltas" (
+create table if not exists "deltas" (
   id            serial primary key,
   version       text,
   date          timestamp default now()

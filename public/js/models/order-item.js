@@ -78,20 +78,20 @@ var OrderItem = Backbone.Model.extend({
   validate: function(attrs, options){
     var schemaErrors = this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
 
-    // An array of options arrays whose parent set are type radio
+    // An array of options sets whose parent set are type radio
     var radioSets = _.where(attrs.options_sets, {type: 'radio'});
 
-    // Ensure that all radios have a state === true
+    // Ensure that all radios have an option with state === true
     var emptySets = _( radioSets ).filter( function( optionsSet ) {
       return !_.some(_.pluck(optionsSet.options, 'state'));
     });
 
     var errors = _( emptySets ).map( function( optionsSet ){
       return {
-        name:           'OPTIONS_SET_REQUIRED'
-        , optionSetName:  optionsSet.name
-        , optionSetId:    optionsSet.id
-        , message:        optionsSet.name + ' is required'
+        name:           'OPTIONS_SET_REQUIRED',
+        optionSetName:  optionsSet.name,
+        optionSetId:    optionsSet.id,
+        message:        optionsSet.name + ' is required'
       };
     }).concat(schemaErrors ? Array.prototype.slice.call(schemaErrors) : []);
 

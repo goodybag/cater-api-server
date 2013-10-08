@@ -1,17 +1,19 @@
-var createTypes = require('./create-types');
-var createTables = require('./create-tables');
-var createDb = require('./destroy-create-db');
+var tasks = require('./tasks');
+var async = require('async');
 
 var run = function() {
-  createDb.run(function(error){
-    if (error) return process.exit(1);
-    createTypes.run(function(error, results) {
-      if (error) return process.exit(1);
-      createTables.run(function(error, results) {
-        return process.exit( (error) ? 1 : 0);
-      });
-    });
-  })
+  var fns = ['destroyCreateDb', 'createTypes', 'createTables', 'runDeltas'];
+
+  // Run each task in series as defined by fns
+  // Exit with 1 if there's an error, 0 if not
+  async.series(
+    fns.map( function( f ){
+      return function( done ){ tasks[ f ].run( done ); }
+    })
+  , function( error, results ){
+      process.exit( ~~!!error );
+    }
+  );
 };
 
 if (require.main === module) {

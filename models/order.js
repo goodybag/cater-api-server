@@ -37,6 +37,15 @@ var modifyAttributes = function(callback, err, orders) {
       order.attributes.user = {id: order.attributes.id, email: order.attributes.user_email, organization: order.attributes.organization};
       delete order.attributes.user_email;
       delete order.attributes.organization;
+
+      if (order.attributes.adjustment_amount) {
+        order.attributes.adjustment = {
+          amount: order.attributes.adjustment_amount,
+          description: order.attributes.adjustment_description
+        };
+        delete order.attributes.adjustment_amount;
+        delete order.attributes.adjustment_description;
+      }
     });
   }
   callback.call(this, err, orders);
@@ -68,6 +77,11 @@ module.exports = Model.extend({
   save: function(callback) {
     var insert = this.attributes.id == null;
     if (insert) this.attributes.review_token = uuid.v4();
+    if (this.attributes.adjustment) {
+      this.attributes.adjustment_amount = this.attributes.adjustment.amount;
+      this.attributes.adjustment_description = this.attributes.adjustment.description;
+      delete this.attributes.adjustment;
+    }
     var order = this
     Model.prototype.save.call(this, ["*", '("orders"."datetime"::text) as datetime'], function(err) {
       if (!err && insert) {

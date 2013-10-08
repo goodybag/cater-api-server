@@ -92,7 +92,7 @@ var ItemModal = Backbone.View.extend({
       }
     }
 
-    if ( !orderItem.validationError ) return this.hide();
+    if ( !orderItem || !orderItem.validationError ) return this.hide();
 
     this.displayErrors( orderItem.validationError );
   },

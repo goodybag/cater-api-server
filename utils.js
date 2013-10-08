@@ -82,7 +82,7 @@ utils.sendMail = function(to, from, subject, html, text, callback) {
 
   var options;
 
-  if (lodash.isObject(to)) {
+  if (lodash.isObject(to) && !lodash.isArray(to)) {
     callback = from;
     from = undefined;
     options = to;

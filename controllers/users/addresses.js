@@ -35,9 +35,8 @@ module.exports.edit = function(req, res, next) {
  */
 module.exports.list = function(req, res, next) {
   var query = { 
-    where: {
-      user_id: req.params.uid 
-    }
+    where: { user_id: req.params.uid }
+  , order: { id: 'asc' }
   };
   Address.find(query, function(error, addresses) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
@@ -65,18 +64,37 @@ module.exports.get = function(req, res, next) {
  * PUT /users/:uid/addresses/:aid
  */
 module.exports.update = function(req, res, next) {
-  Address.findOne(parseInt(req.params.aid), function(error, address) {
+  var aid = parseInt(req.params.aid);
+  Address.findOne(aid, function(error, address) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     if (address === null) return res.send(404);
 
-    // Replace address fields
-    var updates = utils.pick(req.body, ['street', 'city', 'state', 'zip']);
+    var updates = utils.pick(req.body, ['street', 'city', 'state', 'zip', 'is_default']);
     utils.extend(address.attributes, updates);
+    utils.async.series([
+      function unmarkPreviousDefault(callback) {
+        if (updates.is_default) {
+          Address.findOne({ where: {is_default: true}}, function(error, prevAddress) {
+            prevAddress.attributes.is_default = false;
+            prevAddress.save(function(error, prevAddress) {
+              if (error) return res.error(errors.internal.DB_FAILURE, error);
+              callback(null);
+            });
+          });
+        } else {
+          callback(null);
+        }
+      },
 
-    address.save(function(error, address) {
-      if (error) return res.error(errors.internal.DB_FAILURE, error);
-      res.render('address-edit', { address: address[0], flash: 'Saved Successfully' });
-    });
+      function updateAddress(callback) {
+        address.save(function(error, address) {
+          if (error) return res.error(errors.internal.DB_FAILURE, error);
+          if (updates.is_default) return res.send(200);
+          res.render('address-edit', { address: address[0], flash: 'Saved Successfully' });
+        });
+        callback(null);
+      }
+    ]);
   });
 };
 

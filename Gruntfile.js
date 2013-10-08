@@ -14,14 +14,9 @@ module.exports = function(grunt) {
       }
     }
   , uglify: {
-      options: {
-        mangle: false
-      , compress: false
-      , beautify: true
-      }
-    , js: {
+      js: {
         files:{
-          'public/dist/js/min.js': [
+          'public/dist/js/base.min.js': [
             'public/components/jquery/jquery.min.js'
           , 'public/components/jquery-ui/ui/jquery-ui.js'
           , 'public/components/amanda/releases/latest/amanda.min.js'
@@ -34,7 +29,10 @@ module.exports = function(grunt) {
           , 'public/components/lalitkapoor-pickadate/lib/picker.js'
           , 'public/components/lalitkapoor-pickadate/lib/picker.date.js'
           , 'public/components/lalitkapoor-pickadate/lib/picker.time.js'
+
           , 'public/components/lalitkapoor-pickadate/lib/legacy.js'
+
+          , 'public/components/moment/min/moment.min.js'
 
           , 'public/components/moment-timezone/min/moment-timezone.min.js'
 
@@ -53,11 +51,40 @@ module.exports = function(grunt) {
         }
       }
     }
+  , cssmin: {
+      combine: {
+        files: {
+          'public/dist/css/combined.css': [
+            'public/components/bootstrap/dist/css/bootstrap.min.css'
+          , 'public/components/font-awesome/css/font-awesome.css'
+          , 'public/components/select2/select2.css'
+          , 'public/components/lalitkapoor-pickadate/lib/themes/classic.css'
+          , 'public/components/lalitkapoor-pickadate/lib/themes/classic.date.css'
+          , 'public/components/lalitkapoor-pickadate/lib/themes/classic.time.css'
+          ]
+        }
+      }
+    , minify: {
+        src: ['public/dist/css/combined.css']
+      , dest: 'public/dist/css/base.min.css'
+      }
+    }
+  , copy: {
+      main: {
+        files: [
+          {expand: true, cwd: 'public/font', src: ['**'], dest: 'public/dist/font'}
+        , {expand: true, cwd: 'public/img', src: ['**'], dest: 'public/dist/img'}
+        ]
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-complexity');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('analyze', ['complexity']);
+  grunt.registerTask('default', ['uglify', 'cssmin', 'copy']);
 
 };

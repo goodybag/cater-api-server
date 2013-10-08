@@ -48,13 +48,7 @@ module.exports.list = function(req, res, next) {
  * GET /users/:uid/addresses/:aid
  */
 module.exports.get = function(req, res, next) {
-  var query = { 
-    where: {
-      user_id: req.params.uid
-    , id:      req.params.aid
-    }
-  };
-  Address.findOne(query, function(error, address) {
+  Address.findOne(req.params.aid, function(error, address) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.render('address-edit', { address: address.toJSON() });
   });
@@ -64,39 +58,34 @@ module.exports.get = function(req, res, next) {
  * PUT /users/:uid/addresses/:aid
  */
 module.exports.update = function(req, res, next) {
-  var aid = parseInt(req.params.aid);
-  Address.findOne(aid, function(error, address) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    if (address === null) return res.send(404);
+  var updates = utils.pick(req.body, ['street', 'city', 'state', 'zip', 'is_default']);
 
-    var updates = utils.pick(req.body, ['street', 'city', 'state', 'zip', 'is_default']);
-    utils.extend(address.attributes, updates);
-    utils.async.series([
-      function unmarkPreviousDefault(callback) {
-        if (updates.is_default) {
-          Address.findOne({ where: {is_default: true}}, function(error, prevAddress) {
-            if (prevAddress) {
-              prevAddress.attributes.is_default = false;
-              prevAddress.save(function(error, prevAddress) {
-                if (error) return res.error(errors.internal.DB_FAILURE, error);
-                callback(null);
-              });
-            } 
-          });
-        }
-        callback(null);
-      },
-
-      function updateAddress(callback) {
-        address.save(function(error, address) {
-          if (error) return res.error(errors.internal.DB_FAILURE, error);
-          if (updates.is_default) return res.send(200);
-          res.render('address-edit', { address: address[0], flash: 'Saved Successfully' });
+  utils.async.series([
+    function unmarkPreviousDefault(callback) {
+      if (updates.is_default) {
+        Address.findOne({ where: {is_default: true}}, function(error, prevAddress) {
+          if (prevAddress) {
+            prevAddress.attributes.is_default = false;
+            prevAddress.save(function(error, prevAddress) {
+              if (error) return res.error(errors.internal.DB_FAILURE, error);
+              callback(null);
+            });
+          } 
         });
-        callback(null);
       }
-    ]);
-  });
+      callback(null);
+    },
+
+    function updateAddress(callback) {
+      var address = new Address(utils.extend(updates, {id: req.params.aid}));
+      address.save(function(error, address) {
+        if (error) return res.error(errors.internal.DB_FAILURE, error);
+        if (updates.is_default) return res.send(200);
+        res.render('address-edit', { address: address[0], flash: 'Saved Successfully' });
+      });
+      callback(null);
+    }
+  ]);
 };
 
 /**

@@ -16,11 +16,11 @@ module.exports.run = function( callback ){
   if ( config.env != 'dev' ) return callback();
 
   console.log("");
-  console.log("######################################");
+  console.log("#####################################");
   console.log("#  Running Deltas up in the hizzzy  #");
   console.log("#  -------------------------------  #");
   console.log("#    BE ON THE LOOKOUT FOR BEARS    #");
-  console.log("######################################");
+  console.log("#####################################");
   console.log("");
 
   // Get the deltas that have already been run

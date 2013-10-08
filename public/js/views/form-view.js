@@ -21,9 +21,10 @@ var FormView = Backbone.View.extend({
   },
 
   displayErrors: function() {
-    var badFields =  _.uniq(_.invoke(_.pluck(_.pick(this.model.validationError,
-                                                    _.range(this.model.validationError.length)), 'property'),
-                                     'replace', /\[\d+\]$/, ''));
+    var errors = _.isArray(this.model.validationError) ? this.model.validationError :
+      _.pick(this.model.validationError, _.range(this.model.validationError.length));
+
+    var badFields =  _.uniq(_.invoke(_.pluck(errors, 'property'), 'replace', /\[\d+\]$/, ''));
     var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
     this.$el.find(selector).parent().removeClass('has-success').addClass('has-error');
   },

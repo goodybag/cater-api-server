@@ -28,13 +28,13 @@ define(function(require) {
     }
   , item_id: {
       type: types.int
-    , nullable: false
-    , references: {table: 'items', column: 'id'}
+    , nullable: true
+    , references: {table: 'items', column: 'id', onDelete: 'set null'}
     }
   , order_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'orders', column: 'id'}
+    , references: {table: 'orders', column: 'id', onDelete: 'cascade'}
     }
   , quantity: {
       type: types.int

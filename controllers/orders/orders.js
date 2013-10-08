@@ -53,13 +53,13 @@ module.exports.get = function(req, res) {
         order: order.toJSON(),
         restaurantReview: review,
         owner: isOwner,
-        admin: utils.contains(req.session.user.groups, 'admin'),
+        admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
         states: states,
         orderParams: req.session.orderParams
       };
 
       // orders are always editable for an admin
-      if (utils.contains(req.session.user.groups, 'admin'))
+      if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
         context.order.editable = true;
 
       res.render('order', context, function(err, html) {
@@ -110,7 +110,7 @@ module.exports.changeStatus = function(req, res) {
     if (!order) return res.send(404);
 
     // if they're not an admin, check if the status change is ok.
-    if(!utils.contains(req.session.user.groups, 'admin')) {
+    if(!req.session.user || !utils.contains(req.session.user.groups, 'admin')) {
       if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
         return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
 
@@ -135,7 +135,7 @@ module.exports.changeStatus = function(req, res) {
 
         res.render('email-order-submitted', viewOptions, function(err, html) {
           // TODO: error handling
-          utils.sendMail(order.attributes.restaurant.email,
+          utils.sendMail([order.attributes.restaurant.email, config.emails.orders],
                          config.emails.orders,
                          'You have received a new Goodybag order (#' + order.attributes.id+ ')',
                          html);

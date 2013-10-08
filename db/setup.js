@@ -11,6 +11,7 @@ var run = function() {
       return function( done ){ tasks[ f ].run( done ); }
     })
   , function( error, results ){
+      if ( error ) console.log( error );
       process.exit( ~~!!error );
     }
   );

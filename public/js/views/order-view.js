@@ -78,7 +78,8 @@ var OrderView = FormView.extend({
     this.$el.find(this.fieldMap.phone).val(Handlebars.helpers.phoneNumber(value))
   },
 
-  displayErrors: function(){
+  displayErrors: function() {
+    FormView.prototype.displayErrors.apply(this, arguments);
     if ( !this.model.validationError ) return this;
     // Maps field names to error selectors
     var fieldSelector = {

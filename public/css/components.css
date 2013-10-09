@@ -241,11 +241,19 @@
  */
 .order-params-bar {
   position: relative; /* So datepicker doesn't bleed */
+  overflow: hidden;
   display: table;
   width: 100%;
   margin: 0 auto;
   margin-bottom: 20px;
   padding: 15px 18px;
+}
+
+.order-params-bar .form-inline {
+  /* always center in container */
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .order-params-bar .btn-search {
@@ -271,7 +279,8 @@
 }
 
 @media ( max-width: 768px ){
-  .order-params-bar {
+  .order-params-bar,
+  .order-params-bar .form-inline {
     width: 100%;
   }
 

@@ -15,7 +15,7 @@
 </div>
 
 <div class="row">
-  <div class="col-lg-8">
+  <div class="col-md-8">
     <div class="tab-content">
       <div class="tab-pane active" id="menu">
         <div class="menu">
@@ -29,8 +29,8 @@
               {{#each items}}
               <a class="list-group-item item" id="item-{{id}}">
                 <div class="row">
-                  <h5 class="list-group-item-heading col-sm-8">{{name}}</h5>
-                  <dl class="item-legend col-sm-4">
+                  <h5 class="list-group-item-heading col-sm-7">{{name}}</h5>
+                  <dl class="item-legend col-sm-5">
                     <div class="feeds-price-wrapper">
                       <div class="feeds">
                         <dt>Feeds</dt>
@@ -44,7 +44,7 @@
                   </dl>
                 </div>
                 <div class="row">
-                  <p class="list-group-item-text col-sm-8">{{description}}</p>
+                  <p class="list-group-item-text col-sm-7">{{description}}</p>
                 </div>
               </a>
               {{/each}}
@@ -105,7 +105,7 @@
     </div>
   </div>
 
-  <div class="col-lg-4">
+  <div class="col-md-4">
     <div class="panel order-summary" data-spy="affix" data-offset-top="118">
       {{> order_summary}}
     </div>

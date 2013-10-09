@@ -439,7 +439,7 @@ a.list-group-item .list-group-item-heading {
 
 .order-summary {
   font-size: 12px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .order-summary .panel-heading, .order-summary .panel-footer {

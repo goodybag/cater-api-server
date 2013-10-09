@@ -10,7 +10,7 @@ alter table "order_items" add constraint "order_items_item_id_fkey"
 -- If an order is deleted, delete order items
 alter table "order_items" drop constraint "order_items_order_id_fkey";
 alter table "order_items" add constraint "order_items_order_id_fkey"
-  foreign key ("item_id") references "orders"("id") on delete cascade;
+  foreign key ("order_id") references "orders"("id") on delete cascade;
 
 -- Just null out the restaurant_id on delete
 -- We will likely not drop a restaurant unless it's necessary (test data most likely)

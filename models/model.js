@@ -127,8 +127,13 @@ Model.findOne = function(query, callback) {
   });
 };
 
+Model.defaultUpdateQuery = {
+  returning: '*'
+};
+
 Model.update = function(query, callback) {
-  utils.defaults(query, {table: this.table});
+  utils.defaults(query, this.defaultUpdateQuery);
+  query.table = this.table;
   query.type = 'update';
 
   var sql = db.builder.sql(query);
@@ -136,7 +141,7 @@ Model.update = function(query, callback) {
 
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return callback(err);
-    callback(null);
+    callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
 };
 

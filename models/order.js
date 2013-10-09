@@ -280,12 +280,18 @@ module.exports = Model.extend({
     , {
         "name": "order_subtotals"
       , "type": "select"
-      , "table": "subtotals"
+      , "table": "orders"
+      , "joins": {
+          "subtotals": {
+            "type": "left"
+          , "on": {"order_id": "$orders.id$"}
+          }
+        }
       , "columns": [
-          "order_id"
-        , "sum(sub_total) AS sub_total"
+          {"table": "orders", "name": "id", "as": "order_id"}
+        , "coalesce(sum(subtotals.sub_total), 0) + orders.adjustment_amount AS sub_total"
         ]
-      , "groupBy": "order_id"
+      , "groupBy": ["orders.id", "orders.adjustment_amount"]
       }
     ];
 

@@ -34,8 +34,7 @@
 <script src="/js/views/address-view.js"></script>
 <script>
   // Bootstrap models and plug into view
-  var addressCollection = new Addresses();
-  addressCollection.reset({{{json addresses}}});
+  var addressCollection = new Addresses({{{json addresses}}}, {urlRoot: '/users/me/addresses'});
   var addressView = new AddressView({ el: '#main', collection: addressCollection });
 </script>
 {{/extend}}

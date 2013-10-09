@@ -3,7 +3,7 @@ var Address = Backbone.Model.extend({
     type: 'object',
     properties: {
       name: {
-        type: 'string',
+        type: ['string', 'null'],
         required: false
       },
       street: {
@@ -30,12 +30,5 @@ var Address = Backbone.Model.extend({
 
   validate: function(attrs, options) {
     return this.validator.validate(attrs, this.schema, options || {}, function(err) { return err; });
-  },
-
-  initialize: function(attrs, options) {
-    attrs = attrs || {};
-    options = options || {};
-  },
-
-  urlRoot: '/users/me/addresses'
+  }
 });

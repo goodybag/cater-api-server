@@ -127,4 +127,17 @@ Model.findOne = function(query, callback) {
   });
 };
 
+Model.update = function(query, callback) {
+  utils.defaults(query, {table: this.table});
+  query.type = 'update';
+
+  var sql = db.builder.sql(query);
+  var self = this;
+
+  db.query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return callback(err);
+    callback(null);
+  });
+};
+
 module.exports = Model;

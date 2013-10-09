@@ -12,8 +12,8 @@ var db = require('../../db')
  * Set the first address as default, for convenience
  */
 module.exports.create = function(req, res, next) {
-  Address.find({ where: {user_id: req.params.uid}}, function(error, addresses) {
-    var firstCreated = !addresses.length;
+  Address.find({ where: {user_id: req.params.uid, is_default: true}}, function(error, addresses) {
+    var noExistingDefault = !addresses.length;
     var address = new Address({
       user_id:      req.session.user.id
     , name:         req.body.name
@@ -21,7 +21,7 @@ module.exports.create = function(req, res, next) {
     , city:         req.body.city
     , state:        req.body.state
     , zip:          req.body.zip
-    , is_default:   firstCreated
+    , is_default:   noExistingDefault
     });
     address.save(function(error, address) {
       if (error) return res.error(errors.internal.DB_FAILURE, error);
@@ -64,17 +64,12 @@ module.exports.update = function(req, res, next) {
   var updates = utils.pick(req.body, ['name', 'street', 'city', 'state', 'zip', 'is_default']);
 
   utils.async.series([
-    function unmarkPreviousDefault(callback) {
+    function unmarkPreviousDefaults(callback) {
       if (updates.is_default) {
-        Address.findOne({ where: {is_default: true}}, function(error, prevAddress) {
-          if (prevAddress) {
-            prevAddress.attributes.is_default = false;
-            prevAddress.save(function(error, prevAddress) {
-              if (error) return res.error(errors.internal.DB_FAILURE, error);
-              callback(null);
-            });
-          } 
-        });
+        Address.update({
+          updates: { is_default: false },
+          where:   { is_default: true, user_id: req.params.uid }
+        }, callback);
       }
       callback(null);
     },

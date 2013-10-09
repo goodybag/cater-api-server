@@ -217,12 +217,7 @@ module.exports = Model.extend({
         datetime.second(59);
       }
 
-      // mongo-sql can't do the following in a nice way yet:
-      // hours: {$lte: "$EXTRACT(EPOCH FROM ('"+datetime.toISOString()+"' - now())/3600)$"}
-      // current work around in mongo-sql is this, but not going to do that:
-      // hours: {$custom: ['"hours" < EXTRACT(EPOCH FROM ($1 - now())/3600)', datetime.toISOString()]}
-      // instead going to calculating it in code
-      var hours = Math.floor(moment.duration(new moment(datetime) - new moment()).as('hours'));
+      var formattedDateTime = moment(datetime).format('YYYY-MM-DD HH:MM:59');
 
       query.joins.lead_times = {
         type: 'left'
@@ -235,7 +230,8 @@ module.exports = Model.extend({
         , columns: ['restaurant_id']
         , where: {
             'max_guests': {$gte: ((orderParams.guests) ? orderParams.guests : 0)}
-          , 'lead_time': {$lte: hours}
+            // TODO: Assume timezone of the restaurant (restaurant needs timezone column), for now hardcoding America/Chicago
+          , 'lead_time': {$custom: ['"restaurant_lead_times"."lead_time" < EXTRACT(EPOCH FROM ($1 -  (now() AT TIME ZONE \'America/Chicago\') )/3600)', formattedDateTime]}
           }
         }
       }

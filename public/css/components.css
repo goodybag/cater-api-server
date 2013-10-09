@@ -793,6 +793,11 @@ a.list-group-item .list-group-item-heading {
   color: #9E9D94;
 }
 
+.min-max-restrictions > strong:first-child ~ strong {
+  display: inline-block;
+  margin-left: 8px;
+}
+
 .item-options-fieldset .radio,
 .item-options-fieldset .checkbox {
   margin-left: 8px;

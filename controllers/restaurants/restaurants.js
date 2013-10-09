@@ -17,7 +17,7 @@ module.exports.list = function(req, res) {
   var TAGS = ['restaurants-list'];
   logger.routes.info(TAGS, 'listing restaurants');
   //TODO: middleware to validate and sanitize query object
-  var orderParams = req.orderParams || req.session.orderParams || {};
+  var orderParams = req.session.orderParams || {};
 console.log(orderParams)
   models.Restaurant.find({}, orderParams, function(err, models) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);

@@ -1,7 +1,8 @@
 var OrderParamsView = Backbone.View.extend({
   events: {
-    'submit form': 'submit'
+    'submit form': 'onFormSubmit'
   , 'click .form-group': 'focusInputs'
+  , 'click .btn-search': 'onSearchClick'
   }
 
 , initialize: function() {
@@ -18,6 +19,8 @@ var OrderParamsView = Backbone.View.extend({
       format: 'h:i A'
     , interval: 15
     }).pickatime('picker');
+
+    this.$searchBtn = this.$el.find('.btn-search');
   }
 
 , focusInputs: function(e) {
@@ -47,20 +50,21 @@ var OrderParamsView = Backbone.View.extend({
     }
   }
 
-, submit: function (e) {
-    e.preventDefault();
-
-    // formatting date to be YYYY-MM-DD and time to be HH:MM (24 hour time)
-    var form = {
+, getProps: function(){
+    return {
       zip: this.$("input[name='zip']").val() || null
     , date: (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
     , time: (this.timepicker.get()) ? timeFormatter(this.timepicker.get()) : null
     , guests: this.$("input[name='guests']").val() || null
     };
-    this.model.save(form, {
-      success: function(model, response, options) {
-        window.location.reload();
-      }
-    });
+  }
+
+, onSearchClick: function(e){
+    e.target.href = utils.queryParams( this.getProps() );
+  }
+
+, onFormSubmit: function (e) {
+    e.preventDefault();
+    this.$searchBtn.trigger('click');
   }
 });

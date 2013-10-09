@@ -14,28 +14,35 @@ var orderParamsFields = [
 ];
 
 var transforms = {
-  date: function( d ){
-    return moment( d ).format('hh:mm');
+  time: function( d, req ){
+    var datetime = moment();
+    var hhmm = d.split(':');
+    // datetime.hour( hhmm[0] );
+    // datetime.minute( hhmm[1] );
+
+    return datetime.format('hh:mm');
   }
 };
 
 module.exports = function(){
   return function( req, res, next ){
-    // req.session.orderParams = req.session.orderParams || {};
+    var orderParams = {}, added = false;
 
-    // for (var i = 0, l = orderParamsFields.length, key; i < l; ++i){
-    //   key = orderParamsFields[i];
+    for (var i = 0, l = orderParamsFields.length, key; i < l; ++i){
+      key = orderParamsFields[i];
 
-    //   if ( !req.param( key ) ) continue;
+      if ( !req.param( key ) ) continue;
 
-    //   added = true;
+      added = true;
 
-    //   // Add transformed value
-    //   orderParams[ key ] = ( key in transforms
-    //     ? transforms[ key ]( req.param( key ) )
-    //     : req.param( key )
-    //   );
-    // }
+      // Add transformed value
+      orderParams[ key ] = ( key in transforms
+        ? transforms[ key ]( req.param( key ), req )
+        : req.param( key )
+      );
+    }
+
+    if ( added ) req.session.orderParams = orderParams;
 
     next();
   };

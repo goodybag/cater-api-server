@@ -85,7 +85,7 @@ module.exports.update = function(req, res, next) {
       var address = new Address(utils.extend(updates, {id: req.params.aid}));
       address.save(function(error, address) {
         if (error) return res.error(errors.internal.DB_FAILURE, error);
-        return res.send(address);
+        return res.send(204);
       });
       callback(null);
     }
@@ -102,7 +102,7 @@ module.exports.remove = function(req, res, next) {
 
     address.destroy(function(error, response) {
       if (error) return res.error(errors.internal.DB_FAILURE, error);
-      res.send(address);
+      res.send(204);
     });
   });
 };

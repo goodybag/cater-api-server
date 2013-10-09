@@ -1,13 +1,21 @@
 var EditRestaurantView = FormView.extend({
   submitSelector: '.restaurant-form .restaurant-save',
 
+  destroyMsg: [
+    "Are you sure? This will destroy all restaurant data,",
+    "including items, and categories. This will also cause",
+    "orders from this restaurant to no longer be displayed.",
+    "Do you want to continue?"
+  ].join(' '),
+
   events: {
     'keyup .restaurant-form .form-control': 'onChange',
     'change .restaurant-form .form-control, .restaurant-form input': 'onChange',
     'submit .restaurant-form': 'onSave',
     'click .new-category': 'newCategory',
     'click .add-lead-time': 'addLeadTime',
-    'click .remove-lead-time': 'removeLeadTime'
+    'click .remove-lead-time': 'removeLeadTime',
+    'click .restaurant-remove': 'onRestaurantRemoveClick'
   },
 
   initialize: function(options) {
@@ -141,5 +149,13 @@ var EditRestaurantView = FormView.extend({
     e.preventDefault();
     $(e.target).closest('.lead-time').remove();
     this.onChange(e);
+  },
+
+  onRestaurantRemoveClick: function(e){
+    if ( !confirm( this.destroyMsg ) ) return;
+
+    this.model.destroy({
+      success: function(){ window.location.href = '/restaurants?edit=true'; }
+    });
   }
 });

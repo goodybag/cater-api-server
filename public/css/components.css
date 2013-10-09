@@ -347,24 +347,10 @@
   font-weight: 300;
 }
 
-.item-legend .dt-col {
-  padding-right:0;
-}
-
 .item-legend dd {
   color: #000;
   padding-left: 10px;
-  padding-right: 0;
 }
-
-.item-legend .feeds-col {
-  padding-right:0;
-}
-
-.item-legend .price-col {
-  padding-left: 0;
-}
-
 
 /**
  * List Group Items

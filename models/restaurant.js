@@ -217,11 +217,6 @@ module.exports = Model.extend({
         datetime.second(59);
       }
 
-      // mongo-sql can't do the following in a nice way yet:
-      // hours: {$lte: "$EXTRACT(EPOCH FROM ('"+datetime.toISOString()+"' - now())/3600)$"}
-      // current work around in mongo-sql is this:
-      // hours: {$custom: ['"hours" < EXTRACT(EPOCH FROM ($1 - now())/3600)', datetime.toISOString()]}
-
       var formattedDateTime = moment(datetime).format('YYYY-MM-DD HH:MM:59');
 
       query.joins.lead_times = {

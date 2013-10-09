@@ -34,7 +34,7 @@
     "mailgun": "0.4.x",
     "twilio": "1.1.x",
     "mailcomposer": "0.2.x",
-    "moment": "2.1.x",
+    "moment": "~2.3.1",
     "moment-timezone": "0.0.x",
     "bower": "1.2.x",
     "udp-client": "0.1.x",
@@ -56,5 +56,4 @@
   "engines": {
     "node": "0.10.x"
   }
-
 }

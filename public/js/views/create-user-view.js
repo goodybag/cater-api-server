@@ -7,33 +7,23 @@ var CreateUserView = FormView.extend({
     'click .create-user-form': 'onChange'
   },
 
-  /* Show a flash message on the submit button */
-  flashSubmitMessage: function(msg, timeout) {
-    var this_ = this;
-
-    this.$submit.removeClass('hide btn-primary');
-    this.$submit.addClass('btn-info');
-    this.$submit.text(msg);
-
-    setTimeout(function() {
-      this_.$submit.addClass('hide btn-primary');
-      this_.$submit.removeClass('btn-info');
-      this_.$submit.text('Create User');
-    }, timeout || 3000);
-  },
-
   initialize: function(options) {
+    var this_ = this;
     this.model = this.model || new User();
 
-    this.$submit = this.$el.find(this.submitSelector);
+    this.$submit = this.$el.find(this.submitSelector).button();
 
     this.listenTo(this.model, 'sync', function(model, options) {
-      this.flashSubmitMessage('User created successfully!');
+      this.$submit.removeClass('hide');
+      this.$submit.button('success');
+      setTimeout(function() { this_.$submit.button('reset'); }, 3000);
       this.model.clear();
     });
 
     this.listenTo(this.model, 'error', function(model, options) {
-      this.flashSubmitMessage(options.responseJSON.error.message);
+      this.$submit.data('error-text', options.responseJSON.error.message);
+      this.$submit.button('error');
+      setTimeout(function() { this_.$submit.button('reset'); }, 3000);
     });
   },
 

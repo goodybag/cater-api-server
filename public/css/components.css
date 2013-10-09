@@ -333,8 +333,13 @@
 
 .item-legend {
   margin: 0;
-  padding: 0;
   font-size: 13px;
+}
+
+@media (min-width: 768px) {
+  .item-legend .feeds-price-wrapper {
+    float: right;
+  }
 }
 
 .item-legend dd,
@@ -350,6 +355,11 @@
 .item-legend dd {
   color: #000;
   padding-left: 10px;
+}
+
+.item-legend .feeds, .item-legend .price {
+  min-width: 90px;
+  display: inline-block;
 }
 
 /**

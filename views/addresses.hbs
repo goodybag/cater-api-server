@@ -12,8 +12,16 @@
               </div>
             {{/each}}
           </div>
-          <a href="/users/me" class="btn btn-default">Back to settings</a>
-          <a href="/new-address" class="btn btn-primary pull-right">Add new address</a>
+          <div id="add-new-address" class="list-group">
+            <h3>Add new address</h3>
+            <form method="post" action="/users/me/addresses">
+              <fieldset>
+                {{> edit_address }}
+                <a href="/users/me" class="btn btn-default">Back to settings</a>
+                <button type="submit" class="btn btn-primary pull-right">Create Address</button>
+              </fieldset>
+            </form>
+          </div>
         </div>
       </div>
     </div>

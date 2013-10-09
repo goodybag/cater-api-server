@@ -339,17 +339,6 @@ module.exports.register = function(app) {
   });
 
   /**
-   * New User Address form
-   */
-
-  app.get('/new-address', controllers.users.addresses.edit);
-
-  app.all('/new-address', function(req, res, next) {
-    res.set('Allow', 'GET');
-    res.send(405);
-  });
-
-  /**
    *  User Addresseses resource.
    */
 

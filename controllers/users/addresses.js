@@ -8,28 +8,26 @@ var db = require('../../db')
 
 /**
  * POST /users/:uid/addresses
+ *
+ * Set the first address as default, for convenience
  */
 module.exports.create = function(req, res, next) {
-  var address = new Address({
-    user_id:      req.session.user.id
-  , name:         req.body.name
-  , street:       req.body.street
-  , city:         req.body.city
-  , state:        req.body.state
-  , zip:          req.body.zip
-  , is_default:   false
+  Address.find({ where: {user_id: req.params.uid}}, function(error, addresses) {
+    var firstCreated = !addresses.length;
+    var address = new Address({
+      user_id:      req.session.user.id
+    , name:         req.body.name
+    , street:       req.body.street
+    , city:         req.body.city
+    , state:        req.body.state
+    , zip:          req.body.zip
+    , is_default:   firstCreated
+    });
+    address.save(function(error, address) {
+      if (error) return res.error(errors.internal.DB_FAILURE, error);
+      res.redirect('/users/me/addresses');
+    });
   });
-  address.save(function(error, address) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.redirect('/users/me/addresses');
-  });
-};
-
-/**
- * GET /new-address
- */
-module.exports.edit = function(req, res, next) {
-  res.render('address-create', {states: states});
 };
 
 /**
@@ -42,7 +40,7 @@ module.exports.list = function(req, res, next) {
   };
   Address.find(query, function(error, addresses) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('addresses', { addresses: utils.invoke(addresses, 'toJSON') });
+    res.render('addresses', { addresses: utils.invoke(addresses, 'toJSON'), states: states });
   });
 };
 

@@ -17,7 +17,7 @@
   <label for="state">State</label>
   <select class="form-control address-state" name="state">
     {{#each states}}
-      <option value="{{this.abbr}}" label="{{this.abbr}}"{{#if this.default}} selected="selected"{{/if}}>{{this.name}}</option>
+      <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq this.abbr ../address.state}} selected="selected"{{/eq}}>{{this.name}}</option>
     {{/each}}
   </select>
 </div>

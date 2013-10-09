@@ -25,20 +25,23 @@
     </td>
   </tr>
   <tr data-id="{{this.id}}" class="option-expanded collapsed">
-    <td colspan="4" class="row">
-      <div class="option-expanded-inner col-lg-12">
-        <div class="form-group">
+    <td colspan="4">
+      <div class="option-expanded-inner row">
+        <div class="form-group col-lg-12">
           <label>Option Description</label>
           <textarea name="description" class="form-control" placeholder="Option description">{{this.description}}</textarea>
         </div>
-      </div>
-      <div class="form-group col-lg-6">
-        <label>Minumum Selected</label>
-        <input type="number" class="form-control">
-      </div>
-      <div class="form-group col-lg-6">
-        <label>Maximum Selected</label>
-        <input type="number" class="form-control">
+        <fieldset class="checkbox-min-max">
+          <div class="form-group col-sm-4">
+            <label>Min/Max Allowed Selected Checkboxes</label>
+          </div>
+          <div class="form-group col-sm-4">
+            <input type="number" placeholder="Min" class="form-control">
+          </div>
+          <div class="form-group col-sm-4">
+            <input type="number" placeholder="Max" class="form-control">
+          </div>
+        </fieldset>
       </div>
     </td>
   </tr>

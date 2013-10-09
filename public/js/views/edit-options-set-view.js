@@ -16,10 +16,17 @@
     , 'change .options-set-option-default':       'onDefaultChange'
     }
 
+  , initialize: function(){
+      this.toggleCheckboxMinMax();
+      return this;
+    }
+
   , render: function(){
       this.setElement(
         this.template( this.model )
       );
+
+      this.toggleCheckboxMinMax();
 
       return this;
     }
@@ -78,8 +85,13 @@
         throw new Error('EditOptionsSetView.expandOption - cannot find option in DOM');
       }
 
+      this.collapseOption( this.$el.find('.option-expanded') );
+
       option.removeClass('collapsed');
+      option.find('> td').css( 'height', option.find('.option-expanded-inner').height() + 8 + 'px' );
       option.prev('tr').find('.btn-expand-option-set-option').removeClass('collapsed');
+
+      option.parent('.option-set-tr-group').addClass('expanded');
 
       return this;
     }
@@ -110,7 +122,10 @@
       }
 
       option.addClass('collapsed');
+      option.find('> td').css( 'height', 0 );
       option.prev('tr').find('.btn-expand-option-set-option').addClass('collapsed');
+
+      option.parent('.option-set-tr-group').removeClass('expanded');
 
       return this;
     }
@@ -131,6 +146,17 @@
   , remove: function(){
       this.$el.parent('.col-lg-6').remove();
       Backbone.View.prototype.remove.call( this );
+    }
+
+  , toggleCheckboxMinMax: function(){
+      this.$el.find('.checkbox-min-max').toggleClass(
+        'hide', this.model.type !== 'checkbox'
+      );
+
+      // For now, just collapose any open options to avoid any height issues
+      this.collapseOption( this.$el.find('.option-expanded') );
+
+      return this;
     }
 
   , onAddNewOptionClick: function( e ){
@@ -171,6 +197,8 @@
       if ( this.model.type === 'radio' ){
         this.setDefault( this.$el.find('.options-set-option').eq(0) );
       }
+
+      this.toggleCheckboxMinMax();
     }
 
   , onExpandOptionSetOptionClick: function( e ){

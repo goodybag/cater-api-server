@@ -95,6 +95,15 @@ th.name-column {
   font-size: 14px;
 }
 
+.checkbox-min-max {
+  display: inline-block;
+  margin-left: 12px;
+}
+
+.checkbox-min-max input {
+  width: 100px;
+}
+
 .option-group-actions {
   height: 52px;
   border-bottom: solid 10px #C7C1B8;
@@ -192,7 +201,7 @@ th.name-column {
 
 .option-expanded.collapsed .option-expanded-inner {
   opacity: 0;
-  top: -1000px;
+  top: -400px;
 }
 
 .btn-expand-option-set-option > i {

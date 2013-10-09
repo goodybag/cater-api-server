@@ -153,9 +153,6 @@
         'hide', this.model.type !== 'checkbox'
       );
 
-      // For now, just collapose any open options to avoid any height issues
-      this.collapseOption( this.$el.find('.option-expanded') );
-
       return this;
     }
 

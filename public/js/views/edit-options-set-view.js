@@ -1,3 +1,8 @@
+/**
+ * EdoptionsSetView
+ * WARNING: The model that this view expects is just an object. So be careful.
+ */
+
 (function( exports ){
 
   var EditOptionsSetView = exports.EditOptionsSetView = Backbone.View.extend({

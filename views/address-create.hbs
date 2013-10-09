@@ -6,13 +6,7 @@
         <div class="panel-body">
           <form method="post" action="/users/me/addresses">
             <fieldset>
-              {{#if flash}}
-                <div class="alert alert-success fade in">
-                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <strong>{{flash}}</strong>
-                </div>
-              {{/if}}
-              {{> edit_address}}
+              {{> edit_address }}
 
               {{#if is_default}}
                 <p class="text-danger">This is your default address</p>

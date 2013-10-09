@@ -26,11 +26,6 @@ define(function(require) {
     , nullable: false
     , references: {table: 'users', column: 'id'}
     }
-  , address_id: {
-      type: types.int
-    , nullable: true
-    , references: {table: 'addresses', column: 'id'}
-    }
   , name: {
       type: types.text
     , nullable: true

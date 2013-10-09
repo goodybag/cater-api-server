@@ -6,16 +6,13 @@
         <div class="panel-body">
           <form class="address-edit">
             <fieldset>
-              {{#with address}}
-                <input type="hidden" name="_method" value="put" />
-                {{> edit_address}}
-
-              {{#if is_default}}
+              <input type="hidden" name="_method" value="put" />
+              {{> edit_address }}
+              {{#if address.is_default}}
                 <p class="text-danger">This is your default address</p>
               {{/if}}
               <a href="/users/me/addresses" class="btn btn-default pull-left">Back to Address Book</a>
               <button type="submit" class="btn btn-primary pull-right address-submit" data-loading-text="Address Updated!">Update Address</button>
-              {{/with}}
             </fieldset>
           </form>
         </div>

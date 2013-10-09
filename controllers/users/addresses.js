@@ -3,6 +3,7 @@ var db = require('../../db')
   , errors = require('../../errors')
   , utils = require('../../utils')
   , config = require('../../config')
+  , states = require('../../public/states')
   , Address = require('../../models/address');
 
 /**
@@ -25,10 +26,10 @@ module.exports.create = function(req, res, next) {
 };
 
 /**
- * GET /users/:uid/addresses/new
+ * GET /new-address
  */
 module.exports.edit = function(req, res, next) {
-  res.render('address-create');
+  res.render('address-create', {states: states});
 };
 
 /**
@@ -51,7 +52,7 @@ module.exports.list = function(req, res, next) {
 module.exports.get = function(req, res, next) {
   Address.findOne(req.params.aid, function(error, address) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('address-edit', { address: address.toJSON() });
+    res.render('address-edit', { address: address.toJSON(), states: states });
   });
 };
 

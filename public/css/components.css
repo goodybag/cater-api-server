@@ -783,6 +783,16 @@ a.list-group-item .list-group-item-heading {
   color: #535145;
 }
 
+.item-options-fieldset .min-max-restrictions {
+  display: inline-block;
+  margin-left: 12px;
+  font-size: 13px;
+  font-weight: 300;
+  font-style: italic;
+  opacity: 0.9;
+  color: #9E9D94;
+}
+
 .item-options-fieldset .radio,
 .item-options-fieldset .checkbox {
   margin-left: 8px;

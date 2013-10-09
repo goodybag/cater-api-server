@@ -185,7 +185,7 @@
 
   , onDeleteOptionSetOptionClick: function( e ){
       while ( e.target.tagName != 'TR' ) e.target = e.target.parentElement;
-      $( e.target ).remove();
+      $( e.target ).parent('.option-set-tr-group').remove();
     }
 
   , onDefaultChange: function( e ){

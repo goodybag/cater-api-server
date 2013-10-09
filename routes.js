@@ -341,15 +341,17 @@ module.exports.register = function(app) {
   /**
    * New User Address form
    */
+
   app.get('/new-address', controllers.users.addresses.edit);
 
-  /**
-   *  User Addresseses resource.
-   */
   app.all('/new-address', function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);
   });
+
+  /**
+   *  User Addresseses resource.
+   */
 
   app.get('/users/:uid/addresses', controllers.users.addresses.list);
 
@@ -363,6 +365,7 @@ module.exports.register = function(app) {
   /**
    * User Address resource. Represents a single address per user
    */
+
   app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
 
   app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);

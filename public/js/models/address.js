@@ -2,6 +2,10 @@ var Address = Backbone.Model.extend({
   schema: {
     type: 'object',
     properties: {
+      name: {
+        type: 'string',
+        required: false
+      },
       street: {
         type: 'string',
         required: true

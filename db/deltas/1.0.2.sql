@@ -7,6 +7,7 @@
 create table if not exists "addresses" (
   id            serial primary key,
   user_id       int references users(id) on delete cascade,
+  name          text,
   street        text,
   city          text,
   state         varchar(2),

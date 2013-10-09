@@ -31,6 +31,10 @@ define(function(require) {
     , nullable: true
     , references: {table: 'addresses', column: 'id'}
     }
+  , name: {
+      type: types.text
+    , nullable: true
+    }
   , street: {
       type: types.text
     , nullable: false

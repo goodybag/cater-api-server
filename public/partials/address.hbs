@@ -1,9 +1,10 @@
 <div>
   <address>
+    {{#if name }}
+      <strong class="lead">{{name}}</strong><br>
+    {{/if}}
     {{street}}<br>
-    {{city}}<br>
-    {{state}}<br>
-    {{zip}}<br>
+    {{city}}, {{state}} {{zip}}<br>
     {{#if is_default}}
       <p class="text-danger">This is your default address</p>
     {{else}}

@@ -40,7 +40,8 @@ var AddressView = Backbone.View.extend({
     e.preventDefault();
     var this_ = this;
     var updates = {
-      street: this.$el.find('.address-street').val()
+      name:   this.$el.find('.address-name').val()
+    , street: this.$el.find('.address-street').val()
     , city:   this.$el.find('.address-city').val()
     , state:  this.$el.find('.address-state').val()
     , zip:    this.$el.find('.address-zip').val()

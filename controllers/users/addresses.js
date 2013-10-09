@@ -11,6 +11,7 @@ var db = require('../../db')
 module.exports.create = function(req, res, next) {
   var address = new Address({
     user_id:      req.session.user.id
+  , name:         req.body.name
   , street:       req.body.street
   , city:         req.body.city
   , state:        req.body.state
@@ -61,7 +62,7 @@ module.exports.get = function(req, res, next) {
  * set other addresses to false. 
  */
 module.exports.update = function(req, res, next) {
-  var updates = utils.pick(req.body, ['street', 'city', 'state', 'zip', 'is_default']);
+  var updates = utils.pick(req.body, ['name', 'street', 'city', 'state', 'zip', 'is_default']);
 
   utils.async.series([
     function unmarkPreviousDefault(callback) {

@@ -21,7 +21,7 @@ module.exports.auth = function(req, res, next) {
   if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) return next();
   models.Order.findOne(req.params.id, function(err, order) {
     if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, error), res.error(errors.internal.DB_FAILURE, err);
-    if (!order) return res.send(404, 'That order does not exist'); // TODO: proper 404 page.
+    if (!order) return res.render('404');
     var reviewToken = req.query.review_token || req.body.review_token;
     if (order.attributes.user_id !== (req.session.user||0).id && order.attributes.review_token !== reviewToken)
       return res.status(404).render('404');

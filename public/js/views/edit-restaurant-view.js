@@ -7,7 +7,8 @@ var EditRestaurantView = FormView.extend({
     'submit .restaurant-form': 'onSave',
     'click .new-category': 'newCategory',
     'click .add-lead-time': 'addLeadTime',
-    'click .remove-lead-time': 'removeLeadTime'
+    'click .remove-lead-time': 'removeLeadTime',
+    'click .restaurant-remove': 'onRestaurantRemoveClick'
   },
 
   initialize: function(options) {
@@ -141,5 +142,11 @@ var EditRestaurantView = FormView.extend({
     e.preventDefault();
     $(e.target).closest('.lead-time').remove();
     this.onChange(e);
+  },
+
+  onRestaurantRemoveClick: function(e){
+    this.model.destroy({
+      success: function(){ window.location.href = '/restaurants?edit=true'; }
+    });
   }
 });

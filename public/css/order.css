@@ -311,15 +311,15 @@
   position: static;
  }
 
- .adjustment-amount {
+ .adjustment-amount-description {
    margin-bottom: 0;
 }
 
-.adjustment-description {
-   margin: 0;
-   line-height: 24px;
-   padding-left: 9px;
- }
+p.adjustment-description {
+  margin: 0;
+  line-height: 24px;
+  padding-left: 9px;
+}
 
 .adjustment {
   border-bottom: 1px solid #CCCCC0;
@@ -336,6 +336,19 @@
 
 .order-line-item-table {
   margin-bottom: 0;
+}
+
+.adjustment input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.adjustment-input dd, .adjustment-input dt {
+  display: inline-block;
+}
+
+.adjustment-input dd {
+  max-width: 90px;
+  margin-left: 20px;
 }
 
 /**

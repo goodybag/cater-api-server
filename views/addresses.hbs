@@ -13,7 +13,7 @@
             {{/each}}
           </div>
           <a href="/users/me" class="btn btn-default">Back to settings</a>
-          <a href="addresses/new" class="btn btn-primary pull-right">Add new address</a>
+          <a href="/new-address" class="btn btn-primary pull-right">Add new address</a>
         </div>
       </div>
     </div>
@@ -21,8 +21,13 @@
 </div>
 
 {{#extend "scripts"}}
+<script src="/js/models/address.js"></script>
+<script src="/js/collections/addresses.js"></script>
 <script src="/js/views/address-view.js"></script>
 <script>
-  var addressView = new AddressView({ el: '#main' });
+  // Bootstrap models and plug into view
+  var addressCollection = new Addresses();
+  addressCollection.reset({{{json addresses}}});
+  var addressView = new AddressView({ el: '#main', collection: addressCollection });
 </script>
 {{/extend}}

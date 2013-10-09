@@ -6,13 +6,12 @@
     {{zip}}<br>
     {{#if is_default}}
       <p class="text-danger">This is your default address</p>
+    {{else}}
+      <a class="address-default" data-id="{{id}}">Make default address</a>
     {{/if}}
   </address>
   <div class="actions">
     <a href="addresses/{{id}}" class="btn btn-default">Edit</a>
     <button class="btn btn-default address-remove" data-id="{{id}}">Remove</button>
-    {{#unless is_default}}
-      <button class="btn btn-primary address-default" data-id="{{id}}">Make default address</button>
-    {{/unless}}
   </div>
 </div>

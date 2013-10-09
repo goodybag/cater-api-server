@@ -6,31 +6,26 @@ var AddressView = Backbone.View.extend({
 
   removeAddress: function(e) {
     var id = $(e.target).data('id');
-    $.ajax({
-      url: '/users/me/addresses/' + id
-    , type: 'DELETE'
-    , contentType: 'application/json'
-    , error: function(jqXHR, textStatus, errorThrown) {
-        console.error('Error removing address', errorThrown);
-      }
-    , success: function(data, textStatus, jqXHR) {
+    var address = this.collection.get(id);
+    address.destroy({
+      success: function(model, response) {
         location.reload();
+      },
+      error: function(model, xhr, options) { 
+        console.error('Unable to remove address');
       }
     });
   },
 
   setDefaultAddress: function(e) {
     var id = $(e.target).data('id');
-    $.ajax({
-      url: '/users/me/addresses/' + id
-    , type: 'POST'
-    , data: JSON.stringify({ _method: 'PUT', is_default: true })
-    , contentType: 'application/json'
-    , error: function(jqXHR, textStatus, errorThrown) {
-        console.error('Error setting default address', errorThrown);
-      }
-    , success: function(data, textStatus, jqXHR) {
+    var address = this.collection.get(id);
+    address.save({is_default: true}, {
+      success: function(model, response, options) {
         location.reload();
+      },
+      error: function(model, xhr, options) {
+        console.error('Unable to set a default address');
       }
     });
   }

@@ -339,23 +339,38 @@ module.exports.register = function(app) {
   });
 
   /**
-   *  User Addresses resource.  All delivery addresses managed by user
+   * New User Address form
    */
+  app.get('/new-address', controllers.users.addresses.edit);
+
+  /**
+   *  User Addresseses resource.
+   */
+  app.all('/new-address', function(req, res, next) {
+    res.set('Allow', 'GET');
+    res.send(405);
+  });
 
   app.get('/users/:uid/addresses', controllers.users.addresses.list);
 
-  app.get('/users/:uid/addresses/new', controllers.users.addresses.edit);
-
   app.post('/users/:uid/addresses', controllers.users.addresses.create);
 
+  app.all('/users/:uid/addresses', function(req, res, next) {
+    res.set('Allow', 'GET', 'POST');
+    res.send(405);
+  });
+
+  /**
+   * User Address resource. Represents a single address per user
+   */
   app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
 
   app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
 
   app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
 
-  app.all('/users/:uid', function(req, res, next) {
-    res.set('Allow', 'GET', 'PUT', 'POST', 'DELETE');
+  app.all('/users/:uid/addresses/:aid', function(req, res, next) {
+    res.set('Allow', 'GET', 'PUT', 'DELETE');
     res.send(405);
   });
 

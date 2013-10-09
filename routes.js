@@ -367,10 +367,12 @@ module.exports.register = function(app) {
 
   app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
 
+  app.patch('/users/:uid/addresses/:aid', controllers.users.addresses.update);
+
   app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
 
   app.all('/users/:uid/addresses/:aid', function(req, res, next) {
-    res.set('Allow', 'GET', 'PUT', 'DELETE');
+    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
     res.send(405);
   });
 

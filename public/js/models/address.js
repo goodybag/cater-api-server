@@ -33,5 +33,5 @@ var Address = Backbone.Model.extend({
     options = options || {};
   },
 
-  urlRoot: 'addresses'
+  urlRoot: '/users/me/addresses'
 });

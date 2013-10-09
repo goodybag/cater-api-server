@@ -83,8 +83,7 @@ module.exports.update = function(req, res, next) {
       var address = new Address(utils.extend(updates, {id: req.params.aid}));
       address.save(function(error, address) {
         if (error) return res.error(errors.internal.DB_FAILURE, error);
-        if (updates.is_default) return res.send(address);
-        res.render('address-edit', { address: address[0], flash: 'Saved Successfully' });
+        return res.send(address);
       });
       callback(null);
     }

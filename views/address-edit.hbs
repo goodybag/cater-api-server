@@ -4,15 +4,8 @@
     <div class="col-lg-6 col-lg-offset-3">
       <div class="panel">
         <div class="panel-body">
-          <form method="post">
+          <form class="address-edit">
             <fieldset>
-              {{#if flash}}
-                <div class="alert alert-success fade in">
-                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <strong>{{flash}}</strong>
-                </div>
-              {{/if}}
-
               {{#with address}}
                 <input type="hidden" name="_method" value="put" />
                 {{> edit_address}}
@@ -21,7 +14,7 @@
                 <p class="text-danger">This is your default address</p>
               {{/if}}
               <a href="/users/me/addresses" class="btn btn-default pull-left">Back to Address Book</a>
-              <button type="submit" class="btn btn-primary pull-right">Update Address</button>
+              <button type="submit" class="btn btn-primary pull-right address-submit" data-loading-text="Address Updated!">Update Address</button>
               {{/with}}
             </fieldset>
           </form>
@@ -30,3 +23,14 @@
     </div>
   </div>
 </div>
+
+{{#extend "scripts"}}
+<script src="/js/models/address.js"></script>
+<script src="/js/views/address-view.js"></script>
+<script>
+  // Bootstrap model and plug into view
+  var addressModel = new Address();
+  addressModel.set({{{json address}}});
+  var addressView = new AddressView({ el: '#main', model: addressModel });
+</script>
+{{/extend}}

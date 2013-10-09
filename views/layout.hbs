@@ -4,28 +4,7 @@
     <title>Goodybag</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap -->
-    <link href="/components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
-
-    <!-- Fonts -->
-    <link href="/css/gb-icon.css" rel="stylesheet">
-    <link href="/css/aleo.css" rel="stylesheet">
-    <link href="/css/proxima-nova.css" rel="stylesheet">
-
-    <!-- pickadate -->
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.css" rel="stylesheet">
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.date.css" rel="stylesheet">
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.time.css" rel="stylesheet">
-
-
-    <!-- Moar Convenient CSS Stuff -->
-    <link href="/css/kit.css" rel="stylesheet">
-
-    <!-- Goodybag Catering CSS Stuff -->
-    <link href="/css/main.css" rel="stylesheet">
-    <link href="/css/components.css" rel="stylesheet">
-    <link href="/css/theme.css" rel="stylesheet">
-
+    <link href="/dist/css/base.min.css" rel="stylesheet" media="screen">
     <!--[if lte IE 9]>
     <link rel="stylesheet" href="/css/ie-lte-9.css">
     <![endif]-->
@@ -81,23 +60,7 @@
       </ul>
     </footer>
 
-    <script src="/components/jquery/jquery.min.js"></script>
-    <script src="/components/amanda/releases/latest/amanda.min.js"></script>
-    <script src="/components/select2/select2.min.js"></script>
-    <script src="/components/async/lib/async.js"></script>
-    <script src="/components/underscore/underscore-min.js"></script>
-    <script src="/components/backbone/backbone-min.js"></script>
-    <script src="/components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-    <!-- pickadate -->
-    <script src="/components/lalitkapoor-pickadate/lib/picker.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/picker.date.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/picker.time.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/legacy.js"></script>
-
-    <!-- moment -->
-    <script src="/components/moment/min/moment.min.js"></script>
-    <script src="/components/moment-timezone/min/moment-timezone.min.js"></script>
+    <script src="/dist/js/base.min.js"></script>
     <script>
     $.ajax({
       type: "GET",
@@ -109,17 +72,18 @@
       }
     });
     </script>
-
-    <!-- handlebars -->
-    <script src="/components/handlebars/handlebars.js"></script>
-    <script src="/js/hb-helpers.js"></script>
-
-    <script src="/js/utils.js"></script>
     <script>
       for (var key in helpers) {
         Handlebars.registerHelper(key, helpers[key]);
       }
     </script>
+
+    {{{block "templates"}}}
+
+    <script src="/dist/js/mvc.min.js"></script>
+
+    {{{block "views"}}}
+    {{{block "scripts"}}}
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -130,8 +94,5 @@
       ga('create', 'UA-23372459-3', 'goodybag.com');
       ga('send', 'pageview');
     </script>
-
-    {{{block "views"}}}
-    {{{block "scripts"}}}
   </body>
 </html>

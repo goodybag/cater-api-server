@@ -92,7 +92,6 @@ var OrderItem = Backbone.Model.extend({
 
       // Find all checkboxes that have a min/max
       _.chain( attrs.options_sets ).filter( function( set ){
-        console.log(( set.type === 'checkbox' && ( !!set.selected_min || !!set.selected_max ) ))
         return ( set.type === 'checkbox' && ( set.selected_min || set.selected_max ) );
 
       // Filter to the ones that do not satisfy min/max

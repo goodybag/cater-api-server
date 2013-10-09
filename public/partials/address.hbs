@@ -5,11 +5,13 @@
     {{/if}}
     {{street}}<br>
     {{city}}, {{state}} {{zip}}<br>
-    {{#if is_default}}
-      <p class="text-danger">This is your default address</p>
-    {{else}}
-      <a class="address-default" data-id="{{id}}">Make default address</a>
-    {{/if}}
+    <strong>
+      {{#if is_default}}
+        <p class="text-danger">This is your default address</p>
+      {{else}}
+        <a class="address-default" data-id="{{id}}">Make default address</a>
+      {{/if}}
+    </strong>
   </address>
   <div class="actions">
     <a href="addresses/{{id}}" class="btn btn-default">Edit</a>

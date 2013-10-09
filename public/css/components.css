@@ -333,8 +333,13 @@
 
 .item-legend {
   margin: 0;
-  padding: 0;
   font-size: 13px;
+}
+
+@media (min-width: 768px) {
+  .item-legend .feeds-price-wrapper {
+    float: right;
+  }
 }
 
 .item-legend dd,
@@ -347,24 +352,15 @@
   font-weight: 300;
 }
 
-.item-legend .dt-col {
-  padding-right:0;
-}
-
 .item-legend dd {
   color: #000;
   padding-left: 10px;
-  padding-right: 0;
 }
 
-.item-legend .feeds-col {
-  padding-right:0;
+.item-legend .feeds, .item-legend .price {
+  min-width: 90px;
+  display: inline-block;
 }
-
-.item-legend .price-col {
-  padding-left: 0;
-}
-
 
 /**
  * List Group Items

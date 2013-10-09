@@ -84,19 +84,32 @@
         , options:  []
         };
 
+        // Add in checkbox selected min/max
+        if ( option_set.type === 'checkbox' ){
+          ['selected_min', 'selected_max'].forEach( function( field ){
+            option_set[ field ] = $group.find('[name="' + field + '"]').val();
+            option_set[ field ] = option_set[ field ].trim();
+            option_set[ field ] = parseInt( option_set[ field ] );
+
+            if ( isNaN( option_set[ field ] ) ){
+              option_set[ field ] = 0;
+            }
+          });
+        }
+
         option_sets.push( option_set );
 
         // If the group is not new, attach the old ID
         if ( $group.data('id') ) option_set.id = $group.data('id');
 
-        $group.find('.options-set-option').each( function( i ){
+        $group.find('.option-set-tr-group').each( function( i ){
           var $option = $(this);
 
           var option_set_option = {
             name:           $option.find('.options-set-option-name').val()
           , price:          utils.getPrice( $option.find('.options-set-option-price') )
           , default_state:  $option.find('.options-set-option-default:checked').length > 0
-          , description:    $option.find('+ .option-expanded textarea[name="description"]').val()
+          , description:    $option.find('[name="description"]').val()
           };
 
           // If the option is not new, attach the old ID

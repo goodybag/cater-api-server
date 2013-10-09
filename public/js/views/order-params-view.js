@@ -1,9 +1,9 @@
 var OrderParamsView = Backbone.View.extend({
   events: {
-    'submit form': 'onFormSubmit'
-  , 'click .form-group': 'focusInputs'
-  , 'click .btn-search': 'onSearchClick'
-  , 'keyup input':       'onInputChange'
+    'submit form':        'onFormSubmit'
+  , 'click .form-group':  'focusInputs'
+  , 'click .btn-search':  'onSearchClick'
+  , 'keyup input':        'onInputChange'
   }
 
 , initialize: function() {
@@ -66,7 +66,6 @@ var OrderParamsView = Backbone.View.extend({
   }
 
 , updateSearchHref: function(){
-  console.log('update')
     this.$searchBtn.attr( 'href',  utils.queryParams( this.getProps() ) );
     return this;
   }

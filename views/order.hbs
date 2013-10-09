@@ -206,20 +206,19 @@
     </div>
     {{/unless}}
 
-    <div class="panel-body">
+    <div class="panel-body totals-panel">
       {{#if order.adjustment}}
-      <div class="row">
+      <div class="row adjustment">
         <div class="col-lg-8">
-          <p>{{order.adjustment.description}}</p>
+          <p class="adjustment-description">{{order.adjustment.description}}</p>
         </div>
         <div class="col-lg-4">
-          <dl class="dl-horizontal pull-right">
+          <dl class="dl-horizontal order-totals adjustment-amount pull-right">
             <dt>Adjustment:</dt>
             <dd>{{dollars order.adjustment.amount}}<dd>
           </dl>
         </div>
       </div>
-      <hr>
       {{/if}}
       {{#if order.sub_total}}
       <div class="row">

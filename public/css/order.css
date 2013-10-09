@@ -311,7 +311,32 @@
   position: static;
  }
 
+ .adjustment-amount {
+   margin-bottom: 0;
+}
 
+.adjustment-description {
+   margin: 0;
+   line-height: 24px;
+   padding-left: 9px;
+ }
+
+.adjustment {
+  border-bottom: 1px solid #CCCCC0;
+  padding: 20px 0;
+}
+
+.totals {
+  margin-top: 35px;
+}
+
+.totals-panel {
+  padding-top: 0px;
+}
+
+.order-line-item-table {
+  margin-bottom: 0;
+}
 
 /**
  * http://elvery.net/demo/responsive-tables

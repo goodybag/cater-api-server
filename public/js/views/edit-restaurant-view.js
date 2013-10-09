@@ -1,6 +1,13 @@
 var EditRestaurantView = FormView.extend({
   submitSelector: '.restaurant-form .restaurant-save',
 
+  destroyMsg: [
+    "Are you sure? This will destroy all restaurant data,",
+    "including items, and categories. This will also cause",
+    "orders from this restaurant to no longer be displayed.",
+    "Do you want to continue?"
+  ].join(' '),
+
   events: {
     'keyup .restaurant-form .form-control': 'onChange',
     'change .restaurant-form .form-control, .restaurant-form input': 'onChange',
@@ -145,6 +152,8 @@ var EditRestaurantView = FormView.extend({
   },
 
   onRestaurantRemoveClick: function(e){
+    if ( !confirm( this.destroyMsg ) ) return;
+
     this.model.destroy({
       success: function(){ window.location.href = '/restaurants?edit=true'; }
     });

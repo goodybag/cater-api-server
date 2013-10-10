@@ -35,6 +35,10 @@ header.navbar {
   margin-left: 14px;
 }
 
+#main {
+  overflow: hidden;
+}
+
 #footer {
   text-align: center;
   background: #FCFDF6;

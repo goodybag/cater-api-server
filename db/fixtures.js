@@ -145,6 +145,7 @@ var inserts = {
       , email: config.testEmail || faker.Internet.email()
       , price: faker.Helpers.randomNumber(5) + 1
       , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
+      , is_hidden: false
       }
     };
     if (Math.random() < .3) query.values.minimum_order = faker.Helpers.randomNumber(501) * 100;

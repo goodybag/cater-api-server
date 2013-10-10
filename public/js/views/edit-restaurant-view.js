@@ -66,7 +66,8 @@ var EditRestaurantView = FormView.extend({
     zip: '.restaurant-form .restaurant-zip',
     delivery_zips: '.restaurant-form .restaurant-delivery-zips',
     delivery_times: '.restaurant-form .time',
-    lead_times: '.restaurant-form .lead-times'
+    lead_times: '.restaurant-form .lead-times',
+    is_hidden: '.restaurant-form .restaurant-is-hidden'
   },
 
   // TODO: do this automatically based on the model schema
@@ -106,6 +107,10 @@ var EditRestaurantView = FormView.extend({
           lead_time:!_.isNaN(hours) ? hours : null
         } : null;
       }));
+    },
+
+    is_hidden: function() {
+      return this.$el.find(this.fieldMap.is_hidden).is(':checked');
     }
   },
 

@@ -22,8 +22,6 @@ var
 ;
 
 module.exports.run = function( callback ){
-  if ( config.env != 'dev' ) return callback();
-
   console.log("");
   console.log("#####################################");
   console.log("#  Running Deltas up in the hizzzy  #");

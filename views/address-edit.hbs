@@ -1,0 +1,32 @@
+<div class="container">
+  <h1 class="col-lg-12 page-title">Edit Address</h1>
+  <div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+      <div class="panel">
+        <div class="panel-body">
+          <form class="address-edit">
+            <fieldset>
+              {{> edit_address }}
+              {{#if address.is_default}}
+                <p class="text-danger">This is your default address</p>
+              {{/if}}
+              <a href="/users/me/addresses" class="btn btn-default pull-left">Back to Address Book</a>
+              <button type="submit" class="btn btn-primary pull-right address-submit" data-success-text="Address Updated!">Update Address</button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#extend "scripts"}}
+<script src="/js/models/address.js"></script>
+<script src="/js/views/form-view.js"></script>
+<script src="/js/views/address-view.js"></script>
+<script>
+  // Bootstrap model and plug into view
+  var addressModel = new Address({{{json address}}}, {urlRoot: '/users/me/addresses'});
+  var addressView = new AddressView({ el: '#main', model: addressModel });
+</script>
+{{/extend}}

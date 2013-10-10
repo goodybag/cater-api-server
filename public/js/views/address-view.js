@@ -1,62 +1,30 @@
-var AddressView = Backbone.View.extend({
+var AddressView = FormView.extend({
   events: {
-    'click .address-remove':      'removeAddress'
-  , 'click .address-default':     'setDefaultAddress'
-  , 'submit .address-edit':       'updateAddress'
+    'submit .address-edit': 'onSave'
   },
 
   initialize: function() {
+    var this_ = this;
+
     // Cache elements
     this.$submitBtn = this.$el.find('.address-submit').button();
-  },
 
-  removeAddress: function(e) {
-    var id = $(e.target).data('id');
-    var address = this.collection.get(id);
-    address.destroy({
-      success: function(model, response) {
-        location.reload();
-      },
-      error: function(model, xhr, options) { 
-        console.error('Unable to remove address');
-      }
+    this.on('save:success', function() {
+      this_.$submitBtn.button('success');
+      setTimeout(function() { this_.$submitBtn.button('reset'); }, 2000);
+    });
+
+    this.on('save:error', function() {
+      this_.$submitBtn.button('error');
+      setTimeout(function() { this_.$submitBtn.button('reset'); }, 2000);
     });
   },
 
-  setDefaultAddress: function(e) {
-    var id = $(e.target).data('id');
-    var address = this.collection.get(id);
-    address.save({is_default: true}, {
-      success: function(model, response, options) {
-        location.reload();
-      },
-      error: function(model, xhr, options) {
-        console.error('Unable to set a default address');
-      }
-    });
-  },
-
-  updateAddress: function(e) {
-    e.preventDefault();
-    var this_ = this;
-    var updates = {
-      name:   this.$el.find('.address-name').val()
-    , street: this.$el.find('.address-street').val()
-    , city:   this.$el.find('.address-city').val()
-    , state:  this.$el.find('.address-state').val()
-    , zip:    this.$el.find('.address-zip').val()
-    };
-
-    this.model.save(updates, {
-      patch: true,
-
-      success: function(model, response, options) {
-        this_.$submitBtn.button('loading');
-        setTimeout(function() { this_.$submitBtn.button('reset'); }, 2000);
-      },
-      error: function(model, xhr, options) {
-        console.error('Unable to update address');
-      }
-    });
+  fieldMap: {
+    name:     '.address-edit .address-name'
+  , street:   '.address-edit .address-street'
+  , city:     '.address-edit .address-city'
+  , state:    '.address-edit .address-state'
+  , zip:      '.address-edit .address-zip'
   }
 });

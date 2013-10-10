@@ -14,11 +14,11 @@
           </div>
           <div id="add-new-address" class="list-group">
             <h3>Add new address</h3>
-            <form method="post" action="/users/me/addresses">
+            <form class="address-edit" method="post" action="/users/me/addresses">
               <fieldset>
                 {{> edit_address }}
                 <a href="/users/me" class="btn btn-default">Back to settings</a>
-                <button type="submit" class="btn btn-primary pull-right">Create Address</button>
+                <button type="submit" class="btn btn-primary address-submit pull-right" data-error-text="Couldn't save address!">Create Address</button>
               </fieldset>
             </form>
           </div>
@@ -31,10 +31,11 @@
 {{#extend "scripts"}}
 <script src="/js/models/address.js"></script>
 <script src="/js/collections/addresses.js"></script>
-<script src="/js/views/address-view.js"></script>
+<script src="/js/views/form-view.js"></script>
+<script src="/js/views/address-list-view.js"></script>
 <script>
-  // Bootstrap models and plug into view
+  // Bootstrap collection for listing and a new model for adding an address
   var addressCollection = new Addresses({{{json addresses}}}, {urlRoot: '/users/me/addresses'});
-  var addressView = new AddressView({ el: '#main', collection: addressCollection });
+  var addressListView = new AddressListView({ el: '#main', collection: addressCollection, model: new Address() });
 </script>
 {{/extend}}

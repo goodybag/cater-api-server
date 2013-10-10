@@ -25,7 +25,7 @@ module.exports.create = function(req, res, next) {
     });
     address.save(function(error, address) {
       if (error) return res.error(errors.internal.DB_FAILURE, error);
-      res.redirect('/users/me/addresses');
+      res.send(204);
     });
   });
 };

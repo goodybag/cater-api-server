@@ -30,5 +30,7 @@ var Address = Backbone.Model.extend({
 
   validate: function(attrs, options) {
     return this.validator.validate(attrs, this.schema, options || {}, function(err) { return err; });
-  }
+  },
+
+  urlRoot: '/users/me/addresses'
 });

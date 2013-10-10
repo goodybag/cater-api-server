@@ -11,7 +11,7 @@
                 <p class="text-danger">This is your default address</p>
               {{/if}}
               <a href="/users/me/addresses" class="btn btn-default pull-left">Back to Address Book</a>
-              <button type="submit" class="btn btn-primary pull-right address-submit" data-loading-text="Address Updated!">Update Address</button>
+              <button type="submit" class="btn btn-primary pull-right address-submit" data-success-text="Address Updated!">Update Address</button>
             </fieldset>
           </form>
         </div>
@@ -22,6 +22,7 @@
 
 {{#extend "scripts"}}
 <script src="/js/models/address.js"></script>
+<script src="/js/views/form-view.js"></script>
 <script src="/js/views/address-view.js"></script>
 <script>
   // Bootstrap model and plug into view

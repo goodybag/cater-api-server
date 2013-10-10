@@ -70,7 +70,7 @@ app.configure(function(){
 
   var render = app.response.render;
   app.response.render = function(path, options, callback) {
-    var partialConfig = { phone: config.phone, emails: config.emails };
+    var partialConfig = { intercomAppId: config.intercom.appId, phone: config.phone, emails: config.emails };
 
     options = options || {};
 
@@ -79,6 +79,7 @@ app.configure(function(){
       , config: utils.extend(partialConfig, options.config)
       }
     );
+    console.log(options.config);
 
     if (options.user.email) {
       options.intercom = {

@@ -167,18 +167,20 @@ header.navbar {
 #feedback {
 font-size: 1.8em;
 background-color: #000;
-padding: 4px 4px 4px 4px;
+padding: 2px 2px 2px 2px;
 border: solid 2px #ffffff;
 position: fixed;
-top: 40%;
-right: -40px;
+/*top: 40%;*/
+bottom: -10px;
+right: 300px;
+/*right: -40px;*/
 
--webkit-transform: rotate(-90deg);
+/*-webkit-transform: rotate(-90deg);
 -moz-transform: rotate(-90deg);
 -o-transform: rotate(-90deg);
 -ms-transform: rotate(-90deg);
 transform: rotate(-90deg);
-filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);*/
 }
 
 #feedback a {

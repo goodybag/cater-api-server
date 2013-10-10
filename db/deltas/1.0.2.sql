@@ -11,3 +11,13 @@ DO $$
         END;
     END;
 $$
+
+UPDATE restaurants SET is_hidden=FALSE WHERE name NOT IN ('Cow Bells',
+'Sugaplump Pastries',
+'Texas Honey Ham Company',
+'Cupprimo Cupcakery',
+'Bamboo Grille',
+'TEST',
+'Lucky J''s Chicken & Waffles',
+'Bar-B-Que Heaven',
+'Maoz');

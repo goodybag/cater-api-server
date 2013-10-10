@@ -10,7 +10,7 @@ DO $$
             WHEN duplicate_column THEN RAISE NOTICE 'column <column_name> already exists in <table_name>.';
         END;
     END;
-$$
+$$;
 
 UPDATE restaurants SET is_hidden=FALSE WHERE name NOT IN ('Cow Bells',
 'Sugaplump Pastries',

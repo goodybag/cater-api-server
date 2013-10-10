@@ -94,7 +94,7 @@ var ItemModal = Backbone.View.extend({
     _( errors ).forEach( function( error ){
       var $error = $errorTmpl.clone().html( error.message ).removeClass('hide');
 
-      if ( error.type = 'OPTIONS_SET_REQUIRED' ){
+      if ( error.optionSetId ){
         $error.addClass('error-options-set-required');
         this_.$el.find('[data-options-set-id="' + error.optionSetId + '"]').before( $error );
       } else {
@@ -106,7 +106,7 @@ var ItemModal = Backbone.View.extend({
   },
 
   clearErrors: function(){
-    this.$el.find('.errors > .alert').addClass('hide');
+    this.$el.find('.alert').addClass('hide');
     return this;
   },
 

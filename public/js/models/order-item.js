@@ -67,9 +67,10 @@ var OrderItem = Backbone.Model.extend({
   validator: amanda('json'),
 
   validate: function(attrs, options){
+    var errors = [];
+
     var schemaErrors = this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
 
-    // An array of options sets whose parent set are type radio
     var radioSets = _.where(attrs.options_sets, {type: 'radio'});
 
     // Ensure that all radios have an option with state === true
@@ -77,14 +78,48 @@ var OrderItem = Backbone.Model.extend({
       return !_.some(_.pluck(optionsSet.options, 'state'));
     });
 
-    var errors = _( emptySets ).map( function( optionsSet ){
+    errors = errors.concat( _( emptySets ).map( function( optionsSet ){
       return {
         name:           'OPTIONS_SET_REQUIRED',
         optionSetName:  optionsSet.name,
         optionSetId:    optionsSet.id,
         message:        optionsSet.name + ' is required'
       };
-    }).concat(schemaErrors ? Array.prototype.slice.call(schemaErrors) : []);
+    }));
+
+    // Add min/max errors
+    errors = errors.concat(
+
+      // Find all checkboxes that have a min/max
+      _.chain( attrs.options_sets ).filter( function( set ){
+        return ( set.type === 'checkbox' && ( set.selected_min || set.selected_max ) );
+
+      // Filter to the ones that do not satisfy min/max
+      }).reject( function( set ){
+        var selected = _( set.options ).where({ state: true }).length;
+        return selected >= set.selected_min && selected <= set.selected_max;
+
+      // Transform the rejects into errors
+      }).map( function( reject ){
+        var selected        = _( reject.options ).where({ state: true }).length;
+        var isMinError      = selected < reject.selected_min;
+        var requiredAmount  = isMinError ? reject.selected_min : reject.selected_max;
+
+        return {
+          name:           isMinError ? 'MIN_REQUIREMENT' : 'MAX_REQUIREMENT'
+        , optionSetName:  reject.name
+        , optionSetId:    reject.id
+        , message: [
+            'You must select'
+          , isMinError ? 'at least' : 'at most'
+          , requiredAmount
+          , 'checkbox' + ( requiredAmount > 1 ? 'es' : '' )
+          ].join(' ')
+        }
+      }).value()
+    );
+
+    errors = errors.concat(schemaErrors ? Array.prototype.slice.call(schemaErrors) : [])
 
     return errors.length ? errors : null;
   }

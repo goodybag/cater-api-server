@@ -1,3 +1,6 @@
+-- Update version
+insert into deltas (version, date) values ('1.0.3', 'now()');
+
 -- #287: Address book management
 
 /* 
@@ -19,6 +22,3 @@ alter table "restaurants"
   add column "address_id" int 
   references addresses(id)
   on delete cascade;
-
--- Update version
-insert into deltas (version, date) values ('1.0.2', 'now()');

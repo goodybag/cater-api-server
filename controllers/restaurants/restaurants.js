@@ -142,7 +142,7 @@ var leadTimes = function(body, id) {
 }
 
 // maybe this ought to come from the restaurant model?
-var fields = ['name', 'street', 'city', 'state', 'zip', 'sms_phone', 'voice_phone', 'email', 'minimum_order', 'price', 'delivery_fee', 'cuisine'];
+var fields = ['name', 'is_hidden', 'street', 'city', 'state', 'zip', 'sms_phone', 'voice_phone', 'email', 'minimum_order', 'price', 'delivery_fee', 'cuisine'];
 
 module.exports.create = function(req, res) {
   var restaurantQuery = queries.restaurant.create(utils.pick(req.body, fields));

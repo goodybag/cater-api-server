@@ -110,6 +110,9 @@
           , price:          utils.getPrice( $option.find('.options-set-option-price') )
           , default_state:  $option.find('.options-set-option-default:checked').length > 0
           , description:    $option.find('[name="description"]').val()
+          , vegetarian:     $option.find('.options-set-option-vegetarian').is(':checked')
+          , vegan:          $option.find('.options-set-option-vegan').is(':checked')
+          , glutenFree:     $option.find('.options-set-option-gluten-free').is(':checked')
           };
 
           // If the option is not new, attach the old ID

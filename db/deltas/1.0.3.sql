@@ -1,8 +1,13 @@
 -- Update version
 insert into deltas (version, date) values ('1.0.3', 'now()');
 
-CREATE TYPE "tag_type" as 
-  ENUM ('Vegan', 'Vegetarian', 'Gluten Free');
+-- No CREATE TYPE IF NOT EXISTS
+DROP TYPE if exists "tag_type" CASCADE;
+CREATE TYPE "tag_type" AS ENUM (
+  'Vegan', 
+  'Vegetarian', 
+  'Gluten Free'
+);
 
 CREATE TABLE if not exists "item_tags" (
   id                  serial primary key,

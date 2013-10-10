@@ -29,6 +29,12 @@ var transforms = {
 
 module.exports = function(){
   return function( req, res, next ){
+    // Track previous params if there was something there
+    if ( Object.keys( req.session.orderParams ) > 0 ){
+      req.session.previousParams = req.session.orderParams;
+    }
+
+    // New request, reset orderParams
     req.session.orderParams = {};
 
     for (var i = 0, l = orderParamsFields.length, key; i < l; ++i){

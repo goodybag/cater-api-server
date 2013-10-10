@@ -193,7 +193,7 @@ var OrderView = FormView.extend({
         return this.model.get('adjustment');
 
       var desc = $adj.find('.adjustment-description').val().trim() || null
-      var amount = parseInt($adj.find('.adjustment-amount').val().trim())
+      var amount = parseInt($adj.find('.adjustment-amount').val().trim() * 100)
       return {
         description: desc,
         amount: !utils.isNaN(amount) ? amount : null

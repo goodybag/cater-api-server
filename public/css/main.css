@@ -35,10 +35,6 @@ header.navbar {
   margin-left: 14px;
 }
 
-#main {
-  overflow: hidden;
-}
-
 #footer {
   text-align: center;
   background: #FCFDF6;
@@ -152,41 +148,54 @@ header.navbar {
   }
 }
 
-/*#Intercom {
-  position: fixed;
-  right: 0;
-  top: 400px;
-  display: block;
-  width: 50px;
-  height: 125px;
-  text-indent: -10000px;
-  background-image: url(/img/logo.png);
-  overflow: hidden;
-}*/
+/**
+ * matching the style of the olark box
+ */
+#intercom {
+font-family: 'Helvetica Neue', Arial, Helvetica, Geneva, sans-serif;;
+font-size: 14px;
+line-height: 14px;
+text-align: left;
+color: #FFFFFF;
 
-#feedback {
-font-size: 1.8em;
-background-color: #000;
-padding: 2px 2px 2px 2px;
+cursor: pointer;
+
+background-color: #5ba0d0;
+
+padding-left: 10px;
+padding-right: 10px;
+padding-top: 10px;
+padding-bottom: 10px;
+height: 46px;
+width: 250px;
 border: solid 2px #ffffff;
 position: fixed;
-/*top: 40%;*/
+
+right: 280px;
 bottom: -10px;
-right: 300px;
-/*right: -40px;*/
-
-/*-webkit-transform: rotate(-90deg);
--moz-transform: rotate(-90deg);
--o-transform: rotate(-90deg);
--ms-transform: rotate(-90deg);
-transform: rotate(-90deg);
-filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);*/
+border-radius: 7px;
+text-decoration:none;
 }
 
-#feedback a {
-  color: #FFFFFF;
+.intercom-text:hover {
+  text-decoration:underline;
 }
 
-#feedback a:hover {
+.up-arrow {
+  display: inline-block;
+  float: right;
+  width: 16px;
+  height: 17px;
+  background-color: none;
+  background-image: url(/img/olark-buttons-light.png);
+  background-position: -80px 0%;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   text-decoration: none;
+}
+
+.up-arrow:hover {
+  background-color: #000000;
+  text-decoration: none !important;
 }

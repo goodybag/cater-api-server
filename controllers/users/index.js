@@ -103,7 +103,7 @@ module.exports.del = function(req, res) {
 module.exports.listOrders = function(req, res) {
   models.Order.find({where: {user_id: req.params.uid}}, function(err, orders) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.render('user-orders', {orders: utils.invoke(orders, 'toJSON')}, function(err, html) {
+    res.render('user-orders', {orders: utils.invoke(orders, 'toJSON'), hideUserDetails: true}, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
       res.send(html);
     });

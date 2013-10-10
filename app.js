@@ -8,6 +8,7 @@ var
 , rollbar = require('rollbar')
 , express = require('express')
 , hbs = require('hbs')
+, crypto = require('crypto')
 , utils = require('./utils')
 , logger = require('./logger')
 , routes = require('./routes')
@@ -78,6 +79,12 @@ app.configure(function(){
       , config: utils.extend(partialConfig, options.config)
       }
     );
+
+    if (options.user.email) {
+      options.intercom = {
+        user_hash: crypto.createHmac('sha256', new Buffer(config.intercom.apiSecret, 'utf8')).update(options.user.email).digest('hex')
+      };
+    }
 
     render.call(this, path, options, callback);
   }

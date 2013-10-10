@@ -97,6 +97,10 @@ var config = {
       accessToken: 'c7f82820e02c4bd7a759015518948ce3'
     }
 
+  , intercom: {
+      apiSecret: 'A4NvND_qEf-ksKYhVw-GduUS2ruW2NlC39murXx2'
+    }
+
   , postgresConnStr:  "postgres://localhost:5432/cater"
 
   , requestLogger: {

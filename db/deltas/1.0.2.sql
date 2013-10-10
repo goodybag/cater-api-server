@@ -5,12 +5,12 @@ insert into deltas (version, date) values ('1.0.2', 'now()');
 DO $$
     BEGIN
         BEGIN
-        ALTER TABLE restaurants ADD is_hidden NOT NULL DEFAULT TRUE;
+        ALTER TABLE restaurants ADD is_hidden boolean NOT NULL DEFAULT TRUE;
         EXCEPTION
             WHEN duplicate_column THEN RAISE NOTICE 'column <column_name> already exists in <table_name>.';
         END;
     END;
-$$
+$$;
 
 UPDATE restaurants SET is_hidden=FALSE WHERE name NOT IN ('Cow Bells',
 'Sugaplump Pastries',

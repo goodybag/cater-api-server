@@ -10,7 +10,7 @@
     if (typeof data !== "object") return "";
     var params = "?";
     for (var key in data){
-      if (data[key] == null || data[key] == undefined) continue;
+      if ([null, undefined, ""].indexOf(data[key]) > -1) continue;
       if (utils.isArray(data[key])){
         for (var i = 0, l = data[key].length; i < l; ++i){
           params += key + "[]=" + data[key][i] + "&";

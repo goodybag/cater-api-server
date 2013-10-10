@@ -6,6 +6,7 @@
 
 var moment = require('moment');
 
+// These are the fields we will use to build the orderParams object
 var orderParamsFields = [
   'zip'
 , 'date'
@@ -13,10 +14,15 @@ var orderParamsFields = [
 , 'guests'
 ];
 
+// As we get the fields from req.param, run the corresponding
+// transform function to get a new value
 var transforms = {
-  time: function( d, req ){
+  // Return time formatted as HH:mm so user can enter
+  // time as 12:00 am or 00:00
+  time: function( d ){
+    // Just use some random day since we're just concerned with 
+    // formatting time
     var datetime = moment( '2013-01-01 ' + d );
-console.log( '2013-01-01 ' + d, datetime.format('HH:mm') )
     return datetime.format('HH:mm');
   }
 };

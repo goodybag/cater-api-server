@@ -27,6 +27,8 @@ var OrderParamsView = Backbone.View.extend({
     this.timepicker.on( 'set', this.onInputChange );
 
     this.$searchBtn = this.$el.find('.btn-search');
+
+    this.updateSearchHref();
   }
 
 , focusInputs: function(e) {

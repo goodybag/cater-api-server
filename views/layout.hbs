@@ -152,6 +152,14 @@
     olark.identify('3206-351-10-2822');/*]]>*/</script><noscript><a href="https://www.olark.com/site/3206-351-10-2822/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript>
     <!-- end olark code -->
 
+    {{#if user.email}}
+    <script type="text/javascript">
+    olark('api.chat.updateVisitorNickname', {
+        snippet: "{{user.email}}"
+    });
+    </script>
+    {{/if}}
+
     {{{block "views"}}}
     {{{block "scripts"}}}
   </body>

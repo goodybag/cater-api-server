@@ -1,24 +1,23 @@
 -- Update version
-insert into deltas (version, date) values ('1.0.3', 'now()');
+insert into deltas (version, date) values ('1.0.2', 'now()');
 
--- #287: Address book management
+-- there's no add column if not exists
+DO $$
+    BEGIN
+        BEGIN
+        ALTER TABLE restaurants ADD is_hidden NOT NULL DEFAULT TRUE;
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE 'column <column_name> already exists in <table_name>.';
+        END;
+    END;
+$$
 
-/* 
- *  User       <-> Address  1-many
- *  Restaurant <-> Address  1-1
- */
-create table if not exists "addresses" (
-  id            serial primary key,
-  user_id       int references users(id) on delete cascade,
-  name          text,
-  street        text,
-  city          text,
-  state         varchar(2),
-  zip           varchar(5),
-  is_default    boolean
-);
-
-alter table "restaurants"
-  add column "address_id" int 
-  references addresses(id)
-  on delete cascade;
+UPDATE restaurants SET is_hidden=FALSE WHERE name NOT IN ('Cow Bells',
+'Sugaplump Pastries',
+'Texas Honey Ham Company',
+'Cupprimo Cupcakery',
+'Bamboo Grille',
+'TEST',
+'Lucky J''s Chicken & Waffles',
+'Bar-B-Que Heaven',
+'Maoz');

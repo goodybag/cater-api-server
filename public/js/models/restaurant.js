@@ -7,6 +7,10 @@ var Restaurant = Backbone.Model.extend({
         minLength: 1,
         required: true
       },
+      is_hidden: {
+        type: 'boolean',
+        required: 'true'
+      },
       sms_phone: {
         type: ['string', 'null'],
         length: 10,

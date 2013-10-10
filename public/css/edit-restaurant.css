@@ -95,6 +95,15 @@ th.name-column {
   font-size: 14px;
 }
 
+.checkbox-min-max {
+  display: inline-block;
+  margin-left: 12px;
+}
+
+.checkbox-min-max input {
+  width: 100px;
+}
+
 .option-group-actions {
   height: 52px;
   border-bottom: solid 10px #C7C1B8;
@@ -158,7 +167,7 @@ th.name-column {
 .option-expanded > td {
   position: relative;
   overflow: hidden;
-  height: 100px;
+  /*height: 100px;*/
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   border: none;
@@ -179,11 +188,11 @@ th.name-column {
   margin-left: -8px;
   padding: 8px;
 
-  -webkit-transition: opacity 0.3s ease-in-out;
-     -moz-transition: opacity 0.3s ease-in-out;
-      -ms-transition: opacity 0.3s ease-in-out;
-       -o-transition: opacity 0.3s ease-in-out;
-          transition: opacity 0.3s ease-in-out;
+  -webkit-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+     -moz-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+      -ms-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+       -o-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+          transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
 }
 
 .option-expanded.collapsed > td {
@@ -192,7 +201,7 @@ th.name-column {
 
 .option-expanded.collapsed .option-expanded-inner {
   opacity: 0;
-  left: -1000px;
+  top: -400px;
 }
 
 .btn-expand-option-set-option > i {

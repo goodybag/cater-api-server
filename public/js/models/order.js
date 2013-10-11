@@ -142,7 +142,7 @@ var Order = Backbone.Model.extend({
   updateSubtotal: function() {
     this.set('sub_total',
              _.reduce(this.orderItems.pluck('sub_total'),
-                      function(a, b) { return a + b; }, this.get('adjustment').amount)
+                      function(a, b) { return a + b; }, (this.get('adjustment') || 0).amount || 0)
             );
   },
 

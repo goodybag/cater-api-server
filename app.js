@@ -79,7 +79,6 @@ app.configure(function(){
       , config: utils.extend(partialConfig, options.config)
       }
     );
-    console.log(options.config);
 
     if (options.user.email) {
       options.intercom = {

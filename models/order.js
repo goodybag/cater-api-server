@@ -287,7 +287,7 @@ module.exports = Model.extend({
         }
       , "columns": [
           {"table": "orders", "name": "id", "as": "order_id"}
-        , "coalesce(sum(subtotals.sub_total), 0) + orders.adjustment_amount AS sub_total"
+        , "coalesce(sum(subtotals.sub_total), 0) + coalesce(orders.adjustment_amount, 0) AS sub_total"
         ]
       , "groupBy": ["orders.id", "orders.adjustment_amount"]
       }

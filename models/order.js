@@ -38,14 +38,12 @@ var modifyAttributes = function(callback, err, orders) {
       delete order.attributes.user_email;
       delete order.attributes.organization;
 
-      if (order.attributes.adjustment_amount) {
-        order.attributes.adjustment = {
-          amount: order.attributes.adjustment_amount,
-          description: order.attributes.adjustment_description
-        };
-        delete order.attributes.adjustment_amount;
-        delete order.attributes.adjustment_description;
-      }
+      order.attributes.adjustment = {
+        amount: order.attributes.adjustment_amount,
+        description: order.attributes.adjustment_description
+      };
+      delete order.attributes.adjustment_amount;
+      delete order.attributes.adjustment_description;
     });
   }
   callback.call(this, err, orders);

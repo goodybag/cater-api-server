@@ -1,5 +1,5 @@
 -- Update version
-insert into deltas (version, date) values ('1.0.3', 'now()');
+insert into deltas (version, date) values ('1.0.4', 'now()');
 
 -- there's no add column if not exists
 DO $$

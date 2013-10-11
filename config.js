@@ -97,6 +97,11 @@ var config = {
       accessToken: 'c7f82820e02c4bd7a759015518948ce3'
     }
 
+  , intercom: {
+      apiSecret: 'A4NvND_qEf-ksKYhVw-GduUS2ruW2NlC39murXx2'
+    , appId: 'qsetwlny'
+    }
+
   , postgresConnStr:  "postgres://localhost:5432/cater"
 
   , requestLogger: {
@@ -146,6 +151,11 @@ var config = {
       accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
     }
 
+  , intercom: {
+      apiSecret: 'tumIlUFE__wGfvVxtAyESXRMroQJAz5csfMKULAY'
+    , appId: '6bxgiurw'
+    }
+
   , baseUrl: 'http://cater.staging.goodybag.com'
 
   , postgresConnStr: process.env['DATABASE_URL']
@@ -186,6 +196,11 @@ var config = {
 
   , rollbar: {
       accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+    }
+
+  , intercom: {
+      apiSecret: '5I1eNUY_F6HKl_Gb15965fr5VgGfNlwny7WmyKZx'
+    , appId: '13s9qu57'
     }
 
   , baseUrl: 'https://www.goodybag.com'

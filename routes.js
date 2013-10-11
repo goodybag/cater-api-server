@@ -339,6 +339,36 @@ module.exports.register = function(app) {
   });
 
   /**
+   *  User Addresseses resource.
+   */
+
+  app.get('/users/:uid/addresses', controllers.users.addresses.list);
+
+  app.post('/users/:uid/addresses', controllers.users.addresses.create);
+
+  app.all('/users/:uid/addresses', function(req, res, next) {
+    res.set('Allow', 'GET', 'POST');
+    res.send(405);
+  });
+
+  /**
+   * User Address resource. Represents a single address per user
+   */
+
+  app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
+
+  app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
+
+  app.patch('/users/:uid/addresses/:aid', controllers.users.addresses.update);
+
+  app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
+
+  app.all('/users/:uid/addresses/:aid', function(req, res, next) {
+    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
+    res.send(405);
+  });
+
+  /**
    *  User session resource.  Represents a session as a specific user.
    */
 

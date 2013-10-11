@@ -19,6 +19,7 @@ var definitions = [
 , 'order-statuses'
 , 'password-resets'
 , 'waitlist'
+, 'addresses'
 , 'deltas'
 ];
 

@@ -148,6 +148,11 @@ var helpers = {
     return timeFormatter(time, format || "h:mm A");
   },
 
+  unixTimestamp: function(datetime) {
+    if(!datetime) return '';
+    return moment(datetime).unix();
+  },
+
   // TODO: make this a partial
   address: function(loc) {
     if (!loc) return '';

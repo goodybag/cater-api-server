@@ -123,3 +123,4 @@ module.exports.createSessionAs = function(req, res) {
 };
 
 module.exports.passwordResets = require('./password-resets');
+module.exports.addresses = require('./addresses');

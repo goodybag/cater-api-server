@@ -1,46 +1,126 @@
 var OrderItem = Backbone.Model.extend({
-  initialize: function(attrs, options) {
-    this.on('change:price change:quantity change:options_sets', function() {
-      var total = this.get('price');
-
-      // Add in all selected options
-      _(this.get('options_sets')).each( function( set ){
-        _(set.options).each( function( option ){
-          if ( option.state ) total += option.price;
-        })
-      });
-
-      this.set('sub_total', total * this.get('quantity'));
-    }, this);
+  schema: {
+    type: 'object',
+    properties: {
+      quantity: {
+        type: 'integer',
+        minimum: 1,
+        required: true
+      },
+      notes: {
+        type: ['string', 'null'],
+        minLength: 1,
+        required: false
+      },
+      options_sets: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: {
+              type: ['string', 'null'],
+              required: false
+            },
+            type: {
+              type: 'string',
+              enum: ['radio', 'checkbox'],
+              required: true
+            },
+            options: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string',
+                    minLength: 1,
+                    required: true
+                  },
+                  description: {
+                    type: ['string', 'null'],
+                    required: false
+                  },
+                  price: {
+                    type: ['integer', 'null'],
+                    required: false
+                  },
+                  state: {
+                    type: 'boolean'
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   },
 
-  validate: function(){
-    // An array of options arrays whose parent set are type radio
-    var options = _( _( this.get('options_sets') ).filter( function( set ){
-      return set.type === 'radio';
-    }) );
+  initialize: function(attrs, options) {
+    this.on('change:price change:quantity change:options_sets', function(model, value, options) {
+      var optPrices = _.pluck(_.where(_.flatten(_.pluck(model.get('options_sets'), 'options')), {state: true}), 'price')
+      var priceEach = _.reduce(optPrices, function(a, b) { return a + b; }, model.get('price'));
+      model.set('sub_total', model.get('quantity') * priceEach);
+    });
+  },
 
-    // Ensure that all radios have a state === true
-    var errors = _( options ).filter( function( optionsSet ){
-      var hasNotSelected = true;
+  validator: amanda('json'),
 
-      // Ensure at least one state has true
-      _( optionsSet.options ).forEach( function( setOption ){
-        if ( setOption.state ) hasNotSelected = false;
-      });
+  validate: function(attrs, options){
+    var errors = [];
 
-      return hasNotSelected;
+    var schemaErrors = this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
+
+    var radioSets = _.where(attrs.options_sets, {type: 'radio'});
+
+    // Ensure that all radios have an option with state === true
+    var emptySets = _( radioSets ).filter( function( optionsSet ) {
+      return !_.some(_.pluck(optionsSet.options, 'state'));
     });
 
-    if ( errors.length === 0 ) return;
-
-    return _( errors ).map( function( optionsSet ){
+    errors = errors.concat( _( emptySets ).map( function( optionsSet ){
       return {
-        name:           'OPTIONS_SET_REQUIRED'
-      , optionSetName:  optionsSet.name
-      , optionSetId:    optionsSet.id
-      , message:        optionsSet.name + ' is required'
+        name:           'OPTIONS_SET_REQUIRED',
+        optionSetName:  optionsSet.name,
+        optionSetId:    optionsSet.id,
+        message:        optionsSet.name + ' is required'
       };
-    });
+    }));
+
+    // Add min/max errors
+    errors = errors.concat(
+
+      // Find all checkboxes that have a min/max
+      _.chain( attrs.options_sets ).filter( function( set ){
+        return ( set.type === 'checkbox' && ( set.selected_min || set.selected_max ) );
+
+      // Filter to the ones that do not satisfy min/max
+      }).reject( function( set ){
+        var selected = _( set.options ).where({ state: true }).length;
+        return selected >= set.selected_min && selected <= set.selected_max;
+
+      // Transform the rejects into errors
+      }).map( function( reject ){
+        var selected        = _( reject.options ).where({ state: true }).length;
+        var isMinError      = selected < reject.selected_min;
+        var requiredAmount  = isMinError ? reject.selected_min : reject.selected_max;
+
+        return {
+          name:           isMinError ? 'MIN_REQUIREMENT' : 'MAX_REQUIREMENT'
+        , optionSetName:  reject.name
+        , optionSetId:    reject.id
+        , message: [
+            'You must select'
+          , isMinError ? 'at least' : 'at most'
+          , requiredAmount
+          , 'checkbox' + ( requiredAmount > 1 ? 'es' : '' )
+          ].join(' ')
+        }
+      }).value()
+    );
+
+    errors = errors.concat(schemaErrors ? Array.prototype.slice.call(schemaErrors) : [])
+
+    return errors.length ? errors : null;
   }
 });

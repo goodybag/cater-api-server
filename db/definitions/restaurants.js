@@ -81,6 +81,11 @@ define(function(require) {
       type: types.text + '[]'
     , nullable: true
     }
+  , is_hidden: {
+      type: types.boolean
+    , nullable: false
+    , default: true
+    }
   };
 
   definition.indices = {};

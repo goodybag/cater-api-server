@@ -186,7 +186,7 @@
             <td class="line-item-quantity" data-title="Quantity">
               {{#if ../order.editable}}
                 <span class="icon-x">x</span>
-                <input type="number" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
+                <input type="number" min="1" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
               {{else}}
                 <span class="item-quantity-span order-item-field order-item-quantity" />{{this.quantity}}</span>
               {{/if}}

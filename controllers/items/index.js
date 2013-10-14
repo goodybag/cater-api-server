@@ -47,6 +47,6 @@ module.exports.remove = function(req, res) {
   var sql = db.builder.sql(query);
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return res.error(errors.internal.UNKNOWN, error);
-    res.json(200);
+    res.json(204);
   });
 }

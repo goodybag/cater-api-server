@@ -1,6 +1,16 @@
 {{#each options_sets}}
   <fieldset class="item-options-fieldset" data-options-set-id="{{this.id}}">
-    <legend>{{this.name}}</legend>
+    <legend>
+      {{this.name}}
+      <div class="min-max-restrictions">
+        {{#if this.selected_min}}
+          <strong>Minimum:</strong> {{this.selected_min}}
+        {{/if}}
+        {{#if this.selected_max}}
+          <strong>Maximum:</strong> {{this.selected_max}}
+        {{/if}}
+      </div>
+    </legend>
     {{#each this.options}}
       <div class="{{#eq ../type 'radio'}}radio{{else}}checkbox{{/eq}}">
         <label>

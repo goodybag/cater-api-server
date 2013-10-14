@@ -110,6 +110,8 @@ Model.find = function(query, callback) {
   var sql = db.builder.sql(query);
   var self = this;
 
+  // console.log(sql);
+
   db.query(sql.query, sql.values, function(err, rows, result){
     if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
@@ -122,6 +124,24 @@ Model.findOne = function(query, callback) {
   return this.find(query, function(err, models) {
     if (err) return callback(err);
     callback(null, models[0]);
+  });
+};
+
+Model.defaultUpdateQuery = {
+  returning: '*'
+};
+
+Model.update = function(query, callback) {
+  utils.defaults(query, this.defaultUpdateQuery);
+  query.table = this.table;
+  query.type = 'update';
+
+  var sql = db.builder.sql(query);
+  var self = this;
+
+  db.query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return callback(err);
+    callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
 };
 

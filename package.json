@@ -8,7 +8,7 @@
     "url": "https://github.com/goodybag/cater-api-server"
   },
   "scripts": {
-    "start": "node server",
+    "start": "./bin/tasks.js runDeltas && node server",
     "test": "./node_modules/.bin/mocha --bail",
     "postinstall": "./node_modules/.bin/bower install; ./node_modules/grunt-cli/bin/grunt"
   },
@@ -45,7 +45,8 @@
     "rollbar": "0.2.x",
     "connect-request-logger-pg": "0.0.1",
     "winston-papertrail": "0.1.x",
-    "bitly": "1.2.x"
+    "bitly": "1.2.x",
+    "npm": "*"
   },
   "devDependencies": {
     "mocha": "1.12.0",

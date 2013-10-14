@@ -24,9 +24,7 @@ module.exports.list = function(req, res) {
 
     res.render('restaurants', {
       restaurants:    utils.invoke(models, 'toJSON'),
-      orderParams:    orderParams,
-      previousParams: orderParams !== req.session.orderParams ?
-                        req.session.orderParams : null
+      orderParams:    orderParams
     });
   });
 }

@@ -16,14 +16,15 @@ utils.findWhere(states, {abbr: 'TX'}).default = true;
 module.exports.list = function(req, res) {
   var TAGS = ['restaurants-list'];
   logger.routes.info(TAGS, 'listing restaurants');
-
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.session.orderParams || {};
+
   models.Restaurant.find({}, orderParams, function(err, models) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
-    res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON'), orderParams: orderParams}, function(error, html) {
-      if (error) return res.error(errors.internal.UNKNOWN, error);
-      return res.send(html);
+
+    res.render('restaurants', {
+      restaurants:    utils.invoke(models, 'toJSON'),
+      orderParams:    orderParams
     });
   });
 }
@@ -41,7 +42,9 @@ module.exports.get = function(req, res) {
       models.Order.findOne({where: where}, function(err, order) {
         if (err) return callback(err);
         if (order == null) {
-          order = new models.Order({ restaurant_id: req.params.rid, user_id: req.session.user.id });
+          order = new models.Order({ restaurant_id: req.params.rid,
+                                     user_id: req.session.user.id,
+                                     adjustment: {description: null, amount: null}});
           order.getRestaurant(function(error){
             callback(error, order);
           });
@@ -67,10 +70,7 @@ module.exports.get = function(req, res) {
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 
-    var orderParams = utils.clone(req.session.orderParams) || {};
-    orderParams.complete = utils.reduce(['zip', 'guests', 'date', 'time'], function(memo, key) {
-      return memo && this[key] != null;
-    }, true, orderParams);
+    var orderParams = req.session.orderParams || {};
 
     var context = {
       restaurant: results[1].toJSON(),

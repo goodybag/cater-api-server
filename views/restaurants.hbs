@@ -3,6 +3,14 @@
 {{/extend}}
 
 <div class="page-restaurants container">
+  {{#notEmpty orderParams}}
+  <div class="row back-to-results-wrapper">
+    <div class="col-lg-8 col-lg-offset-2">
+      <a class="back-to-results" href="/restaurants">Clear search</a>
+    </div>
+  </div>
+  {{/notEmpty}}
+
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2">{{> order_params_bar}}</div>
   </div>

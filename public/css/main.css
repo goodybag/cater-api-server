@@ -84,6 +84,18 @@ header.navbar {
   text-decoration: underline;
 }
 
+@media (max-width: 526px){
+  .footer-nav > li {
+    display: block;
+    /* little bit of padding to make them easier to tap on mobile */
+    padding: 5px 0;
+  }
+
+  .footer-nav > li:before {
+    content: "";
+  }
+}
+
 .order-item .edit {
   color: gray;
   text-transform:uppercase;

@@ -3,8 +3,8 @@ var OrderView = FormView.extend({
 
   events: function() {
     return {
-      'keyup .order-form .form-control': 'autoSave',
-      'change .order-form .form-control': 'autoSave',
+      'keyup .order-form .form-control, .adjustment .form-control': 'autoSave',
+      'change .order-form .form-control, .adjustment .form-control': 'autoSave',
       'submit .order-form': 'onSave',
       'click .edit-address-btn': 'editAddress',
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
@@ -160,11 +160,13 @@ var OrderView = FormView.extend({
     zip: '#address-zip',
     phone: '#order-phone',
     guests: '#order-guests',
-    notes: '#order-notes'
+    notes: '#order-notes',
+    adjustment: '.adjustment .form-control'
   },
 
   fieldGetters: {
     guests: _.partial(FormView.intGetter, 'guests'),
+
     datetime: function() {
       var date = this.$el.find(".order-form #order-date").val().trim();
       var time = this.$el.find(".order-form #order-time").val().trim();
@@ -180,8 +182,22 @@ var OrderView = FormView.extend({
       var date = moment(datetime);
       return date.isValid() ? datetime : null;
     },
+
     phone: function() {
       return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
+    },
+
+    adjustment: function() {
+      var $adj = this.$el.find('.adjustment');
+      if (!$adj.hasClass('editable'))
+        return this.model.get('adjustment');
+
+      var desc = $adj.find('.adjustment-description').val().trim() || null
+      var amount = parseInt($adj.find('.adjustment-amount').val().trim() * 100)
+      return {
+        description: desc,
+        amount: !utils.isNaN(amount) ? amount : null
+      };
     }
   },
 

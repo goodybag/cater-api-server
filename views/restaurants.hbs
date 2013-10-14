@@ -10,13 +10,13 @@
     </div>
   </div>
   {{else}}
-    {{#if orderParams}}
+    {{#notEmpty orderParams}}
     <div class="row back-to-results-wrapper">
       <div class="col-lg-8 col-lg-offset-2">
         <a class="back-to-results" href="/restaurants">Clear search</a>
       </div>
     </div>
-    {{/if}}
+    {{/notEmpty}}
   {{/if}}
 
   <div class="row">

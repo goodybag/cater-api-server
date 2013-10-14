@@ -27,16 +27,17 @@ var transforms = {
   }
 };
 
+// Override the order params with what's in the query params
+// Playing around with the flows, I think this provides the most
+// consistent "feeling" behavior.
 module.exports = function(){
   return function( req, res, next ){
-    var orderParams = {}, added = false;
+    var orderParams = {};
 
     for ( var i = 0, l = orderParamsFields.length, key; i < l; ++i ){
       key = orderParamsFields[i];
 
       if ( !req.param( key ) ) continue;
-
-      added = true;
 
       // Add transformed value
       orderParams[ key ] = ( key in transforms
@@ -45,8 +46,7 @@ module.exports = function(){
       );
     }
 
-    // Only change order params if they did a new search with values
-    if ( added ) req.session.orderParams = orderParams;
+    req.session.orderParams = orderParams;
 
     // Always attach current orderParams to request though
     req.orderParams = orderParams;

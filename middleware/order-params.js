@@ -29,25 +29,27 @@ var transforms = {
 
 module.exports = function(){
   return function( req, res, next ){
-    // Track previous params if there was something there
-    if ( Object.keys( req.session.orderParams ) > 0 ){
-      req.session.previousParams = req.session.orderParams;
-    }
+    var orderParams = {}, added = false;
 
-    // New request, reset orderParams
-    req.session.orderParams = {};
-
-    for (var i = 0, l = orderParamsFields.length, key; i < l; ++i){
+    for ( var i = 0, l = orderParamsFields.length, key; i < l; ++i ){
       key = orderParamsFields[i];
 
       if ( !req.param( key ) ) continue;
 
+      added = true;
+
       // Add transformed value
-      req.session.orderParams[ key ] = ( key in transforms
+      orderParams[ key ] = ( key in transforms
         ? transforms[ key ]( req.param( key ), req )
         : req.param( key )
       );
     }
+
+    // Only change order params if they did a new search with values
+    if ( added ) req.session.orderParams = orderParams;
+
+    // Always attach current orderParams to request though
+    req.orderParams = orderParams
 
     next();
   };

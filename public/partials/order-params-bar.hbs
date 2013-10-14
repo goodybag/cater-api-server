@@ -3,8 +3,9 @@
     <div class="form-group form-group-title">
       <strong class="form-title">Find Catering</strong>
     </div>
+
     <div class="form-group" data-icon="gb-icon-location">
-      <input list="zips" type="text" class="form-control form-control-zip" name="zip" placeholder="zip" maxlength="5" value="{{orderParams.zip}}"/>
+      <input list="zips" type="text" class="form-control form-control-zip" name="zip" placeholder="zip" maxlength="5" value="{{#if orderParams}}{{orderParams.zip}}{{/if}}"/>
       {{#if order}}
       <datalist id="zips">
         {{#each order.restaurant.delivery_zips}}
@@ -13,16 +14,17 @@
       </datalist>
       {{/if}}
     </div>
+
     <div class="form-group" data-icon="gb-icon-calendar">
-      <input type="text" class="form-control" name="date" placeholder="delivery date" maxlength="10" value="{{formatDateTime orderParams.date}}"/>
+      <input type="text" class="form-control" name="date" placeholder="delivery date" maxlength="10" value="{{#if orderParams}}{{formatDateTime orderParams.date}}{{/if}}"/>
     </div>
 
     <div class="form-group" data-icon="gb-icon-time">
-      <input type="text" class="form-control" name="time" placeholder="delivery time" maxlength="8" value="{{formatTime orderParams.time}}"/>
+      <input type="text" class="form-control" name="time" placeholder="delivery time" maxlength="8" value="{{#if orderParams}}{{formatTime orderParams.time}}{{/if}}"/>
     </div>
 
     <div class="form-group" data-icon="gb-icon-user">
-      <input type="text" class="form-control form-control-guests" name="guests" placeholder="guests" maxlength="4" value="{{orderParams.guests}}"/>
+      <input type="text" class="form-control form-control-guests" name="guests" placeholder="guests" maxlength="4" value="{{#if orderParams}}{{orderParams.guests}}{{/if}}"/>
     </div>
 
     <a href="/restaurants" class="btn btn-primary btn-search">

@@ -6,11 +6,9 @@ var OrderParamsView = Backbone.View.extend({
   , 'keyup input':        'onInputChange'
   }
 
-, initialize: function() {
-    // the OrderParams model should be passed in
-    // the el should also be passed in
-    this.listenTo(this.model, 'change', this.updateFields, this);
+, template: Handlebars.partials.order_params_view
 
+, initialize: function() {
     this.onInputChange = _.debounce( _.bind( this.updateSearchHref, this ), 300 );
 
     this.datepicker = this.$el.find("input[name='date']").eq(0).pickadate({
@@ -31,38 +29,27 @@ var OrderParamsView = Backbone.View.extend({
     this.updateSearchHref();
   }
 
+, render: function(){
+    var $el = $( this.template({
+      orderParams: utils.parseQueryParams()
+    }));
+
+    this.$el.html( $el.html() );
+
+    return this;
+  }
+
 , focusInputs: function(e) {
     // give focus to inputs when clicking icons, text, etc
     e.stopPropagation();
     $(e.target).find('input').focus();
   }
 
-, updateFields: function(model, value, options) {
-    for (var key in model.changed) {
-       // date
-      if(key == 'date' && model.changed[key]){
-        var date = dateTimeFormatter(model.changed[key], 'MM/DD/YYYY');
-        this.$el.find('input[name=' + key + ']').val(date);
-        continue;
-      }
-
-      // time
-      if(key == 'time' && model.changed[key]){
-        var time = timeFormatter(model.changed[key], 'h:mm A');
-        this.$el.find('input[name=' + key + ']').val(time);
-        continue;
-      }
-
-      // otherwise
-      this.$el.find('input[name=' + key + ']').val(model.changed[key]);
-    }
-  }
-
 , getProps: function(){
     return {
-      zip: this.$("input[name='zip']").val() || null
-    , date: (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
-    , time: this.timepicker.get()
+      zip:    this.$("input[name='zip']").val() || null
+    , date:   (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
+    , time:   this.timepicker.get()
     , guests: this.$("input[name='guests']").val() || null
     };
   }

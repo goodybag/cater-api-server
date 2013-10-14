@@ -3,6 +3,14 @@
 {{/extend}}
 
 <div class="page-restaurants container">
+  {{#if previousParams}}
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+      <a class="back-to-results" href="/restaurants{{queryParams previousParams}}">Back to previous search</a>
+    </div>
+  </div>
+  {{/if}}
+
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2">{{> order_params_bar}}</div>
   </div>

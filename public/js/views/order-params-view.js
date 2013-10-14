@@ -8,6 +8,8 @@ var OrderParamsView = Backbone.View.extend({
 
 , template: Handlebars.partials.order_params_view
 
+, searchUrl: '/restaurants'
+
 , initialize: function() {
     this.onInputChange = _.debounce( _.bind( this.updateSearchHref, this ), 300 );
 
@@ -55,7 +57,7 @@ var OrderParamsView = Backbone.View.extend({
   }
 
 , updateSearchHref: function(){
-    this.$searchBtn.attr( 'href',  utils.queryParams( this.getProps() ) );
+    this.$searchBtn.attr( 'href',  this.searchUrl + utils.queryParams( this.getProps() ) );
     return this;
   }
 

@@ -266,6 +266,10 @@ var helpers = {
 
   queryParams: function( obj ){
     return utils.queryParams( obj );
+  },
+
+  notEmpty: function( obj, options ){
+    return options[ !utils.isEmpty( obj ) ? 'fn' : 'inverse' ]();
   }
 }
 

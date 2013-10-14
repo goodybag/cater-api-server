@@ -1,27 +1,35 @@
 var static = require('node-static');
 var controllers = require('./controllers');
-var restrict = require('./middleware/restrict');
+
+var m = {
+  orderParams : require('./middleware/order-params'),
+  restrict    : require('./middleware/restrict')
+};
 
 var file = new static.Server('./public');
 
 module.exports.register = function(app) {
 
-  app.get('/', restrict(['client', 'admin']), function(req, res) { res.redirect('/restaurants'); });
+  app.get('/', m.restrict(['client', 'admin']), function(req, res) { res.redirect('/restaurants'); });
 
   /**
    * Restaurants resource.  The collection of all restaurants.
    */
 
-  app.get('/restaurants', restrict(['client', 'admin']), function(req, res, next) {
-    if (req.query.edit) return next();
-    controllers.restaurants.list.apply(this, arguments);
-  });
+  app.get('/restaurants',
+    m.restrict(['client', 'admin']),
+    m.orderParams(),
+    function(req, res, next) {
+      if (req.query.edit) return next();
+      controllers.restaurants.list.apply(this, arguments);
+    }
+  );
 
-  app.get('/restaurants', restrict('admin'), controllers.restaurants.editAll);
+  app.get('/restaurants', m.restrict('admin'), controllers.restaurants.editAll);
 
-  app.post('/restaurants', restrict('admin'), controllers.restaurants.create);
+  app.post('/restaurants', m.restrict('admin'), controllers.restaurants.create);
 
-  app.all('/restaurants', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/restaurants', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -30,22 +38,22 @@ module.exports.register = function(app) {
    * Restaurant resource.  An individual restaurant.
    */
 
-  app.get('/restaurants/:rid', restrict(['client', 'admin']), controllers.restaurants.orders.current);  // individual restaurant needs current order.
+  app.get('/restaurants/:rid', m.restrict(['client', 'admin']), controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
-  app.get('/restaurants/:rid', restrict(['client', 'admin']), function(req, res, next) {
+  app.get('/restaurants/:rid', m.restrict(['client', 'admin']), function(req, res, next) {
     if (req.query.edit) return next();
     controllers.restaurants.get.apply(this, arguments);
   });
 
-  app.get('/restaurants/:rid', restrict('admin'), controllers.restaurants.edit);
+  app.get('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.edit);
 
-  app.put('/restaurants/:rid', restrict('admin'), controllers.restaurants.update);
+  app.put('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
 
-  app.patch('/restaurants/:rid', restrict('admin'), controllers.restaurants.update);
+  app.patch('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
 
-  app.del('/restaurants/:rid', restrict('admin'), controllers.restaurants.remove);
+  app.del('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.remove);
 
-  app.all('/restaurants/:rid', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/restaurants/:rid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
@@ -54,9 +62,9 @@ module.exports.register = function(app) {
    * Restaurant items resource.  The collection of all items belonging to a restaurant.
    */
 
-  app.get('/restaurants/:rid/items', restrict(['client', 'admin']), controllers.restaurants.listItems);  // not currently used
+  app.get('/restaurants/:rid/items', m.restrict(['client', 'admin']), controllers.restaurants.listItems);  // not currently used
 
-  app.all('/restaurants/:rid/items', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/restaurants/:rid/items', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);
   });
@@ -65,11 +73,11 @@ module.exports.register = function(app) {
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
    */
 
-  app.get('/restaurants/:rid/categories', restrict(['client', 'admin']), controllers.restaurants.categories.list);  // not currently used
+  app.get('/restaurants/:rid/categories', m.restrict(['client', 'admin']), controllers.restaurants.categories.list);  // not currently used
 
-  app.post('/restaurants/:rid/categories', restrict('admin'), controllers.restaurants.categories.create);
+  app.post('/restaurants/:rid/categories', m.restrict('admin'), controllers.restaurants.categories.create);
 
-  app.all('/restaurants/:rid/categories', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/restaurants/:rid/categories', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -78,15 +86,15 @@ module.exports.register = function(app) {
    * Individual category resource.  A single restaurant category.
    */
 
-  app.get('/restaurants/:rid/categories/:cid', restrict(['client', 'admin']), controllers.restaurants.categories.get);  // not currently used
+  app.get('/restaurants/:rid/categories/:cid', m.restrict(['client', 'admin']), controllers.restaurants.categories.get);  // not currently used
 
-  app.put('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.update);
+  app.put('/restaurants/:rid/categories/:cid', m.restrict('admin'), controllers.restaurants.categories.update);
 
-  app.patch('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.update);
+  app.patch('/restaurants/:rid/categories/:cid', m.restrict('admin'), controllers.restaurants.categories.update);
 
-  app.del('/restaurants/:rid/categories/:cid', restrict('admin'), controllers.restaurants.categories.remove);
+  app.del('/restaurants/:rid/categories/:cid', m.restrict('admin'), controllers.restaurants.categories.remove);
 
-  app.all('/restaurants/:rid/categories/:cid', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/restaurants/:rid/categories/:cid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
@@ -95,11 +103,11 @@ module.exports.register = function(app) {
    *  Category items resource.  The collection of all items belonging to a single category.
    */
 
-  app.get('/restaurants/:rid/categories/:cid/items', restrict(['client', 'admin']), controllers.restaurants.categories.listItems);  // not currently used
+  app.get('/restaurants/:rid/categories/:cid/items', m.restrict(['client', 'admin']), controllers.restaurants.categories.listItems);  // not currently used
 
-  app.post('/restaurants/:rid/categories/:cid/items', restrict('admin'), controllers.restaurants.categories.addItem);
+  app.post('/restaurants/:rid/categories/:cid/items', m.restrict('admin'), controllers.restaurants.categories.addItem);
 
-  app.all('/restaurants/:rid/categories/:cid/items', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/restaurants/:rid/categories/:cid/items', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -108,15 +116,15 @@ module.exports.register = function(app) {
    *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
    */
 
-  app.get('/restaurants/:rid/orders', restrict('admin'), controllers.restaurants.orders.list);
+  app.get('/restaurants/:rid/orders', m.restrict('admin'), controllers.restaurants.orders.list);
 
-  app.post('/restaurants/:rid/orders', restrict(['client', 'admin']), function(req, res, next) {
+  app.post('/restaurants/:rid/orders', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body.restaurant_id = req.params.rid;
     req.url = '/orders';
     next();
   });
 
-  app.all('/restaurants/:rid/orders', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/restaurants/:rid/orders', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -125,15 +133,15 @@ module.exports.register = function(app) {
    *  Current order resource.  The current pending order for the given restaurant and logged in user.
    */
 
-  app.all('/restaurants/:rid/orders/current(/*)?', restrict(['client', 'admin']), controllers.restaurants.orders.current);
+  app.all('/restaurants/:rid/orders/current(/*)?', m.restrict(['client', 'admin']), controllers.restaurants.orders.current);
 
   /**
    *  Items resource.  The collection of all items.
    */
 
-  app.get('/items', restrict(['client', 'admin']), controllers.items.list);  // not currently used
+  app.get('/items', m.restrict(['client', 'admin']), controllers.items.list);  // not currently used
 
-  app.all('/items', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/items', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);
   });
@@ -142,15 +150,15 @@ module.exports.register = function(app) {
    *  Item resource.  An individual item.
    */
 
-  app.get('/items/:id', restrict(['client', 'admin']), controllers.items.get);  // not currently used
+  app.get('/items/:id', m.restrict(['client', 'admin']), controllers.items.get);  // not currently used
 
-  app.put('/items/:id', restrict('admin'), controllers.items.update);
+  app.put('/items/:id', m.restrict('admin'), controllers.items.update);
 
-  app.patch('/items/:id', restrict('admin'), controllers.items.update);
+  app.patch('/items/:id', m.restrict('admin'), controllers.items.update);
 
-  app.del('/items/:id', restrict('admin'), controllers.items.remove);
+  app.del('/items/:id', m.restrict('admin'), controllers.items.remove);
 
-  app.all('/items/:id', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/items/:id', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH,  DELETE');
     res.send(405);
   });
@@ -159,9 +167,9 @@ module.exports.register = function(app) {
    *  Orders resource.  The collection of all orders.
    */
 
-  app.get('/orders', restrict('admin'), controllers.orders.list);  // not currently used
+  app.get('/orders', m.restrict('admin'), controllers.orders.list);  // not currently used
 
-  app.post('/orders', restrict(['client', 'admin']), controllers.orders.create);
+  app.post('/orders', m.restrict(['client', 'admin']), controllers.orders.create);
 
   app.all('/orders', function(req, res, next) {
     res.set('Allow', 'GET');
@@ -188,16 +196,16 @@ module.exports.register = function(app) {
 
   app.get('/orders/:id', controllers.orders.get);
 
-  app.put('/orders/:id', restrict(['client', 'admin']), controllers.orders.update);
+  app.put('/orders/:id', m.restrict(['client', 'admin']), controllers.orders.update);
 
-  app.patch('/orders/:id', restrict(['client', 'admin']), controllers.orders.update);
+  app.patch('/orders/:id', m.restrict(['client', 'admin']), controllers.orders.update);
 
-  app.del('/orders/:id', restrict(['client', 'admin']), function(req, res, next) {
+  app.del('/orders/:id', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
     next();
   }, controllers.orders.changeStatus);
 
-  app.all('/orders/:id', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:id', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
@@ -206,12 +214,12 @@ module.exports.register = function(app) {
    *  Order status resource.  The collection of all statuses on a single order.
    */
 
-  app.get('/orders/:oid/status-history', restrict(['client', 'admin']), controllers.orders.listStatus); // latest is on order.  not currently used.
+  app.get('/orders/:oid/status-history', m.restrict(['client', 'admin']), controllers.orders.listStatus); // latest is on order.  not currently used.
 
   // people with restaurant review token can access this route.  leave auth to controllers.orders.auth.
   app.post('/orders/:oid/status-history', controllers.orders.changeStatus);
 
-  app.all('/orders/:id/status-history', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:id/status-history', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -221,11 +229,11 @@ module.exports.register = function(app) {
    *  This is a collection of OrderItems, not Items.
    */
 
-  app.get('/orders/:oid/items', restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
+  app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
 
-  app.post('/orders/:oid/items', restrict(['client', 'admin']), controllers.orders.orderItems.add);
+  app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.add);
 
-  app.all('/orders/:oid/items', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/items', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -234,15 +242,15 @@ module.exports.register = function(app) {
    *  Order item resource.  A single order item.
    */
 
-  app.get('/orders/:oid/items/:iid', restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
+  app.get('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
 
-  app.put('/orders/:oid/items/:iid', restrict(['client', 'admin']), controllers.orders.orderItems.update);
+  app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.update);
 
-  app.patch('/orders/:oid/items/:iid', restrict(['client', 'admin']), controllers.orders.orderItems.update);
+  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.update);
 
-  app.del('/orders/:oid/items/:iid', restrict(['client', 'admin']), controllers.orders.orderItems.remove);
+  app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.remove);
 
-  app.all('/orders/:oid/items/:iid', restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
@@ -280,17 +288,17 @@ module.exports.register = function(app) {
 
 
   // For the order params
-  app.get('/session/order-params', restrict(['client', 'admin']), controllers.session.getOrderParams);
+  app.get('/session/order-params', m.restrict(['client', 'admin']), controllers.session.getOrderParams);
 
-  app.put('/session/order-params', restrict(['client', 'admin']), controllers.session.updateOrderParams);
+  app.put('/session/order-params', m.restrict(['client', 'admin']), controllers.session.updateOrderParams);
 
   /**
    *  Users resource.  All the users.
    */
 
-  app.get('/users', restrict('admin'), controllers.users.list); // not currently used
+  app.get('/users', m.restrict('admin'), controllers.users.list); // not currently used
 
-  app.post('/users', restrict('admin'), controllers.users.create);
+  app.post('/users', m.restrict('admin'), controllers.users.create);
 
   app.all('/users', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -404,7 +412,7 @@ module.exports.register = function(app) {
    *  Static pages
    */
 
-  app.get('/signup', restrict('admin'), controllers.statics.createUser);
+  app.get('/signup', m.restrict('admin'), controllers.statics.createUser);
 
   app.get('/contact-us', controllers.statics.contactUs);
 

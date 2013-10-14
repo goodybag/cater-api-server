@@ -7,3 +7,7 @@ a.list-group-item-restaurant .list-group-item-heading {
 .list-group-item-restaurant .list-restaurant-cuisines > li {
   color: #8B8983;
 }
+
+.back-to-results-wrapper {
+  margin-bottom: 12px;
+}

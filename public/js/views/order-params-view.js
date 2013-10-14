@@ -1,13 +1,15 @@
 var OrderParamsView = Backbone.View.extend({
   events: {
-    'submit form': 'submit'
-  , 'click .form-group': 'focusInputs'
+    'submit form':        'onFormSubmit'
+  , 'click .form-group':  'focusInputs'
+  , 'click .btn-search':  'onSearchClick'
+  , 'keyup input':        'onInputChange'
   }
 
+, template: Handlebars.partials.order_params_view
+
 , initialize: function() {
-    // the OrderParams model should be passed in
-    // the el should also be passed in
-    this.listenTo(this.model, 'change', this.updateFields, this);
+    this.onInputChange = _.debounce( _.bind( this.updateSearchHref, this ), 300 );
 
     this.datepicker = this.$el.find("input[name='date']").eq(0).pickadate({
       format: 'mm/dd/yyyy'
@@ -18,6 +20,22 @@ var OrderParamsView = Backbone.View.extend({
       format: 'h:i A'
     , interval: 15
     }).pickatime('picker');
+
+    this.datepicker.on( 'set', this.onInputChange );
+    this.timepicker.on( 'set', this.onInputChange );
+
+    this.$searchBtn = this.$el.find('.btn-search');
+    this.searchUrl = this.$searchBtn.data('base-url');
+  }
+
+, render: function(){
+    var $el = $( this.template({
+      orderParams: utils.parseQueryParams()
+    }));
+
+    this.$el.html( $el.html() );
+
+    return this;
   }
 
 , focusInputs: function(e) {
@@ -26,41 +44,26 @@ var OrderParamsView = Backbone.View.extend({
     $(e.target).find('input').focus();
   }
 
-, updateFields: function(model, value, options) {
-    for (var key in model.changed) {
-       // date
-      if(key == 'date' && model.changed[key]){
-        var date = dateTimeFormatter(model.changed[key], 'MM/DD/YYYY');
-        this.$el.find('input[name=' + key + ']').val(date);
-        continue;
-      }
-
-      // time
-      if(key == 'time' && model.changed[key]){
-        var time = timeFormatter(model.changed[key], 'h:mm A');
-        this.$el.find('input[name=' + key + ']').val(time);
-        continue;
-      }
-
-      // otherwise
-      this.$el.find('input[name=' + key + ']').val(model.changed[key]);
-    }
-  }
-
-, submit: function (e) {
-    e.preventDefault();
-
-    // formatting date to be YYYY-MM-DD and time to be HH:MM (24 hour time)
-    var form = {
-      zip: this.$("input[name='zip']").val() || null
-    , date: (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
-    , time: (this.timepicker.get()) ? timeFormatter(this.timepicker.get()) : null
+, getProps: function(){
+    return {
+      zip:    this.$("input[name='zip']").val() || null
+    , date:   (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
+    , time:   this.timepicker.get()
     , guests: this.$("input[name='guests']").val() || null
     };
-    this.model.save(form, {
-      success: function(model, response, options) {
-        window.location.reload();
-      }
-    });
+  }
+
+, updateSearchHref: function(){
+    this.$searchBtn.attr( 'href',  this.searchUrl + utils.queryParams( this.getProps() ) );
+    return this;
+  }
+
+, onSearchClick: function(e){
+    this.updateSearchHref();
+  }
+
+, onFormSubmit: function (e) {
+    e.preventDefault();
+    this.updateSearchHref();
   }
 });

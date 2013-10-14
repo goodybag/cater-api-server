@@ -1,1 +1,1 @@
-web: ./bin/tasks.js runDeltas && node server
+web: npm start

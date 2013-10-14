@@ -64,6 +64,6 @@ var OrderParamsView = Backbone.View.extend({
 
 , onFormSubmit: function (e) {
     e.preventDefault();
-    this.$searchBtn.trigger('click');
+    this.updateSearchHref();
   }
 });

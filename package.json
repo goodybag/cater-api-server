@@ -45,7 +45,8 @@
     "rollbar": "0.2.x",
     "connect-request-logger-pg": "0.0.1",
     "winston-papertrail": "0.1.x",
-    "bitly": "1.2.x"
+    "bitly": "1.2.x",
+    "npm": "*"
   },
   "devDependencies": {
     "mocha": "~1.12.0",
@@ -56,5 +57,4 @@
   "engines": {
     "node": "0.10.x"
   }
-
 }

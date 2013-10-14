@@ -97,7 +97,7 @@ var Restaurant = Backbone.Model.extend({
   isValidDeliveryTime: function( date ){
     if ( typeof date !== 'string' ) return false;
 
-    if ( new Date(date).toString() === 'Invalid Date' ) return false;
+    if ( !moment(date).isValid() ) return false;
 
     // Super pro day-parsing
     var day = moment( date.split(' ')[0] ).day();
@@ -126,7 +126,7 @@ var Restaurant = Backbone.Model.extend({
     var date = order.get('datetime');
     if ( typeof date !== 'string' ) return false;
 
-    if ( new Date(date).toString() === 'Invalid Date' ) return false;
+    if ( !moment(date).isValid() ) return false;
 
     // In case of lead_times being null or an empty array
     // return true because there is nothing specified, so all must
@@ -144,7 +144,7 @@ var Restaurant = Backbone.Model.extend({
     if ( !limit ) return false;
 
     var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
-    var hours = (new Date(date) - new Date(now)) / 3600000;
+    var hours = (moment(date) - moment(now)) / 3600000;
 
     return hours > limit.lead_time;
   },

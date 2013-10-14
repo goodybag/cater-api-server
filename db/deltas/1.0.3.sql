@@ -1,22 +1,24 @@
 -- Update version
 insert into deltas (version, date) values ('1.0.3', 'now()');
 
--- No CREATE TYPE IF NOT EXISTS
-DROP TYPE if exists "tag_type" CASCADE;
-CREATE TYPE "tag_type" AS ENUM (
-  'Vegan', 
-  'Vegetarian', 
-  'Gluten Free'
+-- #287: Address book management
+
+/* 
+ *  User       <-> Address  1-many
+ *  Restaurant <-> Address  1-1
+ */
+create table if not exists "addresses" (
+  id            serial primary key,
+  user_id       int references users(id) on delete cascade,
+  name          text,
+  street        text,
+  city          text,
+  state         varchar(2),
+  zip           varchar(5),
+  is_default    boolean
 );
 
-CREATE TABLE if not exists "item_tags" (
-  id                  serial primary key,
-  item_id             int references items(id) on delete cascade,
-  tag                 tag_type not null
-);
-
-CREATE TABLE if not exists "restaurant_tags" (
-  id                  serial primary key,
-  restaurant_id       int references restaurants(id) on delete cascade,
-  tag                 tag_type not null
-);
+alter table "restaurants"
+  add column "address_id" int 
+  references addresses(id)
+  on delete cascade;

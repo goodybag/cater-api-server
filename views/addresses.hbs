@@ -1,0 +1,41 @@
+<div class="container">
+  <h1 class="col-lg-12 page-title">Address Book</h1>
+  <div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+      <div class="panel">
+        <div class="panel-body">
+          <div class="list-group">
+            {{#each addresses}}
+              <div class="list-item">
+                {{> address }}
+                <hr>
+              </div>
+            {{/each}}
+          </div>
+          <div id="add-new-address" class="list-group">
+            <h3>Add new address</h3>
+            <form class="address-edit" method="post" action="/users/me/addresses">
+              <fieldset>
+                {{> edit_address }}
+                <a href="/users/me" class="btn btn-default">Back to settings</a>
+                <button type="submit" class="btn btn-primary address-submit pull-right" data-error-text="Couldn't save address!">Create Address</button>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#extend "scripts"}}
+<script src="/js/models/address.js"></script>
+<script src="/js/collections/addresses.js"></script>
+<script src="/js/views/form-view.js"></script>
+<script src="/js/views/address-list-view.js"></script>
+<script>
+  // Bootstrap collection for listing and a new model for adding an address
+  var addressCollection = new Addresses({{{json addresses}}}, {urlRoot: '/users/me/addresses'});
+  var addressListView = new AddressListView({ el: '#main', collection: addressCollection, model: new Address() });
+</script>
+{{/extend}}

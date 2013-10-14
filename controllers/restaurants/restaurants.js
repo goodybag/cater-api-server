@@ -19,11 +19,18 @@ module.exports.list = function(req, res) {
 
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.session.orderParams || {};
-  models.Restaurant.find({}, orderParams, function(err, models) {
+  models.Restaurant.find({}, orderParams, function(err, restaurants) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
-    res.render('restaurants', {restaurants: utils.invoke(models, 'toJSON'), orderParams: orderParams}, function(error, html) {
-      if (error) return res.error(errors.internal.UNKNOWN, error);
-      return res.send(html);
+    models.Address.findOne({where: {
+      user_id: req.session.user.id
+    , is_default: true
+    }}, function(err, address) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
+      res.render('restaurants', {
+        restaurants: utils.invoke(restaurants, 'toJSON')
+      , orderParams: orderParams
+      , defaultAddress: address ? address.toJSON() : null
+      });
     });
   });
 }

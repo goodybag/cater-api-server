@@ -8,8 +8,6 @@ var OrderParamsView = Backbone.View.extend({
 
 , template: Handlebars.partials.order_params_view
 
-, searchUrl: '/restaurants'
-
 , initialize: function() {
     this.onInputChange = _.debounce( _.bind( this.updateSearchHref, this ), 300 );
 
@@ -27,6 +25,7 @@ var OrderParamsView = Backbone.View.extend({
     this.timepicker.on( 'set', this.onInputChange );
 
     this.$searchBtn = this.$el.find('.btn-search');
+    this.searchUrl = this.$searchBtn.data('base-url');
 
     this.updateSearchHref();
   }

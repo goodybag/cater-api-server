@@ -155,14 +155,23 @@ module.exports = {
       return !utils.isObject(email) ? {email: email} : email;
     }),
     create: utils.compose(utils.partial(upsert, 'waitlist'), function(values) {
-      return utils.defaults(values, {token: uuid.v4()});
+      return {
+        unsubscribed: null,
+        confirmed: null,
+        created_at: 'now()',
+        email: values.email,
+        organization: values.organization,
+        data: JSON.stringify(values),
+        token: values.token || uuid.v4()
+      };
     }),
-    reAdd: function(where, org, token) {
+    reAdd: function(where, data, token) {
       var values = {
         unsubscribed: null,
         confirmed: null,
         created_at: 'now()',
-        organization: org || null
+        organization: data.organization,
+        data: JSON.stringify(data)
       };
 
       if (token) values.token = token;

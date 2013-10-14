@@ -30,6 +30,10 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , data: {
+      type: types.json
+    , default: "'{}'"
+    }
   , token: {
       type: types.text
     , nullable: false

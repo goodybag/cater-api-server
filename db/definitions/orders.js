@@ -83,6 +83,14 @@ define(function(require) {
       type: types.timestamp
     , nullable: true
     }
+  , adjustment_amount: {
+      type: types.int
+    , nullable: true
+    }
+  , adjustment_description: {
+      type: types.text
+    , nullable: true
+    }
   };
 
   definition.indices = {};

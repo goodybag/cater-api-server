@@ -117,12 +117,8 @@ var Order = Backbone.Model.extend({
       this.orderItems.orderId = model.id;
     });
 
-    this.listenTo(this.orderItems, 'change:sub_total add remove', function() {
-      this.set('sub_total', _.reduce(
-        this.orderItems.pluck('sub_total'),
-        function(a, b) { return a + b; }, 0)
-      );
-    }, this);
+    this.on('change:adjustment', this.updateSubtotal, this);
+    this.listenTo(this.orderItems, 'change:sub_total add remove', this.updateSubtotal, this);
 
     this.listenTo(this.restaurant, 'change:is_bad_zip change:is_bad_delivery_time change:is_bad_lead_time change:is_bad_guests', function(model, value, options) {
       this.set('is_unacceptable', _.reduce(_.pick(model.toJSON(), ['is_bad_zip', 'is_bad_delivery_time', 'is_bad_lead_time', 'is_bad_guests']), function(a, b) {
@@ -141,6 +137,13 @@ var Order = Backbone.Model.extend({
       'change:guests': this.guestsChanged,
       'change:is_unacceptable change:below_min': this.setSubmittable
     }, this);
+  },
+
+  updateSubtotal: function() {
+    this.set('sub_total',
+             _.reduce(this.orderItems.pluck('sub_total'),
+                      function(a, b) { return a + b; }, (this.get('adjustment') || 0).amount || 0)
+            );
   },
 
   setSubmittable: function(model, value, options) {

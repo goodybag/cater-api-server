@@ -27,7 +27,7 @@
       <input type="text" class="form-control form-control-guests" name="guests" placeholder="guests" maxlength="4" value="{{#if orderParams}}{{orderParams.guests}}{{/if}}"/>
     </div>
 
-    <a href="/restaurants" data-base-url="/restaurants" class="btn btn-primary btn-search">
+    <a href="/restaurants{{queryParams orderParams}}" data-base-url="/restaurants" class="btn btn-primary btn-search">
       Search <i class="btn-search-icon gb-icon-magnifier"></i>
     </a>
   </form>

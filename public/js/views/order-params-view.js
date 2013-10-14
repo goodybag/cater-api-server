@@ -26,8 +26,6 @@ var OrderParamsView = Backbone.View.extend({
 
     this.$searchBtn = this.$el.find('.btn-search');
     this.searchUrl = this.$searchBtn.data('base-url');
-
-    this.updateSearchHref();
   }
 
 , render: function(){

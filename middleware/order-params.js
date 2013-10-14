@@ -1,7 +1,7 @@
 /**
  * Adds an orderParams object to request if it's present in the URL
  *
- * ?zip=75189&date=2027-09-03
+ * ?zip=75189&date=2027-09-03&11:30am
  */
 
 var moment = require('moment');
@@ -20,7 +20,7 @@ var transforms = {
   // Return time formatted as HH:mm so user can enter
   // time as 12:00 am or 00:00
   time: function( d ){
-    // Just use some random day since we're just concerned with 
+    // Just use some random day since we're just concerned with
     // formatting time
     var datetime = moment( '2013-01-01 ' + d );
     return datetime.format('HH:mm');
@@ -49,7 +49,7 @@ module.exports = function(){
     if ( added ) req.session.orderParams = orderParams;
 
     // Always attach current orderParams to request though
-    req.orderParams = orderParams
+    req.orderParams = orderParams;
 
     next();
   };

@@ -25,8 +25,8 @@ module.exports.list = function(req, res) {
     , is_default: true
     }}, function(err, address) {
       if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
-      if (address) address = address.toJSON();
-
+      address = address ? address.toJSON() : {};
+      console.log(orderParams, address);
       res.render('restaurants', {
         restaurants: utils.invoke(restaurants, 'toJSON')
       , orderParams: orderParams

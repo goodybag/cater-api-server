@@ -41,6 +41,15 @@ errors.internal.UNKNOWN = {
 };
 errors[errors.internal.UNKNOWN.code] = errors.internal.UNKNOWN;
 
+errors.internal.NOT_FOUND = {
+  type: "internal"
+, code: "0004"
+, httpCode: "404"
+, name: "NOT_FOUND"
+, message: "Resource not found"
+}
+errors[errors.internal.NOT_FOUND.code] = errors.internal.NOT_FOUND;
+
 /**
  * Authentication Errors
  */

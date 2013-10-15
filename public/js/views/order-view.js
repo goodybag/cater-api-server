@@ -203,7 +203,7 @@ var OrderView = FormView.extend({
 
     tip: function() {
       var percentage = parseFloat(this.$el.find(this.fieldMap.tip).val())
-      return !_.isNaN(percentage) ? this.model.get('sub_total') * percentage : 0;
+      return !_.isNaN(percentage) ? Math.round(this.model.get('sub_total') * percentage) : 0;
     }
   },
 

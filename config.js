@@ -213,6 +213,13 @@ var config = {
     , plan: 'month'
     }
 
+  , emails: {
+      support: 'support@goodybag.com'
+    , orders: 'orders@goodybag.com'
+    , waitlist: 'waitlist@goodybag.com'
+    , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
+    }
+
   , emailEnabled: true
   }
 };

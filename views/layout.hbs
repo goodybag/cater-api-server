@@ -58,16 +58,19 @@
               <img src="/img/logo.png" alt="Goodybag">
             </a>
             {{#if user.id}}
-            <div class="btn-group pull-right">
-              <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
-                My Account <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="/users/me">My Settings</a></li>
-                <li><a href="/users/me/orders">My Orders</a></li>
-                <li><a href="/auth/logout">Logout</a></li>
-              </ul>
-            </div>
+            <ul class="nav navbar-nav pull-right">
+              <li><a href="/restaurants">Home</a></li>
+              <li class="nav-account dropdown">
+                <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
+                  My Account <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a href="/users/me">My Settings</a></li>
+                  <li><a href="/users/me/orders">My Orders</a></li>
+                  <li><a href="/auth/logout">Logout</a></li>
+                </ul>
+              </li>
+            </ul>
             {{/if}}
             <span class="header-info">
               <span class="contact-us">Contact Us:</span>
@@ -101,11 +104,12 @@
       </ul>
     </footer>
 
-
+    {{#if intercom}}
     <a id="intercom">
       <span class="intercom-text" href="mailto:qsetwlny@incoming.intercom.io">Leave feedback!</span>
       <span class="up-arrow">&nbsp;</span>
     </a>
+    {{/if}}
 
     <script src="/components/jquery/jquery.min.js"></script>
     <script src="/components/amanda/releases/latest/amanda.min.js"></script>

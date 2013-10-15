@@ -202,6 +202,21 @@
   padding-bottom: 11px;
 }
 
+.navbar-nav > li > a {
+  padding-top: 16px;
+  padding-bottom: 14px;
+}
+
+.nav .caret {
+  border-top-color: #333;
+  border-bottom-color: #333;
+  margin-left: 4px;
+}
+
+.navbar-nav > li > .dropdown-menu {
+  margin-top: -11px;
+}
+
 /**
  * Panels
  */

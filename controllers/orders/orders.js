@@ -82,7 +82,6 @@ module.exports.get = function(req, res) {
     }) || {};
 
     order = order.toJSON();
-    console.log(order);
     var address = {
       street: order.street ? order.street : defaultAddress.street
     , city:   order.city ? order.city : defaultAddress.city

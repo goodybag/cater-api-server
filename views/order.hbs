@@ -154,13 +154,15 @@
                   {{/each}}
                 </datalist>
               </div>
+              {{#if order.editable}}
               <div class="form-group form-group-block form-group-save">
                 <label>
-                  <input type="checkbox" class="" {{#unless order.editable}}disabled="disabled"{{/unless}}>
+                  <input type="checkbox">
                   Save for future orders?
                 </input>
                 </label>
               </div>
+              {{/if}}
             </fieldset>
           </div>
         </div>

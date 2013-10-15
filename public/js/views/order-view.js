@@ -120,6 +120,7 @@ var OrderView = FormView.extend({
   },
 
   changeStatus: function(status, checkNulls) {
+    var this_ = this;
     if (checkNulls == null) checkNulls = true;
     if (status === this.model.get('status')) return;
     if (checkNulls && status == 'submitted') {
@@ -149,8 +150,35 @@ var OrderView = FormView.extend({
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({status: status, review_token: this.options.review_token}),
-      error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
-      success: function(data, textStatus, jqXHR) { window.location.href = url }
+      error: function(jqXHR, textStatus, errorThrown) { 
+        alert(errorThrown); 
+      },
+      success: function(data, textStatus, jqXHR) {
+
+        // this needs to get pulled out! -- preston
+        var saveAddress = this_.$el.find('.form-group-save input').is(':checked');
+        if (saveAddress && status === 'submitted') {
+          $.ajax({
+            url: '/users/me/addresses',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ 
+              name:     'temp name'//this_.$el.find('.address-info .address')
+            , street:   this_.$el.find('.address-info .address-street').val()
+            , city:     this_.$el.find('.address-info .address-city').val()
+            , state:    this_.$el.find('.address-info .address-state').val()
+            , zip:      this_.$el.find('.address-info .address-zip').val()
+            }),
+            error: function(jqXHR, textStatus, errorThrown) { 
+              console.log('errrorr!!!!');
+            },
+            success: function(data, textStatus, jqXHR) { 
+              console.log('success!!!!!!!');
+            }
+          });
+        }
+        window.location.href = url;
+      }
     });
   },
 

@@ -83,7 +83,7 @@ module.exports.get = function(req, res) {
     , admin: req.session.user && utils.contains(req.session.user.groups, 'admin')
     , states: states
     , orderParams: req.session.orderParams
-    , addresses: addresses
+    , addresses: utils.invoke(addresses, 'toJSON')
     };
     
     // orders are always editable for an admin

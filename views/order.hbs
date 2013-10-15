@@ -120,6 +120,17 @@
             <fieldset class="form-light address-info">
               <legend class="delivery-address-legend">Delivery Address</legend>
               <div class="form-group form-group-block">
+                {{#if addresses}}
+                <label class="control-label" for="address-saved" class="control-label">Saved Addresses</label>
+                <select id="address-saved" class="form-control address-input" {{#unless order.editable}} disabled="disabled"{{/unless}}>
+                  {{#each addresses}}
+                  {{{dump this}}}
+                    <option value="" label="" {{#if is_default}}selected="selected"{{/if}}>{{name}}</option>
+                  {{/each}}
+                </select>
+                {{/if}}
+              </div>
+              <div class="form-group form-group-block">
                 <label class="control-label" for="address-street" class="control-label">Street Address</label>
                 <input type="text" id="address-street" class="form-control address-input address-street" value="{{order.street}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
               </div>

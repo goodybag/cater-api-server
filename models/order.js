@@ -34,7 +34,7 @@ var modifyAttributes = function(callback, err, orders) {
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
 
-      order.attributes.user = {id: order.attributes.id, email: order.attributes.user_email, organization: order.attributes.organization};
+      order.attributes.user = {id: order.attributes.user_id, email: order.attributes.user_email, organization: order.attributes.organization};
       delete order.attributes.user_email;
       delete order.attributes.organization;
 

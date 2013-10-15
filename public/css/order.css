@@ -303,12 +303,12 @@
 /**
  * Fix pickadate/select2 container problem
  */
- .form-group-delivery-date,
- .form-group-delivery-time {
+.form-group-delivery-date,
+.form-group-delivery-time {
   position: static;
- }
+}
 
- .adjustment-amount-description {
+.adjustment-amount-description {
    margin-bottom: 0;
 }
 

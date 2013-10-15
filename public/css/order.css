@@ -54,9 +54,6 @@
 
 .left-fields {
   margin-top: 32px;
-  /* fix pickadate overflow */
-  position: relative;
-  overflow: hidden;
 }
 
 .left-fields .form-group {

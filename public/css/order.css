@@ -326,6 +326,18 @@ p.adjustment-description {
   padding: 20px 0;
 }
 
+.tip-area {
+  border-bottom: 1px solid #CCCCC0;
+}
+
+.tip-area dl {
+  margin: 20px 0;
+}
+
+.tip-area dt {
+  line-height: 36px;
+}
+
 .totals {
   margin-top: 35px;
 }

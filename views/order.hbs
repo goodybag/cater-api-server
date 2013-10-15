@@ -234,6 +234,27 @@
       </div>
       {{/if}}
       {{/if}}
+
+      {{#if order.editable}}
+      <div class="row tip-area">
+        <div class="col-lg-12">
+          <dl class="dl-horizontal pull-right">
+            <dt>Tip:</dt>
+            <dd>
+              <select class="form-control tip">
+                <option value=".05">5%</option>
+                <option value=".10">10%</option>
+                <option value=".15">15%</option>
+                <option value=".18" selected="selected">18%</option>
+                <option value=".20">20%</option>
+                <option value=".25">25%</option>
+              </select>
+            </dd>
+          </dl>
+        </div>
+      </div>
+      {{/if}}
+
       {{#if order.sub_total}}
       <div class="row">
         <div class="col-lg-12 totals">

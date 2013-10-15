@@ -5,6 +5,7 @@ var OrderView = FormView.extend({
     return {
       'keyup .order-form .form-control, .adjustment .form-control': 'autoSave',
       'change .order-form .form-control, .adjustment .form-control': 'autoSave',
+      'change #address-saved': 'changeAddress',
       'submit .order-form': 'onSave',
       'click .edit-address-btn': 'editAddress',
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
@@ -26,6 +27,7 @@ var OrderView = FormView.extend({
     // please add any model listeners in the setModel function
     this.setModel((this.model) ? this.model : new Order());
 
+    this.addresses = options.addresses;
     this.datepicker = this.$el.find(".order-form #order-date").eq(0).pickadate({
       format: 'mm/dd/yyyy'
     , min: new Date()
@@ -199,6 +201,18 @@ var OrderView = FormView.extend({
         amount: !utils.isNaN(amount) ? amount : null
       };
     }
+  },
+
+  changeAddress: function(e) {
+    var 
+      id = $(e.currentTarget).val()
+    , address = this.addresses.get(id);
+
+    // Replace address form with selected address
+    this.$el.find('.address-street').val(address.get('street'));
+    this.$el.find('.address-city').val(address.get('city'));
+    this.$el.find('.address-state').val(address.get('state'));
+    this.$el.find('.address-zip').val(address.get('zip'));
   },
 
   editAddress: function(e) {

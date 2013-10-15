@@ -55,8 +55,15 @@ module.exports.get = function(req, res) {
         if (error) return callback(errors.internal.DB_FAILURE, error);
         callback(null, order, items);
       });
-    }
-  ], function render(error, order, items) {
+    },
+
+    function getAddresses(order, items, callback) {
+      models.Address.find({ where: {user_id: req.session.user.id} }, function(error, addresses) {
+        if (error) return callback(errors.internal.DB_FAILURE, error);
+        callback(null, order, items, addresses);
+      });
+    },
+  ], function render(error, order, items, addresses) {
 
     // Error handling
     var details = order;
@@ -76,6 +83,7 @@ module.exports.get = function(req, res) {
     , admin: req.session.user && utils.contains(req.session.user.groups, 'admin')
     , states: states
     , orderParams: req.session.orderParams
+    , addresses: addresses
     };
     
     // orders are always editable for an admin

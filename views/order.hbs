@@ -234,6 +234,31 @@
       </div>
       {{/if}}
       {{/if}}
+
+      {{#if order.editable}}
+      <div class="row tip-area">
+        <div class="col-lg-9">
+          <div class="btn-toolbar tip-buttons pull-right">
+            <button type="button" class="btn btn-default" data-percent="0.00">No Tip</button>
+            <button type="button" class="btn btn-default" data-percent="0.05">5%</button>
+            <button type="button" class="btn btn-default" data-percent="0.10">10%</button>
+            <button type="button" class="btn btn-default" data-percent="0.15">15%</button>
+            <button type="button" class="btn btn-default" data-percent="0.18">18%</button>
+            <button type="button" class="btn btn-default" data-percent="0.20">20%</button>
+            <button type="button" class="btn btn-default" data-percent="0.25">25%</button>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <dl class="pull-right">
+            <dt>Tip:</dt>
+            <dd>
+              <input type="number" class="form-control tip" value="{{dollars order.tip}}">
+            </dd>
+          </dl>
+        </div>
+      </div>
+      {{/if}}
+
       {{#if order.sub_total}}
       <div class="row">
         <div class="col-lg-12 totals">

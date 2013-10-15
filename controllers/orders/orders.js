@@ -1,15 +1,19 @@
-var db = require('../../db');
-var errors = require('../../errors');
-var utils = require('../../utils');
-var config = require('../../config');
-var states = require('../../public/states');
-var models = require('../../models');
-var logger = require('../../logger');
+var db      = require('../../db');
+var errors  = require('../../errors');
+var utils   = require('../../utils');
+var config  = require('../../config');
+var states  = require('../../public/states');
+var models  = require('../../models');
+var logger  = require('../../logger');
+var receipt = require('../../lib/receipt');
 
+// var static = require('node-static');
 var moment = require('moment');
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer;
+
+// var fileServer = new static.Server('../../public/receipts');
 
 var Bitly = require('bitly');
 var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
@@ -234,4 +238,27 @@ module.exports.voice = function(req, res, next) {
       res.send(xml);
     });
   });
+};
+
+module.exports.receipt = function( req, res ){
+  models.Order.findOne( +req.params.oid, function( error, order ){
+    if ( error )  return res.error( errors.internal.DB_FAILURE, error );
+    if ( !order ) return res.status(404).render('404');
+
+    var options = {
+      layout: false
+    , order:  order.toJSON()
+    };
+
+    res.render( 'receipt', options );
+  });
+};
+
+module.exports.receiptPdf = function(req, res) {
+  // res.set( 'Content-Type', 'application/pdf' );
+
+  // Don't give a fuck re-build everytime
+  // receipt.build( +req.param('oid'), function( error, result ){
+  //   fileServer.serveFile('/order-' + req.param('oid') + '.pdf', 200, {}, req, res);
+  // });
 };

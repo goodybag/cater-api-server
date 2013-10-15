@@ -1,9 +1,11 @@
+var config = require('./config');
 var static = require('node-static');
 var controllers = require('./controllers');
 
 var m = {
-  orderParams : require('./middleware/order-params'),
-  restrict    : require('./middleware/restrict')
+  orderParams   : require('./middleware/order-params'),
+  restrict      : require('./middleware/restrict'),
+  buildReceipt  : require('./middleware/build-receipt')
 };
 
 var file = new static.Server('./public');
@@ -208,6 +210,14 @@ module.exports.register = function(app) {
   app.all('/orders/:id', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
+  });
+
+  app.get(config.receipt.orderRoute, controllers.orders.receipt);
+
+  app.get('/receipts/order-:oid.pdf', m.buildReceipt(), function(req, res) {
+    file.serve(req, res, function(error){
+      if ( error && error.status == 404) return res.status(404).render('404');
+    });
   });
 
   /**

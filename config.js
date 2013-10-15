@@ -65,6 +65,12 @@ var config = {
     , support: '5122706555'
     , orders: '5122706333'
     }
+
+  , phantomjs: {
+      process: "phantomjs"
+    }
+
+  , receipt: require('./receipt-config')
   }
 
 

@@ -109,8 +109,14 @@
 }
 
 .form-group-state,
-.form-group-zip {
+.form-group-zip,
+.form-group-save {
   margin-left: 0 !important;
+}
+
+.form-group-save input[type='checkbox'] {
+  margin-top: 10px;
+  height: auto;
 }
 
 @media (min-width: 769px){

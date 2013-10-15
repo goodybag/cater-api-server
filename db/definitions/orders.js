@@ -91,6 +91,11 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , tip: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
   };
 
   definition.indices = {};

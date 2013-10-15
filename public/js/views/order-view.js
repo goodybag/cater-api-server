@@ -50,7 +50,7 @@ var OrderView = FormView.extend({
     this.model = model;
 
     this.listenTo(this.model, {
-      'change:sub_total': this.onPriceChange,
+      'change:sub_total change:tip': this.onPriceChange,
       'change:phone': this.onPhoneChange
     }, this);
 

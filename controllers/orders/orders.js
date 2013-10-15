@@ -76,14 +76,29 @@ module.exports.get = function(req, res) {
     var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
     var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
     utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+    addresses = utils.invoke(addresses, 'toJSON');
+    var defaultAddress = utils.find(addresses, function(address) {
+      return address.is_default;
+    }) || {};
+
+    order = order.toJSON();
+    console.log(order);
+    var address = {
+      street: order.street ? order.street : defaultAddress.street
+    , city:   order.city ? order.city : defaultAddress.city
+    , state:  order.state ? order.state : defaultAddress.state
+    , zip:    order.zip ? order.zip : defaultAddress.zip
+    };
+
     var context = {
-      order: order.toJSON()
+      order: order
     , restaurantReview: review
     , owner: isOwner
     , admin: req.session.user && utils.contains(req.session.user.groups, 'admin')
     , states: states
     , orderParams: req.session.orderParams
-    , addresses: utils.invoke(addresses, 'toJSON')
+    , addresses: addresses  // User's list of saved addresses
+    , address: address      // Order address (user supplied or default, when available)
     };
     
     // orders are always editable for an admin

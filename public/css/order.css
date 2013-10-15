@@ -327,12 +327,25 @@ p.adjustment-description {
   border-bottom: 1px solid #CCCCC0;
 }
 
-.tip-area dl {
+.tip-area dl, .tip-area .tip-buttons {
   margin: 20px 0;
 }
 
 .tip-area dt {
   line-height: 36px;
+}
+
+.tip-area dd, .tip-area dt {
+  display: inline-block;
+}
+
+.tip-area dd {
+  max-width: 90px;
+  margin-left: 20px;
+}
+
+.tip-area input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 
 .totals {

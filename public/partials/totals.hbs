@@ -11,6 +11,8 @@
   <dd>{{dollars order.restaurant.delivery_fee}}</dd>
   <dt>Tax</dt>
   <dd>{{tax order.sub_total order.restaurant.delivery_fee}}</dd>
+  <dt>Tip</dt>
+  <dd>{{dollars order.tip}}</dd>
   <dt>Total:</dt>
-  <dd>{{total order.sub_total order.restaurant.delivery_fee}}</dd>
+  <dd>{{total order.sub_total order.restaurant.delivery_fee order.tip}}</dd>
 </dl>

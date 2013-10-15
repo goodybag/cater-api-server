@@ -4,7 +4,7 @@ var OrderView = FormView.extend({
   events: function() {
     return {
       'keyup .order-form .form-control, .adjustment .form-control': 'autoSave',
-      'change .order-form .form-control, .adjustment .form-control': 'autoSave',
+      'change .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
       'submit .order-form': 'onSave',
       'click .edit-address-btn': 'editAddress',
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
@@ -161,7 +161,8 @@ var OrderView = FormView.extend({
     phone: '#order-phone',
     guests: '#order-guests',
     notes: '#order-notes',
-    adjustment: '.adjustment .form-control'
+    adjustment: '.adjustment .form-control',
+    tip: '.tip-area .tip'
   },
 
   fieldGetters: {
@@ -198,6 +199,11 @@ var OrderView = FormView.extend({
         description: desc,
         amount: !utils.isNaN(amount) ? amount : null
       };
+    },
+
+    tip: function() {
+      var percentage = parseFloat(this.$el.find(this.fieldMap.tip).val())
+      return !_.isNaN(percentage) ? this.model.get('sub_total') * percentage : 0;
     }
   },
 

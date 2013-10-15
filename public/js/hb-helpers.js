@@ -69,7 +69,7 @@ var tax = function(subtotal, deliveryFee, rate, options) {
     }
     rate = 0.0825;
   }
-  return ((parseInt(subtotal) + parseInt(deliveryFee)) * parseFloat(rate) / 100).toFixed(2);
+  return (parseInt(subtotal) + parseInt(deliveryFee)) * parseFloat(rate);
 }
 
 var helpers = {
@@ -107,16 +107,20 @@ var helpers = {
     return arr ? arr.join(', ') : '';
   },
 
-  tax: tax,
+  tax: function() {
+    return (tax.apply(this, arguments) / 100).toFixed(2);
+  },
 
-  total: function(cents, deliveryFee, rate, options) {
+  total: function(cents, deliveryFee, tip, rate, options) {
     if (options === undefined) {
       options = rate;
       rate = null;
     }
 
+    tip = tip || 0;
     rate = rate ? rate + 1 : 1.0825;
-    return tax.call(this, cents, deliveryFee, rate, options);
+    var pretip = tax.call(this, cents, deliveryFee, rate, options);
+    return ((pretip + tip) / 100).toFixed(2);
   },
 
   price$: function(price) {

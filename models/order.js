@@ -7,7 +7,6 @@ var Restaurant = require('./restaurant');
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
     var restaurantFields = [
-      'name',
       'delivery_fee',
       'minimum_order',
       'sms_phone',
@@ -25,7 +24,8 @@ var modifyAttributes = function(callback, err, orders) {
         {
           id: order.attributes.restaurant_id,
           email: order.attributes.restaurant_email,
-          delivery_times: utils.object(order.attributes.delivery_times)
+          delivery_times: utils.object(order.attributes.delivery_times),
+          name: order.attributes.restaurant_name
         },
         utils.pick(order.attributes, restaurantFields));
       order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
@@ -34,9 +34,10 @@ var modifyAttributes = function(callback, err, orders) {
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
 
-      order.attributes.user = {id: order.attributes.id, email: order.attributes.user_email, organization: order.attributes.organization};
+      order.attributes.user = {id: order.attributes.user_id, email: order.attributes.user_email, organization: order.attributes.organization, name: order.attributes.user_name};
       delete order.attributes.user_email;
       delete order.attributes.organization;
+      delete order.attributes.user_name;
 
       order.attributes.adjustment = {
         amount: order.attributes.adjustment_amount,
@@ -414,7 +415,7 @@ module.exports = Model.extend({
     , on: {'order_id': '$orders.id$'}
     };
 
-    query.columns.push('restaurants.name');
+    query.columns.push({table: 'restaurants', name: 'name', as: 'restaurant_name'});
     query.columns.push('restaurants.delivery_fee')
     query.columns.push('restaurants.minimum_order');
     query.columns.push({table: 'restaurants', name: 'email', as: 'restaurant_email'});
@@ -558,6 +559,7 @@ module.exports = Model.extend({
 
     query.columns.push({table: 'users', name: 'email', as: 'user_email'});
     query.columns.push({table: 'users', name: 'organization'});
+    query.columns.push({table: 'users', name: 'name', as: 'user_name'});
 
     query.joins.users = {
       type: 'inner'

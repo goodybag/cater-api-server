@@ -155,6 +155,7 @@ Model.create = function(query, callback) {
   var defaults = { returning: '*' };
 
   var sql = db.builder.sql(utils.defaults(utils.extend({}, query, constants), defaults));
+  var self = this;
 
   db.query(sql.query, sql.values, function(err, rows, result) {
     if (err) return callback(err);

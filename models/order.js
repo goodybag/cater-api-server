@@ -158,12 +158,13 @@ module.exports = Model.extend({
       with: {
         old: {
           type: 'select',
+          table: this.constructor.table,
           columns: copyableColumns,
           where: {id: this.attributes.id}
         }
       },
-      columns: copyableColumns.concat('review_token')
-      values: {
+      columns: copyableColumns.concat('review_token'),
+      expression: {
         type: 'select',
         table: 'old',
         columns: ['*', "('" + uuid.v4() + "')"]
@@ -179,6 +180,7 @@ module.exports = Model.extend({
         with: {
           newItems: {
             type: 'select',
+            table: models.OrderItem.table,
             columns: [
               {table: 'order_items', name: 'item_id'},
               {table: 'order_items', name: 'quantity'},
@@ -193,14 +195,14 @@ module.exports = Model.extend({
             joins: {
               items: {
                 type: 'inner',
-                on: {id: '$order_item.item_id$'}
+                on: {id: '$order_items.item_id$'}
               }
             }
           }
         },
 
-        columns: ['item_id', 'quantity', 'notes', 'options_sets', 'name', 'description', 'price', 'feeds_min', 'feeds_max', 'order_id']
-        values: {
+        columns: ['item_id', 'quantity', 'notes', 'options_sets', 'name', 'description', 'price', 'feeds_min', 'feeds_max', 'order_id'],
+        expression: {
           type: 'select',
           table: 'newItems',
           columns: ['*', "('" + newOrder.attributes.id +  "')"]
@@ -217,6 +219,7 @@ module.exports = Model.extend({
         return callback(null, newOrder);
       });
     });
+  }
 }, {
   table: 'orders',
 

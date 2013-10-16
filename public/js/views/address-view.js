@@ -27,5 +27,12 @@ var AddressView = FormView.extend({
   , city:     '.address-edit .address-city'
   , state:    '.address-edit .address-state'
   , zip:      '.address-edit .address-zip'
+  , phone:    '.address-edit .address-phone'
+  },
+
+  fieldGetters: {
+    phone: function() {
+      return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
+    }
   }
 });

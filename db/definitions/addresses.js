@@ -54,6 +54,11 @@ define(function(require) {
       type: types.bool
     , nullable: false
     }
+  , phone: {
+      type: types.varchar(10)
+    , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
+    }
   };
 
   definition.indices = {};

@@ -34,6 +34,10 @@ define(function(require) {
       type: types.text
     , nullable: false
     }
+  , street2: {
+      type: types.text
+    , nullable: true
+    }
   , city: {
       type: types.text
     , nullable: false

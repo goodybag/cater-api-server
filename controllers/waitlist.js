@@ -25,7 +25,7 @@ module.exports.add = function(req, res, next) {
     });
   }
 
-  var updateQuery = queries.waitlist.reAdd(req.body.email, req.body.organization, uuid.v4());
+  var updateQuery = queries.waitlist.reAdd(req.body.email, req.body, uuid.v4());
   var updateSql = db.builder.sql(updateQuery);
 
   db.query(updateSql.query, updateSql.values, function(err, rows, result) {

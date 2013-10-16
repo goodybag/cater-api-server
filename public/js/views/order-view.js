@@ -3,8 +3,8 @@ var OrderView = FormView.extend({
 
   events: function() {
     return {
-      'keyup .order-form .form-control, .adjustment .form-control': 'autoSave',
-      'change .order-form .form-control, .adjustment .form-control': 'autoSave',
+      'keyup .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
+      'change .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
       'submit .order-form': 'onSave',
       'click .edit-address-btn': 'editAddress',
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
@@ -16,7 +16,8 @@ var OrderView = FormView.extend({
       'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted', false),
       'click #change-status-denied': _.bind(this.changeStatus, this, 'denied', false),
       'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted', false),
-      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', false)
+      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', false),
+      'click .tip-buttons .btn': 'clickTipButton'
     }
   },
 
@@ -50,7 +51,7 @@ var OrderView = FormView.extend({
     this.model = model;
 
     this.listenTo(this.model, {
-      'change:sub_total': this.onPriceChange,
+      'change:sub_total change:tip': this.onPriceChange,
       'change:phone': this.onPhoneChange
     }, this);
 
@@ -161,7 +162,9 @@ var OrderView = FormView.extend({
     phone: '#order-phone',
     guests: '#order-guests',
     notes: '#order-notes',
-    adjustment: '.adjustment .form-control'
+    adjustment: '.adjustment .form-control',
+    tip: '.tip-area .tip',
+    name: '.order-name'
   },
 
   fieldGetters: {
@@ -198,6 +201,11 @@ var OrderView = FormView.extend({
         description: desc,
         amount: !utils.isNaN(amount) ? amount : null
       };
+    },
+
+    tip: function() {
+      var tip = parseFloat(this.$el.find(this.fieldMap.tip).val())
+      return !_.isNaN(tip) ? Math.round(tip * 100) : 0;
     }
   },
 
@@ -229,5 +237,12 @@ var OrderView = FormView.extend({
 
   onSaveSuccess: function() {
     this.clearErrors();
+  },
+
+  clickTipButton: function(e) {
+    var percentage = $(e.currentTarget).attr('data-percent');
+    var tip = (this.model.get('sub_total') * percentage / 100).toFixed(2);
+    this.$el.find(this.fieldMap.tip).val(tip);
+    this.autoSave();
   }
 });

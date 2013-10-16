@@ -17,3 +17,8 @@ CREATE TABLE if not exists "restaurant_tags" (
   tag             text references tags(name)      on delete cascade,
   primary key (restaurant_id, tag)
 );
+
+insert into tags (name) values
+  ('Gluten-Free'),
+  ('Vegan'),
+  ('Vegetarian');

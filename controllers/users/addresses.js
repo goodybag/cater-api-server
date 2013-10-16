@@ -15,13 +15,16 @@ module.exports.create = function(req, res, next) {
   Address.find({ where: {user_id: req.params.uid, is_default: true}}, function(error, addresses) {
     var noExistingDefault = !addresses.length;
     var address = new Address({
-      user_id:      req.session.user.id
-    , name:         req.body.name
-    , street:       req.body.street
-    , city:         req.body.city
-    , state:        req.body.state
-    , zip:          req.body.zip
-    , is_default:   noExistingDefault
+      user_id:                req.session.user.id
+    , name:                   req.body.name
+    , street:                 req.body.street
+    , street2:                req.body.street2
+    , city:                   req.body.city
+    , state:                  req.body.state
+    , zip:                    req.body.zip
+    , phone:                  req.body.phone
+    , delivery_instructions:  req.body.delivery_instructions
+    , is_default:             noExistingDefault
     });
     address.save(function(error, address) {
       if (error) return res.error(errors.internal.DB_FAILURE, error);
@@ -61,7 +64,7 @@ module.exports.get = function(req, res, next) {
  * set other addresses to false. 
  */
 module.exports.update = function(req, res, next) {
-  var updates = utils.pick(req.body, ['name', 'street', 'city', 'state', 'zip', 'is_default']);
+  var updates = utils.pick(req.body, ['name', 'street', 'street2', 'city', 'state', 'zip', 'is_default', 'phone', 'delivery_instructions']);
 
   utils.async.series([
     function unmarkPreviousDefaults(callback) {

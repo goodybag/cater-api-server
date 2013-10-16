@@ -17,7 +17,7 @@ module.exports.create = function(req, res, next) {
     var address = new Address(utils.extend(
       {}, 
       req.body, 
-      {user_id: req.session.user.id, is_default: noExistingDefault}
+      {user_id: req.session.user.id, is_default: !!(req.body.is_default || noExistingDefault)} // ensure is_default is boolean
     ));
 
     address.save(function(error, address) {

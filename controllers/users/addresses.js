@@ -14,18 +14,10 @@ var db = require('../../db')
 module.exports.create = function(req, res, next) {
   Address.find({ where: {user_id: req.params.uid, is_default: true}}, function(error, addresses) {
     var noExistingDefault = !addresses.length;
-    var address = new Address({
+    var address = new Address(utils.extend({
       user_id:                req.session.user.id
-    , name:                   req.body.name
-    , street:                 req.body.street
-    , street2:                req.body.street2
-    , city:                   req.body.city
-    , state:                  req.body.state
-    , zip:                    req.body.zip
-    , phone:                  req.body.phone
-    , delivery_instructions:  req.body.delivery_instructions
     , is_default:             noExistingDefault
-    });
+    }, req.body));
     address.save(function(error, address) {
       if (error) return res.error(errors.internal.DB_FAILURE, error);
       res.send(204);

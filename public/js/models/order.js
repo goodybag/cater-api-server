@@ -64,6 +64,10 @@ var Order = Backbone.Model.extend({
          type: ['string', 'null'],
          // TODO: validate against format
          required: false
+        },
+        name: {
+          type: ['string', 'null'],
+          required: false
         }
       }
     };

@@ -54,6 +54,12 @@
         <!--</OrderDetailsSpacer>-->
 
         <!--<OrderDetailsBody>-->
+        {{#if order.user.organization}}
+        <tr>
+          <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Customer Organization:</td>
+          <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{order.user.organization}}</td>
+        </tr>
+        {{/if}}
         <tr>
           <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Delivery Date:</td>
           <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{datepart order.datetime}}</td>

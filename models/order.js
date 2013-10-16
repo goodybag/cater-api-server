@@ -34,9 +34,10 @@ var modifyAttributes = function(callback, err, orders) {
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
 
-      order.attributes.user = {id: order.attributes.id, email: order.attributes.user_email, organization: order.attributes.organization};
+      order.attributes.user = {id: order.attributes.user_id, email: order.attributes.user_email, organization: order.attributes.organization, name: order.attributes.user_name};
       delete order.attributes.user_email;
       delete order.attributes.organization;
+      delete order.attributes.user_name;
 
       order.attributes.adjustment = {
         amount: order.attributes.adjustment_amount,
@@ -478,6 +479,7 @@ module.exports = Model.extend({
 
     query.columns.push({table: 'users', name: 'email', as: 'user_email'});
     query.columns.push({table: 'users', name: 'organization'});
+    query.columns.push({table: 'users', name: 'name', as: 'user_name'});
 
     query.joins.users = {
       type: 'inner'

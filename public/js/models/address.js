@@ -24,7 +24,19 @@ var Address = Backbone.Model.extend({
       },
       zip: {
         type: 'string',
+        length: 5,
+        pattern: /^\d*$/, //contains only digits
         required: true
+      },
+      phone: {
+        type: ['string', 'null'],
+        length: 10,
+        pattern: /^\d*$/, //contains only digits
+        required: false
+      },
+      delivery_instructions: {
+        type: ['string', 'null'],
+        require: false
       }
     }
   },

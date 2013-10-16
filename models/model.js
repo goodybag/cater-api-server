@@ -145,4 +145,21 @@ Model.update = function(query, callback) {
   });
 };
 
+// TODO: abstract commonalities of update and create
+Model.create = function(query, callback) {
+  var constants = {
+    type: 'insert',
+    table: this.table
+  };
+
+  var defaults = { returning: '*' };
+
+  var sql = db.builder.sql(utils.defaults(utils.extend({}, query, constants), defaults));
+
+  db.query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return callback(err);
+    callback(null, utils.map(rows, function(obj) { return new self(obj); }));
+  });
+};
+
 module.exports = Model;

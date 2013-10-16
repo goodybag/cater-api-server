@@ -1,1 +1,2 @@
-https://github.com/heroku/heroku-buildpack-nodejs#diet
+https://github.com/heroku/heroku-buildpack-nodejs
+http://github.com/stomita/heroku-buildpack-phantomjs.git

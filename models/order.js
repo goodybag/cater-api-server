@@ -7,7 +7,6 @@ var Restaurant = require('./restaurant');
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
     var restaurantFields = [
-      'name',
       'delivery_fee',
       'minimum_order',
       'sms_phone',
@@ -25,7 +24,8 @@ var modifyAttributes = function(callback, err, orders) {
         {
           id: order.attributes.restaurant_id,
           email: order.attributes.restaurant_email,
-          delivery_times: utils.object(order.attributes.delivery_times)
+          delivery_times: utils.object(order.attributes.delivery_times),
+          name: order.attributes.restaurant_name
         },
         utils.pick(order.attributes, restaurantFields));
       order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
@@ -334,7 +334,7 @@ module.exports = Model.extend({
     , on: {'order_id': '$orders.id$'}
     };
 
-    query.columns.push('restaurants.name');
+    query.columns.push({table: 'restaurants', name: 'name', as: 'restaurant_name'});
     query.columns.push('restaurants.delivery_fee')
     query.columns.push('restaurants.minimum_order');
     query.columns.push({table: 'restaurants', name: 'email', as: 'restaurant_email'});

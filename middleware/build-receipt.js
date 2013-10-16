@@ -5,7 +5,6 @@ module.exports = function(){
     if ( !req.param('oid') ) return next();
 
     receipt.build( +req.param('oid'), function( error, result ){
-      console.log(error, result);
       next();
     });
   }

@@ -4,7 +4,7 @@
 , "orderRoute": "/orders/:oid/receipt"
 , "paperSize": {
     "format": "Letter'"
-  , "margin": { "left": "2.5cm", "right": "2.5cm", "top": "1cm", "bottom": "1cm" }
+  , "margin": { "left": "1.7cm", "right": "1.7cm", "top": "1.5cm", "bottom": "1cm" }
   , "orientation": "portrait"
   },
   "credentials": {

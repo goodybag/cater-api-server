@@ -246,11 +246,11 @@ module.exports.receipt = function( req, res ){
     if ( !order ) return res.status(404).render('404');
 
     var options = {
-      layout: false
+      layout: 'invoice/invoice-layout'
     , order:  order.toJSON()
     };
-
-    res.render( 'receipt', options );
+console.log(options)
+    res.render( 'invoice/receipt', options );
   });
 };
 

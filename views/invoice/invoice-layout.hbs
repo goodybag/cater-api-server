@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="stylesheet" href="/css/proxima-nova.css">
+    <link rel="stylesheet" href="/css/invoice.css">
+    {{{block "css"}}}
+  </head>
+  <body>
+    <header class="columns">
+      <div class="goodybag-info column-fluid columns">
+        <div class="column-logo column">
+          <img src="/img/test-logo.png" alt="">
+        </div>
+        <div class="column-fluid">
+          <address class="info-item-address info-item">
+            1900 Ullrich Ave.<br />
+            Austin, TX 78756
+          </address>
+
+          <dl class="info-item-phone-numbers info-item dl-inline">
+            <dt>orders:</dt>
+            <dd>512.270.6333</dd>
+            <br>
+            <dt>support:</dt>
+            <dd>512.270.6555</dd>
+          </dl>
+
+          <div class="info-item-urls info-item">
+            <a href="mailto:support@goodybag.com">support@goodybag.com</a>
+            <a href="http://www.goodybag.com">www.goodybag.com</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="document-info">
+        {{{block "info"}}}
+      </div>
+    </header>
+    {{{block "body"}}}
+  </body>
+</html>

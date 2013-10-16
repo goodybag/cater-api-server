@@ -1,0 +1,63 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  line-height: 16px;
+}
+
+body {
+  font-family: 'Proxima Nova';
+  font-size: 14px;
+  color: #333;
+}
+
+@media screen {
+  body {
+    margin: 40px 30px;
+  }
+}
+
+address {
+  font-style: normal;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+.columns {
+  display: -webkit-box;
+}
+
+.columns > .column-fluid {
+  -webkit-box-flex: 1;
+}
+
+.dl-inline {
+  margin: 0;
+  padding: 0;
+}
+
+.dl-inline > dt,
+.dl-inline > dd {
+  display: inline-block;
+  width: auto;
+  margin: 0;
+}
+
+.document-info {
+  width: 175px;
+}
+
+.column-logo {
+  padding-right: 20px;
+}
+
+.goodybag-info .info-item {
+  margin-bottom: 12px;
+}
+
+.info-item-urls > a:after {
+  content: "";
+  display: block;
+}

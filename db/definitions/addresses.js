@@ -59,6 +59,10 @@ define(function(require) {
     , nullable: true
     , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     }
+  , delivery_instructions: {
+      type: types.text
+    , nullable: true
+    }
   };
 
   definition.indices = {};

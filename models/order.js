@@ -81,7 +81,7 @@ module.exports = Model.extend({
       delete this.attributes.adjustment;
     }
     var order = this
-    Model.prototype.save.call(this, ["*", '("orders"."datetime"::text) as datetime'], function(err) {
+    Model.prototype.save.call(this, {returning: ["*", '("orders"."datetime"::text) as datetime']}, function(err) {
       if (!err && insert) {
         var OrderStatus = require('./order-status');
         var status = new OrderStatus({order_id: order.attributes.id});

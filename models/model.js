@@ -47,23 +47,23 @@ utils.extend(Model.prototype, {
   toJSON: function() {
     return utils.clone(this.attributes);
   },
-  save: function(returning, callback) {
-    if (utils.isFunction(returning)) {
-      callback = returning;
-      returning = null;
+  save: function(query, callback) {
+    if (utils.isFunction(query)) {
+      callback = query;
+      query = undefined;
     }
     var attrs = utils.omit(utils.pick(this.attributes, utils.keys(this.constructor.schema)), ['id', 'created_at']);
     var id = this.attributes.id;
-    query = {
+    var defaults = {
       type: id ? 'update' : 'insert',
       table: this.constructor.table,
-      returning: returning || '*'
+      returning: '*',
+      values: attrs
     };
 
-    if (id) query.where = {id: id};
-    query[id ? 'updates' : 'values'] = attrs;
+    if (id) defaults.where = utils.extend({id: id}, query.where);
 
-    var sql = db.builder.sql(query);
+    var sql = db.builder.sql(utils.defaults(query || {}, defaults));
     var self = this;
     db.query(sql.query, sql.values, function(err, rows, result) {
       if (!err && rows && rows[0]) utils.extend(self.attributes, rows[0]);

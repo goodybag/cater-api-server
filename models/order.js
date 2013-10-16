@@ -72,7 +72,12 @@ module.exports = Model.extend({
       callback(null, restaurant);
     });
   },
-  save: function(callback) {
+  save: function(query, callback) {
+    if (_.isFunction(query)) {
+      callback = query;
+      query = undefined;
+    }
+
     var insert = this.attributes.id == null;
     if (insert) this.attributes.review_token = uuid.v4();
     if (this.attributes.adjustment) {

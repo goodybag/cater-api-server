@@ -16,12 +16,8 @@
     <form class="well col-lg-6  col-lg-offset-3 user-settings-form" action="/users/me" method="post">
         <input type="hidden" name="_method" value="put"/>
         <div class="form-group">
-          <label for="input-first-name" class="control-label">First Name</label>
-          <input type="text" id="input-first-name" name="first_name" class="form-control first_name col-lg-12" value="{{user.first_name}}">
-        </div>
-        <div class="form-group">
-          <label for="input-last-name" class="control-label">Last Name</label>
-          <input type="text" id="input-last-name" name="last_name" class="form-control last_name" value="{{user.last_name}}">
+          <label for="input-name" class="control-label">Name</label>
+          <input type="text" id="input-name" name="name" class="form-control name col-lg-12" value="{{user.name}}">
         </div>
         <div class="form-group">
           <label for="input-email" class="control-label">Email</label>
@@ -42,7 +38,7 @@
       <button type="submit" class="btn btn-lg btn-primary pull-right">Save</button>
     </form>
   </div>
-  
+
   <h1 class="text-center page-title">Address Book</h1>
   <div class="row">
     <div class="well col-lg-6  col-lg-offset-3 user-settings-form">
@@ -58,7 +54,7 @@
   $('.user-settings-form').on('submit', function(e) {
     // Client side validation
     e.preventDefault();
-    var fields = ['first_name', 'last_name', 'email', 'organization', 'password'];
+    var fields = ['name', 'email', 'organization', 'password'];
     var data = {};
     for (var i=0, l=fields.length; i<l; i++)
       data[fields[i]] = $('.user-settings-form .' + fields[i]).val();

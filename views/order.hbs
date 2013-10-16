@@ -87,6 +87,12 @@
           </div>
 
           <fieldset class="left-fields">
+            <div class="row">
+              <div class="form-group col-sm-12">
+                <label class="control-label">Order Name</label>
+                <input type="text" class="form-control order-name" value="{{order.name}}" placeholder="Tuesday Meeting">
+              </div>
+            </div>
             <div class="row date-time-guests">
               <div class="form-group col-sm-4 form-group-delivery-date" data-icon="gb-icon-calendar">
                 <label class="control-label" for="order-date">Delivery Date</label>
@@ -285,12 +291,30 @@
 
   {{#if restaurantReview}}
   <div class="panel restaurant-review">
-    <div class="panel-body row">
-      <div class="col-lg-3 col-lg-offset-2">
-        <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+          <dl class="dl-horizontal">
+            {{#if order.user.name}}
+            <dt>Customer Name:</dt>
+            <dd>{{order.user.name}}</dd>
+            {{/if}}
+            <dt>Customer Email:</dt>
+            <dd>{{order.user.email}}</dd>
+            {{#if order.user.organization}}
+            <dt>Customer Organization:</dt>
+            <dd>{{order.user.organization}}</dd>
+            {{/if}}
+          </dl>
+        </div>
       </div>
-      <div class="col-lg-3 col-lg-offset-2">
-        <button class="btn btn-lg btn-success btn-accept pull-right">Accept Order</button>
+      <div class="row">
+        <div class="col-lg-3 col-lg-offset-2">
+          <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
+        </div>
+        <div class="col-lg-3 col-lg-offset-2">
+          <button class="btn btn-lg btn-success btn-accept pull-right">Accept Order</button>
+        </div>
       </div>
     </div>
   </div>

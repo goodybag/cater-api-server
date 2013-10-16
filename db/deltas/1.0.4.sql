@@ -1,22 +1,15 @@
 -- Update version
 insert into deltas (version, date) values ('1.0.4', 'now()');
 
--- #278: Dietary Tags
-DROP TYPE if exists "tag_type" CASCADE;
-CREATE TYPE "tag_type" AS ENUM (
-  'Vegan', 
-  'Vegetarian', 
-  'Gluten Free'
-);
-
-CREATE TABLE if not exists "item_tags" (
-  id                  serial primary key,
-  item_id             int references items(id) on delete cascade,
-  tag                 tag_type not null
-);
-
-CREATE TABLE if not exists "restaurant_tags" (
-  id                  serial primary key,
-  restaurant_id       int references restaurants(id) on delete cascade,
-  tag                 tag_type not null
-);
+-- there's no add column if not exists
+DO $$
+    BEGIN
+        BEGIN
+        alter table orders
+                add adjustment_amount integer,
+                add adjustment_description text;
+        EXCEPTION
+            WHEN duplicate_column THEN RAISE NOTICE 'column <column_name> already exists in <table_name>.';
+        END;
+    END;
+$$;

@@ -103,7 +103,7 @@ utils.sendMail = function(to, from, subject, html, text, callback) {
   }
 
   // Remove whitespace from email to remove possible rendering bugs
-  options.html = options.html.replace(/>\s+</g, '><').trim();
+  if (options.html) options.html = options.html.replace(/>\s+</g, '><').trim();
 
   if (!callback) callback = function(){};
   if (!config.emailEnabled) return callback(); // :TODO: log or output an event so that we can test against the event
@@ -213,6 +213,22 @@ utils.error = function(message, type){
     message: message
   , type: type
   };
+};
+
+utils.queryParams = function(data){
+  if (typeof data !== "object") return "";
+  var params = "?";
+  for (var key in data){
+    if ([null, undefined, ""].indexOf(data[key]) > -1) continue;
+    if (utils.isArray(data[key])){
+      for (var i = 0, l = data[key].length; i < l; ++i){
+        params += key + "[]=" + data[key][i] + "&";
+      }
+    } else {
+      params += key + "=" + data[key] + "&";
+    }
+  }
+  return params.substring(0, params.length - 1);
 };
 
 module.exports = utils;

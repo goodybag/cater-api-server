@@ -4,7 +4,16 @@
       <strong class="lead">{{name}}</strong><br>
     {{/if}}
     {{street}}<br>
+    {{#if street2}}
+    {{street2}}<br>
+    {{/if}}
     {{city}}, {{state}} {{zip}}<br>
+    {{#if phone}}
+    Phone: {{phoneNumber phone}}<br>
+    {{/if}}
+    {{#if delivery_instructions}}
+    Delivery Instructions: {{delivery_instructions}}<br>
+    {{/if}}
     <strong>
       {{#if is_default}}
         <p class="text-danger">This is your default address</p>

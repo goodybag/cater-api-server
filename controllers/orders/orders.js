@@ -202,7 +202,7 @@ module.exports.changeStatus = function(req, res) {
       }
 
       if (status.attributes.status === 'denied') {
-        utils.sendMail(config.emails.orders, config.emails.orders, 'Order #' + order.attributes.id + ' denied',
+        utils.sendMail(config.emails.onDeny || config.emails.orders, config.emails.orders, 'Order #' + order.attributes.id + ' denied',
                        null, config.baseUrl + '/orders/' + order.attributes.id);
       }
 

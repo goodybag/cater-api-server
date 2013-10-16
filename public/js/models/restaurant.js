@@ -107,7 +107,8 @@ var Restaurant = Backbone.Model.extend({
     var hours = this.get('delivery_times')[ day ];
     var time = (date.split(' ')[1] + ':00').substring( 0, 8 );
 
-    return _.every( hours, function( openClose ){
+    // is the desired time within any of the windows for that day?
+    return _.any( hours, function( openClose ){
       return time >= openClose[0] && time < openClose[1]
     });
   },

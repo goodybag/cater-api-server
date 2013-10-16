@@ -53,10 +53,7 @@
 }
 
 .left-fields {
-  margin-top: 32px;
-  /* fix pickadate overflow */
-  position: relative;
-  overflow: hidden;
+  margin-top: 26px;
 }
 
 .left-fields .form-group {
@@ -306,12 +303,75 @@
 /**
  * Fix pickadate/select2 container problem
  */
- .form-group-delivery-date,
- .form-group-delivery-time {
+.form-group-delivery-date,
+.form-group-delivery-time {
   position: static;
- }
+}
 
+.adjustment-amount-description {
+   margin-bottom: 0;
+}
 
+p.adjustment-description {
+  margin: 0;
+  line-height: 24px;
+  padding-left: 9px;
+}
+
+.adjustment {
+  border-bottom: 1px solid #CCCCC0;
+  padding: 20px 0;
+}
+
+.tip-area {
+  border-bottom: 1px solid #CCCCC0;
+}
+
+.tip-area dl, .tip-area .tip-buttons {
+  margin: 20px 0;
+}
+
+.tip-area dt {
+  line-height: 36px;
+}
+
+.tip-area dd, .tip-area dt {
+  display: inline-block;
+}
+
+.tip-area dd {
+  max-width: 90px;
+  margin-left: 20px;
+}
+
+.tip-area input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.totals {
+  margin-top: 35px;
+}
+
+.totals-panel {
+  padding-top: 0px;
+}
+
+.order-line-item-table {
+  margin-bottom: 0;
+}
+
+.adjustment input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.adjustment-input dd, .adjustment-input dt {
+  display: inline-block;
+}
+
+.adjustment-input dd {
+  max-width: 90px;
+  margin-left: 20px;
+}
 
 /**
  * http://elvery.net/demo/responsive-tables

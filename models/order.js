@@ -7,7 +7,6 @@ var Restaurant = require('./restaurant');
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
     var restaurantFields = [
-      'name',
       'delivery_fee',
       'minimum_order',
       'sms_phone',
@@ -25,7 +24,8 @@ var modifyAttributes = function(callback, err, orders) {
         {
           id: order.attributes.restaurant_id,
           email: order.attributes.restaurant_email,
-          delivery_times: utils.object(order.attributes.delivery_times)
+          delivery_times: utils.object(order.attributes.delivery_times),
+          name: order.attributes.restaurant_name
         },
         utils.pick(order.attributes, restaurantFields));
       order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
@@ -34,9 +34,17 @@ var modifyAttributes = function(callback, err, orders) {
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
 
-      order.attributes.user = {id: order.attributes.id, email: order.attributes.user_email, organization: order.attributes.organization};
+      order.attributes.user = {id: order.attributes.user_id, email: order.attributes.user_email, organization: order.attributes.organization, name: order.attributes.user_name};
       delete order.attributes.user_email;
       delete order.attributes.organization;
+      delete order.attributes.user_name;
+
+      order.attributes.adjustment = {
+        amount: order.attributes.adjustment_amount,
+        description: order.attributes.adjustment_description
+      };
+      delete order.attributes.adjustment_amount;
+      delete order.attributes.adjustment_description;
     });
   }
   callback.call(this, err, orders);
@@ -68,6 +76,11 @@ module.exports = Model.extend({
   save: function(callback) {
     var insert = this.attributes.id == null;
     if (insert) this.attributes.review_token = uuid.v4();
+    if (this.attributes.adjustment) {
+      this.attributes.adjustment_amount = this.attributes.adjustment.amount;
+      this.attributes.adjustment_description = this.attributes.adjustment.description;
+      delete this.attributes.adjustment;
+    }
     var order = this
     Model.prototype.save.call(this, ["*", '("orders"."datetime"::text) as datetime'], function(err) {
       if (!err && insert) {
@@ -266,12 +279,18 @@ module.exports = Model.extend({
     , {
         "name": "order_subtotals"
       , "type": "select"
-      , "table": "subtotals"
+      , "table": "orders"
+      , "joins": {
+          "subtotals": {
+            "type": "left"
+          , "on": {"order_id": "$orders.id$"}
+          }
+        }
       , "columns": [
-          "order_id"
-        , "sum(sub_total) AS sub_total"
+          {"table": "orders", "name": "id", "as": "order_id"}
+        , "coalesce(sum(subtotals.sub_total), 0) + coalesce(orders.adjustment_amount, 0) AS sub_total"
         ]
-      , "groupBy": "order_id"
+      , "groupBy": ["orders.id", "orders.adjustment_amount"]
       }
     ];
 
@@ -316,7 +335,7 @@ module.exports = Model.extend({
     , on: {'order_id': '$orders.id$'}
     };
 
-    query.columns.push('restaurants.name');
+    query.columns.push({table: 'restaurants', name: 'name', as: 'restaurant_name'});
     query.columns.push('restaurants.delivery_fee')
     query.columns.push('restaurants.minimum_order');
     query.columns.push({table: 'restaurants', name: 'email', as: 'restaurant_email'});
@@ -460,6 +479,7 @@ module.exports = Model.extend({
 
     query.columns.push({table: 'users', name: 'email', as: 'user_email'});
     query.columns.push({table: 'users', name: 'organization'});
+    query.columns.push({table: 'users', name: 'name', as: 'user_name'});
 
     query.joins.users = {
       type: 'inner'

@@ -87,6 +87,12 @@
           </div>
 
           <fieldset class="left-fields">
+            <div class="row">
+              <div class="form-group col-sm-12">
+                <label class="control-label">Order Name</label>
+                <input type="text" class="form-control order-name" value="{{order.name}}" placeholder="Tuesday Meeting">
+              </div>
+            </div>
             <div class="row date-time-guests">
               <div class="form-group col-sm-4 form-group-delivery-date" data-icon="gb-icon-calendar">
                 <label class="control-label" for="order-date">Delivery Date</label>
@@ -206,8 +212,60 @@
     </div>
     {{/unless}}
 
-    <div class="panel-body">
-      {{#if order.orderItems.length}}
+    <div class="panel-body totals-panel">
+      {{#if admin}}
+      <div class="row adjustment editable">
+        <div class="col-lg-8">
+          <textarea class="form-control adjustment-description" rows="3">{{order.adjustment.description}}</textarea>
+        </div>
+        <div class="col-lg-4">
+          <dl class="adjustment-input pull-right">
+            <dt>Adjustment:</dt>
+            <dd><input type="number" class="form-control adjustment-amount" value="{{dollars order.adjustment.amount}}"></dd>
+          </dl>
+        </div>
+      </div>
+      {{else}}
+      {{#if order.adjustment}}
+      <div class="row adjustment">
+        <div class="col-lg-8">
+          <p class="adjustment-description">{{order.adjustment.description}}</p>
+        </div>
+        <div class="col-lg-4">
+          <dl class="dl-horizontal order-totals adjustment-amount-description pull-right">
+            <dt>Adjustment:</dt>
+            <dd class="adjustment-amount">{{dollars order.adjustment.amount}}<dd>
+          </dl>
+        </div>
+      </div>
+      {{/if}}
+      {{/if}}
+
+      {{#if order.editable}}
+      <div class="row tip-area">
+        <div class="col-lg-9">
+          <div class="btn-toolbar tip-buttons pull-right">
+            <button type="button" class="btn btn-default" data-percent="0.00">No Tip</button>
+            <button type="button" class="btn btn-default" data-percent="0.05">5%</button>
+            <button type="button" class="btn btn-default" data-percent="0.10">10%</button>
+            <button type="button" class="btn btn-default" data-percent="0.15">15%</button>
+            <button type="button" class="btn btn-default" data-percent="0.18">18%</button>
+            <button type="button" class="btn btn-default" data-percent="0.20">20%</button>
+            <button type="button" class="btn btn-default" data-percent="0.25">25%</button>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <dl class="pull-right">
+            <dt>Tip:</dt>
+            <dd>
+              <input type="number" class="form-control tip" value="{{dollars order.tip}}">
+            </dd>
+          </dl>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if order.sub_total}}
       <div class="row">
         <div class="col-lg-12 totals">
           {{> totals}}
@@ -233,12 +291,30 @@
 
   {{#if restaurantReview}}
   <div class="panel restaurant-review">
-    <div class="panel-body row">
-      <div class="col-lg-3 col-lg-offset-2">
-        <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+          <dl class="dl-horizontal">
+            {{#if order.user.name}}
+            <dt>Customer Name:</dt>
+            <dd>{{order.user.name}}</dd>
+            {{/if}}
+            <dt>Customer Email:</dt>
+            <dd>{{order.user.email}}</dd>
+            {{#if order.user.organization}}
+            <dt>Customer Organization:</dt>
+            <dd>{{order.user.organization}}</dd>
+            {{/if}}
+          </dl>
+        </div>
       </div>
-      <div class="col-lg-3 col-lg-offset-2">
-        <button class="btn btn-lg btn-success btn-accept pull-right">Accept Order</button>
+      <div class="row">
+        <div class="col-lg-3 col-lg-offset-2">
+          <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
+        </div>
+        <div class="col-lg-3 col-lg-offset-2">
+          <button class="btn btn-lg btn-success btn-accept pull-right">Accept Order</button>
+        </div>
       </div>
     </div>
   </div>

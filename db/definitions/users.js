@@ -26,11 +26,7 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , first_name: {
-      type: types.text
-    , nullable: true
-    }
-  , last_name: {
+  , name: {
       type: types.text
     , nullable: true
     }

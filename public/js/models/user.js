@@ -16,11 +16,7 @@ var User = Backbone.Model.extend({
         minLength: 1,
         required: true
       },
-      first_name: {
-        type: ['string', 'null'],
-        required: false
-      },
-      last_name: {
+      name: {
         type: ['string', 'null'],
         required: false
       },

@@ -1,21 +1,21 @@
 <div class="form-group">
   <label for="name">Name</label>
-  <input type="text" id="name" name="name" class="form-control address-name" value="{{address.name}}">
+  <input type="text" id="name" name="name" class="form-control address-name" value="{{address.name}}" placeholder="Name of location">
 </div>
 
 <div class="form-group">
   <label for="street">Street (required)</label>
-  <input type="text" id="street" name="street" class="form-control address-street" value="{{address.street}}">
+  <input type="text" id="street" name="street" class="form-control address-street" value="{{address.street}}" placeholder="Street">
 </div>
 
 <div class="form-group">
   <label for="street2">Street 2</label>
-  <input type="text" id="street2" name="street2" class="form-control address-street2" value="{{address.street2}}">
+  <input type="text" id="street2" name="street2" class="form-control address-street2" value="{{address.street2}}" placeholder="Street 2">
 </div>
 
 <div class="form-group">
   <label for="city">City (required)</label>
-  <input type="text" id="city" name="city" class="form-control address-city" value="{{address.city}}">
+  <input type="text" id="city" name="city" class="form-control address-city" value="{{address.city}}" placeholder="City">
 </div>
 
 <div class="form-group">
@@ -29,15 +29,15 @@
 
 <div class="form-group">
   <label for="zip">Zip (required)</label>
-  <input type="text" id="zip" name="zip" class="form-control address-zip" value="{{address.zip}}">
+  <input type="text" id="zip" name="zip" class="form-control address-zip" value="{{address.zip}}" placeholder="Zipcode">
 </div>
 
 <div class="form-group">
   <label for="phone">Phone</label>
-  <input type="text" id="phone" name="phone" class="form-control address-phone" value="{{phoneNumber address.phone}}">
+  <input type="text" id="phone" name="phone" class="form-control address-phone" value="{{phoneNumber address.phone}}" placeholder="Phone number">
 </div>
 
 <div class="form-group">
   <label for="delivery-instructions">Delivery Instructions</label>
-  <textarea id="delivery-instructions" name="delivery_instructions" class="form-control address-delivery-instructions">{{address.delivery_instructions}}</textarea>
+  <textarea id="delivery-instructions" name="delivery_instructions" class="form-control address-delivery-instructions" placeholder="Notes such as gate codes or access instructions">{{address.delivery_instructions}}</textarea>
 </div>

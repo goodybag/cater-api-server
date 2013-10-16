@@ -256,6 +256,17 @@ module.exports.register = function(app) {
   });
 
   /**
+   * Order Duplicates resource.  Duplicates of an order.
+   */
+
+  app.post('/orders/:oid/duplicates', m.restrict(['client', 'admin']), controllers.orders.duplicate);
+
+  app.all('/orders/:oid/duplicates', m.restrict(['client', 'admin']), function(req, res, next) {
+    res.set('Allow', 'POST');
+    res.send(405);
+  });
+
+  /**
    *  Auth page resource.  Simple static login/register page.
    *  Also includes /logout route as a convienence so people can logout by loading a url.
    */

@@ -10,6 +10,10 @@ var Address = Backbone.Model.extend({
         type: 'string',
         required: true
       },
+      street2: {
+        type: ['string', 'null'],
+        required: false
+      },
       city: {
         type: 'string',
         required: true
@@ -20,7 +24,19 @@ var Address = Backbone.Model.extend({
       },
       zip: {
         type: 'string',
+        length: 5,
+        pattern: /^\d*$/, //contains only digits
         required: true
+      },
+      phone: {
+        type: ['string', 'null'],
+        length: 10,
+        pattern: /^\d*$/, //contains only digits
+        required: false
+      },
+      delivery_instructions: {
+        type: ['string', 'null'],
+        required: false
       }
     }
   },

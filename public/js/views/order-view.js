@@ -163,7 +163,8 @@ var OrderView = FormView.extend({
     guests: '#order-guests',
     notes: '#order-notes',
     adjustment: '.adjustment .form-control',
-    tip: '.tip-area .tip'
+    tip: '.tip-area .tip',
+    name: '.order-name'
   },
 
   fieldGetters: {

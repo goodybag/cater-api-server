@@ -124,6 +124,7 @@ module.exports = Model.extend({
 
     return obj;
   },
+
   requiredFields: [
     'datetime',
     'street',
@@ -133,6 +134,7 @@ module.exports = Model.extend({
     'phone',
     'guests'
   ],
+
   isComplete: function() {
     var vals = utils.pick(this.attributes, this.requiredFields);
     for (var key in vals) {
@@ -140,7 +142,80 @@ module.exports = Model.extend({
         return false
     }
     return true;
-  }
+  },
+
+  createCopy: function(callback) {
+    if (this.attributes.id == null) return callback(null, null);
+  // with o as (select user_id, restaurant_id, street, city, state, zip, phone, notes, timezone, guests, adjustment_amount, adjustment_description, tip from orders where id=7)
+// insert into orders (user_id, restaurant_id, street, city, state, zip, phone, notes, timezone, guests, adjustment_amount, adjustment_description, tip, review_token) select o.*, 'fake_token' from o;
+
+  // with pastiche as (select o.item_id, o.quantity, o.notes, o.options_sets, i.name, i.description, i.price, i.feeds_min, i.feeds_max from order_items o inner join items i on (o.item_id = i.id) where order_id=7)
+  // insert into order_items (item_id, quantity, notes, options_sets, name, description, price, feeds_min, feeds_max, order_id) select pastiche.*, 9 from pastiche returning *;
+
+    var copyableColumns = ['user_id', 'restaurant_id', 'street', 'city', 'state', 'zip', 'phone', 'notes', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip'];
+    var copyOrder = {
+      with: {
+        old: {
+          type: 'select',
+          columns: copyableColumns,
+          where: {id: this.attributes.id}
+        }
+      },
+      columns: copyableColumns.concat('review_token')
+      values: {
+        type: 'select',
+        table: 'old',
+        columns: ['*', "('" + uuid.v4() + "')"]
+      }
+    }
+
+    this.constructor.create(copyOrder, function(err, newOrders) {
+      if (err) return callback(err);
+      if (!newOrders || newOrders.length === 0) return callback(null, null);
+      var newOrder = newOrders[0];
+
+      var copyOrderItems = {
+        with: {
+          newItems: {
+            type: 'select',
+            columns: [
+              {table: 'order_items', name: 'item_id'},
+              {table: 'order_items', name: 'quantity'},
+              {table: 'order_items', name: 'notes'},
+              {table: 'order_items', name: 'options_sets'},
+              {table: 'items', name: 'name'},
+              {table: 'items', name: 'description'},
+              {table: 'items', name: 'price'},
+              {table: 'items', name: 'feeds_min'},
+              {table: 'items', name: 'feeds_max'}
+            ],
+            joins: {
+              items: {
+                type: 'inner',
+                on: {id: '$order_item.item_id$'}
+              }
+            }
+          }
+        },
+
+        columns: ['item_id', 'quantity', 'notes', 'options_sets', 'name', 'description', 'price', 'feeds_min', 'feeds_max', 'order_id']
+        values: {
+          type: 'select',
+          table: 'newItems',
+          columns: ['*', "('" + newOrder.attributes.id +  "')"]
+        }
+      };
+
+      require('./order-item').create(copyOrderItems, function(err, newOrderItems) {
+        if (err) return callback(err);
+        newOrder.orderItems = newOrderItems;
+
+        // TODO: check if any order_items are missing because their items have been discontinued
+        // TODO: check if options have changed;
+
+        return callback(null, newOrder);
+      });
+    });
 }, {
   table: 'orders',
 

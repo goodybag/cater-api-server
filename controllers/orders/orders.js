@@ -236,71 +236,10 @@ module.exports.voice = function(req, res, next) {
 };
 
 module.exports.duplicate = function(req, res, next) {
-  var orderColumns = ['user_id', 'restaurant_id', 'street', 'city', 'state', 'zip', 'phone', 'notes', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip'];
-  var copyOrder = {
-    with: {
-      old: {
-        type: 'select',
-        columns: orderColumns,
-        where: {id: parseInt(req.params.oid)}
-      }
-    },
-    columns: orderColumns.concat('review_token')
-    values: {
-      type: 'select',
-      table: 'old',
-      columns: ['*', "('" + uuid.v4() + "')"]
-    }
-  }
-
-  models.Order.create(copyOrder, function(err, newOrders) {
+  var oldOrder = new models.Order({id: req.params.oid});
+  oldOrder.createCopy(function(err, newOrder) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var newOrder = newOrders[0];
-
-    var copyOrderItems = {
-      with: {
-        newItems: {
-          type: 'select',
-          columns: [
-            {table: 'order_items', name: 'item_id'},
-            {table: 'order_items', name: 'quantity'},
-            {table: 'order_items', name: 'notes'},
-            {table: 'order_items', name: 'options_sets'},
-            {table: 'items', name: 'name'},
-            {table: 'items', name: 'description'},
-            {table: 'items', name: 'price'},
-            {table: 'items', name: 'feeds_min'},
-            {table: 'items', name: 'feeds_max'}
-          ],
-          joins: {
-            items: {
-              type: 'inner',
-              on: {id: '$order_item.item_id$'}
-            }
-          }
-        }
-      },
-
-      columns: ['item_id', 'quantity', 'notes', 'options_sets', 'name', 'description', 'price', 'feeds_min', 'feeds_max', 'order_id']
-      values: {
-        type: 'select',
-        table: 'newItems',
-        columns: ['*', "('" + newOrder.attributes.id +  "')"]
-      }
-    };
-
-    models.OrderItem.create(copyOrderItems, function(err, newOrderItems) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-      newOrder.orderItems = newOrderItems;
-      // TODO: check if any order items were not copied, indicating that the item they are based on is no longer available.
-      // TODO: check if options have changed for each order_item.
-      res.json(201, newOrder.toJSON());
-    });
+    if (newOrder == null) return res.json(404);
+    res.json(201, newOrder.toJSON());
   });
-
-  // with o as (select user_id, restaurant_id, street, city, state, zip, phone, notes, timezone, guests, adjustment_amount, adjustment_description, tip from orders where id=7)
-// insert into orders (user_id, restaurant_id, street, city, state, zip, phone, notes, timezone, guests, adjustment_amount, adjustment_description, tip, review_token) select o.*, 'fake_token' from o;
-
-  // with pastiche as (select o.item_id, o.quantity, o.notes, o.options_sets, i.name, i.description, i.price, i.feeds_min, i.feeds_max from order_items o inner join items i on (o.item_id = i.id) where order_id=7)
-  // insert into order_items (item_id, quantity, notes, options_sets, name, description, price, feeds_min, feeds_max, order_id) select pastiche.*, 9 from pastiche returning *;
 };

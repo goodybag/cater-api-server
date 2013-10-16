@@ -1,5 +1,5 @@
 -- Update version
-insert into deltas (version, date) values ('1.0.7', 'now()');
+insert into deltas (version, date) values ('1.0.9', 'now()');
 
 -- Support a few more things for address book
 DO $$

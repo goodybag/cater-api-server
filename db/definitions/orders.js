@@ -96,6 +96,10 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , name: {
+      type: types.text
+    , nullable: true
+    }
   };
 
   definition.indices = {};

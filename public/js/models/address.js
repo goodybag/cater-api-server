@@ -36,7 +36,7 @@ var Address = Backbone.Model.extend({
       },
       delivery_instructions: {
         type: ['string', 'null'],
-        require: false
+        required: false
       }
     }
   },

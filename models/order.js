@@ -176,6 +176,8 @@ module.exports = Model.extend({
       if (!newOrders || newOrders.length === 0) return callback(null, null);
       var newOrder = newOrders[0];
 
+      // TODO: create pending status for new order
+
       var copyOrderItems = {
         with: {
           newItems: {

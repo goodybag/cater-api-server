@@ -229,7 +229,6 @@ module.exports.voice = function(req, res, next) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
     res.render('order-voice', {layout:false, order: order.toJSON()}, function(err, xml) {
-      console.log(err);
       if (err) return res.error(errors.internal.UNKNOWN, err);
       res.send(xml);
     });

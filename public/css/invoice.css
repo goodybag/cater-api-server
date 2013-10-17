@@ -147,6 +147,10 @@ dl > dt {
   margin-bottom: 4px;
 }
 
+.order-info {
+  padding: 20px 0;
+}
+
 .order-info-details.column-fluid {
   padding-left: 12px;
 }
@@ -155,8 +159,18 @@ dl > dt {
   -webkit-box-flex: 4;
 }
 
+.order-info-details .restaurant-name {
+  font-size: 18px;
+  margin: 0;
+}
+
+.order-info-details .dl-horizontal {
+  margin-top: 4px;
+}
+
 .order-info-details .dl-horizontal > dt {
   width: 78px;
+  text-align: left;
 }
 
 .order-info-details .dl-horizontal > dd {

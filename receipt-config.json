@@ -7,7 +7,7 @@
   , "margin": { "left": "1.4cm", "right": "1.4cm", "top": "1.5cm", "bottom": "1cm" }
   , "orientation": "portrait"
   },
-  "zoomFactor": 1.1,
+  "zoomFactor": 1,
   "credentials": {
     "email": "admin@goodybag.com"
   , "password": "password"

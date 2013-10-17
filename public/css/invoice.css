@@ -95,6 +95,10 @@ dl > dt {
   clear: both;
 }
 
+.goodybag-info .info-items {
+  padding-top: 8px;
+}
+
 .customer-info {
   position: absolute;
   top: 0;
@@ -153,15 +157,13 @@ dl > dt {
 
 .order-info-details.column-fluid {
   padding-left: 12px;
-}
-
-.order-info-notes.column-fluid {
-  -webkit-box-flex: 4;
+  min-width: 200px;
 }
 
 .order-info-details .restaurant-name {
-  font-size: 18px;
+  font-size: 16px;
   margin: 0;
+  margin-bottom: 4px;
 }
 
 .order-info-details .dl-horizontal {
@@ -175,4 +177,16 @@ dl > dt {
 
 .order-info-details .dl-horizontal > dd {
   margin-left: 90px;
+}
+
+.order-info-notes {
+  box-sizing: border-box;
+  padding-left: 50px;
+  position: relative;
+  margin-top: 20px;
+}
+
+.order-info-notes > .notes-key {
+  position: absolute;
+  left: 0;
 }

@@ -184,8 +184,13 @@ module.exports = Model.extend({
       function(newOrder, cb) {
         // Step 2: create a pending status for the new order.  (Note: this could be parallel with step 3.
         if (newOrder == null) return cb(null, null);
-        // TODO: create pending status for new order
-        cb(null, newOrder);
+        var OrderStatus = require('./order-status');
+        var status = new OrderStatus({order_id: order.attributes.id});
+        status.save(function(err, status) {
+          if (err) return cb(err);
+          newOrder.attributes.latestStatus = status.attributes.status;
+          cb(null, newOrder);
+        });
       },
 
       function(newOrder, cb) {

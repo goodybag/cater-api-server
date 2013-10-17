@@ -21,28 +21,7 @@
     <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://static.intercomcdn.com/intercom.v1.js';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}};})()</script>
     {{/if}}
 
-    <!-- Bootstrap -->
-    <link href="/components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
-
-    <!-- Fonts -->
-    <link href="/css/gb-icon.css" rel="stylesheet">
-    <link href="/css/aleo.css" rel="stylesheet">
-    <link href="/css/proxima-nova.css" rel="stylesheet">
-
-    <!-- pickadate -->
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.css" rel="stylesheet">
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.date.css" rel="stylesheet">
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.time.css" rel="stylesheet">
-
-
-    <!-- Moar Convenient CSS Stuff -->
-    <link href="/css/kit.css" rel="stylesheet">
-
-    <!-- Goodybag Catering CSS Stuff -->
-    <link href="/css/main.css" rel="stylesheet">
-    <link href="/css/components.css" rel="stylesheet">
-    <link href="/css/theme.css" rel="stylesheet">
-
+    <link href="/dist/css/base.min.css" rel="stylesheet" media="screen">
     <!--[if lte IE 9]>
     <link rel="stylesheet" href="/css/ie-lte-9.css">
     <![endif]-->
@@ -111,23 +90,7 @@
     </a>
     {{/if}}
 
-    <script src="/components/jquery/jquery.min.js"></script>
-    <script src="/components/amanda/releases/latest/amanda.min.js"></script>
-    <script src="/components/select2/select2.min.js"></script>
-    <script src="/components/async/lib/async.js"></script>
-    <script src="/components/underscore/underscore-min.js"></script>
-    <script src="/components/backbone/backbone-min.js"></script>
-    <script src="/components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-    <!-- pickadate -->
-    <script src="/components/lalitkapoor-pickadate/lib/picker.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/picker.date.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/picker.time.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/legacy.js"></script>
-
-    <!-- moment -->
-    <script src="/components/moment/min/moment.min.js"></script>
-    <script src="/components/moment-timezone/min/moment-timezone.min.js"></script>
+    <script src="/dist/js/base.min.js"></script>
     <script>
     $.ajax({
       type: "GET",
@@ -139,17 +102,15 @@
       }
     });
     </script>
-
-    <!-- handlebars -->
-    <script src="/components/handlebars/handlebars.js"></script>
-    <script src="/js/hb-helpers.js"></script>
-
-    <script src="/js/utils.js"></script>
     <script>
       for (var key in helpers) {
         Handlebars.registerHelper(key, helpers[key]);
       }
     </script>
+
+    {{{block "templates"}}}
+
+    <script src="/dist/js/mvc.min.js"></script>
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

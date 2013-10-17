@@ -366,23 +366,16 @@
   </div>
 </div>
 
-{{#extend "scripts"}}
-<script src="/js/models/item.js"></script>
-<script src="/js/models/category.js"></script>
-<script src="/js/models/restaurant.js"></script>
-<script src="/js/models/order-item.js"></script>
-<script src="/js/models/order.js"></script>
-
-<script src="/js/collections/items.js"></script>
-<script src="/js/collections/categories.js"></script>
-
-<script src="/js/views/form-view.js"></script>
-<script src="/js/views/order-view.js"></script>
-<script src="/js/views/order-item-view.js"></script>
+{{#extend "templates"}}
 <script>
   $.get('/partials/totals.hbs', null, function(data, textStatus, jqXHR) {
     Handlebars.registerPartial('totals', Handlebars.compile(data));
-  }, 'html')
+  }, 'html');
+</script>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
   var query = window.location.search ? _.object(_.map(window.location.search.substring(1).split('&'), function(obj) { return obj.split('='); })) : {};
   var view = new OrderView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
   var items = [

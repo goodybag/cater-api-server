@@ -27,17 +27,20 @@ a {
 
 header {
   position: relative;
-  min-height: 200px;
+  min-height: 180px;
 }
 
-/*header:after {
+header:after {
   content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
   display: block;
   width: 100%;
-  height: 10px;
+  height: 6px;
   border-radius: 20px;
   background: #DA1F26;
-}*/
+}
 
 .columns {
   display: -webkit-box;
@@ -89,13 +92,11 @@ header {
 }
 
 .order-number-info {
-  box-sizing: border-box;
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 12px 10px 4px;
+  padding: 12px 0 4px 10px;
   margin-left: -10px;
-  margin-right: -10px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   background: #FAE6E9;
@@ -104,12 +105,15 @@ header {
 
 .order-number-info .order-number-key {
   float: left;
+  display: inline-block;
+  margin-top: 5px;
   font-size: 14px;
-  vertical-align: bottom;
 }
 
 .order-number-info .order-number {
-  font-size: 28px;
+  display: inline-block;
+  font-size: 26px;
   font-weight: 300;
-  vertical-align: bottom;
+  margin-right: 10px;
+  margin-bottom: 4px;
 }

@@ -23,10 +23,10 @@
 
           <dl class="info-item-phone-numbers info-item dl-inline">
             <dt>orders:</dt>
-            <dd>512.270.6333</dd>
+            <dd>{{phoneNumber config.phone.orders "xxx.xxx.xxxx"}}</dd>
             <br>
             <dt>support:</dt>
-            <dd>512.270.6555</dd>
+            <dd>{{phoneNumber config.phone.support "xxx.xxx.xxxx"}}</dd>
           </dl>
 
           <dl class="info-item-urls info-item dl-inline">
@@ -44,16 +44,16 @@
       </div>
 
       <div class="customer-info info-items">
-        <h2 class="customer-company-name info-item">Amherst Holdings LLC</h2>
+        <h2 class="customer-company-name info-item">{{order.user.organization}}</h2>
         <address class="info-item-address info-item">
-          7801 N Capital of Texas Hwy<br />
-          Austin, TX 78731
+          {{order.street}}<br />
+          {{order.city}}, {{order.state}} {{order.zip}}
         </address>
 
         <div class="info-item-contact info-item">
-          Angie Esquivel
+          {{order.user.name}}
           <br>
-          512.342.3000
+          {{phoneNumber order.phone "xxx.xxx.xxxx"}}
         </div>
         {{{block "info"}}}
       </div>

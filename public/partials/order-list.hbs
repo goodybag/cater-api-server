@@ -53,3 +53,22 @@
   <h2 class="text-center">No Orders</h2>
   {{/each}}
 </div>
+
+{{#extend "scripts"}}
+<script>
+  $('.order-list-group .list-group-item .copy-order-btn').click(function(e) {
+    e.preventDefault();
+    var url = $(e.currentTarget).closest('.list-group-item').attr('href');
+    $.ajax({
+      type: 'POST',
+      url: url + '/duplicates',
+      success: function(data, textStatus, jqXHR) {
+        window.location = '/orders/' + data.id;
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Couldn't copy order: " + errorThrown);
+      }
+    })
+  });
+</script>
+{{/extend}}

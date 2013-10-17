@@ -45,15 +45,17 @@
   <div class="form-group">
     <label class="control-label">Dietary Tags</label>
     <div>
+      {{#with restaurant.tags}}
       <label class="checkbox-inline">
-        <input type="checkbox" name="tags" class="restaurant-tags" value="vegetarian" {{#if tags.vegetarian}}checked="checked"{{/if}}> Vegetarian
+        <input type="checkbox" name="tags" class="restaurant-tags" value="vegetarian" {{#contains "vegetarian"}}checked="checked"{{/contains}}> Vegetarian
       </label>
       <label class="checkbox-inline">
-        <input type="checkbox" name="tags" class="restaurant-tags" value="vegan" {{#if tags.vegan}}checked="checked"{{/if}}> Vegan
+        <input type="checkbox" name="tags" class="restaurant-tags" value="vegan" {{#contains "vegan"}}checked="checked"{{/contains}}> Vegan
       </label>
       <label class="checkbox-inline">
-        <input type="checkbox" name="tags" class="restaurant-tags" value="glutenFree" {{#if tags.glutenFree}}checked="checked"{{/if}}> Gluten Free
+        <input type="checkbox" name="tags" class="restaurant-tags" value="glutenFree" {{#contains "glutenFree"}}checked="checked"{{/contains}}> Gluten Free
       </label>
+      {{/with}}
     </div>
   </div>
   <div class="form-group">

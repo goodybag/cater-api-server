@@ -42,6 +42,15 @@ header:after {
   background: #DA1F26;
 }
 
+footer {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #DA1F26;
+  text-transform: uppercase;
+}
+
 .columns {
   display: -webkit-box;
 }
@@ -71,7 +80,6 @@ dl > dt {
   width: 160px;
   overflow: hidden;
   clear: left;
-  text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -168,6 +176,7 @@ dl > dt {
 
 .order-info-details .dl-horizontal {
   margin-top: 4px;
+  text-align: right;
 }
 
 .order-info-details .dl-horizontal > dt {

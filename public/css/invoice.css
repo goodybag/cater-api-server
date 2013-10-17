@@ -62,8 +62,37 @@ header:after {
   margin: 0;
 }
 
-.dl-inline > dt {
+dl > dt {
   font-style: italic;
+}
+
+.dl-horizontal dt {
+  float: left;
+  width: 160px;
+  overflow: hidden;
+  clear: left;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dl-horizontal dd {
+  margin-left: 180px;
+}
+.dl-horizontal dd:before,
+.dl-horizontal dd:after {
+  display: table;
+  content: " ";
+}
+.dl-horizontal dd:after {
+  clear: both;
+}
+.dl-horizontal dd:before,
+.dl-horizontal dd:after {
+  display: table;
+  content: " ";
+}
+.dl-horizontal dd:after {
+  clear: both;
 }
 
 .customer-info {
@@ -116,4 +145,20 @@ header:after {
   font-weight: 300;
   margin-right: 10px;
   margin-bottom: 4px;
+}
+
+.order-info-details.column-fluid {
+  padding-left: 12px;
+}
+
+.order-info-notes.column-fluid {
+  -webkit-box-flex: 4;
+}
+
+.order-info-details .dl-horizontal > dt {
+  width: 78px;
+}
+
+.order-info-details .dl-horizontal > dd {
+  margin-left: 90px;
 }

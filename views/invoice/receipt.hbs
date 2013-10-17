@@ -6,5 +6,20 @@
 {{/extend}}
 
 {{#extend "body"}}
-
+<div class="order-info columns">
+  <div class="order-info-details column-fluid">
+    <h3 class="restaurant-name">{{order.restaurant_name}}</h3>
+    <dl class="dl-horizontal">
+      <dt>Date Created:</dt>
+      <dd>{{formatDateTime order.created_at "MM/DD/YYYY"}}</dd>
+      <dt>Delivery Date:</dt>
+      <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
+      <dt>Delivery Time:</dt>
+      <dd>{{formatTime order.datetime "MM/DD/YYYY"}}</dd>
+      <dt>Guests:</dt>
+      <dd>{{order.guests}}</dd>
+    </dl>
+  </div>
+  <div class="order-info-notes column-fluid">Right</div>
+</div>
 {{/extend}}

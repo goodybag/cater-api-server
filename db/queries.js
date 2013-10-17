@@ -105,8 +105,8 @@ module.exports = {
     update: utils.partial(upsert, 'items'),
     del: utils.partial(del, 'items'),
     createTags: utils.partial(upsert, 'item_tags'),
-    delTags: function(rid) {
-      return del.call(this, 'item_tags', {restaurant_id: rid});
+    delTags: function(id) {
+      return del.call(this, 'item_tags', {item_id: id});
     }
   },
 

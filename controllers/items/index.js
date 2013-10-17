@@ -5,6 +5,12 @@ var utils  = require('../../utils');
 var db     = require('../../db');
 var queries = require('../../db/queries');
 
+var tags = function(body, id) {
+  return utils.map(body.tags, function(obj, index, arr) {
+    return {item_id: id, tag: body.tag};
+  });
+};
+
 module.exports.list = function(req, res, next) {
   models.Item.find(req.query, function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
@@ -32,15 +38,45 @@ module.exports.update = function(req, res) {
     return utils.extend({id: uuid.v4()}, set);
   })));
 
-  var body = req.body.options_sets != null ? utils.extend(req.body, {options_sets: ops}) : req.body;
+  var body = req.body.options_sets !== null ? utils.extend(req.body, {options_sets: ops}) : req.body;
 
-  var query = queries.item.update(req.body, req.params.id);
-  var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, function(err, rows, result) {
-    if (err) return res.error(errors.internal.UNKNOWN, error);
-    res.json(200, rows[0]);
+  // Let's update the item related tables in parallel
+  var tasks = [];
+
+  // TASK 1 - Recreate the tags for this item
+  tasks.push(function(taskCallback) {
+    // Ensure we delete before adding the req.body.tags back in
+    if (req.body.tags === undefined) {
+      return taskCallback(null);
+    }
+    var values = tags(req.body, req.params.id);
+    var delQuery = queries.item.delTags(req.params.id);
+    var createQuery = values.length > 0 ? queries.item.createTags(values) : null;
+    utils.async.eachSeries([delQuery, createQuery], function(query, queryCallback) {
+      if (!query) return queryCallback();
+      var sql = db.builder.sql(query);
+      db.query(sql.query, sql.values, queryCallback);
+    }, taskCallback);
   });
-}
+
+  // TASK 2 - Update this item
+  tasks.push(function(cb) {
+    // only need to update this item's columns
+    var updates = utils.omit(req.body, 'tags');
+    if (utils.size(updates) === 0) return cb();
+    var query = queries.item.update(req.body, req.params.id);
+    var sql = db.builder.sql(query);
+    db.query(sql.query, sql.values, function(err, rows, result) {
+      return cb(err, rows && rows.length>0 ? rows[0] : null);
+    });
+  });
+
+  // Run the tasks in parallelogram
+  utils.async.parallel(tasks, function(err, results) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    res.send(200, utils.last(results));
+  });
+};
 
 module.exports.remove = function(req, res) {
   var query = queries.item.del(req.params.id);

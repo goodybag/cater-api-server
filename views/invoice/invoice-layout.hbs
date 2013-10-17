@@ -9,9 +9,13 @@
     <header class="columns">
       <div class="goodybag-info column-fluid columns">
         <div class="column-logo column">
-          <img src="/img/test-logo.png" alt="">
+          {{>gb_lettermark}}
         </div>
-        <div class="column-fluid">
+        <div class="column-fluid info-items">
+          <div class="info-item-logo info-item">
+            {{>gb_type_logo}}
+          </div>
+
           <address class="info-item-address info-item">
             1900 Ullrich Ave.<br />
             Austin, TX 78756
@@ -39,7 +43,7 @@
         </div>
       </div>
 
-      <div class="customer-info">
+      <div class="customer-info info-items">
         <h2 class="customer-company-name info-item">Amherst Holdings LLC</h2>
         <address class="info-item-address info-item">
           7801 N Capital of Texas Hwy<br />

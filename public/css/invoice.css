@@ -53,6 +53,14 @@ a {
   padding-right: 20px;
 }
 
-header .info-item {
+.info-items .info-item {
   margin-bottom: 12px;
+}
+
+.info-items .info-item:first-child {
+  margin-bottom: 4px;
+}
+
+.info-items .info-item.info-item-logo {
+  margin-bottom: -4px;
 }

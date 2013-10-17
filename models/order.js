@@ -247,9 +247,12 @@ module.exports = Model.extend({
           var newItems = utils.pluck(utils.pluck(newOrder.orderItems, 'attributes'), 'id');
 
           // Lost is all the items that were on the old order that are  no longer available.
-          var lost = utils.difference(oldItems, newItems);
+          var lostIds = utils.difference(oldItems, newItems);
+          var lostItems = utils.filter(oldOrderItems, function(item) {
+            return utils.contains(lostIds, item.attributes.id);
+          });
 
-          cb(null, newOrder, lost.length > 0 ? lost : null);
+          cb(null, newOrder, lostItems.length > 0 ? lostItems : null);
         });
       }
     ];

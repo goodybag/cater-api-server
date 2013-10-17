@@ -67,7 +67,14 @@ module.exports.get = function(req, res) {
       if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
         context.order.editable = true;
 
-      res.render('order', context, function(err, html) {
+      var view = 'order';
+
+      if (req.param('receipt')) {
+        view = 'invoice/receipt';
+        context.layout = 'invoice/invoice-layout';
+      }
+
+      res.render(view, context, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
       });

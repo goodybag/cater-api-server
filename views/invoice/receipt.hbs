@@ -25,4 +25,43 @@
     <p>{{order.notes}}</p>
   </div>
 </div>
+
+<div class="order">
+  <table class="order-table">
+    <thead>
+      <tr>
+        <th class="orders">Orders</th>
+        <th class="quantity">Quantity</th>
+        <th class="notes">Notes</th>
+        <th class="price">Price</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each order.orderItems}}
+      <tr id="order-item-{{this.id}}">
+        <td class="line-item-name" data-title="Name">
+          <div class="item-name">{{this.name}}</div>
+          <ul class="comma-separated item-options">
+            {{#each options_sets}}
+              {{#each this.options}}
+                {{#if this.state}}
+                  <li>{{this.name}}</li>
+                {{/if}}
+              {{/each}}
+            {{/each}}
+          </ul>
+        </td>
+        <td class="line-item-quantity" data-title="Quantity">
+          <span class="item-quantity-span order-item-field order-item-quantity" />{{this.quantity}}</span>
+        </td>
+        <td class="line-item-notes" data-title="Notes">
+          <span name="notes" class="item-notes-span order-item-field order-item-notes">{{this.notes}}</span>
+        </td>
+        <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
 {{/extend}}

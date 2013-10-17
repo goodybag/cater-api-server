@@ -5,6 +5,7 @@ var controllers = require('./controllers');
 var m = {
   orderParams   : require('./middleware/order-params'),
   restrict      : require('./middleware/restrict'),
+  basicAuth     : require('./middleware/basic-session-auth'),
   buildReceipt  : require('./middleware/build-receipt')
 };
 
@@ -198,6 +199,13 @@ module.exports.register = function(app) {
 
   app.get('/orders/:id', controllers.orders.get);
 
+  app.get(
+    config.receipt.orderRoute
+  , m.basicAuth()
+  , function( req, res, next){ req.params.receipt = true; next(); }
+  , controllers.orders.get
+  );
+
   app.put('/orders/:id', m.restrict(['client', 'admin']), controllers.orders.update);
 
   app.patch('/orders/:id', m.restrict(['client', 'admin']), controllers.orders.update);
@@ -212,7 +220,6 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-  app.get(config.receipt.orderRoute, controllers.orders.receipt);
 
   app.get('/receipts/order-:oid.pdf', m.buildReceipt(), function(req, res) {
     file.serve(req, res, function(error){

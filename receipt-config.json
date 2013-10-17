@@ -1,7 +1,7 @@
 {
   "dir": "public/receipts"
 , "script": "lib/receipt-pdf.js"
-, "orderRoute": "/orders/:oid/receipt"
+, "orderRoute": "/orders/:id/receipt"
 , "paperSize": {
     "format": "A11"
   , "margin": { "left": "1.4cm", "right": "1.4cm", "top": "1.5cm", "bottom": "1cm" }
@@ -9,7 +9,7 @@
   },
   "zoomFactor": 1,
   "credentials": {
-    "email": "admin@goodybag.com"
+    "email": "john@goodybag.com"
   , "password": "password"
   }
 }

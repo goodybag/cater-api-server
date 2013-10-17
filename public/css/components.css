@@ -766,6 +766,26 @@ a.list-group-item .list-group-item-heading {
   content: "";
 }
 
+/** 
+ * Tag Listing
+ */
+
+.list-restaurant-tags {
+  display: inline;
+  list-style: none;
+  padding: 0;
+  font-size: 0;
+}
+
+.list-restaurant-tags > li {
+  display: inline;
+  font-size: 13px;
+}
+
+.list-restaurant-tags > li > .label {
+  font-size: 12px;
+}
+
 /**
  * Alerts
  */

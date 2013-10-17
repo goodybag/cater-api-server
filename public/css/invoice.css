@@ -80,6 +80,7 @@ dl > dt {
   width: 160px;
   overflow: hidden;
   clear: left;
+  text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -176,7 +177,6 @@ dl > dt {
 
 .order-info-details .dl-horizontal {
   margin-top: 4px;
-  text-align: right;
 }
 
 .order-info-details .dl-horizontal > dt {

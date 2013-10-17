@@ -154,73 +154,90 @@ module.exports = Model.extend({
   // insert into order_items (item_id, quantity, notes, options_sets, name, description, price, feeds_min, feeds_max, order_id) select pastiche.*, 9 from pastiche returning *;
 
     var copyableColumns = ['user_id', 'restaurant_id', 'street', 'city', 'state', 'zip', 'phone', 'notes', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip'];
-    var copyOrder = {
-      with: {
-        old: {
-          type: 'select',
-          table: this.constructor.table,
-          columns: copyableColumns,
-          where: {id: this.attributes.id}
-        }
-      },
-      columns: copyableColumns.concat('review_token'),
-      expression: {
-        type: 'select',
-        table: 'old',
-        columns: ['*', "('" + uuid.v4() + "')"]
-      }
-    }
-
-    this.constructor.create(copyOrder, function(err, newOrders) {
-      if (err) return callback(err);
-      if (!newOrders || newOrders.length === 0) return callback(null, null);
-      var newOrder = newOrders[0];
-
-      // TODO: create pending status for new order
-
-      var copyOrderItems = {
-        with: {
-          newItems: {
+    var tasks = [
+      function(cb) {
+        // Step 1: Create the new order from the existing one.
+        var copyOrder = {
+          with: {
+            old: {
+              type: 'select',
+              table: this.constructor.table,
+              columns: copyableColumns,
+              where: {id: this.attributes.id}
+            }
+          },
+          columns: copyableColumns.concat('review_token'),
+          expression: {
             type: 'select',
-            table: models.OrderItem.table,
-            columns: [
-              {table: 'order_items', name: 'item_id'},
-              {table: 'order_items', name: 'quantity'},
-              {table: 'order_items', name: 'notes'},
-              {table: 'order_items', name: 'options_sets'},
-              {table: 'items', name: 'name'},
-              {table: 'items', name: 'description'},
-              {table: 'items', name: 'price'},
-              {table: 'items', name: 'feeds_min'},
-              {table: 'items', name: 'feeds_max'}
-            ],
-            joins: {
-              items: {
-                type: 'inner',
-                on: {id: '$order_items.item_id$'}
+            table: 'old',
+            columns: ['*', "('" + uuid.v4() + "')"]
+          }
+        }
+
+        this.constructor.create(copyOrder, function(err, newOrders) {
+          if (err) return cb(err);
+          var newOrder = newOrders && newOrders.length > 0 ? newOrders[0] : null;
+          return cb(null, newOrder);
+        });
+      },
+
+      function(newOrder, cb) {
+        // Step 2: create a pending status for the new order.  (Note: this could be parallel with step 3.
+        if (newOrder == null) return cb(null, null);
+        // TODO: create pending status for new order
+        cb(null, newOrder);
+      },
+
+      function(newOrder, cb) {
+        // Step 3: Copy the order items
+        if (newOrder == null) return cb(null, null);
+
+        var copyOrderItems = {
+          with: {
+            newItems: {
+              type: 'select',
+              table: models.OrderItem.table,
+              columns: [
+                {table: 'order_items', name: 'item_id'},
+                {table: 'order_items', name: 'quantity'},
+                {table: 'order_items', name: 'notes'},
+                {table: 'order_items', name: 'options_sets'},
+                {table: 'items', name: 'name'},
+                {table: 'items', name: 'description'},
+                {table: 'items', name: 'price'},
+                {table: 'items', name: 'feeds_min'},
+                {table: 'items', name: 'feeds_max'}
+              ],
+              joins: {
+                items: {
+                  type: 'inner',
+                  on: {id: '$order_items.item_id$'}
+                }
               }
             }
+          },
+
+          columns: ['item_id', 'quantity', 'notes', 'options_sets', 'name', 'description', 'price', 'feeds_min', 'feeds_max', 'order_id'],
+          expression: {
+            type: 'select',
+            table: 'newItems',
+            columns: ['*', "('" + newOrder.attributes.id +  "')"]
           }
-        },
+        };
 
-        columns: ['item_id', 'quantity', 'notes', 'options_sets', 'name', 'description', 'price', 'feeds_min', 'feeds_max', 'order_id'],
-        expression: {
-          type: 'select',
-          table: 'newItems',
-          columns: ['*', "('" + newOrder.attributes.id +  "')"]
-        }
-      };
+        require('./order-item').create(copyOrderItems, function(err, newOrderItems) {
+          if (err) return cb(err);
+          newOrder.orderItems = newOrderItems;
 
-      require('./order-item').create(copyOrderItems, function(err, newOrderItems) {
-        if (err) return callback(err);
-        newOrder.orderItems = newOrderItems;
+          // TODO: check if any order_items are missing because their items have been discontinued
+          // TODO: check if options have changed;
 
-        // TODO: check if any order_items are missing because their items have been discontinued
-        // TODO: check if options have changed;
+          return cb(null, newOrder);
+        });
+      }
+    ];
 
-        return callback(null, newOrder);
-      });
-    });
+    utils.async.waterfall(tasks, callback);
   }
 }, {
   table: 'orders',

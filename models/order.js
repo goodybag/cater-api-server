@@ -234,10 +234,22 @@ module.exports = Model.extend({
           if (err) return cb(err);
           newOrder.orderItems = newOrderItems;
 
-          // TODO: check if any order_items are missing because their items have been discontinued
-          // TODO: check if options have changed;
-
           return cb(null, newOrder);
+        });
+      },
+
+      function(newOrder, cb) {
+        // Step 4: check if any order_items are missing because their items have been discontinued
+        if (newOrder == null) return cb(null, null);
+        this.getOrderItems(function(err, oldOrderItems) {
+          if (err) return cb(err);
+          var oldItems = utils.pluck(utils.pluck(oldOrderItems, 'attributes'), 'id');
+          var newItems = utils.pluck(utils.pluck(newOrder.orderItems, 'attributes'), 'id');
+
+          // Lost is all the items that were on the old order that are  no longer available.
+          var lost = utils.difference(oldItems, newItems);
+
+          cb(null, newOrder, lost.length > 0 ? lost : null);
         });
       }
     ];

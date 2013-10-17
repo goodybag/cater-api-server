@@ -141,6 +141,12 @@ var leadTimes = function(body, id) {
   });
 }
 
+var tags = function(body, id) {
+  return utils.map(body.tags, function(obj, index, arr) {
+    return {restaurant_id: id, tag: obj};
+  });
+};
+
 // maybe this ought to come from the restaurant model?
 var fields = ['name', 'is_hidden', 'street', 'city', 'state', 'zip', 'sms_phone', 'voice_phone', 'email', 'minimum_order', 'price', 'delivery_fee', 'cuisine'];
 
@@ -176,7 +182,13 @@ module.exports.update = function(req, res) {
   // the subrecords associated with this restaurant.
   // it's a series, so the delete query should always complete before the assocated insert query on the same table.
   // but each table is independent.
-  var tasks = utils.map([['Zips', zips, 'delivery_zips'], ['DeliveryTimes', deliveryTimes, 'delivery_times'], ['LeadTimes', leadTimes, 'lead_times']], function(args) {
+  var tasks = utils.map([
+    ['Zips', zips, 'delivery_zips']
+  , ['DeliveryTimes', deliveryTimes, 'delivery_times']
+  , ['LeadTimes', leadTimes, 'lead_times']
+  , ['Tags', tags, 'tags']
+  ], 
+  function(args) {
     if (req.body[args[2]] === undefined) return function(cb) { cb() };
     var delQuery = queries.restaurant['del' + args[0]](req.params.rid)
     var values = args[1](req.body, req.params.rid);

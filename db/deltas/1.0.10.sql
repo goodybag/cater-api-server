@@ -19,6 +19,6 @@ CREATE TABLE if not exists "restaurant_tags" (
 );
 
 insert into tags (name) values
-  ('Gluten-Free'),
-  ('Vegan'),
-  ('Vegetarian');
+  ('glutenFree'),
+  ('vegan'),
+  ('vegetarian');

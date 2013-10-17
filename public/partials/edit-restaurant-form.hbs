@@ -38,9 +38,23 @@
     </select>
   </div>
   <div class="form-group">
-    <label class="control-label">Cusisne</label>
+    <label class="control-label">Cuisine</label>
     <input type="text" class="form-control restaurant-cuisine" value="{{array restaurant.cuisine}}" placeholder="Mexican, Korean, Amish">
     <span class="help-block">Please enter cuisine as a comma separated list of cuisine tags.</span>
+  </div>
+  <div class="form-group">
+    <label class="control-label">Dietary Tags</label>
+    <div>
+      <label class="checkbox-inline">
+        <input type="checkbox" name="tags" class="restaurant-tags" value="vegetarian" {{#if tags.vegetarian}}checked="checked"{{/if}}> Vegetarian
+      </label>
+      <label class="checkbox-inline">
+        <input type="checkbox" name="tags" class="restaurant-tags" value="vegan" {{#if tags.vegan}}checked="checked"{{/if}}> Vegan
+      </label>
+      <label class="checkbox-inline">
+        <input type="checkbox" name="tags" class="restaurant-tags" value="glutenFree" {{#if tags.glutenFree}}checked="checked"{{/if}}> Gluten Free
+      </label>
+    </div>
   </div>
   <div class="form-group">
     <label class="control-label">Delivery Fee</label>

@@ -67,6 +67,7 @@ var EditRestaurantView = FormView.extend({
     delivery_zips: '.restaurant-form .restaurant-delivery-zips',
     delivery_times: '.restaurant-form .time',
     lead_times: '.restaurant-form .lead-times',
+    tags: '.restaurant-form .restaurant-tags:checked',
     is_hidden: '.restaurant-form .restaurant-is-hidden'
   },
 
@@ -107,6 +108,13 @@ var EditRestaurantView = FormView.extend({
           lead_time:!_.isNaN(hours) ? hours : null
         } : null;
       }));
+    },
+
+    tags: function() {
+      var tags = this.$el.find(this.fieldMap.tags);
+      return utils.map(tags, function(tag) {
+        return tag.getAttribute('value');
+      });
     },
 
     is_hidden: function() {

@@ -249,7 +249,7 @@ module.exports.receipt = function( req, res ){
       layout: 'invoice/invoice-layout'
     , order:  order.toJSON()
     };
-console.log(options)
+
     res.render( 'invoice/receipt', options );
   });
 };

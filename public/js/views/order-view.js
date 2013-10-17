@@ -17,7 +17,8 @@ var OrderView = FormView.extend({
       'click #change-status-denied': _.bind(this.changeStatus, this, 'denied', false),
       'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted', false),
       'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', false),
-      'click .tip-buttons .btn': 'clickTipButton'
+      'click .tip-buttons .btn': 'clickTipButton',
+      'click .copy-order-btn': 'makeCopy'
     }
   },
 
@@ -244,5 +245,20 @@ var OrderView = FormView.extend({
     var tip = (this.model.get('sub_total') * percentage / 100).toFixed(2);
     this.$el.find(this.fieldMap.tip).val(tip);
     this.autoSave();
+  },
+
+  makeCopy: function(e) {
+    var view = this;
+    $.ajax({
+      type: 'POST',
+      url: _.result(this.model, 'url') + '/duplicates',
+      success: function(data, textStatus, jqXHR) {
+        var newOrder = new view.model.constructor(data);
+        window.location = _.result(newOrder, 'url');
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Couldn't copy order: " + errorThrown);
+      }
+    });
   }
 });

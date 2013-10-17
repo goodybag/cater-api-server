@@ -164,7 +164,7 @@ module.exports.create = function(req, res) {
     }
 
     var tasks = utils.map(
-      [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes']],
+      [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes'], [tags, 'createTags']],
       function(args) { return utils.partial( insert, args[0](req.body, rows[0].id), args[1]); }
     );
 

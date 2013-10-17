@@ -25,6 +25,20 @@ a {
   color: #333;
 }
 
+header {
+  position: relative;
+  min-height: 200px;
+}
+
+/*header:after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 10px;
+  border-radius: 20px;
+  background: #DA1F26;
+}*/
+
 .columns {
   display: -webkit-box;
 }
@@ -45,8 +59,16 @@ a {
   margin: 0;
 }
 
+.dl-inline > dt {
+  font-style: italic;
+}
+
 .customer-info {
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 205px;
+  height: 100%;
 }
 
 .column-logo {
@@ -62,5 +84,32 @@ a {
 }
 
 .info-items .info-item.info-item-logo {
-  margin-bottom: -4px;
+  margin-bottom: -2px;
+  margin-left: -2px;
+}
+
+.order-number-info {
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 12px 10px 4px;
+  margin-left: -10px;
+  margin-right: -10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background: #FAE6E9;
+  text-align: right;
+}
+
+.order-number-info .order-number-key {
+  float: left;
+  font-size: 14px;
+  vertical-align: bottom;
+}
+
+.order-number-info .order-number {
+  font-size: 28px;
+  font-weight: 300;
+  vertical-align: bottom;
 }

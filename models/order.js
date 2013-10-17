@@ -219,7 +219,8 @@ module.exports = Model.extend({
                   type: 'inner',
                   on: {id: '$order_items.item_id$'}
                 }
-              }
+              },
+              where: {order_id: self.attributes.id}
             }
           },
 

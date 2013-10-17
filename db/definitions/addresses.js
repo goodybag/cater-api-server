@@ -34,6 +34,10 @@ define(function(require) {
       type: types.text
     , nullable: false
     }
+  , street2: {
+      type: types.text
+    , nullable: true
+    }
   , city: {
       type: types.text
     , nullable: false
@@ -49,6 +53,15 @@ define(function(require) {
   , is_default: {
       type: types.bool
     , nullable: false
+    }
+  , phone: {
+      type: types.varchar(10)
+    , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
+    }
+  , delivery_instructions: {
+      type: types.text
+    , nullable: true
     }
   };
 

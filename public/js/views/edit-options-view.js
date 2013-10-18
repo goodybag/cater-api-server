@@ -128,7 +128,7 @@
       this.model.set( 'options_sets', option_sets );
 
       // Item tags
-      var tags = this_.getTags(this.$el.find('.edit-item-options-tags input:checked'));
+      var tags = this_.getTags(this.$el.find('.edit-item-tags input:checked'));
       this.model.set( 'tags', tags );
 
       this.model.save();

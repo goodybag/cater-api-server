@@ -32,17 +32,8 @@
           <textarea name="description" class="form-control" placeholder="Option description">{{this.description}}</textarea>
         </div>
         <div class="form-group col-lg-12">
-          <label>Dietary Tags</label>
-          <div>
-            <label class="checkbox-inline">
-              <input type="checkbox" name="vegetarian" class="options-set-option-tags" value="vegetarian" {{#contains this.tags "vegetarian"}}checked="checked"{{/contains}}> Vegetarian
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" name="vegan" class="options-set-option-tags" value="vegan" {{#contains this.tags "vegan"}}checked="checked"{{/contains}}> Vegan
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" name="glutenFree" class="options-set-option-tags" value="glutenFree" {{#contains this.tags "glutenFree"}}checked="checked"{{/contains}}> Gluten Free
-            </label>
+          <div class="options-set-tags">
+            {{> edit_tags this.tags }}
           </div>
         </div>
       </div>

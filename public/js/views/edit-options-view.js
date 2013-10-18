@@ -111,7 +111,7 @@
           , price:          utils.getPrice( $option.find('.options-set-option-price') )
           , default_state:  $option.find('.options-set-option-default:checked').length > 0
           , description:    $option.find('[name="description"]').val()
-          , tags:           this_.getTags($option.find('.options-set-option-tags:checked'))
+          , tags:           this_.getTags($option.find('.options-set-tags input:checked'))
           };
 
           // If the option is not new, attach the old ID

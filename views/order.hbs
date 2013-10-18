@@ -53,6 +53,28 @@
   </div>
   {{/if}}
 
+  <div class="row">
+    {{#if query.copy}}
+    <div class="alerts col-lg-12">
+      {{#unless query.lostItems}}
+      <div class="alert alert-success">
+        <p>Your order has been copied.  Your new order is below.</p>
+      </div>
+      {{else}}
+      <div class="alert alert-danger">
+        <p>Your order has been copied.  Your new order is below.</p>
+        <p>However, the following items from your old order are no longer available at {{order.restaurant.name}} and so were not copied:</p>
+        <ul>
+          {{#each query.lostItems}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/unless}}
+    </div>
+    {{/if}}
+  </div>
+
   <div class="panel panel-order-details">
     <form id="order-form" class="form-light order-form row" method="POST" action="javascript:void(0);">
       <div class="col-sm-7 col-left">

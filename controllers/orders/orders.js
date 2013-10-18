@@ -56,7 +56,8 @@ module.exports.get = function(req, res) {
         owner: isOwner,
         admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
         states: states,
-        orderParams: req.session.orderParams
+        orderParams: req.session.orderParams,
+        query: req.query
       };
 
       // orders are always editable for an admin

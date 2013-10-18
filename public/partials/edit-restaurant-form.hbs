@@ -43,17 +43,8 @@
     <span class="help-block">Please enter cuisine as a comma separated list of cuisine tags.</span>
   </div>
   <div class="form-group">
-    <label class="control-label">Dietary Tags</label>
-    <div>
-      <label class="checkbox-inline">
-        <input type="checkbox" name="tags" class="restaurant-tags" value="vegetarian" {{#contains restaurant.tags "vegetarian"}}checked="checked"{{/contains}}> Vegetarian
-      </label>
-      <label class="checkbox-inline">
-        <input type="checkbox" name="tags" class="restaurant-tags" value="vegan" {{#contains restaurant.tags "vegan"}}checked="checked"{{/contains}}> Vegan
-      </label>
-      <label class="checkbox-inline">
-        <input type="checkbox" name="tags" class="restaurant-tags" value="glutenFree" {{#contains restaurant.tags "glutenFree"}}checked="checked"{{/contains}}> Gluten Free
-      </label>
+    <div class="restaurant-tags">
+    {{> edit_tags restaurant.tags }}
     </div>
   </div>
   <div class="form-group">

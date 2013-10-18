@@ -67,7 +67,7 @@ var EditRestaurantView = FormView.extend({
     delivery_zips: '.restaurant-form .restaurant-delivery-zips',
     delivery_times: '.restaurant-form .time',
     lead_times: '.restaurant-form .lead-times',
-    tags: '.restaurant-form .restaurant-tags:checked',
+    tags: '.restaurant-form .restaurant-tags input:checked',
     is_hidden: '.restaurant-form .restaurant-is-hidden'
   },
 

@@ -5,6 +5,20 @@
     <button class="btn btn-default btn-new-group">New Option Group</button>
     <button class="btn btn-success btn-save">Save</button>
   </div>
+  <div>
+    <label class="control-label">Dietary Tags</label>
+    <div class="edit-item-options-tags">
+      <label class="checkbox-inline">
+        <input type="checkbox" name="tags" value="vegetarian" {{#contains restaurant.tags "vegetarian"}}checked="checked"{{/contains}}> Vegetarian
+      </label>
+      <label class="checkbox-inline">
+        <input type="checkbox" name="tags" value="vegan" {{#contains restaurant.tags "vegan"}}checked="checked"{{/contains}}> Vegan
+      </label>
+      <label class="checkbox-inline">
+        <input type="checkbox" name="tags" value="glutenFree" {{#contains restaurant.tags "glutenFree"}}checked="checked"{{/contains}}> Gluten Free
+      </label>
+    </div>
+  </div>
   <div class="option-groups row">
     {{#each model.options_sets}}
       {{>edit_options_set}}

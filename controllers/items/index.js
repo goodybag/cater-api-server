@@ -7,7 +7,7 @@ var queries = require('../../db/queries');
 
 var tags = function(body, id) {
   return utils.map(body.tags, function(obj, index, arr) {
-    return {item_id: id, tag: body.tag};
+    return {item_id: id, tag: obj};
   });
 };
 

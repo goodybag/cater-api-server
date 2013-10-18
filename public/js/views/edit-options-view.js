@@ -127,6 +127,15 @@
       });
 
       this.model.set( 'options_sets', option_sets );
+
+      // Item tags
+      var tags = this.$el.find('.edit-item-options-tags input:checked');
+      tags = utils.map(tags, function(tag) {
+        return tag.getAttribute('value');
+      });
+
+      this.model.set( 'tags', tags );
+
       this.model.save();
     }
 

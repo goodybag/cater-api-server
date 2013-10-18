@@ -243,8 +243,13 @@ var Order = Backbone.Model.extend({
       type: 'POST',
       url: _.result(order, 'url') + '/duplicates',
       success: function(data, textStatus, jqXHR) {
-        var newOrder = new view.model.constructor(data);
-        window.location = _.result(newOrder, 'url');
+        var newOrder = new order.constructor(data);
+        var queryParams = {
+          copy: true
+        }
+        if (newOrder.get('lostItems')) queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
+
+        window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
       },
       error: function(jqXHR, textStatus, errorThrown) {
         if (errorModal) {

@@ -38,6 +38,8 @@ var OrderView = FormView.extend({
     , interval: 15
     }).pickatime('picker');
 
+    this.copyErrorModal = new CopyErrorModal({el: '#copy-order-error-modal'});
+
     this.on('save:success', this.onSaveSuccess, this);
 
     return this;
@@ -248,17 +250,6 @@ var OrderView = FormView.extend({
   },
 
   makeCopy: function(e) {
-    var view = this;
-    $.ajax({
-      type: 'POST',
-      url: _.result(this.model, 'url') + '/duplicates',
-      success: function(data, textStatus, jqXHR) {
-        var newOrder = new view.model.constructor(data);
-        window.location = _.result(newOrder, 'url');
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        alert("Couldn't copy order: " + errorThrown);
-      }
-    });
+    this.model.copy(this.copyErrorModal);
   }
 });

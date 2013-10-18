@@ -16,5 +16,4 @@ var CopyErrorModalView = Backbone.View.extend({
     });
     this.$el.modal('hide');  // Step 1: hide modal
   }
-
 });

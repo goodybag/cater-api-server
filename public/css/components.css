@@ -772,6 +772,7 @@ a.list-group-item .list-group-item-heading {
 
 .tag {
   display: inline-block;
+  vertical-align: bottom;
   width: 20px;
   height: 20px;
 }

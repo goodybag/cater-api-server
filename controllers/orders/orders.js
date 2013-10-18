@@ -240,6 +240,8 @@ module.exports.duplicate = function(req, res, next) {
   oldOrder.createCopy(function(err, newOrder, lostItems) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (newOrder == null) return res.json(404);
-    res.json(201, newOrder.toJSON());
+    var obj = newOrder.toJSON();
+    obj.lostItems = lostItems;
+    res.json(201, obj);
   });
 };

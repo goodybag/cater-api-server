@@ -6,20 +6,11 @@
     return val ? Math.round(parseFloat(val) * 100) : null;
   };
 
-  utils.queryParams = function(data){
-    if (typeof data !== "object") return "";
-    var params = "?";
-    for (var key in data){
-      if ([null, undefined, ""].indexOf(data[key]) > -1) continue;
-      if (utils.isArray(data[key])){
-        for (var i = 0, l = data[key].length; i < l; ++i){
-          params += key + "[]=" + data[key][i] + "&";
-        }
-      } else {
-        params += key + "=" + data[key] + "&";
-      }
-    }
-    return params.substring(0, params.length - 1);
+  utils.queryParams = function(data) {
+    var pairs = _.flatten(_.map(data, function(value, key, obj) {
+      return _.isArray(value) ? _.map(value, function(val) { return [key + '[]', val];}) : [[key, value]];
+    }), true);
+    return '?' + _.map(pairs, function(pair) { return _.map(pair, encodeURIComponent).join('='); }).join('&');
   };
 
   utils.parseQueryParams = function() {
@@ -29,10 +20,7 @@
     var pairs = match[1].split(/[&;]/);
     for (var i=0, len=pairs.length; i < len; i++) {
       var pair = pairs[i].split('=');
-      if (pair.length === 2)
-        params[pair[0]] = pair[1];
-      if (pair.length === 1)
-        params[pair[0]] = null;
+      params[decodeURIComponent(pair[0])] = pair.length === 2 ? decodeURIComponent(pair[1]) : null;
     };
     return params;
   };

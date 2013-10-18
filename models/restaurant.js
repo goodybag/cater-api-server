@@ -25,10 +25,11 @@ module.exports = Model.extend({
       if (!self.categories || self.categories.length === 0)
         return callback(null, null);
       var categories = utils.map(self.categories, function(cat) { return cat.toJSON().id; });
-      require('./item').find(
-        {where: {'category_id': {$in: categories}},
-         order: {order: 'asc'},
-         limit: null},
+      require('./item').find({
+        where: {'category_id': {$in: categories}},
+        order: {order: 'asc'},
+        limit: null,
+        columns: ['*', '(SELECT array(SELECT tag FROM item_tags WHERE item_id = items.id ORDER BY tag ASC)) AS tags']},
         function(err, results) {
           if (err) return callback(err);
           self.items = results;

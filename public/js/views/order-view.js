@@ -38,7 +38,7 @@ var OrderView = FormView.extend({
     , interval: 15
     }).pickatime('picker');
 
-    this.copyErrorModal = new CopyErrorModal({el: '#copy-order-error-modal'});
+    this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
 
     this.on('save:success', this.onSaveSuccess, this);
 

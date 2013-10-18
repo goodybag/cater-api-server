@@ -410,6 +410,7 @@
 <script src="/js/views/order-view.js"></script>
 <script src="/js/views/order-item-view.js"></script>
 <script>
+  history.pushState(null, null, location.pathname);
   $.get('/partials/totals.hbs', null, function(data, textStatus, jqXHR) {
     Handlebars.registerPartial('totals', Handlebars.compile(data));
   }, 'html')

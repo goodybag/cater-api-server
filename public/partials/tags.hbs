@@ -1,11 +1,10 @@
-<span class="tag">
-  {{#if vegetarian}}
-    <span class="label label-success">Vegetarian</span>
-  {{/if}}
-  {{#if vegan}}
-    <span class="label label-info">Vegan</span>
-  {{/if}}
-  {{#if glutenFree}}
-    <span class="label label-warning">Gluten Free</span>
-  {{/if}}
-</span>
+{{! this context should be a string array }}
+{{#contains this "vegan"}}
+<span class="tag tag-vegan tag-tooltip" data-title="Vegan"></span>
+{{/contains}}
+{{#contains this "vegetarian"}}
+<span class="tag tag-vegetarian tag-tooltip" data-title="Vegetarian"></span>
+{{/contains}}
+{{#contains this "glutenFree"}}
+<span class="tag tag-gluten-free tag-tooltip" data-title="Gluten-Free"></span>
+{{/contains}}

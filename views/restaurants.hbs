@@ -34,25 +34,7 @@
             </ul>
             {{/if}}
             <span class="dollar-meter">{{{dollarMeter this.price}}}</span>
-            {{#if tags.length}}
-            <ul class="list-restaurant-tags">
-              {{#contains tags "vegan"}}
-                <li class="list-restaurant-tooltips" data-title="Vegan">
-                  <span class="label label-warning">Vegan</span>
-                </li>
-              {{/contains}}
-              {{#contains tags "vegetarian"}}
-                <li class="list-restaurant-tooltips" data-title="Vegetarian">
-                  <span class="label label-success">Vegetarian</span>
-                </li>
-              {{/contains}}
-              {{#contains tags "glutenFree"}}
-                <li class="list-restaurant-tooltips" data-title="Gluten-Free">
-                  <span class="label label-info">Gluten-Free</span>
-                </li>
-              {{/contains}}
-            </ul>
-            {{/if}}
+            {{> tags tags }}
           </div>
         </a>
         {{else}}
@@ -70,6 +52,6 @@
 <script type="text/javascript">
   var orderParams = new OrderParams();
   var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
-  $(".list-restaurant-tooltips").tooltip();
+  $(".tag-tooltip").tooltip();
 </script>
 {{/extend}}

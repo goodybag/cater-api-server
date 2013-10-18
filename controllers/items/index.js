@@ -64,7 +64,7 @@ module.exports.update = function(req, res) {
     // only need to update this item's columns
     var updates = utils.omit(req.body, 'tags');
     if (utils.size(updates) === 0) return cb();
-    var query = queries.item.update(req.body, req.params.id);
+    var query = queries.item.update(updates, req.params.id);
     var sql = db.builder.sql(query);
     db.query(sql.query, sql.values, function(err, rows, result) {
       return cb(err, rows && rows.length>0 ? rows[0] : null);

@@ -770,20 +770,25 @@ a.list-group-item .list-group-item-heading {
  * Tag Listing
  */
 
-.list-restaurant-tags {
-  display: inline;
-  list-style: none;
-  padding: 0;
-  font-size: 0;
+.tag {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
 }
 
-.list-restaurant-tags > li {
-  display: inline;
-  font-size: 13px;
+.tag-gluten-free {
+  background: url('/img/01_gluten.svg');
+  background-size: 20px 20px;
 }
 
-.list-restaurant-tags > li > .label {
-  font-size: 12px;
+.tag-vegan {
+  background: url('/img/02_vegan.svg');
+  background-size: 20px 20px;
+}
+
+.tag-vegetarian {
+  background: url('/img/03_vegetarian.svg');
+  background-size: 20px 20px;
 }
 
 /**

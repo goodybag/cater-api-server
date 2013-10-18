@@ -17,12 +17,18 @@
     var params = {};
     var match = /^\?(\S*)$/.exec(window.location.search);
     if (match == null || match.length !== 2) return params;
-    var pairs = match[1].split(/[&;]/);
-    for (var i=0, len=pairs.length; i < len; i++) {
-      var pair = pairs[i].split('=');
-      params[decodeURIComponent(pair[0])] = pair.length === 2 ? decodeURIComponent(pair[1]) : null;
-    };
-    return params;
+
+    var pairs = _.map(match[1].split(/[&;]/), _.compose(
+      function(str) {
+        return _.object(['key', 'value'], str.split('='));
+      },
+      decodeURIComponent
+    ));
+
+    return _.objMap(_.groupBy(pairs, function(pair) { return pair.key.replace(/\[\]$/, ''); }),
+             function(list) {
+               var ret = _.pluck(list, 'value');  return ret.length > 1 ? ret : ret[0];
+             });
   };
 
   _.mixin({

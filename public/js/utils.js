@@ -36,8 +36,7 @@
       return _.object(_.keys(obj), _.map(obj, func, context));
     },
 
-    partialRight: function() {
-      var func = arguments[0];
+    partialRight: function(func) {
       var args = Array.prototype.slice.call(arguments, 1);
       return function() {
         return func.apply(this, Array.prototype.slice.apply(arguments).concat(args));

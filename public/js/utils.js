@@ -24,4 +24,10 @@
     };
     return params;
   };
+
+  _.mixin({
+    objMap: function(obj, func, context) {
+      return _.object(_.keys(obj), _.map(obj, func, context));
+    }
+  });
 })( window );

@@ -26,9 +26,9 @@
     ));
 
     return _.objMap(_.groupBy(pairs, function(pair) { return pair.key.replace(/\[\]$/, ''); }),
-             function(list) {
-               var ret = _.pluck(list, 'value');  return ret.length > 1 ? ret : ret[0];
-             });
+                    function(list) {
+                      var ret = _.pluck(list, 'value');  return /\[\]$/.test(list[0].key) ? ret : ret[0];
+                    });
   };
 
   _.mixin({

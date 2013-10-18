@@ -245,16 +245,8 @@ module.exports = Model.extend({
         if (newOrder == null) return cb(null, null);
         self.getOrderItems(function(err, oldOrderItems) {
           if (err) return cb(err);
-          var oldItems = utils.pluck(utils.pluck(oldOrderItems, 'attributes'), 'id');
-          var newItems = utils.pluck(utils.pluck(newOrder.orderItems, 'attributes'), 'id');
-
-          // Lost is all the items that were on the old order that are  no longer available.
-          var lostIds = utils.difference(oldItems, newItems);
-          var lostItems = utils.filter(oldOrderItems, function(item) {
-            return utils.contains(lostIds, item.attributes.id);
-          });
-
-          cb(null, newOrder, lostItems.length > 0 ? lostItems : null);
+          var lostItems = utils.filter(oldOrderItems, function(old) { return old.attributes.item_id === null; });
+          return cb(null, newOrder, lostItems.length > 0 ? lostItems : null);
         });
       }
     ];

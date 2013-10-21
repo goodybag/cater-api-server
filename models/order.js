@@ -265,7 +265,6 @@ module.exports = Model.extend({
 
     utils.async.waterfall(tasks, function(err, client, done, order, lostItems) {
       client.query(err ? 'ROLLBACK' : 'COMMIT', function(error, rows, result) {
-        console.log('ending copy transaction');
         done();
         return callback(error || err, order, lostItems);
       });

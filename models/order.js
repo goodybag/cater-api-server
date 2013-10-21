@@ -163,7 +163,7 @@ module.exports = Model.extend({
       },
 
       function(client, done, cb) {
-        client.query('BEGIN', function(err, rows, results) {
+        client.query('BEGIN', function(err, result) {
           cb(err, client, done);
         });
       },

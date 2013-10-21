@@ -35,7 +35,10 @@
               {{#each items}}
               <a class="list-group-item item" id="item-{{id}}">
                 <div class="row">
-                  <h5 class="list-group-item-heading col-sm-7">{{name}}</h5>
+                  <h5 class="list-group-item-heading col-sm-7">
+                    {{name}}
+                    {{>tags tags}}
+                  </h5>
                   <dl class="item-legend col-sm-5">
                     <div class="feeds-price-wrapper">
                       <div class="feeds">
@@ -210,7 +213,8 @@
     order_item_summary: 'order-item-summary.hbs',
     item_modal_title:   'item-modal-title.hbs',
     item_options:       'item-options.hbs',
-    order_summary:      'order-summary.hbs'
+    order_summary:      'order-summary.hbs',
+    tags:               'tags.hbs'
   };
 
   for (var name in partials) {
@@ -275,5 +279,7 @@
   ];
 
   orderView.render();
+
+  $('.tag-tooltip').tooltip();
 </script>
 {{/extend}}

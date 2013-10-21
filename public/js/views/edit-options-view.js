@@ -71,6 +71,7 @@
      * into the item model
      */
   , save: function(){
+      var this_ = this;
       var option_sets = [];
 
       // Iterate through each option-group pushing the data gathered into
@@ -110,6 +111,7 @@
           , price:          utils.getPrice( $option.find('.options-set-option-price') )
           , default_state:  $option.find('.options-set-option-default:checked').length > 0
           , description:    $option.find('[name="description"]').val()
+          , tags:           this_.getTags($option.find('.options-set-tags input:checked'))
           };
 
           // If the option is not new, attach the old ID
@@ -124,7 +126,18 @@
       });
 
       this.model.set( 'options_sets', option_sets );
+
+      // Item tags
+      var tags = this_.getTags(this.$el.find('.edit-item-tags input:checked'));
+      this.model.set( 'tags', tags );
+
       this.model.save();
+    }
+
+  , getTags: function(tags) {
+      return utils.map(tags, function(tag) {
+        return tag.getAttribute('value');
+      });
     }
 
   , onNewGroupClick: function( e ){

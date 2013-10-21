@@ -74,7 +74,7 @@ module.exports = Model.extend({
     }, client);
   },
   save: function(query, callback, client) {
-    if (_.isFunction(query)) {
+    if (utils.isFunction(query)) {
       callback = query;
       query = undefined;
     }

@@ -1,7 +1,9 @@
 var Model = require('./model');
 var utils = require('../utils');
+var config = require('../config');
 var uuid  = require('node-uuid');
 var db = require('../db');
+var pg = require('pg');  // access db driver directly
 var Restaurant = require('./restaurant');
 
 var modifyAttributes = function(callback, err, orders) {
@@ -157,6 +159,16 @@ module.exports = Model.extend({
     var self = this;
     var tasks = [
       function(cb) {
+        pg.connect(config.postgresConnStr, cb)
+      },
+
+      function(client, done, cb) {
+        client.query('BEGIN', function(err, rows, results) {
+          cb(err, client, done);
+        });
+      },
+
+      function(client, done, cb) {
         // Step 1: Create the new order from the existing one.
         var copyOrder = {
           with: {
@@ -176,27 +188,27 @@ module.exports = Model.extend({
         }
 
         self.constructor.create(copyOrder, function(err, newOrders) {
-          if (err) return cb(err);
+          if (err) return cb(err, client, done);
           var newOrder = newOrders && newOrders.length > 0 ? newOrders[0] : null;
-          return cb(null, newOrder);
-        });
+          return cb(null, client, done, newOrder);
+        }, client);
       },
 
-      function(newOrder, cb) {
+      function(client, done, newOrder, cb) {
         // Step 2: create a pending status for the new order.  (Note: this could be parallel with step 3.
-        if (newOrder == null) return cb(null, null);
+        if (newOrder == null) return cb(null, client, done, null);
         var OrderStatus = require('./order-status');
         var status = new OrderStatus({order_id: newOrder.attributes.id});
         status.save(function(err, status) {
-          if (err) return cb(err);
+          if (err) return cb(err, client, done);
           newOrder.attributes.latestStatus = status.status;
-          cb(null, newOrder);
-        });
+          return cb(null, client, done, newOrder);
+        }, client);
       },
 
-      function(newOrder, cb) {
+      function(client, done, newOrder, cb) {
         // Step 3: Copy the order items
-        if (newOrder == null) return cb(null, null);
+        if (newOrder == null) return cb(null, client, done, null);
 
         var copyOrderItems = {
           with: {
@@ -233,25 +245,31 @@ module.exports = Model.extend({
         };
 
         require('./order-item').create(copyOrderItems, function(err, newOrderItems) {
-          if (err) return cb(err);
+          if (err) return cb(err, client, done);
           newOrder.orderItems = newOrderItems;
 
-          return cb(null, newOrder);
-        });
+          return cb(null, client, done, newOrder);
+        }, client);
       },
 
-      function(newOrder, cb) {
+      function(client, done, newOrder, cb) {
         // Step 4: check if any order_items are missing because their items have been discontinued
-        if (newOrder == null) return cb(null, null);
+        if (newOrder == null) return cb(null, client, done, null);
         self.getOrderItems(function(err, oldOrderItems) {
-          if (err) return cb(err);
+          if (err) return cb(err, client, done);
           var lostItems = utils.filter(oldOrderItems, function(old) { return old.attributes.item_id === null; });
-          return cb(null, newOrder, lostItems.length > 0 ? lostItems : null);
-        });
+          return cb(null, client, done, newOrder, lostItems.length > 0 ? lostItems : null);
+        }, client);
       }
     ];
 
-    utils.async.waterfall(tasks, callback);
+    utils.async.waterfall(tasks, function(err, client, done, order, lostItems) {
+      client.query(err ? 'ROLLBACK' : 'COMMIT', function(error, rows, result) {
+        console.log('ending copy transaction');
+        done();
+        return callback(error || err, order, lostItems);
+      });
+    });
   }
 }, {
   table: 'orders',

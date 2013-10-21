@@ -44,7 +44,13 @@
       </div>
 
       <div class="customer-info info-items">
-        <h2 class="customer-company-name info-item">{{order.user.organization}}</h2>
+        <h2 class="customer-company-name info-item">
+          {{#if order.user.organization}}
+            {{order.user.organization}}
+          {{else}}
+            [Your Organization]
+          {{/if}}
+        </h2>
         <address class="info-item-address info-item">
           {{#if order.street}}
             {{order.street}}
@@ -70,9 +76,13 @@
         </address>
 
         <div class="info-item-contact info-item">
-          {{order.user.name}}
-          <br>
-          {{phoneNumber order.phone "xxx.xxx.xxxx"}}
+          {{#if order.user.name}}
+            {{order.user.name}}
+          {{/if}}
+          {{#if order.phone}}
+            <br>
+            {{phoneNumber order.phone "xxx.xxx.xxxx"}}
+          {{/if}}
         </div>
         {{{block "info"}}}
       </div>

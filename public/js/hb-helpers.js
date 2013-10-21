@@ -279,6 +279,12 @@ var helpers = {
 
   notEmpty: function( obj, options ){
     return options[ !utils.isEmpty( obj ) ? 'fn' : 'inverse' ]();
+  },
+
+  contains: function(array, item, options) {
+    if (array instanceof Array && typeof item === 'string' && array.indexOf(item) >= 0) {
+      return options.fn();
+    }
   }
 }
 

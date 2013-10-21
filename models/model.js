@@ -49,6 +49,7 @@ utils.extend(Model.prototype, {
   },
   save: function(query, callback, client) {
     if (utils.isFunction(query)) {
+      client = callback;
       callback = query;
       query = undefined;
     }

@@ -108,6 +108,7 @@ var Order = Backbone.Model.extend({
 
   initialize: function(attrs, options) {
     attrs = attrs || {};
+
     this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id});
     this.unset('orderItems');
 
@@ -234,5 +235,20 @@ var Order = Backbone.Model.extend({
     obj.orderItems = this.orderItems.toJSON();
     obj.restaurant = this.restaurant.toJSON();
     return obj;
+  },
+
+  copy: function(callback) {
+    var order = this;
+    if (!_.isFunction(callback)) callback = function() {};
+    $.ajax({
+      type: 'POST',
+      url: _.result(order, 'url') + '/duplicates',
+      success: function(data, textStatus, jqXHR) {
+        return callback(null, new order.constructor(data));
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        return callback(errorThrown);
+      }
+    });
   }
 });

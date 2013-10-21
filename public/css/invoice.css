@@ -38,12 +38,12 @@ header:after {
   display: block;
   width: 100%;
   height: 6px;
-  border-radius: 20px;
   background: #DA1F26;
 }
 
 footer {
-  margin-top: 12px;
+  position: relative;
+  margin-top: 22px;
   margin-bottom: 12px;
   text-align: center;
   font-size: 14px;
@@ -75,6 +75,14 @@ footer {
 
 .comma-separated > li:first-child:before {
   content: "";
+}
+
+@media print {
+  /* font-size:0; doesn't seem to be working on print */
+  .comma-separated > li:first-child ~ li {
+    display: inline-block;
+    margin-left: -3px;
+  }
 }
 
 .columns {
@@ -140,6 +148,12 @@ dl > dt {
   right: 0;
   width: 205px;
   height: 100%;
+  box-sizing: border-box;
+  padding-top: 8px;
+}
+
+.customer-info .customer-company-name {
+  margin-top: 0;
 }
 
 .column-logo {
@@ -229,16 +243,16 @@ dl > dt {
   position: absolute;
   left: 0;
   font-style: italic;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .order {
-  border-radius: 8px;
-  border: solid 3px #DA1F26;
+  border-bottom: solid #DA1F26 2px;
 }
 
 .order-table {
   width: 100%;
+  margin-bottom: 70px;
   border-spacing: 0;
   border-collapse: collapse;
 }
@@ -247,6 +261,7 @@ dl > dt {
 .order-table th {
   padding-left: 16px;
   padding-right: 16px;
+  text-align: center;
 }
 
 .order-table td {
@@ -264,7 +279,8 @@ dl > dt {
   font-weight: 500;
 }
 
-.order-table th:first-child {
+.order-table th:first-child,
+.order-table td:first-child {
   text-align: left;
 }
 
@@ -279,4 +295,84 @@ dl > dt {
 
 .order-table .line-item-name .item-options > li {
   font-size: 11px;
+}
+
+.order-adjustment {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-color: #808181;
+  border-style: dashed;
+  border-width: 0;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.order-adjustment .adjustment-amount-wrapper {
+  text-align: right;
+}
+
+.order-adjustment .dl-adjustment-amount {
+  display: inline-block;
+}
+
+.order .order-summary {
+  padding-left: 16px;
+  padding-right: 16px;
+  text-align: right;
+}
+
+.order .order-summary .dl-order-summary {
+  display: inline-block;
+}
+
+.total-wrapper {
+  text-align: right;
+}
+
+.total-wrapper .dl-order-total {
+  display: inline-block;
+  margin-right: 16px;
+}
+
+.dl-adjustment-amount,
+.dl-order-summary,
+.dl-order-total {
+  font-size: 13px;
+}
+
+.dl-adjustment-amount > dt,
+.dl-order-summary > dt,
+.dl-order-total > dt {
+  font-style: normal;
+}
+
+.dl-adjustment-amount > dd,
+.dl-order-summary > dd,
+.dl-order-total > dd {
+  margin-left: 190px;
+  min-width: 60px;
+}
+
+.dl-order-summary {
+  line-height: 24px;
+  margin-bottom: 0;
+}
+
+.total-wrapper {
+  font-weight: bold;
+  background: #FAE6E9;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 8px;
+}
+
+.total-wrapper dl {
+  margin: 0;
+}
+
+.total-wrapper dt,
+.total-wrapper dd {
+  font-size: 15px;
 }

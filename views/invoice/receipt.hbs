@@ -53,15 +53,45 @@
           </ul>
         </td>
         <td class="line-item-quantity" data-title="Quantity">
-          <span class="item-quantity-span order-item-field order-item-quantity" />{{this.quantity}}</span>
+          <span class="item-quantity-span order-item-field order-item-quantity" />x {{this.quantity}}</span>
         </td>
         <td class="line-item-notes" data-title="Notes">
           <span name="notes" class="item-notes-span order-item-field order-item-notes">{{this.notes}}</span>
         </td>
-        <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
+        <td class="line-item-price" data-title="Price">${{dollars this.sub_total}}</td>
       </tr>
       {{/each}}
     </tbody>
   </table>
+
+  <div class="order-adjustment columns">
+    <p class="adjustment-notes column-fluid">{{order.adjustment.description}}</p>
+    <div class="column-fluid adjustment-amount-wrapper">
+      <dl class="dl-adjustment-amount dl-horizontal">
+        <dt>Adjustment:</dt>
+        <dd>${{dollars order.adjustment.amount}}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="order-summary">
+    <dl class="dl-horizontal dl-order-summary">
+      <dt>Subtotal:</dt>
+      <dd>${{dollars order.sub_total}}</dd>
+      <dt>Delivery Fee:</dt>
+      <dd>${{dollars order.delivery_fee}}</dd>
+      <dt>Tax:</dt>
+      <dd>${{tax order.sub_total order.restaurant.delivery_fee}}</dd>
+      <dt>Tip:</dt>
+      <dd>${{dollars order.tip}}</dd>
+    </dl>
+  </div>
+
+  <div class="total-wrapper">
+    <dl class="dl-horizontal dl-order-total">
+      <dt>Total:</dt>
+      <dd>${{total order.sub_total order.restaurant.delivery_fee order.tip}}</dd>
+    </dl>
+  </div>
 </div>
 {{/extend}}

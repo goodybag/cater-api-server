@@ -109,7 +109,7 @@ var Restaurant = Backbone.Model.extend({
 
     // is the desired time within any of the windows for that day?
     return _.any( hours, function( openClose ){
-      return time >= openClose[0] && time < openClose[1]
+      return time >= openClose[0] && time <= openClose[1]
     });
   },
 
@@ -147,7 +147,7 @@ var Restaurant = Backbone.Model.extend({
     var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
     var hours = (moment(date) - moment(now)) / 3600000;
 
-    return hours > limit.lead_time;
+    return hours >= limit.lead_time;
   },
 
   isValidOrder: function( order ){

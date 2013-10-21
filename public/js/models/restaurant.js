@@ -95,6 +95,7 @@ var Restaurant = Backbone.Model.extend({
   },
 
   isValidDeliveryTime: function( date ){
+    if (date == null) return true;
     if ( typeof date !== 'string' ) return false;
 
     if ( !moment(date).isValid() ) return false;
@@ -125,6 +126,7 @@ var Restaurant = Backbone.Model.extend({
 
   isValidGuestDateCombination: function( order ){
     var date = order.get('datetime');
+    if (date == null) return true;
     if ( typeof date !== 'string' ) return false;
 
     if ( !moment(date).isValid() ) return false;

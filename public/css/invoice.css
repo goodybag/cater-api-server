@@ -321,6 +321,8 @@ dl > dt {
 }
 
 .order-adjustment .adjustment-amount-wrapper {
+  box-sizing: border-box;
+  min-width: 260px;
   text-align: right;
 }
 

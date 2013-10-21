@@ -67,6 +67,10 @@ utils.extend(Model.prototype, {
     var sql = db.builder.sql(utils.defaults(query || {}, defaults));
     var self = this;
     (client || db).query(sql.query, sql.values, function(err, rows, result) {
+      if (client) {
+        result = rows;
+        rows = result.rows;
+      }
       if (!err && rows && rows[0]) utils.extend(self.attributes, rows[0]);
       callback.apply(this, arguments);
     })
@@ -114,6 +118,10 @@ Model.find = function(query, callback, client) {
   // console.log(sql);
 
   (client || db).query(sql.query, sql.values, function(err, rows, result){
+    if (client) {
+      result = rows;
+      rows = result.rows;
+    }
     if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
@@ -141,6 +149,10 @@ Model.update = function(query, callback, client) {
   var self = this;
 
   (client || db).query(sql.query, sql.values, function(err, rows, result) {
+    if (client) {
+      result = rows;
+      rows = result.rows;
+    }
     if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
@@ -159,6 +171,10 @@ Model.create = function(query, callback, client) {
   var self = this;
 
   (client || db).query(sql.query, sql.values, function(err, rows, result) {
+    if (client) {
+      result = rows;
+      rows = result.rows;
+    }
     if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });

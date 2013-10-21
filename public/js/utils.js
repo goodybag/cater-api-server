@@ -10,7 +10,9 @@
     var pairs = _.flatten(_.map(data, function(value, key, obj) {
       return _.isArray(value) ? _.map(value, function(val) { return [key + '[]', val];}) : [[key, value]];
     }), true);
-    return '?' + _.map(pairs, function(pair) { return _.map(pair, encodeURIComponent).join('='); }).join('&');
+    return '?' + _.compact(_.map(pairs, function(pair) {
+      return !_.contains([null, undefined, ''], pair[1]) ? _.map(pair, encodeURIComponent).join('=') : null
+    })).join('&');
   };
 
   utils.parseQueryParams = function() {

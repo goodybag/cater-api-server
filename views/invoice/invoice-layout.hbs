@@ -46,8 +46,27 @@
       <div class="customer-info info-items">
         <h2 class="customer-company-name info-item">{{order.user.organization}}</h2>
         <address class="info-item-address info-item">
-          {{order.street}}<br />
-          {{order.city}}, {{order.state}} {{order.zip}}
+          {{#if order.street}}
+            {{order.street}}
+          {{else}}
+            [123 Your St.]
+          {{/if}}
+          <br />
+          {{#if order.city}}
+            {{order.city}}
+          {{else}}
+            [Your City]
+          {{/if}},
+          {{#if order.state}}
+            {{order.state}}
+          {{else}}
+            [Your State]
+          {{/if}}
+          {{#if order.zip}}
+            {{order.zip}}
+          {{else}}
+            [Your Zip]
+          {{/if}}
         </address>
 
         <div class="info-item-contact info-item">

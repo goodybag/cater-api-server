@@ -16,13 +16,13 @@
     <div id="panelDiet" class="panel-collapse collapse in">
       <div class="panel-body">
         <div class="checkbox">
-          <label><input type="checkbox"> Vegetarian</label>
+          <label><input type="checkbox" value="vegetarian" {{#contains orderParams.diet "vegetarian"}}checked="checked"{{/contains}}> Vegetarian</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Vegan</label>
+          <label><input type="checkbox" value="vegan" {{#contains orderParams.diet "vegan"}}checked="checked"{{/contains}}> Vegan</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Gluten-Free</label>
+          <label><input type="checkbox" value="glutenFree" {{#contains orderParams.diet "glutenFree"}}checked="checked"{{/contains}}> Gluten-Free</label>
         </div>
       </div>
     </div>
@@ -40,49 +40,49 @@
     <div id="panelCuisine" class="panel-collapse collapse">
       <div class="panel-body">
         <div class="checkbox">
-          <label><input type="checkbox"> American</label>
+          <label><input type="checkbox" value="american"> American</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Burgers</label>
+          <label><input type="checkbox" value="burgers"> Burgers</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> BBQ</label>
+          <label><input type="checkbox" value="bbq"> BBQ</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Sandwiches</label>
+          <label><input type="checkbox" value="sandwiches"> Sandwiches</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Salad</label>
+          <label><input type="checkbox" value="salads"> Salad</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Chinese</label>
+          <label><input type="checkbox" value="chinese"> Chinese</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Japanese</label>
+          <label><input type="checkbox" value="japanese"> Japanese</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Thai</label>
+          <label><input type="checkbox" value="thai"> Thai</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Italian</label>
+          <label><input type="checkbox" value="italian"> Italian</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Pizza</label>
+          <label><input type="checkbox" value="pizza"> Pizza</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Indian</label>
+          <label><input type="checkbox" value="indian"> Indian</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Tex-Mex</label>
+          <label><input type="checkbox" value="texMex"> Tex-Mex</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Mexican</label>
+          <label><input type="checkbox" value="mexican"> Mexican</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Mediterranean</label>
+          <label><input type="checkbox" value="mediterranean"> Mediterranean</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> Deserts</label>
+          <label><input type="checkbox" value="deserts"> Deserts</label>
         </div>
       </div>
     </div>
@@ -100,16 +100,16 @@
     <div id="panelPrice" class="panel-collapse collapse">
       <div class="panel-body">
         <div class="checkbox">
-          <label><input type="checkbox"> $</label>
+          <label><input type="checkbox" value="1"> $</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> $$</label>
+          <label><input type="checkbox" value="2"> $$</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> $$$</label>
+          <label><input type="checkbox" value="3"> $$$</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox"> $$$$</label>
+          <label><input type="checkbox" value="4"> $$$$</label>
         </div>
       </div>
     </div>

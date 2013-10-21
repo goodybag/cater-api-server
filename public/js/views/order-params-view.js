@@ -44,12 +44,22 @@ var OrderParamsView = Backbone.View.extend({
     $(e.target).find('input').focus();
   }
 
+, getCheckedBoxes: function(selector) {
+    // Retrieve checked filters  
+    return _.map( $(selector), function(option) {
+      return option.getAttribute('value');
+    });
+  }
+
 , getProps: function(){
     return {
-      zip:    this.$("input[name='zip']").val() || null
-    , date:   (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
-    , time:   this.timepicker.get()
-    , guests: this.$("input[name='guests']").val() || null
+      zip:      this.$("input[name='zip']").val() || null
+    , date:     (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
+    , time:     this.timepicker.get()
+    , guests:   this.$("input[name='guests']").val() || null
+    , diet:     this.getCheckedBoxes('#panelDiet input:checked')
+    , cuisine:  this.getCheckedBoxes('#panelCuisine input:checked')
+    , price:    this.getCheckedBoxes('#panelPrice input:checked')
     };
   }
 

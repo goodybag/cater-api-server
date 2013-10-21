@@ -1,17 +1,29 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/order-filters.css">
+{{/extend}}
+
 <h4>Filter by:</h4>
-<div class="panel-group" id="filters">
+<div class="panel-group panel-group-filters" id="filters">
   {{! Diet Section }}
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4>
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#filters" href="#panelDiet">
+        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelDiet" href="#">
           Special Diets
         </a>
       </h4>
     </div>
     <div id="panelDiet" class="panel-collapse collapse in">
       <div class="panel-body">
-        These are special diets hehe
+        <div class="checkbox">
+          <label><input type="checkbox"> Vegetarian</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Vegan</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Gluten-Free</label>
+        </div>
       </div>
     </div>
   </div>
@@ -20,14 +32,58 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4>
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#filters" href="#panelCuisine">
+        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelCuisine" href="#">
           Cuisine
         </a>
       </h4>
     </div>
     <div id="panelCuisine" class="panel-collapse collapse">
       <div class="panel-body">
-        These are cuisine filters hehe
+        <div class="checkbox">
+          <label><input type="checkbox"> American</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Burgers</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> BBQ</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Sandwiches</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Salad</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Chinese</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Japanese</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Thai</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Italian</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Pizza</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Indian</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Tex-Mex</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Mexican</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Mediterranean</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> Deserts</label>
+        </div>
       </div>
     </div>
   </div>
@@ -36,14 +92,25 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4>
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#filters" href="#panelPrice">
+        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelPrice" href="#">
           Price
         </a>
       </h4>
     </div>
     <div id="panelPrice" class="panel-collapse collapse">
       <div class="panel-body">
-        This is the price filter
+        <div class="checkbox">
+          <label><input type="checkbox"> $</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> $$</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> $$$</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox"> $$$$</label>
+        </div>
       </div>
     </div>
   </div>

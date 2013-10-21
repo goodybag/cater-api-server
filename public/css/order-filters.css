@@ -1,0 +1,9 @@
+.panel-group-filters .panel {
+  background-color: #fff; 
+}
+
+.panel-group-filters .panel .panel-heading {
+  padding-top: 0;
+  padding-bottom: 0;
+  background-color: #fff; 
+}

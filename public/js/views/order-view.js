@@ -250,6 +250,18 @@ var OrderView = FormView.extend({
   },
 
   makeCopy: function(e) {
-    this.model.copy(this.copyErrorModal);
+    this.model.copy(function(err, newOrder) {
+      if (err) {
+        this.copyErrorModal.setModel(this.model);
+        this.copyErrorModal.$el.modal('show');
+      } else {
+        var queryParams = {
+          copy: true
+        };
+
+        if (newOrder.get('lostItems')) queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
+        window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
+      }
+    });
   }
 });

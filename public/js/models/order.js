@@ -237,25 +237,17 @@ var Order = Backbone.Model.extend({
     return obj;
   },
 
-  copy: function(errorModal) {
+  copy: function(callback) {
     var order = this;
+    if (!_.isFunction(callback)) callback = function() {};
     $.ajax({
       type: 'POST',
       url: _.result(order, 'url') + '/duplicates',
       success: function(data, textStatus, jqXHR) {
-        var newOrder = new order.constructor(data);
-        var queryParams = {
-          copy: true
-        }
-        if (newOrder.get('lostItems')) queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
-
-        window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
+        return callback(null, new order.constructor(data));
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        if (errorModal) {
-          errorModal.setModel(order);
-          errorModal.$el.modal('show');
-        }
+        return callback(errorThrown);
       }
     });
   }

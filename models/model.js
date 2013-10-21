@@ -47,7 +47,7 @@ utils.extend(Model.prototype, {
   toJSON: function() {
     return utils.clone(this.attributes);
   },
-  save: function(query, callback) {
+  save: function(query, callback, client) {
     if (utils.isFunction(query)) {
       callback = query;
       query = undefined;
@@ -65,12 +65,12 @@ utils.extend(Model.prototype, {
 
     var sql = db.builder.sql(utils.defaults(query || {}, defaults));
     var self = this;
-    db.query(sql.query, sql.values, function(err, rows, result) {
+    (client || db).query(sql.query, sql.values, function(err, rows, result) {
       if (!err && rows && rows[0]) utils.extend(self.attributes, rows[0]);
       callback.apply(this, arguments);
     })
   },
-  destroy: function(callback) {
+  destroy: function(callback, client) {
     if (!this.attributes.id) return callback('need an id');
     var query = {
       type: 'delete',
@@ -78,7 +78,7 @@ utils.extend(Model.prototype, {
       where: {id: this.attributes.id}
     }
     var sql = db.builder.sql(query);
-    db.query(sql.query, sql.values, callback);
+    (client || db).query(sql.query, sql.values, callback);
   }
 });
 
@@ -99,7 +99,7 @@ Model.defaultFindQuery = {
   offset: 0
 }
 
-Model.find = function(query, callback) {
+Model.find = function(query, callback, client) {
   utils.defaults(query, this.defaultFindQuery, {table: this.table});
   query.type = 'select';
 
@@ -112,7 +112,7 @@ Model.find = function(query, callback) {
 
   // console.log(sql);
 
-  db.query(sql.query, sql.values, function(err, rows, result){
+  (client || db).query(sql.query, sql.values, function(err, rows, result){
     if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
@@ -131,7 +131,7 @@ Model.defaultUpdateQuery = {
   returning: '*'
 };
 
-Model.update = function(query, callback) {
+Model.update = function(query, callback, client) {
   utils.defaults(query, this.defaultUpdateQuery);
   query.table = this.table;
   query.type = 'update';
@@ -139,14 +139,14 @@ Model.update = function(query, callback) {
   var sql = db.builder.sql(query);
   var self = this;
 
-  db.query(sql.query, sql.values, function(err, rows, result) {
+  (client || db).query(sql.query, sql.values, function(err, rows, result) {
     if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
 };
 
 // TODO: abstract commonalities of update and create
-Model.create = function(query, callback) {
+Model.create = function(query, callback, client) {
   var constants = {
     type: 'insert',
     table: this.table
@@ -157,7 +157,7 @@ Model.create = function(query, callback) {
   var sql = db.builder.sql(utils.defaults(utils.extend({}, query, constants), defaults));
   var self = this;
 
-  db.query(sql.query, sql.values, function(err, rows, result) {
+  (client || db).query(sql.query, sql.values, function(err, rows, result) {
     if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });

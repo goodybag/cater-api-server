@@ -51,7 +51,7 @@ var modifyAttributes = function(callback, err, orders) {
 }
 
 module.exports = Model.extend({
-  getOrderItems: function(callback) {
+  getOrderItems: function(callback, client) {
     var self = this;
     callback = callback || function() {};
     require('./order-item').find(
@@ -60,9 +60,9 @@ module.exports = Model.extend({
         if (err) return callback(err);
         self.orderItems = results;
         callback(null, results);
-      });
+      }, client);
   },
-  getRestaurant: function(callback){
+  getRestaurant: function(callback, client){
     var self = this;
 
     Restaurant.findOne({ where: { id: this.attributes.restaurant_id } }, function(error, restaurant){
@@ -71,9 +71,9 @@ module.exports = Model.extend({
       self.attributes.restaurant = restaurant.toJSON();
 
       callback(null, restaurant);
-    });
+    }, client);
   },
-  save: function(query, callback) {
+  save: function(query, callback, client) {
     if (_.isFunction(query)) {
       callback = query;
       query = undefined;
@@ -94,7 +94,7 @@ module.exports = Model.extend({
         status.save(callback);
       } else
         callback.apply(this, arguments);
-    });
+    }, client);
   },
   toJSON: function(options) {
     var obj = Model.prototype.toJSON.apply(this, arguments);

@@ -33,6 +33,8 @@ var ItemModal = Backbone.View.extend({
         ? Handlebars.partials.item_options( this.model.toJSON() )
         : ''
     );
+
+    this.$el.find('.tag-tooltip').tooltip();
   },
 
   provideModel: function(model) {

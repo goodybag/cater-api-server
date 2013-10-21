@@ -34,6 +34,7 @@
             </ul>
             {{/if}}
             <span class="dollar-meter">{{{dollarMeter this.price}}}</span>
+            {{> tags tags }}
           </div>
         </a>
         {{else}}
@@ -51,5 +52,6 @@
 <script type="text/javascript">
   var orderParams = new OrderParams();
   var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
+  $(".tag-tooltip").tooltip();
 </script>
 {{/extend}}

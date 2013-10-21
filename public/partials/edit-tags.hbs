@@ -1,0 +1,13 @@
+{{! Current context should be string array }}
+<label class="control-label">Dietary Tags</label>
+<div>
+  <label class="checkbox-inline">
+   <input type="checkbox" value="vegetarian" {{#contains this "vegetarian"}}checked="checked"{{/contains}}> Vegetarian
+  </label>
+  <label class="checkbox-inline">
+    <input type="checkbox" value="vegan" {{#contains this "vegan"}}checked="checked"{{/contains}}> Vegan
+  </label>
+  <label class="checkbox-inline">
+    <input type="checkbox" value="glutenFree" {{#contains this "glutenFree"}}checked="checked"{{/contains}}> Gluten Free
+  </label>
+</div>

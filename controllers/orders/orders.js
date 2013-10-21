@@ -56,7 +56,8 @@ module.exports.get = function(req, res) {
         owner: isOwner,
         admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
         states: states,
-        orderParams: req.session.orderParams
+        orderParams: req.session.orderParams,
+        query: req.query
       };
 
       // orders are always editable for an admin
@@ -229,9 +230,19 @@ module.exports.voice = function(req, res, next) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
     res.render('order-voice', {layout:false, order: order.toJSON()}, function(err, xml) {
-      console.log(err);
       if (err) return res.error(errors.internal.UNKNOWN, err);
       res.send(xml);
     });
+  });
+};
+
+module.exports.duplicate = function(req, res, next) {
+  var oldOrder = new models.Order({id: req.params.oid});
+  oldOrder.createCopy(function(err, newOrder, lostItems) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (newOrder == null) return res.json(404);
+    var obj = newOrder.toJSON();
+    obj.lostItems = lostItems;
+    res.json(201, obj);
   });
 };

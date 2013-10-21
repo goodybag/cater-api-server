@@ -410,8 +410,12 @@
   padding: 14px 17px;
 }
 
-.list-group-item > .label {
+.list-group-item .label {
   float: right;
+}
+
+.list-group-item .copy-order-btn {
+  margin-top: 20px;
 }
 
 a.list-group-item {

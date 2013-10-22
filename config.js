@@ -103,8 +103,8 @@ var config = {
     }
 
   , balanced: {
-      apiKey: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
-    , marketplaceUrl: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
+      secret: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
+    , marketplaceUri: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
     }
 
   , postgresConnStr:  "postgres://localhost:5432/cater"
@@ -162,8 +162,8 @@ var config = {
     }
 
   , balanced: {
-      apiKey: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
-    , marketplaceUrl: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
+      secret: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
+    , marketplaceUri: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
     }
 
   , baseUrl: 'http://cater.staging.goodybag.com'

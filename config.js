@@ -102,17 +102,17 @@ var config = {
     , appId: 'qsetwlny'
     }
 
+  , balanced: {
+      apiKey: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
+    , marketplaceUrl: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
+    }
+
   , postgresConnStr:  "postgres://localhost:5432/cater"
 
   , requestLogger: {
       connStr: "postgres://localhost:5432/cater"
     , table: 'requests'
     , plan: 'month'
-    }
-
-  , balanced: {
-      apiKey: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
-    , marketplaceUrl: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
     }
 
   , baseUrl: 'http://localhost:3000'
@@ -161,6 +161,11 @@ var config = {
     , appId: '6bxgiurw'
     }
 
+  , balanced: {
+      apiKey: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
+    , marketplaceUrl: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
+    }
+
   , baseUrl: 'http://cater.staging.goodybag.com'
 
   , postgresConnStr: process.env['DATABASE_URL']
@@ -169,11 +174,6 @@ var config = {
       connStr: process.env['HEROKU_POSTGRESQL_SILVER_URL']
     , table: 'requests'
     , plan: 'month'
-    }
-
-  , balanced: {
-      apiKey: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
-    , marketplaceUrl: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
     }
 
   , emailEnabled: true

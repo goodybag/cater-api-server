@@ -86,6 +86,17 @@ define(function(require) {
     , nullable: false
     , default: true
     }
+  , balanced_customer_uri: {
+      type: types.text
+    , nullable: false // even if there is no payment method specified this is necessary because this is whom the transaction is done on behalf of when we debit a customer's card or bank
+    , unique: true
+    }
+  , payment_method_id: {
+      type: types.int
+    , nullable: true // this is null is they don't want direct deposits
+    , default: 'NULL'
+    , references: {table: 'payment_methods', column: 'id', onDelete: 'cascade'}
+    }
   };
 
   definition.indices = {};

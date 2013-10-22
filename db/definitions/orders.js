@@ -100,6 +100,10 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , cut: {
+      type: types.int
+    , nullable: true // change this to false once we handle the existing data
+    }
   };
 
   definition.indices = {};

@@ -1,5 +1,5 @@
 /**
- * Users Schema
+ * Restaurant Cuts Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -14,7 +14,7 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'users';
+  definition.name = 'restaurant_cuts';
 
   definition.schema = {
     id: {
@@ -26,32 +26,18 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , name: {
-      type: types.text
-    , nullable: true
-    }
-  , email: {
-      type: types.text
+  , restaurant_id: {
+      type: types.int
     , nullable: false
-    , unique: true
+    , references: {table: 'restaurants', column: 'id', onDelete: 'cascade'}
     }
-  , password: {
-      type: types.text
+  , amount: { // up to this amount
+      type: types.int
     , nullable: false
     }
-  , organization: {
-      type: types.text
-    , nullable: true
-    }
-  , balanced_customer_uri: {
-      type: types.text
-    , nullable: true
-    , unique: true
-    }
-  , isInvoiced: {
-      type: types.boolean
+  , percentage: {
+      type: types.float4
     , nullable: false
-    , default: false
     }
   };
 

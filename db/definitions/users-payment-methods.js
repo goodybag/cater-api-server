@@ -1,5 +1,5 @@
 /**
- * Users Schema
+ * Users Payment Methods Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -14,48 +14,33 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'users';
+  definition.name = 'users_payment_methods';
 
   definition.schema = {
     id: {
       type: types.serial
-    , pk: true
+    , unique: true
     }
   , created_at: {
       type: types.timestamptz
     , nullable: false
     , default: 'NOW()'
     }
-  , name: {
-      type: types.text
-    , nullable: true
-    }
-  , email: {
-      type: types.text
+  , user_id: {
+      type: types.int
     , nullable: false
-    , unique: true
+    , references: {table: 'users', column: 'id', onDelete: 'cascade'}
     }
-  , password: {
-      type: types.text
+  , payment_method_id: {
+      type: types.int
+    , references: {table: 'payment_methods', column: 'id', onDelete: 'cascade'}
     , nullable: false
-    }
-  , organization: {
-      type: types.text
-    , nullable: true
-    }
-  , balanced_customer_uri: {
-      type: types.text
-    , nullable: true
-    , unique: true
-    }
-  , isInvoiced: {
-      type: types.boolean
-    , nullable: false
-    , default: false
     }
   };
 
   definition.indices = {};
+
+  definition.extras = ['PRIMARY KEY ("user_id", "payment_method_id")'];
 
   return definition;
 });

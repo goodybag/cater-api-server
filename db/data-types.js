@@ -60,4 +60,6 @@ module.exports = {
   // custom types
 , orderstatus: 'order_status'
 , timezone: 'timezone'
+, paymentmethod: 'payment_method'
+, paymenttype: 'payment_type'
 }

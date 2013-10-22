@@ -1,4 +1,13 @@
 var Address = Backbone.Model.extend({
+  // TODO: extract to superclass
+  validator: amanda('json'),
+
+  validate: function(attrs, options) {
+    return this.validator.validate(attrs, _.result(this.constructor, 'schema'), options || {}, function(err) { return err; });
+  },
+
+  urlRoot: '/users/me/addresses'
+}, {
   schema: {
     type: 'object',
     properties: {
@@ -45,14 +54,5 @@ var Address = Backbone.Model.extend({
         minLength: 1
       }
     }
-  },
-
-  // TODO: extract to superclass
-  validator: amanda('json'),
-
-  validate: function(attrs, options) {
-    return this.validator.validate(attrs, this.schema, options || {}, function(err) { return err; });
-  },
-
-  urlRoot: '/users/me/addresses'
+  }
 });

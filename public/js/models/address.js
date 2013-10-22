@@ -4,23 +4,28 @@ var Address = Backbone.Model.extend({
     properties: {
       name: {
         type: ['string', 'null'],
-        required: false
+        required: false,
+        minLength: 1
       },
       street: {
         type: 'string',
-        required: true
+        required: true,
+        minLength: 1
       },
       street2: {
         type: ['string', 'null'],
-        required: false
+        required: false,
+        minLength: 1
       },
       city: {
         type: 'string',
-        required: true
+        required: true,
+        minLength: 1
       },
       state: {
         type: 'string',
-        required: true
+        required: true,
+        length: 2
       },
       zip: {
         type: 'string',
@@ -36,7 +41,8 @@ var Address = Backbone.Model.extend({
       },
       delivery_instructions: {
         type: ['string', 'null'],
-        required: false
+        required: false,
+        minLength: 1
       }
     }
   },

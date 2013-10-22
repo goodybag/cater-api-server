@@ -51,6 +51,19 @@ var fakeOptions = [
   }
 ];
 
+var fakeCreditCards= [
+  {type: 'visa',          number: '4111111111111111',   securityCode: '123'}
+, {type: 'mastercard',    number: '5105105105105100',   securityCode: '123'}
+, {type: 'amex',          number: '341111111111111',    securityCode: '1234'}
+];
+
+var fakeBankAccounts = [
+  {routing: '021000021', accountNumber: '9900000000', notes: 'state will be pending'}
+, {routing: '321174851', accountNumber: '9900000001', notes: 'state will be pending'}
+, {routing: '021000021', accountNumber: '9900000002', notes: 'state will be paid/success'}
+, {routing: '321174851', accountNumber: '9900000003', notes: 'state will be paid/success'}
+];
+
 /**
  * Get a random amount of fakeOptions
  * @return {Array}    The fake options array
@@ -130,23 +143,11 @@ var select = function(table) {
 }
 
 var inserts = {
-  restaurants: function() {
+  restaurants: function(values) {
     var query =  {
       type:'insert'
     , table: 'restaurants'
-    , values: {
-        name: faker.Company.companyName()
-      , street: faker.Address.streetAddress()
-      , city: faker.Address.city()
-      , state: faker.Address.usState(true)
-      , zip: faker.Address.zipCodeFormat(0)
-      , sms_phone: config.testPhoneSms || fakePhoneNumber()
-      , voice_phone: config.testPhoneVoice || fakePhoneNumber()
-      , email: config.testEmail || faker.Internet.email()
-      , price: faker.Helpers.randomNumber(5) + 1
-      , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
-      , is_hidden: false
-      }
+    , values: values
     };
     if (Math.random() < .3) query.values.minimum_order = faker.Helpers.randomNumber(501) * 100;
     return query;
@@ -225,6 +226,17 @@ var inserts = {
       }
     }
   }
+, paymentMethods: function(type, uri, data) {
+    return {
+      type: 'insert'
+    , table: 'payment_method'
+    , values: {
+        type: type
+      , uri: uri
+      , data: data
+      }
+    };
+  }
 }
 
 utils.async.series(
@@ -232,7 +244,71 @@ utils.async.series(
     restaurants: function(cb) {
       console.log("populating restaurants");
       utils.async.timesSeries(10, function(n, callback){
-        query(inserts.restaurants(), callback);
+        var tasks = {
+          fake: function(cbSeries){
+            console.log('task-fake');
+            var data = {
+              name: faker.Company.companyName()
+            , street: faker.Address.streetAddress()
+            , city: faker.Address.city()
+            , state: faker.Address.usState(true)
+            , zip: faker.Address.zipCodeFormat(0)
+            , sms_phone: config.testPhoneSms || fakePhoneNumber()
+            , voice_phone: config.testPhoneVoice || fakePhoneNumber()
+            , email: config.testEmail || faker.Internet.email()
+            , price: faker.Helpers.randomNumber(5) + 1
+            , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
+            , is_hidden: false
+            };
+            cbSeries(null, data);
+          }
+        , createBalancedBankAccount: function(fake, cbSeries){
+            console.log('task-create-balanced-bank-account');
+            var fakeBankAccount = utils.sample(fakeBankAccounts, 1);
+            utils.balanced.BankAccounts.create({
+              name: fake.name
+            , account_number: fakeBankAccount.accountNumber
+            , routing_number: fakeBankAccount.routingNumber
+            , type: 'checking'
+            }, function(error, bankAccount){
+              if (error) return cbSeries(error);
+              return cbSeries(null, fake, bankAccount);
+            });
+          }
+        , createPaymentMethod: function(fake, bankAccount, cbSeries){
+            console.log('task-create-payment-method');
+            query(inserts.paymentMethods('bank', bankAccount.uri, bankAccount), function(error, paymentMethod){
+              return cbSeries(error, fake, paymentMethod);
+            });
+          }
+        , createBalancedCustomer: function(fake, paymentMethod, cbSeries){
+            console.log('task-create-balanced-customer');
+            utils.balanced.Customers.create({
+              name: fake.name
+            }, function(error, customer){
+              if (error) return cbSeries(error);
+              fake.balanced_customer_uri = customer.uri;
+              return cbSeries(null, fake);
+            });
+          }
+        , createRestaurant: function(fake, cbSeries){
+            console.log('task-create-restaurant');
+            query(inserts.restaurants(fake), cbSeries);
+          }
+        };
+        utils.async.waterfall(
+          [
+            tasks.fake
+          , tasks.createBalancedBankAcocunt
+          , tasks.createPaymentMethod
+          , tasks.createBalancedCustomer
+          , tasks.createRestaurant
+          ]
+        , function(error, results) {
+            callback(error);
+          }
+        );
+
       }, function(error, results){
         // console.log('called1');
         cb(error);
@@ -362,6 +438,7 @@ utils.async.series(
     }
   }
 , function(error, results) {
+  if (error) console.error(error);
   console.log('done');
   process.exit(0);
   }

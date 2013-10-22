@@ -43,7 +43,7 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
-  , balanced_customer_uri: {
+  , balanced_customer_uri: { //can be null if they're going to be invoiced
       type: types.text
     , nullable: true
     , unique: true

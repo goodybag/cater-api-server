@@ -110,6 +110,11 @@ var config = {
     , plan: 'month'
     }
 
+  , balanced: {
+      apiKey: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
+    , marketplaceUrl: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
+    }
+
   , baseUrl: 'http://localhost:3000'
 
   , testEmail: 'geoff@goodybag.com'
@@ -164,6 +169,11 @@ var config = {
       connStr: process.env['HEROKU_POSTGRESQL_SILVER_URL']
     , table: 'requests'
     , plan: 'month'
+    }
+
+  , balanced: {
+      apiKey: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
+    , marketplaceUrl: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
     }
 
   , emailEnabled: true

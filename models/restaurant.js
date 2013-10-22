@@ -98,6 +98,7 @@ module.exports = Model.extend({
     query.order = query.order || ["is_unacceptable ASC", "restaurants.id ASC"];
     query.joins = query.joins || {};
     query.distinct = (query.distinct != null) ? query.distinct : ["is_unacceptable", "restaurants.id"];
+    query.where = query.where || {};
 
     query.with = {
       dt: {
@@ -153,7 +154,6 @@ module.exports = Model.extend({
     }
 
     var unacceptable = [];
-
     if (orderParams && orderParams.diet) {
       query.with.tags_arr = {
         "type": "select"
@@ -173,7 +173,17 @@ module.exports = Model.extend({
           'restaurants.id': '$tags.restaurant_id$'
         }
       };
-      query.where = { "tags.tags": { '$contains': orderParams.diet } };
+
+      // where tags is superset of orderParams.diet
+      query.where["tags.tags"] = {'$contains': orderParams.diet};
+    }
+
+    if (orderParams && orderParams.price) {
+      query.where.price = {'$in': orderParams.price};
+    }
+
+    if (orderParams && orderParams.cuisine) {
+      // TODO filter cuisine types
     }
 
     if (orderParams && orderParams.zip) {

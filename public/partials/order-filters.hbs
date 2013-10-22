@@ -49,52 +49,52 @@
         </a>
       </h4>
     </div>
-    <div id="panelCuisine" class="panel-collapse collapse">
+    <div id="panelCuisine" class="panel-collapse collapse {{#if orderParams.cuisine}}in{{/if}}">
       <div class="panel-body">
         <div class="checkbox">
-          <label><input type="checkbox" value="american"> American</label>
+          <label><input type="checkbox" value="american" {{#contains orderParams.cuisine "american"}}checked="checked"{{/contains}}> American</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="burgers"> Burgers</label>
+          <label><input type="checkbox" value="burgers" {{#contains orderParams.cuisine "burgers"}}checked="checked"{{/contains}}> Burgers</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="bbq"> BBQ</label>
+          <label><input type="checkbox" value="bbq" {{#contains orderParams.cuisine "bbq"}}checked="checked"{{/contains}}> BBQ</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="sandwiches"> Sandwiches</label>
+          <label><input type="checkbox" value="sandwiches" {{#contains orderParams.cuisine "sandwiches"}}checked="checked"{{/contains}}> Sandwiches</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="salads"> Salad</label>
+          <label><input type="checkbox" value="salads" {{#contains orderParams.cuisine "salads"}}checked="checked"{{/contains}}> Salad</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="chinese"> Chinese</label>
+          <label><input type="checkbox" value="chinese" {{#contains orderParams.cuisine "chinese"}}checked="checked"{{/contains}}> Chinese</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="japanese"> Japanese</label>
+          <label><input type="checkbox" value="japanese" {{#contains orderParams.cuisine "japanese"}}checked="checked"{{/contains}}> Japanese</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="thai"> Thai</label>
+          <label><input type="checkbox" value="thai" {{#contains orderParams.cuisine "thai"}}checked="checked"{{/contains}}> Thai</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="italian"> Italian</label>
+          <label><input type="checkbox" value="italian" {{#contains orderParams.cuisine "italian"}}checked="checked"{{/contains}}> Italian</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="pizza"> Pizza</label>
+          <label><input type="checkbox" value="pizza" {{#contains orderParams.cuisine "pizza"}}checked="checked"{{/contains}}> Pizza</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="indian"> Indian</label>
+          <label><input type="checkbox" value="indian" {{#contains orderParams.cuisine "indian"}}checked="checked"{{/contains}}> Indian</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="texMex"> Tex-Mex</label>
+          <label><input type="checkbox" value="texMex" {{#contains orderParams.cuisine "texMex"}}checked="checked"{{/contains}}> Tex-Mex</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="mexican"> Mexican</label>
+          <label><input type="checkbox" value="mexican" {{#contains orderParams.cuisine "mexican"}}checked="checked"{{/contains}}> Mexican</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="mediterranean"> Mediterranean</label>
+          <label><input type="checkbox" value="mediterranean" {{#contains orderParams.cuisine "mediterranean"}}checked="checked"{{/contains}}> Mediterranean</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="deserts"> Deserts</label>
+          <label><input type="checkbox" value="deserts" {{#contains orderParams.cuisine "deserts"}}checked="checked"{{/contains}}> Deserts</label>
         </div>
       </div>
     </div>
@@ -109,19 +109,19 @@
         </a>
       </h4>
     </div>
-    <div id="panelPrice" class="panel-collapse collapse">
+    <div id="panelPrice" class="panel-collapse collapse {{#if orderParams.price}}in{{/if}}">
       <div class="panel-body">
         <div class="checkbox">
-          <label><input type="checkbox" value="1"> $</label>
+          <label><input type="checkbox" value="1" {{#contains orderParams.price "1"}}checked="checked"{{/contains}}> $</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="2"> $$</label>
+          <label><input type="checkbox" value="2" {{#contains orderParams.price "2"}}checked="checked"{{/contains}}> $$</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="3"> $$$</label>
+          <label><input type="checkbox" value="3" {{#contains orderParams.price "3"}}checked="checked"{{/contains}}> $$$</label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="4"> $$$$</label>
+          <label><input type="checkbox" value="4" {{#contains orderParams.price "4"}}checked="checked"{{/contains}}> $$$$</label>
         </div>
       </div>
     </div>

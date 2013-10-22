@@ -44,13 +44,6 @@ var OrderParamsView = Backbone.View.extend({
     $(e.target).find('input').focus();
   }
 
-, getCheckedBoxes: function(selector) {
-    // Retrieve checked filters  
-    return _.map( $(selector), function(option) {
-      return option.getAttribute('value');
-    });
-  }
-
 , getProps: function(){
     return {
       zip:      this.$("input[name='zip']").val() || null

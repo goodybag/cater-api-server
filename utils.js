@@ -7,6 +7,7 @@ var
 , async = require('async')
 , MailComposer = require('mailcomposer').MailComposer
 , Mailgun = require('mailgun').Mailgun
+, Balanced = require('balanced-official')
 , uuid = require('node-uuid')
 
   // Module Dependencies
@@ -71,6 +72,11 @@ utils.del = function(url, callback){
   };
   request(options, callback);
 };
+
+utils.balanced = new Balanced({
+  marketplace_uri: config.balanced.marketplaceUri
+, secret: config.balanced.secret
+});
 
 var mailgun = new Mailgun(config.mailgun.apiKey);
 

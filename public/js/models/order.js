@@ -21,43 +21,10 @@ var Order = Backbone.Model.extend({
           minLength: 1,
           required: true
         },
-        street: {
-          type: ['string', 'null'],
-          minLength: 1,
-          required: false
-        },
-        city: {
-          type: ['string', 'null'],
-          minLength: 1,
-          required: false
-        },
-        state: {
-          type: ['string', 'null'],
-          length: 2,
-          enum: _.pluck(states, 'abbr').concat([undefined, null]),
-          required: false
-        },
-        zip: {
-          type: ['string', 'null'],
-          length: 5,
-          required: false,
-          pattern: /^\d*$/,
-          enum: this.restaurant.get('delivery_zips')
-        },
-        phone: {
-          type: ['string', 'null'],
-          length: 10,
-          pattern: /^\d*$/, //contains only digits
-          required: false
-        },
         guests: {
           type: ['integer', 'null'],
           minimum: 1,
           maximum: this.restaurant.get('max_guests') || undefined,
-          required: false
-        },
-        notes: {
-          type: ['string', 'null'],
           required: false
         },
         datetime: {
@@ -94,6 +61,9 @@ var Order = Backbone.Model.extend({
       errors = Array.prototype.slice.call( errors );
     }
 
+    var addressErrors = this.address.validate(this.address.toJSON(), options);
+    errors = errors.concat(_.isArray(addressErrors) ? addressErrors : Array.prototype.slice.call(addressErrors));
+
     // Add on the restaurant fulfillability errors
     errors = errors.concat(
       // restaurant validate expects an order model and this instance does not
@@ -114,6 +84,10 @@ var Order = Backbone.Model.extend({
 
     this.restaurant = new Restaurant(attrs.restaurant);
     this.unset('restaurant');
+
+    var addressFields = _.keys(_.result(Address, 'schema').properties);
+    this.address = new Address(_.pick(attrs, addressFields));
+    _.each(addressFields, _.bind(this.unset, this));
 
     if (this.get('id') == "undefined") this.unset('id');
 
@@ -234,6 +208,7 @@ var Order = Backbone.Model.extend({
     var obj = Backbone.Model.prototype.toJSON.apply(this, arguments);
     obj.orderItems = this.orderItems.toJSON();
     obj.restaurant = this.restaurant.toJSON();
+    _.extend(obj, this.address.toJSON());
     return obj;
   },
 

@@ -5,6 +5,8 @@ var
 , errors = require('../../errors')
 , utils = require('../../utils')
 , states = require('../../public/states')
+, cuisines = require('../../public/cuisines')
+, prices = require('../../public/prices')
 ;
 
 var models = require('../../models');
@@ -24,7 +26,9 @@ module.exports.list = function(req, res) {
 
     res.render('restaurants', {
       restaurants:    utils.invoke(models, 'toJSON'),
-      orderParams:    orderParams
+      orderParams:    orderParams,
+      filterCuisines: cuisines,
+      filterPrices:   prices
     });
   });
 }

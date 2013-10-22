@@ -174,7 +174,6 @@ module.exports = Model.extend({
         }
       };
 
-      // where tags is superset of orderParams.diet
       query.where["tags.tags"] = {'$contains': orderParams.diet};
     }
 
@@ -183,7 +182,7 @@ module.exports = Model.extend({
     }
 
     if (orderParams && orderParams.cuisine) {
-      // TODO filter cuisine types
+      query.where.cuisine = {'$contains': orderParams.cuisine};
     }
 
     if (orderParams && orderParams.zip) {

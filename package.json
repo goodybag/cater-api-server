@@ -13,6 +13,7 @@
     "postinstall": "./node_modules/.bin/bower install"
   },
   "dependencies": {
+    "npm": "*",
     "express": "3.4.x",
     "async": "0.2.x",
     "generic-pool": "2.0.x",
@@ -46,7 +47,7 @@
     "connect-request-logger-pg": "0.0.1",
     "winston-papertrail": "0.1.x",
     "bitly": "1.2.x",
-    "npm": "*"
+    "balanced-official": "0.3.3"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

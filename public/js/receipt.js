@@ -3,14 +3,15 @@
  */
 
 var options = {
-  magicNumber: 1400
+  // Describes when to break the page
+  magicNumber: 1420
 
   // Used to select the elements in a $page that will determine
   // the innerHeight of the element (since page is has a min-height),
   // we need to figure out $page.height() - inner.height()
 , remainingTableHeightSelector: [
-    '> *:not(.order)'
-  , '.order > *:not(.order-bottom-wrapper)'
+    '> :not(.order)'
+  , '.order > :not(.order-bottom-wrapper)'
   , '.order-bottom-wrapper > *'
   ].join(', ')
 };
@@ -92,6 +93,17 @@ console.print = function(){
         ),
       "Remaining height:", remaining,
       "Iterations:", ~~(remaining / rowHeight)
+    );
+
+    console.print(
+      options.remainingTableHeightSelector.split(', ').map( function( selector ){
+        return ' ' + selector + ': ' + Array.prototype.reduce.call(
+          $page.find( selector ).map( function(){
+            return $(this).height() || 0;
+          })
+        , function( a, b ){ return a + b; }
+        );
+      })
     );
 
     var $table = $page.find('table');

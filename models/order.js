@@ -3,6 +3,7 @@ var utils = require('../utils');
 var uuid  = require('node-uuid');
 var db = require('../db');
 var Restaurant = require('./restaurant');
+var venter = require('../lib/venter');
 
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
@@ -87,6 +88,10 @@ module.exports = Model.extend({
         var OrderStatus = require('./order-status');
         var status = new OrderStatus({order_id: order.attributes.id});
         status.save(callback);
+
+        process.nextTick( function(){
+          venter.emit( 'order:change', order.attributes.id );
+        });
       } else
         callback.apply(this, arguments);
     });

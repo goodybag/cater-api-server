@@ -3,7 +3,7 @@
 , "script": "lib/receipt-pdf.js"
 , "orderRoute": "/orders/:id/receipt"
 , "paperSize": {
-    "format": "A11"
+    "format": "A4"
   , "margin": { "left": "1.4cm", "right": "1.4cm", "top": "1.5cm", "bottom": "1cm" }
   , "orientation": "portrait"
   },

@@ -1,5 +1,4 @@
 html, body {
-  height: 100%;
   margin: 0;
   padding: 0;
   line-height: 16px;
@@ -18,7 +17,8 @@ body {
 }
 
 .page {
-  height: 100%;
+  width: 100%;
+  min-height: 962px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   page-break-after: always;
@@ -268,7 +268,7 @@ dl > dt {
 
 .order-table {
   width: 100%;
-  margin-bottom: 70px;
+  margin-bottom: 20px;
   border-spacing: 0;
   border-collapse: collapse;
 }
@@ -278,6 +278,7 @@ dl > dt {
   padding-left: 16px;
   padding-right: 16px;
   text-align: center;
+  vertical-align: top;
 }
 
 .order-table td {
@@ -314,8 +315,8 @@ dl > dt {
 }
 
 .order-adjustment {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   padding-left: 16px;
   padding-right: 16px;
   border-color: #808181;
@@ -334,6 +335,10 @@ dl > dt {
 
 .order-adjustment .dl-adjustment-amount {
   display: inline-block;
+  margin: 0;
+}
+
+.order-adjustment .adjustment-notes {
   margin: 0;
 }
 

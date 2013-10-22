@@ -632,6 +632,8 @@ module.exports = Model.extend({
 
     query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
 
+    query.limit = 10000;
+
     // query.columns.push('(is_bad_zip OR is_bad_guests OR is_bad_lead_time OR is_bad_delivery_time AS is_unacceptable)');
 
     Model.find.call(this, query, utils.partial(modifyAttributes, callback));

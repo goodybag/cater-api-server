@@ -140,11 +140,13 @@
       </div>
       <div class="col-sm-5 col-right">
         <div class="panel-body">
+          {{#if this.restaurant}}
           <div class="row">
             <div class="col-sm-12">
               <button type="button" class="btn btn-default copy-order-btn pull-right">Copy Order</button>
             </div>
           </div>
+          {{/if}}
           <div class="form-inline order-delivery">
             <fieldset class="form-light address-info">
               <legend class="delivery-address-legend">Delivery Address</legend>

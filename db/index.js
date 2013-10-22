@@ -11,6 +11,7 @@ var
 , pg = require('pg')
 , pgQuery = require('pg-query')
 , builder = require('mongo-sql')
+, helpers = require('./helpers')
 ;
 
 //apply the parse-float plugin to node-postgres

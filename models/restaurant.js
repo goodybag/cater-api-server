@@ -154,30 +154,26 @@ module.exports = Model.extend({
 
     var unacceptable = [];
 
-    // ex. orderParams.diet = ['vegan', 'glutenFree']
-    // I want to see restaurants tagged vegan & glutenFree
-    // with tags_arr as (select restaurant_id, array_agg(tag) as tags from restaurant_tags group by restaurant_id) select * from tags_arr where tags @> ARRAY['vegan', 'glutenFree'];
     if (orderParams && orderParams.diet) {
-
       query.with.tags_arr = {
-        "name": "tags_arr"
-      , "type": "select"
+        "type": "select"
+      , "table": "restaurant_tags"
       , "columns": [
           "restaurant_id"
         , "array_agg(tag) as tags"
         ]
-      , "table": "restaurant_tags"
       , "groupBy": "restaurant_id"
       };
 
       query.joins.tags_arr = {
         type: 'left'
-      , where: { 
-          "tags": { 
-            $in: orderParams.diet
-          }
+      , alias: 'tags'
+      , target: 'tags_arr'
+      , on: {
+          'restaurants.id': '$tags.restaurant_id$'
         }
       };
+      query.where = { "tags.tags": { '$contains': orderParams.diet } };
     }
 
     if (orderParams && orderParams.zip) {

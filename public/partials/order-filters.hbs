@@ -16,13 +16,25 @@
     <div id="panelDiet" class="panel-collapse collapse in">
       <div class="panel-body">
         <div class="checkbox">
-          <label><input type="checkbox" value="vegetarian" {{#contains orderParams.diet "vegetarian"}}checked="checked"{{/contains}}> Vegetarian</label>
+          <label>
+            <input type="checkbox" value="vegetarian" {{#contains orderParams.diet "vegetarian"}}checked="checked"{{/contains}}>
+             <span class="tag tag-vegetarian tag-tooltip" data-title="Vegetarian" data-original-title="" title=""></span>
+             Vegetarian
+          </label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="vegan" {{#contains orderParams.diet "vegan"}}checked="checked"{{/contains}}> Vegan</label>
+          <label>
+            <input type="checkbox" value="vegan" {{#contains orderParams.diet "vegan"}}checked="checked"{{/contains}}>
+            <span class="tag tag-vegan tag-tooltip" data-title="Vegan" data-original-title="" title=""></span>
+            Vegan
+          </label>
         </div>
         <div class="checkbox">
-          <label><input type="checkbox" value="glutenFree" {{#contains orderParams.diet "glutenFree"}}checked="checked"{{/contains}}> Gluten-Free</label>
+          <label>
+            <input type="checkbox" value="glutenFree" {{#contains orderParams.diet "glutenFree"}}checked="checked"{{/contains}}>
+            <span class="tag tag-gluten-free tag-tooltip" data-title="Gluten-Free" data-original-title="" title=""></span>
+            Gluten-Free
+          </label>
         </div>
       </div>
     </div>

@@ -57,9 +57,9 @@ var OrderParamsView = Backbone.View.extend({
     , date:     (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
     , time:     this.timepicker.get()
     , guests:   this.$("input[name='guests']").val() || null
-    , diet:     this.getCheckedBoxes('#panelDiet input:checked')
-    , cuisine:  this.getCheckedBoxes('#panelCuisine input:checked')
-    , price:    this.getCheckedBoxes('#panelPrice input:checked')
+    , diets:     _.pluck($('#panelDiet input:checked'), 'value')
+    , cuisines:  _.pluck($('#panelCuisine input:checked'), 'value')
+    , prices:    _.pluck($('#panelPrice input:checked'), 'value')
     };
   }
 

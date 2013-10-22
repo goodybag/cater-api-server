@@ -17,21 +17,21 @@
       <div class="panel-body">
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="vegetarian" {{#contains orderParams.diet "vegetarian"}}checked="checked"{{/contains}}>
+            <input type="checkbox" value="vegetarian" {{#contains orderParams.diets "vegetarian"}}checked="checked"{{/contains}}>
              <span class="tag tag-vegetarian tag-tooltip" data-title="Vegetarian" data-original-title="" title=""></span>
              Vegetarian
           </label>
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="vegan" {{#contains orderParams.diet "vegan"}}checked="checked"{{/contains}}>
+            <input type="checkbox" value="vegan" {{#contains orderParams.diets "vegan"}}checked="checked"{{/contains}}>
             <span class="tag tag-vegan tag-tooltip" data-title="Vegan" data-original-title="" title=""></span>
             Vegan
           </label>
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="glutenFree" {{#contains orderParams.diet "glutenFree"}}checked="checked"{{/contains}}>
+            <input type="checkbox" value="glutenFree" {{#contains orderParams.diets "glutenFree"}}checked="checked"{{/contains}}>
             <span class="tag tag-gluten-free tag-tooltip" data-title="Gluten-Free" data-original-title="" title=""></span>
             Gluten-Free
           </label>
@@ -49,11 +49,11 @@
         </a>
       </h4>
     </div>
-    <div id="panelCuisine" class="panel-collapse collapse {{#if orderParams.cuisine}}in{{/if}}">
+    <div id="panelCuisine" class="panel-collapse collapse {{#if orderParams.cuisines}}in{{/if}}">
       <div class="panel-body">
         {{#each filterCuisines}}
         <div class="checkbox">
-          <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisine this}}checked="checked"{{/contains}}> {{this}}</label>
+          <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}> {{this}}</label>
         </div>
         {{/each}}
       </div>
@@ -69,12 +69,12 @@
         </a>
       </h4>
     </div>
-    <div id="panelPrice" class="panel-collapse collapse {{#if orderParams.price}}in{{/if}}">
+    <div id="panelPrice" class="panel-collapse collapse {{#if orderParams.prices}}in{{/if}}">
       <div class="panel-body">
         {{#each filterPrices}}
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="{{this}}" {{#contains ../orderParams.price this}}checked="checked"{{/contains}}>
+            <input type="checkbox" value="{{this}}" {{#contains ../orderParams.prices this}}checked="checked"{{/contains}}>
             <span class="dollar-meter">{{{dollarMeter this}}}</span>
           </label>
         </div>

@@ -154,7 +154,7 @@ module.exports = Model.extend({
     }
 
     var unacceptable = [];
-    if (orderParams && orderParams.diet) {
+    if (orderParams && orderParams.diets) {
       query.with.tags_arr = {
         "type": "select"
       , "table": "restaurant_tags"
@@ -174,15 +174,15 @@ module.exports = Model.extend({
         }
       };
 
-      query.where["tags.tags"] = {'$contains': orderParams.diet};
+      query.where["tags.tags"] = {'$contains': orderParams.diets};
     }
 
-    if (orderParams && orderParams.price) {
-      query.where.price = {'$in': orderParams.price};
+    if (orderParams && orderParams.prices) {
+      query.where.price = {'$in': orderParams.prices};
     }
 
-    if (orderParams && orderParams.cuisine) {
-      query.where.cuisine = {'$contains': orderParams.cuisine};
+    if (orderParams && orderParams.cuisines) {
+      query.where.cuisine = {'$contains': orderParams.cuisines};
     }
 
     if (orderParams && orderParams.zip) {

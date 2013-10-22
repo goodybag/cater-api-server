@@ -282,7 +282,7 @@ var helpers = {
   },
 
   contains: function(array, item, options) {
-    if (array instanceof Array && typeof item === 'string' && array.indexOf(item) >= 0) {
+    if (array instanceof Array && array.indexOf(item) >= 0) {
       return options.fn();
     }
   }

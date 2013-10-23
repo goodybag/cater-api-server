@@ -98,6 +98,7 @@ module.exports = Model.extend({
     query.order = query.order || ["is_unacceptable ASC", "restaurants.id ASC"];
     query.joins = query.joins || {};
     query.distinct = (query.distinct != null) ? query.distinct : ["is_unacceptable", "restaurants.id"];
+    query.where = query.where || {};
 
     query.with = {
       dt: {
@@ -153,6 +154,37 @@ module.exports = Model.extend({
     }
 
     var unacceptable = [];
+    if (orderParams && orderParams.diets) {
+      query.with.tags_arr = {
+        "type": "select"
+      , "table": "restaurant_tags"
+      , "columns": [
+          "restaurant_id"
+        , "array_agg(tag) as tags"
+        ]
+      , "groupBy": "restaurant_id"
+      };
+
+      query.joins.tags_arr = {
+        type: 'left'
+      , alias: 'tags'
+      , target: 'tags_arr'
+      , on: {
+          'restaurants.id': '$tags.restaurant_id$'
+        }
+      };
+
+      query.where["tags.tags"] = {'$contains': orderParams.diets};
+    }
+
+    if (orderParams && orderParams.prices) {
+      query.where.price = {'$in': orderParams.prices};
+    }
+
+    if (orderParams && orderParams.cuisines) {
+      query.where.cuisine = {'$overlap': orderParams.cuisines};
+    }
+
     if (orderParams && orderParams.zip) {
       query.joins.zips = {
         type: 'left'

@@ -5,6 +5,7 @@ var
 , errors = require('../../errors')
 , utils = require('../../utils')
 , states = require('../../public/states')
+, cuisines = require('../../public/cuisines')
 ;
 
 var models = require('../../models');
@@ -18,13 +19,17 @@ module.exports.list = function(req, res) {
   logger.routes.info(TAGS, 'listing restaurants');
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.session.orderParams || {};
+  if (orderParams.prices)
+    orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
 
   models.Restaurant.find({}, orderParams, function(err, models) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
 
     res.render('restaurants', {
       restaurants:    utils.invoke(models, 'toJSON'),
-      orderParams:    orderParams
+      orderParams:    orderParams,
+      filterCuisines: cuisines,
+      filterPrices:   utils.range(1, 5)
     });
   });
 }

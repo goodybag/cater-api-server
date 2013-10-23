@@ -130,9 +130,9 @@ module.exports = Model.extend({
     ;
 
     var requiredAddrFields = ['street', 'city', 'state', 'zip', 'phone']
-    obj.isAddressComplete = _.reduce(_.map(_.pick(obj, requiredAddrFields),
-                                           function(val) { return val != null and val !== ''; }),
-                                     function(memo, item, list) { return memo && item; }, true);
+    obj.isAddressComplete = utils.reduce(utils.map(utils.pick(obj, requiredAddrFields),
+                                                   function(val) { return val != null && val !== ''; }),
+                                         function(memo, item, list) { return memo && item; }, true);
 
     return obj;
   },

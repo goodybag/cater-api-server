@@ -16,7 +16,10 @@
   </div>
 
   <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
+    <div class="col-lg-2">
+      {{> order_filters }}
+    </div>
+    <div class="col-lg-8">
       <div class="list-group list-group-restaurants">
       {{#each restaurants}}
         {{#if is_unacceptable}}

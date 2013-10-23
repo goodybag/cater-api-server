@@ -61,14 +61,16 @@ var Order = Backbone.Model.extend({
       errors = Array.prototype.slice.call( errors );
     }
 
-    var addressErrors = this.address.validate(this.address.toJSON(), options);
-    errors = errors.concat(_.isArray(addressErrors) ? addressErrors : Array.prototype.slice.call(addressErrors));
+    var addressFields = _.keys(_.result(Address, 'schema').properties);
+    var addressErrors = this.address.validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)), options);
+    if (addressErrors != null)
+      errors = errors.concat(_.isArray(addressErrors) ? addressErrors : Array.prototype.slice.call(addressErrors));
 
     // Add on the restaurant fulfillability errors
     errors = errors.concat(
       // restaurant validate expects an order model and this instance does not
       // have all the attrs set
-      this.restaurant.validateOrderFulfillability( new Order( attrs ) )
+      this.restaurant.validateOrderFulfillability( new Order( _.extend({}, this.attributes, attrs) ) )
     );
 
     return errors.length > 0 ? errors : false;

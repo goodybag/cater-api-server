@@ -22,16 +22,20 @@ var modifyAttributes = function(callback, err, orders) {
       'max_guests'
     ];
     utils.each(orders, function(order) {
-      order.attributes.restaurant = utils.extend(
-        {
-          id: order.attributes.restaurant_id,
-          email: order.attributes.restaurant_email,
-          delivery_times: utils.object(order.attributes.delivery_times),
-          name: order.attributes.restaurant_name
-        },
-        utils.pick(order.attributes, restaurantFields));
-      order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
-      utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
+      if (order.attributes.restaurant_id != null) {
+        order.attributes.restaurant = utils.extend(
+          {
+            id: order.attributes.restaurant_id,
+            email: order.attributes.restaurant_email,
+            delivery_times: utils.object(order.attributes.delivery_times),
+            name: order.attributes.restaurant_name
+          },
+          utils.pick(order.attributes, restaurantFields));
+        order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
+        utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
+      } else {
+        order.attribtues.restaurant = null;
+      }
 
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
@@ -124,6 +128,11 @@ module.exports = Model.extend({
       && !obj.below_min
       && !this.attributes.is_unacceptable
     ;
+
+    var requiredAddrFields = ['street', 'city', 'state', 'zip', 'phone']
+    obj.isAddressComplete = utils.reduce(utils.map(utils.pick(obj, requiredAddrFields),
+                                                   function(val) { return val != null && val !== ''; }),
+                                         function(memo, item, list) { return memo && item; }, true);
 
     return obj;
   },
@@ -627,6 +636,8 @@ module.exports = Model.extend({
     ;
 
     query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
+
+    query.limit = 10000;
 
     // query.columns.push('(is_bad_zip OR is_bad_guests OR is_bad_lead_time OR is_bad_delivery_time AS is_unacceptable)');
 

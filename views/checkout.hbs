@@ -49,18 +49,31 @@
                 </div>
               </div>
             </fieldset>
-            <fieldset class="row">
-              <div class="col-md-6">
+            <fieldset class="row delivery-info">
+              <div class="col-md-12">
                 <legend>2. Delivery Info</legend>
-                {{#with orderAddress}}
-                {{> edit_address}}
-                {{/with}}
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" checked="checked">
-                    Save this address in your address book.
-                  </label>
+                {{#if order.isAddressComplete}}
+                {{> address order}}
+                <ul class="list-inline address-actions">
+                  <li><a href="javascript:void" class="edit-address">Edit</a></li>
+                  <li>|</li>
+                  <li><a href="javascript:void" class="select-address">Select Different Address</a></li>
+                  <li>|</li>
+                  <li><a href="javascript:void" class="add-address">Add New Address</a></li>
+                </ul>
+                {{else}}
+                <div class="col-md-6">
+                  {{#with orderAddress}}
+                  {{> edit_address}}
+                  {{/with}}
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" checked="checked">
+                      Save this address in your address book.
+                    </label>
+                  </div>
                 </div>
+                {{/if}}
               </div>
             </fieldset>
             <fieldset id="payment-info" class="row">
@@ -70,7 +83,7 @@
                 <div class="radio">
                   <label>
                     <input type="radio" name="payment-method" class="payment-method" data-parent="#payment-info" checked="checked">
-                    Pay using
+                    Pay using <select class="form-control"></select>
                   </label>
                 </div>
                 <div class="radio">
@@ -132,3 +145,24 @@
     </div>
   </div>
 </div>
+
+{{#extend "scripts"}}
+<script src="/js/models/item.js"></script>
+<script src="/js/models/category.js"></script>
+<script src="/js/models/restaurant.js"></script>d
+<script src="/js/models/order-item.js"></script>
+<script src="/js/models/address.js"></script>
+<script src="/js/models/order.js"></script>
+
+<script src="/js/collections/items.js"></script>
+<script src="/js/collections/categories.js"></script>
+
+<script src="/js/views/form-view.js"></script>
+<script src="/js/views/address-view.js"></script>
+<script src="/js/views/order-address-view.js"></script>
+<script src="/js/views/checkout-view.js"></script>
+
+<script>
+  var view = new CheckoutView({el: '#main', model: new Order( {{{json order}}} )});
+</script>
+{{/extend}}

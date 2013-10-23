@@ -43,10 +43,10 @@ var Address = Backbone.Model.extend({
         required: true
       },
       phone: {
-        type: ['string', 'null'],
+        type: 'string',
         length: 10,
         pattern: /^\d*$/, //contains only digits
-        required: false
+        required: true
       },
       delivery_instructions: {
         type: ['string', 'null'],

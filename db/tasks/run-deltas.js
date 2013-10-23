@@ -71,9 +71,7 @@ module.exports.run = function( callback ){
         a = a.slice(0, -4);
         b = b.slice(0, -4);
 
-        if (semver.lt(a,b)) return -1;
-        if (semver.gt(a,b)) return 1;
-        return 0;
+        return semver.compare(a,b);
     });
 
     // Log our batch

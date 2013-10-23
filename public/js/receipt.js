@@ -35,6 +35,7 @@ window.__page = (function(){
 
 console.print = function(){
   return;
+
   var $console = $('#console-print');
   if ( $console.length === 0 ){
     $console = $([

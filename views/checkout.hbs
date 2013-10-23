@@ -62,14 +62,16 @@
                   <li><a href="javascript:void" class="add-address">Add New Address</a></li>
                 </ul>
                 {{else}}
-                {{#with orderAddress}}
-                {{> edit_address}}
-                {{/with}}
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" checked="checked">
-                    Save this address in your address book.
-                  </label>
+                <div class="col-md-6">
+                  {{#with orderAddress}}
+                  {{> edit_address}}
+                  {{/with}}
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" checked="checked">
+                      Save this address in your address book.
+                    </label>
+                  </div>
                 </div>
                 {{/if}}
               </div>

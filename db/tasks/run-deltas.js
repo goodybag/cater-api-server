@@ -2,6 +2,7 @@ var
   async     = require('async')
 , fs        = require('fs')
 , path      = require('path')
+, semver    = require('semver')
 , utils     = require('../utils')
 , config    = require('../../config')
 , db        = require('../')
@@ -63,7 +64,17 @@ module.exports.run = function( callback ){
     }).filter( function( file ){
       // Reject files that have already been run
       return results.indexOf( file ) === -1;
-    }).sort();
+    }).sort(function (a, b) {
+        // default sort is lexicographically, we need to sort by semver
+
+        // strip off the '.sql'
+        a = a.slice(0, -4);
+        b = b.slice(0, -4);
+
+        if (semver.lt(a,b)) return -1;
+        if (semver.gt(a,b)) return 1;
+        return 0;
+    });
 
     // Log our batch
     deltas.forEach( function( f ){

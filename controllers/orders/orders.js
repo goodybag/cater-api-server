@@ -260,12 +260,3 @@ module.exports.receipt = function( req, res ){
     res.render( 'invoice/receipt', options );
   });
 };
-
-module.exports.receiptPdf = function(req, res) {
-  // res.set( 'Content-Type', 'application/pdf' );
-
-  // Don't give a fuck re-build everytime
-  // receipt.build( +req.param('oid'), function( error, result ){
-  //   fileServer.serveFile('/order-' + req.param('oid') + '.pdf', 200, {}, req, res);
-  // });
-};

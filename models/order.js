@@ -88,12 +88,12 @@ module.exports = Model.extend({
         var OrderStatus = require('./order-status');
         var status = new OrderStatus({order_id: order.attributes.id});
         status.save(callback);
-
-        process.nextTick( function(){
-          venter.emit( 'order:change', order.attributes.id );
-        });
       } else
         callback.apply(this, arguments);
+
+      process.nextTick( function(){
+        venter.emit( 'order:change', order.attributes.id );
+      });
     });
   },
   toJSON: function(options) {

@@ -44,11 +44,19 @@ module.exports = Model.extend({
     }
   },
   destroy: function(callback) {
+    console.log("DESTROYING ORDER_ITEM FOR ORDER", this.attributes.order_id)
     var model = this, args = arguments;
     this.isMutable(function (err, mutable) {
       if (err) return callback(err);
       if (!mutable) return callback({code: 403, message: "can't remove items from non-pending orders"});
-      Model.prototype.destroy.apply(model, args);
+      Model.prototype.destroy.apply(model, function(error){
+        if (error) return callback(error);
+        callback.apply(this, arguments);
+
+        process.nextTick( function(){
+          venter.emit( 'order:change', model.attributes.order_id );
+        });
+      });
     });
   },
   toJSON: function() {

@@ -3,9 +3,6 @@
 </td>
 <td>
   <input type="text" value="{{this.name}}" class="form-control item-name">
-  <div class="edit-item-tags">
-  {{> edit_tags this.tags }}
-  </div>
 </td>
 <td>
   <div class="input-group">
@@ -22,10 +19,13 @@
 <td class="row">
   <textarea class="form-control item-description">{{this.description}}</textarea>
   <a class="item-edit-options" href="#">Edit Options</a>
-  <div class="col-lg-2 col-lg-offset-8 item-button">
-    <button type="button" class="btn btn-danger item-remove pull-right">Remove</button>
-  </div>
-  <div class="col-lg-2 item-button">
-    <button type="submit" class="btn btn-success item-save pull-right hide">Save</button>
+  <div class="item-button pull-right">
+    <button type="button" class="btn btn-danger item-remove">Remove</button>
+    <button type="submit" class="btn btn-success item-save hide">Save</button>
+  </div class="row">
+</td>
+<td>
+  <div class="edit-item-tags">
+  {{> edit_tags this.tags }}
   </div>
 </td>

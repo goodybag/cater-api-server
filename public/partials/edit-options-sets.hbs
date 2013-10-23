@@ -5,9 +5,6 @@
     <button class="btn btn-default btn-new-group">New Option Group</button>
     <button class="btn btn-success btn-save">Save</button>
   </div>
-  <div class="edit-item-tags">
-    {{> edit_tags model.tags }}
-  </div>
   <div class="option-groups row">
     {{#each model.options_sets}}
       {{>edit_options_set}}

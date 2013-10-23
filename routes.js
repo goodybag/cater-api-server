@@ -213,7 +213,6 @@ module.exports.register = function(app) {
   app.get(
     config.receipt.orderRoute
   , m.basicAuth()
-  , m.logReq('session')
   , m.restrict(['admin', 'receipts'])
   , function(req, res, next){ req.params.receipt = true; next(); }
   , controllers.orders.get

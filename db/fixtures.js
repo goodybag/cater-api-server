@@ -3,6 +3,8 @@ var faker = require('Faker');
 var config = require('../config');
 var db = require('../db');
 
+var _ = utils._;
+
 var fakeCategories = [
   'Breakfast'
 , 'Lunch'
@@ -58,10 +60,10 @@ var fakeCreditCards= [
 ];
 
 var fakeBankAccounts = [
-  {routing: '021000021', accountNumber: '9900000000', notes: 'state will be pending'}
-, {routing: '321174851', accountNumber: '9900000001', notes: 'state will be pending'}
-, {routing: '021000021', accountNumber: '9900000002', notes: 'state will be paid/success'}
-, {routing: '321174851', accountNumber: '9900000003', notes: 'state will be paid/success'}
+  {routingNumber: '021000021', accountNumber: '9900000000', notes: 'state will be pending'}
+, {routingNumber: '321174851', accountNumber: '9900000001', notes: 'state will be pending'}
+, {routingNumber: '021000021', accountNumber: '9900000002', notes: 'state will be paid/success'}
+, {routingNumber: '321174851', accountNumber: '9900000003', notes: 'state will be paid/success'}
 ];
 
 /**
@@ -229,12 +231,13 @@ var inserts = {
 , paymentMethods: function(type, uri, data) {
     return {
       type: 'insert'
-    , table: 'payment_method'
+    , table: 'payment_methods'
     , values: {
         type: type
       , uri: uri
-      , data: data
+      , data: JSON.stringify(data)
       }
+    , returning: ['id']
     };
   }
 }
@@ -243,10 +246,10 @@ utils.async.series(
   {
     restaurants: function(cb) {
       console.log("populating restaurants");
-      utils.async.timesSeries(10, function(n, callback){
+      utils.async.times(10, function(n, callback){
         var tasks = {
-          fake: function(cbSeries){
-            console.log('task-fake');
+          fake: function(cbWaterfall){
+            console.log('\trestaurants-task-fake');
             var data = {
               name: faker.Company.companyName()
             , street: faker.Address.streetAddress()
@@ -260,46 +263,47 @@ utils.async.series(
             , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
             , is_hidden: false
             };
-            cbSeries(null, data);
+            cbWaterfall(null, data);
           }
-        , createBalancedBankAccount: function(fake, cbSeries){
-            console.log('task-create-balanced-bank-account');
-            var fakeBankAccount = utils.sample(fakeBankAccounts, 1);
+        , createBalancedBankAccount: function(fake, cbWaterfall){
+            console.log('\trestaurants-task-create-balanced-bank-account');
+            var fakeBankAccount = _.sample(fakeBankAccounts, 1)[0];
             utils.balanced.BankAccounts.create({
               name: fake.name
             , account_number: fakeBankAccount.accountNumber
             , routing_number: fakeBankAccount.routingNumber
             , type: 'checking'
             }, function(error, bankAccount){
-              if (error) return cbSeries(error);
-              return cbSeries(null, fake, bankAccount);
+              if (error) return cbWaterfall(error);
+              return cbWaterfall(null, fake, bankAccount);
             });
           }
-        , createPaymentMethod: function(fake, bankAccount, cbSeries){
-            console.log('task-create-payment-method');
-            query(inserts.paymentMethods('bank', bankAccount.uri, bankAccount), function(error, paymentMethod){
-              return cbSeries(error, fake, paymentMethod);
+        , createPaymentMethod: function(fake, bankAccount, cbWaterfall){
+            console.log('\trestaurants-task-create-payment-method');
+            query(inserts.paymentMethods('bank', bankAccount.uri, bankAccount), function(error, result){
+              return cbWaterfall(error, fake, bankAccount);
             });
           }
-        , createBalancedCustomer: function(fake, paymentMethod, cbSeries){
-            console.log('task-create-balanced-customer');
+        , createBalancedCustomer: function(fake, bankAccount, cbWaterfall){
+            console.log('\trestaurants-task-create-balanced-customer');
             utils.balanced.Customers.create({
               name: fake.name
+            , bank_account_uri: bankAccount.uri
             }, function(error, customer){
-              if (error) return cbSeries(error);
+              if (error) return cbWaterfall(error);
               fake.balanced_customer_uri = customer.uri;
-              return cbSeries(null, fake);
+              return cbWaterfall(null, fake);
             });
           }
-        , createRestaurant: function(fake, cbSeries){
-            console.log('task-create-restaurant');
-            query(inserts.restaurants(fake), cbSeries);
+        , createRestaurant: function(fake, cbWaterfall){
+            console.log('\trestaurants-task-create-restaurant');
+            query(inserts.restaurants(fake), cbWaterfall);
           }
         };
         utils.async.waterfall(
           [
             tasks.fake
-          , tasks.createBalancedBankAcocunt
+          , tasks.createBalancedBankAccount
           , tasks.createPaymentMethod
           , tasks.createBalancedCustomer
           , tasks.createRestaurant
@@ -417,24 +421,102 @@ utils.async.series(
     }
   , users: function(cb) {
       console.log("populating users");
-      utils.async.waterfall([
-        utils.partial(utils.encryptPassword, 'password')
-      , function(hash, salt, callback) {
+
+      var tasks = {
+        encryptPassword: utils.partial(utils.encryptPassword, 'password')
+      , fake: function(hash, salt, cbWaterfall){
+          console.log('\tusers-task-fake');
+          var data = {
+            name: 'Goodybag Admin'
+          , organization: 'Goodybag, Inc.'
+          , email: 'admin@goodybag.com'
+          , password: hash
+          };
+          cbWaterfall(null, data);
+      }
+      , createBalancedCreditCard: function(fake, cbWaterfall){
+          console.log('\tusers-task-create-balanced-credit-card');
+          var fakeCreditCard = _.sample(fakeCreditCards, 1)[0];
+          utils.balanced.Cards.create({
+            card_number: fakeCreditCard.number
+          , expiration_year: 2025
+          , expiration_month: 12
+          , security_code: fakeCreditCard.securityCode
+          }, function(error, creditCard){
+            if (error) return cbWaterfall(error);
+            return cbWaterfall(null, fake, creditCard);
+          });
+        }
+      , createPaymentMethod: function(fake, creditCard, cbWaterfall){
+          console.log('\tusers-task-create-payment-method');
+          query(inserts.paymentMethods('card', creditCard.uri, creditCard), function(error, rows){
+            return cbWaterfall(error, fake, creditCard, rows[0]);
+          });
+        }
+      , createBalancedCustomer: function(fake, creditCard, paymentMethod, cbWaterfall){
+          console.log('\tusers-task-create-balanced-customer');
+          utils.balanced.Customers.create({
+            name: fake.first_name + ' ' + fake.last_name
+          , card_uri: creditCard.uri
+          }, function(error, customer){
+            if (error) return cbWaterfall(error);
+            fake.balanced_customer_uri = customer.uri;
+            return cbWaterfall(null, fake, paymentMethod);
+          });
+        }
+      , createUser: function(fake, paymentMethod, cbWaterfall){
+          console.log('\tusers-task-create-user');
           query({
             type: 'insert'
           , table: 'users'
-          , values: {email: 'admin@goodybag.com', password: hash}
+          , values: fake
           , returning: ['id']
-          }, callback);
+          }, function(error, rows){
+            if(error) return cbWaterfall(error);
+            cbWaterfall(null, rows[0], paymentMethod);
+          });
         }
-      , function(rows, callback) {
+      , createUserGroup: function(user, paymentMethod, cbWaterfall) {
+          console.log('\tusers-task-add-user-to-group');
           query({
             type: 'insert'
           , table: 'users_groups'
-          , values: {user_id: rows[0].id, group: 'admin'}
-          }, callback);
+          , values: {user_id: user.id, group: 'admin'}
+          }, function(error, result){
+            if (error) return cbWaterfall(error);
+            cbWaterfall(null, user, paymentMethod);
+          });
         }
-      ], cb);
+      , createUserPaymentMethod: function(user, paymentMethod, cbWaterfall) {
+          console.log('\tusers-task-add-create-user-payment-method');
+          query({
+            type: 'insert'
+          , table: 'users_payment_methods'
+          , values: {
+              user_id: user.id
+            , payment_method_id: paymentMethod.id
+            }
+          }, function(error, result){
+            if (error) return cbWaterfall(error);
+            cbWaterfall(null, result);
+          });
+        }
+      }
+      utils.async.waterfall(
+        [
+          tasks.encryptPassword
+        , tasks.fake
+        , tasks.createBalancedCreditCard
+        , tasks.createPaymentMethod
+        , tasks.createBalancedCustomer
+        , tasks.createUser
+        , tasks.createUserGroup
+        , tasks.createUserPaymentMethod
+        ]
+      , function(error, results){
+          cb(error);
+        }
+      );
     }
   }
 , function(error, results) {

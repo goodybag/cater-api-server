@@ -10,9 +10,13 @@ var CheckoutView = FormView.extend({
   },
 
   getDiff: function() {
-    var diff = FormView.getDiff.apply(this, arguments);
+    var diff = FormView.prototype.getDiff.apply(this, arguments);
     var addrDiff = this.addressView.getDiff.apply(this.addressView, arguments)
     return diff || addrDiff ? _.extend({}, diff, addrDiff) : null;
+  },
+
+  initialize: function(options) {
+    this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address});
   },
 
   changePaymentMethod: function(e) {

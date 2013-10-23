@@ -129,6 +129,11 @@ module.exports = Model.extend({
       && !this.attributes.is_unacceptable
     ;
 
+    var requiredAddrFields = ['street', 'city', 'state', 'zip', 'phone']
+    obj.isAddressComplete = _.reduce(_.map(_.pick(obj, requiredAddrFields),
+                                           function(val) { return val != null and val !== ''; }),
+                                     function(memo, item, list) { return memo && item; }, true);
+
     return obj;
   },
 

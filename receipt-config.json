@@ -1,6 +1,7 @@
 {
   "dir": "public/receipts"
 , "script": "lib/receipt-pdf.js"
+, "fileName": "order-:id.pdf"
 , "orderRoute": "/orders/:id/receipt"
 , "paperSize": {
     "format": "A4"

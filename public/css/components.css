@@ -796,6 +796,16 @@ a.list-group-item .list-group-item-heading {
   background-size: 20px 20px;
 }
 
+.tag-kosher {
+  background: url('/img/04_kosher.svg');
+  background-size: 20px 20px;
+}
+
+.tag-halal {
+  background: url('/img/05_halal.svg');
+  background-size: 20px 20px;
+}
+
 /**
  * Alerts
  */

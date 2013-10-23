@@ -26,7 +26,14 @@ module.exports = function(){
       if ( exists ) return next();
 
       receipt.build( +req.param('oid'), function( error, result ){
-        if ( error ) return res.status(500).render('500');
+        if ( error ){
+          console.log(error);
+          if ( 'httpStatus' in error && error.httpStatus === 404 ){
+            return res.status(404).render('404');
+          }
+
+          return res.status(500).render('500');
+        }
 
         next();
       });

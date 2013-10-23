@@ -160,6 +160,22 @@ dl > dt {
   padding-right: 20px;
 }
 
+.gb-lettermark {
+  display: inline-block;
+  background: url('/img/gb-lettermark.svg');
+  width: 100px;
+  height: 100px;
+  background-size: 100%;
+}
+
+.gb-type-logo {
+  display: inline-block;
+  background: url('/img/gb-type-logo.svg');
+  width: 114px;
+  height: 21px;
+  background-size: 100%;
+}
+
 .info-items .info-item {
   margin-bottom: 12px;
 }

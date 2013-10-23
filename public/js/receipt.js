@@ -34,6 +34,7 @@ window.__page = (function(){
 })();
 
 console.print = function(){
+  return;
   var $console = $('#console-print');
   if ( $console.length === 0 ){
     $console = $([
@@ -95,16 +96,16 @@ console.print = function(){
       "Iterations:", ~~(remaining / rowHeight)
     );
 
-    console.print(
-      options.remainingTableHeightSelector.split(', ').map( function( selector ){
-        return ' ' + selector + ': ' + Array.prototype.reduce.call(
-          $page.find( selector ).map( function(){
-            return $(this).height() || 0;
-          })
-        , function( a, b ){ return a + b; }
-        );
-      })
-    );
+    // console.print(
+    //   options.remainingTableHeightSelector.split(', ').map( function( selector ){
+    //     return ' ' + selector + ': ' + Array.prototype.reduce.call(
+    //       $page.find( selector ).map( function(){
+    //         return $(this).height() || 0;
+    //       })
+    //     , function( a, b ){ return a + b; }
+    //     );
+    //   })
+    // );
 
     var $table = $page.find('table');
     var colspan = $table.find('th').length;
@@ -130,7 +131,7 @@ console.print = function(){
 
     // First check to see if we even need to do anything
     if ( $page.height() <= options.magicNumber ){
-      fillRemainingTrs( $page );
+      // fillRemainingTrs( $page );
       window.__page.ready();
       return;
     }
@@ -140,11 +141,11 @@ console.print = function(){
     $nextPage.find('table tbody tr').remove();
     $page.find('.order-bottom-wrapper, footer').remove();
 
-    fillRemainingTrs( $page );
+    // fillRemainingTrs( $page );
 
     $('.page').after( $nextPage );
 
-    fillRemainingTrs( $nextPage );
+    // fillRemainingTrs( $nextPage );
 
     window.__page.ready();
     // if ( $page.height() <= options.magicNumber ){

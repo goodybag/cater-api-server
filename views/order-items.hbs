@@ -1,0 +1,242 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/components/select2/select2.css">
+<link rel="stylesheet" href="/css/order.css">
+{{/extend}}
+
+<div class="page page-order container">
+  <div class="row">
+    <h1 class="col-lg-12 page-title">Review Your Order</h1>
+  </div>
+
+  <div class="row">
+    {{#if query.copy}}
+    <div class="alerts col-lg-12">
+      {{#unless query.lostItems}}
+      <div class="alert alert-success">
+        <p>Your order has been copied.  Your new order is below.</p>
+      </div>
+      {{else}}
+      <div class="alert alert-danger">
+        <p>Your order has been copied.  Your new order is below.</p>
+        <p>However, the following items from your old order are no longer available at {{order.restaurant.name}} and so were not copied:</p>
+        <ul>
+          {{#each query.lostItems}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/unless}}
+    </div>
+    {{/if}}
+  </div>
+
+  <div class="panel panel-order-line-item">
+    {{#unless order.orderItems.length}}
+    <div class="panel-heading">No Order Items</div>
+    {{else}}
+    <div class="panel-heading pull-left">{{order.restaurant.name}}</div>
+    <div>
+    {{#if admin}}
+    <div class="btn-group btn-group-status pull-right">
+      <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
+        {{order.status}} <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="javascript:void;" id="change-status-pending">pending</a></li>
+        <li><a href="javascript:void;" id="change-status-canceled">canceled</a></li>
+        <li><a href="javascript:void;" id="change-status-submitted">submitted</a></li>
+        <li><a href="javascript:void;" id="change-status-denied">denied</a></li>
+        <li><a href="javascript:void;" id="change-status-accepted">accepted</a></li>
+        <li><a href="javascript:void;" id="change-status-delivered">delivered</a></li>
+      </ul>
+    </div>
+    {{else}}
+    {{> status_label order}}
+    {{/if}}
+    </div>
+    <div id="order-summary-table-container">
+      <table class="table order-line-item-table{{#if order.editable}} no-tbody-cell-borders{{/if}}">
+        <thead>
+          <tr>
+            <th class="line-item-name">Item</th>
+            <th class="line-item-quantity">Quantity</th>
+            <th class="line-item-notes">Notes</th>
+            <th class="line-item-feeds">Feeds</th>
+            <th class="line-item-price">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each order.orderItems}}
+          <tr id="order-item-{{this.id}}">
+            <td class="line-item-name" data-title="Name">
+              <div class="item-name">{{this.name}}</div>
+              <ul class="comma-separated item-options">
+                {{#each options_sets}}
+                  {{#each this.options}}
+                    {{#if this.state}}
+                      <li>{{this.name}}</li>
+                    {{/if}}
+                  {{/each}}
+                {{/each}}
+              </ul>
+              {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
+            </td>
+            <td class="line-item-quantity" data-title="Quantity">
+              {{#if ../order.editable}}
+                <span class="icon-x">x</span>
+                <input type="number" min="1" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
+              {{else}}
+                <span class="item-quantity-span order-item-field order-item-quantity" />{{this.quantity}}</span>
+              {{/if}}
+            </td>
+            <td class="line-item-notes" data-title="Notes">
+              {{#if ../order.editable}}
+                <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
+              {{else}}
+                <span name="notes" class="item-notes-span order-item-field order-item-notes">{{this.notes}}</span>
+              {{/if}}
+            </td>
+            <td class="line-item-feeds" data-title="Feeds">
+            </td>
+            <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    {{/unless}}
+
+    <div class="panel-body totals-panel">
+
+      {{#if order.sub_total}}
+      <div class="row">
+        <div class="col-lg-12 totals">
+          {{> totals}}
+        </div>
+      </div>
+      {{/if}}
+
+      <div class="row panel-actions">
+        <div class="col-sm-6 actions-left">
+          {{#if order.editable}}
+          <a class="btn btn-default btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add Items to Order</a>
+          {{/if}}
+        </div>
+        <div class="col-sm-6 actions-right">
+          {{#if owner}}
+            <button class="btn btn-primary btn-submit{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Checkout</button>
+            <button class="btn btn-primary btn-submit{{#unless order.submittable}} hide{{/unless}}">Submit</button>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{#if restaurantReview}}
+  <div class="panel restaurant-review">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+          <dl class="dl-horizontal">
+            {{#if order.user.name}}
+            <dt>Customer Name:</dt>
+            <dd>{{order.user.name}}</dd>
+            {{/if}}
+            <dt>Customer Email:</dt>
+            <dd>{{order.user.email}}</dd>
+            {{#if order.user.organization}}
+            <dt>Customer Organization:</dt>
+            <dd>{{order.user.organization}}</dd>
+            {{/if}}
+          </dl>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-lg-offset-2">
+          <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
+        </div>
+        <div class="col-lg-3 col-lg-offset-2">
+          <button class="btn btn-lg btn-success btn-accept pull-right">Accept Order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+</div>
+
+<!-- TODO: merge these two modals with a partial -->
+<div id="reject-confirm-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Confirm Reject</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to reject this order?</p>
+      </div>
+      <div class="row modal-footer">
+        <div class="col-lg-3 col-lg-offset-6">
+          <button type="button" class="btn btn-default" data-dismiss="modal">No, don't reject</button>
+        </div>
+        <div class="col-lg-3">
+          <button type="button" class="btn btn-danger btn-reject">Yes, reject</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cancel-confirm-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Confirm Cancel</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to cancel this order?</p>
+      </div>
+      <div class="row modal-footer">
+        <div class="col-lg-3 col-lg-offset-6">
+          <button type="button" class="btn btn-default" data-dismiss="modal">No, don't cancel</button>
+        </div>
+        <div class="col-lg-3">
+          <button type="button" class="btn btn-danger btn-cancel">Yes, cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{> copy_order_error_modal}}
+
+{{#extend "scripts"}}
+<script src="/js/models/item.js"></script>
+<script src="/js/models/category.js"></script>
+<script src="/js/models/restaurant.js"></script>
+<script src="/js/models/order-item.js"></script>
+<script src="/js/models/order.js"></script>
+
+<script src="/js/collections/items.js"></script>
+<script src="/js/collections/categories.js"></script>
+
+<script src="/js/views/form-view.js"></script>
+<script src="/js/views/copy-error-modal.js"></script>
+<script src="/js/views/order-view.js"></script>
+<script src="/js/views/order-item-view.js"></script>
+<script>
+  if (history) history.pushState(null, null, location.pathname);
+  $.get('/partials/totals.hbs', null, function(data, textStatus, jqXHR) {
+    Handlebars.registerPartial('totals', Handlebars.compile(data));
+  }, 'html')
+  var query = window.location.search ? _.object(_.map(window.location.search.substring(1).split('&'), function(obj) { return obj.split('='); })) : {};
+  var view = new OrderView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
+  var items = [
+    {{#each order.orderItems}}
+    {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})
+    {{/each}}
+  ];
+  view.items = items;
+</script>
+{{/extend}}

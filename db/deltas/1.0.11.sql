@@ -3,8 +3,8 @@
 DO $$
   declare version       text := '1.0.11';
   declare group_name    text := 'receipts';
-  declare user_email    text := 'poop10@goodybag.com';
-  declare user_password text := 'password';
+  declare user_email    text := 'receipts@goodybag.com';
+  declare user_password text := '$2a$10$8egVetFrE7OAk1B.v36dOOdhS9TXt98PN7/zCvLdeAuOa0KLXIzIi';
   declare receipt_user  record;
 begin
   raise notice '## Running Delta v% ##', version;

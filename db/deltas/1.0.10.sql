@@ -18,7 +18,7 @@ CREATE TABLE if not exists "restaurant_tags" (
   primary key (restaurant_id, tag)
 );
 
-insert into tags (name) values
-  ('glutenFree'),
-  ('vegan'),
-  ('vegetarian');
+INSERT INTO tags (name)
+SELECT existing.*
+FROM (SELECT unnest(array['glutenFree','vegan', 'vegetarian']) as tag) AS existing
+WHERE NOT EXISTS (SELECT name from tags WHERE existing.tag = tags.name);

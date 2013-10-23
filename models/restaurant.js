@@ -182,7 +182,7 @@ module.exports = Model.extend({
     }
 
     if (orderParams && orderParams.cuisines) {
-      query.where.cuisine = {'$contains': orderParams.cuisines};
+      query.where.cuisine = {'$overlap': orderParams.cuisines};
     }
 
     if (orderParams && orderParams.zip) {

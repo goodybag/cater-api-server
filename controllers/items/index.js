@@ -38,7 +38,7 @@ module.exports.update = function(req, res) {
     return utils.extend({id: uuid.v4()}, set);
   })));
 
-  var body = req.body.options_sets !== null ? utils.extend(req.body, {options_sets: ops}) : req.body;
+  var body = req.body.options_sets != null ? utils.extend(req.body, {options_sets: ops}) : req.body;
 
   // Let's update the item related tables in parallel
   var tasks = [];

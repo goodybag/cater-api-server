@@ -1,13 +1,14 @@
 var config = require('./config');
 var static = require('node-static');
 var controllers = require('./controllers');
+var utils = require('./utils');
 
-var m = {
+var m = utils.extend({
   orderParams   : require('./middleware/order-params'),
   restrict      : require('./middleware/restrict'),
   basicAuth     : require('./middleware/basic-session-auth'),
   buildReceipt  : require('./middleware/build-receipt')
-};
+}, require('stdm') );
 
 var file = new static.Server('./public');
 
@@ -197,12 +198,24 @@ module.exports.register = function(app) {
 
   app.all('/orders/:id', controllers.orders.auth);
 
-  app.get('/orders/:id', controllers.orders.get);
+  app.get('/orders/:id'
+    // If they're using ?receipt=true, make sure we restrict the group
+  , function(req, res, next){
+      if (!req.param('receipt')) return next();
+
+      return (
+        m.restrict(['admin', 'receipts'])
+      )(req, res, next);
+    }
+  , controllers.orders.get
+  );
 
   app.get(
     config.receipt.orderRoute
   , m.basicAuth()
-  , function( req, res, next){ req.params.receipt = true; next(); }
+  , m.logReq('session')
+  , m.restrict(['admin', 'receipts'])
+  , function(req, res, next){ req.params.receipt = true; next(); }
   , controllers.orders.get
   );
 

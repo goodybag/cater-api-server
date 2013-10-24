@@ -1,6 +1,7 @@
 var OrderAddressView = AddressView.extend({
   events: {
     'click .toggle-edit': 'toggleEditAddress',
+    'click .cancel-edit-btn': 'render',
     'click .save-address': 'saveAddress'
   },
 
@@ -14,6 +15,13 @@ var OrderAddressView = AddressView.extend({
       order: this.options.orderView.model.toJSON(),
       states: states
     };
+    context.orderAddress = function() {
+      return {
+        address: context.order,
+        states: context.states
+      };
+    };
+
     this.$el.html(this.template(context));
   },
 

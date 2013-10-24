@@ -3,6 +3,7 @@
 , "script": "lib/receipt-pdf.js"
 , "fileName": "order-:id.pdf"
 , "orderRoute": "/orders/:id/receipt"
+, "concurrency": 10
 , "paperSize": {
     "format": "A4"
   , "margin": { "left": "1.4cm", "right": "1.4cm", "top": "1.5cm", "bottom": "1cm" }

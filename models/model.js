@@ -122,6 +122,7 @@ Model.find = function(query, callback, client) {
       result = rows;
       rows = result.rows;
     }
+    console.log(err);
     if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });

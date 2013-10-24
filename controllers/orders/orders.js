@@ -127,8 +127,8 @@ module.exports.changeStatus = function(req, res) {
         return res.send(403, 'order not submitttable');
     }
 
-    var done = function(status) {
-      if (status.attributes.status === 'submitted') {
+    var done = function() {
+      if (order.attributes.status === 'submitted') {
         var viewOptions = {
           order: order.toJSON({review: true}),
           config: config,
@@ -137,6 +137,7 @@ module.exports.changeStatus = function(req, res) {
 
         res.render('email-order-submitted', viewOptions, function(err, html) {
           // TODO: error handling
+          console.log(order.attributes);
           utils.sendMail([order.attributes.restaurant.email, config.emails.orders],
                          config.emails.orders,
                          'You have received a new Goodybag order (#' + order.attributes.id+ ')',
@@ -180,20 +181,20 @@ module.exports.changeStatus = function(req, res) {
         }
       }
 
-      if (utils.contains(['submitted', 'accepted', 'delivered'], status.attributes.status)) {
+      if (utils.contains(['submitted', 'accepted', 'delivered'], order.attributes.status)) {
         var viewOptions = {
           layout: 'email-layout',
-          status: status.toJSON(),
+          status: {order_id: order.attributes.id, status: order.attributes.status},
           config: config,
           order: order.toJSON()
         };
 
-        res.render('email-order-' + status.attributes.status, viewOptions, function(err, html) {
+        res.render('email-order-' + order.attributes.status, viewOptions, function(err, html) {
           //TODO: error handling
           utils.sendMail(
             order.attributes.user.email,
             config.emails.orders,
-            'Goodybag order (#'+ order.attributes.id + ') has been ' + status.attributes.status,
+            'Goodybag order (#'+ order.attributes.id + ') has been ' + order.attributes.status,
             html,
             function(err, result) {
               if(err) logger.routes.error(TAGS, 'Error sending email', err);
@@ -202,25 +203,20 @@ module.exports.changeStatus = function(req, res) {
         });
       }
 
-      if (status.attributes.status === 'denied') {
+      if (order.attributes.status === 'denied') {
         utils.sendMail(config.emails.onDeny || config.emails.orders, config.emails.orders, 'Order #' + order.attributes.id + ' denied',
                        null, config.baseUrl + '/orders/' + order.attributes.id);
       }
 
-      res.send(201, status.toJSON());
+      res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
     }
 
-    var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
-    status.save(function(err, rows, result) {
+    order.attributes.status = req.body.status;
+    if (review) order.attributes.token_used = 'now()';
+
+    order.save(function(err){
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      if (review) {
-        order.attributes.token_used = 'now()';
-        order.save(function(err) {
-          if (err) return res.error(errors.internal.DB_FAILURE, err);
-          done(status);
-        });
-      }
-      else done(status);
+      return done();
     });
   });
 };

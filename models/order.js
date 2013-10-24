@@ -92,14 +92,9 @@ module.exports = Model.extend({
       this.attributes.adjustment_description = this.attributes.adjustment.description;
       delete this.attributes.adjustment;
     }
-    var order = this
+    var order = this;
     Model.prototype.save.call(this, {returning: ["*", '("orders"."datetime"::text) as datetime']}, function(err) {
-      if (!err && insert) {
-        var OrderStatus = require('./order-status');
-        var status = new OrderStatus({order_id: order.attributes.id});
-        status.save(callback);
-      } else
-        callback.apply(this, arguments);
+      callback.apply(this, arguments);
     }, client);
   },
   toJSON: function(options) {
@@ -199,21 +194,10 @@ module.exports = Model.extend({
       },
 
       function(client, done, newOrder, cb) {
-        // Step 2: create a pending status for the new order.  (Note: this could be parallel with step 3.
-        if (newOrder == null) return cb(null, client, done, null);
-        var OrderStatus = require('./order-status');
-        var status = new OrderStatus({order_id: newOrder.attributes.id});
-        status.save(function(err, status) {
-          if (err) return cb(err, client, done);
-          newOrder.attributes.latestStatus = status.status;
-          return cb(null, client, done, newOrder);
-        }, client);
-      },
-
-      function(client, done, newOrder, cb) {
-        // Step 3: Copy the order items
+        // Step 2: Copy the order items
         if (newOrder == null) return cb(null, client, done, null);
 
+        newOrder.attributes.status = 'pending';
         var copyOrderItems = {
           with: {
             newItems: {
@@ -257,7 +241,7 @@ module.exports = Model.extend({
       },
 
       function(client, done, newOrder, cb) {
-        // Step 4: check if any order_items are missing because their items have been discontinued
+        // Step 3: check if any order_items are missing because their items have been discontinued
         if (newOrder == null) return cb(null, client, done, null);
         self.getOrderItems(function(err, oldOrderItems) {
           if (err) return cb(err, client, done);
@@ -298,7 +282,6 @@ module.exports = Model.extend({
     // because it cannot be determined due to DST until the datetime in
     // datetime)
     query.columns.push('(orders.datetime::text) as datetime');
-    query.columns.push('latest.status');
 
     query.with = [
       {
@@ -434,36 +417,6 @@ module.exports = Model.extend({
     query.with.push.apply(query.with, itemSubtotals);
 
     query.joins = query.joins || {};
-
-    query.joins.latest = {
-      type: 'left'
-    , columns: ['order_id', 'status']
-    , on: {
-        'order_id': '$orders.id$'
-      }
-    // TODO: convert to with
-    , target: {
-        type: 'select'
-      , columns: ['order_id', 'status']
-      , table: 'order_statuses'
-      , alias: 'statuses'
-      , joins: {
-          recent: {
-            type: 'inner'
-          , on: {
-              'order_id': '$statuses.order_id$'
-            , 'created_at': '$statuses.created_at$'
-            }
-          , target: {
-              type: 'select'
-            , table: 'order_statuses'
-            , columns: ['order_id', 'max(created_at) as created_at']
-            , groupBy: 'order_id'
-            }
-          }
-        }
-      }
-    };
 
     query.columns.push({"table": "order_subtotals", "name": "sub_total"});
 

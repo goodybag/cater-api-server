@@ -43,7 +43,7 @@ module.exports.get = function(req, res) {
   var tasks = [
     function(callback) {
       if (!req.session.user) return callback(null, null);
-      var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'latest.status': 'pending'};
+      var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'orders.status': 'pending'};
       models.Order.findOne({where: where}, function(err, order) {
         if (err) return callback(err);
         if (order == null) {

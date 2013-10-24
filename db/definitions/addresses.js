@@ -56,7 +56,7 @@ define(function(require) {
     }
   , phone: {
       type: types.varchar(10)
-    , nullable: true
+    , nullable: false
     , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     }
   , delivery_instructions: {

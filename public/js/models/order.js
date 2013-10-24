@@ -87,10 +87,6 @@ var Order = Backbone.Model.extend({
     this.restaurant = new Restaurant(attrs.restaurant);
     this.unset('restaurant');
 
-    var addressFields = _.keys(_.result(Address, 'schema').properties);
-    this.address = new Address(_.pick(attrs, addressFields));
-    _.each(addressFields, _.bind(this.unset, this));
-
     if (this.get('id') == "undefined") this.unset('id');
 
     this.on('change:id', function(model, value, options) {
@@ -118,6 +114,29 @@ var Order = Backbone.Model.extend({
       'change:guests': this.guestsChanged,
       'change:is_unacceptable change:below_min': this.setSubmittable
     }, this);
+  },
+
+  set: function(key, val, options) {
+    // strip out updates to the address fields and proxy them through to the address model
+    var attrs;
+    if (key == null) return this;
+
+    var addressFields = _.keys(_.result(Address, 'schema').properties);
+    if (typeof key === 'object') {
+      attrs = key;
+      options = val;
+    } else
+      (attrs = {})[key] = val
+
+    var addr = _.pick(attrs, addressFields);
+    attrs = _.omit(attrs, addressFields);
+
+    if (this.address != null)
+      this.address.set(addr, options);
+    else
+      this.address = new Address(addr);
+
+    return Backbone.Model.prototype.set.call(this, attrs, options);
   },
 
   updateSubtotal: function() {

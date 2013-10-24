@@ -51,7 +51,7 @@ define(function(require) {
   , isInvoiced: {
       type: types.boolean
     , nullable: false
-    , default: false
+    , default: 'false'
     }
   };
 

@@ -62,4 +62,5 @@ module.exports = {
 , timezone: 'timezone'
 , paymentmethod: 'payment_method'
 , paymenttype: 'payment_type'
+, paymentstatus: 'payment_status'
 }

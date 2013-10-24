@@ -104,6 +104,15 @@ define(function(require) {
       type: types.int
     , nullable: true // change this to false once we handle the existing data
     }
+  , payment_status: {
+      type: types.paymentstatus
+    , nullable: true
+    }
+  , payment:_method_id: {
+      type: types.int
+    , nullable: true
+    , references: {table: 'payment_method', column: 'id', onDelete: 'set null'}
+    }
   };
 
   definition.indices = {};

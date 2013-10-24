@@ -107,7 +107,7 @@
         </div>
         <div class="col-sm-6 actions-right">
           {{#if owner}}
-            <button class="btn btn-primary btn-submit{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Checkout</button>
+            <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
             <button class="btn btn-primary btn-submit{{#unless order.submittable}} hide{{/unless}}">Submit</button>
           {{/if}}
         </div>
@@ -165,6 +165,7 @@
 {{> copy_order_error_modal}}
 
 {{#extend "scripts"}}
+<script src="/js/models/address.js"></script>
 <script src="/js/models/item.js"></script>
 <script src="/js/models/category.js"></script>
 <script src="/js/models/restaurant.js"></script>

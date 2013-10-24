@@ -6,6 +6,7 @@ var states  = require('../../public/states');
 var models  = require('../../models');
 var logger  = require('../../logger');
 var receipt = require('../../lib/receipt');
+var venter  = require('../../lib/venter');
 
 // var static = require('node-static');
 var moment = require('moment');

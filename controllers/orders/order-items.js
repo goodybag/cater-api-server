@@ -32,7 +32,8 @@ module.exports.summary = function(req, res, next) {
         admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
         states: states,
         orderParams: req.session.orderParams,
-        query: req.query
+        query: req.query,
+        step: 1
       };
 
       // orders are always editable for an admin

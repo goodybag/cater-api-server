@@ -190,34 +190,9 @@ module.exports.changeStatus = function(req, res) {
         }
       }
 
-      if (utils.contains(['submitted', 'accepted', 'delivered'], status.attributes.status)) {
-        var viewOptions = {
-          layout: 'email-layout',
-          status: status.toJSON(),
-          config: config,
-          order: order.toJSON()
-        };
-
-        res.render('email-order-' + status.attributes.status, viewOptions, function(err, html) {
-          //TODO: error handling
-          utils.sendMail(
-            order.attributes.user.email,
-            config.emails.orders,
-            'Goodybag order (#'+ order.attributes.id + ') has been ' + status.attributes.status,
-            html,
-            function(err, result) {
-              if(err) logger.routes.error(TAGS, 'Error sending email', err);
-            }
-          );
-        });
-      }
-
-      if (status.attributes.status === 'denied') {
-        utils.sendMail(config.emails.onDeny || config.emails.orders, config.emails.orders, 'Order #' + order.attributes.id + ' denied',
-                       null, config.baseUrl + '/orders/' + order.attributes.id);
-      }
-
       res.send(201, status.toJSON());
+
+      venter.emit('order:status:change', order, status);
     }
 
     var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});

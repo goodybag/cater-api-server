@@ -1,0 +1,35 @@
+.wizard {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  color: #D9D9CD; /* Muted Gray */
+  text-align: center;
+  font-family: 'Aleo';
+  font-size: 15px;
+}
+
+.wizard > li {
+  display: inline-block;
+  content: '\ffed';
+  width: 150px;
+}
+
+.wizard .active {
+  color: #481E14; /* Dark maroon */
+}
+
+.wizard .wizard-step {
+  margin-left: auto;
+  margin-top: 0;
+  margin-right: auto;
+  margin-bottom: 5px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  border: 2px solid;
+  vertical-align: middle;
+  line-height: 28px;
+  font-size: 17px;
+  font-family: 'Proxima Nova';
+  font-weight: bold;
+}

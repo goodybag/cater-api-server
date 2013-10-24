@@ -2,7 +2,8 @@
 var CheckoutView = FormView.extend({
   events: {
     'change input[type="radio"].payment-method': 'changePaymentMethod',
-    'submit #order-form': 'submit'
+    'submit #order-form': 'submit',
+    'submit #select-address-form': 'selectAddress'
   },
 
   fieldMap: {
@@ -30,5 +31,14 @@ var CheckoutView = FormView.extend({
 
   submit: function(e) {
     e.preventDefault();
+  },
+
+  selectAddress: function(e) {
+    e.preventDefault();
+    var addressId = this.$el.find('#select-address-form input[name="address-radio"]:checked').attr('data-id');
+    var address = this.options.user.addresses.get(addressId);
+    this.model.save(address.omit(['id', 'user_id', 'is_default']), {success: function() {
+      this.$el.find('#select-address-modal').modal('dismiss');
+    }});
   }
 });

@@ -188,6 +188,6 @@
 <script src="/js/views/checkout-view.js"></script>
 
 <script>
-  var view = new CheckoutView({el: '#main', model: new Order( {{{json order}}} )});
+  var view = new CheckoutView({el: '#main', model: new Order( {{{json order}}} ), user: new User({{{json user}}})});
 </script>
 {{/extend}}

@@ -15,8 +15,6 @@ var
 , helpers = require('./helpers')
 ;
 
-require('./lib/events');
-
 var middleware = {
   cors: require('./middleware/cors')
 , domains: require('./middleware/domains')

@@ -4,7 +4,7 @@ var db = require('../../db')
   , utils = require('../../utils')
   , config = require('../../config')
   , states = require('../../public/states')
-  , Address = require('../../models/address');
+  , models = require('../../models');
 
 /**
  * POST /users/:uid/addresses
@@ -12,11 +12,11 @@ var db = require('../../db')
  * Set the first address as default, for convenience
  */
 module.exports.create = function(req, res, next) {
-  Address.find({ where: {user_id: req.params.uid, is_default: true}}, function(error, addresses) {
+  models.Address.find({ where: {user_id: req.params.uid, is_default: true}}, function(error, addresses) {
     var noExistingDefault = !addresses.length;
-    var address = new Address(utils.extend(
-      {}, 
-      req.body, 
+    var address = new models.Address(utils.extend(
+      {},
+      req.body,
       {user_id: req.session.user.id, is_default: !!(req.body.is_default || noExistingDefault)} // ensure is_default is boolean
     ));
 
@@ -31,11 +31,11 @@ module.exports.create = function(req, res, next) {
  * GET /users/:uid/addresses
  */
 module.exports.list = function(req, res, next) {
-  var query = { 
+  var query = {
     where: { user_id: req.params.uid }
   , order: { id: 'asc' }
   };
-  Address.find(query, function(error, addresses) {
+  models.Address.find(query, function(error, addresses) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.render('addresses', { addresses: utils.invoke(addresses, 'toJSON'), states: states });
   });
@@ -45,7 +45,7 @@ module.exports.list = function(req, res, next) {
  * GET /users/:uid/addresses/:aid
  */
 module.exports.get = function(req, res, next) {
-  Address.findOne(req.params.aid, function(error, address) {
+  models.Address.findOne(req.params.aid, function(error, address) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.render('address-edit', { address: address.toJSON(), states: states });
   });
@@ -55,7 +55,7 @@ module.exports.get = function(req, res, next) {
  * PUT /users/:uid/addresses/:aid
  *
  * Updating address with is_default == true will
- * set other addresses to false. 
+ * set other addresses to false.
  */
 module.exports.update = function(req, res, next) {
   var updates = utils.pick(req.body, ['name', 'street', 'street2', 'city', 'state', 'zip', 'is_default', 'phone', 'delivery_instructions']);
@@ -63,7 +63,7 @@ module.exports.update = function(req, res, next) {
   utils.async.series([
     function unmarkPreviousDefaults(callback) {
       if (updates.is_default) {
-        Address.update({
+        models.Address.update({
           updates: { is_default: false },
           where:   { is_default: true, user_id: req.params.uid }
         }, callback);
@@ -72,7 +72,7 @@ module.exports.update = function(req, res, next) {
     },
 
     function updateAddress(callback) {
-      var address = new Address(utils.extend(updates, {id: req.params.aid}));
+      var address = new models.Address(utils.extend(updates, {id: req.params.aid}));
       address.save(function(error, address) {
         if (error) return res.error(errors.internal.DB_FAILURE, error);
         return res.send(204);
@@ -86,7 +86,7 @@ module.exports.update = function(req, res, next) {
  * DELETE /users/:uid/addresses/:aid
  */
 module.exports.remove = function(req, res, next) {
-  Address.findOne(parseInt(req.params.aid), function(error, address) {
+  models.Address.findOne(parseInt(req.params.aid), function(error, address) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     if (address === null) return res.send(404);
 

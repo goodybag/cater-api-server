@@ -415,7 +415,7 @@
   $.get('/partials/totals.hbs', null, function(data, textStatus, jqXHR) {
     Handlebars.registerPartial('totals', Handlebars.compile(data));
   }, 'html')
-  var query = window.location.search ? _.object(_.map(window.location.search.substring(1).split('&'), function(obj) { return obj.split('='); })) : {};
+  var query = utils.parseQueryParams();
   var view = new OrderView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
   var items = [
     {{#each order.orderItems}}

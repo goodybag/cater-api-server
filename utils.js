@@ -74,6 +74,54 @@ utils.del = function(url, callback){
 
 var mailgun = new Mailgun(config.mailgun.apiKey);
 
+/**
+ * Send mail. Why are there two versions? Because sendMail1
+ * is already being used throughout the codebase and I need
+ * to add attachments to my mail now. Adding it to sendMail1
+ * seems like too daunting of a task because... I mean...
+ * look at it! I would have to add yet ANOTHER argument to
+ * that thing
+ *
+ * Options: {
+ *   to:        'jane@doe.com'
+ * , from:      'john@doe.com'
+ * , subject:   'ohai!'
+ * , html:      '<html></html>'
+ * , body:      'Plain text'
+ * , reply_to:  'john@doe.com'
+ * , attachment: {
+ *     // Whatever mailcomposer accepts
+ *     // See https://github.com/andris9/mailcomposer#add-attachments
+ *     filePath: '~/love-letter.pdf'
+ *   }
+ * , attachments: [ * array of objects described above * ]
+ * }
+ *
+ * @param  {Object}   options  The full email options sent to composer
+ * @param  {Function} callback callback( error )
+ */
+utils.sendMail2 = function( options, callback ){
+  callback = callback || options.callback || utils.noop;
+
+  if ( !config.emailEnabled ) return callback();
+
+  var composer = new MailComposer();
+
+  // Remove whitespace from email to remove possible rendering bugs
+  if ( options.html ) options.html = options.html.replace(/>\s+</g, '><').trim();
+
+  composer.setMessageOption( options );
+
+  if ( options.attachments ) options.attachments.forEach( composer.addAttachment );
+  if ( options.attachment ) composer.addAttachment( options.attachment );
+
+  composer.buildMessage( function( error, message ){
+    if ( error ) return callback( error );
+
+    mailgun.sendRaw( options.from, options.to, message, callback );
+  });
+};
+
 utils.sendMail = function(to, from, subject, html, text, callback) {
   if (lodash.isFunction(text) && callback === undefined) {
     callback = text;

@@ -97,6 +97,7 @@
               {{/if}}
             </td>
             <td class="line-item-feeds" data-title="Feeds">
+              <span>{{range this.feeds_min this.feeds_max}}</span>
             </td>
             <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>

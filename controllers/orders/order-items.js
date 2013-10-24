@@ -14,6 +14,7 @@ module.exports.list = function(req, res, next) {
   });
 }
 
+// TODO: remove all the stuff we don't need here
 module.exports.summary = function(req, res, next) {
   models.Order.findOne(parseInt(req.params.oid), function(error, order) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);

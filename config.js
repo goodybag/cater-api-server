@@ -107,6 +107,13 @@ var config = {
     , marketplaceUri: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
     }
 
+  , ironMQ: {
+      token: '_2rd5UzCv7_-chOc4rDZ0Y7y74A'
+    , projectId: '526990a7f2d1570005000038'
+    }
+
+  , baseUrl: 'http://localhost:3000'
+
   , postgresConnStr:  "postgres://localhost:5432/cater"
 
   , requestLogger: {
@@ -114,8 +121,6 @@ var config = {
     , table: 'requests'
     , plan: 'month'
     }
-
-  , baseUrl: 'http://localhost:3000'
 
   , testEmail: 'geoff@goodybag.com'
 
@@ -166,6 +171,11 @@ var config = {
     , marketplaceUri: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
     }
 
+  , ironMQ: {
+      token: 'M-NmfDgtD66MCHYKTVS3m15BbSA'
+    , projectId: '526990bcf2d1570009000035'
+    }
+
   , baseUrl: 'http://cater.staging.goodybag.com'
 
   , postgresConnStr: process.env['DATABASE_URL']
@@ -211,6 +221,11 @@ var config = {
   , intercom: {
       apiSecret: '5I1eNUY_F6HKl_Gb15965fr5VgGfNlwny7WmyKZx'
     , appId: '13s9qu57'
+    }
+
+  , ironMQ: {
+      token: 'vr52EAPD-oYRDtZzsqYd0eoDLkI'
+    , projectId: '526990cba2b8ed000500002e'
     }
 
   , baseUrl: 'https://www.goodybag.com'

@@ -125,7 +125,6 @@ module.exports.checkout = function(req, res) {
     if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
       context.order.editable = true;
     res.render('checkout', context, function(err, html) {
-      console.log(err);
       if (err) return res.error(errors.internal.UNKNOWN, err);
       res.send(html);
     });

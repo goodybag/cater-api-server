@@ -123,6 +123,32 @@
   </div>
 </div>
 
+<div id="select-address-modal" class="modal fade">
+  <div class="modal-dialog">
+    <form id="select-address-form" class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Select a different address</h4>
+      </div>
+      <div class="modal-body">
+        {{#each user.addresses}}
+        <div class="radio">
+          <label>
+            <input type="radio" name="address-radio" data-id="{{id}}"{{#if this.is_default}} checked="checked"{{/if}}>
+            {{> address}}
+          </label>
+        </div>
+        {{else}}
+        You have no saved addresses.
+        {{/each}}
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Deliver to selected address
+      </div>
+    </form>
+  </div>
+</div>
+
 {{#extend "scripts"}}
 <script>
   var partials = {

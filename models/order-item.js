@@ -29,9 +29,7 @@ module.exports = Model.extend({
 
       oldCallback(null, rows, result);
 
-      process.nextTick( function(){
-        venter.emit( 'order:change', self.attributes.order_id );
-      });
+      venter.emit( 'order:change', self.attributes.order_id );
     };
 
     if (!this.attributes.id) Model.prototype.save.call(this, returning, callback);
@@ -53,9 +51,7 @@ module.exports = Model.extend({
         if (error) return callback(error);
         callback.apply(this, arguments);
 
-        process.nextTick( function(){
-          venter.emit( 'order:change', model.attributes.order_id );
-        });
+        venter.emit( 'order:change', model.attributes.order_id );
       });
     });
   },

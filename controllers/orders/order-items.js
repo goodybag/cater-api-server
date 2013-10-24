@@ -66,9 +66,7 @@ module.exports.update = function(req, res, next) {
       if(error) return res.error(errors.internal.DB_FAILURE, error);
       res.send(rows[0]);
 
-      process.nextTick( function(){
-        venter.emit( 'order:change', req.param('oid') );
-      });
+      venter.emit( 'order:change', req.param('oid') );
     });
   });
 }
@@ -80,8 +78,7 @@ module.exports.remove = function(req, res, next) {
   db.query(sql.query, sql.values, function(error, rows, result) {
     if(error) return res.error(errors.internal.DB_FAILURE, error);
     res.send(200);
-    process.nextTick( function(){
-      venter.emit( 'order:change', req.param('oid') );
-    });
+
+    venter.emit( 'order:change', req.param('oid') );
   });
 }

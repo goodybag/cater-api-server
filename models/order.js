@@ -91,9 +91,7 @@ module.exports = Model.extend({
       } else
         callback.apply(this, arguments);
 
-      process.nextTick( function(){
-        venter.emit( 'order:change', order.attributes.id );
-      });
+      venter.emit( 'order:change', order.attributes.id );
     });
   },
   toJSON: function(options) {

@@ -70,7 +70,7 @@
      * Saves the current state of the DOM representation of options sets
      * into the item model
      */
-  , save: function(){
+  , save: function( callback ){
       var this_ = this;
       var option_sets = [];
 
@@ -117,10 +117,6 @@
           // If the option is not new, attach the old ID
           if ( $option.data('id') ) option_set_option.id = $option.data('id');
 
-          // TODO: Validate this chit
-          // if ( !option_set_option.name )
-          // if ( !option_set_option.price )
-
           option_set.options.push( option_set_option );
         });
       });
@@ -131,7 +127,14 @@
       var tags = this_.getTags(this.$el.find('.edit-item-tags input:checked'));
       this.model.set( 'tags', tags );
 
-      this.model.save();
+
+      this.model.save(null, {
+        wait: true
+      , success: function( results ){ callback( null, results ); }
+      , error: callback
+      });
+
+      if ( this.model.validationError ) return callback( this.model.validationError );
     }
 
   , getTags: function(tags) {
@@ -153,9 +156,13 @@
     }
 
   , onSaveClick: function( e ){
-      // TODO: wait for success or errors and stuff before closing
-      this.save()
-      this.close();
+      var this_ = this;
+
+      this.save( function( error ){
+        if ( error ) return alert( JSON.stringify( error ) );
+
+        this_.close();
+      });
     }
   });
 })( window );

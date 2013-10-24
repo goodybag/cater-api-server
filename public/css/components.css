@@ -806,6 +806,11 @@ a.list-group-item .list-group-item-heading {
   background-size: 20px 20px;
 }
 
+.tag-dairy-free {
+  background: url('/img/06_dairy.svg');
+  background-size: 20px 20px;
+}
+
 /**
  * Alerts
  */

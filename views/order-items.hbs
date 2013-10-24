@@ -15,7 +15,7 @@
     <div class="panel-heading pull-left">{{order.restaurant.name}}</div>
     <div>
     {{#if admin}}
-    <div class="btn-group btn-group-status pull-right">
+    <div class="btn-group order-status pull-right">
       <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
         {{order.status}} <span class="caret"></span>
       </button>
@@ -29,7 +29,9 @@
       </ul>
     </div>
     {{else}}
-    {{> status_label order}}
+    <div class="order-status order-status-label pull-right">
+      {{> status_label order}}
+    </div>
     {{/if}}
     <div class="clearfix"></div>
     </div>

@@ -1,8 +1,12 @@
-.btn-group-status {
+.order-status {
   padding-left: 15px;
   padding-top: 16px;
   padding-right: 15px;
   padding-bottom: 16px;
+}
+
+.order-status-label {
+  margin-top: 5px;
 }
 
 .page-order .form-group.form-group-block {

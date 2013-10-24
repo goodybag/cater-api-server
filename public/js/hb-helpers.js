@@ -283,6 +283,10 @@ var helpers = {
 
   contains: function(list, value, options) {
     return (utils.contains(list, value) ? options.fn : options.inverse).call(options, this);
+  },
+
+  uuid: function(){
+    return utils.uuid();
   }
 }
 

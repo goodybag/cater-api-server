@@ -16,7 +16,7 @@ var CheckoutView = FormView.extend({
   },
 
   initialize: function(options) {
-    this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address});
+    this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address, orderView: this});
   },
 
   changePaymentMethod: function(e) {

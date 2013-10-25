@@ -103,7 +103,7 @@ define(function(require) {
   , status: {
       type:types.orderstatus
     , nullable: false
-    , default: 'pending'
+    , default: "'pending'"
     }
   , cut: {
       type: types.int
@@ -116,7 +116,7 @@ define(function(require) {
   , payment_method_id: {
       type: types.int
     , nullable: true
-    , references: {table: 'payment_method', column: 'id', onDelete: 'set null'}
+    , references: {table: 'payment_methods', column: 'id', onDelete: 'set null'}
     }
   };
 

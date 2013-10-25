@@ -139,12 +139,14 @@
           </label>
         </div>
         {{else}}
-        You have no saved addresses.
+        You have no saved addresses within this restaurant's delivery zone.
         {{/each}}
       </div>
       <div class="modal-footer btn-toolbar">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        {{#if user.addresses}}
         <button type="submit" class="btn btn-primary">Deliver to selected address</button>
+        {{/if}}
       </div>
     </form>
   </div>

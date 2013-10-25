@@ -9,6 +9,8 @@ var
 , Mailgun = require('mailgun').Mailgun
 , Balanced = require('balanced-official')
 , uuid = require('node-uuid')
+, ironMQ = require('iron_mq')
+, rollbar = require("rollbar")
 
   // Module Dependencies
 , config = require('./config')
@@ -19,6 +21,22 @@ var
 ;
 
 utils.uuid = uuid;
+
+// ironMQ stuff
+utils.iron = new ironMQ.Client({token: config.ironMQ.token, project_id: config.ironMQ.projectId});
+utils.queues = {
+  debit: utils.iron.queue('debit')
+};
+
+// rollbar stuff
+rollbar.init(config.rollbar.accessToken);
+utils.rollbar = rollbar;
+
+//balanced stuff
+utils.balanced = new Balanced({
+  marketplace_uri: config.balanced.marketplaceUri
+, secret: config.balanced.secret
+});
 
 utils.get = function(url, options, callback){
   if (typeof options === "function"){
@@ -72,11 +90,6 @@ utils.del = function(url, callback){
   };
   request(options, callback);
 };
-
-utils.balanced = new Balanced({
-  marketplace_uri: config.balanced.marketplaceUri
-, secret: config.balanced.secret
-});
 
 var mailgun = new Mailgun(config.mailgun.apiKey);
 

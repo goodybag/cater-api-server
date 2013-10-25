@@ -36,6 +36,13 @@
             {{/each}}
             </ul>
             {{/if}}
+            {{#if meal_types.length}}
+            <ul class="list-restaurant-meal-types">
+            {{#each meal_types}}
+              <li>{{this}}</li>
+            {{/each}}
+            </ul>
+            {{/if}}
             <span class="dollar-meter">{{{dollarMeter this.price}}}</span>
             {{> tags tags }}
           </div>

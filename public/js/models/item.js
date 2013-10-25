@@ -32,6 +32,47 @@ var Item = Backbone.Model.extend({
           type: 'integer',
           minimum: attrs.feeds_min || 1,
           required: true
+        },
+        options_sets: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              name: {
+                type: ['string', 'null'],
+                required: false
+              },
+              type: {
+                type: 'string',
+                enum: ['radio', 'checkbox'],
+                required: true
+              },
+              options: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    name: {
+                      type: 'string',
+                      minLength: 1,
+                      required: true
+                    },
+                    description: {
+                      type: ['string', 'null'],
+                      required: false
+                    },
+                    price: {
+                      type: ['integer', 'null'],
+                      required: false
+                    },
+                    state: {
+                      type: 'boolean'
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

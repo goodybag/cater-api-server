@@ -4,7 +4,7 @@ insert into deltas (version, date) values ('1.0.12', 'now()');
 -- #369 - Add restaurant meal type filters
 
 create table if not exists "meal_types" (
-  id            serial,
+  id            serial unique not null,
   created_at    timestamptz not null default now(),
   name          text primary key
 );

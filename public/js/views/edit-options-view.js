@@ -111,7 +111,7 @@
           , price:          utils.getPrice( $option.find('.options-set-option-price') )
           , default_state:  $option.find('.options-set-option-default:checked').length > 0
           , description:    $option.find('[name="description"]').val()
-          , tags:           this_.getTags($option.find('.options-set-tags input:checked'))
+          , tags:           _.pluck($option.find('.options-set-tags input:checked'), 'value')
           };
 
           // If the option is not new, attach the old ID
@@ -123,11 +123,6 @@
 
       this.model.set( 'options_sets', option_sets );
 
-      // Item tags
-      var tags = this_.getTags(this.$el.find('.edit-item-tags input:checked'));
-      this.model.set( 'tags', tags );
-
-
       this.model.save(null, {
         wait: true
       , success: function( results ){ callback( null, results ); }
@@ -135,12 +130,6 @@
       });
 
       if ( this.model.validationError ) return callback( this.model.validationError );
-    }
-
-  , getTags: function(tags) {
-      return utils.map(tags, function(tag) {
-        return tag.getAttribute('value');
-      });
     }
 
   , onNewGroupClick: function( e ){

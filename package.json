@@ -48,7 +48,8 @@
     "winston-papertrail": "0.1.x",
     "bitly": "1.2.x",
     "balanced-official": "0.3.3",
-    "semver": "2.1.x"
+    "semver": "2.1.x",
+    "iron_mq": "0.2.x"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

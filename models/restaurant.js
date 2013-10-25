@@ -178,6 +178,29 @@ module.exports = Model.extend({
       query.where["tags.tags"] = {'$contains': orderParams.diets};
     }
 
+    if (orderParams && orderParams.mealTypes) {
+      query.with.meal_types_arr = {
+        "type": "select"
+      , "table": "restaurant_meal_types"
+      , "columns": [
+          "restaurant_id"
+        , "array_agg(meal_type) as meal_types"
+        ]
+      , "groupBy": "restaurant_id"
+      };
+
+      query.joins.meal_types_arr = {
+        type: 'left'
+      , alias: 'meal_types'
+      , target: 'meal_types_arr'
+      , on: {
+          'restaurants.id': '$meal_types.restaurant_id$'
+        }
+      };
+
+      query.where['meal_types.meal_types'] = {'$overlap': orderParams.mealTypes};
+    }
+
     if (orderParams && orderParams.prices) {
       query.where.price = {'$in': orderParams.prices};
     }

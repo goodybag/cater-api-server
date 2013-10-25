@@ -53,6 +53,7 @@ var OrderParamsView = Backbone.View.extend({
     , diets:     _.pluck($('#panelDiet input:checked'), 'value')
     , cuisines:  _.pluck($('#panelCuisine input:checked'), 'value')
     , prices:    _.pluck($('#panelPrice input:checked'), 'value')
+    , mealTypes: _.pluck($('#panelMealTypes input:checked'), 'value')
     };
   }
 

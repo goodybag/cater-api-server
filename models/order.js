@@ -33,6 +33,10 @@ var modifyAttributes = function(callback, err, orders) {
           utils.pick(order.attributes, restaurantFields));
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
         utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
+
+        var rate = 1.0825; // default Austin, TX sales tax for now, in future store in and get from restaurant table
+        var totalPreTip = (parseInt(order.attributes.sub_total) + parseInt(order.attributes.restaurant.delivery_fee)) * parseFloat(rate);
+        order.attributes.total = (totalPreTip + order.attributes.tip); // in cents
       } else {
         order.attribtues.restaurant = null;
       }

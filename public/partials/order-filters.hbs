@@ -36,6 +36,27 @@
             Gluten-Free
           </label>
         </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="kosher" {{#contains orderParams.diets "kosher"}}checked="checked"{{/contains}}>
+            <span class="tag tag-kosher tag-tooltip" data-title="Kosher" data-original-title="" title=""></span>
+            Kosher
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="halal" {{#contains orderParams.diets "halal"}}checked="checked"{{/contains}}>
+            <span class="tag tag-halal tag-tooltip" data-title="Halal" data-original-title="" title=""></span>
+            Halal
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="dairyFree" {{#contains orderParams.diets "dairyFree"}}checked="checked"{{/contains}}>
+            <span class="tag tag-dairy-free tag-tooltip" data-title="Dairy-Free" data-original-title="" title=""></span>
+            Dairy-Free
+          </label>
+        </div>
       </div>
     </div>
   </div>

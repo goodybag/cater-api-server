@@ -5,6 +5,7 @@ var
 , errors = require('../../errors')
 , utils = require('../../utils')
 , states = require('../../public/states')
+, mealTypesList = require('../../public/meal-types')
 , cuisines = require('../../public/cuisines')
 ;
 
@@ -101,7 +102,12 @@ module.exports.edit = function(req, res) {
         return [new Array(i+1).join('$'), restaurant.attributes.price === i];
       }));
       utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
-      res.render('edit-restaurant', {restaurant: restaurant.toJSON(), selectedPrice: selectedPrice, states: states}, function(err, html) {
+      res.render('edit-restaurant', {
+        restaurant: restaurant.toJSON()
+      , selectedPrice: selectedPrice
+      , states: states
+      , mealTypesList: mealTypesList
+      }, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
       });

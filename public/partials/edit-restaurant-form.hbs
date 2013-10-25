@@ -42,22 +42,6 @@
     <input type="text" class="form-control restaurant-cuisine" value="{{array restaurant.cuisine}}" placeholder="Mexican, Korean, Amish">
     <span class="help-block">Please enter cuisine as a comma separated list of cuisine tags.</span>
   </div>
-  <fieldset>
-    <legend>Restaurant Tags</legend>
-    <div class="col-lg-2">
-      <label class="control-label">Special Diets</label>
-      <div class="restaurant-tags">
-      {{> edit_tags restaurant.tags }}
-      </div>
-    </div>
-    <div class="col-lg-2">
-      <label class="control-label">Meal Types</label>
-      <div class="restaurant-meal-types">
-        {{> edit_meal_types }}
-      </div>
-    </div>
-    <div class="clearfix"></div>
-  </fieldset>
   <div class="form-group">
     <label class="control-label">Delivery Fee</label>
     <div class="input-group">
@@ -77,6 +61,22 @@
     <input type="text" class="form-control restaurant-delivery-zips" value="{{array restaurant.delivery_zips}}" placeholder="78701, 78704, 78756">
     <span class="help-block">List of zip codes restaurant will deliver to.  Please enter as a comma separated list.</span>
   </div>
+  <fieldset>
+    <legend>Restaurant Tags</legend>
+    <div class="col-lg-2">
+      <label class="control-label">Special Diets</label>
+      <div class="restaurant-tags">
+      {{> edit_tags restaurant.tags }}
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <label class="control-label">Meal Types</label>
+      <div class="restaurant-meal-types">
+        {{> edit_meal_types }}
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </fieldset>
   <fieldset>
     <legend>Delivery Hours</legend>
     {{#each restaurant.delivery_times}}

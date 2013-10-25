@@ -24,6 +24,7 @@ define(function(require) {
   , id: {
       type: types.serial
     , nullable: false
+    , unique: true
     }
   , created_at: {
       type: types.timestamptz

@@ -38,7 +38,7 @@ define(function(require) {
   , street2: {
       type: types.text
     , nullable: false
-    , default: ''
+    , default: "''"
     }
   , city: {
       type: types.text

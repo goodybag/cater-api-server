@@ -81,6 +81,26 @@
     </div>
   </div>
 
+  {{! Meal Types }}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>
+        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelMealTypes" href="#">
+          Meal Types
+        </a>
+      </h4>
+    </div>
+    <div id="panelMealTypes" class="panel-collapse collapse {{#if orderParams.mealTypes}}in{{/if}}">
+      <div class="panel-body">
+        {{#each filterMealTypes}}
+        <div class="checkbox">
+          <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.mealTypes this}}checked="checked"{{/contains}}> {{this}}</label>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
   {{! Price }}
   <div class="panel panel-default">
     <div class="panel-heading">

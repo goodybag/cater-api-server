@@ -27,10 +27,11 @@ module.exports.list = function(req, res) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
 
     res.render('restaurants', {
-      restaurants:    utils.invoke(models, 'toJSON'),
-      orderParams:    orderParams,
-      filterCuisines: cuisines,
-      filterPrices:   utils.range(1, 5)
+      restaurants:      utils.invoke(models, 'toJSON'),
+      orderParams:      orderParams,
+      filterCuisines:   cuisines,
+      filterPrices:     utils.range(1, 5),
+      filterMealTypes:  mealTypesList
     });
   });
 }

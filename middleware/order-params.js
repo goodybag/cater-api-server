@@ -15,6 +15,7 @@ var orderParamsFields = [
 , 'diets'
 , 'cuisines'
 , 'prices'
+, 'mealTypes'
 ];
 
 // As we get the fields from req.param, run the corresponding

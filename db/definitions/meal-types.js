@@ -1,5 +1,5 @@
 /**
- * Restaurant Meal Types Schema
+ * Meal Types Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -14,10 +14,14 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'restaurant_meal_types';
+  definition.name = 'meal_types';
 
   definition.schema = {
-    id: {
+    name: {
+      name: types.text
+    , pk: true
+    }
+  , id: {
       type: types.serial
     , nullable: false
     }
@@ -26,21 +30,9 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , restaurant_id: {
-      type: types.int
-    , nullable: false
-    , references: {table: 'restaurants', column: 'id', onDelete: 'cascade'}
-    }
-  , meal_type: {
-      type: types.text
-    , nullable: false
-    , references: {table: 'meal_types', column: 'name', onDelete: 'cascade'}
-    }
   };
 
   definition.indices = {};
-
-  definition.extras = ['PRIMARY KEY ("restaurant_id", "meal_type")'];
 
   return definition;
 });

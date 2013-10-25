@@ -4,8 +4,7 @@ a.list-group-item-restaurant .list-group-item-heading {
   font-weight: 500;
 }
 
-.list-group-item-restaurant .list-restaurant-cuisines > li,
-.list-group-item-restaurant .list-restaurant-meal-types > li {
+.list-group-item-restaurant .list-restaurant-inline > li {
   color: #8B8983;
 }
 

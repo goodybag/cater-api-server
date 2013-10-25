@@ -30,14 +30,14 @@
           <h3 class="list-group-item-heading list-group-item-heading-restaurant">{{this.name}}</h3>
           <div class="list-group-item-restaurant-details">
             {{#if cuisine.length}}
-            <ul class="list-restaurant-cuisines">
+            <ul class="list-restaurant-inline">
             {{#each cuisine}}
               <li>{{this}}</li>
             {{/each}}
             </ul>
             {{/if}}
             {{#if meal_types.length}}
-            <ul class="list-restaurant-meal-types">
+            <ul class="list-restaurant-inline">
             {{#each meal_types}}
               <li>{{this}}</li>
             {{/each}}

@@ -2,7 +2,8 @@ var OrderAddressView = AddressView.extend({
   events: {
     'click .toggle-edit': 'toggleEditAddress',
     'click .cancel-edit-btn': 'render',
-    'click .save-address': 'saveAddress'
+    'click .save-address': 'saveAddress',
+    'click .add-address': 'addAddress'
   },
 
   template: Handlebars.partials.order_delivery_info,
@@ -27,6 +28,11 @@ var OrderAddressView = AddressView.extend({
 
   toggleEditAddress: function(e) {
     this.$el.find('.order-address').toggleClass('hide');
+  },
+
+  addAddress: function(e) {
+    this.$el.find('input').val('');
+    this.toggleEditAddress();
   },
 
   saveAddress: function(e) {

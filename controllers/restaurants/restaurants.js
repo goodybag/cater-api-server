@@ -152,6 +152,12 @@ var tags = function(body, id) {
   });
 };
 
+var mealTypes = function(body, id) {
+  return utils.map(body.meal_types, function(obj, index, arr) {
+    return {restaurant_id: id, meal_type: obj};
+  });
+};
+
 // maybe this ought to come from the restaurant model?
 var fields = ['name', 'is_hidden', 'street', 'city', 'state', 'zip', 'sms_phone', 'voice_phone', 'email', 'minimum_order', 'price', 'delivery_fee', 'cuisine'];
 
@@ -169,7 +175,7 @@ module.exports.create = function(req, res) {
     }
 
     var tasks = utils.map(
-      [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes'], [tags, 'createTags']],
+      [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes'], [tags, 'createTags'], [mealTypes, 'createMealTypes']],
       function(args) { return utils.partial( insert, args[0](req.body, rows[0].id), args[1]); }
     );
 
@@ -192,6 +198,7 @@ module.exports.update = function(req, res) {
   , ['DeliveryTimes', deliveryTimes, 'delivery_times']
   , ['LeadTimes', leadTimes, 'lead_times']
   , ['Tags', tags, 'tags']
+  , ['MealTypes', mealTypes, 'meal_types']
   ], 
   function(args) {
     if (req.body[args[2]] === undefined) return function(cb) { cb() };

@@ -19,7 +19,8 @@ define(function(require) {
   definition.schema = {
     id: {
       type: types.serial
-    , pk: true
+    , nullable: false
+    , unique: true
     }
   , user_id: {
       type: types.int
@@ -36,7 +37,8 @@ define(function(require) {
     }
   , street2: {
       type: types.text
-    , nullable: true
+    , nullable: false
+    , default: ''
     }
   , city: {
       type: types.text
@@ -66,6 +68,8 @@ define(function(require) {
   };
 
   definition.indices = {};
+
+  definition.extras = ['PRIMARY KEY ("user_id", "street", "street2", "zip")'];
 
   return definition;
 });

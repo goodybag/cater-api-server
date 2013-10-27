@@ -42,7 +42,7 @@ define(function(require) {
     }
   , data: {
       type: types.json
-    , nullable: false
+    , nullable: true
     }
   };
 

@@ -5,6 +5,8 @@ var uuid  = require('node-uuid');
 var db = require('../db');
 var pg = require('pg');  // access db driver directly
 var Restaurant = require('./restaurant');
+var Transaction = require('./transaction');
+var TransactionError = require('./transaction-error');
 
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
@@ -28,7 +30,8 @@ var modifyAttributes = function(callback, err, orders) {
             id: order.attributes.restaurant_id,
             email: order.attributes.restaurant_email,
             delivery_times: utils.object(order.attributes.delivery_times),
-            name: order.attributes.restaurant_name
+            name: order.attributes.restaurant_name,
+            balanced_customer_uri: order.attribtues.restaurant_balanced_customer_uri
           },
           utils.pick(order.attributes, restaurantFields));
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
@@ -44,7 +47,7 @@ var modifyAttributes = function(callback, err, orders) {
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
 
-      order.attributes.user = {id: order.attributes.user_id, email: order.attributes.user_email, organization: order.attributes.organization, name: order.attributes.user_name};
+      order.attributes.user = {id: order.attributes.user_id, email: order.attributes.user_email, organization: order.attributes.organization, name: order.attributes.user_name, balanced_customer_uri: order.attribtues.user_balanced_customer_uri};
       delete order.attributes.user_email;
       delete order.attributes.organization;
       delete order.attributes.user_name;
@@ -261,6 +264,72 @@ module.exports = Model.extend({
         return callback(error || err, order, lostItems);
       });
     });
+  },
+
+  setPaymentPaid: function (type, uri, data, callback) {
+    var self = this;
+
+    db.getClient(function (error, client, done) {
+      var tasks = {
+        begin: function (cb) {
+          client.query('BEGIN', cb);
+        }
+      , setError: function (cb) {
+          this.save({payment_status: 'paid'}, cb, client);
+        }
+      , createTransaction: function (cb) {
+          Transaction.create({
+            type: type
+          , order_id: self.attributes.id
+          , uri: uri
+          , data: data
+          }, cb, client);
+        }
+      };
+
+      utils.async.series([
+        tasks.begin
+      , tasks.setError
+      , tasks.createTransaction
+      ], function (error, results) {
+        client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
+          done();
+          return callback(e || error);
+      });
+    });
+  },
+
+  setPaymentError: function (requestId, data, callback) {
+    var self = this;
+
+    db.getClient(function (error, client, done) {
+
+      var tasks = {
+        begin: function (cb) {
+          client.query('BEGIN', cb);
+        }
+      , setError: function (cb) {
+          this.save({payment_status: 'error'}, cb, client);
+        }
+      , createTransactionError: function (cb) {
+          TransactionError.create({
+            order_id: self.attributes.id
+          , request_id: requestId
+          , data: data
+          }, cb, client);
+        }
+      };
+
+      utils.async.series([
+        tasks.begin
+      , tasks.setError
+      , tasks.createTransactionError
+      ], function (error, results) {
+        client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
+          done();
+          return callback (e || error)
+      });
+    });
   }
 }, {
   table: 'orders',
@@ -435,6 +504,7 @@ module.exports = Model.extend({
     query.columns.push({table: 'restaurants', name: 'email', as: 'restaurant_email'});
     query.columns.push('restaurants.sms_phone');
     query.columns.push('restaurants.voice_phone');
+    query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});
 
     query.joins.restaurants = {
       type: 'inner'
@@ -574,6 +644,7 @@ module.exports = Model.extend({
     query.columns.push({table: 'users', name: 'email', as: 'user_email'});
     query.columns.push({table: 'users', name: 'organization'});
     query.columns.push({table: 'users', name: 'name', as: 'user_name'});
+    query.columns.push({table: 'users', name: 'balanced_customer_uri', as: 'user_balanced_customer_uri'});
 
     query.joins.users = {
       type: 'inner'

@@ -21,6 +21,7 @@ var definitions = [
 , 'order-items'
 , 'order-statuses'
 , 'transactions'
+, 'transaction-errors'
 , 'password-resets'
 , 'waitlist'
 , 'addresses'

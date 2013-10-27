@@ -65,7 +65,7 @@ var worker = function(message, callback) {
   d.run(function () {
     task(message, callback);
   });
-}
+};
 
 var done = function (error) {
   if (!error) return;
@@ -74,8 +74,8 @@ var done = function (error) {
   utils.rollbar.reportMessage(error);
 };
 
-
 var q = utils.async.queue(worker, 5);
+
 setInterval(function () {
   if (q.length() > 5) return; // don't poll ironMQ unless we are running out of work
 

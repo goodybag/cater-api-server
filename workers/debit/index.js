@@ -33,6 +33,7 @@ var task = function (message, callback) {
   try {
     var body = JSON.parse(message.body);
   } catch (e) {
+    logger.debit.error(TAGS, 'unable to parse message body: ' + message.body);
     return utils.queues.debit.del(message.id, utils.noop), callback(e);
   }
 

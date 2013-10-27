@@ -295,6 +295,7 @@ module.exports = Model.extend({
         client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
           done();
           return callback(e || error);
+        });
       });
     });
   },
@@ -327,7 +328,8 @@ module.exports = Model.extend({
       ], function (error, results) {
         client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
           done();
-          return callback (e || error)
+          return callback (e || error);
+        });
       });
     });
   }

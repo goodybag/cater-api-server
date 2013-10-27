@@ -128,13 +128,13 @@ Model.find = function(query, callback, client) {
   });
 };
 
-Model.findOne = function(query, callback) {
+Model.findOne = function(query, callback, client) {
   if (!utils.isObject(query)) query = {where: {id: query}};
   query.limit = 1;
   return this.find(query, function(err, models) {
     if (err) return callback(err);
     callback(null, models[0]);
-  });
+  }, client);
 };
 
 Model.defaultUpdateQuery = {

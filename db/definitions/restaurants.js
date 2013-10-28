@@ -86,6 +86,9 @@ define(function(require) {
     , nullable: false
     , default: true
     }
+  , logo_url: {
+      type: types.text
+    }
   };
 
   definition.indices = {};

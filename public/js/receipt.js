@@ -34,6 +34,9 @@ window.__page = (function(){
 })();
 
 console.print = function(){
+  // Comment me if you want to live
+  return;
+
   var $console = $('#console-print');
   if ( $console.length === 0 ){
     $console = $([

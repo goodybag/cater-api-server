@@ -65,6 +65,10 @@ var config = {
     , support: '5122706555'
     , orders: '5122706333'
     }
+
+  , filepicker: {
+      key: 'AF52P8LtHSd6VMD07XdOQz'
+    }
   }
 
 

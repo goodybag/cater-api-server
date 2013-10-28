@@ -17,7 +17,8 @@ var OrderView = FormView.extend({
       'click #change-status-denied': _.bind(this.changeStatus, this, 'denied', false),
       'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted', false),
       'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', false),
-      'click .tip-buttons .btn': 'clickTipButton'
+      'click .tip-buttons .btn': 'clickTipButton',
+      'click .copy-order-btn': 'makeCopy'
     }
   },
 
@@ -36,6 +37,8 @@ var OrderView = FormView.extend({
       format: 'h:i A'
     , interval: 15
     }).pickatime('picker');
+
+    this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
 
     this.on('save:success', this.onSaveSuccess, this);
 
@@ -244,5 +247,21 @@ var OrderView = FormView.extend({
     var tip = (this.model.get('sub_total') * percentage / 100).toFixed(2);
     this.$el.find(this.fieldMap.tip).val(tip);
     this.autoSave();
+  },
+
+  makeCopy: function(e) {
+    this.model.copy(function(err, newOrder) {
+      if (err) {
+        this.copyErrorModal.setModel(this.model);
+        this.copyErrorModal.$el.modal('show');
+      } else {
+        var queryParams = {
+          copy: true
+        };
+
+        if (newOrder.get('lostItems')) queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
+        window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
+      }
+    });
   }
 });

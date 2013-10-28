@@ -1,40 +1,95 @@
 <div class="list-group order-list-group">
   {{#each orders}}
-  <a class="list-group-item" href="/orders/{{this.id}}" data-status="{{status}}">
-    {{> status_label}}
-    <h4 class="list-group-item-heading">{{this.restaurant.name}}</h4>
-    <dl class="dl-horizontal-inline order-details-list">
-      {{#if this.name}}
-      <div>
-        <dt>Order Name:</dt>
-        <dd>{{this.name}}</dd>
+  <a class="list-group-item" href="/orders/{{this.id}}" data-status="{{status}}" data-id="{{id}}">
+    <div class="row">
+      <div class="col-sm-8">
+        <h4 class="list-group-item-heading">{{this.restaurant.name}}</h4>
+        <dl class="dl-horizontal-inline order-details-list">
+          {{#if this.name}}
+          <div>
+            <dt>Order Name:</dt>
+            <dd>{{this.name}}</dd>
+          </div>
+          {{/if}}
+          {{#unless ../hideUserDetails}}
+          <div>
+            <dt>User:</dt>
+            <dd>{{this.user.email}}</dd>,
+            <dt>Organization:</dt>
+            <dd>{{this.user.organization}}</dd>
+          </div>
+          {{/unless}}
+          <div>
+            <dt>Date Created:</dt>
+            <dd>{{datepart this.created_at}} {{timepart this.created_at}}</dd>
+          </div>
+          <div>
+            <dt>Delivery Date:</dt>
+            <dd>{{datepart this.datetime}} {{timepart this.datetime}}</dd>
+          </div>
+          {{#if this.sub_total}}
+          <div class="definition-group-subtotal">
+            <dt>Subtotal:</dt>
+            <dd class="subtotal-detail">${{dollars this.sub_total}}</dd>
+          </div>
+          {{/if}}
+        </dl>
       </div>
-      {{/if}}
-      {{#unless ../hideUserDetails}}
-      <div>
-        <dt>User:</dt>
-        <dd>{{this.user.email}}</dd>,
-        <dt>Organization:</dt>
-        <dd>{{this.user.organization}}</dd>
+      <div class="col-sm-4">
+        <div class="row">
+          <div class="col-sm-12">
+            {{> status_label}}
+          </div>
+        </div>
+        {{#if this.restaurant}}
+        <div class="row">
+          <div class="col-sm-12">
+            <button type="button" class="btn btn-default copy-order-btn pull-right">Copy Order</button>
+          </div>
+        </div>
+        {{/if}}
       </div>
-      {{/unless}}
-      <div>
-        <dt>Date Created:</dt>
-        <dd>{{datepart this.created_at}} {{timepart this.created_at}}</dd>
-      </div>
-      <div>
-        <dt>Delivery Date:</dt>
-        <dd>{{datepart this.datetime}} {{timepart this.datetime}}</dd>
-      </div>
-      {{#if this.sub_total}}
-      <div class="definition-group-subtotal">
-        <dt>Subtotal:</dt>
-        <dd class="subtotal-detail">${{dollars this.sub_total}}</dd>
-      </div>
-      {{/if}}
-    </dl>
+    </div>
   </a>
   {{else}}
   <h2 class="text-center">No Orders</h2>
   {{/each}}
 </div>
+
+{{> copy_order_error_modal}}
+
+{{#extend "scripts"}}
+<script src="/js/models/item.js"></script>
+<script src="/js/models/category.js"></script>
+<script src="/js/models/restaurant.js"></script>
+<script src="/js/models/order-item.js"></script>
+<script src="/js/models/order.js"></script>
+
+<script src="/js/collections/items.js"></script>
+<script src="/js/collections/categories.js"></script>
+
+<script src="/js/views/copy-error-modal.js"></script>
+
+<script>
+  var copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
+
+  $('.order-list-group .list-group-item .copy-order-btn').click(function(e) {
+    e.preventDefault();
+    var $item = $(e.currentTarget).closest('.list-group-item')
+    var order = new Order({id: $item.attr('data-id')});
+    order.copy(function(err, newOrder) {
+      if (err) {
+        copyErrorModal.setModel(order);
+        copyErrorModal.$el.modal('show');
+      } else {
+        var queryParams = {
+          copy: true
+        };
+
+        if (newOrder.get('lostItems')) queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
+        window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
+      }
+    });
+  });
+</script>
+{{/extend}}

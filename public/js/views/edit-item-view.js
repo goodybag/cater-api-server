@@ -11,7 +11,7 @@
       'click .item-save': 'onSave',
       'click .item-edit-options': 'onEditOptionsClick',
       'keyup .form-control': 'onChange',
-      'change .form-control': 'onChange'
+      'change .form-control, .edit-item-tags': 'onChange'
     },
 
     initialize: function(options) {
@@ -42,6 +42,9 @@
       feeds_max: function() {
         var val = this.$el.find(this.fieldMap.feeds_max).val().trim();
         return val ? parseInt(val) : null;
+      },
+      tags: function() {
+        return _.pluck(this.$el.find(this.fieldMap.tags), 'value');
       }
     },
 
@@ -51,7 +54,8 @@
       price: '.item-price',
       feeds_min: '.item-feeds-min',
       feeds_max: '.item-feeds-max',
-      description: '.item-description'
+      description: '.item-description',
+      tags: '.edit-item-tags input:checked'
     },
 
     attach: function() {

@@ -98,6 +98,7 @@ module.exports = Model.extend({
     query.order = query.order || ["is_unacceptable ASC", "restaurants.id ASC"];
     query.joins = query.joins || {};
     query.distinct = (query.distinct != null) ? query.distinct : ["is_unacceptable", "restaurants.id"];
+    query.where = query.where || {};
 
     query.with = {
       dt: {
@@ -143,6 +144,7 @@ module.exports = Model.extend({
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
     query.columns.push("(SELECT array(SELECT tag FROM restaurant_tags WHERE restaurant_id = restaurants.id ORDER BY tag ASC)) AS tags");
+    query.columns.push("(SELECT array(SELECT meal_type FROM restaurant_meal_types WHERE restaurant_id = restaurants.id ORDER BY meal_type ASC)) AS meal_types");
     query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");
@@ -153,6 +155,60 @@ module.exports = Model.extend({
     }
 
     var unacceptable = [];
+    if (orderParams && orderParams.diets) {
+      query.with.tags_arr = {
+        "type": "select"
+      , "table": "restaurant_tags"
+      , "columns": [
+          "restaurant_id"
+        , "array_agg(tag) as tags"
+        ]
+      , "groupBy": "restaurant_id"
+      };
+
+      query.joins.tags_arr = {
+        type: 'left'
+      , alias: 'tags'
+      , target: 'tags_arr'
+      , on: {
+          'restaurants.id': '$tags.restaurant_id$'
+        }
+      };
+
+      query.where["tags.tags"] = {'$contains': orderParams.diets};
+    }
+
+    if (orderParams && orderParams.mealTypes) {
+      query.with.meal_types_arr = {
+        "type": "select"
+      , "table": "restaurant_meal_types"
+      , "columns": [
+          "restaurant_id"
+        , "array_agg(meal_type) as meal_types"
+        ]
+      , "groupBy": "restaurant_id"
+      };
+
+      query.joins.meal_types_arr = {
+        type: 'left'
+      , alias: 'meal_types'
+      , target: 'meal_types_arr'
+      , on: {
+          'restaurants.id': '$meal_types.restaurant_id$'
+        }
+      };
+
+      query.where['meal_types.meal_types'] = {'$overlap': orderParams.mealTypes};
+    }
+
+    if (orderParams && orderParams.prices) {
+      query.where.price = {'$in': orderParams.prices};
+    }
+
+    if (orderParams && orderParams.cuisines) {
+      query.where.cuisine = {'$overlap': orderParams.cuisines};
+    }
+
     if (orderParams && orderParams.zip) {
       query.joins.zips = {
         type: 'left'
@@ -233,7 +289,7 @@ module.exports = Model.extend({
         , where: {
             'max_guests': {$gte: ((orderParams.guests) ? orderParams.guests : 0)}
             // TODO: Assume timezone of the restaurant (restaurant needs timezone column), for now hardcoding America/Chicago
-          , 'lead_time': {$custom: ['"restaurant_lead_times"."lead_time" < EXTRACT(EPOCH FROM ($1 -  (now() AT TIME ZONE \'America/Chicago\') )/3600)', formattedDateTime]}
+          , 'lead_time': {$custom: ['"restaurant_lead_times"."lead_time" <= EXTRACT(EPOCH FROM ($1 -  (now() AT TIME ZONE \'America/Chicago\') )/3600)', formattedDateTime]}
           }
         }
       }

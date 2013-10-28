@@ -53,6 +53,28 @@
   </div>
   {{/if}}
 
+  <div class="row">
+    {{#if query.copy}}
+    <div class="alerts col-lg-12">
+      {{#unless query.lostItems}}
+      <div class="alert alert-success">
+        <p>Your order has been copied.  Your new order is below.</p>
+      </div>
+      {{else}}
+      <div class="alert alert-danger">
+        <p>Your order has been copied.  Your new order is below.</p>
+        <p>However, the following items from your old order are no longer available at {{order.restaurant.name}} and so were not copied:</p>
+        <ul>
+          {{#each query.lostItems}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/unless}}
+    </div>
+    {{/if}}
+  </div>
+
   <div class="panel panel-order-details">
     <form id="order-form" class="form-light order-form row" method="POST" action="javascript:void(0);">
       <div class="col-sm-7 col-left">
@@ -90,7 +112,7 @@
             <div class="row">
               <div class="form-group col-sm-12">
                 <label class="control-label">Order Name</label>
-                <input type="text" class="form-control order-name" value="{{order.name}}" placeholder="Tuesday Meeting">
+                <input type="text" class="form-control order-name" value="{{order.name}}" placeholder="e.g. Tuesday Meeting">
               </div>
             </div>
             <div class="row date-time-guests">
@@ -118,11 +140,14 @@
       </div>
       <div class="col-sm-5 col-right">
         <div class="panel-body">
-          <div class="form-inline order-delivery">
-            <div class="form-group form-group-block form-group-phone">
-              <label class="control-label" for="order-phone label-bold">Phone</label>
-              <input type="tel" class="form-control order-phone" id="order-phone" value="{{phoneNumber order.phone}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+          {{#if this.restaurant}}
+          <div class="row">
+            <div class="col-sm-12">
+              <button type="button" class="btn btn-default copy-order-btn pull-right">Copy Order</button>
             </div>
+          </div>
+          {{/if}}
+          <div class="form-inline order-delivery">
             <fieldset class="form-light address-info">
               <legend class="delivery-address-legend">Delivery Address</legend>
               <div class="form-group form-group-block">
@@ -151,6 +176,10 @@
                 </datalist>
               </div>
             </fieldset>
+            <div class="form-group form-group-block form-group-phone">
+              <label class="control-label" for="order-phone label-bold">Phone</label>
+              <input type="tel" class="form-control order-phone" id="order-phone" value="{{phoneNumber order.phone}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+            </div>
           </div>
         </div>
       </div>
@@ -366,6 +395,8 @@
   </div>
 </div>
 
+{{> copy_order_error_modal}}
+
 {{#extend "scripts"}}
 <script src="/js/models/item.js"></script>
 <script src="/js/models/category.js"></script>
@@ -377,13 +408,14 @@
 <script src="/js/collections/categories.js"></script>
 
 <script src="/js/views/form-view.js"></script>
+<script src="/js/views/copy-error-modal.js"></script>
 <script src="/js/views/order-view.js"></script>
 <script src="/js/views/order-item-view.js"></script>
 <script>
   $.get('/partials/totals.hbs', null, function(data, textStatus, jqXHR) {
     Handlebars.registerPartial('totals', Handlebars.compile(data));
   }, 'html')
-  var query = window.location.search ? _.object(_.map(window.location.search.substring(1).split('&'), function(obj) { return obj.split('='); })) : {};
+  var query = utils.parseQueryParams();
   var view = new OrderView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
   var items = [
     {{#each order.orderItems}}
@@ -391,5 +423,6 @@
     {{/each}}
   ];
   view.items = items;
+  if (history) history.pushState(null, null, location.pathname);
 </script>
 {{/extend}}

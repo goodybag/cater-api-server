@@ -67,8 +67,9 @@ var EditRestaurantView = FormView.extend({
     delivery_zips: '.restaurant-form .restaurant-delivery-zips',
     delivery_times: '.restaurant-form .time',
     lead_times: '.restaurant-form .lead-times',
-    tags: '.restaurant-form .restaurant-tags input:checked',
-    is_hidden: '.restaurant-form .restaurant-is-hidden'
+    tags: '.restaurant-form .restaurant-tags input',
+    is_hidden: '.restaurant-form .restaurant-is-hidden',
+    meal_types: '.restaurant-form .restaurant-meal-types input'
   },
 
   // TODO: do this automatically based on the model schema
@@ -111,10 +112,11 @@ var EditRestaurantView = FormView.extend({
     },
 
     tags: function() {
-      var tags = this.$el.find(this.fieldMap.tags);
-      return utils.map(tags, function(tag) {
-        return tag.getAttribute('value');
-      });
+      return _.pluck(this.$el.find(this.fieldMap.tags+ ':checked'), 'value');
+    },
+
+    meal_types: function() {
+      return _.pluck(this.$el.find(this.fieldMap.meal_types + ':checked'), 'value');
     },
 
     is_hidden: function() {

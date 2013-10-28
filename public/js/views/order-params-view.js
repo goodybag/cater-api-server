@@ -46,10 +46,14 @@ var OrderParamsView = Backbone.View.extend({
 
 , getProps: function(){
     return {
-      zip:    this.$("input[name='zip']").val() || null
-    , date:   (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
-    , time:   this.timepicker.get()
-    , guests: this.$("input[name='guests']").val() || null
+      zip:      this.$("input[name='zip']").val() || null
+    , date:     (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
+    , time:     this.timepicker.get()
+    , guests:   this.$("input[name='guests']").val() || null
+    , diets:     _.pluck($('#panelDiet input:checked'), 'value')
+    , cuisines:  _.pluck($('#panelCuisine input:checked'), 'value')
+    , prices:    _.pluck($('#panelPrice input:checked'), 'value')
+    , mealTypes: _.pluck($('#panelMealTypes input:checked'), 'value')
     };
   }
 

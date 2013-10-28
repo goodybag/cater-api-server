@@ -410,8 +410,12 @@
   padding: 14px 17px;
 }
 
-.list-group-item > .label {
+.list-group-item .label {
   float: right;
+}
+
+.list-group-item .copy-order-btn {
+  margin-top: 20px;
 }
 
 a.list-group-item {
@@ -734,10 +738,10 @@ a.list-group-item .list-group-item-heading {
 }
 
 /**
- * Cuisine Listing
+ * Cuisine, Meal Type Listing
  */
 
-.list-restaurant-cuisines {
+.list-restaurant-inline {
   display: inline;
   list-style: none;
   margin: 0;
@@ -745,24 +749,25 @@ a.list-group-item .list-group-item-heading {
   font-size: 0;
 }
 
-.list-restaurant-cuisines + .dollar-meter:before {
+.list-restaurant-inline + .dollar-meter:before,
+.list-restaurant-inline + .list-restaurant-inline:before {
   content: "\2022";
   display: inline-block;
   margin: 0 7px 0 9px;
   font-size: 13px;
 }
 
-.list-restaurant-cuisines > li {
+.list-restaurant-inline > li {
   display: inline;
   font-size: 13px;
 }
 
-.list-restaurant-cuisines > li:before {
+.list-restaurant-inline > li:before {
   content: ", ";
 }
 
 /* Use first-child:before instead of last-child:after for better browser support */
-.list-restaurant-cuisines > li:first-child:before {
+.list-restaurant-inline > li:first-child:before {
   content: "";
 }
 
@@ -789,6 +794,21 @@ a.list-group-item .list-group-item-heading {
 
 .tag-vegetarian {
   background: url('/img/03_vegetarian.svg');
+  background-size: 20px 20px;
+}
+
+.tag-kosher {
+  background: url('/img/04_kosher.svg');
+  background-size: 20px 20px;
+}
+
+.tag-halal {
+  background: url('/img/05_halal.svg');
+  background-size: 20px 20px;
+}
+
+.tag-dairy-free {
+  background: url('/img/06_dairy.svg');
   background-size: 20px 20px;
 }
 

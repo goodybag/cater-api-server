@@ -1,7 +1,9 @@
 var Model = require('./model');
 var utils = require('../utils');
+var config = require('../config');
 var uuid  = require('node-uuid');
 var db = require('../db');
+var pg = require('pg');  // access db driver directly
 var Restaurant = require('./restaurant');
 var venter = require('../lib/venter');
 
@@ -21,16 +23,20 @@ var modifyAttributes = function(callback, err, orders) {
       'max_guests'
     ];
     utils.each(orders, function(order) {
-      order.attributes.restaurant = utils.extend(
-        {
-          id: order.attributes.restaurant_id,
-          email: order.attributes.restaurant_email,
-          delivery_times: utils.object(order.attributes.delivery_times),
-          name: order.attributes.restaurant_name
-        },
-        utils.pick(order.attributes, restaurantFields));
-      order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
-      utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
+      if (order.attributes.restaurant_id != null) {
+        order.attributes.restaurant = utils.extend(
+          {
+            id: order.attributes.restaurant_id,
+            email: order.attributes.restaurant_email,
+            delivery_times: utils.object(order.attributes.delivery_times),
+            name: order.attributes.restaurant_name
+          },
+          utils.pick(order.attributes, restaurantFields));
+        order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
+        utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
+      } else {
+        order.attribtues.restaurant = null;
+      }
 
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
@@ -52,7 +58,7 @@ var modifyAttributes = function(callback, err, orders) {
 }
 
 module.exports = Model.extend({
-  getOrderItems: function(callback) {
+  getOrderItems: function(callback, client) {
     var self = this;
     callback = callback || function() {};
     require('./order-item').find(
@@ -61,9 +67,9 @@ module.exports = Model.extend({
         if (err) return callback(err);
         self.orderItems = results;
         callback(null, results);
-      });
+      }, client);
   },
-  getRestaurant: function(callback){
+  getRestaurant: function(callback, client){
     var self = this;
 
     Restaurant.findOne({ where: { id: this.attributes.restaurant_id } }, function(error, restaurant){
@@ -72,9 +78,14 @@ module.exports = Model.extend({
       self.attributes.restaurant = restaurant.toJSON();
 
       callback(null, restaurant);
-    });
+    }, client);
   },
-  save: function(callback) {
+  save: function(query, callback, client) {
+    if (utils.isFunction(query)) {
+      callback = query;
+      query = undefined;
+    }
+
     var insert = this.attributes.id == null;
     if (insert) this.attributes.review_token = uuid.v4();
     if (this.attributes.adjustment) {
@@ -83,7 +94,7 @@ module.exports = Model.extend({
       delete this.attributes.adjustment;
     }
     var order = this
-    Model.prototype.save.call(this, ["*", '("orders"."datetime"::text) as datetime'], function(err) {
+    Model.prototype.save.call(this, {returning: ["*", '("orders"."datetime"::text) as datetime']}, function(err) {
       if (!err && insert) {
         var OrderStatus = require('./order-status');
         var status = new OrderStatus({order_id: order.attributes.id});
@@ -93,6 +104,7 @@ module.exports = Model.extend({
 
       venter.emit( 'order:change', order.attributes.id );
     });
+    }, client);
   },
   toJSON: function(options) {
     var obj = Model.prototype.toJSON.apply(this, arguments);
@@ -123,6 +135,7 @@ module.exports = Model.extend({
 
     return obj;
   },
+
   requiredFields: [
     'datetime',
     'street',
@@ -132,6 +145,7 @@ module.exports = Model.extend({
     'phone',
     'guests'
   ],
+
   isComplete: function() {
     var vals = utils.pick(this.attributes, this.requiredFields);
     for (var key in vals) {
@@ -139,6 +153,130 @@ module.exports = Model.extend({
         return false
     }
     return true;
+  },
+
+  createCopy: function(callback) {
+    if (this.attributes.id == null) return callback(null, null);
+  // with o as (select user_id, restaurant_id, street, city, state, zip, phone, notes, timezone, guests, adjustment_amount, adjustment_description, tip from orders where id=7)
+// insert into orders (user_id, restaurant_id, street, city, state, zip, phone, notes, timezone, guests, adjustment_amount, adjustment_description, tip, review_token) select o.*, 'fake_token' from o;
+
+  // with pastiche as (select o.item_id, o.quantity, o.notes, o.options_sets, i.name, i.description, i.price, i.feeds_min, i.feeds_max from order_items o inner join items i on (o.item_id = i.id) where order_id=7)
+  // insert into order_items (item_id, quantity, notes, options_sets, name, description, price, feeds_min, feeds_max, order_id) select pastiche.*, 9 from pastiche returning *;
+
+    var copyableColumns = ['user_id', 'restaurant_id', 'street', 'city', 'state', 'zip', 'phone', 'notes', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip'];
+    var self = this;
+    var tasks = [
+      function(cb) {
+        pg.connect(config.postgresConnStr, cb)
+      },
+
+      function(client, done, cb) {
+        client.query('BEGIN', function(err, result) {
+          cb(err, client, done);
+        });
+      },
+
+      function(client, done, cb) {
+        // Step 1: Create the new order from the existing one.
+        var copyOrder = {
+          with: {
+            old: {
+              type: 'select',
+              table: self.constructor.table,
+              columns: copyableColumns,
+              where: {id: self.attributes.id}
+            }
+          },
+          columns: copyableColumns.concat('review_token'),
+          expression: {
+            type: 'select',
+            table: 'old',
+            columns: ['*', "('" + uuid.v4() + "')"]
+          }
+        }
+
+        self.constructor.create(copyOrder, function(err, newOrders) {
+          if (err) return cb(err, client, done);
+          var newOrder = newOrders && newOrders.length > 0 ? newOrders[0] : null;
+          return cb(null, client, done, newOrder);
+        }, client);
+      },
+
+      function(client, done, newOrder, cb) {
+        // Step 2: create a pending status for the new order.  (Note: this could be parallel with step 3.
+        if (newOrder == null) return cb(null, client, done, null);
+        var OrderStatus = require('./order-status');
+        var status = new OrderStatus({order_id: newOrder.attributes.id});
+        status.save(function(err, status) {
+          if (err) return cb(err, client, done);
+          newOrder.attributes.latestStatus = status.status;
+          return cb(null, client, done, newOrder);
+        }, client);
+      },
+
+      function(client, done, newOrder, cb) {
+        // Step 3: Copy the order items
+        if (newOrder == null) return cb(null, client, done, null);
+
+        var copyOrderItems = {
+          with: {
+            newItems: {
+              type: 'select',
+              table: require('./order-item').table,
+              columns: [
+                {table: 'order_items', name: 'item_id'},
+                {table: 'order_items', name: 'quantity'},
+                {table: 'order_items', name: 'notes'},
+                {table: 'order_items', name: 'options_sets'},
+                {table: 'items', name: 'name'},
+                {table: 'items', name: 'description'},
+                {table: 'items', name: 'price'},
+                {table: 'items', name: 'feeds_min'},
+                {table: 'items', name: 'feeds_max'}
+              ],
+              joins: {
+                items: {
+                  type: 'inner',
+                  on: {id: '$order_items.item_id$'}
+                }
+              },
+              where: {order_id: self.attributes.id}
+            }
+          },
+
+          columns: ['item_id', 'quantity', 'notes', 'options_sets', 'name', 'description', 'price', 'feeds_min', 'feeds_max', 'order_id'],
+          expression: {
+            type: 'select',
+            table: 'newItems',
+            columns: ['*', "('" + newOrder.attributes.id +  "')"]
+          }
+        };
+
+        require('./order-item').create(copyOrderItems, function(err, newOrderItems) {
+          if (err) return cb(err, client, done);
+          newOrder.orderItems = newOrderItems;
+
+          return cb(null, client, done, newOrder);
+        }, client);
+      },
+
+      function(client, done, newOrder, cb) {
+        // Step 4: check if any order_items are missing because their items have been discontinued
+        if (newOrder == null) return cb(null, client, done, null);
+        self.getOrderItems(function(err, oldOrderItems) {
+          if (err) return cb(err, client, done);
+          var lostItems = utils.filter(oldOrderItems, function(old) { return old.attributes.item_id === null; });
+          return cb(null, client, done, newOrder, lostItems.length > 0 ? lostItems : null);
+        }, client);
+      }
+    ];
+
+    utils.async.waterfall(tasks, function(err, client, done, order, lostItems) {
+      client.query(err ? 'ROLLBACK' : 'COMMIT', function(error, rows, result) {
+        done();
+        return callback(error || err, order, lostItems);
+      });
+    });
   }
 }, {
   table: 'orders',
@@ -497,6 +635,8 @@ module.exports = Model.extend({
     ;
 
     query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
+
+    query.limit = 10000;
 
     // query.columns.push('(is_bad_zip OR is_bad_guests OR is_bad_lead_time OR is_bad_delivery_time AS is_unacceptable)');
 

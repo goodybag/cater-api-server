@@ -6,34 +6,50 @@
     return val ? Math.round(parseFloat(val) * 100) : null;
   };
 
-  utils.queryParams = function(data){
-    if (typeof data !== "object") return "";
-    var params = "?";
-    for (var key in data){
-      if ([null, undefined, ""].indexOf(data[key]) > -1) continue;
-      if (utils.isArray(data[key])){
-        for (var i = 0, l = data[key].length; i < l; ++i){
-          params += key + "[]=" + data[key][i] + "&";
-        }
-      } else {
-        params += key + "=" + data[key] + "&";
-      }
-    }
-    return params.substring(0, params.length - 1);
+  utils.queryParams = function(data) {
+    var pairs = _.flatten(_.map(data, function(value, key, obj) {
+      return _.isArray(value) ? _.map(value, function(val) { return [key + '[]', val];}) : [[key, value]];
+    }), true);
+    return '?' + _.compact(_.map(pairs, function(pair) {
+      return !_.contains([null, undefined, ''], pair[1]) ? _.map(pair, encodeURIComponent).join('=') : null
+    })).join('&');
   };
 
   utils.parseQueryParams = function() {
     var params = {};
     var match = /^\?(\S*)$/.exec(window.location.search);
     if (match == null || match.length !== 2) return params;
-    var pairs = match[1].split(/[&;]/);
-    for (var i=0, len=pairs.length; i < len; i++) {
-      var pair = pairs[i].split('=');
-      if (pair.length === 2)
-        params[pair[0]] = pair[1];
-      if (pair.length === 1)
-        params[pair[0]] = null;
-    };
-    return params;
+
+    var pairs = _.map(match[1].split(/[&;]/), _.compose(
+      function(str) {
+        return _.object(['key', 'value'], str.split('='));
+      },
+      decodeURIComponent
+    ));
+
+    return _.objMap(_.groupBy(pairs, function(pair) { return pair.key.replace(/\[\]$/, ''); }),
+                    function(list) {
+                      var ret = _.pluck(list, 'value');  return /\[\]$/.test(list[0].key) ? ret : ret[0];
+                    });
   };
+
+  utils.uuid = function(){
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+    });
+  };
+
+  _.mixin({
+    objMap: function(obj, func, context) {
+      return _.object(_.keys(obj), _.map(obj, func, context));
+    },
+
+    partialRight: function(func) {
+      var args = Array.prototype.slice.call(arguments, 1);
+      return function() {
+        return func.apply(this, Array.prototype.slice.apply(arguments).concat(args));
+      };
+    }
+  });
 })( window );

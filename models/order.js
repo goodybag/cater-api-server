@@ -103,7 +103,6 @@ module.exports = Model.extend({
         callback.apply(this, arguments);
 
       venter.emit( 'order:change', order.attributes.id );
-    });
     }, client);
   },
   toJSON: function(options) {

@@ -2,11 +2,40 @@
 var CheckoutView = FormView.extend({
   events: {
     'change input[type="radio"].payment-method': 'changePaymentMethod',
-    'submit #order-form': 'submit'
+    'submit #order-form': 'submit',
+    'submit #select-address-form': 'selectAddress',
+    'click .btn-cancel': 'cancel'
   },
 
   fieldMap: {
-    // TODO: order fields
+    datetime: '.order-datetime',
+    guests: '#order-guests',
+    name: '.order-name',
+    notes: '#order-notes',
+    // adjustment: '.adjustment .form-control',
+    tip: '.order-tip'
+  },
+
+  fieldGetters: {
+    guests: _.partial(FormView.intGetter, 'guests'),
+
+    tip: _.partial(FormView.dollarsGetter, 'tip'),
+
+    datetime: function() {
+      var date = this.$el.find("#order-form #order-date").val().trim();
+      var time = this.$el.find("#order-form #order-time").val().trim();
+      var datepart = date ? dateTimeFormatter(date) : null;
+      var timepart = time ? timeFormatter(time, 'HH:mm:ss') : null;
+
+
+      if(!datepart || !timepart) return null;
+
+      // since we cannot determine offset, cannot format as ISO 8601 String
+      // using "YYYY-MM-DD HH:mm:ss" to represent the date and time
+      var datetime = datepart + ' ' + timepart;
+      var date = moment(datetime);
+      return date.isValid() ? datetime : null;
+    }
   },
 
   getDiff: function() {
@@ -30,5 +59,29 @@ var CheckoutView = FormView.extend({
 
   submit: function(e) {
     e.preventDefault();
+    var self = this;
+    this.onSave(function(err, response) {
+      if (err) return alert(err); // TODO: error handling
+      self.model.changeStatus('submitted', function(err, data) {
+        if (err) return alert(err); // TODO: error handling
+        window.location.reload();
+      });
+    });
+  },
+
+  cancel: function(e) {
+    this.model.changeStatus('canceled', function(err, data) {
+      if (err) return alert(err); // TODO: error handling
+      window.location.reload();
+    });
+  },
+
+  selectAddress: function(e) {
+    e.preventDefault();
+    var addressId = this.$el.find('#select-address-form input[name="address-radio"]:checked').attr('data-id');
+    var address = this.options.user.addresses.get(addressId);
+    this.model.save(address.omit(['id', 'user_id', 'is_default']), {success: function() {
+      this.$el.find('#select-address-modal').modal('dismiss');
+    }});
   }
 });

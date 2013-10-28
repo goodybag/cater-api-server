@@ -22,9 +22,8 @@ var Address = Backbone.Model.extend({
         minLength: 1
       },
       street2: {
-        type: ['string', 'null'],
-        required: false,
-        minLength: 1
+        type: ['string'],
+        required: false
       },
       city: {
         type: 'string',

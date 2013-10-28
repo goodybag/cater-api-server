@@ -2,7 +2,8 @@ var OrderAddressView = AddressView.extend({
   events: {
     'click .toggle-edit': 'toggleEditAddress',
     'click .cancel-edit-btn': 'render',
-    'click .save-address': 'saveAddress'
+    'click .save-address': 'saveAddress',
+    'click .add-address': 'addAddress'
   },
 
   template: Handlebars.partials.order_delivery_info,
@@ -29,13 +30,24 @@ var OrderAddressView = AddressView.extend({
     this.$el.find('.order-address').toggleClass('hide');
   },
 
+  addAddress: function(e) {
+    this.$el.find('input').val('');
+    this.toggleEditAddress();
+  },
+
   saveAddress: function(e) {
-    var self = this;
-    this.options.orderView.onSave(function(err, response) {
-      if (err)
-        ;//TODO: something wen't wrong
-      else
-        self.render();
-    });
+    var diff = this.getDiff(); // changes to address fields
+    if (!diff) return this.render();
+
+    var sent = this.options.orderView.model.save(diff, {
+      success: _.bind(this.render, this),
+      error: function(jqXHR, textstatus, errorThrown) {
+        // TODO: error handling
+        alert(errorThrown);
+      }
+    })
+
+    if (!sent)
+      alert(this.options.orderView.model.validationError); // TODO: real error handling
   }
 });

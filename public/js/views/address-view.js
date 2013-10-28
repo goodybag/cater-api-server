@@ -34,6 +34,9 @@ var AddressView = FormView.extend({
   fieldGetters: {
     phone: function() {
       return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
+    },
+    street2: function() {
+      return this.$el.find(this.fieldMap.street2).val().trim();
     }
   }
 });

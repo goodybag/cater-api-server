@@ -118,10 +118,67 @@
       </div>
     </div>
     <div class="col-md-4">
-      <p>TODO: order summary</p>
+     <div class="panel">
+       {{> order_summary}}
+     </div>
     </div>
   </div>
 </div>
+
+<!-- Begin Modals -->
+
+<div id="select-address-modal" class="modal fade">
+  <div class="modal-dialog">
+    <form id="select-address-form" class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Select a different address</h4>
+      </div>
+      <div class="modal-body">
+        {{#each user.addresses}}
+        <div class="radio">
+          <label>
+            <input type="radio" name="address-radio" data-id="{{id}}"{{#if this.is_default}} checked="checked"{{/if}}>
+            {{> address}}
+          </label>
+        </div>
+        {{else}}
+        You have no saved addresses within this restaurant's delivery zone.
+        {{/each}}
+      </div>
+      <div class="modal-footer btn-toolbar">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        {{#if user.addresses}}
+        <button type="submit" class="btn btn-primary">Deliver to selected address</button>
+        {{/if}}
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="cancel-confirm-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Confirm Cancel</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to cancel this order?</p>
+      </div>
+      <div class="row modal-footer">
+        <div class="col-lg-3 col-lg-offset-6">
+          <button type="button" class="btn btn-default" data-dismiss="modal">No, don't cancel</button>
+        </div>
+        <div class="col-lg-3">
+          <button type="button" class="btn btn-danger btn-cancel">Yes, cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- End Modals -->
 
 {{#extend "scripts"}}
 <script>
@@ -144,13 +201,15 @@
   }
 </script>
 
+<script src="/js/models/address.js"></script>
+<script src="/js/models/user.js"></script>
 <script src="/js/models/item.js"></script>
 <script src="/js/models/category.js"></script>
 <script src="/js/models/restaurant.js"></script>d
 <script src="/js/models/order-item.js"></script>
-<script src="/js/models/address.js"></script>
 <script src="/js/models/order.js"></script>
 
+<script src="/js/collections/addresses.js"></script>
 <script src="/js/collections/items.js"></script>
 <script src="/js/collections/categories.js"></script>
 
@@ -160,6 +219,6 @@
 <script src="/js/views/checkout-view.js"></script>
 
 <script>
-  var view = new CheckoutView({el: '#main', model: new Order( {{{json order}}} )});
+  var view = new CheckoutView({el: '#main', model: new Order( {{{json order}}} ), user: new User({{{json user}}})});
 </script>
 {{/extend}}

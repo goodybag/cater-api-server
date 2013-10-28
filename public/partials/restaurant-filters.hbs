@@ -1,5 +1,5 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/order-filters.css">
+<link rel="stylesheet" href="/css/restaurant-filters.css">
 {{/extend}}
 
 <h4>Filter by:</h4>
@@ -17,6 +17,20 @@
       <div class="panel-body">
         <div class="checkbox">
           <label>
+            <input type="checkbox" value="glutenFree" {{#contains orderParams.diets "glutenFree"}}checked="checked"{{/contains}}>
+            <span class="tag tag-gluten-free tag-tooltip" data-title="Gluten-Free" data-original-title="" title=""></span>
+            Gluten-Free
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="dairyFree" {{#contains orderParams.diets "dairyFree"}}checked="checked"{{/contains}}>
+            <span class="tag tag-dairy-free tag-tooltip" data-title="Dairy-Free" data-original-title="" title=""></span>
+            Dairy-Free
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
             <input type="checkbox" value="vegetarian" {{#contains orderParams.diets "vegetarian"}}checked="checked"{{/contains}}>
              <span class="tag tag-vegetarian tag-tooltip" data-title="Vegetarian" data-original-title="" title=""></span>
              Vegetarian
@@ -31,9 +45,16 @@
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="glutenFree" {{#contains orderParams.diets "glutenFree"}}checked="checked"{{/contains}}>
-            <span class="tag tag-gluten-free tag-tooltip" data-title="Gluten-Free" data-original-title="" title=""></span>
-            Gluten-Free
+            <input type="checkbox" value="halal" {{#contains orderParams.diets "halal"}}checked="checked"{{/contains}}>
+            <span class="tag tag-halal tag-tooltip" data-title="Halal" data-original-title="" title=""></span>
+            Halal
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="kosher" {{#contains orderParams.diets "kosher"}}checked="checked"{{/contains}}>
+            <span class="tag tag-kosher tag-tooltip" data-title="Kosher" data-original-title="" title=""></span>
+            Kosher
           </label>
         </div>
       </div>
@@ -54,6 +75,26 @@
         {{#each filterCuisines}}
         <div class="checkbox">
           <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}> {{this}}</label>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  {{! Meal Types }}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>
+        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelMealTypes" href="#">
+          Meal Types
+        </a>
+      </h4>
+    </div>
+    <div id="panelMealTypes" class="panel-collapse collapse {{#if orderParams.mealTypes}}in{{/if}}">
+      <div class="panel-body">
+        {{#each filterMealTypes}}
+        <div class="checkbox">
+          <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.mealTypes this}}checked="checked"{{/contains}}> {{this}}</label>
         </div>
         {{/each}}
       </div>

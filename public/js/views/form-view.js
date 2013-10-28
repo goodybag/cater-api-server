@@ -75,5 +75,9 @@ var FormView = Backbone.View.extend({
   floatGetter: function(field) {
     var val = (this.$el.find(this.fieldMap[field]).val()||'').trim();
     return val ? parseFloat(val) : null;
+  },
+  dollarsGetter: function(field) {
+    var val = parseFloat((this.$el.find(this.fieldMap[field]).val()||'').trim())
+    return !_.isNaN(val) ? Math.round(val * 100) : null;
   }
 });

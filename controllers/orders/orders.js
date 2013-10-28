@@ -72,6 +72,73 @@ module.exports.get = function(req, res) {
   });
 }
 
+// TEMPORARY FOR TESTING PURPOSES ONLY
+// This wil replace the existing get method when it is complete.
+module.exports.checkout = function(req, res) {
+  var tasks = [
+    function(cb) {
+      models.Order.findOne(parseInt(req.params.id), function(err, order) {
+        if (err) return cb(err);
+        if (!order) return cb(404);
+        return cb(null, order);
+      });
+    },
+
+    function(order, cb) {
+      order.getOrderItems(function(err, items) {
+        return cb(err, order);
+      });
+    },
+
+    function(order, cb) {
+      var query = {
+        where: { user_id: req.session.user.id },
+        order: ['is_default asc', 'id asc']
+      };
+      models.Address.find(query, function(err, addresses) {
+        if (err) return cb(err);
+        return cb(null, order, utils.filter(utils.invoke(addresses, 'toJSON'), function(address) {
+          return utils.contains(order.attributes.restaurant.delivery_zips, address.zip);
+        }));
+      });
+    }
+  ];
+
+  utils.async.waterfall(tasks, function(err, order, addresses) {
+    if (err)
+      return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
+
+    var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
+    var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
+    utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+    var context = {
+      order: order.toJSON(),
+      restaurantReview: review,
+      owner: isOwner,
+      admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
+      orderAddress: function() {
+        return {
+          address: order.toJSON(),
+          states: states
+        };
+      },
+      orderParams: req.session.orderParams,
+      query: req.query,
+      user: {addresses: utils.invoke(addresses, 'toJSON')}
+    };
+
+    // orders are always editable for an admin
+    if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
+      context.order.editable = true;
+    res.render('checkout', context, function(err, html) {
+      if (err) return res.error(errors.internal.UNKNOWN, err);
+      res.send(html);
+    });
+
+  });
+
+}
+
 module.exports.create = function(req, res) {
   var order = new models.Order(utils.extend({user_id: req.session.user.id}, req.body));
   order.save(function(err) {

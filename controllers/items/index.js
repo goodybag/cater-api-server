@@ -38,7 +38,7 @@ module.exports.update = function(req, res) {
     return utils.extend({id: uuid.v4()}, set);
   })));
 
-  var body = req.body.options_sets !== null ? utils.extend(req.body, {options_sets: ops}) : req.body;
+  var body = req.body.options_sets != null ? utils.extend(req.body, {options_sets: ops}) : req.body;
 
   // Let's update the item related tables in parallel
   var tasks = [];
@@ -63,7 +63,7 @@ module.exports.update = function(req, res) {
   tasks.push(function(cb) {
     // only need to update this item's columns
     var updates = utils.omit(req.body, 'tags');
-    if (utils.size(updates) === 0) return cb();
+    if (utils.size(updates) === 0) return cb(null, req.body);
     var query = queries.item.update(updates, req.params.id);
     var sql = db.builder.sql(query);
     db.query(sql.query, sql.values, function(err, rows, result) {

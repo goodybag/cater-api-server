@@ -37,5 +37,12 @@ var User = Backbone.Model.extend({
     return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
   },
 
+  initialize: function(attrs, options) {
+    if (attrs.addresses) {
+      this.addresses = new Addresses(attrs.addresses);
+      this.unset('addresses');
+    }
+  },
+
   urlRoot: '/users',
 });

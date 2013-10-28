@@ -1,42 +1,24 @@
 <div class="col-md-12">
   <legend>2. Delivery Info</legend>
-  {{#if order.isAddressComplete}}
-  <div class="order-address read-only">
+  <div class="order-address read-only{{#unless order.isAddressComplete}} hide{{/unless}}">
     {{> address order}}
     <ul class="list-inline address-actions">
       <li><a href="javascript:void(0)" class="edit-address-btn toggle-edit">Edit</a></li>
       <li>|</li>
-      <li><a href="javascript:void(0)" class="select-address">Select Different Address</a></li>
+      <li><a href="#select-address-modal" class="select-address" data-toggle="modal">Select Different Address</a></li>
       <li>|</li>
       <li><a href="javascript:void(0)" class="add-address">Add New Address</a></li>
     </ul>
   </div>
-  <div class="order-address edit hide">
+  <div class="order-address edit{{#if order.isAddressComplete}} hide{{/if}}">
     {{#with orderAddress}}
     {{> edit_address}}
     {{/with}}
-    <div class="checkbox">
-      <label>
-        <input type="checkbox">
-        Save changes to this address in your address book as well?
-      </label>
-    </div>
+    {{#if order.isAddressComplete}}
     <div class="btn-toolbar">
       <button type="button" class="btn btn-default cancel-edit-btn">Cancel</button>
       <button type="button" class="btn btn-primary save-address">Save Address</button>
     </div>
+    {{/if}}
   </div>
-  {{else}}
-  <div class="col-md-6">
-    {{#with orderAddress}}
-    {{> edit_address}}
-    {{/with}}
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" checked="checked">
-        Save this address in your address book.
-      </label>
-    </div>
-  </div>
-  {{/if}}
 </div>

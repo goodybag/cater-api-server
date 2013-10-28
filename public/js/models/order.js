@@ -121,6 +121,7 @@ var Order = Backbone.Model.extend({
     var attrs;
     if (key == null) return this;
 
+    // TODO: same field names between order and address
     var addressFields = _.keys(_.result(Address, 'schema').properties);
     if (typeof key === 'object') {
       attrs = key;
@@ -244,6 +245,24 @@ var Order = Backbone.Model.extend({
       },
       error: function(jqXHR, textStatus, errorThrown) {
         return callback(errorThrown);
+      }
+    });
+  },
+
+  changeStatus: function(status, callback) {
+    if (status == null || status === this.get('status')) return callback();
+    var self = this;
+    $.ajax({
+      type: 'POST',
+      url: _.result(this, 'url') + '/status-history',
+      contentType: 'application/json',
+      data: JSON.stringify({status: status}),
+      error: function(jqXHR, textstatus, errorThrown) {
+        return callback(errorThrown);
+      },
+      success: function(data, textstatus, jqXHR) {
+        self.set('status', data.status);
+        return callback(null, data);
       }
     });
   }

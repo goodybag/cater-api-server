@@ -4,7 +4,7 @@
 
 var options = {
   // Describes when to break the page
-  magicNumber: 1420
+  magicNumber: 1460
 
   // Used to select the elements in a $page that will determine
   // the innerHeight of the element (since page is has a min-height),
@@ -34,8 +34,6 @@ window.__page = (function(){
 })();
 
 console.print = function(){
-  return;
-
   var $console = $('#console-print');
   if ( $console.length === 0 ){
     $console = $([
@@ -120,47 +118,36 @@ console.print = function(){
   };
 
   $(function(){
-    var $page = $('.page');
-
-    console.print('Page Height:', $page.height())
-    console.print('Adjustment Height:', $('.order-adjustment').height())
-
     // Order adjustments height is variable, so factor that chit in
     options.magicNumber += $('.order-adjustment').height();
 
-    console.print('Magic Number:', options.magicNumber)
+    // Recursively adjust and add new pages
+    var adjustPage = function( $page ){
+      if ( $page.height() <= options.magicNumber ){
+        // fillRemainingTrs( $page );
+        return;
+      }
 
-    // First check to see if we even need to do anything
-    if ( $page.height() <= options.magicNumber ){
-      // fillRemainingTrs( $page );
-      window.__page.ready();
-      return;
-    }
+      var $nextPage = $page.clone();
+      $nextPage.find('table tbody tr').remove();
+      $page.find('.order-bottom-wrapper, footer').remove();
 
-    // Ok, we do need to do something. First, try taking out all of the order totals
-    var $nextPage = $page.clone();
-    $nextPage.find('table tbody tr').remove();
-    $page.find('.order-bottom-wrapper, footer').remove();
+      // Pop TR's from $page until magic number is met
+      // Populate $nextPage with those TR's
+      var $trs = $();
+      while ( $page.height() > options.magicNumber ){
+        $trs = $trs.add( $page.find('tbody > tr:last-child' ).clone() );
+        $page.find('tbody > tr:last-child' ).remove();
+      }
 
-    // fillRemainingTrs( $page );
+      $nextPage.find('tbody').append( $trs );
+      $page.after( $nextPage );
 
-    $('.page').after( $nextPage );
+      return adjustPage( $nextPage );
+    };
 
-    // fillRemainingTrs( $nextPage );
+    adjustPage( $('.page') );
 
     window.__page.ready();
-    // if ( $page.height() <= options.magicNumber ){
-
-    //   return;
-    // }
-
-    //Pop all of the TR's out of table until we've satisfied our magicNumber
-    // var $trs = $(), $tr;
-
-    // while ( $table.height() <= options.magicNumber ){
-    //   $tr = $table.find('tr:last-child');
-    //   $trs = $trs.add( $tr.clone() );
-    //   $tr.remove();
-    // }
   });
 })();

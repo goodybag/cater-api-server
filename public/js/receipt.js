@@ -4,7 +4,7 @@
 
 var options = {
   // Describes when to break the page
-  magicNumber: 1460
+  magicNumber: 1660
 
   // Used to select the elements in a $page that will determine
   // the innerHeight of the element (since page is has a min-height),

@@ -8,13 +8,10 @@ var logger  = require('../../logger');
 var receipt = require('../../lib/receipt');
 var venter  = require('../../lib/venter');
 
-// var static = require('node-static');
 var moment = require('moment');
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer;
-
-// var fileServer = new static.Server('../../public/receipts');
 
 var Bitly = require('bitly');
 var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);

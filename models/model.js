@@ -51,7 +51,7 @@ utils.extend(Model.prototype, {
     if (utils.isFunction(query)) {
       client = callback;
       callback = query;
-      query = undefined;
+      query = {};
     }
     var attrs = utils.omit(utils.pick(this.attributes, utils.keys(this.constructor.schema)), ['id', 'created_at']);
     var id = this.attributes.id;

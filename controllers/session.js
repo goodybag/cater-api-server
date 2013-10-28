@@ -22,7 +22,7 @@ module.exports.create = function(req, res) {
 
     req.session = utils.extend(
       {}, req.session,
-      { user: utils.pick( user, [ 'id', 'groups', 'email', 'created_at' ] ) }
+      { user: utils.pick( user, [ 'id', 'name', 'groups', 'email', 'created_at' ] ) }
     );
 
     return res.redirect(req.query.next || '/restaurants');

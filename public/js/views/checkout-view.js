@@ -3,7 +3,8 @@ var CheckoutView = FormView.extend({
   events: {
     'change input[type="radio"].payment-method': 'changePaymentMethod',
     'submit #order-form': 'submit',
-    'submit #select-address-form': 'selectAddress'
+    'submit #select-address-form': 'selectAddress',
+    'click .btn-cancel': 'cancel'
   },
 
   fieldMap: {
@@ -62,11 +63,17 @@ var CheckoutView = FormView.extend({
     this.onSave(function(err, response) {
       if (err) return alert(err); // TODO: error handling
       self.model.changeStatus('submitted', function(err, data) {
-        if (err) return alert(err);
+        if (err) return alert(err); // TODO: error handling
         window.location.reload();
       });
     });
+  },
 
+  cancel: function(e) {
+    this.model.changeStatus('canceled', function(err, data) {
+      if (err) return alert(err); // TODO: error handling
+      window.location.reload();
+    });
   },
 
   selectAddress: function(e) {

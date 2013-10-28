@@ -74,7 +74,7 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
-      models.Address.findOne({where: { is_default: true }}, callback);
+      models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
     }
   ];
 

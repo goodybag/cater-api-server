@@ -7,3 +7,7 @@
   padding-bottom: 0;
   background-color: #fff; 
 }
+
+.panel-heading a {
+  color: #695A42;
+}

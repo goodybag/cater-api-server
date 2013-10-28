@@ -35,6 +35,7 @@ var Item = Backbone.Model.extend({
         },
         options_sets: {
           type: ['array', 'null'],
+          required: false,
           items: {
             type: 'object',
             properties: {

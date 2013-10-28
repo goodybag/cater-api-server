@@ -1,6 +1,6 @@
 <div class="list-group order-list-group">
   {{#each orders}}
-  <a class="list-group-item" href="/orders/{{this.id}}" data-status="{{status}}" data-id="{{id}}">
+  <a class="list-group-item" href="/orders/{{this.id}}{{#eq status "pending"}}/items{{/eq}}" data-status="{{status}}" data-id="{{id}}">
     <div class="row">
       <div class="col-sm-8">
         <h4 class="list-group-item-heading">{{this.restaurant.name}}</h4>

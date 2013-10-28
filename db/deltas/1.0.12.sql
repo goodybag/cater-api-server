@@ -1,25 +1,31 @@
-begin;
 -- Update version
-insert into deltas (version, date) values ('1.0.11', 'now()');
+insert into deltas (version, date) values ('1.0.12', 'now()');
 
-UPDATE addresses SET street2='' WHERE street2 IS NULL;
+-- #369 - Add restaurant meal type filters
 
-ALTER TABLE addresses
-      ALTER COLUMN street SET NOT NULL,
-      ALTER COLUMN city SET NOT NULL,
-      ALTER COLUMN "state" SET NOT NULL,
-      ALTER COLUMN zip SET NOT NULL,
-      ALTER COLUMN is_default SET NOT NULL,
-      ALTER COLUMN phone SET NOT NULL,
-      ALTER COLUMN street2 SET NOT NULL,
-      ALTER COLUMN street2 SET DEFAULT '';
+create table if not exists "meal_types" (
+  id            serial unique not null,
+  created_at    timestamptz not null default now(),
+  name          text primary key
+);
 
-ALTER TABLE addresses DROP CONSTRAINT IF EXISTS addresses_pkey cascade;
+create table if not exists "restaurant_meal_types" (
+  id            serial unique not null,
+  created_at    timestamptz not null default now(),
+  restaurant_id int not null references restaurants(id) on delete cascade,
+  meal_type     text not null references meal_types(name) on delete cascade,
+  primary key   (restaurant_id, meal_type)
+);
 
-ALTER TABLE addresses ALTER COLUMN id SET NOT NULL;
-ALTER TABLE addresses ADD UNIQUE (id);
-
-ALTER TABLE addresses ADD PRIMARY KEY (user_id, street, street2, zip);
-
-ALTER TABLE restaurants ADD FOREIGN KEY(address_id) REFERENCES addresses(id);
-commit;
+INSERT INTO meal_types (name)
+SELECT existing.*
+FROM
+  (SELECT unnest(array[
+    'Appetizers'
+  , 'Breakfast'
+  , 'Brunch'
+  , 'Lunch'
+  , 'Dinner'
+  , 'Dessert'
+  ]) as meal_type) AS existing
+WHERE NOT EXISTS (SELECT name from meal_types WHERE existing.meal_type = meal_types.name);

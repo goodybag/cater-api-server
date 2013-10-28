@@ -1,5 +1,5 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/order-filters.css">
+<link rel="stylesheet" href="/css/restaurant-filters.css">
 {{/extend}}
 
 <h4>Filter by:</h4>
@@ -75,6 +75,26 @@
         {{#each filterCuisines}}
         <div class="checkbox">
           <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}> {{this}}</label>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  {{! Meal Types }}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>
+        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelMealTypes" href="#">
+          Meal Types
+        </a>
+      </h4>
+    </div>
+    <div id="panelMealTypes" class="panel-collapse collapse {{#if orderParams.mealTypes}}in{{/if}}">
+      <div class="panel-body">
+        {{#each filterMealTypes}}
+        <div class="checkbox">
+          <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.mealTypes this}}checked="checked"{{/contains}}> {{this}}</label>
         </div>
         {{/each}}
       </div>

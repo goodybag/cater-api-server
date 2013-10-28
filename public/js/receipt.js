@@ -71,6 +71,9 @@ console.print = function(){
 
 (function(){
 
+  // WIP progress function for filling the remaining Table Rows
+  // so the tables don't look so bare
+  // This isn't being used yet
   var fillRemainingTrs = function( $page ){
     // Each blank table row should be:
     var rowHeight = 20;
@@ -123,14 +126,11 @@ console.print = function(){
 
     // Recursively adjust and add new pages
     var adjustPage = function( $page ){
-      if ( $page.height() <= options.magicNumber ){
-        // fillRemainingTrs( $page );
-        return;
-      }
+      if ( $page.height() <= options.magicNumber ) return;
 
       var $nextPage = $page.clone();
       $nextPage.find('table tbody tr').remove();
-      $page.find('.order-bottom-wrapper, footer').remove();
+      $page.find('.order-bottom-wrapper').remove();
 
       // Pop TR's from $page until magic number is met
       // Populate $nextPage with those TR's

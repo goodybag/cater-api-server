@@ -58,8 +58,15 @@ var CheckoutView = FormView.extend({
 
   submit: function(e) {
     e.preventDefault();
-    this.onSave();
-    // TODO: on success, change status to submitted.
+    var self = this;
+    this.onSave(function(err, response) {
+      if (err) return alert(err); // TODO: error handling
+      self.model.changeStatus('submitted', function(err, data) {
+        if (err) return alert(err);
+        window.location.reload();
+      });
+    });
+
   },
 
   selectAddress: function(e) {

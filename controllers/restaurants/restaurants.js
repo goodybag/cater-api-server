@@ -71,6 +71,10 @@ module.exports.get = function(req, res) {
           callback(err, restaurant);
         });
       });
+    },
+
+    function(callback) {
+      models.Address.findOne({where: { is_default: true }}, callback);
     }
   ];
 
@@ -82,6 +86,7 @@ module.exports.get = function(req, res) {
     var context = {
       restaurant: results[1].toJSON(),
       order: results[0] ? results[0].toJSON() : null,
+      defaultAddress: results[2] ? results[2].toJSON() : null,
       orderParams: orderParams
     }
 

@@ -42,7 +42,6 @@ module.exports = Model.extend({
     }
   },
   destroy: function(callback) {
-    console.log("DESTROYING ORDER_ITEM FOR ORDER", this.attributes.order_id)
     var model = this, args = arguments;
     this.isMutable(function (err, mutable) {
       if (err) return callback(err);

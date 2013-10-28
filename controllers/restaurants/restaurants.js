@@ -83,11 +83,17 @@ module.exports.get = function(req, res) {
 
     var orderParams = req.session.orderParams || {};
 
+    var defaultAddress = results[2] ? results[2].toJSON() : null;
+
+    // Auto fill precedence orderParam > defaultAddress
+    var zip = orderParams.zip ? orderParams.zip : (defaultAddress ? defaultAddress.zip : '');
+
     var context = {
       restaurant: results[1].toJSON(),
       order: results[0] ? results[0].toJSON() : null,
-      defaultAddress: results[2] ? results[2].toJSON() : null,
-      orderParams: orderParams
+      defaultAddress: defaultAddress,
+      orderParams: orderParams,
+      zip: zip
     }
 
     res.render('menu', context, function(err, html) {

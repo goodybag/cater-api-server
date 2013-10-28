@@ -36,12 +36,18 @@ var OrderAddressView = AddressView.extend({
   },
 
   saveAddress: function(e) {
-    var self = this;
-    this.options.orderView.onSave(function(err, response) {
-      if (err)
-        ;//TODO: something wen't wrong
-      else
-        self.render();
-    });
+    var diff = this.getDiff(); // changes to address fields
+    if (!diff) return this.render();
+
+    var sent = this.options.orderView.model.save(diff, {
+      success: _.bind(this.render, this),
+      error: function(jqXHR, textstatus, errorThrown) {
+        // TODO: error handling
+        alert(errorThrown);
+      }
+    })
+
+    if (!sent)
+      alert(this.options.orderView.model.validationError); // TODO: real error handling
   }
 });

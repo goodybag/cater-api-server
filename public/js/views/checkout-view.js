@@ -7,7 +7,34 @@ var CheckoutView = FormView.extend({
   },
 
   fieldMap: {
-    // TODO: order fields
+    datetime: '.order-datetime',
+    guests: '#order-guests',
+    name: '.order-name',
+    notes: '#order-notes',
+    // adjustment: '.adjustment .form-control',
+    tip: '.order-tip'
+  },
+
+  fieldGetters: {
+    guests: _.partial(FormView.intGetter, 'guests'),
+
+    tip: _.partial(FormView.dollarsGetter, 'tip'),
+
+    datetime: function() {
+      var date = this.$el.find("#order-form #order-date").val().trim();
+      var time = this.$el.find("#order-form #order-time").val().trim();
+      var datepart = date ? dateTimeFormatter(date) : null;
+      var timepart = time ? timeFormatter(time, 'HH:mm:ss') : null;
+
+
+      if(!datepart || !timepart) return null;
+
+      // since we cannot determine offset, cannot format as ISO 8601 String
+      // using "YYYY-MM-DD HH:mm:ss" to represent the date and time
+      var datetime = datepart + ' ' + timepart;
+      var date = moment(datetime);
+      return date.isValid() ? datetime : null;
+    }
   },
 
   getDiff: function() {
@@ -31,6 +58,8 @@ var CheckoutView = FormView.extend({
 
   submit: function(e) {
     e.preventDefault();
+    this.onSave();
+    // TODO: on success, change status to submitted.
   },
 
   selectAddress: function(e) {

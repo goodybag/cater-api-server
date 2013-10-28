@@ -42,10 +42,23 @@
                 </div>
               </div>
               <div class="row">
-                <div class="form-group col-sm-12">
-                  <label class="control-label">Add tip</label>
-                  <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
-                  <p>TODO: tip</p>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label class="control-label">Add tip</label>
+                    <select class="form-control tip-percentage">
+                      <option value="0">No Tip</option>
+                      <option value="custom">Custom Tip</option>
+                      <option value="5">5%</option>
+                      <option value="10">10%</option>
+                      <option value="15">15%</option>
+                      <option value="18">18%</option>
+                      <option value="20">20%</option>
+                      <option value="25">25%</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
+                  </div>
                 </div>
               </div>
             </fieldset>

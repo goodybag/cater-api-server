@@ -38,7 +38,7 @@ module.exports.list = function(req, res) {
 
     res.render('restaurants', {
       restaurants:      utils.invoke(results[0], 'toJSON'),
-      defaultAddress:   results[1].toJSON(),
+      defaultAddress:   results[1] ? results[1].toJSON() : null,
       orderParams:      orderParams,
       filterCuisines:   cuisines,
       filterPrices:     utils.range(1, 5),

@@ -2,6 +2,7 @@ begin;
 -- Update version
 insert into deltas (version, date) values ('1.0.11', 'now()');
 
+-- fix some address stuff, especially uniqueness
 UPDATE addresses SET street2='' WHERE street2 IS NULL;
 
 ALTER TABLE addresses
@@ -23,6 +24,17 @@ ALTER TABLE addresses ADD PRIMARY KEY (user_id, street, street2, zip);
 
 ALTER TABLE restaurants ADD FOREIGN KEY(address_id) REFERENCES addresses(id);
 
-ALTER TABLE orders ADD COLUMN tip_percent tip_percentage;
+
+-- add tip percentage to orders
+DO $$
+  BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tip_percentage') THEN
+      CREATE TYPE tip_percentage AS ENUM('0', 'custom', '5', '10', '15', '18', '20', '25');
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'orders' AND column_name = 'tip_percent') THEN
+      ALTER TABLE orders ADD COLUMN tip_percent tip_percentage;
+    END IF;
+  END;
+$$;
 
 commit;

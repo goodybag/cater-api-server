@@ -35,6 +35,16 @@ var Order = Backbone.Model.extend({
         name: {
           type: ['string', 'null'],
           required: false
+        },
+        tip: {
+          type: ['integer', 'null'],
+          required: false,
+          minimum: 0
+        },
+        tip_percent: {
+          type: ['string', 'null'],
+          required: false,
+          enum: ['0', 'custom', '5', '10', '15', '18', '20', '25']
         }
       }
     };

@@ -5,7 +5,7 @@ var CheckoutView = FormView.extend({
     'submit #order-form': 'submit',
     'submit #select-address-form': 'selectAddress',
     'click .btn-cancel': 'cancel',
-    'change .tip-percentage': 'selectTip',
+    'change .tip-percent': 'selectTip',
     'keydown .order-tip': 'cacheTip',
     'keyup .order-tip': 'customTip'
   },
@@ -17,7 +17,7 @@ var CheckoutView = FormView.extend({
     notes: '#order-notes',
     // adjustment: '.adjustment .form-control',
     tip: '.order-tip',
-    tip_percentage: '.tip-percentage'
+    tip_percent: '.tip-percent'
   },
 
   fieldGetters: {
@@ -104,6 +104,6 @@ var CheckoutView = FormView.extend({
 
   customTip: function(e) {
     if (this.tip !== e.currentTarget.value)
-      this.$el.find('.tip-percentage option[value="custom"]').attr('selected', 'selected');
+      this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
   }
 });

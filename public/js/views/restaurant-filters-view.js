@@ -1,8 +1,3 @@
-/**
- * Handles toggling collapsible icons, triggering search
- * on filter change
- */
-
 var RestaurantFiltersView = Backbone.View.extend({
   events: {
     'change .checkbox': 'onFilterChange'
@@ -28,6 +23,7 @@ var RestaurantFiltersView = Backbone.View.extend({
   }
 
 , toggleCollapsible: function(e) {
+    // toggle collapse panel icon
     var $panelIcon = $(e.currentTarget).siblings('.panel-heading').find('.glyphicon');
     $panelIcon.toggleClass('glyphicon-chevron-down glyphicon-chevron-right');
   }

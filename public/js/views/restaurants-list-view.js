@@ -1,7 +1,5 @@
 /** 
  * Handles restaurant searching and filtering
- * by tags (diets, cuisine, meal types, price)
- * and order params (zip, delivery date/time, guests)
  */
 
 var RestaurantsListView = Backbone.View.extend({

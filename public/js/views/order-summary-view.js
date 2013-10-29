@@ -3,7 +3,7 @@ var OrderSummaryView = Backbone.View.extend({
     'click .btn-checkout': 'checkout'
   },
 
-  template: Handlebars.partials.order_summary,
+  template: Handlebars.partials.menu_order_summary,
 
   initialize: function(options) {
     if (this.model) this.setModel(this.model);

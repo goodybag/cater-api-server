@@ -132,6 +132,12 @@ var config = {
   , testPhoneVoice: '5125390612'
 
   , emailEnabled: true
+
+  , receipt: _.extend(
+      {}
+    , require('./receipt-config')
+    , { bucket: 'dev-receipts.goodybag.com' }
+    )
   }
 
 
@@ -180,6 +186,12 @@ var config = {
     }
 
   , emailEnabled: true
+
+  , receipt: _.extend(
+      {}
+    , require('./receipt-config')
+    , { bucket: 'staging-receipts.goodybag.com' }
+    )
   }
 
 , production: {

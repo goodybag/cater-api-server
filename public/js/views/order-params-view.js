@@ -22,10 +22,6 @@ var OrderParamsView = Backbone.View.extend({
 
     this.datepicker.on( 'set', this.onInputChange );
     this.timepicker.on( 'set', this.onInputChange );
-
-    this.$searchBtn = this.$el.find('.btn-search');
-    this.searchUrl = this.$searchBtn.data('base-url');
-
   }
 
 , render: function(){

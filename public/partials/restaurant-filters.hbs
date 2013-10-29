@@ -125,3 +125,11 @@
   </div>
 
 </div>
+
+{{#extend "scripts"}}
+<script type="text/javascript" src="/js/views/restaurant-filters-view.js"></script>
+
+<script>
+  var restaurantFiltersView = new RestaurantFiltersView({el: '#filters'});
+</script>
+{{/extend}}

@@ -26,6 +26,8 @@ var OrderParamsView = Backbone.View.extend({
 
     this.$searchBtn = this.$el.find('.btn-search');
     this.searchUrl = this.$searchBtn.data('base-url');
+
+    utils.pubSub.on('filter:click', this.onFilterClick, this);
   }
 
 , render: function(){
@@ -69,5 +71,9 @@ var OrderParamsView = Backbone.View.extend({
 , onFormSubmit: function (e) {
     e.preventDefault();
     this.updateSearchHref();
+  }
+
+, onFilterClick: function(e) {
+    window.location = this.searchUrl + utils.queryParams( this.getProps() );
   }
 });

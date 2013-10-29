@@ -33,10 +33,10 @@ a.list-group-item-restaurant .list-group-item-heading {
 }
 
 .list-group-item-restaurant:hover .business-logo,
-.list-group-item-restaurant .business-logo-mono {
+.list-group-item-restaurant .business-logo-color {
   display: none;
 }
 
-.list-group-item-restaurant:hover .business-logo-mono {
+.list-group-item-restaurant:hover .business-logo-color {
   display: inline-block;
 }

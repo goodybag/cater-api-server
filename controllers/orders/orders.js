@@ -124,7 +124,8 @@ module.exports.checkout = function(req, res) {
       },
       orderParams: req.session.orderParams,
       query: req.query,
-      user: {addresses: utils.invoke(addresses, 'toJSON')}
+      user: {addresses: utils.invoke(addresses, 'toJSON')},
+      step: 2
     };
 
     // orders are always editable for an admin

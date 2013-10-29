@@ -22,4 +22,7 @@ ALTER TABLE addresses ADD UNIQUE (id);
 ALTER TABLE addresses ADD PRIMARY KEY (user_id, street, street2, zip);
 
 ALTER TABLE restaurants ADD FOREIGN KEY(address_id) REFERENCES addresses(id);
+
+ALTER TABLE orders ADD COLUMN tip_percent tip_percentage;
+
 commit;

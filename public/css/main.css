@@ -17,6 +17,10 @@ h1 {
   font-weight: 300;
 }
 
+img {
+  max-width: 100%;
+}
+
 header.navbar {
   border-radius: 0;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.07);

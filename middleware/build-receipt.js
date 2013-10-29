@@ -12,37 +12,82 @@ var path    = require('path');
 var fs      = require('fs');
 var receipt = require('../lib/receipt');
 var config  = require('../config');
+var utils   = require('../utils');
 
 module.exports = function(){
   return function( req, res, next ){
     if ( !req.param('oid') ) return next();
 
-    (function( buildReceipt ){
-      if ( req.param('rebuild') ) return buildReceipt();
+    utils.stage({
+      'start':
+      function( stage, done ){
+        if ( req.param('rebuild') ) return stage('buildReceipt');
+        // Don't worry about checking filesystem
+        // We now save PDFs to filesystem for dev convenience only
+        // stage('checkFilesystem');
 
-      var filename = path.resolve(
-        __dirname, '../'
-      , config.receipt.dir
-      , config.receipt.fileName.replace( ':id', req.param('oid') )
-      );
+        stage('checkS3');
+      }
 
-      fs.exists( filename, function( exists ){
-        if ( exists ) return next();
+    , 'checkFilesystem':
+      function( stage, done ){
+        var filename = path.resolve(
+          __dirname, '../'
+        , config.receipt.dir
+        , config.receipt.fileName.replace( ':id', req.param('oid') )
+        );
 
-        buildReceipt();
-      });
-    })( function(){
-      receipt.build( +req.param('oid'), function( error, result ){
-        if ( error ){
-          if ( 'httpStatus' in error && error.httpStatus === 404 ){
-            return res.status(404).render('404');
+        fs.exists( filename, function( exists ){
+          if ( exists ) return done();
+
+          stage('checkS3');
+        });
+      }
+
+      // Check S3 for the receipt - If it's there, go ahead and download it
+      // so future checks to s3 are circumvented
+      // Also, go ahead and just pipe the response to the client
+    , 'checkS3':
+      function( stage, done ){
+        var file = config.receipt.fileName.replace( ':id', req.param('oid') );
+
+        var s3Client = utils.s3.createClient({
+          key:    config.amazon.awsId
+        , secret: config.amazon.awsSecret
+        , bucket: config.receipt.bucket
+        });
+
+        s3Client.getFile( '/' + file, function( error, fileRes ){
+          if ( error ) return stage('buildReceipt');
+
+          // Cache the file locally
+          var receiptFileStream = fs.createWriteStream(
+            path.resolve(
+              __dirname, '../'
+            , config.receipt.dir
+            , file
+            )
+          );
+
+          fileRes.pipe( res );
+          fileRes.pipe( receiptFileStream );
+        });
+      }
+
+    , 'buildReceipt':
+      function( stage, done ){
+        receipt.build( +req.param('oid'), function( error, result ){
+          if ( error ){
+            if ( 'httpStatus' in error && error.httpStatus === 404 ){
+              return res.status(404).render('404');
+            }
+
+            return res.status(500).render('500');
           }
 
-          return res.status(500).render('500');
-        }
-
-        next();
-      });
-    });
+          done();
+        });
+      }
+    })( next );
   }
 };

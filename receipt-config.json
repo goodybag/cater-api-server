@@ -3,6 +3,7 @@
 , "script": "lib/receipt-pdf.js"
 , "fileName": "order-:id.pdf"
 , "orderRoute": "/orders/:id/receipt"
+, "bucket": "receipts.goodybag.com"
 , "concurrency": 10
 , "paperSize": {
     "format": "A4"

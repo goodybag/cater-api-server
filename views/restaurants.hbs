@@ -58,10 +58,19 @@
 {{#extend "scripts"}}
 <script type="text/javascript" src="/js/models/order-params.js"></script>
 <script type="text/javascript" src="/js/views/order-params-view.js"></script>
+<script type="text/javascript" src="/js/views/restaurant-filters-view.js"></script>
+<script type="text/javascript" src="/js/views/restaurants-list-view.js"></script>
 
 <script type="text/javascript">
+  $(".tag-tooltip").tooltip();
   var orderParams = new OrderParams();
   var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
-  $(".tag-tooltip").tooltip();
+  var restaurantFiltersView = new RestaurantFiltersView({el: '#filters'});
+  var restaurantsListView = new RestaurantsListView({
+    el: '#main'
+  , filtersView: restaurantFiltersView
+  , paramsView: orderParamsView
+  , searchUrl: '/restaurants'
+  });
 </script>
 {{/extend}}

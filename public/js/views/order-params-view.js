@@ -9,7 +9,6 @@ var OrderParamsView = Backbone.View.extend({
 , template: Handlebars.partials.order_params_view
 
 , initialize: function() {
-    this.onInputChange = _.debounce( _.bind( this.updateSearchHref, this ), 300 );
 
     this.datepicker = this.$el.find("input[name='date']").eq(0).pickadate({
       format: 'mm/dd/yyyy'
@@ -27,7 +26,6 @@ var OrderParamsView = Backbone.View.extend({
     this.$searchBtn = this.$el.find('.btn-search');
     this.searchUrl = this.$searchBtn.data('base-url');
 
-    utils.pubSub.on('filter:click', this.onFilterClick, this);
   }
 
 , render: function(){
@@ -52,28 +50,19 @@ var OrderParamsView = Backbone.View.extend({
     , date:     (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
     , time:     this.timepicker.get()
     , guests:   this.$("input[name='guests']").val() || null
-    , diets:     _.pluck($('#panelDiet input:checked'), 'value')
-    , cuisines:  _.pluck($('#panelCuisine input:checked'), 'value')
-    , prices:    _.pluck($('#panelPrice input:checked'), 'value')
-    , mealTypes: _.pluck($('#panelMealTypes input:checked'), 'value')
     };
   }
 
-, updateSearchHref: function(){
-    this.$searchBtn.attr( 'href',  this.searchUrl + utils.queryParams( this.getProps() ) );
-    return this;
+, search: function() {
+    this.trigger('params:submit');
   }
 
 , onSearchClick: function(e){
-    this.updateSearchHref();
+    e.preventDefault();
+    this.search();
   }
 
 , onFormSubmit: function (e) {
-    e.preventDefault();
-    this.updateSearchHref();
-  }
-
-, onFilterClick: function(e) {
-    window.location = this.searchUrl + utils.queryParams( this.getProps() );
+    this.search();
   }
 });

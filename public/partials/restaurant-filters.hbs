@@ -9,7 +9,7 @@
     <div class="panel-heading">
       <h4>
         <a class="accordion-toggle" data-toggle="collapse" data-target="#panelDiet" href="#">
-          Special Diets
+          <span class="glyphicon glyphicon-chevron-right pull-right"></span> Special Diets
         </a>
       </h4>
     </div>
@@ -66,7 +66,7 @@
     <div class="panel-heading">
       <h4>
         <a class="accordion-toggle" data-toggle="collapse" data-target="#panelCuisine" href="#">
-          Cuisine
+          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Cuisine
         </a>
       </h4>
     </div>
@@ -86,7 +86,7 @@
     <div class="panel-heading">
       <h4>
         <a class="accordion-toggle" data-toggle="collapse" data-target="#panelMealTypes" href="#">
-          Meal Types
+          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Meal Types
         </a>
       </h4>
     </div>
@@ -106,7 +106,7 @@
     <div class="panel-heading">
       <h4>
         <a class="accordion-toggle" data-toggle="collapse" data-target="#panelPrice" href="#">
-          Price
+          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Price
         </a>
       </h4>
     </div>
@@ -125,11 +125,3 @@
   </div>
 
 </div>
-
-{{#extend "scripts"}}
-<script type="text/javascript" src="/js/views/restaurant-filters-view.js"></script>
-
-<script>
-  var restaurantFiltersView = new RestaurantFiltersView({el: '#filters'});
-</script>
-{{/extend}}

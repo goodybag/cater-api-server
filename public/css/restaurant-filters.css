@@ -11,3 +11,7 @@
 .panel-heading a {
   color: #695A42;
 }
+
+.panel-heading .glyphicon {
+  font-size: 12px;
+}

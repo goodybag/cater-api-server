@@ -407,7 +407,7 @@
 }
 
 .list-group-item {
-  padding: 14px 17px;
+  padding: 11px 17px;
 }
 
 .list-group-item .label {
@@ -771,7 +771,7 @@ a.list-group-item .list-group-item-heading {
   content: "";
 }
 
-/** 
+/**
  * Tag Listing
  */
 

@@ -20,6 +20,7 @@ a.list-group-item-restaurant .list-group-item-heading {
 
 .list-group-restaurants .logo-wrapper + .col {
   padding-left: 12px;
+  margin-top: 6px;
 }
 
 @media screen and (max-width: 768px) {
@@ -29,4 +30,13 @@ a.list-group-item-restaurant .list-group-item-heading {
     padding-left: 40px;
     margin-right: -52px;
   }
+}
+
+.list-group-item-restaurant:hover .business-logo,
+.list-group-item-restaurant .business-logo-mono {
+  display: none;
+}
+
+.list-group-item-restaurant:hover .business-logo-mono {
+  display: inline-block;
 }

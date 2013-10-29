@@ -5,15 +5,16 @@ var models = require('../../models');
 
 var _ = utils._;
 
-var debitCustomer = function (order, user, restaurant, callback) {
+var debitCustomer = function (order, callback) {
   var TAGS = [process.domain.uuid];
 
-  var amount = (order.attributes.total/100).toFixed(2);
-  if(typeof amount === 'undefined' || amount == null || amount == 0) return;
+  var amount = Math.floor(order.attributes.total);
+  if (typeof amount === 'undefined' || amount == null || amount == 0) return callback(new Error('invalid amount: ' + amount));
   utils.balanced.Debits.create({
     amount: amount
-  , customer_uri: user.balanced_customer_uri
-  , on_behalf_of_uri: restaurant.balanced_customer_uri
+  , customer_uri: order.attributes.user.balanced_customer_uri
+  , on_behalf_of_uri: order.attributes.restaurant.balanced_customer_uri
+  , appears_on_statement_as: 'GB ORDER #'+ order.attributes.id
   , meta: {
       user: {id: order.attributes.user.id}
     , restaurant: {id: order.attributes.restaurant.id}
@@ -26,7 +27,7 @@ var debitCustomer = function (order, user, restaurant, callback) {
 };
 
 var task = function (message, callback) {
-  var TAGS = [process.domain.uuid];
+  var TAGS = [process.domain.uuid, 'worker-debit-task'];
   if (!message) return callback();
 
   // if data is bad remove it from the queue immediately
@@ -48,10 +49,18 @@ var task = function (message, callback) {
       order.attributes.payment_status = 'processing';
       order.save(function (error) {
         if (error) return logger.db.error(TAGS, error), utils.rollbar.reportMessage(error), callback(error);
-        // debit customer
+        debitCustomer(order, function(error) {
+          utils.queues.debit.del(message.id, utils.noop);
+          if (error) logger.debit.error(TAGS, error);
+          return callback(error);
+        });
       });
     } else {
-      // debit customer
+      debitCustomer(order, function(error) {
+        utils.queues.debit.del(message.id, utils.noop);
+        if (error) logger.debit.error(TAGS, error);
+        return callback(error);
+      });
     }
   });
 };

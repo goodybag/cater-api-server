@@ -1,7 +1,7 @@
 -- Insert the user and group for building receipts
 
 DO $$
-  declare version       text := '1.0.13';
+  declare version       text := '1.0.15';
   declare group_name    text := 'receipts';
   declare user_email    text := 'receipts@goodybag.com';
   declare user_password text := '$2a$10$8egVetFrE7OAk1B.v36dOOdhS9TXt98PN7/zCvLdeAuOa0KLXIzIi';

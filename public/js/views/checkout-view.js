@@ -92,8 +92,10 @@ var CheckoutView = FormView.extend({
 
   selectTip: function(e) {
     var val = parseInt(e.currentTarget.value);
-    if (!_.isNaN(val))
-      this.$el.find('.order-tip').val(this.model.get('sub_total') * (val / 100));
+    if (!_.isNaN(val)) {
+      var tip = this.model.get('sub_total') * (val / 100);
+      this.$el.find('.order-tip').val(Handlebars.helpers.dollars(tip));
+    }
   },
 
   cacheTip: function(e) {

@@ -15,7 +15,8 @@ var EditRestaurantView = FormView.extend({
     'click .new-category': 'newCategory',
     'click .add-lead-time': 'addLeadTime',
     'click .remove-lead-time': 'removeLeadTime',
-    'click .restaurant-remove': 'onRestaurantRemoveClick'
+    'click .restaurant-remove': 'onRestaurantRemoveClick',
+    'change input[type="filepicker"]': 'onFilePickerChange'
   },
 
   initialize: function(options) {
@@ -53,7 +54,8 @@ var EditRestaurantView = FormView.extend({
 
   fieldMap: {
     name: '.restaurant-form .restaurant-name',
-    logo_url: '.restaurant-form .restaurant-logo-url',
+    logo_url: '.restaurant-form [name="logo_url"]',
+    logo_mono_url: '.restaurant-form [name="logo_mono_url"]',
     sms_phone: '.restaurant-form .restaurant-sms-phone',
     voice_phone: '.restaurant-form .restaurant-voice-phone',
     email: '.restaurant-form .restaurant-email',
@@ -173,5 +175,14 @@ var EditRestaurantView = FormView.extend({
     this.model.destroy({
       success: function(){ window.location.href = '/restaurants?edit=true'; }
     });
+  },
+
+  onFilePickerChange: function(e){
+    console.log(e)
+    var $input = $(e.originalEvent.target);
+    console.log($input.val(), $input)
+    $input.siblings('[data-name="' + $input.attr('name') + '"]').attr(
+      'src', $input.val()
+    );
   }
 });

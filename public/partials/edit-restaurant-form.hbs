@@ -12,11 +12,13 @@
     <div class="row">
       <div class="col-md-6">
         <label class="control-label">Logo</label>
-        <input type="text" id="pick-logo-input" class="form-control restaurant-logo-url" value="{{restaurant.logo_url}}">
-        <button id="pick-logo" class="btn btn-default">Choose File</button>
+        <input type="filepicker" class="form-control" name="logo_url" value="{{restaurant.logo_url}}">
+        <img class="restaurant-logo-img" data-name="logo_url" src="{{restaurant.logo_url}}">
       </div>
       <div class="col-md-6">
-        <img class="restaurant-logo-img" src="{{restaurant.logo_url}}">
+        <label class="control-label">Monochromatic Logo</label>
+        <input type="filepicker" class="form-control" name="logo_mono_url" value="{{restaurant.logo_mono_url}}">
+        <img class="restaurant-logo-img" data-name="logo_mono_url" src="{{restaurant.logo_mono_url}}">
       </div>
     </div>
   </div>
@@ -161,18 +163,5 @@
   new EditHoursView({model: new Hours({day: {{@key}}, times: {{{json this}}} }), el: '#hours-{{@key}}'}),
   {{/each}}
  ];
-
-  var $logoImg = $('.restaurant-logo-img');
-  var $logoInput = $('#pick-logo-input');
-  var onFilePick = function(){
-    filepicker.pick( function( blob ){
-      $logoInput[0].value = blob.url;
-      $logoImg.attr( 'src', blob.url );
-      _.defer( restaurant.onChange.bind( restaurant ) );
-    });
-  };
-
-  $logoInput.focus( onFilePick );
-  $('#pick-logo').click( onFilePick );
 </script>
 {{/extend}}

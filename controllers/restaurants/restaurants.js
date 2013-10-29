@@ -169,6 +169,7 @@ var mealTypes = function(body, id) {
 var fields = [
   'name',
   'logo_url',
+  'logo_mono_url',
   'is_hidden',
   'street',
   'city',

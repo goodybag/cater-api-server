@@ -49,24 +49,19 @@ module.exports = function(){
       // Also, go ahead and just pipe the response to the client
     , 'checkS3':
       function( stage, done ){
-        var file = config.receipt.fileName.replace( ':id', req.param('oid') );
-
-        var s3Client = utils.s3.createClient({
-          key:    config.amazon.awsId
-        , secret: config.amazon.awsSecret
-        , bucket: config.receipt.bucket
-        });
-
-        s3Client.getFile( '/' + file, function( error, fileRes ){
+        receipt.get( req.param('oid'), function( error, fileRes ){
           if ( error ) return stage('buildReceipt');
+
+          // If S3 sent us back a 200 + an XML document, it's most likely their
+          // way of saying `key not found` - but knox doesn't pick up on it
+          // because it's xml. Either way, we probably need to re-build the PDF
+          if ( fileRes.headers['content-type'] === 'application/xml' ){
+            return stage('buildReceipt');
+          }
 
           // Cache the file locally
           var receiptFileStream = fs.createWriteStream(
-            path.resolve(
-              __dirname, '../'
-            , config.receipt.dir
-            , file
-            )
+            receipt.getFullOrderPath( req.param('oid') )
           );
 
           fileRes.pipe( res );

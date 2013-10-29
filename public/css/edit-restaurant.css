@@ -227,3 +227,8 @@ th.name-column {
   -o-transform: rotate(0);
   transform: rotate(0);
 }
+
+.restaurant-logo-img {
+  max-width: 100%;
+  margin-top: 8px;
+}

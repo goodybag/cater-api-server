@@ -1,0 +1,39 @@
+.wizard {
+  display: inline-block;
+  margin: 0 0 0 200px;
+  padding: 0;
+  color: #D9D9CD; /* Muted Gray */
+  text-align: center;
+  font-family: 'Aleo';
+  font-size: 15px;
+  list-style: none;
+}
+
+.wizard > li {
+  float: left;
+  margin: 0 0 0 -80px;
+  padding: 0 100px 0 0;
+  width: 200px;
+  background: url('/img/wizard-separator.png') no-repeat 80px 12px;
+}
+
+.wizard > li:last-child {
+  background: none;
+}
+
+.wizard .active {
+  color: #481E14; /* Dark maroon */
+}
+
+.wizard .wizard-step {
+  margin: 0 auto 5px auto;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  border: 2px solid;
+  vertical-align: middle;
+  line-height: 28px;
+  font-size: 17px;
+  font-family: 'Proxima Nova';
+  font-weight: bold;
+}

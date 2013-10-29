@@ -23,18 +23,31 @@ module.exports.list = function(req, res) {
   if (orderParams.prices)
     orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
 
-  models.Restaurant.find({}, orderParams, function(err, models) {
+  var tasks =  [
+    function(callback) {
+      models.Restaurant.find({}, orderParams, callback);
+    },
+
+    function(callback) {
+      models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
+    }
+  ];
+
+  var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
 
     res.render('restaurants', {
-      restaurants:      utils.invoke(models, 'toJSON'),
+      restaurants:      utils.invoke(results[0], 'toJSON'),
+      defaultAddress:   results[1] ? results[1].toJSON() : null,
       orderParams:      orderParams,
       filterCuisines:   cuisines,
       filterPrices:     utils.range(1, 5),
       filterMealTypes:  mealTypesList
     });
-  });
-}
+  };
+
+  utils.async.parallel(tasks, done);
+};
 
 module.exports.get = function(req, res) {
   var TAGS = ['restaurants-get'];
@@ -71,6 +84,10 @@ module.exports.get = function(req, res) {
           callback(err, restaurant);
         });
       });
+    },
+
+    function(callback) {
+      models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
     }
   ];
 
@@ -80,9 +97,10 @@ module.exports.get = function(req, res) {
     var orderParams = req.session.orderParams || {};
 
     var context = {
-      restaurant: results[1].toJSON(),
-      order: results[0] ? results[0].toJSON() : null,
-      orderParams: orderParams
+      order:            results[0] ? results[0].toJSON() : null,
+      restaurant:       results[1] ? results[1].toJSON() : null,
+      defaultAddress:   results[2] ? results[2].toJSON() : null,
+      orderParams:      orderParams
     }
 
     res.render('menu', context, function(err, html) {

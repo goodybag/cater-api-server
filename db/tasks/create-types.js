@@ -16,6 +16,9 @@ var types = {
 , timezone: function(callback) {
     db.query("CREATE OR REPLACE FUNCTION is_timezone( tz TEXT ) RETURNS BOOLEAN as $$ DECLARE date TIMESTAMPTZ; BEGIN date := now() AT TIME ZONE tz; RETURN TRUE; EXCEPTION WHEN OTHERS THEN RETURN FALSE; END; $$ language plpgsql STABLE; DROP DOMAIN IF EXISTS timezone; CREATE DOMAIN timezone AS TEXT CHECK ( is_timezone( value ) );", callback);
   }
+, tip_percentage: function(callback) {
+    db.query("DROP TYPE IF EXISTS tip_percentage; CREATE TYPE tip_percentage AS ENUM('0', 'custom', '5', '10', '15', '18', '20', '25');", callback);
+  }
 };
 
 var done = function(callback) {

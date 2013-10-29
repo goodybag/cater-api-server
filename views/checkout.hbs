@@ -42,10 +42,24 @@
                 </div>
               </div>
               <div class="row">
-                <div class="form-group col-sm-12">
-                  <label class="control-label">Add tip</label>
-                  <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
-                  <p>TODO: tip</p>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label class="control-label">Add tip</label>
+                    <select class="form-control tip-percent">
+                      {{! eq is ugly as hell but it works }}
+                      <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
+                      <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
+                      <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
+                      <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
+                      <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
+                      <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
+                      <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
+                      <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
+                  </div>
                 </div>
               </div>
             </fieldset>
@@ -122,8 +136,8 @@
       </div>
     </div>
     <div class="col-md-4">
-     <div class="panel">
-       {{> order_summary}}
+     <div class="panel" data-spy="affix" data-offset-top="118">
+       {{> checkout_order_summary}}
      </div>
     </div>
   </div>

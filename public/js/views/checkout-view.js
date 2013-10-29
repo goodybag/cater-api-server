@@ -4,7 +4,10 @@ var CheckoutView = FormView.extend({
     'change input[type="radio"].payment-method': 'changePaymentMethod',
     'submit #order-form': 'submit',
     'submit #select-address-form': 'selectAddress',
-    'click .btn-cancel': 'cancel'
+    'click .btn-cancel': 'cancel',
+    'change .tip-percent': 'selectTip',
+    'keydown .order-tip': 'cacheTip',
+    'keyup .order-tip': 'customTip'
   },
 
   fieldMap: {
@@ -13,7 +16,8 @@ var CheckoutView = FormView.extend({
     name: '.order-name',
     notes: '#order-notes',
     // adjustment: '.adjustment .form-control',
-    tip: '.order-tip'
+    tip: '.order-tip',
+    tip_percent: '.tip-percent'
   },
 
   fieldGetters: {
@@ -46,6 +50,7 @@ var CheckoutView = FormView.extend({
 
   initialize: function(options) {
     this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address, orderView: this});
+    this.tip = this.model.get('tip');
   },
 
   changePaymentMethod: function(e) {
@@ -83,5 +88,22 @@ var CheckoutView = FormView.extend({
     this.model.save(address.omit(['id', 'user_id', 'is_default']), {success: function() {
       this.$el.find('#select-address-modal').modal('dismiss');
     }});
+  },
+
+  selectTip: function(e) {
+    var val = parseInt(e.currentTarget.value);
+    if (!_.isNaN(val)) {
+      var tip = this.model.get('sub_total') * (val / 100);
+      this.$el.find('.order-tip').val(Handlebars.helpers.dollars(tip));
+    }
+  },
+
+  cacheTip: function(e) {
+    this.tip = e.currentTarget.value;
+  },
+
+  customTip: function(e) {
+    if (this.tip !== e.currentTarget.value)
+      this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
   }
 });

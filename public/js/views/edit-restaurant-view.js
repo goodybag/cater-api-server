@@ -178,9 +178,7 @@ var EditRestaurantView = FormView.extend({
   },
 
   onFilePickerChange: function(e){
-    console.log(e)
     var $input = $(e.originalEvent.target);
-    console.log($input.val(), $input)
     $input.siblings('[data-name="' + $input.attr('name') + '"]').attr(
       'src', $input.val()
     );

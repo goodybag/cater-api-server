@@ -91,12 +91,13 @@ var OrderSummaryView = Backbone.View.extend({
       patch: true,
       wait: true,
       singleError: false,
+      skipAddressValidation: true,
       success: function(model, response, options) {
         // Reset order params
         _.each( _.keys( orderParams.toJSON() ), _.bind( orderParams.unset, orderParams ) );
 
         orderParams.save( null, { success: function(){
-          window.location.href = _.result(view.model, 'url');
+          window.location.href = _.result(view.model, 'url') + '/items';
         } })
       }
     });

@@ -229,7 +229,8 @@ module.exports.register = function(app) {
    *  This is a collection of OrderItems, not Items.
    */
 
-  app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
+  //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
+  app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.summary);  // not currently used
 
   app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.add);
 

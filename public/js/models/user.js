@@ -38,6 +38,7 @@ var User = Backbone.Model.extend({
   },
 
   initialize: function(attrs, options) {
+    attrs = attrs || {};
     if (attrs.addresses) {
       this.addresses = new Addresses(attrs.addresses);
       this.unset('addresses');

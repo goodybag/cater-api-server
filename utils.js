@@ -19,8 +19,6 @@ var
 
 utils.s3 = require('knox');
 
-utils.parseXml = require('xml2js').parseString;
-
 utils.uuid = uuid;
 
 utils.stage = function(fns){

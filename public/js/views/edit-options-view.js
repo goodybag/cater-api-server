@@ -45,6 +45,7 @@
 
       this.$el.find('.item-options-table').sortable({
         items: '.option-set-tr-group'
+      , placeholder: "ui-state-highlight"
       });
 
       return this;

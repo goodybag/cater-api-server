@@ -35,7 +35,7 @@ module.exports = Model.extend({
       , expression: coalesceArray( 'pms', 'pm' )
       });
 
-      var joinSubSelect = {
+      var joinSubSelect = utils.extend({
         type: 'select'
       , table: 'users_payment_methods'
       , columns: [
@@ -49,7 +49,7 @@ module.exports = Model.extend({
           , on: { 'id': '$users_payment_methods.payment_method_id$' }
           }
         }
-      };
+      }, options );
 
       query.joins.push({
         type:   'left'
@@ -73,19 +73,19 @@ module.exports = Model.extend({
       , expression: coalesceArray( 'addresses', 'address' )
       });
 
-      query.joins.push( utils.extend({
+      query.joins.push({
         type: 'left'
       , alias: 'addresses'
       , on: { 'user_id': '$users.id$' }
-      , target: {
+      , target: utils.extend({
           type: 'select'
         , table: 'addresses'
         , columns: [
             'user_id'
           , { type: 'row_to_json', expression: 'addresses', as: 'address' }
           ]
-        }
-      }, options ));
+        }, options )
+      });
 
       if ( !query.groupBy ) query.groupBy = [];
 

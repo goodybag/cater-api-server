@@ -14,7 +14,7 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'transactions';
+  definition.name = 'transaction_errors';
 
   definition.schema = {
     id: {

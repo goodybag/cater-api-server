@@ -258,6 +258,7 @@ var Order = Backbone.Model.extend({
   },
 
   changeStatus: function(status, callback) {
+    callback = callback || function() {};
     if (status == null || status === this.get('status')) return callback();
     var self = this;
     $.ajax({

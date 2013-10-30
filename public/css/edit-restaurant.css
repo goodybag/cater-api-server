@@ -228,6 +228,7 @@ th.name-column {
   transform: rotate(0);
 }
 
-.edit-item-tags {
-  margin-bottom: 20px;
+.restaurant-logo-img {
+  max-width: 100%;
+  margin-top: 8px;
 }

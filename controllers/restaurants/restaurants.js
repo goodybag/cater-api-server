@@ -5,6 +5,7 @@ var
 , errors = require('../../errors')
 , utils = require('../../utils')
 , states = require('../../public/states')
+, mealTypesList = require('../../public/meal-types')
 , cuisines = require('../../public/cuisines')
 ;
 
@@ -26,10 +27,11 @@ module.exports.list = function(req, res) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
 
     res.render('restaurants', {
-      restaurants:    utils.invoke(models, 'toJSON'),
-      orderParams:    orderParams,
-      filterCuisines: cuisines,
-      filterPrices:   utils.range(1, 5)
+      restaurants:      utils.invoke(models, 'toJSON'),
+      orderParams:      orderParams,
+      filterCuisines:   cuisines,
+      filterPrices:     utils.range(1, 5),
+      filterMealTypes:  mealTypesList
     });
   });
 }
@@ -101,7 +103,12 @@ module.exports.edit = function(req, res) {
         return [new Array(i+1).join('$'), restaurant.attributes.price === i];
       }));
       utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
-      res.render('edit-restaurant', {restaurant: restaurant.toJSON(), selectedPrice: selectedPrice, states: states}, function(err, html) {
+      res.render('edit-restaurant', {
+        restaurant: restaurant.toJSON()
+      , selectedPrice: selectedPrice
+      , states: states
+      , mealTypesList: mealTypesList
+      }, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
       });
@@ -152,8 +159,30 @@ var tags = function(body, id) {
   });
 };
 
+var mealTypes = function(body, id) {
+  return utils.map(body.meal_types, function(obj, index, arr) {
+    return {restaurant_id: id, meal_type: obj};
+  });
+};
+
 // maybe this ought to come from the restaurant model?
-var fields = ['name', 'is_hidden', 'street', 'city', 'state', 'zip', 'sms_phone', 'voice_phone', 'email', 'minimum_order', 'price', 'delivery_fee', 'cuisine'];
+var fields = [
+  'name',
+  'logo_url',
+  'logo_mono_url',
+  'is_hidden',
+  'street',
+  'city',
+  'state',
+  'zip',
+  'sms_phone',
+  'voice_phone',
+  'email',
+  'minimum_order',
+  'price',
+  'delivery_fee',
+  'cuisine'
+];
 
 module.exports.create = function(req, res) {
   var restaurantQuery = queries.restaurant.create(utils.pick(req.body, fields));
@@ -169,7 +198,7 @@ module.exports.create = function(req, res) {
     }
 
     var tasks = utils.map(
-      [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes'], [tags, 'createTags']],
+      [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes'], [tags, 'createTags'], [mealTypes, 'createMealTypes']],
       function(args) { return utils.partial( insert, args[0](req.body, rows[0].id), args[1]); }
     );
 
@@ -192,7 +221,8 @@ module.exports.update = function(req, res) {
   , ['DeliveryTimes', deliveryTimes, 'delivery_times']
   , ['LeadTimes', leadTimes, 'lead_times']
   , ['Tags', tags, 'tags']
-  ], 
+  , ['MealTypes', mealTypes, 'meal_types']
+  ],
   function(args) {
     if (req.body[args[2]] === undefined) return function(cb) { cb() };
     var delQuery = queries.restaurant['del' + args[0]](req.params.rid)

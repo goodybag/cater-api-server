@@ -3,6 +3,8 @@ var uuid  = require('node-uuid');
 var config = require('../config');
 var utils = require('../utils');
 var logger = require('../logger');
+var venter = require('../lib/venter');
+
 var db = require('../db');
 var Model = require('./model');
 var Restaurant = require('./restaurant');
@@ -109,7 +111,9 @@ module.exports = Model.extend({
     }
     var order = this;
     Model.prototype.save.call(this, {returning: ["*", '("orders"."datetime"::text) as datetime']}, function(err) {
+
       callback.apply(this, arguments);
+      venter.emit( 'order:change', order.attributes.id );
     }, client);
   },
   toJSON: function(options) {

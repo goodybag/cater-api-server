@@ -283,6 +283,29 @@ var helpers = {
 
   contains: function(list, value, options) {
     return (utils.contains(list, value) ? options.fn : options.inverse).call(options, this);
+  },
+
+  uuid: function(){
+    return utils.uuid();
+  },
+
+  filepicker: function(url, width, height){
+    if (!url) return "";
+
+    url = url.replace('www', 'cdn');
+
+    var params = {};
+
+    if (url.indexOf('convert') == -1){
+      url += "/convert";
+      params.cache = true;
+      params.fit = 'crop';
+    }
+
+    if (typeof width === 'number') params.w = width;
+    if (typeof height === 'number') params.h = height;
+
+    return url + utils.queryParams(params);
   }
 }
 

@@ -13,13 +13,13 @@
       <label class="radio-inline">
         <input type="radio"
           class="option-type-radio"
-          name="type-{{this.name}}-{{this.id}}"
+          name="type-{{#if this.id}}{{this.id}}{{else}}{{uuid}}{{/if}}"
           value="radio"
           {{#eq this.type 'radio'}}checked{{/eq}}> Radio
       </label>
       <label class="radio-inline">
         <input type="radio"
-          name="type-{{this.name}}-{{this.id}}"
+          name="type-{{#if this.id}}{{this.id}}{{else}}{{uuid}}{{/if}}"
           value="checkbox"
           {{#eq this.type 'checkbox'}}checked{{/eq}}> Checkbox
       </label>

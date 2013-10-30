@@ -60,6 +60,7 @@ module.exports.get = function(req, res, next) {
 module.exports.update = function(req, res, next) {
   var updates = utils.pick(req.body, ['name', 'street', 'street2', 'city', 'state', 'zip', 'is_default', 'phone', 'delivery_instructions']);
 
+  // TODO: make this a transaction
   utils.async.series([
     function unmarkPreviousDefaults(callback) {
       if (updates.is_default) {
@@ -67,19 +68,19 @@ module.exports.update = function(req, res, next) {
           updates: { is_default: false },
           where:   { is_default: true, user_id: req.params.uid }
         }, callback);
+      } else {
+        callback(null);
       }
-      callback(null);
     },
-
     function updateAddress(callback) {
       var address = new Address(utils.extend(updates, {id: req.params.aid}));
-      address.save(function(error, address) {
-        if (error) return res.error(errors.internal.DB_FAILURE, error);
-        return res.send(204);
-      });
-      callback(null);
+      address.save(callback);
     }
-  ]);
+  ],
+  function updateComplete(error, results) {
+    if (error) return res.error(errors.internal.DB_FAILURE, error);
+    return res.send(204);
+  });
 };
 
 /**

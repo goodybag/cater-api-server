@@ -34,6 +34,10 @@ define(function(require) {
       type: types.text
     , nullable: false
     }
+  , street2: {
+      type: types.text
+    , nullable: true
+    }
   , city: {
       type: types.text
     , nullable: false
@@ -77,6 +81,10 @@ define(function(require) {
     , default: 0
     , checks: ['>= 0']
     }
+  , delivery_instructions: {
+      type: types.text
+    , nullable: true
+    }
   , cuisine: {
       type: types.text + '[]'
     , nullable: true
@@ -85,6 +93,12 @@ define(function(require) {
       type: types.boolean
     , nullable: false
     , default: true
+    }
+  , logo_url: {
+      type: types.text
+    }
+  , logo_mono_url: {
+      type: types.text
     }
   , balanced_customer_uri: {
       type: types.text

@@ -76,7 +76,7 @@ app.configure(function(){
 
     options = utils.extend( options, {
         user:     utils.extend({}, this.req.session ? this.req.session.user : {}, options.user)
-      , config:   utils.extend(partialConfig, options.config)
+      , config:   utils.extend({}, partialConfig, options.config, config)
       , session:  this.req.session
       }
     );

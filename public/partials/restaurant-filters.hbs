@@ -1,5 +1,5 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/order-filters.css">
+<link rel="stylesheet" href="/css/restaurant-filters.css">
 {{/extend}}
 
 <h4>Filter by:</h4>
@@ -9,12 +9,26 @@
     <div class="panel-heading">
       <h4>
         <a class="accordion-toggle" data-toggle="collapse" data-target="#panelDiet" href="#">
-          Special Diets
+          <span class="glyphicon glyphicon-chevron-right pull-right"></span> Special Diets
         </a>
       </h4>
     </div>
     <div id="panelDiet" class="panel-collapse collapse in">
       <div class="panel-body">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="glutenFree" {{#contains orderParams.diets "glutenFree"}}checked="checked"{{/contains}}>
+            <span class="tag tag-gluten-free tag-tooltip" data-title="Gluten-Free" data-original-title="" title=""></span>
+            Gluten-Free
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="dairyFree" {{#contains orderParams.diets "dairyFree"}}checked="checked"{{/contains}}>
+            <span class="tag tag-dairy-free tag-tooltip" data-title="Dairy-Free" data-original-title="" title=""></span>
+            Dairy-Free
+          </label>
+        </div>
         <div class="checkbox">
           <label>
             <input type="checkbox" value="vegetarian" {{#contains orderParams.diets "vegetarian"}}checked="checked"{{/contains}}>
@@ -31,9 +45,16 @@
         </div>
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="glutenFree" {{#contains orderParams.diets "glutenFree"}}checked="checked"{{/contains}}>
-            <span class="tag tag-gluten-free tag-tooltip" data-title="Gluten-Free" data-original-title="" title=""></span>
-            Gluten-Free
+            <input type="checkbox" value="halal" {{#contains orderParams.diets "halal"}}checked="checked"{{/contains}}>
+            <span class="tag tag-halal tag-tooltip" data-title="Halal" data-original-title="" title=""></span>
+            Halal
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="kosher" {{#contains orderParams.diets "kosher"}}checked="checked"{{/contains}}>
+            <span class="tag tag-kosher tag-tooltip" data-title="Kosher" data-original-title="" title=""></span>
+            Kosher
           </label>
         </div>
       </div>
@@ -45,7 +66,7 @@
     <div class="panel-heading">
       <h4>
         <a class="accordion-toggle" data-toggle="collapse" data-target="#panelCuisine" href="#">
-          Cuisine
+          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Cuisine
         </a>
       </h4>
     </div>
@@ -60,12 +81,32 @@
     </div>
   </div>
 
+  {{! Meal Types }}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>
+        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelMealTypes" href="#">
+          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Meal Types
+        </a>
+      </h4>
+    </div>
+    <div id="panelMealTypes" class="panel-collapse collapse {{#if orderParams.mealTypes}}in{{/if}}">
+      <div class="panel-body">
+        {{#each filterMealTypes}}
+        <div class="checkbox">
+          <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.mealTypes this}}checked="checked"{{/contains}}> {{this}}</label>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
   {{! Price }}
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4>
         <a class="accordion-toggle" data-toggle="collapse" data-target="#panelPrice" href="#">
-          Price
+          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Price
         </a>
       </h4>
     </div>

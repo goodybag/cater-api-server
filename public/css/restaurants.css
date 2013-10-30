@@ -4,10 +4,39 @@ a.list-group-item-restaurant .list-group-item-heading {
   font-weight: 500;
 }
 
-.list-group-item-restaurant .list-restaurant-cuisines > li {
+.list-group-item-restaurant .list-restaurant-inline > li {
   color: #8B8983;
 }
 
 .back-to-results-wrapper {
   margin-bottom: 12px;
+}
+
+.list-group-restaurants .logo-wrapper {
+  padding-right: 0;
+  padding-left: 12px;
+  min-width: 40px;
+}
+
+.list-group-restaurants .logo-wrapper + .col {
+  padding-left: 12px;
+  margin-top: 6px;
+}
+
+@media screen and (max-width: 768px) {
+  .list-group-restaurants .logo-wrapper + .col {
+    width: 100%;
+    margin-left: -30px;
+    padding-left: 40px;
+    margin-right: -52px;
+  }
+}
+
+.list-group-item-restaurant:hover .business-logo,
+.list-group-item-restaurant .business-logo-color {
+  display: none;
+}
+
+.list-group-item-restaurant:hover .business-logo-color {
+  display: inline-block;
 }

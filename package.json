@@ -47,8 +47,10 @@
     "connect-request-logger-pg": "0.0.1",
     "winston-papertrail": "0.1.x",
     "bitly": "1.2.x",
-    "balanced-official": "0.3.3",
     "semver": "2.1.x",
+    "stdm": "0.0.3",
+    "knox": "~0.8.6",
+    "balanced-official": "0.3.3",
     "iron_mq": "0.2.x"
   },
   "devDependencies": {

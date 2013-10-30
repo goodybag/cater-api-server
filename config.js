@@ -65,6 +65,19 @@ var config = {
     , support: '5122706555'
     , orders: '5122706333'
     }
+
+  , phantomjs: {
+      process: "phantomjs"
+    }
+
+  , receipt: require('./receipt-config')
+
+  , filepicker: {
+      key: 'AF52P8LtHSd6VMD07XdOQz'
+    }
+
+  , defaultLogo: 'https://www.filepicker.io/api/file/jLhugLRSQAJVdUe88acg'
+  , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
   }
 
 
@@ -129,6 +142,12 @@ var config = {
   , testPhoneVoice: '5125390612'
 
   , emailEnabled: true
+
+  , receipt: _.extend(
+      {}
+    , require('./receipt-config')
+    , { bucket: 'dev-receipts.goodybag.com' }
+    )
   }
 
 
@@ -187,6 +206,12 @@ var config = {
     }
 
   , emailEnabled: true
+
+  , receipt: _.extend(
+      {}
+    , require('./receipt-config')
+    , { bucket: 'staging-receipts' }
+    )
   }
 
 , production: {

@@ -1,5 +1,6 @@
 var Model = require('./model');
 var utils = require('../utils');
+var venter = require('../lib/venter');
 
 module.exports = Model.extend({
   isMutable: function(callback) {
@@ -10,14 +11,33 @@ module.exports = Model.extend({
       callback(null, order.attributes.status === 'pending');
     });
   },
-  save: function(callback) {
-    var self = this, args = arguments;
-    if (!this.attributes.id) Model.prototype.save.apply(this, arguments);
+  save: function(returning, callback) {
+    var self = this;
+
+    if (utils.isFunction(returning)) {
+      callback = returning;
+      returning = null;
+    }
+
+    callback = callback || utils.noop;
+
+    // Override user callback to emit order:change event after
+    // save has been completed
+    var oldCallback = callback;
+    callback = function(error, rows, result){
+      if (error) return oldCallback(error);
+
+      oldCallback(null, rows, result);
+
+      venter.emit( 'order:change', self.attributes.order_id );
+    };
+
+    if (!this.attributes.id) Model.prototype.save.call(this, returning, callback);
     else {
       this.isMutable(function (err, mutable) {
         if (err) return callback(err);
         if (!mutable) return callback({code: 403, message: "can't update non-pending orders"});
-        Model.prototype.save.apply(self, args);
+        Model.prototype.save.call(self, returning, callback);
       });
     }
   },
@@ -26,7 +46,12 @@ module.exports = Model.extend({
     this.isMutable(function (err, mutable) {
       if (err) return callback(err);
       if (!mutable) return callback({code: 403, message: "can't remove items from non-pending orders"});
-      Model.prototype.destroy.apply(model, args);
+      Model.prototype.destroy.apply(model, function(error){
+        if (error) return callback(error);
+        callback.apply(this, arguments);
+
+        venter.emit( 'order:change', model.attributes.order_id );
+      });
     });
   },
   toJSON: function() {

@@ -1,0 +1,105 @@
+{{#extend "scripts"}}
+<script src="/js/receipt.js"></script>
+{{/extend}}
+
+{{#extend "info"}}
+<div class="order-number-info">
+  <span class="order-number-key">Order:</span>
+  <span class="order-number">#{{order.id}}</span>
+</div>
+{{/extend}}
+
+{{#extend "body"}}
+<div class="order-info columns">
+  <div class="order-info-details column-fluid">
+    <h3 class="restaurant-name">{{order.restaurant_name}}</h3>
+    <dl class="dl-horizontal">
+      <dt>Date Created:</dt>
+      <dd>{{formatDateTime order.created_at "MM/DD/YYYY"}}</dd>
+      <dt>Delivery Date:</dt>
+      <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
+      <dt>Delivery Time:</dt>
+      <dd>{{formatTime order.datetime "h:mm A"}}</dd>
+      <dt>Guests:</dt>
+      <dd>{{order.guests}}</dd>
+    </dl>
+  </div>
+  <div class="order-info-notes column-fluid">
+    <div class="notes-key">Notes:</div>
+    <p>{{order.notes}}</p>
+  </div>
+</div>
+
+<div class="order">
+  <table class="order-table" style="">
+    <thead>
+      <tr>
+        <th class="orders">Orders</th>
+        <th class="quantity">Quantity</th>
+        <th class="notes">Notes</th>
+        <th class="price">Price</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each order.orderItems}}
+      <tr id="order-item-{{this.id}}">
+        <td class="line-item-name" data-title="Name">
+          <div class="item-name">{{this.name}}</div>
+          <ul class="comma-separated item-options">
+            {{#each options_sets}}
+              {{#each this.options}}
+                {{#if this.state}}
+                  <li>{{this.name}}</li>
+                {{/if}}
+              {{/each}}
+            {{/each}}
+          </ul>
+        </td>
+        <td class="line-item-quantity" data-title="Quantity">
+          <span class="item-quantity-span order-item-field order-item-quantity" />x {{this.quantity}}</span>
+        </td>
+        <td class="line-item-notes" data-title="Notes">
+          <span name="notes" class="item-notes-span order-item-field order-item-notes">{{this.notes}}</span>
+        </td>
+        <td class="line-item-price" data-title="Price">${{dollars this.sub_total}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div class="order-bottom-wrapper">
+    <div class="order-bottom">
+      <div class="order-adjustment columns">
+        <p class="adjustment-notes column-fluid">{{order.adjustment.description}}</p>
+        <div class="column-fluid adjustment-amount-wrapper">
+          <dl class="dl-adjustment-amount dl-horizontal">
+            <dt>Adjustment:</dt>
+            <dd>${{dollars order.adjustment.amount}}</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="order-summary">
+        <dl class="dl-horizontal dl-order-summary">
+          <dt>Subtotal:</dt>
+          <dd>${{dollars order.sub_total}}</dd>
+          <dt>Delivery Fee:</dt>
+          <dd>${{dollars order.delivery_fee}}</dd>
+          <dt>Tax:</dt>
+          <dd>${{tax order.sub_total order.restaurant.delivery_fee}}</dd>
+          <dt>Tip:</dt>
+          <dd>${{dollars order.tip}}</dd>
+        </dl>
+      </div>
+
+      <div class="total-wrapper">
+        <dl class="dl-horizontal dl-order-total">
+          <dt>Total:</dt>
+          <dd>${{total order.sub_total order.restaurant.delivery_fee order.tip}}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+{{/extend}}

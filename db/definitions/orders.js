@@ -40,6 +40,10 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , street2: {
+      type: types.text
+    , nullable: true
+    }
   , city: {
       type: types.text
     , nullable: true
@@ -102,6 +106,10 @@ define(function(require) {
     ,
     }
   , name: {
+      type: types.text
+    , nullable: true
+    }
+  , delivery_instructions: {
       type: types.text
     , nullable: true
     }

@@ -1,6 +1,22 @@
+var util = require('util');
+var utils = require('../utils');
 var Model = require('./model');
 
 var table = 'users';
+
+// Coalesce two PG arrays for the JSON Array sub-select thingy
+// Used to avoid results of the form `[null]`
+var coalesceArray = function( table, col ){
+  return  [
+    'coalesce('
+  , 'nullif( array_agg('
+  , '"' + table + '"."' + col + '"'
+  , ')::text[]'
+  , ', array[null]::text[]'
+  , '), array[]::text[]'
+  , ')::json[]'
+  ].join(' ');
+};
 
 module.exports = Model.extend({
 
@@ -12,13 +28,11 @@ module.exports = Model.extend({
   // key inside this joins object
 , joins: {
     // Adds payment_methods JSON array to user object
-    'payment_methods': function( query ){
+    'payment_methods': function( options, query ){
       query.columns.push({
         type: 'array_to_json'
-      , expression: {
-          type: 'array_agg'
-        , expression: 'pms.pm'
-        }
+      , as: 'payment_methods'
+      , expression: coalesceArray( 'pms', 'pm' )
       });
 
       var joinSubSelect = {
@@ -51,22 +65,61 @@ module.exports = Model.extend({
         query.groupBy.push('users.id');
       }
     }
+
+  , 'addresses': function( options, query ){
+      query.columns.push({
+        type: 'array_to_json'
+      , as: 'addresses'
+      , expression: coalesceArray( 'addresses', 'address' )
+      });
+
+      query.joins.push( utils.extend({
+        type: 'left'
+      , alias: 'addresses'
+      , on: { 'user_id': '$users.id$' }
+      , target: {
+          type: 'select'
+        , table: 'addresses'
+        , columns: [
+            'user_id'
+          , { type: 'row_to_json', expression: 'addresses', as: 'address' }
+          ]
+        }
+      }, options ));
+
+      if ( !query.groupBy ) query.groupBy = [];
+
+      // Ensure we're grouping by user_id
+      if ( query.groupBy.indexOf('users.id') === -1 ){
+        query.groupBy.push('users.id');
+      }
+    }
   }
 
-, join: function( tbl, query ){
+, join: function( tbl, options, query ){
+    if ( !(tbl in this.joins) ) return this;
+
     if ( !query.joins ) query.joins = [];
     else if ( !Array.isArray( query.joins ) ) query.joins = [ query.joins ];
 
     if ( !query.columns ) query.columns = ['*'];
 
-    return this.joins[ tbl ].call( this, query );
+    return this.joins[ tbl ].call( this, options, query );
   }
 
 , find: function( query, callback, client ){
     // Auto-joins
-    if ( Array.isArray( query.embed ) ){
-      for ( var i = 0, l = query.embed.length; i < l; ++i ){
-        this.join( query.embed[i], query );
+    if ( Array.isArray( query.embeds ) ){
+      for ( var i = 0, l = query.embeds.length; i < l; ++i ){
+        if ( typeof query.embeds[i] === 'string' ){
+          this.join( query.embeds[i], null, query );
+        } else {
+          this.join( query.embeds[i].table, query.embeds[i].options, query );
+        }
+      }
+
+      for ( var tbl in query.embed ){
+        this.join( tbl, query.embed[ tbl ], query );
       }
     }
 

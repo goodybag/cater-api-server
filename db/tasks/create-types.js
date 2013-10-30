@@ -20,7 +20,7 @@ var types = {
     db.query("DROP TYPE IF EXISTS payment_type; CREATE TYPE payment_type AS ENUM('debit', 'credit');", callback);
   }
 , payment_status: function(callback) {
-    db.query("DROP TYPE IF EXISTS payment_status; CREATE TYPE payment_status AS ENUM('pending', 'processing', 'paid', 'invoiced');", callback);
+    db.query("DROP TYPE IF EXISTS payment_status; CREATE TYPE payment_status AS ENUM('pending', 'processing', 'paid', 'invoiced', 'error');", callback);
   }
 , timezone: function(callback) {
     db.query("CREATE OR REPLACE FUNCTION is_timezone( tz TEXT ) RETURNS BOOLEAN as $$ DECLARE date TIMESTAMPTZ; BEGIN date := now() AT TIME ZONE tz; RETURN TRUE; EXCEPTION WHEN OTHERS THEN RETURN FALSE; END; $$ language plpgsql STABLE; DROP DOMAIN IF EXISTS timezone; CREATE DOMAIN timezone AS TEXT CHECK ( is_timezone( value ) );", callback);

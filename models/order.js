@@ -61,6 +61,7 @@ var modifyAttributes = function(callback, err, orders) {
       delete order.attributes.user_email;
       delete order.attributes.organization;
       delete order.attributes.user_name;
+      delete order.attributes.user_balanced_customer_uri;
 
       order.attributes.adjustment = {
         amount: order.attributes.adjustment_amount,
@@ -344,7 +345,7 @@ module.exports = Model.extend({
           , request_id: requestId
           , data: data
           });
-          transactionError.create(cb, client);
+          transactionError.save(cb, client);
         }
       };
 

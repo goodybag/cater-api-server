@@ -1,7 +1,7 @@
 -- Update version
 insert into deltas (version, date) values ('1.0.15', 'now()');
 
--- #369 - Add address fields to restaurants, orders schema
+-- #375 - Add address fields to restaurants, orders schema
 
 DO $$
   BEGIN

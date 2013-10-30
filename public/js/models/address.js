@@ -3,7 +3,13 @@ var Address = Backbone.Model.extend({
   validator: amanda('json'),
 
   validate: function(attrs, options) {
-    return this.validator.validate(attrs, _.result(this.constructor, 'schema'), options || {}, function(err) { return err; });
+    options = _.defaults(options || {}, {enforceRequired: true})
+
+    var schema = _.clone(_.result(this.constructor, 'schema'));
+    if (!options.enforceRequired)
+      schema.properties = _.objMap(schema.properties, _.partialRight(_.omit, 'required'));
+
+    return this.validator.validate(attrs, schema, options, _.identity);
   },
 
   urlRoot: '/users/me/addresses'

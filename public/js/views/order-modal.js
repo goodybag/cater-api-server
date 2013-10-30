@@ -110,8 +110,7 @@ var OrderModal = Backbone.View.extend({
     if ( this.showErrors() ) return;
 
     var self = this;
-    var opts = _.extend({validateAddress: false}, this.submitHandlers);
-    this.model.save(null, opts);
+    this.model.save(null, this.submitHandlers);
   },
 
   onDatePickerOpen: function(){

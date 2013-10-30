@@ -58,7 +58,6 @@ var Order = Backbone.Model.extend({
   validator: amanda('json'),
 
   validate: function(attrs, options) {
-    if (options.validateAddress == null) options.validateAddress = true;
     var errors = this.validator.validate(
       attrs,
       _.result(this, 'schema'),
@@ -72,13 +71,11 @@ var Order = Backbone.Model.extend({
       errors = Array.prototype.slice.call( errors );
     }
 
-    // Don't validate address when adding to order
-    if (options.validateAddress) {
-      var addressFields = _.keys(_.result(Address, 'schema').properties);
-      var addressErrors = this.address.validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)), options);
-      if (addressErrors != null)
-        errors = errors.concat(_.isArray(addressErrors) ? addressErrors : Array.prototype.slice.call(addressErrors));
-    }
+    var addressFields = _.keys(_.result(Address, 'schema').properties);
+    var addressErrors = this.address.validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)),
+                                              _.extend({enforceRequired: false}, options));
+    if (addressErrors != null)
+      errors = errors.concat(_.isArray(addressErrors) ? addressErrors : Array.prototype.slice.call(addressErrors));
 
     // Add on the restaurant fulfillability errors
     errors = errors.concat(

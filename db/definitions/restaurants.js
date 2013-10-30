@@ -34,6 +34,10 @@ define(function(require) {
       type: types.text
     , nullable: false
     }
+  , street2: {
+      type: types.text
+    , nullable: true
+    }
   , city: {
       type: types.text
     , nullable: false
@@ -76,6 +80,10 @@ define(function(require) {
     , nullable: false
     , default: 0
     , checks: ['>= 0']
+    }
+  , delivery_instructions: {
+      type: types.text
+    , nullable: true
     }
   , cuisine: {
       type: types.text + '[]'

@@ -40,41 +40,39 @@ module.exports.list = function(req, res) {
   });
 }
 
+// module.exports.get = function(req, res) {
+//   models.Order.findOne(parseInt(req.params.id), function(error, order) {
+//     if (error) return res.error(errors.internal.DB_FAILURE, error);
+//     if (!order) return res.status(404).render('404');
+//     order.getOrderItems(function(err, items) {
+//       if (err) return res.error(errors.internal.DB_FAILURE, err);
+
+//       var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
+//       var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
+//       utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+//       var context = {
+//         order: order.toJSON(),
+//         restaurantReview: review,
+//         owner: isOwner,
+//         admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
+//         states: states,
+//         orderParams: req.session.orderParams,
+//         query: req.query
+//       };
+
+//       // orders are always editable for an admin
+//       if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
+//         context.order.editable = true;
+
+//       res.render('order', context, function(err, html) {
+//         if (err) return res.error(errors.internal.UNKNOWN, err);
+//         res.send(html);
+//       });
+//     });
+//   });
+// }
+
 module.exports.get = function(req, res) {
-  models.Order.findOne(parseInt(req.params.id), function(error, order) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    if (!order) return res.status(404).render('404');
-    order.getOrderItems(function(err, items) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-
-      var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
-      var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
-      utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
-      var context = {
-        order: order.toJSON(),
-        restaurantReview: review,
-        owner: isOwner,
-        admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
-        states: states,
-        orderParams: req.session.orderParams,
-        query: req.query
-      };
-
-      // orders are always editable for an admin
-      if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
-        context.order.editable = true;
-
-      res.render('order', context, function(err, html) {
-        if (err) return res.error(errors.internal.UNKNOWN, err);
-        res.send(html);
-      });
-    });
-  });
-}
-
-// TEMPORARY FOR TESTING PURPOSES ONLY
-// This wil replace the existing get method when it is complete.
-module.exports.checkout = function(req, res) {
   var tasks = [
     function(cb) {
       models.Order.findOne(parseInt(req.params.id), function(err, order) {
@@ -91,6 +89,8 @@ module.exports.checkout = function(req, res) {
     },
 
     function(order, cb) {
+      // only pending orders need the user's saved address list
+      if (order.attributes.status !== 'pending') return cb(null, order);
       var query = {
         where: { user_id: req.session.user.id },
         order: ['is_default asc', 'id asc']
@@ -116,6 +116,7 @@ module.exports.checkout = function(req, res) {
       restaurantReview: review,
       owner: isOwner,
       admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
+      states: states,
       orderAddress: function() {
         return {
           address: order.toJSON(),
@@ -125,13 +126,14 @@ module.exports.checkout = function(req, res) {
       orderParams: req.session.orderParams,
       query: req.query,
       user: {addresses: utils.invoke(addresses, 'toJSON')},
-      step: 2
+      step: order.attributes.status === 'pending' ? 2 : 3
     };
 
     // orders are always editable for an admin
     if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
       context.order.editable = true;
-    res.render('checkout', context, function(err, html) {
+    var view = order.attributes.status === 'pending' ? 'checkout' : 'receipt';
+    res.render(view, context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
       res.send(html);
     });

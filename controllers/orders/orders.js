@@ -257,8 +257,8 @@ module.exports.changeStatus = function(req, res) {
         }
       }
 
-      res.send(201, status.toJSON());
-      venter.emit('order:status:change', order, status);
+      res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
+      venter.emit('order:status:change', order, order.attributes.status);
     }
 
     if (req.body.status === 'submitted' && order.attributes.user.isInvoiced) order.attributes.payment_status = 'invoiced';

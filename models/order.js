@@ -301,6 +301,8 @@ module.exports = Model.extend({
         , uri: uri
         , data: data
         });
+        // FIX: insert only if it doesn't exist already
+        // INSERT INTO transactions (x,y,z) SELECT 1,2,3 WHERE NOT EXISTS (SELECT 1 FROM transactions WHERE uri=uri);
         transaction.save(cb, client);
         }
       };
@@ -340,6 +342,8 @@ module.exports = Model.extend({
           , request_id: requestId
           , data: data
           });
+          // FIX: insert only if it doesn't exist already
+          // INSERT INTO transaction_errors (x,y,z) SELECT 1,2,3 WHERE NOT EXISTS (SELECT 1 FROM transaction_errors WHERE uri=uri);
           transactionError.save(cb, client);
         }
       };

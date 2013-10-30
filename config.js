@@ -190,7 +190,7 @@ var config = {
   , receipt: _.extend(
       {}
     , require('./receipt-config')
-    , { bucket: 'staging-receipts.goodybag.com' }
+    , { bucket: 'staging-receipts' }
     )
   }
 

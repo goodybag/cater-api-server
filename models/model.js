@@ -118,12 +118,11 @@ Model.find = function(query, callback, client) {
   // console.log(sql);
 
   (client || db).query(sql.query, sql.values, function(err, rows, result){
+    if (err) return callback(err);
     if (client) {
       result = rows;
-      rows = result.rows;
+      rows = (result||0).rows || [];
     }
-    console.log(err);
-    if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
 };
@@ -150,11 +149,11 @@ Model.update = function(query, callback, client) {
   var self = this;
 
   (client || db).query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return callback(err);
     if (client) {
       result = rows;
-      rows = result.rows;
+      rows = (result||0).rows || [];
     }
-    if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
 };
@@ -172,11 +171,11 @@ Model.create = function(query, callback, client) {
   var self = this;
 
   (client || db).query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return callback(err);
     if (client) {
       result = rows;
       rows = (result||0).rows || [];
     }
-    if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
 };

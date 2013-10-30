@@ -209,6 +209,7 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
+  app.get('/orders/:id/checkout', controllers.orders.checkout);
 
   /**
    *  Order status resource.  The collection of all statuses on a single order.

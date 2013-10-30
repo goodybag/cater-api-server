@@ -6,8 +6,13 @@ var Address = Backbone.Model.extend({
     options = _.defaults(options || {}, {enforceRequired: true})
 
     var schema = _.clone(_.result(this.constructor, 'schema'));
-    if (!options.enforceRequired)
+    if (!options.enforceRequired) {
       schema.properties = _.objMap(schema.properties, _.partialRight(_.omit, 'required'));
+      schema.properties = _.objMap(schema.properties, function(property) { 
+        property.type = ['null'].concat(property.type); 
+        return property;
+      });
+    }
 
     return this.validator.validate(attrs, schema, options, _.identity);
   },

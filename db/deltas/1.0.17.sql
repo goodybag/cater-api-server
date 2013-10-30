@@ -1,5 +1,5 @@
 -- Update version
-insert into deltas (version, date) values ('1.0.11', 'now()');
+insert into deltas (version, date) values ('1.0.17', 'now()');
 
 DO $$
   BEGIN
@@ -39,7 +39,6 @@ create or replace function process_new_order() returns trigger as $process_new_o
     return null;
   end
   $process_new_order$ language plpgsql;
-
 
 
 create trigger update_order_status

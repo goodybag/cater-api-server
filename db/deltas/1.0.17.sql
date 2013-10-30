@@ -40,7 +40,6 @@ create or replace function process_new_order() returns trigger as $process_new_o
   end
   $process_new_order$ language plpgsql;
 
-
 create trigger update_order_status
   after update on orders
   for each row

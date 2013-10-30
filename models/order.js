@@ -339,7 +339,7 @@ module.exports = Model.extend({
           , request_id: requestId
           , data: data
           });
-          transactionError.create(cb, client);
+          transactionError.save(cb, client);
         }
       };
 

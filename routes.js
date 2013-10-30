@@ -1,10 +1,14 @@
+var config = require('./config');
 var static = require('node-static');
 var controllers = require('./controllers');
+var utils = require('./utils');
 
-var m = {
-  orderParams : require('./middleware/order-params'),
-  restrict    : require('./middleware/restrict')
-};
+var m = utils.extend({
+  orderParams   : require('./middleware/order-params'),
+  restrict      : require('./middleware/restrict'),
+  basicAuth     : require('./middleware/basic-session-auth'),
+  buildReceipt  : require('./middleware/build-receipt')
+}, require('stdm') );
 
 var file = new static.Server('./public');
 
@@ -194,7 +198,25 @@ module.exports.register = function(app) {
 
   app.all('/orders/:id', controllers.orders.auth);
 
-  app.get('/orders/:id', controllers.orders.get);
+  app.get('/orders/:id'
+    // If they're using ?receipt=true, make sure we restrict the group
+  , function(req, res, next){
+      if (!req.param('receipt')) return next();
+
+      return (
+        m.restrict(['admin', 'receipts'])
+      )(req, res, next);
+    }
+  , controllers.orders.get
+  );
+
+  app.get(
+    config.receipt.orderRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , function(req, res, next){ req.params.receipt = true; next(); }
+  , controllers.orders.get
+  );
 
   app.put('/orders/:id', m.restrict(['client', 'admin']), controllers.orders.update);
 
@@ -208,6 +230,13 @@ module.exports.register = function(app) {
   app.all('/orders/:id', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
+  });
+
+
+  app.get('/receipts/order-:oid.pdf', m.buildReceipt(), function(req, res) {
+    file.serve(req, res, function(error){
+      if ( error && error.status == 404) return res.status(404).render('404');
+    });
   });
 
   /**

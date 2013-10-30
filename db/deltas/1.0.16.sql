@@ -1,40 +1,39 @@
-begin;
--- Update version
-insert into deltas (version, date) values ('1.0.16', 'now()');
+-- Insert the user and group for building receipts
 
--- fix some address stuff, especially uniqueness
-UPDATE addresses SET street2='' WHERE street2 IS NULL;
-
-ALTER TABLE addresses
-      ALTER COLUMN street SET NOT NULL,
-      ALTER COLUMN city SET NOT NULL,
-      ALTER COLUMN "state" SET NOT NULL,
-      ALTER COLUMN zip SET NOT NULL,
-      ALTER COLUMN is_default SET NOT NULL,
-      ALTER COLUMN phone SET NOT NULL,
-      ALTER COLUMN street2 SET NOT NULL,
-      ALTER COLUMN street2 SET DEFAULT '';
-
-ALTER TABLE addresses DROP CONSTRAINT IF EXISTS addresses_pkey cascade;
-
-ALTER TABLE addresses ALTER COLUMN id SET NOT NULL;
-ALTER TABLE addresses ADD UNIQUE (id);
-
-ALTER TABLE addresses ADD PRIMARY KEY (user_id, street, street2, zip);
-
-ALTER TABLE restaurants ADD FOREIGN KEY(address_id) REFERENCES addresses(id);
-
-
--- add tip percentage to orders
 DO $$
-  BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tip_percentage') THEN
-      CREATE TYPE tip_percentage AS ENUM('0', 'custom', '5', '10', '15', '18', '20', '25');
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'orders' AND column_name = 'tip_percent') THEN
-      ALTER TABLE orders ADD COLUMN tip_percent tip_percentage;
-    END IF;
-  END;
-$$;
+  declare version       text := '1.0.16';
+  declare group_name    text := 'receipts';
+  declare user_email    text := 'receipts@goodybag.com';
+  declare user_password text := '$2a$10$8egVetFrE7OAk1B.v36dOOdhS9TXt98PN7/zCvLdeAuOa0KLXIzIi';
+  declare receipt_user  record;
+begin
+  raise notice '## Running Delta v% ##', version;
 
-commit;
+  raise notice 'Using group_name: %, email: %, password: %', group_name, user_email, user_password;
+
+  -- Update version
+  execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
+
+  -- Insert group
+  if not exists ( select 1 from groups where name = group_name ) then
+    raise notice 'inserting group `%`', group_name;
+    execute 'insert into groups ( name ) values ( $1 )' using group_name;
+  end if;
+
+  -- Insert user
+  if not exists ( select 1 from users where users.email = user_email ) then
+    raise notice 'inserting user `%`', user_email;
+
+    for receipt_user in execute 'insert into users (email, password) values ($1, $2) returning *'
+      using user_email, user_password
+    loop
+      -- Insert users_groups
+      if not exists ( select 1 from users_groups where users_groups.user_id = receipt_user.id and "group" = group_name ) then
+        raise notice 'inserting users_groups user_id: `%` group: `%`', receipt_user.id, group_name;
+
+        execute 'insert into users_groups ( "group", user_id ) values ($1, $2)'
+          using group_name, receipt_user.id;
+      end if;
+    end loop;
+  end if;
+end$$;

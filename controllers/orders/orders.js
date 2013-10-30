@@ -1,10 +1,12 @@
-var db = require('../../db');
-var errors = require('../../errors');
-var utils = require('../../utils');
-var config = require('../../config');
-var states = require('../../public/states');
-var models = require('../../models');
-var logger = require('../../logger');
+var db      = require('../../db');
+var errors  = require('../../errors');
+var utils   = require('../../utils');
+var config  = require('../../config');
+var states  = require('../../public/states');
+var models  = require('../../models');
+var logger  = require('../../logger');
+var receipt = require('../../lib/receipt');
+var venter  = require('../../lib/venter');
 
 var moment = require('moment');
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
@@ -133,6 +135,12 @@ module.exports.get = function(req, res) {
     if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
       context.order.editable = true;
     var view = order.attributes.status === 'pending' ? 'checkout' : 'receipt';
+
+    if (req.param('receipt')) {
+      view = 'invoice/receipt';
+      context.layout = 'invoice/invoice-layout';
+    }
+
     res.render(view, context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
       res.send(html);
@@ -250,34 +258,9 @@ module.exports.changeStatus = function(req, res) {
         }
       }
 
-      if (utils.contains(['submitted', 'accepted', 'delivered'], status.attributes.status)) {
-        var viewOptions = {
-          layout: 'email-layout',
-          status: status.toJSON(),
-          config: config,
-          order: order.toJSON()
-        };
-
-        res.render('email-order-' + status.attributes.status, viewOptions, function(err, html) {
-          //TODO: error handling
-          utils.sendMail(
-            order.attributes.user.email,
-            config.emails.orders,
-            'Goodybag order (#'+ order.attributes.id + ') has been ' + status.attributes.status,
-            html,
-            function(err, result) {
-              if(err) logger.routes.error(TAGS, 'Error sending email', err);
-            }
-          );
-        });
-      }
-
-      if (status.attributes.status === 'denied') {
-        utils.sendMail(config.emails.onDeny || config.emails.orders, config.emails.orders, 'Order #' + order.attributes.id + ' denied',
-                       null, config.baseUrl + '/orders/' + order.attributes.id);
-      }
-
       res.send(201, status.toJSON());
+
+      venter.emit('order:status:change', order, status);
     }
 
     var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
@@ -314,5 +297,19 @@ module.exports.duplicate = function(req, res, next) {
     var obj = newOrder.toJSON();
     obj.lostItems = lostItems;
     res.json(201, obj);
+  });
+};
+
+module.exports.receipt = function( req, res ){
+  models.Order.findOne( +req.params.oid, function( error, order ){
+    if ( error )  return res.error( errors.internal.DB_FAILURE, error );
+    if ( !order ) return res.status(404).render('404');
+
+    var options = {
+      layout: 'invoice/invoice-layout'
+    , order:  order.toJSON()
+    };
+
+    res.render( 'invoice/receipt', options );
   });
 };

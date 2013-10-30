@@ -5,6 +5,7 @@ var uuid  = require('node-uuid');
 var db = require('../db');
 var pg = require('pg');  // access db driver directly
 var Restaurant = require('./restaurant');
+var venter = require('../lib/venter');
 
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
@@ -100,6 +101,8 @@ module.exports = Model.extend({
         status.save(callback);
       } else
         callback.apply(this, arguments);
+
+      venter.emit( 'order:change', order.attributes.id );
     }, client);
   },
   toJSON: function(options) {

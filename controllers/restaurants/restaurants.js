@@ -166,7 +166,23 @@ var mealTypes = function(body, id) {
 };
 
 // maybe this ought to come from the restaurant model?
-var fields = ['name', 'is_hidden', 'street', 'city', 'state', 'zip', 'sms_phone', 'voice_phone', 'email', 'minimum_order', 'price', 'delivery_fee', 'cuisine'];
+var fields = [
+  'name',
+  'logo_url',
+  'logo_mono_url',
+  'is_hidden',
+  'street',
+  'city',
+  'state',
+  'zip',
+  'sms_phone',
+  'voice_phone',
+  'email',
+  'minimum_order',
+  'price',
+  'delivery_fee',
+  'cuisine'
+];
 
 module.exports.create = function(req, res) {
   var restaurantQuery = queries.restaurant.create(utils.pick(req.body, fields));
@@ -206,7 +222,7 @@ module.exports.update = function(req, res) {
   , ['LeadTimes', leadTimes, 'lead_times']
   , ['Tags', tags, 'tags']
   , ['MealTypes', mealTypes, 'meal_types']
-  ], 
+  ],
   function(args) {
     if (req.body[args[2]] === undefined) return function(cb) { cb() };
     var delQuery = queries.restaurant['del' + args[0]](req.params.rid)

@@ -7,3 +7,11 @@
   padding-bottom: 0;
   background-color: #fff; 
 }
+
+.panel-heading a {
+  color: #695A42;
+}
+
+.panel-heading .glyphicon {
+  font-size: 12px;
+}

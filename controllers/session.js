@@ -21,7 +21,7 @@ module.exports.create = function(req, res) {
         var user = results[0];
         utils.comparePasswords(req.body.password, user.password, function(error, success) {
           if (!success) return res.render('auth', { error: errors.auth.INVALID_EMAIL });
-          req.session = utils.extend({}, req.session, {user: utils.pick(user, ['id', 'groups', 'email', 'created_at'])});
+          req.session = utils.extend({}, req.session, {user: utils.pick(user, ['id', 'name', 'groups', 'email', 'created_at'])});
           return callback();
         });
       });

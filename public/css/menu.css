@@ -3,14 +3,25 @@
 }
 
 .restaurant-name {
-  display: inline-block;
   padding-right: 30px;
 }
 
+.restaurant-name .business-logo {
+  width: 100px;
+  height: 100px;
+  vertical-align: middle;
+  border-radius: 4px;
+  border: solid 1px #ccccc0;
+  margin-right: 10px;
+  margin-top: -8px;
+}
+
 .menu-info-tabs {
-  display: inline-block;
+  display: block;
   border: none;
   vertical-align: bottom;
+  margin-top: -42px;
+  margin-left: 105px;
 }
 
 .restaurant-info-item {

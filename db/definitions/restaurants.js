@@ -81,7 +81,7 @@ define(function(require) {
     , default: 0
     , checks: ['>= 0']
     }
-  , delivery_instructions {
+  , delivery_instructions: {
       type: types.text
     , nullable: true
     }

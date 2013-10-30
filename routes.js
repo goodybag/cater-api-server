@@ -422,20 +422,20 @@ module.exports.register = function(app) {
    * User cards resource
    */
 
-  app.get('/users/:uid/cards', controllers.users.cards.list);
+  // app.get('/users/:uid/cards', controllers.users.cards.list);
 
-  app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
+  // app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
 
-  app.put('/users/:uid/cards/:cid', controllers.users.cards.update);
+  // app.put('/users/:uid/cards/:cid', controllers.users.cards.update);
 
-  app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
+  // app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
 
-  app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
+  // app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
 
-  app.all('/users/:uid/cards/:cid', function(req, res, next) {
-    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
-    res.send(405);
-  });
+  // app.all('/users/:uid/cards/:cid', function(req, res, next) {
+  //   res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
+  //   res.send(405);
+  // });
 
   /**
    *  User session resource.  Represents a session as a specific user.

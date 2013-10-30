@@ -69,7 +69,7 @@ utils.extend(Model.prototype, {
     (client || db).query(sql.query, sql.values, function(err, rows, result) {
       if (client) {
         result = rows;
-        rows = result.rows;
+        rows = (result||0).rows || [];
       }
       if (!err && rows && rows[0]) utils.extend(self.attributes, rows[0]);
       callback.apply(this, arguments);

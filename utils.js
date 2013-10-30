@@ -17,7 +17,26 @@ var
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
 
+utils.s3 = require('knox');
+
 utils.uuid = uuid;
+
+utils.stage = function(fns){
+  var current = function(){
+    var args = Array.prototype.slice.call(arguments, 0);
+    var callback = args.pop();
+
+    // Redefine current after first call so that it doesn't default to 'start'
+    current = function(name){
+      if (!fns.hasOwnProperty(name)) throw new Error('Cannot find stage item: ', name);
+      fns[name].apply(null, Array.prototype.slice.call(arguments, 1).concat(current, callback));
+    };
+
+    fns.start.apply(null, args.concat(current, callback));
+  };
+
+  return current;
+};
 
 utils.get = function(url, options, callback){
   if (typeof options === "function"){
@@ -73,6 +92,54 @@ utils.del = function(url, callback){
 };
 
 var mailgun = new Mailgun(config.mailgun.apiKey);
+
+/**
+ * Send mail. Why are there two versions? Because sendMail1
+ * is already being used throughout the codebase and I need
+ * to add attachments to my mail now. Adding it to sendMail1
+ * seems like too daunting of a task because... I mean...
+ * look at it! I would have to add yet ANOTHER argument to
+ * that thing
+ *
+ * Options: {
+ *   to:        'jane@doe.com'
+ * , from:      'john@doe.com'
+ * , subject:   'ohai!'
+ * , html:      '<html></html>'
+ * , body:      'Plain text'
+ * , reply_to:  'john@doe.com'
+ * , attachment: {
+ *     // Whatever mailcomposer accepts
+ *     // See https://github.com/andris9/mailcomposer#add-attachments
+ *     filePath: '~/love-letter.pdf'
+ *   }
+ * , attachments: [ * array of objects described above * ]
+ * }
+ *
+ * @param  {Object}   options  The full email options sent to composer
+ * @param  {Function} callback callback( error )
+ */
+utils.sendMail2 = function( options, callback ){
+  callback = callback || options.callback || utils.noop;
+
+  if ( !config.emailEnabled ) return callback();
+
+  var composer = new MailComposer();
+
+  // Remove whitespace from email to remove possible rendering bugs
+  if ( options.html ) options.html = options.html.replace(/>\s+</g, '><').trim();
+
+  composer.setMessageOption( options );
+
+  if ( options.attachments ) options.attachments.forEach( composer.addAttachment );
+  if ( options.attachment ) composer.addAttachment( options.attachment );
+
+  composer.buildMessage( function( error, message ){
+    if ( error ) return callback( error );
+
+    mailgun.sendRaw( options.from, options.to, message, callback );
+  });
+};
 
 utils.sendMail = function(to, from, subject, html, text, callback) {
   if (lodash.isFunction(text) && callback === undefined) {

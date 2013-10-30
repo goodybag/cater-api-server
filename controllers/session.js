@@ -3,6 +3,7 @@ var
 , queries = require('../db/queries')
 , errors = require('../errors')
 , utils = require('../utils')
+, auth = require('../lib/auth')
 ;
 
 module.exports.get = function(req, res) {
@@ -10,29 +11,22 @@ module.exports.get = function(req, res) {
 }
 
 module.exports.create = function(req, res) {
-  var tasks = {
-    comparePassword: function(callback) {
-      var query = queries.user.get({email: req.body.email.toLowerCase()})
+  auth( req.body.email, req.body.password, function( error, user ){
+    if ( error ){
+      if ( error.type !== 'auth' ){
+        return res.status(500).render('500');
+      }
 
-      var sql = db.builder.sql(query);
-      db.query(sql.query, sql.values, function(error, results) {
-        if (error) return res.status(500).render('500');
-        if (results.length != 1) return res.render('auth', { error: errors.auth.INVALID_EMAIL });
-        var user = results[0];
-        utils.comparePasswords(req.body.password, user.password, function(error, success) {
-          if (!success) return res.render('auth', { error: errors.auth.INVALID_EMAIL });
-          req.session = utils.extend({}, req.session, {user: utils.pick(user, ['id', 'name', 'groups', 'email', 'created_at'])});
-          return callback();
-        });
-      });
+      return res.render( 'auth', { error: error } );
     }
-  , redirect: function(callback) {
-      res.redirect(req.query.next || '/restaurants');
-      return callback();
-    }
-  }
 
-  utils.async.series(tasks);
+    req.session = utils.extend(
+      {}, req.session,
+      { user: utils.pick( user, [ 'id', 'name', 'groups', 'email', 'created_at' ] ) }
+    );
+
+    return res.redirect(req.query.next || '/restaurants');
+  });
 }
 
 module.exports.del = function(req, res) {

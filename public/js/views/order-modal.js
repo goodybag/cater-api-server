@@ -105,6 +105,13 @@ var OrderModal = Backbone.View.extend({
       )
     };
 
+    // If the orderParams zip is the same as user's default zip
+    // Go ahead and autofill with default address
+    if (order.zip === this.options.defaultAddress.get('zip')) {
+      defaultProps = _.pick(this.options.defaultAddress.toJSON(), Object.keys(Address.schema.properties));
+      _.extend(order, defaultProps);
+    }
+  
     this.model.set( order, { silent: true } );
 
     if ( this.showErrors() ) return;

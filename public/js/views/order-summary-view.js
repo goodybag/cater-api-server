@@ -3,7 +3,7 @@ var OrderSummaryView = Backbone.View.extend({
     'click .btn-checkout': 'checkout'
   },
 
-  template: Handlebars.partials.order_summary,
+  template: Handlebars.partials.menu_order_summary,
 
   initialize: function(options) {
     if (this.model) this.setModel(this.model);
@@ -82,16 +82,16 @@ var OrderSummaryView = Backbone.View.extend({
       state: 'TX'
     };
 
-    var diff = {};
-    for (var key in params)
-      diff[key] = this.model.get(key) != null ? this.model.get(key) : params[key];
+    var diff = _.defaults(this.model.pick(_.keys(params)), params);
+    // var diff = {};
+    // for (var key in params)
+    //   diff[key] = this.model.has(key) ? this.model.get(key) : params[key];
 
     var view = this;
     var sent = this.model.save(diff, {
       patch: true,
       wait: true,
       singleError: false,
-      skipAddressValidation: true,
       success: function(model, response, options) {
         // Reset order params
         _.each( _.keys( orderParams.toJSON() ), _.bind( orderParams.unset, orderParams ) );

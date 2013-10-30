@@ -96,6 +96,11 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , tip_percent: {
+      type: types.tippercentage
+    , nullable: true
+    ,
+    }
   , name: {
       type: types.text
     , nullable: true

@@ -35,6 +35,16 @@ var Order = Backbone.Model.extend({
         name: {
           type: ['string', 'null'],
           required: false
+        },
+        tip: {
+          type: ['integer', 'null'],
+          required: false,
+          minimum: 0
+        },
+        tip_percent: {
+          type: ['string', 'null'],
+          required: false,
+          enum: ['0', 'custom', '5', '10', '15', '18', '20', '25']
         }
       }
     };
@@ -61,13 +71,12 @@ var Order = Backbone.Model.extend({
       errors = Array.prototype.slice.call( errors );
     }
 
-    // Don't validate address when adding to order
-    if(!options.skipAddressValidation) {
-      var addressFields = _.keys(_.result(Address, 'schema').properties);
-      var addressErrors = this.address.validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)), options);
-      if (addressErrors != null)
-        errors = errors.concat(_.isArray(addressErrors) ? addressErrors : Array.prototype.slice.call(addressErrors));
-    }
+    var addressFields = _.keys(_.result(Address, 'schema').properties);
+    var addressErrors = this.address.validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)),
+                                              _.extend({enforceRequired: false}, options));
+    if (addressErrors != null)
+      errors = errors.concat(_.isArray(addressErrors) ? addressErrors : Array.prototype.slice.call(addressErrors));
+
     // Add on the restaurant fulfillability errors
     errors = errors.concat(
       // restaurant validate expects an order model and this instance does not
@@ -218,14 +227,11 @@ var Order = Backbone.Model.extend({
   },
 
   validateOrderFulfillability: function(){
-    var vals = ['guests', 'datetime'].map( this.get.bind( this ) );
+    var isPresent = ['guests', 'datetime'].map(_.bind(this.has, this)).concat(
+      ['zip'].map(_.bind(this.has, this.address)))
 
     // If they have blank fields, that's the only thing we need to tell them
-    if ( vals.indexOf( null ) + vals.indexOf( undefined ) != -2 ){
-      return ['has_blank_fields'];
-    }
-
-    return this.restaurant.validateOrderFulfillability( this );
+    return _.every(isPresent) ? this.restaurant.validateOrderFulfillability( this ) : ['has_blank_fields'];
   },
 
   toJSON: function() {

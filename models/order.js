@@ -1,10 +1,15 @@
-var Model = require('./model');
-var utils = require('../utils');
-var config = require('../config');
-var uuid  = require('node-uuid');
-var db = require('../db');
 var pg = require('pg');  // access db driver directly
+var uuid  = require('node-uuid');
+var config = require('../config');
+var utils = require('../utils');
+var logger = require('../logger');
+var venter = require('../lib/venter');
+
+var db = require('../db');
+var Model = require('./model');
 var Restaurant = require('./restaurant');
+var Transaction = require('./transaction');
+var TransactionError = require('./transaction-error');
 
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
@@ -28,11 +33,16 @@ var modifyAttributes = function(callback, err, orders) {
             id: order.attributes.restaurant_id,
             email: order.attributes.restaurant_email,
             delivery_times: utils.object(order.attributes.delivery_times),
-            name: order.attributes.restaurant_name
+            name: order.attributes.restaurant_name,
+            balanced_customer_uri: order.attributes.restaurant_balanced_customer_uri
           },
           utils.pick(order.attributes, restaurantFields));
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
         utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
+
+        var rate = 1.0825; // default Austin, TX sales tax for now, in future store in and get from restaurant table
+        var totalPreTip = (parseInt(order.attributes.sub_total) + parseInt(order.attributes.restaurant.delivery_fee)) * parseFloat(rate);
+        order.attributes.total = (totalPreTip + order.attributes.tip); // in cents
       } else {
         order.attribtues.restaurant = null;
       }
@@ -40,7 +50,14 @@ var modifyAttributes = function(callback, err, orders) {
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
 
-      order.attributes.user = {id: order.attributes.user_id, email: order.attributes.user_email, organization: order.attributes.organization, name: order.attributes.user_name};
+      order.attributes.user = {
+        id: order.attributes.user_id,
+        email: order.attributes.user_email,
+        organization: order.attributes.organization,
+        name: order.attributes.user_name,
+        balanced_customer_uri: order.attributes.user_balanced_customer_uri
+      };
+
       delete order.attributes.user_email;
       delete order.attributes.organization;
       delete order.attributes.user_name;
@@ -92,14 +109,11 @@ module.exports = Model.extend({
       this.attributes.adjustment_description = this.attributes.adjustment.description;
       delete this.attributes.adjustment;
     }
-    var order = this
+    var order = this;
     Model.prototype.save.call(this, {returning: ["*", '("orders"."datetime"::text) as datetime']}, function(err) {
-      if (!err && insert) {
-        var OrderStatus = require('./order-status');
-        var status = new OrderStatus({order_id: order.attributes.id});
-        status.save(callback);
-      } else
-        callback.apply(this, arguments);
+
+      callback.apply(this, arguments);
+      venter.emit( 'order:change', order.attributes.id );
     }, client);
   },
   toJSON: function(options) {
@@ -204,21 +218,10 @@ module.exports = Model.extend({
       },
 
       function(client, done, newOrder, cb) {
-        // Step 2: create a pending status for the new order.  (Note: this could be parallel with step 3.
-        if (newOrder == null) return cb(null, client, done, null);
-        var OrderStatus = require('./order-status');
-        var status = new OrderStatus({order_id: newOrder.attributes.id});
-        status.save(function(err, status) {
-          if (err) return cb(err, client, done);
-          newOrder.attributes.latestStatus = status.status;
-          return cb(null, client, done, newOrder);
-        }, client);
-      },
-
-      function(client, done, newOrder, cb) {
-        // Step 3: Copy the order items
+        // Step 2: Copy the order items
         if (newOrder == null) return cb(null, client, done, null);
 
+        newOrder.attributes.status = 'pending';
         var copyOrderItems = {
           with: {
             newItems: {
@@ -262,7 +265,7 @@ module.exports = Model.extend({
       },
 
       function(client, done, newOrder, cb) {
-        // Step 4: check if any order_items are missing because their items have been discontinued
+        // Step 3: check if any order_items are missing because their items have been discontinued
         if (newOrder == null) return cb(null, client, done, null);
         self.getOrderItems(function(err, oldOrderItems) {
           if (err) return cb(err, client, done);
@@ -276,6 +279,84 @@ module.exports = Model.extend({
       client.query(err ? 'ROLLBACK' : 'COMMIT', function(error, rows, result) {
         done();
         return callback(error || err, order, lostItems);
+      });
+    });
+  },
+
+  setPaymentPaid: function (type, uri, data, callback) {
+    var self = this;
+
+    var TAGS = ['order-set-payment-paid'];
+    logger.models.info(TAGS, 'setting payment status to paid for order: ' + this.attributes.id);
+
+    db.getClient(function (error, client, done) {
+      var tasks = {
+        begin: function (cb) {
+          client.query('BEGIN', cb);
+        }
+      , updatePaymentStatus: function (cb) {
+          self.attributes.payment_status = 'paid';
+          self.save(cb, client);
+        }
+      , createTransaction: function (cb) {
+        var transaction = new Transaction({
+          type: type
+        , order_id: self.attributes.id
+        , uri: uri
+        , data: data
+        });
+        transaction.save(cb, client);
+        }
+      };
+
+      utils.async.series([
+        tasks.begin
+      , tasks.updatePaymentStatus
+      , tasks.createTransaction
+      ], function (error, results) {
+        client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
+          done();
+          return callback(e || error);
+        });
+      });
+    });
+  },
+
+  setPaymentError: function (requestId, data, callback) {
+    var self = this;
+
+    var TAGS = ['order-set-payment-error'];
+    logger.models.info(TAGS, 'setting payment status to error for order: ' + this.attributes.id);
+
+    db.getClient(function (error, client, done) {
+
+      var tasks = {
+        begin: function (cb) {
+          client.query('BEGIN', cb);
+        }
+      , updatePaymentStatus: function (cb) {
+          self.attributes.payment_status = 'error';
+          self.save(cb, client);
+        }
+      , createTransactionError: function (cb) {
+          var transactionError = new TransactionError({
+            order_id: self.attributes.id
+          , request_id: requestId
+          , data: data
+          });
+          transactionError.create(cb, client);
+        }
+      };
+
+      utils.async.series([
+        tasks.begin
+      , tasks.updatePaymentStatus
+      , tasks.createTransactionError
+      ], function (error, results) {
+        client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
+          done();
+          return callback (e || error);
+        });
       });
     });
   }
@@ -303,7 +384,6 @@ module.exports = Model.extend({
     // because it cannot be determined due to DST until the datetime in
     // datetime)
     query.columns.push('(orders.datetime::text) as datetime');
-    query.columns.push('latest.status');
 
     query.with = [
       {
@@ -440,36 +520,6 @@ module.exports = Model.extend({
 
     query.joins = query.joins || {};
 
-    query.joins.latest = {
-      type: 'left'
-    , columns: ['order_id', 'status']
-    , on: {
-        'order_id': '$orders.id$'
-      }
-    // TODO: convert to with
-    , target: {
-        type: 'select'
-      , columns: ['order_id', 'status']
-      , table: 'order_statuses'
-      , alias: 'statuses'
-      , joins: {
-          recent: {
-            type: 'inner'
-          , on: {
-              'order_id': '$statuses.order_id$'
-            , 'created_at': '$statuses.created_at$'
-            }
-          , target: {
-              type: 'select'
-            , table: 'order_statuses'
-            , columns: ['order_id', 'max(created_at) as created_at']
-            , groupBy: 'order_id'
-            }
-          }
-        }
-      }
-    };
-
     query.columns.push({"table": "order_subtotals", "name": "sub_total"});
 
     query.joins.order_subtotals = {
@@ -483,6 +533,7 @@ module.exports = Model.extend({
     query.columns.push({table: 'restaurants', name: 'email', as: 'restaurant_email'});
     query.columns.push('restaurants.sms_phone');
     query.columns.push('restaurants.voice_phone');
+    query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});
 
     query.joins.restaurants = {
       type: 'inner'
@@ -622,6 +673,7 @@ module.exports = Model.extend({
     query.columns.push({table: 'users', name: 'email', as: 'user_email'});
     query.columns.push({table: 'users', name: 'organization'});
     query.columns.push({table: 'users', name: 'name', as: 'user_name'});
+    query.columns.push({table: 'users', name: 'balanced_customer_uri', as: 'user_balanced_customer_uri'});
 
     query.joins.users = {
       type: 'inner'

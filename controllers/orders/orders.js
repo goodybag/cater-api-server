@@ -1,10 +1,12 @@
-var db = require('../../db');
-var errors = require('../../errors');
-var utils = require('../../utils');
-var config = require('../../config');
-var states = require('../../public/states');
-var models = require('../../models');
-var logger = require('../../logger');
+var db      = require('../../db');
+var errors  = require('../../errors');
+var utils   = require('../../utils');
+var config  = require('../../config');
+var states  = require('../../public/states');
+var models  = require('../../models');
+var logger  = require('../../logger');
+var receipt = require('../../lib/receipt');
+var venter  = require('../../lib/venter');
 
 var moment = require('moment');
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
@@ -64,7 +66,14 @@ module.exports.get = function(req, res) {
       if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
         context.order.editable = true;
 
-      res.render('order', context, function(err, html) {
+      var view = 'order';
+
+      if (req.param('receipt')) {
+        view = 'invoice/receipt';
+        context.layout = 'invoice/invoice-layout';
+      }
+
+      res.render(view, context, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
       });
@@ -195,8 +204,8 @@ module.exports.changeStatus = function(req, res) {
         return res.send(403, 'order not submitttable');
     }
 
-    var done = function(status) {
-      if (status.attributes.status === 'submitted') {
+    var done = function() {
+      if (order.attributes.status === 'submitted') {
         var viewOptions = {
           order: order.toJSON({review: true}),
           config: config,
@@ -248,47 +257,39 @@ module.exports.changeStatus = function(req, res) {
         }
       }
 
-      if (utils.contains(['submitted', 'accepted', 'delivered'], status.attributes.status)) {
-        var viewOptions = {
-          layout: 'email-layout',
-          status: status.toJSON(),
-          config: config,
-          order: order.toJSON()
-        };
-
-        res.render('email-order-' + status.attributes.status, viewOptions, function(err, html) {
-          //TODO: error handling
-          utils.sendMail(
-            order.attributes.user.email,
-            config.emails.orders,
-            'Goodybag order (#'+ order.attributes.id + ') has been ' + status.attributes.status,
-            html,
-            function(err, result) {
-              if(err) logger.routes.error(TAGS, 'Error sending email', err);
-            }
-          );
-        });
-      }
-
-      if (status.attributes.status === 'denied') {
-        utils.sendMail(config.emails.onDeny || config.emails.orders, config.emails.orders, 'Order #' + order.attributes.id + ' denied',
-                       null, config.baseUrl + '/orders/' + order.attributes.id);
-      }
-
       res.send(201, status.toJSON());
+      venter.emit('order:status:change', order, status);
     }
 
-    var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
-    status.save(function(err, rows, result) {
+    if (req.body.status === 'submitted' && order.attributes.user.isInvoiced) order.attributes.payment_status = 'invoiced';
+
+    // if an order payment_status is processing, paid, or invoiced we don't want to process again
+    // TODO: determine if we want to detect a change in amount and then charge or refund the customer
+    if (req.body.status === 'accepted' && order.attributes.payment_method_id && !utils.contains(['processing', 'paid', 'invoiced'], order.attributes.payment_status)) {
+      logger.routes.info(TAGS, 'queuing order: '+ order.attributes.id +' for payment processing');
+      order.attributes.payment_status = 'pending';
+      utils.queues.debit.post({
+        body: JSON.stringify({order: {id: order.attributes.id}})
+      , delay: 5 // delay because we ideally want the database update to finish before we start processing
+      , expires_in: 2592000 // 30 days
+      }, function(error, body){
+        if (error) {
+          // it's alright if we have an error because we have something that polls the database every so often
+          // to add anything ot the queue that didn't make it on there due to errors. We do want to log the
+          // error and notify rollbar.
+          logger.routes.error(TAGS, 'failed to put order id: '+order.attributes.id+' onto debit queue', error);
+          utils.rollbar.reportMessage(error);
+        }
+      });
+    }
+
+    if (review) order.attributes.token_used = 'now()';
+
+    order.attributes.status = req.body.status;
+
+    order.save(function(err){
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      if (review) {
-        order.attributes.token_used = 'now()';
-        order.save(function(err) {
-          if (err) return res.error(errors.internal.DB_FAILURE, err);
-          done(status);
-        });
-      }
-      else done(status);
+      return done();
     });
   });
 };
@@ -312,5 +313,19 @@ module.exports.duplicate = function(req, res, next) {
     var obj = newOrder.toJSON();
     obj.lostItems = lostItems;
     res.json(201, obj);
+  });
+};
+
+module.exports.receipt = function( req, res ){
+  models.Order.findOne( +req.params.oid, function( error, order ){
+    if ( error )  return res.error( errors.internal.DB_FAILURE, error );
+    if ( !order ) return res.status(404).render('404');
+
+    var options = {
+      layout: 'invoice/invoice-layout'
+    , order:  order.toJSON()
+    };
+
+    res.render( 'invoice/receipt', options );
   });
 };

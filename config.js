@@ -66,6 +66,12 @@ var config = {
     , orders: '5122706333'
     }
 
+  , phantomjs: {
+      process: "phantomjs"
+    }
+
+  , receipt: require('./receipt-config')
+
   , filepicker: {
       key: 'AF52P8LtHSd6VMD07XdOQz'
     }
@@ -109,6 +115,18 @@ var config = {
     , appId: 'qsetwlny'
     }
 
+  , balanced: {
+      secret: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
+    , marketplaceUri: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
+    }
+
+  , ironMQ: {
+      token: '_2rd5UzCv7_-chOc4rDZ0Y7y74A'
+    , projectId: '526990a7f2d1570005000038'
+    }
+
+  , baseUrl: 'http://localhost:3000'
+
   , postgresConnStr:  "postgres://localhost:5432/cater"
 
   , requestLogger: {
@@ -117,8 +135,6 @@ var config = {
     , plan: 'month'
     }
 
-  , baseUrl: 'http://localhost:3000'
-
   , testEmail: 'geoff@goodybag.com'
 
   , testPhoneSms: '5129236299'
@@ -126,6 +142,12 @@ var config = {
   , testPhoneVoice: '5125390612'
 
   , emailEnabled: true
+
+  , receipt: _.extend(
+      {}
+    , require('./receipt-config')
+    , { bucket: 'dev-receipts.goodybag.com' }
+    )
   }
 
 
@@ -163,6 +185,16 @@ var config = {
     , appId: '6bxgiurw'
     }
 
+  , balanced: {
+      secret: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
+    , marketplaceUri: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
+    }
+
+  , ironMQ: {
+      token: 'M-NmfDgtD66MCHYKTVS3m15BbSA'
+    , projectId: '526990bcf2d1570009000035'
+    }
+
   , baseUrl: 'http://cater.staging.goodybag.com'
 
   , postgresConnStr: process.env['DATABASE_URL']
@@ -174,6 +206,12 @@ var config = {
     }
 
   , emailEnabled: true
+
+  , receipt: _.extend(
+      {}
+    , require('./receipt-config')
+    , { bucket: 'staging-receipts' }
+    )
   }
 
 , production: {
@@ -208,6 +246,11 @@ var config = {
   , intercom: {
       apiSecret: '5I1eNUY_F6HKl_Gb15965fr5VgGfNlwny7WmyKZx'
     , appId: '13s9qu57'
+    }
+
+  , ironMQ: {
+      token: 'vr52EAPD-oYRDtZzsqYd0eoDLkI'
+    , projectId: '526990cba2b8ed000500002e'
     }
 
   , baseUrl: 'https://www.goodybag.com'

@@ -2,6 +2,7 @@ var models = require('../../models');
 var errors = require('../../errors');
 var utils  = require('../../utils');
 var states = require('../../public/states');
+var venter = require('../../lib/venter');
 
 var db = require('../../db');
 var queries = require('../../db/queries');
@@ -99,6 +100,8 @@ module.exports.update = function(req, res, next) {
     db.query(sql.query, sql.values, function(error, rows, result) {
       if(error) return res.error(errors.internal.DB_FAILURE, error);
       res.send(rows[0]);
+
+      venter.emit( 'order:change', req.param('oid') );
     });
   });
 }
@@ -110,5 +113,7 @@ module.exports.remove = function(req, res, next) {
   db.query(sql.query, sql.values, function(error, rows, result) {
     if(error) return res.error(errors.internal.DB_FAILURE, error);
     res.send(200);
+
+    venter.emit( 'order:change', req.param('oid') );
   });
 }

@@ -34,6 +34,10 @@ define(function(require) {
       type: types.text
     , nullable: false
     }
+  , street2: {
+      type: types.text
+    , nullable: true
+    }
   , city: {
       type: types.text
     , nullable: false
@@ -77,6 +81,10 @@ define(function(require) {
     , default: 0
     , checks: ['>= 0']
     }
+  , delivery_instructions: {
+      type: types.text
+    , nullable: true
+    }
   , cuisine: {
       type: types.text + '[]'
     , nullable: true
@@ -91,6 +99,17 @@ define(function(require) {
     }
   , logo_mono_url: {
       type: types.text
+    }
+  , balanced_customer_uri: {
+      type: types.text
+    , nullable: false // even if there is no payment method specified this is necessary because this is whom the transaction is done on behalf of when we debit a customer's card or bank
+    , unique: true
+    }
+  , payment_method_id: {
+      type: types.int
+    , nullable: true // this is null is they don't want direct deposits
+    , default: 'NULL'
+    , references: {table: 'payment_methods', column: 'id', onDelete: 'cascade'}
     }
   };
 

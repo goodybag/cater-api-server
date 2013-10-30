@@ -40,6 +40,10 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , street2: {
+      type: types.text
+    , nullable: true
+    }
   , city: {
       type: types.text
     , nullable: true
@@ -104,6 +108,28 @@ define(function(require) {
   , name: {
       type: types.text
     , nullable: true
+    }
+  , delivery_instructions: {
+      type: types.text
+    , nullable: true
+    }
+  , status: {
+      type:types.orderstatus
+    , nullable: false
+    , default: "'pending'"
+    }
+  , cut: {
+      type: types.int
+    , nullable: true // change this to false once we handle the existing data
+    }
+  , payment_status: {
+      type: types.paymentstatus
+    , nullable: true
+    }
+  , payment_method_id: {
+      type: types.int
+    , nullable: true
+    , references: {table: 'payment_methods', column: 'id', onDelete: 'set null'}
     }
   };
 

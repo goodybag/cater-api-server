@@ -219,6 +219,8 @@
   }
 </script>
 
+<script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
+
 <script src="/js/models/address.js"></script>
 <script src="/js/models/user.js"></script>
 <script src="/js/models/item.js"></script>
@@ -235,6 +237,10 @@
 <script src="/js/views/address-view.js"></script>
 <script src="/js/views/order-address-view.js"></script>
 <script src="/js/views/checkout-view.js"></script>
+
+<script type="text/javascript">
+  balanced.init('{{config.balanced.marketplaceUri}}');
+</script>
 
 <script>
   var view = new CheckoutView({el: '#main', model: new Order( {{{json order}}} ), user: new User({{{json user}}})});

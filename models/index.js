@@ -5,5 +5,6 @@ module.exports = {
   OrderItem: require('./order-item'),
   OrderStatus: require('./order-status'),
   Category: require('./category'),
+  // User: require('./address'),
   Address: require('./address')
 }

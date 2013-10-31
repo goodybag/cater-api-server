@@ -8,13 +8,12 @@
   </div>
 
   <div class="row">
-    <div class="col-md-8">
-      <div class="panel">
-        <form id="order-form">
-          <div class="panel-body">
-            <fieldset>
-              <legend>1. Order Details</legend>
+    <div class="col-md-6 col-md-offset-1">
+      <form id="order-form">
+          <div class="list-group">
+            <div class="list-group-item row">
               <div>
+                <legend>1. Order Details</legend>
                 <div class="form-group col-sm-12"><h5>{{order.restaurant.name}}</h5></div>
                 <div class="form-inline clearfix">
                   <div class="form-group col-sm-3 form-group-delivery-date" data-icon="gb-icon-calendar">
@@ -66,11 +65,13 @@
                   </div>
                 </div>
               </div>
-            </fieldset>
-            <fieldset class="row delivery-info">
+            </div>
+
+            <div class="list-group-item row delivery-info">
                 {{> order_delivery_info}}
-            </fieldset>
-            <fieldset id="payment-info" class="row">
+            </div>
+
+            <div id="payment-info" class="list-group-item row">
               <div class="col-md-6">
                 <legend>3. Payment Info</legend>
 
@@ -126,18 +127,17 @@
                 </div>
 
               </div>
-            </fieldset>
-          </div>
-          <div class="panel-footer">
-            <fieldset>
+            </div>
+
+            <div class="list-group-item row">
               <div class="btn-toolbar pull-right">
                 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
                 <button type="submit" class="btn btn-primary">Submit Order</button>
               </div>
-            </fieldset>
+            </div>
+
           </div>
-        </form>
-      </div>
+      </form>
     </div>
     <div class="col-md-4">
      <div class="panel" data-spy="affix" data-offset-top="159" data-offset-bottom="225">

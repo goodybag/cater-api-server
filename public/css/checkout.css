@@ -19,3 +19,11 @@ legend {
   top: 10px;
   width: 360px;
 }
+
+/* Medium devices */
+@media (max-width: 992px) {
+  .affix {
+    position: static;
+    width: 100%;
+  }
+}

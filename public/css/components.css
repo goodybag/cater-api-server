@@ -13,6 +13,7 @@
   font-size: 0;
 }
 
+/*
 .form-inline .form-group {
   font-size: 14px;
 }
@@ -31,7 +32,7 @@
   margin-bottom: 8px;
   color: #aaa;
 }
-
+*/
 .form-control {
   height: 36px;
 }

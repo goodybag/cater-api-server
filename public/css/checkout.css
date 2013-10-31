@@ -28,7 +28,7 @@ legend {
 
 /* Medium devices */
 @media (max-width: 992px) {
-  .affix {
+  .affix, .affix-bottom {
     position: static;
     width: 100%;
   }

@@ -274,4 +274,6 @@ var Order = Backbone.Model.extend({
       }
     });
   }
+}, {
+  addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']
 });

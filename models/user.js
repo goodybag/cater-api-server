@@ -122,7 +122,7 @@ module.exports = Model.extend({
         this.join( tbl, query.embed[ tbl ], query );
       }
     }
-
+console.log(util.inspect(query, {depth: null}));
     return Model.find.call( this, query, callback, client );
   }
 });

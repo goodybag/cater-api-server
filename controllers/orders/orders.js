@@ -101,19 +101,31 @@ module.exports.checkout = function(req, res) {
 
     function(order, cb) {
       var query = {
-        where: { user_id: req.session.user.id },
-        order: ['is_default asc', 'id asc']
+        where: { id: req.session.user.id },
+        embeds: [
+          'payment_methods',
+          {
+            table: 'addresses',
+            options: {
+              order: ['is_default asc', 'id asc']
+              // Actually, we can probably just display this restriction client-side
+            // , where: {
+            //     zip: { $in: order.attributes.restaurant.delivery_zips }
+            //   }
+            }
+          }
+        ]
       };
-      models.Address.find(query, function(err, addresses) {
+
+      models.User.find(query, function(err, results) {
         if (err) return cb(err);
-        return cb(null, order, utils.filter(utils.invoke(addresses, 'toJSON'), function(address) {
-          return utils.contains(order.attributes.restaurant.delivery_zips, address.zip);
-        }));
+
+        return cb(null, order, results[0]);
       });
     }
   ];
 
-  utils.async.waterfall(tasks, function(err, order, addresses) {
+  utils.async.waterfall(tasks, function(err, order, user) {
     if (err)
       return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
 
@@ -133,7 +145,7 @@ module.exports.checkout = function(req, res) {
       },
       orderParams: req.session.orderParams,
       query: req.query,
-      user: {addresses: utils.invoke(addresses, 'toJSON')},
+      user: user.toJSON(),
       step: 2
     };
 

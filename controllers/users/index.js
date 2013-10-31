@@ -5,6 +5,8 @@ var utils = require('../../utils');
 var models = require('../../models');
 
 
+// module.exports.cards = require('./cards');
+
 module.exports.list = function(req, res) {
   var query = queries.user.list(req.query.columns, req.query.limit, req.query.offset);
   var sql = db.builder.sql(query);

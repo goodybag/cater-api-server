@@ -5,28 +5,18 @@ var ReceiptView = OrderView.extend({
       'change .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
       'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),
       'click .btn-accept': _.bind(this.changeStatus, this, 'accepted'),
-      'click #change-status-pending': _.bind(this.changeStatus, this, 'pending', false),
-      'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled', false),
-      'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted', false),
-      'click #change-status-denied': _.bind(this.changeStatus, this, 'denied', false),
-      'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted', false),
-      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', false)
+      'click #change-status-pending': _.bind(this.changeStatus, this, 'pending'),
+      'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled'),
+      'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted'),
+      'click #change-status-denied': _.bind(this.changeStatus, this, 'denied'),
+      'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted'),
+      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered')
     });
-  },
-
-  initialize: function(options) {
-    // please add any model listeners in the setModel function
-    this.setModel((this.model) ? this.model : new Order());
-
-    this.on('save:success', this.onSaveSuccess, this);
-
-    return this;
   },
 
   // set the model and add listeners here
   setModel: function(model) {
-    if (this.model) this.stopListening(this.model);
-    this.model = model;
+    OrderView.prototype.setModel.apply(this, arguments);
 
     this.listenTo(this.model, {
       'change:sub_total change:tip': this.onPriceChange,

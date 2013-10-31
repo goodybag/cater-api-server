@@ -42,6 +42,7 @@ module.exports.list = function(req, res) {
   });
 }
 
+/*
 module.exports.get = function(req, res) {
   models.Order.findOne(parseInt(req.params.id), function(error, order) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
@@ -80,6 +81,7 @@ module.exports.get = function(req, res) {
     });
   });
 }
+*/
 
 // TEMPORARY FOR TESTING PURPOSES ONLY
 // This wil replace the existing get method when it is complete.

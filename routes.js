@@ -206,7 +206,7 @@ module.exports.register = function(app) {
         m.restrict(['admin', 'receipts'])
       )(req, res, next);
     }
-  , controllers.orders.get
+  , controllers.orders.checkout
   );
 
   app.get(
@@ -214,7 +214,7 @@ module.exports.register = function(app) {
   , m.basicAuth()
   , m.restrict(['admin', 'receipts'])
   , function(req, res, next){ req.params.receipt = true; next(); }
-  , controllers.orders.get
+  , controllers.orders.checkout
   );
 
   app.put('/orders/:id', m.restrict(['client', 'admin']), controllers.orders.update);

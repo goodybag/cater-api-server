@@ -29,6 +29,18 @@ module.exports = Model.extend({
 , joins: {
     // Adds payment_methods JSON array to user object
     'payment_methods': function( options, query ){
+      // Add new `with` query replicating the base set
+      if ( !query.withs ) query.withs = [];
+
+      var localTable = {
+        name: 'payment_methods_' + this.table
+      , table: this.table
+      , columns: ['id']
+      , where: query.where
+      };
+
+      query.withs.push( localTable );
+
       query.columns.push({
         type: 'array_to_json'
       , as: 'payment_methods'
@@ -55,7 +67,7 @@ module.exports = Model.extend({
         type:   'left'
       , alias:  'pms'
       , target: joinSubSelect
-      , on: { 'pms.user_id': '$' + this.table + '.id$' }
+      , on: { 'pms.user_id': '$' + localTable.name + '.id$' }
       });
 
       if ( !query.groupBy ) query.groupBy = [];

@@ -10,8 +10,7 @@ var checkForExistingDebit = function (order, callback) {
   utils.balanced.Debits.list({'meta.order_id': order.attributes.id}, function (error, debits) {
     if (error) return callback(error);
 
-    //TODO: come up with a better solution for identifying a transaction for an order (some kind of uuid)
-    if (debits && debits.total > 1) return callback(new Error('multiple debits for a single order')); // this is going to be an issue for testing in dev/staging
+    if (debits && debits.total > 1) return callback(new Error('multiple debits for a single order'));
     if (debits && debits.total == 1) callback (null, debits.items[0]);
     return callback(null, null);
   });

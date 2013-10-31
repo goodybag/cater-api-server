@@ -1,11 +1,9 @@
 var CheckoutView = OrderView.extend({
-  events: function() {
-    return _.extend({}, OrderView.prototype.events, {
-      'change input[type="radio"].payment-method': 'changePaymentMethod',
-      'submit #order-form': 'submit',
-      'submit #select-address-form': 'selectAddress'
-    });
-  },
+  events: _.extend({}, OrderView.prototype.events, {
+    'change input[type="radio"].payment-method': 'changePaymentMethod',
+    'submit #order-form': 'submit',
+    'submit #select-address-form': 'selectAddress'
+  }),
 
   changePaymentMethod: function(e) {
     var $selected = $(e.currentTarget);

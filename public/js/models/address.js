@@ -7,10 +7,12 @@ var Address = Backbone.Model.extend({
 
     var schema = _.clone(_.result(this.constructor, 'schema'));
     if (!options.enforceRequired) {
-      schema.properties = _.objMap(schema.properties, function(property) {
-        property.type = ['null'].concat(property.type);
-        return _.omit(property, 'required');
-      });
+      schema.properties = _.objMap(schema.properties, _.compose(
+        _.partialRight(_.omit, 'required'),
+        function(property) {
+          property.type = ['null'].concat(property.type);
+        })
+      );
     }
 
     return this.validator.validate(attrs, schema, options, _.identity);

@@ -29,6 +29,7 @@ var FormView = Backbone.View.extend({
     this.$el.find(selector).parent().removeClass('has-success').addClass('has-error');
   },
 
+  // TODO: move to subclass
   onChange: function(e) {
     var diff = this.getDiff();
     this.$el.find(this.submitSelector).toggleClass('hide', !diff);

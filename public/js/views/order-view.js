@@ -87,23 +87,11 @@ var OrderView = FormView.extend({
   displayErrors: function() {
     FormView.prototype.displayErrors.apply(this, arguments);
 
-    if ( !this.model.validationError ) return this;
+    var selector = _.map(_.filter(this.model.validationError, _.isString), function(err) {
+      return '[data-error="' + this.model.validationError[i] + '"]';
+    }).join(', ');
 
-    // Maps field names to error selectors
-    var fieldSelector = {
-      zip: '.alert-bad-zip'
-    };
-
-    // Show each alert corresponding to an error
-    for (var i = 0, selector, l = this.model.validationError.length; i < l; ++i) {
-      if ( typeof this.model.validationError[i] === 'string' ){
-        selector = '[data-error="' + this.model.validationError[i] + '"]';
-      } else if ( typeof this.model.validationError[i] === 'object' && this.model.validationError[i].property in fieldSelector) {
-        selector = fieldSelector[ this.model.validationError[i].property ];
-      } else continue;
-
-      this.$el.find( selector ).removeClass('hide');
-    }
+    if (selector) this.$el.find( selector ).removeClass('hide');
 
     return this;
   },

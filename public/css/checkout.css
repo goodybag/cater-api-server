@@ -16,7 +16,13 @@ legend {
 }
 
 .affix {
+  position: fixed;
   top: 10px;
+  width: 360px;
+}
+
+.affix-bottom {
+  position: absolute;
   width: 360px;
 }
 

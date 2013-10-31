@@ -30,16 +30,23 @@ module.exports = Model.extend({
     // Adds payment_methods JSON array to user object
     'payment_methods': function( options, query ){
       // Add new `with` query replicating the base set
-      if ( !query.withs ) query.withs = [];
+      if ( !query.with ) query.with = [];
 
       var localTable = {
         name: 'payment_methods_' + this.table
+      , type: 'select'
       , table: this.table
       , columns: ['id']
       , where: query.where
       };
 
-      query.withs.push( localTable );
+      query.with.push( localTable );
+
+      query.joins.push({
+        type: 'left'
+      , target: localTable.name
+      , on: { id: '$' + this.table + '.id$' }
+      });
 
       query.columns.push({
         type: 'array_to_json'

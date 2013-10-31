@@ -1,3 +1,21 @@
 .form-group[data-icon^="gb-icon"]:before {
-  margin-top: 25px;
+  margin-top: 26px;
+}
+
+.form-inline .form-group {
+  padding-right: 0;
+}
+
+.form-inline {
+  margin-bottom: 10px;
+}
+
+legend {
+  border: none;
+  margin-bottom: 10px;
+}
+
+.affix {
+  top: 10px;
+  width: 360px;
 }

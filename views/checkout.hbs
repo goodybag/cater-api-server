@@ -14,38 +14,41 @@
           <div class="panel-body">
             <fieldset>
               <legend>1. Order Details</legend>
-              <h5>{{order.restaurant.name}}</h5>
-              <div class="row form-inline">
-                <div class="form-group col-sm-3 form-group-delivery-date" data-icon="gb-icon-calendar">
-                  <label class="control-label" for="order-date">Delivery Date</label>
-                  <input type="text" class="form-control order-datetime" id="order-date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+              <div>
+                <div class="form-group col-sm-12"><h5>{{order.restaurant.name}}</h5></div>
+                <div class="form-inline clearfix">
+                  <div class="form-group col-sm-3 form-group-delivery-date" data-icon="gb-icon-calendar">
+                    <label class="control-label" for="order-date">Delivery Date</label>
+                    <input type="text" class="form-control order-datetime" id="order-date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+                  </div>
+                  <div class="form-group col-sm-3 form-group-delivery-time" data-icon="gb-icon-time">
+                    <label class="control-label" for="order-time">Delivery Time</label>
+                    <input type="text" class="form-control order-datetime" id="order-time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+                  </div>
+                  <div class="form-group col-sm-2" data-icon="gb-icon-user">
+                    <label class="control-label" for="order-guests">Guests</label>
+                    <input type="text" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+                  </div>
                 </div>
-                <div class="form-group col-sm-3 form-group-delivery-time" data-icon="gb-icon-time">
-                  <label class="control-label" for="order-time">Delivery Time</label>
-                  <input type="text" class="form-control order-datetime" id="order-time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+
+                <div class="form-inline clearfix">
+                  <div class="form-group col-sm-6">
+                    <label class="control-label" for="order-name">Order Name</label>
+                    <input id="order-name" type="text" class="form-control order-name" value="{{order.name}}" placeholder="e.g. Tuesday Meeting">
+                  </div>
                 </div>
-                <div class="form-group col-sm-3" data-icon="gb-icon-user">
-                  <label class="control-label" for="order-guests">Guests</label>
-                  <input type="number" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+
+                <div class="form-inline clearfix">
+                  <div class="form-group col-sm-8">
+                    <label class="control-label" for="order-notes">Special instructions for this order?</label>
+                    <textarea id="order-notes" class="form-control order-notes" rows="3"{{#unless order.editable}} disabled="disabled"{{/unless}}>{{order.notes}}</textarea>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-sm-6">
-                  <label class="control-label">Order Name</label>
-                  <input type="text" class="form-control order-name" value="{{order.name}}" placeholder="e.g. Tuesday Meeting">
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-sm-8">
-                  <label class="control-label" for="order-notes">Special instructions for this order?</label>
-                  <textarea id="order-notes" class="form-control order-notes" rows="3"{{#unless order.editable}} disabled="disabled"{{/unless}}>{{order.notes}}</textarea>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label class="control-label">Add tip</label>
-                    <select class="form-control tip-percent">
+
+                <div class="form-inline">
+                  <div class="form-group col-xs-2">
+                    <label class="control-label" for="order-tip">Add tip</label>
+                    <select id="order-tip" class="form-control tip-percent">
                       {{! eq is ugly as hell but it works }}
                       <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
                       <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
@@ -57,7 +60,8 @@
                       <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
                     </select>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group col-xs-2">
+                    <label class="control-label text-muted" for="order-tip">&nbsp;</label>
                     <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
                   </div>
                 </div>
@@ -136,7 +140,7 @@
       </div>
     </div>
     <div class="col-md-4">
-     <div class="panel" data-spy="affix" data-offset-top="118">
+     <div class="panel" data-spy="affix" data-offset-top="159">
        {{> checkout_order_summary}}
      </div>
     </div>

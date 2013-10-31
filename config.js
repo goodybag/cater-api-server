@@ -5,6 +5,7 @@
 var
   os = require('os')
 , _ = require('lodash')
+, balancedConfig = require('./balanced-config.json')
 ;
 
 var config = {
@@ -115,10 +116,7 @@ var config = {
     , appId: 'qsetwlny'
     }
 
-  , balanced: {
-      secret: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
-    , marketplaceUri: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
-    }
+  , balanced: balancedConfig
 
   , ironMQ: {
       token: '_2rd5UzCv7_-chOc4rDZ0Y7y74A'
@@ -185,10 +183,7 @@ var config = {
     , appId: '6bxgiurw'
     }
 
-  , balanced: {
-      secret: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
-    , marketplaceUri: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
-    }
+  , balanced: balancedConfig
 
   , ironMQ: {
       token: 'M-NmfDgtD66MCHYKTVS3m15BbSA'

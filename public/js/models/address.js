@@ -7,10 +7,9 @@ var Address = Backbone.Model.extend({
 
     var schema = _.clone(_.result(this.constructor, 'schema'));
     if (!options.enforceRequired) {
-      schema.properties = _.objMap(schema.properties, _.partialRight(_.omit, 'required'));
-      schema.properties = _.objMap(schema.properties, function(property) { 
-        property.type = ['null'].concat(property.type); 
-        return property;
+      schema.properties = _.objMap(schema.properties, function(property) {
+        property.type = ['null'].concat(property.type);
+        return _.omit(property, 'required');
       });
     }
 

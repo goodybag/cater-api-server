@@ -21,8 +21,16 @@
 <div class="form-group">
   <label for="state">State <small>(required)</small></label>
   <select class="form-control address-state" name="state">
+    {{! Show address.state otherwise default }}
     {{#each states}}
-      <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq this.abbr ../address.state}} selected="selected"{{/eq}}>{{this.name}}</option>
+      <option value="{{this.abbr}}" label="{{this.abbr}}"
+      {{#if ../address.state }}
+        {{#eq this.abbr ../../address.state}} selected="selected"{{/eq}}
+      {{else}}
+        {{#if this.default}} selected="selected"{{/if}}
+      {{/if}}>
+      {{this.name}}
+      </option>
     {{/each}}
   </select>
 </div>

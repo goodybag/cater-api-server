@@ -1,14 +1,8 @@
-var OrderView = FormView.extend({
-  submitSelector: '.order-save-btn',
-
+var ReceiptView = OrderView.extend({
   events: function() {
-    return {
+    return _.extend({}, OrderView.prototype.events, {
       'keyup .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
       'change .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
-      'submit .order-form': 'onSave',
-      'click .edit-address-btn': 'editAddress',
-      'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
-      'click .btn-submit': 'submit',
       'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),
       'click .btn-accept': _.bind(this.changeStatus, this, 'accepted'),
       'click #change-status-pending': _.bind(this.changeStatus, this, 'pending', false),
@@ -17,24 +11,13 @@ var OrderView = FormView.extend({
       'click #change-status-denied': _.bind(this.changeStatus, this, 'denied', false),
       'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted', false),
       'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', false),
-      'click .tip-buttons .btn': 'clickTipButton',
       'click .copy-order-btn': 'makeCopy'
-    }
+    });
   },
 
   initialize: function(options) {
     // please add any model listeners in the setModel function
     this.setModel((this.model) ? this.model : new Order());
-
-    this.datepicker = this.$el.find(".order-form #order-date").eq(0).pickadate({
-      format: 'mm/dd/yyyy'
-    , min: new Date()
-    }).pickadate('picker');
-
-    this.timepicker = this.$el.find(".order-form #order-time").eq(0).pickatime({
-      format: 'h:i A'
-    , interval: 15
-    }).pickatime('picker');
 
     this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
 

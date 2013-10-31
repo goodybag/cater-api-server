@@ -47,7 +47,9 @@
     "winston-papertrail": "0.1.x",
     "bitly": "1.2.x",
     "npm": "*",
-    "semver": "2.1.x"
+    "semver": "2.1.x",
+    "stdm": "0.0.3",
+    "knox": "~0.8.6"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

@@ -281,14 +281,18 @@
 
 <script src="/js/views/form-view.js"></script>
 <script src="/js/views/copy-error-modal.js"></script>
+<script src="/js/views/address-view.js"></script>
+<script src="/js/views/order-address-view.js"></script>
+<script src="/js/views/tip-view.js"></script>
 <script src="/js/views/order-view.js"></script>
+<script src="/js/views/receipt-view.js"></script>
 <script src="/js/views/order-item-view.js"></script>
 <script>
   $.get('/partials/totals.hbs', null, function(data, textStatus, jqXHR) {
     Handlebars.registerPartial('totals', Handlebars.compile(data));
   }, 'html')
   var query = utils.parseQueryParams();
-  var view = new OrderView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
+  var view = new ReceiptView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
   var items = [
     {{#each order.orderItems}}
     {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})

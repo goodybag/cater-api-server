@@ -88,7 +88,7 @@ var OrderView = FormView.extend({
     FormView.prototype.displayErrors.apply(this, arguments);
 
     var selector = _.map(_.filter(this.model.validationError, _.isString), function(err) {
-      return '[data-error="' + this.model.validationError[i] + '"]';
+      return '.alert[data-error="' + err + '"]';
     }).join(', ');
 
     if (selector) this.$el.find( selector ).removeClass('hide');

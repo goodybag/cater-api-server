@@ -49,6 +49,6 @@ var OrderAddressView = AddressView.extend({
     })
 
     if (!sent)
-      alert(this.options.orderView.model.validationError); // TODO: real error handling
+      this.options.orderView.displayErrors();
   }
 });

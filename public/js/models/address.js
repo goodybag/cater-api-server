@@ -10,7 +10,7 @@ var Address = Backbone.Model.extend({
       schema.properties = _.objMap(schema.properties, _.compose(
         _.partialRight(_.omit, 'required'),
         function(property) {
-          property.type = ['null'].concat(property.type);
+          return _.extend(property, {type: _.uniq(['null'].concat(property.type))});
         })
       );
     }

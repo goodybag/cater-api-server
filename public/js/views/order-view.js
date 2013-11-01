@@ -46,6 +46,8 @@ var OrderView = FormView.extend({
     this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
     this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
 
+    this.subViews = [this.addressView];
+
     // please add any model listeners in the setModel function
     this.setModel((this.model) ? this.model : new Order());
   },

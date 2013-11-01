@@ -30,6 +30,7 @@ var FormView = Backbone.View.extend({
     var badFields =  _.uniq(_.invoke(_.compact(_.pluck(errors, 'property')), 'replace', /\[\d+\]$/, ''));
     var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
     this.$el.find(selector).closest('.form-group').removeClass('has-success').addClass('has-error');
+    _.invoke(this.subViews, 'displayErrors');
   },
 
   // TODO: move to subclass

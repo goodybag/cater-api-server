@@ -4,9 +4,12 @@ var FormView = Backbone.View.extend({
 
     for (var key in this.fieldMap) {
       var getter = this.fieldGetters[key];
-      var val = getter ? getter.apply(this) : (this.$el.find(this.fieldMap[key]).val()||'').trim() || null;
-      if (!(val == null && this.model.get(key) == null) && !_.isEqual(val, this.model.get(key)))
-        diff[key] = val;
+      var $field = this.$el.find(this.fieldMap[key]);
+      if ($field.length > 0) {
+        var val = getter ? getter.apply(this) : ($field.val()||'').trim() || null;
+        if (!(val == null && this.model.get(key) == null) && !_.isEqual(val, this.model.get(key)))
+          diff[key] = val;
+      }
     }
 
     return _.size(diff) > 0 ? diff : null;

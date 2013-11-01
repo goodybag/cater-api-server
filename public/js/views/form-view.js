@@ -24,6 +24,7 @@ var FormView = Backbone.View.extend({
   },
 
   displayErrors: function() {
+    if (this.model.validationError == null) return;
     var errors = _.isArray(this.model.validationError) ? this.model.validationError :
       _.pick(this.model.validationError, _.range(this.model.validationError.length));
 

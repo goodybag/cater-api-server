@@ -1,6 +1,6 @@
 begin;
 -- Update version
-insert into deltas (version, date) values ('1.0.13', 'now()');
+insert into deltas (version, date) values ('1.0.17', 'now()');
 
 -- fix some address stuff, especially uniqueness
 UPDATE addresses SET street2='' WHERE street2 IS NULL;

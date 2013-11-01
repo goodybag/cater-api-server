@@ -81,10 +81,10 @@ var Order = Backbone.Model.extend({
     errors = errors.concat(
       // restaurant validate expects an order model and this instance does not
       // have all the attrs set
-      this.restaurant.validateOrderFulfillability( new Order( _.defaults(this.toJSON(), attrs) ) )
+      this.restaurant.validateOrderFulfillability( new Order( _.extend(this.toJSON(), attrs) ) )
     );
 
-    return errors.length > 0 ? errors : false;
+    return errors.length > 0 ? errors : null;
   },
 
   urlRoot: '/orders',
@@ -258,6 +258,7 @@ var Order = Backbone.Model.extend({
   },
 
   changeStatus: function(status, callback) {
+    callback = callback || function() {};
     if (status == null || status === this.get('status')) return callback();
     var self = this;
     $.ajax({

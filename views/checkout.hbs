@@ -7,6 +7,51 @@
     {{> wizard }}
   </div>
 
+  {{#if order.editable}}
+  <div class="row">
+    <div class="alerts col-lg-12">
+      <div class="alert alert-danger alert-bad-zip row{{#unless order.restaurant.is_bad_zip}} hide{{/unless}}" data-error="is_bad_zip">
+        <div class="col-sm-8 alert-left">
+          <h3 class="alert-header">Invalid Delivery Zip :(</h3>
+          <p>This order can only be delivered to the zip codes listed</p>
+        </div>
+        <div class="col-sm-4 alert-right">
+          <ul class="list-delivery-zips">
+          {{#each order.restaurant.delivery_zips}}
+            <li class="delivery-zip">{{this}}</li>
+          {{/each}}
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-danger alert-bad-delivery-time row{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}" data-error="is_bad_delivery_time">
+        <div class="col-sm-8 alert-left">
+          <h3 class="alert-header">Invalid Delivery Time :(</h3>
+          <p>This order cannot be delivered for that date and time. Please ensure that your delivery time is within the restaurants schedule.</p>
+        </div>
+        <div class="col-sm-4 alert-right">
+          {{> delivery_times order.restaurant }}
+        </div>
+      </div>
+
+      <div class="alert alert-danger alert-bad-guests{{#unless order.restaurant.is_bad_guests}} hide{{/unless}}" data-error="is_bad_guests">
+        <p>This order cannot be delivered for that many guests.</p>
+        <p><strong>Maximum guests:</strong> {{order.restaurant.max_guests}}</p>
+      </div>
+
+      <div class="alert alert-danger alert-bad-lead-time row{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}" data-error="is_bad_lead_time">
+        <div class="col-sm-8 alert-left">
+          <h3 class="alert-header">Invalid Delivery Time :(</h3>
+          <p>This order cannot be delivered for that many guests without more lead time. Please check lead times for this restaurant.</p>
+        </div>
+        <div class="col-sm-4 alert-right">
+          {{> lead_times order.restaurant }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+
   <div class="row">
     <div class="col-md-6 col-md-offset-1">
       <form id="order-form panel">
@@ -43,7 +88,7 @@
                 </div>
               </div>
 
-              <div class="form-inline clearfix">
+              <div class="tip-area form-inline clearfix">
                 <div class="form-group col-xs-3">
                   <label class="control-label" for="order-tip">Add tip</label>
                   <select id="order-tip" class="form-control tip-percent">
@@ -59,7 +104,7 @@
                   </select>
                 </div>
                 <div class="form-group col-xs-3">
-                  <label class="control-label text-muted" for="order-tip">&nbsp;</label>
+                  <label class="control-label" for="order-tip">&nbsp;</label>
                   <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
                 </div>
               </div>

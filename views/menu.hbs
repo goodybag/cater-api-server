@@ -217,6 +217,7 @@
     item_modal_title:   'item-modal-title.hbs',
     item_options:       'item-options.hbs',
     menu_order_summary: 'menu-order-summary.hbs',
+    order_summary:      'order-summary.hbs',
     tags:               'tags.hbs'
   };
 
@@ -252,13 +253,17 @@
 <script type="text/javascript" src="/js/views/item-view.js"></script>
 <script type="text/javascript" src="/js/views/item-modal.js"></script>
 <script type="text/javascript" src="/js/views/order-modal.js"></script>
-
 <script>
   var orderModel = new Order( {{{json order}}} );
 
   var orderParams = new OrderParams({{{json orderParams}}});
   var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
-  var orderModal = new OrderModal({model: orderModel, el: '#order-params-modal', loginNeeded: {{#if user.id}}false{{else}}true{{/if}} });
+  var orderModal = new OrderModal({
+    model: orderModel
+  , el: '#order-params-modal'
+  , loginNeeded: {{#if user.id}}false{{else}}true{{/if}}
+  , defaultAddress: new Address( {{{json defaultAddress }}})
+  });
 
   var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems});
 

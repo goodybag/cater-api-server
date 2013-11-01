@@ -16,6 +16,7 @@ ItemView = Backbone.View.extend({
       , error: function(){
           alert('sorry we were unable to add item to order, please refresh page and try again');
         }
+      , enforceRequired: false
       });
     }
   }

@@ -19,7 +19,7 @@ module.exports.list = function(req, res) {
   var TAGS = ['restaurants-list'];
   logger.routes.info(TAGS, 'listing restaurants');
   //TODO: middleware to validate and sanitize query object
-  var orderParams = req.session.orderParams || {};
+  var orderParams = req.query || {};
   if (orderParams.prices)
     orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
 
@@ -53,7 +53,7 @@ module.exports.get = function(req, res) {
   var TAGS = ['restaurants-get'];
   logger.routes.info(TAGS, 'getting restaurant ' + req.params.rid);
 
-  var orderParams = req.session.orderParams || {};
+  var orderParams = req.query || {};
 
   var tasks = [
     function(callback) {
@@ -94,7 +94,7 @@ module.exports.get = function(req, res) {
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 
-    var orderParams = req.session.orderParams || {};
+    var orderParams = req.query || {};
 
     var context = {
       order:            results[0] ? results[0].toJSON() : null,

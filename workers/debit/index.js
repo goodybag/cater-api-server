@@ -10,8 +10,8 @@ var checkForExistingDebit = function (order, callback) {
   utils.balanced.Debits.list({'meta.order_id': order.attributes.id}, function (error, debits) {
     if (error) return callback(error);
 
-    if (debits && debits.total > 1) return callback(new Error('multiple debits for a single order'));
-    if (debits && debits.total == 1) callback (null, debits.items[0]);
+    if (debits && debits.total > 1) return callback(new Error('multiple debits for a single order: ' + order.attributes.id));
+    if (debits && debits.total == 1) return callback (null, debits.items[0]);
     return callback(null, null);
   });
 }
@@ -50,7 +50,7 @@ var task = function (message, callback) {
   }
 
   models.Order.findOne({id: body.order.id}, function (error, order) {
-    if (error) return logger.db.error(TAGS, error), utils.rollbar.reportMessage(error), callback(error);
+    if (error) return logger.db.error(TAGS, error), callback(error);
 
     if(!order) return utils.queues.debit.del(message.id, utils.noop), callback();
     if (_.contains(['invoiced', 'paid'], order.payment_status)) return utils.queues.debit.del(message.id, utils.noop), callback();
@@ -63,7 +63,11 @@ var task = function (message, callback) {
 
       if (debit) {
         logger.debit.info(TAGS, 'found existing debit for order: ' + order.attributes.id);
-        return order.setPaymentPaid('debit', debit.uri, debit, callback);
+        return order.setPaymentPaid('debit', debit.uri, debit, function (error) {
+          if (error) return logger.db.error(TAGS, error), callback(error);
+          utils.queues.debit.del(message.id, utils.noop);
+          callback();
+        });
       }
 
       // if no debit then continue to process
@@ -72,7 +76,7 @@ var task = function (message, callback) {
       if (order.attributes.payment_status != 'processing') {
         order.attributes.payment_status = 'processing';
         order.save(function (error) {
-          if (error) return logger.db.error(TAGS, error), utils.rollbar.reportMessage(error), callback(error);
+          if (error) return logger.db.error(TAGS, error), callback(error);
           debitCustomer(order, function (error) {
             utils.queues.debit.del(message.id, utils.noop);
             if (error) logger.debit.error(TAGS, error);

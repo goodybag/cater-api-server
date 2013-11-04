@@ -1,7 +1,16 @@
 var OrderView = FormView.extend({
-  events: {
-    'click .btn-cancel': 'cancel',
-    'click .copy-order-btn': 'makeCopy'
+
+  events: function() {
+    return _.extend({}, OrderView.prototype.events, {
+      'click .btn-cancel': 'cancel',
+      'click .copy-order-btn': 'makeCopy',
+      'click #change-status-pending': _.bind(this.changeStatus, this, 'pending'),
+      'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled'),
+      'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted'),
+      'click #change-status-denied': _.bind(this.changeStatus, this, 'denied'),
+      'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted'),
+      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered')
+    });
   },
 
   fieldMap: {
@@ -126,5 +135,12 @@ var OrderView = FormView.extend({
 
     this.$el.find('.alert').addClass('hide');
     return this;
+  },
+
+  changeStatus: function(status) {
+    this.model.changeStatus(status, function(err) {
+      if (err) return alert(err);
+      window.location.reload();
+    });
   }
 });

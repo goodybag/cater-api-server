@@ -80,14 +80,14 @@
             </td>
             <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>
-          {{else}}
-          <tr>
+          {{/each}}
+          <tr class="order-empty-alert {{#if order.orderItems}}hide{{/if}}">
             <td colspan="5">
-              No items added to order! 
-              Click <a href="/restaurants/{{order.restaurant.id}}">here</a> to view menu
+              <a href="/restaurants/{{order.restaurant.id}}">
+                No items added to order! Click here to view menu
+              </a>
             </td>
           </tr>
-          {{/each}}
         </tbody>
       </table>
     </div>
@@ -191,9 +191,9 @@
   var view = new OrderView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
   var items = [
     {{#each order.orderItems}}
-    {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})
+    {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}}), orderView: view})
     {{/each}}
   ];
-  view.items = items;
+  view.setItems(items);
 </script>
 {{/extend}}

@@ -56,6 +56,29 @@ var OrderView = FormView.extend({
     return this;
   },
 
+  setItems: function(items) {
+    // Replace sub order-item-views and listen to remove
+    // events. Display alert when list is empty
+    var self = this;
+    _.each(this.items, 
+      _.compose(
+        _.bind(this.stopListening, this), 
+        _.identity
+      )
+    );
+
+    this.items = items;
+
+    _.each(this.items, function(item) {
+      self.listenTo(item, 'remove', function removeOrderItemView() {
+        self.stopListening(item);
+        self.items = _.without(self.items, item);
+        if (!this.items.length) 
+          this.$el.find('.order-empty-alert').removeClass('hide');
+      });
+    });
+  },
+
   cancel: function() {
     this.model.changeStatus('canceled', function(err, data) {
       if (err) return alert(err); // TODO: error handling

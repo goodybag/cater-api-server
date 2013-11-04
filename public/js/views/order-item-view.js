@@ -33,5 +33,10 @@ var OrderItemView = FormView.extend({
     this.model.destroy();
   },
 
+  remove: function(e) {
+    this.trigger('remove', this);
+    FormView.prototype.remove.apply(this, arguments);
+  },
+
   autoSave: _.debounce(FormView.prototype.onSave, 600)
 });

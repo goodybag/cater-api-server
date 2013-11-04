@@ -56,6 +56,12 @@ module.exports.listItems = function(req, res) {
   });
 }
 
+var tags = function(body, id) {
+  return utils.map(body.tags, function(obj, index, arr) {
+    return {item_id: id, tag: obj};
+  });
+};
+
 module.exports.addItem = function(req, res) {
   // insert uuids for every options set and option
   // will not override id field if already present
@@ -71,10 +77,35 @@ module.exports.addItem = function(req, res) {
 
   var body = req.body.options_sets != null ? utils.extend(req.body, {options_sets: ops}) : req.body;
 
-  var query = queries.item.create(body, req.params.rid, req.params.cid);
-  var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, function(err, rows, result) {
-    if (err) return res.error(errors.internal.UNKNOWN, err);
-    res.send(201, rows[0]);
+  // Insert new item and related tags in series
+  var tasks = [];
+
+  // Task 1 - Create the item
+  tasks.push(function(taskCallback) {
+    // Exclude tags for items insertion
+    var properties = utils.omit(req.body, 'tags');
+    var query = queries.item.create(properties, req.params.rid, req.params.cid);
+    var sql = db.builder.sql(query);
+    db.query(sql.query, sql.values, function(err, rows, result) {
+      return taskCallback(err, rows && rows.length>0 ? rows[0] : null);
+    });
   });
-}
+
+  // Task 2 - Create item tags
+  tasks.push(function(item, taskCallback) {
+    if (req.body.tags === undefined) return taskCallback(null, item);
+    // Relate body tags to the new item id
+    var values = tags(req.body, item.id);
+    var query = values.length > 0 ? queries.item.createTags(values) : null;
+    if (!query) return taskCallback(null, item);
+    var sql = db.builder.sql(query);
+    db.query(sql.query, sql.values, function(err, rows, result) {
+      taskCallback(err, item, rows);
+    });
+  });
+
+  utils.async.waterfall(tasks, function(err, item, results) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    res.send(201, item);
+  });
+};

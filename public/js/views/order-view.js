@@ -61,10 +61,33 @@ var OrderView = FormView.extend({
     this.setModel((this.model) ? this.model : new Order());
   },
 
+  // set the model and add listeners here
   setModel: function(model) {
     if (this.model) this.stopListening(this.model);
     this.model = model;
+
+    this.listenTo(this.model, {
+      'change:sub_total change:tip': this.onPriceChange,
+      'change:phone': this.onPhoneChange
+    }, this);
+
+    this.listenTo(this.model.restaurant, {
+      'change:is_bad_zip': utils.partial(this.setAlerts, '.alert-bad-zip'),
+      'change:is_bad_delivery_time': utils.partial(this.setAlerts, '.alert-bad-delivery-time'),
+      'change:is_bad_guests': utils.partial(this.setAlerts, '.alert-bad-guests'),
+      'change:is_bad_lead_time': utils.partial(this.setAlerts, '.alert-bad-lead-time')
+    }, this);
+
+    this.model.on('change:submittable', this.onSubmittableChange, this);
+
+    if (this.model.get('editable')) {
+      this.onChange();
+    }
     return this;
+  },
+
+  onPriceChange: function(model, value, options) {
+    this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));
   },
 
   setItems: function(items) {
@@ -116,6 +139,13 @@ var OrderView = FormView.extend({
         window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
       }
     });
+  },
+
+  // Override onChange to noop because we do not want to hide the submit button
+  onChange: function(){},
+
+  onSubmittableChange: function(model, value, options) {
+    this.$el.find('.btn-submit').toggleClass( 'hide', !value );
   },
 
   displayErrors: function() {

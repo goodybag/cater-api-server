@@ -72,7 +72,7 @@
               {{#if ../order.editable}}
                 <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
               {{else}}
-                <span name="notes" class="item-notes-span order-item-field order-item-notes">{{this.notes}}</span>
+                <span name="notes" class="item-notes-span order-item-field order-item-notes">{{#if this.notes}}{{this.notes}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
             </td>
             <td class="line-item-feeds" data-title="Feeds">

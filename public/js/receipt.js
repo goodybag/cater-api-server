@@ -4,7 +4,9 @@
 
 var options = {
   // Describes when to break the page
-  magicNumber: 700
+  magicNumber: 580
+
+, readyTimeout: 20000
 
   // Used to select the elements in a $page that will determine
   // the innerHeight of the element (since page is has a min-height),
@@ -147,8 +149,6 @@ console.print = function(){
     options.magicNumber += $('.order-info').outerHeight();
     options.magicNumber += $('.order-adjustment').outerHeight();
 
-    var pHeight = $('.page').outerHeight();
-
     // Recursively adjust and add new pages
     var adjustPage = function( $page, callback ){
       if ( $page.outerHeight() <= options.magicNumber ) return callback();
@@ -156,14 +156,16 @@ console.print = function(){
       var $nextPage = $page.clone();
       $nextPage.find('table tbody tr').remove();
       $page.find('.order-bottom-wrapper').remove();
-// console.print("Page Outer Height:", pHeight, "Page Inner Height:", $page.innerHeight());
+
+      // console.print("Page Outer Height:", $page.outerHeight(), "Magic Number:", options.magicNumber);
+
       // Pop TR's from $page until magic number is met
       // Populate $nextPage with those TR's
       var $trs = $();
 
       var whileGreaterThan = function( next ){
         var outerHeight = $page.outerHeight();
-        // console.print("  While Page Height: ", pHeight, innerHeight );
+        // console.print("  While Page Height: ", outerHeight );
 
         if ( outerHeight <= options.magicNumber ) return next();
 
@@ -173,35 +175,19 @@ console.print = function(){
         setTimeout(function(){ whileGreaterThan( next ); }, 5 );
       };
 
-      setTimeout( function(){
-        whileGreaterThan( function(){
-          $nextPage.find('tbody').append( $trs.get().reverse() );
-          $page.after( $nextPage );
-          // WHYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
-          options.magicNumber += options.magicNumber * 0.35;
-          setTimeout( function(){
-            adjustPage( $nextPage, callback );
-          }, 5);
-          // return adjustPage( $nextPage, callback );
-        });
-      }, 5);
-
-
-
-      // while ( $page.outerHeight() > options.magicNumber ){
-      //   console.print("Removing:",$page.find('tbody > tr:last-child .item-name').text())
-      //   $trs = $trs.add( $page.find('tbody > tr:last-child' ).clone() );
-      //   $page.find('tbody > tr:last-child' ).remove();
-      // }
-
-      // $nextPage.find('tbody').append( $trs.get().reverse() );
-      // $page.after( $nextPage );
-
-      // return adjustPage( $nextPage );
+      whileGreaterThan( function(){
+        $nextPage.find('tbody').append( $trs.get().reverse() );
+        $page.after( $nextPage );
+        return adjustPage( $nextPage, callback );
+      });
     };
-// console.print($('.page').innerHeight(), $('.page').outerHeight())
+
     adjustPage( $('.page'), function(){
       window.__page.ready();
     });
+
+    setTimeout( function(){
+      if ( !window.__page.isReady() ) window.__page.ready();
+    }, options.readyTimeout );
   });
 })();

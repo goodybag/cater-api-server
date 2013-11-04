@@ -4,11 +4,13 @@
 
 var options = {
   // Describes when to break the page
-  magicNumber: 1660
+  magicNumber: 580
+
+, readyTimeout: 20000
 
   // Used to select the elements in a $page that will determine
   // the innerHeight of the element (since page is has a min-height),
-  // we need to figure out $page.height() - inner.height()
+  // we need to figure out $page.outerHeight() - inner.outerHeight()
 , remainingTableHeightSelector: [
     '> :not(.order)'
   , '.order > :not(.order-bottom-wrapper)'
@@ -33,9 +35,19 @@ window.__page = (function(){
   return exports;
 })();
 
+$.fn.innerHeight = function( options ){
+  return Array.prototype.reduce.call(
+    this.find('> *').map( function(){
+      if ( $(this).hasClass('order') ) return $(this).innerHeight();
+      return $(this).outerHeight();
+    })
+  , function( a, b ){ return a + b; }
+  );
+};
+
 console.print = function(){
   // Comment me if you want to live
-  return;
+  return console.log.apply( console, arguments );
 
   var $console = $('#console-print');
   if ( $console.length === 0 ){
@@ -82,18 +94,18 @@ console.print = function(){
     var rowHeight = 20;
 
     // Amount of space to be filled in page
-    var remaining = $page.height() - Array.prototype.reduce.call(
+    var remaining = $page.outerHeight() - Array.prototype.reduce.call(
       $page.find( options.remainingTableHeightSelector ).map( function(){
-        return $(this).height();
+        return $(this).outerHeight();
       })
     , function( a, b ){ return a + b; }
     );
 
     console.print(
-      "Page Height:", $page.height(),
+      "Page Height:", $page.outerHeight(),
       "Inner Height:",  Array.prototype.reduce.call(
           $page.find( options.remainingTableHeightSelector ).map( function(){
-            return $(this).height();
+            return $(this).outerHeight();
           })
         , function( a, b ){ return a + b; }
         ),
@@ -105,7 +117,7 @@ console.print = function(){
     //   options.remainingTableHeightSelector.split(', ').map( function( selector ){
     //     return ' ' + selector + ': ' + Array.prototype.reduce.call(
     //       $page.find( selector ).map( function(){
-    //         return $(this).height() || 0;
+    //         return $(this).outerHeight() || 0;
     //       })
     //     , function( a, b ){ return a + b; }
     //     );
@@ -123,34 +135,59 @@ console.print = function(){
     }
   };
 
+  var addPageRuler = function( $page ){
+    var tmpl = '<div style="position: absolute; color: red; font-size: 18px; background: rgba(100, 20, 20, 0.1); left: 0; top: {top}px">{top}px</div>';
+    $page.css('position', 'relative');
+    for ( var i = 0, h = $page.outerHeight(); i < h; i += 100 ){
+      $page.append( tmpl.replace(/\{top\}/g, i * 100 ) );
+    }
+  };
+
   $(function(){
-    // Order adjustments height is variable, so factor that chit in
-    options.magicNumber += $('.order-adjustment').height();
+    // Add in variable height els
+    options.magicNumber += $('header').outerHeight();
+    options.magicNumber += $('.order-info').outerHeight();
+    options.magicNumber += $('.order-adjustment').outerHeight();
 
     // Recursively adjust and add new pages
-    var adjustPage = function( $page ){
-      if ( $page.height() <= options.magicNumber ) return;
+    var adjustPage = function( $page, callback ){
+      if ( $page.outerHeight() <= options.magicNumber ) return callback();
 
       var $nextPage = $page.clone();
       $nextPage.find('table tbody tr').remove();
       $page.find('.order-bottom-wrapper').remove();
 
+      // console.print("Page Outer Height:", $page.outerHeight(), "Magic Number:", options.magicNumber);
+
       // Pop TR's from $page until magic number is met
       // Populate $nextPage with those TR's
       var $trs = $();
-      while ( $page.height() > options.magicNumber ){
+
+      var whileGreaterThan = function( next ){
+        var outerHeight = $page.outerHeight();
+        // console.print("  While Page Height: ", outerHeight );
+
+        if ( outerHeight <= options.magicNumber ) return next();
+
         $trs = $trs.add( $page.find('tbody > tr:last-child' ).clone() );
         $page.find('tbody > tr:last-child' ).remove();
-      }
 
-      $nextPage.find('tbody').append( $trs );
-      $page.after( $nextPage );
+        setTimeout(function(){ whileGreaterThan( next ); }, 5 );
+      };
 
-      return adjustPage( $nextPage );
+      whileGreaterThan( function(){
+        $nextPage.find('tbody').append( $trs.get().reverse() );
+        $page.after( $nextPage );
+        return adjustPage( $nextPage, callback );
+      });
     };
 
-    adjustPage( $('.page') );
+    adjustPage( $('.page'), function(){
+      window.__page.ready();
+    });
 
-    window.__page.ready();
+    setTimeout( function(){
+      if ( !window.__page.isReady() ) window.__page.ready();
+    }, options.readyTimeout );
   });
 })();

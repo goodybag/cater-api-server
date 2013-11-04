@@ -40,6 +40,7 @@ var OrderAddressView = AddressView.extend({
     if (!diff) return this.render();
 
     var sent = this.options.orderView.model.save(diff, {
+      wait: true,
       success: _.bind(this.render, this),
       error: function(jqXHR, textstatus, errorThrown) {
         // TODO: error handling
@@ -48,6 +49,6 @@ var OrderAddressView = AddressView.extend({
     })
 
     if (!sent)
-      alert(this.options.orderView.model.validationError); // TODO: real error handling
+      this.options.orderView.displayErrors();
   }
 });

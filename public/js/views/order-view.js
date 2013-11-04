@@ -46,6 +46,8 @@ var OrderView = FormView.extend({
     this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
     this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
 
+    this.subViews = [this.addressView];
+
     // please add any model listeners in the setModel function
     this.setModel((this.model) ? this.model : new Order());
   },
@@ -111,7 +113,7 @@ var OrderView = FormView.extend({
     FormView.prototype.displayErrors.apply(this, arguments);
 
     var selector = _.map(_.filter(this.model.validationError, _.isString), function(err) {
-      return '[data-error="' + this.model.validationError[i] + '"]';
+      return '.alert[data-error="' + err + '"]';
     }).join(', ');
 
     if (selector) this.$el.find( selector ).removeClass('hide');

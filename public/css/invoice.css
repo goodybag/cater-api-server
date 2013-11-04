@@ -17,8 +17,10 @@ body {
 }
 
 .page {
+  position: relative;
   width: 100%;
-  min-height: 962px;
+  height: 962px;
+  overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   page-break-after: always;

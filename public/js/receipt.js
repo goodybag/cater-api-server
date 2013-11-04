@@ -33,6 +33,15 @@ window.__page = (function(){
   return exports;
 })();
 
+$.fn.innerHeight = function( options ){
+  return Array.prototype.reduce.call(
+    this.find('*').map( function(){
+      return $(this).height();
+    })
+  , function( a, b ){ return a + b; }
+  );
+};
+
 console.print = function(){
   // Comment me if you want to live
   // return;
@@ -123,6 +132,14 @@ console.print = function(){
     }
   };
 
+  var addPageRuler = function( $page ){
+    var tmpl = '<div style="position: absolute; color: red; font-size: 18px; background: rgba(100, 20, 20, 0.1); left: 0; top: {top}px">{top}px</div>';
+    $page.css('position', 'relative');
+    for ( var i = 0, h = $page.height(); i < h; i += 100 ){
+      $page.append( tmpl.replace(/\{top\}/g, i * 100 ) );
+    }
+  };
+
   $(function(){
     // Add in variable height els
     options.magicNumber += $('header').height();
@@ -132,11 +149,10 @@ console.print = function(){
 
     // Recursively adjust and add new pages
     var adjustPage = function( $page, callback ){
-      if ( $page.height() <= options.magicNumber ) return callback();
+      if ( $page.innerHeight() <= $page.height() ) return callback();
 
       var $nextPage = $page.clone();
       $nextPage.find('table tbody tr').remove();
-console.print("Page Height:", $page.height(), "Magic Number:", options.magicNumber);
       $page.find('.order-bottom-wrapper').remove();
 console.print("Page Height:", $page.height(), "Magic Number:", options.magicNumber);
       // Pop TR's from $page until magic number is met
@@ -144,9 +160,9 @@ console.print("Page Height:", $page.height(), "Magic Number:", options.magicNumb
       var $trs = $();
 
       var whileGreaterThan = function( next ){
-        console.print("  While Page Height: ", $page.height());
+        console.print("  While Page Height: ", $page.height(), $page.innerHeight());
 
-        if ( $page.height() <= options.magicNumber ) return next();
+        if ( $page.innerHeight() <= $page.height() ) return next();
 
         $trs = $trs.add( $page.find('tbody > tr:last-child' ).clone() );
         $page.find('tbody > tr:last-child' ).remove();
@@ -154,14 +170,19 @@ console.print("Page Height:", $page.height(), "Magic Number:", options.magicNumb
         setTimeout(function(){ whileGreaterThan( next ); }, 5 );
       };
 
-      whileGreaterThan( function(){
-        $nextPage.find('tbody').append( $trs.get().reverse() );
-        $page.after( $nextPage );
-        // WHYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
-        if (isFirst) options.magicNumber += 360;
-        isFirst = false;
-        return adjustPage( $nextPage, callback );
-      });
+      setTimeout( function(){
+        whileGreaterThan( function(){
+          $nextPage.find('tbody').append( $trs.get().reverse() );
+          $page.after( $nextPage );
+          // WHYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+          // options.magicNumber += 380;
+          setTimeout( function(){
+            adjustPage( $nextPage, callback );
+          }, 5);
+          // return adjustPage( $nextPage, callback );
+        });
+      }, 5);
+
 
 
       // while ( $page.height() > options.magicNumber ){
@@ -175,7 +196,7 @@ console.print("Page Height:", $page.height(), "Magic Number:", options.magicNumb
 
       // return adjustPage( $nextPage );
     };
-
+console.print($('.page').height(), $('.page').innerHeight())
     adjustPage( $('.page'), function(){
       window.__page.ready();
     });

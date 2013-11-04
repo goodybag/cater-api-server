@@ -128,7 +128,7 @@ module.exports.get = function(req, res) {
       },
       orderParams: req.session.orderParams,
       query: req.query,
-      user: {addresses: utils.invoke(addresses, 'toJSON')},
+      user: {addresses: addresses},
       step: order.attributes.status === 'pending' ? 2 : 3
     };
 

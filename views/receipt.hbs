@@ -1,3 +1,7 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/order.css">
+<link rel="stylesheet" href="/css/receipt.css">
+{{/extend}}
 
 <div class="page page-order container container-small">
   <div class="row">
@@ -54,7 +58,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-9">
-            <h3 class="restaurant-name">{{order.restaurant.name}} [Order #{{order.id}}]</h3>
+            <h3 class="restaurant-name no-margin">{{order.restaurant.name}} [Order #{{order.id}}]</h3>
             {{#if order.restaurant}}
             <a href="javascript:void(0);" class="copy-order-btn">Copy Order</a>
             {{/if}}
@@ -85,7 +89,7 @@
         </div>
 
         <div class="row">
-          <fieldset class="col-sm-6">
+          <fieldset class="col-sm-6 delivery-info-date no-padding">
             {{#unless order.editable}}
             <p>{{order.name}}</p>
             {{else}}
@@ -129,7 +133,7 @@
             {{/unless}}
           </fieldset>
 
-          <fieldset class="col-sm-6 delivery-info">
+          <fieldset class="col-sm-6 delivery-info-address no-padding">
             <div>
               <strong>{{user.name}}</strong>
             </div>
@@ -152,7 +156,7 @@
     <h3>No Order Items</h3>
     {{else}}
 
-    <table class="table">
+    <table class="table order-line-item-table">
       <caption>Order Summary</caption>
       <thead>
         <tr>

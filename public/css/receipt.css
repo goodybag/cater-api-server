@@ -1,0 +1,21 @@
+.table caption {
+  text-align: left;
+  padding: 10px 0 10px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  border-top: 1px solid #D2D2C8;
+  background-color: #F0F0EF;
+}
+
+.delivery-info-date {
+  margin-left: 24px;
+}
+
+.delivery-info-date dt {
+  text-align: left;
+  width: 100px;
+}
+
+.delivery-info-address {
+  margin-left: 24px;
+}

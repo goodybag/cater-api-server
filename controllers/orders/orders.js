@@ -275,26 +275,6 @@ module.exports.changeStatus = function(req, res) {
 
     if (req.body.status === 'submitted' && order.attributes.user.isInvoiced) order.attributes.payment_status = 'invoiced';
 
-    // if an order payment_status is processing, paid, or invoiced we don't want to process again
-    // TODO: determine if we want to detect a change in amount and then charge or refund the customer
-    if (req.body.status === 'accepted' && order.attributes.payment_method_id && !utils.contains(['processing', 'paid', 'invoiced'], order.attributes.payment_status)) {
-      logger.routes.info(TAGS, 'queuing order: '+ order.attributes.id +' for payment processing');
-      order.attributes.payment_status = 'pending';
-      utils.queues.debit.post({
-        body: JSON.stringify({order: {id: order.attributes.id}})
-      , delay: 5 // delay because we ideally want the database update to finish before we start processing
-      , expires_in: 2592000 // 30 days
-      }, function(error, body){
-        if (error) {
-          // it's alright if we have an error because we have something that polls the database every so often
-          // to add anything ot the queue that didn't make it on there due to errors. We do want to log the
-          // error and notify rollbar.
-          logger.routes.error(TAGS, 'failed to put order id: '+order.attributes.id+' onto debit queue', error);
-          utils.rollbar.reportMessage(error);
-        }
-      });
-    }
-
     if (review) order.attributes.token_used = 'now()';
 
     order.attributes.status = req.body.status;

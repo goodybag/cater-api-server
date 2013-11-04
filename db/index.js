@@ -19,6 +19,10 @@ require('pg-parse-float')(pg);
 pg.defaults.hideDeprecationWarnings = config.pg.hideDeprecationWarnings;
 pg.defaults.poolSize = config.pg.poolSize;
 
+builder.registerConditionalHelper('$notExists', {cascade: false}, function( column, value, values, collection ){
+  return 'not exists (' + builder.sql( value, values ).toString() + ')';
+});
+
 exports.builder = builder;
 
 pgQuery.connectionParameters = config.postgresConnStr;

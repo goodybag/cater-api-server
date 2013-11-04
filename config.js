@@ -5,6 +5,7 @@
 var
   os = require('os')
 , _ = require('lodash')
+, balancedConfig = require('./balanced-config.json')
 ;
 
 var config = {
@@ -115,10 +116,7 @@ var config = {
     , appId: 'qsetwlny'
     }
 
-  , balanced: {
-      secret: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
-    , marketplaceUri: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
-    }
+  , balanced: balancedConfig
 
   , ironMQ: {
       token: '_2rd5UzCv7_-chOc4rDZ0Y7y74A'
@@ -148,6 +146,14 @@ var config = {
     , require('./receipt-config')
     , { bucket: 'dev-receipts.goodybag.com' }
     )
+
+  , workers: {
+      debit: {
+        enqueue: {
+          interval: 1000 * 5 // 5 seconds
+        }
+      }
+    }
   }
 
 
@@ -185,10 +191,7 @@ var config = {
     , appId: '6bxgiurw'
     }
 
-  , balanced: {
-      secret: 'ak-test-2yMMYnOi2bMNdLBc7HlYym7sqAJr8nROF'
-    , marketplaceUri: '/v1/marketplaces/TEST-MP3pCMmNb1TqVVHMW53xHZ16'
-    }
+  , balanced: balancedConfig
 
   , ironMQ: {
       token: 'M-NmfDgtD66MCHYKTVS3m15BbSA'
@@ -212,6 +215,14 @@ var config = {
     , require('./receipt-config')
     , { bucket: 'staging-receipts' }
     )
+
+  , workers: {
+      debit: {
+        enqueue: {
+          interval: 1000 * 5 // 5 seconds
+        }
+      }
+    }
   }
 
 , production: {
@@ -271,6 +282,14 @@ var config = {
     }
 
   , emailEnabled: true
+
+  , workers: {
+      debit: {
+        enqueue: {
+          interval: 1000 * 60 * 30 // 30 minutes
+        }
+      }
+    }
   }
 };
 

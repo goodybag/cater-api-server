@@ -72,10 +72,10 @@ var Order = Backbone.Model.extend({
     }
 
     var addressFields = _.keys(_.result(Address, 'schema').properties);
-    var addressErrors = this.address.validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)),
-                                              _.extend({enforceRequired: false}, options));
-    if (addressErrors != null)
-      errors = errors.concat(_.isArray(addressErrors) ? addressErrors : Array.prototype.slice.call(addressErrors));
+    if (!this.address._validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)),
+                               _.extend({enforceRequired: false}, options))) {
+      errors.push({addressErrors: this.address.validationError});
+    }
 
     // Add on the restaurant fulfillability errors
     errors = errors.concat(

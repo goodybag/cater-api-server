@@ -8,7 +8,7 @@
     "url": "https://github.com/goodybag/cater-api-server"
   },
   "scripts": {
-    "start": "./bin/create-balanced-configs.js && ./bin/tasks.js runDeltas && node server",
+    "start": "./bin/tasks.js runDeltas && node server",
     "test": "./node_modules/.bin/mocha --bail",
     "postinstall": "./node_modules/.bin/bower install"
   },

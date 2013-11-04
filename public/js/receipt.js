@@ -4,7 +4,7 @@
 
 var options = {
   // Describes when to break the page
-  magicNumber: 1660
+  magicNumber: 774
 
   // Used to select the elements in a $page that will determine
   // the innerHeight of the element (since page is has a min-height),
@@ -35,7 +35,7 @@ window.__page = (function(){
 
 console.print = function(){
   // Comment me if you want to live
-  return;
+  // return;
 
   var $console = $('#console-print');
   if ( $console.length === 0 ){
@@ -124,33 +124,60 @@ console.print = function(){
   };
 
   $(function(){
-    // Order adjustments height is variable, so factor that chit in
+    // Add in variable height els
+    options.magicNumber += $('header').height();
+    options.magicNumber += $('.order-info').height();
     options.magicNumber += $('.order-adjustment').height();
+    var isFirst = true;
 
     // Recursively adjust and add new pages
-    var adjustPage = function( $page ){
-      if ( $page.height() <= options.magicNumber ) return;
+    var adjustPage = function( $page, callback ){
+      if ( $page.height() <= options.magicNumber ) return callback();
 
       var $nextPage = $page.clone();
       $nextPage.find('table tbody tr').remove();
+console.print("Page Height:", $page.height(), "Magic Number:", options.magicNumber);
       $page.find('.order-bottom-wrapper').remove();
-
+console.print("Page Height:", $page.height(), "Magic Number:", options.magicNumber);
       // Pop TR's from $page until magic number is met
       // Populate $nextPage with those TR's
       var $trs = $();
-      while ( $page.height() > options.magicNumber ){
+
+      var whileGreaterThan = function( next ){
+        console.print("  While Page Height: ", $page.height());
+
+        if ( $page.height() <= options.magicNumber ) return next();
+
         $trs = $trs.add( $page.find('tbody > tr:last-child' ).clone() );
         $page.find('tbody > tr:last-child' ).remove();
-      }
 
-      $nextPage.find('tbody').append( $trs );
-      $page.after( $nextPage );
+        setTimeout(function(){ whileGreaterThan( next ); }, 5 );
+      };
 
-      return adjustPage( $nextPage );
+      whileGreaterThan( function(){
+        $nextPage.find('tbody').append( $trs.get().reverse() );
+        $page.after( $nextPage );
+        // WHYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+        if (isFirst) options.magicNumber += 360;
+        isFirst = false;
+        return adjustPage( $nextPage, callback );
+      });
+
+
+      // while ( $page.height() > options.magicNumber ){
+      //   console.print("Removing:",$page.find('tbody > tr:last-child .item-name').text())
+      //   $trs = $trs.add( $page.find('tbody > tr:last-child' ).clone() );
+      //   $page.find('tbody > tr:last-child' ).remove();
+      // }
+
+      // $nextPage.find('tbody').append( $trs.get().reverse() );
+      // $page.after( $nextPage );
+
+      // return adjustPage( $nextPage );
     };
 
-    adjustPage( $('.page') );
-
-    window.__page.ready();
+    adjustPage( $('.page'), function(){
+      window.__page.ready();
+    });
   });
 })();

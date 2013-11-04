@@ -7,6 +7,7 @@ var venter = require('../lib/venter');
 
 var db = require('../db');
 var Model = require('./model');
+var queries = require('../db/queries');
 var Restaurant = require('./restaurant');
 var Transaction = require('./transaction');
 var TransactionError = require('./transaction-error');
@@ -295,15 +296,9 @@ module.exports = Model.extend({
           self.save(cb, client);
         }
       , createTransaction: function (cb) {
-        var transaction = new Transaction({
-          type: type
-        , order_id: self.attributes.id
-        , uri: uri
-        , data: data
-        });
-        // FIX: insert only if it doesn't exist already
-        // INSERT INTO transactions (x,y,z) SELECT 1,2,3 WHERE NOT EXISTS (SELECT 1 FROM transactions WHERE uri=uri);
-        transaction.save(cb, client);
+          var query = queries.transaction.createIfUriNotExists(type, self.attributes.id, uri, data);
+          var sql = db.builder.sql(query);
+          client.query(sql.query, sql.values, cb);
         }
       };
 
@@ -342,8 +337,6 @@ module.exports = Model.extend({
           , request_id: requestId
           , data: data
           });
-          // FIX: insert only if it doesn't exist already
-          // INSERT INTO transaction_errors (x,y,z) SELECT 1,2,3 WHERE NOT EXISTS (SELECT 1 FROM transaction_errors WHERE uri=uri);
           transactionError.save(cb, client);
         }
       };

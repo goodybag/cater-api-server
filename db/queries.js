@@ -140,32 +140,6 @@ module.exports = {
     }
   },
 
-  transactionError: {
-    createIfUriNotExists: function (type, orderId, uri, data) {
-      if (typeof data === 'object') data = JSON.stringify(data);
-      return {
-        type: 'insert'
-      , table: 'transactions'
-      , columns: ['type', 'order_id', 'uri', 'data']
-      , expression: {
-          type: 'select'
-        , expression: ["'"+type+"'", orderId, "'"+uri+"'", "'"+data+"'"]
-        , where: {
-            $notExists: {
-              type: 'select'
-            , expression: [1]
-            , table: 'transactions'
-            , columns: []
-            , where: {
-                uri: uri
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-
   user: {
     list: utils.compose(userGroups, utils.partial(find, 'users')),
     get: utils.compose(userGroups, utils.partial(findOne, 'users')),

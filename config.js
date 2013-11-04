@@ -146,6 +146,14 @@ var config = {
     , require('./receipt-config')
     , { bucket: 'dev-receipts.goodybag.com' }
     )
+
+  , workers: {
+      debit: {
+        enqueue: {
+          interval: 1000 * 5 // 5 seconds
+        }
+      }
+    }
   }
 
 
@@ -207,6 +215,14 @@ var config = {
     , require('./receipt-config')
     , { bucket: 'staging-receipts' }
     )
+
+  , workers: {
+      debit: {
+        enqueue: {
+          interval: 1000 * 5 // 5 seconds
+        }
+      }
+    }
   }
 
 , production: {
@@ -266,6 +282,14 @@ var config = {
     }
 
   , emailEnabled: true
+
+  , workers: {
+      debit: {
+        enqueue: {
+          interval: 1000 * 60 * 30 // 30 minutes
+        }
+      }
+    }
   }
 };
 

@@ -356,7 +356,7 @@ module.exports = Model.extend({
 }, {
   table: 'orders',
 
-  find: function(query, callback) {
+  find: function (query, callback) {
     // TODO: alter query to add latest status
 
     // query.order needs orders.id in order for distinct to work properly, this
@@ -687,6 +687,40 @@ module.exports = Model.extend({
     // query.columns.push('(is_bad_zip OR is_bad_guests OR is_bad_lead_time OR is_bad_delivery_time AS is_unacceptable)');
 
     Model.find.call(this, query, utils.partial(modifyAttributes, callback));
+  },
+
+  findReadyForCharging: function (limit, callback) {
+    if (typeof limit === 'function') {
+      callback = limit;
+      limit = 100;
+    }
+    var query = {
+      where: {
+        payment_method_id: {$notNull: true}
+      , payment_status: {$null: true}
+      , status: 'accepted'
+      , $custom: ['now() > "orders"."datetime" AT TIME ZONE "orders"."timezone"']
+      }
+    , limit: limit
+    };
+
+    Model.find.call(this, query, utils.partial(modifyAttributes, callback));
+  },
+
+  setPaymentStatusPendingIfNull: function (ids, callback) {
+    if (typeof ids === 'number') ids = [ids];
+
+    var query = {
+      updates: {
+        payment_status: 'pending'
+      }
+    , where: {
+        payment_status: {$null: true}
+      , id: {$in: ids}
+      }
+    };
+
+    Model.update.call(this, query, utils.partial(modifyAttributes, callback));
   },
 
   // this is a FSM definition

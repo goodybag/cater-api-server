@@ -6,43 +6,88 @@ var Address = require('./address');
 
 var table = 'users';
 
-
 module.exports = Model.extend({
+  findPaymentMethods: function( pmQuery, callback, client ){
+    var query = {
+      type: 'select'
+    , table: 'payment_methods'
+    , columns: ['payment_methods.*']
+    , joins: {
+        users_payment_methods: {
+          alias: 'upm'
+        , on: { 'payment_method_id': '$payment_methods.id$' }
+        }
+      }
+    , where: utils.extend( { 'upm.user_id': this.attributes.id }, pmQuery.where )
+    };
 
+    // Shallow query extension
+    for ( var key in pmQuery ){
+      if ( key === 'where' ) continue;
+      query[ key ] = pmQuery[ key ];
+    }
+
+    ( client || db ).query( db.builder.sql( query ), function( error, result ){
+      return callback( error, result );
+    });
+  }
+
+, updatePaymentMethods: function( where, update, callback, client ){
+    if ( ['number', 'string'].indexOf( typeof where ) > -1 ){
+      where = {
+        id: { $equals: where }
+      };
+    }
+
+    // Don't override existing user_id queries
+    if ( typeof where.id !== 'object' ){
+      where.id = { $equals: where.id };
+    }
+
+    // Ensure that payment methods belong to user
+    where.id.$in = {
+      type: 'select'
+    , columns: ['payment_method_id']
+    , where: { user_id: this.attributes.id }
+    };
+
+    var query = {
+      type: 'update'
+    , table: 'payment_methods'
+    , where: where
+    , returning: ['*']
+    };
+
+    ( client || db ).query( db.builder.sql( query ), function( error, result ){
+      return callback( error, result );
+    });
+  }
 }, {
   table: table
 
   // Get foreign data source pivoting on users
 , embeds: {
-    addresses: function( addressQuery, query, callback, client ){
-      Address.find( addressQuery, callback, client );
+    addresses: function( addressQuery, originalQuery, callback, client ){
+      return Address.find( addressQuery, callback, client );
     }
 
-  , payment_methods: function( pmQuery, query, callback, client ){
-      var query = {
-        type: 'select'
-      , table: 'payment_methods'
-      , columns: ['payment_methods.*']
-      , joins: {
-          users_payment_methods: {
-            alias: 'upm'
-          , on: { 'payment_method_id': '$payment_methods.id$' }
-          }
-        }
-      , where: utils.extend( { 'upm.user_id': query.where.id }, pmQuery.where )
-      };
-
-      // Shallow query extension
-      for ( var key in pmQuery ){
-        if ( key === 'where' ) continue;
-        query[ key ] = pmQuery[ key ];
-      }
-
-      (client || db).query( db.builder.sql( query ), function( error, result ){
-        // Specify exactly two arguments to callback so it doesn't mess up async.parallel results
-        return callback( error, result );
-      });
+  , payment_methods: function( pmQuery, originalQuery, callback, client ){
+      return this.findCards( originalQuery.where.id, pmQuery, callback, client );
     }
+  }
+
+, findPaymentMethods: function( userId, pmQuery, callback, client ){
+    return module.exports.prototype.findPaymentMethods.call(
+      { attributes: { id: userId } }
+    , pmQuery, callback, client
+    );
+  }
+
+, updatePaymentMethods: function( userId, where, update, callback, client ){
+    return module.exports.prototype.updatePaymentMethods.call(
+      { attributes: { id: userId } }
+    , where, update, callback, client
+    );
   }
 
 , find: function( query, callback, client ){

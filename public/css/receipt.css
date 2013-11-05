@@ -8,14 +8,22 @@
 }
 
 .delivery-info-date {
-  margin-left: 24px;
+  margin-left: 0px;
+  padding-left: 24px;
 }
 
 .delivery-info-date dt {
   text-align: left;
   width: 100px;
+  font-weight: normal;
 }
 
-.delivery-info-address {
-  margin-left: 24px;
+.delivery-header {
+  padding-left: 9px;
+  font-size: 21px;
+  color: #432012;
+}
+
+.order-status-label {
+
 }

@@ -56,16 +56,12 @@
   <div class="panel panel-order-details">
     <form id="order-form" class="form-light order-form" method="POST" action="javascript:void(0);">
       <div class="panel-body">
-        <div class="row">
-          <div class="col-sm-9">
-            <h3 class="restaurant-name no-margin">{{order.restaurant.name}} [Order #{{order.id}}]</h3>
-            {{#if order.restaurant}}
-            <a href="javascript:void(0);" class="copy-order-btn">Copy Order</a>
-            {{/if}}
+        <div class="clearfix">
+          <div class="delivery-header pull-left">
+            {{order.restaurant.name}} [Order #{{order.id}}]
           </div>
-          <div class="col-sm-3">
-            {{#if admin}}
-            <div class="btn-group pull-right">
+          {{#if admin}}
+            <div class="btn-group">
               <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
                 {{order.status}} <span class="caret"></span>
               </button>
@@ -79,17 +75,21 @@
               </ul>
             </div>
             {{else}}
-            <span class="pull-right">{{> status_label order}}</span>
+            <div class="pull-right order-status-label">{{> status_label order}}</div>
             {{/if}}
+        </div>
+
+        <div>
+          {{#if order.restaurant}}
+          <a href="javascript:void(0);" class="copy-order-btn">Copy Order</a>
+          {{/if}}
+          <div class="date-created">
+            Date submitted: {{formatDateTime order.submitted "M/D/YYYY h:mm a"}}
           </div>
         </div>
 
-        <div class="date-created">
-          Date submitted: {{formatDateTime order.submitted "M/D/YYYY h:mm a"}}
-        </div>
-
         <div class="row">
-          <fieldset class="col-sm-6 delivery-info-date no-padding">
+          <fieldset class="col-xs-6 delivery-info-date">
             {{#unless order.editable}}
             <p>{{order.name}}</p>
             {{else}}
@@ -133,7 +133,7 @@
             {{/unless}}
           </fieldset>
 
-          <fieldset class="col-sm-6 delivery-info-address no-padding">
+          <fieldset class="col-xs-6 delivery-info-address">
             <div>
               <strong>{{user.name}}</strong>
             </div>

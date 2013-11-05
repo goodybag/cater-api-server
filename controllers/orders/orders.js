@@ -193,7 +193,7 @@ module.exports.changeStatus = function(req, res) {
       venter.emit('order:status:change', order);
     }
 
-    if (req.body.status === 'submitted' && order.attributes.user.isInvoiced) order.attributes.payment_status = 'invoiced';
+    if (req.body.status === 'submitted' && order.attributes.user.is_invoiced) order.attributes.payment_status = 'invoiced';
 
     if (review) order.attributes.token_used = 'now()';
 

@@ -48,7 +48,7 @@ define(function(require) {
     , nullable: true
     , unique: true
     }
-  , isInvoiced: {
+  , is_invoiced: {
       type: types.boolean
     , nullable: false
     , default: 'false'

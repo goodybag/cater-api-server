@@ -18,6 +18,8 @@ var CheckoutView = OrderView.extend({
       format: 'hh:i A'
     , interval: 15
     }).pickatime('picker');
+
+    this.timepicker.on( 'open', _(this.onTimePickerOpen).bind( this ) );
   },
 
   onDatePickerOpen: function(){
@@ -29,6 +31,47 @@ var CheckoutView = OrderView.extend({
     });
 
     this.datepicker.set( 'disable', disabledTimes );
+  },
+
+  onTimePickerOpen: function(){
+    var day = this.datepicker.get();
+
+    // Build a disabled set of values that matches timepickers format
+    var disabled = [];
+    for (var i = 0; i < 24; ++i){
+      disabled.push( [ i, 0  ] );
+      disabled.push( [ i, 15 ] );
+      disabled.push( [ i, 30 ] );
+      disabled.push( [ i, 45 ] );
+    }
+
+    // Initially reset everything
+    this.timepicker.set( 'enable', disabled );
+
+    // Don't do anything if we haven't already selected a day
+    if ( !day ) return;
+
+    day = new Date( day ).getDay();
+
+    var times = this.model.restaurant.get('delivery_times')[ day ];
+
+    this.timepicker.set(
+      'disable'
+      // Filter the times down to the ones that should be disabled
+    , _(disabled).filter( function( t ){
+        // Pad the hh:mm
+        var time = [
+          ( '0' + t[0] ).slice( -2 )
+        , ( '0' + t[1] ).slice( -2 )
+        , '00'
+        ].join(':');
+
+        // Check that `time` is out of bounds for every delivery_time for the day picked
+        return _(times).every( function( t ){
+          return time < t[ 0 ] || time > t[ 1 ];
+        });
+      })
+    );
   },
 
   changePaymentMethod: function(e) {

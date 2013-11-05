@@ -75,7 +75,7 @@
                     <input type="radio" name="payment-method" class="payment-method" data-parent="#payment-info" checked="checked">
                   </label>
                   Pay using
-                  <select class="form-control">
+                  <select class="form-control" name="payment_method_id">
                     {{#each user.payment_methods}}
                       <option value="{{this.id}}">Credit Card (**** {{this.data.last_four}})</option>
                     {{/each}}

@@ -7,7 +7,8 @@ var CheckoutView = FormView.extend({
     'click .btn-cancel': 'cancel',
     'change .tip-percent': 'selectTip',
     'keydown .order-tip': 'cacheTip',
-    'keyup .order-tip': 'customTip'
+    'keyup .order-tip': 'customTip',
+    'change [name="payment_method_id"]': 'onPaymentMethodIdChange'
   },
 
   fieldMap: {
@@ -105,5 +106,9 @@ var CheckoutView = FormView.extend({
   customTip: function(e) {
     if (this.tip !== e.currentTarget.value)
       this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
+  },
+
+  onPaymentMethodIdChange: function(e){
+
   }
 });

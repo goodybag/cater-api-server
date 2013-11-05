@@ -7,60 +7,24 @@ var Address = require('./address');
 var table = 'users';
 
 module.exports = Model.extend({
-  findPaymentMethods: function( pmQuery, callback, client ){
-    var query = {
-      type: 'select'
-    , table: 'payment_methods'
-    , columns: ['payment_methods.*']
-    , joins: {
-        users_payment_methods: {
-          alias: 'upm'
-        , on: { 'payment_method_id': '$payment_methods.id$' }
-        }
-      }
-    , where: utils.extend( { 'upm.user_id': this.attributes.id }, pmQuery.where )
-    };
+  createPaymentMethod: function( pm, callback, client ){
+    module.exports.createPaymentMethod( this.attributes.id, pm, callback, client );
+    return this;
+  }
 
-    // Shallow query extension
-    for ( var key in pmQuery ){
-      if ( key === 'where' ) continue;
-      query[ key ] = pmQuery[ key ];
-    }
-
-    ( client || db ).query( db.builder.sql( query ), function( error, result ){
-      return callback( error, result );
-    });
+, findPaymentMethods: function( pmQuery, callback, client ){
+    module.exports.findPaymentMethods( this.attributes.id, pmQuery, callback, client );
+    return this;
   }
 
 , updatePaymentMethods: function( where, update, callback, client ){
-    if ( ['number', 'string'].indexOf( typeof where ) > -1 ){
-      where = {
-        id: { $equals: where }
-      };
-    }
+    module.exports.updatePaymentMethods( this.attributes.id, where, udpate, callback, client );
+    return this;
+  }
 
-    // Don't override existing user_id queries
-    if ( typeof where.id !== 'object' ){
-      where.id = { $equals: where.id };
-    }
-
-    // Ensure that payment methods belong to user
-    where.id.$in = {
-      type: 'select'
-    , columns: ['payment_method_id']
-    , where: { user_id: this.attributes.id }
-    };
-
-    var query = {
-      type: 'update'
-    , table: 'payment_methods'
-    , where: where
-    , returning: ['*']
-    };
-
-    ( client || db ).query( db.builder.sql( query ), function( error, result ){
-      return callback( error, result );
-    });
+, removePaymentMethods: function( where, callback, client ){
+    module.exports.removePaymentMethods( this.attributes.id, where, callback, client );
+    return this;
   }
 }, {
   table: table
@@ -76,18 +40,118 @@ module.exports = Model.extend({
     }
   }
 
+, createPaymentMethod: function( userId, pm, callback, client ){
+    // Techncially, this should be in a transaction
+    var query = {
+      type: 'insert'
+    , table: 'payment_methods'
+    , values: pm
+    , returning: ['id']
+    };
+
+    ( client || db ).query( db.builder.sql( query ), function( error, result, info ){
+      if ( error ) return callback( error );
+
+      var id = result[0].id;
+
+      var query = {
+        type: 'insert'
+      , table: 'users_payment_methods'
+      , values: { user_id: userId, payment_method_id: id }
+      , returning: ['id']
+      };
+
+      ( client || db ).query( db.builder.sql( query ), function( error, result, info ){
+        return callback( error, result );
+      });
+    });
+  }
+
 , findPaymentMethods: function( userId, pmQuery, callback, client ){
-    return module.exports.prototype.findPaymentMethods.call(
-      { attributes: { id: userId } }
-    , pmQuery, callback, client
-    );
+    var query = {
+      type: 'select'
+    , table: 'payment_methods'
+    , columns: ['payment_methods.*']
+    , joins: {
+        users_payment_methods: {
+          alias: 'upm'
+        , on: { 'payment_method_id': '$payment_methods.id$' }
+        }
+      }
+    , where: utils.extend( { 'upm.user_id': userId }, pmQuery.where )
+    };
+
+    // Shallow query extension
+    for ( var key in pmQuery ){
+      if ( key === 'where' ) continue;
+      query[ key ] = pmQuery[ key ];
+    }
+
+    ( client || db ).query( db.builder.sql( query ), function( error, result, info ){
+      return callback( error, result );
+    });
   }
 
 , updatePaymentMethods: function( userId, where, update, callback, client ){
-    return module.exports.prototype.updatePaymentMethods.call(
-      { attributes: { id: userId } }
-    , where, update, callback, client
-    );
+    if ( ['number', 'string'].indexOf( typeof where ) > -1 ){
+      where = {
+        id: { $equals: where }
+      };
+    }
+
+    // Don't override existing user_id queries
+    if ( typeof where.id !== 'object' ){
+      where.id = { $equals: where.id };
+    }
+
+    // Ensure that payment methods belong to user
+    where.id.$in = {
+      type: 'select'
+    , columns: ['payment_method_id']
+    , where: { user_id: userId }
+    };
+
+    var query = {
+      type: 'update'
+    , table: 'payment_methods'
+    , where: where
+    , returning: ['*']
+    };
+
+    ( client || db ).query( db.builder.sql( query ), function( error, result, info ){
+      return callback( error, result );
+    });
+  }
+
+, removePaymentMethods: function( userId, where, callback, client ){
+    if ( ['number', 'string'].indexOf( typeof where ) > -1 ){
+      where = {
+        id: { $equals: where }
+      };
+    }
+
+    // Don't override existing user_id queries
+    if ( typeof where.id !== 'object' ){
+      where.id = { $equals: where.id };
+    }
+
+    // Ensure that payment methods belong to user
+    where.id.$in = {
+      type: 'select'
+    , columns: ['payment_method_id']
+    , where: { user_id: userId }
+    };
+
+    var query = {
+      type: 'delete'
+    , table: 'payment_methods'
+    , where: where
+    , returning: ['*']
+    };
+
+    ( client || db ).query( db.builder.sql( query ), function( error, result, info ){
+      return callback( error, result );
+    });
   }
 
 , find: function( query, callback, client ){

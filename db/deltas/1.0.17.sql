@@ -3,13 +3,14 @@ insert into deltas (version, date) values ('1.0.17', 'now()');
 
 DO $$
   BEGIN
-    BEGIN
-      alter table "orders" add column "status" order_status default 'pending';
-    EXCEPTION
-      WHEN duplicate_column THEN RAISE NOTICE 'column <column_name> already exists in <table_name>.';
-    END;
+    alter table "orders" add column "status" order_status default 'pending';
+  EXCEPTION
+    WHEN duplicate_column THEN RAISE NOTICE 'column % already exists in %.', 'status', 'orders';
   END;
 $$;
+
+do $$
+begin
 
 update orders
 set status = "s"."status"
@@ -51,17 +52,20 @@ create trigger new_order_status
   for each row
   execute procedure process_new_order();
 
-DROP TYPE IF EXISTS payment_method;
-CREATE TYPE payment_method AS ENUM('card', 'bank');
+if not exists( select 1 from pg_type where typname = 'payment_methods') then
+  CREATE TYPE payment_method AS ENUM('card', 'bank');
+end if;
 
-DROP TYPE IF EXISTS payment_type;
+if not exists( select 1 from pg_type where typname = 'payment_type') then
 CREATE TYPE payment_type AS ENUM('debit', 'credit');
+end if;
 
-DROP TYPE IF EXISTS payment_status;
+if not exists( select 1 from pg_type where typname = 'payment_status') then
 CREATE TYPE payment_status AS ENUM('pending', 'processing', 'paid', 'invoiced', 'error');
+end if;
 
 
-CREATE TABLE payment_methods (
+CREATE TABLE IF NOT EXISTS payment_methods (
   id SERIAL NOT NULL
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , type PAYMENT_METHOD NOT NULL
@@ -71,7 +75,7 @@ CREATE TABLE payment_methods (
 , CONSTRAINT payment_methods_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE restaurant_cuts (
+CREATE TABLE IF NOT EXISTS restaurant_cuts (
   id SERIAL NOT NULL
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , restaurant_id INT4 NOT NULL
@@ -81,7 +85,7 @@ CREATE TABLE restaurant_cuts (
 , CONSTRAINT restaurant_cuts_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE transaction_errors (
+CREATE TABLE IF NOT EXISTS transaction_errors (
   id SERIAL NOT NULL
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , order_id INT4 NOT NULL
@@ -91,7 +95,7 @@ CREATE TABLE transaction_errors (
 , CONSTRAINT transaction_errors_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE transactions (
+CREATE TABLE IF NOT EXISTS transactions (
   id SERIAL NOT NULL
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , type PAYMENT_TYPE NOT NULL
@@ -102,7 +106,7 @@ CREATE TABLE transactions (
 , CONSTRAINT transactions_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE users_payment_methods (
+CREATE TABLE IF NOT EXISTS users_payment_methods (
   id SERIAL NOT NULL
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , user_id INT4 NOT NULL
@@ -149,3 +153,5 @@ ALTER TABLE transactions ADD CONSTRAINT transactions_uri_key UNIQUE (uri);
 ALTER TABLE users ADD CONSTRAINT users_balanced_customer_uri_key UNIQUE (balanced_customer_uri);
 
 ALTER TABLE users_payment_methods ADD CONSTRAINT users_payment_methods_id_key UNIQUE (id);
+
+end$$;

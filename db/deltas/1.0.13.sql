@@ -37,4 +37,4 @@ insert into deltas (version, date) values ('1.0.13', 'now()');
 --   END;
 -- $$;
 
--- commit;
+commit;

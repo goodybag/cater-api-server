@@ -49,7 +49,9 @@ var task = function (message, callback) {
     return utils.queues.debit.del(message.id, utils.noop), callback(e);
   }
 
-  models.Order.findOne({id: body.order.id}, function (error, order) {
+  logger.debit.info("processing order: " + body.order.id);
+
+  models.Order.findOne({where: {id: body.order.id}}, function (error, order) {
     if (error) return logger.db.error(TAGS, error), callback(error);
 
     if(!order) return utils.queues.debit.del(message.id, utils.noop), callback();

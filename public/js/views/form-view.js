@@ -4,9 +4,12 @@ var FormView = Backbone.View.extend({
 
     for (var key in this.fieldMap) {
       var getter = this.fieldGetters[key];
-      var val = getter ? getter.apply(this) : (this.$el.find(this.fieldMap[key]).val()||'').trim() || null;
-      if (!(val == null && this.model.get(key) == null) && !_.isEqual(val, this.model.get(key)))
-        diff[key] = val;
+      var $field = this.$el.find(this.fieldMap[key]);
+      if ($field.length > 0) {
+        var val = getter ? getter.apply(this) : ($field.val()||'').trim() || null;
+        if (!(val == null && this.model.get(key) == null) && !_.isEqual(val, this.model.get(key)))
+          diff[key] = val;
+      }
     }
 
     return _.size(diff) > 0 ? diff : null;
@@ -17,18 +20,21 @@ var FormView = Backbone.View.extend({
   fieldMap: {},
 
   clearErrors: function() {
-    this.$el.find('.form-control').parent().removeClass('has-error');
+    this.$el.find('.form-group.has-error').removeClass('has-error');
   },
 
   displayErrors: function() {
+    if (this.model.validationError == null) return;
     var errors = _.isArray(this.model.validationError) ? this.model.validationError :
       _.pick(this.model.validationError, _.range(this.model.validationError.length));
 
     var badFields =  _.uniq(_.invoke(_.compact(_.pluck(errors, 'property')), 'replace', /\[\d+\]$/, ''));
     var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
-    this.$el.find(selector).parent().removeClass('has-success').addClass('has-error');
+    this.$el.find(selector).closest('.form-group').removeClass('has-success').addClass('has-error');
+    _.invoke(this.subViews, 'displayErrors');
   },
 
+  // TODO: move to subclass
   onChange: function(e) {
     var diff = this.getDiff();
     this.$el.find(this.submitSelector).toggleClass('hide', !diff);

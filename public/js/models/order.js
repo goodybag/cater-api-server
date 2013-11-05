@@ -44,7 +44,7 @@ var Order = Backbone.Model.extend({
         tip_percent: {
           type: ['string', 'null'],
           required: false,
-          enum: ['0', 'custom', '5', '10', '15', '18', '20', '25']
+          enum: ['0', 'custom', '5', '10', '15', '18', '20', '25', null]
         },
         payment_status: {
           type: ['string', 'null'],
@@ -76,19 +76,19 @@ var Order = Backbone.Model.extend({
     }
 
     var addressFields = _.keys(_.result(Address, 'schema').properties);
-    var addressErrors = this.address.validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)),
-                                              _.extend({enforceRequired: false}, options));
-    if (addressErrors != null)
-      errors = errors.concat(_.isArray(addressErrors) ? addressErrors : Array.prototype.slice.call(addressErrors));
+    if (!this.address._validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)),
+                               _.extend({enforceRequired: false}, options))) {
+      errors.push({addressErrors: this.address.validationError});
+    }
 
     // Add on the restaurant fulfillability errors
     errors = errors.concat(
       // restaurant validate expects an order model and this instance does not
       // have all the attrs set
-      this.restaurant.validateOrderFulfillability( new Order( _.defaults(this.toJSON(), attrs) ) )
+      this.restaurant.validateOrderFulfillability( new Order( _.extend(this.toJSON(), attrs) ) )
     );
 
-    return errors.length > 0 ? errors : false;
+    return errors.length > 0 ? errors : null;
   },
 
   urlRoot: '/orders',
@@ -262,6 +262,7 @@ var Order = Backbone.Model.extend({
   },
 
   changeStatus: function(status, callback) {
+    callback = callback || function() {};
     if (status == null || status === this.get('status')) return callback();
     var self = this;
     $.ajax({
@@ -278,4 +279,6 @@ var Order = Backbone.Model.extend({
       }
     });
   }
+}, {
+  addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']
 });

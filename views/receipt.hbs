@@ -61,7 +61,7 @@
             {{order.restaurant.name}} [Order #{{order.id}}]
           </div>
           {{#if admin}}
-            <div class="btn-group">
+            <div class="pull-right btn-group">
               <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
                 {{order.status}} <span class="caret"></span>
               </button>
@@ -74,12 +74,12 @@
                 <li><a href="javascript:void;" id="change-status-delivered">delivered</a></li>
               </ul>
             </div>
-            {{else}}
-            <div class="pull-right order-status-label">{{> status_label order}}</div>
-            {{/if}}
+          {{else}}
+          <div class="pull-right order-status-label">{{> status_label order}}</div>
+          {{/if}}
         </div>
 
-        <div>
+        <div class="delivery-submitted">
           {{#if order.restaurant}}
           <a href="javascript:void(0);" class="copy-order-btn">Copy Order</a>
           {{/if}}
@@ -91,7 +91,7 @@
         <div class="row">
           <fieldset class="col-xs-6 delivery-info-date">
             {{#unless order.editable}}
-            <p>{{order.name}}</p>
+            {{#if order.name}}<p><strong>{{order.name}}</strong></p>{{/if}}
             {{else}}
             <div class="form-group">
               <label class="control-label">Order Name</label>
@@ -100,7 +100,7 @@
             {{/unless}}
 
             {{#unless order.editable}}
-            <dl class="dl-horizontal">
+            <dl class="dl-horizontal no-margin">
               <dt>Delivery Date:</dt>
               <dd>{{datepart order.datetime}}</dd>
               <dt>Delivery Time:</dt>
@@ -134,12 +134,12 @@
           </fieldset>
 
           <fieldset class="col-xs-6 delivery-info-address">
-            <div>
-              <strong>{{user.name}}</strong>
-            </div>
-            <div>
-              <strong>{{user.organization}}</strong>
-            </div>
+            {{#if user.name}}
+            <div><strong>{{user.name}}</strong></div>
+            {{/if}}
+            {{#if user.organization}}
+            <div><strong>{{user.organization}}</strong></div>
+            {{/if}}
             {{#unless order.editable}}
             {{> address order}}
             {{else}}

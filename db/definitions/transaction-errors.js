@@ -29,7 +29,7 @@ define(function(require) {
   , order_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'orders', column: 'id', onDelete: 'cascade'}
+    , references: {table: 'orders', column: 'id', onDelete: 'set null'} // setting to null, because we don't want to automatically delete this
     }
   , request_id: {
       type: types.text

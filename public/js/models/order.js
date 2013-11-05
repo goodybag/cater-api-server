@@ -45,7 +45,11 @@ var Order = Backbone.Model.extend({
           type: ['string', 'null'],
           required: false,
           enum: ['0', 'custom', '5', '10', '15', '18', '20', '25']
-        }
+        },
+        payment_status: {
+          type: ['string', 'null'],
+          required: false
+        },
       }
     };
   },

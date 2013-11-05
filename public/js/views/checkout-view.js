@@ -18,7 +18,8 @@ var CheckoutView = FormView.extend({
     notes: '#order-notes',
     // adjustment: '.adjustment .form-control',
     tip: '.order-tip',
-    tip_percent: '.tip-percent'
+    tip_percent: '.tip-percent',
+    payment_method_id: '[name="payment_method_id"]'
   },
 
   fieldGetters: {
@@ -67,9 +68,9 @@ var CheckoutView = FormView.extend({
     e.preventDefault();
     var self = this;
     this.onSave(function(err, response) {
-      if (err) return alert(err); // TODO: error handling
+      if (err) return alert(JSON.stringify(err)); // TODO: error handling
       self.model.changeStatus('submitted', function(err, data) {
-        if (err) return alert(err); // TODO: error handling
+        if (err) return alert(JSON.stringify(err)); // TODO: error handling
         window.location.reload();
       });
     });
@@ -77,7 +78,7 @@ var CheckoutView = FormView.extend({
 
   cancel: function(e) {
     this.model.changeStatus('canceled', function(err, data) {
-      if (err) return alert(err); // TODO: error handling
+      if (err) return alert(JSON.stringify(err)); // TODO: error handling
       window.location.reload();
     });
   },
@@ -108,7 +109,7 @@ var CheckoutView = FormView.extend({
       this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
   },
 
-  onPaymentMethodIdChange: function(e){
-
-  }
+  // onPaymentMethodIdChange: function(e){
+  //   this.model.set('payment_method_id', $(e.target).val());
+  // }
 });

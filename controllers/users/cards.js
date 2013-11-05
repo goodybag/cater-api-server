@@ -22,13 +22,12 @@ module.exports.create = function(req, res, next) {
  */
 module.exports.list = function(req, res, next) {
   var query = {
-    where: { user_id: +req.param('uid') }
-  , order: { id: 'asc' }
+    order: { id: 'asc' }
   };
 
-  models.User.findPaymentMethods(query, function(error, cards) {
+  models.User.findPaymentMethods(+req.param('uid'), query, function(error, cards) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.json(utils.invoke(cards, 'toJSON'));
+    res.json(cards);
   });
 };
 
@@ -38,15 +37,14 @@ module.exports.list = function(req, res, next) {
 module.exports.get = function(req, res, next) {
   var query = {
     where: {
-      user_id:  +req.param('uid')
-    , id:       +req.param('cid')
+      id: +req.param('cid')
     }
   };
 
-  models.User.findPaymentMethods(query, function(error, cards) {
+  models.User.findPaymentMethods(+req.param('uid'), query, function(error, cards) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     if (!cards || cards.length === 0) return res.send(404);
-    res.json(cards[0].toJSON());
+    res.json(cards[0]);
   });
 };
 

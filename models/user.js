@@ -36,7 +36,7 @@ module.exports = Model.extend({
     }
 
   , payment_methods: function( pmQuery, originalQuery, callback, client ){
-      return this.findCards( originalQuery.where.id, pmQuery, callback, client );
+      return this.findPaymentMethods( originalQuery.where.id, pmQuery, callback, client );
     }
   }
 

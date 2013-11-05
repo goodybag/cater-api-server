@@ -13,7 +13,7 @@ var models  = require('../../models');
 module.exports.create = function(req, res, next) {
   models.User.createPaymentMethod( +req.param('uid'), req.body, function(error, cards) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    return res.send(204);
+    return res.json(cards[0]);
   });
 };
 

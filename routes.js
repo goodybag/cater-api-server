@@ -230,8 +230,6 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
-  app.get('/orders/:id/checkout', controllers.orders.checkout);
-
 
   app.get('/receipts/order-:oid.pdf', m.buildReceipt(), function(req, res) {
     file.serve(req, res, function(error){
@@ -422,6 +420,8 @@ module.exports.register = function(app) {
    */
 
   app.get('/users/:uid/cards', controllers.users.cards.list);
+
+  app.post('/users/:uid/cards', controllers.users.cards.create);
 
   app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
 

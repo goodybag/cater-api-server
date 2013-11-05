@@ -50,6 +50,10 @@ var Order = Backbone.Model.extend({
           type: ['string', 'null'],
           required: false
         },
+        payment_id: {
+          type: ['string', 'null'],
+          required: false
+        }
       }
     };
   },

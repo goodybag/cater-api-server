@@ -40,16 +40,23 @@ module.exports = Model.extend({
     }
   }
 
+, paymentMethodFields: Object.keys(
+    require('../db/definitions/payment-methods').schema
+  )
+
 , createPaymentMethod: function( userId, pm, callback, client ){
+    if ( 'data' in pm ) pm.data = JSON.stringify( pm.data );
+
     // Techncially, this should be in a transaction
     var query = {
       type: 'insert'
     , table: 'payment_methods'
-    , values: pm
+    , values: utils.pick( pm, this.paymentMethodFields )
     , returning: ['id']
     };
-
-    ( client || db ).query( db.builder.sql( query ), function( error, result, info ){
+console.log(client, typeof (client || db).query)
+    db.query( db.builder.sql( query ), function( error, result, info ){
+      console.log("#############", error)
       if ( error ) return callback( error );
 
       var id = result[0].id;
@@ -60,8 +67,8 @@ module.exports = Model.extend({
       , values: { user_id: userId, payment_method_id: id }
       , returning: ['id']
       };
-
-      ( client || db ).query( db.builder.sql( query ), function( error, result, info ){
+console.log("ohai")
+      db.query( db.builder.sql( query ), function( error, result, info ){
         return callback( error, result );
       });
     });

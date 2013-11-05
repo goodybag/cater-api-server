@@ -1,3 +1,7 @@
+.form-group[data-icon^="gb-icon"]:before {
+  margin-top: 26px;
+}
+
 .order-summary-heading {
   text-align: left;
   padding: 10px 0 10px 24px;

@@ -1,5 +1,6 @@
 var CheckoutView = OrderView.extend({
   events: _.extend({}, OrderView.prototype.events, {
+    'click .btn-cancel': 'cancel',
     'change input[type="radio"].payment-method': 'changePaymentMethod',
     'submit #order-form': 'submit',
     'submit #select-address-form': 'selectAddress'
@@ -102,5 +103,12 @@ var CheckoutView = OrderView.extend({
     this.model.save(address.omit(['id', 'user_id', 'is_default']), {success: function() {
       this.$el.find('#select-address-modal').modal('dismiss');
     }});
+  },
+
+  cancel: function() {
+    this.model.changeStatus('canceled', function(err, data) {
+      if (err) return alert(err); // TODO: error handling
+      window.location.reload();
+    });
   }
 });

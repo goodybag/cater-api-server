@@ -287,7 +287,9 @@
   margin-left: 100px
 }
 
-.order-params-bar .form-control[readonly] {
+.order-params-bar .form-control[readonly],
+.delivery-datetime .form-control[readonly]
+ {
   cursor: default;
   background-color: #fff;
 }

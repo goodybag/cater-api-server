@@ -5,6 +5,32 @@ var CheckoutView = OrderView.extend({
     'submit #select-address-form': 'selectAddress'
   }),
 
+  initialize: function() {
+    OrderView.prototype.initialize.apply(this, arguments);
+    this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
+      format: 'mm/dd/yyyy'
+    , min: new Date()
+    }).pickadate('picker');
+
+    this.datepicker.on( 'open', _(this.onDatePickerOpen).bind( this ) );
+
+    this.timepicker = this.$el.find('input[name="time"]').eq(0).pickatime({
+      format: 'hh:i A'
+    , interval: 15
+    }).pickatime('picker');
+  },
+
+  onDatePickerOpen: function(){
+    // Days of week the restaurant does not deliver
+    var disabledTimes = [];
+
+    _(this.model.restaurant.get('delivery_times')).each( function( t, i ){
+      if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
+    });
+
+    this.datepicker.set( 'disable', disabledTimes );
+  },
+
   changePaymentMethod: function(e) {
     var $selected = $(e.currentTarget);
     var parent = $selected.attr('data-parent');

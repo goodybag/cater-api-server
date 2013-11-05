@@ -77,9 +77,12 @@
                   Pay using
                   <select class="form-control">
                     {{#each user.payment_methods}}
-                      <option>Credit Card (**** {{this.data.last_four}})</option>
+                      <option value="{{this.id}}">Credit Card (**** {{this.data.last_four}})</option>
                     {{/each}}
                   </select>
+                  <div class="expired-wrapper">
+                    {{! If a card is selected that is expired, this will be filled with {>checkout_card_expired} !}}
+                  </div>
                 </div>
                 <div class="radio">
                   <label>

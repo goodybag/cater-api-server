@@ -102,19 +102,16 @@ module.exports.checkout = function(req, res) {
     function(order, cb) {
       var query = {
         where: { id: req.session.user.id },
-        embeds: [
-          'payment_methods',
-          {
-            table: 'addresses',
-            options: {
-              order: ['is_default asc', 'id asc']
-              // Actually, we can probably just display this restriction client-side
-            // , where: {
-            //     zip: { $in: order.attributes.restaurant.delivery_zips }
-            //   }
-            }
+        embeds: {
+          payment_methods: {}
+        , addresses: {
+            order: ['is_default asc', 'id asc']
+          // Actually, we can probably just display this restriction client-side
+          // , where: {
+          //     zip: { $in: order.attributes.restaurant.delivery_zips }
+          //   }
           }
-        ]
+        }
       };
 
       models.User.find(query, function(err, results) {

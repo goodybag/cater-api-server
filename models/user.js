@@ -1,147 +1,89 @@
 var util = require('util');
+var db  = require('../db');
 var utils = require('../utils');
 var Model = require('./model');
+var Address = require('./address');
 
 var table = 'users';
 
-// Coalesce two PG arrays for the JSON Array sub-select thingy
-// Used to avoid results of the form `[null]`
-var coalesceArray = function( table, col ){
-  return  [
-    'coalesce('
-  , 'nullif( array_agg('
-  , '"' + table + '"."' + col + '"'
-  , ')::text[]'
-  , ', array[null]::text[]'
-  , '), array[]::text[]'
-  , ')::json[]'
-  ].join(' ');
-};
 
 module.exports = Model.extend({
 
 }, {
   table: table
 
-  // If you want to add a join to query, simply pass an array of strings
-  // on the `embed` key in the query object. The values should match a
-  // key inside this joins object
-, joins: {
-    // Adds payment_methods JSON array to user object
-    'payment_methods': function( options, query ){
-      // Add new `with` query replicating the base set
-      if ( !query.with ) query.with = [];
+  // Get foreign data source pivoting on users
+, embeds: {
+    addresses: function( addressQuery, query, callback, client ){
+      Address.find( addressQuery, callback, client );
+    }
 
-      var localTable = {
-        name: 'payment_methods_' + this.table
-      , type: 'select'
-      , table: this.table
-      , columns: ['id']
-      , where: query.where
-      };
-
-      query.with.push( localTable );
-
-      query.joins.push({
-        type: 'left'
-      , target: localTable.name
-      , on: { id: '$' + this.table + '.id$' }
-      });
-
-      query.columns.push({
-        type: 'array_to_json'
-      , as: 'payment_methods'
-      , expression: coalesceArray( 'pms', 'pm' )
-      });
-
-      var joinSubSelect = utils.extend({
+  , payment_methods: function( pmQuery, query, callback, client ){
+      var query = {
         type: 'select'
-      , table: 'users_payment_methods'
-      , columns: [
-          'user_id'
-        , { type: 'row_to_json', expression: 'payment_methods', as: 'pm' }
-        ]
-        // Join payment_methods
+      , table: 'payment_methods'
+      , columns: ['payment_methods.*']
       , joins: {
-          'payment_methods': {
-            target: 'payment_methods'
-          , on: { 'id': '$users_payment_methods.payment_method_id$' }
+          users_payment_methods: {
+            alias: 'upm'
+          , on: { 'payment_method_id': '$payment_methods.id$' }
           }
         }
-      }, options );
+      , where: utils.extend( { 'upm.user_id': query.where.id }, pmQuery.where )
+      };
 
-      query.joins.push({
-        type:   'left'
-      , alias:  'pms'
-      , target: joinSubSelect
-      , on: { 'pms.user_id': '$' + localTable.name + '.id$' }
-      });
-
-      if ( !query.groupBy ) query.groupBy = [];
-
-      // Ensure we're grouping by user_id
-      if ( query.groupBy.indexOf('users.id') === -1 ){
-        query.groupBy.push('users.id');
+      // Shallow query extension
+      for ( var key in pmQuery ){
+        if ( key === 'where' ) continue;
+        query[ key ] = pmQuery[ key ];
       }
-    }
 
-  , 'addresses': function( options, query ){
-      query.columns.push({
-        type: 'array_to_json'
-      , as: 'addresses'
-      , expression: coalesceArray( 'addresses', 'address' )
+      (client || db).query( db.builder.sql( query ), function( error, result ){
+        // Specify exactly two arguments to callback so it doesn't mess up async.parallel results
+        return callback( error, result );
       });
-
-      query.joins.push({
-        type: 'left'
-      , alias: 'addresses'
-      , on: { 'user_id': '$users.id$' }
-      , target: utils.extend({
-          type: 'select'
-        , table: 'addresses'
-        , columns: [
-            'user_id'
-          , { type: 'row_to_json', expression: 'addresses', as: 'address' }
-          ]
-        }, options )
-      });
-
-      if ( !query.groupBy ) query.groupBy = [];
-
-      // Ensure we're grouping by user_id
-      if ( query.groupBy.indexOf('users.id') === -1 ){
-        query.groupBy.push('users.id');
-      }
     }
-  }
-
-, join: function( tbl, options, query ){
-    if ( !(tbl in this.joins) ) return this;
-
-    if ( !query.joins ) query.joins = [];
-    else if ( !Array.isArray( query.joins ) ) query.joins = [ query.joins ];
-
-    if ( !query.columns ) query.columns = ['*'];
-
-    return this.joins[ tbl ].call( this, options, query );
   }
 
 , find: function( query, callback, client ){
-    // Auto-joins
-    if ( Array.isArray( query.embeds ) ){
-      for ( var i = 0, l = query.embeds.length; i < l; ++i ){
-        if ( typeof query.embeds[i] === 'string' ){
-          this.join( query.embeds[i], null, query );
-        } else {
-          this.join( query.embeds[i].table, query.embeds[i].options, query );
-        }
+    var this_ = this;
+
+    // Run all tasks in parallel
+    var tasks = {
+      users: function( done ){
+        return Model.find.call( this_, query, done, client );
+      }
+    };
+
+    // Is the user requesting to embed foreign data?
+    // If so, add the embed functions to tasks
+    if ( utils.isObject( query.embeds ) ){
+      Object.keys( query.embeds ).forEach( function( key ){
+        if ( !(key in this_.embeds) ) return;
+
+        tasks[ key ] = function( done ){
+          this_.embeds[ key ].call( this_, query.embeds[ key ], query, done );
+        };
+      });
+    }
+
+    utils.async.parallel( tasks, function( error, result ){
+      if ( error ) return callback( error );
+
+      // Embed the results into the user objects invoking toJSON on sub-models
+      for ( var key in result ){
+        if ( key === 'users' ) continue;
+
+        result.users.forEach( function( user ){
+          if ( 'toJSON' in result[ key ] ){
+            user.attributes[ key ] = utils.invoke( result[ key ], 'toJSON' );
+          } else {
+            user.attributes[ key ] = result[ key ];
+          }
+        });
       }
 
-      for ( var tbl in query.embed ){
-        this.join( tbl, query.embed[ tbl ], query );
-      }
-    }
-console.log(util.inspect(query, {depth: null}));
-    return Model.find.call( this, query, callback, client );
+      return callback( null, result.users );
+    });
   }
 });

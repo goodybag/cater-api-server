@@ -129,7 +129,7 @@ define(function(require) {
   , payment_method_id: {
       type: types.int
     , nullable: true
-    , references: {table: 'payment_methods', column: 'id', onDelete: 'set null'}
+    , references: {table: 'payment_methods', column: 'id'}
     }
   };
 

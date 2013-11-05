@@ -4,8 +4,7 @@ var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
 
-
-// module.exports.cards = require('./cards');
+module.exports.cards = require('./cards');
 
 module.exports.list = function(req, res) {
   var query = queries.user.list(req.query.columns, req.query.limit, req.query.offset);

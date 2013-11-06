@@ -1,2 +1,2 @@
 web: npm start
-workers: node workers/debit
+debit: node workers/debit

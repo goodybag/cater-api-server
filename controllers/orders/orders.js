@@ -75,7 +75,6 @@ module.exports.list = function(req, res) {
 // }
 
 module.exports.get = function(req, res) {
-
   var tasks = [
     function(cb) {
       models.Order.findOne(parseInt(req.params.id), function(err, order) {

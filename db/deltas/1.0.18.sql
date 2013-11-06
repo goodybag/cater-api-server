@@ -1,5 +1,5 @@
 -- Update version
-insert into deltas (version, date) values ('1.0.17', 'now()');
+insert into deltas (version, date) values ('1.0.18', 'now()');
 
 DO $$
   BEGIN
@@ -40,28 +40,25 @@ create or replace function process_new_order() returns trigger as $process_new_o
   end
   $process_new_order$ language plpgsql;
 
+DROP TRIGGER IF EXISTS update_order_status ON orders;
 create trigger update_order_status
   after update on orders
   for each row
   when (old.status is distinct from new.status)
   execute procedure process_updated_order();
 
+DROP TRIGGER IF EXISTS new_order_status ON orders;
 create trigger new_order_status
   after insert on orders
   for each row
   execute procedure process_new_order();
 
-DROP TYPE IF EXISTS payment_method;
 CREATE TYPE payment_method AS ENUM('card', 'bank');
-
-DROP TYPE IF EXISTS payment_type;
 CREATE TYPE payment_type AS ENUM('debit', 'credit');
-
-DROP TYPE IF EXISTS payment_status;
 CREATE TYPE payment_status AS ENUM('pending', 'processing', 'paid', 'invoiced', 'error');
 
 
-CREATE TABLE payment_methods (
+CREATE TABLE IF NOT EXISTS payment_methods (
   id SERIAL NOT NULL
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , type PAYMENT_METHOD NOT NULL
@@ -69,9 +66,10 @@ CREATE TABLE payment_methods (
 , data JSON NOT NULL
 
 , CONSTRAINT payment_methods_pkey PRIMARY KEY (id)
+, CONSTRAINT payment_methods_uri_key UNIQUE (uri)
 );
 
-CREATE TABLE restaurant_cuts (
+CREATE TABLE IF NOT EXISTS restaurant_cuts (
   id SERIAL NOT NULL
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , restaurant_id INT4 NOT NULL
@@ -79,9 +77,10 @@ CREATE TABLE restaurant_cuts (
 , percentage FLOAT4 NOT NULL
 
 , CONSTRAINT restaurant_cuts_pkey PRIMARY KEY (id)
+, CONSTRAINT restaurant_cuts_restaurant_id_fkey FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
-CREATE TABLE transaction_errors (
+CREATE TABLE IF NOT EXISTS transaction_errors (
   id SERIAL NOT NULL
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , order_id INT4 NOT NULL
@@ -89,9 +88,10 @@ CREATE TABLE transaction_errors (
 , data JSON
 
 , CONSTRAINT transaction_errors_pkey PRIMARY KEY (id)
+, CONSTRAINT transaction_errors_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders (id) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
-CREATE TABLE transactions (
+CREATE TABLE IF NOT EXISTS transactions (
   id SERIAL NOT NULL
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , type PAYMENT_TYPE NOT NULL
@@ -100,52 +100,33 @@ CREATE TABLE transactions (
 , data JSON
 
 , CONSTRAINT transactions_pkey PRIMARY KEY (id)
+, CONSTRAINT transactions_uri_key UNIQUE (uri)
+, CONSTRAINT transactions_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders (id) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
-CREATE TABLE users_payment_methods (
+CREATE TABLE IF NOT EXISTS users_payment_methods (
   id SERIAL NOT NULL
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , user_id INT4 NOT NULL
 , payment_method_id INT4 NOT NULL
+
+, CONSTRAINT users_payment_methods_pkey PRIMARY KEY (user_id, payment_method_id)
+, CONSTRAINT users_payment_methods_id_key UNIQUE (id)
+, CONSTRAINT users_payment_methods_user_id_fkey FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE NO ACTION ON DELETE CASCADE
+, CONSTRAINT users_payment_methods_payment_method_id_fkey FOREIGN KEY (payment_method_id) REFERENCES payment_methods (id) ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
 
 ALTER TABLE restaurants ADD balanced_customer_uri TEXT;
-
-ALTER TABLE users ADD balanced_customer_uri TEXT;
-
-ALTER TABLE orders ADD cut INT4;
-
-ALTER TABLE users ADD is_invoiced BOOL NOT NULL DEFAULT 'false';
-
-ALTER TABLE orders ADD payment_method_id INT4;
-
 ALTER TABLE restaurants ADD payment_method_id INT4;
-
-ALTER TABLE orders ADD payment_status PAYMENT_STATUS;
-
-ALTER TABLE users_payment_methods ADD CONSTRAINT users_payment_methods_pkey PRIMARY KEY (user_id, payment_method_id);
-
-ALTER TABLE orders ADD CONSTRAINT orders_payment_method_id_fkey FOREIGN KEY (payment_method_id) REFERENCES payment_methods (id) ON UPDATE NO ACTION;
-
-ALTER TABLE restaurant_cuts ADD CONSTRAINT restaurant_cuts_restaurant_id_fkey FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON UPDATE NO ACTION ON DELETE CASCADE;
-
 ALTER TABLE restaurants ADD CONSTRAINT restaurants_payment_method_id_fkey FOREIGN KEY (payment_method_id) REFERENCES payment_methods (id) ON UPDATE NO ACTION ON DELETE SET NULL;
-
-ALTER TABLE transaction_errors ADD CONSTRAINT transaction_errors_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders (id) ON UPDATE NO ACTION ON DELETE SET NULL;
-
-ALTER TABLE transactions ADD CONSTRAINT transactions_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders (id) ON UPDATE NO ACTION ON DELETE SET NULL;
-
-ALTER TABLE users_payment_methods ADD CONSTRAINT users_payment_methods_payment_method_id_fkey FOREIGN KEY (payment_method_id) REFERENCES payment_methods (id) ON UPDATE NO ACTION ON DELETE CASCADE;
-
-ALTER TABLE users_payment_methods ADD CONSTRAINT users_payment_methods_user_id_fkey FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE NO ACTION ON DELETE CASCADE;
-
-ALTER TABLE payment_methods ADD CONSTRAINT payment_methods_uri_key UNIQUE (uri);
-
 ALTER TABLE restaurants ADD CONSTRAINT restaurants_balanced_customer_uri_key UNIQUE (balanced_customer_uri);
 
-ALTER TABLE transactions ADD CONSTRAINT transactions_uri_key UNIQUE (uri);
-
+ALTER TABLE users ADD balanced_customer_uri TEXT;
+ALTER TABLE users ADD is_invoiced BOOL NOT NULL DEFAULT 'false';
 ALTER TABLE users ADD CONSTRAINT users_balanced_customer_uri_key UNIQUE (balanced_customer_uri);
 
-ALTER TABLE users_payment_methods ADD CONSTRAINT users_payment_methods_id_key UNIQUE (id);
+ALTER TABLE orders ADD cut INT4;
+ALTER TABLE orders ADD payment_method_id INT4;
+ALTER TABLE orders ADD payment_status PAYMENT_STATUS;
+ALTER TABLE orders ADD CONSTRAINT orders_payment_method_id_fkey FOREIGN KEY (payment_method_id) REFERENCES payment_methods (id) ON UPDATE NO ACTION;

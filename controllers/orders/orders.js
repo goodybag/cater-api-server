@@ -110,6 +110,9 @@ module.exports.get = function(req, res) {
     if (err)
       return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
 
+    // Redirect empty orders to item summary 
+    if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.id + '/items');
+
     var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
     var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
     utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
@@ -127,7 +130,7 @@ module.exports.get = function(req, res) {
       },
       orderParams: req.session.orderParams,
       query: req.query,
-      user: {addresses: utils.invoke(addresses, 'toJSON')},
+      user: {addresses: addresses},
       step: order.attributes.status === 'pending' ? 2 : 3
     };
 

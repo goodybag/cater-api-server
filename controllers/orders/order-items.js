@@ -37,6 +37,8 @@ module.exports.summary = function(req, res, next) {
         step: 1
       };
 
+      if (!context.owner && !context.admin) return res.status(404).render('404');
+
       // orders are always editable for an admin
       if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
         context.order.editable = true;

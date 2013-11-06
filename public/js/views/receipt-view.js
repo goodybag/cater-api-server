@@ -1,6 +1,7 @@
 var ReceiptView = OrderView.extend({
   events: function() {
     return _.extend({}, OrderView.prototype.events, {
+      'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
       'keyup .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
       'change .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
       'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),

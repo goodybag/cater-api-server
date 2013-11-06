@@ -1,0 +1,35 @@
+.form-group[data-icon^="gb-icon"]:before {
+  margin-top: 26px;
+}
+
+.form-inline .form-group {
+  margin-right: -15px;
+}
+
+.form-inline {
+  margin-bottom: 10px;
+}
+
+legend {
+  border: none;
+  margin-bottom: 10px;
+}
+
+.affix {
+  position: fixed;
+  top: 10px;
+  width: 360px;
+}
+
+.affix-bottom {
+  position: absolute;
+  width: 360px;
+}
+
+/* Medium devices */
+@media (max-width: 992px) {
+  .affix, .affix-bottom {
+    position: static;
+    width: 100%;
+  }
+}

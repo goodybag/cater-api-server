@@ -82,7 +82,8 @@ var OrderSummaryView = Backbone.View.extend({
       state: 'TX'
     };
 
-    var diff = _.defaults(this.model.pick(_.keys(params)), params);
+    var currentState = _.extend(this.model.pick(['guests', 'datetime']), this.model.address.pick(['zip', 'state']));
+    var diff = _.defaults(currentState, params);
     // var diff = {};
     // for (var key in params)
     //   diff[key] = this.model.has(key) ? this.model.get(key) : params[key];

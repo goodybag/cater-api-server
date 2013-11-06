@@ -1,3 +1,7 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/checkout.css">
+{{/extend}}
+
 <div class="page page-checkout container">
   <div class="row">
     {{> wizard }}
@@ -49,72 +53,70 @@
   {{/if}}
 
   <div class="row">
-    <div class="col-md-8">
-      <div class="panel">
-        <form id="order-form">
-          <div class="panel-body">
-            <fieldset>
-              <legend>1. Order Details</legend>
-              <div class="row">
-                <h5 class="col-md-12">{{order.restaurant.name}}</h5>
-              </div>
-              <div class="row form-inline">
-                <div class="col-sm-7">
-                  <div class="form-group col-sm-4 form-group-delivery-date" data-icon="gb-icon-calendar">
-                    <label class="control-label" for="order-date">Delivery Date</label>
-                    <input type="text" class="form-control order-datetime" id="order-date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
-                  </div>
-                  <div class="form-group col-sm-4 form-group-delivery-time" data-icon="gb-icon-time">
-                    <label class="control-label" for="order-time">Delivery Time</label>
-                    <input type="text" class="form-control order-datetime" id="order-time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
-                  </div>
-                  <div class="form-group col-sm-4" data-icon="gb-icon-user">
-                    <label class="control-label" for="order-guests">Guests</label>
-                    <input type="number" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
-                  </div>
+    <div class="col-md-6 col-md-offset-1">
+      <form id="order-form" class="panel">
+          <div class="list-group">
+            <div class="list-group-item">
+              <div class="col-md-12"><legend>1. Order Details</legend></div>
+              <div class="form-group col-sm-12"><h5>{{order.restaurant.name}}</h5></div>
+              <div class="form-inline delivery-datetime clearfix">
+                <div class="form-group col-sm-4 form-group-delivery-date" data-icon="gb-icon-calendar">
+                  <label class="control-label" for="order-date">Delivery Date</label>
+                  <input type="text" class="form-control order-datetime" id="order-date" name="date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+                </div>
+                <div class="form-group col-sm-4 form-group-delivery-time" data-icon="gb-icon-time">
+                  <label class="control-label" for="order-time">Delivery Time</label>
+                  <input type="text" class="form-control order-datetime" id="order-time" name="time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
+                </div>
+                <div class="form-group col-sm-4 form-group-guests" data-icon="gb-icon-user">
+                  <label class="control-label" for="order-guests">Guests</label>
+                  <input type="text" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
                 </div>
               </div>
-              <div class="row">
+
+              <div class="form-inline clearfix">
                 <div class="form-group col-sm-6">
-                  <label class="control-label">Order Name</label>
-                  <input type="text" class="form-control order-name" value="{{order.name}}" placeholder="e.g. Tuesday Meeting">
+                  <label class="control-label" for="order-name">Order Name</label>
+                  <input id="order-name" type="text" class="form-control order-name" value="{{order.name}}" placeholder="e.g. Tuesday Meeting">
                 </div>
               </div>
-              <div class="row">
+
+              <div class="form-inline clearfix">
                 <div class="form-group col-sm-8">
                   <label class="control-label" for="order-notes">Special instructions for this order?</label>
                   <textarea id="order-notes" class="form-control order-notes" rows="3"{{#unless order.editable}} disabled="disabled"{{/unless}}>{{order.notes}}</textarea>
                 </div>
               </div>
-              <div class="row tip-area">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label class="control-label">Add tip</label>
-                    <select class="form-control tip-percent">
-                      {{! eq is ugly as hell but it works }}
-                      <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
-                      <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
-                      <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
-                      <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
-                      <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
-                      <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
-                      <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
-                      <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
-                  </div>
+
+              <div class="tip-area form-inline clearfix">
+                <div class="form-group col-xs-3">
+                  <label class="control-label" for="order-tip">Add tip</label>
+                  <select id="order-tip" class="form-control tip-percent">
+                    {{! eq is ugly as hell but it works }}
+                    <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
+                    <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
+                    <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
+                    <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
+                    <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
+                    <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
+                    <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
+                    <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
+                  </select>
+                </div>
+                <div class="form-group col-xs-3">
+                  <label class="control-label" for="order-tip">&nbsp;</label>
+                  <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
                 </div>
               </div>
-            </fieldset>
-            <fieldset class="row delivery-info">
-                {{> order_delivery_info}}
-            </fieldset>
-            <fieldset id="payment-info" class="row">
-              <div class="col-md-6">
-                <legend>3. Payment Info</legend>
+            </div>
 
+            <div class="list-group-item delivery-info">
+                {{> order_delivery_info}}
+            </div>
+
+            <div id="payment-info" class="list-group-item">
+              <div class="col-md-12">
+                <legend>3. Payment Info</legend>
                 <div class="radio">
                   <label>
                     <input type="radio" name="payment-method" class="payment-method" data-parent="#payment-info" checked="checked">
@@ -165,23 +167,25 @@
                     Pay via invoice.
                   </label>
                 </div>
+              </div>
+            </div>
 
+            <div class="list-group-item">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="btn-toolbar pull-right">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
+                    <button type="submit" class="btn btn-primary">Submit Order</button>
+                  </div>
+                </div>
               </div>
-            </fieldset>
+            </div>
+
           </div>
-          <div class="panel-footer">
-            <fieldset>
-              <div class="btn-toolbar pull-right">
-                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
-                <button type="submit" class="btn btn-primary">Submit Order</button>
-              </div>
-            </fieldset>
-          </div>
-        </form>
-      </div>
+      </form>
     </div>
     <div class="col-md-4">
-     <div class="panel" data-spy="affix" data-offset-top="118">
+     <div class="panel" data-spy="affix" data-offset-top="159" data-offset-bottom="225">
        {{> checkout_order_summary}}
      </div>
     </div>
@@ -248,7 +252,8 @@
   var partials = {
     order_delivery_info: 'order-delivery-info.hbs',
     address: 'address.hbs',
-    edit_address: 'edit-address.hbs'
+    edit_address: 'edit-address.hbs',
+    totals: 'totals.hbs'
   };
 
   for (var name in partials) {
@@ -268,7 +273,7 @@
 <script src="/js/models/user.js"></script>
 <script src="/js/models/item.js"></script>
 <script src="/js/models/category.js"></script>
-<script src="/js/models/restaurant.js"></script>d
+<script src="/js/models/restaurant.js"></script>
 <script src="/js/models/order-item.js"></script>
 <script src="/js/models/order.js"></script>
 

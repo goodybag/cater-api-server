@@ -4,14 +4,20 @@ var
 , utils = require('../utils')
 ;
 
+var cli = false;
+
 var definitions = [
   'users'
 , 'groups'
 , 'users-groups'
+, 'tags'
+, 'meal-types'
 , 'restaurants'
 , 'restaurant-lead-times'
 , 'restaurant-delivery-zips'
 , 'restaurant-delivery-times'
+, 'restaurant-tags'
+, 'restaurant-meal-types'
 , 'orders'
 , 'categories'
 , 'items'
@@ -84,6 +90,6 @@ module.exports.run = function(callback) {
 };
 
 if (require.main === module) {
-  var cli = true;
+  cli = true;
   module.exports.run();
 }

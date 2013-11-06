@@ -17,7 +17,8 @@ var CheckoutView = OrderView.extend({
   submit: function(e) {
     if (e) e.preventDefault();
 
-    if (this.$el.find('[name="payment-method"]:checked').val()) {
+    // If they're saving a new card, delegate to the `savenewCardAndSubmit` handler
+    if (this.$el.find('[name="payment-method"]:checked').val() === 'new') {
       return this.saveNewCardAndSubmit(e);
     }
 
@@ -40,8 +41,11 @@ var CheckoutView = OrderView.extend({
     }});
   },
 
+  /**
+   * Adds a new card view to the payment methods select element
+   * @param {PaymentMethod} paymentMethod The card model
+   */
   addNewCardToSelect: function(paymentMethod){
-    console.log(paymentMethod)
     this.$el.find('[name="payment_method_id"]').append([
       '<option value="'
     , paymentMethod.get('id')
@@ -49,8 +53,24 @@ var CheckoutView = OrderView.extend({
     , paymentMethod.get('data').last_four
     , ')</option>'
     ].join(''));
+    return this;
   },
 
+  /**
+   * Selects the payment method option specified by ID
+   * @param  {Number} id ID of the payment_method
+   */
+  selectCard: function(id){
+    this.$el.find('[name="payment_method_id"] > option[value="' + id + '"]').attr('selected', true);
+    return this;
+  },
+
+  /**
+   * Saves the data with balanced, creates a new PaymentMethod model instance
+   * and saves that to the Cater API
+   * @param  {Object}   data     The card specified by balanced
+   * @param  {Function} callback callback(error, paymentMethod)
+   */
   saveNewCard: function(data, callback) {
     balanced.card.create(data, function(res) {
       if (res.status !== 201) return callback ? callback(res.error) : notify.error(res.error);
@@ -73,6 +93,29 @@ var CheckoutView = OrderView.extend({
     });
   },
 
+  /**
+   * Selects the payment info method. Valid options are defined
+   * by the values of the radio inputs name="payment-method"
+   *
+   * existing|new|invoice
+   *
+   * @param  {[type]} type [description]
+   * @return {[type]}      [description]
+   */
+  selectPaymentType: function(type){
+    // Use click so the change event handlers a called
+    this.$el.find('[name="payment-method"][value="' + type + '"]').trigger('click');
+    return this;
+  },
+
+  /**
+   * Clears all inputs elements in the new card form
+   */
+  clearCardForm: function(){
+    this.$el.find('#new-card input').val('');
+    return this;
+  },
+
   saveNewCardAndSubmit: function(e) {
     var this_ = this;
 
@@ -83,12 +126,17 @@ var CheckoutView = OrderView.extend({
     , expiration_year:  +this.$el.find('[name="expiration_year"]').val()
     };
 
+    // Save the card
     this.saveNewCard(data, function(error, paymentMethod) {
       if (error) return notify.error(error);
 
+      // Then revert back to "Pay Using" and select the newly added card
+      this_.selectPaymentType('existing');
       this_.addNewCardToSelect(paymentMethod);
+      this_.selectCard(paymentMethod.get('id'));
+      this_.clearCardForm();
 
-      // return this.submit(e);
+      return _.defer(function(){ this_.submit(e) });
     });
   }
 });

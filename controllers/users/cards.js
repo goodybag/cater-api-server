@@ -11,9 +11,9 @@ var models  = require('../../models');
  * Set the first address as default, for convenience
  */
 module.exports.create = function(req, res, next) {
-  models.User.createPaymentMethod( +req.param('uid'), req.body, function(error, cards) {
+  models.User.createPaymentMethod( +req.param('uid'), req.body, function(error, card) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    return res.json(cards[0]);
+    return res.json(card);
   });
 };
 

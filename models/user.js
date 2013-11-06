@@ -52,11 +52,11 @@ module.exports = Model.extend({
       type: 'insert'
     , table: 'payment_methods'
     , values: utils.pick( pm, this.paymentMethodFields )
-    , returning: ['id']
+    , returning: ['*']
     };
-console.log(client, typeof (client || db).query)
+
+    // For some reason typeof (client || db) === 'undefined' but typeof db === 'object'.
     db.query( db.builder.sql( query ), function( error, result, info ){
-      console.log("#############", error)
       if ( error ) return callback( error );
 
       var id = result[0].id;
@@ -67,9 +67,9 @@ console.log(client, typeof (client || db).query)
       , values: { user_id: userId, payment_method_id: id }
       , returning: ['id']
       };
-console.log("ohai")
-      db.query( db.builder.sql( query ), function( error, result, info ){
-        return callback( error, result );
+
+      db.query( db.builder.sql( query ), function( error, _result, info ){
+        return callback( error, result[0] );
       });
     });
   }

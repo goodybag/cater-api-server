@@ -5,6 +5,10 @@ var CheckoutView = OrderView.extend({
     'submit #select-address-form': 'selectAddress'
   }),
 
+  fieldMap: {
+    payment_method_id: '[name="payment_method_id"]'
+  },
+
   changePaymentMethod: function(e) {
     var $selected = $(e.currentTarget);
     var parent = $selected.attr('data-parent');

@@ -2,6 +2,7 @@ var CheckoutView = OrderView.extend({
   events: _.extend({}, OrderView.prototype.events, {
     'click .btn-cancel': 'cancel',
     'change input[type="radio"].payment-method': 'changePaymentMethod',
+    'change [name="payment_method_id"]': 'onPaymentMethodIdChange'
     'submit #order-form': 'submit',
     'submit #select-address-form': 'selectAddress'
   }),
@@ -197,6 +198,25 @@ var CheckoutView = OrderView.extend({
     return this;
   },
 
+  /**
+   * Shows the expired card message for the specified card (PaymentMethod)
+   * @param  {PaymentMethod} paymentMethod The card model
+   */
+  showCardExpired: function(paymentMethod){
+    var $el = this.$el.find('.expired-wrapper');
+    $el.removeClass('hide');
+    $el.html( Handlebars.partials.checkout_card_expired( paymentMethod.toJSON() ) );
+    return this;
+  },
+
+  /**
+   * Hide the expired card message
+   */
+  hideCardExpired: function(){
+    this.$el.find('.expired-wrapper').addClass('hide');
+    return this;
+  },
+
   saveNewCardAndSubmit: function(e) {
     var this_ = this;
 
@@ -219,5 +239,15 @@ var CheckoutView = OrderView.extend({
 
       return _.defer(function(){ this_.submit(e) });
     });
+  },
+
+  onPaymentMethodIdChange: function(e) {
+    var pm = _(user.attributes.payment_methods).find( function( p ){
+      return p.id == e.currentTarget.value;
+    });
+
+    if (!pm) return;
+
+    pm = new PaymentMethod(pm);
   }
 });

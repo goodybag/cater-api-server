@@ -127,7 +127,7 @@
                       <option value="{{this.id}}">Credit Card (**** {{this.data.last_four}})</option>
                     {{/each}}
                   </select>
-                  <div class="expired-wrapper">
+                  <div class="expired-wrapper hide">
                     {{! If a card is selected that is expired, this will be filled with {>checkout_card_expired} !}}
                   </div>
                 </div>
@@ -258,6 +258,7 @@
     order_delivery_info: 'order-delivery-info.hbs',
     address: 'address.hbs',
     edit_address: 'edit-address.hbs',
+    checkout_card_expired: 'checkout-card-expired.hbs',
     totals: 'totals.hbs'
   };
 

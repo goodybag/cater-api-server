@@ -103,14 +103,20 @@ var OrderView = FormView.extend({
 
     this.items = items;
 
+    // Listen to each order item view for events
     _.each(this.items, function(item) {
-      self.listenTo(item, 'remove', function removeOrderItemView() {
-        self.stopListening(item);
-        self.items = _.without(self.items, item);
-        if (!this.items.length) 
-          this.$el.find('.order-empty-alert').removeClass('hide');
+      self.listenTo(item, {
+        'remove': _.bind(self.removeOrderItem, self, item)
       });
     });
+  },
+
+  removeOrderItem: function(orderItemView) {
+    // Stop listening and update items
+    this.stopListening(orderItemView);
+    this.items = _.without(this.items, orderItemView);
+    if (!this.items.length)
+      this.$el.find('.order-empty-alert').removeClass('hide');
   },
 
   cancel: function() {

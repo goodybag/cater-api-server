@@ -13,7 +13,6 @@
   font-size: 0;
 }
 
-/*
 .form-inline .form-group {
   font-size: 14px;
 }
@@ -32,7 +31,7 @@
   margin-bottom: 8px;
   color: #aaa;
 }
-*/
+
 .form-control {
   height: 36px;
 }
@@ -288,7 +287,9 @@
   margin-left: 100px
 }
 
-.order-params-bar .form-control[readonly] {
+.order-params-bar .form-control[readonly],
+.delivery-datetime .form-control[readonly]
+ {
   cursor: default;
   background-color: #fff;
 }

@@ -1,3 +1,7 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/order.css">
+<link rel="stylesheet" href="/css/receipt.css">
+{{/extend}}
 
 <div class="page page-order container container-small">
   <div class="row">
@@ -52,16 +56,12 @@
   <div class="panel panel-order-details">
     <form id="order-form" class="form-light order-form" method="POST" action="javascript:void(0);">
       <div class="panel-body">
-        <div class="row">
-          <div class="col-sm-9">
-            <h3 class="restaurant-name">{{order.restaurant.name}} [Order #{{order.id}}]</h3>
-            {{#if order.restaurant}}
-            <a href="javascript:void(0);" class="copy-order-btn">Copy Order</a>
-            {{/if}}
+        <div class="clearfix">
+          <div class="delivery-header pull-left">
+            {{order.restaurant.name}} [Order #{{order.id}}]
           </div>
-          <div class="col-sm-3">
-            {{#if admin}}
-            <div class="btn-group pull-right">
+          {{#if admin}}
+            <div class="pull-right btn-group">
               <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
                 {{order.status}} <span class="caret"></span>
               </button>
@@ -74,20 +74,24 @@
                 <li><a href="javascript:void;" id="change-status-delivered">delivered</a></li>
               </ul>
             </div>
-            {{else}}
-            <span class="pull-right">{{> status_label order}}</span>
-            {{/if}}
+          {{else}}
+          <div class="pull-right order-status-label">{{> status_label order}}</div>
+          {{/if}}
+        </div>
+
+        <div class="delivery-submitted">
+          {{#if order.restaurant}}
+          <a href="javascript:void(0);" class="copy-order-btn">Copy Order</a>
+          {{/if}}
+          <div class="date-created">
+            Date submitted: {{formatDateTime order.submitted "M/D/YYYY h:mm a"}}
           </div>
         </div>
 
-        <div class="date-created">
-          Date submitted: {{formatDateTime order.submitted "M/D/YYYY h:mm a"}}
-        </div>
-
         <div class="row">
-          <fieldset class="col-sm-6">
+          <fieldset class="col-xs-6 delivery-info-date">
             {{#unless order.editable}}
-            <p>{{order.name}}</p>
+            {{#if order.name}}<p><strong>{{order.name}}</strong></p>{{/if}}
             {{else}}
             <div class="form-group">
               <label class="control-label">Order Name</label>
@@ -96,7 +100,7 @@
             {{/unless}}
 
             {{#unless order.editable}}
-            <dl class="dl-horizontal">
+            <dl class="dl-horizontal no-margin">
               <dt>Delivery Date:</dt>
               <dd>{{datepart order.datetime}}</dd>
               <dt>Delivery Time:</dt>
@@ -129,13 +133,13 @@
             {{/unless}}
           </fieldset>
 
-          <fieldset class="col-sm-6 delivery-info">
-            <div>
-              <strong>{{user.name}}</strong>
-            </div>
-            <div>
-              <strong>{{user.organization}}</strong>
-            </div>
+          <fieldset class="col-xs-6 delivery-info-address">
+            {{#if user.name}}
+            <div><strong>{{user.name}}</strong></div>
+            {{/if}}
+            {{#if user.organization}}
+            <div><strong>{{user.organization}}</strong></div>
+            {{/if}}
             {{#unless order.editable}}
             {{> address order}}
             {{else}}
@@ -152,56 +156,58 @@
     <h3>No Order Items</h3>
     {{else}}
 
-    <table class="table">
-      <caption>Order Summary</caption>
-      <thead>
-        <tr>
-          <th class="line-item-name">Item</th>
-          <th class="line-item-quantity">Quantity</th>
-          <th class="line-item-notes">Notes</th>
-          <th class="line-item-feeds">Feeds</th>
-          <th class="line-item-price">Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each order.orderItems}}
-        <tr id="order-item-{{this.id}}">
-          <td class="line-item-name" data-title="Name">
-            <div class="item-name">{{this.name}}</div>
-            <ul class="comma-separated item-options">
-              {{#each options_sets}}
-              {{#each this.options}}
-              {{#if this.state}}
-              <li>{{this.name}}</li>
+    <div class="order-summary-heading">Order Summary</div>
+    <div id="order-summary-table-container">
+      <table class="table order-line-item-table">
+        <thead>
+          <tr>
+            <th class="line-item-name">Item</th>
+            <th class="line-item-quantity">Quantity</th>
+            <th class="line-item-notes">Notes</th>
+            <th class="line-item-feeds">Feeds</th>
+            <th class="line-item-price">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each order.orderItems}}
+          <tr id="order-item-{{this.id}}">
+            <td class="line-item-name" data-title="Name">
+              <div class="item-name">{{this.name}}</div>
+              <ul class="comma-separated item-options">
+                {{#each options_sets}}
+                {{#each this.options}}
+                {{#if this.state}}
+                <li>{{this.name}}</li>
+                {{/if}}
+                {{/each}}
+                {{/each}}
+              </ul>
+              {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
+            </td>
+            <td class="line-item-quantity" data-title="Quantity">
+              {{#if ../order.editable}}
+              <span class="icon-x">x</span>
+              <input type="number" min="1" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
+              {{else}}
+              <span class="item-quantity-span order-item-field order-item-quantity">{{this.quantity}}</span>
               {{/if}}
-              {{/each}}
-              {{/each}}
-            </ul>
-            {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
-          </td>
-          <td class="line-item-quantity" data-title="Quantity">
-            {{#if ../order.editable}}
-            <span class="icon-x">x</span>
-            <input type="number" min="1" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
-            {{else}}
-            <span class="item-quantity-span order-item-field order-item-quantity">{{this.quantity}}</span>
-            {{/if}}
-          </td>
-          <td class="line-item-notes" data-title="Notes">
-            {{#if ../order.editable}}
-            <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
-            {{else}}
-            <span name="notes" class="item-notes-span order-item-field order-item-notes">{{this.notes}}</span>
-            {{/if}}
-          </td>
-          <td>
-            {{range feeds_min feeds_max}}
-          </td>
-          <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
+            </td>
+            <td class="line-item-notes" data-title="Notes">
+              {{#if ../order.editable}}
+              <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
+              {{else}}
+              <span name="notes" class="item-notes-span order-item-field order-item-notes">{{#if this.notes}}{{this.notes}}{{else}}&nbsp;{{/if}}</span>
+              {{/if}}
+            </td>
+            <td class="line-item-feeds" data-title="Feeds">
+              {{range feeds_min feeds_max}}
+            </td>
+            <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
     {{/unless}}
 
     <div class="panel-body totals-panel">

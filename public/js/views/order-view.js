@@ -1,7 +1,16 @@
 var OrderView = FormView.extend({
-  events: {
-    'click .btn-cancel': 'cancel',
-    'click .copy-order-btn': 'makeCopy'
+
+  events: function() {
+    return _.extend({}, OrderView.prototype.events, {
+      'click .btn-cancel': 'cancel',
+      'click .copy-order-btn': 'makeCopy',
+      'click #change-status-pending': _.bind(this.changeStatus, this, 'pending'),
+      'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled'),
+      'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted'),
+      'click #change-status-denied': _.bind(this.changeStatus, this, 'denied'),
+      'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted'),
+      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered')
+    });
   },
 
   fieldMap: {
@@ -10,7 +19,8 @@ var OrderView = FormView.extend({
     name: '.order-name',
     notes: '#order-notes',
     tip: '.order-tip',
-    tip_percent: '.tip-percent'
+    tip_percent: '.tip-percent',
+    quantity: '.order-item-quantity'
   },
 
   fieldGetters: {
@@ -52,10 +62,65 @@ var OrderView = FormView.extend({
     this.setModel((this.model) ? this.model : new Order());
   },
 
+  // set the model and add listeners here
   setModel: function(model) {
     if (this.model) this.stopListening(this.model);
     this.model = model;
+
+    this.listenTo(this.model, {
+      'change:sub_total change:tip': this.onPriceChange,
+      'change:phone': this.onPhoneChange
+    }, this);
+
+    this.listenTo(this.model.restaurant, {
+      'change:is_bad_zip': utils.partial(this.setAlerts, '.alert-bad-zip'),
+      'change:is_bad_delivery_time': utils.partial(this.setAlerts, '.alert-bad-delivery-time'),
+      'change:is_bad_guests': utils.partial(this.setAlerts, '.alert-bad-guests'),
+      'change:is_bad_lead_time': utils.partial(this.setAlerts, '.alert-bad-lead-time')
+    }, this);
+
+    this.model.on('change:submittable', this.onSubmittableChange, this);
+
+    if (this.model.get('editable')) {
+      this.onChange();
+    }
     return this;
+  },
+
+  onPriceChange: function(model, value, options) {
+    this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));
+  },
+
+  setItems: function(items) {
+    // Replace sub order-item-views and listen to remove
+    // events.
+    var self = this;
+    _.each(this.items, 
+      _.compose(
+        _.bind(this.stopListening, this), 
+        _.identity
+      )
+    );
+
+    this.items = items;
+
+    // Listen to each order item view for events
+    _.each(this.items, function(item) {
+      self.listenTo(item, {
+        'remove': _.bind(self.removeOrderItem, self, item)
+      , 'invalid': _.bind(self.onSubmittableChange, self, null, false)
+      });
+    });
+  },
+
+  removeOrderItem: function(orderItemView) {
+    // Stop listening and update items
+    this.stopListening(orderItemView);
+    this.items = _.without(this.items, orderItemView);
+
+    //Display alert when list is empty
+    if (!this.items.length)
+      this.$el.find('.order-empty-alert').removeClass('hide');
   },
 
   cancel: function() {
@@ -86,6 +151,13 @@ var OrderView = FormView.extend({
     });
   },
 
+  // Override onChange to noop because we do not want to hide the submit button
+  onChange: function(){},
+
+  onSubmittableChange: function(model, value, options) {
+    this.$el.find('.btn-submit').toggleClass( 'hide', !value );
+  },
+
   displayErrors: function() {
     FormView.prototype.displayErrors.apply(this, arguments);
 
@@ -103,5 +175,12 @@ var OrderView = FormView.extend({
 
     this.$el.find('.alert').addClass('hide');
     return this;
+  },
+
+  changeStatus: function(status) {
+    this.model.changeStatus(status, function(err) {
+      if (err) return alert(err);
+      window.location.reload();
+    });
   }
 });

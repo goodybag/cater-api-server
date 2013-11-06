@@ -38,9 +38,17 @@ module.exports.create = function(req, res) {
         return callback(error, hash);
       });
     }
-  , create: function(hash, callback) {
+  , balanced: function(hash, callback) {
+      utils.balanced.Customers.create({
+        name: req.body.name
+      }, function (error, customer) {
+        if (error) return res.error(errors.internal.UNKNOWN, error), callback(error);
+        callback(null, hash, customer.uri);
+      });
+    }
+  , create: function(hash, balanced_customer_uri, callback) {
       var groups = req.body.groups || ['client'];
-      var userData = utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash});
+      var userData = utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash, balanced_customer_uri: balanced_customer_uri});
       var query = queries.user.create(utils.omit(userData, 'groups'));
 
       var sql = db.builder.sql(query);

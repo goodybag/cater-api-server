@@ -1,6 +1,7 @@
 var CheckoutView = OrderView.extend({
   events: _.extend({}, OrderView.prototype.events, {
     'click .btn-cancel': 'cancel',
+    'click .item-edit': 'itemEditClick',
     'change input[type="radio"].payment-method': 'changePaymentMethod',
     'submit #order-form': 'submit',
     'submit #select-address-form': 'selectAddress'
@@ -73,6 +74,14 @@ var CheckoutView = OrderView.extend({
         });
       })
     );
+  },
+
+  itemEditClick: function(e) {
+    this.showMenu();
+  },
+
+  showMenu: function() {
+    window.location = this.model.restaurant.url();
   },
 
   changePaymentMethod: function(e) {

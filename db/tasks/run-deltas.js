@@ -54,6 +54,18 @@ module.exports.run = function( callback ){
 
   // Results represents the deltas already run
   })(function( results ){
+    // sort results by semver
+    results.sort(function (a, b) {
+      // default sort is lexicographically, we need to sort by semver
+      // strip off the '.sql'
+      a = a.slice(0, -4);
+      b = b.slice(0, -4);
+      return semver.compare(a,b);
+    });
+
+    var max = '0.0.0';
+    if (results.length) max = results[results.length-1].slice(0, -4);
+
     // Get file paths of deltas not already run, sort, log
     var deltas = fs.readdirSync(
       path.join( __dirname, options.deltasDir )
@@ -62,6 +74,9 @@ module.exports.run = function( callback ){
         fs.statSync( path.join( __dirname, options.deltasDir, file ) ).isFile() &&
         file.slice( -4 ) === '.sql'
       );
+    }).filter( function( file ) {
+      // reject deltas lower than max
+      return semver.gt(file.slice(0, -4), max);
     }).filter( function( file ){
       // Reject files that have already been run
       return results.indexOf( file ) === -1;
@@ -80,7 +95,7 @@ module.exports.run = function( callback ){
     async.mapSeries(deltas,function( f, cb ){
       var delta = fs.readFileSync( path.join( __dirname, options.deltasDir, f ) ).toString();
       var deltaName = f.slice(0, -4);
-      var cwd = __dirname+'/../../bin/deltas/'+f.slice(0, -4);
+      var cwd = __dirname+'/../../bin/deltas/'+deltaName;
 
       async.series(
         [

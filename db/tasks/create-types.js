@@ -41,6 +41,6 @@ module.exports.run = function(callback) {
 };
 
 if (require.main === module) {
-  var cli = true;
+  cli = true;
   module.exports.run();
 }

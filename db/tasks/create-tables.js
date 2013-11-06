@@ -4,6 +4,8 @@ var
 , utils = require('../utils')
 ;
 
+var cli = false;
+
 var definitions = [
   'users'
 , 'groups'
@@ -89,6 +91,6 @@ module.exports.run = function(callback) {
 };
 
 if (require.main === module) {
-  var cli = true;
+  cli = true;
   module.exports.run();
 }

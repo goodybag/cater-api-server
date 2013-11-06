@@ -106,6 +106,8 @@ module.exports = Model.extend({
       };
     }
 
+    if ( 'data' in update ) update.data = JSON.stringify( update.data );
+
     // Don't override existing user_id queries
     if ( typeof where.id !== 'object' ){
       where.id = { $equals: where.id };
@@ -114,6 +116,7 @@ module.exports = Model.extend({
     // Ensure that payment methods belong to user
     where.id.$in = {
       type: 'select'
+    , table: 'users_payment_methods'
     , columns: ['payment_method_id']
     , where: { user_id: userId }
     };
@@ -121,10 +124,11 @@ module.exports = Model.extend({
     var query = {
       type: 'update'
     , table: 'payment_methods'
+    , values: utils.pick( update, this.paymentMethodFields )
     , where: where
     , returning: ['*']
     };
-
+console.log(db.builder.sql( query ));
     ( client || db ).query( db.builder.sql( query ), function( error, result, info ){
       return callback( error, result );
     });

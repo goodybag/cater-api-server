@@ -52,7 +52,7 @@ module.exports.get = function(req, res, next) {
  * PUT /users/:uid/cards/:cid
  */
 module.exports.update = function(req, res, next) {
-  models.User.udpatePaymentMethod( +req.param('uid'), +req.param('cid'), req.body, function(error, cards) {
+  models.User.updatePaymentMethods( +req.param('uid'), +req.param('cid'), req.body, function(error, cards) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     if (!cards || cards.length === 0) return res.send(404);
     return res.send(204);

@@ -1,14 +1,17 @@
 var CheckoutView = OrderView.extend({
   events: _.extend({}, OrderView.prototype.events, {
-    'click .btn-cancel': 'cancel',
-    'change input[type="radio"].payment-method': 'changePaymentMethod',
-    'change [name="payment_method_id"]': 'onPaymentMethodIdChange'
-    'submit #order-form': 'submit',
-    'submit #select-address-form': 'selectAddress'
+    'click  #cancel-confirm-modal .btn-cancel':     'cancel',
+    'click  .btn-expired-update':                   'onExpiredUpdateClick',
+    'click  #update-card .btn-cancel':              'onUpdateCardCancelClick',
+    'click  #update-card .btn-submit':              'onUpdateCardSubmitClick',
+    'change input[type="radio"].payment-method':    'changePaymentMethod',
+    'change #payment-method-id':                    'onPaymentMethodIdChange',
+    'submit #order-form':                           'submit',
+    'submit #select-address-form':                  'selectAddress'
   }),
 
   fieldMap: {
-    payment_method_id: '[name="payment_method_id"]'
+    payment_method_id: '#payment-method-id'
   },
 
   initialize: function() {
@@ -26,6 +29,8 @@ var CheckoutView = OrderView.extend({
     }).pickatime('picker');
 
     this.timepicker.on( 'open', _(this.onTimePickerOpen).bind( this ) );
+
+    this.$paymentMethodId = this.$el.find('#payment-method-id');
   },
 
   onDatePickerOpen: function(){
@@ -97,6 +102,11 @@ var CheckoutView = OrderView.extend({
       return this.saveNewCardAndSubmit(e);
     }
 
+    // If they were editing an existing card, delegate to `onUpdateCardSubmitClick` handler
+    if (!this.$el.find('#update-card').hasClass('hide')){
+      return this.onUpdateCardSubmitClick(e);
+    }
+
     var self = this;
     this.onSave(function(err, response) {
       if (err) return notify.error(err); // TODO: error handling
@@ -128,13 +138,14 @@ var CheckoutView = OrderView.extend({
    * @param {PaymentMethod} paymentMethod The card model
    */
   addNewCardToSelect: function(paymentMethod){
-    this.$el.find('[name="payment_method_id"]').append([
+    this.$paymentMethodId.append([
       '<option value="'
     , paymentMethod.get('id')
     , '">Credit Card (**** '
     , paymentMethod.get('data').last_four
     , ')</option>'
     ].join(''));
+
     return this;
   },
 
@@ -143,36 +154,8 @@ var CheckoutView = OrderView.extend({
    * @param  {Number} id ID of the payment_method
    */
   selectCard: function(id){
-    this.$el.find('[name="payment_method_id"] > option[value="' + id + '"]').attr('selected', true);
+    this.$paymentMethodId.find(' > option[value="' + id + '"]').attr('selected', true);
     return this;
-  },
-
-  /**
-   * Saves the data with balanced, creates a new PaymentMethod model instance
-   * and saves that to the Cater API
-   * @param  {Object}   data     The card specified by balanced
-   * @param  {Function} callback callback(error, paymentMethod)
-   */
-  saveNewCard: function(data, callback) {
-    balanced.card.create(data, function(res) {
-      if (res.status !== 201) return callback ? callback(res.error) : notify.error(res.error);
-
-      var paymentMethod = new PaymentMethod({
-        data:     res.data
-      , uri:      res.data.uri
-      , type:     res.data._type
-      , user_id:  user.get('id')
-      });
-
-      paymentMethod.save(null, {
-        wait: true
-      , success: function(){ if (callback) callback(null, paymentMethod); }
-      , error: function(model, xhr){
-          if (callback) return callback("something went wrong");
-          notify.error("something went wrong");
-        }
-      });
-    });
   },
 
   /**
@@ -192,9 +175,11 @@ var CheckoutView = OrderView.extend({
 
   /**
    * Clears all inputs elements in the new card form
+   * Optional context argument. Defaults to the new-card view
    */
-  clearCardForm: function(){
-    this.$el.find('#new-card input').val('');
+  clearCardForm: function($el){
+    $el = $el || this.$el.find('#new-card');
+    this.$el.find('input').val('');
     return this;
   },
 
@@ -204,8 +189,13 @@ var CheckoutView = OrderView.extend({
    */
   showCardExpired: function(paymentMethod){
     var $el = this.$el.find('.expired-wrapper');
+
+    $el.find('.expired-text').html(
+      Handlebars.partials.checkout_card_expired( paymentMethod.toJSON() )
+    );
+
     $el.removeClass('hide');
-    $el.html( Handlebars.partials.checkout_card_expired( paymentMethod.toJSON() ) );
+
     return this;
   },
 
@@ -217,24 +207,54 @@ var CheckoutView = OrderView.extend({
     return this;
   },
 
+  /**
+   * Show update card view with the PaymentMethod model
+   * @param  {PaymentMethod} paymentMethod data for the view
+   */
+  showUpdateCardView: function(paymentMethod){
+    this.$el.find('#update-card .update-card-wrapper').html(
+      Handlebars.partials.edit_card( paymentMethod.toJSON() )
+    );
+
+    this.$el.find('#update-card').removeClass('hide');
+    this.$el.find('.btn-expired-update').addClass('hide');
+
+    return this;
+  },
+
+  /**
+   * Hide update card view
+   */
+  hideUpdateCardView: function(){
+    this.$el.find('#update-card').addClass('hide');
+    this.$el.find('.btn-expired-update').removeClass('hide');
+
+    return this;
+  },
+
+  // Shouldn't be used a view method
+  // Should be used as an event handler
   saveNewCardAndSubmit: function(e) {
     var this_ = this;
+    var $el = this.$el.find('#new-card');
 
     var data = {
-      card_number:      +this.$el.find('[name="card_number"]').val()
-    , security_code:    +this.$el.find('[name="security_code"]').val()
-    , expiration_month: +this.$el.find('[name="expiration_month"]').val()
-    , expiration_year:  +this.$el.find('[name="expiration_year"]').val()
+      card_number:      +$el.find('[name="card_number"]').val()
+    , security_code:    +$el.find('[name="security_code"]').val()
+    , expiration_month: +$el.find('[name="expiration_month"]').val()
+    , expiration_year:  +$el.find('[name="expiration_year"]').val()
     };
 
+    var pm = new PaymentMethod({ user_id: user.get('id') });
+
     // Save the card
-    this.saveNewCard(data, function(error, paymentMethod) {
+    pm.updateBalancedAndSave(data, function(error) {
       if (error) return notify.error(error);
 
       // Then revert back to "Pay Using" and select the newly added card
       this_.selectPaymentType('existing');
-      this_.addNewCardToSelect(paymentMethod);
-      this_.selectCard(paymentMethod.get('id'));
+      this_.addNewCardToSelect(pm);
+      this_.selectCard(pm.get('id'));
       this_.clearCardForm();
 
       return _.defer(function(){ this_.submit(e) });
@@ -242,12 +262,54 @@ var CheckoutView = OrderView.extend({
   },
 
   onPaymentMethodIdChange: function(e) {
-    var pm = _(user.attributes.payment_methods).find( function( p ){
-      return p.id == e.currentTarget.value;
-    });
+    var pm = user.payment_methods.get(this.$paymentMethodId.val());
 
     if (!pm) return;
 
-    pm = new PaymentMethod(pm);
+    if (pm.isExpired()) this.showCardExpired(pm);
+    else this.hideCardExpired();
+  },
+
+  onExpiredUpdateClick: function(e) {
+    e.preventDefault();
+    var pm = user.payment_methods.get(this.$paymentMethodId.val());
+
+    if (!pm) return;
+
+    this.showUpdateCardView(pm);
+  },
+
+  onUpdateCardCancelClick: function(e){
+    e.preventDefault();
+    console.log("onUpdateCardCancelClick")
+    this.hideUpdateCardView();
+  },
+
+  onUpdateCardSubmitClick: function(e){
+    e.preventDefault();
+
+    var this_ = this;
+    var $el = this.$el.find('#update-card');
+
+    var pm = new PaymentMethod({
+      user_id: user.get('id')
+    , id: $el.find('[name="id"]').val()
+    });
+
+    var data = {
+      card_number:      +$el.find('[name="card_number"]').val()
+    , security_code:    +$el.find('[name="security_code"]').val()
+    , expiration_month: +$el.find('[name="expiration_month"]').val()
+    , expiration_year:  +$el.find('[name="expiration_year"]').val()
+    };
+
+    pm.updateBalancedAndSave(data, function(error) {
+      if (error) return notify.error(error);
+
+      this_.hideCardExpired();
+      this_.selectPaymentType('existing');
+      this_.selectCard(pm.get('id'));
+      this_.clearCardForm($el);
+    });
   }
 });

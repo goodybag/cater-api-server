@@ -6,7 +6,7 @@ INSERT INTO users (email, password) VALUES ('receipts@goodybag.com', '$2a$10$8eg
 
 INSERT INTO tags (name)
 SELECT existing.*
-FROM (SELECT unnest(array['kosher','halal', 'dairyFree']) as tag) AS existing
+FROM (SELECT unnest(array['glutenFree','vegan', 'vegetarian','kosher','halal', 'dairyFree']) as tag) AS existing
 WHERE NOT EXISTS (SELECT name from tags WHERE existing.tag = tags.name);
 
 INSERT INTO meal_types (name)

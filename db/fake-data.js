@@ -400,25 +400,6 @@ utils.async.series(
         }, cb);
       });
     }
-  , userGroups: function(cb) {
-      console.log("populating user groups");
-      utils.async.series({
-        clients: function(callback) {
-          query({
-            type: 'insert'
-          , table: 'groups'
-          , values: {name: 'client'}
-          }, callback);
-        }
-      , admins: function(callback) {
-          query({
-            type: 'insert'
-          , table: 'groups'
-          , values: {name: 'admin'}
-          }, callback);
-        }
-      }, cb)
-    }
   , users: function(cb) {
       console.log("populating users");
 

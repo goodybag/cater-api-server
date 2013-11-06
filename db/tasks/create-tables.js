@@ -4,19 +4,30 @@ var
 , utils = require('../utils')
 ;
 
+var cli = false;
+
 var definitions = [
   'users'
 , 'groups'
 , 'users-groups'
+, 'tags'
+, 'meal-types'
+, 'payment-methods'
+, 'users-payment-methods'
 , 'restaurants'
 , 'restaurant-lead-times'
 , 'restaurant-delivery-zips'
 , 'restaurant-delivery-times'
+, 'restaurant-tags'
+, 'restaurant-meal-types'
+, 'restaurant-cuts'
 , 'orders'
 , 'categories'
 , 'items'
 , 'order-items'
 , 'order-statuses'
+, 'transactions'
+, 'transaction-errors'
 , 'password-resets'
 , 'waitlist'
 , 'addresses'
@@ -84,6 +95,6 @@ module.exports.run = function(callback) {
 };
 
 if (require.main === module) {
-  var cli = true;
+  cli = true;
   module.exports.run();
 }

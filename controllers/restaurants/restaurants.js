@@ -45,7 +45,7 @@ module.exports.get = function(req, res) {
   var tasks = [
     function(callback) {
       if (!req.session.user) return callback(null, null);
-      var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'latest.status': 'pending'};
+      var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'orders.status': 'pending'};
       models.Order.findOne({where: where}, function(err, order) {
         if (err) return callback(err);
         if (order == null) {
@@ -185,29 +185,39 @@ var fields = [
 ];
 
 module.exports.create = function(req, res) {
-  var restaurantQuery = queries.restaurant.create(utils.pick(req.body, fields));
-  var sql = db.builder.sql(restaurantQuery);
-  db.query(sql.query, sql.values, function(err, rows, result) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
+  utils.balanced.Customers.create({
+    name: req.body.name
+  }, function (error, customer) {
+    if (error) return res.error(errors.internal.UNKNOWN, error), callback(error);
 
-    var insert = function(values, method, callback) {
-      if (!values || values.length === 0) return callback();
-      var query = queries.restaurant[method](values);
-      var sql = db.builder.sql(query);
-      db.query(sql.query, sql.values, callback);
-    }
+    var values = utils.pick(req.body, fields);
+    values.balanced_customer_uri = customer.uri;
 
-    var tasks = utils.map(
-      [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes'], [tags, 'createTags'], [mealTypes, 'createMealTypes']],
-      function(args) { return utils.partial( insert, args[0](req.body, rows[0].id), args[1]); }
-    );
+    var restaurantQuery = queries.restaurant.create(values);
 
-    var done = function(err, results) {
-      if (err) return res.error(errors.internal.UNKNOWN, err);
-      res.send(201, rows[0]);
-    };
+    var sql = db.builder.sql(restaurantQuery);
+    db.query(sql.query, sql.values, function(err, rows, result) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
 
-    utils.async.parallel(tasks, done);
+      var insert = function(values, method, callback) {
+        if (!values || values.length === 0) return callback();
+        var query = queries.restaurant[method](values);
+        var sql = db.builder.sql(query);
+        db.query(sql.query, sql.values, callback);
+      }
+
+      var tasks = utils.map(
+        [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes'], [tags, 'createTags'], [mealTypes, 'createMealTypes']],
+        function(args) { return utils.partial( insert, args[0](req.body, rows[0].id), args[1]); }
+      );
+
+      var done = function(err, results) {
+        if (err) return res.error(errors.internal.UNKNOWN, err);
+        res.send(201, rows[0]);
+      };
+
+      utils.async.parallel(tasks, done);
+    });
   });
 }
 

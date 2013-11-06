@@ -1,5 +1,5 @@
 /**
- * Meal Types Schema
+ * Payment Methods Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -14,22 +14,30 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'meal_types';
+  definition.name = 'payment_methods';
 
   definition.schema = {
-    name: {
-      type: types.text
-    , pk: true
-    }
-  , id: {
+    id: {
       type: types.serial
-    , nullable: false
-    , unique: true
+    , pk: true
     }
   , created_at: {
       type: types.timestamptz
     , nullable: false
     , default: 'NOW()'
+    }
+  , type: {
+      type: types.paymentmethod
+    , nullable: false
+    }
+  , uri: {
+      type: types.text
+    , nullable: false
+    , unique: true
+    }
+  , data: {
+      type: types.json
+    , nullable: false
     }
   };
 

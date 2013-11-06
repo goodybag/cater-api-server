@@ -1,5 +1,5 @@
 /**
- * Meal Types Schema
+ * Users Payment Methods Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -14,16 +14,11 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'meal_types';
+  definition.name = 'users_payment_methods';
 
   definition.schema = {
-    name: {
-      type: types.text
-    , pk: true
-    }
-  , id: {
+    id: {
       type: types.serial
-    , nullable: false
     , unique: true
     }
   , created_at: {
@@ -31,9 +26,21 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
+  , user_id: {
+      type: types.int
+    , nullable: false
+    , references: {table: 'users', column: 'id', onDelete: 'cascade'}
+    }
+  , payment_method_id: {
+      type: types.int
+    , references: {table: 'payment_methods', column: 'id', onDelete: 'cascade'}
+    , nullable: false
+    }
   };
 
   definition.indices = {};
+
+  definition.extras = ['PRIMARY KEY ("user_id", "payment_method_id")'];
 
   return definition;
 });

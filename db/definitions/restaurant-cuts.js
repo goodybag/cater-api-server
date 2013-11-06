@@ -1,5 +1,5 @@
 /**
- * Meal Types Schema
+ * Restaurant Cuts Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -14,22 +14,30 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'meal_types';
+  definition.name = 'restaurant_cuts';
 
   definition.schema = {
-    name: {
-      type: types.text
-    , pk: true
-    }
-  , id: {
+    id: {
       type: types.serial
-    , nullable: false
-    , unique: true
+    , pk: true
     }
   , created_at: {
       type: types.timestamptz
     , nullable: false
     , default: 'NOW()'
+    }
+  , restaurant_id: {
+      type: types.int
+    , nullable: false
+    , references: {table: 'restaurants', column: 'id', onDelete: 'cascade'}
+    }
+  , amount: { // up to this amount
+      type: types.int
+    , nullable: false
+    }
+  , percentage: {
+      type: types.float4
+    , nullable: false
     }
   };
 

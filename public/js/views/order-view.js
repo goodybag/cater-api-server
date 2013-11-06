@@ -19,7 +19,8 @@ var OrderView = FormView.extend({
     name: '.order-name',
     notes: '#order-notes',
     tip: '.order-tip',
-    tip_percent: '.tip-percent'
+    tip_percent: '.tip-percent',
+    quantity: '.order-item-quantity'
   },
 
   fieldGetters: {
@@ -92,7 +93,7 @@ var OrderView = FormView.extend({
 
   setItems: function(items) {
     // Replace sub order-item-views and listen to remove
-    // events. Display alert when list is empty
+    // events.
     var self = this;
     _.each(this.items, 
       _.compose(
@@ -107,6 +108,7 @@ var OrderView = FormView.extend({
     _.each(this.items, function(item) {
       self.listenTo(item, {
         'remove': _.bind(self.removeOrderItem, self, item)
+      , 'invalid': _.bind(self.onSubmittableChange, self, null, false)
       });
     });
   },
@@ -115,6 +117,8 @@ var OrderView = FormView.extend({
     // Stop listening and update items
     this.stopListening(orderItemView);
     this.items = _.without(this.items, orderItemView);
+
+    //Display alert when list is empty
     if (!this.items.length)
       this.$el.find('.order-empty-alert').removeClass('hide');
   },

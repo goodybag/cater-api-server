@@ -11,8 +11,13 @@ var OrderItemView = FormView.extend({
     if (this.model)
       this.listenTo(this.model, {
         'change:sub_total': this.onPriceChange,
-        'destroy': this.remove
+        'destroy': this.remove,
+        'invalid': this.invalid
       }, this);
+  },
+
+  invalid: function(e) {
+    this.trigger('invalid', this.model.validationError);
   },
 
   onPriceChange: function(e) {

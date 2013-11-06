@@ -2,6 +2,7 @@ var
   async     = require('async')
 , fs        = require('fs')
 , path      = require('path')
+, spawn     = require('child_process').spawn
 , semver    = require('semver')
 , utils     = require('../utils')
 , config    = require('../../config')
@@ -74,21 +75,45 @@ module.exports.run = function( callback ){
         return semver.compare(a,b);
     });
 
-    // Log our batch
-    deltas.forEach( function( f ){
-      console.log('  * ' + f);
-    });
+    if ( deltas.length == 0 ) return callback();
 
-    // Get file contents
-    deltas = deltas.map( function( file ){
-      return fs.readFileSync( path.join( __dirname, options.deltasDir, file ) ).toString();
-    });
+    async.mapSeries(deltas,function( f, cb ){
+      var delta = fs.readFileSync( path.join( __dirname, options.deltasDir, f ) ).toString();
+      var deltaName = f.slice(0, -4);
+      var cwd = __dirname+'/../../bin/deltas/'+f.slice(0, -4);
 
-    async.series(
-      deltas.map( function( delta ){
-        return function( done ){ db.query( delta, done ); }
-      })
-    , callback
-    );
+      async.series(
+        [
+          // run pre script if necessary
+          function( cbSeries ){
+            if (!fs.existsSync(cwd+'/pre.js')) return cbSeries(null);
+            console.log( deltaName+ ' - running pre script');
+            var pre = spawn( 'node', ['pre.js'], {cwd: cwd} );
+            pre.on( 'close', function( code ){
+              if ( code !=0 ) return cbSeries(new Error ('error running pre script for ' + deltaName + ' exit code: ' + code));
+              cbSeries( null );
+            });
+          }
+          // run delta
+        , function( cbSeries ){
+            console.log( deltaName+ ' - running SQL');
+            db.query( delta, function( error ){
+              return cbSeries( error );
+            });
+          }
+          // run post script if necessary
+        , function( cbSeries ){
+            if (!fs.existsSync(cwd+'/post.js')) return cbSeries(null);
+            console.log( deltaName+ ' - running post script');
+            var post = spawn( 'node', ['post.js'], {cwd: cwd} );
+            post.on( 'close', function( code ){
+              if ( code !=0 ) return cbSeries(new Error ('error running post script for ' + deltaName + ' exit code: ' + code));
+              return cbSeries(null);
+            });
+          }
+        ]
+      , cb
+      );
+    }, callback);
   });
 };

@@ -21,6 +21,7 @@ var definitions = [
 , 'orders'
 , 'categories'
 , 'items'
+, 'item-tags'
 , 'order-items'
 , 'order-statuses'
 , 'password-resets'

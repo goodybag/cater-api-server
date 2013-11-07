@@ -1,5 +1,6 @@
 var CheckoutView = OrderView.extend({
   events: _.extend({}, OrderView.prototype.events, {
+    'click .item-edit':                             'itemEditClick',
     'click  #cancel-confirm-modal .btn-cancel':     'cancel',
     'click  .btn-expired-update':                   'onExpiredUpdateClick',
     'click  #update-card .btn-cancel':              'onUpdateCardCancelClick',
@@ -83,6 +84,14 @@ var CheckoutView = OrderView.extend({
         });
       })
     );
+  },
+
+  itemEditClick: function(e) {
+    this.showMenu();
+  },
+
+  showMenu: function() {
+    window.location = this.model.restaurant.url();
   },
 
   changePaymentMethod: function(e) {

@@ -4,6 +4,7 @@ var ReceiptView = OrderView.extend({
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
       'keyup .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
       'change .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
+      'click .copy-order-btn': 'copyOrder',
       'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),
       'click .btn-accept': _.bind(this.changeStatus, this, 'accepted'),
       'click #change-status-pending': _.bind(this.changeStatus, this, 'pending'),
@@ -13,6 +14,10 @@ var ReceiptView = OrderView.extend({
       'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted'),
       'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered')
     });
+  },
+
+  initialize: function() {
+    this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
   },
 
   // set the model and add listeners here
@@ -65,6 +70,22 @@ var ReceiptView = OrderView.extend({
     this.model.changeStatus(status, function(err) {
       if (err) return alert(err);
       window.location.reload();
+    });
+  },
+
+  copyOrder: function(e) {
+    this.model.copy(function(err, newOrder) {
+      if (err) {
+        this.copyErrorModal.setModel(order);
+        copyErrorModal.$el.modal('show');
+      } else {
+        var queryParams = { copy: true };
+      }
+
+      if (newOrder.get('lostItems')) 
+        queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
+
+        window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
     });
   },
 

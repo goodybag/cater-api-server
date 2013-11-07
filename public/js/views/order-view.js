@@ -156,7 +156,7 @@ var OrderView = FormView.extend({
   onChange: function(){},
 
   onSubmittableChange: function(model, value, options) {
-    this.$el.find('.btn-submit').toggleClass( 'hide', !value );
+    this.$el.find('.btn-submit').toggleClass( 'disabled', !value );
   },
 
   displayErrors: function() {

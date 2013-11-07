@@ -231,7 +231,6 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-
   app.get('/receipts/order-:oid.pdf', m.buildReceipt(), function(req, res) {
     file.serve(req, res, function(error){
       if ( error && error.status == 404) return res.status(404).render('404');
@@ -412,6 +411,27 @@ module.exports.register = function(app) {
   app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
 
   app.all('/users/:uid/addresses/:aid', function(req, res, next) {
+    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
+    res.send(405);
+  });
+
+  /**
+   * User cards resource
+   */
+
+  app.get('/users/:uid/cards', controllers.users.cards.list);
+
+  app.post('/users/:uid/cards', controllers.users.cards.create);
+
+  app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
+
+  app.put('/users/:uid/cards/:cid', controllers.users.cards.update);
+
+  app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
+
+  app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
+
+  app.all('/users/:uid/cards/:cid', function(req, res, next) {
     res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
     res.send(405);
   });

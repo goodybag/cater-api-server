@@ -10,14 +10,24 @@
 }
 
 .wizard > li {
+  position: relative;
   float: left;
   margin: 0 0 0 -80px;
   padding: 0 100px 0 0;
-  width: 200px;
-  background: url('/img/wizard-separator.png') no-repeat 80px 12px;
+  width: 256px;
 }
 
-.wizard > li:last-child {
+.wizard > li:before {
+  content: "";
+  position: absolute;
+  width: 118px;
+  height: 100%;
+  background: url('/img/wizard-separator.png') repeat-x 0 12px;
+  top: 0;
+  right: 32px;
+}
+
+.wizard > li:last-child:before {
   background: none;
 }
 

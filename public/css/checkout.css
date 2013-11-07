@@ -33,3 +33,9 @@ legend {
     width: 100%;
   }
 }
+
+.form-group-delivery-date,
+.form-group-delivery-time,
+.form-group-guests {
+  position: static;
+}

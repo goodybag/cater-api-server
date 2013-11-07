@@ -12,7 +12,9 @@
 
 legend {
   border: none;
+  margin-top: 12px;
   margin-bottom: 10px;
+  font-size: 19px;
 }
 
 .affix {

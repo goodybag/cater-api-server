@@ -89,7 +89,7 @@ var FormView = Backbone.View.extend({
     var diff = this.getDiff();
 
     if (!diff) {
-      view.trigger('save:noop', response, view);
+      this.trigger('save:noop');
       return callback.call(this);
     }
     var view = this;
@@ -109,7 +109,7 @@ var FormView = Backbone.View.extend({
     });
 
     if (!sent) {
-      view.trigger('save:invalid', response, view);
+      view.trigger('save:invalid', this.model.validationError);
       this.displayErrors();
       callback.call(this, this.model.validationError);
     }

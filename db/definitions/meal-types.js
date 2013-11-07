@@ -18,7 +18,7 @@ define(function(require) {
 
   definition.schema = {
     name: {
-      name: types.text
+      type: types.text
     , pk: true
     }
   , id: {

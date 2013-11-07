@@ -69,7 +69,7 @@ utils.extend(Model.prototype, {
     (client || db).query(sql.query, sql.values, function(err, rows, result) {
       if (client) {
         result = rows;
-        rows = result.rows;
+        rows = (result||0).rows || [];
       }
       if (!err && rows && rows[0]) utils.extend(self.attributes, rows[0]);
       callback.apply(this, arguments);
@@ -118,22 +118,22 @@ Model.find = function(query, callback, client) {
   // console.log(sql);
 
   (client || db).query(sql.query, sql.values, function(err, rows, result){
+    if (err) return callback(err);
     if (client) {
       result = rows;
-      rows = result.rows;
+      rows = (result||0).rows || [];
     }
-    if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
 };
 
-Model.findOne = function(query, callback) {
+Model.findOne = function(query, callback, client) {
   if (!utils.isObject(query)) query = {where: {id: query}};
   query.limit = 1;
   return this.find(query, function(err, models) {
     if (err) return callback(err);
     callback(null, models[0]);
-  });
+  }, client);
 };
 
 Model.defaultUpdateQuery = {
@@ -149,11 +149,11 @@ Model.update = function(query, callback, client) {
   var self = this;
 
   (client || db).query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return callback(err);
     if (client) {
       result = rows;
-      rows = result.rows;
+      rows = (result||0).rows || [];
     }
-    if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
 };
@@ -171,11 +171,11 @@ Model.create = function(query, callback, client) {
   var self = this;
 
   (client || db).query(sql.query, sql.values, function(err, rows, result) {
+    if (err) return callback(err);
     if (client) {
       result = rows;
-      rows = result.rows;
+      rows = (result||0).rows || [];
     }
-    if (err) return callback(err);
     callback(null, utils.map(rows, function(obj) { return new self(obj); }));
   });
 };

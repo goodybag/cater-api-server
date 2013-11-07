@@ -119,40 +119,36 @@
                 <legend>3. Payment Info</legend>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="payment-method" class="payment-method" data-parent="#payment-info" checked="checked">
+                    <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" checked="checked">
                   </label>
-                  Pay using <select class="form-control">
-                    <option>placeholder 1</option>
-                    <option>placeholder 2</option>
-                    <option>placeholder 3</option>
+                  Pay using
+                  <select class="form-control" id="payment-method-id" name="payment_method_id">
+                    {{#each user.payment_methods}}
+                      <option value="{{this.id}}">Credit Card (**** {{this.data.last_four}})</option>
+                    {{/each}}
                   </select>
+                  <div class="expired-wrapper hide">
+                    {{! If a card is selected that is expired, this will be filled with {>checkout_card_expired} !}}
+                    <div class="expired-text"></div>
+                    <a href="#" class="btn-expired-update">Update</a>
+                    <div id="update-card" class="hide">
+                      <div class="update-card-wrapper"></div>
+                      <div class="form-group">
+                        <button type="button" class="btn btn-default btn-cancel">Cancel</button>
+                        <button class="btn btn-primary btn-submit">Save changes to card</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="radio">
                   <label>
-                    <input type="radio" name="payment-method" class="payment-method" data-target="#new-card" data-parent="#payment-info">
+                    <input type="radio" name="payment-method" value="new" class="payment-method" data-target="#new-card" data-parent="#payment-info">
                     Use a new card.
                   </label>
                 </div>
 
                 <div id="new-card" class="collapse">
-                  <div class="form-group">
-                    <label class="control-label">Card Title</label>
-                    <input type="text" class="form-control credit-card-title">
-                  </div>
-                  <div class="form-group">
-                    <label class="control-label">Card Number</label>
-                    <input type="text" class="form-control credit-card-title">
-                  </div>
-                  <div class="form-group">
-                    <label class="control-label">Card Title</label>
-                    <input type="text" class="form-control credit-card-title">
-                  </div>
-                  <div class="form-inline">
-                    <div class="form-group">
-                      <label class="control-label">Expiration Date</label>
-                      <input type="month" class="form-control">
-                    </div>
-                  </div>
+                  {{> edit_card}}
                   <div class="checkbox">
                     <label>
                       <input type="checkbox" checked="checked">
@@ -163,7 +159,7 @@
 
                 <div class="radio">
                   <label>
-                    <input type="radio" name="payment-method" class="payment-method" data-parent="#payment-info">
+                    <input type="radio" name="payment-method" value="invoice" class="payment-method" data-parent="#payment-info">
                     Pay via invoice.
                   </label>
                 </div>
@@ -253,6 +249,8 @@
     order_delivery_info: 'order-delivery-info.hbs',
     address: 'address.hbs',
     edit_address: 'edit-address.hbs',
+    checkout_card_expired: 'checkout-card-expired.hbs',
+    edit_card: 'edit-card.hbs',
     totals: 'totals.hbs'
   };
 
@@ -269,6 +267,8 @@
   }
 </script>
 
+<script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
+
 <script src="/js/models/address.js"></script>
 <script src="/js/models/user.js"></script>
 <script src="/js/models/item.js"></script>
@@ -276,7 +276,9 @@
 <script src="/js/models/restaurant.js"></script>
 <script src="/js/models/order-item.js"></script>
 <script src="/js/models/order.js"></script>
+<script src="/js/models/payment-method.js"></script>
 
+<script src="/js/collections/payment-methods.js"></script>
 <script src="/js/collections/addresses.js"></script>
 <script src="/js/collections/items.js"></script>
 <script src="/js/collections/categories.js"></script>
@@ -290,6 +292,15 @@
 <script src="/js/views/checkout-view.js"></script>
 
 <script>
-  var view = new CheckoutView({el: '#main', model: new Order( {{{json order}}} ), user: new User({{{json user}}})});
+  balanced.init('{{config.balanced.marketplaceUri}}');
+
+  var user = new User({{{json user}}});
+
+  var view = new CheckoutView({
+    el: '#main',
+    model: new Order( {{{json order}}} ),
+    user: user
+  });
 </script>
 {{/extend}}
+{{{dump user}}}

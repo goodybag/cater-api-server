@@ -43,6 +43,10 @@ var User = Backbone.Model.extend({
       this.addresses = new Addresses(attrs.addresses);
       this.unset('addresses');
     }
+
+    if (attrs.payment_methods) {
+      this.payment_methods = new PaymentMethods(attrs.payment_methods);
+    }
   },
 
   urlRoot: '/users',

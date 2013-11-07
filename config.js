@@ -5,6 +5,7 @@
 var
   os = require('os')
 , _ = require('lodash')
+, balancedConfig = require('./balanced-config.json') //used in dev
 ;
 
 var config = {
@@ -115,6 +116,15 @@ var config = {
     , appId: 'qsetwlny'
     }
 
+  , balanced: balancedConfig
+
+  , ironMQ: {
+      token: '_2rd5UzCv7_-chOc4rDZ0Y7y74A'
+    , projectId: '526990a7f2d1570005000038'
+    }
+
+  , baseUrl: 'http://localhost:3000'
+
   , postgresConnStr:  "postgres://localhost:5432/cater"
 
   , requestLogger: {
@@ -122,8 +132,6 @@ var config = {
     , table: 'requests'
     , plan: 'month'
     }
-
-  , baseUrl: 'http://localhost:3000'
 
   , testEmail: 'geoff@goodybag.com'
 
@@ -138,6 +146,14 @@ var config = {
     , require('./receipt-config')
     , { bucket: 'dev-receipts.goodybag.com' }
     )
+
+  , workers: {
+      debit: {
+        enqueue: {
+          interval: 1000 * 5 // 5 seconds
+        }
+      }
+    }
   }
 
 
@@ -175,6 +191,16 @@ var config = {
     , appId: '6bxgiurw'
     }
 
+  , balanced: {
+      secret: "ak-test-PuuQnMAqL7pNQ0t9xuMDV3upU2Pz5sLn"
+    , marketplaceUri: "/v1/marketplaces/TEST-MP3gr1uHmPi0i42cNhdL4rEs"
+    }
+
+  , ironMQ: {
+      token: 'M-NmfDgtD66MCHYKTVS3m15BbSA'
+    , projectId: '526990bcf2d1570009000035'
+    }
+
   , baseUrl: 'http://cater.staging.goodybag.com'
 
   , postgresConnStr: process.env['DATABASE_URL']
@@ -192,6 +218,14 @@ var config = {
     , require('./receipt-config')
     , { bucket: 'staging-receipts' }
     )
+
+  , workers: {
+      debit: {
+        enqueue: {
+          interval: 1000 * 5 // 5 seconds
+        }
+      }
+    }
   }
 
 , production: {
@@ -228,6 +262,16 @@ var config = {
     , appId: '13s9qu57'
     }
 
+  , balanced: {
+      secret: "ak-prod-OmLnG7ftnzB145uM4Ycu4YIE0mgPx4eE"
+    , marketplaceUri: "/v1/marketplaces/MPwgAAAdaGmk4BhrmL0qkRM"
+    }
+
+  , ironMQ: {
+      token: 'vr52EAPD-oYRDtZzsqYd0eoDLkI'
+    , projectId: '526990cba2b8ed000500002e'
+    }
+
   , baseUrl: 'https://www.goodybag.com'
 
   , postgresConnStr: process.env['DATABASE_URL']
@@ -246,6 +290,14 @@ var config = {
     }
 
   , emailEnabled: true
+
+  , workers: {
+      debit: {
+        enqueue: {
+          interval: 1000 * 60 * 30 // 30 minutes
+        }
+      }
+    }
   }
 };
 

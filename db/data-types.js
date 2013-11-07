@@ -61,4 +61,7 @@ module.exports = {
 , orderstatus: 'order_status'
 , timezone: 'timezone'
 , tippercentage: 'tip_percentage'
+, paymentmethod: 'payment_method'
+, paymenttype: 'payment_type'
+, paymentstatus: 'payment_status'
 }

@@ -43,6 +43,16 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , balanced_customer_uri: { //can be null if they're going to be invoiced
+      type: types.text
+    , nullable: true
+    , unique: true
+    }
+  , is_invoiced: {
+      type: types.boolean
+    , nullable: false
+    , default: 'false'
+    }
   };
 
   definition.indices = {};

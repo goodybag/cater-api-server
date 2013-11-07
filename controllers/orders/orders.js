@@ -91,22 +91,29 @@ module.exports.get = function(req, res) {
     },
 
     function(order, cb) {
-      // only pending orders need the user's saved address list
-      if (order.attributes.status !== 'pending') return cb(null, order);
       var query = {
-        where: { user_id: req.session.user.id },
-        order: ['is_default asc', 'id asc']
+        where: { id: req.session.user.id },
+        embeds: {
+          payment_methods: {}
+        , addresses: {
+            order: ['is_default asc', 'id asc']
+          // Actually, we can probably just display this restriction client-side
+          // , where: {
+          //     zip: { $in: order.attributes.restaurant.delivery_zips }
+          //   }
+          }
+        }
       };
-      models.Address.find(query, function(err, addresses) {
+
+      models.User.find(query, function(err, results) {
         if (err) return cb(err);
-        return cb(null, order, utils.filter(utils.invoke(addresses, 'toJSON'), function(address) {
-          return utils.contains(order.attributes.restaurant.delivery_zips, address.zip);
-        }));
+
+        return cb(null, order, results[0]);
       });
     }
   ];
 
-  utils.async.waterfall(tasks, function(err, order, addresses) {
+  utils.async.waterfall(tasks, function(err, order, user) {
     if (err)
       return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
 
@@ -130,7 +137,7 @@ module.exports.get = function(req, res) {
       },
       orderParams: req.session.orderParams,
       query: req.query,
-      user: {addresses: addresses},
+      user: user.toJSON(),
       step: order.attributes.status === 'pending' ? 2 : 3
     };
 
@@ -208,8 +215,8 @@ module.exports.changeStatus = function(req, res) {
         return res.send(403, 'order not submitttable');
     }
 
-    var done = function(status) {
-      if (status.attributes.status === 'submitted') {
+    var done = function() {
+      if (order.attributes.status === 'submitted') {
         var viewOptions = {
           order: order.toJSON({review: true}),
           config: config,
@@ -261,22 +268,19 @@ module.exports.changeStatus = function(req, res) {
         }
       }
 
-      res.send(201, status.toJSON());
-
-      venter.emit('order:status:change', order, status);
+      res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
+      venter.emit('order:status:change', order);
     }
 
-    var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
-    status.save(function(err, rows, result) {
+    if (req.body.status === 'submitted' && order.attributes.user.is_invoiced) order.attributes.payment_status = 'invoiced';
+
+    if (review) order.attributes.token_used = 'now()';
+
+    order.attributes.status = req.body.status;
+
+    order.save(function(err){
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      if (review) {
-        order.attributes.token_used = 'now()';
-        order.save(function(err) {
-          if (err) return res.error(errors.internal.DB_FAILURE, err);
-          done(status);
-        });
-      }
-      else done(status);
+      return done();
     });
   });
 };

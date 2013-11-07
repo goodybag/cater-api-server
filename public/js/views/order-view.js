@@ -108,7 +108,8 @@ var OrderView = FormView.extend({
     _.each(this.items, function(item) {
       self.listenTo(item, {
         'remove': _.bind(self.removeOrderItem, self, item)
-      , 'invalid': _.bind(self.onSubmittableChange, self, null, false)
+      , 'disableCheckout': _.bind(self.onSubmittableChange, self, null, false)
+      , 'enableCheckout': _.bind(self.onSubmittableChange, self, null, true)
       });
     });
   },

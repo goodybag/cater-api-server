@@ -26,6 +26,11 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
+  , uuid: {
+      type: types.uuid
+    , nullable: false
+    , default: "uuid_generate_v1()"
+    }
   , user_id: {
       type: types.int
     , nullable: false

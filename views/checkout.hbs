@@ -56,130 +56,134 @@
 
   <div class="row">
     <div class="col-md-8">
-      <form id="order-form" class="panel">
-          <div class="list-group">
-            <div class="list-group-item">
-              <div class="col-md-12"><legend>1. Order Details</legend></div>
-              <div class="form-group col-sm-12"><h5>{{order.restaurant.name}}</h5></div>
-              <div class="form-inline delivery-datetime clearfix">
-                <div class="form-group col-sm-3 form-group-delivery-date" data-icon="gb-icon-calendar">
-                  <label class="control-label" for="order-date">Delivery Date</label>
-                  <input type="text" class="form-control order-datetime" id="order-date" name="date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
-                </div>
-                <div class="form-group col-sm-3 form-group-delivery-time" data-icon="gb-icon-time">
-                  <label class="control-label" for="order-time">Delivery Time</label>
-                  <input type="text" class="form-control order-datetime" id="order-time" name="time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
-                </div>
-                <div class="form-group col-sm-3 form-group-guests" data-icon="gb-icon-user">
-                  <label class="control-label" for="order-guests">Guests</label>
-                  <input type="text" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
-                </div>
+      <form id="order-form" class="panel checkout-form">
+        <div class="list-group">
+          <div class="list-group-item">
+            <div class="col-md-12"><legend>1. Order Details</legend></div>
+            <div class="form-group col-sm-12">
+              <h5 class="restaurant-name">{{order.restaurant.name}}</h5>
+            </div>
+            <div class="form-inline delivery-datetime clearfix">
+              <div class="form-group col-sm-3 form-group-delivery-date" data-icon="gb-icon-calendar">
+                <label class="control-label" for="order-date">Delivery Date</label>
+                <input type="text" class="form-control order-datetime" id="order-date" name="date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
               </div>
-
-              <div class="form-inline clearfix">
-                <div class="form-group col-sm-6">
-                  <label class="control-label" for="order-name">Order Name</label>
-                  <input id="order-name" type="text" class="form-control order-name" value="{{order.name}}" placeholder="e.g. Tuesday Meeting">
-                </div>
+              <div class="form-group col-sm-3 form-group-delivery-time" data-icon="gb-icon-time">
+                <label class="control-label" for="order-time">Delivery Time</label>
+                <input type="text" class="form-control order-datetime" id="order-time" name="time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
               </div>
-
-              <div class="form-inline clearfix">
-                <div class="form-group col-sm-8">
-                  <label class="control-label" for="order-notes">Special instructions for this order?</label>
-                  <textarea id="order-notes" class="form-control order-notes" rows="3"{{#unless order.editable}} disabled="disabled"{{/unless}}>{{order.notes}}</textarea>
-                </div>
-              </div>
-
-              <div class="tip-area form-inline clearfix">
-                <div class="form-group col-xs-3">
-                  <label class="control-label" for="order-tip">Add tip</label>
-                  <select id="order-tip" class="form-control tip-percent">
-                    {{! eq is ugly as hell but it works }}
-                    <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
-                    <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
-                    <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
-                    <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
-                    <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
-                    <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
-                    <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
-                    <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
-                  </select>
-                </div>
-                <div class="form-group col-xs-3">
-                  <label class="control-label" for="order-tip">&nbsp;</label>
-                  <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
-                </div>
+              <div class="form-group col-sm-3 form-group-guests" data-icon="gb-icon-user">
+                <label class="control-label" for="order-guests">Guests</label>
+                <input type="text" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}"{{#unless order.editable}} disabled="disabled"{{/unless}}>
               </div>
             </div>
 
-            <div class="list-group-item delivery-info">
-                {{> order_delivery_info}}
+            <div class="form-inline clearfix">
+              <div class="form-group col-sm-6">
+                <label class="control-label" for="order-name">Order Name</label>
+                <input id="order-name" type="text" class="form-control order-name" value="{{order.name}}" placeholder="e.g. Tuesday Meeting">
+              </div>
             </div>
 
-            <div id="payment-info" class="list-group-item">
-              <div class="col-md-12">
-                <legend>3. Payment Info</legend>
-                <div class="radio">
-                  <label>
-                    <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" checked="checked">
-                  </label>
-                  Pay using
-                  <select class="form-control" id="payment-method-id" name="payment_method_id">
-                    {{#each user.payment_methods}}
-                      <option value="{{this.id}}">Credit Card (**** {{this.data.last_four}})</option>
-                    {{/each}}
-                  </select>
-                  <div class="expired-wrapper hide">
-                    {{! If a card is selected that is expired, this will be filled with {>checkout_card_expired} !}}
-                    <div class="expired-text"></div>
-                    <a href="#" class="btn-expired-update">Update</a>
-                    <div id="update-card" class="hide">
-                      <div class="update-card-wrapper"></div>
-                      <div class="form-group">
-                        <button type="button" class="btn btn-default btn-cancel">Cancel</button>
-                        <button class="btn btn-primary btn-submit">Save changes to card</button>
-                      </div>
+            <div class="form-inline clearfix">
+              <div class="form-group col-sm-8">
+                <label class="control-label" for="order-notes">Special instructions for this order?</label>
+                <textarea id="order-notes" class="form-control order-notes" rows="3"{{#unless order.editable}} disabled="disabled"{{/unless}}>{{order.notes}}</textarea>
+              </div>
+            </div>
+
+            <div class="tip-area form-inline clearfix">
+              <div class="form-group col-xs-3">
+                <label class="control-label" for="order-tip">Add tip</label>
+                <select id="order-tip" class="form-control tip-percent">
+                  {{! eq is ugly as hell but it works }}
+                  <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
+                  <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
+                  <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
+                  <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
+                  <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
+                  <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
+                  <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
+                  <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
+                </select>
+              </div>
+              <div class="form-group col-xs-3">
+                <label class="control-label" for="order-tip">&nbsp;</label>
+                <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
+              </div>
+            </div>
+          </div>
+
+          <div class="list-group-item delivery-info">
+            {{> order_delivery_info}}
+          </div>
+
+          <div id="payment-info" class="list-group-item">
+            <div class="col-md-12">
+              <legend>3. Payment Info</legend>
+              <div class="radio card-select-toggle">
+                <label>
+                  <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" checked="checked">
+                </label>
+                Pay using
+                <select class="form-control card-select" id="payment-method-id" name="payment_method_id">
+                  {{#each user.payment_methods}}
+                    <option value="{{this.id}}">Credit Card (**** {{this.data.last_four}})</option>
+                  {{/each}}
+                </select>
+                <div class="expired-wrapper hide">
+                  {{! If a card is selected that is expired, this will be filled with {>checkout_card_expired} !}}
+                  <div class="expired-text"></div>
+                  <a href="#" class="btn-expired-update">Update</a>
+                  <div id="update-card" class="hide">
+                    <div class="update-card-wrapper"></div>
+                    <div class="form-group">
+                      <button type="button" class="btn btn-default btn-cancel">Cancel</button>
+                      <button class="btn btn-primary btn-submit">Save changes to card</button>
                     </div>
                   </div>
                 </div>
-                <div class="radio">
-                  <label>
-                    <input type="radio" name="payment-method" value="new" class="payment-method" data-target="#new-card" data-parent="#payment-info">
-                    Use a new card.
-                  </label>
-                </div>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="payment-method" value="new" class="payment-method" data-target="#new-card" data-parent="#payment-info">
+                  Use a new card.
+                </label>
+              </div>
 
-                <div id="new-card" class="collapse">
-                  {{> edit_card}}
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" checked="checked">
-                      Save this card for future orders.
-                    </label>
-                  </div>
-                </div>
-
-                <div class="radio">
+              <div id="new-card" class="collapse">
+                {{> edit_card}}
+                <div class="checkbox">
                   <label>
-                    <input type="radio" name="payment-method" value="invoice" class="payment-method" data-parent="#payment-info">
-                    Pay via invoice.
+                    <input type="checkbox" checked="checked">
+                    Save this card for future orders.
                   </label>
                 </div>
               </div>
-            </div>
 
-            <div class="list-group-item">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="btn-toolbar pull-right">
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
-                    <button type="submit" class="btn btn-primary">Submit Order</button>
-                  </div>
-                </div>
+              {{#if user.is_invoiced}}
+              <div class="radio">
+                <label>
+                  <input type="radio" name="payment-method" value="invoice" class="payment-method" data-parent="#payment-info">
+                  Pay via invoice.
+                </label>
               </div>
+              {{/if}}
             </div>
-
           </div>
+
+          <div class="list-group-item">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="btn-toolbar pull-right">
+                  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
+                  <button type="submit" class="btn btn-primary">Submit Order</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </form>
     </div>
     <div class="col-md-4">

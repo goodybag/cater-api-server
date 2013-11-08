@@ -273,6 +273,20 @@ var helpers = {
     return start != end ? [start, '-', end].join('') : start;
   },
 
+  range2: function( start, end, options ){
+    var out = "";
+    for ( var i = start; i <= end; i++ ){
+      out += options.fn( i );
+    }
+    return out;
+  },
+
+  pad: function( n, width, z ){
+    z = ['number', 'string'].indexOf( typeof z ) > -1 ? '0' : z;
+    n = n + '';
+    return n.length >= width ? n : new Array( width - n.length + 1 ).join(z) + n;
+  },
+
   queryParams: function( obj ){
     return utils.queryParams( obj );
   },

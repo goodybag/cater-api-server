@@ -1,18 +1,33 @@
 <input type="hidden" name="id" value="{{id}}">
-<div class="form-group">
-  <label class="control-label">Card Title</label>
-  <input value="{{title}}" type="text" name="payment_method_title" class="form-control credit-card-title">
+<div class="row">
+  <div class="form-group col-sm-6">
+    <label class="control-label">Card Title</label>
+    <input value="{{title}}" type="text" name="payment_method_title" class="form-control credit-card-title">
 </div>
-<div class="form-group">
-  <label class="control-label">Card Number</label>
-  <input type="text" name="card_number" class="form-control credit-card-title">
 </div>
-<div class="form-group">
-  <label class="control-label">CVV Code</label>
-  <input type="text" name="security_code" class="form-control credit-card-title">
+<div class="row">
+  <div class="form-group col-sm-6">
+    <label class="control-label">Card Number</label>
+    <input type="text" name="card_number" class="form-control credit-card-title">
+  </div>
 </div>
-<div class="form-group">
+<div class="row">
+  <div class="form-group col-sm-4">
+    <label class="control-label">CVV Code</label>
+    <input type="text" name="security_code" class="form-control credit-card-title">
+  </div>
+</div>
+
+<div class="row form-inline">
   <label class="control-label">Expiration Date</label>
-  <input value="{{data.expiration_month}}" type="number" name="expiration_month" class="form-control">
-  <input value="{{data.expiration_year}}" type="number" name="expiration_year" class="form-control">
+  <div class="form-group col-sm-2">
+    <select name="expiration_month" class="form-control">
+      {{#range2 '1' '12'}}
+        <option value="{{this}}"{{#eq this data.expiration_month}}selected="selected"{{/eq}}>{{this}}</option>
+      {{/range2}}
+    </select>
+  </div>
+  <div class="form-group col-sm-2">
+    <input value="{{data.expiration_year}}" type="number" name="expiration_year" class="form-control">
+  </div>
 </div>

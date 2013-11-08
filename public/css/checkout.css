@@ -10,11 +10,16 @@
   margin-bottom: 10px;
 }
 
-legend {
+.checkout-form legend {
   border: none;
   margin-top: 12px;
   margin-bottom: 10px;
+  margin-left: -16px;
   font-size: 19px;
+}
+
+.checkout-form .list-group-item {
+  padding-left: 24px;
 }
 
 .affix {
@@ -34,4 +39,19 @@ legend {
     position: static;
     width: 100%;
   }
+}
+
+.restaurant-name {
+  font-size: 16px;
+}
+
+.card-select-toggle input.payment-method {
+  margin-top: 10px;
+}
+
+.card-select {
+  display: inline-block;
+  vertical-align: middle;
+  width: 200px;
+  margin-left: 8px;
 }

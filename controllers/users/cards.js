@@ -7,10 +7,10 @@ var models  = require('../../models');
 
 /**
  * POST /users/:uid/cards
- *
- * Set the first address as default, for convenience
  */
 module.exports.create = function(req, res, next) {
+  // add card to customer
+  // utils.balanced.Customer.addCard(req.user.balanced_customer_uri, req.body.data.uri)
   models.User.createPaymentMethod( +req.param('uid'), req.body, function(error, card) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     return res.json(card);

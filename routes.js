@@ -1,5 +1,4 @@
 var config = require('./config');
-var static = require('node-static');
 var controllers = require('./controllers');
 var utils = require('./utils');
 
@@ -9,8 +8,6 @@ var m = utils.extend({
   basicAuth     : require('./middleware/basic-session-auth'),
   buildReceipt  : require('./middleware/build-receipt')
 }, require('stdm') );
-
-var file = new static.Server('./public');
 
 module.exports.register = function(app) {
 
@@ -461,10 +458,4 @@ module.exports.register = function(app) {
   app.get('/legal', controllers.statics.legal);
 
   app.get('/privacy', controllers.statics.privacy);
-
-  app.get('/*', function(req, res) {
-    file.serve(req, res, function(error){
-      if ( error && error.status == 404) return res.status(404).render('404');
-    });
-  });
 }

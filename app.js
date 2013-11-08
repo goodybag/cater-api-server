@@ -95,3 +95,4 @@ app.configure(function(){
 helpers.register(hbs);
 hbs.registerPartials('./public/partials');
 routes.register(app);
+app.use(express.static(__dirname + '/public'));

@@ -16,6 +16,7 @@ var CreateUserView = FormView.extend({
     this.listenTo(this.model, 'sync', function(model, options) {
       this.$submit.removeClass('hide');
       this.$submit.button('success');
+      window.location.reload();
       setTimeout(function() { this_.$submit.button('reset'); }, 3000);
       this.model.clear();
     });
@@ -36,8 +37,7 @@ var CreateUserView = FormView.extend({
   fieldMap: {
     email: '.create-user-form .create-user-email'
   , password: '.create-user-form .create-user-password'
-  , first_name: '.create-user-form .create-user-first-name'
-  , last_name: '.create-user-form .create-user-last-name'
+  , name: '.create-user-form .create-user-name'
   , organization: '.create-user-form .create-user-organization'
   , groups: '.create-user-form .create-user-group:checked'
   }

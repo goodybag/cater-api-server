@@ -6,12 +6,12 @@ var models = require('../../models');
 
 
 module.exports.list = function(req, res) {
-  var query = queries.user.list(req.query.columns, req.query.limit, req.query.offset);
+  var query = queries.user.list(req.query.columns, req.query.limit || 1000, req.query.offset);
   var sql = db.builder.sql(query);
 
   db.query(sql.query, sql.values, function(error, results){
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(results);
+    res.render('users', {users: results});
   });
 }
 

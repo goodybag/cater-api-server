@@ -105,4 +105,36 @@ errors.registration.EMAIL_TAKEN = {
 , name:     "EMAIL_TAKEN"
 , message:  "This email has already been registered."
 };
-errors["0101"] = errors.registration.EMAIL_TAKEN;
+errors[errors.registration.EMAIL_TAKEN.code] = errors.registration.EMAIL_TAKEN;
+
+/**
+ * Input Errors
+ */
+
+errors.input = {};
+
+errors.input.VALIDATION_FAILED = {
+  type: "input"
+, code: "0301"
+, httpCode: "400"
+, name: "VALIDATION_FAILED"
+, message: "One or more of the supplied values did not pass validation"
+};
+
+errors[errors.input.VALIDATION_FAILED.code] = errors.input.VALIDATION_FAILED;
+
+/**
+ * Balanced Errors
+ */
+
+errors.balanced = {};
+
+errors.balanced.ERROR_ADDING_CARD = {
+  type: "input"
+, code: "0401"
+, httpCode: "401"
+, name: "Error ERROR_ADDING_CARD"
+, message: "There was an error adding this card to your account"
+};
+
+errors[errors.balanced.ERROR_ADDING_CARD.code] = errors.balanced.ERROR_ADDING_CARD;

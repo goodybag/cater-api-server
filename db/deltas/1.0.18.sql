@@ -111,6 +111,7 @@ CREATE TABLE IF NOT EXISTS users_payment_methods (
 , created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 , user_id INT4 NOT NULL
 , payment_method_id INT4 NOT NULL
+, name TEXT
 
 , CONSTRAINT users_payment_methods_pkey PRIMARY KEY (user_id, payment_method_id)
 , CONSTRAINT users_payment_methods_id_key UNIQUE (id)

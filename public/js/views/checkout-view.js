@@ -119,13 +119,14 @@ var CheckoutView = OrderView.extend({
     this.clear();
 
     //make sure that the required fields are selected
-    var blanks = ['date', 'time', 'guests']
+    var blanks = _.chain(['date', 'time', 'guests'])
       .map(function (field) {
         return $(self.fieldMap[field], self.$el).get(0);
       })
       .filter(function (field) {
         return $(field).val()=='';
       })
+      .value()
     ;
 
     if (blanks.length) {

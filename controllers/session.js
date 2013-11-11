@@ -22,6 +22,7 @@ module.exports.create = function(req, res) {
 
     req.session = utils.extend(
       {}, req.session,
+      { user_id: user.id },
       { user: utils.pick( user, [ 'id', 'name', 'organization', 'groups', 'email', 'created_at' ] ) }
     );
 

@@ -1,3 +1,4 @@
+var express = require('express');
 var config = require('./config');
 var controllers = require('./controllers');
 var utils = require('./utils');
@@ -230,11 +231,7 @@ module.exports.register = function(app) {
   });
 
 
-  app.get('/receipts/order-:oid.pdf', m.buildReceipt(), function(req, res) {
-    file.serve(req, res, function(error){
-      if ( error && error.status == 404) return res.status(404).render('404');
-    });
-  });
+  app.get('/receipts/order-:oid.pdf', m.buildReceipt(), express.static(__dirname + '/public'));
 
   /**
    *  Order status resource.  The collection of all statuses on a single order.

@@ -53,6 +53,7 @@ you can use the generic selector below, but it's slower:
 .gb-icon-calendar,
 .gb-icon-email,
 .gb-icon-phone,
+.gb-icon-warning,
 .gb-icon-user {
   font-family: 'gb';
   speak: none;
@@ -98,4 +99,8 @@ you can use the generic selector below, but it's slower:
 .gb-icon-phone:before,
 [data-icon="gb-icon-phone"]:before {
   content: "\e008";
+}
+.gb-icon-warning:before,
+[data-icon="gb-icon-warning"]:before {
+  content: "\e600";
 }

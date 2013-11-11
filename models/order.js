@@ -305,6 +305,27 @@ module.exports = Model.extend({
 
     query.with = [
       {
+        name: 'day_hours'
+      , type: 'select'
+      , table: 'restaurant_delivery_times'
+      , columns: [
+          'restaurant_id'
+        , 'day'
+        , {
+            type: 'array_to_json'
+          , as: 'times'
+          , expression: {
+              type: 'array_agg'
+            , expression: {
+                type: 'array_to_json'
+              , expression: 'array[start_time, end_time]'
+              }
+            }
+          }
+        ]
+      , groupBy: ['restaurant_id', 'day']
+      }
+    , {
         name: 'dt'
       , type: 'select'
       , columns: [
@@ -321,28 +342,7 @@ module.exports = Model.extend({
             }
           }
         ]
-        // TODO: convert to with
-      , table: {
-          type: 'select'
-        , table: 'restaurant_delivery_times'
-        , columns: [
-            'restaurant_id'
-          , 'day'
-          , {
-              type: 'array_to_json'
-            , as: 'times'
-            , expression: {
-                type: 'array_agg'
-              , expression: {
-                  type: 'array_to_json'
-                , expression: 'array[start_time, end_time]'
-                }
-              }
-            }
-          ]
-        , groupBy: ['restaurant_id', 'day']
-        , alias: 'day_hours'
-        }
+      , table: 'day_hours'
       , groupBy: 'restaurant_id'
       }
     , {
@@ -363,14 +363,14 @@ module.exports = Model.extend({
           }
         ]
       , groupBy: 'restaurant_id'
-    }
+      }
     , {
         name: 'max_guests'
       , type: 'select'
       , columns: ['restaurant_id', 'max(max_guests) as max_guests']
       , groupBy: 'restaurant_id'
       , table: 'restaurant_lead_times'
-    }
+      }
     ];
 
     var itemSubtotals = [

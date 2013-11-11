@@ -60,13 +60,13 @@
 
 /* adjust columns to match design */
 .delivery-datetime > .form-group {
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: 2px;
+  padding-right: 2px;
   width: 132px;
 }
 
 .delivery-datetime > .form-group:first-child {
-  margin-left: 11px;
+  margin-left: 13px;
 }
 
 .delivery-datetime .form-group[data-icon^="gb-icon"]:before {

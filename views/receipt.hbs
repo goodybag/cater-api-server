@@ -59,6 +59,9 @@
         <div class="clearfix">
           <div class="delivery-header pull-left">
             {{order.restaurant.name}} [Order #{{order.id}}]
+            {{#if order.restaurant}}
+            <a href="javascript:void(0);" class="copy-order-btn text-muted">Copy Order</a>
+            {{/if}}
           </div>
           {{#if admin}}
             <div class="pull-right btn-group">
@@ -80,9 +83,6 @@
         </div>
 
         <div class="delivery-submitted">
-          {{#if order.restaurant}}
-          <a href="javascript:void(0);" class="copy-order-btn">Copy Order</a>
-          {{/if}}
           <div class="date-created">
             Date submitted: {{formatDateTime order.submitted "M/D/YYYY h:mm a"}}
           </div>

@@ -7,7 +7,7 @@ var _ = utils._;
 
 var checkForExistingDebit = function (order, callback) {
   var TAGS = [process.domain.uuid];
-  utils.balanced.Debits.list({'meta.order_id': order.attributes.id}, function (error, debits) {
+  utils.balanced.Debits.list({'meta.order_uuid': order.attributes.uuid}, function (error, debits) {
     if (error) return callback(error);
 
     if (debits && debits.total > 1) return callback(new Error('multiple debits for a single order: ' + order.attributes.id));
@@ -30,6 +30,7 @@ var debitCustomer = function (order, callback) {
       user_id: order.attributes.user.id
     , restaurant_id: order.attributes.restaurant.id
     , order_id: order.attributes.id
+    , order_uuid: order.attributes.uuid
     }
   }, function (error, debit) {
     if (error) return order.setPaymentError(error.uri, error, callback);

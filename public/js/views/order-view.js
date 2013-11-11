@@ -108,7 +108,8 @@ var OrderView = FormView.extend({
     _.each(this.items, function(item) {
       self.listenTo(item, {
         'remove': _.bind(self.removeOrderItem, self, item)
-      , 'invalid': _.bind(self.onSubmittableChange, self, null, false)
+      , 'disableCheckout': _.bind(self.onSubmittableChange, self, null, false)
+      , 'enableCheckout': _.bind(self.onSubmittableChange, self, null, true)
       });
     });
   },
@@ -155,7 +156,7 @@ var OrderView = FormView.extend({
   onChange: function(){},
 
   onSubmittableChange: function(model, value, options) {
-    this.$el.find('.btn-submit').toggleClass( 'hide', !value );
+    this.$el.find('.btn-submit').toggleClass( 'disabled', !value );
   },
 
   displayErrors: function() {

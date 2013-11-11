@@ -1,6 +1,8 @@
 -- Update version
 insert into deltas (version, date) values ('1.0.18', 'now()');
 
+create extension "uuid-ossp";
+
 DO $$
   BEGIN
     BEGIN
@@ -129,4 +131,5 @@ ALTER TABLE users ADD CONSTRAINT users_balanced_customer_uri_key UNIQUE (balance
 ALTER TABLE orders ADD cut INT4;
 ALTER TABLE orders ADD payment_method_id INT4;
 ALTER TABLE orders ADD payment_status PAYMENT_STATUS;
+ALTER TABLE orders ADD uuid UUID NOT NULL DEFAULT uuid_generate_v1();
 ALTER TABLE orders ADD CONSTRAINT orders_payment_method_id_fkey FOREIGN KEY (payment_method_id) REFERENCES payment_methods (id) ON UPDATE NO ACTION;

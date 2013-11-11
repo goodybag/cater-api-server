@@ -74,7 +74,7 @@ module.exports.create = function(req, res) {
     }
   }
 
-  utils.async.waterfall([flow.encrypt, flow.create, flow.group]);
+  utils.async.waterfall([flow.encrypt, flow.balanced, flow.create, flow.group]);
 }
 
 module.exports.update = function(req, res) {

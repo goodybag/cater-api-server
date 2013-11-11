@@ -4,6 +4,26 @@ INSERT INTO groups (name) VALUES ('receipts');
 
 INSERT INTO users (email, password) VALUES ('receipts@goodybag.com', '$2a$10$8egVetFrE7OAk1B.v36dOOdhS9TXt98PN7/zCvLdeAuOa0KLXIzIi');
 
+INSERT INTO tags (name)
+SELECT existing.*
+FROM (SELECT unnest(array['glutenFree','vegan', 'vegetarian','kosher','halal', 'dairyFree']) as tag) AS existing
+WHERE NOT EXISTS (SELECT name from tags WHERE existing.tag = tags.name);
+
+INSERT INTO meal_types (name)
+SELECT existing.*
+FROM
+  (SELECT unnest(array[
+    'Appetizers'
+  , 'Breakfast'
+  , 'Brunch'
+  , 'Lunch'
+  , 'Dinner'
+  , 'Dessert'
+  ]) as meal_type) AS existing
+WHERE NOT EXISTS (SELECT name from meal_types WHERE existing.meal_type = meal_types.name);
+
+
+
 create function process_updated_order() returns trigger as $process_updated_order$
   begin
     insert into order_statuses(order_id, status) values(NEW.id, NEW.status);

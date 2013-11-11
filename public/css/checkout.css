@@ -41,6 +41,24 @@
   }
 }
 
+.form-group-delivery-date,
+.form-group-delivery-time,
+.form-group-guests {
+  position: static;
+}
+
+.expired-wrapper {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+
+  font-size: 12px;
+  color: #B80300;
+}
+
+.expired-wrapper:before {
+
+}
 .restaurant-name {
   font-size: 16px;
 }

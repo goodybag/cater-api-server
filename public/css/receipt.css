@@ -31,3 +31,9 @@
 .delivery-submitted {
   padding-left: 9px;
 }
+
+.copy-order-btn {
+  text-decoration: underline;
+  margin-left: 10px;
+  font-size: 16px;
+}

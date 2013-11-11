@@ -12,12 +12,11 @@ var OrderItemView = FormView.extend({
       this.listenTo(this.model, {
         'change:sub_total': this.onPriceChange,
         'destroy': this.remove,
-        'invalid': this.invalid
+        'invalid': _.bind(this.trigger, this, 'disableCheckout')
       }, this);
-  },
 
-  invalid: function(e) {
-    this.trigger('invalid', this.model.validationError);
+    // In case we save but there's nothing to change, re-enable checkout
+    this.on('save:noop', _.bind(this.trigger, this, 'enableCheckout'));
   },
 
   onPriceChange: function(e) {

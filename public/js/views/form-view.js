@@ -1,4 +1,13 @@
+/**
+ * This class provides automatic form validation on Backbone models
+ * using Amanda schema validation.
+ */
 var FormView = Backbone.View.extend({
+
+  /**
+   * Return an object containing the properties differing
+   * between the Backbone model and the HTML form
+   */ 
   getDiff: function() {
     var diff = {};
 
@@ -15,8 +24,19 @@ var FormView = Backbone.View.extend({
     return _.size(diff) > 0 ? diff : null;
   },
 
+  /**
+   * Override the default behavior of getDiff with a custom getter.
+   * Useful for converting what the user sees on the form to the actual
+   * backend data like currency representation or datetimes.
+   */
   fieldGetters: {},
 
+  /**
+   * Map model properties to DOM selectors. This is used to
+   * highlight invalid form fields.
+   *
+   * Example `{ name: '.form-name' }`
+   */
   fieldMap: {},
 
   clearErrors: function() {
@@ -30,7 +50,12 @@ var FormView = Backbone.View.extend({
 
     var badFields =  _.uniq(_.invoke(_.compact(_.pluck(errors, 'property')), 'replace', /\[\d+\]$/, ''));
     var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
-    this.$el.find(selector).closest('.form-group').removeClass('has-success').addClass('has-error');
+    
+    this.$el.find(selector)
+      .closest('.form-group')
+      .removeClass('has-success')
+      .addClass('has-error');
+    
     _.invoke(this.subViews, 'displayErrors');
   },
 
@@ -41,6 +66,18 @@ var FormView = Backbone.View.extend({
     return diff;
   },
 
+  /**
+   * Saves the model diff via PATCH.
+   *
+   * Triggers these events
+   *  'save:noop'       no difference between model and form
+   *  'save:invalid'    form failed validation
+   *  'save:success'    server saved diff successfully
+   *  'save:error'      server could not save diff
+
+   *  @param e error details
+   *  @param callback function(err, response)
+   */
   onSave: function(e, callback) {
     if (callback === undefined && _.isFunction(e)) {
       callback = e;
@@ -51,7 +88,10 @@ var FormView = Backbone.View.extend({
     this.clearErrors();
     var diff = this.getDiff();
 
-    if (!diff) return callback.call(this);
+    if (!diff) {
+      this.trigger('save:noop');
+      return callback.call(this);
+    }
     var view = this;
     var sent = this.model.save(diff, {
       patch: true,
@@ -69,11 +109,17 @@ var FormView = Backbone.View.extend({
     });
 
     if (!sent) {
+      view.trigger('save:invalid', this.model.validationError);
       this.displayErrors();
       callback.call(this, this.model.validationError);
     }
   }
 }, {
+
+  /**
+   * Static methods
+   */
+
   intGetter: function(field) {
     var val = (this.$el.find(this.fieldMap[field]).val()||'').trim();
     return val ? parseInt(val) : null;

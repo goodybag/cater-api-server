@@ -16,7 +16,7 @@ var CreateUserView = FormView.extend({
     this.listenTo(this.model, 'sync', function(model, options) {
       this.$submit.removeClass('hide');
       this.$submit.button('success');
-      window.location.reload();
+      if (this_.options.reloadOnSuccess) window.location.reload();
       setTimeout(function() { this_.$submit.button('reset'); }, 3000);
       this.model.clear();
     });

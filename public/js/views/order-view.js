@@ -95,9 +95,9 @@ var OrderView = FormView.extend({
     // Replace sub order-item-views and listen to remove
     // events.
     var self = this;
-    _.each(this.items, 
+    _.each(this.items,
       _.compose(
-        _.bind(this.stopListening, this), 
+        _.bind(this.stopListening, this),
         _.identity
       )
     );

@@ -128,7 +128,14 @@
                 Pay using
                 <select class="form-control card-select" id="payment-method-id" name="payment_method_id">
                   {{#each user.payment_methods}}
-                    <option value="{{this.id}}">Credit Card (**** {{this.data.last_four}})</option>
+                    <option value="{{this.id}}">
+                      {{#if this.name}}
+                        {{this.name}}
+                      {{else}}
+                        Credit Card
+                      {{/if}}
+                      (**** {{this.data.last_four}})
+                    </option>
                   {{/each}}
                 </select>
                 <div class="expired-wrapper hide" data-icon="gb-icon-warning">

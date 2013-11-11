@@ -251,7 +251,8 @@ var CheckoutView = OrderView.extend({
     var $el = this.$el.find('#new-card');
 
     var data = {
-      card_number:      +$el.find('[name="card_number"]').val()
+      name:              $el.find('[name="card_name"]').val()
+    , card_number:      +$el.find('[name="card_number"]').val()
     , security_code:    +$el.find('[name="security_code"]').val()
     , expiration_month: +$el.find('[name="expiration_month"]').val()
     , expiration_year:  +$el.find('[name="expiration_year"]').val()
@@ -309,7 +310,8 @@ var CheckoutView = OrderView.extend({
     });
 
     var data = {
-      card_number:      +$el.find('[name="card_number"]').val()
+      name:              $el.find('[name="card_name"]').val()
+    , card_number:      +$el.find('[name="card_number"]').val()
     , security_code:    +$el.find('[name="security_code"]').val()
     , expiration_month: +$el.find('[name="expiration_month"]').val()
     , expiration_year:  +$el.find('[name="expiration_year"]').val()

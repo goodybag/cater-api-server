@@ -35,6 +35,7 @@ var PaymentMethod = Backbone.Model.extend({
         data:     res.data
       , uri:      res.data.uri
       , type:     res.data._type
+      , name:     data.name
       };
 
       this_.save(pm, {

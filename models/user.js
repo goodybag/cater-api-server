@@ -64,7 +64,7 @@ module.exports = Model.extend({
       var query = {
         type: 'insert'
       , table: 'users_payment_methods'
-      , values: { user_id: userId, payment_method_id: id }
+      , values: { user_id: userId, payment_method_id: id, name: pm.name }
       , returning: ['id']
       };
 
@@ -78,7 +78,7 @@ module.exports = Model.extend({
     var query = {
       type: 'select'
     , table: 'payment_methods'
-    , columns: ['payment_methods.*']
+    , columns: ['payment_methods.*', 'upm.name']
     , joins: {
         users_payment_methods: {
           alias: 'upm'

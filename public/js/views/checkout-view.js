@@ -13,6 +13,9 @@ var CheckoutView = OrderView.extend({
 
   fieldMap: {
     payment_method_id: '#payment-method-id'
+  , date: '#order-date'
+  , time: '#order-time'
+  , guests: '#order-guests'
   },
 
   initialize: function() {
@@ -103,8 +106,33 @@ var CheckoutView = OrderView.extend({
     this.$el.find(target).collapse('show');
   },
 
+  clear: function() {
+    this.$el.find('input').parent().removeClass('has-error');
+    this.$el.find('.alert').addClass('hide');
+  },
+
   submit: function(e) {
+    var self = this;
+
     if (e) e.preventDefault();
+
+    this.clear();
+
+    //make sure that the required fields are selected
+    var blanks = ['date', 'time', 'guests']
+      .map(function (field) {
+        return $(self.fieldMap[field], self.$el).get(0);
+      })
+      .filter(function (field) {
+        return $(field).val()=='';
+      })
+    ;
+
+    if (blanks.length) {
+      $(blanks).parent().addClass('has-error');
+      self.$el.find('.error-blank-fields').removeClass('hide');
+      return;
+    }
 
     // If they're saving a new card, delegate to the `savenewCardAndSubmit` handler
     if (this.$el.find('[name="payment-method"]:checked').val() === 'new') {

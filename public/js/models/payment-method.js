@@ -32,10 +32,11 @@ var PaymentMethod = Backbone.Model.extend({
       if (res.status !== 201) return callback ? callback(res.error) : null;
 
       var pm = {
-        data:     res.data
-      , uri:      res.data.uri
-      , type:     res.data._type
-      , name:     data.name
+        data:       res.data
+      , uri:        res.data.uri
+      , type:       res.data._type
+      , name:       data.name
+      , save_card:  data.save_card
       };
 
       this_.save(pm, {

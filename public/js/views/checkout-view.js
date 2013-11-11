@@ -150,13 +150,11 @@ var CheckoutView = OrderView.extend({
    * @param {PaymentMethod} paymentMethod The card model
    */
   addNewCardToSelect: function(paymentMethod){
-    this.$paymentMethodId.append([
-      '<option value="'
-    , paymentMethod.get('id')
-    , '">Credit Card (**** '
-    , paymentMethod.get('data').last_four
-    , ')</option>'
-    ].join(''));
+    this.$paymentMethodId.append(
+      Handlebars.partials.payment_method_option(
+        paymentMethod.toJSON()
+      )
+    );
 
     return this;
   },
@@ -256,6 +254,7 @@ var CheckoutView = OrderView.extend({
     , security_code:    +$el.find('[name="security_code"]').val()
     , expiration_month: +$el.find('[name="expiration_month"]').val()
     , expiration_year:  +$el.find('[name="expiration_year"]').val()
+    , save_card:         $el.find('[name="save_card"]:checked').length === 1
     };
 
     var pm = new PaymentMethod({ user_id: user.get('id') });

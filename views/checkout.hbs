@@ -128,14 +128,7 @@
                 Pay using
                 <select class="form-control card-select" id="payment-method-id" name="payment_method_id">
                   {{#each user.payment_methods}}
-                    <option value="{{this.id}}">
-                      {{#if this.name}}
-                        {{this.name}}
-                      {{else}}
-                        Credit Card
-                      {{/if}}
-                      (**** {{this.data.last_four}})
-                    </option>
+                    {{> payment_method_option}}
                   {{/each}}
                 </select>
                 <div class="expired-wrapper hide" data-icon="gb-icon-warning">
@@ -164,7 +157,7 @@
                 {{> edit_card}}
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" checked="checked">
+                    <input type="checkbox" name="save_card" checked="checked">
                     Save this card for future orders.
                   </label>
                 </div>
@@ -266,6 +259,7 @@
     edit_address: 'edit-address.hbs',
     checkout_card_expired: 'checkout-card-expired.hbs',
     edit_card: 'edit-card.hbs',
+    payment_method_option: 'payment-method-option.hbs',
     totals: 'totals.hbs'
   };
 

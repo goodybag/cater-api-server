@@ -16,6 +16,10 @@ var CheckoutView = OrderView.extend({
   , date: '#order-date'
   , time: '#order-time'
   , guests: '#order-guests'
+  , street: '.address-street'
+  , city: '.address-city'
+  , state: '.address-state'
+  , zip: '.address-zip'
   },
 
   initialize: function() {
@@ -119,7 +123,7 @@ var CheckoutView = OrderView.extend({
     this.clear();
 
     //make sure that the required fields are selected
-    var blanks = _.chain(['date', 'time', 'guests'])
+    var blanks = _.chain(['date', 'time', 'guests', 'street', 'city', 'state', 'zip'])
       .map(function (field) {
         return $(self.fieldMap[field], self.$el).get(0);
       })

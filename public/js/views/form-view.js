@@ -7,7 +7,7 @@ var FormView = Backbone.View.extend({
   /**
    * Return an object containing the properties differing
    * between the Backbone model and the HTML form
-   */ 
+   */
   getDiff: function() {
     var diff = {};
 
@@ -50,12 +50,12 @@ var FormView = Backbone.View.extend({
 
     var badFields =  _.uniq(_.invoke(_.compact(_.pluck(errors, 'property')), 'replace', /\[\d+\]$/, ''));
     var selector = _.values(_.pick(this.fieldMap, badFields)).join(', ');
-    
+
     this.$el.find(selector)
       .closest('.form-group')
       .removeClass('has-success')
       .addClass('has-error');
-    
+
     _.invoke(this.subViews, 'displayErrors');
   },
 

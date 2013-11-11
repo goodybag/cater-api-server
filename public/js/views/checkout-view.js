@@ -32,6 +32,9 @@ var CheckoutView = OrderView.extend({
     this.timepicker.on( 'open', _(this.onTimePickerOpen).bind( this ) );
 
     this.$paymentMethodId = this.$el.find('#payment-method-id');
+
+    // Trigger payment method id change to check if selected card is expired
+    this.onPaymentMethodIdChange();
   },
 
   onDatePickerOpen: function(){
@@ -316,6 +319,7 @@ var CheckoutView = OrderView.extend({
       if (error) return notify.error(error);
 
       this_.hideCardExpired();
+      this_.hideUpdateCardView();
       this_.selectPaymentType('existing');
       this_.selectCard(pm.get('id'));
       this_.clearCardForm($el);

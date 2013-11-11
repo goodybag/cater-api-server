@@ -56,5 +56,15 @@ var PaymentMethod = Backbone.Model.extend({
       date.getFullYear() === data.expiration_year &&
       date.getMonth() + 1 > data.expiration_month
     );
-  },
+  }/*,
+
+  toJSON: function(){
+    var json = Backbone.Model.prototype.toJSON.call( this );
+
+    if ( typeof json.data === 'object' ){
+      json.data.expiration_month_unpadded = parseInt(json.data.expiration_month);
+    }
+
+    return json;
+  }*/
 });

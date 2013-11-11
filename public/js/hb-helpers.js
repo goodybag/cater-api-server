@@ -281,8 +281,17 @@ var helpers = {
     return out;
   },
 
+  reverseRange: function( start, end, options ){
+    var out = "";
+    for ( var i = start; i >= end; i-- ){
+      out += options.fn( i );
+    }
+    return out;
+  },
+
   pad: function( n, width, z ){
-    z = ['number', 'string'].indexOf( typeof z ) > -1 ? '0' : z;
+    width = ['number', 'string'].indexOf( typeof width ) === -1 ? 1 : width;
+    z = ['number', 'string'].indexOf( typeof z ) === -1 ? '0' : z;
     n = n + '';
     return n.length >= width ? n : new Array( width - n.length + 1 ).join(z) + n;
   },
@@ -320,6 +329,15 @@ var helpers = {
     if (typeof height === 'number') params.h = height;
 
     return url + utils.queryParams(params);
+  },
+
+  substr: function(str, from, to){
+    if ( typeof str !== 'string' ) return "";
+    return str.substring( from, to );
+  },
+
+  typeOf: function(a){
+    return typeof a;
   }
 }
 

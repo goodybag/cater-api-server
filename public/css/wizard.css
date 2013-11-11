@@ -71,7 +71,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (max-width: 536px) {
+@media (max-width: 786px) {
   .wizard > .step {
     width: 33.333333333333%;
     font-size: 12px;

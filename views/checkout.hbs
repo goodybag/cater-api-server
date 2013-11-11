@@ -148,12 +148,12 @@
 
               <div class="radio">
                 <label>
-                  <input type="radio" name="payment-method" value="new" class="payment-method" data-target="#new-card" data-parent="#payment-info">
+                  <input type="radio" name="payment-method" value="new" class="payment-method" data-target="#new-card" data-parent="#payment-info" {{#unless user.payment_methods}}checked="checked"{{/unless}}>
                   Use a new card.
                 </label>
               </div>
 
-              <div id="new-card" class="collapse">
+              <div id="new-card" class="{{#if user.payment_methods}}collapse{{/if}}">
                 {{> edit_card}}
                 <div class="checkbox">
                   <label>

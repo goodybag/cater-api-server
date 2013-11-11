@@ -36,6 +36,10 @@ define(function(require) {
     , references: {table: 'payment_methods', column: 'id', onDelete: 'cascade'}
     , nullable: false
     }
+  , name: {
+      type: types.text
+    , nullable: true
+    }
   };
 
   definition.indices = {};

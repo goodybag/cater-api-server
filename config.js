@@ -4,8 +4,9 @@
 
 var
   os = require('os')
+, fs =  require('fs')
 , _ = require('lodash')
-, balancedConfig = require('./balanced-config.json') //used in dev
+, balancedConfig = fs.existsSync(__dirname+'/balanced-config.json') ? require('./balanced-config.json') : undefined // used in dev
 ;
 
 var config = {

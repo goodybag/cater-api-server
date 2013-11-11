@@ -21,6 +21,7 @@ var middleware = {
 , uuid: require('./middleware/uuid')
 , sslRedirect: require('./middleware/ssl-redirect')
 , requestLogger: require('connect-request-logger-pg')
+, getUser: require('./middleware/get-user')
 };
 
 var app = module.exports = express();
@@ -38,6 +39,8 @@ app.configure(function(){
   app.use(middleware.uuid());
   app.use(middleware.domains);
   app.use(middleware.cors);
+
+  app.use(middleware.getUser);
 
   app.use(middleware.requestLogger({
     connStr: config.requestLogger.connStr
@@ -95,3 +98,4 @@ app.configure(function(){
 helpers.register(hbs);
 hbs.registerPartials('./public/partials');
 routes.register(app);
+app.use(express.static(__dirname + '/public'));

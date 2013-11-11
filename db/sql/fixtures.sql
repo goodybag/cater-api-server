@@ -3,6 +3,7 @@ INSERT INTO groups (name) VALUES ('client');
 INSERT INTO groups (name) VALUES ('receipts');
 
 INSERT INTO users (email, password) VALUES ('receipts@goodybag.com', '$2a$10$8egVetFrE7OAk1B.v36dOOdhS9TXt98PN7/zCvLdeAuOa0KLXIzIi');
+INSERT INTO users_groups (user_id, "group") SELECT id, 'receipts' FROM users WHERE email = 'receipts@goodybag.com';
 
 INSERT INTO tags (name)
 SELECT existing.*

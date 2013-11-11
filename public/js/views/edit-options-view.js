@@ -52,7 +52,7 @@
 
   , addNewOptionGroup: function(){
       var view = new EditOptionsSetView({
-        model: { name: null, options: [], type: 'radio' }
+        model: { name: null, options: [], type: 'radio', id: utils.uuid() }
       });
 
       view.render();

@@ -135,15 +135,17 @@
                   {{! If a card is selected that is expired, this will be filled with {>checkout_card_expired} !}}
                   <div class="expired-text"></div>
                   <a href="#" class="btn-expired-update">Update</a>
-                  <div id="update-card" class="hide">
-                    <div class="update-card-wrapper"></div>
-                    <div class="form-group">
-                      <button type="button" class="btn btn-default btn-cancel">Cancel</button>
-                      <button class="btn btn-primary btn-submit">Save changes to card</button>
-                    </div>
-                  </div>
                 </div>
               </div>
+
+              <div id="update-card" class="hide">
+                <div class="update-card-wrapper"></div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-default btn-cancel">Cancel</button>
+                  <button class="btn btn-primary btn-submit">Save changes to card</button>
+                </div>
+              </div>
+
               <div class="radio">
                 <label>
                   <input type="radio" name="payment-method" value="new" class="payment-method" data-target="#new-card" data-parent="#payment-info">

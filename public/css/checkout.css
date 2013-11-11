@@ -46,19 +46,6 @@
 .form-group-guests {
   position: static;
 }
-
-.expired-wrapper {
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: 4px;
-
-  font-size: 12px;
-  color: #B80300;
-}
-
-.expired-wrapper:before {
-
-}
 .restaurant-name {
   font-size: 16px;
 }
@@ -72,4 +59,25 @@
   vertical-align: middle;
   width: 200px;
   margin-left: 8px;
+}
+
+.expired-wrapper {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+
+  font-size: 12px;
+  color: #B80300;
+}
+
+.expired-wrapper:before {
+
+}
+
+.expired-wrapper .expired-text {
+  font-weight: 700;
+}
+
+.expired-wrapper .btn-expired-update {
+  text-decoration: underline;
 }

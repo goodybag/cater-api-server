@@ -145,7 +145,6 @@ var CheckoutView = OrderView.extend({
       return this.onUpdateCardSubmitClick(e);
     }
 
-    var self = this;
     this.onSave(function(err, response) {
       if (err) return notify.error(err); // TODO: error handling
       self.model.changeStatus('submitted', function(err, data) {

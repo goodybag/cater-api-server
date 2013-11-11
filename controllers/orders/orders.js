@@ -136,8 +136,8 @@ module.exports.changeStatus = function(req, res) {
         return res.send(403, 'order not submitttable');
     }
 
-    var done = function(status) {
-      if (status.attributes.status === 'submitted') {
+    var done = function() {
+      if (order.attributes.status === 'submitted') {
         var viewOptions = {
           order: order.toJSON({review: true}),
           config: config,
@@ -189,22 +189,19 @@ module.exports.changeStatus = function(req, res) {
         }
       }
 
-      res.send(201, status.toJSON());
-
-      venter.emit('order:status:change', order, status);
+      res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
+      venter.emit('order:status:change', order);
     }
 
-    var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
-    status.save(function(err, rows, result) {
+    if (req.body.status === 'submitted' && order.attributes.user.is_invoiced) order.attributes.payment_status = 'invoiced';
+
+    if (review) order.attributes.token_used = 'now()';
+
+    order.attributes.status = req.body.status;
+
+    order.save(function(err){
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      if (review) {
-        order.attributes.token_used = 'now()';
-        order.save(function(err) {
-          if (err) return res.error(errors.internal.DB_FAILURE, err);
-          done(status);
-        });
-      }
-      else done(status);
+      return done();
     });
   });
 };

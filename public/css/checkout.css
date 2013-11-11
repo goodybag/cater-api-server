@@ -29,9 +29,21 @@
   width: 360px;
 }
 
-/* Medium devices */
-@media (max-width: 992px) {
-  .affix, .affix-bottom {
+@media ( min-width: 1200px ){
+  .order-summary.affix {
+    width: 360px;
+  }
+}
+
+@media ( min-width: 992px ) and ( max-width: 1199px ){
+  .order-summary.affix {
+    width: 293px;
+  }
+}
+
+@media ( max-width: 991px ){
+  .order-summary.affix,
+  .order-summary.affix-bottom {
     position: static;
     width: 100%;
   }

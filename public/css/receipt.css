@@ -23,6 +23,7 @@
 }
 
 .delivery-header {
+  margin-bottom: -2px;
   padding-left: 9px;
   font-size: 21px;
   color: #432012;

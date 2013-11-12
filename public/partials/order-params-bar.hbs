@@ -6,13 +6,14 @@
 
     <div class="form-group" data-icon="gb-icon-location">
       <input list="zips" type="text" class="form-control form-control-zip" name="zip" placeholder="zip" maxlength="5" value="{{#if orderParams}}{{orderParams.zip}}{{/if}}"/>
-      {{#if order}}
       <datalist id="zips">
+        {{#if defaultAddress }}
+        <option value="{{defaultAddress.zip}}">Your Default Address</option>
+        {{/if}}
         {{#each order.restaurant.delivery_zips}}
         <option value="{{this}}">
         {{/each}}
       </datalist>
-      {{/if}}
     </div>
 
     <div class="form-group" data-icon="gb-icon-calendar">

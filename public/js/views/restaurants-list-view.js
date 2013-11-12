@@ -1,4 +1,4 @@
-/** 
+/**
  * Handles restaurant searching and filtering
  */
 

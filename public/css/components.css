@@ -287,7 +287,9 @@
   margin-left: 100px
 }
 
-.order-params-bar .form-control[readonly] {
+.order-params-bar .form-control[readonly],
+.delivery-datetime .form-control[readonly]
+ {
   cursor: default;
   background-color: #fff;
 }
@@ -469,6 +471,29 @@ a.list-group-item .list-group-item-heading {
   border: none;
 }
 
+.order-summary .subtotal-row,
+.order-summary .order-totals dt.total,
+.order-summary .order-totals dd.total {
+  font-weight: 700;
+}
+
+.order-summary .checkout-row {
+  padding-top: 30px;
+}
+
+.order-summary .order-totals dt {
+  text-align: left;
+  font-weight: 500;
+}
+
+.order-summary .order-totals dd {
+  text-align: right;
+}
+
+/**
+ * Order Summary > Order Summary Table
+ */
+
 .order-table td {
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
@@ -496,14 +521,6 @@ a.list-group-item .list-group-item-heading {
 .order-table .item-options li {
   font-size: 12px;
   font-weight: 300;
-}
-
-.order-summary .subtotal-row {
-  font-weight: 700;
-}
-
-.order-summary .checkout-row {
-  padding-top: 30px;
 }
 
 .order-table .item-name .item-edit {

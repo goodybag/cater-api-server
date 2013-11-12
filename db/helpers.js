@@ -15,3 +15,7 @@ mosql.registerConditionalHelper( '$overlap', {cascade: false}, function( column,
     }).join(', ') + ']';
   }
 });
+
+mosql.registerConditionalHelper('$notExists', {cascade: false}, function( column, value, values, collection ){
+  return 'not exists (' + mosql.sql( value, values ).toString() + ')';
+});

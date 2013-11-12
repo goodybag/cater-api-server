@@ -1,51 +1,65 @@
 var OrderView = FormView.extend({
-  submitSelector: '.order-save-btn',
 
   events: function() {
-    return {
-      'keyup .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
-      'change .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
-      'submit .order-form': 'onSave',
-      'click .edit-address-btn': 'editAddress',
-      'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
-      'click .btn-submit': 'submit',
-      'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),
-      'click .btn-accept': _.bind(this.changeStatus, this, 'accepted'),
-      'click #change-status-pending': _.bind(this.changeStatus, this, 'pending', false),
-      'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled', false),
-      'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted', false),
-      'click #change-status-denied': _.bind(this.changeStatus, this, 'denied', false),
-      'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted', false),
-      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', false),
-      'click .tip-buttons .btn': 'clickTipButton',
-      'click .copy-order-btn': 'makeCopy'
+    return _.extend({}, OrderView.prototype.events, {
+      'click .btn-cancel': 'cancel',
+      'click .copy-order-btn': 'makeCopy',
+      'click #change-status-pending': _.bind(this.changeStatus, this, 'pending'),
+      'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled'),
+      'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted'),
+      'click #change-status-denied': _.bind(this.changeStatus, this, 'denied'),
+      'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted'),
+      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered')
+    });
+  },
+
+  fieldMap: {
+    datetime: '.order-datetime',
+    guests: '#order-guests',
+    name: '.order-name',
+    notes: '#order-notes',
+    tip: '.order-tip',
+    tip_percent: '.tip-percent',
+    quantity: '.order-item-quantity'
+  },
+
+  fieldGetters: {
+    guests: _.partial(FormView.intGetter, 'guests'),
+
+    tip: _.partial(FormView.dollarsGetter, 'tip'),
+
+    datetime: function() {
+      var date = this.$el.find("#order-form #order-date").val().trim();
+      var time = this.$el.find("#order-form #order-time").val().trim();
+      var datepart = date ? dateTimeFormatter(date) : null;
+      var timepart = time ? timeFormatter(time, 'HH:mm:ss') : null;
+
+
+      if(!datepart || !timepart) return null;
+
+      // since we cannot determine offset, cannot format as ISO 8601 String
+      // using "YYYY-MM-DD HH:mm:ss" to represent the date and time
+      var datetime = datepart + ' ' + timepart;
+      var date = moment(datetime);
+      return date.isValid() ? datetime : null;
     }
   },
 
+  getDiff: function() {
+    var diff = FormView.prototype.getDiff.apply(this, arguments);
+    var addrDiff = this.addressView.getDiff.apply(this.addressView, arguments)
+    return diff || addrDiff ? _.extend({}, diff, addrDiff) : null;
+  },
+
   initialize: function(options) {
-    this.items = options.items || [];
+    this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address, orderView: this});
+    this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
+    this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
+
+    this.subViews = [this.addressView];
 
     // please add any model listeners in the setModel function
     this.setModel((this.model) ? this.model : new Order());
-
-    this.datepicker = this.$el.find(".order-form #order-date").eq(0).pickadate({
-      format: 'mm/dd/yyyy'
-    , min: new Date()
-    }).pickadate('picker');
-
-    this.timepicker = this.$el.find(".order-form #order-time").eq(0).pickatime({
-      format: 'h:i A'
-    , interval: 15
-    }).pickatime('picker');
-
-    this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
-
-    this.on('save:success', this.onSaveSuccess, this);
-
-    return this;
-    // This is causing some width issues with this select
-    // Let's go standard select until we can fix it
-    // this.$el.find('#address-state').select2();
   },
 
   // set the model and add listeners here
@@ -69,7 +83,6 @@ var OrderView = FormView.extend({
 
     if (this.model.get('editable')) {
       this.onChange();
-      this.updateAddressBlock();
     }
     return this;
   },
@@ -78,182 +91,56 @@ var OrderView = FormView.extend({
     this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));
   },
 
-  onPhoneChange: function(model, value, options) {
-    this.$el.find(this.fieldMap.phone).val(Handlebars.helpers.phoneNumber(value))
+  setItems: function(items) {
+    // Replace sub order-item-views and listen to remove
+    // events.
+    var self = this;
+    _.each(this.items,
+      _.compose(
+        _.bind(this.stopListening, this),
+        _.identity
+      )
+    );
+
+    this.items = items;
+
+    // Listen to each order item view for events
+    _.each(this.items, function(item) {
+      self.listenTo(item, {
+        'remove': _.bind(self.removeOrderItem, self, item)
+      , 'disableCheckout': _.bind(self.onSubmittableChange, self, null, false)
+      , 'enableCheckout': _.bind(self.onSubmittableChange, self, null, true)
+      });
+    });
   },
 
-  displayErrors: function() {
-    FormView.prototype.displayErrors.apply(this, arguments);
-    if ( !this.model.validationError ) return this;
-    // Maps field names to error selectors
-    var fieldSelector = {
-      zip: '.alert-bad-zip'
-    };
+  removeOrderItem: function(orderItemView) {
+    // Stop listening and update items
+    this.stopListening(orderItemView);
+    this.items = _.without(this.items, orderItemView);
 
-    // Show each alert corresponding to an error
-    for (var i = 0, selector, l = this.model.validationError.length; i < l; ++i){
-      if ( typeof this.model.validationError[i] === 'string' ){
-        selector = '[data-error="' + this.model.validationError[i] + '"]';
-      } else if ( typeof this.model.validationError[i] === 'object' ){
-        if ( !(this.model.validationError[i].property in fieldSelector) ) continue;
-        selector = fieldSelector[ this.model.validationError[i].property ];
-      } else continue;
-
-      this.$el.find( selector ).removeClass('hide');
-    }
-
-    return this;
+    //Display alert when list is empty
+    if (!this.items.length)
+      this.$el.find('.order-empty-alert').removeClass('hide');
   },
 
-  // Override onChange to noop because we do not want to hide the submit button
-  onChange: function(){},
-
-  clearErrors: function(){
-    this.$el.find('.alert').addClass('hide');
-    return this;
+  cancel: function() {
+    this.model.changeStatus('canceled', function(err, data) {
+      if (err) return alert(err); // TODO: error handling
+      window.location.reload();
+    });
   },
 
   setAlerts: function(selector, model, value, options) {
     this.$el.find(selector).toggleClass('hide', !value);
   },
 
-  onSubmittableChange: function(model, value, options) {
-    this.$el.find('.btn-submit').toggleClass( 'hide', !value );
-  },
-
-  changeStatus: function(status, checkNulls) {
-    if (checkNulls == null) checkNulls = true;
-    if (status === this.model.get('status')) return;
-    if (checkNulls && status == 'submitted') {
-      var vals = _.pick(this.model.toJSON(), this.model.requiredFields)
-      this.$el.find('.order-form-field').parent().removeClass('has-error');
-      var err = false;
-
-      for (var key in vals) {
-        if (vals[key] == null) {
-          this.$el.find(this.fieldMap[key]).parent().addClass('has-error');
-          err = true
-        }
-      }
-
-      if (err) {
-        this.$el.find('.order-address-form').removeClass('hide');
-        this.$el.find('.order-address-block').addClass('hide');
-        window.scrollTo(0);
-        return;
-      }
-    }
-
-    var url = this.model.url();
-    if (this.options.review_token) url += '?review_token=' + this.options.review_token;
-    $.ajax({
-      url: this.model.url() + '/status-history',
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify({status: status, review_token: this.options.review_token}),
-      error: function(jqXHR, textStatus, errorThrown) { alert(errorThrown); },
-      success: function(data, textStatus, jqXHR) { window.location.href = url }
-    });
-  },
-
-  fieldMap: {
-    datetime: '.order-datetime',
-    street: '#address-street',
-    city: '#address-city',
-    state: '#address-state',
-    zip: '#address-zip',
-    phone: '#order-phone',
-    guests: '#order-guests',
-    notes: '#order-notes',
-    adjustment: '.adjustment .form-control',
-    tip: '.tip-area .tip',
-    name: '.order-name'
-  },
-
-  fieldGetters: {
-    guests: _.partial(FormView.intGetter, 'guests'),
-
-    datetime: function() {
-      var date = this.$el.find(".order-form #order-date").val().trim();
-      var time = this.$el.find(".order-form #order-time").val().trim();
-      var datepart = date ? dateTimeFormatter(date) : null;
-      var timepart = time ? timeFormatter(time, 'HH:mm:ss') : null;
-
-
-      if(!datepart || !timepart) return null;
-
-      // since we cannot determine offset, cannot format as ISO 8601 String
-      // using "YYYY-MM-DD HH:mm:ss" to represent the date and time
-      var datetime = datepart + ' ' + timepart;
-      var date = moment(datetime);
-      return date.isValid() ? datetime : null;
-    },
-
-    phone: function() {
-      return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
-    },
-
-    adjustment: function() {
-      var $adj = this.$el.find('.adjustment');
-      if (!$adj.hasClass('editable'))
-        return this.model.get('adjustment');
-
-      var desc = $adj.find('.adjustment-description').val().trim() || null
-      var amount = parseInt($adj.find('.adjustment-amount').val().trim() * 100)
-      return {
-        description: desc,
-        amount: !utils.isNaN(amount) ? amount : null
-      };
-    },
-
-    tip: function() {
-      var tip = parseFloat(this.$el.find(this.fieldMap.tip).val())
-      return !_.isNaN(tip) ? Math.round(tip * 100) : 0;
-    }
-  },
-
-  editAddress: function(e) {
-    this.$el.find('.order-address').toggleClass('hide');
-    this.updateAddressBlock();
-  },
-
-  updateAddressBlock: function() {
-    var addr = {
-      street: this.$el.find('.address-street').val(),
-      city: this.$el.find('.address-city').val(),
-      state: this.$el.find('.address-state').val(),
-      zip: this.$el.find('.address-zip').val()
-    }
-    this.$el.find('.order-address-block').html(Handlebars.helpers.address(addr));
-  },
-
-  autoSave: _.debounce(FormView.prototype.onSave, 600),
-
-  submit: function() {
-    async.each(this.items.concat(this), function(view, cb) {
-      view.onSave(null, cb);
-    }, utils.bind(function(err) {
-      if (!err)
-        this.changeStatus('submitted');
-    }, this));
-  },
-
-  onSaveSuccess: function() {
-    this.clearErrors();
-  },
-
-  clickTipButton: function(e) {
-    var percentage = $(e.currentTarget).attr('data-percent');
-    var tip = (this.model.get('sub_total') * percentage / 100).toFixed(2);
-    this.$el.find(this.fieldMap.tip).val(tip);
-    this.autoSave();
-  },
-
-  makeCopy: function(e) {
+  makeCopy: function() {
+    var self = this;
     this.model.copy(function(err, newOrder) {
       if (err) {
-        this.copyErrorModal.setModel(this.model);
-        this.copyErrorModal.$el.modal('show');
+        self.copyErrorModal.setModel(self.model);
+        self.copyErrorModal.$el.modal('show');
       } else {
         var queryParams = {
           copy: true
@@ -262,6 +149,39 @@ var OrderView = FormView.extend({
         if (newOrder.get('lostItems')) queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
         window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
       }
+    });
+  },
+
+  // Override onChange to noop because we do not want to hide the submit button
+  onChange: function(){},
+
+  onSubmittableChange: function(model, value, options) {
+    this.$el.find('.btn-submit').toggleClass( 'disabled', !value );
+  },
+
+  displayErrors: function() {
+    FormView.prototype.displayErrors.apply(this, arguments);
+
+    var selector = _.map(_.filter(this.model.validationError, _.isString), function(err) {
+      return '.alert[data-error="' + err + '"]';
+    }).join(', ');
+
+    if (selector) this.$el.find( selector ).removeClass('hide');
+
+    return this;
+  },
+
+  clearErrors: function(){
+    FormView.prototype.clearErrors.apply(this, arguments);
+
+    this.$el.find('.alert').addClass('hide');
+    return this;
+  },
+
+  changeStatus: function(status) {
+    this.model.changeStatus(status, function(err) {
+      if (err) return alert(err);
+      window.location.reload();
     });
   }
 });

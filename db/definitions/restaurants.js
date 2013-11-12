@@ -100,6 +100,17 @@ define(function(require) {
   , logo_mono_url: {
       type: types.text
     }
+  , balanced_customer_uri: {
+      type: types.text
+    , nullable: true // even if there is no payment method specified this is good to have because this is whom the transaction is done on behalf of when we debit a customer's card or bank, will allow null, but should change to not null in future and generate uri on restaurant creation
+    , unique: true
+    }
+  , payment_method_id: {
+      type: types.int
+    , nullable: true // this is null is they don't want direct deposits
+    , default: 'NULL'
+    , references: {table: 'payment_methods', column: 'id', onDelete: 'set null'}
+    }
   };
 
   definition.indices = {};

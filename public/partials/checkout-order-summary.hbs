@@ -1,0 +1,12 @@
+{{> order_summary}}
+
+<div class="panel-footer with-items{{#unless order.orderItems.length}} hide{{/unless}}">
+  <div class="totals">
+  {{> totals}}
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <a class="btn btn-default pull-right" href="/restaurants/{{order.restaurant.id}}">Edit Order</a>
+    </div>
+  </div>
+</div>

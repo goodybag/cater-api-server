@@ -1,3 +1,14 @@
+.order-status {
+  padding-left: 15px;
+  padding-top: 16px;
+  padding-right: 15px;
+  padding-bottom: 16px;
+}
+
+.order-status-label {
+  margin-top: 5px;
+}
+
 .page-order .form-group.form-group-block {
   width: 100%;
   padding-left: 0;
@@ -34,7 +45,7 @@
 }
 
 .panel-order-details .label-status {
-  vertical-align: bottom;
+  vertical-align: middle;
 }
 
 .panel-order-details .date-created {
@@ -188,7 +199,7 @@
 }
 
 .order-line-item-table .line-item-name {
-  width: 38%;
+  width: 30%;
   vertical-align: middle;
   line-height: 14px;
 }
@@ -212,7 +223,7 @@
 
 .order-line-item-table .item-quantity-input {
   display: inline-block;
-  width: 100px;
+  width: 70px;
   margin-left: 12px;
   font-size: 13px;
   font-weight: 700;
@@ -275,6 +286,9 @@
 
 .panel-actions {
   margin-top: 10px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  border-top: solid #CCCCC0 1px;
 }
 
 @media (min-width: 768px) {

@@ -1,26 +1,51 @@
 var Address = Backbone.Model.extend({
+  // TODO: extract to superclass
+  validator: amanda('json'),
+
+  validate: function(attrs, options) {
+    options = _.defaults(options || {}, {enforceRequired: true})
+
+    var schema = _.clone(_.result(this.constructor, 'schema'));
+    if (!options.enforceRequired) {
+      schema.properties = _.objMap(schema.properties, _.compose(
+        _.partialRight(_.omit, 'required'),
+        function(property) {
+          return _.extend(property, {type: _.uniq(['null'].concat(property.type))});
+        })
+      );
+    }
+
+    return this.validator.validate(attrs, schema, options, _.identity);
+  },
+
+  urlRoot: '/users/me/addresses'
+}, {
   schema: {
     type: 'object',
     properties: {
       name: {
         type: ['string', 'null'],
-        required: false
+        required: false,
+        minLength: 1
       },
       street: {
         type: 'string',
-        required: true
+        required: true,
+        minLength: 1
       },
       street2: {
-        type: ['string', 'null'],
+        type: 'string',
         required: false
       },
       city: {
         type: 'string',
-        required: true
+        required: true,
+        minLength: 1
       },
       state: {
         type: 'string',
-        required: true
+        required: true,
+        length: 2
       },
       zip: {
         type: 'string',
@@ -29,24 +54,16 @@ var Address = Backbone.Model.extend({
         required: true
       },
       phone: {
-        type: ['string', 'null'],
+        type: 'string',
         length: 10,
         pattern: /^\d*$/, //contains only digits
-        required: false
+        required: true
       },
       delivery_instructions: {
         type: ['string', 'null'],
-        required: false
+        required: false,
+        minLength: 1
       }
     }
-  },
-
-  // TODO: extract to superclass
-  validator: amanda('json'),
-
-  validate: function(attrs, options) {
-    return this.validator.validate(attrs, this.schema, options || {}, function(err) { return err; });
-  },
-
-  urlRoot: '/users/me/addresses'
+  }
 });

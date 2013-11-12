@@ -8,6 +8,17 @@
             {{#each addresses}}
               <div class="list-item">
                 {{> address }}
+                <strong>
+                  {{#if is_default}}
+                  <p class="text-danger">This is your default address</p>
+                  {{else}}
+                  <a class="address-default" data-id="{{id}}">Make default address</a>
+                  {{/if}}
+                </strong>
+                <div class="actions">
+                  <a href="addresses/{{id}}" class="btn btn-default">Edit</a>
+                  <button class="btn btn-default address-remove" data-id="{{id}}">Remove</button>
+                </div>
                 <hr>
               </div>
             {{/each}}

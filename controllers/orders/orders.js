@@ -147,6 +147,13 @@ module.exports.get = function(req, res) {
       ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
     );
 
+    // Embed the payment_method if we can
+    if (context.order.payment_method_id){
+      context.order.payment_method = utils.findWhere(
+        context.user.payment_methods, { id: context.order.payment_method_id }
+      );
+    }
+
     // orders are always editable for an admin
     if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
       context.order.editable = true;

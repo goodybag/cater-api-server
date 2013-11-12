@@ -196,12 +196,17 @@
 
 .order-line-item-table .line-item-notes {
   padding-right: 16px;
+  font-size: 12px;
 }
 
 .order-line-item-table .line-item-name {
   width: 30%;
   vertical-align: middle;
   line-height: 14px;
+}
+
+.line-item-name .item-options > li {
+  font-size: 12px;
 }
 
 .order-line-item-table td.line-item-price {
@@ -244,44 +249,6 @@
 .order-line-item-table .item-notes-textarea {
   height: 50px;
   resize: none;
-}
-
-.order-totals {
-  float: right;
-  text-align: right;
-  margin-top: 0;
-}
-
-.order-totals dt,
-.order-totals dd {
-  line-height: 24px;
-  font-size: 13px;
-}
-
-.order-totals dt {
-  font-weight: 300;
-  float: left;
-  overflow: hidden;
-  clear: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: right;
-  width: 160px;
-}
-
-.order-totals dd {
-  margin-left: 190px;
-  font-weight: 700;
-}
-
-.order-totals .minimum {
-  font-style: italic;
-  font-weight: normal;
-  color: #A7A4A0;
-}
-
-.order-totals .error {
-  color: #DC0500;
 }
 
 .panel-actions {

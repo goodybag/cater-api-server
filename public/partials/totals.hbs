@@ -1,4 +1,12 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/order-totals.css">
+{{/extend}}
+
 <dl class="dl-horizontal order-totals">
+  {{#if order.payment_method}}
+    <dt class="dt-card">Card #:</dt>
+    <dd>****{{order.payment_method.data.last_four}}</dd>
+  {{/if}}
   {{#if order.restaurant.minimum_order}}
   <div class="minimum {{#if order.below_min}} error {{/if}}">
     <dt>Order Minimum:</dt>

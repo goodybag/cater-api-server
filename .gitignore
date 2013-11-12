@@ -20,4 +20,4 @@ balanced-config.json
 public/receipts/*.pdf
 public/components
 *~
-
+local-config.json

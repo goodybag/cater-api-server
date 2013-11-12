@@ -7,7 +7,12 @@ var
 , fs =  require('fs')
 , _ = require('lodash')
 , balancedConfig = fs.existsSync(__dirname+'/balanced-config.json') ? require('./balanced-config.json') : undefined // used in dev
+, local = {}
 ;
+
+if (fs.existsSync('./local-config.json')){
+  local = require('./local-config.json');
+}
 
 var config = {
   defaults: {
@@ -134,11 +139,13 @@ var config = {
     , plan: 'month'
     }
 
-  , testEmail: 'geoff@goodybag.com'
+  , baseUrl: 'http://localhost:3000'
 
-  , testPhoneSms: '5129236299'
+  , testEmail: local.testEmail || 'test@goodybag.com'
 
-  , testPhoneVoice: '5125390612'
+  , testPhoneSms: local.testPhoneSms || '1234567890'
+
+  , testPhoneVoice: local.testPhoneVoice || '1234567890'
 
   , emailEnabled: true
 

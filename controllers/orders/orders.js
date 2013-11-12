@@ -276,6 +276,40 @@ module.exports.changeStatus = function(req, res) {
 
     if (review) order.attributes.token_used = 'now()';
 
+    // Save address
+    if (order.attributes.status === 'pending' && req.body.status === 'submitted') {
+
+      var addressFields = [ 
+        'street'
+      , 'street2'
+      , 'city'
+      , 'state'
+      , 'zip'
+      , 'phone'
+      , 'delivery_instructions'
+      ];
+
+      var orderAddressFields = utils.pick(order.attributes, addressFields);
+      var bodyAddressFields = utils.pick(req.body, addressFields);
+
+      // Set `is_default == true` if there's no default set
+      models.Address.find({ where: {user_id: req.session.user.id, is_default: true}}, function(error, addresses) {
+        if (error) return res.error(errors.internal.DB_FAILURE, error);
+        
+        var noExistingDefault = !addresses.length;
+        var addressData = utils.extend(
+          { user_id: req.session.user.id, is_default: noExistingDefault }
+        , orderAddressFields
+        , bodyAddressFields
+        );
+        var address = new models.Address(addressData);
+
+        address.save(function(err, rows, result) {
+          if (err) return res.error(errors.internal.DB_FAILURE, err);
+        });
+      });
+    }
+
     order.attributes.status = req.body.status;
 
     order.save(function(err){

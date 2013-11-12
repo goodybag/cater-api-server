@@ -58,7 +58,7 @@ module.exports = Model.extend({
     // For some reason typeof (client || db) === 'undefined' but typeof db === 'object'.
     db.query( db.builder.sql( query ), function( error, result, info ){
       if ( error ) return callback( error );
-console.log(pm);
+
       if ( pm.save_card == false ) return callback( null, result[0] );
 
       var id = result[0].id;

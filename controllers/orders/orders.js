@@ -16,6 +16,16 @@ var MailComposer = require('mailcomposer').MailComposer;
 var Bitly = require('bitly');
 var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 
+var addressFields = [ 
+  'street'
+, 'street2'
+, 'city'
+, 'state'
+, 'zip'
+, 'phone'
+, 'delivery_instructions'
+];
+
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
 
@@ -217,6 +227,25 @@ module.exports.changeStatus = function(req, res) {
 
     var done = function() {
       if (order.attributes.status === 'submitted') {
+
+        // TODO: extract this address logic into address model
+        // Save address based on this order's attributes
+        var orderAddressFields = utils.pick(order.attributes, addressFields);
+
+        // Set `is_default == true` if there's no default set
+        models.Address.find({ where: {user_id: req.session.user.id, is_default: true}}, function(error, addresses) {
+          if (error) return res.error(errors.internal.DB_FAILURE, error);
+          
+          var noExistingDefault = !addresses.length;
+          var addressData = utils.extend({ user_id: req.session.user.id, is_default: noExistingDefault }, orderAddressFields);
+          var address = new models.Address(addressData);
+          address.save(function(err, rows, result) {
+
+            // Db enforces unique addresses, so ignore 23505 UNIQUE VIOLATION
+            if (err && err.code !== '23505') return res.error(errors.internal.DB_FAILURE, err);
+          });
+        });
+
         var viewOptions = {
           order: order.toJSON({review: true}),
           config: config,
@@ -275,40 +304,6 @@ module.exports.changeStatus = function(req, res) {
     if (req.body.status === 'submitted' && order.attributes.user.is_invoiced) order.attributes.payment_status = 'invoiced';
 
     if (review) order.attributes.token_used = 'now()';
-
-    // Save address
-    if (order.attributes.status === 'pending' && req.body.status === 'submitted') {
-
-      var addressFields = [ 
-        'street'
-      , 'street2'
-      , 'city'
-      , 'state'
-      , 'zip'
-      , 'phone'
-      , 'delivery_instructions'
-      ];
-
-      var orderAddressFields = utils.pick(order.attributes, addressFields);
-      var bodyAddressFields = utils.pick(req.body, addressFields);
-
-      // Set `is_default == true` if there's no default set
-      models.Address.find({ where: {user_id: req.session.user.id, is_default: true}}, function(error, addresses) {
-        if (error) return res.error(errors.internal.DB_FAILURE, error);
-        
-        var noExistingDefault = !addresses.length;
-        var addressData = utils.extend(
-          { user_id: req.session.user.id, is_default: noExistingDefault }
-        , orderAddressFields
-        , bodyAddressFields
-        );
-        var address = new models.Address(addressData);
-
-        address.save(function(err, rows, result) {
-          if (err) return res.error(errors.internal.DB_FAILURE, err);
-        });
-      });
-    }
 
     order.attributes.status = req.body.status;
 

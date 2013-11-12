@@ -265,9 +265,17 @@ module.exports = Model.extend({
 
       // TODO: only allow valid times in order params, currently assumes so
       if(orderParams.time) {
-        var timeparts = orderParams.time.split(':');
-        datetime.hour(timeparts[0]);
-        datetime.minute(timeparts[1]);
+
+        // Parse format 12 hour format `hh:mm a`
+        // Example: 7:30 pm
+        var timeparts = orderParams.time.split(':')
+          , minuteparts = timeparts[1].split(' ')
+          , timeHour = timeparts[0]
+          , timeMinutes = minuteparts[0]
+          , timePm = minuteparts[1].toLowerCase() === 'pm';
+
+        datetime.hour(timePm ? parseInt(timeHour, 10) + 12 : timeHour);
+        datetime.minute(minuteparts[0]);
         datetime.second(0);
       } else {
         datetime.hour(23);

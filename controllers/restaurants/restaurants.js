@@ -115,6 +115,7 @@ module.exports.get = function(req, res) {
 module.exports.edit = function(req, res) {
   models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (!restaurant) return res.render('404');
     restaurant.getItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       var selectedPrice = utils.object(utils.map([1, 2, 3, 4], function(i) {

@@ -1,5 +1,5 @@
 <div class="container container-small">
-  <h1 class="page-title">Create a new user</h1>
+  <h1 class="page-title">Users</h1>
   <div class="panel">
     <form class="create-user-form" action="/users" method="post">
       <div class="panel-body">
@@ -38,6 +38,28 @@
         </div>
     </form>
   </div>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>name</th>
+          <th>email</th>
+          <th>organization</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each users}}
+        <tr>
+          <td>{{id}}</td>
+          <td>{{name}}</td>
+          <td>{{email}}</td>
+          <td>{{organization}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </div>
 
 {{#extend "scripts"}}
@@ -45,6 +67,6 @@
 <script src="/js/views/form-view.js"></script>
 <script src="/js/views/create-user-view.js"></script>
 <script>
-  var createUserView = new CreateUserView({ el: '#main' });
+  var createUserView = new CreateUserView({ el: '#main', reloadOnSuccess: true });
 </script>
 {{/extend}}

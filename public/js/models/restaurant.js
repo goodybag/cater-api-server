@@ -80,11 +80,13 @@ var Restaurant = (function(){
           required: true
         },
         logo_url: {
-          type: 'string',
+          type: ['string', 'null'],
+          required: false,
           pattern: regex.url
         },
         logo_mono_url: {
-          type: 'string',
+          type: ['string', 'null'],
+          required: false,
           pattern: regex.url
         }
       }

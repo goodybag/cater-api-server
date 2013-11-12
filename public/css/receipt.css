@@ -31,6 +31,10 @@
   font-weight: normal;
 }
 
+.delivery-info-date > dt, .delivery-info-date > dd {
+  line-height: 18px;
+}
+
 .delivery-header {
   margin-bottom: -2px;
   padding-left: 9px;

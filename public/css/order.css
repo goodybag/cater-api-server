@@ -205,8 +205,13 @@
   line-height: 14px;
 }
 
+.line-item-name .item-options {
+  margin-top: 3px;
+}
+
 .line-item-name .item-options > li {
   font-size: 12px;
+  line-height: 8px;
 }
 
 .order-line-item-table td.line-item-price {

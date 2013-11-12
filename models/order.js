@@ -301,7 +301,6 @@ module.exports = Model.extend({
     // because it cannot be determined due to DST until the datetime in
     // datetime)
     query.columns.push('(orders.datetime::text) as datetime');
-    query.columns.push('latest.status');
 
     query.with = [
       {
@@ -371,6 +370,21 @@ module.exports = Model.extend({
       , groupBy: 'restaurant_id'
       , table: 'restaurant_lead_times'
       }
+    , {
+        name: 'statuses'
+      , type: 'select'
+      , table: 'order_statuses'
+      , columns: ['order_id', 'status', 'created_at', 'max(created_at)']
+      , over: {partition: 'order_id'}
+      }
+    , {
+        name: 'submitted'
+      , type: 'select'
+      , table: 'order_statuses'
+      , columns: ['order_id', 'created_at', 'max(created_at)']
+      , over: {partition: ['order_id', 'status']}
+      , where: {status: 'submitted'}
+      }
     ];
 
     var itemSubtotals = [
@@ -438,33 +452,13 @@ module.exports = Model.extend({
 
     query.joins = query.joins || {};
 
-    query.joins.latest = {
+    query.columns.push('statuses.status');
+
+    query.joins.statuses = {
       type: 'left'
-    , columns: ['order_id', 'status']
     , on: {
         'order_id': '$orders.id$'
-      }
-    // TODO: convert to with
-    , target: {
-        type: 'select'
-      , columns: ['order_id', 'status']
-      , table: 'order_statuses'
-      , alias: 'statuses'
-      , joins: {
-          recent: {
-            type: 'inner'
-          , on: {
-              'order_id': '$statuses.order_id$'
-            , 'created_at': '$statuses.created_at$'
-            }
-          , target: {
-              type: 'select'
-            , table: 'order_statuses'
-            , columns: ['order_id', 'max(created_at) as created_at']
-            , groupBy: 'order_id'
-            }
-          }
-        }
+      , 'created_at': '$statuses.max$'
       }
     };
 
@@ -510,10 +504,9 @@ module.exports = Model.extend({
 
     query.columns.push('(submitted.created_at) as submitted');
 
-    query.joins.order_statuses = {
+    query.joins.submitted = {
       type: 'left'
-    , alias: 'submitted'
-    , on: {'order_id': '$orders.id$', 'status': 'submitted'}
+    , on: {'order_id': '$orders.id$', 'created_at': '$submitted.max$'}
     }
 
     var unacceptable = [];

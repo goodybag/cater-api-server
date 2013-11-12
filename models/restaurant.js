@@ -261,27 +261,11 @@ module.exports = Model.extend({
     // TODO: only allow valid dates in order params, currently assumes so
     if (orderParams && orderParams.date) {
       // determine if lead time is unacceptable only if date is provided
-      var datetime = moment(orderParams.date);
 
       // TODO: only allow valid times in order params, currently assumes so
-      if(orderParams.time) {
 
-        // Parse format 12 hour format `hh:mm a`
-        // Example: 7:30 pm
-        var timeparts = orderParams.time.split(':')
-          , minuteparts = timeparts[1].split(' ')
-          , timeHour = timeparts[0]
-          , timeMinutes = minuteparts[0]
-          , timePm = minuteparts[1].toLowerCase() === 'pm';
-
-        datetime.hour(timePm ? parseInt(timeHour, 10) + 12 : timeHour);
-        datetime.minute(minuteparts[0]);
-        datetime.second(0);
-      } else {
-        datetime.hour(23);
-        datetime.minute(59);
-        datetime.second(59);
-      }
+      // orderParams.time uses am/pm
+      var datetime = moment(orderParams.date + ' ' + (orderParams.time ? orderParams.time : '11:59 pm'), 'YYYY-MM-DD hh:mm a');
 
       var formattedDateTime = moment(datetime).format('YYYY-MM-DD HH:MM:59');
 

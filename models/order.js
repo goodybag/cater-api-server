@@ -165,7 +165,6 @@ module.exports = Model.extend({
 
   isComplete: function() {
     var vals = utils.pick(this.attributes, this.requiredFields);
-    console.log("isComplete", vals);
     for (var key in vals) {
       if (vals[key] == null)
         return false

@@ -39,6 +39,9 @@ var CheckoutView = OrderView.extend({
     this.timepicker.on( 'open', _(this.onTimePickerOpen).bind( this ) );
 
     this.$paymentMethodId = this.$el.find('#payment-method-id');
+
+    // Trigger payment method id change to check if selected card is expired
+    this.onPaymentMethodIdChange();
   },
 
   onDatePickerOpen: function(){
@@ -179,13 +182,11 @@ var CheckoutView = OrderView.extend({
    * @param {PaymentMethod} paymentMethod The card model
    */
   addNewCardToSelect: function(paymentMethod){
-    this.$paymentMethodId.append([
-      '<option value="'
-    , paymentMethod.get('id')
-    , '">Credit Card (**** '
-    , paymentMethod.get('data').last_four
-    , ')</option>'
-    ].join(''));
+    this.$paymentMethodId.append(
+      Handlebars.partials.payment_method_option(
+        paymentMethod.toJSON()
+      )
+    );
 
     return this;
   },
@@ -280,10 +281,12 @@ var CheckoutView = OrderView.extend({
     var $el = this.$el.find('#new-card');
 
     var data = {
-      card_number:      +$el.find('[name="card_number"]').val()
+      name:              $el.find('[name="card_name"]').val()
+    , card_number:      +$el.find('[name="card_number"]').val()
     , security_code:    +$el.find('[name="security_code"]').val()
     , expiration_month: +$el.find('[name="expiration_month"]').val()
     , expiration_year:  +$el.find('[name="expiration_year"]').val()
+    , save_card:         $el.find('[name="save_card"]:checked').length === 1
     };
 
     var pm = new PaymentMethod({ user_id: user.get('id') });
@@ -338,7 +341,8 @@ var CheckoutView = OrderView.extend({
     });
 
     var data = {
-      card_number:      +$el.find('[name="card_number"]').val()
+      name:              $el.find('[name="card_name"]').val()
+    , card_number:      +$el.find('[name="card_number"]').val()
     , security_code:    +$el.find('[name="security_code"]').val()
     , expiration_month: +$el.find('[name="expiration_month"]').val()
     , expiration_year:  +$el.find('[name="expiration_year"]').val()
@@ -348,6 +352,7 @@ var CheckoutView = OrderView.extend({
       if (error) return notify.error(error);
 
       this_.hideCardExpired();
+      this_.hideUpdateCardView();
       this_.selectPaymentType('existing');
       this_.selectCard(pm.get('id'));
       this_.clearCardForm($el);

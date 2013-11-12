@@ -1,18 +1,52 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/edit-card.css">
+{{/extend}}
+
 <input type="hidden" name="id" value="{{id}}">
-<div class="form-group">
-  <label class="control-label">Card Title</label>
-  <input value="{{title}}" type="text" name="payment_method_title" class="form-control credit-card-title">
+<div class="row">
+  <div class="form-group col-sm-6">
+    <label class="control-label">Card Title</label>
+    <input value="{{title}}" type="text" name="card_name" class="form-control credit-card-name">
 </div>
-<div class="form-group">
-  <label class="control-label">Card Number</label>
-  <input type="text" name="card_number" class="form-control credit-card-title">
 </div>
-<div class="form-group">
-  <label class="control-label">CVV Code</label>
-  <input type="text" name="security_code" class="form-control credit-card-title">
+<div class="row">
+  <div class="form-group col-sm-6">
+    <label class="control-label">Card Number</label>
+    <input type="text" name="card_number" class="form-control credit-card-number">
+  </div>
 </div>
-<div class="form-group">
+<div class="row">
+  <div class="form-group col-sm-4">
+    <label class="control-label">CVV Code</label>
+    <input type="text" name="security_code" class="form-control credit-card-security">
+  </div>
+</div>
+
+<div class="expiration-wrapper form-inline">
   <label class="control-label">Expiration Date</label>
-  <input value="{{data.expiration_month}}" type="number" name="expiration_month" class="form-control">
-  <input value="{{data.expiration_year}}" type="number" name="expiration_year" class="form-control">
+  <div class="form-group">
+    <select name="expiration_month" class="form-control">
+      {{#reverseRange '12' '1'}}
+        <option
+          value="{{pad this 2}}"
+          {{#if ../data}}
+          {{#eq this ../../data.expiration_month}}selected="selected"{{/eq}}
+          {{/if}}
+        >{{pad this 2}}</option>
+      {{/reverseRange}}
+    </select>
+  </div>
+  <div class="form-group form-group-separator">/</div>
+  <div class="form-group">
+    <select name="expiration_year" class="form-control">
+      {{#reverseRange '2020' '2000'}}
+        <option
+          value="{{this}}"
+          {{#if ../data}}
+          {{#eq this ../../data.expiration_year}}selected="selected"{{/eq}}
+          {{/if}}
+        >{{this}}</option>
+      {{/reverseRange}}
+    </select>
+  </div>
 </div>

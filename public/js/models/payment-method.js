@@ -32,9 +32,11 @@ var PaymentMethod = Backbone.Model.extend({
       if (res.status !== 201) return callback ? callback(res.error) : null;
 
       var pm = {
-        data:     res.data
-      , uri:      res.data.uri
-      , type:     res.data._type
+        data:       res.data
+      , uri:        res.data.uri
+      , type:       res.data._type
+      , name:       data.name
+      , save_card:  data.save_card
       };
 
       this_.save(pm, {
@@ -56,5 +58,5 @@ var PaymentMethod = Backbone.Model.extend({
       date.getFullYear() === data.expiration_year &&
       date.getMonth() + 1 > data.expiration_month
     );
-  },
+  }
 });

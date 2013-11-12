@@ -59,12 +59,14 @@ module.exports = Model.extend({
     db.query( db.builder.sql( query ), function( error, result, info ){
       if ( error ) return callback( error );
 
+      if ( pm.save_card == false ) return callback( null, result[0] );
+
       var id = result[0].id;
 
       var query = {
         type: 'insert'
       , table: 'users_payment_methods'
-      , values: { user_id: userId, payment_method_id: id }
+      , values: { user_id: userId, payment_method_id: id, name: pm.name }
       , returning: ['id']
       };
 
@@ -78,7 +80,7 @@ module.exports = Model.extend({
     var query = {
       type: 'select'
     , table: 'payment_methods'
-    , columns: ['payment_methods.*']
+    , columns: ['payment_methods.*', 'upm.name']
     , joins: {
         users_payment_methods: {
           alias: 'upm'
@@ -128,7 +130,7 @@ module.exports = Model.extend({
     , where: where
     , returning: ['*']
     };
-console.log(db.builder.sql( query ));
+
     ( client || db ).query( db.builder.sql( query ), function( error, result, info ){
       return callback( error, result );
     });

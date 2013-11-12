@@ -55,3 +55,10 @@
 .delivery-info-address address {
   margin-top: 12px;
 }
+
+.thankyou-message {
+  display: block;
+  margin: 20px 0 32px;
+  font-size: 16px;
+  text-align: center;
+}

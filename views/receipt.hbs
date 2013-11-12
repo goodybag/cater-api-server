@@ -8,6 +8,10 @@
     {{> wizard }}
   </div>
 
+  {{#if showThankYou}}
+    <p class="thankyou-message"><strong>Thanks for your order!</strong> You will receive a confirmation email shortly.</p>
+  {{/if}}
+
   {{#if order.editable}}
   <div class="row">
     <div class="alerts col-lg-12">

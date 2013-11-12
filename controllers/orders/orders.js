@@ -77,7 +77,11 @@ module.exports.list = function(req, res) {
 module.exports.get = function(req, res) {
   var tasks = [
     function(cb) {
-      models.Order.findOne(parseInt(req.params.id), function(err, order) {
+      var query = {
+        columns: ['*', 'submitted_date']
+      , where: { id: parseInt(req.params.id) }
+      };
+      models.Order.findOne(query, function(err, order) {
         if (err) return cb(err);
         if (!order) return cb(404);
         return cb(null, order);
@@ -152,6 +156,12 @@ module.exports.get = function(req, res) {
       context.order.payment_method = utils.findWhere(
         context.user.payment_methods, { id: context.order.payment_method_id }
       );
+    }
+
+    // Decide where to show the `Thanks` message
+    if (moment(context.order.submitted_date).add('hours', 1) > moment())
+    if (context.order.user_id == req.session.user.id){
+      context.showThankYou = true;
     }
 
     // orders are always editable for an admin

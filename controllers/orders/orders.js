@@ -16,7 +16,7 @@ var MailComposer = require('mailcomposer').MailComposer;
 var Bitly = require('bitly');
 var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 
-var addressFields = [ 
+var addressFields = [
   'street'
 , 'street2'
 , 'city'

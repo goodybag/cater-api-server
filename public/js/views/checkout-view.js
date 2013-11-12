@@ -153,7 +153,7 @@ var CheckoutView = OrderView.extend({
     }
 
     this.onSave(function(err, response) {
-      if (err) return;
+      if (err) return notify.error(err); // TODO: error handling
       self.model.changeStatus('submitted', function(err, data) {
         if (err) return notify.error(err); // TODO: error handling
         window.location.reload();

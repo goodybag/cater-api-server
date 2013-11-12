@@ -141,7 +141,7 @@
             <div><strong>{{user.organization}}</strong></div>
             {{/if}}
             {{#unless order.editable}}
-            {{> address order}}
+            {{> address order.address}}
             {{else}}
             {{#with orderAddress}}
             {{> edit_address}}

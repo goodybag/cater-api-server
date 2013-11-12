@@ -117,7 +117,7 @@ module.exports.get = function(req, res) {
     if (err)
       return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
 
-    // Redirect empty orders to item summary 
+    // Redirect empty orders to item summary
     if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.id + '/items');
 
     var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
@@ -141,6 +141,12 @@ module.exports.get = function(req, res) {
       step: order.attributes.status === 'pending' ? 2 : 3
     };
 
+    // Put address grouped on order for convenience
+    context.order.address = utils.pick(
+      context.order,
+      ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
+    );
+
     // orders are always editable for an admin
     if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
       context.order.editable = true;
@@ -151,11 +157,7 @@ module.exports.get = function(req, res) {
       context.layout = 'invoice/invoice-layout';
     }
 
-    res.render(view, context, function(err, html) {
-      if (err) return res.error(errors.internal.UNKNOWN, err);
-      res.send(html);
-    });
-
+    res.render(view, context);
   });
 
 }

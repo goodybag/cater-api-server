@@ -3,9 +3,15 @@
  */
 
 var
-  os = require('os')
+  fs = require('fs')
+, os = require('os')
 , _ = require('lodash')
+, local = {}
 ;
+
+if (fs.existsSync('./local-config.json')){
+  local = require('./local-config.json');
+}
 
 var config = {
   defaults: {
@@ -125,11 +131,11 @@ var config = {
 
   , baseUrl: 'http://localhost:3000'
 
-  , testEmail: 'geoff@goodybag.com'
+  , testEmail: local.testEmail || 'test@goodybag.com'
 
-  , testPhoneSms: '5129236299'
+  , testPhoneSms: local.testPhoneSms || '1234567890'
 
-  , testPhoneVoice: '5125390612'
+  , testPhoneVoice: local.testPhoneVoice || '1234567890'
 
   , emailEnabled: true
 

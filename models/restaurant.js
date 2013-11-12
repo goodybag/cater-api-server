@@ -264,7 +264,7 @@ module.exports = Model.extend({
 
       // TODO: only allow valid times in order params, currently assumes so
 
-      // orderParams.time uses am/pm
+      // supports either standard or military time
       var datetime = moment(orderParams.date + ' ' + (orderParams.time ? orderParams.time : '11:59 pm'), 'YYYY-MM-DD hh:mm a');
 
       var formattedDateTime = moment(datetime).format('YYYY-MM-DD HH:MM:59');

@@ -256,23 +256,6 @@
   resize: none;
 }
 
-.panel-actions {
-  margin-top: 10px;
-  padding-top: 30px;
-  padding-bottom: 20px;
-  border-top: solid #CCCCC0 1px;
-}
-
-@media (min-width: 768px) {
-  .panel-actions .btn {
-    margin-left: 10px;
-  }
-}
-
-.panel-actions > .actions-right {
-  text-align: right;
-}
-
 .alert-bad-lead-time .lead-times {
   margin-top: 25px;
 }

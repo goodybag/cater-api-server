@@ -269,6 +269,18 @@
   margin-right: 0;
 }
 
+.panel-actions .actions-left {
+  text-align: left;
+}
+
+@media screen and (max-width: 786px) {
+  .panel-actions .btn {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 /**
  * Order params bar
  */

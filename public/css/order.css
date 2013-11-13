@@ -318,10 +318,12 @@ p.adjustment-description {
 }
 
 .totals {
+  display: inline-block;
   margin-top: 35px;
 }
 
 .totals-panel {
+  text-align: right;
   padding-top: 0px;
 }
 

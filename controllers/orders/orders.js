@@ -96,7 +96,7 @@ module.exports.get = function(req, res) {
 
     function(order, cb) {
       var query = {
-        where: { id: req.session.user.id },
+        where: { id: order.attributes.user_id },
         embeds: {
           payment_methods: {}
         , addresses: {

@@ -248,32 +248,26 @@
         {{> totals}}
       </div>
       {{/if}}
-
-      <div>
-        {{#eq order.status "pending"}}
-        <a class="btn btn-default btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add to Order</a>
-        {{/eq}}
-        {{#if owner}}
-        <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}} pull-right" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
-        {{/if}}
-      </div>
     </div>
-  </div>
 
-  {{#if restaurantReview}}
-  <div class="panel restaurant-review">
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-lg-3 col-lg-offset-2">
-          <button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
-        </div>
-        <div class="col-lg-3 col-lg-offset-2">
-          <button class="btn btn-lg btn-success btn-accept pull-right">Accept Order</button>
-        </div>
-      </div>
+    {{#unless restaurantReview}}
+    <div class="panel-actions">
+      {{#eq order.status "pending"}}
+      <a class="btn btn-default btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add to Order</a>
+      {{/eq}}
+      {{#if owner}}
+      <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
+      {{/if}}
     </div>
+    {{/unless}}
+
+    {{#if restaurantReview}}
+    <div class="panel-actions restaurant-review panel-body">
+      <button class="btn btn-default" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
+      <button class="btn btn-primary btn-accept">Accept Order</button>
+    </div>
+    {{/if}}
   </div>
-  {{/if}}
 </div>
 
 <!-- TODO: merge these two modals with a partial -->

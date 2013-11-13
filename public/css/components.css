@@ -251,6 +251,24 @@
   font-weight: 500;
 }
 
+.panel-actions {
+  padding: 24px 15px;
+  border-top: solid #CCCCC0 1px;
+  text-align: right;
+}
+
+.panel-actions .btn {
+  margin: 0 10px;
+}
+
+.panel-actions .btn:first-child {
+  margin-left: 0;
+}
+
+.panel-actions .btn:last-child {
+  margin-right: 0;
+}
+
 /**
  * Order params bar
  */
@@ -336,6 +354,7 @@
  */
 
 .btn {
+  border-radius: 3px;
   font-weight: 500;
 }
 

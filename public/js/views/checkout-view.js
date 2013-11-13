@@ -222,7 +222,7 @@ var CheckoutView = OrderView.extend({
    */
   clearCardForm: function($el){
     $el = $el || this.$el.find('#new-card');
-    this.$el.find('input').val('');
+    $el.find('input').val('');
     return this;
   },
 

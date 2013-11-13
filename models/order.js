@@ -357,7 +357,7 @@ module.exports = Model.extend({
           , expression: {
               type: 'function'
             , function: 'array_agg'
-            , expression: '(\'{"lead_time": \' || lead_time || \', "max_guests": \' || max_guests || \'}\')::json order by max_guests ASC'
+            , expression: '(\'{"lead_time": \' || lead_time || \', "max_guests": \' || max_guests || \', "cancel_time": \' || coalesce(cancel_time::text::json, \'null\'::json) || \'}\')::json order by max_guests ASC'
             }
           }
         ]

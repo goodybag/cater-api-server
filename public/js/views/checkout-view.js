@@ -44,7 +44,6 @@ var CheckoutView = OrderView.extend({
     // Trigger payment method id change to check if selected card is expired
     this.onPaymentMethodIdChange();
 
-    // this.model.on('invalid', this.selectAddressAlerts);
   },
 
   onDatePickerOpen: function(){
@@ -169,7 +168,7 @@ var CheckoutView = OrderView.extend({
     e.preventDefault();
     var addressId = this.$el.find('#select-address-form input[name="address-radio"]:checked').data('id');
     var address = this.options.user.addresses.get(addressId);
-    this.model.save(address.omit(['user_id', 'is_default']), {
+    var sent = this.model.save(address.omit(['id', 'user_id', 'is_default']), {
       success: function() {
         this_.$el.find('#select-address-modal').modal('hide');
         this_.addressView.render();
@@ -179,19 +178,14 @@ var CheckoutView = OrderView.extend({
         notify.error(err);
       }
     });
+
+    // Can I do this to capture an invalid order.save? I only want to show
+    // alerts in the modal when selecting another address from the user's 
+    // address book.
+    if (!sent) {
+      this_.setAlerts('.alert-bad-zip-modal', this_.model, _.contains(this.model.validationError, 'is_bad_zip'));
+    }
   },
-
-  /**
-   * Triggered by saving order model with a different address.
-   * Display validation errors if the chosen address is invalid.
-   * @param {Backbone.Model} order
-   * @param {array} errors The validation errors returned from model.validate
-   * @param {object} options The options associated with the model.save 
-   */
-  // selectAddressAlerts: function(order, errors, options) {
-
-  //   console.log('selectAddressAlerts', arguments);
-  // },
 
   cancel: function() {
     this.model.changeStatus('canceled', function(err, data) {

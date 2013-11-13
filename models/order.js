@@ -711,7 +711,7 @@ module.exports = Model.extend({
         query.joins.os_submitted.target.where = { order_id: query.where.id };
       }
     }
-// console.log("ohai");
+
     // query.columns.push('(is_bad_zip OR is_bad_guests OR is_bad_lead_time OR is_bad_delivery_time AS is_unacceptable)');
 
     Model.find.call(this, query, utils.partial(modifyAttributes, callback));

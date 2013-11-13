@@ -42,12 +42,16 @@ var OrderView = FormView.extend({
       var datetime = datepart + ' ' + timepart;
       var date = moment(datetime);
       return date.isValid() ? datetime : null;
+    },
+
+    phone: function() {
+      return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
     }
   },
 
   getDiff: function() {
     var diff = FormView.prototype.getDiff.apply(this, arguments);
-    var addrDiff = this.addressView.getDiff.apply(this.addressView, arguments)
+    var addrDiff = this.addressView.getDiff.apply(this.addressView, arguments);
     return diff || addrDiff ? _.extend({}, diff, addrDiff) : null;
   },
 

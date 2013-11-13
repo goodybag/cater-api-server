@@ -111,7 +111,7 @@ module.exports.get = function(req, res) {
           payment_methods: {}
         , addresses: {
             order: ['is_default desc', 'id asc']
-          , where: { user_id: req.session.user.id }
+          , where: { user_id: order.attributes.user_id }
           // Actually, we can probably just display this restriction client-side
           // , where: {
           //     zip: { $in: order.attributes.restaurant.delivery_zips }

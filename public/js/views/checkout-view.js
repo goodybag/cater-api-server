@@ -43,7 +43,6 @@ var CheckoutView = OrderView.extend({
 
     // Trigger payment method id change to check if selected card is expired
     this.onPaymentMethodIdChange();
-
   },
 
   onDatePickerOpen: function(){

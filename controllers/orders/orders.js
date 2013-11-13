@@ -87,7 +87,11 @@ module.exports.list = function(req, res) {
 module.exports.get = function(req, res) {
   var tasks = [
     function(cb) {
-      models.Order.findOne(parseInt(req.params.id), function(err, order) {
+      var query = {
+        columns: ['*', 'submitted_date']
+      , where: { id: parseInt(req.params.id) }
+      };
+      models.Order.findOne(query, function(err, order) {
         if (err) return cb(err);
         if (!order) return cb(404);
         return cb(null, order);
@@ -102,7 +106,7 @@ module.exports.get = function(req, res) {
 
     function(order, cb) {
       var query = {
-        where: { id: req.session.user.id },
+        where: { id: order.attributes.user_id },
         embeds: {
           payment_methods: {}
         , addresses: {
@@ -128,7 +132,7 @@ module.exports.get = function(req, res) {
     if (err)
       return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
 
-    // Redirect empty orders to item summary 
+    // Redirect empty orders to item summary
     if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.id + '/items');
 
     var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
@@ -156,6 +160,25 @@ module.exports.get = function(req, res) {
       step: order.attributes.status === 'pending' ? 2 : 3
     };
 
+    // Put address grouped on order for convenience
+    context.order.address = utils.pick(
+      context.order,
+      ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
+    );
+
+    // Embed the payment_method if we can
+    if (context.order.payment_method_id){
+      context.order.payment_method = utils.findWhere(
+        context.user.payment_methods, { id: context.order.payment_method_id }
+      );
+    }
+
+    // Decide where to show the `Thanks` message
+    if (moment(context.order.submitted_date).add('hours', 1) > moment())
+    if (context.order.user_id == req.session.user.id){
+      context.showThankYou = true;
+    }
+
     // orders are always editable for an admin
     if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
       context.order.editable = true;
@@ -166,11 +189,7 @@ module.exports.get = function(req, res) {
       context.layout = 'invoice/invoice-layout';
     }
 
-    res.render(view, context, function(err, html) {
-      if (err) return res.error(errors.internal.UNKNOWN, err);
-      res.send(html);
-    });
-
+    res.render(view, context);
   });
 
 }

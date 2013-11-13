@@ -12,13 +12,14 @@
 }
 
 .wizard > .step {
-  font-size: 15px;
   position: relative;
   display: inline-block;
   vertical-align: top;
   width: 180px;
   padding: 0;
   margin: 0;
+  font-size: 17px;
+  letter-spacing: 0.5px;
 }
 
 .wizard > .step.active {

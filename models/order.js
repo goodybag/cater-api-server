@@ -689,6 +689,29 @@ module.exports = Model.extend({
 
     query.limit = 10000;
 
+    // Add order submitted_date column logic
+    if (query.columns.indexOf('submitted_date') > -1){
+      query.columns[ query.columns.indexOf('submitted_date') ] = {
+        table: 'os_submitted'
+      , name: 'created_at'
+      , as: 'submitted_date'
+      };
+
+      query.joins.os_submitted = {
+        type: 'left'
+      , on: { status: 'submitted', order_id: '$orders.id$' }
+      , target: {
+          type: 'select'
+        , table: 'order_statuses'
+        }
+      };
+
+      // Reduce the sub-query set if we can
+      if ('id' in query.where){
+        query.joins.os_submitted.target.where = { order_id: query.where.id };
+      }
+    }
+
     // query.columns.push('(is_bad_zip OR is_bad_guests OR is_bad_lead_time OR is_bad_delivery_time AS is_unacceptable)');
 
     Model.find.call(this, query, utils.partial(modifyAttributes, callback));

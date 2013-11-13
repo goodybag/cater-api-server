@@ -170,6 +170,7 @@ var CheckoutView = OrderView.extend({
     var sent = this.model.save(address.omit(['id', 'user_id', 'is_default']), {
       success: function() {
         this_.$el.find('#select-address-modal').modal('hide');
+        this_.clear();
         this_.addressView.render();
       },
 

@@ -1,5 +1,6 @@
-var utils = require('../utils');
+var crypto = require('crypto');
 var uuid  = require('node-uuid');
+var utils = require('../utils');
 
 var defaultSelect = {
   type: 'select',
@@ -116,6 +117,8 @@ module.exports = {
 
   transaction: {
     createIfUriNotExists: function (type, orderId, uri, data) {
+      // must start with a character, not number for it to be valid dollar quoted string
+      var rand = 'x'+crypto.randomBytes(3).toString('hex');
       if (typeof data === 'object') data = JSON.stringify(data);
       return {
         type: 'insert'
@@ -123,7 +126,7 @@ module.exports = {
       , columns: ['type', 'order_id', 'uri', 'data']
       , expression: {
           type: 'select'
-        , expression: ["'"+type+"'", orderId, "'"+uri+"'", "'"+data+"'"]
+        , expression: [type, orderId, uri, data].map(function(i){return '$'+rand+'$$'+i+'$'+rand+'$$';})
         , where: {
             $notExists: {
               type: 'select'

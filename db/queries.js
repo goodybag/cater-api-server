@@ -1,4 +1,3 @@
-var crypto = require('crypto');
 var uuid  = require('node-uuid');
 var utils = require('../utils');
 
@@ -118,7 +117,7 @@ module.exports = {
   transaction: {
     createIfUriNotExists: function (type, orderId, uri, data) {
       // must start with a character, not number for it to be valid dollar quoted string
-      var rand = 'x'+crypto.randomBytes(3).toString('hex');
+      var rand = 'x'+Math.random().toString(36).substr(2, 5);
       if (typeof data === 'object') data = JSON.stringify(data);
       return {
         type: 'insert'

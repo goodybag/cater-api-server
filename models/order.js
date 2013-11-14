@@ -656,7 +656,7 @@ module.exports = Model.extend({
     pending: ['canceled', 'submitted'],
     submitted: ['canceled', 'denied', 'accepted'],
     denied: [],
-    accepted: ['delivered'],
+    accepted: ['canceled', 'delivered'],
     delivered: []
   }
 });

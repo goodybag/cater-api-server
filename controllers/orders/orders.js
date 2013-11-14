@@ -259,7 +259,7 @@ module.exports.changeStatus = function(req, res) {
         // Set `is_default == true` if there's no default set
         models.Address.find({ where: {user_id: req.session.user.id, is_default: true}}, function(error, addresses) {
           if (error) return res.error(errors.internal.DB_FAILURE, error);
-          
+
           var noExistingDefault = !addresses.length;
           var addressData = utils.extend(orderAddressFields, { user_id: req.session.user.id, is_default: noExistingDefault });
           var address = new models.Address(addressData);

@@ -312,7 +312,6 @@ var CheckoutView = OrderView.extend({
 
       if ( Order.addressFields[i] === 'phone' ){
         val = val.replace(/\(|\)|\s|\-/g, '')
-        console.log(val);
       }
 
       address.set( Order.addressFields[i], val );
@@ -395,6 +394,9 @@ var CheckoutView = OrderView.extend({
 
       $el.css( 'right', 0 - $el[0].offsetWidth );
     }
+
+    // Scroll to the first error
+    $(document.body).animate({ scrollTop: this.$el.find('.has-error').eq(0).offset().top - 20 });
   },
 
   onPaymentMethodIdChange: function(e) {

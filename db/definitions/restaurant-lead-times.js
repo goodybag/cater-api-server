@@ -39,7 +39,7 @@ define(function(require) {
       type: types.int
     , nullable: false
     }
-  , cancel_time {
+  , cancel_time: {
       type: types.int
     , nullable: true
     }

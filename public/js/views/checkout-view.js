@@ -163,12 +163,28 @@ var CheckoutView = OrderView.extend({
   },
 
   selectAddress: function(e) {
+    var this_ = this;
     e.preventDefault();
-    var addressId = this.$el.find('#select-address-form input[name="address-radio"]:checked').attr('data-id');
+    var addressId = this.$el.find('#select-address-form input[name="address-radio"]:checked').data('id');
     var address = this.options.user.addresses.get(addressId);
-    this.model.save(address.omit(['id', 'user_id', 'is_default']), {success: function() {
-      this.$el.find('#select-address-modal').modal('dismiss');
-    }});
+    var sent = this.model.save(address.omit(['id', 'user_id', 'is_default']), {
+      success: function() {
+        this_.$el.find('#select-address-modal').modal('hide');
+        this_.clear();
+        this_.addressView.render();
+      },
+
+      error: function(err) {
+        notify.error(err);
+      }
+    });
+
+    // Can I do this to capture an invalid order.save? I only want to show
+    // alerts in the modal when selecting another address from the user's 
+    // address book.
+    if (!sent) {
+      this_.setAlerts('.alert-bad-zip-modal', this_.model, _.contains(this.model.validationError, 'is_bad_zip'));
+    }
   },
 
   cancel: function() {

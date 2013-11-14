@@ -110,7 +110,8 @@ module.exports.get = function(req, res) {
         embeds: {
           payment_methods: {}
         , addresses: {
-            order: ['is_default asc', 'id asc']
+            order: ['is_default desc', 'id asc']
+          , where: { user_id: order.attributes.user_id }
           // Actually, we can probably just display this restriction client-side
           // , where: {
           //     zip: { $in: order.attributes.restaurant.delivery_zips }
@@ -136,6 +137,10 @@ module.exports.get = function(req, res) {
 
     var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
     var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
+
+    user = user.toJSON();
+    user.addresses = utils.invoke(user.addresses, 'toJSON');
+
     utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
     var context = {
       order: order.toJSON(),
@@ -151,7 +156,7 @@ module.exports.get = function(req, res) {
       },
       orderParams: req.session.orderParams,
       query: req.query,
-      user: user.toJSON(),
+      user: user,
       step: order.attributes.status === 'pending' ? 2 : 3
     };
 

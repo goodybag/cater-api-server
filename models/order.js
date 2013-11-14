@@ -121,7 +121,7 @@ module.exports = Model.extend({
 
     var inTimeToCancel;
     if (obj.guests != null && obj.datetime != null) {
-      var cancelTime = (_.find(_.sortBy(obj.leadTimes, 'max_guests'), function(lead) {
+      var cancelTime = (utils.find(utils.sortBy(obj.restaurant.lead_times, 'max_guests'), function(lead) {
         return lead.max_guests >= obj.guests;
       }) || 0).cancel_time;
 

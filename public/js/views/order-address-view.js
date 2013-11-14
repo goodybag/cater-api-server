@@ -36,6 +36,9 @@ var OrderAddressView = AddressView.extend({
   },
 
   saveAddress: function(e) {
+    var errors = this.options.orderView.validateAddress();
+    if (errors) return this.options.orderView.displayErrors2(errors);
+
     var diff = this.getDiff(); // changes to address fields
     if (!diff) return this.render();
 

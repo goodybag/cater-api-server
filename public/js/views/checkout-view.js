@@ -132,22 +132,8 @@ var CheckoutView = OrderView.extend({
 
     // Check to see if we need to validate the address
     if ( !this.$el.find('.order-address.edit').hasClass('hide') ){
-      var address = new Address(), $el;
-      for ( var i = 0, l = Order.addressFields.length; i < l; ++i ){
-        $el = this.$el.find('[name="' + Order.addressFields[i] + '"]');
-
-        if ( !$el.length ) continue;
-        if ( !$el.val().length ) continue;
-
-        address.set( Order.addressFields[i], $el.val() );
-      }
-
-      var errors = address.validate(address.toJSON());
-
-      // Aggregate errors into something more useful
-      if (errors){
-        return this.displayErrors2( errors, Address );
-      }
+      var errors = this.validateAddress();
+      if ( errors ) return this.displayErrors2(errors, Address);
     }
 
     // If they're saving a new card, delegate to the `savenewCardAndSubmit` handler
@@ -311,6 +297,28 @@ var CheckoutView = OrderView.extend({
 
       return _.defer(function(){ this_.submit(e) });
     });
+  },
+
+  validateAddress: function(){
+    var address = new Address(), $el, val;
+    for ( var i = 0, l = Order.addressFields.length; i < l; ++i ){
+      $el = this.$el.find('[name="' + Order.addressFields[i] + '"]');
+
+      if ( !$el.length ) continue;
+
+      val = $el.val();
+
+      if ( !val.length ) continue;
+
+      if ( Order.addressFields[i] === 'phone' ){
+        val = val.replace(/\(|\)|\s|\-/g, '')
+        console.log(val);
+      }
+
+      address.set( Order.addressFields[i], val );
+    }
+
+    return address.validate(address.toJSON());
   },
 
   /**

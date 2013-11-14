@@ -3,11 +3,14 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="72px"
 	 height="72px" viewBox="0 0 72 72" enable-background="new 0 0 72 72" xml:space="preserve">
+<g id="Layer_3">
+	<rect x="-321.934" y="-233.515" fill="#FFFFFF" width="1190.526" height="321.458"/>
+</g>
 <g id="Layer_2" display="none">
 </g>
 <g id="Layer_1">
 	<g>
-		<circle fill="#F1AD46" cx="36" cy="36" r="36"/>
+		<circle fill="#F19946" cx="36" cy="36" r="36"/>
 	</g>
 	<g>
 		<path fill="#FFFFFF" d="M26.206,48.659c-7.847,0-13.247-5.508-13.247-12.959v-0.072c0-7.163,5.579-13.03,13.21-13.03

@@ -3,14 +3,18 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="72px"
 	 height="72px" viewBox="0 0 72 72" enable-background="new 0 0 72 72" xml:space="preserve">
+<g id="Layer_3">
+	<rect x="-909.366" y="-233.515" fill="#FFFFFF" width="1190.526" height="321.458"/>
+</g>
 <g id="Layer_2" display="none">
 </g>
 <g id="Layer_1">
 	<g>
-		<path fill="#358535" d="M36,0C16.117,0,0,16.117,0,36s16.117,36,36,36s36-16.117,36-36S55.883,0,36,0z"/>
+		<path fill="#35856A" d="M36,0C16.117,0,0,16.117,0,36s16.117,36,36,36s36-16.117,36-36S55.883,0,36,0z"/>
 	</g>
 	<g>
-		<path fill="#FFFFFF" d="M43.961,55.03V40.418H29.192V55.03h-8.009V18.629h8.009v14.404h14.769V18.629h8.008V55.03H43.961z"/>
+		<path fill="#FFFFFF" stroke="#FFFFFF" stroke-miterlimit="10" d="M28.227,38.95v14.751h-6.15V18.699h6.15V33.25h16.701V18.699
+			h6.15v35.002h-6.15V38.95H28.227z"/>
 	</g>
 </g>
 </svg>

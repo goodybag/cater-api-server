@@ -146,31 +146,7 @@ var CheckoutView = OrderView.extend({
 
       // Aggregate errors into something more useful
       if (errors){
-        errors = Array.prototype.slice.call( errors );
-
-        // We're just going to use the `required` error text for everything
-        // so just take the unique on error.property
-        errors = _.chain(errors).map( function( error ){
-          return error.property;
-        }).unique().map( function( property ){
-          var message;
-          var noun = property;
-
-          if ( property in Address.fieldNounMap ){
-            noun = Address.fieldNounMap[ property ];
-          }
-
-          message = self.errorTypeMessages.required.replace(
-            '{noun}', noun
-          );
-
-          return {
-            property: property
-          , message: message
-          };
-        }).value();
-
-        return this.displayErrors2( errors );
+        return this.displayErrors2( errors, Address );
       }
     }
 
@@ -314,8 +290,8 @@ var CheckoutView = OrderView.extend({
 
     var data = {
       name:              $el.find('[name="card_name"]').val()
-    , card_number:      +$el.find('[name="card_number"]').val()
-    , security_code:    +$el.find('[name="security_code"]').val()
+    , card_number:       $el.find('[name="card_number"]').val()
+    , security_code:     $el.find('[name="security_code"]').val()
     , expiration_month: +$el.find('[name="expiration_month"]').val()
     , expiration_year:  +$el.find('[name="expiration_year"]').val()
     , save_card:         $el.find('[name="save_card"]:checked').length === 1
@@ -325,7 +301,7 @@ var CheckoutView = OrderView.extend({
 
     // Save the card
     pm.updateBalancedAndSave(data, function(error) {
-      if (error) return notify.error(error);
+      if (error) return this_.displayErrors2(error, PaymentMethod);
 
       // Then revert back to "Pay Using" and select the newly added card
       this_.selectPaymentType('existing');
@@ -337,10 +313,59 @@ var CheckoutView = OrderView.extend({
     });
   },
 
-  displayErrors2: function( errors ){
+  /**
+   * Displays errors next to the form field pertaining to the error
+   *
+   * displayErrors2([
+   *   { property: 'card_number', message: '`555` is not a valid card number' }
+   * ])
+   *
+   * Or Amanda style errors will be converted:
+   *
+   * displayErrors2({
+   *   '0': {...}
+   *   '1': {...}
+   * })
+   *
+   * Optionally pass in a Model that has the fieldNounMap exposed
+   * to convert property names to nicer names
+   *
+   * @param  {Array}  errors Array of error objects
+   * @param  {Object} Model  Model to reference for field-noun-map
+   */
+  displayErrors2: function( errors, Model ){
+    var this_ = this;
     var error, $el, $parent;
     var template = Handlebars.partials.alert_error;
     var selector = '[name="{property}"]';
+
+    // Amanda errors object
+    if ( _.isObject( errors ) && !_.isArray( errors ) ){
+      errors = Array.prototype.slice.call( errors )
+
+      // We're just going to use the `required` error text for everything
+      // so just take the unique on error.property
+      errors = _.chain(errors).map( function( error ){
+        return error.property;
+      }).unique().map( function( property ){
+        var message;
+        var noun = property;
+
+        if ( Model && typeof Model.fieldNounMap === 'object' )
+        if ( property in Model.fieldNounMap ){
+          noun = Model.fieldNounMap[ property ];
+        }
+
+        message = this_.errorTypeMessages.required.replace(
+          '{noun}', noun
+        );
+
+        return {
+          property: property
+        , message: message
+        };
+      }).value();
+    }
 
     var css = {
       position: 'absolute'

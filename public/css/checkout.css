@@ -65,6 +65,13 @@
   width: 132px;
 }
 
+@media ( max-width: 786px ){
+  .delivery-datetime > .form-group {
+    width: 100%;
+  }
+
+}
+
 .delivery-datetime > .form-group:first-child {
   margin-left: 13px;
 }
@@ -75,4 +82,12 @@
 
 .form-error-alert {
   max-width: 340px;
+}
+
+@media ( max-width: 786px ){
+  .form-error-alert {
+    position: static !important;
+    margin-top: 12px;
+    margin-bottom: 2px;
+  }
 }

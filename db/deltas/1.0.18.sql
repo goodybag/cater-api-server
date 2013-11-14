@@ -16,7 +16,8 @@ ALTER TABLE addresses
       ALTER COLUMN street2 SET NOT NULL,
       ALTER COLUMN street2 SET DEFAULT '';
 
-ALTER TABLE addresses DROP CONSTRAINT IF EXISTS addresses_pkey cascade;
+ALTER TABLE addresses DROP CONSTRAINT IF EXISTS addresses_pkey cascade,
+                      DROP CONSTRAINT IF EXISTS address_phone_check;
 
 ALTER TABLE addresses ALTER COLUMN id SET NOT NULL;
 ALTER TABLE addresses ADD UNIQUE (id);

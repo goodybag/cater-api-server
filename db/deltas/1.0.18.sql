@@ -4,6 +4,7 @@ insert into deltas (version, date) values ('1.0.18', 'now()');
 
 -- fix some address stuff, especially uniqueness
 UPDATE addresses SET street2='' WHERE street2 IS NULL;
+UPDATE addresses SET phone='' WHERE phone IS NULL;
 
 ALTER TABLE addresses
       ALTER COLUMN street SET NOT NULL,

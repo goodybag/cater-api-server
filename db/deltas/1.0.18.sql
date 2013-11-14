@@ -3,6 +3,9 @@ begin;
 insert into deltas (version, date) values ('1.0.18', 'now()');
 
 -- fix some address stuff, especially uniqueness
+ALTER TABLE addresses DROP CONSTRAINT IF EXISTS addresses_pkey cascade,
+                      DROP CONSTRAINT IF EXISTS address_phone_check;
+
 UPDATE addresses SET street2='' WHERE street2 IS NULL;
 UPDATE addresses SET phone='' WHERE phone IS NULL;
 
@@ -15,9 +18,6 @@ ALTER TABLE addresses
       ALTER COLUMN phone SET NOT NULL,
       ALTER COLUMN street2 SET NOT NULL,
       ALTER COLUMN street2 SET DEFAULT '';
-
-ALTER TABLE addresses DROP CONSTRAINT IF EXISTS addresses_pkey cascade,
-                      DROP CONSTRAINT IF EXISTS address_phone_check;
 
 ALTER TABLE addresses ALTER COLUMN id SET NOT NULL;
 ALTER TABLE addresses ADD UNIQUE (id);

@@ -3,7 +3,10 @@ var Address = Backbone.Model.extend({
   validator: amanda('json'),
 
   validate: function(attrs, options) {
-    options = _.defaults(options || {}, {enforceRequired: true})
+    options = _.defaults(options || {}, {
+      enforceRequired: true,
+      singleError: false
+    });
 
     var schema = _.clone(_.result(this.constructor, 'schema'));
     if (!options.enforceRequired) {
@@ -65,5 +68,13 @@ var Address = Backbone.Model.extend({
         minLength: 1
       }
     }
+  },
+
+  fieldNounMap: {
+    street: 'street address'
+  , street2: 'secondary street address'
+  , phone: 'phone number'
+  , zip: 'zip code'
+  , name: 'address name'
   }
 });

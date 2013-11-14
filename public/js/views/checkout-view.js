@@ -23,6 +23,10 @@ var CheckoutView = OrderView.extend({
   , phone: '.address-phone'
   },
 
+  errorTypeMessages: {
+    required: 'Please enter a valid {noun}'
+  },
+
   initialize: function() {
     OrderView.prototype.initialize.apply(this, arguments);
     this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
@@ -126,21 +130,48 @@ var CheckoutView = OrderView.extend({
 
     this.clear();
 
-    //make sure that the required fields are selected
-    var blanks = _.chain(['date', 'time', 'guests', 'street', 'city', 'state', 'zip', 'phone'])
-      .map(function (field) {
-        return $(self.fieldMap[field], self.$el).get(0);
-      })
-      .filter(function (field) {
-        return $(field).val()=='';
-      })
-      .value()
-    ;
+    // Check to see if we need to validate the address
+    if ( !this.$el.find('.order-address.edit').hasClass('hide') ){
+      var address = new Address(), $el;
+      for ( var i = 0, l = Order.addressFields.length; i < l; ++i ){
+        $el = this.$el.find('[name="' + Order.addressFields[i] + '"]');
 
-    if (blanks.length) {
-      $(blanks).parent().addClass('has-error');
-      self.$el.find('.error-blank-fields').removeClass('hide');
-      return;
+        if ( !$el.length ) continue;
+        if ( !$el.val().length ) continue;
+
+        address.set( Order.addressFields[i], $el.val() );
+      }
+
+      var errors = address.validate(address.toJSON());
+
+      // Aggregate errors into something more useful
+      if (errors){
+        errors = Array.prototype.slice.call( errors );
+
+        // We're just going to use the `required` error text for everything
+        // so just take the unique on error.property
+        errors = _.chain(errors).map( function( error ){
+          return error.property;
+        }).unique().map( function( property ){
+          var message;
+          var noun = property;
+
+          if ( property in Address.fieldNounMap ){
+            noun = Address.fieldNounMap[ property ];
+          }
+
+          message = self.errorTypeMessages.required.replace(
+            '{noun}', noun
+          );
+
+          return {
+            property: property
+          , message: message
+          };
+        }).value();
+
+        return this.displayErrors2( errors );
+      }
     }
 
     // If they're saving a new card, delegate to the `savenewCardAndSubmit` handler
@@ -151,7 +182,7 @@ var CheckoutView = OrderView.extend({
     // If they were editing an existing card, delegate to `onUpdateCardSubmitClick` handler
     if (!this.$el.find('#update-card').hasClass('hide')){
       return this.onUpdateCardSubmitClick(e);
-    }
+    };
 
     this.onSave(function(err, response) {
       if (err) return notify.error(err); // TODO: error handling
@@ -222,7 +253,7 @@ var CheckoutView = OrderView.extend({
    */
   clearCardForm: function($el){
     $el = $el || this.$el.find('#new-card');
-    this.$el.find('input').val('');
+    $el.find('input').val('');
     return this;
   },
 
@@ -304,6 +335,33 @@ var CheckoutView = OrderView.extend({
 
       return _.defer(function(){ this_.submit(e) });
     });
+  },
+
+  displayErrors2: function( errors ){
+    var error, $el, $parent;
+    var template = Handlebars.partials.alert_error;
+    var selector = '[name="{property}"]';
+
+    var css = {
+      position: 'absolute'
+    , top: '11px'
+    };
+
+    for ( var i = 0, l = errors.length; i < l; ++i ){
+      error = errors[i];
+
+      $el = $( template( error ) );
+      $el.css( css );
+
+      $parent = this.$el.find(
+        selector.replace( '{property}', error.property )
+      ).parents('.form-group').eq(0);
+
+      $parent.prepend( $el );
+      $parent.addClass('has-error');
+
+      $el.css( 'right', 0 - $el[0].offsetWidth );
+    }
   },
 
   onPaymentMethodIdChange: function(e) {

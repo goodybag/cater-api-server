@@ -72,3 +72,7 @@
 .delivery-datetime .form-group[data-icon^="gb-icon"]:before {
   margin-top: 28px;
 }
+
+.form-error-alert {
+  max-width: 340px;
+}

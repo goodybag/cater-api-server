@@ -138,20 +138,6 @@ module.exports.changeStatus = function(req, res) {
 
     var done = function(status) {
       if (status.attributes.status === 'submitted') {
-        var viewOptions = {
-          order: order.toJSON({review: true}),
-          config: config,
-          layout: 'email-layout'
-        };
-
-        res.render('email-order-submitted', viewOptions, function(err, html) {
-          // TODO: error handling
-          utils.sendMail([order.attributes.restaurant.email, config.emails.orders],
-                         config.emails.orders,
-                         'You have received a new Goodybag order (#' + order.attributes.id+ ')',
-                         html);
-        });
-
         if (order.attributes.restaurant.sms_phone) {
           logger.routes.info(TAGS, "shortening url and sending sms for order: " + order.attributes.id);
           var url = config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token;

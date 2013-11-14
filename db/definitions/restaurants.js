@@ -54,12 +54,10 @@ define(function(require) {
   , sms_phones: {
       type: types.array(types.varchar(10))
     , nullable: false
-    // , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     }
   , voice_phones: {
       type: types.array(types.varchar(10))
     , nullable: false
-    // , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     }
   , emails: {
       type: types.array(types.text)
@@ -113,7 +111,6 @@ define(function(require) {
     }
   };
 
-  console.log(definition);
   definition.indices = {};
 
   return definition;

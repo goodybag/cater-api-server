@@ -419,7 +419,6 @@ var CheckoutView = OrderView.extend({
 
   onUpdateCardCancelClick: function(e){
     e.preventDefault();
-    console.log("onUpdateCardCancelClick")
     this.hideUpdateCardView();
   },
 

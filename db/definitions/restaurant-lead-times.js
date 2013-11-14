@@ -39,6 +39,10 @@ define(function(require) {
       type: types.int
     , nullable: false
     }
+  , cancel_time {
+      type: types.int
+    , nullable: true
+    }
   };
 
   definition.indices = {};

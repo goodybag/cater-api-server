@@ -13,6 +13,7 @@ var OrderAddressView = AddressView.extend({
 
   render: function() {
     var context = {
+      user: this.options.user,
       order: this.options.orderView.model.toJSON(),
       states: states
     };

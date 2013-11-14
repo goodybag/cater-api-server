@@ -11,6 +11,15 @@
   background-color: #F0F0EF;
 }
 
+.delivery-info {
+  margin-top: 20px;
+  font-size: 12px;
+}
+
+.delivery-info strong {
+  font-size: 1.1em;
+}
+
 .delivery-info-date {
   margin-left: 0px;
   padding-left: 24px;
@@ -22,7 +31,12 @@
   font-weight: normal;
 }
 
+.delivery-info-date > dt, .delivery-info-date > dd {
+  line-height: 18px;
+}
+
 .delivery-header {
+  margin-bottom: -2px;
   padding-left: 9px;
   font-size: 21px;
   color: #432012;
@@ -36,4 +50,27 @@
   text-decoration: underline;
   margin-left: 10px;
   font-size: 16px;
+}
+
+.delivery-info-address address {
+  margin-top: 12px;
+}
+
+.thankyou-message {
+  display: block;
+  margin: 20px 0 32px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.order-totals {
+  float: right;
+}
+
+.restaurant-review {
+  text-align: center;
+}
+
+.restaurant-review.panel-actions .btn {
+  margin: 0 20px;
 }

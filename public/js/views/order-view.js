@@ -56,7 +56,7 @@ var OrderView = FormView.extend({
   },
 
   initialize: function(options) {
-    this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address, orderView: this});
+    this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address, orderView: this, user: this.options.user});
     this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
     this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
 

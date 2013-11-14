@@ -33,7 +33,7 @@ a:hover {
 .panel .panel-heading,
 .panel .list-group-item {
   border-color: #CCCCC0;
-  color: #695A42;
+  color: #340F02;
   background-color: #FFFFFF;
 }
 
@@ -53,12 +53,19 @@ a:hover {
 .btn-primary {
   background-color: #DC0500;
   border-color: #B80300;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover, .btn-primary:focus,
 .btn-primary:active, .btn-primary.active {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
   background-color: #CF0F0B;
   border-color: #9E0200;
+}
+
+.btn-primary:active {
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
 a.btn-primary.disabled,

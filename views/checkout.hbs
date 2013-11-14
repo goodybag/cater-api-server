@@ -174,17 +174,10 @@
             </div>
           </div>
 
-          <div class="list-group-item">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="btn-toolbar pull-right">
-                  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
-                  <button type="submit" class="btn btn-primary">Submit Order</button>
-                </div>
-              </div>
-            </div>
+          <div class="panel-actions">
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
+            <button type="submit" class="btn btn-primary">Submit Order</button>
           </div>
-
         </div>
       </form>
     </div>
@@ -206,6 +199,21 @@
         <h4 class="modal-title">Select a different address</h4>
       </div>
       <div class="modal-body">
+        {{! modal alerts }}
+        <div class="alert alert-danger alert-bad-zip-modal row hide" data-error="is_bad_zip">
+          <div class="col-sm-8 alert-left">
+            <h3 class="alert-header">Invalid Delivery Zip :(</h3>
+            <p>This order can only be delivered to the zip codes listed</p>
+          </div>
+          <div class="col-sm-4 alert-right">
+            <ul class="list-delivery-zips">
+            {{#each order.restaurant.delivery_zips}}
+              <li class="delivery-zip">{{this}}</li>
+            {{/each}}
+            </ul>
+          </div>
+        </div>
+
         {{#each user.addresses}}
         <div class="radio">
           <label>

@@ -385,6 +385,27 @@ module.exports = Model.extend({
 
     query.with = [
       {
+        name: 'day_hours'
+      , type: 'select'
+      , table: 'restaurant_delivery_times'
+      , columns: [
+          'restaurant_id'
+        , 'day'
+        , {
+            type: 'array_to_json'
+          , as: 'times'
+          , expression: {
+              type: 'array_agg'
+            , expression: {
+                type: 'array_to_json'
+              , expression: 'array[start_time, end_time]'
+              }
+            }
+          }
+        ]
+      , groupBy: ['restaurant_id', 'day']
+      }
+    , {
         name: 'dt'
       , type: 'select'
       , columns: [
@@ -401,28 +422,7 @@ module.exports = Model.extend({
             }
           }
         ]
-        // TODO: convert to with
-      , table: {
-          type: 'select'
-        , table: 'restaurant_delivery_times'
-        , columns: [
-            'restaurant_id'
-          , 'day'
-          , {
-              type: 'array_to_json'
-            , as: 'times'
-            , expression: {
-                type: 'array_agg'
-              , expression: {
-                  type: 'array_to_json'
-                , expression: 'array[start_time, end_time]'
-                }
-              }
-            }
-          ]
-        , groupBy: ['restaurant_id', 'day']
-        , alias: 'day_hours'
-        }
+      , table: 'day_hours'
       , groupBy: 'restaurant_id'
       }
     , {
@@ -443,14 +443,29 @@ module.exports = Model.extend({
           }
         ]
       , groupBy: 'restaurant_id'
-    }
+      }
     , {
         name: 'max_guests'
       , type: 'select'
       , columns: ['restaurant_id', 'max(max_guests) as max_guests']
       , groupBy: 'restaurant_id'
       , table: 'restaurant_lead_times'
-    }
+      }
+    , {
+        name: 'statuses'
+      , type: 'select'
+      , table: 'order_statuses'
+      , columns: ['order_id', 'status', 'created_at', 'max(created_at)']
+      , over: {partition: 'order_id'}
+      }
+    , {
+        name: 'submitted'
+      , type: 'select'
+      , table: 'order_statuses'
+      , columns: ['order_id', 'created_at', 'max(created_at)']
+      , over: {partition: ['order_id', 'status']}
+      , where: {status: 'submitted'}
+      }
     ];
 
     var itemSubtotals = [
@@ -518,6 +533,16 @@ module.exports = Model.extend({
 
     query.joins = query.joins || {};
 
+    query.columns.push('statuses.status');
+
+    query.joins.statuses = {
+      type: 'left'
+    , on: {
+        'order_id': '$orders.id$'
+      , 'created_at': '$statuses.max$'
+      }
+    };
+
     query.columns.push({"table": "order_subtotals", "name": "sub_total"});
 
     query.joins.order_subtotals = {
@@ -561,10 +586,9 @@ module.exports = Model.extend({
 
     query.columns.push('(submitted.created_at) as submitted');
 
-    query.joins.order_statuses = {
+    query.joins.submitted = {
       type: 'left'
-    , alias: 'submitted'
-    , on: {'order_id': '$orders.id$', 'status': 'submitted'}
+    , on: {'order_id': '$orders.id$', 'created_at': '$submitted.max$'}
     }
 
     var unacceptable = [];
@@ -688,6 +712,29 @@ module.exports = Model.extend({
     query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
 
     query.limit = 10000;
+
+    // Add order submitted_date column logic
+    if (query.columns.indexOf('submitted_date') > -1){
+      query.columns[ query.columns.indexOf('submitted_date') ] = {
+        table: 'os_submitted'
+      , name: 'created_at'
+      , as: 'submitted_date'
+      };
+
+      query.joins.os_submitted = {
+        type: 'left'
+      , on: { status: 'submitted', order_id: '$orders.id$' }
+      , target: {
+          type: 'select'
+        , table: 'order_statuses'
+        }
+      };
+
+      // Reduce the sub-query set if we can
+      if ('id' in query.where){
+        query.joins.os_submitted.target.where = { order_id: query.where.id };
+      }
+    }
 
     // query.columns.push('(is_bad_zip OR is_bad_guests OR is_bad_lead_time OR is_bad_delivery_time AS is_unacceptable)');
 

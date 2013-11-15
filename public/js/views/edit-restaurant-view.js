@@ -107,9 +107,11 @@ var EditRestaurantView = FormView.extend({
       return _.compact(_.map(this.$el.find('.lead-time'), function(el) {
         var guests = parseInt($(el).find('.lead-max-guests').val());
         var hours = parseInt($(el).find('.lead-hours').val());
+        var cancel = parseInt($(el).find('.lead-cancel-time').val());
         return !_.isNaN(guests) && !_.isNaN(hours) ? {
           max_guests: !_.isNaN(guests) ? guests : null,
-          lead_time:!_.isNaN(hours) ? hours : null
+          lead_time:!_.isNaN(hours) ? hours : null,
+          cancel_time: !_.isNaN(cancel) ? cancel : null
         } : null;
       }));
     },

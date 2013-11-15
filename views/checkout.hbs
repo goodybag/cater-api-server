@@ -121,8 +121,7 @@
           <div id="payment-info" class="list-group-item">
             <div class="col-md-12">
               <legend>3. Payment Info</legend>
-              {{#if user.payment_methods}}
-              <div class="radio card-select-toggle">
+              <div class="radio card-select-toggle {{#unless user.payment_methods}}hide{{/unless}}">
                 <label>
                   <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" checked="checked">
                 </label>
@@ -138,7 +137,6 @@
                   <a href="#" class="btn-expired-update">Update</a>
                 </div>
               </div>
-              {{/if}}
 
               <div id="update-card" class="hide">
                 <div class="update-card-wrapper"></div>

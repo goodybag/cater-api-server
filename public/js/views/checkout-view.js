@@ -21,6 +21,8 @@ var CheckoutView = OrderView.extend({
   , state: '.address-state'
   , zip: '.address-zip'
   , phone: '.address-phone'
+  , tip: '.order-tip'
+  , tip_percent: '.tip-percent'
   },
 
   errorTypeMessages: {

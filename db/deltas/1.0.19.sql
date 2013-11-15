@@ -1,7 +1,7 @@
 -- Update version
 insert into deltas (version, date) values ('1.0.19', 'now()');
 
-create extension "uuid-ossp";
+create extension if not exists "uuid-ossp";
 
 DO $$
   BEGIN

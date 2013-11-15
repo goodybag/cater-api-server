@@ -121,8 +121,7 @@
           <div id="payment-info" class="list-group-item">
             <div class="col-md-12">
               <legend>3. Payment Info</legend>
-              <div class="radio card-select-toggle">
-                {{#if user.payment_methods}}
+              <div class="radio card-select-toggle {{#unless user.payment_methods}}hide{{/unless}}">
                 <label>
                   <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" checked="checked">
                 </label>
@@ -132,7 +131,6 @@
                     {{> payment_method_option}}
                   {{/each}}
                 </select>
-                {{/if}}
                 <div class="expired-wrapper hide" data-icon="gb-icon-warning">
                   {{! If a card is selected that is expired, this will be filled with {>checkout_card_expired} !}}
                   <div class="expired-text"></div>

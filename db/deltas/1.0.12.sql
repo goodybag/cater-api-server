@@ -19,7 +19,7 @@ create table if not exists "restaurant_meal_types" (
 
 INSERT INTO meal_types (name)
 SELECT existing.*
-FROM 
+FROM
   (SELECT unnest(array[
     'Appetizers'
   , 'Breakfast'

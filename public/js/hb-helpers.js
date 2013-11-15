@@ -91,8 +91,8 @@ var helpers = {
   },
 
   dollars: function(pennies) {
-    var cents = pennies == null ? 0 : parseInt(pennies);
-    return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2);
+    var cents = pennies == null ? 0 : parseFloat(pennies); // parse as float incase of partial cents
+    return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2); // partial cents get rounded here
   },
 
   json: function(context) {
@@ -273,6 +273,29 @@ var helpers = {
     return start != end ? [start, '-', end].join('') : start;
   },
 
+  range2: function( start, end, options ){
+    var out = "";
+    for ( var i = start; i <= end; i++ ){
+      out += options.fn( i );
+    }
+    return out;
+  },
+
+  reverseRange: function( start, end, options ){
+    var out = "";
+    for ( var i = start; i >= end; i-- ){
+      out += options.fn( i );
+    }
+    return out;
+  },
+
+  pad: function( n, width, z ){
+    width = ['number', 'string'].indexOf( typeof width ) === -1 ? 1 : width;
+    z = ['number', 'string'].indexOf( typeof z ) === -1 ? '0' : z;
+    n = n + '';
+    return n.length >= width ? n : new Array( width - n.length + 1 ).join(z) + n;
+  },
+
   queryParams: function( obj ){
     return utils.queryParams( obj );
   },
@@ -306,6 +329,15 @@ var helpers = {
     if (typeof height === 'number') params.h = height;
 
     return url + utils.queryParams(params);
+  },
+
+  substr: function(str, from, to){
+    if ( typeof str !== 'string' ) return "";
+    return str.substring( from, to );
+  },
+
+  typeOf: function(a){
+    return typeof a;
   }
 }
 

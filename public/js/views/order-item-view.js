@@ -11,8 +11,12 @@ var OrderItemView = FormView.extend({
     if (this.model)
       this.listenTo(this.model, {
         'change:sub_total': this.onPriceChange,
-        'destroy': this.remove
+        'destroy': this.remove,
+        'invalid': _.bind(this.trigger, this, 'disableCheckout')
       }, this);
+
+    // In case we save but there's nothing to change, re-enable checkout
+    this.on('save:noop', _.bind(this.trigger, this, 'enableCheckout'));
   },
 
   onPriceChange: function(e) {
@@ -31,6 +35,11 @@ var OrderItemView = FormView.extend({
 
   onDelete: function(e) {
     this.model.destroy();
+  },
+
+  remove: function(e) {
+    this.trigger('remove', this);
+    FormView.prototype.remove.apply(this, arguments);
   },
 
   autoSave: _.debounce(FormView.prototype.onSave, 600)

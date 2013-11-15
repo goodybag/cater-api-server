@@ -1,29 +1,16 @@
-<div>
-  <address>
-    {{#if name }}
-      <strong class="lead">{{name}}</strong><br>
-    {{/if}}
-    {{street}}<br>
-    {{#if street2}}
-    {{street2}}<br>
-    {{/if}}
-    {{city}}, {{state}} {{zip}}<br>
-    {{#if phone}}
-    Phone: {{phoneNumber phone}}<br>
-    {{/if}}
-    {{#if delivery_instructions}}
-    Delivery Instructions: {{delivery_instructions}}<br>
-    {{/if}}
-    <strong>
-      {{#if is_default}}
-        <p class="text-danger">This is your default address</p>
-      {{else}}
-        <a class="address-default" data-id="{{id}}">Make default address</a>
-      {{/if}}
-    </strong>
-  </address>
-  <div class="actions">
-    <a href="addresses/{{id}}" class="btn btn-default">Edit</a>
-    <button class="btn btn-default address-remove" data-id="{{id}}">Remove</button>
-  </div>
-</div>
+<address>
+  {{#if name }}
+  <strong>{{name}}</strong><br>
+  {{/if}}
+  {{street}}<br>
+  {{#if street2}}
+  {{street2}}<br>
+  {{/if}}
+  {{#if city}}{{city}}, {{/if}}{{#if state}}{{state}} {{/if}}{{zip}}<br>
+  {{#if phone}}
+  Phone: {{phoneNumber phone}}<br>
+  {{/if}}
+  {{#if delivery_instructions}}
+  Delivery Instructions: {{delivery_instructions}}<br>
+  {{/if}}
+</address>

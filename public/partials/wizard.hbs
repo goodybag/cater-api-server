@@ -1,0 +1,15 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/wizard.css">
+{{/extend}}
+
+<ol class="wizard">
+  <li class="step{{#eq step 1}} active{{/eq}}{{#gt step 1}} complete{{/gt}}">
+    Review Order
+  </li>
+  <li class="step{{#eq step 2}} active{{/eq}}{{#gt step 2}} complete{{/gt}}">
+    Checkout
+  </li>
+  <li class="step{{#eq step 3}} active{{/eq}}">
+    Receipt
+  </li>
+</ol>

@@ -1,5 +1,5 @@
-var utils = require('../utils');
 var uuid  = require('node-uuid');
+var utils = require('../utils');
 
 var defaultSelect = {
   type: 'select',
@@ -111,6 +111,34 @@ module.exports = {
     createTags: utils.partial(upsert, 'item_tags'),
     delTags: function(id) {
       return del.call(this, 'item_tags', {item_id: id});
+    }
+  },
+
+  transaction: {
+    createIfUriNotExists: function (type, orderId, uri, data) {
+      // must start with a character, not number for it to be valid dollar quoted string
+      var rand = 'x'+Math.random().toString(36).substr(2, 5);
+      if (typeof data === 'object') data = JSON.stringify(data);
+      return {
+        type: 'insert'
+      , table: 'transactions'
+      , columns: ['type', 'order_id', 'uri', 'data']
+      , expression: {
+          type: 'select'
+        , expression: [type, orderId, uri, data].map(function(i){return '$'+rand+'$$'+i+'$'+rand+'$$';})
+        , where: {
+            $notExists: {
+              type: 'select'
+            , expression: [1]
+            , table: 'transactions'
+            , columns: []
+            , where: {
+                uri: uri
+              }
+            }
+          }
+        }
+      }
     }
   },
 

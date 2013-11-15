@@ -16,6 +16,16 @@ var MailComposer = require('mailcomposer').MailComposer;
 var Bitly = require('bitly');
 var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 
+var addressFields = [
+  'street'
+, 'street2'
+, 'city'
+, 'state'
+, 'zip'
+, 'phone'
+, 'delivery_instructions'
+];
+
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
 
@@ -42,43 +52,146 @@ module.exports.list = function(req, res) {
   });
 }
 
-module.exports.get = function(req, res) {
-  models.Order.findOne(parseInt(req.params.id), function(error, order) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    if (!order) return res.status(404).render('404');
-    order.getOrderItems(function(err, items) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
+// module.exports.get = function(req, res) {
+//   models.Order.findOne(parseInt(req.params.id), function(error, order) {
+//     if (error) return res.error(errors.internal.DB_FAILURE, error);
+//     if (!order) return res.status(404).render('404');
+//     order.getOrderItems(function(err, items) {
+//       if (err) return res.error(errors.internal.DB_FAILURE, err);
 
-      var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
-      var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
-      utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
-      var context = {
-        order: order.toJSON(),
-        restaurantReview: review,
-        owner: isOwner,
-        admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
-        states: states,
-        orderParams: req.session.orderParams,
-        query: req.query
+//       var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
+//       var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
+//       utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+//       var context = {
+//         order: order.toJSON(),
+//         restaurantReview: review,
+//         owner: isOwner,
+//         admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
+//         states: states,
+//         orderParams: req.session.orderParams,
+//         query: req.query
+//       };
+
+//       // orders are always editable for an admin
+//       if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
+//         context.order.editable = true;
+
+//       res.render('order', context, function(err, html) {
+//         if (err) return res.error(errors.internal.UNKNOWN, err);
+//         res.send(html);
+//       });
+//     });
+//   });
+// }
+
+module.exports.get = function(req, res) {
+  var tasks = [
+    function(cb) {
+      var query = {
+        columns: ['*', 'submitted_date']
+      , where: { id: parseInt(req.params.id) }
+      };
+      models.Order.findOne(query, function(err, order) {
+        if (err) return cb(err);
+        if (!order) return cb(404);
+        return cb(null, order);
+      });
+    },
+
+    function(order, cb) {
+      order.getOrderItems(function(err, items) {
+        return cb(err, order);
+      });
+    },
+
+    function(order, cb) {
+      var query = {
+        where: { id: order.attributes.user_id },
+        embeds: {
+          payment_methods: {}
+        , addresses: {
+            order: ['is_default desc', 'id asc']
+          , where: { user_id: order.attributes.user_id }
+          // Actually, we can probably just display this restriction client-side
+          // , where: {
+          //     zip: { $in: order.attributes.restaurant.delivery_zips }
+          //   }
+          }
+        }
       };
 
-      // orders are always editable for an admin
-      if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
-        context.order.editable = true;
+      models.User.find(query, function(err, results) {
+        if (err) return cb(err);
 
-      var view = 'order';
-
-      if (req.param('receipt')) {
-        view = 'invoice/receipt';
-        context.layout = 'invoice/invoice-layout';
-      }
-
-      res.render(view, context, function(err, html) {
-        if (err) return res.error(errors.internal.UNKNOWN, err);
-        res.send(html);
+        return cb(null, order, results[0]);
       });
-    });
+    }
+  ];
+
+  utils.async.waterfall(tasks, function(err, order, user) {
+    if (err)
+      return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
+
+    // Redirect empty orders to item summary
+    if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.id + '/items');
+
+    var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
+    var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
+
+    user = user.toJSON();
+    user.addresses = utils.invoke(user.addresses, 'toJSON');
+
+    utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+    var context = {
+      order: order.toJSON(),
+      restaurantReview: review,
+      owner: isOwner,
+      admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
+      states: states,
+      orderAddress: function() {
+        return {
+          address: order.toJSON(),
+          states: states
+        };
+      },
+      orderParams: req.session.orderParams,
+      query: req.query,
+      user: user,
+      step: order.attributes.status === 'pending' ? 2 : 3
+    };
+
+    // Put address grouped on order for convenience
+    context.order.address = utils.pick(
+      context.order,
+      ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
+    );
+
+    // Embed the payment_method if we can
+    if (context.order.payment_method_id){
+      context.order.payment_method = utils.findWhere(
+        context.user.payment_methods, { id: context.order.payment_method_id }
+      );
+    }
+
+    // Decide where to show the `Thanks` message
+    if (moment(context.order.submitted_date).add('hours', 1) > moment())
+    if (context.order.user_id == req.session.user.id){
+      context.showThankYou = true;
+    }
+
+    // orders are always editable for an admin
+    if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
+      context.order.editable = true;
+    var view = order.attributes.status === 'pending' ? 'checkout' : 'receipt';
+
+    if (req.param('receipt')) {
+      view = 'invoice/receipt';
+      context.layout = 'invoice/invoice-layout';
+    }
+
+    res.render(view, context);
   });
+
 }
 
 module.exports.create = function(req, res) {
@@ -136,8 +249,27 @@ module.exports.changeStatus = function(req, res) {
         return res.send(403, 'order not submitttable');
     }
 
-    var done = function(status) {
-      if (status.attributes.status === 'submitted') {
+    var done = function() {
+      if (order.attributes.status === 'submitted') {
+
+        // TODO: extract this address logic into address model
+        // Save address based on this order's attributes
+        var orderAddressFields = utils.pick(order.attributes, addressFields);
+
+        // Set `is_default == true` if there's no default set
+        models.Address.find({ where: {user_id: req.session.user.id, is_default: true}}, function(error, addresses) {
+          if (error) return res.error(errors.internal.DB_FAILURE, error);
+
+          var noExistingDefault = !addresses.length;
+          var addressData = utils.extend(orderAddressFields, { user_id: req.session.user.id, is_default: noExistingDefault });
+          var address = new models.Address(addressData);
+          address.save(function(err, rows, result) {
+
+            // Db enforces unique addresses, so ignore 23505 UNIQUE VIOLATION
+            if (err && err.code !== '23505') return res.error(errors.internal.DB_FAILURE, err);
+          });
+        });
+
         var viewOptions = {
           order: order.toJSON({review: true}),
           config: config,
@@ -189,22 +321,19 @@ module.exports.changeStatus = function(req, res) {
         }
       }
 
-      res.send(201, status.toJSON());
-
-      venter.emit('order:status:change', order, status);
+      res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
+      venter.emit('order:status:change', order);
     }
 
-    var status = new models.OrderStatus({status: req.body.status, order_id: order.attributes.id});
-    status.save(function(err, rows, result) {
+    if (req.body.status === 'submitted' && order.attributes.user.is_invoiced) order.attributes.payment_status = 'invoiced';
+
+    if (review) order.attributes.token_used = 'now()';
+
+    order.attributes.status = req.body.status;
+
+    order.save(function(err){
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      if (review) {
-        order.attributes.token_used = 'now()';
-        order.save(function(err) {
-          if (err) return res.error(errors.internal.DB_FAILURE, err);
-          done(status);
-        });
-      }
-      else done(status);
+      return done();
     });
   });
 };

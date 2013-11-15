@@ -55,10 +55,19 @@ create trigger new_order_status
   for each row
   execute procedure process_new_order();
 
-CREATE TYPE payment_method AS ENUM('card', 'bank');
-CREATE TYPE payment_type AS ENUM('debit', 'credit');
-CREATE TYPE payment_status AS ENUM('pending', 'processing', 'paid', 'invoiced', 'error');
-
+DO $$
+  BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'payment_method') THEN
+      CREATE TYPE payment_method AS ENUM('card', 'bank');
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'payment_type') THEN
+      CREATE TYPE payment_type AS ENUM('debit', 'credit');
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'payment_status') THEN
+      CREATE TYPE payment_status AS ENUM('pending', 'processing', 'paid', 'invoiced', 'error');
+    END IF;
+  END;
+$$;
 
 CREATE TABLE IF NOT EXISTS payment_methods (
   id SERIAL NOT NULL

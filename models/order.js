@@ -11,6 +11,7 @@ var queries = require('../db/queries');
 var Restaurant = require('./restaurant');
 var Transaction = require('./transaction');
 var TransactionError = require('./transaction-error');
+var moment = require('moment-timezone');
 
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
@@ -131,9 +132,23 @@ module.exports = Model.extend({
     if (options && options.plain)
       return obj;
 
+    var inTimeToCancel;
+    if (obj.guests != null && obj.datetime != null) {
+      var cancelTime = (utils.find(utils.sortBy(obj.restaurant.lead_times, 'max_guests'), function(lead) {
+        return lead.max_guests >= obj.guests;
+      }) || 0).cancel_time;
+
+      if (cancelTime) {
+        var now = moment().tz(obj.timezone).format('YYYY-MM-DD HH:mm:ss');
+        var hours = (new Date(obj.datetime) - new Date(now)) / 3600000;
+
+        inTimeToCancel = hours >= cancelTime;
+      }
+    }
+
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
     obj.editable = this.attributes.status === 'pending';
-    obj.cancelable = utils.contains(['pending', 'submitted'], this.attributes.status);
+    obj.cancelable = (this.attributes.status === 'accepted' && inTimeToCancel) || utils.contains(['pending', 'submitted'], this.attributes.status);
 
     if ( obj.restaurant && obj.restaurant.minimum_order ){
       obj.below_min = obj.sub_total < obj.restaurant.minimum_order;
@@ -438,7 +453,7 @@ module.exports = Model.extend({
           , expression: {
               type: 'function'
             , function: 'array_agg'
-            , expression: '(\'{"lead_time": \' || lead_time || \', "max_guests": \' || max_guests || \'}\')::json order by max_guests ASC'
+            , expression: '(\'{"lead_time": \' || lead_time || \', "max_guests": \' || max_guests || \', "cancel_time": \' || coalesce(cancel_time::text::json, \'null\'::json) || \'}\')::json order by max_guests ASC'
             }
           }
         ]
@@ -781,7 +796,7 @@ module.exports = Model.extend({
     pending: ['canceled', 'submitted'],
     submitted: ['canceled', 'denied', 'accepted'],
     denied: [],
-    accepted: ['delivered'],
+    accepted: ['canceled', 'delivered'],
     delivered: []
   }
 });

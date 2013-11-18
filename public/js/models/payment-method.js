@@ -7,10 +7,48 @@ var PaymentMethod = Backbone.Model.extend({
     properties: {}
   },
 
+  balancedSchema: {
+    type: 'object',
+    properties: {
+      card_name: {
+        type: 'string'
+      }
+    , card_number: {
+        type: 'string'
+      , pattern: /^\d*$/
+      , required: true
+      , length: 16
+      }
+    , security_code: {
+        type: 'string'
+      , pattern: /^\d*$/
+      , required: true
+      , length: 3
+      }
+    , expiration_year: {
+        type: 'number'
+      , required: true
+      , minimum: new Date().getFullYear()
+      }
+
+    , expiration_month: {
+        type: 'number'
+      , required: true
+      , minimum: 1
+      , maximum: 12
+      }
+    }
+  },
+
+  validatorOptions: {
+    enforceRequired: true
+  , singleError: false
+  },
+
   validator: amanda('json'),
 
   validate: function(attrs, options) {
-    return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
+    return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, _.identity);
   },
 
   initialize: function(attrs, options) {
@@ -28,8 +66,21 @@ var PaymentMethod = Backbone.Model.extend({
   updateBalancedAndSave: function(data, callback){
     var this_ = this;
 
+    if ( this.validator.validate( data, this.balancedSchema, this.validatorOptions, function( error ){
+      if ( error ) return callback( error );
+    })) return;
+
     balanced.card.create(data, function(res) {
-      if (res.status !== 201) return callback ? callback(res.error) : null;
+      if (res.status !== 201){
+        var errors = _.chain( _.keys( res.error ) ).map( function( property ){
+          return {
+            property: property
+          , message: res.error[ property ]
+          };
+        }).value();
+
+        return callback ? callback( errors ) : notify.error( errors );
+      }
 
       var pm = {
         data:       res.data
@@ -58,5 +109,11 @@ var PaymentMethod = Backbone.Model.extend({
       date.getFullYear() === data.expiration_year &&
       date.getMonth() + 1 > data.expiration_month
     );
+  }
+}, {
+  fieldNounMap: {
+    card_number: 'Card Number'
+  , security_code: 'Security Code'
+  , name: 'Card Title'
   }
 });

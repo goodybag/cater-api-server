@@ -113,7 +113,9 @@ module.exports.get = function(req, res) {
 }
 
 module.exports.edit = function(req, res) {
+  console.log('poop');
   models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
+    console.log(err, restaurant);
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!restaurant) return res.render('404');
     restaurant.getItems(function(err, items) {

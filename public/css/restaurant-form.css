@@ -43,11 +43,11 @@ input.time:not([disabled])[readonly] {
   cursor: default;
 }
 
-.lead-times-list .lead-time-actions {
+.btn-actions {
   margin-top: 21px;
 }
 
-.lead-time-actions a:hover {
+.btn-actions a:hover {
   color: #CF0F0B;
   text-decoration: none;
 }

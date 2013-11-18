@@ -40,10 +40,15 @@
     <input type="text" class="form-control restaurant-voice-phone" value="{{phoneNumber restaurant.voice_phone}}" placeholder="(512) 555-1234">
     <span class="help-block">Ten digit phone number to use for voice order alerts.  Leave blank for no phone order alerts.</span>
   </div>
-  <div class="form-group">
-    <label class="control-label">Email</label>
-    <input type="email" class="form-control restaurant-email" value="{{restaurant.email}}" placeholder="name@example.com">
-  </div>
+  <fieldset>
+    <legend>Emails</legend>
+    <div class="email-list">
+      {{#each restaurant.emails}}
+        {{> email }}
+      {{/each}}
+    </div>
+    <button class="btn btn-success add-email">Add Email</button>
+  </fieldset>
   <div class="form-group">
     <label class="control-label">Price</label>
     <select class="form-control restaurant-price">
@@ -143,7 +148,7 @@
 
 {{#extend "scripts"}}
 <script>
-  var partials = { edit_hours: 'edit-hours.hbs', hours_day: 'hours-day.hbs', lead_time: 'lead-time.hbs'};
+  var partials = { edit_hours: 'edit-hours.hbs', hours_day: 'hours-day.hbs', lead_time: 'lead-time.hbs', 'email': 'email.hbs'};
   for (var name in partials) {
     $.ajax({
       type: 'GET',

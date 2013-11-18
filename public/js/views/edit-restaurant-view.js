@@ -15,6 +15,7 @@ var EditRestaurantView = FormView.extend({
     'click .new-category': 'newCategory',
     'click .add-lead-time': 'addLeadTime',
     'click .remove-lead-time': 'removeLeadTime',
+    'click .add-email': 'addEmail',
     'click .restaurant-remove': 'onRestaurantRemoveClick',
     'change input[type="filepicker"]': 'onFilePickerChange'
   },
@@ -169,6 +170,10 @@ var EditRestaurantView = FormView.extend({
     e.preventDefault();
     $(e.target).closest('.lead-time').remove();
     this.onChange(e);
+  },
+
+  addEmail: function(e) {
+    this.$el.find('.email-list').append(Handlebars.partials.email({}));
   },
 
   onRestaurantRemoveClick: function(e){

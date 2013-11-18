@@ -19,14 +19,14 @@
             {{#if ../state}}checked{{/if}}
             {{#if ../default_state}}checked{{/if}}
             type="radio" id="item-option-{{../id}}"
-            name="{{../../name}}" value="{{../id}}"
+            name="{{../../id}}" value="{{../id}}"
           >
           {{else}}
           <input
             {{#if ../state}}checked{{/if}}
             {{#if ../default_state}}checked{{/if}}
             type="checkbox" id="item-option-{{../id}}"
-            name="{{../../name}}" value="{{../id}}"
+            name="{{../../id}}" value="{{../id}}"
           >
           {{/eq}}
 

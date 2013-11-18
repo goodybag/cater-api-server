@@ -44,6 +44,8 @@ module.exports.get = function(req, res, next) {
   // Load up the menu page with the specified order
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (!order) return res.render('404');
+    if (!order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
     // if (order.status === 'pending') return res.redirect('/restaurants/' + req.params.rid);
     order.getOrderItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

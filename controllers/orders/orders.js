@@ -190,7 +190,7 @@ module.exports.get = function(req, res) {
     }
 
   if ( req.param('email') ){
-    view = 'order-email/order-submitted';
+    view = 'order-email/order-accepted';
     context.layout = 'email-layout';
   }
 

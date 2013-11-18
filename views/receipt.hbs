@@ -252,9 +252,10 @@
 
     {{#unless restaurantReview}}
     <div class="panel-actions">
-      {{#eq order.status "pending"}}
-      <a class="btn btn-default btn-add-to-order" href="/restaurants/{{order.restaurant.id}}">Add to Order</a>
-      {{/eq}}
+      {{#if order.editable}}
+      <a class="btn btn-default btn-add-to-order" href="/orders/{{order.id}}/add-items">Add to Order</a>
+      {{/if}}
+
       {{#if owner}}
       <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
       {{/if}}

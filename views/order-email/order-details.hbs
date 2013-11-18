@@ -20,24 +20,24 @@
       {{#if this.user.organization}}
       <tr>
         <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Customer Organization:</td>
-        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{this.user.organization}}</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: right;">{{this.user.organization}}</td>
       </tr>
       {{/if}}
       <tr>
         <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Delivery Date:</td>
-        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{datepart this.datetime}}</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: right;">{{datepart this.datetime}}</td>
       </tr>
       <tr>
         <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Delivery Time:</td>
-        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{timepart this.datetime}}</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: right;">{{timepart this.datetime}}</td>
       </tr>
       <tr>
         <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Guests:</td>
-        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{this.guests}}</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: right;">{{this.guests}}</td>
       </tr>
       <tr>
         <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Subtotal:</td>
-        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">${{dollars this.sub_total}}</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: right;">${{dollars this.sub_total}}</td>
       </tr>
       <!--</OrderDetailsBody>-->
 

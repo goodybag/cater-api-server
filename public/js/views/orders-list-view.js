@@ -9,10 +9,13 @@ var OrdersListView = Backbone.View.extend({
     this.convertUtcDates();
   },
 
+  /**
+   * Convert backend dates stored in UTC
+   * to client's local timezone
+   */
   convertUtcDates: function() {
-    _.each(this.$el.find('.date-created'), function(date) {
-      var $date = $(date);
-      var output = moment.utc($date.html()).local().format('l h:mm A');
+    _.each(this.$el.find('.date-created'), function($date) {
+      var output = moment.utc($date.data('date')).local().format('l h:mm A');
       $date.html(output);
     });
   },

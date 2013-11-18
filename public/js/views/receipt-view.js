@@ -18,6 +18,7 @@ var ReceiptView = OrderView.extend({
 
   initialize: function() {
     this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
+    this.convertUtcDates();
   },
 
   // set the model and add listeners here
@@ -57,6 +58,16 @@ var ReceiptView = OrderView.extend({
       };
     }
   }),
+
+  /**
+   * Convert backend dates stored in UTC
+   * to client's local timezone
+   */
+  convertUtcDates: function() {
+    var $submitted = this.$el.find('.date-submitted');
+    var output = moment.utc($submitted.data('date')).local().format('l h:mm A');
+    $submitted.html('Date submitted: ' + output);
+  },
 
   onPriceChange: function(model, value, options) {
     this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));

@@ -5,6 +5,22 @@ var OrdersListView = Backbone.View.extend({
 
   statuses: ['pending', 'canceled', 'submitted', 'denied', 'accepted', 'delivered'],
 
+  initialize: function() {
+    this.convertUtcDates();
+  },
+
+  /**
+   * Convert backend dates stored in UTC
+   * to client's local timezone
+   */
+  convertUtcDates: function() {
+    _.each(this.$el.find('.date-created'), function(date) {
+      var $date = $(date);
+      var output = moment.utc($date.data('date')).local().format('l h:mm A');
+      $date.html(output);
+    });
+  },
+
   changeFilter: function() {
     var self = this;
     // defered to allow active state to be updated before running

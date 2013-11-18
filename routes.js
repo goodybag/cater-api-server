@@ -193,7 +193,7 @@ module.exports.register = function(app) {
    *  Order resource.  An individual order.
    */
 
-  app.all('/orders/:id', controllers.orders.auth);
+  app.all('/orders/:id/?*', controllers.orders.auth);
 
   app.get('/orders/:id'
     // If they're using ?receipt=true, make sure we restrict the group
@@ -286,6 +286,17 @@ module.exports.register = function(app) {
 
   app.all('/orders/:oid/duplicates', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'POST');
+    res.send(405);
+  });
+
+  /**
+   * Order add items resource.  Page to add items to an order.  (basically the menu page)
+   */
+
+  app.get('/orders/:oid/add-items', m.restrict(['client', 'admin']), controllers.restaurants.orders.get);
+
+  app.all('/orders/:oid/add-items', m.restrict(['client', 'admin']), function(req, res, next) {
+    res.set('Allow', 'GET');
     res.send(405);
   });
 

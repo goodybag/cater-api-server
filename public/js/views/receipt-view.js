@@ -65,8 +65,10 @@ var ReceiptView = OrderView.extend({
    */
   convertUtcDates: function() {
     var $submitted = this.$el.find('.date-submitted');
-    var output = moment.utc($submitted.data('date')).local().format('l h:mm A');
-    $submitted.html('Date submitted: ' + output);
+    var output = $submitted.data('date') ? 
+      'Date submitted: ' + moment.utc($submitted.data('date')).local().format('l h:mm A') 
+    : '';
+    $submitted.html(output);
   },
 
   onPriceChange: function(model, value, options) {

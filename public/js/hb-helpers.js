@@ -338,6 +338,14 @@ var helpers = {
 
   typeOf: function(a){
     return typeof a;
+  },
+
+  isEven: function( n, options ){
+    return options[ n % 2 === 0 ? 'fn' : 'inverse' ]();
+  },
+
+  isOdd: function( n, options ){
+    return options[ n % 2 !== 0 ? 'fn' : 'inverse' ]();
   }
 }
 

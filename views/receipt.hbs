@@ -88,7 +88,7 @@
 
         <div class="delivery-submitted">
           <div class="date-created">
-            Date submitted: {{formatDateTime order.submitted "M/D/YYYY h:mm a"}}
+            Date submitted: {{datepartUtcToLocal order.submitted}} {{timepartUtcToLocal order.submitted}}
           </div>
         </div>
 

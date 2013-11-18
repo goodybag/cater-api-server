@@ -136,6 +136,15 @@ var helpers = {
     return moment(date).format('h:mm A');
   },
 
+  datepartUtcToLocal: function(date) {
+    return date ? moment.utc(date).local().format('l') : '';
+  },
+
+  timepartUtcToLocal: function(date) {
+    if (!date) return '';
+    return moment.utc(date).local().format('h:mm A');
+  },
+
   formatDateTime: function(date, format, options) {
     if (options === undefined) {
       options = format;

@@ -173,7 +173,7 @@ var EditRestaurantView = FormView.extend({
   },
 
   addEmail: function(e) {
-    this.$el.find('.email-list').append(Handlebars.partials.email({}));
+    this.$el.find('.email-list').append(Handlebars.partials.email());
   },
 
   onRestaurantRemoveClick: function(e){

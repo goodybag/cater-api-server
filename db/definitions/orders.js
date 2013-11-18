@@ -26,6 +26,11 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
+  , uuid: {
+      type: types.uuid
+    , nullable: false
+    , default: "uuid_generate_v1()"
+    }
   , user_id: {
       type: types.int
     , nullable: false
@@ -100,6 +105,11 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , tip_percent: {
+      type: types.tippercentage
+    , nullable: true
+    ,
+    }
   , name: {
       type: types.text
     , nullable: true
@@ -107,6 +117,24 @@ define(function(require) {
   , delivery_instructions: {
       type: types.text
     , nullable: true
+    }
+  , status: {
+      type:types.orderstatus
+    , nullable: false
+    , default: "'pending'"
+    }
+  , cut: {
+      type: types.int
+    , nullable: true // change this to false once we handle the existing data
+    }
+  , payment_status: {
+      type: types.paymentstatus
+    , nullable: true
+    }
+  , payment_method_id: {
+      type: types.int
+    , nullable: true
+    , references: {table: 'payment_methods', column: 'id'}
     }
   };
 

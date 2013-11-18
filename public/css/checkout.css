@@ -1,0 +1,93 @@
+.form-group[data-icon^="gb-icon"]:before {
+  margin-top: 26px;
+}
+
+.form-inline {
+  margin-bottom: 10px;
+}
+
+.checkout-form legend {
+  border: none;
+  margin-top: 12px;
+  margin-bottom: 10px;
+  margin-left: -16px;
+  font-size: 19px;
+}
+
+.checkout-form .list-group-item {
+  padding-left: 24px;
+}
+
+.affix {
+  position: fixed;
+  top: 10px;
+  width: 360px;
+}
+
+.affix-bottom {
+  position: absolute;
+  width: 360px;
+}
+
+@media ( min-width: 1200px ){
+  .order-summary.affix {
+    width: 360px;
+  }
+}
+
+@media ( min-width: 992px ) and ( max-width: 1199px ){
+  .order-summary.affix {
+    width: 293px;
+  }
+}
+
+@media ( max-width: 991px ){
+  .order-summary.affix,
+  .order-summary.affix-bottom {
+    position: static;
+    width: 100%;
+  }
+}
+
+.form-group-delivery-date,
+.form-group-delivery-time,
+.form-group-guests {
+  position: static;
+}
+.restaurant-name {
+  font-size: 16px;
+}
+
+/* adjust columns to match design */
+.delivery-datetime > .form-group {
+  padding-left: 2px;
+  padding-right: 2px;
+  width: 132px;
+}
+
+@media ( max-width: 786px ){
+  .delivery-datetime > .form-group {
+    width: 100%;
+  }
+
+}
+
+.delivery-datetime > .form-group:first-child {
+  margin-left: 13px;
+}
+
+.delivery-datetime .form-group[data-icon^="gb-icon"]:before {
+  margin-top: 28px;
+}
+
+.form-error-alert {
+  max-width: 340px;
+}
+
+@media ( max-width: 786px ){
+  .form-error-alert {
+    position: static !important;
+    margin-top: 12px;
+    margin-bottom: 2px;
+  }
+}

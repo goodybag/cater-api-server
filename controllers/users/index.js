@@ -4,6 +4,7 @@ var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
 
+module.exports.cards = require('./cards');
 
 module.exports.list = function(req, res) {
   var query = queries.user.list(req.query.columns, req.query.limit || 1000, req.query.offset);
@@ -37,9 +38,17 @@ module.exports.create = function(req, res) {
         return callback(error, hash);
       });
     }
-  , create: function(hash, callback) {
+  , balanced: function(hash, callback) {
+      utils.balanced.Customers.create({
+        name: req.body.name
+      }, function (error, customer) {
+        if (error) return res.error(errors.internal.UNKNOWN, error), callback(error);
+        callback(null, hash, customer.uri);
+      });
+    }
+  , create: function(hash, balanced_customer_uri, callback) {
       var groups = req.body.groups || ['client'];
-      var userData = utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash});
+      var userData = utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash, balanced_customer_uri: balanced_customer_uri});
       var query = queries.user.create(utils.omit(userData, 'groups'));
 
       var sql = db.builder.sql(query);
@@ -65,7 +74,7 @@ module.exports.create = function(req, res) {
     }
   }
 
-  utils.async.waterfall([flow.encrypt, flow.create, flow.group]);
+  utils.async.waterfall([flow.encrypt, flow.balanced, flow.create, flow.group]);
 }
 
 module.exports.update = function(req, res) {

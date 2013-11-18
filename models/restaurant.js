@@ -261,21 +261,13 @@ module.exports = Model.extend({
     // TODO: only allow valid dates in order params, currently assumes so
     if (orderParams && orderParams.date) {
       // determine if lead time is unacceptable only if date is provided
-      var datetime = moment(orderParams.date);
 
       // TODO: only allow valid times in order params, currently assumes so
-      if(orderParams.time) {
-        var timeparts = orderParams.time.split(':');
-        datetime.hour(timeparts[0]);
-        datetime.minute(timeparts[1]);
-        datetime.second(0);
-      } else {
-        datetime.hour(23);
-        datetime.minute(59);
-        datetime.second(59);
-      }
 
-      var formattedDateTime = moment(datetime).format('YYYY-MM-DD HH:MM:59');
+      // supports either standard or military time
+      var datetime = moment(orderParams.date + ' ' + (orderParams.time || '11:59 pm'), 'YYYY-MM-DD hh:mm a');
+
+      var formattedDateTime = datetime.format('YYYY-MM-DD HH:MM:59');
 
       query.joins.lead_times = {
         type: 'left'

@@ -3,7 +3,7 @@ var OrderSummaryView = Backbone.View.extend({
     'click .btn-checkout': 'checkout'
   },
 
-  template: Handlebars.partials.order_summary,
+  template: Handlebars.partials.menu_order_summary,
 
   initialize: function(options) {
     if (this.model) this.setModel(this.model);
@@ -82,9 +82,11 @@ var OrderSummaryView = Backbone.View.extend({
       state: 'TX'
     };
 
-    var diff = {};
-    for (var key in params)
-      diff[key] = this.model.get(key) != null ? this.model.get(key) : params[key];
+    var currentState = _.extend(this.model.pick(['guests', 'datetime']), this.model.address.pick(['zip', 'state']));
+    var diff = _.defaults(currentState, params);
+    // var diff = {};
+    // for (var key in params)
+    //   diff[key] = this.model.has(key) ? this.model.get(key) : params[key];
 
     var view = this;
     var sent = this.model.save(diff, {
@@ -96,7 +98,7 @@ var OrderSummaryView = Backbone.View.extend({
         _.each( _.keys( orderParams.toJSON() ), _.bind( orderParams.unset, orderParams ) );
 
         orderParams.save( null, { success: function(){
-          window.location.href = _.result(view.model, 'url');
+          window.location.href = _.result(view.model, 'url') + '/items';
         } })
       }
     });

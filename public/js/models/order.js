@@ -21,43 +21,10 @@ var Order = Backbone.Model.extend({
           minLength: 1,
           required: true
         },
-        street: {
-          type: ['string', 'null'],
-          minLength: 1,
-          required: false
-        },
-        city: {
-          type: ['string', 'null'],
-          minLength: 1,
-          required: false
-        },
-        state: {
-          type: ['string', 'null'],
-          length: 2,
-          enum: _.pluck(states, 'abbr').concat([undefined, null]),
-          required: false
-        },
-        zip: {
-          type: ['string', 'null'],
-          length: 5,
-          required: false,
-          pattern: /^\d*$/,
-          enum: this.restaurant.get('delivery_zips')
-        },
-        phone: {
-          type: ['string', 'null'],
-          length: 10,
-          pattern: /^\d*$/, //contains only digits
-          required: false
-        },
         guests: {
           type: ['integer', 'null'],
           minimum: 1,
           maximum: this.restaurant.get('max_guests') || undefined,
-          required: false
-        },
-        notes: {
-          type: ['string', 'null'],
           required: false
         },
         datetime: {
@@ -67,6 +34,24 @@ var Order = Backbone.Model.extend({
         },
         name: {
           type: ['string', 'null'],
+          required: false
+        },
+        tip: {
+          type: ['integer', 'null'],
+          required: false,
+          minimum: 0
+        },
+        tip_percent: {
+          type: ['string', 'null'],
+          required: false,
+          enum: ['0', 'custom', '5', '10', '15', '18', '20', '25', null]
+        },
+        payment_status: {
+          type: ['string', 'null'],
+          required: false
+        },
+        payment_method_id: {
+          type: ['string', 'number', 'null'],
           required: false
         }
       }
@@ -94,14 +79,20 @@ var Order = Backbone.Model.extend({
       errors = Array.prototype.slice.call( errors );
     }
 
+    var addressFields = _.keys(_.result(Address, 'schema').properties);
+    if (!this.address._validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)),
+                               _.extend({enforceRequired: false}, options))) {
+      errors.push({addressErrors: this.address.validationError});
+    }
+
     // Add on the restaurant fulfillability errors
     errors = errors.concat(
       // restaurant validate expects an order model and this instance does not
       // have all the attrs set
-      this.restaurant.validateOrderFulfillability( new Order( attrs ) )
+      this.restaurant.validateOrderFulfillability( new Order( _.extend(this.toJSON(), attrs) ) )
     );
 
-    return errors.length > 0 ? errors : false;
+    return errors.length > 0 ? errors : null;
   },
 
   urlRoot: '/orders',
@@ -142,6 +133,30 @@ var Order = Backbone.Model.extend({
       'change:guests': this.guestsChanged,
       'change:is_unacceptable change:below_min': this.setSubmittable
     }, this);
+  },
+
+  set: function(key, val, options) {
+    // strip out updates to the address fields and proxy them through to the address model
+    var attrs;
+    if (key == null) return this;
+
+    // TODO: same field names between order and address
+    var addressFields = _.keys(_.result(Address, 'schema').properties);
+    if (typeof key === 'object') {
+      attrs = key;
+      options = val;
+    } else
+      (attrs = {})[key] = val
+
+    var addr = _.pick(attrs, addressFields);
+    attrs = _.omit(attrs, addressFields);
+
+    if (this.address != null)
+      this.address.set(addr, options);
+    else
+      this.address = new Address(addr);
+
+    return Backbone.Model.prototype.set.call(this, attrs, options);
   },
 
   updateSubtotal: function() {
@@ -220,20 +235,18 @@ var Order = Backbone.Model.extend({
   },
 
   validateOrderFulfillability: function(){
-    var vals = ['guests', 'zip', 'datetime'].map( this.get.bind( this ) );
+    var isPresent = ['guests', 'datetime'].map(_.bind(this.has, this)).concat(
+      ['zip'].map(_.bind(this.has, this.address)))
 
     // If they have blank fields, that's the only thing we need to tell them
-    if ( vals.indexOf( null ) + vals.indexOf( undefined ) != -2 ){
-      return ['has_blank_fields'];
-    }
-
-    return this.restaurant.validateOrderFulfillability( this );
+    return _.every(isPresent) ? this.restaurant.validateOrderFulfillability( this ) : ['has_blank_fields'];
   },
 
   toJSON: function() {
     var obj = Backbone.Model.prototype.toJSON.apply(this, arguments);
     obj.orderItems = this.orderItems.toJSON();
     obj.restaurant = this.restaurant.toJSON();
+    _.extend(obj, this.address.toJSON());
     return obj;
   },
 
@@ -250,5 +263,26 @@ var Order = Backbone.Model.extend({
         return callback(errorThrown);
       }
     });
+  },
+
+  changeStatus: function(status, callback) {
+    callback = callback || function() {};
+    if (status == null || status === this.get('status')) return callback();
+    var self = this;
+    $.ajax({
+      type: 'POST',
+      url: _.result(this, 'url') + '/status-history',
+      contentType: 'application/json',
+      data: JSON.stringify({status: status}),
+      error: function(jqXHR, textstatus, errorThrown) {
+        return callback(errorThrown);
+      },
+      success: function(data, textstatus, jqXHR) {
+        self.set('status', data.status);
+        return callback(null, data);
+      }
+    });
   }
+}, {
+  addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']
 });

@@ -175,7 +175,7 @@ var Restaurant = (function(){
       var errors = [];
 
       // Check zips
-      if ( this.get( 'delivery_zips' ).indexOf( order.get('zip') ) === -1 ){
+      if ( this.get( 'delivery_zips' ).indexOf( order.address.get('zip') ) === -1 ){
         errors.push( 'is_bad_zip' );
       }
 

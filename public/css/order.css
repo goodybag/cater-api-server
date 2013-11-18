@@ -1,3 +1,14 @@
+.order-status {
+  padding-left: 15px;
+  padding-top: 16px;
+  padding-right: 15px;
+  padding-bottom: 16px;
+}
+
+.order-status-label {
+  margin-top: 5px;
+}
+
 .page-order .form-group.form-group-block {
   width: 100%;
   padding-left: 0;
@@ -34,11 +45,11 @@
 }
 
 .panel-order-details .label-status {
-  vertical-align: bottom;
+  vertical-align: middle;
 }
 
 .panel-order-details .date-created {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 300;
   color: #918580;
 }
@@ -185,12 +196,22 @@
 
 .order-line-item-table .line-item-notes {
   padding-right: 16px;
+  font-size: 12px;
 }
 
 .order-line-item-table .line-item-name {
-  width: 38%;
+  width: 30%;
   vertical-align: middle;
   line-height: 14px;
+}
+
+.line-item-name .item-options {
+  margin-top: 3px;
+}
+
+.line-item-name .item-options > li {
+  font-size: 12px;
+  line-height: 8px;
 }
 
 .order-line-item-table td.line-item-price {
@@ -212,7 +233,7 @@
 
 .order-line-item-table .item-quantity-input {
   display: inline-block;
-  width: 100px;
+  width: 70px;
   margin-left: 12px;
   font-size: 13px;
   font-weight: 700;
@@ -233,58 +254,6 @@
 .order-line-item-table .item-notes-textarea {
   height: 50px;
   resize: none;
-}
-
-.order-totals {
-  float: right;
-  text-align: right;
-  margin-top: 0;
-}
-
-.order-totals dt,
-.order-totals dd {
-  line-height: 24px;
-  font-size: 13px;
-}
-
-.order-totals dt {
-  font-weight: 300;
-  float: left;
-  overflow: hidden;
-  clear: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: right;
-  width: 160px;
-}
-
-.order-totals dd {
-  margin-left: 190px;
-  font-weight: 700;
-}
-
-.order-totals .minimum {
-  font-style: italic;
-  font-weight: normal;
-  color: #A7A4A0;
-}
-
-.order-totals .error {
-  color: #DC0500;
-}
-
-.panel-actions {
-  margin-top: 10px;
-}
-
-@media (min-width: 768px) {
-  .panel-actions .btn {
-    margin-left: 10px;
-  }
-}
-
-.panel-actions > .actions-right {
-  text-align: right;
 }
 
 .alert-bad-lead-time .lead-times {
@@ -349,10 +318,12 @@ p.adjustment-description {
 }
 
 .totals {
+  display: inline-block;
   margin-top: 35px;
 }
 
 .totals-panel {
+  text-align: right;
   padding-top: 0px;
 }
 

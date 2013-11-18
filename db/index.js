@@ -23,3 +23,12 @@ exports.builder = builder;
 
 pgQuery.connectionParameters = config.postgresConnStr;
 exports.query = pgQuery;
+
+exports.getClient = function(connStr, callback) {
+  if (typeof connStr === 'function') {
+    callback = connStr;
+    connStr = config.postgresConnStr;
+  }
+  // callback will have arguments: error, client, done
+  pg.connect(connStr, callback);
+}

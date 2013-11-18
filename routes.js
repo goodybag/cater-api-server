@@ -20,7 +20,6 @@ module.exports.register = function(app) {
 
   app.get('/restaurants',
     m.restrict(['client', 'admin']),
-    m.orderParams(),
     function(req, res, next) {
       if (req.query.edit) return next();
       controllers.restaurants.list.apply(this, arguments);
@@ -252,7 +251,8 @@ module.exports.register = function(app) {
    *  This is a collection of OrderItems, not Items.
    */
 
-  app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
+  //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
+  app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.summary);  // not currently used
 
   app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.add);
 
@@ -406,6 +406,27 @@ module.exports.register = function(app) {
   app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
 
   app.all('/users/:uid/addresses/:aid', function(req, res, next) {
+    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
+    res.send(405);
+  });
+
+  /**
+   * User cards resource
+   */
+
+  app.get('/users/:uid/cards', controllers.users.cards.list);
+
+  app.post('/users/:uid/cards', controllers.users.cards.create);
+
+  app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
+
+  app.put('/users/:uid/cards/:cid', controllers.users.cards.update);
+
+  app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
+
+  app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
+
+  app.all('/users/:uid/cards/:cid', function(req, res, next) {
     res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
     res.send(405);
   });

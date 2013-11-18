@@ -1,11 +1,16 @@
-var Model = require('./model');
-var utils = require('../utils');
-var config = require('../config');
-var uuid  = require('node-uuid');
-var db = require('../db');
 var pg = require('pg');  // access db driver directly
-var Restaurant = require('./restaurant');
+var uuid  = require('node-uuid');
+var config = require('../config');
+var utils = require('../utils');
+var logger = require('../logger');
 var venter = require('../lib/venter');
+
+var db = require('../db');
+var Model = require('./model');
+var queries = require('../db/queries');
+var Restaurant = require('./restaurant');
+var Transaction = require('./transaction');
+var TransactionError = require('./transaction-error');
 var moment = require('moment-timezone');
 
 var modifyAttributes = function(callback, err, orders) {
@@ -30,11 +35,16 @@ var modifyAttributes = function(callback, err, orders) {
             id: order.attributes.restaurant_id,
             email: order.attributes.restaurant_email,
             delivery_times: utils.object(order.attributes.delivery_times),
-            name: order.attributes.restaurant_name
+            name: order.attributes.restaurant_name,
+            balanced_customer_uri: order.attributes.restaurant_balanced_customer_uri
           },
           utils.pick(order.attributes, restaurantFields));
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
         utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
+
+        var rate = 1.0825; // default Austin, TX sales tax for now, in future store in and get from restaurant table
+        var totalPreTip = (parseInt(order.attributes.sub_total) + parseInt(order.attributes.restaurant.delivery_fee)) * parseFloat(rate);
+        order.attributes.total = (totalPreTip + order.attributes.tip); // in cents
       } else {
         order.attribtues.restaurant = null;
       }
@@ -42,10 +52,18 @@ var modifyAttributes = function(callback, err, orders) {
       var fulfillables = utils.pick(order.attributes.restaurant, ['is_bad_zip', 'is_bad_guests', 'is_bad_lead_time', 'is_bad_delivery_time']);
       order.attributes.is_unacceptable = utils.reduce(fulfillables, function(a, b) { return a || b; }, false);
 
-      order.attributes.user = {id: order.attributes.user_id, email: order.attributes.user_email, organization: order.attributes.organization, name: order.attributes.user_name};
+      order.attributes.user = {
+        id: order.attributes.user_id,
+        email: order.attributes.user_email,
+        organization: order.attributes.organization,
+        name: order.attributes.user_name,
+        balanced_customer_uri: order.attributes.user_balanced_customer_uri
+      };
+
       delete order.attributes.user_email;
       delete order.attributes.organization;
       delete order.attributes.user_name;
+      delete order.attributes.user_balanced_customer_uri;
 
       order.attributes.adjustment = {
         amount: order.attributes.adjustment_amount,
@@ -94,15 +112,10 @@ module.exports = Model.extend({
       this.attributes.adjustment_description = this.attributes.adjustment.description;
       delete this.attributes.adjustment;
     }
-    var order = this
+    var order = this;
     Model.prototype.save.call(this, {returning: ["*", '("orders"."datetime"::text) as datetime']}, function(err) {
-      if (!err && insert) {
-        var OrderStatus = require('./order-status');
-        var status = new OrderStatus({order_id: order.attributes.id});
-        status.save(callback);
-      } else
-        callback.apply(this, arguments);
 
+      callback.apply(this, arguments);
       venter.emit( 'order:change', order.attributes.id );
     }, client);
   },
@@ -147,6 +160,11 @@ module.exports = Model.extend({
       && !this.attributes.is_unacceptable
     ;
 
+    var requiredAddrFields = ['street', 'city', 'state', 'zip', 'phone']
+    obj.isAddressComplete = utils.reduce(utils.map(utils.pick(obj, requiredAddrFields),
+                                                   function(val) { return val != null && val !== ''; }),
+                                         function(memo, item, list) { return memo && item; }, true);
+
     return obj;
   },
 
@@ -177,7 +195,7 @@ module.exports = Model.extend({
   // with pastiche as (select o.item_id, o.quantity, o.notes, o.options_sets, i.name, i.description, i.price, i.feeds_min, i.feeds_max from order_items o inner join items i on (o.item_id = i.id) where order_id=7)
   // insert into order_items (item_id, quantity, notes, options_sets, name, description, price, feeds_min, feeds_max, order_id) select pastiche.*, 9 from pastiche returning *;
 
-    var copyableColumns = ['user_id', 'restaurant_id', 'street', 'city', 'state', 'zip', 'phone', 'notes', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip'];
+    var copyableColumns = ['user_id', 'restaurant_id', 'street', 'city', 'state', 'zip', 'phone', 'notes', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip', 'payment_method_id'];
     var self = this;
     var tasks = [
       function(cb) {
@@ -217,21 +235,10 @@ module.exports = Model.extend({
       },
 
       function(client, done, newOrder, cb) {
-        // Step 2: create a pending status for the new order.  (Note: this could be parallel with step 3.
-        if (newOrder == null) return cb(null, client, done, null);
-        var OrderStatus = require('./order-status');
-        var status = new OrderStatus({order_id: newOrder.attributes.id});
-        status.save(function(err, status) {
-          if (err) return cb(err, client, done);
-          newOrder.attributes.latestStatus = status.status;
-          return cb(null, client, done, newOrder);
-        }, client);
-      },
-
-      function(client, done, newOrder, cb) {
-        // Step 3: Copy the order items
+        // Step 2: Copy the order items
         if (newOrder == null) return cb(null, client, done, null);
 
+        newOrder.attributes.status = 'pending';
         var copyOrderItems = {
           with: {
             newItems: {
@@ -275,7 +282,7 @@ module.exports = Model.extend({
       },
 
       function(client, done, newOrder, cb) {
-        // Step 4: check if any order_items are missing because their items have been discontinued
+        // Step 3: check if any order_items are missing because their items have been discontinued
         if (newOrder == null) return cb(null, client, done, null);
         self.getOrderItems(function(err, oldOrderItems) {
           if (err) return cb(err, client, done);
@@ -291,11 +298,85 @@ module.exports = Model.extend({
         return callback(error || err, order, lostItems);
       });
     });
+  },
+
+  setPaymentPaid: function (type, uri, data, callback) {
+    var self = this;
+
+    var TAGS = ['order-set-payment-paid'];
+    logger.models.info(TAGS, 'setting payment status to paid for order: ' + this.attributes.id);
+
+    db.getClient(function (error, client, done) {
+      var tasks = {
+        begin: function (cb) {
+          client.query('BEGIN', cb);
+        }
+      , updatePaymentStatus: function (cb) {
+          self.attributes.payment_status = 'paid';
+          self.save(cb, client);
+        }
+      , createTransaction: function (cb) {
+          var query = queries.transaction.createIfUriNotExists(type, self.attributes.id, uri, data);
+          var sql = db.builder.sql(query);
+          client.query(sql.query, sql.values, cb);
+        }
+      };
+
+      utils.async.series([
+        tasks.begin
+      , tasks.updatePaymentStatus
+      , tasks.createTransaction
+      ], function (error, results) {
+        client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
+          done();
+          return callback(e || error);
+        });
+      });
+    });
+  },
+
+  setPaymentError: function (requestId, data, callback) {
+    var self = this;
+
+    var TAGS = ['order-set-payment-error'];
+    logger.models.info(TAGS, 'setting payment status to error for order: ' + this.attributes.id);
+
+    db.getClient(function (error, client, done) {
+
+      var tasks = {
+        begin: function (cb) {
+          client.query('BEGIN', cb);
+        }
+      , updatePaymentStatus: function (cb) {
+          self.attributes.payment_status = 'error';
+          self.save(cb, client);
+        }
+      , createTransactionError: function (cb) {
+          var transactionError = new TransactionError({
+            order_id: self.attributes.id
+          , request_id: requestId
+          , data: data
+          });
+          transactionError.save(cb, client);
+        }
+      };
+
+      utils.async.series([
+        tasks.begin
+      , tasks.updatePaymentStatus
+      , tasks.createTransactionError
+      ], function (error, results) {
+        client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
+          done();
+          return callback (e || error);
+        });
+      });
+    });
   }
 }, {
   table: 'orders',
 
-  find: function(query, callback) {
+  find: function (query, callback) {
     // TODO: alter query to add latest status
 
     // query.order needs orders.id in order for distinct to work properly, this
@@ -490,6 +571,7 @@ module.exports = Model.extend({
     query.columns.push({table: 'restaurants', name: 'email', as: 'restaurant_email'});
     query.columns.push('restaurants.sms_phone');
     query.columns.push('restaurants.voice_phone');
+    query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});
 
     query.joins.restaurants = {
       type: 'inner'
@@ -628,6 +710,7 @@ module.exports = Model.extend({
     query.columns.push({table: 'users', name: 'email', as: 'user_email'});
     query.columns.push({table: 'users', name: 'organization'});
     query.columns.push({table: 'users', name: 'name', as: 'user_name'});
+    query.columns.push({table: 'users', name: 'balanced_customer_uri', as: 'user_balanced_customer_uri'});
 
     query.joins.users = {
       type: 'inner'
@@ -645,9 +728,66 @@ module.exports = Model.extend({
 
     query.limit = 10000;
 
+    // Add order submitted_date column logic
+    if (query.columns.indexOf('submitted_date') > -1){
+      query.columns[ query.columns.indexOf('submitted_date') ] = {
+        table: 'os_submitted'
+      , name: 'created_at'
+      , as: 'submitted_date'
+      };
+
+      query.joins.os_submitted = {
+        type: 'left'
+      , on: { status: 'submitted', order_id: '$orders.id$' }
+      , target: {
+          type: 'select'
+        , table: 'order_statuses'
+        }
+      };
+
+      // Reduce the sub-query set if we can
+      if ('id' in query.where){
+        query.joins.os_submitted.target.where = { order_id: query.where.id };
+      }
+    }
+
     // query.columns.push('(is_bad_zip OR is_bad_guests OR is_bad_lead_time OR is_bad_delivery_time AS is_unacceptable)');
 
     Model.find.call(this, query, utils.partial(modifyAttributes, callback));
+  },
+
+  findReadyForCharging: function (limit, callback) {
+    if (typeof limit === 'function') {
+      callback = limit;
+      limit = 100;
+    }
+    var query = {
+      where: {
+        payment_method_id: {$notNull: true}
+      , payment_status: {$null: true}
+      , status: 'accepted'
+      , $custom: ['now() > "orders"."datetime" AT TIME ZONE "orders"."timezone"']
+      }
+    , limit: limit
+    };
+
+    Model.find.call(this, query, utils.partial(modifyAttributes, callback));
+  },
+
+  setPaymentStatusPendingIfNull: function (ids, callback) {
+    if (typeof ids === 'number') ids = [ids];
+
+    var query = {
+      updates: {
+        payment_status: 'pending'
+      }
+    , where: {
+        payment_status: {$null: true}
+      , id: {$in: ids}
+      }
+    };
+
+    Model.update.call(this, query, utils.partial(modifyAttributes, callback));
   },
 
   // this is a FSM definition

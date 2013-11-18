@@ -1,39 +1,74 @@
 {{#extend "body"}}
-  <!--<LeadText>-->
   <table cellpadding="0" cellspacing="0" style="width: 100%;">
     <tr>
-      <td style="width: 100%; padding-top: 2px; padding-bottom: 32px">
-        <h1 style="line-height: 22px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: center; color: #695a42">
-          {{#if order.review_token}}
-          You have received a new order!
-          {{else}}
-          Your order has been submitted and is awaiting review!
-          {{/if}}
-        </h1>
+      <td style="width: 10px"></td>
+      <td>
+        <table cellpadding="0" cellspacing="0" style="width: 100%;">
+          <tr>
+            <td style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-right: 12px;">
+              <h1 style="line-height: 22px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
+                {{#if order.review_token}}
+                You have received a new order!
+                {{else}}
+                Your order has been submitted and is awaiting review!
+                {{/if}}
+              </h1>
+              <!--<BigOlButton>-->
+              <table cellpadding="0" cellspacing="0" style="width: 100%;">
+                <tr>
+                  <td style="width: 100%; padding-top: 2px; padding-top: 12px; font-size: 24px; font-weight: 300; ">
+                    <a href="{{config.baseUrl}}/orders/{{order.id}}{{#if order.review_token}}?review_token={{order.review_token}}{{/if}}" style="text-decoration: none; color: #ffffff; font-family: Helvetica, arial, sans-serif;">
+                      <table cellpadding="0" cellspacing="0" style="">
+                        <tr>
+                          <td style="padding-top: 10px; padding-right: 28px; padding-bottom: 10px; padding-left: 28px; white-space: nowrap; background: #DC0500; border-radius: 4px; border: solid #B80300 1px; font-family: Helvetica, arial, sans-serif; color: #ffffff">
+                            <a href="{{config.baseUrl}}/orders/{{order.id}}{{#if order.review_token}}?review_token={{order.review_token}}{{/if}}" style="color: #ffffff; font-size: 20px; text-decoration: none; font-family: Helvetica, arial, sans-serif;">View full order</a>
+                          </td>
+                        </tr>
+                      </table>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              <!--</BigOlButton>-->
+            </td>
+            <td style="width: 46%; padding-bottom: 22px;">
+              <!--<OrderDetails>-->
+              <table cellpadding="0" cellspacing="0" style="width: 100%">
+                <tr>
+                  <td class="main-width-constraint">
+                    <table class="main-width-constraint" cellpadding="0" cellspacing="0" style="width: 100%; background: #ffffff; border: solid #ccccc0 1px; border-radius: 4px">
+                    <!--<OrderDetailsBody>-->
+                    {{#if order.user.organization}}
+                    <tr>
+                      <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Customer Organization:</td>
+                      <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{order.user.organization}}</td>
+                    </tr>
+                    {{/if}}
+                    <tr>
+                      <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Delivery Date:</td>
+                      <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{datepart order.datetime}}</td>
+                    </tr>
+                    <tr>
+                      <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Delivery Time:</td>
+                      <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{timepart order.datetime}}</td>
+                    </tr>
+                    <tr>
+                      <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Guests:</td>
+                      <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{order.guests}}</td>
+                    </tr>
+                    <!--</OrderDetailsBody>-->
+                  </table>
+                  </td>
+                </tr>
+              </table>
+              <!--</OrderDetails>-->
+            </td>
+          </tr>
+        </table>
+
+        {{> email_order_items order}}
       </td>
+      <td style="width: 10px"></td>
     </tr>
   </table>
-  <!--</LeadText>-->
-
-  <!--<BigOlButton>-->
-  <table cellpadding="0" cellspacing="0" style="width: 100%;">
-    <tr>
-      <td style="width: 100%; padding-top: 2px; padding-bottom: 32px; font-size: 24px; font-weight: 300; ">
-        <a href="{{config.baseUrl}}/orders/{{order.id}}{{#if order.review_token}}?review_token={{order.review_token}}{{/if}}" style="text-decoration: none; color: #ffffff; font-family: Helvetica, arial, sans-serif;">
-          <table cellpadding="0" cellspacing="0" style="">
-            <tr>
-              <td width="50%"></td>
-              <td style="padding-top: 12px; padding-right: 36px; padding-bottom: 12px; padding-left: 36px; white-space: nowrap; background: #DC0500; border-radius: 4px; border: solid #B80300 1px; font-family: Helvetica, arial, sans-serif; color: #ffffff">
-                <a href="{{config.baseUrl}}/orders/{{order.id}}{{#if order.review_token}}?review_token={{order.review_token}}{{/if}}" style="color: #ffffff; font-size: 24px; text-decoration: none; font-family: Helvetica, arial, sans-serif;">View order</a>
-              </td>
-              <td width="50%"></td>
-            </tr>
-          </table>
-        </a>
-      </td>
-    </tr>
-  </table>
-  <!--</BigOlButton>-->
-
-  {{> email_order_items order}}
 {{/extend}}

@@ -1,40 +1,20 @@
-begin;
--- Update version
-insert into deltas (version, date) values ('1.0.17', 'now()');
+-- Add cancel times
 
--- fix some address stuff, especially uniqueness
-UPDATE addresses SET street2='' WHERE street2 IS NULL;
-
-ALTER TABLE addresses
-      ALTER COLUMN street SET NOT NULL,
-      ALTER COLUMN city SET NOT NULL,
-      ALTER COLUMN "state" SET NOT NULL,
-      ALTER COLUMN zip SET NOT NULL,
-      ALTER COLUMN is_default SET NOT NULL,
-      ALTER COLUMN phone SET NOT NULL,
-      ALTER COLUMN street2 SET NOT NULL,
-      ALTER COLUMN street2 SET DEFAULT '';
-
-ALTER TABLE addresses DROP CONSTRAINT IF EXISTS addresses_pkey cascade;
-
-ALTER TABLE addresses ALTER COLUMN id SET NOT NULL;
-ALTER TABLE addresses ADD UNIQUE (id);
-
-ALTER TABLE addresses ADD PRIMARY KEY (user_id, street, street2, zip);
-
-ALTER TABLE restaurants ADD FOREIGN KEY(address_id) REFERENCES addresses(id);
-
-
--- add tip percentage to orders
 DO $$
-  BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tip_percentage') THEN
-      CREATE TYPE tip_percentage AS ENUM('0', 'custom', '5', '10', '15', '18', '20', '25');
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'orders' AND column_name = 'tip_percent') THEN
-      ALTER TABLE orders ADD COLUMN tip_percent tip_percentage;
-    END IF;
-  END;
-$$;
+  declare version       text := '1.0.17';
+  declare tbl_name      text := 'restaurant_lead_times';
+  declare col_name      text := 'cancel_time';
+begin
+  raise notice '## Running Delta v% ##', version;
 
-commit;
+  raise notice 'Using col_name: %, tbl_name: %', col_name, tbl_name;
+
+  -- Update version
+  execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
+
+  -- Add col
+  if not exists ( select 1 from information_schema.columns where table_name = tbl_name and column_name = col_name ) then
+    raise notice 'Adding column `%` to table `%`', col_name, tbl_name;
+    execute 'alter table "' || tbl_name || '" add column "' || col_name || '" integer';
+  end if;
+end$$;

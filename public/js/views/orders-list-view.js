@@ -14,7 +14,8 @@ var OrdersListView = Backbone.View.extend({
    * to client's local timezone
    */
   convertUtcDates: function() {
-    _.each(this.$el.find('.date-created'), function($date) {
+    _.each(this.$el.find('.date-created'), function(date) {
+      var $date = $(date);
       var output = moment.utc($date.data('date')).local().format('l h:mm A');
       $date.html(output);
     });

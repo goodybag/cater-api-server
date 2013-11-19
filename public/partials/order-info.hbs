@@ -1,5 +1,5 @@
 <fieldset class="col-xs-6 delivery-info-date">
-  {{#unless order.editable}}
+  {{#unless edit}}
 
   {{#if order.name}}<p><strong>{{order.name}}</strong></p>{{/if}}
   <dl class="dl-horizontal no-margin">
@@ -46,8 +46,8 @@
   <div><strong>{{user.organization}}</strong></div>
   {{/if}}
 
-  {{#unless order.editable}}
-  {{> address order.address}}
+  {{#unless edit}}
+  {{> address order}}
   {{else}}
   {{#with orderAddress}}
   {{> edit_address}}

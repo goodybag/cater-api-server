@@ -193,6 +193,7 @@ module.exports.register = function(app) {
    *  Order resource.  An individual order.
    */
 
+  app.all('/orders/:id', controllers.orders.auth);
   app.all('/orders/:id/*', controllers.orders.auth);
 
   app.get('/orders/:id'

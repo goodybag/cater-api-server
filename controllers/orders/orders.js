@@ -203,12 +203,17 @@ module.exports.create = function(req, res) {
 }
 
 module.exports.update = function(req, res) {
-  var order = new models.Order(utils.extend({}, req.body, {id: req.params.id}));
-  order.save(function(err, rows, result) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(order.toJSON({plain:true}));
+  models.Order.findOne(req.params.id, function(err, order) {
+     if (err) return res.error(errors.internal.DB_FAILURE, err);
+    var editable = utils.contains(req.session.user.groups, 'admin') || utils.co
+    if (!editable) return res.json(403, 'nope');
+    utils.extend(order.attributes, req.body);  // TODO: pick updateable fields
+    order.save(function(err, rows, result) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      res.send(order.toJSON({plain:true}));
+    });
   });
-}
+});
 
 module.exports.listStatus = function(req, res) {
   models.OrderStatus.find(

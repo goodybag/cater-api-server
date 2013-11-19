@@ -46,7 +46,7 @@
             {{#if this.restaurant}}
             <button type="button" class="btn btn-default copy-order-btn">Order Again?</button>
             {{/if}}
-            <button data-href="/receipts/order-{{this.id}}.pdf" data-target="_blank" data-name="Order #{{this.id}} Receipt" class="btn btn-default btn-receipt">Download Receipt</button>
+            <button data-href="/receipts/order-{{this.id}}.pdf" data-target="_blank" data-name="Order {{this.id}} Receipt" class="btn btn-default btn-receipt">Download Receipt</button>
           </div>
         </div>
       </div>
@@ -100,7 +100,8 @@
     var $el = $(this), url = $el.data('href');
 
     if ( $el.data('target') === '_blank' ){
-      window.open( url, $el.data('name') );
+      // Strip spaces, hyphens, and underscores in window name so IE doesnt bitch
+      window.open( url, $el.data('name').replace( /\s|\_|\-/g, '' ) );
     } else {
       window.location = url;
     }

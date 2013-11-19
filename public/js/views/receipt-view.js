@@ -17,6 +17,7 @@ var ReceiptView = OrderView.extend({
   },
 
   initialize: function() {
+    OrderView.prototype.initialize.apply(this, arguments);
     this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
     this.convertUtcDates();
   },

@@ -213,6 +213,10 @@
   margin-left: 4px;
 }
 
+.navbar-nav {
+  text-align: right;
+}
+
 .navbar-nav > li > .dropdown-menu {
   margin-top: -11px;
 }

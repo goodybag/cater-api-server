@@ -265,15 +265,21 @@ var Order = Backbone.Model.extend({
     });
   },
 
-  changeStatus: function(status, callback) {
+  changeStatus: function(status, review, callback) {
+    if (typeof review === 'function') {
+      callback = review;
+      review = null;
+    }
     callback = callback || function() {};
     if (status == null || status === this.get('status')) return callback();
     var self = this;
+    var data = {status: status};
+    if (review) data.review_token = review;
     $.ajax({
       type: 'POST',
       url: _.result(this, 'url') + '/status-history',
       contentType: 'application/json',
-      data: JSON.stringify({status: status}),
+      data: JSON.stringify(data),
       error: function(jqXHR, textstatus, errorThrown) {
         return callback(errorThrown);
       },

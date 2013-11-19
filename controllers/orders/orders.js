@@ -28,7 +28,6 @@ var addressFields = [
 
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
-
   logger.db.info(TAGS, 'auth for order #'+ req.params.id);
   if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) return next();
   models.Order.findOne(req.params.id, function(err, order) {
@@ -175,6 +174,7 @@ module.exports.get = function(req, res) {
 
     // Decide where to show the `Thanks` message
     if (moment(context.order.submitted_date).add('hours', 1) > moment())
+    if (req.session && req.session.user)
     if (context.order.user_id == req.session.user.id){
       context.showThankYou = true;
     }

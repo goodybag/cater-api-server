@@ -17,6 +17,7 @@ var ReceiptView = OrderView.extend({
   },
 
   initialize: function() {
+    OrderView.prototype.initialize.apply(this, arguments);
     this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
     this.convertUtcDates();
   },
@@ -65,8 +66,8 @@ var ReceiptView = OrderView.extend({
    */
   convertUtcDates: function() {
     var $submitted = this.$el.find('.date-submitted');
-    var output = $submitted.data('date') ? 
-      'Date submitted: ' + moment.utc($submitted.data('date')).local().format('l h:mm A') 
+    var output = $submitted.data('date') ?
+      'Date submitted: ' + moment.utc($submitted.data('date')).local().format('l h:mm A')
     : '';
     $submitted.html(output);
   },
@@ -80,7 +81,7 @@ var ReceiptView = OrderView.extend({
   },
 
   changeStatus: function(status) {
-    this.model.changeStatus(status, function(err) {
+    this.model.changeStatus(status, this.options.review_token, function(err) {
       if (err) return alert(err);
       window.location.reload();
     });
@@ -95,7 +96,7 @@ var ReceiptView = OrderView.extend({
         var queryParams = { copy: true };
       }
 
-      if (newOrder.get('lostItems')) 
+      if (newOrder.get('lostItems'))
         queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
 
         window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);

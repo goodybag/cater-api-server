@@ -175,7 +175,7 @@ var CheckoutView = OrderView.extend({
     });
 
     // Can I do this to capture an invalid order.save? I only want to show
-    // alerts in the modal when selecting another address from the user's 
+    // alerts in the modal when selecting another address from the user's
     // address book.
     if (!sent) {
       this_.setAlerts('.alert-bad-zip-modal', this_.model, _.contains(this.model.validationError, 'is_bad_zip'));
@@ -453,8 +453,8 @@ var CheckoutView = OrderView.extend({
 
     var data = {
       name:              $el.find('[name="card_name"]').val()
-    , card_number:      +$el.find('[name="card_number"]').val()
-    , security_code:    +$el.find('[name="security_code"]').val()
+    , card_number:       $el.find('[name="card_number"]').val()
+    , security_code:     $el.find('[name="security_code"]').val()
     , expiration_month: +$el.find('[name="expiration_month"]').val()
     , expiration_year:  +$el.find('[name="expiration_year"]').val()
     };

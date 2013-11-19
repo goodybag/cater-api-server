@@ -2,8 +2,6 @@ var ReceiptView = OrderView.extend({
   events: function() {
     return _.extend({}, OrderView.prototype.events, {
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
-      'keyup .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
-      'change .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
       'click .copy-order-btn': 'copyOrder',
       'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),
       'click .btn-accept': _.bind(this.changeStatus, this, 'accepted'),
@@ -13,7 +11,9 @@ var ReceiptView = OrderView.extend({
       'click #change-status-denied': _.bind(this.changeStatus, this, 'denied'),
       'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted'),
       'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered'),
-      'click .edit-order-btn': 'toggleEdit'
+      'click .edit-order-btn': 'toggleEdit',
+      'click .cancel-edit-btn': 'toggleEdit',
+      'click .save-btn': 'save'
     });
   },
 
@@ -122,5 +122,12 @@ var ReceiptView = OrderView.extend({
       };
       this.$el.find('.delivery-info').html(Handlebars.partials.order_info(context));
     }
+  },
+
+  save: function() {
+    var self = this;
+    this.onSave(function(err, data) {
+      self.toggleEdit();
+    });
   }
 });

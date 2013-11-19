@@ -294,17 +294,19 @@ module.exports.changeStatus = function(req, res) {
           });
         }
 
-        if (order.attributes.restaurant.voice_phone) {
+        if (order.attributes.restaurant.voice_phones) {
           logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
 
-          twilio.makeCall({
-            to: order.attributes.restaurant.voice_phone,
-            from: config.phone.orders,
-            url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
-            ifMachine: 'Continue',
-            method: 'GET'
-          }, function(err, result) {
-            if (err) logger.routes.error(TAGS, 'unabled to place call', err);
+          utils.each(order.attributes.restaurant.voice_phones, function(voice_phone) {
+            twilio.makeCall({
+              to: voice_phone,
+              from: config.phone.orders,
+              url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
+              ifMachine: 'Continue',
+              method: 'GET'
+            }, function(err, result) {
+              if (err) logger.routes.error(TAGS, 'unabled to place call', err);
+            });
           });
         }
       }

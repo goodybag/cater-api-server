@@ -20,9 +20,9 @@
       if (this.$el) this.$el.attr('id', this.id);
     },
 
-    render: function(hideSave) {
+    render: function() {
       this.$el.html(this.template(this.model.toJSON()));
-      if (this.model.isNew() || this.getDiff() || hideSave==true)
+      if (this.model.isNew() || this.getDiff())
         this.$el.find('.item-save').removeClass('hide');
       return this;
     },

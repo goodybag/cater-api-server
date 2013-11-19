@@ -30,33 +30,26 @@
       Is Hidden
     </label>
   </div>
-  <div class="form-group">
-    <label class="control-label">SMS Phone</label>
-    <input type="text" class="form-control restaurant-sms-phone" value="{{phoneNumber restaurant.sms_phone}}" placeholder="(512) 555-1234">
-    <span class="help-block">Ten digit phone number to use for sms order alerts.  Leave blank for no sms order alerts.</span>
-  </div>
   <fieldset>
     <legend>SMS Phone</legend>
     <div class="sms-phone-list">
       {{#each restaurant.sms_phones}}
-        {{> edit_restaurant_phone }}
+        {{> edit_restaurant_sms_phone }}
       {{/each}}
     </div>
     <span class="help-block">Ten digit phone number to use for sms order alerts.  Leave blank for no sms order alerts.</span>
     <button class="btn btn-success add-sms-phone">Add SMS Phone</button>
   </fieldset>
-
   <fieldset>
     <legend>Voice Phone</legend>
     <div class="voice-phone-list">
       {{#each restaurant.voice_phones}}
-        {{> edit_restaurant_phone }}
+        {{> edit_restaurant_voice_phone }}
       {{/each}}
     </div>
     <span class="help-block">Ten digit phone number to use for voice order alerts.  Leave blank for no phone order alerts.</span>
     <button class="btn btn-success add-voice-phone">Add Voice Phone</button>
   </fieldset>
-
   <fieldset>
     <legend>Emails</legend>
     <div class="email-list">
@@ -171,7 +164,8 @@
   , hours_day: 'hours-day.hbs'
   , lead_time: 'lead-time.hbs'
   , 'edit_restaurant_email': 'edit-restaurant-email.hbs'
-  , 'edit_restaurant_phone': 'edit-restaurant-phone.hbs'
+  , 'edit_restaurant_sms_phone': 'edit-restaurant-sms-phone.hbs'
+  , 'edit_restaurant_voice_phone': 'edit-restaurant-voice-phone.hbs'
   };
 
   for (var name in partials) {

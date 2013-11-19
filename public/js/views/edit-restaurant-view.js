@@ -94,7 +94,7 @@ var EditRestaurantView = FormView.extend({
       return _.pluck(this.$el.find(this.fieldMap.emails), 'value');
     },
 
-    sms_phone: function() {
+    sms_phones: function() {
       return _.chain( this.$el.find(this.fieldMap.sms_phones) )
         .pluck('value')
         .invoke('replace', /[^\d]/g, '')
@@ -191,11 +191,11 @@ var EditRestaurantView = FormView.extend({
   },
 
   addSmsPhone: function(e) {
-    this.$el.find('.sms-phone-list').append(Handlebars.partials.edit_restaurant_phone());
+    this.$el.find('.sms-phone-list').append(Handlebars.partials.edit_restaurant_sms_phone());
   },
 
   addVoicePhone: function(e) {
-    this.$el.find('.voice-phone-list').append(Handlebars.partials.edit_restaurant_phone());
+    this.$el.find('.voice-phone-list').append(Handlebars.partials.edit_restaurant_voice_phone());
   },
 
   addEmail: function(e) {

@@ -39,7 +39,7 @@ var Restaurant = (function(){
           required: true,
           items: {
             type: 'string',
-            format: 'email'
+            // format: 'email'
           }
         },
         price: {

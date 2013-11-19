@@ -35,6 +35,18 @@
     <input type="text" class="form-control restaurant-sms-phone" value="{{phoneNumber restaurant.sms_phone}}" placeholder="(512) 555-1234">
     <span class="help-block">Ten digit phone number to use for sms order alerts.  Leave blank for no sms order alerts.</span>
   </div>
+  <fieldset>
+    <legend>Voice Phone</legend>
+    <div class="voice-phone-list">
+      {{#each restaurant.voice_phones}}
+        {{> edit_restaurant_phone }}
+      {{/each}}
+    </div>
+    <span class="help-block">Ten digit phone number to use for voice order alerts.  Leave blank for no phone order alerts.</span>
+    <button class="btn btn-success add-voice-phone">Add Add Voice Phone</button>
+  </fieldset>
+
+
   <div class="form-group">
     <label class="control-label">Voice Phone</label>
     <input type="text" class="form-control restaurant-voice-phone" value="{{phoneNumber restaurant.voice_phone}}" placeholder="(512) 555-1234">
@@ -44,7 +56,7 @@
     <legend>Emails</legend>
     <div class="email-list">
       {{#each restaurant.emails}}
-        {{> email }}
+        {{> edit_restaurant_email }}
       {{/each}}
     </div>
     <button class="btn btn-success add-email">Add Email</button>
@@ -148,7 +160,14 @@
 
 {{#extend "scripts"}}
 <script>
-  var partials = { edit_hours: 'edit-hours.hbs', hours_day: 'hours-day.hbs', lead_time: 'lead-time.hbs', 'email': 'email.hbs'};
+  var partials = { 
+    edit_hours: 'edit-hours.hbs'
+  , hours_day: 'hours-day.hbs'
+  , lead_time: 'lead-time.hbs'
+  , 'edit_restaurant_email': 'edit-restaurant-email.hbs'
+  , 'edit_restaurant_phone': 'edit-restaurant-phone.hbs'
+  };
+
   for (var name in partials) {
     $.ajax({
       type: 'GET',

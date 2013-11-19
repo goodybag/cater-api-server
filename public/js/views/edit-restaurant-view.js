@@ -8,16 +8,19 @@ var EditRestaurantView = FormView.extend({
     "Do you want to continue?"
   ].join(' '),
 
-  events: {
-    'keyup .restaurant-form .form-control': 'onChange',
-    'change .restaurant-form .form-control, .restaurant-form input': 'onChange',
-    'submit .restaurant-form': 'onSave',
-    'click .new-category': 'newCategory',
-    'click .add-lead-time': 'addLeadTime',
-    'click .remove-lead-time': 'removeLeadTime',
-    'click .add-email': 'addEmail',
-    'click .restaurant-remove': 'onRestaurantRemoveClick',
-    'change input[type="filepicker"]': 'onFilePickerChange'
+  events: function() {
+    return {
+      'keyup .restaurant-form .form-control': 'onChange',
+      'change .restaurant-form .form-control, .restaurant-form input': 'onChange',
+      'submit .restaurant-form': 'onSave',
+      'click .new-category': 'newCategory',
+      'click .add-lead-time': 'addLeadTime',
+      'click .add-voice-phone': 'addVoicePhone',
+      'click .remove-input': utils.bind(this.removeInput, this, '.removable'),
+      'click .add-email': 'addEmail',
+      'click .restaurant-remove': 'onRestaurantRemoveClick',
+      'change input[type="filepicker"]': 'onFilePickerChange'
+    };
   },
 
   initialize: function(options) {
@@ -57,9 +60,9 @@ var EditRestaurantView = FormView.extend({
     name: '.restaurant-form .restaurant-name',
     logo_url: '.restaurant-form [name="logo_url"]',
     logo_mono_url: '.restaurant-form [name="logo_mono_url"]',
-    sms_phone: '.restaurant-form .restaurant-sms-phone',
-    voice_phone: '.restaurant-form .restaurant-voice-phone',
-    email: '.restaurant-form .restaurant-email',
+    // sms_phones: '.restaurant-form .restaurant-sms-phones',
+    voice_phones: '.restaurant-form .restaurant-voice-phones',
+    emails: '.restaurant-form .restaurant-emails',
     price: '.restaurant-form .restaurant-price',
     cuisine: '.restaurant-form .restaurant-cuisine',
     minimum_order: '.restaurant-form .restaurant-minimum-order',
@@ -86,12 +89,22 @@ var EditRestaurantView = FormView.extend({
       return val ? _.invoke(val.split(','), 'trim') : [];
     },
 
-    sms_phone: function() {
-      return this.$el.find(this.fieldMap.sms_phone).val().replace(/[^\d]/g, '') || null;
+    emails: function() {
+      return _.pluck(this.$el.find(this.fieldMap.emails), 'value');
     },
 
-    voice_phone: function() {
-      return this.$el.find(this.fieldMap.voice_phone).val().replace(/[^\d]/g, '') || null;
+    sms_phone: function() {
+      return _.chain( this.$el.find(this.fieldMap.sms_phones) )
+        .pluck('value')
+        .invoke('replace', /[^\d]/g, '')
+        .value();
+    },
+
+    voice_phones: function() {
+      return _.chain( this.$el.find(this.fieldMap.voice_phones) )
+        .pluck('value')
+        .invoke('replace', /[^\d]/g, '')
+        .value();
     },
 
     delivery_zips: function() {
@@ -166,14 +179,22 @@ var EditRestaurantView = FormView.extend({
     this.$el.find('.lead-times-list').append(Handlebars.partials.lead_time({}));
   },
 
-  removeLeadTime: function(e) {
+  /**
+   * Clicking remove button removes the container
+   * so we cull all the form labels, inputs, actions, etc
+   */
+  removeInput: function(selector, e) {
     e.preventDefault();
-    $(e.target).closest('.lead-time').remove();
+    $(e.target).closest(selector).remove();
     this.onChange(e);
   },
 
+  addVoicePhone: function(e) {
+    this.$el.find('.voice-phone-list').append(Handlebars.partials.edit_restaurant_phone());
+  },
+
   addEmail: function(e) {
-    this.$el.find('.email-list').append(Handlebars.partials.email());
+    this.$el.find('.email-list').append(Handlebars.partials.edit_restaurant_email());
   },
 
   onRestaurantRemoveClick: function(e){

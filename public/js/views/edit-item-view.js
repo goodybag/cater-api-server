@@ -59,10 +59,14 @@
       tags: '.edit-item-tags input:checked'
     },
 
-    attach: function() {
+    /**
+     * Attach after element or append to the table body
+     * @param  {jQuery Element} element - optional
+     */
+    attach: function(element) {
       this.$el.hide();
       this.delegateEvents();
-      this.options.category.$el.find('tbody').append(this.$el);
+      (element) ? element.after(this.$el) : this.options.category.$el.find('tbody').append(this.$el);
       this.$el.fadeIn();
     },
 
@@ -97,7 +101,7 @@
       itemModel.category.items.add(itemModel, {sort: false});
       this.options.category.items.push(itemView);
 
-      itemView.render().attach();
+      itemView.render().attach(this.$el);
     },
 
     onItemRemove: function(e) {

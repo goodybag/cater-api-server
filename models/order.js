@@ -147,7 +147,7 @@ module.exports = Model.extend({
     }
 
     if (this.orderItems) obj.orderItems = utils.invoke(this.orderItems, 'toJSON');
-    obj.editable = this.attributes.status === 'pending';
+    obj.editable = utils.contains(['pending', 'submitted'], this.attributes.status);
     obj.cancelable = (this.attributes.status === 'accepted' && inTimeToCancel) || utils.contains(['pending', 'submitted'], this.attributes.status);
 
     if ( obj.restaurant && obj.restaurant.minimum_order ){

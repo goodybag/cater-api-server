@@ -95,6 +95,7 @@
     onItemCopy: function(e) {
       var copy = this.model.toJSON();
       delete copy.id;
+      delete copy.created_at;
       var itemModel = new Item(copy, {category: this.model.category});
       var itemView = new EditItemView({model: itemModel, category: this.options.category});
 

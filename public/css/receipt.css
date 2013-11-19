@@ -74,3 +74,13 @@
 .restaurant-review.panel-actions .btn {
   margin: 0 20px;
 }
+
+.panel-body {
+  position: relative;
+}
+
+.btn-pdf {
+  position: absolute;
+  right: 15px;
+  top: 52px;
+}

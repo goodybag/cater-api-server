@@ -36,6 +36,17 @@
     <span class="help-block">Ten digit phone number to use for sms order alerts.  Leave blank for no sms order alerts.</span>
   </div>
   <fieldset>
+    <legend>SMS Phone</legend>
+    <div class="sms-phone-list">
+      {{#each restaurant.sms_phones}}
+        {{> edit_restaurant_phone }}
+      {{/each}}
+    </div>
+    <span class="help-block">Ten digit phone number to use for sms order alerts.  Leave blank for no sms order alerts.</span>
+    <button class="btn btn-success add-sms-phone">Add SMS Phone</button>
+  </fieldset>
+
+  <fieldset>
     <legend>Voice Phone</legend>
     <div class="voice-phone-list">
       {{#each restaurant.voice_phones}}
@@ -43,15 +54,9 @@
       {{/each}}
     </div>
     <span class="help-block">Ten digit phone number to use for voice order alerts.  Leave blank for no phone order alerts.</span>
-    <button class="btn btn-success add-voice-phone">Add Add Voice Phone</button>
+    <button class="btn btn-success add-voice-phone">Add Voice Phone</button>
   </fieldset>
 
-
-  <div class="form-group">
-    <label class="control-label">Voice Phone</label>
-    <input type="text" class="form-control restaurant-voice-phone" value="{{phoneNumber restaurant.voice_phone}}" placeholder="(512) 555-1234">
-    <span class="help-block">Ten digit phone number to use for voice order alerts.  Leave blank for no phone order alerts.</span>
-  </div>
   <fieldset>
     <legend>Emails</legend>
     <div class="email-list">
@@ -61,6 +66,7 @@
     </div>
     <button class="btn btn-success add-email">Add Email</button>
   </fieldset>
+
   <div class="form-group">
     <label class="control-label">Price</label>
     <select class="form-control restaurant-price">

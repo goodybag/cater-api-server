@@ -15,9 +15,10 @@ var EditRestaurantView = FormView.extend({
       'submit .restaurant-form': 'onSave',
       'click .new-category': 'newCategory',
       'click .add-lead-time': 'addLeadTime',
+      'click .add-sms-phone': 'addSmsPhone',
       'click .add-voice-phone': 'addVoicePhone',
-      'click .remove-input': utils.bind(this.removeInput, this, '.removable'),
       'click .add-email': 'addEmail',
+      'click .remove-input': utils.bind(this.removeInput, this, '.removable'),
       'click .restaurant-remove': 'onRestaurantRemoveClick',
       'change input[type="filepicker"]': 'onFilePickerChange'
     };
@@ -34,7 +35,7 @@ var EditRestaurantView = FormView.extend({
   },
 
   setTooltips: function() {
-    this.$el.find('.remove-lead-time').tooltip();
+    this.$el.find('.remove-input').tooltip();
   },
 
   remove: function() {
@@ -60,7 +61,7 @@ var EditRestaurantView = FormView.extend({
     name: '.restaurant-form .restaurant-name',
     logo_url: '.restaurant-form [name="logo_url"]',
     logo_mono_url: '.restaurant-form [name="logo_mono_url"]',
-    // sms_phones: '.restaurant-form .restaurant-sms-phones',
+    sms_phones: '.restaurant-form .restaurant-sms-phones',
     voice_phones: '.restaurant-form .restaurant-voice-phones',
     emails: '.restaurant-form .restaurant-emails',
     price: '.restaurant-form .restaurant-price',
@@ -187,6 +188,10 @@ var EditRestaurantView = FormView.extend({
     e.preventDefault();
     $(e.target).closest(selector).remove();
     this.onChange(e);
+  },
+
+  addSmsPhone: function(e) {
+    this.$el.find('.sms-phone-list').append(Handlebars.partials.edit_restaurant_phone());
   },
 
   addVoicePhone: function(e) {

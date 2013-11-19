@@ -193,6 +193,15 @@ module.exports.register = function(app) {
    *  Order resource.  An individual order.
    */
 
+
+  app.get(
+    config.receipt.orderRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , function(req, res, next){ req.params.receipt = true; next(); }
+  , controllers.orders.get
+  );
+
   app.all(/^\/orders\/(\d+)(?:\/.*)?$/, function (req, res, next) {
     req.params.id = req.params[0];
     next();
@@ -207,14 +216,6 @@ module.exports.register = function(app) {
         m.restrict(['admin', 'receipts'])
       )(req, res, next);
     }
-  , controllers.orders.get
-  );
-
-  app.get(
-    config.receipt.orderRoute
-  , m.basicAuth()
-  , m.restrict(['admin', 'receipts'])
-  , function(req, res, next){ req.params.receipt = true; next(); }
   , controllers.orders.get
   );
 

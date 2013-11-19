@@ -41,13 +41,14 @@
             {{> status_label}}
           </div>
         </div>
-        {{#if this.restaurant}}
         <div class="row">
-          <div class="col-sm-12">
-            <button type="button" class="btn btn-default copy-order-btn pull-right">Copy Order</button>
+          <div class="col-sm-12 actions">
+            {{#if this.restaurant}}
+            <button type="button" class="btn btn-default copy-order-btn">Order Again?</button>
+            {{/if}}
+            <button data-href="/receipts/order-{{this.id}}.pdf" data-target="_blank" data-name="Order #{{this.id}} Receipt" class="btn btn-default btn-receipt">Download Receipt</button>
           </div>
         </div>
-        {{/if}}
       </div>
     </div>
   </a>
@@ -91,6 +92,18 @@
         window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
       }
     });
+  });
+
+  $('[data-href]').click( function( e ){
+    e.preventDefault();
+
+    var $el = $(this), url = $el.data('href');
+
+    if ( $el.data('target') === '_blank' ){
+      window.open( url, $el.data('name') );
+    } else {
+      window.location = url;
+    }
   });
 </script>
 {{/extend}}

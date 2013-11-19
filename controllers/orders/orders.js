@@ -216,7 +216,7 @@ module.exports.update = function(req, res) {
       res.send(order.toJSON({plain:true}));
     });
   });
-});
+};
 
 module.exports.listStatus = function(req, res) {
   models.OrderStatus.find(

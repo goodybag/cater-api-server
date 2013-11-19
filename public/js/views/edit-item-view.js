@@ -7,6 +7,7 @@
     submitSelector: '.item-save',
 
     events: {
+      'click .item-copy': 'onItemCopy',
       'click .item-remove': 'onItemRemove',
       'click .item-save': 'onSave',
       'click .item-edit-options': 'onEditOptionsClick',
@@ -19,9 +20,9 @@
       if (this.$el) this.$el.attr('id', this.id);
     },
 
-    render: function() {
+    render: function(hideSave) {
       this.$el.html(this.template(this.model.toJSON()));
-      if (this.model.isNew() || this.getDiff())
+      if (this.model.isNew() || this.getDiff() || hideSave==true)
         this.$el.find('.item-save').removeClass('hide');
       return this;
     },
@@ -85,6 +86,18 @@
       this.$el.find('.item-edit-options').text('Close Options');
 
       return this;
+    },
+
+    onItemCopy: function(e) {
+      var copy = this.model.toJSON();
+      delete copy.id;
+      var itemModel = new Item(copy, {category: this.model.category});
+      var itemView = new EditItemView({model: itemModel, category: this.options.category});
+
+      itemModel.category.items.add(itemModel, {sort: false});
+      this.options.category.items.push(itemView);
+
+      itemView.render().attach();
     },
 
     onItemRemove: function(e) {

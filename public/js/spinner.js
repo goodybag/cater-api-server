@@ -1,3 +1,16 @@
+/**
+ * Spinner
+ *
+ * spinner.spin( [target] )
+ * If no target is passed in, it shows the main spinner
+ * Otherwise, it attaches a spinner to the target and returns
+ * that spinner instance
+ *
+ * spinner.stop()
+ * Stop the main spinner
+ *
+ */
+
 var spinner = (function(){
   'use strict';
 

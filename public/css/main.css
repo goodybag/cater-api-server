@@ -140,7 +140,7 @@ header.navbar {
 }
 
 @media (max-width: 526px) {
-  .navbar .btn-group + .header-info {
+  .navbar .navbar-nav + .header-info {
     display: block;
     padding-top: 0;
     margin-top: -10px;

@@ -90,7 +90,9 @@
           <div class="date-submitted" data-date="{{order.submitted}}"></div>
         </div>
 
+        {{#if order.editable}}
         <button type="button" class="btn btn-default edit-order-btn pull-right">Edit</button>
+        {{/if}}
 
         <div class="row delivery-info">
           {{> order_info}}

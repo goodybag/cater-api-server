@@ -81,7 +81,7 @@ var ReceiptView = OrderView.extend({
   },
 
   changeStatus: function(status) {
-    this.model.changeStatus(status, function(err) {
+    this.model.changeStatus(status, this.options.review_token, function(err) {
       if (err) return alert(err);
       window.location.reload();
     });

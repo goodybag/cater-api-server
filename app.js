@@ -7,6 +7,7 @@ var
   config = require('./config')
 , rollbar = require('rollbar')
 , express = require('express')
+, fs = require('fs')
 , hbs = require('hbs')
 , crypto = require('crypto')
 , utils = require('./utils')
@@ -97,5 +98,17 @@ app.configure(function(){
 
 helpers.register(hbs);
 hbs.registerPartials('./public/partials');
+
+[
+  'order-items'
+, 'order-details'
+, 'order-details-no-header'
+].forEach( function( name ){
+  hbs.registerPartial(
+    'email_' + name.replace( /\-/g, '_' )
+  , fs.readFileSync( './views/order-email/' + name + '.hbs' ).toString()
+  );
+});
+
 routes.register(app);
 app.use(express.static(__dirname + '/public'));

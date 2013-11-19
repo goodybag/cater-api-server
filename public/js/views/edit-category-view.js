@@ -8,6 +8,7 @@ var EditCategoryView = FormView.extend({
   template: Handlebars.partials.edit_category,
 
   events: {
+    'click .copy-category': 'copyCategory',
     'click .new-item': 'newItem',
     'keyup .category-form .form-control': 'onChange',
     'change .category-form .form-control': 'onChange',

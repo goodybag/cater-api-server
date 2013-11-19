@@ -270,24 +270,26 @@ module.exports.changeStatus = function(req, res) {
           });
         });
 
-        if (order.attributes.restaurant.sms_phone) {
+        if (order.attributes.restaurant.sms_phones) {
           logger.routes.info(TAGS, "shortening url and sending sms for order: " + order.attributes.id);
           var url = config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token;
 
           // shorten URL
-          bitly.shorten(url, function(err, response) {
-            if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);
-            url = ((response||0).data||0).url || url;
-            // send sms
-            var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
-            + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
-            + '\n' + url;
-            twilio.sendSms({
-              to: order.attributes.restaurant.sms_phone,
-              from: config.phone.orders,
-              body: msg
-            }, function(err, result) {
-              if (err) logger.routes.error(TAGS, 'unabled to send SMS', err);
+          utils.each(order.attributes.restaurant.sms_phones, function(sms_phone) {
+            bitly.shorten(url, function(err, response) {
+              if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);
+              url = ((response||0).data||0).url || url;
+              // send sms
+              var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
+              + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
+              + '\n' + url;
+              twilio.sendSms({
+                to: order.attributes.restaurant.sms_phones,
+                from: config.phone.orders,
+                body: msg
+              }, function(err, result) {
+                if (err) logger.routes.error(TAGS, 'unabled to send SMS', err);
+              });
             });
           });
         }

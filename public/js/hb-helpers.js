@@ -187,11 +187,7 @@ var helpers = {
    * separated by comma.
    */
   phoneList: function(list) {
-    return list ? 
-      list.map(function(phone) {
-        return helpers.phoneNumber(phone);
-      }).join(', ')
-      : '';
+    return utils.map(list, utils.compose(helpers.phoneNumber, utils.identity)).join(', ');
   },
 
   capitalize: function(str) {

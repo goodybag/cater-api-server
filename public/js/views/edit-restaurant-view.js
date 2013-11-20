@@ -179,13 +179,9 @@ var EditRestaurantView = FormView.extend({
     this.$el.find('.lead-times-list').append(Handlebars.partials.lead_time({}));
   },
 
-  /**
-   * Clicking remove button removes the container
-   * so we cull all the form labels, inputs, actions, etc
-   */
-  removeInput: function(selector, e) {
+  removeLeadTime: function(e) {
     e.preventDefault();
-    $(e.target).closest(selector).remove();
+    $(e.target).closest('.lead-time').remove();
     this.onChange(e);
   },
 

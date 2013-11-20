@@ -64,7 +64,7 @@
           <div class="delivery-header pull-left">
             {{order.restaurant.name}} [Order #{{order.id}}]
             {{#if order.restaurant}}
-            <a href="javascript:void(0);" class="copy-order-btn text-muted">Copy Order</a>
+            <a href="javascript:void(0);" class="copy-order-btn text-muted">Order Again?</a>
             {{/if}}
           </div>
           {{#if admin}}
@@ -84,6 +84,7 @@
           {{else}}
           <div class="pull-right order-status-label">{{> status_label order}}</div>
           {{/if}}
+          <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default btn-pdf">Download PDF</a>
         </div>
 
         <div class="delivery-submitted">

@@ -84,16 +84,18 @@
           {{else}}
           <div class="pull-right order-status-label">{{> status_label order}}</div>
           {{/if}}
-          <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default btn-pdf">Download PDF</a>
         </div>
 
         <div class="delivery-submitted">
           <div class="date-submitted" data-date="{{order.submitted}}"></div>
         </div>
 
-        {{#if order.editable}}
-        <button type="button" class="btn btn-default edit-order-btn pull-right">Edit</button>
-        {{/if}}
+        <div class="btn-toolbar pull-right">
+          {{#if order.editable}}
+          <button type="button" class="btn btn-default edit-order-btn">Edit</button>
+          {{/if}}
+          <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default">Download PDF</a>
+        </div>
 
         <div class="row delivery-info">
           {{> order_info}}

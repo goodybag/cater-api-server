@@ -8,7 +8,7 @@ module.exports = Model.extend({
     require('./order').findOne(this.attributes.order_id, function(err, order) {
       if (err) return callback(err);
       if (!err) return callback({code:404, message: 'order not found'});
-      callback(null, order.attributes.status === 'pending');
+      callback(null, utils.contains(['pending', 'submitted'], order.attributes.status));
     });
   },
   save: function(returning, callback) {
@@ -32,14 +32,11 @@ module.exports = Model.extend({
       venter.emit( 'order:change', self.attributes.order_id );
     };
 
-    if (!this.attributes.id) Model.prototype.save.call(this, returning, callback);
-    else {
-      this.isMutable(function (err, mutable) {
-        if (err) return callback(err);
-        if (!mutable) return callback({code: 403, message: "can't update non-pending orders"});
-        Model.prototype.save.call(self, returning, callback);
-      });
-    }
+    this.isMutable(function (err, mutable) {
+      if (err) return callback(err);
+      if (!mutable) return callback({code: 403, message: "can't update non-pending orders"});
+      Model.prototype.save.call(self, returning, callback);
+    });
   },
   destroy: function(callback) {
     var model = this, args = arguments;

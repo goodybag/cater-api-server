@@ -128,6 +128,8 @@ var CheckoutView = OrderView.extend({
   submit: function(e) {
     var self = this;
 
+    spinner.start();
+
     if (e) e.preventDefault();
 
     this.clear();
@@ -135,7 +137,10 @@ var CheckoutView = OrderView.extend({
     // Check to see if we need to validate the address
     if ( !this.$el.find('.order-address.edit').hasClass('hide') ){
       var errors = this.validateAddress();
-      if ( errors ) return this.displayErrors2(errors, Address);
+      if ( errors ){
+        spinner.stop();
+        return this.displayErrors2(errors, Address);
+      }
     }
 
     // If they're saving a new card, delegate to the `savenewCardAndSubmit` handler
@@ -149,6 +154,8 @@ var CheckoutView = OrderView.extend({
     };
 
     this.onSave(function(err, response) {
+      spinner.stop();
+
       if (err) return notify.error(err); // TODO: error handling
       self.model.changeStatus('submitted', function(err, data) {
         if (err) return notify.error(err); // TODO: error handling
@@ -359,6 +366,9 @@ var CheckoutView = OrderView.extend({
    * @param  {Object} Model  Model to reference for field-noun-map
    */
   displayErrors2: function( errors, Model ){
+    // Just in case!
+    spinner.stop();
+
     var this_ = this;
     var error, $el, $parent;
     var template = Handlebars.partials.alert_error;

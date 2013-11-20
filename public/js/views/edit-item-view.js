@@ -96,6 +96,7 @@
       var copy = this.model.omit(['id', 'created_at']);
 
       var itemModel = new Item(copy, {category: this.model.category});
+      itemModel.set('order', itemModel.get('order') + 1);
       var itemView = new EditItemView({model: itemModel, category: this.options.category});
 
       itemModel.category.items.add(itemModel, {sort: false});

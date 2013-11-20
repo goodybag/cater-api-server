@@ -80,6 +80,7 @@ var EditCategoryView = FormView.extend({
   copyCategory: function (e) {
     var self = this;
     var categoryModel = new Category(this.model.omit(['id', 'created_at']), {restaurant: this.model.restaurant});
+    categoryModel.set('order', categoryModel.get('order') + 1);
     var categoryView = new EditCategoryView({model: categoryModel, restaurant: this.restaurant});
     categoryModel.save({}, {
       success: function (model, response, options) {

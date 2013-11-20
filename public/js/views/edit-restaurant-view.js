@@ -16,9 +16,6 @@ var EditRestaurantView = FormView.extend({
       'click .new-category': 'newCategory',
       'click .add-lead-time': 'addLeadTime',
       'click .remove-lead-time': 'removeLeadTime',
-      'click .add-sms-phone': 'addSmsPhone',
-      'click .add-voice-phone': 'addVoicePhone',
-      'click .add-email': 'addEmail',
       'click .restaurant-remove': 'onRestaurantRemoveClick',
       'change input[type="filepicker"]': 'onFilePickerChange'
     };

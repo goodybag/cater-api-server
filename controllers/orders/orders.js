@@ -297,16 +297,14 @@ module.exports.changeStatus = function(req, res) {
         if (order.attributes.restaurant.voice_phones) {
           logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
 
-          utils.each(order.attributes.restaurant.voice_phones, function(voice_phone) {
-            twilio.makeCall({
-              to: voice_phone,
-              from: config.phone.orders,
-              url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
-              ifMachine: 'Continue',
-              method: 'GET'
-            }, function(err, result) {
-              if (err) logger.routes.error(TAGS, 'unable to place call', err);
-            });
+          twilio.makeCall({
+            to: order.attributes.restaurant.voice_phones,
+            from: config.phone.orders,
+            url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
+            ifMachine: 'Continue',
+            method: 'GET'
+          }, function(err, result) {
+            if (err) logger.routes.error(TAGS, 'unable to place call', err);
           });
         }
       }

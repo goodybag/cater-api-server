@@ -221,7 +221,7 @@ module.exports.register = function(app) {
 
   app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
 
-  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
+  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.update);
 
   app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
@@ -258,7 +258,7 @@ module.exports.register = function(app) {
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
   app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.summary);  // not currently used
 
-  app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.add);
+  app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.add);
 
   app.all('/orders/:oid/items', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -271,11 +271,11 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
 
-  app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.update);
+  app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
 
-  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.update);
+  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
 
-  app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.remove);
+  app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
 
   app.all('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');

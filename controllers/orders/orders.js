@@ -38,7 +38,16 @@ module.exports.auth = function(req, res, next) {
       return res.status(404).render('404');
     next();
   });
-}
+};
+
+module.exports.editability = function(req, res, next) {
+  models.Order.findOne(req.params.oid, function(err, order) {
+    if (err) return res.error(errors.internal.DB_FAILURE);
+    if (!order) return res.json(404);
+    var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
+    return editable ? next() : res.json(403, 'order not editable');
+  });
+};
 
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
@@ -208,8 +217,6 @@ var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'n
 module.exports.update = function(req, res) {
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
-    if (!editable) return res.json(403, 'nope');
     utils.extend(order.attributes, utils.pick(req.body, updateableFields));
     order.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

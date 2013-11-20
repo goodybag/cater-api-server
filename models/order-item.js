@@ -3,14 +3,6 @@ var utils = require('../utils');
 var venter = require('../lib/venter');
 
 module.exports = Model.extend({
-  isMutable: function(callback) {
-    if (!this.attributes.order_id) return callback(null, true);
-    require('./order').findOne(this.attributes.order_id, function(err, order) {
-      if (err) return callback(err);
-      if (!err) return callback({code:404, message: 'order not found'});
-      callback(null, utils.contains(['pending', 'submitted'], order.attributes.status));
-    });
-  },
   save: function(returning, callback) {
     var self = this;
 
@@ -32,23 +24,15 @@ module.exports = Model.extend({
       venter.emit( 'order:change', self.attributes.order_id );
     };
 
-    this.isMutable(function (err, mutable) {
-      if (err) return callback(err);
-      if (!mutable) return callback({code: 403, message: "can't update non-pending orders"});
-      Model.prototype.save.call(self, returning, callback);
-    });
+    Model.prototype.save.call(self, returning, callback);
   },
   destroy: function(callback) {
     var model = this, args = arguments;
-    this.isMutable(function (err, mutable) {
-      if (err) return callback(err);
-      if (!mutable) return callback({code: 403, message: "can't remove items from non-pending orders"});
-      Model.prototype.destroy.apply(model, function(error){
-        if (error) return callback(error);
-        callback.apply(this, arguments);
+    Model.prototype.destroy.apply(model, function(error){
+      if (error) return callback(error);
+      callback.apply(this, arguments);
 
-        venter.emit( 'order:change', model.attributes.order_id );
-      });
+      venter.emit( 'order:change', model.attributes.order_id );
     });
   },
   toJSON: function() {

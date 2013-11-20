@@ -7,6 +7,7 @@
     submitSelector: '.item-save',
 
     events: {
+      'click .item-copy': 'onItemCopy',
       'click .item-remove': 'onItemRemove',
       'click .item-save': 'onSave',
       'click .item-edit-options': 'onEditOptionsClick',
@@ -58,10 +59,14 @@
       tags: '.edit-item-tags input:checked'
     },
 
-    attach: function() {
+    /**
+     * Attach after element or append to the table body
+     * @param  {jQuery Element} element - optional
+     */
+    attach: function(element) {
       this.$el.hide();
       this.delegateEvents();
-      this.options.category.$el.find('tbody').append(this.$el);
+      (element) ? element.after(this.$el) : this.options.category.$el.find('tbody').append(this.$el);
       this.$el.fadeIn();
     },
 
@@ -85,6 +90,18 @@
       this.$el.find('.item-edit-options').text('Close Options');
 
       return this;
+    },
+
+    onItemCopy: function(e) {
+      var copy = this.model.omit(['id', 'created_at']);
+
+      var itemModel = new Item(copy, {category: this.model.category});
+      var itemView = new EditItemView({model: itemModel, category: this.options.category});
+
+      itemModel.category.items.add(itemModel, {sort: false});
+      this.options.category.items.push(itemView);
+
+      itemView.render().attach(this.$el);
     },
 
     onItemRemove: function(e) {

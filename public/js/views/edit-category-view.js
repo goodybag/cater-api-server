@@ -89,7 +89,7 @@ var EditCategoryView = FormView.extend({
         categoryView.render().attach();
 
         _(self.items).each(function(item){
-          var itemModel = new Item(item.model.omit(['id', 'created_at', 'category_id']));
+          var itemModel = new Item(item.model.omit(['id', 'created_at', 'category_id']), {category: categoryModel});
           categoryModel.items.add(itemModel);
 
           var itemView = new EditItemView({model: itemModel, category: categoryView});

@@ -208,7 +208,7 @@ var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'n
 module.exports.update = function(req, res) {
   models.Order.findOne(req.params.id, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var editable = utils.contains(req.session.user.groups, 'admin') || utils.co
+    var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
     if (!editable) return res.json(403, 'nope');
     utils.extend(order.attributes, utils.pick(req.body, updateableFields));
     order.save(function(err, rows, result) {

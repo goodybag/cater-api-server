@@ -15,10 +15,10 @@ var EditRestaurantView = FormView.extend({
       'submit .restaurant-form': 'onSave',
       'click .new-category': 'newCategory',
       'click .add-lead-time': 'addLeadTime',
+      'click .remove-lead-time': 'removeLeadTime',
       'click .add-sms-phone': 'addSmsPhone',
       'click .add-voice-phone': 'addVoicePhone',
       'click .add-email': 'addEmail',
-      'click .remove-input': utils.bind(this.removeInput, this, '.removable'),
       'click .restaurant-remove': 'onRestaurantRemoveClick',
       'change input[type="filepicker"]': 'onFilePickerChange'
     };
@@ -35,7 +35,7 @@ var EditRestaurantView = FormView.extend({
   },
 
   setTooltips: function() {
-    this.$el.find('.remove-input').tooltip();
+    this.$el.find('.remove-lead-time').tooltip();
   },
 
   remove: function() {

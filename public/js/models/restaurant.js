@@ -18,7 +18,7 @@ var Restaurant = (function(){
         },
         sms_phones: {
           type: 'array',
-          required: false,
+          uniqueItems: true,
           items: {
             type: 'string',
             length: 10,
@@ -27,7 +27,7 @@ var Restaurant = (function(){
         },
         voice_phones: {
           type: 'array',
-          required: true,
+          uniqueItems: true,
           items: {
             type: 'string',
             length: 10,
@@ -36,10 +36,10 @@ var Restaurant = (function(){
         },
         emails: {
           type: 'array',
-          required: true,
+          uniqueItems: true,
           items: {
             type: 'string',
-            // format: 'email'
+            format: 'email'
           }
         },
         price: {

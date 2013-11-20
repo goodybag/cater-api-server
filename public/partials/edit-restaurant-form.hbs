@@ -30,36 +30,21 @@
       Is Hidden
     </label>
   </div>
-  <fieldset>
-    <legend>SMS Phone</legend>
-    <div class="sms-phone-list">
-      {{#each restaurant.sms_phones}}
-        {{> edit_restaurant_sms_phone }}
-      {{/each}}
-    </div>
-    <span class="help-block">Ten digit phone number to use for sms order alerts.  Leave blank for no sms order alerts.</span>
-    <button class="btn btn-success add-sms-phone">Add SMS Phone</button>
-  </fieldset>
-  <fieldset>
-    <legend>Voice Phone</legend>
-    <div class="voice-phone-list">
-      {{#each restaurant.voice_phones}}
-        {{> edit_restaurant_voice_phone }}
-      {{/each}}
-    </div>
-    <span class="help-block">Ten digit phone number to use for voice order alerts.  Leave blank for no phone order alerts.</span>
-    <button class="btn btn-success add-voice-phone">Add Voice Phone</button>
-  </fieldset>
-  <fieldset>
-    <legend>Emails</legend>
-    <div class="email-list">
-      {{#each restaurant.emails}}
-        {{> edit_restaurant_email }}
-      {{/each}}
-    </div>
-    <button class="btn btn-success add-email">Add Email</button>
-  </fieldset>
-
+  <div class="form-group">
+    <label class="control-label">SMS Phones</label>
+    <input type="text" class="form-control restaurant-sms-phones" value="{{phoneList restaurant.sms_phones}}" placeholder="(512) 555-1234, (512) 555-1235">
+    <span class="help-block">Please enter SMS phone numbers separated by commas for message alerts. Leave blank for no SMS alerts.</span>
+  </div>
+  <div class="form-group">
+    <label class="control-label">Voice Phones</label>
+    <input type="text" class="form-control restaurant-voice-phones" value="{{phoneList restaurant.voice_phones}}" placeholder="(512) 555-1234, (512) 555-1235">
+    <span class="help-block">Please enter voice phone numbers separated by commas for call alerts. Leave blank for no call alerts.</span>
+  </div>
+  <div class="form-group">
+    <label class="control-label">Emails</label>
+    <input type="text" class="form-control restaurant-emails" value="{{array restaurant.emails}}" placeholder="delivery@goodybag.com, orders@goodybag.com">
+    <span class="help-block">Please enter email addresses separated by commas for email alerts. Leave blank for no email alerts.</span>
+  </div>
   <div class="form-group">
     <label class="control-label">Price</label>
     <select class="form-control restaurant-price">

@@ -181,6 +181,17 @@ var helpers = {
     return result;
   },
 
+  /**
+   * Convert array of 10 digit numbers
+   * to string of formatted phone numbers
+   * separated by comma.
+   */
+  phoneList: function(list) {
+    return list.map(function(phone) {
+      return helpers.phoneNumber(phone);
+    }).join(', ');
+  },
+
   capitalize: function(str) {
     if(str && typeof str === 'string') {
       return str.charAt(0).toUpperCase() + str.slice(1);

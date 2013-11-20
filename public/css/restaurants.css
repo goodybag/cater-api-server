@@ -40,3 +40,18 @@ a.list-group-item-restaurant .list-group-item-heading {
 .list-group-item-restaurant:hover .business-logo-color {
   display: inline-block;
 }
+
+.fee-info dl {
+  margin: 0;
+  font-size: 0.9em;
+  color: #8B8983;
+}
+
+.fee-info dt {
+  font-weight: normal;
+  margin-right: 4px;
+}
+
+.fee-info dd {
+  margin-right: 14px;
+}

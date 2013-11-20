@@ -346,6 +346,14 @@ var helpers = {
 
   isOdd: function( n, options ){
     return options[ n % 2 !== 0 ? 'fn' : 'inverse' ]();
+  },
+
+  or2: function(){
+    var args = Array.prototype.slice.call( arguments );
+    var options = args.pop();
+
+    // If any of the values are truthy, run `fn`, otherwise `inverse`
+    return options[ utils.any( args, utils.identity ) ? 'fn' : 'inverse' ]();
   }
 }
 

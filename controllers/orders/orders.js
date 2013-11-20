@@ -242,6 +242,8 @@ module.exports.changeStatus = function(req, res) {
     if (err) return logger.db.error(TAGS, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
 
+    var previousStatus = order.attributes.status;
+
     // if they're not an admin, check if the status change is ok.
     if(!req.session.user || !utils.contains(req.session.user.groups, 'admin')) {
       if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
@@ -317,7 +319,7 @@ module.exports.changeStatus = function(req, res) {
       }
 
       res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
-      venter.emit('order:status:change', order);
+      venter.emit('order:status:change', order, previousStatus);
     }
 
     if (req.body.status === 'submitted' && order.attributes.user.is_invoiced) order.attributes.payment_status = 'invoiced';

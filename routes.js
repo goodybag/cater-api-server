@@ -219,11 +219,11 @@ module.exports.register = function(app) {
   , controllers.orders.get
   );
 
-  app.put('/orders/:id', m.restrict(['client', 'admin']), controllers.orders.update);
+  app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
 
-  app.patch('/orders/:id', m.restrict(['client', 'admin']), controllers.orders.update);
+  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
 
-  app.del('/orders/:id', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
     next();
   }, controllers.orders.changeStatus);

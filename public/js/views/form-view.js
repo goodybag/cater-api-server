@@ -88,7 +88,7 @@ var FormView = Backbone.View.extend({
     this.clearErrors();
     var diff = this.getDiff();
 
-    if (!diff && this.model.attributes.id != null) {
+    if (!diff && !this.model.isNew()) {
       this.trigger('save:noop');
       return callback.call(this);
     }

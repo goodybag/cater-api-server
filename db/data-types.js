@@ -7,7 +7,13 @@ var arg = function(type) {
     if (args.length==0) return type;
     return type + '(' + args.join(',') + ')';
   }
-}
+};
+
+var array = function() {
+  return function(type) {
+    return type + '[]';
+  };
+};
 
 module.exports = {
   bigint: 'int8'
@@ -56,6 +62,7 @@ module.exports = {
 , uuid: 'uuid'
 , xml: 'xml'
 , json: 'json'
+, array: array()
 
   // custom types
 , orderstatus: 'order_status'

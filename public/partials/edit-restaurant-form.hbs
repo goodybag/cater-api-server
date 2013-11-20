@@ -32,17 +32,17 @@
   </div>
   <div class="form-group">
     <label class="control-label">SMS Phones</label>
-    <input type="text" class="form-control restaurant-sms-phones" value="{{phoneList restaurant.sms_phones}}" placeholder="(512) 555-1234, (512) 555-1235">
+    <input type="text" class="form-control restaurant-sms-phones" value="{{#if restaurant.sms_phones}}{{phoneList restaurant.sms_phones}}{{/if}}" placeholder="(512) 555-1234, (512) 555-1235">
     <span class="help-block">Please enter SMS phone numbers separated by commas for message alerts. Leave blank for no SMS alerts.</span>
   </div>
   <div class="form-group">
     <label class="control-label">Voice Phones</label>
-    <input type="text" class="form-control restaurant-voice-phones" value="{{phoneList restaurant.voice_phones}}" placeholder="(512) 555-1234, (512) 555-1235">
+    <input type="text" class="form-control restaurant-voice-phones" value="{{#if restaurant.voice_phones}}{{phoneList restaurant.voice_phones}}{{/if}}" placeholder="(512) 555-1234, (512) 555-1235">
     <span class="help-block">Please enter voice phone numbers separated by commas for call alerts. Leave blank for no call alerts.</span>
   </div>
   <div class="form-group">
     <label class="control-label">Emails</label>
-    <input type="text" class="form-control restaurant-emails" value="{{array restaurant.emails}}" placeholder="delivery@goodybag.com, orders@goodybag.com">
+    <input type="text" class="form-control restaurant-emails" value="{{#if restaurant.emails}}{{array restaurant.emails}}{{/if}}" placeholder="delivery@goodybag.com, orders@goodybag.com">
     <span class="help-block">Please enter email addresses separated by commas for email alerts. Leave blank for no email alerts.</span>
   </div>
   <div class="form-group">

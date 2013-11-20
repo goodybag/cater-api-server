@@ -84,7 +84,7 @@ define(function(require) {
     , nullable: true
     }
   , cuisine: {
-      type: type.array(types.text)
+      type: types.array(types.text)
     , nullable: true
     }
   , is_hidden: {

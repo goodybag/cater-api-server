@@ -213,6 +213,7 @@ module.exports.update = function(req, res) {
     utils.extend(order.attributes, utils.pick(req.body, updateableFields));
     order.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
+      venter.emit('order:update');
       res.send(order.toJSON({plain:true}));
     });
   });

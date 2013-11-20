@@ -16,22 +16,31 @@ var Restaurant = (function(){
           type: 'boolean',
           required: 'true'
         },
-        sms_phone: {
-          type: ['string', 'null'],
-          length: 10,
-          pattern: /^\d*$/, //contains only digits
-          required: false
+        sms_phones: {
+          type: 'array',
+          uniqueItems: true,
+          items: {
+            type: 'string',
+            length: 10,
+            pattern: /^\d*$/, //contains only digits
+          }
         },
-        voice_phone: {
-          type: ['string', 'null'],
-          length: 10,
-          pattern: /^\d*$/, //contains only digits
-          required: false
+        voice_phones: {
+          type: 'array',
+          uniqueItems: true,
+          items: {
+            type: 'string',
+            length: 10,
+            pattern: /^\d*$/ //contains only digits
+          }
         },
-        email: {
-          type: 'string',
-          format: 'email',
-          required: true
+        emails: {
+          type: 'array',
+          uniqueItems: true,
+          items: {
+            type: 'string',
+            format: 'email'
+          }
         },
         price: {
           type: 'integer',

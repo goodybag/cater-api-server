@@ -51,18 +51,16 @@ define(function(require) {
     , nullable: true
     , checks: ["SIMILAR TO '[[:digit:]]{5}'"]
     }
-  , sms_phone: {
-      type: types.varchar(10)
-    , nullable: true
-    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
+  , sms_phones: {
+      type: types.array(types.varchar(10))
+    , nullable: false
     }
-  , voice_phone: {
-      type: types.varchar(10)
-    , nullable: true
-    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
+  , voice_phones: {
+      type: types.array(types.varchar(10))
+    , nullable: false
     }
-  , email: {
-      type: types.text
+  , emails: {
+      type: types.array(types.text)
     , nullable: false
     }
   , minimum_order: {
@@ -86,7 +84,7 @@ define(function(require) {
     , nullable: true
     }
   , cuisine: {
-      type: types.text + '[]'
+      type: types.array(types.text)
     , nullable: true
     }
   , is_hidden: {

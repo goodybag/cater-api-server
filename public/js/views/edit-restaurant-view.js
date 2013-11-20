@@ -8,15 +8,17 @@ var EditRestaurantView = FormView.extend({
     "Do you want to continue?"
   ].join(' '),
 
-  events: {
-    'keyup .restaurant-form .form-control': 'onChange',
-    'change .restaurant-form .form-control, .restaurant-form input': 'onChange',
-    'submit .restaurant-form': 'onSave',
-    'click .new-category': 'newCategory',
-    'click .add-lead-time': 'addLeadTime',
-    'click .remove-lead-time': 'removeLeadTime',
-    'click .restaurant-remove': 'onRestaurantRemoveClick',
-    'change input[type="filepicker"]': 'onFilePickerChange'
+  events: function() {
+    return {
+      'keyup .restaurant-form .form-control': 'onChange',
+      'change .restaurant-form .form-control, .restaurant-form input': 'onChange',
+      'submit .restaurant-form': 'onSave',
+      'click .new-category': 'newCategory',
+      'click .add-lead-time': 'addLeadTime',
+      'click .remove-lead-time': 'removeLeadTime',
+      'click .restaurant-remove': 'onRestaurantRemoveClick',
+      'change input[type="filepicker"]': 'onFilePickerChange'
+    };
   },
 
   initialize: function(options) {
@@ -56,9 +58,9 @@ var EditRestaurantView = FormView.extend({
     name: '.restaurant-form .restaurant-name',
     logo_url: '.restaurant-form [name="logo_url"]',
     logo_mono_url: '.restaurant-form [name="logo_mono_url"]',
-    sms_phone: '.restaurant-form .restaurant-sms-phone',
-    voice_phone: '.restaurant-form .restaurant-voice-phone',
-    email: '.restaurant-form .restaurant-email',
+    sms_phones: '.restaurant-form .restaurant-sms-phones',
+    voice_phones: '.restaurant-form .restaurant-voice-phones',
+    emails: '.restaurant-form .restaurant-emails',
     price: '.restaurant-form .restaurant-price',
     cuisine: '.restaurant-form .restaurant-cuisine',
     minimum_order: '.restaurant-form .restaurant-minimum-order',
@@ -75,23 +77,32 @@ var EditRestaurantView = FormView.extend({
     meal_types: '.restaurant-form .restaurant-meal-types input'
   },
 
+  fieldSplit: function(selector) {
+    var val = this.$el.find(selector).val().trim();
+    return val ? _.invoke(val.split(','), 'trim') : [];
+  },
+
   // TODO: do this automatically based on the model schema
   fieldGetters: {
     price: _.partial(FormView.intGetter, 'price'),
     minimum_order: _.compose(function(cents) { return cents ? Math.round(cents * 100) : null; }, _.partial(FormView.floatGetter, 'minimum_order')),
     delivery_fee: _.compose(function(cents) { return cents != null ? Math.round(cents * 100) : null; }, _.partial(FormView.floatGetter, 'delivery_fee')),
-    cuisine: function() {
-      var val = this.$el.find(this.fieldMap.cuisine).val().trim();
-      return val ? _.invoke(val.split(','), 'trim') : [];
-    },
 
-    sms_phone: function() {
-      return this.$el.find(this.fieldMap.sms_phone).val().replace(/[^\d]/g, '') || null;
+    cuisine: function() { 
+      return this.fieldSplit(this.fieldMap.cuisine); 
     },
-
-    voice_phone: function() {
-      return this.$el.find(this.fieldMap.voice_phone).val().replace(/[^\d]/g, '') || null;
+    
+    sms_phones: function() { 
+      return _.invoke(this.fieldSplit(this.fieldMap.sms_phones), 'replace', /[^\d]/g, '');
     },
+    
+    voice_phones: function() { 
+      return _.invoke(this.fieldSplit(this.fieldMap.voice_phones), 'replace', /[^\d]/g, '');
+    },
+    
+    emails:  function() { 
+      return this.fieldSplit(this.fieldMap.emails); 
+    }, 
 
     delivery_zips: function() {
       var val = this.$el.find(this.fieldMap.delivery_zips).val().trim();

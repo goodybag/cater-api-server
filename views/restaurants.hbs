@@ -44,6 +44,21 @@
                 {{/if}}
                 <span class="dollar-meter">{{{dollarMeter this.price}}}</span>
                 {{> tags tags }}
+                {{#or2 this.delivery_fee this.minimum_order}}
+                <div class="fee-info">
+                  <dl class="dl-horizontal-inline">
+                    {{#if ../delivery_fee}}
+                    <dt>Delivery charge:</dt>
+                    <dd>${{dollars ../../delivery_fee}}</dd>
+                    {{/if}}
+
+                    {{#if ../minimum_order}}
+                    <dt>Order minimum:</dt>
+                    <dd>${{dollars ../../minimum_order}}</dd>
+                    {{/if}}
+                  </dl>
+                </div>
+                {{/or2}}
               </div>
             </div>
           </div>

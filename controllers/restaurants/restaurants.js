@@ -6,6 +6,7 @@ var
 , utils = require('../../utils')
 , states = require('../../public/states')
 , mealTypesList = require('../../public/meal-types')
+, mealStylesList = require('../../public/meal-styles')
 , cuisines = require('../../public/cuisines')
 ;
 
@@ -42,7 +43,8 @@ module.exports.list = function(req, res) {
       orderParams:      orderParams,
       filterCuisines:   cuisines,
       filterPrices:     utils.range(1, 5),
-      filterMealTypes:  mealTypesList
+      filterMealTypes:  mealTypesList,
+      filterMealStyles: mealStylesList
     });
   };
 
@@ -127,6 +129,7 @@ module.exports.edit = function(req, res) {
       , selectedPrice: selectedPrice
       , states: states
       , mealTypesList: mealTypesList
+      , mealStylesList: mealStylesList
       }, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);

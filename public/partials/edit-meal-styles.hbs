@@ -1,0 +1,7 @@
+{{#each mealStylesList }}
+<div class="checkbox">
+  <label>
+    <input type="checkbox" value="{{this}}" {{#contains ../restaurant.meal_styles this}}checked="checked"{{/contains}}> {{this}}
+  </label>
+</div>
+{{/each}}

@@ -124,4 +124,27 @@
     </div>
   </div>
 
+  {{! Serving Style }}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>
+        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelMealStyles" href="javascript:void(0)">
+          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Serving Style
+        </a>
+      </h4>
+    </div>
+    <div id="panelMealStyles" class="panel-collapse collapse {{#if orderParams.mealStyles}}in{{/if}}">
+      <div class="panel-body">
+        {{#each filterMealStyles}}
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="{{this}}" {{#contains ../orderParams.mealStyles this}}checked="checked"{{/contains}}>
+            {{this}}
+          </label>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
 </div>

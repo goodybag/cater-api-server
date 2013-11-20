@@ -67,7 +67,7 @@
       this.$el.hide();
       this.delegateEvents();
       (element) ? element.after(this.$el) : this.options.category.$el.find('tbody').append(this.$el);
-      this.$el.fadeIn();
+      this.$el.stop(true, true).fadeIn();
     },
 
     toggleEditOptions: function(){

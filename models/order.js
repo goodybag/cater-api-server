@@ -116,7 +116,7 @@ module.exports = Model.extend({
     Model.prototype.save.call(this, {returning: ["*", '("orders"."datetime"::text) as datetime']}, function(err) {
 
       callback.apply(this, arguments);
-      venter.emit( 'order:change', order.attributes.id );
+      venter.emit( 'order:change', order );
     }, client);
   },
   toJSON: function(options) {

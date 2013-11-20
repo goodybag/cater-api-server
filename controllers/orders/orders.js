@@ -282,7 +282,6 @@ module.exports.changeStatus = function(req, res) {
             var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
             + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
             + '\n' + url;
-
             twilio.sendSms({
               to: order.attributes.restaurant.sms_phones,
               from: config.phone.orders,
@@ -290,7 +289,6 @@ module.exports.changeStatus = function(req, res) {
             }, function(err, result) {
               if (err) logger.routes.error(TAGS, 'unable to send SMS', err);
             }); 
-
           });
         }
 

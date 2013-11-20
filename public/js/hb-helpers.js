@@ -370,14 +370,14 @@ var helpers = {
   ratingStars: function( rating ){
     var tmplReg = /\{\{type\}\}/g;
     var out = [];
-    var tmpl = '<i class="icon-star{{type}}"></i>';
+    var tmpl = '<i class="gb-icon-star{{type}}"></i>';
 
     for ( var i = 1; i <= 5; i++ ){
       if ( !rating ){
         out.push( tmpl.replace( tmplReg, '-empty' ) );
       } else if ( i <= rating || ( (i - 0.5) > rating && (i - 0.5) <= rating) ){
         out.push( tmpl.replace( tmplReg, '' ) );
-      } else if ( (i - 0.5) <= rating ){
+      } else if ( (i - 0.75) <= rating ){
         out.push( tmpl.replace( tmplReg, '-half-empty' ) );
       } else {
         out.push( tmpl.replace( tmplReg, '-empty' ) );

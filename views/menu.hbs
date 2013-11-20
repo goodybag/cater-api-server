@@ -19,6 +19,12 @@
     <ul class="nav nav-tabs menu-info-tabs">
       <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
       <li><a href="#info" data-toggle="tab">Info</a></li>
+      <li>
+        <a href="#reviews" data-toggle="tab">
+          Reviews
+          {{#if restaurant.num_reviews}}({{restaurant.num_reviews}}){{/if}}
+        </a>
+      </li>
     </ul>
   </div>
 </div>
@@ -115,7 +121,9 @@
         </div>
       </div>
 
-      <div class="tab-pane panel" id="reviews"></div>
+      <div class="tab-pane panel" id="reviews">
+        <div class="panel-body">{{> menu_tab_reviews}}</div>
+      </div>
     </div>
   </div>
 

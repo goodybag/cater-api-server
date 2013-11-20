@@ -54,7 +54,10 @@ you can use the generic selector below, but it's slower:
 .gb-icon-email,
 .gb-icon-phone,
 .gb-icon-warning,
-.gb-icon-user {
+.gb-icon-user,
+.gb-icon-star,
+.gb-icon-star-half-empty,
+.gb-icon-star-empty {
   font-family: 'gb';
   speak: none;
   font-style: normal;
@@ -103,4 +106,16 @@ you can use the generic selector below, but it's slower:
 .gb-icon-warning:before,
 [data-icon="gb-icon-warning"]:before {
   content: "\e600";
+}
+.gb-icon-star:before,
+[data-icon="gb-icon-star"]:before {
+  content: "\e602";
+}
+.gb-icon-star-half-empty:before,
+[data-icon="gb-icon-star-half-empty"]:before {
+  content: "\e603";
+}
+.gb-icon-star-empty:before,
+[data-icon="gb-icon-star-empty"]:before {
+  content: "\e601";
 }

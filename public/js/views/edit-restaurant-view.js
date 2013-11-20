@@ -185,18 +185,6 @@ var EditRestaurantView = FormView.extend({
     this.onChange(e);
   },
 
-  addSmsPhone: function(e) {
-    this.$el.find('.sms-phone-list').append(Handlebars.partials.edit_restaurant_sms_phone());
-  },
-
-  addVoicePhone: function(e) {
-    this.$el.find('.voice-phone-list').append(Handlebars.partials.edit_restaurant_voice_phone());
-  },
-
-  addEmail: function(e) {
-    this.$el.find('.email-list').append(Handlebars.partials.edit_restaurant_email());
-  },
-
   onRestaurantRemoveClick: function(e){
     if ( !confirm( this.destroyMsg ) ) return;
 

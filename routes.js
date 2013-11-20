@@ -207,7 +207,7 @@ module.exports.register = function(app) {
     next();
   }, controllers.orders.auth);
 
-  app.get('/orders/:id'
+  app.get('/orders/:oid'
     // If they're using ?receipt=true, make sure we restrict the group
   , function(req, res, next){
       if (!req.param('receipt')) return next();
@@ -228,7 +228,7 @@ module.exports.register = function(app) {
     next();
   }, controllers.orders.changeStatus);
 
-  app.all('/orders/:id', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
@@ -245,7 +245,7 @@ module.exports.register = function(app) {
   // people with restaurant review token can access this route.  leave auth to controllers.orders.auth.
   app.post('/orders/:oid/status-history', controllers.orders.changeStatus);
 
-  app.all('/orders/:id/status-history', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/status-history', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });

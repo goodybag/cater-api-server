@@ -2,7 +2,7 @@
 
 BACKUP_DIR="backups"
 STAGING_APP="goodybag-staging-cater"
-PRODUCTION_APP="goodybag-staging-cater"
+PRODUCTION_APP="goodybag-production-cater"
 
 heroku_app=""
 branch="master"
@@ -111,10 +111,10 @@ heroku ps:scale web=1 debit=0 --app $heroku_app
 
 uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
 
-echo "deploying"
-cmd_git_push="git push $env $branch:master"
-if $force ; then cmd="$cmd_git_push -f" ; fi
-state=`$cmd_git_push 2>&1`
+echo "deploying $branch to $env"
+cmd_git_push="git push --progress $env $branch:master"
+if [ $force == true ] ; then cmd_git_push="$cmd_git_push -f" ; fi
+state=$($cmd_git_push 2>&1 | tee /dev/tty)
 if [ "$state" == "Everything up-to-date" ] ; then
   echo "there were no changes, scaling back up"
   $cmd_scale_up
@@ -154,6 +154,7 @@ while [ $is_up_again == false ] ; do
     (( count++ ))
   fi
 done
+echo ""
 
 $cmd_scale_up
 if $maintenance ; then heroku maintenance:off --app $heroku_app ; fi

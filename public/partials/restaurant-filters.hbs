@@ -94,7 +94,7 @@
       <div class="panel-body">
         {{#each filterMealTypes}}
         <div class="checkbox">
-          <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.mealTypes this}}checked="checked"{{/contains}}> {{this}}</label>
+          <label><input type="checkbox" value="{{name}}" {{#contains ../orderParams.mealTypes name}}checked="checked"{{/contains}}> {{name}}</label>
         </div>
         {{/each}}
       </div>
@@ -138,8 +138,8 @@
         {{#each filterMealStyles}}
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="{{this}}" {{#contains ../orderParams.mealStyles this}}checked="checked"{{/contains}}>
-            {{this}}
+            <input type="checkbox" value="{{name}}" {{#contains ../orderParams.mealStyles name}}checked="checked"{{/contains}}>
+            {{name}}
           </label>
         </div>
         {{/each}}

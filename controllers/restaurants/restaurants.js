@@ -5,8 +5,7 @@ var
 , errors = require('../../errors')
 , utils = require('../../utils')
 , states = require('../../public/states')
-, mealTypesList = require('../../public/meal-types')
-, mealStylesList = require('../../public/meal-styles')
+, enums = require('../../db/enums')
 , cuisines = require('../../public/cuisines')
 ;
 
@@ -43,8 +42,8 @@ module.exports.list = function(req, res) {
       orderParams:      orderParams,
       filterCuisines:   cuisines,
       filterPrices:     utils.range(1, 5),
-      filterMealTypes:  mealTypesList,
-      filterMealStyles: mealStylesList
+      filterMealTypes:  enums.getMealTypes(),
+      filterMealStyles: enums.getMealStyles()
     });
   };
 
@@ -128,8 +127,8 @@ module.exports.edit = function(req, res) {
         restaurant: restaurant.toJSON()
       , selectedPrice: selectedPrice
       , states: states
-      , mealTypesList: mealTypesList
-      , mealStylesList: mealStylesList
+      , mealTypesList: enums.getMealTypes()
+      , mealStylesList: enums.getMealStyles()
       }, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);

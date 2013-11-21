@@ -6,5 +6,8 @@ module.exports = {
   OrderItem: require('./order-item'),
   OrderStatus: require('./order-status'),
   Category: require('./category'),
-  Address: require('./address')
+  Address: require('./address'),
+  Tag: require('./tag'),
+  MealType: require('./meal-type'),
+  MealStyle: require('./meal-style')
 };

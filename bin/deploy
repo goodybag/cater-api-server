@@ -21,8 +21,8 @@ usage() {
   echo """
 usage: deploy [-f] [-m] [-n] [-s] <environment> [<branch>]
 
-environment this can be either staging or production
-branch the branch you wish to delpoy (defaults to master)
+environment   this can be either staging or production
+branch        the branch you wish to delpoy (defaults to master)
 
 Options:
   -f force

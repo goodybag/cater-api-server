@@ -410,7 +410,7 @@ utils.async.series(
           var data = {
             name: 'Goodybag Admin'
           , organization: 'Goodybag, Inc.'
-          , email: 'admin@goodybag.com'
+          , email: config.testEmail
           , password: hash
           };
           cbWaterfall(null, data);

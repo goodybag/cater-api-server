@@ -32,7 +32,7 @@
               <img class="business-logo" src="{{#if this.logo_mono_url}}{{filepicker this.logo_mono_url}}{{else}}{{filepicker ../../config.defaultMonoLogo}}{{/if}}" alt="{{this.name}}">
               <img class="business-logo business-logo-color" src="{{#if this.logo_url}}{{filepicker this.logo_url}}{{else}}{{filepicker ../../config.defaultLogo}}{{/if}}" alt="{{this.name}}">
             </div>
-            <div class="col-xs-11 col">
+            <div class="col-xs-9 col">
               <h3 class="list-group-item-heading list-group-item-heading-restaurant">{{this.name}}</h3>
               <div class="list-group-item-restaurant-details">
                 {{#if cuisine.length}}
@@ -60,6 +60,10 @@
                 </div>
                 {{/or2}}
               </div>
+            </div>
+            <div class="col-xs-2 rating-wrapper">
+              Rating on Yelp:
+              <div class="rating">{{{ratingStars '4.3'}}}</div>
             </div>
           </div>
         </a>

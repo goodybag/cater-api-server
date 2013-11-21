@@ -97,6 +97,10 @@ var Restaurant = (function(){
           type: ['string', 'null'],
           required: false,
           pattern: regex.url
+        },
+        yelp_business_id: {
+          type: ['string', 'null'],
+          required: false
         }
       }
     },

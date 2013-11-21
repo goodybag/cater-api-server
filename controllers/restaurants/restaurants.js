@@ -200,7 +200,8 @@ var fields = [
   'minimum_order',
   'price',
   'delivery_fee',
-  'cuisine'
+  'cuisine',
+  'yelp_business_id'
 ];
 
 module.exports.create = function(req, res) {
@@ -268,6 +269,7 @@ module.exports.update = function(req, res) {
   // add the acutal restaurant table update as the fourth parallel function.
   tasks.push(function(cb) {
     var updates = utils.pick(req.body, fields);
+    console.log(updates);
     if (utils.size(updates) === 0) return cb();
     var query = queries.restaurant.update(updates, req.params.rid);
     var sql = db.builder.sql(query);

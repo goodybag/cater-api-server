@@ -37,6 +37,10 @@ var config = {
       poolSize: 5
     }
 
+  , yelp: {
+      businessBaseUrl: 'http://www.yelp.com/biz'
+    }
+
   , outputActivePoolIds: false
 
   , baseUrl: 'http://cater.goodybag.com'

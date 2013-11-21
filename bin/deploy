@@ -22,7 +22,7 @@ usage() {
 usage: deploy [-f] [-m] [-n] [-s] <environment> [<branch>]
 
 environment   this can be either staging or production
-branch        the branch you wish to delpoy (defaults to master)
+branch        the branch you wish to deploy (defaults to master)
 
 Options:
   -f force
@@ -148,7 +148,7 @@ while [ $is_up_again == false ] ; do
       is_up_again=true
       count=1
     # if they are the same and new_uptime is less then we are good
-    elif [ `echo $new_uptime | tail -c 2` == `echo $old_uptime | tail -c 2` ] && [ "${new_uptime%?}" -lt "${uptime%?}"  ] ; then
+    elif [ "$new_uptime_period" == "$old_uptime_period" ] && [ "${new_uptime%?}" -lt "${old_uptime%?}" ] ; then
       is_up_again=true
       count=1
     fi

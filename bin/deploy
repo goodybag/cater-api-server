@@ -49,6 +49,18 @@ continue_or_exit() {
   done
 }
 
+time_period_value() {
+  if [ "$1" == "s" ] ; then
+    echo 1
+  elif [ "$1" == "m" ] ; then
+    echo 2
+  elif [ "$1" == "h" ] ; then
+    echo 3
+  elif [ "$1" == "d" ] ; then
+    echo 4
+  fi
+}
+
 while getopts "fmns" opt; do
   case $opt in
     f)
@@ -109,7 +121,8 @@ if $maintenance ; then heroku maintenance:on --app $heroku_app ; fi
 
 heroku ps:scale web=1 debit=0 --app $heroku_app
 
-uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
+old_uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
+old_uptime_period=`echo $old_uptime | tail -c 2`
 
 echo "deploying $branch to $env"
 cmd_git_push="git push --progress $env $branch:master"
@@ -129,30 +142,24 @@ while [ $is_up_again == false ] ; do
   # check if web process is in an up state
   if [[ `heroku ps --app $heroku_app | sed -n 2p` =~ ^web\.[0-9]+\:\ up.*  ]] ; then
     new_uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
+    new_uptime_period=`echo $new_uptime | tail -c 2`
     # if new_uptime is s and old was m, then we are good
-    if [ `echo $new_uptime | tail -c 2` == "s" ] && [ `echo $uptime | tail -c 2` == "m" ] ; then
+    if [ `time_period_value $new_uptime_period` -lt `time_period_value $old_uptime_period` ] ; then
       is_up_again=true
       count=1
     # if they are the same and new_uptime is less then we are good
-    elif [ `echo $new_uptime | tail -c 2` == `echo $uptime | tail -c 2` ] && [ "${new_uptime%?}" -lt "${uptime%?}"  ] ; then
+    elif [ `echo $new_uptime | tail -c 2` == `echo $old_uptime | tail -c 2` ] && [ "${new_uptime%?}" -lt "${uptime%?}"  ] ; then
       is_up_again=true
       count=1
-    else
-      if [ $count -ge 60 ] ; then
-        echo "\nthis is taking longer than expected, please check the logs to ensure everthing is okay"
-        continue_or_exit
-      fi
-      sleep 1
-      (( count++ ))
     fi
-  else
-    if [ $count -ge 60 ] ; then
-      echo "\nthis is taking longer than expected, please check the logs to ensure everthing is okay"
-      continue_or_exit
-    fi
-    sleep 1
-    (( count++ ))
   fi
+  if [ $count -ge 60 ] ; then
+    echo ""
+    echo "this is taking longer than expected, please check the logs to ensure everthing is okay"
+    continue_or_exit
+  fi
+  sleep 1
+  (( count++ ))
 done
 echo ""
 

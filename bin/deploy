@@ -6,10 +6,23 @@ PRODUCTION_APP="goodybag-staging-cater"
 
 heroku_app=""
 branch="master"
+do_version=true
 force=false
 maintenance=false
 
-while getopts ":fm:" opt; do
+usage() {
+  echo "usage: deploy <environment> [<branch>] [-f] [-m] [-n]"
+  echo ""
+  echo "environment this can be either staging or production"
+  echo "branch the branch you wish to delpoy (defaults to master)"
+  echo ""
+  echo "-f force"
+  echo "-m turn maintenance mode on in the beginning and off at the end"
+  echo "-n do not npm version patch"
+  echo "   this flag is only necessary if you do not want to version when deploying master to production"
+}
+
+while getopts ":fmn:" opt; do
   case $opt in
     f)
       force=true
@@ -17,8 +30,12 @@ while getopts ":fm:" opt; do
     m)
       maintenance=true
       ;;
+    n)
+      do_version=false
+      ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
+      usage
       exit 1
       ;;
   esac
@@ -31,7 +48,9 @@ if [ "$env" == "staging" ] ; then
 elif [ "$env" == "production" ] ; then
   heroku_app=$PRODUCTION_APP
 else
-  echo "must specify staging or production"
+  echo "ERROR: must specify environment"
+  echo ""
+  usage
   exit 1
 fi
 
@@ -45,20 +64,57 @@ mkdir -p $BACKUP_DIR
 heroku pgbackups:capture --expire --app $heroku_app
 wget --directory-prefix $BACKUP_DIR `heroku pgbackups:url --app $heroku_app`
 
-if [ "$branch" == "master" ] && [ "$env" == "production" ] ; then
+if [ "$branch" == "master" ] && [ "$env" == "production" ] && [ $do_version == true ]; then
   npm version patch
   git push origin $branch --tags
 fi
 
 if $maintenance ; then heroku maintenance:on --app $heroku_app ; fi
 
-uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
-
 heroku ps:scale web=1 debit=0 --app $heroku_app
+
+uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
 
 cmd="git push $env $branch:master"
 if $force ; then cmd="$cmd -f" ; fi
 $cmd
+
+# check to see that the deploy went successfully (check if status is up and uptime less than old uptime)
+is_up_again=false
+count=0
+while [ $is_up_again == false ] ; do
+  echo "checking if redeploy was successful"
+  # check if web process is in an up state
+  if [[ `heroku ps --app $heroku_app` =~ ^web\.[0-9]+\:\ up.*  ]] ; then
+    new_uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
+    # if new_uptime is s and old was m, then we are good
+    if [ `echo $new_uptime | tail -c 2` == "s" ] && [ `echo $uptime | tail -c 2` == "m" ] ; then
+      is_up_again=true
+    # if they are the same and new_uptime is less then we are good
+    elif [ `echo $new_uptime | tail -c 2` == `echo $uptime | tail -c 2` ] && [ "${new_uptime%?}" -lt "${uptime%?}"  ] ; then
+      is_up_again=true
+    fi
+  else
+    if [ $count -ge 60 ] ; then
+      echo "this is taking longer than expected, please check the logs to ensure everthing is okay"
+      echo "do you want to continue to wait? (y|n)"
+      continue=""
+      while [ "$continue" != "y" ] && [ "$continue" != "n" ] ; do
+        read continue
+        if [ "$continue" == "y" ] ; then
+          count=0
+        elif [ "$continue" == "n" ] ; then
+          echo "you will need to scale back up when ever you are ready and make sure to turn maintenance mode off"
+          exit 2
+        else
+          echo "you must respond with y or n"
+        fi
+      done
+      sleep 1000
+      (( count++ ))
+    fi
+  fi
+done
 
 heroku ps:scale web=2 debit=1 --app $heroku_app
 if $maintenance ; then heroku maintenance:off --app $heroku_app ; fi

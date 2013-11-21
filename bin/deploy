@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+BACKUP_DIR="backups"
+STAGING_APP="goodybag-staging-cater"
+PRODUCTION_APP="goodybag-staging-cater"
+
+heroku_app=""
+branch="master"
+force=false
+maintenance=false
+
+while getopts ":fm:" opt; do
+  case $opt in
+    f)
+      force=true
+      ;;
+    m)
+      maintenance=true
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
+
+env=$1
+
+if [ "$env" == "staging" ] ; then
+  heroku_app=$STAGING_APP
+elif [ "$env" == "production" ] ; then
+  heroku_app=$PRODUCTION_APP
+else
+  echo "must specify staging or production"
+  exit 1
+fi
+
+# if a branch was specify then replace the default branch
+if [ -z "$2" ] ; then
+  branch=$2
+fi
+
+# make database backup
+mkdir -p $BACKUP_DIR
+heroku pgbackups:capture --expire --app $heroku_app
+wget --directory-prefix $BACKUP_DIR `heroku pgbackups:url --app $heroku_app`
+
+if [ "$branch" == "master" ] && [ "$env" == "production" ] ; then
+  npm version patch
+  git push origin $branch --tags
+fi
+
+if $maintenance ; then heroku maintenance:on --app $heroku_app ; fi
+
+uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
+
+heroku ps:scale web=1 debit=0 --app $heroku_app
+
+cmd="git push $env $branch:master"
+if $force ; then cmd="$cmd -f" ; fi
+$cmd
+
+heroku ps:scale web=2 debit=1 --app $heroku_app
+if $maintenance ; then heroku maintenance:off --app $heroku_app ; fi

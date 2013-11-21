@@ -28,8 +28,8 @@ Options:
   -f force
   -m turn maintenance mode on in the beginning and off at the end
   -n skip npm version patch
-  -s skip database backup
      this flag is only necessary if you do not want to version when deploying master to production
+  -s skip database backup
 """
 }
 

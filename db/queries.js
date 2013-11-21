@@ -74,6 +74,7 @@ module.exports = {
     createLeadTimes: utils.partial(upsert, 'restaurant_lead_times'),
     createTags: utils.partial(upsert, 'restaurant_tags'),
     createMealTypes: utils.partial(upsert, 'restaurant_meal_types'),
+    createMealStyles: utils.partial(upsert, 'restaurant_meal_styles'),
     delZips: function(rid) {
       return del.call(this, 'restaurant_delivery_zips', {restaurant_id: rid});
     },
@@ -88,6 +89,9 @@ module.exports = {
     },
     delMealTypes: function(rid) {
       return del.call(this, 'restaurant_meal_types', {restaurant_id: rid});
+    },
+    delMealStyles: function(rid) {
+      return del.call(this, 'restaurant_meal_styles', {restaurant_id: rid});
     }
   },
 

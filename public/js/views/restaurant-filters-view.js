@@ -15,10 +15,11 @@ var RestaurantFiltersView = Backbone.View.extend({
 
 , getProps: function() {
     return {
-      diets:     _.pluck(this.$el.find('#panelDiet input:checked'), 'value')
-    , cuisines:  _.pluck(this.$el.find('#panelCuisine input:checked'), 'value')
-    , prices:    _.pluck(this.$el.find('#panelPrice input:checked'), 'value')
-    , mealTypes: _.pluck(this.$el.find('#panelMealTypes input:checked'), 'value')
+      diets:        _.pluck(this.$el.find('#panelDiet input:checked'), 'value')
+    , cuisines:     _.pluck(this.$el.find('#panelCuisine input:checked'), 'value')
+    , prices:       _.pluck(this.$el.find('#panelPrice input:checked'), 'value')
+    , mealTypes:    _.pluck(this.$el.find('#panelMealTypes input:checked'), 'value')
+    , mealStyles:   _.pluck(this.$el.find('#panelMealStyles input:checked'), 'value')
     };
   }
 

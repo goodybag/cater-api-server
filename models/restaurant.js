@@ -145,6 +145,7 @@ module.exports = Model.extend({
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
     query.columns.push("(SELECT array(SELECT tag FROM restaurant_tags WHERE restaurant_id = restaurants.id ORDER BY tag ASC)) AS tags");
     query.columns.push("(SELECT array(SELECT meal_type FROM restaurant_meal_types WHERE restaurant_id = restaurants.id ORDER BY meal_type ASC)) AS meal_types");
+    query.columns.push("(SELECT array(SELECT meal_style FROM restaurant_meal_styles WHERE restaurant_id = restaurants.id ORDER BY meal_style ASC)) AS meal_styles");
     query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");
@@ -199,6 +200,29 @@ module.exports = Model.extend({
       };
 
       query.where['meal_types.meal_types'] = {'$overlap': orderParams.mealTypes};
+    }
+
+    if (orderParams && orderParams.mealStyles) {
+      query.with.meal_styles_arr = {
+        "type": "select"
+      , "table": "restaurant_meal_styles"
+      , "columns": [
+          "restaurant_id"
+        , "array_agg(meal_style) as meal_styles"
+        ]
+      , "groupBy": "restaurant_id"
+      };
+
+      query.joins.meal_styles_arr = {
+        type: 'left'
+      , alias: 'meal_styles'
+      , target: 'meal_styles_arr'
+      , on: {
+          'restaurants.id': '$meal_styles.restaurant_id$'
+        }
+      };
+
+      query.where['meal_styles.meal_styles'] = {'$overlap': orderParams.mealStyles};
     }
 
     if (orderParams && orderParams.prices) {

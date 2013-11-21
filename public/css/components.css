@@ -387,6 +387,11 @@
   padding-right: 20px;
 }
 
+.btn-lg.btn-yelp .logo {
+  margin-top: -7px;
+  width: 55px;
+}
+
 /**
  * Items
  */
@@ -943,4 +948,17 @@ a.list-group-item .list-group-item-heading {
 .checkbox-inline input[type="checkbox"] {
   /* Make radios/checkbox better align for our font */
   margin-top: 2px;
+}
+
+/**
+ * Tabs
+ */
+
+.tab-pane .tab-actions {
+  margin-top: 12px;
+}
+
+/* The 2nd column, align text to the right */
+.tab-pane .tab-actions [class*="col-"]:first-child + [class*="col-"] {
+  text-align: right;
 }

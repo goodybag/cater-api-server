@@ -1,9 +1,22 @@
 -- Update version
-insert into deltas (version, date) values ('1.0.20', 'now()');
+insert into deltas (version, date) values ('1.1.0', 'now()');
 
--- #366: Add Nuts, Spicy tags
+-- Replace contact info with array columns
+DO $$
+  BEGIN
+    ALTER TABLE restaurants
+      ADD sms_phones    varchar(10)[] default '{}' not null,
+      ADD voice_phones  varchar(10)[] default '{}' not null,
+      ADD emails        text[]        default '{}' not null;
 
-INSERT INTO tags (name)
-SELECT existing.*
-FROM (SELECT unnest(array['nuts','spicy']) as tag) AS existing
-WHERE NOT EXISTS (SELECT name from tags WHERE existing.tag = tags.name);
+    UPDATE restaurants
+      SET sms_phones[1]   = sms_phone,
+          voice_phones[1] = voice_phone,
+          emails[1]       = email;
+
+    ALTER TABLE restaurants
+      DROP IF EXISTS sms_phone,
+      DROP IF EXISTS voice_phone,
+      DROP IF EXISTS email;
+  END;
+$$;

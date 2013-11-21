@@ -213,6 +213,10 @@
   margin-left: 4px;
 }
 
+.navbar-nav {
+  text-align: right;
+}
+
 .navbar-nav > li > .dropdown-menu {
   margin-top: -11px;
 }
@@ -467,6 +471,14 @@ a.list-group-item .list-group-item-heading {
   opacity: 0.45;
   filter: alpha(opacity=45);
   cursor: default;
+}
+
+.list-group-item .actions {
+  text-align: right;
+}
+
+.list-group-item .actions .btn {
+  margin-top: 8px;
 }
 
 /**

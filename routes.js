@@ -193,9 +193,21 @@ module.exports.register = function(app) {
    *  Order resource.  An individual order.
    */
 
-  app.all('/orders/:id', controllers.orders.auth);
 
-  app.get('/orders/:id'
+  app.get(
+    config.receipt.orderRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , function(req, res, next){ req.params.receipt = true; next(); }
+  , controllers.orders.get
+  );
+
+  app.all(/^\/orders\/(\d+)(?:\/.*)?$/, function (req, res, next) {
+    req.params.id = req.params[0];
+    next();
+  }, controllers.orders.auth);
+
+  app.get('/orders/:oid'
     // If they're using ?receipt=true, make sure we restrict the group
   , function(req, res, next){
       if (!req.param('receipt')) return next();
@@ -207,24 +219,16 @@ module.exports.register = function(app) {
   , controllers.orders.get
   );
 
-  app.get(
-    config.receipt.orderRoute
-  , m.basicAuth()
-  , m.restrict(['admin', 'receipts'])
-  , function(req, res, next){ req.params.receipt = true; next(); }
-  , controllers.orders.get
-  );
+  app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
 
-  app.put('/orders/:id', m.restrict(['client', 'admin']), controllers.orders.update);
+  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.update);
 
-  app.patch('/orders/:id', m.restrict(['client', 'admin']), controllers.orders.update);
-
-  app.del('/orders/:id', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
     next();
   }, controllers.orders.changeStatus);
 
-  app.all('/orders/:id', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
@@ -241,7 +245,7 @@ module.exports.register = function(app) {
   // people with restaurant review token can access this route.  leave auth to controllers.orders.auth.
   app.post('/orders/:oid/status-history', controllers.orders.changeStatus);
 
-  app.all('/orders/:id/status-history', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/status-history', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -254,7 +258,7 @@ module.exports.register = function(app) {
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
   app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.summary);  // not currently used
 
-  app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.add);
+  app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.add);
 
   app.all('/orders/:oid/items', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -267,11 +271,11 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
 
-  app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.update);
+  app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
 
-  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.update);
+  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
 
-  app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.remove);
+  app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
 
   app.all('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
@@ -286,6 +290,17 @@ module.exports.register = function(app) {
 
   app.all('/orders/:oid/duplicates', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'POST');
+    res.send(405);
+  });
+
+  /**
+   * Order add items resource.  Page to add items to an order.  (basically the menu page)
+   */
+
+  app.get('/orders/:oid/add-items', m.restrict(['client', 'admin']), controllers.restaurants.orders.get);
+
+  app.all('/orders/:oid/add-items', m.restrict(['client', 'admin']), function(req, res, next) {
+    res.set('Allow', 'GET');
     res.send(405);
   });
 

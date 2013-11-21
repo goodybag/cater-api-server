@@ -256,9 +256,9 @@ utils.async.series(
             , city: faker.Address.city()
             , state: faker.Address.usState(true)
             , zip: faker.Address.zipCodeFormat(0)
-            , sms_phone: config.testPhoneSms || fakePhoneNumber()
-            , voice_phone: config.testPhoneVoice || fakePhoneNumber()
-            , email: config.testEmail || faker.Internet.email()
+            , sms_phones: [config.testPhoneSms || fakePhoneNumber()]
+            , voice_phones: [config.testPhoneVoice || fakePhoneNumber()]
+            , emails: [config.testEmail || faker.Internet.email()]
             , price: faker.Helpers.randomNumber(5) + 1
             , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
             , is_hidden: false
@@ -410,7 +410,7 @@ utils.async.series(
           var data = {
             name: 'Goodybag Admin'
           , organization: 'Goodybag, Inc.'
-          , email: 'admin@goodybag.com'
+          , email: config.testEmail
           , password: hash
           };
           cbWaterfall(null, data);

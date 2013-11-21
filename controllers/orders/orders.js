@@ -28,7 +28,6 @@ var addressFields = [
 
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
-
   logger.db.info(TAGS, 'auth for order #'+ req.params.id);
   if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) return next();
   models.Order.findOne(req.params.id, function(err, order) {
@@ -39,7 +38,16 @@ module.exports.auth = function(req, res, next) {
       return res.status(404).render('404');
     next();
   });
-}
+};
+
+module.exports.editability = function(req, res, next) {
+  models.Order.findOne(req.params.oid, function(err, order) {
+    if (err) return res.error(errors.internal.DB_FAILURE);
+    if (!order) return res.json(404);
+    var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
+    return editable ? next() : res.json(403, 'order not editable');
+  });
+};
 
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
@@ -53,7 +61,7 @@ module.exports.list = function(req, res) {
 }
 
 // module.exports.get = function(req, res) {
-//   models.Order.findOne(parseInt(req.params.id), function(error, order) {
+//   models.Order.findOne(parseInt(req.params.oid), function(error, order) {
 //     if (error) return res.error(errors.internal.DB_FAILURE, error);
 //     if (!order) return res.status(404).render('404');
 //     order.getOrderItems(function(err, items) {
@@ -89,7 +97,7 @@ module.exports.get = function(req, res) {
     function(cb) {
       var query = {
         columns: ['*', 'submitted_date']
-      , where: { id: parseInt(req.params.id) }
+      , where: { id: parseInt(req.params.oid) }
       };
       models.Order.findOne(query, function(err, order) {
         if (err) return cb(err);
@@ -133,7 +141,7 @@ module.exports.get = function(req, res) {
       return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
 
     // Redirect empty orders to item summary
-    if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.id + '/items');
+    if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
 
     var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
     var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
@@ -175,6 +183,7 @@ module.exports.get = function(req, res) {
 
     // Decide where to show the `Thanks` message
     if (moment(context.order.submitted_date).add('hours', 1) > moment())
+    if (req.session && req.session.user)
     if (context.order.user_id == req.session.user.id){
       context.showThankYou = true;
     }
@@ -202,13 +211,19 @@ module.exports.create = function(req, res) {
   });
 }
 
+// TODO: get this from not here
+var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id'];
+
 module.exports.update = function(req, res) {
-  var order = new models.Order(utils.extend({id: req.params.id}, req.body));
-  order.save(function(err, rows, result) {
+  models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(order.toJSON({plain:true}));
+    utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+    order.save(function(err, rows, result) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      res.send(order.toJSON({plain:true}));
+    });
   });
-}
+};
 
 module.exports.listStatus = function(req, res) {
   models.OrderStatus.find(
@@ -232,6 +247,8 @@ module.exports.changeStatus = function(req, res) {
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return logger.db.error(TAGS, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
+
+    var previousStatus = order.attributes.status;
 
     // if they're not an admin, check if the status change is ok.
     if(!req.session.user || !utils.contains(req.session.user.groups, 'admin')) {
@@ -270,21 +287,7 @@ module.exports.changeStatus = function(req, res) {
           });
         });
 
-        var viewOptions = {
-          order: order.toJSON({review: true}),
-          config: config,
-          layout: 'email-layout'
-        };
-
-        res.render('email-order-submitted', viewOptions, function(err, html) {
-          // TODO: error handling
-          utils.sendMail([order.attributes.restaurant.email, config.emails.orders],
-                         config.emails.orders,
-                         'You have received a new Goodybag order (#' + order.attributes.id+ ')',
-                         html);
-        });
-
-        if (order.attributes.restaurant.sms_phone) {
+        if (order.attributes.restaurant.sms_phones) {
           logger.routes.info(TAGS, "shortening url and sending sms for order: " + order.attributes.id);
           var url = config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token;
 
@@ -296,33 +299,37 @@ module.exports.changeStatus = function(req, res) {
             var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
             + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
             + '\n' + url;
-            twilio.sendSms({
-              to: order.attributes.restaurant.sms_phone,
-              from: config.phone.orders,
-              body: msg
-            }, function(err, result) {
-              if (err) logger.routes.error(TAGS, 'unabled to send SMS', err);
+            utils.each(order.attributes.restaurant.sms_phones, function(sms_phone) {
+              twilio.sendSms({
+                to: sms_phone,
+                from: config.phone.orders,
+                body: msg
+              }, function(err, result) {
+                if (err) logger.routes.error(TAGS, 'unable to send SMS', err);
+              });
             });
           });
         }
 
-        if (order.attributes.restaurant.voice_phone) {
+        if (order.attributes.restaurant.voice_phones) {
           logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
 
-          twilio.makeCall({
-            to: order.attributes.restaurant.voice_phone,
-            from: config.phone.orders,
-            url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
-            ifMachine: 'Continue',
-            method: 'GET'
-          }, function(err, result) {
-            if (err) logger.routes.error(TAGS, 'unabled to place call', err);
+          utils.each(order.attributes.restaurant.voice_phones, function(voice_phone) {
+            twilio.makeCall({
+              to: voice_phone,
+              from: config.phone.orders,
+              url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
+              ifMachine: 'Continue',
+              method: 'GET'
+            }, function(err, result) {
+              if (err) logger.routes.error(TAGS, 'unable to place call', err);
+            });
           });
         }
       }
 
       res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
-      venter.emit('order:status:change', order);
+      venter.emit('order:status:change', order, previousStatus);
     }
 
     if (req.body.status === 'submitted' && order.attributes.user.is_invoiced) order.attributes.payment_status = 'invoiced';

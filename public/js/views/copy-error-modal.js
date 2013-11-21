@@ -21,7 +21,7 @@ var CopyErrorModalView = Backbone.View.extend({
           };
 
           if (newOrder.get('lostItems')) queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
-          window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
+          window.location = _.result(newOrder, 'url') + '/items' + utils.queryParams(queryParams);
         }
       }); // Step 2: when hide is done, copy.
     });

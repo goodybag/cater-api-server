@@ -181,6 +181,15 @@ var helpers = {
     return result;
   },
 
+  /**
+   * Convert array of 10 digit numbers
+   * to string of formatted phone numbers
+   * separated by comma.
+   */
+  phoneList: function(list) {
+    return utils.map(list, utils.compose(helpers.phoneNumber, utils.identity)).join(', ');
+  },
+
   capitalize: function(str) {
     if(str && typeof str === 'string') {
       return str.charAt(0).toUpperCase() + str.slice(1);
@@ -338,6 +347,22 @@ var helpers = {
 
   typeOf: function(a){
     return typeof a;
+  },
+
+  isEven: function( n, options ){
+    return options[ n % 2 === 0 ? 'fn' : 'inverse' ]();
+  },
+
+  isOdd: function( n, options ){
+    return options[ n % 2 !== 0 ? 'fn' : 'inverse' ]();
+  },
+
+  or2: function(){
+    var args = Array.prototype.slice.call( arguments );
+    var options = args.pop();
+
+    // If any of the values are truthy, run `fn`, otherwise `inverse`
+    return options[ utils.any( args, utils.identity ) ? 'fn' : 'inverse' ]();
   }
 }
 

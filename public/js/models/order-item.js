@@ -11,7 +11,7 @@ var OrderItem = Backbone.Model.extend({
         type: ['string', 'null'],
         minLength: 1,
         required: false
-      },
+      }/*,
       options_sets: {
         type: 'array',
         items: {
@@ -52,7 +52,7 @@ var OrderItem = Backbone.Model.extend({
             }
           }
         }
-      }
+      }*/
     }
   },
 

@@ -370,7 +370,7 @@ var helpers = {
   ratingStars: function( rating ){
     var tmplReg = /\{\{type\}\}/g;
     var out = [];
-    var tmpl = '<i class="gb-icon-star{{type}}"></i>';
+    var tmpl = '<i class="rating-star gb-icon-star{{type}}"></i>';
 
     for ( var i = 1; i <= 5; i++ ){
       if ( !rating ){

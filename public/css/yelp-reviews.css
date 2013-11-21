@@ -2,3 +2,11 @@
  * Yelp Reviews
  */
 
+.rating-star {
+  color: #DA1800;
+}
+
+.rating-header .rating {
+  display: inline-block;
+  vertical-align: middle;
+}

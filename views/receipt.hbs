@@ -68,90 +68,37 @@
             {{/if}}
           </div>
           {{#if admin}}
-            <div class="pull-right btn-group">
-              <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
-                {{order.status}} <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="javascript:void;" id="change-status-pending">pending</a></li>
-                <li><a href="javascript:void;" id="change-status-canceled">canceled</a></li>
-                <li><a href="javascript:void;" id="change-status-submitted">submitted</a></li>
-                <li><a href="javascript:void;" id="change-status-denied">denied</a></li>
-                <li><a href="javascript:void;" id="change-status-accepted">accepted</a></li>
-                <li><a href="javascript:void;" id="change-status-delivered">delivered</a></li>
-              </ul>
-            </div>
+          <div class="pull-right btn-group">
+            <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
+              {{order.status}} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="javascript:void;" id="change-status-pending">pending</a></li>
+              <li><a href="javascript:void;" id="change-status-canceled">canceled</a></li>
+              <li><a href="javascript:void;" id="change-status-submitted">submitted</a></li>
+              <li><a href="javascript:void;" id="change-status-denied">denied</a></li>
+              <li><a href="javascript:void;" id="change-status-accepted">accepted</a></li>
+              <li><a href="javascript:void;" id="change-status-delivered">delivered</a></li>
+            </ul>
+          </div>
           {{else}}
           <div class="pull-right order-status-label">{{> status_label order}}</div>
           {{/if}}
-          <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default btn-pdf">Download PDF</a>
         </div>
 
         <div class="delivery-submitted">
-          <div class="date-submitted" data-date="{{order.submitted}}">
-          </div>
+          <div class="date-submitted" data-date="{{order.submitted}}"></div>
+        </div>
+
+        <div class="btn-toolbar pull-right">
+          {{#if order.editable}}
+          <button type="button" class="btn btn-default edit-order-btn">Edit</button>
+          {{/if}}
+          <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default">Download PDF</a>
         </div>
 
         <div class="row delivery-info">
-          <fieldset class="col-xs-6 delivery-info-date">
-            {{#unless order.editable}}
-            {{#if order.name}}<p><strong>{{order.name}}</strong></p>{{/if}}
-            {{else}}
-            <div class="form-group">
-              <label class="control-label">Order Name</label>
-              <input type="text" class="form-control order-name" value="{{order.name}}" placeholder="e.g. Tuesday Meeting">
-            </div>
-            {{/unless}}
-
-            {{#unless order.editable}}
-            <dl class="dl-horizontal no-margin">
-              <dt>Delivery Date:</dt>
-              <dd>{{datepart order.datetime}}</dd>
-              <dt>Delivery Time:</dt>
-              <dd>{{timepart order.datetime}}</dd>
-              <dt>Guests:</dt>
-              <dd>{{order.guests}}</dd>
-            </dl>
-            {{else}}
-            <div class="form-group form-group-delivery-date" data-icon="gb-icon-calendar">
-              <label class="control-label" for="order-date">Delivery Date</label>
-              <input type="text" class="form-control order-datetime" id="order-date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}">
-            </div>
-            <div class="form-group form-group-delivery-time" data-icon="gb-icon-time">
-              <label class="control-label" for="order-time">Delivery Time</label>
-              <input type="text" class="form-control order-datetime" id="order-time" value="{{#if order.datetime}}{{formatDateTime order.datetime 'hh:mm A'}}{{else}}{{formatTime orderParams.time}}{{/if}}">
-            </div>
-            <div class="form-group" data-icon="gb-icon-user">
-              <label class="control-label" for="order-guests">Guests</label>
-              <input type="number" class="form-control" id="order-guests" value="{{#if order.guests}}{{order.guests}}{{else}}{{orderParams.guests}}{{/if}}">
-            </div>
-            {{/unless}}
-
-            {{#unless order.editable}}
-            <p>{{order.notes}}</p>
-            {{else}}
-            <div class="form-group">
-              <label class="control-label" for="order-notes">Notes</label>
-              <textarea id="order-notes" class="form-control order-notes" rows="5">{{order.notes}}</textarea>
-            </div>
-            {{/unless}}
-          </fieldset>
-
-          <fieldset class="col-xs-6 delivery-info-address">
-            {{#if user.name}}
-            <div><strong>{{user.name}}</strong></div>
-            {{/if}}
-            {{#if user.organization}}
-            <div><strong>{{user.organization}}</strong></div>
-            {{/if}}
-            {{#unless order.editable}}
-            {{> address order.address}}
-            {{else}}
-            {{#with orderAddress}}
-            {{> edit_address}}
-            {{/with}}
-            {{/unless}}
-          </fieldset>
+          {{> order_info}}
         </div>
       </div>
     </form>
@@ -319,6 +266,27 @@
 {{> copy_order_error_modal}}
 
 {{#extend "scripts"}}
+<script>
+  var partials = {
+    address:      'address.hbs',
+    edit_address: 'edit-address.hbs',
+    order_info:   'order-info.hbs',
+    totals:       'totals.hbs'
+  };
+
+  for (var name in partials) {
+    $.ajax({
+      type: 'GET',
+      url: '/partials/' + partials[name],
+      success: function(data, textStatus, jqXHR) {
+        Handlebars.registerPartial(name, Handlebars.compile(data));
+      },
+      dataType: 'html',
+      async: false
+    });
+  }
+</script>
+
 <script src="/js/models/item.js"></script>
 <script src="/js/models/category.js"></script>
 <script src="/js/models/restaurant.js"></script>
@@ -338,9 +306,6 @@
 <script src="/js/views/receipt-view.js"></script>
 <script src="/js/views/order-item-view.js"></script>
 <script>
-  $.get('/partials/totals.hbs', null, function(data, textStatus, jqXHR) {
-    Handlebars.registerPartial('totals', Handlebars.compile(data));
-  }, 'html')
   var query = utils.parseQueryParams();
   var view = new ReceiptView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
   var items = [

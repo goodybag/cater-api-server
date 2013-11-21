@@ -38,7 +38,16 @@ module.exports.auth = function(req, res, next) {
       return res.status(404).render('404');
     next();
   });
-}
+};
+
+module.exports.editability = function(req, res, next) {
+  models.Order.findOne(req.params.oid, function(err, order) {
+    if (err) return res.error(errors.internal.DB_FAILURE);
+    if (!order) return res.json(404);
+    var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
+    return editable ? next() : res.json(403, 'order not editable');
+  });
+};
 
 module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
@@ -52,7 +61,7 @@ module.exports.list = function(req, res) {
 }
 
 // module.exports.get = function(req, res) {
-//   models.Order.findOne(parseInt(req.params.id), function(error, order) {
+//   models.Order.findOne(parseInt(req.params.oid), function(error, order) {
 //     if (error) return res.error(errors.internal.DB_FAILURE, error);
 //     if (!order) return res.status(404).render('404');
 //     order.getOrderItems(function(err, items) {
@@ -88,7 +97,7 @@ module.exports.get = function(req, res) {
     function(cb) {
       var query = {
         columns: ['*', 'submitted_date']
-      , where: { id: parseInt(req.params.id) }
+      , where: { id: parseInt(req.params.oid) }
       };
       models.Order.findOne(query, function(err, order) {
         if (err) return cb(err);
@@ -132,7 +141,7 @@ module.exports.get = function(req, res) {
       return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
 
     // Redirect empty orders to item summary
-    if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.id + '/items');
+    if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
 
     var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
     var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
@@ -202,13 +211,19 @@ module.exports.create = function(req, res) {
   });
 }
 
+// TODO: get this from not here
+var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id'];
+
 module.exports.update = function(req, res) {
-  var order = new models.Order(utils.extend({id: req.params.id}, req.body));
-  order.save(function(err, rows, result) {
+  models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(order.toJSON({plain:true}));
+    utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+    order.save(function(err, rows, result) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      res.send(order.toJSON({plain:true}));
+    });
   });
-}
+};
 
 module.exports.listStatus = function(req, res) {
   models.OrderStatus.find(
@@ -291,7 +306,7 @@ module.exports.changeStatus = function(req, res) {
                 body: msg
               }, function(err, result) {
                 if (err) logger.routes.error(TAGS, 'unable to send SMS', err);
-              }); 
+              });
             });
           });
         }

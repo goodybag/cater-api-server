@@ -1,29 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="72px"
-	 height="72px" viewBox="0 0 72 72" enable-background="new 0 0 72 72" xml:space="preserve">
-<g id="Layer_2">
-</g>
-<g id="Layer_1">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="72px" height="72px" viewBox="0 0 72 72" enable-background="new 0 0 72 72" xml:space="preserve">
+<g id="Layer_1_1_">
 	<g>
-		<circle fill="#F1AD46" cx="36" cy="36" r="36"/>
-		<g>
-			<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M37.177,61.879c0.659-10.874,4.47-15.049,15.395-17.324
-				C53.149,54.476,48.262,60.095,37.177,61.879z"/>
-			<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M34.823,61.879c-0.659-10.874-4.47-15.049-15.395-17.324
-				C18.851,54.476,23.738,60.095,34.823,61.879z"/>
-			<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M36.945,47.017c0.586-9.673,3.976-13.388,13.693-15.411
-				C51.152,40.431,46.805,45.43,36.945,47.017z"/>
-			<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M35.055,47.017c-0.586-9.673-3.976-13.388-13.693-15.411
-				C20.848,40.431,25.195,45.43,35.055,47.017z"/>
-			<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M37.058,32.762c0.455-7.509,3.086-10.393,10.629-11.963
-				C48.085,27.65,44.711,31.53,37.058,32.762z"/>
-			<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M35.927,24.463c-4.645-5.9-4.597-9.796-0.016-15.973
-				C40.755,13.333,40.815,18.465,35.927,24.463z"/>
-			<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M34.942,32.762c-0.455-7.509-3.086-10.393-10.629-11.963
-				C23.915,27.65,27.289,31.53,34.942,32.762z"/>
-		</g>
+		<circle fill="#F19946" cx="36" cy="36" r="36"/>
+	</g>
+	<g>
+		<path fill="#FFFFFF" d="M26.206,48.659c-7.847,0-13.247-5.509-13.247-12.959v-0.072c0-7.163,5.579-13.03,13.21-13.03
+			c4.535,0,7.271,1.225,9.899,3.456l-3.492,4.211c-1.944-1.619-3.671-2.556-6.587-2.556c-4.031,0-7.235,3.563-7.235,7.848v0.071
+			c0,4.606,3.167,7.991,7.631,7.991c2.016,0,3.815-0.504,5.219-1.512v-3.601h-5.579V33.72h10.942v10.942
+			C34.377,46.859,30.813,48.659,26.206,48.659z"/>
+		<path fill="#FFFFFF" d="M46.402,28.069v5.363h12.021v5.039H46.402v9.756h-5.543V23.03h19.186v5.039H46.402z"/>
 	</g>
 </g>
 </svg>

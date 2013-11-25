@@ -70,7 +70,7 @@ var PaymentMethod = Backbone.Model.extend({
       if ( error ) return callback( error );
     })) return;
 
-    balanced.card.create(data, function(res) {
+    balanced.card.create( _.omit(data, 'card_name'), function(res) {
       if (res.status !== 201){
         var errors = _.chain( _.keys( res.error ) ).map( function( property ){
           return {
@@ -86,7 +86,7 @@ var PaymentMethod = Backbone.Model.extend({
         data:       res.data
       , uri:        res.data.uri
       , type:       res.data._type
-      , name:       data.name
+      , name:       data.card_name
       , save_card:  data.save_card
       };
 

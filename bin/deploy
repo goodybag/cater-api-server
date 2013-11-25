@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+
+BACKUP_DIR="backups"
+STAGING_APP="goodybag-staging-cater"
+PRODUCTION_APP="goodybag-production-cater"
+
+heroku_app=""
+branch="master"
+do_version=true
+do_backup=true
+force=false
+maintenance=false
+
+trap ctrl_c INT
+
+function ctrl_c() {
+  exit 1
+}
+
+usage() {
+  echo """
+usage: deploy [-f] [-m] [-n] [-s] <environment> [<branch>]
+
+environment   this can be either staging or production
+branch        the branch you wish to deploy (defaults to master)
+
+Options:
+  -f force
+  -m turn maintenance mode on in the beginning and off at the end
+  -n skip npm version patch
+     this flag is only necessary if you do not want to version when deploying master to production
+  -s skip database backup
+"""
+}
+
+continue_or_exit() {
+  echo "do you want to continue to wait? (y|n)"
+  continue=""
+  while [ "$continue" != "y" ] && [ "$continue" != "n" ] ; do
+    read continue
+    if [ "$continue" == "y" ] ; then
+      count=1
+    elif [ "$continue" == "n" ] ; then
+      echo "you will need to scale back up when ever you are ready and make sure to turn maintenance mode off"
+      exit 2
+    else
+      echo "you must respond with y or n"
+    fi
+  done
+}
+
+time_period_value() {
+  if [ "$1" == "s" ] ; then
+    echo 1
+  elif [ "$1" == "m" ] ; then
+    echo 2
+  elif [ "$1" == "h" ] ; then
+    echo 3
+  elif [ "$1" == "d" ] ; then
+    echo 4
+  fi
+}
+
+while getopts "fmns" opt; do
+  case $opt in
+    f)
+      force=true
+      echo "push will be forced"
+      ;;
+    m)
+      maintenance=true
+      ;;
+    n)
+      do_version=false
+      ;;
+    s)
+      do_backup=false
+      echo "skipping database backup"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      usage
+      exit 1
+      ;;
+  esac
+done
+shift $(($OPTIND - 1))
+env=$1
+
+if [ "$env" == "staging" ] ; then
+  heroku_app=$STAGING_APP
+elif [ "$env" == "production" ] ; then
+  heroku_app=$PRODUCTION_APP
+else
+  echo "ERROR: must specify environment"
+  usage
+  exit 1
+fi
+
+cmd_scale_down="heroku ps:scale web=1 debit=0 --app $heroku_app"
+cmd_scale_up="heroku ps:scale web=2 debit=1 --app $heroku_app"
+
+# if a branch was specify then replace the default branch
+if [ -n "$2" ] ; then
+  branch=$2
+fi
+
+if [ $do_backup == true ] ; then
+  # make database backup
+  mkdir -p $BACKUP_DIR
+  heroku pgbackups:capture --expire --app $heroku_app
+  wget --directory-prefix $BACKUP_DIR `heroku pgbackups:url --app $heroku_app`
+fi
+
+if [ "$branch" == "master" ] && [ "$env" == "production" ] && [ $do_version == true ]; then
+  npm version patch
+  git push origin $branch --tags
+fi
+
+if $maintenance ; then heroku maintenance:on --app $heroku_app ; fi
+
+heroku ps:scale web=1 debit=0 --app $heroku_app
+
+old_uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
+old_uptime_period=`echo $old_uptime | tail -c 2`
+
+echo "deploying $branch to $env"
+cmd_git_push="git push --progress $env $branch:master"
+if [ $force == true ] ; then cmd_git_push="$cmd_git_push -f" ; fi
+state=$($cmd_git_push 2>&1 | tee /dev/tty)
+if [ "$state" == "Everything up-to-date" ] ; then
+  echo "there were no changes, scaling back up"
+  $cmd_scale_up
+  exit 1
+fi
+
+# check to see that the deploy went successfully (check if status is up and uptime less than old uptime)
+is_up_again=false
+count=1
+while [ $is_up_again == false ] ; do
+  echo -ne "\rchecking if redeploy was successful - attempt $count"
+  # check if web process is in an up state
+  if [[ `heroku ps --app $heroku_app | sed -n 2p` =~ ^web\.[0-9]+\:\ up.*  ]] ; then
+    new_uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
+    new_uptime_period=`echo $new_uptime | tail -c 2`
+    # if new_uptime is s and old was m, then we are good
+    if [ `time_period_value $new_uptime_period` -lt `time_period_value $old_uptime_period` ] ; then
+      is_up_again=true
+      count=1
+    # if they are the same and new_uptime is less then we are good
+    elif [ "$new_uptime_period" == "$old_uptime_period" ] && [ "${new_uptime%?}" -lt "${old_uptime%?}" ] ; then
+      is_up_again=true
+      count=1
+    fi
+  fi
+  if [ $count -ge 60 ] ; then
+    echo ""
+    echo "this is taking longer than expected, please check the logs to ensure everthing is okay"
+    continue_or_exit
+  fi
+  sleep 1
+  (( count++ ))
+done
+echo ""
+
+$cmd_scale_up
+if $maintenance ; then heroku maintenance:off --app $heroku_app ; fi

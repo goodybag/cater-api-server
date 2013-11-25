@@ -19,5 +19,6 @@ node_modules
 balanced-config.json
 public/receipts/*.pdf
 public/components
+backups
 *~
 local-config.json

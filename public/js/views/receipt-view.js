@@ -2,8 +2,6 @@ var ReceiptView = OrderView.extend({
   events: function() {
     return _.extend({}, OrderView.prototype.events, {
       'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
-      'keyup .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
-      'change .order-form .form-control, .adjustment .form-control, .tip-area .form-control': 'autoSave',
       'click .copy-order-btn': 'copyOrder',
       'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),
       'click .btn-accept': _.bind(this.changeStatus, this, 'accepted'),
@@ -12,7 +10,10 @@ var ReceiptView = OrderView.extend({
       'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted'),
       'click #change-status-denied': _.bind(this.changeStatus, this, 'denied'),
       'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted'),
-      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered')
+      'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered'),
+      'click .edit-order-btn': 'toggleEdit',
+      'click .cancel-edit-btn': 'toggleEdit',
+      'click .save-btn': 'save'
     });
   },
 
@@ -103,5 +104,30 @@ var ReceiptView = OrderView.extend({
     });
   },
 
-  autoSave: _.debounce(FormView.prototype.onSave, 600)
+  autoSave: _.debounce(FormView.prototype.onSave, 600),
+
+  toggleEdit: function() {
+    if (this.model.get('editable')) {
+      this.edit = !this.edit;
+      var order = this.model;
+      var context = {
+        order: this.model.toJSON(),
+        edit: this.edit,
+        orderAddress: function() {
+          return {
+            address: order.toJSON(),
+            states: states
+          };
+        }
+      };
+      this.$el.find('.delivery-info').html(Handlebars.partials.order_info(context));
+    }
+  },
+
+  save: function() {
+    var self = this;
+    this.onSave(function(err, data) {
+      self.toggleEdit();
+    });
+  }
 });

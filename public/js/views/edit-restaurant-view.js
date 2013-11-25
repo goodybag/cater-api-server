@@ -76,7 +76,8 @@ var EditRestaurantView = FormView.extend({
     lead_times: '.restaurant-form .lead-times',
     tags: '.restaurant-form .restaurant-tags input',
     is_hidden: '.restaurant-form .restaurant-is-hidden',
-    meal_types: '.restaurant-form .restaurant-meal-types input'
+    meal_types: '.restaurant-form .restaurant-meal-types input',
+    meal_styles: '.restaurant-form .restaurant-meal-styles input'
   },
 
   fieldSplit: function(selector) {
@@ -135,6 +136,10 @@ var EditRestaurantView = FormView.extend({
 
     meal_types: function() {
       return _.pluck(this.$el.find(this.fieldMap.meal_types + ':checked'), 'value');
+    },
+
+    meal_styles: function() {
+      return _.pluck(this.$el.find(this.fieldMap.meal_styles + ':checked'), 'value');
     },
 
     is_hidden: function() {

@@ -304,10 +304,6 @@
   margin-right: auto;
 }
 
-.order-params-bar .btn-search {
-  margin-left: 32px;
-}
-
 .order-params-bar .form-control {
   width: 125px;
 }
@@ -359,7 +355,7 @@
 }
 
 
-@media ( min-width: 769px ) and ( max-width: 992px ){
+@media ( min-width: 769px ) and ( max-width: 1200px ){
   .form-group-title {
     display: none!important;
   }
@@ -874,6 +870,15 @@ a.list-group-item .list-group-item-heading {
 
 .tag-dairy-free {
   background: url('/img/06_dairy.svg');
+  background-size: 20px 20px;
+}
+
+.tag-nuts {
+  background: url('/img/07_nuts.svg');
+  background-size: 20px 20px;
+}
+.tag-spicy {
+  background: url('/img/08_spicy.svg');
   background-size: 20px 20px;
 }
 

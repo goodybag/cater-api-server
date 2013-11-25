@@ -5,7 +5,7 @@ var
 , errors = require('../../errors')
 , utils = require('../../utils')
 , states = require('../../public/states')
-, mealTypesList = require('../../public/meal-types')
+, enums = require('../../db/enums')
 , cuisines = require('../../public/cuisines')
 ;
 
@@ -42,7 +42,8 @@ module.exports.list = function(req, res) {
       orderParams:      orderParams,
       filterCuisines:   cuisines,
       filterPrices:     utils.range(1, 5),
-      filterMealTypes:  mealTypesList
+      filterMealTypes:  enums.getMealTypes(),
+      filterMealStyles: enums.getMealStyles()
     });
   };
 
@@ -126,7 +127,8 @@ module.exports.edit = function(req, res) {
         restaurant: restaurant.toJSON()
       , selectedPrice: selectedPrice
       , states: states
-      , mealTypesList: mealTypesList
+      , mealTypesList: enums.getMealTypes()
+      , mealStylesList: enums.getMealStyles()
       }, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         res.send(html);
@@ -184,6 +186,12 @@ var mealTypes = function(body, id) {
   });
 };
 
+var mealStyles = function(body, id) {
+  return utils.map(body.meal_styles, function(obj, index, arr) {
+    return {restaurant_id: id, meal_style: obj};
+  });
+};
+
 // maybe this ought to come from the restaurant model?
 var fields = [
   'name',
@@ -226,10 +234,16 @@ module.exports.create = function(req, res) {
         db.query(sql.query, sql.values, callback);
       }
 
-      var tasks = utils.map(
-        [[zips, 'createZips'], [deliveryTimes, 'createDeliveryTimes'], [leadTimes, 'createLeadTimes'], [tags, 'createTags'], [mealTypes, 'createMealTypes']],
-        function(args) { return utils.partial( insert, args[0](req.body, rows[0].id), args[1]); }
-      );
+      var tasks = utils.map([
+        [zips,            'createZips']
+      , [deliveryTimes,   'createDeliveryTimes']
+      , [leadTimes,       'createLeadTimes']
+      , [tags,            'createTags']
+      , [mealTypes,       'createMealTypes']
+      , [mealStyles,      'createMealStyles']
+      ], function(args) {
+        return utils.partial( insert, args[0](req.body, rows[0].id), args[1]);
+      });
 
       var done = function(err, results) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
@@ -252,6 +266,7 @@ module.exports.update = function(req, res) {
   , ['LeadTimes', leadTimes, 'lead_times']
   , ['Tags', tags, 'tags']
   , ['MealTypes', mealTypes, 'meal_types']
+  , ['MealStyles', mealStyles, 'meal_styles']
   ],
   function(args) {
     if (req.body[args[2]] === undefined) return function(cb) { cb() };

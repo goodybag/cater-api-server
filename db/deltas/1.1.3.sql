@@ -3,7 +3,13 @@ insert into deltas (version, date) values ('1.1.3', 'now()');
 
 -- #468 Order changes
 
-DROP TYPE IF EXISTS change_status; CREATE TYPE change_status AS ENUM('canceled', 'submitted', 'denied', 'accepted');
+DO $$
+  BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'change_status') THEN
+      CREATE TYPE change_status AS ENUM('canceled', 'submitted', 'denied', 'accepted');
+    END IF;
+  END;
+$$;
 
 CREATE TABLE IF NOT EXISTS order_changes (
   id                serial primary key,

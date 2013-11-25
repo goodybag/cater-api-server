@@ -304,10 +304,6 @@
   margin-right: auto;
 }
 
-.order-params-bar .btn-search {
-  margin-left: 32px;
-}
-
 .order-params-bar .form-control {
   width: 125px;
 }
@@ -359,7 +355,7 @@
 }
 
 
-@media ( min-width: 769px ) and ( max-width: 992px ){
+@media ( min-width: 769px ) and ( max-width: 1200px ){
   .form-group-title {
     display: none!important;
   }

@@ -39,7 +39,17 @@ var onError = function( error ){
 };
 
 var getGbBusinesses = function( callback ){
+  var $query = {
+    where: {
+      yelp__id
+    }
+  };
 
+  Models.restaurants.find( $query, function( error, results ){
+    if ( error ) return callback( error );
+
+    return callback( null, utils.invoke( 'toJSON', results ) );
+  });
 };
 
 var getBusinessYelpData = function( id, callback ){

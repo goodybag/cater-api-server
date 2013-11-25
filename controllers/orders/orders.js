@@ -404,3 +404,22 @@ module.exports.receipt = function( req, res ){
     res.render( 'invoice/receipt', options );
   });
 };
+
+module.exports.applyChange = function(req, res, next) {
+  models.Change.findOne(req.params.cid, function(err, change) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (!change) return res.json(404);
+
+    var json = change.attributes.order_json;
+    var added = _.where(json.order_items, {id: undefined});
+    models.Order.findOne(change.attributes.order_id, function(err, order) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      if (!order) return res.json(404);
+      order.getOrderItems();
+      var old = order.toJSON();
+      var removedIds = _.difference(_.pluck(old.order_items, 'id'), _.pluck(json.order_items, 'id'));
+
+      //TODO: create added, delete removed, update everything else
+    });
+  });
+};

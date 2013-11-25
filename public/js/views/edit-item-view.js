@@ -45,7 +45,7 @@
         return val ? parseInt(val) : null;
       },
       tags: function() {
-        return _.pluck(this.$el.find(this.fieldMap.tags), 'value');
+        return _.pluck(this.$el.find(this.fieldMap.tags + ':checked'), 'value');
       }
     },
 
@@ -56,7 +56,7 @@
       feeds_min: '.item-feeds-min',
       feeds_max: '.item-feeds-max',
       description: '.item-description',
-      tags: '.edit-item-tags input:checked'
+      tags: '.edit-item-tags input'
     },
 
     /**

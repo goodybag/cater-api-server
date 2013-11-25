@@ -226,29 +226,25 @@ module.exports.update = function(req, res) {
   });
 };
 
+// NOTE: We will need to do much the same thing for order item create / update / delete.
+// Once that is done, commonalities should be abstracted out, probably to the model.
 module.exports.change = function(req, res, next) {
   // like update, but create a pending change instead of applying it immedietly
-  models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (!order) return res.json(404);
-
-    // TODO: check if change can be made.  Order must be in accepted state and still be cancelable.
+  models.Change.getChange(req.params.oid, function(err, change) {
+    if (err)
+      return utils.contains([404, 403], err) ? res.json(err) : res.error(errors.internal.DB_FAILURE, err);
 
     var delta = utils.pick(req.body, updateableFields);
+    var changeSummaries = utils.map(delta, function(val, key, obj) {
+      return ['Change', key, 'from', order.attributes[key], 'to', val].join(' ');
+    });
 
-    // TODO: generate change summary statement for delta
+    utils.extend(change.attributes.order_json, delta);
+    change.attributes.change_summaries = (change.attributes.change_summaries || []).concat(changeSummaries);
 
-    models.Change.findOne({where: {order_id: req.params.oid, status: 'pending'}}, function(err, change) {
+    change.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      if (!change) ; // TODO: create one, with order.toJSON() as json
-
-      utils.extend(change.attributes.json, delta);
-      // TODO: append change summary statements to change
-
-      change.save(function(err, rows, result) {
-        if (err) return res.error(errors.internal.DB_FAILURE, err);
-        res.json(201, change.toJSON());  // TODO: is this best?
-      });
+      res.json(201, change.toJSON());  // TODO: is this best?
     });
   });
 };

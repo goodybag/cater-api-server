@@ -17,13 +17,15 @@ var PaymentMethod = Backbone.Model.extend({
         type: 'string'
       , pattern: /^\d*$/
       , required: true
-      , length: 16
+      , minLength: 15
+      , maxLength: 16
       }
     , security_code: {
         type: 'string'
       , pattern: /^\d*$/
       , required: true
-      , length: 3
+      , minLength: 3
+      , maxLength: 4
       }
     , expiration_year: {
         type: 'number'

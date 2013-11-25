@@ -217,10 +217,38 @@ var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'n
 module.exports.update = function(req, res) {
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (!order) return res.json(404);
     utils.extend(order.attributes, utils.pick(req.body, updateableFields));
     order.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       res.send(order.toJSON({plain:true}));
+    });
+  });
+};
+
+module.exports.change = function(req, res, next) {
+  // like update, but create a pending change instead of applying it immedietly
+  models.Order.findOne(req.params.oid, function(err, order) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (!order) return res.json(404);
+
+    // TODO: check if change can be made.  Order must be in accepted state and still be cancelable.
+
+    var delta = utils.pick(req.body, updateableFields);
+
+    // TODO: generate change summary statement for delta
+
+    models.Change.findOne({where: {order_id: req.params.oid, status: 'pending'}}, function(err, change) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      if (!change) ; // TODO: create one, with order.toJSON() as json
+
+      utils.extend(change.attributes.json, delta);
+      // TODO: append change summary statements to change
+
+      change.save(function(err, rows, result) {
+        if (err) return res.error(errors.internal.DB_FAILURE, err);
+        res.json(201, change.toJSON());  // TODO: is this best?
+      });
     });
   });
 };

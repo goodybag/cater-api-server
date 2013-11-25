@@ -1,8 +1,8 @@
 {
   "dir": "public/receipts"
 , "script": "lib/receipt-pdf.js"
-, "fileName": "order-:id.pdf"
-, "orderRoute": "/orders/:id/receipt"
+, "fileName": "order-:oid.pdf"
+, "orderRoute": "/orders/:oid/receipt"
 , "bucket": "receipts.goodybag.com"
 , "concurrency": 10
 , "paperSize": {

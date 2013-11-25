@@ -39,6 +39,9 @@ define(function(require) {
   , change_summaries: {
       type: array(types.text)
     }
+  , order_json: {
+      type: types.json
+    }
   };
 
   definition.indices = {};

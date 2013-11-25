@@ -16,5 +16,6 @@ CREATE TABLE IF NOT EXISTS order_changes (
   created_at        timestamptz not null default now(),
   order_id          int not null references orders(id),
   status            change_status not null default 'submitted',
-  change_summaries  text[]
+  change_summaries  text[],
+  order_json        json
 );

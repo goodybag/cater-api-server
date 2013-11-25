@@ -66,6 +66,7 @@ module.exports = {
 
   // custom types
 , orderstatus: 'order_status'
+, changestatus: 'change_status'
 , timezone: 'timezone'
 , tippercentage: 'tip_percentage'
 , paymentmethod: 'payment_method'

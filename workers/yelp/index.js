@@ -64,6 +64,13 @@ var getGbBusinesses = function( callback ){
 };
 
 var saveBusinessYelpData = function( id, data, callback ){
+  // Filter out reviews that are under our threshold
+  if ( 'reviews' in data ){
+    data.reviews = data.reviews.filter( function( review ){
+      return review.rating >= config.yelp.reviewThreshold
+    });
+  }
+
   var $query = {
     where: { id: id }
   , updates: {

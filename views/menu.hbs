@@ -20,11 +20,15 @@
       <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
       <li><a href="#info" data-toggle="tab">Info</a></li>
       {{#if restaurant.yelp_data}}
-      {{#if ../restaurant.yelp_data.reviews}}
+      {{#if restaurant.yelp_data.review_count}}
       <li>
+        {{#if restaurant.yelp_data.reviews}}
         <a href="#reviews" data-toggle="tab">
+        {{else}}
+        <a href="{{../restaurant.yelp_data.url}}" target="_blank">
+        {{/if}}
           Reviews
-          {{#if restaurant.num_reviews}}({{restaurant.num_reviews}}){{/if}}
+          {{#if restaurant.yelp_data.review_count}}({{restaurant.yelp_data.review_count}}){{/if}}
         </a>
       </li>
       {{/if}}

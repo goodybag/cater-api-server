@@ -126,9 +126,18 @@ module.exports.createSessionAs = function(req, res) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (rows.length === 0) return res.send(404);
     var user = rows[0];
-    req.session = utils.extend({}, req.session, {user: utils.pick(user, ['id', 'groups', 'email'])});
+    req.session = utils.extend({oldUser: req.session.user}, req.session, {user: utils.pick(user, ['id', 'groups', 'email'])});
     res.redirect(req.query.next || '/restaurants');
   });
+};
+
+// POST /users/return
+module.exports.returnSession = function(req, res) {
+  console.log(req.session);
+  // Restore original user
+  req.session = utils.extend({}, req.session, {user: req.session.oldUser});
+  req.session = utils.omit(req.session, 'oldUser');
+  res.redirect(req.query.next || '/restaurants');
 };
 
 module.exports.passwordResets = require('./password-resets');

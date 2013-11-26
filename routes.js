@@ -355,6 +355,17 @@ module.exports.register = function(app) {
   });
 
   /**
+   * User return resource. Restore admin session after impersonating another user
+   */
+
+  app.get('/users/return', controllers.users.returnSession);
+  
+  app.all('/users/return', function(req, res, next) {
+    res.set('Allow', 'GET');
+    res.send(405);
+  });
+
+  /**
    *  Current user resource.
    */
 
@@ -450,10 +461,12 @@ module.exports.register = function(app) {
    *  User session resource.  Represents a session as a specific user.
    */
 
+  app.get('/users/:uid/session', controllers.users.createSessionAs);
+
   app.post('/users/:uid/session', controllers.users.createSessionAs);
 
   app.all('/users/:uid/session', function(req, res, next) {
-    res.set('Allow', 'POST');
+    res.set('Allow', 'GET', 'POST');
     res.send(405);
   });
 

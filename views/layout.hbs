@@ -50,7 +50,7 @@
     {{{block "css"}}}
   </head>
   <body>
-    <header id="header" class="navbar">
+    <header id="header" class="navbar {{#if session.oldUser}}navbar-impersonate{{/if}}">
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
@@ -61,7 +61,7 @@
             <ul class="nav navbar-nav pull-right">
               <li><a href="/restaurants">Home</a></li>
               {{#if session.oldUser}}
-              <li><a href="/users/return">Return to {{session.oldUser.name}}</a></li>
+              <li><a href="/users/return"><strong>Return to {{session.oldUser.name}}</strong></a></li>
               {{/if}}
               <li class="nav-account dropdown">
                 <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">

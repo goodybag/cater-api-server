@@ -202,6 +202,10 @@
   padding-bottom: 11px;
 }
 
+.navbar.navbar-impersonate {
+  border-top: 2px solid red;
+}
+
 .navbar-nav > li > a {
   padding-top: 16px;
   padding-bottom: 14px;

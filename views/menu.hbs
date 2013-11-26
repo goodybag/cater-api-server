@@ -19,12 +19,16 @@
     <ul class="nav nav-tabs menu-info-tabs">
       <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
       <li><a href="#info" data-toggle="tab">Info</a></li>
+      {{#if restaurant.yelp_data}}
+      {{#if ../restaurant.yelp_data.reviews}}
       <li>
         <a href="#reviews" data-toggle="tab">
           Reviews
           {{#if restaurant.num_reviews}}({{restaurant.num_reviews}}){{/if}}
         </a>
       </li>
+      {{/if}}
+      {{/if}}
     </ul>
   </div>
 </div>

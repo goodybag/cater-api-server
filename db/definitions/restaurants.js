@@ -109,6 +109,9 @@ define(function(require) {
     , default: 'NULL'
     , references: {table: 'payment_methods', column: 'id', onDelete: 'set null'}
     }
+  , yelp_business_id: {
+      type: types.text
+    }
   };
 
   definition.indices = {};

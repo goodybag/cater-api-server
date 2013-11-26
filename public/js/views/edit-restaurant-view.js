@@ -17,7 +17,8 @@ var EditRestaurantView = FormView.extend({
       'click .add-lead-time': 'addLeadTime',
       'click .remove-lead-time': 'removeLeadTime',
       'click .restaurant-remove': 'onRestaurantRemoveClick',
-      'change input[type="filepicker"]': 'onFilePickerChange'
+      'change input[type="filepicker"]': 'onFilePickerChange',
+      'click [name="yelp_business_id"]': 'onYelpBusinessIdClick'
     };
   },
 
@@ -56,6 +57,7 @@ var EditRestaurantView = FormView.extend({
 
   fieldMap: {
     name: '.restaurant-form .restaurant-name',
+    yelp_business_id: '.restaurant-form [name="yelp_business_id"]',
     logo_url: '.restaurant-form [name="logo_url"]',
     logo_mono_url: '.restaurant-form [name="logo_mono_url"]',
     sms_phones: '.restaurant-form .restaurant-sms-phones',
@@ -89,21 +91,21 @@ var EditRestaurantView = FormView.extend({
     minimum_order: _.compose(function(cents) { return cents ? Math.round(cents * 100) : null; }, _.partial(FormView.floatGetter, 'minimum_order')),
     delivery_fee: _.compose(function(cents) { return cents != null ? Math.round(cents * 100) : null; }, _.partial(FormView.floatGetter, 'delivery_fee')),
 
-    cuisine: function() { 
-      return this.fieldSplit(this.fieldMap.cuisine); 
+    cuisine: function() {
+      return this.fieldSplit(this.fieldMap.cuisine);
     },
-    
-    sms_phones: function() { 
+
+    sms_phones: function() {
       return _.invoke(this.fieldSplit(this.fieldMap.sms_phones), 'replace', /[^\d]/g, '');
     },
-    
-    voice_phones: function() { 
+
+    voice_phones: function() {
       return _.invoke(this.fieldSplit(this.fieldMap.voice_phones), 'replace', /[^\d]/g, '');
     },
-    
-    emails:  function() { 
-      return this.fieldSplit(this.fieldMap.emails); 
-    }, 
+
+    emails:  function() {
+      return this.fieldSplit(this.fieldMap.emails);
+    },
 
     delivery_zips: function() {
       var val = this.$el.find(this.fieldMap.delivery_zips).val().trim();
@@ -142,6 +144,15 @@ var EditRestaurantView = FormView.extend({
 
     is_hidden: function() {
       return this.$el.find(this.fieldMap.is_hidden).is(':checked');
+    },
+
+    yelp_business_id: function(){
+      var url = this.$el.find(this.fieldMap.yelp_business_id).val();
+      if (!url) return null;
+      if (url.indexOf('/') === -1) return null;
+
+      url = url.split('/').pop();
+      return url.split('#')[0];
     }
   },
 
@@ -200,5 +211,9 @@ var EditRestaurantView = FormView.extend({
     $input.siblings('[data-name="' + $input.attr('name') + '"]').attr(
       'src', $input.val()
     );
+  },
+
+  onYelpBusinessIdClick: function(e){
+    e.target.select();
   }
 });

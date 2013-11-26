@@ -62,8 +62,12 @@
               </div>
             </div>
             <div class="col-xs-2 rating-wrapper">
+              {{#if this.yelp_data}}
+              {{#if ../yelp_data.rating}}
               Rating on Yelp:
-              <div class="rating">{{{ratingStars '4.3'}}}</div>
+              <div class="rating">{{{ratingStars ../../yelp_data.rating}}}</div>
+              {{/if}}
+              {{/if}}
             </div>
           </div>
         </a>

@@ -3,42 +3,30 @@
 {{/extend}}
 
 <h4 class="tab-header rating-header">
+  {{#if restaurant.yelp_data.rating}}
   Overall Yelp Rating:
-  <div class="rating">{{{ratingStars '4.3'}}}</div>
+  <div class="rating">{{{ratingStars ../restaurant.yelp_data.rating}}}</div>
+  {{/if}}
 </h4>
 
+{{#if restaurant.yelp_data.reviews}}
 <div class="reviews">
-  <article class="review">
-    <img src="http://placekitten.com/100/100" class="review-avatar">
+  {{#each ../restaurant.yelp_data.reviews}}
+    <article class="review">
+    <img src="{{this.user.image_url}}" class="review-avatar">
     <div class="review-info">
-      <h5 class="review-author">Jamie N.</h5>
-      <div class="review-rating">{{{ratingStars '4' }}}</div>
-      <p class="review-text">A quick weekend trip to Madison would not have been complete without a late night stop at Ian's. The line was INSANE (or at least it semeed so to me, as an... <a href="#">Read More</a></p>
+      <h5 class="review-author">{{this.user.name}}</h5>
+      <div class="review-rating">{{{ratingStars this.rating }}}</div>
+      <p class="review-text">{{this.excerpt}}... <a href="http://www.yelp.com/biz/{{../../restaurant.yelp_business_id}}#hrid:{{this.id}}" target="_blank">Read More</a></p>
     </div>
   </article>
-
-  <article class="review">
-    <img src="http://placekitten.com/100/100" class="review-avatar">
-    <div class="review-info">
-      <h5 class="review-author">Jamie N.</h5>
-      <div class="review-rating">{{{ratingStars '4' }}}</div>
-      <p class="review-text">A quick weekend trip to Madison would not have been complete without a late night stop at Ian's. The line was INSANE (or at least it semeed so to me, as an... <a href="#">Read More</a></p>
-    </div>
-  </article>
-
-  <article class="review">
-    <img src="http://placekitten.com/100/100" class="review-avatar">
-    <div class="review-info">
-      <h5 class="review-author">Jamie N.</h5>
-      <div class="review-rating">{{{ratingStars '4' }}}</div>
-      <p class="review-text">A quick weekend trip to Madison would not have been complete without a late night stop at Ian's. The line was INSANE (or at least it semeed so to me, as an... <a href="#">Read More</a></p>
-    </div>
-  </article>
+  {{/each}}
 </div>
+{{/if}}
 
 <div class="tab-actions row">
   <div class="col-lg-6">
-    <a href="#">See all (100) Reviews</a>
+    <a href="{{restaurant.yelp_data.url}}" target="_blank">See all ({{restaurant.yelp_data.review_count}}) Reviews</a>
   </div>
   <div class="col-lg-6">
     <a href="http://yelp.com" class="btn btn-lg btn-default btn-yelp" target="_blank">

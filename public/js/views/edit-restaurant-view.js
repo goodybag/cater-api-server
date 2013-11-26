@@ -147,9 +147,7 @@ var EditRestaurantView = FormView.extend({
     },
 
     yelp_business_id: function(){
-      console.log("Test")
       var url = this.$el.find(this.fieldMap.yelp_business_id).val();
-      console.log(url)
       if (!url) return null;
       if (url.indexOf('/') === -1) return null;
 
@@ -161,7 +159,6 @@ var EditRestaurantView = FormView.extend({
   onChange: function(e) {
     this.$el.find('.form-control').parent().removeClass('has-success');
     var diff = FormView.prototype.onChange.apply(this, arguments);
-    console.log("change", diff);
     if (diff) {
       var changed = _.values(_.pick(this.fieldMap, _.keys(diff))).join(', ');
       this.$el.find(changed).parent().filter(':not(.has-error)').addClass('has-success');

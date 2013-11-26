@@ -355,7 +355,8 @@ module.exports.register = function(app) {
   });
 
   /**
-   * User return resource. Restore admin session after impersonating another user
+   * User return resource. Restore admin session after impersonating another user.
+   * Placed higher in the stack so 'client' users can access this route
    */
 
   app.get('/users/return', controllers.users.returnSession);

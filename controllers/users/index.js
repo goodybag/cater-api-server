@@ -131,12 +131,13 @@ module.exports.createSessionAs = function(req, res) {
   });
 };
 
-// POST /users/return
 module.exports.returnSession = function(req, res) {
-  console.log(req.session);
-  // Restore original user
-  req.session = utils.extend({}, req.session, {user: req.session.oldUser});
-  req.session = utils.omit(req.session, 'oldUser');
+
+  // Restore original session and delete oldUser
+  if (req.session.oldUser) {
+    var session = utils.extend({}, req.session, {user: req.session.oldUser});
+    req.session = utils.omit(session, 'oldUser');
+  }
   res.redirect(req.query.next || '/restaurants');
 };
 

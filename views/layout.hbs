@@ -61,7 +61,11 @@
             <ul class="nav navbar-nav pull-right">
               <li><a href="/restaurants">Home</a></li>
               {{#if session.oldUser}}
-              <li><a href="/users/return"><strong>Return to {{session.oldUser.name}}</strong></a></li>
+              <li>
+                <a href="/users/return" class="users-return navbar-btn">
+                  Return to {{session.oldUser.name}}
+                </a>
+              </li>
               {{/if}}
               <li class="nav-account dropdown">
                 <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">

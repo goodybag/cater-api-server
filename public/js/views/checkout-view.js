@@ -8,7 +8,8 @@ var CheckoutView = OrderView.extend({
     'change input[type="radio"].payment-method':    'changePaymentMethod',
     'change #payment-method-id':                    'onPaymentMethodIdChange',
     'submit #order-form':                           'submit',
-    'submit #select-address-form':                  'selectAddress'
+    'submit #select-address-form':                  'selectAddress',
+    'input input[name="card_number"]':              'onCardNumberChange'
   }),
 
   fieldMap: {
@@ -196,6 +197,74 @@ var CheckoutView = OrderView.extend({
     });
   },
 
+  onCardNumberChange: function(e) {
+    var cardTypeRegexes = {
+      visa: {
+        likely: /^4/
+      , valid: /^4[0-9]{15}$/
+      , mask: '9999 9999 9999 9999'
+      }
+    , master: {
+        likely: /^5[1-5]/
+      , valid: /^5[1-5][0-9]{14}/
+      , mask: '9999 9999 9999 9999'
+      }
+    , amex: {
+        likely: /^3[47]/
+      , valid: /^3[47][0-9]{13}$/
+      , mask: '9999 999999 99999'
+      }
+    , discover: {
+        likely: /^6(?:011|5[0-9]{2})/
+      , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
+      , mask: '9999 9999 9999 9999'
+      }
+    }
+
+    var $el = this.$el.find('#new-card');
+    var $input = $el.find('input[name="card_number"]');
+    var inputValue = $input.val();
+
+    var foundMatch = false;
+    for(type in cardTypeRegexes) {
+      if (!cardTypeRegexes.hasOwnProperty(type)) return;
+
+      var cardType = cardTypeRegexes[type];
+
+      // TODO: improve later - apply input mask and change logo only if the card type changes
+      if (cardType.likely.test(inputValue)) {
+        foundMatch = true;
+        $input.inputmask(cardType.mask, {
+          placeholder:" "
+        , oncleared: function() {
+            $input.inputmask('remove');
+            $input.css('background', '');
+          }
+        , onincomplete: function() {
+            $input.inputmask('remove');
+            $input.css('background', '');
+          }
+        });
+
+        $input.css('background', 'url(/img/credit-cards/'+type+'.png) #fff no-repeat right');
+
+        if (type == 'amex') {
+          $el.find('input[name="postal_code"]').closest('.row').removeClass('hide');
+        } else {
+          $el.find('input[name="postal_code"]').closest('.row').addClass('hide');
+        }
+        break;
+      }
+    }
+
+    if (!foundMatch){
+      $(e.target).inputmask('remove');
+      $input.css('background', '');
+      $el.find('input[name="postal_code"]').val('');
+      $el.find('input[name="postal_code"]').closest('.row').addClass('hide');
+    }
+  },
+
   /**
    * Adds a new card view to the payment methods select element
    * @param {PaymentMethod} paymentMethod The card model
@@ -301,12 +370,20 @@ var CheckoutView = OrderView.extend({
 
     var data = {
       card_name:         $el.find('[name="card_name"]').val()
-    , card_number:       $el.find('[name="card_number"]').val()
+    , card_number:       $el.find('[name="card_number"]').inputmask('unmaskedvalue')
     , security_code:     $el.find('[name="security_code"]').val()
     , expiration_month: +$el.find('[name="expiration_month"]').val()
     , expiration_year:  +$el.find('[name="expiration_year"]').val()
     , save_card:         $el.find('[name="save_card"]:checked').length === 1
     };
+
+    if (PaymentMethod.getCardType(data.card_number) == 'amex') {
+      data = _.extend({
+        postal_code: $el.find('[name="postal_code"]').val()
+      , country_code: 'USA'
+      }
+      , data);
+    }
 
     var pm = new PaymentMethod({ user_id: user.get('id') });
 
@@ -463,11 +540,19 @@ var CheckoutView = OrderView.extend({
 
     var data = {
       card_name:         $el.find('[name="card_name"]').val()
-    , card_number:       $el.find('[name="card_number"]').val()
+    , card_number:       $el.find('[name="card_number"]').inputmask('unmaskedvalue')
     , security_code:     $el.find('[name="security_code"]').val()
     , expiration_month: +$el.find('[name="expiration_month"]').val()
     , expiration_year:  +$el.find('[name="expiration_year"]').val()
     };
+
+    if (PaymentMethod.getCardType(data.card_number) == 'amex') {
+      data = _.extend({
+        postal_code: $el.find('[name="postal_code"]').val()
+      , country_code: 'USA'
+      }
+      , data);
+    }
 
     pm.updateBalancedAndSave(data, function(error) {
       if (error) return notify.error(error);

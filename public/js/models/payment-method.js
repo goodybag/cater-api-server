@@ -135,6 +135,7 @@ var PaymentMethod = Backbone.Model.extend({
     card_number: 'Card Number'
   , security_code: 'Security Code'
   , name: 'Card Title'
+  , postal_code: 'Postal Code'
   },
 
   getCardType: function(cardNumber) {

@@ -29,6 +29,10 @@ a:hover {
   border-color: #CCCCC0;
 }
 
+.navbar-impersonate {
+  border-top: 5px solid #DC0500;
+}
+
 .panel,
 .panel .panel-heading,
 .panel .list-group-item {
@@ -262,4 +266,12 @@ a.list-group-item .list-group-item-heading {
   background: none;
   border: none;
   text-decoration: underline;
+}
+
+.nav > li > a.users-return {
+  background-color: #000;
+  color: #fff;
+  padding: 6px 12px;
+  margin-right: 10px;
+  border-radius: 3px;
 }

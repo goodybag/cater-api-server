@@ -53,6 +53,7 @@ var config = {
       , 'rating_img_url_large'
       , 'reviews'
       ]
+    , reviewThreshold: 3
     }
 
   , outputActivePoolIds: false

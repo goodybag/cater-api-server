@@ -59,6 +59,8 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+  app.get('/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
+
   /**
    * Restaurant items resource.  The collection of all items belonging to a restaurant.
    */
@@ -360,7 +362,7 @@ module.exports.register = function(app) {
    */
 
   app.get('/users/return', controllers.users.returnSession);
-  
+
   app.all('/users/return', function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);

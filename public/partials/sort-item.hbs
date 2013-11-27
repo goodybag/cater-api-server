@@ -1,0 +1,24 @@
+<a class="list-group-item item sortable" id="item-{{id}}">
+  <div class="row">
+    <h5 class="list-group-item-heading col-sm-6">
+      {{order}} - {{name}}
+      {{>tags tags}}
+    </h5>
+    <dl class="item-legend col-sm-5">
+      <div class="feeds-price-wrapper">
+        <div class="feeds">
+          <dt>Feeds</dt>
+          <dd>{{range feeds_min feeds_max}}</dd>
+        </div>
+        <div class="price">
+          <dt>Price</dt>
+          <dd>{{dollars price}}</dd>
+        </div>
+      </div>
+    </dl>
+  </div>
+
+  <div class="row">
+    <p class="list-group-item-text col-sm-7">{{description}}</p>
+  </div>
+</a>

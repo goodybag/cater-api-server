@@ -149,6 +149,30 @@ module.exports.editAll = function(req, res, next) {
   });
 };
 
+module.exports.sort = function(req, res) {
+  models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (!restaurant) return res.render('404');
+    restaurant.getItems(function(err, items) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      var selectedPrice = utils.object(utils.map([1, 2, 3, 4], function(i) {
+        return [new Array(i+1).join('$'), restaurant.attributes.price === i];
+      }));
+      utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
+      res.render('menu-sort', {
+        restaurant: restaurant.toJSON()
+      , selectedPrice: selectedPrice
+      , states: states
+      , mealTypesList: enums.getMealTypes()
+      , mealStylesList: enums.getMealStyles()
+      }, function(err, html) {
+        if (err) return res.error(errors.internal.UNKNOWN, err);
+        res.send(html);
+      });
+    });
+  });
+};
+
 var zips = function(body, id) {
   return utils.map(body.delivery_zips, function(zip, index, arr) {
     return {restaurant_id: id,  zip: zip}

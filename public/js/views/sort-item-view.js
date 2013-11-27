@@ -5,8 +5,8 @@ var SortItemView = Backbone.View.extend({
   }
 
 , initialize: function(options) {
-    this.template = options.template || null;
-    this.category = options.category || null; // category view
+    this.template = options.template;
+    this.category = options.category; // category view
     this.listenTo(this.model, 'change', this.render);
   }
 
@@ -16,14 +16,16 @@ var SortItemView = Backbone.View.extend({
   }
 
 , updateOrder: function(event, order) {
+    event.stopPropagation();
     this.model.set('order', order);
   }
 
 , sorted: function(event, ui) { // passing in a jquery sortable stop event's args
-    var self = this;
-    this.category.$el.find('.item').each(function(index, item) {
-      $(item).trigger('update-order', index+1);
+    event.stopPropagation();
+    this.category.$el.find('.item').each(function(index, element) {
+      $(element).trigger('update-order', index+1);
     });
+    this.category.refreshSortable();
     this.category.showSaveItemsButton();
   }
 

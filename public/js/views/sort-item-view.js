@@ -7,12 +7,11 @@ var SortItemView = Backbone.View.extend({
 , initialize: function(options) {
     this.template = options.template || null;
     this.category = options.category || null; // category view
-
     this.listenTo(this.model, 'change', this.render);
   }
 
 , render: function() {
-    this.$el.replaceWith(this.template(this.model.toJSON()));
+    this.$el.html(this.template(this.model.toJSON()));
     return this;
   }
 
@@ -29,14 +28,9 @@ var SortItemView = Backbone.View.extend({
   }
 
 , save: function() {
-    if (!this.model.hasChanged()) return;
+    if (!this.model.unsavedAttributes()) return;
 
-    var data = {
-      order: this.model.get('order')
-    , category_id: this.model.get('category_id')
-    };
-
-    this.model.save(data, {
+    this.model.save(this.model.unsavedAttributes(), {
       patch: true
     });
   }

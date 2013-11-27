@@ -16,7 +16,7 @@ var SortCategoryView = Backbone.View.extend({
   }
 
 , render: function() {
-    this.$el.replaceWith(this.template(this.model.toJSON()));
+    this.$el.html(this.template(this.model.toJSON()));
     return this;
   }
 

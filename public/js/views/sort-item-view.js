@@ -25,7 +25,6 @@ var SortItemView = Backbone.View.extend({
     this.category.$el.find('.item').each(function(index, element) {
       $(element).trigger('update-order', index+1);
     });
-    this.category.refreshSortable();
     this.category.showSaveItemsButton();
   }
 

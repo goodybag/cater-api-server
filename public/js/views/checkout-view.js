@@ -221,9 +221,14 @@ var CheckoutView = OrderView.extend({
       }
     }
 
-    var $el = this.$el.find('#new-card');
-    var $input = $el.find('input[name="card_number"]');
-    var inputValue = $input.val();
+    var $newCard = this.$el.find('#new-card');
+    var $cardNumber = $newCard.find('input[name="card_number"]');
+    var $postalCode = $newCard.find('input[name="postal_code"]');
+    var cardNumber = $cardNumber.val();
+
+    var removeCCLogos = function () {
+      $cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
+    };
 
     var foundMatch = false;
     for(type in cardTypeRegexes) {
@@ -232,26 +237,29 @@ var CheckoutView = OrderView.extend({
       var cardType = cardTypeRegexes[type];
 
       // TODO: improve later - apply input mask and change logo only if the card type changes
-      if (cardType.likely.test(inputValue)) {
+      if (cardType.likely.test(cardNumber)) {
         foundMatch = true;
-        $input.inputmask(cardType.mask, {
+        $cardNumber.inputmask(cardType.mask, {
           placeholder:" "
         , oncleared: function() {
-            $input.inputmask('remove');
-            $input.css('background', '');
+            $cardNumber.inputmask('remove');
+            removeCCLogos();
+            $postalCode.closest('.row').addClass('hide');
           }
         , onincomplete: function() {
-            $input.inputmask('remove');
-            $input.css('background', '');
+            $cardNumber.inputmask('remove');
+            removeCCLogos();
           }
         });
 
-        $input.css('background', 'url(/img/credit-cards/'+type+'.png) #fff no-repeat right');
+        removeCCLogos();
+        $cardNumber.addClass('cc-'+type)
+        ;
 
         if (type == 'amex') {
-          $el.find('input[name="postal_code"]').closest('.row').removeClass('hide');
+          $postalCode.closest('.row').removeClass('hide');
         } else {
-          $el.find('input[name="postal_code"]').closest('.row').addClass('hide');
+          $postalCode.closest('.row').addClass('hide');
         }
         break;
       }
@@ -259,9 +267,9 @@ var CheckoutView = OrderView.extend({
 
     if (!foundMatch){
       $(e.target).inputmask('remove');
-      $input.css('background', '');
-      $el.find('input[name="postal_code"]').val('');
-      $el.find('input[name="postal_code"]').closest('.row').addClass('hide');
+      $cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
+      $postalCode.val('');
+      $postalCode.closest('.row').addClass('hide');
     }
   },
 
@@ -299,7 +307,7 @@ var CheckoutView = OrderView.extend({
    */
   selectPaymentType: function(type){
     // Use click so the change event handlers a called
-    this.$el.find('[name="payment-method"][value="' + type + '"]').trigger('click');
+    this.$newCard.find('[name="payment-method"][value="' + type + '"]').trigger('click');
     return this;
   },
 

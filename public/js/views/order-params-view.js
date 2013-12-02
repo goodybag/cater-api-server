@@ -22,6 +22,7 @@ var OrderParamsView = Backbone.View.extend({
 
     this.datepicker.on( 'set', this.onInputChange );
     this.timepicker.on( 'set', this.onInputChange );
+    this.timepicker.on( 'open', _(this.onTimePickerOpen).bind(this) );
   }
 
 , render: function(){
@@ -60,5 +61,11 @@ var OrderParamsView = Backbone.View.extend({
 
 , onFormSubmit: function (e) {
     this.search();
+  }
+
+, onTimePickerOpen: function (e) {
+    // Scroll to 8am
+    var $el = this.timepicker.$root.find('.picker__holder');
+    $el[0].scrollTop = $el.find('[data-pick="' + (60 * 8) + '"]')[0].offsetTop;
   }
 });

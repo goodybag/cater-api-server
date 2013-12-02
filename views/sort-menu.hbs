@@ -3,11 +3,14 @@
 {{/extend}}
 
 <div class="page page-menu container">
-
 <div class="row">
   <div class="col-md-8">
     <div class="tab-content">
       <div class="tab-pane active" id="menu">
+        <div class="container">
+          <input type="button" class="button btn-default pull-right hide-all-items" value="Hide All Items" />
+          <input type="button" class="button btn-default pull-right show-all-items" value="Show All Items" />
+        </div>
         <div class="menu">
           {{#each restaurant.categories}}
             <div class="panel menu-category" id="category-{{id}}">
@@ -63,27 +66,47 @@
 
 <script type="text/javascript">
 
-var MenuView = Backbone.View.extend({
-  initialize: function(options) {
+var SortMenuView = Backbone.View.extend({
+
+  events: {
+    'click .hide-all-items': 'hideAllItems'
+  , 'click .show-all-items': 'showAllItems'
+  }
+
+, initialize: function(options) {
     this.categories = [];
-    this.$el.sortable({
+    this.$el.find('.menu').sortable({
       handle: '> .menu-cateogry-heading'
     , stop: function(event, ui) {
         ui.item.trigger('sorted', ui);
       }
     });
   }
+
+, hideAllItems: function() {
+    for(var i=0, len=this.categories.length; i<len; i++) {
+      var category = this.categories[i];
+      category.hideItems();
+    }
+  }
+
+, showAllItems: function () {
+    for(var i=0, len=this.categories.length; i<len; i++) {
+      var category = this.categories[i];
+      category.showItems();
+    }
+  }
 });
 
-var menuView = new MenuView({el: ".menu"});
+var sortMenuView = new SortMenuView({el: "#menu"});
 
 var categories = {{{json restaurant.categories}}};
 
 _.chain(categories).each(function(category) {
   // create model and view for category
   var categoryModel = new Category(category);
-  var sortCategoryView = new SortCategoryView({el: "#category-"+category.id, model: categoryModel, menu: menuView, template: templates.sort_category});
-  menuView.categories.push(sortCategoryView);
+  var sortCategoryView = new SortCategoryView({el: "#category-"+category.id, model: categoryModel, menu: sortMenuView, template: templates.sort_category});
+  sortMenuView.categories.push(sortCategoryView);
 
   _.chain(category.items).each(function(item) {
     // create model and view for item

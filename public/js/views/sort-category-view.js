@@ -10,7 +10,7 @@ var SortCategoryView = Backbone.View.extend({
 
 , initialize: function(options) {
     this.items = [];
-    this.showItems = true;
+    this.areItemsVisible = true;
     this.template = options.template;
     this.menu = options.menu;
 
@@ -40,7 +40,7 @@ var SortCategoryView = Backbone.View.extend({
 , renderItems: function() {
     this.$el.find('.category').empty();
 
-    if (!this.showItems) this.$el.find('.category').hide();
+    if (!this.areItemsVisible) this.$el.find('.category').hide();
 
     this.items = _.sortBy(this.items, function(item) {
       return item.model.get('order');
@@ -55,8 +55,18 @@ var SortCategoryView = Backbone.View.extend({
   }
 
 , toggleItemVisibility: function() {
-    this.showItems = !this.showItems;
+    this.areItemsVisible = !this.areItemsVisible;
     this.$el.find('.category').toggle();
+  }
+
+, hideItems: function() {
+    this.areItemsVisible = false;
+    this.$el.find('.category').hide();
+  }
+
+, showItems: function () {
+    this.areItemsVisible = true;
+    this.$el.find('.category').show();
   }
 
 , updateOrder: function(event, order) {

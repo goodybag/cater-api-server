@@ -1,6 +1,6 @@
 var SortItemView = Backbone.View.extend({
   events: {
-    'sorted': 'sorted'
+    'sorted': 'onSorted'
   , 'update-order': 'updateOrder'
   }
 
@@ -15,17 +15,32 @@ var SortItemView = Backbone.View.extend({
     return this;
   }
 
+, isSelected: function() {
+    return this.$el.find('.item-checkbox').is(":checked");
+  }
+
+, moveTo: function(category) {
+    this.category = category;
+    this.$el.appendTo(this.category.$el);
+    this.model.set('category_id', category.model.id);
+    this.category.items.push(this);
+  }
+
 , updateOrder: function(event, order) {
     event.stopPropagation();
     this.model.set('order', order);
   }
 
-, sorted: function(event, ui) { // passing in a jquery sortable stop event's args
+, onSorted: function(event, ui) { // passing in a jquery sortable stop event's args
     event.stopPropagation();
+    this.resort();
+    this.category.showSaveItemsButton();
+  }
+
+, resort: function() {
     this.category.$el.find('.item').each(function(index, element) {
       $(element).trigger('update-order', index+1);
     });
-    this.category.showSaveItemsButton();
   }
 
 , save: function() {

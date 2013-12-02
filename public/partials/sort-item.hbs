@@ -1,26 +1,30 @@
 <div class="row">
-  <h5 class="list-group-item-heading col-sm-6">
-    {{order}} - {{name}}
-    {{>tags tags}}
-  </h5>
-  <dl class="item-legend col-sm-5">
-    <div class="feeds-price-wrapper">
-      <div class="feeds">
-        <dt>Feeds</dt>
-        <dd>{{range feeds_min feeds_max}}</dd>
-      </div>
-      <div class="price">
-        <dt>Price</dt>
-        <dd>{{dollars price}}</dd>
-      </div>
-      <div class="feeds">
-        <dt>Move To</dt>
-        <dd>{{range feeds_min feeds_max}}</dd>
+  <div class="row">
+    <div class="col-sm-1">
+      <center><input type="checkbox" class="item-checkbox"/></center>
+    </div>
+    <div class="col-sm-11">
+      <div class="row">
+        <h5 class="list-group-item-heading col-sm-6">
+          {{order}} - {{name}}
+          {{>tags tags}}
+        </h5>
+        <dl class="item-legend col-sm-5">
+          <div class="feeds-price-wrapper">
+            <div class="feeds">
+              <dt>Feeds</dt>
+              <dd>{{range feeds_min feeds_max}}</dd>
+            </div>
+            <div class="price">
+              <dt>Price</dt>
+              <dd>{{dollars price}}</dd>
+            </div>
+          </div>
+        </dl>
       </div>
     </div>
-  </dl>
-</div>
-
-<div class="row">
-  <p class="list-group-item-text col-sm-7">{{description}}</p>
+  </div>
+  <div class="row">
+    <p class="list-group-item-text col-sm-offset-1 col-sm-7">{{description}}</p>
+  </div>
 </div>

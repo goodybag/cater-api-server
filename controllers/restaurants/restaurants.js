@@ -166,7 +166,7 @@ module.exports.sort = function(req, res) {
       , mealTypesList: enums.getMealTypes()
       , mealStylesList: enums.getMealStyles()
       }, function(err, html) {
-        if (err) return res.error(errors.internal.UNKNOWN, err);
+        if (err) return console.log(err, err.stack), res.error(errors.internal.UNKNOWN, err);
         res.send(html);
       });
     });

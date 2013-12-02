@@ -3,6 +3,17 @@
     <span>{{order}} - {{name}}</span>
   </h3>
   <span class="pull-right">
+    <!-- Single button -->
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        Move Selected to Category <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        {{#each parent.restaurant.categories}}
+          <li><a href="#" class="dropdown-category" data-category-id="{{id}}">{{order}} - {{name}}</a></li>
+        {{/each}}
+      </ul>
+    </div>
     <input type="button" class="button btn-default toggle-items" value="Toggle Items" />
     <input type="button" class="button btn-primary hide save-items" value="Save Items" />
     </span>

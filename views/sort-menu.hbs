@@ -14,7 +14,9 @@
         <div class="menu">
           {{#each restaurant.categories}}
             <div class="panel menu-category" id="category-{{id}}">
-              {{>sort_category this}}
+              {{#include parent=..}}
+                {{> sort_category}}
+              {{/include}}
             </div>
           {{/each}}
         </div>
@@ -95,6 +97,12 @@ var SortMenuView = Backbone.View.extend({
       var category = this.categories[i];
       category.showItems();
     }
+  }
+
+, getCategoryById: function(id) {
+    return _.find(this.categories, function(category){
+      return category.model.id == id;
+    });
   }
 });
 

@@ -56,6 +56,20 @@ var ItemModal = Backbone.View.extend({
   submit: function(e) {
     e.preventDefault();
     var this_ = this;
+
+    if ( !orderModel.isFulfillableOrder() ) {
+      return orderModal.show({
+        success: function(model, response, options) {
+          orderModal.hide();
+          this_.submit(e);
+        }
+      , error: function(){
+          alert('sorry we were unable to add item to order, please refresh page and try again');
+        }
+      , enforceRequired: false
+      });
+    }
+
     var orderItem = this.model instanceof OrderItem ? this.model : null;
 
     var data = {

@@ -69,6 +69,10 @@ define(function(require) {
       type: types.json
     , nullable: true
     }
+  , recipient: {
+      type: types.text
+    , nullable: true
+    }
   };
 
   definition.indices = {};

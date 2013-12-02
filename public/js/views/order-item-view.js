@@ -26,7 +26,8 @@ var OrderItemView = FormView.extend({
 
   fieldMap: {
     quantity: '.order-item-quantity',
-    notes: '.order-item-notes'
+    notes: '.order-item-notes',
+    recipient: '.order-item-recipient'
   },
 
   fieldGetters: {

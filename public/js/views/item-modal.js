@@ -26,6 +26,7 @@ var ItemModal = Backbone.View.extend({
     this.$el.find('.btn.item-modal-submit').text(submitBtnText);
 
     this.$el.find('.form-group-item-notes textarea').val( this.model.get('notes') );
+    this.$el.find('.form-group-item-recipient input, .form-group-item-recipient textarea').val( this.model.get('recipient') );
 
     this.$el.find('.item-options').html(
       // If we have options, render the partial, otherwise clear the item-options div
@@ -75,6 +76,7 @@ var ItemModal = Backbone.View.extend({
     var data = {
       quantity:     parseInt( this.$el.find('.item-quantity').val() ),
       notes:        (this.$el.find('.form-group-item-notes textarea').val()||'').trim() || null,
+      recipient:    (this.$el.find('.form-group-item-recipient input').val()||'') || null
     };
 
     if (data.quantity <= 0) {

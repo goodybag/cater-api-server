@@ -159,7 +159,7 @@ module.exports.sort = function(req, res) {
         return [new Array(i+1).join('$'), restaurant.attributes.price === i];
       }));
       utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
-      res.render('menu-sort', {
+      res.render('sort-menu', {
         restaurant: restaurant.toJSON()
       , selectedPrice: selectedPrice
       , states: states

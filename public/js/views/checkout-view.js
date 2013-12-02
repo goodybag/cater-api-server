@@ -307,7 +307,7 @@ var CheckoutView = OrderView.extend({
    */
   selectPaymentType: function(type){
     // Use click so the change event handlers a called
-    this.$newCard.find('[name="payment-method"][value="' + type + '"]').trigger('click');
+    this.$el.find('[name="payment-method"][value="' + type + '"]').trigger('click');
     return this;
   },
 

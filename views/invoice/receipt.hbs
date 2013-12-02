@@ -37,6 +37,7 @@
     <thead>
       <tr>
         <th class="orders">Orders</th>
+        <th class="recipient">Recipient</th>
         <th class="quantity">Quantity</th>
         <th class="notes">Notes</th>
         <th class="price">Price</th>
@@ -57,6 +58,9 @@
               {{/each}}
             {{/each}}
           </ul>
+        </td>
+        <td class="line-item-recipient" data-title="Recipient">
+          <span class="item-recipient-span order-item-field order-item-recipient" />{{this.recipient}}</span>
         </td>
         <td class="line-item-quantity" data-title="Quantity">
           <span class="item-quantity-span order-item-field order-item-quantity" />x {{this.quantity}}</span>

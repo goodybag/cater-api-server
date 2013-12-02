@@ -236,12 +236,12 @@ dl > dt {
 }
 
 .order-info-details .dl-horizontal > dt {
-  width: 78px;
+  width: 114px;
   text-align: left;
 }
 
 .order-info-details .dl-horizontal > dd {
-  margin-left: 90px;
+  margin-left: 120px;
 }
 
 .order-info-notes {

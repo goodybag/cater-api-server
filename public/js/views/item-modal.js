@@ -75,6 +75,7 @@ var ItemModal = Backbone.View.extend({
     var data = {
       quantity:     parseInt( this.$el.find('.item-quantity').val() ),
       notes:        (this.$el.find('.form-group-item-notes textarea').val()||'').trim() || null,
+      recipient:    (this.$el.find('.form-group-item-recipient input').val()||'') || null
     };
 
     if (data.quantity <= 0) {

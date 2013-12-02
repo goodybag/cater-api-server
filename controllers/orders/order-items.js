@@ -99,7 +99,7 @@ module.exports.update = function(req, res, next) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (orderItem == null) return res.send(404);
 
-    var updates = utils.pick(req.body, ['quantity', 'notes'])
+    var updates = utils.pick(req.body, ['quantity', 'notes', 'recipient'])
     if (req.body.options_sets !== undefined)
       updates.options_sets = JSON.stringify(sanitizeOptions(orderItem.attributes.options_sets, req.body.options_sets));
 

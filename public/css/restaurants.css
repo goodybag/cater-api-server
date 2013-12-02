@@ -55,3 +55,15 @@ a.list-group-item-restaurant .list-group-item-heading {
 .fee-info dd {
   margin-right: 14px;
 }
+
+.list-group-restaurants .rating-wrapper {
+  padding-top: 5px;
+}
+
+.list-group-restaurants .rating {
+  color: #6E6E6E;
+}
+
+.list-group-item-restaurant:hover .rating {
+  color: #DA1800;
+}

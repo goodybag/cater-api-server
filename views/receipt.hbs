@@ -115,6 +115,7 @@
             <th class="line-item-name">Item</th>
             <th class="line-item-quantity">Quantity</th>
             <th class="line-item-notes">Notes</th>
+            <th class="line-item-recipient">Recipient</th>
             <th class="line-item-feeds">Feeds</th>
             <th class="line-item-price">Price</th>
           </tr>
@@ -148,6 +149,13 @@
               <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
               {{else}}
               <span name="notes" class="item-notes-span order-item-field order-item-notes">{{#if this.notes}}{{this.notes}}{{else}}&nbsp;{{/if}}</span>
+              {{/if}}
+            </td>
+            <td class="line-item-recipient" data-title="Recipient">
+              {{#if ../order.editable}}
+                <textarea name="recipient" class="item-notes-textarea form-control order-item-field order-item-recipient">{{this.recipient}}</textarea>
+              {{else}}
+                <span name="recipient" class="item-recipient-span order-item-field order-item-recipient">{{#if this.recipient}}{{this.recipient}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
             </td>
             <td class="line-item-feeds" data-title="Feeds">

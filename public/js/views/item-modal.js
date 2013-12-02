@@ -26,7 +26,7 @@ var ItemModal = Backbone.View.extend({
     this.$el.find('.btn.item-modal-submit').text(submitBtnText);
 
     this.$el.find('.form-group-item-notes textarea').val( this.model.get('notes') );
-    this.$el.find('.form-group-item-recipient input').val( this.model.get('recipient') );
+    this.$el.find('.form-group-item-recipient input, .form-group-item-recipient textarea').val( this.model.get('recipient') );
 
     this.$el.find('.item-options').html(
       // If we have options, render the partial, otherwise clear the item-options div

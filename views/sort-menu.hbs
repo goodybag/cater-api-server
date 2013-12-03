@@ -54,12 +54,13 @@
 {{#extend "scripts"}}
 
 <script src="/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
-<script src="/components/backbone.trackit/dist/0.1.0/backbone.trackit.min.js"></script>
+<script src="/components/backbone.trackit/backbone.trackit.js"></script>
 
 <script src="/js/models/item.js"></script>
 <script src="/js/models/category.js"></script>
 <script src="/js/models/restaurant.js"></script>
 
+<script src="/js/views/sort-menu-view.js"></script>
 <script src="/js/views/sort-category-view.js"></script>
 <script src="/js/views/sort-item-view.js"></script>
 
@@ -68,44 +69,6 @@
 
 <script type="text/javascript">
 
-var SortMenuView = Backbone.View.extend({
-
-  events: {
-    'click .hide-all-items': 'hideAllItems'
-  , 'click .show-all-items': 'showAllItems'
-  }
-
-, initialize: function(options) {
-    this.categories = [];
-    this.$el.find('.menu').sortable({
-      handle: '> .menu-cateogry-heading'
-    , stop: function(event, ui) {
-        ui.item.trigger('sorted', ui);
-      }
-    });
-  }
-
-, hideAllItems: function() {
-    for(var i=0, len=this.categories.length; i<len; i++) {
-      var category = this.categories[i];
-      category.hideItems();
-    }
-  }
-
-, showAllItems: function () {
-    for(var i=0, len=this.categories.length; i<len; i++) {
-      var category = this.categories[i];
-      category.showItems();
-    }
-  }
-
-, getCategoryById: function(id) {
-    return _.find(this.categories, function(category){
-      return category.model.id == id;
-    });
-  }
-});
-
 var sortMenuView = new SortMenuView({el: "#menu"});
 
 var categories = {{{json restaurant.categories}}};
@@ -113,6 +76,7 @@ var categories = {{{json restaurant.categories}}};
 _.chain(categories).each(function(category) {
   // create model and view for category
   var categoryModel = new Category(category);
+  categoryModel.startTracking();
   var sortCategoryView = new SortCategoryView({el: "#category-"+category.id, model: categoryModel, menu: sortMenuView, template: templates.sort_category});
   sortMenuView.categories.push(sortCategoryView);
 

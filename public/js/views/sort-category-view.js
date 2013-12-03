@@ -1,11 +1,11 @@
 var SortCategoryView = Backbone.View.extend({
 
   events: {
-    'sorted': 'onSorted'
+    'item-moved': 'onItemMoved'
   , 'update-order': 'updateOrder'
   , 'click .toggle-items': 'toggleItemVisibility'
   , 'click .save-items': 'saveItems'
-  , 'click .dropdown-category': 'moveSelectedItems'
+  , 'click .dropdown-category': 'moveSelectedItemsToCategory'
   }
 
 , initialize: function(options) {
@@ -16,10 +16,11 @@ var SortCategoryView = Backbone.View.extend({
 
     this.listenTo(this.model, 'change', this.render);
 
-    this.$el.find('.category').sortable({
-      connectWith: '.category'
-    , stop: function(event, ui) {
-        ui.item.trigger('sorted', ui);
+    this.$category = this.$el.find('.category');
+
+    this.$category.sortable({
+      update: function(event, ui) {
+        ui.item.trigger('item-moved', ui);
       }
     });
   }
@@ -27,10 +28,9 @@ var SortCategoryView = Backbone.View.extend({
 , render: function() {
     this.$el.html(this.template(this.model.toJSON()));
     this.renderItems();
-    this.$el.find('.category').sortable({
-      connectWith: '.category'
-    , stop: function(event, ui) {
-        ui.item.trigger('sorted', ui);
+    this.$category.sortable({
+      update: function(event, ui) {
+        ui.item.trigger('item-moved', ui);
       }
     });
 
@@ -38,9 +38,9 @@ var SortCategoryView = Backbone.View.extend({
   }
 
 , renderItems: function() {
-    this.$el.find('.category').empty();
+    this.$category.empty();
 
-    if (!this.areItemsVisible) this.$el.find('.category').hide();
+    if (!this.areItemsVisible) this.$category.hide();
 
     this.items = _.sortBy(this.items, function(item) {
       return item.model.get('order');
@@ -50,70 +50,27 @@ var SortCategoryView = Backbone.View.extend({
       var view = this.items[i];
       view.setElement('<a class="list-group-item item sortable" id="item-'+view.model.get('id')+'">');
       view.delegateEvents();
-      this.$el.find('.category').append(view.render().$el);
+      this.$category.append(view.render().$el);
     }
+  }
+
+, refreshSortable: function () {
+    this.$category.sortable('refresh');
   }
 
 , toggleItemVisibility: function() {
     this.areItemsVisible = !this.areItemsVisible;
-    this.$el.find('.category').toggle();
+    this.$category.toggle();
   }
 
 , hideItems: function() {
     this.areItemsVisible = false;
-    this.$el.find('.category').hide();
+    this.$category.hide();
   }
 
 , showItems: function() {
     this.areItemsVisible = true;
-    this.$el.find('.category').show();
-  }
-
-, moveSelectedItems: function(event) {
-    var self = this;
-    var selectedItems = _.filter(this.items, function (item) {
-      return item.isSelected();
-    });
-
-    _.each(selectedItems, function (item){
-      var category = self.menu.getCategoryById($(event.target).attr('data-category-id'));
-      if (category == null) return alert("this category doesn't exist");
-      item.moveTo(category);
-      item.resort();
-    });
-
-    // remove the views from the this.items
-    this.items = _.difference(this.items, selectedItems);
-    this.items[0].resort(); // hack till I move the sort and update order functions to the right places
-  }
-
-, updateOrder: function(event, order) {
-    event.stopPropagation();
-    this.model.set('order', order);
-    this.save();
-  }
-
-, onSorted: function(event, ui) { // passing in a jquery sortable stop event's args
-    event.stopPropagation();
-    this.resort();
-  }
-
-, resort: function() {
-    this.menu.$el.find('.menu-category').each(function(index, element) {
-      $(element).trigger('update-order', index+1);
-    });
-  }
-
-, save: function() {
-    if (!this.model.hasChanged()) return;
-
-    var data = {
-      order: this.model.get('order')
-    };
-
-    this.model.save(data, {
-      patch: true
-    });
+    this.$category.show();
   }
 
 , showSaveItemsButton: function() {
@@ -122,6 +79,59 @@ var SortCategoryView = Backbone.View.extend({
 
 , hideSaveItemsButton: function() {
     this.$el.find('.save-items').addClass('hide');
+  }
+
+, moveSelectedItemsToCategory: function(event) {
+    var categorySelected = this.menu.getCategoryById($(event.target).attr('data-category-id'));
+    var selectedItems = _.filter(this.items, function (item) {
+      return item.isSelected();
+    });
+
+    _.each(selectedItems, function (item){
+      item.category = categorySelected;
+      item.$el.appendTo(item.category.$category);
+      item.model.set('category_id', item.category.model.id);
+      item.category.items.push(item);
+    });
+
+    // remove the views from the this.items
+    this.items = _.difference(this.items, selectedItems);
+
+    // re-order and save items in the new categorySelected
+    categorySelected.reorderItems();
+    categorySelected.saveItems();
+    categorySelected.refreshSortable();
+
+    // re-order and save items in this category
+    this.reorderItems();
+    this.saveItems();
+    this.refreshSortable();
+  }
+
+, onItemMoved: function(event, ui) {
+    event.stopPropagation();
+    this.reorderItems();
+    this.showSaveItemsButton();
+  }
+
+, reorderItems: function() {
+    this.$el.find('.item').each(function(index, element) {
+      $(element).trigger('update-order', index+1);
+    });
+  }
+
+, updateOrder: function(event, order) {
+    event.stopPropagation();
+    this.model.set('order', order);
+    this.save();
+  }
+
+, save: function() {
+    if (!this.model.unsavedAttributes()) return;
+
+    this.model.save(this.model.unsavedAttributes(), {
+      // patch: true // waiting for pull request to be accepted for patch support to work correctly
+    });
   }
 
 , saveItems: function() {

@@ -14,7 +14,7 @@ module.exports.add = function(req, res, next) {
       baseUrl: config.baseUrl
     };
 
-    res.render('email-waitlist-initial', context, function(err, html) {
+    res.render('waitlist-initial-email', context, function(err, html) {
       // TODO: error handling
       utils.sendMail(email, 'waitlist@goodybag.com', 'Verify your email with Goodybag', html);
     });

@@ -69,7 +69,7 @@ var tax = function(subtotal, deliveryFee, rate, options) {
     }
     rate = 0.0825;
   }
-  return (parseInt(subtotal) + parseInt(deliveryFee)) * parseFloat(rate);
+  return Math.round((parseInt(subtotal) + parseInt(deliveryFee)) * parseFloat(rate));
 }
 
 var helpers = {

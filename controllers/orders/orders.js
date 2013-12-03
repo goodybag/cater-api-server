@@ -251,14 +251,13 @@ module.exports.change = function(req, res, next) {
 
 module.exports.listStatus = function(req, res) {
   models.OrderStatus.find(
-    {where: {order_id: req.params.oid},
-     order: {created_at: 'desc'}},
+    { where: {order_id: req.params.oid}, order: {created_at: 'desc'} },
     function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       res.send(utils.invoke(results, 'toJSON'));
     }
   );
-}
+};
 
 module.exports.changeStatus = function(req, res) {
   var TAGS = ['orders-change-status'];

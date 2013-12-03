@@ -19,6 +19,7 @@ var ReceiptView = OrderView.extend({
 
   initialize: function() {
     OrderView.prototype.initialize.apply(this, arguments);
+    this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
     this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
     this.convertUtcDates();
   },
@@ -74,7 +75,8 @@ var ReceiptView = OrderView.extend({
   },
 
   onPriceChange: function(model, value, options) {
-    this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));
+    var updatedOrder = _.extend(this.model.toJSON(), this.getDiff());
+    this.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder}));
   },
 
   onPhoneChange: function(model, value, options) {
@@ -127,6 +129,7 @@ var ReceiptView = OrderView.extend({
   save: function() {
     var self = this;
     this.onSave(function(err, data) {
+      console.log(err, data);
       self.toggleEdit();
     });
   }

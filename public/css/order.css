@@ -321,6 +321,7 @@ p.adjustment-description {
 
 .totals {
   display: inline-block;
+  float: right;
   margin-top: 35px;
 }
 

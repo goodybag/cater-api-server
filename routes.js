@@ -219,9 +219,9 @@ module.exports.register = function(app) {
   , controllers.orders.get
   );
 
-  app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
+  app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.update, controllers.orders.change));
 
-  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.update);
+  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.update, controllers.orders.change));
 
   app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
@@ -255,8 +255,7 @@ module.exports.register = function(app) {
    *  This is a collection of OrderItems, not Items.
    */
 
-  //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
-  app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.summary);  // not currently used
+  app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.summary);
 
   app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.add);
 
@@ -360,7 +359,7 @@ module.exports.register = function(app) {
    */
 
   app.get('/users/return', controllers.users.returnSession);
-  
+
   app.all('/users/return', function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);

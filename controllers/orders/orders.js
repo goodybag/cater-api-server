@@ -40,13 +40,20 @@ module.exports.auth = function(req, res, next) {
   });
 };
 
-module.exports.editability = function(req, res, next) {
-  models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return res.error(errors.internal.DB_FAILURE);
-    if (!order) return res.json(404);
-    var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
-    return editable ? next() : res.json(403, 'order not editable');
-  });
+module.exports.editability = function(normal, change) {
+  return function(req, res, next) {
+    models.Order.findOne(req.params.oid, function(err, order) {
+      if (err) return res.error(errors.internal.DB_FAILURE);
+      if (!order) return res.json(404);
+      var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
+      // var changeable = !editable && order.attributes.status === 'accepted' && order.toJSON().cancelable
+      var changeable = true;  // FOR TESTING
+      if (editable || changeable)
+        return (editable ? normal : change).call(this, order, req, res, next)
+      else
+        return res.json(403, 'order not editable');
+    });
+  };
 };
 
 module.exports.list = function(req, res) {
@@ -58,7 +65,7 @@ module.exports.list = function(req, res) {
       res.send(html);
     });
   });
-}
+};
 
 // module.exports.get = function(req, res) {
 //   models.Order.findOne(parseInt(req.params.oid), function(error, order) {
@@ -200,8 +207,7 @@ module.exports.get = function(req, res) {
 
     res.render(view, context);
   });
-
-}
+};
 
 module.exports.create = function(req, res) {
   var order = new models.Order(utils.extend({user_id: req.session.user.id}, req.body));
@@ -209,30 +215,29 @@ module.exports.create = function(req, res) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(201, order.toJSON());
   });
-}
+};
 
 // TODO: get this from not here
 var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id'];
 
-module.exports.update = function(req, res) {
-  models.Order.findOne(req.params.oid, function(err, order) {
+module.exports.update = function(order, req, res, next) {
+  if (!order) return res.json(404);
+  utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+  order.save(function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (!order) return res.json(404);
-    utils.extend(order.attributes, utils.pick(req.body, updateableFields));
-    order.save(function(err, rows, result) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-      res.send(order.toJSON({plain:true}));
-    });
+    res.send(order.toJSON({plain:true}));
   });
 };
 
 // NOTE: We will need to do much the same thing for order item create / update / delete.
 // Once that is done, commonalities should be abstracted out, probably to the model.
-module.exports.change = function(req, res, next) {
+module.exports.change = function(order, req, res, next) {
+  console.log('change');
   // like update, but create a pending change instead of applying it immedietly
-  models.Change.getChange(req.params.oid, function(err, change) {
+  var isAdmin = req.session.user && utils.contains(req.session.user.groups, 'admin');
+  models.Change.getChange(req.params.oid, isAdmin, function(err, change) {
     if (err)
-      return utils.contains([404, 403], err) ? res.json(err) : res.error(errors.internal.DB_FAILURE, err);
+      return utils.contains([404, 403], err) ? res.json(err, {}) : res.error(errors.internal.DB_FAILURE, err);
 
     var delta = utils.pick(req.body, updateableFields);
     var changeSummaries = utils.map(delta, function(val, key, obj) {
@@ -242,6 +247,7 @@ module.exports.change = function(req, res, next) {
     utils.extend(change.attributes.order_json, delta);
     change.attributes.change_summaries = (change.attributes.change_summaries || []).concat(changeSummaries);
 
+    console.log('saving change', change);
     change.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       res.json(201, change.toJSON());  // TODO: is this best?

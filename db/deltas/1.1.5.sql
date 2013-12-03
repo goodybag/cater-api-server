@@ -1,5 +1,5 @@
 -- Update version
-insert into deltas (version, date) values ('1.1.3', 'now()');
+insert into deltas (version, date) values ('1.1.5', 'now()');
 
 -- #468 Order changes
 

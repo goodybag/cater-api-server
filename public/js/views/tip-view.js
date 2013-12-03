@@ -13,10 +13,6 @@ var TipView = Backbone.View.extend({
     var val = parseInt(e.currentTarget.value);
     if (!_.isNaN(val)) {
       var tip = this.model.get('sub_total') * (val / 100);
-      // this.model.set({
-      //   'tip_percent': val
-      // , 'tip': tip}
-      // );
       this.options.orderView.onPriceChange();
       this.$el.find('.order-tip').val(Handlebars.helpers.dollars(tip));
     }

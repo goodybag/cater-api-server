@@ -27,10 +27,6 @@ var OrderView = FormView.extend({
     guests: _.partial(FormView.intGetter, 'guests'),
 
     tip: _.partial(FormView.dollarsGetter, 'tip'),
-    // tip: function() {
-    //   console.log('wow so doge');
-    //   return 2;
-    // },
 
     datetime: function() {
       var date = this.$el.find("#order-form #order-date").val().trim();
@@ -96,8 +92,8 @@ var OrderView = FormView.extend({
   },
 
   onPriceChange: function(model, value, options) {
-    console.log('check');
-    this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));
+    var updatedOrder = _.extend(this.model.toJSON(), this.getDiff());
+    this.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder}));
   },
 
   setItems: function(items) {

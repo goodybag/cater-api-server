@@ -26,6 +26,7 @@ var ItemModal = Backbone.View.extend({
     this.$el.find('.btn.item-modal-submit').text(submitBtnText);
 
     this.$el.find('.form-group-item-notes textarea').val( this.model.get('notes') );
+    this.$el.find('.form-group-item-recipient input, .form-group-item-recipient textarea').val( this.model.get('recipient') );
 
     this.$el.find('.item-options').html(
       // If we have options, render the partial, otherwise clear the item-options div
@@ -56,11 +57,26 @@ var ItemModal = Backbone.View.extend({
   submit: function(e) {
     e.preventDefault();
     var this_ = this;
+
+    if ( !orderModel.isFulfillableOrder() ) {
+      return orderModal.show({
+        success: function(model, response, options) {
+          orderModal.hide();
+          this_.submit(e);
+        }
+      , error: function(){
+          alert('sorry we were unable to add item to order, please refresh page and try again');
+        }
+      , enforceRequired: false
+      });
+    }
+
     var orderItem = this.model instanceof OrderItem ? this.model : null;
 
     var data = {
       quantity:     parseInt( this.$el.find('.item-quantity').val() ),
       notes:        (this.$el.find('.form-group-item-notes textarea').val()||'').trim() || null,
+      recipient:    (this.$el.find('.form-group-item-recipient input').val()||'') || null
     };
 
     if (data.quantity <= 0) {

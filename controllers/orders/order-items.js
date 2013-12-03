@@ -81,7 +81,7 @@ module.exports.add = function(req, res, next) {
     models.Item.findOne(parseInt(req.body.item_id), function(err, item) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       if (!item) return res.send(404);
-      var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'item_id']), {order_id: req.params.oid});
+      var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id']), {order_id: req.params.oid});
       attrs.options_sets = JSON.stringify(sanitizeOptions(attrs.options_sets, req.body.options_sets));
 
       var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
@@ -124,7 +124,7 @@ module.exports.update = function(req, res, next) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (orderItem == null) return res.send(404);
 
-    var updates = utils.pick(req.body, ['quantity', 'notes'])
+    var updates = utils.pick(req.body, ['quantity', 'notes', 'recipient'])
     if (req.body.options_sets !== undefined)
       updates.options_sets = JSON.stringify(sanitizeOptions(orderItem.attributes.options_sets, req.body.options_sets));
 

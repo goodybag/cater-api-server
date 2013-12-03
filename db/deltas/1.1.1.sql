@@ -10,7 +10,7 @@ DO $$
       created_at    timestamptz not null default now(),
       name          text primary key
     );
-    
+
     create table if not exists "restaurant_meal_styles" (
       id            serial unique not null,
       created_at    timestamptz not null default now(),
@@ -18,7 +18,7 @@ DO $$
       meal_style    text not null references meal_styles(name) on delete cascade,
       primary key   (restaurant_id, meal_style)
     );
-    
+
     INSERT INTO meal_styles (name)
     SELECT existing.*
     FROM

@@ -208,7 +208,8 @@ var fields = [
   'minimum_order',
   'price',
   'delivery_fee',
-  'cuisine'
+  'cuisine',
+  'yelp_business_id'
 ];
 
 module.exports.create = function(req, res) {

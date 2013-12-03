@@ -191,7 +191,8 @@
   padding-left: 37px;
 }
 
-.order-line-item-table th.line-item-notes {
+.order-line-item-table th.line-item-notes,
+.order-line-item-table th.line-item-recipient {
   padding-left: 10px;
 }
 

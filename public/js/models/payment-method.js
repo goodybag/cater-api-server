@@ -27,12 +27,22 @@ var PaymentMethod = Backbone.Model.extend({
       , minLength: 3
       , maxLength: 4
       }
+    , postal_code: {
+        type: 'string'
+      , pattern: /^\d*$/
+      , required: false
+      , length: 5
+      }
+    , country_code: {
+        type: 'string'
+      , required: false
+      , minLength: 1
+      }
     , expiration_year: {
         type: 'number'
       , required: true
       , minimum: new Date().getFullYear()
       }
-
     , expiration_month: {
         type: 'number'
       , required: true
@@ -68,9 +78,17 @@ var PaymentMethod = Backbone.Model.extend({
   updateBalancedAndSave: function(data, callback){
     var this_ = this;
 
+    // if there is a postal code, then a country code must exist
+    if (data.postal_code && !data.country_code)
+      return callback("country_code is required if a postal_code is given");
+
     if ( this.validator.validate( data, this.balancedSchema, this.validatorOptions, function( error ){
       if ( error ) return callback( error );
     })) return;
+
+      // require postal code for amex cards
+    if (PaymentMethod.getCardType(data.card_number) == 'amex' && !data.postal_code)
+      return callback("postal_code is required for amex cards");
 
     balanced.card.create( _.omit(data, 'card_name'), function(res) {
       if (res.status !== 201){
@@ -117,5 +135,23 @@ var PaymentMethod = Backbone.Model.extend({
     card_number: 'Card Number'
   , security_code: 'Security Code'
   , name: 'Card Title'
+  , postal_code: 'Postal Code'
+  },
+
+  getCardType: function(cardNumber) {
+
+    var cardTypeRegexes = {
+      visa: /^4[0-9]{15}$/
+    , master: /^5[1-5][0-9]{14}/
+    , amex: /^3[47][0-9]{13}$/
+    , discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/
+    }
+
+    for (type in cardTypeRegexes) {
+      if (!cardTypeRegexes.hasOwnProperty(type)) return null;
+      if (cardTypeRegexes[type].test(cardNumber)) return type;
+    }
+
+    return null;
   }
 });

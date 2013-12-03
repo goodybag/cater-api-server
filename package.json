@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.0.13",
+  "version": "1.0.15",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -50,7 +50,8 @@
     "stdm": "0.0.3",
     "knox": "~0.8.6",
     "balanced-official": "goodybag/balanced-node",
-    "iron_mq": "0.2.x"
+    "iron_mq": "0.2.x",
+    "yelp": "~0.1.1"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

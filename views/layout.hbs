@@ -50,7 +50,7 @@
     {{{block "css"}}}
   </head>
   <body>
-    <header id="header" class="navbar">
+    <header id="header" class="navbar {{#if session.oldUser}}navbar-impersonate{{/if}}">
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
@@ -60,6 +60,13 @@
             {{#if user.id}}
             <ul class="nav navbar-nav pull-right">
               <li><a href="/restaurants">Home</a></li>
+              {{#if session.oldUser}}
+              <li>
+                <a href="/users/return" class="users-return navbar-btn">
+                  Return to {{session.oldUser.name}}
+                </a>
+              </li>
+              {{/if}}
               <li class="nav-account dropdown">
                 <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
                   {{#if user.name }} {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
@@ -119,6 +126,7 @@
     <script src="/components/backbone/backbone-min.js"></script>
     <script src="/components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/components/spin.js/spin.js"></script>
+    <script src="/components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js"></script>
 
     <!-- pickadate -->
     <script src="/components/lalitkapoor-pickadate/lib/picker.js"></script>

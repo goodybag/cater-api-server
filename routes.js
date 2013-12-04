@@ -219,9 +219,9 @@ module.exports.register = function(app) {
   , controllers.orders.get
   );
 
-  app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.update, controllers.orders.change));
+  app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.update, controllers.orders.changes.orderUpdate));
 
-  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.update, controllers.orders.change));
+  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.update, controllers.orders.changes.orderUpdate));
 
   app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
@@ -300,6 +300,34 @@ module.exports.register = function(app) {
 
   app.all('/orders/:oid/add-items', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET');
+    res.send(405);
+  });
+
+  /**
+   * Order Changes Resource.  All the proposed changes for a specific order.
+   */
+
+  app.get('/orders/:oid/changes', m.restrict(['client', 'admin']), controllers.orders.changes.list);
+
+  app.all('/orders/:oid/changes', m.restrict(['client', 'admin']), function(req, res, next) {
+    res.set('Allow', 'GET');
+    res.send(405);
+  });
+
+  /**
+   * Order Change Resource.  A single proposed change to an order.
+   */
+
+  app.get('/orders/:oid/changes/:cid', m.restrict(['client', 'admin']), controllers.orders.changes.get);
+
+  app.put('/orders/:oid/changes/:cid', m.restrict(['client', 'admin']), controllers.orders.changes.update);
+
+  app.patch('/orders/:oid/changes/:cid', m.restrict(['client', 'admin']), controllers.orders.changes.update);
+
+  app.delete('/orders/:oid/changes/:cid', m.restrict(['client', 'admin']), controllers.orders.changes.cancel);
+
+  app.all('/orders/:oid/changes/:cid', m.restrict(['client', 'admin']), function(req, res, next) {
+    res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
 

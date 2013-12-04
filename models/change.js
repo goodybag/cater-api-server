@@ -1,10 +1,54 @@
 var Model = require('./model');
 var Order = require('./order');
+var OrderItem = require('./order-item');
 
-module.exports = Model.extend({}, {
+module.exports = Model.extend({
+  changeStatus: function(status, isAdmin, callback) {
+    if (callback === undefined) {
+      callback = isAdmin;
+      isAdmin = false;
+    }
+    if (callback == null) callback = utils.identity;
+    if (this.attributes.status === status) return callback(null, null);
+
+    if (!utils.has(this.constructor.statusFSM, status))
+      return res.json(400, 'Invalid Status: ' + status + '.  Valid statuses are: ' + utils.keys(this.constructor.statusFSM));
+
+    if (!isAdmin && !utils.contains(this.constructor.statusFSM[this.attributes.status], status))
+      return res.json(403, ['Cannot transition from status ',  this.attributes.status, ' to status ', status, '.  Available tranistions from ', this.attributes.status, ' are: ', this.constructor.statusFSM[this.attributes.status]].join(''));
+
+    // TODO: wrap these two in a transaction
+    if (status === 'accepted') this.apply(isAdmin, function(err) {
+      if (err) return callback(err);
+      this.save({status: status}, utils.compose(callback, utils.identity));
+    });
+  },
+
+  apply: function(isAdmin, callback) {
+    var json = JSON.parse(this.attributes.order_json);
+    var added = utils.where(json.order_items, {id: undefined});
+    Order.findOne(this.attributes.order_id, function(err, order) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      if (!order) return res.json(404);
+      order.getOrderItems();
+      var old = order.toJSON();
+      var removedIds = utils.difference(utils.pluck(old.order_items, 'id'), utils.pluck(json.order_items, 'id'));
+
+      // TODO: async.parallel
+      order.save(JSON.parse(this.attributes.order_json), function(err, rows, result) {});
+      utils.each(added, function(orderItem) {
+        (new OrderItem(orderItem)).save(function(err, rows, result) {});
+      });
+      utils.each(removedIds, function(id) {
+        (new OrderItem({id: id})).destroy(function(err) {});
+      });
+      // TODO: update each order item
+    });
+  }
+}, {
   table: 'order_changes',
   getChange: function(orderId, isAdmin, callback) {
-    if (callback == null) {
+    if (callback === undefined) {
       callback = isAdmin;
       isAdmin = false;
     }
@@ -23,5 +67,12 @@ module.exports = Model.extend({}, {
         return callback(null, change);
       });
     });
+  },
+
+  statusFSM: {
+    canceled: [],
+    submitted: ['canceled', 'denied', 'accepted'],
+    denied: [],
+    accepted: []
   }
 });

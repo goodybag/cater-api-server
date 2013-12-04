@@ -229,33 +229,6 @@ module.exports.update = function(order, req, res, next) {
   });
 };
 
-// NOTE: We will need to do much the same thing for order item create / update / delete.
-// Once that is done, commonalities should be abstracted out, probably to the model.
-module.exports.change = function(order, req, res, next) {
-  console.log('change');
-  // like update, but create a pending change instead of applying it immedietly
-  var isAdmin = req.session.user && utils.contains(req.session.user.groups, 'admin');
-  models.Change.getChange(req.params.oid, isAdmin, function(err, change) {
-    if (err)
-      return utils.contains([404, 403], err) ? res.json(err, {}) : res.error(errors.internal.DB_FAILURE, err);
-
-    var delta = utils.pick(req.body, updateableFields);
-    var changeSummaries = utils.map(delta, function(val, key, obj) {
-      return ['Change', key, 'from', order.attributes[key], 'to', val].join(' ');
-    });
-
-    var json = JSON.parse(change.attributes.order_json);
-    utils.extend(json, delta);
-    change.attributes.change_summaries = (change.attributes.change_summaries || []).concat(changeSummaries);
-    change.attributes.order_json = JSON.stringify(json);
-
-    change.save(function(err, rows, result) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-      res.json(201, change.toJSON());  // TODO: is this best?
-    });
-  });
-};
-
 module.exports.listStatus = function(req, res) {
   models.OrderStatus.find(
     { where: {order_id: req.params.oid}, order: {created_at: 'desc'} },
@@ -411,21 +384,4 @@ module.exports.receipt = function( req, res ){
   });
 };
 
-module.exports.applyChange = function(req, res, next) {
-  models.Change.findOne(req.params.cid, function(err, change) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (!change) return res.json(404);
-
-    var json = change.attributes.order_json;
-    var added = _.where(json.order_items, {id: undefined});
-    models.Order.findOne(change.attributes.order_id, function(err, order) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-      if (!order) return res.json(404);
-      order.getOrderItems();
-      var old = order.toJSON();
-      var removedIds = _.difference(_.pluck(old.order_items, 'id'), _.pluck(json.order_items, 'id'));
-
-      //TODO: create added, delete removed, update everything else
-    });
-  });
-};
+module.exports.changes = require('./order-changes');

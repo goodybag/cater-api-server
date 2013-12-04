@@ -130,7 +130,6 @@ var ReceiptView = OrderView.extend({
   save: function() {
     var self = this;
     this.onSave(function(err, data) {
-      console.log(err, data);
       self.toggleEdit();
     });
   }

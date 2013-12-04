@@ -16,7 +16,10 @@ var app = require('./app')
 
 require('./lib/events');
 
-http.createServer(app).listen(app.get('port'), function(){
+var server = http.createServer(app);
+
+server.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
+module.exports = server;

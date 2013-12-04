@@ -59,6 +59,8 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+  app.get('/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
+
   /**
    * Restaurant items resource.  The collection of all items belonging to a restaurant.
    */

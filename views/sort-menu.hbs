@@ -1,0 +1,96 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/menu.css">
+{{/extend}}
+
+<div class="page page-menu container">
+<div class="row">
+  <div class="col-md-8">
+    <div class="tab-content">
+      <div class="tab-pane active" id="menu">
+        <div class="row">
+          <div class="col-md-12">
+            <input type="button" class="button btn-default pull-right hide-all-items" value="Hide All Items" />
+            <input type="button" class="button btn-default pull-right show-all-items" value="Show All Items" />
+          </div>
+        </div>
+        <div class="menu">
+          {{#each restaurant.categories}}
+            <div class="panel menu-category" id="category-{{id}}">
+              {{#include parent=..}}
+                {{> sort_category}}
+              {{/include}}
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{{#extend "views"}}
+<script>
+  var partials = {
+    sort_category: 'sort-category.hbs'
+  , sort_item: 'sort-item.hbs'
+  , tags: 'tags.hbs'
+  };
+
+  var templates = {};
+
+  for (var name in partials) {
+    $.ajax({
+      type: 'GET',
+      url: '/partials/' + partials[name],
+      success: function(data, textStatus, jqXHR) {
+        templates[name] = Handlebars.compile(data);
+        Handlebars.registerPartial(name, templates[name]);
+      },
+      dataType: 'html',
+      async: false
+    });
+  }
+</script>
+{{/extend}}
+
+{{#extend "scripts"}}
+
+<script src="/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+<script src="/components/backbone.trackit/backbone.trackit.js"></script>
+
+<script src="/js/models/item.js"></script>
+<script src="/js/models/category.js"></script>
+<script src="/js/models/restaurant.js"></script>
+
+<script src="/js/views/sort-menu-view.js"></script>
+<script src="/js/views/sort-category-view.js"></script>
+<script src="/js/views/sort-item-view.js"></script>
+
+<script src="/js/collections/items.js"></script>
+<script src="/js/collections/categories.js"></script>
+
+<script type="text/javascript">
+
+var sortMenuView = new SortMenuView({el: "#menu"});
+
+var categories = {{{json restaurant.categories}}};
+
+_(categories).each(function(category) {
+  // create model and view for category
+  var categoryModel = new Category(category);
+  categoryModel.startTracking();
+  var sortCategoryView = new SortCategoryView({el: "#category-"+category.id, model: categoryModel, menu: sortMenuView, template: templates.sort_category});
+  sortMenuView.categories.push(sortCategoryView);
+
+  _(category.items).each(function(item) {
+    // create model and view for item
+    var itemModel = new Item(item);
+    itemModel.startTracking();
+    var sortItemView = new SortItemView({el: "#item-"+item.id, model: itemModel, category: sortCategoryView, template: templates.sort_item});
+    sortCategoryView.items.push(sortItemView);
+  });
+});
+
+</script>
+
+{{/extend}}

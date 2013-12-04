@@ -1,0 +1,28 @@
+<div class="panel-heading menu-cateogry-heading">
+  <h3 class="panel-title menu-cateogry-title">
+    <span class="category-order">{{order}}</span> - <span>{{name}}</span>
+  </h3>
+  <span class="pull-right">
+    <!-- Single button -->
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        Move Selected to Category <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        {{#each parent.restaurant.categories}}
+          <li><a href="#" class="dropdown-category" data-category-id="{{id}}">{{name}}</a></li>
+        {{/each}}
+      </ul>
+    </div>
+    <input type="button" class="button btn-default toggle-items" value="Toggle Items" />
+    <input type="button" class="button btn-primary hide save-items" value="Save Items" />
+    </span>
+  <p class="category-description">{{description}}</p>
+</div>
+<div class="list-group list-group-flush category">
+  {{#each items}}
+    <a class="list-group-item item sortable" id="item-{{id}}">
+      {{>sort_item this}}
+    </a>
+  {{/each}}
+</div>

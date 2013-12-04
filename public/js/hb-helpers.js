@@ -383,6 +383,17 @@ var helpers = {
     }
 
     return out.join('\n');
+  },
+
+  // http://stackoverflow.com/questions/9411538/handlebars-is-it-possible-to-access-parent-context-in-a-partial
+  include: function(options) {
+    var context = {},
+    mergeContext = function(obj) {
+      for(var k in obj)context[k]=obj[k];
+    };
+    mergeContext(this);
+    mergeContext(options.hash);
+    return options.fn(context);
   }
 }
 

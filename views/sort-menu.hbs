@@ -75,14 +75,14 @@ var sortMenuView = new SortMenuView({el: "#menu"});
 
 var categories = {{{json restaurant.categories}}};
 
-_.chain(categories).each(function(category) {
+_(categories).each(function(category) {
   // create model and view for category
   var categoryModel = new Category(category);
   categoryModel.startTracking();
   var sortCategoryView = new SortCategoryView({el: "#category-"+category.id, model: categoryModel, menu: sortMenuView, template: templates.sort_category});
   sortMenuView.categories.push(sortCategoryView);
 
-  _.chain(category.items).each(function(item) {
+  _(category.items).each(function(item) {
     // create model and view for item
     var itemModel = new Item(item);
     itemModel.startTracking();

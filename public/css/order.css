@@ -342,9 +342,13 @@ p.adjustment-description {
   display: inline-block;
 }
 
+.adjustment-input dt {
+  margin-left: 20px;
+}
+
 .adjustment-input dd {
   max-width: 90px;
-  margin-left: 20px;
+  margin-left: 5px;
 }
 
 /**

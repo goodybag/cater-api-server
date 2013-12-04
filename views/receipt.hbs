@@ -198,37 +198,42 @@
       {{/if}}
       {{/if}}
 
+
+      {{#if order.editable}}
+      <div class="row">
+        <div class="tip-area clearfix hide col-lg-12">
+          <dl class="adjustment-input pull-right">
+            <dt>Tip Percent</dt>
+            <dd>
+              <select id="order-tip" class="form-control tip-percent">
+                {{! eq is ugly as hell but it works }}
+                <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
+                <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
+                <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
+                <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
+                <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
+                <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
+                <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
+                <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
+              </select>
+            </dd>
+            <dt>$</dt>
+            <dd>
+              <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
+            </dd>
+          </dl>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if order.sub_total}}
+      <div class="totals">
+        {{> totals}}
+      </div>
+      {{/if}}
     </div>
 
-    <ul class="list-group">
-      <li class="tip-area list-group-item clearfix">
-        <div class="form-group pull-right">
-          <label class="control-label" for="order-tip">&nbsp;</label>
-          <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
-        </div>
-        <div class="form-group pull-right">
-            <label class="control-label" for="order-tip">Add tip</label>
-            <select id="order-tip" class="form-control tip-percent">
-              {{! eq is ugly as hell but it works }}
-              <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
-              <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
-              <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
-              <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
-              <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
-              <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
-              <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
-              <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
-            </select>
-          </div>
-      </li>
-      {{#if order.sub_total}}
-      <li class="list-group-item clearfix">
-        <div class="totals">
-          {{> totals}}
-        </div>
-      </li>
-      {{/if}}
-    </ul>
+
 
     {{#unless restaurantReview}}
     <div class="panel-actions">

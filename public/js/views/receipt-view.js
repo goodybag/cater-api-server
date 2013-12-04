@@ -123,6 +123,7 @@ var ReceiptView = OrderView.extend({
         }
       };
       this.$el.find('.delivery-info').html(Handlebars.partials.order_info(context));
+      this.$el.find('.tip-area').toggleClass('hide');
     }
   },
 

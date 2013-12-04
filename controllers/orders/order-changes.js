@@ -4,11 +4,20 @@ var utils  = require('../../utils');
 
 
 module.exports.list = function(req, res, next) {
-  res.json(501, 'Not Implemented');
+  model.Change.find({order_id: req.params.oid}, function(err, changes) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    return res.json(200, utils.invoke(changes, 'toJSON'));
+    // TODO: html
+  });
 };
 
 module.exports.get = function(req, res, next) {
-  res.json(501, 'Not Implemented');
+  model.Change.findOne(req.params.cid, function(err, change) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (!change) return res.render('404');
+    return res.json(200, change.toJSON());
+    // TODO: html
+  });
 };
 
 // NOTE: We will need to do much the same thing for order item create / update / delete.

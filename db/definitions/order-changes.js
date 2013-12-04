@@ -8,9 +8,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
   };
 }
 
-var
-  types = require('../data-types')
-;
+var types = require('../data-types');
 
 define(function(require) {
   var definition = {};
@@ -37,7 +35,7 @@ define(function(require) {
     , default: 'submitted'
     }
   , change_summaries: {
-      type: array(types.text)
+      type: types.array(types.text)
     }
   , order_json: {
       type: types.json

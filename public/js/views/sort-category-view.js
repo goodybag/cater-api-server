@@ -14,7 +14,7 @@ var SortCategoryView = Backbone.View.extend({
     this.template = options.template;
     this.menu = options.menu;
 
-    this.listenTo(this.model, 'change', this.render);
+    this.listenTo(this.model, 'change:order', this.renderOrder);
 
     this.$category = this.$el.find('.category');
 
@@ -56,6 +56,10 @@ var SortCategoryView = Backbone.View.extend({
     }
   }
 
+, renderOrder: function() {
+    this.$el.find('.category-order').html(this.model.get('order'));
+  }
+
 , refreshSortable: function () {
     this.$category.sortable('refresh');
   }
@@ -84,6 +88,7 @@ var SortCategoryView = Backbone.View.extend({
   }
 
 , moveSelectedItemsToCategory: function(event) {
+    event.preventDefault();
     var categorySelected = this.menu.getCategoryById($(event.target).attr('data-category-id'));
     var selectedItems = _.filter(this.items, function (item) {
       return item.isSelected();
@@ -132,7 +137,7 @@ var SortCategoryView = Backbone.View.extend({
     if (!this.model.unsavedAttributes()) return;
 
     this.model.save(this.model.unsavedAttributes(), {
-      // patch: true // waiting for pull request to be accepted for patch support to work correctly
+      patch: true
     });
   }
 

@@ -1,6 +1,6 @@
 <div class="panel-heading menu-cateogry-heading">
   <h3 class="panel-title menu-cateogry-title">
-    <span>{{order}} - {{name}}</span>
+    <span class="category-order">{{order}}</span> - <span>{{name}}</span>
   </h3>
   <span class="pull-right">
     <!-- Single button -->
@@ -10,7 +10,7 @@
       </button>
       <ul class="dropdown-menu" role="menu">
         {{#each parent.restaurant.categories}}
-          <li><a href="#" class="dropdown-category" data-category-id="{{id}}">{{order}} - {{name}}</a></li>
+          <li><a href="#" class="dropdown-category" data-category-id="{{id}}">{{name}}</a></li>
         {{/each}}
       </ul>
     </div>

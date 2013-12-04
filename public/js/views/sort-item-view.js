@@ -6,7 +6,7 @@ var SortItemView = Backbone.View.extend({
 , initialize: function(options) {
     this.template = options.template;
     this.category = options.category; // category view
-    this.listenTo(this.model, 'change', this.render);
+    this.listenTo(this.model, 'change:order', this.render);
   }
 
 , render: function() {

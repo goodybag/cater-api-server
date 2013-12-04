@@ -26,7 +26,6 @@ module.exports = Model.extend({
 
   apply: function(isAdmin, callback) {
     var json = JSON.parse(this.attributes.order_json);
-    var added = utils.where(json.order_items, {id: undefined});
     Order.findOne(this.attributes.order_id, function(err, order) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       if (!order) return res.json(404);
@@ -36,13 +35,13 @@ module.exports = Model.extend({
 
       // TODO: async.parallel
       order.save(JSON.parse(this.attributes.order_json), function(err, rows, result) {});
-      utils.each(added, function(orderItem) {
+      utils.each(json.order_items, function(orderItem) {
+        // add new items and update exisiting ones
         (new OrderItem(orderItem)).save(function(err, rows, result) {});
       });
       utils.each(removedIds, function(id) {
         (new OrderItem({id: id})).destroy(function(err) {});
       });
-      // TODO: update each order item
     });
   }
 }, {

@@ -29,6 +29,7 @@
     "font-awesome": "3.2.x",
     "jquery-ui": "~1.10.3",
     "spin.js": "~1.3.2",
-    "jquery.inputmask": "~2.4.0"
+    "jquery.inputmask": "~2.4.0",
+    "backbone.trackit": "latest"
   }
 }

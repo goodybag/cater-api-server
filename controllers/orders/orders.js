@@ -244,10 +244,11 @@ module.exports.change = function(order, req, res, next) {
       return ['Change', key, 'from', order.attributes[key], 'to', val].join(' ');
     });
 
-    utils.extend(change.attributes.order_json, delta);
+    var json = JSON.parse(change.attributes.order_json);
+    utils.extend(json, delta);
     change.attributes.change_summaries = (change.attributes.change_summaries || []).concat(changeSummaries);
+    change.attributes.order_json = JSON.stringify(json);
 
-    console.log('saving change', change);
     change.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       res.json(201, change.toJSON());  // TODO: is this best?

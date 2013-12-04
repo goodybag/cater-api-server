@@ -19,7 +19,7 @@ module.exports = Model.extend({}, {
 
       self.findOne({order_id: orderId}, function(err, change) {
         if (err) return callback(err);
-        if (!change) change = new self({order_id: orderId, order_json: order.toJSON()});
+        if (!change) change = new self({order_id: orderId, order_json: JSON.stringify(order.toJSON())});
         return callback(null, change);
       });
     });

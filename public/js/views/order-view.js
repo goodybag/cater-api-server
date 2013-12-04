@@ -92,7 +92,8 @@ var OrderView = FormView.extend({
   },
 
   onPriceChange: function(model, value, options) {
-    this.$el.find('.totals').html(Handlebars.partials.totals({order: this.model.toJSON()}));
+    var updatedOrder = _.extend(this.model.toJSON(), this.getDiff());
+    this.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder}));
   },
 
   setItems: function(items) {

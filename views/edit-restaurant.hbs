@@ -8,13 +8,19 @@
     {{> edit_restaurant_form}}
   </form>
 
-  <div class="categories">
-    {{#each restaurant.categories}}
-    <div id="category-{{this.id}}" class="panel">
-      {{> edit_category}}
+  <fieldset>
+    <legend>Menu</legend>
+    <div>
+      <a href="/restaurants/{{restaurant.id}}/sort">click here to sort this menu</a>
     </div>
-    {{/each}}
-  </div>
+    <div class="categories">
+      {{#each restaurant.categories}}
+      <div id="category-{{this.id}}" class="panel">
+        {{> edit_category}}
+      </div>
+      {{/each}}
+    </div>
+  </fieldset>
 
   <div class="row">
     <div class="col-lg-1 col-lg-offset-11">

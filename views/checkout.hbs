@@ -94,7 +94,7 @@
 
             <div class="tip-area form-inline clearfix">
               <div class="form-group col-xs-3">
-                <label class="control-label" for="order-tip">Add tip</label>
+                <label class="control-label" for="order-tip">Tip Percent</label>
                 <select id="order-tip" class="form-control tip-percent">
                   {{! eq is ugly as hell but it works }}
                   <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
@@ -108,7 +108,7 @@
                 </select>
               </div>
               <div class="form-group col-xs-3">
-                <label class="control-label" for="order-tip">&nbsp;</label>
+                <label class="control-label" for="order-tip">Tip Amount</label>
                 <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
               </div>
             </div>

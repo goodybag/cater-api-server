@@ -4,20 +4,6 @@ ItemView = Backbone.View.extend({
   },
 
   showModal: function() {
-    if ( this.options.orderModel.isFulfillableOrder() ) {
-      this.options.itemModalView.provideModel(this.model).show();
-    } else {
-      var self = this;
-      this.options.orderModal.show({
-        success: function(model, response, options) {
-          self.options.orderModal.hide();
-          self.showModal();
-        }
-      , error: function(){
-          alert('sorry we were unable to add item to order, please refresh page and try again');
-        }
-      , enforceRequired: false
-      });
-    }
+    this.options.itemModalView.provideModel(this.model).show();
   }
 });

@@ -20,14 +20,22 @@ module.exports = Model.extend({
       return res.json(403, ['Cannot transition from status ',  this.attributes.status, ' to status ', status, '.  Available tranistions from ', this.attributes.status, ' are: ', this.constructor.statusFSM[this.attributes.status]].join(''));
 
     // TODO: wrap these two in a transaction
-    if (status === 'accepted') this.apply(isAdmin, function(err) {
-      if (err) return callback(err);
+    var tasks = [];
+    var self = this;
+    if (status === 'accepted') {
+      tasks.push(function(cb) {
+        self.applyChange(isAdmin, cb);
+      });
+    }
+    tasks.push(function(cb) {
+      this.attributes.status = status;
+      this.save(utils.compose(cb, utils.identity));
     });
-    this.attributes.status = status;
-    this.save(utils.compose(callback, utils.identity));
+
+    utils.async.series(tasks, callback);
   },
 
-  apply: function(isAdmin, callback) {
+  applyChange: function(isAdmin, callback) {
     var self = this;
     var json = self.attributes.order_json;
     Order.findOne(self.attributes.order_id, function(err, order) {

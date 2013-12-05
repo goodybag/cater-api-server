@@ -6,6 +6,20 @@
   height: 300px;
 }
 
+.restaurant-map-container {
+  float: right;
+  font-size: 13px;
+  width: 100%;
+}
+
+.restaurant-map-container .list-group-item {
+  padding: 10px 0;
+}
+
+.restaurant-map-container .list-group-item:first-child {
+  padding: 0;
+}
+
 .restaurant-name {
   display: inline-block;
   width: 100%;
@@ -84,7 +98,7 @@
 /**
  * Delivery times has a font-size: 0 element in so it's making the
  * line height on all of the dt,dd's larger than it should be
- */
+ 
 .delivery-times.dl-horizontal > dt,
 .delivery-times.dl-horizontal > dd {
   line-height: 15px;

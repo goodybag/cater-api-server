@@ -1,1 +1,42 @@
-<div class="restaurant-map"></div>
+{{! Displays map and restaurant contact info }}
+{{#with restaurant}}
+<div class="panel restaurant-map-container">
+  <ul class="list-group">
+
+    {{! Restaurant Map }}
+    <li class="list-group-item">
+      <div class="restaurant-map"></div>
+    </li>
+
+    {{! Restaurant Contact Info, Address }}
+    <li class="list-group-item no-padding">
+
+      {{! Left column }}
+      <div class="col-md-7">
+        <p>
+          <strong>Address:</strong><br>
+          2525 W Anderson Ln #130 <br>
+          Austin, TX 78757
+        </p>
+        <p>
+          <strong>Website:</strong><br>
+          <a href="#">www.mcalistersdeli.com</a>
+        </p>
+      </div>
+
+      {{! Right column }}
+      <div class="col-md-4">
+
+        {{#if voice_phones}}
+        <p>
+          <strong>Phone:</strong><br>
+          {{#each voice_phones}}
+          {{phoneNumber this}}<br>
+          {{/each}}
+        </p>
+        {{/if}}
+      </div>
+    </li>
+  </ul>
+</div>
+{{/with}}

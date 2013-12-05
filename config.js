@@ -37,6 +37,12 @@ var config = {
       poolSize: 5
     }
 
+  , google: {
+      maps: {
+        key: 'AIzaSyCFhNxyLqve1AQ7QoLGXnGpUcZRfmNLzdw'
+      }
+    }
+
   , yelp: {
       businessBaseUrl: 'http://www.yelp.com/biz'
     , token: 'p2aFEzA20-W4kFttJqiATW3fyq7AUyW6'
@@ -139,6 +145,12 @@ var config = {
   , intercom: {
       apiSecret: 'A4NvND_qEf-ksKYhVw-GduUS2ruW2NlC39murXx2'
     , appId: 'qsetwlny'
+    }
+
+  , google: {
+      maps: {
+        key: 'AIzaSyDYlg1BLXzjKMmBlnznScUhCQ9pd-LfDHo' // any referer
+      }
     }
 
   , balanced: balancedConfig

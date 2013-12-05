@@ -40,6 +40,14 @@ var OrderSummaryView = Backbone.View.extend({
       , el: $el[0]
       });
     });
+
+    // force map rerender on info tab click
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      this_.options.restaurantMapView.refresh();
+    });
+
+    this.options.restaurantMapView.render();
+
     return this;
   },
 

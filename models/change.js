@@ -22,8 +22,9 @@ module.exports = Model.extend({
     // TODO: wrap these two in a transaction
     if (status === 'accepted') this.apply(isAdmin, function(err) {
       if (err) return callback(err);
-      this.save({status: status}, utils.compose(callback, utils.identity));
     });
+    this.attributes.status = status;
+    this.save(utils.compose(callback, utils.identity));
   },
 
   apply: function(isAdmin, callback) {

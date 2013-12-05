@@ -376,6 +376,8 @@ module.exports = Model.extend({
 }, {
   table: 'orders',
 
+  updateableFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id'],
+
   find: function (query, callback) {
     // TODO: alter query to add latest status
 

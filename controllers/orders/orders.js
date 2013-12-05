@@ -217,12 +217,9 @@ module.exports.create = function(req, res) {
   });
 };
 
-// TODO: get this from not here
-var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id'];
-
 module.exports.update = function(order, req, res, next) {
   if (!order) return res.json(404);
-  utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+  utils.extend(order.attributes, utils.pick(req.body, models.Order.updateableFields));
   order.save(function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(order.toJSON({plain:true}));

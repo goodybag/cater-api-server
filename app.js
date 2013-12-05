@@ -15,6 +15,7 @@ var
 , logger = require('./logger')
 , routes = require('./routes')
 , helpers = require('./helpers')
+, errors = require('./errors')
 ;
 
 var middleware = {

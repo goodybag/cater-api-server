@@ -12,28 +12,36 @@
     <li class="list-group-item no-padding">
 
       {{! Left column }}
-      <div class="col-md-7">
-        <p>
-          <strong>Address:</strong><br>
-          2525 W Anderson Ln #130 <br>
-          Austin, TX 78757
-        </p>
-        <p>
-          <strong>Website:</strong><br>
-          <a href="#">www.mcalistersdeli.com</a>
-        </p>
+      <div class="col-md-6">
+        <dl>
+          <dt>Address:</dt>
+          <dd>
+            <div>{{street}}</div>
+            <div>{{street2}}</div>
+            <div>{{city}}, {{state}} {{zip}}</div>
+          </dd>
+        </dl>
+        {{!-- TODO save restaurant website
+        <dl>
+          <dt>Website:</dt>
+          <dd>
+            <a href="{{website}}">{{website}}</a>
+          </dd>
+        </dl>
+        --}}
       </div>
 
       {{! Right column }}
-      <div class="col-md-4">
-
+      <div class="col-md-6">
         {{#if voice_phones}}
-        <p>
-          <strong>Phone:</strong><br>
-          {{#each voice_phones}}
-          {{phoneNumber this}}<br>
-          {{/each}}
-        </p>
+          <dl>
+            <dt>Phone:</dt>
+            <dd>
+              {{#each voice_phones}}
+                <div>{{phoneNumber this}}</div>
+              {{/each}}
+            </dd>
+          </dl>
         {{/if}}
       </div>
     </li>

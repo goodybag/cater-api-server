@@ -86,50 +86,57 @@
 
       <div class="tab-pane panel" id="info">
         <div class="panel-body">
-          {{> restaurant_location }}
-          <div class="restaurant-info-item restaurant-info-item-categories">
-            <div class="info-item-title">
-              <ul class="list-restaurant-inline">
-              {{#each restaurant.cuisine}}
-                <li class="cuisine-list-item">{{this}}</li>
-              {{/each}}
-              </ul>
-              <span class="dollar-meter">{{{dollarMeter restaurant.price}}}</span>
+          {{! Left info column }}
+          <div  class="col-md-6 no-padding">
+            <div class="restaurant-info-item restaurant-info-item-categories">
+              <div class="info-item-title">
+                <ul class="list-restaurant-inline">
+                {{#each restaurant.cuisine}}
+                  <li class="cuisine-list-item">{{this}}</li>
+                {{/each}}
+                </ul>
+                <span class="dollar-meter">{{{dollarMeter restaurant.price}}}</span>
+              </div>
+            </div>
+
+            {{#if restaurant.max_guests}}
+            <div class="restaurant-info-item restaurant-info-item-categories">
+              <h4 class="info-item-title">Max. Guests:</h4>
+              <div class="info-item-value">{{restaurant.max_guests}}</div>
+            </div>
+            {{/if}}
+
+            {{#if restaurant.delivery_times}}
+            <div class="restaurant-info-item restaurant-info-item-delivery-times">
+              <h4 class="info-item-title">Delivery Times:</h4>
+              <div class="info-item-value">
+                {{> delivery_times restaurant}}
+              </div>
+            </div>
+            {{/if}}
+
+            <div class="restaurant-info-item restaurant-info-item-lead-times">
+              <h4 class="info-item-title">Lead Times:</h4>
+              <div class="info-item-value">
+                {{> lead_times restaurant}}
+              </div>
+            </div>
+
+            <div class="restaurant-info-item restaurant-info-item-zips">
+              <h4 class="info-item-title">Zip Codes within delivery range:</h4>
+              <div class="info-item-value">
+                <ul class="list-delivery-zips">
+                {{#each restaurant.delivery_zips}}
+                  <li class="delivery-zip">{{this}}</li>
+                {{/each}}
+                </ul>
+              </div>
             </div>
           </div>
 
-          {{#if restaurant.max_guests}}
-          <div class="restaurant-info-item restaurant-info-item-categories">
-            <h4 class="info-item-title">Max. Guests:</h4>
-            <div class="info-item-value">{{restaurant.max_guests}}</div>
-          </div>
-          {{/if}}
-
-          {{#if restaurant.delivery_times}}
-          <div class="restaurant-info-item restaurant-info-item-delivery-times">
-            <h4 class="info-item-title">Delivery Times:</h4>
-            <div class="info-item-value">
-              {{> delivery_times restaurant}}
-            </div>
-          </div>
-          {{/if}}
-
-          <div class="restaurant-info-item restaurant-info-item-lead-times">
-            <h4 class="info-item-title">Lead Times:</h4>
-            <div class="info-item-value">
-              {{> lead_times restaurant}}
-            </div>
-          </div>
-
-          <div class="restaurant-info-item restaurant-info-item-zips">
-            <h4 class="info-item-title">Zip Codes within delivery range:</h4>
-            <div class="info-item-value">
-              <ul class="list-delivery-zips">
-              {{#each restaurant.delivery_zips}}
-                <li class="delivery-zip">{{this}}</li>
-              {{/each}}
-              </ul>
-            </div>
+          {{! Right info column}}
+          <div class="col-md-6 no-padding">
+            {{> restaurant_location }}
           </div>
         </div>
       </div>

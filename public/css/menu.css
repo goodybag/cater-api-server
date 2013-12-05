@@ -3,10 +3,7 @@
 }
 
 .restaurant-map {
-  position: absolute;
-  right:  35px;
   height: 300px;
-  width: 300px;
 }
 
 .restaurant-name {

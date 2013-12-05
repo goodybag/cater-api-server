@@ -2,6 +2,10 @@
   top: 30px;
 }
 
+.restaurant-map {
+  height: 180px;
+}
+
 .restaurant-name {
   display: inline-block;
   width: 100%;

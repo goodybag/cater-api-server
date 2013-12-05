@@ -1,5 +1,9 @@
 {{#extend "css"}}
 <link rel="stylesheet" href="/css/menu.css">
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+ <!--[if lte IE 8]>
+     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+ <![endif]-->
 {{/extend}}
 
 <div class="page page-menu container">
@@ -82,6 +86,9 @@
 
       <div class="tab-pane panel" id="info">
         <div class="panel-body">
+          <div class="pull-right">
+            <div class="restaurant-map">hihihi</div>
+          </div>
           <div class="restaurant-info-item restaurant-info-item-categories">
             <div class="info-item-title">
               <ul class="list-restaurant-inline">
@@ -255,7 +262,7 @@
     });
   }
 </script>
-
+<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 <script src="/js/models/address.js"></script>
 <script src="/js/models/item.js"></script>
 <script src="/js/models/category.js"></script>
@@ -272,9 +279,11 @@
 <script type="text/javascript" src="/js/views/order-item-summary-view.js"></script>
 <script type="text/javascript" src="/js/views/order-summary-view.js"></script>
 <script type="text/javascript" src="/js/views/order-params-view.js"></script>
+<script type="text/javascript" src="/js/views/restaurant-map-view.js"></script>
 <script type="text/javascript" src="/js/views/item-view.js"></script>
 <script type="text/javascript" src="/js/views/item-modal.js"></script>
 <script type="text/javascript" src="/js/views/order-modal.js"></script>
+
 <script>
   var orderModel = new Order( {{{json order}}} );
 
@@ -289,7 +298,18 @@
 
   var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems});
 
-  var orderView = new OrderSummaryView({el: '.order-summary', model: orderModel, itemModalView: itemModalView, orderParams: orderParams});
+  var restaurantMapView = new RestaurantMapView({
+    el: '.restaurant-map'
+  , model: new Restaurant( {{{json restaurant}}} )
+  });
+
+  var orderView = new OrderSummaryView({
+    el: '.order-summary'
+  , model: orderModel
+  , itemModalView: itemModalView
+  , orderParams: orderParams
+  , restaurantMapView: restaurantMapView
+  });
 
   {{#each order.orderItems}}
   new OrderItemSummaryView({el: '#order-item-{{id}}', model: orderModel.orderItems.get({{id}}), itemModalView: itemModalView});

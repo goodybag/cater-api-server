@@ -282,7 +282,7 @@ utils.sendError = function(res, error, details){
   if (typeof error === 'string') {
     error = errors[error];
   }
-  error.details = details;
+  error.details = utils.pick(details, ['message', 'stack']);
   res.status(error.httpCode);
   utils.sendJSON(res, { error: error });
 };

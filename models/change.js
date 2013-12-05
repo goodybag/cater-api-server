@@ -1,6 +1,8 @@
 var Model = require('./model');
 var Order = require('./order');
 var OrderItem = require('./order-item');
+var utils = require('../utils');
+var errors = require('../errors');
 
 module.exports = Model.extend({
   changeStatus: function(status, isAdmin, callback) {
@@ -25,8 +27,9 @@ module.exports = Model.extend({
   },
 
   apply: function(isAdmin, callback) {
-    var json = JSON.parse(this.attributes.order_json);
-    Order.findOne(this.attributes.order_id, function(err, order) {
+    var self = this;
+    var json = self.attributes.order_json;
+    Order.findOne(self.attributes.order_id, function(err, order) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       if (!order) return res.json(404);
       order.getOrderItems();
@@ -34,7 +37,9 @@ module.exports = Model.extend({
       var removedIds = utils.difference(utils.pluck(old.order_items, 'id'), utils.pluck(json.order_items, 'id'));
 
       // TODO: async.parallel
-      order.save(JSON.parse(this.attributes.order_json), function(err, rows, result) {});
+      utils.extend(order.attributes, self.attributes.order_json);
+      order.save(function(err, rows, result) {
+      });
       utils.each(json.order_items, function(orderItem) {
         // add new items and update exisiting ones
         (new OrderItem(orderItem)).save(function(err, rows, result) {});
@@ -62,7 +67,9 @@ module.exports = Model.extend({
 
       self.findOne({order_id: orderId}, function(err, change) {
         if (err) return callback(err);
-        if (!change) change = new self({order_id: orderId, order_json: JSON.stringify(order.toJSON())});
+        var orderJson = order.toJSON();
+        var json = utils.extend(utils.pick(orderJson, Order.updateableFields), {order_items: orderJson.order_items});
+        if (!change) change = new self({order_id: orderId, order_json: JSON.stringify(json)});
         return callback(null, change);
       });
     });

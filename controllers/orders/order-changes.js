@@ -4,7 +4,7 @@ var utils  = require('../../utils');
 
 
 module.exports.list = function(req, res, next) {
-  model.Change.find({order_id: req.params.oid}, function(err, changes) {
+  models.Change.find({order_id: req.params.oid}, function(err, changes) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     return res.json(200, utils.invoke(changes, 'toJSON'));
     // TODO: html
@@ -12,7 +12,7 @@ module.exports.list = function(req, res, next) {
 };
 
 module.exports.get = function(req, res, next) {
-  model.Change.findOne(req.params.cid, function(err, change) {
+  models.Change.findOne(req.params.cid, function(err, change) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!change) return res.render('404');
     return res.json(200, change.toJSON());
@@ -23,7 +23,6 @@ module.exports.get = function(req, res, next) {
 // NOTE: We will need to do much the same thing for order item create / update / delete.
 // Once that is done, commonalities should be abstracted out, probably to the model.
 module.exports.orderUpdate = function(order, req, res, next) {
-  console.log('change');
   // like update, but create a pending change instead of applying it immedietly
   var isAdmin = req.session.user && utils.contains(req.session.user.groups, 'admin');
   models.Change.getChange(req.params.oid, isAdmin, function(err, change) {
@@ -64,6 +63,7 @@ module.exports.update = function(req, res, next) {
         return typeof err === 'number' ? res.json(err, {}) : res.error(errors.internal.DB_FAILURE, err);
       return res.json(200, change.toJSON());
     };
+    return res.json(200, change.toJSON());
   });
 };
 

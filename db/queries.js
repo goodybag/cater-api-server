@@ -147,7 +147,12 @@ module.exports = {
   },
 
   user: {
-    list: utils.compose(userGroups, utils.partial(find, 'users')),
+    list: utils.compose(
+      function(query) {
+        query.order = {id: 'desc'};
+        return query;
+      },userGroups, utils.partial(find, 'users')
+    ),
     get: utils.compose(userGroups, utils.partial(findOne, 'users')),
     create: utils.partial(upsert, 'users'),
     update: utils.partial(upsert, 'users'),

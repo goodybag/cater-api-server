@@ -10,6 +10,7 @@ var
 , fs = require('fs')
 , hbs = require('hbs')
 , crypto = require('crypto')
+, forky = require('forky')
 , utils = require('./utils')
 , logger = require('./logger')
 , routes = require('./routes')
@@ -34,7 +35,8 @@ app.configure(function(){
   app.use(express.cookieParser('WOOT THE FUCK'));
   app.use(express.cookieSession());
 
-  app.use(express.bodyParser());
+  app.use(express.json());
+  app.use(express.urlencoded());
   app.use(express.methodOverride());
 
   app.use(middleware.uuid());
@@ -57,6 +59,11 @@ app.configure(function(){
   app.use(app.router);
 
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
+
+  app.use(function(err, req, res, next){
+    forky.disconnect();
+    res.error(errors.internal.UNKNOWN, err);
+  });
 
   app.set('view engine', 'hbs');
   app.set('port', config.http.port || 3000);

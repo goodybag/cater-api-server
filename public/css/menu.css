@@ -19,8 +19,8 @@
   padding: 0;
 }
 
-.restaurant-map-container .list-group-item:first-child {
-  padding: 0;
+.restaurant-map-container .dl {
+  margin-top: 13px;
 }
 
 .restaurant-name {

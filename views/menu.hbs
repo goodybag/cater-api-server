@@ -285,7 +285,6 @@
 <script type="text/javascript" src="/js/views/item-view.js"></script>
 <script type="text/javascript" src="/js/views/item-modal.js"></script>
 <script type="text/javascript" src="/js/views/order-modal.js"></script>
-
 <script>
   var orderModel = new Order( {{{json order}}} );
 
@@ -305,7 +304,6 @@
   , model: new Restaurant( {{{json restaurant}}} )
   });
 
-  console.log('aaaa');
   var orderView = new OrderSummaryView({
     el: '.order-summary'
   , model: orderModel

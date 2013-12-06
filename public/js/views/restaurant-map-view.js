@@ -34,7 +34,7 @@ var RestaurantMapView = Backbone.View.extend({
         // Create the map
         var mapOptions = {
           center: latlng,
-          zoom: 17
+          zoom: 15
         };
 
         this_.map = new google.maps.Map(this_.el, mapOptions);

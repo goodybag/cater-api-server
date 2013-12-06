@@ -52,7 +52,6 @@ var RestaurantMapView = Backbone.View.extend({
   },
 
   render: function() {
-
     // render once
     if (!this.map) this.createMap.call(this);
     return this;

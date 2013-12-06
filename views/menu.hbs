@@ -304,6 +304,11 @@
   , model: new Restaurant( {{{json restaurant}}} )
   });
 
+  // render map on info tab click
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    restaurantMapView.render();
+  });
+
   var orderView = new OrderSummaryView({
     el: '.order-summary'
   , model: orderModel

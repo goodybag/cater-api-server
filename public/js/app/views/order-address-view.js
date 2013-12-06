@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-  var AddressView = require('address-view');
+  var AddressView = require('./address-view');
 
   module.exports = AddressView.extend({
     events: {

@@ -1,6 +1,6 @@
 if (typeof require !== 'undefined') {
-  var utils  = require('../../utils');
-  var states = require('../states');
+  var utils  = require('../../../utils');
+  var states = require('../../states');
   var moment = require('moment');
 } else {
   utils = _;

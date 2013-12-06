@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-  var OrderView = require('order-view');
+  var OrderView = require('./order-view');
 
   module.exports = OrderView.extend({
     events: _.extend({}, OrderView.prototype.events, {

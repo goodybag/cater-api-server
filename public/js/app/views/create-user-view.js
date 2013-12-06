@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-  var FormView = require('form-view');
+  var FormView = require('./form-view');
 
   module.exports = FormView.extend({
     submitSelector: '.create-user-form .create-user-submit',

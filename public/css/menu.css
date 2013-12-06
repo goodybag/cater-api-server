@@ -5,6 +5,9 @@
 .restaurant-map {
   height: 300px;
 }
+.restaurant-map img {
+  max-width: none;
+}
 
 .restaurant-map-container {
   float: right;

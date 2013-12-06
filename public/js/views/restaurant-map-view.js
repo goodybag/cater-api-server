@@ -29,41 +29,33 @@ var RestaurantMapView = Backbone.View.extend({
     };
     geocoder.geocode(geoReq, function (results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-        this_.latlng = results[0].geometry.location;
-        this_.createMap();
+        var latlng = results[0].geometry.location;
+
+        // Create the map
+        var mapOptions = {
+          center: latlng,
+          zoom: 17
+        };
+
+        this_.map = new google.maps.Map(this_.el, mapOptions);
+
+        var marker = new google.maps.Marker({
+          position: latlng,
+          map: this_.map,
+          title: this_.model.get('name')
+        });
       } else {
         alert('Geocode was not successful for the following reason: ' + status);
       }
     });
-    
-    // Create the map
-    var mapOptions = {
-      center: this.latlng,
-      zoom: 17
-    };
-    this.map = new google.maps.Map(this.el, mapOptions);
 
-    var marker = new google.maps.Marker({
-      position: this.latlng,
-      map: this.map,
-      title:"Hello World!"
-    });
   },
 
   render: function() {
-    google.maps.event.addDomListener(window, 'load', _.bind(this.createMap, this));
-    return this;
-  },
 
-  /**
-   * The map is initially rendered off canvas,
-   * so refresh the map when clicking tab to
-   * fix rendering.
-   */
-  refresh: function() {
-    var map = this.map;
-    google.maps.event.trigger(map, 'resize');
-    map.setCenter(map.getCenter());
-    map.setZoom( map.getZoom() );
-  }
+    // render once
+    if (!this.map) this.createMap.call(this);
+    return this;
+
+  },
 });

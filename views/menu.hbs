@@ -263,7 +263,7 @@
     });
   }
 </script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{config.google.maps.key}}&sensor=false">
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false">
 </script>
 <script src="/js/models/address.js"></script>
 <script src="/js/models/item.js"></script>
@@ -305,6 +305,7 @@
   , model: new Restaurant( {{{json restaurant}}} )
   });
 
+  console.log('aaaa');
   var orderView = new OrderSummaryView({
     el: '.order-summary'
   , model: orderModel

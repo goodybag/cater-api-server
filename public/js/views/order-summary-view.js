@@ -41,12 +41,10 @@ var OrderSummaryView = Backbone.View.extend({
       });
     });
 
-    // force map rerender on info tab click
+    // render map on info tab click
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      this_.options.restaurantMapView.refresh();
+      this_.options.restaurantMapView.render();
     });
-
-    this.options.restaurantMapView.render();
 
     return this;
   },

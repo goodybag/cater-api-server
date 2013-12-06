@@ -29,12 +29,12 @@ module.exports.orderUpdate = function(order, req, res, next) {
     if (err)
       return utils.contains([404, 403], err) ? res.json(err, {}) : res.error(errors.internal.DB_FAILURE, err);
 
-    var delta = utils.pick(req.body, updateableFields);
+    var delta = utils.pick(req.body, models.Order.updateableFields);
     var changeSummaries = utils.map(delta, function(val, key, obj) {
       return ['Change', key, 'from', order.attributes[key], 'to', val].join(' ');
     });
 
-    var json = JSON.parse(change.attributes.order_json);
+    var json = change.attributes.order_json
     utils.extend(json, delta);
     change.attributes.change_summaries = (change.attributes.change_summaries || []).concat(changeSummaries);
     change.attributes.order_json = JSON.stringify(json);

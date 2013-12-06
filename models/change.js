@@ -45,17 +45,29 @@ module.exports = Model.extend({
       var old = order.toJSON();
       var removedIds = utils.difference(utils.pluck(old.order_items, 'id'), utils.pluck(json.order_items, 'id'));
 
-      // TODO: async.parallel
-      utils.extend(order.attributes, self.attributes.order_json);
-      order.save(function(err, rows, result) {
-      });
-      utils.each(json.order_items, function(orderItem) {
-        // add new items and update exisiting ones
-        (new OrderItem(orderItem)).save(function(err, rows, result) {});
-      });
-      utils.each(removedIds, function(id) {
-        (new OrderItem({id: id})).destroy(function(err) {});
-      });
+      var tasks = [
+        // update order
+        function(cb) {
+          utils.extend(order.attributes, self.attributes.order_json);
+          order.save(utils.compose(cb, utils.identity));
+        }
+      ];
+
+      // add new items and update exisiting ones
+      tasks = tasks.concat(utils.map(json.order_items, function(orderItem) {
+        var model = new OrderItem(orderItem);
+        return function(cb) {
+          return model.save(utils.compose(cb, utils.identity));
+        };
+      }));
+
+      // remove deleted order items
+      tasks = tasks.concat(utils.map(removedIds, function(id) {
+        var model = new OrderItem({id: id});
+        return utils.bind(model.destroy, model);
+      }));
+
+      utils.async.parallel(tasks, callback);
     });
   }
 }, {

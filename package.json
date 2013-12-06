@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.0.16",
+  "version": "1.0.19",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -43,7 +43,7 @@
     "winston": "0.7.x",
     "microtime": "0.4.x",
     "rollbar": "0.2.x",
-    "connect-request-logger-pg": "0.0.6",
+    "connect-request-logger-pg": "0.0.7",
     "winston-papertrail": "0.1.x",
     "bitly": "1.2.x",
     "semver": "2.1.x",

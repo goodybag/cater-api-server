@@ -65,10 +65,13 @@
 </div>
 
 {{#extend "scripts"}}
-<script src="/js/models/user.js"></script>
-<script src="/js/views/form-view.js"></script>
-<script src="/js/views/create-user-view.js"></script>
 <script>
-  var createUserView = new CreateUserView({ el: '#main', reloadOnSuccess: true });
+  require([
+      'app/views/create-user-view'
+    ]
+  , function(CreateUserView) {
+      var createUserView = new CreateUserView({ el: '#main', reloadOnSuccess: true });
+    }
+  );
 </script>
 {{/extend}}

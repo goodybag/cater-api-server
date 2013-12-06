@@ -118,28 +118,105 @@
     </a>
     {{/if}}
 
-    <script data-main="/js/main.js" src="/components/requirejs/require.js"></script>
+    <script>
+      var require = {
+        //By default load any module IDs from js/lib
+        baseUrl: '/js/lib/'
+        //except, if the module ID starts with "app",
+        //load it from the js/app directory. paths
+        //config is relative to the baseUrl, and
+        //never includes a ".js" extension since
+        //the paths config could be for a directory.
 
+      , paths: {
+          // handlebars plugin
+          hbs: '../../components/require-handlebars-plugin/hbs'
+        , handlebars: '../../components/require-handlebars-plugin/Handlebars'
+
+        , text: '../../components/requirejs-text/text'
+          // json plugin
+        , json: '../../components/requirejs-plugins/src/json'
+
+          // directories
+        , components: '../../components'
+        , partials: '../../partials'
+        , app: '../app'
+
+        , amanda: '../../components/amanda/releases/latest/amanda'
+        , async: '../../components/async/lib/async.js'
+        , 'backbone.trackit': '../../components/backbone.trackit/backbone.trackit'
+        , backbone: '../../components/backbone/backbone'
+        , bootstrap: '../../components/bootstrap/dist/js/bootstrap'
+        , moment: '../../components/moment/moment'
+        , 'moment-timezone': '../../components/moment-timezone/moment-timezone'
+        , select2: '../../components/select2/select2'
+        , spin: '../../components/spin.js/dist/spin'
+        , jquery: '../../components/jquery/jquery'
+        , 'jquery-inputmask': '../../components/jquery-inputmask/dist/jquery-inputmask.bundle'
+        , 'jquery-ui': '../../components/jquery-ui/ui/jquery-ui'
+        , underscore: '../../components/underscore/underscore'
+        , 'pickadate': '../../components/lalitkapoor-pickadate/lib/picker.date'
+        , 'pickadate-legacy': '../../components/lalitkapoor-pickadate/lib/legacy'
+        , 'pickatime': '../../components/lalitkapoor-pickadate/lib/picker.time'
+        , picker: '../../components/lalitkapoor-pickadate/lib/picker'
+        }
+
+      , shim: {
+          hbs: {
+            deps:['handlebars']
+          }
+        , backbone: {
+            deps: ['underscore', 'jquery']
+          , exports: 'Backbone'
+          }
+        , 'backbone.trackit': {
+            deps: ['backbone']
+          }
+        , 'jquery-ui': {
+            deps: ['jquery']
+          , exports: 'jQuery.ui'
+          }
+        , underscore: {
+            exports: '_'
+          }
+        , bootstrap: {
+            deps: ['jquery']
+          }
+        , 'moment-timezone': {
+            deps: ['moment']
+          }
+        , picker: {
+            deps: ['jquery', 'pickadate-legacy']
+          }
+        , pickadate: {
+            deps: ['jquery', 'picker']
+          }
+        , pickatime: {
+            deps: ['jquery', 'picker']
+          }
+        }
+      };
+    </script>
+    <script data-main="/js/main.js" src="/components/requirejs/require.js"></script>
     <!-- pickadate -->
+<!--
     <script src="/components/lalitkapoor-pickadate/lib/picker.js"></script>
     <script src="/components/lalitkapoor-pickadate/lib/picker.date.js"></script>
     <script src="/components/lalitkapoor-pickadate/lib/picker.time.js"></script>
     <script src="/components/lalitkapoor-pickadate/lib/legacy.js"></script>
-
+-->
     <script>
-    define(function(require, exports, module) {
-      console.log('hello world');
-      var $ = require('jquery');
-      $.ajax({
-        type: "GET",
-        url: "/components/moment-timezone/moment-timezone.json",
-        dataType: "json",
-        async: false,
-        success: function(data) {
-          moment.tz.add(data);
-        }
+      require(['jquery', 'moment-timezone'], function($, moment) {
+        $.ajax({
+          type: "GET",
+          url: "/components/moment-timezone/moment-timezone.json",
+          dataType: "json",
+          async: false,
+          success: function(data) {
+            moment.tz.add(data);
+          }
+        });
       });
-    });
     </script>
 
 <!--

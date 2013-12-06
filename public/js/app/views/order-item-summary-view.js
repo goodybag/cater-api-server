@@ -1,6 +1,8 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
 
+  var template = require('hbs!partials/order-item-summary');
+
   module.exports = Backbone.View.extend({
     tagName: 'tr',
 
@@ -8,7 +10,7 @@ define(function(require, exports, module) {
 
     id: function() { return 'order-item-' + this.model.id; },
 
-    template: Handlebars.partials.order_item_summary,
+    template: template,
 
     events: {
       'click .item-edit': 'openEditModal',

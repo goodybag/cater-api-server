@@ -287,37 +287,23 @@
 
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
 
-<script src="/js/models/address.js"></script>
-<script src="/js/models/user.js"></script>
-<script src="/js/models/item.js"></script>
-<script src="/js/models/category.js"></script>
-<script src="/js/models/restaurant.js"></script>
-<script src="/js/models/order-item.js"></script>
-<script src="/js/models/order.js"></script>
-<script src="/js/models/payment-method.js"></script>
-
-<script src="/js/collections/payment-methods.js"></script>
-<script src="/js/collections/addresses.js"></script>
-<script src="/js/collections/items.js"></script>
-<script src="/js/collections/categories.js"></script>
-
-<script src="/js/views/form-view.js"></script>
-<script src="/js/views/copy-error-modal.js"></script>
-<script src="/js/views/tip-view.js"></script>
-<script src="/js/views/address-view.js"></script>
-<script src="/js/views/order-address-view.js"></script>
-<script src="/js/views/order-view.js"></script>
-<script src="/js/views/checkout-view.js"></script>
-
 <script>
-  balanced.init('{{config.balanced.marketplaceUri}}');
+  require([
+        'app/models/user'
+      , 'app/models/order'
+      , 'app/views/checkout-view'
+      ]
+  , function(User, Order, CheckoutView) {
+      balanced.init('{{config.balanced.marketplaceUri}}');
 
-  var user = new User({{{json user}}});
+      var user = new User({{{json user}}});
 
-  var view = new CheckoutView({
-    el: '#main',
-    model: new Order( {{{json order}}} ),
-    user: user
-  });
+      var view = new CheckoutView({
+        el: '#main',
+        model: new Order( {{{json order}}} ),
+        user: user
+      });
+    }
+  );
 </script>
 {{/extend}}

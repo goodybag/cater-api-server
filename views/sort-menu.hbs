@@ -54,42 +54,39 @@
 {{/extend}}
 
 {{#extend "scripts"}}
-
-<script src="/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
-<script src="/components/backbone.trackit/backbone.trackit.js"></script>
-
-<script src="/js/models/item.js"></script>
-<script src="/js/models/category.js"></script>
-<script src="/js/models/restaurant.js"></script>
-
-<script src="/js/views/sort-menu-view.js"></script>
-<script src="/js/views/sort-category-view.js"></script>
-<script src="/js/views/sort-item-view.js"></script>
-
-<script src="/js/collections/items.js"></script>
-<script src="/js/collections/categories.js"></script>
-
 <script type="text/javascript">
+  require([
+      'app/models/Category'
+    , 'app/models/Item'
+    , 'app/views/SortMenuView'
+    , 'app/views/SortCategoryView'
+    , 'app/views/SortItemView'
 
-var sortMenuView = new SortMenuView({el: "#menu"});
+    , 'jquery-ui'
+    , 'backbone.trackit'
+    ]
+  , function(Category, Item, SortMenuView, SortCategoryView, SortItemView) {
+      var sortMenuView = new SortMenuView({el: "#menu"});
 
-var categories = {{{json restaurant.categories}}};
+      var categories = {{{json restaurant.categories}}};
 
-_(categories).each(function(category) {
-  // create model and view for category
-  var categoryModel = new Category(category);
-  categoryModel.startTracking();
-  var sortCategoryView = new SortCategoryView({el: "#category-"+category.id, model: categoryModel, menu: sortMenuView, template: templates.sort_category});
-  sortMenuView.categories.push(sortCategoryView);
+      _(categories).each(function(category) {
+        // create model and view for category
+        var categoryModel = new Category(category);
+        categoryModel.startTracking();
+        var sortCategoryView = new SortCategoryView({el: "#category-"+category.id, model: categoryModel, menu: sortMenuView, template: templates.sort_category});
+        sortMenuView.categories.push(sortCategoryView);
 
-  _(category.items).each(function(item) {
-    // create model and view for item
-    var itemModel = new Item(item);
-    itemModel.startTracking();
-    var sortItemView = new SortItemView({el: "#item-"+item.id, model: itemModel, category: sortCategoryView, template: templates.sort_item});
-    sortCategoryView.items.push(sortItemView);
-  });
-});
+        _(category.items).each(function(item) {
+          // create model and view for item
+          var itemModel = new Item(item);
+          itemModel.startTracking();
+          var sortItemView = new SortItemView({el: "#item-"+item.id, model: itemModel, category: sortCategoryView, template: templates.sort_item});
+          sortCategoryView.items.push(sortItemView);
+        });
+      });
+    }
+  );
 
 </script>
 

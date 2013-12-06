@@ -1,5 +1,9 @@
 define(function(require, exports, module) {
+  require('pickadate');
+  require('pickatime');
+
   var Backbone = require('backbone');
+  var Handlebars = require('handlebars');
 
   module.exports = Backbone.View.extend({
     events: {

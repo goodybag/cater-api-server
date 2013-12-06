@@ -25,8 +25,15 @@
 <script src="/js/views/form-view.js"></script>
 <script src="/js/views/address-view.js"></script>
 <script>
-  // Bootstrap model and plug into view
-  var addressModel = new Address({{{json address}}}, {urlRoot: '/users/me/addresses'});
-  var addressView = new AddressView({ el: '#main', model: addressModel });
+  require([
+      'app/models/address'
+    , 'app/views/address-view'
+    ]
+  , function (Address, AddressView) {
+      // Bootstrap model and plug into view
+      var addressModel = new Address({{{json address}}}, {urlRoot: '/users/me/addresses'});
+      var addressView = new AddressView({ el: '#main', model: addressModel });
+    }
+  );
 </script>
 {{/extend}}

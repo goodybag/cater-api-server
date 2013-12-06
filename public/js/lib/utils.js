@@ -1,5 +1,10 @@
-(function( exports ){
-  var utils = exports.utils = exports.utils || {};
+define(function(require, exports, module) {
+  var _ = require('underscore');
+
+
+  var utils = _;
+
+  module.exports = utils;
 
   utils.getPrice = function( $el ) {
     var val = $el.val().trim();
@@ -52,4 +57,4 @@
       };
     }
   });
-})( window );
+});

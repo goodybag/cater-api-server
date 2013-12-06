@@ -1,5 +1,12 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
+  var amanda = require('amanda');
+
+  var OrderItems = require('../collections/order-items');
+
+  var Restaurant = require('./restaurant');
+  var OrderItem = require('./order-item');
+  var Address = require('./address');
 
   module.exports = Backbone.Model.extend({
     initialize: function(models, options) {

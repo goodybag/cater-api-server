@@ -36,38 +36,38 @@
   }
 </script>
 
-<script src="/js/models/restaurant.js"></script>
-<script src="/js/models/category.js"></script>
-<script src="/js/models/item.js"></script>
-
-<script src="/js/collections/categories.js"></script>
-<script src="/js/collections/items.js"></script>
-
-<script src="/js/views/form-view.js"></script>
-<script src="/js/views/edit-restaurant-view.js"></script>
 <script>
-  $('.new-restaurant').click(function() {
-    $('.new-restaurant-row, .restaurant-form').toggleClass('hide');
-  });
+  require([
+      'jquery'
+    , 'handlebars'
+    , 'app/models/restaurant'
+    , 'app/views/edit-restaurant-view'
+    ]
+  , function($, Handlebars, Restaurant, EditRestaurantView) {
+      $('.new-restaurant').click(function() {
+        $('.new-restaurant-row, .restaurant-form').toggleClass('hide');
+      });
 
-  var restaurant = new (EditRestaurantView.extend({
-    setModel: function(model) {
-      EditRestaurantView.prototype.setModel.apply(this, arguments);
-      this.listenTo(this.model, 'sync', this.created, this);
-    },
+      var restaurant = new (EditRestaurantView.extend({
+        setModel: function(model) {
+          EditRestaurantView.prototype.setModel.apply(this, arguments);
+          this.listenTo(this.model, 'sync', this.created, this);
+        },
 
-    created: function(model, response, options) {
-      this.setModel(new Restaurant());
-      this.$el.find('.form-control').val('');
-      _.invoke(hours, 'reset');
-      this.trigger('created', model);
+        created: function(model, response, options) {
+          this.setModel(new Restaurant());
+          this.$el.find('.form-control').val('');
+          _.invoke(hours, 'reset');
+          this.trigger('created', model);
+        }
+      }))({el: '.new-restaurant-form', hours: hours});
+
+      restaurant.on('created', function(model) {
+        $('.restaurants').append(Handlebars.partials.edit_restaurant_list_item(model.toJSON()));
+        $('.new-restaurant-row, .restaurant-form').toggleClass('hide');
+        window.scrollTo(0);
+      });
     }
-  }))({el: '.new-restaurant-form', hours: hours});
-
-  restaurant.on('created', function(model) {
-    $('.restaurants').append(Handlebars.partials.edit_restaurant_list_item(model.toJSON()));
-    $('.new-restaurant-row, .restaurant-form').toggleClass('hide');
-    window.scrollTo(0);
-  });
+  );
 </script>
 {{/extend}}

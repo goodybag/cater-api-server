@@ -40,7 +40,6 @@ var OrderSummaryView = Backbone.View.extend({
       , el: $el[0]
       });
     });
-
     return this;
   },
 

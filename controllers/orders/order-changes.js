@@ -73,6 +73,11 @@ module.exports.removeItem = changer(function(req, change, order, done) {
 });
 
 module.exports.updateItem = changer(function(req, change, order, done) {
+  var item = utils.findWhere(change.attributes.order_json.orderItems, {id: req.params.iid});
+  var updates = utils.pick(req.body, ['quantity', 'notes', 'recipient'])
+  if (req.body.options_sets !== undefined)
+    updates.options_sets = JSON.stringify(models.OrderItem.sanitizeOptions(item.options_sets, req.body.options_sets));
+  item.extend(updates);
   done();
 });
 

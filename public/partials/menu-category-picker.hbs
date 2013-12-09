@@ -17,29 +17,33 @@
     <div class="tab-content">
       <div class="tab-pane active" id="full">
         {{! list all categories }}
-        {{#range2 1 7}}
+        {{#each restaurant.categories}}
         <div class="menu-category-picker-col">
-          <a href="#">[Group] Salads</a>
+          <a href="#category-{{this.id}}">{{ this.name }}</a>
         </div>
-        {{/range2}}
+        {{/each}}
       </div>
       
       <div class="tab-pane" id="group">
         {{! list group style categories }}
-        {{#range2 1 4}}
+        {{#each restaurant.categories}}
+        {{#eq this.category_type "group"}}
         <div class="menu-category-picker-col">
-          <a href="#">[Group] Stuff</a>
+          <a href="#category-{{this.id}}">{{ this.name }}</a>
         </div>
-        {{/range2}}
+        {{/eq}}
+        {{/each}}
       </div>
       
       <div class="tab-pane" id="individual">
         {{! list individual style categories }}
-        {{#range2 1 5}}
+        {{#each restaurant.categories}}
+        {{#eq this.category_type "individual"}}
         <div class="menu-category-picker-col">
-          <a href="#">[Individual] Cheeses</a>
+          <a href="#category-{{this.id}}">{{ this.name }}</a>
         </div>
-        {{/range2}}
+        {{/eq}}
+        {{/each}}
       </div>
     </div>
   </div>

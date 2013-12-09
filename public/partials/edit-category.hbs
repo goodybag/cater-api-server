@@ -18,7 +18,7 @@
       <div class="row">
         <div class="radio">
           <label>
-            <input type="radio" name="categoryType" class="category-type" value="group" checked>
+            <input type="radio" name="categoryType" class="category-type" value="group" {{#eq this.category_type "group"}}checked{{/eq}}>
             Group
           </label>
         </div>
@@ -26,7 +26,7 @@
       <div class="row">
         <div class="radio">
           <label>
-            <input type="radio" name="categoryType" class="category-type" value="individual">
+            <input type="radio" name="categoryType" class="category-type" value="individual" {{#eq this.category_type "individual"}}checked{{/eq}}>
             Individual
           </label>
         </div>

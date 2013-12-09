@@ -46,8 +46,7 @@ module.exports.editability = function(normal, change) {
       if (err) return res.error(errors.internal.DB_FAILURE);
       if (!order) return res.json(404);
       var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
-      // var changeable = !editable && order.attributes.status === 'accepted' && order.toJSON().cancelable
-      var changeable = true;  // FOR TESTING
+      var changeable = !editable && order.attributes.status === 'accepted' && order.toJSON().cancelable
       if (editable || changeable)
         return (editable ? normal : change).call(this, order, req, res, next)
       else

@@ -15,6 +15,9 @@ var Category = Backbone.Model.extend({
       description: {
         type: ['string', 'null'],
         minLength: 1
+      },
+      category_type: {
+        type: ['string', 'null'],
       }
     }
   },

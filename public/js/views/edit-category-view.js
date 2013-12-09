@@ -12,6 +12,7 @@ var EditCategoryView = FormView.extend({
     'click .new-item': 'newItem',
     'keyup .category-form .form-control': 'onChange',
     'change .category-form .form-control': 'onChange',
+    'change .category-form .category-type': 'onChange',
     'click .category-form .category-remove': 'onRemove',
     'submit .category-form': 'onSave'
   },
@@ -48,13 +49,18 @@ var EditCategoryView = FormView.extend({
   fieldMap: {
     name: '.category-form .category-name',
     description: '.category-form .category-description',
-    order: '.category-form .category-order'
+    order: '.category-form .category-order',
+    category_type: '.category-form .category-type'
   },
 
   fieldGetters: {
     order: function() {
       var val = this.$el.find(this.fieldMap.order).val().trim();
       return val ? parseInt(val) : null;
+    },
+
+    category_type: function() {
+      return this.$el.find(this.fieldMap.category_type+ ':checked').val();
     }
   },
 

@@ -43,6 +43,10 @@ define(function(require) {
       type: types.int
     , nullable: false
     }
+  , category_type: {
+      type: types.text
+    , nullable: true
+    }
   };
 
   definition.indices = {};

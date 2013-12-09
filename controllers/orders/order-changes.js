@@ -66,6 +66,9 @@ module.exports.addItem = changer(function(req, change, order, done) {
 });
 
 module.exports.removeItem = changer(function(req, change, order, done) {
+  var json = change.attributes.order_json;
+  var toRemove = utils.findWhere(json.orderItems, {id: req.params.iid});
+  json.orderItems = json.orderItems.without(toRemove);
   done();
 });
 

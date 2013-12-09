@@ -1,4 +1,5 @@
 var Model = require('./model');
+var Item = require('./item');
 var utils = require('../utils');
 var venter = require('../lib/venter');
 
@@ -42,4 +43,35 @@ module.exports = Model.extend({
     obj.sub_total = this.attributes.quantity * (this.attributes.price + addOns);
     return obj;
   }
-}, {table: 'order_items'});
+}, {
+  table: 'order_items',
+
+  sanitizeOptions: function(oldOpts, newOpts) {
+    // get the current state, and only the current state, from each option, keyed by uuid.
+    var states = utils.object(utils.map(utils.flatten(utils.pluck(newOpts, 'options'), true), function(option, index, arr) {
+      return [option.id, !!option.state];
+    }));
+
+    // clone the old options, but with the new states
+    return utils.map(oldOpts, function(set) {
+      return utils.extend({}, set, {options: utils.map(set.options, function(option) {
+        return utils.extend({state: !!states[option.id]}, utils.pick(option, ['id', 'name', 'price', 'description']));
+      })});
+    });
+  },
+
+  createFromItem: function(itemId, orderId, orderItemAttrs, callback) {
+    var OrderItem = this;
+    models.Item.findOne(parseInt(req.body.item_id), function(err, item) {
+      if (err) return callback(err);
+      if (!item) return callback(404);
+      var attrs = utils.extend(item.toJSON(), orderItemAttrs, {order_id: orderId});
+      attrs.options_sets = JSON.stringify(OrderItem.sanitizeOptions(attrs.options_sets, orderItemAttrs.options_sets));
+
+      var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
+      orderItem.save(function(err, rows, result) {
+        callback(err, orderItem);
+      });
+    });
+  }
+});

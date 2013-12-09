@@ -58,38 +58,18 @@ module.exports.get = function(req, res, next) {
   });
 }
 
-function sanitizeOptions(oldOpts, newOpts) {
-  // get the current state, and only the current state, from each option, keyed by uuid.
-  var states = utils.object(utils.map(utils.flatten(utils.pluck(newOpts, 'options'), true), function(option, index, arr) {
-    return [option.id, !!option.state];
-  }));
-
-  // clone the old options, but with the new states
-  return utils.map(oldOpts, function(set) {
-    return utils.extend({}, set, {options: utils.map(set.options, function(option) {
-      return utils.extend({state: !!states[option.id]}, utils.pick(option, ['id', 'name', 'price', 'description']));
-    })});
-  });
-}
-
 module.exports.add = function(req, res, next) {
   models.Order.findOne(parseInt(req.params.oid), function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
     var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
     if (!editable) return res.json(403, 'nope');
-    models.Item.findOne(parseInt(req.body.item_id), function(err, item) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-      if (!item) return res.send(404);
-      var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id']), {order_id: req.params.oid});
-      attrs.options_sets = JSON.stringify(sanitizeOptions(attrs.options_sets, req.body.options_sets));
-
-      var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
-      orderItem.save(function(error, rows, result) {
-        if (error) return res.error(errors.internal.DB_FAILURE, error);
-        orderItem.attributes = utils.clone(rows[0]);
-        res.send(201, orderItem.toJSON());
-      });
+    var attrs = utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id', 'options_sets']),
+    models.OrderItem.createFromItem(req.body.item_id, order.attributes.id, attrs, function(err, orderItem) {
+      if (err) {
+        return err === 404 ? res.json(404, 'Item Not Found') : res.error(errors.internal.DB_FAILURE, err);
+      }
+      return res.send(201, orderItem.toJSON());
     });
   });
 };
@@ -104,7 +84,7 @@ module.exports.changeAdd = function(req, res, next) {
       if (!item) return res.send(404);
 
       var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'item_id']), {order_id: req.params.oid});
-      attrs.options_sets = JSON.stringify(sanitizeOptions(attrs.options_sets, req.body.options_sets));
+      attrs.options_sets = JSON.stringify(models.OrderItem.sanitizeOptions(attrs.options_sets, req.body.options_sets));
       var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
 
       change.attributes.json.order_items = change.attributes.json.order_items.concat(orderItem.toJSON());
@@ -126,7 +106,7 @@ module.exports.update = function(req, res, next) {
 
     var updates = utils.pick(req.body, ['quantity', 'notes', 'recipient'])
     if (req.body.options_sets !== undefined)
-      updates.options_sets = JSON.stringify(sanitizeOptions(orderItem.attributes.options_sets, req.body.options_sets));
+      updates.options_sets = JSON.stringify(models.OrderItem.sanitizeOptions(orderItem.attributes.options_sets, req.body.options_sets));
 
     var query = queries.orderItem.update(updates, parseInt(req.params.iid));
     var sql = db.builder.sql(query);

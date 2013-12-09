@@ -69,7 +69,9 @@ module.exports.add = function(req, res, next) {
       if (err) {
         return err === 404 ? res.json(404, 'Item Not Found') : res.error(errors.internal.DB_FAILURE, err);
       }
-      return res.send(201, orderItem.toJSON());
+      orderItem.save(function(err, rows, result) {
+        return res.send(201, orderItem.toJSON());
+      });
     });
   });
 };

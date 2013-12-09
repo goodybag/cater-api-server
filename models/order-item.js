@@ -69,9 +69,7 @@ module.exports = Model.extend({
       attrs.options_sets = JSON.stringify(OrderItem.sanitizeOptions(attrs.options_sets, orderItemAttrs.options_sets));
 
       var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
-      orderItem.save(function(err, rows, result) {
-        callback(err, orderItem);
-      });
+      callback(null, orderItem);
     });
   }
 });

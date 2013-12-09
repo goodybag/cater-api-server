@@ -50,7 +50,7 @@ var EditCategoryView = FormView.extend({
     name: '.category-form .category-name',
     description: '.category-form .category-description',
     order: '.category-form .category-order',
-    category_type: '.category-form .category-type'
+    category_types: '.category-form .category-types'
   },
 
   fieldGetters: {
@@ -59,8 +59,8 @@ var EditCategoryView = FormView.extend({
       return val ? parseInt(val) : null;
     },
 
-    category_type: function() {
-      return this.$el.find(this.fieldMap.category_type+ ':checked').val();
+    category_types: function() {
+      return _.pluck(this.$el.find(this.fieldMap.category_types + ':checked'), 'value');
     }
   },
 

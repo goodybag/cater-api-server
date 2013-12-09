@@ -58,7 +58,7 @@
     <div class="col-md-8">
       <form id="order-form" class="panel checkout-form">
         <div class="list-group">
-          <div class="list-group-item">
+          <div class="list-group-item clearfix">
             <div class="col-md-12"><legend>1. Order Details</legend></div>
             <div class="form-group col-sm-12">
               <h5 class="restaurant-name">{{order.restaurant.name}}</h5>
@@ -114,11 +114,11 @@
             </div>
           </div>
 
-          <div class="list-group-item delivery-info">
+          <div class="list-group-item delivery-info clearfix">
             {{> order_delivery_info}}
           </div>
 
-          <div id="payment-info" class="list-group-item">
+          <div id="payment-info" class="list-group-item clearfix">
             <div class="col-md-12">
               <legend>3. Payment Info</legend>
               <div class="radio card-select-toggle {{#unless user.payment_methods}}hide{{/unless}}">

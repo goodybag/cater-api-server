@@ -44,7 +44,7 @@
         <div class="menu">
           {{> menu_category_picker }}
           {{#each restaurant.categories}}
-          <div id="category-{{this.id}}" class="panel menu-category">
+          <div id="category-{{this.id}}" class="panel menu-category category-full {{#if this.category_type}}category-{{this.category_type}}{{/if}}">
             <div class="panel-heading menu-cateogry-heading">
               <h3 class="panel-title menu-cateogry-title">{{name}}</h3>
               <p class="category-description">{{description}}</p>
@@ -274,6 +274,7 @@
 <script type="text/javascript" src="/js/views/order-summary-view.js"></script>
 <script type="text/javascript" src="/js/views/order-params-view.js"></script>
 <script type="text/javascript" src="/js/views/item-view.js"></script>
+<script type="text/javascript" src="/js/views/menu-view.js"></script>
 <script type="text/javascript" src="/js/views/item-modal.js"></script>
 <script type="text/javascript" src="/js/views/order-modal.js"></script>
 <script>
@@ -312,6 +313,8 @@
   ];
 
   orderView.render();
+
+  var menuView = new MenuView({el: '#menu'});
 
   $('.tag-tooltip').tooltip();
 </script>

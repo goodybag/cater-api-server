@@ -72,32 +72,44 @@ module.exports = Model.extend({
   }
 }, {
   table: 'order_changes',
-  getChange: function(orderId, isAdmin, callback) {
+  getChange: function(order, isAdmin, callback) {
     if (callback === undefined) {
       callback = isAdmin;
       isAdmin = false;
     }
     var self = this;
-    Order.findOne(orderId, function(err, order) {
-      if (err) return callback(err);
-      if (!order) return callback(404);
 
-      // Check if change can be made.  Order must be in accepted state and still be cancelable.
-      if (!isAdmin && !(order.attributes.status === 'accepted' && order.toJSON().cancelable))
-        return callback(403);
-
-      order.getOrderItems(function(err, items) {
-        if (err) return callback(err);
-
-        self.findOne({where: {order_id: orderId, status: 'submitted'}}, function(err, change) {
-          if (err) return callback(err);
-          var orderJson = order.toJSON();
-          var json = utils.pick(orderJson, Order.updateableFields.concat('orderItems'))
-          if (!change) change = new self({order_id: orderId, order_json: json});
-          return callback(null, change);
+    var tasks = [
+      function(next) {
+        // Get or pass through the order
+        return order instanceof Order ? next(null, order) : Order.findOne(order, next);
+      },
+      function(order, next) {
+        // make sure the order has order items
+        if (order == null)
+          return next(404);
+        // Check if change can be made.  Order must be in accepted state and still be cancelable.
+        if (!isAdmin && !(order.attributes.status === 'accepted' && order.toJSON().cancelable))
+          return next(403);
+        if (order.orderItems !== undefined)
+          return next(null, order);
+        else {
+          order.getOrderItems(function(err, items) {
+            next(err, order);
+          });
+        }
+      },
+      function(order, next) {
+        self.findOne({where: {order_id: order.attributes.id, status: 'submitted'}}, function(err, change) {
+          if (err) return next(err);
+          var orderJson = utils.pick(order.toJSON(), Order.updateableFields.concat('orderItems'))
+          if (!change) change = new self({order_id: order.attributes.id, order_json: orderJson});
+          return next(null, change);
         });
-      });
-    });
+      }
+    ];
+
+    utils.async.waterfall(tasks, callback);
   },
 
   statusFSM: {

@@ -23,6 +23,7 @@
 .menu-category-picker .menu-category-picker-tabs a {
   padding: 10px 16px;
 }
+
 .menu-category-picker .menu-category-picker-tabs li.active a {
   color: #0039a1;
   font-weight: bold;
@@ -33,6 +34,8 @@
   font-size: 12pt;
   font-weight: bolder;
   border-bottom: 1px dashed #CCCCC0;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .menu-category-picker .menu-category-picker-col {

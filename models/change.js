@@ -103,7 +103,7 @@ module.exports = Model.extend({
         self.findOne({where: {order_id: order.attributes.id, status: 'submitted'}}, function(err, change) {
           if (err) return next(err);
           var orderJson = utils.pick(order.toJSON(), Order.updateableFields.concat('orderItems'))
-          if (!change) change = new self({order_id: order.attributes.id, order_json: orderJson});
+          if (!change) change = new self({order_id: order.attributes.id, order_json: orderJson, change_summaries: []});
           return next(null, change);
         });
       }

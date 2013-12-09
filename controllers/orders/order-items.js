@@ -76,31 +76,6 @@ module.exports.add = function(req, res, next) {
   });
 };
 
-module.exports.changeAdd = function(req, res, next) {
-  models.Change.getChange(req.params.oid, function(err, change) {
-    if (err)
-      return utils.contains([404, 403], err) ? res.json(err) : res.error(errors.internal.DB_FAILURE, err);
-
-    models.Item.findOne(parseInt(req.body.item_id), function(err, item) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-      if (!item) return res.send(404);
-
-      var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'item_id']), {order_id: req.params.oid});
-      attrs.options_sets = JSON.stringify(models.OrderItem.sanitizeOptions(attrs.options_sets, req.body.options_sets));
-      var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
-
-      change.attributes.json.order_items = change.attributes.json.order_items.concat(orderItem.toJSON());
-      if (!change.attributes.change_summaries) change.attributes.change_summaries = [];
-      change.attributes.change_summaries.push('Item added: ' + orderItem.attributes.name);
-
-      change.save(function(err, rows, result) {
-        if (err) return res.error(errors.internal.DB_FAILURE, err);
-        res.json(201, change.toJSON());  // TODO: is this best?
-      });
-    });
-  });
-};
-
 module.exports.update = function(req, res, next) {
   models.OrderItem.findOne(parseInt(req.params.iid), function(err, orderItem) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);

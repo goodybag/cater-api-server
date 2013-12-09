@@ -22,8 +22,8 @@ module.exports.get = function(req, res, next) {
 
 
 // Decorator for creating / updating changes
-// Takes a function which takes a change object and a request and modifies the change object appropriately
-//
+// Takes a function which takes a request, an order, and a change object and modifies the change object appropriately
+// The fourth parameter is a done callback that should be called when the function is finished modifying the change.
 function changer(func) {
   return function(order, req, res, next) {
   var isAdmin = req.session.user && utils.contains(req.session.user.groups, 'admin');
@@ -31,7 +31,7 @@ function changer(func) {
     if (err)
       return utils.contains([404, 403], err) ? res.json(err, {}) : res.error(errors.internal.DB_FAILURE, err);
 
-    func(change, req, function(err) {
+    func(req, change, order, function(err) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
       change.save(function(err, rows, result) {
         if (err) return res.error(errors.internal.DB_FAILURE, err);
@@ -41,7 +41,7 @@ function changer(func) {
   };
 };
 
-module.exports.orderUpdate = changer(function(change, req, done) {
+module.exports.orderUpdate = changer(function(req, change, order, done) {
   // like update, but create a pending change instead of applying it immedietly
   var delta = utils.pick(req.body, models.Order.updateableFields);
   var changeSummaries = utils.map(delta, function(val, key, obj) {
@@ -49,19 +49,27 @@ module.exports.orderUpdate = changer(function(change, req, done) {
   });
 
   utils.extend(change.attributes.order_json, delta);
-  change.attributes.change_summaries = (change.attributes.change_summaries || []).concat(changeSummaries);
+  change.attributes.change_summaries = change.attributes.change_summaries.concat(changeSummaries);
   done();
 });
 
-module.exports.addItem = changer(function(change, req, done) {
+module.exports.addItem = changer(function(req, change, order, done) {
+  var attrs = utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id', 'options_sets']);
+  models.OrderItem.createFromItem(req.body.item_id, order.attributes.id, attrs, function(err, orderItem) {
+    if (err)
+      return err === 404 ? res.json(404, 'Item Not Found') : res.error(errors.internal.DB_FAILURE, err);
+
+    change.attributes.order_json.orderItems.push(orderItem.toJSON());
+    change.attributes.change_summaries.push('Added item ' + orderItem.attributes.name + ' to order.');
+    done();
+  });
+});
+
+module.exports.removeItem = changer(function(req, change, order, done) {
   done();
 });
 
-module.exports.removeItem = changer(function(change, req, done) {
-  done();
-});
-
-module.exports.updateItem = changer(function(change, req, done) {
+module.exports.updateItem = changer(function(req, change, order, done) {
   done();
 });
 

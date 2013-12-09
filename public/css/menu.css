@@ -2,6 +2,21 @@
   top: 30px;
 }
 
+/**
+ * Menu Category Picker
+ */
+
+.menu-category-picker .panel-heading {
+  font-color: #432012;
+  font-weight: bolder;
+  border-bottom: 1px dashed #CCCCC0;
+}
+
+.menu-category-picker .menu-category-picker-col {
+  width: 50%;
+  float: left;
+}
+
 .restaurant-name {
   display: inline-block;
   width: 100%;

@@ -64,7 +64,7 @@ module.exports.add = function(req, res, next) {
     if (!order) return res.render('404');
     var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
     if (!editable) return res.json(403, 'nope');
-    var attrs = utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id', 'options_sets']),
+    var attrs = utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id', 'options_sets']);
     models.OrderItem.createFromItem(req.body.item_id, order.attributes.id, attrs, function(err, orderItem) {
       if (err) {
         return err === 404 ? res.json(404, 'Item Not Found') : res.error(errors.internal.DB_FAILURE, err);

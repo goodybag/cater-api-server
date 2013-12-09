@@ -9,14 +9,6 @@ define(function(require, exports, module) {
   var Address = require('./address');
 
   return module.exports = Backbone.Model.extend({
-    initialize: function(models, options) {
-      if (options && options.orderId) this.orderId = options.orderId;
-    },
-    url: function() { return '/orders/' + this.orderId + '/items' },
-    model: OrderItem
-  });
-
-  var Order = Backbone.Model.extend({
     schema: function() {
       return {
         type: 'object',

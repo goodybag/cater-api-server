@@ -1,13 +1,11 @@
 var OrderSummaryView = Backbone.View.extend({
   events: {
     'click .btn-checkout': 'checkout'
-  , 'click .btn-category': 'changeCategory'
   },
 
   template: Handlebars.partials.menu_order_summary,
 
   initialize: function(options) {
-    console.log(this.$el.find('.btn-category'));
     if (this.model) this.setModel(this.model);
     this.setMaxHeight();
     $(window).resize(utils.bind(this.setMaxHeight, this));
@@ -104,11 +102,5 @@ var OrderSummaryView = Backbone.View.extend({
         } })
       }
     });
-  },
-
-  changeCategory: function(e) {
-    e.preventDefault();
-    alert('hi');
-    console.log('click');
   }
 });

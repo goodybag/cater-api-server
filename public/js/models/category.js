@@ -16,9 +16,16 @@ var Category = Backbone.Model.extend({
         type: ['string', 'null'],
         minLength: 1
       },
-      category_type: {
-        type: ['string', 'null'],
-      }
+      category_types: {
+        type: 'array',
+        uniqueItems: true,
+        required: true,
+        items: {
+          type: 'string',
+          minLength: 1,
+          pattern: /^[\w\-\/]*$/ // consists only of word characters or hyphen
+        }
+      },
     }
   },
 

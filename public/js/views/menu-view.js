@@ -3,6 +3,9 @@ var MenuView = Backbone.View.extend({
     'click .btn-category': 'changeCategory'
   },
 
+  initialize: function () {
+  },
+
   changeCategory: function(e) {
     e.preventDefault();
     var type = $(e.target).data('type');

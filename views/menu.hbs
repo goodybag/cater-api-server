@@ -314,7 +314,7 @@
 
   orderView.render();
 
-  var menuView = new MenuView({el: '#menu'});
+  var menuView = new MenuView({el: '#menu', model: new Restaurant({{{json restaurant}}})});
 
   $('.tag-tooltip').tooltip();
 </script>

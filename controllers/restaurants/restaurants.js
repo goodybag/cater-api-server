@@ -104,6 +104,9 @@ module.exports.get = function(req, res) {
       orderParams:      orderParams
     }
 
+    // TODO: meditate on this a bit more
+    context.categories = utils.groupBy(context.restaurant.categories, 'category_type');
+
     res.render('menu', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
       return res.send(html);

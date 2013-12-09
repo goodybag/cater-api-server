@@ -43,9 +43,10 @@ define(function(require) {
       type: types.int
     , nullable: false
     }
-  , category_type: {
-      type: types.text
-    , nullable: true
+  , category_types: {
+      type: types.array(types.text)
+    , nullable: false
+    , default: "'{}'"
     }
   };
 

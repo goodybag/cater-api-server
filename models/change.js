@@ -86,7 +86,7 @@ module.exports = Model.extend({
       if (!isAdmin && !(order.attributes.status === 'accepted' && order.toJSON().cancelable))
         return callback(403);
 
-      self.findOne({order_id: orderId, status: {$ne: 'accepted'}}, function(err, change) {
+      self.findOne({where: {order_id: orderId, status: {$ne: 'accepted'}}}, function(err, change) {
         if (err) return callback(err);
         var orderJson = order.toJSON();
         var json = utils.extend(utils.pick(orderJson, Order.updateableFields), {order_items: orderJson.order_items});

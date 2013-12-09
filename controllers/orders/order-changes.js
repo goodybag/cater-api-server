@@ -44,6 +44,21 @@ module.exports.orderUpdate = function(order, req, res, next) {
   });
 };
 
+
+module.exports.addItem = function(order, req, res, next) {
+  var isAdmin = req.session.user && utils.contains(req.session.user.groups, 'admin');
+  models.Change.getChange(req.params.oid, isAdmin, function(err, change) {
+    if (err)
+      return utils.contains([404, 403], err) ? res.json(err, {}) : res.error(errors.internal.DB_FAILURE, err);
+  });
+};
+
+module.exports.removeItem = function(order, req, res, next) {
+};
+
+module.exports.updateItem = function(order, req, res, next) {
+};
+
 module.exports.update = function(req, res, next) {
   var adminUpdates = utils.omit(req.body, ['status']);
   models.Change.findOne(req.params.cid, function(err, change) {

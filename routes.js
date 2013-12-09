@@ -259,7 +259,7 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.summary);
 
-  app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.add);
+  app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.orderItems.add, controllers.orders.changes.addItem));
 
   app.all('/orders/:oid/items', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -272,11 +272,11 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
 
-  app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.orderItems.update, controllers.orders.changes.updateItem));
 
-  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.orderItems.update));
 
-  app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
+  app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.orderItems.remove, controllers.orders.changes.removeItem));
 
   app.all('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');

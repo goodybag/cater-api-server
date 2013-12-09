@@ -28,8 +28,8 @@ module.exports = Model.extend({
       });
     }
     tasks.push(function(cb) {
-      this.attributes.status = status;
-      this.save(utils.compose(cb, utils.identity));
+      self.attributes.status = status;
+      self.save(utils.compose(cb, utils.identity));
     });
 
     utils.async.series(tasks, callback);
@@ -90,7 +90,7 @@ module.exports = Model.extend({
         if (err) return callback(err);
         var orderJson = order.toJSON();
         var json = utils.extend(utils.pick(orderJson, Order.updateableFields), {order_items: orderJson.order_items});
-        if (!change) change = new self({order_id: orderId, order_json: JSON.stringify(json)});
+        if (!change) change = new self({order_id: orderId, order_json: json});
         return callback(null, change);
       });
     });

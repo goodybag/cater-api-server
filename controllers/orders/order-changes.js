@@ -34,10 +34,8 @@ module.exports.orderUpdate = function(order, req, res, next) {
       return ['Change', key, 'from', order.attributes[key], 'to', val].join(' ');
     });
 
-    var json = change.attributes.order_json
-    utils.extend(json, delta);
+    utils.extend(change.attributes.order_json, delta);
     change.attributes.change_summaries = (change.attributes.change_summaries || []).concat(changeSummaries);
-    change.attributes.order_json = JSON.stringify(json);
 
     change.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

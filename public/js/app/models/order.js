@@ -8,7 +8,7 @@ define(function(require, exports, module) {
   var OrderItem = require('./order-item');
   var Address = require('./address');
 
-  module.exports = Backbone.Model.extend({
+  return module.exports = Backbone.Model.extend({
     initialize: function(models, options) {
       if (options && options.orderId) this.orderId = options.orderId;
     },

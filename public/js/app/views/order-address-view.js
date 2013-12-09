@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   var AddressView = require('./address-view');
 
-  module.exports = AddressView.extend({
+  return module.exports = AddressView.extend({
     events: {
       'click .toggle-edit': 'toggleEditAddress',
       'click .cancel-edit-btn': 'render',

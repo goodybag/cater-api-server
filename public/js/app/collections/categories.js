@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
 
-  module.exports = Backbone.Collection.extend({
+  return module.exports = Backbone.Collection.extend({
     model: Category,
 
     url: function() { return _.result(this.restaurant, 'url') + '/categories' },

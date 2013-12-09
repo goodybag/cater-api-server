@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   var OrderView = require('./order-view');
 
-  module.exports = OrderView.extend({
+  return module.exports = OrderView.extend({
     events: _.extend({}, OrderView.prototype.events, {
       'click .item-edit':                             'itemEditClick',
       'click  #cancel-confirm-modal .btn-cancel':     'cancel',

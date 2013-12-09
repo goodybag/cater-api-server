@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
 
-  module.exports = Backbone.Collection.extend({
+  return module.exports = Backbone.Collection.extend({
     model: Item,
     url: function() { return _.result(this.category, 'url') + '/items'; },
     initialize: function(models, options) {

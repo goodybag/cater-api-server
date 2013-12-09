@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   var FormView = require('./form-view');
 
-  module.exports = FormView.extend({
+  return module.exports = FormView.extend({
     events: {
       'click .address-remove':      'removeAddress'
     , 'click .address-default':     'setDefaultAddress'

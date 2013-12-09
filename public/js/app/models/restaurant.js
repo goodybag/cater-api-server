@@ -2,13 +2,13 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
 
-  var states = require('json!/states.json');
+  var states = require('../../../states');
 
   var regex = {
     url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
   };
 
-  module.exports = Backbone.Model.extend({
+  return module.exports = Backbone.Model.extend({
     schema: {
       type: 'object',
       properties: {

@@ -3,12 +3,13 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var utils = require('utils');
 
-  module.exports = Backbone.View.extend({
+  return module.exports = Backbone.View.extend({
     events: {
       'click .btn-checkout': 'checkout'
     },
 
-    template: Handlebars.partials.menu_order_summary,
+    // template: Handlebars.partials.menu_order_summary,
+    template: function(){},
 
     initialize: function(options) {
       if (this.model) this.setModel(this.model);

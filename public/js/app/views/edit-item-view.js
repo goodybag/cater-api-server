@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   var FormView = require('./form-view');
 
-  module.exports = FormView.extend({
+  return module.exports = FormView.extend({
     tagName: 'tr',
 
     template: Handlebars.partials.edit_item_row,

@@ -274,6 +274,7 @@
     ]
   , function($, Item, Order, OrderParams, Address, ItemView, OrderParamsView, OrderSummaryView, OrderItemSummaryView, ItemModal, OrderModal) {
       var orderModel = new Order( {{{json order}}} );
+      console.log(Order);
 
       var orderParams = new OrderParams({{{json orderParams}}});
       var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
@@ -284,7 +285,7 @@
       , defaultAddress: new Address( {{{json defaultAddress }}})
       });
 
-      var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems});
+      var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems, orderModel: orderModel});
 
       var orderView = new OrderSummaryView({el: '.order-summary', model: orderModel, itemModalView: itemModalView, orderParams: orderParams});
 

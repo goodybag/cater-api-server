@@ -3,9 +3,9 @@ define(function(require, exports, module) {
   require('pickatime');
 
   var Backbone = require('backbone');
-  var Handlebars = require('handlebars');
+  var template = require('hbs!/partials/order-params-bar')
 
-  module.exports = Backbone.View.extend({
+  return module.exports = Backbone.View.extend({
     events: {
       'submit form':        'onFormSubmit'
     , 'click .form-group':  'focusInputs'
@@ -13,7 +13,8 @@ define(function(require, exports, module) {
     , 'keyup input':        'onInputChange'
     }
 
-  , template: Handlebars.partials.order_params_view
+  // , template: Handlebars.partials.order_params_view
+  , template: function() {}
 
   , initialize: function() {
 

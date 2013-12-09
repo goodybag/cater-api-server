@@ -1,7 +1,14 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
+  var OrderItem = require('../models/order-item');
+  var Handlebars = require('Handlebars');
+  var helpers = require('hb-helpers');
 
-  module.exports = Backbone.View.extend({
+  var partials = {
+    itemOptions: require('hbs!/partials/item-options')
+  };
+
+  return module.exports = Backbone.View.extend({
     events: {
       'submit .modal-item-form': 'submit'
     , 'click .btn-item-remove':  'onItemRemoveClick'
@@ -34,7 +41,7 @@ define(function(require, exports, module) {
       this.$el.find('.item-options').html(
         // If we have options, render the partial, otherwise clear the item-options div
         (this.model.attributes.options_sets || 0).length
-          ? Handlebars.partials.item_options( this.model.toJSON() )
+          ? partials.itemOptions( this.model.toJSON() )
           : ''
       );
 
@@ -61,7 +68,7 @@ define(function(require, exports, module) {
       e.preventDefault();
       var this_ = this;
 
-      if ( !orderModel.isFulfillableOrder() ) {
+      if ( !this.options.orderModel.isFulfillableOrder() ) {
         return orderModal.show({
           success: function(model, response, options) {
             orderModal.hide();

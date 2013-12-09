@@ -5,7 +5,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
 
-  module.exports = Backbone.View.extend({
+  return module.exports = Backbone.View.extend({
 
     /**
      * Return an object containing the properties differing

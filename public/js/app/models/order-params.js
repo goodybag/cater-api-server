@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
 
-  module.exports = Backbone.Model.extend({
+  return module.exports = Backbone.Model.extend({
     url: '/session/order-params',
     isNew: function() { return false; },
     isComplete: function() {

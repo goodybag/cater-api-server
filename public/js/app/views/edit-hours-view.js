@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
 
-  module.exports = Backbone.View.extend({
+  return module.exports = Backbone.View.extend({
     tagName: 'div',
 
     className: 'form-group hours-day row',

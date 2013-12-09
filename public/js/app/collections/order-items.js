@@ -2,7 +2,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var OrderItem = require('../models/order-item');
 
-  module.exports = Backbone.Collection.extend({
+  return module.exports = Backbone.Collection.extend({
     initialize: function(models, options) {
       if (options && options.orderId) this.orderId = options.orderId;
     },

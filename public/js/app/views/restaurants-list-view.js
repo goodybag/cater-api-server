@@ -5,7 +5,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
 
-  module.exports = Backbone.View.extend({
+  return module.exports = Backbone.View.extend({
     initialize: function() {
       this.listenTo(this.options.paramsView, 'params:submit', this.search);
       this.listenTo(this.options.filtersView, 'filters:change', this.search);

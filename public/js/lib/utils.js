@@ -1,10 +1,14 @@
+if (typeof module === 'object' && typeof define !== 'function') {
+  var define = function(factory) {
+    return module.exports = factory(require, exports, module);
+  };
+}
+
 define(function(require, exports, module) {
-  var _ = require('underscore');
+  var _ = require('lodash');
 
 
   var utils = _;
-
-  module.exports = utils;
 
   utils.getPrice = function( $el ) {
     var val = $el.val().trim();
@@ -57,4 +61,6 @@ define(function(require, exports, module) {
       };
     }
   });
+
+  return module.exports = utils;
 });

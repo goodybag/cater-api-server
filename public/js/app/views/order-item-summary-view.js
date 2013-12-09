@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
   var template = require('hbs!partials/order-item-summary');
 
-  module.exports = Backbone.View.extend({
+  return module.exports = Backbone.View.extend({
     tagName: 'tr',
 
     className: 'order-item',

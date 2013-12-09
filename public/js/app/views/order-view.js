@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   var FormView = require('./form-view');
 
-  module.exports = FormView.extend({
+  return module.exports = FormView.extend({
 
     events: function() {
       return _.extend({}, OrderView.prototype.events, {

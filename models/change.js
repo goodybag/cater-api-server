@@ -89,7 +89,7 @@ module.exports = Model.extend({
       order.getOrderItems(function(err, items) {
         if (err) return callback(err);
 
-        self.findOne({where: {order_id: orderId, status: {$ne: 'accepted'}}}, function(err, change) {
+        self.findOne({where: {order_id: orderId, status: 'submitted'}}, function(err, change) {
           if (err) return callback(err);
           var orderJson = order.toJSON();
           var json = utils.pick(orderJson, Order.updateableFields.concat('orderItems'))

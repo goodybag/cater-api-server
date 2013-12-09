@@ -1,12 +1,46 @@
 <div class="panel menu-category-picker">
   <div class="panel-heading">
     Menu Categories
+    <ul class="nav nav-tabs menu-category-picker-tabs">
+      <li class="active">
+        <a href="#full" class="btn-category" data-toggle="tab">Full Menu</a>
+      </li>
+      <li>
+        <a href="#group" class="btn-category" data-toggle="tab">Group Menu</a>
+      </li>
+      <li>
+        <a href="#individual" class="btn-category" data-toggle="tab">Individual Menu</a>
+      </li>
+    </ul>
   </div>
   <div class="panel-body">
-    {{#range2 1 5 }}
-    <div class="menu-category-picker-col">
-      <a href="#">[Group] Salads</a>
+    <div class="tab-content">
+      <div class="tab-pane active" id="full">
+        {{! list all categories }}
+        {{#range2 1 7}}
+        <div class="menu-category-picker-col">
+          <a href="#">[Group] Salads</a>
+        </div>
+        {{/range2}}
+      </div>
+      
+      <div class="tab-pane" id="group">
+        {{! list group style categories }}
+        {{#range2 1 4}}
+        <div class="menu-category-picker-col">
+          <a href="#">[Group] Stuff</a>
+        </div>
+        {{/range2}}
+      </div>
+      
+      <div class="tab-pane" id="individual">
+        {{! list individual style categories }}
+        {{#range2 1 5}}
+        <div class="menu-category-picker-col">
+          <a href="#">[Individual] Cheeses</a>
+        </div>
+        {{/range2}}
+      </div>
     </div>
-    {{/range2}}
   </div>
 </div>

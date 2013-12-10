@@ -62,13 +62,13 @@ module.exports = Model.extend({
 
   createFromItem: function(itemId, orderId, orderItemAttrs, callback) {
     var OrderItem = this;
-    models.Item.findOne(parseInt(req.body.item_id), function(err, item) {
+    Item.findOne(itemId, function(err, item) {
       if (err) return callback(err);
       if (!item) return callback(404);
       var attrs = utils.extend(item.toJSON(), orderItemAttrs, {order_id: orderId});
-      attrs.options_sets = JSON.stringify(OrderItem.sanitizeOptions(attrs.options_sets, orderItemAttrs.options_sets));
+      attrs.options_sets = OrderItem.sanitizeOptions(attrs.options_sets, orderItemAttrs.options_sets)
 
-      var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
+      var orderItem = new OrderItem(utils.omit(attrs, ['id', 'created_at']));
       callback(null, orderItem);
     });
   }

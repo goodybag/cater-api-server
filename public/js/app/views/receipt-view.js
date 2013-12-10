@@ -1,5 +1,7 @@
 define(function(require, exports, module) {
   var utils = require('utils');
+  var states = require('states');
+
   var OrderView = require('./order-view');
   var FormView = require('./form-view');
   var TipView = require('./tip-view');

@@ -53,6 +53,8 @@ var require = {
   , 'pickadate': '../../components/lalitkapoor-pickadate/lib/picker.date'
   , 'pickadate-legacy': '../../components/lalitkapoor-pickadate/lib/legacy'
   , 'pickatime': '../../components/lalitkapoor-pickadate/lib/picker.time'
+
+  , states: '../../states'
   }
 
 , shim: {

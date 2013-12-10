@@ -163,6 +163,7 @@ var inserts = {
       , name: fakeCategories.random() //faker.Lorem.words()[0]
       , description: faker.Lorem.sentence()
       , order: incrementer('categories_order_'+restaurant_id, 1)
+      , category_types: utils.sample(['Group', 'Individual'], Math.round(Math.random()*2))
       }
     }
   }

@@ -11,7 +11,7 @@ var defaultSelect = {
 var find = function(table, columns, limit, offset) {
   return utils.defaults({
     table: table,
-    columns: columns,
+    columns: columns.slice(0), // clone array
     limit: limit,
     offset: offset
   }, defaultSelect);
@@ -166,26 +166,20 @@ module.exports = {
   },
 
   passwordReset: {
-    get: utils.compose(
-      function(query) {
-        query.columns.push('users.email');
-        query.joins = {
-          users: {
-            type: 'inner',
-            on: {id: '$user_id$'}
-          }
-        };
-        return query;
-      },
-      function(query) {
-        query.columns = ['*'];
-        return query;
-      },
-      utils.partial(findOne, 'password_resets'),
-      function(token) {
-        return {token: token, token_used: {$null: true}};
-      }
-    ),
+    get: utils.compose(function(query) {
+      query.columns.push('users.email');
+
+      query.joins = {
+        users: {
+          type: 'inner',
+          on: {id: '$user_id$'}
+        }
+      };
+
+      return query;
+    }, utils.partial(findOne, 'password_resets'), function(token) {
+      return {token: token, token_used: {$null: true}};
+    }),
     create: function(email) {
       var values = {
         token: uuid.v4(),

@@ -163,7 +163,7 @@ var inserts = {
       , name: fakeCategories.random() //faker.Lorem.words()[0]
       , description: faker.Lorem.sentence()
       , order: incrementer('categories_order_'+restaurant_id, 1)
-      , category_types: utils.sample(['group', 'individual'], Math.round(Math.random()*2))
+      , category_types: utils.sample(['group', 'individual'], Math.round(Math.random()*1)+1)
       }
     }
   }
@@ -239,6 +239,15 @@ var inserts = {
       , data: JSON.stringify(data)
       }
     , returning: ['id']
+    };
+  }
+, mealStyles: function(name) {
+    return {
+      type: 'insert'
+    , table: 'meal_styles'
+    , values: {
+        name: name
+      }
     };
   }
 }
@@ -499,6 +508,17 @@ utils.async.series(
           cb(error);
         }
       );
+    }
+  , mealStyles: function(cb) {
+      utils.async.waterfall([
+        function(next) {
+          query(inserts.mealStyles('Group'), next);
+        },
+
+        function(arg, next) {
+          query(inserts.mealStyles('Individual'), next);
+        }
+      ], cb);
     }
   }
 , function(error, results) {

@@ -18,9 +18,19 @@
       <div class="tab-pane active" id="full">
         {{! list all categories }}
         {{#each restaurant.categories}}
+        {{#contains this.category_types "group"}}
         <div class="menu-category-picker-col">
-          <a href="#category-{{this.id}}">{{ this.name }}</a>
+          <a href="#category-{{this.id}}-group">[Group] {{ this.name }}</a>
         </div>
+        {{/contains}}
+        {{/each}}
+
+        {{#each restaurant.categories}}
+        {{#contains this.category_types "individual"}}
+        <div class="menu-category-picker-col">
+          <a href="#category-{{this.id}}-individual">[Individual] {{ this.name }}</a>
+        </div>
+        {{/contains}}
         {{/each}}
       </div>
       
@@ -29,7 +39,7 @@
         {{#each restaurant.categories}}
         {{#contains this.category_types "group"}}
         <div class="menu-category-picker-col">
-          <a href="#category-{{this.id}}">{{ this.name }}</a>
+          <a href="#category-{{this.id}}-group">[Group] {{ this.name }}</a>
         </div>
         {{/contains}}
         {{/each}}
@@ -40,7 +50,7 @@
         {{#each restaurant.categories}}
         {{#contains this.category_types "individual"}}
         <div class="menu-category-picker-col">
-          <a href="#category-{{this.id}}">{{ this.name }}</a>
+          <a href="#category-{{this.id}}-individual">[Individual] {{ this.name }}</a>
         </div>
         {{/contains}}
         {{/each}}

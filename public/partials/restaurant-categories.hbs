@@ -1,0 +1,75 @@
+{{#each restaurant.categories}}
+  {{#contains category_types "group"}}
+    <div id="category-{{id}}-group" class="panel menu-category category-full category-group">
+      <div class="panel-heading menu-cateogry-heading">
+        <h3 class="panel-title menu-cateogry-title">[Group] {{name}}</h3>
+        <p class="category-description">{{description}}</p>
+      </div>
+      <div class="list-group list-group-flush category" id="category-{{id}}">
+        {{#each items}}
+        <a class="list-group-item item" id="item-{{id}}">
+          <div class="row">
+            <h5 class="list-group-item-heading col-sm-7">
+              {{name}}
+              {{>tags tags}}
+            </h5>
+            <dl class="item-legend col-sm-5">
+              <div class="feeds-price-wrapper">
+                <div class="feeds">
+                  <dt>Feeds</dt>
+                  <dd>{{range feeds_min feeds_max}}</dd>
+                </div>
+                <div class="price">
+                  <dt>Price</dt>
+                  <dd>{{dollars price}}</dd>
+                </div>
+              </div>
+            </dl>
+          </div>
+          <div class="row">
+            <p class="list-group-item-text col-sm-7">{{description}}</p>
+          </div>
+        </a>
+        {{/each}}
+      </div>
+    </div>
+  {{/contains}}
+{{/each}}
+
+{{#each restaurant.categories}}
+  {{#contains category_types "individual"}}
+    <div id="category-{{id}}-individual" class="panel menu-category category-full category-individual">
+      <div class="panel-heading menu-cateogry-heading">
+        <h3 class="panel-title menu-cateogry-title">[Individual] {{name}}</h3>
+        <p class="category-description">{{description}}</p>
+      </div>
+      <div class="list-group list-group-flush category" id="category-{{id}}">
+        {{#each items}}
+        <a class="list-group-item item" id="item-{{id}}">
+          <div class="row">
+            <h5 class="list-group-item-heading col-sm-7">
+              {{name}}
+              {{>tags tags}}
+            </h5>
+            <dl class="item-legend col-sm-5">
+              <div class="feeds-price-wrapper">
+                <div class="feeds">
+                  <dt>Feeds</dt>
+                  <dd>{{range feeds_min feeds_max}}</dd>
+                </div>
+                <div class="price">
+                  <dt>Price</dt>
+                  <dd>{{dollars price}}</dd>
+                </div>
+              </div>
+            </dl>
+          </div>
+          <div class="row">
+            <p class="list-group-item-text col-sm-7">{{description}}</p>
+          </div>
+        </a>
+        {{/each}}
+      </div>
+    </div>
+  {{/contains}}
+{{/each}}

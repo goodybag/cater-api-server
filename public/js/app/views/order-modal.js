@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
+  var utils = require('utils');
 
   return module.exports = Backbone.View.extend({
     events: {
@@ -65,9 +66,9 @@ define(function(require, exports, module) {
       for (var key in this.model.toJSON()) {
          // date
         if (key == 'datetime' && this.model.get(key)) {
-          var date = dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY');
-          this.$el.find('[name="date"]').val( dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY') );
-          this.$el.find('[name="time"]').val( dateTimeFormatter(this.model.get(key), 'h:mm A') );
+          var date = utils.dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY');
+          this.$el.find('[name="date"]').val( utils.dateTimeFormatter(this.model.get(key), 'MM/DD/YYYY') );
+          this.$el.find('[name="time"]').val( utils.dateTimeFormatter(this.model.get(key), 'h:mm A') );
           continue;
         }
 
@@ -102,8 +103,8 @@ define(function(require, exports, module) {
         zip: this.$el.find('input[name="zip"]').val().trim() || null,
         guests: parseInt(this.$el.find('input[name="guests"]').val()) || null,
         datetime: !this.datepicker.get() ? null : (
-          dateTimeFormatter(this.datepicker.get()) + " " + (
-            !this.timepicker.get() ? "" : timeFormatter(this.timepicker.get())
+          utils.dateTimeFormatter(this.datepicker.get()) + " " + (
+            !this.timepicker.get() ? "" : utils.timeFormatter(this.timepicker.get())
           )
         )
       };
@@ -125,7 +126,7 @@ define(function(require, exports, module) {
       // Days of week the restaurant does not deliver
       var disabledTimes = [];
 
-      _(orderModel.restaurant.get('delivery_times')).each( function( t, i ){
+      _(this.options.orderModel.restaurant.get('delivery_times')).each( function( t, i ){
         if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
       });
 
@@ -156,7 +157,7 @@ define(function(require, exports, module) {
 
       day = new Date( day ).getDay();
 
-      var times = orderModel.restaurant.get('delivery_times')[ day ];
+      var times = this.options.orderModel.restaurant.get('delivery_times')[ day ];
 
       this.timepicker.set(
         'disable'

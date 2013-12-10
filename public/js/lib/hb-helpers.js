@@ -9,46 +9,6 @@ define(function(require, exports, module) {
   var utils = require('./utils');
   var states = require('../../states');
 
-  var joinIf = function(arr, sep) {
-    return Array.prototype.join.call(utils.compact(arr), sep);
-  }
-
-  var capitalize = function(str) {
-    if (!str) return '';
-    return str[0].toUpperCase() + str.substring(1);
-  }
-
-  var dateTimeFormatter = function(date, format) {
-    if (!date) return '';
-    return moment(date).format(format || 'YYYY-MM-DD');
-  }
-
-  var timeFormatter = function(time, format) {
-    // accepts both 24 hour time and 12 hour time
-    if (!time) return '';
-    if(typeof time == "object") time = time.toString();
-
-    var datetime = new moment();
-    time = time.toLowerCase().match(/(\d+)(?::(\d\d))?\s*(a|p)?/);
-
-    if (time[3] && time[3] == 'a') { // AM
-      datetime.hours(parseInt(time[1]) % 12);
-    } else if (time[3] && time[3] == 'p') { // PM
-      datetime.hours((parseInt(time[1]) % 12) + 12);
-    } else { // assume 24 hour time
-      datetime.hours(parseInt(time[1]));
-    }
-
-    datetime.minutes( parseInt(time[2]) || 0 );
-    datetime.seconds(0);
-    return datetime.format(format || 'HH:mm');
-  }
-
-  // taken from here: http://stackoverflow.com/a/4467559
-  var mod = function(a, n) {
-    return ((a % n) + n) % n;
-  }
-
   var blocks = {};
 
   var tax = function(subtotal, deliveryFee, rate, options) {
@@ -136,7 +96,7 @@ define(function(require, exports, module) {
         options = format;
         format = undefined;
       }
-      return dateTimeFormatter(date, format || "MM/DD/YYYY");
+      return utils.dateTimeFormatter(date, format || "MM/DD/YYYY");
     },
 
     formatTime: function(time, format, options) {
@@ -144,7 +104,7 @@ define(function(require, exports, module) {
         options = format;
         format = undefined;
       }
-      return timeFormatter(time, format || "h:mm A");
+      return utils.timeFormatter(time, format || "h:mm A");
     },
 
     unixTimestamp: function(datetime) {
@@ -155,11 +115,11 @@ define(function(require, exports, module) {
     // TODO: make this a partial
     address: function(loc) {
       if (!loc) return '';
-      var line1 = loc.street ? loc.street : joinIf([loc.street1, loc.street2], ', ');
+      var line1 = loc.street ? loc.street : utils.joinIf([loc.street1, loc.street2], ', ');
       var state = loc.state ? utils.findWhere(states, {abbr: loc.state.toUpperCase()}) : null;
       var stateStr = state ? '<abbr title="' + state.name + '">' + state.abbr + '</abbr>' : '';
-      var line2 = joinIf([joinIf([capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
-      return joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
+      var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
+      return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
                      line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
     },
 

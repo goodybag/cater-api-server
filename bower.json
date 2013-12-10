@@ -20,7 +20,7 @@
     "moment": "2.1.x",
     "underscore": "1.5.x",
     "jquery": "1.10.x",
-    "handlebars": "1.0.x",
+    "handlebars": "1.x",
     "bootstrap": "3.0.x",
     "backbone": "1.0.x",
     "select2": "3.4.x",

@@ -8,25 +8,24 @@ var require = {
   //the paths config could be for a directory.
 
 , paths: {
-    // handlebars plugin
-    hbs: '../../components/require-handlebars-plugin/hbs'
-  , Handlebars: '../../components/require-handlebars-plugin/Handlebars'
-  , json2: '../../components/require-handlebars-plugin/hbs/json2'
-  , i18nprecompile: '../../components/require-handlebars-plugin/hbs/i18nprecompile'
+  //   // handlebars plugin
+  //   hbs: '../../components/require-handlebars-plugin/hbs'
+  // , Handlebars: '../../components/require-handlebars-plugin/Handlebars'
+  // , json2: '../../components/require-handlebars-plugin/hbs/json2'
+  // , i18nprecompile: '../../components/require-handlebars-plugin/hbs/i18nprecompile'
 
     // text plugin
-  , text: '../../components/requirejs-text/text'
+    text: '../../components/requirejs-text/text'
     // json plugin
   , json: '../../components/requirejs-plugins/src/json'
 
     // directories
   , components: '../../components'
-  , partials: '../../partials'
   , app: '../app'
 
     // utility
-  , underscore: '../../components/underscore/underscore'
   , lodash: '../../components/lodash/dist/lodash.underscore'
+  , underscore: '../../components/lodash/dist/lodash.compat'
   , async: '../../components/async/lib/async.js'
   , amanda: '../../components/amanda/releases/latest/amanda'
 
@@ -38,6 +37,9 @@ var require = {
   , bootstrap: '../../components/bootstrap/dist/js/bootstrap'
   , select2: '../../components/select2/select2'
   , spin: '../../components/spin.js/dist/spin'
+
+    // templating related
+  , 'handlebars': '../../components/handlebars/handlebars'
 
     // moment stuff
   , moment: '../../components/moment/moment'
@@ -58,6 +60,12 @@ var require = {
       deps: ['underscore', 'jquery']
     , exports: 'Backbone'
     }
+  , 'handlebars': {
+      exports: 'Handlebars'
+    }
+  , 'partials': {
+      deps: ['handlebars']
+    }
   , 'backbone.trackit': {
       deps: ['backbone']
     }
@@ -65,7 +73,7 @@ var require = {
       deps: ['jquery']
     , exports: 'jQuery.ui'
     }
-  , underscore: {
+  , lodash: {
       exports: '_'
     }
   , bootstrap: {
@@ -85,8 +93,8 @@ var require = {
     }
   }
 
-, hbs: {
-    disableI18n: true
-  , disableHelpers: true
-  }
+// , hbs: {
+//     disableI18n: true
+//   , disableHelpers: true
+//   }
 };

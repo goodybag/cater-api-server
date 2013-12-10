@@ -1,4 +1,5 @@
 define(function(require, exports, module) {
+  var Handlebars = require('handlebars');
   var OrderView = require('./order-view');
 
   return module.exports = OrderView.extend({

@@ -8,7 +8,7 @@ define(function(require, exports, module) {
   var OrderItem = require('./order-item');
   var Address = require('./address');
 
-  return module.exports = Backbone.Model.extend({
+  var Order = Backbone.Model.extend({
     schema: function() {
       return {
         type: 'object',
@@ -294,4 +294,6 @@ define(function(require, exports, module) {
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']
   });
+
+  return module.exports = Order;
 });

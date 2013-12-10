@@ -1,7 +1,8 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
+  var Handlebars = require('handlebars');
 
-  var template = require('hbs!partials/order-item-summary');
+  var template = Handlebars.partials.order_item_summary;
 
   return module.exports = Backbone.View.extend({
     tagName: 'tr',

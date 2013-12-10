@@ -1,15 +1,17 @@
 define(function(require, exports, module) {
   var $ = require('jquery');
-  var Backbone = require('backbone');
+  var Handlebars = require('handlebars');
   var utils = require('utils');
+
+  var Backbone = require('backbone');
+  var OrderItemSummaryView = require('./order-item-summary-view');
 
   return module.exports = Backbone.View.extend({
     events: {
       'click .btn-checkout': 'checkout'
     },
 
-    // template: Handlebars.partials.menu_order_summary,
-    template: function(){},
+    template: Handlebars.partials.menu_order_summary,
 
     initialize: function(options) {
       if (this.model) this.setModel(this.model);
@@ -40,8 +42,8 @@ define(function(require, exports, module) {
         var $el = $(this);
         new OrderItemSummaryView({
           model: this_.model.orderItems.get( $el.data('id') )
-        , orderParams: orderParams
-        , itemModalView: itemModalView
+        , orderParams: this_.options.orderParams
+        , itemModalView: this_.options.itemModalView
         , orderModel: this_.model
         , el: $el[0]
         });
@@ -80,6 +82,7 @@ define(function(require, exports, module) {
     },
 
     checkout: function(e) {
+      var this_ = this;
       var obj = this.options.orderParams.toJSON();
       var params = {
         zip: obj.zip || undefined,
@@ -101,9 +104,9 @@ define(function(require, exports, module) {
         singleError: false,
         success: function(model, response, options) {
           // Reset order params
-          _.each( _.keys( orderParams.toJSON() ), _.bind( orderParams.unset, orderParams ) );
+          _.each( _.keys( this_.options.orderParams.toJSON() ), _.bind( this_.options.orderParams.unset, this_.options.orderParams ) );
 
-          orderParams.save( null, { success: function(){
+          this_.options.orderParams.save( null, { success: function(){
             window.location.href = _.result(view.model, 'url') + '/items';
           } })
         }

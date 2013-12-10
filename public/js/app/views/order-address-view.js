@@ -1,5 +1,8 @@
 define(function(require, exports, module) {
   var AddressView = require('./address-view');
+  var Handlebars = require('Handlebars');
+
+  var template = Handlebars.partials.order_delivery_info;
 
   return module.exports = AddressView.extend({
     events: {
@@ -9,7 +12,7 @@ define(function(require, exports, module) {
       'click .add-address': 'addAddress'
     },
 
-    template: Handlebars.partials.order_delivery_info,
+    template: template,
 
     initialize: function(options) {
     },

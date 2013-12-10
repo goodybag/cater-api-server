@@ -128,7 +128,8 @@
     <script src="/components/lalitkapoor-pickadate/lib/legacy.js"></script>
 -->
     <script>
-      require(['jquery', 'moment-timezone', 'Handlebars', 'hb-helpers'], function($, moment, Handlebars, helpers) {
+      require(['jquery', 'underscore', 'moment-timezone', 'handlebars', 'hb-helpers', 'partials'], function($, _, moment, Handlebars, helpers) {
+
         $.ajax({
           type: "GET",
           url: "/components/moment-timezone/moment-timezone.json",
@@ -143,6 +144,13 @@
           Handlebars.registerHelper(key, helpers[key]);
         }
 
+        // for Handlebars partials replace dashes with underscores
+        // (alternatively, have filenames with underscores instead of hyphens)
+        var newPartials = {};
+        Handlebars.partials = _.map(Handlebars.partials, function(value, key) {
+          newPartials[key.replace(/-/g, '_')] = value;
+        });
+        Handlebars.partials = newPartials;
       });
 
     </script>

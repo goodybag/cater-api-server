@@ -7,7 +7,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 define(function(require, exports, module) {
   var _ = require('lodash');
 
-
+  var moment = require('moment');
   var utils = _;
 
   utils.getPrice = function( $el ) {
@@ -48,6 +48,46 @@ define(function(require, exports, module) {
       return v.toString(16);
     });
   };
+
+  utils.joinIf = function(arr, sep) {
+    return Array.prototype.join.call(utils.compact(arr), sep);
+  }
+
+  utils.capitalize = function(str) {
+    if (!str) return '';
+    return str[0].toUpperCase() + str.substring(1);
+  }
+
+  utils.dateTimeFormatter = function(date, format) {
+    if (!date) return '';
+    return moment(date).format(format || 'YYYY-MM-DD');
+  }
+
+  utils.timeFormatter = function(time, format) {
+    // accepts both 24 hour time and 12 hour time
+    if (!time) return '';
+    if(typeof time == "object") time = time.toString();
+
+    var datetime = new moment();
+    time = time.toLowerCase().match(/(\d+)(?::(\d\d))?\s*(a|p)?/);
+
+    if (time[3] && time[3] == 'a') { // AM
+      datetime.hours(parseInt(time[1]) % 12);
+    } else if (time[3] && time[3] == 'p') { // PM
+      datetime.hours((parseInt(time[1]) % 12) + 12);
+    } else { // assume 24 hour time
+      datetime.hours(parseInt(time[1]));
+    }
+
+    datetime.minutes( parseInt(time[2]) || 0 );
+    datetime.seconds(0);
+    return datetime.format(format || 'HH:mm');
+  }
+
+  // taken from here: http://stackoverflow.com/a/4467559
+  utils.mod = function(a, n) {
+    return ((a % n) + n) % n;
+  }
 
   _.mixin({
     objMap: function(obj, func, context) {

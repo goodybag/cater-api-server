@@ -91,6 +91,7 @@ define(function(require, exports, module) {
         };
       }));
 
+
       // Add min/max errors
       errors = errors.concat(
 

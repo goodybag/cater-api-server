@@ -1,12 +1,9 @@
 define(function(require, exports, module) {
-  var Backbone = require('backbone');
-  var OrderItem = require('../models/order-item');
-  var Handlebars = require('Handlebars');
+  var Handlebars = require('handlebars');
   var helpers = require('hb-helpers');
 
-  var partials = {
-    itemOptions: require('hbs!/partials/item-options')
-  };
+  var Backbone = require('backbone');
+  var OrderItem = require('../models/order-item');
 
   return module.exports = Backbone.View.extend({
     events: {
@@ -41,7 +38,7 @@ define(function(require, exports, module) {
       this.$el.find('.item-options').html(
         // If we have options, render the partial, otherwise clear the item-options div
         (this.model.attributes.options_sets || 0).length
-          ? partials.itemOptions( this.model.toJSON() )
+          ? Handlebars.partials.item_options( this.model.toJSON() )
           : ''
       );
 
@@ -67,11 +64,10 @@ define(function(require, exports, module) {
     submit: function(e) {
       e.preventDefault();
       var this_ = this;
-
       if ( !this.options.orderModel.isFulfillableOrder() ) {
-        return orderModal.show({
+        return this.options.orderModal.show({
           success: function(model, response, options) {
-            orderModal.hide();
+            this_.options.orderModal.hide();
             this_.submit(e);
           }
         , error: function(){

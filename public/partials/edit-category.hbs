@@ -18,7 +18,7 @@
       <div class="row">
         <div class="checkbox">
           <label>
-            <input type="checkbox" name="categoryTypes" class="category-types" value="group" {{#eq this.category_type "group"}}checked{{/eq}}>
+            <input type="checkbox" name="categoryTypes" class="category-types" value="group" {{#contains this.category_types "group"}}checked{{/contains}}>
             Group
           </label>
         </div>
@@ -26,7 +26,7 @@
       <div class="row">
         <div class="checkbox">
           <label>
-            <input type="checkbox" name="categoryTypes" class="category-types" value="individual" {{#eq this.category_type "individual"}}checked{{/eq}}>
+            <input type="checkbox" name="categoryTypes" class="category-types" value="individual" {{#contains this.category_types "individual"}}checked{{/contains}}>
             Individual
           </label>
         </div>

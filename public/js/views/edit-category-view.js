@@ -12,7 +12,7 @@ var EditCategoryView = FormView.extend({
     'click .new-item': 'newItem',
     'keyup .category-form .form-control': 'onChange',
     'change .category-form .form-control': 'onChange',
-    'change .category-form .category-type': 'onChange',
+    'change .category-form .category-types': 'onChange',
     'click .category-form .category-remove': 'onRemove',
     'submit .category-form': 'onSave'
   },
@@ -60,6 +60,7 @@ var EditCategoryView = FormView.extend({
     },
 
     category_types: function() {
+      console.log('POO');
       return _.pluck(this.$el.find(this.fieldMap.category_types + ':checked'), 'value');
     }
   },

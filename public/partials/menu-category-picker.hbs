@@ -38,7 +38,6 @@
       <div class="tab-pane" id="individual">
         {{! list individual style categories }}
         {{#each restaurant.categories}}
-        {{{dump this}}}
         {{#contains this.category_types "individual"}}
         <div class="menu-category-picker-col">
           <a href="#category-{{this.id}}">{{ this.name }}</a>

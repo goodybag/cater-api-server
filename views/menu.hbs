@@ -44,7 +44,7 @@
         <div class="menu">
           {{> menu_category_picker }}
           {{#each restaurant.categories}}
-          <div id="category-{{this.id}}" class="panel menu-category category-full {{#if this.category_type}}category-{{this.category_type}}{{/if}}">
+          <div id="category-{{this.id}}" class="panel menu-category category-full {{#contains this.category_types "group"}}category-group{{/contains}} {{#contains this.category_types "individual"}}category-individual{{/contains}}">
             <div class="panel-heading menu-cateogry-heading">
               <h3 class="panel-title menu-cateogry-title">{{name}}</h3>
               <p class="category-description">{{description}}</p>

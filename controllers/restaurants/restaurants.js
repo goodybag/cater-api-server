@@ -105,7 +105,7 @@ module.exports.get = function(req, res) {
     }
 
     // TODO: meditate on this a bit more
-    context.categories = utils.groupBy(context.restaurant.categories, 'category_type');
+    // context.categories = utils.groupBy(context.restaurant.categories, 'category_types');
 
     res.render('menu', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);

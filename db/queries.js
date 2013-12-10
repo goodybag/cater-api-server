@@ -1,24 +1,22 @@
 var uuid  = require('node-uuid');
 var utils = require('../utils');
 
-var defaultSelect = {
-  type: 'select',
-  columns: ['*'],
-  limit: '100',
-  offset: '0'
-}
+var defaultSelect = function() {
+  return {
+    type: 'select',
+    columns: ['*'],
+    limit: '100',
+    offset: '0'
+  };
+};
 
 var find = function(table, columns, limit, offset) {
-  var query = utils.defaults({
+  return utils.defaults({
     table: table,
     columns: columns,
     limit: limit,
     offset: offset
-  }, defaultSelect);
-
-  // create and use a new reference
-  query.columns = query.columns.slice(0);
-  return query;
+  }, defaultSelect());
 }
 
 var findOne = function(table, where, columns) {

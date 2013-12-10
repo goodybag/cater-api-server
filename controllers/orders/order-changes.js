@@ -20,22 +20,22 @@ module.exports.get = function(req, res, next) {
   });
 };
 
-
 // Decorator for creating / updating changes
 // Takes a function which takes a request, an order, and a change object and modifies the change object appropriately
 // The fourth parameter is a done callback that should be called when the function is finished modifying the change.
 function changer(func) {
   return function(order, req, res, next) {
-  var isAdmin = req.session.user && utils.contains(req.session.user.groups, 'admin');
-  models.Change.getChange(order, isAdmin, function(err, change) {
-    if (err)
-      return utils.contains([404, 403], err) ? res.json(err, {}) : res.error(errors.internal.DB_FAILURE, err);
+    var isAdmin = req.session.user && utils.contains(req.session.user.groups, 'admin');
+    models.Change.getChange(order, isAdmin, function(err, change) {
+      if (err)
+        return utils.contains([404, 403], err) ? res.json(err, {}) : res.error(errors.internal.DB_FAILURE, err);
 
-    func(req, change, order, function(err) {
-      if (err) return res.error(errors.internal.UNKNOWN, err);
-      change.save(function(err, rows, result) {
-        if (err) return res.error(errors.internal.DB_FAILURE, err);
-        res.json(201, change.toJSON());  // TODO: is this best?
+      func(req, change, order, function(err) {
+        if (err) return res.error(errors.internal.UNKNOWN, err);
+        change.save(function(err, rows, result) {
+          if (err) return res.error(errors.internal.DB_FAILURE, err);
+          res.json(201, change.toJSON());  // TODO: is this best?
+        });
       });
     });
   };

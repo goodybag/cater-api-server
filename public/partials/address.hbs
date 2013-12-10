@@ -1,5 +1,9 @@
 <address>
-  {{#if name }}
+  {{#if address }}
+    {{#if address.name}}
+    <strong>{{address.name}}</strong><br>
+    {{/if}}
+  {{else}}
   <strong>{{name}}</strong><br>
   {{/if}}
   {{street}}<br>

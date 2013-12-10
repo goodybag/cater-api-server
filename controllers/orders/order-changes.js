@@ -67,22 +67,23 @@ module.exports.addItem = changer(function(req, change, order, done) {
 
 module.exports.removeItem = changer(function(req, change, order, done) {
   var json = change.attributes.order_json;
-  var toRemove = utils.findWhere(json.orderItems, {id: req.params.iid});
-  json.orderItems = json.orderItems.without(toRemove);
+  var toRemove = utils.findWhere(json.orderItems, {id: parseInt(req.params.iid)}); // NOTE: ideally, all ids would be strings, but this works for now
+  if (toRemove == null) return done({code:404, message: 'OrderItem not found on order: ' + req.params.iid});
+  json.orderItems = utils.without(json.orderItems, toRemove);
   change.attributes.change_summaries.push('Removed item ' + toRemove.name + ' from order.');
   done();
 });
 
 module.exports.updateItem = changer(function(req, change, order, done) {
-  var item = utils.findWhere(change.attributes.order_json.orderItems, {id: req.params.iid});
-  var updates = utils.pick(req.body, ['quantity', 'notes', 'recipient'])
+  var item = utils.findWhere(change.attributes.order_json.orderItems, {id: parseInt(req.params.iid)});
+  var updates = utils.pick(req.body, ['quantity', 'notes', 'recipient']);
   if (req.body.options_sets !== undefined)
-    updates.options_sets = JSON.stringify(models.OrderItem.sanitizeOptions(item.options_sets, req.body.options_sets));
-  item.extend(updates);
+    updates.options_sets = models.OrderItem.sanitizeOptions(item.options_sets, req.body.options_sets);
   var changeSummaries = utils.map(updates, function(val, key, obj) {
-    return ['Item', item.name, key, 'changed'].concat(key !== 'options_sets' ? ['from', item[key], 'to', val] : []).concat('.').join(' ');
+    return ['Item', item.name, key, 'changed'].concat(key !== 'options_sets' ? ['from', item[key], 'to', val] : []).join(' ') + '.';
   });
-  Array.prototype.push.apply(change.attributes.change_summaries, changeSummarries);
+  utils.extend(item, updates);
+  Array.prototype.push.apply(change.attributes.change_summaries, changeSummaries);
   done();
 });
 

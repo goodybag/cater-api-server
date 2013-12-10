@@ -274,7 +274,7 @@ module.exports.register = function(app) {
 
   app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.orderItems.update, controllers.orders.changes.updateItem));
 
-  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.orderItems.update));
+  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.orderItems.update, controllers.orders.changes.updateItem));
 
   app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability(controllers.orders.orderItems.remove, controllers.orders.changes.removeItem));
 

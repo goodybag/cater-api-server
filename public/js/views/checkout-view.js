@@ -17,6 +17,7 @@ var CheckoutView = OrderView.extend({
   , datetime: '.order-datetime'
   , guests: '#order-guests'
   , street: '.address-street'
+  , name: '#order-name'
   , city: '.address-city'
   , state: '.address-state'
   , zip: '.address-zip'

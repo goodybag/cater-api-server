@@ -9,12 +9,16 @@ var defaultSelect = {
 }
 
 var find = function(table, columns, limit, offset) {
-  return utils.defaults({
+  var query = utils.defaults({
     table: table,
-    columns: columns.slice(0), // clone array
+    columns: columns,
     limit: limit,
     offset: offset
   }, defaultSelect);
+
+  // create and use a new reference
+  query.columns = query.columns.slice(0);
+  return query;
 }
 
 var findOne = function(table, where, columns) {

@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
   var AddressView = require('./address-view');
-  var Handlebars = require('Handlebars');
+  var Handlebars = require('handlebars');
 
   var template = Handlebars.partials.order_delivery_info;
 

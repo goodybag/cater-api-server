@@ -11,7 +11,8 @@
  *
  */
 
-var spinner = (function(){
+define(function(require, exports, module) {
+  var Spinner = require('spin');
   'use strict';
 
   var options = {
@@ -74,4 +75,4 @@ var spinner = (function(){
   });
 
   return exports;
-})();
+});

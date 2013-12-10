@@ -1,5 +1,14 @@
 define(function(require, exports, module) {
+  var Handlebars = require('handlebars');
+  var utils = require('utils');
+
+  var Order = require('../models/Order');
+
   var FormView = require('./form-view');
+  var OrderAddressView = require('./order-address-view');
+  var CopyErrorModalView = require('./copy-error-modal');
+  var TipView = require('./tip-view');
+
 
   return module.exports = FormView.extend({
 

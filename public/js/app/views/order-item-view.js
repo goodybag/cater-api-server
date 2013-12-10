@@ -1,6 +1,8 @@
 define(function(require, exports, module) {
   var FormView = require('./form-view');
 
+  var OrderItem = require('../models/order-item');
+
   return module.exports = FormView.extend({
     model: OrderItem,
 

@@ -302,33 +302,13 @@
 
 {{#extend "scripts"}}
 <script>
-  var partials = {
-    address:      'address.hbs',
-    edit_address: 'edit-address.hbs',
-    order_info:   'order-info.hbs',
-    totals:       'totals.hbs'
-  };
-
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial(name, Handlebars.compile(data));
-      },
-      dataType: 'html',
-      async: false
-    });
-  }
-</script>
-
-<script>
   require([
-      'app/models/order'
+      'utils'
+    , 'app/models/order'
     , 'app/views/receipt-view'
     , 'app/views/order-item-view'
     ]
-  , function(Order, ReceiptView, OrderItemView) {
+  , function(utils, Order, ReceiptView, OrderItemView) {
       var query = utils.parseQueryParams();
       var view = new ReceiptView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
       var items = [

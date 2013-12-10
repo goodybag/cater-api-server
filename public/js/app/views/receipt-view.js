@@ -1,5 +1,9 @@
 define(function(require, exports, module) {
+  var utils = require('utils');
   var OrderView = require('./order-view');
+  var FormView = require('./form-view');
+  var TipView = require('./tip-view');
+  var CopyErrorModalView = require('./copy-error-modal');
 
   return module.exports = OrderView.extend({
     events: function() {

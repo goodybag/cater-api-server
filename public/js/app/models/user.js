@@ -5,6 +5,9 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
 
+  var Addresses = require('../collections/addresses');
+  var PaymentMethods = require('../collections/payment-methods');
+
   return module.exports = Backbone.Model.extend({
     schema: {
       type: 'object',

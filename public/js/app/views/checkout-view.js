@@ -1,6 +1,12 @@
 define(function(require, exports, module) {
   var Handlebars = require('handlebars');
+  var spinner = require('spinner');
+
   var OrderView = require('./order-view');
+
+  var Order = require('../models/order');
+  var Address = require('../models/address');
+
 
   return module.exports = OrderView.extend({
     events: _.extend({}, OrderView.prototype.events, {
@@ -397,7 +403,7 @@ define(function(require, exports, module) {
         , data);
       }
 
-      var pm = new PaymentMethod({ user_id: user.get('id') });
+      var pm = new PaymentMethod({ user_id: this.options.user.get('id') });
 
       // Save the card
       pm.updateBalancedAndSave(data, function(error) {
@@ -517,7 +523,7 @@ define(function(require, exports, module) {
     },
 
     onPaymentMethodIdChange: function(e) {
-      var pm = user.payment_methods.get(this.$paymentMethodId.val());
+      var pm = this.options.user.payment_methods.get(this.$paymentMethodId.val());
 
       if (!pm) return;
 
@@ -527,7 +533,7 @@ define(function(require, exports, module) {
 
     onExpiredUpdateClick: function(e) {
       e.preventDefault();
-      var pm = user.payment_methods.get(this.$paymentMethodId.val());
+      var pm = this.options.user.payment_methods.get(this.$paymentMethodId.val());
 
       if (!pm) return;
 
@@ -546,7 +552,7 @@ define(function(require, exports, module) {
       var $el = this.$el.find('#update-card');
 
       var pm = new PaymentMethod({
-        user_id: user.get('id')
+        user_id: this.options.user.get('id')
       , id: $el.find('[name="id"]').val()
       });
 

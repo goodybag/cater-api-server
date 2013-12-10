@@ -69,6 +69,7 @@ module.exports.removeItem = changer(function(req, change, order, done) {
   var json = change.attributes.order_json;
   var toRemove = utils.findWhere(json.orderItems, {id: req.params.iid});
   json.orderItems = json.orderItems.without(toRemove);
+  change.attributes.change_summaries.push('Removed item ' + toRemove.name + ' from order.');
   done();
 });
 
@@ -78,6 +79,10 @@ module.exports.updateItem = changer(function(req, change, order, done) {
   if (req.body.options_sets !== undefined)
     updates.options_sets = JSON.stringify(models.OrderItem.sanitizeOptions(item.options_sets, req.body.options_sets));
   item.extend(updates);
+  var changeSummaries = utils.map(updates, function(val, key, obj) {
+    return ['Item', item.name, key, 'changed'].concat(key !== 'options_sets' ? ['from', item[key], 'to', val] : []).concat('.').join(' ');
+  });
+  Array.prototype.push.apply(change.attributes.change_summaries, changeSummarries);
   done();
 });
 

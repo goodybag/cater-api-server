@@ -14,13 +14,13 @@ var CheckoutView = OrderView.extend({
 
   fieldMap: {
     payment_method_id: '#payment-method-id'
-  , date: '#order-date'
-  , time: '#order-time'
+  , datetime: '.order-datetime'
   , guests: '#order-guests'
   , street: '.address-street'
   , city: '.address-city'
   , state: '.address-state'
   , zip: '.address-zip'
+  , notes: '#order-notes'
   , phone: '.address-phone'
   , tip: '.order-tip'
   , tip_percent: '.tip-percent'

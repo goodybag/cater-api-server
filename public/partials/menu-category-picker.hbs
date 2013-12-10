@@ -27,22 +27,23 @@
       <div class="tab-pane" id="group">
         {{! list group style categories }}
         {{#each restaurant.categories}}
-        {{#eq this.category_type "group"}}
+        {{#contains this.category_types "group"}}
         <div class="menu-category-picker-col">
           <a href="#category-{{this.id}}">{{ this.name }}</a>
         </div>
-        {{/eq}}
+        {{/contains}}
         {{/each}}
       </div>
       
       <div class="tab-pane" id="individual">
         {{! list individual style categories }}
         {{#each restaurant.categories}}
-        {{#eq this.category_type "individual"}}
+        {{{dump this}}}
+        {{#contains this.category_types "individual"}}
         <div class="menu-category-picker-col">
           <a href="#category-{{this.id}}">{{ this.name }}</a>
         </div>
-        {{/eq}}
+        {{/contains}}
         {{/each}}
       </div>
     </div>

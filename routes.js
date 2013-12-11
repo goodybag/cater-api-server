@@ -309,9 +309,9 @@ module.exports.register = function(app) {
    * Order Changes Resource.  All the proposed changes for a specific order.
    */
 
-  app.get('/orders/:oid/changes', m.restrict(['client', 'admin']), controllers.orders.changes.list);
+  app.get('/orders/:oid/changes', controllers.orders.changes.list);
 
-  app.all('/orders/:oid/changes', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/changes', function(req, res, next) {
     res.set('Allow', 'GET');
     res.send(405);
   });
@@ -320,15 +320,15 @@ module.exports.register = function(app) {
    * Order Change Resource.  A single proposed change to an order.
    */
 
-  app.get('/orders/:oid/changes/:cid', m.restrict(['client', 'admin']), controllers.orders.changes.get);
+  app.get('/orders/:oid/changes/:cid', controllers.orders.changes.get);
 
-  app.put('/orders/:oid/changes/:cid', m.restrict(['client', 'admin']), controllers.orders.changes.update);
+  app.put('/orders/:oid/changes/:cid', controllers.orders.changes.update);
 
-  app.patch('/orders/:oid/changes/:cid', m.restrict(['client', 'admin']), controllers.orders.changes.update);
+  app.patch('/orders/:oid/changes/:cid', controllers.orders.changes.update);
 
   app.delete('/orders/:oid/changes/:cid', m.restrict(['client', 'admin']), controllers.orders.changes.cancel);
 
-  app.all('/orders/:oid/changes/:cid', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/changes/:cid', function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });

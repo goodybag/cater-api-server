@@ -4,15 +4,16 @@ var utils = require('../utils');
 var venter = require('../lib/venter');
 
 module.exports = Model.extend({
-  save: function(returning, callback) {
+  save: function(query, callback, client) {
     var self = this;
 
-    if (utils.isFunction(returning)) {
-      callback = returning;
-      returning = null;
+    if (utils.isFunction(query)) {
+      client = callback;
+      callback = query;
+      query = {};
     }
 
-    callback = callback || utils.noop;
+    callback = callback || utils.identity;
 
     // Override user callback to emit order:change event after
     // save has been completed
@@ -25,7 +26,7 @@ module.exports = Model.extend({
       venter.emit( 'order:change', self.attributes.order_id );
     };
 
-    Model.prototype.save.call(self, returning, callback);
+    Model.prototype.save.call(self, query, callback, client);
   },
   destroy: function(callback) {
     var model = this, args = arguments;

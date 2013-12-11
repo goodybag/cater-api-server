@@ -84,6 +84,7 @@ var config = {
       support: 'support@goodybag.com'
     , orders: 'orders@goodybag.com'
     , waitlist: 'waitlist@goodybag.com'
+    , denied: ['jag@goodybag.com', 'sarah.southwell@goodybag.com']
     }
 
   , phone: {

@@ -3,6 +3,10 @@ var MenuView = Backbone.View.extend({
     'click .btn-change-menu': 'changeMenu'
   },
 
+  initialize: function() {
+    this.$el.find('.btn-change-menu').tooltip();
+  },
+
   changeMenu: function(e) {
     e.preventDefault();
     var type = $(e.target).data('type');

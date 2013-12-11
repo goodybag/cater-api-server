@@ -22,7 +22,7 @@
         {{#each restaurant.categories}}
         {{#contains menus "group"}}
         <div class="menu-picker-col">
-          <a href="#category-{{this.id}}-group">[Group] {{ this.name }}</a>
+          <a href="#category-{{id}}-group">[Group] {{name}}</a>
         </div>
         {{/contains}}
         {{/each}}
@@ -30,7 +30,7 @@
         {{#each restaurant.categories}}
         {{#contains menus "individual"}}
         <div class="menu-picker-col">
-          <a href="#category-{{this.id}}-individual">[Individual] {{ this.name }}</a>
+          <a href="#category-{{id}}-individual">[Individual] {{name}}</a>
         </div>
         {{/contains}}
         {{/each}}
@@ -41,7 +41,7 @@
         {{#each restaurant.categories}}
         {{#contains menus "group"}}
         <div class="menu-picker-col">
-          <a href="#category-{{this.id}}-group">[Group] {{ this.name }}</a>
+          <a href="#category-{{id}}-group">[Group] {{name}}</a>
         </div>
         {{/contains}}
         {{/each}}
@@ -52,7 +52,7 @@
         {{#each restaurant.categories}}
         {{#contains menus "individual"}}
         <div class="menu-picker-col">
-          <a href="#category-{{this.id}}-individual">[Individual] {{ this.name }}</a>
+          <a href="#category-{{id}}-individual">[Individual] {{name}}</a>
         </div>
         {{/contains}}
         {{/each}}

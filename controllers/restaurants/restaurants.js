@@ -104,10 +104,10 @@ module.exports.get = function(req, res) {
       orderParams:      orderParams
     }
 
-    // Build a histogram of category types vs freq for labeling
+    // Build a histogram of menus vs freq for labeling
     var menuLengths = utils.countBy(utils.flatten(utils.pluck(context.restaurant.categories, 'menus')));
 
-    // Sum all types as `full`
+    // Sum all types as `full` menu
     utils.each(menuLengths, function(val, key, list) {
       menuLengths.full = (menuLengths.full || 0) + val;
     });

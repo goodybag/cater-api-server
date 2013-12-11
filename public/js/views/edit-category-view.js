@@ -60,7 +60,6 @@ var EditCategoryView = FormView.extend({
     },
 
     category_types: function() {
-      console.log('POO');
       return _.pluck(this.$el.find(this.fieldMap.category_types + ':checked'), 'value');
     }
   },

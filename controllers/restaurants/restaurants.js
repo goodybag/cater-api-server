@@ -104,8 +104,20 @@ module.exports.get = function(req, res) {
       orderParams:      orderParams
     }
 
-    // TODO: meditate on this a bit more
-    // context.categories = utils.groupBy(context.restaurant.categories, 'category_types');
+    // Build a histogram of category types vs freq for labeling
+    var catLengths = utils.reduce(context.restaurant.categories, function(memo, category) {
+      utils.each(category.category_types, function(ct) {
+        memo[ct] = (memo[ct] || 0) + 1;
+      });
+      return memo;
+    }, {});
+
+    // Sum all types as `full`
+    utils.each(catLengths, function(val, key, list) {
+      catLengths.full = (catLengths.full || 0) + val;
+    });
+
+    context.restaurant.categoryLengths = catLengths;
 
     res.render('menu', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);

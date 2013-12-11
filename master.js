@@ -1,3 +1,4 @@
-var forky = require('forky');
+// var forky = require('forky');
 
-forky(__dirname + '/server');
+// forky(__dirname + '/server');
+require(__dirname + '/server')

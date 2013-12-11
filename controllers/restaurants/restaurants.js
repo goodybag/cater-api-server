@@ -33,18 +33,31 @@ module.exports.list = function(req, res) {
     }
   ];
 
+  // Filters count needs a list of all restaurants
+  if (Object.keys(orderParams).length > 0){
+    tasks.push(
+      utils.partial( models.Restaurant.find.bind( models.Restaurant ), {}, { is_hidden: false } )
+    );
+  }
+
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
 
-    res.render('restaurants', {
+    var context = {
       restaurants:      utils.invoke(results[0], 'toJSON'),
       defaultAddress:   results[1] ? results[1].toJSON() : null,
       orderParams:      orderParams,
       filterCuisines:   cuisines,
       filterPrices:     utils.range(1, 5),
       filterMealTypes:  enums.getMealTypes(),
-      filterMealStyles: enums.getMealStyles()
-    });
+      filterMealStyles: enums.getMealStyles(),
+    };
+
+    context.allRestaurants = results.length === 3
+      ? utils.invoke(results[2], 'toJSON')
+      : context.restaurants;
+
+    res.render('restaurants', context);
   };
 
   utils.async.parallel(tasks, done);

@@ -105,14 +105,14 @@ module.exports.get = function(req, res) {
     }
 
     // Build a histogram of category types vs freq for labeling
-    var catLengths = utils.countBy(utils.flatten(utils.pluck(context.restaurant.categories, 'category_types')));
+    var menuLengths = utils.countBy(utils.flatten(utils.pluck(context.restaurant.categories, 'menus')));
 
     // Sum all types as `full`
-    utils.each(catLengths, function(val, key, list) {
-      catLengths.full = (catLengths.full || 0) + val;
+    utils.each(menuLengths, function(val, key, list) {
+      menuLengths.full = (menuLengths.full || 0) + val;
     });
 
-    context.restaurant.categoryLengths = catLengths;
+    context.restaurant.menuLengths = menuLengths;
 
     res.render('menu', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);

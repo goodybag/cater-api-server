@@ -1,6 +1,6 @@
 var MenuView = Backbone.View.extend({
   events: {
-    'click .btn-category': 'changeCategory'
+    'click .btn-change-menu': 'changeMenu'
   },
 
   initialize: function () {
@@ -14,6 +14,6 @@ var MenuView = Backbone.View.extend({
     this.$el.find('.menu-category').hide();
 
     // Show menu category type (full, group, individual)
-    this.$el.find('.category-' + type).show();
+    this.$el.find('.menu-' + type).show();
   }
 });

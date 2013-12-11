@@ -1,8 +1,8 @@
-<div class="panel menu-category-picker">
+<div class="panel menu-picker">
   <div class="panel-heading">
-    Menu Categories
-    {{#with restaurant.categoryLengths}}
-    <ul class="nav nav-tabs menu-category-picker-tabs">
+    Menus
+    {{#with restaurant.menuLengths}}
+    <ul class="nav nav-tabs menu-picker-tabs">
       <li class="active">
         <a href="#full" class="btn-category" data-toggle="tab" data-type="full">Full Menu ({{#if full}}{{full}}{{else}}0{{/if}})</a>
       </li>
@@ -20,16 +20,16 @@
       <div class="tab-pane active" id="full">
         {{! list all categories }}
         {{#each restaurant.categories}}
-        {{#contains this.category_types "group"}}
-        <div class="menu-category-picker-col">
+        {{#contains menus "group"}}
+        <div class="menu-picker-col">
           <a href="#category-{{this.id}}-group">[Group] {{ this.name }}</a>
         </div>
         {{/contains}}
         {{/each}}
 
         {{#each restaurant.categories}}
-        {{#contains this.category_types "individual"}}
-        <div class="menu-category-picker-col">
+        {{#contains menus "individual"}}
+        <div class="menu-picker-col">
           <a href="#category-{{this.id}}-individual">[Individual] {{ this.name }}</a>
         </div>
         {{/contains}}
@@ -39,8 +39,8 @@
       <div class="tab-pane" id="group">
         {{! list group style categories }}
         {{#each restaurant.categories}}
-        {{#contains this.category_types "group"}}
-        <div class="menu-category-picker-col">
+        {{#contains menus "group"}}
+        <div class="menu-picker-col">
           <a href="#category-{{this.id}}-group">[Group] {{ this.name }}</a>
         </div>
         {{/contains}}
@@ -50,8 +50,8 @@
       <div class="tab-pane" id="individual">
         {{! list individual style categories }}
         {{#each restaurant.categories}}
-        {{#contains this.category_types "individual"}}
-        <div class="menu-category-picker-col">
+        {{#contains menus "individual"}}
+        <div class="menu-picker-col">
           <a href="#category-{{this.id}}-individual">[Individual] {{ this.name }}</a>
         </div>
         {{/contains}}

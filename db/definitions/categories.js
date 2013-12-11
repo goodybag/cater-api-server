@@ -43,7 +43,7 @@ define(function(require) {
       type: types.int
     , nullable: false
     }
-  , category_types: {
+  , menus: {
       type: types.array(types.text)
     , nullable: false
     , default: "'{}'"

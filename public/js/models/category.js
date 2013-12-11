@@ -16,7 +16,7 @@ var Category = Backbone.Model.extend({
         type: ['string', 'null'],
         minLength: 1
       },
-      category_types: {
+      menus: {
         type: 'array',
         uniqueItems: true,
         required: true,

@@ -43,7 +43,7 @@ module.exports = Model.extend({
       if (!order) return res.json(404);
       order.getOrderItems();
       var old = order.toJSON();
-      var removedIds = utils.difference(utils.pluck(old.order_items, 'id'), utils.pluck(json.order_items, 'id'));
+      var removedIds = utils.difference(utils.pluck(old.orderItems, 'id'), utils.pluck(json.order_items, 'id'));
 
       var tasks = [
         // update order
@@ -54,7 +54,7 @@ module.exports = Model.extend({
       ];
 
       // add new items and update exisiting ones
-      tasks = tasks.concat(utils.map(json.order_items, function(orderItem) {
+      tasks = tasks.concat(utils.map(json.orderItems, function(orderItem) {
         var model = new OrderItem(orderItem);
         return function(cb) {
           return model.save(utils.compose(cb, utils.identity));

@@ -14,7 +14,7 @@ var types = {
     db.query("DROP TYPE IF EXISTS order_status; CREATE TYPE order_status AS ENUM('canceled', 'pending', 'submitted', 'denied', 'accepted', 'delivered');", callback);
   }
 , change_status: function(callback) {
-    db.query("DROP TYPE IF EXISTS change_status; CREATE TYPE change_status AS ENUM('canceled', 'submitted', 'denied', 'accepted');", callback);
+    db.query("DROP TYPE IF EXISTS change_status; CREATE TYPE change_status AS ENUM('canceled', 'pending', 'submitted', 'denied', 'accepted');", callback);
   }
 , payment_method: function(callback) {
     db.query("DROP TYPE IF EXISTS payment_method; CREATE TYPE payment_method AS ENUM('card', 'bank');", callback);

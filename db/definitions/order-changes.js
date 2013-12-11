@@ -32,7 +32,7 @@ define(function(require) {
   , status: {
       type: types.changestatus
     , nullable: false
-    , default: 'submitted'
+    , default: 'pending'
     }
   , change_summaries: {
       type: types.array(types.text)

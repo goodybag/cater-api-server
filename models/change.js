@@ -120,6 +120,7 @@ module.exports = Model.extend({
 
   statusFSM: {
     canceled: [],
+    pending: ['canceled', 'submitted'],
     submitted: ['canceled', 'denied', 'accepted'],
     denied: [],
     accepted: []

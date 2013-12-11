@@ -94,17 +94,20 @@ module.exports.update = function(req, res, next) {
     if (!change) return res.json(404, 'Not Found');
 
     var isAdmin = req.session.user && utils.contains(req.session.user.groups, 'admin');
-    // TODO: use async to enforce sequencing
-    if (isAdmin)
-      change.save(adminUpdates, function(err, rows, result) {});
+    var tasks = []
+    if (isAdmin) {
+      tasks.push(function(cb) {
+        change.save(adminUpdates, utils.compose(cb, utils.identity));
+      });
+    }
     if (req.body.status)
-      change.changeStatus(req.body.status, function(err) {});
-    var done = function(err) {
+      tasks.push(utils.bind(change.changeStatus, change, req.body.status));
+
+    utils.async.series(tasks, function(err) {
       if (err)
         return typeof err === 'number' ? res.json(err, {}) : res.error(errors.internal.DB_FAILURE, err);
       return res.json(200, change.toJSON());
-    };
-    return res.json(200, change.toJSON());
+    });
   });
 };
 

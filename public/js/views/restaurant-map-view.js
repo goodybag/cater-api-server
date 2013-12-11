@@ -16,7 +16,6 @@ var RestaurantMapView = Backbone.View.extend({
     , 'state'
     , 'zip'))
     .join(' ');
-
   },
 
   createMap: function() {
@@ -39,10 +38,18 @@ var RestaurantMapView = Backbone.View.extend({
 
         this_.map = new google.maps.Map(this_.el, mapOptions);
 
+        var infowindow = new google.maps.InfoWindow({
+            content: this_.model.get('name')
+        });
         var marker = new google.maps.Marker({
           position: latlng,
           map: this_.map,
+          animation: google.maps.Animation.DROP,
           title: this_.model.get('name')
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(this_.map, marker);
         });
       } else {
         alert('Geocode was not successful for the following reason: ' + status);

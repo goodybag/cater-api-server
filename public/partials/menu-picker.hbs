@@ -21,13 +21,13 @@
         {{! list all categories }}
         {{#each restaurant.categories}}
         {{#contains menus "group"}}
-        <div><a href="#group-{{id}}">[Group] {{name}}</a></div>
+        <div class="menu-category"><a href="#group-{{id}}">[Group] {{name}}</a></div>
         {{/contains}}
         {{/each}}
 
         {{#each restaurant.categories}}
         {{#contains menus "individual"}}
-        <div><a href="#individual-{{id}}">[Individual] {{name}}</a></div>
+        <div class="menu-category"><a href="#individual-{{id}}">[Individual] {{name}}</a></div>
         {{/contains}}
         {{/each}}
       </div>
@@ -36,7 +36,7 @@
         {{! list group style categories }}
         {{#each restaurant.categories}}
         {{#contains menus "group"}}
-        <div><a href="#group-{{id}}">[Group] {{name}}</a></div>
+        <div class="menu-category"><a href="#group-{{id}}">[Group] {{name}}</a></div>
         {{/contains}}
         {{/each}}
         {{#unless restaurant.menuLengths.group}}
@@ -48,7 +48,7 @@
         {{! list individual style categories }}
         {{#each restaurant.categories}}
         {{#contains menus "individual"}}
-        <div><a href="#individual-{{id}}">[Individual] {{name}}</a></div>
+        <div class="menu-category"><a href="#individual-{{id}}">[Individual] {{name}}</a></div>
         {{/contains}}
         {{/each}}
         {{#unless restaurant.menuLengths.individual}}

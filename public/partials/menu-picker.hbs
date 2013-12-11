@@ -4,13 +4,13 @@
     {{#with restaurant.menuLengths}}
     <ul class="nav nav-tabs menu-picker-tabs">
       <li class="active">
-        <a href="#full" class="btn-category" data-toggle="tab" data-type="full">Full Menu ({{#if full}}{{full}}{{else}}0{{/if}})</a>
+        <a href="#full" class="btn-change-menu" data-toggle="tab" data-type="full">Full Menu ({{#if full}}{{full}}{{else}}0{{/if}})</a>
       </li>
       <li>
-        <a href="#group" class="btn-category" data-toggle="tab" data-type="group">Group Menu ({{#if group}}{{group}}{{else}}0{{/if}})</a>
+        <a href="#group" class="btn-change-menu" data-toggle="tab" data-type="group">Group Menu ({{#if group}}{{group}}{{else}}0{{/if}})</a>
       </li>
       <li>
-        <a href="#individual" class="btn-category" data-toggle="tab" data-type="individual">Individual Menu ({{#if individual}}{{individual}}{{else}}0{{/if}})</a>
+        <a href="#individual" class="btn-change-menu" data-toggle="tab" data-type="individual">Individual Menu ({{#if individual}}{{individual}}{{else}}0{{/if}})</a>
       </li>
     </ul>
     {{/with}}
@@ -22,7 +22,7 @@
         {{#each restaurant.categories}}
         {{#contains menus "group"}}
         <div class="menu-picker-col">
-          <a href="#category-{{id}}-group">[Group] {{name}}</a>
+          <a href="#group-{{id}}">[Group] {{name}}</a>
         </div>
         {{/contains}}
         {{/each}}
@@ -30,7 +30,7 @@
         {{#each restaurant.categories}}
         {{#contains menus "individual"}}
         <div class="menu-picker-col">
-          <a href="#category-{{id}}-individual">[Individual] {{name}}</a>
+          <a href="#individual-{{id}}">[Individual] {{name}}</a>
         </div>
         {{/contains}}
         {{/each}}
@@ -41,7 +41,7 @@
         {{#each restaurant.categories}}
         {{#contains menus "group"}}
         <div class="menu-picker-col">
-          <a href="#category-{{id}}-group">[Group] {{name}}</a>
+          <a href="#group-{{id}}">[Group] {{name}}</a>
         </div>
         {{/contains}}
         {{/each}}
@@ -52,7 +52,7 @@
         {{#each restaurant.categories}}
         {{#contains menus "individual"}}
         <div class="menu-picker-col">
-          <a href="#category-{{id}}-individual">[Individual] {{name}}</a>
+          <a href="#individual-{{id}}">[Individual] {{name}}</a>
         </div>
         {{/contains}}
         {{/each}}

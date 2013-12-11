@@ -1,8 +1,8 @@
 {{#each restaurant.categories}}
   {{#contains menus "group"}}
-    <div id="category-{{id}}-group" class="panel menu-category category-full category-group">
-      <div class="panel-heading menu-cateogry-heading">
-        <h3 class="panel-title menu-cateogry-title">[Group] {{name}}</h3>
+    <div id="group-{{id}}" class="panel menu-category menu-full menu-group">
+      <div class="panel-heading menu-category-heading">
+        <h3 class="panel-title menu-category-title">[Group] {{name}}</h3>
         <p class="category-description">{{description}}</p>
       </div>
       <div class="list-group list-group-flush category" id="category-{{id}}">
@@ -38,9 +38,9 @@
 
 {{#each restaurant.categories}}
   {{#contains menus "individual"}}
-    <div id="category-{{id}}-individual" class="panel menu-category category-full category-individual">
-      <div class="panel-heading menu-cateogry-heading">
-        <h3 class="panel-title menu-cateogry-title">[Individual] {{name}}</h3>
+    <div id="individual-{{id}}" class="panel menu-category menu-full menu-individual">
+      <div class="panel-heading menu-category-heading">
+        <h3 class="panel-title menu-category-title">[Individual] {{name}}</h3>
         <p class="category-description">{{description}}</p>
       </div>
       <div class="list-group list-group-flush category" id="category-{{id}}">

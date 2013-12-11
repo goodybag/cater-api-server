@@ -191,11 +191,7 @@ module.exports.register = function(app) {
   });
 
 
-  /**
-   *  Order resource.  An individual order.
-   */
-
-
+  // stuff applying to individual orders and all subroutes
   app.get(
     config.receipt.orderRoute
   , m.basicAuth()
@@ -209,6 +205,9 @@ module.exports.register = function(app) {
     next();
   }, controllers.orders.auth);
 
+  /**
+   *  Order resource.  An individual order.
+   */
   app.get('/orders/:oid'
     // If they're using ?receipt=true, make sure we restrict the group
   , function(req, res, next){

@@ -26,6 +26,10 @@ module.exports = Model.extend({
       venter.emit( 'order:change', self.attributes.order_id );
     };
 
+    var attrs = utils.omit(utils.pick(this.attributes, utils.keys(this.constructor.schema)), ['id', 'created_at']);
+    attrs.options_sets = JSON.stringify(attrs.options_sets);
+    if (query.values == null) query.values = attrs;
+
     Model.prototype.save.call(self, query, callback, client);
   },
   destroy: function(callback) {

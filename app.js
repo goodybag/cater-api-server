@@ -47,7 +47,7 @@ app.configure(function(){
   app.use(middleware.cors);
 
   app.use(middleware.getUser());
-app.use( function fuck(req, res, next){ console.log('ohai'); next(); })
+
   app.use(middleware.requestLogger({
     connStr: config.requestLogger.connStr
   , table: config.requestLogger.table

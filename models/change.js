@@ -3,6 +3,7 @@ var Order = require('./order');
 var OrderItem = require('./order-item');
 var utils = require('../utils');
 var errors = require('../errors');
+var venter  = require('../lib/venter');
 
 module.exports = Model.extend({
   changeStatus: function(status, isAdmin, callback) {
@@ -10,14 +11,16 @@ module.exports = Model.extend({
       callback = isAdmin;
       isAdmin = false;
     }
+
     if (callback == null) callback = utils.identity;
-    if (this.attributes.status === status) return callback(null, null);
+    var oldStatus = this.attributes.status;
+    if (oldStatus === status) return callback(null, null);
 
     if (!utils.has(this.constructor.statusFSM, status))
       return res.json(400, 'Invalid Status: ' + status + '.  Valid statuses are: ' + utils.keys(this.constructor.statusFSM));
 
-    if (!isAdmin && !utils.contains(this.constructor.statusFSM[this.attributes.status], status))
-      return res.json(403, ['Cannot transition from status ',  this.attributes.status, ' to status ', status, '.  Available tranistions from ', this.attributes.status, ' are: ', this.constructor.statusFSM[this.attributes.status]].join(''));
+    if (!isAdmin && !utils.contains(this.constructor.statusFSM[oldStatus], status))
+      return res.json(403, ['Cannot transition from status ',  oldStatus, ' to status ', status, '.  Available tranistions from ', oldStatus, ' are: ', this.constructor.statusFSM[oldStatus]].join(''));
 
     // TODO: wrap these two in a transaction
     var tasks = [];
@@ -29,7 +32,10 @@ module.exports = Model.extend({
     }
     tasks.push(function(cb) {
       self.attributes.status = status;
-      self.save(utils.compose(cb, utils.identity));
+      self.save(function(err) {
+        venter.emit('order-change:status:change', self, oldStatus);
+        return cb(err);
+      });
     });
 
     utils.async.series(tasks, callback);

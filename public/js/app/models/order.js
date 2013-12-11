@@ -282,6 +282,7 @@ define(function(require, exports, module) {
         url: _.result(this, 'url') + '/status-history',
         contentType: 'application/json',
         data: JSON.stringify(data),
+        async: true,
         error: function(jqXHR, textstatus, errorThrown) {
           return callback(errorThrown);
         },

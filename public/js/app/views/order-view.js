@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
-  var Handlebars = require('handlebars');
   var utils = require('utils');
+  var Handlebars = require('handlebars');
 
   var Order = require('../models/Order');
 

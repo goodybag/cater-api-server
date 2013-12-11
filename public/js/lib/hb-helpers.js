@@ -7,7 +7,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 define(function(require, exports, module) {
   var moment = require('moment');
   var utils = require('./utils');
-  var states = require('../../states');
+  var states = require('./states');
 
   var blocks = {};
 

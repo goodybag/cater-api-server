@@ -120,65 +120,7 @@
 
     <script src="/js/require-config.js"></script>
     <script src="/components/requirejs/require.js"></script>
-    <!-- pickadate -->
-<!--
-    <script src="/components/lalitkapoor-pickadate/lib/picker.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/picker.date.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/picker.time.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/legacy.js"></script>
--->
-    <script>
-      require([
-          'jquery'
-        , 'underscore'
-        , 'moment-timezone'
-        , 'handlebars'
-        , 'hb-helpers'
 
-        , 'partials'
-        , 'pickadate'
-        , 'pickatime'
-        , 'bootstrap'
-        ]
-      , function($, _, moment, Handlebars, helpers) {
-          $.ajax({
-            type: "GET",
-            url: "/components/moment-timezone/moment-timezone.json",
-            dataType: "json",
-            async: false,
-            success: function(data) {
-              moment.tz.add(data);
-            }
-          });
-
-          for (var key in helpers) {
-            Handlebars.registerHelper(key, helpers[key]);
-          }
-
-          // for Handlebars partials replace dashes with underscores
-          // (alternatively, have filenames with underscores instead of hyphens)
-          var newPartials = {};
-          Handlebars.partials = _.map(Handlebars.partials, function(value, key) {
-            newPartials[key.replace(/-/g, '_')] = value;
-          });
-          Handlebars.partials = newPartials;
-        }
-      );
-
-    </script>
-
-<!--
-    <script src="/js/lib/hb-helpers.js"></script>
-
-    <script src="/js/lib/notify.js"></script>
-    <script src="/js/lib/utils.js"></script>
-    <script src="/js/lib/spinner.js"></script>
-    <script>
-      for (var key in helpers) {
-        Handlebars.registerHelper(key, helpers[key]);
-      }
-    </script>
--->
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

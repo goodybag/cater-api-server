@@ -3,7 +3,7 @@ var db = require('../../db')
   , errors = require('../../errors')
   , utils = require('../../utils')
   , config = require('../../config')
-  , states = require('../../public/states')
+  , states = require('../../public/js/lib/states')
   , models = require('../../models');
 
 /**

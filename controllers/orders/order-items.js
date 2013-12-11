@@ -1,7 +1,7 @@
 var models = require('../../models');
 var errors = require('../../errors');
 var utils  = require('../../utils');
-var states = require('../../public/states');
+var states = require('../../public/js/lib/states')
 var venter = require('../../lib/venter');
 
 var db = require('../../db');

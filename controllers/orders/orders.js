@@ -48,7 +48,7 @@ module.exports.editability = function(normal, change) {
       var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
       var changeable = !editable && order.attributes.status === 'accepted' && order.toJSON().cancelable
       if (editable || changeable)
-        return (editable ? normal : change).call(this, order, req, res, next)
+        return (editable ? normal : change).call(this, req, res, next, order)
       else
         return res.json(403, 'order not editable');
     });
@@ -216,7 +216,7 @@ module.exports.create = function(req, res) {
   });
 };
 
-module.exports.update = function(order, req, res, next) {
+module.exports.update = function(req, res, next, order) {
   if (!order) return res.json(404);
   utils.extend(order.attributes, utils.pick(req.body, models.Order.updateableFields));
   order.save(function(err, rows, result) {

@@ -58,7 +58,7 @@ module.exports.get = function(req, res, next) {
   });
 }
 
-module.exports.add = function(order, req, res, next) {
+module.exports.add = function(req, res, next, order) {
   if (!order) return res.render('404');
   var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
   if (!editable) return res.json(403, 'nope');
@@ -73,7 +73,7 @@ module.exports.add = function(order, req, res, next) {
   });
 };
 
-module.exports.update = function(order, req, res, next) {
+module.exports.update = function(req, res, next, order) {
   models.OrderItem.findOne(parseInt(req.params.iid), function(err, orderItem) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (orderItem == null) return res.send(404);
@@ -94,7 +94,7 @@ module.exports.update = function(order, req, res, next) {
   });
 }
 
-module.exports.remove = function(order, req, res, next) {
+module.exports.remove = function(req, res, next, order) {
   var query = queries.orderItem.del(parseInt(req.params.iid));
   var sql = db.builder.sql(query);
 

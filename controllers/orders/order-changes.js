@@ -24,7 +24,7 @@ module.exports.get = function(req, res, next) {
 // Takes a function which takes a request, an order, and a change object and modifies the change object appropriately
 // The fourth parameter is a done callback that should be called when the function is finished modifying the change.
 function changer(func) {
-  return function(order, req, res, next) {
+  return function(req, res, next, order) {
     var isAdmin = req.session.user && utils.contains(req.session.user.groups, 'admin');
     models.Change.getChange(order, isAdmin, function(err, change) {
       if (err)

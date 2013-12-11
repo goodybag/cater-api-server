@@ -105,12 +105,7 @@ module.exports.get = function(req, res) {
     }
 
     // Build a histogram of category types vs freq for labeling
-    var catLengths = utils.reduce(context.restaurant.categories, function(memo, category) {
-      utils.each(category.category_types, function(ct) {
-        memo[ct] = (memo[ct] || 0) + 1;
-      });
-      return memo;
-    }, {});
+    var catLengths = utils.countBy(utils.flatten(utils.pluck(context.restaurant.categories, 'category_types')));
 
     // Sum all types as `full`
     utils.each(catLengths, function(val, key, list) {

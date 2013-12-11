@@ -46,7 +46,7 @@ app.configure(function(){
   app.use(middleware.domains);
   app.use(middleware.cors);
 
-  app.use(middleware.getUser());
+  app.use(middleware.getUser);
 
   app.use(middleware.requestLogger({
     connStr: config.requestLogger.connStr

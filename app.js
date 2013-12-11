@@ -32,6 +32,8 @@ var app = module.exports = express();
 app.configure(function(){
   app.use(express.favicon(__dirname + '/public/favicon.ico'));
   app.use(express.compress());
+  app.use(express.static(__dirname + '/public'));
+
   app.use(logger.expressError);
   app.use(express.cookieParser('WOOT THE FUCK'));
   app.use(express.cookieSession());
@@ -119,4 +121,3 @@ hbs.registerPartials('./public/partials');
 });
 
 routes.register(app);
-app.use(express.static(__dirname + '/public'));

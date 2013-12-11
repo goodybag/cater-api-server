@@ -95,6 +95,20 @@
               </div>
             </div>
 
+            {{#if restaurant.minimum_order}}
+            <div class="restaurant-info-item restaurant-info-item-categories">
+              <h4 class="info-item-title">Order Minimum:</h4>
+              <div class="info-item-value">${{dollars restaurant.minimum_order}}</div>
+            </div>
+            {{/if}}
+
+            {{#if restaurant.delivery_fee}}
+            <div class="restaurant-info-item restaurant-info-item-categories">
+              <h4 class="info-item-title">Delivery Charge:</h4>
+              <div class="info-item-value">${{dollars restaurant.delivery_fee}}</div>
+            </div>
+            {{/if}}
+
             {{#if restaurant.max_guests}}
             <div class="restaurant-info-item restaurant-info-item-categories">
               <h4 class="info-item-title">Max. Guests:</h4>

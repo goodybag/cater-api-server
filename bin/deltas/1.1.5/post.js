@@ -44,7 +44,7 @@ var tasks = [
 
       // Default unlabeled categories to group
       if (updates.menus === '{}') {
-        updates.menus = '{groups}';
+        updates.menus = '{group}';
       }
 
       var query = queries.category.update(updates, cat.id);

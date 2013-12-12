@@ -10,7 +10,7 @@ define(function(require, exports, module) {
   var TipView = require('./tip-view');
 
 
-  return module.exports = FormView.extend({
+  var OrderView = FormView.extend({
 
     events: function() {
       return _.extend({}, OrderView.prototype.events, {
@@ -202,4 +202,6 @@ define(function(require, exports, module) {
       });
     }
   });
+
+  return module.exports = OrderView;
 });

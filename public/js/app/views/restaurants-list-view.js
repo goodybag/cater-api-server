@@ -3,6 +3,7 @@
  */
 
 define(function(require, exports, module) {
+  var utils = require('utils');
   var Backbone = require('backbone');
 
   return module.exports = Backbone.View.extend({

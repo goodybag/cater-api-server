@@ -21,14 +21,12 @@ module.exports.list = function(req, res) {
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
 
-  orderParams.is_hidden = false;
-
   if (orderParams.prices)
     orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
 
   var tasks =  [
     function(callback) {
-      models.Restaurant.find({}, orderParams, callback);
+      models.Restaurant.find({}, utils.extend({ is_hidden: false }, orderParams), callback);
     },
 
     function(callback) {

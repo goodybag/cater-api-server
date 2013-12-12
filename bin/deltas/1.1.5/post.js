@@ -32,7 +32,7 @@ var tasks = [
       utils.each(labels, function(label) {
         if (cat.name.indexOf(label) >= 0) {
           cat.name = cat.name.replace(label, '').trim();
-          menus.push(label.replace(/[\[\]]/g, '"').toLowerCase().trim());
+          menus.push('"'+ label.replace(/[\[\]]/g, '').toLowerCase().trim() + '"');
         }
       });
 
@@ -44,7 +44,7 @@ var tasks = [
 
       // Default unlabeled categories to group
       if (updates.menus === '{}') {
-        updates.menus = '{groups}';
+        updates.menus = '{group}';
       }
 
       var query = queries.category.update(updates, cat.id);

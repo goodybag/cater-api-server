@@ -56,6 +56,7 @@ var require = {
     '*': {
       'jquery': 'jquery-loaded'
     , 'moment': 'moment-loaded'
+    , 'backbone': 'backbone-loaded'
     }
 
     // deal with jquery
@@ -71,6 +72,10 @@ var require = {
     // deal with moment
   , 'moment-loaded': {'moment': 'moment'}
   , 'moment-timezone': {'moment': 'moment'}
+
+  // deal with backbone
+  , 'backbone-loaded': {'backbone': 'backbone'}
+  , 'backbone.trackit': {'backbone': 'backbone'}
 
   }
 

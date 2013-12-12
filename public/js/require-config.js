@@ -1,6 +1,6 @@
 var require = {
   //By default load any module IDs from js/lib
-  baseUrl: '/js/lib/'
+  baseUrl: '/js/lib'
   //except, if the module ID starts with "app",
   //load it from the js/app directory. paths
   //config is relative to the baseUrl, and
@@ -8,90 +8,85 @@ var require = {
   //the paths config could be for a directory.
 
 , paths: {
-    // text plugin
+    // plugins
     text: '../../components/requirejs-text/text'
-    // json plugin
   , json: '../../components/requirejs-plugins/src/json'
 
     // directories
-  , components: '../../components'
   , app: '../app'
-
+  }
+, packages: [
     // utility
-  , lodash: '../../components/lodash/dist/lodash.underscore'
-  , underscore: '../../components/lodash/dist/lodash.compat'
-  , async: '../../components/async/lib/async.js'
-  , amanda: '../../components/amanda/releases/latest/amanda'
+    {name: 'lodash',            location: '../../components/lodash/dist',               main: 'lodash.underscore.js'}
+  , {name: 'underscore',        location: '../../components/lodash/dist',               main: 'lodash.compat.js'}
+  , {name: 'async',             location: '../../components/async/lib',                 main: 'async.js'}
+  , {name: 'amanda',            location: '../../components/amanda/releases/latest',    main: 'amanda.js'}
 
     // backbone stuff
-  , backbone: '../../components/backbone/backbone'
-  , 'backbone.trackit': '../../components/backbone.trackit/backbone.trackit'
+  , {name: 'backbone',          location: '../../components/backbone',                  main: 'backbone.js'}
+  , {name: 'backbone.trackit',  location: '../../components/backbone.trackit',          main: 'backbone.trackit'}
 
     // ui related stuff
-  , spin: '../../components/spin.js/dist/spin'
+  , {name: 'spin',              location: '../../components/spin.js/dist',              main: 'spin.js'}
 
     // templating related
-  , 'hbs': '../../components/handlebars/handlebars'
-
-    // moment stuff
-  , 'moment-original': '../../components/moment/moment'
-  , 'moment-timezone': '../../components/moment-timezone/moment-timezone'
+  , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}
+      // moment stuff
+  , {name: 'moment-original',   location: '../../components/moment',                    main: 'moment.js'}
+  , {name: 'moment-timezone',   location: '../../components/moment-timezone',           main: 'moment-timezone.js'}
 
     // jquery stuff
-  , 'jquery': '../../components/jquery/jquery'
-  , 'jquery.inputmask': '../../components/jquery.inputmask/dist/jquery.inputmask.bundle'
-  , 'jquery-ui': '../../components/jquery-ui/ui/jquery-ui'
-  , 'picker': '../../components/lalitkapoor-pickadate/lib/picker'
-  , 'pickadate': '../../components/lalitkapoor-pickadate/lib/picker.date'
-  , 'pickadate-legacy': '../../components/lalitkapoor-pickadate/lib/legacy'
-  , 'pickatime': '../../components/lalitkapoor-pickadate/lib/picker.time'
-  , 'bootstrap': '../../components/bootstrap/dist/js/bootstrap'
-  , 'select2': '../../components/select2/select2'
-
-  , 'partials': 'partials'
-  }
-
+  , {name: 'jquery-original',   location: '../../components/jquery',                    main: 'jquery.js'}
+  , {name: 'jquery.inputmask',  location: '../../components/jquery.inputmask/dist',     main: 'jquery.inputmask.bundle.js'}
+  , {name: 'jquery-ui',         location: '../../components/jquery-ui/ui',              main: 'jquery-ui.js'}
+  , {name: 'picker',            location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.js'}
+  , {name: 'pickadate',         location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.date.js'}
+  , {name: 'pickadate-legacy',  location: '../../components/lalitkapoor-pickadate/lib', main: 'legacy.js'}
+  , {name: 'pickatime',         location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.time.js'}
+  , {name: 'bootstrap',         location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
+  , {name: 'select2',           location: '../../components/select2',                   main: 'select2.js'}
+  ]
 , shim: {
     backbone: {
-      deps: ['underscore', 'jquery']
+      deps: ['underscore', 'jquery-original']
     , exports: 'Backbone'
     }
   , 'hbs': {
       exports: 'Handlebars'
     }
-  , 'partials': {
-      deps: ['handlebars']
+  , 'lib/partials': {
+      deps: ['hbs']
     }
   , 'backbone.trackit': {
       deps: ['backbone']
     }
   , 'jquery-ui': {
-      deps: ['jquery']
+      deps: ['jquery-original']
     , exports: 'jQuery.ui'
     }
   , lodash: {
       exports: '_'
     }
   , bootstrap: {
-      deps: ['jquery']
+      deps: ['jquery-original']
     }
   , 'moment-timezone': {
       deps: ['moment-original']
     }
   , picker: {
-      deps: ['jquery', 'pickadate-legacy']
+      deps: ['jquery-original', 'pickadate-legacy']
     }
   , pickadate: {
-      deps: ['jquery', 'picker']
+      deps: ['jquery-original', 'picker']
     }
   , pickatime: {
-      deps: ['jquery', 'picker']
+      deps: ['jquery-original', 'picker']
     }
   , select2: {
-      deps: ['jquery']
+      deps: ['jquery-original']
     }
   , 'jquery.inputmask': {
-      deps: ['jquery']
+      deps: ['jquery-original']
     }
   , partials: {
       deps: ['hbs']

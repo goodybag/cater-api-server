@@ -15,7 +15,16 @@ var Category = Backbone.Model.extend({
       description: {
         type: ['string', 'null'],
         minLength: 1
-      }
+      },
+      menus: {
+        type: 'array',
+        uniqueItems: true,
+        items: {
+          type: 'string',
+          minLength: 1,
+          pattern: /^[\w\-\/]*$/ // consists only of word characters or hyphen
+        }
+      },
     }
   },
 

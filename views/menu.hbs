@@ -18,7 +18,7 @@
     </div>
     <ul class="nav nav-tabs menu-info-tabs">
       <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
-      <li><a href="#info" data-toggle="tab">Info</a></li>
+      <li><a class="info-tab" href="#info" data-toggle="tab">Info</a></li>
       {{#if restaurant.yelp_data}}
       {{#if restaurant.yelp_data.review_count}}
       <li>
@@ -42,41 +42,8 @@
     <div class="tab-content">
       <div class="tab-pane active" id="menu">
         <div class="menu">
-          {{#each restaurant.categories}}
-          <div class="panel menu-category">
-            <div class="panel-heading menu-cateogry-heading">
-              <h3 class="panel-title menu-cateogry-title">{{name}}</h3>
-              <p class="category-description">{{description}}</p>
-            </div>
-            <div class="list-group list-group-flush category" id="category-{{id}}">
-              {{#each items}}
-              <a class="list-group-item item" id="item-{{id}}">
-                <div class="row">
-                  <h5 class="list-group-item-heading col-sm-7">
-                    {{name}}
-                    {{>tags tags}}
-                  </h5>
-                  <dl class="item-legend col-sm-5">
-                    <div class="feeds-price-wrapper">
-                      <div class="feeds">
-                        <dt>Feeds</dt>
-                        <dd>{{range feeds_min feeds_max}}</dd>
-                      </div>
-                      <div class="price">
-                        <dt>Price</dt>
-                        <dd>{{dollars price}}</dd>
-                      </div>
-                    </div>
-                  </dl>
-                </div>
-                <div class="row">
-                  <p class="list-group-item-text col-sm-7">{{description}}</p>
-                </div>
-              </a>
-              {{/each}}
-            </div>
-          </div>
-          {{/each}}
+          {{> menu_picker }}
+          {{> restaurant_categories }}
         </div>
       </div>
 
@@ -296,6 +263,7 @@
 <script type="text/javascript" src="/js/views/order-params-view.js"></script>
 <script type="text/javascript" src="/js/views/restaurant-map-view.js"></script>
 <script type="text/javascript" src="/js/views/item-view.js"></script>
+<script type="text/javascript" src="/js/views/menu-view.js"></script>
 <script type="text/javascript" src="/js/views/item-modal.js"></script>
 <script type="text/javascript" src="/js/views/order-modal.js"></script>
 <script>
@@ -318,7 +286,7 @@
   });
 
   // render map on info tab click
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  $('a.info-tab[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     restaurantMapView.render();
   });
 
@@ -350,6 +318,8 @@
   ];
 
   orderView.render();
+
+  var menuView = new MenuView({el: '#menu', model: new Restaurant({{{json restaurant}}})});
 
   $('.tag-tooltip').tooltip();
 </script>

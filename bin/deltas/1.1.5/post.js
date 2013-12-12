@@ -63,7 +63,8 @@ var tasks = [
   }
 ];
 
-utils.async.waterfall(tasks, function(err, result) {
-  if (err) return console.log(err);
+utils.async.waterfall(tasks, function(error, result) {
+  if (error) return console.log(error), console.log(error.stack), process.exit(1);
   console.log('Completed processing category labels and menus');
+  process.exit(0);
 });

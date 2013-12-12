@@ -1,4 +1,5 @@
 define(function(require, exports, module) {
+  var $ = require('jquery');
   var Handlebars = require('handlebars');
   var spinner = require('spinner');
 
@@ -6,6 +7,7 @@ define(function(require, exports, module) {
 
   var Order = require('../models/order');
   var Address = require('../models/address');
+  var PaymentMethod = require('../models/payment-method');
 
 
   return module.exports = OrderView.extend({

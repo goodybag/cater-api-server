@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
   var utils = require('utils');
+  var moment = require('moment');
   var Handlebars = require('handlebars');
 
   var Order = require('../models/Order');
@@ -43,8 +44,8 @@ define(function(require, exports, module) {
       datetime: function() {
         var date = this.$el.find("#order-form #order-date").val().trim();
         var time = this.$el.find("#order-form #order-time").val().trim();
-        var datepart = date ? dateTimeFormatter(date) : null;
-        var timepart = time ? timeFormatter(time, 'HH:mm:ss') : null;
+        var datepart = date ? utils.dateTimeFormatter(date) : null;
+        var timepart = time ? utils.timeFormatter(time, 'HH:mm:ss') : null;
 
 
         if(!datepart || !timepart) return null;

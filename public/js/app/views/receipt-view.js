@@ -1,6 +1,8 @@
 define(function(require, exports, module) {
+  var $ = require('jquery');
   var utils = require('utils');
   var states = require('states');
+  var moment = require('moment');
 
   var OrderView = require('./order-view');
   var FormView = require('./form-view');

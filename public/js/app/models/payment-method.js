@@ -5,7 +5,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
 
-    return module.exports = Backbone.Model.extend({
+  var PaymentMethod = Backbone.Model.extend({
     schema: {
       type: 'object',
       properties: {}
@@ -159,4 +159,6 @@ define(function(require, exports, module) {
       return null;
     }
   });
+
+  module.exports = PaymentMethod;
 });

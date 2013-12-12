@@ -13,6 +13,25 @@
       <label class="control-label">Description</label>
       <textarea class="form-control category-description">{{this.description}}</textarea>
     </div>
+    <div class="form-group col-lg-2">
+      <label class="control-label">Type</label>
+      <div class="row">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="categoryMenus" class="category-menus" value="group" {{#contains this.menus "group"}}checked{{/contains}}>
+            Group
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="categoryMenus" class="category-menus" value="individual" {{#contains this.menus "individual"}}checked{{/contains}}>
+            Individual
+          </label>
+        </div>
+      </div>
+    </div>
     <div class="btn-toolbar col-lg-3 category-buttons">
       <button type="button" class="btn btn-default category-copy">Copy</button>
       <button type="button" class="btn btn-danger category-remove">Remove</button>

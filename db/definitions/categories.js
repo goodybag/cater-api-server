@@ -43,6 +43,11 @@ define(function(require) {
       type: types.int
     , nullable: false
     }
+  , menus: {
+      type: types.array(types.text)
+    , nullable: false
+    , default: "'{}'"
+    }
   };
 
   definition.indices = {};

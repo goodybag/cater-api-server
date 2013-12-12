@@ -20,12 +20,13 @@ module.exports.list = function(req, res) {
   logger.routes.info(TAGS, 'listing restaurants');
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
+
   if (orderParams.prices)
     orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
 
   var tasks =  [
     function(callback) {
-      models.Restaurant.find({}, orderParams, callback);
+      models.Restaurant.find({}, utils.extend({ is_hidden: false }, orderParams), callback);
     },
 
     function(callback) {
@@ -33,18 +34,31 @@ module.exports.list = function(req, res) {
     }
   ];
 
+  // Filters count needs a list of all restaurants
+  if (Object.keys(orderParams).length > 0){
+    tasks.push(
+      utils.partial( models.Restaurant.find.bind( models.Restaurant ), {}, { is_hidden: false } )
+    );
+  }
+
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
 
-    res.render('restaurants', {
+    var context = {
       restaurants:      utils.invoke(results[0], 'toJSON'),
       defaultAddress:   results[1] ? results[1].toJSON() : null,
       orderParams:      orderParams,
       filterCuisines:   cuisines,
       filterPrices:     utils.range(1, 5),
       filterMealTypes:  enums.getMealTypes(),
-      filterMealStyles: enums.getMealStyles()
-    });
+      filterMealStyles: enums.getMealStyles(),
+    };
+
+    context.allRestaurants = results.length === 3
+      ? utils.invoke(results[2], 'toJSON')
+      : context.restaurants;
+
+    res.render('restaurants', context);
   };
 
   utils.async.parallel(tasks, done);
@@ -103,6 +117,16 @@ module.exports.get = function(req, res) {
       defaultAddress:   results[2] ? results[2].toJSON() : null,
       orderParams:      orderParams
     }
+
+    // Build a histogram of menus vs freq for labeling
+    var menuLengths = utils.countBy(utils.flatten(utils.pluck(context.restaurant.categories, 'menus')));
+
+    // Sum all types as `full` menu
+    utils.each(menuLengths, function(val, key, list) {
+      menuLengths.full = (menuLengths.full || 0) + val;
+    });
+
+    context.restaurant.menuLengths = menuLengths;
 
     res.render('menu', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);

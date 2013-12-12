@@ -3,7 +3,7 @@ define(function(require, exports, module) {
   var amanda = require('amanda');
   var Items = require('../collections/items');
 
-    return module.exports = Backbone.Model.extend({
+  return module.exports = Backbone.Model.extend({
     schema: {
       type: 'object',
       properties: {
@@ -20,7 +20,16 @@ define(function(require, exports, module) {
         description: {
           type: ['string', 'null'],
           minLength: 1
-        }
+        },
+        menus: {
+          type: 'array',
+          uniqueItems: true,
+          items: {
+            type: 'string',
+            minLength: 1,
+            pattern: /^[\w\-\/]*$/ // consists only of word characters or hyphen
+          }
+        },
       }
     },
 

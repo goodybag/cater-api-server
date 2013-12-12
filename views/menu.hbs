@@ -18,7 +18,7 @@
     </div>
     <ul class="nav nav-tabs menu-info-tabs">
       <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
-      <li><a href="#info" data-toggle="tab">Info</a></li>
+      <li><a class="info-tab" href="#info" data-toggle="tab">Info</a></li>
       {{#if restaurant.yelp_data}}
       {{#if restaurant.yelp_data.review_count}}
       <li>
@@ -42,89 +42,78 @@
     <div class="tab-content">
       <div class="tab-pane active" id="menu">
         <div class="menu">
-          {{#each restaurant.categories}}
-          <div class="panel menu-category">
-            <div class="panel-heading menu-cateogry-heading">
-              <h3 class="panel-title menu-cateogry-title">{{name}}</h3>
-              <p class="category-description">{{description}}</p>
-            </div>
-            <div class="list-group list-group-flush category" id="category-{{id}}">
-              {{#each items}}
-              <a class="list-group-item item" id="item-{{id}}">
-                <div class="row">
-                  <h5 class="list-group-item-heading col-sm-7">
-                    {{name}}
-                    {{>tags tags}}
-                  </h5>
-                  <dl class="item-legend col-sm-5">
-                    <div class="feeds-price-wrapper">
-                      <div class="feeds">
-                        <dt>Feeds</dt>
-                        <dd>{{range feeds_min feeds_max}}</dd>
-                      </div>
-                      <div class="price">
-                        <dt>Price</dt>
-                        <dd>{{dollars price}}</dd>
-                      </div>
-                    </div>
-                  </dl>
-                </div>
-                <div class="row">
-                  <p class="list-group-item-text col-sm-7">{{description}}</p>
-                </div>
-              </a>
-              {{/each}}
-            </div>
-          </div>
-          {{/each}}
+          {{> menu_picker }}
+          {{> restaurant_categories }}
         </div>
       </div>
 
       <div class="tab-pane panel" id="info">
         <div class="panel-body">
-          <div class="restaurant-info-item restaurant-info-item-categories">
-            <div class="info-item-title">
-              <ul class="list-restaurant-inline">
-              {{#each restaurant.cuisine}}
-                <li class="cuisine-list-item">{{this}}</li>
-              {{/each}}
-              </ul>
-              <span class="dollar-meter">{{{dollarMeter restaurant.price}}}</span>
+          {{! Left info column }}
+          <div  class="col-md-6 no-padding">
+            <div class="restaurant-info-item restaurant-info-item-categories">
+              <div class="info-item-title">
+                <ul class="list-restaurant-inline">
+                {{#each restaurant.cuisine}}
+                  <li class="cuisine-list-item">{{this}}</li>
+                {{/each}}
+                </ul>
+                <span class="dollar-meter">{{{dollarMeter restaurant.price}}}</span>
+              </div>
+            </div>
+
+            {{#if restaurant.minimum_order}}
+            <div class="restaurant-info-item restaurant-info-item-categories">
+              <h4 class="info-item-title">Order Minimum:</h4>
+              <div class="info-item-value">${{dollars restaurant.minimum_order}}</div>
+            </div>
+            {{/if}}
+
+            {{#if restaurant.delivery_fee}}
+            <div class="restaurant-info-item restaurant-info-item-categories">
+              <h4 class="info-item-title">Delivery Charge:</h4>
+              <div class="info-item-value">${{dollars restaurant.delivery_fee}}</div>
+            </div>
+            {{/if}}
+
+            {{#if restaurant.max_guests}}
+            <div class="restaurant-info-item restaurant-info-item-categories">
+              <h4 class="info-item-title">Max. Guests:</h4>
+              <div class="info-item-value">{{restaurant.max_guests}}</div>
+            </div>
+            {{/if}}
+
+            {{#if restaurant.delivery_times}}
+            <div class="restaurant-info-item restaurant-info-item-delivery-times">
+              <h4 class="info-item-title">Delivery Times:</h4>
+              <div class="info-item-value">
+                {{> delivery_times restaurant}}
+              </div>
+            </div>
+            {{/if}}
+
+            <div class="restaurant-info-item restaurant-info-item-lead-times">
+              <h4 class="info-item-title">Lead Times:</h4>
+              <div class="info-item-value">
+                {{> lead_times restaurant}}
+              </div>
+            </div>
+
+            <div class="restaurant-info-item restaurant-info-item-zips">
+              <h4 class="info-item-title">Zip Codes within delivery range:</h4>
+              <div class="info-item-value">
+                <ul class="list-delivery-zips">
+                {{#each restaurant.delivery_zips}}
+                  <li class="delivery-zip">{{this}}</li>
+                {{/each}}
+                </ul>
+              </div>
             </div>
           </div>
 
-          {{#if restaurant.max_guests}}
-          <div class="restaurant-info-item restaurant-info-item-categories">
-            <h4 class="info-item-title">Max. Guests:</h4>
-            <div class="info-item-value">{{restaurant.max_guests}}</div>
-          </div>
-          {{/if}}
-
-          {{#if restaurant.delivery_times}}
-          <div class="restaurant-info-item restaurant-info-item-delivery-times">
-            <h4 class="info-item-title">Delivery Times:</h4>
-            <div class="info-item-value">
-              {{> delivery_times restaurant}}
-            </div>
-          </div>
-          {{/if}}
-
-          <div class="restaurant-info-item restaurant-info-item-lead-times">
-            <h4 class="info-item-title">Lead Times:</h4>
-            <div class="info-item-value">
-              {{> lead_times restaurant}}
-            </div>
-          </div>
-
-          <div class="restaurant-info-item restaurant-info-item-zips">
-            <h4 class="info-item-title">Zip Codes within delivery range:</h4>
-            <div class="info-item-value">
-              <ul class="list-delivery-zips">
-              {{#each restaurant.delivery_zips}}
-                <li class="delivery-zip">{{this}}</li>
-              {{/each}}
-              </ul>
-            </div>
+          {{! Right info column}}
+          <div class="col-md-6 no-padding">
+            {{> restaurant_location }}
           </div>
         </div>
       </div>
@@ -233,10 +222,11 @@
 </div>
 
 {{#extend "scripts"}}
-
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script>
   require([
       'jquery'
+    , 'app/models/restaurant'
     , 'app/models/item'
     , 'app/models/order'
     , 'app/models/order-params'
@@ -247,10 +237,26 @@
     , 'app/views/order-item-summary-view'
     , 'app/views/item-modal'
     , 'app/views/order-modal'
-
+    , 'app/views/restaurant-map-view'
+    , 'app/views/menu-view'
     , 'bootstrap'
     ]
-  , function($, Item, Order, OrderParams, Address, ItemView, OrderParamsView, OrderSummaryView, OrderItemSummaryView, ItemModal, OrderModal) {
+  , function(
+      $
+    , Restaurant
+    , Item
+    , Order
+    , OrderParams
+    , Address
+    , ItemView
+    , OrderParamsView
+    , OrderSummaryView
+    , OrderItemSummaryView
+    , ItemModal
+    , OrderModal
+    , RestaurantMapView
+    , MenuView
+    ) {
       var orderModel = new Order( {{{json order}}} );
 
       var orderParams = new OrderParams({{{json orderParams}}});
@@ -265,7 +271,31 @@
 
       var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems, orderModel: orderModel, orderModal: orderModal});
 
-      var orderView = new OrderSummaryView({el: '.order-summary', model: orderModel, itemModalView: itemModalView, orderParams: orderParams});
+      var restaurantMapView = new RestaurantMapView({
+        el: '.restaurant-map'
+      , model: new Restaurant( {{{json restaurant}}} )
+      });
+
+      // render map on info tab click
+      $('a.info-tab[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        restaurantMapView.render();
+      });
+
+      var orderView = new OrderSummaryView({
+        el: '.order-summary'
+      , model: orderModel
+      , itemModalView: itemModalView
+      , orderParams: orderParams
+      , restaurantMapView: restaurantMapView
+      });
+
+      var orderView = new OrderSummaryView({
+        el: '.order-summary'
+      , model: orderModel
+      , itemModalView: itemModalView
+      , orderParams: orderParams
+      , restaurantMapView: restaurantMapView
+      });
 
       {{#each order.orderItems}}
       new OrderItemSummaryView({el: '#order-item-{{id}}', model: orderModel.orderItems.get({{id}}), itemModalView: itemModalView});
@@ -287,6 +317,8 @@
       ];
 
       orderView.render();
+
+      var menuView = new MenuView({el: '#menu', model: new Restaurant({{{json restaurant}}})});
 
       $('.tag-tooltip').tooltip();
     }

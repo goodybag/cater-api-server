@@ -49,6 +49,41 @@ define(function(require, exports, module) {
     });
   };
 
+  helpers.searchByFacets = function( items, criteria, types ){
+    types = types || types;
+
+    return _.filter( items, function( item ){
+      var key, i, l, result, criterion;
+      for ( key in criteria ){
+        criterion = criteria[ key ];
+
+        if ( types[ key ] === 'or' ){
+          result = false;
+
+          for ( i = 0, l = criterion.length; i < l; ++i ){
+            if ( item[ key ].indexOf( criterion[ i ] ) > -1 ){
+              result = true;
+              break;
+            }
+          }
+        } else {
+          result = true;
+
+          for ( i = 0, l = criterion.length; i < l; ++i ){
+            if ( _.isArray( item[ key ] ) )
+            if ( item[ key ].indexOf( criterion[ i ] ) === -1 ){
+              result = false;
+            }
+          }
+        }
+
+        if ( !result ) return false;
+      }
+
+      return true;
+    });
+  };
+
   helpers.joinIf = function(arr, sep) {
     return Array.prototype.join.call(_.compact(arr), sep);
   }

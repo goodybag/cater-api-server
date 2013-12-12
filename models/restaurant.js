@@ -95,10 +95,14 @@ module.exports = Model.extend({
 
     query = query || {};
     query.columns = query.columns || ['*'];
-    query.order = query.order || ["restaurants.name ASC", "is_unacceptable ASC", "restaurants.id ASC"];
+    query.order = query.order || ["is_unacceptable ASC", "restaurants.name ASC", "restaurants.id ASC"];
     query.joins = query.joins || {};
     query.distinct = (query.distinct != null) ? query.distinct : ["restaurants.name", "is_unacceptable", "restaurants.id"];
     query.where = query.where || {};
+
+    if (orderParams && 'is_hidden' in orderParams){
+      query.where.is_hidden = orderParams.is_hidden;
+    }
 
     query.with = {
       dt: {

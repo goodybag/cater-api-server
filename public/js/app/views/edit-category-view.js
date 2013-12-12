@@ -18,6 +18,7 @@ define(function(require, exports, module) {
       'click .new-item': 'newItem',
       'keyup .category-form .form-control': 'onChange',
       'change .category-form .form-control': 'onChange',
+      'change .category-form .category-menus': 'onChange',
       'click .category-form .category-remove': 'onRemove',
       'submit .category-form': 'onSave'
     },
@@ -54,13 +55,17 @@ define(function(require, exports, module) {
     fieldMap: {
       name: '.category-form .category-name',
       description: '.category-form .category-description',
-      order: '.category-form .category-order'
+      order: '.category-form .category-order',
+      menus: '.category-form .category-menus'
     },
 
     fieldGetters: {
       order: function() {
         var val = this.$el.find(this.fieldMap.order).val().trim();
         return val ? parseInt(val) : null;
+      },
+      menus: function() {
+        return _.pluck(this.$el.find(this.fieldMap.menus + ':checked'), 'value');
       }
     },
 

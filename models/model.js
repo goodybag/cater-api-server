@@ -115,8 +115,6 @@ Model.find = function(query, callback, client) {
   var sql = db.builder.sql(query);
   var self = this;
 
-  // console.log(sql);
-
   (client || db).query(sql.query, sql.values, function(err, rows, result){
     if (err) return callback(err);
     if (client) {

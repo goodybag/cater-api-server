@@ -40,6 +40,41 @@
     });
   };
 
+  utils.searchByFacets = function( items, criteria, types ){
+    types = types || types;
+
+    return _.filter( items, function( item ){
+      var key, i, l, result, criterion;
+      for ( key in criteria ){
+        criterion = criteria[ key ];
+
+        if ( types[ key ] === 'or' ){
+          result = false;
+
+          for ( i = 0, l = criterion.length; i < l; ++i ){
+            if ( item[ key ].indexOf( criterion[ i ] ) > -1 ){
+              result = true;
+              break;
+            }
+          }
+        } else {
+          result = true;
+
+          for ( i = 0, l = criterion.length; i < l; ++i ){
+            if ( _.isArray( item[ key ] ) )
+            if ( item[ key ].indexOf( criterion[ i ] ) === -1 ){
+              result = false;
+            }
+          }
+        }
+
+        if ( !result ) return false;
+      }
+
+      return true;
+    });
+  };
+
   _.mixin({
     objMap: function(obj, func, context) {
       return _.object(_.keys(obj), _.map(obj, func, context));

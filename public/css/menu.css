@@ -77,6 +77,31 @@
   }
 }
 
+.restaurant-map {
+  height: 300px;
+}
+
+/**
+ * Fixes bootstrap styling with google maps
+ */
+.restaurant-map img {
+  max-width: none;
+}
+
+.restaurant-map-container {
+  float: right;
+  font-size: 13px;
+  width: 100%;
+}
+
+.restaurant-map-container .list-group-item {
+  padding: 0;
+}
+
+.restaurant-map-container dl {
+  margin-top: 13px;
+}
+
 .restaurant-name {
   display: inline-block;
   width: 100%;

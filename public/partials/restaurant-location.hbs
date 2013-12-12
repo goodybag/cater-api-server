@@ -1,0 +1,50 @@
+{{! Displays map and restaurant contact info }}
+{{#with restaurant}}
+<div class="panel restaurant-map-container">
+  <ul class="list-group">
+
+    {{! Restaurant Map }}
+    <li class="list-group-item">
+      <div class="restaurant-map"></div>
+    </li>
+
+    {{! Restaurant Contact Info, Address }}
+    <li class="list-group-item no-padding">
+
+      {{! Left column }}
+      <div class="col-md-6">
+        <dl>
+          <dt>Address:</dt>
+          <dd>
+            <div>{{street}}</div>
+            <div>{{street2}}</div>
+            <div>{{city}}, {{state}} {{zip}}</div>
+          </dd>
+        </dl>
+        {{!-- TODO save restaurant website
+        <dl>
+          <dt>Website:</dt>
+          <dd>
+            <a href="{{website}}">{{website}}</a>
+          </dd>
+        </dl>
+        --}}
+      </div>
+
+      {{! Right column }}
+      <div class="col-md-6">
+        {{#if voice_phones}}
+          <dl>
+            <dt>Phone:</dt>
+            <dd>
+              {{#each voice_phones}}
+                <div>{{phoneNumber this}}</div>
+              {{/each}}
+            </dd>
+          </dl>
+        {{/if}}
+      </div>
+    </li>
+  </ul>
+</div>
+{{/with}}

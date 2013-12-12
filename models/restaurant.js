@@ -100,7 +100,7 @@ module.exports = Model.extend({
     query.distinct = (query.distinct != null) ? query.distinct : ["restaurants.name", "is_unacceptable", "restaurants.id"];
     query.where = query.where || {};
 
-    if ('is_hidden' in orderParams){
+    if (orderParams && 'is_hidden' in orderParams){
       query.where.is_hidden = orderParams.is_hidden;
     }
 

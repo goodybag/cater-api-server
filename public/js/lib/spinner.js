@@ -12,6 +12,7 @@
  */
 
 define(function(require, exports, module) {
+  var $ = require('jquery');
   var Spinner = require('spin');
   'use strict';
 

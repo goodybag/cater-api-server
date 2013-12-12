@@ -18,7 +18,7 @@
     </div>
     <ul class="nav nav-tabs menu-info-tabs">
       <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
-      <li><a href="#info" data-toggle="tab">Info</a></li>
+      <li><a class="info-tab" href="#info" data-toggle="tab">Info</a></li>
       {{#if restaurant.yelp_data}}
       {{#if restaurant.yelp_data.review_count}}
       <li>
@@ -286,7 +286,7 @@
   });
 
   // render map on info tab click
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  $('a.info-tab[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     restaurantMapView.render();
   });
 

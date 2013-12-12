@@ -7,6 +7,9 @@ var require = {
   //never includes a ".js" extension since
   //the paths config could be for a directory.
 
+  // for moment.js
+, noGlobal: true
+
 , paths: {
     // plugins
     text: '../../components/requirejs-text/text'
@@ -32,23 +35,48 @@ var require = {
     // templating related
   , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}
       // moment stuff
-  , {name: 'moment-original',   location: '../../components/moment',                    main: 'moment.js'}
+  , {name: 'moment',            location: '../../components/moment',                    main: 'moment.js'}
   , {name: 'moment-timezone',   location: '../../components/moment-timezone',           main: 'moment-timezone.js'}
 
     // jquery stuff
-  , {name: 'jquery-original',   location: '../../components/jquery',                    main: 'jquery.js'}
+  , {name: 'jquery',            location: '../../components/jquery',                    main: 'jquery.js'}
   , {name: 'jquery.inputmask',  location: '../../components/jquery.inputmask/dist',     main: 'jquery.inputmask.bundle.js'}
   , {name: 'jquery-ui',         location: '../../components/jquery-ui/ui',              main: 'jquery-ui.js'}
   , {name: 'picker',            location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.js'}
-  , {name: 'pickadate',         location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.date.js'}
   , {name: 'pickadate-legacy',  location: '../../components/lalitkapoor-pickadate/lib', main: 'legacy.js'}
+  , {name: 'pickadate',         location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.date.js'}
   , {name: 'pickatime',         location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.time.js'}
   , {name: 'bootstrap',         location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
   , {name: 'select2',           location: '../../components/select2',                   main: 'select2.js'}
   ]
+
+, map: {
+
+    // custom replacements
+    '*': {
+      'jquery': 'jquery-loaded'
+    , 'moment': 'moment-loaded'
+    }
+
+    // deal with jquery
+  , 'jquery-loaded': {'jquery': 'jquery'}
+  , 'jquery.inputmask': {'jquery': 'jquery'}
+  , 'picker': {'jquery': 'jquery'}
+  , 'pickadate-legacy': {'jquery': 'jquery'}
+  , 'pickadate': {'jquery': 'jquery'}
+  , 'pickatime': {'jquery': 'jquery'}
+  , 'bootstrap': {'jquery': 'jquery'}
+  , 'select2': {'jquery': 'jquery'}
+
+    // deal with moment
+  , 'moment-loaded': {'moment': 'moment'}
+  , 'moment-timezone': {'moment': 'moment'}
+
+  }
+
 , shim: {
     backbone: {
-      deps: ['underscore', 'jquery-original']
+      deps: ['underscore', 'jquery']
     , exports: 'Backbone'
     }
   , 'hbs': {
@@ -61,38 +89,37 @@ var require = {
       deps: ['backbone']
     }
   , 'jquery-ui': {
-      deps: ['jquery-original']
+      deps: ['jquery']
     , exports: 'jQuery.ui'
     }
   , lodash: {
       exports: '_'
     }
   , bootstrap: {
-      deps: ['jquery-original']
+      deps: ['jquery']
     }
   , 'moment-timezone': {
-      deps: ['moment-original']
+      deps: ['moment']
     }
   , picker: {
-      deps: ['jquery-original', 'pickadate-legacy']
+      deps: ['jquery', 'pickadate-legacy']
     }
   , pickadate: {
-      deps: ['jquery-original', 'picker']
+      deps: ['jquery', 'picker']
     }
   , pickatime: {
-      deps: ['jquery-original', 'picker']
+      deps: ['jquery', 'picker']
     }
   , select2: {
-      deps: ['jquery-original']
+      deps: ['jquery']
     }
   , 'jquery.inputmask': {
-      deps: ['jquery-original']
+      deps: ['jquery']
     }
   , partials: {
       deps: ['hbs']
     }
   }
-
 // , hbs: {
 //     disableI18n: true
 //   , disableHelpers: true

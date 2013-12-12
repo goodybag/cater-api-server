@@ -16,11 +16,11 @@ body {
 }
 
 a {
-  color: #432012;
+  color: #0039a1;
 }
 
 a:hover {
-  color: #432012;
+  color: #0039a1;
   text-decoration: underline;
 }
 
@@ -249,7 +249,7 @@ a.list-group-item .list-group-item-heading {
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  color: #432012;
+  color: #0039a1;
   text-decoration: underline;
   background: none;
   border: none;

@@ -75,6 +75,15 @@ module.exports = Model.extend({
 
       utils.async.parallel(tasks, callback);
     });
+  },
+
+  getOrder: function(callback) {
+    if (!callback) callback = utils.identity;
+    Order.findOne(this.attributes.order_id, function(err, order) {
+      if (err) return callback(err);
+      this.order = order;
+      return callback.apply(this, arguments);
+    });
   }
 }, {
   table: 'order_changes',

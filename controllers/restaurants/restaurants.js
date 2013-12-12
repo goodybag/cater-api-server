@@ -20,6 +20,9 @@ module.exports.list = function(req, res) {
   logger.routes.info(TAGS, 'listing restaurants');
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
+
+  orderParams.is_hidden = false;
+
   if (orderParams.prices)
     orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
 

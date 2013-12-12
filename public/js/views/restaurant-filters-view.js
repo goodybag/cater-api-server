@@ -3,6 +3,14 @@ var RestaurantFiltersView = Backbone.View.extend({
     'change .checkbox': 'onFilterChange'
   }
 
+, criteriaTypes: {
+    prices: 'or'
+  , meal_styles: 'and'
+  , meal_types: 'and'
+  , diets: 'and'
+  , cuisine: 'or'
+  }
+
 , initialize: function() {
     var collapsibles = this.$el.find('.collapse');
     collapsibles.on('show.bs.collapse', this.toggleCollapsible);
@@ -34,6 +42,8 @@ var RestaurantFiltersView = Backbone.View.extend({
   }
 
 , updateCounts: function(){
+    var this_ = this;
+
     this.$checkboxes.each( function(){
       var $this     = $(this);
 
@@ -45,14 +55,17 @@ var RestaurantFiltersView = Backbone.View.extend({
 
       for ( var key in criteria ) criteria[ key ] = criteria[ key ].slice( 0 );
 
-console.log(JSON.stringify(criteria))
       if ( !criteria[ facet ] ) criteria[ facet ] = [];
       var i = criteria[ facet ].push( $this.find('input').attr('value') ) - 1;
 
-      if ( facet === 'prices' ) criteria[ facet ][i] = +criteria[ facet ][i];
+      if ( facet === 'prices' ) criteria[ facet ][ i ] = +criteria[ facet ][ i ];
 
-console.log(facet, criteria)
-      $label.html( $label.html() + ' (' + searchByFacets( restaurants, criteria ).length + ')' );
+      $label.html([
+        $label.html()
+      , ' ('
+      , utils.searchByFacets( restaurants, criteria, this_.criteriaTypes ).length
+      , ')'
+      ].join(''));
     });
   }
 });

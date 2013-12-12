@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
+  var Item = require('../models/item');
 
   return module.exports = Backbone.Collection.extend({
     model: Item,

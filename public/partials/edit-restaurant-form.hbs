@@ -151,35 +151,3 @@
     <button type="submit" class="btn btn-success restaurant-save pull-right{{#unless isNew}} hide{{/unless}}">Save</button>
   </div>
 </fieldset>
-
-{{#extend "scripts"}}
-<script>
-  var partials = {
-    edit_hours: 'edit-hours.hbs'
-  , hours_day: 'hours-day.hbs'
-  , lead_time: 'lead-time.hbs'
-  };
-
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial(name, Handlebars.compile(data));
-      },
-      dataType: 'html',
-      async: false
-    });
-  }
-</script>
-
-<script src="/js/models/hours.js"></script>
-<script src="/js/views/edit-hours-view.js"></script>
-<script>
-  var hours = [
-  {{#each restaurant.delivery_times}}
-  new EditHoursView({model: new Hours({day: {{@key}}, times: {{{json this}}} }), el: '#hours-{{@key}}'}),
-  {{/each}}
- ];
-</script>
-{{/extend}}

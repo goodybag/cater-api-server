@@ -34,7 +34,9 @@ var require = {
 
     // templating related
   , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}
-      // moment stuff
+  , {name: 'partials',          location: '../../dist',                                 main: 'partials.js'}
+
+    // moment stuff
   , {name: 'moment',            location: '../../components/moment',                    main: 'moment.js'}
   , {name: 'moment-timezone',   location: '../../components/moment-timezone',           main: 'moment-timezone.js'}
 

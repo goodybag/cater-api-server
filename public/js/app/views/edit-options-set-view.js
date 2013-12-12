@@ -5,6 +5,8 @@
 
 define(function(require, exports, module) {
   var Backbone = require('backbone');
+  var $ = require('jquery');
+  var jQuery= $;
 
   return module.exports = Backbone.View.extend({
     template: Handlebars.partials.edit_options_set

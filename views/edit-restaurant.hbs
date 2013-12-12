@@ -36,38 +36,23 @@
 <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
 
 <script>
-  var partials = {
-    'edit_item_row':            'edit-item-row.hbs',
-    'edit_category':            'edit-category.hbs',
-    'edit_options_sets':        'edit-options-sets.hbs',
-    'edit_options_set':         'edit-options-set.hbs',
-    'edit_options_set_option':  'edit-options-set-option.hbs',
-    'edit_tags':                'edit-tags.hbs'
-  };
-
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial(name, Handlebars.compile(data));
-      },
-      dataType: 'html',
-      async: false
-    });
-  }
-</script>
-
-<script>
   require([
       'app/models/restaurant'
     , 'app/views/edit-restaurant-view'
     , 'app/views/edit-category-view'
     , 'app/views/edit-item-view'
+    , 'app/models/hours'
+    , 'app/views/edit-hours-view'
 
     , 'jquery-ui'
     ]
-  , function(Restaurant, EditRestaurantView, EditCategoryView, EditItemView) {
+  , function(Restaurant, EditRestaurantView, EditCategoryView, EditItemView, Hours, EditHoursView) {
+      var hours = [
+        {{#each restaurant.delivery_times}}
+        new EditHoursView({model: new Hours({day: {{@key}}, times: {{{json this}}} }), el: '#hours-{{@key}}'}),
+        {{/each}}
+      ];
+
       var restaurant = new EditRestaurantView({ el: '#main', model: new Restaurant({{{json restaurant}}}), hours: hours });
       {{#each restaurant.categories}}
       var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', model: restaurant.model.categories.get({{id}}), restaurant: restaurant });

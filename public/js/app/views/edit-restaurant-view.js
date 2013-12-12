@@ -1,5 +1,8 @@
 define(function(require, exports, module) {
+  var utils = require('utils');
   var FormView = require('./form-view');
+  var Restaurant = require('../models/restaurant');
+  var EditCategoryView = require('./edit-category-view');
 
   return module.exports = FormView.extend({
     submitSelector: '.restaurant-form .restaurant-save',

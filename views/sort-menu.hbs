@@ -27,45 +27,19 @@
   </div>
 </div>
 
-
-{{#extend "views"}}
-<script>
-  var partials = {
-    sort_category: 'sort-category.hbs'
-  , sort_item: 'sort-item.hbs'
-  , tags: 'tags.hbs'
-  };
-
-  var templates = {};
-
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        templates[name] = Handlebars.compile(data);
-        Handlebars.registerPartial(name, templates[name]);
-      },
-      dataType: 'html',
-      async: false
-    });
-  }
-</script>
-{{/extend}}
-
 {{#extend "scripts"}}
 <script type="text/javascript">
   require([
-      'app/models/Category'
-    , 'app/models/Item'
-    , 'app/views/SortMenuView'
-    , 'app/views/SortCategoryView'
-    , 'app/views/SortItemView'
+      'handlebars'
+    , 'app/models/category'
+    , 'app/models/item'
+    , 'app/views/sort-menu-view'
+    , 'app/views/sort-category-view'
+    , 'app/views/sort-item-view'
 
     , 'jquery-ui'
-    , 'backbone.trackit'
     ]
-  , function(Category, Item, SortMenuView, SortCategoryView, SortItemView) {
+  , function(Handlebars, Category, Item, SortMenuView, SortCategoryView, SortItemView) {
       var sortMenuView = new SortMenuView({el: "#menu"});
 
       var categories = {{{json restaurant.categories}}};
@@ -74,14 +48,14 @@
         // create model and view for category
         var categoryModel = new Category(category);
         categoryModel.startTracking();
-        var sortCategoryView = new SortCategoryView({el: "#category-"+category.id, model: categoryModel, menu: sortMenuView, template: templates.sort_category});
+        var sortCategoryView = new SortCategoryView({el: "#category-"+category.id, model: categoryModel, menu: sortMenuView, template: Handlebars.partials.sort_category});
         sortMenuView.categories.push(sortCategoryView);
 
         _(category.items).each(function(item) {
           // create model and view for item
           var itemModel = new Item(item);
           itemModel.startTracking();
-          var sortItemView = new SortItemView({el: "#item-"+item.id, model: itemModel, category: sortCategoryView, template: templates.sort_item});
+          var sortItemView = new SortItemView({el: "#item-"+item.id, model: itemModel, category: sortCategoryView, template: Handlebars.partials.sort_item});
           sortCategoryView.items.push(sortItemView);
         });
       });

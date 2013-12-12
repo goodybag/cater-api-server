@@ -1,5 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
+  var Handlebars = require('Handlebars');
+  var utils = require('utils');
 
   return module.exports = Backbone.View.extend({
     tagName: 'div',
@@ -67,8 +69,8 @@ define(function(require, exports, module) {
 
     changeTimes: function(e) {
       this.model.set('times', _.compact(_.map(this.$el.find('.open-period'), function(el) {
-        var open = timeFormatter($(el).find(this.selectors.open).val()) || null;
-        var close = timeFormatter($(el).find(this.selectors.close).val()) || null;
+        var open = utils.timeFormatter($(el).find(this.selectors.open).val()) || null;
+        var close = utils.timeFormatter($(el).find(this.selectors.close).val()) || null;
         return open || close ? [open, close] : null;
       }, this)));
     },

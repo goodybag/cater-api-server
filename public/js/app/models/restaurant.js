@@ -1,9 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
-
   var Categories = require('../collections/categories');
-
   var states = require('states');
 
   var regex = {

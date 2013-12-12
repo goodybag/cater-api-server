@@ -3,7 +3,9 @@
  */
 
 define(function(require, exports, module) {
+  var utils = require('utils');
   var Backbone = require('backbone');
+  var EditOptionsSetView = require('./edit-options-set-view');
 
   return module.exports = Backbone.View.extend({
     template: Handlebars.partials.edit_options_sets

@@ -22,28 +22,22 @@
 
 {{#extend "scripts"}}
 <script>
-  var partials = {'edit_restaurant_list_item': 'edit-restaurant-list-item.hbs'};
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial(name, Handlebars.compile(data));
-      },
-      dataType: 'html',
-      async: false
-    });
-  }
-</script>
-
-<script>
   require([
       'jquery'
     , 'handlebars'
     , 'app/models/restaurant'
     , 'app/views/edit-restaurant-view'
+    , 'app/models/hours'
+    , 'app/views/edit-hours-view'
     ]
-  , function($, Handlebars, Restaurant, EditRestaurantView) {
+  , function($, Handlebars, Restaurant, EditRestaurantView, Hours, EditHoursView) {
+
+      var hours = [
+        {{#each restaurant.delivery_times}}
+        new EditHoursView({model: new Hours({day: {{@key}}, times: {{{json this}}} }), el: '#hours-{{@key}}'}),
+        {{/each}}
+      ];
+
       $('.new-restaurant').click(function() {
         $('.new-restaurant-row, .restaurant-form').toggleClass('hide');
       });

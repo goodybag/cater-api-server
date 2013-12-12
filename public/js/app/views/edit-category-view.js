@@ -1,7 +1,10 @@
 define(function(require, exports, module) {
   var FormView = require('./form-view');
+  var EditItemView = require('./edit-item-view');
+  var Category = require('../models/category');
+  var Item = require('../models/item');
 
-  return module.exports = FormView.extend({
+  var EditCategoryView = FormView.extend({
     tagName: 'div',
 
     className: 'panel',
@@ -117,4 +120,6 @@ define(function(require, exports, module) {
       _.invoke(this.items, 'attach');
     }
   });
+
+  return module.exports = EditCategoryView;
 });

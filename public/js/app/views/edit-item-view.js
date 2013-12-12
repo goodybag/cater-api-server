@@ -1,7 +1,9 @@
 define(function(require, exports, module) {
   var FormView = require('./form-view');
+  var EditOptionsView = require('./edit-options-view')
+  var Item = require('../models/item');
 
-  return module.exports = FormView.extend({
+  var EditItemView = FormView.extend({
     tagName: 'tr',
 
     template: Handlebars.partials.edit_item_row,
@@ -122,4 +124,6 @@ define(function(require, exports, module) {
       this.toggleEditOptions();
     }
   });
+
+  module.exports = EditItemView;
 });

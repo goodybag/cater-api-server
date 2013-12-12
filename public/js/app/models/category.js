@@ -1,8 +1,9 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
+  var Items = require('../collections/items');
 
-  return module.exports = Backbone.Model.extend({
+    return module.exports = Backbone.Model.extend({
     schema: {
       type: 'object',
       properties: {
@@ -31,6 +32,10 @@ define(function(require, exports, module) {
     },
 
     initialize: function(attrs, options) {
+      // delayed loading this because it is a circular dep
+      // restaurant requires categories which requires this
+      var Restaurant = require('../models/restaurant');
+
       attrs = attrs || {};
       options = options || {};
 

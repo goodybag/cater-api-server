@@ -4,7 +4,11 @@ var utils     = require('../../../utils')
   , db        = require('../../../db')
   , queries   = require('../../../db/queries');
 
-
+/**
+ * The table categories has `name` prefixed with [Group] or [Individual]
+ * as a placeholder for multiple menu support. This script will process
+ * these `name`s and configure the `menus` column.
+ */
 var tasks = [
   function getCategories(callback) {
     models.Category.find({limit: 1000}, function(error, rows) {

@@ -19,7 +19,7 @@ define(function(require, exports, module) {
       var this_ = this;
 
       /**
-       * Event `change:orderparams` triggered by
+       * Event `change:orderparams` is triggered by
        * adding items or clicking change order 
        * params.
        */

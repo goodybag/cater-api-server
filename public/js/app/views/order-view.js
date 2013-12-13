@@ -3,7 +3,7 @@ define(function(require, exports, module) {
   var moment = require('moment');
   var Handlebars = require('handlebars');
 
-  var Order = require('../models/Order');
+  var Order = require('../models/order');
 
   var FormView = require('./form-view');
   var OrderAddressView = require('./order-address-view');

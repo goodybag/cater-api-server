@@ -243,6 +243,7 @@
     , 'app/views/item-modal'
     , 'app/views/order-modal'
     , 'app/views/restaurant-map-view'
+    , 'app/views/menu-order-params-view'
     , 'app/views/menu-view'
     , 'bootstrap'
     ]
@@ -260,6 +261,7 @@
     , ItemModal
     , OrderModal
     , RestaurantMapView
+    , MenuOrderParamsView
     , MenuView
     ) {
       var orderModel = new Order( {{{json order}}} );
@@ -323,7 +325,16 @@
 
       orderView.render();
 
-      var menuView = new MenuView({el: '#menu', model: new Restaurant({{{json restaurant}}})});
+      var menuView = new MenuView({
+        el: '#menu'
+      , model: new Restaurant({{{json restaurant}}})
+      , orderModal: orderModal
+      });
+
+      var menuOrderParamsView = new MenuOrderParamsView({
+        el: '.menu-order-params'
+      , model: orderModel
+      });
 
       $('.tag-tooltip').tooltip();
     }

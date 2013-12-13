@@ -63,6 +63,7 @@ var require = {
 
     // deal with jquery
   , 'jquery-loaded': {'jquery': 'jquery'}
+  , 'jquery-ui': {'jquery': 'jquery'}
   , 'jquery.inputmask': {'jquery': 'jquery'}
   , 'picker': {'jquery': 'jquery'}
   , 'pickadate-legacy': {'jquery': 'jquery'}

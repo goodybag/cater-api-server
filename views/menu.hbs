@@ -222,105 +222,106 @@
 </div>
 
 {{#extend "scripts"}}
-<script>
-  var partials = {
-    order_item_summary: 'order-item-summary.hbs',
-    item_modal_title:   'item-modal-title.hbs',
-    item_options:       'item-options.hbs',
-    menu_order_summary: 'menu-order-summary.hbs',
-    order_summary:      'order-summary.hbs',
-    tags:               'tags.hbs'
-  };
-
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial(name, Handlebars.compile(data));
-      },
-      dataType: 'html',
-      async: false
-    });
-  }
-</script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-<script src="/js/models/address.js"></script>
-<script src="/js/models/item.js"></script>
-<script src="/js/models/category.js"></script>
-<script src="/js/models/restaurant.js"></script>
-<script type="text/javascript" src="/js/models/order-item.js"></script>
-<script src="/js/models/address.js"></script>
-<script src="/js/models/order.js"></script>
-<script type="text/javascript" src="/js/models/order-params.js"></script>
-
-<script src="/js/collections/items.js"></script>
-<script src="/js/collections/categories.js"></script>
-
-<script src="/js/views/form-view.js"></script>
-<script type="text/javascript" src="/js/views/order-item-summary-view.js"></script>
-<script type="text/javascript" src="/js/views/order-summary-view.js"></script>
-<script type="text/javascript" src="/js/views/order-params-view.js"></script>
-<script type="text/javascript" src="/js/views/restaurant-map-view.js"></script>
-<script type="text/javascript" src="/js/views/item-view.js"></script>
-<script type="text/javascript" src="/js/views/menu-view.js"></script>
-<script type="text/javascript" src="/js/views/item-modal.js"></script>
-<script type="text/javascript" src="/js/views/order-modal.js"></script>
 <script>
-  var orderModel = new Order( {{{json order}}} );
+  require([
+      'jquery'
+    , 'app/models/restaurant'
+    , 'app/models/item'
+    , 'app/models/order'
+    , 'app/models/order-params'
+    , 'app/models/address'
+    , 'app/views/item-view'
+    , 'app/views/order-params-view'
+    , 'app/views/order-summary-view'
+    , 'app/views/order-item-summary-view'
+    , 'app/views/item-modal'
+    , 'app/views/order-modal'
+    , 'app/views/restaurant-map-view'
+    , 'app/views/menu-view'
+    , 'bootstrap'
+    ]
+  , function(
+      $
+    , Restaurant
+    , Item
+    , Order
+    , OrderParams
+    , Address
+    , ItemView
+    , OrderParamsView
+    , OrderSummaryView
+    , OrderItemSummaryView
+    , ItemModal
+    , OrderModal
+    , RestaurantMapView
+    , MenuView
+    ) {
+      var orderModel = new Order( {{{json order}}} );
 
-  var orderParams = new OrderParams({{{json orderParams}}});
-  var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
-  var orderModal = new OrderModal({
-    model: orderModel
-  , el: '#order-params-modal'
-  , loginNeeded: {{#if user.id}}false{{else}}true{{/if}}
-  , defaultAddress: new Address( {{{json defaultAddress }}})
-  });
+      var orderParams = new OrderParams({{{json orderParams}}});
+      var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
+      var orderModal = new OrderModal({
+        model: orderModel
+      , el: '#order-params-modal'
+      , loginNeeded: {{#if user.id}}false{{else}}true{{/if}}
+      , defaultAddress: new Address( {{{json defaultAddress }}})
+      , orderModel: orderModel
+      });
 
-  var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems});
+      var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems, orderModel: orderModel, orderModal: orderModal});
 
-  var restaurantMapView = new RestaurantMapView({
-    el: '.restaurant-map'
-  , model: new Restaurant( {{{json restaurant}}} )
-  });
+      var restaurantMapView = new RestaurantMapView({
+        el: '.restaurant-map'
+      , model: new Restaurant( {{{json restaurant}}} )
+      });
 
-  // render map on info tab click
-  $('a.info-tab[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    restaurantMapView.render();
-  });
+      // render map on info tab click
+      $('a.info-tab[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        restaurantMapView.render();
+      });
 
-  var orderView = new OrderSummaryView({
-    el: '.order-summary'
-  , model: orderModel
-  , itemModalView: itemModalView
-  , orderParams: orderParams
-  , restaurantMapView: restaurantMapView
-  });
+      var orderView = new OrderSummaryView({
+        el: '.order-summary'
+      , model: orderModel
+      , itemModalView: itemModalView
+      , orderParams: orderParams
+      , restaurantMapView: restaurantMapView
+      });
 
-  {{#each order.orderItems}}
-  new OrderItemSummaryView({el: '#order-item-{{id}}', model: orderModel.orderItems.get({{id}}), itemModalView: itemModalView});
-  {{/each}}
+      var orderView = new OrderSummaryView({
+        el: '.order-summary'
+      , model: orderModel
+      , itemModalView: itemModalView
+      , orderParams: orderParams
+      , restaurantMapView: restaurantMapView
+      });
 
-  var itemViews = [
-    {{#each restaurant.categories}}
-    {{#each items}}
-    new ItemView({
-      el: $('#item-{{id}}'),
-      model: new Item( {{{json this}}} ),
-      itemModalView: itemModalView,
-      orderModel: orderModel,
-      orderModal: orderModal,
-      orderParams: orderParams
-      }),
-    {{/each}}
-    {{/each}}
-  ];
+      {{#each order.orderItems}}
+      new OrderItemSummaryView({el: '#order-item-{{id}}', model: orderModel.orderItems.get({{id}}), itemModalView: itemModalView});
+      {{/each}}
 
-  orderView.render();
+      var itemViews = [
+        {{#each restaurant.categories}}
+        {{#each items}}
+        new ItemView({
+          el: $('#item-{{id}}'),
+          model: new Item( {{{json this}}} ),
+          itemModalView: itemModalView,
+          orderModel: orderModel,
+          orderModal: orderModal,
+          orderParams: orderParams
+          }),
+        {{/each}}
+        {{/each}}
+      ];
 
-  var menuView = new MenuView({el: '#menu', model: new Restaurant({{{json restaurant}}})});
+      orderView.render();
 
-  $('.tag-tooltip').tooltip();
+      var menuView = new MenuView({el: '#menu', model: new Restaurant({{{json restaurant}}})});
+
+      $('.tag-tooltip').tooltip();
+    }
+  );
 </script>
 {{/extend}}

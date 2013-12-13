@@ -66,10 +66,13 @@
 </div>
 
 {{#extend "scripts"}}
-<script src="/js/models/contact-us.js"></script>
-<script src="/js/views/form-view.js"></script>
-<script src="/js/views/contact-us-view.js"></script>
 <script>
-  var contactUs = new ContactUsView({ el: '#main' });
+  require([
+      'app/views/contact-us-view'
+    ]
+  , function(ContactUsView) {
+      var contactUs = new ContactUsView({ el: '#main' });
+    }
+  );
 </script>
 {{/extend}}

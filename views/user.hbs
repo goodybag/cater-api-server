@@ -51,18 +51,24 @@
 
 {{#extend "scripts"}}
 <script>
-  $('.user-settings-form').on('submit', function(e) {
-    // Client side validation
-    e.preventDefault();
-    var fields = ['name', 'email', 'organization', 'password'];
-    var data = {};
-    for (var i=0, l=fields.length; i<l; i++)
-      data[fields[i]] = $('.user-settings-form .' + fields[i]).val();
-    if (data.password && data.password !== $('.user-settings-form .confirm_password').val())
-      return alert('passwords must match');
-    if (!data.password) delete data.password;
+  require([
+      'jquery'
+    ]
+  , function($) {
+      $('.user-settings-form').on('submit', function(e) {
+        // Client side validation
+        e.preventDefault();
+        var fields = ['name', 'email', 'organization', 'password'];
+        var data = {};
+        for (var i=0, l=fields.length; i<l; i++)
+          data[fields[i]] = $('.user-settings-form .' + fields[i]).val();
+        if (data.password && data.password !== $('.user-settings-form .confirm_password').val())
+          return alert('passwords must match');
+        if (!data.password) delete data.password;
 
-    this.submit();
-  });
+        this.submit();
+      });
+    }
+  );
 </script>
 {{/extend}}

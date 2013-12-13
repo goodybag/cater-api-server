@@ -60,51 +60,48 @@
 {{> copy_order_error_modal}}
 
 {{#extend "scripts"}}
-<script src="/js/models/address.js"></script>
-<script src="/js/models/item.js"></script>
-<script src="/js/models/category.js"></script>
-<script src="/js/models/restaurant.js"></script>
-<script src="/js/models/order-item.js"></script>
-<script src="/js/models/order.js"></script>
-
-<script src="/js/collections/items.js"></script>
-<script src="/js/collections/categories.js"></script>
-
-<script src="/js/views/copy-error-modal.js"></script>
-
 <script>
-  var copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
+  require([
+      'jquery'
+    , 'utils'
+    , 'app/models/order'
+    , 'app/views/copy-error-modal'
+    ]
+  , function($, utils, Order, CopyErrorModalView){
+      var copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
 
-  $('.order-list-group .list-group-item .copy-order-btn').click(function(e) {
-    e.preventDefault();
-    var $item = $(e.currentTarget).closest('.list-group-item')
-    var order = new Order({id: $item.attr('data-id')});
-    order.copy(function(err, newOrder) {
-      if (err) {
-        copyErrorModal.setModel(order);
-        copyErrorModal.$el.modal('show');
-      } else {
-        var queryParams = {
-          copy: true
-        };
+      $('.order-list-group .list-group-item .copy-order-btn').click(function(e) {
+        e.preventDefault();
+        var $item = $(e.currentTarget).closest('.list-group-item')
+        var order = new Order({id: $item.attr('data-id')});
+        order.copy(function(err, newOrder) {
+          if (err) {
+            copyErrorModal.setModel(order);
+            copyErrorModal.$el.modal('show');
+          } else {
+            var queryParams = {
+              copy: true
+            };
 
-        if (newOrder.get('lostItems')) queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
-        window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
-      }
-    });
-  });
+            if (newOrder.get('lostItems')) queryParams.lostItems = _.pluck(newOrder.get('lostItems'), 'name');
+            window.location = _.result(newOrder, 'url') + utils.queryParams(queryParams);
+          }
+        });
+      });
 
-  $('[data-href]').click( function( e ){
-    e.preventDefault();
+      $('[data-href]').click( function( e ){
+        e.preventDefault();
 
-    var $el = $(this), url = $el.data('href');
+        var $el = $(this), url = $el.data('href');
 
-    if ( $el.data('target') === '_blank' ){
-      // Strip spaces, hyphens, and underscores in window name so IE doesnt bitch
-      window.open( url, $el.data('name').replace( /\s|\_|\-/g, '' ) );
-    } else {
-      window.location = url;
+        if ( $el.data('target') === '_blank' ){
+          // Strip spaces, hyphens, and underscores in window name so IE doesnt bitch
+          window.open( url, $el.data('name').replace( /\s|\_|\-/g, '' ) );
+        } else {
+          window.location = url;
+        }
+      });
     }
-  });
+  );
 </script>
 {{/extend}}

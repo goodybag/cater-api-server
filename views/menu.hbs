@@ -124,9 +124,14 @@
     </div>
   </div>
 
-  <div class="col-md-4">
-    <div class="panel order-summary" data-spy="affix" data-offset-top="118">
-      {{> menu_order_summary}}
+  <div class="col-md-4 order-summary-col">
+    <div data-spy="affix" data-offset-top="200">
+      <div class="order-params">
+        {{> menu_order_params }}
+      </div>
+      <div class="order-summary">
+          {{> menu_order_summary }}
+      </div>
     </div>
   </div>
 </div>

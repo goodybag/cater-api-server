@@ -325,11 +325,7 @@
 
       orderView.render();
 
-      var menuView = new MenuView({
-        el: '#menu'
-      , model: new Restaurant({{{json restaurant}}})
-      , orderModal: orderModal
-      });
+      var menuView = new MenuView({el: '#menu', model: new Restaurant({{{json restaurant}}})});
 
       var menuOrderParamsView = new MenuOrderParamsView({
         el: '.menu-order-params'

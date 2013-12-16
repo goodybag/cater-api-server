@@ -11,9 +11,7 @@ define(function(require, exports, module) {
     editTemplate: Handlebars.partials.edit_order_item,
 
     events: {
-      'click .remove-order-item-btn': 'onDelete',
-      'keyup .form-control': 'autoSave',
-      'change .form-control': 'autoSave'
+      'click .remove-order-item-btn': 'onDelete'
     },
 
     initialize: function(options) {

@@ -20,4 +20,6 @@ psql cater -h localhost --command="update restaurants set sms_phones='{}', voice
 # Clean up
 rm latest.dump
 
+./bin/fix-users
+
 echo "Restore Complete. Enjoy your data!"

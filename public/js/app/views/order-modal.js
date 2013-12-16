@@ -18,6 +18,8 @@ define(function(require, exports, module) {
       , min: new Date()
       }).pickadate('picker');
 
+      console.log(_);
+
       this.datepicker.on( 'open', _(this.onDatePickerOpen).bind( this ) );
 
       this.timepicker = this.$el.find('input[name="time"]').eq(0).pickatime({

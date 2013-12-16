@@ -21,7 +21,6 @@ var require = {
 , packages: [
     // utility
     {name: 'lodash',            location: '../../components/lodash/dist',               main: 'lodash.underscore.js'}
-  , {name: 'underscore',        location: '../../components/lodash/dist',               main: 'lodash.compat.js'}
   , {name: 'async',             location: '../../components/async/lib',                 main: 'async.js'}
   , {name: 'amanda',            location: '../../components/amanda/releases/latest',    main: 'amanda.js'}
 
@@ -84,7 +83,7 @@ var require = {
 
 , shim: {
     backbone: {
-      deps: ['underscore', 'jquery']
+      deps: ['lodash', 'jquery']
     , exports: 'Backbone'
     }
   , 'hbs': {

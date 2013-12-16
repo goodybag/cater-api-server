@@ -144,7 +144,11 @@ define(function(require, exports, module) {
     save: function() {
       // save each order item and the order, in parallel.  toggle back to read only mode after all saves complete.
       var tasks = _.map(this.items, _.compose(_.partial(_.bind, OrderItemView.prototype.onSave), _.identity)).concat(_.bind(this.onSave, this));
-      async.parallel(tasks, _.bind(this.toggleEdit, this));
+      var self = this;
+      async.parallel(tasks, function(err) {
+        if (err) return alert(err); // TODO: real error handling
+        self.toggleEdit();
+      });
     }
   });
 });

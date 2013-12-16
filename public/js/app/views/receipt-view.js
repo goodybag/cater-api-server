@@ -148,6 +148,7 @@ define(function(require, exports, module) {
       async.parallel(tasks, function(err) {
         if (err) return alert(err); // TODO: real error handling
         self.toggleEdit();
+        // TODO: if change has been created instead of direct update, notify user;
       });
     }
   });

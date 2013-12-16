@@ -3,11 +3,13 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var states = require('states');
   var moment = require('moment');
+  var async = require('async');
 
   var FormView = require('./form-view');
   var OrderView = require('./order-view');
   var TipView = require('./tip-view');
   var CopyErrorModalView = require('./copy-error-modal');
+  var OrderItemView = require('./order-item-view');
 
   return module.exports = OrderView.extend({
     events: function() {
@@ -140,10 +142,9 @@ define(function(require, exports, module) {
     },
 
     save: function() {
-      var self = this;
-      this.onSave(function(err, data) {
-        self.toggleEdit();
-      });
+      // save each order item and the order, in parallel.  toggle back to read only mode after all saves complete.
+      var tasks = _.map(this.items, _.compose(_.partial(_.bind, OrderItemView.prototype.onSave), _.identity)).concat(_.bind(this.onSave, this));
+      async.parallel(tasks, this.toggleEdit);
     }
   });
 });

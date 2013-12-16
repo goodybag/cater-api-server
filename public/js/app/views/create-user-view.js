@@ -1,5 +1,8 @@
 define(function(require, exports, module) {
+  var utils = require('utils');
+  var $ = require('jquery');
   var FormView = require('./form-view');
+  var User = require('../models/user');
 
   return module.exports = FormView.extend({
     submitSelector: '.create-user-form .create-user-submit',

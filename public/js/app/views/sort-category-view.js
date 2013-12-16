@@ -1,5 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
+  var $ = require('jquery');
+  require('jquery-ui');
 
   return module.exports = Backbone.View.extend({
 

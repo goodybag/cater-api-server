@@ -172,7 +172,7 @@ define(function(require, exports, module) {
     },
 
     newCategory: function() {
-      var categoryView = new EditCategoryView({restaurant: restaurant});
+      var categoryView = new EditCategoryView({restaurant: this});
 
       this.categories.push(categoryView);
       this.model.categories.add(categoryView.model, {sort: false});

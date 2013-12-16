@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
-  var Handlebars = require('Handlebars');
+  var Handlebars = require('handlebars');
   var utils = require('utils');
 
   return module.exports = Backbone.View.extend({

@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+var options = {
+  email: 'test@goodybag.com'
+, concurrency: 10
+};
+
+var fs = require('fs');
+var async = require('async');
+var User = require('../models').User;
+
+var onError = function( error ){
+  throw error;
+};
+
+if ( fs.existsSync( __dirname + '/../local-config.json') ){
+  options.email = require('../local-config.json').testEmail;
+}
+
+console.log( "using email:", options.email );
+
+options.email = options.email.split('@');
+options.email[0] += '+{id}';
+options.email = options.email.join('@');
+
+User.find( { limit: 999999 }, function( error, users ){
+  if ( error ) return onError( error );
+
+  var fns = users.map( function( user ){
+    return function( done ){
+      user.save(
+        { values: { email: options.email.replace( '{id}', user.attributes.id ) } }
+      , done
+      );
+    }
+  });
+
+  async.parallelLimit( fns, options.concurrency, function( error ){
+    if ( error ) return onError( error );
+
+    console.log( users.length, "users updated!" );
+    process.exit(0);
+  });
+});

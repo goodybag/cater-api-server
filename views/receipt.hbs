@@ -91,7 +91,7 @@
         </div>
 
         <div class="btn-toolbar pull-right">
-          {{#if order.editable}}
+          {{#if order.cancelable}}
           <button type="button" class="btn btn-default edit-order-btn">Edit</button>
           {{/if}}
           <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default">Download PDF</a>

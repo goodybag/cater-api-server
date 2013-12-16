@@ -12,7 +12,6 @@ define(function(require, exports, module) {
 
   var Backbone = {};
   if (isBrowser){
-    console.log('ohai')
     Backbone = require('backbone');
   }
 
@@ -38,6 +37,13 @@ define(function(require, exports, module) {
   utils.Collection  = Backbone.Collection;
   utils.Router      = Backbone.Router;
   utils.History     = Backbone.History;
+
+  utils.startHistory = function(){
+    console.log('starting history');
+    utils.history = Backbone.history;
+    utils.history.start();
+    utils.navigate = function(){ utils.history.navigate.apply(utils.history, arguments); };
+  };
 
   return module.exports = utils;
 });

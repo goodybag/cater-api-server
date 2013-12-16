@@ -316,12 +316,12 @@
 
       , onAction: function( action ){
           if ( action === 'accept' ){
-            utils.Backbone.history.navigate('/');
+            utils.history.navigate('/');
             return view.changeStatus('accepted');
           }
 
-          if ( action === 'accept' ){
-            utils.Backbone.history.navigate('/');
+          if ( action === 'reject' ){
+            utils.history.navigate('/');
             return view.changeStatus('denied');
           }
         }
@@ -338,7 +338,7 @@
       ];
       view.items = items;
 
-      utils.Backbone.history.start();
+      utils.startHistory();
     }
   );
 </script>

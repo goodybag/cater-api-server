@@ -8,9 +8,10 @@
     "url": "https://github.com/goodybag/cater-api-server"
   },
   "scripts": {
-    "start": "./node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js && ./bin/tasks.js runDeltas && node master",
-    "test": "./node_modules/.bin/mocha --bail",
-    "postinstall": "./node_modules/.bin/bower install"
+    "prestart": "handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js && ./bin/tasks.js runDeltas",
+    "start": "node master",
+    "test": "mocha --bail",
+    "postinstall": "bower install"
   },
   "dependencies": {
     "npm": "*",

@@ -507,12 +507,17 @@ a.list-group-item .list-group-item-heading {
  */
 
 .order-summary {
-  font-size: 12px;
+  font-size: 13px;
   overflow-y: scroll;
 }
 
 .order-summary .panel-heading, .order-summary .panel-footer {
   border: none;
+}
+
+.order-summary .panel-title {
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .order-summary .subtotal-row,

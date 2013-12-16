@@ -1,0 +1,30 @@
+{{! NOTE: shares many commonalities with order-item.hbs }}
+<tr id="order-item-{{this.id}}">
+  <td class="line-item-name" data-title="Name">
+    <div class="item-name">{{this.name}}</div>
+    <ul class="comma-separated item-options">
+      {{#each options_sets}}
+      {{#each this.options}}
+      {{#if this.state}}
+      <li>{{this.name}}</li>
+      {{/if}}
+      {{/each}}
+      {{/each}}
+    </ul>
+    <a class="item-remove remove-order-item-btn" href="#">Remove</a>
+  </td>
+  <td class="line-item-quantity" data-title="Quantity">
+    <span class="icon-x">x</span>
+    <input type="number" min="1" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
+  </td>
+  <td class="line-item-notes" data-title="Notes">
+    <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
+  </td>
+  <td class="line-item-recipient" data-title="Recipient">
+    <textarea name="recipient" class="item-notes-textarea form-control order-item-field order-item-recipient">{{this.recipient}}</textarea>
+  </td>
+  <td class="line-item-feeds" data-title="Feeds">
+    {{range feeds_min feeds_max}}
+  </td>
+  <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
+</tr>

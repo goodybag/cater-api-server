@@ -123,11 +123,7 @@
         <tbody>
           {{#each order.orderItems}}
           <tr id="order-item-{{this.id}}">
-            {{#if ../order.editable}}
-            {{> edit_order_item}}
-            {{else}}
             {{> order_item}}
-            {{/if}}
           </tr>
           {{/each}}
         </tbody>

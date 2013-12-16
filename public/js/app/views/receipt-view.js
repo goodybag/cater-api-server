@@ -4,8 +4,8 @@ define(function(require, exports, module) {
   var states = require('states');
   var moment = require('moment');
 
-  var OrderView = require('./order-view');
   var FormView = require('./form-view');
+  var OrderView = require('./order-view');
   var TipView = require('./tip-view');
   var CopyErrorModalView = require('./copy-error-modal');
 
@@ -134,6 +134,7 @@ define(function(require, exports, module) {
           }
         };
         this.$el.find('.delivery-info').html(Handlebars.partials.order_info(context));
+        _.invoke(this.items, 'toggleEdit', this.edit);
         this.$el.find('.tip-area').toggleClass('hide');
       }
     },

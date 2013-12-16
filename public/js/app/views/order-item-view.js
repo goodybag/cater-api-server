@@ -6,6 +6,10 @@ define(function(require, exports, module) {
   return module.exports = FormView.extend({
     model: OrderItem,
 
+    readTemplate: Handlebars.partials.order_item,
+
+    editTemplate: Handlebars.partials.edit_order_item,
+
     events: {
       'click .remove-order-item-btn': 'onDelete',
       'keyup .form-control': 'autoSave',
@@ -22,6 +26,12 @@ define(function(require, exports, module) {
 
       // In case we save but there's nothing to change, re-enable checkout
       this.on('save:noop', _.bind(this.trigger, this, 'enableCheckout'));
+    },
+
+    render: function(template) {
+      if (!template) template = this.options.order.edit ? this.editTemplate : this.readTemplate;
+      this.$el.html(template(this.model.toJSON()));
+      return this;
     },
 
     onPriceChange: function(e) {
@@ -48,6 +58,11 @@ define(function(require, exports, module) {
       FormView.prototype.remove.apply(this, arguments);
     },
 
-    autoSave: _.debounce(FormView.prototype.onSave, 600)
+    autoSave: _.debounce(FormView.prototype.onSave, 600),
+
+    toggleEdit: function(state) {
+      if (state == null) state = this.options.order.edit;
+      this.render(state ? this.editTemplate : this.readTemplate);
+    }
   });
 });

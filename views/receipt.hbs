@@ -302,52 +302,22 @@
 
 {{#extend "scripts"}}
 <script>
-  var partials = {
-    address:      'address.hbs',
-    edit_address: 'edit-address.hbs',
-    order_info:   'order-info.hbs',
-    totals:       'totals.hbs'
-  };
-
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial(name, Handlebars.compile(data));
-      },
-      dataType: 'html',
-      async: false
-    });
-  }
-</script>
-
-<script src="/js/models/item.js"></script>
-<script src="/js/models/category.js"></script>
-<script src="/js/models/restaurant.js"></script>
-<script src="/js/models/order-item.js"></script>
-<script src="/js/models/address.js"></script>
-<script src="/js/models/order.js"></script>
-
-<script src="/js/collections/items.js"></script>
-<script src="/js/collections/categories.js"></script>
-
-<script src="/js/views/form-view.js"></script>
-<script src="/js/views/copy-error-modal.js"></script>
-<script src="/js/views/address-view.js"></script>
-<script src="/js/views/order-address-view.js"></script>
-<script src="/js/views/tip-view.js"></script>
-<script src="/js/views/order-view.js"></script>
-<script src="/js/views/receipt-view.js"></script>
-<script src="/js/views/order-item-view.js"></script>
-<script>
-  var query = utils.parseQueryParams();
-  var view = new ReceiptView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
-  var items = [
-    {{#each order.orderItems}}
-    {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})
-    {{/each}}
-  ];
-  view.items = items;
+  require([
+      'utils'
+    , 'app/models/order'
+    , 'app/views/receipt-view'
+    , 'app/views/order-item-view'
+    ]
+  , function(utils, Order, ReceiptView, OrderItemView) {
+      var query = utils.parseQueryParams();
+      var view = new ReceiptView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
+      var items = [
+        {{#each order.orderItems}}
+        {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})
+        {{/each}}
+      ];
+      view.items = items;
+    }
+  );
 </script>
 {{/extend}}

@@ -2,6 +2,106 @@
   top: 30px;
 }
 
+/**
+ * Menu Picker
+ */
+
+.menu-picker .tab-pane {
+  -moz-column-count: 2;
+  -moz-column-gap: 20px;
+  -webkit-column-count: 2;
+  -webkit-column-gap: 20px;
+  column-count: 2;
+  column-gap: 20px;
+}
+
+.menu-missing {
+  color: #8B8983;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 300;
+}
+
+.menu-picker a {
+  color: #0039a1;
+  font-size: 10pt;
+  font-weight: normal;
+}
+
+.menu-picker .menu-picker-tabs {
+  display: inline-block;
+  vertical-align: middle;
+  border: none;
+  margin-left: 20px;
+  padding-bottom: 3px;
+}
+
+.menu-picker .menu-picker-tabs a {
+  padding: 10px 16px;
+}
+
+.menu-picker .menu-picker-tabs li.active a {
+  color: #0039a1;
+  font-weight: bold;
+}
+
+.menu-picker .panel-heading {
+  color: #432012;
+  font-size: 12pt;
+  font-weight: bolder;
+  border-bottom: 1px dashed #CCCCC0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+@media screen and (max-width: 786px) {
+  .menu-picker .menu-picker-tabs {
+    display: block;
+    margin: 0;
+  }
+
+  .menu-picker .menu-picker-tabs > li > a {
+    clear:both;
+    padding-left: 0;
+    padding-bottom: 0;
+    padding-right: 10px;
+  }
+
+  .menu-picker .tab-pane {
+    -moz-column-count: 1;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 1;
+    -webkit-column-gap: 20px;
+    column-count: 1;
+    column-gap: 20px;
+  }
+}
+
+.restaurant-map {
+  height: 300px;
+}
+
+/**
+ * Fixes bootstrap styling with google maps
+ */
+.restaurant-map img {
+  max-width: none;
+}
+
+.restaurant-map-container {
+  float: right;
+  font-size: 13px;
+  width: 100%;
+}
+
+.restaurant-map-container .list-group-item {
+  padding: 0;
+}
+
+.restaurant-map-container dl {
+  margin-top: 13px;
+}
+
 .restaurant-name {
   display: inline-block;
   width: 100%;

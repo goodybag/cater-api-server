@@ -80,21 +80,62 @@
 </div>
 
 {{#extend "scripts"}}
-<script type="text/javascript" src="/js/models/order-params.js"></script>
-<script type="text/javascript" src="/js/views/order-params-view.js"></script>
-<script type="text/javascript" src="/js/views/restaurant-filters-view.js"></script>
-<script type="text/javascript" src="/js/views/restaurants-list-view.js"></script>
-
 <script type="text/javascript">
-  $(".tag-tooltip").tooltip();
-  var orderParams = new OrderParams();
-  var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
-  var restaurantFiltersView = new RestaurantFiltersView({el: '#filters'});
-  var restaurantsListView = new RestaurantsListView({
-    el: '#main'
-  , filtersView: restaurantFiltersView
-  , paramsView: orderParamsView
-  , searchUrl: '/restaurants'
-  });
+  require([
+      'jquery'
+    , 'utils'
+    , 'app/models/order-params'
+    , 'app/views/order-params-view'
+    , 'app/views/restaurant-filters-view'
+    , 'app/views/restaurants-list-view'
+    , 'bootstrap'
+    ]
+  , function($, utils, OrderParams, OrderParamsView, RestaurantFiltersView, RestaurantsListView) {
+      $(".tag-tooltip").tooltip();
+
+      var restaurants = {{{json allRestaurants}}};
+      // Prepare listing to be usable by the facet serach
+      utils.each( restaurants, function( r ){
+        // Facet values need to be arrays
+        r.prices = [r.price];
+      });
+
+      // Get existing filter criteria from the URL Parameters
+      var existingCriteria = utils.parseQueryParams();
+
+      // The URL parameters don't match up with the actual restaurant fields
+      utils.each({
+        mealStyles: 'meal_styles'
+      , mealTypes:  'meal_types'
+      , diets:      'tags'
+      , cuisines:   'cuisine'
+      }, function( newName, oldName, obj ){
+        if ( obj[ oldName ] ){
+          obj[ newName ] = obj[ oldName ];
+          delete obj[ oldName ];
+        }
+      });
+
+      if ( existingCriteria.prices ){
+        utils.each( existingCriteria.prices, function( p, i, pp ){ pp[ i ] = +p; } );
+      }
+
+      var orderParams = new OrderParams();
+      var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
+
+      var restaurantFiltersView = new RestaurantFiltersView({
+        el: '#filters'
+      , existingCriteria: existingCriteria
+      , restaurants: restaurants
+      });
+
+      var restaurantsListView = new RestaurantsListView({
+        el: '#main'
+      , filtersView: restaurantFiltersView
+      , paramsView: orderParamsView
+      , searchUrl: '/restaurants'
+      });
+    }
+  );
 </script>
 {{/extend}}

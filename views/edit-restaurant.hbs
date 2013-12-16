@@ -34,53 +34,34 @@
 (function(a){if(window.filepicker){return}var b=a.createElement("script");b.type="text/javascript";b.async=!0;b.src=("https:"===a.location.protocol?"https:":"http:")+"//api.filepicker.io/v1/filepicker.js";var c=a.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c);var d={};d._queue=[];var e="pick,pickMultiple,pickAndStore,read,write,writeUrl,export,convert,store,storeUrl,remove,stat,setKey,constructWidget,makeDropPane".split(",");var f=function(a,b){return function(){b.push([a,arguments])}};for(var g=0;g<e.length;g++){d[e[g]]=f(e[g],d._queue)}window.filepicker=d})(document);
 </script>
 <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
-<script src="/components/jquery-ui/ui/jquery-ui.js"></script>
 
 <script>
-  var partials = {
-    'edit_item_row':            'edit-item-row.hbs',
-    'edit_category':            'edit-category.hbs',
-    'edit_options_sets':        'edit-options-sets.hbs',
-    'edit_options_set':         'edit-options-set.hbs',
-    'edit_options_set_option':  'edit-options-set-option.hbs',
-    'edit_tags':                'edit-tags.hbs'
-  };
+  require([
+      'app/models/restaurant'
+    , 'app/views/edit-restaurant-view'
+    , 'app/views/edit-category-view'
+    , 'app/views/edit-item-view'
+    , 'app/models/hours'
+    , 'app/views/edit-hours-view'
 
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial(name, Handlebars.compile(data));
-      },
-      dataType: 'html',
-      async: false
-    });
-  }
-</script>
+    , 'jquery-ui'
+    ]
+  , function(Restaurant, EditRestaurantView, EditCategoryView, EditItemView, Hours, EditHoursView) {
+      var hours = [
+        {{#each restaurant.delivery_times}}
+        new EditHoursView({model: new Hours({day: {{@key}}, times: {{{json this}}} }), el: '#hours-{{@key}}'}),
+        {{/each}}
+      ];
 
-<script src="/js/models/restaurant.js"></script>
-<script src="/js/models/category.js"></script>
-<script src="/js/models/item.js"></script>
-
-<script src="/js/collections/categories.js"></script>
-<script src="/js/collections/items.js"></script>
-
-<script src="/js/views/form-view.js"></script>
-<script src="/js/views/edit-restaurant-view.js"></script>
-<script src="/js/views/edit-category-view.js"></script>
-<script src="/js/views/edit-item-view.js"></script>
-<script src="/js/views/edit-options-view.js"></script>
-<script src="/js/views/edit-options-set-view.js"></script>
-<script>
-  var restaurant = new EditRestaurantView({ el: '#main', model: new Restaurant({{{json restaurant}}}), hours: hours });
-
-  {{#each restaurant.categories}}
-  var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', model: restaurant.model.categories.get({{id}}), restaurant: restaurant });
-  category{{id}}.items = [{{#each items}}
-    new EditItemView({el: '#edit-item-{{id}}', model: category{{../id}}.model.items.get({{id}}),  category: category{{../id}} }),
-  {{/each}}];
-  restaurant.categories.push(category{{id}});
-  {{/each}}
+      var restaurant = new EditRestaurantView({ el: '#main', model: new Restaurant({{{json restaurant}}}), hours: hours });
+      {{#each restaurant.categories}}
+      var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', model: restaurant.model.categories.get({{id}}), restaurant: restaurant });
+      category{{id}}.items = [{{#each items}}
+        new EditItemView({el: '#edit-item-{{id}}', model: category{{../id}}.model.items.get({{id}}),  category: category{{../id}} }),
+      {{/each}}];
+      restaurant.categories.push(category{{id}});
+      {{/each}}
+    }
+  );
 </script>
 {{/extend}}

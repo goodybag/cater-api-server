@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.0.19",
+  "version": "1.0.22",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "https://github.com/goodybag/cater-api-server"
   },
   "scripts": {
-    "start": "./bin/tasks.js runDeltas && node master",
+    "start": "./node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js && ./bin/tasks.js runDeltas && node master",
     "test": "./node_modules/.bin/mocha --bail",
     "postinstall": "./node_modules/.bin/bower install"
   },
@@ -52,7 +52,8 @@
     "balanced-official": "goodybag/balanced-node",
     "iron_mq": "0.2.x",
     "yelp": "~0.1.1",
-    "forky": "0.0.2"
+    "forky": "0.0.2",
+    "handlebars": "~1.1.2"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

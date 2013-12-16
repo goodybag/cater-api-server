@@ -1,21 +1,20 @@
--- Update version
-insert into deltas (version, date) values ('1.1.5', 'now()');
-
--- #468 Order changes
+-- #558 multiple menus
 
 DO $$
-  BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'change_status') THEN
-      CREATE TYPE change_status AS ENUM('canceled', 'pending', 'submitted', 'denied', 'accepted');
-    END IF;
-  END;
-$$;
+  declare version       text := '1.1.5';
+  declare tbl_name      text := 'categories';
+  declare col_name      text := 'menus';
+  declare col_type      text := 'text[]';
+begin
+  raise notice '## Running Delta v% ##', version;
 
-CREATE TABLE IF NOT EXISTS order_changes (
-  id                serial primary key,
-  created_at        timestamptz not null default now(),
-  order_id          int not null references orders(id),
-  status            change_status not null default 'pending',
-  change_summaries  text[],
-  order_json        json
-);
+  -- Update version
+  execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
+
+  -- Add col
+  if not exists ( select 1 from information_schema.columns where table_name = tbl_name and column_name = col_name ) then
+    raise notice 'Adding column `%` to table `%`', col_name, tbl_name;
+    execute 'alter table "' || tbl_name || '" add column "' || col_name || '" ' || col_type || ' default ''{}'' not null ';
+  end if;
+
+end$$;

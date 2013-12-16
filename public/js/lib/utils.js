@@ -1,4 +1,6 @@
+var isBrowser = true;
 if (typeof module === 'object' && typeof define !== 'function') {
+  isBrowser = false;
   var define = function(factory) {
     return module.exports = factory(require, exports, module);
   };
@@ -7,6 +9,12 @@ if (typeof module === 'object' && typeof define !== 'function') {
 define(function(require, exports, module) {
   var _ = require('lodash');
   var helpers = require('./helpers');
+
+  var Backbone = {};
+  if (isBrowser){
+    console.log('ohai')
+    Backbone = require('backbone');
+  }
 
   _.mixin({
     objMap: function(obj, func, context) {
@@ -22,6 +30,14 @@ define(function(require, exports, module) {
   });
 
   var utils = _.extend({}, _, helpers);
+
+  utils.Backbone    = Backbone;
+  utils.Events      = Backbone.Events;
+  utils.Model       = Backbone.Model;
+  utils.View        = Backbone.View;
+  utils.Collection  = Backbone.Collection;
+  utils.Router      = Backbone.Router;
+  utils.History     = Backbone.History;
 
   return module.exports = utils;
 });

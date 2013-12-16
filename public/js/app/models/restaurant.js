@@ -106,6 +106,18 @@ define(function(require, exports, module) {
         yelp_business_id: {
           type: ['string', 'null'],
           required: false
+        },
+        description: {
+          type: ['string', 'null'],
+          required: false
+        },
+        website: {
+          type: 'array',
+          uniqueItems: true,
+          items: {
+            type: 'string',
+            format: 'uri'
+          }
         }
       }
     },

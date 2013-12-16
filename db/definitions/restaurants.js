@@ -112,6 +112,13 @@ define(function(require) {
   , yelp_business_id: {
       type: types.text
     }
+  , description: {
+      type: types.text
+    }
+  , websites: {
+      type: types.array(types.text)
+    , nullable: false
+    }
   };
 
   definition.indices = {};

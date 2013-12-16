@@ -122,11 +122,13 @@
         </thead>
         <tbody>
           {{#each order.orderItems}}
-          {{#if ../order.editable}}
-          {{> edit_order_item}}
-          {{else}}
-          {{> order_item}}
-          {{/if}}
+          <tr id="order-item-{{this.id}}">
+            {{#if ../order.editable}}
+            {{> edit_order_item}}
+            {{else}}
+            {{> order_item}}
+            {{/if}}
+          </tr>
           {{/each}}
         </tbody>
       </table>
@@ -277,7 +279,7 @@
       var view = new ReceiptView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
       var items = [
         {{#each order.orderItems}}
-        {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})
+        {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get( {{this.id}} ), order: view})
         {{/each}}
       ];
       view.items = items;

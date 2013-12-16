@@ -1,28 +1,26 @@
 {{! NOTE: shares many commonalities with edit-order-item.hbs }}
-<tr id="order-item-{{this.id}}">
-  <td class="line-item-name" data-title="Name">
-    <div class="item-name">{{this.name}}</div>
-    <ul class="comma-separated item-options">
-      {{#each options_sets}}
-      {{#each this.options}}
-      {{#if this.state}}
-      <li>{{this.name}}</li>
-      {{/if}}
-      {{/each}}
-      {{/each}}
-    </ul>
-  </td>
-  <td class="line-item-quantity" data-title="Quantity">
-    <span class="item-quantity-span order-item-field order-item-quantity">{{this.quantity}}</span>
-  </td>
-  <td class="line-item-notes" data-title="Notes">
-    <span name="notes" class="item-notes-span order-item-field order-item-notes">{{#if this.notes}}{{this.notes}}{{else}}&nbsp;{{/if}}</span>
-  </td>
-  <td class="line-item-recipient" data-title="Recipient">
-    <span name="recipient" class="item-recipient-span order-item-field order-item-recipient">{{#if this.recipient}}{{this.recipient}}{{else}}&nbsp;{{/if}}</span>
-  </td>
-  <td class="line-item-feeds" data-title="Feeds">
-    {{range feeds_min feeds_max}}
-  </td>
-  <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
-</tr>
+<td class="line-item-name" data-title="Name">
+  <div class="item-name">{{this.name}}</div>
+  <ul class="comma-separated item-options">
+    {{#each options_sets}}
+    {{#each this.options}}
+    {{#if this.state}}
+    <li>{{this.name}}</li>
+    {{/if}}
+    {{/each}}
+    {{/each}}
+  </ul>
+</td>
+<td class="line-item-quantity" data-title="Quantity">
+  <span class="item-quantity-span order-item-field order-item-quantity">{{this.quantity}}</span>
+</td>
+<td class="line-item-notes" data-title="Notes">
+  <span name="notes" class="item-notes-span order-item-field order-item-notes">{{#if this.notes}}{{this.notes}}{{else}}&nbsp;{{/if}}</span>
+</td>
+<td class="line-item-recipient" data-title="Recipient">
+  <span name="recipient" class="item-recipient-span order-item-field order-item-recipient">{{#if this.recipient}}{{this.recipient}}{{else}}&nbsp;{{/if}}</span>
+</td>
+<td class="line-item-feeds" data-title="Feeds">
+  {{range feeds_min feeds_max}}
+</td>
+<td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>

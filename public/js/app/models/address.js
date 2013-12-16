@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
+  var utils = require('utils');
 
   return module.exports = Backbone.Model.extend({
     // TODO: extract to superclass
@@ -14,8 +15,8 @@ define(function(require, exports, module) {
 
       var schema = _.clone(_.result(this.constructor, 'schema'));
       if (!options.enforceRequired) {
-        schema.properties = _.objMap(schema.properties, _.compose(
-          _.partialRight(_.omit, 'required'),
+        schema.properties = utils.objMap(schema.properties, _.compose(
+          utils.partialRight(_.omit, 'required'),
           function(property) {
             return _.extend(property, {type: _.uniq(['null'].concat(property.type))});
           })

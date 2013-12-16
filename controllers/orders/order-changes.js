@@ -4,7 +4,7 @@ var utils  = require('../../utils');
 
 
 module.exports.list = function(req, res, next) {
-  models.Change.find({order_id: req.params.oid}, function(err, changes) {
+  models.Change.find({where: {order_id: req.params.oid}}, function(err, changes) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     return res.json(200, utils.invoke(changes, 'toJSON'));
     // TODO: html

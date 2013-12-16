@@ -32,7 +32,16 @@ var app = module.exports = express();
 app.configure(function(){
   app.use(express.favicon(__dirname + '/public/favicon.ico'));
   app.use(express.compress());
-  app.use(express.static(__dirname + '/public'));
+  app.use((function(){
+    var receiptReg = /receipts\/order\-\d+\.pdf/;
+
+    // Exclude receipts from this static server so we can do ?rebuild=true for
+    // receipts that exist in the local filesystem
+    return function(req, res, next) {
+      if (receiptReg.test(req.path)) return next();
+      return express.static(__dirname + '/public')(req, res, next);
+    };
+  })());
 
   app.use(logger.expressError);
   app.use(express.cookieParser('WOOT THE FUCK'));

@@ -3,7 +3,7 @@
   <a class="list-group-item" href="/orders/{{this.id}}{{#eq status "pending"}}/items{{/eq}}" data-status="{{status}}" data-id="{{id}}">
     <div class="row">
       <div class="col-sm-8">
-        <h4 class="list-group-item-heading">{{this.restaurant.name}}</h4>
+        <h4 class="list-group-item-heading"><span class="order-number">#{{this.id}}</span> {{this.restaurant.name}}</h4>
         <dl class="dl-horizontal-inline order-details-list">
           {{#if this.name}}
           <div>
@@ -14,7 +14,9 @@
           {{#unless ../hideUserDetails}}
           <div>
             <dt>User:</dt>
-            <dd>{{this.user.email}}</dd>,
+            <dd>{{this.user.email}}</dd>
+          </div>
+          <div>
             <dt>Organization:</dt>
             <dd>{{this.user.organization}}</dd>
           </div>

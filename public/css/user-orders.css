@@ -42,3 +42,8 @@
 .status-buttons {
   width: 100%;
 }
+
+.order-number {
+  font-size: 14px;
+  color: #A7A4A0;
+}

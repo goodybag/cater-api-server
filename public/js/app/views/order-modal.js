@@ -18,14 +18,14 @@ define(function(require, exports, module) {
       , min: new Date()
       }).pickadate('picker');
 
-      this.datepicker.on( 'open', _(this.onDatePickerOpen).bind( this ) );
+      this.datepicker.on( 'open', this.onDatePickerOpen.bind( this ) );
 
       this.timepicker = this.$el.find('input[name="time"]').eq(0).pickatime({
         format: 'hh:i A'
       , interval: 15
       }).pickatime('picker');
 
-      this.timepicker.on( 'open', _(this.onTimePickerOpen).bind( this ) );
+      this.timepicker.on( 'open', this.onTimePickerOpen.bind( this ) );
 
       // Remove the paneliness from the order params partial
       this.$el.find('.order-params-bar').removeClass('panel');

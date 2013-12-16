@@ -8,8 +8,6 @@ define(function(require, exports, module) {
   var _ = require('lodash');
   var helpers = require('./helpers');
 
-  var utils = _.extend({}, _, helpers);
-
   _.mixin({
     objMap: function(obj, func, context) {
       return _.object(_.keys(obj), _.map(obj, func, context));
@@ -22,6 +20,8 @@ define(function(require, exports, module) {
       };
     }
   });
+
+  var utils = _.extend({}, _, helpers);
 
   return module.exports = utils;
 });

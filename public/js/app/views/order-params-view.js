@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
+  var utils = require('utils');
 
   var template = Handlebars.partials.order_params_bar;
 
@@ -50,7 +51,7 @@ define(function(require, exports, module) {
   , getProps: function(){
       return {
         zip:      this.$("input[name='zip']").val() || null
-      , date:     (this.datepicker.get()) ? dateTimeFormatter(this.datepicker.get()) : null
+      , date:     (this.datepicker.get()) ? utils.dateTimeFormatter(this.datepicker.get()) : null
       , time:     this.timepicker.get()
       , guests:   this.$("input[name='guests']").val() || null
       };

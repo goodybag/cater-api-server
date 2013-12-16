@@ -198,6 +198,12 @@ module.exports.get = function(req, res) {
       context.layout = 'invoice/invoice-layout';
     }
 
+    if (req.param('email')) {
+      view = 'order-email/order-submitted';
+      context.layout = 'email-layout';
+      context.order.review_token = 'lkjasdljf';
+    }
+
     res.render(view, context);
   });
 

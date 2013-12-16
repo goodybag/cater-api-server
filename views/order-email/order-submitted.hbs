@@ -32,12 +32,16 @@
               <!--</BigOlButton>-->
             </td>
             <td style="width: 46%; padding-bottom: 22px;">
-              {{> email_order_details_no_header order}}
+              {{> email_order_details_no_header}}
             </td>
           </tr>
         </table>
 
         {{> email_order_items order}}
+
+        {{#if order.review_token}}
+        {{> email_accept_reject order}}
+        {{/if}}
       </td>
       <td style="width: 10px"></td>
     </tr>

@@ -113,6 +113,7 @@ hbs.registerPartials('./public/partials');
   'order-items'
 , 'order-details'
 , 'order-details-no-header'
+, 'accept-reject'
 ].forEach( function( name ){
   hbs.registerPartial(
     'email_' + name.replace( /\-/g, '_' )

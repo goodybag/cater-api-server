@@ -5,10 +5,12 @@
     <dl>
       <dt>Zip:</dt>
       <dd>{{#if zip}}{{zip}}{{else}}--{{/if}}</dd>
-      <dt>Guests:</dt>
-      <dd>{{#if guests}}{{guests}}{{else}}--{{/if}}</dd>
       <dt>Date:</dt>
-      <dd>{{#if datetime}}{{datepart datetime}}{{else}}--{{/if}}<a class="btn-change-order-params pull-right" href="#">Change</a></dd>
+      <dd>{{#if datetime}}{{datepart datetime}}{{else}}--{{/if}}</dd>
+      <dt>Time:</dt>
+      <dd>{{#if datetime}}{{timepart datetime}}{{else}}--{{/if}}</dd>
+      <dt>Guests:</dt>
+      <dd>{{#if guests}}{{guests}}{{else}}--{{/if}}<a class="btn-change-order-params pull-right" href="#">Change</a></dd>
     </dl>
   </div>
   {{/with}}

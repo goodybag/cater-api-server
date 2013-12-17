@@ -36,7 +36,7 @@ User.find( { limit: 999999 }, function( error, users ){
       user.save(
         { values: {
             email: options.email.replace( '{id}', user.attributes.id )
-          , password: '$2a$10$BMVl2Je.ZhJlfftbKgmt/Onl9247qGPk0f7WN10DFmJRRl8vF1lpC'
+          , password: '$2a$10$BMVl2Je.ZhJlfftbKgmt/Onl9247qGPk0f7WN10DFmJRRl8vF1lpC' // password
           }
         }
       , done

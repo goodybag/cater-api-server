@@ -515,11 +515,6 @@ a.list-group-item .list-group-item-heading {
   border: none;
 }
 
-.order-summary .panel-title {
-  font-size: 16px;
-  font-weight: bold;
-}
-
 .order-summary .subtotal-row,
 .order-summary .order-totals dt.total,
 .order-summary .order-totals dd.total {

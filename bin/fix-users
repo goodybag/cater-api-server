@@ -2,6 +2,7 @@
 
 var options = {
   email: 'test@goodybag.com'
+, password: '$2a$10$BMVl2Je.ZhJlfftbKgmt/Onl9247qGPk0f7WN10DFmJRRl8vF1lpC' // password
 , concurrency: 10
 , skip: [
     'receipts@goodybag.com'
@@ -34,7 +35,11 @@ User.find( { limit: 999999 }, function( error, users ){
       if ( options.skip.indexOf( user.attributes.email ) > -1 ) return done();
 
       user.save(
-        { values: { email: options.email.replace( '{id}', user.attributes.id ) } }
+        { values: {
+            email: options.email.replace( '{id}', user.attributes.id )
+          , password: options.password
+          }
+        }
       , done
       );
     }

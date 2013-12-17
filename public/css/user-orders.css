@@ -39,6 +39,10 @@
   font-weight: 500;
 }
 
+.label-status {
+  text-transform: capitalize;
+}
+
 .status-buttons {
   width: 100%;
 }

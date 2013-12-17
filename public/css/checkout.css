@@ -93,6 +93,14 @@
 }
 
 
+.payment-info-details {
+  font-style: italic;
+  font-size: 13px;
+  margin-top: -8px;
+  word-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+
 input[name="card_number"] {
   background-color: #fff;
   background-repeat: no-repeat;

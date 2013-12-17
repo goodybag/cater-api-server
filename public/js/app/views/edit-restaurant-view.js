@@ -117,7 +117,7 @@ define(function(require, exports, module) {
       },
 
       websites: function() {
-        return this.fieldSplit(this.fieldMap.websites);
+        return _.map(this.fieldSplit(this.fieldMap.websites), Handlebars.helpers.website);
       },
 
       delivery_zips: function() {

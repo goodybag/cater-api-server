@@ -15,8 +15,8 @@
     <div class="restaurant-header">
       <img class="restaurant-header-logo" src="{{#if restaurant.logo_url}}{{filepicker restaurant.logo_url}}{{else}}{{filepicker config.defaultLogo}}{{/if}}" alt="{{restaurant.name}}">
       <div class="restaurant-header-body">
-        <div class="restaurant-header-name">{{restaurant.name}}</div>
-        <div class="restaurant-header-description">this is the description</div>
+        <div class="restaurant-header-name {{#unless restaurant.description}}restaurant-header-name-full{{/unless}}">{{restaurant.name}}</div>
+        <div class="restaurant-header-description">{{restaurant.description}}</div>
       </div>
     </div>
     <ul class="nav nav-tabs menu-info-tabs">

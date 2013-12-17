@@ -136,6 +136,7 @@
 .restaurant-header {
   display: inline-block;
   height: 100px;
+  margin: 10px 0 4px;
 }
 
 .restaurant-header .restaurant-header-logo {
@@ -154,14 +155,22 @@
 
 .restaurant-header .restaurant-header-name {
   font-family: 'Aleo';
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 300;
+}
+/**
+ * For restaurant's without description, let name take 
+ * full container height
+ */
+.restaurant-header .restaurant-header-name-full {
+  display: table-cell;
+  vertical-align: middle;
+  height: 100px; 
 }
 
 .restaurant-header .restaurant-header-description {
-  font-style: italic;
-  text-transform: uppercase;
   color: #8B8983;
+  font-weight: 300;
 }
 
 @media screen and (max-width: 786px) {
@@ -180,15 +189,17 @@
 
   .restaurant-header .restaurant-header-name {
     font-size: 20px;
-    margin-left: -64px;
-    padding-left: 60px;
     vertical-align: middle;
+    text-align: left; 
+    display: table-cell;
+    height: 50px;
   }
 
   .restaurant-header .restaurant-header-description {
     clear:left;
     padding-top: 10px;
-    margin-left: -50px;
+    margin-left: -45px;
+    width: 95%;
   }
 }
 

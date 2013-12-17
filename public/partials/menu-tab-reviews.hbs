@@ -25,13 +25,10 @@
 {{/if}}
 
 <div class="tab-actions row">
-  <div class="col-lg-6">
-    <a href="{{restaurant.yelp_data.url}}" target="_blank">See all ({{restaurant.yelp_data.review_count}}) Reviews</a>
-  </div>
-  <div class="col-lg-6">
-    <a href="http://yelp.com" class="btn btn-lg btn-default btn-yelp" target="_blank">
-      Reviews powered by
-      <img class="logo" src="/img/yelp-logo.png" alt="Yelp!">
-    </a>
-  </div>
+  <a href="{{restaurant.yelp_data.url}}" class="btn btn-primary" target="_blank">See all ({{restaurant.yelp_data.review_count}}) Reviews</a>
 </div>
+
+<a href="http://yelp.com" class="anchor-yelp" target="_blank">
+  Reviews powered by
+  <img class="logo" src="/img/yelp-logo.png" alt="Yelp!">
+</a>

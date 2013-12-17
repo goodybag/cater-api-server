@@ -44,3 +44,9 @@
   margin-top: 0;
   margin-bottom: 16px;
 }
+
+#reviews .anchor-yelp {
+  position: absolute;
+  right: 32px;
+  bottom: -14px;
+}

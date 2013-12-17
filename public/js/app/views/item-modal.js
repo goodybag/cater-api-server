@@ -17,6 +17,7 @@ define(function(require, exports, module) {
     render: function() {
       var context = {
         item:     this.model.toJSON(),
+        order:    this.options.orderModel.toJSON(),
         inOrder:  this.model instanceof OrderItem
       };
 
@@ -83,10 +84,16 @@ define(function(require, exports, module) {
 
       this.clearErrors();
 
-      if (orderItem)
-        orderItem.save(data, {wait: true});
-      else
+      if (orderItem){
+        orderItem.save(data, {
+          wait: true,
+          success: function(){
+            this_.trigger('submit:success');
+          }
+        });
+      } else {
         orderItem = this.options.orderItems.create(_.extend( { item_id: this.model.attributes.id }, data ), { wait: true });
+      }
 
       orderItem.validationError ? this.displayErrors( orderItem.validationError ) : this.hide();
     },

@@ -8,6 +8,7 @@ define(function(require, exports, module) {
   var FormView = require('./form-view');
   var TipView = require('./tip-view');
   var CopyErrorModalView = require('./copy-error-modal');
+  var ItemModal = require('./item-modal');
 
   return module.exports = OrderView.extend({
     events: function() {
@@ -24,7 +25,8 @@ define(function(require, exports, module) {
         'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered'),
         'click .edit-order-btn': 'toggleEdit',
         'click .cancel-edit-btn': 'toggleEdit',
-        'click .save-btn': 'save'
+        'click .save-btn': 'save',
+        'click a.item-name': 'onItemNameClick'
       });
     },
 
@@ -33,6 +35,18 @@ define(function(require, exports, module) {
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
       this.convertUtcDates();
+
+      this.itemModal = new ItemModal({
+        el:         '#item-modal'
+      , orderItems: this.model.orderItems
+      , orderModel: this.model
+      });
+
+      // Since this view isn't able to just reasily re-render itself
+      // when the underlying models change, just reload the page
+      this.itemModal.on('submit:success', function(){
+        window.location.reload();
+      });
     },
 
     // set the model and add listeners here
@@ -143,6 +157,15 @@ define(function(require, exports, module) {
       this.onSave(function(err, data) {
         self.toggleEdit();
       });
+    },
+
+    onItemNameClick: function(e) {
+      e.preventDefault();
+
+      var id = $(e.currentTarget).data('id');
+
+      this.itemModal.provideModel( this.model.orderItems.get( id ) );
+      this.itemModal.show();
     }
   });
 });

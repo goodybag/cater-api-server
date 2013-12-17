@@ -20,8 +20,13 @@ define( function( require ){
   , Menu:               require('app/views/menu-view')
   };
 
-  return {
+  var page = {
     init: function(){
+      page.view = new Views.Menu({
+        el:     '#menu'
+      , model:  restaurant
+      });
+
       var paramsView = new Views.OrderParams({
         model:  orderParams
       , el:     '.order-params-bar'
@@ -83,11 +88,6 @@ define( function( require ){
 
       orderView.render();
 
-      var menuView = new Views.Menu({
-        el: '#menu'
-      , model: restaurant
-      });
-
       var menuOrderParamsView = new Views.MenuOrderParams({
         el: '.menu-order-params'
       , model: orderModel
@@ -97,4 +97,6 @@ define( function( require ){
       $('.tag-tooltip').tooltip();
     }
   };
+
+  return page;
 });

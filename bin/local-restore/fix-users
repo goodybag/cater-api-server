@@ -18,7 +18,7 @@ var onError = function( error ){
 };
 
 if ( fs.existsSync( __dirname + '/../../local-config.json') ){
-  options.email = require('../../local-config.json').testEmail;
+  options.email = require('../../local-config.json').testEmail || options.email;
 }
 
 console.log( "using email:", options.email );

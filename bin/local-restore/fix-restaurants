@@ -9,14 +9,14 @@ var options = {
 
 var fs = require('fs');
 var async = require('async');
-var Restaurant = require('../models').Restaurant;
+var Restaurant = require('../../models').Restaurant;
 
 var onError = function( error ){
   throw error;
 };
 
-if ( fs.existsSync( __dirname + '/../local-config.json') ){
-  var localConfig = require('../local-config.json');
+if ( fs.existsSync( __dirname + '/../../local-config.json') ){
+  var localConfig = require('../../local-config.json');
   options.email = localConfig.testEmail;
   options.phoneSms = localConfig.testPhoneSms;
   options.phoneVoice = localConfig.testPhoneVoice;

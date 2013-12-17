@@ -11,14 +11,14 @@ var options = {
 
 var fs = require('fs');
 var async = require('async');
-var User = require('../models').User;
+var User = require('../../models').User;
 
 var onError = function( error ){
   throw error;
 };
 
-if ( fs.existsSync( __dirname + '/../local-config.json') ){
-  options.email = require('../local-config.json').testEmail;
+if ( fs.existsSync( __dirname + '/../../local-config.json') ){
+  options.email = require('../../local-config.json').testEmail;
 }
 
 console.log( "using email:", options.email );

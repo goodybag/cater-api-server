@@ -1,20 +1,21 @@
 <div class="panel-heading">
-  <h2 class="panel-title">Your Order</h2>
+  <h2 class="panel-title">Your order</h2>
 </div>
+<div class="panel-body">
+  <div class="without-items{{#if order.orderItems.length}} hide{{/if}}">
+    <p>Click a menu item on the left to add it to your order.</p>
+    {{#if order.restaurant.minimum_order}}
+    <p class="minimum-order">Minimum order: {{dollars order.restaurant.minimum_order}}</p>
+    {{/if}}
+  </div>
 
-<div class="without-items col-lg-12{{#if order.orderItems.length}} hide{{/if}}">
-  <p>Click a menu item on the left to add it to your order.</p>
-  {{#if order.restaurant.minimum_order}}
-  <p class="minimum-order">Minimum order: {{dollars order.restaurant.minimum_order}}</p>
-  {{/if}}
-</div>
-
-<div class="col-lg-12">
-  <table class="table order-table with-items{{#unless order.orderItems.length}} hide{{/unless}}">
-    <tbody>
-      {{#each order.orderItems}}
-      <tr id="order-item-{{this.id}}" data-id="{{this.id}}">{{> order_item_summary}}</tr>
-      {{/each}}
-    </tbody>
-  </table>
+  <div>
+    <table class="table order-table with-items{{#unless order.orderItems.length}} hide{{/unless}}">
+      <tbody>
+        {{#each order.orderItems}}
+        <tr id="order-item-{{this.id}}" data-id="{{this.id}}">{{> order_item_summary}}</tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -67,6 +67,7 @@ define(function(require, exports, module) {
       if ( !this.options.orderModel.isFulfillableOrder() ) {
         return this.options.orderModal.show({
           success: function(model, response, options) {
+            model.trigger('change:orderparams');
             this_.options.orderModal.hide();
             this_.submit(e);
           }

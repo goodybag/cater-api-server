@@ -309,6 +309,26 @@
     , 'app/views/order-item-view'
     ]
   , function(utils, Order, ReceiptView, OrderItemView) {
+      var Router = utils.Router.extend({
+        routes: {
+          'action/:action': 'onAction'
+        }
+
+      , onAction: function( action ){
+          if ( action === 'accept' ){
+            utils.history.navigate('/');
+            return view.changeStatus('accepted');
+          }
+
+          if ( action === 'reject' ){
+            utils.history.navigate('/');
+            return view.changeStatus('denied');
+          }
+        }
+      });
+
+      var router = new Router();
+
       var query = utils.parseQueryParams();
       var view = new ReceiptView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
       var items = [
@@ -317,6 +337,8 @@
         {{/each}}
       ];
       view.items = items;
+
+      utils.startHistory();
     }
   );
 </script>

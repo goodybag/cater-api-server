@@ -164,6 +164,11 @@ define(function(require, exports, module) {
       return '<a href="mailto:' + email + '">' + email + '</a>';
     },
 
+    // Append http protocol if missing
+    website: function(url) {
+      return (/^https?:\/\//).test(url) ? url : 'http://' + url;
+    },
+
     eq: function(a, b, options){
       return options[a == b ? 'fn' : 'inverse'](this);
     },

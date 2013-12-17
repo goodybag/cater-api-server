@@ -50,6 +50,18 @@
     <span class="help-block">Please enter email addresses separated by commas for email alerts. Leave blank for no email alerts.</span>
   </div>
   <div class="form-group">
+    <label class="control-label">Websites</label>
+    <input type="text" class="form-control restaurant-websites" value="{{#if restaurant.websites}}{{array restaurant.websites}}{{/if}}" placeholder="www.goodybag.com, www.shop.goodybag.com">
+    <span class="help-block">Please enter websites separated by commas. These will be listed on the restaurant info tab.
+    </span>
+  </div>
+  <div class="form-group">
+    <label class="control-label">Description (Elevator pitch)</label>
+    <input type="text" class="form-control restaurant-description" value="{{restaurant.description}}" placeholder="Indian Mexican fusion. Voted best new food trailer 2013 and featured on Austin Daily Herald and Austin Chronicle.">
+    <span class="help-block">Please enter a brief description (1-2 sentences) about the restaurant. This will be displayed under the restaurant's name on the menu pages.
+    </span>
+  </div>
+  <div class="form-group">
     <label class="control-label">Price</label>
     <select class="form-control restaurant-price">
       <option value="1"{{#if selectedPrice.$}} selected="selected"{{/if}}>$</option>

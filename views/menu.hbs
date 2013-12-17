@@ -11,10 +11,13 @@
 </div>
 
 <div class="row">
-  <div class="col-lg-12">
-    <div class="restaurant-name-logo">
-      <img class="business-logo" src="{{#if restaurant.logo_url}}{{filepicker restaurant.logo_url}}{{else}}{{filepicker config.defaultLogo}}{{/if}}" alt="{{restaurant.name}}">
-      <h1 class="restaurant-name page-title">{{restaurant.name}}</h1>
+  <div class="col-md-8">
+    <div class="restaurant-header">
+      <img class="restaurant-header-logo" src="{{#if restaurant.logo_url}}{{filepicker restaurant.logo_url}}{{else}}{{filepicker config.defaultLogo}}{{/if}}" alt="{{restaurant.name}}">
+      <div class="restaurant-header-body">
+        <div class="restaurant-header-name {{#unless restaurant.description}}restaurant-header-name-full{{/unless}}">{{restaurant.name}}</div>
+        <div class="restaurant-header-description">{{restaurant.description}}</div>
+      </div>
     </div>
     <ul class="nav nav-tabs menu-info-tabs">
       <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>

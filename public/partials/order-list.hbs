@@ -24,6 +24,7 @@
       new OrderListItemView({
         el: "#order-{{id}}"
       , model: new Order({{{json this}}})
+      , hideUserDetails: {{#if ../hideUserDetails}}true{{else}}false{{/if}}
       });
     {{/each}}
     }

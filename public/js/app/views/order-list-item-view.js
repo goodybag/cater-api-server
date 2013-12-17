@@ -34,6 +34,14 @@ define(function(require, exports, module) {
       });
     }
 
+  , render: function() {
+      var context = this.model.toJSON();
+      if (this.options.hideUserDetails)
+        context.parent = {hideUserDetails: this.options.hideUserDetails};
+
+      return this.template(context);
+    }
+
   , cancelOrder: function(e) {
       e.preventDefault();
 
@@ -42,7 +50,7 @@ define(function(require, exports, module) {
       this.model.changeStatus('canceled', function(error, result) {
         if (error) return alert('Sorry we were unable to cancel that order.');
 
-        self.$el.html(self.template(self.model.toJSON()));
+        self.$el.html(self.render());
       });
     }
 

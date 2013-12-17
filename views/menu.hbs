@@ -136,61 +136,7 @@
   </div>
 </div>
 
-<div class="modal fade modal-item" id="item-modal" role="dialog" aria-labelledby="itemModal" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="row">
-          <h4 class="modal-title col-sm-8"></h4>
-          <div class="col-sm-4 item-legend-wrapper">
-            <dl class="item-legend">
-              <dt>Feeds</dt>
-              <dd class="item-legend-detail-feeds"></dd>
-              <dt>Price</dt>
-              <dd class="item-legend-detail-price"></dd>
-            </dl>
-          </div>
-        </div>
-      </div>
-      <form class="modal-item-form">
-      <div class="modal-body">
-        <div class="errors">
-          <div class="alert alert-danger alert-generic hide"></div>
-        </div>
-        <p class="item-description"></p>
-        <div class="item-options"></div>
-        <div class="form-group form-group-item-notes">
-          <label for="item-notes">Comments or Instructions</label>
-          <textarea name="notes" id="item-notes" rows="3" class="form-control"></textarea>
-        </div>
-        <div class="form-group form-group-item-recipient">
-          <label for="item-recipient">Who is this item for? (optional)</label>
-          <input type="text" name="recipient" id="item-recipient" rows="3" class="form-control" />
-        </div>
-      </div>
-      <div class="modal-footer">
-        <div class="row modal-footer-actions">
-          <div class="col-xs-6 modal-footer-left-actions btn-toolbar">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-default btn-item-remove">Remove from Order</button>
-          </div>
-          <div class="col-xs-6 modal-footer-right-actions form-inline">
-              <div class="form-group">
-                <label class="control-label col-lg-2" for="item-modal-quantity">Quantity</label>
-              </div>
-              <div class="form-group">
-                <input type="number" class="form-control item-quantity col-lg-1" id="item-modal-quantity" maxlength="4" min="0" />
-              </div>
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary item-modal-submit">Add to order</button>
-              </div>
-          </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="modal fade modal-item" id="item-modal" role="dialog" aria-labelledby="itemModal" aria-hidden="true"></div>
 
 <div class="modal fade modal-order-params" id="order-params-modal" role="dialog" aria-labelledby="orderParamsRequiredModal" aria-hidden="true">
   <div class="modal-dialog">
@@ -228,113 +174,30 @@
 
 {{#extend "scripts"}}
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
 <script>
-  require([
-      'jquery'
-    , 'app/models/restaurant'
-    , 'app/models/item'
-    , 'app/models/order'
-    , 'app/models/order-params'
-    , 'app/models/address'
-    , 'app/views/item-view'
-    , 'app/views/order-params-view'
-    , 'app/views/order-summary-view'
-    , 'app/views/order-item-summary-view'
-    , 'app/views/item-modal'
-    , 'app/views/order-modal'
-    , 'app/views/restaurant-map-view'
-    , 'app/views/menu-order-params-view'
-    , 'app/views/menu-view'
-    , 'bootstrap'
-    ]
-  , function(
-      $
-    , Restaurant
-    , Item
-    , Order
-    , OrderParams
-    , Address
-    , ItemView
-    , OrderParamsView
-    , OrderSummaryView
-    , OrderItemSummaryView
-    , ItemModal
-    , OrderModal
-    , RestaurantMapView
-    , MenuOrderParamsView
-    , MenuView
-    ) {
-      var orderModel = new Order( {{{json order}}} );
+  define( 'user', ['app/models/user'], function( User ){
+    return new User( {{{json user}}} )
+  });
 
-      var orderParams = new OrderParams({{{json orderParams}}});
-      var orderParamsView = new OrderParamsView({model: orderParams, el: '.order-params-bar'});
-      var orderModal = new OrderModal({
-        model: orderModel
-      , el: '#order-params-modal'
-      , loginNeeded: {{#if user.id}}false{{else}}true{{/if}}
-      , defaultAddress: new Address( {{{json defaultAddress }}})
-      , orderModel: orderModel
-      });
+  define( 'order', ['app/models/order'], function( Order ){
+    return new Order( {{{json order}}} )
+  });
 
-      var itemModalView = new ItemModal({el: '#item-modal', orderItems: orderModel.orderItems, orderModel: orderModel, orderModal: orderModal});
+  define( 'order-params', ['app/models/order-params'], function( OrderParams ){
+    return new OrderParams( {{{json orderParams}}} );
+  });
 
-      var restaurantMapView = new RestaurantMapView({
-        el: '.restaurant-map'
-      , model: new Restaurant( {{{json restaurant}}} )
-      });
+  define( 'restaurant', ['app/models/restaurant'], function( Restaurant ){
+    return new Restaurant( {{{json restaurant}}} );
+  });
 
-      // render map on info tab click
-      $('a.info-tab[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        restaurantMapView.render();
-      });
+  define( 'default-address', ['app/models/address'], function( Address ){
+    return new Address( {{{json defaultAddress }}} );
+  });
 
-      var orderView = new OrderSummaryView({
-        el: '.order-summary'
-      , model: orderModel
-      , itemModalView: itemModalView
-      , orderParams: orderParams
-      , restaurantMapView: restaurantMapView
-      });
-
-      var orderView = new OrderSummaryView({
-        el: '.order-summary'
-      , model: orderModel
-      , itemModalView: itemModalView
-      , orderParams: orderParams
-      , restaurantMapView: restaurantMapView
-      });
-
-      {{#each order.orderItems}}
-      new OrderItemSummaryView({el: '#order-item-{{id}}', model: orderModel.orderItems.get({{id}}), itemModalView: itemModalView});
-      {{/each}}
-
-      var itemViews = [
-        {{#each restaurant.categories}}
-        {{#each items}}
-        new ItemView({
-          el: $('#item-{{id}}'),
-          model: new Item( {{{json this}}} ),
-          itemModalView: itemModalView,
-          orderModel: orderModel,
-          orderModal: orderModal,
-          orderParams: orderParams
-          }),
-        {{/each}}
-        {{/each}}
-      ];
-
-      orderView.render();
-
-      var menuView = new MenuView({el: '#menu', model: new Restaurant({{{json restaurant}}})});
-
-      var menuOrderParamsView = new MenuOrderParamsView({
-        el: '.menu-order-params'
-      , model: orderModel
-      , orderModal: orderModal
-      });
-
-      $('.tag-tooltip').tooltip();
-    }
-  );
+  require( ['app/pages/menu'], function( page ){
+    page.init();
+  });
 </script>
 {{/extend}}

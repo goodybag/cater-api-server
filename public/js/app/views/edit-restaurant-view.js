@@ -83,12 +83,15 @@ define(function(require, exports, module) {
       tags: '.restaurant-form .restaurant-tags input',
       is_hidden: '.restaurant-form .restaurant-is-hidden',
       meal_types: '.restaurant-form .restaurant-meal-types input',
-      meal_styles: '.restaurant-form .restaurant-meal-styles input'
+      meal_styles: '.restaurant-form .restaurant-meal-styles input',
+      websites: '.restaurant-form .restaurant-websites',
+      description: '.restaurant-form .restaurant-description'
     },
 
-    fieldSplit: function(selector) {
+    fieldSplit: function(selector, delimiter) {
+      delimiter = delimiter || ',';
       var val = this.$el.find(selector).val().trim();
-      return val ? _.invoke(val.split(','), 'trim') : [];
+      return val ? _.invoke(val.split(delimiter), 'trim') : [];
     },
 
     // TODO: do this automatically based on the model schema
@@ -111,6 +114,10 @@ define(function(require, exports, module) {
 
       emails:  function() {
         return this.fieldSplit(this.fieldMap.emails);
+      },
+
+      websites: function() {
+        return this.fieldSplit(this.fieldMap.websites);
       },
 
       delivery_zips: function() {

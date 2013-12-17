@@ -3,6 +3,9 @@
 var options = {
   email: 'test@goodybag.com'
 , concurrency: 10
+, skip: [
+    'receipts@goodybag.com'
+  ]
 };
 
 var fs = require('fs');
@@ -28,6 +31,8 @@ User.find( { limit: 999999 }, function( error, users ){
 
   var fns = users.map( function( user ){
     return function( done ){
+      if ( options.skip.indexOf( user.attributes.email ) > -1 ) return done();
+
       user.save(
         { values: { email: options.email.replace( '{id}', user.attributes.id ) } }
       , done

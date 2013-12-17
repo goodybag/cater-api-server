@@ -1,4 +1,4 @@
-.order-summary.affix {
+.order-summary-col .affix {
   top: 30px;
 }
 
@@ -52,6 +52,30 @@
   border-bottom: 1px dashed #CCCCC0;
   padding-top: 8px;
   padding-bottom: 8px;
+}
+
+/**
+ * Menu order params
+ */
+
+.menu-order-params {
+  font-size: 13px;
+}
+
+.menu-order-params .panel-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.menu-order-params dl {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+.menu-order-params dt {
+  float: left;
+  clear: left;
+  margin-right: 8px;
 }
 
 @media screen and (max-width: 786px) {
@@ -206,19 +230,19 @@
 }
 
 @media ( min-width: 1200px ){
-  .order-summary.affix {
+  .order-summary-col .affix {
     width: 360px;
   }
 }
 
 @media ( min-width: 992px ) and ( max-width: 1199px ){
-  .order-summary.affix {
+  .order-summary-col .affix {
     width: 293px;
   }
 }
 
 @media ( max-width: 991px ){
-  .order-summary.affix {
+  .order-summary-col .affix {
     position: static;
     width: 100%;
   }

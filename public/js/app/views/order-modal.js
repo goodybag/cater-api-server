@@ -72,6 +72,12 @@ define(function(require, exports, module) {
           continue;
         }
 
+        // zip
+        if (key == 'zip' && this.model.address.get(key)) {
+          this.$el.find('[name="zip"]').val( this.model.address.get(key) );
+          continue;
+        }
+
         var $input = this.$el.find('[name="' + key + '"]');
 
         // otherwise

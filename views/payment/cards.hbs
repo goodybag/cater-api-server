@@ -9,36 +9,47 @@
     <div class="col-lg-6  col-lg-offset-3">
       <div class="panel">
         <div class="panel-body">
-          <strong>Credit Cards</strong>
-          <ul class=" user-payments-list">
-          {{#each cards }}
-            <li>
-              <code>{{name}}
-              <strong>(..{{data.last_four}})</strong>
-              </code>
-              <form class="form-remove-card" method="POST" action="/users/me/cards/{{id}}">
-                <input type="hidden" value="delete" name="_method">
-                <button type="submit" class="btn btn-link ">
-                  <i class="icon-remove-circle" data-title="Remove lead time restriction" ></i>
-                </button>
-              </form>
-            </li>
-          {{/each}}
-          </ul>
+          <div class="user-payments-list">
+            <strong>Credit Cards</strong>
+            <ul>
+            {{#each cards }}
+              <li>
+                <code>{{name}}
+                <strong>(..{{data.last_four}})</strong>
+                </code>
+                <form class="form-remove-card" method="POST" action="/users/me/cards/{{id}}">
+                  <input type="hidden" value="delete" name="_method">
+                  <button type="submit" class="btn btn-link ">
+                    <i class="icon-remove-circle" data-title="Remove lead time restriction" ></i>
+                  </button>
+                </form>
+              </li>
+            {{/each}}
+            </ul>
+          </div>
           <hr>
-          <a class="btn btn-primary" href="/users/me/cards/">Add Credit Card</a>
+          <div>
+            <strong>Add Credit Card</strong>
+            {{> edit_card }}
+            <div>
+              <a class="btn btn-primary" href="/users/me/cards/">Add Credit Card</a>
+            </div>
+          </div>
       </div>
     </div>
   </div>
 </div>
 
+{{{dump this}}}
+
 {{#extend "scripts"}}
 <script>
   require([
       'jquery'
+    , 'app/pages/cards'
     ]
-  , function($) {
-
+  , function($, cards) {
+      cards.init();
     }
   );
 </script>

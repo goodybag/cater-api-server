@@ -8,6 +8,7 @@ define(function(require, exports, module) {
   var FormView = require('./form-view');
   var TipView = require('./tip-view');
   var CopyErrorModalView = require('./copy-error-modal');
+  var ItemModal = require('./item-modal');
 
   return module.exports = OrderView.extend({
     events: function() {
@@ -33,6 +34,18 @@ define(function(require, exports, module) {
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
       this.convertUtcDates();
+
+      this.itemModal = new ItemModal({
+        el:         '#item-modal'
+      , orderItems: this.model.orderItems
+      , orderModel: this.model
+      });
+
+      // Since this view isn't able to just reasily re-render itself
+      // when the underlying models change, just reload the page
+      this.itemModal.on('submit:success', function(){
+        window.location.reload();
+      });
     },
 
     // set the model and add listeners here

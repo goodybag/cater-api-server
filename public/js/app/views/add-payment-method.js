@@ -5,14 +5,178 @@ define(function(require, exports, module) {
 
   var OrderView = require('./order-view');
 
-  var Order = require('../models/order');
-  var Address = require('../models/address');
   var PaymentMethod = require('../models/payment-method');
 
   return module.exports = Backbone.View.extend({
 
     events: {
-      'click .btn-add-card': 'saveNewCardAndSubmit'
+      'click .btn-add-card':                          'submit',
+      'input input[name="card_number"]':              'onCardNumberChange'
+    },
+
+    onCardNumberChange: function(e) {
+      var cardTypeRegexes = {
+        visa: {
+          likely: /^4/
+        , valid: /^4[0-9]{15}$/
+        , mask: '9999 9999 9999 9999'
+        }
+      , master: {
+          likely: /^5[1-5]/
+        , valid: /^5[1-5][0-9]{14}/
+        , mask: '9999 9999 9999 9999'
+        }
+      , amex: {
+          likely: /^3[47]/
+        , valid: /^3[47][0-9]{13}$/
+        , mask: '9999 999999 99999'
+        }
+      , discover: {
+          likely: /^6(?:011|5[0-9]{2})/
+        , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
+        , mask: '9999 9999 9999 9999'
+        }
+      }
+
+      var $newCard = this.$el.find('#new-card');
+      var $cardNumber = $newCard.find('input[name="card_number"]');
+      var $postalCode = $newCard.find('input[name="postal_code"]');
+      var cardNumber = $cardNumber.val();
+
+      var removeCCLogos = function () {
+        $cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
+      };
+
+      var foundMatch = false;
+      for(type in cardTypeRegexes) {
+        if (!cardTypeRegexes.hasOwnProperty(type)) return;
+
+        var cardType = cardTypeRegexes[type];
+
+        // TODO: improve later - apply input mask and change logo only if the card type changes
+        if (cardType.likely.test(cardNumber)) {
+          foundMatch = true;
+          $cardNumber.inputmask(cardType.mask, {
+            placeholder:" "
+          , oncleared: function() {
+              $cardNumber.inputmask('remove');
+              removeCCLogos();
+              $postalCode.closest('.row').addClass('hide');
+            }
+          , onincomplete: function() {
+              $cardNumber.inputmask('remove');
+              removeCCLogos();
+            }
+          });
+
+          removeCCLogos();
+          $cardNumber.addClass('cc-'+type)
+          ;
+
+          if (type == 'amex') {
+            $postalCode.closest('.row').removeClass('hide');
+          } else {
+            $postalCode.closest('.row').addClass('hide');
+          }
+          break;
+        }
+      }
+
+      if (!foundMatch){
+        $(e.target).inputmask('remove');
+        $cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
+        $postalCode.val('');
+        $postalCode.closest('.row').addClass('hide');
+      }
+    },
+
+    /**
+     * Displays errors next to the form field pertaining to the error
+     *
+     * displayErrors2([
+     *   { property: 'card_number', message: '`555` is not a valid card number' }
+     * ])
+     *
+     * Or Amanda style errors will be converted:
+     *
+     * displayErrors2({
+     *   '0': {...}
+     *   '1': {...}
+     * })
+     *
+     * Optionally pass in a Model that has the fieldNounMap exposed
+     * to convert property names to nicer names
+     *
+     * @param  {Array}  errors Array of error objects
+     * @param  {Object} Model  Model to reference for field-noun-map
+     */
+    displayErrors2: function( errors, Model ){
+      // Just in case!
+      spinner.stop();
+
+      var this_ = this;
+      var error, $el, $parent;
+      var template = Handlebars.partials.alert_error;
+      var selector = '[name="{property}"]';
+
+      // Amanda errors object
+      if ( _.isObject( errors ) && !_.isArray( errors ) ){
+        errors = Array.prototype.slice.call( errors )
+
+        // We're just going to use the `required` error text for everything
+        // so just take the unique on error.property
+        errors = _.chain(errors).map( function( error ){
+          return error.property;
+        }).unique().map( function( property ){
+          var message;
+          var noun = property;
+
+          if ( Model && typeof Model.fieldNounMap === 'object' )
+          if ( property in Model.fieldNounMap ){
+            noun = Model.fieldNounMap[ property ];
+          }
+
+          message = this_.errorTypeMessages.required.replace(
+            '{noun}', noun
+          );
+
+          return {
+            property: property
+          , message: message
+          };
+        }).value();
+      }
+
+      var css = {
+        position: 'absolute'
+      , top: '11px'
+      };
+
+      for ( var i = 0, l = errors.length; i < l; ++i ){
+        error = errors[i];
+
+        $el = $( template( error ) );
+        $el.css( css );
+
+        $parent = this.$el.find(
+          selector.replace( '{property}', error.property )
+        ).parents('.form-group').eq(0);
+
+        $parent.prepend( $el );
+        $parent.addClass('has-error');
+
+        $el.css( 'right', 0 - $el[0].offsetWidth );
+      }
+
+      // Scroll to the first error
+      // $(document.body).animate({ scrollTop: this.$el.find('.has-error').eq(0).offset().top - 20 });
+    },
+
+
+    submit: function(e) {
+      e.preventDefault();
+      spinner.start();
+      this.saveNewCardAndSubmit(e);
     },
 
     // Shouldn't be used a view method
@@ -27,7 +191,7 @@ define(function(require, exports, module) {
       , security_code:     $el.find('[name="security_code"]').val()
       , expiration_month: +$el.find('[name="expiration_month"]').val()
       , expiration_year:  +$el.find('[name="expiration_year"]').val()
-      , save_card:         $el.find('[name="save_card"]:checked').length === 1
+      , save_card:         true
       };
 
       if (PaymentMethod.getCardType(data.card_number) == 'amex') {
@@ -42,15 +206,9 @@ define(function(require, exports, module) {
 
       // Save the card
       pm.updateBalancedAndSave(data, function(error) {
-        if (error) return this_.displayErrors2(error, PaymentMethod);
+        if (error) return console.log(error);//this_.displayErrors2(error, PaymentMethod);
 
-        // Then revert back to "Pay Using" and select the newly added card
-        this_.selectPaymentType('existing');
-        this_.addNewCardToSelect(pm);
-        this_.selectCard(pm.get('id'));
-        this_.clearCardForm();
-
-        return _.defer(function(){ this_.submit(e); });
+        return window.location.reload();
       });
     },
 

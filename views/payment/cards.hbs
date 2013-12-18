@@ -45,9 +45,15 @@
 {{{dump this}}}
 
 {{#extend "scripts"}}
+<script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
+
 <script>
   define( 'data/user', ['app/models/user'], function( User ){
     return new User( {{{json user}}} )
+  });
+
+  define( 'data/marketplaceUri', function() {
+      return "{{{config.balanced.marketplaceUri}}}";
   });
 
   require([

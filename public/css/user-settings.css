@@ -32,6 +32,44 @@
   margin-top: 10px;
 }
 
-.dl-payment-methods dt {
-  text-align: left;
+
+/**
+ * User Payments list
+ */
+.user-payments-list {
+}
+
+.user-payments-list li {
+  margin-top: 10px;
+}
+
+.user-payments-list li:first-child {
+  margin-top: 0;
+}
+
+.user-payments-list i {
+  display: none;
+  font-size: 20px;
+  color: #535145;
+}
+
+.user-payments-list button {
+  padding: 0;
+}
+
+.user-payments-list button:hover {
+  text-decoration: none;
+}
+
+.user-payments-list .form-remove-card {
+  float: right;
+  display: inline-block;
+}
+
+.user-payments-list li:hover i {
+  display: inline-block;
+}
+
+.user-payments-list li:hover i:hover {
+  color: #DC0500;
 }

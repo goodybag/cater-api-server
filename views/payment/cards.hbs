@@ -1,31 +1,34 @@
 {{#extend "css"}}
 <link rel="stylesheet" href="/css/user-settings.css">
+<link rel="stylesheet" href="/components/font-awesome/css/font-awesome.css">
 {{/extend}}
 
 <div class="container">
-
   <h1 class="text-center page-title">Manage Payment Methods</h1>
   <div class="row">
-    <form class="panel col-lg-6  col-lg-offset-3" action="/users/me" method="post">
-      <div class="panel-body">
-        <dl class="dl-horizontal dl-payment-methods">
-          <dt>Credit Cards</dt>
-          <dd>
-            <ul class="list-unstyled user-payments-list">
-            {{#each cards }}
-              <li>
-                <code>{{name}}
-                <strong>(..{{data.last_four}})</strong>
-                </code>
-              </li>
-
-              {{> payment_method_option }}
-            {{/each}}
-            </ul>
-          </dd>
-        </dl>
+    <div class="col-lg-6  col-lg-offset-3">
+      <div class="panel">
+        <div class="panel-body">
+          <strong>Credit Cards</strong>
+          <ul class=" user-payments-list">
+          {{#each cards }}
+            <li>
+              <code>{{name}}
+              <strong>(..{{data.last_four}})</strong>
+              </code>
+              <form class="form-remove-card" method="POST" action="/users/me/cards/{{id}}">
+                <input type="hidden" value="delete" name="_method">
+                <button type="submit" class="btn btn-link ">
+                  <i class="icon-remove-circle" data-title="Remove lead time restriction" ></i>
+                </button>
+              </form>
+            </li>
+          {{/each}}
+          </ul>
+          <hr>
+          <a class="btn btn-primary" href="/users/me/cards/">Add Credit Card</a>
       </div>
-    </form>
+    </div>
   </div>
 </div>
 

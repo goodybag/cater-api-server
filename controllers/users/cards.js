@@ -35,7 +35,7 @@ module.exports.list = function(req, res, next) {
     var context = {
       cards: cards
     };
-    res.render('payment/user-payments', context);
+    res.render('payment/cards', context);
   });
 };
 

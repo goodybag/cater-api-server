@@ -31,3 +31,7 @@
 .user-other-settings dt {
   margin-top: 10px;
 }
+
+.dl-payment-methods dt {
+  text-align: left;
+}

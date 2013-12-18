@@ -25,8 +25,7 @@ define(function(require, exports, module) {
         'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered'),
         'click .edit-order-btn': 'toggleEdit',
         'click .cancel-edit-btn': 'toggleEdit',
-        'click .save-btn': 'save',
-        'click a.item-name': 'onItemNameClick'
+        'click .save-btn': 'save'
       });
     },
 
@@ -157,15 +156,6 @@ define(function(require, exports, module) {
       this.onSave(function(err, data) {
         self.toggleEdit();
       });
-    },
-
-    onItemNameClick: function(e) {
-      e.preventDefault();
-
-      var id = $(e.currentTarget).data('id');
-
-      this.itemModal.provideModel( this.model.orderItems.get( id ) );
-      this.itemModal.show();
     }
   });
 });

@@ -207,6 +207,15 @@
   line-height: 14px;
 }
 
+.line-item-name .item-description {
+  font-size: 12px;
+}
+
+.line-item-name .item-options-title {
+  font-weight: bold;
+  font-size: 12px;
+}
+
 .line-item-name .item-options {
   margin-top: 3px;
 }

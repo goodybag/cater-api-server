@@ -1,10 +1,10 @@
 define( function( require ){
   var $               = require('jquery')
-  var orderModel      = require('order');
-  var orderParams     = require('order-params');
-  var restaurant      = require('restaurant');
-  var defaultAddress  = require('default-address');
-  var user            = require('user');
+  var orderModel      = require('data/order');
+  var orderParams     = require('data/order-params');
+  var restaurant      = require('data/restaurant');
+  var defaultAddress  = require('data/default-address');
+  var user            = require('data/user');
 
   require('bootstrap');
 

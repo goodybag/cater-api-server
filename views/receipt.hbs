@@ -308,7 +308,7 @@
 
 {{#extend "scripts"}}
 <script>
-  define( 'order', ['app/models/order'], function( Order ){
+  define( 'data/order', ['app/models/order'], function( Order ){
     return new Order( {{{json order}}} );
   });
 

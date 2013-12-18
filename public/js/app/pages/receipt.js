@@ -1,6 +1,6 @@
 define(function(require){
   var utils = require('utils')
-  var order = require('order')
+  var order = require('data/order')
 
   var Views = {
     Receipt:    require('app/views/receipt-view')

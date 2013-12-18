@@ -176,23 +176,23 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
 <script>
-  define( 'user', ['app/models/user'], function( User ){
+  define( 'data/user', ['app/models/user'], function( User ){
     return new User( {{{json user}}} )
   });
 
-  define( 'order', ['app/models/order'], function( Order ){
+  define( 'data/order', ['app/models/order'], function( Order ){
     return new Order( {{{json order}}} )
   });
 
-  define( 'order-params', ['app/models/order-params'], function( OrderParams ){
+  define( 'data/order-params', ['app/models/order-params'], function( OrderParams ){
     return new OrderParams( {{{json orderParams}}} );
   });
 
-  define( 'restaurant', ['app/models/restaurant'], function( Restaurant ){
+  define( 'data/restaurant', ['app/models/restaurant'], function( Restaurant ){
     return new Restaurant( {{{json restaurant}}} );
   });
 
-  define( 'default-address', ['app/models/address'], function( Address ){
+  define( 'data/default-address', ['app/models/address'], function( Address ){
     return new Address( {{{json defaultAddress }}} );
   });
 

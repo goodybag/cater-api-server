@@ -32,7 +32,10 @@ module.exports.list = function(req, res, next) {
 
   models.User.findPaymentMethods(+req.param('uid'), query, function(error, cards) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.json(cards);
+    var context = {
+      cards: cards
+    };
+    res.render('payment/user-payments', context);
   });
 };
 

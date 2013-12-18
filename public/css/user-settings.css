@@ -23,3 +23,11 @@
     padding-bottom: 50px;
   }
 }
+
+.user-other-settings dt:first-child {
+  margin-top: 0;
+}
+
+.user-other-settings dt {
+  margin-top: 10px;
+}

@@ -1,0 +1,12 @@
+<ul class="user-payments-list">
+{{#each cards }}
+  <li>
+    <code>{{name}}
+    <strong>(..{{data.last_four}})</strong>
+    </code>
+  </li>
+
+  {{> payment_method_option }}
+{{/each}}
+</ul>
+{{{dump cards}}}

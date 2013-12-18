@@ -9,8 +9,11 @@ define(function(require, exports, module) {
   var Address = require('../models/address');
   var PaymentMethod = require('../models/payment-method');
 
+  return module.exports = Backbone.View.extend({
 
-  return module.exports = OrderView.extend({
+    events: {
+      'click .btn-add-card': 'saveNewCardAndSubmit'
+    },
 
     // Shouldn't be used a view method
     // Should be used as an event handler
@@ -47,8 +50,10 @@ define(function(require, exports, module) {
         this_.selectCard(pm.get('id'));
         this_.clearCardForm();
 
-        return _.defer(function(){ this_.submit(e) });
+        return _.defer(function(){ this_.submit(e); });
       });
     },
+
+
   });
 });

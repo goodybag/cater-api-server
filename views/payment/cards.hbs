@@ -28,11 +28,13 @@
             </ul>
           </div>
           <hr>
-          <div>
+          <div class="add-payment-method">
             <strong>Add Credit Card</strong>
-            {{> edit_card }}
+            <div id="new-card">
+              {{> edit_card }}
+            </div>
             <div>
-              <a class="btn btn-primary" href="/users/me/cards/">Add Credit Card</a>
+              <a class="btn btn-primary btn-add-card" href="/users/me/cards/">Add Credit Card</a>
             </div>
           </div>
       </div>
@@ -44,6 +46,10 @@
 
 {{#extend "scripts"}}
 <script>
+  define( 'data/user', ['app/models/user'], function( User ){
+    return new User( {{{json user}}} )
+  });
+
   require([
       'jquery'
     , 'app/pages/cards'

@@ -14,6 +14,10 @@ define(function(require, exports, module) {
       'input input[name="card_number"]':              'onCardNumberChange'
     },
 
+    initialize: function() {
+      this.$el.find('.remove-tooltip').tooltip();
+    },
+
     errorTypeMessages: {
       required: 'Please enter a valid {noun}'
     },
@@ -211,6 +215,7 @@ define(function(require, exports, module) {
       pm.updateBalancedAndSave(data, function(error) {
         spinner.stop();
         if (error) return this_.displayErrors(error, PaymentMethod);
+        console.log(error);
         return window.location.reload();
       });
     },

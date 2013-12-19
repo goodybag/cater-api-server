@@ -6,15 +6,15 @@ define( function( require ){
   require('bootstrap');
 
   var Views = {
-    AddPaymentMethod: require('app/views/add-payment-method')
+    PaymentMethodsView: require('app/views/payment-methods-view')
   };
 
   var page = {
     init: function() {
       balanced.init(marketPlaceUri);
 
-      var addPaymentMethodView = new Views.AddPaymentMethod({
-        el:       '.add-payment-method'
+      var paymentMethodsView = new Views.PaymentMethodsView({
+        el:       '#payment-methods'
       , user:     user
       });
     }

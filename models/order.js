@@ -790,6 +790,23 @@ module.exports = Model.extend({
     Model.update.call(this, query, utils.partial(modifyAttributes, callback));
   },
 
+  findTomorrow: function( query, callback ){
+    if ( typeof query === 'function' ){
+      callback = query;
+      query = {};
+    }
+
+    utils.defaults( query, {
+      where: {
+        datetime: {
+          $between_days_from_now: { from: 1, to: 2 }
+        }
+      }
+    });
+
+    Models.Order.find( query, callback );
+  },
+
   // this is a FSM definition
   statusFSM: {
     canceled: [],

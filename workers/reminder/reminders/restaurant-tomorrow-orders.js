@@ -8,18 +8,6 @@
 var Models  = require('../../../models');
 var utils   = require('../../../utils');
 
-var getTomorrowOrders = function( callback ){
-  var query = {
-    where: {
-      datetime: {
-        $between_days_from_now: { from: 1, to: 2 }
-      }
-    }
-  };
-
-  Models.Order.find( query, callback );
-};
-
 module.exports.name = 'Restaurant Tomorrow Orders';
 
 module.exports.schema = {

@@ -226,7 +226,6 @@ define(function(require, exports, module) {
       pm.updateBalancedAndSave(data, function(error) {
         spinner.stop();
         if (error) return this_.displayErrors(error, PaymentMethod);
-        console.log(error);
         return window.location.reload();
       });
     },

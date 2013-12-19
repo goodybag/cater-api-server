@@ -28,7 +28,7 @@
             </ul>
           </div>
           <hr>
-          <div class="add-payment-method">
+          <div id="add-payment-method">
             <strong>Add Credit Card</strong>
             <div id="new-card">
               {{> edit_card }}
@@ -53,7 +53,7 @@
   });
 
   define( 'data/marketplaceUri', function() {
-      return "{{{config.balanced.marketplaceUri}}}";
+    return "{{{config.balanced.marketplaceUri}}}";
   });
 
   require([

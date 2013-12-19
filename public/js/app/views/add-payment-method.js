@@ -14,6 +14,10 @@ define(function(require, exports, module) {
       'input input[name="card_number"]':              'onCardNumberChange'
     },
 
+    errorTypeMessages: {
+      required: 'Please enter a valid {noun}'
+    },
+
     onCardNumberChange: function(e) {
       var cardTypeRegexes = {
         visa: {
@@ -110,7 +114,7 @@ define(function(require, exports, module) {
      * @param  {Array}  errors Array of error objects
      * @param  {Object} Model  Model to reference for field-noun-map
      */
-    displayErrors2: function( errors, Model ){
+    displayErrors: function( errors, Model ){
       // Just in case!
       spinner.stop();
 
@@ -169,9 +173,8 @@ define(function(require, exports, module) {
       }
 
       // Scroll to the first error
-      // $(document.body).animate({ scrollTop: this.$el.find('.has-error').eq(0).offset().top - 20 });
+      $(document.body).animate({ scrollTop: this.$el.find('.has-error').eq(0).offset().top - 20 });
     },
-
 
     submit: function(e) {
       e.preventDefault();
@@ -206,12 +209,10 @@ define(function(require, exports, module) {
 
       // Save the card
       pm.updateBalancedAndSave(data, function(error) {
-        if (error) return console.log(error);//this_.displayErrors2(error, PaymentMethod);
-
+        spinner.stop();
+        if (error) return this_.displayErrors(error, PaymentMethod);
         return window.location.reload();
       });
     },
-
-
   });
 });

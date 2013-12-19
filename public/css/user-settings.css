@@ -79,6 +79,6 @@
 /** 
  * Add payment method
  */
-.add-payment-method .btn-add-card { 
+#add-payment-method .btn-add-card { 
   margin-top: 20px;
 }

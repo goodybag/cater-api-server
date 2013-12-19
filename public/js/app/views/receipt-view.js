@@ -82,6 +82,9 @@ define(function(require, exports, module) {
       }, {
         success: function () {
           self.changeStatus('denied');
+        },
+        error: function() {
+          self.changeStatus('denied');
         }
       });
     },

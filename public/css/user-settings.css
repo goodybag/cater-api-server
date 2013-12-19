@@ -72,9 +72,6 @@
   text-decoration: none;
 }
 
-/** 
- * Add payment method
- */
-#add-payment-method .btn-add-card { 
-  margin-top: 20px;
+#payment-methods .btn-toolbar {
+  margin-top: 15px;
 }

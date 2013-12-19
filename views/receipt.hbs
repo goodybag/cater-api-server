@@ -263,6 +263,7 @@
       </div>
       <div class="modal-body">
         <p>Are you sure you want to reject this order?</p>
+        <textarea class="form-control reason-denied" placeholder="Please let us know why, so we can improve the ordering experience. Thanks!"></textarea>
       </div>
       <div class="row modal-footer">
         <div class="col-lg-3 col-lg-offset-6">
@@ -322,7 +323,7 @@
 
           if ( action === 'reject' ){
             utils.history.navigate('/');
-            return view.changeStatus('denied');
+            return $("#reject-confirm-modal").modal('show');
           }
         }
       });

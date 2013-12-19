@@ -14,7 +14,7 @@ define(function(require, exports, module) {
       return _.extend({}, OrderView.prototype.events, {
         'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
         'click .copy-order-btn': 'copyOrder',
-        'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),
+        'click .btn-reject': 'rejectOrder',
         'click .btn-accept': _.bind(this.changeStatus, this, 'accepted'),
         'click #change-status-pending': _.bind(this.changeStatus, this, 'pending'),
         'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled'),
@@ -55,7 +55,8 @@ define(function(require, exports, module) {
     },
 
     fieldMap: _.extend({
-      adjustment: '.adjustment .form-control'
+      adjustment: '.adjustment .form-control',
+      reason_denied: '.reason-denied'
     }, OrderView.prototype.fieldMap),
 
     fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {
@@ -72,6 +73,18 @@ define(function(require, exports, module) {
         };
       }
     }),
+
+    rejectOrder: function() {
+      var self = this;
+
+      this.model.save({
+        reason_denied: this.$el.find('.reason-denied').val()
+      }, {
+        success: function () {
+          self.changeStatus('denied');
+        }
+      });
+    },
 
     /**
      * Convert backend dates stored in UTC

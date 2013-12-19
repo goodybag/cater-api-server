@@ -32,46 +32,6 @@
   margin-top: 10px;
 }
 
-
-/**
- * User Payments list
- *
- * Show remove button on hover
- */
-
-.user-payments-list li {
-  margin-top: 10px;
-  height: 25px;
-}
-
-.user-payments-list li:first-child {
-  margin-top: 0;
-}
-
-.user-payments-list li:hover i {
-  display: inline-block;
-  vertical-align: top;
-  font-size: 18px;
-}
-
-.user-payments-list li:hover i:hover {
-  color: #DC0500;
-}
-
-.user-payments-list i {
-  display: none;
-  font-size: 20px;
-  color: #535145;
-}
-
-.user-payments-list button {
-  padding: 0;
-}
-
-.user-payments-list button:hover {
-  text-decoration: none;
-}
-
 #payment-methods .btn-toolbar {
   margin-top: 15px;
 }

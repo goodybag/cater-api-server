@@ -4,38 +4,33 @@
 {{/extend}}
 
 <div id="payment-methods" class="container">
-  <h1 class="text-center page-title">Manage Payment Methods</h1>
+  <h1 class="text-center page-title">Credit Cards</h1>
   <div class="row">
     <div class="col-lg-6  col-lg-offset-3">
       <div class="panel">
-        <div class="panel-body">
-          <div class="user-payments-list">
-            <strong>Credit Cards</strong>
-            <ul>
-            {{#each cards }}
-              <li class="payment-method" data-card-id="{{id}}">
-                <code class="payment-method-info">{{data.brand}} ending in {{data.last_four}}
-                {{#if name}}<strong>({{name}})</strong>{{/if}}
-                </code>
-                <button class="btn btn-link btn-remove-card">
-                  <i class="icon-remove-circle remove-tooltip" data-title="Remove this card"></i>
-                </button>
-              </li>
-            {{/each}}
-            </ul>
-          </div>
-          <hr>
-          <div id="add-payment-method">
-            <strong>Add Credit Card</strong>
-            <div id="new-card">
-              {{> edit_card }}
+        <ul class="list-group">
+          {{#each cards}}
+          <li class="list-group-item">
+          {{> payment_method}}
+          </li>
+          {{else}}
+          <li class="list-group-item">
+            <h4>No credit cards saved!</h4>
+          </li>
+          {{/each}}
+          <li class="list-group-item">
+            <div id="add-payment-method">
+              <h3>Add Credit Card</h3>
+              <div id="new-card">
+                {{> edit_card }}
+              </div>
+              <div class="btn-toolbar">
+                <a class="btn btn-default" href="/users/me/">Back to settings</a>
+                <a class="btn btn-primary btn-add-card" href="/users/me/cards/">Add Credit Card</a>
+              </div>
             </div>
-            <div class="btn-toolbar">
-              <a class="btn btn-default" href="/users/me/">Back to settings</a>
-              <a class="btn btn-primary btn-add-card" href="/users/me/cards/">Add Credit Card</a>
-            </div>
-          </div>
-      </div>
+          </li>
+        </ul>
     </div>
   </div>
 

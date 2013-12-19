@@ -6,7 +6,7 @@ define( function( require ){
   require('bootstrap');
 
   var Views = {
-    PaymentMethodsView: require('app/views/payment-methods-view')
+    PaymentMethodsView: require('app/views/payment/payment-methods-view')
   };
 
   var page = {

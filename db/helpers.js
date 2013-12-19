@@ -31,6 +31,10 @@ mosql.registerConditionalHelper(
   }
 );
 
+// Upsert query type
+// Warning: This is subject to some sort of race condition
+// but it will work like 99% of the time
+//
 // Example
 // {
 //   type: 'upsert'

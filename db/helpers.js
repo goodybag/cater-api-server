@@ -30,3 +30,38 @@ mosql.registerConditionalHelper(
     ].join(' and ');
   }
 );
+
+// Example
+// {
+//   type: 'upsert'
+// , table: 'reminders'
+// , upsert: {
+//     name: 'Bob'
+//   , data: '{}'
+//   }
+// , where: {
+//     name: 'Bob'
+//   }
+// }
+mosql.registerQueryType(
+  'upsert'
+, [
+    '{upsert} with "update_tbl" as ('
+  , '  update {table} {updates}'
+  , '  {where} returning *'
+  , ')'
+  , 'insert into {table} ({columns})'
+  , 'select '
+  , 'where not exists ( select * from "update_tbl" )'
+  ].join('\n')
+);
+
+mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
+  query.type = 'insert';
+  process.nextTick( function(){ query.type = 'upsert'; });
+
+  query.updates = upsert;
+  query.columns = Object.keys( upsert );
+
+  return '';
+});

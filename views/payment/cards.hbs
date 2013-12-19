@@ -13,16 +13,13 @@
             <strong>Credit Cards</strong>
             <ul>
             {{#each cards }}
-              <li>
-                <code>{{data.brand}} ending in {{data.last_four}}
+              <li class="payment-method" data-card-id="{{id}}">
+                <code class="payment-method-info">{{data.brand}} ending in {{data.last_four}}
                 {{#if name}}<strong>({{name}})</strong>{{/if}}
                 </code>
-                <form class="form-remove-card" method="POST" action="/users/me/cards/{{id}}">
-                  <input type="hidden" value="delete" name="_method">
-                  <button type="submit" class="btn btn-link btn-remove-card">
-                    <i class="icon-remove-circle remove-tooltip" data-title="Remove this card" ></i>
-                  </button>
-                </form>
+                <button class="btn btn-link btn-remove-card">
+                  <i class="icon-remove-circle remove-tooltip" data-title="Remove this card"></i>
+                </button>
               </li>
             {{/each}}
             </ul>
@@ -39,6 +36,10 @@
           </div>
       </div>
     </div>
+  </div>
+
+  <div id="remove-card-modal" class="modal fade">
+    {{> remove_card_modal}}
   </div>
 </div>
 

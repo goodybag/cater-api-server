@@ -3,14 +3,13 @@ define(function(require, exports, module) {
   var Handlebars = require('handlebars');
   var spinner = require('spinner');
 
-
   var PaymentMethod = require('../../models/payment-method');
 
   return module.exports = Backbone.View.extend({
 
     events: {
       'click .btn-add-card':                          'submit',
-      'click .btn-remove-card':                       'removeCard',
+      'click .btn-remove-card':                       'showRemoveCardModal',
       'input input[name="card_number"]':              'onCardNumberChange'
     },
 
@@ -18,9 +17,16 @@ define(function(require, exports, module) {
       this.$el.find('.remove-tooltip').tooltip();
     },
 
-    removeCard: function(e) {
+    showRemoveCardModal: function(e) {
       e.preventDefault();
-      // TODO show remove card modal
+
+      var $pm = $(e.target).closest('.payment-method');
+
+      var options = {
+        cardId:     $pm.data('card-id')
+      , cardInfo:   $pm.find('.payment-method-info').html()
+      };
+      this.options.removeCardModal.show(options);
     },
 
     errorTypeMessages: {

@@ -39,11 +39,6 @@
  * Show remove button on hover
  */
 
-.user-payments-list .form-remove-card {
-  display: inline-block;
-  vertical-align: top;
-}
-
 .user-payments-list li {
   margin-top: 10px;
   height: 25px;
@@ -55,6 +50,7 @@
 
 .user-payments-list li:hover i {
   display: inline-block;
+  vertical-align: top;
   font-size: 18px;
 }
 

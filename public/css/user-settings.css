@@ -35,14 +35,31 @@
 
 /**
  * User Payments list
+ *
+ * Show remove button on hover
  */
+
+.user-payments-list .form-remove-card {
+  display: inline-block;
+  vertical-align: top;
+}
 
 .user-payments-list li {
   margin-top: 10px;
+  height: 25px;
 }
 
 .user-payments-list li:first-child {
   margin-top: 0;
+}
+
+.user-payments-list li:hover i {
+  display: inline-block;
+  font-size: 18px;
+}
+
+.user-payments-list li:hover i:hover {
+  color: #DC0500;
 }
 
 .user-payments-list i {
@@ -59,15 +76,9 @@
   text-decoration: none;
 }
 
-.user-payments-list .form-remove-card {
-  float: right;
-  display: inline-block;
-}
-
-.user-payments-list li:hover i {
-  display: inline-block;
-}
-
-.user-payments-list li:hover i:hover {
-  color: #DC0500;
+/** 
+ * Add payment method
+ */
+.add-payment-method .btn-add-card { 
+  margin-top: 20px;
 }

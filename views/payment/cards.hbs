@@ -14,8 +14,8 @@
             <ul>
             {{#each cards }}
               <li>
-                <code>{{name}}
-                <strong>(..{{data.last_four}})</strong>
+                <code>{{data.brand}} ending in {{data.last_four}}
+                {{#if name}}<strong>({{name}})</strong>{{/if}}
                 </code>
                 <form class="form-remove-card" method="POST" action="/users/me/cards/{{id}}">
                   <input type="hidden" value="delete" name="_method">

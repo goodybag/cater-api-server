@@ -6,6 +6,7 @@
  */
 
 var Models  = require('../../../models');
+var utils   = require('../../../utils');
 
 var getTomorrowOrders = function( callback ){
   var query = {
@@ -17,19 +18,36 @@ var getTomorrowOrders = function( callback ){
   };
 
   Models.Order.find( query, callback );
-}
+};
 
 module.exports.name = 'Tomorrow Orders';
 
-module.exports.check = function( callback ){
+module.exports.schema = {
+  restaurantOrders: {
+    lastNotified: true
+  }
+, userOrders: {
+    lastNotified: true
+  }
+};
+
+module.exports.check = function( storage, callback ){
   getTomorrowOrders( function( error, results ){
     if ( error ) return callback( error );
+
+    results.forEach( function( result ){
+      var notified = storage.restaurantsOrders.lastNotified;
+
+      if ( !notified ) return;
+
+      if 
+    });
 
     return callback( null, results.length > 0 );
   });
 };
 
-module.exports.work = function( callback ){
+module.exports.work = function( storage, callback ){
   var stats = {
     restaurantsNotified:  { text: 'Restaurants Notified', value: 0 }
   , usersNotified:        { text: 'Users Notified', value: 0 }

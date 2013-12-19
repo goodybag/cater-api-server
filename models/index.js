@@ -9,5 +9,6 @@ module.exports = {
   Address: require('./address'),
   Tag: require('./tag'),
   MealType: require('./meal-type'),
-  MealStyle: require('./meal-style')
+  MealStyle: require('./meal-style'),
+  Reminder: require('./reminder')
 };

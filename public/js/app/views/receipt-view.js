@@ -84,6 +84,7 @@ define(function(require, exports, module) {
           self.changeStatus('denied');
         },
         error: function() {
+          if(console && console.error) console.error('Could not save reason for rejection', arguments);
           self.changeStatus('denied');
         }
       });

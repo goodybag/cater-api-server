@@ -26,6 +26,11 @@ module.exports = Model.extend({
     module.exports.removePaymentMethods( this.attributes.id, where, callback, client );
     return this;
   }
+
+, removeUserPaymentMethod: function( cardId, callback, client ){
+    module.exports.removeUserPaymentMethod( this.attributes.id, cardId, callback, client );
+    return this;
+  }
 }, {
   table: table
 
@@ -163,6 +168,22 @@ module.exports = Model.extend({
     };
 
     ( client || db ).query( db.builder.sql( query ), function( error, result, info ){
+      return callback( error, result );
+    });
+  }
+
+, removeUserPaymentMethod: function( userId, cardId, callback, client ) {
+    var query = {
+      type: 'delete'
+    , table: 'users_payment_methods'
+    , where: {
+        payment_method_id: cardId
+      , user_id: userId
+      }
+    , returning: ['*']
+    };
+
+    ( client || db ).query( db.builder.sql( query ), function( error, result, info ) {
       return callback( error, result );
     });
   }

@@ -980,3 +980,23 @@ a.list-group-item .list-group-item-heading {
 .tab-pane .tab-actions [class*="col-"]:first-child + [class*="col-"] {
   text-align: right;
 }
+
+/**
+ * Credit card logos
+ */
+
+.cc-visa {
+  background: url(/img/credit-cards/visa.png) #fff no-repeat right;
+}
+
+.cc-master {
+  background: url(/img/credit-cards/master.png) #fff no-repeat right;
+}
+
+.cc-amex {
+  background: url(/img/credit-cards/amex.png) #fff no-repeat right;
+}
+
+.cc-discover {
+  background: url(/img/credit-cards/discover.png) #fff no-repeat right;
+}

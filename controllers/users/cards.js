@@ -32,7 +32,10 @@ module.exports.list = function(req, res, next) {
 
   models.User.findPaymentMethods(+req.param('uid'), query, function(error, cards) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.json(cards);
+    var context = {
+      cards: cards
+    };
+    res.render('payment/cards', context);
   });
 };
 
@@ -68,9 +71,9 @@ module.exports.update = function(req, res, next) {
  * DELETE /users/:uid/cards/:cid
  */
 module.exports.remove = function(req, res, next) {
-  models.User.removePaymentMethod( +req.param('cid'), function(error, cards) {
+  models.User.removeUserPaymentMethod( +req.param('uid'), +req.param('cid'), function(error, cards) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     if (!cards || cards.length === 0) return res.send(404);
-    return res.send(204);
+    return res.redirect('/users/me/cards');
   });
 };

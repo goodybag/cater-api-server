@@ -20,7 +20,7 @@ define(function(require){
 
       if ( action === 'reject' ){
         utils.history.navigate('/');
-        return page.view.changeStatus('denied');
+        return $("#reject-confirm-modal").modal('show');
       }
     }
   });

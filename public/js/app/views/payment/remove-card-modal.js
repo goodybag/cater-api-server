@@ -13,6 +13,9 @@ define(function(require, exports, module) {
       this.$el.html(this.template(this.context));
     },
 
+    /**
+     * Replace card text on the modal
+     */
     show: function(options) {
       this.context = options;
       this.render();

@@ -2,36 +2,15 @@
   margin-bottom: 30px;
 }
 
-.user-settings-form {
-  background-color: #FCFDF6;
-  padding-left:   20px;
-  padding-top:    50px;
-  padding-right:  20px;
-  padding-bottom: 100px;
-}
-
-@media (min-width: 768px) {
-  .user-settings-form {
-    padding-left:   120px;
-    padding-right:  120px;
-    padding-bottom: 100px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .user-settings-form {
-    padding-bottom: 50px;
-  }
-}
-
-.user-other-settings dt:first-child {
-  margin-top: 0;
-}
-
-.user-other-settings dt {
-  margin-top: 10px;
+.user-settings-form,
+.user-other-settings {
+  padding: 20px;
 }
 
 #payment-methods .btn-toolbar {
   margin: 15px 0 10px;
+}
+
+.account-settings dl {
+  margin: 0;
 }

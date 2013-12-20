@@ -126,40 +126,79 @@
   margin-top: 13px;
 }
 
-.restaurant-name {
+/**
+ * Restaurant header
+ *   - Logo
+ *   - Name
+ *   - Description
+ */
+.restaurant-header {
   display: inline-block;
-  width: 100%;
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: -114px;
-  padding-left: 110px;
-  padding-right: 30px;
-  vertical-align: middle;
-}
-
-.restaurant-name-logo {
+  height: 100px;
   margin: 10px 0 4px;
 }
 
-.restaurant-name-logo .business-logo {
-  display: inline-block;
-  width: 100px;
+.restaurant-header .restaurant-header-logo {
+  float: left;
   height: 100px;
-  vertical-align: middle;
+  width: 100px;
+  margin-right: 10px;
   border-radius: 4px;
   border: solid 1px #ccccc0;
-  margin-right: 10px;
+}
+
+.restaurant-header .restaurant-header-body {
+  margin-left: 100px; /* same as adjacent logo width */
+  width: 100%;
+}
+
+.restaurant-header .restaurant-header-name {
+  font-family: 'Aleo';
+  font-size: 26px;
+  font-weight: 300;
+}
+/**
+ * For restaurant's without description, let name take 
+ * full container height
+ */
+.restaurant-header .restaurant-header-name-full {
+  display: table-cell;
+  vertical-align: middle;
+  height: 100px; 
+}
+
+.restaurant-header .restaurant-header-description {
+  color: #8B8983;
+  font-weight: 300;
 }
 
 @media screen and (max-width: 786px) {
-  .restaurant-name-logo .business-logo {
+  .restaurant-header {
+    height: 50px;
+  }
+
+  .restaurant-header .restaurant-header-logo {
     width: 50px;
     height: 50px;
   }
 
-  .restaurant-name {
-    margin-left: -64px;
-    padding-left: 60px;
+  .restaurant-header .restaurant-header-body {
+    margin-left: 50px;
+  }
+
+  .restaurant-header .restaurant-header-name {
+    font-size: 20px;
+    vertical-align: middle;
+    text-align: left; 
+    display: table-cell;
+    height: 50px;
+  }
+
+  .restaurant-header .restaurant-header-description {
+    clear:left;
+    padding-top: 10px;
+    margin-left: -45px;
+    width: 95%;
   }
 }
 

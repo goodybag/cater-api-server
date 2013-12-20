@@ -110,6 +110,8 @@ define(function(require, exports, module) {
 
       if (this.get('id') == "undefined") this.unset('id');
 
+      if (!this.get('id')) this.set('editable', true);
+
       this.on('change:id', function(model, value, options) {
         this.orderItems.reset(model.attributes.orderItems || []);
         this.orderItems.orderId = model.id;

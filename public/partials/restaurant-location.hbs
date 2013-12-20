@@ -8,7 +8,7 @@
       <div class="restaurant-map"></div>
     </li>
 
-    {{! Restaurant Contact Info, Address }}
+    {{! Restaurant Contact Info }}
     <li class="list-group-item no-padding">
 
       {{! Left column }}
@@ -21,14 +21,16 @@
             <div>{{city}}, {{state}} {{zip}}</div>
           </dd>
         </dl>
-        {{!-- TODO save restaurant website
+        {{#if websites}}
         <dl>
           <dt>Website:</dt>
           <dd>
-            <a href="{{website}}">{{website}}</a>
+            {{#each websites}}
+            <div><a href="{{website this}}">{{website this}}</a></div>
+            {{/each}}
           </dd>
         </dl>
-        --}}
+        {{/if}}
       </div>
 
       {{! Right column }}

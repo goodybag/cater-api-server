@@ -257,7 +257,9 @@ var fields = [
   'price',
   'delivery_fee',
   'cuisine',
-  'yelp_business_id'
+  'yelp_business_id',
+  'websites',
+  'description'
 ];
 
 module.exports.create = function(req, res) {

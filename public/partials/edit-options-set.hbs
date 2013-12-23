@@ -20,6 +20,12 @@
       <label class="radio-inline">
         <input type="radio"
           name="type-{{#if this.id}}{{this.id}}{{/if}}"
+          value="quantity"
+          {{#eq this.type 'quantity'}}checked{{/eq}}> Quantity
+      </label>
+      <label class="radio-inline">
+        <input type="radio"
+          name="type-{{#if this.id}}{{this.id}}{{/if}}"
           value="checkbox"
           {{#eq this.type 'checkbox'}}checked{{/eq}}> Checkbox
       </label>

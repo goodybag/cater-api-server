@@ -12,7 +12,7 @@
       </div>
     </legend>
     {{#each this.options}}
-      <div class="{{#eq ../type 'radio'}}radio{{else}}checkbox{{/eq}}">
+      <div class="{{../type}}">
         <label>
           {{#eq ../type 'radio'}}
           <input
@@ -21,7 +21,8 @@
             type="radio" id="item-option-{{../id}}"
             name="{{../../id}}" value="{{../id}}"
           >
-          {{else}}
+          {{/eq}}
+          {{#eq ../type 'checkbox'}}
           <input
             {{#if ../state}}checked{{/if}}
             {{#if ../default_state}}checked{{/if}}
@@ -29,7 +30,12 @@
             name="{{../../id}}" value="{{../id}}"
           >
           {{/eq}}
+          {{#eq ../type 'quantity'}}
+          <input type="number" id="item-option-{{../id}}"
+            name="{{../../id}}" min="0" placeholder="Qty">
+          {{/eq}}
 
+          <div class="option-description-wrapper">
           {{this.name}}
 
           {{#if this.price}}
@@ -37,6 +43,7 @@
           {{/if}}
           {{> tags this.tags }}
           <p class="option-description">{{this.description}}</p>
+          </div>
         </label>
       </div>
     {{/each}}

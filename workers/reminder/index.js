@@ -14,8 +14,9 @@ var logError = function( error ){
 };
 
 var logStat = function( group, result ){
+  console.log( Math.pow( 2, process.stdout.columns - 1 ).toString(2).replace( /./g, '#' ) );
   console.log( group );
-  console.log("###############################");
+  console.log( Math.pow( 2, process.stdout.columns - 1 ).toString(2).replace( /./g, '#' ) );
   for ( var key in result ){
     console.log("  *", result[ key ].text, ":", result[ key ].value );
   }
@@ -23,6 +24,8 @@ var logStat = function( group, result ){
 };
 
 var logResults = function( errors, results ){
+  console.log("\n\n")
+
   errors.forEach( logError );
 
   for ( var key in results ){

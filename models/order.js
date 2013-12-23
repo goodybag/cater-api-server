@@ -797,14 +797,15 @@ module.exports = Model.extend({
     }
 
     utils.defaults( query, {
-      where: {
+      table: 'orders'
+    , where: {
         datetime: {
           $between_days_from_now: { from: 1, to: 2 }
         }
       }
     });
 
-    Models.Order.find( query, callback );
+    Model.find( query, callback );
   },
 
   // this is a FSM definition

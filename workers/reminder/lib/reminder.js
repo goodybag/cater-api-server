@@ -4,10 +4,10 @@
 
 var fs        = require('fs');
 var async     = require('async');
+var db        = require('../../../db');
 var utils     = require('../../../utils');
 var Models    = require('../../../models');
 var config    = require('../../../config');
-
 var reminder = module.exports = {};
 
 reminder.reminders = {};
@@ -34,8 +34,18 @@ reminder.ensureSchema = function( schema, storage ){
   });
 };
 
-reminder.saveStorage = function( storage, callback ){
+reminder.saveStorage = function( name, storage, callback ){
+  var $query = db.builder.sql({
+    type: 'upsert'
+  , table: 'remdiners'
+  , where: { name: name }
+  , upsert: {
+      name: name
+    , data: JSON.stringify( storage )
+    }
+  });
 
+  db.query( $query, callback );
 };
 
 reminder.run = function( callback ){
@@ -51,21 +61,21 @@ reminder.run = function( callback ){
 
   , 'get-storage': utils.stage({
       'start':
-      function( next, done ){
-        next('get-available');
+      function( prev, next, done ){
+        next( 'get-available', prev );
       }
 
     , 'get-available':
-      function( next, done ){
+      function( prev, next, done ){
         Models.Reminder.find( { limit: 99999 }, function( error, results ){
           if ( error ) return done( error );
 
-          next( 'prepare-storage', utils.pluck( results, 'attributes' ) );
+          next( 'prepare-storage', utils.pluck( results, 'attributes' ), prev );
         });
       }
 
     , 'prepare-storage':
-      function( results, next, done ){
+      function( results, prev, next, done ){
         var storage = {};
 
         results.forEach( function( result ){
@@ -81,16 +91,16 @@ reminder.run = function( callback ){
 
         // Ensure each storage object matches schema
         Object.keys( storage ).forEach( function( name ){
-          if ( reminder.reminders[ result.name ] )
-          if ( reminder.reminders[ result.name ].schema ){
+          if ( reminder.reminders[ name ] )
+          if ( reminder.reminders[ name ].schema ){
             reminder.ensureSchema(
-              reminder.reminders[ result.name ].schema
+              reminder.reminders[ name ].schema
             , storage[ name ]
             );
           }
         });
 
-        next( 'run-checks', storage );
+        prev( 'run-checks', storage );
       }
     })
 
@@ -100,7 +110,7 @@ reminder.run = function( callback ){
 
       Object.keys( reminder.reminders ).forEach( function( name ){
         checks[ name ] = function( done ){
-          return reminder.reminders[ name ].check( storage[ key ], function( error, result ){
+          return reminder.reminders[ name ].check( storage[ name ], function( error, result ){
             // We do not want to stop all checks on error
             // Just push and log
             if ( error ){
@@ -119,7 +129,7 @@ reminder.run = function( callback ){
     }
 
   , 'run-works':
-    function( storage, results, next, done ){
+    function( storage, results, next, complete ){
       var works = {};
 
       Object.keys( results ).filter( function( key ){
@@ -131,18 +141,18 @@ reminder.run = function( callback ){
             // Just push and log
             if ( error ) errors.push( error );
 
-            return done( null, stats );
+            // Save storage
+            reminder.saveStorage( key, storage[ key ], function( error ){
+              done( null, stats );
+            });
           });
         }
       });
 
-      async.series( works, function( error, results ){
-        reminder.saveStorage( storage, function( error ){
-          done( null, results );
-        });
-      });
+      async.series( works, complete );
     }
   })(function( error, results ){
+    if ( error ) errors.push( error );
     callback( errors, results );
   });
 };

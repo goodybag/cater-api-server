@@ -15,7 +15,7 @@ module.exports.schema = {
 };
 
 module.exports.check = function( storage, callback ){
-  getTomorrowOrders( function( error, results ){
+  Models.Order.findTomorrow( function( error, results ){
     if ( error ) return callback( error );
 
     // Filter out restaurants that have already been notified
@@ -24,6 +24,8 @@ module.exports.check = function( storage, callback ){
 
       var notified = storage.lastNotified[ result.attributes.id ];
       notified = new Date( notified );
+
+      if ( notified == 'Invalid Date' ) return true;
 
       var today = new Date();
       today.setHours( 0, 0, 0, 0 );
@@ -37,13 +39,16 @@ module.exports.check = function( storage, callback ){
 
 module.exports.work = function( storage, callback ){
   var stats = {
-    usersNotified:  { text: 'Users Notified', value: 0 }
+    restaurantsNotified:  { text: 'Restaurants Notified', value: 0 }
+  , peopleNotified:       { text: 'People Notified', value: 0 }
+  , ordersHandled:        { text: 'Orders Handled', value: 0 }
   };
 
-  getTomorrowOrders( function( error, orders ){
+  Models.Order.findTomorrow( function( error, orders ){
     if ( error ) return callback( error );
 
-    console.log(orders);
+    stats.ordersHandled.value = orders.length;
+
     return callback( null, stats );
   });
 };

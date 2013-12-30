@@ -1,4 +1,5 @@
 var mosql = require('mongo-sql');
+var utils = require('../utils');
 
 mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column, set, values, collection ) {
   if (Array.isArray(set)) {
@@ -54,8 +55,8 @@ mosql.registerQueryType(
   , '  update {table} {updates}'
   , '  {where} returning *'
   , ')'
-  , 'insert into {table} ({columns})'
-  , 'select '
+  , 'insert into {table} {columns}'
+  , 'select {expression}'
   , 'where not exists ( select * from "update_tbl" )'
   ].join('\n')
 );
@@ -66,6 +67,10 @@ mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
 
   query.updates = upsert;
   query.columns = Object.keys( upsert );
+  query.expression = utils.values( upsert ).map( function( v ){
+    if ( typeof v !== 'string' ) return v;
+    return "'" + v + "'";
+  });
 
   return '';
 });

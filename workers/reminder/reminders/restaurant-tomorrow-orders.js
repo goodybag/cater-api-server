@@ -21,7 +21,6 @@ module.exports.schema = {
 // Return the function for carrying out all the notifications
 // for an order
 function notifyOrderFn( order ){
-  console.log(order.toJSON());
   return utils.partial( utils.async.parallelNoBail, {
     email: function( done ){
       views.render( 'order-email/order-reminder', {
@@ -32,7 +31,7 @@ function notifyOrderFn( order ){
         if ( error ) return done( error );
 
         utils.sendMail2({
-          to:       order.attributes.emails
+          to:       order.attributes.restaurant.emails
         , from:     config.emails.orders
         , html:     html
 
@@ -124,11 +123,11 @@ module.exports.work = function( storage, callback ){
               storage.lastNotified[ orders[ i ].attributes.id ] = new Date().toString();
 
               if ( result.email ){
-                stats.emailsSent.value += result.email.attributes.emails.length;
+                stats.emailsSent.value += result.email.attributes.restaurant.emails.length;
               }
 
               if ( result.sms ){
-                stats.smsSent.value += result.sms.attributes.sms_phones.length;
+                stats.smsSent.value += result.sms.attributes.restaurant.sms_phones.length;
               }
             });
 

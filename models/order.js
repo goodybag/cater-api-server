@@ -133,7 +133,7 @@ module.exports = Model.extend({
       return obj;
 
     var inTimeToCancel;
-    if (obj.guests != null && obj.datetime != null) {
+    if (obj.guests != null && obj.datetime != null && obj.restaurant) {
       var cancelTime = (utils.find(utils.sortBy(obj.restaurant.lead_times, 'max_guests'), function(lead) {
         return lead.max_guests >= obj.guests;
       }) || 0).cancel_time;
@@ -806,7 +806,7 @@ module.exports = Model.extend({
       }
     });
 
-    Model.find( query, callback );
+    Model.find.call( this, query, callback );
   },
 
   // this is a FSM definition

@@ -55,6 +55,10 @@ define(function(require, exports, module) {
           payment_method_id: {
             type: ['string', 'number', 'null'],
             required: false
+          },
+          reviewed: {
+            type: ['boolean', 'null'],
+            required: false
           }
         }
       };

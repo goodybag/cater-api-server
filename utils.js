@@ -11,6 +11,7 @@ var
 , uuid = require('node-uuid')
 , ironMQ = require('iron_mq')
 , rollbar = require("rollbar")
+, Handlebars = require('hbs')
 
   // Module Dependencies
 , config = require('./config')
@@ -19,6 +20,8 @@ var
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
+
+utils.template = Handlebars.compile.bind( Handlebars );
 
 utils.s3 = require('knox');
 

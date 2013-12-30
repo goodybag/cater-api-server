@@ -8,6 +8,9 @@ var logger  = require('../../logger');
 var receipt = require('../../lib/receipt');
 var venter  = require('../../lib/venter');
 
+var OrderSchema   = require('../../db/definitions/orders');
+var AddressSchema = require('../../db/definitions/addresses');
+
 var moment = require('moment');
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var Mailgun = require('mailgun').Mailgun;
@@ -16,15 +19,12 @@ var MailComposer = require('mailcomposer').MailComposer;
 var Bitly = require('bitly');
 var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 
-var addressFields = [
-  'street'
-, 'street2'
-, 'city'
-, 'state'
-, 'zip'
-, 'phone'
-, 'delivery_instructions'
-];
+var addressFields = utils.keys(utils.omit(AddressSchema.schema, 
+  'id'
+, 'user_id'
+, 'name'
+, 'is_default'
+));
 
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
@@ -211,8 +211,18 @@ module.exports.create = function(req, res) {
   });
 }
 
-// TODO: get this from not here
-var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied'];
+var updateableFields = utils.keys(utils.omit(OrderSchema.schema,
+  'id'
+, 'created_at'
+, 'uuid'
+, 'user_id'
+, 'restaurant_id'
+, 'review_token'
+, 'token_used'
+, 'status'
+, 'cut'
+, 'payment_status'
+));
 
 module.exports.update = function(req, res) {
   models.Order.findOne(req.params.oid, function(err, order) {

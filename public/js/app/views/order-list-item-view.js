@@ -47,7 +47,7 @@ define(function(require, exports, module) {
 
       var self = this;
 
-      this.model.changeStatus('canceled', function(error, result) {
+      this.model.changeStatus('canceled', true, function(error, result) {
         if (error) return alert('Sorry we were unable to cancel that order.');
 
         self.$el.html(self.render());

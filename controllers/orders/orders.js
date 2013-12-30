@@ -329,7 +329,14 @@ module.exports.changeStatus = function(req, res) {
       }
 
       res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
-      venter.emit('order:status:change', order, previousStatus);
+
+      // If we are an admin and we received a ?notify=false then don't send notifications.
+      // Otherwise send the notification.
+      if (!(req.session.user
+        && utils.contains(req.session.user.groups, 'admin')
+        && req.query.notify
+        && req.query.notify.toLowerCase() == 'false'
+      )) venter.emit('order:status:change', order, previousStatus);
     }
 
     if (req.body.status === 'submitted' && order.attributes.user.is_invoiced) order.attributes.payment_status = 'invoiced';

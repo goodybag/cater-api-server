@@ -17,12 +17,16 @@ define(function(require, exports, module) {
       return _.extend({}, OrderView.prototype.events, {
         'click .btn-cancel': 'cancel',
         'click .copy-order-btn': 'makeCopy',
-        'click #change-status-pending': _.bind(this.changeStatus, this, 'pending'),
-        'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled'),
-        'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted'),
-        'click #change-status-denied': _.bind(this.changeStatus, this, 'denied'),
-        'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted'),
-        'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered')
+        'click #change-status-pending': _.bind(this.changeStatus, this, 'pending', true),
+        'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled', true),
+        'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted', true),
+        'click #change-status-denied': _.bind(this.changeStatus, this, 'denied', true),
+        'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted', true),
+        'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', true),
+
+        'click #change-status-submitted-no-notify': _.bind(this.changeStatus, this, 'submitted', false),
+        'click #change-status-accepted-no-notify': _.bind(this.changeStatus, this, 'accepted', false),
+        'click #change-status-canceled-no-notify': _.bind(this.changeStatus, this, 'canceled', false)
       });
     },
 
@@ -196,8 +200,8 @@ define(function(require, exports, module) {
       return this;
     },
 
-    changeStatus: function(status) {
-      this.model.changeStatus(status, function(err) {
+    changeStatus: function(status, notify) {
+      this.model.changeStatus(status, notify, function(err) {
         if (err) return alert(err);
         window.location.reload();
       });

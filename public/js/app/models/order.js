@@ -269,7 +269,7 @@ define(function(require, exports, module) {
       });
     },
 
-    changeStatus: function(status, review, callback) {
+    changeStatus: function(status, notify, review, callback) {
       if (typeof review === 'function') {
         callback = review;
         review = null;
@@ -281,7 +281,7 @@ define(function(require, exports, module) {
       if (review) data.review_token = review;
       $.ajax({
         type: 'POST',
-        url: _.result(this, 'url') + '/status-history',
+        url: _.result(this, 'url') + '/status-history' + ((notify === false) ? '?notify=false' : ''),
         contentType: 'application/json',
         data: JSON.stringify(data),
         async: true,

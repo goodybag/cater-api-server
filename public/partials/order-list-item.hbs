@@ -35,11 +35,11 @@
     </dl>
   </div>
   <div class="col-sm-4">
-    {{#eq user.id 6}} {{! display for om }}
+    {{#eq parent.user.id 6}} {{! display for om }}
     <div class="row">
       <div class="col-sm-12">
         <div class="checkbox">
-          <label class="pull-right {{#if reviewed}}active{{/if}}">
+          <label class="{{#if reviewed}}active{{/if}}">
             <input class="reviewed-checkbox" type="checkbox" {{#if reviewed}}checked{{/if}}> Reviewed
           </label>
         </div>

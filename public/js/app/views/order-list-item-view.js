@@ -4,6 +4,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
   var CopyErrorModalView = require('app/views/copy-error-modal');
+  var notify = require('notify');
 
   return module.exports = Backbone.View.extend({
     events: {
@@ -74,7 +75,7 @@ define(function(require, exports, module) {
       var reviewed = $reviewed.is(':checked');
       $reviewed.parent().toggleClass('active');
       this.model.changeReviewed(reviewed, function(error) {
-        if (error) return alert('Sorry we were unable to mark this order');
+        if (error) return notify.error(error);
       });
     }
   });

@@ -126,7 +126,7 @@ module.exports.createSessionAs = function(req, res) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (rows.length === 0) return res.send(404);
     var user = rows[0];
-    req.session = utils.extend({oldUser: req.session.user}, req.session, {user: utils.pick(user, ['id', 'groups', 'email'])});
+    req.session = utils.extend({oldUser: req.session.user}, req.session, {user: utils.pick(user, ['id', 'groups', 'email', 'created_at'])});
     res.redirect(req.query.next || '/restaurants');
   });
 };

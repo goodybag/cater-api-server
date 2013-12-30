@@ -798,10 +798,11 @@ module.exports = Model.extend({
 
     utils.defaults( query, {
       table: 'orders'
-    , where: {
-        datetime: {
-          $between_days_from_now: { from: 1, to: 2 }
-        }
+    });
+
+    utils.defaults( query.where = query.where || {}, {
+      datetime: {
+        $between_days_from_now: { from: 1, to: 2 }
       }
     });
 

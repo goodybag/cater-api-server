@@ -55,6 +55,10 @@ define(function(require, exports, module) {
           payment_method_id: {
             type: ['string', 'number', 'null'],
             required: false
+          },
+          reviewed: {
+            type: ['boolean', 'null'],
+            required: false
           }
         }
       };
@@ -291,6 +295,25 @@ define(function(require, exports, module) {
         success: function(data, textstatus, jqXHR) {
           self.set('status', data.status);
           return callback(null, data);
+        }
+      });
+    },
+
+    changeReviewed: function(reviewed, callback) {
+      // Bypass model validation when toggling `reviewed` flag
+      callback = callback || function() {};
+
+      var data = {reviewed: reviewed};
+      $.ajax({
+        type: 'PUT'
+      , url: _.result(this, 'url')
+      , contentType: 'application/json'
+      , data: JSON.stringify(data)
+      , error: function(jqXHR, textstatus, error) {
+          return callback(error);
+        }
+      , success: function(data, textstatus, jqXHR) {
+          return callback(null);
         }
       });
     }

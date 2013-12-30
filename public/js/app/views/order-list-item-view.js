@@ -4,12 +4,14 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
   var CopyErrorModalView = require('app/views/copy-error-modal');
+  var notify = require('notify');
 
   return module.exports = Backbone.View.extend({
     events: {
       'click .copy-order-btn': 'copyOrder'
     , 'click .cancel-order-btn': 'cancelOrder'
     , 'click  .btn-receipt': 'downloadReceipt'
+    , 'click .reviewed-checkbox': 'toggleReviewed'
     }
 
   , template: Handlebars.partials.order_list_item
@@ -66,6 +68,15 @@ define(function(require, exports, module) {
       } else {
         window.location = url;
       }
+    }
+
+  , toggleReviewed: function(e) {
+      var $reviewed = $(e.target);
+      var reviewed = $reviewed.is(':checked');
+      $reviewed.parent().toggleClass('active');
+      this.model.changeReviewed(reviewed, function(error) {
+        if (error) return notify.error(error);
+      });
     }
   });
 });

@@ -140,6 +140,11 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , reviewed: {
+      type: types.boolean
+    , nullable: false
+    , default: false
+    }
   };
 
   definition.indices = {};

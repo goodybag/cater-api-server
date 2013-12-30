@@ -4,14 +4,10 @@
 
 var fs        = require('fs');
 var path      = require('path');
-var hbs       = require('hbs')
 var config    = require('../../config');
 var reminder  = require('./lib/reminder');
 
 var dir = __dirname + '/reminders';
-
-require('../../helpers').register( hbs );
-require('../../lib/partials').register( hbs );
 
 var logError = function( error ){
   console.log( error );
@@ -26,12 +22,23 @@ var printrow = function( character ){
 
 var logStat = function( group, result ){
   printrow('#');
-  console.log( group );
+  console.log( '# ' + group );
   printrow('#');
 
+  var longest = Math.max.apply( Math, Object.keys( result ).map( function( k ){
+    return result[ k ].text.length;
+  }));
+
   for ( var key in result ){
-    console.log("  *", result[ key ].text, ":", result[ key ].value );
+    console.log(
+      "  *"
+    , result[ key ].text
+    , Math.pow( 2, longest - result[ key ].text.length ).toString(2).replace( /./g, ' ' )
+    , ":"
+    , result[ key ].value
+    );
   }
+
   console.log("\n\n");
 };
 

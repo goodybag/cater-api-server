@@ -4,19 +4,31 @@
 
 var fs        = require('fs');
 var path      = require('path');
+var hbs       = require('hbs')
 var config    = require('../../config');
 var reminder  = require('./lib/reminder');
 
 var dir = __dirname + '/reminders';
 
+require('../../helpers').register( hbs );
+require('../../lib/partials').register( hbs );
+
 var logError = function( error ){
   console.log( error );
 };
 
+var printrow = function( character ){
+  character = character || '#';
+  console.log(
+    Math.pow( 2, process.stdout.columns - 1 ).toString(2).replace( /./g, character )
+  );
+};
+
 var logStat = function( group, result ){
-  console.log( Math.pow( 2, process.stdout.columns - 1 ).toString(2).replace( /./g, '#' ) );
+  printrow('#');
   console.log( group );
-  console.log( Math.pow( 2, process.stdout.columns - 1 ).toString(2).replace( /./g, '#' ) );
+  printrow('#');
+
   for ( var key in result ){
     console.log("  *", result[ key ].text, ":", result[ key ].value );
   }

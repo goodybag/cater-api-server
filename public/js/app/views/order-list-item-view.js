@@ -70,8 +70,10 @@ define(function(require, exports, module) {
     }
 
   , toggleReviewed: function(e) {
-      var reviewed = $(e.target).is(':checked');
-      this.model.changeReviewed( reviewed, function(error) {
+      var $reviewed = $(e.target);
+      var reviewed = $reviewed.is(':checked');
+      $reviewed.parent().toggleClass('active');
+      this.model.changeReviewed(reviewed, function(error) {
         if (error) return alert('Sorry we were unable to mark this order');
       });
     }

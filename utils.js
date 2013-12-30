@@ -43,6 +43,55 @@ utils.balanced = new Balanced({
 , secret: config.balanced.secret
 });
 
+/**
+ * Async.parallel that does not bail on error.
+ * Instead it will return an array or object
+ * of errors, continuing until each function is
+ * complete
+ * @param  {Array|Object}   fns      The list of functions to run
+ * @param  {Function} callback      ( errors, results )
+ */
+utils.async.parallelNoBail = function( fns, callback ){
+  return utils.async.noBail( 'parallel', fns, callback );
+};
+
+/**
+ * Async.series that does not bail on error.
+ * Instead it will return an array or object
+ * of errors, continuing until each function is
+ * complete
+ * @param  {Array|Object}   fns      The list of functions to run
+ * @param  {Function} callback      ( errors, results )
+ */
+utils.async.seriesNoBail = function( fns, callback ){
+  return utils.async.noBail( 'series', fns, callback );
+};
+
+utils.async.noBail = function( op, fns, callback ){
+  if ( typeof fns !== 'object' ) throw new Error('`parallelNoBail` - Invalid first argument');
+
+  var hadError = false;
+  var noBailFns = Array.isArray( fns ) ? [] : {};
+  var errors    = Array.isArray( fns ) ? [] : {};
+
+  Object.keys( fns ).forEach( function( key ){
+    noBailFns[ key ] = function( done ){
+      fns[ key ]( function( error ){
+        if ( error ){
+          hadError = true;
+          if ( Array.isArray( errors ) ) errors.push( error );
+          else errors[ key ] = error;
+        }
+
+        done.apply( null, [null].concat( Array.prototype.slice.call( arguments, 1 ) ) );
+      });
+    }
+  });
+
+  async[ op ]( noBailFns, function( error, results ){
+    callback( hadError ? errors : null, results );
+  });
+};
 
 utils.stage = function(fns){
   var current = function(){

@@ -297,6 +297,25 @@ define(function(require, exports, module) {
           return callback(null, data);
         }
       });
+    },
+
+    changeReviewed: function(reviewed, callback) {
+      // Bypass model validation when toggling `reviewed` flag
+      callback = callback || function() {};
+
+      var data = {reviewed: reviewed};
+      $.ajax({
+        type: 'PUT'
+      , url: _.result(this, 'url')
+      , contentType: 'application/json'
+      , data: JSON.stringify(data)
+      , error: function(jqXHR, textstatus, error) {
+          return callback(error);
+        }
+      , success: function(data, textstatus, jqXHR) {
+          return callback(null);
+        }
+      });
     }
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']

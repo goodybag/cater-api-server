@@ -10,6 +10,7 @@ define(function(require, exports, module) {
       'click .copy-order-btn': 'copyOrder'
     , 'click .cancel-order-btn': 'cancelOrder'
     , 'click  .btn-receipt': 'downloadReceipt'
+    , 'click .reviewed-checkbox': 'toggleReviewed'
     }
 
   , template: Handlebars.partials.order_list_item
@@ -66,6 +67,13 @@ define(function(require, exports, module) {
       } else {
         window.location = url;
       }
+    }
+
+  , toggleReviewed: function(e) {
+      var reviewed = $(e.target).is(':checked');
+      this.model.changeReviewed( reviewed, function(error) {
+        if (error) return alert('Sorry we were unable to mark this order');
+      });
     }
   });
 });

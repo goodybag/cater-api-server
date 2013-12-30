@@ -21,6 +21,7 @@ module.exports.schema = {
 // Return the function for carrying out all the notifications
 // for an order
 function notifyOrderFn( order ){
+  console.log(order.toJSON());
   return utils.partial( utils.async.parallelNoBail, {
     email: function( done ){
       views.render( 'order-email/order-reminder', {
@@ -56,11 +57,9 @@ function notifyOrderFn( order ){
 };
 
 module.exports.check = function( storage, callback ){
-  var $query = {
-    where: { status: 'accepted' }
-  };
+  var $query = { where: { status: 'accepted' } };
 
-  Models.Order.findTomorrow( function( error, results ){
+  Models.Order.findTomorrow( $query, function( error, results ){
     if ( error ) return callback( error );
 
     // Filter out restaurants that have already been notified
@@ -91,24 +90,7 @@ module.exports.work = function( storage, callback ){
   , errors:               { text: 'Errors', value: 0, objects: [] }
   };
 
-  var $query = {
-    columns:  [
-      '*'
-    , 'restaurants.emails'
-    , 'restaurants.sms_phones'
-    , 'restaurants.voice_phones'
-    ]
-  , where: { status: 'accepted' }
-  , joins: []
-  };
-
-  $query.joins.push({
-    type: 'left'
-  , target: 'restaurants'
-  , on: {
-      id: '$orders.restaurant_id$'
-    }
-  });
+  var $query = { where: { status: 'accepted' } };
 
   Models.Order.findTomorrow( $query, function( error, orders ){
     if ( error ) return callback( error );
@@ -116,7 +98,9 @@ module.exports.work = function( storage, callback ){
     utils.async.parallel(
       orders.map( function( o ){
         return function( done ){ o.getOrderItems( done ); }
-      })
+      }).concat( orders.map( function( o ){
+        return function( done ){ o.getRestaurant( done ); }
+      }))
     , function( error ){
         if ( error ) return callback( error );
 

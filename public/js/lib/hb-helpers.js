@@ -71,6 +71,13 @@ define(function(require, exports, module) {
         options = rate;
         rate = null;
       }
+      console.log({
+        cents: cents
+      , deliveryFee: deliveryFee
+      , tip: tip
+      , rate: rate
+      , options: options
+      });
 
       tip = tip || 0;
       rate = rate ? rate + 1 : 1.0825;

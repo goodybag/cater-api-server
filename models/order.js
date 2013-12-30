@@ -806,7 +806,7 @@ module.exports = Model.extend({
       }
     });
 
-    Model.find.call( this, query, callback );
+    Model.find.call(this, query, utils.partial(modifyAttributes, callback));
   },
 
   // this is a FSM definition

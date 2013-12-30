@@ -5,6 +5,7 @@ define(function(require, exports, module) {
   return module.exports = Backbone.View.extend({
     events: {
       'click .status-buttons': 'changeFilter'
+    , 'click .reviewed-checkbox': 'toggleReviewed'
     },
 
     statuses: ['pending', 'canceled', 'submitted', 'denied', 'accepted', 'delivered'],
@@ -34,6 +35,10 @@ define(function(require, exports, module) {
         $ordersList.addClass('hide');
         (activeFilter === 'all' ? $ordersList : $ordersList.filter('[data-status="' + activeFilter + '"]')).removeClass('hide');
       });
+    },
+
+    toggleReviewed: function(e) {
+      console.log('test');
     }
   });
 });

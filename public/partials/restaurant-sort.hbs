@@ -1,0 +1,18 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/restaurant-filters.css">
+{{/extend}}
+
+
+<h4>Sort by:</h4>
+<div class="panel-group panel-group-filters" id="filters">
+  <select name="sort" class="form-control">
+    {{! denote desc sorting to keep urls relatively short }}
+    <option> -- </option>
+    <option value="price">Lowest Price</option>
+    <option value="priced">Highest Price</option>
+    <option value="ordermin">Lowest Order Minimum</option>
+    <option value="ordermind">Highest Order Minimum</option>
+    <option value="deliveryfee">Lowest Delivery Fee</option>
+    <option value="deliveryfeed">Highest Delivery Fee</option>
+  </select>
+</div>

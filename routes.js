@@ -210,10 +210,8 @@ module.exports.register = function(app) {
   }, m.restrict([]), controllers.orders.auth);
 
   app.get('/orders/:oid'
-  , m.log("poooooooooooooooooop")
     // If they're using ?receipt=true, make sure we restrict the group
   , function(req, res, next){
-    console.log("ohai")
       return (
         m.restrict(!req.param('receipt') ? ['admin', 'receipts'] : ['admin', 'clients'])
       )(req, res, next);

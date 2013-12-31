@@ -55,6 +55,10 @@ define(function(require, exports, module) {
           payment_method_id: {
             type: ['string', 'number', 'null'],
             required: false
+          },
+          reviewed: {
+            type: ['boolean', 'null'],
+            required: false
           }
         }
       };
@@ -269,7 +273,7 @@ define(function(require, exports, module) {
       });
     },
 
-    changeStatus: function(status, review, callback) {
+    changeStatus: function(status, notify, review, callback) {
       if (typeof review === 'function') {
         callback = review;
         review = null;
@@ -281,7 +285,7 @@ define(function(require, exports, module) {
       if (review) data.review_token = review;
       $.ajax({
         type: 'POST',
-        url: _.result(this, 'url') + '/status-history',
+        url: _.result(this, 'url') + '/status-history' + ((notify === false) ? '?notify=false' : ''),
         contentType: 'application/json',
         data: JSON.stringify(data),
         async: true,
@@ -291,6 +295,25 @@ define(function(require, exports, module) {
         success: function(data, textstatus, jqXHR) {
           self.set('status', data.status);
           return callback(null, data);
+        }
+      });
+    },
+
+    changeReviewed: function(reviewed, callback) {
+      // Bypass model validation when toggling `reviewed` flag
+      callback = callback || function() {};
+
+      var data = {reviewed: reviewed};
+      $.ajax({
+        type: 'PUT'
+      , url: _.result(this, 'url')
+      , contentType: 'application/json'
+      , data: JSON.stringify(data)
+      , error: function(jqXHR, textstatus, error) {
+          return callback(error);
+        }
+      , success: function(data, textstatus, jqXHR) {
+          return callback(null);
         }
       });
     }

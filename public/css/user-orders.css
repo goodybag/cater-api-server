@@ -26,6 +26,19 @@
   line-height: 1.6;
 }
 
+.order-list-group .checkbox {
+  margin-top: 0;
+}
+
+.order-list-group .checkbox .active {
+  font-weight: bold;
+  color: #DC0500;
+}
+
+.order-list-group .checkbox label {
+  float: right;
+}
+
 .order-list-group dt {
   font-weight: 300;
   color: #A7A4A0;

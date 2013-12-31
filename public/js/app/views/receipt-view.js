@@ -13,16 +13,19 @@ define(function(require, exports, module) {
   return module.exports = OrderView.extend({
     events: function() {
       return _.extend({}, OrderView.prototype.events, {
-        'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled'),
+        'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled', true),
         'click .copy-order-btn': 'copyOrder',
-        'click .btn-reject': _.bind(this.changeStatus, this, 'denied'),
-        'click .btn-accept': _.bind(this.changeStatus, this, 'accepted'),
-        'click #change-status-pending': _.bind(this.changeStatus, this, 'pending'),
-        'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled'),
-        'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted'),
-        'click #change-status-denied': _.bind(this.changeStatus, this, 'denied'),
-        'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted'),
-        'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered'),
+        'click .btn-reject': 'rejectOrder',
+        'click .btn-accept': _.bind(this.changeStatus, this, 'accepted', true),
+        'click #change-status-pending': _.bind(this.changeStatus, this, 'pending', true),
+        'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled', true),
+        'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted', true),
+        'click #change-status-denied': _.bind(this.changeStatus, this, 'denied', true),
+        'click #change-status-accepted': _.bind(this.changeStatus, this, 'accepted', true),
+        'click #change-status-delivered': _.bind(this.changeStatus, this, 'delivered', true),
+        'click #change-status-submitted-no-notify': _.bind(this.changeStatus, this, 'submitted', false),
+        'click #change-status-accepted-no-notify': _.bind(this.changeStatus, this, 'accepted', false),
+        'click #change-status-canceled-no-notify': _.bind(this.changeStatus, this, 'canceled', false),
         'click .edit-order-btn': 'toggleEdit',
         'click .cancel-edit-btn': 'toggleEdit',
         'click .save-btn': 'save'
@@ -68,7 +71,8 @@ define(function(require, exports, module) {
     },
 
     fieldMap: _.extend({
-      adjustment: '.adjustment .form-control'
+      adjustment: '.adjustment .form-control',
+      reason_denied: '.reason-denied'
     }, OrderView.prototype.fieldMap),
 
     fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {
@@ -85,6 +89,22 @@ define(function(require, exports, module) {
         };
       }
     }),
+
+    rejectOrder: function() {
+      var self = this;
+
+      this.model.save({
+        reason_denied: this.$el.find('.reason-denied').val()
+      }, {
+        success: function () {
+          self.changeStatus('denied');
+        },
+        error: function() {
+          if(console && console.error) console.error('Could not save reason for rejection', arguments);
+          self.changeStatus('denied');
+        }
+      });
+    },
 
     /**
      * Convert backend dates stored in UTC
@@ -107,8 +127,8 @@ define(function(require, exports, module) {
       this.$el.find(this.fieldMap.phone).val(Handlebars.helpers['phoneNumber'](value))
     },
 
-    changeStatus: function(status) {
-      this.model.changeStatus(status, this.options.review_token, function(err) {
+    changeStatus: function(status, notify) {
+      this.model.changeStatus(status, notify, this.options.review_token, function(err) {
         if (err) return alert(err);
         window.location.reload();
       });

@@ -79,6 +79,9 @@
               <li><a href="javascript:void;" id="change-status-denied">denied</a></li>
               <li><a href="javascript:void;" id="change-status-accepted">accepted</a></li>
               <li><a href="javascript:void;" id="change-status-delivered">delivered</a></li>
+              <li><a href="javascript:void;" id="change-status-submitted-no-notify">submitted - no notification</a></li>
+              <li><a href="javascript:void;" id="change-status-accepted-no-notify">accepted - no notification</a></li>
+              <li><a href="javascript:void;" id="change-status-canceled-no-notify">canceled - no notificaton</a></li>
             </ul>
           </div>
           {{else}}
@@ -267,6 +270,7 @@
       </div>
       <div class="modal-body">
         <p>Are you sure you want to reject this order?</p>
+        <textarea class="form-control reason-denied" placeholder="Please let us know why, so we can improve the ordering experience. Thanks!"></textarea>
       </div>
       <div class="row modal-footer">
         <div class="col-lg-3 col-lg-offset-6">

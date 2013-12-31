@@ -36,6 +36,9 @@
       </li>
       {{/if}}
       {{/if}}
+      {{#contains user.groups "admin"}}
+        <li><a href="?edit=true">Edit Restaurant</a></li>
+      {{/contains}}
     </ul>
   </div>
 </div>

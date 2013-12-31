@@ -169,23 +169,26 @@ module.exports = Model.extend({
       var sortedCol = 'restaurants.';
 
       switch (orderParams.sort) {
+        case 'name':
+          sortedCol = 'name ASC';
+          break;
         case 'price':
-          sortedCol += 'price ASC';
+          sortedCol = 'price ASC';
           break;
         case 'priced':
-          sortedCol += 'price DESC';
+          sortedCol = 'price DESC';
           break;
         case 'ordermin':
-          sortedCol += 'minimum_order ASC';
+          sortedCol = 'minimum_order ASC';
           break;
         case 'ordermind':
-          sortedCol += 'minimum_order DESC';
+          sortedCol = 'minimum_order DESC';
           break;
         case 'deliveryfee':
-          sortedCol += 'delivery_fee ASC';
+          sortedCol = 'delivery_fee ASC';
           break;
         case 'deliveryfeed':
-          sortedCol += 'delivery_feed DESC';
+          sortedCol = 'delivery_feed DESC';
           break;
         default: 
           sortedCol = null;
@@ -193,7 +196,7 @@ module.exports = Model.extend({
 
       if (sortedCol) {
 
-        // insert at head of array
+        // insert at head of array (prioritize over default sorts)
         query.order.splice(0, 0, sortedCol);
 
         // lob off the direction qualifier

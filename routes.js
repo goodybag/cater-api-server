@@ -207,15 +207,15 @@ module.exports.register = function(app) {
   app.all(/^\/orders\/(\d+)(?:\/.*)?$/, function (req, res, next) {
     req.params.id = req.params[0];
     next();
-  }, controllers.orders.auth);
+  }, m.restrict([]), controllers.orders.auth);
 
   app.get('/orders/:oid'
+  , m.log("poooooooooooooooooop")
     // If they're using ?receipt=true, make sure we restrict the group
   , function(req, res, next){
-      if (!req.param('receipt')) return next();
-
+    console.log("ohai")
       return (
-        m.restrict(['admin', 'receipts'])
+        m.restrict(!req.param('receipt') ? ['admin', 'receipts'] : ['admin', 'clients'])
       )(req, res, next);
     }
   , controllers.orders.get

@@ -5,11 +5,13 @@
 var fs        = require('fs');
 var path      = require('path');
 var config    = require('../../config');
+var logger    = require('../../logger');
 var reminder  = require('./lib/reminder');
 
 var dir = __dirname + '/reminders';
 
 var logError = function( error ){
+  logger.reminder.error( error );
   console.log( error );
 };
 
@@ -30,6 +32,13 @@ var logStat = function( group, result ){
   }));
 
   for ( var key in result ){
+    // Log errors by worker/reminder module
+    if ( key === 'errors' && result.errors.value > 0 ){
+      result.errors.objects.forEach( function( error ){
+        logger.reminder.error( [ key ], error );
+      });
+    }
+
     console.log(
       "  *"
     , result[ key ].text

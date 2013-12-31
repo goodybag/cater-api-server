@@ -54,7 +54,9 @@ __Arguments:__
 * storage - persistent JSON between calls to the module
 * callback( error, stats )
 
-The second argument to callback should be a statistics object containing any information you'd like to see in the logs.
+The second argument to callback should be a statistics object containing any information you'd like to see in the logs. Use the format seen in the examples and the other workers and the output will look this:
+
+![http://storage.j0.hn/Screen%20Shot%202013-12-31%20at%2010.12.42%20AM.png](http://storage.j0.hn/Screen%20Shot%202013-12-31%20at%2010.12.42%20AM.png)
 
 ### The `storage` parameter
 

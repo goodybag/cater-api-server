@@ -1,8 +1,8 @@
 -- #599 Reminders/notifications
 
 DO $$
-  declare version       text := '1.1.8';
-  
+  declare version       text := '1.1.9';
+
 begin
   raise notice '## Running Delta v% ##', version;
 

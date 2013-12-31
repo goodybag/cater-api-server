@@ -37,7 +37,7 @@ reminder.ensureSchema = function( schema, storage ){
 reminder.saveStorage = function( name, storage, callback ){
   var $query = db.builder.sql({
     type: 'upsert'
-  , table: 'remdiners'
+  , table: 'reminders'
   , where: { name: name }
   , upsert: {
       name: name
@@ -143,6 +143,7 @@ reminder.run = function( callback ){
 
             // Save storage
             reminder.saveStorage( key, storage[ key ], function( error ){
+              if ( error ) return complete( error );
               done( null, stats );
             });
           });

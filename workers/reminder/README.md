@@ -17,6 +17,11 @@ Create a new module in the ```./reminders``` directory with the following scaffo
 
 module.exports.name = 'My Reminder';
 
+// Ensures typeof storage.lastNotified === 'object'
+module.exports.schema = {
+  lastNotified: true
+};
+
 module.exports.check = function( storage, callback ){
   callback( null, false );
 };

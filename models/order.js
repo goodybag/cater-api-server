@@ -133,7 +133,7 @@ module.exports = Model.extend({
       return obj;
 
     var inTimeToCancel;
-    if (obj.guests != null && obj.datetime != null) {
+    if (obj.guests != null && obj.datetime != null && obj.restaurant) {
       var cancelTime = (utils.find(utils.sortBy(obj.restaurant.lead_times, 'max_guests'), function(lead) {
         return lead.max_guests >= obj.guests;
       }) || 0).cancel_time;
@@ -788,6 +788,21 @@ module.exports = Model.extend({
     };
 
     Model.update.call(this, query, utils.partial(modifyAttributes, callback));
+  },
+
+  findTomorrow: function( query, callback ){
+    if ( typeof query === 'function' ){
+      callback = query;
+      query = {};
+    }
+
+    utils.defaults( query.where = query.where || {}, {
+      datetime: {
+        $between_days_from_now: { from: 1, to: 2 }
+      }
+    });
+
+    module.exports.find.call( this, query, callback );
   },
 
   // this is a FSM definition

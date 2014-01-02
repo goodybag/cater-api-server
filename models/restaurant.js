@@ -177,11 +177,11 @@ module.exports = Model.extend({
         case 'priced':
           sortedCol = 'price DESC';
           break;
-        case 'ordermin':
-          sortedCol = 'minimum_order ASC';
+        case 'minorder':
+          sortedCol = 'minimum_order ASC NULLS FIRST';
           break;
-        case 'ordermind':
-          sortedCol = 'minimum_order DESC';
+        case 'minorderd':
+          sortedCol = 'minimum_order DESC NULLS LAST';
           break;
         case 'deliveryfee':
           sortedCol = 'delivery_fee ASC';

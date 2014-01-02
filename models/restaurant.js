@@ -196,11 +196,11 @@ module.exports = Model.extend({
 
       if (sortedCol) {
 
-        // insert at head of array (prioritize over default sorts)
-        query.order.splice(0, 0, sortedCol);
+        // insert after head of array (prioritize after is_unacceptable)
+        query.order.splice(1, 0, sortedCol);
 
         // lob off the direction qualifier
-        query.distinct.splice(0, 0, sortedCol.split(' ')[0]);
+        query.distinct.splice(1, 0, sortedCol.split(' ')[0]);
       }
 
     }

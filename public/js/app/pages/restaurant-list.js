@@ -2,10 +2,12 @@ define( function( require ){
   var $               = require('jquery');
   var utils           = require('utils');
   var restaurants     = require('data/restaurants');
-  var OrderParams     = require('data/order-params');
-
 
   require('bootstrap');
+
+  var Models = {
+    OrderParams:              require('app/models/order-params')
+  };
 
   var Views = {
     OrderParamsView:          require('app/views/order-params-view')
@@ -44,7 +46,7 @@ define( function( require ){
         utils.each( existingCriteria.prices, function( p, i, pp ){ pp[ i ] = +p; } );
       }
 
-      var orderParams = new OrderParams();
+      var orderParams = new Models.OrderParams();
 
       var orderParamsView = new Views.OrderParamsView({
         model: orderParams

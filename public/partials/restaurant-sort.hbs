@@ -2,17 +2,18 @@
 <link rel="stylesheet" href="/css/restaurant-filters.css">
 {{/extend}}
 
-
-<h4>Sort by:</h4>
-<div class="panel-group panel-group-filters" id="filters">
-  <select name="sort" class="form-control">
-    {{! denote desc sorting to keep urls relatively short }}
-    <option value="name">Name</option>
-    <option value="price">Lowest Price</option>
-    <option value="priced">Highest Price</option>
-    <option value="ordermin">Lowest Order Minimum</option>
-    <option value="ordermind">Highest Order Minimum</option>
-    <option value="deliveryfee">Lowest Delivery Fee</option>
-    <option value="deliveryfeed">Highest Delivery Fee</option>
-  </select>
+<div id="sort">
+  <h4>Sort by:</h4>
+  <div class="panel-group panel-group-filters">
+    <select name="sort" class="form-control sort">
+      {{! denote desc sorting to keep urls relatively short }}
+      <option value="name" {{#eq orderParams.sort "name"}}selected{{/eq}}>Name</option>
+      <option value="price" {{#eq orderParams.sort "price"}}selected{{/eq}}>Lowest Price</option>
+      <option value="priced" {{#eq orderParams.sort "priced"}}selected{{/eq}}>Highest Price</option>
+      <option value="ordermin" {{#eq orderParams.sort "ordermin"}}selected{{/eq}}>Lowest Order Minimum</option>
+      <option value="ordermind" {{#eq orderParams.sort "ordermind"}}selected{{/eq}}>Highest Order Minimum</option>
+      <option value="deliveryfee" {{#eq orderParams.sort "deliveryfee"}}selected{{/eq}}>Lowest Delivery Fee</option>
+      <option value="deliveryfeed" {{#eq orderParams.sort "deliveryfeed"}}selected{{/eq}}>Highest Delivery Fee</option>
+    </select>
+  </div>
 </div>

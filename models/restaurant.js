@@ -188,7 +188,7 @@ module.exports = Model.extend({
           sortedCol = 'delivery_fee ASC';
           break;
         case 'deliveryfeed':
-          sortedCol = 'delivery_feed DESC';
+          sortedCol = 'delivery_fee DESC';
           break;
         default: 
           sortedCol = null;

@@ -10,6 +10,7 @@ define( function( require ){
   var Views = {
     OrderParamsView:          require('app/views/order-params-view')
   , RestaurantFiltersView:    require('app/views/restaurant-filters-view')
+  , RestaurantSortView:       require('app/views/restaurant-sort-view')
   , RestaurantsListView:      require('app/views/restaurants-list-view')
   };
 
@@ -56,9 +57,14 @@ define( function( require ){
       , restaurants: restaurants
       });
 
+      var restaurantSortView = new Views.RestaurantSortView({
+        el: '#sort'
+      });
+
       var restaurantsListView = new Views.RestaurantsListView({
         el: '#main'
       , filtersView: restaurantFiltersView
+      , sortView: restaurantSortView
       , paramsView: orderParamsView
       , searchUrl: '/restaurants'
       });

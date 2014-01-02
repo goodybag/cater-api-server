@@ -197,7 +197,7 @@ module.exports = Model.extend({
         query.order.splice(1, 0, sortedCol);
 
         // lob off the direction qualifier
-        query.distinct.splice(1, 0, sortedCol.split(' ')[0]);
+        if ( query.distinct ) query.distinct.splice(1, 0, sortedCol.split(' ')[0]);
       }
     }
 

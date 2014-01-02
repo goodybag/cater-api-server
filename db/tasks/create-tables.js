@@ -23,6 +23,7 @@ var definitions = [
 , 'restaurant-tags'
 , 'restaurant-meal-types'
 , 'restaurant-meal-styles'
+, 'restaurant-events'
 , 'orders'
 , 'categories'
 , 'items'

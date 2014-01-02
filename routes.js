@@ -73,6 +73,32 @@ module.exports.register = function(app) {
   });
 
   /**
+   * Restaurant events resource.
+   */
+
+  app.get('/restaurants/:rid/events', m.restrict(['admin']), controllers.restaurants.events.list);
+
+  app.post('/restaurants/:rid/events', m.restrict(['admin']), controllers.restaurants.events.create);
+
+  app.all('/restaurants/:rid/events', m.restrict(['admin']), function(req, res, next) {
+    res.set('Allow', 'GET, POST');
+    res.send(405);
+  });
+
+  /**
+   * Individual restaurant event resource.
+   */
+
+  app.put('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.update);
+
+  app.del('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.remove);
+
+  app.all('/restaurants/:rid/events/:eid', m.restrict(['admin']), function(req, res, next) {
+    res.set('Allow', 'PUT, DELETE');
+    res.send(405);
+  });  
+
+  /**
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
    */
 

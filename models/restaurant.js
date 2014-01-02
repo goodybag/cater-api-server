@@ -163,10 +163,9 @@ module.exports = Model.extend({
 
     /**
      * Sort by price, order min, or delivery fee
-     * TODO: this is u-g-l-y u aint got no alibi
      */
     if (orderParams && orderParams.sort) {
-      var sortedCol = 'restaurants.';
+      var sortedCol = null;
 
       switch (orderParams.sort) {
         case 'name':
@@ -190,8 +189,6 @@ module.exports = Model.extend({
         case 'deliveryfeed':
           sortedCol = 'delivery_fee DESC';
           break;
-        default: 
-          sortedCol = null;
       }
 
       if (sortedCol) {
@@ -202,7 +199,6 @@ module.exports = Model.extend({
         // lob off the direction qualifier
         query.distinct.splice(1, 0, sortedCol.split(' ')[0]);
       }
-
     }
 
     if (orderParams && orderParams.diets) {

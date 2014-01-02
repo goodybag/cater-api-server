@@ -26,6 +26,7 @@ var middleware = {
 , sslRedirect: require('./middleware/ssl-redirect')
 , requestLogger: require('connect-request-logger-pg')
 , getUser: require('./middleware/get-user')
+, statusCodeIntercept: require('./middleware/status-code-intercept')
 };
 
 var app = module.exports = express();
@@ -64,6 +65,9 @@ app.configure(function(){
   , plan: config.requestLogger.plan
   , customFields: {uuid: 'uuid'}
   }));
+
+  // Intercept status codes and render HTML if necessary
+  app.use( middleware.statusCodeIntercept() );
 
   if (config.isProduction) {
     app.use(middleware.sslRedirect);

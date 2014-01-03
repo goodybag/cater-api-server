@@ -761,7 +761,7 @@ module.exports = Model.extend({
       callback = limit;
       limit = 100;
     }
-    // it is ready for charging 3 days after the order has been placed.
+    // it is ready for charging 3 days after the order has been delivered.
     var query = {
       where: {
         payment_method_id: {$notNull: true}

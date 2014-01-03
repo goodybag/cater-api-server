@@ -1,15 +1,29 @@
 {{#extend "css"}}
 {{!-- <link rel="stylesheet" href="/css/user-orders.css"> --}}
+<link rel='stylesheet' type='text/css' href='/components/fullcalendar/fullcalendar.css' />
 {{/extend}}
 
 <div class="container">
   <div class="row">
     <h1 class="col-lg-12 page-title">Restaurant Availability Calendar</h1>
   </div>
+  <div class="row">
+    <div id="calendar"></div>
+  </div>
 </div>
 
 {{#extend "scripts"}}
 <script>
-
+  require([
+      'jquery'
+    , 'handlebars'
+    , 'app/views/restaurant/availability-view'
+    ]
+  , function($, Handlebars, AvailabilityView) {
+      var availabilityView = new AvailabilityView({
+        el: '#main'
+      });
+    }
+  );
 </script>
 {{/extend}}

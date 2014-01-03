@@ -8,10 +8,15 @@
     <h1 class="col-lg-12 page-title">Restaurant Availability Calendar</h1>
   </div>
   <div class="row">
-    <div id="calendar"></div>
+    <div class="col-lg-12">
+      <div id="calendar"></div>
+    </div>
   </div>
 </div>
 
+<div class="modal-container">
+  {{> restaurant_event_modal }}
+</div>
 {{#extend "scripts"}}
 <script>
   define( 'data/events', ['app/collections/restaurant-events'], 

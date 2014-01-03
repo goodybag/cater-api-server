@@ -7,15 +7,35 @@ var models = require('../../models');
  * GET /restaurants/:rid/events?date=
  */
 module.exports.list = function(req, res, next) {
-  var query = {
-    where: { 
-      restaurant_id: req.params.rid 
-    }
-  };
+  utils.async.parallel({
+    events: function getEvents(callback) {
+      var query = {
+        where: { 
+          restaurant_id: req.params.rid 
+        }
+      };
+      models.RestaurantEvent.find(query, function( error, results) {
+        callback(error, results);
+      });
+    },
 
-  models.RestaurantEvent.find(query, function( error, results) {
+    restaurant: function getRestaurant(callback) {
+      var query = {
+        where: { 
+          id: req.params.rid 
+        }
+      };
+      models.Restaurant.findOne(query, function( error, restaurant ) {
+        callback(error, restaurant.toJSON());
+      });
+    }
+  },
+  function(error, results) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('restaurant/availability', {events: results});
+    res.render('restaurant/availability', {
+      events: results.events
+    , restaurant: results.restaurant
+    });
   });
 }
 

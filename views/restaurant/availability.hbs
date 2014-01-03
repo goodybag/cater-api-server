@@ -14,6 +14,12 @@
 
 {{#extend "scripts"}}
 <script>
+  define( 'data/events', ['app/collections/restaurant-events'], 
+    function( RestaurantEvents ) {
+      return new RestaurantEvents({{{ json events }}});
+    }
+  );
+
   require([
       'jquery'
     , 'handlebars'

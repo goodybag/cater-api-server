@@ -1,6 +1,9 @@
 /**
  * Restaurant Availability View
  *
+ * Note: dates should use the postgres canonical form
+ * `[)` which is inclusive lower bound, exclusive upper bound
+ *
  * Dependencies:
  *   - collections.restaurant-events // todo: generalize restaurant events?
  */

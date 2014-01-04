@@ -13,6 +13,7 @@ define(function(require, exports, module) {
 
   var events = require('data/events');
   var restaurant = require('data/restaurant');
+  var moment = require('moment');
 
   var RestaurantEvent = require('../../models/restaurant-event');
 
@@ -82,14 +83,17 @@ define(function(require, exports, module) {
         date_range = date_range.replace( /[\[\]\(\)]/g,'').split(',');;
         return {
           title: event.get('name'),
-          start: date_range[0],
-          end: date_range[1]
+          start: date_range[0], // lower bound inclusive
+          end: moment(date_range[1]).add('days', -1)// upper bound should be exclusive
         };
       });
     },
 
     select: function(startDate, endDate, allDay, jsEvent, view) {
-      this.renderModal({start: startDate, end: endDate});
+      this.renderModal({
+        start: startDate
+      , end:  moment(endDate).add('days', 1)
+      });
     },
 
     unselect: function(view, jsEvent) {

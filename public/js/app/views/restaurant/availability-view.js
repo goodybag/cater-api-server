@@ -8,15 +8,50 @@
 define(function(require, exports, module) {
   var utils = require('utils');
   var $ = require('jquery');
-  var Backbone = require('backbone');
+  var FormView = require('../form-view');
   var FullCalendar = require('fullcalendar');
 
   var events = require('data/events');
+  var restaurant = require('data/restaurant');
 
-  return module.exports = Backbone.View.extend({
+  var RestaurantEvent = require('../../models/restaurant-event');
+
+  return module.exports = FormView.extend({
     modalTemplate: Handlebars.partials.restaurant_event_modal,
 
+    events: {
+      'click .btn-create-event': 'createEvent'
+    },
+
+    fieldMap: {
+      name: '.event-name',
+      description: '.event-description',
+      date_range: '.event-date-range',
+      closed: '.event-closed'
+    },
+
+    fieldGetters: {
+      date_range: function() {
+        return this.$el.find(this.fieldMap.date_range).data('date-range');
+      },
+
+      closed: function() {
+        return this.$el.find(this.fieldMap.closed).is(':checked');
+      }
+    },
+
+    createEvent: function(e) {
+      this.onSave(e, function(err, res) {
+        if(err) return console.error('Could not create this event!');
+        window.location.reload();
+      });
+    },
+
     initialize: function() {
+
+      this.model = new RestaurantEvent({
+        restaurant: restaurant
+      });
 
       // cache dom objects
       this.$calendar = this.$el.find('#calendar');

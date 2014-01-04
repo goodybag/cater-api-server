@@ -25,6 +25,12 @@
     }
   );
 
+  define( 'data/restaurant', ['app/models/restaurant'],
+    function( Restaurant ) {
+      return new Restaurant({{{ json restaurant }}});
+    }
+  );
+
   require([
       'jquery'
     , 'handlebars'

@@ -34,6 +34,8 @@ define(function(require, exports, module) {
       return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
     },
 
-    // urlRoot: '/users',
+    urlRoot: function() { 
+      return _.result(this.attributes.restaurant, 'url') + '/events'
+    }
   });
 });

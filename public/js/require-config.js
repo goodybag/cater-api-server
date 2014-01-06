@@ -29,7 +29,7 @@ var require = {
   , {name: 'backbone.trackit',  location: '../../components/backbone.trackit',          main: 'backbone.trackit'}
 
     // ui related stuff
-  , {name: 'spin',              location: '../../components/spin.js/dist',              main: 'spin.js'}
+  , {name: 'spin',              location: '../../components/spin.js',                   main: 'spin.js'}
 
     // templating related
   , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}

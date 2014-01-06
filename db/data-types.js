@@ -20,6 +20,7 @@ module.exports = {
 , int8: 'int8'
 , bigserial: 'serial8'
 , serial8: 'serial8'
+, double: 'double precision'
 , bit: arg('bit')
 , varbit: arg('varbit')
 , boolean: 'boolean'

@@ -28,6 +28,9 @@ var types = {
 , tip_percentage: function(callback) {
     db.query("DROP TYPE IF EXISTS tip_percentage; CREATE TYPE tip_percentage AS ENUM('0', 'custom', '5', '10', '15', '18', '20', '25');", callback);
   }
+, order_type: function(callback) {
+    db.query("DROP TYPE IF EXISTS order_type; CREATE TYPE order_type AS ENUM('pickup', 'delivery');", callback);
+  }
 };
 
 var done = function(callback) {

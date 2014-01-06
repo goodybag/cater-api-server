@@ -119,6 +119,14 @@ define(function(require) {
       type: types.array(types.text)
     , nullable: false
     }
+  , lat: {
+      type: types.double
+    , default: '0'
+    }
+  , lon: {
+      type: types.double
+    , default: '0'
+    }
   };
 
   definition.indices = {};

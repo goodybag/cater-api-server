@@ -160,6 +160,47 @@ module.exports = Model.extend({
     }
 
     var unacceptable = [];
+
+    /**
+     * Sort by price, order min, or delivery fee
+     */
+    if (orderParams && orderParams.sort) {
+      var sortedCol = null;
+
+      switch (orderParams.sort) {
+        case 'name':
+          sortedCol = 'name ASC';
+          break;
+        case 'price':
+          sortedCol = 'price ASC';
+          break;
+        case 'priced':
+          sortedCol = 'price DESC';
+          break;
+        case 'minorder':
+          sortedCol = 'minimum_order ASC NULLS FIRST';
+          break;
+        case 'minorderd':
+          sortedCol = 'minimum_order DESC NULLS LAST';
+          break;
+        case 'deliveryfee':
+          sortedCol = 'delivery_fee ASC';
+          break;
+        case 'deliveryfeed':
+          sortedCol = 'delivery_fee DESC';
+          break;
+      }
+
+      if (sortedCol) {
+
+        // insert after head of array (prioritize after is_unacceptable)
+        query.order.splice(1, 0, sortedCol);
+
+        // lob off the direction qualifier
+        if ( query.distinct ) query.distinct.splice(1, 0, sortedCol.split(' ')[0]);
+      }
+    }
+
     if (orderParams && orderParams.diets) {
       query.with.tags_arr = {
         "type": "select"

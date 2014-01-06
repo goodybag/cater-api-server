@@ -15,6 +15,7 @@ var
 , logger = require('./logger')
 , routes = require('./routes')
 , helpers = require('./helpers')
+, partials = require('./lib/partials')
 , errors = require('./errors')
 ;
 
@@ -25,6 +26,7 @@ var middleware = {
 , sslRedirect: require('./middleware/ssl-redirect')
 , requestLogger: require('connect-request-logger-pg')
 , getUser: require('./middleware/get-user')
+, statusCodeIntercept: require('./middleware/status-code-intercept')
 };
 
 var app = module.exports = express();
@@ -63,6 +65,9 @@ app.configure(function(){
   , plan: config.requestLogger.plan
   , customFields: {uuid: 'uuid'}
   }));
+
+  // Intercept status codes and render HTML if necessary
+  app.use( middleware.statusCodeIntercept() );
 
   if (config.isProduction) {
     app.use(middleware.sslRedirect);
@@ -116,18 +121,6 @@ app.configure(function(){
 });
 
 helpers.register(hbs);
-hbs.registerPartials('./public/partials');
-
-[
-  'order-items'
-, 'order-details'
-, 'order-details-no-header'
-, 'accept-reject'
-].forEach( function( name ){
-  hbs.registerPartial(
-    'email_' + name.replace( /\-/g, '_' )
-  , fs.readFileSync( './views/order-email/' + name + '.hbs' ).toString()
-  );
-});
+partials.register(hbs);
 
 routes.register(app);

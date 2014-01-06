@@ -12,3 +12,13 @@ begin
   end if;
 end;
 $$ language plpgsql;
+
+-- Add column to table
+create or replace function add_type( type_name text, type_def text )
+returns void as $$
+begin
+    if not exists ( select 1 from pg_type where typname = type_name ) then
+      execute 'create type ' || type_name || ' as ' || type_def;
+    end if;
+  end;
+$$ language plpgsql;

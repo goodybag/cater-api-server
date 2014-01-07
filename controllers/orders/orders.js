@@ -50,60 +50,11 @@ module.exports.editability = function(req, res, next) {
 };
 
 module.exports.list = function(req, res) {
-  //TODO: middleware to validate and sanitize query object
-  var defaults = {
-    order: 'id desc'
-  , limit: 99999
-  }
-
-  var query = utils.defaults(req.query, defaults);
-
-  switch (req.query.filter) {
-    case 'accepted':
-      query.where = {status: 'accepted'}
-      /** 
-       * TODO: sort by date accepted and move this logic into models.Order
-
-        ```
-        with 
-            latest_order_statuses as (
-                select distinct on(order_id) order_id, status
-                from order_statuses
-                order by order_id desc, created_at desc
-            )
-        select orders.id, latest_order_statuses.status as last_order_status
-        from orders, latest_order_statuses
-        where orders.id=latest_order_statuses.order_id
-        and orders.status = 'accepted';
-        ```
-      */
-      break;
-    case 'pending':
-      query.where = {status: 'pending'}
-      break;
-    case 'canceled':
-      query.where = {status: 'canceled'}
-      break;
-    case 'submitted':
-      query.where = {status: 'submitted'}
-      break;
-    case 'denied':
-      query.where = {status: 'denied'}
-      break;
-    case 'delivered':
-      query.where = {status: 'delivered'}
-      break;
-    default:
-      break;
-  };
-  models.Order.find(query, function(error, models) {
+  models.Order.findByStatus(req.query.filter, function( error, orders ) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('orders', {orders: utils.invoke(models, 'toJSON')}, function(err, html) {
-      if (err) return res.error(errors.internal.UNKNOWN, error);
-      res.send(html);
-    });
+    res.render('orders', {orders: utils.invoke(orders, 'toJSON')});
   });
-}
+};
 
 // module.exports.get = function(req, res) {
 //   models.Order.findOne(parseInt(req.params.oid), function(error, order) {

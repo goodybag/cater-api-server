@@ -805,6 +805,60 @@ module.exports = Model.extend({
     module.exports.find.call( this, query, callback );
   },
 
+  /**
+   * Find orders filtered by status
+   * @param {string} status - The order status to filter by
+   */
+  findByStatus: function( status, callback ){
+
+    var defaults = {
+      order: 'id desc'
+    , limit: 99999
+    }
+
+    var query = defaults;
+
+    switch (status) {
+      case 'accepted':
+        query.where = {status: 'accepted'}
+        /** 
+         * TODO: sort by date accepted
+
+          ```
+          with 
+              latest_order_statuses as (
+                  select distinct on(order_id) order_id, status
+                  from order_statuses
+                  order by order_id desc, created_at desc
+              )
+          select orders.id, latest_order_statuses.status as last_order_status
+          from orders, latest_order_statuses
+          where orders.id=latest_order_statuses.order_id
+          and orders.status = 'accepted';
+          ```
+        */
+        break;
+      case 'pending':
+        query.where = {status: 'pending'}
+        break;
+      case 'canceled':
+        query.where = {status: 'canceled'}
+        break;
+      case 'submitted':
+        query.where = {status: 'submitted'}
+        break;
+      case 'denied':
+        query.where = {status: 'denied'}
+        break;
+      case 'delivered':
+        query.where = {status: 'delivered'}
+        break;
+      default:
+        break;
+    };
+    module.exports.find.call( this, query, callback );
+  },
+
   // this is a FSM definition
   statusFSM: {
     canceled: [],

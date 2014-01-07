@@ -308,6 +308,10 @@
   width: 125px;
 }
 
+.order-params-bar .form-group ~ .form-group {
+  margin-left: 9px;
+}
+
 .order-params-bar .form-control.form-control-zip,
 .order-params-bar .form-control.form-control-guests {
   width: 100px;
@@ -363,10 +367,6 @@
   .order-params-bar {
     padding-left: 5px;
     padding-right: 5px;
-  }
-
-  .order-params-bar .form-group ~ .form-group {
-    /*margin-left: 5px;*/
   }
 
   .btn-search .btn-text {

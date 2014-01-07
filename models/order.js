@@ -806,14 +806,22 @@ module.exports = Model.extend({
 
   /**
    * Find orders filtered by status
+   *
+   * @param {object} query - The query object (optional)
    * @param {string} status - The order status to filter by
    * @param {function} callback - The callback function(error, orders)
    */
-  findByStatus: function( status, callback ){
-    var query = {
+  findByStatus: function( query, status, callback ){
+    if ( typeof query === 'string' ){
+      callback = status;
+      status = query;
+      query = {};
+    } 
+
+    query = utils.defaults(query, {
       order: 'id desc'
     , limit: 'ALL'
-    }
+    });
 
     switch (status) {
       case 'accepted': 

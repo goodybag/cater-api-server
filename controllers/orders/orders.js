@@ -51,7 +51,7 @@ module.exports.editability = function(req, res, next) {
 
 module.exports.list = function(req, res) {
   var filters = ['pending', 'canceled', 'submitted', 'denied', 'accepted', 'delivered'];
-  models.Order.findByStatus(req.query.filter, function( error, orders ) {
+  models.Order.findByStatus(req.query.filter || 'all', function( error, orders ) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.render('orders', {
       orders: utils.invoke(orders, 'toJSON')

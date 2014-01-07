@@ -110,11 +110,14 @@ module.exports.del = function(req, res) {
 }
 
 module.exports.listOrders = function(req, res) {
-  models.Order.find({where: {user_id: req.params.uid}}, function(err, orders) {
+  var filters = ['pending', 'canceled', 'submitted', 'denied', 'accepted', 'delivered'];
+  var filter = utils.contains(filters, req.query.filter) ? req.query.filter : 'all';
+  models.Order.findByStatus({where: {user_id: req.params.uid}}, filter, function(err, orders) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.render('user-orders', {orders: utils.invoke(orders, 'toJSON'), hideUserDetails: true}, function(err, html) {
-      if (err) return res.error(errors.internal.UNKNOWN, err);
-      res.send(html);
+    res.render('user-orders', {
+      orders: utils.invoke(orders, 'toJSON')
+    , hideUserDetails: true
+    , filter: filter
     });
   });
 }

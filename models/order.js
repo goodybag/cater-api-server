@@ -843,7 +843,7 @@ module.exports = Model.extend({
         , distinct: ['order_id']
         }];
 
-        query.joins = {};
+        query.joins = query.joins || {};
 
         query.joins.latest_order_statuses = {
           type: 'left'
@@ -852,9 +852,7 @@ module.exports = Model.extend({
           }
         };
 
-        query.where = {
-          status: 'accepted'
-        };
+        query.where.status = 'accepted';
 
         query.order = ['status_date desc'];
 
@@ -865,7 +863,7 @@ module.exports = Model.extend({
       case 'submitted':
       case 'denied':
       case 'delivered':
-        query.where = { status: status };
+        query.where.status = status;
         break;
       default:
         break;

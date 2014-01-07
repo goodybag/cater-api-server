@@ -46,7 +46,9 @@ define( function( require ){
         utils.each( existingCriteria.prices, function( p, i, pp ){ pp[ i ] = +p; } );
       }
 
-      var orderParams = new Models.OrderParams();
+      var orderParams = new Models.OrderParams(
+        utils.parseQueryParams()
+      );
 
       var orderParamsView = new Views.OrderParamsView({
         model: orderParams

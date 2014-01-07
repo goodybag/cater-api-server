@@ -20,6 +20,8 @@ define( function( require ){
   , Menu:               require('app/views/menu-view')
   };
 
+  orderParams.set( utils.parseQueryParams() );
+
   var page = {
     init: function(){
       page.view = new Views.Menu({

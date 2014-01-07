@@ -7,16 +7,16 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     events: {
-      'submit form':        'onFormSubmit'
-    , 'click .form-group':  'focusInputs'
-    , 'click .btn-search':  'onSearchClick'
-    , 'keyup input':        'onInputChange'
+      'submit form':                'onFormSubmit'
+    , 'click .form-group':          'focusInputs'
+    , 'click .btn-search':          'onSearchClick'
+    , 'keyup input':                'onInputChange'
+    , 'change [name="order_type"]': 'onOrderTypeChange'
     }
 
   , template: template
 
   , initialize: function() {
-
       this.datepicker = this.$el.find("input[name='date']").eq(0).pickadate({
         format: 'mm/dd/yyyy'
       , min: new Date()
@@ -34,7 +34,7 @@ define(function(require, exports, module) {
 
   , render: function(){
       var $el = $( this.template({
-        orderParams: utils.parseQueryParams()
+        orderParams: this.model.toJSON()
       }));
 
       this.$el.html( $el.html() );
@@ -50,10 +50,11 @@ define(function(require, exports, module) {
 
   , getProps: function(){
       return {
-        zip:      this.$("input[name='zip']").val() || null
-      , date:     (this.datepicker.get()) ? utils.dateTimeFormatter(this.datepicker.get()) : null
-      , time:     this.timepicker.get()
-      , guests:   this.$("input[name='guests']").val() || null
+        order_type: this.$el.find('[name="order_type"]').val()
+      , zip:        this.$("input[name='zip']").val() || null
+      , date:       (this.datepicker.get()) ? utils.dateTimeFormatter(this.datepicker.get()) : null
+      , time:       this.timepicker.get()
+      , guests:     this.$("input[name='guests']").val() || null
       };
     }
 
@@ -74,6 +75,10 @@ define(function(require, exports, module) {
       // Scroll to 8am
       var $el = this.timepicker.$root.find('.picker__holder');
       $el[0].scrollTop = $el.find('[data-pick="' + (60 * 8) + '"]')[0].offsetTop;
+    }
+
+  , onOrderTypeChange: function (e) {
+      this.model.set( 'order_type', )
     }
   });
 });

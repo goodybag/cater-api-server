@@ -44,7 +44,8 @@ module.exports.getOrderParams = function(req, res) {
 
 module.exports.updateOrderParams = function(req, res) {
   req.session.orderParams = {
-    zip: req.body.zip
+    order_type: req.body.order_type
+  , zip: req.body.zip
   , date: req.body.date
   , time: req.body.time
   , guests: parseInt(req.body.guests, 10)

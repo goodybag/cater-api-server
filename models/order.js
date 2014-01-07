@@ -821,12 +821,13 @@ module.exports = Model.extend({
     query = utils.defaults(query, {
       order: 'id desc'
     , limit: 'ALL'
+    , where: {}
     });
 
     switch (status) {
-      case 'accepted': 
 
-        // sort by date accepted
+      // sort by date accepted
+      case 'accepted':
         query.with = [{
           name: 'latest_order_statuses'
         , type: 'select'
@@ -844,7 +845,6 @@ module.exports = Model.extend({
         }];
 
         query.joins = query.joins || {};
-
         query.joins.latest_order_statuses = {
           type: 'left'
         , on: {
@@ -853,11 +853,8 @@ module.exports = Model.extend({
         };
 
         query.where.status = 'accepted';
-
         query.order = ['status_date desc'];
-
         break;
-
       case 'pending':
       case 'canceled':
       case 'submitted':

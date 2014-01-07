@@ -118,6 +118,21 @@ define(function(require, exports, module) {
             type: 'string',
             format: 'uri'
           }
+        },
+        lat: {
+          type: 'number',
+          required: false
+        },
+        lon: {
+          type: 'number',
+          required: false
+        },
+        order_types: {
+          type: 'array',
+          items: {
+            type: 'string',
+            enum: ['pickup', 'delivery']
+          }
         }
       }
     },

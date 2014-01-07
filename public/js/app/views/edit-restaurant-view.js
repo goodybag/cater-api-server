@@ -65,7 +65,10 @@ define(function(require, exports, module) {
       name: '.restaurant-form .restaurant-name',
       yelp_business_id: '.restaurant-form [name="yelp_business_id"]',
       logo_url: '.restaurant-form [name="logo_url"]',
+      lat: '.restaurant-form [name="lat"]',
+      lon: '.restaurant-form [name="lon"]',
       logo_mono_url: '.restaurant-form [name="logo_mono_url"]',
+      order_types: '.restaurant-form [name="order_types"]',
       sms_phones: '.restaurant-form .restaurant-sms-phones',
       voice_phones: '.restaurant-form .restaurant-voice-phones',
       emails: '.restaurant-form .restaurant-emails',
@@ -166,10 +169,23 @@ define(function(require, exports, module) {
 
         url = url.split('/').pop();
         return url.split('#')[0];
+      },
+
+      order_types: function(){
+        return this.$el.find(this.fieldMap.order_types).val() || [];
+      },
+
+      lat: function(){
+        return +this.$el.find(this.fieldMap.lat).val() || 0;
+      },
+
+      lon: function(){
+        return +this.$el.find(this.fieldMap.lon).val() || 0;
       }
     },
 
     onChange: function(e) {
+      console.log("onChange")
       this.$el.find('.form-control').parent().removeClass('has-success');
       var diff = FormView.prototype.onChange.apply(this, arguments);
       if (diff) {

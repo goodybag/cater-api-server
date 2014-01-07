@@ -36,7 +36,7 @@
 <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
 
 <script>
-  require([
+  define('app', [
       'app/models/restaurant'
     , 'app/views/edit-restaurant-view'
     , 'app/views/edit-category-view'
@@ -61,7 +61,13 @@
       {{/each}}];
       restaurant.categories.push(category{{id}});
       {{/each}}
+
+      return {
+        restaurantView: restaurant
+      };
     }
   );
+
+  require(['app'], function(){});
 </script>
 {{/extend}}

@@ -259,6 +259,9 @@ var fields = [
   'cuisine',
   'yelp_business_id',
   'websites',
+  'order_types',
+  'lat',
+  'lon',
   'description'
 ];
 

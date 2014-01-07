@@ -38,6 +38,13 @@
     </label>
   </div>
   <div class="form-group">
+    <label class="control-label">Supported Order Types:</label>
+    <select class="form-control" name="order_types" multiple="true">
+      <option value="pickup"{{#contains restaurant.order_types 'pickup'}} selected="true"{{/contains}}>Pickup</option>
+      <option value="delivery"{{#contains restaurant.order_types 'delivery'}} selected="true"{{/contains}}>Delivery</option>
+    </select>
+  </div>
+  <div class="form-group">
     <label class="control-label">SMS Phones</label>
     <input type="text" class="form-control restaurant-sms-phones" value="{{#if restaurant.sms_phones}}{{phoneList restaurant.sms_phones}}{{/if}}" placeholder="(512) 555-1234, (512) 555-1235">
     <span class="help-block">Please enter SMS phone numbers separated by commas for message alerts. Leave blank for no SMS alerts.</span>
@@ -138,6 +145,20 @@
   </fieldset>
   <fieldset>
     <legend>Address</legend>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label class="control-label">Latitude</label>
+          <input name="lat" type="text" class="form-control" value="{{restaurant.lat}}">
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label class="control-label">Longitude</label>
+          <input name="lon" type="text" class="form-control" value="{{restaurant.lon}}">
+        </div>
+      </div>
+    </div>
     <div class="form-group">
       <label class="control-label">Street</label>
       <input type="text" class="form-control restaurant-address restaurant-street" value="{{restaurant.street}}" placeholder="123 Fake St.">

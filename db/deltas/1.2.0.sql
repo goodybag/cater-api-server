@@ -46,6 +46,6 @@ begin
   perform add_column( 'orders', 'is_pickup',            'boolean not null default false' );
 
   perform add_column( 'restaurants', 'order_types',     E'order_type[] not null default Array[\'pickup\', \'delivery\']::order_type[]' );
-  perform add_column( 'restaurants', 'lat',             'boolean not null default true' );
-  perform add_column( 'restaurants', 'lon',             'boolean not null default true' );
+  perform add_column( 'restaurants', 'lat',             'double precision default 0' );
+  perform add_column( 'restaurants', 'lon',             'double precision default 0' );
 end$$;

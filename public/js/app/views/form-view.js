@@ -65,6 +65,7 @@ define(function(require, exports, module) {
     // TODO: move to subclass
     onChange: function(e) {
       var diff = this.getDiff();
+      console.log("onchange", diff)
       this.$el.find(this.submitSelector).toggleClass('hide', !diff);
       return diff;
     },

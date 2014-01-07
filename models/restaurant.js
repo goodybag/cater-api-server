@@ -375,6 +375,20 @@ module.exports = Model.extend({
         utils.invoke(restaurants, function() {
           this.attributes.delivery_times = utils.object(this.attributes.delivery_times);
         });
+
+        // Parse the order_types type
+        utils.invoke(restaurants, function() {
+          if (!this.attributes.order_types){
+            return this.attributes.order_types = [];
+          }
+
+          this.attributes.order_types = this.attributes.order_types.substring(
+            1, this.attributes.order_types.length - 1
+          );
+
+          this.attributes.order_types = this.attributes.order_types.length === 0
+            ? [] : this.attributes.order_types.split(',');
+        });
       }
       return callback.call(this, err, restaurants);
     });

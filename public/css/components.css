@@ -359,6 +359,19 @@
   .form-group-title {
     display: none!important;
   }
+
+  .order-params-bar {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .order-params-bar .form-group ~ .form-group {
+    /*margin-left: 5px;*/
+  }
+
+  .btn-search .btn-text {
+    display: none;
+  }
 }
 
 /**

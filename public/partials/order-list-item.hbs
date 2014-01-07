@@ -1,6 +1,11 @@
 <div class="row">
   <div class="col-sm-8">
-    <h4 class="list-group-item-heading"><span class="order-number">#{{this.id}}</span> {{this.restaurant.name}}</h4>
+    <h4 class="list-group-item-heading">
+      <span class="order-number">#{{this.id}}</span> {{this.restaurant.name}}
+      {{#if this.is_pickup}}
+      - <span class="pickup-indicator">Pickup</span>
+      {{/if}}
+    </h4>
     <dl class="dl-horizontal-inline order-details-list">
       {{#if this.name}}
       <div>

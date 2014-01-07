@@ -39,6 +39,13 @@
 </fieldset>
 
 <fieldset class="col-xs-6 delivery-info-address">
+  {{#if order.is_pickup}}
+    <div class="pickup-info">
+
+    </div>
+  {{else}}
+
+  {{/if}}
   {{#if user.name}}
   <div><strong>{{user.name}}</strong></div>
   {{/if}}

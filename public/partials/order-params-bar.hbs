@@ -4,6 +4,13 @@
       <strong class="form-title">Find Catering</strong>
     </div>
 
+    <div class="form-group">
+      <select name="order_type" class="form-control">
+        <option value="delivery">Delivery</option>
+        <option value="pickup">Pickup</option>
+      </select>
+    </div>
+
     <div class="form-group" data-icon="gb-icon-location">
       <input list="zips" type="text" class="form-control form-control-zip" name="zip" placeholder="zip" maxlength="5" value="{{#if orderParams.zip}}{{orderParams.zip}}{{else}}{{ order.zip}}{{/if}}"/>
       <datalist id="zips">
@@ -29,7 +36,8 @@
     </div>
 
     <a href="/restaurants{{queryParams orderParams}}" class="btn btn-primary btn-search form-group">
-      Search <i class="btn-search-icon gb-icon-magnifier"></i>
+      <span class="btn-text">Search</span>
+      <i class="btn-search-icon gb-icon-magnifier"></i>
     </a>
   </form>
 </div>

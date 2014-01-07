@@ -820,7 +820,7 @@ module.exports = Model.extend({
     var query = defaults;
 
     switch (status) {
-      case 'accepted':
+      case 'accepted': // sort by date accepted
         query.where = {status: 'accepted'}
         /** 
          * TODO: sort by date accepted

@@ -808,6 +808,7 @@ module.exports = Model.extend({
   /**
    * Find orders filtered by status
    * @param {string} status - The order status to filter by
+   * @param {function} callback - The callback function(error, orders)
    */
   findByStatus: function( status, callback ){
 
@@ -839,19 +840,11 @@ module.exports = Model.extend({
         */
         break;
       case 'pending':
-        query.where = {status: 'pending'}
-        break;
       case 'canceled':
-        query.where = {status: 'canceled'}
-        break;
       case 'submitted':
-        query.where = {status: 'submitted'}
-        break;
       case 'denied':
-        query.where = {status: 'denied'}
-        break;
       case 'delivered':
-        query.where = {status: 'delivered'}
+        query.where = {status: status};
         break;
       default:
         break;

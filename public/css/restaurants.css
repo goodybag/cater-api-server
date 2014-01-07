@@ -41,7 +41,8 @@ a.list-group-item-restaurant .list-group-item-heading {
   display: inline-block;
 }
 
-.fee-info dl {
+.fee-info dl,
+.distance {
   margin: 0;
   font-size: 0.9em;
   color: #8B8983;

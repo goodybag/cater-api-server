@@ -812,7 +812,7 @@ module.exports = Model.extend({
   findByStatus: function( status, callback ){
     var query = {
       order: 'id desc'
-    , limit: 99999
+    , limit: 'ALL'
     }
 
     switch (status) {

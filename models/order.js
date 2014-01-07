@@ -826,6 +826,7 @@ module.exports = Model.extend({
         , columns: [
             'order_id'
           , 'status'
+          , { name: 'created_at', alias: 'status_date' }
           ]
         , order: [
             'order_id desc'
@@ -846,6 +847,8 @@ module.exports = Model.extend({
         query.where = {
           status: 'accepted'
         };
+
+        query.order = ['status_date desc'];
 
         break;
 

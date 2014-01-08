@@ -12,7 +12,9 @@ define(function(require, exports, module) {
     // handle events from model.save on submit
     submitHandlers: {},
 
-    initialize: function() {
+    initialize: function( options ) {
+      this.options = options;
+
       this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
         format: 'mm/dd/yyyy'
       , min: new Date()
@@ -29,6 +31,16 @@ define(function(require, exports, module) {
 
       // Remove the paneliness from the order params partial
       this.$el.find('.order-params-bar').removeClass('panel');
+
+      this.options.orderParams.on('change:order_type', this.toggleZip, this);
+
+      this.toggleZip();
+    },
+
+    toggleZip: function(){
+      this.$el.find('[name="zip"]').parent().toggle(
+        this.options.orderParams.get('order_type') !== 'pickup'
+      );
     },
 
     show: function(submitHandlers) {
@@ -106,26 +118,31 @@ define(function(require, exports, module) {
       }
 
       var order = {
-        zip: this.$el.find('input[name="zip"]').val().trim() || null,
-        guests: parseInt(this.$el.find('input[name="guests"]').val()) || null,
+        is_pickup: this.options.orderParams.get('order_type') === 'pickup',
+        guests: +this.options.orderParams.get('guests'),
         datetime: !this.datepicker.get() ? null : (
           utils.dateTimeFormatter(this.datepicker.get()) + " " + (
             !this.timepicker.get() ? "" : utils.timeFormatter(this.timepicker.get())
           )
         )
       };
+      if (!order.is_pickup){
+        order.zip = this.options.orderParams.get('zip');
+      }
 
       // If the orderParams zip is the same as user's default zip
       // Go ahead and autofill with default address
       if (order.zip === this.options.defaultAddress.get('zip'))
         _.extend(order, this.options.defaultAddress.pick(this.model.constructor.addressFields));
 
-      this.model.set( order, { silent: true } );
+      // this.model.set( order, { silent: true } );
 
-      if ( this.showErrors() ) return;
-
+      // if ( this.showErrors() ) return;
+console.log('herro?')
       var self = this;
-      this.model.save(null, this.submitHandlers);
+      if ( !this.model.save(order, this.submitHandlers) ){
+        this.showErrors();
+      }
     },
 
     onDatePickerOpen: function(){

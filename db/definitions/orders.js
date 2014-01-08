@@ -145,6 +145,11 @@ define(function(require) {
     , nullable: false
     , default: false
     }
+  , is_pickup: {
+      type: types.boolean
+    , nullable: false
+    , default: false
+    }
   };
 
   definition.indices = {};

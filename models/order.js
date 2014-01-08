@@ -107,7 +107,6 @@ module.exports = Model.extend({
       callback = query;
       query = undefined;
     }
-
     var insert = this.attributes.id == null;
     if (insert) this.attributes.review_token = uuid.v4();
     if (this.attributes.adjustment) {
@@ -115,6 +114,7 @@ module.exports = Model.extend({
       this.attributes.adjustment_description = this.attributes.adjustment.description;
       delete this.attributes.adjustment;
     }
+
     var order = this;
     Model.prototype.save.call(this, {returning: ["*", '("orders"."datetime"::text) as datetime']}, function(err) {
 
@@ -184,6 +184,7 @@ module.exports = Model.extend({
   isComplete: function() {
     var vals = utils.pick(this.attributes, this.requiredFields);
     for (var key in vals) {
+      if (key === 'zip' && this.attributes.is_pickup) continue;
       if (vals[key] == null)
         return false
     }

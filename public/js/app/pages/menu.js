@@ -41,6 +41,7 @@ define( function( require ){
       , loginNeeded:    !user.get('id')
       , defaultAddress: defaultAddress
       , orderModel:     orderModel
+      , orderParams:    orderParams
       });
 
       var itemModalView = new Views.ItemModal({

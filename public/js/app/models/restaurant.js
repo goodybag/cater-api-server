@@ -175,6 +175,7 @@ define(function(require, exports, module) {
     },
 
     isValidMaxGuests: function( num ){
+      console.log(num);
       // Non-number value, probably null or undefined
       if ( typeof this.get('max_guests') !== 'number' ) return true;
 
@@ -220,11 +221,13 @@ define(function(require, exports, module) {
       var errors = [];
 
       // Check zips
+      if ( !order.get('is_pickup') )
       if ( this.get( 'delivery_zips' ).indexOf( order.address.get('zip') ) === -1 ){
         errors.push( 'is_bad_zip' );
       }
 
       // Check delivery times
+      if ( !order.get('is_pickup') )
       if ( !this.isValidDeliveryTime( order.get('datetime') ) ){
         errors.push( 'is_bad_delivery_time' );
       }

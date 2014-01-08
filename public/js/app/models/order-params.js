@@ -8,6 +8,10 @@ define(function(require, exports, module) {
       date: function( val ){
         if ( val ) return utils.dateTimeFormatter( val );
         return val;
+      },
+
+      guests: function( val ){
+        return parseInt( val );
       }
     },
 

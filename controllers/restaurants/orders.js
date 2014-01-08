@@ -4,12 +4,13 @@ var utils = require('../../utils');
 var models = require('../../models');
 
 module.exports.list = function(req, res) {
+  var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : 'all';
   //TODO: middleware to validate and sanitize query object
   var tasks = [
     function(callback) {
       var query = utils.extend({where: {}}, req.query);
       utils.extend(query.where, {'restaurant_id': req.params.rid});
-      models.Order.find(query, callback);
+      models.Order.findByStatus(query, filter, callback);
     },
 
     function(callback) {
@@ -19,9 +20,10 @@ module.exports.list = function(req, res) {
 
   utils.async.parallel(tasks, function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.render('restaurant-orders', {orders: utils.invoke(results[0], 'toJSON'), restaurant: results[1].toJSON()}, function(err, html) {
-      if (err) return res.error(errors.internal.UNKNOWN, error);
-      res.send(html);
+    res.render('restaurant-orders', {
+      orders: utils.invoke(results[0], 'toJSON')
+    , restaurant: results[1].toJSON()
+    , filter: filter
     });
   });
 }

@@ -110,7 +110,7 @@ define(function(require, exports, module) {
     select: function(startDate, endDate, allDay, jsEvent, view) {
       var html = this.templates.addEventModal({
         start: startDate
-      , end:  moment(endDate).add('days', 1)
+      , end: endDate
       });
       this.renderModal(html);
     },

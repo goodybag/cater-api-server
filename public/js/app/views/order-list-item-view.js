@@ -76,6 +76,7 @@ define(function(require, exports, module) {
       $reviewed.parent().toggleClass('active');
       this.model.changeReviewed(reviewed, function(error) {
         if (error) return notify.error(error);
+        window.location.reload();
       });
     }
   });

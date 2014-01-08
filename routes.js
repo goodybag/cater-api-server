@@ -233,13 +233,17 @@ module.exports.register = function(app) {
   app.all(/^\/orders\/(\d+)(?:\/.*)?$/, function (req, res, next) {
     req.params.id = req.params[0];
     next();
-  }, m.restrict(['admin', 'clients', 'receipts']), controllers.orders.auth);
+  }, controllers.orders.auth);
 
   app.get('/orders/:oid'
     // If they're using ?receipt=true, make sure we restrict the group
   , function(req, res, next){
+      // If they were using a review_token we don't need to worry about it
+      // since the controllers.orders.auth middleware would have taken care of it
+      if (req.param('review_token') && !req.param('receipt')) return next();
+
       return (
-        m.restrict(!req.param('receipt') ? ['admin', 'receipts'] : ['admin', 'clients'])
+        m.restrict(!req.param('receipt') ? ['admin', 'client'] : ['admin', 'receipts'])
       )(req, res, next);
     }
   , controllers.orders.get

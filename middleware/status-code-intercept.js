@@ -1,5 +1,6 @@
 module.exports = function(){
   return function( req, res, next ){
+    if ( !('accept' in req.headers) ) return next();
     if ( req.headers.accept.split(',').indexOf('text/html') === -1 ) return next();
 
     var oldSend = res.send;

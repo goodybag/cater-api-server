@@ -1,6 +1,8 @@
 /**
- * Restaurant Availability View handles the calendar for
- * a restaurant's holidays or time off. Allows marking events 
+ * Restaurant Availability View 
+ *
+ * Handles the calendar for a restaurant's holidays or time off. 
+ * Allows marking events 
  * so that admins are not able to place orders during 
  * specified days.
  *
@@ -13,6 +15,7 @@
 
 define(function(require, exports, module) {
   var utils = require('utils');
+  var notify = require('notify');
   var $ = require('jquery');
   var FormView = require('../form-view');
   var FullCalendar = require('fullcalendar');
@@ -51,25 +54,17 @@ define(function(require, exports, module) {
       }
     },
 
-    createEvent: function(e) {
-      this.model = new RestaurantEvent({restaurant_id: restaurant.id});
-      this.onSave(e, function(err, res) {
-        if(err) return console.error('Could not create this event!');
-        window.location.reload();
-      });
-    },
-
     initialize: function() {
 
       // cache dom objects
       this.$calendar = this.$el.find('#calendar');
 
       // set up
-      var fullCalendarEvents = this.convertEvents();
-      this.setupCalendar(fullCalendarEvents);
+      this.setupCalendar();
     },
 
-    setupCalendar: function(fcEvents) {
+    setupCalendar: function() {
+      var fcEvents = restaurantEvents.toFullCalendarEvents();
       this.$calendar.fullCalendar({
         events:         fcEvents
       , eventClick:     this.displayEvent.bind(this)
@@ -84,24 +79,24 @@ define(function(require, exports, module) {
      */
     convertEvents: function() {
       return restaurantEvents.map(function(event) {
-        var date_range = event.get('date_range');
-        // really hacky, the date ranges are stored like
-        // [2014-01-15,2014-01-18) in postgres with inclusive, exclusive bounds
-        // probably should convert them to timestamp ranges ..
-        date_range = date_range.replace( /[\[\]\(\)]/g,'').split(',');;
-        return {
-          title: event.get('name'),
-          start: date_range[0], // lower bound inclusive
-          end: moment(date_range[1]).add('days', -1), // upper bound should be exclusive
-          id: event.id
-        };
+        return event.toFullCalendarEvent();
       });
     },
 
     displayEvent: function(calEvent, jsEvent, view) {
-      var restaurantEvent = restaurantEvents.get(calEvent.id);
-      var html = this.templates.editEventModal(restaurantEvent.toJSON());
+      // var restaurantEvent = restaurantEvents.get(calEvent.id);
+      console.log(calEvent);
+      var html = this.templates.editEventModal(calEvent);
       this.renderModal(html);
+    },
+
+    createEvent: function(e) {
+      var this_ = this;
+      this.model = new RestaurantEvent({restaurant_id: restaurant.id});
+      this.onSave(e, function(err, res) {
+        if(err) return console.error('Could not create this event!');
+        this_.$calendar.fullCalendar( 'renderEvent', this.model.toFullCalendarEvent() );
+      });
     },
 
     removeEvent: function(e) {
@@ -117,7 +112,7 @@ define(function(require, exports, module) {
         },
 
         error: function(model, xhr, options) {
-
+          notify.error('Unable to remove event');
         }
       });
 

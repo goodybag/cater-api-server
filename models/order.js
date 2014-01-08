@@ -826,7 +826,34 @@ module.exports = Model.extend({
 
     switch (status) {
       case 'accepted':
-        query.order = ['token_used desc']; // sort by accepted date
+        // sort by date accepted
+        query.with = [{
+          name: 'latest_order_statuses'
+        , type: 'select'
+        , table: 'order_statuses'
+        , columns: [
+            'order_id'
+          , 'status'
+          , { name: 'created_at', alias: 'status_date' }
+          ]
+        , order: [
+            'order_id desc'
+          , 'created_at desc'
+          ]
+        , distinct: ['order_id']
+        }];
+
+        query.joins = query.joins || {};
+        query.joins.latest_order_statuses = {
+          type: 'left'
+        , on: {
+            'order_id': '$orders.id$'
+          }
+        };
+
+        query.where.status = status;
+        query.order = ['status_date desc'];
+        break;
       case 'pending':
       case 'canceled':
       case 'submitted':

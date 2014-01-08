@@ -106,16 +106,18 @@ define(function(require, exports, module) {
 
     removeEvent: function(e) {
       // TODO: implement removal
-      var restaurantId = $(e.target).data('id')
+      var this_ = this
+        , restaurantId = $(e.target).data('id')
         , restaurantEvent = restaurantEvents.get(restaurantId);
 
       restaurantEvent.destroy({
         success: function(model, response, options) {
-          console.log('ok');
+          this_.$calendar.fullCalendar('removeEvents', restaurantId);
+          this_.toggleModal('hide');
         },
 
         error: function(model, xhr, options) {
-          console.log('not ok');
+
         }
       });
 
@@ -135,7 +137,14 @@ define(function(require, exports, module) {
 
     renderModal: function(html) {
       this.$el.find('.modal-container').html(html);
-      this.$el.find('#restaurant-event-modal').modal('show');
+      this.toggleModal('show');
+    },
+
+    /**
+     * @param {string} option - one of toggle|show|hide, defaults toggle
+     */
+    toggleModal: function(option) {
+      this.$el.find('#restaurant-event-modal').modal(option || 'toggle');
     }
   });
 });

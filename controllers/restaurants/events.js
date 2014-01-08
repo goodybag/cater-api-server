@@ -43,11 +43,8 @@ module.exports.list = function(req, res, next) {
  * POST /restaurants/:rid/events
  */
 module.exports.create = function(req, res, next) {
-  var query = utils.extend({}, req.body, {restaurant_id: req.params.rid});
-  console.log(query);
-
-  var restaurantEvent = new models.RestaurantEvent(query);
-
+  var data = utils.extend({}, req.body, {restaurant_id: req.params.rid});
+  var restaurantEvent = new models.RestaurantEvent(data);
   restaurantEvent.save(function(error, restaurantEvent) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.send(restaurantEvent);

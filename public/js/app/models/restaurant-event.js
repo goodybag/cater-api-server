@@ -5,6 +5,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
   var moment = require('moment');
+  var utils = require('utils');
 
   return module.exports = Backbone.Model.extend({
     schema: {
@@ -33,18 +34,14 @@ define(function(require, exports, module) {
      * Convert Restaurant Event into a FullCalendar Event object
      */
     toFullCalendarEvent: function() {
-      // Convert canonical daterange from postgres [start, end)
       var date_range = this.get('date_range');
-      // really hacky, the date ranges are stored like
-      // [2014-01-15,2014-01-18) in postgres with inclusive, exclusive bounds
-      // probably should convert them to timestamp ranges ..
-      date_range = date_range.replace( /[\[\]\(\)]/g,'').split(',');;
-      return {
-        title:  this.get('name'),
-        start:  date_range[0],                          // lower bound inclusive
-        end:    moment(date_range[1]).add('days', -1),  // upper bound should be exclusive
-        id:     this.id
-      };
+      date_range = date_range.replace( /[\[\]\(\)]/g,'').split(',');
+
+      return utils.extend({}, this.toJSON(), {
+        title:  this.get('name')
+      , start:  date_range[0]
+      , end:    moment(date_range[1]).add('days', -1)  // convert to inclusive bound
+      });
     },
 
     validator: amanda('json'),

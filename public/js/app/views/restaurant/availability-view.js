@@ -64,9 +64,8 @@ define(function(require, exports, module) {
     },
 
     setupCalendar: function() {
-      var fcEvents = restaurantEvents.toFullCalendarEvents();
       this.$calendar.fullCalendar({
-        events:         fcEvents
+        events:         restaurantEvents.toFullCalendarEvents()
       , eventClick:     this.displayEvent.bind(this)
       , selectable:     true
       , select:         this.select.bind(this)
@@ -74,17 +73,7 @@ define(function(require, exports, module) {
       });
     },
 
-    /**
-     * Convert RestaurantEvents into FullCalendar.Event format
-     */
-    convertEvents: function() {
-      return restaurantEvents.map(function(event) {
-        return event.toFullCalendarEvent();
-      });
-    },
-
     displayEvent: function(calEvent, jsEvent, view) {
-      // var restaurantEvent = restaurantEvents.get(calEvent.id);
       console.log(calEvent);
       var html = this.templates.editEventModal(calEvent);
       this.renderModal(html);
@@ -94,13 +83,13 @@ define(function(require, exports, module) {
       var this_ = this;
       this.model = new RestaurantEvent({restaurant_id: restaurant.id});
       this.onSave(e, function(err, res) {
-        if(err) return console.error('Could not create this event!');
+        if(err) return notify.error('Could not create this event!');
         this_.$calendar.fullCalendar( 'renderEvent', this.model.toFullCalendarEvent() );
+        this_.toggleModal('hide');
       });
     },
 
     removeEvent: function(e) {
-      // TODO: implement removal
       var this_ = this
         , restaurantId = $(e.target).data('id')
         , restaurantEvent = restaurantEvents.get(restaurantId);

@@ -110,8 +110,7 @@ module.exports.del = function(req, res) {
 }
 
 module.exports.listOrders = function(req, res) {
-  var filters = ['pending', 'canceled', 'submitted', 'denied', 'accepted', 'delivered'];
-  var filter = utils.contains(filters, req.query.filter) ? req.query.filter : 'all';
+  var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : 'all';
   models.Order.findByStatus({where: {user_id: req.params.uid}}, filter, function(err, orders) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.render('user-orders', {

@@ -877,5 +877,14 @@ module.exports = Model.extend({
     denied: [],
     accepted: ['canceled', 'delivered'],
     delivered: []
-  }
+  },
+
+  statuses: [
+    'pending'
+  , 'canceled'
+  , 'submitted'
+  , 'denied'
+  , 'accepted'
+  , 'delivered'
+  ]
 });

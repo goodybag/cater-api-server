@@ -50,8 +50,7 @@ module.exports.editability = function(req, res, next) {
 };
 
 module.exports.list = function(req, res) {
-  var filters = ['pending', 'canceled', 'submitted', 'denied', 'accepted', 'delivered'];
-  var filter = utils.contains(filters, req.query.filter) ? req.query.filter : 'all';
+  var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : 'all';
   models.Order.findByStatus(filter, function( error, orders ) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     res.render('orders', {

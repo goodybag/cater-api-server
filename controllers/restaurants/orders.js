@@ -4,8 +4,7 @@ var utils = require('../../utils');
 var models = require('../../models');
 
 module.exports.list = function(req, res) {
-  var filters = ['pending', 'canceled', 'submitted', 'denied', 'accepted', 'delivered'];
-  var filter = utils.contains(filters, req.query.filter) ? req.query.filter : 'all';
+  var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : 'all';
   //TODO: middleware to validate and sanitize query object
   var tasks = [
     function(callback) {

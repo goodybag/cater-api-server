@@ -35,7 +35,7 @@ define(function(require, exports, module) {
     },
 
     urlRoot: function() { 
-      return _.result(this.attributes.restaurant, 'url') + '/events'
+      return '/restaurants/' + this.attributes.restaurant_id + '/events'
     }
   });
 });

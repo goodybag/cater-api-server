@@ -66,6 +66,12 @@ module.exports.update = function(req, res, next) {
  * DELETE /restaurants/:rid/events/:eid
  */
 module.exports.remove = function(req, res, next) {
-  // TODO - implement
-  res.send(400);
+  var query = {
+    restaurant_id: req.params.rid
+  , id: req.params.eid
+  };
+  new models.RestaurantEvent(query).destroy(function( error ){
+    if (error) return res.error(errors.internal.DB_FAILURE, error);
+    res.send(204);
+  });
 };

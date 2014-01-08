@@ -52,6 +52,7 @@ define(function(require, exports, module) {
     },
 
     createEvent: function(e) {
+      this.model = new RestaurantEvent({restaurant_id: restaurant.id});
       this.onSave(e, function(err, res) {
         if(err) return console.error('Could not create this event!');
         window.location.reload();
@@ -59,10 +60,6 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
-
-      this.model = new RestaurantEvent({
-        restaurant: restaurant
-      });
 
       // cache dom objects
       this.$calendar = this.$el.find('#calendar');
@@ -109,6 +106,19 @@ define(function(require, exports, module) {
 
     removeEvent: function(e) {
       // TODO: implement removal
+      var restaurantId = $(e.target).data('id')
+        , restaurantEvent = restaurantEvents.get(restaurantId);
+
+      restaurantEvent.destroy({
+        success: function(model, response, options) {
+          console.log('ok');
+        },
+
+        error: function(model, xhr, options) {
+          console.log('not ok');
+        }
+      });
+
     },
 
     select: function(startDate, endDate, allDay, jsEvent, view) {

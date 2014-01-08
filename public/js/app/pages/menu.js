@@ -1,5 +1,6 @@
 define( function( require ){
   var $               = require('jquery')
+  var utils           = require('utils')
   var orderModel      = require('data/order');
   var orderParams     = require('data/order-params');
   var restaurant      = require('data/restaurant');

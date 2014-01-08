@@ -11,12 +11,32 @@ define(function(require, exports, module) {
     , 'click .form-group':          'focusInputs'
     , 'click .btn-search':          'onSearchClick'
     , 'keyup input':                'onInputChange'
-    , 'change [name="order_type"]': 'onOrderTypeChange'
+    , 'blur input':                 'onInputChange'
+    , 'change [name="order_type"]': 'onInputChange'
     }
 
   , template: template
 
   , initialize: function() {
+      this.initDatePickers();
+
+      this.model.on( 'change:order_type', this.render, this );
+      this.model.on( 'change', this.updateSearchHref, this );
+    }
+
+  , render: function(){
+      var $el = $( this.template({
+        orderParams: this.model.toJSON()
+      }));
+
+      this.$el.html( $el.html() );
+
+      this.initDatePickers();
+
+      return this;
+    }
+
+  , initDatePickers: function(){
       this.datepicker = this.$el.find("input[name='date']").eq(0).pickadate({
         format: 'mm/dd/yyyy'
       , min: new Date()
@@ -27,19 +47,7 @@ define(function(require, exports, module) {
       , interval: 15
       }).pickatime('picker');
 
-      this.datepicker.on( 'set', this.onInputChange );
-      this.timepicker.on( 'set', this.onInputChange );
       this.timepicker.on( 'open', _(this.onTimePickerOpen).bind(this) );
-    }
-
-  , render: function(){
-      var $el = $( this.template({
-        orderParams: this.model.toJSON()
-      }));
-
-      this.$el.html( $el.html() );
-
-      return this;
     }
 
   , focusInputs: function(e) {
@@ -62,6 +70,12 @@ define(function(require, exports, module) {
       this.trigger('params:submit');
     }
 
+  , updateSearchHref: function(){
+      this.$el.find('.btn-search').attr(
+        'href', '/restaurants' + utils.queryParams( this.model.toJSON() )
+      );
+    }
+
   , onSearchClick: function(e){
       e.preventDefault();
       this.search();
@@ -77,8 +91,13 @@ define(function(require, exports, module) {
       $el[0].scrollTop = $el.find('[data-pick="' + (60 * 8) + '"]')[0].offsetTop;
     }
 
-  , onOrderTypeChange: function (e) {
-      this.model.set( 'order_type', )
+  , onInputChange: function (e) {
+      this.model.set(
+        e.target.name
+        // If it's a picker, then use the picker interface to get the value
+      , [ 'date', 'time' ].indexOf( e.target.name ) > -1
+          ? this[ e.target.name + 'picker' ].get() : e.target.value
+      );
     }
   });
 });

@@ -104,6 +104,15 @@ module.exports = Model.extend({
       query.where.is_hidden = orderParams.is_hidden;
     }
 
+    if (orderParams && orderParams.order_type){
+      var types = [ orderParams.order_type ];
+      types.type = 'order_type[]';
+
+      query.where.order_types = {
+        $contains: types
+      }
+    }
+
     query.with = {
       dt: {
         type: 'select'

@@ -30,16 +30,34 @@ define(function(require, exports, module) {
 
   var utils = _.extend({}, _, helpers);
 
-  utils.Backbone    = Backbone;
-  utils.Events      = Backbone.Events;
-  utils.Model       = Backbone.Model;
-  utils.View        = Backbone.View;
-  utils.Collection  = Backbone.Collection;
-  utils.Router      = Backbone.Router;
-  utils.History     = Backbone.History;
+  if (isBrowser){
+    utils.Backbone    = Backbone;
+    utils.Events      = Backbone.Events;
+    utils.View        = Backbone.View;
+    utils.Collection  = Backbone.Collection;
+    utils.Router      = Backbone.Router;
+    utils.History     = Backbone.History;
+
+    utils.Model       = Backbone.Model.extend({
+      setTransforms: {}
+
+      // When set is called, run the transform function if it exists
+    , set: function( key, value ){
+        if ( typeof key === 'object' ){
+          for ( var k in key ) this.set( k, key[ k ] );
+          return this;
+        }
+
+        if ( key in this.setTransforms ){
+          value = this.setTransforms[ key ].call( this, value );
+        }
+
+        return Backbone.Model.prototype.set.call( this, key, value );
+      }
+    });
+  }
 
   utils.startHistory = function(){
-    console.log('starting history');
     utils.history = Backbone.history;
     utils.history.start();
     utils.navigate = function(){ utils.history.navigate.apply(utils.history, arguments); };

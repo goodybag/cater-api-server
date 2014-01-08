@@ -63,6 +63,7 @@ define( function( require ){
 
       var restaurantSortView = new Views.RestaurantSortView({
         el: '#sort'
+      , model: orderParams
       });
 
       var restaurantsListView = new Views.RestaurantsListView({

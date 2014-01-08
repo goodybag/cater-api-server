@@ -1,5 +1,8 @@
 /**
- * Restaurant Availability View
+ * Restaurant Availability View handles the calendar for
+ * a restaurant's holidays or time off. Allows marking events 
+ * so that admins are not able to place orders during 
+ * specified days.
  *
  * Note: dates should use the postgres canonical form
  * `[)` which is inclusive lower bound, exclusive upper bound
@@ -14,17 +17,21 @@ define(function(require, exports, module) {
   var FormView = require('../form-view');
   var FullCalendar = require('fullcalendar');
 
-  var events = require('data/events');
+  var restaurantEvents = require('data/events');
   var restaurant = require('data/restaurant');
   var moment = require('moment');
 
   var RestaurantEvent = require('../../models/restaurant-event');
 
   return module.exports = FormView.extend({
-    modalTemplate: Handlebars.partials.restaurant_event_modal,
+    templates: {
+      addEventModal:    Handlebars.partials.restaurant_add_event_modal
+    , editEventModal:   Handlebars.partials.restaurant_edit_event_modal
+    },
 
     events: {
       'click .btn-create-event': 'createEvent'
+    , 'click .btn-remove-event': 'removeEvent'
     },
 
     fieldMap: {
@@ -61,13 +68,14 @@ define(function(require, exports, module) {
       this.$calendar = this.$el.find('#calendar');
 
       // set up
-      this.convertEvents();
-      this.setupCalendar();
+      var fullCalendarEvents = this.convertEvents();
+      this.setupCalendar(fullCalendarEvents);
     },
 
-    setupCalendar: function() {
+    setupCalendar: function(fcEvents) {
       this.$calendar.fullCalendar({
-        events:         events
+        events:         fcEvents
+      , eventClick:     this.displayEvent.bind(this)
       , selectable:     true
       , select:         this.select.bind(this)
       , unselect:       this.unselect
@@ -78,7 +86,7 @@ define(function(require, exports, module) {
      * Convert RestaurantEvents into FullCalendar.Event format
      */
     convertEvents: function() {
-      events = events.map(function(event) {
+      return restaurantEvents.map(function(event) {
         var date_range = event.get('date_range');
         // really hacky, the date ranges are stored like
         // [2014-01-15,2014-01-18) in postgres with inclusive, exclusive bounds
@@ -87,24 +95,36 @@ define(function(require, exports, module) {
         return {
           title: event.get('name'),
           start: date_range[0], // lower bound inclusive
-          end: moment(date_range[1]).add('days', -1)// upper bound should be exclusive
+          end: moment(date_range[1]).add('days', -1), // upper bound should be exclusive
+          id: event.id
         };
       });
     },
 
+    displayEvent: function(calEvent, jsEvent, view) {
+      var restaurantEvent = restaurantEvents.get(calEvent.id);
+      var html = this.templates.editEventModal(restaurantEvent.toJSON());
+      this.renderModal(html);
+    },
+
+    removeEvent: function(e) {
+      // TODO: implement removal
+    },
+
     select: function(startDate, endDate, allDay, jsEvent, view) {
-      this.renderModal({
+      var html = this.templates.addEventModal({
         start: startDate
       , end:  moment(endDate).add('days', 1)
       });
+      this.renderModal(html);
     },
 
     unselect: function(view, jsEvent) {
-      // not in use currently
+      // TODO: Not used, do we need?
     },
 
-    renderModal: function(ctx) {
-      this.$el.find('.modal-container').html(this.modalTemplate(ctx));
+    renderModal: function(html) {
+      this.$el.find('.modal-container').html(html);
       this.$el.find('#restaurant-event-modal').modal('show');
     }
   });

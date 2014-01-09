@@ -9,6 +9,29 @@
   <div class="row orders-list">
     <div class="col-lg-12">
       <h2>Overall Total: {{overallTotal}}</h2>
+
+      <table class="table table-striped" id="table-orders-by-week">
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Number of Orders</th>
+            <th>Total For Week</th>
+            <th>Unique Users</th>
+          </tr>
+        </thead>
+
+        <tbody>
+        {{#each ordersByWeek}}
+          <tr>
+            <td>{{this.period}}</td>
+            <td>{{this.numberOfOrders}}</td>
+            <td>${{this.periodTotal}}</td>
+            <td>{{this.uniqueUsers}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+
       <table class="table table-striped">
         <thead>
           <tr>
@@ -25,26 +48,6 @@
             <td class="field-created_at">{{formatDateTime this.created_at "MM/DD/YYYY"}}</td>
           </tr>
           {{/each}}
-        </tbody>
-      </table>
-
-      <table class="table table-striped" id="table-orders-by-week">
-        <thead>
-          <tr>
-            <th>Period</th>
-            <th>Number of Orders</th>
-            <th>Total For Week</th>
-          </tr>
-        </thead>
-
-        <tbody>
-        {{#each ordersByWeek}}
-          <tr>
-            <td>{{this.period}}</td>
-            <td>{{this.numberOfOrders}}</td>
-            <td>${{this.periodTotal}}</td>
-          </tr>
-        {{/each}}
         </tbody>
       </table>
     </div>

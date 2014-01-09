@@ -580,6 +580,9 @@ module.exports.register = function(app) {
                     b.sub_total, b.restaurant.delivery_fee, b.tip
                   ) );
                 }).toFixed(2) )
+              , uniqueUsers:  utils.unique( result, function( r ){
+                                return r.user_id
+                              }).length
               })
 
               curr.week++;

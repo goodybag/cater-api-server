@@ -28,8 +28,7 @@ define(function(require, exports, module) {
 
   return module.exports = FormView.extend({
     templates: {
-      addEventModal:    Handlebars.partials.restaurant_add_event_modal
-    , editEventModal:   Handlebars.partials.restaurant_edit_event_modal
+      eventModal:    Handlebars.partials.restaurant_event_form_modal
     },
 
     events: {
@@ -41,16 +40,31 @@ define(function(require, exports, module) {
       name: '.event-name',
       description: '.event-description',
       date_range: '.event-date-range',
-      closed: '.event-closed'
+      closed: '.event-closed',
     },
 
     fieldGetters: {
       date_range: function() {
-        return this.$el.find(this.fieldMap.date_range).data('date-range');
+        var $date_range = this.$el.find(this.fieldMap.date_range);
+        var dateStart = $date_range.find('.event-date-start').text();
+        var dateEnd = $date_range.find('.event-date-end').text();
+
+        // convert upper bound to exclusive for postgres
+        return [
+          '('
+        , moment(dateStart).format('YYYY-MM-DD')
+        , ', '
+        , moment(dateEnd).add('days', 1).format('YYYY-MM-DD')
+        , ']'
+        ].join('');
       },
 
       closed: function() {
         return this.$el.find(this.fieldMap.closed).is(':checked');
+      },
+
+      restaurant_id: function() {
+        return restaurant.id;
       }
     },
 
@@ -74,8 +88,10 @@ define(function(require, exports, module) {
     },
 
     displayEvent: function(calEvent, jsEvent, view) {
-      console.log(calEvent);
-      var html = this.templates.editEventModal(calEvent);
+      calEvent.edit = true;
+      this.model = new RestaurantEvent(calEvent);
+      console.log(this.model.toFullCalendarEvent());
+      var html = this.templates.eventModal(calEvent);
       this.renderModal(html);
     },
 
@@ -108,9 +124,10 @@ define(function(require, exports, module) {
     },
 
     select: function(startDate, endDate, allDay, jsEvent, view) {
-      var html = this.templates.addEventModal({
+      var html = this.templates.eventModal({
         start: startDate
       , end: endDate
+      , edit: false
       });
       this.renderModal(html);
     },

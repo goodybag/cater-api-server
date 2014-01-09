@@ -40,7 +40,7 @@ define(function(require, exports, module) {
       return utils.extend({}, this.toJSON(), {
         title:  this.get('name')
       , start:  date_range[0]
-      , end:    moment(date_range[1]).add('days', -1)  // convert to inclusive bound
+      , end:    moment(date_range[1]).add('days', -1).format('YYYY-MM-DD') // convert to inclusive bound
       });
     },
 

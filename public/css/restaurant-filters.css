@@ -15,3 +15,10 @@
 .panel-heading .glyphicon {
   font-size: 12px;
 }
+
+/* Align top of drop down with list panel */
+@media (min-width: 992px) {
+  .restaurants-left-col {
+    margin-top: -38px;
+  }
+}

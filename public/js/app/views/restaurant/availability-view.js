@@ -51,11 +51,11 @@ define(function(require, exports, module) {
 
         // convert upper bound to exclusive for postgres
         return [
-          '('
+          '['
         , moment(dateStart).format('YYYY-MM-DD')
         , ', '
         , moment(dateEnd).add('days', 1).format('YYYY-MM-DD')
-        , ']'
+        , ')'
         ].join('');
       },
 

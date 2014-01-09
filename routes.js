@@ -600,6 +600,11 @@ module.exports.register = function(app) {
             res.render( 'analytics', {
               orders: results
             , ordersByWeek: ordersByWeek
+            , overallTotal: parseFloat( ordersByWeek.map( function( o ){
+                              return o.periodTotal
+                            }).reduce( function( a, b ){
+                              return ( a || 0 ) + b;
+                            }).toFixed(2) )
             });
           }
         );

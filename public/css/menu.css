@@ -82,6 +82,14 @@
   margin-right: 8px;
 }
 
+.menu-order-params .order-type-pickup + dd {
+  padding-left: 50px;
+}
+
+.menu-order-params .order-type-pickup + dd .addr-city-state-zip {
+  display: block;
+}
+
 @media screen and (max-width: 786px) {
   .menu-picker .menu-picker-tabs {
     display: block;

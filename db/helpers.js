@@ -2,7 +2,6 @@ var mosql = require('mongo-sql');
 var utils = require('../utils');
 
 mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column, set, values, collection ) {
-  console.log('################', set)
   if (Array.isArray(set)) {
     return column + ' @> ARRAY[' + set.map( function(val) {
       return '$' + values.push(val);

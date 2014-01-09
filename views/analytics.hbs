@@ -1,0 +1,63 @@
+{{#extend "css"}}
+
+{{/extend}}
+
+<div class="container">
+  <div class="row">
+    <h1 class="col-lg-12 page-title">Analytics</h1>
+  </div>
+  <div class="row orders-list">
+    <div class="col-lg-12">
+      <p>Note: This is just pulling from accepted orders and may not be 100% accurate.</p>
+      <h2>Overall Total Cash: ${{overallTotal}}</h2>
+      <h2>Overall Unique Users: {{overallUniqueUsers}}</h2>
+
+      <table class="table table-striped" id="table-orders-by-week">
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Number of Orders</th>
+            <th>Total For Week</th>
+            <th>Unique Users</th>
+          </tr>
+        </thead>
+
+        <tbody>
+        {{#each ordersByWeek}}
+          <tr>
+            <td>{{this.period}}</td>
+            <td>{{this.numberOfOrders}}</td>
+            <td>${{this.periodTotal}}</td>
+            <td>{{this.uniqueUsers}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each orders}}
+          <tr>
+            <td class="field-id">#{{this.id}}</td>
+            <td class="field-total">${{total this.sub_total this.restaurant.delivery_fee this.tip}}</td>
+            <td class="field-created_at">{{formatDateTime this.created_at "MM/DD/YYYY"}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{{#extend "scripts"}}
+<script>
+
+</script>
+{{/extend}}

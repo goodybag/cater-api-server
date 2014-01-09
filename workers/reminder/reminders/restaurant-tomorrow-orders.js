@@ -40,7 +40,7 @@ function notifyOrderFn( order ){
                     , order.attributes.id
                     , ' to be delivered '
                     , order.attributes.datetime
-                      ? 'on ' + order.attributes.datetime.split(' ')[0]
+                      ? 'on ' + moment( order.attributes.datetime ).format('MM-DD-YYYY')
                       : 'tomorrow'
                     ].join('')
         }, function( error ){

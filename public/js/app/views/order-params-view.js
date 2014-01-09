@@ -17,16 +17,20 @@ define(function(require, exports, module) {
 
   , template: template
 
-  , initialize: function() {
+  , initialize: function( options ) {
+      this.options = options;
+
       this.initDatePickers();
 
       this.model.on( 'change:order_type', this.render, this );
       this.model.on( 'change', this.updateSearchHref, this );
+
+      this.render();
     }
 
   , render: function(){
       var $el = $( this.template({
-        orderParams: this.model.toJSON()
+        orderParams: utils.extend( {}, this.options.orderModel.toJSON(), this.model.toJSON() )
       }));
 
       this.$el.html( $el.html() );
@@ -62,7 +66,7 @@ define(function(require, exports, module) {
       , zip:        this.$("input[name='zip']").val() || null
       , date:       (this.datepicker.get()) ? utils.dateTimeFormatter(this.datepicker.get()) : null
       , time:       this.timepicker.get()
-      , guests:     this.$("input[name='guests']").val() || null
+      , guests:     +this.$("input[name='guests']").val() || null
       };
     }
 
@@ -92,6 +96,7 @@ define(function(require, exports, module) {
     }
 
   , onInputChange: function (e) {
+    console.log("change", e.target.name, e.target.value)
       this.model.set(
         e.target.name
         // If it's a picker, then use the picker interface to get the value

@@ -1,34 +1,25 @@
 <div class="panel menu-order-params">
   <div class="panel-body">
-    {{#if order.is_pickup}}
-      <div class="panel-title">Your order is for:</div>
-      <dl>
+    <div class="panel-title">Your order is for:</div>
+    <dl>
+      {{#if order.is_pickup}}
         <dt class="order-type order-type-pickup">Pickup:</dt>
         <dd>
           <a class="btn-change-order-params pull-right" href="#">Change</a>
           <div class="address">{{{address restaurant}}}</div>
         </dd>
-        <dt>Date:</dt>
-        <dd>{{#if order.datetime}}{{datepart order.datetime}}{{else}}--{{/if}}</dd>
-        <dt>Time:</dt>
-        <dd>{{#if order.datetime}}{{timepart order.datetime}}{{else}}--{{/if}}</dd>
-        <dt>Guests:</dt>
-        <dd>{{#if order.guests}}{{order.guests}}{{else}}--{{/if}}<a class="btn-change-order-params pull-right" href="#">Change</a></dd>
-      </dl>
-    {{else}}
-      <div class="panel-title">Your order is for:</div>
-      <dl>
+      {{else}}
         <dt class="order-type">Delivery</dt>
         <dd>&nbsp;<a class="btn-change-order-params pull-right" href="#">Change</a></dd>
         <dt>Zip:</dt>
         <dd>{{#if order.zip}}{{order.zip}}{{else}}--{{/if}}</dd>
-        <dt>Date:</dt>
-        <dd>{{#if order.datetime}}{{datepart order.datetime}}{{else}}--{{/if}}</dd>
-        <dt>Time:</dt>
-        <dd>{{#if order.datetime}}{{timepart order.datetime}}{{else}}--{{/if}}</dd>
-        <dt>Guests:</dt>
-        <dd>{{#if order.guests}}{{order.guests}}{{else}}--{{/if}}<a class="btn-change-order-params pull-right" href="#">Change</a></dd>
-      </dl>
-    {{/if}}
+      {{/if}}
+      <dt>Date:</dt>
+      <dd>{{#if order.datetime}}{{datepart order.datetime}}{{else}}--{{/if}}</dd>
+      <dt>Time:</dt>
+      <dd>{{#if order.datetime}}{{timepart order.datetime}}{{else}}--{{/if}}</dd>
+      <dt>Guests:</dt>
+      <dd>{{#if order.guests}}{{order.guests}}{{else}}--{{/if}}</dd>
+    </dl>
   </div>
 </div>

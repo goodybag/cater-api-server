@@ -117,15 +117,11 @@ define(function(require, exports, module) {
         $.post('/session', login, done);
       }
 
-      var order = {
-        is_pickup: this.options.orderParams.get('order_type') === 'pickup',
-        guests: +this.options.orderParams.get('guests'),
-        datetime: !this.datepicker.get() ? null : (
-          utils.dateTimeFormatter(this.datepicker.get()) + " " + (
-            !this.timepicker.get() ? "" : utils.timeFormatter(this.timepicker.get())
-          )
-        )
-      };
+      var order = this.options.orderParamsView.getProps();
+      order.is_pickup = order.order_type === 'pickup';
+      order.datetime = order.date + ' ' + order;
+      delete order.order_type;
+
       if (!order.is_pickup){
         order.zip = this.options.orderParams.get('zip');
       }
@@ -134,11 +130,7 @@ define(function(require, exports, module) {
       // Go ahead and autofill with default address
       if (order.zip === this.options.defaultAddress.get('zip'))
         _.extend(order, this.options.defaultAddress.pick(this.model.constructor.addressFields));
-
-      // this.model.set( order, { silent: true } );
-
-      // if ( this.showErrors() ) return;
-console.log('herro?')
+console.log("saving" ,order);
       var self = this;
       if ( !this.model.save(order, this.submitHandlers) ){
         this.showErrors();

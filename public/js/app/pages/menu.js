@@ -23,6 +23,8 @@ define( function( require ){
 
   orderParams.set( utils.parseQueryParams() );
 
+  if ( orderModel.get('is_pickup') ) orderParams.set('order_type', 'pickup');
+
   var page = {
     init: function(){
       page.view = new Views.Menu({
@@ -32,16 +34,18 @@ define( function( require ){
 
       var paramsView = new Views.OrderParams({
         model:  orderParams
+      , orderModel:     orderModel
       , el:     '.order-params-bar'
       });
 
       var orderModal = new Views.OrderModal({
-        model:          orderModel
-      , el:             '#order-params-modal'
-      , loginNeeded:    !user.get('id')
-      , defaultAddress: defaultAddress
-      , orderModel:     orderModel
-      , orderParams:    orderParams
+        model:            orderModel
+      , el:               '#order-params-modal'
+      , loginNeeded:      !user.get('id')
+      , defaultAddress:   defaultAddress
+      , orderModel:       orderModel
+      , orderParams:      orderParams
+      , orderParamsView:  paramsView
       });
 
       var itemModalView = new Views.ItemModal({

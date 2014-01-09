@@ -641,6 +641,7 @@ module.exports = Model.extend({
     }
 
     var caseIsBadZip = '(CASE '
+      + ' WHEN (orders.is_pickup IS true) THEN FALSE'
       + ' WHEN (orders.zip IS NULL) THEN NULL'
       + ' WHEN (zips.zip IS NULL) THEN TRUE'
       + ' ELSE FALSE'
@@ -708,6 +709,7 @@ module.exports = Model.extend({
     };
 
     var caseIsBadLeadTime = '(CASE '
+      + ' WHEN (orders.is_pickup IS true) THEN FALSE'
       + ' WHEN (orders.datetime IS NULL) THEN NULL'
       + ' WHEN (order_lead_times.order_id IS NULL) THEN FALSE'
       + ' ELSE "order_lead_times"."lead_time" > EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/3600)'
@@ -740,6 +742,7 @@ module.exports = Model.extend({
     }
 
     var caseIsBadDeliveryTime = '(CASE '
+      + ' WHEN (orders.is_pickup IS true) THEN FALSE'
       + ' WHEN (orders.datetime IS NULL) THEN NULL'
       + ' WHEN (delivery_times.restaurant_id IS NULL) THEN TRUE'
       + ' ELSE FALSE'
@@ -839,7 +842,7 @@ module.exports = Model.extend({
       callback = status;
       status = query;
       query = {};
-    } 
+    }
 
     query = utils.defaults(query, {
       order: 'id desc'

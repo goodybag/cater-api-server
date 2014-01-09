@@ -175,7 +175,7 @@ define(function(require, exports, module) {
     },
 
     isValidMaxGuests: function( num ){
-      console.log(num);
+      console.log(num, this.get('max_guests'))
       // Non-number value, probably null or undefined
       if ( typeof this.get('max_guests') !== 'number' ) return true;
 
@@ -219,7 +219,7 @@ define(function(require, exports, module) {
 
     validateOrderFulfillability: function( order ){
       var errors = [];
-
+console.log('validateOrderFulfillability', 'is_pickup', order.get('is_pickup'))
       // Check zips
       if ( !order.get('is_pickup') )
       if ( this.get( 'delivery_zips' ).indexOf( order.address.get('zip') ) === -1 ){
@@ -238,6 +238,7 @@ define(function(require, exports, module) {
       }
 
       // Check lead times
+      if ( !order.get('is_pickup') )
       if (
         !this.isValidGuestDateCombination( order ) &&
         // Ensure that we do not add this error if we've already got

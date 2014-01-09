@@ -534,6 +534,7 @@ module.exports.register = function(app) {
         where: {
           status: 'accepted'
         }
+      , limit: 9999999999
       };
 
       Models.Order.find( $query, function( error, results ){
@@ -601,13 +602,16 @@ module.exports.register = function(app) {
             });
 
             res.render( 'analytics', {
-              orders: results
-            , ordersByWeek: ordersByWeek
-            , overallTotal: parseFloat( ordersByWeek.map( function( o ){
-                              return o.periodTotal
-                            }).reduce( function( a, b ){
-                              return ( a || 0 ) + b;
-                            }).toFixed(2) )
+              orders:             results
+            , ordersByWeek:       ordersByWeek
+            , overallTotal:       parseFloat( ordersByWeek.map( function( o ){
+                                    return o.periodTotal
+                                  }).reduce( function( a, b ){
+                                    return ( a || 0 ) + b;
+                                  }).toFixed(2) )
+            , overallUniqueUsers: utils.unique( results, function( r ){
+                                    return r.user_id;
+                                  }).length
             });
           }
         );

@@ -61,10 +61,6 @@ define(function(require, exports, module) {
 
       closed: function() {
         return this.$el.find(this.fieldMap.closed).is(':checked');
-      },
-
-      restaurant_id: function() {
-        return restaurant.id;
       }
     },
 

@@ -28,7 +28,8 @@ define(function(require, exports, module) {
         'click #change-status-canceled-no-notify': _.bind(this.changeStatus, this, 'canceled', false),
         'click .edit-order-btn': 'toggleEdit',
         'click .cancel-edit-btn': 'toggleEdit',
-        'click .save-btn': 'save'
+        'click .save-btn': 'save',
+        'keyup .adjustment': 'autoSave'
       });
     },
 

@@ -15,4 +15,13 @@ begin
     ALTER COLUMN created_at TYPE timestamptz
   ;
 
+  INSERT INTO groups (name) VALUES ('restaurant');
+
+  create table if not exists "user_restaurants" (
+    id            serial primary key
+  , created_at    timestamptz not null default now()
+  , user_id       int not null references users(id) on delete cascade
+  , restaurant_id int not null references restaurants(id) on delete cascade
+  );
+
 end$$;

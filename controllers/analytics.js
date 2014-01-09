@@ -23,7 +23,7 @@ module.exports.list = function( req, res ){
     where: {
       status: 'accepted'
     }
-  , limit: 9999999999
+  , limit: 'all'
   };
 
   Models.Order.find( $query, function( error, results ){

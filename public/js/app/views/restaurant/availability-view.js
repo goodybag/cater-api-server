@@ -34,6 +34,7 @@ define(function(require, exports, module) {
     events: {
       'click .btn-create-event': 'createEvent'
     , 'click .btn-remove-event': 'removeEvent'
+    , 'click .btn-update-event': 'updateEvent'
     },
 
     fieldMap: {
@@ -86,8 +87,7 @@ define(function(require, exports, module) {
     displayEvent: function(calEvent, jsEvent, view) {
       calEvent.edit = true;
       this.model = new RestaurantEvent(calEvent);
-      console.log(this.model.toFullCalendarEvent());
-      var html = this.templates.eventModal(calEvent);
+      var html = this.templates.eventModal(this.model.toFullCalendarEvent());
       this.renderModal(html);
     },
 

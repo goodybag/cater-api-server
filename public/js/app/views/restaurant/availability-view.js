@@ -2,12 +2,11 @@
  * Restaurant Availability View 
  *
  * Handles the calendar for a restaurant's holidays or time off. 
- * Allows marking events 
- * so that admins are not able to place orders during 
+ * Allows marking events so that admins are not able to place orders during 
  * specified days.
  *
- * Note: dates should use the postgres canonical form
- * `[)` which is inclusive lower bound, exclusive upper bound
+ * Note: Date ranges from backend are represented with [ start, end ) 
+ * but the frontend calendar plugin uses [ start, end ].
  *
  * Dependencies:
  *   - collections.restaurant-events // todo: generalize restaurant events?
@@ -50,7 +49,8 @@ define(function(require, exports, module) {
         var dateStart = $date_range.find('.event-date-start').text();
         var dateEnd = $date_range.find('.event-date-end').text();
 
-        // convert upper bound to exclusive for postgres
+        // convert upper bound for postgres
+        // [ start, end ] -> [ start, end )
         return [
           '['
         , moment(dateStart).format('YYYY-MM-DD')
@@ -85,8 +85,8 @@ define(function(require, exports, module) {
     },
 
     displayEvent: function(calEvent, jsEvent, view) {
-      calEvent.edit = true;
-      this.model = new RestaurantEvent(calEvent);
+      this.model = restaurantEvents.get(calEvent.id);
+      this.model.set('edit', true); // display the 'edit' version of the modal
       var html = this.templates.eventModal(this.model.toFullCalendarEvent());
       this.renderModal(html);
     },
@@ -96,6 +96,12 @@ define(function(require, exports, module) {
       this.model = new RestaurantEvent({restaurant_id: restaurant.id});
       this.onSave(e, function(err, res) {
         if(err) return notify.error('Could not create this event!');
+
+        // Update data model, collection
+        this.model.set(res[0]);
+        restaurantEvents.push(this.model);
+
+        // Update UI
         this_.$calendar.fullCalendar( 'renderEvent', this.model.toFullCalendarEvent() );
         this_.toggleModal('hide');
       });
@@ -116,9 +122,11 @@ define(function(require, exports, module) {
           notify.error('Unable to remove event');
         }
       });
-
     },
 
+    /**
+     * Callback for selecting a date range on the calendar
+     */
     select: function(startDate, endDate, allDay, jsEvent, view) {
       var html = this.templates.eventModal({
         start: startDate

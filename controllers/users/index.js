@@ -82,13 +82,32 @@ module.exports.create = function(req, res) {
       var query = queries.user.setGroup(groups);
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results){
-        if (error) return res.error(errors.internal.DB_FAILURE, error);
-        return res.send(204);
+        if (error) {
+          res.error(errors.internal.DB_FAILURE, error);
+          return callback(error);
+        }
+        callback(null, user, groups);
+      });
+    }
+  , restaurant: function(user, groups, callback) {
+      var query = queries.userRestaurant.create({
+        user_id: user.id
+      , restaurant_id: req.body.restaurant_id
+      });
+      var sql = db.builder.sql(query);
+      db.query(sql.query, sql.values, function(error, results) {
+        if (error) {
+          res.error(errors.internal.DB_FAILURE, error);
+          return callback(error);
+        } else {
+          callback(null);
+          return res.send(204);
+        }
       });
     }
   }
 
-  utils.async.waterfall([flow.encrypt, flow.balanced, flow.create, flow.group]);
+  utils.async.waterfall([flow.encrypt, flow.balanced, flow.create, flow.group, flow.restaurant]);
 }
 
 module.exports.update = function(req, res) {

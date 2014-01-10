@@ -61,7 +61,7 @@ module.exports.update = function(req, res, next) {
       restaurant_id: req.params.rid
     , id: req.params.eid
     }
-  }, 
+  },
   function(err, event) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     var fields = utils.keys(RestaurantEventsDefinition.schema);

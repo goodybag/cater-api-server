@@ -1,4 +1,5 @@
 var db = require('../../db');
+var RestaurantEventsDefinition = require('../../db/definitions/restaurant-events');
 var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
@@ -47,7 +48,7 @@ module.exports.create = function(req, res, next) {
   var restaurantEvent = new models.RestaurantEvent(data);
   restaurantEvent.save(function(error, restaurantEvent) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(restaurantEvent);
+    res.send(restaurantEvent[0]);
   });
 };
 
@@ -55,8 +56,21 @@ module.exports.create = function(req, res, next) {
  * PUT /restaurants/:rid/events/:eid
  */
 module.exports.update = function(req, res, next) {
-  // TODO - implement
-  res.send(400);
+  models.RestaurantEvent.findOne({
+    where: {
+      restaurant_id: req.params.rid
+    , id: req.params.eid
+    }
+  }, 
+  function(err, event) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    var fields = utils.keys(RestaurantEventsDefinition.schema);
+    utils.extend(event.attributes, utils.pick(req.body, fields));
+    event.save(function(err, rows, result) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      res.send(event.toJSON());
+    })
+  });
 };
 
 /**

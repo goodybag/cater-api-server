@@ -86,7 +86,10 @@ define(function(require, exports, module) {
 
     displayEvent: function(calEvent, jsEvent, view) {
       this.model = restaurantEvents.get(calEvent.id);
-      this.model.set('edit', true); // display the 'edit' version of the modal
+      this.model.set({
+        'edit': true            // display the 'edit' version of the modal
+      , 'calEvent': calEvent    // save this for updating full calendar 
+      }); 
       var html = this.templates.eventModal(this.model.toFullCalendarEvent());
       this.renderModal(html);
     },
@@ -98,11 +101,29 @@ define(function(require, exports, module) {
         if(err) return notify.error('Could not create this event!');
 
         // Update data model, collection
-        this.model.set(res[0]);
+        this.model.set(res);
         restaurantEvents.push(this.model);
 
         // Update UI
         this_.$calendar.fullCalendar( 'renderEvent', this.model.toFullCalendarEvent() );
+        this_.toggleModal('hide');
+      });
+    },
+
+    updateEvent: function(e) {
+      var this_ = this;
+      this.onSave(e, function(err, res) {
+        if(err) return notify.error('Could not create this event!');
+
+        // Update data model
+        this.model.set(res);
+
+        // Update cal event model
+        var calEvent = this.model.get('calEvent');
+        calEvent.title = this.model.get('name');
+
+        // Update UI
+        this_.$calendar.fullCalendar( 'updateEvent', calEvent );
         this_.toggleModal('hide');
       });
     },

@@ -91,10 +91,12 @@ module.exports.register = function(app) {
 
   app.put('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.update);
 
+  app.patch('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.update);
+
   app.del('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.remove);
 
   app.all('/restaurants/:rid/events/:eid', m.restrict(['admin']), function(req, res, next) {
-    res.set('Allow', 'PUT, DELETE');
+    res.set('Allow', 'PUT', 'PATCH, DELETE');
     res.send(405);
   });  
 

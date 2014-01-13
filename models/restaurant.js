@@ -316,34 +316,37 @@ module.exports = Model.extend({
     // with "restaurant_events" as
     //   (select "restaurant_events".*
     //    from "restaurant_events"
-    //    where "restaurant_events"."date_range" = $1)
-    // select "restaurants".*
+    //    where "restaurant_events"."date_range" @> date(now())
+    //    and closed is true )
+    // select "restaurants".name, re.*
     // from "restaurants"
     // left outer join "restaurant_events" "re" on "restaurants"."id" = "re"."restaurant_id"
-    // where "re"."id" is null
+    // order by restaurants.name asc;
 
     // Subselect restaurant_events occurring today or on search param date
-    query.with.restaurant_events = {
-      'type': 'select'
-    , 'table': 'restaurant_events'
-    , 'columns': [ '*' ]
-    , 'where': {
-        'date_range': { '$dateContains': orderParams && orderParams.date ? orderParams : 'now()' }
-      , 'closed': true
-      }
-    };
+    if( orderParams && orderParams.date ) {
+      query.with.restaurant_events = {
+        'type': 'select'
+      , 'table': 'restaurant_events'
+      , 'columns': [ '*' ]
+      , 'where': {
+          'date_range': { '$dateContains': orderParams && orderParams.date ? orderParams : 'now()' }
+        , 'closed': true
+        }
+      };
 
-    query.joins.restaurant_events = {
-      type: 'left outer'
-    , alias: 're'
-    , target: 'restaurant_events'
-    , on: {
-        'restaurants.id': '$re.restaurant_id$'
-      }
-    };
+      query.joins.restaurant_events = {
+        type: 'left outer'
+      , alias: 're'
+      , target: 'restaurant_events'
+      , on: {
+          'restaurants.id': '$re.restaurant_id$'
+        }
+      };
 
-    // Filter out events
-    query.where['re.id'] = { '$null': true };
+      // Filter out events
+      query.where['re.id'] = { '$null': true };
+    }
 
 
     if (orderParams && (orderParams.date || orderParams.time)) {

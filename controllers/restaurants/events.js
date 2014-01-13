@@ -27,6 +27,7 @@ module.exports.list = function(req, res, next) {
         }
       };
       models.Restaurant.findOne(query, function( error, restaurant ) {
+        console.log(restaurant);
         callback(error, restaurant.toJSON());
       });
     }

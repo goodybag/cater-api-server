@@ -2,7 +2,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var Handlebars = require('handlebars');
   var spinner = require('spinner');
-  var notify = require('../../lib/notify');
+  var notify = require('../../notify');
 
   var OrderView = require('./order-view');
 

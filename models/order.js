@@ -45,6 +45,10 @@ var modifyAttributes = function(callback, err, orders) {
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
         utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
 
+        if (order.attributes.is_pickup) {
+          order.attributes.restaurant.delivery_fee = 0;
+        }
+
         var rate = 1.0825; // default Austin, TX sales tax for now, in future store in and get from restaurant table
         var totalPreTip = (parseInt(order.attributes.sub_total) + parseInt(order.attributes.restaurant.delivery_fee)) * parseFloat(rate);
         order.attributes.total = Math.round(totalPreTip + order.attributes.tip); // in cents
@@ -639,6 +643,14 @@ module.exports = Model.extend({
       , 'orders.zip': '$zips.zip$'
       }
     }
+
+    var caseIsBadZip = '(CASE '
+      + ' WHEN (orders.is_pickup IS true) THEN FALSE'
+      + ' WHEN (orders.zip IS NULL) THEN NULL'
+      + ' WHEN (zips.zip IS NULL) THEN TRUE'
+      + ' ELSE FALSE'
+      + ' END)'
+    ;
 
     var caseIsBadZip = '(CASE '
       + ' WHEN (orders.is_pickup IS true) THEN FALSE'

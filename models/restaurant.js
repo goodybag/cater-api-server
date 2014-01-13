@@ -313,6 +313,60 @@ module.exports = Model.extend({
       unacceptable.push('(guests.restaurant_id IS NULL)');
     }
 
+    if (orderParams && orderParams.date) {
+
+      // with re as (select re.*, now()
+      // from restaurant_events re
+      // where re.date_range @> date(now())
+      // )
+      // select restaurants.name from restaurants
+      // join re on restaurants.id != re.id;
+
+      // query.with.tags_arr = {
+      //   "type": "select"
+      // , "table": "restaurant_tags"
+      // , "columns": [
+      //     "restaurant_id"
+      //   , "array_agg(tag) as tags"
+      //   ]
+      // , "groupBy": "restaurant_id"
+      // };
+
+      // query.joins.tags_arr = {
+      //   type: 'left'
+      // , alias: 'tags'
+      // , target: 'tags_arr'
+      // , on: {
+      //     'restaurants.id': '$tags.restaurant_id$'
+      //   }
+      // };
+
+      // query.where["tags.tags"] = {'$contains': orderParams.diets};
+
+      // Subselect restaurant_events during today
+      query.with.restaurant_events = {
+        'type': 'select'
+      , 'table': 'restaurant_events'
+      , 'columns': [ '*' ]
+      , 'where': {
+          'date_range': { '$contains': 'date(now())' }
+        }
+      };
+
+      // Filter out restaurants with events today
+      query.joins.restaurant_events = {
+        type: 'left'
+      , alias: 're'
+      , target: 'restaurant_events'
+      , on: {
+          'restaurants.id': '$re.restaurant_id$'
+        }
+      , where: {
+          're.restaurant_id': { '$ne': 'restaurants.id' }
+        }
+      }
+    }
+
     if (orderParams && (orderParams.date || orderParams.time)) {
       query.joins.delivery_times = {
         type: 'left'

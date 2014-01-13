@@ -119,7 +119,7 @@ define(function(require, exports, module) {
 
       var order = this.options.orderParamsView.getProps();
       order.is_pickup = order.order_type === 'pickup';
-      order.datetime = order.date + ' ' + order;
+      order.datetime = order.date + ' ' + order.time;
       delete order.order_type;
 
       if (!order.is_pickup){
@@ -130,7 +130,7 @@ define(function(require, exports, module) {
       // Go ahead and autofill with default address
       if (order.zip === this.options.defaultAddress.get('zip'))
         _.extend(order, this.options.defaultAddress.pick(this.model.constructor.addressFields));
-console.log("saving" ,order);
+
       var self = this;
       if ( !this.model.save(order, this.submitHandlers) ){
         this.showErrors();

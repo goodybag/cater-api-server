@@ -5,6 +5,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
+  var restaurant = require('data/restaurant');
 
   var template = Handlebars.partials.menu_order_params;
 
@@ -26,11 +27,14 @@ define(function(require, exports, module) {
       this.model.on("change:orderparams", function(e) {
         this_.render();
       });
+
+      this.model.on("change", this.onOrderChange, this);
     }
 
   , render: function() {
       var $el = $( this.template({
         order: this.model.toJSON()
+      , restaurant: restaurant.toJSON()
       }));
 
       this.$el.html( $el.html() );
@@ -49,6 +53,10 @@ define(function(require, exports, module) {
             alert('sorry we were unable to change your order information, please refresh page and try again');
           }
       });
+    }
+
+  , onOrderChange: function(){
+      this.render();
     }
   });
 });

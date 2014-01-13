@@ -29,8 +29,16 @@ define(function(require, exports, module) {
     }
 
   , render: function(){
+      var orderParams = {};
+
+      if ( this.options.orderModel ){
+        utils.extend( orderParams, this.options.orderModel.toJSON() );
+      }
+
+      utils.extend( orderParams, this.model.toJSON() );
+
       var $el = $( this.template({
-        orderParams: utils.extend( {}, this.options.orderModel.toJSON(), this.model.toJSON() )
+        orderParams: orderParams
       }));
 
       this.$el.html( $el.html() );

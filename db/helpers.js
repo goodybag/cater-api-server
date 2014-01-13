@@ -6,6 +6,13 @@ mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column
     return column + ' @> ARRAY[' + set.map( function(val) {
       return '$' + values.push(val);
     }).join(', ') + ']';
+  } 
+});
+
+
+mosql.registerConditionalHelper( '$dateContains', {cascade: false}, function( column, set, values, collection ) {
+  if(values.length === 1) {
+    return column + ' @> ' + set + '::date';
   }
 });
 

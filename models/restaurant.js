@@ -323,8 +323,10 @@ module.exports = Model.extend({
     // left outer join "restaurant_events" "re" on "restaurants"."id" = "re"."restaurant_id"
     // order by restaurants.name asc;
 
-    // Subselect restaurant_events occurring today or on search param date
-    if( orderParams && orderParams.date ) {
+    // For restaurant listing, check active restaurant events.
+    if( query.limit !== 1 ) {
+
+      // Subselect restaurant_events occurring today or on search param date
       query.with.restaurant_events = {
         'type': 'select'
       , 'table': 'restaurant_events'
@@ -347,7 +349,6 @@ module.exports = Model.extend({
       // Filter out events
       query.where['re.id'] = { '$null': true };
     }
-
 
     if (orderParams && (orderParams.date || orderParams.time)) {
       query.joins.delivery_times = {

@@ -116,7 +116,13 @@
           </div>
 
           <div class="list-group-item delivery-info clearfix">
-            {{> order_delivery_info}}
+            <div class="col-md-12">
+              {{#if order.is_pickup}}
+                {{> order_pickup_info}}
+              {{else}}
+                {{> order_delivery_info}}
+              {{/if}}
+            </div>
           </div>
 
           <div id="payment-info" class="list-group-item clearfix">

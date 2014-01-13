@@ -37,6 +37,8 @@ define(function(require, exports, module) {
     , phone: '.address-phone'
     , tip: '.order-tip'
     , tip_percent: '.tip-percent'
+    , pickup_person_name: '[name="pickup_person_name"]'
+    , pickup_person_phone: '[name="pickup_person_phone"]'
     },
 
     errorTypeMessages: {

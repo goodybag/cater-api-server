@@ -59,6 +59,16 @@ define(function(require, exports, module) {
           reviewed: {
             type: ['boolean', 'null'],
             required: false
+          },
+          name: {
+            type: ['string', 'null'],
+            required: false
+          },
+          phone: {
+            type: 'string',
+            length: 10,
+            pattern: /^\d*$/, //contains only digits
+            required: true
           }
         }
       };
@@ -85,10 +95,12 @@ define(function(require, exports, module) {
         errors = Array.prototype.slice.call( errors );
       }
 
-      var addressFields = _.keys(_.result(Address, 'schema').properties);
-      if (!this.address._validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)),
-                                 _.extend({enforceRequired: false}, options))) {
-        errors.push({addressErrors: this.address.validationError});
+      if (!this.attributes.is_pickup){
+        var addressFields = _.keys(_.result(Address, 'schema').properties);
+        if (!this.address._validate(_.extend({}, this.address.attributes, _.pick(attrs, addressFields)),
+                                   _.extend({enforceRequired: false}, options))) {
+          errors.push({addressErrors: this.address.validationError});
+        }
       }
 
       // Add on the restaurant fulfillability errors
@@ -148,21 +160,24 @@ define(function(require, exports, module) {
       var attrs;
       if (key == null) return this;
 
-      // TODO: same field names between order and address
-      var addressFields = _.keys(_.result(Address, 'schema').properties);
       if (typeof key === 'object') {
         attrs = key;
         options = val;
       } else
         (attrs = {})[key] = val
 
-      var addr = _.pick(attrs, addressFields);
-      attrs = _.omit(attrs, addressFields);
+      if (!this.attributes.is_pickup){
+        // TODO: same field names between order and address
+        var addressFields = _.keys(_.result(Address, 'schema').properties);
 
-      if (this.address != null)
-        this.address.set(addr, options);
-      else
-        this.address = new Address(addr);
+        var addr = _.pick(attrs, addressFields);
+        attrs = _.omit(attrs, addressFields);
+
+        if (this.address != null)
+          this.address.set(addr, options);
+        else
+          this.address = new Address(addr);
+      }
 
       return Backbone.Model.prototype.set.call(this, attrs, options);
     },
@@ -257,7 +272,9 @@ define(function(require, exports, module) {
       var obj = Backbone.Model.prototype.toJSON.apply(this, arguments);
       obj.orderItems = this.orderItems.toJSON();
       obj.restaurant = this.restaurant.toJSON();
-      _.extend(obj, this.address.toJSON());
+      if (!this.attributes.is_pickup){
+        _.extend(obj, this.address.toJSON());
+      }
       return obj;
     },
 

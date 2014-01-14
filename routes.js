@@ -2,6 +2,8 @@ var express = require('express');
 var config = require('./config');
 var controllers = require('./controllers');
 var utils = require('./utils');
+var Models = require('./models');
+var hbHelpers = require('./public/js/lib/hb-helpers');
 
 var m = utils.extend({
   orderParams   : require('./middleware/order-params'),
@@ -509,4 +511,9 @@ module.exports.register = function(app) {
   app.get('/legal', controllers.statics.legal);
 
   app.get('/privacy', controllers.statics.privacy);
+
+  app.get('/analytics'
+  , m.restrict(['admin'])
+  , controllers.analytics.list
+  )
 }

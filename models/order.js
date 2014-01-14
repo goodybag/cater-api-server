@@ -797,7 +797,7 @@ module.exports = Model.extend({
 
     utils.defaults( query.where = query.where || {}, {
       datetime: {
-        $between_days_from_now: { from: 1, to: 2 }
+        $between_days_from_now: { from: 1, to: 2, timezone: 'orders.timezone' }
       }
     });
 
@@ -816,7 +816,7 @@ module.exports = Model.extend({
       callback = status;
       status = query;
       query = {};
-    } 
+    }
 
     query = utils.defaults(query, {
       order: 'id desc'

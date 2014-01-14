@@ -79,16 +79,6 @@
               [Your Zip]
             {{/if}}
           </address>
-
-          <div class="info-item-contact info-item">
-            {{#if order.user.name}}
-              {{order.user.name}}
-            {{/if}}
-            {{#if order.phone}}
-              <br>
-              {{phoneNumber order.phone "xxx.xxx.xxxx"}}
-            {{/if}}
-          </div>
           {{{block "info"}}}
         </div>
       </header>

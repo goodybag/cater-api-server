@@ -26,7 +26,11 @@ module.exports.list = function(req, res) {
 
   var tasks =  [
     function(callback) {
-      models.Restaurant.find({}, utils.extend({ is_hidden: false }, orderParams), callback);
+      models.Restaurant.find(
+        { includes: ['restaurant_events'] }
+      , utils.extend({ is_hidden: false }
+      , orderParams), 
+      callback);
     },
 
     function(callback) {

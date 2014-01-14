@@ -10,7 +10,7 @@ define(function(require, exports, module) {
 
   var Order = Backbone.Model.extend({
     schema: function() {
-      return {
+      var schema = {
         type: 'object',
         properties: {
           user_id: {
@@ -60,22 +60,31 @@ define(function(require, exports, module) {
             type: ['boolean', 'null'],
             required: false
           },
-          name: {
+          pickup_person_name: {
             type: ['string', 'null'],
             required: false
           },
-          phone: {
-            type: 'string',
+          pickup_person_phone: {
+            type: ['string', 'null'],
             length: 10,
             pattern: /^\d*$/, //contains only digits
-            required: true
+            required: false
           }
         }
       };
+
+      if (this.attributes.is_pickup){
+        schema.properties.pickup_person_name.required = true;
+        schema.properties.pickup_person_phone.required = true;
+      }
+
+      return schema
     },
 
     defaults: {
-      timezone: "America/Chicago"
+      timezone: "America/Chicago",
+      pickup_person_name: null,
+      pickup_person_phone: null
     },
 
     // TODO: extract to superclass
@@ -204,7 +213,11 @@ define(function(require, exports, module) {
     ],
 
     zipChanged: function(model, value, options) {
-      model.restaurant.set('is_bad_zip', !_.contains(model.restaurant.get('delivery_zips'), value));
+      if (this.attributes.pickup){
+        model.restaurant.set('is_bad_zip', false);
+      } else {
+        model.restaurant.set('is_bad_zip', !_.contains(model.restaurant.get('delivery_zips'), value));
+      }
     },
 
     checkLeadTimes: function() {
@@ -229,12 +242,14 @@ define(function(require, exports, module) {
         return;
       }
 
-      // check against restaurant hours
-      var datetime = value.split(' ');
-      var dow = moment(datetime[0]).day();
-      model.restaurant.set('is_bad_delivery_time', !_.find(model.restaurant.get('delivery_times')[dow], function(range) {
-        return datetime[1] >= range[0] && datetime[1] <= range[1];
-      }));
+      if (!this.attributes.is_pickup){
+        // check against restaurant hours
+        var datetime = value.split(' ');
+        var dow = moment(datetime[0]).day();
+        model.restaurant.set('is_bad_delivery_time', !_.find(model.restaurant.get('delivery_times')[dow], function(range) {
+          return datetime[1] >= range[0] && datetime[1] <= range[1];
+        }));
+      }
 
       model.checkLeadTimes();
     },
@@ -338,7 +353,11 @@ define(function(require, exports, module) {
       });
     }
   }, {
-    addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']
+    addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions'],
+    fieldNounMap: {
+      pickup_person_name: 'Name',
+      pickup_person_phone: 'Phone number'
+    }
   });
 
   return module.exports = Order;

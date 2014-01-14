@@ -26,7 +26,10 @@ define( function( require ){
   if ( orderModel.get('is_pickup') ) orderParams.set('order_type', 'pickup');
 
   var page = {
-    init: function(){
+    order:      orderModel
+  , restaurant: restaurant
+
+  , init: function(){
       page.view = new Views.Menu({
         el:     '#menu'
       , model:  restaurant

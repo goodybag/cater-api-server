@@ -154,6 +154,26 @@ define(function(require, exports, module) {
       this.unset('categories');
     },
 
+    isValidPickupTime: function( date ){
+      if (date == null) return true;
+      if ( typeof date !== 'string' ) return false;
+
+      if ( !moment(date).isValid() ) return false;
+
+      // Super pro day-parsing
+      var day = moment( date.split(' ')[0] ).day();
+
+      if ( this.get('hours_of_operation')[ day ].length === 0 ) return false;
+
+      var hours = this.get('hours_of_operation')[ day ];
+      var time = (date.split(' ')[1] + ':00').substring( 0, 8 );
+
+      // is the desired time within any of the windows for that day?
+      return _.any( hours, function( openClose ){
+        return time >= openClose[0] && time <= openClose[1]
+      });
+    },
+
     isValidDeliveryTime: function( date ){
       if (date == null) return true;
       if ( typeof date !== 'string' ) return false;
@@ -219,7 +239,7 @@ define(function(require, exports, module) {
 
     validateOrderFulfillability: function( order ){
       var errors = [];
-console.log('validateOrderFulfillability', 'is_pickup', order.get('is_pickup'))
+
       // Check zips
       if ( !order.get('is_pickup') )
       if ( this.get( 'delivery_zips' ).indexOf( order.address.get('zip') ) === -1 ){

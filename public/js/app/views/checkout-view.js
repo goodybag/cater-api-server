@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var Handlebars = require('handlebars');
   var spinner = require('spinner');
+  var notify = require('../../notify');
 
   var OrderView = require('./order-view');
 
@@ -43,6 +44,29 @@ define(function(require, exports, module) {
 
     errorTypeMessages: {
       required: 'Please enter a valid {noun}'
+    },
+
+    cardTypeRegexes: {
+      visa: {
+        likely: /^4/
+      , valid: /^4[0-9]{15}$/
+      , mask: '9999 9999 9999 9999'
+      }
+    , master: {
+        likely: /^5[1-5]/
+      , valid: /^5[1-5][0-9]{14}/
+      , mask: '9999 9999 9999 9999'
+      }
+    , amex: {
+        likely: /^3[47]/
+      , valid: /^3[47][0-9]{13}$/
+      , mask: '9999 999999 99999'
+      }
+    , discover: {
+        likely: /^6(?:011|5[0-9]{2})/
+      , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
+      , mask: '9999 9999 9999 9999'
+      }
     },
 
     initialize: function() {
@@ -151,6 +175,7 @@ define(function(require, exports, module) {
       this.clear();
 
       // Check to see if we need to validate the address
+      if ( !this.model.attributes.is_pickup )
       if ( !this.$el.find('.order-address.edit').hasClass('hide') ){
         var errors = this.validateAddress();
         if ( errors ){
@@ -172,7 +197,7 @@ define(function(require, exports, module) {
       this.onSave(function(err, response) {
         spinner.stop();
 
-        if (err) return notify.error(err); // TODO: error handling
+        if (err) return self.displayErrors2(err, Order);
         self.model.changeStatus('submitted', true, function(err, data) {
           if (err) return notify.error(err); // TODO: error handling
           window.location.reload();
@@ -213,29 +238,6 @@ define(function(require, exports, module) {
     },
 
     onCardNumberChange: function(e) {
-      var cardTypeRegexes = {
-        visa: {
-          likely: /^4/
-        , valid: /^4[0-9]{15}$/
-        , mask: '9999 9999 9999 9999'
-        }
-      , master: {
-          likely: /^5[1-5]/
-        , valid: /^5[1-5][0-9]{14}/
-        , mask: '9999 9999 9999 9999'
-        }
-      , amex: {
-          likely: /^3[47]/
-        , valid: /^3[47][0-9]{13}$/
-        , mask: '9999 999999 99999'
-        }
-      , discover: {
-          likely: /^6(?:011|5[0-9]{2})/
-        , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
-        , mask: '9999 9999 9999 9999'
-        }
-      }
-
       var $newCard = this.$el.find('#new-card');
       var $cardNumber = $newCard.find('input[name="card_number"]');
       var $postalCode = $newCard.find('input[name="postal_code"]');
@@ -246,10 +248,10 @@ define(function(require, exports, module) {
       };
 
       var foundMatch = false;
-      for(type in cardTypeRegexes) {
-        if (!cardTypeRegexes.hasOwnProperty(type)) return;
+      for(type in this.cardTypeRegexes) {
+        if (!this.cardTypeRegexes.hasOwnProperty(type)) return;
 
-        var cardType = cardTypeRegexes[type];
+        var cardType = this.cardTypeRegexes[type];
 
         // TODO: improve later - apply input mask and change logo only if the card type changes
         if (cardType.likely.test(cardNumber)) {
@@ -268,8 +270,7 @@ define(function(require, exports, module) {
           });
 
           removeCCLogos();
-          $cardNumber.addClass('cc-'+type)
-          ;
+          $cardNumber.addClass('cc-'+type);
 
           if (type == 'amex') {
             $postalCode.closest('.row').removeClass('hide');
@@ -477,30 +478,31 @@ define(function(require, exports, module) {
       // Amanda errors object
       if ( _.isObject( errors ) && !_.isArray( errors ) ){
         errors = Array.prototype.slice.call( errors )
-
-        // We're just going to use the `required` error text for everything
-        // so just take the unique on error.property
-        errors = _.chain(errors).map( function( error ){
-          return error.property;
-        }).unique().map( function( property ){
-          var message;
-          var noun = property;
-
-          if ( Model && typeof Model.fieldNounMap === 'object' )
-          if ( property in Model.fieldNounMap ){
-            noun = Model.fieldNounMap[ property ];
-          }
-
-          message = this_.errorTypeMessages.required.replace(
-            '{noun}', noun
-          );
-
-          return {
-            property: property
-          , message: message
-          };
-        }).value();
       }
+
+      // We're just going to use the `required` error text for everything
+      // so just take the unique on error.property
+      errors = _.chain(errors).map( function( error ){
+        console.log()
+        return error.property;
+      }).unique().map( function( property ){
+        var message;
+        var noun = property;
+
+        if ( Model && typeof Model.fieldNounMap === 'object' )
+        if ( property in Model.fieldNounMap ){
+          noun = Model.fieldNounMap[ property ];
+        }
+
+        message = this_.errorTypeMessages.required.replace(
+          '{noun}', noun
+        );
+
+        return {
+          property: property
+        , message: message
+        };
+      }).value();
 
       var css = {
         position: 'absolute'
@@ -524,7 +526,11 @@ define(function(require, exports, module) {
       }
 
       // Scroll to the first error
-      $(document.body).animate({ scrollTop: this.$el.find('.has-error').eq(0).offset().top - 20 });
+      $el = this.$el.find('.has-error').eq(0);
+
+      if ( $el.length ){
+        $(document.body).animate({ scrollTop: $el.offset().top - 20 });
+      }
     },
 
     onPaymentMethodIdChange: function(e) {

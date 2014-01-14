@@ -63,7 +63,7 @@ module.exports.create = function(req, res) {
   , create: function(hash, balanced_customer_uri, callback) {
       var groups = req.body.groups || ['client'];
       var userData = utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash, balanced_customer_uri: balanced_customer_uri});
-      var query = queries.user.create(utils.omit(userData, 'groups'));
+      var query = queries.user.create(utils.omit(userData, ['groups', 'restaurant_ids']));
 
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results){
@@ -90,9 +90,18 @@ module.exports.create = function(req, res) {
       });
     }
   , restaurant: function(user, groups, callback) {
+      if (
+           !utils.find(groups, {group: 'restaurant'})
+        || !req.body.restaurant_ids
+        || req.body.restaurant_ids.length <=0
+        || isNaN(parseInt(req.body.restaurant_ids[0]))
+      ) {
+        callback(null);
+        return res.send(204);
+      }
       var query = queries.userRestaurant.create({
         user_id: user.id
-      , restaurant_id: req.body.restaurant_id
+      , restaurant_id: parseInt(req.body.restaurant_ids[0])
       });
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results) {

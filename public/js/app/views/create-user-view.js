@@ -45,6 +45,9 @@ define(function(require, exports, module) {
       groups: function () {
         return utils.pluck(this.$el.find(this.fieldMap.groups), 'value');
       }
+    , restaurant_ids: function() {
+      return [parseInt(this.$el.find(this.fieldMap.restaurant_ids).select2('val'))];
+    }
     },
 
     fieldMap: {
@@ -53,10 +56,10 @@ define(function(require, exports, module) {
     , name: '.create-user-form .create-user-name'
     , organization: '.create-user-form .create-user-organization'
     , groups: '.create-user-form .create-user-group:checked'
+    , restaurant_ids: '.create-user-form #restaurants'
     },
 
     toggleRestaurantList: function(){
-      console.log('hello');
       if (this.$el.find('#userGroupRestaurant').is(':checked')){
         this.$el.find('#restaurants').select2("container").show();
       } else {

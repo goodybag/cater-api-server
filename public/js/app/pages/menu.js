@@ -5,6 +5,7 @@ define( function( require ){
   var restaurant      = require('data/restaurant');
   var defaultAddress  = require('data/default-address');
   var user            = require('data/user');
+  var eventDateRanges = require('data/event-date-ranges');
 
   require('bootstrap');
 

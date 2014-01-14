@@ -98,7 +98,12 @@ define(function(require, exports, module) {
         this.restaurant.validateOrderFulfillability( new Order( _.extend(this.toJSON(), attrs) ) )
       );
 
+      console.log(this.validateRestaurantEvents());
       return errors.length > 0 ? errors : null;
+    },
+
+    validateRestaurantEvents: function() {
+      return ['restaurant closed for event'];
     },
 
     urlRoot: '/orders',

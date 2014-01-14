@@ -325,9 +325,17 @@ module.exports = Model.extend({
     // order by restaurants.name asc;
 
     // For restaurant listing, check active restaurant events.
-    if( utils.contains(query.includes, 'restaurant_events') ) {
+
+    // Hide restaurants from listing if there's an event occurring
+    if ( utils.contains(query.includes, 'filter_restaurant_events') ) {
       filterRestaurantsByEvents(query, orderParams);
     }
+
+    // Include restaurant event duration in result
+    if ( utils.contains(query.includes, 'restaurant_events') ) {
+      includeRestaurantEvents(query, orderParams);
+    }
+
 
     if (orderParams && (orderParams.date || orderParams.time)) {
       query.joins.delivery_times = {
@@ -432,5 +440,31 @@ var filterRestaurantsByEvents = function(query, searchParams) {
 
   // Filter out events
   query.where['re.id'] = { '$null': true };
+}
+
+/**
+ * Check restaurant events occurring today or on the 
+ * search param date.
+ *
+ * @param {object} query - Query object to be modified
+ * @param {object} searchParams - Object contains various order
+ *   parameters such as datetime, guests and zip code.
+ */
+var includeRestaurantEvents = function(query, searchParams) {
+
+  query.with.restaurant_events = {
+    'type': 'select'
+  , 'table': 'restaurant_events'
+  , 'columns': [ '*' ]
+  , 'where': {
+      'date_range': { 
+        '$dateContains': searchParams && searchParams.date ? searchParams : 'now()' 
+      }
+    , 'closed': true
+    }
+  };
+
+  // Return array of event date ranges, occuring today or on search param date
+  query.columns.push('(select array_to_json(array(select date_range from restaurant_events where restaurant_events.restaurant_id=restaurants.id) ) ) as event_date_ranges');
 }
 

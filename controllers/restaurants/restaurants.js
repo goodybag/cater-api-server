@@ -26,11 +26,12 @@ module.exports.list = function(req, res) {
 
   var tasks =  [
     function(callback) {
+      var query = { includes: ['filter_restaurant_events'] };
       models.Restaurant.find(
-        { includes: ['restaurant_events'] }
+        query
       , utils.extend({ is_hidden: false }
-      , orderParams), 
-      callback);
+      , orderParams)
+      , callback);
     },
 
     function(callback) {
@@ -96,7 +97,14 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
-      models.Restaurant.findOne(parseInt(req.params.rid), orderParams, function(err, restaurant) {
+      var query = { 
+        where: { 
+          id: parseInt(req.params.rid) 
+        }
+      , includes: ['restaurant_events'] 
+      };
+
+      models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');
         restaurant.getItems(function(err, items) {

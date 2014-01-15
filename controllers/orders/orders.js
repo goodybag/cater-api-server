@@ -79,8 +79,6 @@ module.exports.list = function(req, res) {
     , isRestaurantManager: req.order.isRestaurantManager
     , isOwner: req.order.isOwner
     };
-
-    console.log(context);
     res.render('orders', context);
   });
 };

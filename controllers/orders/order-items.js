@@ -30,17 +30,17 @@ module.exports.summary = function(req, res, next) {
         restaurantReview: review,
         isRestaurantManager: req.order.isRestaurantManager,
         isOwner: req.order.isOwner,
-        isAdmin: req.order.isAdmin
+        isAdmin: req.order.isAdmin,
         states: states,
         orderParams: req.session.orderParams,
         query: req.query,
         step: 1
       };
 
-      if (!context.owner && !context.admin && !context.restaurantManager) return res.status(404).render('404');
+      if (!context.isOwner && !context.isAdmin && !context.isRestaurantManager) return res.status(404).render('404');
 
       // orders are always editable for an admin
-      if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
+      if (req.order.isAdmin)
         context.order.editable = true;
 
       res.render('order-items', context, function(err, html) {

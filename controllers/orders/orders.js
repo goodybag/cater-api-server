@@ -50,15 +50,15 @@ module.exports.editability = function(req, res, next) {
 };
 
 module.exports.list = function(req, res) {
-  //TODO: middleware to validate and sanitize query object
-  models.Order.find(req.query, function(error, models) {
+  var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : 'all';
+  models.Order.findByStatus(filter, function( error, orders ) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('orders', {orders: utils.invoke(models, 'toJSON')}, function(err, html) {
-      if (err) return res.error(errors.internal.UNKNOWN, error);
-      res.send(html);
+    res.render('orders', {
+      orders: utils.invoke(orders, 'toJSON')
+    , filter: filter
     });
   });
-}
+};
 
 // module.exports.get = function(req, res) {
 //   models.Order.findOne(parseInt(req.params.oid), function(error, order) {
@@ -212,7 +212,7 @@ module.exports.create = function(req, res) {
 }
 
 // TODO: get this from not here
-var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed'];
+var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed'];
 
 module.exports.update = function(req, res) {
   models.Order.findOne(req.params.oid, function(err, order) {

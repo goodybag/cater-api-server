@@ -1,4 +1,5 @@
 var mosql = require('mongo-sql');
+var mosqlUtils = require('mongo-sql/lib/utils');
 var utils = require('../utils');
 
 mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column, set, values, collection ) {
@@ -25,9 +26,23 @@ mosql.registerConditionalHelper(
   '$between_days_from_now'
 , { cascade: false }
 , function( column, value, values, table, query ){
+    var tz = value.timezone ? ' at time zone ' + mosqlUtils.quoteColumn( value.timezone ) : '';
+
     return [
-      [ column, " >= date_trunc(\'day\', now() + interval '", value.from, " days')" ].join('')
-    , [ column, "  < date_trunc(\'day\', now() + interval '", value.to, " days')" ].join('')
+      [
+        column
+      , tz
+      , " >= date_trunc(\'day\', (now() ", tz, ") + interval '"
+      , value.from
+      , " days')"
+      ].join('')
+    , [
+        column
+      , tz
+      , "  < date_trunc(\'day\', (now() ", tz, ") + interval '"
+      , value.to
+      , " days')"
+      ].join('')
     ].join(' and ');
   }
 );

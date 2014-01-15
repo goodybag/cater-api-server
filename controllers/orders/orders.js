@@ -64,7 +64,7 @@ module.exports.editability = function(req, res, next) {
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE);
     if (!order) return res.json(404);
-    var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
+    var editable = req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
     return editable ? next() : res.json(403, 'order not editable');
   });
 };
@@ -179,7 +179,7 @@ module.exports.get = function(req, res) {
       isRestaurantReview: isReview,
       isOwner: req.order.isOwner,
       isRestaurantManager: req.order.isRestaurantManager,
-      isAdmin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
+      isAdmin: req.order.isAdmin,
       states: states,
       orderAddress: function() {
         return {
@@ -364,7 +364,7 @@ module.exports.changeStatus = function(req, res) {
       // If we are an admin and we received a ?notify=false then don't send notifications.
       // Otherwise send the notification.
       if (!(req.session.user
-        && utils.contains(req.session.user.groups, 'admin')
+        && req.order.isAdmin
         && req.query.notify
         && req.query.notify.toLowerCase() == 'false'
       )) venter.emit('order:status:change', order, previousStatus);

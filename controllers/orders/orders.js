@@ -282,7 +282,7 @@ module.exports.changeStatus = function(req, res) {
     var previousStatus = order.attributes.status;
 
     // if they're not an admin, check if the status change is ok.
-    if(!req.session.user || !utils.contains(req.session.user.groups, 'admin')) {
+    if(!req.session.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {
       if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
         return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
 
@@ -294,7 +294,7 @@ module.exports.changeStatus = function(req, res) {
         return res.send(403, 'order not complete');
 
       if (req.body.status === 'submitted' && !order.toJSON().submittable)
-        return res.send(403, 'order not submitttable');
+        return res.send(403, 'order not submittable');
     }
 
     var done = function() {

@@ -108,11 +108,15 @@ define(function(require, exports, module) {
       return errors.length > 0 ? errors : null;
     },
 
+    /** 
+     * Check if the order datetime occurs during one of the 
+     * restaurant's closed events
+     */
     validateRestaurantEvents: function() {
       var this_ = this;
 
       // this is super whack
-      utils.each(restaurantEventDateRanges, function(range) {
+      var errors = utils.reduce(restaurantEventDateRanges, function(memo, range) {
         var event = new RestarantEvent({date_range: range});
         var fce = event.toFullCalendarEvent();
         var orderDate = moment(this_.get('datetime'));
@@ -122,13 +126,14 @@ define(function(require, exports, module) {
           orderDate.isSame(fce.start, 'day') ||
           orderDate.isSame(fce.end, 'day');
 
-        if( occursDuringEvent ) {
-          return ['restaurant_closed'];
+        if( occursDuringEvent && !utils.contains(memo, 'restaurant_closed')) {
+          memo.push('restaurant_closed');
         }
-      });
 
-      // No events overlapping with date
-      return [];
+        return memo;
+      }, []);
+
+      return errors;
     },
 
     urlRoot: '/orders',

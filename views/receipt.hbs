@@ -63,9 +63,9 @@
         <div class="clearfix">
           <div class="delivery-header pull-left">
             {{order.restaurant.name}} [Order #{{order.id}}]
-            {{#if order.restaurant}}
+            {{#if order.restaurant}}{{#unless isRestaurantManager}}
             <a href="javascript:void(0);" class="copy-order-btn text-muted">Order Again?</a>
-            {{/if}}
+            {{/unless}}{{/if}}
           </div>
           {{#if admin}}
           <div class="pull-right btn-group">
@@ -239,19 +239,19 @@
       {{/if}}
     </div>
 
-    {{#unless restaurantReview}}
+    {{#unless isRestaurantReview}}
     <div class="panel-actions">
       {{#if order.editable}}
       <a class="btn btn-default btn-add-to-order" href="/orders/{{order.id}}/add-items">Add to Order</a>
       {{/if}}
 
-      {{#if owner}}
+      {{#if isOwner}}
       <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
       {{/if}}
     </div>
     {{/unless}}
 
-    {{#if restaurantReview}}
+    {{#if isRestaurantReview}}
     <div class="panel-actions restaurant-review panel-body">
       <button class="btn btn-default" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
       <button class="btn btn-primary btn-accept">Accept Order</button>

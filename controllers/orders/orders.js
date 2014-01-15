@@ -26,16 +26,36 @@ var addressFields = [
 , 'delivery_instructions'
 ];
 
+/**
+ * Will attach req.order.[isOwner, isRestaurantManager, isAdmin] to help determine
+ * what control the user has over a particular order
+ */
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
+  req.order = {};
   logger.db.info(TAGS, 'auth for order #'+ req.params.id);
-  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) return next();
+  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
+    req.order.isAdmin = true;
+    return next();
+  }
   models.Order.findOne(req.params.id, function(err, order) {
     if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
     var reviewToken = req.query.review_token || req.body.review_token;
+
+    // allow restaurant user to view orders at their own restaurant
+    if (req.user
+      && req.user.attributes.restaurant_ids
+      && utils.contains(req.user.attributes.restaurant_ids, order.attributes.restaurant_id)
+    ) {
+      req.order.isRestaurantManager = true;
+      return next();
+    }
+
     if (order.attributes.user_id !== (req.session.user||0).id && order.attributes.review_token !== reviewToken)
       return res.status(404).render('404');
+
+    req.order.isOwner = true;
     next();
   });
 };
@@ -53,10 +73,15 @@ module.exports.list = function(req, res) {
   var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : 'all';
   models.Order.findByStatus(filter, function( error, orders ) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('orders', {
+    var context = {
       orders: utils.invoke(orders, 'toJSON')
     , filter: filter
-    });
+    , isRestaurantManager: req.order.isRestaurantManager
+    , isOwner: req.order.isOwner
+    };
+
+    console.log(context);
+    res.render('orders', context);
   });
 };
 
@@ -143,18 +168,19 @@ module.exports.get = function(req, res) {
     // Redirect empty orders to item summary
     if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
 
-    var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
-    var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
+    var isReview = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
 
     user = user.toJSON();
     user.addresses = utils.invoke(user.addresses, 'toJSON');
 
     utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+    console.log(req.order);
     var context = {
       order: order.toJSON(),
-      restaurantReview: review,
-      owner: isOwner,
-      admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
+      isRestaurantReview: isReview,
+      isOwner: req.order.isOwner,
+      isRestaurantManager: req.order.isRestaurantManager,
+      isAdmin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
       states: states,
       orderAddress: function() {
         return {

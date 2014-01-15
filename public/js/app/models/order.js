@@ -110,7 +110,6 @@ define(function(require, exports, module) {
 
     validateRestaurantEvents: function() {
       var this_ = this;
-      var errors = [];
 
       // this is super whack
       utils.each(restaurantEventDateRanges, function(range) {
@@ -120,15 +119,16 @@ define(function(require, exports, module) {
 
         var occursDuringEvent = 
           orderDate.isAfter(fce.start) && orderDate.isBefore(fce.end) ||
-          orderDate.isSame(fce.start) ||
-          orderDate.isSame(fce.end);
+          orderDate.isSame(fce.start, 'day') ||
+          orderDate.isSame(fce.end, 'day');
 
         if( occursDuringEvent ) {
-          errors.push('restaurant cannot fulfill order during event');
+          return ['restaurant_closed'];
         }
       });
 
-      return errors;
+      // No events overlapping with date
+      return [];
     },
 
     urlRoot: '/orders',

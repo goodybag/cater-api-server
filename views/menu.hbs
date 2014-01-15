@@ -161,6 +161,8 @@
 
           <div class="alert is_bad_lead_time alert-danger{{#unless restaurant.is_bad_lead_time}} hide{{/unless}}">We're sorry, this restaurant cannot fulfill an order for this many guests without more lead time.</div>
 
+          <div class="alert restaurant_closed alert-danger{{#unless restaurant.restaurant_closed}} hide{{/unless}}">We're sorry, this restaurant is closed for selected date.</div>
+
           <div class="alert alert-danger error-blank-fields hide">You must fill out all fields</div>
         </div>
 

@@ -354,6 +354,14 @@ define(function(require, exports, module) {
       mergeContext(this);
       mergeContext(options.hash);
       return options.fn(context);
+    },
+
+    contains: function(arr, element, options){
+      if(utils.contains(arr, element)){
+        return options.fn(this);
+      } else {
+        return options.inverse(this);
+      }
     }
   }
 

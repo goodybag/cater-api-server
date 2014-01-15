@@ -61,7 +61,11 @@
             </a>
             {{#if user.id}}
             <ul class="nav navbar-nav pull-right">
-              <li><a href="/restaurants">Home</a></li>
+              {{#contains user.groups 'restaurant'}}
+                <li><a href="/restaurants/manage">Home</a></li>
+              {{else}}
+                <li><a href="/restaurants">Home</a></li>
+              {{/contains}}
               {{#if session.oldUser}}
               <li>
                 <a href="/users/return" class="users-return navbar-btn">
@@ -75,6 +79,9 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li><a href="/users/me">My Settings</a></li>
+                  {{#contains user.groups 'restaurant'}}
+                    <li><a href="/restaurants/manage">My Restaurants</a></li>
+                  {{/contains}}
                   <li><a href="/users/me/orders">My Orders</a></li>
                   <li><a href="/auth/logout">Logout</a></li>
                 </ul>

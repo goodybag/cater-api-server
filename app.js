@@ -73,6 +73,8 @@ app.configure(function(){
     app.use(middleware.sslRedirect);
   }
 
+  app.use( require('dirac-middleware')({ envelope: false }) );
+
   app.use(app.router);
 
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));

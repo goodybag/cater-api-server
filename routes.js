@@ -4,6 +4,7 @@ var controllers = require('./controllers');
 var utils = require('./utils');
 var Models = require('./models');
 var hbHelpers = require('./public/js/lib/hb-helpers');
+var db = require('./db');
 
 var m = utils.extend({
   orderParams   : require('./middleware/order-params'),
@@ -12,8 +13,9 @@ var m = utils.extend({
   buildReceipt  : require('./middleware/build-receipt')
 }, require('stdm') );
 
-module.exports.register = function(app) {
+utils.extend( m, require('dirac-middleware') );
 
+module.exports.register = function(app) {
   app.get('/', m.restrict(['client', 'admin']), function(req, res) { res.redirect('/restaurants'); });
 
   /**
@@ -515,5 +517,35 @@ module.exports.register = function(app) {
   app.get('/analytics'
   , m.restrict(['admin'])
   , controllers.analytics.list
-  )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries'
+  , m.pagination()
+  , m.param('restaurant_id')
+  , m.find( db.payment_summaries )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/payment-summaries'
+    // Ensure restaurant ID in the URL is what is in the body
+  , function( req, res, next ){
+      req.body.restaurant_id = req.param('restaurant_id');
+      next();
+    }
+  , m.insert( db.payment_summaries )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id'
+  , m.param('payment_summary_id')
+  , m.findOne( db.payment_summaries )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id'
+  , m.param('payment_summary_id')
+  , m.update( db.payment_summaries )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id'
+  , m.param('payment_summary_id')
+  , m.remove( db.payment_summaries )
+  );
 }

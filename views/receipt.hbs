@@ -245,9 +245,9 @@
       <a class="btn btn-default btn-add-to-order" href="/orders/{{order.id}}/add-items">Add to Order</a>
       {{/if}}
 
-      {{#if isOwner}}
+      {{#unless isRestaurantManager}}
       <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
-      {{/if}}
+      {{/unless}}
     </div>
     {{/unless}}
 

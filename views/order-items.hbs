@@ -118,10 +118,10 @@
           {{/if}}
         </div>
         <div class="col-sm-6 actions-right">
-          {{#if isOwner}}
+          {{#unless isRestaurantManager}}
             <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
             <a href="/orders/{{order.id}}" class="btn btn-primary btn-submit{{#unless order.submittable}} disabled{{/unless}}">Checkout</a>
-          {{/if}}
+          {{/unless}}
         </div>
       </div>
     </div>

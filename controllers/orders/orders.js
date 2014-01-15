@@ -166,13 +166,14 @@ module.exports.get = function(req, res) {
     // Redirect empty orders to item summary
     if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
 
-    var isReview = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
+    var isReview = order.attributes.status === 'submitted'
+      && (req.query.review_token === order.attributes.review_token || req.order.isRestaurantManager)
+    ;
 
     user = user.toJSON();
     user.addresses = utils.invoke(user.addresses, 'toJSON');
 
     utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
-    console.log(req.order);
     var context = {
       order: order.toJSON(),
       isRestaurantReview: isReview,
@@ -212,9 +213,15 @@ module.exports.get = function(req, res) {
       context.showThankYou = true;
     }
 
+    // don't allow restaurant manager to edit orders
+    // in the future we will/should support this
+    if (req.order.isRestaurantManager)
+      context.order.editable = false;
+
     // orders are always editable for an admin
-    if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
+    if (req.order.isAdmin)
       context.order.editable = true;
+
     var view = order.attributes.status === 'pending' ? 'checkout' : 'receipt';
 
     if (req.param('receipt')) {

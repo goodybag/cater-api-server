@@ -423,7 +423,7 @@ var filterRestaurantsByEvents = function(query, searchParams) {
   , 'columns': [ '*' ]
   , 'where': {
       'date_range': { 
-        '$dateContains': searchParams && searchParams.date ? searchParams : 'now()' 
+        '$dateContains': searchParams && searchParams.date ? searchParams.date : 'now()' 
       }
     , 'closed': true
     }

@@ -102,7 +102,7 @@ define(function(require, exports, module) {
       );
 
       errors = errors.concat(
-        this.validateRestaurantEvents();
+        this.validateRestaurantEvents()
       );
 
       return errors.length > 0 ? errors : null;

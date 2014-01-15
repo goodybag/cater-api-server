@@ -12,7 +12,7 @@
   <div class="panel panel-order-line-item">
     <div class="panel-heading pull-left">{{order.restaurant.name}}</div>
     <div>
-    {{#if admin}}
+    {{#if isAdmin}}
     <div class="btn-group order-status pull-right">
       <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
         {{order.status}} <span class="caret"></span>
@@ -118,7 +118,7 @@
           {{/if}}
         </div>
         <div class="col-sm-6 actions-right">
-          {{#if owner}}
+          {{#if isOwner}}
             <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
             <a href="/orders/{{order.id}}" class="btn btn-primary btn-submit{{#unless order.submittable}} disabled{{/unless}}">Checkout</a>
           {{/if}}

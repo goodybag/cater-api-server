@@ -24,15 +24,13 @@ module.exports.summary = function(req, res, next) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
 
       var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
-      var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
-      var isRestaurantManager = utils.contains(req.user.attributes.restaurant_ids, order.attributes.restaurant_id);
       utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
       var context = {
         order: order.toJSON(),
         restaurantReview: review,
-        restaurantManager: isRestaurantManager,
-        owner: isOwner,
-        admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
+        isRestaurantManager: req.order.isRestaurantManager,
+        isOwner: req.order.isOwner,
+        isAdmin: req.order.isAdmin
         states: states,
         orderParams: req.session.orderParams,
         query: req.query,

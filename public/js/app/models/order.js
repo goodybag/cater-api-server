@@ -1,10 +1,13 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
+  var utils = require('utils');
 
   var OrderItems = require('../collections/order-items');
 
+  var restaurantEventDateRanges = require('data/event-date-ranges');
   var Restaurant = require('./restaurant');
+  var RestarantEvent = require('./restaurant-event');
   var OrderItem = require('./order-item');
   var Address = require('./address');
 
@@ -98,12 +101,34 @@ define(function(require, exports, module) {
         this.restaurant.validateOrderFulfillability( new Order( _.extend(this.toJSON(), attrs) ) )
       );
 
-      console.log(this.validateRestaurantEvents());
+      errors = errors.concat(
+        this.validateRestaurantEvents();
+      );
+
       return errors.length > 0 ? errors : null;
     },
 
     validateRestaurantEvents: function() {
-      return ['restaurant closed for event'];
+      var this_ = this;
+      var errors = [];
+
+      // this is super whack
+      utils.each(restaurantEventDateRanges, function(range) {
+        var event = new RestarantEvent({date_range: range});
+        var fce = event.toFullCalendarEvent();
+        var orderDate = moment(this_.get('datetime'));
+
+        var occursDuringEvent = 
+          orderDate.isAfter(fce.start) && orderDate.isBefore(fce.end) ||
+          orderDate.isSame(fce.start) ||
+          orderDate.isSame(fce.end);
+
+        if( occursDuringEvent ) {
+          errors.push('restaurant cannot fulfill order during event');
+        }
+      });
+
+      return errors;
     },
 
     urlRoot: '/orders',

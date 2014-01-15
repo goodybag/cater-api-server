@@ -443,8 +443,9 @@ var filterRestaurantsByEvents = function(query, searchParams) {
 }
 
 /**
- * Check restaurant events occurring today or on the 
- * search param date.
+ * Check restaurant events that are closed for
+ * this restaurant so we can validate
+ * in case the user changes the datepicker
  *
  * @param {object} query - Query object to be modified
  * @param {object} searchParams - Object contains various order
@@ -452,19 +453,16 @@ var filterRestaurantsByEvents = function(query, searchParams) {
  */
 var includeRestaurantEvents = function(query, searchParams) {
 
+  // get all the closed events for this restaurant,
   query.with.restaurant_events = {
     'type': 'select'
   , 'table': 'restaurant_events'
   , 'columns': [ '*' ]
   , 'where': {
-      'date_range': { 
-        '$dateContains': searchParams && searchParams.date ? searchParams : 'now()' 
-      }
-    , 'closed': true
+      'closed': true
     }
   };
 
-  // Return array of event date ranges, occuring today or on search param date
   query.columns.push('(select array_to_json(array(select date_range from restaurant_events where restaurant_events.restaurant_id=restaurants.id) ) ) as event_date_ranges');
 }
 

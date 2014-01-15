@@ -69,11 +69,11 @@ var userRestaurants = function(query) {
   query.columns.push({
     type: 'array_agg',
     as: 'restaurant_ids',
-    expression: '"user_restaurants"."restaurant_id"'
+    expression: '"users_restaurants"."restaurant_id"'
   });
 
   if(!query.joins) query.joins = {};
-  query.joins.user_restaurants = {
+  query.joins.users_restaurants = {
     type: 'left',
     on: {'user_id': '$users.id$'}
   };
@@ -179,10 +179,10 @@ module.exports = {
   },
 
   userRestaurant: {
-    list: utils.partial(find, 'user_restaurants'),
-    get: utils.partial(findOne, 'user_restaurants'),
-    create: utils.partial(upsert, 'user_restaurants'),
-    update: utils.partial(upsert, 'user_restaurants')
+    list: utils.partial(find, 'users_restaurants'),
+    get: utils.partial(findOne, 'users_restaurants'),
+    create: utils.partial(upsert, 'users_restaurants'),
+    update: utils.partial(upsert, 'users_restaurants')
   },
 
   orderItem: {

@@ -17,7 +17,7 @@ begin
 
   INSERT INTO groups (name) VALUES ('restaurant');
 
-  create table if not exists "user_restaurants" (
+  create table if not exists "users_restaurants" (
     id            serial primary key
   , created_at    timestamptz not null default now()
   , user_id       int not null references users(id) on delete cascade

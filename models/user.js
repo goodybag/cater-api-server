@@ -208,10 +208,10 @@ module.exports = Model.extend({
     query.columns.push({
       type: 'array_agg',
       as: 'restaurant_ids',
-      expression: '"user_restaurants"."restaurant_id"'
+      expression: '"users_restaurants"."restaurant_id"'
     });
 
-    query.joins.user_restaurants = {
+    query.joins.users_restaurants = {
       type: 'left',
       on: {'user_id': '$users.id$'}
     };

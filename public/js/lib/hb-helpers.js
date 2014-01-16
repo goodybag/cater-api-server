@@ -273,10 +273,6 @@ define(function(require, exports, module) {
       return options[ !utils.isEmpty( obj ) ? 'fn' : 'inverse' ]();
     },
 
-    contains: function(list, value, options) {
-      return (utils.contains(list, value) ? options.fn : options.inverse).call(options, this);
-    },
-
     uuid: function(){
       return utils.uuid();
     },

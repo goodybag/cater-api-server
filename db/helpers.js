@@ -10,10 +10,8 @@ mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column
   } 
 });
 
-mosql.registerConditionalHelper( '$dateContains', {cascade: false}, function( column, set, values, collection ) {
-  if(values.length === 1) {
-    return column + ' @> ' + set + '::date';
-  }
+mosql.registerConditionalHelper( '$dateContains', function( column, set, values, collection ) {
+  return column + ' @> ' + set + '::date';
 });
 
 mosql.registerConditionalHelper( '$overlap', {cascade: false}, function( column, set, values, collection ) {

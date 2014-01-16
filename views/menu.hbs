@@ -185,10 +185,6 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
 <script>
-  define( 'data/event-date-ranges', function() {
-    return {{{ json restaurant.event_date_ranges }}};
-  });
-
   define( 'data/user', ['app/models/user'], function( User ){
     return new User( {{{json user}}} )
   });

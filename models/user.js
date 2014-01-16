@@ -3,32 +3,38 @@ var db  = require('../db');
 var utils = require('../utils');
 var Model = require('./model');
 var Address = require('./address');
+var queries = require('../db/queries');
 
 var table = 'users';
 
-module.exports = Model.extend({
+var User = module.exports = Model.extend({
   createPaymentMethod: function( pm, callback, client ){
-    module.exports.createPaymentMethod( this.attributes.id, pm, callback, client );
+    User.createPaymentMethod( this.attributes.id, pm, callback, client );
     return this;
   }
 
 , findPaymentMethods: function( pmQuery, callback, client ){
-    module.exports.findPaymentMethods( this.attributes.id, pmQuery, callback, client );
+    User.findPaymentMethods( this.attributes.id, pmQuery, callback, client );
     return this;
   }
 
 , updatePaymentMethods: function( where, update, callback, client ){
-    module.exports.updatePaymentMethods( this.attributes.id, where, udpate, callback, client );
+    User.updatePaymentMethods( this.attributes.id, where, udpate, callback, client );
     return this;
   }
 
 , removePaymentMethods: function( where, callback, client ){
-    module.exports.removePaymentMethods( this.attributes.id, where, callback, client );
+    User.removePaymentMethods( this.attributes.id, where, callback, client );
     return this;
   }
 
 , removeUserPaymentMethod: function( cardId, callback, client ){
-    module.exports.removeUserPaymentMethod( this.attributes.id, cardId, callback, client );
+    User.removeUserPaymentMethod( this.attributes.id, cardId, callback, client );
+    return this;
+  }
+
+, create: function( callback, client ){
+    User.create( this.attributes, callback, client );
     return this;
   }
 }, {
@@ -48,6 +54,95 @@ module.exports = Model.extend({
 , paymentMethodFields: Object.keys(
     require('../db/definitions/payment-methods').schema
   )
+
+, create: function( attr, callback, client ){
+    var this_ = this;
+
+    var flow = {
+      encrypt: function( done ){
+        utils.encryptPassword( attr.password, done );
+      }
+
+    , balanced: function( hash, salt, done ){
+        var data = { name: attr.name };
+
+        utils.balanced.Customers.create( data, function( error, customer ){
+          if ( error ) return done( error );
+
+          done( null, hash, customer.uri );
+        });
+      }
+
+    , create: function( hash, balanced_customer_uri, done ){
+        var groups = attr.groups || ['client'];
+
+        var userData = utils.extend( attr, {
+          email:                  attr.email.toLowerCase()
+        , password:               hash
+        , balanced_customer_uri:  balanced_customer_uri
+        });
+
+        var query = queries.user.create(
+          utils.omit( userData, ['groups', 'restaurant_ids'] )
+        );
+
+        var sql = db.builder.sql( query );
+
+        db.query( sql.query, sql.values, function( error, results ){
+          if (error) return done( error );
+
+          return done( null, results[0], groups );
+        });
+      }
+
+    , group: function( user, groups, done ){
+        user.groups = utils.map( groups, function( group ){
+          return { user_id: user.id, group: group };
+        });
+
+        var query = queries.user.setGroup( user.groups );
+        var sql = db.builder.sql( query );
+
+        db.query( sql.query, sql.values, function( error, results ){
+          done( error, user );
+        });
+      }
+
+    , restaurant: function( user, done ){
+        if ( !utils.find( user.groups, { group: 'restaurant' })
+          || !attr.restaurant_ids
+          || attr.restaurant_ids.length <=0
+          || isNaN( parseInt( attr.restaurant_ids[0] ) )
+        ) return done(null);
+
+        var query = queries.userRestaurant.create({
+          user_id:        user.id
+        , restaurant_id:  parseInt( attr.restaurant_ids[0] )
+        });
+
+        var sql = db.builder.sql( query );
+        db.query( sql.query, sql.values, function( error, results ){
+          done( error, user );
+        });
+      }
+    }
+
+    utils.async.waterfall([
+      flow.encrypt
+    , flow.balanced
+    , flow.create
+    , flow.group
+    , flow.restaurant
+    ], function( error, user ){
+      if ( error ) return callback( error );
+
+      for ( var key in user ){
+        this_.attributes[ key ] = user[ key ];
+      }
+
+      callback( null, this_ );
+    });
+  }
 
 , createPaymentMethod: function( userId, pm, callback, client ){
     if ( 'data' in pm ) pm.data = JSON.stringify( pm.data );

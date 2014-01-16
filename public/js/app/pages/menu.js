@@ -73,6 +73,7 @@ define( function( require ){
         });
       });
 
+      // todo: orderModel.restaurant should not come from models.order
       orderModel.restaurant.set('eventDateRanges', restaurant.get('event_date_ranges'));
 
       restaurant.categories.each( function( category ){

@@ -98,10 +98,7 @@ define(function(require, exports, module) {
         // restaurant validate expects an order model and this instance does not
         // have all the attrs set
         this.restaurant.validateOrderFulfillability( new Order( _.extend(this.toJSON(), attrs) ) )
-      );
-
-      errors = errors.concat(
-        this.validateRestaurantEvents()
+      , this.validateRestaurantEvents()
       );
 
       return errors.length > 0 ? errors : null;

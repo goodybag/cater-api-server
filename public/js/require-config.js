@@ -119,6 +119,7 @@ var require = {
     }
   , select2: {
       deps: ['jquery']
+    , exports: 'Select2'
     }
   , 'jquery.inputmask': {
       deps: ['jquery']

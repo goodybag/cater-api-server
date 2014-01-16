@@ -191,6 +191,33 @@ module.exports = Model.extend({
 , find: function( query, callback, client ){
     var this_ = this;
 
+    if (!query.columns) query.columns = ['*'];
+    if (!query.joins) query.joins = {};
+
+    query.columns.push({
+      type: 'array_agg',
+      as: 'groups',
+      expression: '"users_groups"."group"'
+    });
+
+    query.joins.users_groups = {
+      type: 'left',
+      on: {'user_id': '$users.id$'}
+    };
+
+    query.columns.push({
+      type: 'array_agg',
+      as: 'restaurant_ids',
+      expression: '"users_restaurants"."restaurant_id"'
+    });
+
+    query.joins.users_restaurants = {
+      type: 'left',
+      on: {'user_id': '$users.id$'}
+    };
+
+    query.groupBy = 'id';
+
     // Run all tasks in parallel
     var tasks = {
       users: function( done ){

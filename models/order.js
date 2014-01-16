@@ -809,7 +809,7 @@ module.exports = Model.extend({
    * Find orders filtered by status
    *
    * @param {object} query - The query object (optional)
-   * @param {string} status - The order status to filter by
+   * @param {string|array} status - The order status to filter by
    * @param {function} callback - The callback function(error, orders)
    */
   findByStatus: function( query, status, callback ){
@@ -825,46 +825,50 @@ module.exports = Model.extend({
     , where: {}
     });
 
-    switch (status) {
-      case 'accepted':
-        // sort by date accepted
-        query.with = [{
-          name: 'latest_order_statuses'
-        , type: 'select'
-        , table: 'order_statuses'
-        , columns: [
-            'order_id'
-          , 'status'
-          , { name: 'created_at', alias: 'status_date' }
-          ]
-        , order: [
-            'order_id desc'
-          , 'created_at desc'
-          ]
-        , distinct: ['order_id']
-        }];
+    if (typeof status === 'string') {
+      switch (status) {
+        case 'accepted':
+          // sort by date accepted
+          query.with = [{
+            name: 'latest_order_statuses'
+          , type: 'select'
+          , table: 'order_statuses'
+          , columns: [
+              'order_id'
+            , 'status'
+            , { name: 'created_at', alias: 'status_date' }
+            ]
+          , order: [
+              'order_id desc'
+            , 'created_at desc'
+            ]
+          , distinct: ['order_id']
+          }];
 
-        query.joins = query.joins || {};
-        query.joins.latest_order_statuses = {
-          type: 'left'
-        , on: {
-            'order_id': '$orders.id$'
-          }
-        };
+          query.joins = query.joins || {};
+          query.joins.latest_order_statuses = {
+            type: 'left'
+          , on: {
+              'order_id': '$orders.id$'
+            }
+          };
 
-        query.where.status = status;
-        query.order = ['status_date desc'];
-        break;
-      case 'pending':
-      case 'canceled':
-      case 'submitted':
-      case 'denied':
-      case 'delivered':
-        query.where.status = status;
-        break;
-      default:
-        break;
-    };
+          query.where.status = status;
+          query.order = ['status_date desc'];
+          break;
+        case 'pending':
+        case 'canceled':
+        case 'submitted':
+        case 'denied':
+        case 'delivered':
+          query.where.status = status;
+          break;
+        default:
+          break;
+      };
+    } else {
+      query.where.status = {$in: status};
+    }
 
     module.exports.find.call( this, query, callback );
   },

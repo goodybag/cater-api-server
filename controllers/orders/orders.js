@@ -76,8 +76,6 @@ module.exports.list = function(req, res) {
     var context = {
       orders: utils.invoke(orders, 'toJSON')
     , filter: filter
-    , isRestaurantManager: req.order.isRestaurantManager
-    , isOwner: req.order.isOwner
     };
     res.render('orders', context);
   });

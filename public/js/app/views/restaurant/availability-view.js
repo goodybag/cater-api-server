@@ -4,25 +4,27 @@
  * Handles the calendar for a restaurant's holidays or time off. 
  * Allows marking events so that admins are not able to place orders during 
  * specified days.
- *
- * Note: Date ranges from backend are represented with [ start, end ) 
- * but the frontend calendar plugin uses [ start, end ].
- *
- * Dependencies:
- *   - collections.restaurant-events // todo: generalize restaurant events?
  */
 
 define(function(require, exports, module) {
-  var utils = require('utils');
-  var notify = require('notify');
+
+  // Deps
   var $ = require('jquery');
-  var FormView = require('../form-view');
+  var moment = require('moment');
   var FullCalendar = require('fullcalendar');
 
+  // Lib
+  var utils = require('utils');
+  var notify = require('notify');
+
+  // Bootstrapped data
   var restaurantEvents = require('data/events');
   var restaurant = require('data/restaurant');
-  var moment = require('moment');
 
+  // Views
+  var FormView = require('../form-view');
+
+  // Models
   var RestaurantEvent = require('../../models/restaurant-event');
 
   return module.exports = FormView.extend({
@@ -49,8 +51,8 @@ define(function(require, exports, module) {
         var duringStart = $during.find('.event-date-start').text();
         var duringEnd = $during.find('.event-date-end').text();
 
-        // convert upper bound for postgres
-        // [ start, end ] -> [ start, end )
+        // Note: Date ranges from backend are represented with [ start, end ) 
+        // but the frontend calendar plugin uses [ start, end ].
         return [
           '['
         , moment(duringStart).format('YYYY-MM-DD')
@@ -66,11 +68,7 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
-
-      // cache dom objects
       this.$calendar = this.$el.find('#calendar');
-
-      // set up
       this.setupCalendar();
     },
 
@@ -88,7 +86,7 @@ define(function(require, exports, module) {
       this.model = restaurantEvents.get(calEvent.id);
       this.model.set({
         'edit': true            // display the 'edit' version of the modal
-      , 'calEvent': calEvent    // save this for updating full calendar 
+      , 'calEvent': calEvent    // save object for updating full calendar
       }); 
       var html = this.templates.eventModal(this.model.toFullCalendarEvent());
       this.renderModal(html);
@@ -136,6 +134,7 @@ define(function(require, exports, module) {
         success: function(model, response, options) {
           this_.$calendar.fullCalendar('removeEvents', eventId);
           this_.toggleModal('hide');
+          restaurantEvents.remove(this_.model);
         },
 
         error: function(model, xhr, options) {

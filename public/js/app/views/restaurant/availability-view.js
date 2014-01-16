@@ -130,12 +130,11 @@ define(function(require, exports, module) {
 
     removeEvent: function(e) {
       var this_ = this
-        , restaurantId = $(e.target).data('id')
-        , restaurantEvent = restaurantEvents.get(restaurantId);
+        , eventId = this.model.get('id');
 
-      restaurantEvent.destroy({
+      this.model.destroy({
         success: function(model, response, options) {
-          this_.$calendar.fullCalendar('removeEvents', restaurantId);
+          this_.$calendar.fullCalendar('removeEvents', eventId);
           this_.toggleModal('hide');
         },
 

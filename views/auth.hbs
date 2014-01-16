@@ -57,12 +57,26 @@
             </fieldset>
           </form>
 
-          <form method="POST" action="/waitlist" class="panel">
+          {{#if registrationError}}
+            {{{dump registrationError}}}
+          {{/if}}
+
+          <form method="POST" action="/auth/signup" class="panel" id="registration-form">
             <fieldset>
-              <span class="help-block waitlist-help"><strong>Don't have an account yet?</strong>  Request an invite!</span>
+              <span class="help-block waitlist-help"><strong>Don't have an account yet?</strong> Signup today!</span>
               <div class="form-group">
                 <label>Email</label>
                 <input type="email" name="email" class="form-control" placeholder="user@example.com" value="{{email}}">
+              </div>
+              <div class="row">
+                <div class="form-group col-lg-6">
+                  <label>Password</label>
+                  <input type="password" name="password" class="form-control">
+                </div>
+                <div class="form-group col-lg-6">
+                  <label>One more time</label>
+                  <input type="password" name="password" class="form-control">
+                </div>
               </div>
               <div class="row">
                 <div class="form-group col-lg-6">
@@ -79,7 +93,7 @@
                 <input type="text" name="organization" class="form-control" value="{{organization}}">
               </div>
              <div class="form-group">
-                <button type="submit" class="btn btn-primary pull-right">Request Invite</button>
+                <button type="submit" class="btn btn-primary pull-right">Signup</button>
               </div>
             </fieldset>
           </form>
@@ -93,9 +107,18 @@
 <script>
   require([
       'app/views/auth-view'
+    , 'app/views/registration-view'
     ]
-  , function(AuthView) {
-      var view = new AuthView({el: '.page-auth', query: '{{query}}' });
+  , function(AuthView, RegistrationView) {
+      var page = {};
+
+      page.view = new AuthView({el: '.page-auth', query: '{{query}}' });
+
+      page.registrationView = new RegistrationView({
+        el: '#registration-form'
+      });
+
+      return page;
     }
   );
 </script>

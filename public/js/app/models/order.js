@@ -5,7 +5,6 @@ define(function(require, exports, module) {
 
   var OrderItems = require('../collections/order-items');
 
-  var restaurantEventDateRanges = require('data/event-date-ranges');
   var Restaurant = require('./restaurant');
   var RestarantEvent = require('./restaurant-event');
   var OrderItem = require('./order-item');
@@ -116,7 +115,7 @@ define(function(require, exports, module) {
       var this_ = this;
 
       // this is super whack
-      var errors = utils.reduce(restaurantEventDateRanges, function(memo, range) {
+      var errors = utils.reduce(this.restaurant.get('eventDateRanges'), function(memo, range) {
         var event = new RestarantEvent({date_range: range});
         var fce = event.toFullCalendarEvent();
         var orderDate = moment(this_.get('datetime'));

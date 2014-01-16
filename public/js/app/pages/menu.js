@@ -5,7 +5,6 @@ define( function( require ){
   var restaurant      = require('data/restaurant');
   var defaultAddress  = require('data/default-address');
   var user            = require('data/user');
-  var eventDateRanges = require('data/event-date-ranges');
 
   require('bootstrap');
 
@@ -73,6 +72,8 @@ define( function( require ){
         , itemModalView:  itemModalView
         });
       });
+
+      orderModel.restaurant.set('eventDateRanges', restaurant.get('event_date_ranges'));
 
       restaurant.categories.each( function( category ){
         category.items.each( function( item ){

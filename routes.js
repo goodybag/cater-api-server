@@ -224,11 +224,11 @@ module.exports.register = function(app) {
    *  Order resource.  An individual order.
    */
 
-
   app.get(
     config.receipt.orderRoute
   , m.basicAuth()
   , m.restrict(['admin', 'receipts'])
+  , function(req,res, next){ req.order = {}; next(); } // normally this would get added in orders.auth, but we don't hit that from here
   , function(req, res, next){ req.params.receipt = true; next(); }
   , controllers.orders.get
   );
@@ -265,7 +265,6 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
-
 
   app.get('/receipts/order-:oid.pdf', m.buildReceipt(), express.static(__dirname + '/public'));
 

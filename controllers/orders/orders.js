@@ -26,16 +26,36 @@ var addressFields = [
 , 'delivery_instructions'
 ];
 
+/**
+ * Will attach req.order.[isOwner, isRestaurantManager, isAdmin] to help determine
+ * what control the user has over a particular order
+ */
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
+  req.order = {};
   logger.db.info(TAGS, 'auth for order #'+ req.params.id);
-  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) return next();
+  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
+    req.order.isAdmin = true;
+    return next();
+  }
   models.Order.findOne(req.params.id, function(err, order) {
     if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
     var reviewToken = req.query.review_token || req.body.review_token;
+
+    // allow restaurant user to view orders at their own restaurant
+    if (req.user
+      && req.user.attributes.restaurant_ids
+      && utils.contains(req.user.attributes.restaurant_ids, order.attributes.restaurant_id)
+    ) {
+      req.order.isRestaurantManager = true;
+      return next();
+    }
+
     if (order.attributes.user_id !== (req.session.user||0).id && order.attributes.review_token !== reviewToken)
       return res.status(404).render('404');
+
+    req.order.isOwner = true;
     next();
   });
 };
@@ -44,7 +64,7 @@ module.exports.editability = function(req, res, next) {
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE);
     if (!order) return res.json(404);
-    var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
+    var editable = req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
     return editable ? next() : res.json(403, 'order not editable');
   });
 };
@@ -53,10 +73,11 @@ module.exports.list = function(req, res) {
   var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : 'all';
   models.Order.findByStatus(filter, function( error, orders ) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('orders', {
+    var context = {
       orders: utils.invoke(orders, 'toJSON')
     , filter: filter
-    });
+    };
+    res.render('orders', context);
   });
 };
 
@@ -143,8 +164,9 @@ module.exports.get = function(req, res) {
     // Redirect empty orders to item summary
     if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
 
-    var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
-    var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
+    var isReview = order.attributes.status === 'submitted'
+      && (req.query.review_token === order.attributes.review_token || req.order.isRestaurantManager)
+    ;
 
     user = user.toJSON();
     user.addresses = utils.invoke(user.addresses, 'toJSON');
@@ -152,9 +174,10 @@ module.exports.get = function(req, res) {
     utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
     var context = {
       order: order.toJSON(),
-      restaurantReview: review,
-      owner: isOwner,
-      admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
+      isRestaurantReview: isReview,
+      isOwner: req.order.isOwner,
+      isRestaurantManager: req.order.isRestaurantManager,
+      isAdmin: req.order.isAdmin,
       states: states,
       orderAddress: function() {
         return {
@@ -188,9 +211,15 @@ module.exports.get = function(req, res) {
       context.showThankYou = true;
     }
 
+    // don't allow restaurant manager to edit orders
+    // in the future we will/should support this
+    if (req.order.isRestaurantManager)
+      context.order.editable = false;
+
     // orders are always editable for an admin
-    if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
+    if (req.order.isAdmin)
       context.order.editable = true;
+
     var view = order.attributes.status === 'pending' ? 'checkout' : 'receipt';
 
     if (req.param('receipt')) {
@@ -251,7 +280,7 @@ module.exports.changeStatus = function(req, res) {
     var previousStatus = order.attributes.status;
 
     // if they're not an admin, check if the status change is ok.
-    if(!req.session.user || !utils.contains(req.session.user.groups, 'admin')) {
+    if(!req.session.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {
       if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
         return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
 
@@ -263,7 +292,7 @@ module.exports.changeStatus = function(req, res) {
         return res.send(403, 'order not complete');
 
       if (req.body.status === 'submitted' && !order.toJSON().submittable)
-        return res.send(403, 'order not submitttable');
+        return res.send(403, 'order not submittable');
     }
 
     var done = function() {
@@ -333,7 +362,7 @@ module.exports.changeStatus = function(req, res) {
       // If we are an admin and we received a ?notify=false then don't send notifications.
       // Otherwise send the notification.
       if (!(req.session.user
-        && utils.contains(req.session.user.groups, 'admin')
+        && req.order.isAdmin
         && req.query.notify
         && req.query.notify.toLowerCase() == 'false'
       )) venter.emit('order:status:change', order, previousStatus);

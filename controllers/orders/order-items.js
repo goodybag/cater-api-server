@@ -24,23 +24,23 @@ module.exports.summary = function(req, res, next) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
 
       var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
-      var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
       utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
       var context = {
         order: order.toJSON(),
         restaurantReview: review,
-        owner: isOwner,
-        admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
+        isRestaurantManager: req.order.isRestaurantManager,
+        isOwner: req.order.isOwner,
+        isAdmin: req.order.isAdmin,
         states: states,
         orderParams: req.session.orderParams,
         query: req.query,
         step: 1
       };
 
-      if (!context.owner && !context.admin) return res.status(404).render('404');
+      if (!context.isOwner && !context.isAdmin && !context.isRestaurantManager) return res.status(404).render('404');
 
       // orders are always editable for an admin
-      if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
+      if (req.order.isAdmin)
         context.order.editable = true;
 
       res.render('order-items', context, function(err, html) {

@@ -2,22 +2,28 @@
   <a href="?" class="btn btn-default {{#eq filter "all"}}active{{/eq}}" data-status="all">
     All
   </a>
+  {{#unless isRestaurantManager}}
   <a href="?filter=pending" class="btn btn-pending {{#eq filter "pending"}}active{{/eq}}">
     Pending
   </a>
+  {{/unless}}
+  {{#unless isRestaurantManager}}
   <a href="?filter=canceled" class="btn btn-canceled {{#eq filter "canceled"}}active{{/eq}}">
     Canceled
   </a>
+  {{/unless}}
   <a href="?filter=submitted" class="btn btn-submitted {{#eq filter "submitted"}}active{{/eq}}">
     Submitted
-  </a>
-  <a href="?filter=denied" class="btn btn-denied {{#eq filter "denied"}}active{{/eq}}">
-    Denied
   </a>
   <a href="?filter=accepted" class="btn btn-accepted {{#eq filter "accepted"}}active{{/eq}}">
     Accepted
   </a>
+  <a href="?filter=denied" class="btn btn-denied {{#eq filter "denied"}}active{{/eq}}">
+    Denied
+  </a>
+  {{#unless isRestaurantManager}}
   <a href="?filter=delivered" class="btn btn-delivered {{#eq filter "delivered"}}active{{/eq}}">
     Delivered
   </a>
+  {{/unless}}
 </div>

@@ -7,13 +7,27 @@ var models = require('../../models');
 module.exports.cards = require('./cards');
 
 module.exports.list = function(req, res) {
-  var query = queries.user.list(req.query.columns, req.query.limit || 1000, req.query.offset);
-  var sql = db.builder.sql(query);
+  var tasks = {
+    users: function (callback) {
+      var query = queries.user.list(req.query.columns, req.query.limit || 1000, req.query.offset);
+      var sql = db.builder.sql(query);
+      db.query(sql.query, sql.values, function(error, results){
+        callback(error, results);
+      });
+    }
+  , restaurants: function (callback) {
+      models.Restaurant.find({}, callback);
+    }
+  };
 
-  db.query(sql.query, sql.values, function(error, results){
+  utils.async.parallel(tasks, function(error, results) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('users', {users: results});
+    res.render('users', {
+      users: results.users
+    , restaurants: utils.invoke(results.restaurants, 'toJSON')
+    });
   });
+
 }
 
 module.exports.get = function(req, res) {
@@ -49,7 +63,7 @@ module.exports.create = function(req, res) {
   , create: function(hash, balanced_customer_uri, callback) {
       var groups = req.body.groups || ['client'];
       var userData = utils.extend(req.body, {email: req.body.email.toLowerCase(), password: hash, balanced_customer_uri: balanced_customer_uri});
-      var query = queries.user.create(utils.omit(userData, 'groups'));
+      var query = queries.user.create(utils.omit(userData, ['groups', 'restaurant_ids']));
 
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results){
@@ -68,13 +82,41 @@ module.exports.create = function(req, res) {
       var query = queries.user.setGroup(groups);
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, function(error, results){
-        if (error) return res.error(errors.internal.DB_FAILURE, error);
+        if (error) {
+          res.error(errors.internal.DB_FAILURE, error);
+          return callback(error);
+        }
+        callback(null, user, groups);
+      });
+    }
+  , restaurant: function(user, groups, callback) {
+      if (
+           !utils.find(groups, {group: 'restaurant'})
+        || !req.body.restaurant_ids
+        || req.body.restaurant_ids.length <=0
+        || isNaN(parseInt(req.body.restaurant_ids[0]))
+      ) {
+        callback(null);
         return res.send(204);
+      }
+      var query = queries.userRestaurant.create({
+        user_id: user.id
+      , restaurant_id: parseInt(req.body.restaurant_ids[0])
+      });
+      var sql = db.builder.sql(query);
+      db.query(sql.query, sql.values, function(error, results) {
+        if (error) {
+          res.error(errors.internal.DB_FAILURE, error);
+          return callback(error);
+        } else {
+          callback(null);
+          return res.send(204);
+        }
       });
     }
   }
 
-  utils.async.waterfall([flow.encrypt, flow.balanced, flow.create, flow.group]);
+  utils.async.waterfall([flow.encrypt, flow.balanced, flow.create, flow.group, flow.restaurant]);
 }
 
 module.exports.update = function(req, res) {

@@ -54,11 +54,13 @@
     <div class="row">
       <div class="col-sm-12 actions">
         {{#if this.restaurant}}
-          {{#eq status "pending"}}
-            <button type="button" class="btn btn-default cancel-order-btn">Cancel Order</button>
-          {{else}}
-            <button type="button" class="btn btn-default copy-order-btn">Order Again?</button>
-          {{/eq}}
+          {{#unless parent.isRestaurantManager}}
+            {{#eq status "pending"}}
+              <button type="button" class="btn btn-default cancel-order-btn">Cancel Order</button>
+            {{else}}
+              <button type="button" class="btn btn-default copy-order-btn">Order Again?</button>
+            {{/eq}}
+          {{/unless}}
         {{/if}}
         <button data-href="/receipts/order-{{this.id}}.pdf" data-target="_blank" data-name="Order {{this.id}} Receipt" class="btn btn-default btn-receipt">Download Receipt</button>
       </div>

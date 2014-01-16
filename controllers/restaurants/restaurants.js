@@ -209,6 +209,24 @@ module.exports.sort = function(req, res) {
   });
 };
 
+module.exports.listManageable = function(req, res) {
+  models.Restaurant.find(
+    {
+      where: {
+        id: {$in: req.user.attributes.restaurant_ids}
+      }
+    }
+  , function(error, restaurants) {
+      var context = {restaurants: utils.invoke(restaurants, 'toJSON'), states: states, isNew: true};
+      context.restaurant = {delivery_times: utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; }))};  // tmp hack
+      res.render('user-manage-restaurants', context, function(error, html) {
+        if (error) return res.error(errors.internal.UNKNOWN, error);
+        return res.send(html);
+      });
+    }
+  );
+};
+
 var zips = function(body, id) {
   return utils.map(body.delivery_zips, function(zip, index, arr) {
     return {restaurant_id: id,  zip: zip}

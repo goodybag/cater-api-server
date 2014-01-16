@@ -317,7 +317,7 @@ module.exports = Model.extend({
     // with "restaurant_events" as
     //   (select "restaurant_events".*
     //    from "restaurant_events"
-    //    where "restaurant_events"."date_range" @> date(now())
+    //    where "restaurant_events"."during" @> date(now())
     //    and closed is true )
     // select "restaurants".name, re.*
     // from "restaurants"
@@ -422,7 +422,7 @@ var filterRestaurantsByEvents = function(query, searchParams) {
   , 'table': 'restaurant_events'
   , 'columns': [ '*' ]
   , 'where': {
-      'date_range': { 
+      'during': { 
         '$dateContains': searchParams && searchParams.date ? searchParams.date : 'now()' 
       }
     , 'closed': true
@@ -463,6 +463,6 @@ var includeRestaurantEvents = function(query, searchParams) {
     }
   };
 
-  query.columns.push('(select array_to_json(array(select date_range from restaurant_events where restaurant_events.restaurant_id=restaurants.id) ) ) as event_date_ranges');
+  query.columns.push('(select array_to_json(array(select during from restaurant_events where restaurant_events.restaurant_id=restaurants.id) ) ) as event_date_ranges');
 }
 

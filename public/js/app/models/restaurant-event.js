@@ -19,7 +19,7 @@ define(function(require, exports, module) {
           type: ['string', 'null'],
           required: false
         },
-        date_range: {
+        during: {
           type: 'string',
           required: true
         },
@@ -34,13 +34,13 @@ define(function(require, exports, module) {
      * Convert Restaurant Event into a FullCalendar Event object
      */
     toFullCalendarEvent: function() {
-      var date_range = this.get('date_range');
-      date_range = date_range.replace( /[\[\]\(\)]/g,'').split(',');
+      var during = this.get('during');
+      during = during.replace( /[\[\]\(\)]/g,'').split(',');
 
       return utils.extend({}, this.toJSON(), {
         title:  this.get('name')
-      , start:  date_range[0]
-      , end:    moment(date_range[1]).add('days', -1).format('YYYY-MM-DD') // convert to inclusive bound
+      , start:  during[0]
+      , end:    moment(during[1]).add('days', -1).format('YYYY-MM-DD') // convert to inclusive bound
       });
     },
 

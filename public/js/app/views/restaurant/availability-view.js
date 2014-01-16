@@ -39,23 +39,23 @@ define(function(require, exports, module) {
     fieldMap: {
       name: '.event-name',
       description: '.event-description',
-      date_range: '.event-date-range',
+      during: '.event-during',
       closed: '.event-closed',
     },
 
     fieldGetters: {
-      date_range: function() {
-        var $date_range = this.$el.find(this.fieldMap.date_range);
-        var dateStart = $date_range.find('.event-date-start').text();
-        var dateEnd = $date_range.find('.event-date-end').text();
+      during: function() {
+        var $during = this.$el.find(this.fieldMap.during);
+        var duringStart = $during.find('.event-date-start').text();
+        var duringEnd = $during.find('.event-date-end').text();
 
         // convert upper bound for postgres
         // [ start, end ] -> [ start, end )
         return [
           '['
-        , moment(dateStart).format('YYYY-MM-DD')
+        , moment(duringStart).format('YYYY-MM-DD')
         , ', '
-        , moment(dateEnd).add('days', 1).format('YYYY-MM-DD')
+        , moment(duringEnd).add('days', 1).format('YYYY-MM-DD')
         , ')'
         ].join('');
       },

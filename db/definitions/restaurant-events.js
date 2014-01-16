@@ -38,7 +38,7 @@ define(function(require) {
   , description: {
       type: types.text
     }
-  , date_range: {
+  , during: {
   	  type: types.daterange
   	, nullable: false
   	}

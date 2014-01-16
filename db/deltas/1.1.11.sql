@@ -15,7 +15,7 @@ begin
   , created_at    timestamp not null default now()
   , name          text not null
   , description   text
-  , date_range    daterange not null
+  , during        daterange not null
   , closed        boolean not null
   );
 

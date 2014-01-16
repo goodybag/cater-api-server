@@ -116,7 +116,7 @@ define(function(require, exports, module) {
 
       // this is super whack
       var errors = utils.reduce(this.restaurant.get('eventDateRanges'), function(memo, range) {
-        var event = new RestarantEvent({date_range: range});
+        var event = new RestarantEvent({during: range});
         var fce = event.toFullCalendarEvent();
         var orderDate = moment(this_.get('datetime'));
 

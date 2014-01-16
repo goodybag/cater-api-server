@@ -19,7 +19,7 @@ define(function(require) {
   definition.schema = {
     id: {
       type: types.serial
-    , unique: true
+    , pk: true
     }
   , created_at: {
       type: types.timestamptz
@@ -39,8 +39,6 @@ define(function(require) {
   };
 
   definition.indices = {};
-
-  definition.extras = ['PRIMARY KEY ("user_id", "payment_method_id")'];
 
   return definition;
 });

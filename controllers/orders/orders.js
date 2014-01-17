@@ -178,6 +178,11 @@ module.exports.get = function(req, res) {
       isOwner: req.order.isOwner,
       isRestaurantManager: req.order.isRestaurantManager,
       isAdmin: req.order.isAdmin,
+      isTipEditable: order.isTipEditable({
+        isOwner: req.order.isOwner,
+        isRestaurantManager: req.order.isRestaurantManager,
+        isAdmin: req.order.isAdmin,
+      }),
       states: states,
       orderAddress: function() {
         return {

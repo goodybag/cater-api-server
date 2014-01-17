@@ -106,7 +106,7 @@ module.exports.register = function(app) {
   app.all('/restaurants/:rid/events/:eid', m.restrict(['admin']), function(req, res, next) {
     res.set('Allow', 'PUT', 'PATCH, DELETE');
     res.send(405);
-  });  
+  });
 
   /**
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.

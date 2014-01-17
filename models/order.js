@@ -192,7 +192,7 @@ module.exports = Model.extend({
    * @param  {object}  orderAuth {isAdmin: bool, isOwner: bool, isRestaurantManager: bool}
    * @return {Boolean}           editability
    */
-  var isTipEditable = function(orderAuth) {
+  isTipEditable: function(orderAuth) {
     // Is the tip editable? This is the question. This is the criteria.
     //
     // 1. If the order has been canceled or rejected it is not editable.

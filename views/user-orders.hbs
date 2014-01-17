@@ -1,5 +1,6 @@
 {{#extend "css"}}
 <link rel="stylesheet" href="/css/user-orders.css">
+<link rel="stylesheet" href="/components/fullcalendar/fullcalendar.css">
 <link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css">
 {{/extend}}
 
@@ -23,8 +24,10 @@
           </li>
         </ul>
         <div class="tab-content">
-          <div class="tab-pane active" id="calendar-view">...</div>
-          <div class="tab-pane" id="list-view">
+          <div class="tab-pane fade in active" id="calendar-view">
+            <div id="calendar"></div>
+          </div>
+          <div class="tab-pane fade" id="list-view">
             <div class="row orders-list">
               <div class="col-md-3">
                 <div class="panel">
@@ -51,11 +54,20 @@
 
 {{#extend "scripts"}}
 <script>
+  define( 'data/orders', ['app/collections/orders'], 
+    function( Orders ) {
+      return new Orders({{{ json orders }}});
+    }
+  );
+
   require([
-      'app/views/orders-list-view'
+      'jquery'
+    , 'app/views/orders-list-view'
+    , 'app/views/orders-calendar-view'
     ]
-  , function(OrdersListView) {
+  , function($, OrdersListView, OrdersCalendarView) {
       var ordersListView = new OrdersListView({el: '.orders-list'});
+      var ordersCalendarView = new OrdersCalendarView({el: '#calendar'});
     }
   );
 </script>

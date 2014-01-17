@@ -347,7 +347,17 @@ define(function(require, exports, module) {
           return callback(null);
         }
       });
-    }
+    },
+
+    /**
+     * Convert datetime to a full calendar event object
+     */
+    getFullCalendarEvent: function() {
+      return {
+        title: this.get('restaurant_name')
+      , start: this.get('datetime')
+      }
+    } 
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']
   });

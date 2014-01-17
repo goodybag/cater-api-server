@@ -101,7 +101,7 @@ module.exports.get = function(req, res) {
         where: { 
           id: parseInt(req.params.rid) 
         }
-      , includes: ['restaurant_events'] 
+      , includes: ['closed_restaurant_events'] 
       };
 
       models.Restaurant.findOne(query, orderParams, function(err, restaurant) {

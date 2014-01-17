@@ -314,26 +314,14 @@ module.exports = Model.extend({
       unacceptable.push('(guests.restaurant_id IS NULL)');
     }
 
-    // with "restaurant_events" as
-    //   (select "restaurant_events".*
-    //    from "restaurant_events"
-    //    where "restaurant_events"."during" @> date(now())
-    //    and closed is true )
-    // select "restaurants".name, re.*
-    // from "restaurants"
-    // left outer join "restaurant_events" "re" on "restaurants"."id" = "re"."restaurant_id"
-    // order by restaurants.name asc;
-
-    // For restaurant listing, check active restaurant events.
-
     // Hide restaurants from listing if there's an event occurring
     if ( utils.contains(query.includes, 'filter_restaurant_events') ) {
       filterRestaurantsByEvents(query, orderParams);
     }
 
     // Include restaurant event duration in result
-    if ( utils.contains(query.includes, 'restaurant_events') ) {
-      includeRestaurantEvents(query, orderParams);
+    if ( utils.contains(query.includes, 'closed_restaurant_events') ) {
+      includeClosedRestaurantEvents(query, orderParams);
     }
 
 
@@ -409,8 +397,7 @@ module.exports = Model.extend({
  * Remove restaurants from the result set if 
  * there is an active event going on
  *
- * @param {object} query - Query object modified to 
- *   exclude restaurants
+ * @param {object} query - Query object to be modified
  * @param {object} searchParams - Object contains various order
  *   parameters such as datetime, guests and zip code.
  */
@@ -443,17 +430,15 @@ var filterRestaurantsByEvents = function(query, searchParams) {
 }
 
 /**
- * Check restaurant events that are closed for
- * this restaurant so we can validate
- * in case the user changes the datepicker
+ * Get restaurant events that are closed for
+ * this restaurant. Used for order date validation.
+ * Query result is called `event_date_ranges`.
  *
  * @param {object} query - Query object to be modified
  * @param {object} searchParams - Object contains various order
  *   parameters such as datetime, guests and zip code.
  */
-var includeRestaurantEvents = function(query, searchParams) {
-
-  // get all the closed events for this restaurant,
+var includeClosedRestaurantEvents = function(query, searchParams) {
   query.with.restaurant_events = {
     'type': 'select'
   , 'table': 'restaurant_events'

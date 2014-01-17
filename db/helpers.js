@@ -7,7 +7,11 @@ mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column
     return column + ' @> ARRAY[' + set.map( function(val) {
       return '$' + values.push(val);
     }).join(', ') + ']';
-  }
+  } 
+});
+
+mosql.registerConditionalHelper( '$dateContains', function( column, set, values, collection ) {
+  return column + ' @> ' + set + '::date';
 });
 
 mosql.registerConditionalHelper( '$overlap', {cascade: false}, function( column, set, values, collection ) {

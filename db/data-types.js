@@ -29,6 +29,7 @@ module.exports = {
 , cidr: 'cidr'
 , circle: 'circle'
 , date: 'date'
+, daterange: 'daterange'
 , float8: 'float8'
 , inet: 'inet'
 , integer: 'int'

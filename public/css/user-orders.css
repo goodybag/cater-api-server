@@ -64,3 +64,14 @@
   font-size: 14px;
   color: #A7A4A0;
 }
+
+.nav-orders .nav-tabs > li.active > a {
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+  background-color: #FCF9E8;
+}
+
+.nav-orders .tab-content {
+  margin-top: 30px;
+}

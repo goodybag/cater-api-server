@@ -1,25 +1,49 @@
 {{#extend "css"}}
 <link rel="stylesheet" href="/css/user-orders.css">
+<link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css">
 {{/extend}}
 
 <div class="page-my-orders container">
   <div class="row">
     <h1 class="col-lg-12 page-title">My Orders</h1>
   </div>
-  <div class="row orders-list">
-    <div class="col-md-2 col-md-offset-2">
-      <div class="panel">
-        <div class="panel-heading panel-heading-small">
-          <h4 class="panel-title">Filter</h4>
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="nav-orders">
+        <ul class="nav nav-tabs">
+          <li class="active">
+            <a href="#calendar-view" data-toggle="tab">
+              <i class="icon-calendar"></i> Calendar
+            </a>
+          </li>
+          <li>
+            <a href="#list-view" data-toggle="tab">
+              <i class="icon-list"></i> List
+            </a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="calendar-view">...</div>
+          <div class="tab-pane" id="list-view">
+            <div class="row orders-list">
+              <div class="col-md-3">
+                <div class="panel">
+                  <div class="panel-heading panel-heading-small">
+                    <h4 class="panel-title">Filter</h4>
+                  </div>
+                  <div class="panel-body">
+                    {{> order_status_buttons}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div class="panel">
+                  {{> order_list}}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="panel-body">
-          {{> order_status_buttons}}
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="panel">
-        {{> order_list}}
       </div>
     </div>
   </div>

@@ -353,11 +353,34 @@ define(function(require, exports, module) {
      * Convert datetime to a full calendar event object
      */
     getFullCalendarEvent: function() {
-      return {
-        title: this.get('restaurant_name')
+      var fullCalendarEvent = {
+        title: moment(this.get('datetime')).format('h:mma')+'\n'+this.get('restaurant_name')
       , start: this.get('datetime')
+      , color: this.getStatusColor()
+      };
+
+      //console.log(fullCalendarEvent);
+      return fullCalendarEvent;
+    },
+
+    getStatusColor: function() {
+      switch (this.get('status')) {
+        case 'pending':
+          return '#F0AD4E';
+        case 'canceled':
+          return '#B3B3B3';
+        case 'submitted':
+          return '#5BC0DE';
+        case 'accepted':
+          return '#5CB85C';
+        case 'denied':
+          return '#D9534F';
+        case 'delivered':
+          return '#428BCA';
+        default:
+          return '#fff'
       }
-    } 
+    }
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']
   });

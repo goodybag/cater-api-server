@@ -1,5 +1,5 @@
 var db = require('../../db');
-var RestaurantEventsDefinition = require('../../db/definitions/restaurant-events');
+var definition = require('../../db/definitions/restaurant-events');
 var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
@@ -64,7 +64,7 @@ module.exports.update = function(req, res, next) {
   },
   function(err, event) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var fields = utils.keys(RestaurantEventsDefinition.schema);
+    var fields = utils.keys(definition.schema);
     utils.extend(event.attributes, utils.pick(req.body, fields));
     event.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

@@ -81,3 +81,7 @@
   margin-right: 5px;
   margin-bottom: 5px;
 }
+
+.nav-orders .fc-event:hover { 
+  cursor: pointer;
+}

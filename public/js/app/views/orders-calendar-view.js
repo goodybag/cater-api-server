@@ -38,7 +38,12 @@ define(function(require, exports, module) {
     setupCalendar: function() {
       this.$el.fullCalendar({
         events: orders.getFullCalendarEvents()
+      , eventClick:     this.viewOrder.bind(this)
       });
+    },
+
+    viewOrder: function(calEvent, jsEvent, view) {
+      window.location.href = '/orders/' + calEvent.orderId;
     }
   });
 });

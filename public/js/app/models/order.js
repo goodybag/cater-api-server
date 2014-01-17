@@ -357,6 +357,7 @@ define(function(require, exports, module) {
         title: moment(this.get('datetime')).format('h:mma')+'\n'+this.get('restaurant_name')
       , start: this.get('datetime')
       , color: this.getStatusColor()
+      , orderId: this.get('id')
       };
 
       //console.log(fullCalendarEvent);

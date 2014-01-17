@@ -99,6 +99,7 @@ module.exports = Model.extend({
     query.joins = query.joins || {};
     query.distinct = (query.distinct != null) ? query.distinct : ["restaurants.name", "is_unacceptable", "restaurants.id"];
     query.where = query.where || {};
+    query.includes = query.includes || [];
 
     if (orderParams && 'is_hidden' in orderParams){
       query.where.is_hidden = orderParams.is_hidden;
@@ -313,6 +314,17 @@ module.exports = Model.extend({
       unacceptable.push('(guests.restaurant_id IS NULL)');
     }
 
+    // Hide restaurants from listing if there's an event occurring
+    if ( utils.contains(query.includes, 'filter_restaurant_events') ) {
+      filterRestaurantsByEvents(query, orderParams);
+    }
+
+    // Include restaurant event duration in result
+    if ( utils.contains(query.includes, 'closed_restaurant_events') ) {
+      includeClosedRestaurantEvents(query, orderParams);
+    }
+
+
     if (orderParams && (orderParams.date || orderParams.time)) {
       query.joins.delivery_times = {
         type: 'left'
@@ -380,3 +392,62 @@ module.exports = Model.extend({
     });
   },
 });
+
+/**
+ * Remove restaurants from the result set if 
+ * there is an active event going on
+ *
+ * @param {object} query - Query object to be modified
+ * @param {object} searchParams - Object contains various order
+ *   parameters such as datetime, guests and zip code.
+ */
+var filterRestaurantsByEvents = function(query, searchParams) {
+
+  // Subselect restaurant_events occurring today or on search param date
+  query.with.restaurant_events = {
+    'type': 'select'
+  , 'table': 'restaurant_events'
+  , 'columns': [ '*' ]
+  , 'where': {
+      'during': { 
+        '$dateContains': searchParams && searchParams.date ? searchParams.date : 'now()' 
+      }
+    , 'closed': true
+    }
+  };
+
+  query.joins.restaurant_events = {
+    type: 'left outer'
+  , alias: 're'
+  , target: 'restaurant_events'
+  , on: {
+      'restaurants.id': '$re.restaurant_id$'
+    }
+  };
+
+  // Filter out events
+  query.where['re.id'] = { '$null': true };
+}
+
+/**
+ * Get restaurant events that are closed for
+ * this restaurant. Used for order date validation.
+ * Query result is called `event_date_ranges`.
+ *
+ * @param {object} query - Query object to be modified
+ * @param {object} searchParams - Object contains various order
+ *   parameters such as datetime, guests and zip code.
+ */
+var includeClosedRestaurantEvents = function(query, searchParams) {
+  query.with.restaurant_events = {
+    'type': 'select'
+  , 'table': 'restaurant_events'
+  , 'columns': [ '*' ]
+  , 'where': {
+      'closed': true
+    }
+  };
+
+  query.columns.push('(select array_to_json(array(select during from restaurant_events where restaurant_events.restaurant_id=restaurants.id) ) ) as event_date_ranges');
+}
+

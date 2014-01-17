@@ -52,7 +52,11 @@ define(function(require, exports, module) {
     showErrors: function(){
       this.clear();
 
-      var errors = this.model.validateOrderFulfillability();
+      var errors = [].concat(
+        this.model.validateOrderFulfillability()
+      , this.model.validateRestaurantEvents()
+      );
+
       var this_ = this;
 
       _.each( errors, function( error ){

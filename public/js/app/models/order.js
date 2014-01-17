@@ -1,10 +1,12 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
+  var utils = require('utils');
 
   var OrderItems = require('../collections/order-items');
 
   var Restaurant = require('./restaurant');
+  var RestarantEvent = require('./restaurant-event');
   var OrderItem = require('./order-item');
   var Address = require('./address');
 
@@ -96,9 +98,38 @@ define(function(require, exports, module) {
         // restaurant validate expects an order model and this instance does not
         // have all the attrs set
         this.restaurant.validateOrderFulfillability( new Order( _.extend(this.toJSON(), attrs) ) )
+      , this.validateRestaurantEvents()
       );
 
       return errors.length > 0 ? errors : null;
+    },
+
+    /** 
+     * Check if the order datetime occurs during one of the 
+     * restaurant's closed events
+     */
+    validateRestaurantEvents: function() {
+      var this_ = this;
+
+      // this is super whack
+      var errors = utils.reduce(this.restaurant.get('eventDateRanges'), function(memo, range) {
+        var event = new RestarantEvent({during: range});
+        var fce = event.toFullCalendarEvent();
+        var orderDate = moment(this_.get('datetime'));
+
+        var occursDuringEvent = 
+          orderDate.isAfter(fce.start) && orderDate.isBefore(fce.end) ||
+          orderDate.isSame(fce.start, 'day') ||
+          orderDate.isSame(fce.end, 'day');
+
+        if( occursDuringEvent && !utils.contains(memo, 'restaurant_closed')) {
+          memo.push('restaurant_closed');
+        }
+
+        return memo;
+      }, []);
+
+      return errors;
     },
 
     urlRoot: '/orders',

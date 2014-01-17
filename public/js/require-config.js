@@ -30,6 +30,7 @@ var require = {
 
     // ui related stuff
   , {name: 'spin',              location: '../../components/spin.js',                   main: 'spin.js'}
+  , {name: 'fullcalendar',      location: '../../components/fullcalendar',              main: 'fullcalendar.js'}
 
     // templating related
   , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}
@@ -126,6 +127,9 @@ var require = {
     }
   , partials: {
       deps: ['hbs']
+    }
+  , fullcalendar: {
+      deps: ['jquery']
     }
   }
 // , hbs: {

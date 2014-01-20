@@ -34,29 +34,8 @@ var User = module.exports = Model.extend({
   }
 
 , create: function( callback, client ){
-    User.create( this.attributes, callback, client );
-    return this;
-  }
-}, {
-  table: table
-
-  // Get foreign data source pivoting on users
-, embeds: {
-    addresses: function( addressQuery, originalQuery, callback, client ){
-      return Address.find( addressQuery, callback, client );
-    }
-
-  , payment_methods: function( pmQuery, originalQuery, callback, client ){
-      return this.findPaymentMethods( originalQuery.where.id, pmQuery, callback, client );
-    }
-  }
-
-, paymentMethodFields: Object.keys(
-    require('../db/definitions/payment-methods').schema
-  )
-
-, create: function( attr, callback, client ){
     var this_ = this;
+    var attr = this.attributes;
 
     var flow = {
       encrypt: function( done ){
@@ -90,6 +69,8 @@ var User = module.exports = Model.extend({
 
         db.query( sql.query, sql.values, function( error, results ){
           if (error) return done( error );
+
+          utils.extend( this_.attributes, results[0] );
 
           return done( null, results[0], groups );
         });
@@ -143,6 +124,23 @@ var User = module.exports = Model.extend({
       callback( null, this_ );
     });
   }
+}, {
+  table: table
+
+  // Get foreign data source pivoting on users
+, embeds: {
+    addresses: function( addressQuery, originalQuery, callback, client ){
+      return Address.find( addressQuery, callback, client );
+    }
+
+  , payment_methods: function( pmQuery, originalQuery, callback, client ){
+      return this.findPaymentMethods( originalQuery.where.id, pmQuery, callback, client );
+    }
+  }
+
+, paymentMethodFields: Object.keys(
+    require('../db/definitions/payment-methods').schema
+  )
 
 , createPaymentMethod: function( userId, pm, callback, client ){
     if ( 'data' in pm ) pm.data = JSON.stringify( pm.data );

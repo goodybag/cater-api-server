@@ -72,13 +72,12 @@ define(function(require, exports, module) {
      * Render events filtered by statuses that are toggled on
      */
     render: function() {
-      console.log('render', Date.now());
       var this_ = this
         , events = orders.getFullCalendarEvents();
 
       utils.each(events, function(event) {
         if (utils.contains(this_.filters, event.status) ) {
-          this_.$el.fullCalendar('renderEvent', event);
+          this_.$el.fullCalendar('renderEvent', event, true);
         }
       });
     },
@@ -87,7 +86,6 @@ define(function(require, exports, module) {
      * Clear calendar of all events
      */
     clear: function() {
-      console.log('clear', Date.now());
       this.$el.fullCalendar('removeEvents');
     }
   });

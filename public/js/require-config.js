@@ -16,7 +16,8 @@ var require = {
   , json: '../../components/requirejs-plugins/src/json'
 
     // directories
-  , app: '../app'
+  , app:    '../app'
+  , views:  '../app/views'
   }
 , packages: [
     // utility
@@ -49,6 +50,8 @@ var require = {
   , {name: 'pickatime',         location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.time.js'}
   , {name: 'bootstrap',         location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
   , {name: 'select2',           location: '../../components/select2',                   main: 'select2.js'}
+
+  , {name: 'config',            location: '../app',                                     main: 'config.js'}
   ]
 
 , map: {

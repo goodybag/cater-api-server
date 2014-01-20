@@ -22,7 +22,7 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     templates: {
-
+      popover: Handlebars.partials.orders_calendar_popover
     },
 
     events: {
@@ -36,8 +36,8 @@ define(function(require, exports, module) {
 
     setupCalendar: function() {
       this.$el.fullCalendar({
-        eventClick:       this.viewOrder.bind(this)
-      , eventMouseover:   this.hover.bind(this)
+        //eventClick:       this.viewOrder.bind(this)
+        eventMouseover:   this.hover.bind(this)
       , eventRender:      this.eventRender.bind(this)
       });
       this.render();
@@ -47,7 +47,7 @@ define(function(require, exports, module) {
      * Hovering over order
      */
     hover: function(event, jsEvent, view) {
-      $(jsEvent.target).tooltip('show');
+      //$(jsEvent.target).tooltip('show');
     },
 
     /**
@@ -55,9 +55,12 @@ define(function(require, exports, module) {
      */
     eventRender: function(event, element, view) {
 
+      console.log(event);
       // Set up tooltip content here
-      $(element).tooltip({
-        title: event.title
+      $(element).popover({
+        content: this.templates.popover(event.title)
+      , trigger: 'click'
+      , html: true
       });
     },
 

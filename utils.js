@@ -370,4 +370,18 @@ utils.queryParams = function(data){
   return params.substring(0, params.length - 1);
 };
 
+utils.getNiceError = function(error){
+  switch( error.code ){
+    case '23505':
+      error = {
+        property:       'email'
+      , message:        'Email has already been taken'
+      , validatorName:  'email_taken'
+      };
+      break;
+  }
+
+  return error;
+};
+
 module.exports = utils;

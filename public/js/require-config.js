@@ -43,6 +43,7 @@ var require = {
     // jquery stuff
   , {name: 'jquery',            location: '../../components/jquery',                    main: 'jquery.js'}
   , {name: 'jquery.inputmask',  location: '../../components/jquery.inputmask/dist',     main: 'jquery.inputmask.bundle.js'}
+  , {name: 'jquery.placeholder',location: '../../components/jquery-placeholder',        main: 'jquery.placeholder.js'}
   , {name: 'jquery-ui',         location: '../../components/jquery-ui/ui',              main: 'jquery-ui.js'}
   , {name: 'picker',            location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.js'}
   , {name: 'pickadate-legacy',  location: '../../components/lalitkapoor-pickadate/lib', main: 'legacy.js'}
@@ -65,6 +66,7 @@ var require = {
   , 'jquery-loaded': {'jquery': 'jquery'}
   , 'jquery-ui': {'jquery': 'jquery'}
   , 'jquery.inputmask': {'jquery': 'jquery'}
+  , 'jquery.placeholder': {'jquery': 'jquery'}
   , 'picker': {'jquery': 'jquery'}
   , 'pickadate-legacy': {'jquery': 'jquery'}
   , 'pickadate': {'jquery': 'jquery'}
@@ -123,6 +125,9 @@ var require = {
     , exports: 'Select2'
     }
   , 'jquery.inputmask': {
+      deps: ['jquery']
+    }
+  , 'jquery.placeholder': {
       deps: ['jquery']
     }
   , partials: {

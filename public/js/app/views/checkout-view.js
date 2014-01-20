@@ -523,7 +523,11 @@ define(function(require, exports, module) {
       }
 
       // Scroll to the first error
-      $(document.body).animate({ scrollTop: this.$el.find('.has-error').eq(0).offset().top - 20 });
+      $el = this.$el.find('.has-error');
+
+      if ( $el ){
+        $(document.body).animate({ scrollTop: .eq(0).offset().top - 20 });
+      }
     },
 
     onPaymentMethodIdChange: function(e) {

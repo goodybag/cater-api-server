@@ -56,8 +56,8 @@ define(function(require){
   , getFormData: function(){
       return {
         email:          this.$el.find('[name="email"]').val()
-      , password:       this.$el.find('[name="password"]').eq(0).val()
-      , password2:      this.$el.find('[name="password"]').eq(1).val()
+      , password:       this.$el.find('[name="password"]').val()
+      , password2:      this.$el.find('[name="password2"]').val()
       , firstName:      this.$el.find('[name="firstName"]').val()
       , lastName:       this.$el.find('[name="lastName"]').val()
       , organization:   this.$el.find('[name="organization"]').val()
@@ -65,11 +65,21 @@ define(function(require){
     }
 
   , validate: function(){
+      var data = this.getFormData();
       var options = { singleError: false };
 
-      return utils.validator.validate( this.getFormData(), this.schema, options, function( error ){
+      var errors = utils.validator.validate( data, this.schema, options, function( error ){
         return error;
       }) || [];
+
+      if ( !errors.length )
+      if ( data.password !== data.password2 ){
+        errors.push({
+          validatorName: 'passwordMatch'
+        });
+      }
+
+      return errors;
     }
 
   , onSubmit: function( e ){

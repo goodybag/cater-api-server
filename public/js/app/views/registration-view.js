@@ -1,9 +1,11 @@
 define(function(require){
   var utils = require('utils');
   var Handlebars = require('handlebars');
+  var FormView2 = require('views/form-view-2');
 
-  return utils.View.extend({
+  return FormView2.extend({
     tagName: 'form'
+
   , events: {
       'submit': 'onSubmit'
     }
@@ -22,6 +24,11 @@ define(function(require){
         , required: true
         }
       , password: {
+          type: 'string'
+        , minLength: 1
+        , required: true
+        }
+      , password2: {
           type: 'string'
         , minLength: 1
         , required: true
@@ -58,19 +65,19 @@ define(function(require){
     }
 
   , validate: function(){
-      return utils.validator.validate( this.getFormData(), this.schema, function( error ){
-        console.log(error);
+      var options = { singleError: false };
+
+      return utils.validator.validate( this.getFormData(), this.schema, options, function( error ){
         return error;
       }) || [];
     }
 
   , onSubmit: function( e ){
-        e.preventDefault();
       var errors = this.validate();
 
       if ( errors.length ){
         e.preventDefault();
-        return this.displayErrors2( errors, this );
+        return this.displayErrors( errors, this.$el.find('.errors'), this );
       }
     }
   });

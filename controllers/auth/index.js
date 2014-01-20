@@ -1,5 +1,6 @@
-var Models = require('../../models');
-var utils = require('../../utils');
+var Models  = require('../../models');
+var utils   = require('../../utils');
+var errors  = require('../../errors');
 
 module.exports.index = function(req, res) {
   if (req.session && req.session.user && req.session.user.id != null)
@@ -23,7 +24,11 @@ module.exports.signup = function( req, res ){
 
   new Models.User( data ).create( function( error, user ){
     if ( error ){
-      res.locals.registrationError = utils.getNiceError( error );
+      if ( error.routine === '_bt_check_unique' ){
+        error = errors.registration.EMAIL_TAKEN;
+      }
+
+      res.locals.registrationError = error;
 
       utils.extend( res.locals, req.body );
 

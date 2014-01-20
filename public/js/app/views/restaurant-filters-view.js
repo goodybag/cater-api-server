@@ -27,6 +27,7 @@ define(function(require, exports, module) {
     }
 
   , onFilterChange: function(e) {
+      mixpanel.track("restaurants filter change");
       this.trigger('filters:change');
     }
 

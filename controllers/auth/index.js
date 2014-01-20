@@ -14,21 +14,25 @@ module.exports.index = function(req, res) {
 
 module.exports.signup = function( req, res ){
   var data = {
-    name:         ( req.body.firstName || '' ) + ' ' + ( req.body.lastName || '' )
+    name:         (( req.body.firstName || '' ) + ' ' + ( req.body.lastName || '' )).trim() || null
   , email:        req.body.email
   , password:     req.body.password
   , organization: req.body.organization
+  , groups:       ['client']
   };
 
-  new Models.User( req.body ).create( function( error, user ){
+  new Models.User( data ).create( function( error, user ){
     if ( error ){
-      res.locals.registrationError = error;
+      res.locals.registrationError = utils.getNiceError( error );
 
       utils.extend( res.locals, req.body );
 
+      req.url = '/auth';
       return res.render('auth');
     }
 
-    res.send('WOW GOOD JERB YOU SIGNED UP');
+    req.setSession( user.toJSON() );
+
+    res.redirect('/restaurants');
   });
 };

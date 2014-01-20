@@ -1,6 +1,6 @@
 /**
  * Handles various `restaurant list` search options. This
- * view will listen to sub-views for order params, filters, 
+ * view will listen to sub-views for order params, filters,
  * and sorting options.
  */
 
@@ -23,7 +23,7 @@ define(function(require, exports, module) {
       , this.options.sortView.getProps()
       );
       var searchUrl = this.options.searchUrl;
-      window.location = searchUrl + utils.queryParams(props);
+      window.location.href = searchUrl + utils.queryParams(props);
     }
   });
 });

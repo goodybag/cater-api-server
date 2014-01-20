@@ -17,8 +17,7 @@ define(function(require){
      * @param  {Object}   Model   Model to pull the fieldNounMap from
      */
     displayErrors: function( errors, $errors, Model ){
-      var this_ = this, error
-      var frag = document.createDocumentFragment(), $el;
+      var frag = document.createDocumentFragment();
       var template = Handlebars.partials.alert_error;
       var selector = '[name="{property}"]';
 

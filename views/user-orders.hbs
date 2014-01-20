@@ -25,26 +25,10 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane fade in active" id="calendar-view">
-            <div id="calendar"></div>
+            {{> orders_calendar }}
           </div>
           <div class="tab-pane fade" id="list-view">
-            <div class="row orders-list">
-              <div class="col-md-3">
-                <div class="panel">
-                  <div class="panel-heading panel-heading-small">
-                    <h4 class="panel-title">Filter</h4>
-                  </div>
-                  <div class="panel-body">
-                    {{> order_status_buttons}}
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-9">
-                <div class="panel">
-                  {{> order_list}}
-                </div>
-              </div>
-            </div>
+            {{> orders_list }}
           </div>
         </div>
       </div>
@@ -64,10 +48,22 @@
       'jquery'
     , 'app/views/orders-list-view'
     , 'app/views/orders-calendar-view'
+    , 'app/views/orders-calendar-filter-view'
     ]
-  , function($, OrdersListView, OrdersCalendarView) {
-      var ordersListView = new OrdersListView({el: '.orders-list'});
-      var ordersCalendarView = new OrdersCalendarView({el: '#calendar'});
+  , function($, OrdersListView, OrdersCalendarView, OrdersCalendarFilterView) {
+      var ordersListView = new OrdersListView({
+        el: '.orders-list'
+      });
+
+      var ordersCalendarView = new OrdersCalendarView({
+        el: '#calendar'
+      });
+
+      var ordersCalendarFilterView = new OrdersCalendarFilterView({
+        el: '.order-calendar-filter-buttons'
+      , calendarView: ordersCalendarView
+      });
+      window.x = ordersCalendarView;
     }
   );
 </script>

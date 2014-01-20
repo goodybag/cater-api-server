@@ -358,6 +358,7 @@ define(function(require, exports, module) {
       , start: this.get('datetime')
       , color: this.getStatusColor()
       , orderId: this.get('id')
+      , status: this.get('status')
       };
 
       //console.log(fullCalendarEvent);

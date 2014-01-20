@@ -57,24 +57,25 @@
             </fieldset>
           </form>
 
-          {{#if registrationError}}
-            {{{dump registrationError}}}
-          {{/if}}
-
           <form method="POST" action="/auth/signup" class="panel" id="registration-form">
+            <div class="errors">
+              {{#if registrationError}}
+                {{> alert_error registrationError}}
+              {{/if}}
+            </div>
             <fieldset>
               <span class="help-block waitlist-help"><strong>Don't have an account yet?</strong> Signup today!</span>
               <div class="form-group">
-                <label>Email</label>
+                <label>* Email</label>
                 <input type="email" name="email" class="form-control" placeholder="user@example.com" value="{{email}}">
               </div>
               <div class="row">
                 <div class="form-group col-lg-6">
-                  <label>Password</label>
+                  <label>* Password</label>
                   <input type="password" name="password" class="form-control">
                 </div>
                 <div class="form-group col-lg-6">
-                  <label>One more time</label>
+                  <label>* One more time</label>
                   <input type="password" name="password" class="form-control">
                 </div>
               </div>

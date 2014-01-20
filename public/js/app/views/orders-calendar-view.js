@@ -36,9 +36,29 @@ define(function(require, exports, module) {
 
     setupCalendar: function() {
       this.$el.fullCalendar({
-        eventClick:     this.viewOrder.bind(this)
+        eventClick:       this.viewOrder.bind(this)
+      , eventMouseover:   this.hover.bind(this)
+      , eventRender:      this.eventRender.bind(this)
       });
       this.render();
+    },
+
+    /**
+     * Hovering over order
+     */
+    hover: function(event, jsEvent, view) {
+      $(jsEvent.target).tooltip('show');
+    },
+
+    /**
+     * Triggered while an event is being rendered
+     */
+    eventRender: function(event, element, view) {
+
+      // Set up tooltip content here
+      $(element).tooltip({
+        title: event.title
+      });
     },
 
     /**

@@ -37,8 +37,8 @@ define(function(require, exports, module) {
     setupCalendar: function() {
       this.$el.fullCalendar({
         //eventClick:       this.viewOrder.bind(this)
-        eventMouseover:   this.hover.bind(this)
-      , eventRender:      this.eventRender.bind(this)
+        // eventMouseover:   this.hover.bind(this)
+        eventRender:      this.eventRender.bind(this)
       });
 
       this.render();
@@ -59,7 +59,7 @@ define(function(require, exports, module) {
       // Set up tooltip content here
       $(element).popover({
         content: this.templates.popover(utils.omit(event, 'source'))
-      , title: event.restaurant.name
+      , title: '<strong>#' + event.id + '</strong> ' + event.restaurant.name
       , trigger: 'click'
       , placement: 'auto'
       , html: true

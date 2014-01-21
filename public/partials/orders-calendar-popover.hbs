@@ -1,4 +1,4 @@
-<p>
+<p class="calendar-popover-info">
 {{#if datetime}}
   <div>Delivery Date: {{datepart datetime}} @ {{timepart datetime}}</div>
 {{/if}}
@@ -8,6 +8,8 @@
 {{#if sub_total}}
   <div>Subtotal: ${{dollars sub_total}}</div>
 {{/if}}
-  <a href="#">Click here to view order</a>
+</p>
+<p class="calendar-popover-actions">
+  <a href="/orders/{{id}}">Click here to view order</a>
 </p>
 {{{log this}}}

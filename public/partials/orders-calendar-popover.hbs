@@ -1,1 +1,13 @@
-<h5>{{{this}}}</h5>
+<p>
+{{#if datetime}}
+  <div>Delivery Date: {{datepart datetime}} @ {{timepart datetime}}</div>
+{{/if}}
+{{#if guests}}
+  <div>Guests: {{guests}}</div>
+{{/if}}
+{{#if sub_total}}
+  <div>Subtotal: ${{dollars sub_total}}</div>
+{{/if}}
+  <a href="#">Click here to view order</a>
+</p>
+{{{log this}}}

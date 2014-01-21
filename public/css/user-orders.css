@@ -85,3 +85,12 @@
 .nav-orders .fc-event:hover { 
   cursor: pointer;
 }
+
+.fc .fc-view {
+  overflow: visible;
+}
+
+.fc-event-container > .popover {
+  width: 400px;
+  z-index: 999;
+}

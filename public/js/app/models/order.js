@@ -353,13 +353,13 @@ define(function(require, exports, module) {
      * Convert datetime to a full calendar event object
      */
     getFullCalendarEvent: function() {
-      var fullCalendarEvent = {
-        title: moment(this.get('datetime')).format('h:mma')+'\n'+this.get('restaurant_name')
+      var fullCalendarEvent = utils.extend({}, this.toJSON(), {
+        title: Handlebars.helpers.timepart(this.get('datetime')) + '\n' + Handlebars.helpers.truncate(this.get('restaurant_name'), 15)
       , start: this.get('datetime')
       , color: this.getStatusColor()
       , orderId: this.get('id')
       , status: this.get('status')
-      };
+      });
 
       //console.log(fullCalendarEvent);
       return fullCalendarEvent;

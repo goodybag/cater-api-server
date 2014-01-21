@@ -55,11 +55,12 @@ define(function(require, exports, module) {
      */
     eventRender: function(event, element, view) {
 
-      console.log(event);
       // Set up tooltip content here
       $(element).popover({
-        content: this.templates.popover(event.title)
+        content: this.templates.popover(utils.omit(event, 'source'))
+      , title: event.restaurant.name
       , trigger: 'click'
+      , placement: 'auto'
       , html: true
       });
     },
@@ -100,6 +101,7 @@ define(function(require, exports, module) {
 
       utils.each(events, function(event) {
         if (utils.contains(this_.filters, event.status) ) {
+          console.log(event);
           this_.$el.fullCalendar('renderEvent', event, true);
         }
       });

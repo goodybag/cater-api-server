@@ -30,12 +30,12 @@ function notifyOrderFn( order ){
         if ( error ) return done( error );
 
         utils.sendMail2({
-          to:       order.attributes.user.email
+          to:       ['john@goodybag.com']//order.attributes.user.email
         , from:     config.emails.orders
         , html:     html
 
         , subject:  [
-                      'Goodybag Reminder: Order #'
+                      '[CLIENT] Goodybag Reminder: Order #'
                     , order.attributes.id
                     , ' to be delivered '
                     , order.attributes.datetime

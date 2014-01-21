@@ -14,6 +14,7 @@ var m = utils.extend({
   buildReceipt  : require('./middleware/build-receipt')
 }, require('stdm') );
 
+utils.extend( m, require('./middleware/util') );
 utils.extend( m, require('dirac-middleware') );
 
 module.exports.register = function(app) {
@@ -109,7 +110,7 @@ module.exports.register = function(app) {
   app.all('/restaurants/:rid/events/:eid', m.restrict(['admin']), function(req, res, next) {
     res.set('Allow', 'PUT', 'PATCH, DELETE');
     res.send(405);
-  });  
+  });
 
   /**
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
@@ -584,10 +585,7 @@ module.exports.register = function(app) {
 
   app.post('/api/restaurants/:restaurant_id/payment-summaries'
     // Ensure restaurant ID in the URL is what is in the body
-  , function( req, res, next ){
-      req.body.restaurant_id = req.param('restaurant_id');
-      next();
-    }
+  , m.queryToBody('restaurant_id')
   , m.insert( db.payment_summaries )
   );
 

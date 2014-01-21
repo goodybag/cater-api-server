@@ -31,6 +31,12 @@ define(function(require, exports, module) {
 
   var utils = _.extend({}, _, helpers);
 
+  if (isBrowser){
+    var $ = require('jquery');
+    utils.dom = $;
+    utils.domready = $;
+  }
+
   utils.validator = amanda('json');
 
   utils.Backbone    = Backbone;

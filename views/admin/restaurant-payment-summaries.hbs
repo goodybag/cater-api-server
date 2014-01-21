@@ -1,0 +1,31 @@
+{{#extend "body"}}
+<div class="container page-header">
+  <h1 class="page-title">{{restaurant.name}}</h1>
+  <h2 class="page-sub-title">Payment Summaries</h2>
+  <ul class="header-nav">
+    <li>
+      <button id="create-payment-summary-btn" class="btn btn-default">Create</button>
+    </li>
+  </ul>
+</div>
+
+<div class="container page-content">
+  <table class="table table-striped" id="payment-summaries-table"></table>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  define(
+    'data/payment-summaries'
+  , ['app/collections/payment-summaries']
+  , function( PaymentSummaries ){
+      return new PaymentSummaries({ restaurant_id: {{restaurant.id}} });
+    }
+  );
+
+  require( ['app/pages/restaurant-payment-summaries'], function( page ){
+    page.init();
+  });
+</script>
+{{/extend}}

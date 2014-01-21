@@ -32,5 +32,7 @@ m.queryToBody = function(){
     for ( var i = 0, l = params.length; i < l; ++i ){
       req.body[ params[i] ] = req.param( params[i] );
     }
+
+    next();
   };
 };

@@ -12,7 +12,7 @@ begin
   create table if not exists "payment_summaries" (
     id            serial primary key
   , created_at    timestamp not null default now()
-  , payment_date  timestamp
+  , payment_date  date
   , restaurant_id int not null references restaurants ("id") on delete set null
   );
 

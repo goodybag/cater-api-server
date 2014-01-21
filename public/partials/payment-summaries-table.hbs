@@ -1,0 +1,16 @@
+<thead>
+  <tr>
+    <th>ID</th>
+    <th>Total Payout</th>
+    <th>Payout Date</th>
+  </tr>
+</thead>
+<tbody>
+  {{#each collection}}
+  <tr>
+    <td>#{{this.id}}</td>
+    <td>${{dollars this.total_payout}}</td>
+    <td>{{formatDateTime this.payment_date}}</td>
+  </tr>
+  {{/each}}
+</tbody>

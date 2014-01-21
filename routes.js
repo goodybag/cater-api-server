@@ -577,6 +577,28 @@ module.exports.register = function(app) {
   , controllers.analytics.list
   );
 
+  app.get('/admin/restaurants/:id/payment-summaries'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
+      layout: 'admin/layout'
+    , method: 'findOne'
+    })
+  );
+
+  app.get('/admin/restaurants/:id/payment-summaries/:payment_summary_id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , function( req, res, next ){
+      res.locals.payment_summary_id = req.param('payment_summary_id');
+      return next();
+    }
+  , m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
+      layout: 'admin/layout'
+    , method: 'findOne'
+    })
+  );
+
   app.get('/api/restaurants/:restaurant_id/payment-summaries'
   , m.pagination()
   , m.param('restaurant_id')
@@ -589,18 +611,44 @@ module.exports.register = function(app) {
   , m.insert( db.payment_summaries )
   );
 
-  app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id'
-  , m.param('payment_summary_id')
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
   , m.findOne( db.payment_summaries )
   );
 
-  app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id'
-  , m.param('payment_summary_id')
+  app.put('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
   , m.update( db.payment_summaries )
   );
 
-  app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id'
+  app.del('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
+  , m.remove( db.payment_summaries )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
+  , m.pagination()
   , m.param('payment_summary_id')
+  , m.find( db.payment_summaries )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
+  , m.queryToBody('restaurant_id', 'payment_summary_id')
+  , m.insert( db.payment_summary_items )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , m.param('id')
+  , m.findOne( db.payment_summaries )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , m.param('id')
+  , m.update( db.payment_summaries )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , m.param('id')
   , m.remove( db.payment_summaries )
   );
 }

@@ -8,8 +8,10 @@
 {{#if sub_total}}
   <div>Subtotal: ${{dollars sub_total}}</div>
 {{/if}}
+{{#if status}}
+  <div>Status: {{capitalize status}}</div>
+{{/if}}
 </p>
 <p class="calendar-popover-actions">
   <a href="/orders/{{id}}">Click here to view order</a>
 </p>
-{{{log this}}}

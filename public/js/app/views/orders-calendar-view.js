@@ -23,6 +23,7 @@ define(function(require, exports, module) {
   return module.exports = Backbone.View.extend({
     templates: {
       popover: Handlebars.partials.orders_calendar_popover
+    , modal: Handlebars.partials.orders_calendar_modal
     },
 
     events: {
@@ -36,12 +37,16 @@ define(function(require, exports, module) {
 
     setupCalendar: function() {
       this.$el.fullCalendar({
-        //eventClick:       this.viewOrder.bind(this)
+        dayClick:         this.showModal.bind(this)
         // eventMouseover:   this.hover.bind(this)
-        eventRender:      this.eventRender.bind(this)
+      , eventRender:      this.eventRender.bind(this)
       });
 
       this.render();
+    },
+
+    showModal: function(event, jsEvent, view) {
+      $('#calendar-modal').modal('toggle');
     },
 
     /**
@@ -72,17 +77,8 @@ define(function(require, exports, module) {
 
     },
 
-    /**
-     * Clicking an order directs user to order page
-     */
-    viewOrder: function(calEvent, jsEvent, view) {
-      window.location.href = '/orders/' + calEvent.orderId;
-    },
-
-
     filterOnClick: function(e) {
       var status = $(e.target).data('status');
-      console.log(status);
       this.toggleStatus(status);
     },
 
@@ -108,7 +104,6 @@ define(function(require, exports, module) {
 
       utils.each(events, function(event) {
         if (utils.contains(this_.filters, event.status) ) {
-          console.log(event);
           this_.$el.fullCalendar('renderEvent', event, true);
         }
       });

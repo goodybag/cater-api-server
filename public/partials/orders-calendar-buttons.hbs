@@ -1,0 +1,26 @@
+<div class="btn-group-vertical status-buttons order-calendar-filter-buttons" data-toggle="buttons">
+  {{#unless isRestaurantManager}}
+  <a href="#pending" class="btn btn-pending btn-filter active" data-status="pending">
+    Pending
+  </a>
+  {{/unless}}
+  {{#unless isRestaurantManager}}
+  <a href="#canceled" class="btn btn-canceled btn-filter" data-status="canceled">
+    Canceled
+  </a>
+  {{/unless}}
+  <a href="#submitted" class="btn btn-submitted btn-filter active" data-status="submitted">
+    Submitted
+  </a>
+  <a href="#accepted" class="btn btn-accepted btn-filter active" data-status="accepted">
+    Accepted
+  </a>
+  <a href="#denied" class="btn btn-denied btn-filter" data-status="denied">
+    Denied
+  </a>
+  {{#unless isRestaurantManager}}
+  <a href="#delivered" class="btn btn-delivered btn-filter" data-status="delivered">
+    Delivered
+  </a>
+  {{/unless}}
+</div>

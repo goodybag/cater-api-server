@@ -52,7 +52,11 @@ define(function(require, exports, module) {
     showErrors: function(){
       this.clear();
 
-      var errors = this.model.validateOrderFulfillability();
+      var errors = [].concat(
+        this.model.validateOrderFulfillability()
+      , this.model.validateRestaurantEvents()
+      );
+
       var this_ = this;
 
       _.each( errors, function( error ){
@@ -135,6 +139,23 @@ define(function(require, exports, module) {
       _(this.options.orderModel.restaurant.get('delivery_times')).each( function( t, i ){
         if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
       });
+
+      // Disable dates for closed restaurant events
+      if ( this.options.restaurant ) {
+        var closedEvents = this.options.restaurant.get('event_date_ranges');
+
+        // For each range, push each date
+        utils.each(closedEvents, function(val) {
+          var range = val.replace(/[\[\]\(\)]/g, '').split(',');
+          var start = moment(range[0]);
+          var end = moment(range[1]);
+
+          while(!start.isSame(end)) {
+            disabledTimes.push([start.year(), start.month(), start.date()]);
+            start = start.add('days', 1);
+          }
+        });
+      }
 
       this.datepicker.set( 'disable', disabledTimes );
     },

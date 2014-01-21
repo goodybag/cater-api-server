@@ -34,6 +34,10 @@ define(function(require, exports, module) {
         groups: {
           type: 'array',
           required: true
+        },
+        restaurant_ids: {
+          type: 'array',
+          required: false
         }
       }
     },

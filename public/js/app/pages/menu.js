@@ -38,6 +38,7 @@ define( function( require ){
       , loginNeeded:    !user.get('id')
       , defaultAddress: defaultAddress
       , orderModel:     orderModel
+      , restaurant:     restaurant
       });
 
       var itemModalView = new Views.ItemModal({
@@ -72,6 +73,9 @@ define( function( require ){
         , itemModalView:  itemModalView
         });
       });
+
+      // todo: orderModel.restaurant should not come from models.order
+      orderModel.restaurant.set('eventDateRanges', restaurant.get('event_date_ranges'));
 
       restaurant.categories.each( function( category ){
         category.items.each( function( item ){

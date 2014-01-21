@@ -5,6 +5,7 @@ var utils = require('./utils');
 var Models = require('./models');
 var hbHelpers = require('./public/js/lib/hb-helpers');
 var db = require('./db');
+var errors = require('./errors');
 
 var m = utils.extend({
   orderParams   : require('./middleware/order-params'),
@@ -16,14 +17,18 @@ var m = utils.extend({
 utils.extend( m, require('dirac-middleware') );
 
 module.exports.register = function(app) {
-  app.get('/', m.restrict(['client', 'admin']), function(req, res) { res.redirect('/restaurants'); });
+
+  app.get('/', m.restrict(['client', 'restaurant', 'admin']), function(req, res) {
+    if (utils.contains(req.user.attributes.groups, 'restaurant')) return res.redirect('/restaurants/manage');
+    return res.redirect('/restaurants');
+  });
 
   /**
    * Restaurants resource.  The collection of all restaurants.
    */
 
   app.get('/restaurants',
-    m.restrict(['client', 'admin']),
+    m.restrict(['client', 'restaurant', 'admin']),
     function(req, res, next) {
       if (req.query.edit) return next();
       controllers.restaurants.list.apply(this, arguments);
@@ -42,6 +47,8 @@ module.exports.register = function(app) {
   /**
    * Restaurant resource.  An individual restaurant.
    */
+
+  app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
   app.get('/restaurants/:rid', m.restrict(['client', 'admin']), controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
@@ -75,6 +82,34 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET');
     res.send(405);
   });
+
+  /**
+   * Restaurant events resource.
+   */
+
+  app.get('/restaurants/:rid/events', m.restrict(['admin']), controllers.restaurants.events.list);
+
+  app.post('/restaurants/:rid/events', m.restrict(['admin']), controllers.restaurants.events.create);
+
+  app.all('/restaurants/:rid/events', m.restrict(['admin']), function(req, res, next) {
+    res.set('Allow', 'GET, POST');
+    res.send(405);
+  });
+
+  /**
+   * Individual restaurant event resource.
+   */
+
+  app.put('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.update);
+
+  app.patch('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.update);
+
+  app.del('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.remove);
+
+  app.all('/restaurants/:rid/events/:eid', m.restrict(['admin']), function(req, res, next) {
+    res.set('Allow', 'PUT', 'PATCH, DELETE');
+    res.send(405);
+  });  
 
   /**
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
@@ -123,7 +158,28 @@ module.exports.register = function(app) {
    *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
    */
 
-  app.get('/restaurants/:rid/orders', m.restrict('admin'), controllers.restaurants.orders.list);
+  app.get('/restaurants/:rid/orders'
+  , function(req, res, next) {
+      req.order = {};
+      if (isNaN(parseInt(req.params.rid))) return res.error(errors.internal.UNKNOWN);
+
+      if (utils.contains(req.user.attributes.groups, 'admin')){
+        req.order.isAdmin = true;
+        return next();
+      }
+
+      if (
+           utils.contains(req.user.attributes.groups, 'restaurant')
+        && utils.contains(req.user.attributes.restaurant_ids, parseInt(req.params.rid))
+      ) {
+        req.order.isRestaurantManager = true;
+        return next();
+      }
+
+      return res.error(errors.auth.NOT_ALLOWED);
+    }
+  , controllers.restaurants.orders.list
+  );
 
   app.post('/restaurants/:rid/orders', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body.restaurant_id = req.params.rid;
@@ -199,11 +255,11 @@ module.exports.register = function(app) {
    *  Order resource.  An individual order.
    */
 
-
   app.get(
     config.receipt.orderRoute
   , m.basicAuth()
   , m.restrict(['admin', 'receipts'])
+  , function(req,res, next){ req.order = {}; next(); } // normally this would get added in orders.auth, but we don't hit that from here
   , function(req, res, next){ req.params.receipt = true; next(); }
   , controllers.orders.get
   );
@@ -221,7 +277,7 @@ module.exports.register = function(app) {
       if (req.param('review_token') && !req.param('receipt')) return next();
 
       return (
-        m.restrict(!req.param('receipt') ? ['admin', 'client'] : ['admin', 'receipts'])
+        m.restrict(!req.param('receipt') ? ['admin', 'restaurant', 'client'] : ['admin', 'restaurant', 'receipts'])
       )(req, res, next);
     }
   , controllers.orders.get
@@ -236,11 +292,10 @@ module.exports.register = function(app) {
     next();
   }, controllers.orders.changeStatus);
 
-  app.all('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid', m.restrict(['client', 'restaurant', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
-
 
   app.get('/receipts/order-:oid.pdf', m.buildReceipt(), express.static(__dirname + '/public'));
 
@@ -264,11 +319,11 @@ module.exports.register = function(app) {
    */
 
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
-  app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.summary);  // not currently used
+  app.get('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.orderItems.summary);  // not currently used
 
   app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.add);
 
-  app.all('/orders/:oid/items', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -320,6 +375,8 @@ module.exports.register = function(app) {
   app.get('/auth', controllers.auth.index);
 
   app.post('/auth', controllers.session.create);
+
+  app.post('/auth/signup', controllers.auth.signup);
 
   app.all('/auth', function(req, res, next) {
     res.set('Allow', 'GET, POST');

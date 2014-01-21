@@ -4,7 +4,11 @@ var utils = require('../../utils');
 var models = require('../../models');
 
 module.exports.list = function(req, res) {
-  var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : 'all';
+  // only show restaurant managers orders with a status of submitted, denied, or accepted
+  var defaultFilter = (req.order.isRestaurantManager) ? ['submitted', 'denied', 'accepted'] : 'all';
+  if (req.order.isRestaurantManager && !utils.contains(defaultFilter, req.query.filter)) req.query.filter = null;
+  var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : defaultFilter;
+
   //TODO: middleware to validate and sanitize query object
   var tasks = [
     function(callback) {
@@ -23,6 +27,8 @@ module.exports.list = function(req, res) {
     res.render('restaurant-orders', {
       orders: utils.invoke(results[0], 'toJSON')
     , restaurant: results[1].toJSON()
+    , isRestaurantManager: req.order.isRestaurantManager
+    , isAdmin: req.order.isAdmin
     , filter: filter
     });
   });

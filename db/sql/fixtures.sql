@@ -1,5 +1,6 @@
 INSERT INTO groups (name) VALUES ('admin');
 INSERT INTO groups (name) VALUES ('client');
+INSERT INTO groups (name) VALUES ('restaurant');
 INSERT INTO groups (name) VALUES ('receipts');
 
 INSERT INTO users (email, password) VALUES ('receipts@goodybag.com', '$2a$10$8egVetFrE7OAk1B.v36dOOdhS9TXt98PN7/zCvLdeAuOa0KLXIzIi');

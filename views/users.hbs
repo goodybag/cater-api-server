@@ -33,6 +33,17 @@
                 Admin
               </label>
             </div>
+            <div class="checkbox">
+              <label>
+                <input class="create-user-group" type="checkbox" name="groups" id="userGroupRestaurant" value="restaurant">
+                Restaurant
+                <select name="restaurants" id="restaurants">
+                  {{#each restaurants}}
+                    <option value="{{id}}">{{name}}</option>
+                  {{/each}}
+                </select>
+              </label>
+            </div>
           </div>
           <button type="submit" class="btn btn-primary create-user-submit hide" data-success-text="User created successfully!" data-error-text="">Create User</button>
         </div>

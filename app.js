@@ -27,6 +27,7 @@ var middleware = {
 , requestLogger: require('connect-request-logger-pg')
 , getUser: require('./middleware/get-user')
 , statusCodeIntercept: require('./middleware/status-code-intercept')
+, setSession: require('./middleware/set-session')
 };
 
 var app = module.exports = express();
@@ -57,6 +58,7 @@ app.configure(function(){
   app.use(middleware.domains);
   app.use(middleware.cors);
 
+  app.use(middleware.setSession());
   app.use(middleware.getUser);
 
   app.use(middleware.requestLogger({

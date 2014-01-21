@@ -16,7 +16,8 @@ var require = {
   , json: '../../components/requirejs-plugins/src/json'
 
     // directories
-  , app: '../app'
+  , app:    '../app'
+  , views:  '../app/views'
   }
 , packages: [
     // utility
@@ -30,6 +31,7 @@ var require = {
 
     // ui related stuff
   , {name: 'spin',              location: '../../components/spin.js',                   main: 'spin.js'}
+  , {name: 'fullcalendar',      location: '../../components/fullcalendar',              main: 'fullcalendar.js'}
 
     // templating related
   , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}
@@ -42,6 +44,7 @@ var require = {
     // jquery stuff
   , {name: 'jquery',            location: '../../components/jquery',                    main: 'jquery.js'}
   , {name: 'jquery.inputmask',  location: '../../components/jquery.inputmask/dist',     main: 'jquery.inputmask.bundle.js'}
+  , {name: 'jquery.placeholder',location: '../../components/jquery-placeholder',        main: 'jquery.placeholder.js'}
   , {name: 'jquery-ui',         location: '../../components/jquery-ui/ui',              main: 'jquery-ui.js'}
   , {name: 'picker',            location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.js'}
   , {name: 'pickadate-legacy',  location: '../../components/lalitkapoor-pickadate/lib', main: 'legacy.js'}
@@ -49,6 +52,8 @@ var require = {
   , {name: 'pickatime',         location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.time.js'}
   , {name: 'bootstrap',         location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
   , {name: 'select2',           location: '../../components/select2',                   main: 'select2.js'}
+
+  , {name: 'config',            location: '../app',                                     main: 'config.js'}
   ]
 
 , map: {
@@ -64,6 +69,7 @@ var require = {
   , 'jquery-loaded': {'jquery': 'jquery'}
   , 'jquery-ui': {'jquery': 'jquery'}
   , 'jquery.inputmask': {'jquery': 'jquery'}
+  , 'jquery.placeholder': {'jquery': 'jquery'}
   , 'picker': {'jquery': 'jquery'}
   , 'pickadate-legacy': {'jquery': 'jquery'}
   , 'pickadate': {'jquery': 'jquery'}
@@ -119,12 +125,19 @@ var require = {
     }
   , select2: {
       deps: ['jquery']
+    , exports: 'Select2'
     }
   , 'jquery.inputmask': {
       deps: ['jquery']
     }
+  , 'jquery.placeholder': {
+      deps: ['jquery']
+    }
   , partials: {
       deps: ['hbs']
+    }
+  , fullcalendar: {
+      deps: ['jquery']
     }
   }
 // , hbs: {

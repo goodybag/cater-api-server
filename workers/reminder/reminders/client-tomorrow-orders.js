@@ -37,7 +37,10 @@ function notifyOrderFn( order ){
         , subject:  [
                       'Goodybag Reminder: Order #'
                     , order.attributes.id
-                    , ' to be delivered tomorrow'
+                    , ' to be delivered '
+                    , order.attributes.datetime
+                      ? 'on ' + moment( order.attributes.datetime ).format('MM-DD-YYYY')
+                      : 'tomorrow'
                     ].join('')
         }, function( error ){
           // If successful, we want an easy way to know on the receiving end

@@ -20,11 +20,7 @@
   <dt>Tax:</dt>
   <dd>{{tax order.sub_total order.restaurant.delivery_fee}}</dd>
   <dt>Tip:</dt>
-  {{#if isTipEditable}}
-    <input type="text" name="tip" value="{{dollars order.tip}}" />
-  {{else}}
-    <dd>{{dollars order.tip}}</dd>
-  {{/if}}
+  <dd>{{dollars order.tip}}</dd>
   <dt class="total">Total:</dt>
   <dd class="total">{{total order.sub_total order.restaurant.delivery_fee order.tip}}</dd>
 </dl>

@@ -9,6 +9,7 @@ define(function(require, exports, module) {
   var TipView = require('./tip-view');
   var CopyErrorModalView = require('./copy-error-modal');
   var ItemModal = require('./item-modal');
+  var AddTipModal = require('./add-tip-modal');
 
   return module.exports = OrderView.extend({
     events: function() {
@@ -29,6 +30,7 @@ define(function(require, exports, module) {
         'click .edit-order-btn': 'toggleEdit',
         'click .cancel-edit-btn': 'toggleEdit',
         'click .save-btn': 'save',
+        'click .btn-add-tip': 'showTipModal',
         'keyup .adjustment': 'autoSave'
       });
     },
@@ -36,6 +38,8 @@ define(function(require, exports, module) {
     initialize: function() {
       OrderView.prototype.initialize.apply(this, arguments);
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
+      this.originalTipValue = this.$el.find('.order-tip').val();
+
       this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
       this.convertUtcDates();
 
@@ -44,6 +48,8 @@ define(function(require, exports, module) {
       , orderItems: this.model.orderItems
       , orderModel: this.model
       });
+
+      this.addTipModal = new AddTipModal({el: '#add-tip-modal', model: this.model, orderView: this});
 
       // Since this view isn't able to just reasily re-render itself
       // when the underlying models change, just reload the page
@@ -105,6 +111,17 @@ define(function(require, exports, module) {
           self.changeStatus('denied');
         }
       });
+    },
+
+    showTipModal: function(e) {
+      console.log('show tip modal');
+      e.preventDefault();
+      this.addTipModal.$el.modal('show');
+    },
+
+    resetTip: function(e) {
+      this.$el.find('.order-tip').val(this.originalTipValue);
+      this.onPriceChange();
     },
 
     /**

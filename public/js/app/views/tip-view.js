@@ -26,7 +26,9 @@ define(function(require, exports, module) {
     },
 
     customTip: function(e) {
-      if (this.tip !== e.currentTarget.value)
+      if (!e || !e.currentTarget || !e.currentTarget.value)
+        this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
+      else if (this.tip !== e.currentTarget.value)
         this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
     }
   });

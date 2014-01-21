@@ -31,7 +31,14 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
-      this.filters = ['pending', 'submitted', 'accepted'];
+      this.filters = [
+        'pending'
+      , 'canceled'
+      , 'submitted'
+      , 'accepted'
+      , 'denied'
+      , 'delivered'
+      ];
       this.setupCalendar();
     },
 
@@ -82,15 +89,8 @@ define(function(require, exports, module) {
       this.toggleStatus(status);
     },
 
-    /**
-     * Update list of active filters used to render calendar
-     */
-    toggleStatus: function(status) {
-      if ( utils.contains(this.filters, status) ) {
-        this.filters = utils.without(this.filters, status);
-      } else {
-        this.filters.push(status);
-      }
+    setFilters: function(statuses) {
+      this.filters = statuses;
       this.clear();
       this.render();
     },

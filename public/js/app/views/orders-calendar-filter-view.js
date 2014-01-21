@@ -10,12 +10,13 @@ define(function(require, exports, module) {
   return module.exports = Backbone.View.extend({
 
     events: {
-      'click .btn-filter': 'filterOnClick'
+      'click .checkbox': 'filtersOnClick'
     },
 
     filterOnClick: function(e) {
-      var status = $(e.target).data('status');
-      this.options.calendarView.toggleStatus(status);
+      var $statuses = this.$el.find('input[type="checkbox"]:checked');
+      var statuses = utils.pluck($statuses, 'value');
+      this.options.calendarView.setFilters(statuses);
     }
 
   });

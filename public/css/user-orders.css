@@ -103,7 +103,7 @@
   background: #f7f7f7;
 }
 
-.calendar-filters .filter-swatch {
+.orders-calendar-filters .filter-swatch {
   width: 20px;
   height: 20px;
   border-radius: .25em;
@@ -113,21 +113,21 @@
   margin-right: 5px;
 }
 
-.calendar-filters .pending {
+.orders-calendar-filters .pending {
   background-color: #F0AD4E;
 }
-.calendar-filters .canceled {
+.orders-calendar-filters .canceled {
   background-color: #B3B3B3;
 }
-.calendar-filters .submitted {
+.orders-calendar-filters .submitted {
   background-color: #5BC0DE;
 }
-.calendar-filters .accepted {
+.orders-calendar-filters .accepted {
   background-color: #5CB85C;
 }
-.calendar-filters .denied {
+.orders-calendar-filters .denied {
   background-color: #D9534F;
 }
-.calendar-filters .delivered {
+.orders-calendar-filters .delivered {
   background-color: #428BCA;
 }

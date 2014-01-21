@@ -40,6 +40,7 @@ define(function(require, exports, module) {
         eventMouseover:   this.hover.bind(this)
       , eventRender:      this.eventRender.bind(this)
       });
+
       this.render();
     },
 
@@ -63,6 +64,12 @@ define(function(require, exports, module) {
       , placement: 'auto'
       , html: true
       });
+
+      /* hack to avoid popover to open more than on at the same time */
+      $(element).click(function(){
+        $('.fc-event').not(this).popover('hide'); //all but this
+      });
+
     },
 
     /**

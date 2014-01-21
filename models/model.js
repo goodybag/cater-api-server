@@ -37,6 +37,8 @@ var extend = function(protoProps, staticProps) {
 
 var Model = function(attrs, opts) {
   this.attributes = attrs || {};
+  if (this.initialize) this.initialize(attrs, opts);
+  return this;
 }
 
 utils.extend(Model.prototype, {

@@ -272,6 +272,7 @@ utils.async.series(
             , price: faker.Helpers.randomNumber(5) + 1
             , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
             , is_hidden: false
+            , websites: ['http://poop.com']
             };
             cbWaterfall(null, data);
           }

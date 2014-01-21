@@ -4,7 +4,12 @@ define(function(require, exports, module) {
   require('pickadate');
   require('pickatime');
   require('jquery.inputmask');
+  require('jquery.placeholder');
   require('select2');
+
+  $(function(){
+    $('input, textarea').placeholder();
+  });
 
   return module.exports = $;
 });

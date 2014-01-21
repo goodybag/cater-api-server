@@ -94,3 +94,40 @@
   width: 400px;
   z-index: 999;
 }
+
+.fc-content {
+  background-color: #fff;
+}
+
+#calendar .fc-state-highlight {
+  background: #f7f7f7;
+}
+
+.calendar-filters .filter-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: .25em;
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.calendar-filters .pending {
+  background-color: #F0AD4E;
+}
+.calendar-filters .canceled {
+  background-color: #B3B3B3;
+}
+.calendar-filters .submitted {
+  background-color: #5BC0DE;
+}
+.calendar-filters .accepted {
+  background-color: #5CB85C;
+}
+.calendar-filters .denied {
+  background-color: #D9534F;
+}
+.calendar-filters .delivered {
+  background-color: #428BCA;
+}

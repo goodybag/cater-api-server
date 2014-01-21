@@ -1,26 +1,44 @@
-<div class="btn-group-vertical status-buttons order-calendar-filter-buttons" data-toggle="buttons">
-  {{#unless isRestaurantManager}}
-  <a href="#pending" class="btn btn-pending btn-filter active" data-status="pending">
-    Pending
-  </a>
-  {{/unless}}
-  {{#unless isRestaurantManager}}
-  <a href="#canceled" class="btn btn-canceled btn-filter" data-status="canceled">
-    Canceled
-  </a>
-  {{/unless}}
-  <a href="#submitted" class="btn btn-submitted btn-filter active" data-status="submitted">
-    Submitted
-  </a>
-  <a href="#accepted" class="btn btn-accepted btn-filter active" data-status="accepted">
-    Accepted
-  </a>
-  <a href="#denied" class="btn btn-denied btn-filter" data-status="denied">
-    Denied
-  </a>
-  {{#unless isRestaurantManager}}
-  <a href="#delivered" class="btn btn-delivered btn-filter" data-status="delivered">
-    Delivered
-  </a>
-  {{/unless}}
+<div class="calendar-filters">
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" value="pending">
+      <span class="filter-swatch pending"></span>
+      Pending
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" value="pending">
+      <span class="filter-swatch canceled"></span>
+      Canceled
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" value="submitted">
+      <span class="filter-swatch submitted"></span>
+      Submitted
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" value="accepted">
+      <span class="filter-swatch accepted"></span>
+      Accepted
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" value="denied">
+      <span class="filter-swatch denied"></span>
+      Denied
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" value="delivered">
+      <span class="filter-swatch delivered"></span>
+      Delivered
+    </label>
+  </div>
 </div>

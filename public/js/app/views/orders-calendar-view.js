@@ -98,7 +98,6 @@ define(function(require, exports, module) {
 
     setFilters: function(statuses) {
       this.filters = statuses;
-      this.clear();
       this.render();
     },
 
@@ -109,6 +108,7 @@ define(function(require, exports, module) {
       var this_ = this
         , events = orders.getFullCalendarEvents();
 
+      this.clear();
       utils.each(events, function(event) {
         if (utils.contains(this_.filters, event.status) ) {
           this_.$el.fullCalendar('renderEvent', event, true);

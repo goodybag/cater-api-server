@@ -14,10 +14,10 @@ define(function(require, exports, module) {
     },
 
     addTip: function (e) {
-      console.log('add-tip');
       e.preventDefault();
       e.stopImmediatePropagation();
 
+      var self = this;
       var val = parseFloat(this.$el.find('.order-tip').val().trim()||'');
       var tip = !_.isNaN(val) ? Math.round(val * 100) : null;
       this.options.orderView.onPriceChange();
@@ -26,18 +26,16 @@ define(function(require, exports, module) {
       , validate: false
       , success: function(model, response, optons) {
           window.location.reload();
-          this.$el.modal('hide');
         }
       , error: function(model, xhr, options) {
           alert('Sorry, there was an error adding the tip!');
           console.log(arguments);
-          this.$el.modal('hide');
+          self.$el.modal('hide');
         }
       });
     },
 
     cancel: function (e) {
-      console.log('cancel');
       e.preventDefault();
       e.stopImmediatePropagation();
 

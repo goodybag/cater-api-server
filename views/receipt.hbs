@@ -94,9 +94,14 @@
         </div>
 
         <div class="btn-toolbar pull-right">
+          {{#if isTipEditable}}
+            <a class="btn btn-primary btn-add-tip" href="" onclick="javascript:return false;">{{#eq order.tip 0}}Add Tip{{else}}Edit Tip{{/eq}}</a>
+          {{/if}}
+
           {{#if order.editable}}
           <button type="button" class="btn btn-default edit-order-btn">Edit</button>
           {{/if}}
+
           <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default">Download PDF</a>
         </div>
 
@@ -205,33 +210,6 @@
       {{/if}}
       {{/if}}
 
-      {{#if order.editable}}
-      <div class="row">
-        <div class="tip-area clearfix hide col-lg-12">
-          <dl class="adjustment-input pull-right">
-            <dt>Tip Percent</dt>
-            <dd>
-              <select id="order-tip" class="form-control tip-percent">
-                {{! eq is ugly as hell but it works }}
-                <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
-                <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
-                <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
-                <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
-                <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
-                <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
-                <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
-                <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
-              </select>
-            </dd>
-            <dt>$</dt>
-            <dd>
-              <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
-            </dd>
-          </dl>
-        </div>
-      </div>
-      {{/if}}
-
       {{#if order.sub_total}}
       <div class="totals">
         {{> totals}}
@@ -300,6 +278,49 @@
         </div>
         <div class="col-lg-3">
           <button type="button" class="btn btn-danger btn-cancel">Yes, cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="add-tip-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Add A Tip To This Order</h4>
+      </div>
+      <div class="modal-body">
+        <div class="tip-area clearfix col-lg-12">
+          <dl class="adjustment-input pull-right">
+            <dt>Tip Percent</dt>
+            <dd>
+              <select id="order-tip" class="form-control tip-percent">
+                {{! eq is ugly as hell but it works }}
+                <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
+                <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
+                <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
+                <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
+                <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
+                <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
+                <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
+                <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
+              </select>
+            </dd>
+            <dt>$</dt>
+            <dd>
+              <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <div class="row modal-footer">
+        <div class="col-lg-3 col-lg-offset-6">
+          <button type="button" class="btn btn-danger btn-cancel">Cancel</button>
+        </div>
+        <div class="col-lg-3">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
         </div>
       </div>
     </div>

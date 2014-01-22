@@ -24,14 +24,20 @@ define(function(require, exports, module) {
     templates: {
       detailsPopover: Handlebars.partials.orders_calendar_details_popover
     , createPopover: Handlebars.partials.orders_calendar_create_popover
+    , compiled: {
+        createPopover: Handlebars.partials.orders_calendar_create_popover()
+      }
     },
 
     events: {
       'click .btn-filter': 'filterOnClick'
+    , 'click .btn-search': 'searchOnClick'
     },
 
     initialize: function() {
       var this_ = this;
+
+      this.$calendar = this.$el.find('#calendar');
 
       this.filters = [
         'pending'
@@ -47,15 +53,10 @@ define(function(require, exports, module) {
       $('a[href="#calendar-view"]').on('shown.bs.tab', function (e) {
         this_.render();
       });
-
-      $(':not(.popup-marker)').once().click(function(){
-        $('.popup-marker').hide(); 
-      });
-
     },
 
     setupCalendar: function() {
-      this.$el.fullCalendar({
+      this.$calendar.fullCalendar({
         dayRender:        this.dayRender.bind(this)
       , eventRender:      this.eventRender.bind(this)
       });
@@ -66,22 +67,28 @@ define(function(require, exports, module) {
     dayRender: function(date, cell) {
       var date = moment(date);
       $(cell).popover({
-        content: this.templates.createPopover({
-          date: {
-            query:    date.format('YYYY-MM-DD')
-          , display:  date.format('MMM Do')
-          }
-        })
+        content: this.templates.compiled.createPopover
       , title: '<strong>Create order on ' + date.format('MMM Do') + '</strong>'
       , trigger: 'click'
       , placement: 'auto'
       , html: true
-      , container: 'body'
+      , container: '#main'
       });
 
       /* hack to avoid popover to open more than on at the same time */
       $(cell).click(function(){
         $('.fc-event, .fc-day').not(this).popover('hide'); //all but this
+      });
+
+      $(cell).on('shown.bs.popover', function (e) {
+        $('.popover .time')
+          .pickatime({
+            format: 'hh:i A'
+          , interval: 15
+          })
+          .pickatime('picker');
+    
+        console.log('SSSS');
       });
     },
 
@@ -111,6 +118,20 @@ define(function(require, exports, module) {
       this.toggleStatus(status);
     },
 
+    searchOnClick: function(e) {
+      e.preventDefault();
+
+      var time = this.$el.find('#time').val();
+      var zip = this.$el.find('#zip').val();
+      var guests = this.$el.find('#guests').val();
+
+      // build query string
+      var qs = '';
+
+
+      console.log(time);
+    },
+
     setFilters: function(statuses) {
       this.filters = statuses;
       this.render();
@@ -126,7 +147,7 @@ define(function(require, exports, module) {
       this.clear();
       utils.each(events, function(event) {
         if (utils.contains(this_.filters, event.status) ) {
-          this_.$el.fullCalendar('renderEvent', event, true);
+          this_.$calendar.fullCalendar('renderEvent', event, true);
         }
       });
     },
@@ -135,7 +156,7 @@ define(function(require, exports, module) {
      * Clear calendar of all events
      */
     clear: function() {
-      this.$el.fullCalendar('removeEvents');
+      this.$calendar.fullCalendar('removeEvents');
     }
   });
 });

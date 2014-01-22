@@ -14,7 +14,7 @@ var views   = require('../lib/views');
 module.exports.name = 'Restaurant Action Timeframe';
 
 module.exports.alertEmails = [
-  'om', 'jay', 'jag', 'jacob', 'sarah'
+  'om', 'jay', 'jag', 'jacobparker', 'sarahsouthwell'
 ].map( function( n ){ return n + '@goodybag.com' });
 
 module.exports.schema = {

@@ -67,7 +67,7 @@
             <a href="javascript:void(0);" class="copy-order-btn text-muted">Order Again?</a>
             {{/unless}}{{/if}}
           </div>
-          {{#if admin}}
+          {{#if isAdmin}}
           <div class="pull-right btn-group">
             <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
               {{order.status}} <span class="caret"></span>

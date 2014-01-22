@@ -38,6 +38,7 @@ define( function( require ){
       , loginNeeded:    !user.get('id')
       , defaultAddress: defaultAddress
       , orderModel:     orderModel
+      , restaurant:     restaurant
       });
 
       var itemModalView = new Views.ItemModal({

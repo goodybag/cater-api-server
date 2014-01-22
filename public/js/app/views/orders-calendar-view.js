@@ -22,8 +22,8 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     templates: {
-      popover: Handlebars.partials.orders_calendar_popover
-    , modal: Handlebars.partials.orders_calendar_modal
+      detailsPopover: Handlebars.partials.orders_calendar_details_popover
+    , createPopover: Handlebars.partials.orders_calendar_create_popover
     },
 
     events: {
@@ -47,46 +47,61 @@ define(function(require, exports, module) {
       $('a[href="#calendar-view"]').on('shown.bs.tab', function (e) {
         this_.render();
       });
+
+      $(':not(.popup-marker)').once().click(function(){
+        $('.popup-marker').hide(); 
+      });
+
     },
 
     setupCalendar: function() {
       this.$el.fullCalendar({
-        dayClick:         this.showModal.bind(this)
-        // eventMouseover:   this.hover.bind(this)
+        dayRender:        this.dayRender.bind(this)
       , eventRender:      this.eventRender.bind(this)
       });
 
       this.render();
     },
 
-    showModal: function(event, jsEvent, view) {
-      $('#calendar-modal').modal('toggle');
-    },
+    dayRender: function(date, cell) {
+      var date = moment(date);
+      $(cell).popover({
+        content: this.templates.createPopover({
+          date: {
+            query:    date.format('YYYY-MM-DD')
+          , display:  date.format('MMM Do')
+          }
+        })
+      , title: '<strong>Create order on ' + date.format('MMM Do') + '</strong>'
+      , trigger: 'click'
+      , placement: 'auto'
+      , html: true
+      , container: 'body'
+      });
 
-    /**
-     * Hovering over order
-     */
-    hover: function(event, jsEvent, view) {
-      //$(jsEvent.target).tooltip('show');
+      /* hack to avoid popover to open more than on at the same time */
+      $(cell).click(function(){
+        $('.fc-event, .fc-day').not(this).popover('hide'); //all but this
+      });
     },
 
     /**
      * Triggered while an event is being rendered
      */
     eventRender: function(event, element, view) {
-
       // Set up tooltip content here
       $(element).popover({
-        content: this.templates.popover(utils.omit(event, 'source'))
+        content: this.templates.detailsPopover(utils.omit(event, 'source'))
       , title: '<strong>#' + event.id + '</strong> ' + event.restaurant.name
       , trigger: 'click'
       , placement: 'auto'
       , html: true
+      , container: 'body'
       });
 
       /* hack to avoid popover to open more than on at the same time */
       $(element).click(function(){
-        $('.fc-event').not(this).popover('hide'); //all but this
+        $('.fc-event, .fc-day').not(this).popover('hide'); //all but this
       });
 
     },

@@ -13,7 +13,7 @@ define(function(require, exports, module) {
       ].join('');
     }
 
-  , initialize: function( options ){
+  , initialize: function( models, options ){
       this.restaurant_id = options.restaurant_id;
       return this;
     }
@@ -25,6 +25,15 @@ define(function(require, exports, module) {
       arguments[0].restaurant_id = this.restaurant_id;
 
       return utils.Collection.prototype.create.apply( this, arguments );
+    }
+
+  , createModel: function(){
+      if ( arguments[0] === undefined ) arguments[0] = {};
+
+      // Always set restaurant_id on new models
+      arguments[0].restaurant_id = this.restaurant_id;
+
+      return utils.Collection.prototype.createModel.apply( this, arguments );
     }
   });
 });

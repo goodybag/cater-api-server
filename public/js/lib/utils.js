@@ -42,10 +42,23 @@ define(function(require, exports, module) {
   utils.Backbone    = Backbone;
   utils.Events      = Backbone.Events;
   utils.Model       = Backbone.Model;
-  utils.Collection  = Backbone.Collection;
   utils.Router      = Backbone.Router;
   utils.History     = Backbone.History;
   utils.View        = Backbone.View;
+
+  if ( isBrowser ){
+    utils.Collection  = Backbone.Collection.extend({
+      createModel: function( attr, options ){
+        return this._prepareModel( attr, options );
+      }
+
+    , del: function( id, options ){
+        return (
+          this.get( id ) || this.createModel({ id: id })
+        ).destroy( options );
+      }
+    });
+  }
 
   utils.startHistory = function(){
     utils.history = Backbone.history;

@@ -3,14 +3,19 @@
     <th>ID</th>
     <th>Total Payout</th>
     <th>Payout Date</th>
+    <th class="col-actions"></th>
   </tr>
 </thead>
 <tbody>
   {{#each collection}}
-  <tr>
+  <tr data-id="{{this.id}}">
     <td>#{{this.id}}</td>
     <td>${{dollars this.total_payout}}</td>
     <td>{{formatDateTime this.payment_date}}</td>
+    <td class="col-actions">
+      <a href="{{currUrl}}/{{this.id}}" class="btn btn-sm btn-default item-edit">Edit</a>
+      <button class="btn btn-sm btn-danger item-delete">&times;</button>
+    </td>
   </tr>
   {{/each}}
 </tbody>

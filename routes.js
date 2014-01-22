@@ -593,7 +593,7 @@ module.exports.register = function(app) {
       res.locals.payment_summary_id = req.param('payment_summary_id');
       return next();
     }
-  , m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
+  , m.view( 'admin/restaurant-payment-summary', db.restaurants, {
       layout: 'admin/layout'
     , method: 'findOne'
     })
@@ -629,26 +629,26 @@ module.exports.register = function(app) {
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
   , m.pagination()
   , m.param('payment_summary_id')
-  , m.find( db.payment_summaries )
+  , m.find( db.payment_summary_items )
   );
 
   app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
-  , m.queryToBody('restaurant_id', 'payment_summary_id')
+  , m.queryToBody('payment_summary_id')
   , m.insert( db.payment_summary_items )
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
   , m.param('id')
-  , m.findOne( db.payment_summaries )
+  , m.findOne( db.payment_summary_items )
   );
 
   app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
   , m.param('id')
-  , m.update( db.payment_summaries )
+  , m.update( db.payment_summary_items )
   );
 
   app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
   , m.param('id')
-  , m.remove( db.payment_summaries )
+  , m.remove( db.payment_summary_items )
   );
 }

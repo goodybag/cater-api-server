@@ -1,4 +1,6 @@
 var mosql = require('mongo-sql');
+var dirac = require('dirac');
+var moment = require('moment');
 var mosqlUtils = require('mongo-sql/lib/utils');
 var utils = require('../utils');
 
@@ -7,7 +9,7 @@ mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column
     return column + ' @> ARRAY[' + set.map( function(val) {
       return '$' + values.push(val);
     }).join(', ') + ']';
-  } 
+  }
 });
 
 mosql.registerConditionalHelper( '$dateContains', function( column, set, values, collection ) {
@@ -92,4 +94,18 @@ mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
   });
 
   return '';
+});
+
+dirac.use( function(){
+  var afterPSFinds = function( results, $query, schema, next ){
+    results.forEach( function( r ){
+      console.log(r.payment_date);
+      r.payment_date = moment( r.payment_date ).format('YYYY-MM-DD');
+    });
+
+    next();
+  };
+
+  dirac.dals.payment_summaries.after( 'find',     afterPSFinds );
+  dirac.dals.payment_summaries.after( 'findOne',  afterPSFinds );
 });

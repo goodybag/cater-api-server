@@ -11,6 +11,9 @@ define(function(require){
       var tableView = this.tableView = new TableView({
         collection: summaries
       , template: Hbs.partials.payment_summaries_table
+      , onItemEditClick: function( model, e ){
+          window.location.href += '/' + model.get('id');
+        }
       });
 
       utils.domready( function(){

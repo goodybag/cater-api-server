@@ -1,0 +1,24 @@
+<thead>
+  <tr>
+    <th>Order #</th>
+    <th>Delivery Fee</th>
+    <th>Tip</th>
+    <th>Order Total</th>
+    <th>GB Fee</th>
+    <th>Sales Tax</th>
+    <th>Net Payout</th>
+  </tr>
+</thead>
+<tbody>
+  {{#each collection}}
+  <tr>
+    <td>{{this.order_id}}</td>
+    <td>${{dollars this.delivery_Fee}}</td>
+    <td>${{dollars this.tip}}</td>
+    <td>${{dollars this.order_total}}</td>
+    <td>-${{dollars this.gb_fee}}</td>
+    <td>-${{dollars this.sales_tax}}</td>
+    <td>${{dollars this.net_payout}}</td>
+  </tr>
+  {{/each}}
+</tbody>

@@ -4,15 +4,20 @@
   <h2 class="page-sub-title">Payment Summary #{{payment_summary_id}}</h2>
   <ul class="header-nav">
     <li>
-      <button id="create-payment-summary-btn" class="btn btn-default">Create new Item</button>
+      <button id="save-payment-summary-btn" class="btn btn-success">Save Summary</button>
     </li>
     <li>
-      <button id="create-payment-summary-btn" class="btn btn-danger">Delete Summary</button>
+      <button id="delete-payment-summary-btn" class="btn btn-danger">Delete Summary</button>
+    </li>
+    <li>
+      <button id="create-payment-summary-item-btn" class="btn btn-default">Create new Item</button>
     </li>
   </ul>
 </div>
 
 <div class="container page-content">
+  <h2 class="payment-date-header">Payout Date</h2>
+  <input type="date" name="payment_date">
   <table class="table table-striped" id="payment-summary-items-table"></table>
 </div>
 {{/extend}}
@@ -21,9 +26,11 @@
 <script>
   define(
     'data/payment-summary'
-  , ['app/models/payment-summary']
-  , function( PaymentSummary ){
-      return new PaymentSummary({ id: {{payment_summary_id}} });
+  , ['app/collections/payment-summaries']
+  , function( PaymentSummaries ){
+      return new PaymentSummaries( null, {
+        restaurant_id: {{restaurant.id}}
+      }).createModel({ id: {{payment_summary_id}} });
     }
   );
 
@@ -31,14 +38,14 @@
     'data/payment-summary-items'
   , ['app/collections/payment-summary-items']
   , function( PaymentSummaryItems ){
-      return new PaymentSummaryItems({
+      return new PaymentSummaryItems( null, {
         payment_summary_id: {{payment_summary_id}}
       , restaurant_id:      {{restaurant.id}}
       });
     }
   );
 
-  require( ['app/pages/restaurant-payment-summaries'], function( page ){
+  require( ['app/pages/restaurant-payment-summary'], function( page ){
     page.init();
   });
 </script>

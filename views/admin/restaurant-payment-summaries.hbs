@@ -20,7 +20,7 @@
     'data/payment-summaries'
   , ['app/collections/payment-summaries']
   , function( PaymentSummaries ){
-      return new PaymentSummaries({ restaurant_id: {{restaurant.id}} });
+      return new PaymentSummaries( null, { restaurant_id: {{restaurant.id}} } );
     }
   );
 

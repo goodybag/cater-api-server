@@ -16,7 +16,7 @@ begin
   , restaurant_id int not null references restaurants ("id") on delete set null
   );
 
-  create table if not exists "payment_summary_item" (
+  create table if not exists "payment_summary_items" (
     id                  serial primary key
   , created_at          timestamp not null default now()
   , payment_summary_id  int not null references payment_summaries ("id")

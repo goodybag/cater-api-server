@@ -15,7 +15,7 @@ define(function(require, exports, module) {
       ].join('');
     }
 
-  , initialize: function( options ){
+  , initialize: function( models, options ){
       this.restaurant_id      = options.restaurant_id;
       this.payment_summary_id = options.payment_summary_id;
       return this;
@@ -24,11 +24,20 @@ define(function(require, exports, module) {
   , create: function(){
       if ( arguments[0] === undefined ) arguments[0] = {};
 
-      // Always set restaurant_id & payment_summary_id on new models
-      arguments[0].restaurant_id      = this.restaurant_id;
+      // Always set payment_summary_id on new models
       arguments[0].payment_summary_id = this.payment_summary_id;
 
       return utils.Collection.prototype.create.apply( this, arguments );
+    }
+
+  , createModel: function(){
+      var args = Array.prototype.slice.call( arguments );
+
+      if ( args[0] === undefined ) args[0] = {};
+      // Always set payment_summary_id on new models
+      args[0].payment_summary_id = this.payment_summary_id;
+
+      return utils.Collection.prototype.createModel.apply( this, args );
     }
   });
 });

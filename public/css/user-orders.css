@@ -103,6 +103,11 @@
   background: #f7f7f7;
 }
 
+#main .form-control {
+  cursor: default;
+  background-color: #fff;
+}
+
 .orders-calendar-filters .filter-swatch {
   width: 20px;
   height: 20px;

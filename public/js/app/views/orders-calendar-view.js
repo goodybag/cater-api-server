@@ -16,22 +16,14 @@ define(function(require, exports, module) {
   // Bootstrapped data
   var orders = require('data/orders');
 
-  // Views
-
-  // Models
-
   return module.exports = Backbone.View.extend({
     templates: {
       detailsPopover: Handlebars.partials.orders_calendar_details_popover
     , createPopover: Handlebars.partials.orders_calendar_create_popover
-    , compiled: {
-        createPopover: Handlebars.partials.orders_calendar_create_popover()
-      }
     },
 
     events: {
-      'click .btn-filter': 'filterOnClick'
-    , 'click .btn-search': 'searchOnClick'
+      'click .btn-search': 'searchOnClick'
     },
 
     initialize: function() {
@@ -67,7 +59,7 @@ define(function(require, exports, module) {
     dayRender: function(date, cell) {
       var date = moment(date);
       $(cell).popover({
-        content: this.templates.compiled.createPopover
+        content: this.templates.createPopover({date: date.format('YYYY-MM-DD')})
       , title: '<strong>Create order on ' + date.format('MMM Do') + '</strong>'
       , trigger: 'click'
       , placement: 'auto'
@@ -80,6 +72,7 @@ define(function(require, exports, module) {
         $('.fc-event, .fc-day').not(this).popover('hide'); //all but this
       });
 
+      // plug in pickadate
       $(cell).on('shown.bs.popover', function (e) {
         $('.popover .time')
           .pickatime({
@@ -87,8 +80,6 @@ define(function(require, exports, module) {
           , interval: 15
           })
           .pickatime('picker');
-    
-        console.log('SSSS');
       });
     },
 
@@ -113,23 +104,21 @@ define(function(require, exports, module) {
 
     },
 
-    filterOnClick: function(e) {
-      var status = $(e.target).data('status');
-      this.toggleStatus(status);
-    },
-
     searchOnClick: function(e) {
       e.preventDefault();
-
-      var time = this.$el.find('#time').val();
-      var zip = this.$el.find('#zip').val();
-      var guests = this.$el.find('#guests').val();
+      var params = {
+        date: this.$el.find('#date').data('date')
+      , time: this.$el.find('#time').val()
+      , zip: this.$el.find('#zip').val()
+      , guests: this.$el.find('#guests').val()
+      };
 
       // build query string
-      var qs = '';
+      var qs = utils.map(params, function(val, key) {
+        return val ? (key + '=' + val) : '';
+      });
 
-
-      console.log(time);
+      window.location.href = '/restaurants?' + qs.join('&');
     },
 
     setFilters: function(statuses) {

@@ -1,8 +1,14 @@
+var pg = require('pg');
 var mosql = require('mongo-sql');
 var dirac = require('dirac');
 var moment = require('moment');
 var mosqlUtils = require('mongo-sql/lib/utils');
 var utils = require('../utils');
+
+// Fix PG date parsing (`date` type not to be confused with something with a timezone)
+pg.types.setTypeParser( 1082, 'text', function( val ){
+  return new Date( val + ' 00:00:00');
+});
 
 mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column, set, values, collection ) {
   if (Array.isArray(set)) {
@@ -99,7 +105,6 @@ mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
 dirac.use( function(){
   var afterPSFinds = function( results, $query, schema, next ){
     results.forEach( function( r ){
-      console.log(r.payment_date);
       r.payment_date = moment( r.payment_date ).format('YYYY-MM-DD');
     });
 

@@ -41,7 +41,9 @@ define(function(require){
 
   , onItemDeleteClick: function( e ){
       while ( e.target.tagName !== 'TR' ) e.target = e.target.parentElement;
-      this.collection.del( utils.dom( e.target ).data('id') );
+      var id = utils.dom( e.target ).data('id');
+      if ( id ) this.collection.del( id );
+      e.target.remove();
     }
 
   , onItemEditClick: function( e ){

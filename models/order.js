@@ -187,6 +187,44 @@ module.exports = Model.extend({
     return true;
   },
 
+  /**
+   * determine if the user is allowed to change the value of the tip
+   * @param  {object}  orderAuth {isAdmin: bool, isOwner: bool, isRestaurantManager: bool}
+   * @return {Boolean}           editability
+   */
+  isTipEditable: function(orderAuth) {
+    // Is the tip editable? This is the question. This is the criteria.
+    //
+    // 1. If the order has been canceled or rejected it is not editable.
+    //
+    // 2. If it is 3 days past the delivery date it is no editable.
+    //
+    // 3. If the tip is not 0 then the restaurant cannot edit it.
+    //
+    // 4. If it is before the delivery date then it is editable by the
+    // owner and the admin.
+    //
+    // 5. If it is past the delivery date it is editable by the client,
+    // admin, and restaurant manager.
+
+    var now = moment();
+    var deliveryDateTime = moment.tz(this.attributes.datetime, this.attributes.timezone);
+    var cutOffDateTime = moment.tz(this.attributes.datetime, this.attributes.timezone).add(3, 'days');
+
+    if (utils.contains(['canceled', 'rejected'], this.attributes.status)) return false;
+    if (now > cutOffDateTime) return false;
+    if (this.attributes.tip > 0 && orderAuth.isRestaurantManager) return false;
+
+    if (now < deliveryDateTime && (orderAuth.isAdmin || orderAuth.isOwner)) return true;
+    if (
+      (now > deliveryDateTime)
+      && (now < cutOffDateTime)
+      && (orderAuth.isAdmin || orderAuth.isOwner || orderAuth.isRestaurantManager)
+    ) return true;
+
+    return false;
+  },
+
   createCopy: function(callback) {
     if (this.attributes.id == null) return callback(null, null);
   // with o as (select user_id, restaurant_id, street, city, state, zip, phone, notes, timezone, guests, adjustment_amount, adjustment_description, tip from orders where id=7)
@@ -760,12 +798,13 @@ module.exports = Model.extend({
       callback = limit;
       limit = 100;
     }
+    // it is ready for charging 3 days after the order has been delivered.
     var query = {
       where: {
         payment_method_id: {$notNull: true}
       , payment_status: {$null: true}
       , status: 'accepted'
-      , $custom: ['now() > "orders"."datetime" AT TIME ZONE "orders"."timezone"']
+      , $custom: ['now() > (("orders"."datetime" AT TIME ZONE "orders"."timezone") + interval \'3 days\')']
       }
     , limit: limit
     };

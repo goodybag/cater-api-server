@@ -90,38 +90,27 @@ module.exports.work = function( storage, callback ){
   Models.Order.find( getQuery( storage ), function( error, orders ){
     if ( error ) return callback( error );
 
-    utils.async.parallel(
-      orders.map( function( o ){
-        return function( done ){ o.getOrderItems( done ); }
-      }).concat( orders.map( function( o ){
-        return function( done ){ o.getRestaurant( done ); }
-      }))
-    , function( error ){
-        if ( error ) return callback( error );
-
-        utils.async.parallelNoBail(
-          orders.map( notifyOrderFn )
-        , function( errors, results ){
-            if ( errors ){
-              errors.forEach( function( e ){
-                Object.keys( e ).forEach( function( k ){
-                  stats.errors.value++;
-                  stats.errors.objects.push( e[ k ] );
-                });
-              });
-            }
-
-            // Anything that came back in results is considered a success
-            results.forEach( function( result, i ){
-              if ( !result || Object.keys( result ).length === 0 ) return;
-
-              stats.ordersHandled.value++;
-              storage.lastNotified[ orders[ i ].attributes.id ] = new Date().toString();
+    utils.async.parallelNoBail(
+      orders.map( notifyOrderFn )
+    , function( errors, results ){
+        if ( errors ){
+          errors.forEach( function( e ){
+            Object.keys( e ).forEach( function( k ){
+              stats.errors.value++;
+              stats.errors.objects.push( e[ k ] );
             });
+          });
+        }
 
-            return callback( errors, stats );
-          }
-        );
+        // Anything that came back in results is considered a success
+        results.forEach( function( result, i ){
+          if ( !result || Object.keys( result ).length === 0 ) return;
+
+          stats.ordersHandled.value++;
+          storage.lastNotified[ orders[ i ].attributes.id ] = new Date().toString();
+        });
+
+        return callback( errors, stats );
       }
     );
   });

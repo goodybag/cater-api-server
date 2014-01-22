@@ -1,7 +1,6 @@
 /**
- * Orders Calendar Filter View
+ * Orders Filter View
  */
-
 define(function(require, exports, module) {
 
   var $ = require('jquery');
@@ -17,6 +16,7 @@ define(function(require, exports, module) {
       var $statuses = this.$el.find('input[type="checkbox"]:checked');
       var statuses = utils.pluck($statuses, 'value');
       this.options.calendarView.setFilters(statuses);
+      this.options.listView.setFilters(statuses);
     }
 
   });

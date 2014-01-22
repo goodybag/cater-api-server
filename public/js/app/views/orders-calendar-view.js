@@ -31,6 +31,8 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
+      var this_ = this;
+
       this.filters = [
         'pending'
       , 'canceled'
@@ -40,6 +42,11 @@ define(function(require, exports, module) {
       , 'delivered'
       ];
       this.setupCalendar();
+
+      // rerender on activating the calendar tab
+      $('a[href="#calendar-view"]').on('shown.bs.tab', function (e) {
+        this_.render();
+      });
     },
 
     setupCalendar: function() {

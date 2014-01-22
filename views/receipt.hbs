@@ -95,7 +95,7 @@
 
         <div class="btn-toolbar pull-right">
           {{#if isTipEditable}}
-            <a class="btn btn-primary btn-add-tip" href="">{{#eq order.tip 0}}Add Tip{{else}}Edit Tip{{/eq}}</a>
+            <a class="btn btn-primary btn-add-tip" href="" onclick="javascript:return false;">{{#eq order.tip 0}}Add Tip{{else}}Edit Tip{{/eq}}</a>
           {{/if}}
 
           {{#if order.editable}}
@@ -317,10 +317,10 @@
       </div>
       <div class="row modal-footer">
         <div class="col-lg-3 col-lg-offset-6">
-          <button type="button" class="btn btn-danger btn-cancel">cancel</button>
+          <button type="button" class="btn btn-danger btn-cancel">Cancel</button>
         </div>
         <div class="col-lg-3">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Add Tip</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
         </div>
       </div>
     </div>

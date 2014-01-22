@@ -39,6 +39,7 @@ define(function(require, exports, module) {
       OrderView.prototype.initialize.apply(this, arguments);
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.originalTipValue = this.$el.find('.order-tip').val();
+      this.originalTipPercent = this.$el.find('.tip-percent').val();
 
       this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
       this.convertUtcDates();
@@ -120,6 +121,7 @@ define(function(require, exports, module) {
 
     resetTip: function(e) {
       this.$el.find('.order-tip').val(this.originalTipValue);
+      this.$el.find('.tip-percent').val(this.originalTipPercent);
       this.onPriceChange();
     },
 

@@ -10,6 +10,7 @@ define(function(require, exports, module) {
 
     initialize: function() {
       this.tip = this.model.get('tip');
+      this.$el.find('.tip_percent').val(this.model.get('tip_percent') || 0);
     },
 
     selectTip: function(e) {

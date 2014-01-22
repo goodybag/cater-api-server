@@ -13,8 +13,7 @@ define(function(require, exports, module) {
         el: this.$el.find('.tip-area').get(0)
       , model: this.model
       , orderView: this.options.orderView
-    });
-      this.tipView.customTip();
+      });
     },
 
     addTip: function (e) {
@@ -24,8 +23,10 @@ define(function(require, exports, module) {
       var self = this;
       var val = parseFloat(this.$el.find('.order-tip').val().trim()||'');
       var tip = !_.isNaN(val) ? Math.round(val * 100) : null;
+      var tipPercent = this.$el.find('.tip-percent').val();
+
       this.options.orderView.onPriceChange();
-      this.model.save({'tip': tip}, {
+      this.model.save({'tip': tip, 'tip_percent': tipPercent}, {
         patch: true
       , validate: false
       , success: function(model, response, optons) {
@@ -44,7 +45,6 @@ define(function(require, exports, module) {
       e.stopImmediatePropagation();
 
       this.options.orderView.resetTip();
-      this.tipView.customTip(e);
       this.$el.modal('hide');
     }
   });

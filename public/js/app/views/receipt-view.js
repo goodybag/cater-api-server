@@ -114,7 +114,6 @@ define(function(require, exports, module) {
     },
 
     showTipModal: function(e) {
-      console.log('show tip modal');
       e.preventDefault();
       this.addTipModal.$el.modal('show');
     },

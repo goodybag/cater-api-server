@@ -9,7 +9,11 @@ define(function(require, exports, module) {
     },
 
     initialize: function () {
-      this.tipView = new TipView({el: this.$el.find('.tip-area').get(0), model: this.model, orderView: this.options.orderView});
+      this.tipView = new TipView({
+        el: this.$el.find('.tip-area').get(0)
+      , model: this.model
+      , orderView: this.options.orderView
+    });
       this.tipView.customTip();
     },
 

@@ -354,14 +354,17 @@ define(function(require, exports, module) {
      */
     getFullCalendarEvent: function() {
       var fullCalendarEvent = utils.extend({}, this.toJSON(), {
-        title: Handlebars.helpers.timepart(this.get('datetime')) + '\n' + Handlebars.helpers.truncate(this.get('restaurant_name'), 15)
+        title: [
+          Handlebars.helpers.timepart(this.get('datetime')) 
+        , '\n' 
+        , Handlebars.helpers.truncate(this.get('restaurant_name'), 15)
+        ].join('')
       , start: this.get('datetime')
       , color: this.getStatusColor()
       , orderId: this.get('id')
       , status: this.get('status')
       });
 
-      //console.log(fullCalendarEvent);
       return fullCalendarEvent;
     },
 

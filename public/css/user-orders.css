@@ -86,13 +86,8 @@
   cursor: pointer;
 }
 
-.fc .fc-view {
-  overflow: visible;
-}
-
 .fc-event-container > .popover {
   width: 400px;
-  z-index: 999;
 }
 
 .fc-content {
@@ -116,28 +111,4 @@
   vertical-align: top;
   margin-left: 5px;
   margin-right: 5px;
-}
-
-.orders-calendar-filters .pending {
-  background-color: #F0AD4E;
-}
-
-.orders-calendar-filters .canceled {
-  background-color: #B3B3B3;
-}
-
-.orders-calendar-filters .submitted {
-  background-color: #5BC0DE;
-}
-
-.orders-calendar-filters .accepted {
-  background-color: #5CB85C;
-}
-
-.orders-calendar-filters .denied {
-  background-color: #D9534F;
-}
-
-.orders-calendar-filters .delivered {
-  background-color: #428BCA;
 }

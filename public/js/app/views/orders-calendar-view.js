@@ -69,6 +69,12 @@ define(function(require, exports, module) {
       this.render();
     },
 
+    onTimePickerOpen: function() {
+      // Scroll to 8am initially
+      var $scroller = this.$root.find('.picker__holder');
+      $scroller[0].scrollTop = $scroller.find('[data-pick="' + (60 * 8) + '"]')[0].offsetTop;
+    },
+
     /**
      * Clean up when changing calendar views
      */
@@ -107,6 +113,7 @@ define(function(require, exports, module) {
           .pickatime({
             format: 'hh:i A'
           , interval: 15
+          , onOpen: this_.onTimePickerOpen
           })
           .pickatime('picker');
 

@@ -60,13 +60,11 @@ mosql.registerConditionalHelper(
     return [
       column
     , tz
-    , " < date_trunc(\'"
-    , value.unit ? value.unit.substring( 0, value.unit.length - 1 ) : 'day'
-    , "\', (now() ", tz, ") - interval '"
+    , " < now() ", tz, " - interval '"
     , value.value
-    , " "
+    , ' '
     , value.unit || 'days'
-    , "')"
+    , "'"
     ].join('')
   }
 );

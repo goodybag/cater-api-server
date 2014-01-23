@@ -50,7 +50,6 @@ define(function(require, exports, module) {
       $(document).click(function(e) {
         $('.fc-day, .fc-event').each(function () {
           if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-            //$(this).popover('hide');
             if ($(this).data('bs.popover').tip().hasClass('in')) {
               $(this).popover('toggle');
             }
@@ -77,16 +76,12 @@ define(function(require, exports, module) {
       $('.popover').remove();
     },
 
-    /**
-     * Hooks into FullCalendar when each day is rendered
-     * Let's set up popovers for each
-     */
     dayRender: function(date, cell) {
       var date = moment(date);
 
       var $cell = $(cell);
 
-      // active popover
+      // activate popover
       $cell.popover({
         content: this.templates.createPopover({date: date.format('YYYY-MM-DD')})
       , title: '<strong>Create order on ' + date.format('MMM Do') + '</strong>' + '<button class="close">&times</button>'
@@ -94,11 +89,6 @@ define(function(require, exports, module) {
       , placement: 'auto'
       , html: true
       , container: '#main'
-      });
-
-      /* hack to avoid popover to open more than on at the same time */
-      $cell.click(function(){
-        $('.fc-event, .fc-day').not(this).hasClass('in').popover('toggle'); //all but this
       });
 
       // popover DOM isn't added until a date is clicked, so hook into
@@ -125,7 +115,8 @@ define(function(require, exports, module) {
      * Triggered while an event is being rendered
      */
     eventRender: function(event, element, view) {
-      // Set up tooltip content here
+
+      // Activate popover
       $(element).popover({
         content: this.templates.detailsPopover(utils.omit(event, 'source'))
       , title: '<strong>#' + event.id + '</strong> ' + event.restaurant.name + '<button class="close">&times</button>'
@@ -135,11 +126,6 @@ define(function(require, exports, module) {
       , container: 'body'
       });
 
-      /* hack to avoid popover to open more than on at the same time */
-      $(element).click(function(){
-        $('.fc-event, .fc-day').not(this).hasClass('in').popover('toggle'); //all but this
-      });
-      
       $(element).on('shown.bs.popover', function (e) {
 
         // listen to close buttons
@@ -158,12 +144,7 @@ define(function(require, exports, module) {
       , guests: this.$el.find('#guests').val()
       };
 
-      // build query string
-      var qs = utils.map(params, function(val, key) {
-        return val ? (key + '=' + val) : '';
-      });
-
-      window.location.href = '/restaurants?' + qs.join('&');
+      window.location.href = '/restaurants?' + $.param(params);
     },
 
     setFilters: function(statuses) {

@@ -7,7 +7,7 @@ mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column
     return column + ' @> ARRAY[' + set.map( function(val) {
       return '$' + values.push(val);
     }).join(', ') + ']';
-  } 
+  }
 });
 
 mosql.registerConditionalHelper( '$dateContains', function( column, set, values, collection ) {
@@ -48,6 +48,24 @@ mosql.registerConditionalHelper(
       , " days')"
       ].join('')
     ].join(' and ');
+  }
+);
+
+mosql.registerConditionalHelper(
+  '$older_than'
+, { cascade: false }
+, function( column, value, values, table, query ){
+    var tz = value.timezone ? ' at time zone ' + mosqlUtils.quoteColumn( value.timezone ) : '';
+
+    return [
+      column
+    , tz
+    , " < now() ", tz, " - interval '"
+    , value.value
+    , ' '
+    , value.unit || 'days'
+    , "'"
+    ].join('')
   }
 );
 

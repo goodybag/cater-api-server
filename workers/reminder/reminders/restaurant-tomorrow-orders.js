@@ -111,7 +111,7 @@ module.exports.work = function( storage, callback ){
         utils.async.parallelNoBail(
           orders.map( notifyOrderFn )
         , function( errors, results ){
-            if ( error ){
+            if ( errors ){
               errors.forEach( function( e ){
                 Object.keys( e ).forEach( function( k ){
                   stats.errors.value++;

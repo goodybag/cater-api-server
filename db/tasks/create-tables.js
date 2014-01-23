@@ -36,6 +36,7 @@ var definitions = [
 , 'password-resets'
 , 'waitlist'
 , 'addresses'
+, 'reminders'
 , 'deltas'
 ];
 

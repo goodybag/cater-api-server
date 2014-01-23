@@ -7,13 +7,16 @@ define(function(require){
   , events: {
       'click .item-delete': 'onItemDeleteClick'
     , 'click .item-edit':   'onItemEditClick'
+    , 'input [name]':       'onInputChange'
     }
 
   , initialize: function( options ){
+      this.options = options;
+
       this.collection = options.collection;
       this.template   = options.template;
 
-      this.collection.on( 'change', this.onCollectionChange, this );
+      this.collection.on( 'reset',  this.onCollectionChange, this );
       this.collection.on( 'add',    this.onCollectionChange, this );
       this.collection.on( 'remove', this.onCollectionChange, this );
 
@@ -23,7 +26,8 @@ define(function(require){
   , render: function(){
       this.$el.html(
         this.template({
-          collection: this.collection.toJSON()
+          collection: this.collection.toJSON({ cid: true })
+        , options:    this.options
         })
       );
 
@@ -31,8 +35,9 @@ define(function(require){
     }
 
   , getModelFromEvent: function( e ){
-      while ( e.target.tagName !== 'TR' ) e.target = e.target.parentElement;
-      return this.collection.get( utils.dom( e.target ).data('id') );
+      var el = e.target;
+      while ( el.tagName !== 'TR' ) el = el.parentElement;
+      return this.collection.get({ cid: utils.dom( el ).data('cid') });
     }
 
   , onCollectionChange: function(){
@@ -41,8 +46,8 @@ define(function(require){
 
   , onItemDeleteClick: function( e ){
       while ( e.target.tagName !== 'TR' ) e.target = e.target.parentElement;
-      var id = utils.dom( e.target ).data('id');
-      if ( id ) this.collection.del( id );
+      var cid = utils.dom( e.target ).data('cid');
+      if ( cid ) this.collection.del({ cid: cid });
       e.target.remove();
     }
 
@@ -50,6 +55,16 @@ define(function(require){
       if ( this.options.onItemEditClick ){
         this.options.onItemEditClick.call( this, this.getModelFromEvent( e ), e );
       }
+    }
+
+  , onInputChange: function( e ){
+      var model = this.getModelFromEvent( e );
+      if ( !model ) return;
+
+      model.set(
+        e.target.name
+      , e.target.type === 'number' ? +e.target.value : e.target.value
+      );
     }
   });
 });

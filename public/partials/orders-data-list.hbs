@@ -1,0 +1,7 @@
+<datalist id="{{options.dataListId}}">
+  {{#each collection}}
+  <option value="{{this.id}}">
+    Order #{{this.id}} - ${{dollars this.sub_total}} on {{formatDateTime this.datetime}}
+  </option>
+  {{/each}}
+</datalist>

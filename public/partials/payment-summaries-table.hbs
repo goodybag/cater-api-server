@@ -8,7 +8,7 @@
 </thead>
 <tbody>
   {{#each collection}}
-  <tr data-id="{{this.id}}">
+  <tr data-id="{{this.id}}" data-cid="{{this.cid}}">
     <td>#{{this.id}}</td>
     <td>${{dollars this.total_payout}}</td>
     <td>{{formatDateTime this.payment_date}}</td>

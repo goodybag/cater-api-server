@@ -1,9 +1,9 @@
 define(function(require, exports, module) {
-  var utils           = require('utils');
-  var PaymentSummary  = require('../models/payment-summary');
+  var utils               = require('utils');
+  var PaymentSummaryItem  = require('../models/payment-summary-item');
 
   return module.exports = utils.Collection.extend({
-    model: PaymentSummary
+    model: PaymentSummaryItem
 
   , url: function(){
       return [

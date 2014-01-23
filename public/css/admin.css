@@ -31,3 +31,12 @@
   margin-top: 8px;
   margin-left: 20px;
 }
+
+#payment-summary-items-table input {
+  display: inline-block;
+  width: 80px;
+}
+
+#payment-summary-items-table td {
+  vertical-align: middle;
+}

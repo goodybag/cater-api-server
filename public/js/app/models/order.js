@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
   var utils = require('utils');
+  var config = require('config');
 
   var OrderItems = require('../collections/order-items');
 
@@ -104,8 +105,8 @@ define(function(require, exports, module) {
       return errors.length > 0 ? errors : null;
     },
 
-    /** 
-     * Check if the order datetime occurs during one of the 
+    /**
+     * Check if the order datetime occurs during one of the
      * restaurant's closed events
      */
     validateRestaurantEvents: function() {
@@ -117,7 +118,7 @@ define(function(require, exports, module) {
         var fce = event.toFullCalendarEvent();
         var orderDate = moment(this_.get('datetime'));
 
-        var occursDuringEvent = 
+        var occursDuringEvent =
           orderDate.isAfter(fce.start) && orderDate.isBefore(fce.end) ||
           orderDate.isSame(fce.start, 'day') ||
           orderDate.isSame(fce.end, 'day');
@@ -347,6 +348,12 @@ define(function(require, exports, module) {
           return callback(null);
         }
       });
+    },
+
+    getTotal: function(){
+      return Math.round(
+        ( parseInt(this.get('sub_total')) + parseInt(this.get('delivery_fee')) ) * parseFloat(config.salesTax)
+      );
     }
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']

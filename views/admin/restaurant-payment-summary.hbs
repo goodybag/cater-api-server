@@ -20,6 +20,8 @@
   <input type="date" name="payment_date">
   <table class="table table-striped" id="payment-summary-items-table"></table>
 </div>
+
+<datalist id="orders-data-list"></datalist>
 {{/extend}}
 
 {{#extend "scripts"}}
@@ -42,6 +44,14 @@
         payment_summary_id: {{payment_summary_id}}
       , restaurant_id:      {{restaurant.id}}
       });
+    }
+  );
+
+  define(
+    'data/orders'
+  , ['app/collections/restaurant-orders']
+  , function( Orders ){
+      return new Orders( null, { restaurant_id: {{restaurant.id}} } );
     }
   );
 

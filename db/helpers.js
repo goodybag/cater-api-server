@@ -7,7 +7,7 @@ var utils = require('../utils');
 
 // Fix PG date parsing (`date` type not to be confused with something with a timezone)
 pg.types.setTypeParser( 1082, 'text', function( val ){
-  return new Date( val + ' 00:00:00');
+  return new Date( val + ' 00:00:00' );
 });
 
 mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column, set, values, collection ) {

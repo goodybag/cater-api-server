@@ -1,29 +1,44 @@
 define(function(require){
-  var Hbs       = require('handlebars');
-  var async     = require('async');
-  var utils     = require('utils');
-  var summary   = require('data/payment-summary');
-  var items     = require('data/payment-summary-items');
-  var TableView = require('views/table-view');
+  var Hbs           = require('handlebars');
+  var async         = require('async');
+  var utils         = require('utils');
+  var summary       = require('data/payment-summary');
+  var items         = require('data/payment-summary-items');
+  var orders        = require('data/orders');
+  var TableView     = require('views/table-view');
+  var DataListView  = require('views/data-list-view');
 
   var goBack = function(){
     var href = window.location.href;
     window.location.href = href.substring( 0, href.lastIndexOf('/') );
   };
 
+  var dataListId = 'orders-datalist'
+
   summary.fetch();
   items.fetch();
+  orders.fetch();
 
   return Object.create({
     init: function(){
       var tableView = this.tableView = new TableView({
         collection: items
       , template: Hbs.partials.payment_summary_table
+      , dataListId: dataListId
+      });
+
+      var ordersListView = this.ordersListView = new DataListView({
+        collection: orders
+      , template: Hbs.partials.orders_data_list
+      , dataListId: dataListId
       });
 
       utils.domready( function(){
         tableView.setElement( utils.dom('#payment-summary-items-table') );
         tableView.render();
+
+        ordersListView.setElement( utils.dom('#orders-data-list') );
+        ordersListView.render();
       });
 
       utils.dom('#create-payment-summary-item-btn').click( function(){
@@ -39,8 +54,16 @@ define(function(require){
       utils.dom('#save-payment-summary-btn').click( function(){
         async.parallel(
           items.toArray().map( function( model ){
+            var $el = utils.dom('[data-cid="' + model.cid + '"]');
+
             return function( done ){
-              model.save( null, { success: function(){ done(); }, error: done } );
+              var data = {};
+
+              Object.keys( model.toJSON() ).forEach( function( k ){
+                data[ k ] = $el.find('[name="' + k + '"]').val();
+              });
+
+              model.save( data, { success: function(){ done(); }, error: done } );
             };
           }).concat( function( done ){
             summary.save({
@@ -56,6 +79,13 @@ define(function(require){
 
       summary.on('change:payment_date', function( model, date ){
         utils.dom('[name="payment_date"]').val( utils.dateTimeFormatter( date ) );
+      });
+
+      // When order_id changes, set the order on that mofo
+      items.on( 'change:order_id', function( model, id ){
+        console.log("change:order_id", id, orders.get( id ))
+        model.set( 'order', orders.get( id ) );
+        console.log(model.toJSON())
       });
     }
   });

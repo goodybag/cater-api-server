@@ -599,6 +599,12 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/api/restaurants/:restaurant_id/orders'
+  , m.pagination()
+  , m.param('restaurant_id')
+  , controllers.restaurants.orders.listJSON
+  );
+
   app.get('/api/restaurants/:restaurant_id/payment-summaries'
   , m.pagination()
   , m.param('restaurant_id')

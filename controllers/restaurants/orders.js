@@ -3,6 +3,18 @@ var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
 
+module.exports.listJSON = function(req, res) {
+  var $query = utils.extend({}, req.queryOptions);
+
+  $query.where = req.queryObj;
+
+  models.Order.find( $query, function( error, results ){
+    if ( error ) return res.error( errors.internal.DB_FAILURE, error );
+
+    res.json( utils.invoke( results, 'toJSON' ) );
+  });
+};
+
 module.exports.list = function(req, res) {
   // only show restaurant managers orders with a status of submitted, denied, or accepted
   var defaultFilter = (req.order.isRestaurantManager) ? ['submitted', 'denied', 'accepted'] : 'all';

@@ -36,7 +36,7 @@ function notifyOrderFn( order ){
         , html:     html
 
         , subject:  [
-                      '[RESTAURANT] Goodybag Reminder: Order #'
+                      '[REMINDER] Goodybag Order #'
                     , order.attributes.id
                     , ' to be delivered '
                     , order.attributes.datetime

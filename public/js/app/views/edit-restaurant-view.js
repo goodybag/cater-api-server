@@ -68,6 +68,7 @@ define(function(require, exports, module) {
       logo_mono_url: '.restaurant-form [name="logo_mono_url"]',
       sms_phones: '.restaurant-form .restaurant-sms-phones',
       voice_phones: '.restaurant-form .restaurant-voice-phones',
+      display_phone: '.restaurant-form .restaurant-display-phone',
       emails: '.restaurant-form .restaurant-emails',
       price: '.restaurant-form .restaurant-price',
       cuisine: '.restaurant-form .restaurant-cuisine',

@@ -15,8 +15,7 @@ define(function(require, exports, module) {
     filtersOnClick: function(e) {
       var $statuses = this.$el.find('input[type="checkbox"]:checked');
       var statuses = utils.pluck($statuses, 'value');
-      this.options.calendarView.setFilters(statuses);
-      this.options.listView.setFilters(statuses);
+      utils.invoke(this.options.subviews, 'setFilters', statuses);
     }
 
   });

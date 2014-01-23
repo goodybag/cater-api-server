@@ -69,16 +69,16 @@ define(function(require, exports, module) {
       this.render();
     },
 
+    /**
+     * Clean up when changing calendar views
+     */
     viewRender: function(view, element) {
-
-      // Remove orphaned dom elements
       this.$el.find('.popover').remove();
     },
 
     dayRender: function(date, element) {
       var this_ = this;
       var date = moment(date);
-
       var $element = $(element);
 
       // activate popover
@@ -122,7 +122,7 @@ define(function(require, exports, module) {
      * Triggered while an event is being rendered
      */
     eventRender: function(event, element, view) {
-
+      var this_ = this;
       var $element = $(element);
 
       // Activate popover
@@ -138,13 +138,13 @@ define(function(require, exports, module) {
       , trigger: 'click'
       , placement: 'auto'
       , html: true
-      , container: 'body'
+      , container: '#main'
       });
 
       $element.on('shown.bs.popover', function (e) {
 
         // listen to close button
-        $('.popover button.close').click(function() {
+        this_.$el.find('.popover button.close').click(function() {
           $element.popover('toggle');
         });
       });
@@ -168,7 +168,7 @@ define(function(require, exports, module) {
     },
 
     /**
-     * Render events filtered by statuses that are toggled on
+     * Render events on the calendar
      */
     render: function() {
       var this_ = this

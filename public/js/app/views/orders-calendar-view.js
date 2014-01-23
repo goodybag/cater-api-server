@@ -45,22 +45,51 @@ define(function(require, exports, module) {
       $('a[href="#calendar-view"]').on('shown.bs.tab', function (e) {
         this_.render();
       });
+
+      // click outside popover to close
+      $(document).click(function(e) {
+        $('.fc-day, .fc-event').each(function () {
+          if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            //$(this).popover('hide');
+            if ($(this).data('bs.popover').tip().hasClass('in')) {
+              $(this).popover('toggle');
+            }
+            
+            return;
+          }
+        });
+      });
     },
 
     setupCalendar: function() {
       this.$calendar.fullCalendar({
-        dayRender:        this.dayRender.bind(this)
+        viewRender:       this.viewRender.bind(this)
+      , dayRender:        this.dayRender.bind(this)
       , eventRender:      this.eventRender.bind(this)
       });
 
       this.render();
     },
 
+    viewRender: function(view, element) {
+
+      // Remove orphaned dom elements
+      $('.popover').remove();
+    },
+
+    /**
+     * Hooks into FullCalendar when each day is rendered
+     * Let's set up popovers for each
+     */
     dayRender: function(date, cell) {
       var date = moment(date);
-      $(cell).popover({
+
+      var $cell = $(cell);
+
+      // active popover
+      $cell.popover({
         content: this.templates.createPopover({date: date.format('YYYY-MM-DD')})
-      , title: '<strong>Create order on ' + date.format('MMM Do') + '</strong>'
+      , title: '<strong>Create order on ' + date.format('MMM Do') + '</strong>' + '<button class="close">&times</button>'
       , trigger: 'click'
       , placement: 'auto'
       , html: true
@@ -68,19 +97,28 @@ define(function(require, exports, module) {
       });
 
       /* hack to avoid popover to open more than on at the same time */
-      $(cell).click(function(){
-        $('.fc-event, .fc-day').not(this).popover('hide'); //all but this
+      $cell.click(function(){
+        $('.fc-event, .fc-day').not(this).hasClass('in').popover('toggle'); //all but this
       });
 
-      // plug in pickadate
+      // popover DOM isn't added until a date is clicked, so hook into
+      // this event
       $(cell).on('shown.bs.popover', function (e) {
+
+        // activate pickatime plugin
         $('.popover .time')
           .pickatime({
             format: 'hh:i A'
           , interval: 15
           })
           .pickatime('picker');
+
+        // listen to close buttons
+        $('.popover button.close').click(function() {
+          $cell.popover('toggle');
+        });
       });
+
     },
 
     /**
@@ -90,7 +128,7 @@ define(function(require, exports, module) {
       // Set up tooltip content here
       $(element).popover({
         content: this.templates.detailsPopover(utils.omit(event, 'source'))
-      , title: '<strong>#' + event.id + '</strong> ' + event.restaurant.name
+      , title: '<strong>#' + event.id + '</strong> ' + event.restaurant.name + '<button class="close">&times</button>'
       , trigger: 'click'
       , placement: 'auto'
       , html: true
@@ -99,9 +137,16 @@ define(function(require, exports, module) {
 
       /* hack to avoid popover to open more than on at the same time */
       $(element).click(function(){
-        $('.fc-event, .fc-day').not(this).popover('hide'); //all but this
+        $('.fc-event, .fc-day').not(this).hasClass('in').popover('toggle'); //all but this
       });
+      
+      $(element).on('shown.bs.popover', function (e) {
 
+        // listen to close buttons
+        $('.popover button.close').click(function() {
+          $(element).popover('toggle');
+        });
+      });
     },
 
     searchOnClick: function(e) {

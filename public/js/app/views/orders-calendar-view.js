@@ -23,7 +23,7 @@ define(function(require, exports, module) {
     },
 
     events: {
-      'click .btn-search': 'searchOnClick'
+      'submit .create-order-form': 'search'
     },
 
     initialize: function() {
@@ -41,8 +41,8 @@ define(function(require, exports, module) {
       ];
       this.setupCalendar();
 
-      // rerender on activating the calendar tab
-      $('a[href="#calendar-view"]').on('shown.bs.tab', function (e) {
+      // rerender on calendar tab
+      this.$el.find('a[href="#calendar-view"]').on('shown.bs.tab', function (e) {
         this_.render();
       });
 
@@ -53,7 +53,6 @@ define(function(require, exports, module) {
             if ($(this).data('bs.popover').tip().hasClass('in')) {
               $(this).popover('toggle');
             }
-            
             return;
           }
         });
@@ -73,39 +72,47 @@ define(function(require, exports, module) {
     viewRender: function(view, element) {
 
       // Remove orphaned dom elements
-      $('.popover').remove();
+      this.$el.find('.popover').remove();
     },
 
-    dayRender: function(date, cell) {
+    dayRender: function(date, element) {
+      var this_ = this;
       var date = moment(date);
 
-      var $cell = $(cell);
+      var $element = $(element);
 
       // activate popover
-      $cell.popover({
-        content: this.templates.createPopover({date: date.format('YYYY-MM-DD')})
-      , title: '<strong>Create order on ' + date.format('MMM Do') + '</strong>' + '<button class="close">&times</button>'
+      $element.popover({
+        content: this.templates.createPopover({
+          date: date.format('YYYY-MM-DD')
+        })
+      , title: [
+          '<strong>Create order on '
+        , date.format('MMM Do') 
+        , '</strong>' 
+        , '<button class="close">&times</button>'
+        ].join('')
       , trigger: 'click'
       , placement: 'auto'
       , html: true
       , container: '#main'
       });
 
-      // popover DOM isn't added until a date is clicked, so hook into
-      // this event
-      $(cell).on('shown.bs.popover', function (e) {
+      // popover DOM isn't added until a date is clicked, 
+      // so hook into this event
+      $element.on('shown.bs.popover', function (e) {
 
         // activate pickatime plugin
-        $('.popover .time')
+        this_.$el.find('.popover .time')
           .pickatime({
             format: 'hh:i A'
           , interval: 15
           })
           .pickatime('picker');
 
-        // listen to close buttons
-        $('.popover button.close').click(function() {
-          $cell.popover('toggle');
+        // listen to close button
+        this_.$el.find('.popover button.close').click(function() {
+          $element.popover('toggle');
         });
       });
 
@@ -116,26 +123,34 @@ define(function(require, exports, module) {
      */
     eventRender: function(event, element, view) {
 
+      var $element = $(element);
+
       // Activate popover
-      $(element).popover({
+      $element.popover({
         content: this.templates.detailsPopover(utils.omit(event, 'source'))
-      , title: '<strong>#' + event.id + '</strong> ' + event.restaurant.name + '<button class="close">&times</button>'
+      , title: [
+          '<strong>#' 
+        , event.id 
+        , '</strong> ' 
+        , event.restaurant.name 
+        , '<button class="close">&times</button>'
+        ].join('')
       , trigger: 'click'
       , placement: 'auto'
       , html: true
       , container: 'body'
       });
 
-      $(element).on('shown.bs.popover', function (e) {
+      $element.on('shown.bs.popover', function (e) {
 
-        // listen to close buttons
+        // listen to close button
         $('.popover button.close').click(function() {
-          $(element).popover('toggle');
+          $element.popover('toggle');
         });
       });
     },
 
-    searchOnClick: function(e) {
+    search: function(e) {
       e.preventDefault();
       var params = {
         date: this.$el.find('#date').data('date')

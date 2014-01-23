@@ -14,7 +14,8 @@ var views   = require('../lib/views');
 module.exports.name = 'Restaurant Action Timeframe';
 
 module.exports.alertEmails = [
-  'om', 'jay', 'jag', 'jacobparker', 'sarahsouthwell'
+  // 'om', 'jay', 'jag', 'jacobparker', 'sarahsouthwell'
+  'john'
 ].map( function( n ){ return n + '@goodybag.com' });
 
 module.exports.schema = {
@@ -58,7 +59,7 @@ var getQuery = function( storage ){
   var $query = {
     where: {
       status: 'submitted'
-    , created_at: {
+    , "submitted.created_at": {
         $older_than: { value: 1, unit: 'hours' }
       }
     }

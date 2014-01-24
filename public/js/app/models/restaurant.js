@@ -40,7 +40,8 @@ define(function(require, exports, module) {
           }
         },
         display_phone: {
-          type: 'string',
+          type: ['string', 'null'],
+          required: false,
           length: 10,
           pattern: /^\d*$/ //contains only digits
         },

@@ -573,6 +573,7 @@ module.exports.register = function(app) {
   , controllers.analytics.list
   );
 
+  // For testing emails and shtuff
   app.get('/emails/:name'
   , m.restrict(['admin'])
   , controllers.emails.get

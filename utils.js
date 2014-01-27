@@ -206,6 +206,9 @@ var mailgun = new Mailgun(config.mailgun.apiKey);
  *     filePath: '~/love-letter.pdf'
  *   }
  * , attachments: [ * array of objects described above * ]
+ * , headers: {
+ *     "x-mailer": "Noemailer 1.0"
+ *   }
  * }
  *
  * @param  {Object}   options  The full email options sent to composer
@@ -225,6 +228,12 @@ utils.sendMail2 = function( options, callback ){
 
   if ( options.attachments ) options.attachments.forEach( composer.addAttachment );
   if ( options.attachment ) composer.addAttachment( options.attachment );
+
+  if ( typeof options.headers === 'object' ){
+    for ( var key in options.headers ){
+      composer.addHeader( key, options.headers[ key ] );
+    }
+  }
 
   composer.buildMessage( function( error, message ){
     if ( error ) return callback( error );

@@ -17,7 +17,7 @@ module.exports.post = function( req, res ){
 
   res.render( [ 'emails', req.param('name') ].join('/'), options, function( error, html ){
     utils.sendMail2({
-      to: [config.testEmail].concat(['john.fawcett@hma.com'])
+      to: config.testEmail
     , from: config.emails.info
     , subject: 'Test Email: ' + req.param('name')
     , html: html

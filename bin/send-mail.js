@@ -38,6 +38,9 @@ Models.User.find( { limit: 0 }, function( error, users ){
         , from:     options.from
         , subject:  options.subject
         , html:     html
+        , headers: {
+            'X-Mailgun-Campaign-Id': 'c1h5p'
+          }
         }, function( error ){
 
           if ( error ){

@@ -1,0 +1,34 @@
+{{#extend "css"}}
+
+{{/extend}}
+
+<div class="container">
+
+
+<div class="row">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Restaurant Name</th>
+        <th>Restaurant ID</th>
+        <th>No. of accepted orders</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{#each results}}
+      <tr>
+        <td>{{restaurant_name}}</td>
+        <td>{{restaurant_id}}</td>
+        <td>{{orders_count}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</div>
+
+</div>
+{{#extend "scripts"}}
+<script>
+
+</script>
+{{/extend}}

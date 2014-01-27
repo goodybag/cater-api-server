@@ -7,10 +7,7 @@ module.exports.list = function( req, res ){
   function getWeekNumber(d) {
     // Copy date so don't modify original
     d = new Date(+d);
-    // compensate for timezone
-    // local db is cst, production/staging are utc
-    var hour = config.env === 'production' ? -6 : 0;
-    d.setHours(hour, 0, 0);
+    d.setHours(0, 0, 0);
     // Set to nearest Thursday: current date + 4 - current day number
     // Make Sunday's day number 7
     d.setDate(d.getDate() + 4 - (d.getDay()||7));

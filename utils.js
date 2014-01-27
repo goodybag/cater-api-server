@@ -51,7 +51,16 @@ utils.balanced = new Balanced({
  * @param  {Array|Object}   fns      The list of functions to run
  * @param  {Function} callback      ( errors, results )
  */
-utils.async.parallelNoBail = function( fns, callback ){
+utils.async.parallelNoBail = function( fns, limit, callback ){
+  if ( typeof limit === 'function' ){
+    callback = limit;
+    limit = null;
+  }
+
+  if ( limit ){
+    return utils.async.noBail( 'parallelLimit', fns, limit, callback )
+  }
+
   return utils.async.noBail( 'parallel', fns, callback );
 };
 
@@ -67,8 +76,13 @@ utils.async.seriesNoBail = function( fns, callback ){
   return utils.async.noBail( 'series', fns, callback );
 };
 
-utils.async.noBail = function( op, fns, callback ){
+utils.async.noBail = function( op, fns, limit, callback ){
   if ( typeof fns !== 'object' ) throw new Error('`parallelNoBail` - Invalid first argument');
+
+  if ( typeof limit === 'function' ){
+    callback = limit;
+    limit = null;
+  }
 
   var hadError = false;
   var noBailFns = Array.isArray( fns ) ? [] : {};
@@ -88,9 +102,15 @@ utils.async.noBail = function( op, fns, callback ){
     }
   });
 
-  async[ op ]( noBailFns, function( error, results ){
+  var args = [ noBailFns ];
+
+  if ( limit ) args.push( limit );
+
+  args.push(function( error, results ){
     callback( hadError ? errors : null, results );
   });
+
+  async[ op ].apply( async, args );
 };
 
 utils.stage = function(fns){

@@ -571,10 +571,15 @@ module.exports.register = function(app) {
   app.get('/analytics'
   , m.restrict(['admin'])
   , controllers.analytics.list
-  )
+  );
 
   app.get('/emails/:name'
   , m.restrict(['admin'])
   , controllers.emails.get
-  )
+  );
+
+  app.post('/emails/:name'
+  , m.restrict(['admin'])
+  , controllers.emails.post
+  );
 }

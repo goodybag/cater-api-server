@@ -13,7 +13,7 @@ var options = {
   }
 
 , recipients:   []
-, subject:      'Test Goodybag This Week: New Restaurants & Features'
+, subject:      'Goodybag This Week: New Restaurants & Features'
 , from:         config.emails.info
 , concurrency:  5
 };

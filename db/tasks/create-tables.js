@@ -16,6 +16,7 @@ var definitions = [
 , 'payment-methods'
 , 'users-payment-methods'
 , 'restaurants'
+, 'users-restaurants'
 , 'restaurant-lead-times'
 , 'restaurant-delivery-zips'
 , 'restaurant-delivery-times'
@@ -35,6 +36,7 @@ var definitions = [
 , 'password-resets'
 , 'waitlist'
 , 'addresses'
+, 'reminders'
 , 'deltas'
 ];
 

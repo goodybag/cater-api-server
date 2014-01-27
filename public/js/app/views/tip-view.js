@@ -10,6 +10,7 @@ define(function(require, exports, module) {
 
     initialize: function() {
       this.tip = this.model.get('tip');
+      this.$el.find('.tip_percent').val(this.model.get('tip_percent') || 0);
     },
 
     selectTip: function(e) {
@@ -26,7 +27,9 @@ define(function(require, exports, module) {
     },
 
     customTip: function(e) {
-      if (this.tip !== e.currentTarget.value)
+      if (!e || !e.currentTarget || !e.currentTarget.value)
+        this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
+      else if (this.tip !== e.currentTarget.value)
         this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
     }
   });

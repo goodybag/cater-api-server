@@ -104,8 +104,8 @@ define(function(require, exports, module) {
       return errors.length > 0 ? errors : null;
     },
 
-    /** 
-     * Check if the order datetime occurs during one of the 
+    /**
+     * Check if the order datetime occurs during one of the
      * restaurant's closed events
      */
     validateRestaurantEvents: function() {
@@ -117,7 +117,7 @@ define(function(require, exports, module) {
         var fce = event.toFullCalendarEvent();
         var orderDate = moment(this_.get('datetime'));
 
-        var occursDuringEvent = 
+        var occursDuringEvent =
           orderDate.isAfter(fce.start) && orderDate.isBefore(fce.end) ||
           orderDate.isSame(fce.start, 'day') ||
           orderDate.isSame(fce.end, 'day');
@@ -347,6 +347,44 @@ define(function(require, exports, module) {
           return callback(null);
         }
       });
+    },
+
+    /**
+     * Convert datetime to a full calendar event object
+     */
+    getFullCalendarEvent: function() {
+      var fullCalendarEvent = utils.extend({}, this.toJSON(), {
+        title: [
+          Handlebars.helpers.timepart(this.get('datetime')) 
+        , '\n' 
+        , Handlebars.helpers.truncate(this.get('restaurant_name'), 15)
+        ].join('')
+      , start: this.get('datetime')
+      , color: this.getStatusColor()
+      , orderId: this.get('id')
+      , status: this.get('status')
+      });
+
+      return fullCalendarEvent;
+    },
+
+    getStatusColor: function() {
+      switch (this.get('status')) {
+        case 'pending':
+          return '#F0AD4E';
+        case 'canceled':
+          return '#B3B3B3';
+        case 'submitted':
+          return '#5BC0DE';
+        case 'accepted':
+          return '#5CB85C';
+        case 'denied':
+          return '#D9534F';
+        case 'delivered':
+          return '#428BCA';
+        default:
+          return '#fff'
+      }
     }
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']

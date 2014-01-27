@@ -31,12 +31,12 @@ function notifyOrderFn( order ){
         if ( error ) return done( error );
 
         utils.sendMail2({
-          to:       order.attributes.restaurant.emails
+          to:       ['john@goodybag.com']//order.attributes.restaurant.emails
         , from:     config.emails.orders
         , html:     html
 
         , subject:  [
-                      'Goodybag Reminder: Order #'
+                      '[REMINDER] Goodybag Order #'
                     , order.attributes.id
                     , ' to be delivered '
                     , order.attributes.datetime
@@ -111,7 +111,7 @@ module.exports.work = function( storage, callback ){
         utils.async.parallelNoBail(
           orders.map( notifyOrderFn )
         , function( errors, results ){
-            if ( error ){
+            if ( errors ){
               errors.forEach( function( e ){
                 Object.keys( e ).forEach( function( k ){
                   stats.errors.value++;

@@ -59,6 +59,10 @@ define(function(require) {
       type: types.array(types.varchar(10))
     , nullable: false
     }
+  , display_phone: {
+      type: types.varchar(10)
+    , nullable: true
+    }
   , emails: {
       type: types.array(types.text)
     , nullable: false

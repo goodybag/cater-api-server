@@ -14,7 +14,7 @@ label {
 }
 
 .page-auth {
-  height: 814px;
+  /*min-height: 814px;*/
   background: url('/img/page-background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -23,6 +23,7 @@ label {
 .page-auth > .container {
   max-width: 770px;
   height: 100%;
+  padding-bottom: 16px;
   background: rgb(252, 253, 246);
   background: rgba(252, 253, 246, 0.84);
 }

@@ -48,6 +48,11 @@
     <span class="help-block">Please enter voice phone numbers separated by commas for call alerts. Leave blank for no call alerts.</span>
   </div>
   <div class="form-group">
+    <label class="control-label">Display Phone</label>
+    <input type="text" class="form-control restaurant-display-phone" value="{{#if restaurant.display_phone}}{{phoneNumber restaurant.display_phone}}{{/if}}" placeholder="(512) 555-1234">
+    <span class="help-block">This phone number will be displayed on the menu page's info tab.</span>
+  </div>
+  <div class="form-group">
     <label class="control-label">Emails</label>
     <input type="text" class="form-control restaurant-emails" value="{{#if restaurant.emails}}{{array restaurant.emails}}{{/if}}" placeholder="delivery@goodybag.com, orders@goodybag.com">
     <span class="help-block">Please enter email addresses separated by commas for email alerts. Leave blank for no email alerts.</span>

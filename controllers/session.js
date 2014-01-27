@@ -20,10 +20,7 @@ module.exports.create = function(req, res) {
       return res.render( 'auth', { error: error } );
     }
 
-    req.session = utils.extend(
-      {}, req.session,
-      { user: utils.pick( user, [ 'id', 'name', 'organization', 'groups', 'email', 'created_at' ] ) }
-    );
+    req.setSession( user );
 
     return res.redirect(req.query.next || '/');
   });

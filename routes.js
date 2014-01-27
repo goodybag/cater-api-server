@@ -106,7 +106,7 @@ module.exports.register = function(app) {
   app.all('/restaurants/:rid/events/:eid', m.restrict(['admin']), function(req, res, next) {
     res.set('Allow', 'PUT', 'PATCH, DELETE');
     res.send(405);
-  });  
+  });
 
   /**
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
@@ -282,7 +282,7 @@ module.exports.register = function(app) {
 
   app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
 
-  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.update);
+  app.patch('/orders/:oid', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.editability, controllers.orders.update);
 
   app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
@@ -372,6 +372,8 @@ module.exports.register = function(app) {
   app.get('/auth', controllers.auth.index);
 
   app.post('/auth', controllers.session.create);
+
+  app.post('/auth/signup', controllers.auth.signup);
 
   app.all('/auth', function(req, res, next) {
     res.set('Allow', 'GET, POST');

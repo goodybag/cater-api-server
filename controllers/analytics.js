@@ -19,6 +19,42 @@ module.exports.list = function( req, res ){
     return weekNo;
   }
 
+  /**
+   * Calculates total per period
+   *
+   * @param {array} result
+   */
+  function calcPeriodTotal( result ){
+    if ( !result.length ){
+      return 0;
+    }
+
+    // Sum order totals per period
+    var periodTotal = result.reduce( function( memo, curr ) {
+      var orderTotal = hbHelpers.total( curr.sub_total, curr.restaurant.delivery_fee, curr.tip );
+      return memo + parseFloat( orderTotal );
+    }, 0);
+
+    // Round to two decimal places
+    return parseFloat( periodTotal ).toFixed( 2 );
+  }
+
+  /**
+   * Calculates overall total cash
+   *
+   * @param {array} orders
+   */
+  function calcOverallTotal( orders ){
+
+    // Sum totals
+    var total = orders.reduce( function( memo, order ){
+      return memo + parseFloat( order.periodTotal );
+    }, 0);
+
+    // Round to two decimal places
+    return parseFloat( total ).toFixed( 2 );
+  }
+
   var $query = {
     where: {
       status: 'accepted'
@@ -63,13 +99,7 @@ module.exports.list = function( req, res ){
           ordersByWeek.push({
             period: [ curr.year, 'Week', curr.week ].join(' ')
           , numberOfOrders: result.length
-          , periodTotal: result.length === 0 ? 0 : parseFloat( result.reduce( function( a, b ){
-              return parseFloat(!(typeof a === 'object') ? (a || 0) : hbHelpers.total(
-                a.sub_total, a.restaurant.delivery_fee, a.tip
-              )) + parseFloat( hbHelpers.total(
-                b.sub_total, b.restaurant.delivery_fee, b.tip
-              ) );
-            }).toFixed(2) )
+          , periodTotal: calcPeriodTotal(result)
           , uniqueUsers:  utils.unique( result, function( r ){
                             return r.user_id
                           }).length
@@ -93,11 +123,7 @@ module.exports.list = function( req, res ){
         res.render( 'analytics', {
           orders:             results
         , ordersByWeek:       ordersByWeek
-        , overallTotal:       parseFloat( ordersByWeek.map( function( o ){
-                                return o.periodTotal
-                              }).reduce( function( a, b ){
-                                return ( a || 0 ) + b;
-                              }).toFixed(2) )
+        , overallTotal:       calcOverallTotal(ordersByWeek)
         , overallUniqueUsers: utils.unique( results, function( r ){
                                 return r.user_id;
                               }).length

@@ -8,12 +8,12 @@
     <select name="sort" class="form-control sort">
       {{! denote desc sorting to keep urls relatively short }}
       <option value="name" {{#eq orderParams.sort "name"}}selected{{/eq}}>Name</option>
-      <option value="price" {{#eq orderParams.sort "price"}}selected{{/eq}}>Lowest Price</option>
-      <option value="priced" {{#eq orderParams.sort "priced"}}selected{{/eq}}>Highest Price</option>
-      <option value="minorder" {{#eq orderParams.sort "minorder"}}selected{{/eq}}>Lowest Order Minimum</option>
-      <option value="minorderd" {{#eq orderParams.sort "minorderd"}}selected{{/eq}}>Highest Order Minimum</option>
-      <option value="deliveryfee" {{#eq orderParams.sort "deliveryfee"}}selected{{/eq}}>Lowest Delivery Fee</option>
-      <option value="deliveryfeed" {{#eq orderParams.sort "deliveryfeed"}}selected{{/eq}}>Highest Delivery Fee</option>
+      <option value="price" {{#eq orderParams.sort "price"}}selected{{/eq}}>Price: Low to High</option>
+      <option value="priced" {{#eq orderParams.sort "priced"}}selected{{/eq}}>Price: High to Low</option>
+      <option value="minorder" {{#eq orderParams.sort "minorder"}}selected{{/eq}}>Order Minimum: Low to High</option>
+      <option value="minorderd" {{#eq orderParams.sort "minorderd"}}selected{{/eq}}>Order Minimum: High to Low</option>
+      <option value="deliveryfee" {{#eq orderParams.sort "deliveryfee"}}selected{{/eq}}>Delivery Fee: Low to High</option>
+      <option value="deliveryfeed" {{#eq orderParams.sort "deliveryfeed"}}selected{{/eq}}>Delivery Fee: High to Low</option>
     </select>
   </div>
 </div>

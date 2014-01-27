@@ -572,4 +572,9 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , controllers.analytics.list
   )
+
+  app.get('/emails/:name'
+  , m.restrict(['admin'])
+  , controllers.emails.get
+  )
 }

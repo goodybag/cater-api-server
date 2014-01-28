@@ -28,6 +28,7 @@ define(function(require) {
     }
   , payment_date: {
       type: types.timestamptz
+    , default: 'NOW()'
     }
   , restaurant_id: {
       type: types.int

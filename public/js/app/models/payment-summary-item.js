@@ -11,6 +11,7 @@ define(function(require, exports, module) {
 
   , initialize: function( attr, options ){
       this.on( 'change:order', this.onOrderChange, this );
+      this.on( 'change', this.onChange, this );
     }
 
   , toJSON: function( options ){
@@ -21,7 +22,7 @@ define(function(require, exports, module) {
         delete obj.order;
       }
 
-      obj.net_payout = this.get('order_total') - this.get('gb_fee') - this.get('sales_tax');
+      obj.net_payout = this.getNetPayout();
 
       return obj;
     }
@@ -30,18 +31,32 @@ define(function(require, exports, module) {
       order = order || this.attributes.order;
 
       var data = {
-        delivery_fee: order.get('delivery_fee')
+        delivery_fee: order.restaurant.get('delivery_fee')
       , order_total:  order.getTotal()
       , sales_tax:    order.getSalesTaxContribution()
+      , tip:          order.get('tip')
+      , gb_fee:       order.get('gb_fee') || 0
       };
-console.log(data);
+
+      data.net_payout = this.getNetPayout( data );
+
       this.set( data );
 
       return this;
     }
 
+  , getNetPayout: function( data ){
+      data = data || this.attributes;
+      return data.order_total - data.gb_fee - data.sales_tax;
+    }
+
   , onOrderChange: function( psi, order ){
-      this.updatePropertiesBasedOnOrder( order );
+      if ( order ) this.updatePropertiesBasedOnOrder( order );
+    }
+
+  , onChange: function(){
+    console.log('setting net payout', this.getNetPayout());
+      this.set( 'net_payout', this.getNetPayout() );
     }
   });
 });

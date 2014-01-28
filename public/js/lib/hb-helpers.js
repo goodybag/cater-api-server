@@ -50,6 +50,11 @@ define(function(require, exports, module) {
       return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2); // partial cents get rounded here
     },
 
+    pennies: function(dollars) {
+      var val = parseInt( dollars * 100 );
+      return utils.isNaN(val) ? '' : val;
+    },
+
     json: function(context) {
       return JSON.stringify(context);
     },

@@ -22,9 +22,10 @@ define(function(require){
   return Object.create({
     init: function(){
       var tableView = this.tableView = new TableView({
-        collection: items
-      , template: Hbs.partials.payment_summary_table
-      , dataListId: dataListId
+        collection:   items
+      , template:     Hbs.partials.payment_summary_table
+      , rowTemplate:  Hbs.partials.payment_summary_table_row
+      , dataListId:   dataListId
       });
 
       var ordersListView = this.ordersListView = new DataListView({
@@ -42,7 +43,7 @@ define(function(require){
       });
 
       utils.dom('#create-payment-summary-item-btn').click( function(){
-        items.unshift( items.createModel() );
+        items.push( items.createModel() );
       });
 
       utils.dom('#delete-payment-summary-btn').click( function(){
@@ -52,18 +53,12 @@ define(function(require){
       });
 
       utils.dom('#save-payment-summary-btn').click( function(){
+        tableView.updateModels();
+
         async.parallel(
           items.toArray().map( function( model ){
-            var $el = utils.dom('[data-cid="' + model.cid + '"]');
-
             return function( done ){
-              var data = {};
-
-              Object.keys( model.toJSON() ).forEach( function( k ){
-                data[ k ] = $el.find('[name="' + k + '"]').val();
-              });
-
-              model.save( data, { success: function(){ done(); }, error: done } );
+              model.save( null, { success: function(){ done(); }, error: done } );
             };
           }).concat( function( done ){
             summary.save({
@@ -83,9 +78,7 @@ define(function(require){
 
       // When order_id changes, set the order on that mofo
       items.on( 'change:order_id', function( model, id ){
-        console.log("change:order_id", id, orders.get( id ))
         model.set( 'order', orders.get( id ) );
-        console.log(model.toJSON())
       });
     }
   });

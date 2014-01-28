@@ -1,35 +1,64 @@
 define(function(require){
-  var utils = require('utils');
+  var utils     = require('utils');
+  var RowView   = require('./table-row-view');
 
   return utils.View.extend({
     tagName: 'table'
 
   , events: {
-      'click .item-delete': 'onItemDeleteClick'
-    , 'click .item-edit':   'onItemEditClick'
-    , 'input [name]':       'onInputChange'
+
     }
 
   , initialize: function( options ){
       this.options = options;
 
-      this.collection = options.collection;
-      this.template   = options.template;
+      if ( !options.collection )
+        throw new Error('TableView.initialize - first argument requires property `collection`');
+      if ( !options.template )
+        throw new Error('TableView.initialize - first argument requires property `template`');
+      if ( !options.rowTemplate )
+        throw new Error('TableView.initialize - first argument requires property `rowTemplate`');
 
-      this.collection.on( 'reset',  this.onCollectionChange, this );
-      this.collection.on( 'add',    this.onCollectionChange, this );
-      this.collection.on( 'remove', this.onCollectionChange, this );
+      this.collection   = options.collection;
+      this.template     = options.template;
+      this.rowTemplate  = options.rowTemplate;
+      this.RowView      = options.RowView || RowView;
+
+      this.collection.on( 'reset',  this.onCollectionReset, this );
+      this.collection.on( 'add',    this.onCollectionReset, this );
+      this.collection.on( 'remove', this.onCollectionReset, this );
 
       return this;
     }
 
   , render: function(){
+      var this_   = this;
+      var $els    = $();
+      var RowView = this.RowView;
+      var options = utils.clone( this.options );
+
+      options.template = options.rowTemplate;
+
+      this.children = [];
+
       this.$el.html(
         this.template({
           collection: this.collection.toJSON({ cid: true })
         , options:    this.options
         })
       );
+
+      this.collection.each( function( model ){
+        var child = new RowView( utils.extend({
+          model: model
+        }, options ));
+
+        $els = $els.add( child.render().$el );
+
+        this_.children.push( child );
+      });
+
+      this.$el.find('tbody').append( $els );
 
       return this;
     }
@@ -40,31 +69,20 @@ define(function(require){
       return this.collection.get({ cid: utils.dom( el ).data('cid') });
     }
 
-  , onCollectionChange: function(){
-      this.render();
+  , updateModels: function(){
+      this.children.forEach( function( child ){
+        child.updateModelWithDom();
+      });
     }
 
-  , onItemDeleteClick: function( e ){
-      while ( e.target.tagName !== 'TR' ) e.target = e.target.parentElement;
-      var cid = utils.dom( e.target ).data('cid');
-      if ( cid ) this.collection.del({ cid: cid });
-      e.target.remove();
+  , onCollectionReset: function(){
+      this.render();
     }
 
   , onItemEditClick: function( e ){
       if ( this.options.onItemEditClick ){
         this.options.onItemEditClick.call( this, this.getModelFromEvent( e ), e );
       }
-    }
-
-  , onInputChange: function( e ){
-      var model = this.getModelFromEvent( e );
-      if ( !model ) return;
-
-      model.set(
-        e.target.name
-      , e.target.type === 'number' ? +e.target.value : e.target.value
-      );
     }
   });
 });

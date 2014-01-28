@@ -1,6 +1,8 @@
-var mosql = require('mongo-sql');
-var mosqlUtils = require('mongo-sql/lib/utils');
-var utils = require('../utils');
+var pg          = require('pg');
+var dirac       = require('dirac');
+var mosql       = require('mongo-sql');
+var mosqlUtils  = require('mongo-sql/lib/utils');
+var utils       = require('../utils');
 
 // Fix PG date parsing (`date` type not to be confused with something with a timezone)
 pg.types.setTypeParser( 1082, 'text', function( val ){
@@ -141,10 +143,34 @@ dirac.use( function(){
   dirac.dals.payment_summaries.after( 'findOne',  afterPSFinds );
 });
 
+// Only use columns specified in schema as insert/update targets
 dirac.use( function(){
-  var ensureTargets = function( options ){
-    return function( $query, schema, next ){
-
-    }
+  var options = {
+    operations: [ 'insert', 'update' ]
   };
+
+  var ensureTargets = function( $query, schema, next ){
+    var columns = Object.keys( schema ), vals, target;
+
+    if ( $query.type === 'insert' ){
+      vals = $query.values;
+      target = $query.values = {};
+    } else if ( $query.type === 'update' ){
+      vals = $query.updates;
+      target = $query.updates = {};
+    }
+
+    for ( var key in vals ){
+      if ( columns.indexOf( key ) === -1 ) continue;
+      target[ key ] = vals[ key ];
+    }
+
+    next();
+  };
+
+  Object.keys( dirac.dals ).forEach( function( table ){
+    options.operations.forEach( function( op ){
+      dirac.dals[ table ].before( op, ensureTargets );
+    });
+  });
 });

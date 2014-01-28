@@ -587,7 +587,6 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , controllers.emails.post
   );
-  );
 
   app.get('/admin/restaurants/:id/payment-summaries'
   , m.restrict(['admin'])

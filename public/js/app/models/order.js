@@ -350,6 +350,44 @@ define(function(require, exports, module) {
       });
     },
 
+    /**
+     * Convert datetime to a full calendar event object
+     */
+    getFullCalendarEvent: function() {
+      var fullCalendarEvent = utils.extend({}, this.toJSON(), {
+        title: [
+          Handlebars.helpers.timepart(this.get('datetime')) 
+        , '\n' 
+        , Handlebars.helpers.truncate(this.get('restaurant_name'), 15)
+        ].join('')
+      , start: this.get('datetime')
+      , color: this.getStatusColor()
+      , orderId: this.get('id')
+      , status: this.get('status')
+      });
+
+      return fullCalendarEvent;
+    },
+
+    getStatusColor: function() {
+      switch (this.get('status')) {
+        case 'pending':
+          return '#F0AD4E';
+        case 'canceled':
+          return '#B3B3B3';
+        case 'submitted':
+          return '#5BC0DE';
+        case 'accepted':
+          return '#5CB85C';
+        case 'denied':
+          return '#D9534F';
+        case 'delivered':
+          return '#428BCA';
+        default:
+          return '#fff'
+      }
+    },
+
     getTotal: function(){
       return Math.round(
         ( parseInt(this.get('sub_total')) + parseInt(this.get('delivery_fee')) ) * parseFloat(config.salesTax)

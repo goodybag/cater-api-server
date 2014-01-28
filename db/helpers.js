@@ -1,13 +1,21 @@
-var pg = require('pg');
 var mosql = require('mongo-sql');
-var dirac = require('dirac');
-var moment = require('moment');
 var mosqlUtils = require('mongo-sql/lib/utils');
 var utils = require('../utils');
 
 // Fix PG date parsing (`date` type not to be confused with something with a timezone)
 pg.types.setTypeParser( 1082, 'text', function( val ){
   return new Date( val + ' 00:00:00' );
+});
+
+// Temporaray fix for http://github.com/goodybag/mongo-sql/issues/80
+mosql.registerConditionalHelper('$nin', { cascade: false }, function(column, set, values, collection){
+  if (Array.isArray(set)) {
+    return column + ' not in (' + set.map( function(val){
+      return '$' + values.push( val );
+    }).join(', ') + ')';
+  }
+
+  return column + ' not in (' + queryBuilder(set, values).toString() + ')';
 });
 
 mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column, set, values, collection ) {
@@ -59,6 +67,24 @@ mosql.registerConditionalHelper(
   }
 );
 
+mosql.registerConditionalHelper(
+  '$older_than'
+, { cascade: false }
+, function( column, value, values, table, query ){
+    var tz = value.timezone ? ' at time zone ' + mosqlUtils.quoteColumn( value.timezone ) : '';
+
+    return [
+      column
+    , tz
+    , " < now() ", tz, " - interval '"
+    , value.value
+    , ' '
+    , value.unit || 'days'
+    , "'"
+    ].join('')
+  }
+);
+
 // Upsert query type
 // Warning: This is subject to some sort of race condition
 // but it will work like 99% of the time
@@ -100,17 +126,4 @@ mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
   });
 
   return '';
-});
-
-dirac.use( function(){
-  var afterPSFinds = function( results, $query, schema, next ){
-    results.forEach( function( r ){
-      r.payment_date = moment( r.payment_date ).format('YYYY-MM-DD');
-    });
-
-    next();
-  };
-
-  dirac.dals.payment_summaries.after( 'find',     afterPSFinds );
-  dirac.dals.payment_summaries.after( 'findOne',  afterPSFinds );
 });

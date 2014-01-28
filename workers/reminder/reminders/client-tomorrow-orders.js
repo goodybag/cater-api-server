@@ -35,7 +35,7 @@ function notifyOrderFn( order ){
         , html:     html
 
         , subject:  [
-                      'Goodybag Reminder: Order #'
+                      '[REMINDER] Goodybag Order #'
                     , order.attributes.id
                     , ' to be delivered '
                     , order.attributes.datetime
@@ -100,7 +100,7 @@ module.exports.work = function( storage, callback ){
         utils.async.parallelNoBail(
           orders.map( notifyOrderFn )
         , function( errors, results ){
-            if ( error ){
+            if ( errors ){
               errors.forEach( function( e ){
                 Object.keys( e ).forEach( function( k ){
                   stats.errors.value++;

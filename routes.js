@@ -286,7 +286,7 @@ module.exports.register = function(app) {
 
   app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
 
-  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.update);
+  app.patch('/orders/:oid', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.editability, controllers.orders.update);
 
   app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
@@ -575,6 +575,18 @@ module.exports.register = function(app) {
   app.get('/analytics'
   , m.restrict(['admin'])
   , controllers.analytics.list
+  );
+
+  // For testing emails and shtuff
+  app.get('/emails/:name'
+  , m.restrict(['admin'])
+  , controllers.emails.get
+  );
+
+  app.post('/emails/:name'
+  , m.restrict(['admin'])
+  , controllers.emails.post
+  );
   );
 
   app.get('/admin/restaurants/:id/payment-summaries'

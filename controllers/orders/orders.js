@@ -178,6 +178,11 @@ module.exports.get = function(req, res) {
       isOwner: req.order.isOwner,
       isRestaurantManager: req.order.isRestaurantManager,
       isAdmin: req.order.isAdmin,
+      isTipEditable: order.isTipEditable({
+        isOwner: req.order.isOwner,
+        isRestaurantManager: req.order.isRestaurantManager,
+        isAdmin: req.order.isAdmin,
+      }),
       states: states,
       orderAddress: function() {
         return {
@@ -242,10 +247,20 @@ module.exports.create = function(req, res) {
 
 // TODO: get this from not here
 var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed'];
+var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
 
 module.exports.update = function(req, res) {
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+    if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
+
+    var isTipEditable = order.isTipEditable({
+      isOwner: req.order.isOwner,
+      isRestaurantManager: req.order.isRestaurantManager,
+      isAdmin: req.order.isAdmin,
+    });
+    if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
+
     utils.extend(order.attributes, utils.pick(req.body, updateableFields));
     order.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

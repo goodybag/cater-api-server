@@ -282,6 +282,7 @@ var fields = [
   'zip',
   'sms_phones',
   'voice_phones',
+  'display_phone',
   'emails',
   'minimum_order',
   'price',

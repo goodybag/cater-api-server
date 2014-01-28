@@ -64,3 +64,51 @@
   font-size: 14px;
   color: #A7A4A0;
 }
+
+.nav-orders .nav-tabs > li.active > a {
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+  background-color: #FCF9E8;
+}
+
+.nav-orders .tab-content {
+  margin-top: 30px;
+}
+
+.nav-orders .fc-event {
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.nav-orders .fc-event:hover { 
+  cursor: pointer;
+}
+
+.fc-event-container > .popover {
+  width: 400px;
+}
+
+.fc-content {
+  background-color: #fff;
+}
+
+#calendar .fc-state-highlight {
+  background: #f7f7f7;
+}
+
+#main .form-control {
+  cursor: default;
+  background-color: #fff;
+}
+
+.orders-calendar-filters .filter-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: .25em;
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 5px;
+  margin-right: 5px;
+}

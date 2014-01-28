@@ -39,6 +39,12 @@ define(function(require, exports, module) {
             pattern: /^\d*$/ //contains only digits
           }
         },
+        display_phone: {
+          type: ['string', 'null'],
+          required: false,
+          length: 10,
+          pattern: /^\d*$/ //contains only digits
+        },
         emails: {
           type: 'array',
           uniqueItems: true,

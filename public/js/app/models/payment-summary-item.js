@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
-  var utils = require('utils');
+  var utils   = require('utils');
+  var config  = require('config');
 
   return module.exports = utils.Model.extend({
     defaults: {
@@ -26,20 +27,20 @@ define(function(require, exports, module) {
     }
 
   , updatePropertiesBasedOnOrder: function( order ){
-      order = order || this.order;
+      order = order || this.attributes.order;
 
       var data = {
         delivery_fee: order.get('delivery_fee')
       , order_total:  order.getTotal()
-      , sales_tax:    parseInt( config.salesTax * total )
+      , sales_tax:    order.getSalesTaxContribution()
       };
-console.log("settings", data);
+console.log(data);
       this.set( data );
 
       return this;
     }
 
-  , onOrderChange: function( order ){
+  , onOrderChange: function( psi, order ){
       this.updatePropertiesBasedOnOrder( order );
     }
   });

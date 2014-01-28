@@ -127,3 +127,24 @@ mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
 
   return '';
 });
+
+dirac.use( function(){
+  var afterPSFinds = function( results, $query, schema, next ){
+    results.forEach( function( r ){
+      r.payment_date = moment( r.payment_date ).format('YYYY-MM-DD');
+    });
+
+    next();
+  };
+
+  dirac.dals.payment_summaries.after( 'find',     afterPSFinds );
+  dirac.dals.payment_summaries.after( 'findOne',  afterPSFinds );
+});
+
+dirac.use( function(){
+  var ensureTargets = function( options ){
+    return function( $query, schema, next ){
+
+    }
+  };
+});

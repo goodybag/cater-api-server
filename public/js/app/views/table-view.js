@@ -78,11 +78,5 @@ define(function(require){
   , onCollectionReset: function(){
       this.render();
     }
-
-  , onItemEditClick: function( e ){
-      if ( this.options.onItemEditClick ){
-        this.options.onItemEditClick.call( this, this.getModelFromEvent( e ), e );
-      }
-    }
   });
 });

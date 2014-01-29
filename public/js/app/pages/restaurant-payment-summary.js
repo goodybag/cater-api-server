@@ -15,7 +15,24 @@ define(function(require){
 
   var dataListId = 'orders-datalist'
 
-  summary.fetch();
+  summary.fetch({
+    error: function( model, res ){
+      if ( res.status === 404 ){
+        utils.dom('#main').html([
+          '<div style="text-align: center">'
+        , '  <h1>404 Not Found</h1>'
+        , '  <div>'
+        , '    <img src="https://i.imgflip.com/6htm8.jpg" />'
+        , '  </div>'
+        , '  <a href="'
+        , window.location.href.substring( 0, window.location.href.lastIndexOf('/') )
+        , '">Go Back to Payment Summaries</a>'
+        , '</div>'
+        ].join(''));
+      }
+    }
+  });
+
   items.fetch();
   orders.fetch();
 

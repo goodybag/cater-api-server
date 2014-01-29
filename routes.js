@@ -628,23 +628,33 @@ module.exports.register = function(app) {
   , m.insert( db.payment_summaries )
   );
 
+  var applyRestaurantId = function(){
+    return m.param( 'restaurant_id', function( value, query, options ){
+      query['payment_summaries.restaurant_id'] = value;
+    });
+  }
+
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'
   , m.param('id')
+  , m.param('restaurant_id')
   , m.findOne( db.payment_summaries )
   );
 
   app.put('/api/restaurants/:restaurant_id/payment-summaries/:id'
   , m.param('id')
+  , m.param('restaurant_id')
   , m.update( db.payment_summaries )
   );
 
   app.del('/api/restaurants/:restaurant_id/payment-summaries/:id'
   , m.param('id')
+  , m.param('restaurant_id')
   , m.remove( db.payment_summaries )
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
   , m.pagination()
+  , applyRestaurantId()
   , m.param('payment_summary_id')
   , m.find( db.payment_summary_items )
   );
@@ -655,16 +665,22 @@ module.exports.register = function(app) {
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , applyRestaurantId()
+  , m.param('payment_summary_id')
   , m.param('id')
   , m.findOne( db.payment_summary_items )
   );
 
   app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , applyRestaurantId()
+  , m.param('payment_summary_id')
   , m.param('id')
   , m.update( db.payment_summary_items )
   );
 
   app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , applyRestaurantId()
+  , m.param('payment_summary_id')
   , m.param('id')
   , m.remove( db.payment_summary_items )
   );

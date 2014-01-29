@@ -130,6 +130,7 @@ mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
   return '';
 });
 
+// Make sure dates are formatted correctly
 dirac.use( function(){
   var afterPSFinds = function( results, $query, schema, next ){
     results.forEach( function( r ){
@@ -171,6 +172,67 @@ dirac.use( function(){
   Object.keys( dirac.dals ).forEach( function( table ){
     options.operations.forEach( function( op ){
       dirac.dals[ table ].before( op, ensureTargets );
+    });
+  });
+});
+
+// Ensure restaurant_id is on payment_summary_id records
+dirac.use( function(){
+  var options = {
+    operations: [ 'find', 'findOne' ]
+  , tables:     [ 'payment_summary_items' ]
+  , columns:    [ 'restaurant_id' ]
+  , target:     'payment_summaries'
+  , on:         { id: '$payment_summary_items.payment_summary_id$' }
+  };
+
+  var ensureJoin = function( $query, schema, next ){
+    if ( !$query.columns ) $query.columns = ['*'];
+    if ( !$query.joins ) $query.joins = [];
+
+    $query.columns = $query.columns.concat( options.columns.map( function( c ){
+      return [ options.target, c ].join('.');
+    }));
+
+    $query.joins.push({
+      target: options.target
+    , on:     utils.clone( options.on )
+    });
+
+    next();
+  };
+
+  options.tables.forEach( function( table ){
+    options.operations.forEach( function( op ){
+      dirac.dals[ table ].before( op, ensureJoin );
+    });
+  });
+});
+
+// Ensure total_payout is calculated when pulling out payment_summaries
+dirac.use( function(){
+  var options = {
+    operations: [ 'find', 'findOne' ]
+  , tables:     [ 'payment_summaries' ]
+  , column:     'total_payout'
+  };
+
+  var ensureTotal = function( $query, schema, next ){
+    if ( !$query.columns ) $query.columns = ['*'];
+
+    $query.columns.push({
+      type:     'select'
+    , table:    'payment_summary_items'
+    , columns:  ['sum( order_total - gb_fee - sales_tax )::int as ' + options.column ]
+    , where:    { payment_summary_id: '$payment_summaries.id$' }
+    });
+
+    next();
+  };
+
+  options.tables.forEach( function( table ){
+    options.operations.forEach( function( op ){
+      dirac.dals[ table ].before( op, ensureTotal );
     });
   });
 });

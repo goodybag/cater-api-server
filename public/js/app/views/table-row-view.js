@@ -49,7 +49,6 @@ define(function(require){
         } else {
           val = this.model.attributes[ key ];
         }
-console.log('update!!', val);
 
         $el.val( val );
       }
@@ -97,12 +96,11 @@ console.log('update!!', val);
 
   , onItemEditClick: function( e ){
       if ( this.options.onItemEditClick ){
-        this.options.onItemEditClick.call( this, this.getModelFromEvent( e ), e );
+        this.options.onItemEditClick.call( this, this.model );
       }
     }
 
   , onInputChange: function( e ){
-    console.log("onInputChange", e.target.name, e.target.value);
       this.model.set(
         e.target.name
       , this.getDomValue( e.target.name )

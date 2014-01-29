@@ -1,0 +1,9 @@
+<tr data-id="{{model.id}}" data-cid="{{model.cid}}">
+  <td>#{{model.id}}</td>
+  <td>${{dollars model.total_payout}}</td>
+  <td>{{formatDateTime model.payment_date}}</td>
+  <td class="col-actions">
+    <button class="btn btn-sm btn-default item-edit">Edit</button>
+    <button class="btn btn-sm btn-danger item-delete">&times;</button>
+  </td>
+</tr>

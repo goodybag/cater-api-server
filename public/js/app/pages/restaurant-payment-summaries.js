@@ -9,8 +9,9 @@ define(function(require){
   return Object.create({
     init: function(){
       var tableView = this.tableView = new TableView({
-        collection: summaries
-      , template: Hbs.partials.payment_summaries_table
+        collection:   summaries
+      , template:     Hbs.partials.payment_summaries_table
+      , rowTemplate:  Hbs.partials.payment_summaries_table_row
       , onItemEditClick: function( model, e ){
           window.location.href += '/' + model.get('id');
         }

@@ -6,16 +6,4 @@
     <th class="col-actions"></th>
   </tr>
 </thead>
-<tbody>
-  {{#each collection}}
-  <tr data-id="{{this.id}}" data-cid="{{this.cid}}">
-    <td>#{{this.id}}</td>
-    <td>${{dollars this.total_payout}}</td>
-    <td>{{formatDateTime this.payment_date}}</td>
-    <td class="col-actions">
-      <button class="btn btn-sm btn-default item-edit">Edit</button>
-      <button class="btn btn-sm btn-danger item-delete">&times;</button>
-    </td>
-  </tr>
-  {{/each}}
-</tbody>
+<tbody></tbody>

@@ -632,7 +632,18 @@ module.exports.register = function(app) {
     return m.param( 'restaurant_id', function( value, query, options ){
       query['payment_summaries.restaurant_id'] = value;
     });
-  }
+  };
+
+  var applyRestaurantIdForNonJoins = function(){
+    return m.param( 'restaurant_id', function( value, query, options ){
+      query.$exists = {
+        type:     'select'
+      , columns:  [{ expression: 1 }]
+      , table:    'payment_summaries'
+      , where:    { restaurant_id: value }
+      };
+    });
+  };
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'
   , m.param('id')
@@ -672,14 +683,14 @@ module.exports.register = function(app) {
   );
 
   app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
-  , applyRestaurantId()
+  , applyRestaurantIdForNonJoins()
   , m.param('payment_summary_id')
   , m.param('id')
   , m.update( db.payment_summary_items )
   );
 
   app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
-  , applyRestaurantId()
+  , applyRestaurantIdForNonJoins()
   , m.param('payment_summary_id')
   , m.param('id')
   , m.remove( db.payment_summary_items )

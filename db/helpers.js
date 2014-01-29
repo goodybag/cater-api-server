@@ -17,7 +17,15 @@ mosql.registerConditionalHelper('$nin', { cascade: false }, function(column, set
     }).join(', ') + ')';
   }
 
-  return column + ' not in (' + queryBuilder(set, values).toString() + ')';
+  return column + ' not in (' + mosql.sql(set, values).toString() + ')';
+});
+
+mosql.registerConditionalHelper('$exists', { cascade: false }, function( column, sub, values, collection ){
+  return 'exists (' + mosql.sql( sub, values ).toString() + ')';
+});
+
+mosql.registerConditionalHelper('$notExists', { cascade: false }, function( column, sub, values, collection ){
+  return 'not exists (' + mosql.sql( sub, values ).toString() + ')';
 });
 
 mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column, set, values, collection ) {

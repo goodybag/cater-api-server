@@ -222,6 +222,10 @@
   margin-top: -11px;
 }
 
+.navbar-default .navbar-nav > li > a {
+  color: #0039a1;
+}
+
 /**
  * Panels
  */

@@ -56,7 +56,7 @@
       <div class="container">
 
         {{!-- Brand and toggle get grouped for better mobile display --}}
-        <nav class="navbar" role="navigation">
+        <nav class="navbar navbar-default" role="navigation">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
               <span class="sr-only">Toggle navigation</span>
@@ -79,9 +79,9 @@
             {{#if user.id}}
             <ul class="nav navbar-nav navbar-right">
               {{#contains user.groups 'restaurant'}}
-                <li><a href="/restaurants/manage">Home</a></li>
+                <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
               {{else}}
-                <li><a href="/restaurants">Home</a></li>
+                <li><a href="/restaurants" class="btn-link">Home</a></li>
               {{/contains}}
               {{#if session.oldUser}}
               <li>

@@ -52,15 +52,32 @@
     {{{block "css"}}}
   </head>
   <body>
-    <header id="header" class="navbar {{#if session.oldUser}}navbar-impersonate{{/if}}">
+    <header id="header" class="{{#if session.oldUser}}navbar-impersonate{{/if}}">
       <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
+
+        {{!-- Brand and toggle get grouped for better mobile display --}}
+        <nav class="navbar" role="navigation">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
             <a class="navbar-brand" href="/">
               <img src="/img/logo.png" alt="Goodybag">
             </a>
+          </div>
+
+          {{!-- Collect other nav content for toggling --}}
+          <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li class="contact-info">
+                  Contact us: <strong class="phone-number">{{phoneNumber config.phone.support}}</strong>
+              </li>
+            </ul>
             {{#if user.id}}
-            <ul class="nav navbar-nav pull-right">
+            <ul class="nav navbar-nav navbar-right">
               {{#contains user.groups 'restaurant'}}
                 <li><a href="/restaurants/manage">Home</a></li>
               {{else}}
@@ -85,12 +102,8 @@
               </li>
             </ul>
             {{/if}}
-            <span class="header-info">
-              <span class="contact-us">Contact Us:</span>
-              <strong class="phone-number">{{phoneNumber config.phone.support }}</strong>
-            </span>
           </div>
-        </div>
+        </nav>
       </div>
     </header>
 

@@ -194,7 +194,8 @@
  */
 
 .navbar {
-  margin-bottom: 32px;
+  margin-bottom: 0;
+  border: none;
 }
 
 .navbar-brand {
@@ -202,9 +203,9 @@
   padding-bottom: 11px;
 }
 
-.navbar-nav > li > a {
-  padding-top: 16px;
-  padding-bottom: 14px;
+.navbar .contact-info {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .nav .caret {

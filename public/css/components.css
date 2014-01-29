@@ -201,6 +201,7 @@
 .navbar-brand {
   padding-top: 15px;
   padding-bottom: 11px;
+  padding-left: 0;
 }
 
 .navbar .contact-info {
@@ -224,6 +225,10 @@
 
 .navbar-default .navbar-nav > li > a {
   color: #0039a1;
+}
+
+.navbar-toggle {
+  margin-right: 0;
 }
 
 /**

@@ -154,11 +154,6 @@ header {
     display: none;
   }
 
-  .navbar .navbar-brand {
-    padding-top: 10px;
-    padding-left: 0;
-  }
-
   .navbar .navbar-btn {
     margin-top: 13px;
   }

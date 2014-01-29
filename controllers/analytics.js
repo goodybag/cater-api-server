@@ -55,14 +55,37 @@ module.exports.list = function( req, res ){
     return parseFloat( total ).toFixed( 2 );
   }
 
+
+  // Get latest submitted date per order
+  // ```
+  // select *, (os.created_at at time zone orders.timezone) as created_at_local from orders
+  // left join order_statuses os
+  // on orders.id = os.order_id and os.status = 'submitted'
+  // group by orders.id, os.id
+  // order by os.created_at desc nulls last;
+  // ```
   var $query = {
     where: {
-      status: 'accepted'
+      'status': 'accepted'
     }
   , limit: 'all'
+  , joins: {
+      order_statuses : {
+        type: 'left'
+      , on: {
+          $and: {
+            order_id: '$orders.id$'
+          , 'order_statuses.status': 'submitted'
+          }
+        }  
+      }
+    }
+  , order: ['order_statuses.created_at desc nulls last']
+  // , groupBy: ['orders.id', 'order_statuses.id']
   };
 
   Models.Order.find( $query, function( error, results ){
+    console.log(error);
     if ( error ) return res.json( error );
 
     utils.async.parallel(

@@ -294,7 +294,7 @@ var config = {
     }
 
   , segmentIo: {
-      token: 'q3r0t2euni' // TODO: replace
+      token: 'k9ju1kq8vc'
     }
 
   , intercom: {

@@ -89,7 +89,7 @@ define(function(require){
         e.preventDefault();
         return this.displayErrors( errors, this.$el.find('.errors'), this );
       } else {
-        mixpanel.track('Sign Up');
+        analytics.track('Sign Up');
       }
     }
   });

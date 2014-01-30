@@ -48,7 +48,7 @@ define(function(require, exports, module) {
     },
 
     login: function(e) {
-      mixpanel.track('Login');
+      analytics.track('Login');
     }
   });
 });

@@ -145,7 +145,7 @@
     </a>
     {{/if}}
 
-    <script>mixpanel.track('Page View', {title: document.title});</script>
+    <script>analytics.page(document.title);</script>
 
     <script src="/js/require-config.js"></script>
     <script src="/components/requirejs/require.js"></script>

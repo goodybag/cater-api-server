@@ -55,17 +55,9 @@ module.exports.list = function( req, res ){
     return parseFloat( total ).toFixed( 2 );
   }
 
-
-  // Get latest submitted date per order
-  // ```
-  // select *, (os.created_at at time zone orders.timezone) as created_at_local from orders
-  // left join order_statuses os
-  // on orders.id = os.order_id and os.status = 'submitted'
-  // group by orders.id, os.id
-  // order by os.created_at desc nulls last;
-  // ```
   var $query = {
-    where: {
+    columns: ['*', '(order_statuses.created_at at time zone orders.timezone) as created_at_local']
+  , where: {
       'status': 'accepted'
     }
   , limit: 'all'
@@ -81,11 +73,9 @@ module.exports.list = function( req, res ){
       }
     }
   , order: ['order_statuses.created_at desc nulls last']
-  // , groupBy: ['orders.id', 'order_statuses.id']
   };
 
   Models.Order.find( $query, function( error, results ){
-    console.log(error);
     if ( error ) return res.json( error );
 
     utils.async.parallel(
@@ -100,7 +90,7 @@ module.exports.list = function( req, res ){
 
         results = results.map( function( r ){
           r = r.toJSON();
-          var d = new Date( r.created_at );
+          var d = new Date( r.created_at_local );
           r.week_number = getWeekNumber( d );
           r.year_number = d.getFullYear();
           return r;

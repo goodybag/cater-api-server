@@ -13,9 +13,13 @@ var views   = require('../lib/views');
 
 module.exports.name = 'Restaurant Action Timeframe';
 
-module.exports.alertEmails = [
-  'om', 'jay', 'jag', 'jacobparker', 'sarahsouthwell'
-].map( function( n ){ return n + '@goodybag.com' });
+if ( config.isProduction ){
+  module.exports.alertEmails = [
+    'om', 'jay', 'jag', 'jacobparker', 'sarahsouthwell'
+  ].map( function( n ){ return n + '@goodybag.com' });
+} else {
+  module.exports.alertEmails = [ config.testEmail ];
+}
 
 module.exports.schema = {
   lastNotified: true
@@ -65,7 +69,11 @@ var getQuery = function( storage ){
   };
 
   if ( Object.keys( storage.lastNotified ).length > 0 ){
-    $query.id = { $nin: Object.keys( storage.lastNotified ) };
+    $query.where.id = {
+      $nin: Object.keys( storage.lastNotified ).map( function( id ){
+        return parseInt( id );
+      })
+    };
   }
 
   return $query;

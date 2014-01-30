@@ -8,5 +8,6 @@ module.exports = {
 , waitlist: require('./waitlist')
 , statics: require('./statics')
 , analytics: require('./analytics')
+, emails: require('./emails')
 , contactUs: require('./contact-us')
 }

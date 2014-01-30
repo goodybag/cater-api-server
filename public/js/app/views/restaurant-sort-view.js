@@ -16,6 +16,7 @@ define(function(require, exports, module) {
     }
 
   , onSortChange: function(e) {
+      mixpanel.track("Restaurants List Sort");
       this.trigger('sort:change');
     }
 

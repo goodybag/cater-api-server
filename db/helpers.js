@@ -2,6 +2,17 @@ var mosql = require('mongo-sql');
 var mosqlUtils = require('mongo-sql/lib/utils');
 var utils = require('../utils');
 
+// Temporaray fix for http://github.com/goodybag/mongo-sql/issues/80
+mosql.registerConditionalHelper('$nin', { cascade: false }, function(column, set, values, collection){
+  if (Array.isArray(set)) {
+    return column + ' not in (' + set.map( function(val){
+      return '$' + values.push( val );
+    }).join(', ') + ')';
+  }
+
+  return column + ' not in (' + queryBuilder(set, values).toString() + ')';
+});
+
 mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column, set, values, collection ) {
   if (Array.isArray(set)) {
     return column + ' @> ARRAY[' + set.map( function(val) {

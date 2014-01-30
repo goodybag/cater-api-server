@@ -194,17 +194,19 @@
  */
 
 .navbar {
-  margin-bottom: 32px;
+  margin-bottom: 0;
+  border: none;
 }
 
 .navbar-brand {
   padding-top: 15px;
   padding-bottom: 11px;
+  padding-left: 0;
 }
 
-.navbar-nav > li > a {
-  padding-top: 16px;
-  padding-bottom: 14px;
+.navbar .contact-info {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .nav .caret {
@@ -219,6 +221,14 @@
 
 .navbar-nav > li > .dropdown-menu {
   margin-top: -11px;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #0039a1;
+}
+
+.navbar-toggle {
+  margin-right: 0;
 }
 
 /**

@@ -31,7 +31,7 @@ function notifyOrderFn( order ){
         if ( error ) return done( error );
 
         utils.sendMail2({
-          to:       ['john@goodybag.com']//order.attributes.restaurant.emails
+          to:       order.attributes.restaurant.emails
         , from:     config.emails.orders
         , html:     html
 

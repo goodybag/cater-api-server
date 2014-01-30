@@ -88,6 +88,8 @@ define(function(require){
       if ( errors.length ){
         e.preventDefault();
         return this.displayErrors( errors, this.$el.find('.errors'), this );
+      } else {
+        analytics.track('Sign Up');
       }
     }
   });

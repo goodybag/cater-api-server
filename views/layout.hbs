@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Goodybag</title>
+    <title>Goodybag{{{block "title"}}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {{#if intercom}}
@@ -20,6 +20,14 @@
     </script>
     <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://static.intercomcdn.com/intercom.v1.js';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}};})()</script>
     {{/if}}
+
+    <!-- segment.io -->
+    <script type="text/javascript">
+    window.analytics||(window.analytics=[]),window.analytics.methods=["identify","track","trackLink","trackForm","trackClick","trackSubmit","page","pageview","ab","alias","ready","group","on","once","off"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var method=window.analytics.methods[i];window.analytics[method]=window.analytics.factory(method)}window.analytics.load=function(t){var a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"d2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)},window.analytics.SNIPPET_VERSION="2.0.8",
+    window.analytics.load("{{config.segmentIo.token}}");
+    window.analytics.page();
+    </script>
+    <!-- end segment.io -->
 
     <!-- Select2 -->
     <link href="/components/select2/select2.css" rel="stylesheet" media="screen">
@@ -137,6 +145,8 @@
     </a>
     {{/if}}
 
+    <script>analytics.page(document.title);</script>
+
     <script src="/js/require-config.js"></script>
     <script src="/components/requirejs/require.js"></script>
 
@@ -176,6 +186,12 @@
     olark('api.chat.updateVisitorNickname', {
         snippet: "{{#if session.oldUser}}{{session.oldUser.email}}{{else}}{{user.email}}{{/if}}"
     });
+    </script>
+    {{/if}}
+
+    {{#if user}}
+    <script type="text/javascript">
+      analytics.identify({{user.id}}, {{{json user}}});
     </script>
     {{/if}}
 

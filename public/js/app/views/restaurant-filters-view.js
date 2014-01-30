@@ -27,6 +27,7 @@ define(function(require, exports, module) {
     }
 
   , onFilterChange: function(e) {
+      analytics.track("Restaurants List Filter");
       this.trigger('filters:change');
     }
 

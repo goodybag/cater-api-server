@@ -137,6 +137,10 @@ var config = {
       accessToken: 'c7f82820e02c4bd7a759015518948ce3'
     }
 
+  , segmentIo: {
+      token: 'q3r0t2euni'
+    }
+
   , intercom: {
       apiSecret: 'A4NvND_qEf-ksKYhVw-GduUS2ruW2NlC39murXx2'
     , appId: 'qsetwlny'
@@ -214,6 +218,10 @@ var config = {
       accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
     }
 
+  , segmentIo: {
+      token: 'q3r0t2euni' // TODO: replace
+    }
+
   , intercom: {
       apiSecret: 'tumIlUFE__wGfvVxtAyESXRMroQJAz5csfMKULAY'
     , appId: '6bxgiurw'
@@ -283,6 +291,10 @@ var config = {
 
   , rollbar: {
       accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+    }
+
+  , segmentIo: {
+      token: 'q3r0t2euni' // TODO: replace
     }
 
   , intercom: {

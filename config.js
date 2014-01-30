@@ -219,7 +219,7 @@ var config = {
     }
 
   , segmentIo: {
-      token: 'q3r0t2euni' // TODO: replace
+      token: 'q3r0t2euni' // TODO: same as dev for now, replace later?
     }
 
   , intercom: {

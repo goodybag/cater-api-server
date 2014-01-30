@@ -3,40 +3,6 @@ var utils = require('../utils');
 var Models = require('../models');
 var hbHelpers = require('../public/js/lib/hb-helpers');
 
-
-// select restaurant_id, count(*) as orders_count from orders where status='accepted' group by restaurant_id order by orders_count desc;
-module.exports.revenueByRestaurant = function (req, res) {
-
-  var query = {
-    with: [
-      {
-        name: 'orders_per_restaurant'
-      , type: 'select'
-      , table: 'orders'
-      , columns: ['restaurant_id', { type: 'function', function: 'count', expression: '*', alias: 'orders_count' }]
-      , groupBy: ['restaurant_id']
-      , where: { status: 'accepted' }
-      }
-    ]
-  , columns: ['*', {table: 'orders_per_restaurant', name:'orders_count', alias: 'orders_count'}]
-  , joins: {
-      orders_per_restaurant: {
-        type: 'left'
-      , on: { restaurant_id: '$orders.restaurant_id$' }
-      }
-    }
-  , order: ['orders_per_restaurant.orders_count desc nulls last', 'restaurant_id']
-  , distinct: [ 'orders_per_restaurant.orders_count', 'restaurant_id']
-  };
-
-
-  Models.Order.find( query, function(error, results) {
-    if (error) return res.json(error);
-
-    res.render('analytics/revenue-per-restaurant', {results: utils.invoke(results, 'toJSON')});
-  });
-};
-
 module.exports.list = function( req, res ){
   function getWeekNumber(d) {
     // Copy date so don't modify original

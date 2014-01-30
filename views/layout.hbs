@@ -174,7 +174,7 @@
     {{#if user.email}}
     <script type="text/javascript">
     olark('api.chat.updateVisitorNickname', {
-        snippet: "{{user.email}}"
+        snippet: "{{#if session.oldUser}}{{session.oldUser.email}}{{else}}{{user.email}}{{/if}}"
     });
     </script>
     {{/if}}

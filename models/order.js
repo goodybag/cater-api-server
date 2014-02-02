@@ -828,6 +828,24 @@ module.exports = Model.extend({
     Model.update.call(this, query, utils.partial(modifyAttributes, callback));
   },
 
+  findReadyForAwardingPoints: function (limit, callback) {
+    if (typeof limit === 'function') {
+      callback = limit;
+      limit = 100;
+    }
+    // it is ready for charging 3 days after the order has been delivered.
+    var query = {
+      where: {
+        status: {$or: ['accepted', 'delivered']}
+      , points_awarded: false
+      , $custom: ['now() > (("orders"."datetime" AT TIME ZONE "orders"."timezone") + interval \'3 days\')']
+      }
+    , limit: limit
+    };
+
+    Model.find.call(this, query, utils.partial(modifyAttributes, callback));
+  },
+
   findTomorrow: function( query, callback ){
     if ( typeof query === 'function' ){
       callback = query;

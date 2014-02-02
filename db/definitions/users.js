@@ -53,6 +53,10 @@ define(function(require) {
     , nullable: false
     , default: 'false'
     }
+  , points: {
+      type: types.int
+    , default: 0
+    }
   };
 
   definition.indices = {};

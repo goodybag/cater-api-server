@@ -281,6 +281,60 @@ var User = module.exports = Model.extend({
     });
   }
 
+, addPointsForOrder: function( order, callback, client ) {
+    var points = Math.floor(order.attributes.total / 100);
+    if (isNaN(points)) return callback(new Error('cannot calculate points for order'));
+
+    db.getClient(function (error, client, done) {
+      var tasks = {
+        begin: function (cb) {
+          client.query('BEGIN', cb);
+        }
+      , updateUserPoints: function (cb) {
+          var query = {
+            type: 'update'
+          , table: 'users'
+          , updates: {
+              $inc: {points: points}
+            }
+          , where: {
+              user_id: order.attributes.user_id
+            }
+          };
+
+          var sql = db.builder.sql(query);
+          client.query(sql.query, sql.values, cb);
+        }
+      , setPointsAwardedForOrder: function (cb) {
+          var query = {
+            type: 'update'
+          , table: 'orders'
+          , updates: {
+              points_awarded: true
+            }
+          , where: {
+              id: order.attributes.id
+            , points_awarded: false
+            }
+          };
+          var sql = db.builder.sql(query);
+          client.query(sql.query, sql.values, cb);
+        }
+      };
+
+      utils.async.series([
+        tasks.begin
+      , tasks.updateUserPoints
+      , tasks.setPointsAwardedForOrder
+      ], function (error, results) {
+        client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
+          done();
+          return callback(e || error);
+        });
+      });
+    });
+  }
+
 , find: function( query, callback, client ){
     var this_ = this;
 

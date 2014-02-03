@@ -430,6 +430,8 @@ module.exports = Model.extend({
     query.columns = query.columns || ['*'];
     query.order = query.order || ["submitted.created_at DESC", "orders.created_at DESC"];
     query.with = query.with || [];
+    query.distinct = query.distinct || this.stripOrderBy(query.order); // distinct have the same columns used in order
+
     // making datetime a string on purpose so that the server timezone isn't
     // applied to it when it is pulled out (there is no ofset set on this
     // because it cannot be determined due to DST until the datetime in
@@ -909,6 +911,25 @@ module.exports = Model.extend({
     }
 
     module.exports.find.call( this, query, callback );
+  },
+
+
+  /**
+   * Used to strip ASC or DESC off order by columns
+   *
+   * Example:
+   * ORDER BY ID ASC, CREATED_AT DESC
+   * will need DISTINCT ON ID, CREATED_AT
+   *
+   * @param {array|string} orders - A list or string of columns 
+   *   to order by.
+   * @returns {array} List of columns without ASC or DESC
+   */
+  stripOrderBy: function(columns) {
+    if(typeof columns ==='string') columns = [columns];
+    return columns.map(function(column) { 
+      return column.toLowerCase().replace(/asc|desc/g, '').trim();
+    });
   },
 
   // this is a FSM definition

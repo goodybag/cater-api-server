@@ -11,8 +11,11 @@ define(function(require, exports, module) {
 
   , initialize: function( attr, options ){
       this.on( 'change:order', this.onOrderChange, this );
-      this.on( 'change:gb_fee_percent', this.onFeeChange, this );
+      // this.on( 'change:gb_fee', this.onFeeChange, this );
+      this.on( 'change:gb_fee_percent', this.onFeePercentChange, this );
       this.on( 'change', this.onChange, this );
+console.log(this.get('gb_fee'), this.get('order_total'))
+      this.set( 'gb_fee_percent', parseFloat(((this.get('gb_fee') / this.get('order_total')) * 100).toFixed(2)) );
     }
 
   , toJSON: function( options ){
@@ -56,7 +59,12 @@ define(function(require, exports, module) {
       if ( order ) this.updatePropertiesBasedOnOrder( order );
     }
 
-  , onFeeChange: function( psi, percent ){
+  , onFeeChange: function( psi, fee ){
+
+    }
+
+  , onFeePercentChange: function( psi, percent ){
+    console.log("setting gb_fee", this.get('order_total') * ( percent / 100 ))
       this.set( 'gb_fee', this.get('order_total') * ( percent / 100 ) );
     }
 

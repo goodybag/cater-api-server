@@ -1,6 +1,6 @@
 {
   "dir": "public/receipts"
-, "script": "lib/receipt-pdf.js"
+, "script": "lib/pdf.js"
 , "fileName": "order-:oid.pdf"
 , "orderRoute": "/orders/:oid/receipt"
 , "bucket": "receipts.goodybag.com"
@@ -14,5 +14,11 @@
   "credentials": {
     "email": "receipts@goodybag.com"
   , "password": "G00dyb4agR3c31pt5!"
+  }
+, "paymentSummaries": {
+    "credentials": {
+      "email": "pdf@goodybag.com"
+    , "password": "G00dyb4agp33d333ff"
+    }
   }
 }

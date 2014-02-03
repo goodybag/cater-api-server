@@ -298,7 +298,7 @@ var User = module.exports = Model.extend({
               $inc: {points: points}
             }
           , where: {
-              user_id: order.attributes.user_id
+              id: order.attributes.user_id
             }
           };
 

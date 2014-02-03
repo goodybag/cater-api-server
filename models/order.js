@@ -833,7 +833,7 @@ module.exports = Model.extend({
       callback = limit;
       limit = 100;
     }
-    // it is ready for charging 3 days after the order has been delivered.
+    // it is ready for awarding 3 days after the order has been delivered.
     var query = {
       where: {
         status: {$or: ['accepted', 'delivered']}
@@ -843,7 +843,7 @@ module.exports = Model.extend({
     , limit: limit
     };
 
-    Model.find.call(this, query, utils.partial(modifyAttributes, callback));
+    this.find(query, callback);
   },
 
   findTomorrow: function( query, callback ){

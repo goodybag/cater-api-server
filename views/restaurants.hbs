@@ -32,8 +32,8 @@
         {{/if}}
           <div class="row">
             <div class="col-xs-1 logo-wrapper">
-              <img class="business-logo" src="{{#if this.logo_mono_url}}{{filepicker this.logo_mono_url}}{{else}}{{filepicker ../../config.defaultMonoLogo}}{{/if}}" alt="{{this.name}}">
-              <img class="business-logo business-logo-color" src="{{#if this.logo_url}}{{filepicker this.logo_url}}{{else}}{{filepicker ../../config.defaultLogo}}{{/if}}" alt="{{this.name}}">
+              <img class="business-logo" src="{{#if this.logo_mono_url}}{{filepicker this.logo_mono_url 60 60}}{{else}}{{filepicker ../../config.defaultMonoLogo 60 60}}{{/if}}" alt="{{this.name}}">
+              <img class="business-logo business-logo-color" src="{{#if this.logo_url}}{{filepicker this.logo_url 60 60}}{{else}}{{filepicker ../../config.defaultLogo 60 60}}{{/if}}" alt="{{this.name}}">
             </div>
             <div class="col-xs-9 col">
               <h3 class="list-group-item-heading list-group-item-heading-restaurant">{{this.name}}</h3>

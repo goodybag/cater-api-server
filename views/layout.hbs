@@ -191,7 +191,7 @@
 
     {{#if user}}
     <script type="text/javascript">
-      analytics.identify({{user.id}});
+      analytics.identify({{user.id}}, {{{json user}}});
     </script>
     {{/if}}
 

@@ -583,4 +583,6 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , controllers.emails.post
   );
+
+  app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
 }

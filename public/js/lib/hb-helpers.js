@@ -137,6 +137,16 @@ define(function(require, exports, module) {
     },
 
     /**
+     * Return embedded code or markup
+     * 
+     * TODO: support different languages via extensions
+     * 
+     */
+    embed: function (src, lang) {
+      return src.trim();
+    },
+
+    /**
      * Convert array of 10 digit numbers
      * to string of formatted phone numbers
      * separated by comma.

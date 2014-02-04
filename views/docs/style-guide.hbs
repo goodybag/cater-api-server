@@ -1,0 +1,121 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/docs.css">
+<link rel="stylesheet" href="/css/restaurant-filters.css">
+{{/extend}}
+<div class="container">
+  <h1 class="page-header">Style Guide</h1>
+
+  <h2>Labels</h2>
+  <p>
+    <span class="label label-pending">Pending</span>
+    <span class="label label-submitted">Submitted</span>
+    <span class="label label-accepted">Accepted</span>
+    <span class="label label-denied">Denied</span>
+    <span class="label label-canceled">Canceled</span>
+    <span class="label label-delivered">Delivered</span>
+  </p>
+  <pre class="prettyprint">{{embed '
+<span class="label label-pending">Pending</span>
+
+<span class="label label-pending">Submitted</span>
+
+<span class="label label-accepted">Accepted</span>
+
+<span class="label label-denied">Denied</span>
+
+<span class="label label-canceled">Canceled</span>
+
+<span class="label label-delivered">Delivered</span>
+  '}}</pre>
+  {{!-- End Labels --}}
+
+  <h2>Diet Tags</h2>
+  <p>
+    <span class="tag tag-vegan"></span>
+    <span class="tag tag-vegetarian"></span>
+    <span class="tag tag-gluten-free"></span>
+    <span class="tag tag-kosher"></span>
+    <span class="tag tag-halal"></span>
+    <span class="tag tag-dairy-free"></span>
+    <span class="tag tag-nuts"></span>
+    <span class="tag tag-spicy"></span>
+  </p>
+
+  Note: Must require extend css block in .hbs template with 
+  the following stylesheet
+  <pre class="prettyprint">{{embed '
+{{#extend "css"}}
+  <link rel="stylesheet" href="/css/restaurant-filters.css">
+{{/extend}}'}}</pre>
+
+  Markup
+  <pre class="prettyprint">{{embed '
+<span class="tag tag-vegan"></span>
+
+<span class="tag tag-vegetarian"></span>
+
+<span class="tag tag-gluten-free"></span>
+
+<span class="tag tag-kosher"></span>
+
+<span class="tag tag-halal"></span>
+
+<span class="tag tag-dairy-free"></span>
+
+<span class="tag tag-nuts"></span>
+
+<span class="tag tag-spicy"></span>
+  '}}</pre>
+  {{!-- End Diet Tags --}}
+
+  <h2>Dollar Meter</h2>
+  <p>
+    <div><span class="dollar-meter">{{{dollarMeter 0}}}</span></div>
+    <div><span class="dollar-meter">{{{dollarMeter 1}}}</span></div>
+    <div><span class="dollar-meter">{{{dollarMeter 2}}}</span></div>
+    <div><span class="dollar-meter">{{{dollarMeter 3}}}</span></div>
+    <div><span class="dollar-meter">{{{dollarMeter 4}}}</span></div>
+  </p>
+  <pre class="prettyprint">{{embed '
+<p><span class="dollar-meter">{{{dollarMeter 4}}}</span></p>
+  '}}</pre>
+  {{!-- End Dollar Meter --}}
+
+  <h2>Panels</h2>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel">
+        <div class="panel-heading">
+          <h4 class="panel-title">Heading</h4>
+        </div>
+        <div class="panel-body">Body Text</div>
+        <div class="panel-footer">Footer</div>
+      </div>
+    </div>
+  </div class="row">
+
+  <pre class="prettyprint">{{embed '
+<div class="col-md-4">
+  <div class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">Heading</h4>
+    </div>
+    <div class="panel-body">Body Text</div>
+    <div class="panel-footer">Footer</div>
+  </div>
+</div>
+  '}}</pre>
+  {{!ds-- End Panels --}}
+</div>
+
+
+
+{{#extend "scripts"}}
+<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=sons-of-obsidian"></script>
+
+<script>
+  require(['jquery'], function($) {
+
+  });
+</script>
+{{/extend}}

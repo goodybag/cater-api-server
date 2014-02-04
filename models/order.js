@@ -430,7 +430,9 @@ module.exports = Model.extend({
     query.columns = query.columns || ['*'];
     query.order = query.order || ["submitted.created_at DESC", "orders.created_at DESC"];
     query.with = query.with || [];
-    query.distinct = query.distinct || this.stripOrderBy(query.order); // distinct have the same columns used in order
+
+    // distinct should have the same columns used in order by
+    query.distinct = query.distinct || this.stripColumnOrder(query.order);
 
     // making datetime a string on purpose so that the server timezone isn't
     // applied to it when it is pulled out (there is no ofset set on this
@@ -915,17 +917,12 @@ module.exports = Model.extend({
 
 
   /**
-   * Used to strip ASC or DESC off order by columns
-   *
-   * Example:
-   * ORDER BY ID ASC, CREATED_AT DESC
-   * will need DISTINCT ON ID, CREATED_AT
-   *
-   * @param {array|string} orders - A list or string of columns 
-   *   to order by.
+   * Used to strip ASC or DESC off columns
+   * 
+   * @param {array|string} columns - A list or string of column names 
    * @returns {array} List of columns without ASC or DESC
    */
-  stripOrderBy: function(columns) {
+  stripColumnOrder: function(columns) {
     if(typeof columns ==='string') columns = [columns];
     return columns.map(function(column) { 
       return column.toLowerCase().replace(/asc|desc/g, '').trim();

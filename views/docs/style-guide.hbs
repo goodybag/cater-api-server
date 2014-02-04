@@ -14,21 +14,18 @@
     <span class="label label-canceled">Canceled</span>
     <span class="label label-delivered">Delivered</span>
   </p>
-  <pre class="prettyprint">{{embed
-'
-<span class="label label-pending">Pending</span>
+  <pre class="prettyprint">
+&lt;span class="label label-pending"&gt;Pending&lt;/span&gt;
 
-<span class="label label-pending">Submitted</span>
+&lt;span class="label label-pending"&gt;Submitted&lt;/span&gt;
 
-<span class="label label-accepted">Accepted</span>
+&lt;span class="label label-accepted"&gt;Accepted&lt;/span&gt;
 
-<span class="label label-denied">Denied</span>
+&lt;span class="label label-denied"&gt;Denied&lt;/span&gt;
 
-<span class="label label-canceled">Canceled</span>
+&lt;span class="label label-canceled"&gt;Canceled&lt;/span&gt;
 
-<span class="label label-delivered">Delivered</span>
-'
-  }}</pre>
+&lt;span class="label label-delivered"&gt;Delivered&lt;/span&gt;</pre>
   {{!-- End Labels --}}
 
   <h2>Diet Tags</h2>
@@ -45,34 +42,29 @@
 
   Note: Must require extend css block in .hbs template with 
   the following stylesheet
-  <pre class="prettyprint">{{embed
-'
-{{#extend "css"}}
-  <link rel="stylesheet" href="/css/restaurant-filters.css">
-{{/extend}}
-'
-  }}</pre>
+  <pre class="prettyprint">
+&#123;&#123;#extend "css"&#125;&#125;
+  &lt;link rel="stylesheet" href="/css/restaurant-filters.css"&gt;
+&#123;&#123;/extend&#125;&#125;</pre>
 
   Markup
-  <pre class="prettyprint">{{embed
-'
-<span class="tag tag-vegan"></span>
+  <pre class="prettyprint">
+&lt;span class="tag tag-vegan"&gt;&lt;/span&gt;
 
-<span class="tag tag-vegetarian"></span>
+&lt;span class="tag tag-vegetarian"&gt;&lt;/span&gt;
 
-<span class="tag tag-gluten-free"></span>
+&lt;span class="tag tag-gluten-free"&gt;&lt;/span&gt;
 
-<span class="tag tag-kosher"></span>
+&lt;span class="tag tag-kosher"&gt;&lt;/span&gt;
 
-<span class="tag tag-halal"></span>
+&lt;span class="tag tag-halal"&gt;&lt;/span&gt;
 
-<span class="tag tag-dairy-free"></span>
+&lt;span class="tag tag-dairy-free"&gt;&lt;/span&gt;
 
-<span class="tag tag-nuts"></span>
+&lt;span class="tag tag-nuts"&gt;&lt;/span&gt;
 
-<span class="tag tag-spicy"></span>
-'
-  }}</pre>
+&lt;span class="tag tag-spicy"&gt;&lt;/span&gt;
+</pre>
   {{!-- End Diet Tags --}}
 
   <h2>Dollar Meter</h2>
@@ -83,9 +75,8 @@
     <div><span class="dollar-meter">{{{dollarMeter 3}}}</span></div>
     <div><span class="dollar-meter">{{{dollarMeter 4}}}</span></div>
   </p>
-  <pre class="prettyprint">{{embed '
-<p><span class="dollar-meter">{{{dollarMeter 4}}}</span></p>
-  '}}</pre>
+  <pre class="prettyprint">
+&lt;span class="dollar-meter"&gt;&#123;&#123;&#123;dollarMeter 4&#125;&#125;&#125;&lt;/span&gt;</pre>
   {{!-- End Dollar Meter --}}
 
   <h2>Panels</h2>
@@ -101,19 +92,17 @@
     </div>
   </div class="row">
 
-  <pre class="prettyprint">{{embed
-'
-<div class="col-md-4">
-  <div class="panel">
-    <div class="panel-heading">
-      <h4 class="panel-title">Heading</h4>
-    </div>
-    <div class="panel-body">Body Text</div>
-    <div class="panel-footer">Footer</div>
-  </div>
-</div>
-'
-  }}</pre>
+  <pre class="prettyprint">
+&lt;div class="col-md-4"&gt;
+  &lt;div class="panel"&gt;
+    &lt;div class="panel-heading"&gt;
+      &lt;h4 class="panel-title"&gt;Heading&lt;/h4&gt;
+    &lt;/div&gt;
+    &lt;div class="panel-body"&gt;Body Text&lt;/div&gt;
+    &lt;div class="panel-footer"&gt;Footer&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
   {{!-- End Panels --}}
 
 </div>

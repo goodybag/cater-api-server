@@ -14,7 +14,8 @@
     <span class="label label-canceled">Canceled</span>
     <span class="label label-delivered">Delivered</span>
   </p>
-  <pre class="prettyprint">{{embed '
+  <pre class="prettyprint">{{embed
+'
 <span class="label label-pending">Pending</span>
 
 <span class="label label-pending">Submitted</span>
@@ -26,7 +27,8 @@
 <span class="label label-canceled">Canceled</span>
 
 <span class="label label-delivered">Delivered</span>
-  '}}</pre>
+'
+  }}</pre>
   {{!-- End Labels --}}
 
   <h2>Diet Tags</h2>
@@ -43,13 +45,17 @@
 
   Note: Must require extend css block in .hbs template with 
   the following stylesheet
-  <pre class="prettyprint">{{embed '
+  <pre class="prettyprint">{{embed
+'
 {{#extend "css"}}
   <link rel="stylesheet" href="/css/restaurant-filters.css">
-{{/extend}}'}}</pre>
+{{/extend}}
+'
+  }}</pre>
 
   Markup
-  <pre class="prettyprint">{{embed '
+  <pre class="prettyprint">{{embed
+'
 <span class="tag tag-vegan"></span>
 
 <span class="tag tag-vegetarian"></span>
@@ -65,7 +71,8 @@
 <span class="tag tag-nuts"></span>
 
 <span class="tag tag-spicy"></span>
-  '}}</pre>
+'
+  }}</pre>
   {{!-- End Diet Tags --}}
 
   <h2>Dollar Meter</h2>
@@ -94,7 +101,8 @@
     </div>
   </div class="row">
 
-  <pre class="prettyprint">{{embed '
+  <pre class="prettyprint">{{embed
+'
 <div class="col-md-4">
   <div class="panel">
     <div class="panel-heading">
@@ -104,11 +112,11 @@
     <div class="panel-footer">Footer</div>
   </div>
 </div>
-  '}}</pre>
-  {{!ds-- End Panels --}}
+'
+  }}</pre>
+  {{!-- End Panels --}}
+
 </div>
-
-
 
 {{#extend "scripts"}}
 <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=sons-of-obsidian"></script>

@@ -140,7 +140,7 @@ define(function(require, exports, module) {
      * Return embedded code or markup
      * 
      * TODO: support different languages via extensions
-     * 
+     * Maybe http://assemble.io/helpers/helpers-code.html
      */
     embed: function (src, lang) {
       return src.trim();

@@ -430,6 +430,10 @@ module.exports = Model.extend({
     query.columns = query.columns || ['*'];
     query.order = query.order || ["submitted.created_at DESC", "orders.created_at DESC"];
     query.with = query.with || [];
+
+    // distinct should have the same columns used in order by
+    query.distinct = query.distinct || this.stripColumnOrder(query.order);
+
     // making datetime a string on purpose so that the server timezone isn't
     // applied to it when it is pulled out (there is no ofset set on this
     // because it cannot be determined due to DST until the datetime in
@@ -909,6 +913,20 @@ module.exports = Model.extend({
     }
 
     module.exports.find.call( this, query, callback );
+  },
+
+
+  /**
+   * Used to strip ASC or DESC off columns
+   * 
+   * @param {array|string} columns - A list or string of column names 
+   * @returns {array} List of columns without ASC or DESC
+   */
+  stripColumnOrder: function(columns) {
+    if(typeof columns ==='string') columns = [columns];
+    return columns.map(function(column) { 
+      return column.toLowerCase().replace(/asc|desc/g, '').trim();
+    });
   },
 
   // this is a FSM definition

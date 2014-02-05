@@ -1,10 +1,5 @@
 define( function( require ){
-  var $               = require('jquery')
-  var orderModel      = require('data/order');
-  var orderParams     = require('data/order-params');
-  var restaurant      = require('data/restaurant');
-  var defaultAddress  = require('data/default-address');
-  var user            = require('data/user');
+  var $ = require('jquery')
 
   require('bootstrap');
 
@@ -21,7 +16,13 @@ define( function( require ){
   };
 
   var page = {
-    init: function(){
+    init: function( options ){
+      var orderModel      = options.order;
+      var orderParams     = options.orderParams;
+      var restaurant      = options.restaurant;
+      var defaultAddress  = options.defaultAddress;
+      var user            = options.user;
+
       page.view = new Views.Menu({
         el:     '#menu'
       , model:  restaurant

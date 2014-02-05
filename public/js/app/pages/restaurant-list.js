@@ -1,7 +1,6 @@
 define( function( require ){
   var $               = require('jquery');
   var utils           = require('utils');
-  var restaurants     = require('data/restaurants');
 
   require('bootstrap');
 
@@ -17,7 +16,9 @@ define( function( require ){
   };
 
   var page = {
-    init: function() {
+    init: function(options) {
+      var restaurants = options.restaurants;
+
       $(".tag-tooltip").tooltip();
 
       // Prepare listing to be usable by the facet serach

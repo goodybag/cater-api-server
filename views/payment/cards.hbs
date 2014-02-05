@@ -42,20 +42,15 @@
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
 
 <script>
-  define( 'data/user', ['app/models/user'], function( User ){
-    return new User( {{{json user}}} )
-  });
-
-  define( 'data/marketplaceUri', function() {
-    return "{{{config.balanced.marketplaceUri}}}";
-  });
-
   require([
-      'jquery'
-    , 'app/pages/cards'
+      'app/pages/cards'
+    , 'app/models/index'
     ]
-  , function($, cards) {
-      cards.init();
+  , function(cards, Models) {
+      cards.init({
+        user: new User( {{{json user}}} )
+      , marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
+      });
     }
   );
 </script>

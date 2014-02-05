@@ -187,28 +187,14 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
 <script>
-  define( 'data/user', ['app/models/user'], function( User ){
-    return new User( {{{json user}}} )
-  });
-
-  define( 'data/order', ['app/models/order'], function( Order ){
-    return new Order( {{{json order}}} )
-  });
-
-  define( 'data/order-params', ['app/models/order-params'], function( OrderParams ){
-    return new OrderParams( {{{json orderParams}}} );
-  });
-
-  define( 'data/restaurant', ['app/models/restaurant'], function( Restaurant ){
-    return new Restaurant( {{{json restaurant}}} );
-  });
-
-  define( 'data/default-address', ['app/models/address'], function( Address ){
-    return new Address( {{{json defaultAddress }}} );
-  });
-
-  require( ['app/pages/menu'], function( page ){
-    page.init();
+  require( ['app/pages/menu', 'app/models/index'], function( page, Models ){
+    page.init({
+      order:          new Models.Order( {{{json order}}} )
+    , orderParams:    new Models.OrderParams( {{{json orderParams}}} )
+    , restaurant:     new Models.Restaurant( {{{json restaurant}}} )
+    , defaultAddress: new Models.Address( {{{json defaultAddress}}} )
+    , user:           new Models.User( {{{json user }}} )
+    });
   });
 </script>
 {{/extend}}

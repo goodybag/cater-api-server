@@ -15,6 +15,7 @@
       // plugins
       text: '../../components/requirejs-text/text'
     , json: '../../components/requirejs-plugins/src/json'
+    , requireLib: '../../dist/require'
 
       // directories
     , app:    '../app'
@@ -149,10 +150,12 @@
 
   if ( typeof requirejs !== 'undefined' ){
     requirejs.config( requireConfig );
-  }
-
-  if ( typeof module !== 'undefined' )
-  if ( typeof module.exports !== 'undefined' ){
-    module.exports = requireConfig;
+  } else if ( typeof module !== 'undefined' ) {
+    if ( typeof module.exports !== 'undefined' ){
+      module.exports = requireConfig;
+    }
+  } else {
+    // No other options available means we're loading config before require
+    window.require = requireConfig;
   }
 })();

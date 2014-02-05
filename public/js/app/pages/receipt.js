@@ -1,6 +1,5 @@
 define(function(require){
   var utils = require('utils')
-  var order = require('data/order')
 
   var Views = {
     Receipt:    require('app/views/receipt-view')
@@ -30,7 +29,9 @@ define(function(require){
   var query = utils.parseQueryParams();
 
   var page = {
-    init: function(){
+    init: function( options ){
+      var order = options.order;
+
       page.view = new Views.Receipt({
         el:           '#main'
       , model:        order

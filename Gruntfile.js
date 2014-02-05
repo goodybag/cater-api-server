@@ -46,6 +46,12 @@ module.exports = function(grunt) {
         , name: 'app/builder'
         , include: ['requireLib']
         , mainConfigFile: 'public/js/require-config.js'
+
+          // For some reason, r.js is not playing nicely with UMD modules
+          // We use the same code-snippet everywhere to define UMD modules so
+          // the module can be used in node.js as well. However, we don't
+          // need that in built production web file, so for each module that
+          // has UMD, remove that code.
         , onBuildRead: function( name, path, contents ){
             var first6Lines = contents.split('\n').slice( 0, 6 ).join('\n');
             if ( first6Lines.indexOf('module.exports = factory') === -1 ) return contents;

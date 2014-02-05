@@ -64,7 +64,6 @@
       '*': {
         'jquery': 'jquery-loaded'
       , 'moment': 'moment-loaded'
-      , 'backbone': 'backbone-loaded'
       }
 
       // deal with jquery
@@ -84,9 +83,7 @@
     , 'moment-timezone': {'moment': 'moment'}
 
     // deal with backbone
-    , 'backbone-loaded': {'backbone': 'backbone'}
     , 'backbone.trackit': {'backbone': 'backbone'}
-
     }
 
   , shim: {

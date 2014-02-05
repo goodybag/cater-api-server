@@ -53,10 +53,14 @@ module.exports = function(grunt) {
           // need that in built production web file, so for each module that
           // has UMD, remove that code.
         , onBuildRead: function( name, path, contents ){
-            var first6Lines = contents.split('\n').slice( 0, 6 ).join('\n');
-            if ( first6Lines.indexOf('module.exports = factory') === -1 ) return contents;
+            // Ignore 3rd-party libs
+            if ( /components\/\S+\/\S+/.test( path ) ) return contents;
 
-            return contents.replace( first6Lines, '' );
+            // Contents not UMDing
+            if ( contents.indexOf('module.exports = factory') === -1 ) return contents;
+
+            // Start from the first occurence of a define call
+            return contents.substring( contents.search(/define\s*\(/) );
           }
         })
       }

@@ -1,0 +1,120 @@
+///////////////
+// Hero Unit //
+///////////////
+
+.hero-unit {
+  display: table;
+  width: 100%;
+  padding-top: 80px;
+  padding-bottom: 52px;
+  .standard-padding();
+
+  background: @herounit-bg;
+
+  // Overflow: hidden because sometimes the screenshot
+  // is hanging over the edge in chome at certain widths
+  overflow: hidden;
+
+  font-size: @herounit-font-size;
+  line-height: @herounit-line-height;
+  text-align: center;
+  color: @herounit-color;
+  text-shadow: 0 1px 0 rgba( 0, 0, 0, 0.4 );
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.hero-unit:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../img/pg-logo.svg');
+  background-size: 90%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat no-repeat;
+  .opacity(0.2);
+  -webkit-animation: bg-animation 3s ease-out;
+  -moz-animation: bg-animation 3s ease-out;
+  -o-animation: bg-animation 3s ease-out;
+  animation: bg-animation 3s ease-out;
+}
+
+.hero-unit h1 {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: @font-family-serif;
+  font-weight: 500;
+  margin-top: 0;
+  line-height: 1em;
+  margin-bottom: 2px;
+}
+
+.hero-unit h1 + p {
+  margin-top: -20px;
+  color: rgba(
+    red( @herounit-color )
+  , green( @herounit-color )
+  , blue( @herounit-color )
+  , 0.9
+  );
+}
+
+.hero-unit .btn-call-to-action {
+  position: relative;
+  box-shadow: -22px -17px 0 rgba(0, 0, 0, 0.11)
+}
+
+.hero-unit .hero-unit-screenshot {
+  margin-top: 78px;
+  // Prevent Markup spacing from affecting layout
+  line-height: 0;
+}
+
+// Blog
+.hero-unit.hero-unit-blog {
+  background: @gray-darker;
+  padding-top: 50px;
+  padding-bottom: 46px;
+}
+
+@media screen and (max-width: @breakpoint-tablet){
+  .hero-unit {
+    font-size: @herounit-font-size - 1em;
+    line-height: @herounit-line-height - 1em;
+  }
+}
+
+@media screen and (max-width: @breakpoint-mobile){
+  .hero-unit {
+    font-size: @herounit-font-size - 2em;
+    line-height: @herounit-line-height - 2em;
+  }
+}
+
+.bg-animation() {
+  from { background-position-y: 60% }
+  to { background-position-y: 50% }
+}
+
+@-webkit-keyframes bg-animation {
+  .bg-animation();
+}
+
+@-moz-keyframes bg-animation {
+  .bg-animation();
+}
+
+@-ms-keyframes bg-animation {
+  .bg-animation();
+}
+
+@-o-keyframes bg-animation {
+  .bg-animation();
+}
+
+@keyframes bg-animation {
+  .bg-animation();
+}

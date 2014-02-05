@@ -1,0 +1,149 @@
+////////////
+// Mixins //
+////////////
+
+#grid {
+  .container(){
+    display: table;
+    width: @container-width;
+    margin: 0 auto;
+
+    @media screen and ( max-width: @container-width ){
+      & {
+        width: 100%;
+      }
+    }
+  }
+
+  .row(){
+    display: table;
+    width: 100%;
+  }
+
+  .column( @width ){
+    display: block;
+    float: left;
+    width: @width;
+
+    @media screen and ( max-width: @breakpoint-mobile ){
+      & {
+        width: 100%;
+      }
+    }
+  }
+}
+
+#sections {
+  .dark(){
+    background-color: @gray-dark;
+    color: @white;
+
+    & a, & h1, & h2, & h3, & h4, & h5, & p {
+      color: @white;
+    }
+  }
+
+  .darker(){
+    background-color: @gray-darker;
+    color: #3E3E3E;
+
+    & h1, & h2, & h3, & h4, & h5 {
+      color: @brand-primary;
+    }
+  }
+
+  .brand-primary(){
+    background-color: @brand-primary;
+    color: @white;
+
+    & a, & h1, & h2, & h3, & h4, & h5, & p {
+      color: @white;
+    }
+  }
+
+  .brand-secondary(){
+    background-color: @brand-secondary;
+    color: @white;
+
+    & a {
+      color: @brand-primary;
+    }
+
+    & h1, & h2, & h3, & h4, & h5, & p {
+      color: @white;
+    }
+  }
+}
+
+.reset-ul(){
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.icon-font( @icon ) when ( @icon ){
+  content: @icon;
+  .icon-font();
+}
+
+.icon-font(){
+  display: inline-block;
+  vertical-align: middle;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-awesome( @icon ){
+  .icon-font( @icon );
+}
+
+.standard-padding(){
+  padding-left: @gutter-width / 2;
+  padding-right: @gutter-width / 2;
+}
+
+.large-padding(){
+  padding-left: @gutter-width;
+  padding-right: @gutter-width;
+}
+
+.transition-property( @property ){
+  -webkit-transition-property: @property;
+  -moz-transition-property: @property;
+  -ms-transition-property: @property;
+  -o-transition-property: @property;
+  transition-property: @property;
+}
+
+.transition-property-transform(){
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  -ms-transition-property: -ms-transform;
+  -o-transition-property: -o-transform;
+  transition-property: transform;
+}
+
+.btn-color( @color ){
+  border-color: @color;
+  color: @color;
+  &:hover {
+    background-color: rgba( 255, 255, 255, 0.07 );
+  }
+}
+
+.brand-btn( @bg, @color, @alpha: 0.5 ){
+  background-color: @bg;
+  color: @color;
+  &:hover {
+    background-color: lighten( @bg, 2% );
+  }
+
+  border-color: rgba(
+    red(@color), green(@color), blue(@color), @alpha
+  );
+}

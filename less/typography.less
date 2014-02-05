@@ -1,0 +1,57 @@
+////////////////
+// Typography //
+////////////////
+
+h1, h2, h3, h4, h5 {
+  letter-spacing: 1px;
+}
+
+h1, h2, h4, h5 {
+  text-transform: uppercase;
+}
+
+h2 {
+  margin-bottom: 18px;
+  font-size: 3.0em;
+  line-height: 1.2em;
+  font-weight: 300;
+  color: @off-gray;
+}
+
+h3 {
+  font-family: @font-family-serif;
+}
+
+.lead {
+  font-size: 1.6em;
+  line-height: 1.6em;
+  letter-spacing: 1.2px;
+}
+
+.lead-paragraph {
+  font-size: 1.3em;
+  line-height: 1.8em;
+}
+
+.header-separator {
+  display: inline-block;
+  background-color: @off-white;
+  text-transform: uppercase;
+  padding: 0 10px;
+  font-size: 12px;
+  color: @off-gray;
+  z-index: 2;
+}
+
+.header-separator + hr {
+  position: absolute;
+  width: 100%;
+  margin-top: -28px;
+  border: none;
+  border-bottom: solid 1px #D1D1D1;
+}
+
+em.em-primary {
+  font-style: normal;
+  color: @brand-primary;
+}

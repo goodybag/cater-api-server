@@ -1,0 +1,105 @@
+///////////////
+// Variables //
+///////////////
+
+// Colors
+////////////////////////////////////////////////////
+@white:                     #fff;
+@off-white:                 #E0FAFF;
+@gray:                      #606D70;
+@gray-light:                lighten( @gray, 10% );
+@gray-lighter:              lighten( @gray, 30% );
+@gray-dark:                 darken( @gray, 10% );
+@gray-darker:               darken( @gray, 20% );
+
+@brand-primary:             #39CBE9;
+@brand-secondary:           #4A7680;
+@brand-tertiary:            #FFA6DB;
+@brand-quaternary:          #B3C8CC;
+
+@off-gray:                  desaturate( @brand-secondary, 70% );
+
+@body-bg-color:             @off-white;
+
+
+// Type
+////////////////////////////////////////////////////
+@font-family-serif:         'Roboto Slab', Georgia, serif;
+@font-family-sans-serif:    'Roboto', Helvetica, sans-serif;
+@font-family-monospace:     monospace;
+
+@font-family-base:          @font-family-sans-serif;
+@font-weight-base:          300;
+@font-size-base:            14px;
+@font-size-small:           @font-size-base - 1;
+@font-size-large:           @font-size-base + 4;
+@line-height-base:          24px;
+@line-height-large:         @line-height-base + 4;
+@line-height-small:         @line-height-base - 2;
+@color-base:                @gray;
+@letter-spacing-base:       0;
+
+// Grid
+////////////////////////////////////////////////////
+@columns:                   12;
+@column-width:              80px;
+@gutter-width:              20px;
+@container-width: (@columns * @column-width + ( (@columns - 1) * @gutter-width ));
+
+// Buttons
+////////////////////////////////////////////////////
+@btn-font-family:           @font-family-serif;
+@btn-font-size:             @font-size-base - 5;
+@btn-large-font-size:       @font-size-base - 1;
+
+@btn-padding-top-base:      8px;
+@btn-padding-right-base:    16px;
+@btn-padding-bottom-base:   @btn-padding-top-base - 1;
+@btn-padding-left-base:     @btn-padding-right-base;
+
+@btn-padding-top-large:     15px;
+@btn-padding-right-large:   26px;
+@btn-padding-bottom-large:  @btn-padding-top-large - 2;
+@btn-padding-left-large:    @btn-padding-right-large;
+
+@btn-border-width-base:     3px;
+@btn-border-width-large:    4px;
+
+@btn-border-radius-base:    3px;
+
+// Z-Indexes
+////////////////////////////////////////////////////
+@navbar-zindex:             9999;
+@login-zindex:              1111;
+@photo-nav-zindex:          10;
+
+// Breakpoints
+////////////////////////////////////////////////////
+@breakpoint-desktop-sm:     1024px;
+@breakpoint-tablet:         786px;
+@breakpoint-mobile:         520px;
+
+// Navbar
+///////////////////////////////////////////////////
+@navbar-height:             70px;
+@navbar-mobile-height:      40px;
+@navbar-bg-color:           @gray-darker;
+@navbar-color:              rgba(255, 255, 255, 0.84);
+@navbar-logo-size:          32px;
+
+// Footer
+///////////////////////////////////////////////////
+@footer-height:             140px;
+@footer-bg-color:           @navbar-bg-color;
+@footer-color:              @navbar-color;
+
+// Hero Unit
+///////////////////////////////////////////////////
+@herounit-bg:             @brand-primary;
+@herounit-color:          @white;
+@herounit-font-size:      2.8em;
+@herounit-line-height:    2.8em;
+
+// Page Sections
+///////////////////////////////////////////////////
+@page-section-padding:        40px;

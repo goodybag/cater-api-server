@@ -45,7 +45,6 @@ module.exports = function(grunt) {
         , findNestedDependencies: false
         , name: 'app/builder'
         , include: ['requireLib']
-        , wrap: true
         , mainConfigFile: 'public/js/require-config.js'
         , onBuildRead: function( name, path, contents ){
             var first6Lines = contents.split('\n').slice( 0, 6 ).join('\n');

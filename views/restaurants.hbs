@@ -84,8 +84,8 @@
 
 {{#extend "scripts"}}
 <script type="text/javascript">
-  // require(['app/pages/restaurant-list'], function( page ){
-  //   page.init({ restaurants: {{{json allRestaurants}}} });
-  // });
+  require(['app/pages/restaurant-list'], function( page ){
+    page.init({ restaurants: {{{json allRestaurants}}} });
+  });
 </script>
 {{/extend}}

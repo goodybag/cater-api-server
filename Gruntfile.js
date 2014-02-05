@@ -59,7 +59,7 @@ module.exports = function(grunt) {
             // Contents not UMDing
             if ( contents.indexOf('module.exports = factory') === -1 ) return contents;
 
-            // Start from the first occurence of a define call
+            // Start from the first occurrence of a define call
             return contents.substring( contents.search(/define\s*\(/) );
           }
         })

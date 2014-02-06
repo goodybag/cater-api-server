@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
   var FormView = require('./form-view');
+  var ContactUs = require('../models/contact-us');
 
   return module.exports = FormView.extend({
     submitSelector: '.contact-us-form .contact-us-send',

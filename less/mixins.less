@@ -35,6 +35,11 @@
   .column( @size ){
     ._column( (@column-width * @size) + ((@size - 1) * @gutter-width) );
     margin-left: @gutter-width;
+
+    // Use first of type as well in case the user
+    // did not surround the columns with a row
+    // NOTE: first-of-type does not work in IE<9
+    &:first-of-type,
     &:first-child {
       margin-left: 0;
     }

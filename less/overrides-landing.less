@@ -2,10 +2,35 @@
 // Component->Site Overrides //
 ///////////////////////////////
 
-.hero-unit {
+#intro {
   background-position-x: 25%;
+
+  .hero-unit-marketing-area {
+    #grid > .row();
+    margin-top: 74px;
+    text-align: left;
+  }
+
+  .hero-unit-marketing-area > .screenshot-window {
+    #grid > .column(8);
+    border-bottom: none;
+  }
+
+  .hero-unit-marketing-area > .register-panel {
+    #grid > .column(4);
+  }
+
+  .register-form .btn-submit {
+    width: 100%;
+  }
 }
 
-.register-form .btn-submit {
-  width: 100%;
+#section-why-companies-love-us {
+  .screenshot-window {
+    #grid > .column(8);
+  }
+
+  .check-points {
+    #grid > .column(4);
+  }
 }

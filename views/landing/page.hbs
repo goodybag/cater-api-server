@@ -26,52 +26,108 @@
 <!--</Navbar>-->
 
 <!--<HeroUnit>-->
-<div class="hero-unit">
+<div class="hero-unit" id="intro">
   <div class="container">
     <h1>Office catering made easy.</h1>
     <p>Easily search restaurants and find food to feed your meetings.</p>
 
     <div class="hero-unit-marketing-area">
-      <div class="screenshot-wrapper">
-        <!--<WindowPane>-->
-        <div class="window-pane">
-          <div class="window-header">
-            <i class="window-btn"></i>
-            <i class="window-btn"></i>
-            <i class="window-btn"></i>
+      <!--<WindowPane>-->
+      <div class="screenshot-window window-pane">
+        <div class="window-header">
+          <i class="window-btn"></i>
+          <i class="window-btn"></i>
+          <i class="window-btn"></i>
+        </div>
+        <img src="/img/product-screen-1.jpg" alt="Goodybag restaurants list">
+      </div>
+      <!--</WindowPane>-->
+
+      <!--<Panel>-->
+      <div class="register-panel panel">
+        <h3 class="panel-header">Get your free account</h3>
+        <form class="register-form form-vertical" action="POST" method="/register">
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" name="email" id="register-email">
           </div>
-          <img src="/img/product-screen-1.jpg" alt="Goodybag restaurants list">
-        </div>
-        <!--<WindowPane>-->
+
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" name="password" id="register-password">
+          </div>
+
+          <div class="form-group">
+            <label for="register-confirm-password">Confirm password</label>
+            <input type="password" name="password2" id="register-confirm-password">
+          </div>
+
+          <div class="form-group form-group-submit">
+            <button class="btn btn-primary btn-submit btn-large">Start using Goodybag</button>
+          </div>
+        </form>
       </div>
-
-      <div class="register-wrapper">
-        <div class="panel">
-          <h3 class="panel-header">Get your free account</h3>
-          <form class="register-form form-vertical" action="POST" method="/register">
-            <div class="form-group">
-              <label for="register-email">Email</label>
-              <input type="email" name="email" id="register-email">
-            </div>
-
-            <div class="form-group">
-              <label for="register-password">Password</label>
-              <input type="password" name="password" id="register-password">
-            </div>
-
-            <div class="form-group">
-              <label for="register-confirm-password">Confirm password</label>
-              <input type="password" name="password2" id="register-confirm-password">
-            </div>
-
-            <div class="form-group form-group-submit">
-              <button class="btn btn-primary btn-submit btn-large">Start using Goodybag</button>
-            </div>
-          </form>
-        </div>
-      </div>
+      <!--</Panel>-->
     </div>
   </div>
 </div>
 <!--</HeroUnit>-->
+
+<!--<How it Works>-->
+<section class="page-section" id="section-how-it-works">
+  <div class="container">
+    <h1 class="section-header">How it works</h1>
+
+    <div class="marketing-points">
+      <div class="point">
+        <img src="/img/landing-hiw-1.png" alt="">
+        <p>
+          <strong class="step-title">1. Select a restaurant.</strong> Our wide variety will fit any preference, restriction, or budget.
+        </p>
+      </div>
+      <div class="point">
+        <img src="/img/landing-hiw-2.png" alt="">
+        <p>
+          <strong class="step-title">2. Place order.</strong> Say when and where, submit your order, and pay securely online.
+        </p>
+      </div>
+      <div class="point">
+        <img src="/img/landing-hiw-3.png" alt="">
+        <p>
+          <strong class="step-title">3. Get food!</strong> Your order will be delivered on-time, to your office.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<!--</How it Works>-->
+
+<!--<Why companies love us>-->
+<section class="page-section" id="section-why-companies-love-us">
+  <div class="container">
+    <h1 class="section-header">Why companies love us</h1>
+
+    <!--<WindowPane>-->
+    <div class="screenshot-window window-pane">
+      <div class="window-header">
+        <i class="window-btn"></i>
+        <i class="window-btn"></i>
+        <i class="window-btn"></i>
+      </div>
+      <img src="/img/product-screen-2.jpg" alt="Goodybag restaurant menu and order">
+    </div>
+    <!--</WindowPane>-->
+
+    <!--<CheckPoints>-->
+    <ul class="check-points">
+      <li>Quick and easy order process</li>
+      <li>Wide variety of restaurants</li>
+      <li>Simple and secure payments</li>
+      <li>Dedicated support team</li>
+      <li>No subscription or service fees</li>
+    </ul>
+    <!--</CheckPoints>-->
+  </div>
+</section>
+<!--</Why companies love us>-->
 {{/extend}}

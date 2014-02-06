@@ -12,8 +12,8 @@
   padding-top: @page-section-padding;
   padding-bottom: @page-section-padding;
   text-align: center;
-  font-size: 1em;
   background: @white;
+  border-bottom: solid 1px @gray;
 
   @media screen and (max-width: @breakpoint-tablet){
     & {
@@ -23,12 +23,9 @@
 }
 
 .page-section .section-header {
-  margin-bottom: 18px;
-  font-size: 3.0em;
+  margin-bottom: 36px;
+  font-size: 3.2em;
   line-height: 1.2em;
-  letter-spacing: 1.2px;
-  font-weight: 300;
-  color: @off-gray;
 
   @media screen and (max-width: @breakpoint-tablet) {
     & {
@@ -55,10 +52,6 @@
       font-size: 1.2em;
     }
   }
-}
-
-.page-section > .container {
-  .standard-padding();
 }
 
 .page-section.section-gray {

@@ -2,8 +2,7 @@
 // Marketing Points //
 //////////////////////
 
-@point-padding: 90px 40px 50px;
-@even-bg: rgba( 0, 0, 0, 0.02 );
+@point-padding: 20px 26px 20px;
 
 .marketing-points {
   #grid > .row();
@@ -16,7 +15,15 @@
   display: table-cell;
   width: 2%;
   padding: @point-padding;
-  color: @gray;
+  text-align: center;
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    padding-right: 0;
+  }
 
   @media screen and (max-width: @breakpoint-tablet) {
     & {
@@ -29,36 +36,13 @@
   }
 }
 
-.marketing-points > a.point {
-  text-decoration: none;
-}
-
-.marketing-points > a.point:hover {
-  background: rgba( 0, 0, 0, 0.01 );
-}
-
-// Stripes
-.marketing-points > .point:nth-child(2n) {
-  background-color: @even-bg;
-
-  &:hover {
-    background: rgba( 0, 0, 0, 0.04 );
-  }
-}
-
-.marketing-points .point-title {
-  font-size: 1.2em;
-  font-weight: 500;
-  letter-spacing: 1.2px;
-  line-height: 1.3em;
-}
-
 .marketing-points p {
-  font-size: @font-size-small;
-  letter-spacing: 1.4px;
-  line-height: 1.6em;
+  text-align: left;
+  font-weight: @light;
+  font-size: @font-size-large;
+  line-height: @line-height-large;
 }
 
-.marketing-points .point-icon {
-  font-size: 4em;
+.marketing-points img {
+  margin-bottom: 20px;
 }

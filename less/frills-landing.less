@@ -1,0 +1,48 @@
+////////////////////
+// Landing Frills //
+////////////////////
+
+header {
+  -webkit-animation: ease-in-out 0.6s slide-in-from-top;
+}
+
+#intro {
+  -webkit-animation: ease-out 0.6s slide-bg;
+
+  h1, h1 + p {
+    -webkit-animation: ease-out 2.4s fade-in;
+  }
+
+  .screenshot-window {
+    -webkit-animation: ease-in-out 0.6s slide-in-from-left;
+  }
+
+  .register-panel {
+    -webkit-animation: ease-in-out 0.6s slide-in-from-right;
+  }
+}
+
+@-webkit-keyframes fade-in {
+  from { .opacity(0) }
+  to { .opacity(1) }
+}
+
+@-webkit-keyframes slide-in-from-top {
+  from { .translate( 0, -80px ); .opacity(0); }
+  to { .translate( 0, 0 ); .opacity(1); }
+}
+
+@-webkit-keyframes slide-in-from-left {
+  from { .translate( -500px, 0 ); .opacity(0); }
+  to { .translate( 0, 0 ); .opacity(1); }
+}
+
+@-webkit-keyframes slide-in-from-right {
+  from { .translate( 500px, 0 ); .opacity(0); }
+  to { .translate( 0, 0 ); .opacity(1); }
+}
+
+@-webkit-keyframes slide-bg {
+  from { background-position-x: 10%; }
+  to { background-position-x: 25%; }
+}

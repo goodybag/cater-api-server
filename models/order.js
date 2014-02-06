@@ -432,7 +432,7 @@ module.exports = Model.extend({
     query.with = query.with || [];
 
     // distinct should have the same columns used in order by
-    query.distinct = query.distinct || this.stripColumnOrder(query.order);
+    query.distinct = query.distinct || this.stripColumn(query.order);
 
     // making datetime a string on purpose so that the server timezone isn't
     // applied to it when it is pulled out (there is no ofset set on this
@@ -915,17 +915,17 @@ module.exports = Model.extend({
     module.exports.find.call( this, query, callback );
   },
 
-
   /**
-   * Used to strip ASC or DESC off columns
+   * Strip off modifiers like ASC, DESC, NULLS FIRST, NULLS LAST 
+   * off columns
    * 
    * @param {array|string} columns - A list or string of column names 
-   * @returns {array} List of columns without ASC or DESC
+   * @returns {array} List of columns without modifiers
    */
-  stripColumnOrder: function(columns) {
+  stripColumn: function(columns) {
     if(typeof columns ==='string') columns = [columns];
     return columns.map(function(column) { 
-      return column.toLowerCase().replace(/asc|desc/g, '').trim();
+      return column.trim().split(' ')[0];
     });
   },
 

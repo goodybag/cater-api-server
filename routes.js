@@ -25,7 +25,6 @@ module.exports.register = function(app) {
    */
 
   app.get('/restaurants',
-    m.restrict(['client', 'restaurant', 'admin']),
     function(req, res, next) {
       if (req.query.edit) return next();
       controllers.restaurants.list.apply(this, arguments);

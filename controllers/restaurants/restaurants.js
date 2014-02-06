@@ -35,7 +35,10 @@ module.exports.list = function(req, res) {
     },
 
     function(callback) {
-      models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
+      if (req.session.user) 
+        return models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
+
+      return callback(null);
     }
   ];
 

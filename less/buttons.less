@@ -14,24 +14,35 @@
   @btn-padding-bottom-large
   @btn-padding-left-large;
 
+@btn-padding-small:
+  @btn-padding-top-small
+  @btn-padding-right-small
+  @btn-padding-bottom-small
+  @btn-padding-left-small;
+
 .btn {
   display: inline-block;
   border: none;
   border-style: solid;
-  border-width: @btn-border-width-base;
+  border-width: 0;
+  border-bottom-width: @btn-border-width-base + 1;
   border-radius: @btn-border-radius-base;
   background: transparent;
   padding: @btn-padding-base;
-  font-family: @btn-font-family;
   font-size: @btn-font-size;
   line-height: @line-height-small;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-weight: @semibold;
   text-decoration: none;
   letter-spacing: 0.4px;
 
   &:hover {
     text-decoration: none;
+  }
+
+  &:active {
+    border-bottom-width: @btn-border-width-base;
+    margin-top: 1px;
+    outline-width: 0;
   }
 }
 
@@ -39,8 +50,7 @@
   font-size: @btn-large-font-size;
   line-height: @line-height-base;
   padding: @btn-padding-large;
-  border-width: @btn-border-width-large;
-  letter-spacing: 1.3px;
+  font-weight: @light;
 }
 
 // button with icon
@@ -74,7 +84,10 @@
 }
 
 .btn-default {
-  .brand-btn( transparent, @gray-light, 1 );
+  .brand-btn( @white );
+  border-width: @btn-border-width-base;
+  border-bottom-width: @btn-border-width-base + 1;
+  color: @color-base;
 }
 
 .btn-primary {

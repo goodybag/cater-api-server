@@ -2,13 +2,20 @@
 // Window Pane //
 /////////////////
 
-@wp-header-height: 60px;
-@wp-btn-size: 20px;
+@wp-header-bg: #E8E8E8;
+@wp-header-height: 34px;
+@wp-btn-size: 14px;
+@wp-border-color: #C3C1B5;
 
 .window-pane {
-  border: solid 1px @gray-lighter;
-  border-radius: 3px;
+  border: solid 1px @wp-border-color;
+  border-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   background-color: @white;
+  text-align: left;
+  font-size: 0;
+  line-height: 0;
 }
 
 .window-pane + .window-pane {
@@ -16,9 +23,12 @@
 }
 
 .window-pane .window-header {
+  background: @wp-header-bg;
   padding: (@wp-header-height - @wp-btn-size) / 2;
   padding-left: 20px;
   padding-right: 20px;
+  border-bottom: solid 1px @wp-border-color;
+  box-shadow: inset 0 1px 0 rgba( 255, 255, 255, 0.4 );
 }
 
 .window-pane .window-btn {
@@ -26,12 +36,20 @@
   vertical-align: middle;
   width: @wp-btn-size;
   height: @wp-btn-size;
-  border: solid 1px @gray-light;
   border-radius: @wp-btn-size * 2;
-  margin-left: 12px;
+  margin-left: 10px;
 
   &:first-child {
     margin-left: 0;
+    background: #EB7575;
+
+    & + .window-btn {
+      background: #EED171;
+
+      & + .window-btn {
+        background: #63CB79;
+      }
+    }
   }
 }
 

@@ -5,13 +5,13 @@
 // Colors
 ////////////////////////////////////////////////////
 @white:                     #fff;
-@gray:                      #606D70;
+@gray:                      #B7B6AD;
 @gray-light:                lighten( @gray, 10% );
 @gray-lighter:              lighten( @gray, 30% );
 @gray-dark:                 darken( @gray, 10% );
 @gray-darker:               darken( @gray, 20% );
 
-@brand-primary:             #DC0500;
+@brand-primary:             #dc0000;
 @brand-secondary:           #FBF8E7;
 @brand-tertiary:            #0039a1;
 @brand-quaternary:          #432012;
@@ -20,6 +20,13 @@
 
 @body-bg-color:             @white;
 
+// Font Weight Constants
+////////////////////////////////////////////////////
+@light:                     300;
+@regular:                   500;
+@semibold:                  700;
+@bold:                      900;
+
 // Type
 ////////////////////////////////////////////////////
 @font-family-serif:         Georgia, serif;
@@ -27,43 +34,67 @@
 @font-family-monospace:     monospace;
 
 @font-family-base:          @font-family-sans-serif;
-@font-weight-base:          300;
+@font-weight-base:          @regular;
 @font-size-base:            14px;
-@font-size-small:           @font-size-base - 1;
-@font-size-large:           @font-size-base + 4;
-@line-height-base:          24px;
+@font-size-small:           @font-size-base - 3;
+@font-size-large:           @font-size-base + 2;
+@line-height-base:          16px;
 @line-height-large:         @line-height-base + 4;
 @line-height-small:         @line-height-base - 2;
-@color-base:                @gray;
+@color-base:                @brand-quaternary;
 @letter-spacing-base:       0;
+
 
 // Grid
 ////////////////////////////////////////////////////
+@container-width:           974px;
 @columns:                   12;
-@column-width:              80px;
-@gutter-width:              20px;
-@container-width: (@columns * @column-width + ( (@columns - 1) * @gutter-width ));
+@gutter-width:              35px;
+@column-width: ( @container-width - ( @gutter-width * (@columns - 1) ) ) / @columns;
 
 // Buttons
 ////////////////////////////////////////////////////
-@btn-font-family:           @font-family-serif;
-@btn-font-size:             @font-size-base - 5;
-@btn-large-font-size:       @font-size-base - 1;
+@btn-font-family:               @font-family-serif;
+@btn-font-size:                 @font-size-base;
+@btn-large-font-size:           @font-size-large;
 
-@btn-padding-top-base:      8px;
-@btn-padding-right-base:    16px;
-@btn-padding-bottom-base:   @btn-padding-top-base - 1;
-@btn-padding-left-base:     @btn-padding-right-base;
+@btn-padding-top-base:          11px;
+@btn-padding-right-base:        18px;
+@btn-padding-bottom-base:       @btn-padding-top-base - 1;
+@btn-padding-left-base:         @btn-padding-right-base;
 
-@btn-padding-top-large:     15px;
-@btn-padding-right-large:   26px;
-@btn-padding-bottom-large:  @btn-padding-top-large - 2;
-@btn-padding-left-large:    @btn-padding-right-large;
+@btn-padding-top-small:         7px;
+@btn-padding-right-small:       18px;
+@btn-padding-bottom-small:      @btn-padding-top-small - 1;
+@btn-padding-left-small:        @btn-padding-right-small;
 
-@btn-border-width-base:     3px;
-@btn-border-width-large:    4px;
+@btn-padding-top-large:         14px;
+@btn-padding-right-large:       22px;
+@btn-padding-bottom-large:      @btn-padding-top-large - 2;
+@btn-padding-left-large:        @btn-padding-right-large;
 
-@btn-border-radius-base:    3px;
+@btn-border-width-base:         1px;
+
+@btn-border-radius-base:        3px;
+
+
+// Forms
+////////////////////////////////////////////////////
+@input-font-size:               @btn-font-size;
+@input-width:                   154px;
+@input-border-radius:           @btn-border-radius-base;
+@input-border-color:            @gray;
+@input-border-width:            1px;
+
+@input-padding-top-base:        @btn-padding-top-base;
+@input-padding-right-base:      12px;
+@input-padding-bottom-base:     @input-padding-top-base - 1;
+@input-padding-left-base:       @input-padding-right-base;
+
+@input-padding-top-small:       @btn-padding-top-small;
+@input-padding-right-small:     12px;
+@input-padding-bottom-small:    @input-padding-top-small - 1;
+@input-padding-left-small:      @input-padding-right-small;
 
 // Z-Indexes
 ////////////////////////////////////////////////////
@@ -93,10 +124,10 @@
 
 // Hero Unit
 ///////////////////////////////////////////////////
-@herounit-bg:             @brand-primary;
-@herounit-color:          @white;
-@herounit-font-size:      2.8em;
-@herounit-line-height:    2.8em;
+@herounit-bg:               url('../img/landing-hero-unit-bg.jpg');
+@herounit-color:            @color-base;
+// @herounit-font-size:      1em;
+// @herounit-line-height:    1em;
 
 // Page Sections
 ///////////////////////////////////////////////////

@@ -1,0 +1,73 @@
+///////////
+// Forms //
+///////////
+
+@input-padding-base:
+  @input-padding-top-base
+  @input-padding-right-base
+  @input-padding-bottom-base
+  @input-padding-left-base;
+
+@input-padding-small:
+  @input-padding-top-small
+  @input-padding-right-small
+  @input-padding-bottom-small
+  @input-padding-left-small;
+
+@btn-padding-small:
+  @btn-padding-top-small
+  @btn-padding-right-small
+  @btn-padding-bottom-small
+  @btn-padding-left-small;
+
+label {
+  display: block;
+  font-weight: @semibold;
+  font-size: @font-size-small + 1;
+}
+
+input, textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: @input-border-radius;
+  border: solid @input-border-color @input-border-width;
+  padding: @input-padding-base;
+  line-height: @line-height-small;
+  font-size: @input-font-size;
+}
+
+form:not(.form-vertical) .form-group {
+  display: inline-block;
+  width: @input-width;
+  margin-left: @gutter-width / 4;
+
+  &.form-group-submit {
+    width: auto;
+  }
+
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+.form-small {
+  input, textarea {
+    padding: @input-padding-small;
+  }
+
+  label {
+    font-size: @font-size-small;
+  }
+
+  button {
+    padding: @btn-padding-small;
+  }
+}
+.form-vertical .form-group {
+  margin-top: 14px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}

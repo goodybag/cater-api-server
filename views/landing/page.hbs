@@ -1,9 +1,77 @@
 {{#extend "body"}}
+<!--<Navbar>-->
 <header class="navbar collapsed">
   <div class="container">
     <a href="/">
       <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
     </a>
+
+    <form class="login-form form-small" action="POST" method="/auth">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" name="email" id="login-email">
+      </div>
+
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" name="password" id="login-password">
+      </div>
+
+      <div class="form-group form-group-submit">
+        <button class="btn btn-default">Sign In</button>
+      </div>
+    </form>
   </div>
 </header>
+<!--</Navbar>-->
+
+<!--<HeroUnit>-->
+<div class="hero-unit">
+  <div class="container">
+    <h1>Office catering made easy.</h1>
+    <p>Easily search restaurants and find food to feed your meetings.</p>
+
+    <div class="hero-unit-marketing-area">
+      <div class="screenshot-wrapper">
+        <!--<WindowPane>-->
+        <div class="window-pane">
+          <div class="window-header">
+            <i class="window-btn"></i>
+            <i class="window-btn"></i>
+            <i class="window-btn"></i>
+          </div>
+          <img src="/img/product-screen-1.jpg" alt="Goodybag restaurants list">
+        </div>
+        <!--<WindowPane>-->
+      </div>
+
+      <div class="register-wrapper">
+        <div class="panel">
+          <h3 class="panel-header">Get your free account</h3>
+          <form class="register-form form-vertical" action="POST" method="/register">
+            <div class="form-group">
+              <label for="register-email">Email</label>
+              <input type="email" name="email" id="register-email">
+            </div>
+
+            <div class="form-group">
+              <label for="register-password">Password</label>
+              <input type="password" name="password" id="register-password">
+            </div>
+
+            <div class="form-group">
+              <label for="register-confirm-password">Confirm password</label>
+              <input type="password" name="password2" id="register-confirm-password">
+            </div>
+
+            <div class="form-group form-group-submit">
+              <button class="btn btn-primary btn-submit btn-large">Start using Goodybag</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--</HeroUnit>-->
 {{/extend}}

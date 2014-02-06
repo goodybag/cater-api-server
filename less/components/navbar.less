@@ -12,7 +12,7 @@
 
 // Make sure the logo is properly sized and balanced
 @logo-padding-height: @navbar-height - @navbar-logo-size;
-@logo-padding-offset: 1px;
+@logo-padding-offset: 2px;
 @logo-padding-top: (@logo-padding-height / 2) + @logo-padding-offset;
 @logo-padding-bottom: (@logo-padding-height / 2) - @logo-padding-offset;
 
@@ -35,9 +35,7 @@ body {
 
   color:          @navbar-color;
 
-  box-shadow:
-    0  1px  1px  rgba( 0, 0, 0 , 0.35 ),
-    inset 0 -1px 0 rgba( 0, 0, 0, 0.08 );
+  box-shadow:     0 1px 1px rgba( 0, 0, 0 , 0.25 );
 
   // Otherwise chrome leaves trails
   -webkit-backface-visibility: hidden;
@@ -60,6 +58,11 @@ body {
   & when ( @logo-padding-bottom > 0 ){
     padding-bottom: @logo-padding-bottom;
   }
+}
+
+.navbar .login-form {
+  float: right;
+  margin-top: 2px;
 }
 
 .navbar .nav {

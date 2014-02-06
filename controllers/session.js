@@ -22,7 +22,9 @@ module.exports.create = function(req, res) {
 
     req.setSession( user );
 
-    return res.redirect(req.query.next || '/');
+    var redirect_to = req.session.redirect_to;
+    delete req.session.redirect_to;
+    return res.redirect(redirect_to || req.query.next || '/');
   });
 }
 

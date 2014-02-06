@@ -6,6 +6,8 @@ module.exports.index = function(req, res) {
   if (req.session && req.session.user && req.session.user.id != null)
     return res.redirect(req.query.next || '/restaurants');
 
+  req.session.redirect_to = req.headers.referer;
+
   var query = '?' + utils.invoke(utils.pairs(req.query), 'join', '=').join('&');
   res.render('auth', {query: query}, function(error, html) {
     if (error) return res.status(500).render('500');
@@ -38,6 +40,6 @@ module.exports.signup = function( req, res ){
 
     req.setSession( user.toJSON() );
 
-    res.redirect('/restaurants');
+    res.redirect(req.session.redirect_to || '/restaurants');
   });
 };

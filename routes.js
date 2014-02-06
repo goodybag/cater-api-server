@@ -584,4 +584,9 @@ module.exports.register = function(app) {
   );
 
   app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
+
+
+  app.get('/test', function(req, res) {
+    res.render('test');
+  });
 }

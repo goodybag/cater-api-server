@@ -45,6 +45,13 @@ define(function(require, exports, module) {
     submit: function(e) {
       e.preventDefault();
       var this_ = this;
+
+      if (this.options.loginNeeded) {
+        this.$el.find('.login-needed-modal').modal('show');
+
+        return;
+      }
+
       if ( !this.options.orderModel.isFulfillableOrder() ) {
         return this.options.orderModal.show({
           success: function(model, response, options) {

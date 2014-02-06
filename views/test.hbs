@@ -1,0 +1,12 @@
+{{> login_modal }}
+{{#extend "scripts"}}
+<script>
+  require([
+      'jquery'
+    ]
+  , function($) {
+
+    $('.modal').modal('show');
+  });
+</script>
+{{/extend}}

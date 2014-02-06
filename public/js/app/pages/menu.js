@@ -47,6 +47,7 @@ define( function( require ){
       , orderItems: orderModel.orderItems
       , orderModel: orderModel
       , orderModal: orderModal
+      , loginNeeded:!user.get('id')
       });
 
       var restaurantMapView = new Views.RestaurantMap({

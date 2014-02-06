@@ -15,8 +15,8 @@ var m = utils.extend({
 
 module.exports.register = function(app) {
 
-  app.get('/', m.restrict(['client', 'restaurant', 'admin']), function(req, res) {
-    if (utils.contains(req.user.attributes.groups, 'restaurant')) return res.redirect('/restaurants/manage');
+  app.get('/', function(req, res) {
+    if (req.user && utils.contains(req.user.attributes.groups, 'restaurant')) return res.redirect('/restaurants/manage');
     return res.redirect('/restaurants');
   });
 

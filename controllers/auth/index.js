@@ -7,9 +7,10 @@ module.exports.index = function(req, res) {
     return res.redirect(req.query.next || '/restaurants');
 
   var query = '?' + utils.invoke(utils.pairs(req.query), 'join', '=').join('&');
-  res.render('auth', {query: query}, function(error, html) {
-    if (error) return res.status(500).render('500');
-    return res.send(html);
+
+  res.render('landing/page', {
+    query: query
+  , layout: 'landing/layout'
   });
 };
 

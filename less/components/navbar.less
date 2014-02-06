@@ -1,0 +1,208 @@
+////////////
+// Navbar //
+////////////
+
+@navbar-mobile-height: @navbar-height * @navbar-mobile-factor;
+
+// Make the padding-top a little greater than the bottom for
+// a more "balanced" feeel
+@anchor-padding-offset: 2px;
+@anchor-padding-top: (@navbar-height / 2) + @anchor-padding-offset;
+@anchor-padding-bottom: (@navbar-height / 2) - @anchor-padding-offset;
+
+// Make sure the logo is properly sized and balanced
+@logo-padding-height: @navbar-height - @navbar-logo-size;
+@logo-padding-offset: 1px;
+@logo-padding-top: (@logo-padding-height / 2) + @logo-padding-offset;
+@logo-padding-bottom: (@logo-padding-height / 2) - @logo-padding-offset;
+
+body {
+  // -1 because some browsers are rendering artifacts
+  // at that pixel border
+  padding-top: @navbar-height - 1;
+}
+
+.navbar {
+  position:       fixed;
+  top:            0;
+  width:          100%;
+
+  // Specify min-height in case there are no nav anchors
+  min-height:     @navbar-height;
+
+  background:     @navbar-bg-color;
+  z-index:        @navbar-zindex;
+
+  color:          @navbar-color;
+
+  box-shadow:
+    0  1px  1px  rgba( 0, 0, 0 , 0.35 ),
+    inset 0 -1px 0 rgba( 0, 0, 0, 0.08 );
+
+  // Otherwise chrome leaves trails
+  -webkit-backface-visibility: hidden;
+}
+
+.navbar-logo {
+  float: left;
+  // Make the logo conform to navbar size
+  height: 100%;
+  max-height: @navbar-height;
+  font-family: @font-family-serif;
+  font-size: @navbar-logo-size;
+  line-height: @navbar-height;
+  color: @white;
+
+  & when ( @logo-padding-top > 0 ){
+    padding-top: @logo-padding-top;
+  }
+
+  & when ( @logo-padding-bottom > 0 ){
+    padding-bottom: @logo-padding-bottom;
+  }
+}
+
+.navbar .nav {
+  float: right;
+  .transition( 0.5s, ease-in-out );
+  .transition-property-transform();
+  .translate( 0, 0 );
+}
+
+.navbar .nav a {
+  margin-left: 0;
+  margin-right: 0;
+  padding: @anchor-padding-top 20px @anchor-padding-bottom;
+  color: @navbar-color;
+
+  .transition( 0.2s, ease-in-out );
+  .transition-property( padding );
+}
+
+.navbar .nav a:hover,
+.navbar .nav .active a {
+  text-decoration: none;
+  background: lighten( @navbar-bg-color, 5% );
+}
+
+// Once the container relies on width: 100% add standard padding
+@media (max-width: @container-width) {
+  .navbar .container {
+    .standard-padding();
+  }
+}
+
+// Make the navbar not so tall on mobile
+// Adjust breakpoint to account for nav items
+@media screen and (max-width: (@breakpoint-tablet)) {
+  @anchor-padding-top: (@navbar-mobile-height / 2) + @anchor-padding-offset;
+  @anchor-padding-bottom: (@navbar-mobile-height / 2) - @anchor-padding-offset;
+
+  body {
+    // -1 because some browsers are rendering artifacts
+    // at that pixel border
+    padding-top: @navbar-mobile-height - 1;
+  }
+
+  .navbar .container {
+    .standard-padding();
+  }
+
+  .navbar {
+    min-height: @navbar-mobile-height;
+    padding-bottom: 16px;
+  }
+
+  .navbar:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: #1A1919;
+    left: 0;
+    top: @navbar-mobile-height + 2;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .navbar.collapsed {
+    padding-bottom: 0;
+  }
+
+  .navbar.collapsed:before {
+    display: none;
+  }
+
+  .navbar .navbar-logo {
+    max-width: 98px;
+    max-height: @navbar-mobile-height;
+    font-size: @navbar-logo-size / 2;
+    line-height: @navbar-mobile-height;
+
+    & when ( @logo-padding-top > 0 ){
+      padding-top: @logo-padding-top * @navbar-mobile-factor;
+    }
+
+    & when ( @logo-padding-bottom > 0 ){
+      padding-bottom: @logo-padding-bottom * @navbar-mobile-factor;
+    }
+  }
+
+  .navbar .nav {
+    position: relative;
+    // width: 100%;
+    height: auto;
+    text-align: right;
+  }
+
+  .navbar.collapsed .nav {
+    height: @navbar-mobile-height;
+    overflow: hidden;
+  }
+
+  .navbar .nav:before {
+    .icon-font();
+    content: "\f0c9";
+    display: inline-block;
+    margin-top: (@navbar-mobile-height / 2) - 12;
+    margin-bottom: @navbar-mobile-height / 2;
+    padding: 12px 5px 10px;
+    border-radius: 3px;
+    border: solid 1px rgba( 0, 0, 0, 0.3 );
+    box-shadow: none;
+    text-shadow: 0 -1px 0 rgba( 0, 0, 0, 0.4 );
+    font-size: 18px;
+    line-height: 0;
+  }
+
+  .navbar.collapsed .nav:before {
+    border: solid 1px rgba( 0, 0, 0, 0.3 );
+    box-shadow: 0 1px 0 rgba( 255, 255, 255, 0.06 ),
+      inset 0 1px 0 rgba( 255, 255, 255, 0.03 );
+  }
+
+  .navbar.collapsed .nav:hover:before {
+    background-color: rgba( 255, 255, 255, 0.01 );
+    box-shadow: 0 1px 0 rgba( 255, 255, 255, 0.06 ),
+      inset 0 1px 0 rgba( 255, 255, 255, 0.06 );
+  }
+
+  .navbar .nav:hover {
+    cursor: pointer;
+    color: darken( #fff, 10% );
+  }
+
+  .navbar .nav li {
+    display: block;
+    text-align: right;
+    margin-right: 0 - (@gutter-width / 2);
+  }
+
+  .navbar .nav li:first-child {
+    margin-top: 20px;
+  }
+
+  .navbar .nav a {
+    display: block;
+    padding: @anchor-padding-top (@gutter-width / 2) @anchor-padding-bottom;
+  }
+}

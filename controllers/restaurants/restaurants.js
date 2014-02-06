@@ -78,8 +78,8 @@ module.exports.get = function(req, res) {
 
   var orderParams = req.query || {};
 
-  var tasks = [
-    function(callback) {
+  var tasks = {
+    order: function(callback) {
       if (!req.session.user) return callback(null, null);
       var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'orders.status': 'pending'};
       models.Order.findOne({where: where}, function(err, order) {
@@ -99,7 +99,7 @@ module.exports.get = function(req, res) {
       });
     },
 
-    function(callback) {
+    restaurant: function(callback) {
       var query = {
         where: {
           id: parseInt(req.params.rid)
@@ -116,10 +116,13 @@ module.exports.get = function(req, res) {
       });
     },
 
-    function(callback) {
-      models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
+    defaultAddress: function(callback) {
+      if (req.session.user)
+        return models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
+
+      callback(null);
     }
-  ];
+  };
 
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
@@ -127,9 +130,9 @@ module.exports.get = function(req, res) {
     var orderParams = req.query || {};
 
     var context = {
-      order:            results[0] ? results[0].toJSON() : null,
-      restaurant:       results[1] ? results[1].toJSON() : null,
-      defaultAddress:   results[2] ? results[2].toJSON() : null,
+      order:            results.order ? results.order.toJSON() : null,
+      restaurant:       results.restaurant ? results.restaurant.toJSON() : null,
+      defaultAddress:   results.defaultAddress ? results.defaultAddress.toJSON() : null,
       orderParams:      orderParams
     }
 

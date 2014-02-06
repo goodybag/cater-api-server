@@ -46,9 +46,9 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
-  app.get('/restaurants/:rid', m.restrict(['client', 'admin']), controllers.restaurants.orders.current);  // individual restaurant needs current order.
+  app.get('/restaurants/:rid', controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
-  app.get('/restaurants/:rid', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.get('/restaurants/:rid', function(req, res, next) {
     if (req.query.edit) return next();
     controllers.restaurants.get.apply(this, arguments);
   });

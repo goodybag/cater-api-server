@@ -193,9 +193,13 @@
     </script>
     {{/if}}
 
-    {{#if user}}
+    {{#if user.id}}
     <script type="text/javascript">
+      {{#if session.oldUser}}
+      analytics.identify({{session.oldUser.id}}, {{{json session.oldUser}}});
+      {{else}}
       analytics.identify({{user.id}}, {{{json user}}});
+      {{/if}}
     </script>
     {{/if}}
 

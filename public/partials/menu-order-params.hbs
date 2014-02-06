@@ -1,5 +1,5 @@
+{{#with order}}
 <div class="panel menu-order-params">
-  {{#with order}}
   <div class="panel-body">
     <div class="panel-title">Your order is for:</div>
     <dl>
@@ -13,5 +13,5 @@
       <dd>{{#if guests}}{{guests}}{{else}}--{{/if}}<a class="btn-change-order-params pull-right" href="#">Change</a></dd>
     </dl>
   </div>
-  {{/with}}
 </div>
+{{/with}}

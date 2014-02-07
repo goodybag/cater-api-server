@@ -1,0 +1,33 @@
+/**
+ * Form fields with flushed borders
+ */
+.login-modal .form-control:first-child {
+  margin-bottom: -1px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.login-modal .form-control:last-child {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.login-modal .form-control:not(:first-child):not(:last-child) {
+  border-radius: 0;
+  margin-bottom: -1px;
+}
+
+.login-modal .form-login,
+.login-modal .form-sign-up {
+  margin-top: 20px;
+}
+
+.login-modal .modal-body {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.login-modal .modal-title {
+  font-size: 30px;
+}

@@ -6,7 +6,7 @@ var logger = require('../logger');
 var venter = require('../lib/venter');
 
 var db = require('../db');
-var queryHelpers = require('../db/query-helpers');
+var queryTransform = require('../db/query-transform');
 var Model = require('./model');
 var queries = require('../db/queries');
 var Restaurant = require('./restaurant');
@@ -433,7 +433,7 @@ module.exports = Model.extend({
     query.with = query.with || [];
 
     // distinct should have the same columns used in order by
-    query.distinct = query.distinct || queryHelpers.stripColumn(query.order);
+    query.distinct = query.distinct || queryTransform.stripColumn(query.order);
 
     // making datetime a string on purpose so that the server timezone isn't
     // applied to it when it is pulled out (there is no ofset set on this

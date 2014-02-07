@@ -47,9 +47,7 @@ define(function(require, exports, module) {
       var this_ = this;
 
       if (this.options.loginNeeded) {
-        this.$el.find('.login-needed-modal').modal('show');
-
-        return;
+        return this.options.loginModal.$el.modal('show');
       }
 
       if ( !this.options.orderModel.isFulfillableOrder() ) {

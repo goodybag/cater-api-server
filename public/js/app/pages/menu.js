@@ -13,6 +13,7 @@ define( function( require ){
   , RestaurantMap:      require('app/views/restaurant-map-view')
   , MenuOrderParams:    require('app/views/menu-order-params-view')
   , Menu:               require('app/views/menu-view')
+  , Auth:               require('app/views/auth-view')
   };
 
   var page = {
@@ -26,6 +27,10 @@ define( function( require ){
       page.view = new Views.Menu({
         el:     '#menu'
       , model:  restaurant
+      });
+
+      var loginModal = new Views.Auth({
+        el: '.login-modal'
       });
 
       var paramsView = new Views.OrderParams({
@@ -43,11 +48,12 @@ define( function( require ){
       });
 
       var itemModalView = new Views.ItemModal({
-        el:         '#item-modal'
-      , orderItems: orderModel.orderItems
-      , orderModel: orderModel
-      , orderModal: orderModal
-      , loginNeeded:!user.get('id')
+        el:             '#item-modal'
+      , orderItems:     orderModel.orderItems
+      , orderModel:     orderModel
+      , orderModal:     orderModal
+      , loginNeeded:    !user.get('id')
+      , loginModal:     loginModal
       });
 
       var restaurantMapView = new Views.RestaurantMap({

@@ -18,8 +18,8 @@
   margin-bottom: -1px;
 }
 
-.login-modal .form-login,
-.login-modal .form-sign-up {
+.login-modal .login-form,
+.login-modal .sign-up-form {
   margin-top: 20px;
 }
 

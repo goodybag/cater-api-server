@@ -14,8 +14,8 @@ define( function( require ){
       if (typeof history === 'object' && 'pushState' in history)
         history.pushState(null, null, location.pathname);
       
-      var query = window.location.search ? _.object(_.map(window.location.search.substring(1).split('&'), function(obj) { return obj.split('='); })) : {};
-      
+      var query = utils.parseQueryParams();
+
       var view = new Views.OrderView({
         el: $('#main')
       , model: order

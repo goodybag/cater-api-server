@@ -2,8 +2,10 @@
 // Speech Boxes //
 //////////////////
 
-.speech-boxes {
+@triangle-height: 48px;
 
+.speech-boxes {
+  padding-bottom: @triangle-height;
 }
 
 .speech-boxes > .box {
@@ -16,9 +18,9 @@
     content: "";
     position: absolute;
     left: 46px;
-    bottom: -48px;
+    bottom: -@triangle-height;
     width: 66px;
-    height: 48px;
+    height: @triangle-height;
     background: url('../img/speech-box-triangle-left.png');
   }
 

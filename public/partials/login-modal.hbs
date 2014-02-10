@@ -9,7 +9,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="/auth" class="login-form">
+        <form method="POST" action="/auth" class="login-form top-form">
           <h2 class="modal-title">Login</h2>
           <div>
             <input type="email" name="email" class="form-control" placeholder="Enter email">
@@ -18,7 +18,15 @@
           <button type="submit" class="btn btn-primary btn-block">Login</button>
         </form>
 
-        <form method="POST" action="/auth/signup" class="sign-up-form">
+        <form method="POST" action="/auth" class="forgot-password top-form hide">
+          <h2 class="modal-title">Forgot Password?</h2>
+          <div>
+            <input type="email" name="email" class="form-control" placeholder="Enter email">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Reset Password</button>
+        </form>
+
+        <form method="POST" action="/auth/signup" class="sign-up-form top-form">
         <h2 class="modal-title">Sign up</h2>
         <div>
             <input type="email" class="form-control" name="email" placeholder="Enter email">
@@ -29,7 +37,8 @@
         </form>
       </div>
       <div class="modal-footer">
-        <a href="#">Forgot password?</a>
+        <button class="btn btn-link top-form-toggle top-form">Forgot password?</a>
+        <button class="btn btn-link top-form-toggle top-form hide">Back</a>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

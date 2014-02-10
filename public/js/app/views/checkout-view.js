@@ -174,6 +174,7 @@ define(function(require, exports, module) {
         if (err) return notify.error(err); // TODO: error handling
         self.model.changeStatus('submitted', true, function(err, data) {
           if (err) return notify.error(err); // TODO: error handling
+          analytics.track('Order Submitted');
           window.location.reload();
         });
       });

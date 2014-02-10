@@ -40,10 +40,17 @@
 
   .screenshot-window {
     #grid > .column(8);
+    border-bottom: none;
   }
 
   .check-points {
     #grid > .column(4);
     text-align: left;
+  }
+
+  .check-points > li:last-child {
+    // Ensure that we don't get some funky extra spacing at the bottom
+    // of the page-section
+    margin-bottom: 0;
   }
 }

@@ -17,7 +17,6 @@
 @brand-quaternary:          #432012;
 
 @off-gray:                  desaturate( @brand-secondary, 70% );
-
 @body-bg-color:             @white;
 
 // Font Weight Constants
@@ -26,6 +25,10 @@
 @regular:                   500;
 @semibold:                  700;
 @bold:                      900;
+
+// Base Values
+////////////////////////////////////////////////////
+@border-radius-base:        4px;
 
 // Type
 ////////////////////////////////////////////////////
@@ -43,7 +46,7 @@
 @line-height-small:         @line-height-base - 2;
 @color-base:                @brand-quaternary;
 @letter-spacing-base:       0;
-
+@anchor-color:              @brand-tertiary;
 
 // Grid
 ////////////////////////////////////////////////////
@@ -63,8 +66,8 @@
 @btn-padding-bottom-base:       @btn-padding-top-base - 1;
 @btn-padding-left-base:         @btn-padding-right-base;
 
-@btn-padding-top-small:         7px;
-@btn-padding-right-small:       18px;
+@btn-padding-top-small:         8px;
+@btn-padding-right-small:       22px;
 @btn-padding-bottom-small:      @btn-padding-top-small - 1;
 @btn-padding-left-small:        @btn-padding-right-small;
 
@@ -75,7 +78,7 @@
 
 @btn-border-width-base:         1px;
 
-@btn-border-radius-base:        3px;
+@btn-border-radius-base:        @border-radius-base;
 
 
 // Forms

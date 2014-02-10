@@ -52,16 +52,20 @@ form:not(.form-vertical) .form-group {
 }
 
 .form-small {
+  .typography('small');
+
   input, textarea {
     padding: @input-padding-small;
+    line-height: @line-height-small;
   }
 
   label {
-    font-size: @font-size-small;
+    .typography('small');
   }
 
   button {
     padding: @btn-padding-small;
+    line-height: @line-height-small;
   }
 }
 .form-vertical .form-group {

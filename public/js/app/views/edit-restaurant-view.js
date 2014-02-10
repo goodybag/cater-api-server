@@ -114,7 +114,7 @@ define(function(require, exports, module) {
       },
 
       display_phone: function() {
-        return this.$el.find(this.fieldMap.display_phone).val().replace(/[^\d]/g, '');
+        return this.$el.find(this.fieldMap.display_phone).val().replace(/[^\d]/g, '') || null;
       },
 
       emails:  function() {

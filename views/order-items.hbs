@@ -187,6 +187,8 @@
     , 'app/views/order-item-view'
     ]
   , function($, Handlebars, Order, OrderView, OrderItemView) {
+
+      // TODO: Replace with page.init()
       if (typeof history === 'object' && 'pushState' in history) history.pushState(null, null, location.pathname);
       var query = window.location.search ? _.object(_.map(window.location.search.substring(1).split('&'), function(obj) { return obj.split('='); })) : {};
       var view = new OrderView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
@@ -196,6 +198,8 @@
         {{/each}}
       ];
       view.setItems(items);
+
+      analytics.page('Review Order');
     }
   );
 </script>

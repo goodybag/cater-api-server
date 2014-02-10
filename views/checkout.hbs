@@ -273,6 +273,7 @@
       , 'app/views/checkout-view'
       ]
   , function(User, Order, CheckoutView) {
+      // TODO: page.init()
       balanced.init('{{config.balanced.marketplaceUri}}');
 
       var user = new User({{{json user}}});
@@ -282,6 +283,8 @@
         model: new Order( {{{json order}}} ),
         user: user
       });
+
+      analytics.page('Checkout');
     }
   );
 </script>

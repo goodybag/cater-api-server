@@ -22,7 +22,8 @@ define( function( require ){
       var restaurant      = options.restaurant;
       var defaultAddress  = options.defaultAddress;
       var user            = options.user;
-
+      // console.log(restaurant);
+     analytics.page('Menu', {restaurant: restaurant.pick('name')});
       page.view = new Views.Menu({
         el:     '#menu'
       , model:  restaurant

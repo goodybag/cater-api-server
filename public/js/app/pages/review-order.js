@@ -11,9 +11,6 @@ define( function( require ){
       var order         = options.order;
       var orderItems    = options.orderItems;
 
-      if (typeof history === 'object' && 'pushState' in history)
-        history.pushState(null, null, location.pathname);
-      
       var query = utils.parseQueryParams();
 
       var view = new Views.OrderView({

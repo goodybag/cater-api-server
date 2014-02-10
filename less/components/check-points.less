@@ -1,0 +1,23 @@
+//////////////////
+// Check Points //
+//////////////////
+
+.check-points {
+  list-style-type: none;
+}
+
+.check-points > li {
+  margin-bottom: 64px;
+  font-size: 19px;
+  font-weight: @light;
+}
+
+.check-points > li:before {
+  content: "";
+  position: absolute;
+  left: -32px;
+  top: -5px;
+  width: 23px;
+  height: 25px;
+  background: @checkpoints-bullet-img;
+}

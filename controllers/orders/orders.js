@@ -114,6 +114,7 @@ module.exports.list = function(req, res) {
 // }
 
 module.exports.get = function(req, res) {
+  console.log('get');
   var tasks = [
     function(cb) {
       var query = {
@@ -168,8 +169,12 @@ module.exports.get = function(req, res) {
       && (req.query.review_token === order.attributes.review_token || req.order.isRestaurantManager)
     ;
 
-    user = user.toJSON();
-    user.addresses = utils.invoke(user.addresses, 'toJSON');
+    if ( isReview ) {
+      user = null;
+    } else {
+      user = user.toJSON();
+      user.addresses = utils.invoke(user.addresses, 'toJSON');
+    }
 
     utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
     var context = {
@@ -203,7 +208,7 @@ module.exports.get = function(req, res) {
     );
 
     // Embed the payment_method if we can
-    if (context.order.payment_method_id){
+    if (context.order.payment_method_id && !isReview){
       context.order.payment_method = utils.findWhere(
         context.user.payment_methods, { id: context.order.payment_method_id }
       );

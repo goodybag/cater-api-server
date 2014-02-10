@@ -2,63 +2,35 @@
 // Footer //
 ////////////
 
+@footer-disc-size: 4px;
+
 .footer {
-  height: @footer-height;
-  padding-top: 10px;
-  background-color: @footer-bg-color;
-  color: @footer-color;
+  padding-top: 60px;
+  padding-bottom: 80px;
+  text-align: center;
+}
 
-  @media screen and (max-width: @breakpoint-tablet){
-    & {
-      height: auto;
-      padding-top: 4px;
-      padding-bottom: 4px;
-    }
+.footer-nav li {
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    margin-top: -@footer-disc-size / 2;
+    width: @footer-disc-size;
+    height: @footer-disc-size;
+    border-radius: @footer-disc-size * 2;
+    background: @brand-tertiary;
+  }
+
+  &:first-child:before {
+    display: none;
   }
 }
 
-.footer .container {
-  .standard-padding();
-}
+.footer-nav a {
+  text-decoration: none;
 
-.footer .nav {
-  float: right;
-  margin-top: 20px;
-
-  @media screen and (max-width: @breakpoint-tablet){
-    & {
-      display: none;
-    }
-  }
-}
-
-.footer .nav a {
-  color: @footer-color;
-}
-
-.footer .nav .active a {
-  color: darken( lighten( @brand-secondary, 74% ), 12% );
-}
-
-.footer .copyright {
-  position: absolute;
-  right: 10px;
-  top: 48px;
-  font-size: 8px;
-  letter-spacing: 1.1px;
-  text-transform: uppercase;
-  color: darken( @footer-color, 30% );
-  color: rgba( 255, 255, 255, 0.7 );
-
-  @media screen and (max-width: @breakpoint-tablet){
-    & {
-      position: static;
-    }
-  }
-}
-
-@media screen and (max-width: @breakpoint-tablet){
-  .footer-logo {
-    max-height: @navbar-mobile-height;
+  &:hover {
+    text-decoration: underline;
   }
 }

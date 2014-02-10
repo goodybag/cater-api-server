@@ -36,7 +36,8 @@ module.exports = function(grunt) {
   , less: {
       compile: {
         files: {
-          "public/dist/landing.css": "less/core-landing.less"
+          "public/dist/landing.css":        "less/core-landing.less"
+        , "public/dist/landing-ielt9.css":  "less/ielt9-landing.less"
         }
       }
     }
@@ -93,5 +94,5 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'analyze',  ['complexity'] );
   grunt.registerTask( 'build',    ['less', 'concat', 'requirejs'] );
-  grunt.registerTask( 'default',  ['watch'] );
+  grunt.registerTask( 'default',  ['less', 'watch'] );
 };

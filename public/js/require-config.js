@@ -34,6 +34,7 @@
       // ui related stuff
     , {name: 'spin',              location: '../../components/spin.js',                   main: 'spin.js'}
     , {name: 'fullcalendar',      location: '../../components/fullcalendar',              main: 'fullcalendar.js'}
+    , {name: 'typeahead',         location: '../../components/typeahead.js/dist',              main: 'typeahead.bundle.js'}
 
       // templating related
     , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}

@@ -3,7 +3,9 @@
  */
 
 define(function(require, exports, module) {
-  var utils = require('utils');
+  var $               = require('jquery');
+  var utils           = require('utils');
+  var typeahead       = require('typeahead');
 
   return module.exports = Backbone.View.extend({
 

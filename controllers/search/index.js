@@ -1,9 +1,11 @@
 var utils = require('../../utils');
+var config = require('../../config');
 var models = require('../../models');
 var elasticsearch = require('elasticsearch');
+
 var client = new elasticsearch.Client({
   host: 'localhost:9200',
-  log: 'trace'
+  log: config.isDev ? 'trace' : false
 });
 
 /**

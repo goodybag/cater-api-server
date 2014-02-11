@@ -333,21 +333,6 @@
   background-color: #fff;
 }
 
-/**
- * Restaurant Search Bar
- */
-
-.restaurant-search-bar {
-  padding: 15px 18px;
-}
-
-.restaurant-search-bar .form-inline {
-  /* always center in container */
-  display: table;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 @media ( max-width: 768px ){
   .order-params-bar,
   .order-params-bar .form-inline {
@@ -384,6 +369,30 @@
     display: none!important;
   }
 }
+/**
+ * Restaurant Search Bar
+ */
+
+.restaurant-search-bar {
+  padding: 15px 18px;
+}
+
+.restaurant-search-bar .form-inline {
+  display: table;
+}
+
+.restaurant-search-bar .search-input {
+  -webkit-transition: width 2s;
+  transition: width .25s;
+  width: 200px;
+}
+
+.restaurant-search-bar .search-input:focus {
+  -webkit-transition: width 2s;
+  transition: width .25s;
+  width: 300px;
+}
+
 
 /**
  * Buttons

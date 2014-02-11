@@ -11,6 +11,7 @@ var Models  = require('../../../models');
 var utils   = require('../../../utils');
 var config  = require('../../../config');
 var views   = require('../lib/views');
+var queries = require('../../../db/queries');
 
 module.exports.name = 'Restaurant Tomorrow Orders';
 
@@ -19,17 +20,11 @@ module.exports.schema = {
 };
 
 function getOrderQuery( storage ){
-  var $query = { where: { status: 'accepted' } };
-
-  if ( Object.keys( storage.lastNotified ).length > 0 ){
-    $query.where.id = {
-      $nin: Object.keys( storage.lastNotified ).map( function( id ){
-        return parseInt( id );
-      })
-    };
-  }
-
-  return $query;
+  return queries.orders.acceptedButNot(
+    Object.keys( storage.lastNotified ).map( function( id ){
+      return parseInt( id );
+    })
+  );
 }
 
 // Return the function for carrying out all the notifications

@@ -333,6 +333,21 @@
   background-color: #fff;
 }
 
+/**
+ * Restaurant Search Bar
+ */
+
+.restaurant-search-bar {
+  padding: 15px 18px;
+}
+
+.restaurant-search-bar .form-inline {
+  /* always center in container */
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 @media ( max-width: 768px ){
   .order-params-bar,
   .order-params-bar .form-inline {

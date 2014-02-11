@@ -18,6 +18,20 @@ module.exports.schema = {
   lastNotified: true
 };
 
+function getOrderQuery( storage ){
+  var $query = { where: { status: 'accepted' } };
+
+  if ( Object.keys( storage.lastNotified ).length > 0 ){
+    $query.where.id = {
+      $nin: Object.keys( storage.lastNotified ).map( function( id ){
+        return parseInt( id );
+      })
+    };
+  }
+
+  return $query;
+}
+
 // Return the function for carrying out all the notifications
 // for an order
 function notifyOrderFn( order ){
@@ -61,7 +75,7 @@ function notifyOrderFn( order ){
 };
 
 module.exports.check = function( storage, callback ){
-  var $query = { where: { status: 'accepted' } };
+  var $query = getOrderQuery( storage );
 
   Models.Order.findTomorrow( $query, function( error, results ){
     if ( error ) return callback( error );
@@ -94,7 +108,7 @@ module.exports.work = function( storage, callback ){
   , errors:               { text: 'Errors', value: 0, objects: [] }
   };
 
-  var $query = { where: { status: 'accepted' } };
+  var $query = getOrderQuery( storage );
 
   Models.Order.findTomorrow( $query, function( error, orders ){
     if ( error ) return callback( error );

@@ -261,3 +261,13 @@ module.exports = {
   }
 
 };
+
+module.exports.orders = {};
+module.exports.orders.acceptedButNot = function( ids ){
+  var $query = { where: { status: 'accepted' } };
+  if ( ids && ids.length ){
+    if ( !$query.where.id ) $query.where.id = {};
+    $query.where.id.$nin = ids;
+  }
+  return $query;
+};

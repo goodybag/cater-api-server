@@ -11,12 +11,21 @@ var Models  = require('../../../models');
 var utils   = require('../../../utils');
 var config  = require('../../../config');
 var views   = require('../lib/views');
+var queries = require('../../../db/queries');
 
 module.exports.name = 'Restaurant Tomorrow Orders';
 
 module.exports.schema = {
   lastNotified: true
 };
+
+function getOrderQuery( storage ){
+  return queries.orders.acceptedButNot(
+    Object.keys( storage.lastNotified ).map( function( id ){
+      return parseInt( id );
+    })
+  );
+}
 
 // Return the function for carrying out all the notifications
 // for an order
@@ -61,7 +70,7 @@ function notifyOrderFn( order ){
 };
 
 module.exports.check = function( storage, callback ){
-  var $query = { where: { status: 'accepted' } };
+  var $query = getOrderQuery( storage );
 
   Models.Order.findTomorrow( $query, function( error, results ){
     if ( error ) return callback( error );
@@ -94,7 +103,7 @@ module.exports.work = function( storage, callback ){
   , errors:               { text: 'Errors', value: 0, objects: [] }
   };
 
-  var $query = { where: { status: 'accepted' } };
+  var $query = getOrderQuery( storage );
 
   Models.Order.findTomorrow( $query, function( error, orders ){
     if ( error ) return callback( error );

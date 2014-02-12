@@ -20,9 +20,10 @@ module.exports.restaurant = function(req, res, next) {
     index: 'restaurants'
   , q: 'name:' + name
   }, function(error, response) {
-    if (error) res.send(400, error);
+    if (error) return res.send(400, error);
     res.send(response);
   });
+
 };
 
 

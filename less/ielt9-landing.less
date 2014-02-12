@@ -5,6 +5,15 @@
 @import "variables.less";
 @import "mixins.less";
 
-.hero-unit:after {
-  display: none;
+.navbar {
+  border-bottom: solid 1px @gray;
+}
+
+// Reduce the height of the hero unit so that it
+// completely fits the image
+#intro {
+  padding-top: 50px;
+  .hero-unit-marketing-area {
+    margin-top: 64px;
+  }
 }

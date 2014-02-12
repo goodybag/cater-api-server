@@ -139,6 +139,9 @@
     , fullcalendar: {
         deps: ['jquery']
       }
+    , typeahead: {
+        deps: ['jquery']
+      }
     }
   // , hbs: {
   //     disableI18n: true

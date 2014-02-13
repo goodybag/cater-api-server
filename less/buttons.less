@@ -21,30 +21,7 @@
   @btn-padding-left-small;
 
 .btn {
-  display: inline-block;
-  border: none;
-  border-style: solid;
-  border-width: 0;
-  border-bottom-width: @btn-border-width-base + 1;
-  border-radius: @btn-border-radius-base;
-  background: transparent;
-  padding: @btn-padding-base;
-  font-size: @btn-font-size;
-  line-height: @line-height-small;
-  font-weight: @semibold;
-  text-decoration: none;
-  letter-spacing: 0.4px;
-
-  &:hover {
-    text-decoration: none;
-  }
-
-  &:active {
-    border-bottom-width: @btn-border-width-base;
-    bottom: -1px;
-    margin-bottom: 1px;
-    outline-width: 0;
-  }
+  .btn();
 }
 
 .btn-large {

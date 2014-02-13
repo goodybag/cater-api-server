@@ -8,10 +8,22 @@
   table-layout: fixed;
   margin-top: @logo-list-margin-top;
   margin-bottom: @logo-list-margin-bottom;
+
+  @media screen and ( max-width: @breakpoint-tablet ){
+    display: block;
+  }
 }
 
 .logo-list > li {
   display: table-cell;
   width: 2%;
   text-align: center;
+
+  @media screen and ( max-width: @breakpoint-tablet ){
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    .standard-padding();
+    margin-bottom: 22px;
+  }
 }

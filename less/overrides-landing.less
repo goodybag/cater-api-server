@@ -5,25 +5,47 @@
 #intro {
   background-position-x: 25%;
 
+  @media screen and ( max-width: @container-width ){
+    padding-bottom: 40px;
+  }
+
   .hero-unit-marketing-area {
     #grid > .row();
     margin-top: 74px;
     text-align: left;
   }
 
-  .hero-unit-marketing-area > .screenshot-window {
+  .screenshot-window {
     #grid > .column(8);
-    border-bottom: none;
     box-shadow: 0 0 20px rgba( 0, 0, 0, 0.15 );
+    @media screen and ( min-width: @container-width ){
+      border-bottom: none;
+    }
   }
 
-  .hero-unit-marketing-area > .register-panel {
+  .register-panel {
     #grid > .column(4);
     box-shadow: 0 0 20px rgba( 0, 0, 0, 0.15 );
   }
 
   .register-form .btn-submit {
     width: 100%;
+  }
+
+  .login-panel-mobile {
+    display: none;
+  }
+
+  @media screen and ( max-width: @breakpoint-mobile ){
+    padding-bottom: 20px;
+
+    .screenshot-window {
+      display: none;
+    }
+
+    .hero-unit-marketing-area {
+      margin-top: 20px;
+    }
   }
 }
 
@@ -38,11 +60,21 @@
 }
 
 #section-why-companies-love-us {
-  padding-bottom: 0;
+  @media screen and ( min-width: @container-width ){
+    padding-bottom: 0;
+  }
+
+  @media screen and ( max-width: @breakpoint-mobile ){
+    .check-points {
+      margin-top: 32px;
+    }
+  }
 
   .screenshot-window {
     #grid > .column(8);
-    border-bottom: none;
+    @media screen and ( min-width: @container-width ){
+      border-bottom: none;
+    }
   }
 
   .check-points {
@@ -78,5 +110,12 @@
   .btn-call-to-action {
     margin-top: 50px;
     margin-bottom: 20px;
+  }
+
+  @media screen and ( max-width: @breakpoint-mobile ){
+    .logo-list > li {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
   }
 }

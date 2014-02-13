@@ -88,6 +88,13 @@ body {
   background: lighten( @navbar-bg-color, 5% );
 }
 
+.navbar .navbar-toggle {
+  display: none;
+  padding: @btn-padding-top-small @btn-padding-right-small @btn-padding-bottom-small;
+  margin-top: 5px;
+  float: right;
+}
+
 // Once the container relies on width: 100% add standard padding
 @media (max-width: @container-width) {
   .navbar .container {
@@ -97,7 +104,7 @@ body {
 
 // Make the navbar not so tall on mobile
 // Adjust breakpoint to account for nav items
-@media screen and (max-width: (@breakpoint-tablet)) {
+@media screen and (max-width: (@breakpoint-mobile)) {
   @anchor-padding-top: (@navbar-mobile-height / 2) + @anchor-padding-offset;
   @anchor-padding-bottom: (@navbar-mobile-height / 2) - @anchor-padding-offset;
 
@@ -121,10 +128,14 @@ body {
     position: absolute;
     width: 100%;
     height: 1px;
-    background: #1A1919;
+    background: @gray;
     left: 0;
     top: @navbar-mobile-height + 2;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .navbar .navbar-toggle {
+    display: inline-block;
   }
 
   .navbar.collapsed {
@@ -148,6 +159,29 @@ body {
     & when ( @logo-padding-bottom > 0 ){
       padding-bottom: @logo-padding-bottom * @navbar-mobile-factor;
     }
+  }
+
+  .navbar .login-form {
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  .navbar.collapsed .login-form {
+    height: 0;
+    margin-top: 0;
+  }
+
+  .navbar.collapsed .login-form .form-group {
+    display: none;
+  }
+
+  .navbar .login-form .form-group {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .navbar .login-form .form-group-submit button {
+    width: 100%;
   }
 
   .navbar .nav {

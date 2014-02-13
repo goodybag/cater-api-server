@@ -17,8 +17,15 @@
   content: "";
   position: absolute;
   left: -32px;
-  top: 0;
+  top: -5px;
   width: 23px;
   height: 25px;
   background: @checkpoints-bullet-img;
+}
+
+@media screen and ( max-width: @breakpoint-tablet ){
+  .check-points > li {
+    margin-bottom: 32px;
+    font-size: 18px;
+  }
 }

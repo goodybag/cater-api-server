@@ -2,7 +2,8 @@
 // Marketing Points //
 //////////////////////
 
-@point-padding: 20px 26px 20px;
+@point-side-padding: 26px;
+@point-padding: 20px @point-side-padding 20px;
 
 .marketing-points {
   #grid > .row();
@@ -26,7 +27,7 @@
   }
 
   @media screen and (max-width: @breakpoint-tablet) {
-    & {
+    &, &:first-child, &:last-child {
       display: block;
       width: 100%;
       .standard-padding();

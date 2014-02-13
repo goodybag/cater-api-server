@@ -18,7 +18,14 @@ module.exports.restaurant = function(req, res, next) {
 
   client.search({
     index: 'restaurants'
-  , q: 'name:' + name
+  , type: 'restaurant'
+  , body: {
+      query: {
+        match: {
+          name: name
+        }
+      }
+    }
   }, function(error, response) {
     if (error) return res.send(400, error);
     res.send(response);

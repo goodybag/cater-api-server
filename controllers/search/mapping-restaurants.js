@@ -1,7 +1,7 @@
 var request = require('request');
 
 var options = {
-  uri: 'http://localhost:9200/restaurants/'
+  uri: 'http://localhost:9200/cater/'
 , method: 'PUT'
 , timeout: 7000
 , json: {
@@ -23,5 +23,6 @@ request(options, function(err, res, body) {
   if (err) {
     return console.log(err);
   }
-  console.log(body);
+  console.log('Creating /cater/restaurant mapping');
+  console.log('Response:', body);
 });

@@ -1,3 +1,4 @@
 #!/bin/bash
-node delete-restaurants.js
+node delete-cater-index.js
+node mapping-restaurants.js
 node create-river.js

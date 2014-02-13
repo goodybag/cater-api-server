@@ -12,6 +12,7 @@ var options = {
     , sql: 'select id, name from restaurants'
     , index: 'cater'
     , type: 'restaurant'
+    , schedule: '0 0/5 * * * ?' // every 5 mins
     }
   }
 };

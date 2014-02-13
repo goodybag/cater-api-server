@@ -17,11 +17,11 @@ module.exports.restaurant = function(req, res, next) {
   var name = req.query.name;
 
   client.search({
-    index: 'restaurants'
+    index: 'cater'
   , type: 'restaurant'
   , body: {
       query: {
-        match: {
+        prefix: {
           name: name
         }
       }
@@ -32,6 +32,3 @@ module.exports.restaurant = function(req, res, next) {
   });
 
 };
-
-
-

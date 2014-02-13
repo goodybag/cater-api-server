@@ -1,0 +1,8 @@
+<a href="/restaurants/{{id}}">
+    {{#if logo_url}}
+    <img src="{{filepicker logo_url 30 30}}">
+    {{else}}
+    <img src="{{filepicker "https://www.filepicker.io/api/file/jLhugLRSQAJVdUe88acg" 30 30}}">
+    {{/if}}
+  {{name}}
+</a>

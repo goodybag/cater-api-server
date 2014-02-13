@@ -24,9 +24,6 @@ define(function(require, exports, module) {
       , limit: 10
       , remote: {
           url: '/restaurants/search?name=%QUERY'
-        , filter: function(parsedResponse) {
-            return utils.map(parsedResponse.hits.hits, function(o) {return o._source;});
-          }
         }
       , datumTokenizer: function(d) {
           return Bloodhound.tokenizers.whitespace(d.val);
@@ -40,9 +37,7 @@ define(function(require, exports, module) {
         displayKey: 'name'
       , source: engine.ttAdapter()
       , templates: {
-          suggestion: Handlebars.compile([
-            '<a href="/restaurants/{{id}}">{{name}}</a>'
-          ].join(''))
+          suggestion: Handlebars.partials.search_restaurant_option
         }
       });
     }

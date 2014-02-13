@@ -10,7 +10,6 @@ var client = new elasticsearch.Client({
 
 /**
  * GET /restaurants/search
- *
  */
 
 module.exports.restaurant = function(req, res, next) {
@@ -21,14 +20,21 @@ module.exports.restaurant = function(req, res, next) {
   , type: 'restaurant'
   , body: {
       query: {
-        prefix: {
-          name: name
+        query_string: {
+          query: name
         }
       }
     }
   }, function(error, response) {
     if (error) return res.send(400, error);
-    res.send(response);
+    var restaurants = utils.map(response.hits.hits, function(r) {
+      return {
+        id:         r._id
+      , name:       r._source.name
+      , logo_url:   r._source.logo_url
+      };
+    });
+    res.send(restaurants);
   });
 
 };

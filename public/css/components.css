@@ -383,14 +383,11 @@
 
 .restaurant-search-bar .search-input {
   -webkit-transition: width 2s;
-  transition: width .25s;
   width: 200px;
 }
 
 .restaurant-search-bar .search-input:focus {
   -webkit-transition: width 2s;
-  transition: width .25s;
-  width: 300px;
 }
 
 
@@ -1070,7 +1067,20 @@ a.list-group-item .list-group-item-heading {
 
 .tt-suggestion {
   display: block;
+  
+}
+.tt-suggestion a {
+  display: block;
   padding: 3px 20px;
+}
+
+.tt-suggestion:hover {
+  background-color: #0074D9;
+}
+
+.tt-suggestion:hover a {
+  color: #fff;
+  text-decoration: none;
 }
 
 .tt-suggestion.tt-is-under-cursor {

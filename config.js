@@ -133,6 +133,10 @@ var config = {
       }
     }
 
+  , bonsai: {
+      url: 'http://localhost:9200'
+    }
+
   , rollbar: {
       accessToken: 'c7f82820e02c4bd7a759015518948ce3'
     }
@@ -214,6 +218,10 @@ var config = {
       }
     }
 
+  , bonsai: {
+      url: process.env['BONSAI_URL']
+    }
+
   , rollbar: {
       accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
     }
@@ -287,6 +295,10 @@ var config = {
         host: 'logs.papertrailapp.com'
       , port: 64774
       }
+    }
+
+  , bonsai: {
+      url: process.env['BONSAI_URL']
     }
 
   , rollbar: {

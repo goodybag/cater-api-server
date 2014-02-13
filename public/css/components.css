@@ -369,27 +369,6 @@
     display: none!important;
   }
 }
-/**
- * Restaurant Search Bar
- */
-
-.restaurant-search-bar {
-  padding: 15px 18px;
-}
-
-.restaurant-search-bar .form-inline {
-  display: table;
-}
-
-.restaurant-search-bar .search-input {
-  -webkit-transition: width 2s;
-  width: 200px;
-}
-
-.restaurant-search-bar .search-input:focus {
-  -webkit-transition: width 2s;
-}
-
 
 /**
  * Buttons
@@ -1039,6 +1018,10 @@ a.list-group-item .list-group-item-heading {
  * Additional CSS for Twitter Bootstrap compatibility
  * by https://github.com/jharding/typeahead.js-bootstrap.css
  */
+
+.twitter-typeahead {
+  width: 100%;
+}
 
 .twitter-typeahead .tt-query,
 .twitter-typeahead .tt-hint {

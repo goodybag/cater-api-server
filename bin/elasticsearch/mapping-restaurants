@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 var request = require('request');
+var config = require('../../config');
 
 var options = {
-  uri: 'http://localhost:9200/cater/'
+  uri: config.bonsai.url + '/cater/'
 , method: 'PUT'
 , timeout: 7000
 , json: {

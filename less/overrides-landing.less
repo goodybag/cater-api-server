@@ -2,120 +2,123 @@
 // Component->Site Overrides //
 ///////////////////////////////
 
-#intro {
-  background-position-x: 25%;
+.page-home {
 
-  @media screen and ( max-width: @container-width ){
-    padding-bottom: 40px;
-  }
+  #intro {
+    background-position-x: 25%;
 
-  .hero-unit-marketing-area {
-    #grid > .row();
-    margin-top: 74px;
-    text-align: left;
-  }
-
-  .screenshot-window {
-    #grid > .column(8);
-    box-shadow: 0 0 20px rgba( 0, 0, 0, 0.15 );
-    @media screen and ( min-width: @container-width ){
-      border-bottom: none;
-    }
-  }
-
-  .register-panel {
-    #grid > .column(4);
-    box-shadow: 0 0 20px rgba( 0, 0, 0, 0.15 );
-  }
-
-  .register-form .btn-submit {
-    width: 100%;
-  }
-
-  .login-panel-mobile {
-    display: none;
-  }
-
-  @media screen and ( max-width: @breakpoint-mobile ){
-    padding-bottom: 20px;
-
-    .screenshot-window {
-      display: none;
+    @media screen and ( max-width: @container-width ){
+      padding-bottom: 40px;
     }
 
     .hero-unit-marketing-area {
-      margin-top: 20px;
+      #grid > .row();
+      margin-top: 74px;
+      text-align: left;
+    }
+
+    .screenshot-window {
+      #grid > .column(8);
+      box-shadow: 0 0 20px rgba( 0, 0, 0, 0.15 );
+      @media screen and ( min-width: @container-width ){
+        border-bottom: none;
+      }
+    }
+
+    .register-panel {
+      #grid > .column(4);
+      box-shadow: 0 0 20px rgba( 0, 0, 0, 0.15 );
+    }
+
+    .register-form .btn-submit {
+      width: 100%;
+    }
+
+    .login-panel-mobile {
+      display: none;
+    }
+
+    @media screen and ( max-width: @breakpoint-mobile ){
+      padding-bottom: 20px;
+
+      .screenshot-window {
+        display: none;
+      }
+
+      .hero-unit-marketing-area {
+        margin-top: 20px;
+      }
     }
   }
-}
 
-#section-how-it-works {
-  .section-header {
-    // The 3 graphics do not have a well-defined border so the
-    // spacing between the header and the 'how-it-works' graphics
-    // looks greater than all other sections
-    // This balances that feeling out
-    margin-bottom: 36px;
-  }
-}
-
-#section-why-companies-love-us {
-  @media screen and ( min-width: @container-width ){
-    padding-bottom: 0;
-  }
-
-  @media screen and ( max-width: @breakpoint-mobile ){
-    .check-points {
-      margin-top: 32px;
+  #section-how-it-works {
+    .section-header {
+      // The 3 graphics do not have a well-defined border so the
+      // spacing between the header and the 'how-it-works' graphics
+      // looks greater than all other sections
+      // This balances that feeling out
+      margin-bottom: 36px;
     }
   }
 
-  .screenshot-window {
-    #grid > .column(8);
+  #section-why-companies-love-us {
     @media screen and ( min-width: @container-width ){
-      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    @media screen and ( max-width: @breakpoint-mobile ){
+      .check-points {
+        margin-top: 32px;
+      }
+    }
+
+    .screenshot-window {
+      #grid > .column(8);
+      @media screen and ( min-width: @container-width ){
+        border-bottom: none;
+      }
+    }
+
+    .check-points {
+      #grid > .column(4);
+      text-align: left;
+    }
+
+    .check-points > li:last-child {
+      // Ensure that we don't get some funky extra spacing at the bottom
+      // of the page-section
+      margin-bottom: 0;
     }
   }
 
-  .check-points {
-    #grid > .column(4);
-    text-align: left;
-  }
+  #section-our-happy-customers {
+    .speech-boxes {
+      #grid > .row();
 
-  .check-points > li:last-child {
-    // Ensure that we don't get some funky extra spacing at the bottom
-    // of the page-section
-    margin-bottom: 0;
-  }
-}
-
-#section-our-happy-customers {
-  .speech-boxes {
-    #grid > .row();
-
-    & > .box {
-      #grid > .column(4, @speechbox-margin);
+      & > .box {
+        #grid > .column(4, @speechbox-margin);
+      }
     }
   }
-}
 
-#section-restaurants {
-  .logo-list img {
-    max-width: 114px;
-    background: @white;
-    border: solid 1px @gray;
-    border-radius: 1px;
-  }
+  #section-restaurants {
+    .logo-list img {
+      max-width: 114px;
+      background: @white;
+      border: solid 1px @gray;
+      border-radius: 1px;
+    }
 
-  .btn-call-to-action {
-    margin-top: 50px;
-    margin-bottom: 20px;
-  }
+    .btn-call-to-action {
+      margin-top: 50px;
+      margin-bottom: 20px;
+    }
 
-  @media screen and ( max-width: @breakpoint-mobile ){
-    .logo-list > li {
-      padding-left: 10px;
-      padding-right: 10px;
+    @media screen and ( max-width: @breakpoint-mobile ){
+      .logo-list > li {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
     }
   }
 }

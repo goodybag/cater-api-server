@@ -35,7 +35,8 @@ body {
 
   color:          @navbar-color;
 
-  box-shadow:     0 1px 1px rgba( 0, 0, 0 , 0.25 );
+  box-shadow:     0 0 2px rgba( 0, 0, 0 , 0.3 );
+  border-bottom:  solid 1px @gray;
 
   // Otherwise chrome leaves trails
   -webkit-backface-visibility: hidden;
@@ -63,6 +64,13 @@ body {
 .navbar .login-form {
   float: right;
   margin-top: 2px;
+}
+
+.navbar .login-form .forgot-password {
+  position: absolute;
+  right: 0;
+  text-decoration: none;
+  z-index: 2;
 }
 
 .navbar .nav {

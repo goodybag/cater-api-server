@@ -21,17 +21,20 @@
     width: 100%;
   }
 
+  .col-width( @size, @gutter: @gutter-width, @prop: width ){
+    @column-width: ( @container-width - ( @gutter * (@columns - 1) ) ) / @columns;
+    @{prop}: (@column-width * @size) + ((@size - 1) * @gutter);
+  }
+
   ._column( @width ){
-    display: block;
-    float: left;
     width: @width;
   }
 
   .column( @size, @gutter: @gutter-width ){
-    @column-width: ( @container-width - ( @gutter * (@columns - 1) ) ) / @columns;
-
-    ._column( (@column-width * @size) + ((@size - 1) * @gutter) );
+    display: block;
+    float: left;
     margin-left: @gutter;
+    .col-width( @size, @gutter );
 
     &:first-child {
       margin-left: 0;
@@ -150,6 +153,7 @@
 }
 
 .btn(){
+  position: relative;
   display: inline-block;
   border: none;
   border-style: solid;

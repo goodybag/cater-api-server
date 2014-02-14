@@ -57,6 +57,7 @@
           <th>name</th>
           <th>email</th>
           <th>organization</th>
+          <th>signed up</th>
           <th>login as user</th>
         </tr>
       </thead>
@@ -67,6 +68,7 @@
           <td>{{name}}</td>
           <td>{{email}}</td>
           <td>{{organization}}</td>
+          <td>{{datepart created_at}}</td>
           <td><a href="/users/{{id}}/session">login</a></td>
         </tr>
         {{/each}}

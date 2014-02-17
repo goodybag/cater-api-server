@@ -1,4 +1,4 @@
-#main, #footer, body {
+#main, body {
   background-color: white;
   background: white;
 }
@@ -8,7 +8,15 @@
 }
 
 /**
- * Contact Us Banner
+ * Container
+ */
+
+.contact-us-container {
+  margin-top: 40px;
+}
+
+/**
+ * Banner
  */
 .contact-us-banner {
   background-image: url('/img/page-background.jpg');
@@ -18,28 +26,14 @@
   background-position-x: 14%;
 }
 
-.contact-us-container {
-  margin-top: 40px;
-}
-
 /**
- * Contact Us horizontal rule
+ * Horizontal rule
  */
 
 .contact-us-container hr {
   border: 0;
   border-top: 1px solid #C9C8C1;
 }
-
-/** 
- * Contact us columns
- */
-
-.contact-us-container .contact-us-info-col {
-  width: 28%;
-  float: left;
-}
-
 
 /**
  * Social network icons
@@ -57,7 +51,7 @@
 }
 
 /** 
- * Contact Us icons
+ * Icons
  */
 
 .contact-us-container i {
@@ -65,21 +59,24 @@
 }
 
 /**
- * Contact Us listing
+ * listing
  */
 
 .contact-us-container .icons-ul {
   margin-left: -18px;
 }
 
+/**
+ * Header
+ */
+
 .contact-us-container .contact-us-header {
   font-family: 'Proxima Nova';
   font-weight: 300;
 }
 
-
 /** 
- * Contact Us contact form
+ * Contact form
  */
 
 .contact-us-container .contact-form {

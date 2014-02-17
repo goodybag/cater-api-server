@@ -7,6 +7,8 @@ var
 , states = require('../../public/js/lib/states')
 , enums = require('../../db/enums')
 , cuisines = require('../../public/cuisines')
+, config = require('../../config')
+, elastic = require('../../lib/elastic')
 ;
 
 var models = require('../../models');
@@ -328,6 +330,14 @@ module.exports.create = function(req, res) {
 
       var done = function(err, results) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
+
+        // Index record for elasticsearch
+        elastic.save('restaurant', utils.pick(rows[0], 'id', 'name', 'logo_url')
+        , function(error, response, body) {
+            if (error) return res.error(errors.internal.DB_FAILURE, error);
+          }
+        );
+
         res.send(201, rows[0]);
       };
 

@@ -134,7 +134,9 @@ var config = {
     }
 
   , bonsai: {
-      url: 'http://localhost:9200'
+      host: 'http://localhost'
+    , port: 9200
+    , index: 'cater'
     }
 
   , rollbar: {
@@ -219,7 +221,8 @@ var config = {
     }
 
   , bonsai: {
-      url: process.env['BONSAI_URL']
+      host: process.env['BONSAI_URL']
+    , index: 'cater'
     }
 
   , rollbar: {
@@ -298,7 +301,8 @@ var config = {
     }
 
   , bonsai: {
-      url: process.env['BONSAI_URL']
+      host: process.env['BONSAI_URL']
+    , index: 'cater'
     }
 
   , rollbar: {

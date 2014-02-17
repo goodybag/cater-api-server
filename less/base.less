@@ -54,6 +54,11 @@ code {
   #grid > .col-width(7);
 }
 
+.medium-container {
+  #grid > .container();
+  #grid > .col-width(9);
+}
+
 .col( @i ) when ( @i > @columns ){}
 .col( @i ) when ( @i <= @columns ){
   .col-@{i} { #grid > .column( @i ) };

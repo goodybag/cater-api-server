@@ -56,7 +56,7 @@ module.exports = function(grunt) {
     }
 
   , requirejs: {
-      compile: {
+      app: {
         options: utils.extend( {}, requireConfig, {
           baseUrl: 'public/js/lib'
         , out: 'public/dist/app.js'
@@ -85,8 +85,13 @@ module.exports = function(grunt) {
           }
         })
       }
+    , landing: {}
     }
   };
+
+  var landing   = config.requirejs.landing.options = utils.clone( config.requirejs.app.options );
+  landing.name  = 'app/pages/landing';
+  landing.out   = 'public/dist/landing.js';
 
   grunt.initConfig( config );
 

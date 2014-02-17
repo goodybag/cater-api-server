@@ -16,12 +16,19 @@ var m = utils.extend({
 
 module.exports.register = function(app) {
 
-  app.get('/', controllers.auth.index);
-  app.get('/login', controllers.auth.login);
-  app.post('/login', controllers.auth.login);
-  app.get('/forgot-password', controllers.auth.forgotPassword);
-  app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
-  app.post('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
+  app.before( m.applyQueryParams(), function( app ){
+    app.get('/', controllers.auth.index);
+    app.get('/login', controllers.auth.login);
+    app.post('/login', controllers.auth.login);
+    app.get('/join', controllers.auth.registerView);
+    app.post('/join', controllers.auth.register);
+
+    app.get('/forgot-password', controllers.auth.forgotPassword);
+    app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
+    app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
+    app.post('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
+  });
+
 
   /**
    * Restaurants resource.  The collection of all restaurants.

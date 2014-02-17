@@ -62,8 +62,7 @@
 
       // custom replacements
       '*': {
-        'jquery': 'jquery-loaded'
-      , 'moment': 'moment-loaded'
+        'moment': 'moment-loaded'
       }
 
       // deal with jquery

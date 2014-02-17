@@ -43,3 +43,21 @@ code {
 .row {
   #grid > .row();
 }
+
+.tiny-container {
+  #grid > .container();
+  #grid > .col-width(4);
+}
+
+.small-container {
+  #grid > .container();
+  #grid > .col-width(7);
+}
+
+.col( @i ) when ( @i > @columns ){}
+.col( @i ) when ( @i <= @columns ){
+  .col-@{i} { #grid > .column( @i ) };
+  .col( @i + 1 );
+}
+
+.col( 1 );

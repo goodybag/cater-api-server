@@ -25,6 +25,23 @@ h1, h2, h4, h5 {
   letter-spacing: 1.2px;
 }
 
+h1, h2 {
+  & + .lead {
+    margin-top: -24px;
+  }
+}
+
+.page-title {
+  font-size: 2em;
+  font-weight: @light;
+}
+
+.page-title + p {
+  font-size: 1.1em;
+  font-weight: @light;
+  margin-top: -10px;
+}
+
 .lead-paragraph {
   font-size: 1.3em;
   line-height: 1.8em;

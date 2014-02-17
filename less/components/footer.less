@@ -8,6 +8,11 @@
   padding-top: 60px;
   padding-bottom: 80px;
   text-align: center;
+
+  @media screen and (max-width: @breakpoint-mobile) {
+    .standard-padding();
+    text-align: left;
+  }
 }
 
 .footer-nav {
@@ -29,6 +34,14 @@
 
   &:first-child:before {
     display: none;
+  }
+
+  @media screen and (max-width: @breakpoint-mobile) {
+    display: block!important;
+    &:before { display: none; }
+    & a {
+      margin: 0;
+    }
   }
 }
 

@@ -17,12 +17,12 @@
 <!--</Navbar>-->
 
 <div class="page-section-standalone">
-  <form id="login-form" class="login-form form-vertical{{#if error}} error{{/if}}" action="/login" method="POST">
+  <form id="login-form" class="login-form form-vertical{{#if error}} error{{/if}}" action="/login{{queryParams query}}" method="POST">
     {{#if error}}
-    <h2>Invalid Email/Password</h2>
+    <h2 class="page-title">Invalid Email/Password</h2>
     <div class="cupcake sad"></div>
     {{else}}
-    <h2>Login</h2>
+    <h2 class="page-title">Login</h2>
     {{/if}}
 
     <div class="form-group">

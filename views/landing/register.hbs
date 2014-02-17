@@ -1,0 +1,89 @@
+{{#extend "page"}}page-register{{/extend}}
+
+{{#extend "body"}}
+<!--<Navbar>-->
+<header class="navbar collapsed">
+  <div class="container">
+    <a href="/">
+      <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
+    </a>
+
+    <button class="navbar-toggle btn btn-default">+</button>
+    <ul class="nav">
+      <li><a href="/join">Sign Up</a></li>
+      <li><a href="/login">Login</a></li>
+    </ul>
+  </div>
+</header>
+<!--</Navbar>-->
+
+<div class="page-section-standalone">
+  <div class="small-container">
+    <form id="register-form" class="register-form form-vertical" action="/join{{queryParams query}}" method="POST">
+      <h2 class="page-title">Get your free account</h2>
+      <p>Use Goodybag to simplify your office catering</p>
+      <div class="errors">
+        {{#if error}}
+          <p class="error">
+          {{#eq error.name 'EMAIL_TAKEN'}}
+            This email has already been taken.
+          {{else}}
+            Something went horribly wrong! I'm sorry, please try it again.
+          {{/eq}}
+          </p>
+        {{/if}}
+      </div>
+      <div class="form-group">
+        <label for="register-email">Email</label>
+        <input type="email" name="email" id="register-email">
+      </div>
+
+      <div class="form-group">
+        <label for="register-password">Password</label>
+        <input type="password" name="password" id="register-password">
+      </div>
+
+      <div class="form-group">
+        <label for="register-confirm-password">Confirm password</label>
+        <input type="password" name="password2" id="register-confirm-password">
+      </div>
+
+      <div class="form-group form-group-submit">
+        <button class="btn btn-primary btn-submit btn-large">Start using Goodybag</button>
+      </div>
+
+      <p class="already-user">Already a user? <a href="/login">Sign in</a></p>
+    </form>
+    <div class="cupcake-wrapper">
+      <div class="cupcake happy"></div>
+    </div>
+  </div>
+</div>
+
+<!--<Footer>-->
+<footer class="footer">
+  <ul class="nav footer-nav">
+    <li><a href="/contact-us">Contact Us</a></li>
+    <li><a href="/contact-us">Request to be a caterer</a></li>
+    <li><a href="/legal">Terms of service</a></li>
+    <li><a href="/privacy">Privacy policy</a></li>
+  </ul>
+</footer>
+<!--</Footer>-->
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['jquery', 'navbar', 'field-matcher'], function( $ ){
+    $(function(){
+      $('.navbar').navbar();
+      $('#register-form').fieldMatcher({
+        fields: ['password', 'password2']
+      , onError: function(){
+          $('.errors').html('<p class="error">Passwords must match</p>');
+        }
+      });
+    });
+  });
+</script>
+{{/extend}}

@@ -11,12 +11,13 @@ var m = utils.extend({
   restrict      : require('./middleware/restrict'),
   basicAuth     : require('./middleware/basic-session-auth'),
   buildReceipt  : require('./middleware/build-receipt'),
+  queryParams   : require('./middleware/query-params'),
   queryString   : require('./middleware/query-string')
 }, require('stdm') );
 
 module.exports.register = function(app) {
 
-  app.before( m.applyQueryParams(), function( app ){
+  app.before( m.queryParams(), function( app ){
     app.get('/', controllers.auth.index);
     app.get('/login', controllers.auth.login);
     app.post('/login', controllers.auth.login);

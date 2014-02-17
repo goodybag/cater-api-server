@@ -133,9 +133,9 @@ app.configure(function(){
   app.before = function(){
     var args    = Array.prototype.slice.call( arguments );
     var handler = args.pop();
-    var handle  = function( verb ){
-      var _args = args.concat( Array.prototype.slice.call( arguments, 1 ) );
-      return this[ verb ].apply( this, _args )
+    var handle  = function( verb, path ){
+      var _args = [ path ].concat( args, Array.prototype.slice.call( arguments, 2 ) );
+      return this[ verb ].apply( this, _args );
     };
 
     handler({

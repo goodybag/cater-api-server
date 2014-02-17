@@ -163,7 +163,6 @@ module.exports.login = function ( req, res ){
       return res.render('landing/login', {
         layout: 'landing/layout'
       , error: error
-      , query: req.params
       });
     }
 

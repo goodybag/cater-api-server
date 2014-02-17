@@ -4,7 +4,7 @@ var models = require('../../models');
 var elasticsearch = require('elasticsearch');
 
 var client = new elasticsearch.Client({
-  host: 'localhost:9200',
+  host: config.bonsai.url || 'localhost:9200',
   log: config.isDev ? 'trace' : false
 });
 

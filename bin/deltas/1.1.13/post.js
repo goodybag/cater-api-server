@@ -1,7 +1,7 @@
 var utils = require('../../../utils');
 var models = require('../../../models');
-var request = require('request');
 var config = require('../../../config');
+var elastic = require('../../../lib/elastic');
 
 models.Restaurant.find({}, function(error, restaurants) {
   if (error) return console.error('error finding restaurants');
@@ -11,18 +11,8 @@ models.Restaurant.find({}, function(error, restaurants) {
   utils.each(restaurants, function (restaurant) {
     restaurant = restaurant.attributes;
 
-    var options = {
-      uri: config.bonsai.url + '/cater/restaurant/' + restaurant.id
-    , method: 'PUT'
-    , timeout: 7000
-    , json: {
-        name: restaurant.name
-      , logo_url: restaurant.logo_url
-      }
-    };
-
     tasks.push(function(callback) {
-      request(options, callback);
+      elastic.save('restaurant', utils.pick(restaurant, 'id', 'name', 'logo_url'), callback);
     });
   });
 

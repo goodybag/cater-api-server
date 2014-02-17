@@ -383,6 +383,17 @@ module.exports.update = function(req, res) {
 
   utils.async.parallel(tasks, function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+
+    // Index record for elasticsearch
+    var props = utils.extend({id: req.params.rid}, utils.pick(req.body, 'name', 'logo_url'));
+    if (!props.name) delete props.name;
+    if (!props.logo_url) delete props.logo_url;
+    elastic.save('restaurant', props
+    , function(error, response, body) {
+        console.log(props);
+        if (error) return res.error(errors.internal.DB_FAILURE, error);
+      }
+    );
     res.send(200, (results[3]||0)[0]); // TODO: better than results[3]
   });
 }

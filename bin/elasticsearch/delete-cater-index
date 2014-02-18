@@ -1,12 +1,12 @@
-#!/usr/bin/env node
 var request = require('request');
 var config = require('../../config');
 
 var options = {
-  uri: config.bonsai.url + '/cater'
+  uri: config.bonsai.host + ':' + config.bonsai.port + '/' + config.bonsai.index
 , method: 'DELETE'
 , timeout: 7000
 };
+console.log(options);
 request(options, function(err, res, body) {
   if (err || body.error) {
     return console.log(err);
@@ -15,7 +15,7 @@ request(options, function(err, res, body) {
   console.log('Response:', body);
 });
 
-options.uri = config.bonsai.url + '/_river/cater';
+options.uri = config.bonsai.host + ':' + config.bonsai.port + '/_river/cater';
 request(options, function(err, res, body) {
   if (err) {
     return console.log(err);

@@ -385,15 +385,13 @@ module.exports.update = function(req, res) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 
     // Index record for elasticsearch
-    var props = utils.extend({id: req.params.rid}, utils.pick(req.body, 'name', 'logo_url'));
-    if (!props.name) delete props.name;
-    if (!props.logo_url) delete props.logo_url;
-    elastic.save('restaurant', props
-    , function(error, response, body) {
-        console.log(props);
-        if (error) return res.error(errors.internal.DB_FAILURE, error);
-      }
-    );
+    models.Restaurant.findOne( req.params.rid, function(err, restaurant) {
+      elastic.save( 'restaurant', utils.pick( restaurant.attributes, 'name', 'logo_url', 'id' )
+      , function( error, response, body ){
+          if (error) return res.error(errors.internal.DB_FAILURE, error);
+      });
+    });
+
     res.send(200, (results[3]||0)[0]); // TODO: better than results[3]
   });
 }

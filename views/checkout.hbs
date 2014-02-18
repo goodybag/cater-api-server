@@ -2,6 +2,8 @@
 <link rel="stylesheet" href="/css/checkout.css">
 {{/extend}}
 
+{{#extend "title"}} - Checkout{{/extend}}
+
 <div class="page page-checkout container">
   <div class="row">
     <div class="col-lg-12">
@@ -265,20 +267,12 @@
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
 
 <script>
-  require([
-        'app/models/user'
-      , 'app/models/order'
-      , 'app/views/checkout-view'
-      ]
-  , function(User, Order, CheckoutView) {
-      balanced.init('{{config.balanced.marketplaceUri}}');
-
-      var user = new User({{{json user}}});
-
-      var view = new CheckoutView({
-        el: '#main',
-        model: new Order( {{{json order}}} ),
-        user: user
+  require(['app/pages/checkout', 'app/models/index'],
+    function(page, Models) {
+      page.init({
+        marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
+      , user: new Models.User({{{json user}}})
+      , order: new Models.Order({{{json order}}})
       });
     }
   );

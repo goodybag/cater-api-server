@@ -18,6 +18,7 @@ label {
   background: url('/img/page-background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
+  padding: 0;
 }
 
 .page-auth > .container {

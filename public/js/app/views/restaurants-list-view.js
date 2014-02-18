@@ -10,6 +10,7 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     initialize: function() {
+      analytics.page('Restaurants List');
       this.listenTo(this.options.paramsView, 'params:submit', this.search);
       this.listenTo(this.options.filtersView, 'filters:change', this.search);
       this.listenTo(this.options.sortView, 'sort:change', this.search);
@@ -22,6 +23,7 @@ define(function(require, exports, module) {
       , this.options.paramsView.getProps()
       , this.options.sortView.getProps()
       );
+      analytics.track( 'Restaurant Search', {searchParams: props} );
       var searchUrl = this.options.searchUrl;
       window.location.href = searchUrl + utils.queryParams(props);
     }

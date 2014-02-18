@@ -57,7 +57,6 @@
   box-sizing: border-box;
   padding-left: 50px;
   position: relative;
-  margin-top: 20px;
 }
 
 .columns > .order-info-notes {
@@ -65,8 +64,6 @@
 }
 
 .order-info-notes > .notes-key {
-  position: absolute;
-  left: 0;
   font-style: italic;
   font-size: 13px;
 }
@@ -98,6 +95,10 @@
 
 .order-table .line-item-name .item-options > li {
   font-size: 11px;
+}
+
+.order-table .line-item-notes {
+  min-width: 160px;
 }
 
 .order-adjustment {

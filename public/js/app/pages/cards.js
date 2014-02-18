@@ -1,7 +1,5 @@
 define( function( require ){
-  var $               = require('jquery');
-  var user            = require('data/user');
-  var marketPlaceUri  = require('data/marketplaceUri');
+  var $ = require('jquery');
 
   require('bootstrap');
 
@@ -11,7 +9,10 @@ define( function( require ){
   };
 
   var page = {
-    init: function() {
+    init: function(options) {
+      var user            = options.user;
+      var marketPlaceUri  = options.marketplaceUri;
+
       balanced.init(marketPlaceUri);
 
       var removeCardModal = new Views.RemoveCardModal({

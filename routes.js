@@ -588,6 +588,8 @@ module.exports.register = function(app) {
   , controllers.emails.post
   );
 
+  app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
+
   app.get('/admin/restaurants/:id/payment-summaries'
   , m.restrict(['admin'])
   , m.param('id')

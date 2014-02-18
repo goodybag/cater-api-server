@@ -44,8 +44,14 @@
     </dl>
   </div>
   <div class="order-info-notes column-fluid">
-    <div class="notes-key">Notes:</div>
-    <p>{{order.notes}}</p>
+    {{#if order.notes}}
+      <div class="notes-key">Notes:</div>
+      <p>{{order.notes}}</p>
+    {{/if}}
+    {{#if order.delivery_instructions}}
+      <div class="notes-key">Delivery Instructions:</div>
+      <p>{{order.delivery_instructions}}</p>
+    {{/if}}
   </div>
 </div>
 

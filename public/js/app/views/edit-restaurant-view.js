@@ -113,6 +113,10 @@ define(function(require, exports, module) {
         return _.invoke(this.fieldSplit(this.fieldMap.voice_phones), 'replace', /[^\d]/g, '');
       },
 
+      display_phone: function() {
+        return this.$el.find(this.fieldMap.display_phone).val().replace(/[^\d]/g, '') || null;
+      },
+
       emails:  function() {
         return this.fieldSplit(this.fieldMap.emails);
       },

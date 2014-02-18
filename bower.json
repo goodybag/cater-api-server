@@ -38,6 +38,7 @@
     "requirejs-text": "2.0.10",
     "lodash": "2.4.1",
     "highcharts": "~3.0.7",
-    "jquery-placeholder": "~2.0.7"
+    "jquery-placeholder": "~2.0.7",
+    "almond": "~0.2.9"
   }
 }

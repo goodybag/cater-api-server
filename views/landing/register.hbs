@@ -28,7 +28,11 @@
           {{#eq error.name 'EMAIL_TAKEN'}}
             This email has already been taken.
           {{else}}
-            Something went horribly wrong! I'm sorry, please try it again.
+            {{#if error.message}}
+              {{error.message}}
+            {{else}}
+              Something went horribly wrong! I'm sorry, please try it again.
+            {{/if}}
           {{/eq}}
           </p>
         {{/if}}

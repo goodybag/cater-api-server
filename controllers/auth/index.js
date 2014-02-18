@@ -5,6 +5,7 @@ var config  = require('../../config');
 var db      = require('../../db');
 var queries = require('../../db/queries');
 var auth    = require('../../lib/auth');
+var putils  = require('../../public/js/lib/utils');
 
 module.exports.index = function(req, res) {
   if (req.session && req.session.user && req.session.user.id != null)
@@ -215,11 +216,42 @@ module.exports.register = function( req, res ){
   , groups:       ['client']
   };
 
-  // Expect the client to do validation, but don't screw up
-  // everything by not having the correct info
+  // Don't bother sending a validation error if they didn't fill anything out
   if ( !data.email && !data.password ){
     return res.render( 'landing/register', {
       layout: 'landing/layout'
+    });
+  }
+
+  var errors = putils.validator.validate( data, {
+    type: 'object'
+  , properties: {
+      email: {
+        type: 'string'
+      , format: 'email'
+      , minLength: 1
+      , required: true
+      }
+    , password: {
+        type: 'string'
+      , minLength: 1
+      , required: true
+      }
+    }
+  }, function( errors ){ return errors; });
+
+  if ( errors.length > 0 ){
+    var message;
+
+    if ( errors[0].property === 'email' ){
+      message = 'Invalid Email';
+    } else {
+      message = 'Invalid Password';
+    }
+
+    return res.render( 'landing/register', {
+      layout: 'landing/layout'
+    , error: { message: message }
     });
   }
 

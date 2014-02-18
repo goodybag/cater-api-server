@@ -240,7 +240,7 @@ module.exports.register = function( req, res ){
     }
   }, function( errors ){ return errors; });
 
-  if ( errors.length > 0 ){
+  if ( errors && errors.length > 0 ){
     var message;
 
     if ( errors[0].property === 'email' ){

@@ -223,7 +223,7 @@ module.exports.register = function( req, res ){
     });
   }
 
-  var errors = putils.validator.validate( data, {
+  var error = putils.validator.validate( data, {
     type: 'object'
   , properties: {
       email: {
@@ -238,12 +238,12 @@ module.exports.register = function( req, res ){
       , required: true
       }
     }
-  }, function( errors ){ return errors; });
+  }, function( error ){ return error; });
 
-  if ( errors && errors.length > 0 ){
+  if ( error && error.length > 0 ){
     var message;
 
-    if ( errors[0].property === 'email' ){
+    if ( error[0].property === 'email' ){
       message = 'Invalid Email';
     } else {
       message = 'Invalid Password';

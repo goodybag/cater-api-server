@@ -3,6 +3,8 @@
 <link rel="stylesheet" href="/css/receipt.css">
 {{/extend}}
 
+{{#extend "title"}} - Receipt{{/extend}}
+
 <div class="page page-order container">
   <div class="row">
     {{> wizard }}
@@ -333,12 +335,10 @@
 
 {{#extend "scripts"}}
 <script>
-  define( 'data/order', ['app/models/order'], function( Order ){
-    return new Order( {{{json order}}} );
-  });
-
-  require(['app/pages/receipt'], function( page ){
-    page.init();
+  require(['app/pages/receipt', 'app/models/index'], function( page, Models ){
+    page.init({
+      order: new Models.Order( {{{json order}}} )
+    });
   });
 </script>
 {{/extend}}

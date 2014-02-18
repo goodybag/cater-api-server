@@ -141,7 +141,8 @@ define(function(require, exports, module) {
       attrs = attrs || {};
       options = options || {};
 
-      this.categories = attrs.categories instanceof Categories ? attrs.categories : new Categories(attrs.categories || [], {restaurant: this});
+      this.categories = attrs.categories instanceof Categories ?
+        attrs.categories : new Categories(attrs.categories || [], {restaurant: this});
       this.unset('categories');
     },
 

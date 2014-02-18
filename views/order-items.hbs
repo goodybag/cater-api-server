@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="/css/wizard.css">
 {{/extend}}
 
+{{#extend "title"}} - Review Order{{/extend}}
 <div class="page page-order container">
   <div class="row">
     {{> wizard }}
@@ -179,22 +180,14 @@
 {{#extend "scripts"}}
 <script>
   require([
-      'jquery'
-    , 'handlebars'
-    , 'app/models/order'
-    , 'app/views/order-view'
-    , 'app/views/order-item-view'
-    ]
-  , function($, Handlebars, Order, OrderView, OrderItemView) {
-      if (typeof history === 'object' && 'pushState' in history) history.pushState(null, null, location.pathname);
-      var query = window.location.search ? _.object(_.map(window.location.search.substring(1).split('&'), function(obj) { return obj.split('='); })) : {};
-      var view = new OrderView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
-      var items = [
-        {{#each order.orderItems}}
-        {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}}), orderView: view})
-        {{/each}}
-      ];
-      view.setItems(items);
+    'app/pages/review-order'
+  , 'app/models/index'
+  ]
+  , function(page, Models) {
+      page.init({
+        order: new Models.Order({{{json order}}})
+      , orderItems: {{{json order.orderItems}}}
+      });
     }
   );
 </script>

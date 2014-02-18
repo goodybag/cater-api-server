@@ -1,3 +1,23 @@
+#main, body {
+  background-color: white;
+  background: white;
+}
+
+.navbar {
+  margin-bottom: 0;
+}
+
+/**
+ * Container
+ */
+
+.contact-us-container {
+  margin-top: 40px;
+}
+
+/**
+ * Banner
+ */
 .contact-us-banner {
   background-image: url('/img/page-background.jpg');
   background-repeat: no-repeat;
@@ -6,23 +26,59 @@
   background-position-x: 14%;
 }
 
-.contact-us-container {
-  margin-top: 50px;
+/**
+ * Horizontal rule
+ */
+
+.contact-us-container hr {
+  border: 0;
+  border-top: 1px solid #C9C8C1;
 }
+
+/**
+ * Social network icons
+ */
+
+.contact-us-container ul.social-connect {
+  display: inline-block;
+  list-style: none;
+  padding-left: 0;
+}
+
+.contact-us-container ul.social-connect li {
+  display: inline-block;
+  padding-left: 20px;
+}
+
+/** 
+ * Icons
+ */
 
 .contact-us-container i {
   color: #DC0500;
 }
 
-.contact-ul {
+/**
+ * listing
+ */
+
+.contact-us-container .icons-ul {
   margin-left: -18px;
-  margin-top:   20px;
 }
 
-.contact-form {
+/**
+ * Header
+ */
+
+.contact-us-container .contact-us-header {
+  font-family: 'Proxima Nova';
+  font-weight: 300;
+}
+
+/** 
+ * Contact form
+ */
+
+.contact-us-container .contact-form {
   margin-top: 20px;
-}
-
-.navbar {
-  margin-bottom: 0;
 }

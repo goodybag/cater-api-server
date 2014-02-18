@@ -1,19 +1,21 @@
-var isBrowser = true;
-if (typeof module === 'object' && typeof define !== 'function') {
-  isBrowser = false;
-  var define = function(factory) {
-    return module.exports = factory(require, exports, module);
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
   };
 }
 
 define(function(require, exports, module) {
+  var isBrowser = typeof isNode === 'undefined';
+
   var _ = require('lodash');
   var amanda = require('amanda');
   var helpers = require('./helpers');
 
   var Backbone = { View: { extend: function(){} } };
+
   if (isBrowser){
     Backbone = require('backbone');
+    require('backbone.trackit');
   }
 
   _.mixin({

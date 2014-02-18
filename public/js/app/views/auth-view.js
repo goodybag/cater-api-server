@@ -5,7 +5,8 @@ define(function(require, exports, module) {
     events: {
       'click .top-form-toggle': 'toggleTopForm',
       'blur .top-form input[type="email"]': 'mirrorEmails',
-      'submit form.forgot-password-form': 'forgotPassword'
+      'submit form.forgot-password-form': 'forgotPassword',
+      'submit form.login-form': 'login'
     },
 
     toggleTopForm: function(e) {
@@ -44,6 +45,10 @@ define(function(require, exports, module) {
           self.$el.find('form.forgot-password-form .alert-success').removeClass('hide');
         }
       });
+    },
+
+    login: function(e) {
+      analytics.track('Login');
     }
   });
 });

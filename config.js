@@ -93,6 +93,12 @@ var config = {
     , orders: '5122706333'
     }
 
+  , contact: {
+      facebook: 'https://www.facebook.com/GoodybagATX'
+    , twitter: 'https://twitter.com/GoodybagATX'
+    , linkedin: 'http://www.linkedin.com/company/goodybag-inc'
+    }
+
   , phantomjs: {
       process: "phantomjs"
     }
@@ -135,6 +141,10 @@ var config = {
 
   , rollbar: {
       accessToken: 'c7f82820e02c4bd7a759015518948ce3'
+    }
+
+  , segmentIo: {
+      token: 'q3r0t2euni'
     }
 
   , intercom: {
@@ -214,6 +224,10 @@ var config = {
       accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
     }
 
+  , segmentIo: {
+      token: 'q3r0t2euni' // TODO: same as dev for now, replace later?
+    }
+
   , intercom: {
       apiSecret: 'tumIlUFE__wGfvVxtAyESXRMroQJAz5csfMKULAY'
     , appId: '6bxgiurw'
@@ -283,6 +297,10 @@ var config = {
 
   , rollbar: {
       accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+    }
+
+  , segmentIo: {
+      token: 'k9ju1kq8vc'
     }
 
   , intercom: {

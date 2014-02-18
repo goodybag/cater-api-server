@@ -85,6 +85,7 @@ body {
   margin-right: 0;
   padding: @anchor-padding-top 20px @anchor-padding-bottom;
   color: @navbar-color;
+  text-decoration: none;
 
   .transition( 0.2s, ease-in-out );
   .transition-property( padding );
@@ -92,8 +93,7 @@ body {
 
 .navbar .nav a:hover,
 .navbar .nav .active a {
-  text-decoration: none;
-  background: lighten( @navbar-bg-color, 5% );
+  background: darken( @navbar-bg-color, 5% );
 }
 
 .navbar .navbar-toggle {

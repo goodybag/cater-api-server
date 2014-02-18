@@ -41,5 +41,8 @@
     "jquery-placeholder": "~2.0.7",
     "almond": "~0.2.9",
     "typeahead.js": "~0.10.1"
+  },
+  "resolutions": {
+    "jquery": "1.10.2"
   }
 }

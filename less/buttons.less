@@ -31,36 +31,6 @@
   font-weight: @light;
 }
 
-// button with icon
-.btn[data-icon] {
-  // Icons take up some of the spacing
-  // so balance the padding a bit
-  padding-top: @btn-padding-top-base - 1px;
-  padding-bottom: @btn-padding-bottom-base - 1px;
-  padding-right: @btn-padding-right-base - 8px;
-}
-
-.btn.btn-large[data-icon] {
-  // Icons take up some of the spacing
-  // so balance the padding a bit
-  padding-top: @btn-padding-top-large - 3px;
-  padding-bottom: @btn-padding-bottom-large - 3px;
-  padding-right: @btn-padding-right-large - 8px;
-}
-
-.btn[data-icon]:after {
-  .icon-font();
-  content: "";
-  font-size: 22px;
-  vertical-align: middle;
-  margin-left: 14px;
-}
-
-.btn-large[data-icon]:after {
-  font-size: 30px;
-  margin-left: 24px;
-}
-
 .btn-default {
   .brand-btn( @white );
   border-width: @btn-border-width-base;

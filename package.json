@@ -63,7 +63,8 @@
     "grunt-contrib-copy": "~0.5.0",
     "grunt-requirejs": "~0.4.0",
     "grunt-cli": "~0.1.13",
-    "elasticsearch": "~1.5.3"
+    "elasticsearch": "~1.5.3",
+    "elasticness": "~0.1.2"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

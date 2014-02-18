@@ -29,6 +29,14 @@ define(function(require){
             $form.find('.errors').html('<p class="error">Passwords must match</p>');
           }
         });
+
+        $('#section-restaurants .btn-call-to-action').click( function( e ){
+          e.preventDefault();
+
+          $('html').animate({ scrollTop: 0 }, function(){
+            $('#register-email').focus();
+          });
+        });
       });
     }
   };

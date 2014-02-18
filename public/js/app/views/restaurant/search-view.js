@@ -6,7 +6,7 @@ define(function(require, exports, module) {
   var $               = require('jquery');
   var utils           = require('utils');
   var typeahead       = require('typeahead');
-  var Handlebars      = require('Handlebars');
+  var Handlebars      = require('handlebars');
 
   return module.exports = Backbone.View.extend({
 

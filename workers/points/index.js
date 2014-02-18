@@ -17,7 +17,7 @@ var TAGS = ['worker-award-points'];
 var task = function() {
   models.Order.findReadyForAwardingPoints(100, function (error, orders) {
     if (error) return logger.error(TAGS, "failed to get orders", error), utils.rollbar.reportMessage(error);
-    orders.forEach(function(order){
+    utils.async.each(orders, function(order, callback){
       models.User.addPointsForOrder(order, function(error){
         if (error) {
           var message = "failed to add points to user: " +
@@ -27,8 +27,10 @@ var task = function() {
           ;
           logger.error(TAGS, message, error);
           utils.rollbar.reportMessage(error);
-          return;
+          return callback(error);
         };
+
+        return callback();
       });
     })
 

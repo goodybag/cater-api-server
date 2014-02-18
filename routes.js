@@ -10,15 +10,26 @@ var m = utils.extend({
   orderParams   : require('./middleware/order-params'),
   restrict      : require('./middleware/restrict'),
   basicAuth     : require('./middleware/basic-session-auth'),
-  buildReceipt  : require('./middleware/build-receipt')
+  buildReceipt  : require('./middleware/build-receipt'),
+  queryParams   : require('./middleware/query-params'),
+  queryString   : require('./middleware/query-string')
 }, require('stdm') );
 
 module.exports.register = function(app) {
 
-  app.get('/', m.restrict(['client', 'restaurant', 'admin']), function(req, res) {
-    if (utils.contains(req.user.attributes.groups, 'restaurant')) return res.redirect('/restaurants/manage');
-    return res.redirect('/restaurants');
+  app.before( m.queryParams(), function( app ){
+    app.get('/', controllers.auth.index);
+    app.get('/login', controllers.auth.login);
+    app.post('/login', controllers.auth.login);
+    app.get('/join', controllers.auth.registerView);
+    app.post('/join', controllers.auth.register);
+
+    app.get('/forgot-password', controllers.auth.forgotPassword);
+    app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
+    app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
+    app.post('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
   });
+
 
   /**
    * Restaurants resource.  The collection of all restaurants.

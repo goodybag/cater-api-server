@@ -1,0 +1,74 @@
+//////////////////
+// Page Section //
+//////////////////
+
+.page-section {
+  padding-top: @ps-padding-top;
+  padding-bottom: @ps-padding-bottom;
+  text-align: center;
+  background: @white;
+  border-bottom: solid 1px @gray;
+
+  @media screen and (max-width: @breakpoint-tablet){
+    & {
+
+    }
+  }
+}
+
+.page-section-standalone {
+  padding-top: @pss-padding-top;
+  padding-bottom: @pss-padding-bottom;
+  text-align: left;
+  background: @white;
+  border-bottom: solid 1px @gray;
+
+  @media screen and (max-width: @breakpoint-tablet) {
+    padding-top: @pss-padding-top / 2;
+    padding-bottom: @pss-padding-bottom / 2;
+  }
+}
+
+.page-section .section-header {
+  margin-bottom: 56px;
+  font-size: 3.2em;
+  line-height: 1.2em;
+
+  @media screen and (max-width: @breakpoint-tablet) {
+    & {
+      font-size: 1.6em;
+    }
+  }
+}
+
+.page-section p.lead {
+  font-size: 1.6em;
+
+  @media screen and (max-width: @breakpoint-tablet) {
+    & {
+      font-size: 1.2em;
+    }
+  }
+}
+
+.page-section.section-gray {
+  background: @gray-light;
+}
+
+.page-section.section-gray {
+  h1, h2, h3, h4, h5 {
+    color: @brand-quaternary;
+  }
+}
+
+.page-section.section-darker {
+  #sections > .darker();
+}
+
+.page-section.section-primary {
+  #sections > .brand-primary();
+}
+
+.page-section.section-secondary {
+  #sections > .brand-secondary();
+}

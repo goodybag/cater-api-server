@@ -93,6 +93,12 @@ var config = {
     , orders: '5122706333'
     }
 
+  , contact: {
+      facebook: 'https://www.facebook.com/GoodybagATX'
+    , twitter: 'https://twitter.com/GoodybagATX'
+    , linkedin: 'http://www.linkedin.com/company/goodybag-inc'
+    }
+
   , phantomjs: {
       process: "phantomjs"
     }

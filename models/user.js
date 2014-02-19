@@ -33,6 +33,11 @@ var User = module.exports = Model.extend({
     return this;
   }
 
+, removePoints: function( points, callback, client ){
+    User.removePoints( this.attributes.id, points, callback, client );
+    return this;
+  }
+
 , create: function( callback, client ){
     var this_ = this;
     var attr = this.attributes;
@@ -332,6 +337,23 @@ var User = module.exports = Model.extend({
           return callback(e || error);
         });
       });
+    });
+  }
+
+, removePoints: function( userId, points, callback, client ) {
+    var query = {
+      type: 'update'
+    , table: 'users'
+    , updates: {
+        $dec: {points: points}
+      }
+    , where: {
+        id: userId
+      }
+    };
+
+    ( client || db ).query( db.builder.sql( query ), function( error, result, info ) {
+      return callback( error, result );
     });
   }
 

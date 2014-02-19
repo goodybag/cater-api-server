@@ -15,8 +15,9 @@ var utils = require('../../utils');
 var TAGS = ['worker-award-points'];
 
 var task = function() {
-  models.Order.findReadyForAwardingPoints(100, function (error, orders) {
+  models.Order.findReadyForAwardingPoints(1000, function (error, orders) {
     if (error) return logger.error(TAGS, "failed to get orders", error), utils.rollbar.reportMessage(error);
+    if (orders.length == 0) return done();
     utils.async.each(orders, function(order, callback){
       models.User.addPointsForOrder(order, function(error){
         if (error) {
@@ -32,16 +33,16 @@ var task = function() {
 
         return callback();
       });
-    })
-
+    }, done);
   });
 }
 
 var done = function (error) {
-  if (!error) return;
+  if (!error) return process.exit(0);
   console.log(error);
   console.log(error.stack);
   utils.rollbar.reportMessage(error);
+  return process.exit(1);
 };
 
 var worker = function () {

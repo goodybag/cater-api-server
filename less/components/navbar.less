@@ -64,13 +64,26 @@ body {
 .navbar .login-form {
   float: right;
   margin-top: 2px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.navbar .login-form .form-group {
+  vertical-align: top;
+}
+
+.navbar .login-form .form-group > input {
+  margin-bottom: 5px;
 }
 
 .navbar .login-form .forgot-password {
-  position: absolute;
-  right: 0;
   text-decoration: none;
   z-index: 2;
+}
+
+.navbar .login-form .remember-me {
+  display: inline-block;
+  width: auto;
 }
 
 .navbar .nav {
@@ -189,6 +202,7 @@ body {
   .navbar .login-form {
     width: 100%;
     margin-top: 24px;
+    padding: 0;
   }
 
   .navbar.collapsed .login-form {

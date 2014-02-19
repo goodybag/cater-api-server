@@ -36,6 +36,8 @@ define(function(require, exports, module) {
       _.each(options.hours, function(view) {
         this.listenTo(view.model, 'change', this.onChange, this);
       }, this);
+
+      this.setState('default');
     },
 
     setTooltips: function() {
@@ -174,14 +176,63 @@ define(function(require, exports, module) {
       }
     },
 
-    onChange: function(e) {
-      this.$el.find('.form-control').parent().removeClass('has-success');
-      var diff = FormView.prototype.onChange.apply(this, arguments);
-      if (diff) {
-        var changed = _.values(_.pick(this.fieldMap, _.keys(diff))).join(', ');
-        this.$el.find(changed).parent().filter(':not(.has-error)').addClass('has-success');
+    // Sets the state of the view to communicate to the user
+    // what the view is doing (is it saving? Was there an error?)
+    setState: function( state, error ){
+      if ( this.state === state ) return;
+
+      var args = Array.prototype.slice.call( arguments );
+      this.state = state;
+      args[0] = 'change:' + args[0];
+      this.trigger.apply( this, args );
+
+      this.$el.find('.status-text > span').addClass('hide');
+      this.$el.find('.status-text > .state-' + state).removeClass('hide');
+
+      if ( state === 'error' ){
+        var msg;
+        if ( error && error.message ) msg = error.message;
+        else if ( typeof error === 'string' ) msg = error;
+        else msg = 'Something went horribly wrong!';
+
+        this.$el.find('.status-text > .state-error').text( msg );
       }
     },
+
+    onSave: function(e){
+      var this_ = this;
+      this.setState('loading');
+
+      FormView.prototype.onSave.call( this, e );
+
+      // onSave callback has ambiguous argument ordering, so use events
+      // i.e. the first argument to callback could be error or it could
+      // be the XHR object
+      this.once('save:success', function(){
+        this_.setState('saved');
+        setTimeout( this_.setState.bind( this_, 'default' ), 2000 );
+      });
+
+      this.once('save:invalid', function(){
+        this_.setState( 'error', this.model.validationError );
+      });
+
+      this.once('save:error', function(){
+        this_.setState( 'error' );
+      });
+    },
+
+    onChange: _.debounce( function(e) {
+      this.$el.find('.form-control').parent().removeClass('has-success');
+      var diff = FormView.prototype.onChange.apply(this, arguments);
+      if (Object.keys(diff).length > 0) {
+        var changed = _.values(_.pick(this.fieldMap, _.keys(diff))).join(', ');
+        this.$el.find(changed).parent().filter(':not(.has-error)').addClass('has-success');
+        this.setState('pending');
+      } else {
+        this.setState('default');
+      }
+    }, 200 ),
 
     newCategory: function() {
       var categoryView = new EditCategoryView({restaurant: this});

@@ -164,7 +164,14 @@
       <input type="text" maxlength="5" class="form-control restaurant-address restaurant-zip" value="{{restaurant.zip}}" placeholder="78701">
     </div>
   </fieldset>
-  <div class="col-lg-1 col-lg-offset-10">
+  <div class="col-lg-10 status-text">
+    <span class="state-default">No changes made :)</span>
+    <span class="state-pending hide">You have changes to be saved</span>
+    <span class="state-loading hide">Working...</span>
+    <span class="state-saved hide">Changes saved!</span>
+    <span class="state-error hide"></span>
+  </div>
+  <div class="col-lg-1">
     <button type="button" class="btn btn-danger restaurant-remove pull-right">Remove</button>
   </div>
   <div class="col-lg-1">

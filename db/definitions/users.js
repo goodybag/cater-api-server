@@ -55,6 +55,7 @@ define(function(require) {
     }
   , points: {
       type: types.int
+    , checks: [ '>= 0']
     , default: 0
     }
   };

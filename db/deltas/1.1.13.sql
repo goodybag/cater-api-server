@@ -19,7 +19,7 @@ begin
   -- Add col points to user table
   if not exists ( select 1 from information_schema.columns where table_name = tbl_name1 and column_name = col_name1 ) then
     raise notice 'Adding column `%` to table `%`', col_name1, tbl_name1;
-    execute 'alter table "' || tbl_name1 || '" add column "' || col_name1 || '" ' || col_type1 || ' DEFAULT 0';
+    execute 'alter table "' || tbl_name1 || '" add column "' || col_name1 || '" ' || col_type1 || ' CHECK (points >= 0) DEFAULT 0';
   end if;
 
   -- Add col points_awarded to orders table

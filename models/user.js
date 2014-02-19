@@ -39,6 +39,11 @@ var User = module.exports = Model.extend({
     return this;
   }
 
+, getOrdersWithPendingPoints: function( callback, client ){
+    User.getOrdersWithPendingPoints( this.attributes.id, callback, client );
+    return this;
+  }
+
 , removePoints: function( points, callback, client ){
     User.removePoints( this.attributes.id, points, callback, client );
     return this;
@@ -293,7 +298,7 @@ var User = module.exports = Model.extend({
   }
 
 , addPointsForOrder: function( order, callback, client ) {
-    var points = Math.floor(order.attributes.total / 100);
+    var points = order.attributes.points || 0;
     if (isNaN(points)) return callback(new Error('cannot calculate points for order'));
 
     db.getClient(function (error, client, done) {
@@ -378,10 +383,22 @@ var User = module.exports = Model.extend({
       var points = 0;
       if (!orders.length) return callback(null, points);
       orders.forEach(function(order){
-        points += Math.floor(order.attributes.total / 100);
+        points += (order.attributes.points || 0);
       });
       return callback(null, points);
     });
+  }
+
+, getOrdersWithPendingPoints: function( userId, callback, client ) {
+    var query = {
+      where: {
+        status: {$or: ['submitted', 'accepted', 'delivered']}
+      , points_awarded: false
+      , user_id: userId
+      }
+    };
+
+    return Order.find(query, callback);
   }
 
 , find: function( query, callback, client ){

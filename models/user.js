@@ -2,6 +2,7 @@ var util = require('util');
 var db  = require('../db');
 var utils = require('../utils');
 var Model = require('./model');
+var Order = require('./order');
 var Address = require('./address');
 var queries = require('../db/queries');
 
@@ -30,6 +31,11 @@ var User = module.exports = Model.extend({
 
 , removeUserPaymentMethod: function( cardId, callback, client ){
     User.removeUserPaymentMethod( this.attributes.id, cardId, callback, client );
+    return this;
+  }
+
+, getPendingPoints: function( callback, client ){
+    User.getPendingPoints( this.attributes.id, callback, client );
     return this;
   }
 
@@ -354,6 +360,27 @@ var User = module.exports = Model.extend({
 
     ( client || db ).query( db.builder.sql( query ), function( error, result, info ) {
       return callback( error, result );
+    });
+  }
+
+, getPendingPoints: function( userId, callback, client ) {
+    var query = {
+      where: {
+        status: {$or: ['submitted', 'accepted', 'delivered']}
+      , points_awarded: false
+      , user_id: userId
+      }
+    };
+
+    Order.find(query, function(error, orders){
+      if (error) return callback(error);
+
+      var points = 0;
+      if (!orders.length) return callback(null, points);
+      orders.forEach(function(order){
+        points += Math.floor(order.attributes.total / 100);
+      });
+      return callback(null, points);
     });
   }
 

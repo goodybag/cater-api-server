@@ -40,12 +40,14 @@ input, textarea {
 .checkbox-inline {
   display: inline-block;
   width: auto;
+  padding: 0;
 }
 
 .form-group {
   display: inline-block;
   width: @input-width;
   margin-left: @gutter-width / 4;
+  vertical-align: bottom;
 
   &.form-group-submit {
     width: auto;
@@ -62,6 +64,10 @@ input, textarea {
   input, textarea {
     padding: @input-padding-small;
     line-height: @line-height-small;
+  }
+
+  input[type='checkbox'] {
+    padding: 0;
   }
 
   label {

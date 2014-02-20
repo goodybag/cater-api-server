@@ -47,7 +47,7 @@ body {
   // Make the logo conform to navbar size
   height: 100%;
   max-height: @navbar-height;
-  max-width: 138px;
+  max-width: @navbar-logo-max-width;
   font-family: @font-family-serif;
   font-size: @navbar-logo-size;
   line-height: @navbar-height;
@@ -173,7 +173,7 @@ body {
   }
 
   .navbar .navbar-logo {
-    max-width: 98px;
+    max-width: @navbar-mobile-logo-max-width;
     max-height: @navbar-mobile-height;
     font-size: @navbar-logo-size / 2;
     line-height: @navbar-mobile-height;

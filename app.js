@@ -17,18 +17,8 @@ var
 , helpers = require('./helpers')
 , partials = require('./lib/partials')
 , errors = require('./errors')
+, middleware = require('./middleware')
 ;
-
-var middleware = {
-  cors: require('./middleware/cors')
-, domains: require('./middleware/domains')
-, uuid: require('./middleware/uuid')
-, sslRedirect: require('./middleware/ssl-redirect')
-, requestLogger: require('connect-request-logger-pg')
-, getUser: require('./middleware/get-user')
-, statusCodeIntercept: require('./middleware/status-code-intercept')
-, setSession: require('./middleware/set-session')
-};
 
 var app = module.exports = express();
 

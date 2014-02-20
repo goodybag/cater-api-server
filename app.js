@@ -122,6 +122,33 @@ app.configure(function(){
     render.call(this, path, options, callback);
   }
 
+  /**
+   * More readable app.all implementation for applying multiple
+   * middlewares so a group of routes
+   *
+   * app.before( m.restrict(), function(){
+   *   app.get('/orders', ... );
+   *   app.get('/orders/:id', ... );
+   *   ...
+   * })
+   */
+  app.before = function(){
+    var args    = Array.prototype.slice.call( arguments );
+    var handler = args.pop();
+    var handle  = function( verb, path ){
+      var _args = [ path ].concat( args, Array.prototype.slice.call( arguments, 2 ) );
+      return this[ verb ].apply( this, _args );
+    };
+
+    handler({
+      get:    handle.bind( app, 'get' )
+    , post:   handle.bind( app, 'post' )
+    , put:    handle.bind( app, 'put' )
+    , patch:  handle.bind( app, 'patch' )
+    , del:    handle.bind( app, 'del' )
+    , all:    handle.bind( app, 'all' )
+    })
+  };
 });
 
 helpers.register(hbs);

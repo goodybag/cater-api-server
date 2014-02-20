@@ -65,10 +65,10 @@ module.exports.editability = function(req, res, next) {
     if (err) return res.error(errors.internal.DB_FAILURE);
     if (!order) return res.json(404);
 
-    // client making a tip edit, ensure only tip fields are being adjusted
-    var isTipEdit = req.order.isOwner && !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
-
-    var editable = isTipEdit || req.order.isRestaurantManager || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
+    // ensure only tip fields are being adjusted
+    var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) && 
+                    !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
+    var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
     return editable ? next() : res.json(403, 'order not editable');
   });
 };

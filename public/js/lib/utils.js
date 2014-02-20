@@ -13,7 +13,9 @@ define(function(require, exports, module) {
 
   var Backbone = { View: { extend: function(){} } };
 
+
   if (isBrowser){
+    require('jquery-loaded');
     Backbone = require('backbone');
     require('backbone.trackit');
   }

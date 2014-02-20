@@ -1,5 +1,6 @@
 var fs            = require('fs');
 var path          = require('path');
+var pkg           = require('./package.json');
 var utils         = require('./utils');
 var requireConfig = require('./public/js/require-config');
 
@@ -8,6 +9,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-less');
 
   var config = {
     complexity: {
@@ -22,6 +25,24 @@ module.exports = function(grunt) {
       }
     }
 
+  , watch: {
+      less: {
+        files: [ 'less/*.less', 'less/**/*.less' ]
+      , tasks: ['less']
+      , options: { spawn: false }
+      }
+    }
+
+  , less: {
+      compile: {
+        files: {
+          "public/dist/landing.css":        "less/core-landing.less"
+        , "public/dist/landing-ielt9.css":  "less/ielt9-landing.less"
+        }
+      }
+    }
+
+
   , concat: {
       // Concat the require config to require.js lib
       // so that the config is loaded before modules are
@@ -35,7 +56,7 @@ module.exports = function(grunt) {
     }
 
   , requirejs: {
-      compile: {
+      app: {
         options: utils.extend( {}, requireConfig, {
           baseUrl: 'public/js/lib'
         , out: 'public/dist/app.js'
@@ -64,14 +85,19 @@ module.exports = function(grunt) {
           }
         })
       }
+    , landing: {}
     }
   };
+
+  var landing   = config.requirejs.landing.options = utils.clone( config.requirejs.app.options );
+  landing.name  = 'app/pages/landing';
+  landing.out   = 'public/dist/landing.js';
 
   grunt.initConfig( config );
 
   grunt.loadNpmTasks('grunt-complexity');
 
-  grunt.registerTask('analyze', ['complexity']);
-
-  grunt.registerTask('build', [ 'concat', 'requirejs' ]);
+  grunt.registerTask( 'analyze',  ['complexity'] );
+  grunt.registerTask( 'build',    ['less', 'concat', 'requirejs'] );
+  grunt.registerTask( 'default',  ['less', 'watch'] );
 };

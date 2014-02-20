@@ -518,7 +518,6 @@ a.list-group-item .list-group-item-heading {
 
 .order-summary {
   font-size: 13px;
-  overflow-y: scroll;
 }
 
 .order-summary .panel-heading, .order-summary .panel-footer {

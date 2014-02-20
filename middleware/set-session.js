@@ -8,9 +8,8 @@ module.exports = function( options ){
   return function( req, res, next ){
 
     // Expire in two weeks of inactivity
-    if(req.session.remember) {
+    if ( req.session.remember )
       req.session.cookie.maxAge = 14 * 24 * 60 * 60 * 1000;
-    }
 
     req.setSession = function( user, remember ){
       req.session = utils.extend(

@@ -309,7 +309,7 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-  app.get('/receipts/order-:oid.pdf', m.buildReceipt(), express.static(__dirname + '/public'));
+  app.get('/receipts/order-:oid.pdf', m.buildReceipt());
 
   /**
    *  Order status resource.  The collection of all statuses on a single order.
@@ -621,6 +621,11 @@ module.exports.register = function(app) {
       layout: 'admin/layout'
     , method: 'findOne'
     })
+  );
+
+  app.get('/admin/restaurants/:id/payment-summaries/:payment_summary_id.pdf'
+  , m.restrict(['admin'])
+  , controllers.paymentSummaries.getPdf
   );
 
   app.get('/api/restaurants/:restaurant_id/orders'

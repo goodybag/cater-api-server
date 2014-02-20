@@ -1,24 +1,9 @@
 {
-  "dir": "public/receipts"
-, "script": "lib/pdf.js"
-, "fileName": "order-:oid.pdf"
-, "orderRoute": "/orders/:oid/receipt"
-, "bucket": "receipts.goodybag.com"
-, "concurrency": 10
+  "script": "lib/gen-pdf.js"
 , "paperSize": {
     "format": "A4"
   , "margin": { "left": "1.4cm", "right": "1.4cm", "top": "1.5cm", "bottom": "1cm" }
   , "orientation": "portrait"
   },
-  "zoomFactor": 1,
-  "credentials": {
-    "email": "receipts@goodybag.com"
-  , "password": "G00dyb4agR3c31pt5!"
-  }
-, "paymentSummaries": {
-    "credentials": {
-      "email": "pdf@goodybag.com"
-    , "password": "G00dyb4agp33d333ff"
-    }
-  }
+  "zoomFactor": 1
 }

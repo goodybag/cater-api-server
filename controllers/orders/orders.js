@@ -64,7 +64,11 @@ module.exports.editability = function(req, res, next) {
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE);
     if (!order) return res.json(404);
-    var editable = req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
+
+    // ensure only tip fields are being adjusted
+    var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) && 
+                    !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
+    var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
     return editable ? next() : res.json(403, 'order not editable');
   });
 };

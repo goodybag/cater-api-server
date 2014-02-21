@@ -40,7 +40,11 @@
     "highcharts": "~3.0.7",
     "jquery-placeholder": "~2.0.7",
     "almond": "~0.2.9",
-    "typeahead.js": "~0.10.1"
+    "typeahead.js": "~0.10.1",
+    "normalize-css": "~2.1.3",
+    "less-elements": "*",
+    "html5shiv": "~3.7.0",
+    "console-polyfill": "~0.1.1"
   },
   "resolutions": {
     "jquery": "1.10.2"

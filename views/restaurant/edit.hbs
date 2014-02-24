@@ -1,0 +1,52 @@
+{{#extend "body"}}
+<!--<Navbar>-->
+<header class="navbar collapsed">
+  <div class="container">
+    <a href="/">
+      <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
+    </a>
+
+    <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
+    <ul class="nav">
+      <li><a href="/join">Sign Up</a></li>
+    </ul>
+  </div>
+</header>
+<!--</Navbar>-->
+
+
+<div class="container">
+  <!--<Edit Nav>-->
+  <ul class="restaurant-edit-menu">
+    <li class="active"><a href="#basic-info" data-toggle="tab">Basic info</a></li>
+    <li><a href="#contact" data-toggle="tab">Contact</a></li>
+    <li><a href="#delivery-settings">Delivery Settings</a></li>
+    <li><a href="#notifications">Notifications</a></li>
+    <li><a href="#lead-times">Lead Times</a></li>
+    <li><a href="#address">Address</a></li>
+    <li><a href="#menu">Menu</a></li>
+  </ul>
+  <!--</Edit Nav>-->
+
+  <!--<Edit Body>-->
+  <div class="restaurant-edit-body tab-content">
+    <div class="tab-pane active" id="basic-info">basic infos</div>
+    <div class="tab-pane" id="contact">contact</div>
+    <div id="delivery-settings">delivery settings</div>
+    <div id="notifications">notifications</div>
+    <div id="lead-times">lead-times</div>
+    <div id="address">address</div>
+  </div>
+  <!--</Edit Body>-->
+
+  
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['app/pages/restaurant-edit'], function( page ){
+    page.init();
+  });
+</script>
+{{/extend}}

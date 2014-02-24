@@ -159,16 +159,18 @@ module.exports.edit = function(req, res) {
         return [new Array(i+1).join('$'), restaurant.attributes.price === i];
       }));
       utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
-      res.render('edit-restaurant', {
-        restaurant: restaurant.toJSON()
-      , selectedPrice: selectedPrice
-      , states: states
-      , mealTypesList: enums.getMealTypes()
-      , mealStylesList: enums.getMealStyles()
-      }, function(err, html) {
-        if (err) return res.error(errors.internal.UNKNOWN, err);
-        res.send(html);
-      });
+      
+      res.render('restaurant/edit', {layout: 'landing/layout'});
+      // res.render('edit-restaurant', {
+      //   restaurant: restaurant.toJSON()
+      // , selectedPrice: selectedPrice
+      // , states: states
+      // , mealTypesList: enums.getMealTypes()
+      // , mealStylesList: enums.getMealStyles()
+      // }, function(err, html) {
+      //   if (err) return res.error(errors.internal.UNKNOWN, err);
+      //   res.send(html);
+      // });
     });
   });
 }

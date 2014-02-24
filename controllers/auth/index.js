@@ -167,7 +167,7 @@ module.exports.login = function ( req, res ){
       });
     }
 
-    req.setSession( user );
+    req.setSession( user, req.body.remember );
 
     return res.redirect( req.query.next || '/' );
   });

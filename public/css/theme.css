@@ -25,7 +25,7 @@ a:hover {
 }
 
 .navbar {
-  background: #FCFDF6;
+  background: #FFF;
   border-color: #CCCCC0;
 }
 
@@ -47,7 +47,7 @@ a:hover {
 
 .btn-default {
   border-color: #DDDED8;
-  background-color: #FCFDF6;
+  background-color: #FFF;
 }
 
 .btn-default:hover {

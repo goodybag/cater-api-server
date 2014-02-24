@@ -1,7 +1,3 @@
-{{#extend "scripts"}}
-<script src="/js/lib/receipt.js"></script>
-{{/extend}}
-
 {{#extend "info"}}
 <div class="info-item-contact info-item">
   {{#if order.user.name}}
@@ -14,40 +10,14 @@
 </div>
 
 <div class="doc-id-info order-number-info">
-  <span class="doc-id-key order-number-key">Order:</span>
-  <span class="doc-id order-number">#{{order.id}}</span>
+  <span class="doc-id-key order-number-key"></span>
+  <span class="doc-id order-number">#{{payment_summary.id}}</span>
 </div>
 {{/extend}}
 
 {{#extend "body"}}
 
-<div class="order-info columns">
-  <div class="order-info-details column-fluid">
-    <h3 class="restaurant-name">{{order.restaurant_name}}</h3>
-    <dl class="dl-horizontal">
-      <dt>Order Name:</dt>
-      <dd>{{order.name}}</dd>
-      <dt>Date Created:</dt>
-      <dd>{{formatDateTime order.created_at "MM/DD/YYYY"}}</dd>
-      <dt>Delivery Date:</dt>
-      <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
-      <dt>Delivery Time:</dt>
-      <dd>{{formatDateTime order.datetime "h:mm A"}}</dd>
-      {{#if order.payment_method}}
-      <dt>Payment Method:</dt>
-      <dd>**** **** **** {{order.payment_method.data.last_four}}</dd>
-      <dt>Charge Date:</dt>
-      <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
-      {{/if}}
-      <dt>Guests:</dt>
-      <dd>{{order.guests}}</dd>
-    </dl>
-  </div>
-  <div class="order-info-notes column-fluid">
-    <div class="notes-key">Notes:</div>
-    <p>{{order.notes}}</p>
-  </div>
-</div>
+<div class="order-info"></div>
 
 <div class="order">
   <table class="gb-table" style="">
@@ -64,30 +34,15 @@
     </thead>
 
     <tbody>
-      {{#each order.orderItems}}
-      <tr id="order-item-{{this.id}}">
-        <td class="line-item-name" data-title="Name">
-          <div class="item-name">{{this.name}}</div>
-          <ul class="comma-separated item-options">
-            {{#each options_sets}}
-              {{#each this.options}}
-                {{#if this.state}}
-                  <li>{{this.name}}</li>
-                {{/if}}
-              {{/each}}
-            {{/each}}
-          </ul>
-        </td>
-        <td class="line-item-recipient" data-title="Recipient">
-          <span class="item-recipient-span order-item-field order-item-recipient" />{{this.recipient}}</span>
-        </td>
-        <td class="line-item-quantity" data-title="Quantity">
-          <span class="item-quantity-span order-item-field order-item-quantity" />x {{this.quantity}}</span>
-        </td>
-        <td class="line-item-notes" data-title="Notes">
-          <span name="notes" class="item-notes-span order-item-field order-item-notes">{{this.notes}}</span>
-        </td>
-        <td class="line-item-price" data-title="Price">${{dollars this.sub_total}}</td>
+      {{#each payment_summary_items}}
+      <tr>
+        <td>{{this.order_id}}</td>
+        <td>${{dollars this.delivery_fee}}</td>
+        <td>${{dollars this.tip}}</td>
+        <td>${{dollars this.order_total}}</td>
+        <td>-${{dollars this.gb_fee}}</td>
+        <td>-${{dollars this.sales_tax}}</td>
+        <td>${{dollars this.net_payout}}</td>
       </tr>
       {{/each}}
     </tbody>
@@ -95,33 +50,12 @@
 
   <div class="order-bottom-wrapper">
     <div class="order-bottom">
-      <div class="order-adjustment columns">
-        <p class="adjustment-notes column-fluid">{{order.adjustment.description}}</p>
-        <div class="column-fluid adjustment-amount-wrapper">
-          <dl class="dl-adjustment-amount dl-horizontal">
-            <dt>Adjustment:</dt>
-            <dd>${{dollars order.adjustment.amount}}</dd>
-          </dl>
-        </div>
-      </div>
-
-      <div class="order-summary">
-        <dl class="dl-horizontal dl-order-summary">
-          <dt>Subtotal:</dt>
-          <dd>${{dollars order.sub_total}}</dd>
-          <dt>Delivery Fee:</dt>
-          <dd>${{dollars order.restaurant.delivery_fee}}</dd>
-          <dt>Tax:</dt>
-          <dd>${{tax order.sub_total order.restaurant.delivery_fee}}</dd>
-          <dt>Tip:</dt>
-          <dd>${{dollars order.tip}}</dd>
-        </dl>
-      </div>
+      <div class="order-summary"></div>
 
       <div class="total-wrapper">
         <dl class="dl-horizontal dl-order-total">
           <dt>Total:</dt>
-          <dd>${{total order.sub_total order.restaurant.delivery_fee order.tip}}</dd>
+          <dd>${{dollars payment_summary.total_payout}}</dd>
         </dl>
       </div>
     </div>

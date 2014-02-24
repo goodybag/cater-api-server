@@ -6,6 +6,7 @@ var Models = require('./models');
 var hbHelpers = require('./public/js/lib/hb-helpers');
 var db = require('./db');
 var errors = require('./errors');
+var PaymentSummaryItem = require('./public/js/app/models/payment-summary-item');
 
 var m = utils.extend({
   orderParams   : require('./middleware/order-params'),
@@ -13,7 +14,8 @@ var m = utils.extend({
   basicAuth     : require('./middleware/basic-session-auth'),
   buildReceipt  : require('./middleware/build-receipt'),
   queryParams   : require('./middleware/query-params'),
-  queryString   : require('./middleware/query-string')
+  queryString   : require('./middleware/query-string'),
+  restaurant    : require('./middleware/restaurant')
 }, require('stdm') );
 
 utils.extend( m, require('./middleware/util') );
@@ -623,9 +625,33 @@ module.exports.register = function(app) {
     })
   );
 
-  app.get('/admin/restaurants/:id/payment-summaries/:payment_summary_id.pdf'
+  app.get('/admin/restaurants/:id/payment-summaries/:payment_summary_id'
   , m.restrict(['admin'])
   , controllers.paymentSummaries.getPdf
+  );
+
+  app.get( config.paymentSummaries.route
+  , m.basicAuth()
+  , m.restrict(['admin', 'pms'])
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.restaurant({ param: 'restaurant_id' })
+  , function( req, res, next ){
+      var $query = { payment_summary_id: req.param('id') };
+      db.payment_summary_items.find( $query, function( error, results ){
+        if ( error ) return res.error(500);
+
+        res.locals.payment_summary_items = results.map( function( r ){
+          return new PaymentSummaryItem( r ).toJSON();
+        });
+
+        next();
+      });
+    }
+  , m.view( 'invoice/payment-summary', db.payment_summaries, {
+      layout: 'invoice/payment-summary-layout'
+    , method: 'findOne'
+    })
   );
 
   app.get('/api/restaurants/:restaurant_id/orders'

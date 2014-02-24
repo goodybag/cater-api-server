@@ -1,6 +1,11 @@
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
+  };
+}
+
 define(function(require, exports, module) {
-  var utils   = require('utils');
-  var config  = require('config');
+  var utils = require('utils');
 
   return module.exports = utils.Model.extend({
     defaults: {
@@ -14,12 +19,12 @@ define(function(require, exports, module) {
       // this.on( 'change:gb_fee', this.onFeeChange, this );
       this.on( 'change:gb_fee_percent', this.onFeePercentChange, this );
       this.on( 'change', this.onChange, this );
-console.log(this.get('gb_fee'), this.get('order_total'))
-      this.set( 'gb_fee_percent', parseFloat(((this.get('gb_fee') / this.get('order_total')) * 100).toFixed(2)) );
+
+      this.onFeeChange( this, this.get('fee') );
     }
 
   , toJSON: function( options ){
-      var obj = utils.Model.prototype.toJSON.call( this, options );
+      var obj = module.exports.__super__.toJSON.call( this, options );
 
       if ( obj.order ){
         obj.order_id = obj.order.id;
@@ -40,7 +45,6 @@ console.log(this.get('gb_fee'), this.get('order_total'))
       , sales_tax:        order.getSalesTaxContribution()
       , tip:              order.get('tip')
       , gb_fee:           order.get('gb_fee') || 0
-      , gb_fee_percent:   0
       };
 
       data.net_payout = this.getNetPayout( data );
@@ -60,12 +64,17 @@ console.log(this.get('gb_fee'), this.get('order_total'))
     }
 
   , onFeeChange: function( psi, fee ){
-
+      this.set(
+        'gb_fee_percent'
+      , parseFloat(
+          ((this.get('gb_fee') / this.get('order_total')) * 100).toFixed(2)
+        )
+      );
     }
 
   , onFeePercentChange: function( psi, percent ){
     console.log("setting gb_fee", this.get('order_total') * ( percent / 100 ))
-      this.set( 'gb_fee', this.get('order_total') * ( percent / 100 ) );
+      this.set( 'gb_fee', parseInt( this.get('order_total') * ( percent / 100 ) ) );
     }
 
   , onChange: function(){

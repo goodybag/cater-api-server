@@ -56,6 +56,10 @@ define(function(require) {
       type: types.int
     , default: 0
     }
+  , gb_fee: {
+      type: types.int
+    , default: 0
+    }
   };
 
   definition.indices = {};

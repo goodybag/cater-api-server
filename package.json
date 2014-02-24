@@ -12,6 +12,11 @@
     "test": "./node_modules/.bin/mocha --bail",
     "postinstall": "./node_modules/.bin/bower install"
   },
+  "namedModules": {
+    "underscore": "./node_modules/lodash/lodash.js",
+    "backbone": "./public/components/backbone/backbone.js",
+    "utils": "./public/js/lib/utils.js"
+  },
   "dependencies": {
     "npm": "*",
     "express": "3.4.x",
@@ -62,7 +67,8 @@
     "grunt-contrib-copy": "~0.5.0",
     "grunt-requirejs": "~0.4.0",
     "grunt-contrib-less": "~0.9.0",
-    "grunt-cli": "~0.1.13"
+    "grunt-cli": "~0.1.13",
+    "grunt-named-modules": "~1.0.1"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

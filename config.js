@@ -111,9 +111,10 @@ config.defaults = {
     fileName:     "payment-summary-:psid.pdf"
   , bucket:       "pms.goodybag.com"
   , credentials: {
-      email:      "pdf@goodybag.com"
-    , password:   "G00dyb4agp33d333ff"
+      email:      "pms@goodybag.com"
+    , password:   "G00dyb4agp333m3ss"
     }
+  , route:        '/admin/restaurants/:restaurant_id/payment-summaries/:id/pdf'
   }
 
 , receipt: {

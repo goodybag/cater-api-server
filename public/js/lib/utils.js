@@ -10,13 +10,11 @@ define(function(require, exports, module) {
   var _ = require('lodash');
   var amanda = require('amanda');
   var helpers = require('./helpers');
-
-  var Backbone = { View: { extend: function(){} } };
+  var Backbone = require('backbone');
 
 
   if (isBrowser){
     require('jquery-loaded');
-    Backbone = require('backbone');
     require('backbone.trackit');
   }
 

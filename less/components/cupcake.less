@@ -1,0 +1,23 @@
+/////////////
+// Cupcake //
+/////////////
+
+@cupcake-size: 145px;
+
+.cupcake {
+  display: inline-block;
+  width: @cupcake-size;
+  height: @cupcake-size;
+  background: url('../img/cupcake.jpg');
+  border-radius: @cupcake-size;
+
+  &.sad {
+    background-position-x: -35px;
+    background-position-y: 198px;
+  }
+
+  &.happy {
+    background-position-x: 185px;
+    background-position-y: 201px;
+  }
+}

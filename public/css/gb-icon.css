@@ -55,6 +55,7 @@ you can use the generic selector below, but it's slower:
 .gb-icon-phone,
 .gb-icon-warning,
 .gb-icon-user,
+.gb-icon-hamburger,
 .gb-icon-star,
 .gb-icon-star-half-empty,
 .gb-icon-star-empty {
@@ -118,4 +119,8 @@ you can use the generic selector below, but it's slower:
 .gb-icon-star-empty:before,
 [data-icon="gb-icon-star-empty"]:before {
   content: "\e601";
+}
+.gb-icon-hamburger:before,
+[data-icon="gb-icon-hamburger"]:before {
+  content: "\e604";
 }

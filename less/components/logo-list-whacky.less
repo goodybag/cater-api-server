@@ -1,0 +1,17 @@
+//////////////////////
+// Logo List Whacky //
+//////////////////////
+
+.logo-list-whacky {
+  margin-top: @logo-list-margin-top + @whackiness-factor;
+}
+
+.logo-list-whacky > li:nth-child(2n) {
+  top: -@whackiness-factor;
+
+  @media screen and ( max-width: @breakpoint-tablet ){
+    & {
+      top: 0;
+    }
+  }
+}

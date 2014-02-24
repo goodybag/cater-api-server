@@ -45,8 +45,9 @@
   require([
       'app/pages/cards'
     , 'app/models/index'
+    , 'app/models/user'
     ]
-  , function(cards, Models) {
+  , function(cards, Models, User) {
       cards.init({
         user: new User( {{{json user}}} )
       , marketplaceUri: "{{{config.balanced.marketplaceUri}}}"

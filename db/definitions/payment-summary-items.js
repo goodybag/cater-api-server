@@ -53,11 +53,11 @@ define(function(require) {
     , default: 0
     }
   , sales_tax: {
-      type: types.int
+      type: types.numeric( 5, 5 )
     , default: 0
     }
   , gb_fee: {
-      type: types.int
+      type: types.numeric( 5, 5 )
     , default: 0
     }
   };

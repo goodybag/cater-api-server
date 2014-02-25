@@ -24,8 +24,8 @@ begin
   , delivery_fee        int default 0
   , tip                 int default 0
   , order_total         int default 0
-  , gb_fee              int default 0
-  , sales_tax           int default 0
+  , gb_fee              numeric( 5, 5 ) default 0
+  , sales_tax           numeric( 5, 5 ) default 0
   );
 
 end$$;

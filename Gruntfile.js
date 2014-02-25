@@ -11,6 +11,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-named-modules');
 
   var config = {
@@ -31,6 +32,19 @@ module.exports = function(grunt) {
         files: [ 'less/*.less', 'less/**/*.less' ]
       , tasks: ['less']
       , options: { spawn: false }
+      }
+
+    , handlebars: {
+        files: [ 'public/partials/*.hbs' ]
+      , tasks: [ 'shell:handlebars' ]
+      , options: { spawn: false }
+      }
+    }
+
+  , shell: {
+      handlebars: {
+        options: { stdout: true }
+      , command: './node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js'
       }
     }
 

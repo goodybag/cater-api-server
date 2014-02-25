@@ -20,6 +20,8 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, salesTax: 1.0825
+
 , logging: {
     enabled: true
   , transports: {

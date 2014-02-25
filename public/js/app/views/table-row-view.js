@@ -68,15 +68,18 @@ define(function(require){
     }
 
   , getDomValue: function( key, $el ){
-      var val;
+      var val, args, helper;
       $el = $el || this.$el.find('[name="' + key + '"]');
 
       if ( !$el ) return val;
 
-      val = $el.attr('type') === 'number' ? +$el.val() : $el.val();
+      val     = $el.attr('type') === 'number' ? +$el.val() : $el.val();
+      helper  = ($el.data('out') || "").split(' ');
+      args    = [ val ].concat( helper.slice(1) );
+      helper  = helper[0];
 
-      if ( $el.data('out') && Hbs.helpers[ $el.data('out') ] ){
-        return Hbs.helpers[ $el.data('out') ].call( Hbs, val );
+      if ( helper && Hbs.helpers[ helper ] ){
+        return Hbs.helpers[ helper ].apply( Hbs, args );
       }
 
       return val;

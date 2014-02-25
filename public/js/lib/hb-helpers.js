@@ -367,6 +367,22 @@ define(function(require, exports, module) {
       } else {
         return options.inverse(this);
       }
+    },
+
+    factorToPercent: function( factor, precision, options ){
+      if ( typeof precision === 'object' || !precision ){
+        precision = 2;
+      }
+
+      return parseFloat( ( (factor - 1) * 100 ).toFixed( precision ) );
+    },
+
+    percentToFactor: function( percent, precision, options ){
+      if ( typeof precision === 'object' || !precision ){
+        precision = 2;
+      }
+
+      return parseFloat( (( percent / 100 ) + 1).toFixed( precision ) );
     }
   }
 

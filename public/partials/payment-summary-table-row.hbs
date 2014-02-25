@@ -53,13 +53,13 @@
   </td>
   <td>
     <div class="input-group">
-      <span class="input-group-addon">-$</span>
-      <input name="sales_tax"
+      <span class="input-group-addon">-%</span>
+      <input name="sales_tax_factor"
         class="form-control"
         type="number"
-        data-in="dollars"
-        data-out="pennies"
-        value="{{dollars model.sales_tax}}">
+        data-in="factorToPercent"
+        data-out="percentToFactor 4"
+        value="{{factorToPercent model.sales_tax_factor}}">
     </div>
   </td>
   <td>

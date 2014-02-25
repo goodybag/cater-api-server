@@ -33,7 +33,7 @@ define(function(require){
         $('#section-restaurants .btn-call-to-action').click( function( e ){
           e.preventDefault();
 
-          $('html').animate({ scrollTop: 0 }, function(){
+          $('body').animate({ scrollTop: 0 }, function(){
             $('#register-email').focus();
           });
         });

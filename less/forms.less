@@ -26,7 +26,29 @@ label {
   font-size: @font-size-small + 1;
 }
 
-input, textarea {
+// Whitelist all input types except checkbox, radio
+input[type="button"],
+input[type="color"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="file"],
+input[type="hidden"],
+input[type="image"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="range"],
+input[type="reset"],
+input[type="search"],
+input[type="submit"],
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+input[type="week"],
+textarea {
   display: block;
   width: 100%;
   box-sizing: border-box;
@@ -58,6 +80,10 @@ input, textarea {
   input, textarea {
     padding: @input-padding-small;
     line-height: @line-height-small;
+  }
+
+  input[type='checkbox'] {
+    padding: 0;
   }
 
   label {

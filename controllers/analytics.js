@@ -60,7 +60,6 @@ module.exports.list = function( req, res ){
   , where: {
       'status': 'accepted'
     }
-  , limit: 'all'
   , joins: {
       order_statuses : {
         type: 'left'

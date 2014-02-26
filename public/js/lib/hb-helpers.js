@@ -374,7 +374,7 @@ define(function(require, exports, module) {
         precision = 2;
       }
 
-      return parseFloat( ( (factor - 1) * 100 ).toFixed( precision ) );
+      return parseFloat( ( factor * 100 ).toFixed( precision ) );
     },
 
     percentToFactor: function( percent, precision, options ){
@@ -382,7 +382,7 @@ define(function(require, exports, module) {
         precision = 2;
       }
 
-      return parseFloat( (( percent / 100 ) + 1).toFixed( precision ) );
+      return parseFloat( ( percent / 100 ).toFixed( precision ) );
     }
   }
 

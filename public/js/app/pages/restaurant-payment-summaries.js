@@ -12,9 +12,6 @@ define(function(require){
         collection:   summaries
       , template:     Hbs.partials.payment_summaries_table
       , rowTemplate:  Hbs.partials.payment_summaries_table_row
-      , onItemEditClick: function( model, e ){
-          window.location.href += '/' + model.get('id');
-        }
       });
 
       utils.domready( function(){

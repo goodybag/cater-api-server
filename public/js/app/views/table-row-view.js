@@ -35,22 +35,28 @@ define(function(require){
       return this;
     }
 
-  , updateDomWithModel: function(){
+  , updateDomWithModel: function( props ){
+      props = props || this.model.attributes;
+
       var $el, val;
 
-      for ( var key in this.model.attributes ){
+      for ( var key in props ){
         $el = this.$el.find('[name="' + key + '"]');
 
         if ( $el.length === 0 ) continue;
         if ( this.getDomValue( key, $el ) == this.model.get( key ) ) continue;
         // Do we need to transform the value first?
         if ( $el.data('in') && Hbs.helpers[ $el.data('in') ] ){
-          val = Hbs.helpers[ $el.data('in') ].call( Hbs, this.model.attributes[ key ] );
+          val = Hbs.helpers[ $el.data('in') ].call( Hbs, props[ key ] );
         } else {
-          val = this.model.attributes[ key ];
+          val = props[ key ];
         }
 
-        $el.val( val );
+        if ( $el[0].tagName === 'INPUT' ){
+          $el.val( val );
+        } else {
+          $el.html( val );
+        }
       }
     }
 
@@ -86,7 +92,7 @@ define(function(require){
     }
 
   , onModelChange: function( model, prev ){
-      this.updateDomWithModel();
+      this.updateDomWithModel( model.changed );
     }
 
   , onItemDeleteClick: function( e ){

@@ -4,7 +4,6 @@
       <span class="input-group-addon">#</span>
       <input name="order_id"
         class="form-control"
-        type="number"
         value="{{model.order_id}}"
         list="{{options.dataListId}}">
     </div>
@@ -45,21 +44,23 @@
   <td>
     <div class="input-group">
       <span class="input-group-addon">-%</span>
-      <input name="gb_fee_percent"
+      <input name="gb_fee"
         class="form-control"
         type="number"
-        value="{{model.gb_fee_percent}}">
+        data-in="factorToPercent"
+        data-out="percentToFactor 4"
+        value="{{factorToPercent model.gb_fee}}">
     </div>
   </td>
   <td>
     <div class="input-group">
       <span class="input-group-addon">-%</span>
-      <input name="sales_tax_factor"
+      <input name="sales_tax"
         class="form-control"
         type="number"
         data-in="factorToPercent"
         data-out="percentToFactor 4"
-        value="{{factorToPercent model.sales_tax_factor}}">
+        value="{{factorToPercent model.sales_tax}}">
     </div>
   </td>
   <td>

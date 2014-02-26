@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var FormView = require('./form-view');
   var EditOptionsView = require('./edit-options-view')
   var Item = require('../models/item');
+  var Handlebars = require('handlebars');
 
   var EditItemView = FormView.extend({
     tagName: 'tr',

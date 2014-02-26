@@ -65,7 +65,7 @@ module.exports.register = function(app) {
     controllers.restaurants.get.apply(this, arguments);
   });
 
-  app.get('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.edit);
+  //app.get('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.edit);
 
   app.put('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
 
@@ -77,6 +77,22 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
+
+  /**
+   * Restaurant edit resource
+   */
+
+  app.get('/restaurants/:rid/edit/basic-info', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
+
+  app.get('/restaurants/:rid/edit/notifications', m.restrict('admin'), controllers.restaurants.edit.notifications);
+
+  // app.get('/restaurants/:rid/edit/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);
+
+  // app.get('/restaurants/:rid/edit/tags', m.restrict('admin'), controllers.restaurants.edit.tags);
+
+  // app.get('/restaurants/:rid/edit/address', m.restrict('admin'), controllers.restaurants.edit.address);
+
+  // app.get('/restaurants/:rid/edit/menu', m.restrict('admin'), controllers.restaurants.edit.menu);
 
   app.get('/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 

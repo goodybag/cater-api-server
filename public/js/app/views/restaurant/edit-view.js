@@ -18,7 +18,7 @@ define(function(require, exports, module) {
 
 
       // Get form fields
-      console.log(utils.pluck($(e.currentTarget).find('input'), 'name', 'value'));
+      console.log(utils.pluck($(e.currentTarget).find('input'), 'name'));
       console.log(utils.pluck($(e.currentTarget).find('input'), 'value'));
     }
 

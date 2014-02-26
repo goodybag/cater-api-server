@@ -149,34 +149,46 @@ module.exports.get = function(req, res) {
   utils.async.parallel(tasks, done);
 }
 
-module.exports.edit = function(req, res) {
-  models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (!restaurant) return res.render('404');
-    restaurant.getItems(function(err, items) {
+module.exports.editRestaurant = function(template) {
+  return function(req, res) {
+    models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      var selectedPrice = utils.object(utils.map([1, 2, 3, 4], function(i) {
-        return [new Array(i+1).join('$'), restaurant.attributes.price === i];
-      }));
-      utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
-      
-      res.render('restaurant/edit', {
-        layout: 'landing/layout'
-      , restaurant: restaurant.toJSON()
+      if (!restaurant) return res.render('404');
+      restaurant.getItems(function(err, items) {
+        if (err) return res.error(errors.internal.DB_FAILURE, err);
+        var selectedPrice = utils.object(utils.map([1, 2, 3, 4], function(i) {
+          return [new Array(i+1).join('$'), restaurant.attributes.price === i];
+        }));
+        utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
+        
+        res.render(template, {
+          layout: 'landing/layout'
+        , restaurant: restaurant.toJSON()
+        });
+        // res.render('edit-restaurant', {
+        //   restaurant: restaurant.toJSON()
+        // , selectedPrice: selectedPrice
+        // , states: states
+        // , mealTypesList: enums.getMealTypes()
+        // , mealStylesList: enums.getMealStyles()
+        // }, function(err, html) {
+        //   if (err) return res.error(errors.internal.UNKNOWN, err);
+        //   res.send(html);
+        // });
       });
-      // res.render('edit-restaurant', {
-      //   restaurant: restaurant.toJSON()
-      // , selectedPrice: selectedPrice
-      // , states: states
-      // , mealTypesList: enums.getMealTypes()
-      // , mealStylesList: enums.getMealStyles()
-      // }, function(err, html) {
-      //   if (err) return res.error(errors.internal.UNKNOWN, err);
-      //   res.send(html);
-      // });
     });
-  });
-}
+  };
+};
+
+module.exports.edit = {
+  basicInfo:          module.exports.editRestaurant('restaurant/edit-basic-info')
+, notifications:      module.exports.editRestaurant('restaurant/edit-notifications')
+, deliverySettings:   module.exports.editRestaurant('restaurant/edit-delivery-settings')
+, tags:               module.exports.editRestaurant('restaurant/edit-tags')
+, address:            module.exports.editRestaurant('restaurant/edit-address')
+, menu:               module.exports.editRestaurant('restaurant/edit-menu')
+};
+
 
 module.exports.editAll = function(req, res, next) {
   models.Restaurant.find({}, function(err, models) {

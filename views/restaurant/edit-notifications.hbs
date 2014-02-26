@@ -1,0 +1,51 @@
+{{#extend "body"}}
+
+<div class="restaurant-edit">
+
+  <!--<Navbar>-->
+  <header class="navbar collapsed">
+    <div class="container">
+      <a href="/">
+        <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
+      </a>
+
+      <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
+      <ul class="nav">
+        <li><a href="/join">Sign Up</a></li>
+      </ul>
+    </div>
+  </header>
+  <!--</Navbar>-->
+
+
+  <div class="container">
+  <h1>Editing {{restaurant.name}}</h1>
+    <!--<Edit Nav>-->
+    <ul class="restaurant-edit-menu">
+      <li><a href="#basic-info" data-toggle="tab">Basic info</a></li>
+      <li><a href="#delivery-settings" data-toggle="tab">Delivery Settings</a></li>
+      <li class="active"><a href="#notifications" data-toggle="tab">Notifications</a></li>
+      <li><a href="#lead-times" data-toggle="tab">Lead Times</a></li>
+      <li><a href="#address" data-toggle="tab">Address</a></li>
+      <li><a href="#menu" data-toggle="tab">Menu</a></li>
+    </ul>
+    <!--</Edit Nav>-->
+
+    <!--<Edit Body>-->
+    <div class="restaurant-edit-body">
+      <h2>Notification Settings</h2>
+      <p>Lorem ipsum dolomite</p>
+    </div>
+    <!--</Edit Body>-->
+  </div>
+
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['app/pages/restaurant-edit'], function( page ){
+    page.init();
+  });
+</script>
+{{/extend}}

@@ -160,7 +160,10 @@ module.exports.edit = function(req, res) {
       }));
       utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
       
-      res.render('restaurant/edit', {layout: 'landing/layout'});
+      res.render('restaurant/edit', {
+        layout: 'landing/layout'
+      , restaurant: restaurant.toJSON()
+      });
       // res.render('edit-restaurant', {
       //   restaurant: restaurant.toJSON()
       // , selectedPrice: selectedPrice

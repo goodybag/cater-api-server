@@ -1,0 +1,21 @@
+<h2>Basic Info</h2>
+
+<form class="form-basic-info">
+  <div class="form-group">
+    <label for="input-name">Name</label>
+    <input type="text" name="name" id="input-name" value="{{restaurant.name}}">
+  </div>
+  <div class="form-group">
+    <label for="input-description">Description</label>
+    <input type="text" name="description" id="input-description" value="{{restaurant.description}}">
+  </div>
+
+  <div class="form-group">
+    <label for="input-websites">Websites <small>(separated by commas)</small></label>
+    <input type="text" name="websites" id="input-websites" value="{{restaurant.websites}}">
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary" type="submit">Update</button>
+  </div>
+</form>

@@ -6,10 +6,21 @@ define(function(require, exports, module) {
 
     events: {
       'click .btn-create-event': 'createEvent'
+    , 'submit .form-basic-info': 'update'
     },
 
     initialize: function() {
       
+    },
+
+    update: function(e) {
+      e.preventDefault();
+
+
+      // Get form fields
+      console.log(utils.pluck($(e.currentTarget).find('input'), 'name', 'value'));
+      console.log(utils.pluck($(e.currentTarget).find('input'), 'value'));
     }
+
   });
 });

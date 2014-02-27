@@ -3,6 +3,12 @@
 <link rel="stylesheet" href="/components/font-awesome/css/font-awesome.css">
 {{/extend}}
 
+{{#extend "navbar-links"}}
+<li>
+  <a href="/admin/restaurants/{{restaurant.id}}/payment-summaries">Payment Summaries</a>
+</li>
+{{/extend}}
+
 <div class="container">
   <form id="restaurant-{{restaurant.id}}" class="restaurant-form form-vertical">
     {{> edit_restaurant_form}}

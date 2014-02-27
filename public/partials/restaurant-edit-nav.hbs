@@ -1,19 +1,19 @@
 <ul class="restaurant-edit-menu">
   <li {{#eq active_tab "basic-info"}}class="active"{{/eq}}>
-    <a href="basic-info">Basic info</a>
+    <a href="/restaurants/{{restaurant.id}}/edit/basic-info">Basic info</a>
   </li>
   <li {{#eq active_tab "notifications"}}class="active"{{/eq}}>
-    <a href="notifications">Notifications</a>
+    <a href="/restaurants/{{restaurant.id}}/edit/notifications">Notifications</a>
   </li>
   <li {{#eq active_tab "delivery-settings"}}class="active"{{/eq}}>
-    <a href="delivery-settings">Delivery Settings</a>
+    <a href="/restaurants/{{restaurant.id}}/edit/delivery-settings">Delivery Settings</a>
   </li>
   <li {{#eq active_tab "tags"}}class="active"{{/eq}}>
-    <a href="tags">Tags</a>
+    <a href="/restaurants/{{restaurant.id}}/edit/tags">Tags</a>
   </li>
   <li {{#eq active_tab "address"}}class="active"{{/eq}}>
-    <a href="address">Address</a></li>
+    <a href="/restaurants/{{restaurant.id}}/edit/address">Address</a></li>
   <li {{#eq active_tab "menu"}}class="active"{{/eq}}>
-    <a href="menu">Menu</a>
+    <a href="/restaurants/{{restaurant.id}}/edit/menu">Menu</a>
   </li>
 </ul>

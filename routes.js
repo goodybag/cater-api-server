@@ -82,6 +82,8 @@ module.exports.register = function(app) {
    * Restaurant edit resource
    */
 
+  app.get('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
+
   app.get('/restaurants/:rid/edit/basic-info', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
 
   app.get('/restaurants/:rid/edit/notifications', m.restrict('admin'), controllers.restaurants.edit.notifications);

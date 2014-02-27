@@ -80,7 +80,7 @@ define(function(require){
           }).concat( function( done ){
             summary.save({
               payment_date:     utils.dom('[name="payment_date"]').val()
-            , adjustment:      +utils.dom('[name="adjustment"]').val()
+            , adjustment:       Hbs.helpers.pennies( utils.dom('[name="adjustment"]').val() )
             , adjustment_text:  utils.dom('[name="adjustment_text"]').val()
             }, { success: function(){ done() }, error: done } );
           })
@@ -96,7 +96,7 @@ define(function(require){
       });
 
       summary.on('change:adjustment', function( model, adj ){
-        utils.dom('[name="adjustment"]').val( adj );
+        utils.dom('[name="adjustment"]').val( Hbs.helpers.dollars( adj ) );
       });
 
       summary.on('change:adjustment_text', function( model, adj ){

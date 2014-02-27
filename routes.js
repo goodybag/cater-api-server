@@ -17,24 +17,7 @@ var m = utils.extend({
   queryParams   : require('./middleware/query-params'),
   queryString   : require('./middleware/query-string'),
   after         : require('./middleware/after'),
-  restaurant    : require('./middleware/restaurant'),
-
-  applyRestaurantId: function(){
-    return m.param( 'restaurant_id', function( value, query, options ){
-      query['payment_summaries.restaurant_id'] = value;
-    });
-  },
-
-  applyRestaurantIdForNonJoins: function(){
-    return m.param( 'restaurant_id', function( value, query, options ){
-      query.$exists = {
-        type:     'select'
-      , columns:  [{ expression: 1 }]
-      , table:    'payment_summaries'
-      , where:    { restaurant_id: value }
-      };
-    });
-  }
+  restaurant    : require('./middleware/restaurant')
 }, require('stdm') );
 
 utils.extend( m, require('./middleware/util') );
@@ -697,22 +680,10 @@ module.exports.register = function(app) {
   , m.findOne( db.payment_summaries )
   );
 
-  m.emitPaymentSummaryChange = function( req, res, next ){
-    if ( res.statusCode >= 300 ) return next();
-    venter.emit( 'payment-summary:change', req.param('id'), req.param('restaurant_id') );
-    next();
-  };
-
-  m.emitPaymentSummaryChange2 = function( req, res, next ){
-    if ( res.statusCode >= 300 ) return next();
-    venter.emit( 'payment-summary:change', req.param('payment_summary_id'), req.param('restaurant_id') );
-    next();
-  };
-
   app.put('/api/restaurants/:restaurant_id/payment-summaries/:id'
   , m.param('id')
   , m.param('restaurant_id')
-  , m.after( m.emitPaymentSummaryChange )
+  , m.after( controllers.paymentSummaries.emitPaymentSummaryChange() )
   , m.update( db.payment_summaries )
   );
 
@@ -724,37 +695,41 @@ module.exports.register = function(app) {
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
   , m.pagination()
-  , m.applyRestaurantId()
+  , controllers.paymentSummaries.applyRestaurantId()
   , m.param('payment_summary_id')
   , m.find( db.payment_summary_items )
   );
 
   app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
   , m.queryToBody('payment_summary_id')
-  , m.after( m.emitPaymentSummaryChange )
+  , m.after( controllers.paymentSummaries.emitPaymentSummaryChange() )
   , m.insert( db.payment_summary_items )
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
-  , m.applyRestaurantId()
+  , controllers.paymentSummaries.applyRestaurantId()
   , m.param('payment_summary_id')
   , m.param('id')
   , m.findOne( db.payment_summary_items )
   );
 
   app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
-  , m.applyRestaurantIdForNonJoins()
+  , controllers.paymentSummaries.applyRestaurantIdForNonJoins()
   , m.param('payment_summary_id')
   , m.param('id')
-  , m.after( m.emitPaymentSummaryChange2 )
+  , m.after(
+      controllers.paymentSummaries.emitPaymentSummaryChange({ idField: 'payment_summary_id' })
+    )
   , m.update( db.payment_summary_items )
   );
 
   app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
-  , m.applyRestaurantIdForNonJoins()
+  , controllers.paymentSummaries.applyRestaurantIdForNonJoins()
   , m.param('payment_summary_id')
   , m.param('id')
-  , m.after( m.emitPaymentSummaryChange2 )
+  , m.after(
+      controllers.paymentSummaries.emitPaymentSummaryChange({ idField: 'payment_summary_id' })
+    )
   , m.remove( db.payment_summary_items )
   );
 }

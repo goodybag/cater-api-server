@@ -12,7 +12,7 @@ define(function(require, exports, module) {
     defaults: {
       gb_fee:             0
     , sales_tax:          config.salesTax - 1
-    , order_subtotal:     0
+    , sub_total:          0
     }
 
   , initialize: function( attr, options ){
@@ -42,7 +42,7 @@ define(function(require, exports, module) {
 
       var data = {
         delivery_fee:     order.restaurant.get('delivery_fee')
-      , order_subtotal:   order.get('sub_total')
+      , sub_total:        order.get('sub_total')
       , tip:              order.get('tip')
       };
 

@@ -10,19 +10,26 @@
     <div class="restaurant-edit-body">
       <h2>Basic Info</h2>
 
-      <form class="form-basic-info">
+      <form class="form-basic-info" action="/restaurants/{{restaurant.id}}/edit" method="POST">
+        <input type="hidden" name="_method" value="PUT">
         <div class="form-group">
-          <label for="input-name">Name</label>
-          <input type="text" name="name" id="input-name" value="{{restaurant.name}}">
+          <label class="control-label" for="input-name">Name</label>
+          <input type="text" class="form-control" name="name" id="input-name" value="{{restaurant.name}}">
         </div>
         <div class="form-group">
-          <label for="input-description">Description</label>
-          <input type="text" name="description" id="input-description" value="{{restaurant.description}}">
+          <label class="control-label" for="input-description">Description</label>
+          <input type="text" class="form-control" name="description" id="input-description" value="{{restaurant.description}}">
         </div>
 
         <div class="form-group">
-          <label for="input-websites">Websites <small>(separated by commas)</small></label>
-          <input type="text" name="websites" id="input-websites" value="{{restaurant.websites}}">
+          <label class="control-label" for="input-websites">Websites <small>(separated by commas)</small></label>
+          <input type="text" class="form-control" name="websites" id="input-websites" value="{{restaurant.websites}}">
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="input-hidden">
+            <input type="checkbox" class="form-control" name="is_hidden" id="input-hidden" {{#if restaurant.is_hidden}}checked="checked"{{/if}}> Hidden
+          </label>
         </div>
 
         <div class="actions">
@@ -38,6 +45,22 @@
 
 {{#extend "scripts"}}
 <script>
+  // Bootstrap data
+  define('data', ['app/models/restaurant'], function(Restaurant) {
+    var data = {
+      models: {
+        restaurant: new Restaurant({{{json restaurant}}})
+      },
+      views: {
+
+      }
+    };
+    return data;
+  });
+</script>
+
+<script>
+  // Init views on this page
   require( ['app/pages/restaurant-edit'], function( page ){
     page.init();
   });

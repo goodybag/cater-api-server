@@ -6,9 +6,13 @@ define(function(require){
     RestaurantEditView: require('app/views/restaurant/edit-view')
   };
 
+  var data = require('data')
   var page = {
     init: function(){
-      var restaurantEditView = new Views.RestaurantEditView({ el : '.restaurant-edit' });
+      var restaurantEditView = new Views.RestaurantEditView({
+        el : '.restaurant-edit' 
+      , model: data.models.restaurant
+      });
     },
 
   };

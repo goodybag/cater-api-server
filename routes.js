@@ -83,6 +83,8 @@ module.exports.register = function(app) {
    */
 
   app.get('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
+  
+  app.put('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.update);
 
   app.get('/restaurants/:rid/edit/basic-info', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
 

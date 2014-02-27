@@ -8,7 +8,7 @@
     "url": "https://github.com/goodybag/cater-api-server"
   },
   "scripts": {
-    "start": "grunt namedModules && ./node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js && ./bin/check-build.js && ./bin/tasks.js runDeltas && node master",
+    "start": "grunt namedModules && grunt shell:ensureDir && ./node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js && ./bin/check-build.js && ./bin/tasks.js runDeltas && node master",
     "test": "./node_modules/.bin/mocha --bail",
     "postinstall": "./node_modules/.bin/bower install"
   },

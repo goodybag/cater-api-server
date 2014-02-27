@@ -111,12 +111,14 @@ config.defaults = {
 
 , paymentSummaries: {
     fileName:     "payment-summary-:psid.pdf"
+  , concurrency:  10
   , bucket:       "pms.goodybag.com"
   , credentials: {
       email:      "pms@goodybag.com"
     , password:   "G00dyb4agp333m3ss"
     }
   , route:        '/admin/restaurants/:restaurant_id/payment-summaries/:id/pdf'
+  , dir:          'tmp'
   }
 
 , receipt: {
@@ -205,7 +207,7 @@ config.dev = {
 , emailEnabled: true
 
 , paymentSummaries: _.extend( {}, config.defaults.paymentSummaries,
-    { bucket: 'dev-pms.goodybag.com' }
+    { bucket: 'pms-dev.goodybag.com' }
   )
 
 , receipt: _.extend( {}, config.defaults.receipt,
@@ -282,7 +284,7 @@ config.staging = {
 , emailEnabled: true
 
 , paymentSummaries: _.extend( {}, config.defaults.paymentSummaries,
-    { bucket: 'staging-pms.goodybag.com' }
+    { bucket: 'pms-staging.goodybag.com' }
   )
 
 , receipt: _.extend( {}, config.defaults.receipt,

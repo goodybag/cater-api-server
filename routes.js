@@ -2,6 +2,7 @@ var express = require('express');
 var config = require('./config');
 var controllers = require('./controllers');
 var utils = require('./utils');
+var venter = require('./lib/venter');
 var Models = require('./models');
 var hbHelpers = require('./public/js/lib/hb-helpers');
 var db = require('./db');
@@ -15,7 +16,25 @@ var m = utils.extend({
   buildReceipt  : require('./middleware/build-receipt'),
   queryParams   : require('./middleware/query-params'),
   queryString   : require('./middleware/query-string'),
-  restaurant    : require('./middleware/restaurant')
+  after         : require('./middleware/after'),
+  restaurant    : require('./middleware/restaurant'),
+
+  applyRestaurantId: function(){
+    return m.param( 'restaurant_id', function( value, query, options ){
+      query['payment_summaries.restaurant_id'] = value;
+    });
+  },
+
+  applyRestaurantIdForNonJoins: function(){
+    return m.param( 'restaurant_id', function( value, query, options ){
+      query.$exists = {
+        type:     'select'
+      , columns:  [{ expression: 1 }]
+      , table:    'payment_summaries'
+      , where:    { restaurant_id: value }
+      };
+    });
+  }
 }, require('stdm') );
 
 utils.extend( m, require('./middleware/util') );
@@ -625,7 +644,7 @@ module.exports.register = function(app) {
     })
   );
 
-  app.get('/admin/restaurants/:id/payment-summaries/:payment_summary_id'
+  app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
   , controllers.paymentSummaries.getPdf
   );
@@ -672,32 +691,28 @@ module.exports.register = function(app) {
   , m.insert( db.payment_summaries )
   );
 
-  var applyRestaurantId = function(){
-    return m.param( 'restaurant_id', function( value, query, options ){
-      query['payment_summaries.restaurant_id'] = value;
-    });
-  };
-
-  var applyRestaurantIdForNonJoins = function(){
-    return m.param( 'restaurant_id', function( value, query, options ){
-      query.$exists = {
-        type:     'select'
-      , columns:  [{ expression: 1 }]
-      , table:    'payment_summaries'
-      , where:    { restaurant_id: value }
-      };
-    });
-  };
-
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'
   , m.param('id')
   , m.param('restaurant_id')
   , m.findOne( db.payment_summaries )
   );
 
+  m.emitPaymentSummaryChange = function( req, res, next ){
+    if ( res.statusCode >= 300 ) return next();
+    venter.emit( 'payment-summary:change', req.param('id'), req.param('restaurant_id') );
+    next();
+  };
+
+  m.emitPaymentSummaryChange2 = function( req, res, next ){
+    if ( res.statusCode >= 300 ) return next();
+    venter.emit( 'payment-summary:change', req.param('payment_summary_id'), req.param('restaurant_id') );
+    next();
+  };
+
   app.put('/api/restaurants/:restaurant_id/payment-summaries/:id'
   , m.param('id')
   , m.param('restaurant_id')
+  , m.after( m.emitPaymentSummaryChange )
   , m.update( db.payment_summaries )
   );
 
@@ -709,34 +724,37 @@ module.exports.register = function(app) {
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
   , m.pagination()
-  , applyRestaurantId()
+  , m.applyRestaurantId()
   , m.param('payment_summary_id')
   , m.find( db.payment_summary_items )
   );
 
   app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
   , m.queryToBody('payment_summary_id')
+  , m.after( m.emitPaymentSummaryChange )
   , m.insert( db.payment_summary_items )
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
-  , applyRestaurantId()
+  , m.applyRestaurantId()
   , m.param('payment_summary_id')
   , m.param('id')
   , m.findOne( db.payment_summary_items )
   );
 
   app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
-  , applyRestaurantIdForNonJoins()
+  , m.applyRestaurantIdForNonJoins()
   , m.param('payment_summary_id')
   , m.param('id')
+  , m.after( m.emitPaymentSummaryChange2 )
   , m.update( db.payment_summary_items )
   );
 
   app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
-  , applyRestaurantIdForNonJoins()
+  , m.applyRestaurantIdForNonJoins()
   , m.param('payment_summary_id')
   , m.param('id')
+  , m.after( m.emitPaymentSummaryChange2 )
   , m.remove( db.payment_summary_items )
   );
 }

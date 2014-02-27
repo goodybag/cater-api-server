@@ -46,6 +46,10 @@ module.exports = function(grunt) {
         options: { stdout: true }
       , command: './node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js'
       }
+    , ensureDir: {
+        options: { stdout: true }
+      , command: 'mkdir tmp'
+      }
     }
 
   , less: {
@@ -56,7 +60,6 @@ module.exports = function(grunt) {
         }
       }
     }
-
 
   , concat: {
       // Concat the require config to require.js lib

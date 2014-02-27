@@ -24,3 +24,5 @@ public/components
 backups
 *~
 local-config.json
+tmp/
+!tmp/index

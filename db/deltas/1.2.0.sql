@@ -23,7 +23,7 @@ begin
   , order_id            int not null references orders ("id")
   , delivery_fee        int default 0
   , tip                 int default 0
-  , order_total         int default 0
+  , sib_total           int default 0
   , gb_fee              numeric( 5, 5 ) default 0
   , sales_tax           numeric( 5, 5 ) default 0
   );

@@ -44,7 +44,7 @@ define(function(require) {
       type: types.int
     , default: 0
     }
-  , order_total: {
+  , sub_total: {
       type: types.int
     , default: 0
     }

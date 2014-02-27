@@ -51,7 +51,7 @@ define(function(require, exports, module) {
     },
 
     pennies: function(dollars) {
-      var val = parseInt( dollars * 100 );
+      var val = Math.round( dollars * 100 );
       return utils.isNaN(val) ? '' : val;
     },
 

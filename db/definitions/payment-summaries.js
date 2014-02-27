@@ -35,6 +35,13 @@ define(function(require) {
     , nullable: false
     , references: {table: 'restaurants', column: 'id', onDelete: 'set null'}
     }
+  , adjustment: {
+      type: types.int
+    , default: '0'
+    }
+  , adjustment_text: {
+      type: types.text
+    }
   };
 
   definition.indices = {};

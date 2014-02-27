@@ -79,7 +79,9 @@ define(function(require){
             };
           }).concat( function( done ){
             summary.save({
-              payment_date: utils.dom('[name="payment_date"]').val()
+              payment_date:     utils.dom('[name="payment_date"]').val()
+            , adjustment:      +utils.dom('[name="adjustment"]').val()
+            , adjustment_text:  utils.dom('[name="adjustment_text"]').val()
             }, { success: function(){ done() }, error: done } );
           })
         , function( error ){
@@ -91,6 +93,14 @@ define(function(require){
 
       summary.on('change:payment_date', function( model, date ){
         utils.dom('[name="payment_date"]').val( utils.dateTimeFormatter( date ) );
+      });
+
+      summary.on('change:adjustment', function( model, adj ){
+        utils.dom('[name="adjustment"]').val( adj );
+      });
+
+      summary.on('change:adjustment_text', function( model, adj ){
+        utils.dom('[name="adjustment_text"]').val( adj );
       });
 
       // When order_id changes, set the order on that mofo

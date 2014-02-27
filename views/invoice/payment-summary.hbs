@@ -50,6 +50,16 @@
 
   <div class="order-bottom-wrapper">
     <div class="order-bottom">
+      <div class="order-adjustment columns">
+        <p class="adjustment-notes column-fluid">{{payment_summary.adjustment_text}}</p>
+        <div class="column-fluid adjustment-amount-wrapper">
+          <dl class="dl-adjustment-amount dl-horizontal">
+            <dt>Adjustment:</dt>
+            <dd>${{dollars payment_summary.adjustment}}</dd>
+          </dl>
+        </div>
+      </div>
+
       <div class="order-summary"></div>
 
       <div class="total-wrapper">

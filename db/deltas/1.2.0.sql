@@ -10,10 +10,12 @@ begin
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
   create table if not exists "payment_summaries" (
-    id            serial primary key
-  , created_at    timestamp not null default now()
-  , payment_date  date default now()
-  , restaurant_id int not null references restaurants ("id") on delete set null
+    id                  serial primary key
+  , created_at          timestamp not null default now()
+  , payment_date        date default now()
+  , restaurant_id       int not null references restaurants ("id") on delete set null
+  , adjustment          int default 0
+  , adjustment_text     text
   );
 
   create table if not exists "payment_summary_items" (

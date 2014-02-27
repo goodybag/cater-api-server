@@ -16,8 +16,8 @@ define(function(require, exports, module) {
     }
 
   , initialize: function( attr, options ){
-      this.on( 'change:order', this.onOrderChange, this );
-      this.on( 'change', this.onChange, this );
+      this.on( 'change:order',  this.onOrderChange, this );
+      this.on( 'change',        this.onChange, this );
       this.on( 'change:gb_fee', this.onFeeChange, this );
 
       this.onFeeChange( this, this.get('gb_fee') );
@@ -88,8 +88,8 @@ define(function(require, exports, module) {
     }
 
   , onChange: function(){
-      this.set( 'order_total', this.getTotal() );
-      this.set( 'net_payout', this.getNetPayout() );
+      this.set( 'order_total',  this.getTotal() );
+      this.set( 'net_payout',   this.getNetPayout() );
     }
   });
 });

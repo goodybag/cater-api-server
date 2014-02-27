@@ -42,7 +42,7 @@ define(function(require, exports, module) {
 
       var data = {
         delivery_fee:     order.restaurant.get('delivery_fee')
-      , sub_total:        order.get('sub_total') + order.get('adjustment')
+      , sub_total:        order.get('sub_total') + ( order.get('adjustment').amount || 0 )
       , tip:              order.get('tip')
       };
 

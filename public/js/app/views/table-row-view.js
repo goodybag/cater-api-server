@@ -1,3 +1,12 @@
+/**
+ * TableRowView
+ *
+ * Utilized by TableView. Do not instantiate on your own unless
+ * you know what you're doing!
+ *
+ * See TableView
+ */
+
 define(function(require){
   var utils = require('utils');
   var Hbs   = require('handlebars');

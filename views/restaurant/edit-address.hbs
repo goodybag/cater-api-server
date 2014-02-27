@@ -1,35 +1,10 @@
 {{#extend "body"}}
 
 <div class="restaurant-edit">
-
-  <!--<Navbar>-->
-  <header class="navbar collapsed">
-    <div class="container">
-      <a href="/">
-        <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
-      </a>
-
-      <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
-      <ul class="nav">
-        <li><a href="/join">Sign Up</a></li>
-      </ul>
-    </div>
-  </header>
-  <!--</Navbar>-->
-
-
+  {{> navbar_logged_in }}
   <div class="container">
   <h1>Editing {{restaurant.name}}</h1>
-    <!--<Edit Nav>-->
-    <ul class="restaurant-edit-menu">
-      <li><a href="basic-info">Basic info</a></li>
-      <li><a href="notifications">Notifications</a></li>
-      <li><a href="delivery-settings">Delivery Settings</a></li>
-      <li><a href="tags">Tags</a></li>
-      <li class="active"><a href="address">Address</a></li>
-      <li><a href="menu">Menu</a></li>
-    </ul>
-    <!--</Edit Nav>-->
+    {{> restaurant_edit_nav }}
 
     <!--<Edit Body>-->
     <div class="restaurant-edit-body">

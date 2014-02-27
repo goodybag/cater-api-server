@@ -231,8 +231,13 @@ dirac.use( function(){
     $query.columns.push({
       type:     'select'
     , table:    'payment_summary_items'
-    // TODO: THIS ISN'T WORKING
-    , columns:  ['sum( ( ( sub_total + delivery_fee ) * sales_tax ) + tip )::int as ' + options.column ]
+    , columns:  [[
+      , 'sum('
+      , '+ ( sub_total + delivery_fee + tip )'
+        // We aggressively round to match our notion of cents better
+      , '- round( ( ( sub_total + delivery_fee ) + round( ( sub_total + delivery_fee ) * sales_tax ) + tip ) * gb_fee )'
+      , ')::int as ' + options.column
+      ].join('  \n')]
     , where:    { payment_summary_id: '$payment_summaries.id$' }
     });
 

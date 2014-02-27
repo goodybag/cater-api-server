@@ -20,11 +20,20 @@
 
   <div class="container">
   <h1>Editing {{restaurant.name}}</h1>
-    {{> restaurant_edit_nav }}
+    <!--<Edit Nav>-->
+    <ul class="restaurant-edit-menu">
+      <li><a href="basic-info">Basic info</a></li>
+      <li><a href="notifications">Notifications</a></li>
+      <li><a href="delivery-settings">Delivery Settings</a></li>
+      <li><a href="tags">Tags</a></li>
+      <li><a href="address">Address</a></li>
+      <li class="active"><a href="menu">Menu</a></li>
+    </ul>
+    <!--</Edit Nav>-->
 
     <!--<Edit Body>-->
     <div class="restaurant-edit-body">
-      <h2>Notification Settings</h2>
+      <h2>Edit Menu</h2>
       <p>Lorem ipsum dolomite</p>
     </div>
     <!--</Edit Body>-->

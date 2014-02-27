@@ -86,13 +86,13 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid/edit/notifications', m.restrict('admin'), controllers.restaurants.edit.notifications);
 
-  // app.get('/restaurants/:rid/edit/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);
+  app.get('/restaurants/:rid/edit/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);
 
-  // app.get('/restaurants/:rid/edit/tags', m.restrict('admin'), controllers.restaurants.edit.tags);
+  app.get('/restaurants/:rid/edit/tags', m.restrict('admin'), controllers.restaurants.edit.tags);
 
-  // app.get('/restaurants/:rid/edit/address', m.restrict('admin'), controllers.restaurants.edit.address);
+  app.get('/restaurants/:rid/edit/address', m.restrict('admin'), controllers.restaurants.edit.address);
 
-  // app.get('/restaurants/:rid/edit/menu', m.restrict('admin'), controllers.restaurants.edit.menu);
+  app.get('/restaurants/:rid/edit/menu', m.restrict('admin'), controllers.restaurants.edit.menu);
 
   app.get('/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 

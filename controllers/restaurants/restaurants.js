@@ -164,6 +164,7 @@ module.exports.editRestaurant = function(template) {
         res.render(template, {
           layout: 'landing/layout'
         , restaurant: restaurant.toJSON()
+        , active_tab: template.replace('restaurant/edit-', '')
         });
         // res.render('edit-restaurant', {
         //   restaurant: restaurant.toJSON()

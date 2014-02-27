@@ -20,17 +20,7 @@
 
   <div class="container">
   <h1>Editing {{restaurant.name}}</h1>
-    <!--<Edit Nav>-->
-    <ul class="restaurant-edit-menu">
-      <li><a href="basic-info" data-toggle="tab">Basic info</a></li>
-      <li><a href="contact" data-toggle="tab">Contact</a></li>
-      <li><a href="delivery-settings" data-toggle="tab">Delivery Settings</a></li>
-      <li><a href="notifications">Notifications</a></li>
-      <li><a href="lead-times" data-toggle="tab">Lead Times</a></li>
-      <li><a href="address" data-toggle="tab">Address</a></li>
-      <li><a href="menu" data-toggle="tab">Menu</a></li>
-    </ul>
-    <!--</Edit Nav>-->
+    {{> restaurant_edit_nav }}
 
     <!--<Edit Body>-->
     <div class="restaurant-edit-body">

@@ -48,30 +48,28 @@ define(function(require, exports, module) {
   utils.History     = Backbone.History;
   utils.View        = Backbone.View;
 
-  if ( isBrowser ){
-    utils.Collection = Backbone.Collection.extend({
-      createModel: function( attr, options ){
-        return this._prepareModel( attr, options );
-      }
+  utils.Collection  = Backbone.Collection.extend({
+    createModel: function( attr, options ){
+      return this._prepareModel( attr, options );
+    }
 
-    , del: function( id, options ){
-        return (
-          this.get( id ) || this.createModel( typeof id !== 'object' ? { id: id } : id )
-        ).destroy( options );
-      }
+  , del: function( id, options ){
+      return (
+        this.get( id ) || this.createModel( typeof id !== 'object' ? { id: id } : id )
+      ).destroy( options );
+    }
 
-    , toJSON: function( options ){
-        return utils.invoke( this.models, 'toJSON', options );
-      }
-    });
+  , toJSON: function( options ){
+      return utils.invoke( this.models, 'toJSON', options );
+    }
+  });
 
-    utils.Model = Backbone.Model.extend({
-      toJSON: function( options ){
-        options = options || {};
-        return utils.extend( {}, this.attributes , options.cid ? { cid: this.cid } : null );
-      }
-    });
-  }
+  utils.Model = Backbone.Model.extend({
+    toJSON: function( options ){
+      options = options || {};
+      return utils.extend( {}, this.attributes , options.cid ? { cid: this.cid } : null );
+    }
+  });
 
   utils.startHistory = function(){
     utils.history = Backbone.history;

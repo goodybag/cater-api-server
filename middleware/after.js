@@ -5,7 +5,6 @@
 
 module.exports = function( handler ){
   return function( req, res, next ){
-    console.log("overriding end")
     var oend = res.end;
     res.end = function(){
       var args = arguments;

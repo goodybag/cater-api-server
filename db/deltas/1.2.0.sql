@@ -30,4 +30,20 @@ begin
   , sales_tax           numeric( 5, 5 ) default 0
   );
 
+
+  if not exists( select 1 from groups where name = 'pms' )
+  then
+    INSERT INTO groups (name) VALUES ('pms');
+  end if;
+
+  if not exists( select 1 from users where email = 'pms@goodybag.com' )
+  then
+    INSERT INTO users (email, password) VALUES ('pms@goodybag.com', '$2a$10$FGN90mpEJjVxieb1B.98YeVF6fJQ1/Bs6BQZ5wAEyCTnmxvLFazlq');
+  end if;
+
+  if not exists( select 1 from users_groups, users where users_groups."group" = 'pms' and users_groups.user_id = users.id and users.email = 'pms@goodybag.com'  )
+  then
+    INSERT INTO users_groups (user_id, "group") SELECT id, 'pms' FROM users WHERE email = 'pms@goodybag.com';
+  end if;
+
 end$$;

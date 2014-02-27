@@ -1,0 +1,5 @@
+#!/bin/bash
+
+heroku pg:reset --app goodybag-staging-cater DATABASE_URL
+
+heroku pgbackups:restore --app goodybag-staging-cater DATABASE_URL  `heroku pgbackups:url --app goodybag-production-cater`

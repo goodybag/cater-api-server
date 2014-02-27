@@ -231,7 +231,8 @@ dirac.use( function(){
     $query.columns.push({
       type:     'select'
     , table:    'payment_summary_items'
-    , columns:  ['sum( order_total - gb_fee - sales_tax )::int as ' + options.column ]
+    // TODO: THIS ISN'T WORKING
+    , columns:  ['sum( ( ( sub_total + delivery_fee ) * sales_tax ) + tip )::int as ' + options.column ]
     , where:    { payment_summary_id: '$payment_summaries.id$' }
     });
 

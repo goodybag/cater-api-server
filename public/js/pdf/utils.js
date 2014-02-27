@@ -27,7 +27,7 @@ $.fn.innerHeight = function( options ){
 
 console.print = function(){
   // Comment me if you want to live
-  // return console.log.apply( console, arguments );
+  return console.log.apply( console, arguments );
 
   var $console = $('#console-print');
   if ( $console.length === 0 ){
@@ -90,17 +90,6 @@ var fillRemainingTrs = function( $page ){
     "Remaining height:", remaining,
     "Iterations:", ~~(remaining / rowHeight)
   );
-
-  // console.print(
-  //   options.remainingTableHeightSelector.split(', ').map( function( selector ){
-  //     return ' ' + selector + ': ' + Array.prototype.reduce.call(
-  //       $page.find( selector ).map( function(){
-  //         return $(this).outerHeight() || 0;
-  //       })
-  //     , function( a, b ){ return a + b; }
-  //     );
-  //   })
-  // );
 
   var $table = $page.find('table');
   var colspan = $table.find('th').length;

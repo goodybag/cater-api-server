@@ -3,7 +3,7 @@ define(function(require, exports, module) {
   var FormView = require('../form-view');
   var Handlebars = require('handlebars');
 
-  return module.exports = FormView.extend({
+  return module.exports = Backbone.View.extend({
 
     events: {
       'submit .form-basic-info': 'validate'
@@ -53,7 +53,7 @@ define(function(require, exports, module) {
       var this_ = this;
       this.clearErrors();
       if (errors) {
-        this_.showAlert('error');
+        this_.options.alertView && this_.options.alertView.show('error');
         utils.each(errors, function(error) {
           this_.$el
             .find('input[name="' + error.property + '"]')
@@ -63,34 +63,12 @@ define(function(require, exports, module) {
       };
     },
 
-    dismissAlerts: function() {
-
-    },
-
-    /**
-     * TODO: extract into separate view
-     * Display alert
-     *
-     * @param {string} type - success|error
-     * @param {object} options - supports
-     *   * context - data passed to alert template
-     *   * container - string selector for alert container
-     */
-    showAlert: function(type, options, callback) {
-      options = options || {};
-      var $container = this.$el.find(options.container || '.alert-container');
-
-      var type = 'form_alert_' + type; 
-      var html = Handlebars.partials[type](options.context);
-      $container.html(html);
-    },
-
     validate: function(e) {
       e.preventDefault();
       this.model.save(this.getFields(), {
         patch: true
-      , success: this.showAlert.bind(this, 'success')
-      , error: this.showAlert.bind(this, 'error')
+      , success: this.options.alertView.show.bind(this.options.alertView, 'success')
+      , error: this.options.alertView.show.bind(this.options.alertView, 'error')
       });
 
       this.displayErrors(this.model.validationError);

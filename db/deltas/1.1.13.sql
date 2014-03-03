@@ -12,7 +12,7 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  raise notice 'Setting orders created before v% from v% to v%', cutoff_date, status_from, status_to;
+  raise notice 'Setting orders created before % from % to %', cutoff_date, status_from, status_to;
 
   for o in update orders
     set status = status_to

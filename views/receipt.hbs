@@ -3,6 +3,8 @@
 <link rel="stylesheet" href="/css/receipt.css">
 {{/extend}}
 
+{{#extend "title"}} - Receipt{{/extend}}
+
 <div class="page page-order container">
   <div class="row">
     {{> wizard }}
@@ -63,11 +65,11 @@
         <div class="clearfix">
           <div class="delivery-header pull-left">
             {{order.restaurant.name}} [Order #{{order.id}}]
-            {{#if order.restaurant}}
+            {{#if order.restaurant}}{{#unless isRestaurantManager}}
             <a href="javascript:void(0);" class="copy-order-btn text-muted">Order Again?</a>
-            {{/if}}
+            {{/unless}}{{/if}}
           </div>
-          {{#if admin}}
+          {{#if isAdmin}}
           <div class="pull-right btn-group">
             <button type="button" class="btn btn-{{order.status}} dropdown-toggle" data-toggle="dropdown">
               {{order.status}} <span class="caret"></span>
@@ -79,6 +81,9 @@
               <li><a href="javascript:void;" id="change-status-denied">denied</a></li>
               <li><a href="javascript:void;" id="change-status-accepted">accepted</a></li>
               <li><a href="javascript:void;" id="change-status-delivered">delivered</a></li>
+              <li><a href="javascript:void;" id="change-status-submitted-no-notify">submitted - no notification</a></li>
+              <li><a href="javascript:void;" id="change-status-accepted-no-notify">accepted - no notification</a></li>
+              <li><a href="javascript:void;" id="change-status-canceled-no-notify">canceled - no notificaton</a></li>
             </ul>
           </div>
           {{else}}
@@ -91,9 +96,14 @@
         </div>
 
         <div class="btn-toolbar pull-right">
+          {{#if isTipEditable}}
+            <a class="btn btn-primary btn-add-tip" href="" onclick="javascript:return false;">{{#eq order.tip 0}}Add Tip{{else}}Edit Tip{{/eq}}</a>
+          {{/if}}
+
           {{#if order.editable}}
           <button type="button" class="btn btn-default edit-order-btn">Edit</button>
           {{/if}}
+
           <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default">Download PDF</a>
         </div>
 
@@ -124,7 +134,11 @@
           {{#each order.orderItems}}
           <tr id="order-item-{{this.id}}">
             <td class="line-item-name" data-title="Name">
-              <div class="item-name">{{this.name}}</div>
+              <div class="item-name" data-id="{{this.id}}">{{this.name}}</div>
+              <p class="item-description">{{this.description}}</p>
+              {{#if options_sets}}
+                <div class="item-options-title">With:</div>
+              {{/if}}
               <ul class="comma-separated item-options">
                 {{#each options_sets}}
                 {{#each this.options}}
@@ -198,33 +212,6 @@
       {{/if}}
       {{/if}}
 
-      {{#if order.editable}}
-      <div class="row">
-        <div class="tip-area clearfix hide col-lg-12">
-          <dl class="adjustment-input pull-right">
-            <dt>Tip Percent</dt>
-            <dd>
-              <select id="order-tip" class="form-control tip-percent">
-                {{! eq is ugly as hell but it works }}
-                <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
-                <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
-                <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
-                <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
-                <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
-                <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
-                <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
-                <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
-              </select>
-            </dd>
-            <dt>$</dt>
-            <dd>
-              <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
-            </dd>
-          </dl>
-        </div>
-      </div>
-      {{/if}}
-
       {{#if order.sub_total}}
       <div class="totals">
         {{> totals}}
@@ -232,19 +219,19 @@
       {{/if}}
     </div>
 
-    {{#unless restaurantReview}}
+    {{#unless isRestaurantReview}}
     <div class="panel-actions">
       {{#if order.editable}}
       <a class="btn btn-default btn-add-to-order" href="/orders/{{order.id}}/add-items">Add to Order</a>
       {{/if}}
 
-      {{#if owner}}
+      {{#unless isRestaurantManager}}
       <button class="btn btn-default{{#unless order.cancelable}} hide{{/unless}}" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>
-      {{/if}}
+      {{/unless}}
     </div>
     {{/unless}}
 
-    {{#if restaurantReview}}
+    {{#if isRestaurantReview}}
     <div class="panel-actions restaurant-review panel-body">
       <button class="btn btn-default" data-toggle="modal" data-target="#reject-confirm-modal">Reject Order</button>
       <button class="btn btn-primary btn-accept">Accept Order</button>
@@ -263,6 +250,7 @@
       </div>
       <div class="modal-body">
         <p>Are you sure you want to reject this order?</p>
+        <textarea class="form-control reason-denied" placeholder="Please let us know why, so we can improve the ordering experience. Thanks!"></textarea>
       </div>
       <div class="row modal-footer">
         <div class="col-lg-3 col-lg-offset-6">
@@ -298,56 +286,59 @@
   </div>
 </div>
 
+<div id="add-tip-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Add A Tip To This Order</h4>
+      </div>
+      <div class="modal-body">
+        <div class="tip-area clearfix col-lg-12">
+          <dl class="adjustment-input pull-right">
+            <dt>Tip Percent</dt>
+            <dd>
+              <select id="order-tip" class="form-control tip-percent">
+                {{! eq is ugly as hell but it works }}
+                <option value="0"{{#eq order.tip_percent "0"}} selected="selected"{{/eq}}>No Tip</option>
+                <option value="custom"{{#eq order.tip_percent "custom"}} selected="selected"{{/eq}}>Custom Tip</option>
+                <option value="5"{{#eq order.tip_percent "5"}} selected="selected"{{/eq}}>5%</option>
+                <option value="10"{{#eq order.tip_percent "10"}} selected="selected"{{/eq}}>10%</option>
+                <option value="15"{{#eq order.tip_percent "15"}} selected="selected"{{/eq}}>15%</option>
+                <option value="18"{{#eq order.tip_percent "18"}} selected="selected"{{/eq}}>18%</option>
+                <option value="20"{{#eq order.tip_percent "20"}} selected="selected"{{/eq}}>20%</option>
+                <option value="25"{{#eq order.tip_percent "25"}} selected="selected"{{/eq}}>25%</option>
+              </select>
+            </dd>
+            <dt>$</dt>
+            <dd>
+              <input type="nubmer" class="form-control order-tip" value="{{dollars order.tip}}">
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <div class="row modal-footer">
+        <div class="col-lg-3 col-lg-offset-6">
+          <button type="button" class="btn btn-danger btn-cancel">Cancel</button>
+        </div>
+        <div class="col-lg-3">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {{> copy_order_error_modal}}
+
+<div class="modal fade modal-item" id="item-modal" role="dialog" aria-labelledby="itemModal" aria-hidden="true"></div>
 
 {{#extend "scripts"}}
 <script>
-  var partials = {
-    address:      'address.hbs',
-    edit_address: 'edit-address.hbs',
-    order_info:   'order-info.hbs',
-    totals:       'totals.hbs'
-  };
-
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial(name, Handlebars.compile(data));
-      },
-      dataType: 'html',
-      async: false
+  require(['app/pages/receipt', 'app/models/index'], function( page, Models ){
+    page.init({
+      order: new Models.Order( {{{json order}}} )
     });
-  }
-</script>
-
-<script src="/js/models/item.js"></script>
-<script src="/js/models/category.js"></script>
-<script src="/js/models/restaurant.js"></script>
-<script src="/js/models/order-item.js"></script>
-<script src="/js/models/address.js"></script>
-<script src="/js/models/order.js"></script>
-
-<script src="/js/collections/items.js"></script>
-<script src="/js/collections/categories.js"></script>
-
-<script src="/js/views/form-view.js"></script>
-<script src="/js/views/copy-error-modal.js"></script>
-<script src="/js/views/address-view.js"></script>
-<script src="/js/views/order-address-view.js"></script>
-<script src="/js/views/tip-view.js"></script>
-<script src="/js/views/order-view.js"></script>
-<script src="/js/views/receipt-view.js"></script>
-<script src="/js/views/order-item-view.js"></script>
-<script>
-  var query = utils.parseQueryParams();
-  var view = new ReceiptView( {el: $('#main'), model: new Order( {{{json order}}} ), review_token: query.review_token} );
-  var items = [
-    {{#each order.orderItems}}
-    {{#if @index}},{{/if}} new OrderItemView({el: $('#order-item-{{this.id}}'), model: view.model.orderItems.get({{this.id}})})
-    {{/each}}
-  ];
-  view.items = items;
+  });
 </script>
 {{/extend}}

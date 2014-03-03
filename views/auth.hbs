@@ -57,29 +57,30 @@
             </fieldset>
           </form>
 
-          <form method="POST" action="/waitlist" class="panel">
+          <form method="POST" action="/auth/signup" class="panel" id="registration-form">
+            <div class="errors">
+              {{#if registrationError}}
+                {{> alert_error registrationError}}
+              {{/if}}
+            </div>
             <fieldset>
-              <span class="help-block waitlist-help"><strong>Don't have an account yet?</strong>  Request an invite!</span>
+              <span class="help-block waitlist-help"><strong>Don't have an account yet?</strong> Signup today!</span>
               <div class="form-group">
-                <label>Email</label>
+                <label>* Email</label>
                 <input type="email" name="email" class="form-control" placeholder="user@example.com" value="{{email}}">
               </div>
               <div class="row">
                 <div class="form-group col-lg-6">
-                  <label>First Name</label>
-                  <input type="text" name="firstName" class="form-control" value="{{firstName}}">
+                  <label>* Password</label>
+                  <input type="password" name="password" class="form-control">
                 </div>
                 <div class="form-group col-lg-6">
-                  <label>Last Name</label>
-                  <input type="text" name="lastName" class="form-control" value="{{lastName}}">
+                  <label>* One more time</label>
+                  <input type="password" name="password2" class="form-control">
                 </div>
               </div>
               <div class="form-group">
-                <label>Organization</label>
-                <input type="text" name="organization" class="form-control" value="{{organization}}">
-              </div>
-             <div class="form-group">
-                <button type="submit" class="btn btn-primary pull-right">Request Invite</button>
+                <button type="submit" class="btn btn-primary pull-right">Signup</button>
               </div>
             </fieldset>
           </form>
@@ -90,8 +91,22 @@
 </div>
 
 {{#extend "scripts"}}
-<script src="/js/views/auth-view.js"></script>
 <script>
-  var view = new AuthView({el: '.page-auth', query: '{{query}}' });
+  require([
+      'app/views/auth-view'
+    , 'app/views/registration-view'
+    ]
+  , function(AuthView, RegistrationView) {
+      var page = {};
+
+      page.view = new AuthView({el: '.page-auth', query: '{{query}}' });
+
+      page.registrationView = new RegistrationView({
+        el: '#registration-form'
+      });
+
+      return page;
+    }
+  );
 </script>
 {{/extend}}

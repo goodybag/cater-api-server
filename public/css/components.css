@@ -194,17 +194,19 @@
  */
 
 .navbar {
-  margin-bottom: 32px;
+  margin-bottom: 0;
+  border: none;
 }
 
 .navbar-brand {
   padding-top: 15px;
   padding-bottom: 11px;
+  padding-left: 0;
 }
 
-.navbar-nav > li > a {
-  padding-top: 16px;
-  padding-bottom: 14px;
+.navbar .contact-info {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .nav .caret {
@@ -219,6 +221,14 @@
 
 .navbar-nav > li > .dropdown-menu {
   margin-top: -11px;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #0039a1;
+}
+
+.navbar-toggle {
+  margin-right: 0;
 }
 
 /**
@@ -292,8 +302,7 @@
   position: relative; /* So datepicker doesn't bleed */
   display: table;
   width: 100%;
-  margin: 0 auto;
-  margin-bottom: 20px;
+  margin: 20px auto;
   padding: 15px 18px;
 }
 
@@ -383,8 +392,9 @@
   padding-right: 20px;
 }
 
-.btn-lg.btn-yelp .logo {
-  margin-top: -7px;
+.btn-lg.btn-yelp .logo,
+.anchor-yelp .logo {
+  margin-top: -8px;
   width: 55px;
 }
 
@@ -507,8 +517,7 @@ a.list-group-item .list-group-item-heading {
  */
 
 .order-summary {
-  font-size: 12px;
-  overflow-y: scroll;
+  font-size: 13px;
 }
 
 .order-summary .panel-heading, .order-summary .panel-footer {
@@ -595,6 +604,10 @@ a.list-group-item .list-group-item-heading {
 /**
  * Pages
  */
+
+.page {
+  padding-top: 30px;
+}
 
 .page-title {
   font-size: 40px;
@@ -966,9 +979,36 @@ a.list-group-item .list-group-item-heading {
 
 .tab-pane .tab-actions {
   margin-top: 12px;
+  /* Single column tab actions in the center */
+  text-align: center;
+}
+
+/* If there are tab action columns, then align to left and right */
+.tab-pane .tab-actions [class*="col-"]:first-child {
+  text-align: left;
 }
 
 /* The 2nd column, align text to the right */
 .tab-pane .tab-actions [class*="col-"]:first-child + [class*="col-"] {
   text-align: right;
+}
+
+/**
+ * Credit card logos
+ */
+
+.cc-visa {
+  background: url(/img/credit-cards/visa.png) #fff no-repeat right;
+}
+
+.cc-master {
+  background: url(/img/credit-cards/master.png) #fff no-repeat right;
+}
+
+.cc-amex {
+  background: url(/img/credit-cards/amex.png) #fff no-repeat right;
+}
+
+.cc-discover {
+  background: url(/img/credit-cards/discover.png) #fff no-repeat right;
 }

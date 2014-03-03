@@ -2,6 +2,8 @@
 <link rel="stylesheet" href="/css/checkout.css">
 {{/extend}}
 
+{{#extend "title"}} - Checkout{{/extend}}
+
 <div class="page page-checkout container">
   <div class="row">
     <div class="col-lg-12">
@@ -122,6 +124,7 @@
           <div id="payment-info" class="list-group-item clearfix">
             <div class="col-md-12">
               <legend>3. Payment Info</legend>
+              <div class="payment-info-details">Your card will not be charged until you receive your order.</div>
               <div class="radio card-select-toggle {{#unless user.payment_methods}}hide{{/unless}}">
                 <label>
                   <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" checked="checked">
@@ -183,8 +186,8 @@
       </form>
     </div>
     <div class="col-md-4">
-     <div class="panel order-summary" data-spy="affix" data-offset-top="159" data-offset-bottom="225">
-       {{> checkout_order_summary}}
+     <div class="order-summary" data-spy="affix" data-offset-top="159" data-offset-bottom="225">
+       {{> checkout_order_summary }}
      </div>
     </div>
   </div>
@@ -261,64 +264,17 @@
 <!-- End Modals -->
 
 {{#extend "scripts"}}
-<script>
-  var partials = {
-    order_delivery_info: 'order-delivery-info.hbs',
-    address: 'address.hbs',
-    edit_address: 'edit-address.hbs',
-    checkout_card_expired: 'checkout-card-expired.hbs',
-    edit_card: 'edit-card.hbs',
-    payment_method_option: 'payment-method-option.hbs',
-    alert_error: 'alert-error.hbs',
-    totals: 'totals.hbs'
-  };
-
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial(name, Handlebars.compile(data));
-      },
-      dataType: 'html',
-      async: false
-    });
-  }
-</script>
-
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
 
-<script src="/js/models/address.js"></script>
-<script src="/js/models/user.js"></script>
-<script src="/js/models/item.js"></script>
-<script src="/js/models/category.js"></script>
-<script src="/js/models/restaurant.js"></script>
-<script src="/js/models/order-item.js"></script>
-<script src="/js/models/order.js"></script>
-<script src="/js/models/payment-method.js"></script>
-
-<script src="/js/collections/payment-methods.js"></script>
-<script src="/js/collections/addresses.js"></script>
-<script src="/js/collections/items.js"></script>
-<script src="/js/collections/categories.js"></script>
-
-<script src="/js/views/form-view.js"></script>
-<script src="/js/views/copy-error-modal.js"></script>
-<script src="/js/views/tip-view.js"></script>
-<script src="/js/views/address-view.js"></script>
-<script src="/js/views/order-address-view.js"></script>
-<script src="/js/views/order-view.js"></script>
-<script src="/js/views/checkout-view.js"></script>
-
 <script>
-  balanced.init('{{config.balanced.marketplaceUri}}');
-
-  var user = new User({{{json user}}});
-
-  var view = new CheckoutView({
-    el: '#main',
-    model: new Order( {{{json order}}} ),
-    user: user
-  });
+  require(['app/pages/checkout', 'app/models/index'],
+    function(page, Models) {
+      page.init({
+        marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
+      , user: new Models.User({{{json user}}})
+      , order: new Models.Order({{{json order}}})
+      });
+    }
+  );
 </script>
 {{/extend}}

@@ -2,24 +2,49 @@ var express = require('express');
 var config = require('./config');
 var controllers = require('./controllers');
 var utils = require('./utils');
+var venter = require('./lib/venter');
+var Models = require('./models');
+var hbHelpers = require('./public/js/lib/hb-helpers');
+var db = require('./db');
+var errors = require('./errors');
+var PaymentSummaryItem = require('./public/js/app/models/payment-summary-item');
 
 var m = utils.extend({
   orderParams   : require('./middleware/order-params'),
   restrict      : require('./middleware/restrict'),
   basicAuth     : require('./middleware/basic-session-auth'),
-  buildReceipt  : require('./middleware/build-receipt')
+  buildReceipt  : require('./middleware/build-receipt'),
+  queryParams   : require('./middleware/query-params'),
+  queryString   : require('./middleware/query-string'),
+  after         : require('./middleware/after'),
+  restaurant    : require('./middleware/restaurant')
 }, require('stdm') );
+
+utils.extend( m, require('./middleware/util') );
+utils.extend( m, require('dirac-middleware') );
 
 module.exports.register = function(app) {
 
-  app.get('/', m.restrict(['client', 'admin']), function(req, res) { res.redirect('/restaurants'); });
+  app.before( m.queryParams(), function( app ){
+    app.get('/', controllers.auth.index);
+    app.get('/login', controllers.auth.login);
+    app.post('/login', controllers.auth.login);
+    app.get('/join', controllers.auth.registerView);
+    app.post('/join', controllers.auth.register);
+
+    app.get('/forgot-password', controllers.auth.forgotPassword);
+    app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
+    app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
+    app.post('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
+  });
+
 
   /**
    * Restaurants resource.  The collection of all restaurants.
    */
 
   app.get('/restaurants',
-    m.restrict(['client', 'admin']),
+    m.restrict(['client', 'restaurant', 'admin']),
     function(req, res, next) {
       if (req.query.edit) return next();
       controllers.restaurants.list.apply(this, arguments);
@@ -38,6 +63,8 @@ module.exports.register = function(app) {
   /**
    * Restaurant resource.  An individual restaurant.
    */
+
+  app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
   app.get('/restaurants/:rid', m.restrict(['client', 'admin']), controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
@@ -69,6 +96,34 @@ module.exports.register = function(app) {
 
   app.all('/restaurants/:rid/items', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET');
+    res.send(405);
+  });
+
+  /**
+   * Restaurant events resource.
+   */
+
+  app.get('/restaurants/:rid/events', m.restrict(['admin']), controllers.restaurants.events.list);
+
+  app.post('/restaurants/:rid/events', m.restrict(['admin']), controllers.restaurants.events.create);
+
+  app.all('/restaurants/:rid/events', m.restrict(['admin']), function(req, res, next) {
+    res.set('Allow', 'GET, POST');
+    res.send(405);
+  });
+
+  /**
+   * Individual restaurant event resource.
+   */
+
+  app.put('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.update);
+
+  app.patch('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.update);
+
+  app.del('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.remove);
+
+  app.all('/restaurants/:rid/events/:eid', m.restrict(['admin']), function(req, res, next) {
+    res.set('Allow', 'PUT', 'PATCH, DELETE');
     res.send(405);
   });
 
@@ -119,7 +174,28 @@ module.exports.register = function(app) {
    *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
    */
 
-  app.get('/restaurants/:rid/orders', m.restrict('admin'), controllers.restaurants.orders.list);
+  app.get('/restaurants/:rid/orders'
+  , function(req, res, next) {
+      req.order = {};
+      if (isNaN(parseInt(req.params.rid))) return res.error(errors.internal.UNKNOWN);
+
+      if (utils.contains(req.user.attributes.groups, 'admin')){
+        req.order.isAdmin = true;
+        return next();
+      }
+
+      if (
+           utils.contains(req.user.attributes.groups, 'restaurant')
+        && utils.contains(req.user.attributes.restaurant_ids, parseInt(req.params.rid))
+      ) {
+        req.order.isRestaurantManager = true;
+        return next();
+      }
+
+      return res.error(errors.auth.NOT_ALLOWED);
+    }
+  , controllers.restaurants.orders.list
+  );
 
   app.post('/restaurants/:rid/orders', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body.restaurant_id = req.params.rid;
@@ -195,11 +271,11 @@ module.exports.register = function(app) {
    *  Order resource.  An individual order.
    */
 
-
   app.get(
     config.receipt.orderRoute
   , m.basicAuth()
   , m.restrict(['admin', 'receipts'])
+  , function(req,res, next){ req.order = {}; next(); } // normally this would get added in orders.auth, but we don't hit that from here
   , function(req, res, next){ req.params.receipt = true; next(); }
   , controllers.orders.get
   );
@@ -212,10 +288,12 @@ module.exports.register = function(app) {
   app.get('/orders/:oid'
     // If they're using ?receipt=true, make sure we restrict the group
   , function(req, res, next){
-      if (!req.param('receipt')) return next();
+      // If they were using a review_token we don't need to worry about it
+      // since the controllers.orders.auth middleware would have taken care of it
+      if (req.param('review_token') && !req.param('receipt')) return next();
 
       return (
-        m.restrict(['admin', 'receipts'])
+        m.restrict(!req.param('receipt') ? ['admin', 'restaurant', 'client'] : ['admin', 'restaurant', 'receipts'])
       )(req, res, next);
     }
   , controllers.orders.get
@@ -223,20 +301,19 @@ module.exports.register = function(app) {
 
   app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
 
-  app.patch('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.update);
+  app.patch('/orders/:oid', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.editability, controllers.orders.update);
 
   app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
     next();
   }, controllers.orders.changeStatus);
 
-  app.all('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid', m.restrict(['client', 'restaurant', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
 
-
-  app.get('/receipts/order-:oid.pdf', m.buildReceipt(), express.static(__dirname + '/public'));
+  app.get('/receipts/order-:oid.pdf', m.buildReceipt());
 
   /**
    *  Order status resource.  The collection of all statuses on a single order.
@@ -258,11 +335,11 @@ module.exports.register = function(app) {
    */
 
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
-  app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.summary);  // not currently used
+  app.get('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.orderItems.summary);  // not currently used
 
   app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.add);
 
-  app.all('/orders/:oid/items', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -314,6 +391,8 @@ module.exports.register = function(app) {
   app.get('/auth', controllers.auth.index);
 
   app.post('/auth', controllers.session.create);
+
+  app.post('/auth/signup', controllers.auth.signup);
 
   app.all('/auth', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -507,4 +586,150 @@ module.exports.register = function(app) {
   app.get('/legal', controllers.statics.legal);
 
   app.get('/privacy', controllers.statics.privacy);
+
+  app.get('/analytics'
+  , m.restrict(['admin'])
+  , controllers.analytics.list
+  );
+
+  // For testing emails and shtuff
+  app.get('/emails/:name'
+  , m.restrict(['admin'])
+  , controllers.emails.get
+  );
+
+  app.post('/emails/:name'
+  , m.restrict(['admin'])
+  , controllers.emails.post
+  );
+
+  app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
+
+  app.get('/admin/restaurants/:id/payment-summaries'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
+      layout: 'admin/layout'
+    , method: 'findOne'
+    })
+  );
+
+  app.get('/admin/restaurants/:id/payment-summaries/:payment_summary_id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , function( req, res, next ){
+      res.locals.payment_summary_id = req.param('payment_summary_id');
+      return next();
+    }
+  , m.view( 'admin/restaurant-payment-summary', db.restaurants, {
+      layout: 'admin/layout'
+    , method: 'findOne'
+    })
+  );
+
+  app.get('/payment-summaries/ps-:psid.pdf'
+  , m.restrict(['admin'])
+  , controllers.paymentSummaries.getPdf
+  );
+
+  app.get( config.paymentSummaries.route
+  , m.basicAuth()
+  , m.restrict(['admin', 'pms'])
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.restaurant({ param: 'restaurant_id' })
+  , function( req, res, next ){
+      var $query = { payment_summary_id: req.param('id') };
+      db.payment_summary_items.find( $query, function( error, results ){
+        if ( error ) return res.error(500);
+
+        res.locals.payment_summary_items = results.map( function( r ){
+          return new PaymentSummaryItem( r ).toJSON();
+        });
+
+        next();
+      });
+    }
+  , m.view( 'invoice/payment-summary', db.payment_summaries, {
+      layout: 'invoice/payment-summary-layout'
+    , method: 'findOne'
+    })
+  );
+
+  app.get('/api/restaurants/:restaurant_id/orders'
+  , m.pagination()
+  , m.param('restaurant_id')
+  , controllers.restaurants.orders.listJSON
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries'
+  , m.pagination()
+  , m.param('restaurant_id')
+  , m.find( db.payment_summaries )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/payment-summaries'
+    // Ensure restaurant ID in the URL is what is in the body
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.payment_summaries )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.findOne( db.payment_summaries )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.after( controllers.paymentSummaries.emitPaymentSummaryChange() )
+  , m.update( db.payment_summaries )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.remove( db.payment_summaries )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
+  , m.pagination()
+  , controllers.paymentSummaries.applyRestaurantId()
+  , m.param('payment_summary_id')
+  , m.find( db.payment_summary_items )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
+  , m.queryToBody('payment_summary_id')
+  , m.after( controllers.paymentSummaries.emitPaymentSummaryChange() )
+  , m.insert( db.payment_summary_items )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , controllers.paymentSummaries.applyRestaurantId()
+  , m.param('payment_summary_id')
+  , m.param('id')
+  , m.findOne( db.payment_summary_items )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , controllers.paymentSummaries.applyRestaurantIdForNonJoins()
+  , m.param('payment_summary_id')
+  , m.param('id')
+  , m.after(
+      controllers.paymentSummaries.emitPaymentSummaryChange({ idField: 'payment_summary_id' })
+    )
+  , m.update( db.payment_summary_items )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , controllers.paymentSummaries.applyRestaurantIdForNonJoins()
+  , m.param('payment_summary_id')
+  , m.param('id')
+  , m.after(
+      controllers.paymentSummaries.emitPaymentSummaryChange({ idField: 'payment_summary_id' })
+    )
+  , m.remove( db.payment_summary_items )
+  );
 }

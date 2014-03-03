@@ -1,23 +1,29 @@
-<div class="btn-group-vertical status-buttons" data-toggle="buttons">
-  <label class="btn btn-default active" data-status="all">
-    <input type="radio"> All
-  </label>
-  <label class="btn btn-pending" data-toggle="button" data-status="pending">
-    <input type="radio"> Pending
-  </label>
-  <label class="btn btn-canceled" data-toggle="button" data-status="canceled">
-    <input type="radio"> Canceled
-  </label>
-  <label class="btn btn-submitted" data-toggle="button" data-status="submitted">
-    <input type="radio"> Submitted
-  </label>
-  <label class="btn btn-denied" data-toggle="button" data-status="denied">
-    <input type="radio"> Denied
-  </label>
-  <label class="btn btn-accepted" data-toggle="button" data-status="accepted">
-    <input type="radio"> Accepted
-  </label>
-  <label class="btn btn-delivered" data-toggle="button" data-status="delivered">
-    <input type="radio"> Delivered
-  </label>
+<div class="btn-group-vertical status-buttons">
+  <a href="?" class="btn btn-default {{#eq filter "all"}}active{{/eq}}" data-status="all">
+    All
+  </a>
+  {{#unless isRestaurantManager}}
+  <a href="?filter=pending" class="btn btn-pending {{#eq filter "pending"}}active{{/eq}}">
+    Pending
+  </a>
+  {{/unless}}
+  {{#unless isRestaurantManager}}
+  <a href="?filter=canceled" class="btn btn-canceled {{#eq filter "canceled"}}active{{/eq}}">
+    Canceled
+  </a>
+  {{/unless}}
+  <a href="?filter=submitted" class="btn btn-submitted {{#eq filter "submitted"}}active{{/eq}}">
+    Submitted
+  </a>
+  <a href="?filter=accepted" class="btn btn-accepted {{#eq filter "accepted"}}active{{/eq}}">
+    Accepted
+  </a>
+  <a href="?filter=denied" class="btn btn-denied {{#eq filter "denied"}}active{{/eq}}">
+    Denied
+  </a>
+  {{#unless isRestaurantManager}}
+  <a href="?filter=delivered" class="btn btn-delivered {{#eq filter "delivered"}}active{{/eq}}">
+    Delivered
+  </a>
+  {{/unless}}
 </div>

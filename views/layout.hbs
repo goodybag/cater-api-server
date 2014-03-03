@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Goodybag</title>
+    <title>Goodybag{{{block "title"}}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {{#if intercom}}
@@ -21,6 +21,17 @@
     <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://static.intercomcdn.com/intercom.v1.js';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}};})()</script>
     {{/if}}
 
+    <!-- segment.io -->
+    <script type="text/javascript">
+    window.analytics||(window.analytics=[]),window.analytics.methods=["identify","track","trackLink","trackForm","trackClick","trackSubmit","page","pageview","ab","alias","ready","group","on","once","off"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var method=window.analytics.methods[i];window.analytics[method]=window.analytics.factory(method)}window.analytics.load=function(t){var a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"d2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)},window.analytics.SNIPPET_VERSION="2.0.8",
+    window.analytics.load("{{config.segmentIo.token}}");
+    window.analytics.page();
+    </script>
+    <!-- end segment.io -->
+
+    <!-- Select2 -->
+    <link href="/components/select2/select2.css" rel="stylesheet" media="screen">
+
     <!-- Bootstrap -->
     <link href="/components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
@@ -33,7 +44,6 @@
     <link href="/components/lalitkapoor-pickadate/lib/themes/classic.css" rel="stylesheet">
     <link href="/components/lalitkapoor-pickadate/lib/themes/classic.date.css" rel="stylesheet">
     <link href="/components/lalitkapoor-pickadate/lib/themes/classic.time.css" rel="stylesheet">
-
 
     <!-- Moar Convenient CSS Stuff -->
     <link href="/css/kit.css" rel="stylesheet">
@@ -50,16 +60,37 @@
     {{{block "css"}}}
   </head>
   <body>
-    <header id="header" class="navbar {{#if session.oldUser}}navbar-impersonate{{/if}}">
+    <header id="header" class="{{#if session.oldUser}}navbar-impersonate{{/if}}">
       <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
+
+        {{!-- Brand and toggle get grouped for better mobile display --}}
+        <nav class="navbar navbar-default" role="navigation">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
             <a class="navbar-brand" href="/">
               <img src="/img/logo.png" alt="Goodybag">
             </a>
+          </div>
+
+          {{!-- Collect other nav content for toggling --}}
+          <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li class="contact-info">
+                  Contact us: <strong class="phone-number">{{phoneNumber config.phone.support}}</strong>
+              </li>
+            </ul>
             {{#if user.id}}
-            <ul class="nav navbar-nav pull-right">
-              <li><a href="/restaurants">Home</a></li>
+            <ul class="nav navbar-nav navbar-right">
+              {{#contains user.groups 'restaurant'}}
+                <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
+              {{else}}
+                <li><a href="/restaurants" class="btn-link">Home</a></li>
+              {{/contains}}
               {{#if session.oldUser}}
               <li>
                 <a href="/users/return" class="users-return navbar-btn">
@@ -67,6 +98,7 @@
                 </a>
               </li>
               {{/if}}
+              {{{block "navbar-links"}}}
               <li class="nav-account dropdown">
                 <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
                   {{#if user.name }} {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
@@ -79,12 +111,8 @@
               </li>
             </ul>
             {{/if}}
-            <span class="header-info">
-              <span class="contact-us">Contact Us:</span>
-              <strong class="phone-number">{{phoneNumber config.phone.support }}</strong>
-            </span>
           </div>
-        </div>
+        </nav>
       </div>
     </header>
 
@@ -118,48 +146,12 @@
     </a>
     {{/if}}
 
-    <script src="/components/jquery/jquery.min.js"></script>
-    <script src="/components/amanda/releases/latest/amanda.min.js"></script>
-    <script src="/components/select2/select2.min.js"></script>
-    <script src="/components/async/lib/async.js"></script>
-    <script src="/components/underscore/underscore-min.js"></script>
-    <script src="/components/backbone/backbone-min.js"></script>
-    <script src="/components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/components/spin.js/spin.js"></script>
-    <script src="/components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js"></script>
-
-    <!-- pickadate -->
-    <script src="/components/lalitkapoor-pickadate/lib/picker.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/picker.date.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/picker.time.js"></script>
-    <script src="/components/lalitkapoor-pickadate/lib/legacy.js"></script>
-
-    <!-- moment -->
-    <script src="/components/moment/min/moment.min.js"></script>
-    <script src="/components/moment-timezone/min/moment-timezone.min.js"></script>
-    <script>
-    $.ajax({
-      type: "GET",
-      url: "/components/moment-timezone/moment-timezone.json",
-      dataType: "json",
-      async: false,
-      success: function(data) {
-        moment.tz.add(data);
-      }
-    });
-    </script>
-
-    <script src="/components/handlebars/handlebars.js"></script>
-    <script src="/js/hb-helpers.js"></script>
-
-    <script src="/js/notify.js"></script>
-    <script src="/js/utils.js"></script>
-    <script src="/js/spinner.js"></script>
-    <script>
-      for (var key in helpers) {
-        Handlebars.registerHelper(key, helpers[key]);
-      }
-    </script>
+    {{#unless config.isDev}}
+    <script src="/dist/app.js"></script>
+    {{else}}
+    <script src="/components/requirejs/require.js"></script>
+    <script src="/js/require-config.js"></script>
+    {{/unless}}
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -195,8 +187,18 @@
     {{#if user.email}}
     <script type="text/javascript">
     olark('api.chat.updateVisitorNickname', {
-        snippet: "{{user.email}}"
+        snippet: "{{#if session.oldUser}}{{session.oldUser.email}}{{else}}{{user.email}}{{/if}}"
     });
+    </script>
+    {{/if}}
+
+    {{#if user.id}}
+    <script type="text/javascript">
+      {{#if session.oldUser}}
+      analytics.identify({{session.oldUser.id}}, {{{json session.oldUser}}});
+      {{else}}
+      analytics.identify({{user.id}}, {{{json user}}});
+      {{/if}}
     </script>
     {{/if}}
 

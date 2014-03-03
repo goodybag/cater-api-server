@@ -15,24 +15,26 @@ var
 , logger = require('./logger')
 , routes = require('./routes')
 , helpers = require('./helpers')
+, partials = require('./lib/partials')
 , errors = require('./errors')
+, middleware = require('./middleware')
 ;
-
-var middleware = {
-  cors: require('./middleware/cors')
-, domains: require('./middleware/domains')
-, uuid: require('./middleware/uuid')
-, sslRedirect: require('./middleware/ssl-redirect')
-, requestLogger: require('connect-request-logger-pg')
-, getUser: require('./middleware/get-user')
-};
 
 var app = module.exports = express();
 
 app.configure(function(){
   app.use(express.favicon(__dirname + '/public/favicon.ico'));
   app.use(express.compress());
-  app.use(express.static(__dirname + '/public'));
+  app.use((function(){
+    var receiptReg = /receipts\/order\-\d+\.pdf/;
+
+    // Exclude receipts from this static server so we can do ?rebuild=true for
+    // receipts that exist in the local filesystem
+    return function(req, res, next) {
+      if (receiptReg.test(req.path)) return next();
+      return express.static(__dirname + '/public')(req, res, next);
+    };
+  })());
 
   app.use(logger.expressError);
   app.use(express.cookieParser('WOOT THE FUCK'));
@@ -46,6 +48,7 @@ app.configure(function(){
   app.use(middleware.domains);
   app.use(middleware.cors);
 
+  app.use(middleware.setSession());
   app.use(middleware.getUser);
 
   app.use(middleware.requestLogger({
@@ -55,9 +58,14 @@ app.configure(function(){
   , customFields: {uuid: 'uuid'}
   }));
 
+  // Intercept status codes and render HTML if necessary
+  app.use( middleware.statusCodeIntercept() );
+
   if (config.isProduction) {
     app.use(middleware.sslRedirect);
   }
+
+  app.use( require('dirac-middleware')({ envelope: false }) );
 
   app.use(app.router);
 
@@ -104,20 +112,36 @@ app.configure(function(){
     render.call(this, path, options, callback);
   }
 
+  /**
+   * More readable app.all implementation for applying multiple
+   * middlewares so a group of routes
+   *
+   * app.before( m.restrict(), function(){
+   *   app.get('/orders', ... );
+   *   app.get('/orders/:id', ... );
+   *   ...
+   * })
+   */
+  app.before = function(){
+    var args    = Array.prototype.slice.call( arguments );
+    var handler = args.pop();
+    var handle  = function( verb, path ){
+      var _args = [ path ].concat( args, Array.prototype.slice.call( arguments, 2 ) );
+      return this[ verb ].apply( this, _args );
+    };
+
+    handler({
+      get:    handle.bind( app, 'get' )
+    , post:   handle.bind( app, 'post' )
+    , put:    handle.bind( app, 'put' )
+    , patch:  handle.bind( app, 'patch' )
+    , del:    handle.bind( app, 'del' )
+    , all:    handle.bind( app, 'all' )
+    })
+  };
 });
 
 helpers.register(hbs);
-hbs.registerPartials('./public/partials');
-
-[
-  'order-items'
-, 'order-details'
-, 'order-details-no-header'
-].forEach( function( name ){
-  hbs.registerPartial(
-    'email_' + name.replace( /\-/g, '_' )
-  , fs.readFileSync( './views/order-email/' + name + '.hbs' ).toString()
-  );
-});
+partials.register(hbs);
 
 routes.register(app);

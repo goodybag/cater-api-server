@@ -3,13 +3,30 @@ var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
 
+module.exports.listJSON = function(req, res) {
+  var $query = utils.extend({}, req.queryOptions);
+
+  $query.where = req.queryObj;
+
+  models.Order.find( $query, function( error, results ){
+    if ( error ) return res.error( errors.internal.DB_FAILURE, error );
+
+    res.json( utils.invoke( results, 'toJSON' ) );
+  });
+};
+
 module.exports.list = function(req, res) {
+  // only show restaurant managers orders with a status of submitted, denied, or accepted
+  var defaultFilter = (req.order.isRestaurantManager) ? ['submitted', 'denied', 'accepted'] : 'all';
+  if (req.order.isRestaurantManager && !utils.contains(defaultFilter, req.query.filter)) req.query.filter = null;
+  var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : defaultFilter;
+
   //TODO: middleware to validate and sanitize query object
   var tasks = [
     function(callback) {
       var query = utils.extend({where: {}}, req.query);
       utils.extend(query.where, {'restaurant_id': req.params.rid});
-      models.Order.find(query, callback);
+      models.Order.findByStatus(query, filter, callback);
     },
 
     function(callback) {
@@ -19,9 +36,12 @@ module.exports.list = function(req, res) {
 
   utils.async.parallel(tasks, function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.render('restaurant-orders', {orders: utils.invoke(results[0], 'toJSON'), restaurant: results[1].toJSON()}, function(err, html) {
-      if (err) return res.error(errors.internal.UNKNOWN, error);
-      res.send(html);
+    res.render('restaurant-orders', {
+      orders: utils.invoke(results[0], 'toJSON')
+    , restaurant: results[1].toJSON()
+    , isRestaurantManager: req.order.isRestaurantManager
+    , isAdmin: req.order.isAdmin
+    , filter: filter
     });
   });
 }

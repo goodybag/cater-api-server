@@ -1,0 +1,21 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Remove Credit Card</h4>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to remove {{{cardInfo}}}?</p>
+      <p>Note: Existing orders will still be charged to this card. Please contact us if you'd like to update your payment option on any existing orders.</p>
+    </div>
+    <div class="modal-footer">
+      <div class="btn-toolbar pull-right">
+        <form class="form-remove-card" method="POST" action="/users/me/cards/{{cardId}}">
+          <input type="hidden" value="delete" name="_method">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Remove Card</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

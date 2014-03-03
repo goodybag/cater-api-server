@@ -16,16 +16,16 @@ body {
 }
 
 a {
-  color: #432012;
+  color: #0039a1;
 }
 
 a:hover {
-  color: #432012;
+  color: #0039a1;
   text-decoration: underline;
 }
 
 .navbar {
-  background: #FCFDF6;
+  background: #FFF;
   border-color: #CCCCC0;
 }
 
@@ -47,7 +47,7 @@ a:hover {
 
 .btn-default {
   border-color: #DDDED8;
-  background-color: #FCFDF6;
+  background-color: #FFF;
 }
 
 .btn-default:hover {
@@ -142,7 +142,7 @@ a.list-group-item .list-group-item-heading {
 }
 
 .order-table .item-edit {
-  color: #A29893;
+  color: #0039a1;
 }
 
 /**
@@ -249,7 +249,7 @@ a.list-group-item .list-group-item-heading {
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  color: #432012;
+  color: #0039a1;
   text-decoration: underline;
   background: none;
   border: none;

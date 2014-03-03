@@ -1,0 +1,54 @@
+////////////
+// Footer //
+////////////
+
+@footer-disc-size: 4px;
+
+.footer {
+  padding-top: 60px;
+  padding-bottom: 80px;
+  text-align: center;
+
+  @media screen and (max-width: @breakpoint-mobile) {
+    .standard-padding();
+    text-align: left;
+  }
+}
+
+.footer-nav {
+  padding: 0;
+  margin: 0;
+}
+
+.footer-nav li {
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    margin-top: -@footer-disc-size / 2;
+    width: @footer-disc-size;
+    height: @footer-disc-size;
+    border-radius: @footer-disc-size * 2;
+    background: @brand-tertiary;
+  }
+
+  &:first-child:before {
+    display: none;
+  }
+
+  @media screen and (max-width: @breakpoint-mobile) {
+    display: block!important;
+    &:before { display: none; }
+    & a {
+      margin: 0;
+    }
+  }
+}
+
+.footer-nav a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -1,0 +1,50 @@
+{{#extend "css"}}
+<link rel='stylesheet' type='text/css' href='/components/fullcalendar/fullcalendar.css'/>
+{{/extend}}
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <a class="back-to-results" href="/restaurants/{{restaurant.id}}">Back to restaurant</a>
+    </div>
+  </div>
+
+  <div class="row">
+    <h1 class="col-lg-12 page-title">{{restaurant.name}} Calendar</h1>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div id="calendar"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-container"></div>
+
+{{#extend "scripts"}}
+<script>
+  define( 'data/events', ['app/collections/restaurant-events'], 
+    function( RestaurantEvents ) {
+      return new RestaurantEvents({{{ json events }}});
+    }
+  );
+
+  define( 'data/restaurant', ['app/models/restaurant'],
+    function( Restaurant ) {
+      return new Restaurant({{{ json restaurant }}});
+    }
+  );
+
+  require([
+      'jquery'
+    , 'handlebars'
+    , 'app/views/restaurant/availability-view'
+    ]
+  , function($, Handlebars, AvailabilityView) {
+      var availabilityView = new AvailabilityView({
+        el: '#main'
+      });
+    }
+  );
+</script>
+{{/extend}}

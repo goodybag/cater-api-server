@@ -38,6 +38,10 @@
         </table>
 
         {{> email_order_items order}}
+
+        {{#if order.review_token}}
+          {{> email_accept_reject}}
+        {{/if}}
       </td>
       <td style="width: 10px"></td>
     </tr>

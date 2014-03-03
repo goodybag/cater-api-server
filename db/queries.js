@@ -54,15 +54,31 @@ var userGroups = function(query) {
     as: 'groups',
     expression: '"users_groups"."group"'
   });
-  utils.extend(query, {
-    joins: {
-      users_groups: {
-        type: 'left',
-        on: {'user_id': '$users.id$'}
-      }
-    },
-    groupBy:'id'
+
+  if(!query.joins) query.joins = {};
+  query.joins.users_groups = {
+    type: 'left',
+    on: {'user_id': '$users.id$'}
+  };
+  query.groupBy = 'id';
+
+  return query;
+}
+
+var userRestaurants = function(query) {
+  query.columns.push({
+    type: 'array_agg',
+    as: 'restaurant_ids',
+    expression: '"users_restaurants"."restaurant_id"'
   });
+
+  if(!query.joins) query.joins = {};
+  query.joins.users_restaurants = {
+    type: 'left',
+    on: {'user_id': '$users.id$'}
+  };
+  query.groupBy = 'id';
+
   return query;
 }
 
@@ -153,13 +169,20 @@ module.exports = {
       function(query) {
         query.order = {id: 'desc'};
         return query;
-      },userGroups, utils.partial(find, 'users')
+      },userGroups, userRestaurants, utils.partial(find, 'users')
     ),
-    get: utils.compose(userGroups, utils.partial(findOne, 'users')),
+    get: utils.compose(userGroups, userRestaurants, utils.partial(findOne, 'users')),
     create: utils.partial(upsert, 'users'),
     update: utils.partial(upsert, 'users'),
     del: utils.partial(del, 'users'),
     setGroup: utils.partial(upsert, 'users_groups')
+  },
+
+  userRestaurant: {
+    list: utils.partial(find, 'users_restaurants'),
+    get: utils.partial(findOne, 'users_restaurants'),
+    create: utils.partial(upsert, 'users_restaurants'),
+    update: utils.partial(upsert, 'users_restaurants')
   },
 
   orderItem: {
@@ -237,4 +260,14 @@ module.exports = {
     }
   }
 
+};
+
+module.exports.orders = {};
+module.exports.orders.acceptedButNot = function( ids ){
+  var $query = { where: { status: 'accepted' } };
+  if ( ids && ids.length ){
+    if ( !$query.where.id ) $query.where.id = {};
+    $query.where.id.$nin = ids;
+  }
+  return $query;
 };

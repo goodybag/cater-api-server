@@ -136,6 +136,15 @@ define(function(require) {
     , nullable: true
     , references: {table: 'payment_methods', column: 'id'}
     }
+  , reason_denied: {
+      type: types.text
+    , nullable: true
+    }
+  , reviewed: {
+      type: types.boolean
+    , nullable: false
+    , default: false
+    }
   };
 
   definition.indices = {};

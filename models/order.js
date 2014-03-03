@@ -6,6 +6,7 @@ var logger = require('../logger');
 var venter = require('../lib/venter');
 
 var db = require('../db');
+var queryTransform = require('../db/query-transform');
 var Model = require('./model');
 var queries = require('../db/queries');
 var Restaurant = require('./restaurant');
@@ -133,7 +134,7 @@ module.exports = Model.extend({
       return obj;
 
     var inTimeToCancel;
-    if (obj.guests != null && obj.datetime != null) {
+    if (obj.guests != null && obj.datetime != null && obj.restaurant) {
       var cancelTime = (utils.find(utils.sortBy(obj.restaurant.lead_times, 'max_guests'), function(lead) {
         return lead.max_guests >= obj.guests;
       }) || 0).cancel_time;
@@ -185,6 +186,44 @@ module.exports = Model.extend({
         return false
     }
     return true;
+  },
+
+  /**
+   * determine if the user is allowed to change the value of the tip
+   * @param  {object}  orderAuth {isAdmin: bool, isOwner: bool, isRestaurantManager: bool}
+   * @return {Boolean}           editability
+   */
+  isTipEditable: function(orderAuth) {
+    // Is the tip editable? This is the question. This is the criteria.
+    //
+    // 1. If the order has been canceled or rejected it is not editable.
+    //
+    // 2. If it is 3 days past the delivery date it is no editable.
+    //
+    // 3. If the tip is not 0 then the restaurant cannot edit it.
+    //
+    // 4. If it is before the delivery date then it is editable by the
+    // owner and the admin.
+    //
+    // 5. If it is past the delivery date it is editable by the client,
+    // admin, and restaurant manager.
+
+    var now = moment();
+    var deliveryDateTime = moment.tz(this.attributes.datetime, this.attributes.timezone);
+    var cutOffDateTime = moment.tz(this.attributes.datetime, this.attributes.timezone).add(3, 'days');
+
+    if (utils.contains(['canceled', 'rejected'], this.attributes.status)) return false;
+    if (now > cutOffDateTime) return false;
+    if (this.attributes.tip > 0 && orderAuth.isRestaurantManager) return false;
+
+    if (now < deliveryDateTime && (orderAuth.isAdmin || orderAuth.isOwner)) return true;
+    if (
+      (now > deliveryDateTime)
+      && (now < cutOffDateTime)
+      && (orderAuth.isAdmin || orderAuth.isOwner || orderAuth.isRestaurantManager)
+    ) return true;
+
+    return false;
   },
 
   createCopy: function(callback) {
@@ -391,14 +430,17 @@ module.exports = Model.extend({
     query = query || {};
     query.columns = query.columns || ['*'];
     query.order = query.order || ["submitted.created_at DESC", "orders.created_at DESC"];
+    query.with = query.with || [];
+
+    // distinct should have the same columns used in order by
+    query.distinct = query.distinct || queryTransform.stripColumn(query.order);
 
     // making datetime a string on purpose so that the server timezone isn't
     // applied to it when it is pulled out (there is no ofset set on this
     // because it cannot be determined due to DST until the datetime in
     // datetime)
     query.columns.push('(orders.datetime::text) as datetime');
-
-    query.with = [
+    query.with = query.with.concat([
       {
         name: 'day_hours'
       , type: 'select'
@@ -481,7 +523,7 @@ module.exports = Model.extend({
       , over: {partition: ['order_id', 'status']}
       , where: {status: 'submitted'}
       }
-    ];
+    ]);
 
     var itemSubtotals = [
       {
@@ -761,12 +803,13 @@ module.exports = Model.extend({
       callback = limit;
       limit = 100;
     }
+    // it is ready for charging 3 days after the order has been delivered.
     var query = {
       where: {
         payment_method_id: {$notNull: true}
       , payment_status: {$null: true}
       , status: 'accepted'
-      , $custom: ['now() > "orders"."datetime" AT TIME ZONE "orders"."timezone"']
+      , $custom: ['now() > (("orders"."datetime" AT TIME ZONE "orders"."timezone") + interval \'3 days\')']
       }
     , limit: limit
     };
@@ -790,6 +833,89 @@ module.exports = Model.extend({
     Model.update.call(this, query, utils.partial(modifyAttributes, callback));
   },
 
+  findTomorrow: function( query, callback ){
+    if ( typeof query === 'function' ){
+      callback = query;
+      query = {};
+    }
+
+    utils.defaults( query.where = query.where || {}, {
+      datetime: {
+        $between_days_from_now: { from: 1, to: 2, timezone: 'orders.timezone' }
+      }
+    });
+
+    module.exports.find.call( this, query, callback );
+  },
+
+  /**
+   * Find orders filtered by status
+   *
+   * @param {object} query - The query object (optional)
+   * @param {string|array} status - The order status to filter by
+   * @param {function} callback - The callback function(error, orders)
+   */
+  findByStatus: function( query, status, callback ){
+    if ( typeof query === 'string' ){
+      callback = status;
+      status = query;
+      query = {};
+    }
+
+    query = utils.defaults(query, {
+      order: 'id desc'
+    , limit: 'ALL'
+    , where: {}
+    });
+
+    if (typeof status === 'string') {
+      switch (status) {
+        case 'accepted':
+          // sort by date accepted
+          query.with = [{
+            name: 'latest_order_statuses'
+          , type: 'select'
+          , table: 'order_statuses'
+          , columns: [
+              'order_id'
+            , 'status'
+            , { name: 'created_at', alias: 'status_date' }
+            ]
+          , order: [
+              'order_id desc'
+            , 'created_at desc'
+            ]
+          , distinct: ['order_id']
+          }];
+
+          query.joins = query.joins || {};
+          query.joins.latest_order_statuses = {
+            type: 'left'
+          , on: {
+              'order_id': '$orders.id$'
+            }
+          };
+
+          query.where.status = status;
+          query.order = ['status_date desc'];
+          break;
+        case 'pending':
+        case 'canceled':
+        case 'submitted':
+        case 'denied':
+        case 'delivered':
+          query.where.status = status;
+          break;
+        default:
+          break;
+      };
+    } else {
+      query.where.status = {$in: status};
+    }
+
+    module.exports.find.call( this, query, callback );
+  },
+
   // this is a FSM definition
   statusFSM: {
     canceled: [],
@@ -798,5 +924,14 @@ module.exports = Model.extend({
     denied: [],
     accepted: ['canceled', 'delivered'],
     delivered: []
-  }
+  },
+
+  statuses: [
+    'pending'
+  , 'canceled'
+  , 'submitted'
+  , 'denied'
+  , 'accepted'
+  , 'delivered'
+  ]
 });

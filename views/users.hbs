@@ -33,6 +33,17 @@
                 Admin
               </label>
             </div>
+            <div class="checkbox">
+              <label>
+                <input class="create-user-group" type="checkbox" name="groups" id="userGroupRestaurant" value="restaurant">
+                Restaurant
+                <select name="restaurants" id="restaurants">
+                  {{#each restaurants}}
+                    <option value="{{id}}">{{name}}</option>
+                  {{/each}}
+                </select>
+              </label>
+            </div>
           </div>
           <button type="submit" class="btn btn-primary create-user-submit hide" data-success-text="User created successfully!" data-error-text="">Create User</button>
         </div>
@@ -46,6 +57,7 @@
           <th>name</th>
           <th>email</th>
           <th>organization</th>
+          <th>signed up</th>
           <th>login as user</th>
         </tr>
       </thead>
@@ -56,6 +68,7 @@
           <td>{{name}}</td>
           <td>{{email}}</td>
           <td>{{organization}}</td>
+          <td>{{datepart created_at}}</td>
           <td><a href="/users/{{id}}/session">login</a></td>
         </tr>
         {{/each}}
@@ -65,10 +78,13 @@
 </div>
 
 {{#extend "scripts"}}
-<script src="/js/models/user.js"></script>
-<script src="/js/views/form-view.js"></script>
-<script src="/js/views/create-user-view.js"></script>
 <script>
-  var createUserView = new CreateUserView({ el: '#main', reloadOnSuccess: true });
+  require([
+      'app/views/create-user-view'
+    ]
+  , function(CreateUserView) {
+      var createUserView = new CreateUserView({ el: '#main', reloadOnSuccess: true });
+    }
+  );
 </script>
 {{/extend}}

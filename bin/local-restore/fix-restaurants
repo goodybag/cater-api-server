@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+var options = {
+  email: 'test@goodybag.com'
+, phoneSms: '1234567890'
+, phoneVoice: '1234567890'
+, concurrency: 10
+};
+
+var fs = require('fs');
+var async = require('async');
+var Restaurant = require('../../models').Restaurant;
+
+var onError = function( error ){
+  throw error;
+};
+
+if ( fs.existsSync( __dirname + '/../../local-config.json') ){
+  var localConfig = require('../../local-config.json');
+  options.email = localConfig.testEmail || options.email;
+  options.phoneSms = localConfig.testPhoneSms || options.phoneSms;
+  options.phoneVoice = localConfig.testPhoneVoice || options.phoneVoice;
+}
+
+console.log( "updating restaurants with:", JSON.stringify(options) );
+
+Restaurant.find( { limit: 999999 }, function( error, restaurants ){
+  if ( error ) return onError( error );
+
+  var fns = restaurants.map( function( restaurant ){
+    return function( done ){
+      restaurant.save({ 
+        values: { 
+          emails: '{' + options.email + '}'
+        , sms_phones: '{' + options.phoneSms + '}'
+        , voice_phones: '{' + options.phoneVoice + '}'
+        } 
+      }, done);
+    };
+  });
+
+  async.parallelLimit( fns, options.concurrency, function( error ){
+    if ( error ) return onError( error );
+
+    console.log( restaurants.length, "restaurants updated!" );
+    process.exit(0);
+  });
+});

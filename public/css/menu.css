@@ -1,4 +1,4 @@
-.order-summary.affix {
+.order-summary-col .affix {
   top: 30px;
 }
 
@@ -54,6 +54,30 @@
   padding-bottom: 8px;
 }
 
+/**
+ * Menu order params
+ */
+
+.menu-order-params {
+  font-size: 13px;
+}
+
+.menu-order-params .panel-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.menu-order-params dl {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+.menu-order-params dt {
+  float: left;
+  clear: left;
+  margin-right: 8px;
+}
+
 @media screen and (max-width: 786px) {
   .menu-picker .menu-picker-tabs {
     display: block;
@@ -102,40 +126,79 @@
   margin-top: 13px;
 }
 
-.restaurant-name {
+/**
+ * Restaurant header
+ *   - Logo
+ *   - Name
+ *   - Description
+ */
+.restaurant-header {
   display: inline-block;
-  width: 100%;
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: -114px;
-  padding-left: 110px;
-  padding-right: 30px;
-  vertical-align: middle;
-}
-
-.restaurant-name-logo {
+  height: 100px;
   margin: 10px 0 4px;
 }
 
-.restaurant-name-logo .business-logo {
-  display: inline-block;
-  width: 100px;
+.restaurant-header .restaurant-header-logo {
+  float: left;
   height: 100px;
-  vertical-align: middle;
+  width: 100px;
+  margin-right: 10px;
   border-radius: 4px;
   border: solid 1px #ccccc0;
-  margin-right: 10px;
+}
+
+.restaurant-header .restaurant-header-body {
+  margin-left: 100px; /* same as adjacent logo width */
+  width: 100%;
+}
+
+.restaurant-header .restaurant-header-name {
+  font-family: 'Aleo';
+  font-size: 26px;
+  font-weight: 300;
+}
+/**
+ * For restaurant's without description, let name take 
+ * full container height
+ */
+.restaurant-header .restaurant-header-name-full {
+  display: table-cell;
+  vertical-align: middle;
+  height: 100px; 
+}
+
+.restaurant-header .restaurant-header-description {
+  color: #8B8983;
+  font-weight: 300;
 }
 
 @media screen and (max-width: 786px) {
-  .restaurant-name-logo .business-logo {
+  .restaurant-header {
+    height: 50px;
+  }
+
+  .restaurant-header .restaurant-header-logo {
     width: 50px;
     height: 50px;
   }
 
-  .restaurant-name {
-    margin-left: -64px;
-    padding-left: 60px;
+  .restaurant-header .restaurant-header-body {
+    margin-left: 50px;
+  }
+
+  .restaurant-header .restaurant-header-name {
+    font-size: 20px;
+    vertical-align: middle;
+    text-align: left; 
+    display: table-cell;
+    height: 50px;
+  }
+
+  .restaurant-header .restaurant-header-description {
+    clear:left;
+    padding-top: 10px;
+    margin-left: -45px;
+    width: 95%;
   }
 }
 
@@ -206,19 +269,19 @@
 }
 
 @media ( min-width: 1200px ){
-  .order-summary.affix {
+  .order-summary-col .affix {
     width: 360px;
   }
 }
 
 @media ( min-width: 992px ) and ( max-width: 1199px ){
-  .order-summary.affix {
+  .order-summary-col .affix {
     width: 293px;
   }
 }
 
 @media ( max-width: 991px ){
-  .order-summary.affix {
+  .order-summary-col .affix {
     position: static;
     width: 100%;
   }

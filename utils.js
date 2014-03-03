@@ -11,6 +11,7 @@ var
 , uuid = require('node-uuid')
 , ironMQ = require('iron_mq')
 , rollbar = require("rollbar")
+, Handlebars = require('hbs')
 
   // Module Dependencies
 , config = require('./config')
@@ -19,6 +20,8 @@ var
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
+
+utils.template = Handlebars.compile.bind( Handlebars );
 
 utils.s3 = require('knox');
 
@@ -40,6 +43,75 @@ utils.balanced = new Balanced({
 , secret: config.balanced.secret
 });
 
+/**
+ * Async.parallel that does not bail on error.
+ * Instead it will return an array or object
+ * of errors, continuing until each function is
+ * complete
+ * @param  {Array|Object}   fns      The list of functions to run
+ * @param  {Function} callback      ( errors, results )
+ */
+utils.async.parallelNoBail = function( fns, limit, callback ){
+  if ( typeof limit === 'function' ){
+    callback = limit;
+    limit = null;
+  }
+
+  if ( limit ){
+    return utils.async.noBail( 'parallelLimit', fns, limit, callback )
+  }
+
+  return utils.async.noBail( 'parallel', fns, callback );
+};
+
+/**
+ * Async.series that does not bail on error.
+ * Instead it will return an array or object
+ * of errors, continuing until each function is
+ * complete
+ * @param  {Array|Object}   fns      The list of functions to run
+ * @param  {Function} callback      ( errors, results )
+ */
+utils.async.seriesNoBail = function( fns, callback ){
+  return utils.async.noBail( 'series', fns, callback );
+};
+
+utils.async.noBail = function( op, fns, limit, callback ){
+  if ( typeof fns !== 'object' ) throw new Error('`parallelNoBail` - Invalid first argument');
+
+  if ( typeof limit === 'function' ){
+    callback = limit;
+    limit = null;
+  }
+
+  var hadError = false;
+  var noBailFns = Array.isArray( fns ) ? [] : {};
+  var errors    = Array.isArray( fns ) ? [] : {};
+
+  Object.keys( fns ).forEach( function( key ){
+    noBailFns[ key ] = function( done ){
+      fns[ key ]( function( error ){
+        if ( error ){
+          hadError = true;
+          if ( Array.isArray( errors ) ) errors.push( error );
+          else errors[ key ] = error;
+        }
+
+        done.apply( null, [null].concat( Array.prototype.slice.call( arguments, 1 ) ) );
+      });
+    }
+  });
+
+  var args = [ noBailFns ];
+
+  if ( limit ) args.push( limit );
+
+  args.push(function( error, results ){
+    callback( hadError ? errors : null, results );
+  });
+
+  async[ op ].apply( async, args );
+};
 
 utils.stage = function(fns){
   var current = function(){
@@ -134,6 +206,9 @@ var mailgun = new Mailgun(config.mailgun.apiKey);
  *     filePath: '~/love-letter.pdf'
  *   }
  * , attachments: [ * array of objects described above * ]
+ * , headers: {
+ *     "x-mailer": "Noemailer 1.0"
+ *   }
  * }
  *
  * @param  {Object}   options  The full email options sent to composer
@@ -153,6 +228,12 @@ utils.sendMail2 = function( options, callback ){
 
   if ( options.attachments ) options.attachments.forEach( composer.addAttachment );
   if ( options.attachment ) composer.addAttachment( options.attachment );
+
+  if ( typeof options.headers === 'object' ){
+    for ( var key in options.headers ){
+      composer.addHeader( key, options.headers[ key ] );
+    }
+  }
 
   composer.buildMessage( function( error, message ){
     if ( error ) return callback( error );

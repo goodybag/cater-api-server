@@ -4,7 +4,7 @@ var
 , queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
-, states = require('../../public/states')
+, states = require('../../public/js/lib/states')
 , enums = require('../../db/enums')
 , cuisines = require('../../public/cuisines')
 ;
@@ -26,7 +26,12 @@ module.exports.list = function(req, res) {
 
   var tasks =  [
     function(callback) {
-      models.Restaurant.find({}, utils.extend({ is_hidden: false }, orderParams), callback);
+      var query = { includes: ['filter_restaurant_events'] };
+      models.Restaurant.find(
+        query
+      , utils.extend({ is_hidden: false }
+      , orderParams)
+      , callback);
     },
 
     function(callback) {
@@ -92,7 +97,14 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
-      models.Restaurant.findOne(parseInt(req.params.rid), orderParams, function(err, restaurant) {
+      var query = {
+        where: {
+          id: parseInt(req.params.rid)
+        }
+      , includes: ['closed_restaurant_events']
+      };
+
+      models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');
         restaurant.getItems(function(err, items) {
@@ -197,6 +209,24 @@ module.exports.sort = function(req, res) {
   });
 };
 
+module.exports.listManageable = function(req, res) {
+  models.Restaurant.find(
+    {
+      where: {
+        id: {$in: req.user.attributes.restaurant_ids}
+      }
+    }
+  , function(error, restaurants) {
+      var context = {restaurants: utils.invoke(restaurants, 'toJSON'), states: states, isNew: true};
+      context.restaurant = {delivery_times: utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; }))};  // tmp hack
+      res.render('user-manage-restaurants', context, function(error, html) {
+        if (error) return res.error(errors.internal.UNKNOWN, error);
+        return res.send(html);
+      });
+    }
+  );
+};
+
 var zips = function(body, id) {
   return utils.map(body.delivery_zips, function(zip, index, arr) {
     return {restaurant_id: id,  zip: zip}
@@ -252,12 +282,15 @@ var fields = [
   'zip',
   'sms_phones',
   'voice_phones',
+  'display_phone',
   'emails',
   'minimum_order',
   'price',
   'delivery_fee',
   'cuisine',
-  'yelp_business_id'
+  'yelp_business_id',
+  'websites',
+  'description'
 ];
 
 module.exports.create = function(req, res) {
@@ -340,7 +373,8 @@ module.exports.update = function(req, res) {
 
   utils.async.parallel(tasks, function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(200, (results[3]||0)[0]); // TODO: better than results[3]
+    var result = results[3];
+    res.send( result ? 200 : 204, result); // TODO: better than results[3]
   });
 }
 

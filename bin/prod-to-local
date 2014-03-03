@@ -14,10 +14,10 @@ psql -h localhost --command="create database cater"
 # Restore with production data
 /Applications/Postgres.app/Contents/MacOS/bin/pg_restore --verbose --clean --no-acl --no-owner -h localhost -d cater latest.dump
 
-# Strip restaurant contact info
-psql cater -h localhost --command="update restaurants set sms_phones='{}', voice_phones='{}', emails='{}'";
-
 # Clean up
 rm latest.dump
+
+./bin/local-restore/fix-restaurants
+./bin/local-restore/fix-users
 
 echo "Restore Complete. Enjoy your data!"

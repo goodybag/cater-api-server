@@ -1,0 +1,49 @@
+//////////////////////
+// Marketing Points //
+//////////////////////
+
+@point-side-padding: 26px;
+@point-padding: 20px @point-side-padding 20px;
+
+.marketing-points {
+  #grid > .row();
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.marketing-points > .point {
+  display: table-cell;
+  width: 2%;
+  padding: @point-padding;
+  text-align: center;
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    padding-right: 0;
+  }
+
+  @media screen and (max-width: @breakpoint-tablet) {
+    &, &:first-child, &:last-child {
+      display: block;
+      width: 100%;
+      .standard-padding();
+      padding-top: 20px;
+      padding-bottom: 15px;
+    }
+  }
+}
+
+.marketing-points p {
+  text-align: left;
+  font-weight: @light;
+  font-size: @font-size-large;
+  line-height: @line-height-large;
+}
+
+.marketing-points img {
+  margin-bottom: 20px;
+}

@@ -1,0 +1,58 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/user-settings.css">
+{{/extend}}
+
+<div id="payment-methods" class="container">
+  <h1 class="text-center page-title">Credit Cards</h1>
+  <div class="row">
+    <div class="col-lg-6  col-lg-offset-3">
+      <div class="panel">
+        <ul class="list-group">
+          {{#each cards}}
+          <li class="list-group-item">
+          {{> payment_method}}
+          </li>
+          {{else}}
+          <li class="list-group-item">
+            <h4>No credit cards saved!</h4>
+          </li>
+          {{/each}}
+          <li class="list-group-item">
+            <div id="add-payment-method">
+              <h3>Add Credit Card</h3>
+              <div id="new-card">
+                {{> edit_card }}
+              </div>
+              <div class="btn-toolbar">
+                <a class="btn btn-default" href="/users/me/">Back to settings</a>
+                <a class="btn btn-primary btn-add-card" href="/users/me/cards/">Add Credit Card</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+    </div>
+  </div>
+
+  <div id="remove-card-modal" class="modal fade">
+    {{> remove_card_modal}}
+  </div>
+</div>
+
+{{#extend "scripts"}}
+<script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
+
+<script>
+  require([
+      'app/pages/cards'
+    , 'app/models/index'
+    , 'app/models/user'
+    ]
+  , function(cards, Models, User) {
+      cards.init({
+        user: new User( {{{json user}}} )
+      , marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
+      });
+    }
+  );
+</script>
+{{/extend}}

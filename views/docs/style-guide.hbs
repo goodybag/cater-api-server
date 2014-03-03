@@ -1,0 +1,220 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/docs.css">
+<link rel="stylesheet" href="/css/restaurant-filters.css">
+<link rel="stylesheet" href="/css/wizard.css">
+
+{{/extend}}
+<div class="container">
+  <h1 class="page-header">Style Guide</h1>
+
+  <h3>Labels</h3>
+  <p>
+    <span class="label label-pending">Pending</span>
+    <span class="label label-submitted">Submitted</span>
+    <span class="label label-accepted">Accepted</span>
+    <span class="label label-denied">Denied</span>
+    <span class="label label-canceled">Canceled</span>
+    <span class="label label-delivered">Delivered</span>
+  </p>
+  <pre class="prettyprint">
+&lt;span class="label label-pending"&gt;Pending&lt;/span&gt;
+
+&lt;span class="label label-pending"&gt;Submitted&lt;/span&gt;
+
+&lt;span class="label label-accepted"&gt;Accepted&lt;/span&gt;
+
+&lt;span class="label label-denied"&gt;Denied&lt;/span&gt;
+
+&lt;span class="label label-canceled"&gt;Canceled&lt;/span&gt;
+
+&lt;span class="label label-delivered"&gt;Delivered&lt;/span&gt;</pre>
+  {{!-- End Labels --}}
+
+  <h3>Diet Tags</h3>
+  <p>
+    <span class="tag tag-vegan"></span>
+    <span class="tag tag-vegetarian"></span>
+    <span class="tag tag-gluten-free"></span>
+    <span class="tag tag-kosher"></span>
+    <span class="tag tag-halal"></span>
+    <span class="tag tag-dairy-free"></span>
+    <span class="tag tag-nuts"></span>
+    <span class="tag tag-spicy"></span>
+  </p>
+
+  Note: Must require extend css block in .hbs template with 
+  the following stylesheet
+  <pre class="prettyprint">
+&#123;&#123;#extend "css"&#125;&#125;
+  &lt;link rel="stylesheet" href="/css/restaurant-filters.css"&gt;
+&#123;&#123;/extend&#125;&#125;</pre>
+
+  Markup
+  <pre class="prettyprint">
+&lt;span class="tag tag-vegan"&gt;&lt;/span&gt;
+
+&lt;span class="tag tag-vegetarian"&gt;&lt;/span&gt;
+
+&lt;span class="tag tag-gluten-free"&gt;&lt;/span&gt;
+
+&lt;span class="tag tag-kosher"&gt;&lt;/span&gt;
+
+&lt;span class="tag tag-halal"&gt;&lt;/span&gt;
+
+&lt;span class="tag tag-dairy-free"&gt;&lt;/span&gt;
+
+&lt;span class="tag tag-nuts"&gt;&lt;/span&gt;
+
+&lt;span class="tag tag-spicy"&gt;&lt;/span&gt;
+</pre>
+  {{!-- End Diet Tags --}}
+
+  <h3>Dollar Meter</h3>
+  <p>
+    <div><span class="dollar-meter">{{{dollarMeter 0}}}</span></div>
+    <div><span class="dollar-meter">{{{dollarMeter 1}}}</span></div>
+    <div><span class="dollar-meter">{{{dollarMeter 2}}}</span></div>
+    <div><span class="dollar-meter">{{{dollarMeter 3}}}</span></div>
+    <div><span class="dollar-meter">{{{dollarMeter 4}}}</span></div>
+  </p>
+  <pre class="prettyprint">
+&lt;span class="dollar-meter"&gt;&#123;&#123;&#123;dollarMeter 4&#125;&#125;&#125;&lt;/span&gt;</pre>
+  {{!-- End Dollar Meter --}}
+
+  <h3>Panels</h3>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel">
+        <div class="panel-heading">
+          <h4 class="panel-title">Heading</h4>
+        </div>
+        <div class="panel-body">Body Text</div>
+        <div class="panel-footer">Footer</div>
+      </div>
+    </div>
+  </div class="row">
+
+  <pre class="prettyprint">
+&lt;div class="col-md-4"&gt;
+  &lt;div class="panel"&gt;
+    &lt;div class="panel-heading"&gt;
+      &lt;h4 class="panel-title"&gt;Heading&lt;/h4&gt;
+    &lt;/div&gt;
+    &lt;div class="panel-body"&gt;Body Text&lt;/div&gt;
+    &lt;div class="panel-footer"&gt;Footer&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+  {{!-- End Panels --}}
+
+  <h3>Credit Card Logos</h3>
+  <p>
+    Form inputs with inlined credit card logos
+    <div class="row">
+      <div class="form-group col-sm-3">
+        <input type="text" class="form-control cc-visa">
+      </div>
+      <div class="form-group col-sm-3">
+        <input type="text" class="form-control cc-master">
+      </div>
+      <div class="form-group col-sm-3">
+        <input type="text" class="form-control cc-amex">
+      </div>
+      <div class="form-group col-sm-3">
+        <input type="text" class="form-control cc-discover">
+      </div>
+    </div>
+  </p>
+
+  <pre class="prettyprint">
+&lt;div class="row"&gt;
+  &lt;div class="form-group col-sm-3"&gt;
+    &lt;input type="text" class="form-control cc-visa"&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group col-sm-3"&gt;
+    &lt;input type="text" class="form-control cc-master"&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group col-sm-3"&gt;
+    &lt;input type="text" class="form-control cc-amex"&gt;
+  &lt;/div&gt;
+  &lt;div class="form-group col-sm-3"&gt;
+    &lt;input type="text" class="form-control cc-discover"&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+  
+  {{!-- End Credit Card Logos --}}
+
+  <h3>Checkout Wizard</h3>
+
+  <ol class="wizard">
+    <li class="step active">
+      Review Order
+    </li>
+    <li class="step">
+      Checkout
+    </li>
+    <li class="step">
+      Receipt
+    </li>
+  </ol>
+
+  <p>
+    Extend the css block in .hbs template with wizard.css 
+  </p>
+  <pre class="prettyprint">
+&#123;&#123;#extend "css"&#125;&#125;
+&lt;link rel="stylesheet" href="/css/wizard.css"&gt;
+&#123;&#123;/extend&#125;&#125;</pre>
+
+  <p>
+    Mark <code>&lt;li class="step active"&gt;</code> for the current step 
+    or <code>&lt;li class="step complete"&gt;</code> for completed steps.
+  </p>
+
+  <ol class="wizard">
+    <li class="step complete">
+      Review Order
+    </li>
+    <li class="step active">
+      Checkout
+    </li>
+    <li class="step">
+      Receipt
+    </li>
+  </ol>
+
+  <ol class="wizard">
+    <li class="step complete">
+      Review Order
+    </li>
+    <li class="step complete">
+      Checkout
+    </li>
+    <li class="step active">
+      Receipt
+    </li>
+  </ol>
+
+  <pre class="prettyprint">
+&lt;ol class="wizard"&gt;
+  &lt;li class="step complete"&gt;
+    Review Order
+  &lt;/li&gt;
+  &lt;li class="step active"&gt;
+    Checkout
+  &lt;/li&gt;
+  &lt;li class="step"&gt;
+    Receipt
+  &lt;/li&gt;
+&lt;/ol&gt;</pre>
+</div>
+
+{{#extend "scripts"}}
+<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?skin=sons-of-obsidian"></script>
+
+<script>
+  require(['jquery'], function($) {
+
+  });
+</script>
+{{/extend}}

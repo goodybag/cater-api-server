@@ -20,22 +20,19 @@ module.exports.create = function(req, res) {
       return res.render( 'auth', { error: error } );
     }
 
-    req.session = utils.extend(
-      {}, req.session,
-      { user: utils.pick( user, [ 'id', 'name', 'organization', 'groups', 'email', 'created_at' ] ) }
-    );
+    req.setSession( user );
 
-    return res.redirect(req.query.next || '/restaurants');
+    return res.redirect(req.query.next || '/');
   });
 }
 
 module.exports.del = function(req, res) {
   req.session = null;
-  return res.redirect(req.query.next || '/restaurants');
+  return res.redirect(req.query.next || '/');
 }
 
 module.exports.patch = function(req, res) {
-  return res.redirect(req.query.next || '/restaurants');
+  return res.redirect(req.query.next || '/');
 }
 
 module.exports.getOrderParams = function(req, res) {

@@ -1,0 +1,69 @@
+<div class="row">
+  <div class="col-sm-8">
+    <h4 class="list-group-item-heading"><span class="order-number">#{{this.id}}</span> {{this.restaurant.name}}</h4>
+    <dl class="dl-horizontal-inline order-details-list">
+      {{#if this.name}}
+      <div>
+        <dt>Order Name:</dt>
+        <dd>{{this.name}}</dd>
+      </div>
+      {{/if}}
+      {{#unless parent.hideUserDetails}}
+      <div>
+        <dt>User:</dt>
+        <dd>{{this.user.email}}</dd>
+      </div>
+      <div>
+        <dt>Organization:</dt>
+        <dd>{{this.user.organization}}</dd>
+      </div>
+      {{/unless}}
+      <div>
+        <dt>Date Created:</dt>
+        <dd class="date-created" data-date="{{this.created_at}}"></dd>
+      </div>
+      <div>
+        <dt>Delivery Date:</dt>
+        <dd>{{datepart this.datetime}} {{timepart this.datetime}}</dd>
+      </div>
+      {{#if this.sub_total}}
+      <div class="definition-group-subtotal">
+        <dt>Subtotal:</dt>
+        <dd class="subtotal-detail">${{dollars this.sub_total}}</dd>
+      </div>
+      {{/if}}
+    </dl>
+  </div>
+  <div class="col-sm-4">
+    {{#eq parent.user.id 6}} {{! display for om }}
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="checkbox">
+          <label class="{{#if reviewed}}active{{/if}}">
+            <input class="reviewed-checkbox" type="checkbox" {{#if reviewed}}checked{{/if}}> Reviewed
+          </label>
+        </div>
+      </div>
+    </div>
+    {{/eq}}
+    <div class="row">
+      <div class="col-sm-12">
+        {{> status_label}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 actions">
+        {{#if this.restaurant}}
+          {{#unless parent.isRestaurantManager}}
+            {{#eq status "pending"}}
+              <button type="button" class="btn btn-default cancel-order-btn">Cancel Order</button>
+            {{else}}
+              <button type="button" class="btn btn-default copy-order-btn">Order Again?</button>
+            {{/eq}}
+          {{/unless}}
+        {{/if}}
+        <button data-href="/receipts/order-{{this.id}}.pdf" data-target="_blank" data-name="Order {{this.id}} Receipt" class="btn btn-default btn-receipt">Download Receipt</button>
+      </div>
+    </div>
+  </div>
+</div>

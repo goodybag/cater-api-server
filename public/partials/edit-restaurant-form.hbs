@@ -2,6 +2,9 @@
 <link rel="stylesheet" href="/css/restaurant-form.css">
 {{/extend}}
 
+<p>
+  <a href="?">Back to menu</a>
+</p>
 <fieldset>
   <legend>{{#if isNew}}New{{else}}Edit{{/if}} Restaurant</legend>
   <div class="form-group">
@@ -45,9 +48,26 @@
     <span class="help-block">Please enter voice phone numbers separated by commas for call alerts. Leave blank for no call alerts.</span>
   </div>
   <div class="form-group">
+    <label class="control-label">Display Phone</label>
+    <input type="text" class="form-control restaurant-display-phone" value="{{#if restaurant.display_phone}}{{phoneNumber restaurant.display_phone}}{{/if}}" placeholder="(512) 555-1234">
+    <span class="help-block">This phone number will be displayed on the menu page's info tab.</span>
+  </div>
+  <div class="form-group">
     <label class="control-label">Emails</label>
     <input type="text" class="form-control restaurant-emails" value="{{#if restaurant.emails}}{{array restaurant.emails}}{{/if}}" placeholder="delivery@goodybag.com, orders@goodybag.com">
     <span class="help-block">Please enter email addresses separated by commas for email alerts. Leave blank for no email alerts.</span>
+  </div>
+  <div class="form-group">
+    <label class="control-label">Websites</label>
+    <input type="text" class="form-control restaurant-websites" value="{{#if restaurant.websites}}{{array restaurant.websites}}{{/if}}" placeholder="www.goodybag.com, www.shop.goodybag.com">
+    <span class="help-block">Please enter websites separated by commas. These will be listed on the restaurant info tab.
+    </span>
+  </div>
+  <div class="form-group">
+    <label class="control-label">Description (Elevator pitch)</label>
+    <input type="text" class="form-control restaurant-description" value="{{restaurant.description}}" placeholder="Indian Mexican fusion. Voted best new food trailer 2013 and featured on Austin Daily Herald and Austin Chronicle.">
+    <span class="help-block">Please enter a brief description (1-2 sentences) about the restaurant. This will be displayed under the restaurant's name on the menu pages.
+    </span>
   </div>
   <div class="form-group">
     <label class="control-label">Price</label>
@@ -144,42 +164,17 @@
       <input type="text" maxlength="5" class="form-control restaurant-address restaurant-zip" value="{{restaurant.zip}}" placeholder="78701">
     </div>
   </fieldset>
-  <div class="col-lg-1 col-lg-offset-10">
+  <div class="col-lg-10 status-text">
+    <span class="state-default">No changes made :)</span>
+    <span class="state-pending hide">You have changes to be saved</span>
+    <span class="state-loading hide">Working...</span>
+    <span class="state-saved hide">Changes saved!</span>
+    <span class="state-error hide"></span>
+  </div>
+  <div class="col-lg-1">
     <button type="button" class="btn btn-danger restaurant-remove pull-right">Remove</button>
   </div>
   <div class="col-lg-1">
     <button type="submit" class="btn btn-success restaurant-save pull-right{{#unless isNew}} hide{{/unless}}">Save</button>
   </div>
 </fieldset>
-
-{{#extend "scripts"}}
-<script>
-  var partials = {
-    edit_hours: 'edit-hours.hbs'
-  , hours_day: 'hours-day.hbs'
-  , lead_time: 'lead-time.hbs'
-  };
-
-  for (var name in partials) {
-    $.ajax({
-      type: 'GET',
-      url: '/partials/' + partials[name],
-      success: function(data, textStatus, jqXHR) {
-        Handlebars.registerPartial(name, Handlebars.compile(data));
-      },
-      dataType: 'html',
-      async: false
-    });
-  }
-</script>
-
-<script src="/js/models/hours.js"></script>
-<script src="/js/views/edit-hours-view.js"></script>
-<script>
-  var hours = [
-  {{#each restaurant.delivery_times}}
-  new EditHoursView({model: new Hours({day: {{@key}}, times: {{{json this}}} }), el: '#hours-{{@key}}'}),
-  {{/each}}
- ];
-</script>
-{{/extend}}

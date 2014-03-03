@@ -1,0 +1,68 @@
+html, body {
+  background-color:     @body-bg-color;
+  font-family:          @font-family-base;
+  font-size:            @font-size-base;
+  font-weight:          @font-weight-base;
+  line-height:          @line-height-base;
+  color:                @color-base;
+  letter-spacing:       @letter-spacing-base;
+}
+
+* {
+  position: relative;
+  .box-sizing( border-box );
+}
+
+a, span {
+  position: static;
+}
+
+a {
+  color: @anchor-color;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+img {
+  max-width: 100%;
+}
+
+code {
+  display: block;
+  width: 100%;
+  padding: 10px 12px !important;
+  text-shadow: none;
+  overflow: scroll;
+}
+
+.container {
+  #grid > .container();
+}
+
+.row {
+  #grid > .row();
+}
+
+.tiny-container {
+  #grid > .container();
+  #grid > .col-width(4);
+}
+
+.small-container {
+  #grid > .container();
+  #grid > .col-width(7);
+}
+
+.medium-container {
+  #grid > .container();
+  #grid > .col-width(9);
+}
+
+.col( @i ) when ( @i > @columns ){}
+.col( @i ) when ( @i <= @columns ){
+  .col-@{i} { #grid > .column( @i ) };
+  .col( @i + 1 );
+}
+
+.col( 1 );

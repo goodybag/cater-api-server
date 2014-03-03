@@ -161,6 +161,12 @@ module.exports.login = function ( req, res ){
         return res.status(500).render('500');
       }
 
+      req.analytics.identify( {userId: user.id} );
+      req.analytics.track({
+        userId: user.id
+      , event: 'login'
+      });
+
       return res.render('landing/login', {
         layout: 'landing/layout'
       , error: error

@@ -6,21 +6,14 @@ var Models = require('./models');
 var hbHelpers = require('./public/js/lib/hb-helpers');
 var errors = require('./errors');
 
-var m = utils.extend({
-  orderParams   : require('./middleware/order-params'),
-  restrict      : require('./middleware/restrict'),
-  basicAuth     : require('./middleware/basic-session-auth'),
-  buildReceipt  : require('./middleware/build-receipt'),
-  queryParams   : require('./middleware/query-params'),
-  queryString   : require('./middleware/query-string')
-}, require('stdm') );
+var m = utils.extend(require('./middleware'), require('stdm') );
 
 module.exports.register = function(app) {
 
   app.before( m.queryParams(), function( app ){
     app.get('/', controllers.auth.index);
     app.get('/login', controllers.auth.login);
-    app.post('/login', controllers.auth.login);
+    app.post('/login', m.analytics, controllers.auth.login);
     app.get('/join', controllers.auth.registerView);
     app.post('/join', controllers.auth.register);
 

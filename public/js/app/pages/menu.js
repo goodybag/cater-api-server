@@ -16,6 +16,8 @@ define( function( require ){
   , Menu:               require('app/views/menu-view')
   };
 
+  var editToken = require('data/editToken');
+
   var page = {
     init: function( options ){
       var orderModel      = options.order;
@@ -68,6 +70,7 @@ define( function( require ){
       , itemModalView:      itemModalView
       , orderParams:        orderParams
       , restaurantMapView:  restaurantMapView
+      , editToken:          editToken
       });
 
       orderModel.orderItems.each( function( item ){

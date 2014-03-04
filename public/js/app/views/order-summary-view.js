@@ -26,7 +26,11 @@ define(function(require, exports, module) {
     render: function(){
       var this_ = this;
 
-      this.$el.html( this.template({ order: this.model.toJSON() }) );
+      var html = this.template({
+        order: this.model.toJSON()
+      , edit_token: this.options.editToken
+      });
+      this.$el.html( html );
       this.$tbody = this.$el.find('.order-table tbody');
 
       this.delegateEvents();

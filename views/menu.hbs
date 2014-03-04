@@ -190,6 +190,12 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
 <script>
+  define('data/editToken', [], function() {
+    return "{{{edit_token}}}";
+  });
+</script>
+
+<script>
   require( ['app/pages/menu', 'app/models/index'], function( page, Models ){
     page.init({
       order:          new Models.Order( {{{json order}}} )

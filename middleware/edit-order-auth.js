@@ -16,6 +16,7 @@ module.exports = function(req, res, next) {
 
     // record order creator id
     req.creatorId = order.attributes.user.id;
+    res.locals.edit_token = token;
     next();
     
     // verify token

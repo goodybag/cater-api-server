@@ -42,7 +42,7 @@
     "mailcomposer": "0.2.x",
     "moment": "~2.3.1",
     "moment-timezone": "0.0.x",
-    "bower": "1.2.x",
+    "bower": "git://github.com/neoziro/bower.git#v1.2.8-patched",
     "udp-client": "0.1.x",
     "gelf-encode": "0.2.x",
     "winston-loggly": "0.6.x",

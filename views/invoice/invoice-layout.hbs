@@ -2,10 +2,12 @@
 <html>
   <head>
     <link rel="stylesheet" href="/css/proxima-nova.css">
+    <link rel="stylesheet" href="/css/pdf.css">
     <link rel="stylesheet" href="/css/invoice.css">
     {{{block "css"}}}
 
     <script src="/components/jquery/jquery.js"></script>
+    <script src="/js/pdf/utils.js"></script>
     {{{block "scripts"}}}
   </head>
   <body>
@@ -78,16 +80,6 @@
               [Your Zip]
             {{/if}}
           </address>
-
-          <div class="info-item-contact info-item">
-            {{#if order.user.name}}
-              {{order.user.name}}
-            {{/if}}
-            {{#if order.phone}}
-              <br>
-              {{phoneNumber order.phone "xxx.xxx.xxxx"}}
-            {{/if}}
-          </div>
           {{{block "info"}}}
         </div>
       </header>

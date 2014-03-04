@@ -12,6 +12,7 @@ define( function( require ){
   , OrderModal:         require('app/views/order-modal')
   , RestaurantMap:      require('app/views/restaurant-map-view')
   , MenuOrderParams:    require('app/views/menu-order-params-view')
+  , MenuShareLink:      require('app/views/menu-share-link-view')
   , Menu:               require('app/views/menu-view')
   };
 
@@ -99,6 +100,10 @@ define( function( require ){
         el: '.menu-order-params'
       , model: orderModel
       , orderModal: orderModal
+      });
+
+      var menuShareLinkView = new View.MenuShareLink({
+        el: '.menu-share-link'
       });
 
       $('.tag-tooltip').tooltip();

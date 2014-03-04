@@ -102,7 +102,7 @@ define( function( require ){
       , orderModal: orderModal
       });
 
-      var menuShareLinkView = new View.MenuShareLink({
+      var menuShareLinkView = new Views.MenuShareLink({
         el: '.menu-share-link'
       });
 

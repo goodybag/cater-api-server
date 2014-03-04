@@ -47,11 +47,10 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.current = function(req, res, next) {
-  if (!req.session.user) return next();
-  var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'orders.status': 'pending'};
+  if (!req.session.user && !req.creatorId) return next();
+  var where = {restaurant_id: req.params.rid, user_id: req.creatorId || req.session.user.id, 'orders.status': 'pending'};
   models.Order.findOne({where: where}, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-
     if (order) {
       req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.attributes.id);
     }

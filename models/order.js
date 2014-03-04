@@ -107,7 +107,10 @@ module.exports = Model.extend({
     }
 
     var insert = this.attributes.id == null;
-    if (insert) this.attributes.review_token = uuid.v4();
+    if (insert) {
+      this.attributes.review_token = uuid.v4();
+      this.attributes.edit_token = uuid.v4();
+    }
     if (this.attributes.adjustment) {
       this.attributes.adjustment_amount = this.attributes.adjustment.amount;
       this.attributes.adjustment_description = this.attributes.adjustment.description;

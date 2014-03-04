@@ -1,0 +1,161 @@
+///////////////
+// Variables //
+///////////////
+
+// Colors
+////////////////////////////////////////////////////
+@white:                     #fff;
+@gray:                      #B7B6AD;
+@gray-light:                lighten( @gray, 10% );
+@gray-lighter:              lighten( @gray, 30% );
+@gray-dark:                 darken( @gray, 10% );
+@gray-darker:               darken( @gray, 20% );
+
+@brand-primary:             #dc0000;
+@brand-secondary:           #FBF8E7;
+@brand-tertiary:            #0039a1;
+@brand-quaternary:          #432012;
+
+@off-gray:                  desaturate( @brand-secondary, 70% );
+@body-bg-color:             @white;
+
+// Font Weight Constants
+////////////////////////////////////////////////////
+@light:                     300;
+@regular:                   500;
+@semibold:                  700;
+@bold:                      900;
+
+// Base Values
+////////////////////////////////////////////////////
+@border-radius-base:        4px;
+
+// Type
+////////////////////////////////////////////////////
+@font-family-serif:         Georgia, serif;
+@font-family-sans-serif:    'Proxima Nova', Helvetica, sans-serif;
+@font-family-monospace:     monospace;
+
+@font-family-base:          @font-family-sans-serif;
+@font-weight-base:          @regular;
+@font-size-base:            14px;
+@font-size-small:           @font-size-base - 3;
+@font-size-large:           @font-size-base + 2;
+@line-height-base:          20px;
+@line-height-large:         @line-height-base + 4;
+@line-height-small:         @line-height-base - 4;
+@color-base:                @brand-quaternary;
+@letter-spacing-base:       0;
+@anchor-color:              @brand-tertiary;
+
+// Grid
+////////////////////////////////////////////////////
+@container-width:           974px;
+@columns:                   12;
+@gutter-width:              34px;
+@column-width: ( @container-width - ( @gutter-width * (@columns - 1) ) ) / @columns;
+
+// Buttons
+////////////////////////////////////////////////////
+@btn-font-family:               @font-family-serif;
+@btn-font-size:                 @font-size-base;
+@btn-large-font-size:           @font-size-large;
+
+@btn-padding-top-base:          11px;
+@btn-padding-right-base:        18px;
+@btn-padding-bottom-base:       @btn-padding-top-base - 1;
+@btn-padding-left-base:         @btn-padding-right-base;
+
+@btn-padding-top-small:         7px;
+@btn-padding-right-small:       22px;
+@btn-padding-bottom-small:      @btn-padding-top-small - 1;
+@btn-padding-left-small:        @btn-padding-right-small;
+
+@btn-padding-top-large:         14px;
+@btn-padding-right-large:       22px;
+@btn-padding-bottom-large:      @btn-padding-top-large - 2;
+@btn-padding-left-large:        @btn-padding-right-large;
+
+@btn-border-width-base:         1px;
+
+@btn-border-radius-base:        @border-radius-base;
+
+
+// Forms
+////////////////////////////////////////////////////
+@input-font-size:               @btn-font-size;
+@input-width:                   154px;
+@input-border-radius:           @btn-border-radius-base;
+@input-border-color:            @gray;
+@input-border-width:            1px;
+
+@input-padding-top-base:        @btn-padding-top-base;
+@input-padding-right-base:      12px;
+@input-padding-bottom-base:     @input-padding-top-base - 1;
+@input-padding-left-base:       @input-padding-right-base;
+
+@input-padding-top-small:       @btn-padding-top-small;
+@input-padding-right-small:     12px;
+@input-padding-bottom-small:    @input-padding-top-small - 1;
+@input-padding-left-small:      @input-padding-right-small;
+
+// Z-Indexes
+////////////////////////////////////////////////////
+@navbar-zindex:             9999;
+@login-zindex:              1111;
+@photo-nav-zindex:          10;
+
+// Breakpoints
+////////////////////////////////////////////////////
+@breakpoint-desktop-sm:     1024px;
+@breakpoint-tablet:         786px;
+@breakpoint-mobile:         620px;
+
+// Navbar
+///////////////////////////////////////////////////
+@navbar-height:                 56px;
+@navbar-mobile-factor:          0.75;
+@navbar-bg-color:               @white;
+@navbar-color:                  @color-base;
+@navbar-logo-max-width:         138px;
+@navbar-mobile-logo-max-width:  98px;
+@navbar-logo-size:              25px;
+
+// Footer
+///////////////////////////////////////////////////
+@footer-height:             140px;
+@footer-bg-color:           @navbar-bg-color;
+@footer-color:              @navbar-color;
+
+// Hero Unit
+///////////////////////////////////////////////////
+@herounit-bg:               url('../img/landing-hero-unit-bg.jpg');
+@herounit-color:            @color-base;
+// @herounit-font-size:      1em;
+// @herounit-line-height:    1em;
+
+// Check Points
+///////////////////////////////////////////////////
+@checkpoints-bullet-img:    url('../img/checkpoints-bullet.svg') no-repeat;
+@checkpoints-bullet-img-fb: url('../img/checkpoints-bullet.png') no-repeat;
+
+// Page Sections
+///////////////////////////////////////////////////
+@ps-padding-top:            40px;
+@ps-padding-bottom:         60px;
+@pss-padding-top:           80px;
+@pss-padding-bottom:        100px;
+
+// Speech Boxes
+///////////////////////////////////////////////////
+@speechbox-padding:         20px 22px;
+@speechbox-margin:          60px;
+
+// Logo List
+///////////////////////////////////////////////////
+@logo-list-margin-top:      26px;
+@logo-list-margin-bottom:   26px;
+
+// Logo List Whacky
+///////////////////////////////////////////////////
+@whackiness-factor:         20px;

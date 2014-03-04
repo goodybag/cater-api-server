@@ -1,0 +1,67 @@
+//////////////////
+// Speech Boxes //
+//////////////////
+
+@triangle-height: 48px;
+
+.speech-boxes {
+  padding-bottom: @triangle-height;
+}
+
+.speech-boxes > .box {
+  text-align: left;
+  border-radius: @border-radius-base;
+  border: solid 1px @gray;
+  padding: @speechbox-padding;
+
+  &:after {
+    content: "";
+    position: absolute;
+    left: 46px;
+    bottom: -@triangle-height;
+    width: 66px;
+    height: @triangle-height;
+    background: url('../img/speech-box-triangle-left.png');
+  }
+
+  &.box-reverse:after {
+    left: 64px;
+    background: url('../img/speech-box-triangle-right.png');
+  }
+
+  @media screen and ( max-width: @breakpoint-mobile ){
+    margin-top: 62px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+.speech-boxes blockquote {
+  margin: 0;
+  margin-bottom: 24px;
+}
+
+.speech-boxes .signature {
+  text-align: right;
+  font-size: 0;
+}
+
+.speech-boxes .signature > .wrapper {
+  display: inline-block;
+  min-width: 108px;
+  font-size: @font-size-base;
+  text-align: left;
+}
+
+.speech-boxes .author {
+  font-weight: @semibold;
+}
+
+.speech-boxes a.author-company {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline
+  }
+}

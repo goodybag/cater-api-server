@@ -883,7 +883,6 @@ module.exports = Model.extend({
 
     query = utils.defaults(query, {
       order: 'id desc'
-    , limit: 'ALL'
     , where: {}
     });
 

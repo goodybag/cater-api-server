@@ -1,0 +1,118 @@
+///////////
+// Forms //
+///////////
+
+@input-padding-base:
+  @input-padding-top-base
+  @input-padding-right-base
+  @input-padding-bottom-base
+  @input-padding-left-base;
+
+@input-padding-small:
+  @input-padding-top-small
+  @input-padding-right-small
+  @input-padding-bottom-small
+  @input-padding-left-small;
+
+@btn-padding-small:
+  @btn-padding-top-small
+  @btn-padding-right-small
+  @btn-padding-bottom-small
+  @btn-padding-left-small;
+
+label {
+  display: block;
+  font-weight: @semibold;
+  font-size: @font-size-small + 1;
+}
+
+// Whitelist all input types except checkbox, radio
+input[type="button"],
+input[type="color"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="file"],
+input[type="hidden"],
+input[type="image"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="range"],
+input[type="reset"],
+input[type="search"],
+input[type="submit"],
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+input[type="week"],
+textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: @input-border-radius;
+  border: solid @input-border-color @input-border-width;
+  padding: @input-padding-base;
+  line-height: @line-height-small;
+  font-size: @input-font-size;
+}
+
+.form-group {
+  display: inline-block;
+  width: @input-width;
+  margin-left: @gutter-width / 4;
+  vertical-align: bottom;
+
+  &.form-group-submit {
+    width: auto;
+  }
+
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+.form-small {
+  .typography('small');
+
+  input, textarea {
+    padding: @input-padding-small;
+    line-height: @line-height-small;
+  }
+
+  input[type='checkbox'] {
+    padding: 0;
+  }
+
+  label {
+    .typography('small');
+  }
+
+  button {
+    padding: @btn-padding-small;
+    line-height: @line-height-small;
+  }
+}
+
+.form-vertical .form-group {
+  display: block;
+  width: auto;
+  margin-left: 0;
+  margin-top: 14px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.form-vertical .cupcake {
+  position: absolute;
+  right: -200px;
+  top: 48px;
+
+  @media screen and ( max-width: @breakpoint-tablet ){
+    position: static;
+  }
+}

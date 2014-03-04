@@ -1,0 +1,58 @@
+/////////////
+// Buttons //
+/////////////
+
+@btn-padding-base:
+  @btn-padding-top-base
+  @btn-padding-right-base
+  @btn-padding-bottom-base
+  @btn-padding-left-base;
+
+@btn-padding-large:
+  @btn-padding-top-large
+  @btn-padding-right-large
+  @btn-padding-bottom-large
+  @btn-padding-left-large;
+
+@btn-padding-small:
+  @btn-padding-top-small
+  @btn-padding-right-small
+  @btn-padding-bottom-small
+  @btn-padding-left-small;
+
+.btn {
+  .btn();
+}
+
+.btn-large {
+  font-size: @btn-large-font-size;
+  line-height: @line-height-base;
+  padding: @btn-padding-large;
+  font-weight: @light;
+}
+
+.btn-default {
+  .brand-btn( @white );
+  border-width: @btn-border-width-base;
+  border-bottom-width: @btn-border-width-base + 1;
+  color: @color-base;
+}
+
+.btn-primary {
+  .brand-btn( @brand-primary, @white );
+}
+
+.btn-secondary {
+  .brand-btn( @brand-secondary, @white );
+}
+
+.btn-tertiary {
+  .brand-btn( @brand-tertiary, @white );
+}
+
+.btn-blank {
+  border-color: transparent;
+  &:hover {
+    background-color: transparent;
+  }
+}

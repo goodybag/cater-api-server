@@ -1,6 +1,8 @@
 /**
  * Middleware: Build Receipt
  *
+ * NOTE: This no longer acts like middleware. Instead, it acts like a handler
+ *
  * Ensure that a PDF version of a receipt exists. If it does not,
  * send a build job to the receipt queue. If rebuild=true is in
  * the query params, the receipt will forcefully re-build.
@@ -80,8 +82,15 @@ module.exports = function(){
             return res.status(500).render('500');
           }
 
-          done();
+          stage('sendFile');
         });
+      }
+
+    , 'sendFile':
+      function( stage, done ){
+        fs.createReadStream(
+          receipt.getFullOrderPath( req.param('oid') )
+        ).pipe( res );
       }
     })( next );
   }

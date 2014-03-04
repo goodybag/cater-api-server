@@ -6,6 +6,7 @@ define(function(require){
     , password2:      'You must enter your password twice'
     , passwordMatch:  'Passwords do not match'
     }
+  , salesTax: 1.0825
   };
 
   return config;

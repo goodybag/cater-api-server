@@ -17,18 +17,8 @@ var
 , helpers = require('./helpers')
 , partials = require('./lib/partials')
 , errors = require('./errors')
+, middleware = require('./middleware')
 ;
-
-var middleware = {
-  cors: require('./middleware/cors')
-, domains: require('./middleware/domains')
-, uuid: require('./middleware/uuid')
-, sslRedirect: require('./middleware/ssl-redirect')
-, requestLogger: require('connect-request-logger-pg')
-, getUser: require('./middleware/get-user')
-, statusCodeIntercept: require('./middleware/status-code-intercept')
-, setSession: require('./middleware/set-session')
-};
 
 var app = module.exports = express();
 
@@ -75,6 +65,8 @@ app.configure(function(){
     app.use(middleware.sslRedirect);
   }
 
+  app.use( require('dirac-middleware')({ envelope: false }) );
+
   app.use(app.router);
 
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
@@ -120,6 +112,33 @@ app.configure(function(){
     render.call(this, path, options, callback);
   }
 
+  /**
+   * More readable app.all implementation for applying multiple
+   * middlewares so a group of routes
+   *
+   * app.before( m.restrict(), function(){
+   *   app.get('/orders', ... );
+   *   app.get('/orders/:id', ... );
+   *   ...
+   * })
+   */
+  app.before = function(){
+    var args    = Array.prototype.slice.call( arguments );
+    var handler = args.pop();
+    var handle  = function( verb, path ){
+      var _args = [ path ].concat( args, Array.prototype.slice.call( arguments, 2 ) );
+      return this[ verb ].apply( this, _args );
+    };
+
+    handler({
+      get:    handle.bind( app, 'get' )
+    , post:   handle.bind( app, 'post' )
+    , put:    handle.bind( app, 'put' )
+    , patch:  handle.bind( app, 'patch' )
+    , del:    handle.bind( app, 'del' )
+    , all:    handle.bind( app, 'all' )
+    })
+  };
 });
 
 helpers.register(hbs);

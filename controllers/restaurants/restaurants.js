@@ -174,7 +174,7 @@ module.exports.edit = function(req, res) {
 }
 
 module.exports.editAll = function(req, res, next) {
-  models.Restaurant.find({}, function(err, models) {
+  models.Restaurant.find({limit: 10000}, function(err, models) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     var context = {restaurants: utils.invoke(models, 'toJSON'), states: states, isNew: true};
     context.restaurant = {delivery_times: utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; }))};  // tmp hack
@@ -373,7 +373,8 @@ module.exports.update = function(req, res) {
 
   utils.async.parallel(tasks, function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(200, (results[3]||0)[0]); // TODO: better than results[3]
+    var result = results[3];
+    res.send( result ? 200 : 204, result); // TODO: better than results[3]
   });
 }
 

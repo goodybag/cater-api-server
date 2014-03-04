@@ -50,6 +50,11 @@ define(function(require, exports, module) {
       return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2); // partial cents get rounded here
     },
 
+    pennies: function(dollars) {
+      var val = Math.round( dollars * 100 );
+      return utils.isNaN(val) ? '' : val;
+    },
+
     json: function(context) {
       return JSON.stringify(context);
     },
@@ -362,6 +367,22 @@ define(function(require, exports, module) {
       } else {
         return options.inverse(this);
       }
+    },
+
+    factorToPercent: function( factor, precision, options ){
+      if ( typeof precision === 'object' || !precision ){
+        precision = 2;
+      }
+
+      return parseFloat( ( factor * 100 ).toFixed( precision ) );
+    },
+
+    percentToFactor: function( percent, precision, options ){
+      if ( typeof precision === 'object' || !precision ){
+        precision = 2;
+      }
+
+      return parseFloat( ( percent / 100 ).toFixed( precision ) );
     }
   }
 

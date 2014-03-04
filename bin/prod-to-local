@@ -12,7 +12,7 @@ psql -h localhost --command="create database cater"
 
 
 # Restore with production data
-/Applications/Postgres.app/Contents/MacOS/bin/pg_restore --verbose --clean --no-acl --no-owner -h localhost -d cater latest.dump
+pg_restore --verbose --clean --no-acl --no-owner -h localhost -d cater latest.dump
 
 # Clean up
 rm latest.dump

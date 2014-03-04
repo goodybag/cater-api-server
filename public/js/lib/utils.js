@@ -10,11 +10,11 @@ define(function(require, exports, module) {
   var _ = require('lodash');
   var amanda = require('amanda');
   var helpers = require('./helpers');
+  var Backbone = require('backbone');
 
-  var Backbone = { View: { extend: function(){} } };
 
   if (isBrowser){
-    Backbone = require('backbone');
+    require('jquery-loaded');
     require('backbone.trackit');
   }
 
@@ -33,15 +33,43 @@ define(function(require, exports, module) {
 
   var utils = _.extend({}, _, helpers);
 
+  if (isBrowser){
+    var $ = require('jquery');
+    utils.dom = $;
+    utils.domready = $;
+  }
+
   utils.validator = amanda('json');
 
   utils.Backbone    = Backbone;
   utils.Events      = Backbone.Events;
   utils.Model       = Backbone.Model;
-  utils.Collection  = Backbone.Collection;
   utils.Router      = Backbone.Router;
   utils.History     = Backbone.History;
   utils.View        = Backbone.View;
+
+  utils.Collection  = Backbone.Collection.extend({
+    createModel: function( attr, options ){
+      return this._prepareModel( attr, options );
+    }
+
+  , del: function( id, options ){
+      return (
+        this.get( id ) || this.createModel( typeof id !== 'object' ? { id: id } : id )
+      ).destroy( options );
+    }
+
+  , toJSON: function( options ){
+      return utils.invoke( this.models, 'toJSON', options );
+    }
+  });
+
+  utils.Model = Backbone.Model.extend({
+    toJSON: function( options ){
+      options = options || {};
+      return utils.extend( {}, this.attributes , options.cid ? { cid: this.cid } : null );
+    }
+  });
 
   utils.startHistory = function(){
     utils.history = Backbone.history;

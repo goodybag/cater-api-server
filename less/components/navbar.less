@@ -1,0 +1,251 @@
+////////////
+// Navbar //
+////////////
+
+@navbar-mobile-height: @navbar-height * @navbar-mobile-factor;
+
+// Make the padding-top a little greater than the bottom for
+// a more "balanced" feeel
+@anchor-padding-offset: 2px;
+@anchor-padding-top: (@navbar-height / 2) + @anchor-padding-offset;
+@anchor-padding-bottom: (@navbar-height / 2) - @anchor-padding-offset;
+
+// Make sure the logo is properly sized and balanced
+@logo-padding-height: @navbar-height - @navbar-logo-size;
+@logo-padding-offset: 2px;
+@logo-padding-top: (@logo-padding-height / 2) + @logo-padding-offset;
+@logo-padding-bottom: (@logo-padding-height / 2) - @logo-padding-offset;
+
+body {
+  // -1 because some browsers are rendering artifacts
+  // at that pixel border
+  padding-top: @navbar-height - 1;
+}
+
+.navbar {
+  position:       fixed;
+  top:            0;
+  width:          100%;
+
+  // Specify min-height in case there are no nav anchors
+  min-height:     @navbar-height;
+
+  background:     @navbar-bg-color;
+  z-index:        @navbar-zindex;
+
+  color:          @navbar-color;
+
+  box-shadow:     0 0 2px rgba( 0, 0, 0 , 0.3 );
+  border-bottom:  solid 1px @gray;
+
+  // Otherwise chrome leaves trails
+  -webkit-backface-visibility: hidden;
+}
+
+.navbar-logo {
+  float: left;
+  // Make the logo conform to navbar size
+  height: 100%;
+  max-height: @navbar-height;
+  max-width: @navbar-logo-max-width;
+  font-family: @font-family-serif;
+  font-size: @navbar-logo-size;
+  line-height: @navbar-height;
+  color: @white;
+
+  & when ( @logo-padding-top > 0 ){
+    padding-top: @logo-padding-top;
+  }
+
+  & when ( @logo-padding-bottom > 0 ){
+    padding-bottom: @logo-padding-bottom;
+  }
+}
+
+.navbar .login-form {
+  float: right;
+  margin-top: 3px;
+}
+
+.navbar .login-form .forgot-password {
+  position: absolute;
+  right: 0;
+  text-decoration: none;
+  z-index: 2;
+}
+
+.navbar .login-form .remember-me {
+  position: absolute;
+  right: 0;
+  z-index: 2;
+  top: 0;
+  font-weight: 400;
+  vertical-align: top;
+  input[type="checkbox"] {
+    margin-top: 1px;
+  }
+}
+
+.navbar .nav {
+  float: right;
+  .transition( 0.5s, ease-in-out );
+  .transition-property-transform();
+  .translate( 0, 0 );
+}
+
+.navbar .nav a {
+  margin-left: 0;
+  margin-right: 0;
+  padding: @anchor-padding-top 20px @anchor-padding-bottom;
+  color: @navbar-color;
+  text-decoration: none;
+
+  .transition( 0.2s, ease-in-out );
+  .transition-property( padding );
+}
+
+.navbar .nav a:hover,
+.navbar .nav .active a {
+  background: darken( @navbar-bg-color, 5% );
+}
+
+.navbar .navbar-toggle {
+  position: absolute;
+  right: 10px;
+  display: none;
+  padding: @btn-padding-top-small @btn-padding-right-small @btn-padding-bottom-small;
+  margin-top: 5px;
+
+  // Override default button press effect since this button
+  // cannot be position: relative
+  &:active {
+    position: absolute;
+    bottom: auto;
+    margin-top: 6px;
+  }
+}
+
+.navbar-toggle[data-icon="gb-icon-hamburger"] {
+  padding: 3px 12px 2px;
+  &:before {
+    font-size: 24px;
+    color: #CCC;
+  }
+}
+
+// Once the container relies on width: 100% add standard padding
+@media (max-width: @container-width) {
+  .navbar .container {
+    .standard-padding();
+  }
+}
+
+// Make the navbar not so tall on mobile
+// Adjust breakpoint to account for nav items
+@media screen and (max-width: (@breakpoint-mobile)) {
+  @anchor-padding-top: (@navbar-mobile-height / 2) + @anchor-padding-offset;
+  @anchor-padding-bottom: (@navbar-mobile-height / 2) - @anchor-padding-offset;
+
+  body {
+    // -1 because some browsers are rendering artifacts
+    // at that pixel border
+    padding-top: @navbar-mobile-height - 1;
+  }
+
+  .navbar .container {
+    .standard-padding();
+  }
+
+  .navbar {
+    min-height: @navbar-mobile-height;
+    padding-bottom: 16px;
+  }
+
+  .navbar:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: @gray;
+    left: 0;
+    top: @navbar-mobile-height + 2;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .navbar .navbar-toggle {
+    display: inline-block;
+  }
+
+  .navbar.collapsed {
+    padding-bottom: 0;
+  }
+
+  .navbar.collapsed:before {
+    display: none;
+  }
+
+  .navbar .navbar-logo {
+    max-width: @navbar-mobile-logo-max-width;
+    max-height: @navbar-mobile-height;
+    font-size: @navbar-logo-size / 2;
+    line-height: @navbar-mobile-height;
+
+    & when ( @logo-padding-top > 0 ){
+      padding-top: @logo-padding-top * @navbar-mobile-factor;
+    }
+
+    & when ( @logo-padding-bottom > 0 ){
+      padding-bottom: @logo-padding-bottom * @navbar-mobile-factor;
+    }
+  }
+
+  .navbar .login-form {
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  .navbar.collapsed .login-form {
+    height: 0;
+    margin-top: 0;
+    overflow: hidden;
+  }
+
+  .navbar.collapsed .login-form .form-group {
+    display: none;
+  }
+
+  .navbar .login-form .form-group {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .navbar .login-form .form-group-submit button {
+    width: 100%;
+  }
+
+  .navbar.collapsed .nav {
+    display: none;
+  }
+
+  .navbar .nav {
+    position: relative;
+    // width: 100%;
+    margin-top: @navbar-mobile-height;
+    text-align: right;
+  }
+
+  .navbar .nav li {
+    display: block;
+    text-align: right;
+    margin-right: 0 - (@gutter-width / 2);
+  }
+
+  .navbar .nav li:first-child {
+    margin-top: 20px;
+  }
+
+  .navbar .nav a {
+    display: block;
+    padding: @anchor-padding-top (@gutter-width / 2) @anchor-padding-bottom;
+  }
+}

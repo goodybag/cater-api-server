@@ -1,0 +1,91 @@
+/////////////////
+// Window Pane //
+/////////////////
+
+@wp-header-bg: #E8E8E8;
+@wp-header-height: 34px;
+@wp-btn-size: 14px;
+@wp-border-color: #C3C1B5;
+
+.window-pane {
+  border: solid 1px @wp-border-color;
+  border-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background-color: @white;
+  text-align: left;
+  font-size: 0;
+  line-height: 0;
+}
+
+.window-pane + .window-pane {
+  margin-top: 20px;
+}
+
+.window-pane .window-header {
+  background: @wp-header-bg;
+  padding: (@wp-header-height - @wp-btn-size) / 2;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: solid 1px @wp-border-color;
+  box-shadow: inset 0 1px 0 rgba( 255, 255, 255, 0.4 );
+}
+
+.window-pane .window-btn {
+  display: inline-block;
+  vertical-align: middle;
+  width: @wp-btn-size;
+  height: @wp-btn-size;
+  border-radius: @wp-btn-size * 2;
+  margin-left: 10px;
+
+  &:first-child {
+    margin-left: 0;
+    background: #EB7575;
+
+    & + .window-btn {
+      background: #EED171;
+
+      & + .window-btn {
+        background: #63CB79;
+      }
+    }
+  }
+}
+
+.window-pane img {
+  width: 100%;
+}
+
+.window-pane .window-nav {
+  display: inline-block;
+  float: right;
+}
+
+.window-nav > button {
+  color: @off-gray;
+  padding: 4px 8px;
+
+  &:hover {
+    color: darken( @off-gray, 8% );
+  }
+}
+
+.window-nav .fa {
+  font-size: 20px;
+  line-height: 0;
+}
+
+.window-pane .window-name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding-top: 3px;
+  line-height: @wp-header-height;
+  text-align: center;
+}

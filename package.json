@@ -10,7 +10,7 @@
   "scripts": {
     "start": "grunt namedModules && grunt shell:ensureDir && ./node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js && ./bin/check-build.js && ./bin/tasks.js runDeltas && node master",
     "test": "./node_modules/.bin/mocha --bail",
-    "postinstall": "./node_modules/.bin/bower install"
+    "postinstall": "./node_modules/.bin/bower install --force"
   },
   "namedModules": {
     "underscore": "./node_modules/lodash/lodash.js",
@@ -42,7 +42,7 @@
     "mailcomposer": "0.2.x",
     "moment": "~2.3.1",
     "moment-timezone": "0.0.x",
-    "bower": "1.2.x",
+    "bower": "1.2.7",
     "udp-client": "0.1.x",
     "gelf-encode": "0.2.x",
     "winston-loggly": "0.6.x",

@@ -48,7 +48,7 @@ define(function(require, exports, module) {
           tip_percent: {
             type: ['string', 'null'],
             required: false,
-            enum: ['0', 'custom', '5', '10', '15', '18', '20', '25', null]
+            "enum": ['0', 'custom', '5', '10', '15', '18', '20', '25', null]
           },
           payment_status: {
             type: ['string', 'null'],
@@ -355,8 +355,8 @@ define(function(require, exports, module) {
     getFullCalendarEvent: function() {
       var fullCalendarEvent = utils.extend({}, this.toJSON(), {
         title: [
-          Handlebars.helpers.timepart(this.get('datetime')) 
-        , '\n' 
+          Handlebars.helpers.timepart(this.get('datetime'))
+        , '\n'
         , Handlebars.helpers.truncate(this.get('restaurant_name'), 15)
         ].join('')
       , start: this.get('datetime')

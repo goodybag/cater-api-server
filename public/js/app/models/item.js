@@ -49,7 +49,7 @@ define(function(require, exports, module) {
                 },
                 type: {
                   type: 'string',
-                  enum: ['radio', 'checkbox'],
+                  "enum": ['radio', 'checkbox'],
                   required: true
                 },
                 options: {

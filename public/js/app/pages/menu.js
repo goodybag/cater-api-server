@@ -16,8 +16,6 @@ define( function( require ){
   , Menu:               require('app/views/menu-view')
   };
 
-  var editToken = require('data/editToken');
-
   var page = {
     init: function( options ){
       var orderModel      = options.order;
@@ -25,6 +23,7 @@ define( function( require ){
       var restaurant      = options.restaurant;
       var defaultAddress  = options.defaultAddress;
       var user            = options.user;
+      var editToken       = options.editToken;
 
       analytics.page('Menu', {restaurant: restaurant.pick('name')});
 

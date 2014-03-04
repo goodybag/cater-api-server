@@ -190,12 +190,6 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
 <script>
-  define('data/editToken', [], function() {
-    return "{{{edit_token}}}";
-  });
-</script>
-
-<script>
   require( ['app/pages/menu', 'app/models/index'], function( page, Models ){
     page.init({
       order:          new Models.Order( {{{json order}}} )
@@ -203,6 +197,7 @@
     , restaurant:     new Models.Restaurant( {{{json restaurant}}} )
     , defaultAddress: new Models.Address( {{{json defaultAddress}}} )
     , user:           new Models.User( {{{json user }}} )
+    , editToken:      "{{{edit_token}}}"
     });
   });
 </script>

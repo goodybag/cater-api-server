@@ -2,4 +2,12 @@
 <p>
   <a href="{{config.baseUrl}}/orders/{{order.id}}">Order #{{order.id}}</a> has been submitted for over an hour without restaurant action!
 </p>
+
+<h3>Order Info</h3>
+<ul>
+  <li>
+    <strong>Total:</strong>
+    {{dollars order.total}}
+  </li>
+</ul>
 {{/extend}}

@@ -24,7 +24,7 @@
     "bootstrap": "3.0.0",
     "backbone": "1.0.0",
     "select2": "3.4.3",
-    "async": "0.2.5",
+    "async": "~0.2.5",
     "amanda": "0.4.7",
     "font-awesome": "3.2.1",
     "jquery-ui": "1.10.3",

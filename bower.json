@@ -42,6 +42,7 @@
     "less-elements": "*",
     "almond": "~0.2.9",
     "html5shiv": "~3.7.0",
-    "console-polyfill": "~0.1.1"
+    "console-polyfill": "~0.1.1",
+    "respond": "~1.4.2"
   }
 }

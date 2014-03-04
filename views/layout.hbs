@@ -7,6 +7,7 @@
     <!-- Keep this up here! -->
     <!--[if lt IE 9]>
     <script src="/components/html5shiv/dist/html5shiv.js"></script>
+    <script src="/components/respond/src/respond.js"></script>
     <![endif]-->
     <!--[if lte IE 9]>
     <script src="/components/console-polyfill/index.js"></script>
@@ -66,6 +67,10 @@
     <![endif]-->
 
     {{{block "css"}}}
+
+    <!--[if lt IE 9]>
+    <script src="/components/respond/src/respond.js"></script>
+    <![endif]-->
   </head>
   <body>
     <header id="header" class="{{#if session.oldUser}}navbar-impersonate{{/if}}">

@@ -75,15 +75,16 @@ module.exports.get = function(req, res) {
 
   var orderParams = req.query || {};
 
+  var userId = req.creatorId || req.session.user.id;
   var tasks = [
     function(callback) {
-      if (!req.session.user) return callback(null, null);
-      var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'orders.status': 'pending'};
+      if (!userId) return callback(null, null);
+      var where = {restaurant_id: req.params.rid, user_id: userId, 'orders.status': 'pending'};
       models.Order.findOne({where: where}, function(err, order) {
         if (err) return callback(err);
         if (order == null) {
           order = new models.Order({ restaurant_id: req.params.rid,
-                                     user_id: req.session.user.id,
+                                     user_id: userId,
                                      adjustment: {description: null, amount: null}});
           order.getRestaurant(function(error){
             callback(error, order);
@@ -114,7 +115,7 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
-      models.Address.findOne({where: { user_id: req.creatorId || req.session.user.id, is_default: true }}, callback);
+      models.Address.findOne({where: { user_id: userId, is_default: true }}, callback);
     }
   ];
 

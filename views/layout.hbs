@@ -4,6 +4,15 @@
     <title>Goodybag{{{block "title"}}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Keep this up here! -->
+    <!--[if lt IE 9]>
+    <script src="/components/html5shiv/dist/html5shiv.js"></script>
+    <script src="/components/es5-shim/es5-shim.js"></script>
+    <![endif]-->
+    <!--[if lte IE 9]>
+    <script src="/components/console-polyfill/index.js"></script>
+    <![endif]-->
+
     {{#if intercom}}
     <script id="IntercomSettingsScriptTag">
       window.intercomSettings = {
@@ -41,9 +50,9 @@
     <link href="/css/proxima-nova.css" rel="stylesheet">
 
     <!-- pickadate -->
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.css" rel="stylesheet">
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.date.css" rel="stylesheet">
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.time.css" rel="stylesheet">
+    <link href="/components/pickadate/lib/themes/classic.css" rel="stylesheet">
+    <link href="/components/pickadate/lib/themes/classic.date.css" rel="stylesheet">
+    <link href="/components/pickadate/lib/themes/classic.time.css" rel="stylesheet">
 
     <!-- Moar Convenient CSS Stuff -->
     <link href="/css/kit.css" rel="stylesheet">
@@ -58,6 +67,10 @@
     <![endif]-->
 
     {{{block "css"}}}
+
+    <!--[if lt IE 9]>
+    <script src="/components/respond/src/respond.js"></script>
+    <![endif]-->
   </head>
   <body>
     <header id="header" class="{{#if session.oldUser}}navbar-impersonate{{/if}}">

@@ -50,10 +50,10 @@
     , {name: 'jquery.inputmask',  location: '../../components/jquery.inputmask/dist',     main: 'jquery.inputmask.bundle.js'}
     , {name: 'jquery.placeholder',location: '../../components/jquery-placeholder',        main: 'jquery.placeholder.js'}
     , {name: 'jquery-ui',         location: '../../components/jquery-ui/ui',              main: 'jquery-ui.js'}
-    , {name: 'picker',            location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.js'}
-    , {name: 'pickadate-legacy',  location: '../../components/lalitkapoor-pickadate/lib', main: 'legacy.js'}
-    , {name: 'pickadate',         location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.date.js'}
-    , {name: 'pickatime',         location: '../../components/lalitkapoor-pickadate/lib', main: 'picker.time.js'}
+    , {name: 'picker',            location: '../../components/pickadate/lib',             main: 'picker.js'}
+    , {name: 'pickadate-legacy',  location: '../../components/pickadate/lib',             main: 'legacy.js'}
+    , {name: 'pickadate',         location: '../../components/pickadate/lib',             main: 'picker.date.js'}
+    , {name: 'pickatime',         location: '../../components/pickadate/lib',             main: 'picker.time.js'}
     , {name: 'bootstrap',         location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
     , {name: 'select2',           location: '../../components/select2',                   main: 'select2.js'}
 

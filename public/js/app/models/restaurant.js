@@ -90,7 +90,7 @@ define(function(require, exports, module) {
           type: 'string',
           length: 2,
           pattern: /^[A-Z]*$/, // only capital letters
-          enum: _.pluck(states, 'abbr'),
+          "enum": _.pluck(states, 'abbr'),
           required: true
         },
         zip: {

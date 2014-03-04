@@ -328,9 +328,17 @@ module.exports.register = function(app) {
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
   app.get('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.orderItems.summary);  // not currently used
 
-  app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.add);
+  app.post('/orders/:oid/items'
+  , m.editOrderAuth
+  , function(req, res, next) {
+      if (req.creatorId) return next();
+      m.restrict(['client', 'admin'])(req, res,next);
+    }
+  , controllers.orders.editability
+  , controllers.orders.orderItems.add
+  );
 
-  app.all('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/items', function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -341,7 +349,15 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
 
-  app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.put('/orders/:oid/items/:iid'
+  , m.editOrderAuth
+  , function(req, res, next) {
+     if (req.creatorId) return next();
+     m.restrict(['client', 'admin'])(req, res, next);
+    }
+  , controllers.orders.editability
+  , controllers.orders.orderItems.update
+  );
 
   app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
 

@@ -42,6 +42,7 @@ module.exports.auth = function(req, res, next) {
     if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
     var reviewToken = req.query.review_token || req.body.review_token;
+    var editToken = req.query.edit_token || req.body.edit_token;
 
     // allow restaurant user to view orders at their own restaurant
     if (req.user
@@ -52,7 +53,9 @@ module.exports.auth = function(req, res, next) {
       return next();
     }
 
-    if (order.attributes.user_id !== (req.session.user||0).id && order.attributes.review_token !== reviewToken)
+    if (order.attributes.user_id !== (req.session.user||0).id &&
+        order.attributes.review_token !== reviewToken &&
+        order.attributes.edit_token !== editToken)
       return res.status(404).render('404');
 
     req.order.isOwner = true;

@@ -11,6 +11,7 @@ define(function(require, exports, module) {
   return module.exports = Backbone.View.extend({
     events: {
       'click .highlight-link': 'highlightLink'
+    , 'click .btn-generate-token': 'generateToken'
     },
 
     initialize: function() {
@@ -29,6 +30,13 @@ define(function(require, exports, module) {
       , y = window.scrollY;
       this.$el.find('.share-link').select().focus();
       utils.defer(window.scrollTo.bind(window, x, y));
+    },
+
+    generateToken: function(e) {
+      e.preventDefault();
+      // post /api/orders/:order_id/generate_edit_token
+      // 200 -> render share link partial
+      // 400 -> error
     }
   });
 });

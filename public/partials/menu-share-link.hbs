@@ -1,11 +1,16 @@
 <div class="panel menu-share-link">
   <div class="panel-body">
     <div class="panel-title">Share link</div>
-    <p class="description">Send to others so they can add items too!</p>
-    <div class="form-group">
-      <input class="form-control share-link" type="text" value="{{config.baseUrl}}/restaurants/{{restaurant.id}}?edit_token={{order.edit_token}}">
-    </div>
-    <a class="highlight-link" href="#">Highlight link</a>
-    <a class="learn-more" data-toggle="popover" href="#">Learn more</a>
+    <section class="generate-token-view {{#if order.edit_token}}hide{{/if}}">
+      <button class="btn btn-primary btn-generate-token">Share this order</button>
+    </section>
+    <section class="share-link-view {{#unless order.edit_token}}hide{{/unless}}">
+      <p class="description">Send to others so they can add items too!</p>
+      <div class="form-group">
+        <input class="form-control share-link" type="text" value="{{config.baseUrl}}/restaurants/{{restaurant.id}}?edit_token={{order.edit_token}}">
+      </div>
+      <a class="highlight-link" href="#">Highlight link</a>
+      <a class="learn-more" data-toggle="popover" href="#">Learn more</a>
+    </section>
   </div>
 </div>

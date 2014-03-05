@@ -32,6 +32,10 @@ module.exports.register = function(app) {
     app.get('/join', controllers.auth.registerView);
     app.post('/join', controllers.auth.register);
 
+    app.get('/rewards', m.view( 'landing/rewards', {
+      layout: 'landing/layout'
+    }));
+
     app.get('/forgot-password', controllers.auth.forgotPassword);
     app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
     app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);

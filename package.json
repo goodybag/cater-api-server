@@ -74,7 +74,7 @@
     "grunt-complexity": "~0.1.3",
     "grunt-contrib-watch": "~0.5.3",
     "dirac": "~0.3.4",
-    "dirac-middleware": "~0.1.2"
+    "dirac-middleware": "~0.1.5"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

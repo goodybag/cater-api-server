@@ -9,6 +9,7 @@ module.exports = {
 , statics: require('./statics')
 , analytics: require('./analytics')
 , emails: require('./emails')
+, rewards: require('./rewards')
 , contactUs: require('./contact-us')
 , paymentSummaries: require('./payment-summaries')
 }

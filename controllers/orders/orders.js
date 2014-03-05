@@ -291,8 +291,7 @@ module.exports.generateEditToken = function(req, res) {
   var query = {
     updates: {
       edit_token: utils.uuid.v4()
-    // TODO expires
-    //, edit_token_expires: 
+    , edit_token_expires: moment().add('hours', config.expires.shareLink).format('YYYY-MM-DD HH:mm:ss')
     }
   , where: {
       id: req.params.order_id

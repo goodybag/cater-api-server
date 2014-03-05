@@ -41,6 +41,10 @@ config.defaults = {
     poolSize: 5
   }
 
+, expires: {
+    shareLink: 5 // hours
+  }
+
 , yelp: {
     businessBaseUrl: 'http://www.yelp.com/biz'
   , token: 'p2aFEzA20-W4kFttJqiATW3fyq7AUyW6'

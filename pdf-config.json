@@ -1,0 +1,9 @@
+{
+  "script": "lib/gen-pdf.js"
+, "paperSize": {
+    "format": "A4"
+  , "margin": { "left": "1.4cm", "right": "1.4cm", "top": "1.5cm", "bottom": "1cm" }
+  , "orientation": "portrait"
+  },
+  "zoomFactor": 1
+}

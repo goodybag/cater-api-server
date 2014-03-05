@@ -14,4 +14,6 @@ module.exports = {
 , buildReceipt: require('./build-receipt')
 , queryParams: require('./query-params')
 , queryString: require('./query-string')
+, restaurant: require('./restaurant')
+, after: require('./after')
 };

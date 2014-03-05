@@ -272,6 +272,11 @@ module.exports.register = function( req, res ){
       });
     }
 
+    req.analytics.track({
+      userId: user.id+''
+    , event: 'Sign up'
+    });
+
     req.setSession( user.toJSON() );
 
     res.redirect('/restaurants');

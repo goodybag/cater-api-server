@@ -37,6 +37,8 @@ define(function(require){
             $('#register-email').focus();
           });
         });
+
+        analytics.page('Landing');
       });
     }
   };

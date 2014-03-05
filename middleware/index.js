@@ -1,5 +1,6 @@
 module.exports = {
   after: require('./after')
+, analytics: require('./analytics')
 , basicAuth: require('./basic-session-auth')
 , buildReceipt: require('./build-receipt')
 , cors: require('./cors')

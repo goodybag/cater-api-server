@@ -19,7 +19,7 @@ module.exports.register = function(app) {
   app.before( m.queryParams(), function( app ){
     app.get('/', controllers.auth.index);
     app.get('/login', controllers.auth.login);
-    app.post('/login', controllers.auth.login);
+    app.post('/login', m.analytics, controllers.auth.login);
     app.get('/join', controllers.auth.registerView);
     app.post('/join', controllers.auth.register);
 

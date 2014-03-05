@@ -739,4 +739,8 @@ module.exports.register = function(app) {
     )
   , m.remove( db.payment_summary_items )
   );
+
+  app.get('/api/orders/:order_id/generate_edit_token'
+  , controllers.orders.generateEditToken
+  );
 }

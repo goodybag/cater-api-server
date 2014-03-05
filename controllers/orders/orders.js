@@ -287,6 +287,23 @@ module.exports.listStatus = function(req, res) {
   );
 }
 
+module.exports.generateEditToken = function(req, res) {
+  var query = {
+    updates: {
+      edit_token: utils.uuid.v4()
+    // TODO expires
+    //, edit_token_expires: 
+    }
+  , where: {
+      id: req.params.order_id
+    }
+  };
+  models.Order.update(query, function(err, order) {
+    if (err) res.error(errors.internal.DB_FAILURE, err);
+    res.send(200, order);
+  });
+};
+
 module.exports.changeStatus = function(req, res) {
   var TAGS = ['orders-change-status'];
   logger.routes.info(TAGS, 'attempting to change order status for order ' + req.params.oid+' to: '+ req.body.status + ' with review_token: ' + req.body.review_token);

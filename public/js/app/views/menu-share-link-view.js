@@ -28,7 +28,7 @@ define(function(require, exports, module) {
       var 
         x = window.scrollX
       , y = window.scrollY;
-      this.$el.find('.share-link').focus();
+      this.$el.find('.share-link').select().focus();
       utils.defer(window.scrollTo.bind(window, x, y));
     }
   });

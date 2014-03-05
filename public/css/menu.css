@@ -68,6 +68,10 @@
   font-weight: bold;
 }
 
+.menu-share-link .description {
+  margin-top: 20px;
+}
+
 .menu-share-link a.learn-more {
   float: right;
   color: #999;

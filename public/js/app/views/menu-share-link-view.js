@@ -13,6 +13,17 @@ define(function(require, exports, module) {
       'click .highlight-link': 'highlightLink'
     },
 
+    initialize: function() {
+      this.$el.find('.learn-more').popover({
+        container: 'body'
+      , placement: 'left'
+      , trigger: 'hover'
+      , content: Handlebars.partials.share_link_popover()
+      , title: 'How it works'
+      , html: true
+      });
+    },
+
     highlightLink: function(e) {
       var 
         x = window.scrollX

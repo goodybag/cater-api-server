@@ -140,11 +140,11 @@
     <div class="order-summary">
       {{> menu_order_summary }}
     </div>
-    {{#if order.edit_token}}
+    {{#unless edit_token}}
     <div class="order-share">
       {{> menu_share_link }}
     </div>
-    {{/if}}
+    {{/unless}}
   </div>
 </div>
 

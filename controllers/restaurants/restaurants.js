@@ -7,6 +7,9 @@ var
 , states = require('../../public/js/lib/states')
 , enums = require('../../db/enums')
 , cuisines = require('../../public/cuisines')
+, json2csv = require('json2csv')
+, _ = require('lodash')
+, helpers = require('../../public/js/lib/hb-helpers')
 ;
 
 var models = require('../../models');
@@ -392,3 +395,63 @@ module.exports.listItems = function(req, res) {
     return res.send(utils.invoke(items, 'toJSON'));
   });
 }
+
+module.exports.menuCsv = function( req, res ){
+  var r = new models.Restaurant({ id: req.params.rid });
+
+  r.getItems( function( error, items ){
+    if ( error ) return res.error( errors.internal.DB_FAILURE, error );
+
+    if ( !items || items.length === 0 ) return res.send(404);
+
+    items = _.invoke( items, 'toJSON' );
+
+    var tags = _(items).pluck('tags').flatten().unique().value();
+
+    var columns = Object.keys( items[0] ).concat( 'options', tags ).filter( function( t ){
+      // Omit fields
+      return [
+        'options_sets'
+      , 'tags'
+      , 'created_at'
+      , 'category_id'
+      , 'restaurant_id'
+      ].indexOf( t ) === -1;
+    });
+
+    items = items.map( function( item ){
+      // Format options as:
+      //   Group1: o1, o2, ... - Group2: o1, o2....
+      item.options = _(
+        item.options_sets
+      ).map( function( n ){
+        return n.name + ': ' + _(
+          n.options
+        ).flatten()
+        .pluck('name')
+        .value()
+        .join(', ');
+      }).join(' - ');
+
+      _.intersection( tags, item.tags ).forEach( function( t ){
+        item[ t ] = true;
+      });
+
+      items.price = helpers.dollars( items.price );
+
+      delete item.tags;
+      delete item.options_sets;
+
+      return item;
+    });
+
+    json2csv({ data: items, fields: columns }, function( error, csv ){
+      if ( error )  return res.error( errors.internal.UNKNOWN, error );;
+
+      res.header( 'Content-Type', 'text/csv' );
+      res.header( 'Content-Disposition', 'attachment;filename=menu.csv' );
+
+      res.send( csv );
+    });
+  });
+};

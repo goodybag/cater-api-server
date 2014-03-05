@@ -4,7 +4,7 @@
   }
 
   #intro {
-    background: url('/img/hero-unit-rewards-bg.jpg') no-repeat top;
+    background: url('/img/rewards-intro-bg.png') no-repeat top;
     padding-bottom: 50px;
 
     h1 {
@@ -26,11 +26,17 @@
 
     .container {
       width: 640px;
-      border-top: solid #C6BAB6 2px;
+      @media screen and ( max-width: 640px ){
+        width: 100%;
+      }
     }
 
     .section-header {
       font-size: 2em;
+    }
+
+    .window-pane {
+      border-bottom: none;
     }
   }
 }

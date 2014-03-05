@@ -38,7 +38,7 @@
   <div class="container">
     <h1>Rewards are here</h1>
     <p>Earn points on every order!</p>
-    <img class="rewards-logo" src="/img/logo-rewards-color.png" alt="Goodybag Rewards">
+    <img class="rewards-logo" src="/img/goodycoin_188x188.png" alt="Goodybag Rewards">
   </div>
 </div>
 <!--</HeroUnit>-->
@@ -50,19 +50,19 @@
 
     <div class="marketing-points">
       <div class="point">
-        <img src="/img/landing-hiw-1.png" alt="">
+        <img src="/img/rewards-hiw-1.png" alt="">
         <p>
           Order food through Goodybag
         </p>
       </div>
       <div class="point">
-        <img src="/img/landing-hiw-2.png" alt="">
+        <img src="/img/rewards-hiw-2.png" alt="">
         <p>
           Every dollar spent earns 1 Reward Point
         </p>
       </div>
       <div class="point">
-        <img src="/img/landing-hiw-3.png" alt="">
+        <img src="/img/rewards-hiw-3.png" alt="">
         <p>
           Redeem Points for Rewards through our online shop!
         </p>
@@ -135,6 +135,8 @@
 
 {{#extend "scripts"}}
 <script>
-
+  require( ['jquery', 'navbar'], function( $ ){
+    $('.navbar').navbar();
+  });
 </script>
 {{/extend}}

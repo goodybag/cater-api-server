@@ -409,7 +409,14 @@ module.exports.menuCsv = function( req, res ){
     var tags = _(items).pluck('tags').flatten().unique().value();
 
     var columns = Object.keys( items[0] ).concat( 'options', tags ).filter( function( t ){
-      return [ 'options_sets', 'tags', 'created_at' ].indexOf( t ) === -1;
+      // Omit fields
+      return [
+        'options_sets'
+      , 'tags'
+      , 'created_at'
+      , 'category_id'
+      , 'restaurant_id'
+      ].indexOf( t ) === -1;
     });
 
     items = items.map( function( item ){

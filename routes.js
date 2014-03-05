@@ -119,6 +119,11 @@ module.exports.register = function(app) {
   });
 
   /**
+   * CSV Menu
+   */
+  app.get('/restaurants/:rid/menu.csv', m.restrict(['client', 'admin']), controllers.restaurants.menuCsv);
+
+  /**
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
    */
 

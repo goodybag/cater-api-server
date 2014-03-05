@@ -19,7 +19,6 @@ define(function(require, exports, module) {
       , placement: 'left'
       , trigger: 'hover'
       , content: Handlebars.partials.share_link_popover()
-      , title: 'How it works'
       , html: true
       });
     },

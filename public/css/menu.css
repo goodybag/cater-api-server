@@ -55,16 +55,22 @@
 }
 
 /**
- * Menu order params
+ * Menu panels
  */
 
 .menu-order-params {
   font-size: 13px;
 }
 
-.menu-order-params .panel-title {
+.menu-order-params .panel-title,
+.menu-share-link .panel-title {
   font-size: 16px;
   font-weight: bold;
+}
+
+.menu-share-link a.learn-more {
+  float: right;
+  color: #999;
 }
 
 .menu-order-params dl {

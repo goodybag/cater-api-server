@@ -105,7 +105,9 @@ define( function( require ){
       });
 
       var menuShareLinkView = new Views.MenuShareLink({
-        el: '.menu-share-link'
+        el:           '.menu-share-link'
+      , editToken:    editToken
+      , model:        orderModel
       });
 
       $('.tag-tooltip').tooltip();

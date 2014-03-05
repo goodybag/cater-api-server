@@ -141,11 +141,11 @@
     <div class="order-summary">
       {{> menu_order_summary }}
     </div>
-    {{#unless edit_token}}
+    {{#dneq order.id "undefined"}}
     <div class="order-share">
       {{> menu_share_link }}
     </div>
-    {{/unless}}
+    {{/dneq}}
   </div>
 </div>
 

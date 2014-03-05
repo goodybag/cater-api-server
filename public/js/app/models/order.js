@@ -331,6 +331,25 @@ define(function(require, exports, module) {
       });
     },
 
+    /**
+     * Generate edit token and update this model
+     * @param {function} callback(error)
+     */
+    generateEditToken: function(callback) {
+      var this_ = this;
+      $.ajax({
+        type: 'POST',
+        url: '/api/orders/' + this.id + '/generate_edit_token',
+        error: function(jqXHR, textstatus, errorThrown) {
+          return callback(errorThrown);
+        },
+        success: function(data, textstatus, jqXHR) {
+          this_.set(data);
+          return callback(null, data);
+        }
+      });
+    },
+
     changeReviewed: function(reviewed, callback) {
       // Bypass model validation when toggling `reviewed` flag
       callback = callback || function() {};

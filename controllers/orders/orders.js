@@ -297,9 +297,14 @@ module.exports.generateEditToken = function(req, res) {
       id: req.params.order_id
     }
   };
+
   models.Order.update(query, function(err, order) {
-    if (err) res.error(errors.internal.DB_FAILURE, err);
-    res.send(200, order);
+    if (err || !order.length) 
+      return res.error(errors.internal.DB_FAILURE, err);
+    else if (order[0].attributes.user_id !== req.session.user.id) {
+      return res.send('wtf');
+    }
+    res.send(200, order[0]);
   });
 };
 

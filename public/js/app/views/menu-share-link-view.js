@@ -11,12 +11,16 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     events: {
-      'click .share-link': 'highlightLink'
-    , 'click .btn-generate-token': 'generateToken'
+      'click .share-link':          'highlightLink'
+    , 'click .btn-generate-token':  'generateToken'
     },
 
     initialize: function() {
-      var this_ = this;
+      this.popover();
+      this.subscribeEvents();
+    },
+
+    popover: function() {
       this.$el.find('.learn-more').popover({
         container: 'body'
       , placement: 'left'
@@ -24,10 +28,11 @@ define(function(require, exports, module) {
       , content: Handlebars.partials.share_link_popover()
       , html: true
       });
+    },
 
-      this.model.on('change:orderparams', function(e) {
-        console.log('poop');
-        this_.show();
+    subscribeEvents: function() {
+      this.model.on({
+        'change:orderparams': this.show.bind(this)
       });
     },
 
@@ -41,7 +46,6 @@ define(function(require, exports, module) {
       this.model.generateEditToken(function(err) {
         if (err)
           return notify.error(err);
-
         this_.showLinkView();
       });
     },
@@ -60,6 +64,10 @@ define(function(require, exports, module) {
 
     show: function() {
       this.$el.removeClass('hide');
+    },
+
+    hide: function() {
+      this.$el.addClass('hide');
     }
   });
 });

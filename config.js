@@ -171,7 +171,7 @@ config.dev = {
   }
 
 , segmentIo: {
-    token: 'q3r0t2euni'
+    secret: 'q3r0t2euni'
   }
 
 , intercom: {
@@ -253,7 +253,7 @@ config.staging = {
   }
 
 , segmentIo: {
-    token: 'q3r0t2euni' // TODO: same as dev for now, replace later?
+    secret: 'q3r0t2euni' // TODO: same as dev for now, replace later?
   }
 
 , intercom: {
@@ -330,7 +330,7 @@ config.production = {
   }
 
 , segmentIo: {
-    token: 'k9ju1kq8vc'
+    secret: 'k9ju1kq8vc'
   }
 
 , intercom: {

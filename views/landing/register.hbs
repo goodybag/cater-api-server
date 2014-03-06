@@ -80,13 +80,14 @@
 <script>
   require( ['jquery', 'navbar', 'field-matcher'], function( $ ){
     $(function(){
-      $('.navbar').navbar();
+      $('.navbar').navbar({ toggleText: false, toggleLogin: false });
       $('#register-form').fieldMatcher({
         fields: ['password', 'password2']
       , onError: function(){
           $('.errors').html('<p class="error">Passwords must match</p>');
         }
       });
+      analytics.page('Registration')
     });
   });
 </script>

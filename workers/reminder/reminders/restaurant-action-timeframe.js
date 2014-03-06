@@ -10,6 +10,7 @@ var Models  = require('../../../models');
 var utils   = require('../../../utils');
 var config  = require('../../../config');
 var views   = require('../lib/views');
+var helpers = require('../../../public/js/lib/hb-helpers');
 
 module.exports.name = 'Restaurant Action Timeframe';
 
@@ -45,7 +46,9 @@ function notifyOrderFn( order ){
         , subject:  [
                       '[WARNING] Order #'
                     , order.attributes.id
-                    , ' needs attention!'
+                    , ' ($'
+                    , helpers.dollars( order.toJSON().total )
+                    , ') needs attention!'
                     ].join('')
         }, function( error ){
           // If successful, we want an easy way to know on the receiving end

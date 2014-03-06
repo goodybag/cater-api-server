@@ -7,4 +7,13 @@ module.exports = {
 , getUser: require('./get-user')
 , statusCodeIntercept: require('./status-code-intercept')
 , setSession: require('./set-session')
+, analytics: require('./analytics')
+, orderParams: require('./order-params')
+, restrict: require('./restrict')
+, basicAuth: require('./basic-session-auth')
+, buildReceipt: require('./build-receipt')
+, queryParams: require('./query-params')
+, queryString: require('./query-string')
+, restaurant: require('./restaurant')
+, after: require('./after')
 };

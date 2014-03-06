@@ -42,7 +42,7 @@ config.defaults = {
   }
 
 , expires: {
-    shareLink: 5 // hours
+    shareLink: 1 // day
   }
 
 , yelp: {

@@ -141,14 +141,12 @@
     <div class="order-summary">
       {{> menu_order_summary }}
     </div>
-    {{#dneq order.id "undefined"}}
     <div class="order-share">
       {{> menu_share_link }}
     </div>
-    {{/dneq}}
   </div>
 </div>
-
+{{{dump order}}}
 <div class="modal fade modal-item" id="item-modal" role="dialog" aria-labelledby="itemModal" aria-hidden="true"></div>
 
 <div class="modal fade modal-order-params" id="order-params-modal" role="dialog" aria-labelledby="orderParamsRequiredModal" aria-hidden="true">

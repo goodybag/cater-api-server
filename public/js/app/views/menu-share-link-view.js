@@ -16,12 +16,18 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
+      var this_ = this;
       this.$el.find('.learn-more').popover({
         container: 'body'
       , placement: 'left'
       , trigger: 'hover'
       , content: Handlebars.partials.share_link_popover()
       , html: true
+      });
+
+      this.model.on('change:orderparams', function(e) {
+        console.log('poop');
+        this_.show();
       });
     },
 
@@ -40,7 +46,6 @@ define(function(require, exports, module) {
       });
     },
 
-
     showLinkView: function(token) {
       // Update link
       var $shareLinkView = this.$el.find('.share-link-view');
@@ -51,6 +56,10 @@ define(function(require, exports, module) {
       this.$el.find('.generate-token-view').hide();
       $shareLink.val(url);
       $shareLinkView.removeClass('hide');
+    },
+
+    show: function() {
+      this.$el.removeClass('hide');
     }
   });
 });

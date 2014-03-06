@@ -42,7 +42,8 @@ define(function(require, exports, module) {
 
       this.options.orderModal.show({
         success: function(model, response, options) {
-            window.location.reload();
+            model.trigger('change:orderparams');
+            this_.options.orderModal.hide();
           }
         , error: function(){
             alert('sorry we were unable to change your order information, please refresh page and try again');

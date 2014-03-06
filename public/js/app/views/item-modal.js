@@ -48,8 +48,9 @@ define(function(require, exports, module) {
       if ( !this.options.orderModel.isFulfillableOrder() ) {
         return this.options.orderModal.show({
           success: function(model, response, options) {
+            model.trigger('change:orderparams');
+            this_.options.orderModal.hide();
             this_.submit(e);
-            window.location.reload();
           }
         , error: function(){
             alert('sorry we were unable to add item to order, please refresh page and try again');

@@ -4,6 +4,8 @@
 
 var models = require('../models');
 var utils = require('../utils');
+var moment = require('moment');
+var statuses = ['submitted', 'accepted', 'denied'];
 
 module.exports = function(req, res, next) {
   var token = req.query.edit_token || req.body.edit_token;
@@ -14,14 +16,19 @@ module.exports = function(req, res, next) {
   var query = {
     where: {
       edit_token: token
-    , edit_token_expires: { $gte: 'now()' }
     }
   };
 
   models.Order.findOne(query, function(err, order) {
-    if ( err ) return res.error(500);
-    if ( !order ) return res.render(404);
-
+    if ( err ) 
+      return res.error(500);
+    else if ( !order ) 
+      return res.render(404); 
+    else if ( utils.contains(statuses, order.attributes.status) )
+      return res.render('shared-link/submitted');
+    else if ( moment(order.attributes.edit_token_expires) < moment() ) {
+      return res.render('shared-link/expired');
+    }
     // record order creator id
     req.creatorId = order.attributes.user.id;
     res.locals.edit_token = token;

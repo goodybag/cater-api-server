@@ -10,7 +10,15 @@ module.exports = function(req, res, next) {
   delete req.body.edit_token;
 
   if ( !token ) return next();
-  models.Order.findOne({where: {edit_token: token}}, function(err, order) {
+
+  var query = {
+    where: {
+      edit_token: token
+    , edit_token_expires: { $gte: 'now()' }
+    }
+  };
+
+  models.Order.findOne(query, function(err, order) {
     if ( err ) return res.error(500);
     if ( !order ) return res.render(404);
 

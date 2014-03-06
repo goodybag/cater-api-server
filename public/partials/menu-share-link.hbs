@@ -8,7 +8,8 @@ The "Share Link" panel can be in one of these states:
   <div class="panel-body">
     <div class="panel-title">Share link</div>
     <section class="generate-token-view {{#if order.edit_token}}hide{{/if}}">
-      <button class="btn btn-primary btn-generate-token">Share this order</button>
+      <p class="description">Let others pick and choose their own items</p>
+      <button class="btn btn-primary btn-block btn-generate-token">Share this order</button>
     </section>
     <section class="share-link-view {{#unless order.edit_token}}hide{{/unless}}">
       <p class="description">Send to others so they can add items too!</p>

@@ -13,6 +13,7 @@ define(function(require, exports, module) {
     events: {
       'click .share-link':          'highlightLink'
     , 'click .btn-generate-token':  'generateToken'
+    , 'click .learn-more':          'clickLearnMore'
     },
 
     initialize: function() {
@@ -28,6 +29,11 @@ define(function(require, exports, module) {
       , content: Handlebars.partials.share_link_popover()
       , html: true
       });
+    },
+
+    clickLearnMore: function(e) {
+      e.preventDefault();
+      this.$el.find('.learn-more').popover('toggle');
     },
 
     subscribeEvents: function() {

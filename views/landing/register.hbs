@@ -80,7 +80,7 @@
 <script>
   require( ['jquery', 'navbar', 'field-matcher'], function( $ ){
     $(function(){
-      $('.navbar').navbar();
+      $('.navbar').navbar({ toggleText: false, toggleLogin: false });
       $('#register-form').fieldMatcher({
         fields: ['password', 'password2']
       , onError: function(){

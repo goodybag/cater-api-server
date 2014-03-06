@@ -11,7 +11,7 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     events: {
-      'click .highlight-link': 'highlightLink'
+      'click .share-link': 'highlightLink'
     , 'click .btn-generate-token': 'generateToken'
     },
 
@@ -26,10 +26,7 @@ define(function(require, exports, module) {
     },
 
     highlightLink: function(e) {
-      var x = window.scrollX
-        , y = window.scrollY;
-      this.$el.find('.share-link').select().focus();
-      utils.defer(window.scrollTo.bind(window, x, y));
+      $(e.target).select().focus();
     },
 
     generateToken: function(e) {

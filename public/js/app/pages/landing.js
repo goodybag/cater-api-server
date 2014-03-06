@@ -5,23 +5,7 @@ define(function(require){
   var page = {
     init: function(){
       $(function(){
-        var $login  = $('.navbar .login-form');
-        var $toggle = $('.navbar-toggle');
-        var tText   = $toggle.text();
-
-        $('.navbar').navbar({
-          onExpand: function( nav, $el ){
-            $login.removeClass('form-small');
-            $login.addClass('form-vertical');
-            $toggle.text('Close');
-          }
-
-        , onCollapse: function( nav, $el ){
-            $login.removeClass('form-vertical');
-            $login.addClass('form-small');
-            $toggle.text( tText );
-          }
-        });
+        $('.navbar').navbar();
 
         $('.register-form').fieldMatcher({
           fields: ['password', 'password2']

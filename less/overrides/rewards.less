@@ -81,6 +81,17 @@
     .window-pane {
       border-bottom: none;
       .drop-shadow( 0, 0, 5px, 0.2 );
+
+      // Add arrow
+      &:after {
+        content: "";
+        position: absolute;
+        top: 28px;
+        right: -10px;
+        width: 98px;
+        height: 75px;
+        background: url('/img/red_arrow.png');
+      }
     }
   }
 

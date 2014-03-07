@@ -6,26 +6,6 @@ define(function(require){
   , OrderItem:  require('app/views/order-item-view')
   };
 
-  var Router = utils.Router.extend({
-    routes: {
-      'action/:action': 'onAction'
-    }
-
-  , onAction: function( action ){
-      if ( action === 'accept' ){
-        utils.history.navigate('/');
-        return page.view.changeStatus('accepted');
-      }
-
-      if ( action === 'reject' ){
-        utils.history.navigate('/');
-        return $("#reject-confirm-modal").modal('show');
-      }
-    }
-  });
-
-  var router = new Router();
-
   var query = utils.parseQueryParams();
 
   var page = {
@@ -45,7 +25,22 @@ define(function(require){
         })
       });
 
-      utils.startHistory();
+      page.action();
+    },
+
+    /**
+     * Change status based on url hash
+     */
+    action: function() {
+      var action = window.location.hash.replace('#action/', '');
+      switch ( action ) {
+        case 'accept':
+          page.view.changeStatus('accepted');
+          break;
+        case 'reject':
+          $("#reject-confirm-modal").modal('show');
+          break;
+      }
     }
   };
 

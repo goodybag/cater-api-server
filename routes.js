@@ -380,6 +380,15 @@ module.exports.register = function(app) {
   });
 
   /**
+   * Reporting resource
+   */
+
+  app.get('/reports'
+  , m.restrict(['admin'])
+  , controllers.reports.index
+  );
+
+  /**
    *  Auth page resource.  Simple static login/register page.
    *  Also includes /logout route as a convienence so people can logout by loading a url.
    */

@@ -273,7 +273,7 @@ module.exports.register = function( req, res ){
     }
 
     req.analytics.track({
-      userId: user.id+''
+      userId: user.attributes.id+''
     , event: 'Sign up'
     });
 

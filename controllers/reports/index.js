@@ -2,24 +2,24 @@
  * Generate various reports in CSV
  */
 
-var utils = require('../../utils');
-var models = require('../../models');
-var moment = require('moment');
-var fs = require('fs');
-var hbHelpers = require('../../public/js/lib/hb-helpers');
-var errors = require('../../errors');
+var
+  utils = require('../../utils')
+, models = require('../../models')
+, moment = require('moment')
+, fs = require('fs')
+, hbHelpers = require('../../public/js/lib/hb-helpers')
+, errors = require('../../errors')
+, config = require('../../config')
 
+
+var dollars = hbHelpers.dollars;
 var quoteVal = function(val) {
   return val ? '"'+val+'"' : '';
 }
 
-var dollars = hbHelpers.dollars;
-
 var Reports = {
 
   dateFormat: 'MM-DD-YYYY hh:mm a',
-
-  taxRate: 0.0825,
 
   /**
    * Create a report page
@@ -79,7 +79,7 @@ var Reports = {
         , moment(order.datetime).format(Reports.dateFormat)
         , dollars(order.sub_total)
         , dollars(order.restaurant.delivery_fee)
-        , dollars( (order.sub_total + order.restaurant.delivery_fee) * Reports.taxRate)
+        , dollars( (order.sub_total + order.restaurant.delivery_fee) * config.taxRate)
         , dollars(order.tip)
         , dollars(order.total)
         , order.restaurant.name

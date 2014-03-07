@@ -1,0 +1,81 @@
+<tr data-id="{{model.id}}" data-cid="{{model.cid}}">
+  <td>
+    <div class="input-group">
+      <span class="input-group-addon">#</span>
+      <input name="order_id"
+        class="form-control"
+        value="{{model.order_id}}"
+        list="{{options.dataListId}}">
+    </div>
+  </td>
+  <td>
+    <div class="input-group">
+      <span class="input-group-addon">$</span>
+      <input name="delivery_fee"
+        class="form-control"
+        type="number"
+        data-in="dollars"
+        data-out="pennies"
+        value="{{dollars model.delivery_fee}}">
+    </div>
+  </td>
+  <td>
+    <div class="input-group">
+      <span class="input-group-addon">$</span>
+      <input name="tip"
+        class="form-control"
+        type="number"
+        data-in="dollars"
+        data-out="pennies"
+        value="{{dollars model.tip}}">
+    </div>
+  </td>
+  <td>
+    <div class="input-group">
+      <span class="input-group-addon">$</span>
+      <input name="sub_total"
+        class="form-control"
+        type="number"
+        data-in="dollars"
+        data-out="pennies"
+        value="{{dollars model.sub_total}}">
+    </div>
+  </td>
+  <td>
+    <div class="input-group">
+      <span class="input-group-addon">-%</span>
+      <input name="gb_fee"
+        class="form-control"
+        type="number"
+        data-in="factorToPercent"
+        data-out="percentToFactor 4"
+        value="{{factorToPercent model.gb_fee}}">
+    </div>
+  </td>
+  <td>
+    <div class="input-group">
+      <span class="input-group-addon">-%</span>
+      <input name="sales_tax"
+        class="form-control"
+        type="number"
+        data-in="factorToPercent"
+        data-out="percentToFactor 4"
+        value="{{factorToPercent model.sales_tax}}">
+    </div>
+  </td>
+  <td>
+    <div class="input-group">
+      <span class="input-group-addon">$</span>
+      <input name="net_payout"
+        class="form-control"
+        type="number"
+        disabled="true"
+        data-in="dollars"
+        data-out="pennies"
+        value="{{dollars model.net_payout}}">
+    </div>
+    </td>
+  <td class="col-actions">
+    <button class="btn btn-sm btn-danger item-delete">&times;</button>
+  </td>
+</tr>

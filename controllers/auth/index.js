@@ -167,6 +167,11 @@ module.exports.login = function ( req, res ){
       });
     }
 
+    req.analytics.track({
+      userId: user.id+''
+    , event: 'Login'
+    });
+
     req.setSession( user, req.body.remember );
 
     return res.redirect( req.query.next || '/' );
@@ -266,6 +271,11 @@ module.exports.register = function( req, res ){
       , error: error
       });
     }
+
+    req.analytics.track({
+      userId: user.attributes.id+''
+    , event: 'Sign up'
+    });
 
     req.setSession( user.toJSON() );
 

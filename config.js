@@ -8,344 +8,373 @@ var
 , _ = require('lodash')
 , balancedConfig = fs.existsSync(__dirname+'/balanced-config.json') ? require('./balanced-config.json') : undefined // used in dev
 , local = {}
+, pdf = require('./pdf-config')
 ;
 
 if (fs.existsSync('./local-config.json')){
   local = require('./local-config.json');
 }
 
-var config = {
-  defaults: {
-    numWorkers: os.cpus().length
+var config = {};
 
-  , logging: {
-      enabled: true
-    , transports: {
-        console: true
-      , fileRotate: false
-      }
-    , console: {
-        json: true
-      }
+config.defaults = {
+  numWorkers: os.cpus().length
+
+, salesTax: 1.0825
+
+, logging: {
+    enabled: true
+  , transports: {
+      console: true
+    , fileRotate: false
     }
-
-  , http: {
-      port: 3000
-    }
-
-  , pg: {
-      poolSize: 5
-    }
-
-  , yelp: {
-      businessBaseUrl: 'http://www.yelp.com/biz'
-    , token: 'p2aFEzA20-W4kFttJqiATW3fyq7AUyW6'
-    , tokenSecret: 'gik4eZYy1PB8Fna4TMqIauXUGKs'
-    , consumerKey: '6F-LMALFlGTckzlBfg03fA'
-    , consumerSecret: 'OmclTS9gpl03vksQvA_Cr7OUPU4'
-    , apiUrl: 'http://api.yelp.com/v1'
-    , concernedFields: [
-        'url'
-      , 'review_count'
-      , 'rating'
-      , 'rating_img_url'
-      , 'rating_img_url_small'
-      , 'rating_img_url_large'
-      , 'reviews'
-      ]
-    , reviewThreshold: 3
-    }
-
-  , outputActivePoolIds: false
-
-  , baseUrl: 'http://cater.goodybag.com'
-
-  , amazon: {
-      awsId: "AKIAJZTPY46ZWGWU5JRQ"
-    , awsSecret: "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"
-    }
-
-  , mailgun: {
-      apiKey: 'key-8ffj79wzb2dda3s6r7u93o4yz07oxxu8'
-    , publicApiKey: 'pubkey-45a1-ynm6dw4tmk8egc6izhgqntwir79'
-    }
-
-  , twilio: {
-      account: 'AC4ec9863aecd8248803144972fc51bac0'
-    , token: 'f45e26c40cd7481c872c3552676b598b'
-    }
-
-  , bitly: {
-      username:'goodybaginc'
-    , apiKey: 'R_174d19bb5c13f986cfa863e18a186441'
-    }
-
-  , emails: {
-      support: 'support@goodybag.com'
-    , orders: 'orders@goodybag.com'
-    , waitlist: 'waitlist@goodybag.com'
-    , info: 'info@goodybag.com'
-    }
-
-  , phone: {
-      main: '5126674224'
-    , support: '5122706555'
-    , orders: '5122706333'
-    }
-
-  , contact: {
-      facebook: 'https://www.facebook.com/GoodybagATX'
-    , twitter: 'https://twitter.com/GoodybagATX'
-    , linkedin: 'http://www.linkedin.com/company/goodybag-inc'
-    }
-
-  , phantomjs: {
-      process: "phantomjs"
-    }
-
-  , receipt: require('./receipt-config')
-
-  , filepicker: {
-      key: 'AF52P8LtHSd6VMD07XdOQz'
-    }
-
-  , defaultLogo: 'https://www.filepicker.io/api/file/jLhugLRSQAJVdUe88acg'
-  , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
-  }
-
-
-, dev: {
-    env: 'dev'
-
-  , isDev: true
-
-  , http: {
-      port: 3000
-    }
-
-  , logging: {
-      enabled: true
-    , transports: {
-        console: true
-      , fileRotate: true
-      }
-    , console: {
-        json: true
-      }
-    , fileRotate: {
-        dirname: 'logs'
-      , filename: 'all.log'
-      , json: true
-      }
-    }
-
-  , rollbar: {
-      accessToken: 'c7f82820e02c4bd7a759015518948ce3'
-    }
-
-  , segmentIo: {
-      token: 'q3r0t2euni'
-    }
-
-  , intercom: {
-      apiSecret: 'A4NvND_qEf-ksKYhVw-GduUS2ruW2NlC39murXx2'
-    , appId: 'qsetwlny'
-    }
-
-  , balanced: balancedConfig
-
-  , ironMQ: {
-      token: '_2rd5UzCv7_-chOc4rDZ0Y7y74A'
-    , projectId: '526990a7f2d1570005000038'
-    }
-
-  , baseUrl: 'http://localhost:3000'
-
-  , postgresConnStr:  "postgres://localhost:5432/cater"
-
-  , requestLogger: {
-      connStr: "postgres://localhost:5432/cater"
-    , table: 'requests'
-    , plan: 'month'
-    }
-
-  , baseUrl: 'http://localhost:3000'
-
-  , testEmail: local.testEmail || 'test@goodybag.com'
-
-  , testPhoneSms: local.testPhoneSms || '1234567890'
-
-  , testPhoneVoice: local.testPhoneVoice || '1234567890'
-
-  , emailEnabled: true
-
-  , receipt: _.extend(
-      {}
-    , require('./receipt-config')
-    , { bucket: 'dev-receipts.goodybag.com' }
-    )
-
-  , workers: {
-      debit: {
-        enqueue: {
-          interval: 1000 * 5 // 5 seconds
-        }
-      }
+  , console: {
+      json: true
     }
   }
 
+, http: {
+    port: 3000
+  }
 
-, staging: {
-    env: 'staging'
+, pg: {
+    poolSize: 5
+  }
 
-  , isStaging: true
+, yelp: {
+    businessBaseUrl: 'http://www.yelp.com/biz'
+  , token: 'p2aFEzA20-W4kFttJqiATW3fyq7AUyW6'
+  , tokenSecret: 'gik4eZYy1PB8Fna4TMqIauXUGKs'
+  , consumerKey: '6F-LMALFlGTckzlBfg03fA'
+  , consumerSecret: 'OmclTS9gpl03vksQvA_Cr7OUPU4'
+  , apiUrl: 'http://api.yelp.com/v1'
+  , concernedFields: [
+      'url'
+    , 'review_count'
+    , 'rating'
+    , 'rating_img_url'
+    , 'rating_img_url_small'
+    , 'rating_img_url_large'
+    , 'reviews'
+    ]
+  , reviewThreshold: 3
+  }
 
-  , http: {
-      port: process.env['PORT'] || 5000
+, outputActivePoolIds: false
+
+, baseUrl: 'http://cater.goodybag.com'
+
+, amazon: {
+    awsId: "AKIAJZTPY46ZWGWU5JRQ"
+  , awsSecret: "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"
+  }
+
+, mailgun: {
+    apiKey: 'key-8ffj79wzb2dda3s6r7u93o4yz07oxxu8'
+  , publicApiKey: 'pubkey-45a1-ynm6dw4tmk8egc6izhgqntwir79'
+  }
+
+, twilio: {
+    account: 'AC4ec9863aecd8248803144972fc51bac0'
+  , token: 'f45e26c40cd7481c872c3552676b598b'
+  }
+
+, bitly: {
+    username:'goodybaginc'
+  , apiKey: 'R_174d19bb5c13f986cfa863e18a186441'
+  }
+
+, emails: {
+    support: 'support@goodybag.com'
+  , orders: 'orders@goodybag.com'
+  , waitlist: 'waitlist@goodybag.com'
+  , info: 'info@goodybag.com'
+  }
+
+, phone: {
+    main: '5126674224'
+  , support: '5122706555'
+  , orders: '5122706333'
+  }
+
+, contact: {
+    facebook: 'https://www.facebook.com/GoodybagATX'
+  , twitter: 'https://twitter.com/GoodybagATX'
+  , linkedin: 'http://www.linkedin.com/company/goodybag-inc'
+  }
+
+, phantomjs: {
+    process: "phantomjs"
+  }
+
+, pdf: pdf
+
+, paymentSummaries: {
+    fileName:     "payment-summary-:psid.pdf"
+  , concurrency:  10
+  , bucket:       "pms.goodybag.com"
+  , credentials: {
+      email:      "pms@goodybag.com"
+    , password:   "G00dyb4agp333m3ss"
     }
+  , route:        '/admin/restaurants/:restaurant_id/payment-summaries/:id/pdf'
+  , dir:          'tmp'
+  }
 
-  , logging: {
-      enabled: true
-    , transports: {
-        console: true
-      , papertrail: true
-      }
-    , console: {
-        json: true
-      , raw: true
-      }
-    , papertrail: {
-        host: 'logs.papertrailapp.com'
-      , port: 34830
-      }
-    }
-
-  , rollbar: {
-      accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
-    }
-
-  , segmentIo: {
-      token: 'q3r0t2euni' // TODO: same as dev for now, replace later?
-    }
-
-  , intercom: {
-      apiSecret: 'tumIlUFE__wGfvVxtAyESXRMroQJAz5csfMKULAY'
-    , appId: '6bxgiurw'
-    }
-
-  , balanced: {
-      secret: "ak-test-PuuQnMAqL7pNQ0t9xuMDV3upU2Pz5sLn"
-    , marketplaceUri: "/v1/marketplaces/TEST-MP3gr1uHmPi0i42cNhdL4rEs"
-    }
-
-  , ironMQ: {
-      token: 'M-NmfDgtD66MCHYKTVS3m15BbSA'
-    , projectId: '526990bcf2d1570009000035'
-    }
-
-  , baseUrl: 'http://cater.staging.goodybag.com'
-
-  , postgresConnStr: process.env['DATABASE_URL']
-
-  , requestLogger: {
-      connStr: process.env['HEROKU_POSTGRESQL_SILVER_URL']
-    , table: 'requests'
-    , plan: 'month'
-    }
-
-  , emailEnabled: true
-
-  , receipt: _.extend(
-      {}
-    , require('./receipt-config')
-    , { bucket: 'staging-receipts' }
-    )
-
-  , workers: {
-      debit: {
-        enqueue: {
-          interval: 1000 * 5 // 5 seconds
-        }
-      }
+, receipt: {
+    dir:          "public/receipts"
+  , fileName:     "order-:oid.pdf"
+  , orderRoute:   "/orders/:oid/receipt"
+  , bucket:       "receipts.goodybag.com"
+  , concurrency:  10
+  , credentials: {
+      email:      "receipts@goodybag.com"
+    , password:   "G00dyb4agR3c31pt5!"
     }
   }
 
-, production: {
-    env: 'production'
+, filepicker: {
+    key: 'AF52P8LtHSd6VMD07XdOQz'
+  }
 
-  , isProduction: true
+, defaultLogo: 'https://www.filepicker.io/api/file/jLhugLRSQAJVdUe88acg'
+, defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
+};
 
-  , http: {
-      port: process.env['PORT'] || 5000
+config.dev = {
+  env: 'dev'
+
+, isDev: true
+
+, http: {
+    port: 3000
+  }
+
+, logging: {
+    enabled: true
+  , transports: {
+      console: true
+    , fileRotate: true
     }
-
-  , logging: {
-      enabled: true
-    , transports: {
-        console: true
-      , papertrail: true
-      }
-    , console: {
-        json: true
-      , raw: true
-      }
-    , papertrail: {
-        host: 'logs.papertrailapp.com'
-      , port: 64774
-      }
+  , console: {
+      json: true
     }
-
-  , rollbar: {
-      accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+  , fileRotate: {
+      dirname: 'logs'
+    , filename: 'all.log'
+    , json: true
     }
+  }
 
-  , segmentIo: {
-      token: 'k9ju1kq8vc'
-    }
+, rollbar: {
+    accessToken: 'c7f82820e02c4bd7a759015518948ce3'
+  }
 
-  , intercom: {
-      apiSecret: '5I1eNUY_F6HKl_Gb15965fr5VgGfNlwny7WmyKZx'
-    , appId: '13s9qu57'
-    }
+, segmentIo: {
+    secret: 'q3r0t2euni'
+  }
 
-  , balanced: {
-      secret: "ak-prod-OmLnG7ftnzB145uM4Ycu4YIE0mgPx4eE"
-    , marketplaceUri: "/v1/marketplaces/MPwgAAAdaGmk4BhrmL0qkRM"
-    }
+, intercom: {
+    apiSecret: 'A4NvND_qEf-ksKYhVw-GduUS2ruW2NlC39murXx2'
+  , appId: 'qsetwlny'
+  }
 
-  , ironMQ: {
-      token: 'vr52EAPD-oYRDtZzsqYd0eoDLkI'
-    , projectId: '526990cba2b8ed000500002e'
-    }
+, balanced: balancedConfig
 
-  , baseUrl: 'https://www.goodybag.com'
+, ironMQ: {
+    token: '_2rd5UzCv7_-chOc4rDZ0Y7y74A'
+  , projectId: '526990a7f2d1570005000038'
+  }
 
-  , postgresConnStr: process.env['DATABASE_URL']
+, baseUrl: 'http://localhost:3000'
 
-  , requestLogger: {
-      connStr: process.env['HEROKU_POSTGRESQL_PURPLE_URL']
-    , table: 'requests'
-    , plan: 'month'
-    }
+, postgresConnStr:  "postgres://localhost:5432/cater"
 
-  , emails: {
-      support: 'support@goodybag.com'
-    , orders: 'orders@goodybag.com'
-    , waitlist: 'waitlist@goodybag.com'
-    , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
-    }
+, requestLogger: {
+    connStr: "postgres://localhost:5432/cater"
+  , table: 'requests'
+  , plan: 'month'
+  }
 
-  , emailEnabled: true
+, baseUrl: 'http://localhost:3000'
 
-  , workers: {
-      debit: {
-        enqueue: {
-          interval: 1000 * 60 * 30 // 30 minutes
-        }
+, testEmail: local.testEmail || 'test@goodybag.com'
+
+, testPhoneSms: local.testPhoneSms || '1234567890'
+
+, testPhoneVoice: local.testPhoneVoice || '1234567890'
+
+, emailEnabled: true
+
+, paymentSummaries: _.extend( {}, config.defaults.paymentSummaries,
+    { bucket: 'pms-dev.goodybag.com' }
+  )
+
+, receipt: _.extend( {}, config.defaults.receipt,
+    { bucket: 'dev-receipts.goodybag.com' }
+  )
+
+, workers: {
+    debit: {
+      enqueue: {
+        interval: 1000 * 5 // 5 seconds
       }
     }
   }
 };
+
+config.staging = {
+  env: 'staging'
+
+, isStaging: true
+
+, http: {
+    port: process.env['PORT'] || 5000
+  }
+
+, logging: {
+    enabled: true
+  , transports: {
+      console: true
+    , papertrail: true
+    }
+  , console: {
+      json: true
+    , raw: true
+    }
+  , papertrail: {
+      host: 'logs.papertrailapp.com'
+    , port: 34830
+    }
+  }
+
+, rollbar: {
+    accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+  }
+
+, segmentIo: {
+    secret: 'q3r0t2euni' // TODO: same as dev for now, replace later?
+  }
+
+, intercom: {
+    apiSecret: 'tumIlUFE__wGfvVxtAyESXRMroQJAz5csfMKULAY'
+  , appId: '6bxgiurw'
+  }
+
+, balanced: {
+    secret: "ak-test-PuuQnMAqL7pNQ0t9xuMDV3upU2Pz5sLn"
+  , marketplaceUri: "/v1/marketplaces/TEST-MP3gr1uHmPi0i42cNhdL4rEs"
+  }
+
+, ironMQ: {
+    token: 'M-NmfDgtD66MCHYKTVS3m15BbSA'
+  , projectId: '526990bcf2d1570009000035'
+  }
+
+, baseUrl: 'http://cater.staging.goodybag.com'
+
+, postgresConnStr: process.env['DATABASE_URL']
+
+, requestLogger: {
+    connStr: process.env['HEROKU_POSTGRESQL_SILVER_URL']
+  , table: 'requests'
+  , plan: 'month'
+  }
+
+, emailEnabled: true
+
+, paymentSummaries: _.extend( {}, config.defaults.paymentSummaries,
+    { bucket: 'pms-staging.goodybag.com' }
+  )
+
+, receipt: _.extend( {}, config.defaults.receipt,
+    { bucket: 'staging-receipts.goodybag.com' }
+  )
+
+, workers: {
+    debit: {
+      enqueue: {
+        interval: 1000 * 5 // 5 seconds
+      }
+    }
+  }
+};
+
+config.production = {
+  env: 'production'
+
+, isProduction: true
+
+, http: {
+    port: process.env['PORT'] || 5000
+  }
+
+, logging: {
+    enabled: true
+  , transports: {
+      console: true
+    , papertrail: true
+    }
+  , console: {
+      json: true
+    , raw: true
+    }
+  , papertrail: {
+      host: 'logs.papertrailapp.com'
+    , port: 64774
+    }
+  }
+
+, rollbar: {
+    accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+  }
+
+, segmentIo: {
+    secret: 'k9ju1kq8vc'
+  }
+
+, intercom: {
+    apiSecret: '5I1eNUY_F6HKl_Gb15965fr5VgGfNlwny7WmyKZx'
+  , appId: '13s9qu57'
+  }
+
+, balanced: {
+    secret: "ak-prod-OmLnG7ftnzB145uM4Ycu4YIE0mgPx4eE"
+  , marketplaceUri: "/v1/marketplaces/MPwgAAAdaGmk4BhrmL0qkRM"
+  }
+
+, ironMQ: {
+    token: 'vr52EAPD-oYRDtZzsqYd0eoDLkI'
+  , projectId: '526990cba2b8ed000500002e'
+  }
+
+, baseUrl: 'https://www.goodybag.com'
+
+, postgresConnStr: process.env['DATABASE_URL']
+
+, requestLogger: {
+    connStr: process.env['HEROKU_POSTGRESQL_PURPLE_URL']
+  , table: 'requests'
+  , plan: 'month'
+  }
+
+, emails: {
+    support: 'support@goodybag.com'
+  , orders: 'orders@goodybag.com'
+  , waitlist: 'waitlist@goodybag.com'
+  , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
+  }
+
+, emailEnabled: true
+
+, workers: {
+    debit: {
+      enqueue: {
+        interval: 1000 * 60 * 30 // 30 minutes
+      }
+    }
+  }
+}
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';
 if (GB_ENV == null || !config.hasOwnProperty(GB_ENV)) GB_ENV = 'dev';

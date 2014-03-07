@@ -10,4 +10,5 @@ module.exports = {
 , analytics: require('./analytics')
 , emails: require('./emails')
 , contactUs: require('./contact-us')
+, paymentSummaries: require('./payment-summaries')
 }

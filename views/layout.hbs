@@ -4,6 +4,15 @@
     <title>Goodybag{{{block "title"}}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Keep this up here! -->
+    <!--[if lt IE 9]>
+    <script src="/components/html5shiv/dist/html5shiv.js"></script>
+    <script src="/components/es5-shim/es5-shim.js"></script>
+    <![endif]-->
+    <!--[if lte IE 9]>
+    <script src="/components/console-polyfill/index.js"></script>
+    <![endif]-->
+
     {{#if intercom}}
     <script id="IntercomSettingsScriptTag">
       window.intercomSettings = {
@@ -24,7 +33,7 @@
     <!-- segment.io -->
     <script type="text/javascript">
     window.analytics||(window.analytics=[]),window.analytics.methods=["identify","track","trackLink","trackForm","trackClick","trackSubmit","page","pageview","ab","alias","ready","group","on","once","off"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var method=window.analytics.methods[i];window.analytics[method]=window.analytics.factory(method)}window.analytics.load=function(t){var a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"d2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)},window.analytics.SNIPPET_VERSION="2.0.8",
-    window.analytics.load("{{config.segmentIo.token}}");
+    window.analytics.load("{{config.segmentIo.secret}}");
     window.analytics.page();
     </script>
     <!-- end segment.io -->
@@ -41,9 +50,9 @@
     <link href="/css/proxima-nova.css" rel="stylesheet">
 
     <!-- pickadate -->
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.css" rel="stylesheet">
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.date.css" rel="stylesheet">
-    <link href="/components/lalitkapoor-pickadate/lib/themes/classic.time.css" rel="stylesheet">
+    <link href="/components/pickadate/lib/themes/classic.css" rel="stylesheet">
+    <link href="/components/pickadate/lib/themes/classic.date.css" rel="stylesheet">
+    <link href="/components/pickadate/lib/themes/classic.time.css" rel="stylesheet">
 
     <!-- Moar Convenient CSS Stuff -->
     <link href="/css/kit.css" rel="stylesheet">
@@ -58,6 +67,10 @@
     <![endif]-->
 
     {{{block "css"}}}
+
+    <!--[if lt IE 9]>
+    <script src="/components/respond/src/respond.js"></script>
+    <![endif]-->
   </head>
   <body>
     <header id="header" class="{{#if session.oldUser}}navbar-impersonate{{/if}}">
@@ -98,6 +111,7 @@
                 </a>
               </li>
               {{/if}}
+              {{{block "navbar-links"}}}
               <li class="nav-account dropdown">
                 <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
                   {{#if user.name }} {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>

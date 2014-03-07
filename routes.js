@@ -2,22 +2,21 @@ var express = require('express');
 var config = require('./config');
 var controllers = require('./controllers');
 var utils = require('./utils');
+var venter = require('./lib/venter');
 var Models = require('./models');
 var hbHelpers = require('./public/js/lib/hb-helpers');
+var db = require('./db');
 var errors = require('./errors');
+var PaymentSummaryItem = require('./public/js/app/models/payment-summary-item');
 
-var m = utils.extend({
-  orderParams   : require('./middleware/order-params'),
-  restrict      : require('./middleware/restrict'),
-  basicAuth     : require('./middleware/basic-session-auth'),
-  buildReceipt  : require('./middleware/build-receipt'),
-  queryParams   : require('./middleware/query-params'),
-  queryString   : require('./middleware/query-string')
-}, require('stdm') );
+var m = utils.extend(require('./middleware'), require('stdm') );
+
+utils.extend( m, require('./middleware/util') );
+utils.extend( m, require('dirac-middleware') );
 
 module.exports.register = function(app) {
 
-  app.before( m.queryParams(), function( app ){
+  app.before( m.analytics, m.queryParams(), function( app ){
     app.get('/', controllers.auth.index);
     app.get('/login', controllers.auth.login);
     app.post('/login', controllers.auth.login);
@@ -118,6 +117,11 @@ module.exports.register = function(app) {
     res.set('Allow', 'PUT', 'PATCH, DELETE');
     res.send(405);
   });
+
+  /**
+   * CSV Menu
+   */
+  app.get('/restaurants/:rid/menu.csv', m.restrict(['client', 'admin']), controllers.restaurants.menuCsv);
 
   /**
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
@@ -305,7 +309,7 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-  app.get('/receipts/order-:oid.pdf', m.buildReceipt(), express.static(__dirname + '/public'));
+  app.get('/receipts/order-:oid.pdf', m.buildReceipt());
 
   /**
    *  Order status resource.  The collection of all statuses on a single order.
@@ -596,4 +600,132 @@ module.exports.register = function(app) {
   );
 
   app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
+
+  app.get('/admin/restaurants/:id/payment-summaries'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
+      layout: 'admin/layout'
+    , method: 'findOne'
+    })
+  );
+
+  app.get('/admin/restaurants/:id/payment-summaries/:payment_summary_id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , function( req, res, next ){
+      res.locals.payment_summary_id = req.param('payment_summary_id');
+      return next();
+    }
+  , m.view( 'admin/restaurant-payment-summary', db.restaurants, {
+      layout: 'admin/layout'
+    , method: 'findOne'
+    })
+  );
+
+  app.get('/payment-summaries/ps-:psid.pdf'
+  , m.restrict(['admin'])
+  , controllers.paymentSummaries.getPdf
+  );
+
+  app.get( config.paymentSummaries.route
+  , m.basicAuth()
+  , m.restrict(['admin', 'pms'])
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.restaurant({ param: 'restaurant_id' })
+  , function( req, res, next ){
+      var $query = { payment_summary_id: req.param('id') };
+      db.payment_summary_items.find( $query, function( error, results ){
+        if ( error ) return res.error(500);
+
+        res.locals.payment_summary_items = results.map( function( r ){
+          return new PaymentSummaryItem( r ).toJSON();
+        });
+
+        next();
+      });
+    }
+  , m.view( 'invoice/payment-summary', db.payment_summaries, {
+      layout: 'invoice/payment-summary-layout'
+    , method: 'findOne'
+    })
+  );
+
+  app.get('/api/restaurants/:restaurant_id/orders'
+  , m.pagination()
+  , m.param('restaurant_id')
+  , controllers.restaurants.orders.listJSON
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries'
+  , m.pagination()
+  , m.param('restaurant_id')
+  , m.find( db.payment_summaries )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/payment-summaries'
+    // Ensure restaurant ID in the URL is what is in the body
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.payment_summaries )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.findOne( db.payment_summaries )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.after( controllers.paymentSummaries.emitPaymentSummaryChange() )
+  , m.update( db.payment_summaries )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.remove( db.payment_summaries )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
+  , m.pagination()
+  , controllers.paymentSummaries.applyRestaurantId()
+  , m.param('payment_summary_id')
+  , m.find( db.payment_summary_items )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
+  , m.queryToBody('payment_summary_id')
+  , m.after( controllers.paymentSummaries.emitPaymentSummaryChange() )
+  , m.insert( db.payment_summary_items )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , controllers.paymentSummaries.applyRestaurantId()
+  , m.param('payment_summary_id')
+  , m.param('id')
+  , m.findOne( db.payment_summary_items )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , controllers.paymentSummaries.applyRestaurantIdForNonJoins()
+  , m.param('payment_summary_id')
+  , m.param('id')
+  , m.after(
+      controllers.paymentSummaries.emitPaymentSummaryChange({ idField: 'payment_summary_id' })
+    )
+  , m.update( db.payment_summary_items )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , controllers.paymentSummaries.applyRestaurantIdForNonJoins()
+  , m.param('payment_summary_id')
+  , m.param('id')
+  , m.after(
+      controllers.paymentSummaries.emitPaymentSummaryChange({ idField: 'payment_summary_id' })
+    )
+  , m.remove( db.payment_summary_items )
+  );
 }

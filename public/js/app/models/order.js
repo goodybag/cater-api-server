@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
   var utils = require('utils');
+  var config = require('config');
 
   var OrderItems = require('../collections/order-items');
 
@@ -48,7 +49,7 @@ define(function(require, exports, module) {
           tip_percent: {
             type: ['string', 'null'],
             required: false,
-            enum: ['0', 'custom', '5', '10', '15', '18', '20', '25', null]
+            "enum": ['0', 'custom', '5', '10', '15', '18', '20', '25', null]
           },
           payment_status: {
             type: ['string', 'null'],
@@ -355,8 +356,8 @@ define(function(require, exports, module) {
     getFullCalendarEvent: function() {
       var fullCalendarEvent = utils.extend({}, this.toJSON(), {
         title: [
-          Handlebars.helpers.timepart(this.get('datetime')) 
-        , '\n' 
+          Handlebars.helpers.timepart(this.get('datetime'))
+        , '\n'
         , Handlebars.helpers.truncate(this.get('restaurant_name'), 15)
         ].join('')
       , start: this.get('datetime')
@@ -385,6 +386,23 @@ define(function(require, exports, module) {
         default:
           return '#fff'
       }
+    },
+
+    getTotal: function(){
+      return Math.round(
+        (
+          parseInt( this.get('sub_total') )
+        + parseInt( this.restaurant.get('delivery_fee') )
+        )
+      * parseFloat( config.salesTax )
+      );
+    },
+
+    getSalesTaxContribution: function(){
+      return this.getTotal() - (
+        parseInt( this.get('sub_total') )
+      + parseInt( this.restaurant.get('delivery_fee') )
+      );
     }
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']

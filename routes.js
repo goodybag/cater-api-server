@@ -388,6 +388,16 @@ module.exports.register = function(app) {
   , controllers.reports.index
   );
 
+  app.post('/reports/orders'
+  , m.restrict(['admin'])
+  , controllers.reports.ordersCsv
+  );
+
+  app.post('/reports/users'
+  , m.restrict(['admin'])
+  , controllers.reports.usersCsv
+  );
+
   /**
    *  Auth page resource.  Simple static login/register page.
    *  Also includes /logout route as a convienence so people can logout by loading a url.

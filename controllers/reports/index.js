@@ -6,26 +6,20 @@ var utils = require('../../utils');
 var models = require('../../models');
 var moment = require('moment');
 var fs = require('fs');
-var range = process.argv.slice(2);
-var start = range[0] || '2012-01-01';
-var end = range[1] || moment().format('YYYY-MM-DD');
+var hbHelpers = require('../../public/js/lib/hb-helpers');
+var errors = require('../../errors');
 
-console.log('Generating list of accepted orders delivered from', start, 'to', end);
-var filename = 'accepted-orders-' + start+'-'+end+'.csv';
-console.log('Writing to ',filename);
-var writeStream = fs.createWriteStream(filename);
-
-var wrap = function(str, wrapper) {
-  wrapper = wrapper || '"';
-  return str ? wrapper+str+wrapper : '';
+var quoteVal = function(val) {
+  return val ? '"'+val+'"' : '';
 }
 
-var dollars = function(val) {
-  return (val / 100.0).toFixed(2);
-}
-
+var dollars = hbHelpers.dollars;
 
 var Reports = {
+
+  dateFormat: 'MM-DD-YYYY hh:mm a',
+
+  taxRate: 0.0825,
 
   /**
    * Create a report page
@@ -35,12 +29,34 @@ var Reports = {
   },
 
   /**
-   * POST /reports/orders.csv
+   * POST /reports/orders
    */
   ordersCsv: function(req, res) {
     var status = req.body.status || 'accepted';
     var start = req.body.start || '2012-01-01';
     var end = req.body.end || moment().format('YYYY-MM-DD');
+
+    var filename = [
+      status
+    , 'orders'
+    , start
+    , end
+    ].join('-') + '.csv';
+
+    res.header( 'Content-Type', 'text/csv' );
+    res.header( 'Content-Disposition', 'attachment;filename=' + filename );
+
+    res.write([
+      'Order Number'
+    , 'Order Date'
+    , 'Delivery Date'
+    , 'Subtotal'
+    , 'Delivery Fee'
+    , 'Tax'
+    , 'Tip'
+    , 'Total'
+    , 'Restaurant Name'
+    ].join(',') + '\n');
 
     var query = {
       where: {
@@ -50,41 +66,73 @@ var Reports = {
         , $lte: end
         }
       }
+    , limit: 'all'
     };
-    var writeStream = fs.createWriteStream(filename);
-    writeStream.write([
-      'Order Number'
-    , 'Order Date'
-    , 'Delivery Date'
-    , 'Subtotal'
-    , 'Delivery Fee'
-    , 'Tax'
-    , 'Tip'
-    , 'Total'
-    , 'Restaurant Name'].join(',')+'\n');
 
-models.Order.find(query, function(err, results) {
-  utils.each(results, function(order) {
-    order = order.attributes;
-    writeStream.write(utils.map([
-      order.id
-    , moment(order.created_at).format('MM-DD-YYYY hh:mm a')
-    , moment(order.datetime).format('MM-DD-YYYY hh:mm a')
-    , dollars(order.sub_total)
-    , dollars(order.restaurant.delivery_fee)
-    , dollars( (order.sub_total + order.restaurant.delivery_fee) * 0.0825)
-    , dollars(order.tip)
-    , dollars(order.total)
-    , order.restaurant.name
-    ], function(val) { return wrap(val); }).join(',')+'\n');
-  });
-});
+    models.Order.find(query, function(err, results) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      utils.each(results, function(order) {
+        order = order.attributes;
+        res.write(utils.map([
+          order.id
+        , moment(order.created_at).format(Reports.dateFormat)
+        , moment(order.datetime).format(Reports.dateFormat)
+        , dollars(order.sub_total)
+        , dollars(order.restaurant.delivery_fee)
+        , dollars( (order.sub_total + order.restaurant.delivery_fee) * Reports.taxRate)
+        , dollars(order.tip)
+        , dollars(order.total)
+        , order.restaurant.name
+        ], quoteVal).join(',') + '\n');
+      });
 
+      res.end();
+    });
 
   },
 
   usersCsv: function(req, res) {
+    var start = req.body.start || '2012-01-01';
+    var end = req.body.end || moment().format('YYYY-MM-DD');
 
+    var filename = [
+      'users'
+    , start
+    , end
+    ].join('-') + '.csv';
+
+    res.header( 'Content-Type', 'text/csv' );
+    res.header( 'Content-Disposition', 'attachment;filename=' + filename );
+
+    res.write([
+      'Email'
+    , 'First Name'
+    , 'Last Name'
+    , 'Company Name'
+    ].join(',')+'\n');
+
+    var query = {
+      where: {
+        created_at: { $gte: start, $lte: end }
+      }
+    , limit: 'all'
+    };
+
+    models.User.find(query, function(err, results) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      utils.each(results, function(user) {
+        user = user.attributes;
+        var idx = (user.name||'').indexOf(' ');
+        res.write(utils.map([
+          user.email
+        , user.name ? user.name.slice(0, idx) : ''
+        , user.name ? user.name.slice(idx+1) : ''
+        , user.organization
+        ], quoteVal).join(',') + '\n');
+      });
+
+      res.end();
+    });
   }
 }
 

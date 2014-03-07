@@ -41,6 +41,14 @@ config.defaults = {
     poolSize: 5
   }
 
+, facebook: {
+    pixel: {
+      checkout: '6014846877254'
+    , register: '6014846856854'
+    , restaurantList: '6014846900654'
+    }
+  }
+
 , yelp: {
     businessBaseUrl: 'http://www.yelp.com/biz'
   , token: 'p2aFEzA20-W4kFttJqiATW3fyq7AUyW6'

@@ -70,6 +70,7 @@ define(function(require, exports, module) {
 
     show: function() {
       this.$el.removeClass('hide');
+      this.generateToken();
     },
 
     hide: function() {

@@ -59,10 +59,13 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid', m.editOrderAuth, controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
-  app.get('/restaurants/:rid', m.editOrderAuth, function(req, res, next) {
-    if (req.query.edit) return next();
-    controllers.restaurants.get.apply(this, arguments);
-  });
+  app.get('/restaurants/:rid'
+  , m.editOrderAuth
+  , function(req, res, next) {
+      if (req.query.edit) return next();
+      m.restrict(['client', 'admin'])(req, res, next);
+    }
+  , controllers.restaurants.get);
 
   app.get('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.edit);
 

@@ -47,9 +47,8 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.current = function(req, res, next) {
-  var userId = req.creatorId || req.session.user;
-  if (!userId) return next();
-  var where = {restaurant_id: req.params.rid, user_id: userId, 'orders.status': 'pending'};
+  if ( !req.session.user && !req.creatorId ) return next();
+  var where = {restaurant_id: req.params.rid, user_id: req.creatorId || req.session.user.id, 'orders.status': 'pending'};
   models.Order.findOne({where: where}, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 

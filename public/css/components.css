@@ -231,6 +231,12 @@
   margin-right: 0;
 }
 
+.navbar .gb-points-indicator {
+  float: right;
+  margin-top: 5px;
+  margin-right: 8px;
+}
+
 /**
  * Panels
  */

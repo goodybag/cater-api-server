@@ -65,6 +65,7 @@
 
     <!--[if lte IE 9]>
     <link rel="stylesheet" href="/css/ie-lte-9.css">
+    <link rel="stylesheet" href="/dist/cater-tool-ielt9.css">
     <![endif]-->
 
     {{{block "css"}}}
@@ -98,12 +99,12 @@
                   Contact us: <strong class="phone-number">{{phoneNumber config.phone.support}}</strong>
               </li>
             </ul>
+            {{{block "navbar-stuff"}}}
+
             {{#if user.id}}
             <ul class="nav navbar-nav navbar-right">
               {{#contains user.groups 'restaurant'}}
                 <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
-              {{else}}
-                <li><a href="/restaurants" class="btn-link">Home</a></li>
               {{/contains}}
               {{#if session.oldUser}}
               <li>
@@ -121,9 +122,24 @@
                   <li><a href="/users/me">My Settings</a></li>
                   <li><a href="/users/me/orders">My Orders</a></li>
                   <li><a href="/auth/logout">Logout</a></li>
+                  {{#contains user.groups 'restaurant'}}
+                    <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
+                  {{else}}
+                    <li><a href="/restaurants" class="btn-link">Home</a></li>
+                  {{/contains}}
                 </ul>
               </li>
             </ul>
+
+            <a href="/users/me/rewards" class="gb-points-indicator">
+              <div class="points-wrapper">
+                {{#if user.points}}
+                  {{user.points}}
+                {{else}}
+                  0
+                {{/if}}
+              </div>
+            </a>
             {{/if}}
           </div>
         </nav>

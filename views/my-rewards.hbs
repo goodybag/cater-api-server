@@ -1,0 +1,74 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/my-rewards.css">
+{{/extend}}
+
+{{#extend "title"}} - Rewards{{/extend}}
+{{{dump user}}}
+<h1 class="page-title">Rewards</h1>
+
+<div class="page page-rewards container">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="panel">
+        <div class="giftcard-wrapper">
+          <div class="giftcard">$10</div>
+          <div class="card-description">$10 - Walmart</div>
+        </div>
+        <div class="giftcard-wrapper">
+          <div class="giftcard">$10</div>
+          <div class="card-description">$10 - Walmart</div>
+        </div>
+        <div class="giftcard-wrapper">
+          <div class="giftcard">$10</div>
+          <div class="card-description">$10 - Walmart</div>
+        </div>
+        <div class="giftcard-wrapper">
+          <div class="giftcard">$10</div>
+          <div class="card-description">$10 - Walmart</div>
+        </div>
+        <div class="giftcard-wrapper">
+          <div class="giftcard">$10</div>
+          <div class="card-description">$10 - Walmart</div>
+        </div>
+        <div class="giftcard-wrapper">
+          <div class="giftcard">$10</div>
+          <div class="card-description">$10 - Walmart</div>
+        </div>
+        <div class="giftcard-wrapper">
+          <div class="giftcard">$10</div>
+          <div class="card-description">$10 - Walmart</div>
+        </div>
+        <div class="giftcard-wrapper">
+          <div class="giftcard">$10</div>
+          <div class="card-description">$10 - Walmart</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="panel points-panel points-panel-available">
+        <h2>Available Points</h2>
+        <div class="points-available">{{user.points}}</div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Recent Orders</th>
+              <th>Points Earned</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#437 - Clay Pit</td>
+              <td>228</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#extend "scripts"}}
+<script>
+
+</script>
+{{/extend}}

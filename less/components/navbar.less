@@ -93,7 +93,7 @@ body {
   .translate( 0, 0 );
 }
 
-.navbar .nav a {
+.navbar .nav > li > a {
   margin-left: 0;
   margin-right: 0;
   padding: @anchor-padding-top 20px @anchor-padding-bottom;
@@ -104,7 +104,7 @@ body {
   .transition-property( padding );
 }
 
-.navbar .nav a:hover,
+.navbar .nav > li > a:hover,
 .navbar .nav .active a {
   background: darken( @navbar-bg-color, 5% );
 }
@@ -244,7 +244,7 @@ body {
     margin-top: 20px;
   }
 
-  .navbar .nav a {
+  .navbar .nav > li > a {
     display: block;
     padding: @anchor-padding-top (@gutter-width / 2) @anchor-padding-bottom;
   }

@@ -1,0 +1,31 @@
+.giftcard-wrapper {
+  text-align: center;
+  float: left;
+  width: 50%;
+  margin-bottom: 40px;
+}
+
+/**
+ * Maybe a smidgen over-qualified, but I just want to make sure
+ * I'm only targeting the child column of page
+ */
+.page > .row > .col-lg-8 > .panel {
+  display: table;
+  width: 100%;
+  padding-top: 80px;
+}
+
+.points-panel h2 {
+  text-align: center;
+  font-size: 21px;
+}
+
+.points-panel .points-available {
+  text-align: center;
+  font-size: 40px;
+}
+
+.points-panel .table tr > th:last-child,
+.points-panel .table tr > td:last-child {
+  text-align: right;
+}

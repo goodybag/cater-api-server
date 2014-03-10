@@ -1,7 +1,7 @@
 <div class="panel menu-order-params">
-  {{#with order}}
   <div class="panel-body">
     <div class="panel-title">Your order is for:</div>
+    {{#with order}}
     <dl>
       <dt>Zip:</dt>
       <dd>{{#if zip}}{{zip}}{{else}}--{{/if}}</dd>
@@ -15,6 +15,7 @@
         <a class="btn-change-order-params pull-right {{#eq ../edit_token edit_token}}hide{{/eq}}" href="#">Change</a>
       </dd>
     </dl>
+    {{/with}}
+  {{> menu_share_link }}
   </div>
-  {{/with}}
 </div>

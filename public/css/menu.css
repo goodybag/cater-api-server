@@ -68,6 +68,10 @@
   font-weight: bold;
 }
 
+.menu-share-link {
+  margin-top: 20px;
+}
+
 .menu-share-link .description {
   margin-top: 20px;
 }
@@ -168,13 +172,13 @@
   font-weight: 300;
 }
 /**
- * For restaurant's without description, let name take 
+ * For restaurant's without description, let name take
  * full container height
  */
 .restaurant-header .restaurant-header-name-full {
   display: table-cell;
   vertical-align: middle;
-  height: 100px; 
+  height: 100px;
 }
 
 .restaurant-header .restaurant-header-description {
@@ -199,7 +203,7 @@
   .restaurant-header .restaurant-header-name {
     font-size: 20px;
     vertical-align: middle;
-    text-align: left; 
+    text-align: left;
     display: table-cell;
     height: 50px;
   }

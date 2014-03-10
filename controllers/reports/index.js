@@ -17,7 +17,7 @@ var quoteVal = function(val) {
   return val ? '"'+val+'"' : '';
 }
 
-var Reports = {
+var reports = {
 
   dateFormat: 'MM-DD-YYYY hh:mm a',
 
@@ -71,12 +71,12 @@ var Reports = {
 
     models.Order.find(query, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      utils.each(results, function(order) {
+      results.forEach( function(order) {
         order = order.attributes;
         res.write(utils.map([
           order.id
-        , moment(order.created_at).format(Reports.dateFormat)
-        , moment(order.datetime).format(Reports.dateFormat)
+        , moment(order.created_at).format(reports.dateFormat)
+        , moment(order.datetime).format(reports.dateFormat)
         , dollars(order.sub_total)
         , dollars(order.restaurant.delivery_fee)
         , dollars( (order.sub_total + order.restaurant.delivery_fee) * config.taxRate)
@@ -120,7 +120,7 @@ var Reports = {
 
     models.User.find(query, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      utils.each(results, function(user) {
+      results.forEach( function(user) {
         user = user.attributes;
 
         // break name apart if possible
@@ -141,4 +141,4 @@ var Reports = {
   }
 }
 
-module.exports = Reports;
+module.exports = reports;

@@ -22,6 +22,8 @@ config.defaults = {
 
 , salesTax: 1.0825
 
+, taxRate: .0825
+
 , logging: {
     enabled: true
   , transports: {
@@ -43,6 +45,13 @@ config.defaults = {
 
 , expires: {
     shareLink: 1 // day
+
+, facebook: {
+    pixel: {
+      checkout: '6014846877254'
+    , register: '6014846856854'
+    , restaurantList: '6014846900654'
+    }
   }
 
 , yelp: {

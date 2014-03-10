@@ -16,10 +16,10 @@ utils.extend( m, require('dirac-middleware') );
 
 module.exports.register = function(app) {
 
-  app.before( m.queryParams(), function( app ){
+  app.before( m.analytics, m.queryParams(), function( app ){
     app.get('/', controllers.auth.index);
     app.get('/login', controllers.auth.login);
-    app.post('/login', m.analytics, controllers.auth.login);
+    app.post('/login', controllers.auth.login);
     app.get('/join', controllers.auth.registerView);
     app.post('/join', controllers.auth.register);
 
@@ -394,6 +394,25 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET');
     res.send(405);
   });
+
+  /**
+   * Reporting resource
+   */
+
+  app.get('/reports'
+  , m.restrict(['admin'])
+  , controllers.reports.index
+  );
+
+  app.post('/reports/orders'
+  , m.restrict(['admin'])
+  , controllers.reports.ordersCsv
+  );
+
+  app.post('/reports/users'
+  , m.restrict(['admin'])
+  , controllers.reports.usersCsv
+  );
 
   /**
    *  Auth page resource.  Simple static login/register page.

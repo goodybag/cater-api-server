@@ -22,7 +22,7 @@ define(function(require){
 
   var $ = require('jquery');
 
-  require('/components/bootstrap/js/dropdown.js');
+  require('bootstrap');
 
   $.fn.navbar = function( options ){
     var $window = $(window);

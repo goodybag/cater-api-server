@@ -55,7 +55,6 @@
     , {name: 'pickadate',         location: '../../components/pickadate/lib',             main: 'picker.date.js'}
     , {name: 'pickatime',         location: '../../components/pickadate/lib',             main: 'picker.time.js'}
     , {name: 'bootstrap',         location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
-    // , {name: 'dropdown',          location: '../../components/bootstrap/js',              main: 'dropdown.js'}
     , {name: 'select2',           location: '../../components/select2',                   main: 'select2.js'}
 
     , {name: 'config',            location: '../app',                                     main: 'config.js'}
@@ -138,11 +137,7 @@
         deps: ['hbs']
       }
     , fullcalendar: {
-        deps: ['jquery']
-      }
-    , '/components/bootstrap/js/dropdown.js': {
-        deps: ['jquery']
-      }
+        deps: ['jquery'] }
     }
   // , hbs: {
   //     disableI18n: true

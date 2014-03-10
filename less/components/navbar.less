@@ -223,7 +223,8 @@ body {
     width: 100%;
   }
 
-  .navbar.collapsed .nav {
+  .navbar.collapsed .nav,
+  .navbar.collapsed .gb-points-indicator {
     display: none;
   }
 
@@ -247,5 +248,18 @@ body {
   .navbar .nav > li > a {
     display: block;
     padding: @anchor-padding-top (@gutter-width / 2) @anchor-padding-bottom;
+  }
+
+  .navbar .navbar-right {
+    margin-top: 40px!important;
+    z-index: 1;
+  }
+
+  .navbar .navbar-right .dropdown-menu {
+    margin-left: -12px;
+  }
+
+  .navbar .gb-points-indicator {
+    clear: both;
   }
 }

@@ -9,6 +9,7 @@
     </a>
 
     {{#if user.id}}
+      <button class="navbar-toggle btn btn-default">Hamburger</button>
       <ul class="nav navbar-nav navbar-right">
         {{#contains user.groups 'restaurant'}}
           <li><a href="/restaurants/manage" class="btn-link">Home</a></li>

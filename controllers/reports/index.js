@@ -122,11 +122,16 @@ var Reports = {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       utils.each(results, function(user) {
         user = user.attributes;
-        var idx = (user.name||'').indexOf(' ');
+
+        // break name apart if possible
+        var idx = (user.name||'').indexOf(' ')
+          , first = (idx >= 0) ? user.name.substring(0, idx) : user.name
+          , last = (idx >= 0) ? user.name.substring(idx+1) : '';
+
         res.write(utils.map([
           user.email
-        , user.name ? user.name.slice(0, idx) : ''
-        , user.name ? user.name.slice(idx+1) : ''
+        , first
+        , last
         , user.organization
         ], quoteVal).join(',') + '\n');
       });

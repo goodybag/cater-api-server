@@ -19,8 +19,10 @@
   <dd>{{dollars order.restaurant.delivery_fee}}</dd>
   <dt>Tax:</dt>
   <dd>{{tax order.sub_total order.restaurant.delivery_fee}}</dd>
+  {{#dneq step 1}}
   <dt>Tip:</dt>
   <dd>{{dollars order.tip}}</dd>
+  {{/dneq}}
   <dt class="total">Total:</dt>
   <dd class="total">{{total order.sub_total order.restaurant.delivery_fee order.tip}}</dd>
 </dl>

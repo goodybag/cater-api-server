@@ -15,14 +15,20 @@
   padding-top: 80px;
 }
 
-.points-panel h2 {
+.points-panel {
   text-align: center;
+}
+
+.points-panel h2 {
   font-size: 21px;
 }
 
 .points-panel .points-available {
-  text-align: center;
   font-size: 40px;
+}
+
+.points-panel .table {
+  text-align: left;
 }
 
 .points-panel .table tr > th:last-child,

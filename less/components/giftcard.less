@@ -1,0 +1,53 @@
+///////////////
+// Gift Card //
+///////////////
+//
+// Usage:
+// <div class="giftcard">$10</div>
+//
+
+@card-width:          224px;
+@card-height:         140px;
+@card-default-color:  #e84646;
+
+.giftcard-brand( @color ){
+  background-color: @color;
+  border-bottom: solid 2px darken( @color, 22% );
+}
+
+.giftcard {
+  display: inline-block;
+  width: @card-width;
+  padding-top: @card-height / 2;
+  padding-bottom: @card-height / 2;
+  border-radius: 8px;
+  line-height: 0;
+  font-size: 44px;
+  color: @white;
+  text-align: center;
+  font-weight: @light;
+  text-shadow: 0 -1px 0 rgba( 0, 0, 0, 0.2 );
+  .giftcard-brand( @card-default-color );
+}
+
+.giftcard:before,
+.giftcard:after {
+  content: "";
+  position: absolute;
+  width: 46px;
+  height: 52px;
+}
+
+.giftcard:before {
+  bottom: 0;
+  left: 0;
+  background: url('/img/giftcard-gloss-dark.png');
+  .opacity( 0.09 );
+}
+
+.giftcard:after {
+  top: 0;
+  right: 0;
+  background: url('/img/giftcard-gloss-light.png');
+  .opacity( 0.2 );
+}

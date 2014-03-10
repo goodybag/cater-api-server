@@ -55,9 +55,10 @@ module.exports = function(grunt) {
   , less: {
       compile: {
         files: {
-          "public/dist/landing.css":        "less/core-landing.less"
-        , "public/dist/landing-ielt9.css":  "less/ielt9-landing.less"
-        , "public/dist/cater-tool.css":     "less/core-cater-tool.less"
+          "public/dist/landing.css":            "less/core-landing.less"
+        , "public/dist/landing-ielt9.css":      "less/ielt9-landing.less"
+        , "public/dist/cater-tool.css":         "less/core-cater-tool.less"
+        , "public/dist/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
         }
       }
     }

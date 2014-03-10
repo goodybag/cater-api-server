@@ -45,6 +45,7 @@ config.defaults = {
 
 , expires: {
     shareLink: 1 // day
+  }
 
 , facebook: {
     pixel: {

@@ -767,6 +767,11 @@ module.exports.register = function(app) {
   , m.remove( db.payment_summary_items )
   );
 
+  app.get('/api/orders/:oid/items'
+  , m.restrict(['client', 'admin'])
+  , controllers.orders.orderItems.list
+  );
+
   app.post('/api/orders/:order_id/generate_edit_token'
   , m.restrict(['client', 'admin'])
   , controllers.orders.generateEditToken

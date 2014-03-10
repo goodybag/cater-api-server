@@ -7,6 +7,14 @@ define(function(require, exports, module) {
       if (options && options.orderId) this.orderId = options.orderId;
     },
     url: function() { return '/orders/' + this.orderId + '/items' },
-    model: OrderItem
+    model: OrderItem,
+
+    sync: function(method, model, options) {
+      if( method==='read' ) {
+        options.url = '/api' + model.url();
+      }
+
+      Backbone.sync.call(this, method, model, options);
+    }
   });
 });

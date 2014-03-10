@@ -40,7 +40,6 @@ define( function( require ){
       var orderModal = new Views.OrderModal({
         model:          orderModel
       , el:             '#order-params-modal'
-      , loginNeeded:    !user.get('id')
       , defaultAddress: defaultAddress
       , orderModel:     orderModel
       , restaurant:     restaurant

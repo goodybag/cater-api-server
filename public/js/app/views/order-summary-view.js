@@ -15,6 +15,10 @@ define(function(require, exports, module) {
 
     initialize: function(options) {
       if (this.model) this.setModel(this.model);
+      var this_ = this;
+      setInterval(function() {
+        this_.model.fetch();
+      }, 5000);
     },
 
     setModel: function(model) {

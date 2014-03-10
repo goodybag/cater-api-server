@@ -22,6 +22,8 @@ config.defaults = {
 
 , salesTax: 1.0825
 
+, taxRate: .0825
+
 , logging: {
     enabled: true
   , transports: {

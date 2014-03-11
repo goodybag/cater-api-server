@@ -766,7 +766,11 @@ module.exports.register = function(app) {
   );
 
   app.get('/api/orders/:oid/items'
-  , m.restrict(['client', 'admin'])
+  , m.editOrderAuth
+  , m.exists('creatorId', {
+      then: function(req, res, next) { next(); }
+    , else: m.restrict(['client', 'admin'])
+    })
   , controllers.orders.orderItems.list
   );
 

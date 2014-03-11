@@ -6,6 +6,7 @@ module.exports = {
 , cors: require('./cors')
 , domains: require('./domains')
 , editOrderAuth: require('./edit-order-auth')
+, exists: require('./exists')
 , getUser: require('./get-user')
 , orderParams: require('./order-params')
 , queryParams: require('./query-params')

@@ -99,6 +99,7 @@ config.defaults = {
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
+  , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   }
 
 , phone: {

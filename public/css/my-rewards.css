@@ -5,11 +5,17 @@
   margin-bottom: 40px;
 }
 
+@media screen and (max-width: 768px) {
+  .giftcard-wrapper {
+    width: 100%;
+  }
+}
+
 /**
  * Maybe a smidgen over-qualified, but I just want to make sure
  * I'm only targeting the child column of page
  */
-.page > .row > .col-lg-8 > .panel {
+.page > .row > .col-md-8 > .panel {
   display: table;
   width: 100%;
   padding-top: 80px;
@@ -34,4 +40,10 @@
 .points-panel .table tr > th:last-child,
 .points-panel .table tr > td:last-child {
   text-align: right;
+}
+
+.points-panel .view-all {
+  display: inline-block;
+  margin-top: 8px;
+  margin-bottom: 6px;
 }

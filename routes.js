@@ -494,16 +494,7 @@ module.exports.register = function(app) {
 
   app.get('/users/:uid/rewards'
   , m.restrict(['admin', 'client'])
-  , function( req, res, next ){
-      Models.User.getPendingPoints( req.session.user.id, function( error, points ){
-        if ( error ) return res.error( error );
-
-        req.session.user.pendingPoints = points;
-
-        next();
-      });
-    }
-  , m.view('my-rewards')
+  , controllers.users.rewards.list
   );
 
   /**

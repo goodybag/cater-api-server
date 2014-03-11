@@ -39,8 +39,8 @@ var User = module.exports = Model.extend({
     return this;
   }
 
-, getOrdersWithPendingPoints: function( callback, client ){
-    User.getOrdersWithPendingPoints( this.attributes.id, callback, client );
+, getOrdersWithPendingPoints: function( options, callback, client ){
+    User.getOrdersWithPendingPoints( this.attributes.id, options, callback, client );
     return this;
   }
 
@@ -389,14 +389,20 @@ var User = module.exports = Model.extend({
     });
   }
 
-, getOrdersWithPendingPoints: function( userId, callback, client ) {
-    var query = {
+, getOrdersWithPendingPoints: function( userId, options, callback, client ) {
+    if ( typeof options === 'function' ){
+      callback = options;
+      client = callback;
+      options = {};
+    }
+
+    var query = utils.defaults({
       where: {
         status: {$or: ['submitted', 'accepted', 'delivered']}
       , points_awarded: false
       , user_id: userId
       }
-    };
+    }, options);
 
     return Order.find(query, callback);
   }

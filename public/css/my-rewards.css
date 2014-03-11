@@ -37,13 +37,32 @@
   text-align: left;
 }
 
+.points-panel .table tr > th,
+.points-panel .table tr > td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 .points-panel .table tr > th:last-child,
 .points-panel .table tr > td:last-child {
   text-align: right;
 }
 
+.points-panel .table-striped > tbody > tr:nth-child(odd) > td,
+.points-panel .table-striped > tbody > tr:nth-child(odd) > th {
+  background-color: #EEE;
+}
+
 .points-panel .view-all {
   display: inline-block;
+  padding: 4px 12px 2px;
   margin-top: 8px;
-  margin-bottom: 6px;
+  border: solid 1px #CCC;
+  border-bottom: none;
+  background: #EEE;
+  color: #555;
+  font-size: 13px;
+  text-shadow: 0 1px 0 #fff;
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
 }

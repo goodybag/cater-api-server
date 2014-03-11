@@ -10,38 +10,19 @@
   <div class="row">
     <div class="col-md-8">
       <div class="panel">
+        {{#each cards}}
         <div class="giftcard-wrapper">
-          <div class="giftcard">$10</div>
-          <div class="card-description">$10 - Walmart</div>
+          {{#gt this.amount 10}}
+          <div class="giftcard giftcard-gold">
+          {{else}}
+          <div class="giftcard">
+          {{/gt}}
+            ${{this.amount}}
+            <div class="giftcard-menu"></div>
+          </div>
+          <div class="card-description">{{this.location}}</div>
         </div>
-        <div class="giftcard-wrapper">
-          <div class="giftcard">$10</div>
-          <div class="card-description">$10 - Walmart</div>
-        </div>
-        <div class="giftcard-wrapper">
-          <div class="giftcard">$10</div>
-          <div class="card-description">$10 - Walmart</div>
-        </div>
-        <div class="giftcard-wrapper">
-          <div class="giftcard">$10</div>
-          <div class="card-description">$10 - Walmart</div>
-        </div>
-        <div class="giftcard-wrapper">
-          <div class="giftcard">$10</div>
-          <div class="card-description">$10 - Walmart</div>
-        </div>
-        <div class="giftcard-wrapper">
-          <div class="giftcard">$10</div>
-          <div class="card-description">$10 - Walmart</div>
-        </div>
-        <div class="giftcard-wrapper">
-          <div class="giftcard">$10</div>
-          <div class="card-description">$10 - Walmart</div>
-        </div>
-        <div class="giftcard-wrapper">
-          <div class="giftcard">$10</div>
-          <div class="card-description">$10 - Walmart</div>
-        </div>
+        {{/each}}
       </div>
     </div>
     <div class="col-md-4">

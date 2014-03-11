@@ -150,15 +150,16 @@ define(function(require, exports, module) {
       if (date == null) return true;
       if ( typeof date !== 'string' ) return false;
 
-      if ( !moment(date).isValid() ) return false;
+      date = moment(date);
+      if ( !date.isValid() ) return false;
 
       // Super pro day-parsing
-      var day = moment( date.split(' ')[0] ).day();
+      var day = date.day();
 
       if ( this.get('delivery_times')[ day ].length === 0 ) return false;
 
       var hours = this.get('delivery_times')[ day ];
-      var time = (date.split(' ')[1] + ':00').substring( 0, 8 );
+      var time = date.format('HH:mm:00').substring( 0, 8 );
 
       // is the desired time within any of the windows for that day?
       return _.any( hours, function( openClose ){

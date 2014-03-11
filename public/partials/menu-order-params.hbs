@@ -10,8 +10,8 @@
     <dd>{{#if datetime}}{{timepart datetime}}{{else}}--{{/if}}</dd>
     <dt>Guests:</dt>
     <dd>{{#if guests}}{{guests}}{{else}}--{{/if}}
-      {{!-- Don't let shared link change params --}}
-      <a class="btn-change-order-params pull-right {{#eq ../edit_token edit_token}}hide{{/eq}}" href="#">Change</a>
+      {{!-- hide the change button from shared view --}}
+      <a class="btn-change-order-params pull-right {{#if ../edit_token}}hide{{/if}}" href="#">Change</a>
     </dd>
   </dl>
   {{/with}}

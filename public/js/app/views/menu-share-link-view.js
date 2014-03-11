@@ -1,6 +1,12 @@
 /**
+ * Share Link view
  *
+ * This view can be in three states:
+ *   - Hidden: no order created yet
+ *   - Generate token: order created, but no token set
+ *   - Share token: shows edit token in an input
  */
+
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
@@ -49,11 +55,13 @@ define(function(require, exports, module) {
     generateToken: function(e) {
       var this_ = this;
       e.preventDefault();
-      this.model.generateEditToken(function(err) {
-        if (err)
-          return notify.error(err);
-        this_.showLinkView();
-      });
+      if ( this.model.id ) {
+        this.model.generateEditToken(function(err) {
+          if (err)
+            return notify.error(err);
+          this_.showLinkView();
+        });
+      }
     },
 
     showLinkView: function(token) {
@@ -63,14 +71,13 @@ define(function(require, exports, module) {
       var url = $shareLinkView.find('.share-link').val() + this.model.get('edit_token');
 
       // Show link
-      this.$el.find('.generate-token-view').hide();
+      this.$el.find('.generate-token-view').addClass('hide');
       $shareLink.val(url);
       $shareLinkView.removeClass('hide');
     },
 
     show: function() {
       this.$el.removeClass('hide');
-      this.generateToken();
     },
 
     hide: function() {

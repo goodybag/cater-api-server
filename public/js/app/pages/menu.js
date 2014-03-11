@@ -98,9 +98,9 @@ define( function( require ){
       orderView.render();
 
       var menuOrderParamsView = new Views.MenuOrderParams({
-        el: '.menu-order-params'
-      , model: orderModel
-      , orderModal: orderModal
+        el:           '.menu-order-params'
+      , model:        orderModel
+      , orderModal:   orderModal
       });
 
       var menuShareLinkView = new Views.MenuShareLink({

@@ -2,7 +2,17 @@
  * Control flow based on existence
  * of an object under express `req` object.
  *
- * Example: Checking req.user.name
+ * Example:
+ *
+ * Checking if `req.user.name` exists, run given
+ * middleware function, otherwise next()
+ *
+ * ```
+ * app.use(exists('user.name'), function(req, res, next) { ... })
+ * ```
+ *
+ * or ternary style checking
+ *
  * ```
  * app.use(exists('user.name'), {
  *   then: function(req, res, next) { ... }
@@ -11,7 +21,7 @@
  * ```
  *
  * @param {object} prop - check existence of prop under the request object
- * @param {object} opts - an object containing two functions
+ * @param {object|function} opts - next middleware or an object containing
  *   then - middleware executed if prop exists
  *   else - middleware executed otherwise
  */
@@ -21,6 +31,12 @@ var exists = function( prop, opts ) {
 
   return function(req, res, next) {
     var check = getProperty(req, prop);
+
+    // simple check and run fn
+    if ( typeof opts === 'function')
+      return check ? opts.apply(this, arguments) : next();
+
+    // ternary style
     var noop = function() {};
     opts.then = opts.then || noop;
     opts.else = opts.else || noop;

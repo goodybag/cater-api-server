@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var Handlebars = require('handlebars');
   var utils = require('utils');
+  var config = require('config');
 
   var Backbone = require('backbone');
   var OrderItemSummaryView = require('./order-item-summary-view');
@@ -18,7 +19,7 @@ define(function(require, exports, module) {
       var this_ = this;
       setInterval(function() {
         if ( this_.model.id ) this_.model.orderItems.fetch();
-      }, 5000);
+      }, config.menuRefresh);
     },
 
     setModel: function(model) {

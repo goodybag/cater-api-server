@@ -336,10 +336,10 @@ module.exports.register = function(app) {
 
   app.post('/orders/:oid/items'
   , m.editOrderAuth
-  , function(req, res, next) {
-      if (req.creatorId) return next();
-      m.restrict(['client', 'admin'])(req, res,next);
-    }
+  , m.exists('creatorId', {
+      then: function(req, res, next) { next(); }
+    , else: m.restrict(['client', 'admin'])
+    })
   , controllers.orders.editability
   , controllers.orders.orderItems.add
   );
@@ -357,10 +357,10 @@ module.exports.register = function(app) {
 
   app.put('/orders/:oid/items/:iid'
   , m.editOrderAuth
-  , function(req, res, next) {
-     if (req.creatorId) return next();
-     m.restrict(['client', 'admin'])(req, res, next);
-    }
+  , m.exists('creatorId', {
+      then: function(req, res, next) { next(); }
+    , else: m.restrict(['client', 'admin'])
+    })
   , controllers.orders.editability
   , controllers.orders.orderItems.update
   );

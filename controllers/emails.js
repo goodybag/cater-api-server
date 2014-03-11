@@ -3,7 +3,7 @@ var config  = require('../config');
 
 module.exports.get = function( req, res ){
   var options = {
-    layout:       'emails/layout-gb-update'
+    layout:       'emails/layout'
   , showControls: true
   };
 

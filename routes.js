@@ -62,12 +62,10 @@ module.exports.register = function(app) {
   app.get('/restaurants/:rid'
   , m.editOrderAuth
   , function(req, res, next) {
-      if (req.query.edit) return next();
+      if (req.query.edit) return controllers.restaurants.edit.apply(this, arguments);
       m.restrict(['client', 'admin'])(req, res, next);
     }
   , controllers.restaurants.get);
-
-  app.get('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.edit);
 
   app.put('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
 

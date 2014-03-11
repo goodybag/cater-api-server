@@ -3,9 +3,7 @@
 {{/extend}}
 
 {{#extend "title"}} - Rewards{{/extend}}
-{{{dump user.pendingPoints}}}
-{{{dump pendingOrders}}}
-{{{dump orders}}}
+
 <h1 class="page-title">Rewards</h1>
 
 <div class="page page-rewards container">
@@ -50,6 +48,7 @@
       <div class="panel points-panel points-panel-available">
         <h2>Available Points</h2>
         <div class="points-available">{{user.points}}</div>
+        {{#if orders}}
         <table class="table table-striped">
           <thead>
             <tr>
@@ -58,34 +57,19 @@
             </tr>
           </thead>
           <tbody>
+          {{#each orders}}
             <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
+              <td>#{{this.id}} - {{this.restaurant_name}}</td>
+              <td>{{this.points}}</td>
             </tr>
-            <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
-            </tr>
-            <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
-            </tr>
-            <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
-            </tr>
-            <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
-            </tr>
-            <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
-            </tr>
+          {{/each}}
           </tbody>
         </table>
         <a href="#" class="view-all">View All</a>
+        {{/if}}
       </div>
+
+      {{#if user.pendingPoints}}
       <div class="panel points-panel points-panel-available">
         <h2>Pending Points</h2>
         <div class="points-available">{{user.pendingPoints}}</div>
@@ -97,34 +81,17 @@
             </tr>
           </thead>
           <tbody>
+          {{#each pendingOrders}}
             <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
+              <td>#{{this.id}} - {{this.restaurant_name}}</td>
+              <td>{{this.points}}</td>
             </tr>
-            <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
-            </tr>
-            <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
-            </tr>
-            <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
-            </tr>
-            <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
-            </tr>
-            <tr>
-              <td>#437 - Clay Pit</td>
-              <td>228</td>
-            </tr>
+          {{/each}}
           </tbody>
         </table>
         <a href="#" class="view-all">View All</a>
       </div>
+      {{/if}}
     </div>
   </div>
 </div>

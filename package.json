@@ -8,9 +8,9 @@
     "url": "https://github.com/goodybag/cater-api-server"
   },
   "scripts": {
-    "start": "./node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js && ./node_modules/grunt-cli/bin/grunt namedModules && ./node_modules/grunt-cli/bin/grunt shell:ensureDir && ./bin/check-build.js && ./bin/tasks.js runDeltas && node master",
+    "start": "./node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js && ./node_modules/grunt-cli/bin/grunt namedModules && ./node_modules/grunt-cli/bin/grunt shell:ensureDir && ./bin/tasks.js runDeltas && node master",
     "test": "./node_modules/.bin/mocha --bail",
-    "postinstall": "./node_modules/.bin/bower install"
+    "postinstall": "./node_modules/.bin/bower install && ./bin/check-build.js"
   },
   "namedModules": {
     "underscore": "./node_modules/lodash/lodash.js",

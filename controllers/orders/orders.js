@@ -69,7 +69,7 @@ module.exports.editability = function(req, res, next) {
     if (!order) return res.json(404);
 
     // ensure only tip fields are being adjusted
-    var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) && 
+    var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
                     !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
     var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
     return editable ? next() : res.json(403, 'order not editable');
@@ -299,10 +299,10 @@ module.exports.generateEditToken = function(req, res) {
   };
 
   models.Order.update(query, function(err, order) {
-    if (err || !order.length) 
+    if (err || !order.length)
       return res.error(errors.internal.DB_FAILURE, err);
     else if (order[0].attributes.user_id !== req.session.user.id) {
-      return res.send('wtf');
+      return res.error(errors.auth.NOT_ALLOWED);
     }
     res.send(200, order[0]);
   });

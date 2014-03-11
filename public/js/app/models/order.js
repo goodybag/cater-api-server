@@ -344,7 +344,7 @@ define(function(require, exports, module) {
           return callback(errorThrown);
         },
         success: function(data, textstatus, jqXHR) {
-          this_.set(data);
+          this_.set(data.attributes);
           return callback(null, data);
         }
       });

@@ -62,12 +62,10 @@ module.exports.current = function(req, res, next) {
 
 module.exports.get = function(req, res, next) {
   // Load up the menu page with the specified order
-  var isAdmin = req.user && utils.contains(req.user.attributes.groups, 'admin');
-  console.log(isAdmin);
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
-    if (!isAdmin && !order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
+    if (!req.user.isAdmin && !order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
     // if (order.status === 'pending') return res.redirect('/restaurants/' + req.params.rid);
     order.getOrderItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

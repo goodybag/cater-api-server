@@ -46,10 +46,10 @@ module.exports.list = function( req, res, next ){
   utils.async.parallel( tasks, function( error, results ){
     if ( error ) return res.error( error );
 
-    req.session.user.pendingPoints  = results.pendingPoints;
-    res.locals.pendingOrders        = utils.invoke( results.pendingOrders, 'toJSON' );
-    res.locals.orders               = utils.invoke( results.orders, 'toJSON' );
-    res.locals.cards                = results.cards;
+    req.user.pendingPoints    = results.pendingPoints;
+    res.locals.pendingOrders  = utils.invoke( results.pendingOrders, 'toJSON' );
+    res.locals.orders         = utils.invoke( results.orders, 'toJSON' );
+    res.locals.cards          = results.cards;
 
     res.render('my-rewards');
   });

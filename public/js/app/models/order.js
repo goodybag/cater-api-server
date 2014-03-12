@@ -247,10 +247,11 @@ define(function(require, exports, module) {
       }
 
       // check against restaurant hours
-      var datetime = value.split(' ');
-      var dow = moment(datetime[0]).day();
+      var datetime = moment(value);
+      var dow = datetime.day();
+      var hms = datetime.format('HH:mm:ss'); // 24 hour
       model.restaurant.set('is_bad_delivery_time', !_.find(model.restaurant.get('delivery_times')[dow], function(range) {
-        return datetime[1] >= range[0] && datetime[1] <= range[1];
+        return hms >= range[0] && hms <= range[1];
       }));
 
       model.checkLeadTimes();

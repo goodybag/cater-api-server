@@ -22,6 +22,7 @@ define( function( require ){
       var restaurant      = options.restaurant;
       var defaultAddress  = options.defaultAddress;
       var user            = options.user;
+      var isAdmin         = options.user.get('groups').indexOf('admin') >= 0;
 
       analytics.page('Menu', {restaurant: restaurant.pick('name')});
 
@@ -49,6 +50,7 @@ define( function( require ){
       , orderItems: orderModel.orderItems
       , orderModel: orderModel
       , orderModal: orderModal
+      , isAdmin:    isAdmin
       });
 
       var restaurantMapView = new Views.RestaurantMap({

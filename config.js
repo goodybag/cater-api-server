@@ -376,6 +376,7 @@ config.production = {
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
+  , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   }
 
 , emailEnabled: true

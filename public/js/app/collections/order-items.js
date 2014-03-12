@@ -10,10 +10,7 @@ define(function(require, exports, module) {
     model: OrderItem,
 
     sync: function(method, model, options) {
-      if( method==='read' ) {
-        options.url = '/api' + model.url();
-      }
-
+      options.url = (method === 'read') ? '/api' + model.url() : model.url();
       Backbone.sync.call(this, method, model, options);
     }
   });

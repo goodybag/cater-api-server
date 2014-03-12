@@ -1,8 +1,11 @@
 .giftcard-wrapper {
-  text-align: center;
   float: left;
   width: 50%;
   margin-bottom: 40px;
+}
+
+.giftcard-wrapper .giftcard {
+  margin: 0 auto;
 }
 
 @media screen and (max-width: 768px) {

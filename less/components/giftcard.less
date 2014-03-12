@@ -3,7 +3,14 @@
 ///////////////
 //
 // Usage:
-// <div class="giftcard">$10</div>
+// <div class="giftcard">
+//   <div class="card-info">
+//     <div class="amount">${{this.amount}}</div>
+//     <div class="location">{{this.location}}</div>
+//   </div>
+//   <div class="giftcard-menu"></div>
+// </div>
+//
 //
 
 @card-width:          224px;
@@ -11,21 +18,26 @@
 @card-radius:         8px;
 @card-default-color:  #e84646;
 @card-gold-color:     #E5C74D;
+@card-menu-bg:        #F1F1F1;
+@card-menu-color:     #ccc;
 
 .giftcard-brand( @color ){
   background-color: @color;
   border-bottom: solid 2px darken( @color, 22% );
 
-  &:hover .giftcard-menu {
-    background: darken( @color, 5% );
+  & .menu-primary {
+    background-color: @color;
   }
 }
 
 .giftcard {
   position: relative;
-  display: inline-block;
+  #box > .display();
+  #box > .align( center );
+  #box > .pack( center );
   width: @card-width;
   height: @card-height;
+  padding: 0 12px;
   border-radius: @card-radius;
   color: @white;
   text-align: center;
@@ -34,6 +46,10 @@
   overflow: hidden;
   cursor: pointer;
   .giftcard-brand( @card-default-color );
+}
+
+.giftcard .card-info {
+  #box > .flex( 1 );
 }
 
 .giftcard-gold {
@@ -52,6 +68,12 @@
   width: 46px;
   height: 52px;
   z-index: 2;
+  .transition( 0.2s, ease-out );
+}
+
+.giftcard:hover:before,
+.giftcard:hover:after {
+  .opacity(0);
 }
 
 .giftcard:before {
@@ -68,9 +90,13 @@
   .opacity( 0.2 );
 }
 
-.giftcard > .amount {
+.giftcard .amount {
   font-size: 44px;
+}
 
+.giftcard .location {
+  font-size: 17px;
+  opacity: 0.9;
 }
 
 .giftcard .giftcard-menu {
@@ -81,6 +107,8 @@
   height: 100%;
   z-index: 1;
   border-radius: @card-radius;
+  background: @card-menu-bg;
+  color: @card-menu-color;
   .transition( 0.2s, ease-out );
   .opacity(0);
 }
@@ -88,4 +116,47 @@
 .giftcard:hover .giftcard-menu {
   top: 0;
   .opacity(1);
+}
+
+.giftcard-menu .menu-footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 3px 0 0;
+  font-family: @font-family-serif;
+  font-size: 26px;
+  font-weight: 100;
+  text-transform: uppercase;
+  color: #fff;
+  border: none;
+}
+
+// State
+.giftcard {
+  .state-clicked-once,
+  .state-clicked-twice,
+  .state-unavailable      { display: none; }
+  .state-pre-click        { display: block; }
+
+  &.disabled {
+    .state-pre-click,
+    .state-clicked-once,
+    .state-clicked-twice  { display: none; }
+    .state-unavailable    { display: block; }
+  }
+
+  &.state-clicked-once {
+    .state-pre-click,
+    .state-unavailable,
+    .state-clicked-twice  { display: none; }
+    .state-clicked-once   { display: block; }
+  }
+
+  &.state-clicked-twice {
+    .state-pre-click,
+    .state-unavailable,
+    .state-clicked-once   { display: none; }
+    .state-clicked-twice  { display: block; }
+  }
 }

@@ -383,6 +383,12 @@ define(function(require, exports, module) {
       }
 
       return parseFloat( ( percent / 100 ).toFixed( precision ) );
+    },
+
+    commatize: function( x, options ){
+      var parts = x.toString().split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
     }
   }
 

@@ -256,7 +256,7 @@
   }
 }
 
-#flex {
+#box {
   .display() {
     display: -webkit-box;
     display: -moz-box;
@@ -269,6 +269,13 @@
     -moz-box-align: @orientation;
     -ms-box-align: @orientation;
     box-align: @orientation;
+  }
+
+  .orient( @orientation ){
+    -webkit-box-orient: @orientation;
+    -moz-box-orient: @orientation;
+    -ms-box-orient: @orientation;
+    box-orient: @orientation;
   }
 
   .pack( @orientation ){

@@ -12,14 +12,25 @@
       <div class="panel">
         {{#each cards}}
         <div class="giftcard-wrapper">
-          {{#gt this.amount 10}}
-          <div class="giftcard giftcard-gold">
-          {{else}}
+
+          <div class="giftcard{{!--
+          --}}{{#gt this.amount 10}} giftcard-gold{{/gt}}{{!--
+          --}}{{#gt this.points ../user.points}} disabled{{/gt}}{{!--
+         --}}">
           <div class="giftcard">
-          {{/gt}}
-            <div class="amount">${{this.amount}}</div>
-            <div class="location">{{this.location}}</div>
-            <div class="giftcard-menu"></div>
+            <div class="card-info">
+              <div class="amount">${{this.amount}}</div>
+              <div class="location">{{this.location}}</div>
+            </div>
+            <div class="giftcard-menu">
+              <button class="menu-primary buy-btn state-pre-click">Buy</button>
+              <button class="menu-primary buy-btn state-clicked-once">
+                Buy
+                <span class="once-more">Once more to confirm</span>
+              </button>
+              <div class="menu-primary state-clicked-twice">Thank You</div>
+              <div class="menu-primary state-unavailable">{{commatize this.points}} points needed</div>
+            </div>
           </div>
           {{!-- <div class="card-description">{{this.location}}</div> --}}
         </div>
@@ -29,7 +40,14 @@
     <div class="col-md-4">
       <div class="panel points-panel points-panel-available">
         <h2>Available Points</h2>
-        <div class="points-available">{{user.points}}</div>
+        <div class="points-available">
+          {{#if user.points}}
+            {{user.points}}
+          {{else}}
+            0
+          {{/if}}
+        </div>
+
         {{#if orders}}
         <table class="table table-striped">
           <thead>
@@ -48,6 +66,10 @@
           </tbody>
         </table>
         <a href="#" class="view-all">View All</a>
+        {{else}}
+        <div class="panel-body">
+          <p>You have no points. You can change that by <a href="/restaurants">placing an order!</a></p>
+        </div>
         {{/if}}
       </div>
 

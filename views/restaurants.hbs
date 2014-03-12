@@ -4,6 +4,10 @@
 
 {{#extend "title"}} - Restaurants{{/extend}}
 
+{{#extend "head"}}
+  {{> facebook_pixel config.facebook.pixel.restaurantList }}
+{{/extend}}
+
 <div class="page-restaurants container">
   {{#notEmpty orderParams}}
   <div class="row back-to-results-wrapper">

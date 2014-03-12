@@ -31,11 +31,13 @@ define(function(require){
   var page = {
     init: function( options ){
       var order = options.order;
+      var isAdmin = options.isAdmin;
 
       page.view = new Views.Receipt({
-        el:           '#main'
-      , model:        order
-      , review_token: query.review_token
+        el:               '#main'
+      , model:            order
+      , review_token:     query.review_token
+      , validate:         !isAdmin
       });
 
       order.orderItems.each( function( item ){

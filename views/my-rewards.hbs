@@ -17,10 +17,11 @@
           {{else}}
           <div class="giftcard">
           {{/gt}}
-            ${{this.amount}}
+            <div class="amount">${{this.amount}}</div>
+            <div class="location">{{this.location}}</div>
             <div class="giftcard-menu"></div>
           </div>
-          <div class="card-description">{{this.location}}</div>
+          {{!-- <div class="card-description">{{this.location}}</div> --}}
         </div>
         {{/each}}
       </div>

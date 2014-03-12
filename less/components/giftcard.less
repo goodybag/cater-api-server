@@ -25,11 +25,8 @@
   position: relative;
   display: inline-block;
   width: @card-width;
-  padding-top: @card-height / 2;
-  padding-bottom: @card-height / 2;
+  height: @card-height;
   border-radius: @card-radius;
-  line-height: 0;
-  font-size: 44px;
   color: @white;
   text-align: center;
   font-weight: @light;
@@ -69,6 +66,11 @@
   right: 0;
   background: url('/img/giftcard-gloss-light.png');
   .opacity( 0.2 );
+}
+
+.giftcard > .amount {
+  font-size: 44px;
+
 }
 
 .giftcard .giftcard-menu {

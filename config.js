@@ -72,6 +72,8 @@ config.defaults = {
 
 , outputActivePoolIds: false
 
+, welcomeEmailDelay: (1*60*1000) + (30*1000)
+
 , baseUrl: 'http://cater.goodybag.com'
 
 , amazon: {

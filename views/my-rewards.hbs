@@ -5,31 +5,58 @@
 {{#extend "title"}} - Rewards{{/extend}}
 
 <h1 class="page-title">Rewards</h1>
+<p>Check your latest Reward Point balances and exchange them for prizes!</p>
 
 <div class="page page-rewards container">
   <div class="row">
     <div class="col-md-8">
       <div class="panel">
+        <div class="panel-body">
+          <div class="rewards-description">
+            <p>Hover over a card to view details.<br>After redeeming a card, we will send you a confirmation email.<br>We will deliver your giftcard to you in person!</p>
+            <a href="/rewards" class="btn btn-primary btn-learn-more">Learn more</a>
+          </div>
+        </div>
+
         {{#each cards}}
         <div class="giftcard-wrapper">
 
           <div class="giftcard{{!--
           --}}{{#gt this.amount 10}} giftcard-gold{{/gt}}{{!--
-          --}}{{#gt this.points ../user.points}} disabled{{/gt}}{{!--
+          --}}{{#gt this.cost ../user.points}} disabled{{/gt}}{{!--
          --}}">
-          <div class="giftcard">
             <div class="card-info">
               <div class="amount">${{this.amount}}</div>
               <div class="location">{{this.location}}</div>
             </div>
             <div class="giftcard-menu">
-              <button class="menu-primary buy-btn state-pre-click">Buy</button>
-              <button class="menu-primary buy-btn state-clicked-once">
-                Buy
+              <dl class="points-summary state-pre-click">
+                <dt>Your Points:</dt>
+                <dd>{{commatize ../user.points}}</dd>
+                <dt>Giftcard Cost:</dt>
+                <dd>- {{commatize this.cost}}</dd>
+                <hr>
+                <dt>After Purchase:</dt>
+                <dd>{{commatize this.afterPurchase}}</dd>
+              </dl>
+
+              <dl class="points-summary state-unavailable">
+                <dt>Your Points:</dt>
+                <dd>{{commatize ../user.points}}</dd>
+                <dt>Giftcard Cost:</dt>
+                <dd>- {{commatize this.cost}}</dd>
+                <hr>
+                <dt>After Purchase:</dt>
+                <dd>n/a</dd>
+              </dl>
+
+              <button class="menu-primary redeem-btn state-pre-click">Redeem</button>
+              <button class="menu-primary redeem-btn state-clicked-once">
+                Redeem
                 <span class="once-more">Once more to confirm</span>
               </button>
               <div class="menu-primary state-clicked-twice">Thank You</div>
-              <div class="menu-primary state-unavailable">{{commatize this.points}} points needed</div>
+              <div class="menu-primary state-unavailable">{{commatize this.cost}} points needed</div>
             </div>
           </div>
           {{!-- <div class="card-description">{{this.location}}</div> --}}

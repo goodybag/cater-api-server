@@ -4,11 +4,11 @@
 , { "location": "Boomerang's Gourmet Veggie & Meat Pies", "amount": 10,     "cost": 3000 }
 , { "location": "Fricano's Deli",         "amount": 5,      "cost": 4000 }
 , { "location": "Dos Batos",              "amount": 10,     "cost": 3000 }
-, { "location": "Fricano's Deli",         "amount": 10,     "cost": 4000 }
-, { "location": "Dos Batos",              "amount": 15,     "cost": 3000 }
+, { "location": "Fricano's Deli",         "amount": 10,     "cost": 10000 }
+, { "location": "Dos Batos",              "amount": 15,     "cost": 10000 }
 , { "location": "Fricano's Deli",         "amount": 10,     "cost": 4000 }
 , { "location": "Dos Batos",              "amount": 10,     "cost": 3000 }
-, { "location": "Fricano's Deli",         "amount": 15,     "cost": 4000 }
+, { "location": "Fricano's Deli",         "amount": 15,     "cost": 100000 }
 , { "location": "Dos Batos",              "amount": 10,     "cost": 3000 }
 , { "location": "Fricano's Deli",         "amount": 5,      "cost": 4000 }
 , { "location": "Dos Batos",              "amount": 10,     "cost": 3000 }

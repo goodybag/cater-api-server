@@ -30,13 +30,21 @@ module.exports.list = function( req, res, next ){
 
         cards = cards.toString();
 
-        return done( null, cards ? JSON.parse( cards ) : null );
+        if ( cards ){
+          cards = JSON.parse( cards );
+
+          cards.forEach( function( card ){
+            card.afterPurchase = req.session.user.points - card.cost;
+          });
+        }
+
+        return done( null, cards );
       });
     }
   };
 
   utils.async.parallel( tasks, function( error, results ){
-    if ( error ) return console.log( error ), res.error( error );
+    if ( error ) return res.error( error );
 
     req.session.user.pendingPoints  = results.pendingPoints;
     res.locals.pendingOrders        = utils.invoke( results.pendingOrders, 'toJSON' );

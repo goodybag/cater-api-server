@@ -8,7 +8,6 @@ module.exports = {
 , paymentSummaries: require('./payment-summaries')
 , reports: require('./reports')
 , restaurants: require('./restaurants')
-, rewards: require('./rewards')
 , session: require('./session')
 , statics: require('./statics')
 , users: require('./users')

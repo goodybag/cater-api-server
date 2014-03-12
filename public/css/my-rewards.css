@@ -8,6 +8,18 @@
   margin: 0 auto;
 }
 
+.rewards-description .btn-learn-more {
+  position: absolute;
+  right: 24px;
+  top: 44px;
+}
+
+@media screen and (min-width: 1200px) {
+  .giftcard-wrapper {
+    width: 33.333333333333%;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .giftcard-wrapper {
     width: 100%;
@@ -21,7 +33,11 @@
 .page > .row > .col-md-8 > .panel {
   display: table;
   width: 100%;
-  padding-top: 80px;
+  padding-top: 20px;
+}
+
+.rewards-description {
+  margin-bottom: 80px;
 }
 
 .points-panel {

@@ -24,13 +24,17 @@
           <div class="giftcard{{!--
           --}}{{#gt this.amount 10}} giftcard-gold{{/gt}}{{!--
           --}}{{#gt this.cost ../user.points}} disabled{{/gt}}{{!--
-         --}}">
+         --}}"
+            data-location="{{this.location}}"
+            data-amount="{{this.amount}}"
+            data-cost="{{this.cost}}"
+            >
             <div class="card-info">
               <div class="amount">${{this.amount}}</div>
               <div class="location">{{this.location}}</div>
             </div>
             <div class="giftcard-menu">
-              <dl class="points-summary state-pre-click">
+              <dl class="points-summary state-pre-click state-loading">
                 <dt>Your Points:</dt>
                 <dd>{{commatize ../user.points}}</dd>
                 <dt>Giftcard Cost:</dt>
@@ -59,9 +63,10 @@
               </button>
               <div class="menu-primary state-clicked-twice">Thank You</div>
               <div class="menu-primary state-unavailable">{{commatize this.cost}} points needed</div>
+              <div class="menu-primary state-loading">Loading</div>
             </div>
           </div>
-          {{!-- <div class="card-description">{{this.location}}</div> --}}
+          <div class="card-description">{{commatize this.cost}} points</div>
         </div>
         {{/each}}
       </div>
@@ -131,6 +136,8 @@
 
 {{#extend "scripts"}}
 <script>
-  require(['jquery-loaded'], function(){})
+  require(['app/pages/rewards'], function( page ){
+    page.init();
+  });
 </script>
 {{/extend}}

@@ -51,6 +51,6 @@ module.exports.list = function( req, res, next ){
     res.locals.orders         = utils.invoke( results.orders, 'toJSON' );
     res.locals.cards          = results.cards;
 
-    res.render('my-rewards');
+    res.render('rewards');
   });
 };

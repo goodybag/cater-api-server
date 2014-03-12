@@ -178,12 +178,14 @@
 
 // State
 .giftcard {
+  .state-loading,
   .state-clicked-once,
   .state-clicked-twice,
   .state-unavailable      { display: none; }
   .state-pre-click        { display: block; }
 
   &.disabled {
+    .state-loading,
     .state-pre-click,
     .state-clicked-once,
     .state-clicked-twice  { display: none; }
@@ -191,6 +193,7 @@
   }
 
   &.state-clicked-once {
+    .state-loading,
     .state-pre-click,
     .state-unavailable,
     .state-clicked-twice  { display: none; }
@@ -198,9 +201,18 @@
   }
 
   &.state-clicked-twice {
+    .state-loading,
     .state-pre-click,
     .state-unavailable,
     .state-clicked-once   { display: none; }
     .state-clicked-twice  { display: block; }
+  }
+
+  &.state-loading {
+    .state-clicked-twice,
+    .state-pre-click,
+    .state-unavailable,
+    .state-clicked-once   { display: none; }
+    .state-loading        { display: block; }
   }
 }

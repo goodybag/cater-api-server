@@ -3,7 +3,7 @@ var config  = require('../config');
 
 module.exports.get = function( req, res ){
   var options = {
-    layout:       'emails/layout-gb-update'
+    layout:       'emails/layout'
   , showControls: true
   };
 
@@ -12,7 +12,7 @@ module.exports.get = function( req, res ){
 
 module.exports.post = function( req, res ){
   var options = {
-    layout:       'emails/layout-gb-update'
+    layout: 'emails/layout'
   };
 
   res.render( [ 'emails', req.param('name') ].join('/'), options, function( error, html ){

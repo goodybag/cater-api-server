@@ -72,6 +72,8 @@ config.defaults = {
 
 , outputActivePoolIds: false
 
+, welcomeEmailDelay: (1*60*1000) + (30*1000)
+
 , baseUrl: 'http://cater.goodybag.com'
 
 , amazon: {
@@ -99,6 +101,7 @@ config.defaults = {
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
+  , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   }
 
 , phone: {
@@ -373,6 +376,7 @@ config.production = {
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
+  , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   }
 
 , emailEnabled: true

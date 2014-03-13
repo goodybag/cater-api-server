@@ -338,7 +338,7 @@
   require(['app/pages/receipt', 'app/models/index'], function( page, Models ){
     page.init({
       order: new Models.Order( {{{json order}}} )
-    , isAdmin: {{{isAdmin}}} || false
+    , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
     });
   });
 </script>

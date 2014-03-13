@@ -114,7 +114,7 @@ app.configure(function(){
 
   /**
    * More readable app.all implementation for applying multiple
-   * middlewares so a group of routes
+   * middlewares to a group of routes
    *
    * app.before( m.restrict(), function(){
    *   app.get('/orders', ... );

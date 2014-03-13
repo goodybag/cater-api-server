@@ -16,4 +16,5 @@ module.exports = {
 , queryString: require('./query-string')
 , restaurant: require('./restaurant')
 , after: require('./after')
+, owner: require('./owner')
 };

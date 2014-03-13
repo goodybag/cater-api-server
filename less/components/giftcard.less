@@ -120,6 +120,7 @@
   border-radius: @card-radius;
   background: @card-menu-bg;
   color: @card-menu-color;
+  box-shadow: inset 0 1px 1px rgba( 0, 0, 0, 0.1 );
   .transition( 0.2s, ease-out );
   .opacity(0);
 }
@@ -179,40 +180,54 @@
 // State
 .giftcard {
   .state-loading,
+  .state-error,
   .state-clicked-once,
-  .state-clicked-twice,
+  .state-success,
   .state-unavailable      { display: none; }
   .state-pre-click        { display: block; }
 
   &.disabled {
     .state-loading,
+    .state-error,
     .state-pre-click,
     .state-clicked-once,
-    .state-clicked-twice  { display: none; }
+    .state-success        { display: none; }
     .state-unavailable    { display: block; }
   }
 
   &.state-clicked-once {
     .state-loading,
+    .state-error,
     .state-pre-click,
     .state-unavailable,
-    .state-clicked-twice  { display: none; }
+    .state-success        { display: none; }
     .state-clicked-once   { display: block; }
   }
 
-  &.state-clicked-twice {
+  &.state-success {
     .state-loading,
+    .state-error,
     .state-pre-click,
     .state-unavailable,
     .state-clicked-once   { display: none; }
-    .state-clicked-twice  { display: block; }
+    .state-success        { display: block; }
   }
 
   &.state-loading {
-    .state-clicked-twice,
+    .state-success,
+    .state-error,
     .state-pre-click,
     .state-unavailable,
     .state-clicked-once   { display: none; }
     .state-loading        { display: block; }
+  }
+
+  &.state-error {
+    .state-success,
+    .state-loading,
+    .state-pre-click,
+    .state-unavailable,
+    .state-clicked-once   { display: none; }
+    .state-error          { display: block; }
   }
 }

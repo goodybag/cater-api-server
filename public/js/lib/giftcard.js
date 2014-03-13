@@ -1,11 +1,17 @@
 define(function(require){
   'use strict';
 
-  var $ = require('jquery');
-  var _ = require('lodash');
+  var $       = require('jquery');
+  var _       = require('lodash');
+  var venter  = require('venter');
+  var spinner = require('spinner');
 
   $.fn.giftcard = function( options ){
     var $this = this;
+
+    if ( !options.user ){
+      throw new Error('Missing required property: `user`');
+    }
 
     if ( $this.length > 1 ){
       return $this.each( function(){
@@ -17,12 +23,13 @@ define(function(require){
       states: [
         'pre-click'
       , 'clicked-once'
-      , 'clicked-twice'
+      , 'success'
       , 'unavailable'
       , 'loading'
       ]
     , defaultState: 'pre-click'
     , doubleClickTimeout: 2000
+    , errorTimeout: 4000
     };
 
     options = $.extend( {}, defaults, options );
@@ -42,6 +49,47 @@ define(function(require){
 
     , redeem: function( callback ){
         giftcard.enterState('loading');
+        spinner.start();
+
+        $.ajax({
+          type: 'POST'
+        , url: [ '/api/users', options.user.id, 'rewards' ].join('/')
+        , headers: {
+            'Content-Type': 'application/json'
+          }
+        , data: JSON.stringify({
+            location: giftcard.location
+          , amount:   giftcard.amount
+          , cost:     giftcard.cost
+          })
+
+        , success: function(){
+            giftcard.enterState('success');
+            spinner.stop();
+
+            venter.trigger(
+              'user:points:change'
+            , options.user.points - giftcard.cost
+            , -giftcard.cost
+            );
+
+            $this.trigger(
+              'redeem'
+            , options.user.points - giftcard.cost
+            , -giftcard.cost
+            );
+          }
+
+        , error: function(){
+            giftcard.enterState('error');
+            spinner.stop();
+
+            setTimeout( function(){
+              giftcard.enterState('pre-click');
+            }, options.errorTimeout );
+          }
+        });
+
         return giftcard;
       }
 

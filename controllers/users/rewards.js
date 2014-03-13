@@ -7,7 +7,7 @@ var fs      = require('fs');
 var Models  = require('../../models');
 var utils   = require('../../utils');
 
-module.exports.list = function( req, res, next ){
+module.exports.list = function( req, res ){
   var tasks = {
     'pendingPoints':  Models.User.getPendingPoints.bind( Models.User, req.param('uid') )
 
@@ -53,4 +53,8 @@ module.exports.list = function( req, res, next ){
 
     res.render('rewards');
   });
+};
+
+module.exports.redeem = function( req, res ){
+  res.send(204);
 };

@@ -760,4 +760,14 @@ module.exports.register = function(app) {
     )
   , m.remove( db.payment_summary_items )
   );
+
+  /**
+   * Users
+   */
+
+ app.get('/api/users/:uid/rewards'
+  , m.restrict(['admin', 'client'])
+  , m.owner()
+  , controllers.users.rewards.list
+  );
 }

@@ -18,60 +18,7 @@
           </div>
         </div>
 
-        {{#each cards}}
-        <div class="giftcard-wrapper">
-          <div class="giftcard{{!--
-          --}}{{#gt this.amount 10}} giftcard-gold{{/gt}}{{!--
-          --}}{{#gt this.cost ../user.points}} state-unavailable{{/gt}}{{!--
-         --}}"
-            data-location="{{this.location}}"
-            data-amount="{{this.amount}}"
-            data-cost="{{this.cost}}"
-            >
-            <div class="success-message state-success">
-              <h3>Thanks!</h3>
-              <p>We will send you a confirmation email. All cards will be personally delivered by Goodybag!</p>
-            </div>
-
-            <div class="card-info">
-              <div class="amount">${{this.amount}}</div>
-              <div class="location">{{this.location}}</div>
-            </div>
-            <div class="giftcard-menu">
-              <dl class="points-summary state-pre-click state-clicked-once state-loading state-error">
-                <dt>Your Points:</dt>
-                <dd>{{commatize ../user.points}}</dd>
-                <dt>Giftcard Cost:</dt>
-                <dd>- {{commatize this.cost}}</dd>
-                <hr>
-                <dt>After Purchase:</dt>
-                <dd>{{commatize this.afterPurchase}}</dd>
-              </dl>
-
-              <dl class="points-summary state-unavailable">
-                <dt>Your Points:</dt>
-                <dd>{{commatize ../user.points}}</dd>
-                <dt>Giftcard Cost:</dt>
-                <dd>- {{commatize this.cost}}</dd>
-                <hr>
-                <dt>After Purchase:</dt>
-                <dd>n/a</dd>
-              </dl>
-
-              <button class="menu-primary redeem-btn state-pre-click">Redeem</button>
-              <button class="menu-primary redeem-btn state-clicked-once">
-                Redeem
-                <span class="once-more">Once more to confirm</span>
-              </button>
-              <div class="menu-primary state-success">Thank You</div>
-              <div class="menu-primary state-unavailable">{{commatize this.cost}} points needed</div>
-              <div class="menu-primary state-loading">Loading</div>
-              <div class="menu-primary state-error">Error!</div>
-            </div>
-          </div>
-          <div class="card-description">{{commatize this.cost}} points</div>
-        </div>
-        {{/each}}
+        <div class="giftcards">{{> giftcards}}</div>
       </div>
     </div>
     <div class="col-md-4">
@@ -141,6 +88,10 @@
 <script>
   define('data/user', function(){
     return {{{json user}}};
+  });
+
+  define('data/cards', function(){
+    return {{{json cards}}};
   });
 
   require(['app/pages/rewards'], function( page ){

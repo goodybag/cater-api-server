@@ -63,9 +63,9 @@ module.exports.redeem = function( req, res ){
     return res.error( errors.input.VALIDATION_FAILED );
   }
 
-  Models.User.removePoints( req.param('uid'), req.body.points, function( error ){
+  Models.User.removePoints( req.param('uid'), req.body.cost, function( error ){
     if ( error ) return res.error( errors.internal.DB_FAILURE, error );
-console.log(req.body.points, 'removed');
+
     res.send( 204 );
   });
 };

@@ -362,7 +362,7 @@ var User = module.exports = Model.extend({
         id: userId
       }
     };
-console.log(db.builder.sql( query ));
+
     ( client || db ).query( db.builder.sql( query ), function( error, result, info ) {
       return callback( error, result );
     });

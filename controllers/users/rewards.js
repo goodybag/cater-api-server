@@ -56,5 +56,7 @@ module.exports.list = function( req, res ){
 };
 
 module.exports.redeem = function( req, res ){
-  res.send(204);
+
+
+  Models.User.removePoints( req.param('uid') )
 };

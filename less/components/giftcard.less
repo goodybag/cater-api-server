@@ -34,6 +34,14 @@
     );
   }
 
+  // Kinda hacky, but just to fix this particular state, we don't
+  // show the menu, and the bg is transparent :(
+  &.state-success:hover {
+    background: rgba(
+      red( @color ), green( @color ), blue( @color ), 1
+    );
+  }
+
   & .menu-primary {
     background-color: @color;
   }
@@ -252,6 +260,8 @@ right: 0;
     .state-error,
     .state-pre-click,
     .state-unavailable,
+    .card-info,
+    .giftcard-menu,
     .state-clicked-once   { display: none; }
     .state-success        { display: block; }
   }

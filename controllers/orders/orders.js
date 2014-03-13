@@ -296,6 +296,10 @@ module.exports.generateEditToken = function(req, res) {
   , where: {
       id: req.params.order_id
     }
+  , returning: [
+      '*'
+    , '("orders"."edit_token_expires"::text) as edit_token_expires'
+    ]
   };
 
   models.Order.update(query, function(err, order) {

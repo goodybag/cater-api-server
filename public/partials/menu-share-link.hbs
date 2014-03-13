@@ -13,7 +13,7 @@ The "Share Link" panel can be in one of these states:
   <section class="share-link-view {{#unless order.edit_token}}hide{{/unless}}">
     <p class="description">
     {{#datePassed order.edit_token_expires}}
-      <p class="text-danger">This link has expired!</p>
+      <p class="expired-token text-danger">This link has expired!<a class="btn-regenerate" href="#">Generate a new link?</a></p>
     {{/datePassed}}
     Send this link to others so they can add items too!</p>
     <div class="form-group">

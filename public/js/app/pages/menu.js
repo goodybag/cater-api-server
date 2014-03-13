@@ -24,6 +24,7 @@ define( function( require ){
       var defaultAddress  = options.defaultAddress;
       var user            = options.user;
       var editToken       = options.editToken;
+      var baseUrl         = options.baseUrl;
 
       analytics.page('Menu', {restaurant: restaurant.pick('name')});
 
@@ -108,6 +109,8 @@ define( function( require ){
         el:           '.menu-share-link'
       , editToken:    editToken
       , model:        orderModel
+      , restaurant:   restaurant
+      , baseUrl:      baseUrl
       });
 
       $('.tag-tooltip').tooltip();

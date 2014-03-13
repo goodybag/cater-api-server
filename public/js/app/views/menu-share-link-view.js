@@ -19,6 +19,7 @@ define(function(require, exports, module) {
     events: {
       'click .share-link':          'highlightLink'
     , 'click .btn-generate-token':  'generateToken'
+    , 'click .btn-regenerate':      'generateToken'
     , 'click .learn-more':          'clickLearnMore'
     },
 
@@ -68,7 +69,16 @@ define(function(require, exports, module) {
       // Update link
       var $shareLinkView = this.$el.find('.share-link-view');
       var $shareLink = $shareLinkView.find('.share-link');
-      var url = $shareLinkView.find('.share-link').val() + this.model.get('edit_token');
+      var url = [
+        this.options.baseUrl
+      , '/restaurants/'
+      , this.options.restaurant.get('id')
+      , '?edit_token='
+      , this.model.get('edit_token')
+      ].join('');
+
+      // Hide expired link
+      $shareLinkView.find('.expired-token').remove();
 
       // Show link
       this.$el.find('.generate-token-view').addClass('hide');

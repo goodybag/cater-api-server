@@ -6,15 +6,17 @@
 var utils = require('utils');
 
 module.exports = function( options ){
-  options = utils.defaults( options, {
+  options = utils.defaults( options || {}, {
     param:      'uid'
   , userField:  'id'
   });
 
   return function( req, res, next ){
+    console.log('checking ownership', options);
     if ( !req.user ) return res.send( 401 );
-    if ( req.user.groups.indexOf('admin') > -1 ) return next();
-    if ( req.param( options.param ) == req.user[ options.userField ] ) return next();
+
+    if ( req.user.attributes.groups.indexOf('admin') > -1 ) return next();
+    if ( req.param( options.param ) == req.user.attributes[ options.userField ] ) return next();
 
     return res.send( 401 );
   };

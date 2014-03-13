@@ -34,7 +34,7 @@
               <div class="location">{{this.location}}</div>
             </div>
             <div class="giftcard-menu">
-              <dl class="points-summary state-pre-click state-loading">
+              <dl class="points-summary state-pre-click state-loading state-error">
                 <dt>Your Points:</dt>
                 <dd>{{commatize ../user.points}}</dd>
                 <dt>Giftcard Cost:</dt>
@@ -64,6 +64,7 @@
               <div class="menu-primary state-success">Thank You</div>
               <div class="menu-primary state-unavailable">{{commatize this.cost}} points needed</div>
               <div class="menu-primary state-loading">Loading</div>
+              <div class="menu-primary state-error">Error!</div>
             </div>
           </div>
           <div class="card-description">{{commatize this.cost}} points</div>

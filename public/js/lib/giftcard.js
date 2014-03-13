@@ -26,6 +26,7 @@ define(function(require){
       , 'success'
       , 'unavailable'
       , 'loading'
+      , 'error'
       ]
     , defaultState: 'pre-click'
     , doubleClickTimeout: 2000
@@ -67,17 +68,21 @@ define(function(require){
             giftcard.enterState('success');
             spinner.stop();
 
-            venter.trigger(
-              'user:points:change'
-            , options.user.points - giftcard.cost
-            , -giftcard.cost
-            );
+            options.user.points -= giftcard.cost;
 
-            $this.trigger(
-              'redeem'
-            , options.user.points - giftcard.cost
-            , -giftcard.cost
-            );
+            venter.trigger( 'user:points:change', {
+              user:         options.user
+            , cost:         giftcard.cost
+            , location:     giftcard.location
+            , amount:       giftcard.amount
+            });
+
+            $this.trigger( 'redeem', {
+              user:         options.user
+            , cost:         giftcard.cost
+            , location:     giftcard.location
+            , amount:       giftcard.amount
+            });
           }
 
         , error: function(){

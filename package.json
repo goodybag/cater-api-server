@@ -16,6 +16,7 @@
     "underscore": "./node_modules/lodash/lodash.js",
     "backbone": "./public/components/backbone/backbone.js",
     "config": "./config.js",
+    "errors": "./errors.js",
     "utils": "./public/js/lib/utils.js"
   },
   "dependencies": {

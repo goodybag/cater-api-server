@@ -12,7 +12,6 @@ module.exports = function( options ){
   });
 
   return function( req, res, next ){
-    console.log('checking ownership', options);
     if ( !req.user ) return res.send( 401 );
 
     if ( req.user.attributes.groups.indexOf('admin') > -1 ) return next();

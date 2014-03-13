@@ -768,6 +768,6 @@ module.exports.register = function(app) {
   app.post('/api/users/:uid/rewards'
   , m.restrict(['admin', 'client'])
   , m.owner()
-  , controllers.users.rewards.list
+  , controllers.users.rewards.redeem
   );
 }

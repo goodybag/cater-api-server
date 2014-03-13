@@ -6,6 +6,7 @@ var path    = require('path');
 var fs      = require('fs');
 var Models  = require('../../models');
 var utils   = require('../../utils');
+var errors  = require('../../errors');
 
 module.exports.list = function( req, res ){
   var tasks = {
@@ -46,17 +47,25 @@ module.exports.list = function( req, res ){
   utils.async.parallel( tasks, function( error, results ){
     if ( error ) return res.error( error );
 
-    req.user.pendingPoints    = results.pendingPoints;
-    res.locals.pendingOrders  = utils.invoke( results.pendingOrders, 'toJSON' );
-    res.locals.orders         = utils.invoke( results.orders, 'toJSON' );
-    res.locals.cards          = results.cards;
+    res.locals.user.pendingPoints = results.pendingPoints;
+    res.locals.pendingOrders      = utils.invoke( results.pendingOrders, 'toJSON' );
+    res.locals.orders             = utils.invoke( results.orders, 'toJSON' );
+    res.locals.cards              = results.cards;
 
     res.render('rewards');
   });
 };
 
 module.exports.redeem = function( req, res ){
+  var required = [ 'amount', 'cost', 'location' ];
 
+  if ( utils.intersection( required, Object.keys( req.body ) ).length !== required.length ){
+    return res.error( errors.input.VALIDATION_FAILED );
+  }
 
-  Models.User.removePoints( req.param('uid') )
+  Models.User.removePoints( req.param('uid'), req.body.points, function( error ){
+    if ( error ) return res.error( errors.internal.DB_FAILURE, error );
+console.log(req.body.points, 'removed');
+    res.send( 204 );
+  });
 };

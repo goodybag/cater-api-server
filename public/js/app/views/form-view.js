@@ -100,7 +100,7 @@ define(function(require, exports, module) {
         patch: true,
         wait: true,
         singleError: false,
-        validate: (this.options.validate !== undefined) ? this.options.validate : true , // bypass client validation
+        validate: typeof this.options.validate !== 'boolean' ? true : this.options.validate, // bypass client validation
         success: function(model, response, options) {
           view.$el.find(view.submitSelector).addClass('hide');
           view.trigger('save:success', response, view);

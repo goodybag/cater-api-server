@@ -247,11 +247,10 @@ define(function(require, exports, module) {
       }
 
       // check against restaurant hours
-      var datetime = moment(value);
-      var dow = datetime.day();
-      var hms = datetime.format('HH:mm:ss'); // 24 hour
+      var datetime = value.split(' ');
+      var dow = moment(datetime[0]).day();
       model.restaurant.set('is_bad_delivery_time', !_.find(model.restaurant.get('delivery_times')[dow], function(range) {
-        return hms >= range[0] && hms <= range[1];
+        return datetime[1] >= range[0] && datetime[1] <= range[1];
       }));
 
       model.checkLeadTimes();
@@ -345,10 +344,7 @@ define(function(require, exports, module) {
           return callback(errorThrown);
         },
         success: function(data, textstatus, jqXHR) {
-          this_.set({
-            edit_token:           data.edit_token
-          , edit_token_expires:   moment(data.edit_token_expires).format('YYYY-MM-DD HH:mm:ss')
-          });
+          this_.set( utils.pick(data, 'edit_token', 'edit_token_expires') );
           return callback(null, data);
         }
       });

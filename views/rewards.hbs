@@ -20,10 +20,9 @@
 
         {{#each cards}}
         <div class="giftcard-wrapper">
-
           <div class="giftcard{{!--
           --}}{{#gt this.amount 10}} giftcard-gold{{/gt}}{{!--
-          --}}{{#gt this.cost ../user.points}} disabled{{/gt}}{{!--
+          --}}{{#gt this.cost ../user.points}} state-unavailable{{/gt}}{{!--
          --}}"
             data-location="{{this.location}}"
             data-amount="{{this.amount}}"
@@ -34,7 +33,7 @@
               <div class="location">{{this.location}}</div>
             </div>
             <div class="giftcard-menu">
-              <dl class="points-summary state-pre-click state-loading state-error">
+              <dl class="points-summary state-pre-click state-clicked-once state-loading state-error">
                 <dt>Your Points:</dt>
                 <dd>{{commatize ../user.points}}</dd>
                 <dt>Giftcard Cost:</dt>

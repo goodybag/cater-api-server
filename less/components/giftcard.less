@@ -66,7 +66,7 @@
   .giftcard-brand( @card-gold-color );
 }
 
-.giftcard.disabled {
+.giftcard.state-unavailable {
   .opacity(0.6);
   cursor: no-drop;
 
@@ -76,8 +76,9 @@
   }
 }
 
-.giftcard.disabled:hover {
+.giftcard.state-unavailable:hover {
   border-bottom-color: darken( @card-disabled-color, 22% );
+  .opacity(1);
 }
 
 .giftcard:before,
@@ -153,6 +154,39 @@
   border: none;
 }
 
+.giftcard-menu .once-more {
+  display: inline-block;
+  vertical-align: middle;
+  width: 70px;
+  margin-top: -5px;
+  padding-top: 4px;
+  padding-right: 10px;
+  padding-bottom: 4px;
+  padding-left: 10px;
+  font-size: 11px;
+  text-align: justify;
+  position: relative;
+  box-sizing: content-box;
+}
+
+.giftcard-menu .once-more:before,
+.giftcard-menu .once-more:after {
+  position: absolute;
+  top: -8px;
+  font-size: 36px;
+  font-weight: @light;
+}
+
+.giftcard-menu .once-more:before {
+  content: "(";
+  left: 0;
+}
+
+.giftcard-menu .once-more:after {
+  content: ")";
+right: 0;
+}
+
 .giftcard-menu .points-summary {
   display: table;
   width: 100%;
@@ -195,7 +229,7 @@
   .state-unavailable      { display: none; }
   .state-pre-click        { display: block; }
 
-  &.disabled {
+  &.state-unavailable {
     .state-loading,
     .state-error,
     .state-pre-click,

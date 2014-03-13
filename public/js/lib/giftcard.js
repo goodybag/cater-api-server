@@ -40,6 +40,8 @@ define(function(require){
       init: function(){
         giftcard.state = options.defaultState;
 
+        if ( $this.hasClass('state-unavailable') ) giftcard.state = 'unavailable';
+
         giftcard.location = $this.data('location');
         giftcard.amount   = $this.data('amount');
         giftcard.cost     = $this.data('cost');

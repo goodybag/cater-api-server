@@ -345,7 +345,10 @@ define(function(require, exports, module) {
           return callback(errorThrown);
         },
         success: function(data, textstatus, jqXHR) {
-          this_.set(data);
+          this_.set({
+            edit_token:           data.edit_token
+          , edit_token_expires:   moment(data.edit_token_expires).format('YYYY-MM-DD HH:mm:ss')
+          });
           return callback(null, data);
         }
       });

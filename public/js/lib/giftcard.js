@@ -31,6 +31,7 @@ define(function(require){
     , defaultState: 'pre-click'
     , doubleClickTimeout: 2000
     , errorTimeout: 4000
+    , successTimeout: 4000
     };
 
     options = $.extend( {}, defaults, options );
@@ -69,6 +70,10 @@ define(function(require){
             spinner.stop();
 
             options.user.points -= giftcard.cost;
+
+            setTimeout( function(){
+              giftcard.enterState('pre-click');
+            }, options.successTimeout );
 
             venter.trigger( 'user:points:change', {
               user:         options.user

@@ -26,6 +26,14 @@
   background-color: @color;
   border-bottom: solid 2px darken( @color, 22% );
 
+  &:hover {
+    // Fade the background color out so we don't get rounded corner
+    // backgroudn bleed-through on the menu hover
+    background: rgba(
+      red( @color ), green( @color ), blue( @color ), 0
+    );
+  }
+
   & .menu-primary {
     background-color: @color;
   }
@@ -47,6 +55,7 @@
   overflow: hidden;
   cursor: pointer;
   .giftcard-brand( @card-default-color );
+  .transition( 0.2s, linear );
 }
 
 .giftcard .card-info {

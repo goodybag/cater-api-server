@@ -49,7 +49,7 @@ define( function( require ){
       , orderItems: orderModel.orderItems
       , orderModel: orderModel
       , orderModal: orderModal
-      , isAdmin:    user.attributes.isAdmin
+      , isAdmin:    user.attributes.groups.indexOf('admin') >= 0
       });
 
       var restaurantMapView = new Views.RestaurantMap({

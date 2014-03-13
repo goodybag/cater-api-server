@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var Handlebars = require('handlebars');
   var utils = require('utils');
+  var config = require('config');
 
   var Backbone = require('backbone');
   var OrderItemSummaryView = require('./order-item-summary-view');
@@ -15,6 +16,10 @@ define(function(require, exports, module) {
 
     initialize: function(options) {
       if (this.model) this.setModel(this.model);
+      var this_ = this;
+      setInterval(function() {
+        if ( this_.model.id ) this_.model.orderItems.fetch();
+      }, config.menuRefresh);
     },
 
     setModel: function(model) {
@@ -26,7 +31,11 @@ define(function(require, exports, module) {
     render: function(){
       var this_ = this;
 
-      this.$el.html( this.template({ order: this.model.toJSON() }) );
+      var html = this.template({
+        order: this.model.toJSON()
+      , edit_token: this.options.editToken
+      });
+      this.$el.html( html );
       this.$tbody = this.$el.find('.order-table tbody');
 
       this.delegateEvents();

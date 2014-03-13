@@ -55,16 +55,30 @@
 }
 
 /**
- * Menu order params
+ * Menu panels
  */
 
 .menu-order-params {
   font-size: 13px;
 }
 
-.menu-order-params .panel-title {
+.menu-order-params .panel-title,
+.menu-share-link .panel-title {
   font-size: 16px;
   font-weight: bold;
+}
+
+.menu-share-link {
+  margin-top: 20px;
+}
+
+.menu-share-link .description {
+  margin-top: 20px;
+}
+
+.menu-share-link a.learn-more {
+  float: right;
+  color: #999;
 }
 
 .menu-order-params dl {
@@ -158,13 +172,13 @@
   font-weight: 300;
 }
 /**
- * For restaurant's without description, let name take 
+ * For restaurant's without description, let name take
  * full container height
  */
 .restaurant-header .restaurant-header-name-full {
   display: table-cell;
   vertical-align: middle;
-  height: 100px; 
+  height: 100px;
 }
 
 .restaurant-header .restaurant-header-description {
@@ -189,7 +203,7 @@
   .restaurant-header .restaurant-header-name {
     font-size: 20px;
     vertical-align: middle;
-    text-align: left; 
+    text-align: left;
     display: table-cell;
     height: 50px;
   }

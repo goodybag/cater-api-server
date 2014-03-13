@@ -12,6 +12,7 @@ define( function( require ){
   , OrderModal:         require('app/views/order-modal')
   , RestaurantMap:      require('app/views/restaurant-map-view')
   , MenuOrderParams:    require('app/views/menu-order-params-view')
+  , MenuShareLink:      require('app/views/menu-share-link-view')
   , Menu:               require('app/views/menu-view')
   };
 
@@ -22,6 +23,7 @@ define( function( require ){
       var restaurant      = options.restaurant;
       var defaultAddress  = options.defaultAddress;
       var user            = options.user;
+      var editToken       = options.editToken;
 
       analytics.page('Menu', {restaurant: restaurant.pick('name')});
 
@@ -38,7 +40,6 @@ define( function( require ){
       var orderModal = new Views.OrderModal({
         model:          orderModel
       , el:             '#order-params-modal'
-      , loginNeeded:    !user.get('id')
       , defaultAddress: defaultAddress
       , orderModel:     orderModel
       , restaurant:     restaurant
@@ -68,6 +69,7 @@ define( function( require ){
       , itemModalView:      itemModalView
       , orderParams:        orderParams
       , restaurantMapView:  restaurantMapView
+      , editToken:          editToken
       });
 
       orderModel.orderItems.each( function( item ){
@@ -97,9 +99,15 @@ define( function( require ){
       orderView.render();
 
       var menuOrderParamsView = new Views.MenuOrderParams({
-        el: '.menu-order-params'
-      , model: orderModel
-      , orderModal: orderModal
+        el:           '.menu-order-params'
+      , model:        orderModel
+      , orderModal:   orderModal
+      });
+
+      var menuShareLinkView = new Views.MenuShareLink({
+        el:           '.menu-share-link'
+      , editToken:    editToken
+      , model:        orderModel
       });
 
       $('.tag-tooltip').tooltip();

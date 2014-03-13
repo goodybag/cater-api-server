@@ -67,7 +67,8 @@ define(function(require, exports, module) {
       var data = {
         quantity:     parseInt( this.$el.find('.item-quantity').val() ),
         notes:        (this.$el.find('.form-group-item-notes textarea').val()||'').trim() || null,
-        recipient:    (this.$el.find('.form-group-item-recipient input').val()||'') || null
+        recipient:    (this.$el.find('.form-group-item-recipient input').val()||'') || null,
+        edit_token:   this.options.orderModel.attributes.edit_token
       };
 
       if (data.quantity <= 0) {

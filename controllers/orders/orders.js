@@ -42,6 +42,7 @@ module.exports.auth = function(req, res, next) {
     if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
     var reviewToken = req.query.review_token || req.body.review_token;
+    var editToken = req.query.edit_token || req.body.edit_token;
 
     // allow restaurant user to view orders at their own restaurant
     if (req.user
@@ -52,7 +53,9 @@ module.exports.auth = function(req, res, next) {
       return next();
     }
 
-    if (order.attributes.user_id !== (req.session.user||0).id && order.attributes.review_token !== reviewToken)
+    if (order.attributes.user_id !== (req.session.user||0).id &&
+        order.attributes.review_token !== reviewToken &&
+        order.attributes.edit_token !== editToken)
       return res.status(404).render('404');
 
     req.order.isOwner = true;
@@ -283,6 +286,31 @@ module.exports.listStatus = function(req, res) {
     }
   );
 }
+
+module.exports.generateEditToken = function(req, res) {
+  var query = {
+    updates: {
+      edit_token: utils.uuid.v4()
+    , edit_token_expires: moment().add('days', config.expires.shareLink).format('YYYY-MM-DD HH:mm:ss')
+    }
+  , where: {
+      id: req.params.order_id
+    }
+  , returning: [
+      '*'
+    , '("orders"."edit_token_expires"::text) as edit_token_expires'
+    ]
+  };
+
+  models.Order.update(query, function(err, order) {
+    if (err || !order.length)
+      return res.error(errors.internal.DB_FAILURE, err);
+    else if (order[0].attributes.user_id !== req.session.user.id) {
+      return res.error(errors.auth.NOT_ALLOWED);
+    }
+    res.send(200, order[0]);
+  });
+};
 
 module.exports.changeStatus = function(req, res) {
   var TAGS = ['orders-change-status'];

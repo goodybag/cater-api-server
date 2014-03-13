@@ -43,6 +43,10 @@ config.defaults = {
     poolSize: 5
   }
 
+, expires: {
+    shareLink: 1 // day
+  }
+
 , facebook: {
     pixel: {
       checkout: '6014846877254'

@@ -15,10 +15,13 @@ define(function(require, exports, module) {
     template: Handlebars.partials.item_modal,
 
     render: function() {
+      var order = this.options.orderModel.toJSON();
+
       var context = {
         item:     this.model.toJSON(),
-        order:    this.options.orderModel.toJSON(),
-        inOrder:  this.model instanceof OrderItem
+        order:    order,
+        inOrder:  this.model instanceof OrderItem,
+        editable: this.options.isAdmin || order.editable
       };
 
       this.$el.html( this.template( context ) );
@@ -45,7 +48,7 @@ define(function(require, exports, module) {
     submit: function(e) {
       e.preventDefault();
       var this_ = this;
-      if ( !this.options.orderModel.isFulfillableOrder() ) {
+      if ( !this.options.isAdmin && !this.options.orderModel.isFulfillableOrder() ) {
         return this.options.orderModal.show({
           success: function(model, response, options) {
             model.trigger('change:orderparams');
@@ -87,6 +90,7 @@ define(function(require, exports, module) {
       if (orderItem){
         orderItem.save(data, {
           wait: true,
+          validate: !this.options.isAdmin,
           success: function(){
             this_.trigger('submit:success');
           }

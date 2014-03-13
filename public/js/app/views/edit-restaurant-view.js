@@ -225,7 +225,7 @@ define(function(require, exports, module) {
     onChange: _.debounce( function(e) {
       this.$el.find('.form-control').parent().removeClass('has-success');
       var diff = FormView.prototype.onChange.apply(this, arguments);
-      if (Object.keys(diff).length > 0) {
+      if (diff !== null && Object.keys(diff).length > 0) {
         var changed = _.values(_.pick(this.fieldMap, _.keys(diff))).join(', ');
         this.$el.find(changed).parent().filter(':not(.has-error)').addClass('has-success');
         this.setState('pending');

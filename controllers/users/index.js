@@ -187,3 +187,4 @@ module.exports.returnSession = function(req, res) {
 
 module.exports.passwordResets = require('./password-resets');
 module.exports.addresses = require('./addresses');
+module.exports.favorites = require('./favorites');

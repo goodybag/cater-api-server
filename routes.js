@@ -688,6 +688,25 @@ module.exports.register = function(app) {
     })
   );
 
+
+  app.get('/api/users/:user_id/favorites/restaurants'
+  , m.pagination()
+  , m.param('user_id')
+  , m.find( db.favorite_restaurants )
+  );
+
+  app.post('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.queryToBody('user_id')
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.favorite_restaurants)
+  );
+
+  app.del('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.param('user_id')
+  , m.param('restaurant_id')
+  , m.remove( db.favorite_restaurants )
+  );
+
   app.get('/api/restaurants/:restaurant_id/orders'
   , m.pagination()
   , m.param('restaurant_id')

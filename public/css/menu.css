@@ -81,6 +81,10 @@
   color: #999;
 }
 
+.menu-share-link .btn-regenerate {
+  float: right;
+}
+
 .menu-order-params dl {
   margin-top: 20px;
   margin-bottom: 0;

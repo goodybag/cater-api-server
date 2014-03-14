@@ -14,6 +14,7 @@ begin
   , created_at    timestamp not null default now()
   , user_id       int references users(id) on delete cascade
   , restaurant_id int references restaurants(id) on delete cascade
+  , unique (user_id, restaurant_id)
   );
 
 end$$;

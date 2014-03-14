@@ -48,7 +48,9 @@ define(function(require, exports, module) {
     submit: function(e) {
       e.preventDefault();
       var this_ = this;
-      if ( !this.options.isAdmin && !this.options.orderModel.isFulfillableOrder() ) {
+      var noOrder = !this.options.orderModel.id;
+      var unfulfillable = !this.options.isAdmin && !this.options.orderModel.isFulfillableOrder();
+      if ( noOrder ||  unfulfillable ) {
         return this.options.orderModal.show({
           success: function(model, response, options) {
             model.trigger('change:orderparams');

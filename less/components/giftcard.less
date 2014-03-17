@@ -26,7 +26,8 @@
   background-color: @color;
   border-bottom: solid 2px darken( @color, 22% );
 
-  &:hover {
+  &:hover,
+  &.active {
     // Fade the background color out so we don't get rounded corner
     // backgroudn bleed-through on the menu hover
     background: rgba(
@@ -36,7 +37,8 @@
 
   // Kinda hacky, but just to fix this particular state, we don't
   // show the menu, and the bg is transparent :(
-  &.state-success:hover {
+  &.state-success:hover,
+  &.state-success.active {
     background: rgba(
       red( @color ), green( @color ), blue( @color ), 1
     );
@@ -84,7 +86,8 @@
   }
 }
 
-.giftcard.state-unavailable:hover {
+.giftcard.state-unavailable:hover,
+.giftcard.state-unavailable.active {
   border-bottom-color: darken( @card-disabled-color, 22% );
   .opacity(1);
 }
@@ -100,7 +103,9 @@
 }
 
 .giftcard:hover:before,
-.giftcard:hover:after {
+.giftcard:hover:after,
+.giftcard.active:before,
+.giftcard.active:after {
   .opacity(0);
 }
 
@@ -143,7 +148,8 @@
   .opacity(0);
 }
 
-.giftcard:hover .giftcard-menu {
+.giftcard:hover .giftcard-menu,
+.giftcard.active .giftcard-menu {
   top: 0;
   .opacity(1);
 }

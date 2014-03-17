@@ -131,9 +131,12 @@ define(function(require){
 
     , onClick: function( e ){
         if ( giftcard.state === 'pre-click' ){
+          $this.addClass('active');
+
           setTimeout( function(){
             if ( giftcard.state === 'clicked-once' ){
               giftcard.enterState('pre-click');
+              $this.removeClass('active');
             }
           }, options.doubleClickTimeout );
 

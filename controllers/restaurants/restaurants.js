@@ -27,15 +27,10 @@ module.exports.favorites = function(req, res, next) {
   req.dbQuery = req.dbQuery || {};
   req.dbQuery.includes = req.dbQuery.includes || [];
 
-  var
-    userId = req.user.attributes.id
-  , filter = req.query.favorites;
+  var filter = req.query.favorites;
 
   if (filter) {
-    req.dbQuery.includes.push({
-      type:     'favorites'
-    , userId:   userId
-    });
+    // TODO: only show favs..
   }
 
   next();
@@ -49,6 +44,7 @@ module.exports.list = function(req, res) {
   var dbQuery = req.dbQuery || {};
   dbQuery.includes = dbQuery.includes || [];
   dbQuery.includes.push( {type: 'filter_restaurant_events'} );
+  dbQuery.includes.push( {type: 'favorites', userId: req.user.attributes.id} );
 
   if (orderParams.prices)
     orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });

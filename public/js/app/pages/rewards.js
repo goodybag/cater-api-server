@@ -29,7 +29,7 @@ define(function(require){
       $({ points: from }).animate({ points: to }, {
         duration: 1000
       , step: function(){
-          var val = helpers.commatize( Math.round( this.points ) );
+          var val = helpers.commatize( parseInt( this.points ) );
 
           this_.$headerPoints.text( val );
           this_.$sidebarPoints.text( val );

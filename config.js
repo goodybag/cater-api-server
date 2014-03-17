@@ -106,6 +106,7 @@ config.defaults = {
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
+  , rewards: ['john@goodybag.com']
   }
 
 , phone: {

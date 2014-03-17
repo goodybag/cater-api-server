@@ -6,6 +6,7 @@ var path    = require('path');
 var fs      = require('fs');
 var Models  = require('../../models');
 var utils   = require('../../utils');
+var venter  = require('../../lib/venter');
 var errors  = require('../../errors');
 
 module.exports.list = function( req, res ){
@@ -67,5 +68,7 @@ module.exports.redeem = function( req, res ){
     if ( error ) return res.error( errors.internal.DB_FAILURE, error );
 
     res.send( 204 );
+
+    venter.emit( 'reward:redeemed', req.body, req.param('uid') );
   });
 };

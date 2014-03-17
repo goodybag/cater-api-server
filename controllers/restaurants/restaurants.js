@@ -18,20 +18,45 @@ var logger = require('../../logger');
 
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
+/**
+ * Filter by user's favorite restaurants
+ */
+module.exports.favorites = function(req, res, next) {
+
+  // defaults
+  req.dbQuery = req.dbQuery || {};
+  req.dbQuery.includes = req.dbQuery.includes || [];
+
+  var
+    userId = req.user.attributes.id
+  , filter = req.query.favorites;
+
+  if (filter) {
+    req.dbQuery.includes.push({
+      type:     'favorites'
+    , userId:   userId
+    });
+  }
+
+  next();
+}
+
 module.exports.list = function(req, res) {
   var TAGS = ['restaurants-list'];
   logger.routes.info(TAGS, 'listing restaurants');
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
+  var dbQuery = req.dbQuery || {};
+  dbQuery.includes = dbQuery.includes || [];
+  dbQuery.includes.push( {type: 'filter_restaurant_events'} );
 
   if (orderParams.prices)
     orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
 
   var tasks =  [
     function(callback) {
-      var query = { includes: ['filter_restaurant_events'] };
       models.Restaurant.find(
-        query
+        dbQuery
       , utils.extend({ is_hidden: false }
       , orderParams)
       , callback);
@@ -105,7 +130,7 @@ module.exports.get = function(req, res) {
         where: {
           id: parseInt(req.params.rid)
         }
-      , includes: ['closed_restaurant_events']
+      , includes: [ {type: 'closed_restaurant_events'} ]
       };
 
       models.Restaurant.findOne(query, orderParams, function(err, restaurant) {

@@ -102,7 +102,7 @@ app.configure(function(){
       }
     );
 
-    if (this.req.user.attributes.email) {
+    if (this.req.user && this.req.user.attributes && this.req.user.attributes.email) {
       options.intercom = {
         user_hash: crypto.createHmac('sha256', new Buffer(config.intercom.apiSecret, 'utf8')).update(this.req.user.attributes.email).digest('hex')
       };

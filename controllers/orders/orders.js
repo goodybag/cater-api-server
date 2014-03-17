@@ -257,21 +257,30 @@ var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'n
 var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
 
 module.exports.update = function(req, res) {
+
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
+
+    var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;
+    var oldDatetime = order.attributes.datetime;
 
     var isTipEditable = order.isTipEditable({
       isOwner: req.order.isOwner,
       isRestaurantManager: req.order.isRestaurantManager,
       isAdmin: req.order.isAdmin,
     });
+
     if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
 
     utils.extend(order.attributes, utils.pick(req.body, updateableFields));
     order.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       res.send(order.toJSON({plain:true}));
+
+      if (datetimeChanged) {
+        venter.emit('order:datetime:change', order, oldDatetime);
+      }
     });
   });
 };

@@ -36,6 +36,12 @@ define(function(require){
         }
       });
 
+      // Sometimes animate doesn't end on the right number :/
+      setTimeout( function(){
+        this_.$headerPoints.text( to );
+        this_.$sidebarPoints.text( to );
+      }, 1000 );
+
       this.renderCards();
     }
 

@@ -55,6 +55,11 @@ define(function(require, exports, module) {
       return utils.isNaN(val) ? '' : val;
     },
 
+    dollarsNoCents: function(pennies){
+      var cents = pennies == null ? 0 : parseFloat(pennies); // parse as float incase of partial cents
+      return utils.isNaN(cents) ? '' : (cents / 100)
+    },
+
     json: function(context) {
       return JSON.stringify(context);
     },

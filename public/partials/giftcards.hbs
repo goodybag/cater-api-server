@@ -1,7 +1,7 @@
 {{#each cards}}
 <div class="giftcard-wrapper">
   <div class="giftcard{{!--
-  --}}{{#gt this.amount 10}} giftcard-gold{{/gt}}{{!--
+  --}}{{#gt this.amount 1000}} giftcard-gold{{/gt}}{{!--
   --}}{{#gt this.cost ../user.points}} state-unavailable{{/gt}}{{!--
  --}}"
     data-location="{{this.location}}"
@@ -14,7 +14,7 @@
     </div>
 
     <div class="card-info">
-      <div class="amount">${{this.amount}}</div>
+      <div class="amount">${{dollarsNoCents this.amount}}</div>
       <div class="location">{{this.location}}</div>
     </div>
     <div class="giftcard-menu">

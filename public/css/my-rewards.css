@@ -32,6 +32,10 @@
   .giftcard-wrapper {
     width: 100%;
   }
+
+  .rewards-description .btn-learn-more {
+    position: static;
+  }
 }
 
 .card-description {

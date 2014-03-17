@@ -463,5 +463,34 @@ var includeClosedRestaurantEvents = function(query, searchParams) {
  * @param {object} opts
  */
 var includeFavorites = function(query, opts) {
-  // tood
+  query.with.user_fav_restaurants = {
+    type: 'select'
+  , table: 'favorite_restaurants'
+  , columns: [ '*' ]
+  }
+
+  query.joins.user_fav_restaurants = {
+    type: 'left'
+  , alias: 'ufr'
+  , target: 'user_fav_restaurants'
+  , on: {
+      'restaurants.id': '$ufr.restaurant_id$'
+    }
+  };
+
+  // dear god..i just wanted to see if the user fav'd a restaurant
+  // exists(select 1 from user_fav_restaurants where user_id=$1 and restaurant_id=restaurants.id) as favorite
+  query.columns.push({
+    type: 'exists'
+  , expression: {
+      type: 'select'
+    , columns: [ { expression: '1'} ]
+    , table: 'user_fav_restaurants'
+    , where: {
+        user_id: opts.userId
+      , restaurant_id: '$restaurants.id$'
+      }
+    }
+  , as: 'favorite'
+  });
 }

@@ -64,6 +64,32 @@ a.list-group-item-restaurant .list-group-item-heading {
   color: #6E6E6E;
 }
 
+.list-group-restaurants .favorite-wrapper {
+  padding-top: 7px;
+}
+
+.list-group-restaurants .btn-favorite.active {
+  color: #dc1709;
+  display: block;
+}
+
+.list-group-restaurants .btn-favorite.active:hover {
+  color: #dd9868;
+}
+
+.list-group-item-restaurant .btn-favorite {
+  border: 1px solid #f0f0ea;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #f0f0ea;
+  display: none;
+}
+
+.list-group-item-restaurant:hover .btn-favorite {
+  display: block;
+}
+
+
 .list-group-item-restaurant:hover .rating {
   color: #DA1800;
 }

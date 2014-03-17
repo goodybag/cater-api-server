@@ -1,0 +1,17 @@
+.shared-link-page {
+  margin: 0 auto;
+  width: 50%;
+  text-align: center;
+}
+
+@media screen and ( max-width: 768px) {
+  .shared-link-page {
+    margin: 0 auto;
+    width: 90%;
+    text-align: center;
+  }
+}
+
+.shared-link-page > img {
+  margin: 20px auto;
+}

@@ -7,6 +7,7 @@ define(function(require){
     , passwordMatch:  'Passwords do not match'
     }
   , salesTax: 1.0825
+  , menuRefresh: 5000
   };
 
   return config;

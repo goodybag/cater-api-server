@@ -198,6 +198,10 @@ define(function(require, exports, module) {
       return options[a >= b ? 'fn' : 'inverse'](this);
     },
 
+    datePassed: function(datetime, options) {
+      return options[ moment(datetime) < moment() ? 'fn' : 'inverse'](this);
+    },
+
     dollarMeter: function( value, max, additionalClass ){
       max = (/number|string/).test( typeof max ) ? max : 4;
       additionalClass = typeof additionalClass == "string" ? additionalClass : "";

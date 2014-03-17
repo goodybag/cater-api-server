@@ -101,14 +101,6 @@ define(function(require, exports, module) {
         return;
       }
 
-      if (this.options.loginNeeded) {
-        var login = {
-          email: this.$el.find('input.email').val().trim(),
-          password: this.$el.find('input.password').val().trim()
-        };
-        $.post('/session', login, done);
-      }
-
       var order = {
         zip: this.$el.find('input[name="zip"]').val().trim() || null,
         guests: parseInt(this.$el.find('input[name="guests"]').val()) || null,

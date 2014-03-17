@@ -9,7 +9,7 @@ var db = require('./db');
 var errors = require('./errors');
 var PaymentSummaryItem = require('./public/js/app/models/payment-summary-item');
 
-var m = utils.extend(require('./middleware'), require('stdm') );
+var m = utils.extend( require('./middleware'), require('stdm') );
 
 utils.extend( m, require('./middleware/util') );
 utils.extend( m, require('dirac-middleware') );
@@ -61,14 +61,15 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
-  app.get('/restaurants/:rid', m.restrict(['client', 'admin']), controllers.restaurants.orders.current);  // individual restaurant needs current order.
+  app.get('/restaurants/:rid', m.editOrderAuth, controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
-  app.get('/restaurants/:rid', m.restrict(['client', 'admin']), function(req, res, next) {
-    if (req.query.edit) return next();
-    controllers.restaurants.get.apply(this, arguments);
-  });
-
-  app.get('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.edit);
+  app.get('/restaurants/:rid'
+  , m.editOrderAuth
+  , function(req, res, next) {
+      if (req.query.edit) return controllers.restaurants.edit.apply(this, arguments);
+      m.restrict(['client', 'admin'])(req, res, next);
+    }
+  , controllers.restaurants.get);
 
   app.put('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
 
@@ -337,9 +338,17 @@ module.exports.register = function(app) {
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
   app.get('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.orderItems.summary);  // not currently used
 
-  app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.add);
+  app.post('/orders/:oid/items'
+  , m.editOrderAuth
+  , m.exists('creatorId', {
+      then: function(req, res, next) { next(); }
+    , else: m.restrict(['client', 'admin'])
+    })
+  , controllers.orders.editability
+  , controllers.orders.orderItems.add
+  );
 
-  app.all('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/items', function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -350,7 +359,15 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
 
-  app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.put('/orders/:oid/items/:iid'
+  , m.editOrderAuth
+  , m.exists('creatorId', {
+      then: function(req, res, next) { next(); }
+    , else: m.restrict(['client', 'admin'])
+    })
+  , controllers.orders.editability
+  , controllers.orders.orderItems.update
+  );
 
   app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
 
@@ -759,6 +776,20 @@ module.exports.register = function(app) {
       controllers.paymentSummaries.emitPaymentSummaryChange({ idField: 'payment_summary_id' })
     )
   , m.remove( db.payment_summary_items )
+  );
+
+  app.get('/api/orders/:oid/items'
+  , m.editOrderAuth
+  , m.exists('creatorId', {
+      then: function(req, res, next) { next(); }
+    , else: m.restrict(['client', 'admin'])
+    })
+  , controllers.orders.orderItems.list
+  );
+
+  app.post('/api/orders/:order_id/generate_edit_token'
+  , m.restrict(['client', 'admin'])
+  , controllers.orders.generateEditToken
   );
 
   /**

@@ -84,6 +84,10 @@ define(function(require) {
       type: types.int
     , nullable: true
     }
+  , edit_token: {
+      type: types.text
+    , nullable: true
+    }
   , review_token: {
       type: types.text
     , nullable: false

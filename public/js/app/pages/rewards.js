@@ -10,14 +10,22 @@ define(function(require){
   return Object.create({
     init: function(){
       var this_ = this;
+
       $( function(){
         this_.$cards          = $('.giftcard');
         this_.$headerPoints   = $('.navbar .points-wrapper');
         this_.$sidebarPoints  = $('.points-panel-available .points-available');
 
-        this_.$cards.giftcard({ user: user });
+        var options = {
+          user: user
+        , successTimeout: 4000
+        };
+
+        this_.$cards.giftcard( options );
         this_.$cards.on( 'redeem', function( $e, e ){
           this_.updatePoints( e.user.points + e.cost, e.user.points );
+
+          setTimeout( this_.renderCards, options.successTimeout );
         });
       });
     }
@@ -41,8 +49,6 @@ define(function(require){
         this_.$headerPoints.text( to );
         this_.$sidebarPoints.text( to );
       }, 1000 );
-
-      this.renderCards();
     }
 
   , renderCards: function(){

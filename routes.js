@@ -34,15 +34,12 @@ module.exports.register = function(app) {
    * Restaurants resource.  The collection of all restaurants.
    */
 
-  app.get('/restaurants',
-    m.restrict(['client', 'restaurant', 'admin']),
-    function(req, res, next) {
-      if (req.query.edit) return next();
-      controllers.restaurants.list.apply(this, arguments);
-    }
+  app.get('/restaurants'
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , controllers.restaurants.list
   );
 
-  app.get('/restaurants', m.restrict('admin'), controllers.restaurants.editAll);
+  app.get('/restaurants/edit', m.restrict('admin'), controllers.restaurants.editAll);
 
   app.post('/restaurants', m.restrict('admin'), controllers.restaurants.create);
 
@@ -688,7 +685,7 @@ module.exports.register = function(app) {
     })
   );
 
-
+  // Not currently used
   app.get('/api/users/:user_id/favorites/restaurants'
   , m.pagination()
   , m.param('user_id')

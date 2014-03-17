@@ -8,7 +8,7 @@
             <td style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-right: 12px;">
               <h1 style="line-height: 22px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
                 The delivery date has changed from<br>
-                <strong>{{formatDateTime old_delivery_date "MM/DD/YYYY h:mm A"}}</strong> to <strong>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</strong>
+                <strong>{{formatDateTime oldDatetime "MM/DD/YYYY h:mm A"}}</strong> to <strong>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</strong>
               </h1>
               <!--<BigOlButton>-->
               <table cellpadding="0" cellspacing="0" style="width: 100%;">
@@ -35,6 +35,8 @@
         </table>
 
         {{> email_order_items order}}
+
+        <p>If there are any problems with the new date, please call us at {{phoneNumber config.phone.support}} or email support at <a href="mailto:{{config.emails.support}}">{{config.emails.support}}</a>.</p>
       </td>
       <td style="width: 10px"></td>
     </tr>

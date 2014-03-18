@@ -699,6 +699,12 @@ module.exports.register = function(app) {
   , m.insert( db.favorite_restaurants)
   );
 
+  app.put('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.queryToBody('user_id')
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.favorite_restaurants)
+  );
+
   app.del('/api/users/:user_id/favorites/restaurants/:restaurant_id'
   , m.param('user_id')
   , m.param('restaurant_id')

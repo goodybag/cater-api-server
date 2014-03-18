@@ -6,6 +6,7 @@ define( function( require ){
 
   var Models = {
     OrderParams:              require('app/models/order-params')
+  , FavoriteRestaurant:       require('app/models/favorite-restaurant')
   };
 
   var Views = {
@@ -13,6 +14,7 @@ define( function( require ){
   , RestaurantFiltersView:    require('app/views/restaurant-filters-view')
   , RestaurantSortView:       require('app/views/restaurant-sort-view')
   , RestaurantsListView:      require('app/views/restaurants-list-view')
+  , RestaurantView:           require('app/views/restaurant/restaurant-view')
   };
 
   var page = {
@@ -70,6 +72,17 @@ define( function( require ){
       , sortView: restaurantSortView
       , paramsView: orderParamsView
       , searchUrl: '/restaurants'
+      });
+
+      var restaurantViews = utils.map(restaurants, function(restaurant) {
+        return new Views.RestaurantView({
+          el: '#restaurant-' + restaurant.id
+        , model: new Models.FavoriteRestaurant({
+            restaurantId: restaurant.id
+          , userId: options.userId
+          , favorite: restaurant.favorite
+          })
+        });
       });
     }
   };

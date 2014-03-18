@@ -30,9 +30,9 @@
       <div class="list-group list-group-restaurants">
       {{#each restaurants}}
         {{#if is_unacceptable}}
-        <a href="javascript: void(0);" class="list-group-item list-group-item-restaurant disabled{{#if is_hidden}} hide{{/if}}">
+        <a href="javascript: void(0);" class="list-group-item list-group-item-restaurant disabled{{#if is_hidden}} hide{{/if}}" id="restaurant-{{id}}">
         {{else}}
-        <a href="/restaurants/{{this.id}}{{queryParams ../../orderParams}}" class="list-group-item list-group-item-restaurant{{#if is_hidden}} hide{{/if}}">
+        <a href="/restaurants/{{this.id}}{{queryParams ../../orderParams}}" class="list-group-item list-group-item-restaurant{{#if is_hidden}} hide{{/if}}" id="restaurant-{{id}}">
         {{/if}}
           <div class="row">
             <div class="col-xs-1 logo-wrapper">
@@ -92,7 +92,7 @@
 {{#extend "scripts"}}
 <script type="text/javascript">
   require(['app/pages/restaurant-list'], function( page ){
-    page.init({ restaurants: {{{json allRestaurants}}} });
+    page.init({ restaurants: {{{json restaurants}}}, userId: {{{ user.id }}} });
   });
 </script>
 {{/extend}}

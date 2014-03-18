@@ -1,7 +1,8 @@
 {{#each cards}}
 <div class="giftcard-wrapper">
   <div class="giftcard{{!--
-  --}}{{#gt this.amount 1000}} giftcard-gold{{/gt}}{{!--
+  --}}{{#gte this.amount 5000}} giftcard-orange{{else}}{{!--
+  --}}{{#gte this.amount 2000}} giftcard-gold{{/gte}}{{/gte}}{{!--
   --}}{{#gt this.cost ../user.points}} state-unavailable{{/gt}}{{!--
  --}}"
     data-location="{{this.location}}"

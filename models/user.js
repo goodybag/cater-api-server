@@ -5,6 +5,7 @@ var Model = require('./model');
 var Order = require('./order');
 var Address = require('./address');
 var queries = require('../db/queries');
+var config = require('../config');
 
 var table = 'users';
 
@@ -374,6 +375,7 @@ var User = module.exports = Model.extend({
         status: {$or: ['submitted', 'accepted', 'delivered']}
       , points_awarded: false
       , user_id: userId
+      , created_at: { $gte: config.rewardsStartDate }
       }
     };
 
@@ -401,6 +403,7 @@ var User = module.exports = Model.extend({
         status: {$or: ['submitted', 'accepted', 'delivered']}
       , points_awarded: false
       , user_id: userId
+      , created_at: { $gte: config.rewardsStartDate }
       }
     }, options);
 

@@ -34,6 +34,7 @@
           {{/if}}
         </div>
 
+
         {{#if orders}}
         <table class="table table-striped">
           <thead>
@@ -55,9 +56,14 @@
         {{!-- <a href="#" class="view-all">View All</a> --}}
         {{else}}
         <div class="panel-body">
-          <p>You have no points. You can change that by <a href="/restaurants">placing an order!</a></p>
+          <p>Earn more points by <a href="/restaurants">placing an order!</a></p>
         </div>
         {{/if}}
+        {{#unless user.points}}
+        <div class="panel-body">
+          <p>You have no points. You can change that by <a href="/restaurants">placing an order!</a></p>
+        </div>
+        {{/unless}}
       </div>
 
       {{#if user.pendingPoints}}

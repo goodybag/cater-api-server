@@ -850,7 +850,7 @@ module.exports = Model.extend({
     };
 
     utils.deepExtend(query, options);
-console.log(options, query)
+
     this.find(query, callback);
   },
 

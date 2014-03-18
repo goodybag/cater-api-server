@@ -41,6 +41,7 @@ module.exports.list = function(req, res) {
   logger.routes.info(TAGS, 'listing restaurants');
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
+  orderParams.userId = req.user.attributes.id;
   var dbQuery = req.dbQuery || {};
   dbQuery.includes = dbQuery.includes || [];
   dbQuery.includes.push( {type: 'filter_restaurant_events'} );

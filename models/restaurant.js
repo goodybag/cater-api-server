@@ -314,6 +314,11 @@ module.exports = Model.extend({
       unacceptable.push('(guests.restaurant_id IS NULL)');
     }
 
+    // filter favorites
+    if (orderParams && orderParams.favorites==='true' ) {
+      query.where['ufr.user_id'] = orderParams.userId;
+    }
+
     // Hide restaurants from listing if there's an event occurring
     if ( utils.findWhere(query.includes, { type: 'filter_restaurant_events' } ) ) {
       filterRestaurantsByEvents(query, orderParams);
@@ -323,7 +328,6 @@ module.exports = Model.extend({
     if ( utils.findWhere(query.includes, { type: 'closed_restaurant_events' } ) ) {
       includeClosedRestaurantEvents(query, orderParams);
     }
-
 
     var favorites = utils.findWhere(query.includes, { type: 'favorites' } );
     if ( typeof favorites !== 'undefined' ) {

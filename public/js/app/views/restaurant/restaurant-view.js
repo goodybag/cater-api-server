@@ -23,6 +23,7 @@ define(function(require, exports, module) {
       e.preventDefault();
       var this_ = this;
       this.model.toggleFavorite(function(err) {
+        if(err) return notify.error(err);
         this_.$el.find('.btn-favorite').toggleClass('active');
       });
     }

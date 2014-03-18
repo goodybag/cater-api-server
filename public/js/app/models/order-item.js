@@ -60,7 +60,17 @@ define(function(require, exports, module) {
       }
     },
 
+    url: function(){
+      var url = Backbone.Model.prototype.url.call( this );
+
+      if ( this.options.edit_token ) url += '?edit_token=' + this.options.edit_token;
+
+      return url;
+    },
+
     initialize: function(attrs, options) {
+      this.options = options || {};
+
       this.on('change:price change:quantity change:options_sets', function(model, value, options) {
         var optPrices = _.pluck(_.where(_.flatten(_.pluck(model.get('options_sets'), 'options')), {state: true}), 'price')
         var priceEach = _.reduce(optPrices, function(a, b) { return a + b; }, model.get('price'));

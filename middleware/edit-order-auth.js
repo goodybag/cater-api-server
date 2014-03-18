@@ -33,7 +33,7 @@ module.exports = function(req, res, next) {
     req.creatorId = order.attributes.user.id;
 
     models.User.findOne({id: order.attributes.user.id}, function(err, user) {
-      if (err) res.error(500, err);
+      if (err) return res.error(500, err);
       req.user = user;
       res.locals.user = user.toJSON();
       res.locals.edit_token = token;

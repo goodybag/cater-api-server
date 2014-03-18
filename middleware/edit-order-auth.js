@@ -32,8 +32,12 @@ module.exports = function(req, res, next) {
     // record order creator id
     req.creatorId = order.attributes.user.id;
 
-    // expose to client for convenience
-    res.locals.edit_token = token;
-    next();
+    models.User.findOne({id: order.attributes.user.id}, function(err, user) {
+      if (err) return res.error(500, err);
+      req.user = user;
+      res.locals.user = user.toJSON();
+      res.locals.edit_token = token;
+      next();
+    });
   });
 };

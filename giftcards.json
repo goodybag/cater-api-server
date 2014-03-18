@@ -1,21 +1,8 @@
 [
-  { "location": "Dos Batos",              "amount": 500,     "cost": 3000 }
-, { "location": "Fricano's Deli",         "amount": 1500,      "cost": 4000 }
-, { "location": "Boomerang's Gourmet Veggie & Meat Pies", "amount": 1000,     "cost": 3000 }
-, { "location": "Fricano's Deli",         "amount": 500,      "cost": 4000 }
-, { "location": "Dos Batos",              "amount": 1000,     "cost": 3000 }
-, { "location": "Fricano's Deli",         "amount": 1000,     "cost": 10000 }
-, { "location": "Dos Batos",              "amount": 1500,     "cost": 10000 }
-, { "location": "Fricano's Deli",         "amount": 1000,     "cost": 4000 }
-, { "location": "Dos Batos",              "amount": 1000,     "cost": 3000 }
-, { "location": "Fricano's Deli",         "amount": 1500,     "cost": 100000 }
-, { "location": "Dos Batos",              "amount": 1000,     "cost": 3000 }
-, { "location": "Fricano's Deli",         "amount": 500,      "cost": 4000 }
-, { "location": "Dos Batos",              "amount": 1000,     "cost": 3000 }
-, { "location": "Fricano's Deli",         "amount": 1500,     "cost": 4000 }
-, { "location": "Dos Batos",              "amount": 1000,     "cost": 3000 }
-, { "location": "Fricano's Deli",         "amount": 2500,     "cost": 4000 }
-, { "location": "Dos Batos",              "amount": 1000,     "cost": 3000 }
-, { "location": "Fricano's Deli",         "amount": 1000,     "cost": 4000 }
-, { "location": "Dos Batos",              "amount": 1000,     "cost": 3000 }
+  { "location": "Amazon",                 "amount": 1000,       "cost": 2500 }
+, { "location": "Starbucks",              "amount": 1000,       "cost": 2500 }
+, { "location": "Amazon",                 "amount": 2000,       "cost": 4000 }
+, { "location": "Starbucks",              "amount": 2000,       "cost": 4000 }
+, { "location": "Amazon",                 "amount": 5000,       "cost": 9000 }
+, { "location": "Starbucks",              "amount": 5000,       "cost": 9000 }
 ]

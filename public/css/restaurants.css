@@ -78,17 +78,26 @@ a.list-group-item-restaurant .list-group-item-heading {
 }
 
 .list-group-item-restaurant .btn-favorite {
-  border: 1px solid #f0f0ea;
+  display: none;
+  border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #fff;
+  -webkit-box-shadow: none;
+  box-shadow: none;
   color: #f0f0ea;
-  display: none;
+}
+
+.list-group-item-restaurant .btn-favorite:active {
+  margin-top: 1px;
 }
 
 .list-group-item-restaurant:hover .btn-favorite {
   display: block;
 }
 
+.list-group-item-restaurant .btn-favorite:hover {
+  color: #dd9868;
+}
 
 .list-group-item-restaurant:hover .rating {
   color: #DA1800;

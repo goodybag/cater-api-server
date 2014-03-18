@@ -97,15 +97,14 @@ app.configure(function(){
     options = options || {};
 
     options = utils.extend( options, {
-        user:     utils.extend({}, this.req.session ? this.req.session.user : {}, options.user)
-      , config:   utils.extend({}, partialConfig, options.config, config)
+        config:   utils.extend({}, partialConfig, options.config, config)
       , session:  this.req.session
       }
     );
 
-    if (options.user.email) {
+    if (this.req.user && this.req.user.attributes && this.req.user.attributes.email) {
       options.intercom = {
-        user_hash: crypto.createHmac('sha256', new Buffer(config.intercom.apiSecret, 'utf8')).update(options.user.email).digest('hex')
+        user_hash: crypto.createHmac('sha256', new Buffer(config.intercom.apiSecret, 'utf8')).update(this.req.user.attributes.email).digest('hex')
       };
     }
 

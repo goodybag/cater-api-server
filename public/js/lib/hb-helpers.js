@@ -8,8 +8,19 @@ define(function(require, exports, module) {
   var moment = require('moment');
   var utils = require('./utils');
   var states = require('./states');
+  var config = require('config');
 
   var blocks = {};
+
+  var tax = function( order ){
+    var val = order.sub_total + order.restaurant.delivery_fee;
+
+    return Math.round( val * config.salesTax );
+
+    Math.round(
+      ( parseInt(subtotal) + parseInt(deliveryFee) ) * parseFloat(rate)
+    )
+  };
 
   var tax = function(subtotal, deliveryFee, rate, options) {
     if (subtotal == null) subtotal = 0;
@@ -71,16 +82,34 @@ define(function(require, exports, module) {
       return (tax.apply(this, arguments) / 100).toFixed(2);
     },
 
-    total: function(cents, deliveryFee, tip, rate, options) {
-      if (options === undefined) {
-        options = rate;
-        rate = null;
+    // total: function(cents, deliveryFee, tip, rate, options) {
+    //   if (options === undefined) {
+    //     options = rate;
+    //     rate = null;
+    //   }
+
+    //   tip = tip || 0;
+    //   rate = rate ? rate + 1 : 1.0825;
+    //   var pretip = tax.call(this, cents, deliveryFee, rate, options);
+    //   return ((pretip + tip) / 100).toFixed(2);
+    // },
+
+    total: function(order, options) {
+      if (options === undefined || typeof order !== 'object') {
+        throw new Error('Must supply a valid `order` as first parameter')
       }
 
-      tip = tip || 0;
-      rate = rate ? rate + 1 : 1.0825;
-      var pretip = tax.call(this, cents, deliveryFee, rate, options);
-      return ((pretip + tip) / 100).toFixed(2);
+      order.tip = order.tip || 0;
+      var pretip = tax.call(
+        this
+      , order.sub_total
+      , order.restaurant.delivery_fee
+      , config.salesTax
+      , options
+      );
+
+      console.log(pretip, order.sub_total, order.adjustment.amount, order.restaurant.delivery_fee, config.salesTax)
+      return ((pretip + order.tip) / 100).toFixed(2);
     },
 
     price$: function(price) {

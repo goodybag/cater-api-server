@@ -70,11 +70,10 @@ a.list-group-item-restaurant .list-group-item-heading {
 
 .list-group-restaurants .btn-favorite.active {
   color: #dc1709;
-  display: block;
 }
 
 .list-group-item-restaurant .btn-favorite {
-  display: none;
+  padding-bottom: 4px;
   outline: none;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -82,6 +81,8 @@ a.list-group-item-restaurant .list-group-item-heading {
   -webkit-box-shadow: none;
   box-shadow: none;
   color: #f0f0ea;
+  font-size: 14pt;
+
 }
 
 .list-group-item-restaurant .btn-favorite:active {
@@ -89,13 +90,9 @@ a.list-group-item-restaurant .list-group-item-heading {
 }
 
 .list-group-item-restaurant .btn-favorite:hover {
-  border: 2px solid #ddd;
   margin-top: -1px;
   margin-left: -1px;
-}
-
-.list-group-item-restaurant:hover .btn-favorite {
-  display: block;
+  border: 2px solid #dc1709;
 }
 
 .list-group-item-restaurant:hover .rating {

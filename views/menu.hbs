@@ -189,7 +189,7 @@
 <script>
   require( ['app/pages/menu', 'app/models/index'], function( page, Models ){
     page.init({
-      order:          new Models.Order( {{{json order}}} )
+      order:          new Models.Order( {{{json order}}}, { edit_token: "{{{edit_token}}}"} )
     , orderParams:    new Models.OrderParams( {{{json orderParams}}} )
     , restaurant:     new Models.Restaurant( {{{json restaurant}}} )
     , defaultAddress: new Models.Address( {{{json defaultAddress}}} )

@@ -395,7 +395,7 @@ define(function(require, exports, module) {
     },
 
     commatize: function( x, options ){
-      if ( !x ) return;
+      if ( !x && x != 0 ) return;
 
       var parts = x.toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");

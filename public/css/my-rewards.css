@@ -13,22 +13,41 @@
 }
 
 .rewards-description {
+  display: table;
+  width: 100%;
   margin-bottom: 80px;
+  padding: 0 58px;
 }
 
-.rewards-description .btn-learn-more {
-  position: absolute;
-  right: 24px;
-  top: 44px;
+.rewards-description p {
+  float: left;
+  width: 80%;
 }
 
-@media screen and (min-width: 1200px) {
-  .giftcard-wrapper {
-    width: 33.333333333333%;
+.rewards-description .learn-more-wrapper {
+  float: left;
+  width: 20%;
+  text-align: right;
+}
+
+@media screen and (max-width: 1200px) {
+  .rewards-description {
+    padding: 0 25px;
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 992px) {
+  .rewards-description {
+    padding: 0 50px;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .rewards-description p,
+  .rewards-description .learn-more-wrapper {
+    width: 100%;
+  }
+
   .giftcard-wrapper {
     width: 100%;
   }

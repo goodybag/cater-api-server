@@ -36,7 +36,7 @@ module.exports.list = function( req, res ){
           cards = JSON.parse( cards );
 
           cards.forEach( function( card ){
-            card.afterPurchase = req.session.user.points - card.cost;
+            card.afterPurchase = req.user.attributes.points - card.cost;
           });
         }
 

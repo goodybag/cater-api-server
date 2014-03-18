@@ -11,7 +11,7 @@ define(function(require, exports, module) {
   return module.exports = utils.Model.extend({
     defaults: {
       gb_fee:             0
-    , sales_tax:          config.salesTax - 1
+    , sales_tax:          config.taxRate
     , sub_total:          0
     }
 

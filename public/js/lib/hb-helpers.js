@@ -13,30 +13,12 @@ define(function(require, exports, module) {
   var blocks = {};
 
   var tax = function( order ){
-    var val = order.sub_total + order.restaurant.delivery_fee;
+    if ( !order ) return 0;
 
-    return Math.round( val * config.salesTax );
+    var val = order.sub_total + order.restaurant.delivery_fee + order.adjustment.amount;
 
-    Math.round(
-      ( parseInt(subtotal) + parseInt(deliveryFee) ) * parseFloat(rate)
-    )
+    return Math.round( val * config.taxRate );
   };
-
-  var tax = function(subtotal, deliveryFee, rate, options) {
-    if (subtotal == null) subtotal = 0;
-    var numArgs = arguments.length;
-    if (numArgs === 0) return '0.00';
-    if (numArgs < 4) {
-      if (numArgs === 2) {
-        options = deliveryFee;
-        deliveryFee = 0
-      } else {
-        options = rate;
-      }
-      rate = 0.0825;
-    }
-    return Math.round((parseInt(subtotal) + parseInt(deliveryFee)) * parseFloat(rate));
-  }
 
   var helpers = {
     extend: function(name, context) {
@@ -100,16 +82,11 @@ define(function(require, exports, module) {
       }
 
       order.tip = order.tip || 0;
-      var pretip = tax.call(
-        this
-      , order.sub_total
-      , order.restaurant.delivery_fee
-      , config.salesTax
-      , options
-      );
 
-      console.log(pretip, order.sub_total, order.adjustment.amount, order.restaurant.delivery_fee, config.salesTax)
-      return ((pretip + order.tip) / 100).toFixed(2);
+      var total = order.sub_total + order.restaurant.delivery_fee + order.adjustment.amount
+      total += tax( order );
+
+      return ((total + order.tip) / 100).toFixed(2);
     },
 
     price$: function(price) {

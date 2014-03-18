@@ -408,13 +408,8 @@ define(function(require, exports, module) {
     },
 
     getTotal: function(){
-      return Math.round(
-        (
-          parseInt( this.get('sub_total') )
-        + parseInt( this.restaurant.get('delivery_fee') )
-        )
-      * parseFloat( config.salesTax )
-      );
+      var val = parseInt( this.get('sub_total') ) + parseInt( this.restaurant.get('delivery_fee') )
+      return Math.round( val * parseFloat( config.taxRate ) );
     },
 
     getSalesTaxContribution: function(){

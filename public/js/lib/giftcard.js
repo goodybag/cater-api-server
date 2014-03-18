@@ -110,8 +110,6 @@ define(function(require){
           throw new Error( 'Invalid state: ' + state );
         }
 
-        console.log("Entering state:", state);
-
         giftcard.removeState();
         giftcard.state = state;
         $this.addClass( 'state-' + state );

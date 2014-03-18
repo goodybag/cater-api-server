@@ -77,7 +77,8 @@
     "grunt-contrib-watch": "~0.5.3",
     "dirac": "~0.3.4",
     "dirac-middleware": "~0.1.5",
-    "json2csv": "~2.2.1"
+    "json2csv": "~2.2.1",
+    "deep-extend": "~0.2.8"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

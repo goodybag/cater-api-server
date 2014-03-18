@@ -834,11 +834,12 @@ module.exports = Model.extend({
     Model.update.call(this, query, utils.partial(modifyAttributes, callback));
   },
 
-  findReadyForAwardingPoints: function (limit, callback) {
-    if (typeof limit === 'function') {
-      callback = limit;
-      limit = 100;
+  findReadyForAwardingPoints: function (options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
     }
+
     // it is ready for awarding 3 days after the order has been delivered.
     var query = {
       where: {
@@ -846,9 +847,10 @@ module.exports = Model.extend({
       , points_awarded: false
       , $custom: ['now() > (("orders"."datetime" AT TIME ZONE "orders"."timezone") + interval \'3 days\')']
       }
-    , limit: limit
     };
 
+    utils.deepExtend(query, options);
+console.log(options, query)
     this.find(query, callback);
   },
 

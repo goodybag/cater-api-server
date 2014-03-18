@@ -15,7 +15,14 @@ var utils = require('../../utils');
 var TAGS = ['worker-award-points'];
 
 var task = function() {
-  models.Order.findReadyForAwardingPoints(1000, function (error, orders) {
+  var query = {
+    limit: 1000
+  , where: {
+      created_at: { $gte: config.rewardsStartDate }
+    }
+  };
+
+  models.Order.findReadyForAwardingPoints(query, function (error, orders) {
     if (error) return logger.error(TAGS, "failed to get orders", error), utils.rollbar.reportMessage(error);
     if (orders.length == 0) return done();
     utils.async.each(orders, function(order, callback){

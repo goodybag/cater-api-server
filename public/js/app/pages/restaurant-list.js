@@ -14,6 +14,7 @@ define( function( require ){
   , RestaurantFiltersView:    require('app/views/restaurant-filters-view')
   , RestaurantSortView:       require('app/views/restaurant-sort-view')
   , RestaurantsListView:      require('app/views/restaurants-list-view')
+  , RestaurantFavoritesView:  require('app/views/restaurant/favorites-view')
   , RestaurantView:           require('app/views/restaurant/restaurant-view')
   };
 
@@ -66,11 +67,16 @@ define( function( require ){
         el: '#sort'
       });
 
+      var restaurantFavoritesView = new Views.RestaurantFavoritesView({
+        el: '#favorites'
+      });
+
       var restaurantsListView = new Views.RestaurantsListView({
         el: '#main'
       , filtersView: restaurantFiltersView
       , sortView: restaurantSortView
       , paramsView: orderParamsView
+      , favoritesView: restaurantFavoritesView
       , searchUrl: '/restaurants'
       });
 

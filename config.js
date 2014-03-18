@@ -108,7 +108,7 @@ config.defaults = {
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
-  , rewards: ['john@goodybag.com']
+  , rewards: [ local.testEmail || 'test@goodybag.com' ]
   }
 
 , phone: {
@@ -384,6 +384,11 @@ config.production = {
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
+  , rewards: [
+      'jacobparker@goodybag.com'
+    , 'sarahsouthwell@goodybag.com'
+    , 'jag@goodybag.com'
+    ]
   }
 
 , emailEnabled: true

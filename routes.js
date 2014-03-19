@@ -369,9 +369,9 @@ module.exports.register = function(app) {
   , controllers.orders.orderItems.update
   );
 
-  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.patch('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
 
-  app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
+  app.del('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
 
   app.all('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');

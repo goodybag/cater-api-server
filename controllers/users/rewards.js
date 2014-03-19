@@ -64,6 +64,10 @@ module.exports.redeem = function( req, res ){
     return res.error( errors.input.VALIDATION_FAILED );
   }
 
+  if ( req.user.attributes.points < req.body.points ){
+    return res.error( errors.input.VALIDATION_FAILED );
+  }
+
   Models.User.removePoints( req.param('uid'), req.body.cost, function( error ){
     if ( error ) return res.error( errors.internal.DB_FAILURE, error );
 

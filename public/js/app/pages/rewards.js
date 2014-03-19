@@ -11,22 +11,30 @@ define(function(require){
     init: function(){
       var this_ = this;
 
+      this.giftcardViewOptions = {
+        user: user
+      , successTimeout: 4000
+      };
+
       $( function(){
-        this_.$cards          = $('.giftcard');
         this_.$headerPoints   = $('.navbar .points-wrapper');
         this_.$sidebarPoints  = $('.points-panel-available .points-available');
+        this_.initCards();
+      });
+    }
 
-        var options = {
-          user: user
-        , successTimeout: 4000
-        };
+  , initCards: function(){
+      var this_ = this;
 
-        this_.$cards.giftcard( options );
-        this_.$cards.on( 'redeem', function( $e, e ){
-          this_.updatePoints( e.user.points + e.cost, e.user.points );
+      this.$cards = $('.giftcard');
+      this.$cards.giftcard( this.giftcardViewOptions );
+      this_.$cards.on( 'redeem', function( $e, e ){
+        this_.updatePoints( e.user.points + e.cost, e.user.points );
 
-          setTimeout( this_.renderCards, options.successTimeout );
-        });
+        setTimeout(
+          this_.renderCards.bind( this_ )
+        , this_.giftcardViewOptions.successTimeout
+        );
       });
     }
 
@@ -58,6 +66,8 @@ define(function(require){
         , cards:  cards
         })
       );
+
+      this.initCards();
     }
   });
 });

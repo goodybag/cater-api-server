@@ -137,8 +137,9 @@ define(function(require, exports, module) {
 
     initialize: function(attrs, options) {
       attrs = attrs || {};
+      options = options || {};
 
-      this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id, edit_token: options.edit_token});
+      this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id, edit_token: options.edit_token });
       this.unset('orderItems');
 
       this.restaurant = new Restaurant(attrs.restaurant);

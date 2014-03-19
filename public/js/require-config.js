@@ -137,7 +137,8 @@
         deps: ['hbs']
       }
     , fullcalendar: {
-        deps: ['jquery'] }
+        deps: ['jquery']
+      }
     }
   // , hbs: {
   //     disableI18n: true

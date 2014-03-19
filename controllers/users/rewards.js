@@ -10,6 +10,8 @@ var venter  = require('../../lib/venter');
 var errors  = require('../../errors');
 
 module.exports.list = function( req, res ){
+  var user = req.user.attributes;
+
   var tasks = {
     'pendingPoints':  Models.User.getPendingPoints.bind( Models.User, req.param('uid') )
 
@@ -36,7 +38,7 @@ module.exports.list = function( req, res ){
           cards = JSON.parse( cards );
 
           cards.forEach( function( card ){
-            card.afterPurchase = req.user.attributes.points - card.cost;
+            card.afterPurchase = user.points - card.cost;
           });
         }
 

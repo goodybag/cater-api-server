@@ -400,6 +400,22 @@ define(function(require, exports, module) {
       var parts = x.toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
+    },
+
+    giftcardClasses: function( card, user ){
+      var classList = [];
+
+      if ( card.amount >= 5000 ){
+        classList.push('giftcard-gold');
+      } else if ( card.amount >= 2000 ){
+        classList.push('giftcard-orange');
+      }
+
+      if ( card.cost > user.points ){
+        classList.push('state-unavailable');
+      }
+
+      return classList.join(' ');
     }
   }
 

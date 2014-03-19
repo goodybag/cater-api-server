@@ -18,42 +18,24 @@ var logger = require('../../logger');
 
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
-/**
- * Filter by user's favorite restaurants
- */
-module.exports.favorites = function(req, res, next) {
-
-  // defaults
-  req.dbQuery = req.dbQuery || {};
-  req.dbQuery.includes = req.dbQuery.includes || [];
-
-  var filter = req.query.favorites;
-
-  if (filter) {
-    // TODO: only show favs..
-  }
-
-  next();
-}
-
 module.exports.list = function(req, res) {
   var TAGS = ['restaurants-list'];
   logger.routes.info(TAGS, 'listing restaurants');
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
-  orderParams.userId = req.user.attributes.id;
-  var dbQuery = req.dbQuery || {};
-  dbQuery.includes = dbQuery.includes || [];
-  dbQuery.includes.push( {type: 'filter_restaurant_events'} );
-  dbQuery.includes.push( {type: 'favorites', userId: req.user.attributes.id} );
-
   if (orderParams.prices)
     orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
 
   var tasks =  [
     function(callback) {
+      var query = {
+        includes: [
+          { type: 'filter_restaurant_events' }
+        , { type: 'favorites', userId: req.user.attributes.id }
+        ]
+      };
       models.Restaurant.find(
-        dbQuery
+        query
       , utils.extend({ is_hidden: false }
       , orderParams)
       , callback);

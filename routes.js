@@ -36,7 +36,6 @@ module.exports.register = function(app) {
 
   app.get('/restaurants'
   , m.restrict(['client', 'restaurant', 'admin'])
-  , controllers.restaurants.favorites
   , controllers.restaurants.list
   );
 

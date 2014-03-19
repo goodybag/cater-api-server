@@ -314,9 +314,14 @@ module.exports = Model.extend({
       unacceptable.push('(guests.restaurant_id IS NULL)');
     }
 
+    var favorites = utils.findWhere(query.includes, { type: 'favorites' } );
+    if ( typeof favorites !== 'undefined' ) {
+      includeFavorites(query, favorites);
+    }
+
     // filter favorites
-    if (orderParams && orderParams.favorites==='true' ) {
-      query.where['ufr.user_id'] = orderParams.userId;
+    if (orderParams && orderParams.favorites === 'true' ) {
+      query.where['ufr.user_id'] = favorites.userId;
     }
 
     // Hide restaurants from listing if there's an event occurring
@@ -327,11 +332,6 @@ module.exports = Model.extend({
     // Include restaurant event duration in result
     if ( utils.findWhere(query.includes, { type: 'closed_restaurant_events' } ) ) {
       includeClosedRestaurantEvents(query, orderParams);
-    }
-
-    var favorites = utils.findWhere(query.includes, { type: 'favorites' } );
-    if ( typeof favorites !== 'undefined' ) {
-      includeFavorites(query, favorites);
     }
 
     if (orderParams && (orderParams.date || orderParams.time)) {

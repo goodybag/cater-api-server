@@ -10,8 +10,8 @@ var makeTest = function( options ){
   var defaults = {
     formSelector:         'form[action*="/login"]'
   , postLoginSelector:    '.page-restaurants'
-  , email:                'john+1@goodybag.com'
   , password:             'password'
+  , userId:               1
   , url:                  config.baseUrl
   };
 
@@ -19,11 +19,11 @@ var makeTest = function( options ){
     if ( !(key in options) ) options[ key ] = defaults[ key ];
   }
 
-  return function( test ){
-    if ( config.emailSalt ){
-      options.email = options.email.split('@').join( config.emailSalt + '@' );
-    }
+  options.email = config.testEmail.split('@').join(
+    [ '+', options.userId, config.emailSalt || '', '@' ].join('')
+  );
 
+  return function( test ){
     casper.start( options.url );
 
     // Ensure login form exists

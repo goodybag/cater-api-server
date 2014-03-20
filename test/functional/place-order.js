@@ -14,10 +14,11 @@
 var config = require('../../functional-config');
 var futils = require('../../lib/ftest-utils');
 
-casper.test.begin( 'Place order', 1, function( test ){
+casper.test.begin( 'Place order', 2, function( test ){
   var options = {
-    userId:     1
-  , password:   'password'
+    userId:       1
+  , password:     'password'
+  , restaurantId: 25
   };
 
   options.email = futils.getEmail( options.userId );
@@ -31,6 +32,23 @@ casper.test.begin( 'Place order', 1, function( test ){
     , password:   options.password
     })
   );
+
+  // Ensure we made it to restaurants
+  casper.then( function(){
+    test.assertExists('.page-restaurants');
+  });
+
+  // Select restaurant
+  casper.then(
+    futils.selectRestaurant( test, {
+      restaurantId: options.restaurantId
+    })
+  );
+
+  // Ensure we made it to menu
+  casper.then( function(){
+    test.assertExists('.page-menu');
+  });
 
   casper.run( test.done.bind( test ) );
 });

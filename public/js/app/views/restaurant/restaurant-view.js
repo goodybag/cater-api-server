@@ -9,7 +9,6 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var notify = require('notify');
 
-
   return module.exports = Backbone.View.extend({
 
     events: {

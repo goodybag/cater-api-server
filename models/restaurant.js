@@ -314,13 +314,14 @@ module.exports = Model.extend({
       unacceptable.push('(guests.restaurant_id IS NULL)');
     }
 
+    // join user favorites
     var favorites = utils.findWhere(query.includes, { type: 'favorites' } );
-    if ( typeof favorites !== 'undefined' ) {
+    if ( favorites ) {
       includeFavorites(query, favorites);
     }
 
     // filter favorites
-    if (orderParams && orderParams.favorites === 'true' ) {
+    if (favorites && orderParams && orderParams.favorites === 'true' ) {
       query.where['ufr.user_id'] = favorites.userId;
     }
 

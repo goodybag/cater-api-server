@@ -26,9 +26,10 @@ define(function(require, exports, module) {
     },
 
     getProps: function() {
-      return {
-        favorites: this.$el.find('.btn-favorite').hasClass('active')
-      };
+      // only show on params if toggled on
+      return this.$el.find('.btn-favorite').hasClass('active') ?
+        { favorites : true }
+      : {};
     }
   });
 });

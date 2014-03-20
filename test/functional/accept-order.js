@@ -28,13 +28,17 @@ casper.test.begin( 'Accept Order', 3, function( test ){
     test.assertExists('.btn-accept');
   });
 
-  // Click accept
+  // TODO: figure better way to detect async loading is complete
   casper.then( function() {
-    this.click('.btn-accept');
-    this.wait(7000, function() {
-      test.assertExists('.label-accept');
+    casper.wait(5000, function() {
+      this.click('.btn-accept');
     });
+  })
+
+  // Accepted!
+  casper.waitForSelector('.label-accepted', function() {
+    test.assertExists('.label-accepted');
   });
 
-casper.run( test.done.bind( test ) );
+  casper.run( test.done.bind( test ) );
 });

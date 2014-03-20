@@ -26,7 +26,7 @@ To run the functional test suite, you currently need phantomjs and casperjs inst
 
 ```
 brew install phantomjs
-brew install casperjs
+brew install casperjs --devel
 ```
 
 To run the entire suite:

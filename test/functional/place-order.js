@@ -12,18 +12,25 @@
  */
 
 var config = require('../../functional-config');
+var futils = require('../../lib/ftest-utils');
 
 casper.test.begin( 'Place order', 1, function( test ){
   var options = {
-
+    userId:     1
+  , password:   'password'
   };
+
+  options.email = futils.getEmail( options.userId );
 
   casper.start( config.baseUrl );
 
   // Login
-  casper.then( function(){
-    // Assert something
-  });
+  casper.then(
+    futils.login( test, {
+      email:      options.email
+    , password:   options.password
+    })
+  );
 
   casper.run( test.done.bind( test ) );
 });

@@ -1,11 +1,11 @@
 .panel-group-filters .panel {
-  background-color: #fff; 
+  background-color: #fff;
 }
 
 .panel-group-filters .panel .panel-heading {
   padding-top: 0;
   padding-bottom: 0;
-  background-color: #fff; 
+  background-color: #fff;
 }
 
 .panel-heading a {
@@ -21,4 +21,10 @@
   .restaurants-left-col {
     margin-top: -38px;
   }
+}
+
+.restaurant-favorites {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  float:right;
 }

@@ -5,6 +5,8 @@ var utils         = require('./utils');
 var requireConfig = require('./public/js/require-config');
 
 module.exports = function(grunt) {
+  grunt.loadTasks('./tasks');
+
   grunt.loadNpmTasks('grunt-requirejs');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');

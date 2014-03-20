@@ -38,15 +38,12 @@ module.exports.register = function(app) {
    * Restaurants resource.  The collection of all restaurants.
    */
 
-  app.get('/restaurants',
-    m.restrict(['client', 'restaurant', 'admin']),
-    function(req, res, next) {
-      if (req.query.edit) return next();
-      controllers.restaurants.list.apply(this, arguments);
-    }
+  app.get('/restaurants'
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , controllers.restaurants.list
   );
 
-  app.get('/restaurants', m.restrict('admin'), controllers.restaurants.editAll);
+  app.get('/restaurants/edit', m.restrict('admin'), controllers.restaurants.editAll);
 
   app.post('/restaurants', m.restrict('admin'), controllers.restaurants.create);
 
@@ -699,6 +696,35 @@ module.exports.register = function(app) {
       layout: 'invoice/payment-summary-layout'
     , method: 'findOne'
     })
+  );
+
+  // Not currently used
+  app.get('/api/users/:user_id/favorites/restaurants'
+  , m.owner( {param:'user_id'} )
+  , m.pagination()
+  , m.param('user_id')
+  , m.find( db.favorite_restaurants )
+  );
+
+  app.post('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.owner( {param:'user_id'} )
+  , m.queryToBody('user_id')
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.favorite_restaurants)
+  );
+
+  app.put('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.owner( {param:'user_id'} )
+  , m.queryToBody('user_id')
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.favorite_restaurants)
+  );
+
+  app.del('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.owner( {param:'user_id'} )
+  , m.param('user_id')
+  , m.param('restaurant_id')
+  , m.remove( db.favorite_restaurants )
   );
 
   app.get('/api/restaurants/:restaurant_id/orders'

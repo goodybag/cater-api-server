@@ -5,6 +5,7 @@ var utils = require('../../utils');
 var models = require('../../models');
 
 module.exports.cards = require('./cards');
+module.exports.rewards = require('./rewards');
 
 module.exports.list = function(req, res) {
   var tasks = {

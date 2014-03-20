@@ -149,6 +149,10 @@ define(function(require) {
     , nullable: false
     , default: false
     }
+  , points_awarded: {
+      type: types.boolean
+    , default: false
+    }
   };
 
   definition.indices = {};

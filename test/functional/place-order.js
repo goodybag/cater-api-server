@@ -14,16 +14,22 @@
 var config = require('../../functional-config');
 var futils = require('../../lib/ftest-utils');
 
-casper.test.begin( 'Place order', 2, function( test ){
+casper.options.waitTimeout = 20000;
+
+casper.test.begin( 'Place order', 3, function( test ){
   var options = {
     userId:       1
   , password:     'password'
   , restaurantId: 25
+  , itemId:       101
   };
 
   options.email = futils.getEmail( options.userId );
 
+  // casper.start( [ config.baseUrl, 'restaurants', options.restaurantId ].join('/') );
   casper.start( config.baseUrl );
+
+  casper.evaluate( futils.stdChit() );
 
   // Login
   casper.then(
@@ -49,6 +55,35 @@ casper.test.begin( 'Place order', 2, function( test ){
   casper.then( function(){
     test.assertExists('.page-menu');
   });
+
+  casper.evaluate( futils.stdChit() );
+
+  casper.waitFor( function(){
+    return this.evaluate( function(){
+      if ( typeof window.__ready !== 'function' ){
+        window.__ready = function(){
+          window.__isReady = true;
+        };
+      }
+
+      return window.__isReady;
+    });
+  });
+
+  // Click a menu item
+  casper.thenClick( [ '#item', options.itemId ].join('-') );
+
+  casper.then( function(){
+    console.log(this.getCurrentUrl());
+    this.capture('test.png');
+  });
+
+  // Ensure the modal opened
+  // casper.then( function(){
+  //   this.waitUntilVisible( '.in', function(){
+  //     test.assertExists('.in');
+  //   });
+  // });
 
   casper.run( test.done.bind( test ) );
 });

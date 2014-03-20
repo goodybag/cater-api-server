@@ -114,6 +114,8 @@ define( function( require ){
       });
 
       $('.tag-tooltip').tooltip();
+
+      if ( window.__ready ) window.__ready();
     }
   };
 

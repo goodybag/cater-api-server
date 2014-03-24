@@ -35,6 +35,8 @@ var reports = {
     var status = req.body.status || 'accepted';
     var start = req.body.start || '2012-01-01';
     var end = req.body.end || moment().format('YYYY-MM-DD');
+    var range = req.body.range || 'datetime';
+    var sort = req.body.sort || 'asc';
 
     var filename = [
       status
@@ -61,13 +63,17 @@ var reports = {
     var query = {
       where: {
         status: status
-      , datetime: {
-          $gte: start
-        , $lte: end
-        }
       }
     , limit: 'all'
     };
+
+    // by order datetime or submitted
+    range = (range === 'datetime') ? 'orders.datetime' : 'submitted.created_at';
+    query.where[range] = {
+      $gte: start
+    , $lte: end
+    };
+    query.order = [range + ' ' + sort];
 
     models.Order.find(query, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

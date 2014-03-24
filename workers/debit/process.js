@@ -28,6 +28,7 @@ var debitCustomer = function (order, callback) {
       utils.balanced.Debits.create({
         amount: amount
       , source_uri: paymentMethod.attributes.uri
+      , customer_uri: order.attributes.user.balanced_customer_uri
       , on_behalf_of_uri: order.attributes.restaurant.balanced_customer_uri
       , appears_on_statement_as: 'GB ORDER #'+ order.attributes.id
       , meta: { // note, cannot search on nested properties so keep searchable properties top-level

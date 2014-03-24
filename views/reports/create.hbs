@@ -1,7 +1,7 @@
 <div class="container">
   <h1>Reports</h1>
   <form method="POST" action="/reports/orders">
-    <legend>List orders by delivery date</legend>
+    <legend>List orders</legend>
 
     <label>Status</label>
     <select name="status">
@@ -10,6 +10,18 @@
       <option value="canceled">Canceled</option>
       <option value="accepted" selected>Accepted</option>
       <option value="denied">Denied</option>
+    </select>
+
+    <label>By</label>
+    <select name="range">
+      <option value="datetime">Delivery Date</option>
+      <option value="submitted">Date Submitted</option>
+    </select>
+
+    <label>Sort</label>
+    <select name="sort">
+      <option value="asc">Ascending</option>
+      <option value="desc">Descending</option>
     </select>
 
     <label>Start</label>

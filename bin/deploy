@@ -128,7 +128,7 @@ echo "deploying $branch to $env"
 cmd_git_push="git push --progress $env $branch:master"
 if [ $force == true ] ; then cmd_git_push="$cmd_git_push -f" ; fi
 state=$($cmd_git_push 2>&1 | tee /dev/tty)
-if [ "$state" == "Everything up-to-date" ] ; then
+if [ "$state" == "Everything up-to-date" ] && [ "$env" == "production" ]; then
   echo "there were no changes, scaling back up"
   $cmd_scale_up
   exit 1
@@ -163,5 +163,8 @@ while [ $is_up_again == false ] ; do
 done
 echo ""
 
-$cmd_scale_up
+if [ "$env" == "production" ] ; then
+  $cmd_scale_up
+fi
+
 if $maintenance ; then heroku maintenance:off --app $heroku_app ; fi

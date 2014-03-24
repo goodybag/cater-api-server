@@ -524,7 +524,6 @@ utils.async.series(
   }
 , function(error, results) {
   if (error) console.error(error);
-  console.log('done');
   process.exit(0);
   }
 );

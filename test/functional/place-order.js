@@ -14,14 +14,21 @@
 var config = require('../../functional-config');
 var futils = require('../../lib/ftest-utils');
 
+// Moment will not work in phantomjs so we use sugar
+require('../../node_modules/sugar/release/sugar-full.development');
+
 // casper.options.waitTimeout = 20000;
 
-casper.test.begin( 'Place order', 3, function( test ){
+casper.test.begin( 'Place order', 8, function( test ){
   var options = {
-    userId:       1
+    userId:       3
   , password:     'password'
-  , restaurantId: 25
-  , itemId:       101
+  , restaurantId: 1
+  , itemId:       1
+  , zip:          78745
+  , time:         '12:00 PM'
+  , guests:       15
+  , quantity:     1000
   };
 
   options.email = futils.getEmail( options.userId );
@@ -29,10 +36,7 @@ casper.test.begin( 'Place order', 3, function( test ){
   // casper.start( [ config.baseUrl, 'restaurants', options.restaurantId ].join('/') );
   casper.start( config.baseUrl );
 
-  casper.on( 'page.error', function( message, trace ){
-    this.echo( 'remote error caught: ' + message, 'ERROR' );
-    this.echo( trace, 'ERROR' );
-  });
+  futils.stdSetup( casper );
 
   // Login
   casper.then(
@@ -66,14 +70,49 @@ casper.test.begin( 'Place order', 3, function( test ){
   // Click a menu item
   casper.thenClick( [ '#item', options.itemId ].join('-') );
 
+  // Ensure the modal opened
   casper.then( function(){
-    this.capture('test.png');
+    this.waitUntilVisible( '.modal-item.in', function(){
+      test.assertExists('.modal-item-form button[type="submit"]');
+    });
   });
 
-  // // Ensure the modal opened
+  // Submit form
+  casper.thenClick('.modal-item-form button[type="submit"]');
+
   casper.then( function(){
-    this.waitUntilVisible( '.in', function(){
-      test.assertExists('.in');
+    this.waitUntilVisible( '.modal-order-params.in', function(){
+      test.assertExists('.order-params-bar');
+    });
+  });
+
+  casper.then( function(){
+    var data = { guests: options.guests };
+
+    test.assertExists('.page-menu');
+    data.zip = this.evaluate( function(){
+      return +$('#zips > option').eq(0).val();
+    });
+
+    this.evaluate( function(){
+      // Use last to ensure the date is far enough ahead
+      $('.picker__day--infocus:not(.picker__day--disabled)').last().click();
+      $('.picker__list-item:not(.picker__list-item--disabled)').last().click();
+      $('.modal-item .item-quantity').val( options.quantity );
+      return;
+    });
+
+    this.fill( '.order-params-bar form', data, false );
+
+    test.assertExists('.modal-order-params button[type="submit"]');
+  });
+
+  casper.thenClick('.modal-order-params button[type="submit"]');
+
+  casper.then( function(){
+    this.waitUntilVisible( '.order-table #order-item-' + options.itemId, function(){
+      test.assertExists('.page-menu');
+      test.assertDoesntExist('.order-summary .minimum-order');
     });
   });
 

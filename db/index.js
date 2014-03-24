@@ -44,6 +44,7 @@ exports.getClient = function(connStr, callback) {
   if (typeof connStr === 'function') {
     callback = connStr;
     connStr = config.postgresConnStr;
+    console.log("using connStr", connStr)
   }
   // callback will have arguments: error, client, done
   pg.connect(connStr, callback);

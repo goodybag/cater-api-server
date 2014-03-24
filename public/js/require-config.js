@@ -8,7 +8,7 @@
     //never includes a ".js" extension since
     //the paths config could be for a directory.
 
-  // , waitSeconds: 200
+  , waitSeconds: 200
 
     // for moment.js
   , noGlobal: true

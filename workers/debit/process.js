@@ -21,20 +21,26 @@ var debitCustomer = function (order, callback) {
 
   var amount = Math.floor(order.attributes.total);
   if (typeof amount === 'undefined' || amount == null || amount == 0) return callback(new Error('invalid amount: ' + amount));
-  utils.balanced.Debits.create({
-    amount: amount
-  , customer_uri: order.attributes.user.balanced_customer_uri
-  , on_behalf_of_uri: order.attributes.restaurant.balanced_customer_uri
-  , appears_on_statement_as: 'GB ORDER #'+ order.attributes.id
-  , meta: { // note, cannot search on nested properties so keep searchable properties top-level
-      user_id: order.attributes.user.id
-    , restaurant_id: order.attributes.restaurant.id
-    , order_id: order.attributes.id
-    , order_uuid: order.attributes.uuid
-    }
-  }, function (error, debit) {
-    if (error) return order.setPaymentError(error.uri, error, callback);
-    return order.setPaymentPaid('debit', debit.uri, debit, callback);
+
+  var pmId = order.attributes.payment_method_id;
+  models.PaymentMethod.findOne(pmId, function(error, paymentMethod) {
+    if (error) return callback(new Error('invalid payment method: ' + pmId));
+      utils.balanced.Debits.create({
+        amount: amount
+      , source_uri: paymentMethod.attributes.uri
+      , customer_uri: order.attributes.user.balanced_customer_uri
+      , on_behalf_of_uri: order.attributes.restaurant.balanced_customer_uri
+      , appears_on_statement_as: 'GB ORDER #'+ order.attributes.id
+      , meta: { // note, cannot search on nested properties so keep searchable properties top-level
+          user_id: order.attributes.user.id
+        , restaurant_id: order.attributes.restaurant.id
+        , order_id: order.attributes.id
+        , order_uuid: order.attributes.uuid
+        }
+      }, function (error, debit) {
+        if (error) return order.setPaymentError(error.uri, error, callback);
+        return order.setPaymentPaid('debit', debit.uri, debit, callback);
+      });
   });
 };
 

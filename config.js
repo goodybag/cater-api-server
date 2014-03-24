@@ -15,6 +15,26 @@ if (fs.existsSync('./local-config.json')){
   local = require('./local-config.json');
 }
 
+/**
+ * Change configuration environment
+ * @param  {String} env The environment to change to
+ */
+var changeEnvironment = function( env ){
+  if ( env == null || !config.hasOwnProperty( env ) ) env = 'dev';
+
+  for ( var key in module.exports ) delete module.exports[ key ];
+
+  var _config = {};
+  _config = _.merge( _.clone( config.default ), config[env] );
+
+  for ( var key in _config ) module.exports[ key ] = _config[ key ];
+
+  module.exports.env = env;
+
+  // Re-export this function since it was overwritten in the environment switch
+  module.exports.changeEnvironment = changeEnvironment;
+};
+
 var config = {};
 
 config.defaults = {
@@ -213,8 +233,6 @@ config.dev = {
   , plan: 'month'
   }
 
-, baseUrl: 'http://localhost:3000'
-
 , testEmail: local.testEmail || 'test@goodybag.com'
 
 , testPhoneSms: local.testPhoneSms || '1234567890'
@@ -392,6 +410,13 @@ config.production = {
       }
     }
   }
+};
+
+config.test = {
+  env: 'test'
+, baseUrl: 'http://localhost:3001'
+, http: { port: 3001 }
+, postgresConnStr:  "postgres://localhost:5432/cater"
 }
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';

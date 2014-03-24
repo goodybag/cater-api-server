@@ -115,7 +115,11 @@ define( function( require ){
 
       $('.tag-tooltip').tooltip();
 
-      if ( window.__ready ) window.__ready();
+      if ( typeof window.__ready === 'function' ){
+        window.__ready();
+      } else {
+        throw '__ready not defined!';
+      }
     }
   };
 

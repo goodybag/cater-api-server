@@ -10,7 +10,7 @@ console.log('wuuuuuuuuuuuuuuut');
       console.log('showModal');
       e.preventDefault();
       this.options.itemModalView.provideModel(this.model).show();
-      this.addClass('in');
+      this.$el.addClass('in');
     }
   });
 });

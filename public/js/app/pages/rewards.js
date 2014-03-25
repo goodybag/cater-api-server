@@ -21,6 +21,8 @@ define(function(require){
         this_.$sidebarPoints  = $('.points-panel-available .points-available');
         this_.initCards();
       });
+
+      analytics.page('User Rewards');
     }
 
   , initCards: function(){

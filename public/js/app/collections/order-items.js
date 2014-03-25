@@ -17,6 +17,11 @@ define(function(require, exports, module) {
 
     sync: function(method, model, options) {
       options.url = (method === 'read') ? '/api' + model.url() : model.url();
+
+      // break aggressive caching on IE
+      // this request provides live updates so dont cache reads
+      options.cache = (method !== 'read');
+
       Backbone.sync.call(this, method, model, options);
     }
   });

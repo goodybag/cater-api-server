@@ -1,3 +1,7 @@
+if ( process.argv.indexOf('--test') > -1 ){
+  process.env['GB_ENV'] = 'test';
+}
+
 var utils = require('../utils');
 var faker = require('Faker');
 var config = require('../config');
@@ -405,6 +409,7 @@ utils.async.series(
         if (error) return cb(error);
         utils.async.each(results, function(restaurant, callback) {
           var days = utils.first(utils.shuffle(utils.range(7)), faker.random.number(7));
+          console.log(days);
           utils.async.each(days, function(day, callback2) {
             query(inserts.restaurantDeliveryTimes(restaurant.id, day), callback2);
           }, callback)

@@ -1,3 +1,7 @@
+if ( process.argv.indexOf('--test') > -1 ){
+  process.env['GB_ENV'] = 'test';
+}
+
 var tasks = require('./tasks');
 var async = require('async');
 

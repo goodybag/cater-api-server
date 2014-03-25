@@ -1,15 +1,17 @@
+var forky = require('forky');
 var config = require('./config');
 var rollbar = require('rollbar');
 
 process.on('uncaughtException', function(err) {
-  console.error('Caught exception:', err);
+  console.log('Uncaught Exception', err);
+  forky.disconnect();
+  process.exit();
 });
 
 if (config.rollbar) {
   rollbar.init(config.rollbar.accessToken, {environment: config.env});
   rollbar.handleUncaughtExceptions();
 }
-
 
 var app = require('./app')
   , http = require('http');

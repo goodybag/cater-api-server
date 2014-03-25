@@ -15,7 +15,6 @@ utils.extend( m, require('./middleware/util') );
 utils.extend( m, require('dirac-middleware') );
 
 module.exports.register = function(app) {
-
   app.before( m.analytics, m.queryParams(), function( app ){
     app.get('/', controllers.auth.index);
     app.get('/login', controllers.auth.login);

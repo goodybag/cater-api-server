@@ -11,5 +11,6 @@ module.exports = {
   Tag: require('./tag'),
   MealType: require('./meal-type'),
   MealStyle: require('./meal-style'),
+  PaymentMethod: require('./payment-method'),
   Reminder: require('./reminder')
 };

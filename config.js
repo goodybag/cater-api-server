@@ -20,6 +20,8 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, rewardsStartDate: '2014-03-25 00:00:00'
+
 , salesTax: 1.0825
 
 , taxRate: .0825
@@ -106,6 +108,7 @@ config.defaults = {
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
+  , rewards: [ local.testEmail || 'test@goodybag.com' ]
   }
 
 , phone: {
@@ -379,6 +382,12 @@ config.production = {
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
+  , rewards: [
+      'jacobparker@goodybag.com'
+    , 'sarahsouthwell@goodybag.com'
+    , 'jag@goodybag.com'
+    , 'redemptions@goodybag.com'
+    ]
   }
 
 , emailEnabled: true

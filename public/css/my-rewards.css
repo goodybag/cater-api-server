@@ -1,0 +1,120 @@
+.page-title + p {
+  text-align: center;
+}
+
+.giftcard-wrapper {
+  float: left;
+  width: 50%;
+  margin-bottom: 40px;
+}
+
+.giftcard-wrapper .giftcard {
+  margin: 0 auto;
+}
+
+.rewards-description {
+  display: table;
+  width: 100%;
+  margin-bottom: 80px;
+  padding: 0 58px;
+}
+
+.rewards-description p {
+  float: left;
+  width: 80%;
+}
+
+.rewards-description .learn-more-wrapper {
+  float: left;
+  width: 20%;
+  text-align: right;
+}
+
+@media screen and (max-width: 1200px) {
+  .rewards-description {
+    padding: 0 25px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .rewards-description {
+    padding: 0 50px;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .rewards-description p,
+  .rewards-description .learn-more-wrapper {
+    width: 100%;
+  }
+
+  .giftcard-wrapper {
+    width: 100%;
+  }
+
+  .rewards-description .btn-learn-more {
+    position: static;
+  }
+}
+
+.card-description {
+  margin-top: 4px;
+  text-align: center;
+}
+
+/**
+ * Maybe a smidgen over-qualified, but I just want to make sure
+ * I'm only targeting the child column of page
+ */
+.page > .row > .col-md-8 > .panel {
+  display: table;
+  width: 100%;
+  padding-top: 20px;
+}
+
+.points-panel {
+  text-align: center;
+}
+
+.points-panel h2 {
+  font-size: 21px;
+}
+
+.points-panel .points-available {
+  font-size: 40px;
+}
+
+.points-panel .table {
+  text-align: left;
+}
+
+.points-panel .table tr > th,
+.points-panel .table tr > td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.points-panel .table tr > th:last-child,
+.points-panel .table tr > td:last-child {
+  text-align: right;
+}
+
+.points-panel .table-striped > tbody > tr:nth-child(odd) > td,
+.points-panel .table-striped > tbody > tr:nth-child(odd) > th {
+  background-color: #EEE;
+}
+
+.points-panel .view-all {
+  display: inline-block;
+  padding: 4px 12px 2px;
+  margin-top: 28px;
+  border: solid 1px #CCC;
+  border-bottom: none;
+  background: #EEE;
+  color: #555;
+  font-size: 13px;
+  text-shadow: 0 1px 0 #fff;
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
+  box-shadow: inset 0 1px 0 #fff;
+}

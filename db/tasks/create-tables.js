@@ -37,6 +37,7 @@ var definitions = [
 , 'waitlist'
 , 'addresses'
 , 'reminders'
+, 'favorite-restaurants'
 , 'deltas'
 , 'favorite-restaurants'
 ];

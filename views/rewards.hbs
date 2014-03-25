@@ -1,0 +1,115 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/my-rewards.css">
+{{/extend}}
+
+{{#extend "title"}} - Rewards{{/extend}}
+
+<h1 class="page-title">Rewards</h1>
+<p>Check your latest Reward Point balances and exchange them for prizes!</p>
+
+<div class="page page-rewards container">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="panel">
+        <div class="panel-body">
+          <div class="rewards-description">
+            <p>Hover over a card to view details.<br>After redeeming a card, we will send you a confirmation email.<br>We will deliver your giftcard to you in person!</p>
+            <div class="learn-more-wrapper">
+              <a href="/rewards" class="btn btn-primary btn-learn-more">Learn more</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="giftcards">{{> giftcards}}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel points-panel points-panel-available">
+        <h2>Available Points</h2>
+        <div class="points-available">
+          {{#if user.points}}
+            {{user.points}}
+          {{else}}
+            0
+          {{/if}}
+        </div>
+
+
+        {{#if orders}}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Recent Orders</th>
+              <th>Points Earned</th>
+            </tr>
+          </thead>
+          <tbody>
+          {{#each orders}}
+            <tr>
+              <td>
+                <a href="/orders/{{this.id}}">#{{this.id}} - {{this.restaurant_name}}</a>
+              </td>
+              <td>{{this.points}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+        {{!-- Leave hidden for now until we implement ajax loading feature --}}
+        {{!-- <a href="#" class="view-all">View All</a> --}}
+        {{else}}
+        <div class="panel-body">
+          <p>Earn more points by <a href="/restaurants">placing an order!</a></p>
+        </div>
+        {{/if}}
+        {{#unless user.points}}
+        <div class="panel-body">
+          <p>You have no points. You can change that by <a href="/restaurants">placing an order!</a></p>
+        </div>
+        {{/unless}}
+      </div>
+
+      {{#if user.pendingPoints}}
+      <div class="panel points-panel points-panel-pending">
+        <h2>Pending Points</h2>
+        <div class="points-available">{{user.pendingPoints}}</div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Recent Orders</th>
+              <th>Points Earned</th>
+            </tr>
+          </thead>
+          <tbody>
+          {{#each pendingOrders}}
+            <tr>
+              <td>
+                <a href="/orders/{{this.id}}">#{{this.id}} - {{this.restaurant_name}}</a>
+              </td>
+              <td>{{this.points}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+        {{!-- Leave hidden for now until we implement ajax loading feature --}}
+        {{!-- <a href="#" class="view-all">View All</a> --}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+{{#extend "scripts"}}
+<script>
+  define('data/user', function(){
+    return {{{json user}}};
+  });
+
+  define('data/cards', function(){
+    return {{{json cards}}};
+  });
+
+  require(['app/pages/rewards'], function( page ){
+    page.init();
+  });
+</script>
+{{/extend}}

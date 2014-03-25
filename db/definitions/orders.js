@@ -88,6 +88,10 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , edit_token_expires: {
+      type: types.timestamp
+    , nullable: true
+    }
   , review_token: {
       type: types.text
     , nullable: false
@@ -147,6 +151,10 @@ define(function(require) {
   , reviewed: {
       type: types.boolean
     , nullable: false
+    , default: false
+    }
+  , points_awarded: {
+      type: types.boolean
     , default: false
     }
   };

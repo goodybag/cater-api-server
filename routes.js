@@ -23,6 +23,10 @@ module.exports.register = function(app) {
     app.get('/join', controllers.auth.registerView);
     app.post('/join', controllers.auth.register);
 
+    app.get('/rewards', m.view( 'landing/rewards', {
+      layout: 'landing/layout'
+    }));
+
     app.get('/forgot-password', controllers.auth.forgotPassword);
     app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
     app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
@@ -518,6 +522,15 @@ module.exports.register = function(app) {
   });
 
   /**
+   * Loyalty
+   */
+
+  app.get('/users/:uid/rewards'
+  , m.restrict(['admin', 'client'])
+  , controllers.users.rewards.list
+  );
+
+  /**
    *  User Addresseses resource.
    */
 
@@ -803,5 +816,15 @@ module.exports.register = function(app) {
   app.post('/api/orders/:order_id/generate_edit_token'
   , m.restrict(['client', 'admin'])
   , controllers.orders.generateEditToken
+  );
+
+  /**
+   * Users
+   */
+
+  app.post('/api/users/:uid/rewards'
+  , m.restrict(['admin', 'client'])
+  , m.owner()
+  , controllers.users.rewards.redeem
   );
 }

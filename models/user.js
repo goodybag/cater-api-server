@@ -2,8 +2,10 @@ var util = require('util');
 var db  = require('../db');
 var utils = require('../utils');
 var Model = require('./model');
+var Order = require('./order');
 var Address = require('./address');
 var queries = require('../db/queries');
+var config = require('../config');
 
 var table = 'users';
 
@@ -30,6 +32,21 @@ var User = module.exports = Model.extend({
 
 , removeUserPaymentMethod: function( cardId, callback, client ){
     User.removeUserPaymentMethod( this.attributes.id, cardId, callback, client );
+    return this;
+  }
+
+, getPendingPoints: function( callback, client ){
+    User.getPendingPoints( this.attributes.id, callback, client );
+    return this;
+  }
+
+, getOrdersWithPendingPoints: function( options, callback, client ){
+    User.getOrdersWithPendingPoints( this.attributes.id, options, callback, client );
+    return this;
+  }
+
+, removePoints: function( points, callback, client ){
+    User.removePoints( this.attributes.id, points, callback, client );
     return this;
   }
 
@@ -279,6 +296,118 @@ var User = module.exports = Model.extend({
     ( client || db ).query( db.builder.sql( query ), function( error, result, info ) {
       return callback( error, result );
     });
+  }
+
+, addPointsForOrder: function( order, callback, client ) {
+    var points = order.attributes.points || 0;
+    if (isNaN(points)) return callback(new Error('cannot calculate points for order'));
+
+    db.getClient(function (error, client, done) {
+      var tasks = {
+        begin: function (cb) {
+          client.query('BEGIN', cb);
+        }
+      , updateUserPoints: function (cb) {
+          var query = {
+            type: 'update'
+          , table: 'users'
+          , updates: {
+              $inc: {points: points}
+            }
+          , where: {
+              id: order.attributes.user_id
+            }
+          };
+
+          var sql = db.builder.sql(query);
+          client.query(sql.query, sql.values, cb);
+        }
+      , setPointsAwardedForOrder: function (cb) {
+          var query = {
+            type: 'update'
+          , table: 'orders'
+          , updates: {
+              points_awarded: true
+            }
+          , where: {
+              id: order.attributes.id
+            , points_awarded: false
+            }
+          };
+          var sql = db.builder.sql(query);
+          client.query(sql.query, sql.values, cb);
+        }
+      };
+
+      utils.async.series([
+        tasks.begin
+      , tasks.updateUserPoints
+      , tasks.setPointsAwardedForOrder
+      ], function (error, results) {
+        client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
+          done();
+          return callback(e || error);
+        });
+      });
+    });
+  }
+
+, removePoints: function( userId, points, callback, client ) {
+    var query = {
+      type: 'update'
+    , table: 'users'
+    , updates: {
+        $dec: {points: points}
+      }
+    , where: {
+        id: userId
+      }
+    };
+
+    ( client || db ).query( db.builder.sql( query ), function( error, result, info ) {
+      return callback( error, result );
+    });
+  }
+
+, getPendingPoints: function( userId, callback, client ) {
+    var query = {
+      where: {
+        status: {$or: ['submitted', 'accepted', 'delivered']}
+      , points_awarded: false
+      , user_id: userId
+      , created_at: { $gte: config.rewardsStartDate }
+      }
+    };
+
+    Order.find(query, function(error, orders){
+      if (error) return callback(error);
+
+      var points = 0;
+      if (!orders.length) return callback(null, points);
+      orders.forEach(function(order){
+        points += (order.attributes.points || 0);
+      });
+      return callback(null, points);
+    });
+  }
+
+, getOrdersWithPendingPoints: function( userId, options, callback, client ) {
+    if ( typeof options === 'function' ){
+      callback = options;
+      client = callback;
+      options = {};
+    }
+
+    var query = utils.defaults({
+      where: {
+        status: {$or: ['submitted', 'accepted', 'delivered']}
+      , points_awarded: false
+      , user_id: userId
+      , created_at: { $gte: config.rewardsStartDate }
+      }
+    }, options);
+
+    return Order.find(query, callback);
   }
 
 , find: function( query, callback, client ){

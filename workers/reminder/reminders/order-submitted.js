@@ -6,7 +6,8 @@
  *   at appropriate times (not in the middle of the night)
  */
 
-var config = require('../../../config');
+var config  = require('../../../config');
+var utils   = require('../../../utils');
 var Models  = require('../../../models');
 var views   = require('../lib/views');
 
@@ -41,6 +42,14 @@ var getQuery = function( storage ) {
   return $query;
 };
 
+
+var sendEmail = function(order) {
+  console.log(order);
+  return function(callback) {
+      callback(null);
+  };
+};
+
 module.exports.check = function( storage, callback ){
   Models.Order.find( getQuery(storage), function( error, results ) {
     if ( error ) return callback( error );
@@ -48,33 +57,52 @@ module.exports.check = function( storage, callback ){
   });
 };
 
-module.exports.work = function( storage, callback ){
+module.exports.work = function( storage, done ){
   var stats = {
     submittedOrders:     { text: 'Submitted Orders Notified', value: 0 }
   , errors:              { text: 'Errors', value: 0, objects: [] }
   };
 
-  /*
+  /* Run this flow in parallel for each order
    * 1 Find submitted orders not notified
    * 2 Render email
    * 3 Send mail
    */
+  Models.Order.find( getQuery(storage), function( error, results) {
+    if (error) return done(error);
 
-  utils.auto({
-    findSubmittedOrders: function(callback) {
-      Models.Order.find(getQuery(storage), function(error, orders) {
-        callback(error, orders);
-      });
-    },
-
-    renderEmails: ['findSubmittedOrders', function(callback, results) {
-
-    }],
-
-    sendEmails: ['renderEmails', function(callback, orders) {
-
-    }]
+    var fns = results.map(sendEmail);
+    utils.async.parallelNoBail(fns, function emailsSent(error, results) {
+      done(error, stats);
+    });
   });
+
+  // utils.async.auto({
+  //   findSubmittedOrders: function(callback) {
+  //     console.log('step 1');
+  //     Models.Order.find(getQuery(storage), function(error, orders) {
+  //       callback(error, orders);
+  //     });
+  //   },
+  //
+  //   viewContexts: ['findSubmittedOrders', function(callback, results) {
+  //     var orders = results.findSubmittedOrders;
+  //     var contexts = orders.map(function(order) {
+  //       return {
+  //         order: order.toJSON({review: true})
+  //       , config: config
+  //       , layout: 'email-layout'
+  //       };
+  //     });
+  //     callback(null, contexts);
+  //   }],
+  //
+  //   sendEmails: ['renderEmails', function(callback, orders) {
+  //     console.log('step 3');
+  //     done(null, stats);
+  //   }]
+  // });
+
   //
   // Models.Order.find( getQuery( storage ), function( error, orders ) {
   //   if ( error ) return callback( error );

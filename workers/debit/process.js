@@ -19,10 +19,10 @@ var checkForExistingDebit = function (order, callback) {
 var debitCustomer = function (order, callback) {
   var TAGS = [process.domain.uuid];
 
-  var amount = Math.floor(order.attributes.total);
+  var amount = Math.floor(order.attributes.total + (order.attributes.adjustment.amount || 0));
   if (typeof amount === 'undefined' || amount == null || amount == 0) return callback(new Error('invalid amount: ' + amount));
 
-  var pmId = order.attributes.payment_method_id;
+  var pmId = order.attributes.payment_method_id order.at;
   models.PaymentMethod.findOne(pmId, function(error, paymentMethod) {
     if (error) return callback(new Error('invalid payment method: ' + pmId));
       utils.balanced.Debits.create({

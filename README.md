@@ -28,12 +28,15 @@ To run the functional test suite, you currently need the selinium chrome driver 
 wget http://chromedriver.storage.googleapis.com/2.9/chromedriver_mac32.zip
 unzip chromedriver_mac32.zip
 mv chromedriver /usr/local/bin
+node db/setup --test
+node db/fake-data --test
 ```
 
 To run the entire suite:
 
 ```
-mocha test/functional
+./bin/start-test-server
+npm test
 ```
 
 Or a single file:

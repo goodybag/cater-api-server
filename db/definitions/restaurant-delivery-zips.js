@@ -40,7 +40,7 @@ define(function(require) {
       type: types.int
     , default: 0
     , checks: ['>= 0']
-    , nullable false
+    , nullable: false
     }
   };
 

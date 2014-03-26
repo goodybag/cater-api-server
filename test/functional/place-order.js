@@ -79,7 +79,7 @@ test.describe( 'Order Flow', function(){
 
       // Fill Login
     , function( next ){
-        console.log('* Fill Login')
+        console.log('\n  * Fill Login')
         utils.async.parallel({
           fillEmail: function( next ){
             driver.findElement( webdriver.By.css('#login-email') ).then( function( el ){
@@ -257,7 +257,6 @@ test.describe( 'Order Flow', function(){
             btn.click();
             next();
           });
-
         });
       }
 
@@ -304,6 +303,16 @@ test.describe( 'Order Flow', function(){
 
           btn.click();
 
+          next();
+        });
+      }
+
+      // Ensure we're on the receipt page
+    , function( next ){
+        console.log('  * Ensure were on the receipt page')
+        driver.waitUntilSelector( '.page-order', function( error, result ){
+          assert.equal( !!error, false, 'Not on receipt page' );
+          assert.equal( !!result, true, 'Not on receipt page' );
           next();
         });
       }

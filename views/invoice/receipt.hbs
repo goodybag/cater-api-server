@@ -116,7 +116,7 @@
           <dt>Delivery Fee:</dt>
           <dd>${{dollars order.restaurant.delivery_fee}}</dd>
           <dt>Tax:</dt>
-          <dd>${{tax order.sub_total order.restaurant.delivery_fee}}</dd>
+          <dd>${{tax order}}</dd>
           <dt>Tip:</dt>
           <dd>${{dollars order.tip}}</dd>
         </dl>
@@ -125,7 +125,7 @@
       <div class="total-wrapper">
         <dl class="dl-horizontal dl-order-total">
           <dt>Total:</dt>
-          <dd>${{total order.sub_total order.restaurant.delivery_fee order.tip}}</dd>
+          <dd>${{total order}}</dd>
         </dl>
       </div>
     </div>

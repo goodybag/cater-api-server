@@ -406,23 +406,6 @@ define(function(require, exports, module) {
         default:
           return '#fff'
       }
-    },
-
-    getTotal: function(){
-      return Math.round(
-        (
-          parseInt( this.get('sub_total') )
-        + parseInt( this.restaurant.get('delivery_fee') )
-        )
-      * parseFloat( config.salesTax )
-      );
-    },
-
-    getSalesTaxContribution: function(){
-      return this.getTotal() - (
-        parseInt( this.get('sub_total') )
-      + parseInt( this.restaurant.get('delivery_fee') )
-      );
     }
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']

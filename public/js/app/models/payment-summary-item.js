@@ -11,7 +11,7 @@ define(function(require, exports, module) {
   return module.exports = utils.Model.extend({
     defaults: {
       gb_fee:             0
-    , sales_tax:          config.salesTax - 1
+    , sales_tax:          config.taxRate
     , sub_total:          0
     }
 
@@ -42,7 +42,7 @@ define(function(require, exports, module) {
 
       var data = {
         delivery_fee:     order.restaurant.get('delivery_fee')
-      , sub_total:        order.get('sub_total') + ( order.get('adjustment').amount || 0 )
+      , sub_total:        order.get('sub_total')
       , tip:              order.get('tip')
       };
 

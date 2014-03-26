@@ -61,12 +61,21 @@ $$ language plpgsql;
 
 DO $$
   declare version       text := '1.2.4';
-
+  declare r             record;
 begin
   raise notice '## Running Delta v% ##', version;
 
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  perform add_column( 'restaurant_delivery_zips', 'fee', 'int' );
+  perform add_column( 'restaurant_delivery_zips', 'fee', 'int default 0' );
+
+  -- For each existing delivery zip, update with restaurants current delivery fee
+  for r in select * from restaurants
+  loop
+    update restaurant_delivery_zips
+      set fee = r.delivery_fee
+      where restaurant_id = r.id;
+  end loop;
+
 end$$;

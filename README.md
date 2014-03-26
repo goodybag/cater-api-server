@@ -49,3 +49,7 @@ grunt generate.functional-test:my-test-name
 ```
 
 This will generate `my-test-name.js` in `test/functional`. You may have multiple tests per file, but keep the file scoped to one task. For instance, if you're testing login, it's ok to test the login functionality of multiple pages. And it's ok to add tests for failing login cases.
+
+__Resources:__
+
+* [http://selenium.googlecode.com/git/docs/api/javascript/module_selenium-webdriver.html](Web Driver JS Docs)

@@ -19,7 +19,7 @@ var checkForExistingDebit = function (order, callback) {
 var debitCustomer = function (order, callback) {
   var TAGS = [process.domain.uuid];
 
-  var amount = Math.floor(order.attributes.total + (order.attributes.adjustment.amount || 0));
+  var amount = Math.floor(order.attributes.total);
   if (typeof amount === 'undefined' || amount == null || amount == 0) return callback(new Error('invalid amount: ' + amount));
 
   var pmId = order.attributes.payment_method_id;

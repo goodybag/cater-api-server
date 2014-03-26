@@ -49,10 +49,10 @@ end;
 $$ language plpgsql;
 
 -- Drop column
-create or replace function add_column( tbl_name text, col_name text )
+create or replace function drop_column( tbl_name text, col_name text )
 returns void as $$
 begin
-  if exists ( select 1 from column_exists( tbl_name, col_name ) where column_exists = false ) then
+  if exists ( select 1 from column_exists( tbl_name, col_name ) where column_exists = true ) then
     raise notice 'Dropping column `%` to table `%`', col_name, tbl_name;
     execute 'alter table "' || tbl_name || '" drop column "' || col_name || '"';
   end if;
@@ -79,7 +79,7 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  perform add_column( 'restaurant_delivery_zips', 'fee', 'int default 0' );
+  perform add_column( 'restaurant_delivery_zips', 'fee', 'int not null default 0 check ( fee >= 0)' );
 
   -- For each existing delivery zip, update with restaurants current delivery fee
   for r in select * from restaurants

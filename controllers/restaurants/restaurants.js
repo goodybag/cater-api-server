@@ -294,7 +294,6 @@ var fields = [
   'emails',
   'minimum_order',
   'price',
-  'delivery_fee',
   'cuisine',
   'yelp_business_id',
   'websites',

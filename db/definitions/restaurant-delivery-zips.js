@@ -36,6 +36,12 @@ define(function(require) {
     , nullable: true
     , checks: ["SIMILAR TO '[[:digit:]]{5}'"]
     }
+  , fee: {
+      type: types.int
+    , default: 0
+    , checks: ['>= 0']
+    , nullable false
+    }
   };
 
   definition.indices = {

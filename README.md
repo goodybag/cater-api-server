@@ -22,23 +22,24 @@ hacking this together as fast as possible
 
 ## Testing
 
-To run the functional test suite, you currently need phantomjs and casperjs installed:
+To run the functional test suite, you currently need the selinium chrome driver installed:
 
 ```
-brew install phantomjs
-brew install casperjs --devel
+wget http://chromedriver.storage.googleapis.com/2.9/chromedriver_mac32.zip
+unzip chromedriver_mac32.zip
+mv chromedriver /usr/local/bin
 ```
 
 To run the entire suite:
 
 ```
-casperjs test test/functional
+mocha test/functional
 ```
 
 Or a single file:
 
 ```
-casperjs test test/functional/login.js
+mocha test/functional/login.js
 ```
 
 To write your own functional tests, start off with some scaffolding:

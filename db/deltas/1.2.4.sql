@@ -48,6 +48,17 @@ begin
 end;
 $$ language plpgsql;
 
+-- Drop column
+create or replace function add_column( tbl_name text, col_name text )
+returns void as $$
+begin
+  if exists ( select 1 from column_exists( tbl_name, col_name ) where column_exists = false ) then
+    raise notice 'Dropping column `%` to table `%`', col_name, tbl_name;
+    execute 'alter table "' || tbl_name || '" drop column "' || col_name || '"';
+  end if;
+end;
+$$ language plpgsql;
+
 -- Add type
 create or replace function add_type( type_name text, type_def text )
 returns void as $$
@@ -78,4 +89,5 @@ begin
       where restaurant_id = r.id;
   end loop;
 
+  perform drop_column( 'restaurants', 'delivery_fee' );
 end$$;

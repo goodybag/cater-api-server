@@ -9,7 +9,7 @@
     </a>
 
     {{#if user.id}}
-      <button class="navbar-toggle btn btn-default">Hamburger</button>
+      <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
       <ul class="nav navbar-nav navbar-right">
         {{#contains user.groups 'restaurant'}}
           <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
@@ -184,7 +184,9 @@
 {{#extend "scripts"}}
 <script>
   require( ['jquery', 'navbar'], function( $ ){
-    $('.navbar').navbar();
+    $('.navbar').navbar({ toggleText: false });
   });
+
+  analytics.page('Rewards');
 </script>
 {{/extend}}

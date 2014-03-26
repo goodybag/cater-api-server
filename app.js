@@ -72,8 +72,12 @@ app.configure(function(){
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
 
   app.use(function(err, req, res, next){
-    forky.disconnect();
     res.error(errors.internal.UNKNOWN, err);
+
+    // If the response stream does not close/finish in 2 seconds, just die anyway
+    forky.disconnect(2000);
+    res.on( 'finish', process.exit.bind( process ) );
+    res.on( 'close', process.exit.bind( process ) );
   });
 
   app.set('view engine', 'hbs');

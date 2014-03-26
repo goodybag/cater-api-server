@@ -20,7 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
-, rewardsStartDate: '2014-03-21 00:00:00'
+, rewardsStartDate: '2014-03-25 00:00:00'
 , submittedNotificationStartDate: '2014-03-24 00:00:00'
 
 , salesTax: 1.0825

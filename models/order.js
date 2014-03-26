@@ -94,7 +94,7 @@ module.exports = Model.extend({
     if ( this.attributes.zip ){
       query.where.zip = this.attributes.zip;
     } else {
-      query.sort = 'fee asc';
+      query.order = 'fee asc';
     }
 
     return query;

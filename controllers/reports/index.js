@@ -9,13 +9,13 @@ var
 , fs = require('fs')
 , hbHelpers = require('../../public/js/lib/hb-helpers')
 , errors = require('../../errors')
-, config = require('../../config')
+, config = require('../../config');
 
 
 var dollars = hbHelpers.dollars;
 var quoteVal = function(val) {
   return val ? '"'+val+'"' : '';
-}
+};
 
 var reports = {
 
@@ -73,7 +73,9 @@ var reports = {
       $gte: start
     , $lte: end
     };
-    query.order = [range + ' ' + sort];
+
+    query.order = {};
+    query.order[range] = sort;
 
     models.Order.find(query, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
@@ -145,6 +147,6 @@ var reports = {
       res.end();
     });
   }
-}
+};
 
 module.exports = reports;

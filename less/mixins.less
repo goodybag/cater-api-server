@@ -204,6 +204,31 @@
   box-shadow: inset 0 1px 0 rgba( 255, 255, 255, 0.1 );
 }
 
+// Horizontal dividers
+// -------------------------
+// Dividers (basically an hr) within dropdowns and nav lists
+.nav-divider(@color: #e5e5e5) {
+  height: 1px;
+  margin: ((floor(@font-size-base * @line-height-base) / 2) - 1) 0;
+  overflow: hidden;
+  background-color: @color;
+}
+
+// Reset filters for IE
+//
+// When you need to remove a gradient background, do not forget to use this to reset
+// the IE filter for IE9 and below.
+.reset-filter() {
+  filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));
+}
+
+.animation( @easing, @duration, @name ){
+  -webkit-animation: @easing @duration @name;
+  -moz-animation: @easing @duration @name;
+  -o-animation: @easing @duration @name;
+  animation: @easing @duration @name;
+}
+
 #animations {
   .fade-in() {
     from { .opacity(0) }
@@ -221,8 +246,63 @@
     from { .translate( 500px, 0 ); .opacity(0); }
     to { .translate( 0, 0 ); .opacity(1); }
   }
+  .slide-in-from-bottom() {
+    from { .translate( 0, 80px ); .opacity(0); }
+    to { .translate( 0, 0 ); .opacity(1); }
+  }
   .slide-bg() {
     from { background-position-x: 10%; }
     to { background-position-x: 25%; }
+  }
+}
+
+#box {
+  .display() {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-box;
+    display: box;
+  }
+
+  .align( @orientation ){
+    -webkit-box-align: @orientation;
+    -moz-box-align: @orientation;
+    -ms-box-align: @orientation;
+    box-align: @orientation;
+  }
+
+  .orient( @orientation ){
+    -webkit-box-orient: @orientation;
+    -moz-box-orient: @orientation;
+    -ms-box-orient: @orientation;
+    box-orient: @orientation;
+  }
+
+  .pack( @orientation ){
+    -webkit-box-pack: @orientation;
+    -moz-box-pack: @orientation;
+    -ms-box-pack: @orientation;
+    box-pack: @orientation;
+  }
+
+  .flex( @val ){
+    -webkit-box-flex: @val;
+    -moz-box-flex: @val;
+    -ms-box-flex: @val;
+    box-flex: @val;
+  }
+
+  .ordinal-group( @group ){
+    -webkit-box-ordinal-group: @group;
+    -moz-box-ordinal-group: @group;
+    -ms-box-ordinal-group: @group;
+    box-ordinal-group: @group;
+  }
+
+  .direction( @direction ){
+    -webkit-box-direction: @direction;
+    -moz-box-direction: @direction;
+    -ms-box-direction: @direction;
+    box-direction: @direction;
   }
 }

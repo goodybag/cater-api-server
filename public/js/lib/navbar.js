@@ -22,6 +22,8 @@ define(function(require){
 
   var $ = require('jquery');
 
+  require('bootstrap');
+
   $.fn.navbar = function( options ){
     var $window = $(window);
     var $this = this;

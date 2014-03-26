@@ -72,8 +72,12 @@ app.configure(function(){
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
 
   app.use(function(err, req, res, next){
-    forky.disconnect();
     res.error(errors.internal.UNKNOWN, err);
+
+    // If the response stream does not close/finish in 2 seconds, just die anyway
+    forky.disconnect(2000);
+    res.on( 'finish', process.exit.bind( process ) );
+    res.on( 'close', process.exit.bind( process ) );
   });
 
   app.set('view engine', 'hbs');
@@ -97,15 +101,14 @@ app.configure(function(){
     options = options || {};
 
     options = utils.extend( options, {
-        user:     utils.extend({}, this.req.session ? this.req.session.user : {}, options.user)
-      , config:   utils.extend({}, partialConfig, options.config, config)
+        config:   utils.extend({}, partialConfig, options.config, config)
       , session:  this.req.session
       }
     );
 
-    if (options.user.email) {
+    if (this.req.user && this.req.user.attributes && this.req.user.attributes.email) {
       options.intercom = {
-        user_hash: crypto.createHmac('sha256', new Buffer(config.intercom.apiSecret, 'utf8')).update(options.user.email).digest('hex')
+        user_hash: crypto.createHmac('sha256', new Buffer(config.intercom.apiSecret, 'utf8')).update(this.req.user.attributes.email).digest('hex')
       };
     }
 
@@ -114,7 +117,7 @@ app.configure(function(){
 
   /**
    * More readable app.all implementation for applying multiple
-   * middlewares so a group of routes
+   * middlewares to a group of routes
    *
    * app.before( m.restrict(), function(){
    *   app.get('/orders', ... );

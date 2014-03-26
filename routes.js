@@ -15,13 +15,16 @@ utils.extend( m, require('./middleware/util') );
 utils.extend( m, require('dirac-middleware') );
 
 module.exports.register = function(app) {
-
   app.before( m.analytics, m.queryParams(), function( app ){
     app.get('/', controllers.auth.index);
     app.get('/login', controllers.auth.login);
     app.post('/login', controllers.auth.login);
     app.get('/join', controllers.auth.registerView);
     app.post('/join', controllers.auth.register);
+
+    app.get('/rewards', m.view( 'landing/rewards', {
+      layout: 'landing/layout'
+    }));
 
     app.get('/forgot-password', controllers.auth.forgotPassword);
     app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
@@ -34,15 +37,12 @@ module.exports.register = function(app) {
    * Restaurants resource.  The collection of all restaurants.
    */
 
-  app.get('/restaurants',
-    m.restrict(['client', 'restaurant', 'admin']),
-    function(req, res, next) {
-      if (req.query.edit) return next();
-      controllers.restaurants.list.apply(this, arguments);
-    }
+  app.get('/restaurants'
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , controllers.restaurants.list
   );
 
-  app.get('/restaurants', m.restrict('admin'), controllers.restaurants.editAll);
+  app.get('/restaurants/edit', m.restrict('admin'), controllers.restaurants.editAll);
 
   app.post('/restaurants', m.restrict('admin'), controllers.restaurants.create);
 
@@ -365,9 +365,9 @@ module.exports.register = function(app) {
   , controllers.orders.orderItems.update
   );
 
-  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.patch('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
 
-  app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
+  app.del('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
 
   app.all('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
@@ -519,6 +519,15 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET');
     res.send(405);
   });
+
+  /**
+   * Loyalty
+   */
+
+  app.get('/users/:uid/rewards'
+  , m.restrict(['admin', 'client'])
+  , controllers.users.rewards.list
+  );
 
   /**
    *  User Addresseses resource.
@@ -688,6 +697,35 @@ module.exports.register = function(app) {
     })
   );
 
+  // Not currently used
+  app.get('/api/users/:user_id/favorites/restaurants'
+  , m.owner( {param:'user_id'} )
+  , m.pagination()
+  , m.param('user_id')
+  , m.find( db.favorite_restaurants )
+  );
+
+  app.post('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.owner( {param:'user_id'} )
+  , m.queryToBody('user_id')
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.favorite_restaurants)
+  );
+
+  app.put('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.owner( {param:'user_id'} )
+  , m.queryToBody('user_id')
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.favorite_restaurants)
+  );
+
+  app.del('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.owner( {param:'user_id'} )
+  , m.param('user_id')
+  , m.param('restaurant_id')
+  , m.remove( db.favorite_restaurants )
+  );
+
   app.get('/api/restaurants/:restaurant_id/orders'
   , m.pagination()
   , m.param('restaurant_id')
@@ -777,5 +815,15 @@ module.exports.register = function(app) {
   app.post('/api/orders/:order_id/generate_edit_token'
   , m.restrict(['client', 'admin'])
   , controllers.orders.generateEditToken
+  );
+
+  /**
+   * Users
+   */
+
+  app.post('/api/users/:uid/rewards'
+  , m.restrict(['admin', 'client'])
+  , m.owner()
+  , controllers.users.rewards.redeem
   );
 }

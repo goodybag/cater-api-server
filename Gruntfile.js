@@ -5,6 +5,8 @@ var utils         = require('./utils');
 var requireConfig = require('./public/js/require-config');
 
 module.exports = function(grunt) {
+  grunt.loadTasks('./tasks');
+
   grunt.loadNpmTasks('grunt-requirejs');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -55,8 +57,10 @@ module.exports = function(grunt) {
   , less: {
       compile: {
         files: {
-          "public/dist/landing.css":        "less/core-landing.less"
-        , "public/dist/landing-ielt9.css":  "less/ielt9-landing.less"
+          "public/dist/landing.css":            "less/core-landing.less"
+        , "public/dist/landing-ielt9.css":      "less/ielt9-landing.less"
+        , "public/dist/cater-tool.css":         "less/core-cater-tool.less"
+        , "public/dist/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
         }
       }
     }

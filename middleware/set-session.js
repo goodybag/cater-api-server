@@ -14,7 +14,7 @@ module.exports = function( options ){
     req.setSession = function( user, remember ){
       req.session = utils.extend(
         {}, req.session
-      , { user: utils.pick( user, [ 'id', 'name', 'organization', 'groups', 'email', 'created_at' ] ) }
+      , { user: utils.pick( user, [ 'id', 'name', 'organization', 'groups', 'email', 'points', 'created_at' ] ) }
       );
 
       // Remember me checked, triggered by /login

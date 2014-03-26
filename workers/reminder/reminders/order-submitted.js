@@ -42,11 +42,25 @@ var getQuery = function( storage ) {
   return $query;
 };
 
-
 var sendEmail = function(order) {
-  console.log(order);
   return function(callback) {
-      callback(null);
+    var context = {
+      order: order.toJSON({review: true})
+    , config: config
+    , layout: 'email-layout'
+    };
+    views.render('order-email/order-submitted', context, function(error, html) {
+      if (error) return callback(error);
+      utils.sendMail2({
+        to:   order.attributes.restaurant.emails
+      , from: config.emails.orders
+      , html: html
+      , subject: 'You have received a new Goodybag Order #' + order.attributes.id
+      }, function(error) {
+        callback(error, order);
+      });
+
+    });
   };
 };
 
@@ -63,67 +77,30 @@ module.exports.work = function( storage, done ){
   , errors:              { text: 'Errors', value: 0, objects: [] }
   };
 
-  /* Run this flow in parallel for each order
-   * 1 Find submitted orders not notified
-   * 2 Render email
-   * 3 Send mail
-   */
+  // 1. Find submitted orders not notified
+  // 2. Email notifications in parallel
   Models.Order.find( getQuery(storage), function( error, results) {
     if (error) return done(error);
 
     var fns = results.map(sendEmail);
-    utils.async.parallelNoBail(fns, function emailsSent(error, results) {
+    utils.async.parallelNoBail(fns, function emailsSent(errors, results) {
+      if (errors) {
+        errors.forEach(function(e) {
+          Object.keys(e).forEach(function(key) {
+            stats.errors.value++;
+            stats.errors.objects.push(e[key]);
+          });
+        });
+      }
+
+      // scan results for stats
+      results.forEach(function(result) {
+        if (!result || Object.keys(result).length === 0) return;
+
+        stats.submittedOrders.value++;
+        storage.lastNotified[result.attributes.id] = new Date().toString();
+      });
       done(error, stats);
     });
   });
-
-  // utils.async.auto({
-  //   findSubmittedOrders: function(callback) {
-  //     console.log('step 1');
-  //     Models.Order.find(getQuery(storage), function(error, orders) {
-  //       callback(error, orders);
-  //     });
-  //   },
-  //
-  //   viewContexts: ['findSubmittedOrders', function(callback, results) {
-  //     var orders = results.findSubmittedOrders;
-  //     var contexts = orders.map(function(order) {
-  //       return {
-  //         order: order.toJSON({review: true})
-  //       , config: config
-  //       , layout: 'email-layout'
-  //       };
-  //     });
-  //     callback(null, contexts);
-  //   }],
-  //
-  //   sendEmails: ['renderEmails', function(callback, orders) {
-  //     console.log('step 3');
-  //     done(null, stats);
-  //   }]
-  // });
-
-  //
-  // Models.Order.find( getQuery( storage ), function( error, orders ) {
-  //   if ( error ) return callback( error );
-  //   orders.forEach(function(order) {
-  //     var view = {
-  //       order:    order.toJSON({ review: true })
-  //     , config:   config
-  //     , layout:   'email-layout'
-  //     };
-  //     views.render('order-email/order-submitted', view, function(error, html) {
-  //       utils.sendMail2({
-  //         to:   order.attributes.restaurant.emails
-  //       , from: config.emails.orders
-  //       , html: html
-  //       , subject: subject(order)
-  //       }, function(error) {
-  //
-  //       })
-  //     });
-  //   })
-  // });
-
-  // callback( null, stats );
 };

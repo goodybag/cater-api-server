@@ -70,7 +70,7 @@ define(function(require, exports, module) {
     },
 
     total: function(order, options) {
-      if (options === undefined || typeof order !== 'object') {
+      if (typeof order !== 'object') {
         throw new Error('Must supply a valid `order` as first parameter')
       }
 

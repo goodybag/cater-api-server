@@ -22,7 +22,7 @@ var debitCustomer = function (order, callback) {
   var amount = Math.floor(order.attributes.total + (order.attributes.adjustment.amount || 0));
   if (typeof amount === 'undefined' || amount == null || amount == 0) return callback(new Error('invalid amount: ' + amount));
 
-  var pmId = order.attributes.payment_method_id order.at;
+  var pmId = order.attributes.payment_method_id;
   models.PaymentMethod.findOne(pmId, function(error, paymentMethod) {
     if (error) return callback(new Error('invalid payment method: ' + pmId));
       utils.balanced.Debits.create({

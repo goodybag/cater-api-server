@@ -21,11 +21,23 @@ var utils     = require('../../utils');
 var futils    = require('../../lib/ftest-utils');
 var db        = require('../../db');
 
+Object.defineProperty( Function.prototype, 'argClamp', {
+  enumerable: false
+, value: function( n ){
+    var this_ = this;
+    return function(){
+      return this_.apply( this_, Array.prototype.slice.call( arguments, 0, n ) );
+    }
+  }
+});
+
 require('../../lib/selenium-utils');
 
 var driver = new webdriver.Builder().withCapabilities(
   webdriver.Capabilities.chrome()
 ).build();
+
+driver.manage().window().setSize( 1200, 1000 )
 
 test.before( function( done ){
   // Just delete all orders
@@ -36,7 +48,7 @@ test.before( function( done ){
 });
 
 test.after( function(){
-  // driver.quit();
+  driver.quit();
 })
 
 test.describe( 'Order Flow', function(){
@@ -68,7 +80,7 @@ test.describe( 'Order Flow', function(){
 
       // Fill Login
     , function( next ){
-      console.log('\n// Fill Login')
+        console.log('* Fill Login')
         utils.async.parallel({
           fillEmail: function( next ){
             driver.findElement( webdriver.By.css('#login-email') ).then( function( el ){
@@ -85,7 +97,7 @@ test.describe( 'Order Flow', function(){
 
       // Submit login
     , function( next ){
-      console.log('// Submit login')
+        console.log('  * Submit login')
         driver.findElement( webdriver.By.css('form[action*="/login"]') ).then( function( el ){
           el.submit().then( next.argClamp(0) );
         });
@@ -102,7 +114,7 @@ test.describe( 'Order Flow', function(){
 
       // Select restaurant
     , function( next ){
-      console.log('// Select restaurant')
+        console.log('  * Select restaurant')
         var selector = '.list-group-restaurants > .list-group-item-restaurant:first-child';
         driver.findElement( webdriver.By.css( selector ) ).then( function( el ){
           el.click();
@@ -113,7 +125,7 @@ test.describe( 'Order Flow', function(){
 
       // Ensure we're on the menu page
     , function( next ){
-      console.log('// Ensure were on the menu page')
+        console.log('  * Ensure were on the menu page')
         driver.ensureSelector( '.page-menu', function( error, result ){
           assert.equal( !!error, false, 'Not on menu page' );
           assert.equal( !!result, true, 'Not on menu page' );
@@ -123,7 +135,7 @@ test.describe( 'Order Flow', function(){
 
       // Click on an item, create order
     , function( next ){
-      console.log('// Click on an item, create order')
+        console.log('  * Click on an item, create order')
         driver.ensureSelector( '.menu-category a.item:first-child', function( error, el ){
           assert.equal( !!error, false, 'Could not find any items' );
           assert.equal( !!el, true, 'Could not find any items' );
@@ -154,7 +166,7 @@ test.describe( 'Order Flow', function(){
 
       // Order params
     , function( next ){
-      console.log('// Order params')
+        console.log('  * Order params')
         driver.waitUntilSelector( '.modal-order-params.in', function( error, paramsModal ){
           assert.equal( !!error, false, 'Order params modal did not open' );
           assert.equal( !!paramsModal, true, 'Order params modal did not open' );
@@ -199,7 +211,7 @@ test.describe( 'Order Flow', function(){
 
       // Wait until modals close
     , function( next ){
-      console.log('// Wait until modals close')
+        console.log('  * Wait until modals close')
         driver.waitUntilSelector( '.modal-item:not(.in)', function( error ){
           assert.equal( !!error, false, 'Item modal did not close after submitting order params' );
           next();
@@ -208,7 +220,7 @@ test.describe( 'Order Flow', function(){
 
       // Ensure item got added
     , function( next ){
-      console.log('// Ensure item got added')
+        console.log('  * Ensure item got added')
         driver.waitUntilSelector( '.order-table tbody tr', function( error ){
           assert.equal( !!error, false, 'Item never showed up in order table' );
           next();
@@ -217,7 +229,7 @@ test.describe( 'Order Flow', function(){
 
       // Checkout
     , function( next ){
-      console.log('// Checkout')
+        console.log('  * Checkout')
         // Hide shit in the way of our button
         driver.executeScript( function(){
           $('#habla_beta_container_do_not_rely_on_div_classes_or_names').remove();
@@ -236,7 +248,7 @@ test.describe( 'Order Flow', function(){
 
       // Ensure we're on order page
     , function( next ){
-      console.log('// Ensure were on order page')
+        console.log('  * Ensure were on order page')
         driver.waitUntilSelector( '.page-order', function( error ){
           assert.equal( !!error, false, 'Never got to order page' );
 
@@ -252,9 +264,46 @@ test.describe( 'Order Flow', function(){
 
       // Ensure we're on checkout
     , function( next ){
-      console.log('// Ensure were on checkout')
+        console.log('  * Ensure were on checkout')
         driver.waitUntilSelector( '.page-checkout', function( error ){
           assert.equal( !!error, false, 'Never got to checkout page' );
+
+          next();
+        });
+      }
+
+      // Fill in order name and tip
+    , function( next ){
+        console.log('  * Fill in order name and tip')
+        driver.executeScript( function(){
+          $('#order-name').val('Test Order');
+        });
+
+        driver.ensureSelector( '#order-tip > option[value="10"]', function( error, option ){
+          assert.equal( !!error, false, 'Could not find 10% tip option' );
+
+          option.click();
+
+          next();
+        });
+      }
+
+      // Fill in delivery info
+    , function( next ){
+        console.log('  * Fill in delivery info')
+        driver.executeScript( function(){
+          // Remove intercome to clear click handler
+          $('#intercom').remove();
+          $('.delivery-info #name').val('Test Location');
+          $('.delivery-info #street').val('123 Sesame St');
+          $('.delivery-info #city').val('Austin');
+          $('.delivery-info #phone').val('1234567890');
+        });
+
+        driver.ensureSelector( '.panel-actions button[type="submit"]', function( error, btn ){
+          assert.equal( !!error, false, 'Could not find submit button' );
+
+          btn.click();
 
           next();
         });

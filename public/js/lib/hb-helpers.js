@@ -69,18 +69,6 @@ define(function(require, exports, module) {
       return (tax.apply(this, arguments) / 100).toFixed(2);
     },
 
-    // total: function(cents, deliveryFee, tip, rate, options) {
-    //   if (options === undefined) {
-    //     options = rate;
-    //     rate = null;
-    //   }
-
-    //   tip = tip || 0;
-    //   rate = rate ? rate + 1 : 1.0825;
-    //   var pretip = tax.call(this, cents, deliveryFee, rate, options);
-    //   return ((pretip + tip) / 100).toFixed(2);
-    // },
-
     total: function(order, options) {
       if (options === undefined || typeof order !== 'object') {
         throw new Error('Must supply a valid `order` as first parameter')

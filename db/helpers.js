@@ -232,11 +232,11 @@ dirac.use( function(){
       type:     'select'
     , table:    'payment_summary_items'
     , columns:  [[
-      , 'sum('
+      , 'sum(round('
       , '+ ( sub_total + delivery_fee + tip )'
         // We aggressively round to match our notion of cents better
-      , '- round( ( ( sub_total + delivery_fee ) + round( ( sub_total + delivery_fee ) * sales_tax ) + tip ) * gb_fee )'
-      , ')::int + payment_summaries.adjustment as ' + options.column
+      , '- ( ( ( sub_total + delivery_fee ) + ( ( sub_total + delivery_fee ) * sales_tax ) + tip ) * gb_fee )'
+      , '))::int + payment_summaries.adjustment as ' + options.column
       ].join('  \n')]
     , where:    { payment_summary_id: '$payment_summaries.id$' }
     });
@@ -250,3 +250,12 @@ dirac.use( function(){
     });
   });
 });
+
+// Log queries to dirac
+// dirac.use( function(){
+//   var raw = dirac.DAL.prototype.raw;
+//   dirac.DAL.prototype.raw = function( query, values, callback ){
+//     console.log( query, values );
+//     return raw.apply( this, arguments );
+//   };
+// });

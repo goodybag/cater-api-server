@@ -44,9 +44,7 @@ define(function(require, exports, module) {
     },
 
     subscribeEvents: function() {
-      this.model.on({
-        'change:orderparams': this.show.bind(this)
-      });
+      this.model.on('change:orderparams', this.show, this);
     },
 
     highlightLink: function(e) {

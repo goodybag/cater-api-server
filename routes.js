@@ -756,6 +756,13 @@ module.exports.register = function(app) {
   , m.insert( db.contacts )
   );
 
+  app.put('/api/restaurants/:restaurant_id/contacts/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.update( db.contacts )
+  );
+
   app.del('/api/restaurants/:restaurant_id/contacts/:id'
   , m.restrict( ['admin'] )
   , m.param('restaurant_id')

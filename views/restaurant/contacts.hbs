@@ -15,7 +15,7 @@
 
   {{/each}}
 
-  <form method="POST" action="/api/restaurants/{{restaurant.id}}/contacts">
+  <form id="create-contact" method="POST" action="/api/restaurants/{{restaurant.id}}/contacts">
     <legend>New contact</legend>
     {{> contact_form }}
     <button class="btn btn-primary btn-create-contact" type="submit">Add contact</button>
@@ -31,6 +31,7 @@
 
     page.init({
       contacts: {{{json contacts}}}
+    , restaurantId: {{{restaurant.id}}}
     });
   });
 </script>

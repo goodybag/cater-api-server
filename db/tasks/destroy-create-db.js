@@ -6,7 +6,7 @@ var
 ;
 
 module.exports.run = function( callback ){
-  if ( config.env != 'dev' ) return callback();
+  if ( ['dev', 'test'].indexOf( config.env ) === -1 ) return callback();
   console.log("");
   console.log("######################################");
   console.log("#  Running destroy/create database  #");

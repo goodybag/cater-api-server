@@ -216,8 +216,6 @@ config.dev = {
   , plan: 'month'
   }
 
-, baseUrl: 'http://localhost:3000'
-
 , testEmail: local.testEmail || 'test@goodybag.com'
 
 , testPhoneSms: local.testPhoneSms || '1234567890'
@@ -401,7 +399,14 @@ config.production = {
       }
     }
   }
-}
+};
+
+config.test = _.extend( _.clone( config.dev ), {
+  env: 'test'
+, baseUrl: 'http://localhost:3001'
+, http: { port: 3001 }
+, postgresConnStr:  "postgres://localhost:5432/cater_test"
+});
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';
 if (GB_ENV == null || !config.hasOwnProperty(GB_ENV)) GB_ENV = 'dev';

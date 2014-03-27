@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "./node_modules/grunt-cli/bin/grunt namedModules && ./node_modules/grunt-cli/bin/grunt shell:ensureDir && ./node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js && ./bin/check-build.js && ./bin/tasks.js runDeltas && node master",
-    "test": "casperjs test test/functional",
+    "test": "./node_modules/mocha/bin/mocha test/functional",
     "postinstall": "./node_modules/.bin/bower install"
   },
   "namedModules": {
@@ -78,7 +78,9 @@
     "dirac": "~0.3.4",
     "dirac-middleware": "~0.1.5",
     "json2csv": "~2.2.1",
-    "deep-extend": "~0.2.8"
+    "deep-extend": "~0.2.8",
+    "sugar": "~1.4.1",
+    "selenium-webdriver": "~2.40.0"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

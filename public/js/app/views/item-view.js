@@ -6,7 +6,8 @@ define(function(require, exports, module) {
       'click': 'showModal'
     },
 
-    showModal: function() {
+    showModal: function(e) {
+      e.preventDefault();
       this.options.itemModalView.provideModel(this.model).show();
     }
   });

@@ -111,13 +111,16 @@
 
             <div class="restaurant-info-item restaurant-info-item-zips">
               <h4 class="info-item-title">Zip Codes within delivery range:</h4>
-              <div class="info-item-value">
-                <ul class="list-delivery-zips">
-                {{#each restaurant.delivery_zips}}
-                  <li class="delivery-zip">{{this}}</li>
-                {{/each}}
-                </ul>
-              </div>
+              {{#each restaurant.delivery_zip_groups}}
+                <div class="info-item-value">
+                  <h5 class="info-item-title delivery-zip-tier-title">${{dollars this.fee}}</h5>
+                  <ul class="list-delivery-zips">
+                    {{#each this.zips}}
+                    <li class="delivery-zip">{{this}}</li>
+                    {{/each}}
+                  </ul>
+                </div>
+              {{/each}}
             </div>
           </div>
 

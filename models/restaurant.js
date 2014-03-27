@@ -148,6 +148,15 @@ module.exports = Model.extend({
     };
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
+    query.columns.push([
+      '(select array_to_json( array('
+    , '  select row_to_json( r ) as delivery_zips from ('
+    , '    select distinct on (fee) fee, array_agg(zip) over ( partition by fee ) as zips'
+    , '    from restaurant_delivery_zips'
+    , '    where restaurant_id = 1'
+    , '  ) r'
+    , ')) as delivery_zip_groups)'
+    ].join('\n'));
     query.columns.push("(SELECT array(SELECT tag FROM restaurant_tags WHERE restaurant_id = restaurants.id ORDER BY tag ASC)) AS tags");
     query.columns.push("(SELECT array(SELECT meal_type FROM restaurant_meal_types WHERE restaurant_id = restaurants.id ORDER BY meal_type ASC)) AS meal_types");
     query.columns.push("(SELECT array(SELECT meal_style FROM restaurant_meal_styles WHERE restaurant_id = restaurants.id ORDER BY meal_style ASC)) AS meal_styles");

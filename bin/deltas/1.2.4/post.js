@@ -49,7 +49,21 @@ var tasks = [
   },
 
   function cleanRestaurants(restaurants, callback) {
-    callback(null);
+    // alter table
+    var query = {
+      type: 'alter-table'
+    , table: 'restaurants'
+    , action: {
+        dropColumn:
+          { name: 'sms_phones' }
+        // , { name: 'voice_phones' }
+        // , { name: 'emails' }
+      }
+    };
+    var sql = db.builder.sql(query);
+    db.query(sql.query, sql.values, function(error, rows, result) {
+      return callback(error);
+    });
   }
 ];
 

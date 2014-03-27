@@ -15,6 +15,7 @@ module.exports = {
 , requestLogger: require('connect-request-logger-pg')
 , restaurant: require('./restaurant')
 , restrict: require('./restrict')
+, routeParams: require('./route-params')
 , setSession: require('./set-session')
 , sslRedirect: require('./ssl-redirect')
 , statusCodeIntercept: require('./status-code-intercept')

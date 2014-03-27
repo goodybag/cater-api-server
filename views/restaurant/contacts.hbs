@@ -1,0 +1,37 @@
+{{#extend "page"}}page-contacts{{/extend}}
+
+{{#extend "body"}}
+<h1>Restaurant Contacts</h1>
+<form method="POST" action="/api/{{{restaurant_id}}}/restaurants">
+  <div>
+    <label>Name</label>
+    <input type="text"></input>
+  </div>
+  <div>
+    <label>SMS Phone Numbers</label>
+    <input type="text"></input>
+  </div>
+  <div>
+    <label>Voice Phone Numbers</label>
+    <input type="text"></input>
+  </div>
+  <div>
+    <label>Emails</label>
+    <input type="text"></input>
+  </div>
+  <div>
+    <label>Notes</label>
+    <input type="text"></input>
+  </div>
+  <button type="submit">Add contact</button>
+</form>
+{{/extend}}
+
+
+{{#extend "scripts"}}
+<script>
+  require( ['jquery', 'navbar'], function( $ ){
+    $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+  });
+</script>
+{{/extend}}

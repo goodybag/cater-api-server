@@ -206,6 +206,19 @@ module.exports.register = function(app) {
   });
 
   /**
+   * Restaurant contacts resource.
+   */
+   app.get('/restaurants/:restaurant_id/contacts/:poo'
+   , m.restrict(['admin'])
+   , m.param('restaurant_id')
+   , m.routeParams
+   , m.view( 'restaurant/contacts', db.contacts, {
+       layout: 'admin/layout'
+     , method: 'find'
+     })
+   );
+
+  /**
    *  Current order resource.  The current pending order for the given restaurant and logged in user.
    */
 
@@ -731,6 +744,11 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , controllers.restaurants.orders.listJSON
   );
+
+  // app.get('/api/restaurants/:restaurant_id/contacts'
+  // , m.param('restaurant_id')
+  // , controllers.restaurants.contacts.listJSON
+  // );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries'
   , m.pagination()

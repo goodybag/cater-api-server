@@ -81,7 +81,19 @@ test.describe( 'Delivery Zips Interface', function(){
           assert.equal( !!error, false, 'Could not find info tab' );
           assert.equal( !!info, true, 'Could not find info tab' );
           info.click();
-          setTimeout( next, 2000 );
+
+          driver.waitUntilSelector( '#info.active', next );
+        });
+      }
+
+      // Make sure the delivery zips broken up by tiers
+      // All test restaurants should have the same
+    , function( next ){
+        console.log('  * Make sure the delivery zips broken up by tiers')
+
+        driver.find('.delivery-zip-tier-title + .list-delivery-zips', function( error, els ){
+          assert.equal( els.length, 3, 'Did not get the expected number of zip groups' );
+          next();
         });
       }
     ], done );

@@ -82,7 +82,7 @@ module.exports = function(grunt) {
         options: utils.extend( {}, requireConfig, {
           baseUrl: 'public/js/lib'
         , out: 'public/dist/app.js'
-        , optimize: 'uglify2'
+        , optimize: 'uglify'
         , preserveLicenseComments: false
         , useStrict: true
         , findNestedDependencies: false

@@ -212,7 +212,6 @@ module.exports.register = function(app) {
    , m.restrict(['admin'])
    , m.param('restaurant_id')
    , m.restaurant( {param: 'restaurant_id'} )
-   , m.routeParams
    , m.view( 'restaurant/contacts', db.contacts, {
        layout: 'admin/layout'
      , method: 'find'

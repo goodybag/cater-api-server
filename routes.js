@@ -213,7 +213,7 @@ module.exports.register = function(app) {
    , m.param('restaurant_id')
    , m.restaurant( {param: 'restaurant_id'} )
    , m.view( 'restaurant/contacts', db.contacts, {
-       layout: 'admin/layout'
+       layout: 'landing/layout'
      , method: 'find'
      })
    );
@@ -745,10 +745,6 @@ module.exports.register = function(app) {
   , controllers.restaurants.orders.listJSON
   );
 
-  // app.get('/api/restaurants/:restaurant_id/contacts'
-  // , m.param('restaurant_id')
-  // , controllers.restaurants.contacts.listJSON
-  // );
   app.post('/api/restaurants/:restaurant_id/contacts'
   , m.restrict( ['admin'] )
   , m.queryToBody('restaurant_id')

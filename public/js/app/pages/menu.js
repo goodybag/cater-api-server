@@ -114,12 +114,6 @@ define( function( require ){
       });
 
       $('.tag-tooltip').tooltip();
-
-      if ( typeof window.__ready === 'function' ){
-        window.__ready();
-      } else {
-        throw '__ready not defined!';
-      }
     }
   };
 

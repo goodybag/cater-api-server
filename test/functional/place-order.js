@@ -33,26 +33,26 @@ Object.defineProperty( Function.prototype, 'argClamp', {
 
 require('../../lib/selenium-utils');
 
-var driver = new webdriver.Builder().withCapabilities(
-  webdriver.Capabilities.chrome()
-).build();
-
-driver.manage().window().setSize( 1200, 1000 )
-
-test.before( function( done ){
-  // Just delete all orders
-  utils.async.series([
-    db.order_statuses.remove.bind( db.order_statuses, {} )
-  , db.orders.remove.bind( db.orders, {} )
-  ], done );
-});
-
-test.after( function(){
-  driver.quit();
-});
-
 test.describe( 'Order Flow', function(){
   it( 'should login and place an order', function( done ){
+    var driver = new webdriver.Builder().withCapabilities(
+      webdriver.Capabilities.chrome()
+    ).build();
+
+    driver.manage().window().setSize( 1200, 1000 )
+
+    test.before( function( done ){
+      // Just delete all orders
+      utils.async.series([
+        db.order_statuses.remove.bind( db.order_statuses, {} )
+      , db.orders.remove.bind( db.orders, {} )
+      ], done );
+    });
+
+    test.after( function(){
+      driver.quit();
+    });
+
     var options = {
       timeout:      100000
     , email:        config.testEmail
@@ -92,7 +92,7 @@ test.describe( 'Order Flow', function(){
 
       // Select restaurant
     , function( next ){
-        console.log('* Select restaurant')
+        console.log('\n  * Select restaurant')
         var selector = '.list-group-restaurants > .list-group-item-restaurant:first-child';
         driver.findElement( webdriver.By.css( selector ) ).then( function( el ){
           el.click();
@@ -295,8 +295,6 @@ test.describe( 'Order Flow', function(){
           next();
         });
       }
-    ], function( error ){
-      done();
-    })
+    ], done );
   });
 });

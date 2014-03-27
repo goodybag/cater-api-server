@@ -18,6 +18,7 @@ var test      = require('selenium-webdriver/testing');
 var webdriver = require('selenium-webdriver');
 var config    = require('config');
 var utils     = require('../../utils');
+var tutils    = require('../../lib/test-utils');
 var db        = require('../../db');
 
 Object.defineProperty( Function.prototype, 'argClamp', {
@@ -78,29 +79,7 @@ test.describe( 'Order Flow', function(){
       }
 
       // Fill Login
-    , function( next ){
-        console.log('\n  * Fill Login')
-        utils.async.parallel({
-          fillEmail: function( next ){
-            driver.findElement( webdriver.By.css('#login-email') ).then( function( el ){
-              el.sendKeys( options.email ).then( next.argClamp(0) )
-            });
-          }
-        , fillPassword: function( next ){
-            driver.findElement( webdriver.By.css('#login-password') ).then( function( el ){
-              el.sendKeys( options.password ).then( next.argClamp(0) )
-            });
-          }
-        }, next );
-      }
-
-      // Submit login
-    , function( next ){
-        console.log('  * Submit login')
-        driver.findElement( webdriver.By.css('form[action*="/login"]') ).then( function( el ){
-          el.submit().then( next.argClamp(0) );
-        });
-      }
+    , tutils.login.bind( null, driver, options )
 
     , // Ensure we're on the restaurants page
       function( next ){
@@ -113,7 +92,7 @@ test.describe( 'Order Flow', function(){
 
       // Select restaurant
     , function( next ){
-        console.log('  * Select restaurant')
+        console.log('* Select restaurant')
         var selector = '.list-group-restaurants > .list-group-item-restaurant:first-child';
         driver.findElement( webdriver.By.css( selector ) ).then( function( el ){
           el.click();

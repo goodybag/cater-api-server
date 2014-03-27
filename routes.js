@@ -208,9 +208,10 @@ module.exports.register = function(app) {
   /**
    * Restaurant contacts resource.
    */
-   app.get('/restaurants/:restaurant_id/contacts/:poo'
+   app.get('/restaurants/:restaurant_id/contacts'
    , m.restrict(['admin'])
    , m.param('restaurant_id')
+   , m.restaurant( {param: 'restaurant_id'} )
    , m.routeParams
    , m.view( 'restaurant/contacts', db.contacts, {
        layout: 'admin/layout'
@@ -749,6 +750,18 @@ module.exports.register = function(app) {
   // , m.param('restaurant_id')
   // , controllers.restaurants.contacts.listJSON
   // );
+  app.post('/api/restaurants/:restaurant_id/contacts'
+  , m.restrict( ['admin'] )
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.contacts )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/contacts/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.remove( db.contacts )
+  );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries'
   , m.pagination()

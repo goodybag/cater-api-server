@@ -5,36 +5,11 @@
   <h1>{{restaurant.name}} Contacts</h1>
 
   {{#each contacts}}
-    <form method="put" action="/api/restaurants/{{restaurant.id}}/contacts/{{id}}">
+    <form id="contact-{{id}}" method="put" action="/api/restaurants/{{restaurant.id}}/contacts/{{id}}">
       <legend>Contact #{{@index}}</legend>
-      <div>
-        <label>Name</label>
-        <input type="text" name="name" value="{{name}}"></input>
-      </div>
-      <div>
-        <label>SMS Phone Numbers</label>
-        <input type="text" name="sms_phones" value="{{phoneList sms_phones}}"></input>
-      </div>
-      <div>
-        <label>Voice Phone Numbers</label>
-        <input type="text" name="voice_phones" value="{{phoneList voice_phones}}"></input>
-      </div>
-      <div>
-        <label>Emails</label>
-        <input type="text" name="emails" value="{{emails}}"></input>
-      </div>
-      <div>
-        <label>Notes</label>
-        <input type="text" name="notes" value="{{notes}}"></input>
-      </div>
-      <button class="btn btn-primary" type="submit">Update</button>
-    </form>
-
-    <form method="post" action="/api/restaurants/{{../restaurant.id}}/contacts/{{id}}">
-      <input type="hidden" name="_method" value="DELETE"></input>
-      <button class="btn btn-primary" type="submit">Delete</button>
-    </form>
-
+      {{> contact_form }}
+      <button class="btn btn-primary btn-update-contact" type="submit">Update</button>
+      <button class="btn btn-primary btn-remove-contact" type="submit">Delete</button>
     </form>
     <hr>
 
@@ -42,27 +17,8 @@
 
   <form method="POST" action="/api/restaurants/{{restaurant.id}}/contacts">
     <legend>New contact</legend>
-    <div>
-      <label>Name</label>
-      <input type="text" name="name"></input>
-    </div>
-    <div>
-      <label>SMS Phone Numbers</label>
-      <input type="text" name="sms_phones"></input>
-    </div>
-    <div>
-      <label>Voice Phone Numbers</label>
-      <input type="text" name="voice_phones"></input>
-    </div>
-    <div>
-      <label>Emails</label>
-      <input type="text" name="emails"></input>
-    </div>
-    <div>
-      <label>Notes</label>
-      <input type="text" name="notes"></input>
-    </div>
-    <button class="btn btn-primary" type="submit">Add contact</button>
+    {{> contact_form }}
+    <button class="btn btn-primary btn-create-contact" type="submit">Add contact</button>
   </form>
 </div>
 {{/extend}}
@@ -70,8 +26,12 @@
 
 {{#extend "scripts"}}
 <script>
-  require( ['jquery', 'navbar'], function( $ ){
+  require( ['jquery', 'navbar', 'app/pages/contacts'], function( $, navbar, page ){
     $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+
+    page.init({
+      contacts: {{{json contacts}}}
+    });
   });
 </script>
 {{/extend}}

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "./node_modules/grunt-cli/bin/grunt namedModules && ./node_modules/grunt-cli/bin/grunt shell:ensureDir && ./node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js && ./bin/check-build.js && ./bin/tasks.js runDeltas && node master",
-    "test": "./node_modules/mocha/bin/mocha test/functional",
+    "test": "./node_modules/mocha/bin/mocha -R spec test/functional",
     "postinstall": "./node_modules/.bin/bower install"
   },
   "namedModules": {

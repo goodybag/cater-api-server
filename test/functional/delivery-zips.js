@@ -46,6 +46,9 @@ test.describe( 'Delivery Zips Interface', function(){
 
       // View restaurant
     , function( next ){
+        console.log('');
+        test.log('View Restaurant');
+
         driver.ensureSelector( '.page-restaurants', function( error, result ){
           assert.equal( !!error, false, 'Not on Restaurants page' );
           assert.equal( !!result, true, 'Not on Restaurants page' );
@@ -55,7 +58,8 @@ test.describe( 'Delivery Zips Interface', function(){
 
       // Select restaurant
     , function( next ){
-        console.log('\n  * Select restaurant')
+        test.log('Select restaurant')
+
         var selector = '.list-group-restaurants > .list-group-item-restaurant:first-child';
         driver.findElement( webdriver.By.css( selector ) ).then( function( el ){
           el.click();
@@ -66,7 +70,8 @@ test.describe( 'Delivery Zips Interface', function(){
 
       // Ensure we're on the menu page
     , function( next ){
-        console.log('  * Ensure were on the menu page')
+        test.log('Ensure were on the menu page')
+
         driver.ensureSelector( '.page-menu', function( error, result ){
           assert.equal( !!error, false, 'Not on menu page' );
           assert.equal( !!result, true, 'Not on menu page' );
@@ -76,7 +81,8 @@ test.describe( 'Delivery Zips Interface', function(){
 
       // Click the info tab
     , function( next ){
-        console.log('  * Click the info tab')
+        test.log('Click the info tab')
+
         driver.ensureSelector( '.menu-info-tabs li:first-child + li > a', function( error, info ){
           assert.equal( !!error, false, 'Could not find info tab' );
           assert.equal( !!info, true, 'Could not find info tab' );
@@ -89,7 +95,7 @@ test.describe( 'Delivery Zips Interface', function(){
       // Make sure the delivery zips broken up by tiers
       // All test restaurants should have the same
     , function( next ){
-        console.log('  * Make sure the delivery zips broken up by tiers')
+        test.log('Make sure the delivery zips broken up by tiers')
 
         driver.find('.delivery-zip-tier-title + .list-delivery-zips', function( error, els ){
           assert.equal( els.length, 3, 'Did not get the expected number of zip groups' );

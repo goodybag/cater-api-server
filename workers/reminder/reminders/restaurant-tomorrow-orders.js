@@ -35,7 +35,7 @@ function notifyOrderFn( order ){
       views.render( 'order-email/order-reminder', {
         layout: 'email-layout'
       , config: config
-      , order:  order.toJSON()
+      , order:  order.toJSON({ review: true })
       }, function( error, html ){
         if ( error ) return done( error );
 

@@ -1,3 +1,7 @@
+if ( process.argv.indexOf('--test') > -1 ){
+  process.env['GB_ENV'] = 'test';
+}
+
 var utils = require('../utils');
 var faker = require('Faker');
 var config = require('../config');
@@ -524,7 +528,6 @@ utils.async.series(
   }
 , function(error, results) {
   if (error) console.error(error);
-  console.log('done');
   process.exit(0);
   }
 );

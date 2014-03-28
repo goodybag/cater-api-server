@@ -163,7 +163,7 @@ module.exports = Model.extend({
     query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");
-    query.columns.push({
+    var feeCol = query.columns.push({
       type: 'select'
     , alias: 'delivery_fee'
     , table: 'restaurant_delivery_zips'
@@ -171,7 +171,11 @@ module.exports = Model.extend({
     , where: { restaurant_id:  '$restaurants.id$' }
     , limit: 1
     , order: 'fee asc'
-    });
+    }) - 1;
+
+    if ( orderParams && orderParams.zip ){
+      query.columns[ feeCol ].where.zip = orderParams.zip;
+    }
 
     query.joins.hours = {
       type: 'left'

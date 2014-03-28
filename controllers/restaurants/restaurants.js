@@ -240,7 +240,7 @@ module.exports.listManageable = function(req, res) {
 
 var zips = function(body, id) {
   return utils.map(body.delivery_zips, function(zip, index, arr) {
-    return {restaurant_id: id,  zip: zip}
+    return {restaurant_id: id,  zip: zip.zip, fee: zip.fee }
   });
 }
 

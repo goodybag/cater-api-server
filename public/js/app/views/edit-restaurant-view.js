@@ -130,8 +130,24 @@ define(function(require, exports, module) {
       },
 
       delivery_zips: function() {
-        var val = this.$el.find(this.fieldMap.delivery_zips).val().trim();
-        return val ? _.invoke(val.split(','), 'trim') : [];
+        var delivery_zips = [];
+        this.$el.find('.zip-group:not(.zip-group:last-child)').each( function(){
+          var $group = $(this);
+          var fee = +Handlebars.helpers.pennies( $group.find('[name="fee"]').val() );
+          $group.find('[name="zips"]').val()
+            .replace( /\s/g, '' )
+            .split(',')
+            .map( function( z ){
+              return parseInt( z );
+            }).forEach( function( zip ){
+              delivery_zips.push({
+                fee: fee
+              , zip: zip
+              })
+            });
+        });
+
+        return delivery_zips;
       },
 
       delivery_times: function() {
@@ -295,7 +311,6 @@ define(function(require, exports, module) {
     },
 
     onZipGroupRemoveClick: function(e){
-      console.log('remove', $(e.currentTarget).parents('.zip-group'))
       $(e.currentTarget).parents('.zip-group').remove();
     }
   });

@@ -153,7 +153,7 @@ module.exports = Model.extend({
     , '  select row_to_json( r ) as delivery_zips from ('
     , '    select distinct on (fee) fee, array_agg(zip) over ( partition by fee ) as zips'
     , '    from restaurant_delivery_zips'
-    , '    where restaurant_id = 1'
+    , '    where restaurant_id = restaurants.id'
     , '  ) r'
     , ')) as delivery_zip_groups)'
     ].join('\n'));

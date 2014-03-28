@@ -10,11 +10,14 @@ var utils     = require('../../../utils')
 var tasks = [
   function getRestaurants(callback) {
     models.Restaurant.find({}, function(error, restaurants) {
+      if ( restaurants ) console.log(restaurants.length, 'restaurants found');
       callback(error, restaurants);
     });
   },
 
   function insertContacts(restaurants, callback) {
+
+    // copy restaurant into into a new contact
     var insertTasks = [];
     restaurants.forEach(function(restaurant) {
       var copyColumns = ['sms_phones', 'voice_phones', 'emails'];
@@ -38,30 +41,30 @@ var tasks = [
         });
       });
     });
-    var limit = 5;
 
     // insert in batches
+    var limit = 5;
     utils.async.parallelLimit(insertTasks, limit, function(error, results) {
-      if (error) return callback(error);
-      console.log(results.length, 'restaurants migrated contact info');
-      callback(null, restaurants);
+      if ( results ) console.log(results.length, 'restaurants migrated contact info');
+      callback(error, restaurants);
     });
   },
 
   function cleanRestaurants(restaurants, callback) {
-    // alter table
     var query = {
       type: 'alter-table'
     , table: 'restaurants'
     , action: {
-        dropColumn:
+        dropColumn: [
           { name: 'sms_phones' }
-        // , { name: 'voice_phones' }
-        // , { name: 'emails' }
+        , { name: 'voice_phones' }
+        , { name: 'emails' }
+        ]
       }
     };
     var sql = db.builder.sql(query);
     db.query(sql.query, sql.values, function(error, rows, result) {
+      if ( !error ) console.log('dropped columns for restaurant contact info');
       return callback(error);
     });
   }

@@ -24,7 +24,9 @@ define(function(require, exports, module) {
         'click .remove-lead-time': 'removeLeadTime',
         'click .restaurant-remove': 'onRestaurantRemoveClick',
         'change input[type="filepicker"]': 'onFilePickerChange',
-        'click [name="yelp_business_id"]': 'onYelpBusinessIdClick'
+        'click [name="yelp_business_id"]': 'onYelpBusinessIdClick',
+        'click .zip-groups > .zip-group .remove': 'onZipGroupRemoveClick',
+        'click .zip-groups > .zip-group:last-child': 'onNewZipGroupClick'
       };
     },
 
@@ -284,6 +286,17 @@ define(function(require, exports, module) {
 
     onYelpBusinessIdClick: function(e){
       e.target.select();
+    },
+
+    onNewZipGroupClick: function(e){
+      var $el = $(e.currentTarget);
+      $el.before( $el.clone() );
+      this.delegateEvents();
+    },
+
+    onZipGroupRemoveClick: function(e){
+      console.log('remove', $(e.currentTarget).parents('.zip-group'))
+      $(e.currentTarget).parents('.zip-group').remove();
     }
   });
 });

@@ -38,7 +38,12 @@ define(function(require) {
     }
   };
 
-  definition.indices = {};
+  definition.indices = {
+    'favorite_restaurants_user_id_restaurant_id_key': {
+      type: 'UNIQUE'
+    , columns: ['user_id', 'restaurant_id']
+    }
+  };
 
   return definition;
 });

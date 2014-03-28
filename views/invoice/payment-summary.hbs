@@ -1,4 +1,5 @@
 {{#extend "info"}}
+<div class="info-item-date info-item">Payout Date: {{formatDateTime payment_summary.payment_date}}</div>
 <div class="info-item-contact info-item">
   {{#if order.user.name}}
     {{order.user.name}}
@@ -16,7 +17,6 @@
 {{/extend}}
 
 {{#extend "body"}}
-
 <div class="order-info"></div>
 
 <div class="order">

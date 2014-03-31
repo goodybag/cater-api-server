@@ -79,6 +79,27 @@ var modifyAttributes = function(callback, err, orders) {
 }
 
 module.exports = Model.extend({
+  getDeliveryFeeQuery: function(){
+    var query = {
+      type: 'select'
+    , alias: 'delivery_fee'
+    , table: 'restaurant_delivery_zips'
+    , columns: ['fee']
+    , where: {
+        restaurant_id:  this.attributes.restaurant_id
+      }
+    , limit: 1
+    };
+
+    if ( this.attributes.zip ){
+      query.where.zip = this.attributes.zip;
+    } else {
+      query.order = 'fee asc';
+    }
+
+    return query;
+  },
+
   getOrderItems: function(callback, client) {
     var self = this;
     callback = callback || function() {};
@@ -93,7 +114,14 @@ module.exports = Model.extend({
   getRestaurant: function(callback, client){
     var self = this;
 
-    Restaurant.findOne({ where: { id: this.attributes.restaurant_id } }, function(error, restaurant){
+    var query = {
+      where: { id: this.attributes.restaurant_id }
+    , columns: ['*']
+    };
+
+    query.columns.push( this.getDeliveryFeeQuery() );
+
+    Restaurant.findOne(query, function(error, restaurant){
       if (error) return callback(error);
 
       self.attributes.restaurant = restaurant.toJSON();
@@ -609,7 +637,13 @@ module.exports = Model.extend({
     };
 
     query.columns.push({table: 'restaurants', name: 'name', as: 'restaurant_name'});
-    query.columns.push('restaurants.delivery_fee')
+    query.columns.push(
+      module.exports.prototype.getDeliveryFeeQuery.call({
+        attributes: {
+          restaurant_id: query.where.restaurant_id || '$orders.restaurant_id$'
+        }
+      })
+    );
     query.columns.push('restaurants.minimum_order');
     query.columns.push({table: 'restaurants', name: 'emails', as: 'restaurant_emails'});
     query.columns.push('restaurants.sms_phones');

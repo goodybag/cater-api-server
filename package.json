@@ -80,7 +80,8 @@
     "json2csv": "~2.2.1",
     "deep-extend": "~0.2.8",
     "sugar": "~1.4.1",
-    "selenium-webdriver": "~2.40.0"
+    "selenium-webdriver": "~2.40.0",
+    "leFunc": "~1.1.0"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

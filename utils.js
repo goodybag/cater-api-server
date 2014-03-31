@@ -21,6 +21,8 @@ var
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
 
+utils.overload = require('leFunc');
+
 utils.deepExtend = require('deep-extend');
 
 utils.template = Handlebars.compile.bind( Handlebars );

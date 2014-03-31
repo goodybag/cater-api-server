@@ -26,7 +26,9 @@ config.defaults = {
     from:       '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
   , beginTime:  '09:04'
   , endTime:    '18:00'
-  , delay:      (1*60*1000) + (30*1000)
+  , delay1:     (4*60*1000)
+  , delay2:     (2*60*1000)
+  , timezone:   'America/Chicago'
   }
 
 , salesTax: 1.0825

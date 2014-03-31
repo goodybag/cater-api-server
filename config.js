@@ -22,6 +22,13 @@ config.defaults = {
 
 , rewardsStartDate: '2014-03-25 00:00:00'
 
+, welcome: {
+    from:       '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
+  , beginTime:  '09:04'
+  , endTime:    '18:00'
+  , delay:      (1*60*1000) + (30*1000)
+  }
+
 , salesTax: 1.0825
 
 , taxRate: .0825
@@ -77,8 +84,6 @@ config.defaults = {
   }
 
 , outputActivePoolIds: false
-
-, welcomeEmailDelay: (1*60*1000) + (30*1000)
 
 , baseUrl: 'http://cater.goodybag.com'
 

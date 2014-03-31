@@ -4,37 +4,10 @@ Periodically runs all modules in the ```./reminders``` directory to send out not
 
 ## Adding a New Reminder
 
-Create a new module in the ```./reminders``` directory with the following scaffolding:
+Create a new module in the ```./reminders``` directory with the following command:
 
-```javascript
-/**
- * My Reminder
- *
- * Description:
- *   Checks for pending something or another and
- *   sends a reminder to the concerning party
- */
-
-module.exports.name = 'My Reminder';
-
-// Ensures typeof storage.lastNotified === 'object'
-module.exports.schema = {
-  lastNotified: true
-};
-
-module.exports.check = function( storage, callback ){
-  callback( null, false );
-};
-
-module.exports.work = function( storage, callback ){
-  var stats = {
-    myStat: { text: 'My Statistic', value: 0 }
-  };
-
-  stats.myStat.value++;
-
-  callback( null, stats );
-};
+```
+grunt generate.reminder:my-reminder-name
 ```
 
 Each reminder module must implement a ```name``` property and ```check``` and ```work``` functions. The ```check``` function decides whether or not the reminder should be sent. The ```work``` function actually does the work of sending the reminder.

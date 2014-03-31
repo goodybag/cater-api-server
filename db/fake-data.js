@@ -9,6 +9,12 @@ var db = require('../db');
 
 var _ = utils._;
 
+var delivery_fees = [
+  1000
+, 1500
+, 3000
+];
+
 var fakeCategories = [
   'Breakfast'
 , 'Lunch'
@@ -209,13 +215,14 @@ var inserts = {
       }
     }
   }
-, restaurantDeliveryZips: function(restaurant_id, zip) {
+, restaurantDeliveryZips: function(restaurant_id, zip, fee) {
     return {
       type: 'insert'
     , table: 'restaurant_delivery_zips'
     , values: {
         restaurant_id: restaurant_id
       , zip: zip
+      , fee: fee
       }
     }
   }
@@ -392,7 +399,14 @@ utils.async.series(
         utils.async.timesSeries(results.length, function(n, callback){
           austinZipCodes.sort(arrayRandomize);
           utils.async.timesSeries(10, function(x, callback2){
-            query(inserts.restaurantDeliveryZips(results[n].id, austinZipCodes[x]), callback2);
+            query(
+              inserts.restaurantDeliveryZips(
+                results[n].id
+              , austinZipCodes[x]
+              , delivery_fees[ x % delivery_fees.length ]
+              )
+            , callback2
+            );
           }, function(error, results){
             // console.log('called-sub-3');
             callback(error);

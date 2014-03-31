@@ -131,12 +131,15 @@ module.exports.get = function(req, res) {
 
     var orderParams = req.query || {};
 
+
     var context = {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
       defaultAddress:   results[2] ? results[2].toJSON() : null,
       orderParams:      orderParams
     }
+
+    context.restaurant.delivery_fee = context.order.restaurant.delivery_fee;
 
     // Build a histogram of menus vs freq for labeling
     var menuLengths = utils.countBy(utils.flatten(utils.pluck(context.restaurant.categories, 'menus')));
@@ -237,7 +240,7 @@ module.exports.listManageable = function(req, res) {
 
 var zips = function(body, id) {
   return utils.map(body.delivery_zips, function(zip, index, arr) {
-    return {restaurant_id: id,  zip: zip}
+    return {restaurant_id: id,  zip: zip.zip, fee: zip.fee }
   });
 }
 
@@ -294,7 +297,6 @@ var fields = [
   'emails',
   'minimum_order',
   'price',
-  'delivery_fee',
   'cuisine',
   'yelp_business_id',
   'websites',

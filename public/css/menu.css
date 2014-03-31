@@ -258,6 +258,10 @@
   margin-top: 4px;
 }
 
+.restaurant-info-item-zips h4.info-item-title {
+  margin-bottom: 10px;
+}
+
 /**
  * Delivery times has a font-size: 0 element in so it's making the
  * line height on all of the dt,dd's larger than it should be

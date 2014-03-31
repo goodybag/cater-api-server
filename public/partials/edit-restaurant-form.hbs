@@ -79,16 +79,9 @@
     </select>
   </div>
   <div class="form-group">
+    <span class="help-block">Please enter cuisine as a comma separated list of cuisine tags.</span>
     <label class="control-label">Cuisine</label>
     <input type="text" class="form-control restaurant-cuisine" value="{{array restaurant.cuisine}}" placeholder="Mexican, Korean, Amish">
-    <span class="help-block">Please enter cuisine as a comma separated list of cuisine tags.</span>
-  </div>
-  <div class="form-group">
-    <label class="control-label">Delivery Fee</label>
-    <div class="input-group">
-      <span class="input-group-addon">$</span>
-      <input type="text" class="form-control restaurant-delivery-fee" value="{{dollars restaurant.delivery_fee}}" placeholder="5.00">
-    </div>
   </div>
   <div class="form-group">
     <label class="control-label">Minimum Order</label>
@@ -97,10 +90,22 @@
       <input type="text" class="form-control restaurant-minimum-order" value="{{dollars restaurant.minimum_order}}" placeholder="200.00">
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group zip-groups">
     <label class="control-label">Delivery Zip Codes</label>
-    <input type="text" class="form-control restaurant-delivery-zips" value="{{array restaurant.delivery_zips}}" placeholder="78701, 78704, 78756">
-    <span class="help-block">List of zip codes restaurant will deliver to.  Please enter as a comma separated list.</span>
+    {{#each restaurant.delivery_zip_groups}}
+      <div class="zip-group">
+        <input type="number" name="fee" class="form-control restaurant-delivery-zip-fee" value="{{dollars this.fee}}">
+        <input type="text" name="zips" class="form-control restaurant-delivery-zips" value="{{array this.zips}}" placeholder="78701, 78704, 78756">
+        <span class="help-block">List of zip codes restaurant will deliver to.  Please enter as a comma separated list.</span>
+        <div class="remove">X</div>
+      </div>
+    {{/each}}
+    <div class="zip-group">
+      <input type="number" name="fee" class="form-control restaurant-delivery-zip-fee" value="">
+      <input type="text" name="zips" class="form-control restaurant-delivery-zips" value="{{array this.zips}}" placeholder="78701, 78704, 78756">
+      <span class="help-block">List of zip codes restaurant will deliver to.  Please enter as a comma separated list.</span>
+      <div class="remove">X</div>
+    </div>
   </div>
   <fieldset>
     <legend>Restaurant Tags</legend>

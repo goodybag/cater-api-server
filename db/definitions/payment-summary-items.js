@@ -48,10 +48,6 @@ define(function(require) {
       type: types.int
     , default: 0
     }
-  , delivery_fee: {
-      type: types.int
-    , default: 0
-    }
   , sales_tax: {
       type: types.numeric( 5, 5 )
     , default: 0

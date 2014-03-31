@@ -24,7 +24,9 @@ define(function(require, exports, module) {
         'click .remove-lead-time': 'removeLeadTime',
         'click .restaurant-remove': 'onRestaurantRemoveClick',
         'change input[type="filepicker"]': 'onFilePickerChange',
-        'click [name="yelp_business_id"]': 'onYelpBusinessIdClick'
+        'click [name="yelp_business_id"]': 'onYelpBusinessIdClick',
+        'click .zip-groups > .zip-group .remove': 'onZipGroupRemoveClick',
+        'click .zip-groups > .zip-group:last-child': 'onNewZipGroupClick'
       };
     },
 
@@ -128,8 +130,24 @@ define(function(require, exports, module) {
       },
 
       delivery_zips: function() {
-        var val = this.$el.find(this.fieldMap.delivery_zips).val().trim();
-        return val ? _.invoke(val.split(','), 'trim') : [];
+        var delivery_zips = [];
+        this.$el.find('.zip-group:not(.zip-group:last-child)').each( function(){
+          var $group = $(this);
+          var fee = +Handlebars.helpers.pennies( $group.find('[name="fee"]').val() );
+          $group.find('[name="zips"]').val()
+            .replace( /\s/g, '' )
+            .split(',')
+            .map( function( z ){
+              return parseInt( z );
+            }).forEach( function( zip ){
+              delivery_zips.push({
+                fee: fee
+              , zip: zip
+              })
+            });
+        });
+
+        return delivery_zips;
       },
 
       delivery_times: function() {
@@ -284,6 +302,16 @@ define(function(require, exports, module) {
 
     onYelpBusinessIdClick: function(e){
       e.target.select();
+    },
+
+    onNewZipGroupClick: function(e){
+      var $el = $(e.currentTarget);
+      $el.before( $el.clone() );
+      this.delegateEvents();
+    },
+
+    onZipGroupRemoveClick: function(e){
+      $(e.currentTarget).parents('.zip-group').remove();
     }
   });
 });

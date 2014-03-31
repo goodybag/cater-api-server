@@ -417,7 +417,7 @@ module.exports = Model.extend({
 
     var contactsInfo = ['sms_phones', 'voice_phones', 'emails'];
     contactsInfo.forEach( function(type){
-      query.columns.push(coalesceContactsArray(type));
+      query.columns.push(getContactsInfo(type));
     });
 
     Model.find.call(this, query, function(err, restaurants) {

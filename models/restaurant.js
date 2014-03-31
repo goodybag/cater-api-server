@@ -415,6 +415,11 @@ module.exports = Model.extend({
 
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
 
+    var contactsInfo = ['sms_phones', 'voice_phones', 'emails'];
+    contactsInfo.forEach( function(type){
+      query.columns.push(coalesceContactsArray(type));
+    });
+
     Model.find.call(this, query, function(err, restaurants) {
       if (!err) {
         utils.invoke(restaurants, function() {
@@ -522,3 +527,29 @@ var includeFavorites = function(query, opts) {
   , as: 'favorite'
   });
 }
+
+/**
+ * Select contacts info per restaurant
+ *
+ * @param {String} type is one of (sms_phones|voice_phones|emails)
+ */
+var getContactsInfo = function(type) {
+  var query = {
+    type: 'array'
+  , expression: {
+      type: 'select'
+    , columns: [
+        {
+          type: 'unnest'
+        , expression: 'contacts.' + type
+        }
+      ]
+    , table: 'contacts'
+    , where: {
+        'contacts.restaurant_id': '$restaurants.id$'
+      }
+    }
+  , as: type
+  };
+  return query;
+};

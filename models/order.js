@@ -34,7 +34,7 @@ var modifyAttributes = function(callback, err, orders) {
         order.attributes.restaurant = utils.extend(
           {
             id: order.attributes.restaurant_id,
-            emails: order.attributes.restaurant_emails,
+            emails: order.attributes.emails,
             delivery_times: utils.object(order.attributes.delivery_times),
             name: order.attributes.restaurant_name,
             balanced_customer_uri: order.attributes.restaurant_balanced_customer_uri
@@ -645,9 +645,9 @@ module.exports = Model.extend({
       })
     );
     query.columns.push('restaurants.minimum_order');
-    query.columns.push({table: 'restaurants', name: 'emails', as: 'restaurant_emails'});
-    query.columns.push('restaurants.sms_phones');
-    query.columns.push('restaurants.voice_phones');
+    // query.columns.push({table: 'restaurants', name: 'emails', as: 'restaurant_emails'});
+    // query.columns.push('restaurants.sms_phones');
+    // query.columns.push('restaurants.voice_phones');
     query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});
 
     query.joins.restaurants = {

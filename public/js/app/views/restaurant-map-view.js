@@ -7,6 +7,7 @@
  */
 define(function(require, exports, module) {
   var Backbone = require('backbone');
+  var notify = require('notify');
 
   return module.exports = Backbone.View.extend({
     initialize: function() {
@@ -54,7 +55,7 @@ define(function(require, exports, module) {
             infowindow.open(this_.map, marker);
           });
         } else {
-          alert('Geocode was not successful for the following reason: ' + status);
+          notify.error('Geocode was not successful for the following reason: ' + status);
         }
       });
 

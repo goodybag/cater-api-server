@@ -21,10 +21,10 @@ module.exports.schema = {
 };
 
 var okTimeRanges = {
-  beginHour:    +config.welcome.begin.split(':')[0]
-, beginMinute:  +config.welcome.begin.split(':')[1]
-, endHour:      +config.welcome.end.split(':')[0]
-, endMinute:    +config.welcome.end.split(':')[1]
+  beginHour:    +config.welcome.beginTime.split(':')[0]
+, beginMinute:  +config.welcome.beginTime.split(':')[1]
+, endHour:      +config.welcome.endTime.split(':')[0]
+, endMinute:    +config.welcome.endTime.split(':')[1]
 };
 
 module.exports.getUsers = function( callback ){

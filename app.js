@@ -150,4 +150,4 @@ partials.register(hbs);
 
 routes.register(app);
 
-utils.overload.dataTypes( Models );
+utils.overload.config({ dataTypes: Models });

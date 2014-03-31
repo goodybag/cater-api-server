@@ -21,7 +21,7 @@ var
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
 
-utils.overload = require('leFunc');
+utils.overload = require('leFunc').leFunc;
 
 utils.deepExtend = require('deep-extend');
 

@@ -15,7 +15,7 @@ var welcome = require('../../../lib/welcome-emailer');
 var moment  = require('moment-timezone');
 
 module.exports.name = 'Welcome Email';
-console.log(moment().tz);
+
 module.exports.schema = {
   users: true
 };

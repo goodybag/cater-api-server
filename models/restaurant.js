@@ -3,7 +3,7 @@ var moment = require('moment-timezone');
 var Model = require('./model');
 var utils = require('../utils');
 
-module.exports = Model.extend({
+var Restaurant = module.exports = Model.extend({
   getCategories: function(callback) {
     var self = this;
     callback = callback || function() {};
@@ -417,7 +417,7 @@ module.exports = Model.extend({
 
     var contactsInfo = ['sms_phones', 'voice_phones', 'emails'];
     contactsInfo.forEach( function(type){
-      query.columns.push(getContactsInfo(type));
+      query.columns.push(Restaurant.getContactsInfo(type));
     });
 
     Model.find.call(this, query, function(err, restaurants) {
@@ -429,6 +429,32 @@ module.exports = Model.extend({
       return callback.call(this, err, restaurants);
     });
   },
+
+
+  /**
+   * @param {String} type is one of (sms_phones|voice_phones|emails)
+   */
+  getContactsInfo: function(type) {
+    var query = {
+      type: 'array'
+    , expression: {
+        type: 'select'
+      , columns: [
+          {
+            type: 'unnest'
+          , expression: 'contacts.' + type
+          }
+        ]
+      , table: 'contacts'
+      , where: {
+          'contacts.restaurant_id': '$restaurants.id$'
+        , 'contacts.notify': true
+        }
+      }
+    , as: type
+    };
+    return query;
+  }
 });
 
 /**
@@ -527,30 +553,3 @@ var includeFavorites = function(query, opts) {
   , as: 'favorite'
   });
 }
-
-/**
- * Select contacts info per restaurant
- *
- * @param {String} type is one of (sms_phones|voice_phones|emails)
- */
-var getContactsInfo = function(type) {
-  var query = {
-    type: 'array'
-  , expression: {
-      type: 'select'
-    , columns: [
-        {
-          type: 'unnest'
-        , expression: 'contacts.' + type
-        }
-      ]
-    , table: 'contacts'
-    , where: {
-        'contacts.restaurant_id': '$restaurants.id$'
-      , 'contacts.notify': true
-      }
-    }
-  , as: type
-  };
-  return query;
-};

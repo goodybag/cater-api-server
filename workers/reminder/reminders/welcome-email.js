@@ -12,10 +12,10 @@ var config  = require('../../../config');
 var views   = require('../lib/views');
 var helpers = require('../../../public/js/lib/hb-helpers');
 var welcome = require('../../../lib/welcome-emailer');
-var moment  = require('moment');
+var moment  = require('moment-timezone');
 
 module.exports.name = 'Welcome Email';
-
+console.log(moment().tz);
 module.exports.schema = {
   users: true
 };
@@ -39,21 +39,21 @@ module.exports.getUsers = function( callback ){
 
     // Ensure the current time for each user in the list is
     // within the acceptable timeframe to be sending emails
-    user = users.filter( function( user ){
-      var now   = moment().tz( user.timezone );
-      var begin = moment().tz( user.timezone );
-      var end   = moment().tz( user.timezone );
+    users = users.filter( function( user ){
+      var now   = moment().tz( user.attributes.timezone );
+      var begin = moment().tz( user.attributes.timezone );
+      var end   = moment().tz( user.attributes.timezone );
 
-      begin.set( 'hour', okTimeRanges.beginHour );
-      begin.set( 'minute', okTimeRanges.beginMinute );
+      begin.set( 'hour',    okTimeRanges.beginHour );
+      begin.set( 'minute',  okTimeRanges.beginMinute );
 
-      end.set( 'hour', okTimeRanges.endHour );
-      end.set( 'minute', okTimeRanges.endMinute );
+      end.set( 'hour',    okTimeRanges.endHour );
+      end.set( 'minute',  okTimeRanges.endMinute );
 
       return begin <= now && now < end;
     });
 
-    return callback( null, users.length > 0 );
+    return callback( null, users );
   });
 };
 
@@ -70,5 +70,20 @@ module.exports.work = function( storage, callback ){
   , usersWelcomed:        { text: 'Users Welcomed', value: 0 }
   };
 
+  module.exports.getUsers( function( error, users ){
+    if ( error ) return callback( error );
 
+    utils.async.each( users, function( user, done ){
+      welcome.send( user, function( error ){
+        if ( error ){
+          stats.errors.value++;
+          stats.errors.push( error );
+          return done();
+        }
+
+        stats.usersWelcomed.value++;
+        done();
+      });
+    }, callback.bind( null, null, stats ));
+  });
 };

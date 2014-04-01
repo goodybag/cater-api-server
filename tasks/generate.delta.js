@@ -14,10 +14,10 @@ var options = {
 
 var tmpl = function( data ){
   return [
-    "-- Add new column"
+    "-- Delta"
   , ""
   , "DO $$"
-  , "  declare version       text := '1.1.1';"
+  , "  declare version       text := '" + data.version + "';"
   , "begin"
   , "  raise notice '## Running Delta v% ##', version;"
   , ""
@@ -53,10 +53,10 @@ module.exports = function( grunt ){
       }
     }
 
-    args.forEach( function( filename ){
-      var dest = path.join( options.dest, filename ) + '.' + options.ext;
+    args.forEach( function( version ){
+      var dest = path.join( options.dest, version ) + '.' + options.ext;
       grunt.log.writeln( 'Creating', dest );
-      fs.writeFileSync( dest, tmpl({ name: filename[0].toUpperCase() + filename.slice(1) }) );
+      fs.writeFileSync( dest, tmpl({ version: version }) );
     });
   });
 };

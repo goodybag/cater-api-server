@@ -16,9 +16,7 @@ var moment  = require('moment-timezone');
 
 module.exports.name = 'Welcome Email';
 
-module.exports.schema = {
-  users: true
-};
+module.exports.schema = config.welcome.reminderSchema;
 
 var okTimeRanges = {
   beginHour:    +config.welcome.beginTime.split(':')[0]

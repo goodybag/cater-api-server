@@ -50,12 +50,12 @@
                 {{#or2 this.delivery_fee this.minimum_order}}
                 <div class="fee-info">
                   <dl class="dl-horizontal-inline">
-                    {{#if ../../delivery_fee}}
+                    {{#if ../delivery_fee}}
                     <dt>Delivery charge:</dt>
                     <dd>${{dollars ../../delivery_fee}}</dd>
                     {{/if}}
 
-                    {{#if ../../minimum_order}}
+                    {{#if ../minimum_order}}
                     <dt>Order minimum:</dt>
                     <dd>${{dollars ../../minimum_order}}</dd>
                     {{/if}}

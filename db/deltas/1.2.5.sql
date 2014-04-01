@@ -1,7 +1,9 @@
 -- Delta
+-- This is a noop delta because the real work is done in the
+-- Post-delta bin script
 
 DO $$
-  declare version       text := '1.2.4;
+  declare version       text := '1.2.5';
 begin
   raise notice '## Running Delta v% ##', version;
 

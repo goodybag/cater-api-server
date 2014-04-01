@@ -16,10 +16,11 @@ define(function(require, exports, module) {
 
     getProps: function() {
       var name = this.$el.find('input[name="name"]').val();
-      var notes = this.$el.find('input[name="notes"]').val();
+      var notes = this.$el.find('textarea[name="notes"]').val();
       var sms_phones = this.parsePhoneList(this.$el.find('input[name="sms_phones"]').val());
       var voice_phones = this.parsePhoneList(this.$el.find('input[name="voice_phones"]').val());
       var emails = '{' + this.$el.find('input[name="emails"]').val() + '}';
+      var notify = this.$el.find('input[name="notify"]').is(':checked');
 
       return {
         name: name
@@ -27,6 +28,7 @@ define(function(require, exports, module) {
       , sms_phones: sms_phones
       , voice_phones: voice_phones
       , emails: emails
+      , notify: notify
       };
     },
 

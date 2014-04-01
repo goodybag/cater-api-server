@@ -547,6 +547,7 @@ var getContactsInfo = function(type) {
     , table: 'contacts'
     , where: {
         'contacts.restaurant_id': '$restaurants.id$'
+      , 'contacts.notify': true
       }
     }
   , as: type

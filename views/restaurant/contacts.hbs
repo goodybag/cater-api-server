@@ -81,7 +81,7 @@
 
   {{#each contacts}}
     <form id="contact-{{id}}" method="put" action="/api/restaurants/{{restaurant.id}}/contacts/{{id}}">
-      <legend>Contact #{{@index}}</legend>
+      <legend>Contact #{{add @index 1}}</legend>
       <div class="form-vertical">
         {{> contact_form }}
         <div class="form-group">

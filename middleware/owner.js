@@ -16,6 +16,7 @@ module.exports = function( options ){
 
     if ( req.user.attributes.groups.indexOf('admin') > -1 ) return next();
     if ( req.param( options.param ) == req.user.attributes[ options.userField ] ) return next();
+    if ( req.param( options.param ) === 'me' ) return next();
 
     return res.send( 401 );
   };

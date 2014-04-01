@@ -10,7 +10,6 @@ define(function(require, exports, module) {
   var Address = require('../models/address');
   var PaymentMethod = require('../models/payment-method');
 
-
   return module.exports = OrderView.extend({
     events: _.extend({}, OrderView.prototype.events, {
       'click .item-edit':                             'itemEditClick',
@@ -155,6 +154,16 @@ define(function(require, exports, module) {
         if ( errors ){
           spinner.stop();
           return this.displayErrors2(errors, Address);
+        }
+      }
+
+      if ( this.$el.find('[name="user_name"]') ){
+        if ( !this.$el.find('[name="user_name"]').val() ){
+          spinner.stop();
+          return this.displayErrors2([{
+            property: 'user_name'
+          , message: 'Your name is required'
+          }])
         }
       }
 

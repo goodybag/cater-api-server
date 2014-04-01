@@ -492,7 +492,13 @@ module.exports.register = function(app) {
   });
 
   app.all(/^\/users\/(\d+)(?:\/.*)?$/, function(req, res, next) {
-    if (!req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params[0] !== ''+req.session.user.id))
+    var owner = m.owner();
+    var isOwner = false;
+    owner( req, res, function(){
+      isOwner = true;
+    });
+
+    if (isOwner || !req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params[0] !== ''+req.session.user.id))
       res.send(404);
     else
       next();

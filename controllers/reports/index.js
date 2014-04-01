@@ -76,6 +76,7 @@ var reports = {
 
     query.order = {};
     query.order[range] = sort;
+    query.distinct = [ 'orders.id', range ];
 
     models.Order.find(query, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

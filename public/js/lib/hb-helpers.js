@@ -410,6 +410,12 @@ define(function(require, exports, module) {
       }
 
       return classList.join(' ');
+    },
+
+    cdn: function(){
+      return [ config.cdnBaseUrl ].concat(
+        Array.prototype.slice.call( arguments, 0, - 1 )
+      ).join('/');
     }
   }
 

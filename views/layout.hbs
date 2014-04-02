@@ -180,10 +180,10 @@
     {{/if}}
 
     {{#unless config.isDev}}
-    <script src="/dist/app.js"></script>
+    <script src="{{cdn "dist/app.js"}}"></script>
     {{else}}
-    <script src="/components/requirejs/require.js"></script>
-    <script src="/js/require-config.js"></script>
+    <script src="{{cdn "components/requirejs/require.js"}}"></script>
+    <script src="{{cdn "js/require-config.js"}}"></script>
     {{/unless}}
     <script>
       require( ['config'], function( config ){

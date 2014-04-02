@@ -520,7 +520,6 @@ module.exports.register = function(app) {
      */
 
     app.get('/users/:uid/rewards'
-    , m.restrict(['admin', 'client'])
     , controllers.users.rewards.list
     );
 

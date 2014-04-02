@@ -57,7 +57,9 @@ module.exports.list = function(req, res) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
 
     var context = {
-      restaurants:      utils.invoke(results[0], 'toJSON'),
+      restaurants:      utils.invoke(results[0], 'toJSON').filter( function( r ){
+                          return !r.is_unacceptable;
+                        }),
       defaultAddress:   results[1] ? results[1].toJSON() : null,
       orderParams:      orderParams,
       filterCuisines:   cuisines,

@@ -18,6 +18,7 @@ var
 , partials = require('./lib/partials')
 , errors = require('./errors')
 , middleware = require('./middleware')
+, Models = require('./models')
 ;
 
 var app = module.exports = express();
@@ -148,3 +149,5 @@ helpers.register(hbs);
 partials.register(hbs);
 
 routes.register(app);
+
+utils.overload.config({ dataTypes: Models });

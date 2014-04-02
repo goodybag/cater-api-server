@@ -1,6 +1,8 @@
 var fs            = require('fs');
 var path          = require('path');
+var wrench        = require('wrench');
 var pkg           = require('./package.json');
+var config        = require('./config');
 var utils         = require('./utils');
 var requireConfig = require('./public/js/require-config');
 
@@ -15,8 +17,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-named-modules');
+  grunt.loadNpmTasks('grunt-s3');
 
-  var config = {
+  var gruntConfig = {
     complexity: {
       generic: {
         src: ['./**/*.js'],
@@ -109,13 +112,73 @@ module.exports = function(grunt) {
       }
     , landing: {}
     }
+
+  , s3: {
+      options: {
+        key:    config.amazon.awsId
+      , secret: config.amazon.awsSecret
+      , access:  'public-read'
+      , maxOperations: 20
+      , headers: {
+          // Two Year cache policy (1000 * 60 * 60 * 24 * 730)
+          "Cache-Control": "max-age=630720000, public"
+        , "Expires": new Date(Date.now() + 63072000000).toUTCString()
+        }
+      }
+
+    , dev: {
+        bucket: config.getEnv('dev').cdn.bucket
+      , upload: []
+      }
+
+    , staging: {
+        bucket: config.getEnv('staging').cdn.bucket
+      , upload: []
+      }
+
+    , production: {
+        bucket: config.getEnv('production').cdn.bucket
+      , upload: []
+      }
+    }
   };
 
-  var landing   = config.requirejs.landing.options = utils.clone( config.requirejs.app.options );
+  // Setup s3 to upload all of public
+  Object.keys( gruntConfig.s3 ).filter( function( k ){
+    return ['options'].indexOf( k ) === -1;
+  }).forEach( function( env ){
+    [
+      { src: './public/dist', dest: 'dist', gzip: true }
+    , { src: './public/css', dest: 'css', gzip: true }
+    , { src: './public/img', dest: 'img', gzip: false }
+    , { src: './public/font', dest: 'font', gzip: false }
+    , { src: './public/components/pickadate/lib/themes', dest: 'components/pickadate/lib/themes', gzip: true }
+    , { src: './public/components/select2/select2.css', dest: 'components/select2/select2.css', gzip: true }
+    , { src: './public/components/bootstrap/dist/css/bootstrap.min.css', dest: 'components/bootstrap/dist/css/bootstrap.min.css', gzip: true }
+    ].forEach( function( option ){
+      if ( fs.statSync( option.src ).isFile() ){
+        return gruntConfig.s3[ env ].upload.push( option );
+      }
+
+      gruntConfig.s3[ env ].upload = gruntConfig.s3[ env ].upload.concat(
+        wrench.readdirSyncRecursive( option.src ).filter( function( f ){
+          return fs.statSync( path.join( option.src, f ) ).isFile();
+        }).map( function( f ){
+          return {
+            src:  path.join( option.src, f )
+          , dest: path.join( option.dest, f )
+          , gzip: option.gzip
+          };
+        })
+      );
+    });
+  });
+
+  var landing   = gruntConfig.requirejs.landing.options = utils.clone( gruntConfig.requirejs.app.options );
   landing.name  = 'app/pages/landing';
   landing.out   = 'public/dist/landing.js';
 
-  grunt.initConfig( config );
+  grunt.initConfig( gruntConfig );
 
   grunt.loadNpmTasks('grunt-complexity');
 

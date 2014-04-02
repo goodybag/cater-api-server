@@ -32,7 +32,12 @@ utils.async.parallel({
 }, function( error, results ){
   if ( error ) throw error;
 
-  results.reminder = results.reminder ? ( results.reminder.attributes || {} ) : {};
+  if ( results.reminder && results.reminder.attributes && results.reminder.attributes.data ){
+    results.reminder = results.reminder.attributes.data;
+  } else {
+    results.reminder = {};
+  }
+
   reminder.ensureSchema( schema, results.reminder );
 
   results.users.forEach( function( user ){

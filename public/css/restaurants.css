@@ -63,6 +63,15 @@ a.list-group-item-restaurant .list-group-item-heading {
   color: #DA1800;
 }
 
+a.list-group-item:hover {
+  /* Nice off-gray-ish */
+  border-color: #ccd;
+}
+
+a.list-group-item:hover + a.list-group-item {
+  border-top-color: #ccd;
+}
+
 .page-restaurants .btn-favorite.active {
   color: #dc1709;
 }

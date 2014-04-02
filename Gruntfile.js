@@ -155,6 +155,7 @@ module.exports = function(grunt) {
     , { src: './public/components/pickadate/lib/themes', dest: 'components/pickadate/lib/themes', gzip: true }
     , { src: './public/components/select2/select2.css', dest: 'components/select2/select2.css', gzip: true }
     , { src: './public/components/bootstrap/dist/css/bootstrap.min.css', dest: 'components/bootstrap/dist/css/bootstrap.min.css', gzip: true }
+    , { src: './public/components/respond/src/respond.js', dest: 'components/respond/src/respond.js', gzip: true }
     ].forEach( function( option ){
       if ( fs.statSync( option.src ).isFile() ){
         return gruntConfig.s3[ env ].upload.push( option );

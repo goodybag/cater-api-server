@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+      @media screen and (max-width: 630px) {
+        .main-width-constraint {
+          width: 100% !important;
+        }
+
+        .main-width-gutter {
+          width: 10px !important;
+        }
+
+        .main-width-gutters-padding {
+          padding-left: 10px !important;
+          padding-right: 10px !important;
+        }
+      }
+
+      .controls {
+        position: absolute;
+        top: 12px;
+        right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+
+    {{#if showControls}}
+      <div class="controls">
+        <form method="POST">
+          <button>Send</button>
+        </form>
+      </div>
+    {{/if}}
+
+    {{{body}}}
+  </body>
+</html>

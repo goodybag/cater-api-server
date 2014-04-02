@@ -22,6 +22,18 @@ config.defaults = {
 
 , rewardsStartDate: '2014-03-25 00:00:00'
 
+, welcome: {
+    from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
+  , beginTime:      '09:04'
+  , endTime:        '18:00'
+  , delay1:         (4*60*1000)
+  , delay2:         (2*60*1000)
+  , timezone:       'America/Chicago'
+  , subject1:       'Hi there!'
+  , subject2:       'I forgot... free gift card!!'
+  , reminderSchema: { users: true }
+  }
+
 , salesTax: 1.0825
 
 , taxRate: .0825
@@ -77,8 +89,6 @@ config.defaults = {
   }
 
 , outputActivePoolIds: false
-
-, welcomeEmailDelay: (1*60*1000) + (30*1000)
 
 , baseUrl: 'http://cater.goodybag.com'
 

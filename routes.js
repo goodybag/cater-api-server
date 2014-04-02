@@ -484,11 +484,9 @@ module.exports.register = function(app) {
    */
 
    app.all (/^\/users\/me(?:\/.*)?$/, function(req, res, next) {
-    if (!req.session.user) res.send(404);
-    else {
-      req.url = req.url.replace(/^\/users\/me/, '/users/' + req.session.user.id);
-      next();
-    }
+    if (!req.user) return m.owner()(req, res, next);
+    req.url = req.url.replace(/^\/users\/me/, '/users/' + req.user.attributes.id);
+    next();
   });
 
   app.before(  m.owner(), function( app ){

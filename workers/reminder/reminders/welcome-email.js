@@ -75,7 +75,7 @@ module.exports.work = function( storage, callback ){
       welcome.send( user, function( error ){
         if ( error ){
           stats.errors.value++;
-          stats.errors.push( error );
+          stats.errors.objects.push( error );
           return done();
         }
 

@@ -491,112 +491,111 @@ module.exports.register = function(app) {
     }
   });
 
-  app.all(/^\/users\/(\d+)(?:\/.*)?$/, function(req, res, next) {
-    var owner = m.owner();
-    var isOwner = false;
-    owner( req, res, function(){
-      isOwner = true;
+  app.before(  m.owner(), function( app ){
+    app.get('/users/:uid', controllers.users.get);
+
+    app.put('/users/:uid', controllers.users.update);
+
+    app.del('/users/:uid', function(req, res) { res.send(501); });
+
+    app.all('/users/:uid', function(req, res, next) {
+      res.set('Allow', 'GET, PUT, DELETE');
+      res.send(405);
     });
 
-    if (isOwner || !req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params[0] !== ''+req.session.user.id))
-      res.send(404);
-    else
-      next();
-  });
+    // app.get('/api/users/:uid'
+    // , m.param('uid')
+    // , m.findOne( db.users )
+    // );
 
-  app.get('/users/:uid', controllers.users.get);
+    // app.put('/api/users/:uid'
+    // , m.param('uid')
+    // , m.findOne( db.users )
+    // );
 
-  app.put('/users/:uid', controllers.users.update);
+    /**
+     *  User Orders resource.  All the orders placed by an individual user.
+     */
 
-  app.del('/users/:uid', function(req, res) { res.send(501); });
+    app.get('/users/:uid/orders', controllers.users.listOrders);
 
-  app.all('/users/:uid', function(req, res, next) {
-    res.set('Allow', 'GET, PUT, DELETE');
-    res.send(405);
-  });
+    app.all('/users/:uid', function(req, res, next) {
+      res.set('Allow', 'GET');
+      res.send(405);
+    });
 
-  /**
-   *  User Orders resource.  All the orders placed by an individual user.
-   */
+    /**
+     * Loyalty
+     */
 
-  app.get('/users/:uid/orders', controllers.users.listOrders);
+    app.get('/users/:uid/rewards'
+    , m.restrict(['admin', 'client'])
+    , controllers.users.rewards.list
+    );
 
-  app.all('/users/:uid', function(req, res, next) {
-    res.set('Allow', 'GET');
-    res.send(405);
-  });
+    /**
+     *  User Addresseses resource.
+     */
 
-  /**
-   * Loyalty
-   */
+    app.get('/users/:uid/addresses', controllers.users.addresses.list);
 
-  app.get('/users/:uid/rewards'
-  , m.restrict(['admin', 'client'])
-  , controllers.users.rewards.list
-  );
+    app.post('/users/:uid/addresses', controllers.users.addresses.create);
 
-  /**
-   *  User Addresseses resource.
-   */
+    app.all('/users/:uid/addresses', function(req, res, next) {
+      res.set('Allow', 'GET', 'POST');
+      res.send(405);
+    });
 
-  app.get('/users/:uid/addresses', controllers.users.addresses.list);
+    /**
+     * User Address resource. Represents a single address per user
+     */
 
-  app.post('/users/:uid/addresses', controllers.users.addresses.create);
+    app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
 
-  app.all('/users/:uid/addresses', function(req, res, next) {
-    res.set('Allow', 'GET', 'POST');
-    res.send(405);
-  });
+    app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
 
-  /**
-   * User Address resource. Represents a single address per user
-   */
+    app.patch('/users/:uid/addresses/:aid', controllers.users.addresses.update);
 
-  app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
+    app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
 
-  app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
+    app.all('/users/:uid/addresses/:aid', function(req, res, next) {
+      res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
+      res.send(405);
+    });
 
-  app.patch('/users/:uid/addresses/:aid', controllers.users.addresses.update);
+    /**
+     * User cards resource
+     */
 
-  app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
+    app.get('/users/:uid/cards', controllers.users.cards.list);
 
-  app.all('/users/:uid/addresses/:aid', function(req, res, next) {
-    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
-    res.send(405);
-  });
+    app.post('/users/:uid/cards', controllers.users.cards.create);
 
-  /**
-   * User cards resource
-   */
+    app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
 
-  app.get('/users/:uid/cards', controllers.users.cards.list);
+    app.put('/users/:uid/cards/:cid', controllers.users.cards.update);
 
-  app.post('/users/:uid/cards', controllers.users.cards.create);
+    app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
 
-  app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
+    app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
 
-  app.put('/users/:uid/cards/:cid', controllers.users.cards.update);
+    app.all('/users/:uid/cards/:cid', function(req, res, next) {
+      res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
+      res.send(405);
+    });
 
-  app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
+    /**
+     *  User session resource.  Represents a session as a specific user.
+     */
 
-  app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
+    app.get('/users/:uid/session', controllers.users.createSessionAs);
 
-  app.all('/users/:uid/cards/:cid', function(req, res, next) {
-    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
-    res.send(405);
-  });
+    app.post('/users/:uid/session', controllers.users.createSessionAs);
 
-  /**
-   *  User session resource.  Represents a session as a specific user.
-   */
-
-  app.get('/users/:uid/session', controllers.users.createSessionAs);
-
-  app.post('/users/:uid/session', controllers.users.createSessionAs);
-
-  app.all('/users/:uid/session', function(req, res, next) {
-    res.set('Allow', 'GET', 'POST');
-    res.send(405);
+    app.all('/users/:uid/session', function(req, res, next) {
+      res.set('Allow', 'GET', 'POST');
+      res.send(405);
+    });
   });
 
   /**

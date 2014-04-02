@@ -141,7 +141,7 @@ define(function(require, exports, module) {
     },
 
     submit: function(e) {
-      var self = this;
+      var self = this, userInfo;
 
       spinner.start();
 
@@ -158,20 +158,18 @@ define(function(require, exports, module) {
         }
       }
 
-      if ( this.$el.find('[name="user_name"]') ){
-        var userInfo = {
+      if ( this.$el.find('[name="user_name"]').length ){
+        userInfo = {
           name:         this.$el.find('[name="user_name"]').val()
         , organization: this.$el.find('[name="user_organization"]').val()
         };
 
-        if ( !user.validate( userInfo ) ){
+        if ( !userInfo.name ){
           spinner.stop();
           return this.displayErrors2([{
             property: 'user_name'
           , message: 'Please enter a valid name'
           }]);
-        } else {
-          user.set( userInfo );
         }
       }
 
@@ -188,9 +186,16 @@ define(function(require, exports, module) {
       utils.async.parallel({
         formSave: utils.bind( this.onSave, this )
       , userSave: function( done ){
-          user.save( null, {
-            success: function(){ done(); }
-          , error:   done
+          self.options.user.save( userInfo, {
+            success:  function(){ done(); }
+          , validate: false
+          , patch:    true
+          , error:    function(c){
+              done({
+                property: 'user_name'
+              , message: 'Something went wrong setting your name. Please refresh and try again'
+              });
+            }
           });
         }
       }, function( err ){

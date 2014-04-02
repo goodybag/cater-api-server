@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var Handlebars = require('handlebars');
   var spinner = require('spinner');
+  var utils = require('utils');
   var notify = require('../../notify');
 
   var OrderView = require('./order-view');
@@ -158,12 +159,19 @@ define(function(require, exports, module) {
       }
 
       if ( this.$el.find('[name="user_name"]') ){
-        if ( !this.$el.find('[name="user_name"]').val() ){
+        var userInfo = {
+          name:         this.$el.find('[name="user_name"]').val()
+        , organization: this.$el.find('[name="user_organization"]').val()
+        };
+
+        if ( !user.validate( userInfo ) ){
           spinner.stop();
           return this.displayErrors2([{
             property: 'user_name'
-          , message: 'Your name is required'
-          }])
+          , message: 'Please enter a valid name'
+          }]);
+        } else {
+          user.set( userInfo );
         }
       }
 
@@ -177,12 +185,22 @@ define(function(require, exports, module) {
         return this.onUpdateCardSubmitClick(e);
       };
 
-      this.onSave(function(err, response) {
+      utils.async.parallel({
+        formSave: utils.bind( this.onSave, this )
+      , userSave: function( done ){
+          user.save( null, {
+            success: function(){ done(); }
+          , error:   done
+          });
+        }
+      }, function( err ){
         spinner.stop();
 
         if (err) return notify.error(err); // TODO: error handling
+
         self.model.changeStatus('submitted', true, function(err, data) {
           if (err) return notify.error(err); // TODO: error handling
+
           analytics.track('Order Submitted');
           window.location.reload();
         });

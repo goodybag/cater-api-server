@@ -10,7 +10,7 @@ define(function(require, exports, module) {
       'submit form':        'onFormSubmit'
     , 'click .form-group':  'focusInputs'
     , 'click .btn-search':  'onSearchClick'
-    , 'keyup input':        'onInputChange'
+    , 'keyup input':        'onKeyUp'
     }
 
   , template: template
@@ -27,8 +27,6 @@ define(function(require, exports, module) {
       , interval: 15
       }).pickatime('picker');
 
-      this.datepicker.on( 'set', this.onInputChange );
-      this.timepicker.on( 'set', this.onInputChange );
       this.timepicker.on( 'open', _(this.onTimePickerOpen).bind(this) );
     }
 
@@ -74,6 +72,13 @@ define(function(require, exports, module) {
       // Scroll to 8am
       var $el = this.timepicker.$root.find('.picker__holder');
       $el[0].scrollTop = $el.find('[data-pick="' + (60 * 8) + '"]')[0].offsetTop;
+    }
+
+  , onKeyUp: function( e ){
+      // Enter they intended to submit
+      if ( e.keyCode === 13 ){
+        this.search();
+      }
     }
   });
 });

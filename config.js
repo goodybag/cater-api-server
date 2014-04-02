@@ -20,6 +20,8 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, cdnBaseUrl: 'http://cater-cdn-dev.s3-website-us-east-1.amazonaws.com'
+
 , rewardsStartDate: '2014-03-25 00:00:00'
 
 , welcome: {
@@ -256,6 +258,8 @@ config.staging = {
 
 , isStaging: true
 
+, cdnBaseUrl: 'http://cater-cdn-staging.s3-website-us-east-1.amazonaws.com'
+
 , http: {
     port: process.env['PORT'] || 5000
   }
@@ -332,6 +336,8 @@ config.production = {
   env: 'production'
 
 , isProduction: true
+
+, cdnBaseUrl: 'http://cater-cdn-prod.s3-website-us-east-1.amazonaws.com'
 
 , http: {
     port: process.env['PORT'] || 5000

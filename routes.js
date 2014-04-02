@@ -495,6 +495,7 @@ module.exports.register = function(app) {
     app.get('/users/:uid', controllers.users.get);
 
     app.put('/users/:uid', controllers.users.update);
+    app.patch('/users/:uid', controllers.users.update);
 
     app.del('/users/:uid', function(req, res) { res.send(501); });
 

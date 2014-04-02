@@ -504,16 +504,6 @@ module.exports.register = function(app) {
       res.send(405);
     });
 
-    // app.get('/api/users/:uid'
-    // , m.param('uid')
-    // , m.findOne( db.users )
-    // );
-
-    // app.put('/api/users/:uid'
-    // , m.param('uid')
-    // , m.findOne( db.users )
-    // );
-
     /**
      *  User Orders resource.  All the orders placed by an individual user.
      */

@@ -413,7 +413,7 @@ define(function(require, exports, module) {
     },
 
     cdn: function(){
-      return [ config.cdnBaseUrl ].concat(
+      return [ config.cdn.baseUrl ].concat(
         Array.prototype.slice.call( arguments, 0, - 1 )
       ).join('/');
     }

@@ -1,7 +1,7 @@
 -- #772 restaurant contacts
 
 DO $$
- declare version       text := '1.2.4';
+ declare version       text := '1.2.6';
 
 begin
  raise notice '## Running Delta v% ##', version;

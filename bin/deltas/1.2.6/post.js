@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 var utils     = require('../../../utils')
-  , models    = require('../../../models')
   , db        = require('../../../db')
   , queries   = require('../../../db/queries');
 
@@ -9,9 +8,15 @@ var utils     = require('../../../utils')
  */
 var tasks = [
   function getRestaurants(callback) {
-    models.Restaurant.find({}, function(error, restaurants) {
-      if ( restaurants ) console.log(restaurants.length, 'restaurants found');
-      callback(error, restaurants);
+    var query = {
+      type: 'select'
+    , table: 'restaurants'
+    , columns: ['*']
+    };
+    var sql = db.builder.sql(query);
+    db.query(sql.query, sql.values, function(error, rows, result) {
+      if ( rows ) console.log(rows.length, 'restaurants found');
+      callback(error, rows);
     });
   },
 
@@ -25,8 +30,8 @@ var tasks = [
         name: 'Restaurant'
       , notes: 'Original admin panel contact info'
       , notify: true
-      , restaurant_id: restaurant.attributes.id
-      }, utils.pick(restaurant.attributes, copyColumns)
+      , restaurant_id: restaurant.id
+      }, utils.pick(restaurant, copyColumns)
       );
       var query = {
         type: 'insert'

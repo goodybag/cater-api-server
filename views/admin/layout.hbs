@@ -5,29 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Select2 -->
-    <link href="/components/select2/select2.css" rel="stylesheet" media="screen">
+    <link href="{{cdn "/components/select2/select2.css"}}" rel="stylesheet" media="screen">
 
     <!-- Bootstrap -->
-    <link href="/components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="{{cdn "/components/bootstrap/dist/css/bootstrap.min.css"}}" rel="stylesheet" media="screen">
 
     <!-- Fonts -->
-    <link href="/css/gb-icon.css" rel="stylesheet">
-    <link href="/css/aleo.css" rel="stylesheet">
-    <link href="/css/proxima-nova.css" rel="stylesheet">
+    <link href="{{cdn "/css/gb-icon.css"}}" rel="stylesheet">
+    <link href="{{cdn "/css/aleo.css"}}" rel="stylesheet">
+    <link href="{{cdn "/css/proxima-nova.css"}}" rel="stylesheet">
 
     <!-- Moar Convenient CSS Stuff -->
-    <link href="/css/kit.css" rel="stylesheet">
+    <link href="{{cdn "/css/kit.css"}}" rel="stylesheet">
 
     <!-- Goodybag Catering CSS Stuff -->
-    <link href="/css/main.css" rel="stylesheet">
-    <link href="/css/components.css" rel="stylesheet">
-    <link href="/css/theme.css" rel="stylesheet">
-    <link href="/css/admin.css" rel="stylesheet">
+    <link href="{{cdn "/css/main.css"}}" rel="stylesheet">
+    <link href="{{cdn "/css/components.css"}}" rel="stylesheet">
+    <link href="{{cdn "/css/theme.css"}}" rel="stylesheet">
+    <link href="{{cdn "/css/admin.css"}}" rel="stylesheet">
 
     {{{block "css"}}}
 
     <!--[if lte IE 9]>
-    <link rel="stylesheet" href="/css/ie-lte-9.css">
+    <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
     <![endif]-->
   </head>
   <body>
@@ -75,8 +75,12 @@
       {{{block "body"}}}
     </div>
 
-    <script src="/js/require-config.js"></script>
-    <script src="/components/requirejs/require.js"></script>
+    {{#unless config.isDev}}
+    <script src="{{cdn "dist/app.js"}}"></script>
+    {{else}}
+    <script src="{{cdn "components/requirejs/require.js"}}"></script>
+    <script src="{{cdn "js/require-config.js"}}"></script>
+    {{/unless}}
     <script>
       require( ['config'], function( config ){
         config.cdnBaseUrl = '{{{config.cdnBaseUrl}}}';

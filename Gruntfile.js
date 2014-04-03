@@ -152,12 +152,26 @@ module.exports = function(grunt) {
     , { src: './public/css', dest: 'css', gzip: true }
     , { src: './public/img', dest: 'img', gzip: false }
     , { src: './public/font', dest: 'font', gzip: false }
-    , { src: './public/components/bootstrap', dest: 'components/bootstrap', gzip: true }
+    , { src: './public/*', dest: '', gzip: false }
+    , { src: './public/components/bootstrap/dist', dest: 'components/bootstrap/dist', gzip: true }
+    , { src: './public/components/requirejs', dest: 'components/requirejs', gzip: true }
+    , { src: './public/components/html5shiv/dist/html5shiv.js', dest: 'components/html5shiv/dist/html5shiv.js', gzip: true }
+    , { src: './public/components/es5-shim/es5-shim.js', dest: 'components/es5-shim/es5-shim.js', gzip: true }
+    , { src: './public/components/es5-shim/es5-sham.js', dest: 'components/es5-shim/es5-sham.js', gzip: true }
+    , { src: './public/components/console-polyfill/index.js', dest: 'components/console-polyfill/index.js', gzip: true }
     , { src: './public/components/pickadate/lib/themes', dest: 'components/pickadate/lib/themes', gzip: true }
     , { src: './public/components/select2/select2.css', dest: 'components/select2/select2.css', gzip: true }
     , { src: './public/components/respond/src/respond.js', dest: 'components/respond/src/respond.js', gzip: true }
+    , { src: './public/components/jquery/jquery.js', dest: 'components/jquery/jquery.js', gzip: true }
     ].forEach( function( option ){
-      if ( fs.statSync( option.src ).isFile() ){
+      try {
+        if ( !fs.statSync( option.src ).isDirectory() ){
+          return gruntConfig.s3[ env ].upload.push( option );
+        }
+
+      // If we had to catch on statSync, it's because the path
+      // was not a file or directory, probably a glob
+      } catch ( e ){
         return gruntConfig.s3[ env ].upload.push( option );
       }
 

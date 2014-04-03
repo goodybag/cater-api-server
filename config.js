@@ -21,8 +21,10 @@ config.defaults = {
   numWorkers: os.cpus().length
 
 , cdn: {
-    // baseUrl: 'http://localhost:3000'
-    baseUrl: 'http://cater-cdn-dev.s3-website-us-east-1.amazonaws.com'
+    baseUrl: 'http://localhost:3000'
+    // If you want to test out uploading stuff to a CDN, but don't want
+    // to use staging or prod, you can uncomment out this line
+    // baseUrl: 'http://cater-cdn-dev.s3-website-us-east-1.amazonaws.com'
   , bucket: 'cater-cdn-dev'
   }
 

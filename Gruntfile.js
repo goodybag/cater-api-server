@@ -57,7 +57,7 @@ module.exports = function(grunt) {
       }
     , deployStaging: {
         options: { stdout: true }
-      , command: 'git push staging 790-s3:master'
+      , command: 'git push staging master'
       }
     , deployProduction: {
         options: { stdout: true }

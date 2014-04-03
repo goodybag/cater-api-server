@@ -63,14 +63,6 @@ module.exports = function(grunt) {
         options: { stdout: true }
       , command: './bin/deploy production'
       }
-    // , 'handlebars:staging': {
-    //     options: { stdout: true }
-    //   , command: 'export GB_ENV=staging && grunt shell:handlebars'
-    //   }
-    // , 'handlebars:dev': {
-    //     options: { stdout: true }
-    //   , command: 'export GB_ENV=dev && grunt shell:handlebars'
-    //   }
     }
 
   , less: {
@@ -160,6 +152,12 @@ module.exports = function(grunt) {
   };
 
   // Setup s3 to upload all of public
+  // Due to the limitations of globbing, I needed something a little more robust.
+  // Also, I didn't want to repeat the same configs for each target.
+  // So this loop applies all of the below configs to the upload property
+  // to each target in s3. It also has the added benefit of using recursive
+  // directory walking using wrench when a directory is specified.
+  // Globs are still allowed as well.
   Object.keys( gruntConfig.s3 ).filter( function( k ){
     return ['options'].indexOf( k ) === -1;
   }).forEach( function( env ){

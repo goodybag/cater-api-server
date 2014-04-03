@@ -55,6 +55,22 @@ module.exports = function(grunt) {
         options: { stdout: true }
       , command: 'mkdir tmp'
       }
+    , deployStaging: {
+        options: { stdout: true }
+      , command: 'git push staging 790-s3:master'
+      }
+    , deployProduction: {
+        options: { stdout: true }
+      , command: './bin/deploy production'
+      }
+    // , 'handlebars:staging': {
+    //     options: { stdout: true }
+    //   , command: 'export GB_ENV=staging && grunt shell:handlebars'
+    //   }
+    // , 'handlebars:dev': {
+    //     options: { stdout: true }
+    //   , command: 'export GB_ENV=dev && grunt shell:handlebars'
+    //   }
     }
 
   , less: {
@@ -198,6 +214,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-complexity');
 
   grunt.registerTask( 'analyze',  ['complexity'] );
-  grunt.registerTask( 'build',    ['less', 'concat', 'requirejs'] );
+  grunt.registerTask( 'build',    ['less', 'concat', 'shell:handlebars', 'requirejs'] );
   grunt.registerTask( 'default',  ['less', 'watch'] );
+
+  grunt.registerTask( 'deploy', ['build', 's3:prod', 'shell:deployProduction'] );
+  grunt.registerTask( 'deploy:staging', ['build', 's3:staging', 'shell:deployStaging'] );
+  grunt.registerTask( 'deploy:dev', ['build', 's3:dev'] );
 };

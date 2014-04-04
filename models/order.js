@@ -460,6 +460,7 @@ module.exports = Model.extend({
     query.columns = query.columns || ['*'];
     query.order = query.order || ["submitted.created_at DESC", "orders.created_at DESC"];
     query.with = query.with || [];
+    query.where = query.where || {};
 
     // distinct should have the same columns used in order by
     query.distinct = query.distinct || queryTransform.stripColumn(query.order);

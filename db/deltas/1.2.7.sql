@@ -2,7 +2,7 @@
 -- items. This adds delete behavior and fixes the issue
 
 DO $$
-  declare version       text := '1.2.6';
+  declare version       text := '1.2.7';
 begin
   raise notice '## Running Delta v% ##', version;
 

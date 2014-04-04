@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var Handlebars = require('handlebars');
   var spinner = require('spinner');
+  var utils = require('utils');
   var notify = require('../../notify');
 
   var OrderView = require('./order-view');
@@ -9,7 +10,6 @@ define(function(require, exports, module) {
   var Order = require('../models/order');
   var Address = require('../models/address');
   var PaymentMethod = require('../models/payment-method');
-
 
   return module.exports = OrderView.extend({
     events: _.extend({}, OrderView.prototype.events, {
@@ -141,7 +141,7 @@ define(function(require, exports, module) {
     },
 
     submit: function(e) {
-      var self = this;
+      var self = this, userInfo;
 
       spinner.start();
 
@@ -158,6 +158,21 @@ define(function(require, exports, module) {
         }
       }
 
+      if ( this.$el.find('[name="user_name"]').length ){
+        userInfo = {
+          name:         this.$el.find('[name="user_name"]').val()
+        , organization: this.$el.find('[name="user_organization"]').val()
+        };
+
+        if ( !userInfo.name ){
+          spinner.stop();
+          return this.displayErrors2([{
+            property: 'user_name'
+          , message: 'Please enter a valid name'
+          }]);
+        }
+      }
+
       // If they're saving a new card, delegate to the `savenewCardAndSubmit` handler
       if (this.$el.find('[name="payment-method"]:checked').val() === 'new') {
         return this.saveNewCardAndSubmit(e);
@@ -168,12 +183,29 @@ define(function(require, exports, module) {
         return this.onUpdateCardSubmitClick(e);
       };
 
-      this.onSave(function(err, response) {
+      utils.async.parallel({
+        formSave: utils.bind( this.onSave, this )
+      , userSave: function( done ){
+          self.options.user.save( userInfo, {
+            success:  function(){ done(); }
+          , validate: false
+          , patch:    true
+          , error:    function(c){
+              done({
+                property: 'user_name'
+              , message: 'Something went wrong setting your name. Please refresh and try again'
+              });
+            }
+          });
+        }
+      }, function( err ){
         spinner.stop();
 
         if (err) return notify.error(err); // TODO: error handling
+
         self.model.changeStatus('submitted', true, function(err, data) {
           if (err) return notify.error(err); // TODO: error handling
+
           analytics.track('Order Submitted');
           window.location.reload();
         });

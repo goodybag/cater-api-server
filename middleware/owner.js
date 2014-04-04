@@ -9,14 +9,23 @@ module.exports = function( options ){
   options = utils.defaults( options || {}, {
     param:      'uid'
   , userField:  'id'
+  , onError: function( req, res, next ){
+      // If they're not logged in, redirect them to login
+      if ( !req.user )
+      if ( 'accept' in req.headers )
+      if ( req.headers.accept.split(',').indexOf('text/html') > -1 ){
+        return res.redirect( '/login?next=' + req.url );
+      }
+      return res.send(401);
+    }
   });
 
   return function( req, res, next ){
-    if ( !req.user ) return res.send( 401 );
+    if ( !req.user ) return options.onError( req, res, next );
 
     if ( req.user.attributes.groups.indexOf('admin') > -1 ) return next();
     if ( req.param( options.param ) == req.user.attributes[ options.userField ] ) return next();
 
-    return res.send( 401 );
+    return options.onError( req, res, next );
   };
 };

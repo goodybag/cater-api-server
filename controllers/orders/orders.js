@@ -353,64 +353,66 @@ module.exports.changeStatus = function(req, res) {
 
     var done = function() {
       if (order.attributes.status === 'submitted') {
+        order.getRestaurant( function( err, restaurant ){
 
-        // TODO: extract this address logic into address model
-        // Save address based on this order's attributes
-        var orderAddressFields = utils.pick(order.attributes, addressFields);
+          // TODO: extract this address logic into address model
+          // Save address based on this order's attributes
+          var orderAddressFields = utils.pick(order.attributes, addressFields);
 
-        // Set `is_default == true` if there's no default set
-        models.Address.find({ where: {user_id: req.session.user.id, is_default: true}}, function(error, addresses) {
-          if (error) return res.error(errors.internal.DB_FAILURE, error);
+          // Set `is_default == true` if there's no default set
+          models.Address.find({ where: {user_id: req.session.user.id, is_default: true}}, function(error, addresses) {
+            if (error) return res.error(errors.internal.DB_FAILURE, error);
 
-          var noExistingDefault = !addresses.length;
-          var addressData = utils.extend(orderAddressFields, { user_id: req.session.user.id, is_default: noExistingDefault });
-          var address = new models.Address(addressData);
-          address.save(function(err, rows, result) {
+            var noExistingDefault = !addresses.length;
+            var addressData = utils.extend(orderAddressFields, { user_id: req.session.user.id, is_default: noExistingDefault });
+            var address = new models.Address(addressData);
+            address.save(function(err, rows, result) {
 
-            // Db enforces unique addresses, so ignore 23505 UNIQUE VIOLATION
-            if (err && err.code !== '23505') return res.error(errors.internal.DB_FAILURE, err);
+              // Db enforces unique addresses, so ignore 23505 UNIQUE VIOLATION
+              if (err && err.code !== '23505') return res.error(errors.internal.DB_FAILURE, err);
+            });
           });
-        });
 
-        if (order.attributes.restaurant.sms_phones) {
-          logger.routes.info(TAGS, "shortening url and sending sms for order: " + order.attributes.id);
-          var url = config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token;
+          if (restaurant.attributes && restaurant.attributes.sms_phones) {
+            logger.routes.info(TAGS, "shortening url and sending sms for order: " + order.attributes.id);
+            var url = config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token;
 
-          // shorten URL
-          bitly.shorten(url, function(err, response) {
-            if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);
-            url = ((response||0).data||0).url || url;
-            // send sms
-            var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
-            + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
-            + '\n' + url;
-            utils.each(order.attributes.restaurant.sms_phones, function(sms_phone) {
-              twilio.sendSms({
-                to: sms_phone,
-                from: config.phone.orders,
-                body: msg
-              }, function(err, result) {
-                if (err) logger.routes.error(TAGS, 'unable to send SMS', err);
+            // shorten URL
+            bitly.shorten(url, function(err, response) {
+              if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);
+              url = ((response||0).data||0).url || url;
+              // send sms
+              var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
+              + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
+              + '\n' + url;
+              utils.each(restaurant.attributes.sms_phones, function(sms_phone) {
+                twilio.sendSms({
+                  to: sms_phone,
+                  from: config.phone.orders,
+                  body: msg
+                }, function(err, result) {
+                  if (err) logger.routes.error(TAGS, 'unable to send SMS', err);
+                });
               });
             });
-          });
-        }
+          }
 
-        if (order.attributes.restaurant.voice_phones) {
-          logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
+          if (restaurant.attributes && restaurant.attributes.voice_phones) {
+            logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
 
-          utils.each(order.attributes.restaurant.voice_phones, function(voice_phone) {
-            twilio.makeCall({
-              to: voice_phone,
-              from: config.phone.orders,
-              url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
-              ifMachine: 'Continue',
-              method: 'GET'
-            }, function(err, result) {
-              if (err) logger.routes.error(TAGS, 'unable to place call', err);
+            utils.each(restaurant.attributes.voice_phones, function(voice_phone) {
+              twilio.makeCall({
+                to: voice_phone,
+                from: config.phone.orders,
+                url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
+                ifMachine: 'Continue',
+                method: 'GET'
+              }, function(err, result) {
+                if (err) logger.routes.error(TAGS, 'unable to place call', err);
+              });
             });
-          });
-        }
+          }
+        });
       }
 
       res.send(201, {order_id: order.attributes.id, status: order.attributes.status});

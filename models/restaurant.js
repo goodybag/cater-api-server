@@ -526,7 +526,7 @@ var includeFavorites = function(query, opts) {
     type: 'select'
   , table: 'favorite_restaurants'
   , columns: [ '*' ]
-  }
+};
 
   query.joins.user_fav_restaurants = {
     type: 'left'
@@ -552,4 +552,4 @@ var includeFavorites = function(query, opts) {
     }
   , as: 'favorite'
   });
-}
+};

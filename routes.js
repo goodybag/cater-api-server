@@ -61,10 +61,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid'
   , m.editOrderAuth
-  , function(req, res, next) {
-      if (req.query.edit) return controllers.restaurants.edit.apply(this, arguments);
-      m.restrict(['client', 'admin'])(req, res, next);
-    }
+  , m.restrict(['client', 'admin'])
   , controllers.restaurants.get);
 
   app.put('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
@@ -77,6 +74,8 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
+
+  app.get('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit);
 
   app.get('/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 

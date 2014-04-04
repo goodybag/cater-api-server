@@ -19,6 +19,7 @@ var modifyAttributes = function(callback, err, orders) {
     var restaurantFields = [
       'delivery_fee',
       'minimum_order',
+      'emails',
       'sms_phones',
       'voice_phones',
       'is_bad_zip',
@@ -34,8 +35,10 @@ var modifyAttributes = function(callback, err, orders) {
         order.attributes.restaurant = utils.extend(
           {
             id: order.attributes.restaurant_id,
-            emails: order.attributes.emails,
             delivery_times: utils.object(order.attributes.delivery_times),
+            emails: order.attributes.emails,
+            sms_phones: order.attributes.sms_phones,
+            voice_phones: order.attributes.voice_phones,
             name: order.attributes.restaurant_name,
             balanced_customer_uri: order.attributes.restaurant_balanced_customer_uri
           },
@@ -646,20 +649,22 @@ module.exports = Model.extend({
       })
     );
     query.columns.push('restaurants.minimum_order');
-    // query.columns.push({table: 'restaurants', name: 'emails', as: 'restaurant_emails'});
-    // query.columns.push('restaurants.sms_phones');
-    // query.columns.push('restaurants.voice_phones');
     query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});
 
     query.joins.restaurants = {
       type: 'inner'
     , on: {'id': '$orders.restaurant_id$'}
-    }
+    };
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = orders.restaurant_id)) AS delivery_zips");
     query.columns.push('hours.delivery_times');
     query.columns.push('lead_times_json.lead_times');
     query.columns.push("max_guests.max_guests");
+
+    var contactsInfo = ['sms_phones', 'voice_phones', 'emails'];
+    contactsInfo.forEach( function(type){
+      query.columns.push(Restaurant.getContactsInfo(type));
+    });
 
     query.joins.max_guests = {
       type: 'left'

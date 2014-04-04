@@ -353,6 +353,7 @@ module.exports.changeStatus = function(req, res) {
 
     var done = function() {
       if (order.attributes.status === 'submitted') {
+
         // TODO: extract this address logic into address model
         // Save address based on this order's attributes
         var orderAddressFields = utils.pick(order.attributes, addressFields);

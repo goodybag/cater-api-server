@@ -17,7 +17,7 @@ pg_restore --verbose --clean --no-acl --no-owner -h localhost -d cater latest.du
 # Clean up
 rm latest.dump
 
-./bin/local-restore/fix-restaurants
+./bin/local-restore/fix-contacts
 ./bin/local-restore/fix-users
 
 echo "Restore Complete. Enjoy your data!"

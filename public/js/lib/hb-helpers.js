@@ -388,6 +388,10 @@ define(function(require, exports, module) {
       return parseFloat( ( percent / 100 ).toFixed( precision ) );
     },
 
+    add: function (value, addition) {
+      return value + addition;
+    },
+
     commatize: function( x, options ){
       if ( !x && x != 0 ) return;
 

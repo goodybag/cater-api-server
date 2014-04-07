@@ -70,10 +70,7 @@ define(function(require, exports, module) {
       yelp_business_id: '.restaurant-form [name="yelp_business_id"]',
       logo_url: '.restaurant-form [name="logo_url"]',
       logo_mono_url: '.restaurant-form [name="logo_mono_url"]',
-      sms_phones: '.restaurant-form .restaurant-sms-phones',
-      voice_phones: '.restaurant-form .restaurant-voice-phones',
       display_phone: '.restaurant-form .restaurant-display-phone',
-      emails: '.restaurant-form .restaurant-emails',
       price: '.restaurant-form .restaurant-price',
       cuisine: '.restaurant-form .restaurant-cuisine',
       minimum_order: '.restaurant-form .restaurant-minimum-order',
@@ -109,20 +106,8 @@ define(function(require, exports, module) {
         return this.fieldSplit(this.fieldMap.cuisine);
       },
 
-      sms_phones: function() {
-        return _.invoke(this.fieldSplit(this.fieldMap.sms_phones), 'replace', /[^\d]/g, '');
-      },
-
-      voice_phones: function() {
-        return _.invoke(this.fieldSplit(this.fieldMap.voice_phones), 'replace', /[^\d]/g, '');
-      },
-
       display_phone: function() {
         return this.$el.find(this.fieldMap.display_phone).val().replace(/[^\d]/g, '') || null;
-      },
-
-      emails:  function() {
-        return this.fieldSplit(this.fieldMap.emails);
       },
 
       websites: function() {

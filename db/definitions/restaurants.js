@@ -51,21 +51,9 @@ define(function(require) {
     , nullable: true
     , checks: ["SIMILAR TO '[[:digit:]]{5}'"]
     }
-  , sms_phones: {
-      type: types.array(types.varchar(10))
-    , nullable: false
-    }
-  , voice_phones: {
-      type: types.array(types.varchar(10))
-    , nullable: false
-    }
   , display_phone: {
       type: types.varchar(10)
     , nullable: true
-    }
-  , emails: {
-      type: types.array(types.text)
-    , nullable: false
     }
   , minimum_order: {
       type: types.int

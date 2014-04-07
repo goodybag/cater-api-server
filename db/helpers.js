@@ -4,6 +4,19 @@ var mosql       = require('mongo-sql');
 var mosqlUtils  = require('mongo-sql/lib/utils');
 var utils       = require('../utils');
 
+// This is silly until I solve this peerdep issue
+// dirac is using its own copy of mosql, so apply all helpers to both
+var mosql2 = require('../node_modules/dirac/node_modules/mongo-sql');
+Object.keys( mosql ).filter( function( key ){
+  return typeof mosql[ key ] === 'function';
+}).forEach( function( key ){
+  var fn = mosql[ key ];
+  mosql[ key ] = function(){
+    mosql2[ key ].apply( mosql2, arguments );
+    return fn.apply( mosql, arguments );
+  };
+});
+
 // Fix PG date parsing (`date` type not to be confused with something with a timezone)
 pg.types.setTypeParser( 1082, 'text', function( val ){
   return new Date( val + ' 00:00:00' );
@@ -97,13 +110,13 @@ mosql.registerConditionalHelper(
 
 mosql.registerConditionalHelper(
   '$is_future'
-, { cascade: false }
+, { cascade: true }
 , function( column, value, values, table, query ){
     return [
-      utils.quoteObject( column, table )
+      mosql.quoteObject( column, table )
     , value ? '>' : '<'
     , 'now()'
-    ].join('');
+    ].join(' ');
   }
 );
 

@@ -9,6 +9,8 @@ module.exports.reminder = setup({app: 'cater', component: 'reminder'});
 module.exports.paymentSummaryPhantom = setup({app: 'cater', component: 'paymentSummaryPhantom'});
 module.exports.points = setup({app: 'cater', component: 'points'});
 module.exports.welcomeEmail = setup({app: 'cater', component: 'welcomeEmail'});
+module.exports.emailer = setup({app: 'cater', component: 'emailer'});
+module.exports.emailerWorker = setup({app: 'cater', component: 'emailerWorker'});
 
 var expressLogger = setup({app: 'cater', component: 'express'});
 

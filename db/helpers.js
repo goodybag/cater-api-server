@@ -114,9 +114,9 @@ mosql.registerConditionalHelper(
 , function( column, value, values, table, query ){
     // So, MoSQL insists on parameterizing my values for me
     // In the process, the value becomes a boolean string :/
-    if ( value !== 'true' || value !== 'false'){
+    if ( value !== 'true' && value !== 'false'){
       // Bug was not as expected, let's just fail right away
-      throw new Error('Unexpected input for $is_future helper');
+      throw new Error('Unexpected input for $is_future helper: ' + value );
     }
     value = value === 'true';
 

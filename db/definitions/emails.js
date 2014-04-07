@@ -19,8 +19,8 @@ define(function(require) {
   definition.schema = {
     id:           { type: types.serial, pk: true }
   , subject:      { type: types.text }
-  , to:           { type: types.text }
-  , from:         { type: types.text }
+  , to:           { type: types.text, nullable: false }
+  , from:         { type: types.text, nullable: false }
   , body:         { type: types.text }
   , log:          { type: types.json }
   , status:       { type: types.email_status, nullable: false, default: 'pending' }

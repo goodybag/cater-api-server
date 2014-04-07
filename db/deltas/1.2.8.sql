@@ -14,8 +14,8 @@ begin
   create table if not exists "emails" (
     "id"            serial
   , "subject"       text
-  , "to"            text
-  , "from"          text
+  , "to"            text not null
+  , "from"          text not null
   , "body"          text
   , "log"           json
   , "status"        email_status not null default 'pending'

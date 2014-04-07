@@ -239,6 +239,9 @@ module.exports = Model.extend({
     //
     // 5. If it is past the delivery date it is editable by the client,
     // admin, and restaurant manager.
+    //
+    // 6. If the order has been copied and thus datetime is undefined. Note:
+    // certain fields are not copied such as datetime, tip, tip_amount.
 
     var now = moment();
     var deliveryDateTime = moment.tz(this.attributes.datetime, this.attributes.timezone);
@@ -254,6 +257,8 @@ module.exports = Model.extend({
       && (now < cutOffDateTime)
       && (orderAuth.isAdmin || orderAuth.isOwner || orderAuth.isRestaurantManager)
     ) return true;
+
+    if (this.attributes.datetime === null) return true;
 
     return false;
   },

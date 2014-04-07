@@ -252,11 +252,11 @@ module.exports.create = function(req, res) {
   });
 }
 
-// TODO: get this from not here
-var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed'];
-var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
-
 module.exports.update = function(req, res) {
+
+  // TODO: get this from not here
+  var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed'];
+  var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
 
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);

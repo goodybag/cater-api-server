@@ -141,9 +141,13 @@ define(function(require, exports, module) {
     },
 
     submit: function(e) {
+      spinner.start();
+
       var self = this, userInfo;
 
-      spinner.start();
+      var tasks = {
+        formSave: utils.bind( this.onSave, this )
+      };
 
       if (e) e.preventDefault();
 
@@ -171,21 +175,8 @@ define(function(require, exports, module) {
           , message: 'Please enter a valid name'
           }]);
         }
-      }
 
-      // If they're saving a new card, delegate to the `savenewCardAndSubmit` handler
-      if (this.$el.find('[name="payment-method"]:checked').val() === 'new') {
-        return this.saveNewCardAndSubmit(e);
-      }
-
-      // If they were editing an existing card, delegate to `onUpdateCardSubmitClick` handler
-      if (!this.$el.find('#update-card').hasClass('hide')){
-        return this.onUpdateCardSubmitClick(e);
-      };
-
-      utils.async.parallel({
-        formSave: utils.bind( this.onSave, this )
-      , userSave: function( done ){
+        tasks.userSave = function( done ){
           self.options.user.save( userInfo, {
             success:  function(){ done(); }
           , validate: false
@@ -198,7 +189,19 @@ define(function(require, exports, module) {
             }
           });
         }
-      }, function( err ){
+      }
+
+      // If they're saving a new card, delegate to the `savenewCardAndSubmit` handler
+      if (this.$el.find('[name="payment-method"]:checked').val() === 'new') {
+        return this.saveNewCardAndSubmit(e);
+      }
+
+      // If they were editing an existing card, delegate to `onUpdateCardSubmitClick` handler
+      if (!this.$el.find('#update-card').hasClass('hide')){
+        return this.onUpdateCardSubmitClick(e);
+      };
+
+      utils.async.parallel(tasks, function( err ){
         spinner.stop();
 
         if (err) return notify.error(err); // TODO: error handling

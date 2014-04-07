@@ -6,7 +6,13 @@
   <a href="?">Back to menu</a>
 </p>
 <fieldset>
-  <legend>{{#if isNew}}New{{else}}Edit{{/if}} Restaurant</legend>
+  {{#if isNew}}
+  <legend>New Restaurant</legend>
+  {{else}}
+  <legend>Edit Restaurant</legend>
+  <a href="/restaurants/{{restaurant.id}}/contacts">Manage contacts</a>
+  {{/if}}
+
   <div class="form-group">
     <label class="control-label">Name</label>
     <input type="text" class="form-control restaurant-name" placeholder="Name of Restaurant" value="{{restaurant.name}}">

@@ -20,6 +20,10 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, emailer: {
+    cronTime: '00 * * * * *'
+  }
+
 , rewardsStartDate: '2014-03-25 00:00:00'
 
 , welcome: {

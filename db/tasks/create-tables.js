@@ -40,6 +40,7 @@ var definitions = [
 , 'payment-summaries'
 , 'payment-summary-items'
 , 'favorite-restaurants'
+, 'contacts'
 , 'deltas'
 , 'favorite-restaurants'
 ];

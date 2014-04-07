@@ -27,6 +27,11 @@ exports.builder = builder;
 pgQuery.connectionParameters = config.postgresConnStr;
 exports.query = pgQuery;
 
+exports.query2 = function(query, callback) {
+  var sql = builder.sql(query);
+  pgQuery(sql.query, sql.values, callback);
+}
+
 var dir = path.join( __dirname, './definitions' );
 fs.readdirSync( dir ).filter( function( f ){
   return fs.statSync( path.join( dir, f ) ).isFile() && f.slice(-3) == '.js'

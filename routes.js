@@ -61,10 +61,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid'
   , m.editOrderAuth
-  , function(req, res, next) {
-      if (req.query.edit) return controllers.restaurants.edit.apply(this, arguments);
-      m.restrict(['client', 'admin'])(req, res, next);
-    }
+  , m.restrict(['client', 'admin'])
   , controllers.restaurants.get);
 
   app.put('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
@@ -77,6 +74,8 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
     res.send(405);
   });
+
+  app.get('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit);
 
   app.get('/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 
@@ -484,113 +483,110 @@ module.exports.register = function(app) {
    */
 
    app.all (/^\/users\/me(?:\/.*)?$/, function(req, res, next) {
-    if (!req.session.user) res.send(404);
-    else {
-      req.url = req.url.replace(/^\/users\/me/, '/users/' + req.session.user.id);
-      next();
-    }
+    if (!req.user) return m.owner()(req, res, next);
+    req.url = req.url.replace(/^\/users\/me/, '/users/' + req.user.attributes.id);
+    next();
   });
 
-  app.all(/^\/users\/(\d+)(?:\/.*)?$/, function(req, res, next) {
-    if (!req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params[0] !== ''+req.session.user.id))
-      res.send(404);
-    else
-      next();
-  });
+  app.before( m.owner(), function( app ){
+    app.get('/users/:uid', controllers.users.get);
 
-  app.get('/users/:uid', controllers.users.get);
+    var restrictUpdate = m.filterBody({
+      client: Models.User.ownerWritable
+    });
 
-  app.put('/users/:uid', controllers.users.update);
+    app.put('/users/:uid', restrictUpdate, controllers.users.update);
+    app.patch('/users/:uid', restrictUpdate, controllers.users.update);
 
-  app.del('/users/:uid', function(req, res) { res.send(501); });
+    app.del('/users/:uid', function(req, res) { res.send(501); });
 
-  app.all('/users/:uid', function(req, res, next) {
-    res.set('Allow', 'GET, PUT, DELETE');
-    res.send(405);
-  });
+    app.all('/users/:uid', function(req, res, next) {
+      res.set('Allow', 'GET, PUT, DELETE');
+      res.send(405);
+    });
 
-  /**
-   *  User Orders resource.  All the orders placed by an individual user.
-   */
+    /**
+     *  User Orders resource.  All the orders placed by an individual user.
+     */
 
-  app.get('/users/:uid/orders', controllers.users.listOrders);
+    app.get('/users/:uid/orders', controllers.users.listOrders);
 
-  app.all('/users/:uid', function(req, res, next) {
-    res.set('Allow', 'GET');
-    res.send(405);
-  });
+    app.all('/users/:uid', function(req, res, next) {
+      res.set('Allow', 'GET');
+      res.send(405);
+    });
 
-  /**
-   * Loyalty
-   */
+    /**
+     * Loyalty
+     */
 
-  app.get('/users/:uid/rewards'
-  , m.restrict(['admin', 'client'])
-  , controllers.users.rewards.list
-  );
+    app.get('/users/:uid/rewards'
+    , controllers.users.rewards.list
+    );
 
-  /**
-   *  User Addresseses resource.
-   */
+    /**
+     *  User Addresseses resource.
+     */
 
-  app.get('/users/:uid/addresses', controllers.users.addresses.list);
+    app.get('/users/:uid/addresses', controllers.users.addresses.list);
 
-  app.post('/users/:uid/addresses', controllers.users.addresses.create);
+    app.post('/users/:uid/addresses', controllers.users.addresses.create);
 
-  app.all('/users/:uid/addresses', function(req, res, next) {
-    res.set('Allow', 'GET', 'POST');
-    res.send(405);
-  });
+    app.all('/users/:uid/addresses', function(req, res, next) {
+      res.set('Allow', 'GET', 'POST');
+      res.send(405);
+    });
 
-  /**
-   * User Address resource. Represents a single address per user
-   */
+    /**
+     * User Address resource. Represents a single address per user
+     */
 
-  app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
+    app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
 
-  app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
+    app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
 
-  app.patch('/users/:uid/addresses/:aid', controllers.users.addresses.update);
+    app.patch('/users/:uid/addresses/:aid', controllers.users.addresses.update);
 
-  app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
+    app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
 
-  app.all('/users/:uid/addresses/:aid', function(req, res, next) {
-    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
-    res.send(405);
-  });
+    app.all('/users/:uid/addresses/:aid', function(req, res, next) {
+      res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
+      res.send(405);
+    });
 
-  /**
-   * User cards resource
-   */
+    /**
+     * User cards resource
+     */
 
-  app.get('/users/:uid/cards', controllers.users.cards.list);
+    app.get('/users/:uid/cards', controllers.users.cards.list);
 
-  app.post('/users/:uid/cards', controllers.users.cards.create);
+    app.post('/users/:uid/cards', controllers.users.cards.create);
 
-  app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
+    app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
 
-  app.put('/users/:uid/cards/:cid', controllers.users.cards.update);
+    app.put('/users/:uid/cards/:cid', controllers.users.cards.update);
 
-  app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
+    app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
 
-  app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
+    app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
 
-  app.all('/users/:uid/cards/:cid', function(req, res, next) {
-    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
-    res.send(405);
-  });
+    app.all('/users/:uid/cards/:cid', function(req, res, next) {
+      res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
+      res.send(405);
+    });
 
-  /**
-   *  User session resource.  Represents a session as a specific user.
-   */
+    /**
+     *  User session resource.  Represents a session as a specific user.
+     */
 
-  app.get('/users/:uid/session', controllers.users.createSessionAs);
+    app.get('/users/:uid/session', controllers.users.createSessionAs);
 
-  app.post('/users/:uid/session', controllers.users.createSessionAs);
+    app.post('/users/:uid/session', controllers.users.createSessionAs);
 
-  app.all('/users/:uid/session', function(req, res, next) {
-    res.set('Allow', 'GET', 'POST');
-    res.send(405);
+    app.all('/users/:uid/session', function(req, res, next) {
+      res.set('Allow', 'GET', 'POST');
+      res.send(405);
+    });
   });
 
   /**
@@ -668,6 +664,16 @@ module.exports.register = function(app) {
     })
   );
 
+   app.get('/admin/restaurants/:restaurant_id/contacts'
+   , m.restrict(['admin'])
+   , m.param('restaurant_id')
+   , m.restaurant( {param: 'restaurant_id'} )
+   , m.view( 'restaurant/contacts', db.contacts, {
+       layout: 'admin/layout2'
+     , method: 'find'
+     })
+   );
+
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
   , controllers.paymentSummaries.getPdf
@@ -730,6 +736,32 @@ module.exports.register = function(app) {
   , m.pagination()
   , m.param('restaurant_id')
   , controllers.restaurants.orders.listJSON
+  );
+
+  app.get('/api/restaurants/:restaurant_id/contacts'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.find( db.contacts )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/contacts'
+  , m.restrict( ['admin'] )
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.contacts )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/contacts/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.update( db.contacts )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/contacts/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.remove( db.contacts )
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries'

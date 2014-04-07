@@ -159,9 +159,25 @@ var inserts = {
     var query =  {
       type:'insert'
     , table: 'restaurants'
+    , returning: ['*']
     , values: values
     };
     if (Math.random() < .3) query.values.minimum_order = faker.Helpers.randomNumber(501) * 100;
+    return query;
+  }
+, contacts: function(restaurant_id) {
+    var query = {
+      type: 'insert'
+    , table: 'contacts'
+    , returning: ['*']
+    , values: {
+        restaurant_id: restaurant_id
+      , sms_phones: [config.testPhoneSms || fakePhoneNumber()]
+      , voice_phones: [config.testPhoneVoice || fakePhoneNumber()]
+      , emails: [config.testEmail || faker.Internet.email()]
+      , name: faker.Name.findName()
+      }
+    };
     return query;
   }
 , categories: function(restaurant_id) {
@@ -277,9 +293,6 @@ utils.async.series(
             , city: faker.Address.city()
             , state: faker.Address.usState(true)
             , zip: faker.Address.zipCodeFormat(0)
-            , sms_phones: [config.testPhoneSms || fakePhoneNumber()]
-            , voice_phones: [config.testPhoneVoice || fakePhoneNumber()]
-            , emails: [config.testEmail || faker.Internet.email()]
             , price: faker.Helpers.randomNumber(5) + 1
             , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
             , is_hidden: false
@@ -321,6 +334,10 @@ utils.async.series(
             console.log('\trestaurants-task-create-restaurant');
             query(inserts.restaurants(fake), cbWaterfall);
           }
+        , createContact: function(restaurant, cbWaterfall){
+            console.log('\trestaurants-task-create-contact');
+            query(inserts.contacts(restaurant[0].id), cbWaterfall);
+          }
         };
         utils.async.waterfall(
           [
@@ -329,6 +346,7 @@ utils.async.series(
           , tasks.createPaymentMethod
           , tasks.createBalancedCustomer
           , tasks.createRestaurant
+          , tasks.createContact
           ]
         , function(error, results) {
             callback(error);

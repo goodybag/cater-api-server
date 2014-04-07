@@ -19,4 +19,5 @@ module.exports = {
 , sslRedirect: require('./ssl-redirect')
 , statusCodeIntercept: require('./status-code-intercept')
 , uuid: require('./uuid')
+, filterBody: require('./filter-body')
 };

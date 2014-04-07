@@ -12,6 +12,8 @@ var
 , helpers = require('../../public/js/lib/hb-helpers')
 ;
 
+cuisines = cuisines.sort();
+
 var models = require('../../models');
 
 var logger = require('../../logger');

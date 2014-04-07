@@ -1,19 +1,45 @@
+.panel-group-filters {
+  margin-bottom: 5px;
+}
+
 .panel-group-filters .panel {
   background-color: #fff;
 }
 
 .panel-group-filters .panel .panel-heading {
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
   background-color: #fff;
-}
-
-.panel-heading a {
+  font-size: 18px;
   color: #695A42;
 }
 
+.panel-group-filters .panel .panel-heading:hover {
+  cursor: pointer;
+  cursor: hand;
+}
+
 .panel-heading .glyphicon {
+  float: right;
   font-size: 12px;
+  margin-top: 3px;
+
+  -webkit-transition-duration: 0.2s;
+     -moz-transition-duration: 0.2s;
+       -o-transition-duration: 0.2s;
+          transition-duration: 0.2s;
+
+  -webkit-transition-property: -webkit-transform;
+     -moz-transition-property:    -moz-transform;
+       -o-transition-property:      -o-transform;
+          transition-property:         transform;
+}
+
+
+.panel-heading .glyphicon.active {
+  -webkit-transform:rotate(90deg);
+     -moz-transform:rotate(90deg);
+       -o-transform:rotate(90deg);
 }
 
 /* Align top of drop down with list panel */
@@ -24,7 +50,6 @@
 }
 
 .restaurant-favorites {
-  margin-top: 10px;
   margin-bottom: 10px;
   float:right;
 }

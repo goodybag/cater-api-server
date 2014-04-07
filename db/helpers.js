@@ -235,7 +235,7 @@ dirac.use( function(){
       , 'sum(round('
       , '+ ( sub_total + delivery_fee + tip )'
         // We aggressively round to match our notion of cents better
-      , '- ( ( ( sub_total + delivery_fee ) + ( ( sub_total + delivery_fee ) * sales_tax ) + tip ) * gb_fee )'
+      , '- ( round( ( sub_total + delivery_fee ) + round( ( sub_total + delivery_fee ) * sales_tax ) + tip ) * gb_fee )'
       , '))::int + payment_summaries.adjustment as ' + options.column
       ].join('  \n')]
     , where:    { payment_summary_id: '$payment_summaries.id$' }

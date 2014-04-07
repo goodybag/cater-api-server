@@ -11,7 +11,7 @@ define(function(require, exports, module) {
   var amanda = require('amanda');
   var helpers = require('./helpers');
   var Backbone = require('backbone');
-
+  var async = require('async');
 
   if (isBrowser){
     require('jquery-loaded');
@@ -39,6 +39,7 @@ define(function(require, exports, module) {
     utils.domready = $;
   }
 
+  utils.async = async;
   utils.validator = amanda('json');
 
   utils.Backbone    = Backbone;

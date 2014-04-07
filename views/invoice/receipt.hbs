@@ -33,11 +33,13 @@
       <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
       <dt>Delivery Time:</dt>
       <dd>{{formatDateTime order.datetime "h:mm A"}}</dd>
-      {{#if order.payment_method}}
       <dt>Payment Method:</dt>
+      {{#if order.payment_method}}
       <dd>**** **** **** {{order.payment_method.data.last_four}}</dd>
       <dt>Charge Date:</dt>
       <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
+      {{else}}
+      <dd>Invoiced</dd>
       {{/if}}
       <dt>Guests:</dt>
       <dd>{{order.guests}}</dd>

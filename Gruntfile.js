@@ -72,6 +72,7 @@ module.exports = function(grunt) {
         , "public/dist/landing-ielt9.css":      "less/ielt9-landing.less"
         , "public/dist/cater-tool.css":         "less/core-cater-tool.less"
         , "public/dist/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
+        , "public/dist/admin.css":              "less/core-admin.less"
         }
       }
     }

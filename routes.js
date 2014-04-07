@@ -213,7 +213,7 @@ module.exports.register = function(app) {
    , m.param('restaurant_id')
    , m.restaurant( {param: 'restaurant_id'} )
    , m.view( 'restaurant/contacts', db.contacts, {
-       layout: 'landing/layout'
+       layout: 'admin/layout2'
      , method: 'find'
      })
    );

@@ -144,6 +144,13 @@ var User = module.exports = Model.extend({
 }, {
   table: table
 
+, ownerWritable: [
+    'name'
+  , 'organization'
+  , 'email'
+  , 'password'
+  ]
+
   // Get foreign data source pivoting on users
 , embeds: {
     addresses: function( addressQuery, originalQuery, callback, client ){

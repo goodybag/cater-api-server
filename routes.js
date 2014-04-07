@@ -660,6 +660,16 @@ module.exports.register = function(app) {
     })
   );
 
+   app.get('/admin/restaurants/:restaurant_id/contacts'
+   , m.restrict(['admin'])
+   , m.param('restaurant_id')
+   , m.restaurant( {param: 'restaurant_id'} )
+   , m.view( 'restaurant/contacts', db.contacts, {
+       layout: 'admin/layout2'
+     , method: 'find'
+     })
+   );
+
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
   , controllers.paymentSummaries.getPdf
@@ -722,6 +732,32 @@ module.exports.register = function(app) {
   , m.pagination()
   , m.param('restaurant_id')
   , controllers.restaurants.orders.listJSON
+  );
+
+  app.get('/api/restaurants/:restaurant_id/contacts'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.find( db.contacts )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/contacts'
+  , m.restrict( ['admin'] )
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.contacts )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/contacts/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.update( db.contacts )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/contacts/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.remove( db.contacts )
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries'

@@ -3,7 +3,7 @@ var moment = require('moment-timezone');
 var Model = require('./model');
 var utils = require('../utils');
 
-module.exports = Model.extend({
+var Restaurant = module.exports = Model.extend({
   getCategories: function(callback) {
     var self = this;
     callback = callback || function() {};
@@ -415,6 +415,11 @@ module.exports = Model.extend({
 
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
 
+    var contactsInfo = ['sms_phones', 'voice_phones', 'emails'];
+    contactsInfo.forEach( function(type){
+      query.columns.push(Restaurant.getContactsInfo(type));
+    });
+
     Model.find.call(this, query, function(err, restaurants) {
       if (!err) {
         utils.invoke(restaurants, function() {
@@ -424,6 +429,32 @@ module.exports = Model.extend({
       return callback.call(this, err, restaurants);
     });
   },
+
+
+  /**
+   * @param {String} type is one of (sms_phones|voice_phones|emails)
+   */
+  getContactsInfo: function(type) {
+    var query = {
+      type: 'array'
+    , expression: {
+        type: 'select'
+      , columns: [
+          {
+            type: 'unnest'
+          , expression: 'contacts.' + type
+          }
+        ]
+      , table: 'contacts'
+      , where: {
+          'contacts.restaurant_id': '$restaurants.id$'
+        , 'contacts.notify': true
+        }
+      }
+    , as: type
+    };
+    return query;
+  }
 });
 
 /**
@@ -495,7 +526,7 @@ var includeFavorites = function(query, opts) {
     type: 'select'
   , table: 'favorite_restaurants'
   , columns: [ '*' ]
-  }
+};
 
   query.joins.user_fav_restaurants = {
     type: 'left'
@@ -521,4 +552,4 @@ var includeFavorites = function(query, opts) {
     }
   , as: 'favorite'
   });
-}
+};

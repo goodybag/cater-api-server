@@ -745,6 +745,12 @@ module.exports.register = function(app) {
   , controllers.restaurants.orders.listJSON
   );
 
+  app.get('/api/restaurants/:restaurant_id/contacts'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.find( db.contacts )
+  );
+
   app.post('/api/restaurants/:restaurant_id/contacts'
   , m.restrict( ['admin'] )
   , m.queryToBody('restaurant_id')

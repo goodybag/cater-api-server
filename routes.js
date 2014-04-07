@@ -206,19 +206,6 @@ module.exports.register = function(app) {
   });
 
   /**
-   * Restaurant contacts resource.
-   */
-   app.get('/restaurants/:restaurant_id/contacts'
-   , m.restrict(['admin'])
-   , m.param('restaurant_id')
-   , m.restaurant( {param: 'restaurant_id'} )
-   , m.view( 'restaurant/contacts', db.contacts, {
-       layout: 'admin/layout2'
-     , method: 'find'
-     })
-   );
-
-  /**
    *  Current order resource.  The current pending order for the given restaurant and logged in user.
    */
 
@@ -680,6 +667,16 @@ module.exports.register = function(app) {
     , method: 'findOne'
     })
   );
+
+   app.get('/admin/restaurants/:restaurant_id/contacts'
+   , m.restrict(['admin'])
+   , m.param('restaurant_id')
+   , m.restaurant( {param: 'restaurant_id'} )
+   , m.view( 'restaurant/contacts', db.contacts, {
+       layout: 'admin/layout2'
+     , method: 'find'
+     })
+   );
 
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])

@@ -95,6 +95,19 @@ mosql.registerConditionalHelper(
   }
 );
 
+mosql.registerConditionalHelper(
+  '$is_future'
+, { cascade: false }
+, function( column, value, values, table, query ){
+    return [
+      utils.quoteObject( column, table )
+    , value ? '>' : '<'
+    , 'now()'
+    ].join('');
+  }
+);
+
+
 // Upsert query type
 // Warning: This is subject to some sort of race condition
 // but it will work like 99% of the time

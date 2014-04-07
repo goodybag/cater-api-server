@@ -42,6 +42,7 @@ var definitions = [
 , 'favorite-restaurants'
 , 'deltas'
 , 'favorite-restaurants'
+, 'emails'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');

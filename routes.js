@@ -488,11 +488,15 @@ module.exports.register = function(app) {
     next();
   });
 
-  app.before(  m.owner(), function( app ){
+  app.before( m.owner(), function( app ){
     app.get('/users/:uid', controllers.users.get);
 
-    app.put('/users/:uid', controllers.users.update);
-    app.patch('/users/:uid', controllers.users.update);
+    var restrictUpdate = m.filterBody({
+      client: Models.User.ownerWritable
+    });
+
+    app.put('/users/:uid', restrictUpdate, controllers.users.update);
+    app.patch('/users/:uid', restrictUpdate, controllers.users.update);
 
     app.del('/users/:uid', function(req, res) { res.send(501); });
 

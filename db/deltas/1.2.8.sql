@@ -17,6 +17,7 @@ begin
   , "to"            text
   , "from"          text
   , "body"          text
+  , "log"           json
   , "status"        email_status not null default 'pending'
   , "send_date"     timestamp not null default now()
   , "created_at"    timestamp not null default now()

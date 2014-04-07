@@ -22,6 +22,7 @@ define(function(require) {
   , to:           { type: types.text }
   , from:         { type: types.text }
   , body:         { type: types.text }
+  , log:          { type: types.json }
   , status:       { type: types.email_status, nullable: false, default: 'pending' }
   , send_date:    { type: types.timestamp, nullable: false, default: 'now()' }
   , created_at:   { type: types.timestamp, nullable: false, default: 'now()' }

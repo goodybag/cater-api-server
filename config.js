@@ -350,7 +350,7 @@ config.production = {
 
 , cdn: {
     baseUrl: 'http://cater-cdn-prod.s3-website-us-east-1.amazonaws.com'
-  , bucket: 'cater-cdn-production'
+  , bucket: 'cater-cdn-prod'
   }
 
 , http: {

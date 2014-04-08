@@ -12,7 +12,7 @@ var
 , ironMQ = require('iron_mq')
 , rollbar = require("rollbar")
 , Handlebars = require('hbs')
-, moment = require('moment')
+, moment = require('moment-timezone')
 
   // Module Dependencies
 , config = require('./config')
@@ -407,21 +407,27 @@ utils.queryParams = function(data){
 /**
  * Return an appropriate datetime for customers/restaurant
  * notifications. During graveyard shift, return next 
- * morning datetime.
+ * morning datetime. 
+ *
+ * Note: these times are relative to the given timezone!
  * @param {Date} datetime
+ * @param {String} timezone optional timezone used,
+ * omit to use the implicit offset in datetime
  * @return moment object
  */
-utils.getSaneDatetime = function( datetime ){
-  datetime = moment(datetime).utc();
+utils.getSaneDatetime = function( datetime, timezone ){
+  if ( timezone ){
+    datetime = moment.tz(datetime, timezone);
+  } else {
+    datetime = moment(datetime);
+  }
   var hour = datetime.hour();
-
   if ( hour >= config.graveyard.start && 
        hour < config.graveyard.end ){
     datetime.hour( config.graveyard.end );
     datetime.minute(0);
     datetime.second(0);
   }
-
   return datetime;
 };
 

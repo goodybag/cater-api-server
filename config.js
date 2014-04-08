@@ -179,8 +179,8 @@ config.defaults = {
 , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
 
 , graveyard: { // Don't notify people during grave yard shift
-    start: 5   // GMT hours (12am-7am CDT)
-  , end: 12
+    start: 0   // this range is relative to order tz
+  , end: 7
   }
 };
 

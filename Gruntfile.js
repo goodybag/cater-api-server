@@ -216,7 +216,7 @@ module.exports = function(grunt) {
   grunt.registerTask( 'build',    ['less', 'concat', 'shell:handlebars', 'requirejs'] );
   grunt.registerTask( 'default',  ['less', 'watch'] );
 
-  grunt.registerTask( 'deploy', ['build', 's3:prod', 'shell:deployProduction'] );
+  grunt.registerTask( 'deploy', ['build', 's3:production', 'shell:deployProduction'] );
   grunt.registerTask( 'deploy:staging', ['build', 's3:staging', 'shell:deployStaging'] );
   grunt.registerTask( 'deploy:dev', ['build', 's3:dev'] );
 };

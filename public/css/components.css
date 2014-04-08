@@ -206,8 +206,20 @@
 }
 
 .navbar .contact-info {
-  padding-top: 15px;
-  padding-bottom: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+.navbar .contact-info .help-text {
+  font-weight: 700;
+}
+
+@media screen and ( max-width: 982px ){
+  .navbar .contact-info .help-text {
+    display: none;
+  }
 }
 
 .nav .caret {

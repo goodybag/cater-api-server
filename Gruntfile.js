@@ -169,6 +169,8 @@ module.exports = function(grunt) {
     , { src: './public/font', dest: 'font', gzip: false }
     , { src: './public/*', dest: '', gzip: false }
     , { src: './public/components/bootstrap/dist', dest: 'components/bootstrap/dist', gzip: true }
+    , { src: './public/components/font-awesome/css', dest: 'components/font-awesome/css', gzip: true }
+    , { src: './public/components/font-awesome/font', dest: 'components/font-awesome/font', gzip: true }
     , { src: './public/components/requirejs', dest: 'components/requirejs', gzip: true }
     , { src: './public/components/html5shiv/dist/html5shiv.js', dest: 'components/html5shiv/dist/html5shiv.js', gzip: true }
     , { src: './public/components/es5-shim/es5-shim.js', dest: 'components/es5-shim/es5-shim.js', gzip: true }

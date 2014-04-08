@@ -4,14 +4,16 @@
     <title>Goodybag{{{block "title"}}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="shortcut icon" href="{{cdn "favicon.ico"}}">
+
     <!-- Keep this up here! -->
     <!--[if lt IE 9]>
-    <script src="/components/html5shiv/dist/html5shiv.js"></script>
-    <script src="/components/es5-shim/es5-shim.js"></script>
-    <script src="/components/es5-shim/es5-sham.js"></script>
+    <script src="{{cdn "/components/html5shiv/dist/html5shiv.js"}}"></script>
+    <script src="{{cdn "/components/es5-shim/es5-shim.js"}}"></script>
+    <script src="{{cdn "/components/es5-shim/es5-sham.js"}}"></script>
     <![endif]-->
     <!--[if lte IE 9]>
-    <script src="/components/console-polyfill/index.js"></script>
+    <script src="{{cdn "/components/console-polyfill/index.js"}}"></script>
     <![endif]-->
 
     {{#if intercom}}
@@ -40,40 +42,40 @@
     <!-- end segment.io -->
 
     <!-- Select2 -->
-    <link href="/components/select2/select2.css" rel="stylesheet" media="screen">
+    <link href="{{cdn "components/select2/select2.css"}}" rel="stylesheet" media="screen">
 
     <!-- Bootstrap -->
-    <link href="/components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="{{cdn "components/bootstrap/dist/css/bootstrap.min.css"}}" rel="stylesheet" media="screen">
 
     <!-- Fonts -->
-    <link href="/css/gb-icon.css" rel="stylesheet">
-    <link href="/css/aleo.css" rel="stylesheet">
-    <link href="/css/proxima-nova.css" rel="stylesheet">
+    <link href="{{cdn "css/gb-icon.css"}}" rel="stylesheet">
+    <link href="{{cdn "css/aleo.css"}}" rel="stylesheet">
+    <link href="{{cdn "css/proxima-nova.css"}}" rel="stylesheet">
 
     <!-- pickadate -->
-    <link href="/components/pickadate/lib/themes/classic.css" rel="stylesheet">
-    <link href="/components/pickadate/lib/themes/classic.date.css" rel="stylesheet">
-    <link href="/components/pickadate/lib/themes/classic.time.css" rel="stylesheet">
+    <link href="{{cdn "components/pickadate/lib/themes/classic.css"}}" rel="stylesheet">
+    <link href="{{cdn "components/pickadate/lib/themes/classic.date.css"}}" rel="stylesheet">
+    <link href="{{cdn "components/pickadate/lib/themes/classic.time.css"}}" rel="stylesheet">
 
     <!-- Moar Convenient CSS Stuff -->
-    <link href="/css/kit.css" rel="stylesheet">
+    <link href="{{cdn "css/kit.css"}}" rel="stylesheet">
 
     <!-- Goodybag Catering CSS Stuff -->
-    <link href="/css/main.css" rel="stylesheet">
-    <link href="/css/components.css" rel="stylesheet">
-    <link href="/dist/cater-tool.css" rel="stylesheet">
-    <link href="/css/theme.css" rel="stylesheet">
+    <link href="{{cdn "css/main.css"}}" rel="stylesheet">
+    <link href="{{cdn "css/components.css"}}" rel="stylesheet">
+    <link href="{{cdn "dist/cater-tool.css"}}" rel="stylesheet">
+    <link href="{{cdn "css/theme.css"}}" rel="stylesheet">
 
     <!--[if lte IE 9]>
-    <link rel="stylesheet" href="/css/ie-lte-9.css">
-    <link rel="stylesheet" href="/dist/cater-tool-ielt9.css">
+    <link rel="stylesheet" href="{{cdn "css/ie-lte-9.css"}}">
+    <link rel="stylesheet" href="{{cdn "dist/cater-tool-ielt9.css"}}">
     <![endif]-->
 
     {{{block "css"}}}
 
     {{{block "head"}}}
     <!--[if lt IE 9]>
-    <script src="/components/respond/src/respond.js"></script>
+    <script src="{{cdn "components/respond/src/respond.js"}}"></script>
     <![endif]-->
   </head>
   <body>
@@ -90,7 +92,7 @@
               <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/">
-              <img src="/img/logo.png" alt="Goodybag">
+              <img src="{{cdn "img/logo.png"}}" alt="Goodybag">
             </a>
           </div>
 
@@ -180,11 +182,16 @@
     {{/if}}
 
     {{#unless config.isDev}}
-    <script src="/dist/app.js"></script>
+    <script src="{{cdn "dist/app.js"}}"></script>
     {{else}}
-    <script src="/components/requirejs/require.js"></script>
-    <script src="/js/require-config.js"></script>
+    <script src="{{cdn "components/requirejs/require.js"}}"></script>
+    <script src="{{cdn "js/require-config.js"}}"></script>
     {{/unless}}
+    <script>
+      require( ['config'], function( config ){
+        config.cdnBaseUrl = '{{{config.cdnBaseUrl}}}';
+      });
+    </script>
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

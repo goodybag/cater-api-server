@@ -20,8 +20,12 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
-, emailer: {
-    cronTime: '00 * * * * *'
+, cdn: {
+    baseUrl: 'http://localhost:3000'
+    // If you want to test out uploading stuff to a CDN, but don't want
+    // to use staging or prod, you can uncomment out this line
+    // baseUrl: 'http://cater-cdn-dev.s3-website-us-east-1.amazonaws.com'
+  , bucket: 'cater-cdn-dev'
   }
 
 , rewardsStartDate: '2014-03-25 00:00:00'
@@ -260,6 +264,11 @@ config.staging = {
 
 , isStaging: true
 
+, cdn: {
+    baseUrl: 'http://cater-cdn-staging.s3-website-us-east-1.amazonaws.com'
+  , bucket: 'cater-cdn-staging'
+  }
+
 , http: {
     port: process.env['PORT'] || 5000
   }
@@ -336,6 +345,11 @@ config.production = {
   env: 'production'
 
 , isProduction: true
+
+, cdn: {
+    baseUrl: 'http://cater-cdn-prod.s3-website-us-east-1.amazonaws.com'
+  , bucket: 'cater-cdn-production'
+  }
 
 , http: {
     port: process.env['PORT'] || 5000
@@ -426,4 +440,9 @@ var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';
 if (GB_ENV == null || !config.hasOwnProperty(GB_ENV)) GB_ENV = 'dev';
 
 module.exports = _.defaults(config[GB_ENV], config.defaults);
+
+module.exports.getEnv = function( env ){
+  return _.defaults(config[env], config.defaults);
+};
+
 console.log('Loading ' + GB_ENV + ' config');

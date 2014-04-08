@@ -73,7 +73,10 @@ define(function(require, exports, module) {
     }
 
   , onOrderChange: function( psi, order ){
-      if ( order ) this.updatePropertiesBasedOnOrder( order );
+      if ( order )
+      if ( this.attributes.order && this.attributes.order.cid !== order.cid ) {
+        this.updatePropertiesBasedOnOrder( order );
+      }
     }
 
   , onFeeChange: function( pse, factor ){

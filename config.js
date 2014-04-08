@@ -179,6 +179,11 @@ config.defaults = {
 
 , defaultLogo: 'https://www.filepicker.io/api/file/jLhugLRSQAJVdUe88acg'
 , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
+
+, graveyard: { // Don't notify people during grave yard shift
+    start: 0   // this range is relative to order tz
+  , end: 7
+  }
 };
 
 config.dev = {

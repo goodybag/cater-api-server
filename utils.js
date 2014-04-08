@@ -409,20 +409,20 @@ utils.queryParams = function(data){
  * notifications. During graveyard shift, return next 
  * morning datetime.
  * @param {Date} datetime
- * @return string
+ * @return moment object
  */
 utils.saneDatetime = function( datetime ){
   datetime = moment(datetime).utc();
   var hour = datetime.hour();
 
-  if ( hour >= config.graveYard.start && 
-       hour < config.graveYard.end ){
-    datetime.hour( config.graveYard.end );
+  if ( hour >= config.graveyard.start && 
+       hour < config.graveyard.end ){
+    datetime.hour( config.graveyard.end );
     datetime.minute(0);
     datetime.second(0);
   }
 
-  return datetime.toString();
+  return datetime;
 };
 
 module.exports = utils;

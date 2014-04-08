@@ -178,7 +178,7 @@ config.defaults = {
 , defaultLogo: 'https://www.filepicker.io/api/file/jLhugLRSQAJVdUe88acg'
 , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
 
-, graveYard: { // Don't notify people during grave yard shift
+, graveyard: { // Don't notify people during grave yard shift
     start: 5   // GMT hours (12am-7am CDT)
   , end: 12
   }

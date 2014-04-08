@@ -1,5 +1,5 @@
 /**
- * Emails Schema
+ * Order Notifications Schema
  */
 
 if (typeof module === 'object' && typeof define !== 'function') {
@@ -14,16 +14,12 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'emails';
+  definition.name = 'order_notifications';
 
   definition.schema = {
     id:           { type: types.serial, pk: true }
-  , subject:      { type: types.text }
-  , to:           { type: types.text, nullable: false }
-  , from:         { type: types.text, nullable: false }
-  , body:         { type: types.text }
-  , log:          { type: types.json }
-  , status:       { type: types.email_status, nullable: false, default: 'pending' }
+  , order_id:     { type: types.int, references: { table: 'orders', column: 'id', onDelete: 'set null' } }
+  , email:        { type: types.json }
   , send_date:    { type: types.timestamp, nullable: false, default: 'now()' }
   , created_at:   { type: types.timestamp, nullable: false, default: 'now()' }
   };

@@ -11,14 +11,10 @@ begin
   DROP TYPE IF EXISTS email_status;
   CREATE TYPE email_status AS ENUM('pending', 'delivered', 'error');
 
-  create table if not exists "emails" (
+  create table if not exists "order_notifications" (
     "id"            serial
-  , "subject"       text
-  , "to"            text not null
-  , "from"          text not null
-  , "body"          text
-  , "log"           json
-  , "status"        email_status not null default 'pending'
+  , "order_id"      references orders( id ) on delete set null
+  , "email"         json
   , "send_date"     timestamp not null default now()
   , "created_at"    timestamp not null default now()
   );

@@ -6,6 +6,7 @@ var db      = require('../../db');
 var queries = require('../../db/queries');
 var auth    = require('../../lib/auth');
 var putils  = require('../../public/js/lib/utils');
+var venter  = require('../../lib/venter');
 
 module.exports.index = function(req, res) {
   if (req.session && req.session.user && req.session.user.id != null)
@@ -167,6 +168,11 @@ module.exports.login = function ( req, res ){
       });
     }
 
+    req.analytics.track({
+      userId: user.id+''
+    , event: 'Login'
+    });
+
     req.setSession( user, req.body.remember );
 
     return res.redirect( req.query.next || '/' );
@@ -267,8 +273,15 @@ module.exports.register = function( req, res ){
       });
     }
 
+    req.analytics.track({
+      userId: user.attributes.id+''
+    , event: 'Sign up'
+    });
+
     req.setSession( user.toJSON() );
 
     res.redirect('/restaurants');
+
+    venter.emit( 'user:registered', user );
   });
 };

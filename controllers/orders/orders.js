@@ -42,6 +42,7 @@ module.exports.auth = function(req, res, next) {
     if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
     var reviewToken = req.query.review_token || req.body.review_token;
+    var editToken = req.query.edit_token || req.body.edit_token;
 
     // allow restaurant user to view orders at their own restaurant
     if (req.user
@@ -52,7 +53,9 @@ module.exports.auth = function(req, res, next) {
       return next();
     }
 
-    if (order.attributes.user_id !== (req.session.user||0).id && order.attributes.review_token !== reviewToken)
+    if (order.attributes.user_id !== (req.session.user||0).id &&
+        order.attributes.review_token !== reviewToken &&
+        order.attributes.edit_token !== editToken)
       return res.status(404).render('404');
 
     req.order.isOwner = true;
@@ -66,7 +69,7 @@ module.exports.editability = function(req, res, next) {
     if (!order) return res.json(404);
 
     // ensure only tip fields are being adjusted
-    var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) && 
+    var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
                     !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
     var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
     return editable ? next() : res.json(403, 'order not editable');
@@ -249,26 +252,35 @@ module.exports.create = function(req, res) {
   });
 }
 
-// TODO: get this from not here
-var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed'];
-var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
-
 module.exports.update = function(req, res) {
+
+  // TODO: get this from not here
+  var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed'];
+  var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
+
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
+
+    var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;
+    var oldDatetime = order.attributes.datetime;
 
     var isTipEditable = order.isTipEditable({
       isOwner: req.order.isOwner,
       isRestaurantManager: req.order.isRestaurantManager,
       isAdmin: req.order.isAdmin,
     });
+
     if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
 
     utils.extend(order.attributes, utils.pick(req.body, updateableFields));
     order.save(function(err, rows, result) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       res.send(order.toJSON({plain:true}));
+
+      if (datetimeChanged) {
+        venter.emit('order:datetime:change', order, oldDatetime);
+      }
     });
   });
 };
@@ -283,6 +295,31 @@ module.exports.listStatus = function(req, res) {
     }
   );
 }
+
+module.exports.generateEditToken = function(req, res) {
+  var query = {
+    updates: {
+      edit_token: utils.uuid.v4()
+    , edit_token_expires: moment().add('days', config.expires.shareLink).format('YYYY-MM-DD HH:mm:ss')
+    }
+  , where: {
+      id: req.params.order_id
+    }
+  , returning: [
+      '*'
+    , '("orders"."edit_token_expires"::text) as edit_token_expires'
+    ]
+  };
+
+  models.Order.update(query, function(err, order) {
+    if (err || !order.length)
+      return res.error(errors.internal.DB_FAILURE, err);
+    else if (order[0].attributes.user_id !== req.session.user.id) {
+      return res.error(errors.auth.NOT_ALLOWED);
+    }
+    res.send(200, order[0]);
+  });
+};
 
 module.exports.changeStatus = function(req, res) {
   var TAGS = ['orders-change-status'];

@@ -8,24 +8,17 @@ define(function(require, exports, module) {
   var moment = require('moment');
   var utils = require('./utils');
   var states = require('./states');
+  var config = require('config');
 
   var blocks = {};
 
-  var tax = function(subtotal, deliveryFee, rate, options) {
-    if (subtotal == null) subtotal = 0;
-    var numArgs = arguments.length;
-    if (numArgs === 0) return '0.00';
-    if (numArgs < 4) {
-      if (numArgs === 2) {
-        options = deliveryFee;
-        deliveryFee = 0
-      } else {
-        options = rate;
-      }
-      rate = 0.0825;
-    }
-    return Math.round((parseInt(subtotal) + parseInt(deliveryFee)) * parseFloat(rate));
-  }
+  var tax = function( order ){
+    if ( !order ) return 0;
+
+    var val = order.sub_total + order.restaurant.delivery_fee;
+
+    return Math.round( val * config.taxRate );
+  };
 
   var helpers = {
     extend: function(name, context) {
@@ -50,6 +43,16 @@ define(function(require, exports, module) {
       return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2); // partial cents get rounded here
     },
 
+    pennies: function(dollars) {
+      var val = Math.round( dollars * 100 );
+      return utils.isNaN(val) ? '' : val;
+    },
+
+    dollarsNoCents: function(pennies){
+      var cents = pennies == null ? 0 : parseFloat(pennies); // parse as float incase of partial cents
+      return utils.isNaN(cents) ? '' : (cents / 100)
+    },
+
     json: function(context) {
       return JSON.stringify(context);
     },
@@ -66,16 +69,17 @@ define(function(require, exports, module) {
       return (tax.apply(this, arguments) / 100).toFixed(2);
     },
 
-    total: function(cents, deliveryFee, tip, rate, options) {
-      if (options === undefined) {
-        options = rate;
-        rate = null;
+    total: function(order, options) {
+      if (typeof order !== 'object') {
+        throw new Error('Must supply a valid `order` as first parameter')
       }
 
-      tip = tip || 0;
-      rate = rate ? rate + 1 : 1.0825;
-      var pretip = tax.call(this, cents, deliveryFee, rate, options);
-      return ((pretip + tip) / 100).toFixed(2);
+      order.tip = order.tip || 0;
+
+      var total = order.sub_total + order.restaurant.delivery_fee;
+      total += tax( order );
+
+      return ((total + order.tip) / 100).toFixed(2);
     },
 
     price$: function(price) {
@@ -191,6 +195,10 @@ define(function(require, exports, module) {
 
     gte: function(a, b, options){
       return options[a >= b ? 'fn' : 'inverse'](this);
+    },
+
+    datePassed: function(datetime, options) {
+      return options[ moment(datetime) < moment() ? 'fn' : 'inverse'](this);
     },
 
     dollarMeter: function( value, max, additionalClass ){
@@ -362,6 +370,63 @@ define(function(require, exports, module) {
       } else {
         return options.inverse(this);
       }
+    },
+
+    factorToPercent: function( factor, precision, options ){
+      if ( typeof precision === 'object' || !precision ){
+        precision = 2;
+      }
+
+      return parseFloat( ( factor * 100 ).toFixed( precision ) );
+    },
+
+    percentToFactor: function( percent, precision, options ){
+      if ( typeof precision === 'object' || !precision ){
+        precision = 2;
+      }
+
+      return parseFloat( ( percent / 100 ).toFixed( precision ) );
+    },
+
+    add: function (value, addition) {
+      return value + addition;
+    },
+
+    commatize: function( x, options ){
+      if ( !x && x != 0 ) return;
+
+      var parts = x.toString().split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
+    },
+
+    giftcardClasses: function( card, user ){
+      var classList = [];
+
+      if ( card.amount >= 5000 ){
+        classList.push('giftcard-gold');
+      } else if ( card.amount >= 2000 ){
+        classList.push('giftcard-orange');
+      }
+
+      if ( card.cost > user.points ){
+        classList.push('state-unavailable');
+      }
+
+      return classList.join(' ');
+    },
+
+    cdn: function(){
+      // Just in case they pass in their own slash
+      for ( var key in arguments ){
+        if ( arguments[ key ][0] === '/' ){
+          arguments[ key ] = arguments[ key ].toString().substring(1);
+        }
+      }
+
+      return [ config.cdn.baseUrl ].concat(
+        Array.prototype.slice.call( arguments, 0, - 1 )
+      ).join('/');
     }
   }
 

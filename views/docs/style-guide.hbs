@@ -1,7 +1,7 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/docs.css">
-<link rel="stylesheet" href="/css/restaurant-filters.css">
-<link rel="stylesheet" href="/css/wizard.css">
+<link rel="stylesheet" href="{{cdn "/css/docs.css"}}">
+<link rel="stylesheet" href="{{cdn "/css/restaurant-filters.css"}}">
+<link rel="stylesheet" href="{{cdn "/css/wizard.css"}}">
 
 {{/extend}}
 <div class="container">
@@ -42,7 +42,7 @@
     <span class="tag tag-spicy"></span>
   </p>
 
-  Note: Must require extend css block in .hbs template with 
+  Note: Must require extend css block in .hbs template with
   the following stylesheet
   <pre class="prettyprint">
 &#123;&#123;#extend "css"&#125;&#125;
@@ -141,7 +141,7 @@
     &lt;input type="text" class="form-control cc-discover"&gt;
   &lt;/div&gt;
 &lt;/div&gt;</pre>
-  
+
   {{!-- End Credit Card Logos --}}
 
   <h3>Checkout Wizard</h3>
@@ -159,7 +159,7 @@
   </ol>
 
   <p>
-    Extend the css block in .hbs template with wizard.css 
+    Extend the css block in .hbs template with wizard.css
   </p>
   <pre class="prettyprint">
 &#123;&#123;#extend "css"&#125;&#125;
@@ -167,7 +167,7 @@
 &#123;&#123;/extend&#125;&#125;</pre>
 
   <p>
-    Mark <code>&lt;li class="step active"&gt;</code> for the current step 
+    Mark <code>&lt;li class="step active"&gt;</code> for the current step
     or <code>&lt;li class="step complete"&gt;</code> for completed steps.
   </p>
 

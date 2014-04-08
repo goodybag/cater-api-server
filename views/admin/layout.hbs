@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>[Admin] Goodybag</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Select2 -->
+    <link href="{{cdn "/components/select2/select2.css"}}" rel="stylesheet" media="screen">
+
+    <!-- Bootstrap -->
+    <link href="{{cdn "/components/bootstrap/dist/css/bootstrap.min.css"}}" rel="stylesheet" media="screen">
+
+    <!-- Fonts -->
+    <link href="{{cdn "/css/gb-icon.css"}}" rel="stylesheet">
+    <link href="{{cdn "/css/aleo.css"}}" rel="stylesheet">
+    <link href="{{cdn "/css/proxima-nova.css"}}" rel="stylesheet">
+
+    <!-- Moar Convenient CSS Stuff -->
+    <link href="{{cdn "/css/kit.css"}}" rel="stylesheet">
+
+    <!-- Goodybag Catering CSS Stuff -->
+    <link href="{{cdn "/css/main.css"}}" rel="stylesheet">
+    <link href="{{cdn "/css/components.css"}}" rel="stylesheet">
+    <link href="{{cdn "/css/theme.css"}}" rel="stylesheet">
+    <link href="{{cdn "/css/admin.css"}}" rel="stylesheet">
+
+    {{{block "css"}}}
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
+    <![endif]-->
+  </head>
+  <body>
+    <header id="header" class="navbar {{#if session.oldUser}}navbar-impersonate{{/if}}">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <a class="navbar-brand" href="/">
+              <img src="{{cdn "/img/logo.png"}}" alt="Goodybag">
+            </a>
+            {{#if user.id}}
+            <ul class="nav navbar-nav pull-right">
+              {{#contains user.groups 'restaurant'}}
+                <li><a href="/restaurants/manage">Home</a></li>
+              {{else}}
+                <li><a href="/restaurants">Home</a></li>
+              {{/contains}}
+              {{#if session.oldUser}}
+              <li>
+                <a href="/users/return" class="users-return navbar-btn">
+                  Return to {{session.oldUser.name}}
+                </a>
+              </li>
+              {{/if}}
+              <li class="nav-account dropdown">
+                <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
+                  {{#if user.name }} {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a href="/users/me">My Settings</a></li>
+                  <li><a href="/users/me/orders">My Orders</a></li>
+                  <li><a href="/auth/logout">Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {{{block "banner"}}}
+
+    <div id="main">
+      {{{block "body"}}}
+    </div>
+
+    {{#unless config.isDev}}
+    <script src="{{cdn "dist/app.js"}}"></script>
+    {{else}}
+    <script src="{{cdn "components/requirejs/require.js"}}"></script>
+    <script src="{{cdn "js/require-config.js"}}"></script>
+    {{/unless}}
+    <script>
+      require( ['config'], function( config ){
+        config.cdnBaseUrl = '{{{config.cdnBaseUrl}}}';
+      });
+    </script>
+
+    {{{block "views"}}}
+    {{{block "scripts"}}}
+  </body>
+</html>

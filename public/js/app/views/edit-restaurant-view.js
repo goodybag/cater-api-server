@@ -24,7 +24,9 @@ define(function(require, exports, module) {
         'click .remove-lead-time': 'removeLeadTime',
         'click .restaurant-remove': 'onRestaurantRemoveClick',
         'change input[type="filepicker"]': 'onFilePickerChange',
-        'click [name="yelp_business_id"]': 'onYelpBusinessIdClick'
+        'click [name="yelp_business_id"]': 'onYelpBusinessIdClick',
+        'click .zip-groups > .zip-group .remove': 'onZipGroupRemoveClick',
+        'click .zip-groups > .zip-group:last-child': 'onNewZipGroupClick'
       };
     },
 
@@ -68,10 +70,7 @@ define(function(require, exports, module) {
       yelp_business_id: '.restaurant-form [name="yelp_business_id"]',
       logo_url: '.restaurant-form [name="logo_url"]',
       logo_mono_url: '.restaurant-form [name="logo_mono_url"]',
-      sms_phones: '.restaurant-form .restaurant-sms-phones',
-      voice_phones: '.restaurant-form .restaurant-voice-phones',
       display_phone: '.restaurant-form .restaurant-display-phone',
-      emails: '.restaurant-form .restaurant-emails',
       price: '.restaurant-form .restaurant-price',
       cuisine: '.restaurant-form .restaurant-cuisine',
       minimum_order: '.restaurant-form .restaurant-minimum-order',
@@ -107,20 +106,8 @@ define(function(require, exports, module) {
         return this.fieldSplit(this.fieldMap.cuisine);
       },
 
-      sms_phones: function() {
-        return _.invoke(this.fieldSplit(this.fieldMap.sms_phones), 'replace', /[^\d]/g, '');
-      },
-
-      voice_phones: function() {
-        return _.invoke(this.fieldSplit(this.fieldMap.voice_phones), 'replace', /[^\d]/g, '');
-      },
-
       display_phone: function() {
         return this.$el.find(this.fieldMap.display_phone).val().replace(/[^\d]/g, '') || null;
-      },
-
-      emails:  function() {
-        return this.fieldSplit(this.fieldMap.emails);
       },
 
       websites: function() {
@@ -128,8 +115,24 @@ define(function(require, exports, module) {
       },
 
       delivery_zips: function() {
-        var val = this.$el.find(this.fieldMap.delivery_zips).val().trim();
-        return val ? _.invoke(val.split(','), 'trim') : [];
+        var delivery_zips = [];
+        this.$el.find('.zip-group:not(.zip-group:last-child)').each( function(){
+          var $group = $(this);
+          var fee = +Handlebars.helpers.pennies( $group.find('[name="fee"]').val() );
+          $group.find('[name="zips"]').val()
+            .replace( /\s/g, '' )
+            .split(',')
+            .map( function( z ){
+              return parseInt( z );
+            }).forEach( function( zip ){
+              delivery_zips.push({
+                fee: fee
+              , zip: zip
+              })
+            });
+        });
+
+        return delivery_zips;
       },
 
       delivery_times: function() {
@@ -225,7 +228,7 @@ define(function(require, exports, module) {
     onChange: _.debounce( function(e) {
       this.$el.find('.form-control').parent().removeClass('has-success');
       var diff = FormView.prototype.onChange.apply(this, arguments);
-      if (Object.keys(diff).length > 0) {
+      if (diff !== null && Object.keys(diff).length > 0) {
         var changed = _.values(_.pick(this.fieldMap, _.keys(diff))).join(', ');
         this.$el.find(changed).parent().filter(':not(.has-error)').addClass('has-success');
         this.setState('pending');
@@ -284,6 +287,16 @@ define(function(require, exports, module) {
 
     onYelpBusinessIdClick: function(e){
       e.target.select();
+    },
+
+    onNewZipGroupClick: function(e){
+      var $el = $(e.currentTarget);
+      $el.before( $el.clone() );
+      this.delegateEvents();
+    },
+
+    onZipGroupRemoveClick: function(e){
+      $(e.currentTarget).parents('.zip-group').remove();
     }
   });
 });

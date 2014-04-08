@@ -46,7 +46,7 @@
           {{#each orders}}
           <tr>
             <td class="field-id">#{{this.id}}</td>
-            <td class="field-total">${{total this.sub_total this.restaurant.delivery_fee this.tip}}</td>
+            <td class="field-total">${{total this}}</td>
             <td class="field-created_at">{{formatDateTime this.created_at "MM/DD/YYYY"}}</td>
           </tr>
           {{/each}}

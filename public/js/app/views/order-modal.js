@@ -6,7 +6,8 @@ define(function(require, exports, module) {
     events: {
       'submit form': 'submit',
       'click .btn-submit': 'submit',
-      'click button[data-dismiss="modal"]': 'hide'
+      'click button[data-dismiss="modal"]': 'hide',
+      'keyup input': 'onKeyUp'
     },
 
     // handle events from model.save on submit
@@ -99,14 +100,6 @@ define(function(require, exports, module) {
         blank.parent().addClass('has-error');
         this.$el.find('.error-blank-fields').removeClass('hide');
         return;
-      }
-
-      if (this.options.loginNeeded) {
-        var login = {
-          email: this.$el.find('input.email').val().trim(),
-          password: this.$el.find('input.password').val().trim()
-        };
-        $.post('/session', login, done);
       }
 
       var order = {
@@ -211,6 +204,13 @@ define(function(require, exports, module) {
 
       if ( $last.length ){
         $scroller[0].scrollTop = $last[0].offsetTop;
+      }
+    }
+
+  , onKeyUp: function( e ){
+      // Enter they intended to submit
+      if ( e.keyCode === 13 ){
+        this.submit( e );
       }
     }
   });

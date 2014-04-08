@@ -37,7 +37,12 @@ var definitions = [
 , 'waitlist'
 , 'addresses'
 , 'reminders'
+, 'payment-summaries'
+, 'payment-summary-items'
+, 'favorite-restaurants'
+, 'contacts'
 , 'deltas'
+, 'favorite-restaurants'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');

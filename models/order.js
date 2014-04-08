@@ -19,6 +19,7 @@ var modifyAttributes = function(callback, err, orders) {
     var restaurantFields = [
       'delivery_fee',
       'minimum_order',
+      'emails',
       'sms_phones',
       'voice_phones',
       'is_bad_zip',
@@ -34,8 +35,10 @@ var modifyAttributes = function(callback, err, orders) {
         order.attributes.restaurant = utils.extend(
           {
             id: order.attributes.restaurant_id,
-            emails: order.attributes.restaurant_emails,
             delivery_times: utils.object(order.attributes.delivery_times),
+            emails: order.attributes.emails,
+            sms_phones: order.attributes.sms_phones,
+            voice_phones: order.attributes.voice_phones,
             name: order.attributes.restaurant_name,
             balanced_customer_uri: order.attributes.restaurant_balanced_customer_uri
           },
@@ -46,6 +49,7 @@ var modifyAttributes = function(callback, err, orders) {
         var rate = 1.0825; // default Austin, TX sales tax for now, in future store in and get from restaurant table
         var totalPreTip = (parseInt(order.attributes.sub_total) + parseInt(order.attributes.restaurant.delivery_fee)) * parseFloat(rate);
         order.attributes.total = Math.round(totalPreTip + order.attributes.tip); // in cents
+        order.attributes.points = Math.floor(order.attributes.total / 100);
       } else {
         order.attribtues.restaurant = null;
       }
@@ -78,6 +82,27 @@ var modifyAttributes = function(callback, err, orders) {
 }
 
 module.exports = Model.extend({
+  getDeliveryFeeQuery: function(){
+    var query = {
+      type: 'select'
+    , alias: 'delivery_fee'
+    , table: 'restaurant_delivery_zips'
+    , columns: ['fee']
+    , where: {
+        restaurant_id:  this.attributes.restaurant_id
+      }
+    , limit: 1
+    };
+
+    if ( this.attributes.zip ){
+      query.where.zip = this.attributes.zip;
+    } else {
+      query.order = 'fee asc';
+    }
+
+    return query;
+  },
+
   getOrderItems: function(callback, client) {
     var self = this;
     callback = callback || function() {};
@@ -92,7 +117,14 @@ module.exports = Model.extend({
   getRestaurant: function(callback, client){
     var self = this;
 
-    Restaurant.findOne({ where: { id: this.attributes.restaurant_id } }, function(error, restaurant){
+    var query = {
+      where: { id: this.attributes.restaurant_id }
+    , columns: ['*']
+    };
+
+    query.columns.push( this.getDeliveryFeeQuery() );
+
+    Restaurant.findOne(query, function(error, restaurant){
       if (error) return callback(error);
 
       self.attributes.restaurant = restaurant.toJSON();
@@ -207,6 +239,9 @@ module.exports = Model.extend({
     //
     // 5. If it is past the delivery date it is editable by the client,
     // admin, and restaurant manager.
+    //
+    // 6. If the order has been copied and thus datetime is undefined. Note:
+    // certain fields are not copied such as datetime, tip, tip_amount.
 
     var now = moment();
     var deliveryDateTime = moment.tz(this.attributes.datetime, this.attributes.timezone);
@@ -222,6 +257,8 @@ module.exports = Model.extend({
       && (now < cutOffDateTime)
       && (orderAuth.isAdmin || orderAuth.isOwner || orderAuth.isRestaurantManager)
     ) return true;
+
+    if (this.attributes.datetime === null) return true;
 
     return false;
   },
@@ -431,6 +468,7 @@ module.exports = Model.extend({
     query.columns = query.columns || ['*'];
     query.order = query.order || ["submitted.created_at DESC", "orders.created_at DESC"];
     query.with = query.with || [];
+    query.where = query.where || {};
 
     // distinct should have the same columns used in order by
     query.distinct = query.distinct || queryTransform.stripColumn(query.order);
@@ -608,22 +646,30 @@ module.exports = Model.extend({
     };
 
     query.columns.push({table: 'restaurants', name: 'name', as: 'restaurant_name'});
-    query.columns.push('restaurants.delivery_fee')
+    query.columns.push(
+      module.exports.prototype.getDeliveryFeeQuery.call({
+        attributes: {
+          restaurant_id: query.where.restaurant_id || '$orders.restaurant_id$'
+        }
+      })
+    );
     query.columns.push('restaurants.minimum_order');
-    query.columns.push({table: 'restaurants', name: 'emails', as: 'restaurant_emails'});
-    query.columns.push('restaurants.sms_phones');
-    query.columns.push('restaurants.voice_phones');
     query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});
 
     query.joins.restaurants = {
       type: 'inner'
     , on: {'id': '$orders.restaurant_id$'}
-    }
+    };
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = orders.restaurant_id)) AS delivery_zips");
     query.columns.push('hours.delivery_times');
     query.columns.push('lead_times_json.lead_times');
     query.columns.push("max_guests.max_guests");
+
+    var contactsInfo = ['sms_phones', 'voice_phones', 'emails'];
+    contactsInfo.forEach( function(type){
+      query.columns.push(Restaurant.getContactsInfo(type));
+    });
 
     query.joins.max_guests = {
       type: 'left'
@@ -833,6 +879,26 @@ module.exports = Model.extend({
     Model.update.call(this, query, utils.partial(modifyAttributes, callback));
   },
 
+  findReadyForAwardingPoints: function (options, callback) {
+    if (typeof options === 'function') {
+      callback = options;
+      options = {};
+    }
+
+    // it is ready for awarding 3 days after the order has been delivered.
+    var query = {
+      where: {
+        status: {$or: ['accepted', 'delivered']}
+      , points_awarded: false
+      , $custom: ['now() > (("orders"."datetime" AT TIME ZONE "orders"."timezone") + interval \'3 days\')']
+      }
+    };
+
+    utils.deepExtend(query, options);
+
+    this.find(query, callback);
+  },
+
   findTomorrow: function( query, callback ){
     if ( typeof query === 'function' ){
       callback = query;
@@ -864,7 +930,6 @@ module.exports = Model.extend({
 
     query = utils.defaults(query, {
       order: 'id desc'
-    , limit: 'ALL'
     , where: {}
     });
 

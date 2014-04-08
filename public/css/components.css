@@ -179,6 +179,7 @@
   max-width: 350px;
   list-style: none;
   margin: 0;
+  margin-bottom: 10px;
   padding: 0;
 }
 
@@ -229,6 +230,12 @@
 
 .navbar-toggle {
   margin-right: 0;
+}
+
+.navbar .gb-points-indicator {
+  float: right;
+  margin-top: 5px;
+  margin-right: 8px;
 }
 
 /**
@@ -781,7 +788,8 @@ a.list-group-item .list-group-item-heading {
 
 .modal-order-params .form-group-title,
 .modal-order-params .btn-search {
-  display: none;
+  /* Respond.js is screwing some chit up, so !important */
+  display: none!important;
 }
 
 .modal-order-params .modal-title {

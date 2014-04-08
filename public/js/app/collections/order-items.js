@@ -4,9 +4,25 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.Collection.extend({
     initialize: function(models, options) {
-      if (options && options.orderId) this.orderId = options.orderId;
+      this.options = options || {};
+      if (options.orderId) this.orderId = options.orderId;
+      if (options.edit_token){
+        this.each( function( m ){
+          m.options.edit_token = edit_token;
+        });
+      }
     },
     url: function() { return '/orders/' + this.orderId + '/items' },
-    model: OrderItem
+    model: OrderItem,
+
+    sync: function(method, model, options) {
+      options.url = (method === 'read') ? '/api' + model.url() : model.url();
+
+      // break aggressive caching on IE
+      // this request provides live updates so dont cache reads
+      options.cache = (method !== 'read');
+
+      Backbone.sync.call(this, method, model, options);
+    }
   });
 });

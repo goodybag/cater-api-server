@@ -1,8 +1,12 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/restaurants.css">
+<link rel="stylesheet" href="{{cdn "/css/restaurants.css"}}">
 {{/extend}}
 
 {{#extend "title"}} - Restaurants{{/extend}}
+
+{{#extend "head"}}
+  {{> facebook_pixel config.facebook.pixel.restaurantList }}
+{{/extend}}
 
 <div class="page-restaurants container">
   {{#notEmpty orderParams}}
@@ -25,17 +29,12 @@
     <div class="col-md-9">
       <div class="list-group list-group-restaurants">
       {{#each restaurants}}
-        {{#if is_unacceptable}}
-        <a href="javascript: void(0);" class="list-group-item list-group-item-restaurant disabled{{#if is_hidden}} hide{{/if}}">
-        {{else}}
-        <a href="/restaurants/{{this.id}}{{queryParams ../../orderParams}}" class="list-group-item list-group-item-restaurant{{#if is_hidden}} hide{{/if}}">
-        {{/if}}
+        <a href="/restaurants/{{this.id}}{{queryParams ../orderParams}}" class="list-group-item list-group-item-restaurant{{#if is_hidden}} hide{{/if}}" id="restaurant-{{id}}">
           <div class="row">
             <div class="col-xs-1 logo-wrapper">
-              <img class="business-logo" src="{{#if this.logo_mono_url}}{{filepicker this.logo_mono_url 60 60}}{{else}}{{filepicker ../../config.defaultMonoLogo 60 60}}{{/if}}" alt="{{this.name}}">
-              <img class="business-logo business-logo-color" src="{{#if this.logo_url}}{{filepicker this.logo_url 60 60}}{{else}}{{filepicker ../../config.defaultLogo 60 60}}{{/if}}" alt="{{this.name}}">
+              <img class="business-logo" src="{{#if this.logo_url}}{{filepicker this.logo_url 60 60}}{{else}}{{filepicker ../../config.defaultLogo 60 60}}{{/if}}" alt="{{this.name}}">
             </div>
-            <div class="col-xs-9 col">
+            <div class="col-xs-8 col">
               <h3 class="list-group-item-heading list-group-item-heading-restaurant">{{this.name}}</h3>
               <div class="list-group-item-restaurant-details">
                 {{#if cuisine.length}}
@@ -64,11 +63,14 @@
                 {{/or2}}
               </div>
             </div>
+            <div class="col-xs-1 favorite-wrapper">
+              {{> favorite_restaurant }}
+            </div>
             <div class="col-xs-2 rating-wrapper">
               {{#if this.yelp_data}}
               {{#if ../yelp_data.rating}}
               Rating on Yelp:
-              <div class="rating">{{{ratingStars ../../yelp_data.rating}}}</div>
+              <div class="rating">{{{ratingStars ../yelp_data.rating}}}</div>
               {{/if}}
               {{/if}}
             </div>
@@ -85,7 +87,7 @@
 {{#extend "scripts"}}
 <script type="text/javascript">
   require(['app/pages/restaurant-list'], function( page ){
-    page.init({ restaurants: {{{json allRestaurants}}} });
+    page.init({ restaurants: {{{json restaurants}}}, userId: {{{ user.id }}} });
   });
 </script>
 {{/extend}}

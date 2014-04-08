@@ -1,17 +1,13 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/restaurant-filters.css">
+<link rel="stylesheet" href="{{cdn "/css/restaurant-filters.css"}}">
 {{/extend}}
 
 <h4>Filter by:</h4>
 <div class="panel-group panel-group-filters" id="filters">
   {{! Diet Section }}
   <div class="panel panel-default" data-facet="tags">
-    <div class="panel-heading">
-      <h4>
-        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelDiet" href="javascript:void(0)">
-          <span class="glyphicon glyphicon-chevron-right pull-right"></span> Special Diets
-        </a>
-      </h4>
+    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-target="#panelDiet" href="javascript:void(0)">
+      <span class="glyphicon glyphicon-chevron-right active"></span> Special Diets
     </div>
     <div id="panelDiet" class="panel-collapse collapse in">
       <div class="panel-body">
@@ -63,12 +59,8 @@
 
   {{! Cuisine Types }}
   <div class="panel panel-default" data-facet="cuisine">
-    <div class="panel-heading">
-      <h4>
-        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelCuisine" href="javascript:void(0)">
-          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Cuisine
-        </a>
-      </h4>
+    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-target="#panelCuisine" href="javascript:void(0)">
+      <span class="glyphicon glyphicon-chevron-right"></span> Cuisine
     </div>
     <div id="panelCuisine" class="panel-collapse collapse {{#if orderParams.cuisines}}in{{/if}}">
       <div class="panel-body">
@@ -83,12 +75,8 @@
 
   {{! Meal Types }}
   <div class="panel panel-default" data-facet="meal_types">
-    <div class="panel-heading">
-      <h4>
-        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelMealTypes" href="javascript:void(0)">
-          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Meal Types
-        </a>
-      </h4>
+    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-target="#panelMealTypes" href="javascript:void(0)">
+      <span class="glyphicon glyphicon-chevron-right"></span> Meal Types
     </div>
     <div id="panelMealTypes" class="panel-collapse collapse {{#if orderParams.mealTypes}}in{{/if}}">
       <div class="panel-body">
@@ -103,12 +91,8 @@
 
   {{! Price }}
   <div class="panel panel-default" data-facet="prices">
-    <div class="panel-heading">
-      <h4>
-        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelPrice" href="javascript:void(0)">
-          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Price
-        </a>
-      </h4>
+    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-target="#panelPrice" href="javascript:void(0)">
+      <span class="glyphicon glyphicon-chevron-right "></span> Price
     </div>
     <div id="panelPrice" class="panel-collapse collapse {{#if orderParams.prices}}in{{/if}}">
       <div class="panel-body">
@@ -126,12 +110,8 @@
 
   {{! Serving Style }}
   <div class="panel panel-default" data-facet="meal_styles">
-    <div class="panel-heading">
-      <h4>
-        <a class="accordion-toggle" data-toggle="collapse" data-target="#panelMealStyles" href="javascript:void(0)">
-          <span class="glyphicon glyphicon-chevron-down pull-right"></span> Serving Style
-        </a>
-      </h4>
+    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-target="#panelMealStyles" href="javascript:void(0)">
+      <span class="glyphicon glyphicon-chevron-right"></span> Serving Style
     </div>
     <div id="panelMealStyles" class="panel-collapse collapse {{#if orderParams.mealStyles}}in{{/if}}">
       <div class="panel-body">
@@ -147,4 +127,13 @@
     </div>
   </div>
 
+</div>
+
+<div class="restaurant-favorites" id="favorites">
+  <label for="favorite-toggle">Show Favorites</label>
+  <button
+    class="btn btn-favorite {{#eq orderParams.favorites "true"}}active{{/eq}}"
+    id="favorite-toggle"
+    data-icon="gb-icon-heart">
+  </button>
 </div>

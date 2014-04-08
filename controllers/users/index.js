@@ -5,6 +5,7 @@ var utils = require('../../utils');
 var models = require('../../models');
 
 module.exports.cards = require('./cards');
+module.exports.rewards = require('./rewards');
 
 module.exports.list = function(req, res) {
   var tasks = {
@@ -127,6 +128,11 @@ module.exports.update = function(req, res) {
     var sql = db.builder.sql(query);
     db.query(sql.query, sql.values, function(err, rows, result) {
       if (err) return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
+
+      if ( req.header('Content-Type') === 'application/json' ){
+        return res.send(204);
+      }
+
       res.render('user', {user: rows[0], alert: true}, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         return res.send(200, html);

@@ -11,6 +11,9 @@ var
 , pg = require('pg')
 , pgQuery = require('pg-query')
 , builder = require('mongo-sql')
+, dirac   = require('dirac')
+, fs      = require('fs')
+, path    = require('path')
 , helpers = require('./helpers')
 ;
 
@@ -23,6 +26,24 @@ exports.builder = builder;
 
 pgQuery.connectionParameters = config.postgresConnStr;
 exports.query = pgQuery;
+
+exports.query2 = function(query, callback) {
+  var sql = builder.sql(query);
+  pgQuery(sql.query, sql.values, callback);
+}
+
+var dir = path.join( __dirname, './definitions' );
+fs.readdirSync( dir ).filter( function( f ){
+  return fs.statSync( path.join( dir, f ) ).isFile() && f.slice(-3) == '.js'
+}).forEach( function( f ){
+  dirac.register( require( path.join( dir, f ) ) );
+});
+
+dirac.init( config.postgresConnStr );
+
+for ( var key in dirac.dals ){
+  exports[ key ] = dirac.dals[ key ];
+}
 
 exports.getClient = function(connStr, callback) {
   if (typeof connStr === 'function') {

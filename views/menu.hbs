@@ -1,5 +1,5 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/menu.css">
+<link rel="stylesheet" href="{{cdn "/css/menu.css"}}">
 {{/extend}}
 
 {{#extend "title"}} - {{restaurant.name}} Menu{{/extend}}
@@ -39,8 +39,9 @@
       {{/if}}
       {{/if}}
       {{#contains user.groups "admin"}}
-        <li><a href="{{restaurant.id}}/edit">Edit Restaurant</a></li>
-        <li><a href="{{restaurant.id}}/events">Calendar</a></li>
+        <li><a href="/restaurants/{{restaurant.id}}/edit">Edit Restaurant</a></li>
+        <li><a href="/restaurants/{{restaurant.id}}/events">Calendar</a></li>
+        <li><a href="/restaurants/{{restaurant.id}}/menu.csv">CSV Menu</a></li>
       {{/contains}}
     </ul>
   </div>
@@ -81,7 +82,7 @@
             {{#if restaurant.delivery_fee}}
             <div class="restaurant-info-item restaurant-info-item-categories">
               <h4 class="info-item-title">Delivery Charge:</h4>
-              <div class="info-item-value">${{dollars restaurant.delivery_fee}}</div>
+              <div class="info-item-value">Starting from: ${{dollars restaurant.delivery_fee}}</div>
             </div>
             {{/if}}
 
@@ -110,13 +111,16 @@
 
             <div class="restaurant-info-item restaurant-info-item-zips">
               <h4 class="info-item-title">Zip Codes within delivery range:</h4>
-              <div class="info-item-value">
-                <ul class="list-delivery-zips">
-                {{#each restaurant.delivery_zips}}
-                  <li class="delivery-zip">{{this}}</li>
-                {{/each}}
-                </ul>
-              </div>
+              {{#each restaurant.delivery_zip_groups}}
+                <div class="info-item-value">
+                  <h5 class="info-item-title delivery-zip-tier-title">${{dollars this.fee}}</h5>
+                  <ul class="list-delivery-zips">
+                    {{#each this.zips}}
+                    <li class="delivery-zip">{{this}}</li>
+                    {{/each}}
+                  </ul>
+                </div>
+              {{/each}}
             </div>
           </div>
 
@@ -134,11 +138,12 @@
   </div>
 
   <div class="col-md-4 order-summary-col">
-    <div class="order-params">
-      {{> menu_order_params }}
+    <div class="order-meta">
+      {{!-- order params & share link --}}
+      {{> menu_order_meta }}
     </div>
     <div class="order-summary">
-        {{> menu_order_summary }}
+      {{> menu_order_summary }}
     </div>
   </div>
 </div>
@@ -187,11 +192,13 @@
 <script>
   require( ['app/pages/menu', 'app/models/index'], function( page, Models ){
     page.init({
-      order:          new Models.Order( {{{json order}}} )
+      order:          new Models.Order( {{{json order}}}, { edit_token: "{{{edit_token}}}"} )
     , orderParams:    new Models.OrderParams( {{{json orderParams}}} )
     , restaurant:     new Models.Restaurant( {{{json restaurant}}} )
     , defaultAddress: new Models.Address( {{{json defaultAddress}}} )
     , user:           new Models.User( {{{json user }}} )
+    , editToken:      "{{{edit_token}}}"
+    , baseUrl:        "{{{config.baseUrl}}}"
     });
   });
 </script>

@@ -7,7 +7,12 @@ var
 , states = require('../../public/js/lib/states')
 , enums = require('../../db/enums')
 , cuisines = require('../../public/cuisines')
+, json2csv = require('json2csv')
+, _ = require('lodash')
+, helpers = require('../../public/js/lib/hb-helpers')
 ;
+
+cuisines = cuisines.sort();
 
 var models = require('../../models');
 
@@ -20,13 +25,17 @@ module.exports.list = function(req, res) {
   logger.routes.info(TAGS, 'listing restaurants');
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
-
   if (orderParams.prices)
     orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
 
   var tasks =  [
     function(callback) {
-      var query = { includes: ['filter_restaurant_events'] };
+      var query = {
+        includes: [
+          { type: 'filter_restaurant_events' }
+        , { type: 'favorites', userId: req.user.attributes.id }
+        ]
+      };
       models.Restaurant.find(
         query
       , utils.extend({ is_hidden: false }
@@ -50,7 +59,9 @@ module.exports.list = function(req, res) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
 
     var context = {
-      restaurants:      utils.invoke(results[0], 'toJSON'),
+      restaurants:      utils.invoke(results[0], 'toJSON').filter( function( r ){
+                          return !r.is_unacceptable;
+                        }),
       defaultAddress:   results[1] ? results[1].toJSON() : null,
       orderParams:      orderParams,
       filterCuisines:   cuisines,
@@ -75,15 +86,16 @@ module.exports.get = function(req, res) {
 
   var orderParams = req.query || {};
 
+  var userId = req.creatorId || req.session.user.id;
   var tasks = [
     function(callback) {
-      if (!req.session.user) return callback(null, null);
-      var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'orders.status': 'pending'};
+      if (!userId) return callback(null, null);
+      var where = {restaurant_id: req.params.rid, user_id: userId, 'orders.status': 'pending'};
       models.Order.findOne({where: where}, function(err, order) {
         if (err) return callback(err);
         if (order == null) {
           order = new models.Order({ restaurant_id: req.params.rid,
-                                     user_id: req.session.user.id,
+                                     user_id: userId,
                                      adjustment: {description: null, amount: null}});
           order.getRestaurant(function(error){
             callback(error, order);
@@ -101,7 +113,7 @@ module.exports.get = function(req, res) {
         where: {
           id: parseInt(req.params.rid)
         }
-      , includes: ['closed_restaurant_events']
+      , includes: [ {type: 'closed_restaurant_events'} ]
       };
 
       models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
@@ -114,7 +126,7 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
-      models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
+      models.Address.findOne({where: { user_id: userId, is_default: true }}, callback);
     }
   ];
 
@@ -123,12 +135,15 @@ module.exports.get = function(req, res) {
 
     var orderParams = req.query || {};
 
+
     var context = {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
       defaultAddress:   results[2] ? results[2].toJSON() : null,
       orderParams:      orderParams
     }
+
+    context.restaurant.delivery_fee = context.order.restaurant.delivery_fee;
 
     // Build a histogram of menus vs freq for labeling
     var menuLengths = utils.countBy(utils.flatten(utils.pluck(context.restaurant.categories, 'menus')));
@@ -192,7 +207,7 @@ module.exports.edit = {
 
 
 module.exports.editAll = function(req, res, next) {
-  models.Restaurant.find({}, function(err, models) {
+  models.Restaurant.find({limit: 10000}, function(err, models) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     var context = {restaurants: utils.invoke(models, 'toJSON'), states: states, isNew: true};
     context.restaurant = {delivery_times: utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; }))};  // tmp hack
@@ -247,7 +262,7 @@ module.exports.listManageable = function(req, res) {
 
 var zips = function(body, id) {
   return utils.map(body.delivery_zips, function(zip, index, arr) {
-    return {restaurant_id: id,  zip: zip}
+    return {restaurant_id: id,  zip: zip.zip, fee: zip.fee }
   });
 }
 
@@ -304,7 +319,6 @@ var fields = [
   'emails',
   'minimum_order',
   'price',
-  'delivery_fee',
   'cuisine',
   'yelp_business_id',
   'websites',
@@ -410,3 +424,63 @@ module.exports.listItems = function(req, res) {
     return res.send(utils.invoke(items, 'toJSON'));
   });
 }
+
+module.exports.menuCsv = function( req, res ){
+  var r = new models.Restaurant({ id: req.params.rid });
+
+  r.getItems( function( error, items ){
+    if ( error ) return res.error( errors.internal.DB_FAILURE, error );
+
+    if ( !items || items.length === 0 ) return res.send(404);
+
+    items = _.invoke( items, 'toJSON' );
+
+    var tags = _(items).pluck('tags').flatten().unique().value();
+
+    var columns = Object.keys( items[0] ).concat( 'options', tags ).filter( function( t ){
+      // Omit fields
+      return [
+        'options_sets'
+      , 'tags'
+      , 'created_at'
+      , 'category_id'
+      , 'restaurant_id'
+      ].indexOf( t ) === -1;
+    });
+
+    items = items.map( function( item ){
+      // Format options as:
+      //   Group1: o1, o2, ... - Group2: o1, o2....
+      item.options = _(
+        item.options_sets
+      ).map( function( n ){
+        return n.name + ': ' + _(
+          n.options
+        ).flatten()
+        .pluck('name')
+        .value()
+        .join(', ');
+      }).join(' - ');
+
+      _.intersection( tags, item.tags ).forEach( function( t ){
+        item[ t ] = true;
+      });
+
+      items.price = helpers.dollars( items.price );
+
+      delete item.tags;
+      delete item.options_sets;
+
+      return item;
+    });
+
+    json2csv({ data: items, fields: columns }, function( error, csv ){
+      if ( error )  return res.error( errors.internal.UNKNOWN, error );;
+
+      res.header( 'Content-Type', 'text/csv' );
+      res.header( 'Content-Disposition', 'attachment;filename=menu.csv' );
+
+      res.send( csv );
+    });
+  });
+};

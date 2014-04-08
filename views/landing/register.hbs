@@ -1,11 +1,15 @@
 {{#extend "page"}}page-register{{/extend}}
 
+{{#extend "head"}}
+  {{> facebook_pixel config.facebook.pixel.register }}
+{{/extend}}
+
 {{#extend "body"}}
 <!--<Navbar>-->
 <header class="navbar collapsed">
   <div class="container">
     <a href="/">
-      <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
+      <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
     </a>
 
     <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
@@ -59,7 +63,7 @@
       <p class="already-user">Already have an account? <a href="/login">Sign in</a></p>
     </form>
     <div class="cupcake-wrapper">
-      <img src="/img/login-takeout.png">
+      <img src="{{cdn "/img/login-takeout.png"}}">
     </div>
   </div>
 </div>
@@ -80,13 +84,14 @@
 <script>
   require( ['jquery', 'navbar', 'field-matcher'], function( $ ){
     $(function(){
-      $('.navbar').navbar();
+      $('.navbar').navbar({ toggleText: false, toggleLogin: false });
       $('#register-form').fieldMatcher({
         fields: ['password', 'password2']
       , onError: function(){
           $('.errors').html('<p class="error">Passwords must match</p>');
         }
       });
+      analytics.page('Registration')
     });
   });
 </script>

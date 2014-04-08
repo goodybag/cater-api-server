@@ -3,6 +3,18 @@ var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
 
+module.exports.listJSON = function(req, res) {
+  var $query = utils.extend({}, req.queryOptions);
+
+  $query.where = req.queryObj;
+
+  models.Order.find( $query, function( error, results ){
+    if ( error ) return res.error( errors.internal.DB_FAILURE, error );
+
+    res.json( utils.invoke( results, 'toJSON' ) );
+  });
+};
+
 module.exports.list = function(req, res) {
   // only show restaurant managers orders with a status of submitted, denied, or accepted
   var defaultFilter = (req.order.isRestaurantManager) ? ['submitted', 'denied', 'accepted'] : 'all';
@@ -35,8 +47,8 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.current = function(req, res, next) {
-  if (!req.session.user) return next();
-  var where = {restaurant_id: req.params.rid, user_id: req.session.user.id, 'orders.status': 'pending'};
+  if ( !req.session.user && !req.creatorId ) return next();
+  var where = {restaurant_id: req.params.rid, user_id: req.creatorId || req.session.user.id, 'orders.status': 'pending'};
   models.Order.findOne({where: where}, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 
@@ -53,7 +65,7 @@ module.exports.get = function(req, res, next) {
   models.Order.findOne(req.params.oid, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
-    if (!order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
+    if (!req.user.isAdmin && !order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
     // if (order.status === 'pending') return res.redirect('/restaurants/' + req.params.rid);
     order.getOrderItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

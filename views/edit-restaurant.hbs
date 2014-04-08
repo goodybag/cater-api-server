@@ -1,6 +1,15 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/edit-restaurant.css">
-<link rel="stylesheet" href="/components/font-awesome/css/font-awesome.css">
+<link rel="stylesheet" href="{{cdn "/css/edit-restaurant.css"}}">
+<link rel="stylesheet" href="{{cdn "/components/font-awesome/css/font-awesome.css"}}">
+{{/extend}}
+
+{{#extend "navbar-links"}}
+<li>
+  <a href="/admin/restaurants/{{restaurant.id}}/payment-summaries">Payment Summaries</a>
+</li>
+<li>
+  <a href="/admin/restaurants/{{restaurant.id}}/contacts">Manage Contacts</a>
+</li>
 {{/extend}}
 
 <div class="container">

@@ -43,7 +43,7 @@ define(function(require, exports, module) {
   , toggleCollapsible: function(e) {
       // toggle collapse panel icon
       var $panelIcon = $(e.currentTarget).siblings('.panel-heading').find('.glyphicon');
-      $panelIcon.toggleClass('glyphicon-chevron-down glyphicon-chevron-right');
+      $panelIcon.toggleClass('active');
     }
 
   , updateCounts: function(){

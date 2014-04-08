@@ -6,6 +6,9 @@ module.exports.models = setup({app: 'cater', component: 'models'});
 module.exports.debit = setup({app: 'cater', component: 'debit'});
 module.exports.db = setup({app: 'cater', component: 'db'});
 module.exports.reminder = setup({app: 'cater', component: 'reminder'});
+module.exports.paymentSummaryPhantom = setup({app: 'cater', component: 'paymentSummaryPhantom'});
+module.exports.points = setup({app: 'cater', component: 'points'});
+module.exports.welcomeEmail = setup({app: 'cater', component: 'welcomeEmail'});
 
 var expressLogger = setup({app: 'cater', component: 'express'});
 

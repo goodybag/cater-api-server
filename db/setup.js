@@ -1,7 +1,11 @@
+if ( process.argv.indexOf('--test') > -1 ){
+  process.env['GB_ENV'] = 'test';
+}
+
 var tasks = require('./tasks');
 var async = require('async');
 
-var run = function() {
+var run = function( callback ) {
   var fns = ['destroyCreateDb', 'createExtensions', 'createTypes', 'createTables', 'loadFixtures', 'setLatestDelta'];
 
   // Run each task in series as defined by fns
@@ -12,6 +16,7 @@ var run = function() {
     })
   , function( error, results ){
       if ( error ) console.log( error );
+      if ( callback ) return callback( error );
       process.exit( ~~!!error );
     }
   );
@@ -19,4 +24,6 @@ var run = function() {
 
 if (require.main === module) {
   run();
+} else {
+  module.exports = run;
 }

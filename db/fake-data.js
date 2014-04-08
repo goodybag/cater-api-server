@@ -1,9 +1,19 @@
+if ( process.argv.indexOf('--test') > -1 ){
+  process.env['GB_ENV'] = 'test';
+}
+
 var utils = require('../utils');
 var faker = require('Faker');
 var config = require('../config');
 var db = require('../db');
 
 var _ = utils._;
+
+var delivery_fees = [
+  1000
+, 1500
+, 3000
+];
 
 var fakeCategories = [
   'Breakfast'
@@ -149,9 +159,25 @@ var inserts = {
     var query =  {
       type:'insert'
     , table: 'restaurants'
+    , returning: ['*']
     , values: values
     };
     if (Math.random() < .3) query.values.minimum_order = faker.Helpers.randomNumber(501) * 100;
+    return query;
+  }
+, contacts: function(restaurant_id) {
+    var query = {
+      type: 'insert'
+    , table: 'contacts'
+    , returning: ['*']
+    , values: {
+        restaurant_id: restaurant_id
+      , sms_phones: [config.testPhoneSms || fakePhoneNumber()]
+      , voice_phones: [config.testPhoneVoice || fakePhoneNumber()]
+      , emails: [config.testEmail || faker.Internet.email()]
+      , name: faker.Name.findName()
+      }
+    };
     return query;
   }
 , categories: function(restaurant_id) {
@@ -205,13 +231,14 @@ var inserts = {
       }
     }
   }
-, restaurantDeliveryZips: function(restaurant_id, zip) {
+, restaurantDeliveryZips: function(restaurant_id, zip, fee) {
     return {
       type: 'insert'
     , table: 'restaurant_delivery_zips'
     , values: {
         restaurant_id: restaurant_id
       , zip: zip
+      , fee: fee
       }
     }
   }
@@ -266,9 +293,6 @@ utils.async.series(
             , city: faker.Address.city()
             , state: faker.Address.usState(true)
             , zip: faker.Address.zipCodeFormat(0)
-            , sms_phones: [config.testPhoneSms || fakePhoneNumber()]
-            , voice_phones: [config.testPhoneVoice || fakePhoneNumber()]
-            , emails: [config.testEmail || faker.Internet.email()]
             , price: faker.Helpers.randomNumber(5) + 1
             , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
             , is_hidden: false
@@ -310,6 +334,10 @@ utils.async.series(
             console.log('\trestaurants-task-create-restaurant');
             query(inserts.restaurants(fake), cbWaterfall);
           }
+        , createContact: function(restaurant, cbWaterfall){
+            console.log('\trestaurants-task-create-contact');
+            query(inserts.contacts(restaurant[0].id), cbWaterfall);
+          }
         };
         utils.async.waterfall(
           [
@@ -318,6 +346,7 @@ utils.async.series(
           , tasks.createPaymentMethod
           , tasks.createBalancedCustomer
           , tasks.createRestaurant
+          , tasks.createContact
           ]
         , function(error, results) {
             callback(error);
@@ -388,7 +417,14 @@ utils.async.series(
         utils.async.timesSeries(results.length, function(n, callback){
           austinZipCodes.sort(arrayRandomize);
           utils.async.timesSeries(10, function(x, callback2){
-            query(inserts.restaurantDeliveryZips(results[n].id, austinZipCodes[x]), callback2);
+            query(
+              inserts.restaurantDeliveryZips(
+                results[n].id
+              , austinZipCodes[x]
+              , delivery_fees[ x % delivery_fees.length ]
+              )
+            , callback2
+            );
           }, function(error, results){
             // console.log('called-sub-3');
             callback(error);
@@ -524,7 +560,6 @@ utils.async.series(
   }
 , function(error, results) {
   if (error) console.error(error);
-  console.log('done');
   process.exit(0);
   }
 );

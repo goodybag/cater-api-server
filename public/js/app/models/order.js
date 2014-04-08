@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
   var utils = require('utils');
+  var config = require('config');
 
   var OrderItems = require('../collections/order-items');
 
@@ -48,7 +49,7 @@ define(function(require, exports, module) {
           tip_percent: {
             type: ['string', 'null'],
             required: false,
-            enum: ['0', 'custom', '5', '10', '15', '18', '20', '25', null]
+            "enum": ['0', 'custom', '5', '10', '15', '18', '20', '25', null]
           },
           payment_status: {
             type: ['string', 'null'],
@@ -136,8 +137,9 @@ define(function(require, exports, module) {
 
     initialize: function(attrs, options) {
       attrs = attrs || {};
+      options = options || {};
 
-      this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id});
+      this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id, edit_token: options.edit_token });
       this.unset('orderItems');
 
       this.restaurant = new Restaurant(attrs.restaurant);
@@ -330,6 +332,25 @@ define(function(require, exports, module) {
       });
     },
 
+    /**
+     * Generate edit token and update this model
+     * @param {function} callback(error)
+     */
+    generateEditToken: function(callback) {
+      var this_ = this;
+      $.ajax({
+        type: 'POST',
+        url: '/api/orders/' + this.id + '/generate_edit_token',
+        error: function(jqXHR, textstatus, errorThrown) {
+          return callback(errorThrown);
+        },
+        success: function(data, textstatus, jqXHR) {
+          this_.set( utils.pick(data, 'edit_token', 'edit_token_expires') );
+          return callback(null, data);
+        }
+      });
+    },
+
     changeReviewed: function(reviewed, callback) {
       // Bypass model validation when toggling `reviewed` flag
       callback = callback || function() {};
@@ -355,8 +376,8 @@ define(function(require, exports, module) {
     getFullCalendarEvent: function() {
       var fullCalendarEvent = utils.extend({}, this.toJSON(), {
         title: [
-          Handlebars.helpers.timepart(this.get('datetime')) 
-        , '\n' 
+          Handlebars.helpers.timepart(this.get('datetime'))
+        , '\n'
         , Handlebars.helpers.truncate(this.get('restaurant_name'), 15)
         ].join('')
       , start: this.get('datetime')

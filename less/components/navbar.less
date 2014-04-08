@@ -80,6 +80,10 @@ body {
   z-index: 2;
   top: 0;
   font-weight: 400;
+  vertical-align: top;
+  input[type="checkbox"] {
+    margin-top: 1px;
+  }
 }
 
 .navbar .nav {
@@ -89,7 +93,7 @@ body {
   .translate( 0, 0 );
 }
 
-.navbar .nav a {
+.navbar .nav > li > a {
   margin-left: 0;
   margin-right: 0;
   padding: @anchor-padding-top 20px @anchor-padding-bottom;
@@ -100,7 +104,7 @@ body {
   .transition-property( padding );
 }
 
-.navbar .nav a:hover,
+.navbar .nav > li > a:hover,
 .navbar .nav .active a {
   background: darken( @navbar-bg-color, 5% );
 }
@@ -219,7 +223,8 @@ body {
     width: 100%;
   }
 
-  .navbar.collapsed .nav {
+  .navbar.collapsed .nav,
+  .navbar.collapsed .gb-points-indicator {
     display: none;
   }
 
@@ -240,8 +245,21 @@ body {
     margin-top: 20px;
   }
 
-  .navbar .nav a {
+  .navbar .nav > li > a {
     display: block;
     padding: @anchor-padding-top (@gutter-width / 2) @anchor-padding-bottom;
+  }
+
+  .navbar .navbar-right {
+    margin-top: 40px!important;
+    z-index: 1;
+  }
+
+  .navbar .navbar-right .dropdown-menu {
+    margin-left: -12px;
+  }
+
+  .navbar .gb-points-indicator {
+    clear: both;
   }
 }

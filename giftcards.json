@@ -1,0 +1,8 @@
+[
+  { "location": "Amazon",                 "amount": 1000,       "cost": 2500 }
+, { "location": "Starbucks",              "amount": 1000,       "cost": 2500 }
+, { "location": "Amazon",                 "amount": 2000,       "cost": 4000 }
+, { "location": "Starbucks",              "amount": 2000,       "cost": 4000 }
+, { "location": "Amazon",                 "amount": 5000,       "cost": 9000 }
+, { "location": "Starbucks",              "amount": 5000,       "cost": 9000 }
+]

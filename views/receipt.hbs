@@ -1,6 +1,6 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/order.css">
-<link rel="stylesheet" href="/css/receipt.css">
+<link rel="stylesheet" href="{{cdn "/css/order.css"}}">
+<link rel="stylesheet" href="{{cdn "/css/receipt.css"}}">
 {{/extend}}
 
 {{#extend "title"}} - Receipt{{/extend}}
@@ -184,7 +184,7 @@
     {{/unless}}
 
     <div class="panel-body totals-panel">
-      {{#if admin}}
+      {{#if isAdmin}}
       <div class="row adjustment editable">
         <div class="col-lg-8">
           <textarea class="form-control adjustment-description" rows="3">{{order.adjustment.description}}</textarea>
@@ -338,6 +338,7 @@
   require(['app/pages/receipt', 'app/models/index'], function( page, Models ){
     page.init({
       order: new Models.Order( {{{json order}}} )
+    , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
     });
   });
 </script>

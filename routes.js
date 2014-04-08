@@ -2,27 +2,29 @@ var express = require('express');
 var config = require('./config');
 var controllers = require('./controllers');
 var utils = require('./utils');
+var venter = require('./lib/venter');
 var Models = require('./models');
 var hbHelpers = require('./public/js/lib/hb-helpers');
+var db = require('./db');
 var errors = require('./errors');
+var PaymentSummaryItem = require('./public/js/app/models/payment-summary-item');
 
-var m = utils.extend({
-  orderParams   : require('./middleware/order-params'),
-  restrict      : require('./middleware/restrict'),
-  basicAuth     : require('./middleware/basic-session-auth'),
-  buildReceipt  : require('./middleware/build-receipt'),
-  queryParams   : require('./middleware/query-params'),
-  queryString   : require('./middleware/query-string')
-}, require('stdm') );
+var m = utils.extend( require('./middleware'), require('stdm') );
+
+utils.extend( m, require('./middleware/util') );
+utils.extend( m, require('dirac-middleware') );
 
 module.exports.register = function(app) {
-
-  app.before( m.queryParams(), function( app ){
+  app.before( m.analytics, m.queryParams(), function( app ){
     app.get('/', controllers.auth.index);
     app.get('/login', controllers.auth.login);
     app.post('/login', controllers.auth.login);
     app.get('/join', controllers.auth.registerView);
     app.post('/join', controllers.auth.register);
+
+    app.get('/rewards', m.view( 'landing/rewards', {
+      layout: 'landing/layout'
+    }));
 
     app.get('/forgot-password', controllers.auth.forgotPassword);
     app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
@@ -35,15 +37,12 @@ module.exports.register = function(app) {
    * Restaurants resource.  The collection of all restaurants.
    */
 
-  app.get('/restaurants',
-    m.restrict(['client', 'restaurant', 'admin']),
-    function(req, res, next) {
-      if (req.query.edit) return next();
-      controllers.restaurants.list.apply(this, arguments);
-    }
+  app.get('/restaurants'
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , controllers.restaurants.list
   );
 
-  app.get('/restaurants', m.restrict('admin'), controllers.restaurants.editAll);
+  app.get('/restaurants/edit', m.restrict('admin'), controllers.restaurants.editAll);
 
   app.post('/restaurants', m.restrict('admin'), controllers.restaurants.create);
 
@@ -58,14 +57,12 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
-  app.get('/restaurants/:rid', m.restrict(['client', 'admin']), controllers.restaurants.orders.current);  // individual restaurant needs current order.
+  app.get('/restaurants/:rid', m.editOrderAuth, controllers.restaurants.orders.current);  // individual restaurant needs current order.
 
-  app.get('/restaurants/:rid', m.restrict(['client', 'admin']), function(req, res, next) {
-    if (req.query.edit) return next();
-    controllers.restaurants.get.apply(this, arguments);
-  });
-
-  //app.get('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.edit);
+  app.get('/restaurants/:rid'
+  , m.editOrderAuth
+  , m.restrict(['client', 'admin'])
+  , controllers.restaurants.get);
 
   app.put('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
 
@@ -97,6 +94,9 @@ module.exports.register = function(app) {
   app.get('/restaurants/:rid/edit/address', m.restrict('admin'), controllers.restaurants.edit.address);
 
   app.get('/restaurants/:rid/edit/menu', m.restrict('admin'), controllers.restaurants.edit.menu);
+
+  // app.get('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit);
+
 
   app.get('/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 
@@ -138,6 +138,11 @@ module.exports.register = function(app) {
     res.set('Allow', 'PUT', 'PATCH, DELETE');
     res.send(405);
   });
+
+  /**
+   * CSV Menu
+   */
+  app.get('/restaurants/:rid/menu.csv', m.restrict(['client', 'admin']), controllers.restaurants.menuCsv);
 
   /**
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
@@ -325,7 +330,7 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-  app.get('/receipts/order-:oid.pdf', m.buildReceipt(), express.static(__dirname + '/public'));
+  app.get('/receipts/order-:oid.pdf', m.buildReceipt());
 
   /**
    *  Order status resource.  The collection of all statuses on a single order.
@@ -349,9 +354,17 @@ module.exports.register = function(app) {
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
   app.get('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.orderItems.summary);  // not currently used
 
-  app.post('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.add);
+  app.post('/orders/:oid/items'
+  , m.editOrderAuth
+  , m.exists('creatorId', {
+      then: function(req, res, next) { next(); }
+    , else: m.restrict(['client', 'admin'])
+    })
+  , controllers.orders.editability
+  , controllers.orders.orderItems.add
+  );
 
-  app.all('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), function(req, res, next) {
+  app.all('/orders/:oid/items', function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -362,11 +375,19 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
 
-  app.put('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.put('/orders/:oid/items/:iid'
+  , m.editOrderAuth
+  , m.exists('creatorId', {
+      then: function(req, res, next) { next(); }
+    , else: m.restrict(['client', 'admin'])
+    })
+  , controllers.orders.editability
+  , controllers.orders.orderItems.update
+  );
 
-  app.patch('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.patch('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
 
-  app.del('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
+  app.del('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
 
   app.all('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
@@ -394,6 +415,25 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET');
     res.send(405);
   });
+
+  /**
+   * Reporting resource
+   */
+
+  app.get('/reports'
+  , m.restrict(['admin'])
+  , controllers.reports.index
+  );
+
+  app.post('/reports/orders'
+  , m.restrict(['admin'])
+  , controllers.reports.ordersCsv
+  );
+
+  app.post('/reports/users'
+  , m.restrict(['admin'])
+  , controllers.reports.usersCsv
+  );
 
   /**
    *  Auth page resource.  Simple static login/register page.
@@ -464,104 +504,110 @@ module.exports.register = function(app) {
    */
 
    app.all (/^\/users\/me(?:\/.*)?$/, function(req, res, next) {
-    if (!req.session.user) res.send(404);
-    else {
-      req.url = req.url.replace(/^\/users\/me/, '/users/' + req.session.user.id);
-      next();
-    }
+    if (!req.user) return m.owner()(req, res, next);
+    req.url = req.url.replace(/^\/users\/me/, '/users/' + req.user.attributes.id);
+    next();
   });
 
-  app.all(/^\/users\/(\d+)(?:\/.*)?$/, function(req, res, next) {
-    if (!req.session.user || (req.session.user.groups.indexOf('admin') === -1 && ''+req.params[0] !== ''+req.session.user.id))
-      res.send(404);
-    else
-      next();
-  });
+  app.before( m.owner(), function( app ){
+    app.get('/users/:uid', controllers.users.get);
 
-  app.get('/users/:uid', controllers.users.get);
+    var restrictUpdate = m.filterBody({
+      client: Models.User.ownerWritable
+    });
 
-  app.put('/users/:uid', controllers.users.update);
+    app.put('/users/:uid', restrictUpdate, controllers.users.update);
+    app.patch('/users/:uid', restrictUpdate, controllers.users.update);
 
-  app.del('/users/:uid', function(req, res) { res.send(501); });
+    app.del('/users/:uid', function(req, res) { res.send(501); });
 
-  app.all('/users/:uid', function(req, res, next) {
-    res.set('Allow', 'GET, PUT, DELETE');
-    res.send(405);
-  });
+    app.all('/users/:uid', function(req, res, next) {
+      res.set('Allow', 'GET, PUT, DELETE');
+      res.send(405);
+    });
 
-  /**
-   *  User Orders resource.  All the orders placed by an individual user.
-   */
+    /**
+     *  User Orders resource.  All the orders placed by an individual user.
+     */
 
-  app.get('/users/:uid/orders', controllers.users.listOrders);
+    app.get('/users/:uid/orders', controllers.users.listOrders);
 
-  app.all('/users/:uid', function(req, res, next) {
-    res.set('Allow', 'GET');
-    res.send(405);
-  });
+    app.all('/users/:uid', function(req, res, next) {
+      res.set('Allow', 'GET');
+      res.send(405);
+    });
 
-  /**
-   *  User Addresseses resource.
-   */
+    /**
+     * Loyalty
+     */
 
-  app.get('/users/:uid/addresses', controllers.users.addresses.list);
+    app.get('/users/:uid/rewards'
+    , controllers.users.rewards.list
+    );
 
-  app.post('/users/:uid/addresses', controllers.users.addresses.create);
+    /**
+     *  User Addresseses resource.
+     */
 
-  app.all('/users/:uid/addresses', function(req, res, next) {
-    res.set('Allow', 'GET', 'POST');
-    res.send(405);
-  });
+    app.get('/users/:uid/addresses', controllers.users.addresses.list);
 
-  /**
-   * User Address resource. Represents a single address per user
-   */
+    app.post('/users/:uid/addresses', controllers.users.addresses.create);
 
-  app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
+    app.all('/users/:uid/addresses', function(req, res, next) {
+      res.set('Allow', 'GET', 'POST');
+      res.send(405);
+    });
 
-  app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
+    /**
+     * User Address resource. Represents a single address per user
+     */
 
-  app.patch('/users/:uid/addresses/:aid', controllers.users.addresses.update);
+    app.get('/users/:uid/addresses/:aid', controllers.users.addresses.get);
 
-  app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
+    app.put('/users/:uid/addresses/:aid', controllers.users.addresses.update);
 
-  app.all('/users/:uid/addresses/:aid', function(req, res, next) {
-    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
-    res.send(405);
-  });
+    app.patch('/users/:uid/addresses/:aid', controllers.users.addresses.update);
 
-  /**
-   * User cards resource
-   */
+    app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
 
-  app.get('/users/:uid/cards', controllers.users.cards.list);
+    app.all('/users/:uid/addresses/:aid', function(req, res, next) {
+      res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
+      res.send(405);
+    });
 
-  app.post('/users/:uid/cards', controllers.users.cards.create);
+    /**
+     * User cards resource
+     */
 
-  app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
+    app.get('/users/:uid/cards', controllers.users.cards.list);
 
-  app.put('/users/:uid/cards/:cid', controllers.users.cards.update);
+    app.post('/users/:uid/cards', controllers.users.cards.create);
 
-  app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
+    app.get('/users/:uid/cards/:cid', controllers.users.cards.get);
 
-  app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
+    app.put('/users/:uid/cards/:cid', controllers.users.cards.update);
 
-  app.all('/users/:uid/cards/:cid', function(req, res, next) {
-    res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
-    res.send(405);
-  });
+    app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
 
-  /**
-   *  User session resource.  Represents a session as a specific user.
-   */
+    app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
 
-  app.get('/users/:uid/session', controllers.users.createSessionAs);
+    app.all('/users/:uid/cards/:cid', function(req, res, next) {
+      res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
+      res.send(405);
+    });
 
-  app.post('/users/:uid/session', controllers.users.createSessionAs);
+    /**
+     *  User session resource.  Represents a session as a specific user.
+     */
 
-  app.all('/users/:uid/session', function(req, res, next) {
-    res.set('Allow', 'GET', 'POST');
-    res.send(405);
+    app.get('/users/:uid/session', controllers.users.createSessionAs);
+
+    app.post('/users/:uid/session', controllers.users.createSessionAs);
+
+    app.all('/users/:uid/session', function(req, res, next) {
+      res.set('Allow', 'GET', 'POST');
+      res.send(405);
+    });
   });
 
   /**
@@ -616,4 +662,221 @@ module.exports.register = function(app) {
   );
 
   app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
+
+  app.get('/admin/restaurants/:id/payment-summaries'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
+      layout: 'admin/layout'
+    , method: 'findOne'
+    })
+  );
+
+  app.get('/admin/restaurants/:id/payment-summaries/:payment_summary_id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , function( req, res, next ){
+      res.locals.payment_summary_id = req.param('payment_summary_id');
+      return next();
+    }
+  , m.view( 'admin/restaurant-payment-summary', db.restaurants, {
+      layout: 'admin/layout'
+    , method: 'findOne'
+    })
+  );
+
+   app.get('/admin/restaurants/:restaurant_id/contacts'
+   , m.restrict(['admin'])
+   , m.param('restaurant_id')
+   , m.restaurant( {param: 'restaurant_id'} )
+   , m.view( 'restaurant/contacts', db.contacts, {
+       layout: 'admin/layout2'
+     , method: 'find'
+     })
+   );
+
+  app.get('/payment-summaries/ps-:psid.pdf'
+  , m.restrict(['admin'])
+  , controllers.paymentSummaries.getPdf
+  );
+
+  app.get( config.paymentSummaries.route
+  , m.basicAuth()
+  , m.restrict(['admin', 'pms'])
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.restaurant({ param: 'restaurant_id' })
+  , function( req, res, next ){
+      var $query = { payment_summary_id: req.param('id') };
+      db.payment_summary_items.find( $query, function( error, results ){
+        if ( error ) return res.error(500);
+
+        res.locals.payment_summary_items = results.map( function( r ){
+          return new PaymentSummaryItem( r ).toJSON();
+        });
+
+        next();
+      });
+    }
+  , m.view( 'invoice/payment-summary', db.payment_summaries, {
+      layout: 'invoice/payment-summary-layout'
+    , method: 'findOne'
+    })
+  );
+
+  // Not currently used
+  app.get('/api/users/:user_id/favorites/restaurants'
+  , m.owner( {param:'user_id'} )
+  , m.pagination()
+  , m.param('user_id')
+  , m.find( db.favorite_restaurants )
+  );
+
+  app.post('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.owner( {param:'user_id'} )
+  , m.queryToBody('user_id')
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.favorite_restaurants)
+  );
+
+  app.put('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.owner( {param:'user_id'} )
+  , m.queryToBody('user_id')
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.favorite_restaurants)
+  );
+
+  app.del('/api/users/:user_id/favorites/restaurants/:restaurant_id'
+  , m.owner( {param:'user_id'} )
+  , m.param('user_id')
+  , m.param('restaurant_id')
+  , m.remove( db.favorite_restaurants )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/orders'
+  , m.pagination()
+  , m.param('restaurant_id')
+  , controllers.restaurants.orders.listJSON
+  );
+
+  app.get('/api/restaurants/:restaurant_id/contacts'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.find( db.contacts )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/contacts'
+  , m.restrict( ['admin'] )
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.contacts )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/contacts/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.update( db.contacts )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/contacts/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.remove( db.contacts )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries'
+  , m.pagination()
+  , m.param('restaurant_id')
+  , m.find( db.payment_summaries )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/payment-summaries'
+    // Ensure restaurant ID in the URL is what is in the body
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.payment_summaries )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.findOne( db.payment_summaries )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.after( controllers.paymentSummaries.emitPaymentSummaryChange() )
+  , m.update( db.payment_summaries )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.remove( db.payment_summaries )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
+  , m.pagination()
+  , controllers.paymentSummaries.applyRestaurantId()
+  , m.param('payment_summary_id')
+  , m.find( db.payment_summary_items )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'
+  , m.queryToBody('payment_summary_id')
+  , m.after( controllers.paymentSummaries.emitPaymentSummaryChange() )
+  , m.insert( db.payment_summary_items )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , controllers.paymentSummaries.applyRestaurantId()
+  , m.param('payment_summary_id')
+  , m.param('id')
+  , m.findOne( db.payment_summary_items )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , controllers.paymentSummaries.applyRestaurantIdForNonJoins()
+  , m.param('payment_summary_id')
+  , m.param('id')
+  , m.after(
+      controllers.paymentSummaries.emitPaymentSummaryChange({ idField: 'payment_summary_id' })
+    )
+  , m.update( db.payment_summary_items )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  , controllers.paymentSummaries.applyRestaurantIdForNonJoins()
+  , m.param('payment_summary_id')
+  , m.param('id')
+  , m.after(
+      controllers.paymentSummaries.emitPaymentSummaryChange({ idField: 'payment_summary_id' })
+    )
+  , m.remove( db.payment_summary_items )
+  );
+
+  app.get('/api/orders/:oid/items'
+  , m.editOrderAuth
+  , m.exists('creatorId', {
+      then: function(req, res, next) { next(); }
+    , else: m.restrict(['client', 'admin'])
+    })
+  , controllers.orders.orderItems.list
+  );
+
+  app.post('/api/orders/:order_id/generate_edit_token'
+  , m.restrict(['client', 'admin'])
+  , controllers.orders.generateEditToken
+  );
+
+  /**
+   * Users
+   */
+
+  app.post('/api/users/:uid/rewards'
+  , m.restrict(['admin', 'client'])
+  , m.owner()
+  , controllers.users.rewards.redeem
+  );
 }

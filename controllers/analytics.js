@@ -31,8 +31,7 @@ module.exports.list = function( req, res ){
 
     // Sum order totals per period
     var periodTotal = result.reduce( function( memo, curr ) {
-      var orderTotal = hbHelpers.total( curr.sub_total, curr.restaurant.delivery_fee, curr.tip );
-      return memo + parseFloat( orderTotal );
+      return memo + parseFloat( hbHelpers.total( curr ) );
     }, 0);
 
     // Round to two decimal places
@@ -60,7 +59,6 @@ module.exports.list = function( req, res ){
   , where: {
       'status': 'accepted'
     }
-  , limit: 'all'
   , joins: {
       order_statuses : {
         type: 'left'
@@ -69,7 +67,7 @@ module.exports.list = function( req, res ){
             order_id: '$orders.id$'
           , 'order_statuses.status': 'submitted'
           }
-        }  
+        }
       }
     }
   , order: ['order_statuses.created_at desc nulls last']

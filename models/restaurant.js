@@ -3,7 +3,7 @@ var moment = require('moment-timezone');
 var Model = require('./model');
 var utils = require('../utils');
 
-module.exports = Model.extend({
+var Restaurant = module.exports = Model.extend({
   getCategories: function(callback) {
     var self = this;
     callback = callback || function() {};
@@ -148,12 +148,35 @@ module.exports = Model.extend({
     };
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
+    query.columns.push([
+      '(select array_to_json( array('
+    , '  select row_to_json( r ) as delivery_zips from ('
+    , '    select distinct on (fee) fee, array_agg(zip) over ( partition by fee ) as zips'
+    , '    from restaurant_delivery_zips'
+    , '    where restaurant_id = restaurants.id'
+    , '  ) r'
+    , ')) as delivery_zip_groups)'
+    ].join('\n'));
     query.columns.push("(SELECT array(SELECT tag FROM restaurant_tags WHERE restaurant_id = restaurants.id ORDER BY tag ASC)) AS tags");
     query.columns.push("(SELECT array(SELECT meal_type FROM restaurant_meal_types WHERE restaurant_id = restaurants.id ORDER BY meal_type ASC)) AS meal_types");
     query.columns.push("(SELECT array(SELECT meal_style FROM restaurant_meal_styles WHERE restaurant_id = restaurants.id ORDER BY meal_style ASC)) AS meal_styles");
     query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");
+    var feeCol = query.columns.push({
+      type: 'select'
+    , alias: 'delivery_fee'
+    , table: 'restaurant_delivery_zips'
+    , columns: ['fee']
+    , where: { restaurant_id:  '$restaurants.id$' }
+    , limit: 1
+    , order: 'fee asc'
+    }) - 1;
+
+    if ( orderParams && orderParams.zip ){
+      query.columns[ feeCol ].where.zip = orderParams.zip;
+    }
+
     query.joins.hours = {
       type: 'left'
     , target: 'dt'
@@ -314,16 +337,26 @@ module.exports = Model.extend({
       unacceptable.push('(guests.restaurant_id IS NULL)');
     }
 
+    // join user favorites
+    var favorites = utils.findWhere(query.includes, { type: 'favorites' } );
+    if ( favorites ) {
+      includeFavorites(query, favorites);
+    }
+
+    // filter favorites
+    if (favorites && orderParams && orderParams.favorites === 'true' ) {
+      query.where['ufr.user_id'] = favorites.userId;
+    }
+
     // Hide restaurants from listing if there's an event occurring
-    if ( utils.contains(query.includes, 'filter_restaurant_events') ) {
+    if ( utils.findWhere(query.includes, { type: 'filter_restaurant_events' } ) ) {
       filterRestaurantsByEvents(query, orderParams);
     }
 
     // Include restaurant event duration in result
-    if ( utils.contains(query.includes, 'closed_restaurant_events') ) {
+    if ( utils.findWhere(query.includes, { type: 'closed_restaurant_events' } ) ) {
       includeClosedRestaurantEvents(query, orderParams);
     }
-
 
     if (orderParams && (orderParams.date || orderParams.time)) {
       query.joins.delivery_times = {
@@ -382,6 +415,11 @@ module.exports = Model.extend({
 
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
 
+    var contactsInfo = ['sms_phones', 'voice_phones', 'emails'];
+    contactsInfo.forEach( function(type){
+      query.columns.push(Restaurant.getContactsInfo(type));
+    });
+
     Model.find.call(this, query, function(err, restaurants) {
       if (!err) {
         utils.invoke(restaurants, function() {
@@ -391,10 +429,36 @@ module.exports = Model.extend({
       return callback.call(this, err, restaurants);
     });
   },
+
+
+  /**
+   * @param {String} type is one of (sms_phones|voice_phones|emails)
+   */
+  getContactsInfo: function(type) {
+    var query = {
+      type: 'array'
+    , expression: {
+        type: 'select'
+      , columns: [
+          {
+            type: 'unnest'
+          , expression: 'contacts.' + type
+          }
+        ]
+      , table: 'contacts'
+      , where: {
+          'contacts.restaurant_id': '$restaurants.id$'
+        , 'contacts.notify': true
+        }
+      }
+    , as: type
+    };
+    return query;
+  }
 });
 
 /**
- * Remove restaurants from the result set if 
+ * Remove restaurants from the result set if
  * there is an active event going on
  *
  * @param {object} query - Query object to be modified
@@ -409,8 +473,8 @@ var filterRestaurantsByEvents = function(query, searchParams) {
   , 'table': 'restaurant_events'
   , 'columns': [ '*' ]
   , 'where': {
-      'during': { 
-        '$dateContains': searchParams && searchParams.date ? searchParams.date : 'now()' 
+      'during': {
+        '$dateContains': searchParams && searchParams.date ? searchParams.date : 'now()'
       }
     , 'closed': true
     }
@@ -451,3 +515,41 @@ var includeClosedRestaurantEvents = function(query, searchParams) {
   query.columns.push('(select array_to_json(array(select during from restaurant_events where restaurant_events.restaurant_id=restaurants.id) ) ) as event_date_ranges');
 }
 
+/**
+ * Join user's favorite restaurants
+ *
+ * @param {object} query
+ * @param {object} opts
+ */
+var includeFavorites = function(query, opts) {
+  query.with.user_fav_restaurants = {
+    type: 'select'
+  , table: 'favorite_restaurants'
+  , columns: [ '*' ]
+};
+
+  query.joins.user_fav_restaurants = {
+    type: 'left'
+  , alias: 'ufr'
+  , target: 'user_fav_restaurants'
+  , on: {
+      'restaurants.id': '$ufr.restaurant_id$'
+    }
+  };
+
+  // dear god..i just wanted to see if the user fav'd a restaurant
+  // exists(select 1 from user_fav_restaurants where user_id=$1 and restaurant_id=restaurants.id) as favorite
+  query.columns.push({
+    type: 'exists'
+  , expression: {
+      type: 'select'
+    , columns: [ { expression: '1'} ]
+    , table: 'user_fav_restaurants'
+    , where: {
+        user_id: opts.userId
+      , restaurant_id: '$restaurants.id$'
+      }
+    }
+  , as: 'favorite'
+  });
+};

@@ -76,7 +76,11 @@ module.exports.add = function(req, res, next) {
   models.Order.findOne(parseInt(req.params.oid), function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
-    var editable = utils.contains(req.session.user.groups, 'admin') || utils.contains(['pending', 'submitted'], order.attributes.status);
+    var editable = 
+      req.creatorId ||
+      utils.contains(req.session.user.groups, 'admin') || 
+      utils.contains(['pending', 'submitted'], order.attributes.status);
+
     if (!editable) return res.json(403, 'nope');
     models.Item.findOne(parseInt(req.body.item_id), function(err, item) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

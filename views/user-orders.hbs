@@ -1,7 +1,7 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/user-orders.css">
-<link rel="stylesheet" href="/components/fullcalendar/fullcalendar.css">
-<link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{cdn "/css/user-orders.css"}}">
+<link rel="stylesheet" href="{{cdn "/components/fullcalendar/fullcalendar.css"}}">
+<link rel="stylesheet" href="{{cdn "/components/font-awesome/css/font-awesome.min.css"}}">
 {{/extend}}
 
 {{#extend "title"}} - My Orders{{/extend}}
@@ -43,7 +43,7 @@
 
 {{#extend "scripts"}}
 <script>
-  define( 'data/orders', ['app/collections/orders'], 
+  define( 'data/orders', ['app/collections/orders'],
     function( Orders ) {
       return new Orders({{{ json orders }}});
     }

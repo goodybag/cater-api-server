@@ -1,0 +1,120 @@
+.page-rewards {
+  .marketing-points > .point {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+  .marketing-points .point p {
+    text-align: center;
+  }
+
+  #intro {
+    background: url('/img/rewards-intro-bg.png') no-repeat top;
+    padding-top: 100px;
+    padding-bottom: 50px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(0,0,0, 0.17);
+
+    h1 {
+      text-transform: uppercase;
+    }
+
+    h1 + p {
+      margin-top: 10px;
+    }
+
+    h1, h1 + p {
+      .animation( ease-out, 0.8s, slide-in-from-top );
+    }
+
+    .rewards-logo {
+      margin-top: 20px;
+      margin-bottom: 30px;
+      .animation( ease-out, 0.7s, slide-in-from-bottom );
+    }
+
+    @media screen and ( max-width: @breakpoint-mobile ){
+      padding-top: 50px;
+
+      .rewards-logo {
+        max-width: 140px;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  #section-how-it-works {
+
+  }
+
+  #section-rewards-screen {
+    @asparagus-bleed: 220px;
+
+    padding-bottom: 0;
+    overflow: hidden;
+
+    .container {
+      width: 640px;
+      @media screen and ( max-width: 640px ){
+        width: 100%;
+      }
+    }
+
+    .container:before {
+      content: "";
+      position: absolute;
+      left: -@asparagus-bleed;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      box-sizing: content-box;
+      padding-left: @asparagus-bleed;
+      padding-right: @asparagus-bleed;
+      background:
+        url('/img/asparagus_L.png') no-repeat left bottom
+      , url('/img/asparagus_R.png') no-repeat right bottom;
+    }
+
+    .section-header {
+      font-size: 2em;
+    }
+
+    .window-pane {
+      border-bottom: none;
+      .drop-shadow( 0, 0, 5px, 0.2 );
+
+      // Add arrow
+      &:after {
+        content: "";
+        position: absolute;
+        top: 30px;
+        right: -10px;
+        width: 98px;
+        height: 75px;
+        background: url('/img/red_arrow.png');
+
+        @media screen and ( max-width: @container-width ){
+          display: none;
+        }
+      }
+    }
+  }
+
+  #section-faqs {
+    overflow: hidden;
+
+    // Cake BG
+    .container:before {
+      content: "";
+      position: absolute;
+      top: 90px;
+      left: -410px;
+      width: 410px;
+      height: 377px;
+      background: url('/img/cake.png');
+    }
+
+    .faqs {
+      text-align: left;
+    }
+  }
+}

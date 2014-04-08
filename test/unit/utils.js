@@ -13,14 +13,19 @@ var tz = {
 describe('utils', function() {
   describe('saneDatetime()', function() {
     it('should return datetime during regular hours', function() {
-      var date = moment().hour(17); // 5pm central
+      var date = moment().hour(17);
       var result = utils.getSaneDatetime(date, tz.central);
+
+      // The following line is to model that the date is actually
+      // relative to the order timezone.
+      date = moment.tz(date, tz.central);
       assert.equal(result.toString(), date.toString());
     });
 
     it('should convert datetime during graveyard shift', function() {
       var date = moment().hour(3); // 3am central
       var result = utils.getSaneDatetime(date, tz.central);
+      date = moment.tz(date, tz.central);
       assert.equal(result.hour(), config.graveyard.end);
     });
 

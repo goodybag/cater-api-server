@@ -411,7 +411,7 @@ utils.queryParams = function(data){
  * @param {Date} datetime
  * @return moment object
  */
-utils.saneDatetime = function( datetime ){
+utils.getSaneDatetime = function( datetime ){
   datetime = moment(datetime).utc();
   var hour = datetime.hour();
 

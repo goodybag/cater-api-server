@@ -4,22 +4,24 @@
     <title>Goodybag.com</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="shortcut icon" href="{{cdn "favicon.ico"}}">
+
     <!-- Keep this up here! -->
     <!--[if lt IE 9]>
-    <script src="/components/html5shiv/dist/html5shiv.js"></script>
+    <script src="{{cdn "/components/html5shiv/dist/html5shiv.js"}}"></script>
     <![endif]-->
     <!--[if lte IE 9]>
-    <script src="/components/console-polyfill/index.js"></script>
+    <script src="{{cdn "/components/console-polyfill/index.js"}}"></script>
     <![endif]-->
 
-    <link rel="stylesheet" href="/css/gb-icon.css">
-    <link rel="stylesheet" href="/dist/landing.css">
+    <link rel="stylesheet" href="{{cdn "/css/gb-icon.css"}}">
+    <link rel="stylesheet" href="{{cdn "/dist/landing.css"}}">
 
     {{{block "css"}}}
 
     {{{block "head"}}}
     <!--[if lt IE 9]>
-    <link rel="stylesheet" href="/dist/landing-ielt9.css">
+    <link rel="stylesheet" href="{{cdn "/dist/landing-ielt9.css"}}">
     <![endif]-->
   </head>
   <body class="page {{{block "page"}}}">
@@ -44,12 +46,17 @@
     </script>
     {{/if}}
 
-    {{#if config.isProduction}}
-    <script src="/dist/landing.js"></script>
+    {{#unless config.isDev}}
+    <script src="{{cdn "dist/landing.js"}}"></script>
     {{else}}
     <script src="/components/requirejs/require.js"></script>
     <script src="/js/require-config.js"></script>
-    {{/if}}
+    {{/unless}}
+    <script>
+      require( ['config'], function( config ){
+        config.cdnBaseUrl = '{{{config.cdnBaseUrl}}}';
+      });
+    </script>
 
     {{> olark }}
 

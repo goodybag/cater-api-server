@@ -414,6 +414,19 @@ define(function(require, exports, module) {
       }
 
       return classList.join(' ');
+    },
+
+    cdn: function(){
+      // Just in case they pass in their own slash
+      for ( var key in arguments ){
+        if ( arguments[ key ][0] === '/' ){
+          arguments[ key ] = arguments[ key ].toString().substring(1);
+        }
+      }
+
+      return [ config.cdn.baseUrl ].concat(
+        Array.prototype.slice.call( arguments, 0, - 1 )
+      ).join('/');
     }
   }
 

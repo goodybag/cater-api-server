@@ -12,6 +12,7 @@ var
 , ironMQ = require('iron_mq')
 , rollbar = require("rollbar")
 , Handlebars = require('hbs')
+, moment = require('moment')
 
   // Module Dependencies
 , config = require('./config')
@@ -401,6 +402,27 @@ utils.queryParams = function(data){
     }
   }
   return params.substring(0, params.length - 1);
+};
+
+/**
+ * Return an appropriate datetime for customers/restaurant
+ * notifications. During graveyard shift, return next 
+ * morning datetime.
+ * @param {Date} datetime
+ * @return string
+ */
+utils.saneDatetime = function( datetime ){
+  datetime = moment(datetime).utc();
+  var hour = datetime.hour();
+
+  if ( hour >= config.graveYard.start && 
+       hour < config.graveYard.end ){
+    datetime.hour( config.graveYard.end );
+    datetime.minute(0);
+    datetime.second(0);
+  }
+
+  return datetime.toString();
 };
 
 module.exports = utils;

@@ -15,7 +15,7 @@ label {
 
 .page-auth {
   /*min-height: 814px;*/
-  background: url('/img/page-background.jpg');
+  background: url('../img/page-background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   padding: 0;

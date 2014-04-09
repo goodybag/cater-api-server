@@ -12,48 +12,63 @@ The typical use case will be:
 2. Scheduler polls for open jobs
 3. Consumers works jobs from the queue
 
-** Usage **
-
-In other processes, use the scheduler to queue jobs
-passing in data. Here's an example for phone notification
-scheduled sometime in the future.
-
-```
-scheduler.queue('restaurant:orderSubmitted', {
-  message: 'You have an order ready!'
-, deliverAt: moment().addDay(1)
-}, function(error) {
-  if (error) console.log('Could not schedule phone call');
-});
-```
-
-Then work on pending jobs in a cron task:
-```
-var scheduler = require('./scheduler')
-scheduler.work('restaurant:orderSubmitted', function(jobs, callback) {
-
-  // array of calling procedures
-  var calls = jobs.map( function(job) { return makeCall(job); });
-
-  // run procedures and callback
-  async.parallel(calls, callback);
-});
-
-```
 
 API
 ----
 
-### queue(action, consume)
-
-* `action` - string
-* `consume(data, callback)` - consumer function which is passed all pending
-jobs
-
-
-### schedule(action, data, [callback])
+### queue(action, data, [callback])
 
 * `action` - string
 * `data` - object
 * `callback(error)` - optional callback function indicating
 if scheduling was successful
+
+
+### work(action, consume, [callback])
+
+* `action` - string
+* `consume(error, data, next)` - iterator function for each job found per action
+* `callback` - optional callback function once all jobs are completed
+
+Example
+--------
+
+In this example, we will
+schedule an email to get delivered at a certain date. First, let's require
+the scheduler.
+
+```javascript
+var scheduler = require('./scheduler');
+```
+
+Now, let's use the scheduler to queue some data.
+
+```javascript
+scheduler.queue('send-email', {
+  to: 'john.doe@gmail.com'
+, from: 'preston@goodybag.com'
+, body: 'Reminder you have an order coming up!'
+, deliverAt: moment().addDay(1)
+});
+```
+
+Let's invoke the scheduler to work on an action. The second parameter of `work`
+is called upon every pending job. The next function will continue onto the next
+job until all other pending jobs have been completed. Passing an error to next
+will mark that job status 'failed'.
+
+```javascript
+// worker.js run as cron job
+sendMail = function(error, message, next) {
+  if (message.deliverAt <= now) {
+    return mailer.send(message, next);
+  } else {
+    next('Invalid job!');
+  }
+}
+
+scheduler.work('email', sendMail, function(error) {
+  if (error) return console.log(error);
+  console.log('Completed ' + results.length + ' email jobs')
+});
+```

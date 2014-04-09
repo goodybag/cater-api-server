@@ -1,44 +1,60 @@
 var db = require('../db');
+var utils = require('../utils');
 
-var Scheduler = function() {
-  this.actions = [];
-};
+var scheduler = {
+  queue: function(action, data, callback) {
+    if ( typeof action !== 'string') {
+      callback && callback('Invalid action type: ' + typeof action);
+    }
 
-Scheduler.prototype.schedule = function(action, data, callback) {
-  if ( typeof action !== 'string') {
-    callback && callback('Invalid action type: ' + typeof action);
+    var query = {
+      type: 'insert'
+    , table: 'scheduled_jobs'
+    , values: {
+        action: action
+      , data: data
+      , status: 'pending'
+      }
+    };
+    db.query2(query, function(error){
+      callback && callback(error);
+    });
+  },
+
+
+  work: function(action, consume, callback) {
+    // fetch actions not pending
+    var query = {
+      type: 'select'
+    , table: 'scheduled_jobs'
+    , where: {
+        action: action
+      , status: 'pending'
+      }
+    };
+
+    db.query2(query, function(error, results) {
+      if ( error ) return callback( error );
+
+      var jobs = results.map(function(job) {
+        return function(seriesDone) {
+          utils.async.series([
+            changeStatus('in-progress', job)
+          , function(next) { consume.call(this, null, job, next); }
+          , changeStatus('complete', job)
+          ], seriesDone);
+        };
+      });
+
+      // Run these jobs in parallel
+      utils.async.parallel(jobs, callback);
+    });
   }
-
-  var query = {
-    type: 'insert'
-  , table: 'scheduled_jobs'
-  , values: {
-      action: action
-    , data: data
-    , status: 'pending'
-    }
-  };
-  db.query2(query, function(error){
-    callback && callback(error);
-  });
 };
 
-Scheduler.prototype.work = function(action, consume) {
-  // fetch actions not pending
-  var query = {
-    type: 'select'
-  , table: 'scheduled_jobs'
-  , where: {
-      action: action
-    , status: 'pending'
-    }
+var changeStatus = function(status, job) {
+  return function(next) {
+    next(null);
   };
-
-  db.query2(query, function(error, results){
-    console.log(results);
-  });
-  // consume each row in parallel
-  // mark each job success or error
 };
-
-module.exports = new Scheduler();
+module.exports = scheduler;

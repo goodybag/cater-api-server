@@ -20,6 +20,14 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, deniedRecipents: [
+    'jag@goodybag.com'
+  , 'sarah.southwell@goodybag.com'
+  , 'om@goodybag.com'
+  , 'jay@goodybag.com'
+  , 'jacob.parker@goodybag.com'
+  ]
+
 , cdn: {
     baseUrl: 'http://localhost:3000'
     // If you want to test out uploading stuff to a CDN, but don't want

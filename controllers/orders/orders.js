@@ -246,7 +246,9 @@ module.exports.get = function(req, res) {
 
 module.exports.create = function(req, res) {
   var order = new models.Order(utils.extend({user_id: req.session.user.id}, req.body));
+  console.log('#### MODEL SAVE ####');
   order.save(function(err) {
+    console.log(err);
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(201, order.toJSON());
   });

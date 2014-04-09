@@ -2,7 +2,7 @@ var db = require('../db');
 var utils = require('../utils');
 
 var scheduler = {
-  queue: function(action, data, callback) {
+  queue: function(action, datetime, data, callback) {
     if ( typeof action !== 'string') {
       callback && callback('Invalid action type: ' + typeof action);
     }
@@ -14,6 +14,7 @@ var scheduler = {
         action: action
       , data: data
       , status: 'pending'
+      , datetime: datetime
       }
     };
     db.query2(query, function(error){
@@ -30,6 +31,9 @@ var scheduler = {
     , where: {
         action: action
       , status: 'pending'
+      , $lte: {
+        datetime: 'now()'
+        }
       }
     };
 

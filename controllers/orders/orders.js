@@ -385,7 +385,7 @@ module.exports.changeStatus = function(req, res) {
             + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
             + '\n' + url;
             utils.each(order.attributes.restaurant.sms_phones, function(sms_phone) {
-              twilio.sendSms({
+              utils.sendSms({
                 to: sms_phone,
                 from: config.phone.orders,
                 body: msg
@@ -400,7 +400,7 @@ module.exports.changeStatus = function(req, res) {
           logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
 
           utils.each(order.attributes.restaurant.voice_phones, function(voice_phone) {
-            twilio.makeCall({
+            utils.makeCall({
               to: voice_phone,
               from: config.phone.orders,
               url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',

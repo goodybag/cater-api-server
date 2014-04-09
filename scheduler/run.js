@@ -1,18 +1,32 @@
-var scheduler = require('../scheduler');
+var
+  config = require('../config')
+, scheduler = require('../scheduler')
+, twilio = require('twilio')(config.twilio.account, config.twilio.token)
+, moment = require('moment')
+;
 
 // Run all pending `test` jobs
-var consume = function(data, done) {
-  console.log('Consuming: ' + JSON.stringify(data));
-  // SEND EMAIL
+var makeCall = function(job, done) {
+  var deliverAt = moment(job.data.deliverAt);
+  delete job.data.deliverAt;
 
-  // CONTINUE TO NEXT JOB
+  if ( deliverAt <= moment() ) {
+    return twilio.makeCall(job.data, done);
+  } else {
+    // leave pending ??
+    done('call not ready until ' + deliverAt.toString());
+  }
+
   done();
 }
 
 var done = function(error, results) {
-  if (error) return console.log ('couldnt finish test job ' + error);
+  if (error) {
+    console.log ('couldnt finish test job ' + JSON.stringify(error));
+    process.exit(1);
+  }
   console.log('Completed ' + results.length + ' "test" jobs');
   process.exit(0);
 }
 
-scheduler.work('restaurant-submitted-orders', consume, done);
+scheduler.work('make-call', makeCall, done);

@@ -23,9 +23,10 @@ queues are namespaced by `action` name.
 API
 ----
 
-### queue(action, data, [callback])
+### queue(action, datetime, data, [callback])
 
 * `action` - string
+* `datetime` - timestamp to run
 * `data` - object
 * `callback(error)` - optional callback function indicating
 if scheduling was successful

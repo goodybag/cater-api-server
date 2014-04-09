@@ -1,6 +1,13 @@
 var
+
+
+  // Module Dependencies
+  config = require('./config')
+, errors = require('./errors')
+, scheduler = require('./scheduler')
+
   // Third Party Dependencies
-  lodash = require('lodash')
+,  lodash = require('lodash')
 , bcrypt = require('bcrypt')
 , ok = require('okay')
 , request = require('request')
@@ -12,10 +19,6 @@ var
 , ironMQ = require('iron_mq')
 , rollbar = require("rollbar")
 , Handlebars = require('hbs')
-
-  // Module Dependencies
-, config = require('./config')
-, errors = require('./errors')
 
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async})
@@ -401,6 +404,17 @@ utils.queryParams = function(data){
     }
   }
   return params.substring(0, params.length - 1);
+};
+
+utils.sendSms = function(options, callback){
+  // TODO account for graveyard shifts based on order z
+  var date = new Date();
+  scheduler.queue('send-sms', date, options, callback);
+};
+
+utils.makeCall = function(options, callback){
+  var date = new Date();
+  scheduler.queue('make-call', date, options, callback);
 };
 
 module.exports = utils;

@@ -76,9 +76,13 @@
             </div>
           </div>
         </a>
-        {{else}}
-        <h1 class="text-center">No Restaurants</h1>
         {{/each}}
+        {{#lte restaurants.length config.resultsTooFewContactUsThreshold}}
+          <div class="results-too-few">
+            <h4>Need more options?<br>We will help get your order placed today!</h4>
+            <p>Give us a call: {{phoneNumber config.phone.support}}</p>
+          </div>
+        {{/lte}}
       </div>
     </div>
   </div>

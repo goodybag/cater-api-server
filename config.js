@@ -20,6 +20,8 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, resultsTooFewContactUsThreshold: 5
+
 , cdn: {
     baseUrl: 'http://localhost:3000'
     // If you want to test out uploading stuff to a CDN, but don't want
@@ -347,8 +349,8 @@ config.production = {
 , isProduction: true
 
 , cdn: {
-    baseUrl: 'http://cater-cdn-prod.s3-website-us-east-1.amazonaws.com'
-  , bucket: 'cater-cdn-production'
+    baseUrl: 'https://s3.amazonaws.com/cater-cdn-prod'
+  , bucket: 'cater-cdn-prod'
   }
 
 , http: {

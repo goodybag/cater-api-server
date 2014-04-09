@@ -41,20 +41,26 @@ var scheduler = {
           utils.async.series([
             changeStatus('in-progress', job)
           , consume.bind(this, job)
-          , changeStatus('complete', job)
+          , changeStatus('completed', job)
           ], seriesDone);
         };
       });
 
       // Run these jobs in parallel
-      utils.async.parallel(jobs, callback);
+      utils.async.parallelNoBail(jobs, callback);
     });
   }
 };
 
 var changeStatus = function(status, job) {
   return function(next) {
-    next(null);
+    var query = {
+      type: 'update'
+    , table: 'scheduled_jobs'
+    , values: { status: status }
+    , where: { id: job.id }
+    };
+    db.query2(query, next);
   };
 };
 module.exports = scheduler;

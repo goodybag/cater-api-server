@@ -9,9 +9,16 @@ on a flexible json store.
 The typical use case will be:
 
 1. Producer queues job
-2. Scheduler polls for open jobs
+2. Scheduler polls for pending jobs
 3. Consumers works jobs from the queue
 
+### Jobs
+
+Jobs are just JSON blobs that are queued and removed from the scheduler. The
+queues are namespaced by `action` name.
+* action
+* data
+* status - one of pending, in-progress, completed, or failed
 
 API
 ----

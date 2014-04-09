@@ -12,7 +12,7 @@ var consume = function(data, done) {
 var done = function(error, results) {
   if (error) return console.log ('couldnt finish test job ' + error);
   console.log('Completed ' + results.length + ' "test" jobs');
+  process.exit(0);
 }
 
-// work(action, workerFn, callback)
-scheduler.work('test', consume, done);
+scheduler.work('restaurant-submitted-orders', consume, done);

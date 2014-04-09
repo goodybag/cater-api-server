@@ -72,4 +72,5 @@ module.exports = {
 , paymentmethod: 'payment_method'
 , paymenttype: 'payment_type'
 , paymentstatus: 'payment_status'
+, jobstatus: 'job_status'
 }

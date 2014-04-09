@@ -29,7 +29,7 @@ var upsert = function(table, values, where) {
   var query = {
     type: where != null ? 'update' : 'insert',
     table: table,
-    returning: '*'
+    returning: ['*']
   };
 
   if (where != null) query.where = utils.isObject(where) ? where : {id: where};

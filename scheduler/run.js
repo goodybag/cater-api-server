@@ -1,12 +1,12 @@
 var scheduler = require('../scheduler');
 
 // Run all pending `test` jobs
-var consume = function(error, data, done) {
+var consume = function(data, done) {
   console.log('Consuming: ' + JSON.stringify(data));
   // SEND EMAIL
 
   // CONTINUE TO NEXT JOB
-  done(error);
+  done();
 }
 
 var done = function(error, results) {

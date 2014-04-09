@@ -27,7 +27,7 @@ if scheduling was successful
 ### work(action, consume, [callback])
 
 * `action` - string
-* `consume(error, data, next)` - iterator function for each job found per action
+* `consume(data, next)` - iterator function for each job found per action
 * `callback` - optional callback function once all jobs are completed
 
 Example
@@ -67,7 +67,7 @@ sendMail = function(error, message, next) {
   }
 }
 
-scheduler.work('email', sendMail, function(error) {
+scheduler.work('send-email', sendMail, function(error) {
   if (error) return console.log(error);
   console.log('Completed ' + results.length + ' email jobs')
 });

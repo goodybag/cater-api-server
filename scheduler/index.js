@@ -40,7 +40,7 @@ var scheduler = {
         return function(seriesDone) {
           utils.async.series([
             changeStatus('in-progress', job)
-          , function(next) { consume.call(this, null, job, next); }
+          , consume.bind(this, job)
           , changeStatus('complete', job)
           ], seriesDone);
         };

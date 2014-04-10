@@ -19,9 +19,13 @@ var scheduler = new Scheduler();
 
 scheduler.on('email', function(job) {
   console.log(job.data);
-});
-scheduler.emit('email', {data: 'poop'});
 
-scheduler.queue('email', new Date(), { to: 'hop', from: 'doddy'}, function(err, result) {
-  console.log(arguments);
+  scheduler.changeJobStatus('failed', job, function() {console.log(arguments);});
 });
+//
+// scheduler.queue('email', new Date(), { to: 'hop', from: 'doddy'}, function(err, result) {
+//   console.log(arguments);
+// });
+
+
+scheduler.run('email');

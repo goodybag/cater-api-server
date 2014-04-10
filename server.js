@@ -5,7 +5,7 @@ var config  = require('./config');
 var rollbar = require('rollbar');
 
 process.on('uncaughtException', function(err) {
-  console.log('Uncaught Exception', err);
+  console.log('Uncaught Exception', err, err.stack);
   forky.disconnect();
   process.exit();
 });
@@ -21,12 +21,11 @@ var app = require('./app')
 require('./lib/events');
 
 // Require all order notification definitions
-fs.readDirSync('./lib/order-notifications').filter( function( f ){
-  return fs.statSync( path.join( './lib/order-notifications', f ) ).isFile();
-}).map( function( f ){
-  return path.join( './lib/order-notifications', f );
+var dir = path.resolve( __dirname, './lib/order-notifications' );
+fs.readdirSync( dir ).filter( function( f ){
+  return fs.statSync( path.join( dir, f ) ).isFile();
 }).forEach( function( f ){
-  require( f );
+  require( path.join( dir, f ) );
 });
 
 var server = http.createServer(app);

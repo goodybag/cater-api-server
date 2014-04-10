@@ -167,6 +167,7 @@ module.exports = function(grunt) {
     , { src: './public/css', dest: 'css', gzip: true }
     , { src: './public/img', dest: 'img', gzip: false }
     , { src: './public/font', dest: 'font', gzip: false }
+    , { src: './public/js/pdf', dest: 'pdf', gzip: false }
     , { src: './public/*', dest: '', gzip: false }
     , { src: './public/components/bootstrap/dist', dest: 'components/bootstrap/dist', gzip: true }
     , { src: './public/components/font-awesome/css', dest: 'components/font-awesome/css', gzip: true }

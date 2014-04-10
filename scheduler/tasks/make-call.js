@@ -1,6 +1,6 @@
 var
-  config = require('../config')
-, scheduler = require('../scheduler')
+  config = require('../../config')
+, scheduler = require('../../scheduler')
 , twilio = require('twilio')(config.twilio.account, config.twilio.token)
 , moment = require('moment')
 ;
@@ -14,7 +14,7 @@ var makeCall = function(job, done) {
 
 var done = function(error, results) {
   if (error) {
-    console.log('one or more jobs failed');
+    console.log('one or more jobs failed', results[0][1]);
     process.exit(1);
   }
   console.log('Completed ' + results.length + ' "make-call" jobs');

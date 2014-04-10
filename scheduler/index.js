@@ -16,9 +16,10 @@ var scheduler = {
       , status: 'pending'
       , datetime: datetime
       }
+    , returning: ['*']
     };
-    db.query2(query, function(error){
-      callback && callback(error);
+    db.query2(query, function(error, result){
+      callback && callback(error, result[0]);
     });
   },
 

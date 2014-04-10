@@ -9,7 +9,7 @@ begin
  -- Update version
  execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
- DROP TYPE IF EXISTS job_status;
+ DROP TYPE IF EXISTS job_status cascade;
  CREATE TYPE job_status AS ENUM('pending', 'in-progress', 'completed', 'failed');
 
  CREATE TABLE IF NOT EXISTS "scheduled_jobs" (

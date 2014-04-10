@@ -41,12 +41,11 @@ var scheduler = {
       if ( error ) return callback( error );
 
       var jobs = results.map(function(job) {
-        return function(seriesDone) {
+        return function(done) {
           utils.async.series([
             changeStatus('in-progress', job)
           , consume.bind(this, job)
-          , changeStatus('completed', job)
-          ], seriesDone);
+          ], completeJob.bind(this, done, job) );
         };
       });
 
@@ -56,6 +55,11 @@ var scheduler = {
   }
 };
 
+/**
+ * @param {String} job status
+ * @param {object} the job record
+ * @return {Function} returns async.series fn
+ */
 var changeStatus = function(status, job) {
   return function(next) {
     var query = {
@@ -67,4 +71,14 @@ var changeStatus = function(status, job) {
     db.query2(query, next);
   };
 };
+
+/**
+ * This updates the job status 'failed' or 'complete'
+ */
+var completeJob = function( done, job, error, results ){
+  changeStatus(error ? 'failed' : 'completed', job)(function(){
+    return done(error, results);
+  });
+};
+
 module.exports = scheduler;

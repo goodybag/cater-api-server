@@ -188,7 +188,7 @@
     {{/unless}}
     <script>
       require( ['config'], function( config ){
-        config.cdnBaseUrl = '{{{config.cdn.baseUrl}}}';
+        config.cdn = { baseUrl: '{{{config.cdn.baseUrl}}}' };
       });
     </script>
 

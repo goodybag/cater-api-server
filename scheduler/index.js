@@ -20,7 +20,7 @@ var scheduler = {
     , returning: ['*']
     };
     db.query2(query, function(error, result){
-      callback && callback(error, result[0]);
+      callback && callback(error, Array.isArray(result) ? result[0] : null);
     });
   },
 

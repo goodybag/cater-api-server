@@ -98,6 +98,14 @@ config.defaults = {
   , reviewThreshold: 3
   }
 
+
+, notifications: {
+    // appropriate hours to send notifications
+    // 7am-12am relative to order timezone
+    start: 7
+  , end: 24
+  }
+
 , outputActivePoolIds: false
 
 , baseUrl: 'http://cater.goodybag.com'

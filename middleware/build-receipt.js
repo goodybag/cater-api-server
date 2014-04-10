@@ -17,7 +17,7 @@ var config  = require('../config');
 var utils   = require('../utils');
 var logger  = require('../logger').receipt;
 
-var loggerTags = ['emailer'];
+var loggerTags = ['receipt', 'order'];
 
 [ 'debug', 'info', 'warn', 'error' ].forEach( function( level ){
   logger[ level ] = logger[ level ].bind( logger, loggerTags );
@@ -88,6 +88,7 @@ module.exports = function(){
         receipt.build( +req.param('oid'), function( error, result ){
           if ( error ){
             logger.error( 'Error building receipt #'  + req.param('oid'), error );
+            console.log('#######ERROR##########', error);
 
             if ( 'httpStatus' in error && error.httpStatus === 404 ){
               return res.status(404).render('404');

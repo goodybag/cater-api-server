@@ -414,6 +414,7 @@ utils.sendSms = function(options, callback){
 
 utils.makeCall = function(date, options, callback){
   console.log('MAKING CALLLLL', arguments);
+  date = new Date();
   scheduler.queue('make-call', date, options, callback);
 };
 

@@ -17,15 +17,19 @@
 var Scheduler = require('./lib/scheduler');
 var scheduler = new Scheduler();
 
-scheduler.on('email', function(job) {
+scheduler.on('make-call', function(job) {
   console.log(job.data);
+
 
   scheduler.changeJobStatus('failed', job, function() {console.log(arguments);});
 });
+
+scheduler.run('make-call');
 //
-// scheduler.queue('email', new Date(), { to: 'hop', from: 'doddy'}, function(err, result) {
-//   console.log(arguments);
-// });
-
-
-scheduler.run('email');
+// scheduler.queue('make-call', new Date(), { to: '7135178077',
+//      from: '5122706333',
+//      url: 'http://localhost:3000/orders/851/voice',
+//      ifMachine: 'Continue',
+//      method: 'GET' }, function() {
+//        console.log(arguments);
+//      });

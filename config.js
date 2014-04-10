@@ -20,7 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
-, deniedRecipents: [
+, deniedRecipients: [
     'jag@goodybag.com'
   , 'sarah.southwell@goodybag.com'
   , 'om@goodybag.com'

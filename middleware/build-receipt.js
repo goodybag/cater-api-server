@@ -15,6 +15,13 @@ var fs      = require('fs');
 var receipt = require('../lib/receipt');
 var config  = require('../config');
 var utils   = require('../utils');
+var logger  = require('../logger').receipt;
+
+var loggerTags = ['receipt', 'order'];
+
+[ 'debug', 'info', 'warn', 'error' ].forEach( function( level ){
+  logger[ level ] = logger[ level ].bind( logger, loggerTags );
+});
 
 module.exports = function(){
   return function( req, res, next ){
@@ -51,6 +58,8 @@ module.exports = function(){
       // Also, go ahead and just pipe the response to the client
     , 'checkS3':
       function( stage, done ){
+        logger.info( 'checking S3 for receipt #' + req.param('oid') );
+
         receipt.get( req.param('oid'), function( error, fileRes ){
           if ( error ) return stage('buildReceipt');
 
@@ -66,6 +75,8 @@ module.exports = function(){
             receipt.getFullOrderPath( req.param('oid') )
           );
 
+          logger.info( 'Sending receipt #'  + req.param('oid') );
+
           fileRes.pipe( res );
           fileRes.pipe( receiptFileStream );
         });
@@ -73,8 +84,12 @@ module.exports = function(){
 
     , 'buildReceipt':
       function( stage, done ){
+        logger.info( 'Building receipt #' + req.param('oid') );
         receipt.build( +req.param('oid'), function( error, result ){
           if ( error ){
+            logger.error( 'Error building receipt #'  + req.param('oid'), error );
+            console.log('#######ERROR##########', error);
+
             if ( 'httpStatus' in error && error.httpStatus === 404 ){
               return res.status(404).render('404');
             }
@@ -88,6 +103,8 @@ module.exports = function(){
 
     , 'sendFile':
       function( stage, done ){
+        logger.info( 'Sending receipt #'  + req.param('oid') );
+
         fs.createReadStream(
           receipt.getFullOrderPath( req.param('oid') )
         ).pipe( res );

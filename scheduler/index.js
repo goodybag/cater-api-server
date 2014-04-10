@@ -1,5 +1,6 @@
 var db = require('../db');
 var utils = require('../utils');
+var logger = require('../logger').scheduler;
 
 var scheduler = {
   queue: function(action, datetime, data, callback) {
@@ -77,6 +78,9 @@ var changeStatus = function(status, job) {
  * This updates the job status 'failed' or 'complete'
  */
 var completeJob = function( done, job, error, results ){
+  if (error) {
+    logger.info('Scheduled job failed', job);
+  }
   changeStatus(error ? 'failed' : 'completed', job)(function(){
     return done(error, results);
   });

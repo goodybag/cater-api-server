@@ -13,12 +13,8 @@ var makeCall = function(job, done) {
 };
 
 var done = function(error, results) {
-  if (error) {
-    console.log('one or more jobs failed', results[0][1]);
-    process.exit(1);
-  }
-  console.log('Completed ' + results.length + ' "make-call" jobs');
-  process.exit(0);
+  console.log('completed ' + results.length + ' "make-call" jobs');
+  process.exit(error ? 1 : 0);
 };
 
 scheduler.work('make-call', makeCall, done);

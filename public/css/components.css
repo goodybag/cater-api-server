@@ -206,8 +206,20 @@
 }
 
 .navbar .contact-info {
-  padding-top: 15px;
-  padding-bottom: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+.navbar .contact-info .help-text {
+  font-weight: 700;
+}
+
+@media screen and ( max-width: 982px ){
+  .navbar .contact-info .help-text {
+    display: none;
+  }
 }
 
 .nav .caret {
@@ -870,41 +882,41 @@ a.list-group-item .list-group-item-heading {
 }
 
 .tag-gluten-free {
-  background: url('/img/01_gluten.svg');
+  background: url('../img/01_gluten.svg');
   background-size: 20px 20px;
 }
 
 .tag-vegan {
-  background: url('/img/02_vegan.svg');
+  background: url('../img/02_vegan.svg');
   background-size: 20px 20px;
 }
 
 .tag-vegetarian {
-  background: url('/img/03_vegetarian.svg');
+  background: url('../img/03_vegetarian.svg');
   background-size: 20px 20px;
 }
 
 .tag-kosher {
-  background: url('/img/04_kosher.svg');
+  background: url('../img/04_kosher.svg');
   background-size: 20px 20px;
 }
 
 .tag-halal {
-  background: url('/img/05_halal.svg');
+  background: url('../img/05_halal.svg');
   background-size: 20px 20px;
 }
 
 .tag-dairy-free {
-  background: url('/img/06_dairy.svg');
+  background: url('../img/06_dairy.svg');
   background-size: 20px 20px;
 }
 
 .tag-nuts {
-  background: url('/img/07_nuts.svg');
+  background: url('../img/07_nuts.svg');
   background-size: 20px 20px;
 }
 .tag-spicy {
-  background: url('/img/08_spicy.svg');
+  background: url('../img/08_spicy.svg');
   background-size: 20px 20px;
 }
 
@@ -1006,17 +1018,17 @@ a.list-group-item .list-group-item-heading {
  */
 
 .cc-visa {
-  background: url(/img/credit-cards/visa.png) #fff no-repeat right;
+  background: url(../img/credit-cards/visa.png) #fff no-repeat right;
 }
 
 .cc-master {
-  background: url(/img/credit-cards/master.png) #fff no-repeat right;
+  background: url(../img/credit-cards/master.png) #fff no-repeat right;
 }
 
 .cc-amex {
-  background: url(/img/credit-cards/amex.png) #fff no-repeat right;
+  background: url(../img/credit-cards/amex.png) #fff no-repeat right;
 }
 
 .cc-discover {
-  background: url(/img/credit-cards/discover.png) #fff no-repeat right;
+  background: url(../img/credit-cards/discover.png) #fff no-repeat right;
 }

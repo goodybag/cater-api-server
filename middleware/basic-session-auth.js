@@ -7,6 +7,7 @@
 
 var express = require('express');
 var auth    = require('../lib/auth');
+var Models  = require('../models');
 
 var basic   = express.basicAuth( auth );
 
@@ -18,6 +19,7 @@ module.exports = function(){
     // so override next and capture the value on session
     basic( req, res, function(){
       req.session.user = req.user;
+      req.user = new Models.User( req.user );
       next();
     });
   };

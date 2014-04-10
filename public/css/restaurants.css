@@ -10,6 +10,7 @@ a.list-group-item-restaurant .list-group-item-heading {
 
 .back-to-results-wrapper {
   margin-bottom: 12px;
+  margin-top: 12px;
 }
 
 .list-group-restaurants .logo-wrapper {
@@ -95,4 +96,8 @@ a.list-group-item:hover + a.list-group-item {
 
 .page-restaurants .btn-favorite:hover {
   border: 1px solid #dc1709;
+}
+
+.results-too-few {
+  text-align: center;
 }

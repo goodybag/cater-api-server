@@ -19,7 +19,7 @@
  * Banner
  */
 .contact-us-banner {
-  background-image: url('/img/page-background.jpg');
+  background-image: url('../img/page-background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position-y: -38px;
@@ -50,7 +50,7 @@
   padding-left: 20px;
 }
 
-/** 
+/**
  * Icons
  */
 
@@ -75,7 +75,7 @@
   font-weight: 300;
 }
 
-/** 
+/**
  * Contact form
  */
 

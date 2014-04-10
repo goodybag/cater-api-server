@@ -1,15 +1,17 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <link rel="stylesheet" href="{{cdn "/css/proxima-nova.css"}}">
-    <link rel="stylesheet" href="{{cdn "/css/pdf.css"}}">
-    <link rel="stylesheet" href="{{cdn "/css/invoice.css"}}">
-    <link rel="stylesheet" href="{{cdn "/css/payment-summary-pdf.css"}}">
+    <link rel="stylesheet" href="/css/proxima-nova.css">
+    <link rel="stylesheet" href="/css/pdf.css">
+    <link rel="stylesheet" href="/css/invoice.css">
+    <link rel="stylesheet" href="/css/payment-summary-pdf.css">
     {{{block "css"}}}
 
-    <script src="{{cdn "/components/jquery/jquery.js"}}"></script>
-    <script src="{{cdn "/js/pdf/utils.js"}}"></script>
-    <script src="{{cdn "/js/pdf/payment-summary.js"}}"></script>
+    <script src="/components/jquery/jquery.js"></script>
+
+    {{!-- Cannot find out why file is forbidden in s3 --}}
+    <script src="/js/pdf/utils.js"></script>
+    <script src="/js/pdf/payment-summary.js"></script>
     {{{block "scripts"}}}
   </head>
   <body>

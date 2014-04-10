@@ -60,7 +60,7 @@ utils.extend(Model.prototype, {
     var defaults = {
       type: id ? 'update' : 'insert',
       table: this.constructor.table,
-      returning: '*',
+      returning: ['*'],
       values: attrs
     };
 
@@ -137,7 +137,7 @@ Model.findOne = function(query, callback, client) {
 };
 
 Model.defaultUpdateQuery = {
-  returning: '*'
+  returning: ['*']
 };
 
 Model.update = function(query, callback, client) {
@@ -165,7 +165,7 @@ Model.create = function(query, callback, client) {
     table: this.table
   };
 
-  var defaults = { returning: '*' };
+  var defaults = { returning: ['*'] };
 
   var sql = db.builder.sql(utils.defaults(utils.extend({}, query, constants), defaults));
   var self = this;

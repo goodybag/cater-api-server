@@ -82,7 +82,11 @@
             {{#if restaurant.delivery_fee}}
             <div class="restaurant-info-item restaurant-info-item-categories">
               <h4 class="info-item-title">Delivery Charge:</h4>
+              {{#unless order.zip}}
               <div class="info-item-value">Starting from: ${{dollars restaurant.delivery_fee}}</div>
+              {{else}}
+              <div class="info-item-value">${{dollars restaurant.delivery_fee}}</div>
+              {{/unless}}
             </div>
             {{/if}}
 

@@ -15,4 +15,10 @@ scheduler.registerAction('make-call', function(job, done) {
   });
 });
 
+scheduler.registerAction('send-sms', function(job, done) {
+  twilio.sendSms(job.data, function(error) {
+
+  });
+});
+
 module.exports = scheduler.actions;

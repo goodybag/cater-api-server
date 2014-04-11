@@ -1,5 +1,5 @@
 Scheduler
----------
+=========
 
 The scheduler is an abstraction for declaring action workflows.
 You can then queue and process jobs against these actions.
@@ -7,7 +7,8 @@ You can then queue and process jobs against these actions.
 Note that the scheduler module is a singleton, so be mindful to
 declare actions before attempting to work on them.
 
-### Usage
+Usage
+=====
 
 Declare scheduled actions.
 
@@ -54,34 +55,46 @@ cron.add('0 * * * * *', function() {
 });
 ```
 
-### API
+API
+===
 
-__Job objects__
+.registerAction(action, fn)
+--------------------------
 
-Each job describes some data and when to run.
+Register a new action workflow. The work function has the signature `fn(job, done)`.
+Once the job is complete, run the `done` function with either 'failed' or
+'complete'.
+
+.enqueue(action, datetime, data, [callback])
+-------------------------------------------
+
+Places a new job on the queue. An optional `callback(error, job)` can be
+specified.
+
+.run(action)
+-----------
+
+Runs all pending jobs of this particular action.
+
+.runAll()
+--------
+
+Runs all pending jobs.
+
+Job object
+==========
+
+Each job describes some data and when to run. Using `.enqueue()` builds
+a new job, whereas `.registerAction()` lets you consume the job data.
+
+Jobs contain:
 
  * id
  * datetime
  * data
  * status (pending|in-progress|completed|failed)
 
-__registerAction(action, fn)__
-  * fn(job, done) - This is the action work function. Once all
-  work is complete, run the `done` function with either 'failed' or
-  'complete'.
-
-__enqueue(action, datetime, data, [callback])__
-
-Places a new job on the queue.
-
-__run(action)__
-
-Runs all pending jobs of this particular action.
-
-__runAll()__
-
-Runs all pending jobs.
-
-### Future plans
+Future plans
+============
 
 * Monitor jobs page

@@ -8,16 +8,15 @@ scheduler.registerAction('make-call', function(job, done) {
   // twilio.makeCall(job.data, function(error) {
   //   if (error) {
   //     logger.error('Could not place call for job #' + job.id, error);
-  //     done('failed');
   //   } else {
   //     logger.info('Made call successfully', job);
-  //     done('completed');
   //   }
+  //   done(error);
   // });
 });
 
 scheduler.registerAction('send-sms', function(job, done) {
-  done('completed');
+  done(null);
   // twilio.sendSms(job.data, function(error) {
   //
   // });

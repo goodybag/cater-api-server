@@ -395,6 +395,11 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+  app.get('/orders/:oid/notifications/:nid'
+  , m.restrict(['admin'])
+  , controllers.orders.notifications.getEmail
+  );
+
   /**
    * Reporting resource
    */
@@ -847,6 +852,16 @@ module.exports.register = function(app) {
   app.post('/api/orders/:order_id/generate_edit_token'
   , m.restrict(['client', 'admin'])
   , controllers.orders.generateEditToken
+  );
+
+  app.get('/api/orders/:oid/notifications'
+  , m.restrict(['admin'])
+  , controllers.orders.notifications.JSON.list
+  );
+
+  app.get('/api/orders/:oid/notifications-history'
+  , m.restrict(['admin'])
+  , controllers.orders.notifications.JSON.history
   );
 
   /**

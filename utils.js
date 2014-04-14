@@ -19,6 +19,7 @@ var
 , ironMQ = require('iron_mq')
 , rollbar = require("rollbar")
 , Handlebars = require('hbs')
+, moment = require('moment-timezone')
 
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async})
@@ -406,16 +407,26 @@ utils.queryParams = function(data){
   return params.substring(0, params.length - 1);
 };
 
+/* Not in use .. yet hehehe
 utils.sendSms = function(options, callback){
-  // TODO account for graveyard shifts based on order z
-  var date = new Date();
-  scheduler.queue('send-sms', date, options, callback);
+  scheduler.enqueue('send-sms', date, options, callback);
 };
+*/
 
 utils.makeCall = function(date, options, callback){
-  console.log('MAKING CALLLLL', arguments);
-  date = new Date();
-  scheduler.queue('make-call', date, options, callback);
+  scheduler.enqueue('make-call', date, options, callback);
+};
+
+// sanitize notification times so they're during work hours
+utils.getWorkingTime = function( datetime, timezone ){
+  datetime = moment(datetime).tz(timezone);
+  if ( datetime.hour() < config.notifications.start ){
+    datetime
+      .hour( config.notifications.start )
+      .minute( 0 )
+      .second( 0 );
+  }
+  return datetime.toISOString();
 };
 
 module.exports = utils;

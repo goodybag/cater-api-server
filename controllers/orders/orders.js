@@ -372,37 +372,33 @@ module.exports.changeStatus = function(req, res) {
           });
         });
 
-        // if (order.attributes.restaurant.sms_phones) {
-        //   logger.routes.info(TAGS, "shortening url and sending sms for order: " + order.attributes.id);
-        //   var url = config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token;
-        //
-        //   // shorten URL
-        //   bitly.shorten(url, function(err, response) {
-        //     if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);
-        //     url = ((response||0).data||0).url || url;
-        //     // send sms
-        //     var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
-        //     + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
-        //     + '\n' + url;
-        //     utils.each(order.attributes.restaurant.sms_phones, function(sms_phone) {
-        //       utils.sendSms({
-        //         to: sms_phone,
-        //         from: config.phone.orders,
-        //         body: msg
-        //       }, function(err, result) {
-        //         if (err) logger.routes.error(TAGS, 'unable to send SMS', err);
-        //       });
-        //     });
-        //   });
-        // }
+        if (order.attributes.restaurant.sms_phones) {
+          logger.routes.info(TAGS, "shortening url and sending sms for order: " + order.attributes.id);
+          var url = config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token;
+        
+          // shorten URL
+          bitly.shorten(url, function(err, response) {
+            if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);
+            url = ((response||0).data||0).url || url;
+            // send sms
+            var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
+            + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
+            + '\n' + url;
+            utils.each(order.attributes.restaurant.sms_phones, function(sms_phone) {
+              twilio.sendSms({
+                to: sms_phone,
+                from: config.phone.orders,
+                body: msg
+              }, function(err, result) {
+                if (err) logger.routes.error(TAGS, 'unable to send SMS', err);
+              });
+            });
+          });
+        }
 
         if (order.attributes.restaurant.voice_phones) {
           logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
-          var timezone = order.attributes.timezone;
-          var datetime = moment().tz(timezone); // check if current time + order timezone is good to send
-          if (datetime.hour() < config.notifications.start) {
-            datetime.hour(config.notifications.start);
-          }
+          var datetime = utils.getWorkingTime(moment(), order.attributes.timezone);
           utils.each(order.attributes.restaurant.voice_phones, function(voice_phone) {
             utils.makeCall(datetime.toString(), {
               to: voice_phone,
@@ -411,8 +407,7 @@ module.exports.changeStatus = function(req, res) {
               ifMachine: 'Continue',
               method: 'GET'
             }, function(err, result) {
-              console.log('ERROR', err);
-              // if (err) logger.routes.error(TAGS, 'unable to place call', err);
+              if (err) logger.routes.error(TAGS, 'unable to place call', err);
             });
           });
         }

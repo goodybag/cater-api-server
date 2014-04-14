@@ -24,6 +24,8 @@ require('./lib/events');
 var dir = path.resolve( __dirname, './lib/order-notifications' );
 fs.readdirSync( dir ).filter( function( f ){
   return fs.statSync( path.join( dir, f ) ).isFile();
+}).filter( function( f ){
+  return f.slice(-3) === '.js';
 }).forEach( function( f ){
   require( path.join( dir, f ) );
 });

@@ -43,16 +43,24 @@ scheduler.enqueue('make-call', moment().addDay(1), {
 Then in the worker script, embed a cron style runner
 
 ```javascript
-var cron = require('crontab');
-var scheduler = require('../lib/scheduler');
+var reporter = require('../../lib/stats-reporter');
+var scheduler = require('../../lib/scheduler');
 
-cron.add('0 * * * * *', function() {
-  // Run all tasks
-  scheduler.runAll();
-
-  // or individual tasks
-  scheduler.run('make-call');
+scheduler.runAll( function( errors, stats ){
+  reporter.logResults( errors, stats );
+  process.exit(0);
 });
+```
+
+The worker will print
+
+```
+################################################################################
+# make-call
+################################################################################
+  * Jobs Started     : 1
+  * Jobs Completed   : 1
+  * Jobs Failed      : 0
 ```
 
 API
@@ -62,8 +70,8 @@ API
 --------------------------
 
 Register a new action workflow. The work function has the signature `fn(job, done)`.
-Once the job is complete, run the `done` function with either 'failed' or
-'complete'.
+Once the job is complete, run the `done` function with either an error or null
+to mark status 'failed' or 'completed', respectively.
 
 .enqueue(action, datetime, data, [callback])
 -------------------------------------------
@@ -102,7 +110,7 @@ Stats object
 ============
 
 The methods `run()` and `runAll()` may specify a callback method exposing
-a stats object. The stats tally jobs that have:
+a stats object:
 
  * started
  * completed

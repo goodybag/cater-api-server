@@ -83,7 +83,9 @@
     "selenium-webdriver": "~2.40.0",
     "leFunc": "~1.2.0",
     "wrench": "~1.5.8",
-    "grunt-s3": "~0.2.0-alpha.3"
+    "grunt-s3": "~0.2.0-alpha.3",
+    "cron": "^1.0.4",
+    "time": "^0.10.0"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

@@ -104,6 +104,8 @@ config.defaults = {
     // 7am-12am relative to order timezone
     start: 7
   , end: 24
+  , cron: '0 * * * * *'
+  , tz: 'America/Chicago'
   }
 
 , outputActivePoolIds: false

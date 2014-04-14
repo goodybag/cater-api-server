@@ -71,15 +71,19 @@ Once the job is complete, run the `done` function with either 'failed' or
 Places a new job on the queue. An optional `callback(error, job)` can be
 specified.
 
-.run(action)
+.run(action, callback)
 -----------
 
 Runs all pending jobs of this particular action.
 
-.runAll()
+* callback(err, stats)
+
+.runAll(callback)
 --------
 
 Runs all pending jobs.
+
+* callback(err, stats)
 
 Job object
 ==========
@@ -93,6 +97,16 @@ Jobs contain:
  * datetime
  * data
  * status (pending|in-progress|completed|failed)
+
+Stats object
+============
+
+The methods `run()` and `runAll()` may specify a callback method exposing
+a stats object. The stats tally jobs that have:
+
+ * started
+ * completed
+ * failed
 
 Future plans
 ============

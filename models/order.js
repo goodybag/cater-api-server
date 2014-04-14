@@ -655,6 +655,7 @@ module.exports = Model.extend({
       module.exports.prototype.getDeliveryFeeQuery.call({
         attributes: {
           restaurant_id: query.where.restaurant_id || '$orders.restaurant_id$'
+        , zip: '$orders.zip$'
         }
       })
     );

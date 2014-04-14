@@ -4,22 +4,21 @@ var scheduler = require('../../lib/scheduler');
 var logger = require('../../logger').scheduler;
 
 scheduler.registerAction('make-call', function(job, done) {
-  done('failed');
-  // twilio.makeCall(job.data, function(error) {
-  //   if (error) {
-  //     logger.error('Could not place call for job #' + job.id, error);
-  //   } else {
-  //     logger.info('Made call successfully', job);
-  //   }
-  //   done(error);
-  // });
+  twilio.makeCall(job.data, function(error) {
+    if (error) {
+      logger.error('Could not place call for job #' + job.id, error);
+    }
+    done(error);
+  });
 });
 
 scheduler.registerAction('send-sms', function(job, done) {
-  done(null);
-  // twilio.sendSms(job.data, function(error) {
-  //
-  // });
+  twilio.sendSms(job.data, function(error) {
+    if ( error ) {
+      logger.error('Could not send sms for job #' + job.id, error);
+    }
+    done(error);
+  });
 });
 
 module.exports = scheduler.actions;

@@ -177,7 +177,7 @@ module.exports.editRestaurant = function(template) {
         utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
         
         res.render(template, {
-          layout: 'landing/layout'
+          layout: 'admin/layout2'
         , restaurant: restaurant.toJSON()
         , active_tab: template.replace('restaurant/edit-', '')
         });

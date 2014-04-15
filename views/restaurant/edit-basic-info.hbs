@@ -1,7 +1,6 @@
 {{#extend "body"}}
 
 <div class="restaurant-edit">
-  {{> navbar_logged_in }}
   <div class="container">
   <h1>Editing {{restaurant.name}}</h1>
     {{> restaurant_edit_nav }}
@@ -38,6 +37,22 @@
           </label>
         </div>
 
+        <div class="form-group">
+          <div class="row">
+            <div class="col-3">
+              <label class="control-label">Logo</label>
+              <input type="filepicker" class="form-control" name="logo_url" value="{{restaurant.logo_url}}">
+              <img class="restaurant-logo-img" data-name="logo_url"
+                src="{{#if restaurant.logo_url}}{{restaurant.logo_url}}{{else}}{{config.defaultLogo}}{{/if}}">
+            </div>
+            <div class="col-3">
+              <label class="control-label">Monochromatic Logo</label>
+              <input type="filepicker" class="form-control" name="logo_mono_url" value="{{restaurant.logo_mono_url}}">
+              <img class="restaurant-logo-img" data-name="logo_mono_url"
+                src="{{#if restaurant.logo_mono_url}}{{restaurant.logo_mono_url}}{{else}}{{config.defaultMonoLogo}}{{/if}}">
+            </div>
+          </div>
+        </div>
         <div class="actions">
           <button class="btn btn-primary" type="submit">Update</button>
         </div>

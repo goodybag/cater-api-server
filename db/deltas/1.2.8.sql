@@ -13,6 +13,9 @@ begin
 
   create table if not exists "order_notifications" (
     "id"            serial
+
+    -- Registered text ID of notification
+  , "nid"           text not null
   , "order_id"      int references orders( id ) on delete set null
   , "email"         json
   , "send_date"     timestamp not null default now()

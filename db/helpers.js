@@ -9,6 +9,8 @@ var utils       = require('../utils');
 var mosql2 = require('../node_modules/dirac/node_modules/mongo-sql');
 Object.keys( mosql ).filter( function( key ){
   return typeof mosql[ key ] === 'function';
+}).filter( function( key ){
+  return key.indexOf('register') > -1;
 }).forEach( function( key ){
   var fn = mosql[ key ];
   mosql[ key ] = function(){
@@ -287,6 +289,12 @@ dirac.use( function(){
 
 // Log queries to dirac
 // dirac.use( function(){
+//   var query = dirac.DAL.prototype.query;
+//   dirac.DAL.prototype.query = function( query, callback ){
+//     console.log( query );
+//     return query.apply( this, arguments );
+//   };
+
 //   var raw = dirac.DAL.prototype.raw;
 //   dirac.DAL.prototype.raw = function( query, values, callback ){
 //     console.log( query, values );

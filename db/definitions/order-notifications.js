@@ -18,6 +18,7 @@ define(function(require) {
 
   definition.schema = {
     id:           { type: types.serial, pk: true }
+  , nid:          { type: types.text, nullable: false }
   , order_id:     { type: types.int, references: { table: 'orders', column: 'id', onDelete: 'set null' } }
   , email:        { type: types.json }
   , send_date:    { type: types.timestamp, nullable: false, default: 'now()' }

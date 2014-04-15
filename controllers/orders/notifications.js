@@ -95,13 +95,27 @@ module.exports.JSON.history = function( req, res ){
 
         notes = notes.map( function( note ){
           note.email.url = getEmailUrl( req.param('oid'), note.nid );
-          return utils.extend( note, notifier.defs[ note.nid ] );
+          return utils.extend( note, utils.omit( notifier.defs[ note.nid ], 'id' ) );
         });
 
         return res.json( notes );
       });
     }
   ]);
+};
+
+module.exports.JSON.historyItem = function( req, res ){
+  logger.info( 'Getting order notification history for order #' + req.param('oid') );
+
+  db.order_notifications.findOne( +req.param('id'), function( error, note ){
+    if ( error ){
+      return res.error( error );
+    }
+
+    utils.extend( note, utils.omit( notifier.defs[ note.nid ], 'fn', 'id' ) );
+
+    res.json( note );
+  });
 };
 
 module.exports.getEmail = function( req, res ){

@@ -21,7 +21,7 @@ var notifier = require('./lib/order-notifier');
 notifier.register({
   'some-type'
 , name: 'Something'
-, build: function( order, logger, callback ){
+, build: function( order, logger, options, callback ){
     var email = {
       to:       'some@one.com'
     , from:     'me@me.com'

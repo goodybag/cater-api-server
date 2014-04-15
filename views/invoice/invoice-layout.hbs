@@ -61,6 +61,10 @@
           <address class="info-item-address info-item">
             {{#if order.street}}
               {{order.street}}
+              {{#if order.street2}}
+                <br />
+                {{order.street2}}
+              {{/if}}
             {{else}}
               [123 Your St.]
             {{/if}}

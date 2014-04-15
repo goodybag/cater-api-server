@@ -94,15 +94,14 @@
             <a class="navbar-brand" href="/">
               <img src="{{cdn "img/logo.png"}}" alt="Goodybag">
             </a>
+            <div class="contact-info">
+              <span class="help-text">Let us help you with your order!</span>
+              <span class="phone-number">{{phoneNumber config.phone.support}}</span>
+            </div>
           </div>
 
           {{!-- Collect other nav content for toggling --}}
           <div class="collapse navbar-collapse" id="navbar-collapse">
-            <ul class="nav navbar-nav">
-              <li class="contact-info">
-                  Contact us: <strong class="phone-number">{{phoneNumber config.phone.support}}</strong>
-              </li>
-            </ul>
             {{{block "navbar-stuff"}}}
 
             {{#if user.id}}
@@ -189,7 +188,7 @@
     {{/unless}}
     <script>
       require( ['config'], function( config ){
-        config.cdnBaseUrl = '{{{config.cdnBaseUrl}}}';
+        config.cdn = { baseUrl: '{{{config.cdn.baseUrl}}}' };
       });
     </script>
 

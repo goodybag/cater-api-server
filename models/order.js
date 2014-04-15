@@ -146,7 +146,12 @@ module.exports = Model.extend({
       delete this.attributes.adjustment;
     }
     var order = this;
-    Model.prototype.save.call(this, {returning: ["*", '("orders"."datetime"::text) as datetime']}, function(err) {
+    Model.prototype.save.call(this, {
+      returning: [
+        "*"
+      , { expression: '("orders"."datetime"::text)', alias: 'datetime' }
+      ]
+  }, function(err) {
 
       callback.apply(this, arguments);
       venter.emit( 'order:change', order.attributes.id );
@@ -650,6 +655,7 @@ module.exports = Model.extend({
       module.exports.prototype.getDeliveryFeeQuery.call({
         attributes: {
           restaurant_id: query.where.restaurant_id || '$orders.restaurant_id$'
+        , zip: '$orders.zip$'
         }
       })
     );

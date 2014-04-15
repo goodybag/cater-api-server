@@ -167,8 +167,11 @@ module.exports = function(grunt) {
     , { src: './public/css', dest: 'css', gzip: true }
     , { src: './public/img', dest: 'img', gzip: false }
     , { src: './public/font', dest: 'font', gzip: false }
+    , { src: './public/js/pdf', dest: 'pdf', gzip: false }
     , { src: './public/*', dest: '', gzip: false }
     , { src: './public/components/bootstrap/dist', dest: 'components/bootstrap/dist', gzip: true }
+    , { src: './public/components/font-awesome/css', dest: 'components/font-awesome/css', gzip: true }
+    , { src: './public/components/font-awesome/font', dest: 'components/font-awesome/font', gzip: true }
     , { src: './public/components/requirejs', dest: 'components/requirejs', gzip: true }
     , { src: './public/components/html5shiv/dist/html5shiv.js', dest: 'components/html5shiv/dist/html5shiv.js', gzip: true }
     , { src: './public/components/es5-shim/es5-shim.js', dest: 'components/es5-shim/es5-shim.js', gzip: true }
@@ -178,6 +181,7 @@ module.exports = function(grunt) {
     , { src: './public/components/select2/select2.css', dest: 'components/select2/select2.css', gzip: true }
     , { src: './public/components/respond/src/respond.js', dest: 'components/respond/src/respond.js', gzip: true }
     , { src: './public/components/jquery/jquery.js', dest: 'components/jquery/jquery.js', gzip: true }
+    , { src: './public/components/fullcalendar/fullcalendar.css', dest: 'components/fullcalendar/fullcalendar.css', gzip: true }
     ].forEach( function( option ){
       try {
         if ( !fs.statSync( option.src ).isDirectory() ){
@@ -216,7 +220,7 @@ module.exports = function(grunt) {
   grunt.registerTask( 'build',    ['less', 'concat', 'shell:handlebars', 'requirejs'] );
   grunt.registerTask( 'default',  ['less', 'watch'] );
 
-  grunt.registerTask( 'deploy', ['build', 's3:prod', 'shell:deployProduction'] );
+  grunt.registerTask( 'deploy', ['build', 's3:production', 'shell:deployProduction'] );
   grunt.registerTask( 'deploy:staging', ['build', 's3:staging', 'shell:deployStaging'] );
   grunt.registerTask( 'deploy:dev', ['build', 's3:dev'] );
 };

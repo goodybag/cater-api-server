@@ -1,6 +1,4 @@
 var
-
-
   // Module Dependencies
   config = require('./config')
 , errors = require('./errors')

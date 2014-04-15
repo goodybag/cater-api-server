@@ -375,7 +375,6 @@ module.exports.changeStatus = function(req, res) {
         if (order.attributes.restaurant.sms_phones) {
           logger.routes.info(TAGS, "shortening url and sending sms for order: " + order.attributes.id);
           var url = config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token;
-        
           // shorten URL
           bitly.shorten(url, function(err, response) {
             if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);

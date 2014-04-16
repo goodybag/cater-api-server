@@ -7,6 +7,7 @@ var models  = require('../../models');
 var logger  = require('../../logger');
 var receipt = require('../../lib/receipt');
 var venter  = require('../../lib/venter');
+var scheduler = require('../../lib/scheduler');
 
 var moment = require('moment-timezone');
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
@@ -400,14 +401,14 @@ module.exports.changeStatus = function(req, res) {
           logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
           var datetime = utils.getWorkingTime(moment(), order.attributes.timezone);
           utils.each(order.attributes.restaurant.voice_phones, function(voice_phone) {
-            utils.makeCall(datetime.toString(), {
+            scheduler.enqueue('make-call', datetime.toString(), {
               to: voice_phone,
               from: config.phone.orders,
               url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
               ifMachine: 'Continue',
               method: 'GET'
             }, function(err, result) {
-              if (err) logger.routes.error(TAGS, 'unable to place call', err);
+              if (err) logger.scheduler.error(TAGS, 'unable to schedule call', err);
             });
           });
         }

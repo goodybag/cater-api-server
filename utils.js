@@ -405,16 +405,6 @@ utils.queryParams = function(data){
   return params.substring(0, params.length - 1);
 };
 
-/* Not in use .. yet hehehe
-utils.sendSms = function(options, callback){
-  scheduler.enqueue('send-sms', date, options, callback);
-};
-*/
-
-utils.makeCall = function(date, options, callback){
-  scheduler.enqueue('make-call', date, options, callback);
-};
-
 // sanitize notification times so they're during work hours
 utils.getWorkingTime = function( datetime, timezone ){
   datetime = moment(datetime).tz(timezone);

@@ -16,7 +16,7 @@ module.exports = function(req, res, next) {
     req.user.isAdmin = utils.contains(req.user.attributes.groups, 'admin');
     req.user.isRestaurant =
       utils.contains(req.user.attributes.groups, 'restaurant') &&
-      utils.contains(req.user.attributes.restaurant_ids, parseInt(req.params.rid));
+      utils.contains(req.user.attributes.restaurant_ids, parseInt(req.param('rid')));
 
     res.locals.user = user.toJSON();
     delete res.locals.user.password;

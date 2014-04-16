@@ -13,6 +13,8 @@ define(function(require, exports, module) {
       gb_fee:             0
     , sales_tax:          config.taxRate
     , sub_total:          0
+    , delivery_fee:       0
+    , tip:                0
     }
 
   , initialize: function( attr, options ){
@@ -73,8 +75,9 @@ define(function(require, exports, module) {
     }
 
   , onOrderChange: function( psi, order ){
+      var porder = this.previous('order');
       if ( order )
-      if ( this.attributes.order && this.attributes.order.cid !== order.cid ) {
+      if ( !porder || porder.cid !== order.cid ) {
         this.updatePropertiesBasedOnOrder( order );
       }
     }

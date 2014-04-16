@@ -1032,3 +1032,27 @@ a.list-group-item .list-group-item-heading {
 .cc-discover {
   background: url(../img/credit-cards/discover.png) #fff no-repeat right;
 }
+
+/**
+ * Search Info
+ */
+
+.search-info {
+  margin-bottom: 6px;
+  padding-left: 2px;
+}
+
+.search-info .search-info-item {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 6px;
+}
+
+.search-info > .search-info-item:first-child {
+  margin-left: 0;
+}
+
+/* Search Info Overrides */
+.search-info .results {
+  font-weight: 100;
+}

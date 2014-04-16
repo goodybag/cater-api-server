@@ -18,13 +18,6 @@ module.exports.name = 'Welcome Email';
 
 module.exports.schema = config.welcome.reminderSchema;
 
-var okTimeRanges = {
-  beginHour:    +config.welcome.beginTime.split(':')[0]
-, beginMinute:  +config.welcome.beginTime.split(':')[1]
-, endHour:      +config.welcome.endTime.split(':')[0]
-, endMinute:    +config.welcome.endTime.split(':')[1]
-};
-
 module.exports.getUsers = function( callback ){
   welcome.getUnWelcomedUsers( function( error, users ){
     if ( error ) return callback( error );
@@ -37,18 +30,8 @@ module.exports.getUsers = function( callback ){
 
     // Ensure the current time for each user in the list is
     // within the acceptable timeframe to be sending emails
-    users = users.filter( function( user ){
-      var now   = moment().tz( user.attributes.timezone );
-      var begin = moment().tz( user.attributes.timezone );
-      var end   = moment().tz( user.attributes.timezone );
-
-      begin.set( 'hour',    okTimeRanges.beginHour );
-      begin.set( 'minute',  okTimeRanges.beginMinute );
-
-      end.set( 'hour',    okTimeRanges.endHour );
-      end.set( 'minute',  okTimeRanges.endMinute );
-
-      return begin <= now && now < end;
+    users = users.filter( function( user, i, a ){
+      return welcome.isValidTimeForUser( user );
     });
 
     return callback( null, users );

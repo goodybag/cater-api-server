@@ -34,7 +34,7 @@ var reports = {
   ordersCsv: function(req, res) {
     var status = req.body.status || 'accepted';
     var start = req.body.start || '2012-01-01';
-    var end = req.body.end || moment().format('YYYY-MM-DD');
+    var end = moment(req.body.end || new Date()).add('d',1).format('YYYY-MM-DD');
     var range = req.body.range || 'datetime';
     var sort = req.body.sort || 'asc';
 
@@ -71,7 +71,7 @@ var reports = {
     range = (range === 'datetime') ? 'orders.datetime' : 'submitted.created_at';
     query.where[range] = {
       $gte: start
-    , $lte: end
+    , $lt: end
     };
 
     query.order = {};

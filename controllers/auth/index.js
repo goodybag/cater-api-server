@@ -9,8 +9,12 @@ var putils  = require('../../public/js/lib/utils');
 var venter  = require('../../lib/venter');
 
 module.exports.index = function(req, res) {
-  if (req.session && req.session.user && req.session.user.id != null)
+  if (req.session && req.session.user && req.session.user.id != null){
+    if ( req.session.user.groups.indexOf('restaurant') > -1 ){
+      return res.redirect(req.query.next || '/restaurants/manage');
+    }
     return res.redirect(req.query.next || '/restaurants');
+  }
 
   res.render('landing/home', {
     layout: 'landing/layout'
@@ -174,6 +178,10 @@ module.exports.login = function ( req, res ){
     });
 
     req.setSession( user, req.body.remember );
+
+    if ( user.groups.indexOf('restaurant') > -1 ){
+      return res.redirect(req.query.next || '/restaurants/manage');
+    }
 
     return res.redirect( req.query.next || '/' );
   });

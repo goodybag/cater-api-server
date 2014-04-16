@@ -101,8 +101,13 @@ define(function(require, exports, module) {
     rejectOrder: function() {
       var self = this;
 
+      var reasonDenied = this.$el.find('.reason-denied').val() 
+      if ( reasonDenied.length === 0 ) {
+        return alert('Please enter a reason!');
+      }
+
       this.model.save({
-        reason_denied: this.$el.find('.reason-denied').val()
+        reason_denied: reasonDenied
       }, {
         success: function () {
           self.changeStatus('denied');

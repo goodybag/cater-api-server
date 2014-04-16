@@ -14,6 +14,12 @@
     <p class="thankyou-message"><strong>Thanks for your order!</strong> You will receive a confirmation email shortly.</p>
   {{/if}}
 
+  {{#if isAdmin }}
+    {{#if order.reason_denied }}
+    <div class="reason-denied">Reason Denied: {{order.reason_denied}}</div>
+    {{/if}}
+  {{/if}}
+
   {{#if order.editable}}
   <div class="row">
     <div class="alerts col-lg-12">

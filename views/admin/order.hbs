@@ -1,0 +1,32 @@
+{{#extend "page"}}page-order{{/extend}}
+
+{{#extend "body"}}
+<div class="container">
+  <h1>Order #{{order.id}} Command Center</h1>
+
+  <section class="panel-component" id="order-notifications">
+    <h1 class="component-title">Notifications</h1>
+    <ul class="component-nav nav">
+      <li class="active">
+        <a href="#">History</a>
+      </li>
+      <li>
+        <a href="#">Available</a>
+      </li>
+    </ul>
+  </section>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  define( 'data/order', ['app/models/order'], function( Order ){
+    return new Order( {{{json order}}} );
+  });
+
+  require( ['app/pages/admin-order'], function( page ){
+    page.init({
+
+    });
+  });
+</script>
+{{/extend}}

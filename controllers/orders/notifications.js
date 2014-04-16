@@ -87,7 +87,10 @@ module.exports.JSON.history = function( req, res ){
 
     // Get order notifications
   , function( order, next ){
-      db.order_notifications.find( { order_id: +req.param('oid') }, function( error, notes ){
+      var $where = { order_id: +req.param('oid') };
+      var options = { order: { send_date: 'desc' } };
+
+      db.order_notifications.find( $where, options, function( error, notes ){
         if ( error ){
           logger.error( 'Error getting order notifications for order #' + req.param('oid'), error );
           return res.error( error );

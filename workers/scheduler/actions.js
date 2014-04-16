@@ -12,13 +12,14 @@ scheduler.registerAction('make-call', function(job, done) {
   });
 });
 
-scheduler.registerAction('send-sms', function(job, done) {
-  twilio.sendSms(job.data, function(error) {
-    if ( error ) {
-      logger.error('Could not send sms for job #' + job.id, error);
-    }
-    done(error);
-  });
-});
+// Not delaying sms atm
+// scheduler.registerAction('send-sms', function(job, done) {
+//   twilio.sendSms(job.data, function(error) {
+//     if ( error ) {
+//       logger.error('Could not send sms for job #' + job.id, error);
+//     }
+//     done(error);
+//   });
+// });
 
 module.exports = scheduler.actions;

@@ -1,13 +1,12 @@
 var scheduler = require('../../../lib/scheduler');
 
-var actions = {
-  makeCall:       { fn: require('./make-call'), name: 'make-call' }
-, sendSms:        { fn: require('./send-sms'), name: 'send-sms' }
-};
+var actions = [
+  { fn: require('./make-call'), name: 'make-call' }
+, { fn: require('./send-sms'), name: 'send-sms' }
+];
 
-for( var key in actions ) {
-  var action = actions[key];
+actions.forEach( function( action ){
   scheduler.registerAction(action.name, action.fn);
-}
+});
 
 module.exports = actions;

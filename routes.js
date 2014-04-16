@@ -669,15 +669,23 @@ module.exports.register = function(app) {
     })
   );
 
-   app.get('/admin/restaurants/:restaurant_id/contacts'
-   , m.restrict(['admin'])
-   , m.param('restaurant_id')
-   , m.restaurant( {param: 'restaurant_id'} )
-   , m.view( 'restaurant/contacts', db.contacts, {
-       layout: 'admin/layout2'
-     , method: 'find'
-     })
-   );
+  app.get('/admin/restaurants/:restaurant_id/contacts'
+  , m.restrict(['admin'])
+  , m.param('restaurant_id')
+  , m.restaurant( {param: 'restaurant_id'} )
+  , m.view( 'restaurant/contacts', db.contacts, {
+     layout: 'admin/layout2'
+   , method: 'find'
+   })
+  );
+
+  app.get('/admin/orders/:oid'
+  , m.restrict(['admin'])
+  , m.getOrder({ param: 'oid', withItems: true })
+  , m.view( 'admin/order', {
+      layout: 'admin/layout2'
+    })
+  );
 
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])

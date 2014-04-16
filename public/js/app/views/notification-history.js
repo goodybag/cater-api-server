@@ -9,23 +9,28 @@ define(function(require){
 
     }
 
+  , template: Hbs.partials.notification_history_table
+
   , noteTmpl: function( note, indent ){
       indent = indent || 0;
 
       return [
         '<tr>'
-      , '  <td>' + note.email.recipients.join(', ') + '</td>'
+      , '  <td>' + (Array.isArray( note.email.to ) ? note.email.to.join(', ') : note.email.to) + '</td>'
       , '  <td>' + note.name + '</td>'
-      , '  <td>' + note.name + '</td>'
+      , '  <td>' + note.send_date + '</td>'
+      , '  <td class="actions">'
+      , '    <button class="btn btn-small btn-default">Preview</button>'
+      , '    <button class="btn btn-small btn-primary">Send</button>'
+      , '  </td>'
       , '</tr>'
       ].map( function( str ){
         return new Array( indent + 1 ).join(' ') + str;
       }).join('\n')
     }
 
-  , template: function( data ){
+  , template2: function( data ){
       var tmpl = [
-        '<table class="table">'
       , '  <thead>'
       , '    <tr>'
       , '      <th>Recipients</th>'
@@ -37,24 +42,32 @@ define(function(require){
       , '  <tbody>'
       ];
 
-      data.notifications.forEach( function( note ){
-        tmpl.push( this.noteTmpl( note, 4 ) );
+      var this_ = this;
+      data.items.forEach( function( note ){
+        tmpl.push( this_.noteTmpl( note, 4 ) );
       });
 
       tmpl.push('  </tbody>');
-      tmpl.push('</table>');
 
       return tmpl.join('\n');
     }
 
   , initialize: function( options ){
-      this.options = options;
+      this.options = options || {};
+      this.items = this.options.items || [];
 
       return this;
     }
 
-  , render: function(){
+  , setItems: function( items ){
+      this.items = items;
+      this.render();
+      return this;
+    }
 
+  , render: function(){
+      this.$el.html( this.template({ items: this.items } ) );
+      return this;
     }
   });
 

@@ -65,6 +65,10 @@ define(function(require, exports, module) {
       return arr ? arr.join(', ') : '';
     },
 
+    list: function( list ){
+      return utils.isArray( list ) ? list.join(', ') : list;
+    },
+
     tax: function() {
       return (tax.apply(this, arguments) / 100).toFixed(2);
     },

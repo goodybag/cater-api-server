@@ -65,8 +65,16 @@ define(function(require, exports, module) {
       return arr ? arr.join(', ') : '';
     },
 
-    list: function( list ){
+    commaList: function( list ){
       return utils.isArray( list ) ? list.join(', ') : list;
+    },
+
+    list: function( list ){
+      return [
+        '<ul>'
+      , '  <li>' + (utils.isArray( list ) ? list.join('</li>\n  <li>') : list) + '</li>'
+      , '</ul>'
+      ].join('\n');
     },
 
     tax: function() {

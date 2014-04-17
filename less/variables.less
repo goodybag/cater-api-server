@@ -162,6 +162,10 @@
 
 // Bootstrap Variables
 ///////////////////////////////////////////////////
+@border-radius-base:             4px;
+@border-radius-large:            6px;
+@border-radius-small:            3px;
+
 @caret-width-base:                4px;
 @caret-width-large:               5px;
 @zindex-dropdown:                 1000;
@@ -184,3 +188,20 @@
 
 @dropdown-caret-color:            #000;
 @grid-float-breakpoint:           @breakpoint-tablet;
+
+// Popovers
+// -------------------------
+@popover-bg:                          #fff;
+@popover-max-width:                   276px;
+@popover-border-color:                rgba(0,0,0,.2);
+@popover-fallback-border-color:       #ccc;
+
+@popover-title-bg:                    darken(@popover-bg, 3%);
+
+@popover-arrow-width:                 10px;
+@popover-arrow-color:                 #fff;
+
+@popover-arrow-outer-width:           (@popover-arrow-width + 1);
+@popover-arrow-outer-color:           rgba(0,0,0,.25);
+@popover-arrow-outer-fallback-color:  #999;
+@zindex-popover:                      1010;

@@ -437,6 +437,13 @@ config.test = _.extend( _.clone( config.dev ), {
 , baseUrl: 'http://localhost:3001'
 , http: { port: 3001 }
 , postgresConnStr:  "postgres://localhost:5432/cater_test"
+, cdn: {
+    baseUrl: 'http://localhost:3001'
+    // If you want to test out uploading stuff to a CDN, but don't want
+    // to use staging or prod, you can uncomment out this line
+    // baseUrl: 'http://cater-cdn-dev.s3-website-us-east-1.amazonaws.com'
+  , bucket: 'cater-cdn-dev'
+  }
 });
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';

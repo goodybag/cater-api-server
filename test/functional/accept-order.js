@@ -48,23 +48,25 @@ test.describe( 'Accept Order', function(){
     utils.async.series([
       function createOrder(next) {
         console.log('');
-        test.log('Create new order');
         tutils.createOrder({status: 'submitted'}
         , function(error, results) {
             order = results[0];
             next(error);
         });
       }
+    , test.alog('Created new order')
 
     , function addOrderItem(next) {
-        test.log('Add order item');
         tutils.addOrderItem({order_id: order.id}, next);
       }
 
-    , tutils.login.bind( null, driver, options )
+    , test.alog('Added order item')
 
+    , tutils.login.bind( null, driver, options )
+    
+    , test.alog('Logged in')
+    
     , function reviewOrder(next) {
-        test.log('View review order page');
         var url = config.baseUrl + '/orders/' + order.id + '?review_token=' + order.review_token;
         driver.get( url );
 
@@ -74,20 +76,24 @@ test.describe( 'Accept Order', function(){
         });
       }
 
+    , test.alog('Viewing review order page')
+
     , function acceptOrder(next) {
-        test.log('Accept order');
         var selector = '.restaurant-review > .btn-accept';
         driver.findElement( webdriver.By.css( selector ) ).click().then(next);
       }
 
+    , test.alog('Accepting order')
+
     , function orderAccepted(next) {
-        test.log('Order was accepted!');;
-        driver.sleep(2000);
+        driver.sleep(1000);
         driver.isElementPresent( webdriver.By.css('.btn-accepted') ).then(function(present){
           assert(present, 'Order not accepted');
           next();
         });
       }
+
+    , test.alog('Order was accepted!')
 
     ], done );
   });

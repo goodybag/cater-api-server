@@ -437,6 +437,7 @@ config.test = _.extend( _.clone( config.dev ), {
 , baseUrl: 'http://localhost:3001'
 , http: { port: 3001 }
 , postgresConnStr:  "postgres://localhost:5432/cater_test"
+, cdn: { baseUrl: 'http://localhost:3001' }
 });
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';

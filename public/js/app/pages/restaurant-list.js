@@ -1,6 +1,7 @@
 define( function( require ){
   var $               = require('jquery');
   var utils           = require('utils');
+  var allRestaurants  = require('data/all-restaurants');
 
   require('bootstrap');
 
@@ -26,6 +27,11 @@ define( function( require ){
 
       // Prepare listing to be usable by the facet serach
       utils.each( restaurants, function( r ){
+        // Facet values need to be arrays
+        r.prices = [r.price];
+      });
+
+      utils.each( allRestaurants, function( r ){
         // Facet values need to be arrays
         r.prices = [r.price];
       });
@@ -60,7 +66,7 @@ define( function( require ){
       var restaurantFiltersView = new Views.RestaurantFiltersView({
         el: '#filters'
       , existingCriteria: existingCriteria
-      , restaurants: restaurants
+      , restaurants: allRestaurants
       });
 
       var restaurantSortView = new Views.RestaurantSortView({

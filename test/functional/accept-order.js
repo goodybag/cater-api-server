@@ -68,33 +68,24 @@ test.describe( 'Accept Order', function(){
         var url = config.baseUrl + '/orders/' + order.id + '?review_token=' + order.review_token;
         driver.get( url );
 
-        driver.ensureSelector('.restaurant-review', function( error, result ) {
-          assert.equal( !!error, false, 'Not reviewing order page' );
-          assert.equal( !!result, true, 'Not reviewing order page' );
+        driver.isElementPresent( webdriver.By.css('.restaurant-review') ).then(function(present) {
+          assert(present, 'Could not review order');
           next();
         });
-
       }
 
     , function acceptOrder(next) {
         test.log('Accept order');
         var selector = '.restaurant-review > .btn-accept';
-        driver.findElement( webdriver.By.css( selector ) ).click().then(function() {
-          next();
-        });
-          // test.log('my body is not ready');
-          // driver.waitUntilSelector( '.label-accepted', next );
+        driver.findElement( webdriver.By.css( selector ) ).click().then(next);
       }
 
     , function orderAccepted(next) {
-        test.log('Order was accepted!');
-
-        // driver.findElement( webdriver.By.css('.label-accepted')).then(function(err, res) {
-        //   console.log(err, res);
-        // });
-        driver.isElementPresent( webdriver.By.css('.label-accepted') ).then(function(present){
-          console.log(present);
-          next(present ? null : new Error('Order not accepted'));
+        test.log('Order was accepted!');;
+        driver.sleep(2000);
+        driver.isElementPresent( webdriver.By.css('.btn-accepted') ).then(function(present){
+          assert(present, 'Order not accepted');
+          next();
         });
       }
 

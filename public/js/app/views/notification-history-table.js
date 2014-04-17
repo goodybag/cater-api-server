@@ -26,6 +26,10 @@ define(function(require){
 
   , render: function(){
       this.$el.html( this.template({ items: this.items } ) );
+      this.$el.find('.btn-preview').preview({
+        width: 630
+      , height: 700
+      });
       return this;
     }
   });

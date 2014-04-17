@@ -9,6 +9,7 @@ define(function(require, exports, module) {
   require('select2');
   require('navbar');
   require('field-matcher');
+  require('preview');
 
   $(function(){
     $('input, textarea').placeholder();

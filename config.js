@@ -420,6 +420,7 @@ config.production = {
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
+  , info: 'info@goodybag.com'
   , rewards: [
       'jacobparker@goodybag.com'
     , 'sarahsouthwell@goodybag.com'

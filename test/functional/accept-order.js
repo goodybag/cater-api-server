@@ -23,7 +23,7 @@ test.describe( 'Accept Order', function(){
     , email:        config.testEmail
     , password:     'password'
     , win: {
-        width:      1200
+        width:      1600
       , height:     1000
       }
     };
@@ -78,12 +78,24 @@ test.describe( 'Accept Order', function(){
 
     , function acceptOrder(next) {
         test.log('Accept order');
-        // var selector = '.restaurant-review .btn-accept';
-        // driver.findElement( webdriver.By.css( selector ) ).then( function( el ){
-        //   el.click();
+        var selector = '.restaurant-review > .btn-accept';
+        driver.findElement( webdriver.By.css( selector ) ).click().then(function() {
+          next();
+        });
+          // test.log('my body is not ready');
+          // driver.waitUntilSelector( '.label-accepted', next );
+      }
 
-        //   driver.waitUntilSelector( '.label-accepted', next );
+    , function orderAccepted(next) {
+        test.log('Order was accepted!');
+
+        // driver.findElement( webdriver.By.css('.label-accepted')).then(function(err, res) {
+        //   console.log(err, res);
         // });
+        driver.isElementPresent( webdriver.By.css('.label-accepted') ).then(function(present){
+          console.log(present);
+          next(present ? null : new Error('Order not accepted'));
+        });
       }
 
     ], done );

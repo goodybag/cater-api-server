@@ -69,9 +69,9 @@ test.describe( 'Accept Order', function(){
     , function reviewOrder(next) {
         var url = config.baseUrl + '/orders/' + order.id + '?review_token=' + order.review_token;
         driver.get( url );
-
-        driver.isElementPresent( webdriver.By.css('.restaurant-review') ).then(function(present) {
-          assert(present, 'Could not review order');
+        driver.waitUntilSelector( '.restaurant-review', function(error, el) {
+          assert.equal( !!error, false, 'Could not review order');
+          assert.equal( !!el, true, 'Could not review order');
           next();
         });
       }
@@ -86,9 +86,9 @@ test.describe( 'Accept Order', function(){
     , test.alog('Accepting order')
 
     , function orderAccepted(next) {
-        driver.sleep(1000);
-        driver.isElementPresent( webdriver.By.css('.btn-accepted') ).then(function(present){
-          assert(present, 'Order not accepted');
+        driver.waitUntilSelector('.btn-accepted', function(error, btn) {
+          assert.equal( !!error, false, 'Order not accepted');
+          assert.equal( !!btn, true, 'Order not accepted');
           next();
         });
       }

@@ -60,9 +60,13 @@
 </script>
 
 <script>
-  // Init views on this page
-  require( ['app/pages/restaurant/edit-basic-info'], function( page ){
-    page.init();
+  require( ['jquery', 'navbar', 'app/pages/contacts'], function( $, navbar, page ){
+    $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+
+    page.init({
+      contacts: {{{json contacts}}}
+    , restaurantId: {{{restaurant.id}}}
+    });
   });
 </script>
 {{/extend}}

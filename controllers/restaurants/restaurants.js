@@ -51,7 +51,7 @@ module.exports.list = function(req, res) {
   // Filters count needs a list of all restaurants
   if (Object.keys(orderParams).length > 0){
     tasks.push(
-      utils.partial( models.Restaurant.find.bind( models.Restaurant ), {}, { is_hidden: false } )
+      models.Restaurant.find.bind( models.Restaurant, {}, { is_hidden: false } )
     );
   }
 

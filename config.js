@@ -32,6 +32,12 @@ config.defaults = {
 
 , rewardsStartDate: '2014-03-25 00:00:00'
 
+, rewardsPromo: {
+    startDate: '2014-04-21 00:00:00'
+  , endDate: '2014-04-22 00:00:00' 
+  , ptsMultiplier: 2.0
+  }
+
 , welcome: {
     from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
   , beginTime:      '09:04'
@@ -412,6 +418,7 @@ config.production = {
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
+  , info: 'info@goodybag.com'
   , rewards: [
       'jacobparker@goodybag.com'
     , 'sarahsouthwell@goodybag.com'
@@ -436,6 +443,7 @@ config.test = _.extend( _.clone( config.dev ), {
 , baseUrl: 'http://localhost:3001'
 , http: { port: 3001 }
 , postgresConnStr:  "postgres://localhost:5432/cater_test"
+, cdn: { baseUrl: 'http://localhost:3001' }
 });
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';

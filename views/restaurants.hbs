@@ -9,13 +9,6 @@
 {{/extend}}
 
 <div class="page-restaurants container">
-  {{#notEmpty orderParams}}
-  <div class="row back-to-results-wrapper">
-    <div class="col-md-12">
-      <a class="back-to-results" href="/restaurants">Clear search</a>
-    </div>
-  </div>
-  {{/notEmpty}}
 
   <div class="row">
     <div class="col-md-9 col-md-offset-3">{{> order_params_bar}}</div>
@@ -27,6 +20,14 @@
       {{> restaurant_filters }}
     </div>
     <div class="col-md-9">
+      {{#notEmpty orderParams}}
+      <div class="search-info">
+        <div class="search-info-item clear">
+          <a class="back-to-results" href="/restaurants">Clear search</a>
+        </div>
+        <div class="search-info-item results">{{../restaurants.length}} result{{#gt ../restaurants.length 1}}s{{/gt}}</div>
+      </div>
+      {{/notEmpty}}
       <div class="list-group list-group-restaurants">
       {{#each restaurants}}
         <a href="/restaurants/{{this.id}}{{queryParams ../orderParams}}" class="list-group-item list-group-item-restaurant{{#if is_hidden}} hide{{/if}}" id="restaurant-{{id}}">
@@ -90,8 +91,16 @@
 
 {{#extend "scripts"}}
 <script type="text/javascript">
-  require(['app/pages/restaurant-list'], function( page ){
-    page.init({ restaurants: {{{json restaurants}}}, userId: {{{ user.id }}} });
+  define('data/all-restaurants', function(){
+    return {{{json allRestaurants}}};
+  });
+
+  define('data/restaurants', function(){
+    return {{{json restaurants}}};
+  });
+
+  require(['app/pages/restaurant-list', 'data/restaurants'], function( page, restaurants ){
+    page.init({ restaurants: restaurants, userId: {{{ user.id }}} });
   });
 </script>
 {{/extend}}

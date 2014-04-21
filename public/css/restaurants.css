@@ -101,3 +101,7 @@ a.list-group-item:hover + a.list-group-item {
 .results-too-few {
   text-align: center;
 }
+
+.search-info {
+  margin-top: -12px;
+}

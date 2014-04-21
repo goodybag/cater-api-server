@@ -381,7 +381,7 @@ module.exports.changeStatus = function(req, res) {
             if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);
             url = ((response||0).data||0).url || url;
             // send sms
-            var msg = 'New Goodybag order for $' + (parseInt(order.attributes.sub_total) / 100).toFixed(2)
+            var msg = 'New Goodybag order for $' + (parseInt(order.attributes.total) / 100).toFixed(2)
             + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
             + '\n' + url;
             utils.each(order.attributes.restaurant.sms_phones, function(sms_phone) {

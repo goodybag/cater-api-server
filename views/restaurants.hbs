@@ -99,8 +99,8 @@
     return {{{json restaurants}}};
   });
 
-  require(['app/pages/restaurant-list', 'data/restaurants'], function( page, restaurants ){
-    page.init({ restaurants: restaurants, userId: {{{ user.id }}} });
+  require(['app/pages/restaurant-list', 'data/restaurants', 'data/all-restaurants'], function( page, restaurants, allRestaurants ){
+    page.init({ restaurants: restaurants, userId: {{{ user.id }}}, allRestaurants: allRestaurants });
   });
 </script>
 {{/extend}}

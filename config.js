@@ -32,6 +32,12 @@ config.defaults = {
 
 , rewardsStartDate: '2014-03-25 00:00:00'
 
+, rewardsPromo: {
+    startDate: '2014-04-21 00:00:00'
+  , endDate: '2014-04-22 00:00:00' 
+  , ptsMultiplier: 2.0
+  }
+
 , welcome: {
     from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
   , beginTime:      '09:04'

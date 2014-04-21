@@ -1,3 +1,4 @@
+var fs          = require('fs');
 var pg          = require('pg');
 var dirac       = require('dirac');
 var mosql       = require('mongo-sql');
@@ -6,18 +7,20 @@ var utils       = require('../utils');
 
 // This is silly until I solve this peerdep issue
 // dirac is using its own copy of mosql, so apply all helpers to both
-var mosql2 = require('../node_modules/dirac/node_modules/mongo-sql');
-Object.keys( mosql ).filter( function( key ){
-  return typeof mosql[ key ] === 'function';
-}).filter( function( key ){
-  return key.indexOf('register') > -1;
-}).forEach( function( key ){
-  var fn = mosql[ key ];
-  mosql[ key ] = function(){
-    mosql2[ key ].apply( mosql2, arguments );
-    return fn.apply( mosql, arguments );
-  };
-});
+if ( fs.existsSync('../node_modules/dirac/node_modules/mongo-sql') ){
+  var mosql2 = require('../node_modules/dirac/node_modules/mongo-sql');
+  Object.keys( mosql ).filter( function( key ){
+    return typeof mosql[ key ] === 'function';
+  }).filter( function( key ){
+    return key.indexOf('register') > -1;
+  }).forEach( function( key ){
+    var fn = mosql[ key ];
+    mosql[ key ] = function(){
+      mosql2[ key ].apply( mosql2, arguments );
+      return fn.apply( mosql, arguments );
+    };
+  });
+}
 
 // Fix PG date parsing (`date` type not to be confused with something with a timezone)
 pg.types.setTypeParser( 1082, 'text', function( val ){

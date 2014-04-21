@@ -85,6 +85,16 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid/edit/basic-info', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
 
+  app.get('/restaurants/:restaurant_id/edit/contacts'
+  , m.restrict(['admin'])
+  , m.param('restaurant_id')
+  , m.restaurant( { param: 'restaurant_id' } )
+  , m.view('restaurant/edit-contacts', db.contacts, {
+      layout: 'admin/layout2'
+    , method: 'find'
+    })
+  );
+
   app.get('/restaurants/:rid/edit/notifications', m.restrict('admin'), controllers.restaurants.edit.notifications);
 
   app.get('/restaurants/:rid/edit/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);

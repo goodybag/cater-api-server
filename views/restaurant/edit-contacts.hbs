@@ -1,0 +1,68 @@
+{{#extend "body"}}
+
+<div class="restaurant-edit">
+  <div class="container">
+  <h1>Editing {{restaurant.name}}</h1>
+    {{> restaurant_edit_nav }}
+
+    <!--<Edit Body>-->
+    <div class="restaurant-edit-body">
+    <div class="alert-container"></div>
+      <h2>{{restaurant.name}} Contacts</h2>
+        <!-- Existing contacts -->
+        {{#each contacts}}
+        <form class="ap-form" id="contact-{{id}}" method="put" action="/api/restaurants/{{restaurant.id}}/contacts/{{id}}">
+          <legend>Contact #{{add @index 1}}</legend>
+          <div class="form-vertical">
+            {{> contact_form }}
+            <div class="form-group">
+              <button class="btn btn-primary btn-update-contact" type="submit">Update</button>
+              <button class="btn btn-primary btn-remove-contact" type="submit">Delete</button>
+            </div>
+          </div>
+        </form>
+        {{/each}}
+        <!-- End Existing contacts  -->
+
+        <!-- New Contact -->
+        <form class="ap-form" id="create-contact" method="POST" action="/api/restaurants/{{restaurant.id}}/contacts">
+          <legend>New contact</legend>
+          <div class="form-vertical">
+          {{> contact_form }}
+          <div class="form-group">
+            <button class="btn btn-primary btn-create-contact" type="submit">Add contact</button>
+          </div>
+          </div>
+        </form>
+        <!-- End New Contact -->
+
+    </div>
+    <!--</Edit Body>-->
+  </div>
+
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  // Bootstrap data
+  define('data', ['app/models/restaurant'], function(Restaurant) {
+    var data = {
+      models: {
+        restaurant: new Restaurant({{{json restaurant}}})
+      },
+      views: {
+
+      }
+    };
+    return data;
+  });
+</script>
+
+<script>
+  // Init views on this page
+  require( ['app/pages/restaurant/edit-basic-info'], function( page ){
+    page.init();
+  });
+</script>
+{{/extend}}

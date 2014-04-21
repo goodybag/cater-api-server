@@ -1,7 +1,6 @@
 define( function( require ){
   var $               = require('jquery');
   var utils           = require('utils');
-  var allRestaurants  = require('data/all-restaurants');
 
   require('bootstrap');
 
@@ -22,6 +21,7 @@ define( function( require ){
   var page = {
     init: function(options) {
       var restaurants = options.restaurants;
+      var allRestaurants  = options.allRestaurants;
 
       $(".tag-tooltip").tooltip();
 

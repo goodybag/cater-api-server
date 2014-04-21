@@ -3,25 +3,32 @@
 <div class="restaurant-edit">
   <div class="container">
   <h1>Editing {{restaurant.name}}</h1>
-    <!--<Edit Nav>-->
-    <ul class="restaurant-edit-menu">
-      <li><a href="basic-info">Basic info</a></li>
-      <li><a href="notifications">Notifications</a></li>
-      <li class="active"><a href="delivery-settings">Delivery Settings</a></li>
-      <li><a href="tags">Tags</a></li>
-      <li><a href="address">Address</a></li>
-      <li><a href="menu">Menu</a></li>
-    </ul>
-    <!--</Edit Nav>-->
+    {{> restaurant_edit_nav }}
 
     <!--<Edit Body>-->
     <div class="restaurant-edit-body">
       <h2>Delivery Settings</h2>
-      <p>Lorem ipsum dolomite</p>
+      <form class="ap-form" action="/restaurants/{{restaurant.id}}/edit" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+
+        <div class="form-group">
+          <label class="control-label" for="input-name">Minimum Order
+            <span class="help-block">required</span>
+          </label>
+          <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars restaurant.minimum_order}}">
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="input-name">Delivery Zip Codes
+            <span class="help-block">List of zip codes restaurant will
+            deliver to. Please enter as a comma separated list.</span>
+          </label>
+          <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars restaurant.minimum_order}}">
+        </div>
+      </form>
     </div>
     <!--</Edit Body>-->
   </div>
-
 </div>
 {{/extend}}
 

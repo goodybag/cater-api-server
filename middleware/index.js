@@ -1,5 +1,6 @@
 module.exports = {
-  after: require('./after')
+  activeTab: require('./active-tab')
+, after: require('./after')
 , analytics: require('./analytics')
 , basicAuth: require('./basic-session-auth')
 , buildReceipt: require('./build-receipt')
@@ -7,6 +8,7 @@ module.exports = {
 , domains: require('./domains')
 , editOrderAuth: require('./edit-order-auth')
 , exists: require('./exists')
+, filterBody: require('./filter-body')
 , getUser: require('./get-user')
 , orderParams: require('./order-params')
 , owner: require('./owner')
@@ -19,5 +21,4 @@ module.exports = {
 , sslRedirect: require('./ssl-redirect')
 , statusCodeIntercept: require('./status-code-intercept')
 , uuid: require('./uuid')
-, filterBody: require('./filter-body')
 };

@@ -198,7 +198,6 @@ module.exports.editRestaurant = function(template) {
 
 module.exports.edit = {
   basicInfo:          module.exports.editRestaurant('restaurant/edit-basic-info')
-, notifications:      module.exports.editRestaurant('restaurant/edit-notifications')
 , deliverySettings:   module.exports.editRestaurant('restaurant/edit-delivery-settings')
 , tags:               module.exports.editRestaurant('restaurant/edit-tags')
 , address:            module.exports.editRestaurant('restaurant/edit-address')

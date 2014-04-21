@@ -96,8 +96,6 @@ module.exports.register = function(app) {
     })
   );
 
-  app.get('/restaurants/:rid/edit/notifications', m.restrict('admin'), controllers.restaurants.edit.notifications);
-
   app.get('/restaurants/:rid/edit/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);
 
   app.get('/restaurants/:rid/edit/tags', m.restrict('admin'), controllers.restaurants.edit.tags);

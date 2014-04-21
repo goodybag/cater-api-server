@@ -141,6 +141,6 @@ define(function(require, exports, module) {
       delimiter = delimiter || ',';
       var val = this.$el.find(selector).val().trim();
       return val ? _.invoke(val.split(delimiter), 'trim') : [];
-    },
+    }
   });
 });

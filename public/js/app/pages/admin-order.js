@@ -32,8 +32,13 @@ define(function(require){
       $(function(){
         $('.navbar').navbar({ toggleText: false, toggleLogin: false });
 
-        page.notificationHistory.setElement( $('#notifications-history-table') );
-        page.notifications.setElement( $('#notifications-table') );
+        page.notificationHistory.setElement(
+          $('#notifications-history-table')
+        ).render();
+
+        page.notifications.setElement(
+          $('#notifications-table')
+        ).render();
       });
     }
 

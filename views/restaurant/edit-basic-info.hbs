@@ -41,15 +41,15 @@
           <div class="row">
             <div class="col-3">
               <label class="control-label">Logo</label>
-              <input type="filepicker" class="form-control" name="logo_url" value="{{restaurant.logo_url}}">
               <img class="restaurant-logo-img" data-name="logo_url"
                 src="{{#if restaurant.logo_url}}{{restaurant.logo_url}}{{else}}{{config.defaultLogo}}{{/if}}">
+              <input type="filepicker" class="form-control btn btn-default btn-full" name="logo_url" value="{{restaurant.logo_url}}">
             </div>
             <div class="col-3">
               <label class="control-label">Monochromatic Logo</label>
-              <input type="filepicker" class="form-control" name="logo_mono_url" value="{{restaurant.logo_mono_url}}">
               <img class="restaurant-logo-img" data-name="logo_mono_url"
                 src="{{#if restaurant.logo_mono_url}}{{restaurant.logo_mono_url}}{{else}}{{config.defaultMonoLogo}}{{/if}}">
+              <input type="filepicker" class="form-control btn btn-default btn-full" name="logo_mono_url" value="{{restaurant.logo_mono_url}}">
             </div>
           </div>
         </div>
@@ -65,10 +65,12 @@
 {{/extend}}
 
 {{#extend "scripts"}}
-
+<!--
 <script type="text/javascript">
 (function(a){if(window.filepicker){return}var b=a.createElement("script");b.type="text/javascript";b.async=!0;b.src=("https:"===a.location.protocol?"https:":"http:")+"//api.filepicker.io/v1/filepicker.js";var c=a.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c);var d={};d._queue=[];var e="pick,pickMultiple,pickAndStore,read,write,writeUrl,export,convert,store,storeUrl,remove,stat,setKey,constructWidget,makeDropPane".split(",");var f=function(a,b){return function(){b.push([a,arguments])}};for(var g=0;g<e.length;g++){d[e[g]]=f(e[g],d._queue)}window.filepicker=d})(document);
 </script>
+-->
+<script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
 <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
 
 <script>

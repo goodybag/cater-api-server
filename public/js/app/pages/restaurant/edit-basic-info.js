@@ -14,6 +14,8 @@ define(function(require){
         el: '.alert-container'
       });
 
+      
+
       var restaurantEditView = new Views.EditBasicInfoView({
         el : '.restaurant-edit'
       , model: data.models.restaurant

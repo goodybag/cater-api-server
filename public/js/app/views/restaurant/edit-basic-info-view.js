@@ -15,6 +15,7 @@ define(function(require, exports, module) {
     , websites:               '#input-websites'
     , yelp_business_id:       '#input-yelp'
     , is_hidden:              '#input-hidden'
+    , 'change input[type="filepicker"]': 'onFilePickerChange',
     },
 
     fieldGetters: {
@@ -61,6 +62,7 @@ define(function(require, exports, module) {
      */
     displayErrors: function(errors) {
       var this_ = this;
+      console.log(this.model.validationError);
       this.clearErrors();
       if (errors) {
         this_.options.alertView && this_.options.alertView.show('error');
@@ -82,6 +84,14 @@ define(function(require, exports, module) {
       });
 
       this.displayErrors(this.model.validationError);
+    },
+
+    onFilePickerChange: function(e){
+      console.log('changepicker');
+      var $input = $(e.originalEvent.target);
+      $input.siblings('[data-name="' + $input.attr('name') + '"]').attr(
+        'src', $input.val()
+      );
     },
 
   });

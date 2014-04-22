@@ -8,7 +8,7 @@
     <!--<Edit Body>-->
     <div class="restaurant-edit-body">
       <h2>Delivery Settings</h2>
-      <form class="ap-form" action="/restaurants/{{restaurant.id}}/edit" method="POST">
+      <form class="ap-form form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST">
         <input type="hidden" name="_method" value="PUT">
 
         <div class="form-group">
@@ -26,20 +26,25 @@
             <span class="help-block">List of zip codes restaurant will
             deliver to. Please enter as a comma separated list.</span>
           </label>
-          {{#each restaurant.delivery_zip_groups}}
-          <div class="input-group input-group-top">
-            <span class="input-addon">$</span>
-            <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars fee}}">
+          <div class="delivery-zip-group">
+            {{#each restaurant.delivery_zip_groups}}
+              <div class="input-group input-group-top">
+                <span class="input-addon">$</span>
+                <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars fee}}">
+              </div>
+              <div class="input-group input-group-bottom">
+                <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
+              </div>
+            {{else}}
+              <h2>No delivery zips</h2>
+            {{/each}}
           </div>
-          <div class="input-group input-group-bottom">
-            <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
-          </div>
-          {{else}}
-            <h2>No delivery zips</h2>
-          {{/each}}
+        </div>
+        <div class="form-group">
+          <button class="btn btn-default">Add New Delivery Area</button>
         </div>
 
-        <button class="btn btn-primary">Add New Delivery Area</button>
+        <button class="btn btn-primary" type="submit">Update</button>
       </form>
     </div>
     <!--</Edit Body>-->
@@ -48,11 +53,25 @@
 {{/extend}}
 
 {{#extend "scripts"}}
+
 <script>
-/*
-  require( ['app/pages/restaurant-edit'], function( page ){
+  // Bootstrap data
+  define('data', ['app/models/restaurant'], function(Restaurant) {
+    var data = {
+      models: {
+        restaurant: new Restaurant({{{json restaurant}}})
+      },
+      views: {
+
+      }
+    };
+    return data;
+  });
+</script>
+
+<script>
+  require( ['app/pages/restaurant/edit-delivery-settings'], function( page ){
     page.init();
   });
-*/
 </script>
 {{/extend}}

@@ -15,7 +15,10 @@
           <label class="control-label" for="input-name">Minimum Order
             <span class="help-block">required</span>
           </label>
-          <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars restaurant.minimum_order}}">
+          <div class="input-group">
+            <span class="input-addon">$</span>
+            <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars restaurant.minimum_order}}">
+          </div>
         </div>
 
         <div class="form-group">
@@ -23,8 +26,20 @@
             <span class="help-block">List of zip codes restaurant will
             deliver to. Please enter as a comma separated list.</span>
           </label>
-          <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars restaurant.minimum_order}}">
+          {{#each restaurant.delivery_zip_groups}}
+          <div class="input-group input-group-top">
+            <span class="input-addon">$</span>
+            <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars fee}}">
+          </div>
+          <div class="input-group input-group-bottom">
+            <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
+          </div>
+          {{else}}
+            <h2>No delivery zips</h2>
+          {{/each}}
         </div>
+
+        <button class="btn btn-primary">Add New Delivery Area</button>
       </form>
     </div>
     <!--</Edit Body>-->
@@ -34,8 +49,10 @@
 
 {{#extend "scripts"}}
 <script>
+/*
   require( ['app/pages/restaurant-edit'], function( page ){
     page.init();
   });
+*/
 </script>
 {{/extend}}

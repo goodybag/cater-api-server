@@ -6,7 +6,7 @@ define(function(require){
 
   var exports = utils.View.extend({
     events: {
-
+      'click .btn-options': 'onBtnOptionsClick'
     }
 
   , template: Hbs.partials.notifications_table
@@ -31,6 +31,43 @@ define(function(require){
       , height: 700
       });
       return this;
+    }
+
+  , expandOptions: function( cid ){
+      var $tr = this.$el.find( '#notification-' + cid );
+      var item = this.items.filter( function( item ){
+        return item.cid == cid;
+      })[0];
+
+      if ( this.rowExpander ){
+        this.rowExpander.collapse();
+      }
+
+      this.rowExpander = $tr.rowExpand({
+        template: Hbs.partials.notification_table_options.bind( Hbs, item )
+      , animate: false
+      });
+
+      this.rowExpander.expand();
+
+      return this;
+    }
+
+  , collapseOptions: function(){
+      if ( this.rowExpander ){
+        this.rowExpander.collapse();
+        delete this.rowExpander;
+      }
+
+      return this;
+    }
+
+  , onBtnOptionsClick: function( e ){
+      if ( this.rowExpander ){
+        return this.collapseOptions();
+      }
+
+      this.expandOptions( $( e.currentTarget ).data('cid') );
     }
   });
 

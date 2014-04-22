@@ -10,6 +10,7 @@ define(function(require, exports, module) {
   require('navbar');
   require('field-matcher');
   require('preview');
+  require('jquery.row-expand');
 
   $(function(){
     $('input, textarea').placeholder();

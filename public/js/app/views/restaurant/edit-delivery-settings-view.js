@@ -11,11 +11,34 @@ define(function(require, exports, module) {
     },
 
     fieldMap: {
-
+      delivery_zips: '.delivery-zip-group'
+    , minimum_order: '.minimum_order'
     },
 
     fieldGetters: {
+      minimum_order: function() {
+        return +Handlebars.helpers.pennies( this.$el.find('.minimum-order').val() );
+      },
 
+      delivery_zips: function() {
+        var delivery_zips = []
+        this.$el.find('.delivery-zip-group').each(function() {
+          var $group = $(this);
+          var fee = +Handlebars.helpers.pennies( $group.find('[name="fee"]').val() );
+          $group.find('[name="zips"]').val()
+            .replace( /\s/g, '' )
+            .split(',')
+            .map( function( z ){
+              return parseInt( z );
+            }).forEach( function( zip ){
+              delivery_zips.push({
+                fee: fee
+              , zip: zip
+              })
+            });
+        });
+        return delivery_zips;
+      }
     },
 
     addDeliveryTier: function() {

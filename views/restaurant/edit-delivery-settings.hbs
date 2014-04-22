@@ -7,6 +7,7 @@
 
     <!--<Edit Body>-->
     <div class="restaurant-edit-body">
+      <div class="alert-container"></div>
       <h2>Delivery Settings</h2>
       <form class="ap-form form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST">
         <input type="hidden" name="_method" value="PUT">
@@ -17,7 +18,7 @@
           </label>
           <div class="input-group">
             <span class="input-addon">$</span>
-            <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars restaurant.minimum_order}}">
+            <input type="text" class="form-control minimum-order" name="minimum_order" value="{{dollars restaurant.minimum_order}}">
           </div>
         </div>
 
@@ -31,16 +32,22 @@
           <div class="delivery-zip-group">
             <div class="input-group input-group-top">
               <span class="input-addon">$</span>
-              <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars fee}}">
+              <input type="text" class="form-control" name="fee" id="input-minimum-order" value="{{dollars fee}}">
             </div>
             <div class="input-group input-group-bottom">
               <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
             </div>
           </div>
           {{else}}
-            <div class="delivery-zip-group">
-              <h2>No delivery zips</h2>
+          <div class="delivery-zip-group">
+            <div class="input-group input-group-top">
+              <span class="input-addon">$</span>
+              <input type="text" class="form-control" name="fee" id="input-minimum-order" value="{{dollars fee}}">
             </div>
+            <div class="input-group input-group-bottom">
+              <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
+            </div>
+          </div>
           {{/each}}
           
         </div>

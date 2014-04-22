@@ -93,7 +93,15 @@
     {{{block "banner"}}}
 
     <div id="main">
-      {{{block "body"}}}
+      <div class="restaurant-edit">
+        <div class="container">
+        <h1>Editing {{restaurant.name}}</h1>
+          {{> restaurant_edit_nav }}
+          <div class="restaurant-edit-body">
+            <div class="alert-container"></div>
+            {{{block "body"}}}
+          </div>
+        </div>
       <footer class="footer">
         <ul class="nav footer-nav">
           <li><a href="/contact-us">Contact Us</a></li>

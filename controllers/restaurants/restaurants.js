@@ -199,6 +199,7 @@ module.exports.editRestaurant = function(template) {
 module.exports.edit = {
   basicInfo:          module.exports.editRestaurant('restaurant/edit-basic-info')
 , deliverySettings:   module.exports.editRestaurant('restaurant/edit-delivery-settings')
+, leadTimes:          module.exports.editRestaurant('restaurant/edit-lead-times')
 , tags:               module.exports.editRestaurant('restaurant/edit-tags')
 , address:            module.exports.editRestaurant('restaurant/edit-address')
 , menu:               module.exports.editRestaurant('restaurant/edit-menu')

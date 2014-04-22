@@ -26,22 +26,26 @@
             <span class="help-block">List of zip codes restaurant will
             deliver to. Please enter as a comma separated list.</span>
           </label>
+          
+          {{#each restaurant.delivery_zip_groups}}
           <div class="delivery-zip-group">
-            {{#each restaurant.delivery_zip_groups}}
-              <div class="input-group input-group-top">
-                <span class="input-addon">$</span>
-                <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars fee}}">
-              </div>
-              <div class="input-group input-group-bottom">
-                <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
-              </div>
-            {{else}}
-              <h2>No delivery zips</h2>
-            {{/each}}
+            <div class="input-group input-group-top">
+              <span class="input-addon">$</span>
+              <input type="text" class="form-control" name="minimum_order" id="input-minimum-order" value="{{dollars fee}}">
+            </div>
+            <div class="input-group input-group-bottom">
+              <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
+            </div>
           </div>
+          {{else}}
+            <div class="delivery-zip-group">
+              <h2>No delivery zips</h2>
+            </div>
+          {{/each}}
+          
         </div>
         <div class="form-group">
-          <button class="btn btn-default">Add New Delivery Area</button>
+          <button class="btn btn-default btn-add-delivery-tier">Add New Delivery Area</button>
         </div>
 
         <button class="btn btn-primary" type="submit">Update</button>

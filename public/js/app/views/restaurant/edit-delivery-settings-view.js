@@ -7,6 +7,7 @@ define(function(require, exports, module) {
 
     events: {
       'submit .form-delivery-settings': 'save'
+    , 'click .btn-add-delivery-tier': 'addDeliveryTierClick'
     },
 
     fieldMap: {
@@ -15,6 +16,18 @@ define(function(require, exports, module) {
 
     fieldGetters: {
 
+    },
+
+    addDeliveryTier: function() {
+      var last = this.$el.find('.delivery-zip-group:last-child');
+      var clone = last.clone();
+      clone.find('input').val('');
+      last.after(clone);
+    },
+
+    addDeliveryTierClick: function(e) {
+      e.preventDefault();
+      this.addDeliveryTier();
     },
 
     initialize: function() {

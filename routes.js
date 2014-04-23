@@ -867,6 +867,11 @@ module.exports.register = function(app) {
   , controllers.orders.notifications.JSON.list
   );
 
+  app.post('/api/orders/:oid/notifications/:id'
+  , m.restrict(['admin'])
+  , controllers.orders.notifications.JSON.sendNotification
+  );
+
   app.get('/api/orders/:oid/notifications-history'
   , m.restrict(['admin'])
   , controllers.orders.notifications.JSON.history

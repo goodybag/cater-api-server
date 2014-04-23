@@ -1,12 +1,16 @@
 define(function(require){
   'use strict';
 
-  var utils = require('utils');
-  var Hbs   = require('handlebars');
+  var utils         = require('utils');
+  var Hbs           = require('handlebars');
+  var orderNotifier = require('order-notifier');
+  var spinner       = require('spinner');
+  var notify        = require('notify');
 
   var exports = utils.View.extend({
     events: {
       'click .btn-options': 'onBtnOptionsClick'
+    , 'click .btn-send':    'onBtnSendClick'
     }
 
   , template: Hbs.partials.notifications_table
@@ -14,6 +18,10 @@ define(function(require){
   , initialize: function( options ){
       this.options = options || {};
       this.items = this.options.items || [];
+
+      utils.enforceRequired( options, [
+        'order_id'
+      ]);
 
       return this;
     }
@@ -80,6 +88,27 @@ define(function(require){
       }
 
       this.expandOptions( $( e.currentTarget ).data('cid') );
+    }
+
+  , onBtnSendClick: function( e ){
+      spinner.start();
+
+      var this_   = this;
+      var $target = $( e.target );
+      var cid     = $target.data('cid');
+      var $tr     = this.$el.find( '#notification-' + cid );
+      var item    = this.items.filter( function( item ){
+        return item.cid == cid;
+      })[0];
+
+      orderNotifier.send( item, function( error ){
+        spinner.stop();
+        if ( error ) return notify.error( error );
+
+        var oldText = $target.text();
+        $target.text('Success!');
+        setTimeout( function(){ $target.text( oldText ); }, 3000 );
+      });
     }
 
   , onItemParamsChange: function( $tr, item ){

@@ -62,6 +62,14 @@ module.exports.JSON.list = function( req, res ){
   });
 };
 
+module.exports.JSON.sendNotification = function( req, res ){
+  logger.info( ['Sending notification', req.param('id'), ' for order #', req.param('oid') ].join('') );
+  notifier.send( req.param('id'), +req.param('oid'), function( error ){
+    if ( error ) return res.error( error );
+    return res.send(204);
+  });
+};
+
 module.exports.JSON.history = function( req, res ){
   logger.info( 'Getting order notification history for order #' + req.param('oid') );
 

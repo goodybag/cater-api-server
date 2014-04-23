@@ -37,10 +37,13 @@ define(function(require){
     }
 
   , expandOptions: function( cid ){
-      var $tr = this.$el.find( '#notification-' + cid );
-      var item = this.items.filter( function( item ){
+      var this_ = this;
+      var $tr   = this.$el.find( '#notification-' + cid );
+      var item  = this.items.filter( function( item ){
         return item.cid == cid;
       })[0];
+
+      if ( !item.params ) item.params = {};
 
       if ( this.rowExpander ){
         this.rowExpander.collapse();
@@ -52,6 +55,12 @@ define(function(require){
       });
 
       this.rowExpander.expand();
+      
+      // Update the preview URL
+      this.rowExpander.$wrapper.find('input').keyup( function( e ){
+        item.params[ e.target.name ] = e.target.value;
+        this_.onItemParamsChange( $tr, item );
+      });
 
       return this;
     }
@@ -71,6 +80,13 @@ define(function(require){
       }
 
       this.expandOptions( $( e.currentTarget ).data('cid') );
+    }
+
+  , onItemParamsChange: function( $tr, item ){
+      $tr.find('.btn-preview').attr( 'href', [
+        item.email.url
+      , utils.queryParams( item.params )
+      ].join('') );
     }
   });
 

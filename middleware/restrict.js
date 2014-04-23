@@ -5,7 +5,7 @@ module.exports = function(groups) {
   return function(req, res, next) {
     if (req.creatorId) 
       next();
-    if (req.order && req.order.isOwner)
+    else if (req.order && req.order.isOwner)
       next();
     else if (req.session.user == null || req.session.user.id == null)
       res.redirect('/login?next=' + req.url);

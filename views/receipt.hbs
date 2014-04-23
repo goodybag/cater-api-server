@@ -14,6 +14,12 @@
     <p class="thankyou-message"><strong>Thanks for your order!</strong> You will receive a confirmation email shortly.</p>
   {{/if}}
 
+  {{#if isAdmin }}
+    {{#if order.reason_denied }}
+    <div class="reason-denied-header">Reason Denied: {{order.reason_denied}}</div>
+    {{/if}}
+  {{/if}}
+
   {{#if order.editable}}
   <div class="row">
     <div class="alerts col-lg-12">
@@ -249,8 +255,11 @@
         <h4 class="modal-title">Confirm Reject</h4>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to reject this order?</p>
-        <textarea class="form-control reason-denied" placeholder="Please let us know why, so we can improve the ordering experience. Thanks!"></textarea>
+        <div class="form-group">
+          <p>Are you sure you want to reject this order?</p>
+          <textarea class="form-control reason-denied" placeholder="Please let us know why, so we can improve the ordering experience. Thanks!"></textarea>
+          <span class="help-block">This field is required</span>
+        </div>
       </div>
       <div class="row modal-footer">
         <div class="col-lg-3 col-lg-offset-6">

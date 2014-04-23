@@ -30,6 +30,9 @@ define(function(require){
         width: 630
       , height: 700
       });
+
+      this.$el.find('.btn-toggle').toggler();
+
       return this;
     }
 

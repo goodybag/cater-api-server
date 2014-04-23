@@ -14,16 +14,19 @@
     var $body = $( document.body );
 
     var defaults = {
-      wrapWith: '<tr><td colspan="{{colspan}}"></td></tr>'
-    , wrapTarget: 'td'
-    , animate: true
-    , wrapperPreCSS: {
-        opacity: 0
-      , width: '100%'
-      }
-    , wrapperPostCSS: {
-        opacity: 1
-      }
+      // Markup to insert after target
+      insertHTML:     '<tr><td colspan="{{colspan}}"></td></tr>'
+      // The Element we're actually concerned with within the insertHTML
+    , wrapTarget:     'td'
+      // Whether or not to use .css() or .animate() when setting properties
+    , animate:        true
+      // Attempt to normalize td's so lib consumer can easily
+      // add their own wrapper
+    , targetCss:      { padding: 0 }
+      // Before the wrapper is inserted in DOM, this is the CSS
+    , wrapperPreCSS:  { opacity: 0, width: '100%' }
+      // Once the wrapper element is inserted, add this CSS
+    , wrapperPostCSS: { opacity: 1 }
     };
 
     options = $.extend( {}, defaults, options );
@@ -38,7 +41,9 @@
     }
 
     var plugin = {
-      init: function(){
+      $this: $this
+
+    , init: function(){
         return plugin;
       }
 
@@ -46,34 +51,45 @@
         return $this.find('td').length;
       }
 
+    , toggle: function(){
+        if ( plugin.$wrapper ){
+          return plugin.collapse();
+        }
+
+        return plugin.expand();
+      }
+
     , expand: function(){
         var initialHeight;
 
         plugin.collapse();
 
-        plugin.$this = $(
-          options.wrapWith.replace( '{{colspan}}', plugin.getColSpan() )
+        plugin.$wrapper = $(
+          options.insertHTML.replace( '{{colspan}}', plugin.getColSpan() )
         );
 
-        ( options.wrapTarget ?
-          plugin.$this.find( options.wrapTarget ) : plugin.$this
-        ).html( plugin.getInnerHTML() );
+        if ( options.wrapTarget ){
+          plugin.$wrapper.find( options.wrapTarget ).html( plugin.getInnerHTML() );
+          plugin.$wrapper.find( options.wrapTarget ).css( options.targetCss );
+        } else {
+          plugin.$wrapper.html( plugin.getInnerHTML() );
+        }
 
-        plugin.$this.css(
+        plugin.$wrapper.css(
           $.extend( options.wrapperPreCSS, { position: 'absolute' } )
         );
 
-        $this.after( plugin.$this );
+        $this.after( plugin.$wrapper );
 
-        initialHeight = plugin.$this.height() + 'px';
+        initialHeight = plugin.$wrapper.height() + 'px';
 
-        plugin.$this.css({
+        plugin.$wrapper.css({
           height:   0
         , position: 'static'
         });
 
         setTimeout( function(){
-          plugin.$this[ options.animate ? 'animate' : 'css' ](
+          plugin.$wrapper[ options.animate ? 'animate' : 'css' ](
             $.extend( options.wrapperPostCSS, { height: initialHeight } )
           );
         }, 1 );
@@ -82,8 +98,8 @@
       }
 
     , collapse: function(){
-        if ( plugin.$this ){
-          var $el = plugin.$this;
+        if ( plugin.$wrapper ){
+          var $el = plugin.$wrapper;
           var cleanup = function(){
             $el.remove();
           };
@@ -95,7 +111,7 @@
 
           if( !options.animate ) cleanup();
 
-          delete plugin.$this;
+          delete plugin.$wrapper;
         }
 
         return plugin;

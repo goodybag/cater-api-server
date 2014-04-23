@@ -439,6 +439,11 @@ define(function(require, exports, module) {
       return [ config.cdn.baseUrl ].concat(
         Array.prototype.slice.call( arguments, 0, - 1 )
       ).join('/');
+    },
+
+    uncamelize: function( text ){
+      var result = text.replace( /([A-Z])/g, " $1" );
+      return result.charAt(0).toUpperCase() + result.slice(1);
     }
   }
 

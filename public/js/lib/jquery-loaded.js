@@ -11,6 +11,7 @@ define(function(require, exports, module) {
   require('field-matcher');
   require('preview');
   require('jquery.row-expand');
+  require('jquery.toggler');
 
   $(function(){
     $('input, textarea').placeholder();

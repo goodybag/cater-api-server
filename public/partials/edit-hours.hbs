@@ -1,17 +1,27 @@
-<div class="col-time">
-  <input type="text" class="time open-time"
-    {{#if this}} value="{{this.[0]}}"{{/if}}>
-</div>
-<div class="col-separator">-</div>
-<div class="col-time">
-  <input type="text" class="time close-time"
-    {{#if this}} value="{{this.[1]}}"{{/if}}>
-</div>
-<div class="col-checkbox">
-  <input type="checkbox" class="hours-checkbox"
-    {{#ifAllDay this}} checked="checked"{{/ifAllDay}}> 24 Hours
-</div>
-<div class="col-checkbox">
-  <input type="checkbox" class="time hours-checkbox"
-    {{#unless this}} checked="checked"{{/unless}}> Closed
+<div class="row">
+  <div class="col-time">
+    <input type="text" class="time open-time"
+      {{#if this}} value="{{this.[0]}}"
+      {{else}} disabled="disabled"{{/if}}
+      {{#ifAllDay this}} disabled="disabled"{{/ifAllDay}}>
+  </div>
+  <div class="col-separator">-</div>
+  <div class="col-time">
+    <input type="text" class="time close-time"
+      {{#if this}} value="{{this.[1]}}"
+      {{else}} disabled="disabled"{{/if}}
+      {{#ifAllDay this}} disabled="disabled"{{/ifAllDay}}>
+  </div>
+  {{#unless @index}}
+  <div class="col-checkbox">
+    <input type="checkbox" class="hours-checkbox all-day"
+      {{#ifAllDay this}} checked="checked"{{/ifAllDay}}> 24 Hours
+  </div>
+  <div class="col-checkbox">
+    <input type="checkbox" class="hours-checkbox closed"
+      {{#unless this}} checked="checked"{{/unless}}> Closed
+  </div>
+  {{else}}
+    <button type="button" class="btn btn-default remove-period">Remove</button>
+  {{/unless}}
 </div>

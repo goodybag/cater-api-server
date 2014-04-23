@@ -5,13 +5,9 @@
     <input type="hidden" name="_method" value="PUT">
 
     {{#each restaurant.delivery_times}}
-      <div id="hours-{{@key}}" class="form-group hours-day row">
-        <div class="row">
-          <div class="col-day">{{weekday @key}}</div>
-          {{#each this}}
-            {{>edit_hours}}
-          {{/each}}
-        </div>
+      <div class="col-day">{{weekday @key}}</div>
+      <div id="hours-{{@key}}" class="hours-day col-times">
+        {{> hours_day }}
       </div>
     {{/each}}
 

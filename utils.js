@@ -1,6 +1,11 @@
 var
+  // Module Dependencies
+  config = require('./config')
+, errors = require('./errors')
+, scheduler = require('./lib/scheduler')
+
   // Third Party Dependencies
-  lodash = require('lodash')
+,  lodash = require('lodash')
 , bcrypt = require('bcrypt')
 , ok = require('okay')
 , request = require('request')
@@ -12,10 +17,7 @@ var
 , ironMQ = require('iron_mq')
 , rollbar = require("rollbar")
 , Handlebars = require('hbs')
-
-  // Module Dependencies
-, config = require('./config')
-, errors = require('./errors')
+, moment = require('moment-timezone')
 
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async})
@@ -401,6 +403,18 @@ utils.queryParams = function(data){
     }
   }
   return params.substring(0, params.length - 1);
+};
+
+// sanitize notification times so they're during work hours
+utils.getWorkingTime = function( datetime, timezone ){
+  datetime = moment(datetime).tz(timezone);
+  if ( datetime.hour() < config.notifications.start ){
+    datetime
+      .hour( config.notifications.start )
+      .minute( 0 )
+      .second( 0 );
+  }
+  return datetime.toISOString();
 };
 
 module.exports = utils;

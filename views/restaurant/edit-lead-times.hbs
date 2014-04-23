@@ -1,52 +1,24 @@
 {{#extend "body"}}
-  <h2>Delivery Settings</h2>
-  <form class="ap-form form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST">
+  <h2>Delivery Hours</h2>
+
+  <form class="ap-form ap-lead-times form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST">
     <input type="hidden" name="_method" value="PUT">
 
-    <div class="form-group">
-      <label class="control-label" for="input-name">Minimum Order
-        <span class="help-block">required</span>
-      </label>
-      <div class="input-group">
-        <span class="input-addon">$</span>
-        <input type="text" class="form-control minimum-order" name="minimum_order" value="{{dollars restaurant.minimum_order}}">
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label class="control-label" for="input-name">Delivery Zip Codes
-        <span class="help-block">List of zip codes restaurant will
-        deliver to. Please enter as a comma separated list.</span>
-      </label>
-      
-      {{#each restaurant.delivery_zip_groups}}
-      <div class="delivery-zip-group">
-        <div class="input-group input-group-top">
-          <span class="input-addon">$</span>
-          <input type="text" class="form-control" name="fee" id="input-minimum-order" value="{{dollars fee}}">
-        </div>
-        <div class="input-group input-group-bottom">
-          <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
+    {{#each restaurant.delivery_times}}
+      <div id="hours-{{@key}}" class="form-group hours-day row">
+        <div class="row">
+          <div class="col-day">{{weekday @key}}</div>
+          {{#each this}}
+            {{>edit_hours}}
+          {{/each}}
         </div>
       </div>
-      {{else}}
-      <div class="delivery-zip-group">
-        <div class="input-group input-group-top">
-          <span class="input-addon">$</span>
-          <input type="text" class="form-control" name="fee" id="input-minimum-order" value="{{dollars fee}}">
-        </div>
-        <div class="input-group input-group-bottom">
-          <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
-        </div>
-      </div>
-      {{/each}}
-      
-    </div>
-    <div class="form-group">
-      <button class="btn btn-default btn-add-delivery-tier">Add New Delivery Area</button>
-    </div>
+    {{/each}}
 
     <button class="btn btn-primary" type="submit">Update</button>
+
+    <h2>Lead Times</h2>
+
   </form>
 {{/extend}}
 

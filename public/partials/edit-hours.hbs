@@ -1,29 +1,17 @@
-<div class="row open-period">
-  <div class="col-lg-3 hours-input">
-    <div class="row">
-      <div class="form-group col-lg-5">
-        <input type="text" class="form-control time open-time" {{#if this}}value="{{this.[0]}}"{{else}}disabled="disabled"{{/if}}{{#ifAllDay this}} disabled="disabled"{{/ifAllDay}}>
-      </div>
-      <div class="col-lg-2 separator">&mdash;</div>
-      <div class="form-group col-lg-5">
-        <input type="text" class="form-control time close-time" {{#if this}}value="{{this.[1]}}"{{else}}disabled="disabled"{{/if}}{{#ifAllDay this}} disabled="disabled"{{/ifAllDay}}>
-      </div>
-    </div>
-  </div>
-  {{#unless @index}}
-  <div class="form-group col-lg-1 hours-checkbox">
-    <label class="control-label">
-      <input type="checkbox" class="all-day"{{#ifAllDay this}} checked="checked"{{/ifAllDay}}> 24 Hours
-    </label>
-  </div>
-  <div class="form-group col-lg-1 hours-checkbox">
-    <label class="control-label">
-      <input type="checkbox" class="closed"{{#unless this}} checked="checked"{{/unless}}> Closed
-    </label>
-  </div>
-  {{else}}
-  <div class="btn-toolbar col-lg-1">
-    <button type="button" class="btn btn-default remove-period">Remove</button>
-  </div>
-  {{/unless}}
+<div class="col-time">
+  <input type="text" class="time open-time"
+    {{#if this}} value="{{this.[0]}}"{{/if}}>
+</div>
+<div class="col-separator">-</div>
+<div class="col-time">
+  <input type="text" class="time close-time"
+    {{#if this}} value="{{this.[1]}}"{{/if}}>
+</div>
+<div class="col-checkbox">
+  <input type="checkbox" class="hours-checkbox"
+    {{#ifAllDay this}} checked="checked"{{/ifAllDay}}> 24 Hours
+</div>
+<div class="col-checkbox">
+  <input type="checkbox" class="time hours-checkbox"
+    {{#unless this}} checked="checked"{{/unless}}> Closed
 </div>

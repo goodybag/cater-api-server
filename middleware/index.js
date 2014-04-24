@@ -7,6 +7,7 @@ module.exports = {
 , cors: require('./cors')
 , domains: require('./domains')
 , editOrderAuth: require('./edit-order-auth')
+, enums: require('./enums')
 , exists: require('./exists')
 , filterBody: require('./filter-body')
 , getUser: require('./get-user')

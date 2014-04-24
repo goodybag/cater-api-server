@@ -1,4 +1,4 @@
-{{#each mealStylesList }}
+{{#each enums.MealStyle }}
 <div class="checkbox">
   <label>
     <input type="checkbox" value="{{name}}" {{#contains ../restaurant.meal_styles name}}checked="checked"{{/contains}}> {{name}}

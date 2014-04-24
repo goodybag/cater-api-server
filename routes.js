@@ -100,7 +100,10 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid/edit/lead-times', m.restrict('admin'), controllers.restaurants.edit.leadTimes);
 
-  app.get('/restaurants/:rid/edit/tags', m.restrict('admin'), controllers.restaurants.edit.tags);
+  app.get('/restaurants/:rid/edit/tags', 
+    m.restrict('admin')
+  , m.enums()
+  , controllers.restaurants.edit.tags);
 
   app.get('/restaurants/:rid/edit/address', m.restrict('admin'), controllers.restaurants.edit.address);
 

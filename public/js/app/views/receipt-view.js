@@ -101,8 +101,14 @@ define(function(require, exports, module) {
     rejectOrder: function() {
       var self = this;
 
+      this.$el.find('#reject-confirm-modal .has-error').removeClass('has-error');
+      var $reasonDenied = this.$el.find('.reason-denied');
+      if ( $reasonDenied.val().length === 0 ) {
+        return $reasonDenied.closest('.form-group').addClass('has-error');
+      }
+
       this.model.save({
-        reason_denied: this.$el.find('.reason-denied').val()
+        reason_denied: $reasonDenied.val()
       }, {
         success: function () {
           self.changeStatus('denied');

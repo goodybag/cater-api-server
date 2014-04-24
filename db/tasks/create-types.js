@@ -28,6 +28,9 @@ var types = {
 , tip_percentage: function(callback) {
     db.query("DROP TYPE IF EXISTS tip_percentage; CREATE TYPE tip_percentage AS ENUM('0', 'custom', '5', '10', '15', '18', '20', '25');", callback);
   }
+, job_status: function(callback) {
+    db.query("DROP TYPE IF EXISTS job_status; CREATE TYPE job_status AS ENUM('pending', 'in-progress', 'completed', 'failed');", callback);
+  }
 };
 
 var done = function(callback) {

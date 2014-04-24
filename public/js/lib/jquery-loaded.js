@@ -9,7 +9,7 @@ define(function(require, exports, module) {
   require('select2');
   require('navbar');
   require('field-matcher');
-  require('preview');
+  require('jquery.preview');
   require('jquery.row-expand');
   require('jquery.toggler');
   require('jquery.prefixer');

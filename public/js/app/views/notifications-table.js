@@ -19,8 +19,8 @@ define(function(require){
       this.options = options || {};
       this.items = this.options.items || [];
 
-      utils.enforceRequired( options, [
-        'order_id'
+      utils.enforceRequired( this.options, [
+        'order'
       ]);
 
       return this;
@@ -101,10 +101,11 @@ define(function(require){
         return item.cid == cid;
       })[0];
 
-      orderNotifier.send( item, function( error ){
+      orderNotifier.send( item.id, this.options.order.get('id'), function( error ){
         spinner.stop();
         if ( error ) return notify.error( error );
 
+        this_.trigger( 'send', item, this_ );
         var oldText = $target.text();
         $target.text('Success!');
         setTimeout( function(){ $target.text( oldText ); }, 3000 );

@@ -1,6 +1,7 @@
 define(function(require){
   var $       = require('jquery-loaded');
   var notify  = require('notify');
+  var utils   = require('utils');
   var order   = require('data/order');
 
   var Views = {
@@ -9,25 +10,14 @@ define(function(require){
   };
 
   var page = {
-    notificationHistory: new Views.NotificationHistoryTable()
-  , notifications: new Views.NotificationsTable()
+    notificationHistory: new Views.NotificationHistoryTable({ order: order })
+  , notifications: new Views.NotificationsTable({ order: order })
 
   , init: function(){
-      page.getHistory( function( error, items ){
-        if ( error ){
-          return notify.error( error );
-        }
+      page.fetchAndRenderHistory();
+      page.fetchAndRenderNotifications();
 
-        page.notificationHistory.setItems( items );
-      });
-
-      page.getAvailable( function( error, items ){
-        if ( error ){
-          return notify.error( error );
-        }
-
-        page.notifications.setItems( items );
-      });
+      page.notifications.on( 'send', page.onNotificationsSend );
 
       $(function(){
         $('.navbar').navbar({ toggleText: false, toggleLogin: false });
@@ -66,6 +56,30 @@ define(function(require){
         }
       , error: callback
       });
+    }
+
+  , fetchAndRenderHistory: function(){
+      page.getHistory( function( error, items ){
+        if ( error ){
+          return notify.error( error );
+        }
+
+        page.notificationHistory.setItems( items );
+      });
+    }
+
+  , fetchAndRenderNotifications: function(){
+      page.getAvailable( function( error, items ){
+        if ( error ){
+          return notify.error( error );
+        }
+
+        page.notifications.setItems( items );
+      });
+    }
+
+  , onNotificationsSend: function(){
+      page.fetchAndRenderHistory();
     }
   };
 

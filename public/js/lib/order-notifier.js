@@ -11,18 +11,16 @@ if (typeof module === 'object' && typeof define !== 'function') {
 define(function(require){
   var utils = require('utils');
   var module = {
-    send: function( notification, callback ){
-      utils.enforceRequired( notification [ 'id', 'order_id' ] );
-
+    send: function( note_id, order_id, callback ){
       utils.ajax({
         type:     'POST'
       , json:     true
       , headers:  { 'Content-Type': 'application/json' }
       , url: [
           '/api/orders'
-        , notification.order_id
+        , order_id
         , 'notifications'
-        , notification.id
+        , note_id
         ].join('/')
       , success:  function(){ callback(); }
       , error:    callback

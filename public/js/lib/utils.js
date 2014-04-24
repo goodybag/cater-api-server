@@ -85,8 +85,16 @@ define(function(require, exports, module) {
    * @param  {Array}  properties Array of properties required
    */
   utils.enforceRequired = function( obj, properties ){
+    if ( !_.isObject( obj ) ){
+      throw new Error('Invalid first parameter');
+    }
+
+    if ( !_.isArray( properties ) ){
+      throw new Error('Invalid second parameter');
+    }
+
     for ( var i = 0; i < properties.length; i++ ){
-      if ( !notification[ properties[i] ] ){
+      if ( !obj[ properties[i] ] ){
         throw new Error('Missing required option: `' + properties[i] + '`');
       }
     }

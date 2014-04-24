@@ -40,6 +40,12 @@ config.defaults = {
 
 , rewardsStartDate: '2014-03-25 00:00:00'
 
+, rewardsPromo: {
+    startDate: '2014-04-21 00:00:00'
+  , endDate: '2014-04-22 00:00:00' 
+  , ptsMultiplier: 2.0
+  }
+
 , welcome: {
     from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
   , beginTime:      '09:04'
@@ -104,6 +110,19 @@ config.defaults = {
     , 'reviews'
     ]
   , reviewThreshold: 3
+  }
+
+
+, notifications: {
+    // appropriate hours to send notifications
+    // 7am-12am relative to order timezone
+    start: 7
+  , end: 24
+  }
+
+, scheduler: {
+    cron: '*/10 * * * * *'
+  , start: true
   }
 
 , outputActivePoolIds: false
@@ -445,6 +464,7 @@ config.test = _.extend( _.clone( config.dev ), {
 , baseUrl: 'http://localhost:3001'
 , http: { port: 3001 }
 , postgresConnStr:  "postgres://localhost:5432/cater_test"
+, cdn: { baseUrl: 'http://localhost:3001' }
 });
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';

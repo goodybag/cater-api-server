@@ -10,6 +10,7 @@ module.exports.paymentSummaryPhantom = setup({app: 'cater', component: 'paymentS
 module.exports.points = setup({app: 'cater', component: 'points'});
 module.exports.welcomeEmail = setup({app: 'cater', component: 'welcomeEmail'});
 module.exports.orderNotifier = setup({app: 'cater', component: 'orderNotifier'});
+module.exports.scheduler = setup({app: 'cater', component: 'scheduler'});
 module.exports.receipt = setup({app: 'cater', component: 'receipt'});
 
 var expressLogger = setup({app: 'cater', component: 'express'});

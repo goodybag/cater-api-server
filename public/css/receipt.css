@@ -84,3 +84,11 @@
   right: 15px;
   top: 52px;
 }
+
+.reason-denied-header {
+  float: right;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #DC0500;
+  font-size: 18px;
+}

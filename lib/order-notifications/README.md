@@ -54,11 +54,13 @@ __`def` Properties:__
 ```
 // `*` is required
 {
-* id          - Unique id for the notification
-* name        - Nice name for notification
-* build       - function( order, logger, callback ) defines the notification.
-              - callback( error, notificationObj ) to define
-  type        - Category of notification, i.e. "submitted"
-  description - Description of the notification
+* id              - Unique id for the notification
+* name            - Nice name for notification
+* build           - function( order, logger, options, callback )
+                    defines the notification.
+                  - callback( error, notificationObj ) to define
+  type            - Category of notification, i.e. "submitted"
+  description     - Description of the notification
+  requiredOptions - Properties that are required to exist on `options`
 }
 ```

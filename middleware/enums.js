@@ -13,7 +13,7 @@ function tableReduce(memo, table) {
 }
 
 /**
- * Attach database enums to res.locals
+ * Attach database enums to res.locals.enums
  * @param {array|string} specify specific enums
  */
 function enums(opts) {

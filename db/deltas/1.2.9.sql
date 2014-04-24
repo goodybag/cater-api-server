@@ -1,7 +1,7 @@
 -- #798 - Notifications
 
 DO $$
-  declare version       text := '1.2.8';
+  declare version       text := '1.2.9';
 begin
   raise notice '## Running Delta v% ##', version;
 

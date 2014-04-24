@@ -1,24 +1,60 @@
 {{#extend "body"}}
-
-<div class="restaurant-edit">
-  <div class="container">
-  <h1>Editing {{restaurant.name}}</h1>
-    {{> restaurant_edit_nav }}
-
-    <!--<Edit Body>-->
-    <div class="restaurant-edit-body">
-      <h2>Update Address</h2>
-      <p>Lorem ipsum dolomite</p>
+  <h2>Update Address</h2>
+  <form class="ap-form form-address">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-4">
+          <label class="control-label">Street</label>
+          <input type="text" class="form-control restaurant-address restaurant-street" value="{{restaurant.street}}" placeholder="123 Fake St.">
+        </div>
+        <div class="col-3">
+          <label class="control-label">City</label>
+          <input type="text" class="form-control restaurant-address restaurant-city" value="{{restaurant.city}}" placeholder="Austin">
+        </div>
+      </div>
     </div>
-    <!--</Edit Body>-->
-  </div>
 
-</div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-4">
+          <label class="control-label">Zip</label>
+          <input type="text" maxlength="5" class="form-control restaurant-address restaurant-zip" value="{{restaurant.zip}}" placeholder="78701">
+        </div>
+        <div class="col-3">
+          <label class="control-label">State</label>
+          <select class="form-control restaurant-address restaurant-state">
+            {{#each states}}
+            <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq ../restaurant.state this.abbr}} selected="selected"{{/eq}}>{{this.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">Update</button>
+    </div>
+  </form>
 {{/extend}}
 
 {{#extend "scripts"}}
 <script>
-  require( ['app/pages/restaurant-edit'], function( page ){
+  // Bootstrap data
+  define('data', ['app/models/restaurant'], function(Restaurant) {
+    var data = {
+      models: {
+        restaurant: new Restaurant({{{json restaurant}}})
+      },
+      views: {
+
+      }
+    };
+    return data;
+  });
+</script>
+
+<script>
+  require( ['app/pages/restaurant/edit-address'], function( page ){
     page.init();
   });
 </script>

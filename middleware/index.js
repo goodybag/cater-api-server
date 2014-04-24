@@ -20,6 +20,7 @@ module.exports = {
 , restrict: require('./restrict')
 , setSession: require('./set-session')
 , sslRedirect: require('./ssl-redirect')
+, states: require('./states')
 , statusCodeIntercept: require('./status-code-intercept')
 , uuid: require('./uuid')
 };

@@ -12,6 +12,7 @@ define(function(require, exports, module) {
   require('preview');
   require('jquery.row-expand');
   require('jquery.toggler');
+  require('jquery.prefixer');
 
   $(function(){
     $('input, textarea').placeholder();

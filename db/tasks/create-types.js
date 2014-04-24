@@ -30,6 +30,7 @@ var types = {
   }
 , email_status: function(callback) {
     db.query("DROP TYPE IF EXISTS email_status; CREATE TYPE email_status AS ENUM('pending', 'delivered', 'error');", callback);
+  }
 , job_status: function(callback) {
     db.query("DROP TYPE IF EXISTS job_status; CREATE TYPE job_status AS ENUM('pending', 'in-progress', 'completed', 'failed');", callback);
   }

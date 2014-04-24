@@ -18,6 +18,7 @@ define(function(require){
       page.fetchAndRenderNotifications();
 
       page.notifications.on( 'send', page.onNotificationsSend );
+      page.notificationHistory.on( 'highlight', page.onHighlight );
 
       $(function(){
         $('.navbar').navbar({ toggleText: false, toggleLogin: false });
@@ -80,6 +81,14 @@ define(function(require){
 
   , onNotificationsSend: function(){
       page.fetchAndRenderHistory();
+    }
+
+  , onHighlight: function( cid, e, view ){
+      $('.nav-tabs [href="#notifications-available"]').trigger('click');
+      var $tds = page.notifications.$el.find( '#notification-' + cid + ' > td' );
+      $tds.addClass('highlight');
+      $tds.eq(0).one( 'animationend', function(){ console.log('END') } );
+      $tds.eq(0).one( 'animationend', $tds.removeClass.bind( $tds, 'highlight') );
     }
   };
 

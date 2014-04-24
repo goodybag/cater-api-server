@@ -6,7 +6,7 @@ define(function(require){
 
   var exports = utils.View.extend({
     events: {
-
+      'click .btn-highlight': 'onBtnHighlightClick'
     }
 
   , template: Hbs.partials.notification_history_table
@@ -31,6 +31,10 @@ define(function(require){
       , height: 700
       });
       return this;
+    }
+
+  , onBtnHighlightClick: function( e ){
+      this.trigger( 'highlight', $( e.target ).data('cid'), e, this );
     }
   });
 

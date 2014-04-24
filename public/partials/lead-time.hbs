@@ -1,21 +1,30 @@
 <div class="row lead-time">
-  <div class="form-group col-lg-3">
-    <label class="control-label">Max Guests</label>
-    <input type="number" class="form-control lead-times lead-max-guests" value="{{max_guests}}">
+  <div class="col-2">
+    <div class="form-group">
+      <label class="control-label">Max Guests</label>
+      <input type="number" class="form-control lead-times lead-max-guests" value="{{max_guests}}">
+    </div>
   </div>
-  <div class="form-group col-lg-3">
-    <label class="control-label">Hours</label>
-    <input type="number" class="form-control lead-times lead-hours" value="{{lead_time}}">
+  <div class="col-2">
+    <div class="form-group">
+      <label class="control-label">Hours</label>
+      <input type="number" class="form-control lead-times lead-hours" value="{{lead_time}}">
+    </div>
   </div>
-  <div class="form-group col-lg-3">
-    <label class="control-label">Cancel Time</label>
-    <input type="number" class="form-control lead-times lead-cancel-time" value="{{cancel_time}}">
+  <div class="col-2">
+    <div class="form-group">
+      <label class="control-label">Cancel Time</label>
+      <input type="number" class="form-control lead-times lead-cancel-time" value="{{cancel_time}}">
+    </div>
   </div>
-  <div class="form-group col-lg-3">
-    <div class="lead-time-actions">
-      <a href="#">
-        <i class="remove-lead-time icon-remove-circle icon-2x" data-title="Remove lead time restriction" ></i>
-      </a>
+  <div class="col-2 col-remove">
+    <div class="form-group">
+      <div class="lead-time-actions">
+        <a href="#">
+          <i class="remove-lead-time icon-remove-circle icon-2x" data-title="Remove lead time restriction" ></i>
+          <button class="btn btn-default remove-lead-time" data-icon="gb-icon-x-mark"></button>
+        </a>
+      </div>
     </div>
   </div>
 </div>

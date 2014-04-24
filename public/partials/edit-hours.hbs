@@ -14,12 +14,16 @@
   </div>
   {{#unless @index}}
   <div class="col-checkbox">
-    <input type="checkbox" class="hours-checkbox all-day"
+    <label>
+      <input type="checkbox" class="hours-checkbox all-day"
       {{#ifAllDay this}} checked="checked"{{/ifAllDay}}> 24 Hours
+    </label>
   </div>
   <div class="col-checkbox">
+    <label>
     <input type="checkbox" class="hours-checkbox closed"
       {{#unless this}} checked="checked"{{/unless}}> Closed
+    </label>
   </div>
   {{else}}
     <button type="button" class="btn btn-default remove-period">Remove</button>

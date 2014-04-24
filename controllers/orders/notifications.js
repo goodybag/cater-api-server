@@ -64,7 +64,27 @@ module.exports.JSON.list = function( req, res ){
 
 module.exports.JSON.sendNotification = function( req, res ){
   logger.info( ['Sending notification', req.param('id'), ' for order #', req.param('oid') ].join('') );
-  notifier.send( req.param('id'), +req.param('oid'), function( error ){
+
+  var notification = notifier.defs[ req.param('id') ];
+
+  if ( !notification ){
+    return res.error( errors.internal.NOT_FOUND );
+  }
+
+  var options = {};
+  if ( notification.requiredOptions ){
+    for ( var i = 0, l = notification.requiredOptions.length; i < l; ++i ){
+      if ( !req.param( notification.requiredOptions[i] ) ){
+        return res.error( errors.internal.BAD_DATA, {
+          message: 'Missing required property: `' + notification.requiredOptions[i] + '`'
+        });
+      }
+
+      options[ notification.requiredOptions[i] ] = req.param( notification.requiredOptions[i] );
+    }
+  }
+
+  notifier.send( req.param('id'), +req.param('oid'), options, function( error ){
     if ( error ) return res.error( error );
     return res.send(204);
   });

@@ -9,7 +9,10 @@
   {{#each items}}
   <tr id="notification-{{this.cid}}">
     <td>{{{list this.email.to}}}</td>
-    <td>{{this.name}}</td>
+    <td>
+      {{this.name}}
+      <p class="notification-description">{{this.description}}</p>
+    </td>
     <td class="actions">
       {{#if this.requiredOptions}}
         <button

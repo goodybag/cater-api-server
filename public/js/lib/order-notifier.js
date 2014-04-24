@@ -11,7 +11,22 @@ if (typeof module === 'object' && typeof define !== 'function') {
 define(function(require){
   var utils = require('utils');
   var module = {
-    send: function( note_id, order_id, callback ){
+    send: function( note_id, order_id, options, callback ){
+      if ( !note_id ){
+        throw new Error('Invalid note_id');
+      }
+
+      if ( !order_id ){
+        throw new Error('Invalid order_id');
+      }
+
+      if ( typeof options === 'function' ){
+        callback = options;
+        options = {};
+      }
+
+      options = options || {};
+
       utils.ajax({
         type:     'POST'
       , json:     true
@@ -21,7 +36,7 @@ define(function(require){
         , order_id
         , 'notifications'
         , note_id
-        ].join('/')
+        ].join('/') + utils.queryParams( options )
       , success:  function(){ callback(); }
       , error:    callback
       });

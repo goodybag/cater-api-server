@@ -101,7 +101,7 @@ define(function(require){
         return item.cid == cid;
       })[0];
 
-      orderNotifier.send( item.id, this.options.order.get('id'), query.params, function( error ){
+      orderNotifier.send( item.id, this.options.order.get('id'), item.params, function( error ){
         spinner.stop();
         if ( error ) return notify.error( error );
 

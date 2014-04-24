@@ -87,7 +87,6 @@ define(function(require){
       $('.nav-tabs [href="#notifications-available"]').trigger('click');
       var $tds = page.notifications.$el.find( '#notification-' + cid + ' > td' );
       $tds.addClass('highlight');
-      $tds.eq(0).one( 'animationend', function(){ console.log('END') } );
       $tds.eq(0).one( 'animationend', $tds.removeClass.bind( $tds, 'highlight') );
     }
   };

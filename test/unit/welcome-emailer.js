@@ -22,4 +22,11 @@ describe ('Welcome Emailer', function(){
 
     assert.equal( welcomer.isValidTimeForUser( invalidTime, user ), false );
   });
+
+  it ('should return a valid result without passing in a time as first arg', function(){
+    var user = { attributes: {} };
+    var result = welcomer.isValidTimeForUser( user );
+
+    assert.equal( result === true || result === false, true );
+  });
 });

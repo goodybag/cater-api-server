@@ -154,6 +154,45 @@
       <input type="text" maxlength="5" class="form-control restaurant-address restaurant-zip" value="{{restaurant.zip}}" placeholder="78701">
     </div>
   </fieldset>
+  <fieldset>
+    <legend>Billing and Stuff</legend>
+    <div class="form-group">
+      <label class="control-label">Street</label>
+      <input type="text" name="mailing_street" class="form-control" value="{{restaurant.mailing_street}}" placeholder="123 Fake St.">
+    </div>
+    <div class="form-group">
+      <label class="control-label">Street 2</label>
+      <input type="text" name="mailing_street2" class="form-control" value="{{restaurant.mailing_street2}}" placeholder="123 Fake St.">
+    </div>
+    <div class="form-group">
+      <label class="control-label">City</label>
+      <input type="text" name="mailing_city" class="form-control" value="{{restaurant.mailing_city}}" placeholder="Austin">
+    </div>
+    <div class="form-group">
+      <label class="control-label">State</label>
+      <select name="mailing_state" class="form-control">
+        {{#each states}}
+        <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq this.abbr ../restaurant.mailing_state}} selected="selected"{{/eq}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Zip</label>
+      <input type="text" name="mailing_zip" maxlength="5" class="form-control" value="{{restaurant.mailing_zip}}" placeholder="78701">
+    </div>
+    <div class="form-group">
+      <label class="control-label">Flat Rate (0 for tiered rate)</label>
+      <input type="text" name="flat_rate" value="{{factorToPercent restaurant.flat_rate}}" placeholder="12.75">
+    </div>
+    <div class="form-group">
+      <label class="control-label">Does this business use <em>Direct Deposit</em>?</label>
+      <input type="checkbox" name="is_direct_deposit"{{#if restaurant.is_direct_deposit}} checked{{/if}}>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Is GB fee calculated on the order <em>Grand Total</em>? (As opposed to the subtotal + delivery fee)</label>
+      <input type="checkbox" name="is_fee_on_total"{{#if restaurant.is_fee_on_total}} checked{{/if}}>
+    </div>
+  </fieldset>
   <div class="col-lg-10 status-text">
     <span class="state-default">No changes made :)</span>
     <span class="state-pending hide">You have changes to be saved</span>

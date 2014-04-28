@@ -87,7 +87,15 @@ define(function(require, exports, module) {
       meal_types: '.restaurant-form .restaurant-meal-types input',
       meal_styles: '.restaurant-form .restaurant-meal-styles input',
       websites: '.restaurant-form .restaurant-websites',
-      description: '.restaurant-form .restaurant-description'
+      description: '.restaurant-form .restaurant-description',
+      mailing_street: '.restaurant-form [name="mailing_street"]',
+      mailing_street2: '.restaurant-form [name="mailing_street2"]',
+      mailing_city: '.restaurant-form [name="mailing_city"]',
+      mailing_state: '.restaurant-form [name="mailing_state"]',
+      mailing_zip: '.restaurant-form [name="mailing_zip"]',
+      flat_rate: '.restaurant-form [name="flat_rate"]',
+      is_direct_deposit: '.restaurant-form [name="is_direct_deposit"]',
+      is_fee_on_total: '.restaurant-form [name="is_fee_on_total"]'
     },
 
     fieldSplit: function(selector, delimiter) {
@@ -169,6 +177,14 @@ define(function(require, exports, module) {
         return this.$el.find(this.fieldMap.is_hidden).is(':checked');
       },
 
+      is_direct_deposit: function() {
+        return this.$el.find(this.fieldMap.is_direct_deposit).is(':checked');
+      },
+
+      is_fee_on_total: function() {
+        return this.$el.find(this.fieldMap.is_fee_on_total).is(':checked');
+      },
+
       yelp_business_id: function(){
         var url = this.$el.find(this.fieldMap.yelp_business_id).val();
         if (!url) return null;
@@ -176,6 +192,13 @@ define(function(require, exports, module) {
 
         url = url.split('/').pop();
         return url.split('#')[0];
+      },
+
+      flat_rate: function(){
+        var val = this.$el.find( this.fieldMap.flat_rate ).val();
+        val = Handlebars.helpers.percentToFactor( val, 5 );
+        console.log('flat_rate is', val);
+        return val;
       }
     },
 

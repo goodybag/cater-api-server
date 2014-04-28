@@ -12,7 +12,7 @@
       {{/each}}
 
       <div class="form-group">
-        <button class="btn btn-primary" type="submit">Add new category</button>
+        <button class="btn btn-primary new-category" type="submit">Add new category</button>
       </div>
     </div>
   </div>
@@ -20,43 +20,52 @@
 
 {{#extend "scripts"}}
 <script>
-  // Bootstrap data
-  define('data', ['app/models/restaurant', 'app/views/edit-category-view', 'app/views/edit-item-view']
-  , function(Restaurant, EditCategoryView, EditItemView) {
-    var restaurant = new Restaurant({{{json restaurant}}});
-
-    {{#each restaurant.categories}}
-      var category{{this.id}} = new EditCategoryView({
-        el: '#category-{{id}}'
-      , model: restaurant.categories.get({{id}})
-      , restaurant: restaurant 
-      });
-
-      category{{id}}.items = [
-        {{#each items}}
-          new EditItemView({
-            el: '#edit-item-{{id}}'
-          , model: category{{../id}}.model.items.get({{id}})
-          , category: category{{../id}} }),
-        {{/each}}]
-
-      restaurant.categories.push(category{{id}});
+require([
+  'app/models/restaurant'
+, 'app/views/edit-restaurant-view'
+, 'app/views/edit-category-view'
+, 'app/views/edit-item-view'
+, 'app/models/hours'
+, 'app/views/edit-hours-view'
+, 'jquery-ui'
+], function(Restaurant, EditRestaurantView, EditCategoryView, EditItemView, Hours, EditHoursView) {
+  var hours = [
+    {{#each restaurant.delivery_times}}
+      new EditHoursView({
+        model: new Hours({
+          day: {{@key}}
+        , times: {{{json this}}}
+        })
+      , el: '#hours-{{@key}}'
+      }),
     {{/each}}
-    var data = {
-      models: {
-        restaurant: restaurant
-      },
-      views: {
+  ];
 
-      }
-    };
-    return data;
+  var editRestaurantView = new EditRestaurantView({
+    el: '#main'
+  , model: new Restaurant({{{json restaurant}}})
+  , hours: hours
   });
-</script>
 
-<script>
-  require( ['app/pages/restaurant/edit-menu'], function( page ){
-    page.init();
-  });
+  {{#each restaurant.categories}}
+    var category{{this.id}} = new EditCategoryView({
+      el: '#category-{{this.id}}'
+    , model: editRestaurantView.model.categories.get({{id}})
+    , restaurant: editRestaurantView
+    });
+
+    category{{id}}.items = [
+      {{#each items}}
+        new EditItemView({
+          el: '#edit-item-{{id}}'
+        , model: category{{../id}}.model.items.get({{id}})
+        , category: category{{../id}}
+        }),
+      {{/each}}
+    ];
+
+    editRestaurantView.categories.push(category{{id}});
+  {{/each}}
+});
 </script>
 {{/extend}}

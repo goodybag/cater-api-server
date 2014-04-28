@@ -121,7 +121,6 @@ define(function(require, exports, module) {
 
     onEditOptionsClick: function(e){
       e.preventDefault();
-
       this.toggleEditOptions();
     }
   });

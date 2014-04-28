@@ -58,7 +58,7 @@
 
 <h2>Items</h2>
 {{#each items}}
-<div class="row">
+<div id="edit-item-{{id}}" class="row">
   <div class="col-details">
     <div class="row row-details">
       <div class="col-order">
@@ -82,10 +82,7 @@
       <textarea rows="3">{{description}}</textarea>
     </div>
     <div class="row row-actions">
-      <label>
-        <input type="checkbox" name="hidden"> Hidden
-      </label>
-      <a href="#">+ Expand Options</a>
+      <a href="#" class="item-edit-options">+ Expand Options</a>
       <button class="btn btn-default">Copy</button>
       <button class="btn btn-primary">Remove</button>
       <button class="btn btn-tertiary">Save</button>

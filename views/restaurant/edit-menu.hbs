@@ -3,12 +3,15 @@
   <div>
     <a href="/restaurants/{{restaurant.id}}/sort">click here to sort this menu</a>
   </div>
+
   <div class="ap-menu">
     <div class="categories">
       {{#each restaurant.categories}}
-      <div id="category-{{this.id}}" class="panel">
-        {{> edit_category}}
-      </div>
+        <div id="category-{{this.id}}" class="panel">
+          <form class="category-form">
+            {{> edit_category}}
+          </form>
+        </div>
       {{/each}}
 
       <div class="form-group">

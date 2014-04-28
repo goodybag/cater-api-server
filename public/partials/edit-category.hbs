@@ -1,17 +1,39 @@
 <div class="row">
-  <div class="col-1">
-    <div class="form-group">
-      <label class="control-label">Order</label>
-      <input type="number" value="{{order}}" class="form-control category-order">
+  <div class="col-details">
+    <div class="row">
+      <div class="col-4">
+        <div class="row row-category-details">
+          <div class="col-1">
+            <div class="form-group">
+              <label class="control-label">Order</label>
+              <input type="number" value="{{order}}" class="form-control category-order">
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <label class="control-label">Name</label>
+              <input type="text" value="{{name}}" class="form-control category-order">
+            </div>
+          </div>
+        </div>
+        <div class="row row-actions">
+          <button class="btn btn-default category-copy">Copy</button>
+          <button class="btn btn-primary category-remove">Remove</button>
+          <button type="submit" class="btn btn-tertiary category-save">Save</button>
+          <label><input type="checkbox">Hidden</label>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-group">
+          <label class="control-label">Description</label>
+          <input type="text" value="{{description}}" class="form-control category-description">
+        </div>
+      </div>
+
     </div>
-  </div>
-  <div class="col-5">
-    <div class="form-group">
-      <label class="control-label">Name</label>
-      <input type="text" value="{{name}}" class="form-control category-order">
-    </div>
-  </div>
-  <div class="col-2">
+
+  </div>{{!-- end cateogriy left col --}}
+  <div class="col-checkboxes">
     <div class="form-group">
       <label class="control-label">Type</label>
       <div class="row">
@@ -30,15 +52,6 @@
           </label>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-6">
-    <div class="form-group">
-      <label class="control-label">Description</label>
-      <input type="text" value="{{description}}" class="form-control category-description">
     </div>
   </div>
 </div>
@@ -78,7 +91,7 @@
     </div>
   </div>{{!-- end col details --}}
 
-  <div class="col-tags">
+  <div class="col-checkboxes">
     <label>Tags</label>
     {{> edit_tags this.tags }}
   </div>{{!-- end col tags --}}

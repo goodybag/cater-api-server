@@ -1,13 +1,13 @@
-<td colspan="7" class="edit-item-options-wrapper">
+<div class="edit-item-options-wrapper">
   <h2 class="edit-item-options-title">Edit Options</h2>
   <div class="actions">
     <button class="btn btn-default btn-cancel">Cancel</button>
-    <button class="btn btn-default btn-new-group">New Option Group</button>
-    <button class="btn btn-success btn-save">Save</button>
+    <button class="btn btn-primary btn-new-group">New Option Group</button>
+    <button class="btn btn-save">Save</button>
   </div>
   <div class="option-groups row">
     {{#each model.options_sets}}
       {{>edit_options_set}}
     {{/each}}
   </div>
-</td>
+</div>

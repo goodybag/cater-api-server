@@ -46,11 +46,8 @@ config.defaults = {
   , beginTime:      '09:04'
   , endTime:        '18:00'
   , delay1:         (4*60*1000)
-  , delay2:         (2*60*1000)
   , timezone:       'America/Chicago'
   , subject1:       'Hi there!'
-  , subject2:       'I forgot... free gift card!!'
-  , reminderSchema: { users: true }
   }
 
 , salesTax: 1.0825

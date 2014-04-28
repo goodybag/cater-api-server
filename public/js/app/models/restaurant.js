@@ -124,6 +124,48 @@ define(function(require, exports, module) {
             type: 'string',
             format: 'uri'
           }
+        },
+        billing_email: {
+          type: 'string',
+          minLength: 1,
+          required: false
+        },
+        billing_street: {
+          type: 'string',
+          minLength: 1,
+          required: false
+        },
+        billing_street2: {
+          type: 'string',
+          minLength: 1,
+          required: false
+        },
+        billing_city: {
+          type: 'string',
+          minLenght: 1,
+          required: false
+        },
+        billing_state: {
+          type: 'string',
+          length: 2,
+          pattern: /^[A-Z]*$/, // only capital letters
+          "enum": _.pluck(states, 'abbr'),
+          required: false
+        },
+        billing_zip: {
+          type: 'string',
+          length: 5,
+          pattern: /^\d*$/, // only digits
+          required: false
+        },
+        gb_fee: {
+          type: 'number'
+        },
+        is_direct_deposit: {
+          type: 'boolean'
+        },
+        is_fee_on_total: {
+          type: 'boolean'
         }
       }
     },

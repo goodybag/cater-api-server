@@ -126,7 +126,7 @@ define(function(require) {
   , gb_fee: {
       type: types.numeric(5,5)
     , nullable: false
-    , deafult: 0.1275
+    , default: 0.1275
     }
   , is_direct_deposit: {
       type: types.boolean

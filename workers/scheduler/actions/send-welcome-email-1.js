@@ -3,6 +3,6 @@ var config    = require('../../../config');
 var logger    = require('../../../logger').scheduler;
 var welcomer  = require('../../../lib/welcome-emailer');
 
-module.exports = function( user, done ){
-  welcomer.send( user.id, done );
+module.exports = function( job, done ){
+  welcomer.send( job.data.id, done );
 };

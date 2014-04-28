@@ -32,11 +32,14 @@ config.defaults = {
 
 , rewardsStartDate: '2014-03-25 00:00:00'
 
-, rewardsPromo: {
-    startDate: '2014-04-21 00:00:00'
-  , endDate: '2014-04-22 00:00:00' 
-  , ptsMultiplier: 2.0
-  }
+// temp solution, would be better in a table
+, rewardsPromos: [
+    { start: '2014-04-21 00:00:00', end: '2014-04-22 00:00:00', rate: 2.0 }
+  , { start: '2014-04-28 00:00:00', end: '2014-04-29 00:00:00', rate: 2.0 }
+  , { start: '2014-05-05 00:00:00', end: '2014-05-06 00:00:00', rate: 2.0 }
+  , { start: '2014-05-12 00:00:00', end: '2014-05-13 00:00:00', rate: 2.0 }
+  , { start: '2014-05-19 00:00:00', end: '2014-05-20 00:00:00', rate: 2.0 }
+  ]
 
 , welcome: {
     from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'

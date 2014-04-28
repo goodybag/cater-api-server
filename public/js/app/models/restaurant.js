@@ -124,6 +124,38 @@ define(function(require, exports, module) {
             type: 'string',
             format: 'uri'
           }
+        },
+        mailing_street: {
+          type: 'string',
+          minLength: 1,
+          required: false
+        },
+        mailing_city: {
+          type: 'string',
+          minLenght: 1,
+          required: false
+        },
+        mailing_state: {
+          type: 'string',
+          length: 2,
+          pattern: /^[A-Z]*$/, // only capital letters
+          "enum": _.pluck(states, 'abbr'),
+          required: false
+        },
+        mailing_zip: {
+          type: 'string',
+          length: 5,
+          pattern: /^\d*$/, // only digits
+          required: false
+        },
+        flat_rate: {
+          type: 'number'
+        },
+        is_direct_deposit: {
+          type: 'boolean'
+        },
+        is_fee_on_total: {
+          type: 'boolean'
         }
       }
     },

@@ -125,30 +125,40 @@ define(function(require, exports, module) {
             format: 'uri'
           }
         },
-        mailing_street: {
+        billing_email: {
           type: 'string',
           minLength: 1,
           required: false
         },
-        mailing_city: {
+        billing_street: {
+          type: 'string',
+          minLength: 1,
+          required: false
+        },
+        billing_street2: {
+          type: 'string',
+          minLength: 1,
+          required: false
+        },
+        billing_city: {
           type: 'string',
           minLenght: 1,
           required: false
         },
-        mailing_state: {
+        billing_state: {
           type: 'string',
           length: 2,
           pattern: /^[A-Z]*$/, // only capital letters
           "enum": _.pluck(states, 'abbr'),
           required: false
         },
-        mailing_zip: {
+        billing_zip: {
           type: 'string',
           length: 5,
           pattern: /^\d*$/, // only digits
           required: false
         },
-        flat_rate: {
+        gb_fee: {
           type: 'number'
         },
         is_direct_deposit: {

@@ -88,12 +88,13 @@ define(function(require, exports, module) {
       meal_styles: '.restaurant-form .restaurant-meal-styles input',
       websites: '.restaurant-form .restaurant-websites',
       description: '.restaurant-form .restaurant-description',
-      mailing_street: '.restaurant-form [name="mailing_street"]',
-      mailing_street2: '.restaurant-form [name="mailing_street2"]',
-      mailing_city: '.restaurant-form [name="mailing_city"]',
-      mailing_state: '.restaurant-form [name="mailing_state"]',
-      mailing_zip: '.restaurant-form [name="mailing_zip"]',
-      flat_rate: '.restaurant-form [name="flat_rate"]',
+      billing_email: '.restaurant-form [name="billing_email"]',
+      billing_street: '.restaurant-form [name="billing_street"]',
+      billing_street2: '.restaurant-form [name="billing_street2"]',
+      billing_city: '.restaurant-form [name="billing_city"]',
+      billing_state: '.restaurant-form [name="billing_state"]',
+      billing_zip: '.restaurant-form [name="billing_zip"]',
+      gb_fee: '.restaurant-form [name="gb_fee"]',
       is_direct_deposit: '.restaurant-form [name="is_direct_deposit"]',
       is_fee_on_total: '.restaurant-form [name="is_fee_on_total"]'
     },
@@ -194,10 +195,9 @@ define(function(require, exports, module) {
         return url.split('#')[0];
       },
 
-      flat_rate: function(){
-        var val = this.$el.find( this.fieldMap.flat_rate ).val();
+      gb_fee: function(){
+        var val = this.$el.find( this.fieldMap.gb_fee ).val();
         val = Handlebars.helpers.percentToFactor( val, 5 );
-        console.log('flat_rate is', val);
         return val;
       }
     },

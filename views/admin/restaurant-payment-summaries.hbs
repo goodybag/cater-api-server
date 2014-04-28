@@ -4,12 +4,12 @@
   <div class="row">
     <div class="col-sm-6">
       <dl class="dl-horizontal">
-        <dt>Flat Rate:</dt>
+        <dt>GB Fee:</dt>
         <dd>
-          {{#if restaurant.flat_rate}}
-            {{factorToPercent restaurant.flat_rate}}%
-            {{else}}
-            Uses Tiered Rate
+          {{#if restaurant.gb_fee}}
+            {{factorToPercent restaurant.gb_fee}}%
+          {{else}}
+            Tiered
           {{/if}}
         </dd>
         <dt>Direct Deposit?</dt>
@@ -20,10 +20,12 @@
     </div>
     <div class="col-sm-6">
       <address>
-        <h4>Mailing Address:</h4>
-        {{restaurant.mailing_street}}{{#if restaurant.mailing_street2}}, {{restaurant.mailing_street2}}{{/if}}
+        <h4>Billing Info:</h4>
+        <a href="mailto:{{restaurant.billing_email}}">{{restaurant.billing_email}}</a>
         <br>
-        {{restaurant.mailing_city}}, {{restaurant.mailing_state}}, {{restaurant.mailing_zip}}
+        {{restaurant.billing_street}}{{#if restaurant.billing_street2}}, {{restaurant.billing_street2}}{{/if}}
+        <br>
+        {{restaurant.billing_city}}, {{restaurant.billing_state}}, {{restaurant.billing_zip}}
       </address>
     </div>
   </div>

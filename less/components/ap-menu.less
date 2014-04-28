@@ -1,0 +1,51 @@
+/////////////////////////////////////////////////
+// Menu
+/////////////////////////////////////////////////
+
+.ap-menu {
+  .col-details {
+    float: left;
+    width: 80%;
+  }
+
+  .col-tags {
+    float: left;
+    width: 20%;
+    padding-left: 10px;
+  }
+
+  .row-details .col-order {
+    .col-detail(@width: 15%, @margin-left: 0);
+  }
+  .row-details .col-name {
+    .col-detail(199px);
+  }
+  .row-details .col-price {
+    .col-detail(15%);
+  }
+  .row-details .col-feeds-min {
+    .col-detail(15%);
+  }
+  .row-details .col-feeds-max {
+    .col-detail(15%);
+  }
+
+  .row-actions {
+    margin: 10px 0;
+  }
+  .row-actions .btn {
+    float: right;
+    margin-left: 5px;
+  }
+
+  .row-actions label {
+    display: inline-block;
+  }
+}
+
+
+.col-detail(@width: 20%, @margin-left: 5px) {
+  float:          left;
+  margin-left:    @margin-left;
+  width:          @width;
+}

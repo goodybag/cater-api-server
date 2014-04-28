@@ -21,10 +21,30 @@
 {{#extend "scripts"}}
 <script>
   // Bootstrap data
-  define('data', ['app/models/restaurant'], function(Restaurant) {
+  define('data', ['app/models/restaurant', 'app/views/edit-category-view', 'app/views/edit-item-view']
+  , function(Restaurant, EditCategoryView, EditItemView) {
+    var restaurant = new Restaurant({{{json restaurant}}});
+
+    {{#each restaurant.categories}}
+      var category{{this.id}} = new EditCategoryView({
+        el: '#category-{{id}}'
+      , model: restaurant.categories.get({{id}})
+      , restaurant: restaurant 
+      });
+
+      category{{id}}.items = [
+        {{#each items}}
+          new EditItemView({
+            el: '#edit-item-{{id}}'
+          , model: category{{../id}}.model.items.get({{id}})
+          , category: category{{../id}} }),
+        {{/each}}]
+
+      restaurant.categories.push(category{{id}});
+    {{/each}}
     var data = {
       models: {
-        restaurant: new Restaurant({{{json restaurant}}})
+        restaurant: restaurant
       },
       views: {
 

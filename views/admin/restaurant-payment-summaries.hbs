@@ -1,6 +1,20 @@
 {{#extend "body"}}
 <div class="container page-header">
   <h1 class="page-title">{{restaurant.name}}</h1>
+  <dl class="dl-horizontal">
+    <dt>Flat Rate:</dt>
+    <dd>
+      {{#if restaurant.flat_rate}}
+        {{factorToPercent restaurant.flat_rate}}%
+        {{else}}
+        Uses Tiered Rate
+      {{/if}}
+    </dd>
+    <dt>Direct Deposit?</dt>
+    <dd>{{#if restaurant.is_direct_deposit}}Yes{{else}}No{{/if}}</dd>
+    <dt>Fee on Grand Total?</dt>
+    <dd>{{#if restaurant.is_fee_on_total}}Yes{{else}}No{{/if}}</dd>
+  </dl>
   <h2 class="page-sub-title">Payment Summaries</h2>
   <ul class="header-nav">
     <li>

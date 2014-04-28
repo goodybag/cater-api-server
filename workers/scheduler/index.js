@@ -7,6 +7,8 @@ var config = require('../../config');
 
 new CronJob(config.scheduler.cron, function(){
   scheduler.runAll( function( errors, stats ){
-    reporter.logResults( errors, stats );
-  });    
+    if ( !config.isDev ){
+      reporter.logResults( errors, stats );
+    }
+  });
 }, null, config.scheduler.start);

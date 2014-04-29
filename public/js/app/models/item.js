@@ -34,7 +34,7 @@ define(function(require, exports, module) {
           },
           feeds_max: {
             type: 'integer',
-            minimum: (attrs && attrs.feeds_min) || 1,
+            minimum: attrs.feeds_min || 1,
             required: true
           },
           options_sets: {

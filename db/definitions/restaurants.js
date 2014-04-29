@@ -105,6 +105,39 @@ define(function(require) {
       type: types.array(types.text)
     , nullable: false
     }
+  , billing_email: {
+      type: types.text
+    }
+  , billing_street: {
+      type: types.text
+    }
+  , billing_street2: {
+      type: types.text
+    }
+  , billing_city: {
+      type: types.text
+    }
+  , billing_state: {
+      type: types.varchar(2)
+    }
+  , billing_zip: {
+      type: types.varchar(2)
+    }
+  , gb_fee: {
+      type: types.numeric(5,5)
+    , nullable: false
+    , default: 0.1275
+    }
+  , is_direct_deposit: {
+      type: types.boolean
+    , nullable: false
+    , default: true
+    }
+  , is_fee_on_total: {
+      type: types.boolean
+    , nullable: false
+    , default: true
+    }
   };
 
   definition.indices = {};

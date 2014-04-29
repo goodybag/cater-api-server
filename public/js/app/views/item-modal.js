@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     events: {
       'submit .modal-item-form': 'submit'
     , 'click .btn-item-remove':  'onItemRemoveClick'
+    , 'click .checkbox': 'onItemChangeClick'
     },
 
     // template: require('hb!/partials/item-modal'),
@@ -137,6 +138,29 @@ define(function(require, exports, module) {
       }
 
       this.hide();
+    },
+
+    onItemChangeClick: function(e) {
+      var this_ = this;
+      var options_sets = _( this.model.get('options_sets') ).map( function( set ) {
+        return _.extend({}, set, {
+          options: _( set.options ).map( function( option ) {
+            var state = this_.$el.find( '#item-option-' + option.id ).is(':checked');
+            return _.extend({}, _.omit(option, 'default_state'), {state: state});
+          })
+        });
+      });
+      var quantity = +this.$el.find('.item-quantity').val();
+      var orderItem = new OrderItem();
+      var validationError = orderItem.validate({
+        quantity: quantity
+      , options_sets: options_sets
+      });
+      console.log(validationError);
+
+      this.clearErrors();
+      this.displayErrors( validationError );
+      //e.preventDefault();
     }
   });
 });

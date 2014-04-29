@@ -20,4 +20,5 @@ module.exports = {
 , statusCodeIntercept: require('./status-code-intercept')
 , uuid: require('./uuid')
 , filterBody: require('./filter-body')
+, getOrder: require('./get-order')
 };

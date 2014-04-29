@@ -267,6 +267,13 @@ module.exports.register = function(app) {
    *  Order resource.  An individual order.
    */
 
+  app.get('/orders/:oid/manifest'
+  , m.getOrder()
+  , m.view( 'order-manifest/manifest-1', {
+      layout: 'order-manifest/layout'
+    })
+  );
+
   app.get(
     config.receipt.orderRoute
   , m.basicAuth()

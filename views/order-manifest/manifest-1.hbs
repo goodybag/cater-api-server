@@ -1,0 +1,492 @@
+{{#extend "scripts"}}
+<script>
+  var pageHeight = 940;
+
+  var fillerTmpl = function( options ){
+    return [
+      '<tr class="filler">'
+    , '  ' + new Array(5).join('.').split('.').map( function(){
+        return '  <td style="height: ' + options.height + 'px"></td>'
+      }).join('\n')
+    , '</tr>'
+    ].join('\n');
+  };
+
+  var adjustManifestPage = function( $page, callback ){
+    console.print('inner', Array.prototype.reduce.call(
+      $page.find('> *').map( function(){
+        return $(this).outerHeight(true);
+      })
+    , function( a, b ){ return a + b; }
+    ));
+    var getDiff = function( $el ){
+      return pageHeight - Array.prototype.reduce.call(
+        $el.find('> *').map( function(){
+          return $(this).outerHeight(true);
+        })
+      , function( a, b ){ return a + b; }
+      );
+    };
+
+    var fillRemaining = function( height ){
+      console.print('Filling table with: ', height);
+      $page.find('tbody').append( fillerTmpl({ height: height }) );
+    };
+
+    var diff = getDiff( $page );
+
+    // Table fits on page, add the filler and callback
+    if ( diff >= 0 ){
+      fillRemaining( diff );
+      return callback();
+    }
+
+    // $page's inner contents are larger than the paper would allow
+    // Remove table rows until this page fits
+    var $trs = $();
+    var whileGreaterThan = function( callback ){
+      if ( getDiff( $page ) >= 0 ) return callback();
+
+      $trs = $trs.add( $page.find('tbody > tr:last-child' ).clone() );
+      $page.find('tbody > tr:last-child' ).remove();
+
+      setTimeout(function(){ whileGreaterThan( callback ); }, 5 );
+    };
+
+    whileGreaterThan( function(){
+      var $clone = $page.clone();
+      $clone.find('table tbody tr').remove();
+      $clone.find('tbody').append( $trs.get().reverse() );
+      $page.after( $clone );
+      adjustManifestPage( $clone, callback );
+    });
+  };
+
+  var fixPageNumbers = function(){
+    var $numbers = $('.page-number');
+    $numbers.find('.total').text( $numbers.length );
+    $numbers.each( function( i ){
+      $(this).find('.current').text( i + 1 );
+    });
+  };
+
+  $(function(){
+    adjustManifestPage( $('.table-page').eq(0), function(){
+      fixPageNumbers();
+      window.__page.ready();
+    });
+  });
+</script>
+{{/extend}}
+
+{{#extend "body"}}
+<section class="manifest-page table-page">
+  <header class="manifest-header">
+    <h4 class="header-text">Please print this and include with the delivered order. Thanks! <span class="signature">-Goodybag</span></h4>
+    <div class="subtext">
+      Not what you ordered? Something missing? No worries! We will help get it resolved. Contact us at the number below.
+    </div>
+  </header>
+  <table class="manifest-table">
+    <thead>
+      <tr>
+        <th class="checkbox"><img src="/img/checkmark_white.svg" width="18"></th>
+        <th class="quantity">Qty</th>
+        <th class="item">Item</th>
+        <th class="options-notes">Options/Notes</th>
+        <th class="recipient">Recipient</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x50</td>
+        <td class="item">Taco</td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient"></td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x3</td>
+        <td class="item">Taco</td>
+        <td class="options-notes">No veggies!</td>
+        <td class="recipient"></td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">x2</td>
+        <td class="item">
+          Dos Batos Box
+          <div class="options">Mexican Corn, Hybrid</div>
+        </td>
+        <td class="options-notes">Add Lettuce &amp; spinach</td>
+        <td class="recipient">
+          John<br>
+          Preston
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="page-number">
+    Page <span class="current">1</span>/<span class="total">2</span>
+  </div>
+</section>
+
+<section class="manifest-page">
+  <h1 class="page-title">Order Info</h1>
+  <dl class="manifest-order-dl">
+    <dt>Restaurant:</dt>
+    <dd>{{order.restaurant.name}}</dd>
+    <dt>Order Number:</dt>
+    <dd>#{{order.id}}</dd>
+    {{#if order.name}}
+    <dt>Delivery Name:</dt>
+    <dd>{{order.name}}</dd>
+    {{/if}}
+    <dt>Customer Notes:</dt>
+    <dd>{{order.notes}}</dd>
+  </dl>
+
+  <div class="page-number">
+    Page <span class="current">1</span>/<span class="total">2</span>
+  </div>
+</section>
+{{/extend}}

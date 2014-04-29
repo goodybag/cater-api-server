@@ -130,6 +130,20 @@ define(function(require, exports, module) {
       return this;
     },
 
+    validateOptionsMaximum: function(e) {
+      // checks if maximum # of options have been exceeded
+      var $optionsSet = $(e.target).closest('.item-options-fieldset');
+      var optionsSetId = $optionsSet.data('options-set-id');
+      var options_set = _.findWhere(this.model.get('options_sets'), {id: optionsSetId});
+      var selectedCount = $optionsSet.find('input[type="checkbox"]:checked').length;
+
+      if ( selectedCount >= options_set.selected_max  ) {
+        $optionsSet.find('input[type="checkbox"]:not(:checked)').prop('disabled', true);
+      } else {
+        $optionsSet.find('input[type="checkbox"]').prop('disabled', false);
+      }
+    },
+
     onItemRemoveClick: function(e) {
       e.preventDefault();
 
@@ -142,25 +156,9 @@ define(function(require, exports, module) {
 
     onItemChangeClick: function(e) {
       var this_ = this;
-      var options_sets = _( this.model.get('options_sets') ).map( function( set ) {
-        return _.extend({}, set, {
-          options: _( set.options ).map( function( option ) {
-            var state = this_.$el.find( '#item-option-' + option.id ).is(':checked');
-            return _.extend({}, _.omit(option, 'default_state'), {state: state});
-          })
-        });
-      });
-      var quantity = +this.$el.find('.item-quantity').val();
-      var orderItem = new OrderItem();
-      var validationError = orderItem.validate({
-        quantity: quantity
-      , options_sets: options_sets
-      });
-      console.log(validationError);
+      this.validateOptionsMaximum.call(this, e);
+    },
 
-      this.clearErrors();
-      this.displayErrors( validationError );
-      //e.preventDefault();
-    }
+
   });
 });

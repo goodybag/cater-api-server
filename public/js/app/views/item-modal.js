@@ -137,10 +137,12 @@ define(function(require, exports, module) {
       var options_set = _.findWhere(this.model.get('options_sets'), {id: optionsSetId});
       var selectedCount = $optionsSet.find('input[type="checkbox"]:checked').length;
 
-      if ( selectedCount >= options_set.selected_max ) {
-        $optionsSet.find('input[type="checkbox"]:not(:checked)').prop('disabled', true);
-      } else {
-        $optionsSet.find('input[type="checkbox"]').prop('disabled', false);
+      if ( options_set.selected_max ) {
+        if ( selectedCount >= options_set.selected_max ) {
+          $optionsSet.find('input[type="checkbox"]:not(:checked)').prop('disabled', true);
+        } else {
+          $optionsSet.find('input[type="checkbox"]').prop('disabled', false);
+        } 
       }
     },
 

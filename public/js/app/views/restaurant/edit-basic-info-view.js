@@ -16,6 +16,8 @@ define(function(require, exports, module) {
     , websites:               '#input-websites'
     , yelp_business_id:       '#input-yelp'
     , is_hidden:              '#input-hidden'
+    , logo_url:               '#input-logo-url'
+    , logo_mono_url:          '#input-mono-logo-url'
     },
 
     fieldGetters: {

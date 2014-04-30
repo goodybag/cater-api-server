@@ -52,17 +52,14 @@ var modifyAttributes = function(callback, err, orders) {
 
         // Handle reward promos
         var submitted = moment(order.attributes.submitted);
-        var promoRate;
-
-        var awardPromo = utils.some(config.rewardsPromos, function(promo) {
+        var promo = utils.find(config.rewardsPromos, function(promo) {
           var eligible = submitted >= moment(promo.start) &&
                          submitted <  moment(promo.end);
-          if (eligible) promoRate = promo.rate;
           return eligible;
         });
 
-        if ( awardPromo && promoRate ) {
-          order.attributes.points = Math.floor(order.attributes.total * promoRate / 100);
+        if ( promo ) {
+          order.attributes.points = Math.floor(order.attributes.total * promo.rate / 100);
         } else {
           order.attributes.points = Math.floor(order.attributes.total / 100);
         }

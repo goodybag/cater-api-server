@@ -304,7 +304,16 @@ var fields = [
   'cuisine',
   'yelp_business_id',
   'websites',
-  'description'
+  'description',
+  'billing_email',
+  'billing_street',
+  'billing_street2',
+  'billing_city',
+  'billing_state',
+  'billing_zip',
+  'gb_fee',
+  'is_direct_deposit',
+  'is_fee_on_total'
 ];
 
 module.exports.create = function(req, res) {

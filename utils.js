@@ -2,10 +2,9 @@ var
   // Module Dependencies
   config = require('./config')
 , errors = require('./errors')
-, scheduler = require('./lib/scheduler')
 
   // Third Party Dependencies
-,  lodash = require('lodash')
+, lodash = require('lodash')
 , bcrypt = require('bcrypt')
 , ok = require('okay')
 , request = require('request')

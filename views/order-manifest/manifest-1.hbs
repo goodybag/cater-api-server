@@ -1,6 +1,6 @@
 {{#extend "scripts"}}
 <script>
-  var pageHeight = 1020;
+  var pageHeight = 920;
 
   var fillerTmpl = function( options ){
     return [
@@ -13,14 +13,8 @@
   };
 
   var adjustManifestPage = function( $page, callback ){
-    console.print('inner', Array.prototype.reduce.call(
-      $page.find('> *').map( function(){
-        return $(this).outerHeight(true);
-      })
-    , function( a, b ){ return a + b; }
-    ));
-    var getDiff = function( $el ){
-      return pageHeight - Array.prototype.reduce.call(
+    var getInnerHeight = function( $el ){
+      return Array.prototype.reduce.call(
         $el.find('> *').map( function(){
           var $this = $(this);
           if ( ['fixed', 'absolute'].indexOf( $this.css('position') ) > -1 ){
@@ -32,8 +26,13 @@
       , function( a, b ){ return a + b; }
       );
     };
+    console.print('inner', getInnerHeight( $page ) );
 
-    var fillRemaining = function( height ){
+    var getDiff = function( $el ){
+      return pageHeight - getInnerHeight( $el );
+    };
+
+    var fillRemaining = function( $page, height ){
       console.print('Filling table with: ', height);
       $page.find('tbody').append( fillerTmpl({ height: height }) );
     };
@@ -42,7 +41,7 @@
 
     // Table fits on page, add the filler and callback
     if ( diff >= 0 ){
-      fillRemaining( diff );
+      fillRemaining( $page, diff );
       return callback();
     }
 
@@ -59,6 +58,9 @@
     };
 
     whileGreaterThan( function(){
+      var diff = getDiff( $page );
+      if ( diff > 0 ) fillRemaining( $page, diff );
+
       var $clone = $page.clone();
       $clone.find('table tbody tr').remove();
       $clone.find('tbody').append( $trs.get().reverse() );
@@ -482,7 +484,8 @@
       Not what you ordered? Something missing? No worries! We will help get it resolved. Contact us at the number below.
     </div>
   </header>
-  <h1 class="page-title">Order Info</h1>
+
+  <h2 class="section-title">Order Info</h2>
   <dl class="manifest-section-dl">
     <dt>Restaurant:</dt>
     <dd>{{order.restaurant.name}}</dd>
@@ -494,6 +497,40 @@
     {{/if}}
     <dt>Customer Notes:</dt>
     <dd>{{order.notes}}</dd>
+  </dl>
+
+  <h2 class="section-title">Delivery</h2>
+  <dl class="manifest-section-dl">
+    {{#if order.user.organization}}
+    <dt>Company:</dt>
+    <dd>{{order.user.organization}}</dd>
+    {{/if}}
+    <dt>Address:</dt>
+    <dd>
+      {{order.street}}
+      {{#if order.street2}}
+        <br>
+        {{order.street2}}
+      {{/if}}
+      <br>
+      {{order.city}}, {{order.state}} {{order.zip}}
+    </dd>
+    <dt>Delivery Date:</dt>
+    <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
+    <dt>Delivery Time:</dt>
+    <dd>{{formatDateTime order.datetime "h:mm A"}}</dd>
+    <dt>Delivery Instructions:</dt>
+    <dd>{{order.delivery_instructions}}</dd>
+  </dl>
+
+  <h2 class="section-title">Goodybag</h2>
+  <dl class="manifest-section-dl">
+    <dt>Phone:</dt>
+    <dd>{{phoneNumber config.phone.support "xxx.xxx.xxxx"}}</dd>
+    <dt>Email:</dt>
+    <dd>{{config.emails.support}}</dd>
+    <dt>Website:</dt>
+    <dd>{{config.baseUrl}}</dd>
   </dl>
 
   <div class="page-number">

@@ -50,12 +50,19 @@ var modifyAttributes = function(callback, err, orders) {
         var totalPreTip = (parseInt(order.attributes.sub_total) + parseInt(order.attributes.restaurant.delivery_fee)) * parseFloat(rate);
         order.attributes.total = Math.round(totalPreTip + order.attributes.tip); // in cents
 
-        // Multiply rewards based on config.rewards
+        // Handle reward promos
         var submitted = moment(order.attributes.submitted);
-        var awardPromo = submitted >= moment(config.rewardsPromo.startDate) &&
-                         submitted <  moment(config.rewardsPromo.endDate);
-        if ( awardPromo ) {
-          order.attributes.points = Math.floor(order.attributes.total * config.rewardsPromo.ptsMultiplier / 100);
+        var promoRate;
+
+        var awardPromo = utils.some(config.rewardsPromos, function(promo) {
+          var eligible = submitted >= moment(promo.start) &&
+                         submitted <  moment(promo.end);
+          if (eligible) promoRate = promo.rate;
+          return eligible;
+        });
+
+        if ( awardPromo && promoRate ) {
+          order.attributes.points = Math.floor(order.attributes.total * promoRate / 100);
         } else {
           order.attributes.points = Math.floor(order.attributes.total / 100);
         }

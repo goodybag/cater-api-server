@@ -1,72 +1,70 @@
-<div class="col-lg-6">
-  <div class="option-group" data-id="{{this.id}}">
-    <div class="option-group-actions">
-      <div class="btn-delete-option btn btn-primary btn-block btn-lg">Delete Option Group</div>
-    </div>
-    <input
-      class="options-set-name option-group-heading"
-      value="{{this.name}}"
-      placeholder="Enter Option Set Name">
+<div class="option-group" data-id="{{this.id}}">
+  <div class="option-group-actions">
+    <div class="btn-delete-option btn btn-primary btn-block btn-full">Delete Option Group</div>
+  </div>
+  <input
+    class="options-set-name option-group-heading"
+    value="{{this.name}}"
+    placeholder="Enter Option Set Name">
 
-    <div class="form-group option-group-type form-inline">
-      <h4 class="option-type-title">Option Type:</h4>
-      <label class="radio-inline">
-        <input type="radio"
-          class="option-type-radio"
-          name="type-{{#if this.id}}{{this.id}}{{/if}}"
-          value="radio"
-          {{#eq this.type 'radio'}}checked{{/eq}}> Radio
-      </label>
-      <label class="radio-inline">
-        <input type="radio"
-          name="type-{{#if this.id}}{{this.id}}{{/if}}"
-          value="checkbox"
-          {{#eq this.type 'checkbox'}}checked{{/eq}}> Checkbox
-      </label>
-      <div class="checkbox-min-max{{#eq this.type 'radio'}} hide{{/eq}}">
-        <div class="form-group input-group-sm">
-          <input type="number"
-            placeholder="Min"
-            name="selected_min"
-            value="{{this.selected_min}}"
-            minimum="0"
-            class="form-control">
-        </div>
-        <div class="form-group input-group-sm">
-          <input type="number"
-            placeholder="Max"
-            name="selected_max"
-            value="{{this.selected_max}}"
-            minimum="0"
-            class="form-control">
-        </div>
+  <div class="form-group option-group-type form-inline">
+    <h4 class="option-type-title">Option Type:</h4>
+    <label class="radio-inline">
+      <input type="radio"
+        class="option-type-radio"
+        name="type-{{#if this.id}}{{this.id}}{{/if}}"
+        value="radio"
+        {{#eq this.type 'radio'}}checked{{/eq}}> Radio
+    </label>
+    <label class="radio-inline">
+      <input type="radio"
+        name="type-{{#if this.id}}{{this.id}}{{/if}}"
+        value="checkbox"
+        {{#eq this.type 'checkbox'}}checked{{/eq}}> Checkbox
+    </label>
+    <div class="checkbox-min-max{{#eq this.type 'radio'}} hide{{/eq}}">
+      <div class="form-group input-group-sm">
+        <input type="number"
+          placeholder="Min"
+          name="selected_min"
+          value="{{this.selected_min}}"
+          minimum="0"
+          class="form-control">
+      </div>
+      <div class="form-group input-group-sm">
+        <input type="number"
+          placeholder="Max"
+          name="selected_max"
+          value="{{this.selected_max}}"
+          minimum="0"
+          class="form-control">
       </div>
     </div>
+  </div>
 
-    <div class="option-group-body">
-      <table class="table table-bordered item-options-table">
-        <thead>
-          <tr>
-            <td colspan="4" class="add-wrapper">
-              <button class="btn btn-default btn-new-option btn-block">
-                <i class="icon-plus"></i>
-                Add New Option
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th>Default</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody class="options-set-options">
-        {{#each this.options}}
-          {{>edit_options_set_option}}
-        {{/each}}
-        </tbody>
-      </table>
-    </div>
+  <div class="option-group-body">
+    <table class="table table-bordered item-options-table">
+      <thead>
+        <tr>
+          <td colspan="4" class="add-wrapper">
+            <button class="btn btn-default btn-new-option btn-block">
+              <i class="icon-plus"></i>
+              Add New Option
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <th>Default</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="options-set-options">
+      {{#each this.options}}
+        {{>edit_options_set_option}}
+      {{/each}}
+      </tbody>
+    </table>
   </div>
 </div>

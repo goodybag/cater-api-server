@@ -11,7 +11,6 @@ define(function(require, exports, module) {
   return module.exports = Backbone.View.extend({
     template: Handlebars.partials.edit_options_sets
 
-  , tagName: 'tr'
   , className: 'edit-options'
 
   , events: {

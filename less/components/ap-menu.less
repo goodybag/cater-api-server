@@ -156,3 +156,104 @@
 .option-group tr > td:last-child {
   border-right: none!important;
 }
+
+th.price-column {
+  width: 125px;
+}
+
+th.order-column,
+th.feeds-min-column,
+th.feeds-max-column {
+  width: 90px;
+}
+
+th.name-column {
+  width: 300px;
+}
+
+.option-group .column-name {
+  width: 52%;
+}
+
+.option-group .column-actions {
+  white-space: nowrap;
+}
+
+.option-group .column-default,
+.option-group .column-actions {
+  vertical-align: middle;
+  text-align: center;
+}
+
+
+.option-expanded > td {
+  position: relative;
+  overflow: hidden;
+  /*height: 100px;*/
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border: none;
+
+  -webkit-transition: height 0.3s ease-in-out;
+     -moz-transition: height 0.3s ease-in-out;
+      -ms-transition: height 0.3s ease-in-out;
+       -o-transition: height 0.3s ease-in-out;
+          transition: height 0.3s ease-in-out;
+}
+
+.option-expanded .option-expanded-inner {
+  position: absolute;
+  left: auto;
+  width: 100%;
+  opacity: 1;
+
+  padding: 8px;
+
+  -webkit-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+     -moz-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+      -ms-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+       -o-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+          transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+}
+
+.option-expanded.collapsed > td {
+  height: 0;
+}
+
+.option-expanded.collapsed .option-expanded-inner {
+  opacity: 0;
+  top: -400px;
+}
+
+.btn-expand-option-set-option > .icon-collapse {
+  display: inline-block;
+
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  -moz-transition: -moz-transform 0.3s ease-in-out;
+  -ms-transition: -ms-transform 0.3s ease-in-out;
+  -o-transition: -o-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+}
+
+.btn-expand-option-set-option.collapsed > .icon-collapse {
+  -webkit-transform: rotate(0);
+  -moz-transform: rotate(0);
+  -ms-transform: rotate(0);
+  -o-transform: rotate(0);
+  transform: rotate(0);
+}
+
+.table tbody.option-set-tr-group {
+  border-top: 0;
+  background: #fff;
+}
+
+.actions {
+  margin-bottom: 10px;
+}

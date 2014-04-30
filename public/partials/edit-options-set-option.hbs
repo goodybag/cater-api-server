@@ -11,27 +11,27 @@
     </td>
     <td class="column-price">
       <div class="input-group">
-        <span class="input-group-addon">$</span>
+        <span class="input-addon">$</span>
         <input type="text" class="options-set-option-price form-control" placeholder="Option Price" value="{{dollars this.price}}">
       </div>
     </td>
     <td class="column-actions">
-      <button class="btn-expand-option-set-option btn btn-info btn-sm collapsed">
-        <i class="icon-collapse"></i>
+      <button class="btn-expand-option-set-option btn btn-default btn-sm collapsed">
+        <span class="icon-collapse">▾</span>
       </button>
-      <button class="btn-delete-option-set-option btn btn-danger btn-sm">
-        <i class="icon-remove"></i>
+      <button class="btn-delete-option-set-option btn btn-primary btn-sm">
+        <span class="icon-remove">✖</span>
       </button>
     </td>
   </tr>
   <tr data-id="{{this.id}}" class="option-expanded collapsed">
     <td colspan="4">
       <div class="option-expanded-inner row">
-        <div class="form-group col-lg-12">
+        <div class="form-group">
           <label>Option Description</label>
           <textarea name="description" class="form-control" placeholder="Option description">{{this.description}}</textarea>
         </div>
-        <div class="form-group col-lg-12">
+        <div class="form-group">
           <label>Dietary Tags</label>
           <div class="options-set-tags">
             {{> edit_tags this.tags }}

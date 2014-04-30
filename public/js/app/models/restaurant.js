@@ -126,34 +126,34 @@ define(function(require, exports, module) {
           }
         },
         billing_email: {
-          type: 'string',
+          type: ['string', 'null'],
           minLength: 1,
           required: false
         },
         billing_street: {
-          type: 'string',
+          type: ['string', 'null'],
           minLength: 1,
           required: false
         },
         billing_street2: {
-          type: 'string',
+          type: ['string', 'null'],
           minLength: 1,
           required: false
         },
         billing_city: {
-          type: 'string',
+          type: ['string', 'null'],
           minLenght: 1,
           required: false
         },
         billing_state: {
-          type: 'string',
+          type: ['string', 'null'],
           length: 2,
           pattern: /^[A-Z]*$/, // only capital letters
-          "enum": _.pluck(states, 'abbr'),
+          "enum": _.pluck(states, 'abbr').concat([null]),
           required: false
         },
         billing_zip: {
-          type: 'string',
+          type: ['string', 'null'],
           length: 5,
           pattern: /^\d*$/, // only digits
           required: false

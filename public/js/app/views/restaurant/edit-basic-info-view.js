@@ -7,6 +7,7 @@ define(function(require, exports, module) {
 
     events: {
       'submit .form-basic-info': 'save'
+    , 'change input[type="filepicker"]': 'onFilePickerChange'
     },
 
     fieldMap: {
@@ -15,7 +16,6 @@ define(function(require, exports, module) {
     , websites:               '#input-websites'
     , yelp_business_id:       '#input-yelp'
     , is_hidden:              '#input-hidden'
-    , 'change input[type="filepicker"]': 'onFilePickerChange',
     },
 
     fieldGetters: {
@@ -41,7 +41,6 @@ define(function(require, exports, module) {
     },
 
     onFilePickerChange: function(e){
-      console.log('changepicker');
       var $input = $(e.originalEvent.target);
       $input.siblings('[data-name="' + $input.attr('name') + '"]').attr(
         'src', $input.val()

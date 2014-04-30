@@ -16,6 +16,7 @@ define(function(require, exports, module) {
     }
 
   , onSortChange: function(e) {
+      analytics.track('Filter Change', { type: 'Sorting' });
       this.trigger('sort:change');
     }
 

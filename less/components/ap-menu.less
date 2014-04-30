@@ -132,8 +132,27 @@
   border-radius: 0;
   border-width: 0;
   border-bottom-width: 1px;
+  text-align: center;
+  cursor: pointer;
 }
 
 .add-wrapper {
   padding: 8px;
+}
+
+.option-group .item-options-table {
+  position: relative;
+  overflow: hidden;
+  border-left: none;
+  border-right: none;
+}
+
+.option-group tr > th:first-child,
+.option-group tr > td:first-child {
+  border-left: none!important;
+}
+
+.option-group tr > th:last-child,
+.option-group tr > td:last-child {
+  border-right: none!important;
 }

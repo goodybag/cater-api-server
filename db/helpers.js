@@ -201,7 +201,7 @@ dirac.use( function(){
     $query.columns = $query.columns.concat( options.columns.map( function( c ){
       return [ options.target, c ].join('.');
     }));
-
+console.log(utils);
     $query.joins.push({
       target: options.target
     , on:     utils.clone( options.on )

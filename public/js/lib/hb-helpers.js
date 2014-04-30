@@ -427,6 +427,14 @@ define(function(require, exports, module) {
       return [ config.cdn.baseUrl ].concat(
         Array.prototype.slice.call( arguments, 0, - 1 )
       ).join('/');
+    },
+
+    join: function( set, joiner, prop ){
+      if ( typeof prop === 'string' ){
+        set = utils.pluck( set, prop );
+      }
+
+      return set.join( joiner );
     }
   }
 

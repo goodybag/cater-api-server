@@ -27,7 +27,7 @@ $.fn.innerHeight = function( options ){
 
 console.print = function(){
   // Comment me if you want to live
-  // return console.log.apply( console, arguments );
+  return console.log.apply( console, arguments );
 
   var $console = $('#console-print');
   if ( $console.length === 0 ){

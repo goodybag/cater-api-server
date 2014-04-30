@@ -8,8 +8,9 @@ var Models    = require('../models');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
-    param:      'oid'
-  , withItems:  false
+    param:        'oid'
+  , withItems:    false
+  , withManifest: false
   });
 
   return function( req, res, next ){
@@ -24,7 +25,11 @@ module.exports = function( options ){
       order.getOrderItems( function( error ){
         if ( error ) return next( error );
 
-        res.locals.order = order.toJSON();
+        var jsonOptions = {};
+
+        if ( options.withManifest ) jsonOptions.manifest = true;
+
+        res.locals.order = order.toJSON( jsonOptions );
 
         next();
       });

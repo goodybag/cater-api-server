@@ -268,7 +268,10 @@ module.exports.register = function(app) {
    */
 
   app.get('/orders/:oid/manifest'
-  , m.getOrder()
+  , m.getOrder({
+      withItems:    true
+    , withManifest: true
+    })
   , m.view( 'order-manifest/manifest-1', {
       layout: 'order-manifest/layout'
     })

@@ -217,7 +217,128 @@ module.exports = Model.extend({
                                                    function(val) { return val != null && val !== ''; }),
                                          function(memo, item, list) { return memo && item; }, true);
 
+    if (options && options.manifest){
+      obj.manifest = this.getManifest();
+    }
+
     return obj;
+  },
+
+  // Group items with the same item.id/notes/options
+  // getManifest: function(){
+  //   var manifest = [];
+  //   var idIdx = {};
+  //   var manifestIndices = {};
+
+  //   var addNewItem = function( item ){
+  //     var mitem = utils.pick( item, [
+  //       'quantity', 'notes', 'options_sets'
+  //     ]);
+
+  //     mitem.recipients = item.recipient ? [ item.recipient ] : [];
+  //     return manifestIndices[ [ item.id, idIdx[ item.id ]++ ].join('-') ] = manifest.push( mitem ) - 1;
+  //   };
+
+  //   this.orderItems.forEach( function( item ){
+  //     // hash groups by {item.id}-{cid}
+  //     idIdx[ item.id ] = ( idIdx[ item.id ] || 0 );
+
+
+  //     if ( !([ item.id, idIdx[ item.id ] ].join('-') in manifestIndices) ){
+  //       return addNewItem( item );
+  //     }
+
+  //     // If the options/notes are the same, then just update the quantity
+  //     if ( itemsAreBasicallyTheSame( item ) )
+  //   });
+
+  //   return manifest;
+  // },
+
+  getManifest: function(){
+    var grouped = utils.invoke( this.orderItems, 'toJSON' ).map( function( item ){
+      var mitem = utils.pick( item, [
+        'name', 'quantity', 'notes'
+      ]);
+
+      mitem.recipients = item.recipient ? [ item.recipient ] : [];
+
+      mitem.options_sets = item.options_sets.map( function( set ){
+        var options = set.options.filter( function( o ){
+          return o.state;
+        });
+
+        if ( options.length === 0 ) options.push('None Selected');
+
+        return {
+          name:     set.name
+        , options:  options
+        }
+      });
+
+      return mitem;
+    });
+
+    grouped = utils.groupBy( grouped, 'id' );
+
+    var itemsAreBasicallyTheSame = function( a, b ){
+      if ( a.id !== b.id ) return false;
+      if ( a.notes !== b.notes ) return false;
+      if ( a.options_sets.length !== b.options_sets.length ) return false;
+
+      for ( var i = 0, l = a.options_sets.length; i < l; i++ ){
+        if ( a.options_sets[ i ].id !== b.options_sets[ i ].id ) return false;
+        if ( a.options_sets[ i ].options.length !== b.options_sets[ i ].options.length ) return false;
+
+        for ( var ii = 0, ll = a.options_sets[ i ].options.length; ii < ll; ii++ ){
+          if ( a.options_sets[ i ].options[ ii ].name !== b.options_sets[ i ].options[ ii ].name ) return false;
+        }
+      }
+
+      return true;
+    };
+
+    var consolidateGroup = function( group ){
+      if ( group.length <= 1 ) return group;
+
+      for ( var i = 1, l = group.length, g1, g2; i < l; i++ ){
+        g1 = group[ i - 1 ];
+        g2 = group[ i - 0 ];
+
+        if ( !itemsAreBasicallyTheSame( g1, g2 ) ) continue;
+
+        g1.quantity += g2.quantity;
+        g1.recipients = g1.recipients.concat( g2.recipients );
+        group.splice( i, i );
+
+        // Since we removed group[i], do not advance `i`
+        l--;
+        i--;
+      }
+
+      return group;
+    };
+
+    Object.keys( grouped ).forEach( function( id ){
+      grouped[ id ] = consolidateGroup( grouped[ id ] );
+    });
+
+    var manifest = Object.keys( grouped ).map( function( id ){
+      return grouped[ id ];
+    });
+
+    manifest = utils.flatten( manifest );
+
+    // Fix the options sets
+    // manifest.forEach( function( mitem ){
+    //   mitem.options = mitem.options_sets.map( function( set ){
+
+    //   });
+
+    //   mitem.options = utils.flatten( mitem.options );
+    // });
+
+    return manifest;
   },
 
   requiredFields: [

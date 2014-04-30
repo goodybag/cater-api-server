@@ -17,8 +17,8 @@ body {
 }
 
 .page {
-  width: 642px;
-  min-height: 940px;
+  width: 700px;
+  min-height: 920px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   page-break-after: always;
@@ -52,7 +52,7 @@ header:after {
 footer {
   position: relative;
   margin-top: 22px;
-  margin-bottom: 12px;
+  /*margin-bottom: 12px;*/
   text-align: center;
   font-size: 14px;
   color: #DA1F26;

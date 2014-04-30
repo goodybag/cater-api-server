@@ -1,6 +1,34 @@
 {{#extend "body"}}
 <div class="container page-header">
   <h1 class="page-title">{{restaurant.name}}</h1>
+  <div class="row">
+    <div class="col-sm-6">
+      <dl class="dl-horizontal">
+        <dt>GB Fee:</dt>
+        <dd>
+          {{#if restaurant.gb_fee}}
+            {{factorToPercent restaurant.gb_fee}}%
+          {{else}}
+            Tiered
+          {{/if}}
+        </dd>
+        <dt>Direct Deposit?</dt>
+        <dd>{{#if restaurant.is_direct_deposit}}Yes{{else}}No{{/if}}</dd>
+        <dt>Fee on Grand Total?</dt>
+        <dd>{{#if restaurant.is_fee_on_total}}Yes{{else}}No{{/if}}</dd>
+      </dl>
+    </div>
+    <div class="col-sm-6">
+      <address>
+        <h4>Billing Info:</h4>
+        <a href="mailto:{{restaurant.billing_email}}">{{restaurant.billing_email}}</a>
+        <br>
+        {{restaurant.billing_street}}{{#if restaurant.billing_street2}}, {{restaurant.billing_street2}}{{/if}}
+        <br>
+        {{restaurant.billing_city}}, {{restaurant.billing_state}}, {{restaurant.billing_zip}}
+      </address>
+    </div>
+  </div>
   <h2 class="page-sub-title">Payment Summaries</h2>
   <ul class="header-nav">
     <li>

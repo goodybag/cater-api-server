@@ -87,7 +87,16 @@ define(function(require, exports, module) {
       meal_types: '.restaurant-form .restaurant-meal-types input',
       meal_styles: '.restaurant-form .restaurant-meal-styles input',
       websites: '.restaurant-form .restaurant-websites',
-      description: '.restaurant-form .restaurant-description'
+      description: '.restaurant-form .restaurant-description',
+      billing_email: '.restaurant-form [name="billing_email"]',
+      billing_street: '.restaurant-form [name="billing_street"]',
+      billing_street2: '.restaurant-form [name="billing_street2"]',
+      billing_city: '.restaurant-form [name="billing_city"]',
+      billing_state: '.restaurant-form [name="billing_state"]',
+      billing_zip: '.restaurant-form [name="billing_zip"]',
+      gb_fee: '.restaurant-form [name="gb_fee"]',
+      is_direct_deposit: '.restaurant-form [name="is_direct_deposit"]',
+      is_fee_on_total: '.restaurant-form [name="is_fee_on_total"]'
     },
 
     fieldSplit: function(selector, delimiter) {
@@ -169,6 +178,14 @@ define(function(require, exports, module) {
         return this.$el.find(this.fieldMap.is_hidden).is(':checked');
       },
 
+      is_direct_deposit: function() {
+        return this.$el.find(this.fieldMap.is_direct_deposit).is(':checked');
+      },
+
+      is_fee_on_total: function() {
+        return this.$el.find(this.fieldMap.is_fee_on_total).is(':checked');
+      },
+
       yelp_business_id: function(){
         var url = this.$el.find(this.fieldMap.yelp_business_id).val();
         if (!url) return null;
@@ -176,6 +193,12 @@ define(function(require, exports, module) {
 
         url = url.split('/').pop();
         return url.split('#')[0];
+      },
+
+      gb_fee: function(){
+        var val = this.$el.find( this.fieldMap.gb_fee ).val();
+        val = Handlebars.helpers.percentToFactor( val, 5 );
+        return val;
       }
     },
 

@@ -4,8 +4,21 @@ define(function(require, exports, module) {
   var utils = require('utils');
 
   return module.exports = Backbone.View.extend({
-    events: {
-      'change .checkbox': 'onFilterChange'
+    events: function() {
+      return {
+        'change .checkbox': 'onFilterChange'
+      , 'change #panelDiet .checkbox':        this.logFilterEvent('Special Diets')
+      , 'change #panelCuisine .checkbox':     this.logFilterEvent('Cuisine')
+      , 'change #panelMealTypes .checkbox':   this.logFilterEvent('Meal Types')
+      , 'change #panelPrice .checkbox':       this.logFilterEvent('Price')
+      , 'change #panelMealStyles .checkbox':  this.logFilterEvent('Meal Styles')
+      };
+    }
+
+  , logFilterEvent: function(type) {
+      return function(e) {
+        analytics.track('Filter Change', { type: type });
+      }
     }
 
   , criteriaTypes: {

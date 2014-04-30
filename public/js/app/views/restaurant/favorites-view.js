@@ -22,6 +22,7 @@ define(function(require, exports, module) {
       e.preventDefault();
       var this_ = this;
       this_.$el.find('.btn-favorite').toggleClass('active');
+      analytics.track('Filter Change', { type: 'Favorites' });
       this.trigger('favorites:change');
     },
 

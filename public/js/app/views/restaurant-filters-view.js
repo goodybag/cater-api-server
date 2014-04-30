@@ -12,7 +12,7 @@ define(function(require, exports, module) {
       , 'change #panelMealTypes .checkbox':   this.logFilterEvent('Meal Types')
       , 'change #panelPrice .checkbox':       this.logFilterEvent('Price')
       , 'change #panelMealStyles .checkbox':  this.logFilterEvent('Meal Styles')
-      }
+      };
     }
 
   , logFilterEvent: function(type) {

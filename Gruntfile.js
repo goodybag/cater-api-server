@@ -20,7 +20,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-s3');
 
   var gruntConfig = {
-    complexity: {
+    localbranch: grunt.option('branch') || 'master'
+
+  , complexity: {
       generic: {
         src: ['./**/*.js'],
         options: {
@@ -57,11 +59,11 @@ module.exports = function(grunt) {
       }
     , deployStaging: {
         options: { stdout: true }
-      , command: 'git push staging master'
+      , command: 'git push staging <%= localbranch %>:master'
       }
     , deployProduction: {
         options: { stdout: true }
-      , command: './bin/deploy production'
+      , command: './bin/deploy production <%= localbranch %>'
       }
     }
 

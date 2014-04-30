@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     events: {
       'submit .modal-item-form': 'submit'
     , 'click .btn-item-remove':  'onItemRemoveClick'
+    , 'click .checkbox': 'onItemChangeClick'
     },
 
     // template: require('hb!/partials/item-modal'),
@@ -129,6 +130,22 @@ define(function(require, exports, module) {
       return this;
     },
 
+    validateOptionsMaximum: function(e) {
+      // checks if maximum # of options have been exceeded
+      var $optionsSet = $(e.target).closest('.item-options-fieldset');
+      var optionsSetId = $optionsSet.data('options-set-id');
+      var options_set = _.findWhere(this.model.get('options_sets'), {id: optionsSetId});
+      var selectedCount = $optionsSet.find('input[type="checkbox"]:checked').length;
+
+      if ( options_set.selected_max ) {
+        if ( selectedCount >= options_set.selected_max ) {
+          $optionsSet.find('input[type="checkbox"]:not(:checked)').prop('disabled', true);
+        } else {
+          $optionsSet.find('input[type="checkbox"]').prop('disabled', false);
+        } 
+      }
+    },
+
     onItemRemoveClick: function(e) {
       e.preventDefault();
 
@@ -137,6 +154,11 @@ define(function(require, exports, module) {
       }
 
       this.hide();
+    },
+
+    onItemChangeClick: function(e) {
+      var this_ = this;
+      this.validateOptionsMaximum.call(this, e);
     }
   });
 });

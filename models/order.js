@@ -304,7 +304,7 @@ module.exports = Model.extend({
       for ( var i = 1, l = group.length, g1, g2; i < l; i++ ){
         g1 = group[ i - 1 ];
         g2 = group[ i - 0 ];
-
+console.log('checking', g1, g2)
         if ( !itemsAreBasicallyTheSame( g1, g2 ) ) continue;
 
         g1.quantity += g2.quantity;

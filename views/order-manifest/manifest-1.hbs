@@ -1,6 +1,15 @@
 {{#extend "scripts"}}
 <script>
+  var config = {
+    pageHeight:               920
+  , phantomPageHeightOffset: -350
+  };
+
   var pageHeight = 920;
+
+  var isPhantom = function(){
+    return navigator.userAgent.indexOf('PhantomJS') > - 1;
+  };
 
   var fillerTmpl = function( options ){
     return [
@@ -29,7 +38,13 @@
     console.print('inner', getInnerHeight( $page ) );
 
     var getDiff = function( $el ){
-      return pageHeight - getInnerHeight( $el );
+      return [
+        config.pageHeight
+      , isPhantom() ? config.phantomPageHeightOffset : 0
+      , getInnerHeight( $el )
+      , parseFloat( $el.css('padding-top') )
+      , parseFloat( $el.css('padding-bottom') )
+      ].reduce( function( a, b ){ return a - b; });
     };
 
     var fillRemaining = function( $page, height ){

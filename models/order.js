@@ -224,41 +224,10 @@ module.exports = Model.extend({
     return obj;
   },
 
-  // Group items with the same item.id/notes/options
-  // getManifest: function(){
-  //   var manifest = [];
-  //   var idIdx = {};
-  //   var manifestIndices = {};
-
-  //   var addNewItem = function( item ){
-  //     var mitem = utils.pick( item, [
-  //       'quantity', 'notes', 'options_sets'
-  //     ]);
-
-  //     mitem.recipients = item.recipient ? [ item.recipient ] : [];
-  //     return manifestIndices[ [ item.id, idIdx[ item.id ]++ ].join('-') ] = manifest.push( mitem ) - 1;
-  //   };
-
-  //   this.orderItems.forEach( function( item ){
-  //     // hash groups by {item.id}-{cid}
-  //     idIdx[ item.id ] = ( idIdx[ item.id ] || 0 );
-
-
-  //     if ( !([ item.id, idIdx[ item.id ] ].join('-') in manifestIndices) ){
-  //       return addNewItem( item );
-  //     }
-
-  //     // If the options/notes are the same, then just update the quantity
-  //     if ( itemsAreBasicallyTheSame( item ) )
-  //   });
-
-  //   return manifest;
-  // },
-
   getManifest: function(){
     var grouped = utils.invoke( this.orderItems, 'toJSON' ).map( function( item ){
       var mitem = utils.pick( item, [
-        'name', 'quantity', 'notes'
+        'id', 'name', 'quantity', 'notes'
       ]);
 
       mitem.recipients = item.recipient ? [ item.recipient ] : [];
@@ -304,7 +273,7 @@ module.exports = Model.extend({
       for ( var i = 1, l = group.length, g1, g2; i < l; i++ ){
         g1 = group[ i - 1 ];
         g2 = group[ i - 0 ];
-console.log('checking', g1, g2)
+
         if ( !itemsAreBasicallyTheSame( g1, g2 ) ) continue;
 
         g1.quantity += g2.quantity;
@@ -328,15 +297,6 @@ console.log('checking', g1, g2)
     });
 
     manifest = utils.flatten( manifest );
-
-    // Fix the options sets
-    // manifest.forEach( function( mitem ){
-    //   mitem.options = mitem.options_sets.map( function( set ){
-
-    //   });
-
-    //   mitem.options = utils.flatten( mitem.options );
-    // });
 
     return manifest;
   },

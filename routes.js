@@ -79,13 +79,13 @@ module.exports.register = function(app) {
    * Restaurant edit resource
    */
 
-  app.get('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
+  app.get('/admin/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
   
-  app.put('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.update);
+  app.put('/admin/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.update);
 
-  app.get('/restaurants/:rid/edit/basic-info', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
+  app.get('/admin/restaurants/:rid/edit/basic-info', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
 
-  app.get('/restaurants/:restaurant_id/edit/contacts'
+  app.get('/admin/restaurants/:restaurant_id/edit/contacts'
   , m.restrict(['admin'])
   , m.activeTab('contacts')
   , m.param('restaurant_id')
@@ -96,28 +96,28 @@ module.exports.register = function(app) {
     })
   );
 
-  app.get('/restaurants/:rid/edit/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);
+  app.get('/admin/restaurants/:rid/edit/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);
 
-  app.get('/restaurants/:rid/edit/lead-times', m.restrict('admin'), controllers.restaurants.edit.leadTimes);
+  app.get('/admin/restaurants/:rid/edit/lead-times', m.restrict('admin'), controllers.restaurants.edit.leadTimes);
 
-  app.get('/restaurants/:rid/edit/tags'
+  app.get('/admin/restaurants/:rid/edit/tags'
   , m.restrict('admin')
   , m.enums()
   , controllers.restaurants.edit.tags
   );
 
-  app.get('/restaurants/:rid/edit/address'
+  app.get('/admin/restaurants/:rid/edit/address'
   , m.restrict('admin')
   , m.states()
   , controllers.restaurants.edit.address
   );
 
-  app.get('/restaurants/:rid/edit/menu', m.restrict('admin'), controllers.restaurants.edit.menu);
+  app.get('/admin/restaurants/:rid/edit/menu', m.restrict('admin'), controllers.restaurants.edit.menu);
 
   // app.get('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit);
 
 
-  app.get('/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
+  app.get('/admin/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 
   /**
    * Restaurant items resource.  The collection of all items belonging to a restaurant.

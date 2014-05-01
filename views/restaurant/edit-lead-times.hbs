@@ -5,10 +5,12 @@
     <input type="hidden" name="_method" value="PUT">
 
     {{#each restaurant.delivery_times}}
+    <div class="delivery-time">
       <div class="col-day">{{weekday @key}}</div>
       <div id="hours-{{@key}}" class="hours-day col-times">
         {{> hours_day }}
       </div>
+    </div>
     {{/each}}
 
     <h2>Lead Times</h2>

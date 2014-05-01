@@ -288,6 +288,7 @@ define(function(require, exports, module) {
       cuisine: []
     , delivery_zips: []
     , lead_times: []
+    , gb_fee: 0.1275
     }
   });
 });

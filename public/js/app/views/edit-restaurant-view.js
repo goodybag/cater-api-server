@@ -31,8 +31,11 @@ define(function(require, exports, module) {
     },
 
     initialize: function(options) {
+      var this_ = this;
+
       this.categories = [];
       this.setModel(this.model || new Restaurant());
+      this.model.trigger('change:gb_fee');
       this.onChange();
       this.setTooltips();
       _.each(options.hours, function(view) {
@@ -40,6 +43,22 @@ define(function(require, exports, module) {
       }, this);
 
       this.setState('default');
+
+      // onSave callback has ambiguous argument ordering, so use events
+      // i.e. the first argument to callback could be error or it could
+      // be the XHR object
+      this.on('save:success', function(){
+        this_.setState('saved');
+        setTimeout( this_.setState.bind( this_, 'default' ), 2000 );
+      });
+
+      this.on('save:invalid', function(){
+        this_.setState( 'error', this.model.validationError );
+      });
+
+      this.on('save:error', function(){
+        this_.setState( 'error' );
+      });
     },
 
     setTooltips: function() {
@@ -59,7 +78,8 @@ define(function(require, exports, module) {
           this.$el.find('.restaurant-form .form-control').parent().removeClass('has-success');
         },
         'change:sms_phone': utils.bind(this.formatPhone, this, 'sms_phone'),
-        'change:voice_phone': utils.bind(this.formatPhone, this, 'voice_phone')
+        'change:voice_phone': utils.bind(this.formatPhone, this, 'voice_phone'),
+        'change:gb_fee': utils.bind(this.onGbFeeChange, this)
       });
       this.listenTo(this.model.categories, 'sort', this.sortCategories, this);
       return this;
@@ -230,22 +250,6 @@ define(function(require, exports, module) {
       this.setState('loading');
 
       FormView.prototype.onSave.call( this, e );
-
-      // onSave callback has ambiguous argument ordering, so use events
-      // i.e. the first argument to callback could be error or it could
-      // be the XHR object
-      this.once('save:success', function(){
-        this_.setState('saved');
-        setTimeout( this_.setState.bind( this_, 'default' ), 2000 );
-      });
-
-      this.once('save:invalid', function(){
-        this_.setState( 'error', this.model.validationError );
-      });
-
-      this.once('save:error', function(){
-        this_.setState( 'error' );
-      });
     },
 
     onChange: _.debounce( function(e) {
@@ -320,6 +324,12 @@ define(function(require, exports, module) {
 
     onZipGroupRemoveClick: function(e){
       $(e.currentTarget).parents('.zip-group').remove();
+    },
+
+    onGbFeeChange: function(){
+      this.$el.find( this.fieldMap.gb_fee ).val(
+        Handlebars.helpers.factorToPercent( this.model.get('gb_fee') )
+      );
     }
   });
 });

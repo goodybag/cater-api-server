@@ -1,8 +1,9 @@
 {{#extend "body"}}
   <h2>Edit Menu</h2>
-  <div>
-    <a href="/restaurants/{{restaurant.id}}/sort">click here to sort this menu</a>
-  </div>
+  <ul>
+    <li><a href="/admin/restaurants/{{restaurant.id}}/sort">sort menu</a></li>
+    <li><a href="/admin/restaurants/{{restaurant.id}}/menu.csv">download menu in .csv</a></li>
+  </ul>
 
   <div class="ap-menu">
     <div class="categories">

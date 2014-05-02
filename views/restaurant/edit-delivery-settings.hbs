@@ -1,29 +1,23 @@
 {{#extend "body"}}
   <h2>Delivery Settings</h2>
-  <form class="ap-form form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST">
-    <input type="hidden" name="_method" value="PUT">
-
+  <form class="ap-form">
     <div class="form-group">
-      <label class="control-label" for="input-name">Minimum Order
-        <span class="help-block">required</span>
-      </label>
+      <label class="control-label" for="input-name">Minimum Order</label>
       <div class="input-group">
         <span class="input-addon">$</span>
-        <input type="text" class="form-control minimum-order" name="minimum_order" value="{{dollars restaurant.minimum_order}}">
+        <input type="number" step="0.01" class="form-control minimum-order" name="minimum_order" value="{{dollars restaurant.minimum_order}}">
       </div>
     </div>
-
     <div class="form-group">
       <label class="control-label" for="input-name">Delivery Zip Codes
         <span class="help-block">List of zip codes restaurant will
         deliver to. Please enter as a comma separated list.</span>
       </label>
-      
       {{#each restaurant.delivery_zip_groups}}
       <div class="delivery-zip-group">
         <div class="input-group input-group-top">
           <span class="input-addon">$</span>
-          <input type="text" class="form-control" name="fee" id="input-minimum-order" value="{{dollars fee}}">
+          <input type="number" step="0.01" class="form-control" name="fee" id="input-minimum-order" value="{{dollars fee}}">
         </div>
         <div class="input-group input-group-bottom">
           <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
@@ -40,13 +34,13 @@
         </div>
       </div>
       {{/each}}
-      
     </div>
     <div class="form-group">
-      <button class="btn btn-default btn-add-delivery-tier">Add New Delivery Area</button>
+      <button class="btn-add-delivery-tier">Add New Delivery Area</button>
     </div>
-
-    <button class="btn btn-primary" type="submit">Update</button>
+    <div class="form-group">
+      <button class="btn-update" type="submit">Update</button>
+    </div>
   </form>
 {{/extend}}
 

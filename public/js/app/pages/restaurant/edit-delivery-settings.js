@@ -9,10 +9,6 @@ define(function(require){
   , AlertView: require('app/views/alert-view')
   };
 
-  var Models = {
-    Hours: require('app/models/hours')
-  };
-
   var data = require('data');
   var page = {
     init: function(){
@@ -26,7 +22,6 @@ define(function(require){
       , alertView: alertView
       });
     },
-
   };
 
   return page;

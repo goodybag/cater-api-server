@@ -5,9 +5,10 @@ define(function(require, exports, module) {
 
   return module.exports = EditRestaurantView.extend({
 
-    events: {
-      'submit .form-delivery-settings': 'save'
-    , 'click .btn-add-delivery-tier': 'addDeliveryTierClick'
+    events: function() {
+      return _.extend({}, EditRestaurantView.prototype.events, {
+        'click .btn-add-delivery-tier': 'addDeliveryTierClick'
+      });
     },
 
     fieldMap: {
@@ -17,7 +18,7 @@ define(function(require, exports, module) {
 
     fieldGetters: {
       minimum_order: function() {
-        return +Handlebars.helpers.pennies( this.$el.find('.minimum-order').val() );
+        return +Handlebars.helpers.pennies( this.$el.find('.minimum-order').val() ) || null;
       },
 
       delivery_zips: function() {

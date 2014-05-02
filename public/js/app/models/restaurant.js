@@ -21,37 +21,11 @@ define(function(require, exports, module) {
           type: 'boolean',
           required: 'true'
         },
-        sms_phones: {
-          type: 'array',
-          uniqueItems: true,
-          items: {
-            type: 'string',
-            length: 10,
-            pattern: /^\d*$/, //contains only digits
-          }
-        },
-        voice_phones: {
-          type: 'array',
-          uniqueItems: true,
-          items: {
-            type: 'string',
-            length: 10,
-            pattern: /^\d*$/ //contains only digits
-          }
-        },
         display_phone: {
           type: ['string', 'null'],
           required: false,
           length: 10,
           pattern: /^\d*$/ //contains only digits
-        },
-        emails: {
-          type: 'array',
-          uniqueItems: true,
-          items: {
-            type: 'string',
-            format: 'email'
-          }
         },
         price: {
           type: 'integer',

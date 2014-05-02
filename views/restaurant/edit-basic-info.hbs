@@ -1,42 +1,38 @@
 {{#extend "body"}}
   <h2>Basic Info</h2>
 
-  <form class="ap-form form-basic-info" >
+  <form class="ap-form" >
     <div class="form-group">
       <label class="control-label" for="input-name">Name
         <span class="help-block">Required</span>
       </label>
       <input type="text" class="form-control" name="name" id="input-name" value="{{restaurant.name}}">
     </div>
-
     <div class="form-group">
       <label class="control-label" for="input-description">Description
         <span class="help-block">Displayed under the restaurant's name on the menu pages.</span>
       </label>
       <input type="text" class="form-control" name="description" id="input-description" value="{{restaurant.description}}">
     </div>
-
     <div class="form-group">
       <label class="control-label" for="input-websites">Websites
         <span class="help-block">Separated by comma</span>
       </label>
       <input type="text" class="form-control" name="websites" id="input-websites" value="{{restaurant.websites}}">
     </div>
-
     <div class="form-group">
       <label class="control-label" for="input-yelp">Yelp Page URL</label>
       <input type="text" class="form-control" name="yelp_business_id" id="input-yelp" value="{{config.yelp.businessBaseUrl}}/{{restaurant.yelp_business_id}}">
     </div>
-
     <div class="form-group">
       <div class="row">
-        <div class="col-3">
+        <div class="col-logo-color">
           <label class="control-label">Logo</label>
           <img class="restaurant-logo-img" data-name="logo_url"
             src="{{#if restaurant.logo_url}}{{restaurant.logo_url}}{{else}}{{config.defaultLogo}}{{/if}}">
           <input type="filepicker" class="form-control btn btn-default btn-block" name="logo_url" value="{{restaurant.logo_url}}" id="input-logo-url">
         </div>
-        <div class="col-3">
+        <div class="col-logo-mono">
           <label class="control-label">Monochromatic Logo</label>
           <img class="restaurant-logo-img" data-name="logo_mono_url"
             src="{{#if restaurant.logo_mono_url}}{{restaurant.logo_mono_url}}{{else}}{{config.defaultMonoLogo}}{{/if}}">
@@ -44,46 +40,30 @@
         </div>
       </div>
     </div>
-
     <div class="form-group">
       <label class="control-label" for="input-hidden">
         <input type="checkbox" class="form-control" name="is_hidden" id="input-hidden" {{#if restaurant.is_hidden}}checked="checked"{{/if}}>
          Hidden from listing
       </label>
     </div>
-
     <div class="actions">
-      <button class="btn btn-primary" type="submit">Update</button>
+      <button class="btn-update" type="submit">Update</button>
     </div>
-
   </form>
 {{/extend}}
 
 {{#extend "scripts"}}
-<!--
-<script type="text/javascript">
-(function(a){if(window.filepicker){return}var b=a.createElement("script");b.type="text/javascript";b.async=!0;b.src=("https:"===a.location.protocol?"https:":"http:")+"//api.filepicker.io/v1/filepicker.js";var c=a.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c);var d={};d._queue=[];var e="pick,pickMultiple,pickAndStore,read,write,writeUrl,export,convert,store,storeUrl,remove,stat,setKey,constructWidget,makeDropPane".split(",");var f=function(a,b){return function(){b.push([a,arguments])}};for(var g=0;g<e.length;g++){d[e[g]]=f(e[g],d._queue)}window.filepicker=d})(document);
-</script>
--->
 <script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
 <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
-
 <script>
   // Bootstrap data
   define('data', ['app/models/restaurant'], function(Restaurant) {
     var data = {
-      models: {
-        restaurant: new Restaurant({{{json restaurant}}})
-      },
-      views: {
-
-      }
+      models: { restaurant: new Restaurant({{{json restaurant}}}) }
     };
     return data;
   });
-</script>
 
-<script>
   // Init views on this page
   require( ['app/pages/restaurant/edit-basic-info'], function( page ){
     page.init();

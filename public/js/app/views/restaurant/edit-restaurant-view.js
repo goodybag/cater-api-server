@@ -9,6 +9,10 @@ define(function(require, exports, module) {
   var Handlebars = require('handlebars');
 
   return module.exports = Backbone.View.extend({
+    events: {
+      'submit .ap-form': 'save'
+    },
+
     fieldMap: {
     },
 

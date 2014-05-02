@@ -4,10 +4,10 @@ define(function(require, exports, module) {
   var Handlebars = require('handlebars');
 
   return module.exports = EditRestaurantView.extend({
-
-    events: {
-      'submit .form-basic-info': 'save'
-    , 'change input[type="filepicker"]': 'onFilePickerChange'
+    events: function() {
+      return _.extend({}, EditRestaurantView.prototype.events, {
+        'change input[type="filepicker"]': 'onFilePickerChange'
+      });
     },
 
     fieldMap: {

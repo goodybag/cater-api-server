@@ -78,7 +78,7 @@ module.exports.register = function(app) {
   app.get('/admin/restaurants/create'
   , m.restrict('admin')
   , m.states()
-  , controllers.restaurants.createRestaurant
+  , m.view('restaurant/create', { layout: 'admin/layout-page' })
   );
 
   app.post('/admin/restaurants/create'

@@ -15,6 +15,7 @@ var
 , fs      = require('fs')
 , path    = require('path')
 , helpers = require('./helpers')
+, Tx      = require('pg-transaction')
 ;
 
 //apply the parse-float plugin to node-postgres
@@ -53,3 +54,11 @@ exports.getClient = function(connStr, callback) {
   // callback will have arguments: error, client, done
   pg.connect(connStr, callback);
 }
+
+exports.transaction = function( callback ){
+  exports.getClient( function( error, client ){
+    if ( error ) return callback( error );
+
+    return callback( null, new Tx( client ) );
+  });
+};

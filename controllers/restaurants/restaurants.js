@@ -205,10 +205,6 @@ module.exports.edit = {
 , menu:               module.exports.editRestaurant('restaurant/edit-menu')
 };
 
-module.exports.createRestaurant = function(req, res, next) {
-  res.render('restaurant/create', { layout: 'admin/layout-page' } );
-};
-
 module.exports.editAll = function(req, res, next) {
   models.Restaurant.find({limit: 10000}, function(err, models) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
@@ -372,7 +368,7 @@ module.exports.create = function(req, res) {
 
       var done = function(err, results) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
-        res.send(201, rows[0]);
+        res.redirect('/admin/restaurants/' + rows[0].id+ '/edit');
       };
 
       utils.async.parallel(tasks, done);

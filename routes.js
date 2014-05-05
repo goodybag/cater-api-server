@@ -75,6 +75,10 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+  /**
+   * Restaurant create
+   */
+
   app.get('/admin/restaurants/create'
   , m.restrict('admin')
   , m.states()
@@ -83,7 +87,7 @@ module.exports.register = function(app) {
 
   app.post('/admin/restaurants/create'
   , m.restrict('admin')
-  , m.insert( db.restaurants )
+  , controllers.restaurants.create
   );
 
   /**

@@ -9,15 +9,13 @@
     <div class="categories">
       {{#each restaurant.categories}}
         <div id="category-{{this.id}}" class="panel">
-          <form class="category-form">
-            {{> edit_category}}
-          </form>
+          {{> edit_category}}
         </div>
       {{/each}}
+    </div>
 
-      <div class="form-group">
-        <button class="btn btn-primary new-category" type="submit">Add new category</button>
-      </div>
+    <div class="form-group">
+      <button class="btn btn-primary new-category" type="submit">Add new category</button>
     </div>
   </div>
 {{/extend}}

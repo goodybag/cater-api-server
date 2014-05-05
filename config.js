@@ -48,7 +48,7 @@ config.defaults = {
   , delay1:         (4*60*1000)
   , timezone:       'America/Chicago'
   , subject1:       'Hi there!'
-  , days:           [ 2, 3, 4, 5 ]
+  , days:           [ 1, 2, 3, 4, 5 ]
   }
 
 , salesTax: 1.0825

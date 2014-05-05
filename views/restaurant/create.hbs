@@ -1,0 +1,54 @@
+{{#extend "body"}}
+  <div class="container">
+    <h2>Create new restaurant</h2>
+    <form action="/admin/restaurants/create" method="post">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" placeholder="Name" required></input>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label">Street</label>
+        <input type="text" class="form-control" name="street" placeholder="123 Fake St." required>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label">City</label>
+        <input type="text" class="form-control" name="city" placeholder="Austin" required>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label">Zip</label>
+        <input type="text" maxlength="5" class="form-control" name="zip" placeholder="78701" required>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label">State</label>
+        <select name="state" class="form-control">
+          {{#each states}}
+          <option value="{{this.abbr}}" label="{{this.abbr}}" {{#if this.default}}selected="selected"{{/if}}>{{this.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label">Price</label>
+        <select name="price" class="form-control">
+          <option value="1"{{#eq restaurant.price 1}} selected="selected"{{/eq}}>$</option>
+          <option value="2"{{#eq restaurant.price 2}} selected="selected"{{/eq}}>$$</option>
+          <option value="3"{{#eq restaurant.price 3}} selected="selected"{{/eq}}>$$$</option>
+          <option value="4"{{#eq restaurant.price 4}} selected="selected"{{/eq}}>$$$$</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </form>
+  </div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+</script>
+{{/extend}}

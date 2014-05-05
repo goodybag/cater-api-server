@@ -177,7 +177,7 @@ module.exports.editRestaurant = function(template) {
         utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
         
         res.render(template, {
-          layout: 'admin/layout2'
+          layout: 'admin/layout-two-column'
         , restaurant: restaurant.toJSON()
         , active_tab: template.replace('restaurant/edit-', '')
         });
@@ -205,6 +205,9 @@ module.exports.edit = {
 , menu:               module.exports.editRestaurant('restaurant/edit-menu')
 };
 
+module.exports.createRestaurant = function(req, res, next) {
+  res.render('restaurant/create', { layout: 'admin/layout-page' } );
+};
 
 module.exports.editAll = function(req, res, next) {
   models.Restaurant.find({limit: 10000}, function(err, models) {

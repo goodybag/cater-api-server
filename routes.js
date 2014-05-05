@@ -75,6 +75,17 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+  app.get('/admin/restaurants/create'
+  , m.restrict('admin')
+  , m.states()
+  , controllers.restaurants.createRestaurant
+  );
+
+  app.post('/admin/restaurants/create'
+  , m.restrict('admin')
+  , m.insert( db.restaurants )
+  );
+
   /**
    * Restaurant edit resource
    */
@@ -91,7 +102,7 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.restaurant( { param: 'restaurant_id' } )
   , m.view('restaurant/edit-contacts', db.contacts, {
-      layout: 'admin/layout2'
+      layout: 'admin/layout-two-column'
     , method: 'find'
     })
   );

@@ -27,7 +27,7 @@ describe ('Welcome Emailer', function(){
     var user = { attributes: {} };
     var result = welcomer.isValidTimeForUser( user );
 
-    assert.equal( result === true || result === false, true );
+    assert.equal( typeof result === 'boolean', true );
   });
 
   it ('should state the day is valid', function(){
@@ -52,6 +52,6 @@ describe ('Welcome Emailer', function(){
     var user = { attributes: {} };
     var result = welcomer.isValidDayForUser( user );
 
-    assert.equal( result === true || result === false, true );
+    assert.equal( typeof result === 'boolean', true );
   });
 });

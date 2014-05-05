@@ -213,6 +213,8 @@ config.dev = {
 
 , isDev: true
 
+, deniedRecipients: [ local.testEmail || 'test@goodybag.com' ]
+
 , http: {
     port: 3000
   }

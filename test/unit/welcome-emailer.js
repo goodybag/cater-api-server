@@ -27,6 +27,31 @@ describe ('Welcome Emailer', function(){
     var user = { attributes: {} };
     var result = welcomer.isValidTimeForUser( user );
 
-    assert.equal( result === true || result === false, true );
+    assert.equal( typeof result === 'boolean', true );
+  });
+
+  it ('should state the day is valid', function(){
+    var user = { attributes: {} };
+    var validTime = moment().tz( config.welcome.timezone );
+
+    validTime = validTime.day( config.welcome.days[0] );
+
+    assert.equal( welcomer.isValidDayForUser( validTime, user ), true );
+  });
+
+  it ('should state the day is invalid', function(){
+    var user = { attributes: {} };
+    var invalidTime = moment().tz( config.welcome.timezone );
+
+    invalidTime = invalidTime.day(0);
+
+    assert.equal( welcomer.isValidDayForUser( invalidTime, user ), false );
+  });
+
+  it ('should return a valid result without passing in a date as first arg', function(){
+    var user = { attributes: {} };
+    var result = welcomer.isValidDayForUser( user );
+
+    assert.equal( typeof result === 'boolean', true );
   });
 });

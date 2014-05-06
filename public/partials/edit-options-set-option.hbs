@@ -26,18 +26,21 @@
   </tr>
   <tr data-id="{{this.id}}" class="option-expanded collapsed">
     <td colspan="4">
-      <div class="option-expanded-inner row">
-        <div class="form-group">
-          <label>Option Description</label>
-          <textarea name="description" class="form-control" placeholder="Option description">{{this.description}}</textarea>
-        </div>
-        <div class="form-group">
-          <label>Dietary Tags</label>
-          <div class="options-set-tags">
-            {{> edit_tags this.tags }}
+      <div class="option-expanded-inner">
+        <div class="row">
+          <div class="col-6">
+            <label>Option Description</label>
+            <textarea name="description" class="form-control" placeholder="Option description">{{this.description}}</textarea>
           </div>
         </div>
-      </div>
+        <div class="row">
+          <div class="col-6">
+            <label>Dietary Tags</label>
+            <div class="options-set-tags">
+              {{> edit_tags this.tags }}
+            </div>
+          </div>
+        </div>
     </td>
   </tr>
 </tbody>

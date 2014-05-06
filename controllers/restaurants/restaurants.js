@@ -181,16 +181,6 @@ module.exports.editRestaurant = function(template) {
         , restaurant: restaurant.toJSON()
         , active_tab: template.replace('restaurant/edit-', '')
         });
-        // res.render('edit-restaurant', {
-        //   restaurant: restaurant.toJSON()
-        // , selectedPrice: selectedPrice
-        // , states: states
-        // , mealTypesList: enums.getMealTypes()
-        // , mealStylesList: enums.getMealStyles()
-        // }, function(err, html) {
-        //   if (err) return res.error(errors.internal.UNKNOWN, err);
-        //   res.send(html);
-        // });
       });
     });
   };

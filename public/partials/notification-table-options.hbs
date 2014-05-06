@@ -1,0 +1,12 @@
+<div class="additional-options">
+  <h2>Additional Options</h2>
+  <p>This notification requires some additional options in order to be sent. Please fill them in before previewing or sending.</p>
+  <form action="#" class="form-horizontal additional-options-form">
+    {{#each requiredOptions}}
+      <div class="form-group">
+        <label for="notification-option-{{../cid}}-{{this}}">{{uncamelize this}}</label>
+        <input type="text" id="notification-option-{{../cid}}-{{this}}" name="{{this}}">
+      </div>
+    {{/each}}
+  </form>
+</div>

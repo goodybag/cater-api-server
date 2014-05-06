@@ -182,11 +182,13 @@
   font-weight: @semibold;
   text-decoration: none;
   letter-spacing: 0.4px;
+  vertical-align: bottom;
 
   &:hover {
     text-decoration: none;
   }
 
+  &.active,
   &:active {
     border-bottom-width: @btn-border-width-base;
     bottom: -1px;
@@ -244,6 +246,13 @@
   animation: @easing @duration @name;
 }
 
+.animation-delay( @delay ){
+  -webkit-animation-delay: @delay;
+  -moz-animation-delay: @delay;
+  -o-animation-delay: @delay;
+  animation-delay: @delay;
+}
+
 #animations {
   .fade-in() {
     from { .opacity(0) }
@@ -268,6 +277,9 @@
   .slide-bg() {
     from { background-position-x: 10%; }
     to { background-position-x: 25%; }
+  }
+  .highlight() {
+    from { background-color: #F0F75A; }
   }
 }
 
@@ -320,4 +332,11 @@
     -ms-box-direction: @direction;
     box-direction: @direction;
   }
+}
+
+.starship-enterprise() {
+  position: absolute;
+  width: 600px;
+  height: 177px;
+  background: url('../img/enterprise.png');
 }

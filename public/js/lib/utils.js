@@ -37,6 +37,7 @@ define(function(require, exports, module) {
     var $ = require('jquery');
     utils.dom = $;
     utils.domready = $;
+    utils.ajax = $.ajax;
   }
 
   utils.async = async;
@@ -76,6 +77,27 @@ define(function(require, exports, module) {
     utils.history = Backbone.history;
     utils.history.start();
     utils.navigate = function(){ utils.history.navigate.apply(utils.history, arguments); };
+  };
+
+  /**
+   * Throws an error if an object is missing a property
+   * @param  {Object} obj        Object in question
+   * @param  {Array}  properties Array of properties required
+   */
+  utils.enforceRequired = function( obj, properties ){
+    if ( !_.isObject( obj ) ){
+      throw new Error('Invalid first parameter');
+    }
+
+    if ( !_.isArray( properties ) ){
+      throw new Error('Invalid second parameter');
+    }
+
+    for ( var i = 0; i < properties.length; i++ ){
+      if ( !obj[ properties[i] ] ){
+        throw new Error('Missing required option: `' + properties[i] + '`');
+      }
+    }
   };
 
   /**

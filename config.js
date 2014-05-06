@@ -20,6 +20,14 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, deniedRecipients: [
+    'jag@goodybag.com'
+  , 'sarah.southwell@goodybag.com'
+  , 'om@goodybag.com'
+  , 'jay@goodybag.com'
+  , 'jacob.parker@goodybag.com'
+  ]
+
 , resultsTooFewContactUsThreshold: 5
 
 , cdn: {
@@ -48,6 +56,7 @@ config.defaults = {
   , delay1:         (4*60*1000)
   , timezone:       'America/Chicago'
   , subject1:       'Hi there!'
+  , days:           [ 1, 2, 3, 4, 5 ]
   }
 
 , salesTax: 1.0825
@@ -206,6 +215,8 @@ config.dev = {
   env: 'dev'
 
 , isDev: true
+
+, deniedRecipients: [ local.testEmail || 'test@goodybag.com' ]
 
 , http: {
     port: 3000

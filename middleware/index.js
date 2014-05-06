@@ -10,6 +10,7 @@ module.exports = {
 , enums: require('./enums')
 , exists: require('./exists')
 , filterBody: require('./filter-body')
+, getOrder: require('./get-order')
 , getUser: require('./get-user')
 , orderParams: require('./order-params')
 , owner: require('./owner')

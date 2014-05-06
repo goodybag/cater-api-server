@@ -54,7 +54,8 @@ var getGbBusinesses = function( callback ){
   var $query = {
     where: {
       yelp_business_id: { $notNull: true }
-    }
+    },
+    limit: 'all'
   };
 
   Models.Restaurant.find( $query, function( error, results ){

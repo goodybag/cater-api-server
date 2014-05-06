@@ -1,3 +1,16 @@
+/**
+ * S3 Middleware/Route Handler
+ *
+ * Usage:
+ * app.get('/some/route/my-file-:id.doc', s3({
+ *   // Path on the S3 bucket
+ *   path: '/my-file-:id.doc'
+ * , key:  MY_AWS_KEY
+ * , secret: MY_AWS_SECRET
+ * , bucket: 'some-bucket'
+ * }));
+ */
+
 var knox = require('knox');
 var pathToRegex = require('path-to-regexp');
 

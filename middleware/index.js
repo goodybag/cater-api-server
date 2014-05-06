@@ -21,4 +21,5 @@ module.exports = {
 , uuid: require('./uuid')
 , filterBody: require('./filter-body')
 , getOrder: require('./get-order')
+, s3: require('./s3')
 };

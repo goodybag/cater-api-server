@@ -268,12 +268,24 @@ module.exports.register = function(app) {
    */
 
   app.get('/orders/:oid/manifest'
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
   , m.getOrder({
       withItems:    true
     , withManifest: true
     })
   , m.view( 'order-manifest/manifest-1', {
       layout: 'order-manifest/layout'
+    })
+  );
+
+  app.get('/manifests/manifest-:oid.pdf'
+  , m.restrict(['admin', 'restaurant'])
+  , m.s3({
+      path:   '/manifest-:oid.pdf'
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.receipt.bucket
     })
   );
 
@@ -319,7 +331,12 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-  app.get('/receipts/order-:oid.pdf', m.buildReceipt());
+  app.get('/receipts/order-:oid.pdf', m.s3({
+    path:   '/' + config.receipt.fileName
+  , key:    config.amazon.awsId
+  , secret: config.amazon.awsSecret
+  , bucket: config.receipt.bucket
+  }));
 
   /**
    *  Order status resource.  The collection of all statuses on a single order.

@@ -24,7 +24,6 @@
   .col-width( @size, @gutter: @gutter-width, @prop: width ){
     @column-width: ( @container-width - ( @gutter * (@columns - 1) ) ) / @columns;
     @{prop}: (@column-width * @size) + ((@size - 1) * @gutter);
-    float: left;
   }
 
   ._column( @width ){

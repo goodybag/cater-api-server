@@ -58,41 +58,7 @@
 
   <h2>Items</h2>
   {{#each items}}
-  <div id="edit-item-{{id}}" class="row">
-    <div class="col-details">
-      <div class="row row-details">
-        <div class="col-order">
-          <label>Order<input type="text" value="{{order}}"></label>
-        </div>
-        <div class="col-name">
-          <label>Name<input type="text" value="{{name}}"></label>
-        </div>
-        <div class="col-price">
-          <label>Price<input type="text" value="{{price}}"></label>
-        </div>
-        <div class="col-feeds-min">
-          <label>Feeds Min<input type="text" value="{{feeds_min}}"></label>
-        </div>
-        <div class="col-feeds-max">
-          <label>Feeds Max<input type="text" value="{{feeds_max}}"></label>
-        </div>
-      </div>
-      <div class="row row-description">
-        <label>Description</label>
-        <textarea rows="3">{{description}}</textarea>
-      </div>
-      <div class="row row-actions">
-        <a href="#" class="item-edit-options">+ Expand Options</a>
-        <button class="btn btn-default">Copy</button>
-        <button class="btn btn-primary">Remove</button>
-        <button class="btn btn-save">Save</button>
-      </div>
-    </div>{{!-- end col details --}}
-
-    <div class="col-checkboxes">
-      <label>Tags</label>
-      {{> edit_tags this.tags }}
-    </div>{{!-- end col tags --}}
-  </div>
+    {{>edit_item_row}}
   {{/each}}
+  <button type="button" class="btn btn-primary new-item pull-right">New Item</button>
 </form>

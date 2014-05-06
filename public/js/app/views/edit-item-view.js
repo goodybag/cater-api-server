@@ -5,7 +5,7 @@ define(function(require, exports, module) {
   var Handlebars = require('handlebars');
 
   var EditItemView = FormView.extend({
-    tagName: 'tr',
+    tagName: 'div',
 
     template: Handlebars.partials.edit_item_row,
 

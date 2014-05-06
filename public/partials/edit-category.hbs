@@ -2,29 +2,21 @@
   <h2>Category</h2>
   <div class="row">
     <div class="col-details">
+      <div class="row-details">
+        <div class="col-order">
+          <label class="control-label">Order
+            <input type="number" value="{{order}}" class="form-control category-order">
+          </label>
+        </div>
+        <div class="col-name">
+          <label class="control-label">Name
+            <input type="text" value="{{name}}" class="form-control category-name">
+          </label>
+        </div>
+      </div>
       <div class="row">
-        <div class="col-4">
-          <div class="row row-category-details">
-            <div class="col-1">
-              <div class="form-group">
-                <label class="control-label">Order</label>
-                <input type="number" value="{{order}}" class="form-control category-order">
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="form-group">
-                <label class="control-label">Name</label>
-                <input type="text" value="{{name}}" class="form-control category-name">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-2">
-          <div class="form-group">
-            <label class="control-label">Description</label>
-            <input type="text" value="{{description}}" class="form-control category-description">
-          </div>
-        </div>
+        <label class="control-label">Description</label>
+        <textarea class="form-control category-description" rows="3">{{description}}</textarea>
       </div>
       <div class="row row-actions">
         <button class="btn btn-default category-copy">Copy</button>

@@ -41,16 +41,11 @@
     var data = {
       models: {
         restaurant: new Restaurant({{{json restaurant}}})
-      },
-      views: {
-
       }
     };
     return data;
   });
-</script>
 
-<script>
   require( ['app/pages/restaurant/edit-lead-times'], function( page ){
     page.init();
   });

@@ -56,16 +56,11 @@
     var data = {
       models: {
         restaurant: new Restaurant({{{json restaurant}}})
-      },
-      views: {
-
       }
     };
     return data;
   });
-</script>
 
-<script>
   require( ['app/pages/restaurant/edit-tags'], function( page ){
     page.init();
   });

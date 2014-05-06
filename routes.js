@@ -118,7 +118,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:restaurant_id/contacts'
   , m.restrict(['admin'])
-  , m.activeTab('contacts')
+  , m.defaultLocals( { active_tab: 'contacts'} )
   , m.param('restaurant_id')
   , m.restaurant( { param: 'restaurant_id' } )
   , m.view('restaurant/edit-contacts', db.contacts, {

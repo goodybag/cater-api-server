@@ -251,7 +251,6 @@ module.exports = Model.extend({
     grouped = utils.groupBy( grouped, 'item_id' );
 
     var itemsAreBasicallyTheSame = function( a, b ){
-console.log('comparing', a.name, b.name)
       if ( a.item_id !== b.item_id ) return false;
       if ( a.notes !== b.notes ) return false;
       if ( a.options_sets.length !== b.options_sets.length ) return false;
@@ -269,7 +268,6 @@ console.log('comparing', a.name, b.name)
     };
 
     var consolidateGroup = function( group ){
-      console.log('consolidating group', group);
       if ( group.length <= 1 ) return group;
 
       for ( var i = 1, l = group.length, g1, g2; i < l; i++ ){

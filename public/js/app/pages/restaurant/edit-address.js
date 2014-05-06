@@ -19,8 +19,7 @@ define(function(require){
       , model: data.models.restaurant
       , alertView: alertView
       });
-    },
-
+    }
   };
 
   return page;

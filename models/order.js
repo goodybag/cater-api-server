@@ -227,7 +227,7 @@ module.exports = Model.extend({
   getManifest: function(){
     var grouped = utils.invoke( this.orderItems, 'toJSON' ).map( function( item ){
       var mitem = utils.pick( item, [
-        'id', 'name', 'quantity', 'notes'
+        'id', 'name', 'quantity', 'notes', 'item_id'
       ]);
 
       mitem.recipients = item.recipient ? [ item.recipient ] : [];
@@ -248,10 +248,11 @@ module.exports = Model.extend({
       return mitem;
     });
 
-    grouped = utils.groupBy( grouped, 'id' );
+    grouped = utils.groupBy( grouped, 'item_id' );
 
     var itemsAreBasicallyTheSame = function( a, b ){
-      if ( a.id !== b.id ) return false;
+console.log('comparing', a.name, b.name)
+      if ( a.item_id !== b.item_id ) return false;
       if ( a.notes !== b.notes ) return false;
       if ( a.options_sets.length !== b.options_sets.length ) return false;
 
@@ -268,12 +269,12 @@ module.exports = Model.extend({
     };
 
     var consolidateGroup = function( group ){
+      console.log('consolidating group', group);
       if ( group.length <= 1 ) return group;
 
       for ( var i = 1, l = group.length, g1, g2; i < l; i++ ){
         g1 = group[ i - 1 ];
         g2 = group[ i - 0 ];
-
         if ( !itemsAreBasicallyTheSame( g1, g2 ) ) continue;
 
         g1.quantity += g2.quantity;

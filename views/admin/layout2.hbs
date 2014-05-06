@@ -52,16 +52,6 @@
               </ul>
             </li>
           </ul>
-
-          <a href="/users/me/rewards" class="gb-points-indicator">
-            <div class="points-wrapper">
-              {{#if user.points}}
-                {{user.points}}
-              {{else}}
-                0
-              {{/if}}
-            </div>
-          </a>
         {{else}}
           <button class="navbar-toggle btn btn-default">Sign In</button>
           <form class="login-form form-small" method="POST" action="/login{{queryParams query}}">

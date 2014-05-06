@@ -1,0 +1,43 @@
+{{#extend "page"}}page-order{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <h1>Order #{{order.id}} Command Center</h1>
+
+  <section class="panel-component" id="order-notifications">
+    <h1 class="component-title">Notifications</h1>
+    <ul class="component-nav nav nav-tabs">
+      <li class="active">
+        <a href="#notifications-history" data-toggle="tab">History</a>
+      </li>
+      <li>
+        <a href="#notifications-available" data-toggle="tab">Available</a>
+      </li>
+    </ul>
+    <div class="component-content tab-content">
+      <div class="tab-pane active" id="notifications-history">
+        <p>This is a history of notifications for order #{{order.id}}.</p>
+        <table class="table notifications-table" id="notifications-history-table"></table>
+      </div>
+
+      <div class="tab-pane" id="notifications-available">
+        <p>This is a list of available notifications for order #{{order.id}}.</p>
+        <table class="table notifications-table" id="notifications-table"></table>
+      </div>
+    </div>
+  </section>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  define( 'data/order', ['app/models/order'], function( Order ){
+    return new Order( {{{json order}}} );
+  });
+
+  require( ['app/pages/admin-order'], function( page ){
+    page.init({
+
+    });
+  });
+</script>
+{{/extend}}

@@ -20,6 +20,14 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, deniedRecipients: [
+    'jag@goodybag.com'
+  , 'sarah.southwell@goodybag.com'
+  , 'om@goodybag.com'
+  , 'jay@goodybag.com'
+  , 'jacob.parker@goodybag.com'
+  ]
+
 , resultsTooFewContactUsThreshold: 5
 
 , cdn: {
@@ -205,6 +213,8 @@ config.dev = {
   env: 'dev'
 
 , isDev: true
+
+, deniedRecipients: [ local.testEmail || 'test@goodybag.com' ]
 
 , http: {
     port: 3000

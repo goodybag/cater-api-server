@@ -58,6 +58,9 @@ module.exports.auth = function(req, res, next) {
         order.attributes.edit_token !== editToken)
       return res.status(404).render('404');
 
+    // There was a review token, so this is likely a restaurant manager
+    req.order.isRestaurantManager = true;
+
     req.order.isOwner = true;
     next();
   });

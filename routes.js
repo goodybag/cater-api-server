@@ -716,7 +716,12 @@ module.exports.register = function(app) {
 
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
-  , controllers.paymentSummaries.getPdf
+  , m.s3({
+      path:   '/payment-summary-:psid.pdf'
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.paymentSummaries.bucket
+    })
   );
 
   app.get( config.paymentSummaries.route

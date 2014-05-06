@@ -25,7 +25,7 @@ module.exports = function( options ){
     knox.createClient(
       options
     ).getFile( s3path, function( error, fileRes ){
-      if ( error ) return next( error );
+      if ( error ) return res.error( error );
 
       fileRes.pipe( res );
     });

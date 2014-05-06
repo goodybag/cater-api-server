@@ -442,7 +442,7 @@ define(function(require, exports, module) {
         set = utils.pluck( set, prop );
       }
 
-      return utils.isArray( set ) ? set.join( separator || ', ' ) : set;
+      return utils.isArray( set ) ? set.join( joiner || ', ' ) : set;
     },
 
     uncamelize: function( text ){

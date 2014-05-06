@@ -5,7 +5,6 @@ var config  = require('../../config');
 var states  = require('../../public/js/lib/states')
 var models  = require('../../models');
 var logger  = require('../../logger');
-var receipt = require('../../lib/receipt');
 var venter  = require('../../lib/venter');
 var scheduler = require('../../lib/scheduler');
 

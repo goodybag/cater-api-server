@@ -20,6 +20,8 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, tmpDir: './tmp'
+
 , resultsTooFewContactUsThreshold: 5
 
 , cdn: {

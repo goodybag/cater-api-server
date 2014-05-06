@@ -94,26 +94,65 @@ module.exports.register = function(app) {
    * Restaurant edit resource
    */
 
-  app.get('/admin/restaurants/:rid', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
+  app.get('/admin/restaurants/:rid'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'basic-info'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-basic-info', {
+      layout: 'admin/layout-two-column'
+    })
+  );
   
-  app.put('/admin/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
+  app.put('/admin/restaurants/:rid'
+  , m.restrict('admin')
+  , controllers.restaurants.update
+  );
 
-  app.get('/admin/restaurants/:rid/basic-info', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
+  app.get('/admin/restaurants/:rid/basic-info'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'basic-info'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-basic-info', {
+      layout: 'admin/layout-two-column'
+    })
+  );
 
-  app.get('/admin/restaurants/:rid/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);
+  app.get('/admin/restaurants/:rid/delivery-settings'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'delivery-settings'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-delivery-settings', {
+      layout: 'admin/layout-two-column'
+    })
+  );
 
-  app.get('/admin/restaurants/:rid/lead-times', m.restrict('admin'), controllers.restaurants.edit.leadTimes);
+  app.get('/admin/restaurants/:rid/lead-times'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'lead-times'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-lead-times', {
+      layout: 'admin/layout-two-column'
+    })
+  );
 
   app.get('/admin/restaurants/:rid/tags'
   , m.restrict('admin')
   , m.enums()
-  , controllers.restaurants.edit.tags
+  , m.defaultLocals( { active_tab: 'tags'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-tags', {
+      layout: 'admin/layout-two-column'
+    })
   );
 
   app.get('/admin/restaurants/:rid/address'
   , m.restrict('admin')
   , m.states()
-  , controllers.restaurants.edit.address
+  , m.defaultLocals( { active_tab: 'address'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-address', {
+      layout: 'admin/layout-two-column'
+    })
   );
 
   app.get('/admin/restaurants/:restaurant_id/contacts'
@@ -127,7 +166,11 @@ module.exports.register = function(app) {
     })
   );
 
-  app.get('/admin/restaurants/:rid/menu', m.restrict('admin'), controllers.restaurants.edit.menu);
+  app.get('/admin/restaurants/:rid/menu'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'menu'} )
+  , controllers.restaurants.editMenu
+  );
 
   app.get('/admin/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 

@@ -1,4 +1,5 @@
 var fs          = require('fs');
+var path        = require('path');
 var pg          = require('pg');
 var dirac       = require('dirac');
 var mosql       = require('mongo-sql');
@@ -7,8 +8,9 @@ var utils       = require('../utils');
 
 // This is silly until I solve this peerdep issue
 // dirac is using its own copy of mosql, so apply all helpers to both
-if ( fs.existsSync('../node_modules/dirac/node_modules/mongo-sql') ){
-  var mosql2 = require('../node_modules/dirac/node_modules/mongo-sql');
+if ( fs.existsSync( path.join( __dirname, '../', 'node_modules/dirac/node_modules/mongo-sql' ) ) ){
+  var mosql2 = require( path.join( __dirname, '../', 'node_modules/dirac/node_modules/mongo-sql' ) );
+
   Object.keys( mosql ).filter( function( key ){
     return typeof mosql[ key ] === 'function';
   }).filter( function( key ){
@@ -240,7 +242,7 @@ dirac.use( function(){
     $query.columns = $query.columns.concat( options.columns.map( function( c ){
       return [ options.target, c ].join('.');
     }));
-console.log(utils);
+
     $query.joins.push({
       target: options.target
     , on:     utils.clone( options.on )
@@ -292,10 +294,10 @@ dirac.use( function(){
 
 // Log queries to dirac
 // dirac.use( function(){
-//   var query = dirac.DAL.prototype.query;
+//   var query_ = dirac.DAL.prototype.query;
 //   dirac.DAL.prototype.query = function( query, callback ){
-//     console.log( query );
-//     return query.apply( this, arguments );
+//     console.log( JSON.stringify(query, true, '  ') );
+//     return query_.apply( this, arguments );
 //   };
 
 //   var raw = dirac.DAL.prototype.raw;

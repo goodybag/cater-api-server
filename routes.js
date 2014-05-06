@@ -100,17 +100,6 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:rid/basic-info', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
 
-  app.get('/admin/restaurants/:restaurant_id/contacts'
-  , m.restrict(['admin'])
-  , m.activeTab('contacts')
-  , m.param('restaurant_id')
-  , m.restaurant( { param: 'restaurant_id' } )
-  , m.view('restaurant/edit-contacts', db.contacts, {
-      layout: 'admin/layout-two-column'
-    , method: 'find'
-    })
-  );
-
   app.get('/admin/restaurants/:rid/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);
 
   app.get('/admin/restaurants/:rid/lead-times', m.restrict('admin'), controllers.restaurants.edit.leadTimes);
@@ -125,6 +114,17 @@ module.exports.register = function(app) {
   , m.restrict('admin')
   , m.states()
   , controllers.restaurants.edit.address
+  );
+
+  app.get('/admin/restaurants/:restaurant_id/contacts'
+  , m.restrict(['admin'])
+  , m.activeTab('contacts')
+  , m.param('restaurant_id')
+  , m.restaurant( { param: 'restaurant_id' } )
+  , m.view('restaurant/edit-contacts', db.contacts, {
+      layout: 'admin/layout-two-column'
+    , method: 'find'
+    })
   );
 
   app.get('/admin/restaurants/:rid/menu', m.restrict('admin'), controllers.restaurants.edit.menu);

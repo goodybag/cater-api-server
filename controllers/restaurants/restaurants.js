@@ -164,7 +164,7 @@ module.exports.get = function(req, res) {
   utils.async.parallel(tasks, done);
 }
 
-module.exports.editRestaurant = function(template) {
+module.exports.editRestaurant = function(type) {
   return function(req, res) {
     models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
@@ -176,10 +176,10 @@ module.exports.editRestaurant = function(template) {
         }));
         utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
         
-        res.render(template, {
+        res.render('restaurant/edit-' + type, {
           layout: 'admin/layout-two-column'
         , restaurant: restaurant.toJSON()
-        , active_tab: template.replace('restaurant/edit-', '')
+        , active_tab: type
         });
       });
     });
@@ -187,12 +187,12 @@ module.exports.editRestaurant = function(template) {
 };
 
 module.exports.edit = {
-  basicInfo:          module.exports.editRestaurant('restaurant/edit-basic-info')
-, deliverySettings:   module.exports.editRestaurant('restaurant/edit-delivery-settings')
-, leadTimes:          module.exports.editRestaurant('restaurant/edit-lead-times')
-, tags:               module.exports.editRestaurant('restaurant/edit-tags')
-, address:            module.exports.editRestaurant('restaurant/edit-address')
-, menu:               module.exports.editRestaurant('restaurant/edit-menu')
+  basicInfo:          module.exports.editRestaurant('basic-info')
+, deliverySettings:   module.exports.editRestaurant('delivery-settings')
+, leadTimes:          module.exports.editRestaurant('lead-times')
+, tags:               module.exports.editRestaurant('tags')
+, address:            module.exports.editRestaurant('address')
+, menu:               module.exports.editRestaurant('menu')
 };
 
 module.exports.editAll = function(req, res, next) {

@@ -49,7 +49,7 @@ define(function(require, exports, module) {
         this_.options.alertView && this_.options.alertView.show('error');
         utils.each(errors, function(error) {
           this_.$el
-            .find('input[name="' + error.property + '"]')
+            .find('input[name="' + error.property.replace(/\[\d+\]$/, '') + '"]')
             .closest('.form-group')
             .addClass('has-error');
         });

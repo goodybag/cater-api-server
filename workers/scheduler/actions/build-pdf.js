@@ -26,10 +26,10 @@ module.exports = function( job, done ){
   // Required args
   var args = [
     script
-  , '--url',      job.url
-  , '--output',   job.output
-  , '--email',    job.email
-  , '--password', job.password
+  , '--url',      job.data.url
+  , '--output',   job.data.output
+  , '--email',    job.data.email
+  , '--password', job.data.password
   ];
 
   // Other acceptable/optional args
@@ -39,8 +39,8 @@ module.exports = function( job, done ){
   , 'margin-bottom'
   , 'margin-left'
   ].forEach( function( prop ){
-    if ( prop in job ){
-      args.push( prop, job[ prop ] );
+    if ( prop in job.data ){
+      args.push( '--' + prop, job.data[ prop ] );
     }
   });
 
@@ -48,5 +48,7 @@ module.exports = function( job, done ){
     if ( error ){
       return done( error );
     }
-  });
+
+    done();
+  }));
 };

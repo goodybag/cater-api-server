@@ -22,6 +22,7 @@ var
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
 
+utils.CronJob = require('cron').CronJob;
 utils.overload = require('leFunc');
 
 utils.deepExtend = require('deep-extend');

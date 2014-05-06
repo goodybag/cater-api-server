@@ -1,9 +1,9 @@
-var forky = require('forky');
-var config = require('./config');
+var forky   = require('forky');
+var config  = require('./config');
 var rollbar = require('rollbar');
 
 process.on('uncaughtException', function(err) {
-  console.log('Uncaught Exception', err);
+  console.log('Uncaught Exception', err, err.stack);
   forky.disconnect();
   process.exit();
 });
@@ -17,6 +17,7 @@ var app = require('./app')
   , http = require('http');
 
 require('./lib/events');
+require('./lib/order-notifications');
 
 var server = http.createServer(app);
 

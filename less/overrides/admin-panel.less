@@ -13,3 +13,31 @@ header {
   z-index: 2;
   position: relative;
 }
+
+.page-order {
+  padding-bottom: 80px;
+
+  #main {
+    // Don't let the enterprise give horizontals
+    @media screen and ( max-width: @container-width ){
+      overflow: hidden;
+    }
+
+    &:after {
+      content: "";
+      .starship-enterprise();
+      right: 50%;
+      margin-right: -600px;
+      top: 50px;
+      opacity: 0.1;
+    }
+  }
+
+  #notifications-history-table {
+    margin-top: 30px;
+  }
+
+  #notifications-table .actions {
+    min-width: 250px;
+  }
+}

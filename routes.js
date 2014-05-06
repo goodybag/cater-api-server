@@ -405,6 +405,11 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+  app.get('/orders/:oid/notifications/:nid'
+  , m.restrict(['admin'])
+  , controllers.orders.notifications.getEmail
+  );
+
   /**
    * Reporting resource
    */
@@ -674,15 +679,23 @@ module.exports.register = function(app) {
     })
   );
 
-   app.get('/admin/restaurants/:restaurant_id/contacts'
-   , m.restrict(['admin'])
-   , m.param('restaurant_id')
-   , m.restaurant( {param: 'restaurant_id'} )
-   , m.view( 'restaurant/contacts', db.contacts, {
-       layout: 'admin/layout2'
-     , method: 'find'
-     })
-   );
+  app.get('/admin/restaurants/:restaurant_id/contacts'
+  , m.restrict(['admin'])
+  , m.param('restaurant_id')
+  , m.restaurant( {param: 'restaurant_id'} )
+  , m.view( 'restaurant/contacts', db.contacts, {
+     layout: 'admin/layout2'
+   , method: 'find'
+   })
+  );
+
+  app.get('/admin/orders/:oid'
+  , m.restrict(['admin'])
+  , m.getOrder({ param: 'oid', withItems: true })
+  , m.view( 'admin/order', {
+      layout: 'admin/layout2'
+    })
+  );
 
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
@@ -857,6 +870,26 @@ module.exports.register = function(app) {
   app.post('/api/orders/:order_id/generate_edit_token'
   , m.restrict(['client', 'admin'])
   , controllers.orders.generateEditToken
+  );
+
+  app.get('/api/orders/:oid/notifications'
+  , m.restrict(['admin'])
+  , controllers.orders.notifications.JSON.list
+  );
+
+  app.post('/api/orders/:oid/notifications/:id'
+  , m.restrict(['admin'])
+  , controllers.orders.notifications.JSON.sendNotification
+  );
+
+  app.get('/api/orders/:oid/notifications-history'
+  , m.restrict(['admin'])
+  , controllers.orders.notifications.JSON.history
+  );
+
+  app.get('/api/orders/:oid/notifications-history/:id'
+  , m.restrict(['admin'])
+  , controllers.orders.notifications.JSON.historyItem
   );
 
   /**

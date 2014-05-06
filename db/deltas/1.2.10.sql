@@ -1,4 +1,4 @@
--- Allow scheduled series
+-- #798 - Notifications
 
 DO $$
   declare version       text := '1.2.10';
@@ -8,8 +8,17 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  perform add_column( 'scheduled_jobs', 'predicate_id', 'integer references scheduled_jobs(id)' );
+  DROP TYPE IF EXISTS email_status;
+  CREATE TYPE email_status AS ENUM('pending', 'delivered', 'error');
 
-  alter table scheduled_jobs alter column status set default 'pending';
-  alter table scheduled_jobs alter column datetime set default now();
+  create table if not exists "order_notifications" (
+    "id"            serial
+
+    -- Registered text ID of notification
+  , "nid"           text not null
+  , "order_id"      int references orders( id ) on delete set null
+  , "email"         json
+  , "send_date"     timestamp not null default now()
+  , "created_at"    timestamp not null default now()
+  );
 end$$;

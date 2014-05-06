@@ -65,6 +65,14 @@ define(function(require, exports, module) {
       return arr ? arr.join(', ') : '';
     },
 
+    list: function( list ){
+      return [
+        '<ul>'
+      , '  <li>' + (utils.isArray( list ) ? list.join('</li>\n  <li>') : list) + '</li>'
+      , '</ul>'
+      ].join('\n');
+    },
+
     tax: function() {
       return (tax.apply(this, arguments) / 100).toFixed(2);
     },
@@ -434,7 +442,12 @@ define(function(require, exports, module) {
         set = utils.pluck( set, prop );
       }
 
-      return set.join( joiner );
+      return utils.isArray( set ) ? set.join( separator || ', ' ) : set;
+    },
+
+    uncamelize: function( text ){
+      var result = text.replace( /([A-Z])/g, " $1" );
+      return result.charAt(0).toUpperCase() + result.slice(1);
     }
   }
 

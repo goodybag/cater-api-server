@@ -10,7 +10,8 @@ module.exports = function( job, done ){
   var missing = [
     'url'
   , 'output'
-  , 'credentials'
+  , 'email'
+  , 'password'
   ].filter( function( required ){
     return !( required in job.data );
   });
@@ -27,8 +28,8 @@ module.exports = function( job, done ){
     script
   , '--url',      job.url
   , '--output',   job.output
-  , '--email',    job.credentials.email
-  , '--password', job.credentials.password
+  , '--email',    job.email
+  , '--password', job.password
   ];
 
   // Other acceptable/optional args

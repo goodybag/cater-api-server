@@ -94,13 +94,13 @@ module.exports.register = function(app) {
    * Restaurant edit resource
    */
 
-  app.get('/admin/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
+  app.get('/admin/restaurants/:rid', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
   
-  app.put('/admin/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.update);
+  app.put('/admin/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
 
-  app.get('/admin/restaurants/:rid/edit/basic-info', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
+  app.get('/admin/restaurants/:rid/basic-info', m.restrict('admin'), controllers.restaurants.edit.basicInfo);
 
-  app.get('/admin/restaurants/:restaurant_id/edit/contacts'
+  app.get('/admin/restaurants/:restaurant_id/contacts'
   , m.restrict(['admin'])
   , m.activeTab('contacts')
   , m.param('restaurant_id')
@@ -111,26 +111,23 @@ module.exports.register = function(app) {
     })
   );
 
-  app.get('/admin/restaurants/:rid/edit/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);
+  app.get('/admin/restaurants/:rid/delivery-settings', m.restrict('admin'), controllers.restaurants.edit.deliverySettings);
 
-  app.get('/admin/restaurants/:rid/edit/lead-times', m.restrict('admin'), controllers.restaurants.edit.leadTimes);
+  app.get('/admin/restaurants/:rid/lead-times', m.restrict('admin'), controllers.restaurants.edit.leadTimes);
 
-  app.get('/admin/restaurants/:rid/edit/tags'
+  app.get('/admin/restaurants/:rid/tags'
   , m.restrict('admin')
   , m.enums()
   , controllers.restaurants.edit.tags
   );
 
-  app.get('/admin/restaurants/:rid/edit/address'
+  app.get('/admin/restaurants/:rid/address'
   , m.restrict('admin')
   , m.states()
   , controllers.restaurants.edit.address
   );
 
-  app.get('/admin/restaurants/:rid/edit/menu', m.restrict('admin'), controllers.restaurants.edit.menu);
-
-  // app.get('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit);
-
+  app.get('/admin/restaurants/:rid/menu', m.restrict('admin'), controllers.restaurants.edit.menu);
 
   app.get('/admin/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 

@@ -368,7 +368,7 @@ module.exports.create = function(req, res) {
 
       var done = function(err, results) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
-        res.redirect('/admin/restaurants/' + rows[0].id+ '/edit');
+        res.redirect('/admin/restaurants/' + rows[0].id);
       };
 
       utils.async.parallel(tasks, done);

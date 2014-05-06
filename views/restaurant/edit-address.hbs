@@ -1,36 +1,26 @@
 {{#extend "body"}}
   <h2>Update Address</h2>
-  <form class="ap-form form-address">
+  <form class="ap-form form-vertical form-address">
     <div class="form-group">
-      <div class="row">
-        <div class="col-4">
-          <label class="control-label">Street</label>
-          <input type="text" class="form-control restaurant-address restaurant-street" value="{{restaurant.street}}" placeholder="123 Fake St.">
-        </div>
-        <div class="col-3">
-          <label class="control-label">City</label>
-          <input type="text" class="form-control restaurant-address restaurant-city" value="{{restaurant.city}}" placeholder="Austin">
-        </div>
-      </div>
+      <label class="control-label">Street</label>
+      <input type="text" class="form-control restaurant-address restaurant-street" value="{{restaurant.street}}" placeholder="123 Fake St.">
     </div>
-
     <div class="form-group">
-      <div class="row">
-        <div class="col-4">
-          <label class="control-label">Zip</label>
-          <input type="text" maxlength="5" class="form-control restaurant-address restaurant-zip" value="{{restaurant.zip}}" placeholder="78701">
-        </div>
-        <div class="col-3">
-          <label class="control-label">State</label>
-          <select class="form-control restaurant-address restaurant-state">
-            {{#each states}}
-            <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq ../restaurant.state this.abbr}} selected="selected"{{/eq}}>{{this.name}}</option>
-            {{/each}}
-          </select>
-        </div>
-      </div>
+      <label class="control-label">City</label>
+      <input type="text" class="form-control restaurant-address restaurant-city" value="{{restaurant.city}}" placeholder="Austin">
     </div>
-
+    <div class="form-group">
+      <label class="control-label">Zip</label>
+      <input type="text" maxlength="5" class="form-control restaurant-address restaurant-zip" value="{{restaurant.zip}}" placeholder="78701">
+    </div>
+    <div class="form-group">
+      <label class="control-label">State</label>
+      <select class="form-control restaurant-address restaurant-state">
+        {{#each states}}
+        <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq ../restaurant.state this.abbr}} selected="selected"{{/eq}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
     <div class="form-group">
       <button class="btn btn-primary" type="submit">Update</button>
     </div>

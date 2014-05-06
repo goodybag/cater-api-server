@@ -1,7 +1,7 @@
 {{#extend "body"}}
   <h2>Delivery Hours</h2>
 
-  <form class="ap-form ap-lead-times form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST">
+  <form class="ap-form ap-lead-times form-vertical form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST">
     <input type="hidden" name="_method" value="PUT">
 
     {{#each restaurant.delivery_times}}

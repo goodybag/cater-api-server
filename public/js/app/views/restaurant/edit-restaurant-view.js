@@ -42,7 +42,6 @@ define(function(require, exports, module) {
      * failing validation
      */
     displayErrors: function(errors) {
-      console.log(errors);
       var this_ = this;
       this.clearErrors();
       if (errors) {

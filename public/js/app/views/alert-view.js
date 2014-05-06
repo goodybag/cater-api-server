@@ -11,7 +11,8 @@ define(function(require, exports, module) {
      * Dismiss alert
      */
     dismiss: function() {
-      $container.html(); // todo bootstrap close
+      this.$el.empty();
+      return this;
     },
 
     /**
@@ -24,6 +25,7 @@ define(function(require, exports, module) {
       var type = 'form_alert_' + type;
       var html = Handlebars.partials[type](context);
       this.$el.html(html);
+      return this;
     }
 
   });

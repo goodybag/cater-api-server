@@ -159,6 +159,7 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.defaultLocals( { active_tab: 'contacts'} )
   , m.param('restaurant_id')
+  , m.sort('+id')
   , m.restaurant( { param: 'restaurant_id' } )
   , m.view('restaurant/edit-contacts', db.contacts, {
       layout: 'admin/layout-two-column'

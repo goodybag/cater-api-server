@@ -16,11 +16,12 @@ module.exports = function( options ){
 
       if ( options.withMenuItems ){
         restaurant.getItems( function( error, items ){
-          if ( error ) return res.error(500); 
+          if ( error ) return res.error(500);
           res.locals.restaurant = restaurant.toJSON();
           next();
         });
       } else {
+        res.locals.restaurant = restaurant.toJSON();
         next();
       }
     });

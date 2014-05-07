@@ -80,7 +80,7 @@ define(function(require, exports, module) {
       this.$el.find(this.selectors.closed).attr('checked', false);
       this.$el.find(this.selectors.timeInputs).removeAttr('disabled');
       var $period = $( Handlebars.partials.edit_hours(['', ''], {data: {index: this.model.get('times').length || 1}}) );
-      $period.find('input.time').pickatime({
+      $period.find(this.selectors.timeInputs).pickatime({
         format: 'hh:i A',
         interval: 15
       }).pickatime('picker');

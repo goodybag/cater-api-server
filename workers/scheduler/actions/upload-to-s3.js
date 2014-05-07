@@ -1,9 +1,18 @@
 var path      = require('path');
 var config    = require('../../../config');
 var utils     = require('../../../utils');
-var logger    = require('../../../logger').scheduler;
+var slogger   = require('../../../logger').scheduler;
 
 module.exports = function( job, done ){
+  var TAGS = [ 'upload-to-s3', 'job-' + job.id ];
+  var logger = {};
+
+  [ 'debug', 'info', 'warn', 'error' ].forEach( function( level ){
+    logger[ level ] = slogger[ level ].bind( slogger, TAGS );
+  });
+
+  logger.info( 'Building PDF', job );
+
   var missing = [
     'bucket'
   , 'src'
@@ -13,6 +22,8 @@ module.exports = function( job, done ){
   });
 
   if ( missing.length > 0 ){
+    logger.warn( 'Missing required fields: ' + missing.join(', '), { missing: missing } );
+
     return done({
       message: 'Missing required fields: ' + missing.join(', ')
     , details: missing

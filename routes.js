@@ -848,7 +848,6 @@ module.exports.register = function(app) {
   , m.remove( db.payment_summary_items )
   );
 
-
   app.get('/api/restaurants/:restaurant_id/photos'
   , m.restrict( ['client', 'admin'] )
   , m.param('restaurant_id')
@@ -860,6 +859,27 @@ module.exports.register = function(app) {
   , m.queryToBody('restaurant_id')
   , m.sort('+priority')
   , m.insert( db.restaurant_photos )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/photos/:id'
+  , m.restrict( ['client', 'admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.findOne( db.restaurant_photos )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/photos/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.update( db.restaurant_photos )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/photos/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.remove( db.restaurant_photos )
   );
 
   app.get('/api/orders/:oid/items'

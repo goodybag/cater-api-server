@@ -176,6 +176,18 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/admin/restaurants/:restaurant_id/photos'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'photos'} )
+  , m.restaurant( { param: 'restaurant_id' } )
+  , m.param('restaurant_id')
+  , m.sort('+priority')
+  , m.view('restaurant/edit-photos', db.restaurant_photos, {
+      layout: 'admin/layout-two-column'
+    , method: 'find'
+    })
+  );
+
   app.get('/admin/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 
   /**

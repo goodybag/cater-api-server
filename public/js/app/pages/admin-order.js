@@ -7,6 +7,7 @@ define(function(require){
   var Views = {
     NotificationHistoryTable:     require('app/views/notification-history-table')
   , NotificationsTable:           require('app/views/notifications-table')
+  , PdfPreview:                   require('app/views/pdf-preview')
   };
 
   var page = {
@@ -30,6 +31,10 @@ define(function(require){
         page.notifications.setElement(
           $('#notifications-table')
         ).render();
+
+        $('.pdf-preview').each( function(){
+          new Views.PdfPreview({ el: this });
+        });
       });
     }
 

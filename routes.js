@@ -895,6 +895,11 @@ module.exports.register = function(app) {
   , controllers.orders.generateEditToken
   );
 
+  app.post('/api/orders/:oid/rebuild-pdf/:type'
+  , m.restrict(['admin'])
+  , controllers.orders.rebuildPdf
+  );
+
   app.get('/api/orders/:oid/notifications'
   , m.restrict(['admin'])
   , controllers.orders.notifications.JSON.list

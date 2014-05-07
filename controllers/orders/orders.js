@@ -6,6 +6,7 @@ var states  = require('../../public/js/lib/states')
 var models  = require('../../models');
 var logger  = require('../../logger');
 var venter  = require('../../lib/venter');
+var pdfs    = require('../../lib/pdfs');
 var scheduler = require('../../lib/scheduler');
 
 var moment = require('moment-timezone');
@@ -474,4 +475,19 @@ module.exports.receipt = function( req, res ){
 
     res.render( 'invoice/receipt', options );
   });
+};
+
+module.exports.rebuildPdf = function( req, res ){
+  if ( !(req.param('type') in pdfs) ){
+    return res.error({
+      type: 'input'
+    , httpCode: '403'
+    , name: 'INVALID_PDF'
+    , message: 'The report of that type does not exist'
+    });
+  }
+
+  pdfs[ req.param('type') ].build({ orderId: req.param('oid') });
+
+  res.send(204);
 };

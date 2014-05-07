@@ -848,6 +848,20 @@ module.exports.register = function(app) {
   , m.remove( db.payment_summary_items )
   );
 
+
+  app.get('/api/restaurants/:restaurant_id/photos'
+  , m.restrict( ['client', 'admin'] )
+  , m.param('restaurant_id')
+  , m.find( db.restaurant_photos )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/photos'
+  , m.restrict( 'admin' )
+  , m.queryToBody('restaurant_id')
+  , m.sort('+priority')
+  , m.insert( db.restaurant_photos )
+  );
+
   app.get('/api/orders/:oid/items'
   , m.editOrderAuth
   , m.exists('creatorId', {

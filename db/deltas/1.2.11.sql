@@ -11,7 +11,7 @@ begin
   create table if not exists "restaurant_photos" (
     "id"            serial
   , "created_at"    timestamp not null default now()
-  , "restaurant_id" int references restaurants( id ) on delete cascade
+  , "restaurant_id" int not null references restaurants( id ) on delete cascade
   , "url"           text not null
   , "name"          text
   , "description"   text

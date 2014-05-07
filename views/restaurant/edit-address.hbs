@@ -1,0 +1,46 @@
+{{#extend "body"}}
+  <h2>Update Address</h2>
+  <form class="ap-form form-vertical form-address">
+    <div class="form-group">
+      <label class="control-label">Street</label>
+      <input name="street" type="text" class="form-control restaurant-address restaurant-street" value="{{restaurant.street}}" placeholder="123 Fake St.">
+    </div>
+    <div class="form-group">
+      <label class="control-label">City</label>
+      <input name="city" type="text" class="form-control restaurant-address restaurant-city" value="{{restaurant.city}}" placeholder="Austin">
+    </div>
+    <div class="form-group">
+      <label class="control-label">Zip</label>
+      <input name="zip" type="text" maxlength="5" class="form-control restaurant-address restaurant-zip" value="{{restaurant.zip}}" placeholder="78701">
+    </div>
+    <div class="form-group">
+      <label class="control-label">State</label>
+      <select class="form-control restaurant-address restaurant-state">
+        {{#each states}}
+        <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq ../restaurant.state this.abbr}} selected="selected"{{/eq}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">Update</button>
+    </div>
+  </form>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  // Bootstrap data
+  define('data', ['app/models/restaurant'], function(Restaurant) {
+    var data = {
+      models: {
+        restaurant: new Restaurant({{{json restaurant}}})
+      }
+    };
+    return data;
+  });
+
+  require( ['app/pages/restaurant/edit-address'], function( page ){
+    page.init();
+  });
+</script>
+{{/extend}}

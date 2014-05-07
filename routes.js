@@ -75,9 +75,108 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-  app.get('/restaurants/:rid/edit', m.restrict('admin'), controllers.restaurants.edit);
+  /**
+   * Restaurant create
+   */
 
-  app.get('/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
+  app.get('/admin/restaurants/create'
+  , m.restrict('admin')
+  , m.states()
+  , m.view('restaurant/create', { layout: 'admin/layout-page' })
+  );
+
+  app.post('/admin/restaurants/create'
+  , m.restrict('admin')
+  , controllers.restaurants.create
+  );
+
+  /**
+   * Restaurant edit resource
+   */
+
+  app.get('/admin/restaurants/:rid'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'basic-info'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-basic-info', {
+      layout: 'admin/layout-two-column'
+    })
+  );
+
+  app.put('/admin/restaurants/:rid'
+  , m.restrict('admin')
+  , controllers.restaurants.update
+  );
+
+  app.get('/admin/restaurants/:rid/basic-info'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'basic-info'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-basic-info', {
+      layout: 'admin/layout-two-column'
+    })
+  );
+
+  app.get('/admin/restaurants/:rid/delivery-settings'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'delivery-settings'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-delivery-settings', {
+      layout: 'admin/layout-two-column'
+    })
+  );
+
+  app.get('/admin/restaurants/:rid/lead-times'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'lead-times'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-lead-times', {
+      layout: 'admin/layout-two-column'
+    })
+  );
+
+  app.get('/admin/restaurants/:rid/tags'
+  , m.restrict('admin')
+  , m.enums()
+  , m.defaultLocals( { active_tab: 'tags'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-tags', {
+      layout: 'admin/layout-two-column'
+    })
+  );
+
+  app.get('/admin/restaurants/:rid/address'
+  , m.restrict('admin')
+  , m.states()
+  , m.defaultLocals( { active_tab: 'address'} )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('restaurant/edit-address', {
+      layout: 'admin/layout-two-column'
+    })
+  );
+
+  app.get('/admin/restaurants/:restaurant_id/contacts'
+  , m.restrict(['admin'])
+  , m.defaultLocals( { active_tab: 'contacts'} )
+  , m.param('restaurant_id')
+  , m.sort('+id')
+  , m.restaurant( { param: 'restaurant_id' } )
+  , m.view('restaurant/edit-contacts', db.contacts, {
+      layout: 'admin/layout-two-column'
+    , method: 'find'
+    })
+  );
+
+  app.get('/admin/restaurants/:rid/menu'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'menu'} )
+  , m.restaurant( { param: 'rid', withMenuItems: true } )
+  , m.view('restaurant/edit-menu', {
+      layout: 'admin/layout-two-column'
+    })
+  );
+
+  app.get('/admin/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 
   /**
    * Restaurant items resource.  The collection of all items belonging to a restaurant.
@@ -121,7 +220,7 @@ module.exports.register = function(app) {
   /**
    * CSV Menu
    */
-  app.get('/restaurants/:rid/menu.csv', m.restrict(['client', 'admin']), controllers.restaurants.menuCsv);
+  app.get('/admin/restaurants/:rid/menu.csv', m.restrict(['client', 'admin']), controllers.restaurants.menuCsv);
 
   /**
    * Restaurant categories resource.  The collection of all categories belonging to a restaurant.

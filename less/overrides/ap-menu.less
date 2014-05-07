@@ -1,0 +1,259 @@
+/////////////////////////////////////////////////
+// Menu
+/////////////////////////////////////////////////
+
+.ap-menu {
+  .col-details {
+    float: left;
+    width: 80%;
+  }
+
+  .col-checkboxes {
+    float: left;
+    width: 20%;
+    padding-left: 10px;
+  }
+
+  .row-details .col-order {
+    .col-detail(@width: 15%, @margin-left: 0);
+  }
+  .row-details .col-name {
+    .col-detail(199px);
+  }
+  .row-details .col-price {
+    .col-detail(15%);
+  }
+  .row-details .col-feeds-min {
+    .col-detail(15%);
+  }
+  .row-details .col-feeds-max {
+    .col-detail(15%);
+  }
+
+  .row-actions {
+    margin: 10px 0;
+  }
+  .row-actions .btn {
+    float: right;
+    margin-left: 5px;
+  }
+
+  .row-actions label {
+    display: inline-block;
+  }
+}
+
+
+.col-detail(@width: 20%, @margin-left: 5px) {
+  float:          left;
+  margin-left:    @margin-left;
+  width:          @width;
+}
+
+
+/////////
+// TODO: simplify these
+// Moving some styling 
+/////////
+
+.option-group {
+  height: 400px;
+  margin-bottom: 30px;
+  border: solid 1px #CCCCC0;
+  border-radius: 2px;
+  overflow: scroll;
+  background: #fff;
+}
+
+.option-group .option-group-heading {
+  width: 100%;
+  margin-top: 0;
+  padding-top: 12px;
+  padding-bottom: 6px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border: none;
+  border-bottom: solid 1px #CCCCC0;
+  font-size: 18px;
+  color: #695A42;
+}
+
+.option-group .option-group-type {
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 8px;
+  padding-bottom: 4px;
+  margin-bottom: 0;
+}
+
+.option-group-type .option-type-title {
+  display: inline-block;
+  margin: 0;
+  margin-right: 20px;
+  font-size: 14px;
+}
+
+.checkbox-min-max {
+  display: inline-block;
+  margin-left: 12px;
+}
+
+.checkbox-min-max input {
+  width: 100px;
+}
+
+.option-group-actions {
+  height: 52px;
+  border-bottom: solid 10px #C7C1B8;
+  margin-top: -42px;
+  -webkit-transition: margin 0.3s ease-in-out;
+  -moz-transition: margin 0.3s ease-in-out;
+  -ms-transition: margin 0.3s ease-in-out;
+  -o-transition: margin 0.3s ease-in-out;
+  transition: margin 0.3s ease-in-out;
+}
+
+.option-group-actions:hover {
+  margin-top: 0;
+}
+
+.radio-inline {
+  display: inline-block;
+  padding-left: 20px;
+  margin-bottom: 0;
+  font-weight: normal;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.option-group-actions .btn-delete-option {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border-width: 0;
+  border-bottom-width: 1px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.add-wrapper {
+  padding: 8px;
+}
+
+.option-group .item-options-table {
+  position: relative;
+  overflow: hidden;
+  border-left: none;
+  border-right: none;
+}
+
+.option-group tr > th:first-child,
+.option-group tr > td:first-child {
+  border-left: none!important;
+}
+
+.option-group tr > th:last-child,
+.option-group tr > td:last-child {
+  border-right: none!important;
+}
+
+th.price-column {
+  width: 125px;
+}
+
+th.order-column,
+th.feeds-min-column,
+th.feeds-max-column {
+  width: 90px;
+}
+
+th.name-column {
+  width: 300px;
+}
+
+.option-group .column-name {
+  width: 52%;
+}
+
+.option-group .column-actions {
+  white-space: nowrap;
+}
+
+.option-group .column-default,
+.option-group .column-actions {
+  vertical-align: middle;
+  text-align: center;
+}
+
+
+.option-expanded > td {
+  position: relative;
+  overflow: hidden;
+  /*height: 100px;*/
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border: none;
+
+  -webkit-transition: height 0.3s ease-in-out;
+     -moz-transition: height 0.3s ease-in-out;
+      -ms-transition: height 0.3s ease-in-out;
+       -o-transition: height 0.3s ease-in-out;
+          transition: height 0.3s ease-in-out;
+}
+
+.option-expanded .option-expanded-inner {
+  position: absolute;
+  left: auto;
+  width: 100%;
+  opacity: 1;
+
+  padding: 8px;
+
+  -webkit-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+     -moz-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+      -ms-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+       -o-transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+          transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out;
+}
+
+.option-expanded.collapsed > td {
+  height: 0;
+}
+
+.option-expanded.collapsed .option-expanded-inner {
+  opacity: 0;
+  top: -400px;
+}
+
+.btn-expand-option-set-option > .icon-collapse {
+  display: inline-block;
+
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  -moz-transition: -moz-transform 0.3s ease-in-out;
+  -ms-transition: -ms-transform 0.3s ease-in-out;
+  -o-transition: -o-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+}
+
+.btn-expand-option-set-option.collapsed > .icon-collapse {
+  -webkit-transform: rotate(0);
+  -moz-transform: rotate(0);
+  -ms-transform: rotate(0);
+  -o-transform: rotate(0);
+  transform: rotate(0);
+}
+
+.table tbody.option-set-tr-group {
+  border-top: 0;
+  background: #fff;
+}
+
+.actions {
+  margin-bottom: 10px;
+}

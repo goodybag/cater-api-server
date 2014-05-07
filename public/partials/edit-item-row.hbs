@@ -1,32 +1,36 @@
-<td>
-  <input type="number" value="{{this.order}}" min="0" class="form-control item-order">
-</td>
-<td>
-  <input type="text" value="{{this.name}}" class="form-control item-name">
-</td>
-<td>
-  <div class="input-group">
-    <span class="input-group-addon">$</span>
-    <input type="text" class="form-control item-price" value="{{dollars this.price}}" placeholder="8.50">
-  </div>
-</td>
-<td>
-  <input type="number" min="1" value="{{this.feeds_min}}" class="form-control item-feeds-min">
-</td>
-<td>
-  <input type="number" min="1" value="{{this.feeds_max}}" class="form-control item-feeds-max">
-</td>
-<td class="row">
-  <textarea class="form-control item-description">{{this.description}}</textarea>
-  <a class="item-edit-options" href="#">Edit Options</a>
-  <div class="item-button pull-right">
-    <button type="button" class="btn btn-default item-copy">Copy</button>
-    <button type="button" class="btn btn-danger item-remove">Remove</button>
-    <button type="submit" class="btn btn-success item-save hide">Save</button>
-  </div class="row">
-</td>
-<td>
-  <div class="edit-item-tags">
-  {{> edit_tags this.tags }}
-  </div>
-</td>
+<div id="edit-item-{{id}}" class="row">
+  <div class="col-details">
+    <div class="row row-details">
+      <div class="col-order">
+        <label>Order<input class="item-order form-control" type="text" value="{{order}}"></label>
+      </div>
+      <div class="col-name">
+        <label>Name<input class="item-name form-control" type="text" value="{{name}}"></label>
+      </div>
+      <div class="col-price">
+        <label>Price<input class="item-price form-control" type="text" value="{{dollars price}}"></label>
+      </div>
+      <div class="col-feeds-min">
+        <label>Feeds Min<input class="item-feeds-min form-control" type="number" step="1.0" min="1" value="{{feeds_min}}"></label>
+      </div>
+      <div class="col-feeds-max">
+        <label>Feeds Max<input class="item-feeds-max form-control" type="number" step="1.0" min="1" value="{{feeds_max}}"></label>
+      </div>
+    </div>
+    <div class="row row-description">
+      <label>Description</label>
+      <textarea class="item-description form-control" rows="3">{{description}}</textarea>
+    </div>
+    <div class="row row-actions">
+      <a href="#" class="item-edit-options">+ Edit Options</a>
+      <button class="btn btn-default item-copy">Copy</button>
+      <button class="btn btn-primary item-remove">Remove</button>
+      <button class="btn btn-save item-save">Save</button>
+    </div>
+  </div>{{!-- end col details --}}
+
+  <div class="col-checkboxes edit-item-tags">
+    <label>Tags</label>
+    {{> edit_tags this.tags }}
+  </div>{{!-- end col tags --}}
+</div>

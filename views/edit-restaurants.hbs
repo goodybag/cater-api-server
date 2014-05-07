@@ -9,45 +9,10 @@
 
   <div class="row new-restaurant-row">
     <div class="col-lg-2 col-lg-offset-10">
-      <button type="button" class="btn btn-primary new-restaurant pull-right">New Restaurant</button>
+      <a href="/admin/restaurants/create" class="btn btn-primary new-restaurant pull-right">New Restaurant</a>
     </div>
-  </div>
-
-  <div class="row new-restaurant-form">
-    <form id="restaurant-{{restaurant.id}}" class="restaurant-form hide">
-      {{> edit_restaurant_form}}
-    </form>
   </div>
 </div>
 
 {{#extend "scripts"}}
-<script>
-  require([
-      'jquery'
-    , 'handlebars'
-    , 'app/models/restaurant'
-    , 'app/views/edit-restaurant-view'
-    , 'app/models/hours'
-    , 'app/views/edit-hours-view'
-    ]
-  , function($, Handlebars, Restaurant, EditRestaurantView, Hours, EditHoursView) {
-
-      var hours = [
-        {{#each restaurant.delivery_times}}
-        new EditHoursView({model: new Hours({day: {{@key}}, times: {{{json this}}} }), el: '#hours-{{@key}}'}),
-        {{/each}}
-      ];
-
-      $('.new-restaurant').click(function() {
-        $('.new-restaurant-row, .restaurant-form').toggleClass('hide');
-      });
-
-      var restaurant = new EditRestaurantView({el: '.new-restaurant-form', hours: hours});
-
-      restaurant.on('save:success', function() {
-        window.location.reload();
-      });
-    }
-  );
-</script>
 {{/extend}}

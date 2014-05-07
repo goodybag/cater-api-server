@@ -1,0 +1,68 @@
+{{#extend "body"}}
+  <h2>Restaurant Tags</h2>
+  
+  <form class="ap-form form-vertical form-basic-info" action="/restaurants/{{restaurant.id}}/edit" method="POST">
+    <div class="form-group">
+      <label class="control-label">Price</label>
+      <select class="form-control restaurant-price">
+        <option value="1"{{#eq restaurant.price 1}} selected="selected"{{/eq}}>$</option>
+        <option value="2"{{#eq restaurant.price 2}} selected="selected"{{/eq}}>$$</option>
+        <option value="3"{{#eq restaurant.price 3}} selected="selected"{{/eq}}>$$$</option>
+        <option value="4"{{#eq restaurant.price 4}} selected="selected"{{/eq}}>$$$$</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label">Cuisine
+        <span class="help-block">Please enter cuisine as a comma separated list
+        of cuisine tags.</span>
+      </label>
+      <input name="cuisine" type="text" class="form-control restaurant-cuisine" value="{{array restaurant.cuisine}}" placeholder="Mexican, Korean, Amish">
+    </div>
+
+    <div class="form-group">
+      <div class="row">
+        <div class="col-2">
+          <label class="control-label">Special Diets</label>
+          <div class="restaurant-tags">
+          {{> edit_tags restaurant.tags }}
+          </div>
+        </div>
+        <div class="col-2">
+          <label class="control-label">Meal Types</label>
+          <div class="restaurant-meal-types">
+            {{> edit_meal_types }}
+          </div>
+        </div>
+        <div class="col-2">
+          <label class="control-label">Meal Styles</label>
+          <div class="restaurant-meal-styles">
+            {{> edit_meal_styles }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">Update</button>
+    </div>
+  </form>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  // Bootstrap data
+  define('data', ['app/models/restaurant'], function(Restaurant) {
+    var data = {
+      models: {
+        restaurant: new Restaurant({{{json restaurant}}})
+      }
+    };
+    return data;
+  });
+
+  require( ['app/pages/restaurant/edit-tags'], function( page ){
+    page.init();
+  });
+</script>
+{{/extend}}

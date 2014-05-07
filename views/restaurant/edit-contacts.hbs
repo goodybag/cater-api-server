@@ -1,0 +1,52 @@
+{{#extend "body"}}
+  <h2>Contacts</h2>
+  <!-- Existing contacts -->
+  {{#each contacts}}
+  <form class="ap-form" id="contact-{{id}}" method="put" action="/api/restaurants/{{restaurant.id}}/contacts/{{id}}">
+    <legend>Contact #{{add @index 1}}</legend>
+    <div class="form-vertical">
+      {{> contact_form }}
+      <div class="form-group">
+        <button class="btn btn-primary btn-update-contact" type="submit">Update</button>
+        <button class="btn btn-primary btn-remove-contact" type="submit">Delete</button>
+      </div>
+    </div>
+  </form>
+  {{/each}}
+  <!-- End Existing contacts  -->
+
+  <!-- New Contact -->
+  <form class="ap-form" id="create-contact" method="POST" action="/api/restaurants/{{restaurant.id}}/contacts">
+    <legend>New contact</legend>
+    <div class="form-vertical">
+    {{> contact_form }}
+    <div class="form-group">
+      <button class="btn btn-primary btn-create-contact" type="submit">Add contact</button>
+    </div>
+    </div>
+  </form>
+  <!-- End New Contact -->
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  // Bootstrap data
+  define('data', ['app/models/restaurant'], function(Restaurant) {
+    var data = {
+      models: {
+        restaurant: new Restaurant({{{json restaurant}}})
+      }
+    };
+    return data;
+  });
+
+  require( ['jquery', 'navbar', 'app/pages/contacts'], function( $, navbar, page ){
+    $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+
+    page.init({
+      contacts: {{{json contacts}}}
+    , restaurantId: {{{restaurant.id}}}
+    });
+  });
+</script>
+{{/extend}}

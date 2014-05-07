@@ -1,0 +1,73 @@
+{{#extend "body"}}
+  <h2>Edit Menu</h2>
+  <ul>
+    <li><a href="/restaurants/{{restaurant.id}}">view menu</a></li>
+    <li><a href="/admin/restaurants/{{restaurant.id}}/sort">sort menu</a></li>
+    <li><a href="/admin/restaurants/{{restaurant.id}}/menu.csv">download menu in .csv</a></li>
+  </ul>
+
+  <div class="ap-menu">
+    <div class="categories">
+      {{#each restaurant.categories}}
+        <div id="category-{{this.id}}" class="panel">
+          {{> edit_category}}
+        </div>
+      {{/each}}
+    </div>
+
+    <button class="btn btn-primary new-category" type="submit">Add new category</button>
+
+  </div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require([
+  'app/models/restaurant'
+, 'app/views/edit-restaurant-view'
+, 'app/views/edit-category-view'
+, 'app/views/edit-item-view'
+, 'app/models/hours'
+, 'app/views/edit-hours-view'
+, 'jquery-ui'
+], function(Restaurant, EditRestaurantView, EditCategoryView, EditItemView, Hours, EditHoursView) {
+  var hours = [
+    {{#each restaurant.delivery_times}}
+      new EditHoursView({
+        model: new Hours({
+          day: {{@key}}
+        , times: {{{json this}}}
+        })
+      , el: '#hours-{{@key}}'
+      }),
+    {{/each}}
+  ];
+
+  var editRestaurantView = new EditRestaurantView({
+    el: '#main'
+  , model: new Restaurant({{{json restaurant}}})
+  , hours: hours
+  });
+
+  {{#each restaurant.categories}}
+    var category{{this.id}} = new EditCategoryView({
+      el: '#category-{{this.id}}'
+    , model: editRestaurantView.model.categories.get({{id}})
+    , restaurant: editRestaurantView
+    });
+
+    category{{id}}.items = [
+      {{#each items}}
+        new EditItemView({
+          el: '#edit-item-{{id}}'
+        , model: category{{../id}}.model.items.get({{id}})
+        , category: category{{../id}}
+        }),
+      {{/each}}
+    ];
+
+    editRestaurantView.categories.push(category{{id}});
+  {{/each}}
+});
+</script>
+{{/extend}}

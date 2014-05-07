@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
   var utils = require('utils');
+  var Hours = require('app/models/hours');
 
   return module.exports = Backbone.View.extend({
     tagName: 'div',

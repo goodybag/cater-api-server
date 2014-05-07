@@ -1,0 +1,60 @@
+@edit-menu-padding-top: 8px;
+@edit-menu-padding-left: 20px;
+
+.restaurant-edit-menu {
+  #grid .column(3);
+}
+
+.restaurant-edit-body {
+  #grid .column(9);
+}
+
+.restaurant-edit {
+  .tab-content {
+    & > .tab-pane {
+      display: none;
+    }
+    & > .active { 
+      display: block;
+    }
+  }
+}
+
+.restaurant-edit-body .form-group {
+  margin-left: 0;
+}
+
+.restaurant-edit-menu {
+  margin: 0;
+  margin-top: 10px;
+  padding: 0;
+  list-style-type: none;
+}
+
+.restaurant-edit-menu > li > a {
+  display: block;
+  padding: @edit-menu-padding-top @edit-menu-padding-left;
+  text-decoration: none;
+  color: @gray-darker;
+}
+
+.restaurant-edit-menu > li.active > a,
+.restaurant-edit-menu > li.active:hover > a {
+  border-left: 2px solid @brand-primary;
+  padding: @edit-menu-padding-top @edit-menu-padding-left - 2;
+  color: @brand-primary;
+}
+
+.restaurant-edit-menu > li:hover > a {
+  border-left: 1px solid @brand-primary;
+  padding: @edit-menu-padding-top @edit-menu-padding-left - 1;
+}
+
+.restaurant-logo-img {
+  max-width: 100%;
+  margin-top: 8px;
+}
+
+.restaurant-logo-btn {
+  width: 100%;
+}

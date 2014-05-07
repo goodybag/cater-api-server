@@ -102,7 +102,7 @@ module.exports.register = function(app) {
       layout: 'admin/layout-two-column'
     })
   );
-  
+
   app.put('/admin/restaurants/:rid'
   , m.restrict('admin')
   , controllers.restaurants.update
@@ -169,7 +169,10 @@ module.exports.register = function(app) {
   app.get('/admin/restaurants/:rid/menu'
   , m.restrict('admin')
   , m.defaultLocals( { active_tab: 'menu'} )
-  , controllers.restaurants.editMenu
+  , m.restaurant( { param: 'rid', withMenuItems: true } )
+  , m.view('restaurant/edit-menu', {
+      layout: 'admin/layout-two-column'
+    })
   );
 
   app.get('/admin/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);

@@ -14,9 +14,15 @@ module.exports = function( options ){
     Models.Restaurant.findOne( $query, function( error, restaurant ){
       if ( error ) return res.error(500);
 
-      res.locals.restaurant = restaurant.toJSON();
-
-      next();
+      if ( options.withMenuItems ){
+        restaurant.getItems( function( error, items ){
+          if ( error ) return res.error(500); 
+          res.locals.restaurant = restaurant.toJSON();
+          next();
+        });
+      } else {
+        next();
+      }
     });
   };
 };

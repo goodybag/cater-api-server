@@ -17,7 +17,7 @@ define(function(require){
 
       var editPhotosView = new Views.EditPhotosView({
         el: '.edit-photos'
-      , collection: options.photos
+      , collection: options.models.photos
       });
     },
 

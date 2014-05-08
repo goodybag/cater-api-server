@@ -32,10 +32,6 @@ define(function(require, exports, module) {
 
     validate: function(attrs, options) {
       return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
-    },
-
-    urlRoot: function() {
-      return '/restaurants/' + this.attributes.restaurant_id + '/photos';
     }
   });
 });

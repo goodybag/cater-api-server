@@ -12,10 +12,11 @@ define(function(require, exports, module) {
     },
 
     addPhoto: function(e) {
+      // todo validate url / show error alert 
       this.collection.create({
-        url: 'lol'
-      , name: 'lol'
-      , description: 'lol'
+        url:          this.$el.find('input[name="url"]').val()
+      , name:         this.$el.find('input[name="name"]').val()
+      , description:  this.$el.find('input[name="description"]').val()
       });
     },
 

@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.33",
+  "version": "1.1.35",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -75,13 +75,13 @@
     "grunt-shell": "~0.6.4",
     "grunt-complexity": "~0.1.3",
     "grunt-contrib-watch": "~0.5.3",
-    "dirac": "~0.3.4",
+    "dirac": "~0.3.6",
     "dirac-middleware": "~0.1.5",
     "json2csv": "~2.2.1",
     "deep-extend": "~0.2.8",
     "sugar": "~1.4.1",
     "selenium-webdriver": "~2.40.0",
-    "leFunc": "~1.2.0",
+    "leFunc": "~1.2.1",
     "wrench": "~1.5.8",
     "grunt-s3": "~0.2.0-alpha.3",
     "cron": "^1.0.4",

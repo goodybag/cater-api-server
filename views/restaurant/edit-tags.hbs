@@ -1,6 +1,6 @@
 {{#extend "body"}}
   <h2>Restaurant Tags</h2>
-  
+
   <form class="ap-form form-vertical form-basic-info" action="/restaurants/{{restaurant.id}}/edit" method="POST">
     <div class="form-group">
       <label class="control-label">Price</label>
@@ -51,18 +51,12 @@
 
 {{#extend "scripts"}}
 <script>
-  // Bootstrap data
-  define('data', ['app/models/restaurant'], function(Restaurant) {
-    var data = {
+  require( ['app/pages/admin/restaurant/edit-tags', 'app/models/restaurant'], function( page, Restaurant ){
+    page.init({
       models: {
         restaurant: new Restaurant({{{json restaurant}}})
       }
-    };
-    return data;
-  });
-
-  require( ['app/pages/restaurant/edit-tags'], function( page ){
-    page.init();
+    });
   });
 </script>
 {{/extend}}

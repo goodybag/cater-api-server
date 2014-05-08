@@ -3,24 +3,22 @@ define(function(require){
   require('jquery-loaded');
 
   var Views = {
-    EditTagsView: require('app/views/restaurant/edit-tags-view')
+    EditAddressView: require('app/views/restaurant/edit-address-view')
   , AlertView: require('app/views/alert-view')
   };
 
-  var data = require('data')
   var page = {
-    init: function(){
+    init: function( options ){
       var alertView = new Views.AlertView({
         el: '.alert-container'
       });
 
-      var restaurantEditView = new Views.EditTagsView({
+      var restaurantEditView = new Views.EditAddressView({
         el : '.restaurant-edit'
-      , model: data.models.restaurant
+      , model: options.models.restaurant
       , alertView: alertView
       });
-    },
-
+    }
   };
 
   return page;

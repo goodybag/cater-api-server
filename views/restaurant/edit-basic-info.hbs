@@ -56,17 +56,11 @@
 <script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
 <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
 <script>
-  // Bootstrap data
-  define('data', ['app/models/restaurant'], function(Restaurant) {
-    var data = {
-      models: { restaurant: new Restaurant({{{json restaurant}}}) }
-    };
-    return data;
-  });
-
   // Init views on this page
-  require( ['app/pages/restaurant/edit-basic-info'], function( page ){
-    page.init();
+  require( ['app/pages/admin/restaurant/edit-basic-info', 'app/models/restaurant'], function( page, Restaurant ){
+    page.init({
+      models: { restaurant: new Restaurant({{{json restaurant}}}) }
+    });
   });
 </script>
 {{/extend}}

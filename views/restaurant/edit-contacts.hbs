@@ -30,16 +30,6 @@
 
 {{#extend "scripts"}}
 <script>
-  // Bootstrap data
-  define('data', ['app/models/restaurant'], function(Restaurant) {
-    var data = {
-      models: {
-        restaurant: new Restaurant({{{json restaurant}}})
-      }
-    };
-    return data;
-  });
-
   require( ['jquery', 'navbar', 'app/pages/contacts'], function( $, navbar, page ){
     $('.navbar').navbar({ toggleText: false, toggleLogin: false });
 

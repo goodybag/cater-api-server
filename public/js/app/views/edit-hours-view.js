@@ -79,8 +79,13 @@ define(function(require, exports, module) {
     addPeriod: function(e) {
       this.$el.find(this.selectors.closed).attr('checked', false);
       this.$el.find(this.selectors.timeInputs).removeAttr('disabled');
-      this.$el.find('.hours-listing').append(Handlebars.partials.edit_hours(['', ''], {data: {index: this.model.get('times').length || 1}}));
-      this.setPickers();
+
+      var $period = $( Handlebars.partials.edit_hours(['', ''], {data: {index: this.model.get('times').length || 1}}) );
+      $period.find(this.selectors.timeInputs).pickatime({
+        format: 'hh:i A',
+        interval: 15
+      }).pickatime('picker');
+      this.$el.find('.hours-listing').append($period);
     },
 
     removePeriod: function(e) {

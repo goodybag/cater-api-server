@@ -29,18 +29,12 @@
 
 {{#extend "scripts"}}
 <script>
-  // Bootstrap data
-  define('data', ['app/models/restaurant'], function(Restaurant) {
-    var data = {
+  require( ['app/pages/admin/restaurant/edit-address', 'app/models/restaurant'], function( page, Restaurant ){
+    page.init({
       models: {
         restaurant: new Restaurant({{{json restaurant}}})
       }
-    };
-    return data;
-  });
-
-  require( ['app/pages/restaurant/edit-address'], function( page ){
-    page.init();
+    });
   });
 </script>
 {{/extend}}

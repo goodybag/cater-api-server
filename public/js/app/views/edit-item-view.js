@@ -7,6 +7,8 @@ define(function(require, exports, module) {
   var EditItemView = FormView.extend({
     tagName: 'div',
 
+    className: 'row',
+
     template: Handlebars.partials.edit_item_row,
 
     submitSelector: '.item-save',

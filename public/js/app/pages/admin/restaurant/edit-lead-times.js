@@ -13,9 +13,8 @@ define(function(require){
     Hours: require('app/models/hours')
   };
 
-  var data = require('data');
   var page = {
-    init: function(){
+    init: function( options ){
       var alertView = new Views.AlertView({
         el: '.alert-container'
       });
@@ -29,7 +28,7 @@ define(function(require){
 
       var restaurantEditView = new Views.EditLeadTimesView({
         el : '.restaurant-edit'
-      , model: data.models.restaurant
+      , model: options.models.restaurant
       , alertView: alertView
       , hours: hours
       });

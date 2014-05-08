@@ -19,7 +19,7 @@ define(function(require, exports, module) {
       this.collection.create({
         url:          this.$el.find('input[name="url"]').val()
       , name:         this.$el.find('input[name="name"]').val()
-      , description:  this.$el.find('input[name="description"]').val()
+      , description:  this.$el.find('textarea[name="description"]').val()
       });
       this.render();
     },

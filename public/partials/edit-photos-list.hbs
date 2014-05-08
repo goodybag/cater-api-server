@@ -1,6 +1,12 @@
 <ul class="photo-list draggable">
 {{#each restaurant_photos}}
-  <li>{{url}}</li>
+  <li>
+    <img src="{{filepicker url}}">
+    <input type="text" name="name" value="{{name}}">
+    <textarea name="description" rows="3">{{description}}</textarea>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <button class="btn btn-default btn-remove">Remove</button>
+  </li>
 {{/each}}
 </ul>
 

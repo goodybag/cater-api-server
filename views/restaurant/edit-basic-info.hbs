@@ -25,6 +25,14 @@
       <input type="text" class="form-control" name="yelp_business_id" id="input-yelp" value="{{config.yelp.businessBaseUrl}}/{{restaurant.yelp_business_id}}">
     </div>
     <div class="form-group">
+      <label for="region_id_selector" class="control-label"></label>
+      <select name="region_id" id="region_id_selector">
+        {{#each regions}}
+          <option value="{{this.id}}"{{#eq ../restaurant.region_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
       <div class="row">
         <div class="col-logo-color">
           <label class="control-label">Logo</label>

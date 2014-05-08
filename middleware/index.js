@@ -24,4 +24,5 @@ module.exports = {
 , states: require('./states')
 , statusCodeIntercept: require('./status-code-intercept')
 , uuid: require('./uuid')
+, db: require('./db')
 };

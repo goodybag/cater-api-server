@@ -22,6 +22,8 @@ var
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
 
+utils.words = require('pluralize');
+
 utils.CronJob = require('cron').CronJob;
 utils.overload = require('leFunc');
 

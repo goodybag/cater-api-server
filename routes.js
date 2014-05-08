@@ -75,6 +75,23 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
+  app.get('/admin'
+  , m.restrict('admin')
+  , m.view( 'admin/home', { layout: 'admin/layout2' } )
+  );
+
+  /**
+   * Regions
+   */
+
+  app.get('/admin/regions'
+  , m.sort('+name')
+  , m.view( 'admin/regions', db.regions, {
+      layout: 'admin/layout2'
+    , method: 'find'
+    })
+  );
+
   /**
    * Restaurant create
    */
@@ -97,6 +114,7 @@ module.exports.register = function(app) {
   app.get('/admin/restaurants/:rid'
   , m.restrict('admin')
   , m.defaultLocals( { active_tab: 'basic-info'} )
+  , m.db.regions.find( {}, { limit: 'all' } )
   , m.restaurant( {param: 'rid' } )
   , m.view('restaurant/edit-basic-info', {
       layout: 'admin/layout-two-column'
@@ -111,6 +129,7 @@ module.exports.register = function(app) {
   app.get('/admin/restaurants/:rid/basic-info'
   , m.restrict('admin')
   , m.defaultLocals( { active_tab: 'basic-info'} )
+  , m.db.regions.find( {}, { limit: 'all' } )
   , m.restaurant( {param: 'rid' } )
   , m.view('restaurant/edit-basic-info', {
       layout: 'admin/layout-two-column'

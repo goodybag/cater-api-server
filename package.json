@@ -81,7 +81,7 @@
     "deep-extend": "~0.2.8",
     "sugar": "~1.4.1",
     "selenium-webdriver": "~2.40.0",
-    "leFunc": "~1.2.0",
+    "leFunc": "~1.2.1",
     "wrench": "~1.5.8",
     "grunt-s3": "~0.2.0-alpha.3",
     "cron": "^1.0.4",

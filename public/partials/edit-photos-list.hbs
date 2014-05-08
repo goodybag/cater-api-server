@@ -1,0 +1,25 @@
+<ul class="photo-list draggable">
+{{#each restaurant_photos}}
+  <li>{{url}}</li>
+{{/each}}
+</ul>
+
+<form class="form-add-photo ap-form form-vertical">
+  <!-- <img src="{{config.defaultLogo}}"> -->
+  <img class="" data-name="url" src="{{config.defaultLogo}}">
+  <input type="filepicker" class="form-control btn btn-default btn-block" name="url" id="input-logo-url">
+
+  <div class="form-group">
+    <label>Name
+      <input type="text" name="name" placeholder="Name">
+    </label>
+  </div>
+  <div class="form-group">
+    <label>Description
+      <textarea name="description" rows="3"></textarea>
+    </label>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary">Add</button>
+  </div>
+</form>

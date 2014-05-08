@@ -3,6 +3,8 @@ define(function(require, exports, module) {
   var Handlebars = require('handlebars');
 
   return module.exports = Backbone.View.extend({
+    template: Handlebars.partials.edit_photos_list,
+
     events: {
       'change input[type="filepicker"]': 'onFilePickerChange'
     , 'submit .form-add-photo': 'addPhoto'
@@ -12,12 +14,22 @@ define(function(require, exports, module) {
     },
 
     addPhoto: function(e) {
-      // todo validate url / show error alert 
+      // todo validate url / show error alert
+      e.preventDefault();
       this.collection.create({
         url:          this.$el.find('input[name="url"]').val()
       , name:         this.$el.find('input[name="name"]').val()
       , description:  this.$el.find('input[name="description"]').val()
       });
+      this.render();
+    },
+
+    render: function() {
+      var html = this.template({
+        restaurant_photos: this.collection.toJSON()
+      , config: { defaultLogo: this.options.defaultLogo }
+      });
+      this.$el.html(html);
     },
 
     onFilePickerChange: function(e){

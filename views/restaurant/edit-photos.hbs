@@ -2,33 +2,7 @@
   <h2>Photos</h2>
 
   <div class="edit-photos">
-    <!-- move to edit_photos_list partial -->
-    <ul class="photo-list draggable">
-    {{#each restaurant_photos}}
-      <li>{{url}}</li>
-    {{/each}}
-    </ul>
-
-    <form class="form-add-photo ap-form form-vertical">
-      <!-- <img src="{{config.defaultLogo}}"> -->
-      <img class="restaurant-logo-img" data-name="url"
-        src="{{#if restaurant.logo_url}}{{restaurant.logo_url}}{{else}}{{config.defaultLogo}}{{/if}}">
-      <input type="filepicker" class="form-control btn btn-default btn-block" name="url" value="{{restaurant.logo_url}}" id="input-logo-url">
-
-      <div class="form-group">
-        <label>Name
-          <input type="text" name="name" placeholder="Name">
-        </label>
-      </div>
-      <div class="form-group">
-        <label>Description
-          <textarea name="description" rows="3"></textarea>
-        </label>
-      </div>
-      <div class="form-group">
-        <button class="btn btn-primary">Add</button>
-      </div>
-    </form>
+    {{> edit_photos_list }}
   </div>
 {{/extend}}
 
@@ -46,7 +20,9 @@ require( [
     models: {
       restaurant: new Restaurant({{{json restaurant}}})
     , photos: new PhotosCollection({{{json restaurant_photos}}}, { restaurant_id: {{restaurant.id}} })
-    }
+    },
+
+  defaultLogo: "{{config.defaultLogo}}"
   });
 });
 </script>

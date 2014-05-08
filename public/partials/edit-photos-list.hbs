@@ -1,11 +1,14 @@
 <ul class="photo-list draggable">
 {{#each restaurant_photos}}
-  <li>
-    <img src="{{filepicker url}}">
-    <input type="text" name="name" value="{{name}}">
-    <textarea name="description" rows="3">{{description}}</textarea>
-    <button type="submit" class="btn btn-primary">Update</button>
-    <button class="btn btn-default btn-remove">Remove</button>
+  <li data-id="{{id}}">
+    <form class="form-update-photo">
+      <img data-name="url" src="{{filepicker url}}">
+      <input type="filepicker" class="form-control btn btn-default btn-block" name="url">
+      <input type="text" name="name" value="{{name}}">
+      <textarea name="description" rows="3">{{description}}</textarea>
+      <button type="submit" class="btn btn-primary">Update</button>
+      <button class="btn btn-default btn-remove-photo">Remove</button>
+    </form>
   </li>
 {{/each}}
 </ul>
@@ -13,7 +16,7 @@
 <form class="form-add-photo ap-form form-vertical">
   <!-- <img src="{{config.defaultLogo}}"> -->
   <img class="" data-name="url" src="{{config.defaultLogo}}">
-  <input type="filepicker" class="form-control btn btn-default btn-block" name="url" id="input-logo-url">
+  <input type="filepicker" class="form-control btn btn-default btn-block" name="url">
 
   <div class="form-group">
     <label>Name

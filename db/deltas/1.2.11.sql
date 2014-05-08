@@ -29,17 +29,10 @@ begin
 
   perform add_column( 'orders', 'region_id', 'int references regions(id)' );
 
-  create table if not exists "delivery_services" ();
-
-  perform add_column( 'delivery_services', 'id', 'serial primary key' );
-  perform add_column( 'delivery_services', 'region_id', 'int references regions(id)' );
-  perform add_column( 'delivery_services', 'name', 'text' );
-
   raise notice '## ID IS %', rid;
 
   -- Set all data to use the default region
   update orders set region_id = rid;
   update restaurants set region_id = rid;
   update users set region_id = rid;
-  update delivery_services set region_id = rid;
 end$$;

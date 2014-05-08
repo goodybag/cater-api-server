@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>[Admin] Goodybag</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Goodybag Catering CSS Stuff -->
+    <link href="{{cdn "/dist/admin.css"}}" rel="stylesheet">
+
+    {{{block "css"}}}
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
+    <![endif]-->
+  </head>
+  <body class="page {{{block "page"}}}">
+    <!--<Navbar>-->
+    <header class="navbar collapsed">
+      <div class="container">
+        <a href="/">
+          <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
+        </a>
+
+        {{#if user.id}}
+          <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
+          <ul class="nav navbar-nav navbar-right">
+            {{#contains user.groups 'restaurant'}}
+              <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
+            {{/contains}}
+            {{#if session.oldUser}}
+            <li>
+              <a href="/users/return" class="users-return navbar-btn">
+                Return to {{session.oldUser.name}}
+              </a>
+            </li>
+            {{/if}}
+            {{{block "navbar-links"}}}
+            <li class="nav-account dropdown">
+              <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
+                {{#if user.name }} {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="/users/me">My Settings</a></li>
+                <li><a href="/users/me/orders">My Orders</a></li>
+                <li><a href="/users/me/rewards">My Rewards</a></li>
+                <li><a href="/auth/logout">Logout</a></li>
+                {{#contains user.groups 'restaurant'}}
+                  <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
+                {{else}}
+                  <li><a href="/restaurants" class="btn-link">Home</a></li>
+                {{/contains}}
+              </ul>
+            </li>
+          </ul>
+
+        {{else}}
+          <button class="navbar-toggle btn btn-default">Sign In</button>
+          <form class="login-form form-small" method="POST" action="/login{{queryParams query}}">
+            <div class="form-group">
+              <label for="login-email">Email</label>
+              <label for="remember-me" class="remember-me">
+                <input type="checkbox" name="remember" value="1" id="remember-me" tabindex="3">
+                Remember me
+              </label>
+              <input type="email" name="email" id="login-email" placeholder="Email" tabindex="1">
+            </div>
+
+            <div class="form-group">
+              <a href="/forgot-password" class="forgot-password">Forgot password?</a>
+              <label for="login-password">Password</label>
+              <input type="password" name="password" id="login-password" placeholder="Password" tabindex="2">
+            </div>
+
+            <div class="form-group form-group-submit">
+              <button class="btn btn-default" tabindex="4">Sign In</button>
+            </div>
+          </form>
+        {{/if}}
+      </div>
+    </header>
+    <!--</Navbar>-->
+
+
+    {{{block "banner"}}}
+
+    <div id="main">
+      <div class="restaurant-edit">
+        <div class="container">
+        <h1>Editing {{restaurant.name}}</h1>
+          {{> restaurant_edit_nav }}
+          <div class="restaurant-edit-body">
+            <div class="alert-container"></div>
+            {{{block "body"}}}
+          </div>
+        </div>
+      <footer class="footer">
+        <ul class="nav footer-nav">
+          <li><a href="/contact-us">Contact Us</a></li>
+          <li><a href="/contact-us">Request to be a caterer</a></li>
+          <li><a href="/legal">Terms of service</a></li>
+          <li><a href="/privacy">Privacy policy</a></li>
+        </ul>
+      </footer>
+    </div>
+
+    {{#unless config.isDev}}
+    <script src="{{cdn "/dist/admin.js"}}"></script>
+    {{else}}
+    <script src="/components/requirejs/require.js"></script>
+    <script src="/js/require-config.js"></script>
+    {{/unless}}
+
+    {{{block "views"}}}
+    {{{block "scripts"}}}
+  </body>
+</html>

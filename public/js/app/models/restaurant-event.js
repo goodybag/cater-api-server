@@ -50,7 +50,7 @@ define(function(require, exports, module) {
       return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
     },
 
-    urlRoot: function() { 
+    urlRoot: function() {
       return '/restaurants/' + this.attributes.restaurant_id + '/events'
     }
   });

@@ -37,10 +37,15 @@
 <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
 <script>
 // Init views on this page
-require( ['app/pages/admin/restaurant/edit-photos', 'app/models/restaurant'], function( page, Restaurant ){
+require( [
+  'app/pages/admin/restaurant/edit-photos'
+, 'app/models/restaurant'
+, 'app/collections/restaurant-photos'
+], function( page, Restaurant, PhotosCollection ){
   page.init({
     models: {
       restaurant: new Restaurant({{{json restaurant}}})
+    , photos: new PhotosCollection({{{json restaurant_photos}}}, { restaurant_id: {{restaurant.id}} })
     }
   });
 });

@@ -30,6 +30,7 @@ define(function(require, exports, module) {
       , config: { defaultLogo: this.options.defaultLogo }
       });
       this.$el.html(html);
+      filepicker.constructWidget(this.$el.find('input[type="filepicker"]'));
     },
 
     onFilePickerChange: function(e){

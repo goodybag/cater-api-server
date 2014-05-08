@@ -1,43 +1,48 @@
 {{#extend "body"}}
   <h2>Photos</h2>
 
+  <div class="edit-photos">
+    <!-- move to edit_photos_list partial -->
+    <ul class="photo-list draggable">
+    {{#each restaurant_photos}}
+      <li>{{url}}</li>
+    {{/each}}
+    </ul>
 
-  <ul class="photo-list draggable">
-  {{#each restaurant_photos}}
-    <li>{{url}}</li>
-  {{/each}}
-  </ul>
+    <form class="form-add-photo ap-form form-vertical">
+      <!-- <img src="{{config.defaultLogo}}"> -->
+      <img class="restaurant-logo-img" data-name="url"
+        src="{{#if restaurant.logo_url}}{{restaurant.logo_url}}{{else}}{{config.defaultLogo}}{{/if}}">
+      <input type="filepicker" class="form-control btn btn-default btn-block" name="url" value="{{restaurant.logo_url}}" id="input-logo-url">
 
-  <form class="add-photo ap-form">
-    <!-- <img src="{{config.defaultLogo}}"> -->
-    <img class="restaurant-logo-img" data-name="url"
-      src="{{#if restaurant.logo_url}}{{restaurant.logo_url}}{{else}}{{config.defaultLogo}}{{/if}}">
-    <input type="filepicker" class="form-control btn btn-default btn-block" name="logo_url" value="{{restaurant.logo_url}}" id="input-logo-url">
-    <div class="form-group">
-      <label>Priority
-        <input type="number" step="1" name="priority" placeholder="Priority">
-      </label>
-    </div>
-    <div class="form-group">
-      <label>Name
-        <input type="text" name="name" placeholder="Name">
-      </label>
-    </div>
-    <div class="form-group">
-      <label>Description
-        <textarea name="description" rows="3"></textarea>
-      </label>
-    </div>
-    <div class="form-group">
-      <button class="btn btn-primary">Add</button>
-    </div>
-  </form>
-
+      <div class="form-group">
+        <label>Name
+          <input type="text" name="name" placeholder="Name">
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Description
+          <textarea name="description" rows="3"></textarea>
+        </label>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary">Add</button>
+      </div>
+    </form>
+  </div>
 {{/extend}}
 
 {{#extend "scripts"}}
 <script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
 <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
 <script>
+// Init views on this page
+require( ['app/pages/admin/restaurant/edit-photos', 'app/models/restaurant'], function( page, Restaurant ){
+  page.init({
+    models: {
+      restaurant: new Restaurant({{{json restaurant}}})
+    }
+  });
+});
 </script>
 {{/extend}}

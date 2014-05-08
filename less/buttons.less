@@ -32,6 +32,15 @@
 }
 
 .btn-small {
+  font-size: @btn-small-font-size;
+  line-height: @line-height-base;
+  padding: @btn-padding-small;
+  font-weight: @light;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
   font-size: @font-size-small;
   line-height: @line-height-small;
   padding: @btn-padding-small;
@@ -55,6 +64,10 @@
 
 .btn-tertiary {
   .brand-btn( @brand-tertiary, @white );
+}
+
+.btn-save{
+  .brand-btn( #6fc96a, @white );
 }
 
 .btn-blank {

@@ -30,13 +30,9 @@
 
 {{#extend "scripts"}}
 <script>
-  define( 'data/order', ['app/models/order'], function( Order ){
-    return new Order( {{{json order}}} );
-  });
-
   require( ['app/pages/admin-order'], function( page ){
     page.init({
-
+      order: new Order( {{{json order}}} )
     });
   });
 </script>

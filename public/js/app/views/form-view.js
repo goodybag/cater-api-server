@@ -135,6 +135,12 @@ define(function(require, exports, module) {
     dollarsGetter: function(field) {
       var val = parseFloat((this.$el.find(this.fieldMap[field]).val()||'').trim())
       return !_.isNaN(val) ? Math.round(val * 100) : null;
+    },
+
+    fieldSplit: function(selector, delimiter) {
+      delimiter = delimiter || ',';
+      var val = this.$el.find(selector).val().trim();
+      return val ? _.invoke(val.split(delimiter), 'trim') : [];
     }
   });
 });

@@ -105,6 +105,25 @@
   list-style: none;
 }
 
+.clearfix {
+  *zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    // Fixes Opera/contenteditable bug:
+    // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+    line-height: 0;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+.hide {
+  display: none!important;
+}
+
 .icon-font( @icon ) when ( @icon ){
   content: @icon;
   .icon-font();
@@ -324,4 +343,17 @@
   width: 600px;
   height: 177px;
   background: url('../img/enterprise.png');
+}
+
+.alert-variant(@background; @border; @text-color) {
+  background-color: @background;
+  border-color: @border;
+  color: @text-color;
+
+  hr {
+    border-top-color: darken(@border, 5%);
+  }
+  .alert-link {
+    color: darken(@text-color, 10%);
+  }
 }

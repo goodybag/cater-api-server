@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.33",
+  "version": "1.1.35",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -31,7 +31,7 @@
     "connect-request-logger-pg": "0.0.7",
     "cron": "^1.0.4",
     "deep-extend": "~0.2.8",
-    "dirac": "~0.3.4",
+    "dirac": "~0.3.6",
     "dirac-middleware": "~0.1.5",
     "express": "3.4.x",
     "forky": "0.0.2",
@@ -56,7 +56,7 @@
     "jade": "0.34.x",
     "json2csv": "~2.2.1",
     "knox": "~0.8.6",
-    "leFunc": "~1.2.0",
+    "leFunc": "~1.2.1",
     "lodash": "2.2.x",
     "mailcomposer": "0.2.x",
     "mailgun": "0.4.x",

@@ -116,7 +116,7 @@ define(function(require, exports, module) {
       billing_zip: '.restaurant-form [name="billing_zip"]',
       gb_fee: '.restaurant-form [name="gb_fee"]',
       is_direct_deposit: '.restaurant-form [name="is_direct_deposit"]',
-      is_fee_on_total: '.restaurant-form [name="is_fee_on_total"]'
+      is_fee_on_total: '.restaurant-form [name="is_fee_on_total"]',
       region_id: '.restaurant-form [name="region_id"]'
     },
 

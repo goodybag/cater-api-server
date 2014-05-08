@@ -289,7 +289,8 @@ var fields = [
   'billing_zip',
   'gb_fee',
   'is_direct_deposit',
-  'is_fee_on_total'
+  'is_fee_on_total',
+  'region_id'
 ];
 
 module.exports.create = function(req, res) {

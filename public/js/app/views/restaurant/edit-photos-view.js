@@ -13,6 +13,7 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
+      render();
     },
 
     addPhoto: function(e) {
@@ -60,6 +61,10 @@ define(function(require, exports, module) {
       this.$el.find('input[type="filepicker"]').each(function() {
         filepicker.constructWidget( this );
       });
+
+      // pass in `stop` function for updating the collection
+      // convert all forms to just a global batch update
+      this.$el.find('.photo-list').sortable();
     },
 
     onFilePickerChange: function(e){

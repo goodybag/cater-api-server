@@ -1,9 +1,5 @@
 {{#extend "body"}}
-  <h2>Photos</h2>
-
-  <div class="edit-photos">
-    {{> edit_photos_list }}
-  </div>
+  {{> edit_photos_list }}
 {{/extend}}
 
 {{#extend "scripts"}}
@@ -15,6 +11,7 @@ require( [
   'app/pages/admin/restaurant/edit-photos'
 , 'app/models/restaurant'
 , 'app/collections/restaurant-photos'
+, 'jquery-ui'
 ], function( page, Restaurant, PhotosCollection ){
   page.init({
     models: {

@@ -562,7 +562,7 @@ define(function(require, exports, module) {
       $el = this.$el.find('.has-error');
 
       if ( $el ){
-        $(document.body).animate({ scrollTop: $el.eq(0).offset().top - 20 });
+        $('html,body').animate({ scrollTop: $el.eq(0).offset().top - 20 });
       }
     },
 

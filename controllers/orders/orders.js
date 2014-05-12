@@ -14,9 +14,6 @@ var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer;
 
-var Bitly = require('bitly');
-var bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
-
 var addressFields = [
   'street'
 , 'street2'
@@ -372,46 +369,6 @@ module.exports.changeStatus = function(req, res) {
             if (err && err.code !== '23505') return res.error(errors.internal.DB_FAILURE, err);
           });
         });
-
-        if (order.attributes.restaurant.sms_phones) {
-          logger.routes.info(TAGS, "shortening url and sending sms for order: " + order.attributes.id);
-          var url = config.baseUrl + '/orders/' + order.attributes.id + '?review_token=' + order.attributes.review_token;
-
-          // shorten URL
-          bitly.shorten(url, function(err, response) {
-            if (err) logger.routes.error(TAGS, 'unable to shorten url, attempting to sms unshortend link', err);
-            url = ((response||0).data||0).url || url;
-            // send sms
-            var msg = 'New Goodybag order for $' + (parseInt(order.attributes.total) / 100).toFixed(2)
-            + ' to be delivered on ' + moment(order.attributes.datetime).format('MM/DD/YYYY h:mm a') + '.'
-            + '\n' + url;
-            utils.each(order.attributes.restaurant.sms_phones, function(sms_phone) {
-              twilio.sendSms({
-                to: sms_phone,
-                from: config.phone.orders,
-                body: msg
-              }, function(err, result) {
-                if (err) logger.routes.error(TAGS, 'unable to send SMS', err);
-              });
-            });
-          });
-        }
-
-        if (order.attributes.restaurant.voice_phones) {
-          logger.routes.info(TAGS, "making call for order: " + order.attributes.id);
-          var datetime = utils.getWorkingTime(moment(), order.attributes.timezone);
-          utils.each(order.attributes.restaurant.voice_phones, function(voice_phone) {
-            scheduler.enqueue('make-call', datetime.toString(), {
-              to: voice_phone,
-              from: config.phone.orders,
-              url: config.baseUrl + '/orders/' + order.attributes.id + '/voice',
-              ifMachine: 'Continue',
-              method: 'GET'
-            }, function(err, result) {
-              if (err) logger.scheduler.error(TAGS, 'unable to schedule call', err);
-            });
-          });
-        }
       }
 
       res.send(201, {order_id: order.attributes.id, status: order.attributes.status});

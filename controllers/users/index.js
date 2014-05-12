@@ -129,7 +129,7 @@ module.exports.update = function(req, res) {
     db.query(sql.query, sql.values, function(err, rows, result) {
       if (err) return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
 
-      if ( req.header('Content-Type') === 'application/json' ){
+      if ( req.header('Content-Type').indexOf( 'application/json' ) >= 0 ){
         return res.send(204);
       }
 

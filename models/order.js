@@ -277,7 +277,7 @@ module.exports = Model.extend({
 
         g1.quantity += g2.quantity;
         g1.recipients = g1.recipients.concat( g2.recipients );
-        group.splice( i, i );
+        group.splice( i, 1 );
 
         // Since we removed group[i], do not advance `i`
         l--;

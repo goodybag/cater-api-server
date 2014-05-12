@@ -18,10 +18,8 @@ var reduceActions = function(memo, group, action) {
 
 new CronJob(config.scheduler.cron, function(){
   scheduler.runAll( function( errors, stats ){
-    if ( !config.isDev ){
-      // Filter actions that had some activity
-      stats = utils.reduce(stats, reduceActions, {});
-      if ( errors || !utils.isEmpty(stats) ) reporter.logResults( errors, stats );
-    }
+    // Filter actions that had some activity
+    stats = utils.reduce(stats, reduceActions, {});
+    if ( errors || !utils.isEmpty(stats) ) reporter.logResults( errors, stats );
   });
 }, null, config.scheduler.start);

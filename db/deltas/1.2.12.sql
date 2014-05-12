@@ -1,7 +1,7 @@
 -- Delta Regions
 
 DO $$
-  declare version         text := '1.2.11';
+  declare version         text := '1.2.12';
   declare default_region  text := 'Austin, TX';
   declare rid             int;
 begin

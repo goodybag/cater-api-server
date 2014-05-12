@@ -27,10 +27,6 @@ begin
   perform add_column( 'users', 'region_id', 'int references regions(id)' );
   perform add_column( 'users', 'default_zip', 'character varying(5)' );
 
-  perform add_column( 'orders', 'region_id', 'int references regions(id)' );
-
-  raise notice '## ID IS %', rid;
-
   -- Set all data to use the default region
   update orders set region_id = rid;
   update restaurants set region_id = rid;

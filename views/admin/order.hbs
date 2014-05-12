@@ -70,7 +70,7 @@
 
 {{#extend "scripts"}}
 <script>
-  require( ['app/pages/admin-order'], function( page ){
+  require( ['app/pages/admin/order', 'app/models/order'], function( page, Order ){
     page.init({
       order: new Order( {{{json order}}} )
     });

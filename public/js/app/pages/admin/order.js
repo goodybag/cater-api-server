@@ -15,6 +15,8 @@ define(function(require){
         throw new Error('Missing required property: `order`');
       }
 
+      page.order = options.order;
+
       page.notificationHistory  = new Views.NotificationHistoryTable({ order: options.order })
       page.notifications        = new Views.NotificationsTable({ order: options.order })
 
@@ -44,7 +46,7 @@ define(function(require){
   , getHistory: function( callback ){
       $.ajax({
         type: 'GET'
-      , url: ['/api/orders', order.get('id'), 'notifications-history'].join('/')
+      , url: ['/api/orders', page.order.get('id'), 'notifications-history'].join('/')
       , json: true
       , headers: { 'Content-Type': 'application/json' }
       , success: function( notes ){
@@ -57,7 +59,7 @@ define(function(require){
   , getAvailable: function( callback ){
       $.ajax({
         type: 'GET'
-      , url: ['/api/orders', order.get('id'), 'notifications'].join('/')
+      , url: ['/api/orders', page.order.get('id'), 'notifications'].join('/')
       , json: true
       , headers: { 'Content-Type': 'application/json' }
       , success: function( notes ){

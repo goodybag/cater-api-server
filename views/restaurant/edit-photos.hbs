@@ -16,7 +16,13 @@ require( [
   page.init({
     models: {
       restaurant: new Restaurant({{{json restaurant}}})
-    , photos: new PhotosCollection({{{json restaurant_photos}}}, { restaurant_id: {{restaurant.id}} })
+    , photos: new PhotosCollection(
+        {{#if restaurant_photos}}
+          {{{json restaurant_photos}}}
+        {{else}}
+          []
+        {{/if}}
+      , { restaurant_id: {{restaurant.id}} })
     },
 
   defaultLogo: "{{config.defaultLogo}}"

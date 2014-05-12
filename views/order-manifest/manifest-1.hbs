@@ -128,11 +128,23 @@
           {{this.name}}
           <div class="options">
             {{#each this.options_sets}}
+            {{#if this.name.length}}
+              <div class="option-group-name">{{this.name}}:</div>
+            {{/if}}
+            <ul class="option-group">
+              {{#each this.options}}
+                <li>{{this.name}}</li>
+              {{/each}}
+            </ul>
+            {{/each}}
+          </div>
+          {{!-- <div class="options">
+            {{#each this.options_sets}}
               {{#if @index}}<br>{{/if}}
               {{#if this.name.length}}{{this.name}}: {{/if}}
               {{join this.options ", " "name"}}
             {{/each}}
-          </div>
+          </div> --}}
         </td>
         <td class="options-notes">{{this.notes}}</td>
         <td class="recipient">{{{join this.recipients "<br>"}}}</td>

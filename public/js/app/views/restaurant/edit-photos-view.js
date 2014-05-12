@@ -72,8 +72,19 @@ define(function(require, exports, module) {
     },
 
     sortable: function() {
-      this.$el.find('.photo-list').sortable();
-    }
+      this.$el.find('.photo-list').sortable({
+        update: this.onItemMoved.bind(this)
+      });
+    },
+
+    onItemMoved: function() {
+      var this_ = this;
+      // kinda crappy
+      this.$el.find('.photo-list li').each(function(index, element) {
+        var id = $(element).data('id');
+        this_.collection.get(id).save( { priority: index } );
+      });
+    },
 
     onFilePickerChange: function(e){
       var $input = $(e.originalEvent.target);

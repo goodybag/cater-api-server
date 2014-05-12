@@ -5,7 +5,9 @@ define(function(require, exports, module) {
   var Handlebars = require('handlebars');
 
   var EditItemView = FormView.extend({
-    tagName: 'tr',
+    tagName: 'div',
+
+    className: 'row',
 
     template: Handlebars.partials.edit_item_row,
 
@@ -71,7 +73,7 @@ define(function(require, exports, module) {
     attach: function(element) {
       this.$el.hide();
       this.delegateEvents();
-      (element) ? element.after(this.$el) : this.options.category.$el.find('tbody').append(this.$el);
+      (element) ? element.after(this.$el) : this.options.category.$el.find('.items-list').append(this.$el);
       this.$el.stop(true, true).fadeIn();
     },
 
@@ -80,7 +82,7 @@ define(function(require, exports, module) {
       if ( this.editOptions ){
         this.editOptions.remove();
         delete this.editOptions;
-        this.$el.find('.item-edit-options').text('Edit Options');
+        this.$el.find('.item-edit-options').text('+ Edit Options');
         return this;
       }
 
@@ -92,7 +94,7 @@ define(function(require, exports, module) {
 
       this.$el.after( this.editOptions.$el );
 
-      this.$el.find('.item-edit-options').text('Close Options');
+      this.$el.find('.item-edit-options').text('- Close Options');
 
       return this;
     },
@@ -121,7 +123,6 @@ define(function(require, exports, module) {
 
     onEditOptionsClick: function(e){
       e.preventDefault();
-
       this.toggleEditOptions();
     }
   });

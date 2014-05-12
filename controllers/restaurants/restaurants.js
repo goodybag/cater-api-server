@@ -164,30 +164,6 @@ module.exports.get = function(req, res) {
   utils.async.parallel(tasks, done);
 }
 
-module.exports.edit = function(req, res) {
-  models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (!restaurant) return res.render('404');
-    restaurant.getItems(function(err, items) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-      var selectedPrice = utils.object(utils.map([1, 2, 3, 4], function(i) {
-        return [new Array(i+1).join('$'), restaurant.attributes.price === i];
-      }));
-      utils.findWhere(states, {abbr: restaurant.attributes.state || 'TX'}).default = true;
-      res.render('edit-restaurant', {
-        restaurant: restaurant.toJSON()
-      , selectedPrice: selectedPrice
-      , states: states
-      , mealTypesList: enums.getMealTypes()
-      , mealStylesList: enums.getMealStyles()
-      }, function(err, html) {
-        if (err) return res.error(errors.internal.UNKNOWN, err);
-        res.send(html);
-      });
-    });
-  });
-}
-
 module.exports.editAll = function(req, res, next) {
   models.Restaurant.find({limit: 10000}, function(err, models) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
@@ -351,7 +327,7 @@ module.exports.create = function(req, res) {
 
       var done = function(err, results) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
-        res.send(201, rows[0]);
+        res.redirect('/admin/restaurants/' + rows[0].id);
       };
 
       utils.async.parallel(tasks, done);

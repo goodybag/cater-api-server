@@ -1,0 +1,66 @@
+{{#extend "body"}}
+  <h2>Basic Info</h2>
+
+  <form class="ap-form form-vertical">
+    <div class="form-group">
+      <label class="control-label" for="input-name">Name
+        <span class="help-block">Required</span>
+      </label>
+      <input type="text" class="form-control" name="name" id="input-name" value="{{restaurant.name}}">
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-description">Description
+        <span class="help-block">Displayed under the restaurant's name on the menu pages.</span>
+      </label>
+      <input type="text" class="form-control" name="description" id="input-description" value="{{restaurant.description}}">
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-websites">Websites
+        <span class="help-block">Separated by comma</span>
+      </label>
+      <input type="text" class="form-control" name="websites" id="input-websites" value="{{restaurant.websites}}">
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-yelp">Yelp Page URL</label>
+      <input type="text" class="form-control" name="yelp_business_id" id="input-yelp" value="{{config.yelp.businessBaseUrl}}/{{restaurant.yelp_business_id}}">
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-logo-color">
+          <label class="control-label">Logo</label>
+          <img class="restaurant-logo-img" data-name="logo_url"
+            src="{{#if restaurant.logo_url}}{{restaurant.logo_url}}{{else}}{{config.defaultLogo}}{{/if}}">
+          <input type="filepicker" class="form-control btn btn-default btn-block" name="logo_url" value="{{restaurant.logo_url}}" id="input-logo-url">
+        </div>
+        <div class="col-logo-mono">
+          <label class="control-label">Monochromatic Logo</label>
+          <img class="restaurant-logo-img" data-name="logo_mono_url"
+            src="{{#if restaurant.logo_mono_url}}{{restaurant.logo_mono_url}}{{else}}{{config.defaultMonoLogo}}{{/if}}">
+          <input type="filepicker" class="form-control btn btn-default btn-block" name="logo_mono_url" value="{{restaurant.logo_mono_url}}"  id="input-mono-logo-url">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-hidden">
+        <input type="checkbox" class="form-control" name="is_hidden" id="input-hidden" {{#if restaurant.is_hidden}}checked="checked"{{/if}}>
+         Hidden from listing
+      </label>
+    </div>
+    <div class="actions">
+      <button class="btn-update" type="submit">Update</button>
+    </div>
+  </form>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
+<script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
+<script>
+  // Init views on this page
+  require( ['app/pages/admin/restaurant/edit-basic-info', 'app/models/restaurant'], function( page, Restaurant ){
+    page.init({
+      models: { restaurant: new Restaurant({{{json restaurant}}}) }
+    });
+  });
+</script>
+{{/extend}}

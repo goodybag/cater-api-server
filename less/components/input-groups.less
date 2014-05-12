@@ -1,0 +1,61 @@
+//////////////////////
+// Input groups     //
+//////////////////////
+
+/**
+ * Input groups with addon
+ */
+
+.input-group {
+  display: table;
+  width: 100%;
+}
+
+.input-group .input-addon {
+  display: table-cell;
+  width: 1%;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  color: #555;
+  text-align: center;
+  background-color: #eee;
+  border: 1px solid #b7b6ad;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-right: 0;
+}
+
+.input-group .form-control:last-child {
+  display: table-cell;
+  widht: 100%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/**
+ * Input groups with flush bottom border 
+ */ 
+
+.input-group-top .input-addon {
+  border-bottom-left-radius: 0;
+}
+
+.input-group-top .form-control:last-child {
+  border-bottom-right-radius: 0;
+}
+
+/**
+ * Input groups with flush top border 
+ */
+
+.input-group-bottom .form-control {
+  border-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+  width: 100%;
+  margin-bottom: 10px;
+}

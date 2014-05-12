@@ -2,7 +2,6 @@ define(function(require){
   var $       = require('jquery-loaded');
   var notify  = require('notify');
   var utils   = require('utils');
-  var order   = require('data/order');
 
   var Views = {
     NotificationHistoryTable:     require('app/views/notification-history-table')
@@ -11,10 +10,14 @@ define(function(require){
   };
 
   var page = {
-    notificationHistory: new Views.NotificationHistoryTable({ order: order })
-  , notifications: new Views.NotificationsTable({ order: order })
+    init: function( options ){
+      if ( !options.order ){
+        throw new Error('Missing required property: `order`');
+      }
 
-  , init: function(){
+      page.notificationHistory  = new Views.NotificationHistoryTable({ order: options.order })
+      page.notifications        = new Views.NotificationsTable({ order: options.order })
+
       page.fetchAndRenderHistory();
       page.fetchAndRenderNotifications();
 

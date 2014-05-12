@@ -1,3 +1,19 @@
+#main {
+  // Don't let the enterprise give horizontals
+  @media screen and ( max-width: @container-width ){
+    overflow: hidden;
+  }
+
+  &:before {
+    content: "";
+    .starship-enterprise();
+    right: 50%;
+    margin-right: -600px;
+    top: 50px;
+    opacity: 0.1;
+  }
+}
+
 .navbar .navbar-right {
   // Hack positioning until I figure out how to make it generalized
   // within the navbar height calculation
@@ -14,24 +30,115 @@ header {
   position: relative;
 }
 
-.page-order {
-  padding-bottom: 80px;
+.delivery-time {
+  .clearfix();
+}
 
-  #main {
-    // Don't let the enterprise give horizontals
-    @media screen and ( max-width: @container-width ){
-      overflow: hidden;
+//////
+// General components // should be somewheres else
+//////
+
+.btn-update {
+  .btn();
+  .btn-primary();
+}
+
+//////
+// Basic info
+//////
+
+.col-logo-color,
+.col-logo-mono {
+  #grid.column(3);
+}
+
+//////
+// Contacts
+//////
+
+///////
+// Lead times
+///////
+
+.ap-lead-times {
+  .row {
+    margin-bottom: 10px;
+  }
+}
+
+@media (min-width: 40rem) {
+  .ap-lead-times {
+    .col-day {
+      float: left;
+      width: 15%;
+      font-weight: 700;
+      line-height: 36px;
     }
 
-    &:after {
-      content: "";
-      .starship-enterprise();
-      right: 50%;
-      margin-right: -600px;
-      top: 50px;
-      opacity: 0.1;
+    .col-times {
+      float: left;
+      width: 85%;
+    }
+
+    .col-time {
+      float: left;
+      width: 20%;
+      margin-right: 10px;
+    }
+
+    .col-separator {
+      display: inline-block;
+      float: left;
+      width: 40px;
+      line-height: 36px;
+      margin-left: -10px;
+      text-align: center;
+    }
+    
+    .col-checkbox {
+      float: left;
+      width: 15%;
+      margin-left: 10px;
+      line-height: 36px;
     }
   }
+}
+
+@media (min-width: 40rem) {
+  .lead-times-list {
+    .col-remove {
+      line-height: 59px;
+    }
+
+    .remove-lead-time {
+      vertical-align: bottom;
+    }
+  }
+}
+
+///////
+// Delivery Settings
+///////
+
+.btn-add-delivery-tier {
+  .btn();
+  .btn-default();
+}
+
+////////
+// Menu
+///////
+
+.ap-menu .panel {
+  margin-bottom: 10px;
+}
+
+////////
+// Order 
+////////
+
+.page-order {
+  padding-bottom: 80px;
 
   #order-pdfs > .pdf-preview {
     #grid > .column(6);

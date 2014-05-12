@@ -123,6 +123,7 @@ module.exports = function(grunt) {
         })
       }
     , landing: {}
+    , admin: {}
     }
 
   , s3: {
@@ -214,6 +215,10 @@ module.exports = function(grunt) {
   var landing   = gruntConfig.requirejs.landing.options = utils.clone( gruntConfig.requirejs.app.options );
   landing.name  = 'app/pages/landing';
   landing.out   = 'public/dist/landing.js';
+
+  var admin   = gruntConfig.requirejs.admin.options = utils.clone( gruntConfig.requirejs.app.options );
+  admin.name  = 'app/pages/admin/builder';
+  admin.out   = 'public/dist/admin.js';
 
   grunt.initConfig( gruntConfig );
 

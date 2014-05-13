@@ -37,7 +37,7 @@ begin
 
   -- Update Austin
   update regions set sales_tax = 0.08250 where id = rid;
-  update regions set timezone = 'America/Chicago';
-  update regions set state = 'TX';
-  update regions set cities = Array['Austin', 'Round Rock', 'Georgetown'];
+  update regions set timezone = 'America/Chicago' where id = rid;
+  update regions set state = 'TX' where id = rid;
+  update regions set cities = Array['Austin', 'Round Rock', 'Georgetown'] where id = rid;
 end$$;

@@ -13,8 +13,8 @@ module.exports = function(req, res, next) {
     if (error) return next(error);
 
     req.user = user;
-    req.user.isAdmin = utils.contains(req.user.attributes.groups, 'admin');
-    req.user.isRestaurant =
+    res.locals.isAdmin = req.user.isAdmin = utils.contains(req.user.attributes.groups, 'admin');
+    res.locals.isRestaurant = req.user.isRestaurant =
       utils.contains(req.user.attributes.groups, 'restaurant') &&
       utils.contains(req.user.attributes.restaurant_ids, parseInt(req.param('rid')));
 

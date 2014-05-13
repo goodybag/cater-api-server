@@ -27,8 +27,9 @@ module.exports.create = function(req, res) {
 }
 
 module.exports.del = function(req, res) {
-  req.session = null;
-  return res.redirect(req.query.next || '/');
+  req.session.destroy(function(){
+    res.redirect(req.query.next || '/');
+  });
 }
 
 module.exports.patch = function(req, res) {

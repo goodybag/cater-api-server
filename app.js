@@ -19,6 +19,8 @@ var
 , errors = require('./errors')
 , middleware = require('./middleware')
 , Models = require('./models')
+, session = require('express-session')
+, RedisStore = require('connect-redis')(session)
 ;
 
 var app = module.exports = express();
@@ -39,8 +41,10 @@ app.configure(function(){
 
   app.use(logger.expressError);
   app.use(express.cookieParser('WOOT THE FUCK'));
-  app.use(express.cookieSession());
-
+  app.use(session({
+    store: new RedisStore
+  , secret: config.session.secret
+  }));
   app.use(express.json());
   app.use(express.urlencoded());
   app.use(express.methodOverride());

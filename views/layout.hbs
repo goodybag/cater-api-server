@@ -207,9 +207,13 @@
     {{#if user.id}}
     <script type="text/javascript">
       {{#if session.oldUser}}
-      analytics.identify({{session.oldUser.id}}, {{{json session.oldUser}}});
+        var oldUser = {{{json session.oldUser}}};
+        {{#if isAdmin}}user.$ignore = true;{{/if}}
+        analytics.identify({{session.oldUser.id}}, oldUser);
       {{else}}
-      analytics.identify({{user.id}}, {{{json user}}});
+        var user = {{{json}}};
+        {{#if isAdmin}}user.$ignore = true;{{/if}}
+        analytics.identify({{user.id}}, user);
       {{/if}}
     </script>
     {{/if}}

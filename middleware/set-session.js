@@ -12,14 +12,15 @@ module.exports = function( options ){
       req.session.cookie.maxAge = 14 * 24 * 60 * 60 * 1000;
 
     req.setSession = function( user, remember ){
-      req.session = utils.extend(
-        {}, req.session
-      , { user: utils.pick( user, [ 'id', 'name', 'organization', 'groups', 'email', 'points', 'created_at' ] ) }
-      );
+      req.session.user = user;
 
       // Remember me checked, triggered by /login
       if ( remember )
         req.session.remember = remember;
+
+      // req.session.save(function(err) {
+      //   console.log(err);
+      // });
     };
 
     next();

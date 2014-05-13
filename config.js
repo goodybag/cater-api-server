@@ -30,6 +30,10 @@ config.defaults = {
 
 , resultsTooFewContactUsThreshold: 5
 
+, session: {
+    secret: 'SartorialPitchforksynthvegandirecttradeflannelwhateverbiodieselfap'
+  }
+
 , cdn: {
     baseUrl: 'http://localhost:3000'
     // If you want to test out uploading stuff to a CDN, but don't want

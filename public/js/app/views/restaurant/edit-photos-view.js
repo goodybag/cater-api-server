@@ -80,10 +80,14 @@ define(function(require, exports, module) {
     onItemMoved: function() {
       var this_ = this;
       // kinda crappy
+      // save new priority
       this.$el.find('.photo-list li').each(function(index, element) {
         var id = $(element).data('id');
         this_.collection.get(id).save( { priority: index } );
       });
+
+      // sort collection for re-rendering template
+      this.collection.sort();
     },
 
     onFilePickerChange: function(e){

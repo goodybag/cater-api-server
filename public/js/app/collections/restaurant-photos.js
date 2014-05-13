@@ -17,5 +17,7 @@ define(function(require, exports, module) {
       this.restaurant_id = options.restaurant_id;
       return this;
     }
+
+  , comparator: 'priority'
   });
 });

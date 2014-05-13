@@ -62,6 +62,20 @@ var Restaurant = module.exports = Model.extend({
 {
   table: 'restaurants',
 
+  getRegionJoin: function(){
+    return {
+      type: 'left'
+    , target: 'regions'
+    , on: { id: '$restaurants.region_id$' }
+    };
+  },
+
+  getRegionColumns: function(){
+    return [
+      'regions.sales_tax', 'regions.timezone'
+    ];
+  },
+
   findOne: function(query, orderParams, callback) {
     if (utils.isFunction(orderParams)) {
       callback = orderParams;
@@ -172,6 +186,9 @@ var Restaurant = module.exports = Model.extend({
     , limit: 1
     , order: 'fee asc'
     }) - 1;
+
+    query.columns = query.columns.concat( Restaurant.getRegionColumns() );
+    query.joins.regions = Restaurant.getRegionJoin();
 
     if ( orderParams && orderParams.zip ){
       query.columns[ feeCol ].where.zip = orderParams.zip;

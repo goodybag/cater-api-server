@@ -15,6 +15,7 @@ begin
   perform add_column( 'regions', 'id', 'serial primary key' );
   perform add_column( 'regions', 'name', 'text unique not null' );
   perform add_column( 'regions', 'timezone', E'text not null default \'America/Chicago\'' );
+  perform add_column( 'regions', 'sales_tax', 'numeric(5,5) default 0' );
 
   select id into rid from regions where name = default_region;
 
@@ -31,4 +32,7 @@ begin
   update orders set region_id = rid;
   update restaurants set region_id = rid;
   update users set region_id = rid;
+
+  -- Update Austin
+  update regions set sales_tax = 0.08250 where id = rid;
 end$$;

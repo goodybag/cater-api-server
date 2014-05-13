@@ -6,28 +6,33 @@ define(function(require, exports, module) {
     template: Handlebars.partials.edit_photos_list,
 
     events: {
-      'change input[type="filepicker"]': 'onFilePickerChange'
-    , 'submit .form-add-photo': 'addPhoto'
-    , 'submit .form-update-photo': 'updatePhoto'
-    , 'click .btn-remove-photo': 'removePhoto'
+      'change input[type="filepicker"]':  'onFilePickerChange'
+    , 'submit .form-add-photo':           'addPhoto'
+    , 'submit .form-update-photo':        'updatePhoto'
+    , 'click .btn-remove-photo':          'removePhoto'
     },
 
     initialize: function() {
       this.sortable();
     },
 
+    getData: function($el) {
+      return {
+        url:          $el.find('input[name="url"]').val()
+      , name:         $el.find('input[name="name"]').val()
+      , description:  $el.find('textarea[name="description"]').val()
+      };
+    },
+
     addPhoto: function(e) {
-      // todo validate url / show error alert
-      var this_ = this;
       e.preventDefault();
+      var this_ = this;
       var $form = this.$el.find('.form-add-photo');
-      this.collection.create({
-        url:          $form.find('input[name="url"]').val()
-      , name:         $form.find('input[name="name"]').val()
-      , description:  $form.find('textarea[name="description"]').val()
-      }, { 
+      var data = this.getData($form);
+      this.collection.create(data, { 
         wait: true 
-      , success: this.render.bind(this)
+      , success: this.alert({type: 'success', message: 'Added new photo! Good job'})
+      , error:   this.alert({type: 'error', message: 'Could not add photo..'})
       });
     },
 
@@ -35,29 +40,39 @@ define(function(require, exports, module) {
       e.preventDefault();
       var $photo = $(e.target).closest('li');
       var id = $photo.data('id');
-
-      this.collection.get(id).save({
-        url:          $photo.find('input[name="url"]').val()
-      , name:         $photo.find('input[name="name"]').val()
-      , description:  $photo.find('textarea[name="description"]').val()
-      }, {
+      var data = this.getData($photo);
+      this.collection.get(id).save(data, {
         wait: true
-      , success: this.render.bind(this)
+      , success: this.alert({type: 'success', message: 'Updated successfully!'})
+      , error:   this.alert({type: 'error', message: 'Could not update..'})
       });
-
-      // todo hook into success/fail callbacks
-      // to show respective alert view
     },
 
     removePhoto: function(e) {
       e.preventDefault();
       var $photo = $(e.target).closest('li');
       var id = $photo.data('id');
-      this.collection.get(id).destroy();
+      this.collection.get(id).destroy({
+        wait: true
+      , success: this.alert({ type: 'success', message: 'Removed photo!' })
+      , error: this.alert({ type: 'error', message: 'Could not remove this photo..' })
+      });
+    },
 
-      // todo hook into success/fail callbacks
-      // to show respective alert view
-      this.render();
+    alert: function(opts) {
+      var this_ = this;
+      opts = opts || {};
+      opts.type = opts.type || 'success';
+      opts.message = opts.message || 'Saved Successfully'
+
+      var context = { 
+        message: opts.message
+      };
+
+      return function() {
+        this_.options.alertView.show(opts.type, context);
+        this_.render();
+      };
     },
 
     render: function() {
@@ -74,19 +89,29 @@ define(function(require, exports, module) {
 
     sortable: function() {
       this.$el.find('.photo-list').sortable({
-        update: this.onItemMoved.bind(this)
+      , update: this.onItemMoved()
       });
     },
 
     onItemMoved: function() {
       var this_ = this;
+
       // 1. re-index photos
-      // 2, sort collection for re-rendering template
-      this.$el.find('.photo-list li').each(function(index, element) {
-        var id = $(element).data('id');
-        this_.collection.get(id).save( { priority: index } );
-      });
-      this.collection.sort();
+      // 2. show alert  TODO
+      // 3. sort collection for re-rendering template
+      return function() {
+        // var success = true;
+        this_.$el.find('.photo-list li').each(function(index, element) {
+          var id = $(element).data('id');
+          var check = this_.collection.get(id).save( { priority: index } );
+        });
+        // if (success) {
+        //   this_.options.alertView.show('success', { message: 'Reordered photo successfully!' });
+        // } else {
+        //   this_.optiosn.alertView.show('error', { message: 'Could not reorder photo..' });
+        // }
+        this_.collection.sort();
+      }
     },
 
     onFilePickerChange: function(e){

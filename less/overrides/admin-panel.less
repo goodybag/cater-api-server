@@ -164,7 +164,7 @@ header {
 .photo-list > li {
   float: left;
   width: 30%;
-  margin-right: 2%;
+  margin-right: 5%;
   border: 1px solid #ececec;
   border-radius: 5px;
   padding: 7px;
@@ -173,6 +173,10 @@ header {
   // &:nth-child(3n) {
   //   margin-right: 0;
   // }
+
+  &:nth-of-type(3n) {
+    margin-right: 0;
+  }
 
   img { // figure a way to clip without messing aspect ratio
     width: 100%;

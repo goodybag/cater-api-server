@@ -270,15 +270,32 @@ module.exports.register = function( req, res ){
   }
 
   (function( next ){
-    if ( !req.geo || !( req.geo.region_code && req.geo.city ) ) return next();
+    var $query, options = {};
 
+    // No Geo data? Let's still associate a region_id to them for now
+    // In the future, we'll want to prompt the user to select a region
+    // But for now, we'll go ahead and choose for them
+    if ( !req.geo || !( req.geo.region_code && req.geo.city ) ){
+      $query = { name: 'Austin, TX' };
     // Lookup region based on geo data
-    var $query = {
-      state:  req.geo.region_code
-    , cities: { $contains: [req.geo.city] }
-    };
+    } else {
+      $query = {
+        $or: [
+          { state:  req.geo.region_code
+          , cities: { $contains: [req.geo.city] }
+          }
+          // If they did provide region data that we don't currently support,
+          // still assign them to Austin, TX, but in the future, we will
+          // prompt the user to choose from the list
+        , { name: 'Austin, TX' }
+        ]
+      };
 
-    db.regions.findOne( $query, function( error, region ){
+      // Always put ATX at the bottom if there are multiple results
+      options = { order: "name = 'Austin, TX' asc" }
+    }
+
+    db.regions.find( $query, options, function( error, regions ){
       if ( error ){
         return res.render( 'landing/register', {
           layout: 'landing/layout'
@@ -286,7 +303,8 @@ module.exports.register = function( req, res ){
         });
       }
 
-      data.region_id = region.id;
+      // There will at least be 1 result
+      data.region_id = regions[0].id;
 
       next();
     });

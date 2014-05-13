@@ -35,18 +35,22 @@ define(function(require, exports, module) {
       e.preventDefault();
       var $photo = $(e.target).closest('li');
       var id = $photo.data('id');
+
       this.collection.get(id).save({
-        url:          $photo.find('img').attr('src')
+        url:          $photo.find('input[name="url"]').val()
       , name:         $photo.find('input[name="name"]').val()
       , description:  $photo.find('textarea[name="description"]').val()
+      }, {
+        wait: true
+      , success: this.render.bind(this)
       });
 
-      this.render();
       // todo hook into success/fail callbacks
       // to show respective alert view
     },
 
     removePhoto: function(e) {
+      e.preventDefault();
       var $photo = $(e.target).closest('li');
       var id = $photo.data('id');
       this.collection.get(id).destroy();
@@ -65,9 +69,6 @@ define(function(require, exports, module) {
       this.$el.find('input[type="filepicker"]').each(function() {
         filepicker.constructWidget( this );
       });
-
-      // pass in `stop` function for updating the collection
-      // convert all forms to just a global batch update
       this.sortable();
     },
 
@@ -79,14 +80,12 @@ define(function(require, exports, module) {
 
     onItemMoved: function() {
       var this_ = this;
-      // kinda crappy
-      // save new priority
+      // 1. re-index photos
+      // 2, sort collection for re-rendering template
       this.$el.find('.photo-list li').each(function(index, element) {
         var id = $(element).data('id');
         this_.collection.get(id).save( { priority: index } );
       });
-
-      // sort collection for re-rendering template
       this.collection.sort();
     },
 
@@ -95,7 +94,6 @@ define(function(require, exports, module) {
       $input.siblings('[data-name="' + $input.attr('name') + '"]').attr(
         'src', $input.val()
       );
-    },
-
+    }
   });
 });

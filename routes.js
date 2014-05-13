@@ -20,7 +20,7 @@ module.exports.register = function(app) {
     app.get('/login', controllers.auth.login);
     app.post('/login', controllers.auth.login);
     app.get('/join', controllers.auth.registerView);
-    app.post('/join', controllers.auth.register);
+    app.post('/join', m.getGeoFromIp(), controllers.auth.register);
 
     app.get('/rewards', m.view( 'landing/rewards', {
       layout: 'landing/layout'

@@ -72,7 +72,7 @@ mosql.registerConditionalHelper('$notExists', { cascade: false }, function( colu
 });
 
 mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column, set, values, collection ) {
-  if (Array.isArray(set)) {
+  if (Array.isArray(set)){
     return column + ' @> ARRAY[' + set.map( function(val) {
       return '$' + values.push(val);
     }).join(', ') + ']';
@@ -304,10 +304,10 @@ dirac.use( function(){
 
 // Log queries to dirac
 // dirac.use( function(){
-//   var query = dirac.DAL.prototype.query;
+//   var query_ = dirac.DAL.prototype.query;
 //   dirac.DAL.prototype.query = function( query, callback ){
 //     console.log( query );
-//     return query.apply( this, arguments );
+//     return query_.apply( this, arguments );
 //   };
 
 //   var raw = dirac.DAL.prototype.raw;

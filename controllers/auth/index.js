@@ -269,27 +269,50 @@ module.exports.register = function( req, res ){
     });
   }
 
-  new Models.User( data ).create( function( error, user ){
-    if ( error ){
-      if ( error.routine === '_bt_check_unique' ){
-        error = errors.registration.EMAIL_TAKEN;
+  (function( next ){
+    if ( !req.geo || !( req.geo.region_code && req.geo.city ) ) return next();
+
+    // Lookup region based on geo data
+    var $query = {
+      state:  req.geo.region_code
+    , cities: { $contains: [req.geo.city] }
+    };
+
+    db.regions.findOne( $query, function( error, region ){
+      if ( error ){
+        return res.render( 'landing/register', {
+          layout: 'landing/layout'
+        , error: error
+        });
       }
 
-      return res.render( 'landing/register', {
-        layout: 'landing/layout'
-      , error: error
-      });
-    }
+      data.region_id = region.id;
 
-    req.analytics.track({
-      userId: user.attributes.id+''
-    , event: 'Sign up'
+      next();
     });
+  })(function(){
+    new Models.User( data ).create( function( error, user ){
+      if ( error ){
+        if ( error.routine === '_bt_check_unique' ){
+          error = errors.registration.EMAIL_TAKEN;
+        }
 
-    req.setSession( user.toJSON() );
+        return res.render( 'landing/register', {
+          layout: 'landing/layout'
+        , error: error
+        });
+      }
 
-    res.redirect('/restaurants');
+      req.analytics.track({
+        userId: user.attributes.id+''
+      , event: 'Sign up'
+      });
 
-    venter.emit( 'user:registered', user );
+      req.setSession( user.toJSON() );
+
+      res.redirect('/restaurants');
+
+      venter.emit( 'user:registered', user );
+    });
   });
 };

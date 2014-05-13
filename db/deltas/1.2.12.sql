@@ -14,7 +14,9 @@ begin
 
   perform add_column( 'regions', 'id', 'serial primary key' );
   perform add_column( 'regions', 'name', 'text unique not null' );
-  perform add_column( 'regions', 'timezone', E'text not null default \'America/Chicago\'' );
+  perform add_column( 'regions', 'state', E'text not' );
+  perform add_column( 'regions', 'cities', 'text[] not null default Array[]::text[]' );
+  perform add_column( 'regions', 'timezone', E'text not null' );
   perform add_column( 'regions', 'sales_tax', 'numeric(5,5) default 0' );
 
   select id into rid from regions where name = default_region;
@@ -35,4 +37,7 @@ begin
 
   -- Update Austin
   update regions set sales_tax = 0.08250 where id = rid;
+  update regions set timezone = 'America/Chicago';
+  update regions set state = 'TX';
+  update regions set cities = Array['Austin', 'Round Rock', 'Georgetown'];
 end$$;

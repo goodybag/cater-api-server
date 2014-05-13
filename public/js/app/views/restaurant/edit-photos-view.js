@@ -32,7 +32,7 @@ define(function(require, exports, module) {
       this.collection.create(data, { 
         wait: true 
       , success: this.alert({type: 'success', message: 'Added new photo! Good job'})
-      , error:   this.alert({type: 'error', message: 'Could not add photo..'})
+      , error:   this.alert({type: 'error', message: 'Could not add photo'})
       });
     },
 
@@ -44,7 +44,7 @@ define(function(require, exports, module) {
       this.collection.get(id).save(data, {
         wait: true
       , success: this.alert({type: 'success', message: 'Updated successfully!'})
-      , error:   this.alert({type: 'error', message: 'Could not update..'})
+      , error:   this.alert({type: 'error', message: 'Could not update photo'})
       });
     },
 
@@ -55,7 +55,7 @@ define(function(require, exports, module) {
       this.collection.get(id).destroy({
         wait: true
       , success: this.alert({ type: 'success', message: 'Removed photo!' })
-      , error: this.alert({ type: 'error', message: 'Could not remove this photo..' })
+      , error: this.alert({ type: 'error', message: 'Could not remove photo' })
       });
     },
 
@@ -89,6 +89,8 @@ define(function(require, exports, module) {
 
     sortable: function() {
       this.$el.find('.photo-list').sortable({
+        forcePlaceholderSize: true
+      , placeholder: 'placeholder'
       , update: this.onItemMoved()
       });
     },

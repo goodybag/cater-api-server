@@ -45,6 +45,7 @@ var definitions = [
 , 'deltas'
 , 'favorite-restaurants'
 , 'order-notifications'
+, 'scheduled-jobs'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');

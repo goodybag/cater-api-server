@@ -59,18 +59,12 @@ define(function(require, exports, module) {
       });
     },
 
-    alert: function(opts) {
+    alert: function(context) {
       var this_ = this;
-      opts = opts || {};
-      opts.type = opts.type || 'success';
-      opts.message = opts.message || 'Saved Successfully'
-
-      var context = { 
-        message: opts.message
-      };
+      context = context || { type: 'success', message: 'Updated' };
 
       return function() {
-        this_.options.alertView.show(opts.type, context);
+        this_.options.alertView.show(context);
         this_.render();
       };
     },

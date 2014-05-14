@@ -21,8 +21,7 @@ define(function(require){
       , collection: options.models.photos
       , defaultLogo: options.defaultLogo
       });
-    },
-
+    }
   };
 
   return page;

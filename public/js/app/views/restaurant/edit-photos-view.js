@@ -102,16 +102,10 @@ define(function(require, exports, module) {
       // 2. show alert  TODO
       // 3. sort collection for re-rendering template
       return function() {
-        // var success = true;
         this_.$el.find('.photo-list li').each(function(index, element) {
           var id = $(element).data('id');
           var check = this_.collection.get(id).save( { priority: index } );
         });
-        // if (success) {
-        //   this_.options.alertView.show('success', { message: 'Reordered photo successfully!' });
-        // } else {
-        //   this_.optiosn.alertView.show('error', { message: 'Could not reorder photo..' });
-        // }
         this_.collection.sort();
       }
     },

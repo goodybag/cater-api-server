@@ -279,8 +279,26 @@ var inserts = {
   }
 }
 
-utils.async.series([
+utils.async.waterfall([
   function(cb) {
+    console.log('populating regions')
+    var data = {
+      name: 'Austin, TX'
+    , state: 'TX'
+    , cities: ['Austin', 'Round Rock', 'Georgetown']
+    , timezone: 'America/Chicago'
+    , sales_tax: 0.0825
+    };
+
+    query({
+      type: 'insert'
+    , table: 'regions'
+    , values: data
+    , returning: ['*']
+    }, function( error, results ){ cb( error, results ? results[0] : null ); });
+  }
+
+, function(region, cb) {
     console.log("populating restaurants");
     utils.async.times(10, function(n, callback){
       var tasks = {
@@ -296,6 +314,7 @@ utils.async.series([
           , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
           , is_hidden: false
           , websites: ['http://poop.com']
+          , region_id: region.id
           };
           cbWaterfall(null, data);
         }
@@ -354,10 +373,10 @@ utils.async.series([
 
     }, function(error, results){
       // console.log('called1');
-      cb(error);
+      cb(error, region);
     });
   }
-, function(cb) {
+, function(region, cb) {
     console.log("populating categories");
     query(select('restaurants'), function(error, results){
       utils.async.timesSeries(results.length, function(n, callback){
@@ -369,11 +388,11 @@ utils.async.series([
         });
       }, function(error, results){
         // console.log('called2');
-        cb(error);
+        cb(error, region);
       });
     });
   }
-, function(cb) {
+, function(region, cb) {
     console.log("populating items");
     query(select('categories'), function(error, results){
       utils.async.timesSeries(results.length, function(n, callback){
@@ -385,11 +404,11 @@ utils.async.series([
         });
       }, function(error, results){
         // console.log('called3');
-        cb(error);
+        cb(error, region);
       });
     });
   }
-, function(cb) {
+, function(region, cb) {
     console.log("populating restaurant_lead_times");
     query(select('restaurants'), function(error, results){
       utils.async.timesSeries(results.length, function(n, callback){
@@ -406,11 +425,11 @@ utils.async.series([
         });
       }, function(error, results){
         // console.log('called4');
-        cb(error);
+        cb(error, region);
       });
     });
   }
-, function(cb) {
+, function(region, cb) {
     console.log("populating restaurant_delivery_zips");
     query(select('restaurants'), function(error, results){
       utils.async.timesSeries(results.length, function(n, callback){
@@ -430,11 +449,11 @@ utils.async.series([
         });
       }, function(error, results){
         // console.log('called4');
-        cb(error);
+        cb(error, region);
       });
     });
   }
-, function(cb) {
+, function(region, cb) {
     console.log('populating restaurant_delivery_times');
     query(select('restaurants'), function(error, results) {
       if (error) return cb(error);
@@ -444,10 +463,10 @@ utils.async.series([
         utils.async.each(days, function(day, callback2) {
           query(inserts.restaurantDeliveryTimes(restaurant.id, day), callback2);
         }, callback)
-      }, cb);
+      }, function( error ){ cb( error, region ); });
     });
   }
-, function(cb) {
+, function(region, cb) {
     console.log("populating users");
 
     var tasks = {
@@ -459,6 +478,7 @@ utils.async.series([
         , organization: 'Goodybag, Inc.'
         , email: config.testEmail
         , password: hash
+        , region_id: region.id
         };
         cbWaterfall(null, data);
     }

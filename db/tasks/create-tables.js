@@ -7,7 +7,8 @@ var
 var cli = false;
 
 var definitions = [
-  'users'
+  'regions'
+, 'users'
 , 'groups'
 , 'users-groups'
 , 'tags'
@@ -44,7 +45,6 @@ var definitions = [
 , 'deltas'
 , 'favorite-restaurants'
 , 'order-notifications'
-, 'regions'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');

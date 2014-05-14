@@ -1,9 +1,13 @@
 -- Delta Regions
 
 DO $$
-  declare version         text := '1.2.12';
-  declare default_region  text := 'Austin, TX';
-  declare rid             int;
+  declare version             text          := '1.2.12';
+  declare default_region      text          := 'Austin, TX';
+  declare default_state       text          := 'TX';
+  declare default_cities      text[]        := Array['Austin', 'Round Rock', 'Georgetown'];
+  declare default_timezone    text          := 'America/Chicago';
+  declare default_sales_tax   numeric(5,5)  := 0.08250;
+  declare rid                 int;
 begin
   raise notice '## Running Delta v% ##', version;
 
@@ -22,7 +26,13 @@ begin
   select id into rid from regions where name = default_region;
 
   if rid is null then
-    execute 'insert into regions( name ) values ( $1 ) returning id' into rid using default_region;
+    execute 'insert into regions( name, state, cities, timezone, sales_tax ) values ( $1, $2, $3, $4, $5 ) returning id'
+      into rid using
+        default_region
+      , default_state
+      , default_cities
+      , default_timezone
+      , default_sales_tax;
   end if;
 
   perform add_column( 'restaurants', 'region_id', 'int references regions(id)' );
@@ -31,13 +41,12 @@ begin
   perform add_column( 'users', 'default_zip', 'character varying(5)' );
 
   -- Set all data to use the default region
-  update orders set region_id = rid;
   update restaurants set region_id = rid;
   update users set region_id = rid;
 
   -- Update Austin
-  update regions set sales_tax = 0.08250 where id = rid;
-  update regions set timezone = 'America/Chicago' where id = rid;
-  update regions set state = 'TX' where id = rid;
-  update regions set cities = Array['Austin', 'Round Rock', 'Georgetown'] where id = rid;
+  update regions set state = default_state where id = rid;
+  update regions set cities = default_cities where id = rid;
+  update regions set timezone = default_timezone where id = rid;
+  update regions set sales_tax = default_sales_tax where id = rid;
 end$$;

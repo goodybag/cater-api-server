@@ -19,7 +19,10 @@ define(function(require) {
   definition.schema = {
     id:           { type: types.serial, pk: true }
   , name:         { type: types.text, nullable: false, unique: true }
-  , timezone:     { type: types.text, nullable: false, default: 'America/Chicago' }
+  , state:        { type: types.text, nullable: false }
+  , cities:       { type: types.array( types.text ), nullable: false, default: 'Array[]::text[]' }
+  , timezone:     { type: types.text, nullable: false }
+  , sales_tax:    { type: types.numeric( 5, 5 ), nullable: false, default: 0 }
   };
 
   definition.indices = {};

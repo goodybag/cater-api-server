@@ -4,6 +4,18 @@ define(function(require, exports, module) {
 
   return module.exports = utils.Collection.extend({
     model: Order
-  , comparator: 'priority'
+
+  , url: function(){
+      return [
+        '/api/restaurants/'
+      , this.restaurant_id
+      , '/orders'
+      ].join('');
+    }
+
+  , initialize: function( models, options ){
+      this.restaurant_id = options.restaurant_id;
+      return this;
+    }
   });
 });

@@ -7,6 +7,12 @@ var utils       = require('../utils');
 
 dirac.setMoSql( mosql );
 
+dirac.embed = function( options ){
+  return function( dirac ){
+
+  };
+};
+
 dirac.autoJoin = function( options ){
   [
     'target', 'on'
@@ -299,6 +305,25 @@ dirac.use( function(){
     options.operations.forEach( function( op ){
       dirac.dals[ table ].before( op, ensureTotal );
     });
+  });
+});
+
+// Get zips for delivery services
+dirac.use( function(){
+  var options = {
+    operations: ['find', 'findOne']
+  , tables:     ['delivery_services']
+  , target:     'delivery_'
+  };
+
+  dirac.dals.delivery_services.before( 'find', function( $query, schema, next ){
+    $query.columns.push([
+      '(select array_to_json( array('
+    , '  select row_to_json( r ) '
+    , '  from delivery_service_zips r'
+    , '  where r.delivery_service_id = delivery_services.id'
+    , ')) as zips)'
+    ].join('\n'));
   });
 });
 

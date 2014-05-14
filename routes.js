@@ -1009,4 +1009,38 @@ module.exports.register = function(app) {
   , m.owner()
   , controllers.users.rewards.redeem
   );
+
+  /**
+   * Delivery Services
+   */
+
+  app.get('/api/delivery-services'
+  , m.restrict(['admin'])
+  , m.sort('-id')
+  , m.param('region_id')
+  , m.find( db.delivery_services )
+  );
+
+  app.post('/api/delivery-services'
+  , m.restrict(['admin'])
+  , m.insert( db.delivery_services )
+  );
+
+  app.get('/api/delivery-services/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.findOne( db.delivery_services )
+  );
+
+  app.put('/api/delivery-services/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.delivery_services )
+  );
+
+  app.del('/api/delivery-services/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.delivery_services )
+  );
 }

@@ -26,4 +26,5 @@ module.exports = {
 , uuid: require('./uuid')
 , db: require('./db')
 , getGeoFromIp: require('./get-geo-from-ip')
+, queryOptions: require('./query-options')
 };

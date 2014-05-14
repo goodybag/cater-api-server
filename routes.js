@@ -1018,6 +1018,9 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.sort('-id')
   , m.param('region_id')
+  , m.queryOptions({
+      many: [{ table: 'delivery_service_zips' }]
+    })
   , m.find( db.delivery_services )
   );
 

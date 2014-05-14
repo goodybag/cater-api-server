@@ -17,11 +17,11 @@ define(function(require) {
   definition.name = 'delivery_service_zips';
 
   definition.schema = {
-    id:           { type: types.serial, pk: true }
-  , region_id:    { type: types.int, references: { table: 'delivery_services', column: 'id', onDelete: 'cascade' } }
-  , from:         { type: types.varchar(5), nullable: false }
-  , to:           { type: types.varchar(5), nullable: false }
-  , price:        { type: types.int, default: 0, nullable: false }
+    id:                   { type: types.serial, pk: true }
+  , delivery_service_id:  { type: types.int, references: { table: 'delivery_services', column: 'id', onDelete: 'cascade' } }
+  , from:                 { type: types.varchar(5), nullable: false }
+  , to:                   { type: types.varchar(5), nullable: false }
+  , price:                { type: types.int, default: 0, nullable: false }
   };
 
   definition.indices = {};

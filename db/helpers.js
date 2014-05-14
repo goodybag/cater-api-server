@@ -7,12 +7,6 @@ var utils       = require('../utils');
 
 dirac.setMoSql( mosql );
 
-dirac.embed = function( options ){
-  return function( dirac ){
-
-  };
-};
-
 dirac.autoJoin = function( options ){
   [
     'target', 'on'
@@ -324,6 +318,61 @@ dirac.use( function(){
     , '  where r.delivery_service_id = delivery_services.id'
     , ')) as zips)'
     ].join('\n'));
+  });
+});
+
+// Embed queries into each other
+dirac.use( function( dirac ){
+  var options = {
+    operations: ['find', 'findOne']
+  , tmpl: function( data ){
+      return [
+        '(select array_to_json( array('
+      , '  select row_to_json( r ) '
+      , '  from ' + data.target + ' r'
+        // TODO
+        // If user specified where cluase in their many directive
+        // then use that special where clause
+        // Otherwise, take on the following form, but generalized:
+      , '  where r.delivery_service_id = delivery_services.id'
+      , ')) as zips)'
+      ].join('\n')
+    }
+  };
+
+  Object.keys( dirac.dals ).forEach( function( table_name ){
+    var dal = dirac.dals[ table_name ];
+
+    options.operations.forEach( function( op ){
+      dal.before( op, getBeforeOpFn( dal ) );
+      dal.before( op, function( $query, schema, next ){
+        if ( !Array.isArray( $query.many ) ) return next();
+
+        $query.many.forEach( function( target ){
+          var col = options.tmpl({
+            table:  table_name
+          , target: target
+          });
+
+          $query.columns.push( col );
+        });
+      });
+    });
+  });
+});
+
+dirac.use( function( dirac ){
+  // Filter down to dals whose schema contains a `references` key
+  Object.keys( dirac.dals ).filter( function( table_name ){
+    var dal = dirac.dals[ table_name ];
+
+    return Object.keys( dal.schema ).some( function( col_name ){
+      return dal.schema[ col_name ].references;
+    });
+  }).forEach( function( table_name ){
+    var dal = dirac.dals[ table_name ];
+
+
   });
 });
 

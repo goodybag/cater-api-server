@@ -1,7 +1,7 @@
--- #798 - Notifications
+-- #860 Admin Panel Photos
 
 DO $$
-  declare version       text := '1.2.11';
+  declare version       text := '1.2.13';
 begin
   raise notice '## Running Delta v% ##', version;
 

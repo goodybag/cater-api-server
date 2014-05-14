@@ -17,15 +17,13 @@ require( [
     models: {
       restaurant: new Restaurant({{{json restaurant}}})
     , photos: new PhotosCollection(
-        {{#if restaurant_photos}}
-          {{{json restaurant_photos}}}
-        {{else}}
-          []
+        {{#if restaurant_photos}} {{{json restaurant_photos}}}
+        {{else}} []
         {{/if}}
       , { restaurant_id: {{restaurant.id}} })
     },
 
-  defaultLogo: "{{config.defaultLogo}}"
+    defaultLogo: "{{config.defaultLogo}}"
   });
 });
 </script>

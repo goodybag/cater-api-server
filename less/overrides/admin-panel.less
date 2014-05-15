@@ -94,7 +94,7 @@ header {
       margin-left: -10px;
       text-align: center;
     }
-    
+
     .col-checkbox {
       float: left;
       width: 15%;
@@ -134,7 +134,7 @@ header {
 }
 
 ////////
-// Order 
+// Order
 ////////
 
 .page-order {
@@ -146,5 +146,38 @@ header {
 
   #notifications-table .actions {
     min-width: 250px;
+  }
+}
+
+///////
+// Photos
+///////
+// todo move into component
+
+.photo-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  .clearfix();
+}
+
+.photo-list > li.placeholder {
+  border: 2px dotted #f3f3f3;
+  background: none;
+}
+
+.photo-list > li {
+  float: left;
+  width: 30%;
+  margin-right: 2%;
+  margin-bottom: 10px;
+  border: 1px solid #ececec;
+  border-radius: 5px;
+  padding: 7px;
+  background-color: #f3f3f3;
+
+  img {
+    border-radius: 5px;
   }
 }

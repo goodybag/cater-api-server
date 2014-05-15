@@ -176,6 +176,18 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/admin/restaurants/:restaurant_id/photos'
+  , m.restrict('admin')
+  , m.defaultLocals( { active_tab: 'photos'} )
+  , m.restaurant( { param: 'restaurant_id' } )
+  , m.param('restaurant_id')
+  , m.sort('+priority')
+  , m.view('restaurant/edit-photos', db.restaurant_photos, {
+      layout: 'admin/layout-two-column'
+    , method: 'find'
+    })
+  );
+
   app.get('/admin/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 
   /**
@@ -945,6 +957,40 @@ module.exports.register = function(app) {
       controllers.paymentSummaries.emitPaymentSummaryChange({ idField: 'payment_summary_id' })
     )
   , m.remove( db.payment_summary_items )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/photos'
+  , m.restrict( ['client', 'admin'] )
+  , m.param('restaurant_id')
+  , m.find( db.restaurant_photos )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/photos'
+  , m.restrict( 'admin' )
+  , m.queryToBody('restaurant_id')
+  , m.sort('+priority')
+  , m.insert( db.restaurant_photos )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/photos/:id'
+  , m.restrict( ['client', 'admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.findOne( db.restaurant_photos )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/photos/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.update( db.restaurant_photos )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/photos/:id'
+  , m.restrict( ['admin'] )
+  , m.param('restaurant_id')
+  , m.param('id')
+  , m.remove( db.restaurant_photos )
   );
 
   app.get('/api/orders/:oid/items'

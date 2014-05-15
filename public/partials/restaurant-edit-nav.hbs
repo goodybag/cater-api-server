@@ -15,8 +15,12 @@
     <a href="/admin/restaurants/{{restaurant.id}}/tags">Tags</a>
   </li>
   <li {{#eq active_tab "address"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/address">Address</a></li>
+    <a href="/admin/restaurants/{{restaurant.id}}/address">Address</a>
+  </li>
   <li {{#eq active_tab "menu"}}class="active"{{/eq}}>
     <a href="/admin/restaurants/{{restaurant.id}}/menu">Menu</a>
+  </li>
+  <li {{#eq active_tab "photos"}}class="active"{{/eq}}>
+    <a href="/admin/restaurants/{{restaurant.id}}/photos">Photos</a>
   </li>
 </ul>

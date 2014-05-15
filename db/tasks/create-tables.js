@@ -7,7 +7,8 @@ var
 var cli = false;
 
 var definitions = [
-  'users'
+  'regions'
+, 'users'
 , 'groups'
 , 'users-groups'
 , 'tags'

@@ -38,6 +38,9 @@ define(function(require, exports, module) {
         restaurant_ids: {
           type: 'array',
           required: false
+        },
+        region_id: {
+          type: ['number', 'null']
         }
       }
     },

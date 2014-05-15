@@ -6,6 +6,7 @@ var app = require('../app');
 var http = require('http');
 
 require('../lib/events');
+require('../lib/order-notifications');
 
 var server = http.createServer( app );
 

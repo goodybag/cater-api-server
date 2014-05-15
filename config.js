@@ -20,6 +20,9 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, geoipUrl: 'http://freegeoip.net/json/:ip'
+, geoTestIp: '216.201.168.18'
+
 , deniedRecipients: [
     'jag@goodybag.com'
   , 'sarah.southwell@goodybag.com'

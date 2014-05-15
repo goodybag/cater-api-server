@@ -28,7 +28,9 @@ var modifyAttributes = function(callback, err, orders) {
       'is_bad_delivery_time',
       'delivery_zips',
       'lead_times',
-      'max_guests'
+      'max_guests',
+      'sales_tax',
+      'restaurant_timezone'
     ];
     utils.each(orders, function(order) {
       if (order.attributes.restaurant_id != null) {
@@ -46,7 +48,7 @@ var modifyAttributes = function(callback, err, orders) {
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
         utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
 
-        var rate = 1.0825; // default Austin, TX sales tax for now, in future store in and get from restaurant table
+        var rate = order.attributes.restaurant.sales_tax + 1;
         var totalPreTip = (parseInt(order.attributes.sub_total) + parseInt(order.attributes.restaurant.delivery_fee)) * parseFloat(rate);
         order.attributes.total = Math.round(totalPreTip + order.attributes.tip); // in cents
 
@@ -64,6 +66,9 @@ var modifyAttributes = function(callback, err, orders) {
           order.attributes.points = Math.floor(order.attributes.total / 100);
         }
 
+        // Fix the conflict-free property joined from region/restaurant
+        order.attributes.restaurant.timezone = order.attributes.restaurant.restaurant_timezone;
+        delete order.attributes.restaurant.restaurant_timezone;
       } else {
         order.attribtues.restaurant = null;
       }
@@ -153,7 +158,22 @@ module.exports = Model.extend({
     }
 
     var insert = this.attributes.id == null;
-    if (insert) this.attributes.review_token = uuid.v4();
+    if (insert) {
+      this.attributes.review_token = uuid.v4();
+
+      if ( !this.attributes.restaurant_id ){
+        throw new Error('Order cannot save without `restaurant_id`');
+      }
+
+      this.attributes.timezone = {
+        type:     'select'
+      , table:    'regions'
+      , columns:  ['timezone']
+      , joins:    [{ target: 'restaurants', on: { 'region_id': '$regions.id$' } }]
+      , where:    { 'restaurants.id': this.attributes.restaurant_id }
+      , limit:    1
+      };
+    }
     if (this.attributes.adjustment) {
       this.attributes.adjustment_amount = this.attributes.adjustment.amount;
       this.attributes.adjustment_description = this.attributes.adjustment.description;
@@ -713,6 +733,14 @@ module.exports = Model.extend({
       type: 'left'
     , on: {'order_id': '$orders.id$', 'created_at': '$submitted.max$'}
     }
+
+    query.columns.push.apply(
+      query.columns
+    , Restaurant.getRegionColumns({
+        aliases: { timezone: 'restaurant_timezone' }
+      })
+    );
+    query.joins.regions = Restaurant.getRegionJoin();
 
     var unacceptable = [];
     // check zip

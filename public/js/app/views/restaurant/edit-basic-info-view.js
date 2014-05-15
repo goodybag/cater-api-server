@@ -18,6 +18,7 @@ define(function(require, exports, module) {
     , is_hidden:              '#input-hidden'
     , logo_url:               '#input-logo-url'
     , logo_mono_url:          '#input-mono-logo-url'
+    , region_id:              '[name="region_id"]'
     },
 
     fieldGetters: {
@@ -36,6 +37,10 @@ define(function(require, exports, module) {
 
         url = url.split('/').pop();
         return url.split('#')[0];
+      },
+
+      region_id: function(){
+        return +this.$el.find( this.fieldMap.region_id ).val();
       }
     },
 

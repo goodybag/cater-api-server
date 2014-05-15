@@ -138,6 +138,10 @@ define(function(require) {
     , nullable: false
     , default: true
     }
+  , region_id: {
+      type: types.int
+    , references: {table: 'regions', column: 'id', onDelete: 'set null'}
+    }
   };
 
   definition.indices = {};

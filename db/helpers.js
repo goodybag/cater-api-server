@@ -7,6 +7,46 @@ var utils       = require('../utils');
 
 dirac.setMoSql( mosql );
 
+dirac.autoJoin = function( options ){
+  [
+    'target', 'on'
+  ].forEach( function( k ){
+    if ( !options[ k ] ){
+      throw new Error('Missing required property: `' + k + '`');
+    }
+  });
+
+  options = utils.defaults( options || {}, {
+    operations: [ 'find', 'findOne' ]
+  , tables:     []
+  , columns:    []
+  });
+
+  return function( dirac ){
+    var ensureJoin = function( $query, schema, next ){
+      if ( !$query.columns ) $query.columns = ['*'];
+      if ( !$query.joins ) $query.joins = [];
+
+      $query.columns = $query.columns.concat( options.columns.map( function( c ){
+        return [ options.target, c ].join('.');
+      }));
+
+      $query.joins.push({
+        target: options.target
+      , on:     utils.clone( options.on )
+      });
+
+      next();
+    };
+
+    options.tables.forEach( function( table ){
+      options.operations.forEach( function( op ){
+        dirac.dals[ table ].before( op, ensureJoin );
+      });
+    });
+  }
+}
+
 // Fix PG date parsing (`date` type not to be confused with something with a timezone)
 pg.types.setTypeParser( 1082, 'text', function( val ){
   return new Date( val + ' 00:00:00' );
@@ -32,7 +72,7 @@ mosql.registerConditionalHelper('$notExists', { cascade: false }, function( colu
 });
 
 mosql.registerConditionalHelper( '$contains', {cascade: false}, function( column, set, values, collection ) {
-  if (Array.isArray(set)) {
+  if (Array.isArray(set)){
     return column + ' @> ARRAY[' + set.map( function(val) {
       return '$' + values.push(val);
     }).join(', ') + ']';
@@ -208,38 +248,25 @@ dirac.use( function(){
   });
 });
 
+// Always join in region
+dirac.use(
+  dirac.autoJoin({
+    tables:   ['restaurants']
+  , columns:  ['sales_tax', 'timezone']
+  , target:   'regions'
+  , on:       { id: '$restaurants.region_id$' }
+  })
+);
+
 // Ensure restaurant_id is on payment_summary_id records
-dirac.use( function(){
-  var options = {
-    operations: [ 'find', 'findOne' ]
-  , tables:     [ 'payment_summary_items' ]
+dirac.use(
+  dirac.autoJoin({
+    tables:     [ 'payment_summary_items' ]
   , columns:    [ 'restaurant_id' ]
   , target:     'payment_summaries'
   , on:         { id: '$payment_summary_items.payment_summary_id$' }
-  };
-
-  var ensureJoin = function( $query, schema, next ){
-    if ( !$query.columns ) $query.columns = ['*'];
-    if ( !$query.joins ) $query.joins = [];
-
-    $query.columns = $query.columns.concat( options.columns.map( function( c ){
-      return [ options.target, c ].join('.');
-    }));
-
-    $query.joins.push({
-      target: options.target
-    , on:     utils.clone( options.on )
-    });
-
-    next();
-  };
-
-  options.tables.forEach( function( table ){
-    options.operations.forEach( function( op ){
-      dirac.dals[ table ].before( op, ensureJoin );
-    });
-  });
-});
+  })
+);
 
 // Ensure total_payout is calculated when pulling out payment_summaries
 dirac.use( function(){
@@ -277,10 +304,10 @@ dirac.use( function(){
 
 // Log queries to dirac
 // dirac.use( function(){
-//   var query = dirac.DAL.prototype.query;
+//   var query_ = dirac.DAL.prototype.query;
 //   dirac.DAL.prototype.query = function( query, callback ){
 //     console.log( query );
-//     return query.apply( this, arguments );
+//     return query_.apply( this, arguments );
 //   };
 
 //   var raw = dirac.DAL.prototype.raw;

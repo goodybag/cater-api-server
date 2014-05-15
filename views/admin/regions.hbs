@@ -1,0 +1,38 @@
+{{#extend "page"}}page-regions{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <h1>Regions</h1>
+
+  <section class="panel-component" id="regions-table">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Timezone</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each regions}}
+        <tr>
+          <td>{{this.id}}</td>
+          <td>{{this.name}}</td>
+          <td>{{this.timezone}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </section>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['app/pages/admin-regions'], function( page ){
+    page.init({
+
+    });
+  });
+</script>
+{{/extend}}

@@ -24,6 +24,9 @@
         {{#if user.id}}
           <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
           <ul class="nav navbar-nav navbar-right">
+            {{#contains user.groups 'admin'}}
+              <li><a href="/admin">Home</a></li>
+            {{/contains}}
             {{#contains user.groups 'restaurant'}}
               <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
             {{/contains}}

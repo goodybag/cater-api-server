@@ -35,6 +35,9 @@ module.exports.list = function(req, res) {
           { type: 'filter_restaurant_events' }
         , { type: 'favorites', userId: req.user.attributes.id }
         ]
+      , where: {
+          region_id: req.user.attributes.region_id
+        }
       };
       models.Restaurant.find(
         query
@@ -289,7 +292,8 @@ var fields = [
   'billing_zip',
   'gb_fee',
   'is_direct_deposit',
-  'is_fee_on_total'
+  'is_fee_on_total',
+  'region_id'
 ];
 
 module.exports.create = function(req, res) {

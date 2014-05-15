@@ -15,10 +15,14 @@
 }
 
 .navbar .navbar-right {
+  padding-left: 16px;
+}
+
+// Only add margin hack if dropdown is the only element
+.navbar .dropdown:nth-of-type( 1 ) {
   // Hack positioning until I figure out how to make it generalized
   // within the navbar height calculation
   margin-top: 8px;
-  padding-left: 16px;
 }
 
 header {

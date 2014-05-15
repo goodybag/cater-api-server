@@ -30,7 +30,7 @@ var modifyAttributes = function(callback, err, orders) {
       'lead_times',
       'max_guests',
       'sales_tax',
-      'timezone'
+      'restaurant_timezone'
     ];
     utils.each(orders, function(order) {
       if (order.attributes.restaurant_id != null) {
@@ -66,6 +66,9 @@ var modifyAttributes = function(callback, err, orders) {
           order.attributes.points = Math.floor(order.attributes.total / 100);
         }
 
+        // Fix the conflict-free property joined from region/restaurant
+        order.attributes.restaurant.timezone = order.attributes.restaurant.restaurant_timezone;
+        delete order.attributes.restaurant.restaurant_timezone;
       } else {
         order.attribtues.restaurant = null;
       }
@@ -731,7 +734,12 @@ module.exports = Model.extend({
     , on: {'order_id': '$orders.id$', 'created_at': '$submitted.max$'}
     }
 
-    query.columns.push.apply( query.columns, Restaurant.getRegionColumns() );
+    query.columns.push.apply(
+      query.columns
+    , Restaurant.getRegionColumns({
+        aliases: { timezone: 'restaurant_timezone' }
+      })
+    );
     query.joins.regions = Restaurant.getRegionJoin();
 
     var unacceptable = [];

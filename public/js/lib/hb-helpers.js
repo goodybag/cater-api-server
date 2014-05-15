@@ -152,6 +152,23 @@ define(function(require, exports, module) {
       return result;
     },
 
+    floor: function(value) {
+      return Math.floor(value);
+    },
+
+    divide: function(dividend, divisor) {
+      return dividend / divisor;
+    },
+
+    divideFloor: function(dividend, divisor) {
+      console.log(arguments);
+      return helpers.floor( helpers.divide( dividend, divisor ) );
+    },
+
+    mod: function(dividend, divisor) {
+      return dividend % divisor;
+    },
+
     /**
      * Convert array of 10 digit numbers
      * to string of formatted phone numbers

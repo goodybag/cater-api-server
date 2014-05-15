@@ -7,7 +7,7 @@ begin
   raise notice '## Running Delta v% ##', version;
 
   -- Update version
-  -- execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
+  execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
   FOR r IN execute 'SELECT * FROM restaurant_lead_times'
   LOOP

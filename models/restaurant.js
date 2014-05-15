@@ -70,10 +70,29 @@ var Restaurant = module.exports = Model.extend({
     };
   },
 
-  getRegionColumns: function(){
-    return [
-      'regions.sales_tax', 'regions.timezone'
-    ];
+  getRegionColumns: function( options ){
+    options = utils.defaults( options || {}, {
+      table: 'regions'
+    , aliases: {}
+    , columns: ['sales_tax', 'timezone']
+    });
+
+    var columns = [];
+
+    options.columns.forEach( function( col ){
+      var obj = {
+        table:  options.table
+      , name:   col
+      };
+
+      if ( options.aliases[ col ] ){
+        obj.alias = options.aliases[ col ];
+      }
+
+      columns.push( obj );
+    });
+
+    return columns;
   },
 
   findOne: function(query, orderParams, callback) {

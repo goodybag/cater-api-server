@@ -161,7 +161,6 @@ define(function(require, exports, module) {
     },
 
     divideFloor: function(dividend, divisor) {
-      console.log(arguments);
       return helpers.floor( helpers.divide( dividend, divisor ) );
     },
 

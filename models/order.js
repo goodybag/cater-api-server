@@ -155,7 +155,22 @@ module.exports = Model.extend({
     }
 
     var insert = this.attributes.id == null;
-    if (insert) this.attributes.review_token = uuid.v4();
+    if (insert) {
+      this.attributes.review_token = uuid.v4();
+
+      if ( !this.attributes.restaurant_id ){
+        throw new Error('Order cannot save without `restaurant_id`');
+      }
+
+      this.attributes.timezone = {
+        type:     'select'
+      , table:    'regions'
+      , columns:  ['timezone']
+      , joins:    [{ target: 'restaurants', on: { 'region_id': '$regions.id$' } }]
+      , where:    { 'restaurants.id': this.attributes.restaurant_id }
+      , limit:    1
+      };
+    }
     if (this.attributes.adjustment) {
       this.attributes.adjustment_amount = this.attributes.adjustment.amount;
       this.attributes.adjustment_description = this.attributes.adjustment.description;

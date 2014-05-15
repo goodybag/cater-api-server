@@ -215,9 +215,9 @@ define(function(require, exports, module) {
       if ( !limit ) return false;
 
       var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
-      var hours = (moment(date) - moment(now)) / 3600000;
+      var minutes = (moment(date) - moment(now)) / 60000;
 
-      return hours >= limit.lead_time;
+      return minutes >= limit.lead_time;
     },
 
     isValidOrder: function( order ){

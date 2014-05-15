@@ -303,23 +303,23 @@ dirac.use( function(){
 });
 
 // Get zips for delivery services
-dirac.use( function(){
-  var options = {
-    operations: ['find', 'findOne']
-  , tables:     ['delivery_services']
-  , target:     'delivery_'
-  };
+// dirac.use( function(){
+//   var options = {
+//     operations: ['find', 'findOne']
+//   , tables:     ['delivery_services']
+//   , target:     'delivery_'
+//   };
 
-  dirac.dals.delivery_services.before( 'find', function( $query, schema, next ){
-    $query.columns.push([
-      '(select array_to_json( array('
-    , '  select row_to_json( r ) '
-    , '  from delivery_service_zips r'
-    , '  where r.delivery_service_id = delivery_services.id'
-    , ')) as zips)'
-    ].join('\n'));
-  });
-});
+//   dirac.dals.delivery_services.before( 'find', function( $query, schema, next ){
+//     $query.columns.push([
+//       '(select array_to_json( array('
+//     , '  select row_to_json( r ) '
+//     , '  from delivery_service_zips r'
+//     , '  where r.delivery_service_id = delivery_services.id'
+//     , ')) as zips)'
+//     ].join('\n'));
+//   });
+// });
 
 // Embed queries into each other
 dirac.use( function( dirac ){
@@ -330,12 +330,10 @@ dirac.use( function( dirac ){
         '(select array_to_json( array('
       , '  select row_to_json( r ) '
       , '  from ' + data.target + ' r'
-        // TODO
-        // If user specified where cluase in their many directive
-        // then use that special where clause
-        // Otherwise, take on the following form, but generalized:
-      , '  where r.delivery_service_id = delivery_services.id'
-      , ')) as zips)'
+      , ' where ' + data.pivots.map( function( p ){
+                      return 'r.' + p.target_col + ' = ' + data.source + '.' + p.source_col;
+                    }).join(' and ')
+      , ')) as ' + data.alias + ')'
       ].join('\n')
     }
   };
@@ -344,21 +342,51 @@ dirac.use( function( dirac ){
     var dal = dirac.dals[ table_name ];
 
     options.operations.forEach( function( op ){
-      dal.before( op, getBeforeOpFn( dal ) );
       dal.before( op, function( $query, schema, next ){
         if ( !Array.isArray( $query.many ) ) return next();
 
         $query.many.forEach( function( target ){
-          var col = options.tmpl({
-            table:  table_name
-          , target: target
+          var targetDal = dirac.dals[ target.table ];
+
+          if ( !targetDal.dependencies[ table_name ] ){
+            throw new Error( 'Table: `' + target + '` does not depend on `' + table_name + '`' );
+          }
+
+          var pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
+            return {
+              source_col: targetDal.dependencies[ table_name ][ p ]
+            , target_col: p
+            };
           });
+
+          var col = options.tmpl({
+            source:     table_name
+          , target:     target.table
+          , alias:      target.alias || target.table
+          , pivots:     pivots
+          });
+
+          if ( !$query.columns ){
+            $query.columns = ['*'];
+          }
 
           $query.columns.push( col );
         });
+
+        next();
       });
     });
   });
+});
+
+// Setup cached dependency graph for use by relationship helpers
+var init = dirac.DAL.prototype.initialize;
+dirac.DAL = dirac.DAL.extend({
+  initialize: function(){
+    this.dependents   = {};
+    this.dependencies = {};
+    return init.apply( this, arguments );
+  }
 });
 
 dirac.use( function( dirac ){
@@ -372,8 +400,29 @@ dirac.use( function( dirac ){
   }).forEach( function( table_name ){
     var dal = dirac.dals[ table_name ];
 
+    Object.keys( dal.schema ).filter( function( col_name ){
+      return dal.schema[ col_name ].references;
+    }).forEach( function( col_name ){
+      var col = dal.schema[ col_name ];
+      var target = dirac.dals[ col.references.table ];
 
+      if ( !target.dependents[ table_name ] ){
+        target.dependents[ table_name ] = {};
+      }
+
+      if ( !dal.dependencies[ col.references.table ] ){
+        dal.dependencies[ col.references.table ] = {};
+      }
+
+      target.dependents[ table_name ][ col.references.column ] = col_name;
+      dal.dependencies[ col.references.table ][ col_name ] = col.references.column;
+    });
   });
+
+  console.log('delivery_services.dependencies', dirac.dals.delivery_services.dependencies);
+  console.log('delivery_services.dependents', dirac.dals.delivery_services.dependents);
+  console.log('delivery_service_zips.dependencies', dirac.dals.delivery_service_zips.dependencies);
+  console.log('delivery_service_zips.dependents', dirac.dals.delivery_service_zips.dependents);
 });
 
 // Log queries to dirac

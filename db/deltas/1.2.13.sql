@@ -25,7 +25,7 @@ begin
   perform add_column( 'delivery_services', 'region_id', 'int references regions(id) on delete set null' );
   perform add_column( 'delivery_services', 'name', 'text' );
   perform add_column( 'delivery_services', 'rate', 'numeric(5,5) not null default 0' );
-  perform add_column( 'delivery_services', 'created_at', 'timestamp with timezone not null default now()' );
+  perform add_column( 'delivery_services', 'created_at', 'timestamp not null default now()' );
 
   create table if not exists "delivery_service_zips" ();
   perform add_column( 'delivery_service_zips', 'id', 'serial primary key' );
@@ -33,7 +33,7 @@ begin
   perform add_column( 'delivery_service_zips', 'from', 'character varying(5) not null' );
   perform add_column( 'delivery_service_zips', 'to', 'character varying(5) not null' );
   perform add_column( 'delivery_service_zips', 'price', 'int not null default 0' );
-  perform add_column( 'delivery_service_zips', 'created_at', 'timestamp with timezone not null default now()' );
+  perform add_column( 'delivery_service_zips', 'created_at', 'timestamp not null default now()' );
 
   if not exists ( select 1 where constraint_exists( 'delivery_service_zips_from_to_key' ) is true )
   then

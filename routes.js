@@ -1019,7 +1019,7 @@ module.exports.register = function(app) {
   , m.sort('-id')
   , m.param('region_id')
   , m.queryOptions({
-      many: [{ table: 'delivery_service_zips' }]
+      many: [{ table: 'delivery_service_zips', alias: 'zips' }]
     })
   , m.find( db.delivery_services )
   );
@@ -1045,5 +1045,27 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.delivery_services )
+  );
+
+  app.get('/api/users'
+  , m.restrict(['admin'])
+  , m.sort('-id')
+  , m.queryOptions({
+      many: [{ table: 'addresses' }, { table: 'orders' }]
+    })
+  , m.find( db.users )
+  );
+
+  app.get('/api/users/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.sort('-id')
+  , m.queryOptions({
+      many: [
+        { table: 'addresses' }
+      , { table: 'users_groups', alias: 'groups' }
+      ]
+    })
+  , m.find( db.users )
   );
 }

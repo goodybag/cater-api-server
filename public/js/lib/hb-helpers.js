@@ -168,6 +168,12 @@ define(function(require, exports, module) {
       return dividend % divisor;
     },
 
+    leadtime: function(minutes) {
+      var hours = Math.floor(minutes / 60);
+      var minutes = minutes % 60;
+      return hours + ' hrs' + (minutes ? ' ' + minutes + ' mins' : '');
+    },
+
     /**
      * Convert array of 10 digit numbers
      * to string of formatted phone numbers

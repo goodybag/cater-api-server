@@ -160,8 +160,8 @@ define(function(require, exports, module) {
       return dividend / divisor;
     },
 
-    divideFloor: function(dividend, divisor) {
-      return helpers.floor( helpers.divide( dividend, divisor ) );
+    intDivide: function(dividend, divisor) {
+      return Math.floor( dividend / divisor );
     },
 
     mod: function(dividend, divisor) {

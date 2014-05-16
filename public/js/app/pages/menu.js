@@ -25,7 +25,7 @@ define( function( require ){
       var user            = options.user;
       var editToken       = options.editToken;
       var baseUrl         = options.baseUrl;
-      window.orderModel = orderModel;
+
       analytics.page('Menu', {restaurant: restaurant.pick('name')});
 
       page.view = new Views.Menu({

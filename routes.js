@@ -1055,4 +1055,10 @@ module.exports.register = function(app) {
   , m.owner()
   , controllers.users.rewards.redeem
   );
+
+  app.get('/lunchroom/bv'
+  , m.view( 'lunchroom/bv', {
+      layout: 'lunchroom/layout'
+    })
+  );
 }

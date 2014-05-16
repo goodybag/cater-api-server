@@ -141,6 +141,23 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.gb-icon( @icon ) when ( @icon ){
+  content: @icon;
+  border: solid;
+  .gb-icon();
+}
+
+.gb-icon(){
+  font-family: 'gb';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+
 .font-awesome( @icon ){
   .icon-font( @icon );
 }

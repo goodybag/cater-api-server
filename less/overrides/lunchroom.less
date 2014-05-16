@@ -1,0 +1,34 @@
+///////////////////////////////
+// Component->Site Overrides //
+///////////////////////////////
+
+body {
+  padding-top: 100px;
+}
+
+.spotlight-items {
+  #grid > .container();
+
+  .spotlight-item {
+    #grid > .column(4);
+  }
+
+  & + .spotlight-items {
+    margin-top: 50px;
+    padding-top:50px;
+    border-top: solid #ccc 1px;
+  }
+}
+
+.navbar-logo {
+  padding-top: 1px;
+  padding-bottom: 2px;
+}
+
+.my-lunch-allotted-amount {
+  margin-top: 11px;
+}
+
+.my-lunch-actions {
+  margin-top: 28px;
+}

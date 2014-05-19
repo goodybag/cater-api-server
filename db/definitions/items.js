@@ -64,7 +64,7 @@ define(function(require) {
       type: types.json
     , nullable: true
     }
-  , hide: {
+  , is_hidden: {
       type: types.boolean
     , nullable: false
     , default: false

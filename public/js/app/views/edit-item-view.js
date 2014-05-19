@@ -54,7 +54,7 @@ define(function(require, exports, module) {
       tags: function() {
         return _.pluck(this.$el.find(this.fieldMap.tags + ':checked'), 'value');
       },
-      hide: function() {
+      is_hidden: function() {
         return this.$el.find(this.fieldMap.hide).is(':checked');
       }
     },
@@ -67,7 +67,7 @@ define(function(require, exports, module) {
       feeds_max: '.item-feeds-max',
       description: '.item-description',
       tags: '.edit-item-tags input',
-      hide: '.item-hide',
+      is_hidden: '.item-hide',
     },
 
     /**

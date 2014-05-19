@@ -44,7 +44,6 @@ define(function(require, exports, module) {
     removeLeadTime: function(e) {
       e.preventDefault();
       $(e.target).closest('.lead-time').remove();
-      this.onChange(e);
     },
 
     initialize: function() {

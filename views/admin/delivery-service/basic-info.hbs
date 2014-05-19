@@ -10,12 +10,16 @@
     <li>{{delivery_service.name}}</li>
   </ul>
 
-  <h1>Edit Delivery Service</h1>
+  <h1 class="page-title">Edit Delivery Service - {{delivery_service.name}}</h1>
 </div>
 {{/extend}}
 
 {{#extend "nav-col"}}
 {{> admin_delivery_service_sidebar_nav}}
+{{/extend}}
+
+{{#extend "body"}}
+<h2>Heyo</h2>
 {{/extend}}
 
 {{#extend "scripts"}}

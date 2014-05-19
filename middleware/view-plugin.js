@@ -34,7 +34,14 @@ module.exports = function( name, options ){
 
 viewPlugins.sidebarNav = {
   fn: function( options, req, res, done ){
-    options.baseUrl = req.originalUrl;
+    var url = options.baseUrl;
+
+    req.route.keys.forEach( function( key ){
+      url = url.replace( new RegExp( ':' + key.name, 'g' ), req.param( key.name ) )
+    });
+
+    options.baseUrl = url;
+
     done( null, options );
   }
 };

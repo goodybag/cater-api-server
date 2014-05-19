@@ -116,7 +116,10 @@ module.exports.register = function(app) {
   app.get('/admin/delivery-services/:id/basic-info'
   , m.param('id')
   , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
-  , m.viewPlugin( 'sidebarNav', { active: 'basic-info'} )
+  , m.viewPlugin( 'sidebarNav', {
+      active:   'basic-info'
+    , baseUrl:  '/admin/delivery-services/:id'
+    })
   , m.view( 'admin/delivery-service/basic-info', db.delivery_services, {
       layout: 'admin/layout-single-object'
     , method: 'findOne'

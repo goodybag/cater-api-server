@@ -2,7 +2,7 @@
 
 {{#extend "body"}}
 <div class="container" id="main-container">
-  <h1>Delivery Services</h1>
+  <h1 class="page-title">Delivery Services</h1>
 
   <section class="panel-component" id="delivery-services-table">
     <table class="table table-striped">
@@ -14,6 +14,11 @@
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <td colspan="3" class="col-add-new">
+            <a class="btn btn-default btn-large" href="/admin/delivery-services/new">Create New Delivery Service</a>
+          </td>
+        </tr>
       {{#each delivery_services}}
         <tr>
           <td>{{this.id}}</td>

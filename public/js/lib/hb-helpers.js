@@ -444,6 +444,10 @@ define(function(require, exports, module) {
     uncamelize: function( text ){
       var result = text.replace( /([A-Z])/g, " $1" );
       return result.charAt(0).toUpperCase() + result.slice(1);
+    },
+
+    lookup: function( key, obj ){
+      return obj[ key ];
     }
   }
 

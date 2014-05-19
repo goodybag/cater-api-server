@@ -1,0 +1,11 @@
+<script>
+  require(
+    [ 'jquery-loaded', 'app/views/admin/item-form', '{{itemForm.collection}}' ]
+  , function( $, formView, Collection ){
+      new FormView({
+        el: $('{{itemForm.selector}}')
+      , model: new Collection().create({{lookup itemForm.itemProperty this}})
+      });
+    }
+  );
+</script>

@@ -109,12 +109,46 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/admin/delivery-services/new'
+  , m.db.regions.find( {}, { limit: 'all' } )
+  , m.viewPlugin( 'sidebarNav', {
+      active:   'basic-info'
+    , baseUrl:  '/admin/delivery-services/new'
+    , isNew:    true
+    })
+  , m.viewPlugin( 'itemForm', {
+      selector:     '#create-item-form'
+    , collection:   'app/collections/delivery-services'
+    , itemProperty: 'delivery_service'
+    })
+  , m.view( 'admin/delivery-service/new-item', {
+      layout: 'admin/layout-single-object'
+    })
+  );
+
+  // app.post('/admin/delivery-services/new'
+  // , m.db.regions.find( {}, { limit: 'all' } )
+  // , m.viewPlugin( 'sidebarNav', {
+  //     active:   'basic-info'
+  //   , baseUrl:  '/admin/delivery-services/new'
+  //   , isNew:    true
+  //   })
+  // , m.view( 'admin/delivery-service/new-item', db.delivery_services, {
+  //     layout: 'admin/layout-single-object'
+  //   , method: 'insert'
+  //   })
+  // , m.after( function( req, res, next ){
+
+  //   })
+  // );
+
   app.get('/admin/delivery-services/:id'
   , m.redirect('/admin/delivery-services/:id/basic-info')
   );
 
   app.get('/admin/delivery-services/:id/basic-info'
   , m.param('id')
+  , m.db.regions.find( {}, { limit: 'all' } )
   , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
   , m.viewPlugin( 'sidebarNav', {
       active:   'basic-info'

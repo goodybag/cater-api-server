@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{cdn "/dist/order-manifest.css"}}">
+    {{{block "css"}}}
+
+    <script src="/components/jquery/jquery.js"></script>
+
+    {{!-- Cannot find out why file is forbidden in s3 --}}
+    <script src="/js/pdf/utils.js"></script>
+    {{{block "scripts"}}}
+  </head>
+  <body>
+    {{{block "body"}}}
+  </body>
+</html>

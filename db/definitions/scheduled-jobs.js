@@ -39,6 +39,10 @@ define(function(require) {
   , datetime: {
       type: types.timestamptz
     }
+  , predicate_id: {
+      type: types.int
+    , references: { table: 'scheduled_jobs', column: 'id' }
+    }
   };
 
   definition.indices = {};

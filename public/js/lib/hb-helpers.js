@@ -65,10 +65,6 @@ define(function(require, exports, module) {
       return arr ? arr.join(', ') : '';
     },
 
-    join: function( list, separator ) {
-      return utils.isArray( list ) ? list.join( separator || ', ' ) : list;
-    },
-
     list: function( list ){
       return [
         '<ul>'
@@ -461,6 +457,14 @@ define(function(require, exports, module) {
       return [ config.cdn.baseUrl ].concat(
         Array.prototype.slice.call( arguments, 0, - 1 )
       ).join('/');
+    },
+
+    join: function( set, joiner, prop ){
+      if ( typeof prop === 'string' ){
+        set = utils.pluck( set, prop );
+      }
+
+      return utils.isArray( set ) ? set.join( joiner || ', ' ) : set;
     },
 
     uncamelize: function( text ){

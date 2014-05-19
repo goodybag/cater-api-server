@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: os.cpus().length
 
+, tmpDir: './tmp'
 , geoipUrl: 'http://freegeoip.net/json/:ip'
 , geoTestIp: '216.201.168.18'
 

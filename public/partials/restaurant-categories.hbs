@@ -7,29 +7,31 @@
       </div>
       <div class="list-group list-group-flush category" id="category-{{id}}">
         {{#each items}}
-        <a href="#" class="list-group-item item" id="item-{{id}}">
-          <div class="row">
-            <h5 class="list-group-item-heading col-sm-7">
-              {{name}}
-              {{>tags tags}}
-            </h5>
-            <dl class="item-legend col-sm-5">
-              <div class="feeds-price-wrapper">
-                <div class="feeds">
-                  <dt>Feeds</dt>
-                  <dd>{{range feeds_min feeds_max}}</dd>
+          {{#unless hide}}
+          <a href="#" class="list-group-item item" id="item-{{id}}">
+            <div class="row">
+              <h5 class="list-group-item-heading col-sm-7">
+                {{name}}
+                {{>tags tags}}
+              </h5>
+              <dl class="item-legend col-sm-5">
+                <div class="feeds-price-wrapper">
+                  <div class="feeds">
+                    <dt>Feeds</dt>
+                    <dd>{{range feeds_min feeds_max}}</dd>
+                  </div>
+                  <div class="price">
+                    <dt>Price</dt>
+                    <dd>{{dollars price}}</dd>
+                  </div>
                 </div>
-                <div class="price">
-                  <dt>Price</dt>
-                  <dd>{{dollars price}}</dd>
-                </div>
-              </div>
-            </dl>
-          </div>
-          <div class="row">
-            <p class="list-group-item-text col-sm-7">{{description}}</p>
-          </div>
-        </a>
+              </dl>
+            </div>
+            <div class="row">
+              <p class="list-group-item-text col-sm-7">{{description}}</p>
+            </div>
+          </a>
+          {{/unless}}
         {{/each}}
       </div>
     </div>

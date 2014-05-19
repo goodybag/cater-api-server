@@ -21,6 +21,11 @@
       <label>Description</label>
       <textarea class="item-description form-control" rows="3">{{description}}</textarea>
     </div>
+    <div class="row row-hide">
+      <label>
+        Hide <input class="item-hide" type="checkbox" {{#if hide}}checked="checked"{{/if}}>
+      </label>
+    </div>
     <div class="row row-actions">
       <a href="#" class="item-edit-options">+ Edit Options</a>
       <button class="btn btn-default item-copy">Copy</button>

@@ -388,7 +388,8 @@ config.production = {
 , isProduction: true
 
 , cdn: {
-    baseUrl: 'https://s3.amazonaws.com/cater-cdn-prod'
+    // baseUrl: 'https://s3.amazonaws.com/cater-cdn-prod'
+    baseUrl: 'https://www.goodybag.com'
   , bucket: 'cater-cdn-prod'
   }
 

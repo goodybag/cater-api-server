@@ -116,7 +116,8 @@ define(function(require, exports, module) {
       billing_zip: '.restaurant-form [name="billing_zip"]',
       gb_fee: '.restaurant-form [name="gb_fee"]',
       is_direct_deposit: '.restaurant-form [name="is_direct_deposit"]',
-      is_fee_on_total: '.restaurant-form [name="is_fee_on_total"]'
+      is_fee_on_total: '.restaurant-form [name="is_fee_on_total"]',
+      region_id: '.restaurant-form [name="region_id"]'
     },
 
     fieldSplit: function(selector, delimiter) {
@@ -219,6 +220,10 @@ define(function(require, exports, module) {
         var val = this.$el.find( this.fieldMap.gb_fee ).val();
         val = Handlebars.helpers.percentToFactor( val, 5 );
         return val;
+      },
+
+      region_id: function(){
+        return +this.$el.find( this.fieldMap.region_id ).val();
       }
     },
 

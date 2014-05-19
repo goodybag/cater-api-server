@@ -279,287 +279,305 @@ var inserts = {
   }
 }
 
-utils.async.series(
-  {
-    restaurants: function(cb) {
-      console.log("populating restaurants");
-      utils.async.times(10, function(n, callback){
-        var tasks = {
-          fake: function(cbWaterfall){
-            console.log('\trestaurants-task-fake');
-            var data = {
-              name: faker.Company.companyName()
-            , street: faker.Address.streetAddress()
-            , city: faker.Address.city()
-            , state: faker.Address.usState(true)
-            , zip: faker.Address.zipCodeFormat(0)
-            , price: faker.Helpers.randomNumber(5) + 1
-            , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
-            , is_hidden: false
-            , websites: ['http://poop.com']
-            };
-            cbWaterfall(null, data);
-          }
-        , createBalancedBankAccount: function(fake, cbWaterfall){
-            console.log('\trestaurants-task-create-balanced-bank-account');
-            var fakeBankAccount = _.sample(fakeBankAccounts, 1)[0];
-            utils.balanced.BankAccounts.create({
-              name: fake.name
-            , account_number: fakeBankAccount.accountNumber
-            , routing_number: fakeBankAccount.routingNumber
-            , type: 'checking'
-            }, function(error, bankAccount){
-              if (error) return cbWaterfall(error);
-              return cbWaterfall(null, fake, bankAccount);
-            });
-          }
-        , createPaymentMethod: function(fake, bankAccount, cbWaterfall){
-            console.log('\trestaurants-task-create-payment-method');
-            query(inserts.paymentMethods('bank', bankAccount.uri, bankAccount), function(error, result){
-              return cbWaterfall(error, fake, bankAccount);
-            });
-          }
-        , createBalancedCustomer: function(fake, bankAccount, cbWaterfall){
-            console.log('\trestaurants-task-create-balanced-customer');
-            utils.balanced.Customers.create({
-              name: fake.name
-            , bank_account_uri: bankAccount.uri
-            }, function(error, customer){
-              if (error) return cbWaterfall(error);
-              fake.balanced_customer_uri = customer.uri;
-              return cbWaterfall(null, fake);
-            });
-          }
-        , createRestaurant: function(fake, cbWaterfall){
-            console.log('\trestaurants-task-create-restaurant');
-            query(inserts.restaurants(fake), cbWaterfall);
-          }
-        , createContact: function(restaurant, cbWaterfall){
-            console.log('\trestaurants-task-create-contact');
-            query(inserts.contacts(restaurant[0].id), cbWaterfall);
-          }
-        };
-        utils.async.waterfall(
-          [
-            tasks.fake
-          , tasks.createBalancedBankAccount
-          , tasks.createPaymentMethod
-          , tasks.createBalancedCustomer
-          , tasks.createRestaurant
-          , tasks.createContact
-          ]
-        , function(error, results) {
-            callback(error);
-          }
-        );
+utils.async.waterfall([
+  function(cb) {
+    console.log('populating regions')
+    var data = {
+      name: 'Austin, TX'
+    , state: 'TX'
+    , cities: ['Austin', 'Round Rock', 'Georgetown']
+    , timezone: 'America/Chicago'
+    , sales_tax: 0.0825
+    };
 
-      }, function(error, results){
-        // console.log('called1');
-        cb(error);
-      });
-    }
-  , categories: function(cb) {
-      console.log("populating categories");
-      query(select('restaurants'), function(error, results){
-        utils.async.timesSeries(results.length, function(n, callback){
-          utils.async.timesSeries(10, function(x, callback2){
-            query(inserts.categories(results[n].id), callback2);
-          }, function(error, results){
-            // console.log('called-sub-2');
-            callback(error);
-          });
-        }, function(error, results){
-          // console.log('called2');
-          cb(error);
-        });
-      });
-    }
-  , items: function(cb) {
-      console.log("populating items");
-      query(select('categories'), function(error, results){
-        utils.async.timesSeries(results.length, function(n, callback){
-          utils.async.timesSeries(10, function(x, callback2){
-            query(inserts.items(results[n].restaurant_id, results[n].id), callback2);
-          }, function(error, results){
-            // console.log('called-sub-3');
-            callback(error);
-          });
-        }, function(error, results){
-          // console.log('called3');
-          cb(error);
-        });
-      });
-    }
-  , restaurantLeadTimes: function(cb) {
-      console.log("populating restaurant_lead_times");
-      query(select('restaurants'), function(error, results){
-        utils.async.timesSeries(results.length, function(n, callback){
-          var max1 = Math.floor(Math.random() * 50)+50;
-          var max2 = Math.floor(Math.random() * 50)+50+max1;
-          var max3 = Math.floor(Math.random() * 50)+50+max2;
-          utils.async.series({
-            '24-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, max1 , 24), callback2);}
-          , '48-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, max2, 48), callback2);}
-          , '72-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, max3, 72), callback2);}
-          }, function(error, results){
-              // console.log('called-sub-4');
-              callback(error);
-          });
-        }, function(error, results){
-          // console.log('called4');
-          cb(error);
-        });
-      });
-    }
-  , restaurantDeliveryZips: function(cb) {
-      console.log("populating restaurant_delivery_zips");
-      query(select('restaurants'), function(error, results){
-        utils.async.timesSeries(results.length, function(n, callback){
-          austinZipCodes.sort(arrayRandomize);
-          utils.async.timesSeries(10, function(x, callback2){
-            query(
-              inserts.restaurantDeliveryZips(
-                results[n].id
-              , austinZipCodes[x]
-              , delivery_fees[ x % delivery_fees.length ]
-              )
-            , callback2
-            );
-          }, function(error, results){
-            // console.log('called-sub-3');
-            callback(error);
-          });
-        }, function(error, results){
-          // console.log('called4');
-          cb(error);
-        });
-      });
-    }
-  , restaurantDeliveryTimes: function(cb) {
-      console.log('populating restaurant_delivery_times');
-      query(select('restaurants'), function(error, results) {
-        if (error) return cb(error);
-        utils.async.each(results, function(restaurant, callback) {
-          // provide at least one day open
-          var days = utils.first(utils.shuffle(utils.range(7)), faker.random.number(6)+1); 
-          utils.async.each(days, function(day, callback2) {
-            query(inserts.restaurantDeliveryTimes(restaurant.id, day), callback2);
-          }, callback)
-        }, cb);
-      });
-    }
-  , users: function(cb) {
-      console.log("populating users");
+    query({
+      type: 'insert'
+    , table: 'regions'
+    , values: data
+    , returning: ['*']
+    }, function( error, results ){ cb( error, results ? results[0] : null ); });
+  }
 
+, function(region, cb) {
+    console.log("populating restaurants");
+    utils.async.times(10, function(n, callback){
       var tasks = {
-        encryptPassword: utils.partial(utils.encryptPassword, 'password')
-      , fake: function(hash, salt, cbWaterfall){
-          console.log('\tusers-task-fake');
+        fake: function(cbWaterfall){
+          console.log('\trestaurants-task-fake');
           var data = {
-            name: 'Goodybag Admin'
-          , organization: 'Goodybag, Inc.'
-          , email: config.testEmail
-          , password: hash
+            name: faker.Company.companyName()
+          , street: faker.Address.streetAddress()
+          , city: faker.Address.city()
+          , state: faker.Address.usState(true)
+          , zip: faker.Address.zipCodeFormat(0)
+          , price: faker.Helpers.randomNumber(5) + 1
+          , cuisine: faker.Lorem.words(faker.Helpers.randomNumber(4))
+          , is_hidden: false
+          , websites: ['http://poop.com']
+          , region_id: region.id
           };
           cbWaterfall(null, data);
-      }
-      , createBalancedCreditCard: function(fake, cbWaterfall){
-          console.log('\tusers-task-create-balanced-credit-card');
-          var fakeCreditCard = _.sample(fakeCreditCards, 1)[0];
-          utils.balanced.Cards.create({
-            card_number: fakeCreditCard.number
-          , expiration_year: 2025
-          , expiration_month: 12
-          , security_code: fakeCreditCard.securityCode
-          }, function(error, creditCard){
+        }
+      , createBalancedBankAccount: function(fake, cbWaterfall){
+          console.log('\trestaurants-task-create-balanced-bank-account');
+          var fakeBankAccount = _.sample(fakeBankAccounts, 1)[0];
+          utils.balanced.BankAccounts.create({
+            name: fake.name
+          , account_number: fakeBankAccount.accountNumber
+          , routing_number: fakeBankAccount.routingNumber
+          , type: 'checking'
+          }, function(error, bankAccount){
             if (error) return cbWaterfall(error);
-            return cbWaterfall(null, fake, creditCard);
+            return cbWaterfall(null, fake, bankAccount);
           });
         }
-      , createPaymentMethod: function(fake, creditCard, cbWaterfall){
-          console.log('\tusers-task-create-payment-method');
-          query(inserts.paymentMethods('card', creditCard.uri, creditCard), function(error, rows){
-            return cbWaterfall(error, fake, creditCard, rows[0]);
+      , createPaymentMethod: function(fake, bankAccount, cbWaterfall){
+          console.log('\trestaurants-task-create-payment-method');
+          query(inserts.paymentMethods('bank', bankAccount.uri, bankAccount), function(error, result){
+            return cbWaterfall(error, fake, bankAccount);
           });
         }
-      , createBalancedCustomer: function(fake, creditCard, paymentMethod, cbWaterfall){
-          console.log('\tusers-task-create-balanced-customer');
+      , createBalancedCustomer: function(fake, bankAccount, cbWaterfall){
+          console.log('\trestaurants-task-create-balanced-customer');
           utils.balanced.Customers.create({
-            name: fake.first_name + ' ' + fake.last_name
-          , card_uri: creditCard.uri
+            name: fake.name
+          , bank_account_uri: bankAccount.uri
           }, function(error, customer){
             if (error) return cbWaterfall(error);
             fake.balanced_customer_uri = customer.uri;
-            return cbWaterfall(null, fake, paymentMethod);
+            return cbWaterfall(null, fake);
           });
         }
-      , createUser: function(fake, paymentMethod, cbWaterfall){
-          console.log('\tusers-task-create-user');
-          query({
-            type: 'insert'
-          , table: 'users'
-          , values: fake
-          , returning: ['id']
-          }, function(error, rows){
-            if(error) return cbWaterfall(error);
-            cbWaterfall(null, rows[0], paymentMethod);
-          });
+      , createRestaurant: function(fake, cbWaterfall){
+          console.log('\trestaurants-task-create-restaurant');
+          query(inserts.restaurants(fake), cbWaterfall);
         }
-      , createUserGroup: function(user, paymentMethod, cbWaterfall) {
-          console.log('\tusers-task-add-user-to-group');
-          query({
-            type: 'insert'
-          , table: 'users_groups'
-          , values: {user_id: user.id, group: 'admin'}
-          }, function(error, result){
-            if (error) return cbWaterfall(error);
-            cbWaterfall(null, user, paymentMethod);
-          });
+      , createContact: function(restaurant, cbWaterfall){
+          console.log('\trestaurants-task-create-contact');
+          query(inserts.contacts(restaurant[0].id), cbWaterfall);
         }
-      , createUserPaymentMethod: function(user, paymentMethod, cbWaterfall) {
-          console.log('\tusers-task-add-create-user-payment-method');
-          query({
-            type: 'insert'
-          , table: 'users_payment_methods'
-          , values: {
-              user_id: user.id
-            , payment_method_id: paymentMethod.id
-            }
-          }, function(error, result){
-            if (error) return cbWaterfall(error);
-            cbWaterfall(null, result);
-          });
-        }
-      }
+      };
       utils.async.waterfall(
         [
-          tasks.encryptPassword
-        , tasks.fake
-        , tasks.createBalancedCreditCard
+          tasks.fake
+        , tasks.createBalancedBankAccount
         , tasks.createPaymentMethod
         , tasks.createBalancedCustomer
-        , tasks.createUser
-        , tasks.createUserGroup
-        , tasks.createUserPaymentMethod
+        , tasks.createRestaurant
+        , tasks.createContact
         ]
-      , function(error, results){
-          cb(error);
+      , function(error, results) {
+          callback(error);
         }
       );
-    }
-  , mealStyles: function(cb) {
-      utils.async.waterfall([
-        function(next) {
-          query(inserts.mealStyles('Group'), next);
-        },
 
-        function(arg, next) {
-          query(inserts.mealStyles('Individual'), next);
-        }
-      ], cb);
-    }
+    }, function(error, results){
+      // console.log('called1');
+      cb(error, region);
+    });
   }
-, function(error, results) {
+, function(region, cb) {
+    console.log("populating categories");
+    query(select('restaurants'), function(error, results){
+      utils.async.timesSeries(results.length, function(n, callback){
+        utils.async.timesSeries(10, function(x, callback2){
+          query(inserts.categories(results[n].id), callback2);
+        }, function(error, results){
+          // console.log('called-sub-2');
+          callback(error);
+        });
+      }, function(error, results){
+        // console.log('called2');
+        cb(error, region);
+      });
+    });
+  }
+, function(region, cb) {
+    console.log("populating items");
+    query(select('categories'), function(error, results){
+      utils.async.timesSeries(results.length, function(n, callback){
+        utils.async.timesSeries(10, function(x, callback2){
+          query(inserts.items(results[n].restaurant_id, results[n].id), callback2);
+        }, function(error, results){
+          // console.log('called-sub-3');
+          callback(error);
+        });
+      }, function(error, results){
+        // console.log('called3');
+        cb(error, region);
+      });
+    });
+  }
+, function(region, cb) {
+    console.log("populating restaurant_lead_times");
+    query(select('restaurants'), function(error, results){
+      utils.async.timesSeries(results.length, function(n, callback){
+        var max1 = Math.floor(Math.random() * 50)+50;
+        var max2 = Math.floor(Math.random() * 50)+50+max1;
+        var max3 = Math.floor(Math.random() * 50)+50+max2;
+        utils.async.series({
+          '24-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, max1 , 24), callback2);}
+        , '48-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, max2, 48), callback2);}
+        , '72-hours': function(callback2){query(inserts.restaurantLeadTimes(results[n].id, max3, 72), callback2);}
+        }, function(error, results){
+            // console.log('called-sub-4');
+            callback(error);
+        });
+      }, function(error, results){
+        // console.log('called4');
+        cb(error, region);
+      });
+    });
+  }
+, function(region, cb) {
+    console.log("populating restaurant_delivery_zips");
+    query(select('restaurants'), function(error, results){
+      utils.async.timesSeries(results.length, function(n, callback){
+        austinZipCodes.sort(arrayRandomize);
+        utils.async.timesSeries(10, function(x, callback2){
+          query(
+            inserts.restaurantDeliveryZips(
+              results[n].id
+            , austinZipCodes[x]
+            , delivery_fees[ x % delivery_fees.length ]
+            )
+          , callback2
+          );
+        }, function(error, results){
+          // console.log('called-sub-3');
+          callback(error);
+        });
+      }, function(error, results){
+        // console.log('called4');
+        cb(error, region);
+      });
+    });
+  }
+, function(region, cb) {
+    console.log('populating restaurant_delivery_times');
+    query(select('restaurants'), function(error, results) {
+      if (error) return cb(error);
+      utils.async.each(results, function(restaurant, callback) {
+        // provide at least one day open
+        var days = utils.first(utils.shuffle(utils.range(7)), faker.random.number(6)+1);
+        utils.async.each(days, function(day, callback2) {
+          query(inserts.restaurantDeliveryTimes(restaurant.id, day), callback2);
+        }, callback)
+      }, function( error ){ cb( error, region ); });
+    });
+  }
+, function(region, cb) {
+    console.log("populating users");
+
+    var tasks = {
+      encryptPassword: utils.partial(utils.encryptPassword, 'password')
+    , fake: function(hash, salt, cbWaterfall){
+        console.log('\tusers-task-fake');
+        var data = {
+          name: 'Goodybag Admin'
+        , organization: 'Goodybag, Inc.'
+        , email: config.testEmail
+        , password: hash
+        , region_id: region.id
+        };
+        cbWaterfall(null, data);
+    }
+    , createBalancedCreditCard: function(fake, cbWaterfall){
+        console.log('\tusers-task-create-balanced-credit-card');
+        var fakeCreditCard = _.sample(fakeCreditCards, 1)[0];
+        utils.balanced.Cards.create({
+          card_number: fakeCreditCard.number
+        , expiration_year: 2025
+        , expiration_month: 12
+        , security_code: fakeCreditCard.securityCode
+        }, function(error, creditCard){
+          if (error) return cbWaterfall(error);
+          return cbWaterfall(null, fake, creditCard);
+        });
+      }
+    , createPaymentMethod: function(fake, creditCard, cbWaterfall){
+        console.log('\tusers-task-create-payment-method');
+        query(inserts.paymentMethods('card', creditCard.uri, creditCard), function(error, rows){
+          return cbWaterfall(error, fake, creditCard, rows[0]);
+        });
+      }
+    , createBalancedCustomer: function(fake, creditCard, paymentMethod, cbWaterfall){
+        console.log('\tusers-task-create-balanced-customer');
+        utils.balanced.Customers.create({
+          name: fake.first_name + ' ' + fake.last_name
+        , card_uri: creditCard.uri
+        }, function(error, customer){
+          if (error) return cbWaterfall(error);
+          fake.balanced_customer_uri = customer.uri;
+          return cbWaterfall(null, fake, paymentMethod);
+        });
+      }
+    , createUser: function(fake, paymentMethod, cbWaterfall){
+        console.log('\tusers-task-create-user');
+        query({
+          type: 'insert'
+        , table: 'users'
+        , values: fake
+        , returning: ['id']
+        }, function(error, rows){
+          if(error) return cbWaterfall(error);
+          cbWaterfall(null, rows[0], paymentMethod);
+        });
+      }
+    , createUserGroup: function(user, paymentMethod, cbWaterfall) {
+        console.log('\tusers-task-add-user-to-group');
+        query({
+          type: 'insert'
+        , table: 'users_groups'
+        , values: {user_id: user.id, group: 'admin'}
+        }, function(error, result){
+          if (error) return cbWaterfall(error);
+          cbWaterfall(null, user, paymentMethod);
+        });
+      }
+    , createUserPaymentMethod: function(user, paymentMethod, cbWaterfall) {
+        console.log('\tusers-task-add-create-user-payment-method');
+        query({
+          type: 'insert'
+        , table: 'users_payment_methods'
+        , values: {
+            user_id: user.id
+          , payment_method_id: paymentMethod.id
+          }
+        }, function(error, result){
+          if (error) return cbWaterfall(error);
+          cbWaterfall(null, result);
+        });
+      }
+    }
+    utils.async.waterfall(
+      [
+        tasks.encryptPassword
+      , tasks.fake
+      , tasks.createBalancedCreditCard
+      , tasks.createPaymentMethod
+      , tasks.createBalancedCustomer
+      , tasks.createUser
+      , tasks.createUserGroup
+      , tasks.createUserPaymentMethod
+      ]
+    , function(error, results){
+        cb(error);
+      }
+    );
+  }
+, function(cb) {
+    utils.async.waterfall([
+      function(next) {
+        query(inserts.mealStyles('Group'), next);
+      },
+
+      function(arg, next) {
+        query(inserts.mealStyles('Individual'), next);
+      }
+    ], cb);
+  }
+], function(error, results) {
   if (error) console.error(error);
   process.exit(0);
   }

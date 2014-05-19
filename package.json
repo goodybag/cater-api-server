@@ -67,11 +67,18 @@
     "node-uuid": "1.4.x",
     "npm": "*",
     "okay": "0.3.x",
+<<<<<<< HEAD
     "path-to-regexp": "^0.1.2",
+=======
+>>>>>>> master
     "pg": "2.3.x",
     "pg-parse-float": "0.0.x",
     "pg-query": "~0.3.0",
     "pg-transaction": "1.0.x",
+<<<<<<< HEAD
+=======
+    "pluralize": "0.0.9",
+>>>>>>> master
     "request": "2.25.x",
     "rollbar": "0.2.x",
     "selenium-webdriver": "~2.40.0",

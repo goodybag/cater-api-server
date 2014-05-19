@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 
     var val = order.sub_total + order.restaurant.delivery_fee;
 
-    return Math.round( val * config.taxRate );
+    return Math.round( val * order.restaurant.sales_tax );
   };
 
   var helpers = {

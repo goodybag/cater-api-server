@@ -1,0 +1,45 @@
+<div class="edit-photos">
+  <h2>Photos</h2>
+  <ul class="photo-list draggable">
+  {{#each restaurant_photos}}
+    <li data-id="{{id}}">
+      <form class="form-update-photo form-vertical">
+        <div class="form-group">
+          <img data-name="url" src="{{filepicker url 200 200}}">
+          <input type="filepicker" class="form-control btn btn-default btn-block" name="url" value="{{url}}">
+        </div>
+        <div class="form-group">
+          <input type="text" name="name" value="{{name}}" placeholder="Name">
+        </div>
+        <div class="form-group">
+          <textarea name="description" rows="3" placeholder="Description">{{description}}</textarea>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Update</button>
+          <button class="btn btn-default btn-remove-photo">Remove</button>
+        </div>
+      </form>
+    </li>
+  {{/each}}
+  </ul>
+
+  <h2>Upload photo</h2>
+  <form class="form-add-photo ap-form form-vertical">
+    <img data-name="url" src="{{filepicker config.defaultLogo 200 200}}">
+    <input type="filepicker" class="form-control btn btn-default btn-block" name="url">
+
+    <div class="form-group">
+      <label>Name
+        <input type="text" name="name" placeholder="Name">
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Description
+        <textarea name="description" placeholder="Description" rows="3"></textarea>
+      </label>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary">Add</button>
+    </div>
+  </form>
+</div>

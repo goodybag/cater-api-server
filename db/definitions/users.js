@@ -58,6 +58,13 @@ define(function(require) {
     , checks: [ '>= 0']
     , default: 0
     }
+  , region_id: {
+      type: types.int
+    , references: {table: 'regions', column: 'id', onDelete: 'set null'}
+    }
+  , default_zip: {
+      type: types.varchar(5)
+    }
   };
 
   definition.indices = {};

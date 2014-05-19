@@ -7,7 +7,8 @@ var
 var cli = false;
 
 var definitions = [
-  'users'
+  'regions'
+, 'users'
 , 'groups'
 , 'users-groups'
 , 'tags'
@@ -25,6 +26,7 @@ var definitions = [
 , 'restaurant-meal-types'
 , 'restaurant-meal-styles'
 , 'restaurant-events'
+, 'restaurant-photos'
 , 'orders'
 , 'categories'
 , 'items'

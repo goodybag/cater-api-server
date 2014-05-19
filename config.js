@@ -21,6 +21,9 @@ config.defaults = {
   numWorkers: os.cpus().length
 
 , tmpDir: './tmp'
+, geoipUrl: 'http://freegeoip.net/json/:ip'
+, geoTestIp: '216.201.168.18'
+
 , deniedRecipients: [
     'jag@goodybag.com'
   , 'sarah.southwell@goodybag.com'
@@ -48,6 +51,10 @@ config.defaults = {
   , { start: '2014-05-05 00:00:00', end: '2014-05-06 00:00:00', rate: 2.0 }
   , { start: '2014-05-12 00:00:00', end: '2014-05-13 00:00:00', rate: 2.0 }
   , { start: '2014-05-19 00:00:00', end: '2014-05-20 00:00:00', rate: 2.0 }
+  , { start: '2014-05-26 00:00:00', end: '2014-05-27 00:00:00', rate: 2.0 }
+  , { start: '2014-06-02 00:00:00', end: '2014-06-03 00:00:00', rate: 2.0 }
+  , { start: '2014-06-09 00:00:00', end: '2014-06-10 00:00:00', rate: 2.0 }
+  , { start: '2014-06-16 00:00:00', end: '2014-06-17 00:00:00', rate: 2.0 }
   ]
 
 , welcome: {

@@ -1,0 +1,25 @@
+{{#extend "page"}}page-home{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <h1>Welcome to the Goodybag WizWog Panel</h1>
+
+  <section class="panel-component" id="admin-portal">
+    <h2 class="panel-title">Click a link below to begin your journey</h2>
+    <ul>
+      <li><a href="/restaurants/edit">Restaurants</a></li>
+      <li><a href="/admin/regions">Regions</a></li>
+    </ul>
+  </section>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['app/pages/admin-home'], function( page ){
+    page.init({
+
+    });
+  });
+</script>
+{{/extend}}

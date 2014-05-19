@@ -24,36 +24,19 @@
         {{#if user.id}}
           <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
           <ul class="nav navbar-nav navbar-right">
-            {{#contains user.groups 'admin'}}
-              <li><a href="/admin">Home</a></li>
-            {{/contains}}
-            {{#contains user.groups 'restaurant'}}
-              <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
-            {{/contains}}
-            {{#if session.oldUser}}
             <li>
-              <a href="/users/return" class="users-return navbar-btn">
-                Return to {{session.oldUser.name}}
-              </a>
+              <a href="/admin">Home</a>
             </li>
-            {{/if}}
+            <li class="{{#eq activeTab 'restaurants'}}active{{/eq}}">
+              <a href="/admin/restaurants">Restaurants</a>
+            </li>
+            <li class="{{#eq activeTab 'regions'}}active{{/eq}}">
+              <a href="/admin/regions">Regions</a>
+            </li>
+            <li class="{{#eq activeTab 'delivery-services'}}active{{/eq}}">
+              <a href="/admin/delivery-services">Delivery Services</a>
+            </li>
             {{{block "navbar-links"}}}
-            <li class="nav-account dropdown">
-              <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
-                {{#if user.name }} {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="/users/me">My Settings</a></li>
-                <li><a href="/users/me/orders">My Orders</a></li>
-                <li><a href="/users/me/rewards">My Rewards</a></li>
-                <li><a href="/auth/logout">Logout</a></li>
-                {{#contains user.groups 'restaurant'}}
-                  <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
-                {{else}}
-                  <li><a href="/restaurants" class="btn-link">Home</a></li>
-                {{/contains}}
-              </ul>
-            </li>
           </ul>
         {{else}}
           <button class="navbar-toggle btn btn-default">Sign In</button>
@@ -81,7 +64,6 @@
       </div>
     </header>
     <!--</Navbar>-->
-
 
     {{{block "banner"}}}
 

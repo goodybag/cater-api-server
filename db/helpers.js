@@ -325,13 +325,14 @@ dirac.use( function(){
 dirac.use( function( dirac ){
   var options = {
     operations: ['find', 'findOne']
+  , pluginName: 'many'
   , tmpl: function( data ){
       return [
         '(select array_to_json( array('
       , '  select row_to_json( r ) '
       , '  from ' + data.target + ' r'
       , ' where ' + data.pivots.map( function( p ){
-                      return 'r.' + p.target_col + ' = ' + data.source + '.' + p.source_col;
+                      return 'r."' + p.target_col + '" = "' + data.source + '"."' + p.source_col + '"';
                     }).join(' and ')
       , ')) as ' + data.alias + ')'
       ].join('\n')
@@ -343,18 +344,78 @@ dirac.use( function( dirac ){
 
     options.operations.forEach( function( op ){
       dal.before( op, function( $query, schema, next ){
-        if ( !Array.isArray( $query.many ) ) return next();
+        if ( !Array.isArray( $query[ options.pluginName ] ) ) return next();
 
-        $query.many.forEach( function( target ){
+        $query[ options.pluginName ].forEach( function( target ){
           var targetDal = dirac.dals[ target.table ];
 
           if ( !targetDal.dependencies[ table_name ] ){
-            throw new Error( 'Table: `' + target + '` does not depend on `' + table_name + '`' );
+            throw new Error( 'Table: `' + target.table + '` does not depend on `' + table_name + '`' );
           }
 
           var pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
             return {
               source_col: targetDal.dependencies[ table_name ][ p ]
+            , target_col: p
+            };
+          });
+
+          var col = options.tmpl({
+            source:     table_name
+          , target:     target.table
+          , alias:      target.alias || target.table
+          , pivots:     pivots
+          });
+
+          if ( !$query.columns ){
+            $query.columns = ['*'];
+          }
+
+          $query.columns.push( col );
+        });
+
+        next();
+      });
+    });
+  });
+});
+
+// Same as one-to-many, but with a single JSON object
+// and searches target dependents instead of dependencies
+dirac.use( function( dirac ){
+  var options = {
+    operations: ['find', 'findOne']
+  , pluginName: 'one'
+  , tmpl: function( data ){
+      return [
+        '(select row_to_json( r ) '
+      , '  from ' + data.target + ' r'
+      , 'where ' + data.pivots.map( function( p ){
+                      return 'r."' + p.target_col + '" = "' + data.source + '"."' + p.source_col + '"';
+                    }).join(' and ')
+      , 'limit 1'
+      , ') as ' + data.alias
+      ].join('\n')
+    }
+  };
+
+  Object.keys( dirac.dals ).forEach( function( table_name ){
+    var dal = dirac.dals[ table_name ];
+
+    options.operations.forEach( function( op ){
+      dal.before( op, function( $query, schema, next ){
+        if ( !Array.isArray( $query[ options.pluginName ] ) ) return next();
+
+        $query[ options.pluginName ].forEach( function( target ){
+          var targetDal = dirac.dals[ target.table ];
+
+          if ( !targetDal.dependents[ table_name ] ){
+            throw new Error( 'Table: `' + target.name + '` does not depend on `' + table_name + '`' );
+          }
+
+          var pivots = Object.keys( targetDal.dependents[ table_name ] ).map( function( p ){
+            return {
+              source_col: targetDal.dependents[ table_name ][ p ]
             , target_col: p
             };
           });
@@ -418,11 +479,6 @@ dirac.use( function( dirac ){
       dal.dependencies[ col.references.table ][ col_name ] = col.references.column;
     });
   });
-
-  console.log('delivery_services.dependencies', dirac.dals.delivery_services.dependencies);
-  console.log('delivery_services.dependents', dirac.dals.delivery_services.dependents);
-  console.log('delivery_service_zips.dependencies', dirac.dals.delivery_service_zips.dependencies);
-  console.log('delivery_service_zips.dependents', dirac.dals.delivery_service_zips.dependents);
 });
 
 // Log queries to dirac

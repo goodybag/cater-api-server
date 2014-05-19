@@ -86,9 +86,42 @@ module.exports.register = function(app) {
 
   app.get('/admin/regions'
   , m.sort('+name')
+  , m.queryOptions({
+      one: [{ table: 'regions', alias: 'region' }]
+    })
   , m.view( 'admin/regions', db.regions, {
       layout: 'admin/layout2'
     , method: 'find'
+    , activeTab: 'regions'
+    })
+  );
+
+  /**
+   * Delivery Services
+   */
+
+  app.get('/admin/delivery-services'
+  , m.sort('+name')
+  , m.queryOptions({
+      one: [{ table: 'regions', alias: 'region' }]
+    })
+  , m.view( 'admin/delivery-services', db.delivery_services, {
+      layout: 'admin/layout2'
+    , method: 'find'
+    , activeTab: 'delivery-services'
+    })
+  );
+
+  app.get('/admin/delivery-services/:id/basic-info'
+  , m.param('id')
+  , m.queryOptions({
+      one: [{ table: 'regions', alias: 'region' }]
+    })
+  , m.view( 'admin/delivery-service', db.delivery_services, {
+      layout: 'admin/layout2'
+    , method: 'findOne'
+    , activeTab: 'delivery-services'
+    , sidebarNav: { active: 'basic-info' }
     })
   );
 
@@ -117,7 +150,7 @@ module.exports.register = function(app) {
   , m.db.regions.find( {}, { limit: 'all' } )
   , m.restaurant( {param: 'rid' } )
   , m.view('restaurant/edit-basic-info', {
-      layout: 'admin/layout-two-column'
+      layout: 'admin/layout-single-object'
     })
   );
 
@@ -1020,6 +1053,7 @@ module.exports.register = function(app) {
   , m.param('region_id')
   , m.queryOptions({
       many: [{ table: 'delivery_service_zips', alias: 'zips' }]
+    , one:  [{ table: 'regions', alias: 'region' }]
     })
   , m.find( db.delivery_services )
   );

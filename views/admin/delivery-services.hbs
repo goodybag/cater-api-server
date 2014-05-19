@@ -1,0 +1,40 @@
+{{#extend "page"}}page-regions{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <h1>Delivery Services</h1>
+
+  <section class="panel-component" id="delivery-services-table">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Region</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each delivery_services}}
+        <tr>
+          <td>{{this.id}}</td>
+          <td>
+            <a href="/admin/delivery-services/{{this.id}}">{{this.name}}</a>
+          </td>
+          <td>{{this.region.name}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </section>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['app/pages/admin-regions'], function( page ){
+    page.init({
+
+    });
+  });
+</script>
+{{/extend}}

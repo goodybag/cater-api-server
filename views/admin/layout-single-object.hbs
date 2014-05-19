@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>[Admin] Goodybag{{{block "html-title"}}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Goodybag Catering CSS Stuff -->
+    <link href="{{cdn "/dist/admin.css"}}" rel="stylesheet">
+
+    {{{block "css"}}}
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
+    <![endif]-->
+  </head>
+  <body class="page {{{block "page"}}}">
+    <!--<Navbar>-->
+    <header class="navbar collapsed">
+      <div class="container">
+        <a href="/">
+          <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
+        </a>
+
+        <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="/admin">Home</a>
+          </li>
+          <li class="{{#eq activeTab 'restaurants'}}active{{/eq}}">
+            <a href="/admin/restaurants">Restaurants</a>
+          </li>
+          <li class="{{#eq activeTab 'regions'}}active{{/eq}}">
+            <a href="/admin/regions">Regions</a>
+          </li>
+          <li class="{{#eq activeTab 'delivery-services'}}active{{/eq}}">
+            <a href="/admin/delivery-services">Delivery Services</a>
+          </li>
+          {{{block "navbar-links"}}}
+        </ul>
+      </div>
+    </header>
+    <!--</Navbar>-->
+
+    {{{block "banner"}}}
+
+    <div id="main">
+      {{{block "page-head"}}}
+      <div class="nav-col">
+        {{{block "nav-col"}}}
+      </div>
+      <div class="content-col">
+        {{{block "nav-col"}}}
+      </div>
+    </div>
+
+    {{#unless config.isDev}}
+    <script src="{{cdn "/dist/admin.js"}}"></script>
+    {{else}}
+    <script src="/components/requirejs/require.js"></script>
+    <script src="/js/require-config.js"></script>
+    {{/unless}}
+
+    {{{block "views"}}}
+    {{{block "scripts"}}}
+  </body>
+</html>

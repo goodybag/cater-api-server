@@ -1,0 +1,22 @@
+/////////////////
+// Breadcrumbs //
+/////////////////
+
+.breadcrumbs {
+  list-style: none;
+  padding-left: 0;
+}
+
+.breadcrumbs li {
+  display: inline-block;
+}
+
+.breadcrumbs li:first-child + li {
+
+  &:before {
+    content: "/";
+    display: inline-block;
+    margin-left: 6px;
+    margin-right: 8px;
+  }
+}

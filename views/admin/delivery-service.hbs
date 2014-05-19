@@ -1,0 +1,29 @@
+{{#extend "html-title"}}{{delivery_service.name}}{{/extend}}
+{{#extend "page"}}page-delivery-service{{/extend}}
+
+{{#extend "page-head"}}
+<div class="container" id="main-container">
+  <ul class="breadcrumbs main-breadcrumbs">
+    <li>
+      <a href="/admin/delivery-services">Delivery Services</a>
+    </li>
+    <li>{{delivery_service.name}}</li>
+  </ul>
+
+  <h1>Edit Delivery Service</h1>
+</div>
+{{/extend}}
+
+{{#extend "nav-col"}}
+
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['app/pages/admin-regions'], function( page ){
+    page.init({
+
+    });
+  });
+</script>
+{{/extend}}

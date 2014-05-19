@@ -18,12 +18,13 @@ define(function(require, exports, module) {
     /**
      * Show alert
      *
-     * @param {string} type - success|error
      * @param {object} context - data passed to alert template
      */
-    show: function(type, context, callback) {
-      var type = 'form_alert_' + type;
-      var html = Handlebars.partials[type](context);
+    show: function(context) {
+      if (typeof context === 'string') {
+        context = { type: context };
+      }
+      var html = Handlebars.partials.form_alert(context);
       this.$el.html(html);
       return this;
     }

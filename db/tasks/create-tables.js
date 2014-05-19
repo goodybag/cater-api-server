@@ -26,6 +26,7 @@ var definitions = [
 , 'restaurant-meal-types'
 , 'restaurant-meal-styles'
 , 'restaurant-events'
+, 'restaurant-photos'
 , 'orders'
 , 'categories'
 , 'items'
@@ -47,6 +48,7 @@ var definitions = [
 , 'order-notifications'
 , 'delivery-services'
 , 'delivery-service-zips'
+, 'scheduled-jobs'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');

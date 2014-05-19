@@ -23,10 +23,7 @@ module.exports = {
 , states: require('./states')
 , statusCodeIntercept: require('./status-code-intercept')
 , uuid: require('./uuid')
-<<<<<<< HEAD
 , s3: require('./s3')
-=======
 , db: require('./db')
 , getGeoFromIp: require('./get-geo-from-ip')
->>>>>>> master
 };

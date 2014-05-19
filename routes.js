@@ -86,9 +86,6 @@ module.exports.register = function(app) {
 
   app.get('/admin/regions'
   , m.sort('+name')
-  , m.queryOptions({
-      one: [{ table: 'regions', alias: 'region' }]
-    })
   , m.view( 'admin/regions', db.regions, {
       layout: 'admin/layout2'
     , method: 'find'
@@ -105,23 +102,24 @@ module.exports.register = function(app) {
   , m.queryOptions({
       one: [{ table: 'regions', alias: 'region' }]
     })
-  , m.view( 'admin/delivery-services', db.delivery_services, {
+  , m.view( 'admin/delivery-service/list', db.delivery_services, {
       layout: 'admin/layout2'
     , method: 'find'
     , activeTab: 'delivery-services'
     })
   );
 
+  app.get('/admin/delivery-services/:id'
+  , m.redirect('/admin/delivery-services/:id/basic-info')
+  );
+
   app.get('/admin/delivery-services/:id/basic-info'
   , m.param('id')
-  , m.queryOptions({
-      one: [{ table: 'regions', alias: 'region' }]
-    })
-  , m.view( 'admin/delivery-service', db.delivery_services, {
-      layout: 'admin/layout2'
+  , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
+  , m.viewPlugin( 'sidebarNav', { active: 'basic-info'} )
+  , m.view( 'admin/delivery-service/basic-info', db.delivery_services, {
+      layout: 'admin/layout-single-object'
     , method: 'findOne'
-    , activeTab: 'delivery-services'
-    , sidebarNav: { active: 'basic-info' }
     })
   );
 

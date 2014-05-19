@@ -27,4 +27,6 @@ module.exports = {
 , db: require('./db')
 , getGeoFromIp: require('./get-geo-from-ip')
 , queryOptions: require('./query-options')
+, redirect: require('./redirect')
+, viewPlugin: require('./view-plugin')
 };

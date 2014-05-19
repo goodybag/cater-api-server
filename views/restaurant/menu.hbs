@@ -1,1 +1,15 @@
-<h1>hi</h1>
+{{#extend "page"}}page-menu{{/extend}}
+
+{{#extend "body"}}
+<div class="container">
+  <h1>hello world</h1>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['jquery', 'navbar'], function( $ ){
+    $('.navbar').navbar({ toggleText: false });
+  });
+</script>
+{{/extend}}

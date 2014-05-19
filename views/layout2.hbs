@@ -1,0 +1,62 @@
+{{!-- New layout for general goodybag pages --}}
+{{!-- TODO: Rename to layout.hbs once all pages are converted --}}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Goodybag.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{cdn "favicon.ico"}}">
+    <!-- Keep this up here! -->
+    <!--[if lt IE 9]>
+    <script src="{{cdn "/components/html5shiv/dist/html5shiv.js"}}"></script>
+    <![endif]-->
+    <!--[if lte IE 9]>
+    <script src="{{cdn "/components/console-polyfill/index.js"}}"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="{{cdn "/css/gb-icon.css"}}">
+    <link rel="stylesheet" href="{{cdn "/dist/cater.css"}}">
+    {{{block "css"}}}
+    {{{block "head"}}}
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" href="{{cdn "/dist/cater-ielt9.css"}}">
+    <![endif]-->
+  </head>
+  <body class="page {{{block "page"}}}">
+    {{> navbar }}
+    {{{ block "body" }}}
+    {{> footer }}
+    <!-- segment.io -->
+    <script type="text/javascript">
+    window.analytics||(window.analytics=[]),window.analytics.methods=["identify","track","trackLink","trackForm","trackClick","trackSubmit","page","pageview","ab","alias","ready","group","on","once","off"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var method=window.analytics.methods[i];window.analytics[method]=window.analytics.factory(method)}window.analytics.load=function(t){var a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"d2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)},window.analytics.SNIPPET_VERSION="2.0.8",
+    window.analytics.load("{{config.segmentIo.secret}}");
+    window.analytics.page();
+    </script>
+    <!-- end segment.io -->
+
+    {{#if user.id}}
+    <script type="text/javascript">
+      {{#if session.oldUser}}
+      analytics.identify({{session.oldUser.id}}, {{{json session.oldUser}}});
+      {{else}}
+      analytics.identify({{user.id}}, {{{json user}}});
+      {{/if}}
+    </script>
+    {{/if}}
+
+    {{#unless config.isDev}}
+    <script src="{{cdn "dist/landing.js"}}"></script>
+    {{else}}
+    <script src="/components/requirejs/require.js"></script>
+    <script src="/js/require-config.js"></script>
+    {{/unless}}
+    <script>
+      require( ['config'], function( config ){
+        config.cdn = { baseUrl: '{{{config.cdn.baseUrl}}}' };
+      });
+    </script>
+
+    {{> olark }}
+
+    {{{block "scripts"}}}
+  </body>
+</html>

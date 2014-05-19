@@ -148,7 +148,7 @@ module.exports.register = function(app) {
   , m.db.regions.find( {}, { limit: 'all' } )
   , m.restaurant( {param: 'rid' } )
   , m.view('restaurant/edit-basic-info', {
-      layout: 'admin/layout-single-object'
+      layout: 'admin/layout-two-column'
     })
   );
 

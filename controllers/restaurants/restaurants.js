@@ -138,13 +138,12 @@ module.exports.get = function(req, res) {
 
     var orderParams = req.query || {};
 
-
     var context = {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
       defaultAddress:   results[2] ? results[2].toJSON() : null,
       orderParams:      orderParams
-    }
+    };
 
     context.restaurant.delivery_fee = context.order.restaurant.delivery_fee;
 
@@ -158,7 +157,7 @@ module.exports.get = function(req, res) {
 
     context.restaurant.menuLengths = menuLengths;
 
-    res.render('menu', context, function(err, html) {
+    res.render('restaurant/menu', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
       return res.send(html);
     });

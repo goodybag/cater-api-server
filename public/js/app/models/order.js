@@ -233,9 +233,9 @@ define(function(require, exports, module) {
 
       var then = this.get('datetime');
       var now = moment().tz(this.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
-      var hours = (new Date(then) - new Date(now)) / 3600000;
+      var minutes = (new Date(then) - new Date(now)) / 60000;
 
-      this.restaurant.set('is_bad_lead_time', !limit ? true : hours <= limit.lead_time);
+      this.restaurant.set('is_bad_lead_time', !limit ? true : minutes <= limit.lead_time);
     },
 
     datetimeChanged: function(model, value, options) {

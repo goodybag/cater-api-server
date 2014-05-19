@@ -152,6 +152,28 @@ define(function(require, exports, module) {
       return result;
     },
 
+    floor: function(value) {
+      return Math.floor(value);
+    },
+
+    divide: function(dividend, divisor) {
+      return dividend / divisor;
+    },
+
+    intDivide: function(dividend, divisor) {
+      return Math.floor( dividend / divisor );
+    },
+
+    mod: function(dividend, divisor) {
+      return dividend % divisor;
+    },
+
+    leadtime: function(minutes) {
+      var hours = Math.floor(minutes / 60);
+      var minutes = minutes % 60;
+      return hours + ' hrs' + (minutes ? ' ' + minutes + ' mins' : '');
+    },
+
     /**
      * Convert array of 10 digit numbers
      * to string of formatted phone numbers

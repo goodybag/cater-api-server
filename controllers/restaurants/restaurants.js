@@ -158,6 +158,13 @@ module.exports.get = function(req, res) {
 
     context.restaurant.menuLengths = menuLengths;
 
+    // filter out hidden items
+    context.restaurant.categories.forEach(function(category) {
+      category.items = utils.filter(category.items, function(item) {
+        return !item.is_hidden;
+      });
+    });
+
     res.render('menu', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
       return res.send(html);

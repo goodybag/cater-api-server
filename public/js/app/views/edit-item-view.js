@@ -55,7 +55,7 @@ define(function(require, exports, module) {
         return _.pluck(this.$el.find(this.fieldMap.tags + ':checked'), 'value');
       },
       is_hidden: function() {
-        return this.$el.find(this.fieldMap.hide).is(':checked');
+        return this.$el.find(this.fieldMap.is_hidden).is(':checked');
       }
     },
 

@@ -65,10 +65,6 @@ define(function(require, exports, module) {
       return arr ? arr.join(', ') : '';
     },
 
-    join: function( list, separator ) {
-      return utils.isArray( list ) ? list.join( separator || ', ' ) : list;
-    },
-
     list: function( list ){
       return [
         '<ul>'
@@ -150,6 +146,28 @@ define(function(require, exports, module) {
       for (var i in str)
         result = result.replace('x', str[i]);
       return result;
+    },
+
+    floor: function(value) {
+      return Math.floor(value);
+    },
+
+    divide: function(dividend, divisor) {
+      return dividend / divisor;
+    },
+
+    intDivide: function(dividend, divisor) {
+      return Math.floor( dividend / divisor );
+    },
+
+    mod: function(dividend, divisor) {
+      return dividend % divisor;
+    },
+
+    leadtime: function(minutes) {
+      var hours = Math.floor(minutes / 60);
+      var minutes = minutes % 60;
+      return hours + ' hrs' + (minutes ? ' ' + minutes + ' mins' : '');
     },
 
     /**
@@ -439,6 +457,14 @@ define(function(require, exports, module) {
       return [ config.cdn.baseUrl ].concat(
         Array.prototype.slice.call( arguments, 0, - 1 )
       ).join('/');
+    },
+
+    join: function( set, joiner, prop ){
+      if ( typeof prop === 'string' ){
+        set = utils.pluck( set, prop );
+      }
+
+      return utils.isArray( set ) ? set.join( joiner || ', ' ) : set;
     },
 
     uncamelize: function( text ){

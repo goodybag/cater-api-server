@@ -6,6 +6,7 @@ define(function(require){
   var Views = {
     NotificationHistoryTable:     require('app/views/notification-history-table')
   , NotificationsTable:           require('app/views/notifications-table')
+  , PdfPreview:                   require('app/views/pdf-preview')
   };
 
   var page = {
@@ -13,6 +14,8 @@ define(function(require){
       if ( !options.order ){
         throw new Error('Missing required property: `order`');
       }
+
+      page.order = options.order;
 
       page.notificationHistory  = new Views.NotificationHistoryTable({ order: options.order })
       page.notifications        = new Views.NotificationsTable({ order: options.order })
@@ -33,13 +36,17 @@ define(function(require){
         page.notifications.setElement(
           $('#notifications-table')
         ).render();
+
+        $('.pdf-preview').each( function(){
+          new Views.PdfPreview({ el: this });
+        });
       });
     }
 
   , getHistory: function( callback ){
       $.ajax({
         type: 'GET'
-      , url: ['/api/orders', order.get('id'), 'notifications-history'].join('/')
+      , url: ['/api/orders', page.order.get('id'), 'notifications-history'].join('/')
       , json: true
       , headers: { 'Content-Type': 'application/json' }
       , success: function( notes ){
@@ -52,7 +59,7 @@ define(function(require){
   , getAvailable: function( callback ){
       $.ajax({
         type: 'GET'
-      , url: ['/api/orders', order.get('id'), 'notifications'].join('/')
+      , url: ['/api/orders', page.order.get('id'), 'notifications'].join('/')
       , json: true
       , headers: { 'Content-Type': 'application/json' }
       , success: function( notes ){

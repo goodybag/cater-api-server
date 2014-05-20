@@ -4,6 +4,46 @@
 <div class="container" id="main-container">
   <h1>Order #{{order.id}} Command Center</h1>
 
+  <section class="panel-component" id="order-pdfs">
+    <h1 class="component-title">Available Pdfs</h1>
+    <div class="pdf-preview" data-order-id="{{order.id}}" data-type="receipt">
+      <div class="pdf-preview-header">
+        <h3 class="pdf-preview-title">Receipt</h3>
+        <ul class="nav nav-tabs nav-tabs-sm">
+          <li>
+            <a href="#" class="rebuild-pdf">Re-Build PDF</a>
+          </li>
+          <li>
+            <a href="#" class="refresh">Refresh</a>
+          </li>
+          <li>
+            <a href="{{config.baseUrl}}/receipts/order-{{order.id}}.pdf" target="_blank">View</a>
+          </li>
+        </ul>
+      </div>
+      <div class="pdf-preview-alert"></div>
+      <iframe src="{{config.baseUrl}}/receipts/order-{{order.id}}.pdf" frameborder="0"></iframe>
+    </div>
+    <div class="pdf-preview" data-order-id="{{order.id}}" data-type="manifest">
+      <div class="pdf-preview-header">
+        <h3 class="pdf-preview-title">Manifest</h3>
+        <ul class="nav nav-tabs nav-tabs-sm">
+          <li>
+            <a href="#" class="rebuild-pdf">Re-Build PDF</a>
+          </li>
+          <li>
+            <a href="#" class="refresh">Refresh</a>
+          </li>
+          <li>
+            <a href="{{config.baseUrl}}/manifests/manifest-{{order.id}}.pdf" target="_blank">View</a>
+          </li>
+        </ul>
+      </div>
+      <div class="pdf-preview-alert"></div>
+      <iframe src="{{config.baseUrl}}/manifests/manifest-{{order.id}}.pdf" frameborder="0"></iframe>
+    </div>
+  </section>
+
   <section class="panel-component" id="order-notifications">
     <h1 class="component-title">Notifications</h1>
     <ul class="component-nav nav nav-tabs">
@@ -30,7 +70,7 @@
 
 {{#extend "scripts"}}
 <script>
-  require( ['app/pages/admin-order'], function( page ){
+  require( ['app/pages/admin/order', 'app/models/order'], function( page, Order ){
     page.init({
       order: new Order( {{{json order}}} )
     });

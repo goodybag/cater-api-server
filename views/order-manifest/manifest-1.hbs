@@ -1,0 +1,222 @@
+{{#extend "scripts"}}
+<script>
+  var config = {
+    pageHeight:               920
+  , phantomPageHeightOffset:  -120
+  };
+
+  var pageHeight = 920;
+
+  var isPhantom = function(){
+    return navigator.userAgent.indexOf('PhantomJS') > - 1;
+  };
+
+  var fillerTmpl = function( options ){
+    return [
+      '<tr class="filler">'
+    , '  ' + new Array(5).join('.').split('.').map( function(){
+        return '  <td style="height: ' + options.height + 'px"></td>'
+      }).join('\n')
+    , '</tr>'
+    ].join('\n');
+  };
+
+  var adjustManifestPage = function( $page, callback ){
+    var getInnerHeight = function( $el ){
+      return Array.prototype.reduce.call(
+        $el.find('> *').map( function(){
+          var $this = $(this);
+          if ( ['fixed', 'absolute'].indexOf( $this.css('position') ) > -1 ){
+            return 0;
+          }
+
+          return $this.outerHeight(true);
+        })
+      , function( a, b ){ return a + b; }
+      );
+    };
+    console.print('inner', getInnerHeight( $page ) );
+
+    var getDiff = function( $el ){
+      return [
+        config.pageHeight
+      , isPhantom() ? config.phantomPageHeightOffset : 0
+      , getInnerHeight( $el )
+      , parseFloat( $el.css('padding-top') )
+      , parseFloat( $el.css('padding-bottom') )
+      ].reduce( function( a, b ){ return a - b; });
+    };
+
+    var fillRemaining = function( $page, height ){
+      console.print('Filling table with: ', height);
+      $page.find('tbody').append( fillerTmpl({ height: height }) );
+    };
+
+    var diff = getDiff( $page );
+
+    // Table fits on page, add the filler and callback
+    if ( diff >= 0 ){
+      fillRemaining( $page, diff );
+      return callback();
+    }
+
+    // $page's inner contents are larger than the paper would allow
+    // Remove table rows until this page fits
+    var $trs = $();
+    var whileGreaterThan = function( callback ){
+      if ( getDiff( $page ) >= 0 ) return callback();
+
+      $trs = $trs.add( $page.find('tbody > tr:last-child' ).clone() );
+      $page.find('tbody > tr:last-child' ).remove();
+
+      setTimeout(function(){ whileGreaterThan( callback ); }, 5 );
+    };
+
+    whileGreaterThan( function(){
+      var diff = getDiff( $page );
+      if ( diff > 0 ) fillRemaining( $page, diff );
+
+      var $clone = $page.clone();
+      $clone.find('table tbody tr').remove();
+      $clone.find('tbody').append( $trs.get().reverse() );
+      $page.after( $clone );
+      adjustManifestPage( $clone, callback );
+    });
+  };
+
+  var fixPageNumbers = function(){
+    var $numbers = $('.page-number');
+    $numbers.find('.total').text( $numbers.length );
+    $numbers.each( function( i ){
+      $(this).find('.current').text( i + 1 );
+    });
+  };
+
+  $(function(){
+    adjustManifestPage( $('.table-page').eq(0), function(){
+      fixPageNumbers();
+      window.__page.ready();
+    });
+  });
+</script>
+{{/extend}}
+
+{{#extend "body"}}
+<section class="manifest-page table-page">
+  <header class="manifest-header">
+    <h4 class="header-text">Please print this and include with the delivered order. Thanks! <span class="signature">-Goodybag</span></h4>
+    <div class="subtext">
+      Not what you ordered? Something missing? No worries! We will help get it resolved. Contact us at the number below.
+    </div>
+  </header>
+  <table class="manifest-table">
+    <thead>
+      <tr>
+        <th class="checkbox"><img src="/img/checkmark_white.svg" width="18"></th>
+        <th class="quantity">Qty</th>
+        <th class="item">Item</th>
+        <th class="options-notes">Options/Notes</th>
+        <th class="recipient">Recipient</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each order.manifest}}
+      <tr>
+        <td class="checkbox"></td>
+        <td class="quantity">{{this.quantity}}</td>
+        <td class="item">
+          {{this.name}}
+          <div class="options">
+            {{#each this.options_sets}}
+            {{#if this.name.length}}
+              <div class="option-group-name">{{this.name}}:</div>
+            {{/if}}
+            <ul class="option-group">
+              {{#each this.options}}
+                <li>{{this.name}}</li>
+              {{/each}}
+            </ul>
+            {{/each}}
+          </div>
+          {{!-- <div class="options">
+            {{#each this.options_sets}}
+              {{#if @index}}<br>{{/if}}
+              {{#if this.name.length}}{{this.name}}: {{/if}}
+              {{join this.options ", " "name"}}
+            {{/each}}
+          </div> --}}
+        </td>
+        <td class="options-notes">{{this.notes}}</td>
+        <td class="recipient">{{{join this.recipients "<br>"}}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <div class="page-number">
+    Page <span class="current">1</span>/<span class="total">2</span>
+  </div>
+</section>
+
+<section class="manifest-page">
+  <header class="manifest-header">
+    <h4 class="header-text">Please print this and include with the delivered order. Thanks! <span class="signature">-Goodybag</span></h4>
+    <div class="subtext">
+      Not what you ordered? Something missing? No worries! We will help get it resolved. Contact us at the number below.
+    </div>
+  </header>
+
+  <h2 class="section-title">Order Info</h2>
+  <dl class="manifest-section-dl">
+    <dt>Restaurant:</dt>
+    <dd>{{order.restaurant.name}}</dd>
+    <dt>Order Number:</dt>
+    <dd>#{{order.id}}</dd>
+    {{#if order.name}}
+    <dt>Delivery Name:</dt>
+    <dd>{{order.name}}</dd>
+    {{/if}}
+    <dt>Customer Notes:</dt>
+    <dd>{{order.notes}}</dd>
+  </dl>
+
+  <h2 class="section-title">Delivery</h2>
+  <dl class="manifest-section-dl">
+    {{#if order.user.organization}}
+    <dt>Company:</dt>
+    <dd>{{order.user.organization}}</dd>
+    {{/if}}
+    <dt>Address:</dt>
+    <dd>
+      {{order.street}}
+      {{#if order.street2}}
+        <br>
+        {{order.street2}}
+      {{/if}}
+      <br>
+      {{order.city}}, {{order.state}} {{order.zip}}
+    </dd>
+    <dt>Phone:</dt>
+    <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}}</dd>
+    <dt>Delivery Date:</dt>
+    <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
+    <dt>Delivery Time:</dt>
+    <dd>{{formatDateTime order.datetime "h:mm A"}}</dd>
+    <dt>Delivery Instructions:</dt>
+    <dd>{{order.delivery_instructions}}</dd>
+  </dl>
+
+  <h2 class="section-title">Goodybag</h2>
+  <dl class="manifest-section-dl">
+    <dt>Phone:</dt>
+    <dd>{{phoneNumber config.phone.support "xxx.xxx.xxxx"}}</dd>
+    <dt>Email:</dt>
+    <dd>{{config.emails.support}}</dd>
+    <dt>Website:</dt>
+    <dd>https://www.goodybag.com</dd>
+  </dl>
+
+  <div class="page-number">
+    Page <span class="current">1</span>/<span class="total">2</span>
+  </div>
+</section>
+{{/extend}}

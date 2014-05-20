@@ -55,6 +55,7 @@
 }
 
 @nav-height: 33px;
+@nav-height-small: 24px;
 .nav-tabs {
   padding-left: 0;
 }
@@ -77,6 +78,12 @@
   border-bottom-right-radius: 2px;
   border: solid 1px @gray;
   border-top: none;
+}
+
+.nav-tabs-sm > li > a {
+  font-size: @font-size-small;
+  padding-top: (@nav-height-small / 2) + 0.5;
+  padding-bottom: (@nav-height-small / 2) - 0.5;
 }
 
 .nav-tabs a {

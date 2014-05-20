@@ -1,23 +1,29 @@
 <div class="row lead-time">
-  <div class="col-2">
+  <div class="col-guests">
     <div class="form-group">
       <label class="control-label">Max Guests</label>
       <input type="number" class="form-control lead-times lead-max-guests" value="{{max_guests}}">
     </div>
   </div>
-  <div class="col-2">
+  <div class="col-time">
     <div class="form-group">
       <label class="control-label">Hours</label>
-      <input type="number" class="form-control lead-times lead-hours" value="{{lead_time}}">
+      <input type="number" step="1" class="form-control lead-times lead-hours" value="{{intDivide lead_time 60}}">
     </div>
   </div>
-  <div class="col-2">
+  <div class="col-time">
+    <div class="form-group">
+      <label class="control-label">Minutes</label>
+      <input type="number" step="15" class="form-control lead-times lead-minutes" value="{{mod lead_time 60}}">
+    </div>
+  </div>
+  <div class="col-time">
     <div class="form-group">
       <label class="control-label">Cancel Time</label>
       <input type="number" class="form-control lead-times lead-cancel-time" value="{{cancel_time}}">
     </div>
   </div>
-  <div class="col-2 col-remove">
+  <div class="col-remove">
     <div class="form-group">
       <div class="lead-time-actions">
         <a href="#">

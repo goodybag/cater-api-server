@@ -397,6 +397,29 @@ module.exports.register = function(app) {
    *  Order resource.  An individual order.
    */
 
+  app.get('/orders/:oid/manifest'
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , m.getOrder({
+      withItems:    true
+    , withManifest: true
+    })
+  , m.view( 'order-manifest/manifest-1', {
+      layout: 'order-manifest/layout'
+    })
+  );
+
+  app.get('/manifests/manifest-:oid.pdf'
+  // For now, don't restrict so I don't have to re-write the ?review_token mess
+  // , m.restrict(['admin', 'restaurant'])
+  , m.s3({
+      path:   '/manifest-:oid.pdf'
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.receipt.bucket
+    })
+  );
+
   app.get(
     config.receipt.orderRoute
   , m.basicAuth()
@@ -439,7 +462,12 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-  app.get('/receipts/order-:oid.pdf', m.buildReceipt());
+  app.get('/receipts/order-:oid.pdf', m.s3({
+    path:   '/' + config.receipt.fileName
+  , key:    config.amazon.awsId
+  , secret: config.amazon.awsSecret
+  , bucket: config.receipt.bucket
+  }));
 
   /**
    *  Order status resource.  The collection of all statuses on a single order.
@@ -819,7 +847,12 @@ module.exports.register = function(app) {
 
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
-  , controllers.paymentSummaries.getPdf
+  , m.s3({
+      path:   '/payment-summary-:psid.pdf'
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.paymentSummaries.bucket
+    })
   );
 
   app.get( config.paymentSummaries.route
@@ -1024,6 +1057,11 @@ module.exports.register = function(app) {
   app.post('/api/orders/:order_id/generate_edit_token'
   , m.restrict(['client', 'admin'])
   , controllers.orders.generateEditToken
+  );
+
+  app.post('/api/orders/:oid/rebuild-pdf/:type'
+  , m.restrict(['admin'])
+  , controllers.orders.rebuildPdf
   );
 
   app.get('/api/orders/:oid/notifications'

@@ -2,7 +2,6 @@ module.exports = {
   after: require('./after')
 , analytics: require('./analytics')
 , basicAuth: require('./basic-session-auth')
-, buildReceipt: require('./build-receipt')
 , cors: require('./cors')
 , defaultLocals: require('./default-locals')
 , domains: require('./domains')
@@ -24,6 +23,7 @@ module.exports = {
 , states: require('./states')
 , statusCodeIntercept: require('./status-code-intercept')
 , uuid: require('./uuid')
+, s3: require('./s3')
 , db: require('./db')
 , getGeoFromIp: require('./get-geo-from-ip')
 };

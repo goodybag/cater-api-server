@@ -1,0 +1,56 @@
+/////////////////////
+// Manifest Header //
+/////////////////////
+
+// Things in here are more or less hardcoded to make it easier to print
+
+.manifest-header {
+  min-height: 82px;
+  padding: 8px 12px;
+  margin-bottom: 40px;
+  color: #fff;
+  font-family: 'Din Condensed';
+  text-transform: uppercase;
+  background-color: @manifest-gray;
+  border: solid @manifest-gray 1px;
+
+  &:before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 14px;
+    width: 250px;
+    height: 41px;
+    background-image: url('../img/thankyou.svg');
+    background-repeat: no-repeat;
+    background-size: 250px;
+  }
+
+  .header-text {
+    position: absolute;
+    right: 12px;
+    bottom: 20px;
+    margin: 0;
+    font-size: 13px;
+    white-space: pre;
+  }
+
+  .signature {
+    text-transform: none;
+  }
+
+  .subtext {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    width: 100%;
+    background: #FFF;
+    color: #808080;
+    font-family: 'Din';
+    font-size: 11px;
+    line-height: 13px;
+    padding-top: 3px;
+  }
+}

@@ -1,4 +1,5 @@
 var fs          = require('fs');
+var path        = require('path');
 var pg          = require('pg');
 var dirac       = require('dirac');
 var mosql       = require('mongo-sql');
@@ -306,7 +307,7 @@ dirac.use( function(){
 // dirac.use( function(){
 //   var query_ = dirac.DAL.prototype.query;
 //   dirac.DAL.prototype.query = function( query, callback ){
-//     console.log( query );
+//     console.log( JSON.stringify(query, true, '  ') );
 //     return query_.apply( this, arguments );
 //   };
 

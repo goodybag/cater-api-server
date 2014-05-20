@@ -111,7 +111,24 @@ header {
 @media (min-width: 40rem) {
   .lead-times-list {
     .col-remove {
+      float: left;
+      margin: 0 10px;
       line-height: 59px;
+    }
+
+    .col-guests {
+      float: left;
+      margin: 0 10px;
+      width: 10%;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+    
+    .col-time {
+      float: left;
+      margin: 0 10px;
+      width: 10%;
     }
 
     .remove-lead-time {
@@ -143,6 +160,10 @@ header {
 
 .page-order {
   padding-bottom: 80px;
+
+  #order-pdfs > .pdf-preview {
+    #grid > .column(6);
+  }
 
   #notifications-history-table {
     margin-top: 30px;

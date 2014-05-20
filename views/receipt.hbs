@@ -120,7 +120,11 @@
           <button type="button" class="btn btn-default edit-order-btn">Edit</button>
           {{/if}}
 
-          <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default">Download PDF</a>
+          {{#if isRestaurantManager}}
+            <a href="/manifests/manifest-{{order.id}}.pdf" target="_blank" class="btn btn-default">Download PDF</a>
+          {{else}}
+            <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default">Download PDF</a>
+          {{/if}}
         </div>
 
         <div class="row delivery-info">

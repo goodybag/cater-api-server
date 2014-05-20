@@ -75,6 +75,7 @@ module.exports = function(grunt) {
         , "public/dist/cater.css":              "less/core-cater.less"
         , "public/dist/cater-ielt9.css":        "less/ielt9-cater.less"
         , "public/dist/admin.css":              "less/core-admin.less"
+        , "public/dist/order-manifest.css":     "less/core-order-manifest.less"
         }
       }
     }

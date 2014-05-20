@@ -2,14 +2,35 @@
 
 {{#extend "body"}}
 <div class="container">
-  <h1>hello world</h1>
+  <a class="back-to-results" href="/restaurants{{queryParams orderParams}}">Back to search</a>
+
+  <div class="menu">
+    <div class="col-main">
+      {{> menu_header }}
+      {{> menu_tabs }}
+      {{> menu_tab_contents }}
+    </div>
+    <div class="col-side">
+      {{> menu_order_meta }}
+      {{> menu_order_summary }}
+    </div>
 </div>
 {{/extend}}
 
 {{#extend "scripts"}}
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
 <script>
-  require( ['jquery', 'navbar'], function( $ ){
-    $('.navbar').navbar({ toggleText: false });
+  require( ['app/pages/menu', 'app/models/index'], function( page, Models ){
+    page.init({
+      order:          new Models.Order( {{{json order}}}, { edit_token: "{{{edit_token}}}"} )
+    , orderParams:    new Models.OrderParams( {{{json orderParams}}} )
+    , restaurant:     new Models.Restaurant( {{{json restaurant}}} )
+    , defaultAddress: new Models.Address( {{{json defaultAddress}}} )
+    , user:           new Models.User( {{{json user }}} )
+    , editToken:      "{{{edit_token}}}"
+    , baseUrl:        "{{{config.baseUrl}}}"
+    });
   });
 </script>
 {{/extend}}

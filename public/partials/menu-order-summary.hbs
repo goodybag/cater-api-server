@@ -1,33 +1,35 @@
-<div class="panel">
-  {{> order_summary}}
+<div class="order-summary">
+  <div class="panel">
+    {{> order_summary}}
 
-  <div class="panel-footer with-items{{#unless order.orderItems.length}} hide{{/unless}}">
-    {{#if order.adjustment.amount}}
-    <div class="row">
-      <div class="col-lg-12">
-        Adjustment
-        <div class="pull-right">{{dollars order.adjustment.amount}}</div>
+    <div class="panel-footer with-items{{#unless order.orderItems.length}} hide{{/unless}}">
+      {{#if order.adjustment.amount}}
+      <div class="row">
+        <div class="col-lg-12">
+          Adjustment
+          <div class="pull-right">{{dollars order.adjustment.amount}}</div>
+        </div>
       </div>
-    </div>
-    {{/if}}
-    <div class="row subtotal-row">
-      <div class="col-lg-12">
-        Subtotal
-        <div class="subtotal pull-right">{{dollars order.sub_total}}</div>
+      {{/if}}
+      <div class="row subtotal-row">
+        <div class="col-lg-12">
+          Subtotal
+          <div class="subtotal pull-right">{{dollars order.sub_total}}</div>
+        </div>
       </div>
-    </div>
-    <div class="row checkout-row">
-      <div class="col-xs-6 col-minimum-order">
-        {{#if order.restaurant.minimum_order}}
-        <div class="minimum-order{{#unless order.below_min}} hide{{/unless}}">Minimum order: {{dollars order.restaurant.minimum_order}}</div>
-        {{/if}}
-      </div>
-      <div class="col-xs-6">
-        {{#eq order.status "pending"}}
-        <button class="btn btn-primary btn-checkout pull-right {{#if edit_token}}hide{{/if}}"{{#unless order.submittable}} disabled="disabled"{{/unless}}{{#if restaurant.is_unacceptable}} disabled="disabled"{{/if}}>Checkout</button>
-        {{else}}
-        <a href="/orders/{{order.id}}" class="btn btn-primary pull-right">To Order</a>
-        {{/eq}}
+      <div class="row checkout-row">
+        <div class="col-xs-6 col-minimum-order">
+          {{#if order.restaurant.minimum_order}}
+          <div class="minimum-order{{#unless order.below_min}} hide{{/unless}}">Minimum order: {{dollars order.restaurant.minimum_order}}</div>
+          {{/if}}
+        </div>
+        <div class="col-xs-6">
+          {{#eq order.status "pending"}}
+          <button class="btn btn-primary btn-checkout pull-right {{#if edit_token}}hide{{/if}}"{{#unless order.submittable}} disabled="disabled"{{/unless}}{{#if restaurant.is_unacceptable}} disabled="disabled"{{/if}}>Checkout</button>
+          {{else}}
+          <a href="/orders/{{order.id}}" class="btn btn-primary pull-right">To Order</a>
+          {{/eq}}
+        </div>
       </div>
     </div>
   </div>

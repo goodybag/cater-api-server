@@ -1,0 +1,37 @@
+
+
+.menu {
+  .row();
+}
+
+
+.col-main {
+  #grid>.column(9);
+}
+
+.col-side {
+  #grid>.column(3);
+}
+
+@media (min-width: 40rem) {
+  .menu .logo {
+    display: inline-block;
+    height: @logo-size;
+    width: @logo-size;
+  }
+
+  .menu .restaurant-name {
+    vertical-align: top;
+    line-height: @logo-size;
+    font-family: 'Aleo';
+    font-weight: 700;
+    font-size: 4rem;
+  }
+
+  .menu .restaurant-description {
+    color: #111;
+    font-size: 1.1rem;
+  }
+}
+
+@logo-size: 100px;

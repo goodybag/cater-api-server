@@ -1,0 +1,5 @@
+<img class="logo" 
+  src="{{#if restaurant.logo_url}}{{filepicker restaurant.logo_url 100 100}}{{else}}{{filepicker config.defaultLogo 100 100}}{{/if}}" 
+  alt="{{restaurant.name}}">
+<span class="restaurant-name">{{restaurant.name}}</span>
+<div class="restaurant-description">{{restaurant.description}}</div>

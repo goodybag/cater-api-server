@@ -34,7 +34,7 @@ define(function(require, exports, module) {
           required: true
         },
         cuisine: {
-          type: 'array',
+          type: ['array', 'null'],
           uniqueItems: true,
           items: {
             type: 'string',

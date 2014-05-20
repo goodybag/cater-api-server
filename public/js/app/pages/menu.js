@@ -18,6 +18,8 @@ define( function( require ){
 
   var page = {
     init: function( options ){
+      page.options = options;
+
       var orderModel      = options.order;
       var orderParams     = options.orderParams;
       var restaurant      = options.restaurant;

@@ -21,8 +21,7 @@
 {{#extend "body"}}
 <h2>Basic Info</h2>
 
-<form
-  id="create-item-form"
+<form id="create-item-form"
   action="{{sidebarNav.baseUrl}}"
   method="POST"
   class="form ap-form form-vertical">
@@ -33,10 +32,10 @@
 {{#extend "scripts"}}
 {{> admin_item_form}}
 <script>
-  // require( ['app/pages/admin-regions'], function( page ){
-  //   page.init({
-
-  //   });
-  // });
+  require( ['item-form'], function( form ){
+    form.on('item:saved', function( model ){
+      window.location.href = '{{sidebarNav.baseUrl}}/' + model.get('id');
+    });
+  });
 </script>
 {{/extend}}

@@ -126,22 +126,6 @@ module.exports.register = function(app) {
     })
   );
 
-  // app.post('/admin/delivery-services/new'
-  // , m.db.regions.find( {}, { limit: 'all' } )
-  // , m.viewPlugin( 'sidebarNav', {
-  //     active:   'basic-info'
-  //   , baseUrl:  '/admin/delivery-services/new'
-  //   , isNew:    true
-  //   })
-  // , m.view( 'admin/delivery-service/new-item', db.delivery_services, {
-  //     layout: 'admin/layout-single-object'
-  //   , method: 'insert'
-  //   })
-  // , m.after( function( req, res, next ){
-
-  //   })
-  // );
-
   app.get('/admin/delivery-services/:id'
   , m.redirect('/admin/delivery-services/:id/basic-info')
   );
@@ -153,6 +137,11 @@ module.exports.register = function(app) {
   , m.viewPlugin( 'sidebarNav', {
       active:   'basic-info'
     , baseUrl:  '/admin/delivery-services/:id'
+    })
+  , m.viewPlugin( 'itemForm', {
+      selector:       '#edit-item-form'
+    , collection:     'app/collections/delivery-services'
+    , localModelProp: 'delivery_service'
     })
   , m.view( 'admin/delivery-service/basic-info', db.delivery_services, {
       layout: 'admin/layout-single-object'

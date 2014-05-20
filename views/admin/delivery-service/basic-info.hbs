@@ -21,17 +21,21 @@
 {{#extend "body"}}
 <h2>Basic Info</h2>
 
-<form action="{{sidebarNav.baseUrl}}/basic-info" class="form ap-form form-vertical">
+<form id="edit-item-form"
+  action="{{sidebarNav.baseUrl}}/basic-info"
+  method="POST"
+  class="form ap-form form-vertical">
   {{> admin_delivery_service_basic_info_form}}
 </form>
 {{/extend}}
 
 {{#extend "scripts"}}
+{{> admin_item_form}}
 <script>
-  // require( ['app/pages/admin-regions'], function( page ){
-  //   page.init({
-
-  //   });
-  // });
+  require( ['item-form'], function( form ){
+    form.on('item:saved', function( model ){
+      window.location.href = '/admin/delivery-services';
+    });
+  });
 </script>
 {{/extend}}

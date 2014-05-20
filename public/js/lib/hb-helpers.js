@@ -53,7 +53,13 @@ define(function(require, exports, module) {
       return utils.isNaN(cents) ? '' : (cents / 100)
     },
 
-    json: function(context) {
+    json: function(context, key) {
+      if ( typeof key === 'string' ){
+        key = key.split('.');
+        for ( var i = 0, l = key.length; i <l; i++ ){
+          context = context[ key[i] ];
+        }
+      }
       return JSON.stringify(context);
     },
 
@@ -470,10 +476,6 @@ define(function(require, exports, module) {
     uncamelize: function( text ){
       var result = text.replace( /([A-Z])/g, " $1" );
       return result.charAt(0).toUpperCase() + result.slice(1);
-    },
-
-    lookup: function( key, obj ){
-      return obj[ key ];
     }
   }
 

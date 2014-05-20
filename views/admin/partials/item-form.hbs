@@ -5,7 +5,7 @@
   , function( $, FormView, Collection ){
       return new FormView({
         el: $('{{itemForm.selector}}')
-      , model: new Collection().createModel({{lookup itemForm.localModelProp this}})
+      , model: new Collection().createModel({{{json this itemForm.localModelProp}}})
       });
     }
   );

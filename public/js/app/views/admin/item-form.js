@@ -36,6 +36,7 @@ define(function(require, exports, module) {
         success: function(){
           spinner.stop();
           venter.trigger( 'item:saved', this_.model );
+          this_.trigger( 'item:saved', this_.model, this_ );
         }
 
       , error: function( error ){

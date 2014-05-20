@@ -1,0 +1,45 @@
+/////////////////////////
+// Core Order Manifest //
+/////////////////////////
+
+@import (less) "../public/components/normalize-css/normalize.css";
+@import "../public/components/less-elements/elements.less";
+
+@import "variables.less";
+@import "mixins.less";
+@import "animations.less";
+
+@import "font-faces/din.less";
+@import "font-faces/share-tech-mono.less";
+@import "typography-order-manifest.less";
+
+// Components
+@import "components/manifest-page.less";
+@import "components/manifest-header.less";
+@import "components/manifest-table.less";
+@import "components/manifest-section-dl.less";
+
+html, body {
+  background-color:     #fff;
+  font-family:          'Din';
+  font-size:            14px;
+  font-weight:          500;
+  line-height:          16px;
+  color:                #333;
+  padding: 0;
+  margin: 0;
+}
+
+* {
+  position: relative;
+  .box-sizing( border-box );
+}
+
+@media print {
+  // @page {
+  //   margin-top:     @manifest-page-margin-top;
+  //   margin-bottom:  @manifest-page-margin-bottom;
+  //   margin-left:    @manifest-page-margin-left;
+  //   margin-right:   @manifest-page-margin-right;
+  // }
+}

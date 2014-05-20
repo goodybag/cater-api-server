@@ -5,8 +5,8 @@ var config  = require('../../config');
 var states  = require('../../public/js/lib/states')
 var models  = require('../../models');
 var logger  = require('../../logger');
-var receipt = require('../../lib/receipt');
 var venter  = require('../../lib/venter');
+var pdfs    = require('../../lib/pdfs');
 var scheduler = require('../../lib/scheduler');
 
 var moment = require('moment-timezone');
@@ -55,6 +55,11 @@ module.exports.auth = function(req, res, next) {
         order.attributes.review_token !== reviewToken &&
         order.attributes.edit_token !== editToken)
       return res.status(404).render('404');
+
+    // There was a review token, so this is likely a restaurant manager
+    if (reviewToken){
+      req.order.isRestaurantManager = true;
+    }
 
     req.order.isOwner = true;
     next();
@@ -429,4 +434,19 @@ module.exports.receipt = function( req, res ){
 
     res.render( 'invoice/receipt', options );
   });
+};
+
+module.exports.rebuildPdf = function( req, res ){
+  if ( !(req.param('type') in pdfs) ){
+    return res.error({
+      type: 'input'
+    , httpCode: '403'
+    , name: 'INVALID_PDF'
+    , message: 'The report of that type does not exist'
+    });
+  }
+
+  pdfs[ req.param('type') ].build({ orderId: req.param('oid') });
+
+  res.send(204);
 };

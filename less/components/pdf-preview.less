@@ -1,0 +1,44 @@
+/////////////////
+// PDF Preview //
+/////////////////
+
+.pdf-preview {
+  .pdf-preview-title {
+    margin-bottom: 0;
+    padding-bottom: 6px;
+    border-bottom: solid 1px @gray;
+  }
+
+  .nav-tabs {
+    position: absolute;
+    z-index: 2;
+
+  }
+
+  .nav-tabs a {
+    background: #fff;
+    opacity: 0.8;
+  }
+
+  iframe {
+    width: 100%;
+    min-height: 385px;
+    border: none;
+  }
+
+  .pdf-preview-alert {
+    .opacity(0);
+    .transition( ease-out, 0.2s );
+    .transition-property( opacity );
+    position: absolute;
+    top: 160px;
+    width: 100%;
+    padding: 16px 12px;
+    z-index: 2;
+    background: rgba( 255, 255, 255, 0.74 );
+    box-shadow: 0 0 15px rgba( 0, 0, 0, 0.3 );
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+  }
+}

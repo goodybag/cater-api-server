@@ -4,7 +4,7 @@
 
 var options = {
   // Describes when to break the page
-  magicNumber: 580
+  magicNumber: 1360
 
 , readyTimeout: 20000
 
@@ -20,9 +20,9 @@ var options = {
 
 $(function(){
   // Add in variable height els
-  options.magicNumber += $('header').outerHeight();
-  options.magicNumber += $('.order-info').outerHeight();
-  options.magicNumber += $('.order-adjustment').outerHeight();
+  options.magicNumber -= $('header').outerHeight();
+  options.magicNumber -= $('.order-info').outerHeight();
+  options.magicNumber -= $('.order-adjustment').outerHeight();
 
   adjustPage( $('.page'), function(){
     window.__page.ready();

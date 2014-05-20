@@ -431,7 +431,7 @@ var Restaurant = module.exports = Model.extend({
         , where: {
             'max_guests': {$gte: ((orderParams.guests) ? orderParams.guests : 0)}
             // TODO: Assume timezone of the restaurant (restaurant needs timezone column), for now hardcoding America/Chicago
-          , 'lead_time': {$custom: ['"restaurant_lead_times"."lead_time" <= EXTRACT(EPOCH FROM ($1 -  (now() AT TIME ZONE \'America/Chicago\') )/3600)', formattedDateTime]}
+          , 'lead_time': {$custom: ['"restaurant_lead_times"."lead_time" <= EXTRACT(EPOCH FROM ($1 -  (now() AT TIME ZONE \'America/Chicago\') )/60)', formattedDateTime]}
           }
         }
       }

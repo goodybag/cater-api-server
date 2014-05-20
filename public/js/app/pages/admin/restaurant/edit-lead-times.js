@@ -19,7 +19,7 @@ define(function(require){
         el: '.alert-container'
       });
 
-      var hours = utils.map(data.models.restaurant.attributes.delivery_times, function(times, idx) {
+      var hours = utils.map(options.models.restaurant.attributes.delivery_times, function(times, idx) {
         return new Views.EditHoursView({
           model: new Models.Hours({ day: idx, times: times })
         , el: '#hours-' + idx

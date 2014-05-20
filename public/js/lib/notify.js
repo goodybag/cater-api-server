@@ -4,7 +4,7 @@ define(function(){
   notify.error = function( msg ){
     // segment.io requires properties to be an object
     if ( typeof msg !== 'object' ) msg = { error: msg };
-    analytics.track('Error', msg);
+    if ( window.analytics ) analytics.track('Error', msg);
     console.error( msg );
   };
 

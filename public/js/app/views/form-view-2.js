@@ -8,6 +8,7 @@ define(function(require){
   var Backbone  = require('backbone');
   var utils     = require('utils');
   var config    = require('config');
+  var Hbs       = require('handlebars');
 
   return Backbone.View.extend({
     /**
@@ -45,10 +46,18 @@ define(function(require){
   , getModelData: function(){
       var this_ = this, data = {};
 
-      Object.keys( this.model.attributes ).forEach( function( k ){
-        var val = this_.getDomValue( k );
+      this.$el.find('[name]').each( function(){
+        var $this = $(this);
+        var k     = $this.attr('name');
+        var val   = this_.getDomValue( k, $this );
+
         if ( val ) data[ k ] = val;
       });
+
+      // Object.keys( this.model.attributes ).forEach( function( k ){
+      //   var val = this_.getDomValue( k );
+      //   if ( val ) data[ k ] = val;
+      // });
 
       return data;
     }

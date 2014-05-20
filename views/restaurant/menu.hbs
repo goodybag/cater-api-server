@@ -3,7 +3,6 @@
 {{#extend "body"}}
 <div class="container">
   <a class="back-to-results" href="/restaurants{{queryParams orderParams}}">Back to search</a>
-
   <div class="menu">
     <div class="col-main">
       {{> menu_header }}
@@ -15,6 +14,9 @@
       {{> menu_order_summary }}
     </div>
 </div>
+
+{{!-- Modals tucked away ;) --}}
+{{> modal_order_params }}
 {{/extend}}
 
 {{#extend "scripts"}}

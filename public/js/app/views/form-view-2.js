@@ -50,7 +50,7 @@ define(function(require){
         if ( val ) data[ k ] = val;
       });
 
-      returm data;
+      return data;
     }
 
     /**

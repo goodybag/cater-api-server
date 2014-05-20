@@ -1,11 +1,15 @@
 <script>
-  require(
-    [ 'jquery-loaded', 'app/views/admin/item-form', '{{itemForm.collection}}' ]
-  , function( $, formView, Collection ){
-      new FormView({
+  define(
+    'item-form'
+  , [ 'jquery-loaded', 'app/views/admin/item-form', '{{itemForm.collection}}' ]
+  , function( $, FormView, Collection ){
+      return new FormView({
         el: $('{{itemForm.selector}}')
-      , model: new Collection().create({{lookup itemForm.itemProperty this}})
+      , model: new Collection().createModel({{lookup itemForm.localModelProp this}})
       });
     }
   );
+
+  // No-op require to load in item-form
+  require(['item-form'], function(){})
 </script>

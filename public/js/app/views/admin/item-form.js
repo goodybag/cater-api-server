@@ -13,10 +13,10 @@ define(function(require, exports, module) {
   var config    = require('config');
   var FormView2 = require('app/views/form-view-2');
   var spinner   = require('spinner');
-  var venter    = requrie('venter');
-  var notify    = requrie('notify');
+  var venter    = require('venter');
+  var notify    = require('notify');
 
-  return module.exports = utils.View.extend({
+  return module.exports = FormView2.extend({
     events: {
       'submit':       'onSubmit'
     }

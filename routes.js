@@ -117,9 +117,9 @@ module.exports.register = function(app) {
     , isNew:    true
     })
   , m.viewPlugin( 'itemForm', {
-      selector:     '#create-item-form'
-    , collection:   'app/collections/delivery-services'
-    , itemProperty: 'delivery_service'
+      selector:       '#create-item-form'
+    , collection:     'app/collections/delivery-services'
+    , localModelProp: 'delivery_service'
     })
   , m.view( 'admin/delivery-service/new-item', {
       layout: 'admin/layout-single-object'

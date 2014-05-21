@@ -10,7 +10,7 @@
 {{/extend}}
 
 {{#extend "body"}}
-<h2>Basic Info</h2>
+<h2>Delivery Zips</h2>
 
 <form id="edit-item-form"
   action="{{sidebarNav.baseUrl}}/basic-info"
@@ -21,12 +21,7 @@
 {{/extend}}
 
 {{#extend "scripts"}}
-{{> admin_item_form}}
 <script>
-  require( ['item-form'], function( form ){
-    form.on('item:saved', function( model ){
-      window.location.href = '/admin/delivery-services';
-    });
-  });
+
 </script>
 {{/extend}}

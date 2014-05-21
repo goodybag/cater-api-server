@@ -141,6 +141,9 @@ module.exports.register = function(app) {
       active:   'basic-info'
     , baseUrl:  '/admin/delivery-services/:id'
     })
+  , m.viewPlugin( 'breadCrumbs', {
+      currentPage: 'basic-info'
+    })
   , m.viewPlugin( 'itemForm', {
       selector:       '#edit-item-form'
     , collection:     'app/collections/delivery-services'

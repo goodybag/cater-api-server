@@ -13,10 +13,9 @@ define(function(require, exports, module) {
   var config    = require('config');
   var spinner   = require('spinner');
 
-  return module.exports = FormView2.extend({
+  return module.exports = utils.View.extend({
     events: {
-      'submit':             'onSubmit'
-    , 'click .btn-delete':  'onBtnDeleteClick'
+      'click .btn-delete':  'onBtnDeleteClick'
     }
 
   , initialize: function( options ){
@@ -39,8 +38,8 @@ define(function(require, exports, module) {
 
       model.destroy().done( function(){
         spinner.stop();
-        venter.trigger( 'item:saved', model );
         this_.trigger( 'item:saved', model, this_ );
+        $( e.currentTarget ).parents('tr').eq(0).remove();
       }).fail( function( xhr, status, error ){
         spinner.stop();
         notify.error( error );

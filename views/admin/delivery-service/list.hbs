@@ -30,7 +30,7 @@
           </td>
           <td>{{this.region.name}}</td>
           <td class="actions">
-            <button class="btn btn-small btn-default" data-id="{{this.id}}">X</button>
+            <button class="btn btn-small btn-default btn-delete" data-id="{{this.id}}">X</button>
           </td>
         </tr>
       {{/each}}
@@ -42,10 +42,23 @@
 
 {{#extend "scripts"}}
 <script>
-  require( ['app/pages/admin-delivery-services'], function( page ){
-    page.init({
+  define(
+    'page'
+  , [ 'jquery-loaded', 'app/views/admin/readable-table', '{{collection.path}}' ]
+  , function( $, Table, Collection ){
+      var page = {
+        init: function(){
+          $(function(){
+            page.table = new Table({ collection: new Collection() });
+            page.table.setElement( $('#delivery-services-table > table') );
+          });
+        }
+      };
 
-    });
-  });
+      return page;
+    }
+  );
+
+  require(['page'], function( page ){ page.init(); });
 </script>
 {{/extend}}

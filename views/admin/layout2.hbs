@@ -14,56 +14,7 @@
     <![endif]-->
   </head>
   <body class="page {{{block "page"}}}">
-    <!--<Navbar>-->
-    <header class="navbar collapsed">
-      <div class="container">
-        <a href="/">
-          <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
-        </a>
-
-        {{#if user.id}}
-          <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <a href="/admin">Home</a>
-            </li>
-            <li class="{{#eq activeTab 'restaurants'}}active{{/eq}}">
-              <a href="/admin/restaurants">Restaurants</a>
-            </li>
-            <li class="{{#eq activeTab 'regions'}}active{{/eq}}">
-              <a href="/admin/regions">Regions</a>
-            </li>
-            <li class="{{#eq activeTab 'delivery-services'}}active{{/eq}}">
-              <a href="/admin/delivery-services">Delivery Services</a>
-            </li>
-            {{{block "navbar-links"}}}
-          </ul>
-        {{else}}
-          <button class="navbar-toggle btn btn-default">Sign In</button>
-          <form class="login-form form-small" method="POST" action="/login{{queryParams query}}">
-            <div class="form-group">
-              <label for="login-email">Email</label>
-              <label for="remember-me" class="remember-me">
-                <input type="checkbox" name="remember" value="1" id="remember-me" tabindex="3">
-                Remember me
-              </label>
-              <input type="email" name="email" id="login-email" placeholder="Email" tabindex="1">
-            </div>
-
-            <div class="form-group">
-              <a href="/forgot-password" class="forgot-password">Forgot password?</a>
-              <label for="login-password">Password</label>
-              <input type="password" name="password" id="login-password" placeholder="Password" tabindex="2">
-            </div>
-
-            <div class="form-group form-group-submit">
-              <button class="btn btn-default" tabindex="4">Sign In</button>
-            </div>
-          </form>
-        {{/if}}
-      </div>
-    </header>
-    <!--</Navbar>-->
+    {{> admin_navbar}}
 
     {{{block "banner"}}}
 

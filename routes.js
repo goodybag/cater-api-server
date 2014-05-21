@@ -102,11 +102,11 @@ module.exports.register = function(app) {
   , m.queryOptions({
       one: [{ table: 'regions', alias: 'region' }]
     })
+  , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
   , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
   , m.view( 'admin/delivery-service/list', db.delivery_services, {
       layout: 'admin/layout2'
     , method: 'find'
-    , activeTab: 'delivery-services'
     })
   );
 

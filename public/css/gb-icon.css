@@ -59,7 +59,10 @@ you can use the generic selector below, but it's slower:
 .gb-icon-hamburger,
 .gb-icon-star,
 .gb-icon-star-half-empty,
-.gb-icon-star-empty {
+.gb-icon-star-empty,
+.gb-icon-individual,
+.gb-icon-group,
+.gb-icon-full-menu {
   font-family: 'gb';
   speak: none;
   font-style: normal;
@@ -128,4 +131,16 @@ you can use the generic selector below, but it's slower:
 .gb-icon-hamburger:before,
 [data-icon="gb-icon-heart"]:before {
   content: "\e609";
+}
+.gb-icon-individual:before,
+[data-icon="gb-icon-individual"]:before {
+  content: "\e60a";
+}
+.gb-icon-group:before,
+[data-icon="gb-icon-group"]:before {
+  content: "\e60b";
+}
+.gb-icon-full-menu:before,
+[data-icon="gb-icon-full-menu"]:before {
+  content: "\e60c";
 }

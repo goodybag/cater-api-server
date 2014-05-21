@@ -1,5 +1,5 @@
 {{#each restaurant.categories}}
-  {{#contains menus "group"}}
+  {{!-- {{#contains menus "group"}}
     <div id="group-{{id}}" class="panel menu-category menu-full menu-group">
       <div class="panel-heading menu-category-heading">
         <h3 class="panel-title menu-category-title">[Group] {{name}}</h3>
@@ -33,6 +33,24 @@
         {{/each}}
       </div>
     </div>
+  {{/contains}} --}}
+
+  {{#contains menus "group"}}
+    <div id="group-{{id}}" class="menu-category menu-full menu-group">
+      <div class="category-heading">
+        <h2>[GRoup]{{name}}</h2>
+        <p>{{description}}</p>
+      </div>
+    </div>
+    <div class="list-group">
+      {{#each items}}
+      <a href="#" class="list-group-item">
+        <div><strong>{{name}}{{> tags tags}}</strong></div>
+        <div>{{description}}</div>
+      </a>
+      {{/each}}
+    </div>
+
   {{/contains}}
 {{/each}}
 

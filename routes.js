@@ -102,6 +102,7 @@ module.exports.register = function(app) {
   , m.queryOptions({
       one: [{ table: 'regions', alias: 'region' }]
     })
+  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
   , m.view( 'admin/delivery-service/list', db.delivery_services, {
       layout: 'admin/layout2'
     , method: 'find'
@@ -111,9 +112,10 @@ module.exports.register = function(app) {
 
   app.get('/admin/delivery-services/new'
   , m.db.regions.find( {}, { limit: 'all' } )
+  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
   , m.viewPlugin( 'sidebarNav', {
       active:   'basic-info'
-    , baseUrl:  '/admin/delivery-services/new'
+    , baseUrl:  '/admin/delivery-services'
     , isNew:    true
     })
   , m.viewPlugin( 'itemForm', {
@@ -134,6 +136,7 @@ module.exports.register = function(app) {
   , m.param('id')
   , m.db.regions.find( {}, { limit: 'all' } )
   , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
+  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
   , m.viewPlugin( 'sidebarNav', {
       active:   'basic-info'
     , baseUrl:  '/admin/delivery-services/:id'

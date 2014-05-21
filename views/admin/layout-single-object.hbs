@@ -26,13 +26,13 @@
           <li>
             <a href="/admin">Home</a>
           </li>
-          <li class="{{#eq activeTab 'restaurants'}}active{{/eq}}">
+          <li class="{{#eq mainNav.active 'restaurants'}}active{{/eq}}">
             <a href="/admin/restaurants">Restaurants</a>
           </li>
-          <li class="{{#eq activeTab 'regions'}}active{{/eq}}">
+          <li class="{{#eq mainNav.active 'regions'}}active{{/eq}}">
             <a href="/admin/regions">Regions</a>
           </li>
-          <li class="{{#eq activeTab 'delivery-services'}}active{{/eq}}">
+          <li class="{{#eq mainNav.active 'delivery-services'}}active{{/eq}}">
             <a href="/admin/delivery-services">Delivery Services</a>
           </li>
           {{{block "navbar-links"}}}

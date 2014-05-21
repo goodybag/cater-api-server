@@ -1,8 +1,15 @@
-{{#extend "page"}}page-regions{{/extend}}
+{{#extend "page"}}page-delivery-services{{/extend}}
 
 {{#extend "body"}}
 <div class="container" id="main-container">
   <h1 class="page-title">Delivery Services</h1>
+  <div class="page-actions">
+    <a
+      class="btn btn-primary"
+      href="/admin/delivery-services/new">
+      Create
+    </a>
+  </div>
 
   <section class="panel-component" id="delivery-services-table">
     <table class="table table-striped">
@@ -11,14 +18,10 @@
           <th>ID</th>
           <th>Name</th>
           <th>Region</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td colspan="3" class="col-add-new">
-            <a class="btn btn-default btn-large" href="/admin/delivery-services/new">Create New Delivery Service</a>
-          </td>
-        </tr>
       {{#each delivery_services}}
         <tr>
           <td>{{this.id}}</td>
@@ -26,6 +29,9 @@
             <a href="/admin/delivery-services/{{this.id}}">{{this.name}}</a>
           </td>
           <td>{{this.region.name}}</td>
+          <td class="actions">
+            <button class="btn btn-small btn-default" data-id="{{this.id}}">X</button>
+          </td>
         </tr>
       {{/each}}
       </tbody>
@@ -36,7 +42,7 @@
 
 {{#extend "scripts"}}
 <script>
-  require( ['app/pages/admin-regions'], function( page ){
+  require( ['app/pages/admin-delivery-services'], function( page ){
     page.init({
 
     });

@@ -155,6 +155,25 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/admin/delivery-services/:id/delivery-zips'
+  , m.param('id')
+  , m.db.regions.find( {}, { limit: 'all' } )
+  , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
+  , m.queryOptions({ many: [{ table: 'delivery_service_zips', alias: 'zips' }] })
+  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
+  , m.viewPlugin( 'sidebarNav', {
+      active:   'delivery-zips'
+    , baseUrl:  '/admin/delivery-services/:id'
+    })
+  , m.viewPlugin( 'breadCrumbs', {
+      currentPage: 'delivery-zips'
+    })
+  , m.view( 'admin/delivery-service/delivery-zips', db.delivery_services, {
+      layout: 'admin/layout-single-object'
+    , method: 'findOne'
+    })
+  );
+
   /**
    * Restaurant create
    */

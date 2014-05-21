@@ -11,17 +11,38 @@
 
 {{#extend "body"}}
 <h2>Delivery Zips</h2>
+<section class="ap-component" id="component-delivery-zips">
 
-<form id="edit-item-form"
-  action="{{sidebarNav.baseUrl}}/basic-info"
-  method="POST"
-  class="form ap-form form-vertical">
-  {{> admin_delivery_service_basic_info_form}}
-</form>
+</section>
 {{/extend}}
 
 {{#extend "scripts"}}
 <script>
+  define(
+    'page'
+  , [ 'jquery-loaded', 'app/views/admin/2d-matrix-editor' ]
+  , function( $, MatrixEdtor ){
+      var page = {
+        init: function(){
+          page.delivery_service = {{{json delivery_service}}};
+          $(function(){
+            page.editor = new MatrixEdtor({
+              set:  page.delivery_service.zips.map( function( zip ){
+                      return { x: zip.from, y: zip.to }
+                    })
+            });
 
+            page.editor.render();
+
+            $('#component-delivery-zips').append( page.editor.el );
+          });
+        }
+      }
+
+      return page;
+    }
+  );
+
+  require(['page'], function( page ){ return page.init(); });
 </script>
 {{/extend}}

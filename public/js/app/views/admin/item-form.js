@@ -54,8 +54,8 @@ define(function(require, exports, module) {
 
       this.model.destroy().done( function(){
         spinner.stop();
-        venter.trigger( 'item:saved', this_.model );
-        this_.trigger( 'item:saved', this_.model, this_ );
+        venter.trigger( 'item:destroyed', this_.model );
+        this_.trigger( 'item:destroyed', this_.model, this_ );
       }).fail( function( xhr, status, error ){
         spinner.stop();
         notify.error( error );

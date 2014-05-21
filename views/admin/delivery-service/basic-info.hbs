@@ -24,7 +24,7 @@
 {{> admin_item_form}}
 <script>
   require( ['item-form'], function( form ){
-    form.on('item:saved', function( model ){
+    form.on( 'item:saved item:destroyed', function( model ){
       window.location.href = '/admin/delivery-services';
     });
   });

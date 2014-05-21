@@ -389,7 +389,7 @@ config.production = {
 , isProduction: true
 
 , cdn: {
-    baseUrl: 'https://s3.amazonaws.com/cater-cdn-prod'
+    baseUrl: 'https://d3bqck8kwfkhx5.cloudfront.net/'
   , bucket: 'cater-cdn-prod'
   }
 

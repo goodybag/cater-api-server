@@ -3,13 +3,16 @@
     {{#with restaurant.menuLengths}}
     <ul class="nav nav-tabs menu-picker-tabs">
       <li class="active">
-        <a href="#full" class="btn-change-menu" data-toggle="tab" data-type="full" title="Show all menu items">Full Menu ({{#if full}}{{full}}{{else}}0{{/if}})</a>
+        <a href="#full" class="btn-change-menu" data-toggle="tab" data-type="full" title="Show all menu items">
+          <span data-icon="gb-icon-full-menu"></span> Full Menu ({{#if full}}{{full}}{{else}}0{{/if}})</a>
       </li>
       <li>
-        <a href="#group" class="btn-change-menu {{#unless group}}disabled{{/unless}}" data-toggle="tab" data-type="group" title="Show group packaged items">Group Menu ({{#if group}}{{group}}{{else}}0{{/if}})</a>
+        <a href="#group" class="btn-change-menu {{#unless group}}disabled{{/unless}}" data-toggle="tab" data-type="group" title="Show group packaged items">
+          <span data-icon="gb-icon-group"></span> Group Menu ({{#if group}}{{group}}{{else}}0{{/if}})</a>
       </li>
       <li>
-        <a href="#individual" class="btn-change-menu" data-toggle="tab" data-type="individual" title="Show individually packaged items">Individual Menu ({{#if individual}}{{individual}}{{else}}0{{/if}})</a>
+        <a href="#individual" class="btn-change-menu" data-toggle="tab" data-type="individual" title="Show individually packaged items">
+          <span data-icon="gb-icon-individual"></span> Individual Menu ({{#if individual}}{{individual}}{{else}}0{{/if}})</a>
       </li>
     </ul>
     {{/with}}

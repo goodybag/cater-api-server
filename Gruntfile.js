@@ -22,6 +22,8 @@ module.exports = function(grunt) {
   var gruntConfig = {
     localbranch: grunt.option('branch') || 'master'
 
+  , pkg: grunt.file.readJSON('package.json')
+
   , complexity: {
       generic: {
         src: ['./**/*.js'],
@@ -59,24 +61,40 @@ module.exports = function(grunt) {
       }
     , deployStaging: {
         options: { stdout: true }
-      , command: 'git push staging <%= localbranch %>:master'
+      , command: 'git push staging <%= localbranch %>:master --force'
       }
     , deployProduction: {
         options: { stdout: true }
       , command: './bin/deploy production <%= localbranch %>'
+      }
+    , versionPatch: {
+        options: { stdout: true }
+      , command: 'npm version patch'
+      }
+    , commitManifest: {
+        options: { stdout: true }
+      , command: 'git add public/css/order-manifest.css && git commit -m "copy order manifest styles"'
       }
     }
 
   , less: {
       compile: {
         files: {
-          "public/dist/landing.css":            "less/core-landing.less"
-        , "public/dist/landing-ielt9.css":      "less/ielt9-landing.less"
-        , "public/dist/cater-tool.css":         "less/core-cater-tool.less"
-        , "public/dist/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
-        , "public/dist/admin.css":              "less/core-admin.less"
-        , "public/dist/order-manifest.css":     "less/core-order-manifest.less"
+          "public/dist/<%= pkg.version %>/landing.css":            "less/core-landing.less"
+        , "public/dist/<%= pkg.version %>/landing-ielt9.css":      "less/ielt9-landing.less"
+        , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less"
+        , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
+        , "public/dist/<%= pkg.version %>/admin.css":              "less/core-admin.less"
+        , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
         }
+      }
+    }
+
+  , copy: {
+      manifest: {
+        files: [
+          { src: ['public/dist/<%= pkg.version %>/order-manifest.css'], dest: 'public/css/order-manifest.css' }
+        ]
       }
     }
 
@@ -96,7 +114,7 @@ module.exports = function(grunt) {
       app: {
         options: utils.extend( {}, requireConfig, {
           baseUrl: 'public/js/lib'
-        , out: 'public/dist/app.js'
+        , out: 'public/dist/<%= pkg.version %>/app.js'
         , optimize: 'uglify'
         , preserveLicenseComments: false
         , useStrict: true
@@ -214,21 +232,21 @@ module.exports = function(grunt) {
 
   var landing   = gruntConfig.requirejs.landing.options = utils.clone( gruntConfig.requirejs.app.options );
   landing.name  = 'app/pages/landing';
-  landing.out   = 'public/dist/landing.js';
+  landing.out   = 'public/dist/<%= pkg.version %>/landing.js';
 
   var admin   = gruntConfig.requirejs.admin.options = utils.clone( gruntConfig.requirejs.app.options );
   admin.name  = 'app/pages/admin/builder';
-  admin.out   = 'public/dist/admin.js';
+  admin.out   = 'public/dist/<%= pkg.version %>/admin.js';
 
   grunt.initConfig( gruntConfig );
 
   grunt.loadNpmTasks('grunt-complexity');
 
   grunt.registerTask( 'analyze',  ['complexity'] );
-  grunt.registerTask( 'build',    ['less', 'concat', 'shell:handlebars', 'requirejs'] );
+  grunt.registerTask( 'build',    ['less', 'copy:manifest', 'shell:commitManifest', 'concat', 'shell:handlebars', 'requirejs'] );
   grunt.registerTask( 'default',  ['less', 'shell:handlebars', 'watch'] );
 
-  grunt.registerTask( 'deploy', ['build', 's3:production', 'shell:deployProduction'] );
+  grunt.registerTask( 'deploy', [ 'shell:versionPatch', 'build', 's3:production', 'shell:deployProduction'] );
   grunt.registerTask( 'deploy:staging', ['build', 's3:staging', 'shell:deployStaging'] );
   grunt.registerTask( 'deploy:dev', ['build', 's3:dev'] );
 };

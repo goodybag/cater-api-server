@@ -27,7 +27,7 @@ branch        the branch you wish to deploy (defaults to master)
 Options:
   -f force
   -m turn maintenance mode on in the beginning and off at the end
-  -n skip npm version patch
+  -n skip push tags to master
      this flag is only necessary if you do not want to version when deploying master to production
   -s skip database backup
 """
@@ -113,7 +113,7 @@ if [ $do_backup == true ] ; then
 fi
 
 if [ "$branch" == "master" ] && [ "$env" == "production" ] && [ $do_version == true ]; then
-  npm version patch
+  # npm version patch
   git push origin $branch --tags
 fi
 

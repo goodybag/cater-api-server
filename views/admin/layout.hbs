@@ -76,7 +76,7 @@
     </div>
 
     {{#unless config.isDev}}
-    <script src="{{cdn "dist/app.js"}}"></script>
+    <script src="{{cdn (format 'dist/<%= version %>/app.js' pkg)}}"></script>
     {{else}}
     <script src="{{cdn "components/requirejs/require.js"}}"></script>
     <script src="{{cdn "js/require-config.js"}}"></script>

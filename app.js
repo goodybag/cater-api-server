@@ -19,7 +19,10 @@ var
 , errors = require('./errors')
 , middleware = require('./middleware')
 , Models = require('./models')
+, pkg = require('./package.json')
 ;
+
+hbs.handlebars = require('handlebars');
 
 var app = module.exports = express();
 
@@ -104,6 +107,7 @@ app.configure(function(){
     options = utils.extend( options, {
         config:   utils.extend({}, partialConfig, options.config, config)
       , session:  this.req.session
+      , pkg:      pkg
       }
     );
 

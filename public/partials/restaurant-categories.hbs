@@ -1,53 +1,15 @@
 {{#each restaurant.categories}}
-  {{!-- {{#contains menus "group"}}
-    <div id="group-{{id}}" class="panel menu-category menu-full menu-group">
-      <div class="panel-heading menu-category-heading">
-        <h3 class="panel-title menu-category-title">[Group] {{name}}</h3>
-        <p class="category-description">{{description}}</p>
-      </div>
-      <div class="list-group list-group-flush category" id="category-{{id}}">
-        {{#each items}}
-        <a href="#" class="list-group-item item" id="item-{{id}}">
-          <div class="row">
-            <h5 class="list-group-item-heading col-sm-7">
-              {{name}}
-              {{>tags tags}}
-            </h5>
-            <dl class="item-legend col-sm-5">
-              <div class="feeds-price-wrapper">
-                <div class="feeds">
-                  <dt>Feeds</dt>
-                  <dd>{{range feeds_min feeds_max}}</dd>
-                </div>
-                <div class="price">
-                  <dt>Price</dt>
-                  <dd>{{dollars price}}</dd>
-                </div>
-              </div>
-            </dl>
-          </div>
-          <div class="row">
-            <p class="list-group-item-text col-sm-7">{{description}}</p>
-          </div>
-        </a>
-        {{/each}}
-      </div>
-    </div>
-  {{/contains}} --}}
-
   {{#contains menus "group"}}
     <div id="group-{{id}}" class="menu-category menu-full menu-group">
       <div class="category-heading">
         <span class="category-type-icon" data-icon="gb-icon-group"></span>
-        <div>
-        <p>{{name}}</p>
-        <p>{{description}}</p>
-        </div>
+        <span class="category-name">{{name}}</span>
+        {{#if description}}<div class="category-description">{{description}}</div>{{/if}}
       </div>
     </div>
-    <div class="list-group">
+    <div class="list-group" id="category-{{id}}">
       {{#each items}}
-      <a href="#" class="list-group-item">
+      <a href="#" class="list-group-item" id="item-{{id}}">
         <div class="menu-item-name">{{name}}{{> tags tags}}</div>
         <div class="menu-item-stats">
           <dl>
@@ -61,44 +23,33 @@
       </a>
       {{/each}}
     </div>
-
   {{/contains}}
 {{/each}}
 
 {{#each restaurant.categories}}
   {{#contains menus "individual"}}
-    <div id="individual-{{id}}" class="panel menu-category menu-full menu-individual">
-      <div class="panel-heading menu-category-heading">
-        <h3 class="panel-title menu-category-title">[Individual] {{name}}</h3>
-        <p class="category-description">{{description}}</p>
+    <div id="group-{{id}}" class="menu-category menu-full menu-individual">
+      <div class="category-heading">
+        <span class="category-type-icon" data-icon="gb-icon-individual"></span>
+        <span class="category-name">{{name}}</span>
+        {{#if description}}<div class="category-description">{{description}}</div>{{/if}}
       </div>
-      <div class="list-group list-group-flush category" id="category-{{id}}">
-        {{#each items}}
-        <a href="#" class="list-group-item item" id="item-{{id}}">
-          <div class="row">
-            <h5 class="list-group-item-heading col-sm-7">
-              {{name}}
-              {{>tags tags}}
-            </h5>
-            <dl class="item-legend col-sm-5">
-              <div class="feeds-price-wrapper">
-                <div class="feeds">
-                  <dt>Feeds</dt>
-                  <dd>{{range feeds_min feeds_max}}</dd>
-                </div>
-                <div class="price">
-                  <dt>Price</dt>
-                  <dd>{{dollars price}}</dd>
-                </div>
-              </div>
-            </dl>
-          </div>
-          <div class="row">
-            <p class="list-group-item-text col-sm-7">{{description}}</p>
-          </div>
-        </a>
-        {{/each}}
-      </div>
+    </div>
+    <div class="list-group" id="category-{{id}}">
+      {{#each items}}
+      <a href="#" class="list-group-item" id="item-{{id}}">
+        <div class="menu-item-name">{{name}}{{> tags tags}}</div>
+        <div class="menu-item-stats">
+          <dl>
+            <dt>Feeds</dt>
+            <dd>{{range feeds_min feeds_max}}</dd>
+            <dt>Price</dt>
+            <dd>{{dollars price}}</dd>
+          </dl>
+        </div>
+        <div class="menu-item-description">{{description}}</div>
+      </a>
+      {{/each}}
     </div>
   {{/contains}}
 {{/each}}

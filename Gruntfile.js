@@ -61,7 +61,7 @@ module.exports = function(grunt) {
       }
     , deployStaging: {
         options: { stdout: true }
-      , command: 'git push staging <%= localbranch %>:master'
+      , command: 'git push staging <%= localbranch %>:master --force'
       }
     , deployProduction: {
         options: { stdout: true }

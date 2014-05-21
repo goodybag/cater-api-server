@@ -67,7 +67,7 @@ module.exports = function(grunt) {
         options: { stdout: true }
       , command: './bin/deploy production <%= localbranch %>'
       }
-    , patchVersion: {
+    , versionPatch: {
         options: { stdout: true }
       , command: 'npm version patch'
       }

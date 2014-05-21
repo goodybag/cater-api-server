@@ -45,8 +45,16 @@
     <div class="list-group">
       {{#each items}}
       <a href="#" class="list-group-item">
-        <div><strong>{{name}}{{> tags tags}}</strong></div>
-        <div>{{description}}</div>
+        <div class="menu-item-name">{{name}}{{> tags tags}}</div>
+        <div class="menu-item-stats">
+          <dl>
+            <dt>Feeds</dt>
+            <dd>{{range feeds_min feeds_max}}</dd>
+            <dt>Price</dt>
+            <dd>{{dollars price}}</dd>
+          </dl>
+        </div>
+        <div class="menu-item-description">{{description}}</div>
       </a>
       {{/each}}
     </div>

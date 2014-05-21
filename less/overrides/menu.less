@@ -7,6 +7,7 @@
  * Nav tabs
  */
 .menu .nav-tabs {
+  border-bottom: 2px solid @brand-primary;
 }
 
 .menu .nav-tabs > li {
@@ -37,5 +38,46 @@
 /**
  * Menu Picker
  */
-.menu-picker { margin-bottom: 20px; }
+.menu-picker, .menu-picker-tabs { margin-bottom: 20px; }
 .menu-picker .tab-pane { .multicolumn(2, 20px); }
+
+/**
+ * Menu Category
+ */
+
+/**
+ * Menu Item
+ */
+.menu-item-name {
+  display: inline-block;
+  width: 70%;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.menu-item-stats {
+  display: inline-block;
+  vertical-align: top;
+  width: 29%;
+}
+
+.menu-item-stats dl {
+  float: right;
+  margin: 0;
+}
+
+.menu-item-stats dt {
+  display: inline;
+  margin-left: 30px;
+  &:nth-of-type(1) { margin-left: 0; }
+}
+
+.menu-item-description {
+  color: @gray-darker;
+}
+
+.menu-item-stats dd {
+  display: inline;
+  font-weight: bold;
+  margin: 0;
+}

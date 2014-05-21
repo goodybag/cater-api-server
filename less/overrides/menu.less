@@ -40,10 +40,18 @@
  */
 .menu-picker, .menu-picker-tabs { margin-bottom: 20px; }
 .menu-picker .tab-pane { .multicolumn(2, 20px); }
+.menu-picker .tab-pane a { text-decoration: none; }
+
+.menu-picker .tab-pane a [data-icon="gb-icon-group"],
+.menu-picker .tab-pane a [data-icon="gb-icon-individual"] { 
+  color: @gray; 
+  font-size: 1.1rem;
+}
+
 .menu-picker-tabs > li {
   line-height: 35px;
   &:nth-of-type(1) {
-    padding-left: 10px;
+    padding-left: 5px;
   }
 }
 .menu-picker-tabs a.btn-change-menu {
@@ -53,7 +61,7 @@
 .menu-picker-tabs [data-icon="gb-icon-full-menu"],
 .menu-picker-tabs [data-icon="gb-icon-group"],
 .menu-picker-tabs [data-icon="gb-icon-individual"] {
-  color: @gray-darker;
+  color: @gray;
   font-size: 2rem;
   vertical-align: middle;
 }
@@ -80,7 +88,7 @@
 }
 
 .category-type-icon {
-  color: @gray-darker;
+  color: @gray;
   font-size: 3rem;
   margin-right: 5px;
 }

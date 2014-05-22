@@ -14,7 +14,7 @@
     <script src="{{cdn "/components/console-polyfill/index.js"}}"></script>
     <![endif]-->
     <link rel="stylesheet" href="{{cdn "/css/gb-icon.css"}}">
-    <link rel="stylesheet" href="{{cdn "/dist/cater.css"}}">
+    <link href="{{cdn (format 'dist/<%= version %>/cater.css' pkg)}}" rel="stylesheet">
     {{{block "css"}}}
     {{{block "head"}}}
     <!--[if lt IE 9]>

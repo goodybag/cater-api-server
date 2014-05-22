@@ -64,6 +64,11 @@ define(function(require) {
       type: types.json
     , nullable: true
     }
+  , is_hidden: {
+      type: types.boolean
+    , nullable: false
+    , default: false
+    }
   };
 
   definition.indices = {};

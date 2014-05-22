@@ -122,7 +122,7 @@ module.exports.get = function(req, res) {
       models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');
-        restaurant.getItems(function(err, items) {
+        restaurant.getItems({ where: { 'is_hidden': false } }, function(err, items) {
           callback(err, restaurant);
         });
       });

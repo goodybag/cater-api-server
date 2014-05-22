@@ -27,10 +27,10 @@ define(function(require, exports, module) {
     },
 
     customTip: function(e) {
-      if (!e || !e.currentTarget || !e.currentTarget.value)
+      if (this.tip !== e.currentTarget.value) {
         this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
-      else if (this.tip !== e.currentTarget.value)
-        this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
+        this.options.orderView.onPriceChange();
+      }
     }
   });
 });

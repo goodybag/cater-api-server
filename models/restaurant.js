@@ -17,35 +17,42 @@ var Restaurant = module.exports = Model.extend({
       });
   },
 
-  getItems: function(callback) {
+  getItems: function(query, callback) {
     var self = this;
+
+    if ( typeof query === 'function' ) {
+      callback = query;
+      query = {};
+    }
+
     callback = callback || function() {};
     var items = function(err) {
       if (err) return callback(err);
       if (!self.categories || self.categories.length === 0)
         return callback(null, null);
       var categories = utils.map(self.categories, function(cat) { return cat.toJSON().id; });
-      require('./item').find({
-        where: {'category_id': {$in: categories}},
+      query = utils.deepExtend({
+        where: { 'category_id': { $in: categories } },
         order: {order: 'asc'},
         limit: null,
-        columns: ['*', '(SELECT array(SELECT tag FROM item_tags WHERE item_id = items.id ORDER BY tag ASC)) AS tags']},
-        function(err, results) {
-          if (err) return callback(err);
-          self.items = results;
+        columns: ['*', '(SELECT array(SELECT tag FROM item_tags WHERE item_id = items.id ORDER BY tag ASC)) AS tags']
+      }, query);
 
-          var catIndex = utils.object(utils.map(self.categories, function(cat) {
-            return cat.attributes.id;
-          }), self.categories);
+      require('./item').find(query, function(err, results) {
+        if (err) return callback(err);
+        self.items = results;
 
-          utils.each(results, function(item) {
-            var cat = catIndex[item.attributes.category_id];
-            cat.items ? cat.items.push(item) : cat.items = [item];
-          });
+        var catIndex = utils.object(utils.map(self.categories, function(cat) {
+          return cat.attributes.id;
+        }), self.categories);
 
-          callback(null, results);
-        }
-      );
+        utils.each(results, function(item) {
+          var cat = catIndex[item.attributes.category_id];
+          cat.items ? cat.items.push(item) : cat.items = [item];
+        });
+
+        callback(null, results);
+      });
     }
 
     self.categories ? items() : self.getCategories(items);

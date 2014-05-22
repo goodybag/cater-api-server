@@ -2,14 +2,14 @@
   <fieldset class="item-options-fieldset" data-options-set-id="{{this.id}}">
     <legend>
       {{this.name}}
-      <div class="min-max-restrictions">
+      <span class="min-max-restrictions">
         {{#if this.selected_min}}
-          <strong>Minimum:</strong> {{this.selected_min}}
+          Minimum: {{this.selected_min}}
         {{/if}}
         {{#if this.selected_max}}
-          <strong>Maximum:</strong> {{this.selected_max}}
+          Maximum: {{this.selected_max}}
         {{/if}}
-      </div>
+      </span>
     </legend>
     {{#each this.options}}
       <div class="{{#eq ../type 'radio'}}radio{{else}}checkbox{{/eq}}">
@@ -36,7 +36,7 @@
           <span class="option-price">(+{{dollars this.price}})</span>
           {{/if}}
           {{> tags this.tags }}
-          <p class="option-description">{{this.description}}</p>
+          {{#if description}}<p class="option-description">{{description}}</p>{{/if}}
         </label>
       </div>
     {{/each}}

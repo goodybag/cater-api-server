@@ -146,18 +146,70 @@
 .modal-item .form-group-item-notes,
 .modal-item .form-group-item-recipient {
   display: block;
-  margin: 0;
   width: 60%;
+}
+
+.modal-item .modal-header,
+.modal-item .modal-footer {
+  padding: 25px;
+}
+
+.modal-item .modal-body {
+  padding: 15px 25px 25px 25px;
+}
+
+.modal-item .item-description {
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+.modal-item .min-max-restrictions {
+  font-weight: 300;
+  font-style: italic;
+  padding-left: 10px;
+  color: @gray-darker;
 }
 
 .modal-item .modal-title {
   font-weight: bold;
+  font-size: @font-size-large;
 }
 
 .modal-item fieldset {
   border: none;
+  border-bottom: 1px solid @gray-light;
+  margin: 0;
+  margin-bottom: 10px;
+  padding: 0;
+  padding-bottom: 10px;
 }
 
-.modal-item .btn-actions {
+legend {
+  font-weight: bold;
+}
+
+.modal-item .modal-footer label {
+  display: inline-block;
+  line-height: 40px;
+}
+
+.modal-item .modal-footer-actions .actions-left {
+  float: left;
+}
+
+.modal-item .modal-footer-actions .actions-right {
   float: right;
+}
+
+.modal-item .form-group-item-quantity {
+  width: 20%;
+}
+
+.modal-item input[type="checkbox"] {
+  margin: 5px;
+}
+
+.modal-item label {
+  font-weight: normal;
+  font-size: @font-size-base;
 }

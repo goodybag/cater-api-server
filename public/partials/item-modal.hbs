@@ -14,7 +14,7 @@
       </div>
     </div>
     <form class="modal-item-form">
-      <div class="modal-body">
+      <div class="modal-body form-vertical">
         <div class="errors">
           <div class="alert alert-danger alert-generic hide"></div>
         </div>
@@ -30,30 +30,25 @@
           <label for="item-recipient">Who is this item for? (optional)</label>
           <input type="text" name="recipient" value="{{item.recipient}}" id="item-recipient" rows="3" class="form-control"{{#unless editable}} disabled="true"{{/unless}} />
         </div>
-        <div class="form-group form-group-item-quantity">
-          <label class="control-label" for="item-modal-quantity">Quantity</label>
-          <input type="number" class="form-control item-quantity" id="item-modal-quantity" maxlength="4" min="0" value="{{#if item.quantity}}{{item.quantity}}{{else}}1{{/if}}"{{#unless editable}} disabled="true"{{/unless}} />
-        </div>
       </div>
       <!-- End modal-body -->
 
       <div class="modal-footer">
         <div class="modal-footer-actions">
-
-
-
           {{#if editable}}
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <div class="btn-actions">
+          <div class="actions-left">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          </div>
+          <div class="actions-right">
             {{#if order.editable}}
             <button type="button" class="btn btn-default btn-item-remove{{#unless inOrder}} hide{{/unless}}">Remove from Order</button>
             {{/if}}
+            <label class="control-label" for="item-modal-quantity">Quantity</label>
+            <div class="form-group form-group-item-quantity">
+              <input type="number" class="form-control item-quantity" id="item-modal-quantity" maxlength="4" min="0" value="{{#if item.quantity}}{{item.quantity}}{{else}}1{{/if}}"{{#unless editable}} disabled="true"{{/unless}} />
+            </div>
             <button type="submit" class="btn btn-primary item-modal-submit">
-              {{#if inOrder}}
-                Update Item
-              {{else}}
-                Add to order
-              {{/if}}
+              {{#if inOrder}}Update Item{{else}}Add to order{{/if}}
             </button>
           </div>
           {{/if}}

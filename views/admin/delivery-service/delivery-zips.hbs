@@ -10,8 +10,12 @@
 {{/extend}}
 
 {{#extend "body"}}
-<h2>Delivery Zips</h2>
-<section class="ap-component" id="component-delivery-zips">
+<section class="panel-component" id="component-delivery-zips">
+  <h2 class="component-title">Delivery Zips</h2>
+  <ul class="nav nav-horizontal nav-tabs component-nav">
+    <li><a href="#">$15</a></li>
+    <li><a href="#">$25</a></li>
+  </ul>
 
 </section>
 {{/extend}}
@@ -20,16 +24,32 @@
 <script>
   define(
     'page'
-  , [ 'jquery-loaded', 'app/views/admin/2d-matrix-editor' ]
-  , function( $, MatrixEdtor ){
+  , [ 'jquery-loaded', 'utils', 'app/views/admin/matrix-editor' ]
+  , function( $, utils, MatrixEdtor ){
       var page = {
         init: function(){
           page.delivery_service = {{{json delivery_service}}};
           $(function(){
+            var set = utils.chain( page.delivery_service.zips ).pluck('from').concat(
+              utils.pluck( page.delivery_service.zips, 'to' )
+            ).unique().value();
+
+            // Initialize at 0
+            var values = {}, i, ii, l;
+            for ( i = 0, l = set.length; i < l; ++i ){
+              values[ set[i] ] = {};
+              for ( ii = 0; ii < l; ++ii ){
+                values[ set[i] ][ set[ii] ] = 0;
+              }
+            }
+
+            page.delivery_service.zips.forEach( function( zip ){
+              values[ zip.from ][ zip.to ] = zip.price;
+            });
+
             page.editor = new MatrixEdtor({
-              set:  page.delivery_service.zips.map( function( zip ){
-                      return { x: zip.from, y: zip.to }
-                    })
+              set:    set
+            , values: values
             });
 
             page.editor.render();

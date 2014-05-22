@@ -1,18 +1,16 @@
-<div class="container" id="main-container">
-  <ul class="breadcrumbs main-breadcrumbs">
-    <li>
-      <a href="/admin">Admin Panel</a>
-    </li>
-    <li>
-      <a href="/admin/delivery-services">Delivery Services</a>
-    </li>
-    <li>
-      <a href="/admin/delivery-services/{{delivery_service.id}}">
-        {{delivery_service.name}}
-      </a>
-    </li>
-    <li>{{breadCrumbs.currentPage}}</li>
-  </ul>
+<ul class="breadcrumbs main-breadcrumbs">
+  <li>
+    <a href="/admin">Admin Panel</a>
+  </li>
+  <li>
+    <a href="/admin/delivery-services">Delivery Services</a>
+  </li>
+  <li>
+    <a href="/admin/delivery-services/{{delivery_service.id}}">
+      {{delivery_service.name}}
+    </a>
+  </li>
+  <li>{{breadCrumbs.currentPage}}</li>
+</ul>
 
-  <h1 class="page-title">Edit Delivery Service - {{delivery_service.name}}</h1>
-</div>
+<h1 class="page-title">Edit Delivery Service - {{delivery_service.name}}</h1>

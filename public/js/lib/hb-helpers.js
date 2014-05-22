@@ -480,6 +480,10 @@ define(function(require, exports, module) {
 
     format: function( str, obj ){
       return utils.template( str )( obj );
+    },
+
+    ref: function( obj, key ){
+      return obj[ key ];
     }
   }
 

@@ -63,9 +63,6 @@ console.log(filtered);
       var $y = this.$el.find('.node-col-y');
 
       $y.find('option[selected="selected"]').attr( 'selected', null );
-console.log(utils.map( filtered, function( item ){
-          return '[value="' + item.y + '"]';
-        }).join(', '));
       $y.find(
         utils.map( filtered, function( item ){
           return '[value="' + item.y + '"]';

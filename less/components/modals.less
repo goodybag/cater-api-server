@@ -18,7 +18,7 @@
   overflow: auto;
   overflow-y: scroll;
   position: fixed;
-  top: 0;
+  top: @navbar-height;
   right: 0;
   bottom: 0;
   left: 0;
@@ -144,4 +144,30 @@
 
 @media (min-width: @breakpoint-desktop-sm) {
   .modal-lg { width: @modal-lg; }
+}
+
+.modal-title {
+  display: inline;
+}
+
+.modal-stats {
+  display: inline;
+}
+
+
+.modal-stats dl {
+  float: right;
+  margin: 0;
+}
+
+.modal-stats dt {
+  display: inline;
+  margin-left: 30px;
+  &:nth-of-type(1) { margin-left: 0; }
+}
+
+.modal-stats dd {
+  display: inline;
+  font-weight: bold;
+  margin: 0;
 }

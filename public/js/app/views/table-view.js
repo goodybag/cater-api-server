@@ -1,7 +1,7 @@
 /**
  * TableView
  *
- * This is and editable table view. It depends on TableRowView.
+ * This is an editable table view. It depends on TableRowView.
  * This is more like a data table. I wrote this guy real quick and
  * it should eventually be replaced by a DataView Backbone plugin.
  * I started doing that, but I realized that it was just a little bit
@@ -20,7 +20,7 @@
  * Extend TableView:
  *   var AwesomeTableView = TableView.extend({
  *     initialize: function( options ){
- *       // Best just to pass default soptions to super
+ *       // Best just to pass default options to super
  *       options = utils.defaults( options, {
  *         template: awesomeTemplate
  *       , rowTemplate: awesomeRowTemplate

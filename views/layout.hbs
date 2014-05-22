@@ -63,7 +63,7 @@
     <!-- Goodybag Catering CSS Stuff -->
     <link href="{{cdn "css/main.css"}}" rel="stylesheet">
     <link href="{{cdn "css/components.css"}}" rel="stylesheet">
-    <link href="{{cdn "dist/cater.css"}}" rel="stylesheet">
+    <link href="{{cdn (format 'dist/<%= version %>/cater.css' pkg)}}" rel="stylesheet">
     <link href="{{cdn "css/theme.css"}}" rel="stylesheet">
 
     <!--[if lte IE 9]>
@@ -181,7 +181,7 @@
     {{/if}}
 
     {{#unless config.isDev}}
-    <script src="{{cdn "dist/app.js"}}"></script>
+    <script src="{{cdn (format 'dist/<%= version %>/app.js' pkg)}}"></script>
     {{else}}
     <script src="{{cdn "components/requirejs/require.js"}}"></script>
     <script src="{{cdn "js/require-config.js"}}"></script>

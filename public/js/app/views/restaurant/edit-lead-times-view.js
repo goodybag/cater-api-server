@@ -30,7 +30,7 @@ define(function(require, exports, module) {
           var cancel = parseInt($(el).find('.lead-cancel-time').val());
           return !_.isNaN(guests) && !_.isNaN(hours) ? {
             max_guests: !_.isNaN(guests) ? guests : null,
-            lead_time:!_.isNaN(hours) && !_.isNaN(minutes) ? hours * 60 + minutes : null,
+            lead_time: !_.isNaN(minutes) ? hours * 60 + minutes: hours * 60,
             cancel_time: !_.isNaN(cancel) ? cancel : null
           } : null;
         }));

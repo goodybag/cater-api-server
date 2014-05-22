@@ -1,12 +1,12 @@
 {{#each restaurant.categories}}
   {{#contains menus "group"}}
-    <div id="group-{{id}}" class="menu-category menu-full menu-group">
-      <div class="category-heading">
-        <span class="category-type-icon" data-icon="gb-icon-group"></span>
-        <span class="category-name">{{name}}</span>
-        {{#if description}}<div class="category-description">{{description}}</div>{{/if}}
-      </div>
+  <div id="group-{{id}}" class="menu-category menu-full menu-group">
+    <div class="category-heading">
+      <span class="category-type-icon" data-icon="gb-icon-group"></span>
+      <span class="category-name">{{name}}</span>
+      {{#if description}}<div class="category-description">{{description}}</div>{{/if}}
     </div>
+
     <div class="list-group" id="category-{{id}}">
       {{#each items}}
       <a href="#" class="list-group-item" id="item-{{id}}">
@@ -23,18 +23,19 @@
       </a>
       {{/each}}
     </div>
+  </div>
   {{/contains}}
 {{/each}}
 
 {{#each restaurant.categories}}
   {{#contains menus "individual"}}
-    <div id="individual-{{id}}" class="menu-category menu-full menu-individual">
-      <div class="category-heading">
-        <span class="category-type-icon" data-icon="gb-icon-individual"></span>
-        <span class="category-name">{{name}}</span>
-        {{#if description}}<div class="category-description">{{description}}</div>{{/if}}
-      </div>
+  <div id="group-{{id}}" class="menu-category menu-full menu-individual">
+    <div class="category-heading">
+      <span class="category-type-icon" data-icon="gb-icon-individual"></span>
+      <span class="category-name">{{name}}</span>
+      {{#if description}}<div class="category-description">{{description}}</div>{{/if}}
     </div>
+
     <div class="list-group" id="category-{{id}}">
       {{#each items}}
       <a href="#" class="list-group-item" id="item-{{id}}">
@@ -51,5 +52,6 @@
       </a>
       {{/each}}
     </div>
+  </div>
   {{/contains}}
 {{/each}}

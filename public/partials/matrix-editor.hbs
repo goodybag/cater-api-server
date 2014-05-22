@@ -1,29 +1,29 @@
-<div class="matrix-editor">
-  <table class="matrix-table">
-    <thead>
-      <tr>
-        <th></th>
-        {{#each set}}
-          <th>
-            <span class="val">{{this}}</span>
-          </th>
+<table class="matrix-table">
+  <thead>
+    <tr>
+      <th></th>
+      {{#each set}}
+        <th>
+          <span class="val">{{this}}</span>
+        </th>
+      {{/each}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#each set}}
+      <tr data-index="{{@index}}">
+        <td>{{this}}</td>
+        {{#each ../set}}
+          <td
+            contenteditable="true"
+            data-in="dollars"
+            data-out="pennies"
+            data-x="{{../this}}"
+            data-y="{{this}}">
+            {{dollars (ref (ref ../../values ../this) this)}}
+          </td>
         {{/each}}
       </tr>
-    </thead>
-    <tbody>
-      {{#each set}}
-        <tr data-index="{{@index}}">
-          <td>{{this}}</td>
-          {{#each ../set}}
-            <td
-              contenteditable="true"
-              data-in="dollars"
-              data-out="pennies">
-              {{dollars (ref (ref ../../values ../this) this)}}
-            </td>
-          {{/each}}
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
-</div>
+    {{/each}}
+  </tbody>
+</table>

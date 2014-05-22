@@ -25,11 +25,13 @@ define(function(require, exports, module) {
     , 'keyup      td':                  'onTdKeyup'
     }
 
+  , allowedChars: '01234567890.'
+
   , template: Hbs.partials['matrix_editor']
 
   , initialize: function( options ){
       utils.enforceRequired( options, [
-        'set', 'values'
+        'set'
       ]);
 
       utils.defaults( options, {
@@ -37,7 +39,16 @@ define(function(require, exports, module) {
       });
 
       this.set    = options.set.sort();
-      this.values = options.values;
+      this.values = {};
+
+      // Initialize at 0
+      var i, ii, l;
+      for ( i = 0, l = this.set.length; i < l; ++i ){
+        this.values[ this.set[i] ] = {};
+        for ( ii = 0; ii < l; ++ii ){
+          this.values[ this.set[i] ][ this.set[ii] ] = 0;
+        }
+      }
 
       this.rowEdits = {};
 
@@ -101,12 +112,52 @@ define(function(require, exports, module) {
       }
     }
 
-  , updateMultiEdits: function( val ){
+  , updateMultiEdits: function( $el ){
       var this_ = this;
 
-      this.$trs.filter( function(){
+      var $tds = this.$trs.filter( function(){
         return $(this).data('index') in this_.rowEdits;
-      }).find('> td:first-child ~ td').text( val );
+      }).find('> td:first-child ~ td').not( $el ).text( $el.text() );
+
+      this.updateValuesWithEl( $tds );
+
+      return this;
+    }
+
+  , updateValuesWithEl: function( $el ){
+      var this_ = this;
+      $el.each( function(){
+        var $this = $(this);
+        this_.values[ $this.data('x') ][ $this.data('y') ] = Hbs.helpers[
+          $this.data('out')
+        ]( $this.text() );
+      });
+    }
+
+  , addToSet: function( val ){
+      if ( this.set.indexOf( val ) > -1 ) return this;
+
+      // Add to sorted set
+      for ( var i = 0, l = this.set.length; i < l; ++i ){
+        if ( this.set[i] > val ){
+          var b = this.set.slice( i );
+          this.set.length = i;
+          this.set.push( val );
+          this.set = this.set.concat( b );
+          break;
+        }
+
+        this.set.push( val );
+      }
+
+      // Initialize values
+      this.values[ val ] = {};
+      for ( var x in this.values ){
+        this.values[ x ][ val ] = 0;
+        this.values[ val ][ x ] = 0;
+      }
+
+      this.render();
 
       return this;
     }
@@ -124,7 +175,10 @@ define(function(require, exports, module) {
     }
 
   , onTdKeyup: function( e ){
-      this.updateMultiEdits( $( e.currentTarget ).text() );
+      var $target = $( e.currentTarget );
+
+      this.updateMultiEdits( $target );
+      this.updateValuesWithEl( $target );
     }
   });
 });

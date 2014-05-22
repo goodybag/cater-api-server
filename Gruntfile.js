@@ -1,7 +1,6 @@
 var fs            = require('fs');
 var path          = require('path');
 var wrench        = require('wrench');
-var pkg           = require('./package.json');
 var config        = require('./config');
 var utils         = require('./utils');
 var requireConfig = require('./public/js/require-config');
@@ -243,7 +242,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-complexity');
 
   grunt.registerTask( 'reloadPkg', 'Reload in case of package changes', function() {
-    pkg = JSON.parse(fs.readFileSync('./package.json'));
+    gruntConfig.pkg = grunt.file.readJSON('./package.json');
   });
   grunt.registerTask( 'analyze',      ['complexity'] );
   grunt.registerTask( 'build',        ['less', 'copy:manifest', 'shell:commitManifest', 'concat', 'shell:handlebars', 'requirejs'] );

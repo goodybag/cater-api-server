@@ -21,7 +21,15 @@
   .transform( rotate(-50deg) );
 }
 
-.matrix-editor tbody > tr:nth-child(2n) td {
+.matrix-editor td {
+  padding: 4px;
+}
+
+.matrix-editor tr > td:first-child {
+  cursor: pointer;
+}
+
+.matrix-editor tr:nth-child(2n) td {
   background: @off-gray;
 }
 
@@ -37,10 +45,21 @@
 }
 
 .matrix-editor tr:hover td,
-.matrix-editor .highlight {
-  background: darken( @off-gray, 3% ) !important;
+.matrix-editor tr td.highlight,
+.matrix-editor tr th.highlight {
+  background: darken( @off-gray, 3% );
 }
 
 .matrix-editor .highlight.focus {
-  background: darken( @off-gray, 10% ) !important;
+  background: darken( @off-gray, 10% );
+}
+
+.matrix-editor tr.multi-edit td {
+  background: lighten( @brand-tertiary, 50% );
+  &.highlight {
+    background: lighten( @brand-tertiary, 45% );
+    &.focus {
+      background: lighten( @brand-tertiary, 40% );
+    }
+  }
 }

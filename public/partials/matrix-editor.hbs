@@ -12,11 +12,14 @@
     </thead>
     <tbody>
       {{#each set}}
-        <tr>
+        <tr data-index="{{@index}}">
           <td>{{this}}</td>
           {{#each ../set}}
-            <td>
-              {{ref (ref ../../values ../this) this}}
+            <td
+              contenteditable="true"
+              data-in="dollars"
+              data-out="pennies">
+              {{dollars (ref (ref ../../values ../this) this)}}
             </td>
           {{/each}}
         </tr>

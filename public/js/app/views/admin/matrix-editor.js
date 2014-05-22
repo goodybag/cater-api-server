@@ -19,8 +19,10 @@ define(function(require, exports, module) {
     events: {
       'mouseenter td:first-child ~ td': 'onTdMouseEnter'
     , 'mouseleave td:first-child ~ td': 'onTdMouseLeave'
-    , 'mouseenter th':                  'onTdMouseEnter'
-    , 'mouseleave th':                  'onTdMouseLeave'
+    , 'mouseenter th:first-child ~ th': 'onTdMouseEnter'
+    , 'mouseleave th:first-child ~ th': 'onTdMouseLeave'
+    , 'click tr > td:first-child':      'onFirstTdClick'
+    , 'keyup      td':                  'onTdKeyup'
     }
 
   , template: Hbs.partials['matrix_editor']
@@ -37,6 +39,8 @@ define(function(require, exports, module) {
       this.set    = options.set.sort();
       this.values = options.values;
 
+      this.rowEdits = {};
+
       return this;
     }
 
@@ -52,8 +56,6 @@ define(function(require, exports, module) {
     }
 
   , highlightTdColumn: function( $el ){
-      if ( !($el instanceof jQuery) ) $el = $( $el );
-
       this.$focus = $el.addClass('focus');
       var col = $el.prevAll().length + 1;
 
@@ -69,12 +71,60 @@ define(function(require, exports, module) {
       }
     }
 
+  , setRowToMultiEdit: function( $tr ){
+      if ( this.rowEdits[ $tr.data('index') ] ){
+        return this;
+      }
+
+      this.rowEdits[ $tr.data('index') ] = true;
+      $tr.addClass('multi-edit');
+
+      return this;
+    }
+
+  , unsetRowToMultiEdit: function( $tr ){
+      if ( !this.rowEdits[ $tr.data('index') ] ){
+        return this;
+      }
+
+      delete this.rowEdits[ $tr.data('index') ];
+      $tr.removeClass('multi-edit');
+
+      return this;
+    }
+
+  , toggleRowEdit: function( $tr ){
+      if ( this.rowEdits[ $tr.data('index') ] ){
+        return this.unsetRowToMultiEdit( $tr );
+      } else {
+        return this.setRowToMultiEdit( $tr );
+      }
+    }
+
+  , updateMultiEdits: function( val ){
+      var this_ = this;
+
+      this.$trs.filter( function(){
+        return $(this).data('index') in this_.rowEdits;
+      }).find('> td:first-child ~ td').text( val );
+
+      return this;
+    }
+
   , onTdMouseEnter: function( e ){
-      this.highlightTdColumn( e.currentTarget );
+      this.highlightTdColumn( $( e.currentTarget ) );
     }
 
   , onTdMouseLeave: function( e ){
       this.unhighlightTdColumn();
+    }
+
+  , onFirstTdClick: function( e ){
+      this.toggleRowEdit( $( e.currentTarget ).closest('tr') );
+    }
+
+  , onTdKeyup: function( e ){
+      this.updateMultiEdits( $( e.currentTarget ).text() );
     }
   });
 });

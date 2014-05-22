@@ -242,11 +242,15 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-complexity');
 
-  grunt.registerTask( 'analyze',  ['complexity'] );
-  grunt.registerTask( 'build',    ['less', 'copy:manifest', 'shell:commitManifest', 'concat', 'shell:handlebars', 'requirejs'] );
-  grunt.registerTask( 'default',  ['less', 'shell:handlebars', 'watch'] );
+  grunt.registerTask( 'reloadPkg', 'Reload in case of package changes', function() {
+    pkg = JSON.parse(fs.readFileSync('./package.json'));
+  });
+  grunt.registerTask( 'analyze',      ['complexity'] );
+  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'shell:commitManifest', 'concat', 'shell:handlebars', 'requirejs'] );
+  grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'watch'] );
+  grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 
-  grunt.registerTask( 'deploy', [ 'shell:versionPatch', 'build', 's3:production', 'shell:deployProduction'] );
+  grunt.registerTask( 'deploy', [ 'versionPatch', 'build', 's3:production', 'shell:deployProduction'] );
   grunt.registerTask( 'deploy:staging', ['build', 's3:staging', 'shell:deployStaging'] );
   grunt.registerTask( 'deploy:dev', ['build', 's3:dev'] );
 };

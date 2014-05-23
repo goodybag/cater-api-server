@@ -85,6 +85,23 @@ input[disabled] {
   }
 }
 
+.form-group[data-icon]:before {
+  position: relative;
+  float: right;
+  margin-top: 10px;
+  /*
+  Large (small) enough margin to ensure that its box
+  dimensions do not take up any space in the form-group */
+  margin-left: -50px;
+  /*
+  Since negative margin-left closes the box-right the icon fills
+  and no more, we need the margin-right to fill the rest */
+  margin-right: 5px;
+  z-index: 1;
+  font-size: 18px;
+  color: #aaa;
+}
+
 .form-small {
   .typography('small');
 

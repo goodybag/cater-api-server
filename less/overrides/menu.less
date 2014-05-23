@@ -143,6 +143,14 @@
 /**
  * Item Modal
  */
+.modal-item {
+  z-index: @modal-item-zindex;
+}
+
+.modal-item > .modal-dialog {
+  width: 800px;
+}
+
 .modal-item .form-group-item-notes,
 .modal-item .form-group-item-recipient {
   display: block;
@@ -168,11 +176,6 @@
   font-style: italic;
   padding-left: 10px;
   color: @gray-darker;
-}
-
-.modal-item .modal-title {
-  font-weight: bold;
-  font-size: @font-size-large;
 }
 
 .modal-item fieldset {
@@ -212,4 +215,39 @@ legend {
 .modal-item label {
   font-weight: normal;
   font-size: @font-size-base;
+}
+
+/**
+ * Modal order params
+ */
+.modal-order-params .modal-dialog {
+  width: 600px;
+}
+
+.modal-order-params .modal-body {
+  padding: 30px;
+}
+
+.modal-order-params .order-params-bar {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.modal-order-params .form-group-title,
+.modal-order-params .btn-search {
+  display: none;
+}
+
+.modal-order-params .form-group {
+  width: auto;
+}
+
+.modal-order-params .form-control {
+  width: 125px;
+}
+
+.modal-order-params .form-control-zip,
+.modal-order-params .form-control-guests {
+  width: 100px;
 }

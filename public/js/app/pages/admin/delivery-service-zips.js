@@ -20,8 +20,11 @@ define(function( require ){
           utils.pluck( page.delivery_service.attributes.zips, 'to' )
         ).unique().value();
 
+        page.$allZips = utils.dom('#all_zips');
+        page.$allZips.change( page.onAllZipsChange );
+
         page.editor = new MatrixEditor({
-          set:    set
+          set: set
         });
 
         // Set the correct values on the editor
@@ -31,9 +34,20 @@ define(function( require ){
 
         page.editor.setElement( utils.dom('.matrix-editor') );
         page.editor.render();
+
+        page.updateAllZips( set );
       });
 
       utils.dom('.btn-save').click( page.onSaveBtnClick )
+    }
+
+  , updateAllZips: function( set ){
+      page.$allZips.val( set.join(' ') );
+    }
+
+  , onAllZipsChange: function( e ){
+      page.editor.setSet( page.$allZips.val().match(/(\d{5})/g) );
+      page.editor.render();
     }
 
   , onSaveBtnClick: function( e ){

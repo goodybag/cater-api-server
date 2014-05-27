@@ -38,20 +38,31 @@ define(function(require, exports, module) {
 
       });
 
-      this.set    = options.set.sort();
-      this.values = {};
+      this.setSet( options.set );
+
+      this.rowEdits = {};
+
+      return this;
+    }
+
+  , setSet: function( set ){
+      this.set = set.sort();
+
+      this.values = this.values || {};
 
       // Initialize at 0
       var i, ii, l;
       for ( i = 0, l = this.set.length; i < l; ++i ){
-        this.values[ this.set[i] ] = {};
+        if ( !this.values[ this.set[i] ] ){
+          this.values[ this.set[i] ] = {};
+        }
         for ( ii = 0; ii < l; ++ii ){
-          this.values[ this.set[i] ][ this.set[ii] ] = 0;
+          if ( !this.values[ this.set[i] ][ this.set[ii] ] ){
+            this.values[ this.set[i] ][ this.set[ii] ] = 0;
+          }
         }
       }
-
-      this.rowEdits = {};
-
+console.log(this.values);
       return this;
     }
 

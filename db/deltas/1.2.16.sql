@@ -13,7 +13,7 @@ end;
 $$ language plpgsql;
 
 DO $$
-  declare version       text := '1.2.15';
+  declare version       text := '1.2.16';
 begin
   raise notice '## Running Delta v% ##', version;
 

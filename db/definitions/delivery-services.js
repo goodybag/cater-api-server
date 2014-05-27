@@ -27,23 +27,5 @@ define(function(require) {
 
   definition.indices = {};
 
-  // Ensure delivery zips get saved properly in a TX
-  // definition.update = function( $query, updates, options, callback ){
-  //   // Not updating zips, just move along
-  //   if ( !updates.zips ) return dirac.DAL.update.apply( this, arguments );
-
-  //   // If they're not updating 1 document, let's just avoid this
-  //   if ( typeof $query === 'object' )
-
-  //   if ( typeof options == 'function' ){
-  //     callback = options;
-  //     options = {};
-  //   }
-
-  //   dirac.transaction( function( tx ){
-  //     tx.dals.delivery_service_zips.remove({})
-  //   });
-  // };
-
   return definition;
 });

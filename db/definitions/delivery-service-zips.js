@@ -24,7 +24,12 @@ define(function(require) {
   , price:                { type: types.int, default: 0, nullable: false }
   };
 
-  definition.indices = {};
+  definition.indices = {
+    delivery_service_zips_delivery_service_id_from_to_key: {
+      type: 'UNIQUE'
+    , columns: ['delivery_service_id', 'from', 'to']
+    }
+  };
 
   return definition;
 });

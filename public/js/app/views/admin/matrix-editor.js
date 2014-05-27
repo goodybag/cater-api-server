@@ -1,5 +1,5 @@
 /**
- * Tree Editor
+ * Matrix Editor
  */
 
 if ( typeof module === "object" && module && typeof module.exports === "object" ){

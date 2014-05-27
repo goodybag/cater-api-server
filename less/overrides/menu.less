@@ -2,7 +2,12 @@
 // Cater Menu Overrides
 /////////////////////////////////
 
-
+/**
+ * Push body down
+ */
+body.page-menu {
+  padding-top: 70px;
+}
 /**
  * Nav tabs
  */
@@ -250,4 +255,105 @@ legend {
 .modal-order-params .form-control-zip,
 .modal-order-params .form-control-guests {
   width: 100px;
+}
+
+/**
+ * Menu Order Params Panel
+ */
+.menu-order-params dt {
+  .clearfix();
+}
+.menu-order-params dt {
+  float: left;
+  clear: left;
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+.menu-order-params dd {
+  margin-left: 0;
+}
+
+
+/**
+ * Menu Panels
+ */
+.order-meta .panel,
+.order-summary .panel {
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.order-summary .panel-body {
+  padding-bottom: 20px;
+}
+
+.order-summary h2 {
+  font-weight: bold;
+}
+
+.order-summary .btn-checkout {
+  float: right;
+}
+
+.order-summary .minimum-order {
+  padding-top: 9px;
+  color: #DC0500;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/**
+ * Order Summary
+ */
+
+.order-summary {
+  font-size: 13px;
+}
+
+.order-summary .panel-heading, .order-summary .panel-footer {
+  border: none;
+}
+
+.order-summary .subtotal-row,
+.order-summary .order-totals dt.total,
+.order-summary .order-totals dd.total {
+  font-weight: 700;
+}
+
+.order-summary .checkout-row {
+  padding-top: 30px;
+}
+
+.order-summary .order-totals dt {
+  text-align: left;
+  font-weight: 500;
+}
+
+.order-summary .order-totals dd {
+  text-align: right;
+}
+
+.order-summary .order-item-recipient {
+  font-weight:  lighter;
+  font-style:   italic;
+}
+
+.order-summary .order-table .item-name {
+  font-size: @font-size-base;
+  font-weight: @font-weight-bold;
+  min-width: 66%;
+}
+
+.order-summary .order-table .item-quantity {
+  width: 40px;
+}
+
+.order-summary .order-table .item-price {
+  width: 40px;
+}
+
+.order-summary .order-table .item-options {
+  font-size: @font-size-small + 1;
+  font-weight: @font-weight-light;
 }

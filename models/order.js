@@ -55,8 +55,8 @@ var modifyAttributes = function(callback, err, orders) {
         // Handle reward promos
         var submitted = moment(order.attributes.submitted);
         var promo = utils.find(config.rewardsPromos, function(promo) {
-          var eligible = submitted >= moment(promo.start) &&
-                         submitted <  moment(promo.end);
+          var eligible = submitted >= moment.tz(promo.start, order.attributes.timezone) &&
+                         submitted <  moment.tz(promo.end, order.attributes.timezone);
           return eligible;
         });
 

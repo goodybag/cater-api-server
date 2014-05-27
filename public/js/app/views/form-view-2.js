@@ -54,11 +54,6 @@ define(function(require){
         if ( val ) data[ k ] = val;
       });
 
-      // Object.keys( this.model.attributes ).forEach( function( k ){
-      //   var val = this_.getDomValue( k );
-      //   if ( val ) data[ k ] = val;
-      // });
-
       return data;
     }
 

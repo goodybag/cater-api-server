@@ -62,7 +62,7 @@ define(function(require, exports, module) {
           }
         }
       }
-console.log(this.values);
+
       return this;
     }
 

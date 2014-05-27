@@ -217,6 +217,54 @@ dirac.use( function(){
   dirac.dals.payment_summaries.after( 'findOne',  afterPSFinds );
 });
 
+// Remove existing zip defs, replace with new ones
+// TODO: use transaction
+dirac.use( function( dirac ){
+  dirac.dals.delivery_services.before( 'update', function( $query, schema, next ){
+    if ( !$query.updates.zips ) return next();
+    if ( !$query.where && !$query.where.id ) return next();
+
+    if ( !$query.with ) $query.with = [];
+
+    $query.with.push({
+      type:   'insert'
+    , name:   'insert_zips'
+    , table:  'delivery_service_zips'
+    , values: $query.updates.zips.map( function( zip ){
+                return utils.extend( { delivery_service_id: $query.where.id }, zip );
+              })
+    });
+
+    dirac.dals.delivery_service_zips.remove( { delivery_service_id: $query.where.id }, next );
+  });
+
+  dirac.dals.delivery_services.before( 'insert', function( $query, schema, next ){
+    if ( !$query.values.zips ) return next();
+
+    // Save zips for later
+    if ( $query.values.zips.length > 0 ){
+      $query.__zips = $query.values.zips;
+    }
+
+    next();
+  });
+
+  dirac.dals.delivery_services.after( 'insert', function( results, $query, schema, next ){
+    if ( !$query.__zips ) return next();
+
+    var onResult = function( result, done ){
+      var zips = $query.__zips.map( function( zip ){
+        return utils.extend( { delivery_zip_id: result.id }, zip );
+      });
+
+
+      dirac.dals.delivery_service_zips.insert( zips, done );
+    };
+
+    utils.async.each( results, onResult, next );
+  });
+});
+
 // Only use columns specified in schema as insert/update targets
 dirac.use( function(){
   var options = {
@@ -227,17 +275,18 @@ dirac.use( function(){
     var columns = Object.keys( schema ), vals, target;
 
     if ( $query.type === 'insert' ){
-      vals = $query.values;
-      target = $query.values = {};
+      vals = Array.isArray( $query.values ) ? $query.values : [ $query.values ];
     } else if ( $query.type === 'update' ){
-      vals = $query.updates;
-      target = $query.updates = {};
+      vals = [ $query.updates ];
     }
 
-    for ( var key in vals ){
-      if ( columns.indexOf( key ) === -1 ) continue;
-      target[ key ] = vals[ key ];
-    }
+    vals.forEach( function( val ){
+      for ( var key in val ){
+        if ( columns.indexOf( key ) === -1 ){
+          delete val[ key ];
+        }
+      }
+    });
 
     next();
   };
@@ -483,7 +532,7 @@ dirac.use( function( dirac ){
 });
 
 // Log queries to dirac
-// dirac.use( function(){
+// dirac.use( function( dirac ){
 //   var query_ = dirac.DAL.prototype.query;
 //   dirac.DAL.prototype.query = function( query, callback ){
 //     console.log( JSON.stringify(query, true, '  ') );
@@ -492,7 +541,7 @@ dirac.use( function( dirac ){
 
 //   var raw = dirac.DAL.prototype.raw;
 //   dirac.DAL.prototype.raw = function( query, values, callback ){
-//     console.log( query, values );
+//     console.log( query );
 //     return raw.apply( this, arguments );
 //   };
 // });

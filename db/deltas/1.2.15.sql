@@ -35,9 +35,9 @@ begin
   perform add_column( 'delivery_service_zips', 'price', 'int not null default 0' );
   perform add_column( 'delivery_service_zips', 'created_at', 'timestamp not null default now()' );
 
-  if not exists ( select 1 where constraint_exists( 'delivery_service_zips_from_to_key' ) is true )
+  if not exists ( select 1 where constraint_exists( 'delivery_service_zips_delivery_service_id_from_to_key' ) is true )
   then
     alter table delivery_service_zips
-      add constraint delivery_service_zips_from_to_key unique( "from", "to" );
+      add constraint delivery_service_zips_delivery_service_id_from_to_key unique( "delivery_service_id", "from", "to" );
   end if;
 end$$;

@@ -257,7 +257,6 @@ dirac.use( function( dirac ){
         return utils.extend( { delivery_zip_id: result.id }, zip );
       });
 
-
       dirac.dals.delivery_service_zips.insert( zips, done );
     };
 

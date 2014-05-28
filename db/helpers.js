@@ -223,6 +223,7 @@ dirac.use( function( dirac ){
   dirac.dals.delivery_services.before( 'update', function( $query, schema, next ){
     if ( !$query.updates.zips ) return next();
     if ( !$query.where && !$query.where.id ) return next();
+    if ( !Array.isArray( $query.updates.zips ) || $query.updates.zips.length === 0 ) return next();
 
     if ( !$query.with ) $query.with = [];
 

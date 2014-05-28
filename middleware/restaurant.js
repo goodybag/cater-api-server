@@ -4,11 +4,13 @@ var Models  = require('../models');
 module.exports = function( options ){
   options = utils.defaults( options, {
     param: 'id'
+  , with_delivery_services: false
   });
 
   return function( req, res, next ){
     var $query = {
       where: { id: req.param( options.param ) }
+    , with_delivery_services: options.with_delivery_services
     };
 
     Models.Restaurant.findOne( $query, function( error, restaurant ){

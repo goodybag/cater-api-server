@@ -141,6 +141,10 @@ var Restaurant = module.exports = Model.extend({
     query.where = query.where || {};
     query.includes = query.includes || [];
 
+    if ( !('with_delivery_services' in query) ){
+      query.with_delivery_services = true;
+    }
+
     if (orderParams && 'is_hidden' in orderParams){
       query.where.is_hidden = orderParams.is_hidden;
     }
@@ -192,8 +196,23 @@ var Restaurant = module.exports = Model.extend({
       '(select array_to_json( array('
     , '  select row_to_json( r ) as delivery_zips from ('
     , '    select distinct on (fee) fee, array_agg(zip) over ( partition by fee ) as zips'
-    , '    from restaurant_delivery_zips'
-    , '    where restaurant_id = restaurants.id'
+    , '    from ('
+    , '      select zip, fee, restaurant_id from restaurant_delivery_zips'
+    , '        where restaurant_id = restaurants.id'
+      // Add in third-party delivery service zips
+    , !query.with_delivery_services ? '' : [
+        '      union'
+      , '      select'
+      , '        delivery_service_zips."to" as zip'
+      , '      , delivery_service_zips.price as fee'
+      , '      , rs.id as restaurant_id'
+      , '      from delivery_service_zips'
+      , '      left join delivery_services on delivery_services.id = delivery_service_zips.delivery_service_id'
+      , '      left join regions on regions.id = delivery_services.region_id'
+      , '      left join restaurants rs on rs.zip = delivery_service_zips."from" and rs.region_id = regions.id'
+      ].join('\n')
+    , '    ) zip_fees'
+    , '    where zip_fees.restaurant_id = restaurants.id'
     , '  ) r'
     , ')) as delivery_zip_groups)'
     ].join('\n'));

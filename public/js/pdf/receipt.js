@@ -4,7 +4,7 @@
 
 var options = {
   // Describes when to break the page
-  magicNumber: 1360
+  magicNumber: 1382
 
 , readyTimeout: 20000
 

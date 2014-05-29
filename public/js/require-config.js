@@ -36,6 +36,7 @@
       // ui related stuff
     , {name: 'spin',              location: '../../components/spin.js',                   main: 'spin.js'}
     , {name: 'fullcalendar',      location: '../../components/fullcalendar',              main: 'fullcalendar.js'}
+    , {name: 'keymaster',         location: '../../components/keymaster',                 main: 'keymaster.js'}
 
       // templating related
     , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}

@@ -22,6 +22,7 @@ define(function(require, exports, module) {
     , 'mouseenter th:first-child ~ th': 'onTdMouseEnter'
     , 'mouseleave th:first-child ~ th': 'onTdMouseLeave'
     , 'click tr > td:first-child':      'onFirstTdClick'
+    , 'click td:first-child ~ td':      'onTdClick'
     , 'keyup      td':                  'onTdKeyup'
     }
 
@@ -191,6 +192,29 @@ define(function(require, exports, module) {
 
       this.updateMultiEdits( $target );
       this.updateValuesWithEl( $target );
+    }
+
+  , onTdClick: function( e ){
+      if ( utils.key.isPressed('shift') ){
+        return this.onTdShiftClick( e );
+      }
+    }
+
+  , onTdShiftClick: function( e ){
+      var $el = $( e.currentTarget );
+      if ( $el.hasClass('highlight') ){
+        $el.removeClass('highlight');
+        delete this.$currentActive;
+      } else {
+        $el.addClass('highlight');
+
+        // Highlight the rectangle defined by the previous active el
+        if ( this.$currentActive ){
+
+        }
+
+        this.$currentActive = $el;
+      }
     }
   });
 });

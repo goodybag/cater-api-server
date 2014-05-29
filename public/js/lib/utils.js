@@ -38,6 +38,7 @@ define(function(require, exports, module) {
     utils.dom = $;
     utils.domready = $;
     utils.ajax = $.ajax;
+    utils.key = require('mousetrap');
   }
 
   utils.async = async;

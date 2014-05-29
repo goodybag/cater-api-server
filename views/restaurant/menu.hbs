@@ -10,8 +10,11 @@
       {{> menu_tab_contents }}
     </div>
     <div class="col-side">
-      {{> menu_order_meta }}
-      {{> menu_order_summary }}
+      <div class="list-group">
+        <div class="list-group-item">{{> menu_order_params }}</div>
+        <div class="list-group-item menu-share-link {{#eq order.id "undefined"}}hide{{/eq}}">{{> menu_share_link }}</div>
+        <div class="list-group-item">{{> menu_order_summary }}</div>
+      </div>
     </div>
 </div>
 

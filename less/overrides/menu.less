@@ -260,6 +260,15 @@ legend {
 /**
  * Menu Order Params Panel
  */
+.menu-order-params .panel-title {
+  font-style: italic;
+}
+
+.menu-order-params dl {
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
 .menu-order-params dt {
   .clearfix();
 }
@@ -279,7 +288,8 @@ legend {
  * Menu Panels
  */
 .order-meta .panel,
-.order-summary .panel {
+.order-summary .panel,
+.order-shared .panel {
   margin-bottom: 20px;
   padding: 15px;
 }
@@ -342,7 +352,7 @@ legend {
 .order-summary .order-table .item-name {
   font-size: @font-size-base;
   font-weight: @font-weight-bold;
-  min-width: 66%;
+  width: 75%;
 }
 
 .order-summary .order-table .item-quantity {
@@ -356,4 +366,24 @@ legend {
 .order-summary .order-table .item-options {
   font-size: @font-size-small + 1;
   font-weight: @font-weight-light;
+}
+
+/**
+ * Menu shared link
+ */
+
+.menu-share-link {
+  background-color: #FFFACA;
+}
+
+.menu-share-link .panel-title {
+  text-align: center;
+  font-weight: @font-weight-bold;
+  font-size: @font-size-large;
+}
+
+.menu-share-link .description {
+  text-align: center;
+  font-style: italic;
+  margin-top: 10px;
 }

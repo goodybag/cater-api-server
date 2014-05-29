@@ -1,21 +1,25 @@
 .list-group {
   list-style-type: none;
-  border-top:     solid @list-group-border-width @gray;
-  border-bottom:  solid @list-group-border-width @gray;
   background: @white;
   padding: 0;
 }
 
 .list-group-item {
   display: block;
-  border: 0;
-  border-top:   solid @list-group-border-width @gray;
-  border-left:  solid @list-group-border-width @gray;
-  border-right: solid @list-group-border-width @gray;
+  border:   solid @list-group-border-width @gray;
+  border-top: none;
+  border-radius: 0;
   padding: @list-group-item-padding;
 
   &:nth-of-type(1) {
-    border-top: 0;
+    border-top-left-radius: @border-radius-base;
+    border-top-right-radius: @border-radius-base;
+    border-top: solid @list-group-border-width @gray;
+  }  
+
+  &:nth-last-of-type(1) {
+    border-bottom-left-radius: @border-radius-base;
+    border-bottom-right-radius: @border-radius-base;
   }
 }
 

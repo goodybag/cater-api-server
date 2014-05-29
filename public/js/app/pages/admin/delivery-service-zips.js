@@ -57,7 +57,9 @@ define(function( require ){
 
       for ( x in page.editor.values ){
         for ( y in page.editor.values[ x ] ){
-          zips.push({ from: +x, to: +y, price: page.editor.values[ x ][ y ] });
+          if ( page.editor.values[ x ][ y ] !== null ){
+            zips.push({ from: +x, to: +y, price: page.editor.values[ x ][ y ] });
+          }
         }
       }
 

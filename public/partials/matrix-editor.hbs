@@ -15,12 +15,17 @@
         <td>{{this}}</td>
         {{#each ../set}}
           <td
+            class="{{#isNull (ref (ref ../../values ../this) this)}}empty{{/isNull}}"
             contenteditable="true"
             data-in="dollars"
             data-out="pennies"
             data-x="{{../this}}"
             data-y="{{this}}">
-            {{dollars (ref (ref ../../values ../this) this)}}
+            {{#isNull (ref (ref ../../values ../this) this)}}
+              x
+            {{else}}
+              {{dollars (ref (ref ../../../values ../../this) ../this)}}
+            {{/isNull}}
           </td>
         {{/each}}
       </tr>

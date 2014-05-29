@@ -50,7 +50,7 @@ define(function(require, exports, module) {
 
       this.values = this.values || {};
 
-      // Initialize at 0
+      // Initialize at null
       var i, ii, l;
       for ( i = 0, l = this.set.length; i < l; ++i ){
         if ( !this.values[ this.set[i] ] ){
@@ -58,7 +58,7 @@ define(function(require, exports, module) {
         }
         for ( ii = 0; ii < l; ++ii ){
           if ( !this.values[ this.set[i] ][ this.set[ii] ] ){
-            this.values[ this.set[i] ][ this.set[ii] ] = 0;
+            this.values[ this.set[i] ][ this.set[ii] ] = null;
           }
         }
       }
@@ -139,9 +139,10 @@ define(function(require, exports, module) {
       var this_ = this;
       $el.each( function(){
         var $this = $(this);
-        this_.values[ $this.data('x') ][ $this.data('y') ] = Hbs.helpers[
+        var val   = $this.text().trim();
+        this_.values[ $this.data('x') ][ $this.data('y') ] = val === 'x' ? null : Hbs.helpers[
           $this.data('out')
-        ]( $this.text() );
+        ]( val );
       });
     }
 
@@ -164,8 +165,8 @@ define(function(require, exports, module) {
       // Initialize values
       this.values[ val ] = {};
       for ( var x in this.values ){
-        this.values[ x ][ val ] = 0;
-        this.values[ val ][ x ] = 0;
+        this.values[ x ][ val ] = null;
+        this.values[ val ][ x ] = null;
       }
 
       this.render();

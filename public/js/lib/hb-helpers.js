@@ -484,6 +484,10 @@ define(function(require, exports, module) {
 
     ref: function( obj, key ){
       return obj[ key ];
+    },
+
+    isNull: function( val, options ){
+      return options[ val === null ? 'fn' : 'inverse' ]();
     }
   }
 

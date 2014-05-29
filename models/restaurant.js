@@ -69,6 +69,70 @@ var Restaurant = module.exports = Model.extend({
 {
   table: 'restaurants',
 
+  // Coerces restaurant_delivery_zips into a `from`->`to` data model
+  // Unions with the delivery_service_zips
+  //
+  // select "restaurants"."zip" as "from",
+  //       "restaurant_delivery_zips"."zip" as "from",
+  //       "restaurant_delivery_zips"."fee" as "price",
+  //       "restaurants"."id" as "restaurant_id",
+  //       "restaurants"."region_id" as "region_id"
+  // from "restaurant_delivery_zips"
+  // join "restaurants" "restaurants" on "restaurants"."id" = "restaurant_delivery_zips"."restaurant_id"
+  // union select "delivery_service_zips"."from" as "from",
+  //              "delivery_service_zips"."to" as "to",
+  //              "delivery_service_zips"."price" as "price",
+  //              "restaurants"."id" as "restaurant_id",
+  //              "restaurants"."region_id" as "region_id"
+  // from "delivery_service_zips"
+  // join "restaurants" "restaurants" on "restaurants"."zip" = "delivery_service_zips"."from")
+  getDeliveryZipsQuery: function( options ){
+    options = options || {};
+
+    var query = {
+      type: 'union'
+    , queries: [
+        {
+          type: 'select'
+        , table: 'restaurant_delivery_zips'
+        , columns: [
+            { table: 'restaurants', name: 'zip', alias: 'from' }
+          , { table: 'restaurant_delivery_zips', name: 'zip', alias: 'from' }
+          , { table: 'restaurant_delivery_zips', name: 'fee', alias: 'price' }
+          , { table: 'restaurants', name: 'id', alias: 'restaurant_id' }
+          , { table: 'restaurants', name: 'region_id', alias: 'region_id' }
+          ]
+        , joins: {
+            restaurants: {
+              on: { id: '$restaurant_delivery_zips.restaurant_id$' }
+            }
+          }
+        }
+      ]
+    };
+
+    if ( options.with_delivery_services ){
+      query.queries.push({
+        type: 'select'
+      , table: 'delivery_service_zips'
+      , columns: [
+          { table: 'delivery_service_zips', name: 'from', alias: 'from' }
+        , { table: 'delivery_service_zips', name: 'to', alias: 'to' }
+        , { table: 'delivery_service_zips', name: 'price', alias: 'price' }
+        , { table: 'restaurants', name: 'id', alias: 'restaurant_id' }
+        , { table: 'restaurants', name: 'region_id', alias: 'region_id' }
+        ]
+      , joins: {
+          restaurants: {
+            on: { zip: '$delivery_service_zips.from$' }
+          }
+        }
+      });
+    }
+
+    return query;
+  },
+
   getRegionJoin: function(){
     return {
       type: 'left'
@@ -189,6 +253,8 @@ var Restaurant = module.exports = Model.extend({
         }
       , groupBy: 'restaurant_id'
       }
+
+    , all_delivery_zips: Restaurant.getDeliveryZipsQuery( query )
     };
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
@@ -208,8 +274,8 @@ var Restaurant = module.exports = Model.extend({
       , '      , rs.id as restaurant_id'
       , '      from delivery_service_zips'
       , '      left join delivery_services on delivery_services.id = delivery_service_zips.delivery_service_id'
-      , '      left join regions on regions.id = delivery_services.region_id'
-      , '      left join restaurants rs on rs.zip = delivery_service_zips."from" and rs.region_id = regions.id'
+      , '      left join restaurants rs on rs.zip = delivery_service_zips."from"'
+      , '        and rs.region_id = delivery_services.region_id'
       ].join('\n')
     , '    ) zip_fees'
     , '    where zip_fees.restaurant_id = restaurants.id'
@@ -374,6 +440,23 @@ var Restaurant = module.exports = Model.extend({
         , 'zips.zip': orderParams.zip
         }
       }
+
+      // query.joins.zips = {
+      //   type: 'left'
+      // , target: {
+      //     type: 'union'
+      //   , queries: [
+      //       { type: 'select'
+      //       , table: 'restaurant_delivery_zips'
+      //       , columns: ['zip']
+      //       , where: { 'restaurant_id': '$restaurants.id$' }
+      //       }
+      //     , {
+
+      //       }
+      //     ]
+      //   }
+      // };
 
       query.columns.push('(zips.zip IS NULL) AS is_bad_zip');
       unacceptable.push('(zips.zip IS NULL)');

@@ -70,16 +70,12 @@ module.exports.auth = function(req, res, next) {
 };
 
 module.exports.editability = function(req, res, next) {
-  models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return res.error(errors.internal.DB_FAILURE);
-    if (!order) return res.json(404);
 
-    // ensure only tip fields are being adjusted
-    var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
-                    !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
-    var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
-    return editable ? next() : res.json(403, 'order not editable');
-  });
+  // ensure only tip fields are being adjusted
+  var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
+                  !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
+  var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
+  return editable ? next() : res.json(403, 'order not editable');
 };
 
 module.exports.list = function(req, res) {

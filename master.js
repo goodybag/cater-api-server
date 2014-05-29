@@ -5,3 +5,7 @@ forky(__dirname + '/server');
 if ( config.isDev ){
   require('./workers/scheduler');
 }
+
+if ( config.isProduction ){
+  require('newrelic');
+}

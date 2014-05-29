@@ -32,13 +32,16 @@ module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
   req.order = {};
   logger.db.info(TAGS, 'auth for order #'+ req.params.id);
-  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
-    req.order.isAdmin = true;
-    return next();
-  }
+
   models.Order.findOne(req.params.id, function(err, order) {
     if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
+    utils.extend(req.order, order);
+    if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
+      req.order.isAdmin = true;
+      return next();
+    }
+
     var reviewToken = req.query.review_token || req.body.review_token;
     var editToken = req.query.edit_token || req.body.edit_token;
 

@@ -942,7 +942,7 @@ module.exports = Model.extend({
 
     query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
 
-    query.limit = 10000;
+    query.limit = query.limit || 10000;
 
     // Add order submitted_date column logic
     if (query.columns.indexOf('submitted_date') > -1){

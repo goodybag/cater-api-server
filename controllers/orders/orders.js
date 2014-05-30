@@ -81,11 +81,17 @@ module.exports.editability = function(req, res, next) {
 
 module.exports.list = function(req, res) {
   var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : 'all';
-  models.Order.findByStatus(filter, function( error, orders ) {
+  var limit = config.pagination.limit;
+  var page = +req.query.p || 0;
+  var offset = page * limit;
+  var query = { limit: limit, offset: offset };
+  models.Order.findByStatus(query, filter, function( error, orders ) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     var context = {
       orders: utils.invoke(orders, 'toJSON')
     , filter: filter
+    , prevPage: page - 1
+    , nextPage: page + 1
     };
     res.render('orders', context);
   });

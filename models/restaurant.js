@@ -97,7 +97,7 @@ var Restaurant = module.exports = Model.extend({
         , table: 'restaurant_delivery_zips'
         , columns: [
             { table: 'restaurants', name: 'zip', alias: 'from' }
-          , { table: 'restaurant_delivery_zips', name: 'zip', alias: 'from' }
+          , { table: 'restaurant_delivery_zips', name: 'zip', alias: 'to' }
           , { table: 'restaurant_delivery_zips', name: 'fee', alias: 'price' }
           , { table: 'restaurants', name: 'id', alias: 'restaurant_id' }
           , { table: 'restaurants', name: 'region_id', alias: 'region_id' }
@@ -256,29 +256,14 @@ var Restaurant = module.exports = Model.extend({
 
     , all_delivery_zips: Restaurant.getDeliveryZipsQuery( query )
     };
-
+console.log(Restaurant.getDeliveryZipsQuery( query ));
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
     query.columns.push([
       '(select array_to_json( array('
     , '  select row_to_json( r ) as delivery_zips from ('
-    , '    select distinct on (fee) fee, array_agg(zip) over ( partition by fee ) as zips'
-    , '    from ('
-    , '      select zip, fee, restaurant_id from restaurant_delivery_zips'
-    , '        where restaurant_id = restaurants.id'
-      // Add in third-party delivery service zips
-    , !query.with_delivery_services ? '' : [
-        '      union'
-      , '      select'
-      , '        delivery_service_zips."to" as zip'
-      , '      , delivery_service_zips.price as fee'
-      , '      , rs.id as restaurant_id'
-      , '      from delivery_service_zips'
-      , '      left join delivery_services on delivery_services.id = delivery_service_zips.delivery_service_id'
-      , '      left join restaurants rs on rs.zip = delivery_service_zips."from"'
-      , '        and rs.region_id = delivery_services.region_id'
-      ].join('\n')
-    , '    ) zip_fees'
-    , '    where zip_fees.restaurant_id = restaurants.id'
+    , '    select distinct on (price) price as fee, array_agg("to") over ( partition by price ) as zips'
+    , '    from all_delivery_zips'
+    , '    where all_delivery_zips.restaurant_id = restaurants.id'
     , '  ) r'
     , ')) as delivery_zip_groups)'
     ].join('\n'));
@@ -434,10 +419,10 @@ var Restaurant = module.exports = Model.extend({
       query.joins.zips = {
         type: 'left'
       , alias: 'zips'
-      , target: 'restaurant_delivery_zips'
+      , target: 'all_delivery_zips'
       , on: {
           'restaurants.id': '$zips.restaurant_id$'
-        , 'zips.zip': orderParams.zip
+        , 'to': orderParams.zip
         }
       }
 
@@ -458,8 +443,8 @@ var Restaurant = module.exports = Model.extend({
       //   }
       // };
 
-      query.columns.push('(zips.zip IS NULL) AS is_bad_zip');
-      unacceptable.push('(zips.zip IS NULL)');
+      query.columns.push('(zips.to IS NULL) AS is_bad_zip');
+      unacceptable.push('(zips.to IS NULL)');
     }
 
     if (orderParams && orderParams.guests) {

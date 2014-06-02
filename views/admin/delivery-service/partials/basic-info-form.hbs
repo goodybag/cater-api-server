@@ -23,6 +23,12 @@
   </div>
 </div>
 <div class="form-group">
+  <label class="control-label" for="input-lead_time_modifier">
+    Order Lead Time Modifier
+  </label>
+  <input type="text" class="form-control" name="lead_time_modifier" id="input-lead_time_modifier" value="{{delivery_service.lead_time_modifier}}">
+</div>
+<div class="form-group">
   <label for="region_id_selector" class="control-label">Region</label>
   <select name="region_id" id="region_id_selector">
     {{#each regions}}

@@ -50,6 +50,7 @@ var reports = {
 
     res.write([
       'Order Number'
+    , 'User Email'
     , 'Date Submitted'
     , 'Delivery Date'
     , 'Subtotal'
@@ -84,6 +85,7 @@ var reports = {
         order = order.attributes;
         res.write(utils.map([
           order.id
+        , order.user.email
         , moment(order.submitted).format(reports.dateFormat)
         , moment(order.datetime).format(reports.dateFormat)
         , dollars(order.sub_total)

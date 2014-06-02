@@ -76,7 +76,7 @@ var Restaurant = module.exports = Model.extend({
         'restaurant_id'
       , {
           type: 'array_to_json'
-        , as: 'delivery_times'
+        , as: 'hours_times'
         , expression: {
             type: 'array_agg'
           , expression: {
@@ -89,7 +89,7 @@ var Restaurant = module.exports = Model.extend({
     , table: {
         type: 'select'
       , alias: 'day_hours'
-      , table: 'restaurant_delivery_times'
+      , table: 'restaurant_hours'
       , columns: [
           'restaurant_id'
         , 'day'
@@ -100,35 +100,8 @@ var Restaurant = module.exports = Model.extend({
               type: 'array_agg'
             , expression: {
                 type: 'array_to_json'
-              // , expression: 'array[restaurant_delivery_times.start_time, restaurant_delivery_times.end_time]'
-              , expression: [
-                  'array['
-                , 'least('
-                  , 'restaurant_delivery_times.start_time, '
-                  , 'restaurant_hours.start_time - regions.lead_time_modifier'
-                , '), greatest('
-                  , 'restaurant_delivery_times.end_time, '
-                  , 'restaurant_hours.end_time - regions.lead_time_modifier'
-                , ')]'
-                ].join('')
+              , expression: 'array[restaurant_hours.start_time, restaurant_hours.end_time]'
               }
-            }
-          }
-        ]
-        // Join on hours to include delivery service hours
-      , joins: [
-          { alias: 'restaurants'
-          , type: 'left'
-          , target: 'restaurants'
-          , on: { id: '$restaurant_delivery_times.restaurant_id$' }
-          }
-        , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
-        , { alias: 'restaurant_hours'
-          , type: 'left'
-          , target: 'restaurant_hours'
-          , on: {
-              restaurant_id: '$restaurant_delivery_times.restaurant_id$'
-            , day: '$restaurant_delivery_times.day$'
             }
           }
         ]
@@ -138,7 +111,7 @@ var Restaurant = module.exports = Model.extend({
     };
 
     return query;
-  }
+  },
 
   // Coerces restaurant_delivery_zips into a `from`->`to` data model
   // Unions with the delivery_service_zips
@@ -369,6 +342,11 @@ var Restaurant = module.exports = Model.extend({
     query.columns.push("(SELECT array(SELECT meal_type FROM restaurant_meal_types WHERE restaurant_id = restaurants.id ORDER BY meal_type ASC)) AS meal_types");
     query.columns.push("(SELECT array(SELECT meal_style FROM restaurant_meal_styles WHERE restaurant_id = restaurants.id ORDER BY meal_style ASC)) AS meal_styles");
     query.columns.push('hours.delivery_times');
+    query.columns.push({
+      alias: 'hours_of_operation'
+    , type: 'coalesce'
+    , expression: 'hoo.hours_times, \'[]\'::json'
+    });
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
     query.columns.push("(SELECT coalesce(array_to_json(array_agg(row_to_json(r))), \'[]\'::json) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_pickup_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS pickup_lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");
@@ -394,6 +372,12 @@ var Restaurant = module.exports = Model.extend({
     , target: 'dt'
     , on: { 'restaurants.id': '$hours.restaurant_id$' }
     }
+
+    query.joins.hoo = {
+      type: 'left'
+    , target: 'hours_of_operation'
+    , on: { 'restaurant_id': '$restaurants.id$' }
+    };
 
     var unacceptable = [];
 

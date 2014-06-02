@@ -13,7 +13,7 @@ begin
   perform add_column( 'orders', 'is_pickup', 'bool not null default false' );
   perform add_column( 'orders', 'delivery_service_id', 'int references delivery_services( id )' );
 
-  perform add_column( 'regions', 'lead_time_modifier', 'int not null default 0' );
+  perform add_column( 'regions', 'lead_time_modifier', E'interval not null default \'0 minutes\'' );
 
   create table if not exists restaurant_pickup_lead_times ();
   perform add_column( 'restaurant_pickup_lead_times', 'id', 'serial primary key' );

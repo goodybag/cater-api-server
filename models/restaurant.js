@@ -69,6 +69,77 @@ var Restaurant = module.exports = Model.extend({
 {
   table: 'restaurants',
 
+  getHoursQuery: function( options ){
+    var query = {
+      type: 'select'
+    , columns: [
+        'restaurant_id'
+      , {
+          type: 'array_to_json'
+        , as: 'delivery_times'
+        , expression: {
+            type: 'array_agg'
+          , expression: {
+              type: 'array_to_json'
+            , expression: 'array[(day::text)::json, times]'
+            }
+          }
+        }
+      ]
+    , table: {
+        type: 'select'
+      , alias: 'day_hours'
+      , table: 'restaurant_delivery_times'
+      , columns: [
+          'restaurant_id'
+        , 'day'
+        , {
+            type: 'array_to_json'
+          , as: 'times'
+          , expression: {
+              type: 'array_agg'
+            , expression: {
+                type: 'array_to_json'
+              // , expression: 'array[restaurant_delivery_times.start_time, restaurant_delivery_times.end_time]'
+              , expression: [
+                  'array['
+                , 'least('
+                  , 'restaurant_delivery_times.start_time, '
+                  , 'restaurant_hours.start_time - regions.lead_time_modifier'
+                , '), greatest('
+                  , 'restaurant_delivery_times.end_time, '
+                  , 'restaurant_hours.end_time - regions.lead_time_modifier'
+                , ')]'
+                ].join('')
+              }
+            }
+          }
+        ]
+        // Join on hours to include delivery service hours
+      , joins: [
+          { alias: 'restaurants'
+          , type: 'left'
+          , target: 'restaurants'
+          , on: { id: '$restaurant_delivery_times.restaurant_id$' }
+          }
+        , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
+        , { alias: 'restaurant_hours'
+          , type: 'left'
+          , target: 'restaurant_hours'
+          , on: {
+              restaurant_id: '$restaurant_delivery_times.restaurant_id$'
+            , day: '$restaurant_delivery_times.day$'
+            }
+          }
+        ]
+      , groupBy: ['restaurant_id', 'day']
+      }
+    , groupBy: 'restaurant_id'
+    };
+
+    return query;
+  }
+
   // Coerces restaurant_delivery_zips into a `from`->`to` data model
   // Unions with the delivery_service_zips
   //
@@ -232,6 +303,7 @@ var Restaurant = module.exports = Model.extend({
         ]
       , table: {
           type: 'select'
+        , alias: 'day_hours'
         , table: 'restaurant_delivery_times'
         , columns: [
             'restaurant_id'
@@ -243,39 +315,43 @@ var Restaurant = module.exports = Model.extend({
                 type: 'array_agg'
               , expression: {
                   type: 'array_to_json'
-                , expression: 'array[start_time, end_time]'
-                // , expression: [
-                //     'array['
-                //   , 'min('
-                //     , 'restaurant_delivery_times.start_time, '
-                //     , 'restaurant_hours.start_time - interval \'' + ' minutes\''
-                //   , ']'
-                  // ].join('')
+                // , expression: 'array[restaurant_delivery_times.start_time, restaurant_delivery_times.end_time]'
+                , expression: [
+                    'array['
+                  , 'least('
+                    , 'restaurant_delivery_times.start_time, '
+                    , 'restaurant_hours.start_time - regions.lead_time_modifier'
+                  , '), greatest('
+                    , 'restaurant_delivery_times.end_time, '
+                    , 'restaurant_hours.end_time - regions.lead_time_modifier'
+                  , ')]'
+                  ].join('')
                 }
               }
             }
           ]
-        , groupBy: ['restaurant_id', 'day']
-        , alias: 'day_hours'
-        }
-        // Join on hours to include delivery service hours
-      , joins: [
-          { alias: 'restaurants'
-          , target: 'restaurants'
-          , on: { id: '$restaurant_delivery_times.restaurant_id$' }
-          }
-        , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
-        , { alias: 'restaurant_hours'
-          , target: 'restaurant_hours'
-          , on: {
-              restaurant_id: '$restaurant_delivery_times.restaurant_id$'
-            , day: '$restaurant_delivery_times.day$'
+          // Join on hours to include delivery service hours
+        , joins: [
+            { alias: 'restaurants'
+            , type: 'left'
+            , target: 'restaurants'
+            , on: { id: '$restaurant_delivery_times.restaurant_id$' }
             }
-          }
-        ]
+          , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
+          , { alias: 'restaurant_hours'
+            , type: 'left'
+            , target: 'restaurant_hours'
+            , on: {
+                restaurant_id: '$restaurant_delivery_times.restaurant_id$'
+              , day: '$restaurant_delivery_times.day$'
+              }
+            }
+          ]
+        , groupBy: ['restaurant_id', 'day']
+        }
       , groupBy: 'restaurant_id'
       }
-
+    , hours_of_operation: Restaurant.getHoursQuery( query )
     , all_delivery_zips: Restaurant.getDeliveryZipsQuery( query )
     };
 

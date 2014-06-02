@@ -88,7 +88,7 @@ var reports = {
         , moment(order.datetime).format(reports.dateFormat)
         , dollars(order.sub_total)
         , dollars(order.restaurant.delivery_fee)
-        , dollars( (order.sub_total + order.restaurant.delivery_fee) * (order.restaurant.sales_tax + 1) )
+        , dollars( (order.sub_total + order.restaurant.delivery_fee) * order.restaurant.sales_tax )
         , dollars(order.tip)
         , dollars(order.total)
         , order.restaurant.name

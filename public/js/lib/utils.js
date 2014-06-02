@@ -42,6 +42,7 @@ define(function(require, exports, module) {
 
   utils.async = async;
   utils.validator = amanda('json');
+  utils.Math = require('./math');
 
   utils.Backbone    = Backbone;
   utils.Events      = Backbone.Events;

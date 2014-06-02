@@ -1,4 +1,5 @@
 {{#extend "body"}}
+{{{dump restaurant}}}
   <h2>Delivery Hours</h2>
 
   <form class="ap-form ap-lead-times form-vertical form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST">
@@ -36,7 +37,7 @@
   <form class="ap-form ap-lead-times form-vertical form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST">
     <input type="hidden" name="_method" value="PUT">
 
-    {{#each restaurant.pickup_times}}
+    {{#each restaurant.pickup_lead_times}}
     <div class="delivery-time">
       <div class="col-day">{{weekday @key}}</div>
       <div id="hours-{{@key}}" class="hours-day col-times">

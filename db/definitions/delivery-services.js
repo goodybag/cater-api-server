@@ -22,7 +22,6 @@ define(function(require) {
   , region_id:          { type: types.int, references: { table: 'regions', column: 'id', onDelete: 'set null' } }
   , name:               { type: types.text }
   , rate:               { type: types.numeric( 5, 5 ), nullable: false, default: 0 }
-  , lead_time_modifier: { type: types.int, nullable: false, default: 0 }
   , created_at:         { type: types.timestamptz, nullable: false, default: 'NOW()' }
   };
 

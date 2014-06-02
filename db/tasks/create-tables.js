@@ -27,6 +27,7 @@ var definitions = [
 , 'restaurant-meal-styles'
 , 'restaurant-events'
 , 'restaurant-photos'
+, 'restaurant-hours'
 , 'orders'
 , 'categories'
 , 'items'

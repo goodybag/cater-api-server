@@ -244,6 +244,13 @@ var Restaurant = module.exports = Model.extend({
               , expression: {
                   type: 'array_to_json'
                 , expression: 'array[start_time, end_time]'
+                // , expression: [
+                //     'array['
+                //   , 'min('
+                //     , 'restaurant_delivery_times.start_time, '
+                //     , 'restaurant_hours.start_time - interval \'' + ' minutes\''
+                //   , ']'
+                  // ].join('')
                 }
               }
             }
@@ -251,6 +258,21 @@ var Restaurant = module.exports = Model.extend({
         , groupBy: ['restaurant_id', 'day']
         , alias: 'day_hours'
         }
+        // Join on hours to include delivery service hours
+      , joins: [
+          { alias: 'restaurants'
+          , target: 'restaurants'
+          , on: { id: '$restaurant_delivery_times.restaurant_id$' }
+          }
+        , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
+        , { alias: 'restaurant_hours'
+          , target: 'restaurant_hours'
+          , on: {
+              restaurant_id: '$restaurant_delivery_times.restaurant_id$'
+            , day: '$restaurant_delivery_times.day$'
+            }
+          }
+        ]
       , groupBy: 'restaurant_id'
       }
 
@@ -272,22 +294,23 @@ var Restaurant = module.exports = Model.extend({
     query.columns.push("(SELECT array(SELECT meal_style FROM restaurant_meal_styles WHERE restaurant_id = restaurants.id ORDER BY meal_style ASC)) AS meal_styles");
     query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
+    query.columns.push("(SELECT coalesce(array_to_json(array_agg(row_to_json(r))), \'[]\'::json) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_pickup_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS pickup_lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");
     var feeCol = query.columns.push({
       type: 'select'
     , alias: 'delivery_fee'
-    , table: 'restaurant_delivery_zips'
-    , columns: ['fee']
+    , table: 'all_delivery_zips'
+    , columns: ['price']
     , where: { restaurant_id:  '$restaurants.id$' }
     , limit: 1
-    , order: 'fee asc'
+    , order: 'price asc'
     }) - 1;
 
     query.columns = query.columns.concat( Restaurant.getRegionColumns() );
     query.joins.regions = Restaurant.getRegionJoin();
 
     if ( orderParams && orderParams.zip ){
-      query.columns[ feeCol ].where.zip = orderParams.zip;
+      query.columns[ feeCol ].where.to = orderParams.zip;
     }
 
     query.joins.hours = {

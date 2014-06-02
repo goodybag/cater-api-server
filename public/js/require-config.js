@@ -140,6 +140,9 @@
     , fullcalendar: {
         deps: ['jquery']
       }
+    , keymaster: {
+        exports: 'key'
+      }
     }
   // , hbs: {
   //     disableI18n: true

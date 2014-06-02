@@ -36,7 +36,17 @@ module.exports.auth = function(req, res, next) {
     req.order.isAdmin = true;
     return next();
   }
-  models.Order.findOne(req.params.id, function(err, order) {
+
+  var options = {
+    columns: [
+      'restaurant_id'
+    , 'user_id'
+    , 'review_token'
+    , 'edit_token'
+    ]
+  };
+
+  db.orders.findOne(req.params.id, function(err, order) {
     if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
     var reviewToken = req.query.review_token || req.body.review_token;
@@ -45,15 +55,15 @@ module.exports.auth = function(req, res, next) {
     // allow restaurant user to view orders at their own restaurant
     if (req.user
       && req.user.attributes.restaurant_ids
-      && utils.contains(req.user.attributes.restaurant_ids, order.attributes.restaurant_id)
+      && utils.contains(req.user.attributes.restaurant_ids, order.restaurant_id)
     ) {
       req.order.isRestaurantManager = true;
       return next();
     }
 
-    if (order.attributes.user_id !== (req.session.user||0).id &&
-        order.attributes.review_token !== reviewToken &&
-        order.attributes.edit_token !== editToken)
+    if (order.user_id !== (req.session.user||0).id &&
+        order.review_token !== reviewToken &&
+        order.edit_token !== editToken)
       return res.status(404).render('404');
 
     // There was a review token, so this is likely a restaurant manager

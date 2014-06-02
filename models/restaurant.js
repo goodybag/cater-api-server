@@ -256,7 +256,7 @@ var Restaurant = module.exports = Model.extend({
 
     , all_delivery_zips: Restaurant.getDeliveryZipsQuery( query )
     };
-console.log(Restaurant.getDeliveryZipsQuery( query ));
+
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
     query.columns.push([
       '(select array_to_json( array('

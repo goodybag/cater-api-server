@@ -12,7 +12,6 @@ module.exports = function( options ){
   });
 
   return function( req, res, next ){
-    console.log(req.param('id'));
     db.orders.findOne( +req.param( options.param ), function( error, order ){
       if ( error ) return next( error );
       // if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);

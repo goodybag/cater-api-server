@@ -35,8 +35,6 @@ utils.s3 = require('knox');
 
 utils.uuid = uuid;
 
-utils.Qlock = require('qlock');
-
 // ironMQ stuff
 utils.iron = new ironMQ.Client({token: config.ironMQ.token, project_id: config.ironMQ.projectId});
 utils.queues = {

@@ -181,7 +181,7 @@ module.exports.register = function(app) {
   app.get('/admin/restaurants/create'
   , m.restrict('admin')
   , m.states()
-  , m.view('restaurant/create', { layout: 'admin/layout-page' })
+  , m.view('admin/restaurant/create', { layout: 'admin/layout-page' })
   );
 
   app.post('/admin/restaurants/create'
@@ -198,7 +198,7 @@ module.exports.register = function(app) {
   , m.defaultLocals( { active_tab: 'basic-info'} )
   , m.db.regions.find( {}, { limit: 'all' } )
   , m.restaurant( {param: 'rid' } )
-  , m.view('restaurant/edit-basic-info', {
+  , m.view('admin/restaurant/edit-basic-info', {
       layout: 'admin/layout-two-column'
     })
   );
@@ -213,7 +213,7 @@ module.exports.register = function(app) {
   , m.defaultLocals( { active_tab: 'basic-info'} )
   , m.db.regions.find( {}, { limit: 'all' } )
   , m.restaurant( {param: 'rid' } )
-  , m.view('restaurant/edit-basic-info', {
+  , m.view('admin/restaurant/edit-basic-info', {
       layout: 'admin/layout-two-column'
     })
   );
@@ -222,16 +222,16 @@ module.exports.register = function(app) {
   , m.restrict('admin')
   , m.defaultLocals( { active_tab: 'delivery-settings'} )
   , m.restaurant( {param: 'rid' } )
-  , m.view('restaurant/edit-delivery-settings', {
+  , m.view('admin/restaurant/edit-delivery-settings', {
       layout: 'admin/layout-two-column'
     })
   );
 
-  app.get('/admin/restaurants/:rid/lead-times'
+  app.get('/admin/restaurants/:rid/hours-of-operation'
   , m.restrict('admin')
-  , m.defaultLocals( { active_tab: 'lead-times'} )
+  , m.defaultLocals( { active_tab: 'hours-of-operation'} )
   , m.restaurant( {param: 'rid' } )
-  , m.view('restaurant/edit-lead-times', {
+  , m.view('admin/restaurant/hours-of-operation', {
       layout: 'admin/layout-two-column'
     })
   );
@@ -241,7 +241,7 @@ module.exports.register = function(app) {
   , m.enums()
   , m.defaultLocals( { active_tab: 'tags'} )
   , m.restaurant( {param: 'rid' } )
-  , m.view('restaurant/edit-tags', {
+  , m.view('admin/restaurant/edit-tags', {
       layout: 'admin/layout-two-column'
     })
   );
@@ -251,7 +251,7 @@ module.exports.register = function(app) {
   , m.states()
   , m.defaultLocals( { active_tab: 'address'} )
   , m.restaurant( {param: 'rid' } )
-  , m.view('restaurant/edit-address', {
+  , m.view('admin/restaurant/edit-address', {
       layout: 'admin/layout-two-column'
     })
   );
@@ -262,7 +262,7 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.sort('+id')
   , m.restaurant( { param: 'restaurant_id' } )
-  , m.view('restaurant/edit-contacts', db.contacts, {
+  , m.view('admin/restaurant/edit-contacts', db.contacts, {
       layout: 'admin/layout-two-column'
     , method: 'find'
     })
@@ -272,7 +272,7 @@ module.exports.register = function(app) {
   , m.restrict('admin')
   , m.defaultLocals( { active_tab: 'menu'} )
   , m.restaurant( { param: 'rid', withMenuItems: true } )
-  , m.view('restaurant/edit-menu', {
+  , m.view('admin/restaurant/edit-menu', {
       layout: 'admin/layout-two-column'
     })
   );
@@ -283,7 +283,7 @@ module.exports.register = function(app) {
   , m.restaurant( { param: 'restaurant_id' } )
   , m.param('restaurant_id')
   , m.sort('+priority')
-  , m.view('restaurant/edit-photos', db.restaurant_photos, {
+  , m.view('admin/restaurant/edit-photos', db.restaurant_photos, {
       layout: 'admin/layout-two-column'
     , method: 'find'
     })

@@ -62,6 +62,7 @@ var Restaurant = module.exports = Model.extend({
     var obj = Model.prototype.toJSON.apply(this, arguments);
     if (this.categories) obj.categories = utils.invoke(this.categories, 'toJSON');
     obj.delivery_times = utils.defaults({}, obj.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
+    obj.hours_of_operation = utils.defaults({}, obj.hours_of_operation, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
     return obj;
   }
 },

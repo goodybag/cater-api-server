@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     events: function() {
       return _.extend({}, EditRestaurantView.prototype.events, {
         'click .btn-add-delivery-tier': 'addDeliveryTierClick'
+      , 'submit': 'save'
       });
     },
 
@@ -55,7 +56,7 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
-    },
+    }
 
   });
 });

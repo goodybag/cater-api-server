@@ -19,21 +19,27 @@ define(function(require){
         el: '.alert-container'
       });
 
-      var hours = utils.map(options.models.restaurant.attributes.delivery_times, function(times, idx) {
+      var deliveryHours = utils.map(options.models.restaurant.attributes.delivery_times, function(times, idx) {
         return new Views.EditHoursView({
           model: new Models.Hours({ day: idx, times: times })
-        , el: '#hours-' + idx
+        , el: '#delivery-hours-' + idx
         });
       });
 
-      var restaurantEditView = new Views.EditLeadTimesView({
+      var hours = utils.map(options.models.restaurant.attributes.delivery_times, function(times, idx) {
+        return new Views.EditHoursView({
+          model: new Models.Hours({ day: idx, times: times })
+        , el: '#delivery-hours-' + idx
+        });
+      });
+
+      var deliveryLeadTimesView = new Views.EditLeadTimesView({
         el : '.restaurant-edit'
       , model: options.models.restaurant
       , alertView: alertView
       , hours: hours
       });
-    },
-
+    }
   };
 
   return page;

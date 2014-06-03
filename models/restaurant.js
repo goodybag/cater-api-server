@@ -62,7 +62,7 @@ var Restaurant = module.exports = Model.extend({
     var obj = Model.prototype.toJSON.apply(this, arguments);
     if (this.categories) obj.categories = utils.invoke(this.categories, 'toJSON');
     obj.delivery_times = utils.defaults({}, obj.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
-    obj.hours_of_operation = utils.defaults({}, obj.hours_of_operation, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
+    // obj.hours_of_operation = utils.defaults({}, obj.hours_of_operation, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
     return obj;
   }
 },
@@ -251,7 +251,7 @@ var Restaurant = module.exports = Model.extend({
     query.includes = query.includes || [];
 
     if ( !('with_delivery_services' in query) ){
-      query.with_delivery_services = true;
+      query.with_delivery_services = false;
     }
 
     if (orderParams && 'is_hidden' in orderParams){
@@ -325,7 +325,6 @@ var Restaurant = module.exports = Model.extend({
         }
       , groupBy: 'restaurant_id'
       }
-    , hours_of_operation: Restaurant.getHoursQuery( query )
     , all_delivery_zips: Restaurant.getDeliveryZipsQuery( query )
     };
 
@@ -343,11 +342,6 @@ var Restaurant = module.exports = Model.extend({
     query.columns.push("(SELECT array(SELECT meal_type FROM restaurant_meal_types WHERE restaurant_id = restaurants.id ORDER BY meal_type ASC)) AS meal_types");
     query.columns.push("(SELECT array(SELECT meal_style FROM restaurant_meal_styles WHERE restaurant_id = restaurants.id ORDER BY meal_style ASC)) AS meal_styles");
     query.columns.push('hours.delivery_times');
-    query.columns.push({
-      alias: 'hours_of_operation'
-    , type: 'coalesce'
-    , expression: 'hoo.hours_times, \'[]\'::json'
-    });
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
     query.columns.push("(SELECT coalesce(array_to_json(array_agg(row_to_json(r))), \'[]\'::json) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_pickup_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS pickup_lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");
@@ -372,13 +366,22 @@ var Restaurant = module.exports = Model.extend({
       type: 'left'
     , target: 'dt'
     , on: { 'restaurants.id': '$hours.restaurant_id$' }
-    }
-
-    query.joins.hoo = {
-      type: 'left'
-    , target: 'hours_of_operation'
-    , on: { 'restaurant_id': '$restaurants.id$' }
     };
+
+    // Hours of operation
+    // query.hours_of_operation = Restaurant.getHoursQuery( query );
+
+    // query.joins.hoo = {
+    //   type: 'left'
+    // , target: 'hours_of_operation'
+    // , on: { 'restaurant_id': '$restaurants.id$' }
+    // };
+
+    // query.columns.push({
+    //   alias: 'hours_of_operation'
+    // , type: 'coalesce'
+    // , expression: 'hoo.hours_times, \'[]\'::json'
+    // });
 
     var unacceptable = [];
 

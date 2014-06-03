@@ -450,7 +450,7 @@ module.exports.register = function(app) {
 
   app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
 
-  app.patch('/orders/:oid', m.editOrderAuth, m.restrict(['client', 'restaurant', 'admin']), controllers.orders.editability, controllers.orders.update);
+  app.patch('/orders/:oid', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.editability, controllers.orders.update);
 
   app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};

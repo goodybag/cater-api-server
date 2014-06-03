@@ -55,8 +55,8 @@ var modifyAttributes = function(callback, err, orders) {
         // Handle reward promos
         var submitted = moment(order.attributes.submitted);
         var promo = utils.find(config.rewardsPromos, function(promo) {
-          var eligible = submitted >= moment(promo.start) &&
-                         submitted <  moment(promo.end);
+          var eligible = submitted >= moment.tz(promo.start, order.attributes.timezone) &&
+                         submitted <  moment.tz(promo.end, order.attributes.timezone);
           return eligible;
         });
 
@@ -942,7 +942,7 @@ module.exports = Model.extend({
 
     query.columns.push(caseIsBadDeliveryTime+' AS is_bad_delivery_time');
 
-    query.limit = 10000;
+    query.limit = query.limit || 10000;
 
     // Add order submitted_date column logic
     if (query.columns.indexOf('submitted_date') > -1){

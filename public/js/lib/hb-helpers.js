@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
     dollars: function(pennies) {
       var cents = pennies == null ? 0 : parseFloat(pennies); // parse as float incase of partial cents
-      return utils.isNaN(cents) ? '' : (cents / 100).toFixed(2); // partial cents get rounded here
+      return utils.isNaN(cents) ? '' : utils.Math.round10(cents / 100, -2).toFixed(2); // partial cents get rounded here
     },
 
     pennies: function(dollars) {

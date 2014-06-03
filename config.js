@@ -52,7 +52,7 @@ config.defaults = {
   , { start: '2014-05-05 00:00:00', end: '2014-05-06 00:00:00', rate: 2.0 }
   , { start: '2014-05-12 00:00:00', end: '2014-05-13 00:00:00', rate: 2.0 }
   , { start: '2014-05-19 00:00:00', end: '2014-05-20 00:00:00', rate: 2.0 }
-  , { start: '2014-05-26 00:00:00', end: '2014-05-27 00:00:00', rate: 2.0 }
+  , { start: '2014-05-27 00:00:00', end: '2014-05-28 00:00:00', rate: 2.0 }
   , { start: '2014-06-02 00:00:00', end: '2014-06-03 00:00:00', rate: 2.0 }
   , { start: '2014-06-09 00:00:00', end: '2014-06-10 00:00:00', rate: 2.0 }
   , { start: '2014-06-16 00:00:00', end: '2014-06-17 00:00:00', rate: 2.0 }
@@ -66,6 +66,10 @@ config.defaults = {
   , timezone:       'America/Chicago'
   , subject1:       'Hi there!'
   , days:           [ 1, 2, 3, 4, 5 ]
+  }
+
+, pagination: {
+    limit: 20
   }
 
 , salesTax: 1.0825
@@ -390,7 +394,7 @@ config.production = {
 , isProduction: true
 
 , cdn: {
-    baseUrl: 'https://d3bqck8kwfkhx5.cloudfront.net/'
+    baseUrl: 'https://d3bqck8kwfkhx5.cloudfront.net'
   , bucket: 'cater-cdn-prod'
   }
 
@@ -458,6 +462,7 @@ config.production = {
       'jacobparker@goodybag.com'
     , 'sarahsouthwell@goodybag.com'
     , 'jag@goodybag.com'
+    , 'om@goodybag.com'
     , 'redemptions@goodybag.com'
     ]
   }

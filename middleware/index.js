@@ -25,6 +25,7 @@ module.exports = {
 , uuid: require('./uuid')
 , s3: require('./s3')
 , db: require('./db')
+, profile: require('./profile')
 , getGeoFromIp: require('./get-geo-from-ip')
 , queryOptions: require('./query-options')
 , redirect: require('./redirect')

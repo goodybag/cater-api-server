@@ -8,8 +8,6 @@ var moment = require('moment');
 var statuses = ['submitted', 'accepted', 'denied'];
 
 module.exports = function(req, res, next) {
-  var qlk = new utils.Qlock();
-  qlk.profile('editorderauth');
   var token = req.query.edit_token || req.body.edit_token;
   delete req.body.edit_token;
 
@@ -30,6 +28,5 @@ module.exports = function(req, res, next) {
   // record order creator id
   req.creatorId = order.attributes.user.id;
   req.locals.edit_token = token;
-  qlk.profile('editorderauth');
   next();
 };

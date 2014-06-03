@@ -23,7 +23,7 @@ module.exports = function(req, res, next) {
   if ( utils.contains(statuses, order.attributes.status) )
     return res.render('shared-link/submitted');
   else if ( moment(order.attributes.edit_token_expires) < moment() )
-    return res.redner('shared-link/expired');
+    return res.render('shared-link/expired');
 
   // record order creator id
   req.creatorId = order.attributes.user.id;

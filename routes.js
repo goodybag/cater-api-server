@@ -429,10 +429,14 @@ module.exports.register = function(app) {
   , controllers.orders.get
   );
 
-  app.all(/^\/orders\/(\d+)(?:\/.*)?$/, function (req, res, next) {
-    req.params.id = req.params[0];
-    next();
-  }, controllers.orders.auth);
+  app.all(/^\/orders\/(\d+)(?:\/.*)?$/
+  , function (req, res, next) {
+      req.params.id = req.params[0];
+      next();
+    }
+  , m.getOrder2({ param: 'id' })
+  , controllers.orders.auth
+  );
 
   app.get('/orders/:oid'
     // If they're using ?receipt=true, make sure we restrict the group

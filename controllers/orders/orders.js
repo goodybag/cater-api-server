@@ -30,52 +30,37 @@ var addressFields = [
  */
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
-  req.order = {};
   logger.db.info(TAGS, 'auth for order #'+ req.params.id);
 
-  var options = {
-    columns: [
-      'restaurant_id'
-    , 'user_id'
-    , 'review_token'
-    , 'edit_token'
-    ]
-  };
+  if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
+    req.order.isAdmin = true;
+    return next();
+  }
 
-  db.orders.findOne(req.params.id, options, function(err, order) {
-    if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
-    if (!order) return res.render('404');
-    utils.extend(req.order, order);
-    if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
-      req.order.isAdmin = true;
-      return next();
-    }
+  var reviewToken = req.query.review_token || req.body.review_token;
+  var editToken = req.query.edit_token || req.body.edit_token;
 
-    var reviewToken = req.query.review_token || req.body.review_token;
-    var editToken = req.query.edit_token || req.body.edit_token;
+  // allow restaurant user to view orders at their own restaurant
+  if (req.user
+    && req.user.attributes.restaurant_ids
+    && utils.contains(req.user.attributes.restaurant_ids, req.order.restaurant_id)
+  ) {
+    req.order.isRestaurantManager = true;
+    return next();
+  }
 
-    // allow restaurant user to view orders at their own restaurant
-    if (req.user
-      && req.user.attributes.restaurant_ids
-      && utils.contains(req.user.attributes.restaurant_ids, order.restaurant_id)
-    ) {
-      req.order.isRestaurantManager = true;
-      return next();
-    }
+  if (req.order.user_id !== (req.session.user||0).id &&
+      req.order.review_token !== reviewToken &&
+      req.order.edit_token !== editToken)
+    return res.status(404).render('404');
 
-    if (order.user_id !== (req.session.user||0).id &&
-        order.review_token !== reviewToken &&
-        order.edit_token !== editToken)
-      return res.status(404).render('404');
+  // There was a review token, so this is likely a restaurant manager
+  if (reviewToken){
+    req.order.isRestaurantManager = true;
+  }
 
-    // There was a review token, so this is likely a restaurant manager
-    if (reviewToken){
-      req.order.isRestaurantManager = true;
-    }
-
-    req.order.isOwner = true;
-    next();
-  });
+  req.order.isOwner = true;
+  next();
 };
 
 module.exports.editability = function(req, res, next) {

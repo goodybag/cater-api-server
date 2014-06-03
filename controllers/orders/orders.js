@@ -25,17 +25,13 @@ var addressFields = [
 ];
 
 /**
- * Will attach req.order.[isOwner, isRestaurantManager, isAdmin] to help determine
+ * Will attach req.order and req.order[isOwner, isRestaurantManager, isAdmin] to help determine
  * what control the user has over a particular order
  */
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
   req.order = {};
   logger.db.info(TAGS, 'auth for order #'+ req.params.id);
-  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
-    req.order.isAdmin = true;
-    return next();
-  }
 
   var options = {
     columns: [
@@ -46,9 +42,15 @@ module.exports.auth = function(req, res, next) {
     ]
   };
 
-  db.orders.findOne(req.params.id, function(err, order) {
+  db.orders.findOne(req.params.id, options, function(err, order) {
     if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.render('404');
+    utils.extend(req.order, order);
+    if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
+      req.order.isAdmin = true;
+      return next();
+    }
+
     var reviewToken = req.query.review_token || req.body.review_token;
     var editToken = req.query.edit_token || req.body.edit_token;
 
@@ -77,16 +79,11 @@ module.exports.auth = function(req, res, next) {
 };
 
 module.exports.editability = function(req, res, next) {
-  models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return res.error(errors.internal.DB_FAILURE);
-    if (!order) return res.json(404);
-
-    // ensure only tip fields are being adjusted
-    var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
-                    !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
-    var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
-    return editable ? next() : res.json(403, 'order not editable');
-  });
+  // ensure only tip fields are being adjusted
+  var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
+                  !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
+  var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
+  return editable ? next() : res.json(403, 'order not editable');
 };
 
 module.exports.list = function(req, res) {

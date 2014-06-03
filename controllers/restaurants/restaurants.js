@@ -38,6 +38,7 @@ module.exports.list = function(req, res) {
       , where: {
           region_id: req.user.attributes.region_id
         }
+      , limit: 'all'
       };
       models.Restaurant.find(
         query

@@ -46,6 +46,8 @@ var definitions = [
 , 'deltas'
 , 'favorite-restaurants'
 , 'order-notifications'
+, 'delivery-services'
+, 'delivery-service-zips'
 , 'scheduled-jobs'
 ];
 

@@ -1,0 +1,15 @@
+<script>
+  define(
+    'readable-table'
+  , [ 'jquery-loaded', 'app/views/admin/readable-table', '{{readableTable.collection}}' ]
+  , function( $, ReadableTableView, Collection ){
+      return new ReadableTableView({
+        el: $('{{readableTable.selector}}')
+      , collection: new Collection()
+      });
+    }
+  );
+
+  // No-op require to load in readable-table
+  require(['readable-table'], function(){})
+</script>

@@ -1,0 +1,34 @@
+{{#extend "html-title"}}{{delivery_service.name}}{{/extend}}
+{{#extend "page"}}page-delivery-service{{/extend}}
+
+{{#extend "page-head"}}
+{{> admin_delivery_service_page_head}}
+{{/extend}}
+
+{{#extend "nav-col"}}
+{{> admin_delivery_service_sidebar_nav}}
+{{/extend}}
+
+{{#extend "body"}}
+<div class="panel-component">
+  <h2 class="component-title">Basic Info</h2>
+
+  <form id="edit-item-form"
+    action="{{sidebarNav.baseUrl}}/basic-info"
+    method="POST"
+    class="form ap-form form-vertical">
+    {{> admin_delivery_service_basic_info_form}}
+  </form>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+{{> admin_item_form}}
+<script>
+  require( ['item-form'], function( form ){
+    form.on( 'item:saved item:destroyed', function( model ){
+      window.location.href = '/admin/delivery-services';
+    });
+  });
+</script>
+{{/extend}}

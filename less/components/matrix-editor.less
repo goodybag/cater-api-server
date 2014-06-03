@@ -1,0 +1,64 @@
+///////////////////
+// Matrix Editor //
+///////////////////
+
+.matrix-editor {
+  max-width: 100%;
+  overflow: scroll;
+}
+
+.matrix-editor .matrix-table {
+  min-width: 100%;
+  border-top: solid 1px @gray-light;
+  border-right: solid 1px @gray-light;
+}
+
+.matrix-editor th > .val {
+  display: block;
+  padding: 20px 0;
+  .transform( rotate(-50deg) );
+}
+
+.matrix-editor td {
+  padding: 4px;
+}
+
+.matrix-editor tr > td:first-child {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.matrix-editor tr:nth-child(2n) td {
+  background: @off-gray;
+}
+
+.matrix-editor td:nth-child(2n),
+.matrix-editor th:nth-child(2n) {
+  background: lighten( @off-gray, 2% );
+}
+
+.matrix-editor tr td,
+.matrix-editor tr th {
+  border-bottom: solid 1px @gray-light;
+  border-left: solid 1px @gray-light;
+}
+
+.matrix-editor tr:hover td,
+.matrix-editor tr td.highlight,
+.matrix-editor tr th.highlight {
+  background: darken( @off-gray, 3% );
+}
+
+.matrix-editor .highlight.focus {
+  background: darken( @off-gray, 10% );
+}
+
+.matrix-editor tr.multi-edit td {
+  background: lighten( @brand-tertiary, 50% );
+  &.highlight {
+    background: lighten( @brand-tertiary, 45% );
+    &.focus {
+      background: lighten( @brand-tertiary, 40% );
+    }
+  }
+}

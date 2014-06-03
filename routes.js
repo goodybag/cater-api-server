@@ -89,6 +89,88 @@ module.exports.register = function(app) {
   , m.view( 'admin/regions', db.regions, {
       layout: 'admin/layout2'
     , method: 'find'
+    , activeTab: 'regions'
+    })
+  );
+
+  /**
+   * Delivery Services
+   */
+
+  app.get('/admin/delivery-services'
+  , m.sort('+name')
+  , m.queryOptions({
+      one: [{ table: 'regions', alias: 'region' }]
+    })
+  , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
+  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
+  , m.view( 'admin/delivery-service/list', db.delivery_services, {
+      layout: 'admin/layout2'
+    , method: 'find'
+    })
+  );
+
+  app.get('/admin/delivery-services/new'
+  , m.db.regions.find( {}, { limit: 'all' } )
+  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
+  , m.viewPlugin( 'sidebarNav', {
+      active:   'basic-info'
+    , baseUrl:  '/admin/delivery-services'
+    , isNew:    true
+    })
+  , m.viewPlugin( 'itemForm', {
+      selector:       '#create-item-form'
+    , collection:     'app/collections/delivery-services'
+    , localModelProp: 'delivery_service'
+    })
+  , m.view( 'admin/delivery-service/new-item', {
+      layout: 'admin/layout-single-object'
+    })
+  );
+
+  app.get('/admin/delivery-services/:id'
+  , m.redirect('/admin/delivery-services/:id/basic-info')
+  );
+
+  app.get('/admin/delivery-services/:id/basic-info'
+  , m.param('id')
+  , m.db.regions.find( {}, { limit: 'all' } )
+  , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
+  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
+  , m.viewPlugin( 'sidebarNav', {
+      active:   'basic-info'
+    , baseUrl:  '/admin/delivery-services/:id'
+    })
+  , m.viewPlugin( 'breadCrumbs', {
+      currentPage: 'basic-info'
+    })
+  , m.viewPlugin( 'itemForm', {
+      selector:       '#edit-item-form'
+    , collection:     'app/collections/delivery-services'
+    , localModelProp: 'delivery_service'
+    })
+  , m.view( 'admin/delivery-service/basic-info', db.delivery_services, {
+      layout: 'admin/layout-single-object'
+    , method: 'findOne'
+    })
+  );
+
+  app.get('/admin/delivery-services/:id/delivery-zips'
+  , m.param('id')
+  , m.db.regions.find( {}, { limit: 'all' } )
+  , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
+  , m.queryOptions({ many: [{ table: 'delivery_service_zips', alias: 'zips' }] })
+  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
+  , m.viewPlugin( 'sidebarNav', {
+      active:   'delivery-zips'
+    , baseUrl:  '/admin/delivery-services/:id'
+    })
+  , m.viewPlugin( 'breadCrumbs', {
+      currentPage: 'delivery-zips'
+    })
+  , m.view( 'admin/delivery-service/delivery-zips', db.delivery_services, {
+      layout: 'admin/layout-single-object'
+    , method: 'findOne'
     })
   );
 
@@ -1092,5 +1174,65 @@ module.exports.register = function(app) {
   , m.restrict(['admin', 'client'])
   , m.owner()
   , controllers.users.rewards.redeem
+  );
+
+  /**
+   * Delivery Services
+   */
+
+  app.get('/api/delivery-services'
+  , m.restrict(['admin'])
+  , m.sort('-id')
+  , m.param('region_id')
+  , m.queryOptions({
+      many: [{ table: 'delivery_service_zips', alias: 'zips' }]
+    , one:  [{ table: 'regions', alias: 'region' }]
+    })
+  , m.find( db.delivery_services )
+  );
+
+  app.post('/api/delivery-services'
+  , m.restrict(['admin'])
+  , m.insert( db.delivery_services )
+  );
+
+  app.get('/api/delivery-services/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.findOne( db.delivery_services )
+  );
+
+  app.put('/api/delivery-services/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.delivery_services )
+  );
+
+  app.del('/api/delivery-services/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.delivery_services )
+  );
+
+  app.get('/api/users'
+  , m.restrict(['admin'])
+  , m.sort('-id')
+  , m.queryOptions({
+      many: [{ table: 'addresses' }, { table: 'orders' }]
+    })
+  , m.find( db.users )
+  );
+
+  app.get('/api/users/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.sort('-id')
+  , m.queryOptions({
+      many: [
+        { table: 'addresses' }
+      , { table: 'users_groups', alias: 'groups' }
+      ]
+    })
+  , m.find( db.users )
   );
 }

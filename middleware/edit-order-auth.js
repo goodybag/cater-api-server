@@ -21,7 +21,7 @@ module.exports = function(req, res, next) {
 
   models.Order.findOne(query, function(err, order) {
     if ( err )
-        return res.error(500, err);
+      return res.error(500, err);
     else if ( !order )
       return res.render(404);
     else if ( utils.contains(statuses, order.attributes.status) )

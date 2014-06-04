@@ -374,7 +374,7 @@ module.exports.register = function(app) {
 
   app.get('/orders', m.restrict('admin'), controllers.orders.list);  // not currently used
 
-  app.post('/orders', m.restrict(['client', 'admin']), controllers.orders.create);
+  app.post('/orders', m.log('wut'), m.restrict(['client', 'admin']), m.log('poop'), controllers.orders.create);
 
   app.all('/orders', function(req, res, next) {
     res.set('Allow', 'GET');

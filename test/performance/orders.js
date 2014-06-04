@@ -1,45 +1,83 @@
 var assert  = require('assert');
 var utils   = require('../../utils');
+var moment  = require('moment-timezone');
 
 describe ('/orders', function(){
+  before( function( done ){
+    utils.test.loginAsUserId( 1, done );
+  });
+
+  after( function( done ){
+    utils.test.logout( done );
+  });
+
   it ('GET /orders', function( done ){
-    this.expected = 100;
+    this.expected = 1380;
 
-    utils.test.loginAsUserId( 1, function( error ){
+    utils.test.get( '/orders', function( error, res, body ){
       assert( !error, error );
-
-      utils.test.get( '/orders', function( error, res, body ){
-        assert( !error, error );
-        console.log(res);
-        assert.equal( res.uri.pathname === '/orders', 'Incorrect pathname' );
-        done();
-      });
+      assert.equal( res.request.uri.pathname, '/orders' );
+      done();
     });
   });
 
-  it ('GET /orders/:oid', function( done ){
-    this.expected = 84;
+  it ('GET /orders/1662', function( done ){
+    this.expected = 1404;
 
-    utils.test.loginAsUserId( 1, function( error ){
+    utils.test.get( '/orders/1662', function( error, res, body ){
       assert( !error, error );
-
-      utils.test.get( '/orders', function( error ){
-        assert( !error, error );
-        done();
-      });
+      assert.equal( res.request.uri.pathname, '/orders/1662' );
+      done();
     });
   });
 
-  it ('PUT /orders/:oid', function( done ){
-    this.expected = 104;
+  it ('GET /orders/1000/manifest', function( done ){
+    this.expected = 1430;
 
-    utils.test.loginAsUserId( 1, function( error ){
+    utils.test.get( '/orders/1000/manifest', function( error, res, body ){
       assert( !error, error );
+      assert.equal( res.request.uri.pathname, '/orders/1000/manifest' );
+      done();
+    });
+  });
 
-      utils.test.get( '/orders', function( error ){
-        assert( !error, error );
-        done();
-      });
+  // Hacky as shit
+  var order;
+  it ('POST /orders', function( done ){
+    this.expected = 12;
+
+    var data = {
+      restaurant_id: 31
+    , guests: 25
+    , datetime: moment().add('days', 3).hour(13).format('YYYY-MM-DD hh:mm:ss')
+    };
+
+    utils.test.json.post( '/orders', data, function( error, res, body ){
+      assert( !error, error );
+      assert( !body.error, JSON.stringify( body.error, true, '  ' ) );
+
+      order = body;
+
+      done();
+    });
+  });
+
+  it ('POST /order/:oid/items', function( done ){
+    this.timeout( 5000 );
+    this.expected = 2690;
+
+    assert( !!order.id, 'Order was not monkey-patched' );
+
+    var data = {
+      item_id: 2106
+    , quantity: 1
+    };
+
+    utils.test.json.post( [ '/orders', order.id, 'items' ].join('/'), data, function( error, res, body ){
+      assert( !error, error );
+      assert( !body.error, JSON.stringify( body.error, true, '  ' ) );
+
+      done();
     });
   });
 });

@@ -59,30 +59,60 @@ utils.balanced = new Balanced({
 
 utils.test = {};
 
-utils.test.get = function( url, options, callback ){
-  url = [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' );
+// utils.test.get = function( url, options, callback ){
+//   url = [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' );
 
-  if ( typeof options === "function" ){
-    callback = options;
-    options = {};
-  }
+//   if ( typeof options === "function" ){
+//     callback = options;
+//     options = {};
+//   }
 
-  options = utils.extend({
-    url: url
-  , method: "GET"
-  }, options);
+//   options = utils.extend({
+//     url: url
+//   , method: "GET"
+//   , jar: true
+//   }, options);
 
-  return request( options, callback );
-};
+//   return request( options, callback );
+// };
+
+[
+  'get', 'post', 'put', 'patch', 'del'
+].forEach( function( method ){
+  utils.test[ method ] = function( url, data, callback ){
+    var options = {
+      url:    [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' )
+    , method: method
+    , jar:    true
+    , form:   data
+    };
+
+    if ( [ 'get', 'del' ].indexOf( method ) > -1 ){
+      delete options.form;
+    }
+
+    return request( options, [ 'get', 'del' ].indexOf( method ) > -1 ? data : callback );
+  };
+});
 
 utils.test.json = {};
 [
   'get', 'post', 'put', 'patch', 'del'
 ].forEach( function( method ){
-  utils.test.json[ method ] = function( url ){
-    url = [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' );
-    var args = [ url ].concat( Array.prototype.slice.call( arguments, 1 ) );
-    return utils[ method ].apply( null, args );
+  utils.test.json[ method ] = function( url, data, callback ){
+    var options = {
+      url:    [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' )
+    , method: method
+    , json:   true
+    , jar:    true
+    , form:   data
+    };
+
+    if ( [ 'get', 'del' ].indexOf( method ) > -1 ){
+      delete options.form;
+    }
+
+    return request( options, [ 'get', 'del' ].indexOf( method ) > -1 ? data : callback );
   };
 });
 
@@ -96,7 +126,11 @@ utils.test.loginAsUserId = function( id, callback ){
 
 utils.test.login = function( user, password, callback ){
   var data = { email: user, password: password };
-  return utils.test.json.post( '/session', data, callback );
+  return utils.test.post( '/login', data, callback );
+};
+
+utils.test.logout = function( callback ){
+  return utils.test.get( '/auth/logout', callback );
 };
 
 /**

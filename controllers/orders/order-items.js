@@ -77,7 +77,7 @@ module.exports.add = function(req, res, next) {
   var editable = 
     req.creatorId ||
     utils.contains(req.session.user.groups, 'admin') || 
-    utils.contains(['pending', 'submitted'], order.attributes.status);
+    utils.contains(['pending', 'submitted'], req.order.status);
 
   if (!editable) return res.json(403, 'nope');
   models.Item.findOne(parseInt(req.body.item_id), function(err, item) {

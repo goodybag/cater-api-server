@@ -743,6 +743,11 @@ module.exports = Model.extend({
       }
     ];
 
+    // Filters out a lot of results on `sets` CTE
+    if (query.where.id) {
+      itemSubtotals[0].where = { id : query.where.id }
+    }
+
     query.with.push.apply(query.with, itemSubtotals);
 
     query.joins = query.joins || {};

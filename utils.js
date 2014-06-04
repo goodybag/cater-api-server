@@ -59,23 +59,6 @@ utils.balanced = new Balanced({
 
 utils.test = {};
 
-// utils.test.get = function( url, options, callback ){
-//   url = [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' );
-
-//   if ( typeof options === "function" ){
-//     callback = options;
-//     options = {};
-//   }
-
-//   options = utils.extend({
-//     url: url
-//   , method: "GET"
-//   , jar: true
-//   }, options);
-
-//   return request( options, callback );
-// };
-
 [
   'get', 'post', 'put', 'patch', 'del'
 ].forEach( function( method ){

@@ -58,45 +58,35 @@ utils.balanced = new Balanced({
 });
 
 utils.test = {};
-
-[
-  'get', 'post', 'put', 'patch', 'del'
-].forEach( function( method ){
-  utils.test[ method ] = function( url, data, callback ){
-    var options = {
+function getRequestMethod( method, opts ){
+  return function( url, data, callback ){
+    var options = utils.extend({
       url:    [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' )
     , method: method
-    , jar:    true
     , form:   data
-    };
-
+    , jar:    true
+    }, opts || {} );
     if ( [ 'get', 'del' ].indexOf( method ) > -1 ){
       delete options.form;
     }
 
     return request( options, [ 'get', 'del' ].indexOf( method ) > -1 ? data : callback );
   };
+}
+
+// Regular HTTP requests
+[
+  'get', 'post'
+].forEach( function( method ){
+  utils.test[ method ] = getRequestMethod( method );
 });
 
+// For consuming JSON
 utils.test.json = {};
 [
   'get', 'post', 'put', 'patch', 'del'
 ].forEach( function( method ){
-  utils.test.json[ method ] = function( url, data, callback ){
-    var options = {
-      url:    [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' )
-    , method: method
-    , json:   true
-    , jar:    true
-    , form:   data
-    };
-
-    if ( [ 'get', 'del' ].indexOf( method ) > -1 ){
-      delete options.form;
-    }
-
-    return request( options, [ 'get', 'del' ].indexOf( method ) > -1 ? data : callback );
-  };
+  utils.test.json[ method ] = getRequestMethod( method, { json: true } );
 });
 
 utils.test.loginAsUserId = function( id, callback ){

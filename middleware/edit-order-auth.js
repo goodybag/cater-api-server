@@ -19,14 +19,19 @@ module.exports = function(req, res, next) {
     }
   };
 
-  var order = req.order;
-  if ( utils.contains(statuses, order.attributes.status) )
-    return res.render('shared-link/submitted');
-  else if ( moment(order.attributes.edit_token_expires) < moment() )
-    return res.render('shared-link/expired');
+  models.Order.findOne(query, function(err, order) {
+    if ( err )
+        return res.error(500, err);
+    else if ( !order )
+      return res.render(404);
+    else if ( utils.contains(statuses, order.attributes.status) )
+      return res.render('shared-link/submitted');
+    else if ( moment(order.attributes.edit_token_expires) < moment() )
+      return res.render('shared-link/expired');
 
-  // record order creator id
-  req.creatorId = order.attributes.user.id;
-  req.locals.edit_token = token;
-  next();
+    // record order creator id
+    req.creatorId = order.attributes.user_id;
+    res.locals.edit_token = token;
+    next();
+  });
 };

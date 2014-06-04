@@ -25,68 +25,50 @@ var addressFields = [
 ];
 
 /**
- * Will attach req.order.[isOwner, isRestaurantManager, isAdmin] to help determine
+ * Will attach req.order and req.order[isOwner, isRestaurantManager, isAdmin] to help determine
  * what control the user has over a particular order
  */
 module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
-  req.order = {};
   logger.db.info(TAGS, 'auth for order #'+ req.params.id);
-  if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
+
+  if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
     req.order.isAdmin = true;
     return next();
   }
 
-  var options = {
-    columns: [
-      'restaurant_id'
-    , 'user_id'
-    , 'review_token'
-    , 'edit_token'
-    ]
-  };
+  var reviewToken = req.query.review_token || req.body.review_token;
+  var editToken = req.query.edit_token || req.body.edit_token;
 
-  db.orders.findOne(req.params.id, function(err, order) {
-    if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
-    if (!order) return res.render('404');
-    var reviewToken = req.query.review_token || req.body.review_token;
-    var editToken = req.query.edit_token || req.body.edit_token;
+  // allow restaurant user to view orders at their own restaurant
+  if (req.user
+    && req.user.attributes.restaurant_ids
+    && utils.contains(req.user.attributes.restaurant_ids, req.order.restaurant_id)
+  ) {
+    req.order.isRestaurantManager = true;
+    return next();
+  }
 
-    // allow restaurant user to view orders at their own restaurant
-    if (req.user
-      && req.user.attributes.restaurant_ids
-      && utils.contains(req.user.attributes.restaurant_ids, order.restaurant_id)
-    ) {
-      req.order.isRestaurantManager = true;
-      return next();
-    }
+  if (req.order.user_id !== (req.session.user||0).id &&
+      req.order.review_token !== reviewToken &&
+      req.order.edit_token !== editToken)
+    return res.status(404).render('404');
 
-    if (order.user_id !== (req.session.user||0).id &&
-        order.review_token !== reviewToken &&
-        order.edit_token !== editToken)
-      return res.status(404).render('404');
+  // There was a review token, so this is likely a restaurant manager
+  if (reviewToken){
+    req.order.isRestaurantManager = true;
+  }
 
-    // There was a review token, so this is likely a restaurant manager
-    if (reviewToken){
-      req.order.isRestaurantManager = true;
-    }
-
-    req.order.isOwner = true;
-    next();
-  });
+  req.order.isOwner = true;
+  next();
 };
 
 module.exports.editability = function(req, res, next) {
-  models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return res.error(errors.internal.DB_FAILURE);
-    if (!order) return res.json(404);
-
-    // ensure only tip fields are being adjusted
-    var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
-                    !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
-    var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
-    return editable ? next() : res.json(403, 'order not editable');
-  });
+  // ensure only tip fields are being adjusted
+  var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
+                  !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
+  var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], req.order.status);
+  return editable ? next() : res.json(403, 'order not editable');
 };
 
 module.exports.list = function(req, res) {
@@ -276,31 +258,30 @@ module.exports.update = function(req, res) {
   // TODO: get this from not here
   var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed'];
   var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
+  if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 
-  models.Order.findOne(req.params.oid, function(err, order) {
+  // Instantiate order model for save functionality
+  var order = new models.Order(req.order);
+
+  var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;
+  var oldDatetime = order.attributes.datetime;
+
+  var isTipEditable = order.isTipEditable({
+    isOwner: req.order.isOwner,
+    isRestaurantManager: req.order.isRestaurantManager,
+    isAdmin: req.order.isAdmin,
+  });
+
+  if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
+
+  utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+  order.save(function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
+    res.send(order.toJSON({plain:true}));
 
-    var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;
-    var oldDatetime = order.attributes.datetime;
-
-    var isTipEditable = order.isTipEditable({
-      isOwner: req.order.isOwner,
-      isRestaurantManager: req.order.isRestaurantManager,
-      isAdmin: req.order.isAdmin,
-    });
-
-    if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
-
-    utils.extend(order.attributes, utils.pick(req.body, updateableFields));
-    order.save(function(err, rows, result) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-      res.send(order.toJSON({plain:true}));
-
-      if (datetimeChanged) {
-        venter.emit('order:datetime:change', order, oldDatetime);
-      }
-    });
+    if (datetimeChanged) {
+      venter.emit('order:datetime:change', order, oldDatetime);
+    }
   });
 };
 

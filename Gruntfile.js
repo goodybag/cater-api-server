@@ -263,6 +263,18 @@ module.exports = function(grunt) {
   , 's3:production'
   , 'shell:deployProduction'
   ]);
-  grunt.registerTask( 'deploy:staging', ['build', 'readStaticAssets', 's3:staging', 'shell:deployStaging'] );
-  grunt.registerTask( 'deploy:dev', ['build', 'readStaticAssets', 's3:dev'] );
+
+  grunt.registerTask( 'deploy:staging', [
+    'build'
+  , 'readStaticAssets'
+  , 's3:staging'
+  , 'shell:deployStaging'
+  ]);
+
+  grunt.registerTask( 'deploy:dev', [
+    'versionPatch'
+  , 'build'
+  , 'readStaticAssets'
+  , 's3:dev'
+  ]);
 };

@@ -1,6 +1,7 @@
 var
   // Module Dependencies
-  config = require('./config')
+  fs     = require('fs')
+, config = require('./config')
 , errors = require('./errors')
 
   // Third Party Dependencies
@@ -21,6 +22,11 @@ var
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
+
+var local = {};
+if (fs.existsSync('./local-config.json')){
+  local = require('./local-config.json');
+}
 
 utils.words = require('pluralize');
 
@@ -50,6 +56,48 @@ utils.balanced = new Balanced({
   marketplace_uri: config.balanced.marketplaceUri
 , secret: config.balanced.secret
 });
+
+utils.test = {};
+
+utils.test.get = function( url, options, callback ){
+  url = [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' );
+
+  if ( typeof options === "function" ){
+    callback = options;
+    options = {};
+  }
+
+  options = utils.extend({
+    url: url
+  , method: "GET"
+  }, options);
+
+  return request( options, callback );
+};
+
+utils.test.json = {};
+[
+  'get', 'post', 'put', 'patch', 'del'
+].forEach( function( method ){
+  utils.test.json[ method ] = function( url ){
+    url = [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' );
+    var args = [ url ].concat( Array.prototype.slice.call( arguments, 1 ) );
+    return utils[ method ].apply( null, args );
+  };
+});
+
+utils.test.loginAsUserId = function( id, callback ){
+  var email = config.testEmail.split('@');
+  email[0] += '+' + id;
+  if ( local.emailSalt ) email[0] += local.emailSalt;
+  email = email.join('@');
+  return utils.test.login( email, 'password', callback );
+};
+
+utils.test.login = function( user, password, callback ){
+  var data = { email: user, password: password };
+  return utils.test.json.post( '/session', data, callback );
+};
 
 /**
  * Async.parallel that does not bail on error.

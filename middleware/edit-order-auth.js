@@ -20,13 +20,13 @@ module.exports = function(req, res, next) {
   };
 
   var order = req.order;
-  if ( utils.contains(statuses, order.attributes.status) )
+  if ( utils.contains(statuses, req.order.status) )
     return res.render('shared-link/submitted');
-  else if ( moment(order.attributes.edit_token_expires) < moment() )
+  else if ( moment(req.order.edit_token_expires) < moment() )
     return res.render('shared-link/expired');
 
   // record order creator id
-  req.creatorId = order.attributes.user.id;
-  req.locals.edit_token = token;
+  req.creatorId = req.order.user_id;
+  res.locals.edit_token = token;
   next();
 };

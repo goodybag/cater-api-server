@@ -257,8 +257,8 @@ module.exports = function(grunt) {
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 
   grunt.registerTask( 'deploy', [ 
-    'versionPatch'
-  , 'build'
+    // 'versionPatch'
+    'build'
   , 'readStaticAssets'
   , 's3:production'
   , 'shell:deployProduction'

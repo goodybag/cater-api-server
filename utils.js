@@ -1,6 +1,7 @@
 var
   // Module Dependencies
-  config = require('./config')
+  fs     = require('fs')
+, config = require('./config')
 , errors = require('./errors')
 
   // Third Party Dependencies
@@ -21,6 +22,11 @@ var
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async})
 ;
+
+var local = {};
+if (fs.existsSync('./local-config.json')){
+  local = require('./local-config.json');
+}
 
 utils.words = require('pluralize');
 
@@ -50,6 +56,55 @@ utils.balanced = new Balanced({
   marketplace_uri: config.balanced.marketplaceUri
 , secret: config.balanced.secret
 });
+
+utils.test = {};
+function getRequestMethod( method, opts ){
+  return function( url, data, callback ){
+    var options = utils.extend({
+      url:    [ config.baseUrl, url ].join( url[0] === '/' ? '' : '/' )
+    , method: method
+    , form:   data
+    , jar:    true
+    }, opts || {} );
+    if ( [ 'get', 'del' ].indexOf( method ) > -1 ){
+      delete options.form;
+    }
+
+    return request( options, [ 'get', 'del' ].indexOf( method ) > -1 ? data : callback );
+  };
+}
+
+// Regular HTTP requests
+[
+  'get', 'post'
+].forEach( function( method ){
+  utils.test[ method ] = getRequestMethod( method );
+});
+
+// For consuming JSON
+utils.test.json = {};
+[
+  'get', 'post', 'put', 'patch', 'del'
+].forEach( function( method ){
+  utils.test.json[ method ] = getRequestMethod( method, { json: true } );
+});
+
+utils.test.loginAsUserId = function( id, callback ){
+  var email = config.testEmail.split('@');
+  email[0] += '+' + id;
+  if ( local.emailSalt ) email[0] += local.emailSalt;
+  email = email.join('@');
+  return utils.test.login( email, 'password', callback );
+};
+
+utils.test.login = function( user, password, callback ){
+  var data = { email: user, password: password };
+  return utils.test.post( '/login', data, callback );
+};
+
+utils.test.logout = function( callback ){
+  return utils.test.get( '/auth/logout', callback );
+};
 
 /**
  * Async.parallel that does not bail on error.

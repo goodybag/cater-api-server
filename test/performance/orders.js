@@ -1,6 +1,7 @@
 var assert  = require('assert');
-var utils   = require('../../utils');
 var moment  = require('moment-timezone');
+var utils   = require('../../utils');
+var db      = require('../../db');
 
 describe ('/orders', function(){
   before( function( done ){
@@ -64,7 +65,7 @@ describe ('/orders', function(){
 
   it ('POST /order/:oid/items', function( done ){
     this.timeout( 5000 );
-    this.expected = 2690;
+    this.expected = 13;
 
     assert( !!order.id, 'Order was not monkey-patched' );
 

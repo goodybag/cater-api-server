@@ -13,7 +13,7 @@ describe ('/orders', function(){
   });
 
   it ('GET /orders', function( done ){
-    this.expected = 1380;
+    this.expected = 170;
 
     utils.test.get( '/orders', function( error, res, body ){
       assert( !error, error );

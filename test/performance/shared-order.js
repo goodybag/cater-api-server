@@ -20,7 +20,7 @@ describe ('/orders - Shared orders', function(){
     this.expected = 12;
 
     var data = {
-      restaurant_id: 31
+      restaurant_id: restaurant_id
     , guests: 25
     , datetime: moment().add('days', 3).hour(13).format('YYYY-MM-DD hh:mm:ss')
     };
@@ -53,10 +53,10 @@ describe ('/orders - Shared orders', function(){
     this.timeout( 5000 );
     this.expected = 400;
 
-    utils.test.json.get( ['/restaurants', 31, '?edit_token=' + order.edit_token ].join('/'), function( error, res, body  ){
+    utils.test.json.get( ['/restaurants', restaurant_id, '?edit_token=' + order.edit_token ].join('/'), function( error, res, body  ){
       assert( !error, error);
       assert( !body.error, JSON.stringify( body.error, true, ' ' ) );
-      assert.equal( res.request.uri.pathname, '/restaurants/31/' );
+      assert.equal( res.statusCode, 200 );
       done();
     });
   });

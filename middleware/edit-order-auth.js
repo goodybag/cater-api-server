@@ -1,5 +1,8 @@
 /**
- * Middleware for authenticating individual ordering
+ * Middleware for individual ordering checking
+ *   - Edit token is valid
+ *   - Order hasn't been submitted
+ *   - Shared Link hasn't expired
  */
 
 var models = require('../models');
@@ -8,11 +11,13 @@ var moment = require('moment');
 var statuses = ['submitted', 'accepted', 'denied'];
 
 module.exports = function(req, res, next) {
+  // we don't want to make any changes with the token downstream
   var token = req.query.edit_token || req.body.edit_token;
   delete req.body.edit_token;
 
   if ( !token ) return next();
 
+  // For shared orders, we must lookup order via `edit_token`
   var query = {
     where: {
       edit_token: token

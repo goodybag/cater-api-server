@@ -1,28 +1,28 @@
 <div class="btn-group-vertical status-buttons">
-  <a href="?" class="btn btn-default {{#eq filter "all"}}active{{/eq}}" data-status="all">
+  <a href="?p={{p}}" class="btn btn-default {{#eq status "all"}}active{{/eq}}" data-status="all">
     All
   </a>
   {{#unless isRestaurantManager}}
-  <a href="?filter=pending" class="btn btn-pending {{#eq filter "pending"}}active{{/eq}}">
+  <a href="?status=pending&p={{p}}" class="btn btn-pending {{#eq status "pending"}}active{{/eq}}">
     Pending
   </a>
   {{/unless}}
   {{#unless isRestaurantManager}}
-  <a href="?filter=canceled" class="btn btn-canceled {{#eq filter "canceled"}}active{{/eq}}">
+  <a href="?status=canceled&p={{p}}" class="btn btn-canceled {{#eq status "canceled"}}active{{/eq}}">
     Canceled
   </a>
   {{/unless}}
-  <a href="?filter=submitted" class="btn btn-submitted {{#eq filter "submitted"}}active{{/eq}}">
+  <a href="?status=submitted&p={{p}}" class="btn btn-submitted {{#eq status "submitted"}}active{{/eq}}">
     Submitted
   </a>
-  <a href="?filter=accepted" class="btn btn-accepted {{#eq filter "accepted"}}active{{/eq}}">
+  <a href="?status=accepted&p={{p}}" class="btn btn-accepted {{#eq status "accepted"}}active{{/eq}}">
     Accepted
   </a>
-  <a href="?filter=denied" class="btn btn-denied {{#eq filter "denied"}}active{{/eq}}">
+  <a href="?status=denied&p={{p}}" class="btn btn-denied {{#eq status "denied"}}active{{/eq}}">
     Denied
   </a>
   {{#unless isRestaurantManager}}
-  <a href="?filter=delivered" class="btn btn-delivered {{#eq filter "delivered"}}active{{/eq}}">
+  <a href="?status=delivered&p={{p}}" class="btn btn-delivered {{#eq status "delivered"}}active{{/eq}}">
     Delivered
   </a>
   {{/unless}}

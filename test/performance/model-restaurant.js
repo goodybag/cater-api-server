@@ -23,19 +23,4 @@ describe ('models.Restaurant', function(){
       done();
     });
   });
-
-  // There's a weird PG optimization going on causing the second findOne
-  // to run basically instantly
-  // it ('models.Order.findOne(:id).getOrderItems()', function( done ){
-  //   this.expected = 300;
-
-  //   Models.Order.findOne( 1199, function( error, order ){
-  //     assert( !error, error );
-  //     assert( order instanceof Models.Order );
-
-  //     order.getOrderItems( function( error, items ){
-  //       done();
-  //     });
-  //   });
-  // });
 });

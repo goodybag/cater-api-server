@@ -17,26 +17,34 @@ module.exports = function(req, res, next) {
 
   if ( !token ) return next();
 
-  // For shared orders, we must lookup order via `edit_token`
-  var query = {
-    where: {
-      edit_token: token
-    }
-  };
+  var tasks = [
+    function getOrder(done) {
+      // Get req.order or lookup by edit_token
+      if (req.order) return done(null, req.order);
+      var query = { where: { edit_token: token } };
+      models.Order.findOne(query, function(err, order) {
+        done(err, order.toJSON());
+      });
+    },
 
-  models.Order.findOne(query, function(err, order) {
-    if ( err )
+    function auth(order, done) {
+      if ( utils.contains(statuses, order.status) )
+        return res.render('shared-link/submitted');
+      else if ( moment(order.edit_token_expires) < moment() )
+        return res.render('shared-link/expired');
+
+      // record order creator id
+      req.creatorId = order.user_id;
+      res.locals.edit_token = token;
+      done(null , order);
+    }
+  ];
+
+  utils.async.waterfall(tasks, function(err, order) {
+    if ( err ) 
       return res.error(500, err);
     else if ( !order )
       return res.render(404);
-    else if ( utils.contains(statuses, order.attributes.status) )
-      return res.render('shared-link/submitted');
-    else if ( moment(order.attributes.edit_token_expires) < moment() )
-      return res.render('shared-link/expired');
-
-    // record order creator id
-    req.creatorId = order.attributes.user_id;
-    res.locals.edit_token = token;
     next();
   });
 };

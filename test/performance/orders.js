@@ -81,4 +81,33 @@ describe ('/orders', function(){
       done();
     });
   });
+
+  it ('GET /api/orders/:oid/items', function( done ){
+    this.timeout( 5000 );
+    this.expected = 10;
+
+    utils.test.json.get( ['/api/orders', order.id, 'items' ].join('/'), function( error, res, body  ){
+      assert( !error, error);
+      assert( !body.error, JSON.stringify( body.error, true, ' ' ) );
+      console.log(body);
+      done();
+    });
+  });
+
+  it ('POST /orders/:oid/items - Edit Token', function( done ){
+    this.timeout( 5000 );
+    this.expected = 10;
+
+    var data = {
+      item_id: 2106
+    , quantity: 1
+    , edit_token: order.edit_token
+    }
+    utils.test.json.post( ['/orders', order.id, 'items' ].join('/'), data, function( error, res, body  ){
+      assert( !error, error);
+      assert( !body.error, JSON.stringify( body.error, true, ' ' ) );
+      console.log(body);
+      done();
+    });
+  });
 });

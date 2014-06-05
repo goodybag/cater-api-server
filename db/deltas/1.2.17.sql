@@ -11,6 +11,7 @@ begin
   perform add_column( 'restaurants', 'delivery_service_order_amount_threshold', 'int not null default 0' );
 
   perform add_column( 'orders', 'is_pickup', 'bool not null default false' );
+  perform add_column( 'orders', 'pickup_datetime', 'timestamp without time zone' );
   perform add_column( 'orders', 'delivery_service_id', 'int references delivery_services( id )' );
 
   perform add_column( 'regions', 'lead_time_modifier', E'interval not null default \'0 minutes\'' );

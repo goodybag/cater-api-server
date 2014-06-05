@@ -80,6 +80,10 @@ module.exports.register = function(app) {
   , m.view( 'admin/home', { layout: 'admin/layout2' } )
   );
 
+  app.get('/admin/query-inspector'
+  , m.view( 'admin/query-inspector', { layout: 'admin/layout2' } )
+  );
+
   /**
    * Regions
    */

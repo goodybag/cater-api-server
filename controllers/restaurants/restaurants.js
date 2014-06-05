@@ -248,6 +248,7 @@ var leadTimes = function(body, id) {
 }
 
 var hours = function(body, id) {
+  console.log('hours');
   return Array.prototype.concat.apply([], utils.map(body.hours_of_operation, function(times, day, obj) {
     return utils.map(times, function(period, index, arr) {
       return {
@@ -261,6 +262,7 @@ var hours = function(body, id) {
 }
 
 var pickupLeadTimes = function(body, id) {
+  console.log('pickupLeadTimes');
   return utils.map(body.pickup_lead_times, function(obj, index, arr) {
     return utils.extend({restaurant_id: id}, obj);
   });
@@ -370,7 +372,7 @@ module.exports.update = function(req, res) {
     ['Zips', zips, 'delivery_zips']
   , ['DeliveryTimes', deliveryTimes, 'delivery_times']
   , ['LeadTimes', leadTimes, 'lead_times']
-  , ['Hours', hours, 'hours']
+  , ['Hours', hours, 'hours_of_operation']
   , ['PickupLeadTimes', pickupLeadTimes, 'pickup_lead_times']
   , ['Tags', tags, 'tags']
   , ['MealTypes', mealTypes, 'meal_types']

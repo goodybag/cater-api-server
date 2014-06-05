@@ -9,10 +9,13 @@ var db = require('./db');
 var errors = require('./errors');
 var PaymentSummaryItem = require('./public/js/app/models/payment-summary-item');
 
-var m = utils.extend( require('./middleware'), require('stdm') );
-
-utils.extend( m, require('./middleware/util') );
-utils.extend( m, require('dirac-middleware') );
+var m = utils.extend(
+  {}
+, require('stdm')
+, require('dirac-middleware')
+, require('./middleware/util')
+, require('./middleware')
+);
 
 module.exports.register = function(app) {
   app.before( m.analytics, m.queryParams(), function( app ){
@@ -372,7 +375,20 @@ module.exports.register = function(app) {
    *  Orders resource.  The collection of all orders.
    */
 
-  app.get('/orders', m.restrict('admin'), controllers.orders.list);  // not currently used
+  app.get('/orders'
+  , m.restrict('admin')
+  , m.pagination({ pageParam: 'p' })
+  , m.param('status')
+  , m.sort('-created_at')
+  , m.queryOptions({
+      one: [
+        { table: 'users',       alias: 'user' }
+      , { table: 'restaurants', alias: 'restaurant' }
+      ]
+    })
+  , function( req, res, next ){ res.locals.status = req.queryObj.status; next(); }
+  , m.view('orders', db.orders)
+  );
 
   app.post('/orders', m.restrict(['client', 'admin']), controllers.orders.create);
 

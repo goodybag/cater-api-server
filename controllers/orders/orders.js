@@ -32,33 +32,10 @@ module.exports.auth = function(req, res, next) {
   var TAGS = ['orders-auth'];
   logger.db.info(TAGS, 'auth for order #'+ req.params.id);
 
-<<<<<<< HEAD
-  models.Order.findOne(req.params.id, function(err, order) {
-    if (err) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, err), res.error(errors.internal.DB_FAILURE, err);
-    if (!order) return res.render('404');
-    utils.extend(req.order, order);
-    if (req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
-      req.order.isAdmin = true;
-      return next();
-    }
-
-    var reviewToken = req.query.review_token || req.body.review_token;
-    var editToken = req.query.edit_token || req.body.edit_token;
-
-    // allow restaurant user to view orders at their own restaurant
-    if (req.user
-      && req.user.attributes.restaurant_ids
-      && utils.contains(req.user.attributes.restaurant_ids, order.attributes.restaurant_id)
-    ) {
-      req.order.isRestaurantManager = true;
-      return next();
-    }
-=======
   if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
     req.order.isAdmin = true;
     return next();
   }
->>>>>>> f3587f43535b4b6bff9857c71e9941499d1bd38b
 
   var reviewToken = req.query.review_token || req.body.review_token;
   var editToken = req.query.edit_token || req.body.edit_token;
@@ -87,18 +64,10 @@ module.exports.auth = function(req, res, next) {
 };
 
 module.exports.editability = function(req, res, next) {
-<<<<<<< HEAD
-
-  // ensure only tip fields are being adjusted
-  var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
-                  !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
-  var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], order.attributes.status);
-=======
   // ensure only tip fields are being adjusted
   var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
                   !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
   var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], req.order.status);
->>>>>>> f3587f43535b4b6bff9857c71e9941499d1bd38b
   return editable ? next() : res.json(403, 'order not editable');
 };
 

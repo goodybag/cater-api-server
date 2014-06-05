@@ -81,6 +81,8 @@ module.exports = function(grunt) {
         files: {
           "public/dist/<%= pkg.version %>/landing.css":            "less/core-landing.less"
         , "public/dist/<%= pkg.version %>/landing-ielt9.css":      "less/ielt9-landing.less"
+        , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less" // to be deprecated
+        , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater.less"     // to be deprecated
         , "public/dist/<%= pkg.version %>/cater.css":              "less/core-cater.less"
         , "public/dist/<%= pkg.version %>/cater-ielt9.css":        "less/ielt9-cater.less"
         , "public/dist/<%= pkg.version %>/admin.css":              "less/core-admin.less"

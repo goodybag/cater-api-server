@@ -85,6 +85,7 @@ describe ('/orders - Shared orders', function(){
     utils.test.json.get( ['/api/orders', order.id, 'items' ].join('/'), function( error, res, body  ){
       assert( !error, error);
       assert( !body.error, JSON.stringify( body.error, true, ' ' ) );
+      assert( Array.isArray(body) );
       done();
     });
   });

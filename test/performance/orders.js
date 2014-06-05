@@ -23,7 +23,7 @@ describe ('/orders', function(){
   });
 
   it ('GET /orders/1662', function( done ){
-    this.expected = 1404;
+    this.expected = 130;
 
     utils.test.get( '/orders/1662', function( error, res, body ){
       assert( !error, error );
@@ -33,7 +33,7 @@ describe ('/orders', function(){
   });
 
   it ('GET /orders/1000/manifest', function( done ){
-    this.expected = 1430;
+    this.expected = 130;
 
     utils.test.get( '/orders/1000/manifest', function( error, res, body ){
       assert( !error, error );

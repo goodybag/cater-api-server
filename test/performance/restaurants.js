@@ -48,8 +48,7 @@ describe ('/restaurants', function(){
   });
 
   it ('GET /restaurants/111 - With pending order', function( done ){
-    this.timeout(5000);
-    this.expected = 3250;
+    this.expected = 245;
 
     utils.test.get( '/restaurants/111', function( error, res, body ){
       assert( !error, error );

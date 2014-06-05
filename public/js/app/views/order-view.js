@@ -147,7 +147,7 @@ define(function(require, exports, module) {
     },
 
     cancel: function() {
-      this.model.changeStatus('canceled', function(err, data) {
+      this.model.changeStatus('canceled', true, function(err, data) {
         if (err) return alert(err); // TODO: error handling
         window.location.reload();
       });

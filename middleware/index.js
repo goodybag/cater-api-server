@@ -10,6 +10,7 @@ module.exports = {
 , exists: require('./exists')
 , filterBody: require('./filter-body')
 , getOrder: require('./get-order')
+, getOrder2: require('./get-order2')
 , getUser: require('./get-user')
 , orderParams: require('./order-params')
 , owner: require('./owner')

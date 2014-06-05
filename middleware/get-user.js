@@ -2,7 +2,15 @@ var models = require('../models');
 var utils = require('../utils');
 
 module.exports = function(req, res, next) {
-  if(!req.session || !req.session.user || req.session.user.id == null) return next();
+  if(!req.session || !req.session.user || req.session.user.id == null){
+    if ( req.param('edit_token') ){
+      req.user = new models.User({ groups: ['guest'], name: 'Guest' });
+      req.user.isAdmin = false;
+      req.user.isRestaurant = false;
+      res.locals.user = req.user.toJSON();
+    }
+    return next();
+  }
 
   var query = {
     where: { id: req.session.user.id }

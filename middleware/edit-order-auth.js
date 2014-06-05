@@ -30,14 +30,8 @@ module.exports = function(req, res, next) {
       return res.render('shared-link/expired');
 
     // record order creator id
-    req.creatorId = order.attributes.user.id;
-
-    models.User.findOne(order.attributes.user.id, function(err, user) {
-      if (err) return res.error(500, err);
-      req.user = user;
-      res.locals.user = user.toJSON();
-      res.locals.edit_token = token;
-      next();
-    });
+    req.creatorId = order.attributes.user_id;
+    res.locals.edit_token = token;
+    next();
   });
 };

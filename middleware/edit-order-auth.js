@@ -23,12 +23,19 @@ module.exports = function(req, res, next) {
       if (req.order) return done(null, req.order);
       var query = { where: { edit_token: token } };
       models.Order.findOne(query, function(err, order) {
-        done(err, order.toJSON());
+        if (err)
+          return done(err);
+        else if (!order)
+          done(null, null);
+        else
+          done(null, order.toJSON());
       });
     },
 
     function auth(order, done) {
-      if ( utils.contains(statuses, order.status) )
+      if ( !order ) 
+        return done(null);
+      else if ( utils.contains(statuses, order.status) )
         return res.render('shared-link/submitted');
       else if ( moment(order.edit_token_expires) < moment() )
         return res.render('shared-link/expired');

@@ -89,12 +89,38 @@ describe ('/orders', function(){
     utils.test.json.get( ['/api/orders', order.id, 'items' ].join('/'), function( error, res, body  ){
       assert( !error, error);
       assert( !body.error, JSON.stringify( body.error, true, ' ' ) );
-      console.log(body);
       done();
     });
   });
 
-  it ('POST /orders/:oid/items - Edit Token', function( done ){
+  it ('POST /api/orders/:oid/generate_edit_token', function( done ){
+    this.timeout( 5000 );
+    this.expected = 10;
+
+    var data = { };
+    utils.test.json.post( ['/api/orders', order.id, 'generate_edit_token'].join('/'), data, function( error, res, body ){
+      assert( !error, error);
+      assert( !body.error, JSON.stringify( body.error, true, ' ' ) );
+      assert( body.edit_token );
+      order = body;
+      done();
+    });
+  });
+
+
+  it ('GET /restaurants/:rid/?edit_token=', function( done ){
+    this.timeout( 5000 );
+    this.expected = 400;
+
+    utils.test.json.get( ['/restaurants', 31, '?edit_token=' + order.edit_token ].join('/'), function( error, res, body  ){
+      assert( !error, error);
+      assert( !body.error, JSON.stringify( body.error, true, ' ' ) );
+      assert.equal( res.request.uri.pathname, '/restaurants/31/' );
+      done();
+    });
+  });
+
+  it ('POST /orders/:oid/items - With edit token', function( done ){
     this.timeout( 5000 );
     this.expected = 10;
 
@@ -102,11 +128,11 @@ describe ('/orders', function(){
       item_id: 2106
     , quantity: 1
     , edit_token: order.edit_token
-    }
-    utils.test.json.post( ['/orders', order.id, 'items' ].join('/'), data, function( error, res, body  ){
+    };
+    utils.test.json.post( ['/orders', order.id, 'items' ].join('/'), data, function( error, res, body ){
       assert( !error, error);
       assert( !body.error, JSON.stringify( body.error, true, ' ' ) );
-      console.log(body);
+      assert( body.id )
       done();
     });
   });

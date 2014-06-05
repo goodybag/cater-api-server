@@ -10,6 +10,7 @@ module.exports = {
 , exists: require('./exists')
 , filterBody: require('./filter-body')
 , getOrder: require('./get-order')
+, getOrder2: require('./get-order2')
 , getUser: require('./get-user')
 , orderParams: require('./order-params')
 , owner: require('./owner')
@@ -25,5 +26,6 @@ module.exports = {
 , uuid: require('./uuid')
 , s3: require('./s3')
 , db: require('./db')
+, profile: require('./profile')
 , getGeoFromIp: require('./get-geo-from-ip')
 };

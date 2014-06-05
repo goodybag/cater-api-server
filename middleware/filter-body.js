@@ -1,7 +1,7 @@
 /**
  * Filter Body
  *
- * Filter fields on the body on group
+ * Whitelists fields on the body on group. Do not filter admin requests.
  */
 
 module.exports = function( def ){
@@ -9,6 +9,7 @@ module.exports = function( def ){
     var available = [];
 
     if ( req.user && req.user.attributes.groups ){
+      if ( req.user.attributes.groups.indexOf( 'admin' ) >= 0 ) return next();
       req.user.attributes.groups.filter( function( group ){
         return group in def;
       }).forEach( function( group ){

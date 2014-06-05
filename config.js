@@ -67,6 +67,10 @@ config.defaults = {
   , days:           [ 1, 2, 3, 4, 5 ]
   }
 
+, pagination: {
+    limit: 20
+  }
+
 , salesTax: 1.0825
 
 , taxRate: .0825
@@ -457,6 +461,7 @@ config.production = {
       'jacobparker@goodybag.com'
     , 'sarahsouthwell@goodybag.com'
     , 'jag@goodybag.com'
+    , 'om@goodybag.com'
     , 'redemptions@goodybag.com'
     ]
   }

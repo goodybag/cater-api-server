@@ -173,62 +173,6 @@ module.exports = function(grunt) {
     }
   };
 
-  // Setup s3 to upload all of public
-  // Due to the limitations of globbing, I needed something a little more robust.
-  // Also, I didn't want to repeat the same configs for each target.
-  // So this loop applies all of the below configs to the upload property
-  // to each target in s3. It also has the added benefit of using recursive
-  // directory walking using wrench when a directory is specified.
-  // Globs are still allowed as well.
-  Object.keys( gruntConfig.s3 ).filter( function( k ){
-    return ['options'].indexOf( k ) === -1;
-  }).forEach( function( env ){
-    [
-      { src: './public/dist', dest: 'dist', gzip: true }
-    , { src: './public/css', dest: 'css', gzip: true }
-    , { src: './public/img', dest: 'img', gzip: false }
-    , { src: './public/font', dest: 'font', gzip: false }
-    , { src: './public/js/pdf', dest: 'pdf', gzip: false }
-    , { src: './public/*', dest: '', gzip: false }
-    , { src: './public/components/bootstrap/dist', dest: 'components/bootstrap/dist', gzip: true }
-    , { src: './public/components/font-awesome/css', dest: 'components/font-awesome/css', gzip: true }
-    , { src: './public/components/font-awesome/font', dest: 'components/font-awesome/font', gzip: true }
-    , { src: './public/components/requirejs', dest: 'components/requirejs', gzip: true }
-    , { src: './public/components/html5shiv/dist/html5shiv.js', dest: 'components/html5shiv/dist/html5shiv.js', gzip: true }
-    , { src: './public/components/es5-shim/es5-shim.js', dest: 'components/es5-shim/es5-shim.js', gzip: true }
-    , { src: './public/components/es5-shim/es5-sham.js', dest: 'components/es5-shim/es5-sham.js', gzip: true }
-    , { src: './public/components/console-polyfill/index.js', dest: 'components/console-polyfill/index.js', gzip: true }
-    , { src: './public/components/pickadate/lib/themes', dest: 'components/pickadate/lib/themes', gzip: true }
-    , { src: './public/components/select2/select2.css', dest: 'components/select2/select2.css', gzip: true }
-    , { src: './public/components/respond/src/respond.js', dest: 'components/respond/src/respond.js', gzip: true }
-    , { src: './public/components/jquery/jquery.js', dest: 'components/jquery/jquery.js', gzip: true }
-    , { src: './public/components/fullcalendar/fullcalendar.css', dest: 'components/fullcalendar/fullcalendar.css', gzip: true }
-    ].forEach( function( option ){
-      try {
-        if ( !fs.statSync( option.src ).isDirectory() ){
-          return gruntConfig.s3[ env ].upload.push( option );
-        }
-
-      // If we had to catch on statSync, it's because the path
-      // was not a file or directory, probably a glob
-      } catch ( e ){
-        return gruntConfig.s3[ env ].upload.push( option );
-      }
-
-      gruntConfig.s3[ env ].upload = gruntConfig.s3[ env ].upload.concat(
-        wrench.readdirSyncRecursive( option.src ).filter( function( f ){
-          return fs.statSync( path.join( option.src, f ) ).isFile();
-        }).map( function( f ){
-          return {
-            src:  path.join( option.src, f )
-          , dest: path.join( option.dest, f )
-          , gzip: option.gzip
-          };
-        })
-      );
-    });
-  });
-
   var landing   = gruntConfig.requirejs.landing.options = utils.clone( gruntConfig.requirejs.app.options );
   landing.name  = 'app/pages/landing';
   landing.out   = 'public/dist/<%= pkg.version %>/landing.js';
@@ -244,12 +188,92 @@ module.exports = function(grunt) {
   grunt.registerTask( 'reloadPkg', 'Reload in case of package changes', function() {
     gruntConfig.pkg = grunt.file.readJSON('./package.json');
   });
+
+  grunt.registerTask( 'readStaticAssets', 'Refresh S3 upload list', function() {
+    // Setup s3 to upload all of public
+    // Due to the limitations of globbing, I needed something a little more robust.
+    // Also, I didn't want to repeat the same configs for each target.
+    // So this loop applies all of the below configs to the upload property
+    // to each target in s3. It also has the added benefit of using recursive
+    // directory walking using wrench when a directory is specified.
+    // Globs are still allowed as well.
+
+    Object.keys( gruntConfig.s3 ).filter( function( k ){
+      return ['options'].indexOf( k ) === -1;
+    }).forEach( function( env ){
+
+      // Rebuild upload lists
+      gruntConfig.s3[ env ].upload = [];
+      [
+        { src: './public/dist', dest: 'dist', gzip: true }
+      , { src: './public/css', dest: 'css', gzip: true }
+      , { src: './public/img', dest: 'img', gzip: false }
+      , { src: './public/font', dest: 'font', gzip: false }
+      , { src: './public/js/pdf', dest: 'pdf', gzip: false }
+      , { src: './public/*', dest: '', gzip: false }
+      , { src: './public/components/bootstrap/dist', dest: 'components/bootstrap/dist', gzip: true }
+      , { src: './public/components/font-awesome/css', dest: 'components/font-awesome/css', gzip: true }
+      , { src: './public/components/font-awesome/font', dest: 'components/font-awesome/font', gzip: true }
+      , { src: './public/components/requirejs', dest: 'components/requirejs', gzip: true }
+      , { src: './public/components/html5shiv/dist/html5shiv.js', dest: 'components/html5shiv/dist/html5shiv.js', gzip: true }
+      , { src: './public/components/es5-shim/es5-shim.js', dest: 'components/es5-shim/es5-shim.js', gzip: true }
+      , { src: './public/components/es5-shim/es5-sham.js', dest: 'components/es5-shim/es5-sham.js', gzip: true }
+      , { src: './public/components/console-polyfill/index.js', dest: 'components/console-polyfill/index.js', gzip: true }
+      , { src: './public/components/pickadate/lib/themes', dest: 'components/pickadate/lib/themes', gzip: true }
+      , { src: './public/components/select2/select2.css', dest: 'components/select2/select2.css', gzip: true }
+      , { src: './public/components/respond/src/respond.js', dest: 'components/respond/src/respond.js', gzip: true }
+      , { src: './public/components/jquery/jquery.js', dest: 'components/jquery/jquery.js', gzip: true }
+      , { src: './public/components/fullcalendar/fullcalendar.css', dest: 'components/fullcalendar/fullcalendar.css', gzip: true }
+      ].forEach( function( option ){
+        try {
+          if ( !fs.statSync( option.src ).isDirectory() ){
+            return gruntConfig.s3[ env ].upload.push( option );
+          }
+
+        // If we had to catch on statSync, it's because the path
+        // was not a file or directory, probably a glob
+        } catch ( e ){
+          return gruntConfig.s3[ env ].upload.push( option );
+        }
+
+        gruntConfig.s3[ env ].upload = gruntConfig.s3[ env ].upload.concat(
+          wrench.readdirSyncRecursive( option.src ).filter( function( f ){
+            return fs.statSync( path.join( option.src, f ) ).isFile();
+          }).map( function( f ){
+            return {
+              src:  path.join( option.src, f )
+            , dest: path.join( option.dest, f )
+            , gzip: option.gzip
+            };
+          })
+        );
+      });
+    });
+  });
+
   grunt.registerTask( 'analyze',      ['complexity'] );
   grunt.registerTask( 'build',        ['less', 'copy:manifest', 'shell:commitManifest', 'concat', 'shell:handlebars', 'requirejs'] );
   grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 
-  grunt.registerTask( 'deploy', [ 'versionPatch', 'build', 's3:production', 'shell:deployProduction'] );
-  grunt.registerTask( 'deploy:staging', ['build', 's3:staging', 'shell:deployStaging'] );
-  grunt.registerTask( 'deploy:dev', ['build', 's3:dev'] );
+  grunt.registerTask( 'deploy', [ 
+    // 'versionPatch'
+    'build'
+  , 'readStaticAssets'
+  , 's3:production'
+  , 'shell:deployProduction'
+  ]);
+
+  grunt.registerTask( 'deploy:staging', [
+    'build'
+  , 'readStaticAssets'
+  , 's3:staging'
+  , 'shell:deployStaging'
+  ]);
+
+  grunt.registerTask( 'deploy:dev', [
+    'build'
+  , 'readStaticAssets'
+  , 's3:dev'
+  ]);
 };

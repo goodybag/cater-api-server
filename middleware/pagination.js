@@ -13,15 +13,15 @@ module.exports = function( options ){
   , pageParam:    'page'
   });
 
-  return function(req, res, next){
-    var page = req.param( options.pageParam ) || 1;
+  return function( req, res, next ){
+    var page = ( req.param( options.pageParam ) - 1 ) || 0;
 
     req.queryOptions.limit = options.allowLimit && req.param('limit')
       ? req.param('limit') : options.limit;
 
     req.queryOptions.offset = page * req.queryOptions.limit;
 
-    res.locals[ options.pageParam ] = page;
+    res.locals[ options.pageParam ] = page + 1;
 
     next();
   };

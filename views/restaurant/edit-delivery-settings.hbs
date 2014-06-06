@@ -1,3 +1,4 @@
+{{#extend "page"}}page-delivery-settings{{/extend}}
 {{#extend "body"}}
   <h2>Delivery Settings</h2>
   <form class="ap-form form-vertical">
@@ -15,13 +16,16 @@
       </label>
       {{#each restaurant.delivery_zip_groups}}
       <div class="delivery-zip-group">
-        <div class="input-group input-group-top">
-          <span class="input-addon">$</span>
-          <input type="number" step="0.01" class="form-control" name="fee" id="input-minimum-order" value="{{dollars fee}}">
+        <div class="delivery-zip-form">
+          <div class="input-group input-group-top">
+            <span class="input-addon">$</span>
+            <input type="number" step="0.01" class="form-control" name="fee" id="input-minimum-order" value="{{dollars fee}}">
+          </div>
+          <div class="input-group input-group-bottom">
+            <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
+          </div>
         </div>
-        <div class="input-group input-group-bottom">
-          <input type="text" class="form-control" name="zips" value="{{array zips}}" placeholder="Ex. 78735, 78745">
-        </div>
+        <button class="btn-remove-delivery-tier">X</button>
       </div>
       {{else}}
       <div class="delivery-zip-group">

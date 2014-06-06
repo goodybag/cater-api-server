@@ -140,10 +140,30 @@ header {
 ///////
 // Delivery Settings
 ///////
+.page-delivery-settings {
+  .delivery-zip-group .delivery-zip-form {
+    position: relative;
+    display: inline-block;
+  }
 
-.btn-add-delivery-tier {
-  .btn();
-  .btn-default();
+  .btn-add-delivery-tier {
+    .btn();
+    .btn-default();
+  }
+
+  .delivery-zip-group:hover .btn-remove-delivery-tier {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .btn-remove-delivery-tier {
+    .btn();
+    .btn-primary();
+    vertical-align: top;
+    display: none;
+  }
 }
 
 ////////

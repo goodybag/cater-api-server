@@ -141,9 +141,8 @@ header {
 // Delivery Settings
 ///////
 .page-delivery-settings {
-  .delivery-zip-group .delivery-zip-form {
+  .delivery-zip-group {
     position: relative;
-    display: inline-block;
   }
 
   .btn-add-delivery-tier {
@@ -151,18 +150,19 @@ header {
     .btn-default();
   }
 
+  .btn-remove-delivery-tier {
+    .btn();
+    .btn-primary();
+    display: none;
+  }
+
   .delivery-zip-group:hover .btn-remove-delivery-tier {
     display: block;
     position: absolute;
     right: 0;
     top: 0;
-  }
 
-  .btn-remove-delivery-tier {
-    .btn();
-    .btn-primary();
-    vertical-align: top;
-    display: none;
+    &:active { bottom: inherit; }
   }
 }
 

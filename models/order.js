@@ -745,7 +745,7 @@ module.exports = Model.extend({
 
     // Filters out a lot of results on `sets` CTE
     if (query.where.id) {
-      itemSubtotals[0].where = { id : query.where.id }
+      itemSubtotals[0].where = { order_id : query.where.id }
     }
 
     // If they're querying by this fields, further reduce results

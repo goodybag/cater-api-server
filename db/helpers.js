@@ -501,6 +501,111 @@ dirac.use( function( dirac ){
   });
 });
 
+// Order subtotals
+dirac.use( function( dirac ){
+  dirac.dals.orders.before( 'find', function( $query, schema, next ){
+    // if ( !$query.totals ) return next();
+    $query.with = $query.with || [];
+    $query.joins = $query.joins || [];
+    $query.columns = $query.columns || ['*'];
+
+    var itemSubtotals = [
+      {
+        "name": "sets"
+      , "type": "select"
+      , "table": "order_items"
+      , "columns": [
+          {"name": "id", "as": "order_item_id"}
+        , "json_array_elements(options_sets) AS set"
+        ]
+      }
+    , {
+        "name": "options"
+      , "type": "select"
+      , "table": "sets"
+      , "columns": [
+          "order_item_id"
+        , "json_array_elements(set->'options') AS option"
+        ]
+      }
+    , {
+        "name": "selected_options"
+      , "type": "select"
+      , "table": "options"
+      , "columns": ["*"]
+      , "where": { "$custom": [" (option->>'state')::bool "] }
+    }
+    , {
+        "name": "subtotals"
+      , "type": "select"
+      , "table": "order_items"
+      , "columns": [
+          {"table": "order_items", "name": "id", "as": "order_item_id"}
+        , {"table": "order_items", "name": "order_id"}
+        , "(quantity * (price + coalesce(sum((option->>'price')::int), 0))) as sub_total"
+        ]
+      , "joins": {
+          "selected_options": {
+            "type": "left",
+            "on": {"order_item_id": "$order_items.id$"}
+          }
+        }
+      , "groupBy": ["order_items.id", "order_items.quantity", "order_items.price", "order_items.order_id"]
+      }
+    , {
+        "name": "order_subtotals"
+      , "type": "select"
+      , "table": "orders"
+      , "joins": {
+          "subtotals": {
+            "type": "left"
+          , "on": {"order_id": "$orders.id$"}
+          }
+        }
+      , "columns": [
+          {"table": "orders", "name": "id", "as": "order_id"}
+        , "coalesce(sum(subtotals.sub_total), 0) + coalesce(orders.adjustment_amount, 0) AS sub_total"
+        ]
+      , "groupBy": ["orders.id", "orders.adjustment_amount"]
+      }
+    ];
+
+    // Filters out a lot of results on `sets` CTE
+    if ($query.where.id) {
+      itemSubtotals[0].where = { order_id : $query.where.id }
+    }
+
+    // If they're querying by this fields, further reduce results
+    // on `sets` CTE
+    var itemFieldsFromOrder = ['restaurant_id', 'user_id', 'edit_token'];
+
+    if ( itemFieldsFromOrder.some( function( k ){ return k in $query.where } ) ){
+      itemSubtotals[0].where = itemSubtotals[0].where || {};
+      itemSubtotals[0].joins = itemSubtotals[0].joins || [];
+      itemSubtotals[0].joins.push({
+        type: 'left'
+      , target: 'orders'
+      , on: { id: '$order_items.order_id$' }
+      });
+
+      itemFieldsFromOrder.forEach( function( k ){
+        if ( $query.where[ k ] ){
+          itemSubtotals[0].where[ 'orders.' + k ] = $query.where[ k ];
+        }
+      });
+    }
+
+    $query.with.push.apply($query.with, itemSubtotals);
+    $query.columns.push({"table": "order_subtotals", "name": "sub_total"});
+    $query.joins.push({
+      type: 'left'
+    , target: 'order_subtotals'
+    , on: {'order_id': '$orders.id$'}
+    });
+    next();
+  });
+});
+
 // Log queries to dirac
 // dirac.use( function(){
 //   var query_ = dirac.DAL.prototype.query;

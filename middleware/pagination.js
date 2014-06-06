@@ -13,7 +13,7 @@ module.exports = function( options ){
   , pageParam:    'page'
   });
 
-  return function(req, res, next){
+  return function( req, res, next ){
     var page = ( req.param( options.pageParam ) - 1 ) || 0;
 
     req.queryOptions.limit = options.allowLimit && req.param('limit')
@@ -21,7 +21,7 @@ module.exports = function( options ){
 
     req.queryOptions.offset = page * req.queryOptions.limit;
 
-    res.locals[ options.pageParam ] = page;
+    res.locals[ options.pageParam ] = page + 1;
 
     next();
   };

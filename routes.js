@@ -379,14 +379,20 @@ module.exports.register = function(app) {
   , m.restrict('admin')
   , m.pagination({ pageParam: 'p' })
   , m.param('status')
-  , m.sort('-created_at')
+  , m.sort('-id')
   , m.queryOptions({
       one: [
         { table: 'users',       alias: 'user' }
       , { table: 'restaurants', alias: 'restaurant' }
       ]
     })
-  , function( req, res, next ){ res.locals.status = req.queryObj.status; next(); }
+  , function( req, res, next ){
+      res.locals.status = req.param('status');
+      if ( req.param('status') == 'accepted' ){
+        req.queryOptions.statusSort = req.param('status');
+      }
+      return next();
+    }
   , m.view('orders', db.orders)
   );
 

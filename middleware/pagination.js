@@ -14,7 +14,7 @@ module.exports = function( options ){
   });
 
   return function(req, res, next){
-    var page = req.param( options.pageParam ) || 1;
+    var page = ( req.param( options.pageParam ) - 1 ) || 0;
 
     req.queryOptions.limit = options.allowLimit && req.param('limit')
       ? req.param('limit') : options.limit;

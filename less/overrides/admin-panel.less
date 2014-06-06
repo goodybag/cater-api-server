@@ -145,14 +145,9 @@ header {
     position: relative;
   }
 
-  .btn-add-delivery-tier {
-    .btn();
-    .btn-default();
-  }
+  .btn-add-delivery-tier:extend(.btn, .btn-default) { }
 
-  .btn-remove-delivery-tier {
-    .btn();
-    .btn-primary();
+  .btn-remove-delivery-tier:extend(.btn, .btn-primary) {
     display: none;
   }
 

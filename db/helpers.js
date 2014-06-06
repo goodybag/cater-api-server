@@ -467,11 +467,11 @@ dirac.use( function( dirac ){
 // Order status sorting
 dirac.use( function( dirac ){
   dirac.dals.orders.before( 'find', function( $query, schema, next ){
-    if ( !$query.statusSort ) return next();
+    if ( !$query.statusDateSort ) return next();
 
-    $query.with     = $query.with || {};
-    $query.joins    = $query.joins || {};
-    $query.columns  = $query.columns || ['*'];
+    $query.with     = $query.with     || [];
+    $query.joins    = $query.joins    || [];
+    $query.columns  = $query.columns  || ['*'];
 
     $query.columns.push({
       table:  'statuses'
@@ -479,17 +479,23 @@ dirac.use( function( dirac ){
     , alias:  'status_date'
     });
 
-    $query.with.statuses = {
-      type:     'select'
+    $query.with.push({
+      name:     'statuses'
+    , type:     'select'
     , table:    'order_statuses'
     , columns:  [ 'order_id', 'status', 'created_at']
     , distinct: [ 'order_id' ]
     , order:    [ 'order_id desc', 'created_at desc' ]
-    , where:    { status: $query.statusSort }
-    };
+    , where:    { status: $query.statusDateSort.status }
+    });
 
-    $query.joins.statuses = { on: { order_id: '$orders.id$' } };
-    $query.order = ['status_date desc'];
+    $query.joins.push({
+      type:   'left'
+    , target: 'statuses'
+    , on:     { order_id: '$orders.id$' }
+    });
+
+    $query.order = [ 'status_date ' + ($query.statusDateSort.direction || 'desc') ];
 
     next();
   });

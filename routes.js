@@ -389,7 +389,7 @@ module.exports.register = function(app) {
   , function( req, res, next ){
       res.locals.status = req.param('status');
       if ( req.param('status') == 'accepted' ){
-        req.queryOptions.statusSort = req.param('status');
+        req.queryOptions.statusDateSort = { status: req.param('status') };
       }
       return next();
     }

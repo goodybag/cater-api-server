@@ -1,0 +1,10 @@
+{{#each restaurant.delivery_zip_groups}}
+  <div class="info-item-value">
+    <h5 class="info-item-title delivery-zip-tier-title">${{dollars this.fee}}</h5>
+    <ul class="list-delivery-zips">
+      {{#each this.zips}}
+      <li class="delivery-zip">{{this}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/each}}

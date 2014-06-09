@@ -1,0 +1,45 @@
+///////////////////////////////////////////////
+// Definition Lists                          //
+///////////////////////////////////////////////
+
+.dl-stacked {
+  font-size: @font-size-base;
+
+  dt {
+    display: block;
+    font-weight: @font-weight-bold;
+  }
+
+  dd {
+    display: block;
+    margin: 0;
+    margin-bottom: 20px; 
+  }
+}
+
+.dl-horizontal(@width: 60px) {
+  .clearfix();
+  font-size: @font-size-base;
+
+  dt {
+    float: left;
+    width: @width;
+    font-weight: @font-weight-base;
+  }
+
+  dd {
+    float: left;
+    margin: 0;
+  }
+
+  dd + dt { clear: left; }
+}
+
+
+.dl-horizontal {
+  .dl-horizontal();
+}
+
+.dl-horizontal-wide {
+  .dl-horizontal(130px);
+}

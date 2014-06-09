@@ -425,7 +425,7 @@ define(function(require, exports, module) {
     },
 
     add: function (value, addition) {
-      return value + addition;
+      return (+value) + (+addition);
     },
 
     commatize: function( x, options ){

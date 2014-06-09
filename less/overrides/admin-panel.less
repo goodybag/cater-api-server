@@ -156,10 +156,25 @@ header {
 ///////
 // Delivery Settings
 ///////
+.page-delivery-settings {
+  .delivery-zip-group {
+    position: relative;
+  }
 
-.btn-add-delivery-tier {
-  .btn();
-  .btn-default();
+  .btn-add-delivery-tier:extend(.btn, .btn-default) { }
+
+  .btn-remove-delivery-tier:extend(.btn, .btn-primary) {
+    display: none;
+  }
+
+  .delivery-zip-group:hover .btn-remove-delivery-tier {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    &:active { bottom: inherit; }
+  }
 }
 
 ////////

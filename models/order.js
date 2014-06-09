@@ -743,6 +743,31 @@ module.exports = Model.extend({
       }
     ];
 
+    // Filters out a lot of results on `sets` CTE
+    if (query.where.id) {
+      itemSubtotals[0].where = { order_id : query.where.id }
+    }
+
+    // If they're querying by this fields, further reduce results
+    // on `sets` CTE
+    var itemFieldsFromOrder = ['restaurant_id', 'user_id', 'edit_token'];
+
+    if ( itemFieldsFromOrder.some( function( k ){ return k in query.where } ) ){
+      itemSubtotals[0].where = itemSubtotals[0].where || {};
+      itemSubtotals[0].joins = itemSubtotals[0].joins || [];
+      itemSubtotals[0].joins.push({
+        type: 'left'
+      , target: 'orders'
+      , on: { id: '$order_items.order_id$' }
+      });
+
+      itemFieldsFromOrder.forEach( function( k ){
+        if ( query.where[ k ] ){
+          itemSubtotals[0].where[ 'orders.' + k ] = query.where[ k ];
+        }
+      });
+    }
+
     query.with.push.apply(query.with, itemSubtotals);
 
     query.joins = query.joins || {};

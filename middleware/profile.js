@@ -8,7 +8,7 @@
  * , m.profile('My Middleware Chain')
  * , m.myMiddleware()
  *  // Stop profiling
- * , m.profile() // Closing
+ * , m.profile('My Middleware Chain') // Closing
  * );
  */
 
@@ -22,13 +22,15 @@ module.exports = function( name, options ){
   });
 
   return function( req, res, next ){
-    if ( !req.profileStart ){
-      req.profileStart = new Date();
+    if ( !req.profiler ) req.profiler = {};
+
+    if ( !req.profiler[ name ] ){
+      req.profiler[ name ] = new Date();
       return next();
     }
 
-    var result = new Date() - req.profileStart;
-    delete req.profileStart;
+    var result = new Date() - req.profiler[ name ];
+    delete req.profiler[ name ];
 
     console.log( name + ': ' + result + 'ms' );
     next();

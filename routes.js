@@ -9,10 +9,13 @@ var db = require('./db');
 var errors = require('./errors');
 var PaymentSummaryItem = require('./public/js/app/models/payment-summary-item');
 
-var m = utils.extend( require('./middleware'), require('stdm') );
-
-utils.extend( m, require('./middleware/util') );
-utils.extend( m, require('dirac-middleware') );
+var m = utils.extend(
+  {}
+, require('stdm')
+, require('dirac-middleware')
+, require('./middleware/util')
+, require('./middleware')
+);
 
 module.exports.register = function(app) {
   app.before( m.analytics, m.queryParams(), function( app ){
@@ -454,7 +457,26 @@ module.exports.register = function(app) {
    *  Orders resource.  The collection of all orders.
    */
 
-  app.get('/orders', m.restrict('admin'), controllers.orders.list);  // not currently used
+  app.get('/orders'
+  , m.restrict('admin')
+  , m.pagination({ pageParam: 'p' })
+  , m.param('status')
+  , m.sort('-id')
+  , m.queryOptions({
+      one: [
+        { table: 'users',       alias: 'user' }
+      , { table: 'restaurants', alias: 'restaurant' }
+      ]
+    })
+  , function( req, res, next ){
+      res.locals.status = req.param('status');
+      if ( req.param('status') == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.param('status') };
+      }
+      return next();
+    }
+  , m.view('orders', db.orders)
+  );
 
   app.post('/orders', m.restrict(['client', 'admin']), controllers.orders.create);
 
@@ -511,10 +533,14 @@ module.exports.register = function(app) {
   , controllers.orders.get
   );
 
-  app.all(/^\/orders\/(\d+)(?:\/.*)?$/, function (req, res, next) {
-    req.params.id = req.params[0];
-    next();
-  }, controllers.orders.auth);
+  app.all(/^\/orders\/(\d+)(?:\/.*)?$/
+  , function (req, res, next) {
+      req.params.id = req.params[0];
+      next();
+    }
+  , m.getOrder2({ param: 'id' })
+  , controllers.orders.auth
+  );
 
   app.get('/orders/:oid'
     // If they're using ?receipt=true, make sure we restrict the group

@@ -1,5 +1,8 @@
 /**
- * Middleware for authenticating individual ordering
+ * Middleware for individual ordering checking
+ *   - Edit token is valid
+ *   - Order hasn't been submitted
+ *   - Shared Link hasn't expired
  */
 
 var models = require('../models');
@@ -8,36 +11,47 @@ var moment = require('moment');
 var statuses = ['submitted', 'accepted', 'denied'];
 
 module.exports = function(req, res, next) {
+  // we don't want to make any changes with the token downstream
   var token = req.query.edit_token || req.body.edit_token;
   delete req.body.edit_token;
 
   if ( !token ) return next();
 
-  var query = {
-    where: {
-      edit_token: token
-    }
-  };
+  var tasks = [
+    function getOrder(done) {
+      // Get req.order or lookup by edit_token
+      if (req.order) return done(null, req.order);
+      var query = { where: { edit_token: token } };
+      models.Order.findOne(query, function(err, order) {
+        if (err)
+          return done(err);
+        else if (!order)
+          done(null, null);
+        else
+          done(null, order.toJSON());
+      });
+    },
 
-  models.Order.findOne(query, function(err, order) {
-    if ( err )
+    function auth(order, done) {
+      if ( !order ) 
+        return done(null);
+      else if ( utils.contains(statuses, order.status) )
+        return res.render('shared-link/submitted');
+      else if ( moment(order.edit_token_expires) < moment() )
+        return res.render('shared-link/expired');
+
+      // record order creator id
+      req.creatorId = order.user_id;
+      res.locals.edit_token = token;
+      done(null , order);
+    }
+  ];
+
+  utils.async.waterfall(tasks, function(err, order) {
+    if ( err ) 
       return res.error(500, err);
     else if ( !order )
       return res.render(404);
-    else if ( utils.contains(statuses, order.attributes.status) )
-      return res.render('shared-link/submitted');
-    else if ( moment(order.attributes.edit_token_expires) < moment() )
-      return res.render('shared-link/expired');
-
-    // record order creator id
-    req.creatorId = order.attributes.user.id;
-
-    models.User.findOne(order.attributes.user.id, function(err, user) {
-      if (err) return res.error(500, err);
-      req.user = user;
-      res.locals.user = user.toJSON();
-      res.locals.edit_token = token;
-      next();
-    });
+    next();
   });
 };

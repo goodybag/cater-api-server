@@ -512,6 +512,43 @@ dirac.use( function( dirac ){
   });
 });
 
+// Order status sorting
+dirac.use( function( dirac ){
+  dirac.dals.orders.before( 'find', function( $query, schema, next ){
+    if ( !$query.statusDateSort ) return next();
+
+    $query.with     = $query.with     || [];
+    $query.joins    = $query.joins    || [];
+    $query.columns  = $query.columns  || ['*'];
+
+    $query.columns.push({
+      table:  'statuses'
+    , name:   'created_at'
+    , alias:  'status_date'
+    });
+
+    $query.with.push({
+      name:     'statuses'
+    , type:     'select'
+    , table:    'order_statuses'
+    , columns:  [ 'order_id', 'status', 'created_at']
+    , distinct: [ 'order_id' ]
+    , order:    [ 'order_id desc', 'created_at desc' ]
+    , where:    { status: $query.statusDateSort.status }
+    });
+
+    $query.joins.push({
+      type:   'left'
+    , target: 'statuses'
+    , on:     { order_id: '$orders.id$' }
+    });
+
+    $query.order = [ 'status_date ' + ($query.statusDateSort.direction || 'desc') ];
+
+    next();
+  });
+});
+
 // Log queries to dirac
 // dirac.use( function( dirac ){
 //   var query_ = dirac.DAL.prototype.query;

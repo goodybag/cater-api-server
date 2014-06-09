@@ -16,7 +16,6 @@ module.exports = {
 , owner: require('./owner')
 , queryParams: require('./query-params')
 , queryString: require('./query-string')
-, requestLogger: require('connect-request-logger-pg')
 , restaurant: require('./restaurant')
 , restrict: require('./restrict')
 , setSession: require('./set-session')
@@ -31,4 +30,5 @@ module.exports = {
 , queryOptions: require('./query-options')
 , redirect: require('./redirect')
 , viewPlugin: require('./view-plugin')
+, pagination: require('./pagination')
 };

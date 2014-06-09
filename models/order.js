@@ -745,12 +745,12 @@ module.exports = Model.extend({
 
     // Filters out a lot of results on `sets` CTE
     if (query.where.id) {
-      itemSubtotals[0].where = { id : query.where.id }
+      itemSubtotals[0].where = { order_id : query.where.id }
     }
 
     // If they're querying by this fields, further reduce results
     // on `sets` CTE
-    var itemFieldsFromOrder = ['restaurant_id', 'user_id'];
+    var itemFieldsFromOrder = ['restaurant_id', 'user_id', 'edit_token'];
 
     if ( itemFieldsFromOrder.some( function( k ){ return k in query.where } ) ){
       itemSubtotals[0].where = itemSubtotals[0].where || {};

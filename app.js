@@ -55,13 +55,6 @@ app.configure(function(){
   app.use(middleware.setSession());
   app.use(middleware.getUser);
 
-  app.use(middleware.requestLogger({
-    connStr: config.requestLogger.connStr
-  , table: config.requestLogger.table
-  , plan: config.requestLogger.plan
-  , customFields: {uuid: 'uuid'}
-  }));
-
   // Intercept status codes and render HTML if necessary
   app.use( middleware.statusCodeIntercept() );
 

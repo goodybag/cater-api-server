@@ -2,21 +2,23 @@
 // Lists inlined                          //
 ////////////////////////////////////////////
 
-.list-inline(@content: ", ", @margin: 0) {
+.list-inline(@delimiter: ", ", @margin: 0, @width: auto) {
   display:        inline;
   list-style:     none;
+  line-height:    @line-height-small;
   margin:         0;
   padding:        0;
   font-size:      0;
 
   & > li {
-    display:      inline;
+    display:      inline-block;
+    width:        @width;
     font-size:    @font-size-base;
     font-weight:  @font-weight-base;
   }
 
   & > li ~ li:before {
-    content:      @content;
+    content:      @delimiter;
     margin:       @margin;
   }
 
@@ -25,10 +27,15 @@
   }
 }
 
+// Default comma delimiter
 .list-inline {
   .list-inline();
 }
 
 .list-inline-bullet {
   .list-inline("\2022", 0 5px);
+}
+
+.list-inline-space {
+  .list-inline("", 0, 62px);
 }

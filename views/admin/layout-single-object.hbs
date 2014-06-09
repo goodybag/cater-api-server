@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>[Admin] Goodybag{{{block "html-title"}}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Goodybag Catering CSS Stuff -->
+    <link href="{{cdn (format '/dist/<%= version %>/admin.css' pkg)}}" rel="stylesheet">
+
+    {{{block "css"}}}
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
+    <![endif]-->
+  </head>
+  <body class="page single-object-page {{{block "page"}}}">
+    {{> admin_navbar}}
+
+    {{{block "banner"}}}
+
+    <div id="main">
+      <div class="container page-head">
+        {{{block "page-head"}}}
+      </div>
+      <div class="container">
+        <div class="nav-col">
+          {{{block "nav-col"}}}
+        </div>
+        <div class="content-col">
+          {{{block "body"}}}
+        </div>
+      </div>
+    </div>
+
+    {{#unless config.isDev}}
+    <script src="{{cdn "/dist/admin.js"}}"></script>
+    {{else}}
+    <script src="/components/requirejs/require.js"></script>
+    <script src="/js/require-config.js"></script>
+    {{/unless}}
+
+    {{{block "views"}}}
+    {{{block "scripts"}}}
+  </body>
+</html>

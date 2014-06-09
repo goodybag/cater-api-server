@@ -62,12 +62,121 @@ var Restaurant = module.exports = Model.extend({
     var obj = Model.prototype.toJSON.apply(this, arguments);
     if (this.categories) obj.categories = utils.invoke(this.categories, 'toJSON');
     obj.delivery_times = utils.defaults({}, obj.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
+    // obj.hours_of_operation = utils.defaults({}, obj.hours_of_operation, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
     return obj;
   }
 },
 
 {
   table: 'restaurants',
+
+  getHoursQuery: function( options ){
+    var query = {
+      type: 'select'
+    , columns: [
+        'restaurant_id'
+      , {
+          type: 'array_to_json'
+        , as: 'hours_times'
+        , expression: {
+            type: 'array_agg'
+          , expression: {
+              type: 'array_to_json'
+            , expression: 'array[(day::text)::json, times]'
+            }
+          }
+        }
+      ]
+    , table: {
+        type: 'select'
+      , alias: 'day_hours'
+      , table: 'restaurant_hours'
+      , columns: [
+          'restaurant_id'
+        , 'day'
+        , {
+            type: 'array_to_json'
+          , as: 'times'
+          , expression: {
+              type: 'array_agg'
+            , expression: {
+                type: 'array_to_json'
+              , expression: 'array[restaurant_hours.start_time, restaurant_hours.end_time]'
+              }
+            }
+          }
+        ]
+      , groupBy: ['restaurant_id', 'day']
+      }
+    , groupBy: 'restaurant_id'
+    };
+
+    return query;
+  },
+
+  // Coerces restaurant_delivery_zips into a `from`->`to` data model
+  // Unions with the delivery_service_zips
+  //
+  // select "restaurants"."zip" as "from",
+  //       "restaurant_delivery_zips"."zip" as "from",
+  //       "restaurant_delivery_zips"."fee" as "price",
+  //       "restaurants"."id" as "restaurant_id",
+  //       "restaurants"."region_id" as "region_id"
+  // from "restaurant_delivery_zips"
+  // join "restaurants" "restaurants" on "restaurants"."id" = "restaurant_delivery_zips"."restaurant_id"
+  // union select "delivery_service_zips"."from" as "from",
+  //              "delivery_service_zips"."to" as "to",
+  //              "delivery_service_zips"."price" as "price",
+  //              "restaurants"."id" as "restaurant_id",
+  //              "restaurants"."region_id" as "region_id"
+  // from "delivery_service_zips"
+  // join "restaurants" "restaurants" on "restaurants"."zip" = "delivery_service_zips"."from")
+  getDeliveryZipsQuery: function( options ){
+    options = options || {};
+
+    var query = {
+      type: 'union'
+    , queries: [
+        {
+          type: 'select'
+        , table: 'restaurant_delivery_zips'
+        , columns: [
+            { table: 'restaurants', name: 'zip', alias: 'from' }
+          , { table: 'restaurant_delivery_zips', name: 'zip', alias: 'to' }
+          , { table: 'restaurant_delivery_zips', name: 'fee', alias: 'price' }
+          , { table: 'restaurants', name: 'id', alias: 'restaurant_id' }
+          , { table: 'restaurants', name: 'region_id', alias: 'region_id' }
+          ]
+        , joins: {
+            restaurants: {
+              on: { id: '$restaurant_delivery_zips.restaurant_id$' }
+            }
+          }
+        }
+      ]
+    };
+
+    if ( options.with_delivery_services ){
+      query.queries.push({
+        type: 'select'
+      , table: 'delivery_service_zips'
+      , columns: [
+          { table: 'delivery_service_zips', name: 'from', alias: 'from' }
+        , { table: 'delivery_service_zips', name: 'to', alias: 'to' }
+        , { table: 'delivery_service_zips', name: 'price', alias: 'price' }
+        , { table: 'restaurants', name: 'id', alias: 'restaurant_id' }
+        , { table: 'restaurants', name: 'region_id', alias: 'region_id' }
+        ]
+      , joins: {
+          restaurants: {
+            on: { zip: '$delivery_service_zips.from$' }
+          }
+        }
+      });
+    }
+
+    return query;
+  },
 
   getRegionJoin: function(){
     return {
@@ -141,6 +250,10 @@ var Restaurant = module.exports = Model.extend({
     query.where = query.where || {};
     query.includes = query.includes || [];
 
+    if ( !('with_delivery_services' in query) ){
+      query.with_delivery_services = false;
+    }
+
     if (orderParams && 'is_hidden' in orderParams){
       query.where.is_hidden = orderParams.is_hidden;
     }
@@ -164,6 +277,7 @@ var Restaurant = module.exports = Model.extend({
         ]
       , table: {
           type: 'select'
+        , alias: 'day_hours'
         , table: 'restaurant_delivery_times'
         , columns: [
             'restaurant_id'
@@ -175,25 +289,52 @@ var Restaurant = module.exports = Model.extend({
                 type: 'array_agg'
               , expression: {
                   type: 'array_to_json'
-                , expression: 'array[start_time, end_time]'
+                // , expression: 'array[restaurant_delivery_times.start_time, restaurant_delivery_times.end_time]'
+                , expression: [
+                    'array['
+                  , 'least('
+                    , 'restaurant_delivery_times.start_time, '
+                    , 'restaurant_hours.start_time - regions.lead_time_modifier'
+                  , '), greatest('
+                    , 'restaurant_delivery_times.end_time, '
+                    , 'restaurant_hours.end_time - regions.lead_time_modifier'
+                  , ')]'
+                  ].join('')
                 }
               }
             }
           ]
+          // Join on hours to include delivery service hours
+        , joins: [
+            { alias: 'restaurants'
+            , type: 'left'
+            , target: 'restaurants'
+            , on: { id: '$restaurant_delivery_times.restaurant_id$' }
+            }
+          , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
+          , { alias: 'restaurant_hours'
+            , type: 'left'
+            , target: 'restaurant_hours'
+            , on: {
+                restaurant_id: '$restaurant_delivery_times.restaurant_id$'
+              , day: '$restaurant_delivery_times.day$'
+              }
+            }
+          ]
         , groupBy: ['restaurant_id', 'day']
-        , alias: 'day_hours'
         }
       , groupBy: 'restaurant_id'
       }
+    , all_delivery_zips: Restaurant.getDeliveryZipsQuery( query )
     };
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
     query.columns.push([
       '(select array_to_json( array('
     , '  select row_to_json( r ) as delivery_zips from ('
-    , '    select distinct on (fee) fee, array_agg(zip) over ( partition by fee ) as zips'
-    , '    from restaurant_delivery_zips'
-    , '    where restaurant_id = restaurants.id'
+    , '    select distinct on (price) price as fee, array_agg("to") over ( partition by price ) as zips'
+    , '    from all_delivery_zips'
+    , '    where all_delivery_zips.restaurant_id = restaurants.id'
     , '  ) r'
     , ')) as delivery_zip_groups)'
     ].join('\n'));
@@ -202,29 +343,45 @@ var Restaurant = module.exports = Model.extend({
     query.columns.push("(SELECT array(SELECT meal_style FROM restaurant_meal_styles WHERE restaurant_id = restaurants.id ORDER BY meal_style ASC)) AS meal_styles");
     query.columns.push('hours.delivery_times');
     query.columns.push("(SELECT array_to_json(array_agg(row_to_json(r))) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS lead_times");
+    query.columns.push("(SELECT coalesce(array_to_json(array_agg(row_to_json(r))), \'[]\'::json) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_pickup_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS pickup_lead_times");
     query.columns.push("(SELECT max(max_guests) FROM restaurant_lead_times WHERE restaurant_id = restaurants.id) AS max_guests");
     var feeCol = query.columns.push({
       type: 'select'
     , alias: 'delivery_fee'
-    , table: 'restaurant_delivery_zips'
-    , columns: ['fee']
+    , table: 'all_delivery_zips'
+    , columns: ['price']
     , where: { restaurant_id:  '$restaurants.id$' }
     , limit: 1
-    , order: 'fee asc'
+    , order: 'price asc'
     }) - 1;
 
     query.columns = query.columns.concat( Restaurant.getRegionColumns() );
     query.joins.regions = Restaurant.getRegionJoin();
 
     if ( orderParams && orderParams.zip ){
-      query.columns[ feeCol ].where.zip = orderParams.zip;
+      query.columns[ feeCol ].where.to = orderParams.zip;
     }
 
     query.joins.hours = {
       type: 'left'
     , target: 'dt'
     , on: { 'restaurants.id': '$hours.restaurant_id$' }
-    }
+    };
+
+    // Hours of operation
+    // query.hours_of_operation = Restaurant.getHoursQuery( query );
+
+    // query.joins.hoo = {
+    //   type: 'left'
+    // , target: 'hours_of_operation'
+    // , on: { 'restaurant_id': '$restaurants.id$' }
+    // };
+
+    // query.columns.push({
+    //   alias: 'hours_of_operation'
+    // , type: 'coalesce'
+    // , expression: 'hoo.hours_times, \'[]\'::json'
+    // });
 
     var unacceptable = [];
 
@@ -349,15 +506,32 @@ var Restaurant = module.exports = Model.extend({
       query.joins.zips = {
         type: 'left'
       , alias: 'zips'
-      , target: 'restaurant_delivery_zips'
+      , target: 'all_delivery_zips'
       , on: {
           'restaurants.id': '$zips.restaurant_id$'
-        , 'zips.zip': orderParams.zip
+        , 'to': orderParams.zip
         }
       }
 
-      query.columns.push('(zips.zip IS NULL) AS is_bad_zip');
-      unacceptable.push('(zips.zip IS NULL)');
+      // query.joins.zips = {
+      //   type: 'left'
+      // , target: {
+      //     type: 'union'
+      //   , queries: [
+      //       { type: 'select'
+      //       , table: 'restaurant_delivery_zips'
+      //       , columns: ['zip']
+      //       , where: { 'restaurant_id': '$restaurants.id$' }
+      //       }
+      //     , {
+
+      //       }
+      //     ]
+      //   }
+      // };
+
+      query.columns.push('(zips.to IS NULL) AS is_bad_zip');
+      unacceptable.push('(zips.to IS NULL)');
     }
 
     if (orderParams && orderParams.guests) {

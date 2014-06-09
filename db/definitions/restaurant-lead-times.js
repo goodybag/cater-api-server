@@ -34,14 +34,17 @@ define(function(require) {
   , max_guests: {
       type: types.int
     , nullable: false
+    , default: 0
     }
   , lead_time: {
       type: types.int
     , nullable: false
+    , default: 0
     }
   , cancel_time: {
       type: types.int
     , nullable: true
+    , default: 0
     }
   };
 

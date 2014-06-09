@@ -247,6 +247,25 @@ var leadTimes = function(body, id) {
   });
 }
 
+var hours = function(body, id) {
+  return Array.prototype.concat.apply([], utils.map(body.hours_of_operation, function(times, day, obj) {
+    return utils.map(times, function(period, index, arr) {
+      return {
+        restaurant_id: id,
+        day: day,
+        start_time: period[0],
+        end_time: period[1]
+      };
+    });
+  }));
+}
+
+var pickupLeadTimes = function(body, id) {
+  return utils.map(body.pickup_lead_times, function(obj, index, arr) {
+    return utils.extend({restaurant_id: id}, obj);
+  });
+}
+
 var tags = function(body, id) {
   return utils.map(body.tags, function(obj, index, arr) {
     return {restaurant_id: id, tag: obj};
@@ -323,6 +342,8 @@ module.exports.create = function(req, res) {
         [zips,            'createZips']
       , [deliveryTimes,   'createDeliveryTimes']
       , [leadTimes,       'createLeadTimes']
+      , [hours,           'createHours']
+      , [pickupLeadTimes, 'createPickupLeadTimes']
       , [tags,            'createTags']
       , [mealTypes,       'createMealTypes']
       , [mealStyles,      'createMealStyles']
@@ -349,6 +370,8 @@ module.exports.update = function(req, res) {
     ['Zips', zips, 'delivery_zips']
   , ['DeliveryTimes', deliveryTimes, 'delivery_times']
   , ['LeadTimes', leadTimes, 'lead_times']
+  , ['Hours', hours, 'hours']
+  , ['PickupLeadTimes', pickupLeadTimes, 'pickup_lead_times']
   , ['Tags', tags, 'tags']
   , ['MealTypes', mealTypes, 'meal_types']
   , ['MealStyles', mealStyles, 'meal_styles']

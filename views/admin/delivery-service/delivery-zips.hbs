@@ -1,0 +1,38 @@
+{{#extend "html-title"}}{{delivery_service.name}}{{/extend}}
+{{#extend "page"}}page-delivery-service{{/extend}}
+
+{{#extend "page-head"}}
+{{> admin_delivery_service_page_head}}
+{{/extend}}
+
+{{#extend "nav-col"}}
+{{> admin_delivery_service_sidebar_nav}}
+{{/extend}}
+
+{{#extend "body"}}
+<section class="panel-component" id="component-delivery-zips">
+  <h2 class="component-title">Delivery Zips</h2>
+  <div class="component-actions">
+    <button class="btn btn-save">Save</button>
+  </div>
+  <div class="component-content">
+    <p>Click a row to select all items in the row and all items will be edited together. You can select multiple rows at once. Click again to un-select.</p>
+    <div class="matrix-editor"></div>
+  </div>
+  <h3 class="component-title">All Zips</h3>
+  <div class="component-content">
+    <p>To add more zips to the matrix above, add them here separated by spaces or new lines. Click outside of the textbox when done.</p>
+    <textarea class='form-control"' name="all_zips" id="all_zips" cols="30" rows="10"></textarea>
+  </div>
+</section>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require(['app/pages/admin/delivery-service-zips'], function( page ){
+    return page.init({
+      delivery_service: {{{json delivery_service}}}
+    });
+  });
+</script>
+{{/extend}}

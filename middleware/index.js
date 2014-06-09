@@ -16,7 +16,6 @@ module.exports = {
 , owner: require('./owner')
 , queryParams: require('./query-params')
 , queryString: require('./query-string')
-, requestLogger: require('connect-request-logger-pg')
 , restaurant: require('./restaurant')
 , restrict: require('./restrict')
 , setSession: require('./set-session')
@@ -28,6 +27,8 @@ module.exports = {
 , db: require('./db')
 , profile: require('./profile')
 , getGeoFromIp: require('./get-geo-from-ip')
+, redirect: require('./redirect')
+, viewPlugin: require('./view-plugin')
 , pagination: require('./pagination')
 , queryOptions: require('./query-options')
 };

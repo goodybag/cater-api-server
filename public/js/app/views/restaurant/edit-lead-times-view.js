@@ -6,14 +6,14 @@ define(function(require, exports, module) {
   return module.exports = EditRestaurantView.extend({
 
     events: {
-      'submit .form-delivery-settings': 'save'
+      'submit': 'save'
     , 'click .add-lead-time': 'addLeadTime'
     , 'click .remove-lead-time': 'removeLeadTime'
     },
 
     fieldMap: {
-      delivery_times: '.restaurant-form .time'
-    , lead_times: '.restaurant-form .lead-times'
+      delivery_times: '.time'
+    , lead_times: '.lead-times'
     },
 
     fieldGetters: {
@@ -47,6 +47,7 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
+
     }
 
   });

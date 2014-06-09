@@ -1,7 +1,7 @@
 {{#extend "page"}}page-delivery-settings{{/extend}}
 {{#extend "body"}}
   <h2>Delivery Settings</h2>
-  <form class="ap-form form-vertical">
+  <form class="ap-form form-vertical" id="delivery-settings-form">
     <div class="form-group">
       <label class="control-label" for="input-name">Minimum Order</label>
       <div class="input-group">
@@ -42,6 +42,38 @@
     </div>
     <div class="form-group">
       <button class="btn-update" type="submit">Update</button>
+    </div>
+  </form>
+
+  <h2>Delivery Hours</h2>
+
+  <form class="ap-form ap-lead-times form-vertical form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST" id="delivery-times-form">
+    <input type="hidden" name="_method" value="PUT">
+
+    {{#each restaurant.delivery_times}}
+    <div class="delivery-time">
+      <div class="col-day">{{weekday @key}}</div>
+      <div id="delivery-hours-{{@key}}" class="hours-day col-times">
+        {{> hours_day }}
+      </div>
+    </div>
+    {{/each}}
+
+    <h2>Lead Times</h2>
+    <div class="lead-times-list">
+      {{#each restaurant.lead_times}}
+      {{> lead_time}}
+      {{/each}}
+    </div>
+
+    <div class="form-group">
+      <button type="button" class="btn btn-tertiary add-lead-time">
+        Add Restriction</button>
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">
+        Update</button>
     </div>
   </form>
 {{/extend}}

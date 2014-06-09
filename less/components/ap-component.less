@@ -5,6 +5,8 @@
 // Most general panel component
 // Describes how various components interact
 
+@component-title-margin-bottom: 18px;
+
 .panel-component {
   font-size: 1rem;
   display: table;
@@ -12,15 +14,18 @@
 }
 
 .panel-component .component-title {
-  padding-bottom: 4px;
+  padding-bottom: 8px;
   font-size: 2em;
   border-bottom: solid 1px @gray;
 
-  @marginbottom: 18px;
-  margin-bottom: @marginbottom;
+  margin-bottom: @component-title-margin-bottom;
 
   + .component-nav {
-    margin-top: -@marginbottom;
+    margin-top: -@component-title-margin-bottom;
+
+    // + .component-actions {
+    //   margin-top: -2 * @component-title-margin-bottom
+    // }
   }
 }
 
@@ -28,6 +33,22 @@
   padding-left: 8px;
 }
 
+.panel-component .component-actions {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: -@component-title-margin-bottom;
+  text-align: right;
+
+  & button {
+    margin-left: 8px;
+  }
+}
+
 .panel-component .component-content {
   padding-top: 12px;
+
+  > p:nth-of-type(1) {
+    margin-top: 0;
+  }
 }

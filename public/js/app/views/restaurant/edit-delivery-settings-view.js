@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     events: function() {
       return _.extend({}, EditRestaurantView.prototype.events, {
         'click .btn-add-delivery-tier': 'addDeliveryTierClick'
+      , 'click .btn-remove-delivery-tier': 'removeDeliveryTierClick'
       });
     },
 
@@ -49,13 +50,27 @@ define(function(require, exports, module) {
       last.after(clone);
     },
 
+    removeDeliveryTier: function($tier) {
+      var len = this.$el.find('.delivery-zip-group').length;
+      if ( len <= 1 )
+        $tier.find('input').val('');
+      else
+        $tier.remove();
+    },
+
+    removeDeliveryTierClick: function(e) {
+      e.preventDefault();
+      var $tier = $(e.target).closest('.delivery-zip-group');
+      this.removeDeliveryTier($tier);
+    },
+
     addDeliveryTierClick: function(e) {
       e.preventDefault();
       this.addDeliveryTier();
     },
 
     initialize: function() {
-    },
+    }
 
   });
 });

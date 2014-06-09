@@ -1,3 +1,7 @@
+.page {
+  padding-bottom: 20px;
+}
+
 #main {
   // Don't let the enterprise give horizontals
   @media screen and ( max-width: @container-width ){
@@ -124,7 +128,7 @@ header {
         margin-left: 0;
       }
     }
-    
+
     .col-time {
       float: left;
       margin: 0 10px;
@@ -137,13 +141,40 @@ header {
   }
 }
 
+.main-breadcrumbs {
+  margin-top: 32px;
+  opacity: 0.6;
+
+  .transition( 0.3s );
+  .transition-property( opacity );
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 ///////
 // Delivery Settings
 ///////
+.page-delivery-settings {
+  .delivery-zip-group {
+    position: relative;
+  }
 
-.btn-add-delivery-tier {
-  .btn();
-  .btn-default();
+  .btn-add-delivery-tier:extend(.btn, .btn-default) { }
+
+  .btn-remove-delivery-tier:extend(.btn, .btn-primary) {
+    display: none;
+  }
+
+  .delivery-zip-group:hover .btn-remove-delivery-tier {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    &:active { bottom: inherit; }
+  }
 }
 
 ////////
@@ -204,5 +235,35 @@ header {
 
   img {
     border-radius: 5px;
+  }
+}
+
+.single-object-page {
+  .nav-col {
+    #grid > .column(3);
+  }
+
+  .content-col {
+    #grid > .column(9);
+  }
+}
+
+.page-actions {
+  margin-top: -50px;
+  text-align: right;
+}
+
+.page-delivery-services {
+  #delivery-services-table {
+    margin-top: 40px;
+  }
+}
+
+.page-delivery-service {
+  #component-delivery-zips {
+    // Usually, we might use panel-components as containers/rows
+    // this requires a display: table;
+    // However, that's messing with the overflowing of children els
+    display: block;
   }
 }

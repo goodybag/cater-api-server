@@ -8,6 +8,7 @@ define(function(require){
   var Backbone  = require('backbone');
   var utils     = require('utils');
   var config    = require('config');
+  var Hbs       = require('handlebars');
 
   return Backbone.View.extend({
     /**
@@ -35,6 +36,74 @@ define(function(require){
       this.$el.find(
         '[name="' + utils.pluck( errors, 'property' ).join('"], [name="') + '"]'
       ).parent().addClass('has-error');
+    }
+
+    /**
+     * Gets the values from input elements whose names correspond
+     * to a model attribute key
+     * @return {Object} The result
+     */
+  , getModelData: function(){
+      var this_ = this, data = {};
+
+      this.$el.find('[name]').each( function(){
+        var $this = $(this);
+        var k     = $this.attr('name');
+        var val   = this_.getDomValue( k, $this );
+
+        if ( val ) data[ k ] = val;
+      });
+
+      return data;
+    }
+
+    /**
+     * Gets a value from an input element for a single attribute
+     * @param  {String} key Key name of model attr
+     * @param  {jQuery} $el [Optional] scope to search
+     * @return {Mixed}      The value
+     */
+  , getDomValue: function( key, $el ){
+      var val, args, helper;
+      $el = $el || this.$el.find('[name="' + key + '"]');
+
+      if ( !$el ) return val;
+
+      val     = $el.attr('type') === 'number' ? +$el.val() : $el.val();
+      helper  = ($el.data('out') || "").split(' ');
+      args    = [ val ].concat( helper.slice(1) );
+      helper  = helper[0];
+
+      if ( helper && Hbs.helpers[ helper ] ){
+        return Hbs.helpers[ helper ].apply( Hbs, args );
+      }
+
+      return val;
+    }
+
+  , updateDomWithModel: function( props ){
+      props = props || this.model.attributes;
+
+      var $el, val;
+
+      for ( var key in props ){
+        $el = this.$el.find('[name="' + key + '"]');
+
+        if ( $el.length === 0 ) continue;
+        if ( this.getDomValue( key, $el ) == this.model.get( key ) ) continue;
+        // Do we need to transform the value first?
+        if ( $el.data('in') && Hbs.helpers[ $el.data('in') ] ){
+          val = Hbs.helpers[ $el.data('in') ].call( Hbs, props[ key ] );
+        } else {
+          val = props[ key ];
+        }
+
+        if ( $el[0].tagName === 'INPUT' ){
+          $el.val( val );
+        } else {
+          $el.html( val );
+        }
+      }
     }
   });
 });

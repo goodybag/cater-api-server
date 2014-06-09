@@ -5,6 +5,7 @@ define([
 , 'app/pages/admin/restaurant/edit-delivery-settings'
 , 'app/pages/admin/restaurant/edit-tags'
 , 'app/pages/admin/restaurant/edit-lead-times'
+, 'app/pages/admin/delivery-service-zips'
 
 , 'app/pages/contacts'
 

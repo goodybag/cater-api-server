@@ -11,32 +11,52 @@
   width: 100%;
 }
 
+.input-group .form-control {
+  display: table-cell;
+  width: 100%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: @input-border-radius;
+  border-bottom-left-radius: @input-border-radius;
+}
+
 .input-group .input-addon {
   display: table-cell;
   width: 1%;
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
+  border: solid @input-border-color @input-border-width;
+  padding: @input-padding-base;
+  line-height: @line-height-small;
+  font-size: @input-font-size;
   color: #555;
   text-align: center;
-  background-color: #eee;
-  border: 1px solid #b7b6ad;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-right: 0;
+  background-color: @off-gray;
+  border: @input-border-width solid #b7b6ad;
+  border-radius: @input-border-radius;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right-width: 0;
+  text-shadow: 0 1px 0 #fff;
 }
 
-.input-group .form-control:last-child {
-  display: table-cell;
-  widht: 100%;
+.input-group .input-addon + .form-control {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  border-top-right-radius: @input-border-radius;
+  border-bottom-right-radius: @input-border-radius;
+}
+
+.input-group .form-control + .input-addon {
+  border-top-right-radius: @input-border-radius;
+  border-bottom-right-radius: @input-border-radius;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-right-width: @input-border-width;
+  border-left-width: 0;
 }
 
 /**
- * Input groups with flush bottom border 
- */ 
+ * Input groups with flush bottom border
+ */
 
 .input-group-top .input-addon {
   border-bottom-left-radius: 0;
@@ -47,7 +67,7 @@
 }
 
 /**
- * Input groups with flush top border 
+ * Input groups with flush top border
  */
 
 .input-group-bottom .form-control {

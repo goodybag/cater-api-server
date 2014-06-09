@@ -10,16 +10,10 @@
     <div class="panel-body">
       {{! Left info column }}
       <div  class="col-md-6 no-padding">
-        <div class="restaurant-info-item restaurant-info-item-categories">
-          <div class="info-item-title">
-            <ul class="list-restaurant-inline">
-            {{#each restaurant.cuisine}}
-              <li class="cuisine-list-item">{{this}}</li>
-            {{/each}}
-            </ul>
-            <span class="dollar-meter">{{{dollarMeter restaurant.price}}}</span>
-          </div>
-        </div>
+        <ul class="list-inline-bullet">
+          <li>{{> restaurant_cuisines }}</li>
+          <li>{{> restaurant_dollar_meter }}</li>
+        </ul>
 
         {{#if restaurant.minimum_order}}
         <div class="restaurant-info-item restaurant-info-item-categories">

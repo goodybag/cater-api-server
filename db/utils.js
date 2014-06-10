@@ -106,7 +106,7 @@ function createIndex(definition, callback) {
     sql.push([
       'CREATE', (index.type) ? index.type : '', 'INDEX', '"'+name+'"', 'ON', '"'+definition.name+'"',
         (index.using) ? 'USING '+index.using : '',
-        '(', index.columns.join(','), ')'
+        '("' + index.columns.join('","') + '")'
     ].join(' '));
   }
   var statement = sql.join('; ');

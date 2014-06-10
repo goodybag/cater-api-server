@@ -29,7 +29,6 @@ var definitions = [
 , 'restaurant-photos'
 , 'restaurant-hours'
 , 'restaurant-pickup-lead-times'
-, 'restaurant-pickup-times'
 , 'orders'
 , 'categories'
 , 'items'

@@ -15,7 +15,7 @@ module.exports = function( options ){
     var ip = config.isDev ?
       config.geoTestIp : req.header('x-forwarded-for') || req.connection.remoteAddress
 
-    utils.get( options.url.replace( ':ip', ip ), function( error, gres, geo ){
+    utils.get( options.url.replace( ':ip', ip ), { timeout: 2000 }, function( error, gres, geo ){
       // Error getting geocode is not a shower-stopper
       if ( error ){
         logger.routes.error( 'Could not get geo code info', { ip: ip, error: error } );

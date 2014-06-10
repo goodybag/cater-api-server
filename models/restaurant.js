@@ -311,15 +311,15 @@ var Restaurant = module.exports = Model.extend({
             , target: 'restaurants'
             , on: { id: '$restaurant_delivery_times.restaurant_id$' }
             }
-          , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
-          , { alias: 'restaurant_hours'
-            , type: 'left'
-            , target: 'restaurant_hours'
-            , on: {
-                restaurant_id: '$restaurant_delivery_times.restaurant_id$'
-              , day: '$restaurant_delivery_times.day$'
-              }
-            }
+          // , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
+          // , { alias: 'restaurant_hours'
+          //   , type: 'left'
+          //   , target: 'restaurant_hours'
+          //   , on: {
+          //       restaurant_id: '$restaurant_delivery_times.restaurant_id$'
+          //     , day: '$restaurant_delivery_times.day$'
+          //     }
+          //   }
           ]
         , groupBy: ['restaurant_id', 'day']
         }

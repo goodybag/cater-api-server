@@ -311,15 +311,15 @@ var Restaurant = module.exports = Model.extend({
             , target: 'restaurants'
             , on: { id: '$restaurant_delivery_times.restaurant_id$' }
             }
-          // , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
-          // , { alias: 'restaurant_hours'
-          //   , type: 'left'
-          //   , target: 'restaurant_hours'
-          //   , on: {
-          //       restaurant_id: '$restaurant_delivery_times.restaurant_id$'
-          //     , day: '$restaurant_delivery_times.day$'
-          //     }
-          //   }
+          , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
+          , { alias: 'restaurant_hours'
+            , type: 'left'
+            , target: 'restaurant_hours'
+            , on: {
+                restaurant_id: '$restaurant_delivery_times.restaurant_id$'
+              , day: '$restaurant_delivery_times.day$'
+              }
+            }
           ]
         , groupBy: ['restaurant_id', 'day']
         }
@@ -612,17 +612,21 @@ var Restaurant = module.exports = Model.extend({
         , where: {
             'max_guests': {$gte: ((orderParams.guests) ? orderParams.guests : 0)}
             // TODO: Assume timezone of the restaurant (restaurant needs timezone column), for now hardcoding America/Chicago
-          , 'lead_time': {$custom: ['"restaurant_lead_times"."lead_time" <= EXTRACT(EPOCH FROM ($1 -  (now() AT TIME ZONE \'America/Chicago\') )/60)', formattedDateTime]}
+          , 'lead_time': {$custom: ['"restaurant_lead_times"."lead_time" <= EXTRACT(EPOCH FROM ($1 -  (now() AT TIME ZONE regions.timezone) )/60)', formattedDateTime]}
           }
+        , joins: [
+            { type: 'left', target: 'restaurants', on: { id: '$restaurant_lead_times.restaurant_id$' } }
+          , { type: 'left', target: 'regions', on: { id: '$restaurants.region_id$' } }
+          ]
         }
       }
 
       query.columns.push('(lead_times.restaurant_id IS NULL) AS is_bad_lead_time');
       unacceptable.push('(lead_times.restaurant_id IS NULL)');
 
-      var day = moment(datetime).tz('America/Chicago').day();
-
-      query.joins.delivery_times.on['delivery_times.day'] = day;
+      query.joins.delivery_times.on['delivery_times.day'] = {
+        $custom: [ 'delivery_times.day = extract( dow from $1 at time zone regions.timezone )', datetime ]
+      };
     }
 
     if (orderParams && orderParams.time) {

@@ -30,12 +30,4 @@ begin
   perform add_column( 'restaurant_hours', 'start_time', E'time not null default \'00:00\'' );
   perform add_column( 'restaurant_hours', 'end_time', E'time not null default \'00:00\'' );
   perform add_column( 'restaurant_hours', 'created_at', 'timestamp not null default now()' );
-
-  create table if not exists restaurant_pickup_times ();
-  perform add_column( 'restaurant_pickup_times', 'id', 'serial primary key' );
-  perform add_column( 'restaurant_pickup_times', 'restaurant_id', 'int not null references restaurants(id) on delete cascade' );
-  perform add_column( 'restaurant_pickup_times', 'day', 'int not null default 0 check ( day >= 0 and day <= 6 )');
-  perform add_column( 'restaurant_pickup_times', 'start_time', E'time not null default \'00:00\'' );
-  perform add_column( 'restaurant_pickup_times', 'end_time', E'time not null default \'00:00\'' );
-  perform add_column( 'restaurant_pickup_times', 'created_at', 'timestamp not null default now()' );
 end$$;

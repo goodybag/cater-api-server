@@ -61,7 +61,9 @@ module.exports.list = function(req, res) {
 
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
-
+console.log("ALL STAR BURGER", results[0].filter( function( r ){
+  return r.attributes.id === 137;
+})[0]);
     var context = {
       restaurants:      utils.invoke(results[0], 'toJSON').filter( function( r ){
                           return !r.is_unacceptable;
@@ -248,8 +250,7 @@ var leadTimes = function(body, id) {
 }
 
 var hours = function(body, id) {
-  console.log('hours');
-  return Array.prototype.concat.apply([], utils.map(body.hours_of_operation, function(times, day, obj) {
+  var a = Array.prototype.concat.apply([], utils.map(body.hours_of_operation, function(times, day, obj) {
     return utils.map(times, function(period, index, arr) {
       return {
         restaurant_id: id,
@@ -259,6 +260,8 @@ var hours = function(body, id) {
       };
     });
   }));
+  console.log('hours', a);
+  return a;
 }
 
 var pickupLeadTimes = function(body, id) {
@@ -315,6 +318,7 @@ var fields = [
   'gb_fee',
   'is_direct_deposit',
   'is_fee_on_total',
+  'head_count_delivery_service_threshold',
   'region_id'
 ];
 
@@ -386,6 +390,9 @@ module.exports.update = function(req, res) {
 
     return utils.partial(utils.async.eachSeries, [delQuery, createQuery], function(query, cb) {
       if (!query) return cb();
+      if ( query.table === 'restaurant_hours' ){
+        console.log(query);
+      }
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, cb);
     });

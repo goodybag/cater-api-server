@@ -117,7 +117,8 @@ define(function(require, exports, module) {
       gb_fee: '.restaurant-form [name="gb_fee"]',
       is_direct_deposit: '.restaurant-form [name="is_direct_deposit"]',
       is_fee_on_total: '.restaurant-form [name="is_fee_on_total"]',
-      region_id: '.restaurant-form [name="region_id"]'
+      region_id: '.restaurant-form [name="region_id"]',
+      head_count_delivery_service_threshold: '.restaurant-form [name="head_count_delivery_service_threshold"]'
     },
 
     fieldSplit: function(selector, delimiter) {

@@ -142,6 +142,11 @@ define(function(require) {
       type: types.int
     , references: {table: 'regions', column: 'id', onDelete: 'set null'}
     }
+  , head_count_delivery_service_threshold: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
   };
 
   definition.indices = {};

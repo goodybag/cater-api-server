@@ -189,7 +189,7 @@ var Restaurant = module.exports = Model.extend({
     };
 
     query.queries.push({ type: 'select', table: 'restaurant_hours', columns: columns });
-console.log(JSON.stringify(query, true, '  '));
+
     return query;
   },
 
@@ -341,7 +341,6 @@ console.log(JSON.stringify(query, true, '  '));
       , groupBy: 'restaurant_id'
       }
     , all_delivery_zips: Restaurant.getDeliveryZipsQuery( query )
-    , all_delivery_times: Restaurant.getDeliveryTimesQuery( query )
     };
 
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
@@ -616,6 +615,8 @@ console.log(JSON.stringify(query, true, '  '));
     }
 
     if (orderParams && (orderParams.date || orderParams.time)) {
+      query.with.all_delivery_times = Restaurant.getDeliveryTimesQuery( orderParams );
+
       query.joins.delivery_times = {
         type: 'left'
       , alias: 'delivery_times'

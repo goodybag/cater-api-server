@@ -61,9 +61,7 @@ module.exports.list = function(req, res) {
 
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
-console.log("ALL STAR BURGER", results[0].filter( function( r ){
-  return r.attributes.id === 137;
-})[0]);
+
     var context = {
       restaurants:      utils.invoke(results[0], 'toJSON').filter( function( r ){
                           return !r.is_unacceptable;

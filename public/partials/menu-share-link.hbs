@@ -16,7 +16,7 @@ The "Share Link" panel can be in one of these states:
 <section class="share-link-view {{#unless order.edit_token}}hide{{/unless}}">
   <div class="annotation">
   {{#datePassed order.edit_token_expires}}
-    <p class="expired-token text-danger">This link has expired!<a class="btn-regenerate" href="#">Generate a new link?</a></p>
+    <p class="expired-token text-danger">This link has expired! <a class="btn-regenerate" href="#">Generate a new link?</a></p>
   {{/datePassed}}
   <p>Copy this link and share it with hungry friends!</p>
   </div>

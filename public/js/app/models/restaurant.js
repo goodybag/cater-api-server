@@ -172,18 +172,38 @@ define(function(require, exports, module) {
 
       if ( !moment(date).isValid() ) return false;
 
+      var this_ = this;
+
       // Super pro day-parsing
       var day = moment( date.split(' ')[0] ).day();
 
-      if ( this.get('delivery_times')[ day ].length === 0 ) return false;
+      if ( this.get('delivery_times')[ day ].length === 0 )
+      if ( this.get('hours_of_operation')[ day ].length === 0 ){
+       return false;
+      }
 
       var hours = this.get('delivery_times')[ day ];
       var time = (date.split(' ')[1] + ':00').substring( 0, 8 );
 
       // is the desired time within any of the windows for that day?
-      return _.any( hours, function( openClose ){
+      var result = _.any( hours, function( openClose ){
         return time >= openClose[0] && time <= openClose[1]
       });
+
+      // Restaurant couldn't ful-fill, what about delivery services?
+      if ( !result ){
+        result = _.chain(
+          this.get('hours_of_operation')[ day ]
+        ).map( function( openClose ){
+          return _.map( openClose, function( t ){
+            return t + (this_.get('region').lead_time_modifier || 0);
+          });
+        }).any( function( openClose ){
+          return time >= openClose[0] && time <= openClose[1]
+        }).value();
+      }
+
+      return result;
     },
 
     isValidMaxGuests: function( num ){
@@ -212,16 +232,31 @@ define(function(require, exports, module) {
         return true;
       }
 
+      var isDeliveryService = false;
+
       var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
         return obj.max_guests >= order.get('guests');
       });
+
+      if ( !limit ){
+        isDeliveryService = true;
+
+        limit = _.find(_.sortBy(this.get('pickup_lead_times'), 'max_guests'), function(obj) {
+          return obj.max_guests >= order.get('guests');
+        });
+      }
 
       if ( !limit ) return false;
 
       var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
       var minutes = (moment(date) - moment(now)) / 60000;
+      var leadTime = limit.lead_time;
 
-      return minutes >= limit.lead_time;
+      if ( isDeliveryService ){
+        leadTime += moment.duration( this.get('region').lead_time_modifier ).asMinutes();
+      }
+
+      return minutes >= leadTime;
     },
 
     isValidOrder: function( order ){

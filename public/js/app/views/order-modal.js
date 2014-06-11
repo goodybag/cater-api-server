@@ -13,7 +13,11 @@ define(function(require, exports, module) {
     // handle events from model.save on submit
     submitHandlers: {},
 
-    initialize: function() {
+    initialize: function( options ) {
+      utils.enforceRequired( options, [
+        'orderModel', 'restaurant'
+      ]);
+
       this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
         format: 'mm/dd/yyyy'
       , min: new Date()
@@ -128,9 +132,13 @@ define(function(require, exports, module) {
     onDatePickerOpen: function(){
       // Days of week the restaurant does not deliver
       var disabledTimes = [];
+      var restaurant = this.options.restaurant;
 
-      _(this.options.orderModel.restaurant.get('delivery_times')).each( function( t, i ){
-        if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
+      _.each( _.range(7), function( i ){
+        if ( restaurant.get('delivery_times')[ i ].length === 0 )
+        if ( restaurant.get('hours_of_operation')[ i ].length === 0 ){
+          disabledTimes.push( i + 1 );
+        }
       });
 
       // Disable dates for closed restaurant events

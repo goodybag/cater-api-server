@@ -52,7 +52,10 @@
                   <dl class="dl-horizontal-inline">
                     {{#if ../delivery_fee}}
                     <dt>Delivery charge:</dt>
-                    <dd>${{dollars ../../delivery_fee}}</dd>
+                    <dd>
+                      {{#unless ../../../orderParams.zip}}Starting from {{/unless}}
+                      ${{dollars ../../delivery_fee}}
+                    </dd>
                     {{/if}}
 
                     {{#if ../minimum_order}}

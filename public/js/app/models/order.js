@@ -11,6 +11,8 @@ define(function(require, exports, module) {
   var OrderItem = require('./order-item');
   var Address = require('./address');
 
+  var orderDeliveryServiceCriteria = require('order-delivery-service-criteria');
+
   var Order = Backbone.Model.extend({
     schema: function() {
       return {
@@ -406,6 +408,14 @@ define(function(require, exports, module) {
         default:
           return '#fff'
       }
+    },
+
+    shouldBeDeliveryService: function(){
+      var order = this.toJSON();
+
+      return _.some( orderDeliveryServiceCriteria, function( fn ){
+        return fn( order );
+      });
     }
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']

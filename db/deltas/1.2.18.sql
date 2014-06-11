@@ -1,59 +1,4 @@
-INSERT INTO groups (name) VALUES ('admin');
-INSERT INTO groups (name) VALUES ('client');
-INSERT INTO groups (name) VALUES ('restaurant');
-INSERT INTO groups (name) VALUES ('receipts');
-INSERT INTO groups (name) VALUES ('pms');
-
-INSERT INTO users (email, password) VALUES ('receipts@goodybag.com', '$2a$10$8egVetFrE7OAk1B.v36dOOdhS9TXt98PN7/zCvLdeAuOa0KLXIzIi');
-INSERT INTO users_groups (user_id, "group") SELECT id, 'receipts' FROM users WHERE email = 'receipts@goodybag.com';
-
-INSERT INTO users (email, password) VALUES ('pms@goodybag.com', '$2a$10$FGN90mpEJjVxieb1B.98YeVF6fJQ1/Bs6BQZ5wAEyCTnmxvLFazlq');
-INSERT INTO users_groups (user_id, "group") SELECT id, 'pms' FROM users WHERE email = 'pms@goodybag.com';
-
-INSERT INTO tags (name)
-SELECT existing.*
-FROM (SELECT unnest(array['glutenFree','vegan', 'vegetarian','kosher','halal', 'dairyFree']) as tag) AS existing
-WHERE NOT EXISTS (SELECT name from tags WHERE existing.tag = tags.name);
-
-INSERT INTO meal_types (name)
-SELECT existing.*
-FROM
-  (SELECT unnest(array[
-    'Appetizers'
-  , 'Breakfast'
-  , 'Brunch'
-  , 'Lunch'
-  , 'Dinner'
-  , 'Dessert'
-  ]) as meal_type) AS existing
-WHERE NOT EXISTS (SELECT name from meal_types WHERE existing.meal_type = meal_types.name);
-
-
-
-create function process_updated_order() returns trigger as $process_updated_order$
-  begin
-    insert into order_statuses(order_id, status) values(NEW.id, NEW.status);
-    return null;
-  end
-$process_updated_order$ language plpgsql;
-
-create function process_new_order() returns trigger as $process_new_order$
-  begin
-    insert into order_statuses(order_id, status) values(NEW.id, NEW.status);
-    return null;
-  end
-  $process_new_order$ language plpgsql;
-
-create trigger update_order_status
-  after update on orders
-  for each row
-  when (old.status is distinct from new.status)
-  execute procedure process_updated_order();
-
-create trigger new_order_status
-  after insert on orders
-  for each row
-  execute procedure process_new_order();
+-- Delta
 
 create or replace function on_order_items_change()
 returns trigger as $$
@@ -178,3 +123,48 @@ begin
     using sub_total, total, sales_tax, o.id;
 end;
 $$ language plpgsql;
+
+DO $$
+  declare version       text := '1.2.18';
+  declare r orders;
+begin
+  raise notice '## Running Delta v% ##', version;
+
+  -- Update version
+  execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
+
+  perform add_column( 'orders', 'sub_total',    'int not null default 0' );
+  perform add_column( 'orders', 'sales_tax',    'int not null default 0' );
+  perform add_column( 'orders', 'total',        'int not null default 0' );
+  perform add_column( 'orders', 'delivery_fee', 'int not null default 0' );
+
+  drop trigger if exists order_order_items_change on order_items;
+  drop trigger if exists order_total_change on orders;
+
+  for r in (
+    select * from orders where restaurant_id in (
+      select id from restaurants
+    )
+  )
+  loop
+    raise notice 'Updating Order #%', r.id;
+
+    update orders
+      set delivery_fee = get_order_delivery_fee( r )
+    where orders.id = r.id;
+
+    perform update_order_totals( r );
+  end loop;
+
+  create trigger order_order_items_change
+    after insert or update or delete
+    on order_items
+    for each row
+    execute procedure on_order_items_change();
+
+  create trigger order_total_change
+    after insert or update of delivery_fee, tip, adjustment_amount
+    on orders
+    for each row
+    execute procedure on_order_total_change();
+end$$;

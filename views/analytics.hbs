@@ -46,7 +46,7 @@
           {{#each orders}}
           <tr>
             <td class="field-id">#{{this.id}}</td>
-            <td class="field-total">${{total this}}</td>
+            <td class="field-total">${{dollars this.total}}</td>
             <td class="field-created_at">{{formatDateTime this.created_at "MM/DD/YYYY"}}</td>
           </tr>
           {{/each}}

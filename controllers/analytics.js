@@ -1,7 +1,6 @@
 var config = require('../config');
 var utils = require('../utils');
-var Models = require('../models');
-var hbHelpers = require('../public/js/lib/hb-helpers');
+var db = require('../db');
 
 module.exports.list = function( req, res ){
   function getWeekNumber(d) {
@@ -31,7 +30,7 @@ module.exports.list = function( req, res ){
 
     // Sum order totals per period
     var periodTotal = result.reduce( function( memo, curr ) {
-      return memo + parseFloat( hbHelpers.total( curr ) );
+      return memo + (curr.total / 100);
     }, 0);
 
     // Round to two decimal places
@@ -55,10 +54,13 @@ module.exports.list = function( req, res ){
   }
 
   var $query = {
+    status: 'accepted'
+  };
+
+  var options = {
     columns: ['*', '(order_statuses.created_at at time zone orders.timezone) as created_at_local']
-  , where: {
-      'status': 'accepted'
-    }
+  , many: [{ table: 'order_items', alias: 'items' }]
+  , one: [{ table: 'restaurants', alias: 'restaurant' }]
   , joins: {
       order_statuses : {
         type: 'left'
@@ -70,76 +72,130 @@ module.exports.list = function( req, res ){
         }
       }
     }
+  , limit: 'all'
   , order: ['order_statuses.created_at desc nulls last']
   };
 
-  Models.Order.find( $query, function( error, results ){
+  db.orders.find( $query, options, function( error, results ){
     if ( error ) return res.json( error );
 
-    utils.async.parallel(
-      results.map( function( order ){
-        return order.getOrderItems.bind( order )
-      }).concat( results.map( function( order ){
-        return order.getRestaurant.bind( order );
-      }))
+    results = results.map( function( r ){
+      var d = new Date( r.created_at_local );
+      r.week_number = getWeekNumber( d );
+      r.year_number = d.getFullYear();
+      return r;
+    });
 
-    , function( error ){
-        if ( error ) return res.json( error );
+    var start = { year: 2013, week: 40 };
+    var curr = { year: 2013, week: 40 };
+    var d = new Date();
+    var now = { year: d.getFullYear(), week: getWeekNumber( d ) };
+    var ordersByWeek = [];
+    var result;
+    var stop = false;
 
-        results = results.map( function( r ){
-          r = r.toJSON();
-          var d = new Date( r.created_at_local );
-          r.week_number = getWeekNumber( d );
-          r.year_number = d.getFullYear();
-          return r;
-        });
+    while ( !stop ){
+      result = results.filter( function( r ){
+        return r.year_number === curr.year && r.week_number === curr.week;
+      });
 
-        var start = { year: 2013, week: 40 };
-        var curr = { year: 2013, week: 40 };
-        var d = new Date();
-        var now = { year: d.getFullYear(), week: getWeekNumber( d ) };
-        var ordersByWeek = [];
-        var result;
-        var stop = false;
+      ordersByWeek.push({
+        period: [ curr.year, 'Week', curr.week ].join(' ')
+      , numberOfOrders: result.length
+      , periodTotal: calcPeriodTotal(result)
+      , uniqueUsers:  utils.unique( result, function( r ){
+                        return r.user_id
+                      }).length
+      })
 
-        while ( !stop ){
-          result = results.filter( function( r ){
-            return r.year_number === curr.year && r.week_number === curr.week;
-          });
-
-          ordersByWeek.push({
-            period: [ curr.year, 'Week', curr.week ].join(' ')
-          , numberOfOrders: result.length
-          , periodTotal: calcPeriodTotal(result)
-          , uniqueUsers:  utils.unique( result, function( r ){
-                            return r.user_id
-                          }).length
-          })
-
-          curr.week++;
-          if ( curr.week === 53 ){
-            curr.week = 1;
-            curr.year++;
-          }
-
-          if ( curr.year === now.year ){
-            if ( curr.week === now.week + 1 ) stop = true;
-          }
-        }
-
-        results.sort( function( a, b ){
-          return a.id > b.id;
-        });
-
-        res.render( 'analytics', {
-          orders:             results
-        , ordersByWeek:       ordersByWeek
-        , overallTotal:       calcOverallTotal(ordersByWeek)
-        , overallUniqueUsers: utils.unique( results, function( r ){
-                                return r.user_id;
-                              }).length
-        });
+      curr.week++;
+      if ( curr.week === 53 ){
+        curr.week = 1;
+        curr.year++;
       }
-    );
+
+      if ( curr.year === now.year ){
+        if ( curr.week === now.week + 1 ) stop = true;
+      }
+    }
+
+    results.sort( function( a, b ){
+      return a.id > b.id;
+    });
+
+    res.render( 'analytics', {
+      orders:             results
+    , ordersByWeek:       ordersByWeek
+    , overallTotal:       calcOverallTotal( ordersByWeek )
+    , overallUniqueUsers: utils.unique( results, function( r ){
+                            return r.user_id;
+                          }).length
+    });
+
+    // utils.async.parallel(
+    //   results.map( function( order ){
+    //     return order.getOrderItems.bind( order )
+    //   }).concat( results.map( function( order ){
+    //     return order.getRestaurant.bind( order );
+    //   }))
+
+    // , function( error ){
+    //     if ( error ) return res.json( error );
+
+    //     results = results.map( function( r ){
+    //       r = r.toJSON();
+    //       var d = new Date( r.created_at_local );
+    //       r.week_number = getWeekNumber( d );
+    //       r.year_number = d.getFullYear();
+    //       return r;
+    //     });
+
+    //     var start = { year: 2013, week: 40 };
+    //     var curr = { year: 2013, week: 40 };
+    //     var d = new Date();
+    //     var now = { year: d.getFullYear(), week: getWeekNumber( d ) };
+    //     var ordersByWeek = [];
+    //     var result;
+    //     var stop = false;
+
+    //     while ( !stop ){
+    //       result = results.filter( function( r ){
+    //         return r.year_number === curr.year && r.week_number === curr.week;
+    //       });
+
+    //       ordersByWeek.push({
+    //         period: [ curr.year, 'Week', curr.week ].join(' ')
+    //       , numberOfOrders: result.length
+    //       , periodTotal: calcPeriodTotal(result)
+    //       , uniqueUsers:  utils.unique( result, function( r ){
+    //                         return r.user_id
+    //                       }).length
+    //       })
+
+    //       curr.week++;
+    //       if ( curr.week === 53 ){
+    //         curr.week = 1;
+    //         curr.year++;
+    //       }
+
+    //       if ( curr.year === now.year ){
+    //         if ( curr.week === now.week + 1 ) stop = true;
+    //       }
+    //     }
+
+    //     results.sort( function( a, b ){
+    //       return a.id > b.id;
+    //     });
+
+    //     res.render( 'analytics', {
+    //       orders:             results
+    //     , ordersByWeek:       ordersByWeek
+    //     , overallTotal:       calcOverallTotal(ordersByWeek)
+    //     , overallUniqueUsers: utils.unique( results, function( r ){
+    //                             return r.user_id;
+    //                           }).length
+    //     });
+    //   }
+    // );
   });
 };

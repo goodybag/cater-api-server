@@ -140,7 +140,7 @@ count=1
 while [ $is_up_again == false ] ; do
   echo -ne "\rchecking if redeploy was successful - attempt $count"
   # check if web process is in an up state
-  if [[ `heroku ps --app $heroku_app | sed -n 2p` =~ ^web\.[0-9]+\:\ up.*  ]] ; then
+  if [[ `heroku ps --app $heroku_app | sed -n '/web/p' | sed -n 2p` =~ ^web\.[0-9]+\:\ up.*  ]] ; then
     new_uptime=`heroku ps --app $heroku_app | sed -n 2p | cut -d '~' -f 2 | cut -d ' ' -f 2`
     new_uptime_period=`echo $new_uptime | tail -c 2`
     # if new_uptime is s and old was m, then we are good

@@ -190,6 +190,26 @@ var Restaurant = module.exports = Model.extend({
 
     query.queries.push({ type: 'select', table: 'restaurant_hours', columns: columns });
 
+    // Alter the start/end times to reflect the regions lead_time modifier
+    if ( options.time ){
+      var rHours = query.queries[1];
+
+      rHours.columns[ rHours.columns.indexOf('start_time') ] = {
+        type: 'expression'
+      , expression: 'start_time - regions.lead_time_modifier'
+      };
+
+      rHours.columns[ rHours.columns.indexOf('end_time') ] = {
+        type: 'expression'
+      , expression: 'end_time - regions.lead_time_modifier'
+      };
+
+      rHours.joins = [
+        { type: 'left', target: 'restaurants', on: { id: '$' + rHours.table + '.restaurant_id$' } }
+      , { type: 'left', target: 'regions', on: { id: '$restaurants.region_id$' } }
+      ];
+    }
+
     return query;
   },
 

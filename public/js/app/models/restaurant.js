@@ -3,6 +3,7 @@ define(function(require, exports, module) {
   var amanda = require('amanda');
   var Categories = require('../collections/categories');
   var states = require('states');
+  var utils = require('utils');
 
   var regex = {
     url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
@@ -230,8 +231,12 @@ define(function(require, exports, module) {
     validateOrderFulfillability: function( order ){
       var errors = [];
 
+      var allDeliveryZips = utils.reduce( this.get('delivery_zip_groups'), function( a, b ){
+        return a.concat( b.zips );
+      }, [] );
+
       // Check zips
-      if ( this.get( 'delivery_zips' ).indexOf( order.address.get('zip') ) === -1 ){
+      if ( allDeliveryZips.indexOf( order.address.get('zip') ) === -1 ){
         errors.push( 'is_bad_zip' );
       }
 

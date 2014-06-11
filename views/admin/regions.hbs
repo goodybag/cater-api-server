@@ -10,6 +10,10 @@
         <tr>
           <th>ID</th>
           <th>Name</th>
+          <th>Lead Time Modifier</th>
+          <th>Sales Tax</th>
+          <th>Cities</th>
+          <th>State</th>
           <th>Timezone</th>
         </tr>
       </thead>
@@ -18,6 +22,10 @@
         <tr>
           <td>{{this.id}}</td>
           <td>{{this.name}}</td>
+          <td>{{this.lead_time_modifier.minutes}} minutes</td>
+          <td>{{this.sales_tax}}</td>
+          <td>{{#each this.cities}}{{this}}<br />{{/each}}</td>
+          <td>{{this.state}}</td>
           <td>{{this.timezone}}</td>
         </tr>
       {{/each}}

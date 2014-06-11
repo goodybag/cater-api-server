@@ -48,6 +48,13 @@ dirac.autoJoin = function( options ){
   }
 }
 
+mosql.registerQueryType( 'one', [
+  'select row_to_json( r )'
+, '  from {table} r'
+, '  {where}'
+, '  limit 1'
+].join(''));
+
 // Fix PG date parsing (`date` type not to be confused with something with a timezone)
 pg.types.setTypeParser( 1082, 'text', function( val ){
   return new Date( val + ' 00:00:00' );

@@ -1,4 +1,5 @@
 var moment = require('moment-timezone');
+var mosql = require('mongo-sql');
 
 var Model = require('./model');
 var utils = require('../utils');
@@ -194,14 +195,16 @@ var Restaurant = module.exports = Model.extend({
     if ( options.time ){
       var rHours = query.queries[1];
 
+      rHours.columns = rHours.columns.slice(0);
+
       rHours.columns[ rHours.columns.indexOf('start_time') ] = {
         type: 'expression'
-      , expression: 'start_time - regions.lead_time_modifier'
+      , expression: 'start_time + regions.lead_time_modifier'
       };
 
       rHours.columns[ rHours.columns.indexOf('end_time') ] = {
         type: 'expression'
-      , expression: 'end_time - regions.lead_time_modifier'
+      , expression: 'end_time + regions.lead_time_modifier'
       };
 
       rHours.joins = [
@@ -363,6 +366,15 @@ var Restaurant = module.exports = Model.extend({
     , all_delivery_zips: Restaurant.getDeliveryZipsQuery( query )
     };
 
+    query.columns.push({
+      alias: 'region'
+    , expression: {
+        type: 'one'
+      , table: 'regions'
+      , where: { id: '$restaurants.region_id$' }
+      , parenthesis: true
+      }
+    });
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
     query.columns.push([
       '(select array_to_json( array('

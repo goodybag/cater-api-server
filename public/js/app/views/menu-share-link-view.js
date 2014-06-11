@@ -29,6 +29,7 @@ define(function(require, exports, module) {
     },
 
     popover: function() {
+      // Deprecated
       this.$el.find('.learn-more').popover({
         container: 'body'
       , placement: 'left'

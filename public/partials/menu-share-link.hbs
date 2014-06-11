@@ -5,20 +5,21 @@ The "Share Link" panel can be in one of these states:
   * Share link URL view if token is present
 --}}
 
-<div class="panel-title">
-  <button class="btn btn-share btn-generate-token">Start Shared Card</button>
-</div>
 <section class="generate-token-view {{#if order.edit_token}}hide{{/if}}">
+  <div class="panel-title">
+    <button class="btn btn-share btn-generate-token">Start Shared Card</button>
+  </div>
+</section>
+<section>
   <div class="description">Let others pick and choose their own items</div>
 </section>
 <section class="share-link-view {{#unless order.edit_token}}hide{{/unless}}">
-  <div class="description">
+  <div class="annotation">
   {{#datePassed order.edit_token_expires}}
     <p class="expired-token text-danger">This link has expired!<a class="btn-regenerate" href="#">Generate a new link?</a></p>
   {{/datePassed}}
-  Send this link to others so they can add items too!</div>
-  <div class="form-group">
-    <input class="form-control share-link" type="text" value="{{config.baseUrl}}/restaurants/{{restaurant.id}}?edit_token={{order.edit_token}}">
+  <p>Copy this link and share it with hungry friends!</p>
   </div>
-  <a class="learn-more" data-toggle="popover" href="#">Learn more</a>
+  <input class="form-control share-link" type="text" value="{{config.baseUrl}}/restaurants/{{restaurant.id}}?edit_token={{order.edit_token}}">
+  {{!-- <a class="learn-more" data-toggle="popover" href="#">Learn more</a> --}}
 </section>

@@ -333,7 +333,7 @@ define(function(require, exports, module) {
     },
 
     /**
-     * Generate edit token and update this model
+     * Generate edit token and update relevant models
      * @param {function} callback(error)
      */
     generateEditToken: function(callback) {
@@ -345,7 +345,18 @@ define(function(require, exports, module) {
           return callback(errorThrown);
         },
         success: function(data, textstatus, jqXHR) {
-          this_.set( utils.pick(data, 'edit_token', 'edit_token_expires') );
+          data = utils.pick(data, 'edit_token', 'edit_token_expires');
+          // Set token on 
+          // 1) Order 
+          // 2) Order Items Collection 
+          // 3) Order Items Models
+          this_.set( data );
+          if ( this_.orderItems ){
+            this_.orderItems.options.editToken = data.edit_token;
+            this_.orderItems.each( function( item ){
+              item.set('editToken', data.edit_token);
+            });
+          }
           return callback(null, data);
         }
       });

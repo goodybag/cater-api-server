@@ -76,11 +76,11 @@ define( function( require ){
       });
 
       orderModel.orderItems.each( function( item ){
+        if ( editToken ) item.set('edit_token', editToken);
         new Views.OrderItemSummary({
           el:             '#order-item-' + item.get('id')
         , model:          item
         , itemModalView:  itemModalView
-        , editToken:      editToken
         });
       });
 

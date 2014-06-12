@@ -60,6 +60,13 @@ define(function(require, exports, module) {
       }
     },
 
+    sync: function(method, model, options) {
+      if ( model.options.edit_token ) {
+        options.data = { edit_token: model.options.edit_token };
+      }
+      Backbone.sync.call(this, method, model, options);
+    },
+
     url: function(){
       var url = Backbone.Model.prototype.url.call( this );
       var editToken = this.get('edit_token');

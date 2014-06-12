@@ -10,11 +10,13 @@ function testCriteria( order ){
 }
 
 describe ('Order Delivery Service Criteria', function(){
+  var now = moment().tz('America/Chicago');
+
   var defaultOrder = {
     sub_total:  1000
   , guests:     25
   , zip:        '78756'
-  , datetime:   moment().tz('America/Chicago').format('YYYY-MM-DD 12:00:00')
+  , datetime:   now.format('YYYY-MM-DD 12:00:00')
   , restaurant: {
       delivery_service_order_amount_threshold:  500
     , head_count_delivery_service_threshold:    20
@@ -23,11 +25,29 @@ describe ('Order Delivery Service Criteria', function(){
         { fee: 1000, zips: ['78756'] }
       , { fee: 1200, zips: ['78755'] }
       ]
+    , delivery_times: {
+        "0": [],
+        "1": [ [ "11:00:00", "15:00:00" ] ],
+        "2": [ [ "11:00:00", "15:00:00" ] ],
+        "3": [ [ "11:00:00", "15:00:00" ] ],
+        "4": [ [ "11:00:00", "15:00:00" ] ],
+        "5": [ [ "11:00:00", "15:00:00" ] ],
+        "6": []
+      }
+    , hours_of_operation: {
+        "0": [],
+        "1": [ [ "10:00:00", "16:00:00" ] ],
+        "2": [ [ "10:00:00", "16:00:00" ] ],
+        "3": [ [ "10:00:00", "16:00:00" ] ],
+        "4": [ [ "10:00:00", "16:00:00" ] ],
+        "5": [ [ "10:00:00", "16:00:00" ] ],
+        "6": []
+      }
     , lead_times: [
         { lead_time: 100, max_guests: 10 }
         { lead_time: 200, max_guests: 20 }
       ]
-    , pickup_times: [
+    , pickup_lead_times: [
         { lead_time: 100, max_guests: 100 }
         { lead_time: 200, max_guests: 200 }
       ]
@@ -37,6 +57,10 @@ describe ('Order Delivery Service Criteria', function(){
       }
     }
   };
+
+  if ( now.get('hour') < 12 ){
+
+  }
 
   it ('should not be delivery service', function(){
     var order = defaultOrder;

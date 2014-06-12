@@ -101,6 +101,8 @@ define( function( require ){
             orderModel:     orderModel,
             orderModal:     orderModal,
             orderParams:    orderParams
+          }, {
+            editToken: editToken
           });
         });
       });

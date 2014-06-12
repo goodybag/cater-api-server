@@ -62,9 +62,7 @@ define(function(require, exports, module) {
 
     url: function(){
       var url = Backbone.Model.prototype.url.call( this );
-
-      if ( this.options.edit_token ) url += '?edit_token=' + this.options.edit_token;
-
+      if ( this.options.editToken ) url += '?edit_token=' + this.options.editToken;
       return url;
     },
 

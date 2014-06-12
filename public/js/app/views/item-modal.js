@@ -70,8 +70,7 @@ define(function(require, exports, module) {
       var data = {
         quantity:     parseInt( this.$el.find('.item-quantity').val() ),
         notes:        (this.$el.find('.form-group-item-notes textarea').val()||'').trim() || null,
-        recipient:    (this.$el.find('.form-group-item-recipient input').val()||'') || null,
-        edit_token:   this.options.orderModel.attributes.edit_token
+        recipient:    (this.$el.find('.form-group-item-recipient input').val()||'') || null
       };
 
       if (data.quantity <= 0) {
@@ -100,7 +99,9 @@ define(function(require, exports, module) {
           }
         });
       } else {
-        orderItem = this.options.orderItems.create(_.extend( { item_id: this.model.attributes.id }, data ), { wait: true });
+        orderItem = this.options.orderItems.create(
+          _.extend( { item_id: this.model.attributes.id }, data )
+                  , { wait: true, editToken: this.options.orderModel.attributes.edit_token });
       }
 
       orderItem.validationError ? this.displayErrors( orderItem.validationError ) : this.hide();

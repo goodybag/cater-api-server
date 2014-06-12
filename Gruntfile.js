@@ -256,7 +256,7 @@ module.exports = function(grunt) {
   grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 
-  grunt.registerTask( 'deploy', [ 
+  grunt.registerTask( 'deploy', [
     // 'versionPatch'
     'build'
   , 'readStaticAssets'

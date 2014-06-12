@@ -28,6 +28,12 @@ define( function( require ){
       var editToken       = options.editToken;
       var baseUrl         = options.baseUrl;
 
+      // Attach edit token to collection and its models
+      orderModel.orderItems.options.editToken = editToken;
+      orderModel.orderItems.each(function(item) {
+        item.options.editToken = editToken;
+      });
+
       analytics.page('Menu', {restaurant: restaurant.pick('name')});
 
       page.view = new Views.Menu({

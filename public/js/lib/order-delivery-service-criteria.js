@@ -5,6 +5,8 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define(function(require, exports, module) {
+  var utils = require('utils');
+
   return [
     // Is dollar amount too low?
     function( order ){
@@ -18,6 +20,10 @@ define(function(require, exports, module) {
 
   , // Delivery zips
     function( order ){
+      if ( order.restaurant.delivery_zips.indexOf( order.zip ) === -1 ){
+
+      }
+
       return false;
     }
 

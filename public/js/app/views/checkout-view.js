@@ -561,7 +561,7 @@ define(function(require, exports, module) {
       // Scroll to the first error
       $el = this.$el.find('.has-error');
 
-      if ( $el ){
+      if ( $el.length ){
         $('html,body').animate({ scrollTop: $el.eq(0).offset().top - 20 });
       }
     },

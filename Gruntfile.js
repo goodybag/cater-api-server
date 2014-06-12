@@ -148,7 +148,7 @@ module.exports = function(grunt) {
         key:    config.amazon.awsId
       , secret: config.amazon.awsSecret
       , access:  'public-read'
-      , maxOperations: 20
+      , maxOperations: 10
       , headers: {
           // Two Year cache policy (1000 * 60 * 60 * 24 * 730)
           "Cache-Control": "max-age=630720000, public"

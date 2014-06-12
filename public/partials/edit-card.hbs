@@ -28,31 +28,36 @@
   </div>
 </div>
 
-<div class="expiration-wrapper form-inline">
-  <label class="control-label">Expiration Date</label>
-  <div class="form-group">
-    <select name="expiration_month" class="form-control">
-      {{#range2 '1' '12'}}
-        <option
-          value="{{pad this 2}}"
-          {{#if ../data}}
-          {{#eq this ../../data.expiration_month}}selected="selected"{{/eq}}
-          {{/if}}
-        >{{pad this 2}}</option>
-      {{/range2}}
-    </select>
-  </div>
-  <div class="form-group form-group-separator">/</div>
-  <div class="form-group">
-    <select name="expiration_year" class="form-control">
-      {{#range2 '2013' '2025'}}
-        <option
-          value="{{this}}"
-          {{#if ../data}}
-          {{#eq this ../../data.expiration_year}}selected="selected"{{/eq}}
-          {{/if}}
-        >{{this}}</option>
-      {{/range2}}
-    </select>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="expiration-wrapper form-group form-inline">
+      <input type="hidden" name="expiration">
+      <label class="control-label">Expiration Date</label>
+      <div class="form-group">
+        <select name="expiration_month" class="form-control">
+          {{#range2 '1' '12'}}
+            <option
+              value="{{pad this 2}}"
+              {{#if ../data}}
+              {{#eq this ../../data.expiration_month}}selected="selected"{{/eq}}
+              {{/if}}
+            >{{pad this 2}}</option>
+          {{/range2}}
+        </select>
+      </div>
+      <div class="form-group form-group-separator">/</div>
+      <div class="form-group">
+        <select name="expiration_year" class="form-control">
+          {{#range2 '2013' '2025'}}
+            <option
+              value="{{this}}"
+              {{#if ../data}}
+              {{#eq this ../../data.expiration_year}}selected="selected"{{/eq}}
+              {{/if}}
+            >{{this}}</option>
+          {{/range2}}
+        </select>
+      </div>
+    </div>
   </div>
 </div>

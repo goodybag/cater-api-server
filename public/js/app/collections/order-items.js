@@ -15,14 +15,17 @@ define(function(require, exports, module) {
     url: function() { return '/orders/' + this.orderId + '/items' },
     model: OrderItem,
 
-    sync: function(method, model, options) {
-      options.url = (method === 'read') ? '/api' + model.url() : model.url();
+    sync: function(method, collection, options) {
+      options.url = (method === 'read') ? '/api' + collection.url() : collection.url();
+
+      if ( collection.options.edit_token ) {
+        options.data = { edit_token: collection.options.edit_token };
+      }
 
       // break aggressive caching on IE
       // this request provides live updates so dont cache reads
       options.cache = (method !== 'read');
-
-      Backbone.sync.call(this, method, model, options);
+      Backbone.sync.call(this, method, collection, options);
     }
   });
 });

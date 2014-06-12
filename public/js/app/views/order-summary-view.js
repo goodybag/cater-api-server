@@ -16,6 +16,10 @@ define(function(require, exports, module) {
 
     initialize: function(options) {
       if (this.model) this.setModel(this.model);
+      this.pollOrderUpdates();
+    },
+
+    pollOrderUpdates: function() {
       var this_ = this;
       setInterval(function() {
         if ( this_.model.id ) this_.model.orderItems.fetch();

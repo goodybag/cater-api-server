@@ -80,6 +80,7 @@ define( function( require ){
           el:             '#order-item-' + item.get('id')
         , model:          item
         , itemModalView:  itemModalView
+        , editToken:      editToken
         });
       });
 

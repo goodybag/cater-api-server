@@ -345,7 +345,12 @@ define(function(require, exports, module) {
           return callback(errorThrown);
         },
         success: function(data, textstatus, jqXHR) {
-          this_.set( utils.pick(data, 'edit_token', 'edit_token_expires') );
+          // Set token on the order and its order items
+          var tokenData = utils.pick(data, 'edit_token', 'edit_token_expires')
+          this_.set( tokenData );
+          this_.orderItems.each(function(item) {
+            item.set( tokenData );
+          });
           return callback(null, data);
         }
       });

@@ -37,6 +37,9 @@ var reports = {
     var end = moment(req.body.end || new Date()).add('d',1).format('YYYY-MM-DD');
     var range = req.body.range || 'datetime';
     var sort = req.body.sort || 'asc';
+    var restaurantId = req.body.restaurantId;
+    var userId = req.body.userId;
+
 
     var filename = [
       status
@@ -67,6 +70,9 @@ var reports = {
       }
     , limit: 'all'
     };
+
+    if ( restaurantId ) query.where.restaurant_id = restaurantId;
+    if ( userId ) query.where.user_id = userId;
 
     // by order datetime or submitted
     range = (range === 'datetime') ? 'orders.datetime' : 'submitted.created_at';

@@ -167,6 +167,11 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , total: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
   };
 
   definition.indices = {};

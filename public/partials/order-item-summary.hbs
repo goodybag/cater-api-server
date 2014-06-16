@@ -1,8 +1,9 @@
 <td class="item-name">
   {{name}}
-  {{#if recipient}}<span class="order-item-recipient">for {{recipient}}</span>{{/if}}
+  {{#if recipient}}<span class="order-item-recipient"> for {{recipient}}</span>{{/if}}
 
-  <ul class="list-inline item-options">
+  <a class="item-edit" href="#" data-id="{{id}}">Edit</a>
+  <ul class="list-small item-options">
   {{#each options_sets}}
     {{#each this.options}}
       {{#if this.state}}
@@ -12,7 +13,6 @@
   {{/each}}
   </ul>
 
-  <a class="item-edit" href="#" data-id="{{id}}">Edit</a>
 </td>
 <td class="item-quantity">x {{quantity}}</td>
 <td class="item-price">{{dollars sub_total}}</td>

@@ -12,6 +12,11 @@ function testCriteria( order ){
 describe ('Order Delivery Service Criteria', function(){
   var now = moment().tz('America/Chicago');
 
+  // If it's within an hour or after 12pm, just advance to the next monday
+  // just in case
+  if ( now.get('hour') >= 11 ){
+    now = now.day(8);
+  }
   var defaultOrder = {
     sub_total:  1000
   , guests:     25
@@ -44,8 +49,8 @@ describe ('Order Delivery Service Criteria', function(){
         "6": []
       }
     , lead_times: [
-        { lead_time: 100, max_guests: 10 }
-      , { lead_time: 200, max_guests: 20 }
+        { lead_time: 100, max_guests: 30 }
+      , { lead_time: 200, max_guests: 40 }
       ]
     , pickup_lead_times: [
         { lead_time: 100, max_guests: 100 }
@@ -57,12 +62,6 @@ describe ('Order Delivery Service Criteria', function(){
       }
     }
   };
-
-  // If it's within an hour or after 12pm, just advance to the next monday
-  // just in case
-  if ( now.get('hour') >= 11 ){
-    now = now.day('Monday');
-  }
 
   it ('should not be delivery service', function(){
     var order = defaultOrder;
@@ -115,6 +114,20 @@ describe ('Order Delivery Service Criteria', function(){
           "5": [ [ "00:00:00", "01:00:00" ] ],
           "6": []
         }
+      }
+    });
+
+    assert( testCriteria( order ) );
+  });
+
+  it ('should be delivery service because lead time', function(){
+    var order = utils.deepExtend( {}, defaultOrder, {
+      restaurant: {
+        // Make lead times trigger pickup
+        lead_times: [
+          { lead_time: 100, max_guests: 10 }
+        , { lead_time: 200, max_guests: 20 }
+        ]
       }
     });
 

@@ -66,36 +66,37 @@ define(function( require, exports, module ){
 
     // Lead times
   , function( order ){
-      // var date = order.datetime;
+      var date = order.datetime;
 
-      // if ( !moment( date ).isValid() ) return false;
+      if ( !moment( date ).isValid() ) return false;
 
-      // var restaurant = order.restaurant;
+      var restaurant = order.restaurant;
 
-      // var isDeliveryService = false;
+      var isDeliveryService = false;
+      var limit = utils.find( utils.sortBy( restaurant.lead_times, 'max_guests' ), function( obj ){
+        return obj.max_guests >= order.guests;
+      });
 
-      // var limit = utils.find( utils.sortBy( restaurant.lead_times, 'max_guests' ), function( obj ){
-      //   return obj.max_guests >= order.guests;
-      // });
+      if ( !limit ){
+        isDeliveryService = true;
+        limit = utils.find( utils.sortBy( restaurant.pickup_lead_times, 'max_guests' ), function( obj ){
+          return obj.max_guests >= order.guests;
+        });
+      }
 
-      // if ( !limit ){
-      //   isDeliveryService = true;
+      if ( !limit ) return false;
 
-      //   limit = utils.find( utils.sortBy( restaurant.pickup_lead_times, 'max_guests' ), function( obj ){
-      //     return obj.max_guests >= order.guests;
-      //   });
-      // }
+      var now = moment().tz( restaurant.region.timezone ).format('YYYY-MM-DD HH:mm:ss');
+      var minutes = (moment( date ) - moment( now )) / 60000;
+      var leadTime = limit.lead_time;
 
-      // var now = moment().tz( restaurant.region.timezone ).format('YYYY-MM-DD HH:mm:ss');
-      // var minutes = (moment( date ) - moment( now )) / 60000;
-      // var leadTime = limit.lead_time;
-
-      // if ( minutes < leadTime ){
-      //   leadTime += moment.duration( restaurant.region.lead_time_modifier ).asMinutes();
-      //   return minutes >= leadTime;
-      // }
-
-      return false;
+      if ( isDeliveryService ){
+        leadTime += moment.duration( restaurant.region.lead_time_modifier ).asMinutes();
+        console.log(minutes, leadTime);
+        return minutes >= leadTime;
+      } else {
+        return !(minutes >= leadTime);
+      }
     }
   ], function( fn ){
     return function( order ){

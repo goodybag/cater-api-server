@@ -14,15 +14,15 @@ define(function( require, exports, module ){
       return order.sub_total < order.restaurant.delivery_service_order_amount_threshold;
     }
 
-  , // Is head count too low?
-    function( order ){
+    // Is head count too low?
+  , function( order ){
       if ( typeof order.guests !== 'number' ) return false;
 
       return order.guests < order.restaurant.head_count_delivery_service_threshold;
     }
 
-  , // Delivery zips
-    function( order ){
+    // Delivery zips
+  , function( order ){
       // Was not in delivery_zips
       if ( order.restaurant.delivery_zips.indexOf( order.zip ) === -1 ){
         // But if it was in zip_groups, then that's from delivery service zips
@@ -34,41 +34,66 @@ define(function( require, exports, module ){
       return false;
     }
 
-  , // Delivery times
-    function( order ){
-      return false;
-    }
-
-  , // Lead times
-    function( order ){
+    // Delivery times
+  , function( order ){
       var date = order.datetime;
 
       if ( !moment( date ).isValid() ) return false;
 
-      var restaurant = order.restaurant;
-
-      var isDeliveryService = false;
-
-      var limit = utils.find( utils.sortBy( restaurant.lead_times, 'max_guests' ), function( obj ){
-        return obj.max_guests >= order.guests;
+      var restaurant  = order.restaurant;
+      var day         = moment( date.split(' ')[0] ).day();
+      var hours       = restaurant.delivery_times[ day ];
+      var time        = ( date.split(' ')[1] + ':00' ).substring( 0, 8 );
+      // is the desired time within any of the windows for that day?
+      var result = utils.any( hours, function( openClose ){
+        return time >= openClose[0] && time <= openClose[1];
       });
 
-      if ( !limit ){
-        isDeliveryService = true;
+      if ( result ) return false;
 
-        limit = utils.find( utils.sortBy( restaurant.pickup_lead_times, 'max_guests' ), function( obj ){
-          return obj.max_guests >= order.guests;
-        });
-      }
+      date  = moment( date ).add( 'minutes', -restaurant.region.lead_time_modifier || 0 );
+      day   = date.day();
+      hours = restaurant.delivery_times[ day ];
+      time  = date.format('HH:mm:ss');
 
-      var now = moment().tz( restaurant.region.timezone ).format('YYYY-MM-DD HH:mm:ss');
-      var minutes = (moment( date ) - moment( now )) / 60000;
-      var leadTime = limit.lead_time;
+      // Restaurant couldn't ful-fill, what about delivery services?
+      return utils.chain(
+        restaurant.hours_of_operation[ day ]
+      ).any( function( openClose ){
+        return time >= openClose[0] && time <= openClose[1]
+      }).value();
+    }
 
-      if ( minutes < leadTime ){
-        leadTime += moment.duration( restaurant.region.lead_time_modifier ).asMinutes();
-        return minutes >= leadTime;
-      }
+    // Lead times
+  , function( order ){
+      // var date = order.datetime;
+
+      // if ( !moment( date ).isValid() ) return false;
+
+      // var restaurant = order.restaurant;
+
+      // var isDeliveryService = false;
+
+      // var limit = utils.find( utils.sortBy( restaurant.lead_times, 'max_guests' ), function( obj ){
+      //   return obj.max_guests >= order.guests;
+      // });
+
+      // if ( !limit ){
+      //   isDeliveryService = true;
+
+      //   limit = utils.find( utils.sortBy( restaurant.pickup_lead_times, 'max_guests' ), function( obj ){
+      //     return obj.max_guests >= order.guests;
+      //   });
+      // }
+
+      // var now = moment().tz( restaurant.region.timezone ).format('YYYY-MM-DD HH:mm:ss');
+      // var minutes = (moment( date ) - moment( now )) / 60000;
+      // var leadTime = limit.lead_time;
+
+      // if ( minutes < leadTime ){
+      //   leadTime += moment.duration( restaurant.region.lead_time_modifier ).asMinutes();
+      //   return minutes >= leadTime;
+      // }
 
       return false;
     }

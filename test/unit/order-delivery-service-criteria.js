@@ -45,11 +45,11 @@ describe ('Order Delivery Service Criteria', function(){
       }
     , lead_times: [
         { lead_time: 100, max_guests: 10 }
-        { lead_time: 200, max_guests: 20 }
+      , { lead_time: 200, max_guests: 20 }
       ]
     , pickup_lead_times: [
         { lead_time: 100, max_guests: 100 }
-        { lead_time: 200, max_guests: 200 }
+      , { lead_time: 200, max_guests: 200 }
       ]
     , region: {
         timezone: 'America/Chicago'
@@ -58,18 +58,16 @@ describe ('Order Delivery Service Criteria', function(){
     }
   };
 
-  if ( now.get('hour') < 12 ){
-
+  // If it's within an hour or after 12pm, just advance to the next monday
+  // just in case
+  if ( now.get('hour') >= 11 ){
+    now = now.day('Monday');
   }
 
   it ('should not be delivery service', function(){
     var order = defaultOrder;
 
-    var result = criteria.some( function( fn ){
-      return fn( order );
-    });
-
-    assert( !result );
+    assert( !testCriteria( order ) );
   });
 
   it ('should be delivery service because dollar amount', function(){
@@ -78,18 +76,18 @@ describe ('Order Delivery Service Criteria', function(){
     , restaurant: {
         delivery_service_order_amount_threshold:  1000
       }
-    };
+    });
 
     assert( testCriteria( order ) );
   });
 
   it ('should be delivery service because head count', function(){
-    var order = {
+    var order = utils.deepExtend( {}, defaultOrder, {
       guests: 20
     , restaurant: {
         head_count_delivery_service_threshold:    25
       }
-    };
+    });
 
     assert( testCriteria( order ) );
   });
@@ -107,7 +105,17 @@ describe ('Order Delivery Service Criteria', function(){
 
   it ('should be delivery service because delivery time', function(){
     var order = utils.deepExtend( {}, defaultOrder, {
-
+      restaurant: {
+        delivery_times: {
+          "0": [],
+          "1": [ [ "00:00:00", "01:00:00" ] ],
+          "2": [ [ "00:00:00", "01:00:00" ] ],
+          "3": [ [ "00:00:00", "01:00:00" ] ],
+          "4": [ [ "00:00:00", "01:00:00" ] ],
+          "5": [ [ "00:00:00", "01:00:00" ] ],
+          "6": []
+        }
+      }
     });
 
     assert( testCriteria( order ) );

@@ -192,13 +192,14 @@ define(function(require, exports, module) {
 
       // Restaurant couldn't ful-fill, what about delivery services?
       if ( !result ){
+        date  = moment( date ).add( 'minutes', -this.get('region').lead_time_modifier || 0 );
+        day   = date.day();
+        hours = this.get('delivery_times')[ day ];
+        time  = date.format('HH:mm:ss');
+
         result = _.chain(
           this.get('hours_of_operation')[ day ]
-        ).map( function( openClose ){
-          return _.map( openClose, function( t ){
-            return t + (this_.get('region').lead_time_modifier || 0);
-          });
-        }).any( function( openClose ){
+        ).any( function( openClose ){
           return time >= openClose[0] && time <= openClose[1]
         }).value();
       }
@@ -266,12 +267,14 @@ define(function(require, exports, module) {
     validateOrderFulfillability: function( order ){
       var errors = [];
 
+      console.log(this.get('delivery_zip_groups'));
       var allDeliveryZips = utils.reduce( this.get('delivery_zip_groups'), function( a, b ){
         return a.concat( b.zips );
       }, [] );
 
       // Check zips
       if ( allDeliveryZips.indexOf( order.address.get('zip') ) === -1 ){
+        console.log('pushing is_bad_zip', allDeliveryZips)
         errors.push( 'is_bad_zip' );
       }
 

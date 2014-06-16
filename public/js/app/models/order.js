@@ -278,8 +278,8 @@ define(function(require, exports, module) {
     },
 
     validateOrderFulfillability: function(){
-      var isPresent = ['guests', 'datetime'].map(_.bind(this.has, this)).concat(
-        ['zip'].map(_.bind(this.has, this.address)))
+      var isPresent = _.map(['guests', 'datetime'], _.bind(this.has, this)).concat(
+        _.map(['zip'], _.bind(this.has, this.address)));
 
       // If they have blank fields, that's the only thing we need to tell them
       return _.every(isPresent) ? this.restaurant.validateOrderFulfillability( this ) : ['has_blank_fields'];

@@ -10,7 +10,7 @@
   </div>
 
   <div>
-    <table class="table order-table with-items{{#unless order.orderItems.length}} hide{{/unless}}">
+    <table class="table table-unbordered order-table with-items{{#unless order.orderItems.length}} hide{{/unless}}">
       <tbody>
         {{#each order.orderItems}}
         <tr id="order-item-{{this.id}}" data-id="{{this.id}}">{{> order_item_summary}}</tr>

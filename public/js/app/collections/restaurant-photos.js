@@ -33,12 +33,12 @@ define(function(require, exports, module) {
     }
 
   , next: function() {
-      this.setCurrent( (this.currentIdx + 1) % this.length );
+      this.setCurrent( (this.currentIdx + 1 + this.length) % this.length );
       return this.getCurrent();
     }
 
   , prev: function() {
-      this.setCurrent( (this.currentIdx - 1) % this.length );
+      this.setCurrent( (this.currentIdx - 1 + this.length) % this.length );
       return this.getCurrent();
     }
 

@@ -27,15 +27,17 @@ define(function(require, exports, module) {
       e.preventDefault();
       var photoIdx = $(e.target).data('photo-idx');
       var photo = this.options.photos.setCurrent(photoIdx);
-      this.changePhoto(photo, photoIdx);
+      this.changePhoto(photo);
     },
 
     nextClick: function(e) {
       e.preventDefault();
+      this.next();
     },
 
     previousClick: function(e) {
       e.preventDefault();
+      this.prev();
     },
 
     /**
@@ -43,8 +45,9 @@ define(function(require, exports, module) {
      * 2. Apply .active
      * 3. Scroll to photo
      */
-    changePhoto: function(photo, idx) {
+    changePhoto: function(photo) {
       console.log('change:'+photo.id);
+      var idx = this.options.photos.indexOf(photo);
 
       this.$img.attr('src', photo.get('url'));
       this.$name.text(photo.get('name'));
@@ -65,11 +68,11 @@ define(function(require, exports, module) {
     },
 
     next: function() {
-
+      this.changePhoto(this.options.photos.next());
     },
 
-    previous: function() {
-
+    prev: function() {
+      this.changePhoto(this.options.photos.prev());
     }
   });
 });

@@ -1,0 +1,45 @@
+<div class="restaurant-info">
+  {{! Left info column }}
+  <div class="col-half">
+    <ul class="list-inline-bullet">
+      <li>{{> restaurant_cuisines }}</li>
+      <li>{{> restaurant_dollar_meter }}</li>
+    </ul>
+  
+    <dl class="dl-stacked">
+      {{#if restaurant.minimum_order}}
+      <dt>Order Minimum:</dt><dd>${{dollars restaurant.minimum_order}}</dd>
+      {{/if}}
+  
+      {{#if restaurant.delivery_fee}}
+      <dt>Delivery Charge:</dt>
+      {{#unless order.zip}}
+      <dd>Starting from ${{dollars restaurant.delivery_fee}}</dd>
+      {{else}}
+      <dd>${{dollars restaurant.delivery_fee}}</dd>
+      {{/unless}}
+      {{/if}}
+  
+      {{#if restaurant.max_guests}}
+      <dt>Max. Guests:</dt>
+      <dd>{{restaurant.max_guests}}</dd>
+      {{/if}}
+  
+      {{#if restaurant.delivery_times}}
+      <dt>Delivery Times:</dt>
+      <dd>{{> delivery_times restaurant}}</dd>
+      {{/if}}
+  
+      <dt>Lead Times:</dt>
+      <dd>{{> lead_times restaurant}}</dd>
+  
+      <dt>Zip Codes within delivery range:</dt>
+      <dt>{{> restaurant_delivery_zips }}</dt>
+    </dl>
+  </div>
+  
+  {{! Right info column}}
+  <div class="col-half">
+    {{> restaurant_location }}
+  </div>
+</div>

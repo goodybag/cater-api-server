@@ -1,30 +1,28 @@
-<div class="panel" id="reviews">
-  <div class="panel-body">
-    <h4 class="tab-header rating-header">
-      {{#if restaurant.yelp_data.rating}}
-      Overall Yelp Rating:
-      <div class="rating">{{{ratingStars ../restaurant.yelp_data.rating}}}</div>
-      {{/if}}
-    </h4>
-
-    {{#if restaurant.yelp_data.reviews}}
-    <div class="reviews">
-      {{#each ../restaurant.yelp_data.reviews}}
-        <article class="review">
-        <img src="{{this.user.image_url}}" class="review-avatar">
-        <div class="review-info">
-          <h5 class="review-author">{{this.user.name}}</h5>
-          <div class="review-rating">{{{ratingStars this.rating }}}</div>
-          <p class="review-text">{{this.excerpt}}... <a href="http://www.yelp.com/biz/{{../../restaurant.yelp_business_id}}#hrid:{{this.id}}" target="_blank">Read More</a></p>
-        </div>
-      </article>
-      {{/each}}
-    </div>
+<div id="reviews">
+  <h4 class="tab-header rating-header">
+    {{#if restaurant.yelp_data.rating}}
+    Overall Yelp Rating:
+    <div class="rating">{{{ratingStars ../restaurant.yelp_data.rating}}}</div>
     {{/if}}
+  </h4>
 
-    <div class="tab-actions">
-      <a href="{{restaurant.yelp_data.url}}" class="btn btn-primary" target="_blank">See all ({{restaurant.yelp_data.review_count}}) Reviews</a>
-    </div>
+  {{#if restaurant.yelp_data.reviews}}
+  <div class="reviews">
+    {{#each ../restaurant.yelp_data.reviews}}
+      <article class="review">
+      <img src="{{this.user.image_url}}" class="review-avatar">
+      <div class="review-info">
+        <h5 class="review-author">{{this.user.name}}</h5>
+        <div class="review-rating">{{{ratingStars this.rating }}}</div>
+        <p class="review-text">{{this.excerpt}}... <a href="http://www.yelp.com/biz/{{../../restaurant.yelp_business_id}}#hrid:{{this.id}}" target="_blank">Read More</a></p>
+      </div>
+    </article>
+    {{/each}}
+  </div>
+  {{/if}}
+
+  <div class="tab-actions">
+    <a href="{{restaurant.yelp_data.url}}" class="btn btn-primary" target="_blank">See all ({{restaurant.yelp_data.review_count}}) Reviews</a>
   </div>
 </div>
 

@@ -136,7 +136,7 @@ define(function(require, exports, module) {
     },
 
     clear: function() {
-      this.$el.find('input').parent().removeClass('has-error');
+      this.$el.find('.has-error').removeClass('has-error');
       this.$el.find('.alert').addClass('hide');
     },
 
@@ -406,6 +406,7 @@ define(function(require, exports, module) {
 
       this.$el.find('#update-card').removeClass('hide');
       this.$el.find('.btn-expired-update').addClass('hide');
+      this.$el.find('#update-card .btn-submit').attr( 'type', 'submit' );
 
       return this;
     },
@@ -416,6 +417,7 @@ define(function(require, exports, module) {
     hideUpdateCardView: function(){
       this.$el.find('#update-card').addClass('hide');
       this.$el.find('.btn-expired-update').removeClass('hide');
+      this.$el.find('#update-card .btn-submit').attr( 'type', 'button' );
 
       return this;
     },
@@ -509,32 +511,36 @@ define(function(require, exports, module) {
       var template = Handlebars.partials.alert_error;
       var selector = '[name="{property}"]';
 
-      // Amanda errors object
       if ( _.isObject( errors ) && !_.isArray( errors ) ){
-        errors = Array.prototype.slice.call( errors )
+        // Amanda errors object
+        if ( '0' in errors ){
+          errors = Array.prototype.slice.call( errors )
 
-        // We're just going to use the `required` error text for everything
-        // so just take the unique on error.property
-        errors = _.chain(errors).map( function( error ){
-          return error.property;
-        }).unique().map( function( property ){
-          var message;
-          var noun = property;
+          // We're just going to use the `required` error text for everything
+          // so just take the unique on error.property
+          errors = _.chain(errors).map( function( error ){
+            return error.property;
+          }).unique().map( function( property ){
+            var message;
+            var noun = property;
 
-          if ( Model && typeof Model.fieldNounMap === 'object' )
-          if ( property in Model.fieldNounMap ){
-            noun = Model.fieldNounMap[ property ];
-          }
+            if ( Model && typeof Model.fieldNounMap === 'object' )
+            if ( property in Model.fieldNounMap ){
+              noun = Model.fieldNounMap[ property ];
+            }
 
-          message = this_.errorTypeMessages.required.replace(
-            '{noun}', noun
-          );
+            message = this_.errorTypeMessages.required.replace(
+              '{noun}', noun
+            );
 
-          return {
-            property: property
-          , message: message
-          };
-        }).value();
+            return {
+              property: property
+            , message: message
+            };
+          }).value();
+        } else {
+          errors = [ errors ];
+        }
       }
 
       var css = {
@@ -561,7 +567,7 @@ define(function(require, exports, module) {
       // Scroll to the first error
       $el = this.$el.find('.has-error');
 
-      if ( $el ){
+      if ( $el.length ){
         $('html,body').animate({ scrollTop: $el.eq(0).offset().top - 20 });
       }
     },

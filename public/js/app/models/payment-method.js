@@ -86,9 +86,12 @@ define(function(require, exports, module) {
       if (data.postal_code && !data.country_code)
         return callback("country_code is required if a postal_code is given");
 
-      if ( this.validator.validate( data, this.balancedSchema, this.validatorOptions, function( error ){
-        if ( error ) return callback( error );
-      })) return;
+      var error;
+      this.validator.validate( data, this.balancedSchema, this.validatorOptions, function( _error ){
+        error = _error;
+      });
+
+      if ( error ) return callback( error );
 
         // require postal code for amex cards
       if (PaymentMethod.getCardType(data.card_number) == 'amex' && !data.postal_code)
@@ -118,7 +121,10 @@ define(function(require, exports, module) {
           wait: true
         , success: function(){ if (callback) callback(null, this); }
         , error: function(model, xhr){
-            if (callback) return callback("something went wrong");
+            if (callback) return callback({
+              property: 'id'
+            , message: 'Something went wrong processing your card. Please check your card details and try again.'
+            });
             notify.error("something went wrong");
           }
         });
@@ -140,6 +146,8 @@ define(function(require, exports, module) {
     , security_code: 'Security Code'
     , name: 'Card Title'
     , postal_code: 'Postal Code'
+    , expiration_year: 'Expiration Year'
+    , expiration_month: 'Expiration Year'
     },
 
     getCardType: function(cardNumber) {

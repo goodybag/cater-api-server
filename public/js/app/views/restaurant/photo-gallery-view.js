@@ -25,8 +25,9 @@ define(function(require, exports, module) {
 
     changePhotoClick: function(e) {
       e.preventDefault();
-      var photoId = $(e.target).data('photo-id');
-      this.changePhoto(photoId);
+      var photoIdx = $(e.target).data('photo-idx');
+      var photo = this.options.photos.setCurrent(photoIdx);
+      this.changePhoto(photo, photoIdx);
     },
 
     nextClick: function(e) {
@@ -37,14 +38,21 @@ define(function(require, exports, module) {
       e.preventDefault();
     },
 
-    changePhoto: function(id) {
-      var photo = this.options.photos.find({id: id});
-      console.log('change:'+id);
+    /**
+     * 1. Update image, name, description
+     * 2. Apply .active
+     * 3. Scroll to photo
+     */
+    changePhoto: function(photo, idx) {
+      console.log('change:'+photo.id);
+
       this.$img.attr('src', photo.get('url'));
       this.$name.text(photo.get('name'));
       this.$description.text(photo.get('description'));
+
       this.$el.find('.photo-thumbnail').removeClass('active');
-      this.$el.find('.photo-thumbnail[data-photo-id="' + id + '"]').addClass('active');
+      this.$el.find('.photo-thumbnail[data-photo-idx="' + idx + '"]').addClass('active');
+
       this.scrollToPhoto();
     },
 

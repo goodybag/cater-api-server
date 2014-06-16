@@ -11,7 +11,7 @@
   <section class="photo-thumbnails">
     <button class="previous">&lt;</button>
     {{#each photos}}
-      <img width="50" height="50" src="{{filepicker url 50 50}}" data-photo-id="{{@index}}" class="photo-thumbnail">
+      <img width="50" height="50" src="{{filepicker url 50 50}}" data-photo-idx="{{@index}}" class="photo-thumbnail">
     {{/each}}
     <button class="next">&gt;</button>
   </section>

@@ -134,7 +134,7 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
-      db.restaurant_photos.find({ restaurant_id : +req.params.rid }, callback);
+      db.restaurant_photos.find({restaurant_id : +req.params.rid }, { order: 'priority' }, callback);
     }
   ];
 

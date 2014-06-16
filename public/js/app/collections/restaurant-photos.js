@@ -1,3 +1,7 @@
+/**
+ * Note: Paging is by collection _index_ not photo _id_
+ * because the photo ids are not necessarily in order!
+ */
 define(function(require, exports, module) {
   var utils  = require('utils');
   var RestaurantPhoto  = require('../models/restaurant-photo');
@@ -19,20 +23,23 @@ define(function(require, exports, module) {
       return this;
     }
 
-  , setCurrent: function(id) {
-      this.currentId = id;
+  , setCurrent: function(idx) {
+      this.currentIdx = idx;
+      return this.getCurrent();
     }
 
   , getCurrent: function() {
-      return this.get(this.currentId);
+      return this.at(this.currentIdx);
     }
 
   , next: function() {
-
+      this.setCurrent( (this.currentIdx + 1) % this.length );
+      return this.getCurrent();
     }
 
   , prev: function() {
-
+      this.setCurrent( (this.currentIdx - 1) % this.length );
+      return this.getCurrent();
     }
 
   , comparator: 'priority'

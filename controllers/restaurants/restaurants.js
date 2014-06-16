@@ -131,6 +131,10 @@ module.exports.get = function(req, res) {
 
     function(callback) {
       models.Address.findOne({where: { user_id: userId, is_default: true }}, callback);
+    },
+
+    function(callback) {
+      db.restaurant_photos.find({ restaurant_id : +req.params.rid }, callback);
     }
   ];
 
@@ -143,6 +147,7 @@ module.exports.get = function(req, res) {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
       defaultAddress:   results[2] ? results[2].toJSON() : null,
+      photos:           results[3],
       orderParams:      orderParams,
       layout:           'layout2' // TODO replace layout.hbs with layout2.hbs
     };

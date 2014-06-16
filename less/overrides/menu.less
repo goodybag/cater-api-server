@@ -417,3 +417,35 @@ legend {
   max-width: none;
 }
 
+/**
+ * Photo Gallery
+ */
+.photo-gallery .photo-img {
+  max-height: 500px;
+  display: table;
+  margin: 0 auto;
+}
+
+.photo-gallery .photo-name,
+.photo-gallery .photo-description { text-align: center; }
+
+.photo-gallery .photo-thumbnail {
+  padding: 5px;
+}
+
+.photo-gallery .photo-thumbnail:hover {
+  cursor: pointer;
+  background-color: @gray;
+}
+
+.photo-gallery .photo-thumbnail.active {
+  background-color: @gray-light;
+}
+
+.photo-gallery .previous {
+  float: left;
+}
+
+.photo-gallery .next {
+  float: right;
+}

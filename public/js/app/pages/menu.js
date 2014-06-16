@@ -14,6 +14,11 @@ define( function( require ){
   , MenuOrderParams:    require('app/views/menu-order-params-view')
   , MenuShareLink:      require('app/views/menu-share-link-view')
   , Menu:               require('app/views/menu-view')
+  , PhotoGallery:       require('app/views/restaurant/photo-gallery-view')
+  };
+
+  var Collections = {
+    RestaurantPhotos:   require('app/collections/restaurant-photos')
   };
 
   var page = {
@@ -27,6 +32,7 @@ define( function( require ){
       var user            = options.user;
       var editToken       = options.editToken;
       var baseUrl         = options.baseUrl;
+      var photos          = options.photos;
 
       analytics.page('Menu', {restaurant: restaurant.pick('name')});
 
@@ -113,6 +119,11 @@ define( function( require ){
       , model:        orderModel
       , restaurant:   restaurant
       , baseUrl:      baseUrl
+      });
+
+      var photoGalleryView = new Views.PhotoGallery({
+        el:           '.photo-gallery'
+      , photos:       new Collections.RestaurantPhotos(photos, { restaurant_id: restaurant.id })
       });
 
       $('.tag-tooltip').tooltip();

@@ -1,0 +1,18 @@
+<div class="panel photo-gallery">
+{{!-- {{{dump photos}}} --}}
+  <section class="selected-photo">
+    {{#with photos.[0]}}
+    <img class="photo-img" src="{{{filepicker url}}}">
+    {{#if name}}<p class="photo-name">{{name}}</p>{{/if}}
+    {{#if description}}<p class="photo-description">{{description}}</p>{{/if}}
+    {{/with}}
+  </section>
+
+  <section class="photo-thumbnails">
+    <button class="previous">&lt;</button>
+    {{#each photos}}
+      <img width="50" height="50" src="{{filepicker url 50 50}}" data-photo-id="{{@index}}" class="photo-thumbnail">
+    {{/each}}
+    <button class="next">&gt;</button>
+  </section>
+</div>

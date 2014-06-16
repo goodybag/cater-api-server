@@ -422,6 +422,7 @@ legend {
  */
 .photo-gallery .photo-img {
   max-height: 500px;
+  max-width: 600px;
   display: table;
   margin: 0 auto;
 }
@@ -431,21 +432,37 @@ legend {
 
 .photo-gallery .photo-thumbnail {
   padding: 5px;
-}
+  display: inline-block;
+  vertical-align: middle;
+ }
 
 .photo-gallery .photo-thumbnail:hover {
   cursor: pointer;
   background-color: @gray;
 }
 
-.photo-gallery .photo-thumbnail.active {
-  background-color: @gray-light;
+.photo-gallery .photo-thumbnail.active { background-color: @gray-light; }
+
+.photo-gallery .pager {
+  visibility: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  width: 10%;
+  height: 200px;
 }
 
-.photo-gallery .previous {
-  float: left;
+.photo-gallery .selected-photo:hover .pager,
+.photo-gallery .photo-thumbnails:hover .pager { visibility: visible; }
+
+.photo-gallery .photo-container {
+  display: inline-block;
+  vertical-align: middle;
+  width: 78%;
 }
 
-.photo-gallery .next {
-  float: right;
+// reset button styling
+.photo-gallery button {
+  border: 0;
+  background: none;
+  outline: 0;
 }

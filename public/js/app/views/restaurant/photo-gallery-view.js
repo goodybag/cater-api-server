@@ -56,7 +56,7 @@ define(function(require, exports, module) {
       this.$el.find('.photo-thumbnail').removeClass('active');
       this.$el.find('.photo-thumbnail[data-photo-idx="' + idx + '"]').addClass('active');
 
-      this.scrollToPhoto();
+      // this.scrollToPhoto();
     },
 
     scrollToPhoto: function(options) {

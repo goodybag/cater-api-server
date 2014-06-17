@@ -23,7 +23,7 @@ body.page-menu { padding-top: 70px; }
 .menu .nav-tabs > li > a {
   margin: 0;
   padding: 0;
-  color: #0074D9;
+  color: @brand-tertiary;
   border: none;
 
   &:hover {
@@ -32,7 +32,6 @@ body.page-menu { padding-top: 70px; }
 }
 
 .menu .nav-tabs > li.active {
-  font-weight: bold;
   margin-top: 8px;
 }
 
@@ -470,6 +469,10 @@ legend {
 .photo-gallery .selected-photo:hover .pager,
 .photo-gallery .photo-thumbnails:hover .pager { visibility: visible; }
 
+.photo-gallery .pager:hover {
+  color: @gray-darker;
+}
+
 .photo-gallery .photo-thumbnail {
   padding: 5px;
   display: inline-block;
@@ -490,5 +493,5 @@ legend {
   outline: 0;
 }
 
-@photo-gallery-photo-height: 400px;
+@photo-gallery-photo-height: 300px;
 @photo-gallery-thumbnail-height: 50px;

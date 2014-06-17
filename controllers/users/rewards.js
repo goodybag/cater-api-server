@@ -49,7 +49,7 @@ module.exports.list = function( req, res ){
 
   utils.async.parallel( tasks, function( error, results ){
     if ( error ) return res.error( error );
-
+    console.log(results.orders);
     res.locals.user.pendingPoints = results.pendingPoints;
     res.locals.pendingOrders      = utils.invoke( results.pendingOrders, 'toJSON' );
     res.locals.orders             = utils.invoke( results.orders, 'toJSON' );

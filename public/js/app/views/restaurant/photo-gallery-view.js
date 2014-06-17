@@ -6,6 +6,7 @@ define(function(require, exports, module) {
 
   var utils = require('utils');
   var notify = require('notify');
+  var Handlebars = require('handlebars');
 
   return module.exports = Backbone.View.extend({
 
@@ -49,7 +50,8 @@ define(function(require, exports, module) {
       console.log('change:'+photo.id);
       var idx = this.options.photos.indexOf(photo);
 
-      this.$img.attr('src', photo.get('url'));
+      var url = Handlebars.helpers.filepicker(photo.get('url'), 50, 50);
+      this.$img.attr('src', url);
       this.$name.text(photo.get('name'));
       this.$description.text(photo.get('description'));
 

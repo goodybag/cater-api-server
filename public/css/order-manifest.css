@@ -344,6 +344,10 @@ table {
     A set of useful LESS mixins
     More info at: http://lesselements.com
   ---------------------------------------------------*/
+.col-half {
+  float: left;
+  width: 50%;
+}
 .clearfix {
   *zoom: 1;
 }
@@ -355,6 +359,12 @@ table {
 }
 .clearfix:after {
   clear: both;
+}
+.pull-right {
+  float: right !important;
+}
+.pull-left {
+  float: left !important;
 }
 .hide {
   display: none!important;

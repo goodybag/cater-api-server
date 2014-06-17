@@ -420,6 +420,19 @@ legend {
 /**
  * Photo Gallery
  */
+
+.photo-gallery {
+  margin: 20px 0;
+}
+
+// wraps .photo-img
+.photo-gallery .photo-container {
+  display: inline-block;
+  vertical-align: middle;
+  width: 88%;
+  height: @photo-gallery-photo-height;
+}
+
 .photo-gallery .photo-img {
   height: 100%;
   max-width: 600px;
@@ -427,8 +440,35 @@ legend {
   margin: 0 auto;
 }
 
-.photo-gallery .photo-name,
+.photo-gallery .photo-name { 
+  text-align: center;
+  font-size: @font-size-large;
+  font-weight: @font-weight-bold;
+  margin: 10px;
+}
+
 .photo-gallery .photo-description { text-align: center; }
+
+.photo-gallery .pager {
+  visibility: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  width: 5%;
+}
+
+.photo-gallery .pager {
+  color: @gray-light;
+  font-size: 20px;
+}
+
+.photo-gallery .pager.prev { float: left; }
+.photo-gallery .pager.next { float: right; }
+
+.photo-gallery .selected-photo .pager { height: @photo-gallery-photo-height; }
+.photo-gallery .photo-thumbnails .pager { height: @photo-gallery-thumbnail-height; }
+
+.photo-gallery .selected-photo:hover .pager,
+.photo-gallery .photo-thumbnails:hover .pager { visibility: visible; }
 
 .photo-gallery .photo-thumbnail {
   padding: 5px;
@@ -443,27 +483,6 @@ legend {
 
 .photo-gallery .photo-thumbnail.active { background-color: @gray-light; }
 
-.photo-gallery .pager {
-  padding: 0;
-  visibility: hidden;
-  display: inline-block;
-  vertical-align: middle;
-  width: 5%;
-}
-
-.photo-gallery .selected-photo .pager { height: 200px; }
-.photo-gallery .photo-thumbnails .pager { height: 50px; }
-
-.photo-gallery .selected-photo:hover .pager,
-.photo-gallery .photo-thumbnails:hover .pager { visibility: visible; }
-
-.photo-gallery .photo-container {
-  display: inline-block;
-  vertical-align: middle;
-  width: 88%;
-  height: @photo-gallery-photo-height;
-}
-
 // reset button styling
 .photo-gallery button {
   border: 0;
@@ -472,3 +491,4 @@ legend {
 }
 
 @photo-gallery-photo-height: 400px;
+@photo-gallery-thumbnail-height: 50px;

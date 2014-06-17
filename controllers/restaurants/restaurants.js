@@ -139,7 +139,6 @@ module.exports.get = function(req, res) {
 
     var orderParams = req.query || {};
 
-
     var context = {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,

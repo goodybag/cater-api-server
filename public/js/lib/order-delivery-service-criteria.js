@@ -1,3 +1,15 @@
+/**
+ * Order delivery service criteria
+ *
+ * An array of functions of the following schema
+ *
+ * Boolean function( Object order ){}
+ *
+ * The function should describe a single criterion for whether
+ * or not an order should be picked up by a delivery service.
+ * Returns true for delivery service, false for no
+ */
+
 if ( typeof module === "object" && module && typeof module.exports === "object" ){
   var isNode = true, define = function( factory ){
     module.exports = factory( require, exports, module );
@@ -8,21 +20,70 @@ define(function( require, exports, module ){
   var moment = require('moment-timezone');
   var utils = require('utils');
 
-  return utils.map([
-    // Is dollar amount too low?
-    function( order ){
+  exports = {
+    criteria: []
+
+  , check: function( order ){
+      return utils.some( exports.criteria, function( criterion ){
+        return criterion.fn( order );
+      });
+    }
+
+  , add: function( criterion ){
+      utils.enforceRequired( criterion, [
+        'name', 'fn'
+      ]);
+
+      criterion = utils.defaults( criterion, {
+        requirements: []
+      });
+
+      // Simply return false if the required fields are not present
+      criterion.fn = utils.wrap( criterion.fn, function( fn, order ){
+        if ( !utils.hasPropsDeep( order, criterion.requirements ) ){
+          return false;
+        }
+
+        return fn( order );
+      });
+
+      exports.criteria.push( criterion );
+    }
+  };
+
+  // Is dollar amount too low?
+  exports.add({
+    name: 'dollar_amount'
+  , requirements: [
+      'sub_total'
+    , 'restaurant.delivery_service_order_amount_threshold'
+    ]
+  , fn: function( order ){
       return order.sub_total < order.restaurant.delivery_service_order_amount_threshold;
     }
+  });
 
-    // Is head count too low?
-  , function( order ){
-      if ( typeof order.guests !== 'number' ) return false;
-
+  // Is head count too low?
+  exports.add({
+    name: 'head_count'
+  , requirements: [
+      'guests'
+    , 'restaurant.head_count_delivery_service_threshold'
+    ]
+  , fn: function( order ){
       return order.guests < order.restaurant.head_count_delivery_service_threshold;
     }
+  });
 
-    // Delivery zips
-  , function( order ){
+  // Delivery zips
+  exports.add({
+    name: 'delivery_zips'
+  , requirements: [
+      'zip'
+    , 'restaurant.delivery_zips'
+    , 'restaurant.delivery_zip_groups'
+    ]
+  , fn: function( order ){
       // Was not in delivery_zips
       if ( order.restaurant.delivery_zips.indexOf( order.zip ) === -1 ){
         // But if it was in zip_groups, then that's from delivery service zips
@@ -33,9 +94,18 @@ define(function( require, exports, module ){
 
       return false;
     }
+  });
 
-    // Delivery times
-  , function( order ){
+  // Delivery times
+  exports.add({
+    name: 'delivery_times'
+  , requirements: [
+      'datetime'
+    , 'restaurant.delivery_times'
+    , 'restaurant.hours_of_operation'
+    , 'restaurant.region.lead_time_modifier'
+    ]
+  , fn: function( order ){
       var date = order.datetime;
 
       if ( !moment( date ).isValid() ) return false;
@@ -63,9 +133,19 @@ define(function( require, exports, module ){
         return time >= openClose[0] && time <= openClose[1]
       }).value();
     }
+  });
 
-    // Lead times
-  , function( order ){
+  // Lead times
+  exports.add({
+    name: 'lead_times'
+  , requirements: [
+      'datetime'
+    , 'restaurant.lead_times'
+    , 'restaurant.pickup_lead_times'
+    , 'restaurant.region.timezone'
+    , 'restaurant.region.lead_time_modifier'
+    ]
+  , fn: function( order ){
       var date = order.datetime;
 
       if ( !moment( date ).isValid() ) return false;
@@ -92,34 +172,12 @@ define(function( require, exports, module ){
 
       if ( isDeliveryService ){
         leadTime += moment.duration( restaurant.region.lead_time_modifier ).asMinutes();
-        console.log(minutes, leadTime);
         return minutes >= leadTime;
       } else {
         return !(minutes >= leadTime);
       }
     }
-  ], function( fn ){
-    return function( order ){
-      utils.enforceRequired( order, [
-        'restaurant', 'sub_total', 'guests', 'zip', 'datetime'
-      ]);
+  })
 
-      utils.enforceRequired( order.restaurant, [
-        'delivery_service_order_amount_threshold'
-      , 'head_count_delivery_service_threshold'
-      , 'delivery_zips'
-      , 'delivery_zip_groups'
-      , 'lead_times'
-      , 'pickup_lead_times'
-      , 'region'
-      ]);
-
-      utils.enforceRequired( order.restaurant.region, [
-        'timezone'
-      , 'lead_time_modifier'
-      ]);
-
-      return fn( order );
-    }
-  });
+  return exports;
 });

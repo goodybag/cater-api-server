@@ -184,6 +184,7 @@ define(function(require, exports, module) {
       if (key == null) return this;
 
       // TODO: same field names between order and address
+      // See comment below
       var addressFields = _.keys(_.result(Address, 'schema').properties);
       if (typeof key === 'object') {
         attrs = key;
@@ -192,7 +193,8 @@ define(function(require, exports, module) {
         (attrs = {})[key] = val
 
       var addr = _.pick(attrs, addressFields);
-      attrs = _.omit(attrs, addressFields);
+      // Why do we take out the address fields from the top-level attributes?
+      // attrs = _.omit(attrs, addressFields);
 
       if (this.address != null)
         this.address.set(addr, options);
@@ -290,6 +292,7 @@ define(function(require, exports, module) {
       obj.orderItems = this.orderItems.toJSON();
       obj.restaurant = this.restaurant.toJSON();
       _.extend(obj, this.address.toJSON());
+      obj.is_delivery_service = this.shouldBeDeliveryService();
       return obj;
     },
 
@@ -411,11 +414,11 @@ define(function(require, exports, module) {
     },
 
     shouldBeDeliveryService: function(){
-      var order = this.toJSON();
-
-      return _.some( orderDeliveryServiceCriteria, function( fn ){
-        return fn( order );
+      var order = _.extend( {}, this.attributes, {
+        restaurant: this.restaurant.toJSON()
       });
+
+      return orderDeliveryServiceCriteria.check( order );
     }
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']

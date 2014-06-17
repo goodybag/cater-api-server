@@ -3,12 +3,6 @@ var moment    = require('moment-timezone');
 var utils     = require('../../utils');
 var criteria  = require('../../public/js/lib/order-delivery-service-criteria');
 
-function testCriteria( order ){
-  return criteria.some( function( fn ){
-    return fn( order );
-  });
-}
-
 describe ('Order Delivery Service Criteria', function(){
   var now = moment().tz('America/Chicago');
 
@@ -66,7 +60,7 @@ describe ('Order Delivery Service Criteria', function(){
   it ('should not be delivery service', function(){
     var order = defaultOrder;
 
-    assert( !testCriteria( order ) );
+    assert( !criteria.check( order ) );
   });
 
   it ('should be delivery service because dollar amount', function(){
@@ -77,7 +71,7 @@ describe ('Order Delivery Service Criteria', function(){
       }
     });
 
-    assert( testCriteria( order ) );
+    assert( criteria.check( order ) );
   });
 
   it ('should be delivery service because head count', function(){
@@ -88,7 +82,7 @@ describe ('Order Delivery Service Criteria', function(){
       }
     });
 
-    assert( testCriteria( order ) );
+    assert( criteria.check( order ) );
   });
 
   it ('should be delivery service because delivery zip', function(){
@@ -99,7 +93,7 @@ describe ('Order Delivery Service Criteria', function(){
       }
     });
 
-    assert( testCriteria( order ) );
+    assert( criteria.check( order ) );
   });
 
   it ('should be delivery service because delivery time', function(){
@@ -117,7 +111,7 @@ describe ('Order Delivery Service Criteria', function(){
       }
     });
 
-    assert( testCriteria( order ) );
+    assert( criteria.check( order ) );
   });
 
   it ('should be delivery service because lead time', function(){
@@ -131,6 +125,6 @@ describe ('Order Delivery Service Criteria', function(){
       }
     });
 
-    assert( testCriteria( order ) );
+    assert( criteria.check( order ) );
   });
 });

@@ -1,20 +1,20 @@
 <div class="panel panel-no-padding photo-gallery">
 {{!-- {{{dump photos}}} --}}
   <section class="selected-photo">
-    <button class="pager previous">&lt;</button>
+    {{#with photos.[0]}}
+    <button class="pager previous">◀</button>
     <div class="photo-container">
-      {{#with photos.[0]}}
       <img class="photo-img" src="{{{filepicker url}}}">
-      {{#if name}}<p class="photo-name">{{name}}</p>{{/if}}
-      {{#if description}}<p class="photo-description">{{description}}</p>{{/if}}
-      {{/with}}
     </div>
-    <button class="pager next">&gt;</button>
+    <button class="pager next">▶</button>
+    {{#if name}}<p class="photo-name">{{name}}</p>{{/if}}
+    {{#if description}}<p class="photo-description">{{description}}</p>{{/if}}
+    {{/with}}
   </section>
 
   <section class="photo-thumbnails">
-    <button class="pager previous">&lt;</button>
-    {{#each photos}}<img width="50" height="50" src="{{filepicker url 50 50}}" data-photo-idx="{{@index}}" class="photo-thumbnail">{{/each}}
-    <button class="pager next">&gt;</button>
+    <button class="pager previous">◀</button>
+    {{#each photos}}<img width="50" height="50" src="{{filepicker url 50 50}}" data-photo-idx="{{@index}}" class="photo-thumbnail {{#eq @index 0}}active{{/eq}}">{{/each}}
+    <button class="pager next">▶</button>
   </section>
 </div>

@@ -421,7 +421,7 @@ legend {
  * Photo Gallery
  */
 .photo-gallery .photo-img {
-  max-height: 500px;
+  height: 100%;
   max-width: 600px;
   display: table;
   margin: 0 auto;
@@ -444,12 +444,15 @@ legend {
 .photo-gallery .photo-thumbnail.active { background-color: @gray-light; }
 
 .photo-gallery .pager {
+  padding: 0;
   visibility: hidden;
   display: inline-block;
   vertical-align: middle;
-  width: 10%;
-  height: 200px;
+  width: 5%;
 }
+
+.photo-gallery .selected-photo .pager { height: 200px; }
+.photo-gallery .photo-thumbnails .pager { height: 50px; }
 
 .photo-gallery .selected-photo:hover .pager,
 .photo-gallery .photo-thumbnails:hover .pager { visibility: visible; }
@@ -457,7 +460,8 @@ legend {
 .photo-gallery .photo-container {
   display: inline-block;
   vertical-align: middle;
-  width: 78%;
+  width: 88%;
+  height: @photo-gallery-photo-height;
 }
 
 // reset button styling
@@ -466,3 +470,5 @@ legend {
   background: none;
   outline: 0;
 }
+
+@photo-gallery-photo-height: 400px;

@@ -56,13 +56,12 @@ define(function(require, exports, module) {
       this.$el.find('.photo-thumbnail').removeClass('active');
       this.$el.find('.photo-thumbnail[data-photo-idx="' + idx + '"]').addClass('active');
 
-      // this.scrollToPhoto();
+      this.scrollTop();
     },
 
-    scrollToPhoto: function(options) {
+    scrollTop: function(options) {
       options = options || {};
-      options.offset = options.offset || 56;
-      options.y = options.y || this.$img.offset().top - options.offset;
+      options.y = options.y || 0;
       options.duration = options.duration || 500;
       $('html, body').animate({ scrollTop: options.y}, options.duration);
     },

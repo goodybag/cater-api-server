@@ -1,0 +1,127 @@
+#main, body {
+  background-color: white;
+  background: white;
+}
+
+/**
+ * Container
+ */
+
+.faqs-container {
+  color: #432012;
+}
+
+h1.faq-header {
+  margin-bottom: 60px;
+  text-align: center;
+  font-size: 48px;
+  color: #432012;
+  font-weight: 500;
+  font-family: 'Proxima Nova';
+}
+
+h2.faq-header {
+  font-size: 20px;
+  color: #432012;
+  font-weight: 500;
+  font-family: 'Proxima Nova';
+}
+/**
+ * Contact
+ */
+
+section {
+  border-top: 1px solid #432012;
+  margin: 10px 0;
+}
+
+.contact-header {
+  margin: 20px 0 10px 0;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.semibold {
+  font-weight: 500;
+}
+
+/**
+ * Banner
+ */
+.faqs-banner {
+  background-image: url('../img/faqs-background.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-y: -465px;
+  background-position-x: 14%;
+}
+
+/**
+ * Social network icons
+ */
+
+.contact-us-container ul.social-connect {
+  display: inline-block;
+  list-style: none;
+  padding-left: 0;
+}
+
+.contact-us-container ul.social-connect li {
+  display: inline-block;
+  padding-left: 20px;
+}
+
+/**
+ * Icons
+ */
+
+.contact-us-container i {
+  color: #DC0500;
+}
+
+/**
+ * listing
+ */
+
+.contact-us-container .icons-ul {
+  margin-left: -18px;
+}
+
+/**
+ * Header
+ */
+
+.contact-us-container .contact-us-header {
+  font-family: 'Proxima Nova';
+  font-weight: 300;
+}
+
+/**
+ * Contact form
+ */
+
+.contact-us-container .contact-form {
+  margin-top: 20px;
+}
+
+ol.faq-list {
+  list-style-position: inside;
+  padding: 0;
+  /*margin: 20;*/
+}
+
+
+ol.faq-list li {
+  position: relative;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+ol.faq-list li > p {
+  font-weight: 300;
+}
+
+ol.faq-index li a {
+  position: absolute;
+  left: 5%;
+}

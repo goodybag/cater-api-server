@@ -891,6 +891,8 @@ module.exports.register = function(app) {
 
   app.post('/contact-us', controllers.contactUs.sendSupportEmail);
 
+  app.get('/faqs', controllers.statics.faqs);
+
   app.get('/legal', controllers.statics.legal);
 
   app.get('/privacy', controllers.statics.privacy);

@@ -50,16 +50,12 @@ h2.faq-header {
   margin: 10px 0;
 }
 
-.page-faqs section.no-border {
-  border: none;
-}
+.page-faqs section.no-border { border: none; }
 
 @media (max-width: 768px){
   .page-faqs section {
     margin: 10px 10px;
   }
-
-
 }
 
 /**
@@ -125,7 +121,5 @@ ol.faq-index li > a {
     padding-left: 2px;
   }
 
-  .contact-header > strong {
-    display: block;
-  }
+  .contact-header > strong { display: block; }
 }

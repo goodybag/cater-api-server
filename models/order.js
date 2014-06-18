@@ -895,9 +895,25 @@ module.exports = Model.extend({
     , "joins": {
         rlt: {
           type: 'left'
-        , target: 'restaurant_lead_times'
         , on: {
             restaurant_id: '$orders.restaurant_id$'
+          }
+        , target: {
+            type: 'union'
+          , queries: [
+              { type:     'select'
+              , table:    'restaurant_lead_times'
+              , distinct: true
+              , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
+              , where:    { restaurant_id: '$orders.restaurant_id$' }
+              }
+            , { type:     'select'
+              , table:    'restaurant_pickup_lead_times'
+              , distinct: true
+              , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
+              , where:    { restaurant_id: '$orders.restaurant_id$' }
+              }
+            ]
           }
         }
       }

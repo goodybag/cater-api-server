@@ -851,7 +851,12 @@ module.exports = Model.extend({
 
     var unacceptable = [];
     // check zip
-    query.with.push( Restaurant.getDeliveryZipsQuery({ with_delivery_services: true }) );
+    query.with.push(
+      Restaurant.getDeliveryZipsQuery({
+        name: 'all_delivery_zips'
+      , with_delivery_services: true
+      })
+    );
     query.joins.zips = {
       type: 'left'
     , alias: 'zips'
@@ -864,7 +869,7 @@ module.exports = Model.extend({
 
     var caseIsBadZip = '(CASE '
       + ' WHEN (orders.zip IS NULL) THEN NULL'
-      + ' WHEN (zips.zip IS NULL) THEN TRUE'
+      + ' WHEN (zips.to IS NULL) THEN TRUE'
       + ' ELSE FALSE'
       + ' END)'
     ;

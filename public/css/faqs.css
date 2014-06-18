@@ -21,7 +21,7 @@
 
 .faqs-container { 
   color: #432012; 
-  font-weight: 500;
+  font-weight: 300;
   font-size: 15px;
 }
 
@@ -78,6 +78,8 @@ h2.faq-header:first-child {
 
 .contact-header > strong { font-weight: 500; }
 
+.contact-us-info { margin-bottom: 10px; }
+
 .contact-us-info i {
   display: inline-block;
   width: 16px;
@@ -96,10 +98,12 @@ ol.faq-index {
   font-size: 15px;
   list-style-position: inside;
   padding: 0;
+  font-weight: 700;
 }
 
 ol.faq-index li > a {
   position: absolute;
+  font-weight: 300;
   left: 4%;
 }
 

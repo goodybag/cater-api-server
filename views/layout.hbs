@@ -215,6 +215,13 @@
     </script>
     {{/if}}
 
+    {{#if isAdmin}}
+    <script>
+      mixpanel.register({ "$ignore": "true" });
+      console.log('what');
+    </script>
+    {{/if}}
+
     {{{block "views"}}}
     {{{block "scripts"}}}
   </body>

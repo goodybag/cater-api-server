@@ -57,6 +57,12 @@
     </script>
     {{/if}}
 
+    {{#if isAdmin}}
+    <script>
+      mixpanel.register({ "$ignore": "true" });
+    </script>
+    {{/if}}
+
     {{#unless config.isDev}}
     <script src="{{cdn (format 'dist/<%= version %>/landing.js' pkg)}}"></script>
     {{else}}

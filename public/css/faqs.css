@@ -19,7 +19,11 @@
  * Container
  */
 
-.faqs-container { color: #432012; }
+.faqs-container { 
+  color: #432012; 
+  font-weight: 500;
+  font-size: 15px;
+}
 
 /**
  * Headers
@@ -37,7 +41,6 @@ h1.faq-header {
 h2.faq-header {
   font-size: 20px;
   color: #432012;
-  font-weight: 500;
   font-family: 'Proxima Nova';
 }
 
@@ -83,7 +86,6 @@ h2.faq-header:first-child {
   font-size: 16px;
 }
 
-.contact-us-info { font-weight: 500; }
 .contact-us-info strong { font-weight: 700; }
 
 /**
@@ -129,8 +131,4 @@ ol.faq-index li > a {
 
 .faq-list strong {
   font-weight: 700; 
-}
-
-.faq-list p {
-  font-weight: 500;
 }

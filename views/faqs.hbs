@@ -8,7 +8,6 @@
 {{/extend}}
 
 <div class="page page-faqs container faqs-container">
-
   <div class="row">
     <div class="col-md-10 col-md-offset-1">
       <div class="row">
@@ -50,50 +49,118 @@
             <li><a href="#26">How do I remove a credit or debit card from my account?</a></li>
             <li><a href="#27">I used the wrong card to pay for my order, how do I change it?</a></li>
           </ol>
-          <section>
-            <div class="contact-header"><span class="semibold">Don't see your question?</span> Please get in touch with anything else!</div>
+          <section class="contact-us">
+            <div class="contact-header"><strong>Don't see your question?</strong> Please get in touch with anything else!</div>
 
-            <dl>
-              <dt><i data-icon="gb-phone"></i> Phone </dt>
-              <dd>512-667-4224</dd>
-              <dt><i data-icon="gb-email"></i></dt>
-              <dd>support@goodybag.com</dd>
-              <dt><i data-icon="gb-chat"></i></dt>
-            </dl>
+            <div class="contact-us-info">
+              <i class="icon-li icon-phone"></i>
+              <strong>Phone</strong> {{ phoneNumber config.phone.support }}
+            </div>
+            <div class="contact-us-info">
+              <i class="icon-li icon-envelope"></i>
+              <strong>Mail</strong> {{{ mailto config.emails.support }}}
+            </div>
+            <div class="contact-us-info">
+              <i class="icon-li icon-comments"></i>
+              <strong>Live Chat</strong>
+            </div>
           </section>
 
+        <ol class="faq-list">
           <section>
             <h2 class="faq-header">General</h2>
-            <ol class="faq-list">
-              <li id="1">What is Goodybag?
-                <p>Goodybag is a site for ordering catering for the office. We feature 100+ restaurants and have created a super easy process that lets companies search for and order food delivery for lunch, meetings, and events!</p>
-              </li>
-              <li id="2">How much does it cost to use?
-                <p>It's free!</p>
-              </li>
-              <li id="3">Who makes the food?
-                <p>We offer catering options from over 100 quality restaurants, who deliver their food right to your office.</p>
-              </li>
-              <li id="4">Who delivers the food, the restaurant or Goodybag?
-                <p>All restaurants on our site are responsible for delivering the food.</p>
-              </li>
-              <li id="5">Do you deliver to my zip code?
-                <p>A lot of our restaurants can deliver to most of the greater Austin area. To know exactly what restaurants can deliver to your zip, enter your zip code in the "Find Catering" bar located above the restaurant listing <a href="/restaurants">here</a>.</p>
-              </li>
-              <li id="6">How much is the delivery fee?
-                <p>The delivery fee is different for every restaurant and zip code.</p>
-              </li>
-              <li id="7">Do you have a rewards program?
-                <p>Yes! Read more about it here.</p>
-              </li>
-              <li id="8">How do I create an account?
-                <p>Just go here and enter your info.</p>
-              </li>
-              <li id="9">How do I change my password?
-                <p>If you're logged in, just go to your Account Settings, enter your new password and click "Save." If you forgot your password, go here.</p>
-              </li>
-            </ol>
+            <li id="1"><span>What is Goodybag?</span>
+              <p>Goodybag is a site for ordering catering for the office. We feature 100+ restaurants and have created a super easy process that lets companies search for and order food delivery for lunch, meetings, and events!</p>
+            </li>
+            <li id="2"><span>How much does it cost to use?</span>
+              <p>It's free!</p>
+            </li>
+            <li id="3"><span>Who makes the food?</span>
+              <p>We offer catering options from over 100 quality restaurants, who deliver their food right to your office.</p>
+            </li>
+            <li id="4"><span>Who delivers the food, the restaurant or Goodybag?</span>
+              <p>All restaurants on our site are responsible for delivering the food.</p>
+            </li>
+            <li id="5"><span>Do you deliver to my zip code?</span>
+              <p>A lot of our restaurants can deliver to most of the greater Austin area. To know exactly what restaurants can deliver to your zip, enter your zip code in the "Find Catering" bar located above the restaurant listing <a href="/restaurants">here</a>.</p>
+            </li>
+            <li id="6"><span>How much is the delivery fee?</span>
+              <p>The delivery fee is different for every restaurant and zip code.</p>
+            </li>
+            <li id="7"><span>Do you have a rewards program?</span>
+              <p>Yes! Read more about it here.</p>
+            </li>
+            <li id="8"><span>How do I create an account?</span>
+              <p>Just go here and enter your info.</p>
+            </li>
+            <li id="9"><span>How do I change my password?</span>
+              <p>If you're logged in, just go to your Account Settings, enter your new password and click "Save." If you forgot your password, go here.</p>
+            </li>
           </section>
+          <section>
+            <h2 class="faq-header">Orders</h2>
+            <li id="10"><span>I need food ASAP! Can you help?</span>
+              <p>We sure can! Give us a call (512-270-6555) or click the live chat tab on the bottom right corner of our site and tell us what you need and when you need it. We'll find your best bets and can even place the order for you! Of course, the more advanced notice and flexibility you have the better, as our restaurants are very busy at peak meal times.</p>
+            </li>
+            <li id="11"><span>How do I change my order after it's been submitted?</span>
+              <p>Contact us and we’ll help make any changes you need. We’re available via phone (512-270-6555), email (support@goodybag.com), or the live chat tab on the bottom right corner of our site.</p>
+            </li>
+            <li id="12"><span>How do I view my order after it's been submitted?</span>
+              <p>Go to “My Orders” to see all your orders. You can view them as either a calendar or a list.  The list will have your most recent order at the top.</p>
+            </li>
+            <li id="13"><span>Can I re-order an old order for a later date?</span>
+              <p>Yep! Just find your old order in your “My Orders” list and click "Order Again." A new order with all the same info will be created, and you just have to update the date and time!</p>
+            </li>
+            <li id="14"><span>Can I share an order with others?</span>
+              <p>Yes. Once you've selected a restaurant and entered the zip, date, time, and guest count, click on "Share this order" (located on the righthand side of the screen). A link will appear that you can send out to any employees who want to pick their own meals. Once everyone has added what they want, you are in charge of submitting the order.</p>
+            </li>
+            <li id="15"><span>How do I cancel my order?</span>
+              <p>If you need to cancel an order, call us at 512-270-6555. We understand there are last minute complications and changes, but please try and cancel as far in advance as possible! Some of our restaurants may not be able to cancel if it is too close to the delivery time. </p>
+            </li>
+            <li id="16"><span>Can I give a tip?</span>
+              <p>You can add a tip during the checkout process or contact us to add one on after your order has been delivered.</p>
+            </li>
+            <li id="17"><span>Something was wrong with my order, what do I do?</span>
+              <p>If you aren't completely satisfied with your order, please let us know immediately and we can find a solution. We will contact the restaurant and/or can adjust the billing info if necessary.</p>
+            </li>
+          </section>
+          <section>
+            <h2 class="faq-header">Food and Restaurants</h2>
+            <li id="18"><span>Any suggestions of restaurants I should try?</span>
+              <p>Of course! Call us (512-270-6555) or use the live chat tab on the bottom right corner of the screen and we'll give you our recommendations based on personal experience and user feedback.</p>
+            </li>
+            <li id="19"><span>Is the food for groups or as individual dishes?</span>
+              <p>Both! We feature restaurants that have both large catering dishes and servings, as well as individual boxed lunches and meals.</p>
+            </li>
+            <li id="20"><span>Will caterers bring utensils, plates, napkins, etc.?</span>
+              <p>It depends. Most of our caterers will bring these things automatically, but if you absolutely need them, then include a note under the "Special Instructions" section when you're checking out just to be sure! You will never be charged extra for them.</p>
+            </li>
+            <li id="21"><span>Why is the full menu not listed for some restaurants?</span>
+              <p>We meet with each restaurant individually to discuss the ideal menu for our site. We select menu items for a variety of reasons -- how well they travel, how much prep work they require, etc. That being said, if there are ever items you want but don't see on the menu, let us know and we can look into adding them!</p>
+            </li>
+            <li id="22"><span>Is this drop off or full service?</span>
+              <p>This depends on the caterer. All will deliver to you, but only some provide setup and servers. If you're looking specifically for a full service caterer, please contact us and we'll help you find the perfect one for your event!</p>
+            </li>
+            <li id="23"><span>Can I get a tasting of a restaurant I'm unfamiliar with?</span>
+              <p>Yes! If there's a restaurant you want to try out before placing a full order there, we can arrange for them to bring you food for a tasting. If you'd rather try out a bunch of different places, let us know any restrictions or preferences at your office and we can come up with a list of tastings options.</p>
+            </li>
+            <li id="24"><span>I don't see my favorite restaurant, can you add it?</span>
+              <p>Let us know any favorites and we'll do our best to get them on board :)</p>
+            </li>
+          </section>
+          <section>
+            <h2 class="faq-header">Payments</h2>
+            <li id="25"><span>How do I pay for orders?</span>
+              <p>You can pay by either credit card or invoicing.  If you use a credit card, you will be prompted to enter your card info at checkout.  If you want to get invoices instead, we'll send you a cumulative invoice at the end of every month.</p>
+            </li>
+            <li id="26"><span>How do I remove a credit or debit card from my account?</span>
+              <p>Go to your Account Settings and click “Manage Credit Cards.” Click the “Remove” button under the credit card you wish to remove from your account.</p>
+            </li>
+            <li id="27"><span>I used the wrong card to pay for my order, how do I change it?</span>
+              <p>Contact us if you want to change the card you used for an order that you've already submitted. For any order, your card will not be charged until the day of delivery.</p>
+            </li>
+          </section>
+        </ol>
       </div>
     </div>
 

@@ -4,12 +4,26 @@
 }
 
 /**
+ * Banner
+ */
+
+.faqs-banner {
+  background-image: url('../img/faqs-background.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-y: -465px;
+  background-position-x: 14%;
+}
+
+/**
  * Container
  */
 
-.faqs-container {
-  color: #432012;
-}
+.faqs-container { color: #432012; }
+
+/**
+ * Headers
+ */
 
 h1.faq-header {
   margin-bottom: 60px;
@@ -26,102 +40,66 @@ h2.faq-header {
   font-weight: 500;
   font-family: 'Proxima Nova';
 }
+
 /**
- * Contact
+ * Sections
  */
 
-section {
+.page-faqs section {
   border-top: 1px solid #432012;
   margin: 10px 0;
 }
+
+/**
+ * Contact us section
+ */
+
+.contact-us { padding-bottom: 35px; }
 
 .contact-header {
   margin: 20px 0 10px 0;
   font-size: 20px;
   font-weight: 300;
-}
-
-.semibold {
-  font-weight: 500;
-}
-
-/**
- * Banner
- */
-.faqs-banner {
-  background-image: url('../img/faqs-background.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position-y: -465px;
-  background-position-x: 14%;
-}
-
-/**
- * Social network icons
- */
-
-.contact-us-container ul.social-connect {
-  display: inline-block;
-  list-style: none;
-  padding-left: 0;
-}
-
-.contact-us-container ul.social-connect li {
-  display: inline-block;
-  padding-left: 20px;
-}
-
-/**
- * Icons
- */
-
-.contact-us-container i {
-  color: #DC0500;
-}
-
-/**
- * listing
- */
-
-.contact-us-container .icons-ul {
-  margin-left: -18px;
-}
-
-/**
- * Header
- */
-
-.contact-us-container .contact-us-header {
   font-family: 'Proxima Nova';
-  font-weight: 300;
 }
+
+.contact-header > strong { font-weight: 500; }
+
+.contact-us-info i {
+  color: #DC0500;
+  margin: 0 5px;
+  width: 14px;
+  display: inline-block;
+}
+
+.contact-us-info { font-weight: 300; }
+.contact-us-info strong { font-weight: 500; }
 
 /**
- * Contact form
+ * Order Lists
  */
-
-.contact-us-container .contact-form {
-  margin-top: 20px;
-}
 
 ol.faq-list {
-  list-style-position: inside;
   padding: 0;
-  /*margin: 20;*/
+  list-style-position: inside;
 }
 
-
 ol.faq-list li {
-  position: relative;
   font-size: 15px;
   font-weight: 500;
 }
 
-ol.faq-list li > p {
-  font-weight: 300;
+ol.faq-list li span { margin-left: 5px; }
+
+ol.faq-list li > p { font-weight: 300; }
+
+ol.faq-index {
+  list-style-position: inside;
+  padding: 0;
 }
 
-ol.faq-index li a {
+ol.faq-index li > a {
   position: absolute;
   left: 5%;
 }
+

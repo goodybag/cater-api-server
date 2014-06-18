@@ -135,6 +135,8 @@ module.exports.get = function(req, res) {
       orderParams:      orderParams
     }
 
+    context.order.user_id = '' + context.order.user_id;
+    context.order.restaurant_id = '' + context.order.restaurant_id;
     context.order.restaurant = context.restaurant;
 
     // Build a histogram of menus vs freq for labeling

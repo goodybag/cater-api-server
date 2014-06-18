@@ -50,6 +50,18 @@ h2.faq-header {
   margin: 10px 0;
 }
 
+.page-faqs section.no-border {
+  border: none;
+}
+
+@media (max-width: 768px){
+  .page-faqs section {
+    margin: 10px 10px;
+  }
+
+
+}
+
 /**
  * Contact us section
  */
@@ -80,20 +92,18 @@ h2.faq-header {
  */
 
 ol.faq-list {
+  font-size: 15px;
+  font-weight: 500;
   padding: 0;
   list-style-position: inside;
 }
 
-ol.faq-list li {
-  font-size: 15px;
-  font-weight: 500;
-}
-
-ol.faq-list li span { margin-left: 5px; }
+ol.faq-list li > span { margin-left: 5px; }
 
 ol.faq-list li > p { font-weight: 300; }
 
 ol.faq-index {
+  font-size: 15px;
   list-style-position: inside;
   padding: 0;
 }
@@ -103,3 +113,19 @@ ol.faq-index li > a {
   left: 5%;
 }
 
+@media (max-width: 768px){
+  ol.faq-index {
+    font-size: 15px;
+    padding: 0;
+  }
+
+  ol.faq-index li > a {
+    position: inherit;
+    list-style-position: outside;
+    padding-left: 2px;
+  }
+
+  .contact-header > strong {
+    display: block;
+  }
+}

@@ -41,16 +41,20 @@ h2.faq-header {
   font-family: 'Proxima Nova';
 }
 
+h2.faq-header:first-child {
+  margin-top: 0;
+}
+
 /**
  * Sections
  */
 
 .page-faqs section {
   border-top: 1px solid #432012;
-  margin: 10px 0;
+  padding: 20px 0 40px;
 }
 
-.page-faqs section.no-border { border: none; }
+.page-faqs section:nth-of-type(1) { border: none; }
 
 @media (max-width: 768px){
   .page-faqs section {
@@ -62,10 +66,8 @@ h2.faq-header {
  * Contact us section
  */
 
-.contact-us { padding-bottom: 35px; }
-
 .contact-header {
-  margin: 20px 0 10px 0;
+  margin-bottom: 10px;
   font-size: 20px;
   font-weight: 300;
   font-family: 'Proxima Nova';
@@ -74,29 +76,19 @@ h2.faq-header {
 .contact-header > strong { font-weight: 500; }
 
 .contact-us-info i {
-  color: #DC0500;
-  margin: 0 5px;
-  width: 14px;
   display: inline-block;
+  width: 16px;
+  margin: 0 5px;
+  color: #DC0500;
+  font-size: 16px;
 }
 
 .contact-us-info { font-weight: 300; }
 .contact-us-info strong { font-weight: 500; }
 
 /**
- * Order Lists
+ * Faq Lists
  */
-
-ol.faq-list {
-  font-size: 15px;
-  font-weight: 500;
-  padding: 0;
-  list-style-position: inside;
-}
-
-ol.faq-list li > span { margin-left: 5px; }
-
-ol.faq-list li > p { font-weight: 300; }
 
 ol.faq-index {
   font-size: 15px;
@@ -106,7 +98,7 @@ ol.faq-index {
 
 ol.faq-index li > a {
   position: absolute;
-  left: 5%;
+  left: 4%;
 }
 
 @media (max-width: 768px){
@@ -128,8 +120,17 @@ ol.faq-index li > a {
   counter-reset: faq 0;
 }
 
-section.faq-list div:before {
+.faq-list strong:before {
   counter-increment: faq;
   content: counter(faq) ".";
   padding-right: 10px;
+  font-weight: 500; 
+}
+
+.faq-list strong {
+  font-weight: 500; 
+}
+
+.faq-list p {
+  font-weight: 300;
 }

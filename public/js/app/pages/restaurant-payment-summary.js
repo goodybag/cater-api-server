@@ -34,7 +34,7 @@ define(function(require){
   });
 
   items.fetch();
-  orders.fetch();
+  orders.fetch({ data: { limit: 'all' } });
 
   return Object.create({
     init: function(){

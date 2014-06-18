@@ -1017,7 +1017,7 @@ module.exports.register = function(app) {
   );
 
   app.get('/api/restaurants/:restaurant_id/orders'
-  , m.pagination()
+  , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
   , controllers.restaurants.orders.listJSON
   );
@@ -1049,7 +1049,7 @@ module.exports.register = function(app) {
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries'
-  , m.pagination()
+  , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
   , m.find( db.payment_summaries )
   );

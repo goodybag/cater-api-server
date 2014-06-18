@@ -92,14 +92,25 @@ module.exports.get = function(req, res) {
 
   var userId = req.creatorId || req.session.user.id;
   var tasks = [
-    !userId ? utils.noop.async() : db.orders.findOne.bind(
-      db.orders
-    , { restaurant_id: req.params.rid
-      , user_id: userId
-      , 'orders.status': 'pending'
-      }
-    , { many: [{ table: 'order_items', alias: 'orderItems' }] }
-    ),
+    function(callback) {
+      if (!userId) return callback(null, null);
+      var where = {restaurant_id: req.params.rid, user_id: userId, 'orders.status': 'pending'};
+      models.Order.findOne({where: where}, function(err, order) {
+        if (err) return callback(err);
+        if (order == null) {
+          order = new models.Order({ restaurant_id: req.params.rid,
+                                     user_id: userId,
+                                     adjustment: {description: null, amount: null}});
+          order.getRestaurant(function(error){
+            callback(error, order);
+          });
+          return;
+        }
+        order.getOrderItems(function(err, items) {
+          callback(err, order);
+        });
+      });
+    },
 
     function(callback) {
       var query = {
@@ -129,15 +140,20 @@ module.exports.get = function(req, res) {
     var orderParams = req.query || {};
 
     var context = {
-      order:            results[0],
+      order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
       defaultAddress:   results[2] ? results[2].toJSON() : null,
       orderParams:      orderParams
     }
 
-    context.order.user_id = '' + context.order.user_id;
-    context.order.restaurant_id = '' + context.order.restaurant_id;
-    context.order.restaurant = context.restaurant;
+    context.restaurant.delivery_fee = context.order.restaurant.delivery_fee;
+
+    // Copy fields that don't exist from the restaurant result to order.restaurant
+    for ( var key in context.restaurant ){
+      if ( !(key in context.order.restaurant) ){
+        context.order.restaurant[ key ] = context.restaurant[ key ];
+      }
+    }
 
     // Build a histogram of menus vs freq for labeling
     var menuLengths = utils.countBy(utils.flatten(utils.pluck(context.restaurant.categories, 'menus')));

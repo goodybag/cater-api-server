@@ -851,13 +851,14 @@ module.exports = Model.extend({
 
     var unacceptable = [];
     // check zip
+    query.with.push( Restaurant.getDeliveryZipsQuery({ with_delivery_services: true }) );
     query.joins.zips = {
       type: 'left'
     , alias: 'zips'
-    , target: 'restaurant_delivery_zips'
+    , target: 'all_delivery_zips'
     , on: {
-        'orders.restaurant_id': '$zips.restaurant_id$'
-      , 'orders.zip': '$zips.zip$'
+        restaurant_id: '$orders.restaurant_id$'
+      , to: '$orders.zip$'
       }
     }
 

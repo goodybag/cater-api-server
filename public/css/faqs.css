@@ -123,3 +123,13 @@ ol.faq-index li > a {
 
   .contact-header > strong { display: block; }
 }
+
+.page-faqs {
+  counter-reset: faq 0;
+}
+
+section.faq-list div:before {
+  counter-increment: faq;
+  content: counter(faq) ".";
+  padding-right: 10px;
+}

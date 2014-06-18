@@ -83,8 +83,8 @@ h2.faq-header:first-child {
   font-size: 16px;
 }
 
-.contact-us-info { font-weight: 300; }
-.contact-us-info strong { font-weight: 500; }
+.contact-us-info { font-weight: 500; }
+.contact-us-info strong { font-weight: 700; }
 
 /**
  * Faq Lists
@@ -124,13 +124,13 @@ ol.faq-index li > a {
   counter-increment: faq;
   content: counter(faq) ".";
   padding-right: 10px;
-  font-weight: 500; 
+  font-weight: 700; 
 }
 
 .faq-list strong {
-  font-weight: 500; 
+  font-weight: 700; 
 }
 
 .faq-list p {
-  font-weight: 300;
+  font-weight: 500;
 }

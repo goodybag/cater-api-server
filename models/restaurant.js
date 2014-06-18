@@ -157,6 +157,8 @@ var Restaurant = module.exports = Model.extend({
       ]
     };
 
+    if ( options.name ) query.name = options.name;
+
     if ( options.with_delivery_services ){
       query.queries.push({
         type: 'select'

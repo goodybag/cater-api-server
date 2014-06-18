@@ -176,6 +176,12 @@ define(function(require, exports, module) {
         'change:guests': this.guestsChanged,
         'change:is_unacceptable change:below_min': this.setSubmittable
       }, this);
+
+      // this.on( 'change', function(){
+      //   var isDeliveryService = this.shouldBeDeliveryService();
+      //   this.attributes.is_pickup = isDeliveryService;
+      //   this.attributes.is_delivery_service = true;
+      // });
     },
 
     set: function(key, val, options) {
@@ -418,7 +424,7 @@ define(function(require, exports, module) {
         restaurant: this.restaurant.toJSON()
       });
 
-      return orderDeliveryServiceCriteria.check( order );
+      return orderDeliveryServiceCriteria.check( order )
     }
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']

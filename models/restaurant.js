@@ -586,15 +586,6 @@ var Restaurant = module.exports = Model.extend({
         type: 'left'
       , alias: 'guests'
       , on: {'restaurants.id': '$guests.restaurant_id$'}
-      , target: {
-          type: 'select'
-        , table: 'restaurant_lead_times'
-        , distinct: true
-        , columns: ['restaurant_id']
-        , where: {
-            'max_guests': {$gte: orderParams.guests}
-          }
-        }
       , distinct: true
       , target: {
           type: 'union'

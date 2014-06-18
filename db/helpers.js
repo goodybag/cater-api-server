@@ -365,6 +365,33 @@ dirac.use( function( dirac ){
     operations: ['find', 'findOne']
   , pluginName: 'many'
   , tmpl: function( data ){
+      return {
+        type: 'expression'
+      , alias: 'poop'
+      , expression: {
+          alias: 'r'
+        , parenthesis: true
+        , type: 'select'
+        , expression: {
+            type: 'array_to_json'
+          , expression: {
+              type: 'array'
+            , expression: {
+                type: 'select'
+              , alias: 'r'
+              , table: 'some_table'
+              , columns: [
+                  { type: 'row_to_json', expression: 'r' }
+                ]
+              , where: {
+                  tgt: '$source.tgt$'
+                }
+              }
+            }
+          }
+        }
+      };
+
       return [
         '(select array_to_json( array('
       , '  select row_to_json( r ) '

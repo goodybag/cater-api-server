@@ -4,7 +4,7 @@ define(function(require){
   var summaries = require('data/payment-summaries');
   var TableView = require('views/table-view');
 
-  summaries.fetch();
+  summaries.fetch({ data: { limit: 'all' } });
 
   return Object.create({
     init: function(){

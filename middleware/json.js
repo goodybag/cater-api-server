@@ -1,3 +1,6 @@
+var fs = require('fs');
+var path = require('path');
+
 /**
  * Read a json file and plug into res.locals
  *
@@ -5,14 +8,24 @@
  *                      and a res.locals target
  */
 module.exports = function(opts) {
+  if ( typeof opts !== 'object' ) {
+    throw new Error( 'JSON middleware requires object' );
+  }
+
+  opts = opts || {};
+  opts.file = opts.file || '';
+  opts.target = opts.target || '';
+
   return function(req, res, next) {
-    if ( typeof opts !== 'object' ) {
-      return next( new Error( 'JSON middleware requires object' ) );
-    }
-    opts = opts || {};
-    opts.file = opts.file || '';
-    opts.target = opts.target || '';
-    res.locals[opts.target] = require(process.cwd() + '/' + opts.file);
-    next();
+    fs.readFile( path.join( process.cwd(), opts.file ), function( error, contents) {
+      if ( error ) return next( error );
+
+      try {
+        res.locals[opts.target] = JSON.parse( contents.toString() );
+        next();
+      } catch ( e ){
+        return next( new Error ('Invalid JSON') );
+      }
+    });
   };
 };

@@ -891,8 +891,8 @@ module.exports.register = function(app) {
 
   app.post('/contact-us', controllers.contactUs.sendSupportEmail);
 
-  app.get('/faqs',
-    m.json({ file: './public/js/lib/faqs', target: 'faqs' })
+  app.get('/faqs'
+  , m.json({ file: '/public/js/lib/faqs.json', target: 'faqs' })
   , m.view('faqs')
   );
 

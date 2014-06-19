@@ -23,7 +23,7 @@ begin
   end loop;
 
   create trigger order_total_change
-    after insert or update of tip, adjustment_amount
+    after insert or update of zip, tip, adjustment_amount
     on orders
     for each row
     execute procedure on_order_total_change();

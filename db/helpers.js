@@ -46,14 +46,7 @@ dirac.autoJoin = function( options ){
       });
     });
   }
-}
-
-mosql.registerQueryType( 'one', [
-  'select row_to_json( r )'
-, '  from {table} r'
-, '  {where}'
-, '  limit 1'
-].join(''));
+};
 
 // Fix PG date parsing (`date` type not to be confused with something with a timezone)
 pg.types.setTypeParser( 1082, 'text', function( val ){
@@ -375,9 +368,7 @@ dirac.use( function( dirac ){
         type: 'expression'
       , alias: data.alias
       , expression: {
-          type: 'select'
-        , alias: 'r'
-        , parenthesis: true
+          parenthesis: true
         , expression: {
             type: 'array_to_json'
           , expression: {
@@ -455,22 +446,14 @@ dirac.use( function( dirac ){
         type: 'expression'
       , alias: data.alias
       , expression: {
-          type: 'select'
-        , alias: 'r'
-        , parenthesis: true
+          parenthesis: true
         , expression: {
-            type: 'array_to_json'
-          , expression: {
-              type: 'array'
-            , expression: {
-                type: 'select'
-              , alias: 'r'
-              , table: data.target
-              , columns: [{ type: 'row_to_json', expression: 'r' }]
-              , where: where
-              , limit: 1
-              }
-            }
+            type: 'select'
+          , alias: 'r'
+          , table: data.target
+          , columns: [{ type: 'row_to_json', expression: 'r' }]
+          , where: where
+          , limit: 1
           }
         }
       };

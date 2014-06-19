@@ -1029,7 +1029,8 @@ module.exports.register = function(app) {
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
   , m.queryOptions({
-      one: [{ table: 'restaurants', alias: 'restaurant' }]
+      one:  [{ table: 'restaurants', alias: 'restaurant' }]
+    , many: [{ table: 'order_items', alias: 'items' }]
     })
   , m.find( db.orders )
   );

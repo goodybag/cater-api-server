@@ -5,8 +5,6 @@
   , phantomPageHeightOffset:  -120
   };
 
-  var pageHeight = 920;
-
   var isPhantom = function(){
     return navigator.userAgent.indexOf('PhantomJS') > - 1;
   };
@@ -109,6 +107,7 @@
       Not what you ordered? Something missing? No worries! We will help get it resolved. Contact us at the number below.
     </div>
   </header>
+  <h2>THIS ORDER IS FOR {{#if order.is_pickup}}PICKUP{{else}}DELIVERY{{/if}}!</h2>
   <table class="manifest-table">
     <thead>
       <tr>

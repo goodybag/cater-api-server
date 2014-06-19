@@ -1,0 +1,138 @@
+#main, body {
+  background-color: white;
+  background: white;
+}
+
+/**
+ * Banner
+ */
+
+.faqs-banner {
+  background-image: url('../img/faqs-background.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-y: -465px;
+  background-position-x: 14%;
+}
+
+/**
+ * Container
+ */
+
+.faqs-container { 
+  color: #432012; 
+  font-weight: 300;
+  font-size: 15px;
+}
+
+/**
+ * Headers
+ */
+
+h1.faq-header {
+  margin-bottom: 60px;
+  text-align: center;
+  font-size: 48px;
+  color: #432012;
+  font-weight: 500;
+  font-family: 'Proxima Nova';
+}
+
+h2.faq-header {
+  font-size: 20px;
+  color: #432012;
+  font-family: 'Proxima Nova';
+}
+
+h2.faq-header:first-child {
+  margin-top: 0;
+}
+
+/**
+ * Sections
+ */
+
+.page-faqs section {
+  border-top: 1px solid #432012;
+  padding: 20px 0 40px;
+}
+
+.page-faqs section:nth-of-type(1) { border: none; }
+
+@media (max-width: 768px){
+  .page-faqs section {
+    margin: 10px 10px;
+  }
+}
+
+/**
+ * Contact us section
+ */
+
+.contact-header {
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 300;
+  font-family: 'Proxima Nova';
+}
+
+.contact-header > strong { font-weight: 500; }
+
+.contact-us-info { margin-bottom: 10px; }
+
+.contact-us-info i {
+  display: inline-block;
+  width: 16px;
+  margin: 0 5px;
+  color: #DC0500;
+  font-size: 16px;
+}
+
+.contact-us-info strong { font-weight: 700; }
+
+/**
+ * Faq Lists
+ */
+
+ol.faq-index {
+  font-size: 15px;
+  list-style-position: inside;
+  padding: 0;
+  font-weight: 700;
+}
+
+ol.faq-index li > a {
+  position: absolute;
+  font-weight: 300;
+  left: 4%;
+}
+
+@media (max-width: 768px){
+  ol.faq-index {
+    font-size: 15px;
+    padding: 0;
+  }
+
+  ol.faq-index li > a {
+    position: inherit;
+    list-style-position: outside;
+    padding-left: 2px;
+  }
+
+  .contact-header > strong { display: block; }
+}
+
+.page-faqs {
+  counter-reset: faq 0;
+}
+
+.faq-list strong:before {
+  counter-increment: faq;
+  content: counter(faq) ".";
+  padding-right: 10px;
+  font-weight: 700; 
+}
+
+.faq-list strong {
+  font-weight: 700; 
+}

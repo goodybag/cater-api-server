@@ -157,6 +157,21 @@ define(function(require) {
       type: types.boolean
     , default: false
     }
+  , sales_tax: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
+  , delivery_fee: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
+  , total: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
   };
 
   definition.indices = {};

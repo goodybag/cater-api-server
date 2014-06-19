@@ -895,6 +895,11 @@ module.exports.register = function(app) {
 
   app.post('/contact-us', controllers.contactUs.sendSupportEmail);
 
+  app.get('/faqs'
+  , m.json({ file: '/public/js/lib/faqs.json', target: 'faqs' })
+  , m.view('faqs')
+  );
+
   app.get('/legal', controllers.statics.legal);
 
   app.get('/privacy', controllers.statics.privacy);
@@ -1021,9 +1026,12 @@ module.exports.register = function(app) {
   );
 
   app.get('/api/restaurants/:restaurant_id/orders'
-  , m.pagination()
+  , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
-  , controllers.restaurants.orders.listJSON
+  , m.queryOptions({
+      one: [{ table: 'restaurants', alias: 'restaurant' }]
+    })
+  , m.find( db.orders )
   );
 
   app.get('/api/restaurants/:restaurant_id/contacts'
@@ -1053,7 +1061,7 @@ module.exports.register = function(app) {
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries'
-  , m.pagination()
+  , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
   , m.find( db.payment_summaries )
   );

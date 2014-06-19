@@ -5,6 +5,7 @@
 var
   utils = require('../../utils')
 , models = require('../../models')
+, db = require('../../db')
 , moment = require('moment')
 , fs = require('fs')
 , hbHelpers = require('../../public/js/lib/hb-helpers')
@@ -37,6 +38,9 @@ var reports = {
     var end = moment(req.body.end || new Date()).add('d',1).format('YYYY-MM-DD');
     var range = req.body.range || 'datetime';
     var sort = req.body.sort || 'asc';
+    var restaurantId = req.body.restaurantId;
+    var userId = req.body.userId;
+
 
     var filename = [
       status
@@ -50,47 +54,52 @@ var reports = {
 
     res.write([
       'Order Number'
-    , 'User Email'
     , 'Date Submitted'
     , 'Delivery Date'
+    , 'User Name'
+    , 'User Email'
+    , 'Company Name'
     , 'Subtotal'
     , 'Delivery Fee'
     , 'Tax'
     , 'Tip'
     , 'Total'
-    , 'Restaurant Name'
+    , 'Caterer Name'
     ].join(',') + '\n');
 
-    var query = {
-      where: {
-        status: status
-      }
-    , limit: 'all'
-    };
+    var where = { status: status };
+    var options = { limit: 'all' };
 
+    if ( restaurantId ) where.restaurant_id = restaurantId;
+    if ( userId ) where.user_id = userId;
     // by order datetime or submitted
     range = (range === 'datetime') ? 'orders.datetime' : 'submitted.created_at';
-    query.where[range] = {
+    where[range] = {
       $gte: start
     , $lt: end
     };
 
-    query.order = {};
-    query.order[range] = sort;
-    query.distinct = [ 'orders.id', range ];
+    options.order = {};
+    options.order[range] = sort;
+    options.distinct = [ 'orders.id', range ];
+    options.one = [
+      { table: 'users', alias: 'user' }
+    , { table: 'restaurants', alias: 'restaurant'}
+    ];
 
-    models.Order.find(query, function(err, results) {
+    db.orders.find(where, options, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       results.forEach( function(order) {
-        order = order.attributes;
         res.write(utils.map([
           order.id
-        , order.user.email
         , moment(order.submitted).format(reports.dateFormat)
         , moment(order.datetime).format(reports.dateFormat)
+        , order.user.name
+        , order.user.email
+        , order.user.organization
         , dollars(order.sub_total)
-        , dollars(order.restaurant.delivery_fee)
-        , dollars( (order.sub_total + order.restaurant.delivery_fee) * order.restaurant.sales_tax )
+        , dollars(order.delivery_fee)
+        , dollars(order.sales_tax)
         , dollars(order.tip)
         , dollars(order.total)
         , order.restaurant.name

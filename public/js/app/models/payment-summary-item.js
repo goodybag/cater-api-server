@@ -42,9 +42,10 @@ define(function(require, exports, module) {
       order = order || this.attributes.order;
 
       var data = {
-        delivery_fee:     order.restaurant.get('delivery_fee')
+        delivery_fee:     order.get('delivery_fee')
       , sub_total:        order.get('sub_total')
       , tip:              order.get('tip')
+      , gb_fee:           order.restaurant.get('gb_fee') || 0
       };
 
       data.net_payout = this.getNetPayout( data );

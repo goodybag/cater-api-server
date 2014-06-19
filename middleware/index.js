@@ -31,4 +31,5 @@ module.exports = {
 , viewPlugin: require('./view-plugin')
 , pagination: require('./pagination')
 , queryOptions: require('./query-options')
+, json: require('./json')
 };

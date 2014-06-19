@@ -233,29 +233,24 @@ define(function(require, exports, module) {
         return true;
       }
 
-      var isDeliveryService = false;
-
       var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
         return obj.max_guests >= order.get('guests');
       });
-
-      if ( !limit ){
-        isDeliveryService = true;
-
-        limit = _.find(_.sortBy(this.get('pickup_lead_times'), 'max_guests'), function(obj) {
-          return obj.max_guests >= order.get('guests');
-        });
-      }
-
-      if ( !limit ) return false;
 
       var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
       var minutes = (moment(date) - moment(now)) / 60000;
       var leadTime = limit.lead_time;
 
-      if ( isDeliveryService ){
-        leadTime += moment.duration( this.get('region').lead_time_modifier ).asMinutes();
+      if ( !limit || minutes < leadTime ){
+        limit = _.find(_.sortBy(this.get('pickup_lead_times'), 'max_guests'), function(obj) {
+          return obj.max_guests >= order.get('guests');
+        });
       }
+
+      if ( !limit || minutes >= leadTime ) return false;
+
+      leadTime = limit.lead_time;
+      leadTime += moment.duration( this.get('region').lead_time_modifier ).asMinutes();
 
       return minutes >= leadTime;
     },
@@ -267,7 +262,6 @@ define(function(require, exports, module) {
     validateOrderFulfillability: function( order ){
       var errors = [];
 
-      console.log(this.get('delivery_zip_groups'));
       var allDeliveryZips = utils.reduce( this.get('delivery_zip_groups'), function( a, b ){
         return a.concat( b.zips );
       }, [] );

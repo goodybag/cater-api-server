@@ -910,13 +910,11 @@ module.exports = Model.extend({
               , table:    'restaurant_lead_times'
               , distinct: true
               , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
-              , where:    { restaurant_id: '$orders.restaurant_id$' }
               }
             , { type:     'select'
               , table:    'restaurant_pickup_lead_times'
               , distinct: true
               , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
-              , where:    { restaurant_id: '$orders.restaurant_id$' }
               }
             ]
           }
@@ -960,10 +958,17 @@ module.exports = Model.extend({
     query.columns.push(caseIsBadLeadTime+' AS is_bad_lead_time');
 
     // check delivery days and times
+    query.with.push(
+      Restaurant.getDeliveryTimesQuery({
+        name: 'all_delivery_times'
+      , time: true
+      })
+    );
+
     query.joins.delivery_times = {
       type: 'left'
     , alias: 'delivery_times'
-    , target: 'restaurant_delivery_times'
+    , target: 'all_delivery_times'
     , on: {
         'orders.restaurant_id': '$delivery_times.restaurant_id$'
       , 'delivery_times.day': {$custom: ['"delivery_times"."day" = EXTRACT(DOW FROM "orders"."datetime")']}

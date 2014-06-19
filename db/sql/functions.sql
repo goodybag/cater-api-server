@@ -131,6 +131,14 @@ begin
 end;
 $$ language plpgsql;
 
+create or replace function on_order_items_remove()
+returns trigger as $$
+begin
+  perform update_order_totals( OLD.order_id );
+  return OLD;
+end;
+$$ language plpgsql;
+
 create or replace function update_order_item_subtotal( oid int )
 returns void as $$
   declare o order_items;

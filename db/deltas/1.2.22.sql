@@ -12,9 +12,10 @@ begin
   perform add_column( 'order_items', 'sub_total', 'int not null default 0' );
 
   drop trigger if exists order_order_items_change on order_items;
+  drop trigger if exists order_order_items_remove on order_items;
 
   for r in (
-    select * from order_items
+    select * from order_items order by id asc
   )
   loop
     raise notice 'Updating Order Item #%', r.id;
@@ -23,8 +24,14 @@ begin
   end loop;
 
   create trigger order_order_items_change
-    after insert or update or delete
+    after insert or update of quantity, price, options_sets
     on order_items
     for each row
     execute procedure on_order_items_change();
+
+  create trigger order_order_items_remove
+    after delete
+    on order_items
+    for each row
+    execute procedure on_order_items_remove();
 end$$;

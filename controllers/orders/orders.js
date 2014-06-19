@@ -117,6 +117,12 @@ module.exports.get = function(req, res) {
       });
     },
 
+    function( order, cb ){
+      order.getRestaurant( function( error ){
+        return cb( error, order );
+      });
+    },
+
     function(order, cb) {
       order.getOrderItems(function(err, items) {
         return cb(err, order);

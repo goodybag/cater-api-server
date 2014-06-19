@@ -188,10 +188,13 @@ var Restaurant = module.exports = Model.extend({
 
     var query = {
       type: 'union'
-    , queries: [ { type: 'select', table: 'restaurant_delivery_times', columns: columns } ]
+    , queries: [
+        { type: 'select', table: 'restaurant_delivery_times', columns: columns }
+      , { type: 'select', table: 'restaurant_hours', columns: columns }
+      ]
     };
 
-    query.queries.push({ type: 'select', table: 'restaurant_hours', columns: columns });
+    if ( options.name ) query.name = options.name;
 
     // Alter the start/end times to reflect the regions lead_time modifier
     if ( options.time ){

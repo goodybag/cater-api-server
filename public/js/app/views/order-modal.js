@@ -186,6 +186,7 @@ define(function(require, exports, module) {
       day = new Date( day ).getDay();
 
       var times = this.options.orderModel.restaurant.get('delivery_times')[ day ];
+      times = times.concat( this.options.orderModel.restaurant.get('hours_of_operation')[ day ] );
 
       this.timepicker.set(
         'disable'

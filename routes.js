@@ -1024,7 +1024,10 @@ module.exports.register = function(app) {
   app.get('/api/restaurants/:restaurant_id/orders'
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
-  , controllers.restaurants.orders.listJSON
+  , m.queryOptions({
+      one: [{ table: 'restaurants', alias: 'restaurant' }]
+    })
+  , m.find( db.orders )
   );
 
   app.get('/api/restaurants/:restaurant_id/contacts'

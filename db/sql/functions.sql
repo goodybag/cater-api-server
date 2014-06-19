@@ -121,3 +121,50 @@ begin
     using sub_total, total, sales_tax, delivery_fee, o.id;
 end;
 $$ language plpgsql;
+
+create or replace function on_order_items_change()
+returns trigger as $$
+begin
+  perform update_order_totals( NEW.order_id );
+  perform update_order_item_subtotal( NEW );
+  return NEW;
+end;
+$$ language plpgsql;
+
+create or replace function update_order_item_subtotal( oid int )
+returns void as $$
+  declare o order_items;
+begin
+  for o in ( select * from order_items where id = oid )
+  loop
+    perform update_order_item_subtotal( o );
+    return;
+  end loop;
+end;
+$$ language plpgsql;
+
+create or replace function update_order_item_subtotal( order_item order_items )
+returns void as $$
+  declare options_total int;
+begin
+  options_total := coalesce( (
+    with options1 as (
+      select json_array_elements(
+        json_array_elements( order_item.options_sets )->'options'
+      ) as option
+    ),
+    options as (
+      select
+        (options1.option->>'state')::boolean as state
+      , (options1.option->>'price')::int as price
+      from options1
+    )
+
+    select sum( options.price ) from options where options.state is true
+  ), 0 );
+
+  update order_items
+    set sub_total = order_item.quantity * ( order_item.price + options_total )
+  where id = order_item.id;
+end;
+$$ language plpgsql;

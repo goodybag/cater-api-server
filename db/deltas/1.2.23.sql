@@ -3,7 +3,7 @@
 DO $$
   declare default_region_id int;
   declare default_region    text := 'Austin, TX';
-  declare version           text := '1.2.20';
+  declare version           text := '1.2.23';
 begin
   raise notice '## Running Delta v% ##', version;
 

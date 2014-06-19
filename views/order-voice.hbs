@@ -3,9 +3,13 @@
   <Say voice="woman">
     Hello.
     You have received a new Goodybag order for ${{dollars order.total}} 
-    {{#if order.is_pickup }}
+    {{#if order.is_pickup}}
     for pickup at {{formatDateTime order.datetime "MM/DD/YYYY h:mm a"}}.
-    {{else}}
+    {{/if}}
+    {{#if order.is_delivery_service}}
+    for pickup at {{formatDateTime order.datetime "MM/DD/YYYY h:mm a"}}.
+    {{/if}}
+    {{#if order.is_delivery}}
     to be delivered {{formatDateTime order.datetime "MM/DD/YYYY h:mm a"}}.
     {{/if}}
     Please check your email for a link to accept or reject the order.

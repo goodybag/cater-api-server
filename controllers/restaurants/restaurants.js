@@ -313,6 +313,7 @@ var fields = [
   'gb_fee',
   'is_direct_deposit',
   'is_fee_on_total',
+  'head_count_delivery_service_threshold',
   'region_id'
 ];
 
@@ -370,7 +371,7 @@ module.exports.update = function(req, res) {
     ['Zips', zips, 'delivery_zips']
   , ['DeliveryTimes', deliveryTimes, 'delivery_times']
   , ['LeadTimes', leadTimes, 'lead_times']
-  , ['Hours', hours, 'hours']
+  , ['Hours', hours, 'hours_of_operation']
   , ['PickupLeadTimes', pickupLeadTimes, 'pickup_lead_times']
   , ['Tags', tags, 'tags']
   , ['MealTypes', mealTypes, 'meal_types']

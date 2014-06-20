@@ -6,18 +6,31 @@
       <!--<OrderDetailsBody>-->
       {{#if this.user.organization}}
       <tr>
-        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Customer Organization:</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Organization:</td>
         <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{this.user.organization}}</td>
       </tr>
       {{/if}}
+      {{!-- Third party delivery needs to see both pickup & delivery times --}}
+      {{#if (or this.is_pickup this.is_delivery_service) }}
       <tr>
-        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">{{#if this.is_pickup}}Pickup{{else}}Delivery{{/if}} Date:</td>
-        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{#if is_pickup}}{{datepart pickup_datetime}}{{else}}{{datepart this.datetime}}{{/if}}</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Pickup Date:</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{datepart pickup_datetime}}</td>
       </tr>
       <tr>
-        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">{{#if this.is_pickup}}Pickup{{else}}Delivery{{/if}} Time:</td>
-        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{#if is_pickup}}{{timepart pickup_datetime}}{{else}}{{timepart this.datetime}}{{/if}}</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Pickup Time:</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{timepart pickup_datetime}}</td>
       </tr>
+      {{/if}}
+      {{#if (or this.is_delivery this.is_delivery_service) }}
+      <tr>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Delivery Date:</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{datepart datetime}}</td>
+      </tr>
+      <tr>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Pickup Time:</td>
+        <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{timepart datetime}}</td>
+      </tr>
+      {{/if}}
       <tr>
         <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 10px; padding-left: 12px; text-align: left">Guests:</td>
         <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; width: 50%; padding-top: 8px; padding-bottom: 8px; padding-right: 12px; text-align: left;">{{this.guests}}</td>

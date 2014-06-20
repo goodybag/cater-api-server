@@ -62,7 +62,7 @@ var Restaurant = module.exports = Model.extend({
     var obj = Model.prototype.toJSON.apply(this, arguments);
     if (this.categories) obj.categories = utils.invoke(this.categories, 'toJSON');
     obj.delivery_times = utils.defaults({}, obj.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
-    // obj.hours_of_operation = utils.defaults({}, obj.hours_of_operation, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
+    obj.hours_of_operation = utils.defaults({}, obj.hours_of_operation, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
     return obj;
   }
 },
@@ -369,19 +369,19 @@ var Restaurant = module.exports = Model.extend({
     };
 
     // Hours of operation
-    // query.hours_of_operation = Restaurant.getHoursQuery( query );
+    query.with.hours_of_operation = Restaurant.getHoursQuery( query );
 
-    // query.joins.hoo = {
-    //   type: 'left'
-    // , target: 'hours_of_operation'
-    // , on: { 'restaurant_id': '$restaurants.id$' }
-    // };
+    query.joins.hoo = {
+      type: 'left'
+    , target: 'hours_of_operation'
+    , on: { 'restaurant_id': '$restaurants.id$' }
+    };
 
-    // query.columns.push({
-    //   alias: 'hours_of_operation'
-    // , type: 'coalesce'
-    // , expression: 'hoo.hours_times, \'[]\'::json'
-    // });
+    query.columns.push({
+      alias: 'hours_of_operation'
+    , type: 'coalesce'
+    , expression: 'hoo.hours_times, \'[]\'::json'
+    });
 
     var unacceptable = [];
 
@@ -641,6 +641,7 @@ var Restaurant = module.exports = Model.extend({
       if (!err) {
         utils.invoke(restaurants, function() {
           this.attributes.delivery_times = utils.object(this.attributes.delivery_times);
+          this.attributes.hours_of_operation = utils.object(this.attributes.hours_of_operation);
         });
       }
       return callback.call(this, err, restaurants);

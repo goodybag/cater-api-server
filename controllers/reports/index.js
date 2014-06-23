@@ -158,6 +158,59 @@ var reports = {
 
       res.end();
     });
+  },
+
+  usersRedemptionsCsv: function(req, res) {
+
+    // reports.csv.writeFilename(res, 'user-redemptions.csv');
+    res.csv.writeHeaders('user-redemptions.csv');
+    res.write([
+      'User ID'
+    , 'User Name'
+    , 'User Email'
+    , 'User Company'
+    , 'Gift Card Type'
+    , 'Gift Card Amount'
+    , 'Gift Card Cost'
+    ].join(',') + '\n');
+
+    var query = {};
+    var options = {
+      limit : 'all'
+    , one: [{ table: 'users', alias: 'user' }]
+    };
+    db.users_redemptions.find(query, options, function(error, redemptions) {
+      console.log(arguments);
+
+      redemptions.forEach(function(redemption) {
+        res.write(utils.map([
+          redemption.user.id
+        , redemption.user.name
+        , redemption.user.email
+        , redemption.user.organization
+        , redemption.location
+        , redemption.amount
+        , redemption.cost
+        ], quoteVal).join(',') + '\n');
+      });
+
+      res.end();
+    });
+  },
+
+  csv: {
+    writeFilename: function(res, filename) {
+      res.header( 'Content-Type', 'text/csv' );
+      res.header( 'Content-Disposition', 'attachment;filename=' + filename );
+    },
+
+    writeRow: function(res, columns) {
+      res.write(columns.join(',') + '\n');
+    },
+
+    writeRowQuoted: function(res, columns) {
+      res.write(utils.map(columns, quoteVal).join(',') + '\n');
+    }
   }
 };
 

@@ -60,6 +60,7 @@
           <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{order.user.organization}}</td>
         </tr>
         {{/if}}
+        {{#if order.is_delivery}}
         <tr>
           <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Delivery Date:</td>
           <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{datepart order.datetime}}</td>
@@ -68,6 +69,16 @@
           <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Delivery Time:</td>
           <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{timepart order.datetime}}</td>
         </tr>
+        {{else}}
+        <tr>
+          <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Pickup Date:</td>
+          <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{datepart order.pickup_datetime}}</td>
+        </tr>
+        <tr>
+          <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Pickup Time:</td>
+          <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{timepart order.pickup_datetime}}</td>
+        </tr>
+        {{/if}}
         <tr>
           <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-right: 10px; text-align: right">Guests:</td>
           <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; width: 50%; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; text-align: left;">{{order.guests}}</td>

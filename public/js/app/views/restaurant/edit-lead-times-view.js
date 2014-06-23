@@ -27,7 +27,7 @@ define(function(require, exports, module) {
           var guests = +$(el).find('.lead-max-guests').val();
           var hours = +$(el).find('.lead-hours').val();
           var minutes = +$(el).find('.lead-minutes').val();
-          var cancel = parseInt($(el).find('.lead-cancel-time').val());
+          var cancel = +$(el).find('.lead-cancel-time').val();
           return {
             max_guests: !_.isNaN(guests) ? guests : null,
             lead_time: !_.isNaN(minutes) ? hours * 60 + minutes : hours * 60,

@@ -23,7 +23,7 @@ define(function(require, exports, module) {
        * adding items or clicking change order
        * params.
        */
-      this.model.on("change:orderparams", function(e) {
+      this.model.on("change:orderparams change:is_delivery_service", function(e) {
         this_.render();
       });
 

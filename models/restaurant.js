@@ -332,38 +332,38 @@ var Restaurant = module.exports = Model.extend({
                 type: 'array_agg'
               , expression: {
                   type: 'array_to_json'
-                // , expression: 'array[restaurant_delivery_times.start_time, restaurant_delivery_times.end_time]'
-                , expression: [
-                    'array['
-                  , 'least('
-                    , 'restaurant_delivery_times.start_time, '
-                    , 'restaurant_hours.start_time + regions.lead_time_modifier'
-                  , '), greatest('
-                    , 'restaurant_delivery_times.end_time, '
-                    , 'restaurant_hours.end_time + regions.lead_time_modifier'
-                  , ')]'
-                  ].join('')
+                , expression: 'array[restaurant_delivery_times.start_time, restaurant_delivery_times.end_time]'
+                // , expression: [
+                //     'array['
+                //   , 'least('
+                //     , 'restaurant_delivery_times.start_time, '
+                //     , 'restaurant_hours.start_time + regions.lead_time_modifier'
+                //   , '), greatest('
+                //     , 'restaurant_delivery_times.end_time, '
+                //     , 'restaurant_hours.end_time + regions.lead_time_modifier'
+                //   , ')]'
+                //   ].join('')
                 }
               }
             }
           ]
           // Join on hours to include delivery service hours
-        , joins: [
-            { alias: 'restaurants'
-            , type: 'left'
-            , target: 'restaurants'
-            , on: { id: '$restaurant_delivery_times.restaurant_id$' }
-            }
-          , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
-          , { alias: 'restaurant_hours'
-            , type: 'left'
-            , target: 'restaurant_hours'
-            , on: {
-                restaurant_id: '$restaurant_delivery_times.restaurant_id$'
-              , day: '$restaurant_delivery_times.day$'
-              }
-            }
-          ]
+        // , joins: [
+        //     { alias: 'restaurants'
+        //     , type: 'left'
+        //     , target: 'restaurants'
+        //     , on: { id: '$restaurant_delivery_times.restaurant_id$' }
+        //     }
+        //   , utils.extend( { alias: 'regions' }, Restaurant.getRegionJoin() )
+        //   , { alias: 'restaurant_hours'
+        //     , type: 'left'
+        //     , target: 'restaurant_hours'
+        //     , on: {
+        //         restaurant_id: '$restaurant_delivery_times.restaurant_id$'
+        //       , day: '$restaurant_delivery_times.day$'
+        //       }
+        //     }
+        //   ]
         , groupBy: ['restaurant_id', 'day']
         }
       , groupBy: 'restaurant_id'

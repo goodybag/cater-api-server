@@ -264,12 +264,10 @@ var hours = function(body, id) {
       };
     });
   }));
-  console.log('hours', a);
   return a;
 }
 
 var pickupLeadTimes = function(body, id) {
-  console.log('pickupLeadTimes');
   return utils.map(body.pickup_lead_times, function(obj, index, arr) {
     return utils.extend({restaurant_id: id}, obj);
   });

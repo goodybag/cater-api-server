@@ -121,15 +121,13 @@ var reports = {
     , end
     ].join('-') + '.csv';
 
-    res.header( 'Content-Type', 'text/csv' );
-    res.header( 'Content-Disposition', 'attachment;filename=' + filename );
-
-    res.write([
+    res.csv.writeFilename(filename);
+    res.csv.writeRow([
       'Email'
     , 'First Name'
     , 'Last Name'
     , 'Company Name'
-    ].join(',')+'\n');
+    ]);
 
     var query = {
       where: {
@@ -148,12 +146,12 @@ var reports = {
           , first = (idx >= 0) ? user.name.substring(0, idx) : user.name
           , last = (idx >= 0) ? user.name.substring(idx+1) : '';
 
-        res.write(utils.map([
+        res.csv.writeRowQuoted([
           user.email
         , first
         , last
         , user.organization
-        ], quoteVal).join(',') + '\n');
+        ]);
       });
 
       res.end();
@@ -161,10 +159,8 @@ var reports = {
   },
 
   usersRedemptionsCsv: function(req, res) {
-
-    // reports.csv.writeFilename(res, 'user-redemptions.csv');
-    res.csv.writeHeaders('user-redemptions.csv');
-    res.write([
+    res.csv.writeFilename('user-redemptions.csv');
+    res.csv.writeRow([
       'User ID'
     , 'User Name'
     , 'User Email'
@@ -172,7 +168,7 @@ var reports = {
     , 'Gift Card Type'
     , 'Gift Card Amount'
     , 'Gift Card Cost'
-    ].join(',') + '\n');
+    ]);
 
     var query = {};
     var options = {
@@ -180,10 +176,8 @@ var reports = {
     , one: [{ table: 'users', alias: 'user' }]
     };
     db.users_redemptions.find(query, options, function(error, redemptions) {
-      console.log(arguments);
-
       redemptions.forEach(function(redemption) {
-        res.write(utils.map([
+        res.csv.writeRowQuoted([
           redemption.user.id
         , redemption.user.name
         , redemption.user.email
@@ -191,26 +185,10 @@ var reports = {
         , redemption.location
         , redemption.amount
         , redemption.cost
-        ], quoteVal).join(',') + '\n');
+        ]);
       });
-
       res.end();
     });
-  },
-
-  csv: {
-    writeFilename: function(res, filename) {
-      res.header( 'Content-Type', 'text/csv' );
-      res.header( 'Content-Disposition', 'attachment;filename=' + filename );
-    },
-
-    writeRow: function(res, columns) {
-      res.write(columns.join(',') + '\n');
-    },
-
-    writeRowQuoted: function(res, columns) {
-      res.write(utils.map(columns, quoteVal).join(',') + '\n');
-    }
   }
 };
 

@@ -11,11 +11,11 @@ var csv = {
       this.header( 'Content-Disposition', 'attachment;filename=' + filename );
     },
 
-    writeRow: function(res, columns) {
+    writeRow: function(columns) {
       this.write(columns.join(',') + '\n');
     },
 
-    writeRowQuoted: function(res, columns) {
+    writeRowQuoted: function(columns) {
       this.write(utils.map(columns, csv.quoteVal).join(',') + '\n');
     },
 
@@ -24,12 +24,9 @@ var csv = {
     }
 };
 
-module.exports = function(options) {
-  return function(req, res, next) {
-    if ( res.csv ) throw new Error('res.csv already exists!');
-
-    res.csv = csv.bindAll()
-    res.csv.writeHeaders = csv.writeFilename.bind(res);
-    next(); 
-  }
+module.exports =  function(req, res, next) {
+  if ( res.csv ) throw new Error('res.csv already exists!');
+  res.csv = {};
+  for ( var method in csv ) res.csv[method] = csv[method].bind(res);
+  next(); 
 }

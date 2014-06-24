@@ -677,17 +677,19 @@ module.exports.register = function(app) {
 
   app.post('/reports/orders'
   , m.restrict(['admin'])
+  , m.csv
   , controllers.reports.ordersCsv
   );
 
   app.post('/reports/users'
   , m.restrict(['admin'])
+  , m.csv
   , controllers.reports.usersCsv
   );
 
   app.post('/reports/redemptions'
   , m.restrict(['admin'])
-  , m.csv()
+  , m.csv
   , controllers.reports.usersRedemptionsCsv
   );
 

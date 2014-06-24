@@ -75,6 +75,10 @@ define(function(require) {
       type: types.timestamp
     , nullable: true
     }
+  , pickup_datetime: {
+      type: types.timestamp
+    , nullable: true
+    }
   , timezone: {
       type: types.timezone
     , nullable: true
@@ -172,6 +176,9 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , is_delivery: { type: types.boolean, nullable: false, default: false }
+  , is_pickup: { type: types.boolean, nullable: false, default: false }
+  , is_delivery_service: { type: types.boolean, nullable: false, default: false }
   };
 
   definition.indices = {};

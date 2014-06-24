@@ -24,15 +24,15 @@ define(function(require, exports, module) {
 
       lead_times: function() {
         return _.compact(_.map(this.$el.find('.lead-time'), function(el) {
-          var guests = parseInt($(el).find('.lead-max-guests').val());
-          var hours = parseInt($(el).find('.lead-hours').val());
-          var minutes = parseInt($(el).find('.lead-minutes').val());
-          var cancel = parseInt($(el).find('.lead-cancel-time').val());
-          return !_.isNaN(guests) && !_.isNaN(hours) ? {
+          var guests = +$(el).find('.lead-max-guests').val();
+          var hours = +$(el).find('.lead-hours').val();
+          var minutes = +$(el).find('.lead-minutes').val();
+          var cancel = +$(el).find('.lead-cancel-time').val();
+          return {
             max_guests: !_.isNaN(guests) ? guests : null,
-            lead_time: !_.isNaN(minutes) ? hours * 60 + minutes: hours * 60,
+            lead_time: !_.isNaN(minutes) ? hours * 60 + minutes : hours * 60,
             cancel_time: !_.isNaN(cancel) ? cancel : null
-          } : null;
+          };
         }));
       }
     },

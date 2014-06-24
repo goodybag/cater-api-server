@@ -1,4 +1,4 @@
--- #892 asap order part 3
+-- #960
 
 DO $$
   declare version       text := '1.2.21';
@@ -8,8 +8,11 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  perform add_column( 'orders', 'pickup_datetime', 'timestamp without time zone' );
+  update restaurant_lead_times set cancel_time = 0 where cancel_time is null;
 
-  -- The point in which we switch from using delivery service to restaurant delivery
-  perform add_column( 'restaurants', 'head_count_delivery_service_threshold', 'int not null default 0' );
+  alter table restaurant_lead_times
+    alter column cancel_time set not null,
+    alter column cancel_time set default 0,
+    alter column lead_time set default 0,
+    alter column max_guests set default 0;
 end$$;

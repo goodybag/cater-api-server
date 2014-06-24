@@ -2,15 +2,15 @@ var domain = require('domain');
 var utils = require('../../utils');
 var logger = require('../../logger');
 var models = require('../../models');
-
+var db = require('../../db');
 var _ = utils._;
 
 var checkForExistingDebit = function (order, callback) {
   var TAGS = [process.domain.uuid];
-  utils.balanced.Debits.list({'meta.order_uuid': order.attributes.uuid}, function (error, debits) {
+  utils.balanced.Debits.list({'meta.order_uuid': order.uuid}, function (error, debits) {
     if (error) return callback(error);
 
-    if (debits && debits.total > 1) return callback(new Error('multiple debits for a single order: ' + order.attributes.id));
+    if (debits && debits.total > 1) return callback(new Error('multiple debits for a single order: ' + order.id));
     if (debits && debits.total == 1) return callback (null, debits.items[0]);
     return callback(null, null);
   });
@@ -19,23 +19,23 @@ var checkForExistingDebit = function (order, callback) {
 var debitCustomer = function (order, callback) {
   var TAGS = [process.domain.uuid];
 
-  var amount = Math.floor(order.attributes.total);
+  var amount = Math.floor(order.total);
   if (typeof amount === 'undefined' || amount == null || amount == 0) return callback(new Error('invalid amount: ' + amount));
 
-  var pmId = order.attributes.payment_method_id;
+  var pmId = order.payment_method_id;
   models.PaymentMethod.findOne(pmId, function(error, paymentMethod) {
     if (error) return callback(new Error('invalid payment method: ' + pmId));
       utils.balanced.Debits.create({
         amount: amount
       , source_uri: paymentMethod.attributes.uri
-      , customer_uri: order.attributes.user.balanced_customer_uri
-      , on_behalf_of_uri: order.attributes.restaurant.balanced_customer_uri
-      , appears_on_statement_as: 'GB ORDER #'+ order.attributes.id
+      , customer_uri: order.user.balanced_customer_uri
+      , on_behalf_of_uri: order.restaurant.balanced_customer_uri
+      , appears_on_statement_as: 'GB ORDER #'+ order.id
       , meta: { // note, cannot search on nested properties so keep searchable properties top-level
-          user_id: order.attributes.user.id
-        , restaurant_id: order.attributes.restaurant.id
-        , order_id: order.attributes.id
-        , order_uuid: order.attributes.uuid
+          user_id: order.user.id
+        , restaurant_id: order.restaurant.id
+        , order_id: order.id
+        , order_uuid: order.uuid
         }
       }, function (error, debit) {
         if (error) return order.setPaymentError(error.uri, error, callback);
@@ -58,10 +58,18 @@ var task = function (message, callback) {
 
   logger.debit.info("processing order: " + body.order.id);
 
-  models.Order.findOne({where: {id: body.order.id}}, function (error, order) {
+  var $options = { 
+    one: [ 
+      { table: 'restaurants', alias: 'restaurant' }
+    , { table: 'users', alias: 'user' }
+    ]
+  };
+  db.orders.findOne( body.order.id, $options, function(error, order) {
+
+  // models.Order.findOne({where: {id: body.order.id}}, function (error, order) {
     if (error) return logger.db.error(TAGS, error), callback(error);
 
-    if(!order) return utils.queues.debit.del(message.id, utils.noop), callback();
+    if ( !order ) return utils.queues.debit.del(message.id, utils.noop), callback();
     if (_.contains(['invoiced', 'paid'], order.payment_status)) return utils.queues.debit.del(message.id, utils.noop), callback();
 
     // check to see if a debit was already successfuly processed for this order
@@ -71,7 +79,7 @@ var task = function (message, callback) {
       if (error) return callback(error); // attempt to process this from the queue again later
 
       if (debit) {
-        logger.debit.info(TAGS, 'found existing debit for order: ' + order.attributes.id);
+        logger.debit.info(TAGS, 'found existing debit for order: ' + order.id);
         return order.setPaymentPaid('debit', debit.uri, debit, function (error) {
           if (error) return logger.db.error(TAGS, error), callback(error);
           utils.queues.debit.del(message.id, utils.noop);
@@ -82,9 +90,9 @@ var task = function (message, callback) {
       // if no debit then continue to process
 
       // if the status is processing there is no need to set the payment status to processing again
-      if (order.attributes.payment_status != 'processing') {
-        order.attributes.payment_status = 'processing';
-        order.save(function (error) {
+      if (order.payment_status != 'processing') {
+        var $update = { payment_status: 'processing' };
+        db.orders.update( order.id, $update, function(error) {
           if (error) return logger.db.error(TAGS, error), callback(error);
           debitCustomer(order, function (error) {
             utils.queues.debit.del(message.id, utils.noop);

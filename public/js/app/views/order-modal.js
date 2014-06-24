@@ -121,7 +121,7 @@ define(function(require, exports, module) {
       if (order.zip === this.options.defaultAddress.get('zip'))
         _.extend(order, this.options.defaultAddress.pick(this.model.constructor.addressFields));
 
-      this.model.set( order, { silent: true } );
+      this.model.set( order );
 
       if ( this.showErrors() ) return;
 

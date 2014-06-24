@@ -177,9 +177,9 @@ define(function(require, exports, module) {
         'change:is_unacceptable change:below_min': this.setSubmittable
       }, this);
 
+      this.set( 'is_delivery_service', this.shouldBeDeliveryService() )
       this.on( 'change', function(){
-        var isDeliveryService = this.shouldBeDeliveryService();
-        this.attributes.is_delivery_service = true;
+         this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
       });
     },
 
@@ -231,7 +231,7 @@ define(function(require, exports, module) {
     ],
 
     zipChanged: function(model, value, options) {
-      model.restaurant.set('is_bad_zip', !_.contains(model.restaurant.get('delivery_zips'), value));
+      model.restaurant.set('is_bad_zip', !this.restaurant.isValid(this));
     },
 
     checkLeadTimes: function() {

@@ -381,6 +381,7 @@ var Restaurant = module.exports = Model.extend({
       }
     });
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
+    query.columns.push("(SELECT array(SELECT \"to\" FROM delivery_service_zips WHERE \"from\" = restaurants.zip ORDER BY \"to\" ASC)) AS delivery_service_zips");
     query.columns.push([
       '(select array_to_json( array('
     , '  select row_to_json( r ) as delivery_zips from ('

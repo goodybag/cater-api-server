@@ -257,6 +257,16 @@ define(function(require, exports, module) {
       return minutes >= leadTime;
     },
 
+    isValidZip: function( order ){
+      var zips = this.get('delivery_zips');
+
+      if ( order.get('is_delivery_service') ){
+        zips = this.get('delivery_service_zips');
+      }
+
+      return zips.indexOf( order.address.get('zip') ) > -1;
+    },
+
     isValidOrder: function( order ){
       return this.validateOrder( order ).length === 0;
     },
@@ -264,13 +274,7 @@ define(function(require, exports, module) {
     validateOrderFulfillability: function( order ){
       var errors = [];
 
-      var allDeliveryZips = utils.reduce( this.get('delivery_zip_groups'), function( a, b ){
-        return a.concat( b.zips );
-      }, [] );
-
-      // Check zips
-      if ( allDeliveryZips.indexOf( order.address.get('zip') ) === -1 ){
-        console.log('pushing is_bad_zip', allDeliveryZips)
+      if ( !this.isValidZip( order ) ){
         errors.push( 'is_bad_zip' );
       }
 

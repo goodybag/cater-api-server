@@ -177,11 +177,10 @@ define(function(require, exports, module) {
         'change:is_unacceptable change:below_min': this.setSubmittable
       }, this);
 
-      // this.on( 'change', function(){
-      //   var isDeliveryService = this.shouldBeDeliveryService();
-      //   this.attributes.is_pickup = isDeliveryService;
-      //   this.attributes.is_delivery_service = true;
-      // });
+      this.on( 'change', function(){
+        var isDeliveryService = this.shouldBeDeliveryService();
+        this.attributes.is_delivery_service = true;
+      });
     },
 
     set: function(key, val, options) {
@@ -236,16 +235,7 @@ define(function(require, exports, module) {
     },
 
     checkLeadTimes: function() {
-      var guests = this.get('guests');
-      var limit = _.find(_.sortBy(this.restaurant.get('lead_times'), 'max_guests'), function(obj) {
-        return obj.max_guests >= guests;
-      });
-
-      var then = this.get('datetime');
-      var now = moment().tz(this.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
-      var minutes = (new Date(then) - new Date(now)) / 60000;
-
-      this.restaurant.set('is_bad_lead_time', !limit ? true : minutes <= limit.lead_time);
+      this.restaurant.set( 'is_bad_lead_time', !this.restaurant.isValidGuestDateCombination( this ) );
     },
 
     datetimeChanged: function(model, value, options) {

@@ -241,13 +241,15 @@ define(function(require, exports, module) {
       var minutes = (moment(date) - moment(now)) / 60000;
       var leadTime = limit.lead_time;
 
+      if ( limit && minutes >= leadTime ) return true;
+
       if ( !limit || minutes < leadTime ){
         limit = _.find(_.sortBy(this.get('pickup_lead_times'), 'max_guests'), function(obj) {
           return obj.max_guests >= order.get('guests');
         });
       }
 
-      if ( !limit || minutes >= leadTime ) return false;
+      if ( !limit ) return false;
 
       leadTime = limit.lead_time;
       leadTime += moment.duration( this.get('region').lead_time_modifier ).asMinutes();

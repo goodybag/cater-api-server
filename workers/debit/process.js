@@ -38,6 +38,8 @@ var debitCustomer = function (order, callback) {
         , order_uuid: order.uuid
         }
       }, function (error, debit) {
+        // construct a model to run the following transactions
+        order = new models.Order(order);
         if (error) return order.setPaymentError(error.uri, error, callback);
         return order.setPaymentPaid('debit', debit.uri, debit, callback);
       });

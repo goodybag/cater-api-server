@@ -39,9 +39,8 @@ var debitCustomer = function (order, callback) {
         }
       }, function (error, debit) {
         // construct a model to run the following transactions
-        order = new models.Order(order);
-        if (error) return order.setPaymentError(error.uri, error, callback);
-        return order.setPaymentPaid('debit', debit.uri, debit, callback);
+        if (error) return (new models.Order(order)).setPaymentError(error.uri, error, callback);
+        return (new models.Order(order)).setPaymentPaid('debit', debit.uri, debit, callback);
       });
   });
 };
@@ -79,7 +78,7 @@ var task = function (message, callback) {
 
       if (debit) {
         logger.debit.info(TAGS, 'found existing debit for order: ' + order.id);
-        return order.setPaymentPaid('debit', debit.uri, debit, function (error) {
+        return (new models.Order(order)).setPaymentPaid('debit', debit.uri, debit, function (error) {
           if (error) return logger.db.error(TAGS, error), callback(error);
           utils.queues.debit.del(message.id, utils.noop);
           callback();

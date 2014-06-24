@@ -67,10 +67,7 @@ var task = function (message, callback) {
     ]
   };
   db.orders.findOne( body.order.id, $options, function(error, order) {
-
-  // models.Order.findOne({where: {id: body.order.id}}, function (error, order) {
-    if (error) return logger.db.error(TAGS, error), callback(error);
-
+    if ( error ) return logger.db.error(TAGS, error), callback(error);
     if ( !order ) return utils.queues.debit.del(message.id, utils.noop), callback();
     if (_.contains(['invoiced', 'paid'], order.payment_status)) return utils.queues.debit.del(message.id, utils.noop), callback();
 

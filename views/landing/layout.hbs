@@ -9,6 +9,8 @@
     <!-- Keep this up here! -->
     <!--[if lt IE 9]>
     <script src="{{cdn "/components/html5shiv/dist/html5shiv.js"}}"></script>
+    <script src="{{cdn "/components/es5-shim/es5-shim.js"}}"></script>
+    <script src="{{cdn "/components/es5-shim/es5-sham.js"}}"></script>
     <![endif]-->
     <!--[if lte IE 9]>
     <script src="{{cdn "/components/console-polyfill/index.js"}}"></script>
@@ -21,7 +23,7 @@
 
     {{{block "head"}}}
     <!--[if lt IE 9]>
-    <link rel="stylesheet" href="{{cdn "/dist/landing-ielt9.css"}}">
+    <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/landing-ielt9.css' pkg)}}">
     <![endif]-->
   </head>
   <body class="page {{{block "page"}}}">

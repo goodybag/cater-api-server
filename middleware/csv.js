@@ -12,10 +12,6 @@ var csv = {
     },
 
     writeRow: function(columns) {
-      this.write(columns.join(',') + '\n');
-    },
-
-    writeRowQuoted: function(columns) {
       this.write(utils.map(columns, csv.quoteVal).join(',') + '\n');
     },
 

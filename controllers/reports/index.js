@@ -41,7 +41,6 @@ var reports = {
     var restaurantId = req.body.restaurantId;
     var userId = req.body.userId;
 
-
     var filename = [
       status
     , 'orders'
@@ -49,10 +48,8 @@ var reports = {
     , end
     ].join('-') + '.csv';
 
-    res.header( 'Content-Type', 'text/csv' );
-    res.header( 'Content-Disposition', 'attachment;filename=' + filename );
-
-    res.write([
+    res.csv.writeFilename(filename);
+    res.csv.writeRow([
       'Order Number'
     , 'Date Submitted'
     , 'Delivery Date'
@@ -65,7 +62,7 @@ var reports = {
     , 'Tip'
     , 'Total'
     , 'Caterer Name'
-    ].join(',') + '\n');
+    ]);
 
     var where = { status: status };
     var options = { limit: 'all' };
@@ -89,26 +86,26 @@ var reports = {
 
     db.orders.find(where, options, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      results.forEach( function(order) {
-        res.write(utils.map([
-          order.id
-        , moment(order.submitted).format(reports.dateFormat)
-        , moment(order.datetime).format(reports.dateFormat)
-        , order.user.name
-        , order.user.email
-        , order.user.organization
-        , dollars(order.sub_total)
-        , dollars(order.delivery_fee)
-        , dollars(order.sales_tax)
-        , dollars(order.tip)
-        , dollars(order.total)
-        , order.restaurant.name
-        ], quoteVal).join(',') + '\n');
-      });
-
+      results
+        .filter( function(order) { return order.restaurant_id; })
+        .forEach( function(order) {
+          res.csv.writeRow([
+            order.id
+          , moment(order.submitted).format(reports.dateFormat)
+          , moment(order.datetime).format(reports.dateFormat)
+          , order.user.name
+          , order.user.email
+          , order.user.organization
+          , dollars(order.sub_total)
+          , dollars(order.delivery_fee)
+          , dollars(order.sales_tax)
+          , dollars(order.tip)
+          , dollars(order.total)
+          , order.restaurant.name
+          ]);
+        });
       res.end();
     });
-
   },
 
   usersCsv: function(req, res) {
@@ -146,7 +143,7 @@ var reports = {
           , first = (idx >= 0) ? user.name.substring(0, idx) : user.name
           , last = (idx >= 0) ? user.name.substring(idx+1) : '';
 
-        res.csv.writeRowQuoted([
+        res.csv.writeRow([
           user.email
         , first
         , last
@@ -177,7 +174,7 @@ var reports = {
     };
     db.users_redemptions.find(query, options, function(error, redemptions) {
       redemptions.forEach(function(redemption) {
-        res.csv.writeRowQuoted([
+        res.csv.writeRow([
           redemption.user.id
         , redemption.user.name
         , redemption.user.email

@@ -231,7 +231,7 @@ define(function(require, exports, module) {
     ],
 
     zipChanged: function(model, value, options) {
-      model.restaurant.set('is_bad_zip', !this.restaurant.isValid(this));
+      model.restaurant.set('is_bad_zip', !this.restaurant.isValidZip(this));
     },
 
     checkLeadTimes: function() {

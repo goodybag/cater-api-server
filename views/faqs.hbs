@@ -1,0 +1,67 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="{{cdn "/css/faqs.css"}}">
+<link rel="stylesheet" href="{{cdn "/components/font-awesome/css/font-awesome.css"}}">
+{{/extend}}
+
+{{#extend "banner"}}
+<div class="banner faqs-banner"></div>
+{{/extend}}
+
+<div class="page page-faqs container faqs-container">
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="row">
+        <h1 class="faq-header">Frequently Asked Questions</h1>
+
+        <section class="no-border">
+          <ol class="faq-index">
+            {{#each faqs}}
+            <h2 class="faq-header">{{section}}</h2>
+              {{#each items}}
+              <li><a href="#{{anchorify q}}">{{q}}</a></li>
+              {{/each}}
+            {{/each}}
+          </ol>
+        </section>
+
+        <section class="contact-us">
+          <div class="contact-header"><strong>Don't see your question?</strong> Please get in touch with anything else!</div>
+          <div class="contact-us-info">
+            <i class="icon-li icon-phone"></i>
+            <strong>Phone</strong> {{ phoneNumber config.phone.support }}
+          </div>
+          <div class="contact-us-info">
+            <i class="icon-li icon-envelope"></i>
+            <strong>Mail</strong> {{{ mailto config.emails.support }}}
+          </div>
+          <div class="contact-us-info">
+            <i class="icon-li icon-comments"></i>
+            <strong>Live Chat</strong>
+          </div>
+        </section>
+
+        {{#each faqs}}
+        <section class="faq-list">
+          <h2 class="faq-header">{{ section }}</h2>
+          {{#each items}}
+          <strong id="{{anchorify q}}">{{q}}</strong>
+          <p>{{{a}}}</p>
+          {{/each}}
+        </section>
+        {{/each}}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{{#extend "scripts"}}
+<script>
+  require([
+      'jquery-loaded'
+    ]
+  , function() {
+    }
+  );
+</script>
+{{/extend}}

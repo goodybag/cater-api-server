@@ -15,12 +15,18 @@ define(function(require, exports, module) {
 
       var schema = _.clone(_.result(this.constructor, 'schema'));
       if (!options.enforceRequired) {
-        schema.properties = utils.objMap(schema.properties, _.compose(
-          utils.partialRight(_.omit, 'required'),
-          function(property) {
-            return _.extend(property, {type: _.uniq(['null'].concat(property.type))});
-          })
-        );
+        schema.properties = _.clone( schema.properties );
+        for ( var key in schema.properties ){
+          schema.properties[ key ].required = false;
+
+          if ( !utils.isArray( schema.properties[ key ].type ) ){
+            schema.properties[ key ].type = [ schema.properties[ key ].type ];
+          }
+
+          if ( schema.properties[ key ].type.indexOf('null') === -1 ){
+            schema.properties[ key ].type.push('null');
+          }
+        }
       }
 
       return this.validator.validate(attrs, schema, options, _.identity);

@@ -3,6 +3,7 @@ module.exports = {
 , analytics: require('./analytics')
 , basicAuth: require('./basic-session-auth')
 , cors: require('./cors')
+, csv: require('./csv')
 , defaultLocals: require('./default-locals')
 , domains: require('./domains')
 , editOrderAuth: require('./edit-order-auth')

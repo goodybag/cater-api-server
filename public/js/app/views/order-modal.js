@@ -126,7 +126,7 @@ define(function(require, exports, module) {
       if ( this.showErrors() ) return;
 
       var self = this;
-      this.model.save()
+      this.model.save(null, this.submitHandlers);
     },
 
     onDatePickerOpen: function(){

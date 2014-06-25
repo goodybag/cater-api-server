@@ -33,13 +33,13 @@ var reports = {
    * POST /reports/orders
    */
   ordersCsv: function(req, res) {
-    var status = req.body.status || 'accepted';
-    var start = req.body.start || '2012-01-01';
-    var end = moment(req.body.end || new Date()).add('d',1).format('YYYY-MM-DD');
-    var range = req.body.range || 'datetime';
-    var sort = req.body.sort || 'asc';
-    var restaurantId = req.body.restaurantId;
-    var userId = req.body.userId;
+    var status = req.query.status || 'accepted';
+    var start = req.query.start || '2012-01-01';
+    var end = moment(req.query.end || new Date()).add('d',1).format('YYYY-MM-DD');
+    var range = req.query.range || 'datetime';
+    var sort = req.query.sort || 'asc';
+    var restaurantId = req.query.restaurantId;
+    var userId = req.query.userId;
 
     var filename = [
       status
@@ -109,8 +109,8 @@ var reports = {
   },
 
   usersCsv: function(req, res) {
-    var start = req.body.start || '2012-01-01';
-    var end = req.body.end || moment().format('YYYY-MM-DD');
+    var start = req.query.start || '2012-01-01';
+    var end = req.query.end || moment().format('YYYY-MM-DD');
 
     var filename = [
       'users'
@@ -173,7 +173,7 @@ var reports = {
     , one: [{ table: 'users', alias: 'user' }]
     };
 
-    if (req.body.userId) query.user_id = req.body.userId;
+    if (req.query.userId) query.user_id = req.query.userId;
     db.users_redemptions.find(query, options, function(error, redemptions) {
       redemptions.forEach(function(redemption) {
         res.csv.writeRow([

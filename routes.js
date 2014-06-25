@@ -675,21 +675,21 @@ module.exports.register = function(app) {
   , controllers.reports.index
   );
 
-  app.post('/reports/orders'
+  app.get('/reports/orders'
   , m.restrict(['admin'])
-  , m.csv
+  , m.csv()
   , controllers.reports.ordersCsv
   );
 
-  app.post('/reports/users'
+  app.get('/reports/users'
   , m.restrict(['admin'])
-  , m.csv
+  , m.csv()
   , controllers.reports.usersCsv
   );
 
-  app.post('/reports/redemptions'
+  app.get('/reports/redemptions'
   , m.restrict(['admin'])
-  , m.csv
+  , m.csv()
   , controllers.reports.usersRedemptionsCsv
   );
 

@@ -20,9 +20,11 @@ var csv = {
     }
 };
 
-module.exports =  function(req, res, next) {
-  if ( res.csv ) throw new Error('res.csv already exists!');
-  res.csv = {};
-  for ( var method in csv ) res.csv[method] = csv[method].bind(res);
-  next(); 
+module.exports = function( opts ){
+  return function( req, res, next ){
+    if ( res.csv ) throw new Error('res.csv already exists!');
+    res.csv = {};
+    for ( var method in csv ) res.csv[method] = csv[method].bind(res);
+    next(); 
+  };
 }

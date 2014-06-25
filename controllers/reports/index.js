@@ -172,6 +172,8 @@ var reports = {
       limit : 'all'
     , one: [{ table: 'users', alias: 'user' }]
     };
+
+    if (req.body.userId) query.user_id = req.body.userId;
     db.users_redemptions.find(query, options, function(error, redemptions) {
       redemptions.forEach(function(redemption) {
         res.csv.writeRow([

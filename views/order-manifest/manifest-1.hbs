@@ -5,8 +5,6 @@
   , phantomPageHeightOffset:  -120
   };
 
-  var pageHeight = 920;
-
   var isPhantom = function(){
     return navigator.userAgent.indexOf('PhantomJS') > - 1;
   };
@@ -105,6 +103,32 @@
 <section class="manifest-page table-page">
   <header class="manifest-header">
     <h4 class="header-text">Please print this and include with the delivered order. Thanks! <span class="signature">-Goodybag</span></h4>
+    <div class="order-info">
+      <div class="info-item">
+        <div class="item-title">This Order Is For:</div>
+        <div class="item-value">
+          {{#if order.is_delivery}}Delivery{{else}}Pickup{{/if}}
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="item-title">Order:</div>
+        <div class="item-value"></div>
+      </div>
+      <div class="info-item">
+        <div class="item-title">Company:</div>
+        <div class="item-value"></div>
+      </div>
+      <div class="info-item">
+        <div class="item-title">Order Date:</div>
+        <div class="item-value"></div>
+      </div>
+      <div class="info-item">
+        <div class="item-title">
+          {{#if order.is_delivery}}Delivery{{else}}Pickup{{/if}} Time
+        </div>
+        <div class="item-value"></div>
+      </div>
+    </div>
     <div class="subtext">
       Not what you ordered? Something missing? No worries! We will help get it resolved. Contact us at the number below.
     </div>
@@ -172,38 +196,54 @@
     <dt>Order Number:</dt>
     <dd>#{{order.id}}</dd>
     {{#if order.name}}
-    <dt>Delivery Name:</dt>
+    <dt>Order Name:</dt>
     <dd>{{order.name}}</dd>
     {{/if}}
     <dt>Customer Notes:</dt>
     <dd>{{order.notes}}</dd>
   </dl>
 
-  <h2 class="section-title">Delivery</h2>
-  <dl class="manifest-section-dl">
-    {{#if order.user.organization}}
-    <dt>Company:</dt>
-    <dd>{{order.user.organization}}</dd>
-    {{/if}}
-    <dt>Address:</dt>
-    <dd>
-      {{order.street}}
-      {{#if order.street2}}
-        <br>
-        {{order.street2}}
+  {{#if order.is_delivery}}
+    <h2 class="section-title">Delivery</h2>
+    <dl class="manifest-section-dl">
+      {{#if order.user.organization}}
+      <dt>Company:</dt>
+      <dd>{{order.user.organization}}</dd>
       {{/if}}
-      <br>
-      {{order.city}}, {{order.state}} {{order.zip}}
-    </dd>
-    <dt>Phone:</dt>
-    <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}}</dd>
-    <dt>Delivery Date:</dt>
-    <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
-    <dt>Delivery Time:</dt>
-    <dd>{{formatDateTime order.datetime "h:mm A"}}</dd>
-    <dt>Delivery Instructions:</dt>
-    <dd>{{order.delivery_instructions}}</dd>
-  </dl>
+      <dt>Address:</dt>
+      <dd>
+        {{order.street}}
+        {{#if order.street2}}
+          <br>
+          {{order.street2}}
+        {{/if}}
+        <br>
+        {{order.city}}, {{order.state}} {{order.zip}}
+      </dd>
+      <dt>Phone:</dt>
+      <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}}</dd>
+      <dt>Delivery Date:</dt>
+      <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
+      <dt>Delivery Time:</dt>
+      <dd>{{formatDateTime order.datetime "h:mm A"}}</dd>
+      <dt>Delivery Instructions:</dt>
+      <dd>{{order.delivery_instructions}}</dd>
+    </dl>
+  {{else}}
+    <h2 class="section-title">Pickup</h2>
+    <dl class="manifest-section-dl">
+      {{#if order.user.organization}}
+      <dt>Company:</dt>
+      <dd>{{order.user.organization}}</dd>
+      {{/if}}
+      <dt>Phone:</dt>
+      <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}}</dd>
+      <dt>Pickup Date:</dt>
+      <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY"}}</dd>
+      <dt>Pickup Time:</dt>
+      <dd>{{formatDateTime order.pickup_datetime "h:mm A"}}</dd>
+    </dl>
+  {{/if}}
 
   <h2 class="section-title">Goodybag</h2>
   <dl class="manifest-section-dl">

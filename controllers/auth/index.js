@@ -172,10 +172,12 @@ module.exports.login = function ( req, res ){
       });
     }
 
-    req.analytics.track({
-      userId: user.id+''
-    , event: 'Login'
-    });
+    if ( !utils.contains(user.groups, 'admin') ) {
+      req.analytics.track({
+        userId: user.id+''
+      , event: 'Login'
+      });
+    }
 
     req.setSession( user, req.body.remember );
 

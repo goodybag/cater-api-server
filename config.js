@@ -43,6 +43,8 @@ config.defaults = {
   , bucket: 'cater-cdn-dev'
   }
 
+, googleAnalytics: 'UA-23372459-4'
+
 , rewardsStartDate: '2014-03-25 00:00:00'
 
 // temp solution, would be better in a table
@@ -401,6 +403,8 @@ config.production = {
     baseUrl: 'https://d3bqck8kwfkhx5.cloudfront.net'
   , bucket: 'cater-cdn-prod'
   }
+
+, googleAnalytics: 'UA-23372459-3'
 
 , http: {
     port: process.env['PORT'] || 5000

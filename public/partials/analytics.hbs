@@ -33,9 +33,8 @@ window.analytics.page();
 
 {{#if user.isAdmin}}
 <script>
-  analytics.once('ready', function() {
-    mixpanel.register({ "$ignore": "true" });
-    console.log('IGNORING THIS PAGE');
-  });
+analytics.once('ready', function() {
+  mixpanel.register({ "$ignore": "true" });
+});
 </script>
 {{/if}}

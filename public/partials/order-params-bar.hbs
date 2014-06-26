@@ -10,8 +10,10 @@
         {{#if defaultAddress }}
         <option value="{{defaultAddress.zip}}">Your Default Address</option>
         {{/if}}
-        {{#each order.restaurant.delivery_zips}}
-        <option value="{{this}}">
+        {{#each order.restaurant.delivery_zip_groups}}
+          {{#each this.zips}}
+            <option value="{{this}}">
+          {{/each}}
         {{/each}}
       </datalist>
     </div>

@@ -190,7 +190,7 @@ var Restaurant = module.exports = Model.extend({
     options = utils.defaults( options || {}, {
       table: 'regions'
     , aliases: {}
-    , columns: ['timezone']
+    , columns: ['sales_tax', 'timezone']
     });
 
     var columns = [];

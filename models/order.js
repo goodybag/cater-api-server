@@ -28,6 +28,7 @@ var modifyAttributes = function(callback, err, orders) {
       'delivery_zips',
       'lead_times',
       'max_guests',
+      'restaurant_sales_tax',
       'restaurant_timezone'
     ];
     utils.each(orders, function(order) {
@@ -61,6 +62,9 @@ var modifyAttributes = function(callback, err, orders) {
         // Fix the conflict-free property joined from region/restaurant
         order.attributes.restaurant.timezone = order.attributes.restaurant.restaurant_timezone;
         delete order.attributes.restaurant.restaurant_timezone;
+
+        order.attributes.restaurant.sales_tax = order.attributes.restaurant.restaurant_sales_tax;
+        delete order.attributes.restaurant.restaurant_sales_tax;
       } else {
         order.attribtues.restaurant = null;
       }
@@ -804,7 +808,7 @@ module.exports = Model.extend({
     query.columns.push.apply(
       query.columns
     , Restaurant.getRegionColumns({
-        aliases: { timezone: 'restaurant_timezone' }
+        aliases: { timezone: 'restaurant_timezone', sales_tax: 'restaurant_sales_tax' }
       })
     );
     query.joins.regions = Restaurant.getRegionJoin();

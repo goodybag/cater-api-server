@@ -144,6 +144,12 @@ define(function(require, exports, module) {
         },
         region_id: {
           type: ['number', 'null']
+        },
+        delivery_service_order_amount_threshold: {
+          type: ['number', 'null']
+        },
+        delivery_service_head_count_threshold: {
+          type: ['number', 'null']
         }
       }
     },

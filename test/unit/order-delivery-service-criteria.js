@@ -18,7 +18,7 @@ describe ('Order Delivery Service Criteria', function(){
   , datetime:   now.format('YYYY-MM-DD 12:00:00')
   , restaurant: {
       delivery_service_order_amount_threshold:  500
-    , head_count_delivery_service_threshold:    20
+    , delivery_service_head_count_threshold:    20
     , delivery_zips: ['78756']
     , delivery_zip_groups: [
         { fee: 1000, zips: ['78756'] }
@@ -78,7 +78,7 @@ describe ('Order Delivery Service Criteria', function(){
     var order = utils.deepExtend( {}, defaultOrder, {
       guests: 20
     , restaurant: {
-        head_count_delivery_service_threshold:    25
+        delivery_service_head_count_threshold:    25
       }
     });
 

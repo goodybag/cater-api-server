@@ -142,7 +142,12 @@ define(function(require) {
       type: types.int
     , references: {table: 'regions', column: 'id', onDelete: 'set null'}
     }
-  , head_count_delivery_service_threshold: {
+  , delivery_service_order_amount_threshold: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
+  , delivery_service_head_count_threshold: {
       type: types.int
     , nullable: false
     , default: 0

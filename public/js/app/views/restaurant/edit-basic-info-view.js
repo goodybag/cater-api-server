@@ -11,14 +11,16 @@ define(function(require, exports, module) {
     },
 
     fieldMap: {
-      name:                   '#input-name'
-    , description:            '#input-description'
-    , websites:               '#input-websites'
-    , yelp_business_id:       '#input-yelp'
-    , is_hidden:              '#input-hidden'
-    , logo_url:               '#input-logo-url'
-    , logo_mono_url:          '#input-mono-logo-url'
-    , region_id:              '[name="region_id"]'
+      name:                                     '#input-name'
+    , description:                              '#input-description'
+    , websites:                                 '#input-websites'
+    , yelp_business_id:                         '#input-yelp'
+    , is_hidden:                                '#input-hidden'
+    , logo_url:                                 '#input-logo-url'
+    , logo_mono_url:                            '#input-mono-logo-url'
+    , region_id:                                '[name="region_id"]'
+    , delivery_service_head_count_threshold:    '[name="delivery_service_head_count_threshold"]'
+    , delivery_service_order_amount_threshold:  '[name="delivery_service_order_amount_threshold"]'
     },
 
     fieldGetters: {
@@ -41,7 +43,16 @@ define(function(require, exports, module) {
 
       region_id: function(){
         return +this.$el.find( this.fieldMap.region_id ).val();
-      }
+      },
+
+      delivery_service_head_count_threshold: function(){
+        return +this.$el.find( this.fieldMap.delivery_service_head_count_threshold ).val();
+      },
+
+      delivery_service_order_amount_threshold: function(){
+        var $el = this.$el.find( this.fieldMap.delivery_service_order_amount_threshold );
+        return Handlebars.helpers[ $el.data('out') ]( $el.val() );
+      },
     },
 
     initialize: function() {
@@ -52,7 +63,6 @@ define(function(require, exports, module) {
       $input.siblings('[data-name="' + $input.attr('name') + '"]').attr(
         'src', $input.val()
       );
-    },
-
+    }
   });
 });

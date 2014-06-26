@@ -156,6 +156,8 @@ define(function(require, exports, module) {
         this.orderItems.orderId = model.id;
       });
 
+      this.set( 'is_delivery_service', this.shouldBeDeliveryService() )
+
       this.on('change:adjustment', this.updateSubtotal, this);
       this.listenTo(this.orderItems, 'change:sub_total add remove', this.updateSubtotal, this);
 
@@ -166,6 +168,7 @@ define(function(require, exports, module) {
       }, this);
 
       this.on('change:sub_total', function(model, value, options) {
+        this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
         model.set('below_min', value < model.restaurant.get('minimum_order'));
         model.setSubmittable(model, value, options);
       }, this);
@@ -176,11 +179,6 @@ define(function(require, exports, module) {
         'change:guests': this.guestsChanged,
         'change:is_unacceptable change:below_min': this.setSubmittable
       }, this);
-
-      this.set( 'is_delivery_service', this.shouldBeDeliveryService() )
-      this.on( 'change', function(){
-         this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
-      });
     },
 
     set: function(key, val, options) {
@@ -231,6 +229,7 @@ define(function(require, exports, module) {
     ],
 
     zipChanged: function(model, value, options) {
+      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
       model.restaurant.set('is_bad_zip', !this.restaurant.isValidZip(this));
     },
 
@@ -239,6 +238,8 @@ define(function(require, exports, module) {
     },
 
     datetimeChanged: function(model, value, options) {
+      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+
       if (!value) {
         model.restaurant.set({
           is_bad_delivery_time: null,
@@ -258,6 +259,8 @@ define(function(require, exports, module) {
     },
 
     guestsChanged: function(model, value, options) {
+      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+
       if (value == null) {
         model.restaurant.set({
           is_bad_guests: null,

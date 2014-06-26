@@ -14,7 +14,7 @@ begin
   perform add_column( 'orders', 'is_delivery_service', 'boolean not null default false' );
 
   -- The point in which we switch from using delivery service to restaurant delivery
-  perform add_column( 'restaurants', 'head_count_delivery_service_threshold', 'int not null default 0' );
+  perform add_column( 'restaurants', 'delivery_service_head_count_threshold', 'int not null default 0' );
 
   perform add_column( 'order_items', 'sub_total', 'int not null default 0' );
 

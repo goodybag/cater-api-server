@@ -320,7 +320,8 @@ var fields = [
   'gb_fee',
   'is_direct_deposit',
   'is_fee_on_total',
-  'head_count_delivery_service_threshold',
+  'delivery_service_head_count_threshold',
+  'delivery_service_order_amount_threshold',
   'region_id'
 ];
 

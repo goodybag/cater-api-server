@@ -68,10 +68,10 @@ define(function( require, exports, module ){
     name: 'head_count'
   , requirements: [
       'guests'
-    , 'restaurant.head_count_delivery_service_threshold'
+    , 'restaurant.delivery_service_head_count_threshold'
     ]
   , fn: function( order ){
-      return order.guests < order.restaurant.head_count_delivery_service_threshold;
+      return order.guests < order.restaurant.delivery_service_head_count_threshold;
     }
   });
 

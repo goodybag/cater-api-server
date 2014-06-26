@@ -25,6 +25,7 @@ define(function(require, exports, module) {
       , this.options.sortView.getProps()
       , this.options.favoritesView.getProps()
       );
+      console.log('hi');
       analytics.track( 'Restaurant Search', {searchParams: props} );
       var searchUrl = this.options.searchUrl;
       window.location.href = searchUrl + utils.queryParams(props);

@@ -22,12 +22,12 @@ module.exports = function(req, res, next) {
 
     req.user = user;
     req.user.isAdmin = utils.contains(req.user.attributes.groups, 'admin');
-    res.locals.isAdmin = utils.contains(req.user.attributes.groups, 'admin');
     req.user.isRestaurant =
       utils.contains(req.user.attributes.groups, 'restaurant') &&
       utils.contains(req.user.attributes.restaurant_ids, parseInt(req.param('rid')));
 
     res.locals.user = user.toJSON();
+    res.locals.user.isAdmin = req.user.isAdmin;
     delete res.locals.user.password;
 
     next();

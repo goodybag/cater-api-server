@@ -56,9 +56,11 @@ define(function( require, exports, module ){
     name: 'dollar_amount'
   , requirements: [
       'sub_total'
+    , 'restaurant.minimum_order'
     , 'restaurant.delivery_service_order_amount_threshold'
     ]
   , fn: function( order ){
+      if ( order.sub_total < order.restaurant.minimum_order ) return false;
       return order.sub_total < order.restaurant.delivery_service_order_amount_threshold;
     }
   });

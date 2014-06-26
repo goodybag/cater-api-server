@@ -15,9 +15,9 @@ define(function(require, exports, module) {
   var tax = function( order ){
     if ( !order ) return 0;
 
-    var val = order.sub_total + order.restaurant.delivery_fee;
+    var val = order.sub_total + order.delivery_fee;
 
-    return Math.round( val * order.restaurant.sales_tax );
+    return Math.round( val * order.sales_tax );
   };
 
   var helpers = {
@@ -90,7 +90,7 @@ define(function(require, exports, module) {
 
       order.tip = order.tip || 0;
 
-      var total = order.sub_total + order.restaurant.delivery_fee;
+      var total = order.sub_total + order.delivery_fee;
       total += tax( order );
 
       return ((total + order.tip) / 100).toFixed(2);

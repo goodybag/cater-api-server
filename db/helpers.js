@@ -517,6 +517,8 @@ dirac.use( function( dirac ){
   dirac.dals.orders.before( 'find', function( $query, schema, next ){
     if ( !$query.statusDateSort ) return next();
 
+    var alias = $query.statusDateSort.alias || 'status_date';
+
     $query.with     = $query.with     || [];
     $query.joins    = $query.joins    || [];
     $query.columns  = $query.columns  || ['*'];
@@ -524,7 +526,7 @@ dirac.use( function( dirac ){
     $query.columns.push({
       table:  'statuses'
     , name:   'created_at'
-    , alias:  'status_date'
+    , alias:  alias
     });
 
     $query.with.push({
@@ -543,11 +545,48 @@ dirac.use( function( dirac ){
     , on:     { order_id: '$orders.id$' }
     });
 
-    $query.order = [ 'status_date ' + ($query.statusDateSort.direction || 'desc') ];
+    $query.order = [ alias + ' ' + ($query.statusDateSort.direction || 'desc') ];
 
     next();
   });
 });
+
+// Order submitted date
+// dirac.use( function( dirac ){
+//   var submittedHandler = function( $query, schema, next ){
+//     $query.with = $query.with || [];
+//     $query.joins = $query.joins || [];
+//     $query.columns = $query.columns || ['*'];
+
+//     $query.columns.push({
+//       table: 'last_submitted'
+//     , name: 'created_at'
+//     , alias: 'submitted'
+//     });
+
+//     $query.with.push({
+//       name:     'last_submitted'
+//     , type:     'select'
+//     , table:    'order_statuses'
+//     , columns:  [ 'order_id', 'status', 'created_at' ]
+//     , distinct: [ 'order_id' ]
+//     , order:    [ 'order_id desc, created_at desc' ]
+//     , where:    { status: 'submitted', order_id: $query.where.id }
+//     });
+
+//     $query.joins.push({
+//       type: 'left'
+//     , target: 'last_submitted'
+//     , on: { order_id: '$orders.id$' }
+//     });
+//     // Join order_statuses here
+//     next();
+
+//   };
+
+//   dirac.dals.orders.before( 'findOne', submittedHandler );
+//   dirac.dals.orders.before( 'find', submittedHandler );
+// })
 
 // Log queries to dirac
 // dirac.use( function( dirac ){

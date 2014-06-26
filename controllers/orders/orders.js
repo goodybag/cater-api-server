@@ -110,27 +110,30 @@ module.exports.get = function(req, res) {
         columns: ['*', 'submitted_date']
       , where: { id: parseInt(req.params.oid) }
       };
-      models.Order.findOne(query, function(err, order) {
+      var $query = { id : parseInt(req.params.oid) };
+      var $options = { 
+        columns: ['*']
+      , statusDateSort: {
+          status: 'submitted'
+        , alias: 'submitted_date'
+        }
+      , many: [{ table: 'order_items', alias: 'orderItems' }]
+      };
+      db.orders.find( $query, $options, function(err, order) {
         if (err) return cb(err);
-        if (!order) return cb(404);
-        return cb(null, order);
-      });
-    },
-
-    function(order, cb) {
-      order.getOrderItems(function(err, items) {
-        return cb(err, order);
+        if (!order || !order.length) return cb(404);
+        return cb(null, order[0]);
       });
     },
 
     function(order, cb) {
       var query = {
-        where: { id: order.attributes.user_id },
+        where: { id: order.user_id },
         embeds: {
           payment_methods: {}
         , addresses: {
             order: ['is_default desc', 'id asc']
-          , where: { user_id: order.attributes.user_id }
+          , where: { user_id: order.user_id }
           // Actually, we can probably just display this restriction client-side
           // , where: {
           //     zip: { $in: order.attributes.restaurant.delivery_zips }
@@ -152,16 +155,17 @@ module.exports.get = function(req, res) {
       return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
 
     // Redirect empty orders to item summary
-    if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
+    if (!order.orderitems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
 
-    var isReview = order.attributes.status === 'submitted'
-      && (req.query.review_token === order.attributes.review_token || req.order.isRestaurantManager)
+    var isReview = order.status === 'submitted'
+      && (req.query.review_token === order.review_token || req.order.isRestaurantManager)
     ;
 
     user = user.toJSON();
     user.addresses = utils.invoke(user.addresses, 'toJSON');
 
-    utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+    utils.findWhere(states, {abbr: order.state || 'TX'}).default = true;
+    order = new models.Order(order);
     var context = {
       order: order.toJSON(),
       isRestaurantReview: isReview,

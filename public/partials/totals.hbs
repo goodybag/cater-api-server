@@ -16,13 +16,13 @@
   <dt>Subtotal:</dt>
   <dd>{{dollars order.sub_total}}</dd>
   <dt>Delivery Fee:</dt>
-  <dd>{{dollars order.restaurant.delivery_fee}}</dd>
+  <dd>{{dollars order.delivery_fee}}</dd>
   <dt>Tax:</dt>
-  <dd>{{tax order}}</dd>
+  <dd>{{dollars order.sales_tax}}</dd>
   {{#dneq step 1}}
   <dt>Tip:</dt>
   <dd>{{dollars order.tip}}</dd>
   {{/dneq}}
   <dt class="total">Total:</dt>
-  <dd class="total">{{total order}}</dd>
+  <dd class="total">{{dollars order.total}}</dd>
 </dl>

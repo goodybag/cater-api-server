@@ -17,7 +17,6 @@ var moment = require('moment-timezone');
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
     var restaurantFields = [
-      'delivery_fee',
       'minimum_order',
       'emails',
       'sms_phones',
@@ -29,7 +28,6 @@ var modifyAttributes = function(callback, err, orders) {
       'delivery_zips',
       'lead_times',
       'max_guests',
-      'sales_tax',
       'restaurant_timezone'
     ];
     utils.each(orders, function(order) {
@@ -47,10 +45,6 @@ var modifyAttributes = function(callback, err, orders) {
           utils.pick(order.attributes, restaurantFields));
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
         utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
-
-        var rate = order.attributes.restaurant.sales_tax + 1;
-        var totalPreTip = (parseInt(order.attributes.sub_total) + parseInt(order.attributes.restaurant.delivery_fee)) * parseFloat(rate);
-        order.attributes.total = Math.round(totalPreTip + order.attributes.tip); // in cents
 
         // Handle reward promos
         var submitted = moment(order.attributes.submitted);
@@ -99,27 +93,6 @@ var modifyAttributes = function(callback, err, orders) {
 }
 
 module.exports = Model.extend({
-  getDeliveryFeeQuery: function(){
-    var query = {
-      type: 'select'
-    , alias: 'delivery_fee'
-    , table: 'restaurant_delivery_zips'
-    , columns: ['fee']
-    , where: {
-        restaurant_id:  this.attributes.restaurant_id
-      }
-    , limit: 1
-    };
-
-    if ( this.attributes.zip ){
-      query.where.zip = this.attributes.zip;
-    } else {
-      query.order = 'fee asc';
-    }
-
-    return query;
-  },
-
   getOrderItems: function(callback, client) {
     var self = this;
     callback = callback || function() {};
@@ -138,8 +111,6 @@ module.exports = Model.extend({
       where: { id: this.attributes.restaurant_id }
     , columns: ['*']
     };
-
-    query.columns.push( this.getDeliveryFeeQuery() );
 
     Restaurant.findOne(query, function(error, restaurant){
       if (error) return callback(error);
@@ -788,14 +759,7 @@ module.exports = Model.extend({
     };
 
     query.columns.push({table: 'restaurants', name: 'name', as: 'restaurant_name'});
-    query.columns.push(
-      module.exports.prototype.getDeliveryFeeQuery.call({
-        attributes: {
-          restaurant_id: query.where.restaurant_id || '$orders.restaurant_id$'
-        , zip: '$orders.zip$'
-        }
-      })
-    );
+
     query.columns.push('restaurants.minimum_order');
     query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});
 

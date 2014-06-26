@@ -107,15 +107,14 @@ module.exports.get = function(req, res) {
   var tasks = [
     function(cb) {
       var query = {
-        columns: ['*', 'submitted_date']
+        columns: ['*', 'submitted']
       , where: { id: parseInt(req.params.oid) }
       };
       var $query = { id : parseInt(req.params.oid) };
-      var $options = { 
-        columns: ['*']
-      , statusDateSort: {
+      var $options = {
+        statusDateSort: {
           status: 'submitted'
-        , alias: 'submitted_date'
+        , alias: 'submitted'
         }
       , many: [{ table: 'order_items', alias: 'orderItems' }]
       };

@@ -133,7 +133,7 @@
       </div>
     </form>
 
-    {{#unless order.orderItems.length}}
+    {{#unless order.orderitems.length}}
     <h3>No Order Items</h3>
     {{else}}
 
@@ -151,7 +151,7 @@
           </tr>
         </thead>
         <tbody>
-          {{#each order.orderItems}}
+          {{#each order.orderitems}}
           <tr id="order-item-{{this.id}}">
             <td class="line-item-name" data-title="Name">
               <div class="item-name" data-id="{{this.id}}">{{this.name}}</div>

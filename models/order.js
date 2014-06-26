@@ -100,6 +100,10 @@ var modifyAttributes = function(callback, err, orders) {
 }
 
 module.exports = Model.extend({
+  doNotSave: [
+    'total', 'sub_total', 'sales_tax', 'delivery_fee'
+  ],
+
   getDeliveryFeeQuery: function(){
     var query = {
       type: 'select'
@@ -179,6 +183,7 @@ module.exports = Model.extend({
       this.attributes.adjustment_description = this.attributes.adjustment.description;
       delete this.attributes.adjustment;
     }
+
     var order = this;
     Model.prototype.save.call(this, {
       returning: [

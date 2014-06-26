@@ -123,7 +123,7 @@ define(function( require, exports, module ){
 
       if ( result ) return false;
 
-      date  = moment( date ).add( 'minutes', -restaurant.region.lead_time_modifier || 0 );
+      date  = moment( date ).add( 'minutes', -moment.duration( restaurant.region.lead_time_modifier ).asMinutes() );
       day   = date.day();
       hours = restaurant.delivery_times[ day ];
       time  = date.format('HH:mm:ss');

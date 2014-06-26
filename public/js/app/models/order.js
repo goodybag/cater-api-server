@@ -39,6 +39,11 @@ define(function(require, exports, module) {
            // TODO: validate against format
            required: false
           },
+          pickup_datetime: {
+           type: ['string', 'null'],
+           // TODO: validate against format
+           required: false
+          },
           name: {
             type: ['string', 'null'],
             required: false
@@ -71,6 +76,7 @@ define(function(require, exports, module) {
 
     defaults: {
       timezone: "America/Chicago"
+    , is_delivery: true
     },
 
     // TODO: extract to superclass
@@ -137,7 +143,11 @@ define(function(require, exports, module) {
 
     urlRoot: '/orders',
 
+    types: [ 'is_delivery', 'is_delivery_service', 'is_pickup'],
+
     initialize: function(attrs, options) {
+      var this_ = this;
+
       attrs = attrs || {};
       options = options || {};
 
@@ -156,7 +166,7 @@ define(function(require, exports, module) {
         this.orderItems.orderId = model.id;
       });
 
-      this.set( 'is_delivery_service', this.shouldBeDeliveryService() )
+      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
 
       this.on('change:adjustment', this.updateSubtotal, this);
       this.listenTo(this.orderItems, 'change:sub_total add remove', this.updateSubtotal, this);
@@ -173,12 +183,20 @@ define(function(require, exports, module) {
         model.setSubmittable(model, value, options);
       }, this);
 
+      this.on( 'change:is_delivery_service', function( model, value, options ){
+        model.restaurant.set('is_bad_zip', !this.restaurant.isValidZip(this));
+      });
+
       this.on({
         'change:zip': this.zipChanged,
         'change:datetime': this.datetimeChanged,
         'change:guests': this.guestsChanged,
         'change:is_unacceptable change:below_min': this.setSubmittable
       }, this);
+
+      utils.each( this_.types, function( field ){
+        this_.on( 'change:' + field, this_.onOrderTypeChange.bind( this_, field ) );
+      });
     },
 
     set: function(key, val, options) {
@@ -256,6 +274,18 @@ define(function(require, exports, module) {
       }));
 
       model.checkLeadTimes();
+
+      if ( model.get('is_delivery_service') ){
+        model.set(
+          'pickup_datetime'
+        , moment(
+            model.get('datetime')
+          ).add(
+            'minutes'
+          , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+          ).format('YYYY-MM-DD hh:mm:ss')
+        );
+      }
     },
 
     guestsChanged: function(model, value, options) {
@@ -418,6 +448,30 @@ define(function(require, exports, module) {
       });
 
       return orderDeliveryServiceCriteria.check( order )
+    },
+
+    onOrderTypeChange: function( type, model, value, options ){
+      if ( value === false ) return;
+
+      var this_ = this;
+
+      utils.each( this.types, function( t ){
+        this_.attributes[ t ] = false;
+      });
+
+      this.attributes[ type ] = true;
+
+      if ( type === 'is_delivery_service' ){
+        model.set(
+          'pickup_datetime'
+        , moment(
+            model.get('datetime')
+          ).add(
+            'minutes'
+          , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+          ).format('YYYY-MM-DD hh:mm:ss')
+        );
+      }
     }
   }, {
     addressFields: ['street', 'street2', 'city', 'state', 'zip', 'phone', 'delivery_instructions']

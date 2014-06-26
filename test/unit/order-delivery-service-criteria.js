@@ -17,7 +17,8 @@ describe ('Order Delivery Service Criteria', function(){
   , zip:        '78756'
   , datetime:   now.format('YYYY-MM-DD 12:00:00')
   , restaurant: {
-      delivery_service_order_amount_threshold:  500
+      minimum_order: 100
+    , delivery_service_order_amount_threshold:  500
     , delivery_service_head_count_threshold:    20
     , delivery_zips: ['78756']
     , delivery_zip_groups: [

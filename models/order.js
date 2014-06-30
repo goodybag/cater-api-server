@@ -98,7 +98,6 @@ var modifyAttributes = function(callback, err, orders) {
 }
 
 module.exports = Model.extend({
-<<<<<<< HEAD
   doNotSave: [
     'total', 'sub_total', 'sales_tax', 'delivery_fee'
   ],

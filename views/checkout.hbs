@@ -26,8 +26,10 @@
         </div>
         <div class="col-sm-4 alert-right">
           <ul class="list-delivery-zips">
-          {{#each order.restaurant.delivery_zips}}
-            <li class="delivery-zip">{{this}}</li>
+          {{#each order.restaurant.delivery_zip_groups}}
+            {{#each this.zips}}
+              <li class="delivery-zip">{{this}}</li>
+            {{/each}}
           {{/each}}
           </ul>
         </div>
@@ -237,8 +239,10 @@
           </div>
           <div class="col-sm-4 alert-right">
             <ul class="list-delivery-zips">
-            {{#each order.restaurant.delivery_zips}}
-              <li class="delivery-zip">{{this}}</li>
+            {{#each order.restaurant.delivery_zip_groups}}
+              {{#each this.zips}}
+                <li class="delivery-zip">{{this}}</li>
+              {{/each}}
             {{/each}}
             </ul>
           </div>

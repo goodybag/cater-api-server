@@ -111,6 +111,9 @@
         <th class="item">Item</th>
         <th class="options-notes">Options/Notes</th>
         <th class="recipient">Recipient</th>
+        <th class="feeds">Feeds</th>
+        <th class="qty">Qty</th>
+        <th class="price">Price</th>
       </tr>
     </thead>
     <tbody>
@@ -142,6 +145,9 @@
         </td>
         <td class="options-notes">{{this.notes}}</td>
         <td class="recipient">{{{join this.recipients "<br>"}}}</td>
+        <td class="feeds">{{this.feeds_max}}</td>
+        <td class="qty">x{{this.quantity}}</td>
+        <td class="price">${{dollars this.sub_total}}</td>
       </tr>
       {{/each}}
     </tbody>

@@ -259,7 +259,7 @@ module.exports = Model.extend({
   getManifest: function(){
     var grouped = utils.invoke( this.orderItems, 'toJSON' ).map( function( item ){
       var mitem = utils.pick( item, [
-        'id', 'name', 'quantity', 'notes', 'item_id'
+        'id', 'name', 'quantity', 'notes', 'item_id', 'sub_total', 'feeds_max'
       ]);
 
       mitem.recipients = item.recipient ? [ item.recipient ] : [];
@@ -308,6 +308,7 @@ module.exports = Model.extend({
         if ( !itemsAreBasicallyTheSame( g1, g2 ) ) continue;
 
         g1.quantity += g2.quantity;
+        g1.sub_total += g2.sub_total;
         g1.recipients = g1.recipients.concat( g2.recipients );
         group.splice( i, 1 );
 

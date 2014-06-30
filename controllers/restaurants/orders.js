@@ -79,6 +79,12 @@ module.exports.get = function(req, res, next) {
             restaurant: restaurant.toJSON()
           };
 
+          for ( var key in context.restaurant ){
+            if ( !(key in context.order.restaurant) ){
+              context.order.restaurant[ key ] = context.restaurant[ key ];
+            }
+          }
+
           return res.render('menu', context);
         });
       });

@@ -27,6 +27,9 @@ define(function(require, exports, module) {
       return _.size(diff) > 0 ? diff : null;
     },
 
+    // Patch on save?
+    patch: true,
+
     /**
      * Override the default behavior of getDiff with a custom getter.
      * Useful for converting what the user sees on the form to the actual
@@ -97,7 +100,7 @@ define(function(require, exports, module) {
       }
       var view = this;
       var sent = this.model.save(diff, {
-        patch: true,
+        patch: this.patch,
         wait: true,
         singleError: false,
         validate: typeof this.options.validate !== 'boolean' ? true : this.options.validate, // bypass client validation

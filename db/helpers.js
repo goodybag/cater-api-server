@@ -49,8 +49,8 @@ dirac.autoJoin = function( options ){
 };
 
 mosql.registerQueryType( 'one', [
-  'select row_to_json( r )'
-, '  from {table} r'
+  'select row_to_json( {table} )'
+, '  from {table}'
 , '  {where}'
 , '  limit 1'
 ].join(''));

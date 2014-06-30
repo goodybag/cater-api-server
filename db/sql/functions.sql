@@ -27,18 +27,41 @@ $$ language plpgsql;
 
 create or replace function get_order_delivery_fee( o orders )
 returns int as $$
+  declare default_fee int;
 begin
+  -- If `zip` does not exist, just pick the least expensive one
+  default_fee := (select fee from restaurant_delivery_zips
+    where restaurant_id = o.restaurant_id
+    order by fee asc
+    limit 1);
+
+  -- Delivery Service Order
+  if o.is_delivery_service is true
+  then
+    return coalesce(
+      ( select delivery_service_zips.price from delivery_service_zips
+        left join restaurants on restaurants.id = o.restaurant_id
+        where delivery_service_zips."from" = restaurants.zip
+          and delivery_service_zips."to" = o.zip
+        limit 1
+      )
+    , default_fee
+    );
+  end if;
+
+  -- Pickup Order
+  if o.is_pickup is true
+  then
+    return 0;
+  end if;
+
+  -- Restaurant Delivery Order
   return coalesce(
     ( select fee from restaurant_delivery_zips
       where restaurant_id = o.restaurant_id
       and zip = o.zip
     )
-      -- If `zip` does not exist, just pick the least expensive one
-  , ( select fee from restaurant_delivery_zips
-      where restaurant_id = o.restaurant_id
-      order by fee asc
-      limit 1
-    )
+  , default_fee
   );
 end;
 $$ language plpgsql;

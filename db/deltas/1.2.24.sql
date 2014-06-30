@@ -3,6 +3,7 @@
 DO $$
   declare version       text := '1.2.24';
   declare r order_items;
+  declare o orders;
 begin
   raise notice '## Running Delta v% ##', version;
 
@@ -30,6 +31,19 @@ begin
     raise notice 'Updating Order Item #%', r.id;
 
     perform update_order_item_subtotal( r );
+  end loop;
+
+  for o in (
+    select * from orders
+    where restaurant_id in (
+      select id from restaurants
+    )
+    order by id asc
+  )
+  loop
+    raise notice 'Updating Order #%', o.id;
+
+    perform update_order_totals( o );
   end loop;
 
   create trigger order_order_items_change

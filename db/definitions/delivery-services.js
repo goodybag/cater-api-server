@@ -22,6 +22,8 @@ define(function(require) {
   , region_id:          { type: types.int, references: { table: 'regions', column: 'id', onDelete: 'set null' } }
   , name:               { type: types.text }
   , rate:               { type: types.numeric( 5, 5 ), nullable: false, default: 0 }
+  , order_email:        { type: types.text }
+  , order_phone:        { type: types.varchar( 10 ) }
   , created_at:         { type: types.timestamptz, nullable: false, default: 'NOW()' }
   };
 

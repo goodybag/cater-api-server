@@ -20,6 +20,7 @@ begin
   perform add_column( 'order_items', 'sub_total', 'int not null default 0' );
 
   perform add_column( 'delivery_services', 'order_email', 'text' );
+  perform add_column( 'delivery_services', 'order_phone', 'varchar(10)' );
 
   drop trigger if exists order_order_items_change on order_items;
   drop trigger if exists order_order_items_remove on order_items;

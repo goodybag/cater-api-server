@@ -1,0 +1,19 @@
+<section style="text-align: left; margin: 0 20px;">
+  <h2>Goodybag Order #{{order.id}} is scheduled for delivery.</h2>
+  <p>
+    <div>Pickup order by: {{timepart order.pickup_datetime}} {{datepart order.pickup_datetime}}</div>
+    <div>Restaurant Name: {{order.restaurant.name}}</div>
+    <div>Restaurant Address: {{> plain_address order.restaurant}}</div>
+  </p>
+
+  <p>
+    <div>Time delivered by: {{datepart order}} {{timepart order}}</div>
+    <div>Delivering to: {{order.user.name}} {{phoneNumber order.phone}}</div>
+    <div>Office Address: {{> plain_address order}}</div>
+    <div>Delivering food for {{order.guests}} guests</div>
+    {{#if order.delivery_instructions}}<div>Delivery instructions: "{{order.delivery_instructions}}"</div>
+  </p>
+  
+  <div>Order subtotal: ${{dollars order.sub_total}}</div>
+  {{/if}}
+</section>

@@ -42,6 +42,11 @@ var modifyAttributes = function(callback, err, orders) {
             sms_phones: order.attributes.sms_phones,
             voice_phones: order.attributes.voice_phones,
             name: order.attributes.restaurant_name,
+            street: order.attributes.restaurant_street,
+            street2: order.attributes.restaurant_street2,
+            city: order.attributes.restaurant_city,
+            state: order.attributes.restaurant_state,
+            zip: order.attributes.restaurant_zip,
             balanced_customer_uri: order.attributes.restaurant_balanced_customer_uri
           },
           utils.pick(order.attributes, restaurantFields));
@@ -803,6 +808,19 @@ module.exports = Model.extend({
     };
 
     query.columns.push({table: 'restaurants', name: 'name', as: 'restaurant_name'});
+    query.columns.push({table: 'restaurants', name: 'street', as: 'restaurant_street'});
+    query.columns.push({table: 'restaurants', name: 'street2', as: 'restaurant_street2'});
+    query.columns.push({table: 'restaurants', name: 'city', as: 'restaurant_city'});
+    query.columns.push({table: 'restaurants', name: 'state', as: 'restaurant_state'});
+    query.columns.push({table: 'restaurants', name: 'zip', as: 'restaurant_zip'});
+    query.columns.push(
+      module.exports.prototype.getDeliveryFeeQuery.call({
+        attributes: {
+          restaurant_id: query.where.restaurant_id || '$orders.restaurant_id$'
+        , zip: '$orders.zip$'
+        }
+      })
+    );
 
     query.columns.push('restaurants.minimum_order');
     query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});

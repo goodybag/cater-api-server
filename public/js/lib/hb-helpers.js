@@ -137,7 +137,7 @@ define(function(require, exports, module) {
       var state = loc.state ? utils.findWhere(states, {abbr: loc.state.toUpperCase()}) : null;
       var stateStr = state ? '<abbr title="' + state.name + '">' + state.abbr + '</abbr>' : '';
       var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
-      return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
+      return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span> ' : null,
                      line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
     },
 

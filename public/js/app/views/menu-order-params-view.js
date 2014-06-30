@@ -20,12 +20,14 @@ define(function(require, exports, module) {
 
       /**
        * Event `change:orderparams` is triggered by
-       * adding items or clicking change order 
+       * adding items or clicking change order
        * params.
        */
-      this.model.on("change:orderparams", function(e) {
+      this.model.on("change:orderparams change:is_delivery_service", function(e) {
         this_.render();
       });
+
+      this.render();
     }
 
   , render: function() {

@@ -83,6 +83,10 @@ module.exports.register = function(app) {
   , m.view( 'admin/home', { layout: 'admin/layout2' } )
   );
 
+  app.get('/admin/query-inspector'
+  , m.view( 'admin/query-inspector', { layout: 'admin/layout2' } )
+  );
+
   /**
    * Regions
    */
@@ -675,14 +679,22 @@ module.exports.register = function(app) {
   , controllers.reports.index
   );
 
-  app.post('/reports/orders'
+  app.get('/reports/orders'
   , m.restrict(['admin'])
+  , m.csv()
   , controllers.reports.ordersCsv
   );
 
-  app.post('/reports/users'
+  app.get('/reports/users'
   , m.restrict(['admin'])
+  , m.csv()
   , controllers.reports.usersCsv
+  );
+
+  app.get('/reports/redemptions'
+  , m.restrict(['admin'])
+  , m.csv()
+  , controllers.reports.usersRedemptionsCsv
   );
 
   /**
@@ -891,6 +903,11 @@ module.exports.register = function(app) {
 
   app.post('/contact-us', controllers.contactUs.sendSupportEmail);
 
+  app.get('/faqs'
+  , m.json({ file: '/public/js/lib/faqs.json', target: 'faqs' })
+  , m.view('faqs')
+  );
+
   app.get('/legal', controllers.statics.legal);
 
   app.get('/privacy', controllers.statics.privacy);
@@ -1019,7 +1036,11 @@ module.exports.register = function(app) {
   app.get('/api/restaurants/:restaurant_id/orders'
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
-  , controllers.restaurants.orders.listJSON
+  , m.queryOptions({
+      one:  [{ table: 'restaurants', alias: 'restaurant' }]
+    , many: [{ table: 'order_items', alias: 'items' }]
+    })
+  , m.find( db.orders )
   );
 
   app.get('/api/restaurants/:restaurant_id/contacts'

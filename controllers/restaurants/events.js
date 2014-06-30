@@ -33,7 +33,7 @@ module.exports.list = function(req, res, next) {
   },
   function(error, results) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('restaurant/availability', {
+    res.render('admin/restaurant/availability', {
       events: results.events
     , restaurant: results.restaurant
     });

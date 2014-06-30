@@ -33,14 +33,13 @@ var reports = {
    * POST /reports/orders
    */
   ordersCsv: function(req, res) {
-    var status = req.body.status || 'accepted';
-    var start = req.body.start || '2012-01-01';
-    var end = moment(req.body.end || new Date()).add('d',1).format('YYYY-MM-DD');
-    var range = req.body.range || 'datetime';
-    var sort = req.body.sort || 'asc';
-    var restaurantId = req.body.restaurantId;
-    var userId = req.body.userId;
-
+    var status = req.query.status || 'accepted';
+    var start = req.query.start || '2012-01-01';
+    var end = moment(req.query.end || new Date()).add('d',1).format('YYYY-MM-DD');
+    var range = req.query.range || 'datetime';
+    var sort = req.query.sort || 'asc';
+    var restaurantId = req.query.restaurantId;
+    var userId = req.query.userId;
 
     var filename = [
       status
@@ -49,10 +48,8 @@ var reports = {
     , end
     ].join('-') + '.csv';
 
-    res.header( 'Content-Type', 'text/csv' );
-    res.header( 'Content-Disposition', 'attachment;filename=' + filename );
-
-    res.write([
+    res.csv.writeFilename(filename);
+    res.csv.writeRow([
       'Order Number'
     , 'Date Submitted'
     , 'Delivery Date'
@@ -65,7 +62,7 @@ var reports = {
     , 'Tip'
     , 'Total'
     , 'Caterer Name'
-    ].join(',') + '\n');
+    ]);
 
     var where = { status: status };
     var options = { limit: 'all' };
@@ -89,31 +86,31 @@ var reports = {
 
     db.orders.find(where, options, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      results.forEach( function(order) {
-        res.write(utils.map([
-          order.id
-        , moment(order.submitted).format(reports.dateFormat)
-        , moment(order.datetime).format(reports.dateFormat)
-        , order.user.name
-        , order.user.email
-        , order.user.organization
-        , dollars(order.sub_total)
-        , dollars(order.delivery_fee)
-        , dollars(order.sales_tax)
-        , dollars(order.tip)
-        , dollars(order.total)
-        , order.restaurant.name
-        ], quoteVal).join(',') + '\n');
-      });
-
+      results
+        .filter( function(order) { return order.restaurant_id; })
+        .forEach( function(order) {
+          res.csv.writeRow([
+            order.id
+          , moment(order.submitted).format(reports.dateFormat)
+          , moment(order.datetime).format(reports.dateFormat)
+          , order.user.name
+          , order.user.email
+          , order.user.organization
+          , dollars(order.sub_total)
+          , dollars(order.delivery_fee)
+          , dollars(order.sales_tax)
+          , dollars(order.tip)
+          , dollars(order.total)
+          , order.restaurant.name
+          ]);
+        });
       res.end();
     });
-
   },
 
   usersCsv: function(req, res) {
-    var start = req.body.start || '2012-01-01';
-    var end = req.body.end || moment().format('YYYY-MM-DD');
+    var start = req.query.start || '2012-01-01';
+    var end = req.query.end || moment().format('YYYY-MM-DD');
 
     var filename = [
       'users'
@@ -121,15 +118,13 @@ var reports = {
     , end
     ].join('-') + '.csv';
 
-    res.header( 'Content-Type', 'text/csv' );
-    res.header( 'Content-Disposition', 'attachment;filename=' + filename );
-
-    res.write([
+    res.csv.writeFilename(filename);
+    res.csv.writeRow([
       'Email'
     , 'First Name'
     , 'Last Name'
     , 'Company Name'
-    ].join(',')+'\n');
+    ]);
 
     var query = {
       where: {
@@ -148,14 +143,49 @@ var reports = {
           , first = (idx >= 0) ? user.name.substring(0, idx) : user.name
           , last = (idx >= 0) ? user.name.substring(idx+1) : '';
 
-        res.write(utils.map([
+        res.csv.writeRow([
           user.email
         , first
         , last
         , user.organization
-        ], quoteVal).join(',') + '\n');
+        ]);
       });
 
+      res.end();
+    });
+  },
+
+  usersRedemptionsCsv: function(req, res) {
+    res.csv.writeFilename('user-redemptions.csv');
+    res.csv.writeRow([
+      'User ID'
+    , 'User Name'
+    , 'User Email'
+    , 'User Company'
+    , 'Gift Card Type'
+    , 'Gift Card Amount'
+    , 'Gift Card Cost'
+    ]);
+
+    var query = {};
+    var options = {
+      limit : 'all'
+    , one: [{ table: 'users', alias: 'user' }]
+    };
+
+    if (req.query.userId) query.user_id = req.query.userId;
+    db.users_redemptions.find(query, options, function(error, redemptions) {
+      redemptions.forEach(function(redemption) {
+        res.csv.writeRow([
+          redemption.user.id
+        , redemption.user.name
+        , redemption.user.email
+        , redemption.user.organization
+        , redemption.location
+        , redemption.amount
+        , redemption.cost
+        ]);
+      });
       res.end();
     });
   }

@@ -43,7 +43,7 @@ define(function(require) {
     }
   , cancel_time: {
       type: types.int
-    , nullable: true
+    , nullable: false
     , default: 0
     }
   };

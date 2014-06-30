@@ -263,6 +263,11 @@ define(function(require, exports, module) {
       return val[ 0 ].toUpperCase() + val.substring( 1 );
     },
 
+    // return url hash friendly strings
+    anchorify: function( str ){
+      return str.toLowerCase().replace(/\s+/g, '-').replace(/[^0-9a-zA-Z-]/g, '');
+    },
+
     withNullable: function(context, options) {
       if (utils.isFunction(context)) { context = context.call(this); }
 

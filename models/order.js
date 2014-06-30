@@ -12,12 +12,12 @@ var queries = require('../db/queries');
 var Restaurant = require('./restaurant');
 var Transaction = require('./transaction');
 var TransactionError = require('./transaction-error');
+var orderDeliveryServiceCriteria = require('../public/js/lib/order-delivery-service-criteria');
 var moment = require('moment-timezone');
 
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
     var restaurantFields = [
-      'delivery_fee',
       'minimum_order',
       'emails',
       'sms_phones',
@@ -29,7 +29,7 @@ var modifyAttributes = function(callback, err, orders) {
       'delivery_zips',
       'lead_times',
       'max_guests',
-      'sales_tax',
+      'restaurant_sales_tax',
       'restaurant_timezone'
     ];
     utils.each(orders, function(order) {
@@ -53,20 +53,14 @@ var modifyAttributes = function(callback, err, orders) {
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
         utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
 
-        var rate = order.attributes.restaurant.sales_tax + 1;
-        var totalPreTip = (parseInt(order.attributes.sub_total) + parseInt(order.attributes.restaurant.delivery_fee)) * parseFloat(rate);
-        order.attributes.total = Math.round(totalPreTip + order.attributes.tip); // in cents
-
         // Handle reward promos
         var submitted = moment(order.attributes.submitted);
-        var promo = utils.find(config.rewardsPromos, function(promo) {
-          var eligible = submitted >= moment.tz(promo.start, order.attributes.timezone) &&
-                         submitted <  moment.tz(promo.end, order.attributes.timezone);
-          return eligible;
-        });
 
-        if ( promo ) {
-          order.attributes.points = Math.floor(order.attributes.total * promo.rate / 100);
+        // Check all mondays past 4/21
+        var eligible = submitted.day() == 1 && submitted >= moment(config.rewardsPromo.start);
+
+        if ( eligible ) {
+          order.attributes.points = Math.floor(order.attributes.total * config.rewardsPromo.rate / 100);
         } else {
           order.attributes.points = Math.floor(order.attributes.total / 100);
         }
@@ -74,6 +68,9 @@ var modifyAttributes = function(callback, err, orders) {
         // Fix the conflict-free property joined from region/restaurant
         order.attributes.restaurant.timezone = order.attributes.restaurant.restaurant_timezone;
         delete order.attributes.restaurant.restaurant_timezone;
+
+        order.attributes.restaurant.sales_tax = order.attributes.restaurant.restaurant_sales_tax;
+        delete order.attributes.restaurant.restaurant_sales_tax;
       } else {
         order.attribtues.restaurant = null;
       }
@@ -106,6 +103,10 @@ var modifyAttributes = function(callback, err, orders) {
 }
 
 module.exports = Model.extend({
+  doNotSave: [
+    'total', 'sub_total', 'sales_tax', 'delivery_fee'
+  ],
+
   getDeliveryFeeQuery: function(){
     var query = {
       type: 'select'
@@ -148,6 +149,15 @@ module.exports = Model.extend({
 
     query.columns.push( this.getDeliveryFeeQuery() );
 
+    query.columns.push({
+      alias: 'region'
+    , expression: {
+        type: 'one'
+      , table: 'regions'
+      , where: { id: '$restaurants.region_id$' }
+      , parenthesis: true
+      }
+    });
     Restaurant.findOne(query, function(error, restaurant){
       if (error) return callback(error);
 
@@ -179,11 +189,13 @@ module.exports = Model.extend({
       , limit:    1
       };
     }
+
     if (this.attributes.adjustment) {
       this.attributes.adjustment_amount = this.attributes.adjustment.amount;
       this.attributes.adjustment_description = this.attributes.adjustment.description;
       delete this.attributes.adjustment;
     }
+
     var order = this;
     Model.prototype.save.call(this, {
       returning: [
@@ -808,6 +820,7 @@ module.exports = Model.extend({
         }
       })
     );
+
     query.columns.push('restaurants.minimum_order');
     query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});
 
@@ -852,26 +865,32 @@ module.exports = Model.extend({
     query.columns.push.apply(
       query.columns
     , Restaurant.getRegionColumns({
-        aliases: { timezone: 'restaurant_timezone' }
+        aliases: { timezone: 'restaurant_timezone', sales_tax: 'restaurant_sales_tax' }
       })
     );
     query.joins.regions = Restaurant.getRegionJoin();
 
     var unacceptable = [];
     // check zip
+    query.with.push(
+      Restaurant.getDeliveryZipsQuery({
+        name: 'all_delivery_zips'
+      , with_delivery_services: true
+      })
+    );
     query.joins.zips = {
       type: 'left'
     , alias: 'zips'
-    , target: 'restaurant_delivery_zips'
+    , target: 'all_delivery_zips'
     , on: {
-        'orders.restaurant_id': '$zips.restaurant_id$'
-      , 'orders.zip': '$zips.zip$'
+        restaurant_id: '$orders.restaurant_id$'
+      , to: '$orders.zip$'
       }
     }
 
     var caseIsBadZip = '(CASE '
       + ' WHEN (orders.zip IS NULL) THEN NULL'
-      + ' WHEN (zips.zip IS NULL) THEN TRUE'
+      + ' WHEN (zips.to IS NULL) THEN TRUE'
       + ' ELSE FALSE'
       + ' END)'
     ;
@@ -902,9 +921,23 @@ module.exports = Model.extend({
     , "joins": {
         rlt: {
           type: 'left'
-        , target: 'restaurant_lead_times'
         , on: {
             restaurant_id: '$orders.restaurant_id$'
+          }
+        , target: {
+            type: 'union'
+          , queries: [
+              { type:     'select'
+              , table:    'restaurant_lead_times'
+              , distinct: true
+              , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
+              }
+            , { type:     'select'
+              , table:    'restaurant_pickup_lead_times'
+              , distinct: true
+              , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
+              }
+            ]
           }
         }
       }
@@ -946,10 +979,17 @@ module.exports = Model.extend({
     query.columns.push(caseIsBadLeadTime+' AS is_bad_lead_time');
 
     // check delivery days and times
+    query.with.push(
+      Restaurant.getDeliveryTimesQuery({
+        name: 'all_delivery_times'
+      , time: true
+      })
+    );
+
     query.joins.delivery_times = {
       type: 'left'
     , alias: 'delivery_times'
-    , target: 'restaurant_delivery_times'
+    , target: 'all_delivery_times'
     , on: {
         'orders.restaurant_id': '$delivery_times.restaurant_id$'
       , 'delivery_times.day': {$custom: ['"delivery_times"."day" = EXTRACT(DOW FROM "orders"."datetime")']}

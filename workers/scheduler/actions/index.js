@@ -7,6 +7,7 @@ var actions = [
 , { fn: require('./build-pdf'), name: 'build-pdf' }
 , { fn: require('./upload-to-s3'), name: 'upload-to-s3' }
 , { fn: require('./notify-delivery-service'), name: 'notify-delivery-service' }
+, { fn: require('./redeem-reward'), name: 'redeem-reward' }
 ];
 
 actions.forEach( function( action ){

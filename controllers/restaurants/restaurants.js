@@ -139,7 +139,6 @@ module.exports.get = function(req, res) {
 
     var orderParams = req.query || {};
 
-
     var context = {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
@@ -148,6 +147,13 @@ module.exports.get = function(req, res) {
     }
 
     context.restaurant.delivery_fee = context.order.restaurant.delivery_fee;
+
+    // Copy fields that don't exist from the restaurant result to order.restaurant
+    for ( var key in context.restaurant ){
+      if ( !(key in context.order.restaurant) ){
+        context.order.restaurant[ key ] = context.restaurant[ key ];
+      }
+    }
 
     // Build a histogram of menus vs freq for labeling
     var menuLengths = utils.countBy(utils.flatten(utils.pluck(context.restaurant.categories, 'menus')));
@@ -248,7 +254,7 @@ var leadTimes = function(body, id) {
 }
 
 var hours = function(body, id) {
-  return Array.prototype.concat.apply([], utils.map(body.hours_of_operation, function(times, day, obj) {
+  var a = Array.prototype.concat.apply([], utils.map(body.hours_of_operation, function(times, day, obj) {
     return utils.map(times, function(period, index, arr) {
       return {
         restaurant_id: id,
@@ -258,6 +264,7 @@ var hours = function(body, id) {
       };
     });
   }));
+  return a;
 }
 
 var pickupLeadTimes = function(body, id) {
@@ -313,6 +320,8 @@ var fields = [
   'gb_fee',
   'is_direct_deposit',
   'is_fee_on_total',
+  'delivery_service_head_count_threshold',
+  'delivery_service_order_amount_threshold',
   'region_id'
 ];
 
@@ -370,7 +379,7 @@ module.exports.update = function(req, res) {
     ['Zips', zips, 'delivery_zips']
   , ['DeliveryTimes', deliveryTimes, 'delivery_times']
   , ['LeadTimes', leadTimes, 'lead_times']
-  , ['Hours', hours, 'hours']
+  , ['Hours', hours, 'hours_of_operation']
   , ['PickupLeadTimes', pickupLeadTimes, 'pickup_lead_times']
   , ['Tags', tags, 'tags']
   , ['MealTypes', mealTypes, 'meal_types']
@@ -384,6 +393,9 @@ module.exports.update = function(req, res) {
 
     return utils.partial(utils.async.eachSeries, [delQuery, createQuery], function(query, cb) {
       if (!query) return cb();
+      if ( query.table === 'restaurant_hours' ){
+        console.log(query);
+      }
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, cb);
     });

@@ -43,20 +43,26 @@ config.defaults = {
   , bucket: 'cater-cdn-dev'
   }
 
+, googleAnalytics: 'UA-23372459-4'
+
 , rewardsStartDate: '2014-03-25 00:00:00'
 
 // temp solution, would be better in a table
-, rewardsPromos: [
-    { start: '2014-04-21 00:00:00', end: '2014-04-22 00:00:00', rate: 2.0 }
-  , { start: '2014-04-28 00:00:00', end: '2014-04-29 00:00:00', rate: 2.0 }
-  , { start: '2014-05-05 00:00:00', end: '2014-05-06 00:00:00', rate: 2.0 }
-  , { start: '2014-05-12 00:00:00', end: '2014-05-13 00:00:00', rate: 2.0 }
-  , { start: '2014-05-19 00:00:00', end: '2014-05-20 00:00:00', rate: 2.0 }
-  , { start: '2014-05-27 00:00:00', end: '2014-05-28 00:00:00', rate: 2.0 }
-  , { start: '2014-06-02 00:00:00', end: '2014-06-03 00:00:00', rate: 2.0 }
-  , { start: '2014-06-09 00:00:00', end: '2014-06-10 00:00:00', rate: 2.0 }
-  , { start: '2014-06-16 00:00:00', end: '2014-06-17 00:00:00', rate: 2.0 }
-  ]
+// , rewardsPromos: [
+//     { start: '2014-04-21 00:00:00', end: '2014-04-22 00:00:00', rate: 2.0 }
+//   , { start: '2014-04-28 00:00:00', end: '2014-04-29 00:00:00', rate: 2.0 }
+//   , { start: '2014-05-05 00:00:00', end: '2014-05-06 00:00:00', rate: 2.0 }
+//   , { start: '2014-05-12 00:00:00', end: '2014-05-13 00:00:00', rate: 2.0 }
+//   , { start: '2014-05-19 00:00:00', end: '2014-05-20 00:00:00', rate: 2.0 }
+//   , { start: '2014-05-27 00:00:00', end: '2014-05-28 00:00:00', rate: 2.0 }
+//   , { start: '2014-06-02 00:00:00', end: '2014-06-03 00:00:00', rate: 2.0 }
+//   , { start: '2014-06-09 00:00:00', end: '2014-06-10 00:00:00', rate: 2.0 }
+//   , { start: '2014-06-16 00:00:00', end: '2014-06-17 00:00:00', rate: 2.0 }
+//   ]
+, rewardsPromo: {
+    start: '2014-04-21 00:00:00'
+  , rate: '2.0'
+  }
 
 , welcome: {
     from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
@@ -397,6 +403,8 @@ config.production = {
     baseUrl: 'https://d3bqck8kwfkhx5.cloudfront.net'
   , bucket: 'cater-cdn-prod'
   }
+
+, googleAnalytics: 'UA-23372459-3'
 
 , http: {
     port: process.env['PORT'] || 5000

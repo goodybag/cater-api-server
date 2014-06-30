@@ -117,6 +117,12 @@ module.exports.get = function(req, res) {
       });
     },
 
+    function( order, cb ){
+      order.getRestaurant( function( error ){
+        return cb( error, order );
+      });
+    },
+
     function(order, cb) {
       order.getOrderItems(function(err, items) {
         return cb(err, order);
@@ -238,7 +244,7 @@ module.exports.create = function(req, res) {
 module.exports.update = function(req, res) {
 
   // TODO: get this from not here
-  var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed'];
+  var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed', 'is_delivery', 'is_delivery_service', 'is_pickup'];
   var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
   if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 
@@ -371,7 +377,6 @@ module.exports.changeStatus = function(req, res) {
     if (review) order.attributes.token_used = 'now()';
 
     order.attributes.status = req.body.status;
-
     order.save(function(err){
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       return done();

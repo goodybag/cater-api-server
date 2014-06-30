@@ -451,7 +451,17 @@ define(function(require, exports, module) {
     },
 
     onOrderTypeChange: function( type, model, value, options ){
-      if ( value === false ) return;
+      // They were setting to false, unless this was a delivery order to begin with
+      // go ahead and set this is_delivery
+      if ( value === false ){
+        if ( type === 'is_delivery' ){
+          this.attributes.is_delivery_service = true;
+        } else {
+          this.attributes.is_delivery = true;
+        }
+
+        return;
+      }
 
       var this_ = this;
 

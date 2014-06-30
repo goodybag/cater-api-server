@@ -1010,7 +1010,8 @@ table {
 .manifest-header .header-text {
   margin-top: 30px;
   margin-right: 12px;
-  font-size: 13px;
+  margin-bottom: 8px;
+  font-size: 14px;
   text-align: right;
   white-space: pre;
 }
@@ -1023,10 +1024,13 @@ table {
   border-left: solid 1px #808080;
   border-right: solid 1px #808080;
   font-family: 'Din';
-  color: #808080;
+  color: #666666;
   font-size: 11px;
   line-height: 13px;
   text-align: center;
+}
+.manifest-header .subtext .phone {
+  color: #1a1a1a;
 }
 .manifest-header .order-info {
   border-bottom: solid 2px #808080;
@@ -1034,16 +1038,16 @@ table {
 .manifest-header .order-info > .info-item {
   display: table-cell;
   width: 1%;
-  padding: 6px 8px;
+  padding: 6px 8px 2px;
   background: #fff;
   border-left: solid 1px #808080;
   border-right: solid 1px #808080;
   color: #808080;
-  line-height: 18px;
+  line-height: 20px;
 }
 .manifest-header .order-info .item-value {
   color: #000;
-  font-size: 20px;
+  font-size: 22px;
 }
 .manifest-table {
   -webkit-box-flex: 1;

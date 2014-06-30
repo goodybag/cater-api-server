@@ -102,7 +102,7 @@
 {{#extend "body"}}
 <section class="manifest-page table-page">
   <header class="manifest-header">
-    <h4 class="header-text">Please print this and include with the delivered order. Thanks! <span class="signature">-Goodybag</span></h4>
+    <h4 class="header-text">Please print this and include with the {{#if order.is_delivery}}delivered{{else}}pickup{{/if}} order. Thanks! <span class="signature">-Goodybag</span></h4>
     <div class="order-info">
       <div class="info-item info-item-order-type">
         <div class="item-title">This Order Is For:</div>
@@ -142,7 +142,7 @@
       </div>
     </div>
     <div class="subtext">
-      Not what you ordered? Something missing? No worries! We will help get it resolved. Contact us at the number below.
+      Not what you ordered? &nbsp;Something missing? &nbsp;No worries! &nbsp;We will help get it resolved. &nbsp;Contact us at: <strong class="phone">{{phoneNumber config.phone.support "xxx.xxx.xxxx"}}</strong>
     </div>
   </header>
   <table class="manifest-table">

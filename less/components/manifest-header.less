@@ -30,7 +30,8 @@
   .header-text {
     margin-top: 30px;
     margin-right: 12px;
-    font-size: 13px;
+    margin-bottom: 8px;
+    font-size: 14px;
     text-align: right;
     white-space: pre;
   }
@@ -40,15 +41,20 @@
   }
 
   .subtext {
+    @subtext-color: #666;
     padding-top: 3px;
     background: #FFF;
     border-left: solid 1px @manifest-gray;
     border-right: solid 1px @manifest-gray;
     font-family: 'Din';
-    color: #808080;
+    color: @subtext-color;
     font-size: 11px;
     line-height: 13px;
     text-align: center;
+
+    .phone {
+      color: darken( @subtext-color, 30% );
+    }
   }
 
   .order-info {
@@ -58,18 +64,26 @@
   .order-info > .info-item {
     display: table-cell;
     width: 1%;
-    padding: 6px 8px;
+    padding: 6px 8px 2px;
 
     background: #fff;
     border-left: solid 1px @manifest-gray;
     border-right: solid 1px @manifest-gray;
     color: @manifest-gray;
-    line-height: 18px;
+    line-height: 20px;
+
+    // Highlight order type
+    // Actually, we decided against this
+    // &.info-item-order-type {
+    //   background: @manifest-gray;
+    //   &, .item-value {
+    //     color: #fff;
+    //   }
+    // }
   }
 
   .order-info .item-value {
     color: #000;
-    font-size: 20px;
-
+    font-size: 22px;
   }
 }

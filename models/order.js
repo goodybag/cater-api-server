@@ -18,7 +18,6 @@ var moment = require('moment-timezone');
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
     var restaurantFields = [
-      'delivery_fee',
       'minimum_order',
       'emails',
       'sms_phones',
@@ -30,7 +29,7 @@ var modifyAttributes = function(callback, err, orders) {
       'delivery_zips',
       'lead_times',
       'max_guests',
-      'sales_tax',
+      'restaurant_sales_tax',
       'restaurant_timezone'
     ];
     utils.each(orders, function(order) {
@@ -49,10 +48,6 @@ var modifyAttributes = function(callback, err, orders) {
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
         utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
 
-        var rate = order.attributes.restaurant.sales_tax + 1;
-        var totalPreTip = (parseInt(order.attributes.sub_total) + parseInt(order.attributes.restaurant.delivery_fee)) * parseFloat(rate);
-        order.attributes.total = Math.round(totalPreTip + order.attributes.tip); // in cents
-
         // Handle reward promos
         var submitted = moment(order.attributes.submitted);
 
@@ -68,6 +63,9 @@ var modifyAttributes = function(callback, err, orders) {
         // Fix the conflict-free property joined from region/restaurant
         order.attributes.restaurant.timezone = order.attributes.restaurant.restaurant_timezone;
         delete order.attributes.restaurant.restaurant_timezone;
+
+        order.attributes.restaurant.sales_tax = order.attributes.restaurant.restaurant_sales_tax;
+        delete order.attributes.restaurant.restaurant_sales_tax;
       } else {
         order.attribtues.restaurant = null;
       }
@@ -100,6 +98,7 @@ var modifyAttributes = function(callback, err, orders) {
 }
 
 module.exports = Model.extend({
+<<<<<<< HEAD
   doNotSave: [
     'total', 'sub_total', 'sales_tax', 'delivery_fee'
   ],
@@ -155,7 +154,6 @@ module.exports = Model.extend({
       , parenthesis: true
       }
     });
-
     Restaurant.findOne(query, function(error, restaurant){
       if (error) return callback(error);
 
@@ -805,14 +803,7 @@ module.exports = Model.extend({
     };
 
     query.columns.push({table: 'restaurants', name: 'name', as: 'restaurant_name'});
-    query.columns.push(
-      module.exports.prototype.getDeliveryFeeQuery.call({
-        attributes: {
-          restaurant_id: query.where.restaurant_id || '$orders.restaurant_id$'
-        , zip: '$orders.zip$'
-        }
-      })
-    );
+
     query.columns.push('restaurants.minimum_order');
     query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});
 
@@ -857,7 +848,7 @@ module.exports = Model.extend({
     query.columns.push.apply(
       query.columns
     , Restaurant.getRegionColumns({
-        aliases: { timezone: 'restaurant_timezone' }
+        aliases: { timezone: 'restaurant_timezone', sales_tax: 'restaurant_sales_tax' }
       })
     );
     query.joins.regions = Restaurant.getRegionJoin();

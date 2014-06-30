@@ -1,6 +1,6 @@
 <div class="container">
   <h1>Reports</h1>
-  <form method="POST" action="/reports/orders">
+  <form method="GET" action="/reports/orders">
     <legend>List orders</legend>
 
     <div class="form-group">
@@ -41,15 +41,21 @@
     <button class="btn btn-primary" type="submit">Generate .csv</button>
   </form>
 
-  <form method="POST" action="/reports/users">
+  <form method="GET" action="/reports/users">
     <legend>List users by register date</legend>
-
     <label>Start</label>
     <input class="datepicker" name="start">
-
     <label>End</label>
     <input class="datepicker" name="end">
+    <button class="btn btn-primary" type="submit">Generate</button>
+  </form>
 
+  <form method="GET" action="/reports/redemptions">
+    <legend>List user redemptions</legend>
+    <div class="form-group">
+      <label>User ID</label>
+      <input class="text" name="userId">
+    </div>
     <button class="btn btn-primary" type="submit">Generate</button>
   </form>
 </div>

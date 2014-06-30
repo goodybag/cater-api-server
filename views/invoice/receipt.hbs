@@ -116,9 +116,9 @@
           <dt>Subtotal:</dt>
           <dd>${{dollars order.sub_total}}</dd>
           <dt>Delivery Fee:</dt>
-          <dd>${{dollars order.restaurant.delivery_fee}}</dd>
+          <dd>${{dollars order.delivery_fee}}</dd>
           <dt>Tax:</dt>
-          <dd>${{tax order}}</dd>
+          <dd>${{dollars order.sales_tax}}</dd>
           <dt>Tip:</dt>
           <dd>${{dollars order.tip}}</dd>
         </dl>
@@ -127,7 +127,7 @@
       <div class="total-wrapper">
         <dl class="dl-horizontal dl-order-total">
           <dt>Total:</dt>
-          <dd>${{total order}}</dd>
+          <dd>${{dollars order.total}}</dd>
         </dl>
       </div>
     </div>

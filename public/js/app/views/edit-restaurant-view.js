@@ -118,7 +118,7 @@ define(function(require, exports, module) {
       is_direct_deposit: '.restaurant-form [name="is_direct_deposit"]',
       is_fee_on_total: '.restaurant-form [name="is_fee_on_total"]',
       region_id: '.restaurant-form [name="region_id"]',
-      delivery_service_head_count_threshold: '.restaurant-form [name="delivery_service_head_count_threshold"]'
+      delivery_service_head_count_threshold: '.restaurant-form [name="delivery_service_head_count_threshold"]',
       delivery_service_order_amount_threshold: '.restaurant-form [name="delivery_service_order_amount_threshold"]'
     },
 

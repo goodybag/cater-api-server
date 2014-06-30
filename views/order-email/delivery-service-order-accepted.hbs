@@ -1,9 +1,9 @@
 <section style="text-align: left; margin: 0 20px;">
   <h2>Goodybag Order #{{order.id}} is scheduled for delivery.</h2>
   <p>
-  <div>Pickup order by: {{timepart order.pickup_datetime}} {{datepart order.pickup_datetime}}</div>
-  <div>Restaurant Name: {{order.restaurant.name}}</div>
-  <div>Restaurant Address: {{> plain_address order.restaurant}}</div>
+    <div>Pickup order by: {{timepart order.pickup_datetime}} {{datepart order.pickup_datetime}}</div>
+    <div>Restaurant Name: {{order.restaurant.name}}</div>
+    <div>Restaurant Address: {{> plain_address order.restaurant}}</div>
   </p>
 
   <p>
@@ -17,4 +17,3 @@
   <div>Order subtotal: ${{dollars order.sub_total}}</div>
   {{/if}}
 </section>
-{{{dump this}}} 

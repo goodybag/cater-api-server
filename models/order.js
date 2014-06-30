@@ -146,6 +146,16 @@ module.exports = Model.extend({
 
     query.columns.push( this.getDeliveryFeeQuery() );
 
+    query.columns.push({
+      alias: 'region'
+    , expression: {
+        type: 'one'
+      , table: 'regions'
+      , where: { id: '$restaurants.region_id$' }
+      , parenthesis: true
+      }
+    });
+
     Restaurant.findOne(query, function(error, restaurant){
       if (error) return callback(error);
 

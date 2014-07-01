@@ -365,7 +365,7 @@ dirac.use( function( dirac ){
       , ' where ' + data.pivots.map( function( p ){
                       return 'r."' + p.target_col + '" = "' + data.source + '"."' + p.source_col + '"';
                     }).join(' and ')
-      , ')) as ' + data.alias + ')'
+      , ')) as "' + data.alias + '")'
       ].join('\n')
     }
   };

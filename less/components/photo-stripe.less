@@ -1,0 +1,26 @@
+//////////////////
+// Photo Stripe //
+//////////////////
+
+.photo-stripe {
+  height: @photo-stripe-height;
+  overflow: hidden;
+
+  & > img {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  &.photo-stripe-sushi > img {
+    top: -180px;
+  }
+
+  @media screen and ( max-width: 768px ){
+    height: @photo-stripe-height / 2;
+    &.photo-stripe-sushi > img {
+      top: -50px;
+    }
+  }
+}

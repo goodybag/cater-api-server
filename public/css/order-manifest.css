@@ -987,14 +987,13 @@ table {
 }
 .manifest-header {
   min-height: 82px;
-  padding-top: 8px;
+  padding: 8px 12px;
   margin-bottom: 40px;
   color: #fff;
   font-family: 'Din Condensed';
   text-transform: uppercase;
   background-color: #808080;
   border: solid #808080 1px;
-  border-bottom-width: 2px;
 }
 .manifest-header:before {
   content: "";
@@ -1009,45 +1008,28 @@ table {
 }
 .manifest-header .header-text {
   margin-top: 30px;
-  margin-right: 12px;
-  margin-bottom: 8px;
-  font-size: 14px;
-  text-align: right;
+  font-size: 13px;
   white-space: pre;
 }
 .manifest-header .signature {
   text-transform: none;
 }
 .manifest-header .subtext {
-  padding-top: 3px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
   background: #FFF;
-  border-left: solid 1px #808080;
-  border-right: solid 1px #808080;
+  color: #808080;
   font-family: 'Din';
-  color: #666666;
   font-size: 11px;
   line-height: 13px;
-  text-align: center;
-}
-.manifest-header .subtext .phone {
-  color: #1a1a1a;
-}
-.manifest-header .order-info {
-  border-bottom: solid 2px #808080;
+  padding-top: 3px;
 }
 .manifest-header .order-info > .info-item {
   display: table-cell;
   width: 1%;
-  padding: 6px 8px 2px;
-  background: #fff;
-  border-left: solid 1px #808080;
-  border-right: solid 1px #808080;
-  color: #808080;
-  line-height: 20px;
-}
-.manifest-header .order-info .item-value {
-  color: #000;
-  font-size: 22px;
 }
 .manifest-table {
   -webkit-box-flex: 1;

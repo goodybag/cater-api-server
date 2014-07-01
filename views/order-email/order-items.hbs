@@ -5,36 +5,36 @@
     <th style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 12px; padding-top: 5px; padding-bottom: 5px; padding-left: 12px; padding-right: 12px; text-align: left; border-bottom: solid 1px #cccccc; font-weight: 500">Quantity</th>
     <th style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 12px; padding-top: 5px; padding-bottom: 5px; padding-left: 12px; padding-right: 12px; text-align: right; border-bottom: solid 1px #cccccc; font-weight: 500">Price</th>
   </tr>
-  {{#each this.orderItems}}
+  {{#each orderItems}}
     <tr>
-      <td style="{{#isOdd @index}}background: #f1f1f1; border-top: solid 1px #e0e0e0;{{/isOdd}}font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: left; width: 66%">{{this.name}}</td>
-      <td style="{{#isOdd @index}}background: #f1f1f1; border-top: solid 1px #e0e0e0;{{/isOdd}}font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: left;"><span style="font-size: 10px">x</span>{{this.quantity}}</td>
-      <td style="{{#isOdd @index}}background: #f1f1f1; border-top: solid 1px #e0e0e0;{{/isOdd}}font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: right;">{{dollars this.sub_total}}</td>
+      <td style="{{#isOdd @index}}background: #f1f1f1; border-top: solid 1px #e0e0e0;{{/isOdd}}font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: left; width: 66%">{{name}}</td>
+      <td style="{{#isOdd @index}}background: #f1f1f1; border-top: solid 1px #e0e0e0;{{/isOdd}}font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: left;"><span style="font-size: 10px">x</span>{{quantity}}</td>
+      <td style="{{#isOdd @index}}background: #f1f1f1; border-top: solid 1px #e0e0e0;{{/isOdd}}font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: right;">{{dollars sub_total}}</td>
     </tr>
   {{/each}}
   <tr>
     <td colspan="2" style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 26px; padding-bottom: 6px; padding-left: 12px; padding-right: 0; text-align: right; border-top: solid #CCCCC0 1px">Subtotal:</td>
-    <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 26px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; text-align: right; border-top: solid #CCCCC0 1px">${{dollars this.sub_total}}</td>
+    <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 26px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; text-align: right; border-top: solid #CCCCC0 1px">${{dollars sub_total}}</td>
   </tr>
 
   <tr>
     <td colspan="2" style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 6px; padding-bottom: 6px; padding-left: 12px; padding-right: 0; text-align: right;">Delivery Fee:</td>
-    <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 6px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; text-align: right;">${{dollars this.restaurant.delivery_fee}}</td>
+    <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 6px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; text-align: right;">${{dollars delivery_fee}}</td>
   </tr>
 
   <tr>
     <td colspan="2" style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 6px; padding-bottom: 6px; padding-left: 12px; padding-right: 0; text-align: right;">Tax:</td>
-    <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 6px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; text-align: right;">${{tax this}}</td>
+    <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 6px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; text-align: right;">${{dollars sales_tax}}</td>
   </tr>
 
   <tr>
     <td colspan="2" style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 6px; padding-bottom: 6px; padding-left: 12px; padding-right: 0; text-align: right;">Tip:</td>
-    <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 6px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; text-align: right;">${{dollars this.tip}}</td>
+    <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 6px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; text-align: right;">${{dollars tip}}</td>
   </tr>
 
   <tr>
     <td colspan="2" style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 0; text-align: right; font-weight: bolder;">Total:</td>
-    <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: right;">${{total this}}</td>
+    <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: right;">${{dollars total}}</td>
   </tr>
 </table>
 <!--</OrderItems>-->

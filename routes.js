@@ -29,6 +29,12 @@ module.exports.register = function(app) {
       layout: 'landing/layout'
     }));
 
+    app.get('/testimonials'
+    , m.view( 'landing/testimonials', {
+        layout: 'landing/layout'
+      })
+    );
+
     app.get('/forgot-password', controllers.auth.forgotPassword);
     app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
     app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);

@@ -1,0 +1,104 @@
+{{#extend "page"}}page-testimonials{{/extend}}
+
+{{#extend "body"}}
+{{> landing_navbar}}
+
+<!--<PhotoStripe>-->
+<div class="photo-stripe photo-stripe-sushi"></div>
+<!--</PhotoStripe>-->
+
+<!--<How it Works>-->
+<section class="page-section" id="section-how-it-works">
+  <div class="container">
+    <h1 class="section-header">How it works</h1>
+
+    <div class="marketing-points">
+      <div class="point">
+        <img src="{{cdn "/img/rewards-hiw-1.png"}}" alt="">
+        <p>
+          Order food through Goodybag
+        </p>
+      </div>
+      <div class="point">
+        <img src="{{cdn "/img/rewards-hiw-2.png"}}" alt="">
+        <p>
+          Every dollar spent earns 1 Reward Point
+        </p>
+      </div>
+      <div class="point">
+        <img src="{{cdn "/img/rewards-hiw-3.png"}}" alt="">
+        <p>
+          Redeem Points for Rewards through our online shop!
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<!--</How it Works>-->
+
+<!--<Rewards Screen>-->
+<section class="page-section" id="section-rewards-screen">
+  <div class="container">
+    <h1 class="section-header">View your points, browse and redeem rewards!</h1>
+
+    <!--<WindowPane>-->
+    <div class="screenshot-window window-pane">
+      <div class="window-header">
+        <i class="window-btn"></i>
+        <i class="window-btn"></i>
+        <i class="window-btn"></i>
+      </div>
+      <img src="{{cdn "/img/rewards-screenshot.png"}}" alt="Goodybag rewards">
+    </div>
+    <!--</WindowPane>-->
+  </div>
+</section>
+<!--</Rewards Screen>-->
+
+<!--<FAQsSection>-->
+<section class="page-section" id="section-faqs">
+  <div class="container">
+    <h1 class="section-header">FAQs</h1>
+
+    <!--<FAQs>-->
+    <div class="faqs">
+      <article class="faq">
+        <h1>What are Actual Points vs Pending Points?</h1>
+        <p>Actual Points can be redeemed for rewards while Pending Points cannot. Pending Points represent orders that have not yet been fulfilled. Actual Points represent fulfilled orders.</p>
+      </article>
+
+      <article class="faq">
+        <h1>How will I receive my card?</h1>
+        <p>We will personally deliver them! After redeeming a card you will receive a confirmation email from us. We will find out when is the best time to stop by.</p>
+      </article>
+
+      <article class="faq">
+        <h1>What can I redeem My Points for?</h1>
+        <p>Currently we are offering gift cards from Amazon &amp; Starbucks in values of $10, $20 and $50 respectively.</p>
+      </article>
+
+      <article class="faq">
+        <h1>How do I enroll?</h1>
+        <p>You're already enrolled! Click your name in the top right corner then select My Rewards from the drop down to access your Rewards Page.</p>
+      </article>
+
+      <article class="faq">
+        <h1>Will I be credited for previous orders made on my account?</h1>
+        <p>Sorry but only orders made after the launch of our Rewards Program accrue Reward Points.</p>
+      </article>
+    </div>
+    <!--</FAQs>-->
+  </div>
+</section>
+<!--</FAQsSection>-->
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['jquery', 'navbar'], function( $ ){
+    $('.navbar').navbar({ toggleText: false });
+  });
+
+  analytics.page('Rewards');
+</script>
+{{/extend}}

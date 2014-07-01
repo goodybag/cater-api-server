@@ -176,6 +176,7 @@ config.defaults = {
   , info: 'info@goodybag.com'
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   , rewards: [ local.testEmail || 'test@goodybag.com' ]
+  , asapOrders: [ local.testEmail || 'test@goodybag.com' ]
   }
 
 , phone: {
@@ -472,6 +473,10 @@ config.production = {
     , 'jag@goodybag.com'
     , 'om@goodybag.com'
     , 'redemptions@goodybag.com'
+    ]
+  , asapOrders: [
+      'sarahsouthwell@goodybag.com'
+    , 'gillian@goodybag.com'
     ]
   }
 

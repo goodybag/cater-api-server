@@ -21,7 +21,10 @@
   </div>
 
   {{#if showThankYou}}
-    <p class="thankyou-message"><strong>Thanks for your order!</strong> You will receive a confirmation email shortly.</p>
+    <div class="thankyou-wrapper">
+      <p class="thankyou-message"><strong>Thanks for your order!</strong> You will receive a confirmation email shortly.</p>
+      <h4 class="points-earned">You earned <em class="reward-points">{{order.points}} reward points</em> with this order!</h4>
+    </div>
   {{/if}}
 
   {{#if isAdmin }}

@@ -45,7 +45,9 @@
       class="form-control"
       name="order_phone"
       id="input-phone"
-      value="{{delivery_service.order_phone}}">
+      data-in="phoneNumber"
+      data-out="sanitizePhoneNumber"
+      value="{{phoneNumber delivery_service.order_phone}}">
   </div>
 </div>
 <div class="form-group">

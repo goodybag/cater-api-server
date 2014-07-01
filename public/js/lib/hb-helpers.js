@@ -154,6 +154,10 @@ define(function(require, exports, module) {
       return result;
     },
 
+    sanitizePhoneNumber: function(str) {
+      return str.replace(/\D/g, '');
+    },
+
     floor: function(value) {
       return Math.floor(value);
     },

@@ -117,8 +117,21 @@ module.exports.get = function(req, res) {
         where: {
           id: parseInt(req.params.rid)
         }
+      , columns: ['*']
       , includes: [ {type: 'closed_restaurant_events'} ]
       };
+
+      query.columns.push({
+        alias: 'delivery_service'
+      , expression: {
+          type: 'one'
+        , table: 'delivery_services'
+        , parenthesis: true
+          // Just pick one delivery service that applies
+          // We'll come up with better logic later
+        , where: { region_id: '$restaurants.region_id$' }
+        }
+      });
 
       models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
         if (err) return callback(err);

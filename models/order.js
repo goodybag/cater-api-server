@@ -408,7 +408,23 @@ module.exports = Model.extend({
   // with pastiche as (select o.item_id, o.quantity, o.notes, o.options_sets, i.name, i.description, i.price, i.feeds_min, i.feeds_max from order_items o inner join items i on (o.item_id = i.id) where order_id=7)
   // insert into order_items (item_id, quantity, notes, options_sets, name, description, price, feeds_min, feeds_max, order_id) select pastiche.*, 9 from pastiche returning *;
 
-    var copyableColumns = ['user_id', 'restaurant_id', 'street', 'city', 'state', 'zip', 'phone', 'notes', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip', 'payment_method_id'];
+    var copyableColumns = [
+      'user_id'
+    , 'restaurant_id'
+    , 'street'
+    , 'city'
+    , 'state'
+    , 'zip'
+    , 'phone'
+    , 'notes'
+    , 'timezone'
+    , 'guests'
+    , 'adjustment_amount'
+    , 'adjustment_description'
+    , 'tip'
+    , 'payment_method_id'
+    , 'delivery_service_id'
+    ];
     var self = this;
     var tasks = [
       function(cb) {

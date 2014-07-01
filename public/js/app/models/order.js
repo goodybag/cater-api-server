@@ -154,6 +154,10 @@ define(function(require, exports, module) {
       this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id, edit_token: options.edit_token });
       this.unset('orderItems');
 
+      if ( attrs.restaurant.delivery_service ){
+        this.set( 'delivery_service_id', attrs.restaurant.delivery_service.id );
+      }
+
       this.restaurant = new Restaurant(attrs.restaurant);
       this.unset('restaurant');
 
@@ -269,9 +273,7 @@ define(function(require, exports, module) {
       // check against restaurant hours
       var datetime = value.split(' ');
       var dow = moment(datetime[0]).day();
-      model.restaurant.set('is_bad_delivery_time', !_.find(model.restaurant.get('delivery_times')[dow], function(range) {
-        return datetime[1] >= range[0] && datetime[1] <= range[1];
-      }));
+      model.restaurant.set('is_bad_delivery_time', !model.restaurant.isValidDeliveryTime( value ) );
 
       model.checkLeadTimes();
 

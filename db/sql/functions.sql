@@ -38,11 +38,27 @@ begin
   -- Delivery Service Order
   if o.is_delivery_service is true
   then
+
+    if o.delivery_service_id is not null
+    then
+      return coalesce(
+        ( select delivery_service_zips.price from delivery_service_zips
+          left join restaurants on restaurants.id = o.restaurant_id
+          where delivery_service_zips."from" = restaurants.zip
+            and delivery_service_zips."to" = o.zip
+            and delivery_service_zips.delivery_service_id = o.delivery_service_id
+          limit 1
+        )
+      , default_fee
+      );
+    end if;
+
     return coalesce(
       ( select delivery_service_zips.price from delivery_service_zips
         left join restaurants on restaurants.id = o.restaurant_id
         where delivery_service_zips."from" = restaurants.zip
           and delivery_service_zips."to" = o.zip
+        order by price asc
         limit 1
       )
     , default_fee

@@ -179,6 +179,7 @@ define(function(require) {
   , is_delivery: { type: types.boolean, nullable: false, default: false }
   , is_pickup: { type: types.boolean, nullable: false, default: false }
   , is_delivery_service: { type: types.boolean, nullable: false, default: false }
+  , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
   };
 
   definition.indices = {};

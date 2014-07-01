@@ -30,7 +30,7 @@ module.exports.JSON = {};
 module.exports.JSON.list = function( req, res ){
   logger.info( 'Getting order notifications for order #' + req.param('oid') );
 
-  Models.Order.findOne( +req.param('oid'), function( error, order ){
+  db.orders.findOne( +req.param('oid'), function( error, order ){
     if ( error ){
       logger.error( 'Error getting order #' + req.param('oid'), error );
       return res.error( error );
@@ -96,20 +96,16 @@ module.exports.JSON.history = function( req, res ){
   utils.async.waterfall([
     // Prepare order model
     function( next ){
-      Models.Order.findOne( +req.param('oid'), function( error, order ){
+      var $options = {
+        many: [ { table: 'order_items', alias: 'orderItems' } ]
+      , one:  [ { table: 'restaurants', alias: 'restaurant' } ]
+      };
+      db.orders.findOne( +req.param('oid'), $options, function( error, order ){
         if ( error ){
           logger.error( 'Error getting order #' + req.param('oid'), error );
           return res.error( error );
         }
-
-        order.getOrderItems( function( error ){
-          if ( error ){
-            logger.error( 'Error getting order #' + req.param('oid'), error );
-            return res.error( error );
-          }
-
-          return next( null, order );
-        });
+        return next( null, order );
       });
     }
 

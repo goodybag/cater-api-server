@@ -67,6 +67,14 @@ define(function(require, exports, module) {
       return value1 || value2;
     },
 
+    and: function(value1, value2) {
+      return value1 && value2;
+    },
+
+    not: function( val ){
+      return !val;
+    },
+
     array: function(arr) {
       return arr ? arr.join(', ') : '';
     },

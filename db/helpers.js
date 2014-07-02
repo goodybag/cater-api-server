@@ -579,6 +579,23 @@ dirac.use( function( dirac ){
   });
 });
 
+// todo: better solution cache order_item.sub_total via trigger
+// Calculate item sub_totals
+dirac.use( function( dirac ){
+  dirac.dals.orders.after( 'findOne', function( results, $query, schema, next ){
+    if ( $query.many && utils.filter($query.many, { table: 'order_items' }) ) {
+      results = results.map( function(order) {
+        order = order.orderItems.map( function(item) {
+          var options = utils.flatten(utils.pluck(item.options_sets, 'options'), true);
+          var addOns = utils.reduce(utils.pluck(utils.where(options, {state: true}), 'price'), function(a, b) { return a + b; }, 0);
+          item.sub_total = item.quantity * (item.price + addOns);
+        });
+      });
+    }
+    next();
+  });
+});
+
 // Log queries to dirac
 // dirac.use( function( dirac ){
 //   var query_ = dirac.DAL.prototype.query;

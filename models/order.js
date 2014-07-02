@@ -107,7 +107,7 @@ module.exports = Model.extend({
     'total', 'sub_total', 'sales_tax', 'delivery_fee'
   ],
 
-  getDeliveryFeeQuery: function(){
+  getDeliveryFeeQuery: function( options ){
     var query = {
       type: 'select'
     , alias: 'delivery_fee'
@@ -829,14 +829,6 @@ module.exports = Model.extend({
     query.columns.push({table: 'restaurants', name: 'city', as: 'restaurant_city'});
     query.columns.push({table: 'restaurants', name: 'state', as: 'restaurant_state'});
     query.columns.push({table: 'restaurants', name: 'zip', as: 'restaurant_zip'});
-    query.columns.push(
-      module.exports.prototype.getDeliveryFeeQuery.call({
-        attributes: {
-          restaurant_id: query.where.restaurant_id || '$orders.restaurant_id$'
-        , zip: '$orders.zip$'
-        }
-      })
-    );
 
     query.columns.push('restaurants.minimum_order');
     query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});

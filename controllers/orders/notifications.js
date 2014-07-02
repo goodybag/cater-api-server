@@ -25,12 +25,21 @@ var getEmailUrl = function( oid, nid ){
   ].join('/');
 };
 
+// Order query options
+var $ordersOptions = {
+  many: [ { table: 'order_items', alias: 'orderItems' } ]
+, one:  [ { table: 'restaurants', alias: 'restaurant' }
+        , { table: 'users', alias: 'user' }
+        , { table: 'delivery_services', alias: 'deliveryService' }
+        ]
+};
+
 module.exports.JSON = {};
 
 module.exports.JSON.list = function( req, res ){
   logger.info( 'Getting order notifications for order #' + req.param('oid') );
 
-  Models.Order.findOne( +req.param('oid'), function( error, order ){
+  db.orders.findOne( +req.param('oid'), $ordersOptions, function( error, order ){
     if ( error ){
       logger.error( 'Error getting order #' + req.param('oid'), error );
       return res.error( error );
@@ -96,20 +105,12 @@ module.exports.JSON.history = function( req, res ){
   utils.async.waterfall([
     // Prepare order model
     function( next ){
-      Models.Order.findOne( +req.param('oid'), function( error, order ){
+      db.orders.findOne( +req.param('oid'), $ordersOptions, function( error, order ){
         if ( error ){
           logger.error( 'Error getting order #' + req.param('oid'), error );
           return res.error( error );
         }
-
-        order.getOrderItems( function( error ){
-          if ( error ){
-            logger.error( 'Error getting order #' + req.param('oid'), error );
-            return res.error( error );
-          }
-
-          return next( null, order );
-        });
+        return next( null, order );
       });
     }
 

@@ -83,6 +83,7 @@ var reports = {
       { table: 'users', alias: 'user' }
     , { table: 'restaurants', alias: 'restaurant'}
     ];
+    options.submittedDate = true;
 
     db.orders.find(where, options, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
@@ -91,7 +92,9 @@ var reports = {
         .forEach( function(order) {
           res.csv.writeRow([
             order.id
-          , moment(order.submitted).format(reports.dateFormat)
+          , order.submitted ? 
+              moment(order.submitted).format(reports.dateFormat) :
+              'N/A'
           , moment(order.datetime).format(reports.dateFormat)
           , order.user.name
           , order.user.email

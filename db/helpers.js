@@ -549,6 +549,36 @@ dirac.use( function( dirac ){
   });
 });
 
+// Order submitted date
+dirac.use( function( dirac ){
+  dirac.dals.orders.before( 'find', function( $query, schema, next ){
+    if ( !$query.submittedDate ) return next();
+
+    $query.with     = $query.with     || [];
+    $query.joins    = $query.joins    || [];
+    $query.columns  = $query.columns  || ['*'];
+
+    $query.with.push({
+      name:     'submitted_dates'
+    , type:     'select'
+    , table:    'order_statuses'
+    , columns:  [ 'order_id', { type: 'max', expression: 'created_at', alias: 'submitted' } ]
+    , groupBy:  'order_id'
+    , where:    { status: 'submitted' }
+    });
+
+    $query.joins.push({
+      type:     'left'
+    , target:   'submitted_dates'
+    , on:       { order_id: '$orders.id$' }
+    })
+
+    $query.columns.push('submitted_dates.submitted');
+
+    next();
+  });
+});
+
 // Log queries to dirac
 // dirac.use( function( dirac ){
 //   var query_ = dirac.DAL.prototype.query;

@@ -934,19 +934,39 @@ module.exports = Model.extend({
             restaurant_id: '$orders.restaurant_id$'
           }
         , target: {
-            type: 'union'
-          , queries: [
-              { type:     'select'
-              , table:    'restaurant_lead_times'
-              , distinct: true
-              , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
-              }
-            , { type:     'select'
-              , table:    'restaurant_pickup_lead_times'
-              , distinct: true
-              , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
-              }
-            ]
+            type:     'select'
+          , table:    'restaurant_lead_times'
+          , distinct: true
+          , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
+          }
+        }
+      }
+    , "where": {
+        "rlt.max_guests": { $gte: '$orders.guests$' }
+      }
+    },
+
+    {
+      "name": "pickup_sub_lead_times"
+    , "type": "select"
+    , "columns": [
+        { name: 'id', alias: 'order_id' }
+      , { name: 'max_guests', table: 'rlt' }
+      , { name: 'lead_time', table: 'rlt' }
+      , "min(max_guests) OVER (PARTITION by orders.id)"
+      ]
+    , "table": "orders"
+    , "joins": {
+        rlt: {
+          type: 'left'
+        , on: {
+            restaurant_id: '$orders.restaurant_id$'
+          }
+        , target: {
+            type:     'select'
+          , table:    'restaurant_pickup_lead_times'
+          , distinct: true
+          , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
           }
         }
       }
@@ -967,6 +987,20 @@ module.exports = Model.extend({
     , "where": {
         "max_guests": "$sub_lead_times.min$"
       }
+    },
+
+    {
+      "name": "pickup_order_lead_times"
+    , "type": "select"
+    , "columns": [
+        "order_id"
+      , "max_guests"
+      , "lead_time"
+      ]
+    , "table": "pickup_sub_lead_times"
+    , "where": {
+        "max_guests": "$pickup_sub_lead_times.min$"
+      }
     }];
 
     query.with.push.apply(query.with, leadTimes);
@@ -978,9 +1012,17 @@ module.exports = Model.extend({
       }
     };
 
+    query.joins.pickup_order_lead_times = {
+      type: 'left'
+    , on: {
+        'orders.id': '$pickup_order_lead_times.order_id$'
+      }
+    };
+
     var caseIsBadLeadTime = '(CASE '
       + ' WHEN (orders.datetime IS NULL) THEN NULL'
       + ' WHEN (order_lead_times.order_id IS NULL) THEN FALSE'
+      + ' WHEN (orders.is_delivery_service is true or orders.is_pickup is true) THEN "pickup_order_lead_times"."lead_time" > EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/60)'
       + ' ELSE "order_lead_times"."lead_time" > EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/60)'
       + ' END)'
     ;

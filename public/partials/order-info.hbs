@@ -3,10 +3,17 @@
 
   {{#if order.name}}<p><strong>{{order.name}}</strong></p>{{/if}}
   <dl class="dl-horizontal no-margin">
+    {{#if show_pickup}}
+    <dt>Pickup Date:</dt>
+    <dd>{{datepart order.pickup_datetime}}</dd>
+    <dt>Pickup Time:</dt>
+    <dd>{{timepart order.pickup_datetime}}</dd>
+    {{else}}
     <dt>Delivery Date:</dt>
     <dd>{{datepart order.datetime}}</dd>
     <dt>Delivery Time:</dt>
     <dd>{{timepart order.datetime}}</dd>
+    {{/if}}
     <dt>Guests:</dt>
     <dd>{{order.guests}}</dd>
   </dl>

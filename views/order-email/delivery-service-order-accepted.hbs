@@ -11,9 +11,10 @@
     <div>Delivering to: {{order.user.name}} {{phoneNumber order.phone}}</div>
     <div>Office Address: {{> plain_address order}}</div>
     <div>Delivering food for {{order.guests}} guests</div>
-    {{#if order.delivery_instructions}}<div>Delivery instructions: "{{order.delivery_instructions}}"</div>
+    {{#if order.delivery_instructions}}
+    <div>Delivery instructions: "{{order.delivery_instructions}}"</div>
+    {{/if}}
   </p>
   
   <div>Order subtotal: ${{dollars order.sub_total}}</div>
-  {{/if}}
 </section>

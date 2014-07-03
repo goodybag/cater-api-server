@@ -179,6 +179,7 @@ module.exports.get = function(req, res) {
         isRestaurantManager: req.order.isRestaurantManager,
         isAdmin: req.order.isAdmin,
       }),
+      show_pickup: req.order.is_pickup || (req.order.isRestaurantManager && req.order.is_delivery_service),
       states: states,
       orderAddress: function() {
         return {

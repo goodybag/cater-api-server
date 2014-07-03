@@ -1,3 +1,28 @@
+--------------------
+-- Event Handlers --
+--------------------
+create or replace function on_order_datetime_change()
+returns trigger as $$
+begin
+  if NEW.is_delivery_service is true then
+    perform update_order_delivery_service_pickup_time( NEW.id );
+  end if;
+  return NEW;
+end;
+$$ language plpgsql;
+
+create or replace function on_order_type_change()
+returns trigger as $$
+begin
+  if NEW.is_delivery_service is true then
+    perform update_order_delivery_service_pickup_time( NEW.id );
+  end if;
+
+  perform update_order_types( NEW );
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function on_order_items_change()
 returns trigger as $$
 begin
@@ -11,6 +36,80 @@ returns trigger as $$
 begin
   perform update_order_totals( NEW );
   return NEW;
+end;
+$$ language plpgsql;
+
+create or replace function on_order_items_change()
+returns trigger as $$
+begin
+  perform update_order_totals( NEW.order_id );
+  perform update_order_item_subtotal( NEW );
+  return NEW;
+end;
+$$ language plpgsql;
+
+create or replace function on_order_items_remove()
+returns trigger as $$
+begin
+  perform update_order_totals( OLD.order_id );
+  return OLD;
+end;
+$$ language plpgsql;
+
+---------------
+-- Functions --
+---------------
+create or replace function update_order_delivery_service_pickup_time( oid int )
+returns void as $$
+  declare o orders;
+begin
+  update orders
+    set pickup_datetime = ( select get_order_delivery_service_pickup_time( oid ) )
+    where id = oid;
+end;
+$$ language plpgsql;
+
+create or replace function get_order_delivery_service_pickup_time( oid int )
+returns timestamp as $$
+  declare o orders;
+begin
+  return ( select datetime - regions.lead_time_modifier from orders
+  left join restaurants on orders.restaurant_id = restaurants.id
+  left join regions on restaurants.region_id = regions.id
+  where orders.id = oid );
+end;
+$$ language plpgsql;
+
+create or replace function update_order_types( oid int )
+returns void as $$
+  declare o orders;
+begin
+  for o in ( select * from orders where id = oid )
+  loop
+    perform update_order_types( o );
+  end loop;
+end;
+$$ language plpgsql;
+
+create or replace function update_order_types( o orders )
+returns void as $$
+begin
+  if o.is_pickup then
+    update orders set
+      is_delivery         = false
+    , is_delivery_service = false
+    where id = o.id;
+  elsif o.is_delivery then
+    update orders set
+      is_pickup           = false
+    , is_delivery_service = false
+    where id = o.id;
+  elsif o.is_delivery_service then
+    update orders set
+      is_pickup           = false
+    , is_delivery         = false
+    where id = o.id;
+  end if;
 end;
 $$ language plpgsql;
 
@@ -158,23 +257,6 @@ begin
 
   execute 'update orders set sub_total = $1, total = $2, sales_tax = $3, delivery_fee = $4 where id = $5'
     using sub_total, total, sales_tax, delivery_fee, o.id;
-end;
-$$ language plpgsql;
-
-create or replace function on_order_items_change()
-returns trigger as $$
-begin
-  perform update_order_totals( NEW.order_id );
-  perform update_order_item_subtotal( NEW );
-  return NEW;
-end;
-$$ language plpgsql;
-
-create or replace function on_order_items_remove()
-returns trigger as $$
-begin
-  perform update_order_totals( OLD.order_id );
-  return OLD;
 end;
 $$ language plpgsql;
 

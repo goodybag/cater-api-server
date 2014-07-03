@@ -24,6 +24,8 @@ begin
 
   drop trigger if exists order_order_items_change on order_items;
   drop trigger if exists order_order_items_remove on order_items;
+  drop trigger if exists on_order_datetime_change on orders;
+  drop trigger if exists on_order_type_change on orders;
 
   for r in (
     select * from order_items order by id asc
@@ -58,4 +60,17 @@ begin
     on order_items
     for each row
     execute procedure on_order_items_remove();
+
+  create trigger on_order_datetime_change
+    after insert or update of datetime
+    on orders
+    for each row
+    execute procedure on_order_datetime_change();
+
+  create trigger on_order_type_change
+    after update of is_pickup, is_delivery, is_delivery_service
+    on orders
+    for each row
+    when ( OLD.* is distinct from NEW.* )
+    execute procedure on_order_type_change();
 end$$;

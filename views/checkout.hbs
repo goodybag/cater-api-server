@@ -153,7 +153,7 @@
               <div class="payment-info-details">Your card will not be charged until you receive your order.</div>
               <div class="radio card-select-toggle {{#unless user.payment_methods}}hide{{/unless}}">
                 <label>
-                  <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" checked="checked">
+                  <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" {{#unless user.is_invoiced}}checked="checked"{{/unless}}>
                 </label>
                 Pay using
                 <select class="form-control card-select" id="payment-method-id" name="payment_method_id">
@@ -196,7 +196,7 @@
               {{#if user.is_invoiced}}
               <div class="radio">
                 <label>
-                  <input type="radio" name="payment-method" value="invoice" class="payment-method" data-parent="#payment-info">
+                  <input type="radio" name="payment-method" value="invoice" class="payment-method" data-parent="#payment-info" checked="checked">
                   Pay via invoice.
                 </label>
               </div>

@@ -275,8 +275,6 @@ define(function(require, exports, module) {
       var dow = moment(datetime[0]).day();
       model.restaurant.set('is_bad_delivery_time', !model.restaurant.isValidDeliveryTime( value ) );
 
-      model.checkLeadTimes();
-
       if ( model.get('is_delivery_service') ){
         model.set(
           'pickup_datetime'
@@ -288,6 +286,8 @@ define(function(require, exports, module) {
           ).format('YYYY-MM-DD hh:mm:ss')
         );
       }
+
+      model.checkLeadTimes();
     },
 
     guestsChanged: function(model, value, options) {

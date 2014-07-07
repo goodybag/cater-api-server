@@ -596,6 +596,17 @@ module.exports.register = function(app) {
   });
 
   /**
+   * Delivery service actions
+   */
+  app.get('/orders/:oid/delivery-service-accept', 
+    m.deliveryServiceAuth()
+  // , controllers.orders.deliveryServices.accept
+  , m.view( 'delivery-service/accepted', db.orders, {
+     method: 'findOne'
+    })
+  );
+
+  /**
    *  Order items resource.  The collection of all order items on a single order.
    *  This is a collection of OrderItems, not Items.
    */

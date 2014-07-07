@@ -598,12 +598,9 @@ module.exports.register = function(app) {
   /**
    * Delivery service actions
    */
-  app.get('/orders/:oid/delivery-service-accept', 
-    m.deliveryServiceAuth()
-  // , controllers.orders.deliveryServices.accept
-  , m.view( 'delivery-service/accepted', db.orders, {
-     method: 'findOne'
-    })
+  app.get('/orders/:oid/delivery-service-accept'
+  , m.deliveryServiceAuth()
+  , controllers.orders.deliveryServices.accept
   );
 
   /**

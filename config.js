@@ -33,6 +33,14 @@ config.defaults = {
   , 'jacob.parker@goodybag.com'
   ]
 
+, deliveryServiceOrderAboveThresholdRecipients: [
+    'jag@goodybag.com'
+  , 'sarah.southwell@goodybag.com'
+  , 'om@goodybag.com'
+  , 'jay@goodybag.com'
+  , 'jacob.parker@goodybag.com'
+  ]
+
 , resultsTooFewContactUsThreshold: 5
 
 , cdn: {
@@ -237,6 +245,7 @@ config.dev = {
 , isDev: true
 
 , deniedRecipients: [ local.testEmail || 'test@goodybag.com' ]
+, deliveryServiceOrderAboveThresholdRecipients: [ local.testEmail || 'test@goodybag.com' ]
 
 , http: {
     port: 3000

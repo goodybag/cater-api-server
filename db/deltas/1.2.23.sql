@@ -10,6 +10,7 @@ begin
   create table if not exists region_zips ();
 
   perform add_column( 'region_zips', 'id', 'serial primary key' );
+  perform add_column( 'region_zips', 'created_at', 'timestamp with time zone not null default now()' );
   perform add_column( 'region_zips', 'region_id', 'int references regions( id ) not null' );
   perform add_column( 'region_zips', 'zip', 'character varying(5) not null' );
 

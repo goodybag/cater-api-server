@@ -30,6 +30,7 @@ var $ordersOptions = {
   many: [ { table: 'order_items', alias: 'orderItems' } ]
 , one:  [ { table: 'restaurants', alias: 'restaurant' }
         , { table: 'users', alias: 'user' }
+        , { table: 'delivery_services', alias: 'deliveryService' }
         ]
 };
 

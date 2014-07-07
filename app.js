@@ -63,6 +63,22 @@ app.configure(function(){
   }
 
   app.use( require('dirac-middleware')({ envelope: false }) );
+  app.use( function( req, res, next ){
+    if ( !req.param('query_inspector') ) return next();
+
+    var oend = res.end;
+
+    res.end = function(){
+      res.header(
+        'Query-Inspector'
+      , JSON.stringify( utils.extend( { where: req.queryObj }, req.queryOptions ) )
+      );
+
+      return oend.apply( res, arguments );
+    };
+
+    next();
+  });
 
   app.use(app.router);
 

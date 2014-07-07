@@ -140,6 +140,10 @@ config.defaults = {
   , end: 24
   }
 
+, deliveryServices: {
+    responseThresholdMins: 30
+  }
+
 , scheduler: {
     cron: '*/10 * * * * *'
   , start: true

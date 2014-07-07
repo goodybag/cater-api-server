@@ -8,7 +8,7 @@ module.exports = function(job, done) {
   db.orders.findOne(data.orderId, function( err, order ){
     if ( err ) return done( err );
     if ( !order.ds_token_used ) {
-      notifier.send('gb-delivery-service-action-needed', order)
+      notifier.send('goodybaggers-asap-order-needs-attention', order);
     }
     done(null);
   });

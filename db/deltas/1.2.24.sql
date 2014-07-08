@@ -13,6 +13,8 @@ begin
   perform add_column( 'orders', 'pickup_datetime', 'timestamp without time zone' );
   perform add_column( 'orders', 'is_delivery', 'boolean not null default false' );
   perform add_column( 'orders', 'is_delivery_service', 'boolean not null default false' );
+  perform add_column( 'orders', 'ds_token', 'text' );
+  perform add_column( 'orders', 'ds_token_used', 'timestamp' );
 
   -- The point in which we switch from using delivery service to restaurant delivery
   perform add_column( 'restaurants', 'delivery_service_head_count_threshold', 'int not null default 0' );

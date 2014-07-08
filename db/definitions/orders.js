@@ -100,6 +100,14 @@ define(function(require) {
       type: types.text
     , nullable: false
     }
+  , ds_token: {
+      type: types.text
+    , nullable: true
+    }
+  , ds_token_used: {
+      type: types.timestamp
+    , nullable: true
+    }
   , token_used: {
       type: types.timestamp
     , nullable: true

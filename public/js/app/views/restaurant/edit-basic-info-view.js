@@ -51,13 +51,14 @@ define(function(require, exports, module) {
       },
 
       delivery_service_order_total_upperbound: function(){
-        return +this.$el.find( this.fieldMap.delivery_service_order_total_upperbound ).val();
+        var $el = this.$el.find( this.fieldMap.delivery_service_order_total_upperbound );
+        return Handlebars.helpers[ $el.data('out') ]( $el.val() );
       },
 
       delivery_service_order_amount_threshold: function(){
         var $el = this.$el.find( this.fieldMap.delivery_service_order_amount_threshold );
         return Handlebars.helpers[ $el.data('out') ]( $el.val() );
-      },
+      }
     },
 
     initialize: function() {

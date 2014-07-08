@@ -7,8 +7,9 @@
 define(function(require, exports, module) {
   var utils = require('utils');
   var Handlebars = require('handlebars');
+  var FormView2 = require('../form-view-2');
 
-  return module.exports = Backbone.View.extend({
+  return module.exports = FormView2.extend({
     events: {
       'submit .ap-form': 'save'
     },
@@ -17,15 +18,23 @@ define(function(require, exports, module) {
     },
 
     fieldGetters: {
+      default: function( key, $el ){
+        return this.getDomValue( key, $el );
+      }
     },
 
     initialize: function() {
     },
 
     getField: function(selector, field, fieldMap) {
-      return this.fieldGetters[field] ?
-        this.fieldGetters[field].call(this, selector)
-      : this.$el.find(selector).val();
+      field = field in this.fieldGetters ? field : 'default';
+      if (this.fieldGetters[field]) {
+        return this.fieldGetters[field].apply(
+          this
+          // Default gets field as first argument
+        , (field === 'default' ? [field] : []).concat( this.$el.find(selector) )
+        );
+      }
     },
 
     getFields: function() {
@@ -64,6 +73,7 @@ define(function(require, exports, module) {
       , success:  this.options.alertView.show.bind(this.options.alertView, 'success')
       , error:    this.options.alertView.show.bind(this.options.alertView, 'error')
       });
+      console.log(this.model, this.model.validationError);
       this.displayErrors(this.model.validationError);
     }
   }, {
@@ -72,16 +82,16 @@ define(function(require, exports, module) {
      * Static methods
      */
 
-    intGetter: function(field) {
-      var val = (this.$el.find(this.fieldMap[field]).val()||'').trim();
+    intGetter: function($el) {
+      var val = ($el.val()||'').trim();
       return val ? parseInt(val) : null;
     },
-    floatGetter: function(field) {
-      var val = (this.$el.find(this.fieldMap[field]).val()||'').trim();
+    floatGetter: function($el) {
+      var val = ($el.val()||'').trim();
       return val ? parseFloat(val) : null;
     },
-    dollarsGetter: function(field) {
-      var val = parseFloat((this.$el.find(this.fieldMap[field]).val()||'').trim())
+    dollarsGetter: function($el) {
+      var val = parseFloat(($el.val()||'').trim())
       return !_.isNaN(val) ? Math.round(val * 100) : null;
     },
 

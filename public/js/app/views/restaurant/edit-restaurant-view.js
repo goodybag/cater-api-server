@@ -73,7 +73,7 @@ define(function(require, exports, module) {
       , success:  this.options.alertView.show.bind(this.options.alertView, 'success')
       , error:    this.options.alertView.show.bind(this.options.alertView, 'error')
       });
-      console.log(this.model, this.model.validationError);
+
       this.displayErrors(this.model.validationError);
     }
   }, {

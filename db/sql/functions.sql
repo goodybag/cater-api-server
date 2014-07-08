@@ -15,6 +15,7 @@ create or replace function on_order_type_change()
 returns trigger as $$
 begin
   if NEW.is_delivery_service is true then
+    perform update_order_delivery_service_id( NEW.id );
     perform update_order_delivery_service_pickup_time( NEW.id );
   end if;
 
@@ -59,6 +60,23 @@ $$ language plpgsql;
 ---------------
 -- Functions --
 ---------------
+create or replace function update_order_delivery_service_id( oid int )
+returns void as $$
+begin
+  -- Just select some arbitrary in-region delivery service for now
+  update orders
+    set delivery_service_id = (
+      select delivery_services.id from delivery_services
+        left join orders on orders.id = oid
+        left join restaurants on orders.restaurant_id = restaurants.id
+        left join regions on restaurants.region_id = regions.id
+        where orders.id = oid
+        limit 1
+    )
+    where id = oid;
+end;
+$$ language plpgsql;
+
 create or replace function update_order_delivery_service_pickup_time( oid int )
 returns void as $$
   declare o orders;

@@ -148,6 +148,9 @@ define(function(require, exports, module) {
         delivery_service_order_amount_threshold: {
           type: ['number', 'null']
         },
+        delivery_service_order_total_upperbound: {
+          type: ['number', 'null']
+        },
         delivery_service_head_count_threshold: {
           type: ['number', 'null']
         }

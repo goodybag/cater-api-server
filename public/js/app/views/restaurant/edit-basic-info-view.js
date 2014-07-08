@@ -20,6 +20,7 @@ define(function(require, exports, module) {
     , logo_mono_url:                            '#input-mono-logo-url'
     , region_id:                                '[name="region_id"]'
     , delivery_service_head_count_threshold:    '[name="delivery_service_head_count_threshold"]'
+    , delivery_service_order_total_upperbound:  '[name="delivery_service_order_total_upperbound"]'
     , delivery_service_order_amount_threshold:  '[name="delivery_service_order_amount_threshold"]'
     },
 
@@ -47,6 +48,10 @@ define(function(require, exports, module) {
 
       delivery_service_head_count_threshold: function(){
         return +this.$el.find( this.fieldMap.delivery_service_head_count_threshold ).val();
+      },
+
+      delivery_service_order_total_upperbound: function(){
+        return +this.$el.find( this.fieldMap.delivery_service_order_total_upperbound ).val();
       },
 
       delivery_service_order_amount_threshold: function(){

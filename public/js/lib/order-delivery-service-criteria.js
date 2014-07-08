@@ -23,12 +23,47 @@ define(function( require, exports, module ){
   exports = {
     criteria: []
 
+    /**
+     * Checks an order object for whether or not a delivery service
+     * shoudl orderr
+     * @param  {Object} order Order object
+     * @return {Boolean}      Should use DS
+     */
   , check: function( order ){
-      return utils.some( exports.criteria, function( criterion ){
+      var criteria = exports.criteria.filter( function( c ){
+        return c.type === 'every';
+      });
+
+      var result = utils.every( criteria, function( criterion ){
+        return criterion.fn( order );
+      });
+
+      if ( !result ) return false;
+
+      criteria = exports.criteria.filter( function( c ){
+        return c.type === 'some';
+      });
+
+      return utils.some( criteria, function( criterion ){
         return criterion.fn( order );
       });
     }
 
+    /**
+     * Adds a new criterion
+     *
+     * I think all of the properties in criterion are pretty
+     * self-explanatory except maybe `type`.
+     *
+     * There are two valid types: ['every', 'some']
+     *
+     * Every `every` type needs to be true for the order to be
+     * considered a DS order. Otherwise, it is not. Then, we check
+     * for some true `some` criterion. If any one of those is true,
+     * AND every `every` type is true, then it is a DS Order.
+     *
+     * @param {Object} criterion criterion object
+     */
   , add: function( criterion ){
       utils.enforceRequired( criterion, [
         'name', 'fn'
@@ -51,9 +86,23 @@ define(function( require, exports, module ){
     }
   };
 
+  // Is dollar amount too high?
+  // exports.add({
+  //   name: 'dollar_amount_too_high'
+  // , type: 'every'
+  // , requirements: [
+  //     'sub_total'
+  //   , 'restaurant.delivery_service_order_total_upperbound'
+  //   ]
+  // , fn: function( order ){
+  //     return order.sub_total < order.restaurant.delivery_service_order_total_upperbound;
+  //   }
+  // });
+
   // Is dollar amount too low?
   exports.add({
     name: 'dollar_amount'
+  , type: 'some'
   , requirements: [
       'sub_total'
     , 'restaurant.minimum_order'
@@ -68,6 +117,7 @@ define(function( require, exports, module ){
   // Is head count too low?
   exports.add({
     name: 'head_count'
+  , type: 'some'
   , requirements: [
       'guests'
     , 'restaurant.delivery_service_head_count_threshold'
@@ -80,6 +130,7 @@ define(function( require, exports, module ){
   // Delivery zips
   exports.add({
     name: 'delivery_zips'
+  , type: 'some'
   , requirements: [
       'zip'
     , 'restaurant.delivery_zips'
@@ -101,6 +152,7 @@ define(function( require, exports, module ){
   // Delivery times
   exports.add({
     name: 'delivery_times'
+  , type: 'some'
   , requirements: [
       'datetime'
     , 'restaurant.delivery_times'
@@ -140,6 +192,7 @@ define(function( require, exports, module ){
   // Lead times
   exports.add({
     name: 'lead_times'
+  , type: 'some'
   , requirements: [
       'datetime'
     , 'restaurant.lead_times'

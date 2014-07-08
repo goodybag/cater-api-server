@@ -25,6 +25,20 @@
       <input type="text" class="form-control" name="yelp_business_id" id="input-yelp" value="{{config.yelp.businessBaseUrl}}/{{restaurant.yelp_business_id}}">
     </div>
     <div class="form-group">
+      <label class="control-label" for="input-rate">GB Fee</label>
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          name="gb_fee"
+          id="input-gb_fee"
+          data-in="factorToPercent"
+          data-out="percentToFactor 4"
+          value="{{factorToPercent restaurant.gb_fee}}">
+        <div class="input-addon">%</div>
+      </div>
+    </div>
+    <div class="form-group">
       <label for="region_id_selector" class="control-label">Region</label>
       <select name="region_id" id="region_id_selector">
         {{#each regions}}
@@ -38,15 +52,15 @@
           <label class="control-label">Logo</label>
           <img class="restaurant-logo-img" data-name="logo_url"
             src="{{#if restaurant.logo_url}}{{restaurant.logo_url}}{{else}}{{config.defaultLogo}}{{/if}}">
-          <input type="filepicker" class="form-control btn btn-default btn-block" 
-            name="logo_url" value="{{#if restaurant.logo_url}}{{restaurant.logo_url}}{{else}}{{config.defaultLogo}}{{/if}}" 
+          <input type="filepicker" class="form-control btn btn-default btn-block"
+            name="logo_url" value="{{#if restaurant.logo_url}}{{restaurant.logo_url}}{{else}}{{config.defaultLogo}}{{/if}}"
             id="input-logo-url">
         </div>
         <div class="col-logo-mono">
           <label class="control-label">Monochromatic Logo</label>
           <img class="restaurant-logo-img" data-name="logo_mono_url"
             src="{{#if restaurant.logo_mono_url}}{{restaurant.logo_mono_url}}{{else}}{{config.defaultMonoLogo}}{{/if}}">
-          <input type="filepicker" class="form-control btn btn-default btn-block" 
+          <input type="filepicker" class="form-control btn btn-default btn-block"
             name="logo_mono_url" value="{{#if restaurant.logo_mono_url}}{{restaurant.logo_mono_url}}{{else}}{{config.defaultMonoLogo}}{{/if}}"
             id="input-mono-logo-url">
         </div>
@@ -56,6 +70,18 @@
       <label class="control-label" for="input-hidden">
         <input type="checkbox" class="form-control" name="is_hidden" id="input-hidden" {{#if restaurant.is_hidden}}checked="checked"{{/if}}>
          Hidden from listing
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-hidden">
+        <input type="checkbox" class="form-control" name="is_fee_on_total" id="input-is_fee_on_total" {{#if restaurant.is_fee_on_total}}checked="checked"{{/if}}>
+         Is the GB fee applied to Order Total?
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-hidden">
+        <input type="checkbox" class="form-control" name="is_direct_deposit" id="input-is_direct_deposit" {{#if restaurant.is_direct_deposit}}checked="checked"{{/if}}>
+         Uses Direct Deposit?
       </label>
     </div>
     <div class="actions">

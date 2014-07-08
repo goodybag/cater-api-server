@@ -69,7 +69,12 @@ define(function(require){
 
       if ( !$el ) return val;
 
-      val     = $el.attr('type') === 'number' ? +$el.val() : $el.val();
+      switch ( $el.attr('type') ){
+        case 'number':    val = +$el.val(); break;
+        case 'checkbox':  val = $el[0].checked; break;
+        default:          val = $el.val(); break;
+      }
+
       helper  = ($el.data('out') || "").split(' ');
       args    = [ val ].concat( helper.slice(1) );
       helper  = helper[0];

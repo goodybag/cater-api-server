@@ -19,9 +19,12 @@ define(function(require, exports, module) {
     , logo_url:               '#input-logo-url'
     , logo_mono_url:          '#input-mono-logo-url'
     , region_id:              '[name="region_id"]'
+    , gb_fee:                 '[name="gb_fee"]'
+    , is_fee_on_total:        '[name="is_fee_on_total"]'
+    , is_direct_deposit:      '[name="is_direct_deposit"]'
     },
 
-    fieldGetters: {
+    fieldGetters: _.extend({
       websites: function() {
         return _.map(EditRestaurantView.fieldSplit.call(this, this.fieldMap.websites), Handlebars.helpers.website);
       },
@@ -37,12 +40,8 @@ define(function(require, exports, module) {
 
         url = url.split('/').pop();
         return url.split('#')[0];
-      },
-
-      region_id: function(){
-        return +this.$el.find( this.fieldMap.region_id ).val();
       }
-    },
+    }, EditRestaurantView.prototype.fieldGetters ),
 
     initialize: function() {
     },

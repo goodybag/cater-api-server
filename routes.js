@@ -94,6 +94,8 @@ module.exports.register = function(app) {
    */
 
   app.get('/admin/regions'
+  , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'regions' })
   , m.sort('+name')
   , m.view( 'admin/regions', db.regions, {
       layout: 'admin/layout2'
@@ -189,6 +191,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/create'
   , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.states()
   , m.view('admin/restaurant/create', { layout: 'admin/layout-page' })
   );
@@ -204,6 +207,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:rid'
   , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'basic-info'} )
   , m.db.regions.find( {}, { limit: 'all' } )
   , m.restaurant( {param: 'rid' } )
@@ -219,6 +223,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:rid/basic-info'
   , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'basic-info'} )
   , m.db.regions.find( {}, { limit: 'all' } )
   , m.restaurant( {param: 'rid' } )
@@ -229,6 +234,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:rid/delivery-settings'
   , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'delivery-settings'} )
   , m.restaurant( {param: 'rid' } )
   , m.view('admin/restaurant/edit-delivery-settings', {
@@ -238,6 +244,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:rid/hours-of-operation'
   , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'hours-of-operation'} )
   , m.restaurant( {param: 'rid' } )
   , m.view('admin/restaurant/hours-of-operation', {
@@ -248,6 +255,7 @@ module.exports.register = function(app) {
   app.get('/admin/restaurants/:rid/tags'
   , m.restrict('admin')
   , m.enums()
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'tags'} )
   , m.restaurant( {param: 'rid' } )
   , m.view('admin/restaurant/edit-tags', {
@@ -258,6 +266,7 @@ module.exports.register = function(app) {
   app.get('/admin/restaurants/:rid/address'
   , m.restrict('admin')
   , m.states()
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'address'} )
   , m.restaurant( {param: 'rid' } )
   , m.view('admin/restaurant/edit-address', {
@@ -267,6 +276,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:restaurant_id/contacts'
   , m.restrict(['admin'])
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'contacts'} )
   , m.param('restaurant_id')
   , m.sort('+id')
@@ -279,6 +289,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:rid/menu'
   , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'menu'} )
   , m.restaurant( { param: 'rid', withMenuItems: true } )
   , m.view('admin/restaurant/edit-menu', {
@@ -288,6 +299,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:restaurant_id/photos'
   , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'photos'} )
   , m.restaurant( { param: 'restaurant_id' } )
   , m.param('restaurant_id')

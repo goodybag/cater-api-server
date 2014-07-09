@@ -365,7 +365,7 @@ dirac.use( function( dirac ){
       , ' where ' + data.pivots.map( function( p ){
                       return 'r."' + p.target_col + '" = "' + data.source + '"."' + p.source_col + '"';
                     }).join(' and ')
-      , ')) as ' + data.alias + ')'
+      , ')) as "' + data.alias + '")'
       ].join('\n')
     }
   };
@@ -545,6 +545,53 @@ dirac.use( function( dirac ){
 
     $query.order = [ 'status_date ' + ($query.statusDateSort.direction || 'desc') ];
 
+    next();
+  });
+});
+
+// Order submitted date
+dirac.use( function( dirac ){
+  dirac.dals.orders.before( 'find', function( $query, schema, next ){
+    if ( !$query.submittedDate ) return next();
+
+    $query.with     = $query.with     || [];
+    $query.joins    = $query.joins    || [];
+    $query.columns  = $query.columns  || ['*'];
+
+    $query.with.push({
+      name:     'submitted_dates'
+    , type:     'select'
+    , table:    'order_statuses'
+    , columns:  [ 'order_id', { type: 'max', expression: 'created_at', alias: 'submitted' } ]
+    , groupBy:  'order_id'
+    , where:    { status: 'submitted' }
+    });
+
+    $query.joins.push({
+      type:     'left'
+    , target:   'submitted_dates'
+    , on:       { order_id: '$orders.id$' }
+    })
+
+    $query.columns.push('submitted_dates.submitted');
+
+    next();
+  });
+});
+
+// todo: better solution cache order_item.sub_total via trigger
+// Calculate item sub_totals
+dirac.use( function( dirac ){
+  dirac.dals.orders.after( 'findOne', function( results, $query, schema, next ){
+    if ( $query.many && utils.filter($query.many, { table: 'order_items' }) ) {
+      results = results.map( function(order) {
+        order = order.orderItems.map( function(item) {
+          var options = utils.flatten(utils.pluck(item.options_sets, 'options'), true);
+          var addOns = utils.reduce(utils.pluck(utils.where(options, {state: true}), 'price'), function(a, b) { return a + b; }, 0);
+          item.sub_total = item.quantity * (item.price + addOns);
+        });
+      });
+    }
     next();
   });
 });

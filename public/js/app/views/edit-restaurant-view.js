@@ -217,8 +217,9 @@ define(function(require, exports, module) {
       },
 
       gb_fee: function(){
-        var val = this.$el.find( this.fieldMap.gb_fee ).val();
-        val = Handlebars.helpers.percentToFactor( val, 5 );
+        var $el = this.$el.find( this.fieldMap.gb_fee );
+        var val = $el.val();
+        val = Handlebars.helpers[ $el.data('in') ]( val );
         return val;
       },
 

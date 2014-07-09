@@ -245,7 +245,7 @@ config.defaults = {
 };
 
 config.dev = {
-  env: 'dev'
+  env: 'dev'`
 
 , isDev: true
 
@@ -329,6 +329,8 @@ config.dev = {
 
 config.staging = {
   env: 'staging'
+
+, numWorkers: 1
 
 , isStaging: true
 

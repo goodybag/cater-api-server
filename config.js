@@ -245,7 +245,7 @@ config.defaults = {
 };
 
 config.dev = {
-  env: 'dev'`
+  env: 'dev'
 
 , isDev: true
 

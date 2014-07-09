@@ -64,7 +64,7 @@ var reports = {
     , 'Caterer Name'
     ]);
 
-    var where = { status: status };
+    var where = { status: status, restaurant_id: { $notNull: true } };
     var options = { limit: 'all' };
 
     if ( restaurantId ) where.restaurant_id = restaurantId;
@@ -83,15 +83,17 @@ var reports = {
       { table: 'users', alias: 'user' }
     , { table: 'restaurants', alias: 'restaurant'}
     ];
+    options.submittedDate = true;
 
     db.orders.find(where, options, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       results
-        .filter( function(order) { return order.restaurant_id; })
         .forEach( function(order) {
           res.csv.writeRow([
             order.id
-          , moment(order.submitted).format(reports.dateFormat)
+          , order.submitted ? 
+              moment(order.submitted).format(reports.dateFormat) :
+              'N/A'
           , moment(order.datetime).format(reports.dateFormat)
           , order.user.name
           , order.user.email

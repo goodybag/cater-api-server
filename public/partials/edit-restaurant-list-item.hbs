@@ -1,15 +1,4 @@
-<div class="list-group-item">
-  <div class="row">
-    <div class="col-sm-9">
-        <a href="/admin/restaurants/{{id}}">
-          <h4>{{name}}</h4>
-        </a>
-    </div>
-    <div class="col-sm-3">
-      <div class="pull right">
-        <a class="btn btn-default" href="/admin/restaurants/{{id}}">Edit Restaurant</a>
-        <a class="btn btn-default" href="/admin/restaurants/{{id}}/sort">Sort Menu</a>
-      </div>
-    </div>
-  </div>
-</div>
+<li class="list-group-item">
+  <a class="edit-restaurants-link" href="/admin/restaurants/{{id}}">{{name}}</a>
+  <a class="edit-restaurants-sort" href="/admin/restaurants/{{id}}/sort">Sort Menu</a>
+</li>

@@ -1,0 +1,111 @@
+//
+// List groups (modified from bootstrap)
+// --------------------------------------------------
+
+
+// Base class
+//
+// Easily usable on <ul>, <ol>, or <div>.
+
+.list-group {
+  // No need to set list-style: none; since .list-group-item is block level
+  margin-bottom: 20px;
+  padding-left: 0; // reset padding because ul and ol
+}
+
+
+// Individual list items
+//
+// Use on `li`s or `div`s within the `.list-group` parent.
+
+.list-group-item {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  // Place the border on the list items and negative margin up for better styling
+  margin-bottom: -1px;
+  background-color: @list-group-bg;
+  border: 1px solid @list-group-border;
+
+  // Round the first and last items
+  &:first-child {
+    border-top-right-radius: @list-group-border-radius;
+     border-top-left-radius: @list-group-border-radius;
+  }
+  &:last-child {
+    margin-bottom: 0;
+    border-bottom-right-radius: @list-group-border-radius;
+     border-bottom-left-radius: @list-group-border-radius;
+
+  }
+
+  // Align badges within list items
+  > .badge {
+    float: right;
+  }
+  > .badge + .badge {
+    margin-right: 5px;
+  }
+}
+
+
+// Linked list items
+//
+// Use anchor elements instead of `li`s or `div`s to create linked list items.
+// Includes an extra `.active` modifier class for showing selected items.
+
+a.list-group-item {
+  color: @brand-quaternary;
+  text-decoration: none;
+
+  .list-group-item-heading {
+    color: @brand-quaternary;
+  }
+
+  // Hover state
+  &:hover,
+  &:focus {
+    color: @brand-quaternary;
+    background-color: @off-gray;
+  }
+}
+
+.list-group-item {
+  // Disabled state
+  &.disabled,
+  &.disabled:hover,
+  &.disabled:focus {
+    background-color: @list-group-border;
+    color: @gray-darker;
+    cursor: not-allowed;
+    
+    // Force color to inherit for custom content
+    .list-group-item-heading {
+      color: inherit;
+    }
+    .list-group-item-text {
+      color: @gray-darker;
+    }
+  }
+
+  // Active class on item itself, not parent
+  &.active,
+  &.active:hover,
+  &.active:focus {
+    z-index: 2; // Place active items above their siblings for proper border styling
+    color: @white;
+    background-color: @brand-primary;
+    border-color: @brand-primary;
+
+    // Force color to inherit for custom content
+    .list-group-item-heading,
+    .list-group-item-heading > small,
+    .list-group-item-heading > .small {
+      color: inherit;
+    }
+    .list-group-item-text {
+      color: @brand-quaternary
+      ;
+    }
+  }
+}

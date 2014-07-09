@@ -175,6 +175,7 @@ module.exports = Model.extend({
     var insert = this.attributes.id == null;
     if (insert) {
       this.attributes.review_token = uuid.v4();
+      this.attributes.ds_token = uuid.v4();
 
       if ( !this.attributes.restaurant_id ){
         throw new Error('Order cannot save without `restaurant_id`');

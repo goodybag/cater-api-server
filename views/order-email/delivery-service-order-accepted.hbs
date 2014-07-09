@@ -16,5 +16,8 @@
     {{/if}}
   </p>
   
-  <div>Order subtotal: ${{dollars order.sub_total}}</div>
+  <p>Order subtotal: ${{dollars order.sub_total}}</p>
+
+  <p><a href="{{config.baseUrl}}/orders/{{order.id}}/delivery-service-accept?ds_token={{order.ds_token}}">Click here to accept</a>
+  </p>
 </section>

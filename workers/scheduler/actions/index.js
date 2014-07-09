@@ -8,6 +8,8 @@ var actions = [
 , { fn: require('./upload-to-s3'), name: 'upload-to-s3' }
 , { fn: require('./notify-delivery-service'), name: 'notify-delivery-service' }
 , { fn: require('./redeem-reward'), name: 'redeem-reward' }
+, { fn: require('./delivery-service-order'), name:'delivery-service-order' }
+, { fn: require('./sms-gb-asap-after-hours'), name: 'sms-gb-asap-after-hours' }
 ];
 
 actions.forEach( function( action ){

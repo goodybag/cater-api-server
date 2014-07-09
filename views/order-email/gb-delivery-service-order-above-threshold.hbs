@@ -1,0 +1,6 @@
+<section style="text-align: left; margin: 0 20px;">
+  <h2>Goodybag Delivery Service Order #{{order.id}} Needs Review!</h2>
+  <p>This delivery service order has exceeded the restaurants dollar amount threshold for allowing a delivery service deliver. <strong>We have not sent the delivery service <em>or the restaurant</em> a notification</strong>.</p>
+  <p>We need to contact the restaurant and see if we can convince them to deliver this order. Once that is complete, notify a Goodybag Programmer to manually change the order type. THEN send the restaurant a "restaurant-order-submitted" notification from the <a href="{{config.baseUrl}}/admin/orders/{{order.id}}">Order Command Center</a></p>
+  <a href="{{config.baseUrl}}/orders/{{order.id}}">View order here</a>
+</section>

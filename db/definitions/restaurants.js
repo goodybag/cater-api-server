@@ -147,6 +147,11 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , delivery_service_order_total_upperbound: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
   , delivery_service_head_count_threshold: {
       type: types.int
     , nullable: false

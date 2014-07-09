@@ -335,6 +335,7 @@ var fields = [
   'is_fee_on_total',
   'delivery_service_head_count_threshold',
   'delivery_service_order_amount_threshold',
+  'delivery_service_order_total_upperbound',
   'region_id'
 ];
 

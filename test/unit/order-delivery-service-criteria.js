@@ -19,6 +19,7 @@ describe ('Order Delivery Service Criteria', function(){
   , restaurant: {
       minimum_order: 100
     , delivery_service_order_amount_threshold:  500
+    , delivery_service_order_total_upperbound:  200000
     , delivery_service_head_count_threshold:    20
     , delivery_zips: ['78756']
     , delivery_zip_groups: [

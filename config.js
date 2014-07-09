@@ -150,6 +150,7 @@ config.defaults = {
 
 , deliveryServices: {
     responseThresholdMins: 30
+  , supportPhones: [ local.testPhoneSms || '1234567890' ]
   }
 
 , scheduler: {
@@ -490,6 +491,13 @@ config.production = {
   , asapOrders: [
       'sarahsouthwell@goodybag.com'
     , 'gillian@goodybag.com'
+    ]
+  }
+
+, deliveryServices: {
+    responseThresholdMins: 30
+  , supportPhones: [
+      '9788461970' // Sarah
     ]
   }
 

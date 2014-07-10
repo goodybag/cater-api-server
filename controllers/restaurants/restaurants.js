@@ -10,6 +10,7 @@ var
 , json2csv = require('json2csv')
 , _ = require('lodash')
 , helpers = require('../../public/js/lib/hb-helpers')
+, restaurantsSchema = require('../../db/definitions/restaurants')
 ;
 
 cuisines = cuisines.sort();
@@ -350,7 +351,34 @@ module.exports.create = function(req, res) {
   });
 }
 
+
 module.exports.update = function(req, res) {
+  var restaurantId = req.params.rid;
+
+console.log(utils.partition);
+  utils.partition(utils.keys(req.body), function() {
+    console.log('dsadas');
+    return true;
+  });
+  var updates = utils.partition(utils.keys(req.body), function(field) {
+    // return field in req.body;
+    console.log(arguments);
+    return true;
+  });
+  console.log(updates);
+  // for ( var field in req.body ) {
+  //   if ( field in restaurantsSchema.schema ) {
+  //     // Update `restaurants`
+
+  //   } else {
+  //     // Update other tables referenced by `restaurant_id`
+
+  //   }
+  // }
+
+}
+
+module.exports.update2 = function(req, res) {
   // this should be an array of three functions, each an async eachSeries to destroy and recreate
   // the subrecords associated with this restaurant.
   // it's a series, so the delete query should always complete before the assocated insert query on the same table.

@@ -474,4 +474,29 @@ utils.getWorkingTime = function( datetime, timezone ){
   return datetime.toISOString();
 };
 
+// split object or array into two arrays based on predicate
+//   - array predicate called with arguments (element, index, list)
+//   - object predicate called with arguments (value, key, object)
+utils.partition = function(source, predicate) {
+  if ( Array.isArray(source) ) {
+    var truthy = [];
+    var falsy = [];
+    source.forEach( function(val, idx, array){
+      (predicate.apply(this, arguments) ? truthy : falsy ).push(val);
+    });
+    return [truthy, falsy];
+  }
+
+  if ( typeof source === 'object' ) {
+    var truthy = {};
+    var falsy = {};
+    for ( var key in source ) {
+      ( predicate.call(this, source[key], key, source) ? truthy : falsy )[key] = source[key];
+    }
+    return [truthy, falsy];
+  }
+
+  throw new Error('partition requires an array or an object');
+}
+
 module.exports = utils;

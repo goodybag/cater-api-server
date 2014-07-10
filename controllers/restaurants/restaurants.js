@@ -267,7 +267,7 @@ var leadTimes = function(body, id) {
 }
 
 var hours = function(body, id) {
-  var a = Array.prototype.concat.apply([], utils.map(body.hours_of_operation, function(times, day, obj) {
+  return Array.prototype.concat.apply([], utils.map(body.hours_of_operation, function(times, day, obj) {
     return utils.map(times, function(period, index, arr) {
       return {
         restaurant_id: id,
@@ -277,7 +277,6 @@ var hours = function(body, id) {
       };
     });
   }));
-  return a;
 }
 
 var pickupLeadTimes = function(body, id) {

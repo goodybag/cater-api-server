@@ -407,9 +407,6 @@ module.exports.update = function(req, res) {
 
     return utils.partial(utils.async.eachSeries, [delQuery, createQuery], function(query, cb) {
       if (!query) return cb();
-      if ( query.table === 'restaurant_hours' ){
-        console.log(query);
-      }
       var sql = db.builder.sql(query);
       db.query(sql.query, sql.values, cb);
     });

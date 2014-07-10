@@ -27,7 +27,7 @@ define(function( require ){
           set:      set
         , dataIn:   "dollars"
         , dataOut:  "pennies"
-        , legend:   [{ axis: 'x', label: 'To' }, { axis: 'y', label: 'From' }]
+        , legend:   [{ axis: 'y', label: 'From' }, { axis: 'x', label: 'To' }]
         });
 
         // Set the correct values on the editor

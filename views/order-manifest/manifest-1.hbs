@@ -2,7 +2,7 @@
 <script>
   var config = {
     pageHeight:               920
-  , phantomPageHeightOffset:  -120
+  , phantomPageHeightOffset:  -280
   };
 
   var isPhantom = function(){
@@ -12,7 +12,7 @@
   var fillerTmpl = function( options ){
     return [
       '<tr class="filler">'
-    , '  ' + new Array(5).join('.').split('.').map( function(){
+    , '  ' + new Array(8).join('.').split('.').map( function(){
         return '  <td style="height: ' + options.height + 'px"></td>'
       }).join('\n')
     , '</tr>'

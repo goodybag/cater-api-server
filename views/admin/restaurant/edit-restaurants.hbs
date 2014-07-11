@@ -1,0 +1,15 @@
+{{#extend "page"}}page-restaurants{{/extend}}
+
+{{#extend "body"}}
+<div class="container">
+  <h1>Edit Restaurants</h1>
+
+  <ul class="list-group">
+  {{#each restaurants}}
+  {{> edit_restaurant_list_item}}
+  {{/each}}
+  </ul>
+
+  <a href="/admin/restaurants/create" class="btn btn-primary">New Restaurant</a>
+</div>
+{{/extend}}

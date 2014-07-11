@@ -50,6 +50,8 @@ a.list-group-item-restaurant .list-group-item-heading {
 
 .list-group-restaurants .rating-wrapper {
   padding-top: 5px;
+  /* Quick hack to fix medium breakpoint derpage */
+  padding-right: 2px;
 }
 
 .list-group-restaurants .rating {

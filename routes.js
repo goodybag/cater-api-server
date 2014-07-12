@@ -88,6 +88,8 @@ module.exports.register = function(app) {
    */
 
   app.get('/admin/regions'
+  , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'regions' })
   , m.sort('+name')
   , m.view( 'admin/regions', db.regions, {
       layout: 'admin/layout2'

@@ -78,6 +78,7 @@ module.exports.register = function(app) {
 
   app.get('/admin'
   , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'home' })
   , m.view( 'admin/home', { layout: 'admin/layout2' } )
   );
 
@@ -183,7 +184,6 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants'
   , m.restrict('admin')
-  // , controllers.restaurants.editAll
   , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.db.restaurants.find( {}, { limit: 'all' } )
   , m.view('admin/restaurant/edit-restaurants', {

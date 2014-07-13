@@ -168,22 +168,6 @@ module.exports.get = function(req, res) {
   utils.async.parallel(tasks, done);
 }
 
-module.exports.editAll = function(req, res, next) {
-  models.Restaurant.find({limit: 10000}, function(err, models) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var context = {
-      restaurants: utils.invoke(models, 'toJSON')
-    , states: states
-    , isNew: true
-    };
-    context.restaurant = {delivery_times: utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; }))};  // tmp hack
-    res.render('edit-restaurants', context, function(error, html) {
-      if (error) return res.error(errors.internal.UNKNOWN, error);
-      return res.send(html);
-    });
-  });
-};
-
 module.exports.sort = function(req, res) {
   models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);

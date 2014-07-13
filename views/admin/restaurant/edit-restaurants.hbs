@@ -1,20 +1,15 @@
+{{#extend "page"}}page-restaurants{{/extend}}
+
 {{#extend "body"}}
 <div class="container">
   <h1>Edit Restaurants</h1>
 
-  <div class="list-group restaurants">
-    {{#each restaurants}}
-    {{> edit_restaurant_list_item}}
-    {{/each}}
-  </div>
+  <ul class="list-group">
+  {{#each restaurants}}
+  {{> edit_restaurant_list_item}}
+  {{/each}}
+  </ul>
 
-  <div class="row new-restaurant-row">
-    <div class="col-2 col-offset-10">
-      <a href="/admin/restaurants/create" class="btn btn-primary new-restaurant pull-right">New Restaurant</a>
-    </div>
-  </div>
+  <a href="/admin/restaurants/create" class="btn btn-primary">New Restaurant</a>
 </div>
-{{/extend}}
-
-{{#extend "scripts"}}
 {{/extend}}

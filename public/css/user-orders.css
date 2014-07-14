@@ -44,11 +44,11 @@
   color: #A7A4A0;
 }
 
-.definition-group-subtotal {
+.definition-group-total {
   margin-top: 4px;
 }
 
-.definition-group-subtotal > dd {
+.definition-group-total > dd {
   font-weight: 500;
 }
 
@@ -82,7 +82,7 @@
   margin-bottom: 5px;
 }
 
-.nav-orders .fc-event:hover { 
+.nav-orders .fc-event:hover {
   cursor: pointer;
 }
 

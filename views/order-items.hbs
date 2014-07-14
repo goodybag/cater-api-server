@@ -107,6 +107,17 @@
     </div>
 
     <div class="panel-body totals-panel">
+      <div class="row adjustment editable">
+        <div class="col-lg-8">
+          <textarea class="form-control adjustment-description" rows="3"></textarea>
+        </div>
+        <div class="col-lg-4">
+          <dl class="adjustment-input pull-right">
+            <dt>Adjustment:</dt>
+            <dd><input type="number" class="form-control adjustment-amount" value="0.00"></dd>
+          </dl>
+        </div>
+      </div>
       <div class="totals">
         {{> totals}}
       </div>

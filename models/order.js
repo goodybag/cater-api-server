@@ -13,6 +13,7 @@ var Restaurant = require('./restaurant');
 var Transaction = require('./transaction');
 var TransactionError = require('./transaction-error');
 var orderDeliveryServiceCriteria = require('../public/js/lib/order-delivery-service-criteria');
+var ordrInTrayBuilder = require('../lib/tray-builder');
 var moment = require('moment-timezone');
 
 var modifyAttributes = function(callback, err, orders) {
@@ -260,6 +261,10 @@ module.exports = Model.extend({
     }
 
     return obj;
+  },
+
+  toOrdrInTray: function(){
+    return ordrInTrayBuilder( this.toJSON() );
   },
 
   getManifest: function(){

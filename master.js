@@ -1,6 +1,6 @@
 var config = require('./config');
 var forky = require('forky');
-forky(__dirname + '/server');
+forky(__dirname + '/server', config.numWorkers);
 
 if ( config.isDev ){
   process.on('uncaughtException', function( error ){

@@ -90,7 +90,7 @@ define(function(require, exports, module) {
           return this.model.get('adjustment');
 
         var desc = $adj.find('.adjustment-description').val().trim() || null
-        var amount = parseInt($adj.find('.adjustment-amount').val().trim() * 100)
+        var amount = Math.round($adj.find('.adjustment-amount').val().trim() * 100)
         return {
           description: desc,
           amount: !utils.isNaN(amount) ? amount : null

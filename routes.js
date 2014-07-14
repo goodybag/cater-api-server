@@ -45,8 +45,6 @@ module.exports.register = function(app) {
   , controllers.restaurants.list
   );
 
-  app.get('/restaurants/edit', m.restrict('admin'), controllers.restaurants.editAll);
-
   app.post('/restaurants', m.restrict('admin'), controllers.restaurants.create);
 
   app.all('/restaurants', m.restrict(['client', 'admin']), function(req, res, next) {
@@ -80,6 +78,7 @@ module.exports.register = function(app) {
 
   app.get('/admin'
   , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'home' })
   , m.view( 'admin/home', { layout: 'admin/layout2' } )
   );
 
@@ -180,6 +179,19 @@ module.exports.register = function(app) {
   , m.view( 'admin/delivery-service/delivery-zips', db.delivery_services, {
       layout: 'admin/layout-single-object'
     , method: 'findOne'
+    })
+  );
+
+  /**
+   * Restaurant list
+   */
+
+  app.get('/admin/restaurants'
+  , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+  , m.db.restaurants.find( {}, { limit: 'all' } )
+  , m.view('admin/restaurant/edit-restaurants', {
+      layout: 'admin/layout-page'
     })
   );
 

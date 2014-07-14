@@ -330,6 +330,8 @@ config.dev = {
 config.staging = {
   env: 'staging'
 
+, numWorkers: 1
+
 , isStaging: true
 
 , cdn: {

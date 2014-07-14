@@ -26,10 +26,10 @@
         <dt>Delivery Date:</dt>
         <dd>{{datepart this.datetime}} {{timepart this.datetime}}</dd>
       </div>
-      {{#if this.sub_total}}
+      {{#if this.total}}
       <div class="definition-group-subtotal">
-        <dt>Subtotal:</dt>
-        <dd class="subtotal-detail">${{dollars this.sub_total}}</dd>
+        <dt>Total:</dt>
+        <dd class="subtotal-detail">${{dollars this.total}}</dd>
       </div>
       {{/if}}
     </dl>

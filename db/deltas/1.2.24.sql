@@ -25,6 +25,11 @@ begin
   perform add_column( 'delivery_services', 'order_email', 'text' );
   perform add_column( 'delivery_services', 'order_phone', 'varchar(10)' );
 
+  update restaurants set
+    delivery_service_head_count_threshold = 60
+  , delivery_service_order_amount_threshold = 50000
+  , delivery_service_order_total_upperbound = 200000;
+
   drop trigger if exists order_order_items_change on order_items;
   drop trigger if exists order_order_items_remove on order_items;
   drop trigger if exists on_order_datetime_change on orders;

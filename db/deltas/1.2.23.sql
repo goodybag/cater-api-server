@@ -10,6 +10,4 @@ begin
 
   delete from meal_types where name = 'Brunch';
 
-  
-
 end$$;

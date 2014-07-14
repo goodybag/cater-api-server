@@ -3,17 +3,21 @@
 ////////////
 
 #grid {
-  .container(){
+  .container( @w ){
     display: table;
-    width: @container-width;
+    width: @w;
     margin: 0 auto;
 
-    @media screen and ( max-width: @container-width ){
+    @media screen and ( max-width: @w ){
       & {
         width: 100%;
         .standard-padding();
       }
     }
+  }
+
+  .container() {
+    #grid > .container( @container-width );
   }
 
   .row(){

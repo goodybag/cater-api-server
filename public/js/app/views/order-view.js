@@ -69,7 +69,6 @@ define(function(require, exports, module) {
       },
 
       adjustment: function() {
-        console.log('adjustment getter');
         var $adj = this.$el.find('.adjustment');
         if (!$adj.hasClass('editable'))
           return this.model.get('adjustment');

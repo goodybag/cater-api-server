@@ -1,6 +1,13 @@
 <div class="list-group order-list-group">
   {{#each orders}}
   <a id="order-{{id}}" class="list-group-item" href="/orders/{{this.id}}{{#eq status "pending"}}/items{{/eq}}" data-status="{{status}}" data-id="{{id}}">
+    {{#if ../user.isAdmin}}
+    <span
+      class="order-type-indicator"
+      data-type="{{orderTypeAbbr this}}">
+      {{orderTypeAbbr this}}
+    </span>
+    {{/if}}
     {{#include parent=..}}
       {{> order_list_item}}
     {{/include}}

@@ -1,6 +1,5 @@
 var utils   = require('../utils');
 var Models  = require('../models');
-var errors  = require('../errors');
 
 module.exports = function( options ){
   options = utils.defaults( options, {

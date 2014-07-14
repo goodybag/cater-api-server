@@ -1,5 +1,6 @@
 var utils   = require('../utils');
 var Models  = require('../models');
+var errors  = require('../errors');
 
 module.exports = function( options ){
   options = utils.defaults( options, {
@@ -14,11 +15,12 @@ module.exports = function( options ){
     };
 
     Models.Restaurant.findOne( $query, function( error, restaurant ){
-      if ( error ) return res.error(500);
+      if ( error ) return res.send( 500 );
+      if ( !restaurant ) return res.send( 404 );
 
       if ( options.withMenuItems ){
         restaurant.getItems( function( error, items ){
-          if ( error ) return res.error(500);
+          if ( error ) return res.send( 500 );
           res.locals.restaurant = restaurant.toJSON();
           next();
         });

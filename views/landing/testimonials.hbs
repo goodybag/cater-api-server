@@ -33,12 +33,16 @@
   <div class="container">
     <div class="speech-boxes">
     {{#each testimonials}}
-      <div class="box box-{{#eq (mod @index 3) 1}}2{{else}}3{{/eq}}">
+      <div class="box box-2">
         <blockquote>"{{{this.message}}}"</blockquote>
         <div class="signature">
-          <span class="author">Stephanie Donohoe</span>
-          <div class="logo-wrapper">
-            <img src="{{cdn this.organizationLogo}}" alt="nFusion" class="author-logo">
+          <div class="wrapper">
+            <span class="author">Stephanie Donohoe</span>
+            <div class="logo-wrapper">
+              <a href="{{this.organizationUrl}}" class="logo-link">
+                <img src="{{cdn this.organizationLogo}}" alt="nFusion" class="author-logo">
+              </a>
+            </div>
           </div>
         </div>
       </div>

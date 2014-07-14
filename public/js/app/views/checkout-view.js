@@ -45,6 +45,7 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
+      console.log('checkout-view');
       OrderView.prototype.initialize.apply(this, arguments);
       this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
         format: 'mm/dd/yyyy'

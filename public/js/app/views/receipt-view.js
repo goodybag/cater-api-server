@@ -13,7 +13,7 @@ define(function(require, exports, module) {
 
   return module.exports = OrderView.extend({
     events: function() {
-      return _.extend({}, OrderView.prototype.events, {
+      return _.extend({}, OrderView.prototype.events.call(this), {
         'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled', true),
         'click .copy-order-btn': 'copyOrder',
         'click .btn-reject': 'rejectOrder',
@@ -35,7 +35,6 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
-      console.log('receipt-view');
       OrderView.prototype.initialize.apply(this, arguments);
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.originalTipValue = this.$el.find('.order-tip').val();

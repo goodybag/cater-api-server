@@ -40,8 +40,7 @@
     margin-left: @gutter;
     #grid > .col-width( @size, @gutter );
 
-    &:first-child,
-    &:nth-of-type(@{size}n) {
+    &:first-child {
       margin-left: 0;
     }
 
@@ -58,6 +57,17 @@
         margin-left: 0;
       }
     }
+  }
+
+  .nchilds-margin-left( @nchilds ) when ( @nchilds > 1 ){
+    &:nth-of-type(@{nchilds}n){
+      margin-left: 0;
+    }
+  }
+
+  .column-grid( @size, @gutter: @gutter-width ){
+    .column( @size, @gutter: @gutter-width );
+    .nchilds-margin-left( floor( @columns / @size ) );
   }
 }
 

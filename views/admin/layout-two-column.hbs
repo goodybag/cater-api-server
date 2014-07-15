@@ -22,10 +22,12 @@
       <div class="restaurant-edit">
         <div class="container">
         <h1>Editing {{restaurant.name}}</h1>
-          {{> restaurant_edit_nav }}
-          <div class="restaurant-edit-body">
-            <div class="alert-container"></div>
-            {{{block "body"}}}
+          <div>
+            {{> restaurant_edit_nav }}
+            <div class="restaurant-edit-body">
+              <div class="alert-container"></div>
+              {{{block "body"}}}
+            </div>
           </div>
         </div>
       <footer class="footer">

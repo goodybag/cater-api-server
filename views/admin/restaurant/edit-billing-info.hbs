@@ -20,7 +20,7 @@
     </div>
     <div class="form-group">
       <label class="control-label">State</label>
-      <select class="form-control restaurant-address restaurant-billing_state">
+      <select class="form-control restaurant-address restaurant-billing_state" name="billing_state">
         {{#each states}}
         <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq ../restaurant.billing_state this.abbr}} selected="selected"{{/eq}}>{{this.name}}</option>
         {{/each}}

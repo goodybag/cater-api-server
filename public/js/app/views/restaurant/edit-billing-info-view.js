@@ -10,6 +10,14 @@ define(function(require, exports, module) {
       });
     },
 
+    deleteOnEmptyString: [
+      'billing_street'
+    , 'billing_street2'
+    , 'billing_city'
+    , 'billing_state'
+    , 'billing_zip'
+    ],
+
     fieldMap: {
       gb_fee:                 '[name="gb_fee"]'
     , is_fee_on_total:        '[name="is_fee_on_total"]'

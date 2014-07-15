@@ -16,8 +16,8 @@ define(function(require, exports, module) {
     , zip: '.restaurant-zip'
     },
 
-    fieldGetters: {
-    },
+    fieldGetters: _.extend({
+    }, EditRestaurantView.prototype.fieldGetters ),
 
     initialize: function() {
     }

@@ -14,8 +14,12 @@
         padding-left: 12px;
         padding-right: 12px;
 
-        &:before {
-          left: -38px;
+        &:before,
+        &:after {
+          content: "\"";
+          position: static;
+          display: inline;
+          background: none;
         }
       }
     }

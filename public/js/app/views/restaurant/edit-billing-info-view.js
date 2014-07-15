@@ -10,7 +10,7 @@ define(function(require, exports, module) {
       });
     },
 
-    deleteOnEmptyString: [
+    nullOnEmptyString: [
       'billing_street'
     , 'billing_street2'
     , 'billing_city'

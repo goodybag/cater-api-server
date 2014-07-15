@@ -101,18 +101,22 @@ define(function(require, exports, module) {
         },
         billing_email: {
           type: ['string', 'null'],
+          minLength: 1,
           required: false
         },
         billing_street: {
           type: ['string', 'null'],
+          minLength: 1,
           required: false
         },
         billing_street2: {
           type: ['string', 'null'],
+          minLength: 1,
           required: false
         },
         billing_city: {
           type: ['string', 'null'],
+          minLenght: 1,
           required: false
         },
         billing_state: {

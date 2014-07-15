@@ -14,9 +14,9 @@ define(function(require, exports, module) {
       'submit .ap-form': 'save'
     },
 
-    // Fields that should be deleted if the value retrieved
+    // Fields that should be nulled if the value retrieved
     // from the DOM is an empty string
-    deleteOnEmptyString: [],
+    nullOnEmptyString: [],
 
     fieldMap: {
     },
@@ -47,8 +47,8 @@ define(function(require, exports, module) {
 
       for ( var key in values ){
         if ( values[ key ] === '' || values[ key ] === NaN )
-        if ( this.deleteOnEmptyString.indexOf( key ) > -1 ){
-          delete values[ key ];
+        if ( this.nullOnEmptyString.indexOf( key ) > -1 ){
+          values[ key ] = null;
         }
       }
 

@@ -17,7 +17,7 @@ define(function(require, exports, module) {
     , minimum_order: '.minimum_order'
     },
 
-    fieldGetters: {
+    fieldGetters: _.extend({
       minimum_order: function() {
         return +Handlebars.helpers.pennies( this.$el.find('.minimum-order').val() ) || null;
       },
@@ -41,7 +41,8 @@ define(function(require, exports, module) {
         });
         return delivery_zips;
       }
-    },
+    }, EditRestaurantView.prototype.fieldGetters ),
+
 
     addDeliveryTier: function() {
       var last = this.$el.find('.delivery-zip-group:last-child');

@@ -17,7 +17,7 @@ define(function(require, exports, module) {
     , meal_styles: '.restaurant-meal-styles input'
     },
 
-    fieldGetters: {
+    fieldGetters: _.extend({
       price: _.partial(EditRestaurantView.intGetter, 'price'),
 
       cuisine: function() {
@@ -35,7 +35,8 @@ define(function(require, exports, module) {
       meal_styles: function() {
         return _.pluck(this.$el.find(this.fieldMap.meal_styles + ':checked'), 'value');
       }
-    },
+    }, EditRestaurantView.prototype.fieldGetters ),
+
 
     initialize: function() {
     }

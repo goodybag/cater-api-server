@@ -1,0 +1,84 @@
+///////////////////
+// Quote Rotator //
+///////////////////
+
+@quote-rotator-quote-padding: 52px;
+
+.quote-rotator-mobile() {
+  @media screen and ( max-width: @breakpoint-mobile ){
+    & {
+      font-size: 16px;
+      line-height: 26px;
+
+      blockquote {
+        padding-left: 12px;
+        padding-right: 12px;
+
+        &:before,
+        &:after {
+          content: "\"";
+          position: static;
+          display: inline;
+          background: none;
+        }
+      }
+    }
+  }
+}
+
+.quote-rotator .quote {
+  text-align: left;
+  .quote-rotator-mobile();
+
+  &.quote-lg {
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 30px;
+    .quote-rotator-mobile();
+  }
+
+  blockquote {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: @quote-rotator-quote-padding;
+    padding-right: @quote-rotator-quote-padding;
+
+    &:before,
+    &:after {
+      content: "";
+      position: absolute;
+      width: 48px;
+      height: 38px;
+      background-image: url('/img/quote-rotator-quotes.png');
+      background-position-y: -34px;
+    }
+
+    &:before {
+      top: -8px;
+      left: 0;
+      background-position-x: -17px;
+    }
+
+    &:after {
+      bottom: -8px;
+      right: 0;
+      background-position-x: -79px;
+    }
+  }
+}
+
+.quote-rotator .signature {
+  text-align: right;
+  margin-top: 22px;
+  padding-right: @quote-rotator-quote-padding;
+
+  & .author {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  & img {
+    vertical-align: middle;
+  }
+}

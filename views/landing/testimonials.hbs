@@ -1,0 +1,70 @@
+{{#extend "title"}} - Testimonials{{/extend}}
+{{#extend "page"}}page-testimonials{{/extend}}
+
+{{#extend "body"}}
+{{> landing_navbar}}
+
+<!--<PhotoStripe>-->
+<div class="photo-stripe photo-stripe-sushi">
+  <img src="/img/photo-stripe-sushi.png" alt="">
+</div>
+<!--</PhotoStripe>-->
+
+<!--<IntroQuote>-->
+<section class="page-section" id="section-intro-quote">
+  <div class="container">
+    <h1 class="section-header">We Make Offices Happy</h1>
+
+    <div class="quote-rotator">
+      <div class="quote quote-lg">
+        <blockquote>I started using Goodybag this past week and already I am questioning what I EVER did without you guys! You have taken so much stress out of my day by being available to chat, e-email, and do all the leg work I normally have to do myself. Not only does it make my job easier, but it also helps me discovering catering options that I was never aware of. Now we do not have to eat the same boxed lunches everyday!!! THANK YOU GOODYBAG! Your staff deserves a HUGE pat on the back!</blockquote>
+        <div class="signature">
+          <span class="author">Kristen Reilly</span>
+          <img src="{{cdn "/img/client-logos/q2.png" }}" alt="Grow Beyond" class="author-logo">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--</IntroQuote>-->
+
+<!--<TestimonialsList>-->
+<section class="page-section" id="section-testimonials-list">
+  <div class="container">
+    {{#each testimonials}}
+      {{#eq (mod @index 3) 0}}<div class="speech-boxes">{{/eq}}
+        <div class="box box-2 box-no-border" id="testimonial-{{this.id}}">
+          <blockquote>"{{{this.message}}}"</blockquote>
+          <div class="signature">
+            <span class="author">-{{this.author}}</span>
+            <div class="logo-wrapper">
+              <img src="{{cdn this.organizationLogo}}" alt="nFusion" class="author-logo">
+            </div>
+          </div>
+        </div>
+      {{#eq (mod @index 3) 2}}</div>{{/eq}}
+    {{/each}}
+  </div>
+</section>
+<!--</TestimonialsList>-->
+
+<!--<OutroCTA>-->
+<section class="page-section" id="section-outro-cta">
+  <div class="container">
+    <h1 class="section-header">See for yourself how easy it is!</h1>
+    <p>Sign up and simplify your office catering.</p>
+    <a href="/join" class="btn btn-primary btn-large btn-cta">Start using Goodybag</a>
+  </div>
+</section>
+<!--</OutroCTA>-->
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['jquery', 'navbar'], function( $ ){
+    $('.navbar').navbar({ toggleText: false });
+  });
+
+  analytics.page('Testimonials');
+</script>
+{{/extend}}

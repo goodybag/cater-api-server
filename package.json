@@ -33,7 +33,7 @@
     "dirac": "~0.3.6",
     "dirac-middleware": "~0.1.5",
     "express": "3.4.x",
-    "forky": "0.0.2",
+    "forky": "0.1.2",
     "gelf-encode": "0.2.x",
     "generic-pool": "2.0.x",
     "grunt": "~0.4.1",

@@ -3,17 +3,21 @@
 ////////////
 
 #grid {
-  .container(){
+  .container( @w ){
     display: table;
-    width: @container-width;
+    width: @w;
     margin: 0 auto;
 
-    @media screen and ( max-width: @container-width ){
+    @media screen and ( max-width: @w ){
       & {
         width: 100%;
         .standard-padding();
       }
     }
+  }
+
+  .container() {
+    #grid > .container( @container-width );
   }
 
   .row(){
@@ -37,7 +41,7 @@
     #grid > .col-width( @size, @gutter );
 
     &:first-child,
-    &:nth-of-type(1) {
+    &:nth-of-type(@{size}n) {
       margin-left: 0;
     }
 

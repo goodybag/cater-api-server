@@ -1,0 +1,42 @@
+.page-testimonials {
+  #section-intro-quote {
+    padding-bottom: 80px;
+    margin-bottom: 60px;
+  }
+
+  .speech-boxes {
+    #grid > .row();
+
+    & > .box {
+      #grid > .column(4, 22px);
+    }
+
+    #testimonial-texas-tribune-1,
+    #testimonial-tableau-1,
+    #testimonial-entropic-1,
+    #testimonial-bigcommerce-1,
+    #testimonial-hawkeye-1 {
+      .speech-boxes > .box-with-border();
+
+      @media screen and ( max-width: @breakpoint-mobile ){
+
+      }
+    }
+
+    #testimonial-entropic-1,
+    #testimonial-bigcommerce-1 {
+      .speech-boxes > .box-reverse();
+    }
+  }
+
+  @media screen and ( max-width: @breakpoint-mobile ){
+    .speech-boxes {
+      padding-bottom: 0;
+    }
+
+    .box {
+      .speech-boxes > .box-no-border();
+      margin-bottom: 20px;
+    }
+  }
+}

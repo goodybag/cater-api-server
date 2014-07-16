@@ -67,6 +67,7 @@
     "node-uuid": "1.4.x",
     "npm": "*",
     "okay": "0.3.x",
+    "ordrin-api": "^1.0.1",
     "path-to-regexp": "^0.1.2",
     "pg": "2.3.x",
     "pg-parse-float": "0.0.x",

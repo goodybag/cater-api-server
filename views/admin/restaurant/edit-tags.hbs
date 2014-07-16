@@ -4,7 +4,7 @@
   <form class="ap-form form-vertical form-basic-info" action="/restaurants/{{restaurant.id}}/edit" method="POST">
     <div class="form-group">
       <label class="control-label">Price</label>
-      <select class="form-control restaurant-price">
+      <select class="form-control restaurant-price" type="number">
         <option value="1"{{#eq restaurant.price 1}} selected="selected"{{/eq}}>$</option>
         <option value="2"{{#eq restaurant.price 2}} selected="selected"{{/eq}}>$$</option>
         <option value="3"{{#eq restaurant.price 3}} selected="selected"{{/eq}}>$$$</option>

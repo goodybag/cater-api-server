@@ -13,7 +13,7 @@ define(function(require, exports, module) {
 
   return module.exports = OrderView.extend({
     events: function() {
-      return _.extend({}, OrderView.prototype.events, {
+      return _.extend({}, OrderView.prototype.events.call(this), {
         'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled', true),
         'click .copy-order-btn': 'copyOrder',
         'click .btn-reject': 'rejectOrder',
@@ -30,8 +30,7 @@ define(function(require, exports, module) {
         'click .edit-order-btn': 'toggleEdit',
         'click .cancel-edit-btn': 'toggleEdit',
         'click .save-btn': 'save',
-        'click .btn-add-tip': 'showTipModal',
-        'keyup .adjustment': 'autoSave'
+        'click .btn-add-tip': 'showTipModal'
       });
     },
 
@@ -79,24 +78,8 @@ define(function(require, exports, module) {
     },
 
     fieldMap: _.extend({
-      adjustment: '.adjustment .form-control',
       reason_denied: '.reason-denied'
     }, OrderView.prototype.fieldMap),
-
-    fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {
-      adjustment: function() {
-        var $adj = this.$el.find('.adjustment');
-        if (!$adj.hasClass('editable'))
-          return this.model.get('adjustment');
-
-        var desc = $adj.find('.adjustment-description').val().trim() || null
-        var amount = Math.round($adj.find('.adjustment-amount').val().trim() * 100)
-        return {
-          description: desc,
-          amount: !utils.isNaN(amount) ? amount : null
-        };
-      }
-    }),
 
     rejectOrder: function() {
       var self = this;

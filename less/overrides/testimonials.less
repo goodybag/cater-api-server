@@ -1,0 +1,65 @@
+.page-testimonials {
+  #section-intro-quote {
+    padding-bottom: 80px;
+    margin-bottom: 60px;
+  }
+
+  .speech-boxes {
+    #grid > .row();
+
+    & > .box {
+      #grid > .column(4, 22px);
+    }
+
+    #testimonial-texas-tribune-1,
+    #testimonial-tableau-1,
+    #testimonial-entropic-1,
+    #testimonial-bigcommerce-1,
+    #testimonial-hawkeye-1 {
+      .speech-boxes > .box-with-border();
+
+      @media screen and ( max-width: @breakpoint-mobile ){
+
+      }
+    }
+
+    #testimonial-entropic-1,
+    #testimonial-bigcommerce-1 {
+      .speech-boxes > .box-reverse();
+    }
+  }
+
+  #section-outro-cta {
+    .section-header {
+      margin-bottom: 14px;
+      font-size: 2.5em;
+      font-weight: 500;
+    }
+
+    .section-header + p {
+      margin-top: 0;
+      font-size: 16px;
+    }
+
+    .btn-cta {
+      margin-top: 8px;
+    }
+  }
+
+  @media screen and ( max-width: @breakpoint-mobile ){
+    .speech-boxes {
+      padding-bottom: 0;
+    }
+
+    .box {
+      .speech-boxes > .box-no-border();
+      margin-bottom: 20px;
+    }
+
+    #section-outro-cta {
+      .section-header {
+        font-size: 1.6em;
+      }
+    }
+  }
+}

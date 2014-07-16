@@ -18,7 +18,7 @@ if (fs.existsSync('./local-config.json')){
 var config = {};
 
 config.defaults = {
-  numWorkers: os.cpus().length
+  numWorkers: Math.floor( os.cpus().length / 2 )
 
 , tmpDir: './tmp'
 

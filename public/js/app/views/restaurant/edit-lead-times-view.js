@@ -16,7 +16,7 @@ define(function(require, exports, module) {
     , lead_times: '.lead-times'
     },
 
-    fieldGetters: {
+    fieldGetters: _.extend({
       delivery_times: function() {
         var models = _.pluck(this.options.hours, 'model')
         return _.object(_.invoke(models, 'get', 'day'), _.invoke(models, 'toJSON'));
@@ -35,7 +35,8 @@ define(function(require, exports, module) {
           };
         }));
       }
-    },
+    }, EditRestaurantView.prototype.fieldGetters ),
+
 
     addLeadTime: function(e) {
       this.$el.find('.lead-times-list').append(Handlebars.partials.lead_time({}));

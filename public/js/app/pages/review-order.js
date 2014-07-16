@@ -10,14 +10,16 @@ define( function( require ){
     init: function(options) {
       var order         = options.order;
       var orderItems    = options.orderItems;
+      var isAdmin       = options.isAdmin;
 
       var query = utils.parseQueryParams();
 
       var view = new Views.OrderView({
         el: $('#main')
       , model: order
-      , review_token: query.review_token} 
-      );
+      , review_token: query.review_token
+      , validate: !isAdmin
+      });
 
       orderItems = utils.map(orderItems, function(orderItem) {
         return new Views.OrderItemView({

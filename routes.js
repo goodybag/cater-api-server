@@ -29,6 +29,13 @@ module.exports.register = function(app) {
       layout: 'landing/layout'
     }));
 
+    app.get('/testimonials'
+    , m.json({ file: '/public/data/testimonials.json', target: 'testimonials' })
+    , m.view( 'landing/testimonials', {
+        layout: 'landing/layout'
+      })
+    );
+
     app.get('/forgot-password', controllers.auth.forgotPassword);
     app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
     app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
@@ -936,7 +943,7 @@ module.exports.register = function(app) {
   app.post('/contact-us', controllers.contactUs.sendSupportEmail);
 
   app.get('/faqs'
-  , m.json({ file: '/public/js/lib/faqs.json', target: 'faqs' })
+  , m.json({ file: '/public/data/faqs.json', target: 'faqs' })
   , m.view('faqs')
   );
 

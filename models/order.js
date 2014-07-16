@@ -482,6 +482,7 @@ module.exports = Model.extend({
               columns: [
                 {table: 'order_items', name: 'item_id'},
                 {table: 'order_items', name: 'quantity'},
+                {table: 'order_items', name: 'recipient'},
                 {table: 'order_items', name: 'notes'},
                 {table: 'order_items', name: 'options_sets'},
                 {table: 'items', name: 'name'},
@@ -500,7 +501,7 @@ module.exports = Model.extend({
             }
           },
 
-          columns: ['item_id', 'quantity', 'notes', 'options_sets', 'name', 'description', 'price', 'feeds_min', 'feeds_max', 'order_id'],
+          columns: ['item_id', 'quantity', 'recipient', 'notes', 'options_sets', 'name', 'description', 'price', 'feeds_min', 'feeds_max', 'order_id'],
           expression: {
             type: 'select',
             table: 'newItems',

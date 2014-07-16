@@ -63,11 +63,11 @@
 .order-type-indicator[data-type="D"] { background: #5BC0DE; }
 .order-type-indicator[data-type="P"] { background: #5CB85C; }
 
-.definition-group-subtotal {
+.definition-group-total {
   margin-top: 4px;
 }
 
-.definition-group-subtotal > dd {
+.definition-group-total > dd {
   font-weight: 500;
 }
 

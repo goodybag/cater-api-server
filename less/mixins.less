@@ -3,17 +3,21 @@
 ////////////
 
 #grid {
-  .container(){
+  .container( @w ){
     display: table;
-    width: @container-width;
+    width: @w;
     margin: 0 auto;
 
-    @media screen and ( max-width: @container-width ){
+    @media screen and ( max-width: @w ){
       & {
         width: 100%;
         .standard-padding();
       }
     }
+  }
+
+  .container() {
+    #grid > .container( @container-width );
   }
 
   .row(){
@@ -36,8 +40,7 @@
     margin-left: @gutter;
     #grid > .col-width( @size, @gutter );
 
-    &:first-child,
-    &:nth-of-type(1) {
+    &:first-child {
       margin-left: 0;
     }
 
@@ -54,6 +57,17 @@
         margin-left: 0;
       }
     }
+  }
+
+  .nchilds-margin-left( @nchilds ) when ( @nchilds > 1 ){
+    &:nth-of-type(@{nchilds}n){
+      margin-left: 0;
+    }
+  }
+
+  .column-grid( @size, @gutter: @gutter-width ){
+    .column( @size, @gutter: @gutter-width );
+    .nchilds-margin-left( floor( @columns / @size ) );
   }
 }
 

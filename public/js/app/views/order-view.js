@@ -26,7 +26,9 @@ define(function(require, exports, module) {
 
         'click #change-status-submitted-no-notify': _.bind(this.changeStatus, this, 'submitted', false),
         'click #change-status-accepted-no-notify': _.bind(this.changeStatus, this, 'accepted', false),
-        'click #change-status-canceled-no-notify': _.bind(this.changeStatus, this, 'canceled', false)
+        'click #change-status-canceled-no-notify': _.bind(this.changeStatus, this, 'canceled', false),
+
+        'keyup .adjustment': 'autoSave'
       });
     },
 
@@ -37,7 +39,8 @@ define(function(require, exports, module) {
       notes: '#order-notes',
       tip: '.order-tip',
       tip_percent: '.tip-percent',
-      quantity: '.order-item-quantity'
+      quantity: '.order-item-quantity',
+      adjustment: '.adjustment .form-control'
     },
 
     fieldGetters: {
@@ -63,6 +66,19 @@ define(function(require, exports, module) {
 
       phone: function() {
         return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
+      },
+
+      adjustment: function() {
+        var $adj = this.$el.find('.adjustment');
+        if (!$adj.hasClass('editable'))
+          return this.model.get('adjustment');
+
+        var desc = $adj.find('.adjustment-description').val().trim() || null
+        var amount = Math.round($adj.find('.adjustment-amount').val().trim() * 100)
+        return {
+          description: desc,
+          amount: !utils.isNaN(amount) ? amount : null
+        };
       }
     },
 
@@ -205,7 +221,9 @@ define(function(require, exports, module) {
         if (err) return alert(err);
         window.location.reload();
       });
-    }
+    },
+
+    autoSave: _.debounce(FormView.prototype.onSave, 600)
   });
 
   return module.exports = OrderView;

@@ -25,20 +25,6 @@
       <input type="text" class="form-control" name="yelp_business_id" id="input-yelp" value="{{config.yelp.businessBaseUrl}}/{{restaurant.yelp_business_id}}">
     </div>
     <div class="form-group">
-      <label class="control-label" for="input-rate">GB Fee</label>
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          name="gb_fee"
-          id="input-gb_fee"
-          data-in="factorToPercent"
-          data-out="percentToFactor 4"
-          value="{{factorToPercent restaurant.gb_fee}}">
-        <div class="input-addon">%</div>
-      </div>
-    </div>
-    <div class="form-group">
       <label for="region_id_selector" class="control-label">Region</label>
       <select name="region_id" id="region_id_selector" type="number">
         {{#each regions}}
@@ -70,18 +56,6 @@
       <label class="control-label" for="input-hidden">
         <input type="checkbox" class="form-control" name="is_hidden" id="input-hidden" {{#if restaurant.is_hidden}}checked="checked"{{/if}}>
          Hidden from listing
-      </label>
-    </div>
-    <div class="form-group">
-      <label class="control-label" for="input-is_fee_on_total">
-        <input type="checkbox" class="form-control" name="is_fee_on_total" id="input-is_fee_on_total" {{#if restaurant.is_fee_on_total}}checked="checked"{{/if}}>
-         Is the GB fee applied to Order Total?
-      </label>
-    </div>
-    <div class="form-group">
-      <label class="control-label" for="input-is_direct_deposit">
-        <input type="checkbox" class="form-control" name="is_direct_deposit" id="input-is_direct_deposit" {{#if restaurant.is_direct_deposit}}checked="checked"{{/if}}>
-         Uses Direct Deposit?
       </label>
     </div>
     <div class="actions">

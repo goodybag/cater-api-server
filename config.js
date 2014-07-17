@@ -365,7 +365,7 @@ config.staging = {
   , projectId: '526990bcf2d1570009000035'
   }
 
-, baseUrl: 'http://cater.staging.goodybag.com'
+, baseUrl: 'https://staging.goodybag.com'
 
 , postgresConnStr: process.env['DATABASE_URL']
 

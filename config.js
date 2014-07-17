@@ -318,7 +318,7 @@ config.staging = {
 , isStaging: true
 
 , cdn: {
-    baseUrl: 'http://cater-cdn-staging.s3-website-us-east-1.amazonaws.com'
+    baseUrl: 'https://d1llefdsnne2yl.cloudfront.net'
   , bucket: 'cater-cdn-staging'
   }
 

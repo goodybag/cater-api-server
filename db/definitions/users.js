@@ -65,6 +65,8 @@ define(function(require) {
   , default_zip: {
       type: types.varchar(5)
     }
+  , ordrin_email:     { type: types.text, unique: true }
+  , ordrin_password:  { type: types.text }
   };
 
   definition.indices = {};

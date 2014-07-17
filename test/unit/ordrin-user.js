@@ -1,17 +1,19 @@
 var assert      = require('assert');
 var ordrin      = require('ordrin-api');
-var config      = require('../../config');
+var config      = require('../../config').getEnv('test');
 var db          = require('../../db');
+var utils       = require('../../utils');
+var tutils      = require('../../lib/test-utils');
 var ordrinUser  = require('../../lib/ordrin-user');
 
 ordrin.api = new ordrin.APIs( config.ordrin.apiKeyPublic );
-
 describe ('OrdrIn User Module', function(){
   it ( 'Should register a user with a user object', function( done ){
-    db.users.insert( { email: 'bill@bob.com', password: 'poop' }, function( error, user ){
+    tutils.generateUser( function( error, user ){
       assert( !error );
 
       ordrinUser.register( user, function( error, user ){
+        console.log(error);
         assert( !error );
 
         assert.equal(
@@ -21,7 +23,17 @@ describe ('OrdrIn User Module', function(){
 
         assert( !!user.orderin_password );
 
-        ordrin.api.
+        var creds = {
+          email:            user.orderin_email
+        , current_password: user.orderin_password
+        };
+
+        ordrin.api.get_account_information( creds, function( error, result ){
+          assert( !error );
+
+          console.log(result);
+          done();
+        });
       });
     });
   });

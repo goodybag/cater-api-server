@@ -102,7 +102,7 @@ describe ('OrdrIn User Module', function(){
     });
   });
 
-  it ( 'Should renew the users token', function( done ){
+  it ( 'Should renew the users token'/*, function( done ){
     tutils.generateUser( function( error, user ){
       assert( !error );
 
@@ -134,5 +134,5 @@ describe ('OrdrIn User Module', function(){
         });
       });
     });
-  });
+  }*/);
 });

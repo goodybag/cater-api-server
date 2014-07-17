@@ -18,7 +18,7 @@ if (fs.existsSync('./local-config.json')){
 var config = {};
 
 config.defaults = {
-  numWorkers: Math.floor( os.cpus().length / 2 )
+  numWorkers: os.cpus().length
 
 , tmpDir: './tmp'
 
@@ -396,6 +396,7 @@ config.staging = {
 
 config.production = {
   env: 'production'
+, numWorkers: 3
 
 , isProduction: true
 

@@ -58,7 +58,7 @@ app.configure(function(){
   // Intercept status codes and render HTML if necessary
   app.use( middleware.statusCodeIntercept() );
 
-  if (config.isProduction) {
+  if (config.isProduction || config.isStaging) {
     app.use(middleware.sslRedirect);
   }
 

@@ -6,14 +6,14 @@ var utils       = require('../../utils');
 var tutils      = require('../../lib/test-utils');
 var ordrinUser  = require('../../lib/ordrin-user');
 
-ordrin.api = new ordrin.APIs( config.ordrin.apiKeyPublic );
+ordrin = new ordrin.APIs( config.ordrin.apiKeyPrivate );
+
 describe ('OrdrIn User Module', function(){
   it ( 'Should register a user with a user object', function( done ){
     tutils.generateUser( function( error, user ){
       assert( !error );
 
       ordrinUser.register( user, function( error, user ){
-        console.log(error);
         assert( !error );
 
         assert.equal(
@@ -21,24 +21,54 @@ describe ('OrdrIn User Module', function(){
         , config.ordrin.emailFormat.replace( '{id}', user.id )
         );
 
-        assert( !!user.orderin_password );
+        assert( !!user.ordrin_password );
 
         var creds = {
-          email:            user.orderin_email
-        , current_password: user.orderin_password
+          email:            user.ordrin_email
+        , current_password: user.ordrin_password
         };
 
-        ordrin.api.get_account_information( creds, function( error, result ){
+        ordrin.get_account_info( creds, function( error, result ){
           assert( !error );
 
-          console.log(result);
+          assert.equal( user.ordrin_email, result.em );
+
           done();
         });
       });
     });
   });
 
-  it ( 'Should register a user with a userId' );
+  it ( 'Should register a user with a userId', function( done ){
+    tutils.generateUser( function( error, user ){
+      assert( !error );
+
+      ordrinUser.register( user.id, function( error, user ){
+        assert( !error );
+
+        assert.equal(
+          user.ordrin_email
+        , config.ordrin.emailFormat.replace( '{id}', user.id )
+        );
+
+        assert( !!user.ordrin_password );
+
+        var creds = {
+          email:            user.ordrin_email
+        , current_password: user.ordrin_password
+        };
+
+        ordrin.get_account_info( creds, function( error, result ){
+          assert( !error );
+
+          assert.equal( user.ordrin_email, result.em );
+
+          done();
+        });
+      });
+    });
+  });
+
   it ( 'Should error because user already exists' );
   it ( 'Should update a users name' );
   it ( 'Should renew the users token' );

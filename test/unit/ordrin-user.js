@@ -69,7 +69,70 @@ describe ('OrdrIn User Module', function(){
     });
   });
 
-  it ( 'Should error because user already exists' );
-  it ( 'Should update a users name' );
-  it ( 'Should renew the users token' );
+  it ( 'Should error because user already exists', function( done ){
+    tutils.generateUser( function( error, user ){
+      assert( !error );
+
+      ordrinUser.register( user, function( error, user ){
+        assert( !error );
+
+        assert.equal(
+          user.ordrin_email
+        , config.ordrin.emailFormat.replace( '{id}', user.id )
+        );
+
+        assert( !!user.ordrin_password );
+
+        var creds = {
+          email:            user.ordrin_email
+        , current_password: user.ordrin_password
+        };
+
+        ordrin.get_account_info( creds, function( error, result ){
+          assert( !error );
+
+          assert.equal( user.ordrin_email, result.em );
+
+          ordrinUser.register( user, function( error, user ){
+            assert( !!error );
+            done();
+          });
+        });
+      });
+    });
+  });
+
+  it ( 'Should renew the users token', function( done ){
+    tutils.generateUser( function( error, user ){
+      assert( !error );
+
+      ordrinUser.register( user, function( error, user ){
+        assert( !error );
+
+        assert.equal(
+          user.ordrin_email
+        , config.ordrin.emailFormat.replace( '{id}', user.id )
+        );
+
+        assert( !!user.ordrin_password );
+
+        var creds = {
+          email:            user.ordrin_email
+        , current_password: user.ordrin_password
+        };
+
+        ordrin.get_account_info( creds, function( error, result ){
+          assert( !error );
+
+          assert.equal( user.ordrin_email, result.em );
+
+          ordrinUser.renewToken( user.id, function( error, token ){
+            assert( !error );
+            assert( !!token );
+            done();
+          });
+        });
+      });
+    });
+  });
 });

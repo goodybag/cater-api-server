@@ -181,8 +181,10 @@
 
   <h2 class="section-title">Delivery</h2>
   <dl class="manifest-section-dl">
-    <dt>Contact Phone:</dt>
-    <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}}</dd>
+    <dt>Contact:</dt>
+    <dd>
+      {{order.user.name}} - {{phoneNumber order.phone "xxx.xxx.xxxx"}}
+    </dd>
     {{#if order.user.organization}}
     <dt>Company:</dt>
     <dd>{{order.user.organization}}</dd>

@@ -27,7 +27,19 @@ hbs.handlebars = require('handlebars');
 var app = module.exports = express();
 
 app.configure(function(){
-  app.use( middleware.timeout( '5s', { respond: true } ) );
+  // Intercept status codes and render HTML if necessary
+  app.use( middleware.statusCodeIntercept() );
+  // app.use( middleware.timeout( '5s', { respond: true } ) );
+  app.use( function( req, res, next ){
+    res.setTimeout( config.http.timeout, function(){
+      res.send(503);
+      req.on( 'end', function(){
+        forky.disconnect();
+        process.exit();
+      });
+    });
+    next();
+  });
   app.use(express.favicon(__dirname + '/public/favicon.ico'));
   app.use(express.compress());
   app.use((function(){
@@ -55,9 +67,6 @@ app.configure(function(){
 
   app.use(middleware.setSession());
   app.use(middleware.getUser);
-
-  // Intercept status codes and render HTML if necessary
-  app.use( middleware.statusCodeIntercept() );
 
   if (config.isProduction || config.isStaging) {
     app.use(middleware.sslRedirect);

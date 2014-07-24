@@ -95,6 +95,7 @@ config.defaults = {
 
 , http: {
     port: 3000
+  , timeout: 10000
   }
 
 , pg: {
@@ -239,6 +240,7 @@ config.dev = {
 
 , http: {
     port: 3000
+  , timeout: 10000
   }
 
 , logging: {
@@ -324,6 +326,7 @@ config.staging = {
 
 , http: {
     port: process.env['PORT'] || 5000
+  , timeout: 10000
   }
 
 , logging: {
@@ -409,6 +412,7 @@ config.production = {
 
 , http: {
     port: process.env['PORT'] || 5000
+  , timeout: 10000
   }
 
 , logging: {
@@ -490,7 +494,7 @@ config.production = {
 config.test = _.extend( _.clone( config.dev ), {
   env: 'test'
 , baseUrl: 'http://localhost:3001'
-, http: { port: 3001 }
+, http: { port: 3001, timeout: 10000 }
 , postgresConnStr:  "postgres://localhost:5432/cater_test"
 , cdn: { baseUrl: 'http://localhost:3001' }
 });

@@ -235,11 +235,11 @@
       {{/if}}
       {{/if}}
 
-      {{#if order.sub_total}}
+      {{#notNull order.sub_total}}
       <div class="totals">
         {{> totals}}
       </div>
-      {{/if}}
+      {{/notNull}}
     </div>
 
     {{#unless isRestaurantReview}}

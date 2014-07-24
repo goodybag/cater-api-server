@@ -18,13 +18,6 @@ var m = utils.extend(
 );
 
 module.exports.register = function(app) {
-  app.get('/test-req', function( req, res ){
-    var i = 0;
-    setInterval( function(){
-      console.log( i++, req.timedout )
-    }, 1000 );
-  });
-
   app.before( m.analytics, m.queryParams(), function( app ){
     app.get('/', controllers.auth.index);
     app.get('/login', controllers.auth.login);

@@ -27,6 +27,7 @@ hbs.handlebars = require('handlebars');
 var app = module.exports = express();
 
 app.configure(function(){
+  app.use( middleware.timeout( '5s', { respond: true } ) );
   app.use(express.favicon(__dirname + '/public/favicon.ico'));
   app.use(express.compress());
   app.use((function(){

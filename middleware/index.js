@@ -33,5 +33,4 @@ module.exports = {
 , pagination: require('./pagination')
 , queryOptions: require('./query-options')
 , json: require('./json')
-, timeout: require('connect-timeout')
 };

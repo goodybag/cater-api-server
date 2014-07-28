@@ -3,9 +3,21 @@
 DO $$
   declare default_region_id int;
   declare default_region    text := 'Austin, TX';
-  declare version           text := '1.2.23';
+  declare ds_id             int;
+  declare zipA              character varying(5);
+  declare zipB              character varying(5);
+  declare zips              int[];
+  declare version           text := '1.2.25';
 begin
   raise notice '## Running Delta v% ##', version;
+
+  zips := array[
+    78613, 78660, 78664, 78665, 78681, 78701, 78702, 78703
+  , 78704, 78705, 78719, 78721, 78722, 78723, 78726, 78727
+  , 78729, 78730, 78731, 78733, 78741, 78744, 78745, 78746
+  , 78748, 78728, 78749, 78750, 78751, 78758, 78759, 78757
+  , 78752, 78753, 78754, 78756
+  ];
 
   create table if not exists region_zips ();
 
@@ -49,6 +61,45 @@ begin
   , ( default_region_id, 78750 ), ( default_region_id, 78751 ), ( default_region_id, 78752 ), ( default_region_id, 78753 )
   , ( default_region_id, 78754 ), ( default_region_id, 78755 ), ( default_region_id, 78756 ), ( default_region_id, 78757 )
   , ( default_region_id, 78758 ), ( default_region_id, 78759 ), ( default_region_id, 78831 ), ( default_region_id, 79719 );
+
+  delete from delivery_services;
+  delete from delivery_service_zips;
+
+  insert into delivery_services (
+    name, rate, region_id
+  ) values (
+    'Capitol Courier'
+  , 0.06000
+  , default_region_id
+  );
+
+  select id into ds_id from delivery_services limit 1;
+
+  -- Initialize CapCourier with zips set to 1500 price
+  for zipA in ( select unnest( zips ) )
+  loop
+    for zipB in ( select unnest( zips ) )
+    loop
+      insert into delivery_service_zips
+        ( "from", "to", "price", "delivery_service_id" ) values
+        ( zipA, zipB, 1500, ds_id );
+    end loop;
+  end loop;
+
+  -- Set the 1200 ones
+  update delivery_service_zips
+    set price = 1200
+    where "from" in (
+      '78701', '78702', '78703', '78704', '78705'
+    , '78721', '78722', '78723', '78731', '78741'
+    , '78746', '78751', '78752', '78753', '78754'
+    , '78756', '78757', '78758', '78759'
+    ) and "to" in (
+      '78701', '78702', '78703', '78704', '78705'
+    , '78721', '78722', '78723', '78731', '78741'
+    , '78746', '78751', '78752', '78753', '78754'
+    , '78756', '78757', '78758', '78759'
+    );
 
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();

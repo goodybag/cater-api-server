@@ -18,7 +18,7 @@ if (fs.existsSync('./local-config.json')){
 var config = {};
 
 config.defaults = {
-  numWorkers: Math.floor( os.cpus().length / 2 )
+  numWorkers: os.cpus().length
 
 , tmpDir: './tmp'
 
@@ -103,6 +103,7 @@ config.defaults = {
 
 , http: {
     port: 3000
+  , timeout: 8000
   }
 
 , pg: {
@@ -254,6 +255,7 @@ config.dev = {
 
 , http: {
     port: 3000
+  , timeout: 8000
   }
 
 , logging: {
@@ -335,12 +337,13 @@ config.staging = {
 , isStaging: true
 
 , cdn: {
-    baseUrl: 'http://cater-cdn-staging.s3-website-us-east-1.amazonaws.com'
+    baseUrl: 'https://d1llefdsnne2yl.cloudfront.net'
   , bucket: 'cater-cdn-staging'
   }
 
 , http: {
     port: process.env['PORT'] || 5000
+  , timeout: 8000
   }
 
 , logging: {
@@ -382,7 +385,7 @@ config.staging = {
   , projectId: '526990bcf2d1570009000035'
   }
 
-, baseUrl: 'http://cater.staging.goodybag.com'
+, baseUrl: 'https://staging.goodybag.com'
 
 , postgresConnStr: process.env['DATABASE_URL']
 
@@ -413,6 +416,7 @@ config.staging = {
 
 config.production = {
   env: 'production'
+, numWorkers: 3
 
 , isProduction: true
 
@@ -425,6 +429,7 @@ config.production = {
 
 , http: {
     port: process.env['PORT'] || 5000
+  , timeout: 8000
   }
 
 , logging: {
@@ -517,7 +522,7 @@ config.production = {
 config.test = _.extend( _.clone( config.dev ), {
   env: 'test'
 , baseUrl: 'http://localhost:3001'
-, http: { port: 3001 }
+, http: { port: 3001, timeout: 8000 }
 , postgresConnStr:  "postgres://localhost:5432/cater_test"
 , cdn: { baseUrl: 'http://localhost:3001' }
 });

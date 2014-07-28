@@ -25,7 +25,8 @@ define(function(require, exports, module) {
       , this.options.sortView.getProps()
       , this.options.favoritesView.getProps()
       );
-      analytics.track( 'Restaurant Search', {searchParams: props} );
+      // Clone props because analytics is mutating the date property
+      analytics.track( 'Restaurant Search', {searchParams: _.clone(props)} );
       var searchUrl = this.options.searchUrl;
       window.location.href = searchUrl + utils.queryParams(props);
     }

@@ -18,8 +18,6 @@ define(function(require, exports, module) {
     },
 
     fieldGetters: _.extend({
-      price: _.partial(EditRestaurantView.intGetter, 'price'),
-
       cuisine: function() {
         return EditRestaurantView.fieldSplit.call(this, this.fieldMap.cuisine);
       },

@@ -14,6 +14,10 @@ define(function(require, exports, module) {
       'submit .ap-form': 'save'
     },
 
+    // Fields that should be nulled if the value retrieved
+    // from the DOM is an empty string
+    nullOnEmptyString: [],
+
     fieldMap: {
     },
 
@@ -39,7 +43,16 @@ define(function(require, exports, module) {
 
     getFields: function() {
       var values = utils.map(this.fieldMap, this.getField.bind(this));
-      return utils.object(utils.keys(this.fieldMap), values);
+      values = utils.object(utils.keys(this.fieldMap), values);
+
+      for ( var key in values ){
+        if ( values[ key ] === '' || values[ key ] === NaN )
+        if ( this.nullOnEmptyString.indexOf( key ) > -1 ){
+          values[ key ] = null;
+        }
+      }
+
+      return values;
     },
 
     clearErrors: function() {

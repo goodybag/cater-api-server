@@ -1,0 +1,70 @@
+{{#extend "body"}}
+  <h2>Billing Info</h2>
+
+  <form class="ap-form form-vertical">
+    <div class="form-group">
+      <label class="control-label">Street</label>
+      <input name="billing_street" type="text" class="form-control restaurant-address restaurant-billing_street" value="{{restaurant.billing_street}}" placeholder="123 Fake St.">
+    </div>
+    <div class="form-group">
+      <label class="control-label">Street 2</label>
+      <input name="billing_street2" type="text" class="form-control restaurant-address restaurant-billing_street2" value="{{restaurant.billing_street2}}" placeholder="Suite 220">
+    </div>
+    <div class="form-group">
+      <label class="control-label">City</label>
+      <input name="billing_city" type="text" class="form-control restaurant-address restaurant-billing_city" value="{{restaurant.billing_city}}" placeholder="Austin">
+    </div>
+    <div class="form-group">
+      <label class="control-label">Zip</label>
+      <input name="billing_zip" type="text" maxlength="5" class="form-control restaurant-address restaurant-billing_zip" value="{{restaurant.billing_zip}}" placeholder="78701">
+    </div>
+    <div class="form-group">
+      <label class="control-label">State</label>
+      <select class="form-control restaurant-address restaurant-billing_state" name="billing_state">
+        {{#each states}}
+        <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq ../restaurant.billing_state this.abbr}} selected="selected"{{/eq}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-rate">GB Fee (0 for tiered)</label>
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          name="gb_fee"
+          id="input-gb_fee"
+          data-in="factorToPercent"
+          data-out="percentToFactor 4"
+          value="{{factorToPercent restaurant.gb_fee}}">
+        <div class="input-addon">%</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-is_fee_on_total">
+        <input type="checkbox" class="form-control" name="is_fee_on_total" id="input-is_fee_on_total" {{#if restaurant.is_fee_on_total}}checked="checked"{{/if}}>
+         Is the GB fee applied to Order Total?
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-is_direct_deposit">
+        <input type="checkbox" class="form-control" name="is_direct_deposit" id="input-is_direct_deposit" {{#if restaurant.is_direct_deposit}}checked="checked"{{/if}}>
+         Uses Direct Deposit?
+      </label>
+    </div>
+    <div class="actions">
+      <button class="btn-update" type="submit">Update</button>
+    </div>
+  </form>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  // Init views on this page
+  require( ['app/pages/admin/restaurant/edit-billing-info', 'app/models/restaurant'], function( page, Restaurant ){
+    page.init({
+      models: { restaurant: new Restaurant({{{json restaurant}}}) }
+    });
+  });
+</script>
+{{/extend}}

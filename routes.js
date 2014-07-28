@@ -249,6 +249,18 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/admin/restaurants/:rid/billing-info'
+  , m.restrict('admin')
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+  , m.defaultLocals( { active_tab: 'billing-info'} )
+  , m.states()
+  , m.db.regions.find( {}, { limit: 'all' } )
+  , m.restaurant( {param: 'rid' } )
+  , m.view('admin/restaurant/edit-billing-info', {
+      layout: 'admin/layout-two-column'
+    })
+  );
+
   app.get('/admin/restaurants/:rid/delivery-settings'
   , m.restrict('admin')
   , m.viewPlugin( 'mainNav', { active: 'restaurants' })

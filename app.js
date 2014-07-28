@@ -35,12 +35,17 @@ app.configure(function(){
   // so let's just kill the worker
   app.use( function( req, res, next ){
     res.setTimeout( config.http.timeout, function(){
+      logger.routes.error( ['request-timeout'], 'Request timed out', utils.pick( req, [
+        'url', 'method', 'route', 'params', 'cookies', 'user'
+      ]));
+
       res.send(503);
       req.on( 'end', function(){
         forky.disconnect();
         process.exit();
       });
     });
+
     next();
   });
 

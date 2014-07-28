@@ -56,6 +56,8 @@ define(function(require, exports, module) {
       this.itemModal.on('submit:success', function(){
         window.location.reload();
       });
+
+      this.onPriceChange();
     },
 
     // set the model and add listeners here

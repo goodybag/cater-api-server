@@ -493,6 +493,10 @@ define(function(require, exports, module) {
 
     isNull: function( val, options ){
       return options[ val === null ? 'fn' : 'inverse' ]();
+    },
+
+    notNull: function( val, options ){
+      return options[ val !== null ? 'fn' : 'inverse' ]();
     }
   }
 

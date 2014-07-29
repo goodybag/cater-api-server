@@ -507,6 +507,10 @@ define(function(require, exports, module) {
       return options[ val === null ? 'fn' : 'inverse' ]();
     },
 
+    notNull: function( val, options ){
+      return options[ val !== null ? 'fn' : 'inverse' ]();
+    },
+
     orderTypeAbbr: function( order ){
       if ( order.is_delivery_service ) return 'DS';
       if ( order.is_pickup ) return 'P';

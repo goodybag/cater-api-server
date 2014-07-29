@@ -71,6 +71,7 @@ define(function(require, exports, module) {
       this.$el.html( this.template({
         set:      this.set
       , values:   this.values
+      , options:  this.options
       }));
 
       this.$trs = this.$el.find('tr');

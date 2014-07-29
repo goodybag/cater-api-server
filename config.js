@@ -33,6 +33,14 @@ config.defaults = {
   , 'jacob.parker@goodybag.com'
   ]
 
+, deliveryServiceOrderAboveThresholdRecipients: [
+    'jag@goodybag.com'
+  , 'sarah.southwell@goodybag.com'
+  , 'om@goodybag.com'
+  , 'jay@goodybag.com'
+  , 'jacob.parker@goodybag.com'
+  ]
+
 , resultsTooFewContactUsThreshold: 5
 
 , cdn: {
@@ -141,6 +149,11 @@ config.defaults = {
   , end: 24
   }
 
+, deliveryServices: {
+    responseThresholdMins: 30
+  , supportPhones: [ local.testPhoneSms || '1234567890' ]
+  }
+
 , scheduler: {
     cron: '*/10 * * * * *'
   , start: true
@@ -177,6 +190,7 @@ config.defaults = {
   , info: 'info@goodybag.com'
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   , rewards: [ local.testEmail || 'test@goodybag.com' ]
+  , asapOrders: [ local.testEmail || 'test@goodybag.com' ]
   }
 
 , phone: {
@@ -237,6 +251,7 @@ config.dev = {
 , isDev: true
 
 , deniedRecipients: [ local.testEmail || 'test@goodybag.com' ]
+, deliveryServiceOrderAboveThresholdRecipients: [ local.testEmail || 'test@goodybag.com' ]
 
 , http: {
     port: 3000
@@ -316,6 +331,8 @@ config.dev = {
 
 config.staging = {
   env: 'staging'
+
+, numWorkers: 1
 
 , isStaging: true
 
@@ -477,6 +494,17 @@ config.production = {
     , 'jag@goodybag.com'
     , 'om@goodybag.com'
     , 'redemptions@goodybag.com'
+    ]
+  , asapOrders: [
+      'sarahsouthwell@goodybag.com'
+    , 'gillian@goodybag.com'
+    ]
+  }
+
+, deliveryServices: {
+    responseThresholdMins: 30
+  , supportPhones: [
+      '9788461970' // Sarah
     ]
   }
 

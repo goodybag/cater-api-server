@@ -2,10 +2,8 @@
 <script>
   var config = {
     pageHeight:               920
-  , phantomPageHeightOffset:  -120
+  , phantomPageHeightOffset:  -280
   };
-
-  var pageHeight = 920;
 
   var isPhantom = function(){
     return navigator.userAgent.indexOf('PhantomJS') > - 1;
@@ -14,7 +12,7 @@
   var fillerTmpl = function( options ){
     return [
       '<tr class="filler">'
-    , '  ' + new Array(5).join('.').split('.').map( function(){
+    , '  ' + new Array(8).join('.').split('.').map( function(){
         return '  <td style="height: ' + options.height + 'px"></td>'
       }).join('\n')
     , '</tr>'
@@ -103,12 +101,8 @@
 
 {{#extend "body"}}
 <section class="manifest-page table-page">
-  <header class="manifest-header">
-    <h4 class="header-text">Please print this and include with the delivered order. Thanks! <span class="signature">-Goodybag</span></h4>
-    <div class="subtext">
-      Not what you ordered? Something missing? No worries! We will help get it resolved. Contact us at the number below.
-    </div>
-  </header>
+  {{> order_manifest_header}}
+
   <table class="manifest-table">
     <thead>
       <tr>
@@ -117,6 +111,9 @@
         <th class="item">Item</th>
         <th class="options-notes">Options/Notes</th>
         <th class="recipient">Recipient</th>
+        <th class="feeds">Feeds</th>
+        <th class="qty">Qty</th>
+        <th class="price">Price</th>
       </tr>
     </thead>
     <tbody>
@@ -148,6 +145,9 @@
         </td>
         <td class="options-notes">{{this.notes}}</td>
         <td class="recipient">{{{join this.recipients "<br>"}}}</td>
+        <td class="feeds">{{this.feeds_max}}</td>
+        <td class="qty">x{{this.quantity}}</td>
+        <td class="price">${{dollars this.sub_total}}</td>
       </tr>
       {{/each}}
     </tbody>
@@ -158,12 +158,7 @@
 </section>
 
 <section class="manifest-page">
-  <header class="manifest-header">
-    <h4 class="header-text">Please print this and include with the delivered order. Thanks! <span class="signature">-Goodybag</span></h4>
-    <div class="subtext">
-      Not what you ordered? Something missing? No worries! We will help get it resolved. Contact us at the number below.
-    </div>
-  </header>
+  {{> order_manifest_header}}
 
   <h2 class="section-title">Order Info</h2>
   <dl class="manifest-section-dl">
@@ -172,40 +167,62 @@
     <dt>Order Number:</dt>
     <dd>#{{order.id}}</dd>
     {{#if order.name}}
-    <dt>Delivery Name:</dt>
+    <dt>Order Name:</dt>
     <dd>{{order.name}}</dd>
     {{/if}}
     <dt>Customer Notes:</dt>
     <dd>{{order.notes}}</dd>
   </dl>
 
-  <h2 class="section-title">Delivery</h2>
-  <dl class="manifest-section-dl">
-    <dt>Contact:</dt>
-    <dd>
-      {{order.user.name}} - {{phoneNumber order.phone "xxx.xxx.xxxx"}}
-    </dd>
-    {{#if order.user.organization}}
-    <dt>Company:</dt>
-    <dd>{{order.user.organization}}</dd>
-    {{/if}}
-    <dt>Address:</dt>
-    <dd>
-      {{order.street}}
-      {{#if order.street2}}
-        <br>
-        {{order.street2}}
+  {{#if order.is_delivery}}
+    <h2 class="section-title">Delivery</h2>
+    <dl class="manifest-section-dl">
+      <dt>Contact:</dt>
+      <dd>
+        {{order.user.name}} - {{phoneNumber order.phone "xxx.xxx.xxxx"}}
+      </dd>
+      {{#if order.user.organization}}
+      <dt>Company:</dt>
+      <dd>{{order.user.organization}}</dd>
       {{/if}}
-      <br>
-      {{order.city}}, {{order.state}} {{order.zip}}
-    </dd>
-    <dt>Delivery Date:</dt>
-    <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
-    <dt>Delivery Time:</dt>
-    <dd>{{formatDateTime order.datetime "h:mm A"}}</dd>
-    <dt>Delivery Instructions:</dt>
-    <dd>{{order.delivery_instructions}}</dd>
-  </dl>
+      <dt>Address:</dt>
+      <dd>
+        {{order.street}}
+        {{#if order.street2}}
+          <br>
+          {{order.street2}}
+        {{/if}}
+        <br>
+        {{order.city}}, {{order.state}} {{order.zip}}
+      </dd>
+      <dt>Phone:</dt>
+      <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}}</dd>
+      <dt>Delivery Date:</dt>
+      <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
+      <dt>Delivery Time:</dt>
+      <dd>{{formatDateTime order.datetime "h:mm A"}}</dd>
+      <dt>Delivery Instructions:</dt>
+      <dd>{{order.delivery_instructions}}</dd>
+    </dl>
+  {{else}}
+    <h2 class="section-title">Pickup</h2>
+    <dl class="manifest-section-dl">
+      <dt>Contact:</dt>
+      <dd>
+        {{order.user.name}} - {{phoneNumber order.phone "xxx.xxx.xxxx"}}
+      </dd>
+      {{#if order.user.organization}}
+      <dt>Company:</dt>
+      <dd>{{order.user.organization}}</dd>
+      {{/if}}
+      <dt>Phone:</dt>
+      <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}}</dd>
+      <dt>Pickup Date:</dt>
+      <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY"}}</dd>
+      <dt>Pickup Time:</dt>
+      <dd>{{formatDateTime order.pickup_datetime "h:mm A"}}</dd>
+    </dl>
+  {{/if}}
 
   <h2 class="section-title">Goodybag</h2>
   <dl class="manifest-section-dl">

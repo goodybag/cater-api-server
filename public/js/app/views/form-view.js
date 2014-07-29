@@ -27,6 +27,15 @@ define(function(require, exports, module) {
       return _.size(diff) > 0 ? diff : null;
     },
 
+    // Wait for response on save
+    wait: true,
+
+    // Patch on save?
+    patch: true,
+
+    // Should model be set, then save, or atomically save
+    setThenSave: false,
+
     /**
      * Override the default behavior of getDiff with a custom getter.
      * Useful for converting what the user sees on the form to the actual
@@ -96,9 +105,15 @@ define(function(require, exports, module) {
         return callback.call(this);
       }
       var view = this;
+
+      if ( this.setThenSave ){
+        this.model.set( diff );
+        diff = null;
+      }
+
       var sent = this.model.save(diff, {
-        patch: true,
-        wait: true,
+        patch: this.patch,
+        wait: this.wait,
         singleError: false,
         validate: typeof this.options.validate !== 'boolean' ? true : this.options.validate, // bypass client validation
         success: function(model, response, options) {

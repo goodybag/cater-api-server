@@ -49,13 +49,14 @@ utils.extend(Model.prototype, {
   toJSON: function() {
     return utils.clone(this.attributes);
   },
+  doNotSave: [],
   save: function(query, callback, client) {
     if (utils.isFunction(query)) {
       client = callback;
       callback = query;
       query = {};
     }
-    var attrs = utils.omit(utils.pick(this.attributes, utils.keys(this.constructor.schema)), ['id', 'created_at']);
+    var attrs = utils.omit(utils.pick(this.attributes, utils.keys(this.constructor.schema)), ['id', 'created_at'].concat(this.doNotSave));
     var id = this.attributes.id;
     var defaults = {
       type: id ? 'update' : 'insert',

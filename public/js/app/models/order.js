@@ -11,6 +11,8 @@ define(function(require, exports, module) {
   var OrderItem = require('./order-item');
   var Address = require('./address');
 
+  var orderDeliveryServiceCriteria = require('order-delivery-service-criteria');
+
   var Order = Backbone.Model.extend({
     schema: function() {
       return {
@@ -33,6 +35,11 @@ define(function(require, exports, module) {
             required: false
           },
           datetime: {
+           type: ['string', 'null'],
+           // TODO: validate against format
+           required: false
+          },
+          pickup_datetime: {
            type: ['string', 'null'],
            // TODO: validate against format
            required: false
@@ -69,6 +76,7 @@ define(function(require, exports, module) {
 
     defaults: {
       timezone: "America/Chicago"
+    , is_delivery: true
     },
 
     // TODO: extract to superclass
@@ -135,12 +143,20 @@ define(function(require, exports, module) {
 
     urlRoot: '/orders',
 
+    types: [ 'is_delivery', 'is_delivery_service', 'is_pickup'],
+
     initialize: function(attrs, options) {
+      var this_ = this;
+
       attrs = attrs || {};
       options = options || {};
 
       this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id, edit_token: options.edit_token });
       this.unset('orderItems');
+
+      if ( attrs.restaurant.delivery_service ){
+        this.set( 'delivery_service_id', attrs.restaurant.delivery_service.id );
+      }
 
       this.restaurant = new Restaurant(attrs.restaurant);
       this.unset('restaurant');
@@ -154,6 +170,8 @@ define(function(require, exports, module) {
         this.orderItems.orderId = model.id;
       });
 
+      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+
       this.on('change:adjustment', this.updateSubtotal, this);
       this.listenTo(this.orderItems, 'change:sub_total add remove', this.updateSubtotal, this);
 
@@ -164,9 +182,14 @@ define(function(require, exports, module) {
       }, this);
 
       this.on('change:sub_total', function(model, value, options) {
+        this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
         model.set('below_min', value < model.restaurant.get('minimum_order'));
         model.setSubmittable(model, value, options);
       }, this);
+
+      this.on( 'change:is_delivery_service', function( model, value, options ){
+        model.restaurant.set('is_bad_zip', !this.restaurant.isValidZip(this));
+      });
 
       this.on({
         'change:zip': this.zipChanged,
@@ -174,6 +197,10 @@ define(function(require, exports, module) {
         'change:guests': this.guestsChanged,
         'change:is_unacceptable change:below_min': this.setSubmittable
       }, this);
+
+      utils.each( this_.types, function( field ){
+        this_.on( 'change:' + field, this_.onOrderTypeChange.bind( this_, field ) );
+      });
     },
 
     set: function(key, val, options) {
@@ -182,6 +209,7 @@ define(function(require, exports, module) {
       if (key == null) return this;
 
       // TODO: same field names between order and address
+      // See comment below
       var addressFields = _.keys(_.result(Address, 'schema').properties);
       if (typeof key === 'object') {
         attrs = key;
@@ -190,7 +218,8 @@ define(function(require, exports, module) {
         (attrs = {})[key] = val
 
       var addr = _.pick(attrs, addressFields);
-      attrs = _.omit(attrs, addressFields);
+      // Why do we take out the address fields from the top-level attributes?
+      // attrs = _.omit(attrs, addressFields);
 
       if (this.address != null)
         this.address.set(addr, options);
@@ -222,23 +251,17 @@ define(function(require, exports, module) {
     ],
 
     zipChanged: function(model, value, options) {
-      model.restaurant.set('is_bad_zip', !_.contains(model.restaurant.get('delivery_zips'), value));
+      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+      model.restaurant.set('is_bad_zip', !this.restaurant.isValidZip(this));
     },
 
     checkLeadTimes: function() {
-      var guests = this.get('guests');
-      var limit = _.find(_.sortBy(this.restaurant.get('lead_times'), 'max_guests'), function(obj) {
-        return obj.max_guests >= guests;
-      });
-
-      var then = this.get('datetime');
-      var now = moment().tz(this.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
-      var minutes = (new Date(then) - new Date(now)) / 60000;
-
-      this.restaurant.set('is_bad_lead_time', !limit ? true : minutes <= limit.lead_time);
+      this.restaurant.set( 'is_bad_lead_time', !this.restaurant.isValidGuestDateCombination( this ) );
     },
 
     datetimeChanged: function(model, value, options) {
+      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+
       if (!value) {
         model.restaurant.set({
           is_bad_delivery_time: null,
@@ -250,14 +273,26 @@ define(function(require, exports, module) {
       // check against restaurant hours
       var datetime = value.split(' ');
       var dow = moment(datetime[0]).day();
-      model.restaurant.set('is_bad_delivery_time', !_.find(model.restaurant.get('delivery_times')[dow], function(range) {
-        return datetime[1] >= range[0] && datetime[1] <= range[1];
-      }));
+      model.restaurant.set('is_bad_delivery_time', !model.restaurant.isValidDeliveryTime( value ) );
+
+      if ( model.get('is_delivery_service') ){
+        model.set(
+          'pickup_datetime'
+        , moment(
+            model.get('datetime')
+          ).add(
+            'minutes'
+          , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+          ).format('YYYY-MM-DD hh:mm:ss')
+        );
+      }
 
       model.checkLeadTimes();
     },
 
     guestsChanged: function(model, value, options) {
+      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+
       if (value == null) {
         model.restaurant.set({
           is_bad_guests: null,
@@ -276,8 +311,8 @@ define(function(require, exports, module) {
     },
 
     validateOrderFulfillability: function(){
-      var isPresent = ['guests', 'datetime'].map(_.bind(this.has, this)).concat(
-        ['zip'].map(_.bind(this.has, this.address)))
+      var isPresent = _.map(['guests', 'datetime'], _.bind(this.has, this)).concat(
+        _.map(['zip'], _.bind(this.has, this.address)));
 
       // If they have blank fields, that's the only thing we need to tell them
       return _.every(isPresent) ? this.restaurant.validateOrderFulfillability( this ) : ['has_blank_fields'];
@@ -288,6 +323,7 @@ define(function(require, exports, module) {
       obj.orderItems = this.orderItems.toJSON();
       obj.restaurant = this.restaurant.toJSON();
       _.extend(obj, this.address.toJSON());
+      obj.is_delivery_service = this.shouldBeDeliveryService();
       return obj;
     },
 
@@ -405,6 +441,48 @@ define(function(require, exports, module) {
           return '#428BCA';
         default:
           return '#fff'
+      }
+    },
+
+    shouldBeDeliveryService: function(){
+      var order = _.extend( {}, this.attributes, {
+        restaurant: this.restaurant.toJSON()
+      });
+
+      return orderDeliveryServiceCriteria.check( order )
+    },
+
+    onOrderTypeChange: function( type, model, value, options ){
+      // They were setting to false, unless this was a delivery order to begin with
+      // go ahead and set this is_delivery
+      if ( value === false ){
+        if ( type === 'is_delivery' ){
+          this.attributes.is_delivery_service = true;
+        } else {
+          this.attributes.is_delivery = true;
+        }
+
+        return;
+      }
+
+      var this_ = this;
+
+      utils.each( this.types, function( t ){
+        this_.attributes[ t ] = false;
+      });
+
+      this.attributes[ type ] = true;
+
+      if ( type === 'is_delivery_service' ){
+        model.set(
+          'pickup_datetime'
+        , moment(
+            model.get('datetime')
+          ).add(
+            'minutes'
+          , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+          ).format('YYYY-MM-DD hh:mm:ss')
+        );
       }
     }
   }, {

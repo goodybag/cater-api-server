@@ -67,6 +67,14 @@ define(function(require, exports, module) {
       return value1 || value2;
     },
 
+    and: function(value1, value2) {
+      return value1 && value2;
+    },
+
+    not: function( val ){
+      return !val;
+    },
+
     array: function(arr) {
       return arr ? arr.join(', ') : '';
     },
@@ -137,7 +145,7 @@ define(function(require, exports, module) {
       var state = loc.state ? utils.findWhere(states, {abbr: loc.state.toUpperCase()}) : null;
       var stateStr = state ? '<abbr title="' + state.name + '">' + state.abbr + '</abbr>' : '';
       var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
-      return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span>' : null,
+      return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span> ' : null,
                      line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
     },
 
@@ -152,6 +160,10 @@ define(function(require, exports, module) {
       for (var i in str)
         result = result.replace('x', str[i]);
       return result;
+    },
+
+    sanitizePhoneNumber: function(str) {
+      return str.replace(/\D/g, '');
     },
 
     floor: function(value) {
@@ -495,8 +507,10 @@ define(function(require, exports, module) {
       return options[ val === null ? 'fn' : 'inverse' ]();
     },
 
-    notNull: function( val, options ){
-      return options[ val !== null ? 'fn' : 'inverse' ]();
+    orderTypeAbbr: function( order ){
+      if ( order.is_delivery_service ) return 'DS';
+      if ( order.is_pickup ) return 'P';
+      return 'D';
     }
   }
 

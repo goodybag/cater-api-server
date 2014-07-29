@@ -40,8 +40,6 @@ viewPlugins.sidebarNav = {
       url = url.replace( new RegExp( ':' + key.name, 'g' ), req.param( key.name ) )
     });
 
-    options.baseUrl = url;
-
-    done( null, options );
+    done( null, utils.extend( {}, options, { baseUrl: url } ) );
   }
 };

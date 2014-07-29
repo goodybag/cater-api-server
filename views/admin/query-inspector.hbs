@@ -1,0 +1,53 @@
+{{#extend "page"}}page-query-inspector{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <section class="panel-component" id="query-inspector">
+    <h1 class="panel-title">Query Inspector</h1>
+    <div class="panel-content">
+      <form class="form ap-form inspector-form">
+        <div class="form-group">
+          <label for="query-inspector-url">URL</label>
+          <input type="text" class="form-control" id="query-inspector-url">
+          <button class="btn btn-default" id="btn-inspect">Inspect!</button>
+        </div>
+
+        <div class="query-wrapper">
+          <pre id="inspector-code"></pre>
+        </div>
+        <div class="response-wrapper">
+          <iframe id="inspector-iframe" src="" frameborder="0"></iframe>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['jquery-loaded'], function( $ ){
+    function inspect( url ){
+      $.ajax( { url: url, success: function( r, status, res ){
+        var val = res.getResponseHeader('Query-Inspector');
+        val = JSON.stringify( JSON.parse( val ), true, '  ' );
+        $('#inspector-code').html( val );
+      }});
+
+      $('#inspector-iframe').attr( 'src', url );
+    }
+
+    function onBtnInspectClick( e ){
+      e.preventDefault();
+      var url = $('#query-inspector-url').val();
+      url += ( url.indexOf('?') > -1 ? '&' : '?' ) + 'query_inspector=true';
+      console.log(url);
+      inspect( url );
+    }
+
+    $(function(){
+      $('#btn-inspect').click( onBtnInspectClick );
+    });
+  });
+</script>
+{{/extend}}

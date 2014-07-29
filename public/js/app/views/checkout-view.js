@@ -40,6 +40,9 @@ define(function(require, exports, module) {
     , tip_percent: '.tip-percent'
     },
 
+    patch: false,
+    setThenSave: true,
+
     errorTypeMessages: {
       required: 'Please enter a valid {noun}'
     },

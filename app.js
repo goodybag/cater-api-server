@@ -82,6 +82,7 @@ app.configure(function(){
   }
 
   app.use( require('dirac-middleware')({ envelope: false }) );
+  // app.use( m.queryInspector() );
 
   app.use(app.router);
 

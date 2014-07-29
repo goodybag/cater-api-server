@@ -11,17 +11,20 @@ define(function(require, exports, module) {
     },
 
     fieldMap: {
-      name:                   '#input-name'
-    , description:            '#input-description'
-    , websites:               '#input-websites'
-    , yelp_business_id:       '#input-yelp'
-    , is_hidden:              '#input-hidden'
-    , logo_url:               '#input-logo-url'
-    , logo_mono_url:          '#input-mono-logo-url'
-    , region_id:              '[name="region_id"]'
-    , gb_fee:                 '[name="gb_fee"]'
-    , is_fee_on_total:        '[name="is_fee_on_total"]'
-    , is_direct_deposit:      '[name="is_direct_deposit"]'
+      name:                                     '#input-name'
+    , description:                              '#input-description'
+    , websites:                                 '#input-websites'
+    , yelp_business_id:                         '#input-yelp'
+    , is_hidden:                                '#input-hidden'
+    , logo_url:                                 '#input-logo-url'
+    , logo_mono_url:                            '#input-mono-logo-url'
+    , region_id:                                '[name="region_id"]'
+    , gb_fee:                                   '[name="gb_fee"]'
+    , is_fee_on_total:                          '[name="is_fee_on_total"]'
+    , is_direct_deposit:                        '[name="is_direct_deposit"]'
+    , delivery_service_head_count_threshold:    '[name="delivery_service_head_count_threshold"]'
+    , delivery_service_order_total_upperbound:  '[name="delivery_service_order_total_upperbound"]'
+    , delivery_service_order_amount_threshold:  '[name="delivery_service_order_amount_threshold"]'
     },
 
     fieldGetters: _.extend({
@@ -51,7 +54,6 @@ define(function(require, exports, module) {
       $input.siblings('[data-name="' + $input.attr('name') + '"]').attr(
         'src', $input.val()
       );
-    },
-
+    }
   });
 });

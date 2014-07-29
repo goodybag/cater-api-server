@@ -46,7 +46,14 @@ dirac.autoJoin = function( options ){
       });
     });
   }
-}
+};
+
+mosql.registerQueryType( 'one', [
+  'select row_to_json( {table} )'
+, '  from {table}'
+, '  {where}'
+, '  limit 1'
+].join(''));
 
 // Fix PG date parsing (`date` type not to be confused with something with a timezone)
 pg.types.setTypeParser( 1082, 'text', function( val ){
@@ -358,15 +365,32 @@ dirac.use( function( dirac ){
     operations: ['find', 'findOne']
   , pluginName: 'many'
   , tmpl: function( data ){
-      return [
-        '(select array_to_json( array('
-      , '  select row_to_json( r ) '
-      , '  from ' + data.target + ' r'
-      , ' where ' + data.pivots.map( function( p ){
-                      return 'r."' + p.target_col + '" = "' + data.source + '"."' + p.source_col + '"';
-                    }).join(' and ')
-      , ')) as "' + data.alias + '")'
-      ].join('\n')
+      var where = utils.extend( {}, data.where );
+
+      data.pivots.forEach( function( p ){
+        where[ p.target_col ] = '$' + mosqlUtils.quoteObject( p.source_col, data.source ) + '$';
+      });
+
+      return {
+        type: 'expression'
+      , alias: data.alias
+      , expression: {
+          parenthesis: true
+        , expression: {
+            type: 'array_to_json'
+          , expression: {
+              type: 'array'
+            , expression: {
+                type: 'select'
+              , alias: 'r'
+              , table: data.target
+              , columns: [{ type: 'row_to_json', expression: 'r' }]
+              , where: where
+              }
+            }
+          }
+        }
+      };
     }
   };
 
@@ -394,6 +418,7 @@ dirac.use( function( dirac ){
           var col = options.tmpl({
             source:     table_name
           , target:     target.table
+          , where:      target.where
           , alias:      target.alias || target.table
           , pivots:     pivots
           });
@@ -418,15 +443,27 @@ dirac.use( function( dirac ){
     operations: ['find', 'findOne']
   , pluginName: 'one'
   , tmpl: function( data ){
-      return [
-        '(select row_to_json( r ) '
-      , '  from ' + data.target + ' r'
-      , 'where ' + data.pivots.map( function( p ){
-                      return 'r."' + p.target_col + '" = "' + data.source + '"."' + p.source_col + '"';
-                    }).join(' and ')
-      , 'limit 1'
-      , ') as ' + data.alias
-      ].join('\n')
+      var where = utils.extend( {}, data.where );
+
+      data.pivots.forEach( function( p ){
+        where[ p.target_col ] = '$' + mosqlUtils.quoteObject( p.source_col, data.source ) + '$';
+      });
+
+      return {
+        type: 'expression'
+      , alias: data.alias
+      , expression: {
+          parenthesis: true
+        , expression: {
+            type: 'select'
+          , alias: 'r'
+          , table: data.target
+          , columns: [{ type: 'row_to_json', expression: 'r' }]
+          , where: where
+          , limit: 1
+          }
+        }
+      };
     }
   };
 
@@ -454,6 +491,7 @@ dirac.use( function( dirac ){
           var col = options.tmpl({
             source:     table_name
           , target:     target.table
+          , where:      target.where
           , alias:      target.alias || target.table
           , pivots:     pivots
           });

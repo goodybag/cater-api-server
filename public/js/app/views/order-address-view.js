@@ -50,8 +50,11 @@ define(function(require, exports, module) {
       var diff = this.getDiff(); // changes to address fields
       if (!diff) return this.render();
 
+      this.options.orderView.model.set( diff );
+
+      if ( this.validationError ) return this.options.orderView.displayErrors();
+
       var sent = this.options.orderView.model.save(diff, {
-        patch: true,
         wait: true,
         success: _.bind(this.render, this),
         error: function(jqXHR, textstatus, errorThrown) {

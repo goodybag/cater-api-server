@@ -2,6 +2,10 @@
 // Matrix Editor //
 ///////////////////
 
+@matrix-legend-axis-indicator-size: 10px;
+@matrix-axis-x-bg: lighten( @brand-primary, 50% );
+@matrix-axis-y-bg: lighten( @brand-tertiary, 62% );
+
 .matrix-editor {
   max-width: 100%;
   overflow: scroll;
@@ -30,14 +34,25 @@
 .matrix-editor tr > td:first-child {
   cursor: pointer;
   font-weight: 700;
+  background: @matrix-axis-y-bg !important;
+}
+
+.matrix-editor th:first-child ~ th {
+  background: @matrix-axis-x-bg !important;
+  &:nth-child(2n) {
+    background: lighten( @matrix-axis-x-bg, 2% ) !important;
+  }
 }
 
 .matrix-editor tr:nth-child(2n) td {
   background: @off-gray;
 }
 
-.matrix-editor td:nth-child(2n),
-.matrix-editor th:nth-child(2n) {
+.matrix-editor tr:nth-child(2n) > td:first-child {
+  background: lighten( @matrix-axis-y-bg, 2% ) !important;
+}
+
+.matrix-editor td:nth-child(2n) {
   background: lighten( @off-gray, 2% );
 }
 
@@ -64,5 +79,39 @@
     &.focus {
       background: lighten( @brand-tertiary, 40% );
     }
+  }
+}
+
+.matrix-editor .matrix-legend {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 18px;
+
+  & > .legend-item {
+    display: inline-block;
+    margin-left: 20px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  & > .legend-item:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 12px;
+    margin-top: -(@matrix-legend-axis-indicator-size / 2) + 1px;
+    width: @matrix-legend-axis-indicator-size;
+    height: @matrix-legend-axis-indicator-size;
+  }
+
+  & > .legend-item[data-axis="x"]:before {
+    background: @matrix-axis-x-bg;
+  }
+
+  & > .legend-item[data-axis="y"]:before {
+    background: @matrix-axis-y-bg;
   }
 }

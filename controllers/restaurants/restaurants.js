@@ -117,8 +117,21 @@ module.exports.get = function(req, res) {
         where: {
           id: parseInt(req.params.rid)
         }
+      , columns: ['*']
       , includes: [ {type: 'closed_restaurant_events'} ]
       };
+
+      query.columns.push({
+        alias: 'delivery_service'
+      , expression: {
+          type: 'one'
+        , table: 'delivery_services'
+        , parenthesis: true
+          // Just pick one delivery service that applies
+          // We'll come up with better logic later
+        , where: { region_id: '$restaurants.region_id$' }
+        }
+      });
 
       models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
         if (err) return callback(err);
@@ -139,7 +152,6 @@ module.exports.get = function(req, res) {
 
     var orderParams = req.query || {};
 
-
     var context = {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
@@ -148,6 +160,13 @@ module.exports.get = function(req, res) {
     }
 
     context.restaurant.delivery_fee = context.order.restaurant.delivery_fee;
+
+    // Copy fields that don't exist from the restaurant result to order.restaurant
+    for ( var key in context.restaurant ){
+      if ( !(key in context.order.restaurant) ){
+        context.order.restaurant[ key ] = context.restaurant[ key ];
+      }
+    }
 
     // Build a histogram of menus vs freq for labeling
     var menuLengths = utils.countBy(utils.flatten(utils.pluck(context.restaurant.categories, 'menus')));
@@ -301,7 +320,9 @@ var fields = [
   'gb_fee',
   'is_direct_deposit',
   'is_fee_on_total',
-  'head_count_delivery_service_threshold',
+  'delivery_service_head_count_threshold',
+  'delivery_service_order_amount_threshold',
+  'delivery_service_order_total_upperbound',
   'region_id'
 ];
 

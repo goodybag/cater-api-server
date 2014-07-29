@@ -5,6 +5,7 @@ module.exports = {
 , cors: require('./cors')
 , csv: require('./csv')
 , defaultLocals: require('./default-locals')
+, deliveryServiceAuth: require('./delivery-service-auth')
 , domains: require('./domains')
 , editOrderAuth: require('./edit-order-auth')
 , enums: require('./enums')

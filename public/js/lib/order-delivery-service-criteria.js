@@ -99,21 +99,6 @@ define(function( require, exports, module ){
   //   }
   // });
 
-  // Is dollar amount too low?
-  exports.add({
-    name: 'dollar_amount'
-  , type: 'some'
-  , requirements: [
-      'sub_total'
-    , 'restaurant.minimum_order'
-    , 'restaurant.delivery_service_order_amount_threshold'
-    ]
-  , fn: function( order ){
-      if ( order.sub_total < order.restaurant.minimum_order ) return false;
-      return order.sub_total < order.restaurant.delivery_service_order_amount_threshold;
-    }
-  });
-
   // Is head count too low?
   exports.add({
     name: 'head_count'

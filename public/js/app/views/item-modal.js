@@ -53,8 +53,7 @@ define(function(require, exports, module) {
       var unfulfillable = !this.options.isAdmin && !this.options.orderModel.isFulfillableOrder();
       if ( noOrder ||  unfulfillable ) {
         return this.options.orderModal.show({
-          success: function(model, response, options) {
-            model.trigger('change:orderparams');
+          success: function(model) {
             this_.options.orderModal.hide();
             this_.submit(e);
           }
@@ -142,7 +141,7 @@ define(function(require, exports, module) {
           $optionsSet.find('input[type="checkbox"]:not(:checked)').prop('disabled', true);
         } else {
           $optionsSet.find('input[type="checkbox"]').prop('disabled', false);
-        } 
+        }
       }
     },
 

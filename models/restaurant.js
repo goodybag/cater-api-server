@@ -643,7 +643,7 @@ var Restaurant = module.exports = Model.extend({
       var datetime = moment(orderParams.date + ' ' + (orderParams.time || '11:59 pm'), 'YYYY-MM-DD hh:mm a');
 
       var formattedDateTime = datetime.format('YYYY-MM-DD HH:mm:00');
-console.log("**", formattedDateTime, orderParams, "**");
+
       query.joins.lead_times = {
         type: 'left'
       , alias: 'lead_times'

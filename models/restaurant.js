@@ -673,7 +673,7 @@ var Restaurant = module.exports = Model.extend({
             , columns: ['restaurant_id']
             , where: {
                 'max_guests': {$gte: ((orderParams.guests) ? orderParams.guests : 0)}
-              , 'lead_time': {$custom: ['"restaurant_pickup_lead_times"."lead_time" <= EXTRACT(EPOCH FROM ((($1 AT TIME ZONE regions.timezone) - regions.lead_time_modifier) - (now() AT TIME ZONE regions.timezone) )/60)', formattedDateTime]}
+              , 'lead_time': {$custom: ['"restaurant_pickup_lead_times"."lead_time" <= EXTRACT(EPOCH FROM (((($1 AT TIME ZONE regions.timezone) - regions.lead_time_modifier) AT TIME ZONE regions.timezone) - (now() AT TIME ZONE regions.timezone) )/60)', formattedDateTime]}
               }
             , joins: [
                 { type: 'left', target: 'restaurants', on: { id: '$restaurant_pickup_lead_times.restaurant_id$' } }

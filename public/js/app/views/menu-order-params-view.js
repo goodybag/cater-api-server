@@ -43,8 +43,7 @@ define(function(require, exports, module) {
       var this_ = this;
 
       this.options.orderModal.show({
-        success: function(model, response, options) {
-            model.trigger('change:orderparams');
+        success: function(model) {
             this_.options.orderModal.hide();
           }
         , error: function(){

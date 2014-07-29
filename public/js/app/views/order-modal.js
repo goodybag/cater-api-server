@@ -126,7 +126,10 @@ define(function(require, exports, module) {
       if ( this.showErrors() ) return;
 
       var self = this;
-      this.model.save(null, this.submitHandlers);
+      this.model.save().success(function(){
+        self.model.trigger('change:orderparams');
+        self.submitHandlers.success( self.model );
+      }).error( self.submitHandlers.error );
     },
 
     onDatePickerOpen: function(){

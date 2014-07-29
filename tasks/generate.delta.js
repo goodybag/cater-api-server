@@ -39,7 +39,7 @@ module.exports = function( grunt ){
     // with the latest file patched
     if ( args.length === 0 ){
       var latest = fs.readdirSync( options.dest ).filter( function( f ){
-        return fs.statSync( path.join( options.dest, f ) ).isFile();
+        return fs.statSync( path.join( options.dest, f ) ).isFile() && f.slice(-3) === 'sql';
       }).map( function( f ){
         return f.slice( 0, -4 );
       }).sort( function( a, b ){

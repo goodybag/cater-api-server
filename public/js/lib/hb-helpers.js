@@ -43,6 +43,17 @@ define(function(require, exports, module) {
       return utils.isNaN(cents) ? '' : utils.Math.round10(cents / 100, -2).toFixed(2); // partial cents get rounded here
     },
 
+    dollarsOmit00: function(pennies) {
+      var cents = pennies == null ? 0 : parseFloat(pennies); // parse as float incase of partial cents
+      var dollars = utils.isNaN(cents) ? '' : utils.Math.round10(cents / 100, -2).toFixed(2); // partial cents get rounded here
+
+      if ( dollars.slice(-2) === '00' ){
+        return dollars.substring( 0, dollars.indexOf('.') );
+      }
+
+      return dollars;
+    },
+
     pennies: function(dollars) {
       var val = Math.round( dollars * 100 );
       return utils.isNaN(val) ? '' : val;

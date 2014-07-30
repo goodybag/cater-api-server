@@ -1,23 +1,25 @@
-<section style="text-align: left; margin: 0 20px;">
+<section style="text-align: left; margin: 0 20px; font-family: Helvetica, Arial, sans-serif">
   <h2>Goodybag Order #{{order.id}} is scheduled for delivery.</h2>
   <p>
-    <div>Pickup order by: {{datepart order.pickup_datetime}} {{timepart order.pickup_datetime}}</div>
-    <div>Restaurant Name: {{order.restaurant.name}}</div>
-    <div>Restaurant Address: {{> plain_address order.restaurant}}</div>
+    <div><strong style="display: inline-block; width: 180px">Pickup Order By</strong>: {{datepart order.pickup_datetime}} {{timepart order.pickup_datetime}}</div>
+    <div><span style="display: inline-block; width: 180px">Pickup Order From</span>: {{order.restaurant.name}} - {{> plain_address order.restaurant}}</div>
   </p>
 
   <p>
-    <div>Time delivered by: {{datepart order.datetime}} {{timepart order.datetime}}</div>
-    <div>Delivering to: {{order.user.name}} {{phoneNumber order.phone}}</div>
-    <div>Office Address: {{> plain_address order}}</div>
-    <div>Delivering food for {{order.guests}} guests</div>
+    <div><strong style="display: inline-block; width: 180px">Deliver Order By</strong>: {{datepart order.datetime}} {{timepart order.datetime}}</div>
+    <div><span style="display: inline-block; width: 180px">Deliver Order To</span>: {{#if order.user.organization}}{{order.user.organization}}{{else}}Contact Goodybag{{/if}}</div>
+    <div><span style="display: inline-block; width: 180px">Contact</span>: {{order.user.name}} {{phoneNumber order.phone}}</div>
+    <div><span style="display: inline-block; width: 180px">Office Address</span>: {{> plain_address order}}</div>
+    <div><span style="display: inline-block; width: 180px">Head Count</span>: {{order.guests}}</div>
     {{#if order.delivery_instructions}}
-    <div>Delivery instructions: "{{order.delivery_instructions}}"</div>
+    <div><strong style="display: inline-block; width: 180px">Delivery instructions</strong>: "{{order.delivery_instructions}}"</div>
     {{/if}}
   </p>
 
-  <p>Order subtotal: ${{dollars order.sub_total}}</p>
+  <p><span style="display: inline-block; width: 180px">Order subtotal</span>: ${{dollars order.sub_total}}</p>
 
-  <p><a href="{{config.baseUrl}}/orders/{{order.id}}/delivery-service-accept?ds_token={{order.ds_token}}">Click here to accept</a>
+  <p>Contact Goodybag for any issues or questions at: {{phoneNumber config.phone.support}} or {{{mailto config.emails.orders}}}</p>
+
+  {{!-- <p><a href="{{config.baseUrl}}/orders/{{order.id}}/delivery-service-accept?ds_token={{order.ds_token}}">Click here to accept</a> --}}
   </p>
 </section>

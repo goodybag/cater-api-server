@@ -619,17 +619,21 @@ dirac.use( function( dirac ){
 
 dirac.use( function( dirac ){
   var onOrder = function( order ){
-    // Handle reward promos
-    var submitted = moment( order.submitted );
+    Object.defineProperty( order, 'points', {
+      get: function(){
+        // Handle reward promos
+        var submitted = moment( order.submitted );
 
-    // Check all mondays past 4/21
-    var eligible = submitted.day() == 1 && submitted >= moment( config.rewardsPromo.start );
+        // Check all mondays past 4/21
+        var eligible = submitted.day() == 1 && submitted >= moment( config.rewardsPromo.start );
 
-    if ( eligible ) {
-      order.points = Math.floor( order.total * config.rewardsPromo.rate / 100 );
-    } else {
-      order.points = Math.floor( order.total / 100 );
-    }
+        if ( eligible ) {
+          return Math.floor( order.total * config.rewardsPromo.rate / 100 );
+        }
+
+        return Math.floor( order.total / 100 );
+      }
+    });
   };
 
   var afterOrderFind = function( results, $query, schema, next ){

@@ -526,6 +526,11 @@ config.test = _.extend( _.clone( config.dev ), {
 , http: { port: 3001, timeout: 8000 }
 , postgresConnStr:  "postgres://localhost:5432/cater_test"
 , cdn: { baseUrl: 'http://localhost:3001' }
+, ordrin: {
+    apiKeyPublic: '31XhIpj5gektUGCVR1XCNY1i4Rw-if5cN4IzvP1ncig'
+  , apiKeyPrivate: 'JSRbZdQTBWtpDxIxXtO2aPmKc26M98V2NHjG7h09-iQ'
+  , emailFormat: 'ordrin-user{salt}+{id}@goodybag.com'.replace( '{salt}', local.ordrinEmailSalt || '' )
+  }
 });
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';

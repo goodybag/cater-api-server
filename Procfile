@@ -1,3 +1,3 @@
 web: npm start
-debit: node workers/debit
+debit: grunt namedModules && node workers/debit
 scheduler: grunt namedModules && node workers/scheduler

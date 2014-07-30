@@ -12,6 +12,7 @@ var queries = require('../db/queries');
 var Restaurant = require('./restaurant');
 var Transaction = require('./transaction');
 var TransactionError = require('./transaction-error');
+var orderDeliveryServiceCriteria = require('../public/js/lib/order-delivery-service-criteria');
 var ordrInTrayBuilder = require('../lib/tray-builder');
 var moment = require('moment-timezone');
 
@@ -42,6 +43,11 @@ var modifyAttributes = function(callback, err, orders) {
             sms_phones: order.attributes.sms_phones,
             voice_phones: order.attributes.voice_phones,
             name: order.attributes.restaurant_name,
+            street: order.attributes.restaurant_street,
+            street2: order.attributes.restaurant_street2,
+            city: order.attributes.restaurant_city,
+            state: order.attributes.restaurant_state,
+            zip: order.attributes.restaurant_zip,
             balanced_customer_uri: order.attributes.restaurant_balanced_customer_uri
           },
           utils.pick(order.attributes, restaurantFields));
@@ -98,6 +104,31 @@ var modifyAttributes = function(callback, err, orders) {
 }
 
 module.exports = Model.extend({
+  doNotSave: [
+    'total', 'sub_total', 'sales_tax', 'delivery_fee'
+  ],
+
+  getDeliveryFeeQuery: function( options ){
+    var query = {
+      type: 'select'
+    , alias: 'delivery_fee'
+    , table: 'restaurant_delivery_zips'
+    , columns: ['fee']
+    , where: {
+        restaurant_id:  this.attributes.restaurant_id
+      }
+    , limit: 1
+    };
+
+    if ( this.attributes.zip ){
+      query.where.zip = this.attributes.zip;
+    } else {
+      query.order = 'fee asc';
+    }
+
+    return query;
+  },
+
   getOrderItems: function(callback, client) {
     var self = this;
     callback = callback || function() {};
@@ -117,6 +148,17 @@ module.exports = Model.extend({
     , columns: ['*']
     };
 
+    query.columns.push( this.getDeliveryFeeQuery() );
+
+    query.columns.push({
+      alias: 'region'
+    , expression: {
+        type: 'one'
+      , table: 'regions'
+      , where: { id: '$restaurants.region_id$' }
+      , parenthesis: true
+      }
+    });
     Restaurant.findOne(query, function(error, restaurant){
       if (error) return callback(error);
 
@@ -134,6 +176,7 @@ module.exports = Model.extend({
     var insert = this.attributes.id == null;
     if (insert) {
       this.attributes.review_token = uuid.v4();
+      this.attributes.ds_token = uuid.v4();
 
       if ( !this.attributes.restaurant_id ){
         throw new Error('Order cannot save without `restaurant_id`');
@@ -148,11 +191,13 @@ module.exports = Model.extend({
       , limit:    1
       };
     }
+
     if (this.attributes.adjustment) {
       this.attributes.adjustment_amount = this.attributes.adjustment.amount;
       this.attributes.adjustment_description = this.attributes.adjustment.description;
       delete this.attributes.adjustment;
     }
+
     var order = this;
     Model.prototype.save.call(this, {
       returning: [
@@ -225,7 +270,7 @@ module.exports = Model.extend({
   getManifest: function(){
     var grouped = utils.invoke( this.orderItems, 'toJSON' ).map( function( item ){
       var mitem = utils.pick( item, [
-        'id', 'name', 'quantity', 'notes', 'item_id'
+        'id', 'name', 'quantity', 'notes', 'item_id', 'sub_total', 'feeds_max'
       ]);
 
       mitem.recipients = item.recipient ? [ item.recipient ] : [];
@@ -274,6 +319,7 @@ module.exports = Model.extend({
         if ( !itemsAreBasicallyTheSame( g1, g2 ) ) continue;
 
         g1.quantity += g2.quantity;
+        g1.sub_total += g2.sub_total;
         g1.recipients = g1.recipients.concat( g2.recipients );
         group.splice( i, 1 );
 
@@ -368,7 +414,23 @@ module.exports = Model.extend({
   // with pastiche as (select o.item_id, o.quantity, o.notes, o.options_sets, i.name, i.description, i.price, i.feeds_min, i.feeds_max from order_items o inner join items i on (o.item_id = i.id) where order_id=7)
   // insert into order_items (item_id, quantity, notes, options_sets, name, description, price, feeds_min, feeds_max, order_id) select pastiche.*, 9 from pastiche returning *;
 
-    var copyableColumns = ['user_id', 'restaurant_id', 'street', 'city', 'state', 'zip', 'phone', 'notes', 'timezone', 'guests', 'adjustment_amount', 'adjustment_description', 'tip', 'payment_method_id'];
+    var copyableColumns = [
+      'user_id'
+    , 'restaurant_id'
+    , 'street'
+    , 'city'
+    , 'state'
+    , 'zip'
+    , 'phone'
+    , 'notes'
+    , 'timezone'
+    , 'guests'
+    , 'adjustment_amount'
+    , 'adjustment_description'
+    , 'tip'
+    , 'payment_method_id'
+    , 'delivery_service_id'
+    ];
     var self = this;
     var tasks = [
       function(cb) {
@@ -769,6 +831,11 @@ module.exports = Model.extend({
     };
 
     query.columns.push({table: 'restaurants', name: 'name', as: 'restaurant_name'});
+    query.columns.push({table: 'restaurants', name: 'street', as: 'restaurant_street'});
+    query.columns.push({table: 'restaurants', name: 'street2', as: 'restaurant_street2'});
+    query.columns.push({table: 'restaurants', name: 'city', as: 'restaurant_city'});
+    query.columns.push({table: 'restaurants', name: 'state', as: 'restaurant_state'});
+    query.columns.push({table: 'restaurants', name: 'zip', as: 'restaurant_zip'});
 
     query.columns.push('restaurants.minimum_order');
     query.columns.push({table: 'restaurants', name: 'balanced_customer_uri', as: 'restaurant_balanced_customer_uri'});
@@ -821,19 +888,25 @@ module.exports = Model.extend({
 
     var unacceptable = [];
     // check zip
+    query.with.push(
+      Restaurant.getDeliveryZipsQuery({
+        name: 'all_delivery_zips'
+      , with_delivery_services: true
+      })
+    );
     query.joins.zips = {
       type: 'left'
     , alias: 'zips'
-    , target: 'restaurant_delivery_zips'
+    , target: 'all_delivery_zips'
     , on: {
-        'orders.restaurant_id': '$zips.restaurant_id$'
-      , 'orders.zip': '$zips.zip$'
+        restaurant_id: '$orders.restaurant_id$'
+      , to: '$orders.zip$'
       }
     }
 
     var caseIsBadZip = '(CASE '
       + ' WHEN (orders.zip IS NULL) THEN NULL'
-      + ' WHEN (zips.zip IS NULL) THEN TRUE'
+      + ' WHEN (zips.to IS NULL) THEN TRUE'
       + ' ELSE FALSE'
       + ' END)'
     ;
@@ -864,9 +937,43 @@ module.exports = Model.extend({
     , "joins": {
         rlt: {
           type: 'left'
-        , target: 'restaurant_lead_times'
         , on: {
             restaurant_id: '$orders.restaurant_id$'
+          }
+        , target: {
+            type:     'select'
+          , table:    'restaurant_lead_times'
+          , distinct: true
+          , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
+          }
+        }
+      }
+    , "where": {
+        "rlt.max_guests": { $gte: '$orders.guests$' }
+      }
+    },
+
+    {
+      "name": "pickup_sub_lead_times"
+    , "type": "select"
+    , "columns": [
+        { name: 'id', alias: 'order_id' }
+      , { name: 'max_guests', table: 'rlt' }
+      , { name: 'lead_time', table: 'rlt' }
+      , "min(max_guests) OVER (PARTITION by orders.id)"
+      ]
+    , "table": "orders"
+    , "joins": {
+        rlt: {
+          type: 'left'
+        , on: {
+            restaurant_id: '$orders.restaurant_id$'
+          }
+        , target: {
+            type:     'select'
+          , table:    'restaurant_pickup_lead_times'
+          , distinct: true
+          , columns:  ['restaurant_id', 'max_guests', 'lead_time', 'cancel_time']
           }
         }
       }
@@ -887,6 +994,20 @@ module.exports = Model.extend({
     , "where": {
         "max_guests": "$sub_lead_times.min$"
       }
+    },
+
+    {
+      "name": "pickup_order_lead_times"
+    , "type": "select"
+    , "columns": [
+        "order_id"
+      , "max_guests"
+      , "lead_time"
+      ]
+    , "table": "pickup_sub_lead_times"
+    , "where": {
+        "max_guests": "$pickup_sub_lead_times.min$"
+      }
     }];
 
     query.with.push.apply(query.with, leadTimes);
@@ -898,9 +1019,17 @@ module.exports = Model.extend({
       }
     };
 
+    query.joins.pickup_order_lead_times = {
+      type: 'left'
+    , on: {
+        'orders.id': '$pickup_order_lead_times.order_id$'
+      }
+    };
+
     var caseIsBadLeadTime = '(CASE '
       + ' WHEN (orders.datetime IS NULL) THEN NULL'
       + ' WHEN (order_lead_times.order_id IS NULL) THEN FALSE'
+      + ' WHEN (orders.is_delivery_service is true or orders.is_pickup is true) THEN "pickup_order_lead_times"."lead_time" > EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/60)'
       + ' ELSE "order_lead_times"."lead_time" > EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/60)'
       + ' END)'
     ;
@@ -908,10 +1037,17 @@ module.exports = Model.extend({
     query.columns.push(caseIsBadLeadTime+' AS is_bad_lead_time');
 
     // check delivery days and times
+    query.with.push(
+      Restaurant.getDeliveryTimesQuery({
+        name: 'all_delivery_times'
+      , time: true
+      })
+    );
+
     query.joins.delivery_times = {
       type: 'left'
     , alias: 'delivery_times'
-    , target: 'restaurant_delivery_times'
+    , target: 'all_delivery_times'
     , on: {
         'orders.restaurant_id': '$delivery_times.restaurant_id$'
       , 'delivery_times.day': {$custom: ['"delivery_times"."day" = EXTRACT(DOW FROM "orders"."datetime")']}

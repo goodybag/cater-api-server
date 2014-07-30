@@ -100,6 +100,11 @@ define(function(require, exports, module) {
       // for (var key in params)
       //   diff[key] = this.model.has(key) ? this.model.get(key) : params[key];
 
+      // Ensure these also get saved
+      diff.is_delivery_service  = this.model.get('is_delivery_service');
+      diff.is_delivery          = this.model.get('is_delivery');
+      diff.is_pickup            = this.model.get('is_pickup');
+
       var view = this;
       var sent = this.model.save(diff, {
         patch: true,

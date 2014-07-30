@@ -23,6 +23,34 @@
   </div>
 </div>
 <div class="form-group">
+  <label class="control-label" for="input-email">
+  Email
+  </label>
+  <div class="input-group">
+    <input
+      type="email"
+      class="form-control"
+      name="order_email"
+      id="input-email"
+      value="{{delivery_service.order_email}}">
+  </div>
+</div>
+<div class="form-group">
+  <label class="control-label" for="input-phone">
+  Phone
+  </label>
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      name="order_phone"
+      id="input-phone"
+      data-in="phoneNumber"
+      data-out="sanitizePhoneNumber"
+      value="{{phoneNumber delivery_service.order_phone}}">
+  </div>
+</div>
+<div class="form-group">
   <label for="region_id_selector" class="control-label">Region</label>
   <select name="region_id" id="region_id_selector">
     {{#each regions}}

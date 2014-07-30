@@ -142,6 +142,21 @@ define(function(require) {
       type: types.int
     , references: {table: 'regions', column: 'id', onDelete: 'set null'}
     }
+  , delivery_service_order_amount_threshold: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
+  , delivery_service_order_total_upperbound: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
+  , delivery_service_head_count_threshold: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
   };
 
   definition.indices = {};

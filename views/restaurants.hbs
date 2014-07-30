@@ -47,24 +47,18 @@
                 {{/if}}
                 <span class="dollar-meter">{{{dollarMeter this.price}}}</span>
                 {{> tags tags }}
-                {{#or2 this.delivery_fee this.minimum_order}}
                 <div class="fee-info">
                   <dl class="dl-horizontal-inline">
-                    {{#if ../delivery_fee}}
-                    <dt>Delivery charge:</dt>
-                    <dd>
-                      {{#unless ../../../orderParams.zip}}Starting from {{/unless}}
-                      ${{dollars ../../delivery_fee}}
-                    </dd>
-                    {{/if}}
-
-                    {{#if ../minimum_order}}
+                    <dt>Delivery:</dt>
+                      {{#if delivery_fee}}
+                        <dd>{{#unless ../../orderParams.zip}}Starting from {{else}}{{/unless}}${{dollarsOmit00 ../delivery_fee}}</dd>
+                      {{else}}
+                        <dd>Free</dd>
+                      {{/if}}
                     <dt>Order minimum:</dt>
-                    <dd>${{dollars ../../minimum_order}}</dd>
-                    {{/if}}
+                    <dd>${{dollarsOmit00 (or minimum_order 0)}}</dd>
                   </dl>
                 </div>
-                {{/or2}}
               </div>
             </div>
             <div class="col-xs-1 favorite-wrapper">

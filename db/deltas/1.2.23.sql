@@ -9,5 +9,4 @@ begin
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
   delete from meal_types where name = 'Brunch';
-
 end$$;

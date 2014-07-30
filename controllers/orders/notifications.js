@@ -30,6 +30,7 @@ var $ordersOptions = {
   many: [ { table: 'order_items', alias: 'orderItems' } ]
 , one:  [ { table: 'restaurants', alias: 'restaurant' }
         , { table: 'users', alias: 'user' }
+        , { table: 'delivery_services', alias: 'deliveryService' }
         ]
 };
 
@@ -44,7 +45,16 @@ module.exports.JSON.list = function( req, res ){
       return res.error( error );
     }
 
-    var fns = Object.keys( notifier.defs ).map( function( nid ){
+    var fns = Object.keys(
+      notifier.defs
+    // Filter out notifications that do not apply to the order
+    ).filter( function( nid ){
+      var def = notifier.defs[ nid ];
+
+      if ( typeof def.isAvailable !== 'function' ) return true;
+
+      return def.isAvailable( order );
+    }).map( function( nid ){
       return function( done ){
         notifier.getNotification( nid, order, { render: false }, function( error, result ){
           if ( error ) return done( error );

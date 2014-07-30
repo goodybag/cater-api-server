@@ -3,6 +3,7 @@ define(function(require, exports, module) {
   var amanda = require('amanda');
   var Categories = require('../collections/categories');
   var states = require('states');
+  var utils = require('utils');
 
   var regex = {
     url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
@@ -143,6 +144,15 @@ define(function(require, exports, module) {
         },
         region_id: {
           type: ['number', 'null']
+        },
+        delivery_service_order_amount_threshold: {
+          type: ['number', 'null']
+        },
+        delivery_service_order_total_upperbound: {
+          type: ['number', 'null']
+        },
+        delivery_service_head_count_threshold: {
+          type: ['number', 'null']
         }
       }
     },
@@ -171,18 +181,39 @@ define(function(require, exports, module) {
 
       if ( !moment(date).isValid() ) return false;
 
+      var this_ = this;
+
       // Super pro day-parsing
       var day = moment( date.split(' ')[0] ).day();
 
-      if ( this.get('delivery_times')[ day ].length === 0 ) return false;
+      if ( this.get('delivery_times')[ day ].length === 0 )
+      if ( this.get('hours_of_operation')[ day ].length === 0 ){
+       return false;
+      }
 
       var hours = this.get('delivery_times')[ day ];
       var time = (date.split(' ')[1] + ':00').substring( 0, 8 );
 
       // is the desired time within any of the windows for that day?
-      return _.any( hours, function( openClose ){
+      var result = _.any( hours, function( openClose ){
         return time >= openClose[0] && time <= openClose[1]
       });
+
+      // Restaurant couldn't ful-fill, what about delivery services?
+      if ( !result ){
+        date  = moment( date ).add( 'minutes', -this.get('region').lead_time_modifier || 0 );
+        day   = date.day();
+        hours = this.get('delivery_times')[ day ];
+        time  = date.format('HH:mm:ss');
+
+        result = _.chain(
+          this.get('hours_of_operation')[ day ]
+        ).any( function( openClose ){
+          return time >= openClose[0] && time <= openClose[1]
+        }).value();
+      }
+
+      return result;
     },
 
     isValidMaxGuests: function( num ){
@@ -215,12 +246,34 @@ define(function(require, exports, module) {
         return obj.max_guests >= order.get('guests');
       });
 
-      if ( !limit ) return false;
-
       var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
       var minutes = (moment(date) - moment(now)) / 60000;
+      var leadTime = limit.lead_time;
 
-      return minutes >= limit.lead_time;
+      if ( limit && minutes >= leadTime ) return true;
+
+      if ( !limit || minutes < leadTime ){
+        limit = _.find(_.sortBy(this.get('pickup_lead_times'), 'max_guests'), function(obj) {
+          return obj.max_guests >= order.get('guests');
+        });
+      }
+
+      if ( !limit ) return false;
+
+      leadTime = limit.lead_time;
+      leadTime += moment.duration( this.get('region').lead_time_modifier ).asMinutes();
+
+      return minutes >= leadTime;
+    },
+
+    isValidZip: function( order ){
+      var zips = this.get('delivery_zips');
+
+      if ( order.get('is_delivery_service') ){
+        zips = this.get('delivery_service_zips');
+      }
+
+      return zips.indexOf( order.address.get('zip') ) > -1;
     },
 
     isValidOrder: function( order ){
@@ -230,8 +283,7 @@ define(function(require, exports, module) {
     validateOrderFulfillability: function( order ){
       var errors = [];
 
-      // Check zips
-      if ( this.get( 'delivery_zips' ).indexOf( order.address.get('zip') ) === -1 ){
+      if ( !this.isValidZip( order ) ){
         errors.push( 'is_bad_zip' );
       }
 

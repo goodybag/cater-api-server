@@ -89,6 +89,10 @@ module.exports.register = function(app) {
   , m.view( 'admin/home', { layout: 'admin/layout2' } )
   );
 
+  app.get('/admin/query-inspector'
+  , m.view( 'admin/query-inspector', { layout: 'admin/layout2' } )
+  );
+
   /**
    * Regions
    */
@@ -635,6 +639,14 @@ module.exports.register = function(app) {
   });
 
   /**
+   * Delivery service actions
+   */
+  app.get('/orders/:oid/delivery-service-accept'
+  , m.deliveryServiceAuth()
+  , controllers.orders.deliveryServices.accept
+  );
+
+  /**
    *  Order items resource.  The collection of all order items on a single order.
    *  This is a collection of OrderItems, not Items.
    */
@@ -1076,7 +1088,8 @@ module.exports.register = function(app) {
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
   , m.queryOptions({
-      one: [{ table: 'restaurants', alias: 'restaurant' }]
+      one:  [{ table: 'restaurants', alias: 'restaurant' }]
+    , many: [{ table: 'order_items', alias: 'items' }]
     })
   , m.find( db.orders )
   );

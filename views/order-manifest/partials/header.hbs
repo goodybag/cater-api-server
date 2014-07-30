@@ -1,0 +1,44 @@
+<header class="manifest-header">
+  <h4 class="header-text">Please print this and include with the {{#if order.is_delivery}}delivered{{else}}pickup{{/if}} order. Thanks! <span class="signature">-Goodybag</span></h4>
+  <div class="order-info">
+    <div class="info-item info-item-order-type">
+      <div class="item-title">This Order Is For:</div>
+      <div class="item-value">
+        {{#if order.is_delivery}}Delivery{{else}}Pickup{{/if}}
+      </div>
+    </div>
+    <div class="info-item">
+      <div class="item-title">Order:</div>
+      <div class="item-value">#{{order.id}}</div>
+    </div>
+    <div class="info-item">
+      <div class="item-title">Company:</div>
+      <div class="item-value">{{order.user.organization}}</div>
+    </div>
+    <div class="info-item">
+      <div class="item-title">Order Date:</div>
+      <div class="item-value">
+        {{#if order.is_delivery}}
+          {{formatDateTime order.datetime "MM/DD/YYYY"}}
+        {{else}}
+          {{formatDateTime order.pickup_datetime "MM/DD/YYYY"}}
+        {{/if}}
+      </div>
+    </div>
+    <div class="info-item">
+      <div class="item-title">
+        {{#if order.is_delivery}}Delivery{{else}}Pickup{{/if}} Time
+      </div>
+      <div class="item-value">
+        {{#if order.is_delivery}}
+          {{formatDateTime order.datetime "h:mm A"}}
+        {{else}}
+          {{formatDateTime order.pickup_datetime "h:mm A"}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  <div class="subtext">
+    Not what you ordered? &nbsp;Something missing? &nbsp;No worries! &nbsp;We will help get it resolved. &nbsp;Contact us at: <span class="phone">{{phoneNumber config.phone.support "xxx.xxx.xxxx"}}</span>
+  </div>
+</header>

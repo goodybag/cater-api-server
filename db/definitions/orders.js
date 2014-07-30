@@ -75,6 +75,10 @@ define(function(require) {
       type: types.timestamp
     , nullable: true
     }
+  , pickup_datetime: {
+      type: types.timestamp
+    , nullable: true
+    }
   , timezone: {
       type: types.timezone
     , nullable: true
@@ -95,6 +99,14 @@ define(function(require) {
   , review_token: {
       type: types.text
     , nullable: false
+    }
+  , ds_token: {
+      type: types.text
+    , nullable: true
+    }
+  , ds_token_used: {
+      type: types.timestamp
+    , nullable: true
     }
   , token_used: {
       type: types.timestamp
@@ -172,6 +184,10 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , is_delivery: { type: types.boolean, nullable: false, default: false }
+  , is_pickup: { type: types.boolean, nullable: false, default: false }
+  , is_delivery_service: { type: types.boolean, nullable: false, default: false }
+  , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
   };
 
   definition.indices = {};

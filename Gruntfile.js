@@ -84,7 +84,7 @@ module.exports = function(grunt) {
         , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less"
         , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
         , "public/dist/<%= pkg.version %>/admin.css":              "less/core-admin.less"
-        , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
+        , "public/css/order-manifest.css":                         "less/core-order-manifest.less"
         }
       }
     }
@@ -208,8 +208,9 @@ module.exports = function(grunt) {
         { src: './public/dist', dest: 'dist', gzip: true }
       , { src: './public/css', dest: 'css', gzip: true }
       , { src: './public/img', dest: 'img', gzip: false }
+      , { src: './public/img/emails', dest: 'img', gzip: false }
       , { src: './public/font', dest: 'font', gzip: false }
-      , { src: './public/js/pdf', dest: 'pdf', gzip: false }
+      , { src: './public/js/pdf', dest: 'js/pdf', gzip: false }
       , { src: './public/*', dest: '', gzip: false }
       , { src: './public/components/bootstrap/dist', dest: 'components/bootstrap/dist', gzip: true }
       , { src: './public/components/font-awesome/css', dest: 'components/font-awesome/css', gzip: true }

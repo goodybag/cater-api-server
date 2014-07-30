@@ -18,7 +18,7 @@ if (fs.existsSync('./local-config.json')){
 var config = {};
 
 config.defaults = {
-  numWorkers: Math.floor( os.cpus().length / 2 )
+  numWorkers: local.numWorkers || os.cpus().length
 
 , tmpDir: './tmp'
 
@@ -26,6 +26,14 @@ config.defaults = {
 , geoTestIp: '216.201.168.18'
 
 , deniedRecipients: [
+    'jag@goodybag.com'
+  , 'sarah.southwell@goodybag.com'
+  , 'om@goodybag.com'
+  , 'jay@goodybag.com'
+  , 'jacob.parker@goodybag.com'
+  ]
+
+, deliveryServiceOrderAboveThresholdRecipients: [
     'jag@goodybag.com'
   , 'sarah.southwell@goodybag.com'
   , 'om@goodybag.com'
@@ -95,6 +103,7 @@ config.defaults = {
 
 , http: {
     port: 3000
+  , timeout: 8000
   }
 
 , pg: {
@@ -140,6 +149,11 @@ config.defaults = {
   , end: 24
   }
 
+, deliveryServices: {
+    responseThresholdMins: 30
+  , supportPhones: [ local.testPhoneSms || '1234567890' ]
+  }
+
 , scheduler: {
     cron: '*/10 * * * * *'
   , start: true
@@ -176,6 +190,7 @@ config.defaults = {
   , info: 'info@goodybag.com'
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   , rewards: [ local.testEmail || 'test@goodybag.com' ]
+  , asapOrders: [ local.testEmail || 'test@goodybag.com' ]
   }
 
 , phone: {
@@ -236,9 +251,11 @@ config.dev = {
 , isDev: true
 
 , deniedRecipients: [ local.testEmail || 'test@goodybag.com' ]
+, deliveryServiceOrderAboveThresholdRecipients: [ local.testEmail || 'test@goodybag.com' ]
 
 , http: {
     port: 3000
+  , timeout: 8000
   }
 
 , logging: {
@@ -315,15 +332,18 @@ config.dev = {
 config.staging = {
   env: 'staging'
 
+, numWorkers: 1
+
 , isStaging: true
 
 , cdn: {
-    baseUrl: 'http://cater-cdn-staging.s3-website-us-east-1.amazonaws.com'
+    baseUrl: 'https://d1llefdsnne2yl.cloudfront.net'
   , bucket: 'cater-cdn-staging'
   }
 
 , http: {
     port: process.env['PORT'] || 5000
+  , timeout: 8000
   }
 
 , logging: {
@@ -365,7 +385,7 @@ config.staging = {
   , projectId: '526990bcf2d1570009000035'
   }
 
-, baseUrl: 'http://cater.staging.goodybag.com'
+, baseUrl: 'https://staging.goodybag.com'
 
 , postgresConnStr: process.env['DATABASE_URL']
 
@@ -396,6 +416,7 @@ config.staging = {
 
 config.production = {
   env: 'production'
+, numWorkers: 3
 
 , isProduction: true
 
@@ -408,6 +429,7 @@ config.production = {
 
 , http: {
     port: process.env['PORT'] || 5000
+  , timeout: 8000
   }
 
 , logging: {
@@ -473,6 +495,18 @@ config.production = {
     , 'om@goodybag.com'
     , 'redemptions@goodybag.com'
     ]
+  , asapOrders: [
+      'sarahsouthwell@goodybag.com'
+    , 'gillian@goodybag.com'
+    ]
+  }
+
+, deliveryServices: {
+    responseThresholdMins: 30
+  , supportPhones: [
+      '9788461970' // Sarah
+    , '2072997985' // Gillian
+    ]
   }
 
 , emailEnabled: true
@@ -489,7 +523,7 @@ config.production = {
 config.test = _.extend( _.clone( config.dev ), {
   env: 'test'
 , baseUrl: 'http://localhost:3001'
-, http: { port: 3001 }
+, http: { port: 3001, timeout: 8000 }
 , postgresConnStr:  "postgres://localhost:5432/cater_test"
 , cdn: { baseUrl: 'http://localhost:3001' }
 , ordrin: {

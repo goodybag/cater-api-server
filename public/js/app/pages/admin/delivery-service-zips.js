@@ -24,7 +24,10 @@ define(function( require ){
         page.$allZips.change( page.onAllZipsChange );
 
         page.editor = new MatrixEditor({
-          set: set
+          set:      set
+        , dataIn:   "dollars"
+        , dataOut:  "pennies"
+        , legend:   [{ axis: 'y', label: 'From' }, { axis: 'x', label: 'To' }]
         });
 
         // Set the correct values on the editor

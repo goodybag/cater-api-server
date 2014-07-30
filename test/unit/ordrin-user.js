@@ -1,3 +1,5 @@
+process.env.GB_ENV = 'test';
+
 var assert      = require('assert');
 var ordrin      = require('ordrin-api');
 var config      = require('../../config').getEnv('test');
@@ -102,7 +104,7 @@ describe ('OrdrIn User Module', function(){
     });
   });
 
-  it ( 'Should renew the users token'/*, function( done ){
+  it ( 'Should renew the users token', function( done ){
     tutils.generateUser( function( error, user ){
       assert( !error );
 
@@ -129,10 +131,11 @@ describe ('OrdrIn User Module', function(){
           ordrinUser.renewToken( user.id, function( error, token ){
             assert( !error );
             assert( !!token );
+            assert.notEqual( creds.current_password, token );
             done();
           });
         });
       });
     });
-  }*/);
+  });
 });

@@ -1,13 +1,13 @@
 <section style="text-align: left; margin: 0 20px;">
   <h2>Goodybag Order #{{order.id}} is scheduled for delivery.</h2>
   <p>
-    <div>Pickup order by: {{timepart order.pickup_datetime}} {{datepart order.pickup_datetime}}</div>
+    <div>Pickup order by: {{datepart order.pickup_datetime}} {{timepart order.pickup_datetime}}</div>
     <div>Restaurant Name: {{order.restaurant.name}}</div>
     <div>Restaurant Address: {{> plain_address order.restaurant}}</div>
   </p>
 
   <p>
-    <div>Time delivered by: {{datepart order}} {{timepart order}}</div>
+    <div>Time delivered by: {{datepart order.datetime}} {{timepart order.datetime}}</div>
     <div>Delivering to: {{order.user.name}} {{phoneNumber order.phone}}</div>
     <div>Office Address: {{> plain_address order}}</div>
     <div>Delivering food for {{order.guests}} guests</div>
@@ -15,7 +15,7 @@
     <div>Delivery instructions: "{{order.delivery_instructions}}"</div>
     {{/if}}
   </p>
-  
+
   <p>Order subtotal: ${{dollars order.sub_total}}</p>
 
   <p><a href="{{config.baseUrl}}/orders/{{order.id}}/delivery-service-accept?ds_token={{order.ds_token}}">Click here to accept</a>

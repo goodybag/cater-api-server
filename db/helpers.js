@@ -617,21 +617,32 @@ dirac.use( function( dirac ){
   });
 });
 
-// todo: better solution cache order_item.sub_total via trigger
-// Calculate item sub_totals
 dirac.use( function( dirac ){
-  dirac.dals.orders.after( 'findOne', function( results, $query, schema, next ){
-    if ( $query.many && utils.filter($query.many, { table: 'order_items' }) ) {
-      results = results.map( function(order) {
-        order = order.orderItems.map( function(item) {
-          var options = utils.flatten(utils.pluck(item.options_sets, 'options'), true);
-          var addOns = utils.reduce(utils.pluck(utils.where(options, {state: true}), 'price'), function(a, b) { return a + b; }, 0);
-          item.sub_total = item.quantity * (item.price + addOns);
-        });
-      });
-    }
+  var onOrder = function( order ){
+    Object.defineProperty( order, 'points', {
+      get: function(){
+        // Handle reward promos
+        var submitted = moment( order.submitted );
+
+        // Check all mondays past 4/21
+        var eligible = submitted.day() == 1 && submitted >= moment( config.rewardsPromo.start );
+
+        if ( eligible ) {
+          return Math.floor( order.total * config.rewardsPromo.rate / 100 );
+        }
+
+        return Math.floor( order.total / 100 );
+      }
+    });
+  };
+
+  var afterOrderFind = function( results, $query, schema, next ){
+    results.forEach( onOrder );
     next();
-  });
+  };
+
+  dirac.dals.orders.after( 'find', afterOrderFind );
+  dirac.dals.orders.after( 'findOne', afterOrderFind );
 });
 
 // Log queries to dirac

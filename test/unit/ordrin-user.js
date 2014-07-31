@@ -11,128 +11,131 @@ var ordrinUser  = require('../../lib/ordrin-user');
 ordrin = new ordrin.APIs( config.ordrin.apiKeyPrivate );
 
 describe ('OrdrIn User Module', function(){
-  it ( 'Should register a user with a user object', function( done ){
-    tutils.generateUser( function( error, user ){
-      assert( !error );
 
-      ordrinUser.register( user, function( error, user ){
+  describe ('User Registration Stuff', function(){
+    it ( 'Should register a user with a user object', function( done ){
+      tutils.generateUser( function( error, user ){
         assert( !error );
 
-        assert.equal(
-          user.ordrin_email
-        , config.ordrin.emailFormat.replace( '{id}', user.id )
-        );
-
-        assert( !!user.ordrin_password );
-
-        var creds = {
-          email:            user.ordrin_email
-        , current_password: user.ordrin_password
-        };
-
-        ordrin.get_account_info( creds, function( error, result ){
+        ordrinUser.register( user, function( error, user ){
           assert( !error );
 
-          assert.equal( user.ordrin_email, result.em );
+          assert.equal(
+            user.ordrin_email
+          , config.ordrin.emailFormat.replace( '{id}', user.id )
+          );
 
-          done();
-        });
-      });
-    });
-  });
+          assert( !!user.ordrin_password );
 
-  it ( 'Should register a user with a userId', function( done ){
-    tutils.generateUser( function( error, user ){
-      assert( !error );
+          var creds = {
+            email:            user.ordrin_email
+          , current_password: user.ordrin_password
+          };
 
-      ordrinUser.register( user.id, function( error, user ){
-        assert( !error );
+          ordrin.get_account_info( creds, function( error, result ){
+            assert( !error );
 
-        assert.equal(
-          user.ordrin_email
-        , config.ordrin.emailFormat.replace( '{id}', user.id )
-        );
+            assert.equal( user.ordrin_email, result.em );
 
-        assert( !!user.ordrin_password );
-
-        var creds = {
-          email:            user.ordrin_email
-        , current_password: user.ordrin_password
-        };
-
-        ordrin.get_account_info( creds, function( error, result ){
-          assert( !error );
-
-          assert.equal( user.ordrin_email, result.em );
-
-          done();
-        });
-      });
-    });
-  });
-
-  it ( 'Should error because user already exists', function( done ){
-    tutils.generateUser( function( error, user ){
-      assert( !error );
-
-      ordrinUser.register( user, function( error, user ){
-        assert( !error );
-
-        assert.equal(
-          user.ordrin_email
-        , config.ordrin.emailFormat.replace( '{id}', user.id )
-        );
-
-        assert( !!user.ordrin_password );
-
-        var creds = {
-          email:            user.ordrin_email
-        , current_password: user.ordrin_password
-        };
-
-        ordrin.get_account_info( creds, function( error, result ){
-          assert( !error );
-
-          assert.equal( user.ordrin_email, result.em );
-
-          ordrinUser.register( user, function( error, user ){
-            assert( !!error );
             done();
           });
         });
       });
     });
-  });
 
-  it ( 'Should renew the users token', function( done ){
-    tutils.generateUser( function( error, user ){
-      assert( !error );
-
-      ordrinUser.register( user, function( error, user ){
+    it ( 'Should register a user with a userId', function( done ){
+      tutils.generateUser( function( error, user ){
         assert( !error );
 
-        assert.equal(
-          user.ordrin_email
-        , config.ordrin.emailFormat.replace( '{id}', user.id )
-        );
-
-        assert( !!user.ordrin_password );
-
-        var creds = {
-          email:            user.ordrin_email
-        , current_password: user.ordrin_password
-        };
-
-        ordrin.get_account_info( creds, function( error, result ){
+        ordrinUser.register( user.id, function( error, user ){
           assert( !error );
 
-          assert.equal( user.ordrin_email, result.em );
+          assert.equal(
+            user.ordrin_email
+          , config.ordrin.emailFormat.replace( '{id}', user.id )
+          );
 
-          ordrinUser.renewToken( user.id, function( error, token ){
+          assert( !!user.ordrin_password );
+
+          var creds = {
+            email:            user.ordrin_email
+          , current_password: user.ordrin_password
+          };
+
+          ordrin.get_account_info( creds, function( error, result ){
             assert( !error );
-            assert( !!token );
-            assert.notEqual( creds.current_password, token );
+
+            assert.equal( user.ordrin_email, result.em );
+
             done();
+          });
+        });
+      });
+    });
+
+    it ( 'Should error because user already exists', function( done ){
+      tutils.generateUser( function( error, user ){
+        assert( !error );
+
+        ordrinUser.register( user, function( error, user ){
+          assert( !error );
+
+          assert.equal(
+            user.ordrin_email
+          , config.ordrin.emailFormat.replace( '{id}', user.id )
+          );
+
+          assert( !!user.ordrin_password );
+
+          var creds = {
+            email:            user.ordrin_email
+          , current_password: user.ordrin_password
+          };
+
+          ordrin.get_account_info( creds, function( error, result ){
+            assert( !error );
+
+            assert.equal( user.ordrin_email, result.em );
+
+            ordrinUser.register( user, function( error, user ){
+              assert( !!error );
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    it ( 'Should renew the users token', function( done ){
+      tutils.generateUser( function( error, user ){
+        assert( !error );
+
+        ordrinUser.register( user, function( error, user ){
+          assert( !error );
+
+          assert.equal(
+            user.ordrin_email
+          , config.ordrin.emailFormat.replace( '{id}', user.id )
+          );
+
+          assert( !!user.ordrin_password );
+
+          var creds = {
+            email:            user.ordrin_email
+          , current_password: user.ordrin_password
+          };
+
+          ordrin.get_account_info( creds, function( error, result ){
+            assert( !error );
+
+            assert.equal( user.ordrin_email, result.em );
+
+            ordrinUser.renewToken( user.id, function( error, token ){
+              assert( !error );
+              assert( !!token );
+              assert.notEqual( creds.current_password, token );
+              done();
+            });
           });
         });
       });

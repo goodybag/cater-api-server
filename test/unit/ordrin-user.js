@@ -142,7 +142,5 @@ describe ('OrdrIn User Module', function(){
     });
   });
 
-  describe ('Credit Cards', function(){
-
-  });
+  describe ('Credit Cards', function(){});
 });

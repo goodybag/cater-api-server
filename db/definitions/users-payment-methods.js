@@ -40,6 +40,7 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , ordrin_card_id: { type: types.text, unique: true }
   };
 
   definition.indices = {};

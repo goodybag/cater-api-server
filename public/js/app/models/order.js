@@ -334,7 +334,7 @@ define(function(require, exports, module) {
         type: 'POST',
         url: _.result(order, 'url') + '/duplicates',
         success: function(data, textStatus, jqXHR) {
-          return callback(null, new order.constructor(data));
+          return callback(null, new order.constructor(_.extend(data, { restaurant: order.restaurant.toJSON() })));
         },
         error: function(jqXHR, textStatus, errorThrown) {
           return callback(errorThrown);

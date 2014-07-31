@@ -115,6 +115,7 @@ define(function(require, exports, module) {
         , type:       res.data._type
         , name:       data.card_name
         , save_card:  data.save_card
+        , original:   data
         };
 
         this_.save(pm, {

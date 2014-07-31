@@ -6,13 +6,13 @@ var config      = require('../../config').getEnv('test');
 var db          = require('../../db');
 var utils       = require('../../utils');
 var tutils      = require('../../lib/test-utils');
-var ordrinUser  = require('../../lib/ordrin-user');
+var ordrinUser  = require('../../lib/ordrin/user');
 
 ordrin = new ordrin.APIs( config.ordrin.apiKeyPrivate );
 
 describe ('OrdrIn User Module', function(){
 
-  describe ('User Registration Stuff', function(){
+  describe ('User Registration', function(){
     it ( 'Should register a user with a user object', function( done ){
       tutils.generateUser( function( error, user ){
         assert( !error );
@@ -140,5 +140,9 @@ describe ('OrdrIn User Module', function(){
         });
       });
     });
+  });
+
+  describe ('Credit Cards', function(){
+
   });
 });

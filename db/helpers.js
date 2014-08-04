@@ -484,14 +484,14 @@ dirac.use( function( dirac ){
           var targetDal = dirac.dals[ target.table ];
 
           // Immediate dependency not met and not specifying how to get there
-          if ( !targetDal.dependencies[ table_name ] )
+          if ( !targetDal.dependents[ table_name ] )
           if ( !target.where ){
             throw new Error( 'Table: `' + target.table + '` does not depend on `' + table_name + '`' );
           }
 
           var pivots = [];
 
-          if ( targetDal.dependencies[ table_name ] ){
+          if ( !targetDal.dependents[ table_name ] ){
              pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
               return {
                 source_col: targetDal.dependencies[ table_name ][ p ]

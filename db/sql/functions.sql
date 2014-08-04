@@ -1,6 +1,38 @@
 --------------------
 -- Event Handlers --
 --------------------
+create or replace function on_order_type_is_pickup_change()
+returns trigger as $$
+begin
+  if NEW.is_pickup is true then
+    perform update_order_types( NEW, 'is_pickup' );
+  end if;
+  return NEW;
+end;
+$$ language plpgsql;
+
+create or replace function on_order_type_is_delivery_change()
+returns trigger as $$
+begin
+  if NEW.is_delivery is true then
+    perform update_order_types( NEW, 'is_delivery' );
+  end if;
+  return NEW;
+end;
+$$ language plpgsql;
+
+create or replace function on_order_type_is_delivery_service_change()
+returns trigger as $$
+begin
+  if NEW.is_delivery_service is true then
+    perform update_order_types( NEW, 'is_delivery_service' );
+    perform update_order_delivery_service_id( NEW.id );
+    perform update_order_delivery_service_pickup_time( NEW.id );
+  end if;
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function on_order_datetime_change()
 returns trigger as $$
 begin
@@ -98,33 +130,36 @@ begin
 end;
 $$ language plpgsql;
 
-create or replace function update_order_types( oid int )
+create or replace function update_order_types( oid int, type text )
 returns void as $$
   declare o orders;
 begin
   for o in ( select * from orders where id = oid )
   loop
-    perform update_order_types( o );
+    perform update_order_types( o, type );
   end loop;
 end;
 $$ language plpgsql;
 
-create or replace function update_order_types( o orders )
+create or replace function update_order_types( o orders, type text )
 returns void as $$
 begin
-  if o.is_pickup then
+  if type = 'is_pickup' then
     update orders set
-      is_delivery         = false
+      is_pickup           = true
+    , is_delivery         = false
     , is_delivery_service = false
     where id = o.id;
-  elsif o.is_delivery then
+  elsif type = 'is_delivery' then
     update orders set
-      is_pickup           = false
+      is_delivery = true
+    , is_pickup           = false
     , is_delivery_service = false
     where id = o.id;
-  elsif o.is_delivery_service then
+  elsif type = 'is_delivery_service' then
     update orders set
-      is_pickup           = false
+      is_delivery_service = true
+    , is_pickup           = false
     , is_delivery         = false
     where id = o.id;
   end if;

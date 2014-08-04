@@ -20,7 +20,7 @@ var
 , moment = require('moment-timezone')
 
   // Make underscores/async functionality available on utils
-, utils     = lodash.extend({}, lodash, {async: async})
+, utils     = lodash.extend({}, lodash, {async: async}, require('./public/js/lib/utils'))
 ;
 
 var local = {};

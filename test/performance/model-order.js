@@ -7,6 +7,7 @@ var Models  = require('../../models');
 describe ('models.Order', function(){
   it ('models.Order.find()', function( done ){
     this.expected = 1800;
+    this.timeout(8000);
 
     Models.Order.find( { limit: 100 }, function( error, orders ){
       assert( !error, error );

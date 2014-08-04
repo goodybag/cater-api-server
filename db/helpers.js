@@ -404,16 +404,22 @@ dirac.use( function( dirac ){
         $query[ options.pluginName ].forEach( function( target ){
           var targetDal = dirac.dals[ target.table ];
 
-          if ( !targetDal.dependencies[ table_name ] ){
+          // Immediate dependency not met and not specifying how to get there
+          if ( !targetDal.dependencies[ table_name ] )
+          if ( !target.where ){
             throw new Error( 'Table: `' + target.table + '` does not depend on `' + table_name + '`' );
           }
 
-          var pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
-            return {
-              source_col: targetDal.dependencies[ table_name ][ p ]
-            , target_col: p
-            };
-          });
+          var pivots = [];
+
+          if ( targetDal.dependencies[ table_name ] ){
+             pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
+              return {
+                source_col: targetDal.dependencies[ table_name ][ p ]
+              , target_col: p
+              };
+            });
+          }
 
           var col = options.tmpl({
             source:     table_name
@@ -477,16 +483,22 @@ dirac.use( function( dirac ){
         $query[ options.pluginName ].forEach( function( target ){
           var targetDal = dirac.dals[ target.table ];
 
-          if ( !targetDal.dependents[ table_name ] ){
-            throw new Error( 'Table: `' + target.name + '` does not depend on `' + table_name + '`' );
+          // Immediate dependency not met and not specifying how to get there
+          if ( !targetDal.dependents[ table_name ] )
+          if ( !target.where ){
+            throw new Error( 'Table: `' + target.table + '` does not depend on `' + table_name + '`' );
           }
 
-          var pivots = Object.keys( targetDal.dependents[ table_name ] ).map( function( p ){
-            return {
-              source_col: targetDal.dependents[ table_name ][ p ]
-            , target_col: p
-            };
-          });
+          var pivots = [];
+
+          if ( !targetDal.dependents[ table_name ] ){
+             pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
+              return {
+                source_col: targetDal.dependencies[ table_name ][ p ]
+              , target_col: p
+              };
+            });
+          }
 
           var col = options.tmpl({
             source:     table_name

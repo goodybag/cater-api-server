@@ -5,6 +5,7 @@ module.exports = {
 , destroyCreateDb:  require('./destroy-create-db')
 , loadFixtures:     require('./load-fixtures')
 , loadFunctions:    require('./load-functions')
+, loadTriggers:     require('./load-triggers')
 , setLatestDelta:   require('./set-latest-delta')
 , runDeltas:        require('./run-deltas')
 };

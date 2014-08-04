@@ -14,7 +14,6 @@
   },
   "namedModules": {
     "underscore": "./node_modules/lodash/lodash.js",
-    "backbone": "./public/components/backbone/backbone.js",
     "config": "./config.js",
     "errors": "./errors.js",
     "utils": "./public/js/lib/utils.js"
@@ -24,6 +23,7 @@
     "amanda": "~0.4.7",
     "analytics-node": "~0.6.0",
     "async": "0.2.x",
+    "backbone": "^1.1.2",
     "balanced-official": "goodybag/balanced-node",
     "bcrypt": "0.7.x",
     "bitly": "1.2.x",

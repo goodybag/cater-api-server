@@ -76,13 +76,6 @@ define(function(require, exports, module) {
 
         if ( facet === 'prices' ) criteria[ facet ][ i ] = +criteria[ facet ][ i ];
 
-        // Rename fields
-        // utils.each({ tags: 'diets', cuisine: 'cuisines' }, function( from, to ){
-        //   console.log(from, to);
-        //   criteria[ to ] = ( criteria[ to ] || [] ).concat( criteria[ from ] || [] );
-        //   delete criteria[ from ];
-        // });
-
         $label.html([
           $label.html()
         , ' ('

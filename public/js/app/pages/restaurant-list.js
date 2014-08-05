@@ -43,7 +43,6 @@ define( function( require ){
       , cuisines:   'cuisine'
       }, function( newName, oldName ){
         if ( existingCriteria[ oldName ] ){
-          console.log("setting", newName)
           existingCriteria[ newName ] = existingCriteria[ oldName ];
           delete existingCriteria[ oldName ];
         }

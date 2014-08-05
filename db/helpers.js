@@ -492,9 +492,9 @@ dirac.use( function( dirac ){
           var pivots = [];
 
           if ( targetDal.dependents[ table_name ] ){
-             pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
+             pivots = Object.keys( targetDal.dependents[ table_name ] ).map( function( p ){
               return {
-                source_col: targetDal.dependencies[ table_name ][ p ]
+                source_col: targetDal.dependents[ table_name ][ p ]
               , target_col: p
               };
             });

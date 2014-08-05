@@ -47,10 +47,13 @@ define(function(require, exports, module) {
     }
 
   , getProps: function(){
+      var validDate = /\d{2}\/\d{2}\/\d{4}/.test( this.datepicker.get() );
+      var validTime = /\d{1,2}:\d{2}\s(AM|PM)/.test( this.timepicker.get() );
+
       return {
         zip:      this.$("input[name='zip']").val() || null
-      , date:     (this.datepicker.get()) ? utils.dateTimeFormatter(this.datepicker.get()) : null
-      , time:     this.timepicker.get()
+      , date:     validDate ? utils.dateTimeFormatter(this.datepicker.get()) : null
+      , time:     validTime ? this.timepicker.get() : null
       , guests:   this.$("input[name='guests']").val() || null
       };
     }

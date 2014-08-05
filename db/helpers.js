@@ -491,7 +491,7 @@ dirac.use( function( dirac ){
 
           var pivots = [];
 
-          if ( !targetDal.dependents[ table_name ] ){
+          if ( targetDal.dependents[ table_name ] ){
              pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
               return {
                 source_col: targetDal.dependencies[ table_name ][ p ]

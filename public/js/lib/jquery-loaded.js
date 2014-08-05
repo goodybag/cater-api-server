@@ -13,6 +13,7 @@ define(function(require, exports, module) {
   require('jquery.row-expand');
   require('jquery.toggler');
   require('jquery.prefixer');
+  require('jquery.modern-modal');
 
   $(function(){
     $('input, textarea').placeholder();

@@ -2,7 +2,60 @@
 
 {{#extend "body"}}
 <div class="container" id="main-container">
-  <h1>Order #{{order.id}} Command Center</h1>
+  <div class="order-type-wrapper">
+    <select name="order_type" id="order-type" class="form-control">
+      <option value="is_pickup"{{#if order.is_pickup}} selected="true"{{/if}}>Type: Pickup</option>
+      <option value="is_delivery"{{#if order.is_delivery}} selected="true"{{/if}}>Type: Delivery</option>
+      <option value="is_delivery_service"{{#if order.is_delivery_service}} selected="true"{{/if}}>Type: Delivery Service</option>
+    </select>
+  </div>
+
+  <ul class="breadcrumbs main-breadcrumbs">
+    <li>
+      <a href="/admin">Admin Panel</a>
+    </li>
+    <li>
+      <a href="/orders">Orders</a>
+    </li>
+    <li>Order <a href="/orders/{{order.id}}">#{{order.id}}</a> Command Center</li>
+  </ul>
+
+  <div>
+    <section class="panel-component" id="order-user">
+      <h1 class="component-title">User</h1>
+      <dl class="user-profile dl-horizontal">
+        <dt>Name</dt>
+        <dd>
+          <a href="/users/{{order.user.id}}">{{order.user.name}}</a>
+        </dd>
+        <dt>Email</dt>
+        <dd>{{order.user.email}}</dd>
+        <dt>Organization</dt>
+        <dd>{{order.user.organization}}</dd>
+        <dt>Contact</dt>
+        <dd>{{phoneNumber order.phone}}</dd>
+      </dl>
+    </section>
+
+    <section class="panel-component" id="order-restaurant">
+      <h1 class="component-title">Details</h1>
+      <dl class="user-profile dl-horizontal">
+        <dt>Total</dt>
+        <dd>${{dollars order.total}}</dd>
+        <dt>Restaurant</dt>
+        <dd>
+          <a href="/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a>
+        </dd>
+        <dt>Delivery Time</dt>
+        <dd>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</dd>
+
+        {{#or2 order.is_pickup order.is_delivery_service}}
+          <dt>Pickup Time</dt>
+          <dd>{{formatDateTime ../order.pickup_datetime "MM/DD/YYYY h:mm A"}}</dd>
+        {{/or2}}
+      </dl>
+    </section>
+  </div>
 
   <section class="panel-component" id="order-pdfs">
     <h1 class="component-title">Available Pdfs</h1>

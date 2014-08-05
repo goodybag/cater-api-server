@@ -23,6 +23,7 @@ define(function(require, exports, module) {
       , this.options.paramsView.getProps()
       , this.options.sortView.getProps()
       );
+
       // Clone props because analytics is mutating the date property
       analytics.track( 'Restaurant Search', {searchParams: _.clone(props)} );
       var searchUrl = this.options.searchUrl;

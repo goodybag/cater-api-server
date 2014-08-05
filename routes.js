@@ -1013,11 +1013,18 @@ module.exports.register = function(app) {
    })
   );
 
-  app.get('/admin/orders/:oid'
+  app.get('/admin/orders/:id'
   , m.restrict(['admin'])
-  , m.getOrder({ param: 'oid', withItems: true })
-  , m.view( 'admin/order', {
+  , m.param('id')
+  , m.queryOptions({
+      one:  [ { table: 'restaurants', alias: 'restaurant' }
+            , { table: 'users', alias: 'user' }
+            ]
+    , many: [{ table: 'order_items', alias: 'items' }]
+    })
+  , m.view( 'admin/order', db.orders, {
       layout: 'admin/layout2'
+    , method: 'findOne'
     })
   );
 
@@ -1194,6 +1201,56 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.param('id')
   , m.remove( db.restaurant_photos )
+  );
+
+  app.get('/api/orders'
+  , m.restrict(['admin'])
+  , m.pagination()
+  , m.param('status')
+  , function( req, res, next ){
+      res.locals.status = req.param('status');
+      if ( req.param('status') == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.param('status') };
+      }
+      return next();
+    }
+  , m.sort('-id')
+  , m.queryOptions({
+      one: [
+        { table: 'users',       alias: 'user' }
+      , { table: 'restaurants', alias: 'restaurant' }
+      ]
+    })
+  , m.find( db.orders )
+  );
+
+  app.post('/api/orders'
+  , m.restrict(['admin'])
+  , m.insert( db.orders )
+  );
+
+  app.get('/api/orders/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.queryOptions({
+      one: [
+        { table: 'users',       alias: 'user' }
+      , { table: 'restaurants', alias: 'restaurant' }
+      ]
+    })
+  , m.findOne( db.orders )
+  );
+
+  app.put('/api/orders/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.orders )
+  );
+
+  app.del('/api/orders/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.orders )
   );
 
   app.get('/api/orders/:oid/items'

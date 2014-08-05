@@ -35,7 +35,11 @@ define(function(require, exports, module) {
 
       this.$checkboxes = this.$el.find('.checkbox');
 
-      this.updateCounts();
+
+      // Sorry for this hackiness, but IE8 just will not stop having errors with this
+      if ( window.navigator.userAgent.indexOf('MSIE 8.0') === -1 ){
+        this.updateCounts();
+      }
     }
 
   , onFilterChange: function(e) {

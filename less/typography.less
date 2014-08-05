@@ -8,7 +8,8 @@ h1 {
 }
 
 h2 {
-  font-size: 3.2;
+  font-size: 2.2em;
+  line-height: 1.2em;
 }
 
 h1, h2, h3, h4, h5 {
@@ -28,6 +29,13 @@ h1, h2, h4, h5 {
 h1, h2 {
   & + .lead {
     margin-top: -24px;
+  }
+}
+
+small {
+  font-size: 0.8em;
+  &.really-small {
+    font-size: 0.5em;
   }
 }
 
@@ -69,4 +77,28 @@ h1, h2 {
 em.em-primary {
   font-style: normal;
   color: @brand-primary;
+}
+
+// Horizontal description lists
+//
+// Defaults to being stacked without any of the below styles applied, until the
+// grid breakpoint is reached (default of ~768px).
+
+.dl-horizontal {
+  dd {
+    &:extend(.clearfix all); // Clear the floated `dt` if an empty `dd` is present
+  }
+
+  @media (min-width: @grid-float-breakpoint) {
+    dt {
+      float: left;
+      width: (@dl-horizontal-offset - 20);
+      clear: left;
+      text-align: right;
+      .text-overflow();
+    }
+    dd {
+      margin-left: @dl-horizontal-offset;
+    }
+  }
 }

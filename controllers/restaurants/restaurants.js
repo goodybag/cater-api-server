@@ -33,7 +33,6 @@ module.exports.list = function(req, res) {
       var query = {
         includes: [
           { type: 'filter_restaurant_events' }
-        , { type: 'favorites', userId: req.user.attributes.id }
         ]
       , where: {
           region_id: req.user.attributes.region_id

@@ -596,17 +596,6 @@ var Restaurant = module.exports = Model.extend({
       unacceptable.push('(guests.restaurant_id IS NULL)');
     }
 
-    // join user favorites
-    var favorites = utils.findWhere(query.includes, { type: 'favorites' } );
-    if ( favorites ) {
-      includeFavorites(query, favorites);
-    }
-
-    // filter favorites
-    if (favorites && orderParams && orderParams.favorites === 'true' ) {
-      query.where['ufr.user_id'] = favorites.userId;
-    }
-
     // Hide restaurants from listing if there's an event occurring
     if ( utils.findWhere(query.includes, { type: 'filter_restaurant_events' } ) ) {
       filterRestaurantsByEvents(query, orderParams);
@@ -799,42 +788,3 @@ var includeClosedRestaurantEvents = function(query, searchParams) {
 
   query.columns.push('(select array_to_json(array(select during from restaurant_events where restaurant_events.restaurant_id=restaurants.id) ) ) as event_date_ranges');
 }
-
-/**
- * Join user's favorite restaurants
- *
- * @param {object} query
- * @param {object} opts
- */
-var includeFavorites = function(query, opts) {
-  query.with.user_fav_restaurants = {
-    type: 'select'
-  , table: 'favorite_restaurants'
-  , columns: [ '*' ]
-};
-
-  query.joins.user_fav_restaurants = {
-    type: 'left'
-  , alias: 'ufr'
-  , target: 'user_fav_restaurants'
-  , on: {
-      'restaurants.id': '$ufr.restaurant_id$'
-    }
-  };
-
-  // dear god..i just wanted to see if the user fav'd a restaurant
-  // exists(select 1 from user_fav_restaurants where user_id=$1 and restaurant_id=restaurants.id) as favorite
-  query.columns.push({
-    type: 'exists'
-  , expression: {
-      type: 'select'
-    , columns: [ { expression: '1'} ]
-    , table: 'user_fav_restaurants'
-    , where: {
-        user_id: opts.userId
-      , restaurant_id: '$restaurants.id$'
-      }
-    }
-  , as: 'favorite'
-  });
-};

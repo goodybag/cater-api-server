@@ -58,10 +58,6 @@ a.list-group-item-restaurant .list-group-item-heading {
   color: #6E6E6E;
 }
 
-.list-group-restaurants .favorite-wrapper {
-  padding-top: 7px;
-}
-
 .list-group-item-restaurant:hover .rating {
   color: #DA1800;
 }
@@ -73,31 +69,6 @@ a.list-group-item:hover {
 
 a.list-group-item:hover + a.list-group-item {
   border-top-color: #ccd;
-}
-
-.page-restaurants .btn-favorite.active {
-  color: #dc1709;
-}
-
-.page-restaurants .btn-favorite {
-  padding-bottom: 4px;
-  outline: none;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #fff;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  color: #ddd;
-  font-size: 14pt;
-
-}
-
-.page-restaurants .btn-favorite:active {
-  margin-top: 1px!important;
-}
-
-.page-restaurants .btn-favorite:hover {
-  border: 1px solid #dc1709;
 }
 
 .results-too-few {

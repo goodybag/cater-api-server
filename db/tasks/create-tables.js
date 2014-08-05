@@ -43,7 +43,6 @@ var definitions = [
 , 'reminders'
 , 'payment-summaries'
 , 'payment-summary-items'
-, 'favorite-restaurants'
 , 'contacts'
 , 'deltas'
 , 'order-notifications'

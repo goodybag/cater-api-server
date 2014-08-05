@@ -495,7 +495,7 @@ var Restaurant = module.exports = Model.extend({
         }
       };
 
-      query.where['meal_types.meal_types'] = {'$overlap': orderParams.mealTypes};
+      query.where['meal_types.meal_types'] = {'$contains': orderParams.mealTypes};
     }
 
     if (orderParams && orderParams.mealStyles) {

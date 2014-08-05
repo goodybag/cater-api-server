@@ -2,6 +2,7 @@ define(function(require){
   var $       = require('jquery-loaded');
   var notify  = require('notify');
   var utils   = require('utils');
+  var flash   = require('flash');
 
   var Views = {
     NotificationHistoryTable:     require('app/views/notification-history-table')
@@ -40,6 +41,34 @@ define(function(require){
         $('.pdf-preview').each( function(){
           new Views.PdfPreview({ el: this });
         });
+
+        $('[name="order_type"]').change( function( e ){
+          var order = {};
+          order[ $(this).val() ] = true;
+
+          page.updateOrder( order, function( error, order ){
+            if ( error ){
+              return flash.info( 'Error :(', 1000 );
+            }
+
+            flash.info("It's set!<br><small class=\"really-small\">Re-build PDFs and send notifications</small>")
+          });
+        });
+      });
+    }
+
+    // Because I'm too lazy to fulfill all required properties on the Order Model
+  , updateOrder: function( props, callback ){
+      $.ajax({
+        type: 'PUT'
+      , url: '/api/orders/' + page.order.get('id')
+      , json: true
+      , headers: { 'Content-Type': 'application/json' }
+      , data: JSON.stringify( props )
+      , success: function( order ){
+          return callback( null, order );
+        }
+      , error: callback
       });
     }
 

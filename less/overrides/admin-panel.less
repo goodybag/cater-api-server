@@ -192,6 +192,11 @@ header {
 .page-order {
   padding-bottom: 80px;
 
+  #order-user,
+  #order-restaurant {
+    #grid > .column(6);
+  }
+
   #order-pdfs .pdf-preview {
     #grid > .row();
   }
@@ -206,6 +211,14 @@ header {
 
   #notifications-table .actions {
     min-width: 250px;
+  }
+
+  .order-type-wrapper {
+    width: 178px;
+    position: absolute;
+    top: 25px;
+    right: 0;
+    z-index: 1;
   }
 }
 

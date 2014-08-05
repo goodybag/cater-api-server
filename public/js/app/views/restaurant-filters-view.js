@@ -49,7 +49,6 @@ define(function(require, exports, module) {
       , cuisines:     _.pluck(this.$el.find('#panelCuisine input:checked'), 'value')
       , prices:       _.pluck(this.$el.find('#panelPrice input:checked'), 'value')
       , mealTypes:    _.pluck(this.$el.find('#panelMealTypes input:checked'), 'value')
-      , mealStyles:   _.pluck(this.$el.find('#panelMealStyles input:checked'), 'value')
       };
     }
 
@@ -77,6 +76,12 @@ define(function(require, exports, module) {
         var i = criteria[ facet ].push( $this.find('input').attr('value') ) - 1;
 
         if ( facet === 'prices' ) criteria[ facet ][ i ] = +criteria[ facet ][ i ];
+
+        // Rename fields
+        utils.each({ tags: 'diets', cuisine: 'cuisines' }, function( from, to ){
+          criteria[ to ] = ( criteria[ to ] || [] ).concat( criteria[ from ] || [] );
+          delete criteria[ from ];
+        });
 
         $label.html([
           $label.html()

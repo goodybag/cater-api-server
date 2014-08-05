@@ -50,6 +50,8 @@ define(function(require, exports, module) {
   };
 
   helpers.searchByFacets = function( items, criteria, types ){
+    console.log(criteria);
+
     types = types || types;
 
     return _.filter( items, function( item ){

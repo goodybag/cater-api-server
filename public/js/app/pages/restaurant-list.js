@@ -38,14 +38,14 @@ define( function( require ){
 
       // The URL parameters don't match up with the actual restaurant fields
       utils.each({
-        mealStyles: 'meal_styles'
-      , mealTypes:  'meal_types'
+        mealTypes:  'meal_types'
       , diets:      'tags'
       , cuisines:   'cuisine'
-      }, function( newName, oldName, obj ){
-        if ( obj[ oldName ] ){
-          obj[ newName ] = obj[ oldName ];
-          delete obj[ oldName ];
+      }, function( newName, oldName ){
+        if ( existingCriteria[ oldName ] ){
+          console.log("setting", newName)
+          existingCriteria[ newName ] = existingCriteria[ oldName ];
+          delete existingCriteria[ oldName ];
         }
       });
 

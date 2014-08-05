@@ -23,7 +23,6 @@ define(function(require, exports, module) {
 
   , criteriaTypes: {
       prices: 'or'
-    , meal_styles: 'and'
     , meal_types: 'and'
     , diets: 'and'
     , cuisine: 'or'
@@ -78,10 +77,11 @@ define(function(require, exports, module) {
         if ( facet === 'prices' ) criteria[ facet ][ i ] = +criteria[ facet ][ i ];
 
         // Rename fields
-        utils.each({ tags: 'diets', cuisine: 'cuisines' }, function( from, to ){
-          criteria[ to ] = ( criteria[ to ] || [] ).concat( criteria[ from ] || [] );
-          delete criteria[ from ];
-        });
+        // utils.each({ tags: 'diets', cuisine: 'cuisines' }, function( from, to ){
+        //   console.log(from, to);
+        //   criteria[ to ] = ( criteria[ to ] || [] ).concat( criteria[ from ] || [] );
+        //   delete criteria[ from ];
+        // });
 
         $label.html([
           $label.html()

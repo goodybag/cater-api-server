@@ -1013,11 +1013,18 @@ module.exports.register = function(app) {
    })
   );
 
-  app.get('/admin/orders/:oid'
+  app.get('/admin/orders/:id'
   , m.restrict(['admin'])
-  , m.getOrder({ param: 'oid', withItems: true })
-  , m.view( 'admin/order', {
+  , m.param('id')
+  , m.queryOptions({
+      one:  [ { table: 'restaurants', alias: 'restaurant' }
+            , { table: 'users', alias: 'user' }
+            ]
+    , many: [{ table: 'order_items', alias: 'items' }]
+    })
+  , m.view( 'admin/order', db.orders, {
       layout: 'admin/layout2'
+    , method: 'findOne'
     })
   );
 

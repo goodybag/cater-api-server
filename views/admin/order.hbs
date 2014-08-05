@@ -2,7 +2,25 @@
 
 {{#extend "body"}}
 <div class="container" id="main-container">
-  <h1>Order #{{order.id}} Command Center</h1>
+  <ul class="breadcrumbs main-breadcrumbs">
+    <li>
+      <a href="/admin">Admin Panel</a>
+    </li>
+    <li>
+      <a href="/orders">Orders</a>
+    </li>
+    <li><a href="/orders/{{order.id}}">Order #{{order.id}}</a> Command Center</li>
+  </ul>
+
+  <section class="panel-component" id="order-user">
+    <h1 class="component-title">User</h1>
+    <dl class="user-profile dl-horizontal">
+      <dt>Name</dt>
+      <dd>
+        <a href="/users/{{order.user.id}}">{{order.user.name}}</a>
+      </dd>
+    </dl>
+  </section>
 
   <section class="panel-component" id="order-pdfs">
     <h1 class="component-title">Available Pdfs</h1>

@@ -5,7 +5,7 @@
 <h4>Filter by:</h4>
 <div class="panel-group panel-group-filters" id="filters">
   {{! Diet Section }}
-  <div class="panel panel-default" data-facet="tags">
+  <div class="panel panel-default" data-facet="diets">
     <div class="panel-heading accordion-toggle" data-toggle="collapse" data-target="#panelDiet" href="javascript:void(0)">
       <span class="glyphicon glyphicon-chevron-right active"></span> Special Diets
     </div>
@@ -88,52 +88,4 @@
       </div>
     </div>
   </div>
-
-  {{! Price }}
-  <div class="panel panel-default" data-facet="prices">
-    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-target="#panelPrice" href="javascript:void(0)">
-      <span class="glyphicon glyphicon-chevron-right "></span> Price
-    </div>
-    <div id="panelPrice" class="panel-collapse collapse {{#if orderParams.prices}}in{{/if}}">
-      <div class="panel-body">
-        {{#each filterPrices}}
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="{{this}}" {{#contains ../orderParams.prices this}}checked="checked"{{/contains}}>
-            <span class="dollar-meter">{{{dollarMeter this}}}</span>
-          </label>
-        </div>
-        {{/each}}
-      </div>
-    </div>
-  </div>
-
-  {{! Serving Style }}
-  <div class="panel panel-default" data-facet="meal_styles">
-    <div class="panel-heading accordion-toggle" data-toggle="collapse" data-target="#panelMealStyles" href="javascript:void(0)">
-      <span class="glyphicon glyphicon-chevron-right"></span> Serving Style
-    </div>
-    <div id="panelMealStyles" class="panel-collapse collapse {{#if orderParams.mealStyles}}in{{/if}}">
-      <div class="panel-body">
-        {{#each filterMealStyles}}
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="{{name}}" {{#contains ../orderParams.mealStyles name}}checked="checked"{{/contains}}>
-            {{name}}
-          </label>
-        </div>
-        {{/each}}
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<div class="restaurant-favorites" id="favorites">
-  <label for="favorite-toggle">Show Favorites</label>
-  <button
-    class="btn btn-favorite {{#eq orderParams.favorites "true"}}active{{/eq}}"
-    id="favorite-toggle"
-    data-icon="gb-icon-heart">
-  </button>
 </div>

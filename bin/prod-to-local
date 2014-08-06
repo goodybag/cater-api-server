@@ -19,5 +19,6 @@ rm latest.dump
 
 ./bin/local-restore/fix-contacts
 ./bin/local-restore/fix-users
+./bin/local-restore/fix-delivery-services
 
 echo "Restore Complete. Enjoy your data!"

@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+
+var options = {
+  email: 'test@goodybag.com'
+, phone: '1234567890'
+};
+
+var fs = require('fs');
+var async = require('async');
+var db = require('../../db');
+
+var onError = function( error ){
+  throw error;
+};
+
+if ( fs.existsSync( __dirname + '/../../local-config.json') ){
+  var localConfig = require('../../local-config.json');
+  options.email = localConfig.testEmail || options.email;
+}
+
+console.log( "updating delivery_services with:", JSON.stringify(options) );
+
+var query = {
+  type: 'update'
+, ifExists: true
+, table: 'delivery_services'
+, updates: {
+    order_email: options.email
+  , order_phone: options.phone
+  }
+, returning: ['*']
+};
+
+db.query2(query, function(error, results) {
+  console.log(error ? error : results.length + ' delivery_services updated');
+  process.exit(error ? 1 : 0);
+});

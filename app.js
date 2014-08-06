@@ -86,6 +86,11 @@ app.configure(function(){
 
   app.use(app.router);
 
+  app.use( function( req, res, next ){
+    res.locals.reqParams = req.params;
+    return next();
+  });
+
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
 
   app.use(function(err, req, res, next){

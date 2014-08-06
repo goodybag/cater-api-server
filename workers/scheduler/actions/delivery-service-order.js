@@ -11,7 +11,7 @@ module.exports = function(job, done) {
   var data = job.data;
   db.orders.findOne(data.orderId, function( err, order ){
     if ( err ) return done( err );
-    if ( !order.ds_token_used ) notifier.send('goodybaggers-asap-order-needs-attention', order);
+    if ( !order.ds_token_used ) notifier.send('goodybaggers-ds-order-needs-attention', order);
     done(null);
   });
 };

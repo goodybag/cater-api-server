@@ -7,7 +7,7 @@ module.exports = function(job, jobDone) {
   var msg = {
     from: config.phone.orders
   , body: [
-      'Goodybag ASAP Order #'
+      'Goodybag DS Order #'
     , job.data.orderId
     , 'was placed over the weekend or after hours. Please ensure the delivery service'
     , 'can fulfill this order.'

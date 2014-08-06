@@ -300,7 +300,7 @@ utils.sendMail2 = function( options, callback ){
 
   composer.buildMessage( function( error, message ){
     if ( error ) return callback( error );
-
+console.log(options);
     mailgun.sendRaw( options.from, options.to, message, callback );
   });
 };

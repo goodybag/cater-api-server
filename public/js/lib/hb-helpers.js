@@ -338,7 +338,7 @@ define(function(require, exports, module) {
     },
 
     queryParams: function( obj ){
-      var params = obj;
+      var params = obj || {};
       var rest = Array.prototype.slice.call( arguments, 1 );
 
       // If next args are url-encodable, then they're using rest-syntax
@@ -538,6 +538,10 @@ define(function(require, exports, module) {
       if ( order.is_delivery_service ) return 'DS';
       if ( order.is_pickup ) return 'P';
       return 'D';
+    },
+
+    omit: function( obj, key ){
+      return utils.omit( obj, key );
     }
   }
 

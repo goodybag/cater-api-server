@@ -508,6 +508,9 @@ module.exports.register = function(app) {
   , m.restrict('admin')
   , m.pagination({ pageParam: 'p' })
   , m.param('status')
+  , m.param( 'type', function( type, $query, options ){
+      $query[ type ] = true;
+    })
   , m.sort('-id')
   , m.queryOptions({
       one: [

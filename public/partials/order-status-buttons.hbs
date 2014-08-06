@@ -3,26 +3,26 @@
     All
   </a>
   {{#unless isRestaurantManager}}
-  <a href="?status=pending" class="btn btn-pending {{#eq status "pending"}}active{{/eq}}">
+  <a href="{{queryParams reqQuery 'status' 'pending'}}" class="btn btn-pending {{#eq status "pending"}}active{{/eq}}">
     Pending
   </a>
   {{/unless}}
   {{#unless isRestaurantManager}}
-  <a href="?status=canceled" class="btn btn-canceled {{#eq status "canceled"}}active{{/eq}}">
+  <a href="{{queryParams reqQuery 'status' 'canceled'}}" class="btn btn-canceled {{#eq status "canceled"}}active{{/eq}}">
     Canceled
   </a>
   {{/unless}}
-  <a href="?status=submitted" class="btn btn-submitted {{#eq status "submitted"}}active{{/eq}}">
+  <a href="{{queryParams reqQuery 'status' 'submitted'}}" class="btn btn-submitted {{#eq status "submitted"}}active{{/eq}}">
     Submitted
   </a>
-  <a href="?status=accepted" class="btn btn-accepted {{#eq status "accepted"}}active{{/eq}}">
+  <a href="{{queryParams reqQuery 'status' 'accepted'}}" class="btn btn-accepted {{#eq status "accepted"}}active{{/eq}}">
     Accepted
   </a>
-  <a href="?status=denied" class="btn btn-denied {{#eq status "denied"}}active{{/eq}}">
+  <a href="{{queryParams reqQuery 'status' 'denied'}}" class="btn btn-denied {{#eq status "denied"}}active{{/eq}}">
     Denied
   </a>
   {{#unless isRestaurantManager}}
-  <a href="?status=delivered" class="btn btn-delivered {{#eq status "delivered"}}active{{/eq}}">
+  <a href="{{queryParams reqQuery 'status' 'delivered'}}" class="btn btn-delivered {{#eq status "delivered"}}active{{/eq}}">
     Delivered
   </a>
   {{/unless}}

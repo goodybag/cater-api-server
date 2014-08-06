@@ -10,12 +10,29 @@
     <div class="col-md-2 col-md-offset-2">
       <div class="panel">
         <div class="panel-heading panel-heading-small">
-          <h4 class="panel-title">Filter</h4>
+          <h4 class="panel-title">Status</h4>
         </div>
         <div class="panel-body">
           {{> order_status_buttons}}
         </div>
       </div>
+      {{#if user.isAdmin}}
+      <div class="panel panel-order-types">
+        <div class="panel-heading panel-heading-small">
+          <h4 class="panel-title">Order Type</h4>
+        </div>
+        <div class="panel-body">
+          <a href="{{queryParams (omit reqQuery 'type')}}"
+             class="btn btn-default{{#unless reqQuery.type}} active{{/unless}}">Any</a>
+          <a href="{{queryParams reqQuery 'type' 'is_pickup'}}"
+             class="btn btn-default{{#eq reqQuery.type 'is_pickup'}} active{{/eq}}">Pickup</a>
+          <a href="{{queryParams reqQuery 'type' 'is_delivery'}}"
+             class="btn btn-default{{#eq reqQuery.type 'is_delivery'}} active{{/eq}}">Delivery</a>
+          <a href="{{queryParams reqQuery 'type' 'is_delivery_service'}}"
+             class="btn btn-default{{#eq reqQuery.type 'is_delivery_service'}} active{{/eq}}">Delivery Service</a>
+        </div>
+      </div>
+      {{/if}}
     </div>
     <div class="col-md-6">
       <div class="panel">

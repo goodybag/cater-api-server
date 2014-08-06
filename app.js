@@ -84,6 +84,11 @@ app.configure(function(){
   app.use( require('dirac-middleware')({ envelope: false }) );
   // app.use( m.queryInspector() );
 
+  app.use( function( req, res, next ){
+    res.locals.reqQuery = req.query;
+    return next();
+  });
+
   app.use(app.router);
 
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));

@@ -131,3 +131,12 @@
   margin-left: 5px;
   margin-right: 5px;
 }
+
+.panel-order-types .btn {
+  display: block;
+  margin-top: 4px;
+}
+
+.panel-order-types .btn:first-child {
+  margin-top: 0;
+}

@@ -338,7 +338,19 @@ define(function(require, exports, module) {
     },
 
     queryParams: function( obj ){
-      return utils.queryParams( obj );
+      var params = obj;
+      var rest = Array.prototype.slice.call( arguments, 1 );
+
+      // If next args are url-encodable, then they're using rest-syntax
+      if ( [ 'string', 'number' ].indexOf( typeof rest[1] ) > -1 ){
+        params = utils.clone( obj );
+
+        for ( var i = 0, l = rest.length; i < l - 1; i += 2 ){
+          params[ rest[i] ] = rest[ i + 1 ];
+        }
+      }
+
+      return utils.queryParams( params );
     },
 
     notEmpty: function( obj, options ){

@@ -8,6 +8,7 @@ module.exports = function(req, res, next) {
       req.user.isAdmin = false;
       req.user.isRestaurant = false;
       res.locals.user = req.user.toJSON();
+      req.session.user = res.locals.user;
     }
     return next();
   }

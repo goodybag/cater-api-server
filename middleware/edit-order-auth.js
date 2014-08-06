@@ -17,6 +17,12 @@ module.exports = function(req, res, next) {
 
   if ( !token ) return next();
 
+  // Check to see if we even need to use the edit token to auth
+  if ( utils.hasPropsDeep( req, ['user.attributes.groups'] ) )
+  if ( utils.intersection( req.user.attributes.groups, ['admin', 'client'] ).length >= 1 ){
+    return next();
+  }
+
   var tasks = [
     function getOrder(done) {
       // Get req.order or lookup by edit_token
@@ -33,7 +39,7 @@ module.exports = function(req, res, next) {
     },
 
     function auth(order, done) {
-      if ( !order ) 
+      if ( !order )
         return done(null);
       else if ( utils.contains(statuses, order.status) )
         return res.render('shared-link/submitted');
@@ -48,7 +54,7 @@ module.exports = function(req, res, next) {
   ];
 
   utils.async.waterfall(tasks, function(err, order) {
-    if ( err ) 
+    if ( err )
       return res.error(500, err);
     else if ( !order )
       return res.render(404);

@@ -6,6 +6,11 @@ returns trigger as $$
 begin
   if NEW.is_pickup is true then
     perform update_order_types( NEW, 'is_pickup' );
+    -- Unfortunately, update_order_types does not mutate the NEW object
+    -- Therefore, a stale order object is passed to update_order_totals
+    -- and the totals (specifically the delivery_fee) end up being wrong
+    -- To fix this, pass the order.id and do a fresh look-up
+    perform update_order_totals( NEW.id );
   end if;
   return NEW;
 end;
@@ -16,6 +21,11 @@ returns trigger as $$
 begin
   if NEW.is_delivery is true then
     perform update_order_types( NEW, 'is_delivery' );
+    -- Unfortunately, update_order_types does not mutate the NEW object
+    -- Therefore, a stale order object is passed to update_order_totals
+    -- and the totals (specifically the delivery_fee) end up being wrong
+    -- To fix this, pass the order.id and do a fresh look-up
+    perform update_order_totals( NEW.id );
   end if;
   return NEW;
 end;
@@ -28,6 +38,11 @@ begin
     perform update_order_types( NEW, 'is_delivery_service' );
     perform update_order_delivery_service_id( NEW.id );
     perform update_order_delivery_service_pickup_time( NEW.id );
+    -- Unfortunately, update_order_types does not mutate the NEW object
+    -- Therefore, a stale order object is passed to update_order_totals
+    -- and the totals (specifically the delivery_fee) end up being wrong
+    -- To fix this, pass the order.id and do a fresh look-up
+    perform update_order_totals( NEW.id );
   end if;
   return NEW;
 end;

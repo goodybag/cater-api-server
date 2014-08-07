@@ -1,0 +1,46 @@
+.page-kitchen-sink {
+  .component-title {
+    border-bottom: solid 1px @gray-light;
+  }
+
+  .page-section {
+    text-align: left;
+    padding-top: 80px;
+    padding-botom: 50px;
+    border-bottom: none;
+    overflow: hidden;
+  }
+
+  .lead {
+    font-weight: 100;
+  }
+
+  #section-intro {
+    .page-section.section-salmon();
+
+    h1, .lead {
+      width: 64%;
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      right: 10%;
+      bottom: 0;
+      width: 400px;
+      height: 400px;
+      background: url('/img/cupcake.svg');
+      background-size: cover;
+      .animation( ease-out, 2s, cupcake-slide-in-from-bottom )
+    }
+
+    .lead {
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+}
+
+@-webkit-keyframes  cupcake-slide-in-from-bottom { #animations > .slide-in-from-bottom(150px) }
+@-moz-keyframes     cupcake-slide-in-from-bottom { #animations > .slide-in-from-bottom(150px) }
+@-o-keyframes       cupcake-slide-in-from-bottom { #animations > .slide-in-from-bottom(150px) }
+@keyframes          cupcake-slide-in-from-bottom { #animations > .slide-in-from-bottom(150px) }

@@ -289,8 +289,8 @@
     from { .translate( 500px, 0 ); .opacity(0); }
     to { .translate( 0, 0 ); .opacity(1); }
   }
-  .slide-in-from-bottom() {
-    from { .translate( 0, 80px ); .opacity(0); }
+  .slide-in-from-bottom(@d:80px) {
+    from { .translate( 0, @d ); .opacity(0); }
     to { .translate( 0, 0 ); .opacity(1); }
   }
   .slide-bg() {

@@ -51,6 +51,7 @@ var reports = {
     res.csv.writeFilename(filename);
     res.csv.writeRow([
       'Order Number'
+    , 'Order Type'
     , 'Date Submitted'
     , 'Delivery Date'
     , 'User Name'
@@ -91,6 +92,7 @@ var reports = {
         .forEach( function(order) {
           res.csv.writeRow([
             order.id
+          , hbHelpers.orderTypeAbbr(order)
           , order.submitted ? 
               moment(order.submitted).format(reports.dateFormat) :
               'N/A'

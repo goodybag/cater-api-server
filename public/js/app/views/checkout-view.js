@@ -40,6 +40,14 @@ define(function(require, exports, module) {
     , tip_percent: '.tip-percent'
     },
 
+    fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {
+      payment_method_id: function() {
+        var existingCardSelected = this.$el.find('.payment-method[value="existing"]:checked').length;
+        var pmid = this.$el.find(this.fieldMap.payment_method_id).val();
+        return existingCardSelected ? pmid : null;
+      }
+    }),
+
     patch: false,
     setThenSave: true,
 

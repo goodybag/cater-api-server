@@ -29,3 +29,37 @@
   </div>
 </section>
 {{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require(['jquery-loaded'], function($){
+    var tmpl = function( data ){
+      return [
+        '<div class="section-decorator-block animated-out">'
+      , '</div>'
+      ].join('\n');
+    };
+
+    var options = {
+      numDecorators: 80
+    , blockDelay: 15
+    };
+
+    $(function(){
+      var $container = $('<div class="section-decorators"></div>');
+
+      for ( var i = 0; i < options.numDecorators; ++i ){
+        var $el = $(tmpl());
+        $container.append( $el );
+
+        setTimeout( function( $el ){
+          console.log('ohai')
+          $el.removeClass('animated-out');
+        }.bind( null, $el ), i * options.blockDelay );
+      }
+
+      $('#section-intro').append( $container );
+    });
+  });
+</script>
+{{/extend}}

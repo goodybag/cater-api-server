@@ -16,7 +16,13 @@
   }
 
   #section-intro {
+    text-shadow: 0 0 25px rgba(48, 14, 14, 0.52);
+
     .page-section.section-salmon();
+
+    .intro {
+      z-index: 2;
+    }
 
     h1, .lead {
       width: 64%;
@@ -31,11 +37,40 @@
       height: 400px;
       background: url('/img/cupcake.svg');
       background-size: cover;
-      .animation( ease-out, 2s, cupcake-slide-in-from-bottom )
+      z-index: 1;
+      .animation( ease-out, 2s, cupcake-slide-in-from-bottom );
+      .opacity(0.85);
     }
 
     .lead {
       color: rgba(255, 255, 255, 0.9);
+    }
+  }
+}
+
+.section-decorators {
+  #box > .display();
+  #box > .flow( row );
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  > .section-decorator-block {
+    #box > .flex(1);
+    background: rgba( 0, 0, 0, 0.09 );
+    .opacity(1);
+
+    .transition( ease-out, 0.5s );
+
+    &:nth-child(2n) {
+      background: rgba( 0, 0, 0, 0.05 );
+    }
+
+    &.animated-out {
+      .opacity(0);
+      .transform( scale(5) translate3d( 200px, 0, 0 ) rotate(60deg) );
     }
   }
 }

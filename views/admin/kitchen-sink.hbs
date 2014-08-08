@@ -52,13 +52,23 @@
         var $el = $(tmpl());
         $container.append( $el );
 
-        setTimeout( function( $el ){
-          console.log('ohai')
-          $el.removeClass('animated-out');
-        }.bind( null, $el ), i * options.blockDelay );
+        setTimeout(
+          $el.removeClass.bind( $el, 'animated-out' )
+        , i * options.blockDelay
+        );
       }
 
       $('#section-intro').append( $container );
+
+      $(window).one('scroll', function(){
+        $('.section-decorator-block').each(function( i ){
+          var $el = $(this);
+          setTimeout(
+            $el.addClass.bind( $el, 'animated-out-reverse' )
+          , i * options.blockDelay
+          );
+        });
+      });
     });
   });
 </script>

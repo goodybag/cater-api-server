@@ -1,6 +1,23 @@
 --------------------
 -- Event Handlers --
 --------------------
+create or replace function on_order_create()
+returns trigger as $$
+begin
+  -- Ensure order type
+  if NEW.is_pickup is true then
+    perform on_order_type_is_pickup_change();
+  elsif NEW.is_delivery is true then
+    perform on_order_type_is_delivery_change();
+  elsif NEW.is_delivery_service is true then
+    perform on_order_type_is_delivery_service_change();
+  elsif
+    update orders set is_delivery = true where id = NEW.id;
+  end if;
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function on_order_type_is_pickup_change()
 returns trigger as $$
 begin

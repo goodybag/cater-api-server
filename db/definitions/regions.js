@@ -23,7 +23,7 @@ define(function(require) {
   , cities:             { type: types.array( types.text ), nullable: false, default: 'Array[]::text[]' }
   , timezone:           { type: types.text, nullable: false }
   , sales_tax:          { type: types.numeric( 5, 5 ), nullable: false, default: 0 }
-  , lead_time_modifier: { type: types.int, nullable: false, default: 0 }
+  , lead_time_modifier: { type: types.interval, nullable: false, default: '\'0 minutes\'::interval' }
   };
 
   definition.indices = {};

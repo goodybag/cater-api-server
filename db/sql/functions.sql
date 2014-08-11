@@ -4,16 +4,7 @@
 create or replace function on_order_create()
 returns trigger as $$
 begin
-  -- Ensure order type
-  if NEW.is_pickup is true then
-    perform on_order_type_is_pickup_change();
-  elsif NEW.is_delivery is true then
-    perform on_order_type_is_delivery_change();
-  elsif NEW.is_delivery_service is true then
-    perform on_order_type_is_delivery_service_change();
-  elsif
-    update orders set is_delivery = true where id = NEW.id;
-  end if;
+  perform ensure_order_type( NEW );
   return NEW;
 end;
 $$ language plpgsql;
@@ -28,6 +19,8 @@ begin
     -- and the totals (specifically the delivery_fee) end up being wrong
     -- To fix this, pass the order.id and do a fresh look-up
     perform update_order_totals( NEW.id );
+  else
+    perform ensure_order_type( NEW );
   end if;
   return NEW;
 end;
@@ -43,6 +36,8 @@ begin
     -- and the totals (specifically the delivery_fee) end up being wrong
     -- To fix this, pass the order.id and do a fresh look-up
     perform update_order_totals( NEW.id );
+  else
+    perform ensure_order_type( NEW );
   end if;
   return NEW;
 end;
@@ -60,6 +55,8 @@ begin
     -- and the totals (specifically the delivery_fee) end up being wrong
     -- To fix this, pass the order.id and do a fresh look-up
     perform update_order_totals( NEW.id );
+  else
+    perform ensure_order_type( NEW );
   end if;
   return NEW;
 end;
@@ -159,6 +156,30 @@ begin
   left join restaurants on orders.restaurant_id = restaurants.id
   left join regions on restaurants.region_id = regions.id
   where orders.id = oid );
+end;
+$$ language plpgsql;
+
+create or replace function ensure_order_type( oid int )
+returns void as $$
+  declare o orders;
+begin
+  for o in ( select * from orders where id = oid )
+  loop
+    perform ensure_order_type( o, type );
+  end loop;
+end;
+$$ language plpgsql;
+
+create or replace function ensure_order_type( o orders )
+returns void as $$
+begin
+  if (
+    not o.is_pickup and
+    not o.is_delivery and
+    not o.is_delivery_service
+  ) then
+    update orders set is_delivery = true where id = o.id;
+  end if;
 end;
 $$ language plpgsql;
 

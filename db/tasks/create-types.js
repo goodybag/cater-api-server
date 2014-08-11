@@ -1,3 +1,10 @@
+/**
+ * Dynamically adds new enum types to the database. Will also add
+ * new values to existing types. Does NOT remove values, so you
+ * will still need a delta for that (since there may be objects
+ * that depend on that value)
+ */
+
 var
   db = require('../')
 , async = require('async')

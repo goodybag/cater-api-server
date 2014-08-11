@@ -49,6 +49,17 @@ define(function( require, exports, module ){
       });
     }
 
+  , why: function( order ){
+      return exports.criteria.filter( function( c ){
+        return c.type === 'some' ? c.fn( order )  : !c.fn( order );
+      }).map( function( c ){
+        return {
+          type: c.type
+        , name: c.name
+        };
+      });
+    }
+
     /**
      * Adds a new criterion
      *

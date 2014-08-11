@@ -172,13 +172,31 @@ $$ language plpgsql;
 
 create or replace function ensure_order_type( o orders )
 returns void as $$
+  declare curr     boolean;
+  declare has_type boolean;
 begin
-  if (
-    not o.is_pickup and
-    not o.is_delivery and
-    not o.is_delivery_service
-  ) then
-    update orders set is_delivery = true where id = o.id;
+  has_type := false;
+
+  -- Ensure we 1 order type
+  -- Multiple order types means no order type
+  for curr in ( select * from unnest( array[
+    o.is_pickup,
+    o.is_delivery,
+    o.is_delivery_service
+  ]) r )
+  loop
+    if has_type is true and curr is true then
+      has_type := false;
+      exit;
+    end if;
+
+    has_type := curr;
+  end loop;
+
+
+  -- No order type? Set to delivery
+  if not has_type then
+    perform update_order_types( o, 'is_delivery' );
   end if;
 end;
 $$ language plpgsql;
@@ -403,3 +421,15 @@ begin
   where id = order_item.id;
 end;
 $$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION is_timezone( tz TEXT ) RETURNS BOOLEAN as $$
+  DECLARE date TIMESTAMPTZ;
+BEGIN
+  date := now() AT TIME ZONE tz;
+  RETURN TRUE;
+EXCEPTION WHEN OTHERS THEN RETURN FALSE;
+END;
+$$ language plpgsql STABLE;
+
+DROP DOMAIN IF EXISTS timezone;
+CREATE DOMAIN timezone AS TEXT CHECK ( is_timezone( value ) );

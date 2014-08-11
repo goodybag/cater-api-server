@@ -5,6 +5,7 @@ var dirac       = require('dirac');
 var mosql       = require('mongo-sql');
 var mosqlUtils  = require('mongo-sql/lib/utils');
 var utils       = require('../utils');
+var config      = require('../config');
 
 dirac.setMoSql( mosql );
 

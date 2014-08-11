@@ -103,7 +103,6 @@ define(function(require) {
     }
   , websites: {
       type: types.array(types.text)
-    , nullable: false
     }
   , billing_email: {
       type: types.text

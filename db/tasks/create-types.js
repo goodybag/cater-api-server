@@ -89,12 +89,22 @@ module.exports.run = function(callback) {
         return ;
       });
 
-      async.parallel()
+      async.parallel( fns, done );
     }
   ]);
 
   var addNewTypes = async.waterfall.bind( async, [
+    async.filter.bind( async, Object.keys( pgEnums ), helpers.typeExists )
+  , function( types, done ){
+      done( null, _.without( pgEnums, types ) );
+    }
+  , function( toCreate, done ){
+      var types = Object.keys( toCreate ).map( function( k ){
+        return { name: k, enum: toCreate[ k ] };
+      });
 
+      async.each( types, helpers.createType, done );
+    }
   ]);
 
   async.parallel( [ alterExistingTypes, addNewTypes ], callback );

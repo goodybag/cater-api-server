@@ -107,7 +107,6 @@
     <thead>
       <tr>
         <th class="checkbox"><img src="{{cdn "/img/checkmark_white.svg"}}" width="18"></th>
-        <th class="quantity">Qty</th>
         <th class="item">Item</th>
         <th class="options-notes">Options/Notes</th>
         <th class="recipient">Recipient</th>
@@ -120,7 +119,6 @@
       {{#each order.manifest}}
       <tr>
         <td class="checkbox"></td>
-        <td class="quantity">{{this.quantity}}</td>
         <td class="item">
           {{this.name}}
           <div class="options">

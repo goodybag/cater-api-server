@@ -1,6 +1,6 @@
 /**
- * Dynamically adds new enum types to the database. Will also add
- * new values to existing types. Does NOT remove values, so you
+ * Dynamically adds new types to the database. Will also add
+ * new values to existing enum types. Does NOT remove types/values, so you
  * will still need a delta for that (since there may be objects
  * that depend on that value)
  */

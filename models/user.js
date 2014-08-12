@@ -296,14 +296,13 @@ var User = module.exports = Model.extend({
     , where: {
         payment_method_id: cardId
       , user_id: userId
-      , {
-          $notExists: {
-            type: 'one'
-          , table: 'orders'
-          , where: { 
-              'payment_method_id' : '$users_payment_methods.id$'
-              // TODO dont let active orders with this card go thru
-            }
+      , $notExists: {
+          type: 'one'
+        , table: 'orders'
+        , where: { 
+            payment_method_id : '$users_payment_methods.payment_method_id$'
+          , status: { $or: [ 'submitted', 'accepted' ] }
+          , payment_status: { $null: true }
           }
         }
       }

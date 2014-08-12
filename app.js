@@ -91,7 +91,7 @@ app.configure(function(){
 
   app.use(app.router);
 
-  if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accesToken));
+  if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accessToken));
 
   app.use(function(err, req, res, next){
     res.error(errors.internal.UNKNOWN, err);

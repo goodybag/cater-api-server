@@ -15,7 +15,7 @@ var
 var cli = false;
 
 
-var helpers = {
+var helpers = module.exports.helpers = {
   createType: function( type, callback ){
     var query = [
       'create type "' + type.name + '" as enum('
@@ -48,7 +48,7 @@ var helpers = {
     });
   }
 
-, addType: function( typeName, value, callback ){
+, addValueToType: function( typeName, value, callback ){
     var query = 'alter type "' + typeName + '" add value \'' + value + '\'';
 
     db.query( query, callback );
@@ -64,13 +64,28 @@ var done = function(callback) {
   }
 };
 
-module.exports.run = function(callback) {
+module.exports.run = function( enumTypes, callback ){
+  if ( typeof enumTypes === 'function' ){
+    callback = enumTypes;
+    enumTypes = null;
+  }
+
+  enumTypes = enumTypes || pgEnums;
+
   var alterExistingTypes = async.waterfall.bind( async, [
-    async.filter.bind( async, Object.keys( pgEnums ), helpers.typeExists )
+    function( done ){
+      var onFilter = function( t, done ){
+        helpers.typeExists( t, function( error, result ){
+          if ( error ) done( false );
+          else done( result );
+        });
+      };
+
+      async.filter( Object.keys( enumTypes ), onFilter, done.bind( null, null ) );
+    }
 
   , function( existingTypes, done ){
       var values = {};
-
       existingTypes.forEach( function( t ){
         values[ t ] = helpers.getExistingValues.bind( null, t );
       });
@@ -80,19 +95,20 @@ module.exports.run = function(callback) {
 
   , function( existingValues, done ){
       var typesWithChanges = Object.keys( existingValues ).filter( function( k ){
-        return _.difference( pgEnums[ k ], existingValues[ k ] ).length > 0;
+        return _.difference( enumTypes[ k ], existingValues[ k ] ).length > 0;
       });
 
-      // Only add the new values in pgEnums module
+      // Only add the new values in enumTypes
       var fns = {};
 
-      Object.keys( typesWithChanges ).forEach( function( k ){
+      typesWithChanges.forEach( function( k ){
         var types = _.difference(
-          pgEnums[ k ], existingValues[ k ]
+          enumTypes[ k ], existingValues[ k ]
         ).filter( function( v ){
-          return pgEnums[ k ].indexOf( v ) > -1;
+          return enumTypes[ k ].indexOf( v ) > -1;
         });
-        fns[ k ] = async.each.bind( async, types, helpers.addType.bind( null, k ) );
+
+        fns[ k ] = async.each.bind( async, types, helpers.addValueToType.bind( null, k ) );
         return ;
       });
 
@@ -102,15 +118,17 @@ module.exports.run = function(callback) {
 
   var addNewTypes = async.waterfall.bind( async, [
     function( done ){
-      async.filter( Object.keys( pgEnums ), function( t, cb ){
+      var onFilter = function( t, cb ){
         helpers.typeExists( t, function( error, result ){
           if ( error ) cb( false );
           else cb( result );
         });
-      })
+      };
+
+      async.filter( Object.keys( enumTypes ), onFilter, done.bind( null, null ) );
     }
   , function( types, done ){
-      done( null, _.without( pgEnums, types ) );
+      done( null, _.omit( enumTypes, types ) );
     }
   , function( toCreate, done ){
       var types = Object.keys( toCreate ).map( function( k ){

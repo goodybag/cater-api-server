@@ -5,11 +5,11 @@ var createTypes = require('../../db/tasks/create-types');
 
 var types = {};
 
-types[ 'type_' + parseInt(Math.random()*0xffffff).toString(36) ] = [ 'a', 'b' ];
-types[ 'type_' + parseInt(Math.random()*0xffffff).toString(36) ] = [ 'a', 'b' ];
+types[ 'type_' + Math.random().toString(36) ] = [ 'a', 'b' ];
+types[ 'type_' + Math.random().toString(36) ] = [ 'a', 'b' ];
 
 describe ('DB Tasks: Create Types', function(){
-  it ('should create types that do no exist', function( done ){
+  it ('should create enum types that do no exist', function( done ){
     utils.async.series([
       // Ensure the types do not exist first
       utils.async.each.bind( utils.async, Object.keys( types ), function( t, done ){
@@ -45,7 +45,7 @@ describe ('DB Tasks: Create Types', function(){
     ], done );
   });
 
-  it ('should add to types that do exist', function( done ){
+  it ('should add to enum types that do exist', function( done ){
     var k = Object.keys( types )[0];
     types[ k ].push( 'c', 'd' );
 
@@ -73,5 +73,41 @@ describe ('DB Tasks: Create Types', function(){
         });
       })
     ], done );
+  });
+
+  it ('should create a domain type', function( done ){
+    var types = {};
+
+    types[
+      'tz_' + Math.random().toString(36)
+    ] = { type: 'domain', as: 'text check ( is_timezone( value ) )' };
+
+    utils.async.series([
+      // Ensure the types do not exist first
+      utils.async.each.bind( utils.async, Object.keys( types ), function( t, done ){
+        createTypes.helpers.typeExists( t, function( error, result ){
+          assert( !error, 'Error checking if type `' + t + '` exists', error );
+          assert( !result, 'Type `' + t + '` did exist' );
+          done();
+        });
+      })
+
+      // Create the types
+    , createTypes.run.bind( null, types )
+
+      // Ensure the types now exist
+    , utils.async.each.bind( utils.async, Object.keys( types ), function( t, done ){
+        createTypes.helpers.typeExists( t, function( error, result ){
+          assert( !error, 'Error checking if type `' + t + '` exists', error );
+          assert( result, 'Type `' + t + '` did not exist' );
+          done();
+        });
+      })
+    ], done );
+  });
+
+  it ('should throw an error if a type does is not supported', function(){
+    var types = { poop: { type: 'byaaaaaaaaaaah' } };
+    assert.throws( createTypes.run.bind( null, types ), Error );
   });
 });

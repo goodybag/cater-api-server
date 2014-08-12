@@ -11,4 +11,5 @@ module.exports = {
 , email_status:   ['pending', 'delivered', 'error']
 , job_status:     ['pending', 'in-progress', 'completed', 'failed']
 , order_type:     ['pickup', 'delivery', 'courier']
+, timezone:       { type: 'domain', as: 'text check ( is_timezone( value ) )' }
 };

@@ -33,11 +33,11 @@
 
   <!--<OrderDetails>-->
   <div style="width: 400px; margin: 0 auto;">
-  {{#if order.is_pickup }}
+  {{#eq order.type 'pickup' }}
     {{> order_email_details_pickup order}}
   {{else}}
     {{> order_email_details_delivery order}}
-  {{/if}}
+  {{/eq}}
   </div>
   <!--</OrderDetails>-->
 

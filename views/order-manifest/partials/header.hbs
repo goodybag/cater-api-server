@@ -1,10 +1,10 @@
 <header class="manifest-header">
-  <h4 class="header-text">Please print this and include with the {{#if order.is_delivery}}delivered{{else}}pickup{{/if}} order. Thanks! <span class="signature">-Goodybag</span></h4>
+  <h4 class="header-text">Please print this and include with the {{#eq order.type 'delivery'}}delivered{{else}}pickup{{/eq}} order. Thanks! <span class="signature">-Goodybag</span></h4>
   <div class="order-info">
     <div class="info-item info-item-order-type">
       <div class="item-title">This Order Is For:</div>
       <div class="item-value">
-        {{#if order.is_delivery}}Delivery{{else}}Pickup{{/if}}
+        {{#eq order.type 'delivery'}}Delivery{{else}}Pickup{{/eq}}
       </div>
     </div>
     <div class="info-item">
@@ -18,23 +18,23 @@
     <div class="info-item">
       <div class="item-title">Order Date:</div>
       <div class="item-value">
-        {{#if order.is_delivery}}
+        {{#eq order.type 'delivery'}}
           {{formatDateTime order.datetime "MM/DD/YYYY"}}
         {{else}}
           {{formatDateTime order.pickup_datetime "MM/DD/YYYY"}}
-        {{/if}}
+        {{/eq}}
       </div>
     </div>
     <div class="info-item">
       <div class="item-title">
-        {{#if order.is_delivery}}Delivery{{else}}Pickup{{/if}} Time
+        {{#eq order.type 'delivery'}}Delivery{{else}}Pickup{{/eq}} Time
       </div>
       <div class="item-value">
-        {{#if order.is_delivery}}
+        {{#eq order.type 'delivery'}}
           {{formatDateTime order.datetime "h:mm A"}}
         {{else}}
           {{formatDateTime order.pickup_datetime "h:mm A"}}
-        {{/if}}
+        {{/eq}}
       </div>
     </div>
   </div>

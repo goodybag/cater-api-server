@@ -188,7 +188,7 @@ module.exports.get = function(req, res) {
         isRestaurantManager: req.order.isRestaurantManager,
         isAdmin: req.order.isAdmin,
       }),
-      show_pickup: req.order.is_pickup || (req.order.isRestaurantManager && req.order.is_delivery_service),
+      show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
       states: states,
       orderAddress: function() {
         return {
@@ -247,7 +247,7 @@ module.exports.create = function(req, res) {
 module.exports.update = function(req, res) {
 
   // TODO: get this from not here
-  var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed', 'is_delivery', 'is_delivery_service', 'is_pickup'];
+  var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed', 'type'];
   var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
   if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 

@@ -4,59 +4,22 @@
 create or replace function on_order_create()
 returns trigger as $$
 begin
-  perform ensure_order_type( NEW );
   return NEW;
 end;
 $$ language plpgsql;
 
-create or replace function on_order_type_is_pickup_change()
+create or replace function on_order_type_change()
 returns trigger as $$
 begin
-  if NEW.is_pickup is true then
-    perform update_order_types( NEW, 'is_pickup' );
-    -- Unfortunately, update_order_types does not mutate the NEW object
-    -- Therefore, a stale order object is passed to update_order_totals
-    -- and the totals (specifically the delivery_fee) end up being wrong
-    -- To fix this, pass the order.id and do a fresh look-up
-    perform update_order_totals( NEW.id );
-  else
-    perform ensure_order_type( NEW );
-  end if;
-  return NEW;
-end;
-$$ language plpgsql;
-
-create or replace function on_order_type_is_delivery_change()
-returns trigger as $$
-begin
-  if NEW.is_delivery is true then
-    perform update_order_types( NEW, 'is_delivery' );
-    -- Unfortunately, update_order_types does not mutate the NEW object
-    -- Therefore, a stale order object is passed to update_order_totals
-    -- and the totals (specifically the delivery_fee) end up being wrong
-    -- To fix this, pass the order.id and do a fresh look-up
-    perform update_order_totals( NEW.id );
-  else
-    perform ensure_order_type( NEW );
-  end if;
-  return NEW;
-end;
-$$ language plpgsql;
-
-create or replace function on_order_type_is_delivery_service_change()
-returns trigger as $$
-begin
-  if NEW.is_delivery_service is true then
-    perform update_order_types( NEW, 'is_delivery_service' );
+  if NEW.type = 'courier' then
     perform update_order_delivery_service_id( NEW.id );
     perform update_order_delivery_service_pickup_time( NEW.id );
-    -- Unfortunately, update_order_types does not mutate the NEW object
-    -- Therefore, a stale order object is passed to update_order_totals
-    -- and the totals (specifically the delivery_fee) end up being wrong
-    -- To fix this, pass the order.id and do a fresh look-up
+
+    -- Since update_order_delivery_service_id could affect the delivery_fee
+    -- use NEW.id to fetch a non-stale record
     perform update_order_totals( NEW.id );
   else
-    perform ensure_order_type( NEW );
+    perform update_order_totals( NEW );
   end if;
   return NEW;
 end;
@@ -65,22 +28,9 @@ $$ language plpgsql;
 create or replace function on_order_datetime_change()
 returns trigger as $$
 begin
-  if NEW.is_delivery_service is true then
+  if NEW.type = 'courier' then
     perform update_order_delivery_service_pickup_time( NEW.id );
   end if;
-  return NEW;
-end;
-$$ language plpgsql;
-
-create or replace function on_order_type_change()
-returns trigger as $$
-begin
-  if NEW.is_delivery_service is true then
-    perform update_order_delivery_service_id( NEW.id );
-    perform update_order_delivery_service_pickup_time( NEW.id );
-  end if;
-
-  perform update_order_types( NEW );
   return NEW;
 end;
 $$ language plpgsql;
@@ -159,84 +109,6 @@ begin
 end;
 $$ language plpgsql;
 
-create or replace function ensure_order_type( oid int )
-returns void as $$
-  declare o orders;
-begin
-  for o in ( select * from orders where id = oid )
-  loop
-    perform ensure_order_type( o, type );
-  end loop;
-end;
-$$ language plpgsql;
-
-create or replace function ensure_order_type( o orders )
-returns void as $$
-  declare curr     boolean;
-  declare has_type boolean;
-begin
-  has_type := false;
-
-  -- Ensure we 1 order type
-  -- Multiple order types means no order type
-  for curr in ( select * from unnest( array[
-    o.is_pickup,
-    o.is_delivery,
-    o.is_delivery_service
-  ]) r )
-  loop
-    if has_type is true and curr is true then
-      has_type := false;
-      exit;
-    end if;
-
-    has_type := curr;
-  end loop;
-
-
-  -- No order type? Set to delivery
-  if not has_type then
-    perform update_order_types( o, 'is_delivery' );
-  end if;
-end;
-$$ language plpgsql;
-
-create or replace function update_order_types( oid int, type text )
-returns void as $$
-  declare o orders;
-begin
-  for o in ( select * from orders where id = oid )
-  loop
-    perform update_order_types( o, type );
-  end loop;
-end;
-$$ language plpgsql;
-
-create or replace function update_order_types( o orders, type text )
-returns void as $$
-begin
-  if type = 'is_pickup' then
-    update orders set
-      is_pickup           = true
-    , is_delivery         = false
-    , is_delivery_service = false
-    where id = o.id;
-  elsif type = 'is_delivery' then
-    update orders set
-      is_delivery = true
-    , is_pickup           = false
-    , is_delivery_service = false
-    where id = o.id;
-  elsif type = 'is_delivery_service' then
-    update orders set
-      is_delivery_service = true
-    , is_pickup           = false
-    , is_delivery         = false
-    where id = o.id;
-  end if;
-end;
-$$ language plpgsql;
-
 create or replace function get_order_delivery_fee( oid int )
 returns int as $$
   declare o orders;
@@ -259,9 +131,7 @@ begin
     limit 1);
 
   -- Delivery Service Order
-  if o.is_delivery_service is true
-  then
-
+  if o.type = 'courier' then
     if o.delivery_service_id is not null
     then
       return coalesce(
@@ -289,8 +159,7 @@ begin
   end if;
 
   -- Pickup Order
-  if o.is_pickup is true
-  then
+  if o.type = 'pickup' then
     return 0;
   end if;
 
@@ -421,6 +290,3 @@ begin
   where id = order_item.id;
 end;
 $$ language plpgsql;
-
-DROP DOMAIN IF EXISTS timezone;
-CREATE DOMAIN timezone AS TEXT CHECK ( is_timezone( value ) );

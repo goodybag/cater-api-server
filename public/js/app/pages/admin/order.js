@@ -43,8 +43,7 @@ define(function(require){
         });
 
         $('[name="order_type"]').change( function( e ){
-          var order = {};
-          order[ $(this).val() ] = true;
+          var order = { type: $(this).val() };
 
           page.updateOrder( order, function( error, order ){
             if ( error ){

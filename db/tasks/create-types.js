@@ -101,7 +101,14 @@ module.exports.run = function(callback) {
   ]);
 
   var addNewTypes = async.waterfall.bind( async, [
-    async.filter.bind( async, Object.keys( pgEnums ), helpers.typeExists )
+    function( done ){
+      async.filter( Object.keys( pgEnums ), function( t, cb ){
+        helpers.typeExists( t, function( error, result ){
+          if ( error ) cb( false );
+          else cb( result );
+        });
+      })
+    }
   , function( types, done ){
       done( null, _.without( pgEnums, types ) );
     }

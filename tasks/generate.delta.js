@@ -42,9 +42,7 @@ module.exports = function( grunt ){
         return fs.statSync( path.join( options.dest, f ) ).isFile() && f.slice(-3) === 'sql';
       }).map( function( f ){
         return f.slice( 0, -4 );
-      }).sort( function( a, b ){
-        return semver.gt( a, b );
-      }).pop();
+      }).sort( semver.compare ).pop();
 
       if ( !latest ){
         args.push('0.0.1');

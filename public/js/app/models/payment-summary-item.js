@@ -46,6 +46,7 @@ define(function(require, exports, module) {
       , sub_total:        order.get('sub_total')
       , tip:              order.get('tip')
       , gb_fee:           order.restaurant.get('gb_fee') || 0
+      , sales_tax:        order.get('sales_tax') === 0 ? 0 : this.get('sales_tax')
       };
 
       data.net_payout = this.getNetPayout( data );

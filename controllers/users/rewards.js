@@ -17,10 +17,6 @@ module.exports.list = function( req, res ){
   var tasks = {
     'pendingPoints':  Models.User.getPendingPoints.bind( Models.User, req.param('uid') )
 
-  , 'pendingOrders':  Models.User.getOrdersWithPendingPoints.bind( Models.User, req.param('uid'), {
-                        order: { datetime: 'desc' }
-                      })
-
   , 'pendingOrders':  db.orders.findWithPendingPoints.bind( db.orders, {
                         user_id:        req.param('uid')
                       }, {

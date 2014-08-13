@@ -9,7 +9,9 @@ if (typeof module === 'object' && typeof define !== 'function') {
 }
 
 var
-  types = require('../data-types')
+  types   = require('../data-types')
+, config  = require('../../config')
+, utils   = require('../../utils')
 ;
 
 define(function(require) {
@@ -196,6 +198,21 @@ define(function(require) {
   };
 
   definition.indices = {};
+
+  definition.findWithPendingPoints = function( $where, $options, callback ){
+    utils.enforceRequired( $where, [
+      'user_id'
+    ]);
+
+    $where = utils.defaults( $where, {
+      status:         { $or: ['submitted', 'accepted', 'delivered'] }
+    , points_awarded: false
+    , created_at:     { $gte: config.rewardsStartDate }
+    });
+
+    return this.find( $where, $options, callback );
+  };
+
 
   return definition;
 });

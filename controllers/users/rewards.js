@@ -21,11 +21,8 @@ module.exports.list = function( req, res ){
                         order: { datetime: 'desc' }
                       })
 
-  , 'pendingOrders':  db.orders.find.bind( db.orders, {
+  , 'pendingOrders':  db.orders.findWithPendingPoints.bind( db.orders, {
                         user_id:        req.param('uid')
-                      , status:         { $or: ['submitted', 'accepted', 'delivered'] }
-                      , points_awarded: false
-                      , created_at:     { $gte: config.rewardsStartDate }
                       }, {
                         order:          { datetime: 'desc' }
                       , one:            [{ table: 'restaurants', alias: 'restaurant' }]

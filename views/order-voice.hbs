@@ -2,16 +2,16 @@
 <Response>
   <Say voice="woman">
     Hello.
-    You have received a new Goodybag order for ${{dollars order.total}} 
-    {{#if order.is_pickup}}
-    for pickup at {{formatDateTime order.datetime "MM/DD/YYYY h:mm a"}}.
-    {{/if}}
-    {{#if order.is_delivery_service}}
-    for pickup at {{formatDateTime order.datetime "MM/DD/YYYY h:mm a"}}.
-    {{/if}}
-    {{#if order.is_delivery}}
+    You have received a new Goodybag order for ${{dollars order.total}}
+    {{#eq order.type 'pickup'}}
+    for pickup at {{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm a"}}.
+    {{/eq}}
+    {{#eq order.type 'courier'}}
+    for pickup at {{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm a"}}.
+    {{/eq}}
+    {{#eq order.type 'delivery'}}
     to be delivered {{formatDateTime order.datetime "MM/DD/YYYY h:mm a"}}.
-    {{/if}}
+    {{/eq}}
     Please check your email for a link to accept or reject the order.
     Goodbye.</Say>
 </Response>

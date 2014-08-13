@@ -28,11 +28,11 @@
               <!--</BigOlButton>-->
             </td>
             <td style="width: 46%; padding-bottom: 22px;">
-              {{#if (or order.is_pickup order.is_delivery_service)}}
+              {{#or2 (eq order.type 'pickup') (eq order.type 'courier')}}
                 {{> order_email_details_pickup order}}
               {{else}}
                 {{> order_email_details_delivery order}}
-              {{/if}}
+              {{/or2}}
             </td>
           </tr>
         </table>

@@ -172,7 +172,7 @@
     <dd>{{order.notes}}</dd>
   </dl>
 
-  {{#if order.is_delivery}}
+  {{#eq order.type 'delivery'}}
     <h2 class="section-title">Delivery</h2>
     <dl class="manifest-section-dl">
       <dt>Contact:</dt>
@@ -220,7 +220,7 @@
       <dt>Pickup Time:</dt>
       <dd>{{formatDateTime order.pickup_datetime "h:mm A"}}</dd>
     </dl>
-  {{/if}}
+  {{/eq}}
 
   <h2 class="section-title">Goodybag</h2>
   <dl class="manifest-section-dl">

@@ -269,7 +269,7 @@ define(function(require, exports, module) {
     isValidZip: function( order ){
       var zips = this.get('delivery_zips');
 
-      if ( order.get('is_delivery_service') ){
+      if ( order.get('type') === 'courier' ){
         zips = this.get('delivery_service_zips');
       }
 

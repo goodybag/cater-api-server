@@ -69,14 +69,19 @@ define(function(require, exports, module) {
           reviewed: {
             type: ['boolean', 'null'],
             required: false
-          }
+          },
+          type: {
+            type: ['string', 'null'],
+            required: false,
+            "enum": ['pickup', 'delivery', 'courier', null]
+          },
         }
       };
     },
 
     defaults: {
       timezone: "America/Chicago"
-    , is_delivery: true
+    , type: 'delivery'
     },
 
     // TODO: extract to superclass
@@ -143,8 +148,6 @@ define(function(require, exports, module) {
 
     urlRoot: '/orders',
 
-    types: [ 'is_delivery', 'is_delivery_service', 'is_pickup'],
-
     initialize: function(attrs, options) {
       var this_ = this;
 
@@ -170,7 +173,9 @@ define(function(require, exports, module) {
         this.orderItems.orderId = model.id;
       });
 
-      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+      if ( this.shouldBeDeliveryService() ){
+        this.set( 'type', 'courier' );
+      }
 
       this.on('change:adjustment', this.updateSubtotal, this);
       this.listenTo(this.orderItems, 'change:sub_total add remove', this.updateSubtotal, this);
@@ -182,25 +187,20 @@ define(function(require, exports, module) {
       }, this);
 
       this.on('change:sub_total', function(model, value, options) {
-        this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+        if ( this.shouldBeDeliveryService() ){
+          this.set( 'type', 'courier' );
+        }
         model.set('below_min', value < model.restaurant.get('minimum_order'));
         model.setSubmittable(model, value, options);
       }, this);
-
-      this.on( 'change:is_delivery_service', function( model, value, options ){
-        model.restaurant.set('is_bad_zip', !this.restaurant.isValidZip(this));
-      });
 
       this.on({
         'change:zip': this.zipChanged,
         'change:datetime': this.datetimeChanged,
         'change:guests': this.guestsChanged,
-        'change:is_unacceptable change:below_min': this.setSubmittable
+        'change:is_unacceptable change:below_min': this.setSubmittable,
+        'change:type': this.onOrderTypeChange
       }, this);
-
-      utils.each( this_.types, function( field ){
-        this_.on( 'change:' + field, this_.onOrderTypeChange.bind( this_, field ) );
-      });
     },
 
     set: function(key, val, options) {
@@ -251,7 +251,9 @@ define(function(require, exports, module) {
     ],
 
     zipChanged: function(model, value, options) {
-      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+      if ( this.shouldBeDeliveryService() ){
+        this.set( 'type', 'courier' );
+      }
       model.restaurant.set('is_bad_zip', !this.restaurant.isValidZip(this));
     },
 
@@ -260,7 +262,9 @@ define(function(require, exports, module) {
     },
 
     datetimeChanged: function(model, value, options) {
-      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+      if ( this.shouldBeDeliveryService() ){
+        this.set( 'type', 'courier' );
+      }
 
       if (!value) {
         model.restaurant.set({
@@ -275,7 +279,7 @@ define(function(require, exports, module) {
       var dow = moment(datetime[0]).day();
       model.restaurant.set('is_bad_delivery_time', !model.restaurant.isValidDeliveryTime( value ) );
 
-      if ( model.get('is_delivery_service') ){
+      if ( model.get('type') === 'courier' ){
         model.set(
           'pickup_datetime'
         , moment(
@@ -291,7 +295,9 @@ define(function(require, exports, module) {
     },
 
     guestsChanged: function(model, value, options) {
-      this.set( 'is_delivery_service', this.shouldBeDeliveryService() );
+      if ( this.shouldBeDeliveryService() ){
+        this.set( 'type', 'courier' );
+      }
 
       if (value == null) {
         model.restaurant.set({
@@ -323,7 +329,6 @@ define(function(require, exports, module) {
       obj.orderItems = this.orderItems.toJSON();
       obj.restaurant = this.restaurant.toJSON();
       _.extend(obj, this.address.toJSON());
-      obj.is_delivery_service = this.shouldBeDeliveryService();
       return obj;
     },
 
@@ -452,28 +457,10 @@ define(function(require, exports, module) {
       return orderDeliveryServiceCriteria.check( order )
     },
 
-    onOrderTypeChange: function( type, model, value, options ){
-      // They were setting to false, unless this was a delivery order to begin with
-      // go ahead and set this is_delivery
-      if ( value === false ){
-        if ( type === 'is_delivery' ){
-          this.attributes.is_delivery_service = true;
-        } else {
-          this.attributes.is_delivery = true;
-        }
+    onOrderTypeChange: function( model, type, options ){
+      if ( type === 'courier' ){
+        model.restaurant.set( 'is_bad_zip', !this.restaurant.isValidZip(this) );
 
-        return;
-      }
-
-      var this_ = this;
-
-      utils.each( this.types, function( t ){
-        this_.attributes[ t ] = false;
-      });
-
-      this.attributes[ type ] = true;
-
-      if ( type === 'is_delivery_service' ){
         model.set(
           'pickup_datetime'
         , moment(

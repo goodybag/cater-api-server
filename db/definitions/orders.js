@@ -186,14 +186,12 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , type: { type: types.order_type, nullable: false, default: 'delivery' }
   , sub_total: {
       type: types.int
     , nullable: false
     , default: 0
     }
-  , is_delivery: { type: types.boolean, nullable: false, default: false }
-  , is_pickup: { type: types.boolean, nullable: false, default: false }
-  , is_delivery_service: { type: types.boolean, nullable: false, default: false }
   , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
   };
 

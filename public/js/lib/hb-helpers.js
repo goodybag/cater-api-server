@@ -233,26 +233,32 @@ define(function(require, exports, module) {
     },
 
     eq: function(a, b, options){
+      if ( typeof options.fn !== 'function' ) return a == b;
       return options[a == b ? 'fn' : 'inverse'](this);
     },
 
     dneq: function(a, b, options){
+      if ( typeof options.fn !== 'function' ) return a != b;
       return options[a != b ? 'fn' : 'inverse'](this);
     },
 
     lt: function(a, b, options){
+      if ( typeof options.fn !== 'function' ) return a < b;
       return options[a < b ? 'fn' : 'inverse'](this);
     },
 
     lte: function(a, b, options){
+      if ( typeof options.fn !== 'function' ) return a <= b;
       return options[a <= b ? 'fn' : 'inverse'](this);
     },
 
     gt: function(a, b, options){
+      if ( typeof options.fn !== 'function' ) return a > b;
       return options[a > b ? 'fn' : 'inverse'](this);
     },
 
     gte: function(a, b, options){
+      if ( typeof options.fn !== 'function' ) return a >= b;
       return options[a >= b ? 'fn' : 'inverse'](this);
     },
 
@@ -406,7 +412,7 @@ define(function(require, exports, module) {
       var options = args.pop();
 
       // If any of the values are truthy, run `fn`, otherwise `inverse`
-      return options[ utils.any( args, utils.identity ) ? 'fn' : 'inverse' ]();
+      return options[ utils.any( args, utils.identity ) ? 'fn' : 'inverse' ](this);
     },
 
     ratingStars: function( rating ){
@@ -535,9 +541,12 @@ define(function(require, exports, module) {
     },
 
     orderTypeAbbr: function( order ){
-      if ( order.is_delivery_service ) return 'DS';
-      if ( order.is_pickup ) return 'P';
-      return 'D';
+      switch( order.type ){
+        case 'pickup': return 'P';
+        case 'courier': return 'DS';
+        case 'delivery': return 'D';
+        default: return 'D';
+      }
     },
 
     omit: function( obj, key ){

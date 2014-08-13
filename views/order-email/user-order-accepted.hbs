@@ -21,11 +21,11 @@
               <!--</StatusLabel>-->
             </td>
             <td class="main-width-constraint" style="width: 46%; padding-bottom: 22px;">
-              {{#if order.is_pickup}}
+              {{#eq order.type 'pickup'}}
               {{> order_email_details_pickup order }}
               {{else}}
               {{> order_email_details_delivery order }}
-              {{/if}}
+              {{/eq}}
             </td>
           </tr>
         </table>
@@ -56,7 +56,7 @@
     </tr>
   </table>
 
-  {{#if order.is_delivery_service}}
+  {{#eq order.type 'courier'}}
     <!--<NormalText>-->
     <table cellpadding="0" cellspacing="0" style="width: 100%;">
       <tr>
@@ -66,5 +66,5 @@
       </tr>
     </table>
     <!--</NormalText>-->
-  {{/if}}
+  {{/eq}}
 {{/extend}}

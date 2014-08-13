@@ -22,6 +22,7 @@ module.exports.list = function( req, res ){
                       }, {
                         order:          { datetime: 'desc' }
                       , one:            [{ table: 'restaurants', alias: 'restaurant' }]
+                      , submittedDate:  true
                       })
 
   , 'orders':         Models.Order.find.bind( Models.Order, {

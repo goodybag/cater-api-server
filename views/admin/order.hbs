@@ -49,10 +49,10 @@
         <dt>Delivery Time</dt>
         <dd>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</dd>
 
-        {{#or2 (eq order.type 'pickup') (eq order.type 'courier')}}
+        {{#is order.type 'pickup' 'courier'}}
           <dt>Pickup Time</dt>
           <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}}</dd>
-        {{/or2}}
+        {{/is}}
       </dl>
     </section>
   </div>

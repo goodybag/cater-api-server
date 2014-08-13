@@ -197,6 +197,7 @@ returns void as $$
   declare sales_tax     int := 0;
   declare total         int := 0;
   declare curr          int := 0;
+  declare tax_exempt    boolean;
 begin
   tax_rate := (
     select regions.sales_tax
@@ -205,6 +206,8 @@ begin
     left join regions on restaurants.region_id = regions.id
     where orders.id = o.id
   );
+
+  tax_exempt := (select is_tax_exempt from users where users.id = o.user_id);
 
   delivery_fee := get_order_delivery_fee( o );
 
@@ -236,7 +239,9 @@ begin
 
   sub_total   := sub_total + coalesce( o.adjustment_amount, 0 );
   total       := sub_total + delivery_fee;
-  sales_tax   := round( total * tax_rate );
+  if not tax_exempt then
+    sales_tax   := round( total * tax_rate );
+  end if;
   total       := total + sales_tax + o.tip;
 
   -- Debug

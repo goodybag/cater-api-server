@@ -9,26 +9,14 @@ module.exports.rewards = require('./rewards');
 
 module.exports.list = function(req, res) {
   var tasks = {
-    users: function (callback) {
-      var query = queries.user.list(req.query.columns, req.query.limit || 1000, req.query.offset);
-      var sql = db.builder.sql(query);
-      db.query(sql.query, sql.values, function(error, results){
-        callback(error, results);
-      });
-    }
-  , restaurants: function (callback) {
-      models.Restaurant.find({}, callback);
-    }
+    users:        db.users.find.bind( db.users, {}, { limit: 'all', order: 'id desc' } )
+  , restaurants:  db.restaurants.find.bind( db.restaurants, {} )
   };
 
   utils.async.parallel(tasks, function(error, results) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('users', {
-      users: results.users
-    , restaurants: utils.invoke(results.restaurants, 'toJSON')
-    });
+    res.render('users', results);
   });
-
 }
 
 module.exports.get = function(req, res) {

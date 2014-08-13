@@ -2,7 +2,7 @@
 -- #1044 - Remove unnecessary triggers and functions
 
 DO $$
-  declare version       text := '1.2.29';
+  declare version       text := '1.2.30';
 begin
   raise notice '## Running Delta v% ##', version;
 

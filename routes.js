@@ -36,6 +36,12 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/request-to-be-a-caterer'
+    , m.view( 'landing/restaurant', {
+        layout: 'landing/layout'
+      })
+    );
+
     app.get('/forgot-password', controllers.auth.forgotPassword);
     app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
     app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);

@@ -208,7 +208,7 @@ module.exports = function(grunt) {
         { src: './public/dist', dest: 'dist', gzip: true }
       , { src: './public/css', dest: 'css', gzip: true }
       , { src: './public/img', dest: 'img', gzip: false }
-      , { src: './public/img/emails', dest: 'img', gzip: false }
+      , { src: './public/img/**', dest: 'img', gzip: false }
       , { src: './public/font', dest: 'font', gzip: false }
       , { src: './public/js/pdf', dest: 'js/pdf', gzip: false }
       , { src: './public/*', dest: '', gzip: false }

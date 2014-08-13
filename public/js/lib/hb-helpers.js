@@ -551,6 +551,18 @@ define(function(require, exports, module) {
 
     omit: function( obj, key ){
       return utils.omit( obj, key );
+    },
+
+    // Is a === any of rest
+    is: function( a ){
+      var rest = Array.prototype.slice.call( arguments, 1 );
+      var options = rest.pop();
+
+      // If any of the values are truthy, run `fn`, otherwise `inverse`
+      return options[
+        utils.any( rest, function( b ){ return a == b; })
+          ? 'fn' : 'inverse'
+      ](this);
     }
   }
 

@@ -91,96 +91,89 @@ module.exports.run = function( cTypes, callback ){
     }
   });
 
-  async.parallel([
-    ///////////////////////////////
-    // Alter existing enum types //
-    ///////////////////////////////
-    async.waterfall.bind( async, [
-      // Filter to enums that currently exist
-      function( done ){
-        var onFilter = function( t, done ){
-          // Only enums are arrays
-          if ( !Array.isArray( cTypes[ t ] ) ) return done( false );
+  async.auto({
+    // Filter to enums that currently exist
+    'existing_enums': [ function( done ){
+      var onFilter = function( t, done ){
+        // Only enums are arrays
+        if ( !Array.isArray( cTypes[ t ] ) ) return done( false );
 
-          helpers.typeExists( t, function( error, result ){
-            if ( error ) done( false );
-            else done( result );
-          });
+        helpers.typeExists( t, function( error, result ){
+          if ( error ) done( false );
+          else done( result );
+        });
+      };
+
+      async.filter( Object.keys( cTypes ), onFilter, done.bind( null, null ) );
+    }]
+
+    // Get the exiting values for the types
+  , 'existing_values': [ 'existing_enums', function( done, results ){
+      var values = {};
+
+      results.existing_enums.forEach( function( t ){
+        values[ t ] = helpers.getExistingValues.bind( null, t );
+      });
+
+      async.parallel( values, done );
+    }]
+
+    // Add the values that don't exist in the DB
+  , 'add_values': [ 'existing_values', function( done, results ){
+      var typesWithChanges = Object.keys( results.existing_values ).filter( function( k ){
+        return _.difference( cTypes[ k ], results.existing_values[ k ] ).length > 0;
+      });
+
+      // Only add the new values in cTypes
+      var fns = {};
+
+      typesWithChanges.forEach( function( k ){
+        var types = _.difference(
+          cTypes[ k ], results.existing_values[ k ]
+        ).filter( function( v ){
+          return cTypes[ k ].indexOf( v ) > -1;
+        });
+
+        fns[ k ] = async.each.bind( async, types, helpers.addValueToType.bind( null, k ) );
+        return ;
+      });
+
+      async.parallel( fns, done );
+    }]
+
+    // Get the types that have not been added to the DB
+  , 'new_types': [ function( done ){
+      var onFilter = function( t, cb ){
+        helpers.typeExists( t, function( error, result ){
+          if ( error ) cb( false );
+          else cb( result );
+        });
+      };
+
+      async.filter( Object.keys( cTypes ), onFilter, function( types ){
+        return done( null, _.omit( cTypes, types ) );
+      });
+    }]
+
+    // Create new types
+  , 'create_new_types': [ 'new_types', function( done, results ){
+      var typeQueries = Object.keys( results.new_types ).map( function( k ){
+        var def = {
+          type: Array.isArray( results.new_types[ k ] ) ? 'enum' : results.new_types[ k ].type
+        , name: k
         };
 
-        async.filter( Object.keys( cTypes ), onFilter, done.bind( null, null ) );
-      }
+        if ( def.type === 'enum' ) def.enum = results.new_types[ k ];
+        else def.as = results.new_types[ k ].as;
 
-      // Get the exiting values for the types
-    , function( existingTypes, done ){
-        var values = {};
-        existingTypes.forEach( function( t ){
-          values[ t ] = helpers.getExistingValues.bind( null, t );
-        });
+        return def;
+      }).map( function( type ){
+        return queries.types[ type.type ]( type );
+      });
 
-        async.parallel( values, done );
-      }
-
-      // Add the values that don't exist in the DB
-    , function( existingValues, done ){
-        var typesWithChanges = Object.keys( existingValues ).filter( function( k ){
-          return _.difference( cTypes[ k ], existingValues[ k ] ).length > 0;
-        });
-
-        // Only add the new values in cTypes
-        var fns = {};
-
-        typesWithChanges.forEach( function( k ){
-          var types = _.difference(
-            cTypes[ k ], existingValues[ k ]
-          ).filter( function( v ){
-            return cTypes[ k ].indexOf( v ) > -1;
-          });
-
-          fns[ k ] = async.each.bind( async, types, helpers.addValueToType.bind( null, k ) );
-          return ;
-        });
-
-        async.parallel( fns, done );
-      }
-    ])
-
-    ///////////////////
-    // Add new types //
-    ///////////////////
-  , async.waterfall.bind( async, [
-      function( done ){
-        var onFilter = function( t, cb ){
-          helpers.typeExists( t, function( error, result ){
-            if ( error ) cb( false );
-            else cb( result );
-          });
-        };
-
-        async.filter( Object.keys( cTypes ), onFilter, done.bind( null, null ) );
-      }
-    , function( types, done ){
-        done( null, _.omit( cTypes, types ) );
-      }
-    , function( toCreate, done ){
-        var typeQueries = Object.keys( toCreate ).map( function( k ){
-          var def = {
-            type: Array.isArray( toCreate[ k ] ) ? 'enum' : toCreate[ k ].type
-          , name: k
-          };
-
-          if ( def.type === 'enum' ) def.enum = toCreate[ k ];
-          else def.as = toCreate[ k ].as;
-
-          return def;
-        }).map( function( type ){
-          return queries.types[ type.type ]( type );
-        });
-
-        async.each( typeQueries, db.query.bind( db ), done );
-      }
-    ])
-  ], callback );
+      async.each( typeQueries, db.query.bind( db ), done );
+    }]
+  }, callback );
 };
 
 if (require.main === module) {

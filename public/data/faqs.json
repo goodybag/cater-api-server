@@ -1,5 +1,5 @@
 [
-  { 
+  {
     "section": "General"
   , "items": [
       { "q": "What is Goodybag?"
@@ -11,8 +11,8 @@
     , { "q": "Who makes the food?"
       , "a": "We offer catering options from over 100 quality restaurants, who deliver their food right to your office."
       }
-    , { "q": "Who delivers the food, the restaurant or Goodybag?"
-      , "a": "All restaurants on our site are responsible for delivering the food."
+    , { "q": "Who delivers the food?"
+      , "a": "Usually, the restaurant will deliver their food. If they are unable, or if the order is placed last minute, it may be delivered by a third party delivery service we work with."
       }
     , { "q": "Do you deliver to my zip code?"
       , "a": "A lot of our restaurants can deliver to most of the greater Austin area. To know exactly what restaurants can deliver to your zip, enter your zip code in the \"Find Catering\" bar located above the restaurant listing <a href=\"/restaurants\">here</a>."

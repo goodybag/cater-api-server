@@ -240,7 +240,7 @@ begin
   sub_total   := sub_total + coalesce( o.adjustment_amount, 0 );
   total       := sub_total + delivery_fee;
   if not tax_exempt then
-    sales_tax   := round( total * tax_rate );
+    sales_tax := round( total * tax_rate );
   end if;
   total       := total + sales_tax + o.tip;
 

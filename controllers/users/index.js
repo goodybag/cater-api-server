@@ -7,18 +7,6 @@ var models = require('../../models');
 module.exports.cards = require('./cards');
 module.exports.rewards = require('./rewards');
 
-module.exports.list = function(req, res) {
-  var tasks = {
-    users:        db.users.find.bind( db.users, {}, { limit: 'all', order: 'id desc' } )
-  , restaurants:  db.restaurants.find.bind( db.restaurants, {} )
-  };
-
-  utils.async.parallel(tasks, function(error, results) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('users', results);
-  });
-}
-
 module.exports.get = function(req, res) {
   var query = queries.user.get(req.params.uid, req.query.columns);
   var sql = db.builder.sql(query);

@@ -792,7 +792,15 @@ module.exports.register = function(app) {
    *  Users resource.  All the users.
    */
 
-  app.get('/users', m.restrict('admin'), controllers.users.list); // not currently used
+  app.get('/users'
+  , m.restrict('admin')
+  , m.db.restaurants.find( {}, { limit: 'all' })
+  , m.queryOptions({
+      limit: 'all'
+    , order: 'id desc'
+    })
+  , m.view( 'users', db.users, { method: 'find' })
+  );
 
   app.post('/users', m.restrict('admin'), controllers.users.create);
 

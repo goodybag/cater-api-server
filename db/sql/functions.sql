@@ -290,3 +290,36 @@ begin
   where id = order_item.id;
 end;
 $$ language plpgsql;
+
+-- Create a reminder
+create or replace function schedule_remind_restaurant()
+returns trigger as 
+$$
+DECLARE
+  job_data json;
+BEGIN
+  job_data := to_json( '{"order_id":' || new.id || '}' );
+  insert into scheduled_jobs (action, data, datetime)
+    values ('remind-restaurant', job_data, new.datetime - interval '1' day);
+  return new;
+end;
+$$ language plpgsql;
+
+-- Update reminder
+CREATE OR REPLACE FUNCTION update_remind_restaurant()
+RETURNS TRIGGER AS
+$$
+BEGIN
+  with remind_restaurant_jobs as (
+    select * from scheduled_jobs
+    where action = 'remind-restaurant'
+  )
+  update scheduled_jobs
+  set datetime = new.datetime - interval '1' day
+  from remind_restaurant_jobs
+  where scheduled_jobs.id = remind_restaurant_jobs.id and remind_restaurant_jobs.data->>order_id = new.id;
+  return new;
+END;
+$$ language plpgsql;
+
+

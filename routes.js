@@ -1370,4 +1370,13 @@ module.exports.register = function(app) {
     })
   , m.find( db.users )
   );
+
+  app.get('/api/orders/search/:search'
+  , m.param('search', function(val, query, options) {
+      query.search_vector = { $matches: val };
+    })
+  , m.sort('-id')
+  , m.queryOptions({ limit: 10 })
+  , m.find( db.orders )
+  );
 }

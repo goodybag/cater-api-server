@@ -167,6 +167,9 @@ mosql.registerConditionalHelper(
   }
 );
 
+mosql.registerConditionalHelper( '$matches', function( column, set, values, collection ) {
+  return column + ' @@ to_tsquery(' + set + ')';
+});
 
 // Upsert query type
 // Warning: This is subject to some sort of race condition

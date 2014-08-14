@@ -17,8 +17,13 @@
     <div class="signup-info-wrapper">
       <div class="signup-col">
         <div class="inner">
+          {{#if restaurant_requests}}
+          <h3>Thanks!</h3>
+          <p>We'll be in touch soon :)</p>
+          {{else}}
           <h3>Be a Goodybag caterer</h3>
           <p>Enter your info and we'll get in touch soon!</p>
+          {{/if}}
           <form action="/request-to-be-a-caterer" method="POST" class="form form-vertical">
             <div class="form-group">
               <label for="request-form-full-name">Full Name</label>

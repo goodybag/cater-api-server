@@ -25,6 +25,11 @@ config.defaults = {
 , geoipUrl: 'http://freegeoip.net/json/:ip'
 , geoTestIp: '216.201.168.18'
 
+, restaurantContactRecipients: [
+    'jag@goodybag.com'
+  , 'alexlauzon@goodybag.com'
+  ]
+
 , deniedRecipients: [
     'jag@goodybag.com'
   , 'sarah.southwell@goodybag.com'
@@ -252,6 +257,7 @@ config.dev = {
 
 , deniedRecipients: [ local.testEmail || 'test@goodybag.com' ]
 , deliveryServiceOrderAboveThresholdRecipients: [ local.testEmail || 'test@goodybag.com' ]
+, restaurantContactRecipients: [ local.testEmail || 'test@goodybag.com' ]
 
 , http: {
     port: 3000

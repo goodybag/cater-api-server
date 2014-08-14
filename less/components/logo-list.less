@@ -8,10 +8,19 @@
   table-layout: fixed;
   margin-top: @logo-list-margin-top;
   margin-bottom: @logo-list-margin-bottom;
+  text-align: center;
 
   @media screen and ( max-width: @breakpoint-tablet ){
     display: block;
   }
+}
+
+// In the div.logo-list > img configuration
+.logo-list > img {
+  margin: 0 20px;
+
+  &:first-child { margin-left: 0; }
+  &:last-child { margin-right: 0; }
 }
 
 .logo-list > li {

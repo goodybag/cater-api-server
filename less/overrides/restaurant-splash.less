@@ -20,6 +20,11 @@
   .marketing-points > .point {
     @point-padding: 36px;
 
+    @media screen and ( max-width: @breakpoint-mobile ){
+      padding-left: 0!important;
+      padding-right: 0!important;
+    }
+
     // Experiment with point-padding model -
     // this method doesn't really work with more than 3 points
     &:first-child {
@@ -83,8 +88,22 @@
   }
 
   #section-testimonials {
+    padding-bottom: 120px;
+
     .box {
       #grid > .column(4);
     }
+  }
+
+  #section-office-logos {
+    .section-header {
+      font-size: 22px;
+      font-style: italic;
+    }
+  }
+
+  #section-outro-cta {
+    padding-top: 60px;
+    padding-bottom: 80px;
   }
 }

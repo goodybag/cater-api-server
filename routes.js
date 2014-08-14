@@ -1255,7 +1255,13 @@ module.exports.register = function(app) {
       next();
     }
   , m.sort('-id')
-  , m.queryOptions({ limit: 10 })
+  , m.queryOptions({
+      limit: 10
+    , one: [
+        { table: 'restaurants', alias: 'restaurant' }
+      , { table: 'users', alias: 'user' }
+      ]
+    })
   , m.find( db.orders )
   );
 

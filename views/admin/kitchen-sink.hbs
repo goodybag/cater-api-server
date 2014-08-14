@@ -50,13 +50,22 @@
     };
 
     var $autocomplete = $('#autocomplete');
+    $autocomplete.after('<ul class="autocomplete-results"></ul>');
+    var $results = $('.autocomplete-results');
+    console.log($results);
     var update = _.throttle(function(){ 
       var query = { q: $autocomplete.val() };
       $.ajax({
         url: options.endpoint
       , data: query
       , success: function(data, status, xhr) {
-          console.log(data);
+          var html = '';
+          data.forEach(function(d) {
+            html += '<li>Order #' + d.id + ' - ' + d.restaurant.name + ' to ' + d.user.name + ' for $' + d.total +'</li>';
+          });
+
+          $results.empty();
+          $results.append(html);
         }
       });
     }, options.rateLimit);

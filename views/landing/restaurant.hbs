@@ -167,7 +167,7 @@
 <section class="page-section" id="section-outro-cta">
   <div class="container">
     <h2>See how we can help grow your business</h2>
-    <a href="/join" class="btn btn-primary btn-large btn-cta">Be a Goodybag caterer</a>
+    <a href="#section-intro-signup" class="btn btn-primary btn-large btn-cta">Be a Goodybag caterer</a>
   </div>
 </section>
 <!--</OutroCTA>-->
@@ -175,8 +175,21 @@
 
 {{#extend "scripts"}}
 <script>
-  require( ['jquery', 'navbar'], function( $ ){
+  require( ['jquery-loaded', 'navbar'], function( $ ){
     $('.navbar').navbar({ toggleText: false });
+
+    var $btn              = $('#section-outro-cta .btn-cta');
+    var $scrollToSection  = $( $btn.attr('href') );
+    var doNotAnimate      = /MSIE\s[0-9]/.test( window.navigator.userAgent );
+
+    $btn.click( function( e ){
+      if ( doNotAnimate ) return;
+      e.preventDefault();
+
+      $('body').animate({ scrollTop: $scrollToSection.offset().top }, function(){
+        $('#request-form-full-name').focus();
+      });
+    });
   });
 
   analytics.page('Restaurants Splash');

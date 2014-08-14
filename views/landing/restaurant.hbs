@@ -155,7 +155,7 @@
       <img src="{{cdn '/img/client-logos/bazaarvoice.png'}}" alt="Bazaarvoice">
       <img src="{{cdn '/img/client-logos/rackspace.png'}}" alt="rackspace">
       <img src="{{cdn '/img/client-logos/humana.png'}}" alt="Humana">
-      <img src="{{cdn '/img/client-logos/bazaarvoice.png'}}" alt="Apple">
+      <img src="{{cdn '/img/client-logos/apple.png'}}" alt="Apple">
       <img src="{{cdn '/img/client-logos/home-away.png'}}" alt="Home Away">
     </div>
     <!--</LogoList>-->
@@ -178,17 +178,26 @@
   require( ['jquery-loaded', 'navbar'], function( $ ){
     $('.navbar').navbar({ toggleText: false });
 
+    var $name             = $('#request-form-full-name');
     var $btn              = $('#section-outro-cta .btn-cta');
     var $scrollToSection  = $( $btn.attr('href') );
-    var doNotAnimate      = /MSIE\s[0-9]/.test( window.navigator.userAgent );
+
+    // IE/Firefox not scrolling to the right spot
+    var doNotAnimate = [
+      /MSIE\s[0-9]/
+    , /Firefox/
+    ].some( function( r ){
+      return r.test( window.navigator.userAgent );
+    });
 
     $btn.click( function( e ){
-      if ( doNotAnimate ) return;
+      if ( doNotAnimate ) return $name.focus();
       e.preventDefault();
 
-      $('body').animate({ scrollTop: $scrollToSection.offset().top }, function(){
-        $('#request-form-full-name').focus();
-      });
+      $('body').animate(
+        { scrollTop: $scrollToSection.offset().top }
+      , $name.focus.bind( $name )
+      );
     });
   });
 

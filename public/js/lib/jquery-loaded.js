@@ -14,6 +14,7 @@ define(function(require, exports, module) {
   require('jquery.toggler');
   require('jquery.prefixer');
   require('jquery.modern-modal');
+  require('components/gb-dropdown');
 
   $(function(){
     $('input, textarea').placeholder();

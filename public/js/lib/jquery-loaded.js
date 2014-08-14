@@ -15,6 +15,7 @@ define(function(require, exports, module) {
   require('jquery.prefixer');
   require('jquery.modern-modal');
   require('components/gb-dropdown');
+  require('lodash');
 
   $(function(){
     $('input, textarea').placeholder();

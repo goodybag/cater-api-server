@@ -28,9 +28,41 @@
     </div>
   </div>
 </section>
+
+<section class="page-section" id="section-typeahead">
+  <div class="container">
+    <h2 class="component-title">Autocomplete</h2>
+    <label for="autocomplete">Search orders</label>
+    <input class="component-autocomplete" id="autocomplete" type="text" placeholder="Search orders">
+  </div>
+</section>
 {{/extend}}
 
 {{#extend "scripts"}}
+<script>
+
+  require(['jquery-loaded'], function($){
+
+
+    var options = {
+      rateLimit: 500 // ms
+    , endpoint: '/api/orders/search'
+    };
+
+    var $autocomplete = $('#autocomplete');
+    var update = _.throttle(function(){ 
+      var query = { q: $autocomplete.val() };
+      $.ajax({
+        url: options.endpoint
+      , data: query
+      , success: function(data, status, xhr) {
+          console.log(data);
+        }
+      });
+    }, options.rateLimit);
+    $autocomplete.on('input', update);
+  });
+</script>
 <script>
   require(['jquery-loaded'], function($){
     var tmpl = function( data ){

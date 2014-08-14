@@ -109,6 +109,16 @@ module.exports.register = function(app) {
   );
 
   /**
+   * Kitchen Sink
+   */
+
+  app.get('/admin/kitchen-sink'
+  , m.view( 'admin/kitchen-sink', {
+      layout: 'admin/layout2'
+    })
+  );
+
+  /**
    * Delivery Services
    */
 

@@ -20,8 +20,8 @@ define(function(require) {
     id:                   { type: types.serial, pk: true }
   , contact_name:         { type: types.text }
   , contact_email:        { type: types.text }
-  , contact_phone:        { type: types.text }
-  , restaurant_name:      { type: types.varchar(10), checks: ["SIMILAR TO '[[:digit:]]{10}'"] }
+  , contact_phone:        { type: types.varchar(10), checks: ["SIMILAR TO '[[:digit:]]{10}'"] }
+  , restaurant_name:      { type: types.text }
   };
 
   return definition;

@@ -1238,6 +1238,17 @@ module.exports.register = function(app) {
   , m.insert( db.orders )
   );
 
+  app.get('/api/orders/search'
+  , function(req, res, next) {
+      var query = req.query.q;
+      req.queryObj.search_vector = { $matches: query };
+      next();
+    }
+  , m.sort('-id')
+  , m.queryOptions({ limit: 10 })
+  , m.find( db.orders )
+  );
+
   app.get('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')
@@ -1371,12 +1382,4 @@ module.exports.register = function(app) {
   , m.find( db.users )
   );
 
-  app.get('/api/orders/search/:search'
-  , m.param('search', function(val, query, options) {
-      query.search_vector = { $matches: val };
-    })
-  , m.sort('-id')
-  , m.queryOptions({ limit: 10 })
-  , m.find( db.orders )
-  );
 }

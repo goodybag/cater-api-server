@@ -1,23 +1,13 @@
-drop trigger if exists on_order_type_is_pickup_change on orders;
-create trigger on_order_type_is_pickup_change
-    after update of is_pickup
+drop trigger if exists on_order_create on orders;
+create trigger on_order_create
+    after insert
     on orders
     for each row
-    when ( OLD.* is distinct from NEW.* )
-    execute procedure on_order_type_is_pickup_change();
+    execute procedure on_order_create();
 
-drop trigger if exists on_order_type_is_delivery_change on orders;
-create trigger on_order_type_is_delivery_change
-    after update of is_delivery
+drop trigger if exists on_order_type_change on orders;
+create trigger on_order_type_change
+    after update of type
     on orders
     for each row
-    when ( OLD.* is distinct from NEW.* )
-    execute procedure on_order_type_is_delivery_change();
-
-drop trigger if exists on_order_type_is_delivery_service_change on orders;
-create trigger on_order_type_is_delivery_service_change
-    after update of is_delivery_service
-    on orders
-    for each row
-    when ( OLD.* is distinct from NEW.* )
-    execute procedure on_order_type_is_delivery_service_change();
+    execute procedure on_order_type_change();

@@ -5,7 +5,9 @@
 var path    = require('path');
 var fs      = require('fs');
 var Models  = require('../../models');
+var db      = require('../../db');
 var utils   = require('../../utils');
+var config  = require('../../config');
 var venter  = require('../../lib/venter');
 var errors  = require('../../errors');
 
@@ -15,8 +17,12 @@ module.exports.list = function( req, res ){
   var tasks = {
     'pendingPoints':  Models.User.getPendingPoints.bind( Models.User, req.param('uid') )
 
-  , 'pendingOrders':  Models.User.getOrdersWithPendingPoints.bind( Models.User, req.param('uid'), {
-                        order: { datetime: 'desc' }
+  , 'pendingOrders':  db.orders.findWithPendingPoints.bind( db.orders, {
+                        user_id:        req.param('uid')
+                      }, {
+                        order:          { datetime: 'desc' }
+                      , one:            [{ table: 'restaurants', alias: 'restaurant' }]
+                      , submittedDate:  true
                       })
 
   , 'orders':         Models.Order.find.bind( Models.Order, {
@@ -51,7 +57,7 @@ module.exports.list = function( req, res ){
     if ( error ) return res.error( error );
 
     res.locals.user.pendingPoints = results.pendingPoints;
-    res.locals.pendingOrders      = utils.invoke( results.pendingOrders, 'toJSON' );
+    res.locals.pendingOrders      = results.pendingOrders;
     res.locals.orders             = utils.invoke( results.orders, 'toJSON' );
     res.locals.cards              = results.cards;
 

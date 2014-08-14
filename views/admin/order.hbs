@@ -4,9 +4,9 @@
 <div class="container" id="main-container">
   <div class="order-type-wrapper">
     <select name="order_type" id="order-type" class="form-control">
-      <option value="is_pickup"{{#if order.is_pickup}} selected="true"{{/if}}>Type: Pickup</option>
-      <option value="is_delivery"{{#if order.is_delivery}} selected="true"{{/if}}>Type: Delivery</option>
-      <option value="is_delivery_service"{{#if order.is_delivery_service}} selected="true"{{/if}}>Type: Delivery Service</option>
+      <option value="pickup"{{#eq order.type 'pickup'}} selected="true"{{/eq}}>Type: Pickup</option>
+      <option value="delivery"{{#eq order.type 'delivery'}} selected="true"{{/eq}}>Type: Delivery</option>
+      <option value="courier"{{#eq order.type 'courier'}} selected="true"{{/eq}}>Type: Courier Service</option>
     </select>
   </div>
 
@@ -49,10 +49,10 @@
         <dt>Delivery Time</dt>
         <dd>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</dd>
 
-        {{#or2 order.is_pickup order.is_delivery_service}}
+        {{#is order.type 'pickup' 'courier'}}
           <dt>Pickup Time</dt>
-          <dd>{{formatDateTime ../order.pickup_datetime "MM/DD/YYYY h:mm A"}}</dd>
-        {{/or2}}
+          <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}}</dd>
+        {{/is}}
       </dl>
     </section>
   </div>

@@ -1029,7 +1029,7 @@ module.exports = Model.extend({
     var caseIsBadLeadTime = '(CASE '
       + ' WHEN (orders.datetime IS NULL) THEN NULL'
       + ' WHEN (order_lead_times.order_id IS NULL) THEN FALSE'
-      + ' WHEN (orders.is_delivery_service is true or orders.is_pickup is true) THEN "pickup_order_lead_times"."lead_time" > EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/60)'
+      + ' WHEN (orders.type = \'courier\' or orders.type = \'pickup\') THEN "pickup_order_lead_times"."lead_time" > EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/60)'
       + ' ELSE "order_lead_times"."lead_time" > EXTRACT(EPOCH FROM ("orders"."datetime" - (now() AT TIME ZONE "orders"."timezone"))/60)'
       + ' END)'
     ;

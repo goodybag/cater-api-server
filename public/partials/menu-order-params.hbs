@@ -14,8 +14,8 @@
       <a class="btn-change-order-params pull-right {{#if ../edit_token}}hide{{/if}}" href="#">Change</a>
     </dd>
   </dl>
-  {{#if is_delivery_service}}
+  {{#eq type 'courier'}}
     <strong>Note: This order will be delivered by a courier service</strong>
-  {{/if}}
+  {{/eq}}
   {{/with}}
 </div>

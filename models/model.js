@@ -107,6 +107,19 @@ Model.defaultFindQuery = {
   offset: 0
 }
 
+function logQuery( $query ){
+  var strQuery = $query.query;
+
+  $query.values.forEach( function( v, i ){
+    strQuery = strQuery.replace(
+      new RegExp( '\\$' + (i + 1), 'g' )
+    , typeof v === 'number' ? v : ( "'" + v + "'" )
+    );
+  });
+
+  console.log( strQuery );
+};
+
 Model.find = function(query, callback, client) {
   utils.defaults(query, this.defaultFindQuery, {table: this.table});
   query.type = 'select';
@@ -117,6 +130,8 @@ Model.find = function(query, callback, client) {
 
   var sql = db.builder.sql(query);
   var self = this;
+
+  // logQuery( sql );
 
   (client || db).query(sql.query, sql.values, function(err, rows, result){
     if (err) return callback(err);

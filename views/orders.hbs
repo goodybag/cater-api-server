@@ -24,12 +24,12 @@
         <div class="panel-body">
           <a href="{{queryParams (omit reqQuery 'type')}}"
              class="btn btn-default{{#unless reqQuery.type}} active{{/unless}}">Any</a>
-          <a href="{{queryParams reqQuery 'type' 'is_pickup'}}"
-             class="btn btn-default{{#eq reqQuery.type 'is_pickup'}} active{{/eq}}">Pickup</a>
-          <a href="{{queryParams reqQuery 'type' 'is_delivery'}}"
-             class="btn btn-default{{#eq reqQuery.type 'is_delivery'}} active{{/eq}}">Delivery</a>
-          <a href="{{queryParams reqQuery 'type' 'is_delivery_service'}}"
-             class="btn btn-default{{#eq reqQuery.type 'is_delivery_service'}} active{{/eq}}">Delivery Service</a>
+          <a href="{{queryParams reqQuery 'type' 'pickup'}}"
+             class="btn btn-default{{#eq reqQuery.type 'pickup'}} active{{/eq}}">Pickup</a>
+          <a href="{{queryParams reqQuery 'type' 'delivery'}}"
+             class="btn btn-default{{#eq reqQuery.type 'delivery'}} active{{/eq}}">Delivery</a>
+          <a href="{{queryParams reqQuery 'type' 'courier'}}"
+             class="btn btn-default{{#eq reqQuery.type 'courier'}} active{{/eq}}">Delivery Service</a>
         </div>
       </div>
       {{/if}}

@@ -100,20 +100,6 @@ define(function(require, exports, module) {
       // for (var key in params)
       //   diff[key] = this.model.has(key) ? this.model.get(key) : params[key];
 
-      // Ensure these also get saved
-      diff.is_delivery_service  = this.model.get('is_delivery_service');
-      diff.is_delivery          = this.model.get('is_delivery');
-      diff.is_pickup            = this.model.get('is_pickup');
-
-      // Hacky, but just make sure. This should probably go in order model
-      // But we're having issues with sometimes getting all false order types
-      // So just do a last stop-gap measure here and make sure one is set
-      if ( !diff.is_delivery_service )
-      if ( !diff.is_delivery )
-      if ( !diff.is_pickup ){
-        diff.is_delivery = true;
-      }
-
       var view = this;
       var sent = this.model.save(diff, {
         patch: true,

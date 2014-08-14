@@ -7,7 +7,7 @@
           <tr>
             <td style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-right: 12px;">
               <h1 style="line-height: 24px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
-                The delivery date has changed<br>
+                The {{#is order.type 'pickup' 'courier'}}pickup{{else}}delivery{{/is}} date has changed<br>
                 From {{formatDateTime oldDatetime "MM/DD/YYYY h:mm A"}}<br>
                 To <strong>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</strong>
               </h1>
@@ -30,11 +30,11 @@
               <!--</BigOlButton>-->
             </td>
             <td style="width: 46%; padding-bottom: 22px;">
-              {{#if (or order.is_pickup order.is_delivery_service)}}
+              {{#is order.type 'pickup' 'courier'}}
                 {{> order_email_details_pickup order}}
               {{else}}
                 {{> order_email_details_delivery order}}
-              {{/if}}
+              {{/is}}
             </td>
           </tr>
         </table>

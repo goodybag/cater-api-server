@@ -11,6 +11,8 @@ define( function( require ){
       var user            = options.user;
       var order           = options.order;
 
+      page.options = options;
+
       balanced.init(marketPlaceUri);
 
       var view = new Views.CheckoutView({

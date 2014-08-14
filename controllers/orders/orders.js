@@ -107,7 +107,16 @@ module.exports.get = function(req, res) {
   var tasks = [
     function(cb) {
       var query = {
-        columns: ['*', 'submitted_date']
+        columns: ['*', 'submitted_date', {
+            alias: 'payment_method'
+          , expression: {
+              type: 'one'
+            , table: 'payment_methods'
+            , parenthesis: true
+            , where: { id: '$orders.payment_method_id$' }
+            }
+          }
+        ]
       , where: { id: parseInt(req.params.oid) }
       };
       models.Order.findOne(query, function(err, order) {
@@ -179,7 +188,7 @@ module.exports.get = function(req, res) {
         isRestaurantManager: req.order.isRestaurantManager,
         isAdmin: req.order.isAdmin,
       }),
-      show_pickup: req.order.is_pickup || (req.order.isRestaurantManager && req.order.is_delivery_service),
+      show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
       states: states,
       orderAddress: function() {
         return {
@@ -198,13 +207,6 @@ module.exports.get = function(req, res) {
       context.order,
       ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
     );
-
-    // Embed the payment_method if we can
-    if (context.order.payment_method_id){
-      context.order.payment_method = utils.findWhere(
-        context.user.payment_methods, { id: context.order.payment_method_id }
-      );
-    }
 
     // Decide where to show the `Thanks` message
     if (moment(context.order.submitted_date).add('hours', 1) > moment())
@@ -245,7 +247,7 @@ module.exports.create = function(req, res) {
 module.exports.update = function(req, res) {
 
   // TODO: get this from not here
-  var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed', 'is_delivery', 'is_delivery_service', 'is_pickup'];
+  var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed', 'type'];
   var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
   if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 

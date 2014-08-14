@@ -9,7 +9,9 @@ if (typeof module === 'object' && typeof define !== 'function') {
 }
 
 var
-  types = require('../data-types')
+  types   = require('../data-types')
+, config  = require('../../config')
+, utils   = require('../../utils')
 ;
 
 define(function(require) {
@@ -184,13 +186,31 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
-  , is_delivery: { type: types.boolean, nullable: false, default: false }
-  , is_pickup: { type: types.boolean, nullable: false, default: false }
-  , is_delivery_service: { type: types.boolean, nullable: false, default: false }
+  , type: { type: types.order_type, nullable: false, default: 'delivery' }
+  , sub_total: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
   , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
   };
 
   definition.indices = {};
+
+  definition.findWithPendingPoints = function( $where, $options, callback ){
+    utils.enforceRequired( $where, [
+      'user_id'
+    ]);
+
+    $where = utils.defaults( $where, {
+      status:         { $or: ['submitted', 'accepted', 'delivered'] }
+    , points_awarded: false
+    , created_at:     { $gte: config.rewardsStartDate }
+    });
+
+    return this.find( $where, $options, callback );
+  };
+
 
   return definition;
 });

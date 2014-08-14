@@ -29,6 +29,8 @@ var definitions = [
 , 'restaurant-photos'
 , 'restaurant-hours'
 , 'restaurant-pickup-lead-times'
+, 'delivery-services'
+, 'delivery-service-zips'
 , 'orders'
 , 'categories'
 , 'items'
@@ -46,8 +48,6 @@ var definitions = [
 , 'contacts'
 , 'deltas'
 , 'order-notifications'
-, 'delivery-services'
-, 'delivery-service-zips'
 , 'scheduled-jobs'
 ];
 

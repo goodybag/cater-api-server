@@ -43,8 +43,6 @@ module.exports.register = function(app) {
     );
 
     app.post('/request-to-be-a-caterer'
-    , m.log('wut')
-    , function( req, res, next ){ console.log(req.body ); next(); }
     , m.view( 'landing/restaurant', db.restaurant_requests, {
         layout: 'landing/layout'
       , method: 'insert'

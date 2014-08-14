@@ -171,6 +171,10 @@ mosql.registerConditionalHelper( '$matches', function( column, set, values, coll
   return column + ' @@ to_tsquery(' + set + ')';
 });
 
+mosql.registerConditionalHelper( '$partialMatches', function( column, set, values, collection ) {
+  return column + ' @@ to_tsquery(' + set + '||\':*\')'; // prefix matching
+});
+
 // Upsert query type
 // Warning: This is subject to some sort of race condition
 // but it will work like 99% of the time

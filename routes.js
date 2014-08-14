@@ -1251,7 +1251,8 @@ module.exports.register = function(app) {
   app.get('/api/orders/search'
   , function(req, res, next) {
       var query = req.query.q;
-      req.queryObj.search_vector = { $matches: query };
+      if ( !query ) return next();
+      req.queryObj.search_vector = { $partialMatches: query };
       next();
     }
   , m.sort('-id')

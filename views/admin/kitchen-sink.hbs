@@ -52,19 +52,20 @@
     var $autocomplete = $('#autocomplete');
     $autocomplete.after('<ul class="autocomplete-results"></ul>');
     var $results = $('.autocomplete-results');
-    console.log($results);
     var update = _.throttle(function(){ 
-      var query = { q: $autocomplete.val() };
+      var val = $autocomplete.val();
+      if ( !val ) return $results.empty();
+      var query = { q: val };
       $.ajax({
         url: options.endpoint
       , data: query
       , success: function(data, status, xhr) {
           var html = '';
-          data.forEach(function(d) {
-            html += '<li>Order #' + d.id + ' - ' + d.restaurant.name + ' to ' + d.user.name + ' for $' + d.total +'</li>';
-          });
-
           $results.empty();
+          console.log(data);
+          data.forEach(function(d) {
+            html += '<li><a href="/orders/' + d.id + '"> Order #' + d.id + '</a> - ' + d.restaurant.name + ' to ' + d.user.name + ' for $' + d.total + ' on ' + d.datetime + '</li>';
+          });
           $results.append(html);
         }
       });

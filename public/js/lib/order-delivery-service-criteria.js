@@ -30,6 +30,8 @@ define(function( require, exports, module ){
      * @return {Boolean}      Should use DS
      */
   , check: function( order ){
+      if ( order.restaurant.disable_courier ) return false;
+
       var criteria = exports.criteria.filter( function( c ){
         return c.type === 'every';
       });

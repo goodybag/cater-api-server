@@ -295,3 +295,56 @@ begin
   where id = order_item.id;
 end;
 $$ language plpgsql;
+
+create or replace function get_delivery_fee( rid int, zip varchar(5) )
+returns int as $$
+begin
+  return (
+    select price from (
+      select restaurant_delivery_zips.fee as price from restaurant_delivery_zips
+        left join restaurants on restaurant_delivery_zips.restaurant_id = restaurants.id
+      where restaurants.id = rid
+      union
+      select delivery_service_zips.price from delivery_service_zips
+        left join restaurants on delivery_service_zips.from = restaurants.zip
+      where restaurants.id = rid
+    ) as all_delivery_zips order by price asc limit 1
+  );
+end;
+$$ language plpgsql;
+
+create or replace function get_delivery_fee( rid int, zip varchar(5), delivery_date timestamp, guests int )
+returns int as $$
+  declare diff interval;
+begin
+  diff := delivery_date at time zone regions.timezone - now();
+
+  return (
+    select price from (
+      select restaurant_delivery_zips.fee as price from restaurant_delivery_zips
+        left join restaurants on restaurant_delivery_zips.restaurant_id = restaurants.id
+        left join regions on regions.id = restaurants.region_id
+        left join restaurant_lead_times on restaurant_lead_times.restaurant_id = restaurants.id
+        left join restaurant_delivery_times on restaurant_delivery_times.restaurant_id = restaurants.id
+      where restaurants.id = rid
+        and restaurant_lead_times.lead_time * interval '1 minute' <= diff
+        and restaurant_lead_times.max_guests <= guests
+        and restaurant_delivery_times.day = extract( dow from delivery_date at time zone regions.timezone )
+        and restaurant_delivery_times.start_time >= delivery_date::time at time zone regions.timezone
+        and restaurant_delivery_times.end_time <= delivery_date::time at time zone regions.timezone
+      union
+      select delivery_service_zips.price from delivery_service_zips
+        left join restaurants on delivery_service_zips.from = restaurants.zip
+        left join regions on regions.id = restaurants.region_id
+        left join restaurant_pickup_lead_times on restaurant_pickup_lead_times.restaurant_id = restaurants.id
+        left join restaurant_hours on restaurant_hours.restaurant_id = restaurants.id
+      where restaurants.id = rid
+        and restaurant_pickup_lead_times.lead_time * interval '1 minute' <= diff
+        and restaurant_pickup_lead_times.max_guests <= guests
+        and restaurant_hours.start_time >= delivery_date::time at time zone regions.timezone
+        and restaurant_hours.end_time <= delivery_date::time at time zone regions.timezone
+    ) as all_delivery_zips
+    order by price asc limit 1
+  );
+end;
+$$ language plpgsql;

@@ -156,6 +156,10 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , disable_courier: {
+      type: types.boolean
+    , default: false
+    }
   };
 
   definition.indices = {};

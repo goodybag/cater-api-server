@@ -171,6 +171,7 @@ var Restaurant = module.exports = Model.extend({
         , { table: 'restaurants', name: 'id', alias: 'restaurant_id' }
         , { table: 'restaurants', name: 'region_id', alias: 'region_id' }
         ]
+      , where: { 'restaurants.disable_courier': false }
       , joins: {
           restaurants: {
             on: { zip: '$delivery_service_zips.from$' }

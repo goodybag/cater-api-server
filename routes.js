@@ -198,7 +198,7 @@ module.exports.register = function(app) {
   , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.db.restaurants.find( {}, {
       limit: 'all'
-    , order: 'name asc'
+    , order: 'name'
     })
   , m.view('admin/restaurant/edit-restaurants', {
       layout: 'admin/layout-page'

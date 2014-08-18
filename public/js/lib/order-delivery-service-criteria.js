@@ -30,13 +30,21 @@ define(function( require, exports, module ){
      * @return {Boolean}      Should use DS
      */
   , check: function( order ){
-      if ( order.restaurant.disable_courier ) return false;
+      var criteria = exports.criteria.filter( function( c ){
+        return c.type === 'and';
+      });
+
+      var result = utils.every( criteria, function( criterion ){
+        return criterion.fn( order );
+      });
+
+      if ( !result ) return false;
 
       var criteria = exports.criteria.filter( function( c ){
         return c.type === 'every';
       });
 
-      var result = utils.every( criteria, function( criterion ){
+      result = utils.every( criteria, function( criterion ){
         return criterion.fn( order );
       });
 
@@ -112,6 +120,16 @@ define(function( require, exports, module ){
   //   }
   // });
 
+  exports.add({
+    name: 'restaurant_disabled_courier'
+  , type: 'and'
+  , requirements: [
+      'restaurant.disable_courier'
+    ]
+  , fn: function( order ){
+      return !order.restaurant.disable_courier;
+    }
+  })
   // Is head count too low?
   exports.add({
     name: 'head_count'

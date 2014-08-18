@@ -196,7 +196,10 @@ module.exports.register = function(app) {
   app.get('/admin/restaurants'
   , m.restrict('admin')
   , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.db.restaurants.find( {}, { limit: 'all' } )
+  , m.db.restaurants.find( {}, {
+      limit: 'all'
+    , order: 'name'
+    })
   , m.view('admin/restaurant/edit-restaurants', {
       layout: 'admin/layout-page'
     })

@@ -31,20 +31,10 @@ define(function( require, exports, module ){
      */
   , check: function( order ){
       var criteria = exports.criteria.filter( function( c ){
-        return c.type === 'and';
-      });
-
-      var result = utils.every( criteria, function( criterion ){
-        return criterion.fn( order );
-      });
-
-      if ( !result ) return false;
-
-      var criteria = exports.criteria.filter( function( c ){
         return c.type === 'every';
       });
 
-      result = utils.every( criteria, function( criterion ){
+      var result = utils.every( criteria, function( criterion ){
         return criterion.fn( order );
       });
 
@@ -122,14 +112,15 @@ define(function( require, exports, module ){
 
   exports.add({
     name: 'restaurant_disabled_courier'
-  , type: 'and'
+  , type: 'every'
   , requirements: [
       'restaurant.disable_courier'
     ]
   , fn: function( order ){
       return !order.restaurant.disable_courier;
     }
-  })
+  });
+
   // Is head count too low?
   exports.add({
     name: 'head_count'

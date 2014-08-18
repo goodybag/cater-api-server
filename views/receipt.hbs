@@ -119,7 +119,7 @@
             <a class="btn btn-primary btn-add-tip" href="" onclick="javascript:return false;">{{#eq order.tip 0}}Add Tip{{else}}Edit Tip{{/eq}}</a>
           {{/if}}
 
-          {{#if order.editable}}
+          {{#if isAdmin }}
           <button type="button" class="btn btn-default edit-order-btn">Edit</button>
           {{/if}}
 
@@ -171,10 +171,10 @@
                 {{/each}}
                 {{/each}}
               </ul>
-              {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
+              {{#if ../isAdmin}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
             </td>
             <td class="line-item-quantity" data-title="Quantity">
-              {{#if ../order.editable}}
+              {{#if ../isAdmin}}
               <span class="icon-x">x</span>
               <input type="number" min="1" class="item-quantity-input form-control order-item-field order-item-quantity" value="{{this.quantity}}" />
               {{else}}
@@ -182,14 +182,14 @@
               {{/if}}
             </td>
             <td class="line-item-notes" data-title="Notes">
-              {{#if ../order.editable}}
+              {{#if ../isAdmin}}
               <textarea name="notes" class="item-notes-textarea form-control order-item-field order-item-notes">{{this.notes}}</textarea>
               {{else}}
               <span name="notes" class="item-notes-span order-item-field order-item-notes">{{#if this.notes}}{{this.notes}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
             </td>
             <td class="line-item-recipient" data-title="Recipient">
-              {{#if ../order.editable}}
+              {{#if ../isAdmin}}
                 <textarea name="recipient" class="item-notes-textarea form-control order-item-field order-item-recipient">{{this.recipient}}</textarea>
               {{else}}
                 <span name="recipient" class="item-recipient-span order-item-field order-item-recipient">{{#if this.recipient}}{{this.recipient}}{{else}}&nbsp;{{/if}}</span>
@@ -244,7 +244,7 @@
 
     {{#unless isRestaurantReview}}
     <div class="panel-actions">
-      {{#if order.editable}}
+      {{#if isAdmin}}
       <a class="btn btn-default btn-add-to-order" href="/orders/{{order.id}}/add-items">Add to Order</a>
       {{/if}}
 

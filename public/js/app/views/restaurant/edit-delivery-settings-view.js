@@ -13,11 +13,16 @@ define(function(require, exports, module) {
     },
 
     fieldMap: {
-      delivery_zips: '.delivery-zip-group'
-    , minimum_order: '.minimum_order'
+      delivery_zips:    '.delivery-zip-group'
+    , minimum_order:    '.minimum_order'
+    , disable_courier:  '.disable-courier'
     },
 
     fieldGetters: _.extend({
+      disable_courier: function() {
+        return this.$el.find(this.fieldMap.disable_courier).is(':checked');
+      },
+
       minimum_order: function() {
         return +Handlebars.helpers.pennies( this.$el.find('.minimum-order').val() ) || null;
       },

@@ -141,6 +141,7 @@ var Restaurant = module.exports = Model.extend({
     };
 
     if ( options.name ) query.name = options.name;
+    if ( options.alias ) query.alias = options.alias;
 
     if ( options.zip ){
       rQuery.where['restaurant_delivery_zips.zip'] = options.zip;
@@ -472,14 +473,19 @@ console.log(JSON.stringify(query, true, '  '));
     query.columns.push("(SELECT coalesce(array_to_json(array_agg(row_to_json(r))), \'[]\'::json) FROM (SELECT lead_time, max_guests, cancel_time FROM restaurant_pickup_lead_times WHERE restaurant_id = restaurants.id ORDER BY lead_time ASC) r ) AS pickup_lead_times");
     query.columns.push("(SELECT max(r.max_guests) FROM ( select max_guests, restaurant_id from restaurant_lead_times union select max_guests, restaurant_id from restaurant_pickup_lead_times) r WHERE r.restaurant_id = restaurants.id) AS max_guests");
 
-    // query.columns.push({
-    //   type: 'select'
+    query.columns.push({
+      type: 'select'
     // , alias: 'all_delivery_zips'
-    // , columns: ['price']
-    // , limit: 1
-    // , order: 'price asc'
-    // , table: Restaurant.getDeliveryZipsQuery( orderParams )
-    // });
+    , columns: ['price']
+    , limit: 1
+    , order: 'price asc'
+    , table: Restaurant.getDeliveryZipsQuery(
+        utils.extend(
+          { alias: 'all_delivery_zips', with_delivery_services: true }
+        , orderParams
+        )
+      )
+    });
 
     query.columns = query.columns.concat( Restaurant.getRegionColumns() );
     query.joins.regions = Restaurant.getRegionJoin();

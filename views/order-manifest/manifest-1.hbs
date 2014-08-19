@@ -20,17 +20,19 @@
   };
 
   var getInnerHeight = function( $el ){
-    return Array.prototype.reduce.call(
-      $el.find('> *').map( function(){
-        var $this = $(this);
-        if ( ['fixed', 'absolute'].indexOf( $this.css('position') ) > -1 ){
-          return 0;
-        }
+    return Array.prototype.slice.call(
+      $el.find('> *')
+    ).map( function( el ){
+      var $this = $(el);
 
-        return $this.outerHeight(true);
-      })
-    , function( a, b ){ return a + b; }
-    );
+      if ( ['fixed', 'absolute'].indexOf( $this.css('position') ) > -1 ){
+        return 0;
+      }
+
+      return $this.outerHeight(true);
+    }).reduce( function( a, b ){
+      return a + b;
+    });
   };
 
   var adjustManifestPage = function( $page, callback ){

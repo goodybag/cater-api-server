@@ -1045,6 +1045,10 @@ table {
   color: #808080;
   line-height: 20px;
 }
+.manifest-header .order-info > .info-item.info-item-company {
+  white-space: nowrap;
+  max-width: 230px;
+}
 .manifest-header .order-info .item-value {
   color: #000;
   font-size: 22px;

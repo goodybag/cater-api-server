@@ -31,13 +31,6 @@
 
 <section class="page-section" id="section-typeahead">
   <div class="container">
-    <h2 class="component-title">Autocomplete</h2>
-    <label for="autocomplete">Search orders</label>
-    <input class="component-autocomplete" id="autocomplete" type="text" placeholder="Search orders">
-  </div>
-</section>
-<section class="page-section" id="section-typeahead">
-  <div class="container">
     <div id="order-search"></div>
   </div>
 </section>
@@ -49,56 +42,12 @@
   require(['jquery-loaded', 'react', 'jsx!components/order-search']
     , function($, React, OrderSearch){
 
-    // mock api data
-    var data = [
-      { order: { id: 1235, total: 15682 }
-      , restaurant: { name: 'Pizza Pub' }
-      , user: { name: 'Preston', email: 'preston@goodybag.com', organization: 'Goodybag' }
-      }
-
-    , { order: { id: 113, total: 64207 }
-      , restaurant: { name: 'Lobsters R Us' }
-      , user: { name: 'Mr. Krabs', email: 'krabby@patty.com', organization: 'Bobloblaw' }
-      }
-
-    , { order: { id: 32141, total: 111 }
-      , restaurant: { name: 'Pineapple' }
-      , user: { name: 'Apple', email: 'banana@cucumber.com', organization: 'Tomato' }
-      }
-    ];
-
+    // TODO: ratelimit?
     // Render this lovely component
     React.renderComponent(
-      OrderSearch({ data: data })
+      OrderSearch({ endpoint: '/api/orders/search' })
     , document.getElementById('order-search')
     );
-    var options = {
-      rateLimit: 500 // ms
-    , endpoint: '/api/orders/search'
-    };
-
-  //   var $autocomplete = $('#autocomplete');
-  //   $autocomplete.after('<ul class="autocomplete-results"></ul>');
-  //   var $results = $('.autocomplete-results');
-  //   var update = _.throttle(function(){ 
-  //     var val = $autocomplete.val();
-  //     if ( !val ) return $results.empty();
-  //     var query = { q: val };
-  //     $.ajax({
-  //       url: options.endpoint
-  //     , data: query
-  //     , success: function(data, status, xhr) {
-  //         var html = '';
-  //         $results.empty();
-  //         console.log(data);
-  //         data.forEach(function(d) {
-  //           html += '<li><a href="/orders/' + d.id + '"> Order #' + d.id + '</a> - ' + d.restaurant.name + ' to ' + d.user.name + ' for $' + d.total + ' on ' + d.datetime + '</li>';
-  //         });
-  //         $results.append(html);
-  //       }
-  //     });
-  //   }, options.rateLimit);
-  //   $autocomplete.on('input', update);
   });
 </script>
 <script>

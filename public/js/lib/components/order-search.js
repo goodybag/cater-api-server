@@ -9,9 +9,11 @@
 define([
   'jquery-loaded'
 , 'react'
+, 'moment'
 ], function(
   $
 , React
+, moment
 ) {
 
   var OrderSearch = React.createClass({
@@ -98,10 +100,11 @@ define([
   var SearchRow = React.createClass({
     render: function() {
       var orderUrl = '/orders/' + this.props.order.id;
+      var datetime = moment(this.props.order.datetime).calendar();
       return (
         <div>
-          <p><a href={orderUrl}>Order #{this.props.order.id}</a> - ${this.props.order.total}</p>
-          <p>{this.props.order.restaurant.name} delivering to {this.props.order.user.name}</p>
+          <p><a href={orderUrl}>Order #{this.props.order.id}</a> - ${this.props.order.total} @ {datetime}</p>
+          <p>{this.props.order.restaurant.name} delivering to {this.props.order.user.name} ({this.props.order.user.organization})</p>
           <hr/>
         </div>
       );

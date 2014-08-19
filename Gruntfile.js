@@ -70,10 +70,6 @@ module.exports = function(grunt) {
         options: { stdout: true }
       , command: 'npm version patch'
       }
-    , commitManifest: {
-        options: { stdout: true }
-      , command: 'git add public/css/order-manifest.css && git commit -m "copy order manifest styles"'
-      }
     }
 
   , less: {
@@ -84,7 +80,7 @@ module.exports = function(grunt) {
         , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less"
         , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
         , "public/dist/<%= pkg.version %>/admin.css":              "less/core-admin.less"
-        , "public/css/order-manifest.css":                         "less/core-order-manifest.less"
+        , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
         }
       }
     }
@@ -92,7 +88,7 @@ module.exports = function(grunt) {
   , copy: {
       manifest: {
         files: [
-          { src: ['public/dist/<%= pkg.version %>/order-manifest.css'], dest: 'public/css/order-manifest.css' }
+          { expand: true, flatten: true, src: ['public/js/pdf/*'], dest: 'public/dist/<%= pkg.version %>/pdf/' }
         ]
       }
     }
@@ -253,7 +249,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask( 'analyze',      ['complexity'] );
-  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'shell:commitManifest', 'concat', 'shell:handlebars', 'requirejs'] );
+  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'concat', 'shell:handlebars', 'requirejs'] );
   grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 

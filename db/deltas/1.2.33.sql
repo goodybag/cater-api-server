@@ -8,6 +8,7 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
+  alter table orders drop column if exists search_vector;
   alter table orders add column search_vector tsvector;
 
   update orders as o 
@@ -26,7 +27,7 @@ begin
   create index orders_search_idx on
     orders using gin( search_vector );
 
-  create view orders_search_view as
+  create or replace view orders_search_view as
     select 
       orders.id as order_id,
       orders.name as order_name,

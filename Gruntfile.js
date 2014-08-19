@@ -88,8 +88,7 @@ module.exports = function(grunt) {
   , copy: {
       manifest: {
         files: [
-          // Can't figure out how to not be totally explicit here
-          { src: ['public/js/pdf/utils.js'], dest: 'public/dist/<%= pkg.version %>/pdf/utils.js' }
+          { expand: true, flatten: true, src: ['public/js/pdf/*'], dest: 'public/dist/<%= pkg.version %>/pdf/' }
         ]
       }
     }

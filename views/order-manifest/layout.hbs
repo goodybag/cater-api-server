@@ -1,11 +1,16 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <link rel="stylesheet" href="{{cdn "/css/order-manifest.css"}}">
+    <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/order-manifest.css' pkg)}}">
     {{{block "css"}}}
 
     <script src="{{cdn "/components/jquery/jquery.js"}}"></script>
-    <script src="{{cdn "/js/pdf/utils.js"}}"></script>
+
+    {{#unless config.isDev}}
+      <script src="{{cdn (format 'dist/<%= version %>/pdf/utils.js' pkg)}}"></script>
+    {{else}}
+      <script src="{{cdn "/js/pdf/utils.js"}}"></script>
+    {{/unless}}
     {{{block "scripts"}}}
   </head>
   <body>

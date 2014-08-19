@@ -955,6 +955,7 @@ table {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   page-break-after: always;
+  overflow: hidden;
   padding-top: 0.2in;
   padding-bottom: 0.25in;
   padding-left: 0.25in;

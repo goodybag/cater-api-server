@@ -38,7 +38,6 @@
 </section>
 <section class="page-section" id="section-typeahead">
   <div class="container">
-    <h2 class="component-title">Order Search</h2>
     <div id="order-search"></div>
   </div>
 </section>
@@ -50,9 +49,27 @@
   require(['jquery-loaded', 'react', 'jsx!components/order-search']
     , function($, React, OrderSearch){
 
+    // mock api data
+    var data = [
+      { order: { id: 1235, total: 15682 }
+      , restaurant: { name: 'Pizza Pub' }
+      , user: { name: 'Preston', email: 'preston@goodybag.com', organization: 'Goodybag' }
+      }
+
+    , { order: { id: 113, total: 64207 }
+      , restaurant: { name: 'Lobsters R Us' }
+      , user: { name: 'Mr. Krabs', email: 'krabby@patty.com', organization: 'Bobloblaw' }
+      }
+
+    , { order: { id: 32141, total: 111 }
+      , restaurant: { name: 'Pineapple' }
+      , user: { name: 'Apple', email: 'banana@cucumber.com', organization: 'Tomato' }
+      }
+    ];
+
     // Render this lovely component
     React.renderComponent(
-      OrderSearch(null)
+      OrderSearch({ data: data })
     , document.getElementById('order-search')
     );
     var options = {

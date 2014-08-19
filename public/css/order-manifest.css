@@ -955,6 +955,7 @@ table {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   page-break-after: always;
+  overflow: hidden;
   padding-top: 0.2in;
   padding-bottom: 0.25in;
   padding-left: 0.25in;
@@ -1044,6 +1045,10 @@ table {
   border-right: solid 1px #808080;
   color: #808080;
   line-height: 20px;
+}
+.manifest-header .order-info > .info-item.info-item-company {
+  white-space: nowrap;
+  max-width: 230px;
 }
 .manifest-header .order-info .item-value {
   color: #000;

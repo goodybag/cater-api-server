@@ -110,6 +110,17 @@ define(function( require, exports, module ){
   //   }
   // });
 
+  exports.add({
+    name: 'restaurant_disabled_courier'
+  , type: 'every'
+  , requirements: [
+      'restaurant.disable_courier'
+    ]
+  , fn: function( order ){
+      return !order.restaurant.disable_courier;
+    }
+  });
+
   // Is head count too low?
   exports.add({
     name: 'head_count'

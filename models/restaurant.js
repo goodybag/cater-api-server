@@ -116,30 +116,13 @@ var Restaurant = module.exports = Model.extend({
     return query;
   },
 
-  // Coerces restaurant_delivery_zips into a `from`->`to` data model
-  // Unions with the delivery_service_zips
-  //
-  // select "restaurants"."zip" as "from",
-  //       "restaurant_delivery_zips"."zip" as "from",
-  //       "restaurant_delivery_zips"."fee" as "price",
-  //       "restaurants"."id" as "restaurant_id",
-  //       "restaurants"."region_id" as "region_id"
-  // from "restaurant_delivery_zips"
-  // join "restaurants" "restaurants" on "restaurants"."id" = "restaurant_delivery_zips"."restaurant_id"
-  // union select "delivery_service_zips"."from" as "from",
-  //              "delivery_service_zips"."to" as "to",
-  //              "delivery_service_zips"."price" as "price",
-  //              "restaurants"."id" as "restaurant_id",
-  //              "restaurants"."region_id" as "region_id"
-  // from "delivery_service_zips"
-  // join "restaurants" "restaurants" on "restaurants"."zip" = "delivery_service_zips"."from")
   getDeliveryZipsQuery: function( options ){
     options = options || {};
 
-    var query = {
+    var rQuery, dsQuery, query = {
       type: 'union'
     , queries: [
-        {
+        rQuery = {
           type: 'select'
         , table: 'restaurant_delivery_zips'
         , columns: [
@@ -149,19 +132,77 @@ var Restaurant = module.exports = Model.extend({
           , { table: 'restaurants', name: 'id', alias: 'restaurant_id' }
           , { table: 'restaurants', name: 'region_id', alias: 'region_id' }
           ]
-        , joins: {
-            restaurants: {
-              on: { id: '$restaurant_delivery_zips.restaurant_id$' }
-            }
-          }
+        , where: {}
+        , joins: [
+            { target: 'restaurants' on: { id: '$restaurant_delivery_zips.restaurant_id$' } }
+          ]
         }
       ]
     };
 
     if ( options.name ) query.name = options.name;
 
+    if ( options.zip ){
+      rQuery.where['restaurant_delivery_zips.zip'] = options.zip;
+    }
+
+    if ( options.date || options.time ){
+      rQuery.joins.push({
+        target: 'regions', on: { id: '$restaurants.region_id$' }
+      });
+
+      rQuery.joins.push({
+        target: 'restaurant_delivery_times', on: { restaurant_id: '$restaurants.id$' }
+      });
+    }
+
+    if ( options.date ){
+      rQuery.where['restaurant_delivery_times.day'] = {
+        $custom: [
+          'restaurant_delivery_times.day = extract( dow from $1 at time zone regions.timezone )'
+        , options.date
+        ];
+      };
+    }
+
+    if ( options.time ){
+      rQuery.where['restaurant_delivery_times.start_time'] = {
+        $custom: [
+          'restaurant_delivery_times.start_time <= $1::time at time zone regions.timezone'
+        , options.time
+        ];
+      };
+
+      rQuery.where['restaurant_delivery_times.end_time'] = {
+        $custom: [
+          'restaurant_delivery_times.end_time > $1::time at time zone regions.timezone'
+        , options.time
+        ];
+      };
+    }
+
+    if ( options.date && options.time && options.guests ){
+      rQuery.joins.push({
+        target: 'restaurant_lead_times', on: { restaurant_id: '$restaurants.id$' }
+      });
+
+      rQuery.where['restaurant_lead_times.lead_time'] = {
+        $custom: [
+          'restaurant_lead_times.lead_time * interval \'1 minute\' <= $1 at time zone regions.timezone - now()'
+        , [ options.date, options.time ].join(' ')
+        ];
+      };
+
+      rQuery.where['restaurant_lead_times.max_guests'] = {
+        $custom: [
+          'restaurant_lead_times.max_guests <= $1'
+        , options.guests
+        ];
+      };
+    }
+
     if ( options.with_delivery_services ){
-      query.queries.push({
+      query.queries.push( dsQuery = {
         type: 'select'
       , table: 'delivery_service_zips'
       , columns: [
@@ -178,6 +219,65 @@ var Restaurant = module.exports = Model.extend({
           }
         }
       });
+
+      if ( options.zip ){
+        dsQuery.where['delivery_service_zips.to'] = options.zip;
+      }
+
+      if ( options.date || options.time ){
+        dsQuery.joins.push({
+          target: 'regions', on: { id: '$restaurants.region_id$' }
+        });
+
+        dsQuery.joins.push({
+          target: 'restaurant_hours', on: { restaurant_id: '$restaurants.id$' }
+        });
+      }
+
+      if ( options.date ){
+        dsQuery.where['restaurant_hours.day'] = {
+          $custom: [
+            'restaurant_hours.day = extract( dow from $1 at time zone regions.timezone )'
+          , options.date
+          ];
+        };
+      }
+
+      if ( options.time ){
+        dsQuery.where['restaurant_hours.start_time'] = {
+          $custom: [
+            'restaurant_hours.start_time <= $1::time at time zone regions.timezone'
+          , options.time
+          ];
+        };
+
+        dsQuery.where['restaurant_hours.end_time'] = {
+          $custom: [
+            'restaurant_hours.end_time > $1::time at time zone regions.timezone'
+          , options.time
+          ];
+        };
+      }
+
+      if ( options.date && options.time && options.guests ){
+        dsQuery.joins.push({
+          target: 'restaurant_pickup_lead_times', on: { restaurant_id: '$restaurants.id$' }
+        });
+
+        dsQuery.where['restaurant_pickup_lead_times.lead_time'] = {
+          $custom: [
+            'restaurant_pickup_lead_times.lead_time * interval \'1 minute\' <= $1 at time zone regions.timezone - now()'
+          , [ options.date, options.time ].join(' ')
+          ];
+        };
+
+        dsQuery.where['restaurant_pickup_lead_times.max_guests'] = {
+          $custom: [
+            'restaurant_pickup_lead_times.max_guests <= $1'
+          , options.guests
+          ];
+        };
+      }
     }
 
     return query;

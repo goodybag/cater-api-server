@@ -652,10 +652,7 @@ module.exports.register = function(app) {
 
   app.post('/orders/:oid/items'
   , m.editOrderAuth
-  , m.exists('creatorId', {
-      then: function(req, res, next) { next(); }
-    , else: m.restrict(['client', 'admin'])
-    })
+  , m.restrict(['client', 'admin'])
   , controllers.orders.editability
   , controllers.orders.orderItems.add
   );
@@ -673,10 +670,7 @@ module.exports.register = function(app) {
 
   app.put('/orders/:oid/items/:iid'
   , m.editOrderAuth
-  , m.exists('creatorId', {
-      then: function(req, res, next) { next(); }
-    , else: m.restrict(['client', 'admin'])
-    })
+  , m.restrict(['client', 'admin'])
   , controllers.orders.editability
   , controllers.orders.orderItems.update
   );
@@ -1259,10 +1253,7 @@ module.exports.register = function(app) {
 
   app.get('/api/orders/:oid/items'
   , m.editOrderAuth
-  , m.exists('creatorId', {
-      then: function(req, res, next) { next(); }
-    , else: m.restrict(['client', 'admin'])
-    })
+  , m.restrict(['client', 'admin'])
   , controllers.orders.orderItems.list
   );
 

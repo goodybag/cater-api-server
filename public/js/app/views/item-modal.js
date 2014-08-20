@@ -151,7 +151,7 @@ define(function(require, exports, module) {
       if ( this.model instanceof OrderItem ){
         var edit_token = this.options.orderModel.attributes.edit_token;
         var data = edit_token ?
-        { data: $.param({ edit_token: this.edit_token }) } : null;
+        { data: $.param({ edit_token: edit_token }) } : null;
         this.model.destroy(data);
       }
 

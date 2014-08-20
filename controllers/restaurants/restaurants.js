@@ -95,7 +95,7 @@ module.exports.get = function(req, res) {
 
   var orderParams = req.query || {};
 
-  var userId = req.creatorId || req.session.user.id;
+  var userId = req.user.id || req.session.user.id;
   var tasks = [
     function(callback) {
       if (!userId) return callback(null, null);

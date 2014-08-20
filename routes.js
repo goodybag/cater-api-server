@@ -65,7 +65,11 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
-  app.get('/restaurants/:rid', m.editOrderAuth, controllers.restaurants.orders.current);  // individual restaurant needs current order.
+  app.get('/restaurants/:rid'
+  , m.editOrderAuth
+  , controllers.restaurants.orders.current
+  , controllers.restaurants.get
+  );  // individual restaurant needs current order.
 
   app.get('/restaurants/:rid'
   , m.editOrderAuth

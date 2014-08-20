@@ -5,7 +5,7 @@
  *   - Shared Link hasn't expired
  */
 
-var models = require('../models');
+var db = require('../db')
 var utils = require('../utils');
 var moment = require('moment');
 var statuses = ['submitted', 'accepted', 'denied'];
@@ -27,14 +27,17 @@ module.exports = function(req, res, next) {
     function getOrder(done) {
       // Get req.order or lookup by edit_token
       if (req.order) return done(null, req.order);
-      var query = { where: { edit_token: token } };
-      models.Order.findOne(query, function(err, order) {
+
+      var $query = { where: { edit_token: token } };
+      var $options = { one: [ { table: 'users', alias: 'user' } ] }
+
+      db.orders.findOne($query, $options, function(err, order) {
         if (err)
           return done(err);
         else if (!order)
           done(null, null);
         else
-          done(null, order.toJSON());
+          done(null, order);
       });
     },
 
@@ -46,8 +49,13 @@ module.exports = function(req, res, next) {
       else if ( moment(order.edit_token_expires) < moment() )
         return res.render('shared-link/expired');
 
-      // record order creator id
-      req.creatorId = order.user_id;
+      // Replace user with order creator
+      req.user = order.user;
+
+      // Attach shared order
+      req.order = order;
+
+      // req.creatorId = order.user_id;
       res.locals.edit_token = token;
       done(null , order);
     }

@@ -16,10 +16,21 @@ define(function(require, exports, module) {
 
     initialize: function(options) {
       if (this.model) this.setModel(this.model);
+      this.edit_token = options.editToken;
+      this.setFetchInterval();
+    },
+
+    setFetchInterval: function() {
       var this_ = this;
-      setInterval(function() {
-        if ( this_.model.id ) this_.model.orderItems.fetch();
+      var data = this.edit_token ?
+        { data: $.param({ edit_token: this.edit_token }) } : null;
+      this.intervalId = setInterval(function() {
+        if ( this_.model.id ) this_.model.orderItems.fetch(data);
       }, config.menuRefresh);
+    },
+
+    clearFetchInterval: function() {
+      clearInterval(this.intervalId);
     },
 
     setModel: function(model) {

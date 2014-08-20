@@ -84,7 +84,7 @@ module.exports = function(grunt) {
 
     , react: {
         options: { stdout: true }
-      , command: 'jsx jsx/ public/js/lib/components'
+      , command: 'jsx --extension=jsx jsx/ public/js/lib/components'
       }
     }
 

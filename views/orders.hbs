@@ -32,6 +32,14 @@
              class="btn btn-default{{#eq reqQuery.type 'courier'}} active{{/eq}}">Delivery Service</a>
         </div>
       </div>
+      <div class="panel">
+        <div class="panel-heading panel-heading-small">
+          <h4 class="panel-title">Search Orders</h4>
+        </div>
+        <div class="panel-body">
+          <div id="order-search"></div>
+        </div>
+      </div>
       {{/if}}
     </div>
     <div class="col-md-6">
@@ -47,9 +55,16 @@
 <script>
   require([
       'app/views/orders-list-view'
+    , 'react'
+    , 'components/order-search'
     ]
-  , function(OrdersListView) {
+  , function(OrdersListView, React, OrderSearch) {
       var ordersListView = new OrdersListView({el: '.orders-list'});
+
+      React.renderComponent(
+        OrderSearch({ endpoint: '/api/orders/search' })
+      , document.getElementById('order-search')
+      );
     }
   );
 </script>

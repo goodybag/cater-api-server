@@ -51,6 +51,7 @@ define([
     render: function() {
       return (
         React.DOM.div({className: "orderSearch"}, 
+          React.DOM.h2({className: "component-title"}, "Search orders:"), 
           SearchBar({
             searchText: this.state.searchText, 
             onUserInput: this.handleUserInput}

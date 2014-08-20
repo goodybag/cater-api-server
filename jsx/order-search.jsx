@@ -51,7 +51,6 @@ define([
     render: function() {
       return (
         <div className="orderSearch">
-          <h2 className="component-title">Search orders:</h2>
           <SearchBar
             searchText={this.state.searchText}
             onUserInput={this.handleUserInput}

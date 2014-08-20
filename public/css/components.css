@@ -1056,3 +1056,29 @@ a.list-group-item .list-group-item-heading {
 .search-info .results {
   font-weight: 100;
 }
+
+/* Order Search */
+#order-search {
+  position: relative;
+}
+
+#order-search input {
+  width: 100%;
+}
+
+#order-search .searchResults {
+  position: absolute;
+  top: 40px;
+  padding: 5px;
+  background-color: white;
+  border-radius: 5px;
+  border: solid 1px #CCCCC0;
+  width: 400px;
+  max-height: 200px;
+  overflow: scroll;
+  z-index: 100;
+}
+
+#order-search .searchResults:empty {
+  display: none;
+}

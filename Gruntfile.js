@@ -17,6 +17,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-named-modules');
   grunt.loadNpmTasks('grunt-s3');
+  grunt.loadNpmTasks('grunt-react');
 
   var gruntConfig = {
     localbranch: grunt.option('branch') || 'master'
@@ -47,6 +48,12 @@ module.exports = function(grunt) {
       , tasks: [ 'shell:handlebars' ]
       , options: { spawn: false }
       }
+
+    , react: {
+        files: [ 'jsx/*.jsx' ]
+      , tasks: [ 'shell:react' ]
+      , options: { spawn: false }
+      }
     }
 
   , shell: {
@@ -73,6 +80,11 @@ module.exports = function(grunt) {
     , commitManifest: {
         options: { stdout: true }
       , command: 'git add public/css/order-manifest.css && git commit -m "copy order manifest styles"'
+      }
+
+    , react: {
+        options: { stdout: true }
+      , command: 'jsx jsx/ public/js/lib/components'
       }
     }
 
@@ -141,6 +153,16 @@ module.exports = function(grunt) {
       }
     , landing: {}
     , admin: {}
+    }
+
+  , react: {
+      files: {
+        expand: true
+      , cwd: 'jsx'
+      , src: [ '**/*.jsx' ]
+      , dest: 'public/js/lib/components'
+      , ext: '.js'
+      }
     }
 
   , s3: {
@@ -253,7 +275,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask( 'analyze',      ['complexity'] );
-  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'shell:commitManifest', 'concat', 'shell:handlebars', 'requirejs'] );
+  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'shell:commitManifest', 'concat', 'shell:handlebars', 'requirejs', 'react'] );
   grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 

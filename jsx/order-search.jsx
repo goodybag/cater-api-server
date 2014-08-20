@@ -18,7 +18,7 @@ define([
 , moment
 ) {
 
-  var OrderSearch = React.createClass({displayName: 'OrderSearch',
+  var OrderSearch = React.createClass({
     getInitialState: function() {
       return {
         orders: []
@@ -50,65 +50,65 @@ define([
 
     render: function() {
       return (
-        React.DOM.div({className: "orderSearch"}, 
-          React.DOM.h2({className: "component-title"}, "Search orders:"), 
-          SearchBar({
-            searchText: this.state.searchText, 
-            onUserInput: this.handleUserInput}
-          ), 
-          SearchResults({
-            orders: this.state.orders, 
-            searchText: this.state.searchText}
-          )
-        )
+        <div className="orderSearch">
+          <h2 className="component-title">Search orders:</h2>
+          <SearchBar
+            searchText={this.state.searchText}
+            onUserInput={this.handleUserInput}
+          />
+          <SearchResults
+            orders={this.state.orders}
+            searchText={this.state.searchText} 
+          />
+        </div>
       );
     }
   });
 
-  var SearchBar = React.createClass({displayName: 'SearchBar',
+  var SearchBar = React.createClass({
     handleChange: function() {
       this.props.onUserInput(this.refs.searchTextInput.getDOMNode().value);
     },
 
     render: function() {
       return (
-        React.DOM.input({
-          type: "text", 
-          placeholder: "enter search", 
-          value: this.props.searchText, 
-          ref: "searchTextInput", 
-          onChange: this.handleChange}
-        )
+        <input
+          type="text"
+          placeholder="enter search"
+          value={this.props.searchText}
+          ref="searchTextInput"
+          onChange={this.handleChange}
+        />
       );
     }
   });
 
-  var SearchResults = React.createClass({displayName: 'SearchResults',
+  var SearchResults = React.createClass({
     render: function() {
       var rows = this.props.orders.map(function( order ){
         return (
-          SearchRow({order: order, key: order.id})
+          <SearchRow order={order} key={order.id} />
         );
       });
 
       return (
-        React.DOM.div({className: "searchResults"}, 
-          rows
-        )
+        <div className="searchResults">
+          {rows}
+        </div>
       );
     }
   });
 
-  var SearchRow = React.createClass({displayName: 'SearchRow',
+  var SearchRow = React.createClass({
     render: function() {
       var orderUrl = '/orders/' + this.props.order.id;
       var datetime = moment(this.props.order.datetime).calendar();
       return (
-        React.DOM.div(null, 
-          React.DOM.p(null, React.DOM.a({href: orderUrl}, "Order #", this.props.order.id), " - $", this.props.order.total, " @ ", datetime), 
-          React.DOM.p(null, this.props.order.restaurant.name, " delivering to ", this.props.order.user.name, " (", this.props.order.user.organization, ")"), 
-          React.DOM.hr(null)
-        )
+        <div>
+          <p><a href={orderUrl}>Order #{this.props.order.id}</a> - ${this.props.order.total} @ {datetime}</p>
+          <p>{this.props.order.restaurant.name} delivering to {this.props.order.user.name} ({this.props.order.user.organization})</p>
+          <hr/>
+        </div>
       );
     }
   });

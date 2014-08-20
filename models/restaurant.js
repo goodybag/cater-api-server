@@ -126,15 +126,19 @@ var Restaurant = module.exports = Model.extend({
           type: 'select'
         , table: 'restaurant_delivery_zips'
         , columns: [
-            { table: 'restaurants', name: 'zip', alias: 'from' }
+            { table: 'r', name: 'zip', alias: 'from' }
           , { table: 'restaurant_delivery_zips', name: 'zip', alias: 'to' }
           , { table: 'restaurant_delivery_zips', name: 'fee', alias: 'price' }
-          , { table: 'restaurants', name: 'id', alias: 'restaurant_id' }
-          , { table: 'restaurants', name: 'region_id', alias: 'region_id' }
+          , { table: 'r', name: 'id', alias: 'restaurant_id' }
+          , { table: 'r', name: 'region_id', alias: 'region_id' }
           ]
-        , where: {}
+        , where: utils.extend( {}, options.where )
         , joins: [
-            { target: 'restaurants', on: { id: '$restaurant_delivery_zips.restaurant_id$' } }
+            { target: 'restaurants'
+            , alias:  'r'
+            , type:   'left'
+            , on:     { id: '$restaurant_delivery_zips.restaurant_id$' }
+            }
           ]
         }
       ]
@@ -149,11 +153,11 @@ var Restaurant = module.exports = Model.extend({
 
     if ( options.date || options.time ){
       rQuery.joins.push({
-        target: 'regions', on: { id: '$restaurants.region_id$' }
+        target: 'regions', type: 'left', on: { id: '$r.region_id$' }
       });
 
       rQuery.joins.push({
-        target: 'restaurant_delivery_times', on: { restaurant_id: '$restaurants.id$' }
+        target: 'restaurant_delivery_times', type: 'left', on: { restaurant_id: '$r.id$' }
       });
     }
 
@@ -184,7 +188,7 @@ var Restaurant = module.exports = Model.extend({
 
     if ( options.date && options.time && options.guests ){
       rQuery.joins.push({
-        target: 'restaurant_lead_times', on: { restaurant_id: '$restaurants.id$' }
+        target: 'restaurant_lead_times', type: 'left', on: { restaurant_id: '$r.id$' }
       });
 
       rQuery.where['restaurant_lead_times.lead_time'] = {
@@ -210,12 +214,16 @@ var Restaurant = module.exports = Model.extend({
           { table: 'delivery_service_zips', name: 'from', alias: 'from' }
         , { table: 'delivery_service_zips', name: 'to', alias: 'to' }
         , { table: 'delivery_service_zips', name: 'price', alias: 'price' }
-        , { table: 'restaurants', name: 'id', alias: 'restaurant_id' }
-        , { table: 'restaurants', name: 'region_id', alias: 'region_id' }
+        , { table: 'r', name: 'id', alias: 'restaurant_id' }
+        , { table: 'r', name: 'region_id', alias: 'region_id' }
         ]
-      , where: { 'restaurants.disable_courier': false }
+      , where: utils.extend( { 'r.disable_courier': false }, options.where )
       , joins: [
-          { target: 'restaurants', on: { zip: '$delivery_service_zips.from$' } }
+          { target: 'restaurants'
+          , alias:  'r'
+          , type:   'left'
+          , on:     { zip: '$delivery_service_zips.from$' }
+          }
         ]
       });
 
@@ -225,11 +233,11 @@ var Restaurant = module.exports = Model.extend({
 
       if ( options.date || options.time ){
         dsQuery.joins.push({
-          target: 'regions', on: { id: '$restaurants.region_id$' }
+          target: 'regions', type: 'left', on: { id: '$r.region_id$' }
         });
 
         dsQuery.joins.push({
-          target: 'restaurant_hours', on: { restaurant_id: '$restaurants.id$' }
+          target: 'restaurant_hours', type: 'left', on: { restaurant_id: '$r.id$' }
         });
       }
 
@@ -260,7 +268,7 @@ var Restaurant = module.exports = Model.extend({
 
       if ( options.date && options.time && options.guests ){
         dsQuery.joins.push({
-          target: 'restaurant_pickup_lead_times', on: { restaurant_id: '$restaurants.id$' }
+          target: 'restaurant_pickup_lead_times', type: 'left', on: { restaurant_id: '$r.id$' }
         });
 
         dsQuery.where['restaurant_pickup_lead_times.lead_time'] = {
@@ -442,7 +450,9 @@ console.log(JSON.stringify(query, true, '  '));
         }
       , groupBy: 'restaurant_id'
       }
-    , all_delivery_zips: Restaurant.getDeliveryZipsQuery( query )
+    , all_delivery_zips: Restaurant.getDeliveryZipsQuery({
+        with_delivery_services: query.with_delivery_services
+      })
     };
 
     query.columns.push({
@@ -474,17 +484,23 @@ console.log(JSON.stringify(query, true, '  '));
     query.columns.push("(SELECT max(r.max_guests) FROM ( select max_guests, restaurant_id from restaurant_lead_times union select max_guests, restaurant_id from restaurant_pickup_lead_times) r WHERE r.restaurant_id = restaurants.id) AS max_guests");
 
     query.columns.push({
-      type: 'select'
-    // , alias: 'all_delivery_zips'
-    , columns: ['price']
-    , limit: 1
-    , order: 'price asc'
-    , table: Restaurant.getDeliveryZipsQuery(
-        utils.extend(
-          { alias: 'all_delivery_zips', with_delivery_services: true }
-        , orderParams
+      alias: 'delivery_fee'
+    , expression: {
+        type: 'select'
+      , parenthesis: true
+      , columns: ['price']
+      , limit: 1
+      , order: 'price asc'
+      , table: Restaurant.getDeliveryZipsQuery(
+          utils.extend(
+            { alias: 'all_delivery_zips'
+            , with_delivery_services: true
+            , where: { 'r.id': '$restaurants.id$'}
+            }
+          , orderParams
+          )
         )
-      )
+      }
     });
 
     query.columns = query.columns.concat( Restaurant.getRegionColumns() );

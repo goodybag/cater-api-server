@@ -286,7 +286,7 @@ var Restaurant = module.exports = Model.extend({
         };
       }
     }
-console.log(JSON.stringify(query, true, '  '));
+
     return query;
   },
 

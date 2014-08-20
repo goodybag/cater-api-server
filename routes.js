@@ -67,12 +67,6 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/:rid'
   , m.editOrderAuth
-  , controllers.restaurants.orders.current
-  , controllers.restaurants.get
-  );  // individual restaurant needs current order.
-
-  app.get('/restaurants/:rid'
-  , m.editOrderAuth
   , m.restrict(['client', 'admin'])
   , controllers.restaurants.get);
 
@@ -472,12 +466,6 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
-
-  /**
-   *  Current order resource.  The current pending order for the given restaurant and logged in user.
-   */
-
-  app.all('/restaurants/:rid/orders/current(/*)?', m.restrict(['client', 'admin']), controllers.restaurants.orders.current);
 
   /**
    *  Items resource.  The collection of all items.

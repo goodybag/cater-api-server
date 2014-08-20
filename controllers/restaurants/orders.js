@@ -46,32 +46,6 @@ module.exports.list = function(req, res) {
   });
 }
 
-module.exports.current = function(req, res, next) {
-  if ( req.order ) return next();
-  if ( !req.user ) return res.redirect('/login?next=' + req.url);
-
-  // Sanitize req.user to just json
-  // not sure if we need data models like user.getOrdersEndinginSeven
-  if ( req.user.attributes ) req.user = req.user.toJSON();
-
-  var $query = {
-    'restaurant_id': req.params.rid
-  , 'user_id': req.user.id
-  , 'orders.status': 'pending'
-  };
-
-  db.orders.findOne( $query, function(err, order) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-
-    if (order) {
-      req.order = order;
-      req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.id);
-    }
-
-    next();
-  });
-};
-
 module.exports.get = function(req, res, next) {
   // Load up the menu page with the specified order
   models.Order.findOne(req.params.oid, function(err, order) {

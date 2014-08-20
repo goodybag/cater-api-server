@@ -3,7 +3,7 @@ var utils = require('../utils');
 module.exports = function(groups) {
   if (typeof groups === 'string') groups = groups.trim().split(' ');
   return function(req, res, next) {
-    if (req.creatorId) 
+    if (req.user) 
       next();
     else if (req.order && req.order.isOwner)
       next();

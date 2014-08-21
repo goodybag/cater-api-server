@@ -10,8 +10,10 @@
 define(function(require, exports, module) {
   var $ = require('jquery');
   var Handlebars = require('handlebars');
+  var utils = require('utils');
   var React = require('react');
   var moment = require('moment');
+  var config = require('config');
 
   var OrderSearch = React.createClass({
     getInitialState: function() {
@@ -21,30 +23,26 @@ define(function(require, exports, module) {
       };
     },
 
-    search: function(searchText) {
-      if ( !searchText ) {
-        return this.setState({
-          searchText: searchText
-        , orders: []
-        });
-      }
+    handleInputChange: function(searchText) {
+      if ( !searchText ) return this.clearSearch();
+      this.setState({searchText: searchText});
+      this.search();
+    },
 
-      var query = { q: searchText };
+    search: utils.debounce(function() {
+      var searchText = this.state.searchText
       var this_ = this;
       $.ajax({
         url: this.props.endpoint
-      , data: query
+      , data: { q: searchText }
       , success: function(orders, status, xhr) {
-          this_.setState({
-            searchText: searchText
-          , orders: orders
-          });
+          this_.setState({ orders: orders });
         }
       });
-    },
+    }, config.debounceWait),
 
     clearSearch: function() {
-      this.setState({ orders: [] });
+      this.setState({ searchText: '', orders: [] });
     },
 
     render: function() {
@@ -52,7 +50,7 @@ define(function(require, exports, module) {
         <div className="orderSearch">
           <SearchBar
             searchText={this.state.searchText}
-            search={this.search}
+            handleInputChange={this.handleInputChange}
             clearSearch={this.clearSearch}
           />
           <SearchResults
@@ -66,11 +64,11 @@ define(function(require, exports, module) {
 
   var SearchBar = React.createClass({
     handleChange: function() {
-      this.props.search(this.refs.searchTextInput.getDOMNode().value);
+      this.props.handleInputChange(this.refs.searchTextInput.getDOMNode().value);
     },
 
     handleFocus: function() {
-      this.props.search(this.refs.searchTextInput.getDOMNode().value);
+      this.props.handleInputChange(this.refs.searchTextInput.getDOMNode().value);
     },
 
     handleBlur: function() {

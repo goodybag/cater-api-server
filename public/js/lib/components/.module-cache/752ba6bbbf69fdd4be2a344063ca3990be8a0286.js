@@ -75,7 +75,7 @@ define([
       return (
         React.DOM.input({
           type: "text", 
-          placeholder: "Enter search", 
+          placeholder: "enter search", 
           value: this.props.searchText, 
           ref: "searchTextInput", 
           onChange: this.handleChange}
@@ -92,9 +92,8 @@ define([
         );
       });
 
-      var classString = 'search-results list-group';
       return (
-        React.DOM.div({className: classString}, 
+        React.DOM.div({className: "searchResults"}, 
           rows
         )
       );
@@ -106,15 +105,10 @@ define([
       var orderUrl = '/orders/' + this.props.order.id;
       var datetime = moment( this.props.order.datetime ).calendar();
       var total = Hbs.helpers.dollars( this.props.order.total );
-      var classString = 'search-row list-group-item';
-      var orgString = this.props.order.user.organization ?
-                        '(' + this.props.order.user.organization +')' : '';
       return (
-        React.DOM.div({className: classString}, 
-          React.DOM.a({href: orderUrl}, 
-            React.DOM.div(null, React.DOM.strong(null, "#", this.props.order.id), " ", datetime, " for $", total), 
-            React.DOM.div(null, this.props.order.restaurant.name, " to ", this.props.order.user.name, " ", orgString)
-          )
+        React.DOM.div({className: "search-row"}, 
+          React.DOM.p(null, React.DOM.a({href: orderUrl}, "Order #", this.props.order.id), " - $", total, " @ ", datetime), 
+          React.DOM.div(null, this.props.order.restaurant.name, " delivering to ", this.props.order.user.name, " (", this.props.order.user.organization, ")")
         )
       );
     }

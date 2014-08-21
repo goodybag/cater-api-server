@@ -1066,19 +1066,36 @@ a.list-group-item .list-group-item-heading {
   width: 100%;
 }
 
-#order-search .searchResults {
+#order-search .search-results {
   position: absolute;
   top: 40px;
-  padding: 5px;
   background-color: white;
   border-radius: 5px;
   border: solid 1px #CCCCC0;
   width: 400px;
-  max-height: 200px;
+  max-height: 300px;
   overflow: scroll;
   z-index: 100;
 }
 
-#order-search .searchResults:empty {
+#order-search .search-row {
+  padding: 10px;
+  border-left: none;
+  border-right: none;
+}
+
+#order-search .search-row > a {
+  color: #340F02;
+}
+
+#order-search .search-row:hover {
+  background-color: #F8F8F0;
+}
+
+#order-search .search-row:hover > a {
+  text-decoration: none;
+}
+
+#order-search .search-results:empty {
   display: none;
 }

@@ -75,7 +75,7 @@ define([
       return (
         React.DOM.input({
           type: "text", 
-          placeholder: "Enter search", 
+          placeholder: "enter search", 
           value: this.props.searchText, 
           ref: "searchTextInput", 
           onChange: this.handleChange}

@@ -12,10 +12,12 @@ define([
   'jquery-loaded'
 , 'react'
 , 'moment'
+, 'Handlebars'
 ], function(
   $
 , React
 , moment
+, Hbs
 ) {
 
   var OrderSearch = React.createClass({
@@ -73,7 +75,7 @@ define([
       return (
         <input
           type="text"
-          placeholder="enter search"
+          placeholder="Enter search"
           value={this.props.searchText}
           ref="searchTextInput"
           onChange={this.handleChange}
@@ -90,8 +92,9 @@ define([
         );
       });
 
+      var classString = 'search-results list-group';
       return (
-        <div className="searchResults">
+        <div className={classString}>
           {rows}
         </div>
       );
@@ -101,12 +104,17 @@ define([
   var SearchRow = React.createClass({
     render: function() {
       var orderUrl = '/orders/' + this.props.order.id;
-      var datetime = moment(this.props.order.datetime).calendar();
+      var datetime = moment( this.props.order.datetime ).calendar();
+      var total = Hbs.helpers.dollars( this.props.order.total );
+      var classString = 'search-row list-group-item';
+      var orgString = this.props.order.user.organization ?
+                        '(' + this.props.order.user.organization +')' : '';
       return (
-        <div>
-          <p><a href={orderUrl}>Order #{this.props.order.id}</a> - ${this.props.order.total} @ {datetime}</p>
-          <p>{this.props.order.restaurant.name} delivering to {this.props.order.user.name} ({this.props.order.user.organization})</p>
-          <hr/>
+        <div className={classString}>
+          <a href={orderUrl}>
+            <div><strong>#{this.props.order.id}</strong> {datetime} for ${total}</div>
+            <div>{this.props.order.restaurant.name} to {this.props.order.user.name} {orgString}</div>
+          </a>
         </div>
       );
     }

@@ -45,13 +45,18 @@ define(function(require, exports, module) {
       this.setState({ searchText: '', orders: [] });
     },
 
+    clearResults: function() {
+      this.setState({ orders: [] });
+    },
+
     render: function() {
       return (
         React.DOM.div({className: "orderSearch"}, 
           SearchBar({
             searchText: this.state.searchText, 
             handleInputChange: this.handleInputChange, 
-            clearSearch: this.clearSearch}
+            clearSearch: this.clearSearch, 
+            clearResults: this.clearResults}
           ), 
           SearchResults({
             orders: this.state.orders, 
@@ -72,7 +77,7 @@ define(function(require, exports, module) {
     },
 
     handleBlur: function() {
-      this.props.clearSearch();
+      this.props.clearResults();
     },
 
     render: function() {

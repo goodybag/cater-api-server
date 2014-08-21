@@ -7,18 +7,11 @@
     - SearchResults
       - SearchRow
 */
-
-define([
-  'jquery-loaded'
-, 'react'
-, 'moment'
-, 'Handlebars'
-], function(
-  $
-, React
-, moment
-, Hbs
-) {
+define(function(require, exports, module) {
+  var $ = require('jquery');
+  var Handlebars = require('handlebars');
+  var React = require('react');
+  var moment = require('moment');
 
   var OrderSearch = React.createClass({displayName: 'OrderSearch',
     getInitialState: function() {
@@ -105,7 +98,7 @@ define([
     render: function() {
       var orderUrl = '/orders/' + this.props.order.id;
       var datetime = moment( this.props.order.datetime ).calendar();
-      var total = Hbs.helpers.dollars( this.props.order.total );
+      var total = Handlebars.helpers.dollars( this.props.order.total );
       var classString = 'search-row list-group-item';
       var orgString = this.props.order.user.organization ?
                         '(' + this.props.order.user.organization +')' : '';
@@ -120,5 +113,5 @@ define([
     }
   });
 
-  return OrderSearch;
+  return module.exports = OrderSearch;
 });

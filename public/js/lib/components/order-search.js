@@ -21,7 +21,7 @@ define(function(require, exports, module) {
       };
     },
 
-    handleUserInput: function(searchText) {
+    search: function(searchText) {
       if ( !searchText ) {
         return this.setState({
           searchText: searchText
@@ -43,12 +43,17 @@ define(function(require, exports, module) {
       });
     },
 
+    clearSearch: function() {
+      this.setState({ orders: [] });
+    },
+
     render: function() {
       return (
         React.DOM.div({className: "orderSearch"}, 
           SearchBar({
             searchText: this.state.searchText, 
-            onUserInput: this.handleUserInput}
+            search: this.search, 
+            clearSearch: this.clearSearch}
           ), 
           SearchResults({
             orders: this.state.orders, 
@@ -61,7 +66,15 @@ define(function(require, exports, module) {
 
   var SearchBar = React.createClass({displayName: 'SearchBar',
     handleChange: function() {
-      this.props.onUserInput(this.refs.searchTextInput.getDOMNode().value);
+      this.props.search(this.refs.searchTextInput.getDOMNode().value);
+    },
+
+    handleFocus: function() {
+      this.props.search(this.refs.searchTextInput.getDOMNode().value);
+    },
+
+    handleBlur: function() {
+      this.props.clearSearch();
     },
 
     render: function() {
@@ -71,7 +84,9 @@ define(function(require, exports, module) {
           placeholder: "Enter search", 
           value: this.props.searchText, 
           ref: "searchTextInput", 
-          onChange: this.handleChange}
+          onChange: this.handleChange, 
+          onFocus: this.handleFocus, 
+          onBlur: this.handleBlur}
         )
       );
     }

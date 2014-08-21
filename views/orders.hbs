@@ -8,6 +8,16 @@
   </div>
   <div class="row orders-list">
     <div class="col-md-2 col-md-offset-2">
+      {{#if user.isAdmin}}
+      <div class="panel">
+        <div class="panel-heading panel-heading-small">
+          <h4 class="panel-title">Search Orders</h4>
+        </div>
+        <div class="panel-body">
+          <div id="order-search"></div>
+        </div>
+      </div>
+      {{/if}}
       <div class="panel">
         <div class="panel-heading panel-heading-small">
           <h4 class="panel-title">Status</h4>
@@ -30,14 +40,6 @@
              class="btn btn-default{{#eq reqQuery.type 'delivery'}} active{{/eq}}">Delivery</a>
           <a href="{{queryParams reqQuery 'type' 'courier'}}"
              class="btn btn-default{{#eq reqQuery.type 'courier'}} active{{/eq}}">Delivery Service</a>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-heading panel-heading-small">
-          <h4 class="panel-title">Search Orders</h4>
-        </div>
-        <div class="panel-body">
-          <div id="order-search"></div>
         </div>
       </div>
       {{/if}}

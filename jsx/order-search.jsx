@@ -23,6 +23,10 @@ define(function(require, exports, module) {
       };
     },
 
+    componentDidMount: function() {
+      window.addEventListener('click', this.clearResults);
+    },
+
     handleInputChange: function(searchText) {
       if ( !searchText ) return this.clearSearch();
       this.setState({searchText: searchText});
@@ -76,8 +80,9 @@ define(function(require, exports, module) {
       this.props.handleInputChange(this.refs.searchTextInput.getDOMNode().value);
     },
 
-    handleBlur: function() {
-      this.props.clearResults();
+    handleKeyPress: function(e) {
+      if ( e.which === 27 )
+        this.props.clearResults();
     },
 
     render: function() {
@@ -89,7 +94,7 @@ define(function(require, exports, module) {
           ref="searchTextInput"
           onChange={this.handleChange}
           onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
+          onKeyDown={this.handleKeyPress}
         />
       );
     }
@@ -113,6 +118,11 @@ define(function(require, exports, module) {
   });
 
   var SearchRow = React.createClass({
+    handleClick: function(e) {
+      // This prevents clearing results
+      e.stopPropagation();
+    },
+
     render: function() {
       var orderUrl = '/orders/' + this.props.order.id;
       var datetime = moment( this.props.order.datetime ).calendar();
@@ -121,7 +131,7 @@ define(function(require, exports, module) {
       var orgString = this.props.order.user.organization ?
                         '(' + this.props.order.user.organization +')' : '';
       return (
-        <div className={classString}>
+        <div className={classString} onClick={this.handleClick}>
           <a href={orderUrl}>
             <div><strong>#{this.props.order.id}</strong> {datetime} for ${total}</div>
             <div>{this.props.order.restaurant.name} to {this.props.order.user.name} {orgString}</div>

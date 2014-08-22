@@ -3,6 +3,8 @@ create or replace view orders_search_view as
     orders.id as order_id,
     orders.name as order_name,
     restaurants.name as restaurant_name,
+    restaurants.id as restaurant_id,
+    users.id as user_id,
     users.name as user_name,
     users.email as user_email,
     users.organization as user_organization

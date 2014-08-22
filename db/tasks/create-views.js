@@ -18,3 +18,8 @@ module.exports.run = function(callback) {
   var views = fs.readFileSync(file).toString();
   db.query(views, done(callback));
 };
+
+if (require.main === module) {
+  cli = true;
+  module.exports.run();
+}

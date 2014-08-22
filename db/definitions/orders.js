@@ -186,7 +186,7 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
-  , type: { type: types.order_type, nullable: false, default: 'delivery' }
+  , type: { type: types.order_type, nullable: false, default: '\'delivery\'::order_type' }
   , sub_total: {
       type: types.int
     , nullable: false

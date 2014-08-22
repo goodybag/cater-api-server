@@ -2,7 +2,7 @@
 <script>
   var config = {
     pageHeight:               920
-  , phantomPageHeightOffset:  -280
+  , phantomPageHeightOffset:  -240
   };
 
   var isPhantom = function(){
@@ -12,27 +12,30 @@
   var fillerTmpl = function( options ){
     return [
       '<tr class="filler">'
-    , '  ' + new Array(8).join('.').split('.').map( function(){
+    , '  ' + new Array(7).join('.').split('.').map( function(){
         return '  <td style="height: ' + options.height + 'px"></td>'
       }).join('\n')
     , '</tr>'
     ].join('\n');
   };
 
-  var adjustManifestPage = function( $page, callback ){
-    var getInnerHeight = function( $el ){
-      return Array.prototype.reduce.call(
-        $el.find('> *').map( function(){
-          var $this = $(this);
-          if ( ['fixed', 'absolute'].indexOf( $this.css('position') ) > -1 ){
-            return 0;
-          }
+  var getInnerHeight = function( $el ){
+    return Array.prototype.slice.call(
+      $el.find('> *')
+    ).map( function( el ){
+      var $this = $(el);
 
-          return $this.outerHeight(true);
-        })
-      , function( a, b ){ return a + b; }
-      );
-    };
+      if ( ['fixed', 'absolute'].indexOf( $this.css('position') ) > -1 ){
+        return 0;
+      }
+
+      return $this.outerHeight(true);
+    }).reduce( function( a, b ){
+      return a + b;
+    });
+  };
+
+  var adjustManifestPage = function( $page, callback ){
     console.print('inner', getInnerHeight( $page ) );
 
     var getDiff = function( $el ){
@@ -170,6 +173,23 @@
     {{/if}}
     <dt>Customer Notes:</dt>
     <dd>{{order.notes}}</dd>
+    <dt>Sub-Total:</dt>
+    <dd>${{dollars order.sub_total}}</dd>
+    <dt>Delivery Fee:</dt>
+    <dd>${{dollars order.delivery_fee}}</dd>
+    <dt>Tax:</dt>
+    <dd>${{dollars order.sales_tax}}</dd>
+    <dt>Tip:</dt>
+    <dd>${{dollars order.tip}}</dd>
+    {{#if order.adjustment.amount}}
+    <dt>Adjustment:</dt>
+    <dd>${{dollars order.adjustment.amount}}
+      <br>
+      {{order.adjustment.description}}
+    </dd>
+    {{/if}}
+    <dt>Total:</dt>
+    <dd>${{dollars order.total}}</dd>
   </dl>
 
   {{#eq order.type 'delivery'}}

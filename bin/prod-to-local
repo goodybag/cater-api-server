@@ -17,9 +17,6 @@ pg_restore --verbose --clean --no-acl --no-owner -h localhost -d cater latest.du
 # Clean up
 rm latest.dump
 
-
-node db/tasks/create-views
-
 ./bin/local-restore/fix-contacts
 ./bin/local-restore/fix-users
 ./bin/local-restore/fix-delivery-services

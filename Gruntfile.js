@@ -77,10 +77,6 @@ module.exports = function(grunt) {
         options: { stdout: true }
       , command: 'npm version patch'
       }
-    , commitManifest: {
-        options: { stdout: true }
-      , command: 'git add public/css/order-manifest.css && git commit -m "copy order manifest styles"'
-      }
     , react: {
         options: { stdout: true, stderr: true }
       , command: 'jsx --extension=jsx jsx/ public/js/lib/components'

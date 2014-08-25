@@ -53,6 +53,11 @@ define(function(require) {
     , nullable: false
     , default: 'false'
     }
+  , is_tax_exempt: {
+      type: types.boolean
+    , nullable: false
+    , default: 'false'
+    }
   , points: {
       type: types.int
     , checks: [ '>= 0']

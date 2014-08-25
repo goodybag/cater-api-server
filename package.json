@@ -57,6 +57,8 @@
     "knox": "~0.8.6",
     "leFunc": "~1.2.1",
     "lodash": "2.2.x",
+    "loglog": "^0.1.4",
+    "loglog-mongodb": "^1.0.1",
     "mailcomposer": "0.2.x",
     "mailgun": "0.4.x",
     "microtime": "0.4.x",

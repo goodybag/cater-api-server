@@ -99,6 +99,7 @@ config.defaults = {
   , console: {
       json: true
     }
+  , mongoConnStr: 'mongodb://localhost:1337/logs'
   }
 
 , http: {
@@ -272,6 +273,7 @@ config.dev = {
     , filename: 'all.log'
     , json: true
     }
+  , mongoConnStr: 'mongodb://localhost:1337/logs'
   }
 
 , rollbar: {

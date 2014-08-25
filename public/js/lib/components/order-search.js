@@ -59,7 +59,6 @@ define(function(require, exports, module) {
           SearchBar({
             searchText: this.state.searchText, 
             handleInputChange: this.handleInputChange, 
-            clearSearch: this.clearSearch, 
             clearResults: this.clearResults}
           ), 
           SearchResults({

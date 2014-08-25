@@ -56,17 +56,10 @@
 {{#extend "scripts"}}
 <script>
   require([
-      'app/views/orders-list-view'
-    , 'react'
-    , 'jsx!components/order-search'
+      'app/pages/orders'
     ]
-  , function(OrdersListView, React, OrderSearch) {
-      var ordersListView = new OrdersListView({el: '.orders-list'});
-
-      React.renderComponent(
-        OrderSearch({ endpoint: '/api/orders/search' })
-      , document.getElementById('order-search')
-      );
+  , function(orders) {
+      orders.init();
     }
   );
 </script>

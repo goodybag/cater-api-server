@@ -4,4 +4,5 @@ define([
 , 'app/pages/receipt'
 , 'app/pages/checkout'
 , 'app/pages/restaurant-list'
+, 'app/pages/orders'
 ], function(){});

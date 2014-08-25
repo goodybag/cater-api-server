@@ -18,11 +18,17 @@
       text: '../../components/requirejs-text/text'
     , json: '../../components/requirejs-plugins/src/json'
     , requireLib: '../../dist/require'
+    , jsx: '../../components/jsx-requirejs-plugin/js/jsx'
 
       // directories
     , app:    '../app'
     , views:  '../app/views'
     }
+
+  , jsx: {
+      fileExtension: '.jsx'
+    }
+
   , packages: [
       // utility
       {name: 'lodash',            location: '../../components/lodash/dist',               main: 'lodash.underscore.js'}
@@ -37,9 +43,8 @@
     , {name: 'spin',              location: '../../components/spin.js',                   main: 'spin.js'}
     , {name: 'fullcalendar',      location: '../../components/fullcalendar',              main: 'fullcalendar.js'}
     , {name: 'keymaster',         location: '../../components/keymaster',                 main: 'keymaster.js'}
-    , {name: 'react',             location: '../../components/react',                     main: 'react.js'}
-    , {name: 'JSXTransformer',    location: '../../components/react',                     main: 'JSXTransformer.js'}
-    , {name: 'jsx',               location: '../../components/require-jsx',               main: 'jsx.js'}
+    , {name: 'react',             location: '../../components/jsx-requirejs-plugin/js',      main: 'react-with-addons-0.11.1.js'}
+    , {name: 'JSXTransformer',    location: '../../components/jsx-requirejs-plugin/js',      main: 'JSXTransformer-0.11.1.js'}
 
       // templating related
     , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}

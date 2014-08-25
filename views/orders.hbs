@@ -58,7 +58,7 @@
   require([
       'app/views/orders-list-view'
     , 'react'
-    , 'components/order-search'
+    , 'jsx!components/order-search'
     ]
   , function(OrdersListView, React, OrderSearch) {
       var ordersListView = new OrdersListView({el: '.orders-list'});

@@ -1,6 +1,5 @@
 var utils = require('../utils');
 var db = require('../db');
-var logger = require('../lib/logger').create('Model');
 
 // copied directly from backbone source
 var extend = function(protoProps, staticProps) {
@@ -198,4 +197,3 @@ Model.create = function(query, callback, client) {
 };
 
 module.exports = Model;
-module.exports.logger = logger;

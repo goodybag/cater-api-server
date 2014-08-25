@@ -6,14 +6,11 @@ var Order = require('./order');
 var Address = require('./address');
 var queries = require('../db/queries');
 var config = require('../config');
-var uLogger = require('../lib/logger').create('Model-User');
 
 var table = 'users';
 
 var User = module.exports = Model.extend({
-  logger: uLogger
-
-, createPaymentMethod: function( pm, callback, client ){
+  createPaymentMethod: function( pm, callback, client ){
     User.createPaymentMethod( this.attributes.id, pm, callback, client );
     return this;
   }
@@ -421,13 +418,6 @@ var User = module.exports = Model.extend({
   }
 
 , find: function( query, callback, client ){
-    var logger = uLogger;
-
-    // Parent logger context
-    if ( this.logger ){
-      logger = this.logger.create('')
-    }
-
     var this_ = this;
 
     if (!query.columns) query.columns = ['*'];
@@ -496,4 +486,3 @@ var User = module.exports = Model.extend({
     });
   }
 });
-

@@ -21,6 +21,8 @@ var logger = require('../../logger');
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
 module.exports.list = function(req, res) {
+  var rLogger = req.logger.create('Restaurants-List');
+  rLogger.info('Listing restaurants');
   var TAGS = ['restaurants-list'];
   logger.routes.info(TAGS, 'listing restaurants');
   //TODO: middleware to validate and sanitize query object

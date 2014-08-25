@@ -21,7 +21,7 @@ module.exports = function(req, res, next) {
   }
 
   logger.info( 'Looking up user', { user_id: req.session.user.id } );
-  models.User.findOne.call({ logger: logger }, query, function (error, user) {
+  models.User.findOne( query, function (error, user) {
     if (error){
       logger.error( 'Failed to lookup user', { error: error } );
       return next(error);

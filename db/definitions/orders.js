@@ -186,6 +186,9 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , search_vector: {
+      type: types.tsvector
+    }
   , type: { type: types.order_type, nullable: false, default: '\'delivery\'::order_type' }
   , sub_total: {
       type: types.int

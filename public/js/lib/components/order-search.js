@@ -59,7 +59,7 @@ define(function(require, exports, module) {
           SearchBar({
             searchText: this.state.searchText, 
             handleInputChange: this.handleInputChange, 
-            clearResults: this.clearResults}
+            onEscapeKey: this.clearResults}
           ), 
           SearchResults({
             orders: this.state.orders, 
@@ -80,8 +80,9 @@ define(function(require, exports, module) {
     },
 
     handleKeyPress: function(e) {
-      if ( e.which === 27 )
-        this.props.clearResults();
+      if ( e.which === 27 && typeof this.props.onEscapeKey === 'function' ) {
+        this.props.onEscapeKey();
+      }
     },
 
     render: function() {

@@ -48,6 +48,6 @@
     "pickadate": "https://github.com/goodybag/pickadate.js/archive/3.4.1.tar.gz",
     "keymaster": "~1.6.2",
     "react": "~0.11.1",
-    "require-jsx": "git://github.com/seiffert/require-jsx.git"
+    "jsx-requirejs-plugin": "git://github.com/philix/jsx-requirejs-plugin.git#~0.3.0"
   }
 }

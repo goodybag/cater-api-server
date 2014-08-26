@@ -94,6 +94,15 @@
 
     .box {
       #grid > .column(4);
+      // Make all boxes match Boss Hogs
+      min-height: 207px;
+
+      // +40 to accommodate boss hogs longer text
+      @media screen and ( max-width: (@breakpoint-tablet + 40) ){
+        width: 100%;
+        margin-left: 0;
+        margin-top: 32px;
+      }
     }
   }
 

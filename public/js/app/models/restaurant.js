@@ -142,6 +142,9 @@ define(function(require, exports, module) {
         is_fee_on_total: {
           type: 'boolean'
         },
+        disable_courier: {
+          type: 'boolean'
+        },
         region_id: {
           type: ['number', 'null']
         },

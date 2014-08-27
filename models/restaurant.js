@@ -164,7 +164,7 @@ var Restaurant = module.exports = Model.extend({
     if ( options.date ){
       rQuery.where['restaurant_delivery_times.day'] = {
         $custom: [
-          'restaurant_delivery_times.day = extract( dow from $1 at time zone regions.timezone )'
+          'restaurant_delivery_times.day = extract( dow from $1::timestamp at time zone regions.timezone )'
         , options.date
         ]
       };
@@ -193,14 +193,14 @@ var Restaurant = module.exports = Model.extend({
 
       rQuery.where['restaurant_lead_times.lead_time'] = {
         $custom: [
-          'restaurant_lead_times.lead_time * interval \'1 minute\' <= $1 at time zone regions.timezone - now()'
+          'restaurant_lead_times.lead_time * interval \'1 minute\' <= $1::timestamp at time zone regions.timezone - now()'
         , [ options.date, options.time ].join(' ')
         ]
       };
 
       rQuery.where['restaurant_lead_times.max_guests'] = {
         $custom: [
-          'restaurant_lead_times.max_guests <= $1'
+          'restaurant_lead_times.max_guests >= $1'
         , options.guests
         ]
       };
@@ -244,7 +244,7 @@ var Restaurant = module.exports = Model.extend({
       if ( options.date ){
         dsQuery.where['restaurant_hours.day'] = {
           $custom: [
-            'restaurant_hours.day = extract( dow from $1 at time zone regions.timezone )'
+            'restaurant_hours.day = extract( dow from $1::timestamp at time zone regions.timezone )'
           , options.date
           ]
         };
@@ -273,14 +273,14 @@ var Restaurant = module.exports = Model.extend({
 
         dsQuery.where['restaurant_pickup_lead_times.lead_time'] = {
           $custom: [
-            'restaurant_pickup_lead_times.lead_time * interval \'1 minute\' <= $1 at time zone regions.timezone - now()'
+            'restaurant_pickup_lead_times.lead_time * interval \'1 minute\' <= $1::timestamp at time zone regions.timezone - now()'
           , [ options.date, options.time ].join(' ')
           ]
         };
 
         dsQuery.where['restaurant_pickup_lead_times.max_guests'] = {
           $custom: [
-            'restaurant_pickup_lead_times.max_guests <= $1'
+            'restaurant_pickup_lead_times.max_guests >= $1'
           , options.guests
           ]
         };

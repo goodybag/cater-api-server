@@ -277,7 +277,7 @@ begin
       where restaurants.id = rid
         and restaurant_delivery_zips.zip = delivery_zip
         and restaurant_lead_times.lead_time * interval '1 minute' <= delivery_date at time zone regions.timezone - now()
-        and restaurant_lead_times.max_guests <= guests
+        and restaurant_lead_times.max_guests >= guests
         and restaurant_delivery_times.day = extract( dow from delivery_date at time zone regions.timezone )
         and restaurant_delivery_times.start_time <= delivery_date::time at time zone regions.timezone
         and restaurant_delivery_times.end_time > delivery_date::time at time zone regions.timezone
@@ -290,10 +290,10 @@ begin
       where restaurants.id = rid
         and delivery_service_zips.to = delivery_zip
         and restaurant_pickup_lead_times.lead_time * interval '1 minute' <= delivery_date at time zone regions.timezone - now()
-        and restaurant_pickup_lead_times.max_guests <= guests
+        and restaurant_pickup_lead_times.max_guests >= guests
         and restaurant_hours.day = extract( dow from delivery_date at time zone regions.timezone )
         and restaurant_hours.start_time <= delivery_date::time at time zone regions.timezone
-        and restaurant_hours.end_time >= delivery_date::time at time zone regions.timezone
+        and restaurant_hours.end_time > delivery_date::time at time zone regions.timezone
     ) as all_delivery_zips
     order by price asc limit 1
   );

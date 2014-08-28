@@ -1,6 +1,6 @@
 define( function( require ){
   var React = require('react');
-  var OrderSearch = require('jsx!components/order-search');
+  var OrderSearch = require('/../../dist/order-search.js');
   var OrdersListView = require('app/views/orders-list-view');
 
   var page = {

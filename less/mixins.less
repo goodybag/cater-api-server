@@ -282,11 +282,11 @@
     to { .translate( 0, 0 ); .opacity(1); }
   }
   .slide-in-from-left( @d: -500px, @o: 0 ) {
-    from { .translate( 0, @d ); .opacity(@o); }
+    from { .translate( @d, 0 ); .opacity(@o); }
     to { .translate( 0, 0 ); .opacity(1); }
   }
   .slide-in-from-right( @d: 500px, @o: 0 ) {
-    from { .translate( 0, @d ); .opacity(@o); }
+    from { .translate( @d, 0 ); .opacity(@o); }
     to { .translate( 0, 0 ); .opacity(1); }
   }
   .slide-in-from-bottom( @d: 80px, @o: 0 ) {

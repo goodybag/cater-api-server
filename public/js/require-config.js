@@ -17,16 +17,11 @@
       // plugins
       text: '../../components/requirejs-text/text'
     , json: '../../components/requirejs-plugins/src/json'
-    , jsx: '../../components/jsx-requirejs-plugin/js/jsx'
     , requireLib: '../../dist/require'
 
       // directories
     , app:    '../app'
     , views:  '../app/views'
-    }
-
-  , jsx: {
-      fileExtension: '.jsx'
     }
 
   , packages: [
@@ -44,7 +39,6 @@
     , {name: 'fullcalendar',      location: '../../components/fullcalendar',              main: 'fullcalendar.js'}
     , {name: 'keymaster',         location: '../../components/keymaster',                 main: 'keymaster.js'}
     , {name: 'react',             location: '../../components/react',                     main: 'react.js'}
-    , {name: 'JSXTransformer',    location: '../../components/jsx-requirejs-plugin/js',   main: 'JSXTransformer-0.11.1.js'}
 
       // templating related
     , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}

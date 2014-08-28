@@ -44,7 +44,7 @@ module.exports.register = function(app) {
 
     app.post('/request-to-be-a-caterer'
     , m.after( function( req, res, next ){
-        venter.emit( 'restaurant_contact:created', req.body );
+        venter.emit( 'restaurant_request:created', req.body );
         next();
       })
     , m.view( 'landing/restaurant', db.restaurant_requests, {

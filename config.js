@@ -25,9 +25,8 @@ config.defaults = {
 , geoipUrl: 'http://freegeoip.net/json/:ip'
 , geoTestIp: '216.201.168.18'
 
-, restaurantContactRecipients: [
-    'jag@goodybag.com'
-  , 'alexlauzon@goodybag.com'
+, restaurantRequestRecipients: [
+    local.testEmail || 'test@goodybag.com'
   ]
 
 , deniedRecipients: [
@@ -425,6 +424,11 @@ config.production = {
 , numWorkers: 3
 
 , isProduction: true
+
+, restaurantRequestRecipients: [
+    'jag@goodybag.com'
+  , 'alexlauzon@goodybag.com'
+  ]
 
 , cdn: {
     baseUrl: 'https://d3bqck8kwfkhx5.cloudfront.net'

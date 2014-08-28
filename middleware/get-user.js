@@ -2,7 +2,7 @@ var models = require('../models');
 var utils = require('../utils');
 
 module.exports = function(req, res, next) {
-  var logger = req.logger.create('GetUser');
+  var logger = req.logger.create('Middleware-GetUser');
 
   if(!req.session || !req.session.user || req.session.user.id == null){
     if ( req.param('edit_token') ){

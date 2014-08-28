@@ -21,10 +21,8 @@ var logger = require('../../logger');
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
 module.exports.list = function(req, res) {
-  var rLogger = req.logger.create('Restaurants-List');
-  rLogger.info('Listing restaurants');
-  var TAGS = ['restaurants-list'];
-  logger.routes.info(TAGS, 'listing restaurants');
+  var rLogger = req.logger.create('Controller-Restaurants-List');
+
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
   if (orderParams.prices)
@@ -41,6 +39,11 @@ module.exports.list = function(req, res) {
         }
       , limit: 'all'
       };
+
+      rLogger.info('Finding filtered restaurants', {
+        orderParams: orderParams
+      });
+
       models.Restaurant.find(
         query
       , utils.extend({ is_hidden: false }
@@ -49,12 +52,14 @@ module.exports.list = function(req, res) {
     },
 
     function(callback) {
+      rLogger.info('Finding default address');
       models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
     }
   ];
 
   // Filters count needs a list of all restaurants
   if (Object.keys(orderParams).length > 0){
+    rLogger.info('Finding all restaurants');
     tasks.push(
       models.Restaurant.find.bind( models.Restaurant, {
         where: {
@@ -67,7 +72,7 @@ module.exports.list = function(req, res) {
   }
 
   var done = function(err, results) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
+    if (err) return res.error(errors.internal.DB_FAILURE, err), rLogger.error(err);
 
     var context = {
       restaurants:      utils.invoke(results[0], 'toJSON').filter( function( r ){

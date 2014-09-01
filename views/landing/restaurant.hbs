@@ -1,0 +1,211 @@
+{{#extend "title"}} - Restaurants{{/extend}}
+{{#extend "page"}}page-restaurants{{/extend}}
+
+{{#extend "body"}}
+{{> landing_navbar}}
+
+<!--<PhotoStripe>-->
+<div class="photo-stripe photo-stripe-indian">
+  <img src="/img/restaurant-splash/photo-stripe.jpg" alt="">
+</div>
+<!--</PhotoStripe>-->
+
+<!--<IntroSignup>-->
+<section class="page-section" id="section-intro-signup">
+  <div class="container">
+    <h1 class="section-header">More Orders Instantly</h1>
+    <div class="signup-info-wrapper">
+      <div class="signup-col">
+        <div class="inner">
+          {{#if restaurant_requests}}
+          <h3>Thanks!</h3>
+          <p>We'll be in touch soon :)</p>
+          {{else}}
+          <h3>Be a Goodybag caterer</h3>
+          <p>Enter your info and we'll get in touch soon!</p>
+          {{/if}}
+          <form action="/request-to-be-a-caterer" method="POST" class="form form-vertical">
+            <div class="form-group">
+              <label for="request-form-full-name">Full Name</label>
+              <input type="text" id="request-form-full-name" name="contact_name" required="true">
+            </div>
+            <div class="form-group">
+              <label for="request-form-email">Email</label>
+              <input type="email" id="request-form-email" name="contact_email" required="true">
+            </div>
+            <div class="form-group">
+              <label for="request-form-phone-number">Phone Number</label>
+              <input type="text" id="request-form-phone-number" name="contact_phone" required="true">
+            </div>
+            <div class="form-group">
+              <label for="request-form-restaurant-name">Restaurant Name</label>
+              <input type="text" id="request-form-restaurant-name" name="restaurant_name" required="true">
+            </div>
+            <div class="form-group form-group-submit">
+              <button class="btn btn-primary">Submit my info</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="signup-info-col">
+        <div class="inner">
+          <ul class="check-points">
+            <li>
+              New Customers
+              <div class="subtext">Our large corporate network exposes your menu and businesses to hundreds of new customers.</div>
+            </li>
+            <li>
+              Higher value orders
+              <div class="subtext">Increase your delivery order volume and reach new markets with high value catering orders.</div>
+            </li>
+            <li>
+              Repeat business
+              <div class="subtext">Grow and maintain a larger, more diverse customer base. We handle all customer service to best promote your business.</div>
+            </li>
+            <li>
+              Free advertising
+              <div class="subtext">We feature your restaurant on our website, social media, and weekly email campaigns, increasing your online presence in multiple ways.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--</IntroSignup>-->
+
+<!--<How it Works>-->
+<section class="page-section" id="section-how-it-works">
+  <div class="container">
+    <h1 class="section-header">How it works</h1>
+
+    <div class="marketing-points">
+      <div class="point">
+        <img src="{{cdn "/img/restaurant-splash/hiw-1.png"}}" alt="How Goodybag works" class="img-tacos">
+        <p>
+          Companies use Goodybag to place catering orders at your restaurant
+        </p>
+      </div>
+      <div class="point">
+        <img src="{{cdn "/img/restaurant-splash/hiw-2.png"}}" alt="How Goodybag works" class="img-phone">
+        <p>
+          You'll be instantly notified of an order by phone, email, and text.
+        </p>
+      </div>
+      <div class="point">
+        <img src="{{cdn "/img/restaurant-splash/hiw-3.png"}}" alt="How Goodybag works" class="img-cash">
+        <p>
+          You prepare and deliver the food, and we pay you for the order.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<!--</How it Works>-->
+
+<!--<What our caterers are saying>-->
+<section class="page-section" id="section-testimonials">
+  <div class="container">
+    <h1 class="section-header">What our caterers are saying</h1>
+
+    <!--<SpeechBoxes>-->
+    <div class="speech-boxes">
+      <div class="box box-3">
+        <blockquote>"In less than 3 weeks my business has tripled. The staff is courterous, polite, and reliable. I'm getting to serve people who wouldn't never heard of me. I can't say enough good things."</blockquote>
+        <div class="signature">
+          <img src="{{cdn "/img/restaurant-splash/testimonial-boss-hogs.png"}}" alt="Boss Hogs Kitchen" class="author-logo">
+          <div class="wrapper">
+            <span class="author">Brandon Pierce</span>
+            <br>
+            <a href="http://www.bosshogskitchen.com/" class="author-company" target="_blank">Boss Hogs Kitchen</a>
+          </div>
+        </div>
+      </div>
+      <div class="box box-3">
+        <blockquote>Goodybag has led us to many very successful clients. The staff at Goodybag has been awesome to work with and is always eager to promote our services."</blockquote>
+        <div class="signature">
+          <img src="{{cdn "/img/restaurant-splash/testimonial-mr-fruit-cup.png"}}" alt="Mister FruitCup" class="author-logo">
+          <div class="wrapper">
+            <span class="author">Justin Avalos</span>
+            <br>
+            <a href="http://misterfruitcup.com/" class="author-company" target="_blank">Mister FruitCup</a>
+          </div>
+        </div>
+      </div>
+      <div class="box box-3">
+        <blockquote>"Goodybag has been a tremendous help in providing catering business. I'm very glad I signed up with them, thanks for all the extra business and revenue!"</blockquote>
+        <div class="signature">
+          <img src="{{cdn "/img/restaurant-splash/testimonial-silver-grill.png"}}" alt="Silver Grill Cafe" class="author-logo">
+          <div class="wrapper">
+            <span class="author">Rehan Awan</span>
+            <br>
+            <a href="http://silvergrillcafe.com/" class="author-company" target="_blank">Silver Grill Cafe</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--</SpeechBoxes>-->
+  </div>
+</section>
+<!--</What our caterers are saying>-->
+
+<!--<OfficeLogos>-->
+<section class="page-section" id="section-office-logos">
+  <div class="container">
+    <h1 class="section-header">Offices trust Goodybag for their catering</h1>
+
+    <!--<LogoList>-->
+    <div class="logo-list">
+      <img src="{{cdn '/img/client-logos/morgan-stanley.png'}}" alt="Morgan Stanley">
+      <img src="{{cdn '/img/client-logos/bazaarvoice.png'}}" alt="Bazaarvoice">
+      <img src="{{cdn '/img/client-logos/rackspace.png'}}" alt="rackspace">
+      <img src="{{cdn '/img/client-logos/humana.png'}}" alt="Humana">
+      <img src="{{cdn '/img/client-logos/apple.png'}}" alt="Apple">
+      <img src="{{cdn '/img/client-logos/home-away.png'}}" alt="Home Away">
+    </div>
+    <!--</LogoList>-->
+  </div>
+</section>
+<!--</OfficeLogos>-->
+
+<!--<OutroCTA>-->
+<section class="page-section" id="section-outro-cta">
+  <div class="container">
+    <h2>See how we can help grow your business</h2>
+    <a href="#section-intro-signup" class="btn btn-primary btn-large btn-cta">Be a Goodybag caterer</a>
+  </div>
+</section>
+<!--</OutroCTA>-->
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['jquery-loaded', 'navbar'], function( $ ){
+    $('.navbar').navbar({ toggleText: false });
+
+    var $name             = $('#request-form-full-name');
+    var $btn              = $('#section-outro-cta .btn-cta');
+    var $scrollToSection  = $( $btn.attr('href') );
+
+    // IE/Firefox not scrolling to the right spot
+    var doNotAnimate = [
+      /MSIE\s[0-9]/
+    , /Firefox/
+    ].some( function( r ){
+      return r.test( window.navigator.userAgent );
+    });
+
+    $btn.click( function( e ){
+      if ( doNotAnimate ) return $name.focus();
+      e.preventDefault();
+
+      $('body').animate(
+        { scrollTop: $scrollToSection.offset().top }
+      , $name.focus.bind( $name )
+      );
+    });
+  });
+
+  analytics.page('Restaurants Splash');
+</script>
+{{/extend}}

@@ -16,11 +16,18 @@
 .check-points > li:before {
   content: "";
   position: absolute;
-  left: -32px;
-  top: -5px;
+  left: -@checkpoints-bullet-offset;
+  top: -2px;
   width: 23px;
   height: 25px;
   background: @checkpoints-bullet-img;
+}
+
+.check-points .subtext {
+  font-size: 14px;
+  font-weight: @regular;
+  margin-top: 4px;
+  margin-left: -@checkpoints-bullet-offset;
 }
 
 @media screen and ( max-width: @breakpoint-tablet ){

@@ -378,21 +378,19 @@ var User = module.exports = Model.extend({
 
 , getPendingPoints: function( userId, callback, client ) {
     var query = {
-      where: {
-        status: {$or: ['submitted', 'accepted', 'delivered']}
-      , points_awarded: false
-      , user_id: userId
-      , created_at: { $gte: config.rewardsStartDate }
-      }
+      status: {$or: ['submitted', 'accepted', 'delivered']}
+    , points_awarded: false
+    , user_id: userId
+    , created_at: { $gte: config.rewardsStartDate }
     };
 
-    Order.find(query, function(error, orders){
+    db.orders.find(query, function(error, orders){
       if (error) return callback(error);
 
       var points = 0;
       if (!orders.length) return callback(null, points);
       orders.forEach(function(order){
-        points += (order.attributes.points || 0);
+        points += (order.points || 0);
       });
       return callback(null, points);
     });

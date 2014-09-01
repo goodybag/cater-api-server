@@ -173,6 +173,23 @@
     {{/if}}
     <dt>Customer Notes:</dt>
     <dd>{{order.notes}}</dd>
+    <dt>Sub-Total:</dt>
+    <dd>${{dollars order.sub_total}}</dd>
+    <dt>Delivery Fee:</dt>
+    <dd>${{dollars order.delivery_fee}}</dd>
+    <dt>Tax:</dt>
+    <dd>${{dollars order.sales_tax}}</dd>
+    <dt>Tip:</dt>
+    <dd>${{dollars order.tip}}</dd>
+    {{#if order.adjustment.amount}}
+    <dt>Adjustment:</dt>
+    <dd>${{dollars order.adjustment.amount}}
+      <br>
+      {{order.adjustment.description}}
+    </dd>
+    {{/if}}
+    <dt>Total:</dt>
+    <dd>${{dollars order.total}}</dd>
   </dl>
 
   {{#eq order.type 'delivery'}}

@@ -17,6 +17,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-named-modules');
   grunt.loadNpmTasks('grunt-s3');
+  grunt.loadNpmTasks('grunt-react');
 
   var gruntConfig = {
     localbranch: grunt.option('branch') || 'master'
@@ -46,6 +47,22 @@ module.exports = function(grunt) {
         files: [ 'public/partials/*.hbs' ]
       , tasks: [ 'shell:handlebars' ]
       , options: { spawn: false }
+      }
+
+    , react: {
+        files: [ 'jsx/*.jsx' ]
+      , tasks: [ 'react' ]
+      , options: { spawn: false }
+      }
+    }
+
+  , react: {
+      files: {
+        expand: true
+      , cwd: 'jsx'
+      , src: [ '**/*.jsx' ]
+      , dest: 'public/dist'
+      , ext: '.js'
       }
     }
 
@@ -204,7 +221,7 @@ module.exports = function(grunt) {
         { src: './public/dist', dest: 'dist', gzip: true }
       , { src: './public/css', dest: 'css', gzip: true }
       , { src: './public/img', dest: 'img', gzip: false }
-      , { src: './public/img/emails', dest: 'img', gzip: false }
+      , { src: './public/img/**', dest: 'img', gzip: false }
       , { src: './public/font', dest: 'font', gzip: false }
       , { src: './public/js/pdf', dest: 'js/pdf', gzip: false }
       , { src: './public/*', dest: '', gzip: false }
@@ -249,7 +266,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask( 'analyze',      ['complexity'] );
-  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'concat', 'shell:handlebars', 'requirejs'] );
+  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'concat', 'shell:handlebars', 'react', 'requirejs'] );
   grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 

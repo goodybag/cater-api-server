@@ -25,6 +25,10 @@ config.defaults = {
 , geoipUrl: 'http://freegeoip.net/json/:ip'
 , geoTestIp: '216.201.168.18'
 
+, restaurantRequestRecipients: [
+    local.testEmail || 'test@goodybag.com'
+  ]
+
 , deniedRecipients: [
     'jag@goodybag.com'
   , 'sarah.southwell@goodybag.com'
@@ -71,6 +75,10 @@ config.defaults = {
     start: '2014-04-21 00:00:00'
   , rate: '2.0'
   }
+
+, rewardHolidays: [
+    { start: '2014-09-02 00:00:00', end: '2014-09-03 00:00:00', rate: '2.0', description: 'Post-Labor Day' }
+  ]
 
 , welcome: {
     from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
@@ -252,6 +260,7 @@ config.dev = {
 
 , deniedRecipients: [ local.testEmail || 'test@goodybag.com' ]
 , deliveryServiceOrderAboveThresholdRecipients: [ local.testEmail || 'test@goodybag.com' ]
+, restaurantContactRecipients: [ local.testEmail || 'test@goodybag.com' ]
 
 , http: {
     port: 3000
@@ -419,6 +428,11 @@ config.production = {
 , numWorkers: 3
 
 , isProduction: true
+
+, restaurantRequestRecipients: [
+    'jag@goodybag.com'
+  , 'alexlauzon@goodybag.com'
+  ]
 
 , cdn: {
     baseUrl: 'https://d3bqck8kwfkhx5.cloudfront.net'

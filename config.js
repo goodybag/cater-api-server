@@ -72,6 +72,10 @@ config.defaults = {
   , rate: '2.0'
   }
 
+, rewardHolidays: [
+    { start: '2014-09-02 00:00:00', end: '2014-09-03 00:00:00', rate: '2.0', description: 'Post-Labor Day' }
+  ]
+
 , welcome: {
     from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
   , beginTime:      '09:04'

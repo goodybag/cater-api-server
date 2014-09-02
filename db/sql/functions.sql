@@ -264,6 +264,61 @@ begin
 end;
 $$ language plpgsql;
 
+-- Update search vectors based on relevant relations
+create or replace function update_orders_search_vector_from_orders()
+returns trigger as $$
+begin
+  update orders as o 
+  set search_vector = to_tsvector( 'english', 
+      o.id                            || ' ' ||
+      coalesce(new.name, '')          || ' ' ||
+      coalesce(restaurant_name, '')   || ' ' ||
+      coalesce(user_name, '')         || ' ' ||
+      coalesce(user_email, '')        || ' ' ||
+      coalesce(user_organization, '') || ' ' 
+    )
+  from orders_search_view as osv
+  where o.id = osv.order_id and osv.order_id = new.id;
+  return new;
+end;
+$$ language plpgsql;
+
+create or replace function update_orders_search_vector_from_restaurants()
+returns trigger as $$
+begin
+  update orders as o 
+  set search_vector = to_tsvector( 'english', 
+      o.id                            || ' ' ||
+      coalesce(order_name, '')        || ' ' ||
+      coalesce(new.name, '')          || ' ' ||
+      coalesce(user_name, '')         || ' ' ||
+      coalesce(user_email, '')        || ' ' ||
+      coalesce(user_organization, '') || ' ' 
+    )
+  from orders_search_view as osv
+  where o.id = osv.order_id and osv.restaurant_id = new.id;
+  return new;
+end;
+$$ language plpgsql;
+
+create or replace function update_orders_search_vector_from_users()
+returns trigger as $$
+begin
+  update orders as o 
+  set search_vector = to_tsvector( 'english', 
+      o.id                            || ' ' ||
+      coalesce(order_name, '')        || ' ' ||
+      coalesce(restaurant_name, '')   || ' ' ||
+      coalesce(new.name, '')          || ' ' ||
+      coalesce(new.email, '')         || ' ' ||
+      coalesce(new.organization, '')  || ' ' 
+    )
+  from orders_search_view as osv
+  where o.id = osv.order_id and osv.user_id = new.id;
+  return new;
+end;
+$$ language plpgsql;
+
 create or replace function get_delivery_fee( rid int, delivery_zip varchar(5), delivery_date timestamp, guests int )
 returns int as $$
 begin

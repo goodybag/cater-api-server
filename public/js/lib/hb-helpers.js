@@ -506,7 +506,7 @@ define(function(require, exports, module) {
         }
       }
 
-      return [ config.cdn.baseUrl ].concat(
+      return [ config.isDev ? [] : config.cdn.baseUrl ].concat(
         Array.prototype.slice.call( arguments, 0, - 1 )
       ).join('/');
     },

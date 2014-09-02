@@ -126,6 +126,16 @@ module.exports.register = function(app) {
   );
 
   /**
+   * Kitchen Sink
+   */
+
+  app.get('/admin/kitchen-sink'
+  , m.view( 'admin/kitchen-sink', {
+      layout: 'admin/layout2'
+    })
+  );
+
+  /**
    * Delivery Services
    */
 
@@ -1258,6 +1268,24 @@ module.exports.register = function(app) {
   , m.insert( db.orders )
   );
 
+  app.get('/api/orders/search'
+  , function(req, res, next) {
+      var query = req.query.q;
+      if ( !query ) return next();
+      req.queryObj.search_vector = { $partialMatches: query };
+      next();
+    }
+  , m.sort('-id')
+  , m.queryOptions({
+      limit: 10
+    , one: [
+        { table: 'restaurants', alias: 'restaurant' }
+      , { table: 'users', alias: 'user' }
+      ]
+    })
+  , m.find( db.orders )
+  );
+
   app.get('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')
@@ -1390,4 +1418,5 @@ module.exports.register = function(app) {
     })
   , m.find( db.users )
   );
+
 }

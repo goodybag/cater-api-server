@@ -167,6 +167,20 @@ mosql.registerConditionalHelper(
   }
 );
 
+mosql.registerConditionalHelper( '$matches', function( column, set, values, collection ) {
+  return column + ' @@ plainto_tsquery(' + set + ')';
+});
+
+mosql.registerConditionalHelper( '$partialMatches', function( column, set, values, collection ) {
+  // join all tokens with logical AND and append with partial match (:*)
+  var idx = parseInt(set.slice(1)) - 1;
+  values[idx] = values[idx]
+                  .trim()
+                  .split(' ')
+                  .map(function(str) { return str.replace(/\W+/g, ''); } )
+                  .join(':*&') + ':*';
+  return column + ' @@ to_tsquery(' + set + ')';
+});
 
 // Upsert query type
 // Warning: This is subject to some sort of race condition

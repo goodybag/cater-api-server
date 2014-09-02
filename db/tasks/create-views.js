@@ -6,7 +6,7 @@ var cli = false;
 
 var done = function(callback) {
   return function(error, results) {
-    console.log( (error) ? "Error creating views" : "Successfully created views");
+    console.log( (error) ? "Error creating views" : "Successfully loaded in views");
     if(error) console.log(error);
     if (cli) return process.exit( (error) ? 1 : 0 );
     else if(callback) callback(error, results);

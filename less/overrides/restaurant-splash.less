@@ -5,7 +5,10 @@
 .page-restaurants {
   .photo-stripe > img {
     top: -80px;
-    .animation( ease-out, 5s, slide-in-from-top-no-fade );
+
+    @media screen and ( min-width: @breakpoint-tablet ){
+      .animation( ease-out, 5s, slide-in-from-top-no-fade );
+    }
   }
 
   .check-points > li {

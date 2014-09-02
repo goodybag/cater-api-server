@@ -96,6 +96,45 @@
   }
 }
 
+.speech-boxes > .box-3 {
+  box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.18 );
+
+  &:after {
+    display: none;
+  }
+
+  @logo-size: 90px;
+  .author-logo {
+    @border-width: 1px;
+    @border-padding: 2px;
+    @border-color: #aaa;
+
+    width: @logo-size;
+    height: @logo-size;
+    position: absolute;
+    left: -8px;
+    bottom: -42px;
+    z-index: 2;
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 @border-width @border-color
+    , 0 0 0 @border-width+@border-padding #FFF
+    , 0 0 0 @border-width+@border-padding+@border-width @border-color
+    , 0 0 2px @border-width+@border-padding+@border-width rgba(0, 0, 0, 0.15);
+  }
+
+  .signature > .wrapper {
+    display: block;
+    min-width: auto;
+    padding-left: @logo-size + 12px;
+  }
+
+  .signature {
+    position: absolute;
+    bottom: 22px;
+  }
+}
+
 .speech-boxes > .box-no-border {
   border: none;
   padding-left: @speechbox-padding-hori + 1;

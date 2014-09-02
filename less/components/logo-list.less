@@ -6,11 +6,28 @@
   #grid > .row();
   .reset-ul();
   table-layout: fixed;
-  margin-top: @logo-list-margin-top;
+  margin-top: 0;
   margin-bottom: @logo-list-margin-bottom;
+  text-align: center;
 
   @media screen and ( max-width: @breakpoint-tablet ){
     display: block;
+  }
+}
+
+// In the div.logo-list > img configuration
+.logo-list > img {
+  margin: 0 20px;
+  margin-top: @logo-list-margin-top;
+
+  &:first-child { margin-left: 0; }
+  &:last-child { margin-right: 0; }
+
+  @media screen and ( max-width: @breakpoint-tablet ){
+    display: block;
+    margin: 30px auto;
+    &:first-child { margin-left: auto; }
+    &:last-child { margin-right: auto; }
   }
 }
 

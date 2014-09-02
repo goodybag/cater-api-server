@@ -277,20 +277,20 @@
     from { .opacity(0) }
     to { .opacity(1) }
   }
-  .slide-in-from-top() {
-    from { .translate( 0, -80px ); .opacity(0); }
+  .slide-in-from-top( @d: -80px, @o: 0 ) {
+    from { .translate( 0, @d ); .opacity(@o); }
     to { .translate( 0, 0 ); .opacity(1); }
   }
-  .slide-in-from-left() {
-    from { .translate( -500px, 0 ); .opacity(0); }
+  .slide-in-from-left( @d: -500px, @o: 0 ) {
+    from { .translate( @d, 0 ); .opacity(@o); }
     to { .translate( 0, 0 ); .opacity(1); }
   }
-  .slide-in-from-right() {
-    from { .translate( 500px, 0 ); .opacity(0); }
+  .slide-in-from-right( @d: 500px, @o: 0 ) {
+    from { .translate( @d, 0 ); .opacity(@o); }
     to { .translate( 0, 0 ); .opacity(1); }
   }
-  .slide-in-from-bottom() {
-    from { .translate( 0, 80px ); .opacity(0); }
+  .slide-in-from-bottom( @d: 80px, @o: 0 ) {
+    from { .translate( 0, @d ); .opacity(@o); }
     to { .translate( 0, 0 ); .opacity(1); }
   }
   .slide-bg() {

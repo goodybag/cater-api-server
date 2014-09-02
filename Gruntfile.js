@@ -266,7 +266,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask( 'analyze',      ['complexity'] );
-  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'concat', 'shell:handlebars', 'requirejs', 'react'] );
+  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'concat', 'shell:handlebars', 'react', 'requirejs'] );
   grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 

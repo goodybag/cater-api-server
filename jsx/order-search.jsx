@@ -28,7 +28,7 @@ define(function(require, exports, module) {
     },
 
     handleInputChange: function(searchText) {
-      if ( !searchText ) return this.clearSearch();
+      if ( !searchText  || searchText.trim() === '') return this.clearSearch();
       this.setState({searchText: searchText});
       this.search();
     },

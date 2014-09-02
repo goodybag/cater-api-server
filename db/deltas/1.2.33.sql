@@ -8,23 +8,11 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  alter table orders drop column if exists search_vector;
-  alter table orders add column search_vector tsvector;
+  create table if not exists "restaurant_requests" ();
 
-  update orders as o 
-  set search_vector = to_tsvector( 'english', 
-      o.id                 || ' ' ||
-      coalesce(o.name, '') || ' ' ||
-      coalesce(r.name, '') || ' ' ||
-      coalesce(u.name, '') || ' ' ||
-      coalesce(u.email, '')|| ' ' ||
-      coalesce(u.organization, '') || ' ' 
-    )
-  from restaurants as r, users as u
-  where o.restaurant_id = r.id
-  and o.user_id = u.id;
-
-  create index orders_search_idx on
-    orders using gin( search_vector );
-
+  perform add_column( 'restaurant_requests', 'id', 'serial' );
+  perform add_column( 'restaurant_requests', 'contact_name', 'text' );
+  perform add_column( 'restaurant_requests', 'contact_email', 'text' );
+  perform add_column( 'restaurant_requests', 'contact_phone', E'varchar(10) check( contact_phone SIMILAR TO \'[[:digit:]]{10}\' )' );
+  perform add_column( 'restaurant_requests', 'restaurant_name', 'text' );
 end$$;

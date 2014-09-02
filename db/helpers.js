@@ -651,6 +651,14 @@ dirac.use( function( dirac ){
         // Handle reward promos
         var submitted = moment( order.submitted );
 
+        var holiday = utils.find(config.rewardHolidays, function(holiday) {
+          return submitted >= moment( holiday.start ) && submitted < moment( holiday.end );
+        });
+
+        if ( holiday ) {
+          return Math.floor( order.total * holiday.rate / 100 );
+        }
+
         // Check all mondays past 4/21
         var eligible = submitted.day() == 1 && submitted >= moment( config.rewardsPromo.start );
 

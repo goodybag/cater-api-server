@@ -8,7 +8,7 @@
     "url": "https://github.com/goodybag/cater-api-server"
   },
   "scripts": {
-    "start": "./node_modules/grunt-cli/bin/grunt namedModules && ./node_modules/grunt-cli/bin/grunt shell:ensureDir && ./bin/tasks.js loadUtilityFunctions && ./bin/tasks.js createTypes && ./bin/tasks.js loadFunctions && ./bin/tasks.js runDeltas && ./bin/tasks.js loadTriggers && node master",
+    "start": "./node_modules/grunt-cli/bin/grunt namedModules && ./node_modules/grunt-cli/bin/grunt shell:ensureDir && ./bin/tasks.js loadUtilityFunctions && ./bin/tasks.js createTypes && ./bin/tasks.js loadFunctions && ./bin/tasks.js createViews && ./bin/tasks.js runDeltas && ./bin/tasks.js loadTriggers && node master",
     "test": "./node_modules/mocha/bin/mocha -R spec test/functional",
     "postinstall": "./node_modules/.bin/bower install"
   },

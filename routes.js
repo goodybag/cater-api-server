@@ -675,16 +675,20 @@ module.exports.register = function(app) {
    */
 
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
-  app.get('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.orderItems.summary);  // not currently used
+  
+  app.get('/api/orders/:oid/items'
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , controllers.orders.orderItems.summary
+  );
 
-  app.post('/orders/:oid/items'
+  app.post('/api/orders/:oid/items'
   , m.editOrderAuth
   , m.restrict(['client', 'admin'])
   , controllers.orders.editability
   , controllers.orders.orderItems.add
   );
 
-  app.all('/orders/:oid/items', function(req, res, next) {
+  app.all('/api/orders/:oid/items', function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -693,23 +697,39 @@ module.exports.register = function(app) {
    *  Order item resource.  A single order item.
    */
 
-  app.get('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
+  app.get('/api/orders/:oid/items/:iid'
+  , m.restrict(['client', 'admin'])
+  , controllers.orders.orderItems.get
+  );
 
-  app.put('/orders/:oid/items/:iid'
+  app.put('/api/orders/:oid/items/:iid'
   , m.editOrderAuth
   , m.restrict(['client', 'admin'])
   , controllers.orders.editability
   , controllers.orders.orderItems.update
   );
 
-  app.patch('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.patch('/api/orders/:oid/items/:iid'
+  , m.editOrderAuth
+  , m.restrict(['client', 'admin'])
+  , controllers.orders.editability
+  , controllers.orders.orderItems.update
+  );
 
-  app.del('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
+  app.del('/api/orders/:oid/items/:iid'
+  , m.editOrderAuth
+  , m.restrict(['client', 'admin'])
+  , controllers.orders.editability
+  , controllers.orders.orderItems.remove
+  );
 
-  app.all('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
-    res.set('Allow', 'GET, PUT, PATCH, DELETE');
-    res.send(405);
-  });
+  app.all('/orders/:oid/items/:iid'
+  , m.restrict(['client', 'admin'])
+  , function(req, res, next) {
+      res.set('Allow', 'GET, PUT, PATCH, DELETE');
+      res.send(405);
+    }
+  );
 
   /**
    * Order Duplicates resource.  Duplicates of an order.

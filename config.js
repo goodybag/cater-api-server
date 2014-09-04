@@ -100,6 +100,8 @@ config.defaults = {
       json: true
     }
   , mongoConnStr: 'mongodb://localhost:1337/logs'
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , http: {
@@ -274,6 +276,8 @@ config.dev = {
     , json: true
     }
   , mongoConnStr: 'mongodb://localhost:1337/logs'
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {

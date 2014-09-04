@@ -70,6 +70,10 @@ module.exports = function(grunt) {
         options: { stdout: true }
       , command: 'npm version patch'
       }
+    , loggingServer: {
+        options: { stdout: true }
+      , command: 'node workers/logs'
+      }
     }
 
   , less: {
@@ -250,7 +254,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'analyze',      ['complexity'] );
   grunt.registerTask( 'build',        ['less', 'copy:manifest', 'concat', 'shell:handlebars', 'requirejs'] );
-  grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'watch'] );
+  grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'shell:loggingServer', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 
   grunt.registerTask( 'deploy', [

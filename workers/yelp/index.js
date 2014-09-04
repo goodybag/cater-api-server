@@ -3,10 +3,11 @@
  */
 
 var util      = require('util');
+var yelp      = require('yelp');
 var utils     = require('../../utils');
 var Models    = require('../../models');
 var config    = require('../../config');
-var yelp      = require('yelp');
+var logger    = require('../../lib/logger').create('Worker-Yelp');
 
 yelp = yelp.createClient({
   consumer_key:     config.yelp.consumerKey
@@ -14,6 +15,7 @@ yelp = yelp.createClient({
 , token:            config.yelp.token
 , token_secret:     config.yelp.tokenSecret
 });
+
 var errors = [];
 
 var stats = {
@@ -40,6 +42,7 @@ var logStats = function(){
 
 var onComplete = function(){
   logStats();
+  logger.info( 'Complete', { stats: stats } );
   process.exit(0);
 };
 
@@ -58,6 +61,7 @@ var getGbBusinesses = function( callback ){
     limit: 'all'
   };
 
+  logger.info('Finding GB Businesses');
   Models.Restaurant.find( $query, function( error, results ){
     if ( error ) return callback( error );
     return callback( null, results.map( function( r ){ return r.attributes; }) );
@@ -95,9 +99,14 @@ getGbBusinesses( function( error, businesses ){
   var fns = businesses.map( function( business ){
 
     return function( done ){
+      var blogger = logger.create( business.name, {
+        data: { business: business }
+      });
+
       var localOnError = function( error ){
         if ( !error ) return
 
+        blogger.error({ error: error });
         stats.errors.value++;
         errors.push( error );
         console.log( error.statusCode === 404 ? (business.yelp_business_id + ' not found') : error );
@@ -105,9 +114,11 @@ getGbBusinesses( function( error, businesses ){
         return done();
       };
 
+      blogger.info('Getting Yelp business');
       yelp.business( business.yelp_business_id, function( error, data ){
         if ( error ) return localOnError( error );
 
+        blogger.info('saveBusinessYelpData');
         saveBusinessYelpData( business.id, data, function( error ){
           if ( error ) return localOnError( error );
 

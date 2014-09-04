@@ -1,20 +1,22 @@
 var domain = require('domain');
 var config = require('../../config');
 var utils = require('../../utils');
-var logger = require('../../logger');
+var logger = require('./logger').create('Enqueue');
 var models = require('../../models');
 
 var _ = utils._;
 
 var task = function () {
-  var TAGS = ['worker-debit-enqueue-task'];
   models.Order.findReadyForCharging(1000, function (error, orders) {
-    if (error) return logger.db.error(TAGS, "failed to get orders", error), utils.rollbar.reportMessage(error);
+    if (error){
+      logger.create('DB').error("failed to get orders", { error: error });
+      return utils.rollbar.reportMessage(error);
+    }
     var messages = [];
     var ids = [];
 
     _.map(orders, function (order) {
-      logger.debit.info(TAGS, 'queuing order: '+ order.attributes.id +' for payment processing');
+      logger.info('queuing order: '+ order.attributes.id +' for payment processing', { order: order });
       ids.push(order.attributes.id);
       messages.push({
         body: JSON.stringify({order: {id: order.attributes.id}})
@@ -27,10 +29,14 @@ var task = function () {
     utils.queues.debit.post(messages, function (error, body) {
       if (error) {
         // it's alright if we have an error, we'll get these orders on the next go;
-        return logger.debit.error(TAGS, 'failed to put orders onto debit queue', error), utils.rollbar.reportMessage(error);
+        logger.error('failed to put orders onto debit queue', { error: error });
+        return utils.rollbar.reportMessage(error);
       }
       models.Order.setPaymentStatusPendingIfNull(ids, function (error) {
-        if (error) return logger.db.error(TAGS, "failed to set orders to pending", error), utils.rollbar.reportMessage(error);
+        if (error){
+          utils.rollbar.reportMessage(error);
+          return logger.create('DB').error("failed to set orders to pending", { error: error });
+        }
       });
     });
   });
@@ -38,8 +44,7 @@ var task = function () {
 
 var done = function (error) {
   if (!error) return;
-  console.log(error);
-  console.log(error.stack);
+  logger.error({ error: error });
   utils.rollbar.reportMessage(error);
 };
 

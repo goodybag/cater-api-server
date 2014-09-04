@@ -42,6 +42,10 @@ describe ('/orders - Shared orders guest user', function(){
       done();
     });
   });
+
+  it ('view shared menu without token should fail', function(done) {
+    done();
+  });
 });
 
 describe ('/orders - Shared orders client user', function(){

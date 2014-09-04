@@ -16,7 +16,7 @@ describe ('/orders - Shared orders guest user', function(){
   // provision new order for guest
   before( function( done ){
     utils.test.loginAsUserId( fixture.user.id, function( err ){
-       var data = {
+      var data = {
         restaurant_id: fixture.restaurant.id
       , guests: 25
       , datetime: moment().add(3, 'days').hour(13).format('YYYY-MM-DD hh:mm:ss')
@@ -34,11 +34,16 @@ describe ('/orders - Shared orders guest user', function(){
     });
   });
 
-  it('view shared menu', function(done) {
-    console.log(order);
-    setTimeout(done, 1000);
+  it ('view shared menu', function(done) {
+    var url = ['/restaurants', fixture.restaurant.id + '?edit_token=' + order.edit_token ].join('/');
+    utils.test.json.get( url, function( error, res, body ){
+      assert( !error );
+      assert.equal( res.statusCode, 200 );
+      done();
+    });
   });
 });
+
 describe ('/orders - Shared orders client user', function(){
   before( function( done ){
     utils.test.loginAsUserId( 1, done );

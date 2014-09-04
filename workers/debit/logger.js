@@ -1,1 +1,1 @@
-module.exports = require('../../lib/logger').create('Debit');
+module.exports = require('../../lib/logger').create('Worker-Debit');

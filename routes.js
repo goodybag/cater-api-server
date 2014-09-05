@@ -675,7 +675,11 @@ module.exports.register = function(app) {
    */
 
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
-  app.get('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.orderItems.summary);  // not currently used
+  
+  app.get('/api/orders/:oid/items'
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , controllers.orders.orderItems.summary
+  );
 
   app.post('/api/orders/:oid/items'
   , m.editOrderAuth
@@ -684,7 +688,7 @@ module.exports.register = function(app) {
   , controllers.orders.orderItems.add
   );
 
-  app.all('/orders/:oid/items', function(req, res, next) {
+  app.all('/api/orders/:oid/items', function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
@@ -695,7 +699,8 @@ module.exports.register = function(app) {
 
   app.get('/api/orders/:oid/items/:iid'
   , m.restrict(['client', 'admin'])
-  , controllers.orders.orderItems.get);
+  , controllers.orders.orderItems.get
+  );
 
   app.put('/api/orders/:oid/items/:iid'
   , m.editOrderAuth
@@ -708,7 +713,8 @@ module.exports.register = function(app) {
   , m.editOrderAuth
   , m.restrict(['client', 'admin'])
   , controllers.orders.editability
-  , controllers.orders.orderItems.update);
+  , controllers.orders.orderItems.update
+  );
 
   app.del('/api/orders/:oid/items/:iid'
   , m.editOrderAuth
@@ -717,10 +723,13 @@ module.exports.register = function(app) {
   , controllers.orders.orderItems.remove
   );
 
-  app.all('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
-    res.set('Allow', 'GET, PUT, PATCH, DELETE');
-    res.send(405);
-  });
+  app.all('/orders/:oid/items/:iid'
+  , m.restrict(['client', 'admin'])
+  , function(req, res, next) {
+      res.set('Allow', 'GET, PUT, PATCH, DELETE');
+      res.send(405);
+    }
+  );
 
   /**
    * Order Duplicates resource.  Duplicates of an order.

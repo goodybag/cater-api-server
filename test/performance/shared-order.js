@@ -3,7 +3,52 @@ var moment  = require('moment-timezone');
 var utils   = require('../../utils');
 var db      = require('../../db');
 
-describe ('/orders - Shared orders', function(){
+
+describe ('/orders - Shared orders guest user', function(){
+
+  var fixture = {
+    user: { id: 1 }
+  , restaurant: { id: 31 }
+  };
+
+  var order;
+
+  // provision new order for guest
+  before( function( done ){
+    utils.test.loginAsUserId( fixture.user.id, function( err ){
+      var data = {
+        restaurant_id: fixture.restaurant.id
+      , guests: 25
+      , datetime: moment().add(3, 'days').hour(13).format('YYYY-MM-DD hh:mm:ss')
+      };
+
+      utils.test.json.post( '/orders', data, function( error, res, body ){
+        assert( !error, error );
+        assert( !body.error, JSON.stringify( body.error, true, '  ' ) );
+
+        order = body;
+
+        utils.test.logout( done );
+      });
+       
+    });
+  });
+
+  it ('view shared menu', function(done) {
+    var url = ['/restaurants', fixture.restaurant.id + '?edit_token=' + order.edit_token ].join('/');
+    utils.test.json.get( url, function( error, res, body ){
+      assert( !error );
+      assert.equal( res.statusCode, 200 );
+      done();
+    });
+  });
+
+  it ('view shared menu without token should fail', function(done) {
+    done();
+  });
+});
+
+describe ('/orders - Shared orders client user', function(){
   before( function( done ){
     utils.test.loginAsUserId( 1, done );
   });
@@ -16,7 +61,7 @@ describe ('/orders - Shared orders', function(){
   var order;
   var restaurant_id = 31;
 
-  it ('POST /orders', function( done ){
+  it ('create order', function( done ){
     this.expected = 12;
 
     var data = {
@@ -35,7 +80,7 @@ describe ('/orders - Shared orders', function(){
     });
   });
 
-  it ('POST /api/orders/:oid/generate_edit_token', function( done ){
+  it ('create edit_token', function( done ){
     this.timeout( 5000 );
     this.expected = 10;
 
@@ -49,7 +94,7 @@ describe ('/orders - Shared orders', function(){
     });
   });
 
-  it ('GET /restaurants/:rid/?edit_token=', function( done ){
+  it ('view shared order', function( done ){
     this.timeout( 5000 );
     this.expected = 400;
 
@@ -61,7 +106,7 @@ describe ('/orders - Shared orders', function(){
     });
   });
 
-  it ('POST /orders/:oid/items - With edit token', function( done ){
+  it ('create shared order item', function( done ){
     this.timeout( 5000 );
     this.expected = 10;
 
@@ -78,7 +123,7 @@ describe ('/orders - Shared orders', function(){
     });
   });
 
-  it ('GET /api/orders/:oid/items', function( done ){
+  it ('get shared order items', function( done ){
     this.timeout( 5000 );
     this.expected = 10;
 

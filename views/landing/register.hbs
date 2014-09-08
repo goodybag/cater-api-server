@@ -47,6 +47,18 @@
       </div>
 
       <div class="form-group">
+        <label for="register-region">I'm ordering food in:</label>
+        <select name="region_id" id="register-region">
+          {{#each regions}}
+            <option
+              value="{{this.id}}"
+              {{#eq ../reqQuery.region this.id}}selected{{/eq}}
+            >{{this.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="form-group">
         <label for="register-password">Password</label>
         <input type="password" name="password" id="register-password">
       </div>

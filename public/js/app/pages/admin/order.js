@@ -50,7 +50,12 @@ define(function(require){
               return flash.info( 'Error :(', 1000 );
             }
 
-            flash.info("It's set!<br><small class=\"really-small\">Re-build PDFs and send notifications</small>")
+            flash.info([
+              "It's set!<br>"
+            , "<small class=\"really-small\">"
+            , "Don't forget to send necessary notifications"
+            , "</small>"
+            ].join('\n'));
           });
         });
       });

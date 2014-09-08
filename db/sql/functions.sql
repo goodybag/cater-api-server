@@ -124,52 +124,42 @@ create or replace function get_order_delivery_fee( o orders )
 returns int as $$
   declare default_fee int;
 begin
+  -- Pickup Order
+  if o.type = 'pickup' then
+    return 0;
+  end if;
+
   -- If `zip` does not exist, just pick the least expensive one
   default_fee := (select fee from restaurant_delivery_zips
     where restaurant_id = o.restaurant_id
     order by fee asc
     limit 1);
 
-  -- Delivery Service Order
-  if o.type = 'courier' then
-    if o.delivery_service_id is not null
-    then
-      return coalesce(
-        ( select delivery_service_zips.price from delivery_service_zips
-          left join restaurants on restaurants.id = o.restaurant_id
-          where delivery_service_zips."from" = restaurants.zip
-            and delivery_service_zips."to" = o.zip
-            and delivery_service_zips.delivery_service_id = o.delivery_service_id
-          limit 1
-        )
-      , default_fee
-      );
-    end if;
-
+  if o.type = 'delivery' then
     return coalesce(
-      ( select delivery_service_zips.price from delivery_service_zips
-        left join restaurants on restaurants.id = o.restaurant_id
-        where delivery_service_zips."from" = restaurants.zip
-          and delivery_service_zips."to" = o.zip
-        order by price asc
-        limit 1
-      )
+      (select fee from restaurant_delivery_zips rdz
+      where rdz.zip = o.zip
+        and rdz.restaurant_id = o.restaurant_id
+      order by fee asc
+      limit 1)
     , default_fee
     );
   end if;
 
-  -- Pickup Order
-  if o.type = 'pickup' then
-    return 0;
+  if o.type = 'courier' then
+    return coalesce(
+      (select dsz.price from delivery_service_zips dsz
+      left join restaurants rs on rs.id = o.restaurant_id
+      where dsz."from" = rs.zip
+        and dsz."to" = o.zip
+      limit 1)
+    , default_fee
+    );
   end if;
 
-  -- Restaurant Delivery Order
   return coalesce(
-    ( select fee from restaurant_delivery_zips
-      where restaurant_id = o.restaurant_id
-      and zip = o.zip
-    )
-  , default_fee
+    default_fee
+  , 0
   );
 end;
 $$ language plpgsql;
@@ -293,5 +283,60 @@ begin
   update order_items
     set sub_total = order_item.quantity * ( order_item.price + options_total )
   where id = order_item.id;
+end;
+$$ language plpgsql;
+
+-- Update search vectors based on relevant relations
+create or replace function update_orders_search_vector_from_orders()
+returns trigger as $$
+begin
+  update orders as o 
+  set search_vector = to_tsvector( 'english', 
+      o.id                            || ' ' ||
+      coalesce(new.name, '')          || ' ' ||
+      coalesce(restaurant_name, '')   || ' ' ||
+      coalesce(user_name, '')         || ' ' ||
+      coalesce(user_email, '')        || ' ' ||
+      coalesce(user_organization, '') || ' ' 
+    )
+  from orders_search_view as osv
+  where o.id = osv.order_id and osv.order_id = new.id;
+  return new;
+end;
+$$ language plpgsql;
+
+create or replace function update_orders_search_vector_from_restaurants()
+returns trigger as $$
+begin
+  update orders as o 
+  set search_vector = to_tsvector( 'english', 
+      o.id                            || ' ' ||
+      coalesce(order_name, '')        || ' ' ||
+      coalesce(new.name, '')          || ' ' ||
+      coalesce(user_name, '')         || ' ' ||
+      coalesce(user_email, '')        || ' ' ||
+      coalesce(user_organization, '') || ' ' 
+    )
+  from orders_search_view as osv
+  where o.id = osv.order_id and osv.restaurant_id = new.id;
+  return new;
+end;
+$$ language plpgsql;
+
+create or replace function update_orders_search_vector_from_users()
+returns trigger as $$
+begin
+  update orders as o 
+  set search_vector = to_tsvector( 'english', 
+      o.id                            || ' ' ||
+      coalesce(order_name, '')        || ' ' ||
+      coalesce(restaurant_name, '')   || ' ' ||
+      coalesce(new.name, '')          || ' ' ||
+      coalesce(new.email, '')         || ' ' ||
+      coalesce(new.organization, '')  || ' ' 
+    )
+  from orders_search_view as osv
+  where o.id = osv.order_id and osv.user_id = new.id;
+  return new;
 end;
 $$ language plpgsql;

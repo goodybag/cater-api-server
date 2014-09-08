@@ -88,7 +88,10 @@ define(function(require, exports, module) {
     },
 
     removePeriod: function(e) {
-      $(e.target).closest('.open-period').remove();
+      var idx = $(e.target).closest('.open-period').index();
+      var times = this.model.get('times').slice(); // generate new reference
+      times.splice(idx, 1);
+      this.model.set('times', times);
     }
   });
 });

@@ -39,6 +39,23 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/request-to-be-a-caterer'
+    , m.view( 'landing/restaurant', {
+        layout: 'landing/layout'
+      })
+    );
+
+    app.post('/request-to-be-a-caterer'
+    , m.after( function( req, res, next ){
+        venter.emit( 'restaurant_request:created', req.body );
+        next();
+      })
+    , m.view( 'landing/restaurant', db.restaurant_requests, {
+        layout: 'landing/layout'
+      , method: 'insert'
+      })
+    );
+
     app.get('/forgot-password', controllers.auth.forgotPassword);
     app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
     app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
@@ -108,6 +125,16 @@ module.exports.register = function(app) {
       layout: 'admin/layout2'
     , method: 'find'
     , activeTab: 'regions'
+    })
+  );
+
+  /**
+   * Kitchen Sink
+   */
+
+  app.get('/admin/kitchen-sink'
+  , m.view( 'admin/kitchen-sink', {
+      layout: 'admin/layout2'
     })
   );
 
@@ -1244,6 +1271,24 @@ module.exports.register = function(app) {
   , m.insert( db.orders )
   );
 
+  app.get('/api/orders/search'
+  , function(req, res, next) {
+      var query = req.query.q;
+      if ( !query ) return next();
+      req.queryObj.search_vector = { $partialMatches: query };
+      next();
+    }
+  , m.sort('-id')
+  , m.queryOptions({
+      limit: 10
+    , one: [
+        { table: 'restaurants', alias: 'restaurant' }
+      , { table: 'users', alias: 'user' }
+      ]
+    })
+  , m.find( db.orders )
+  );
+
   app.get('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')
@@ -1259,6 +1304,14 @@ module.exports.register = function(app) {
   app.put('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.after( function( req, res, next ){
+      if ( res.statusCode >= 300 || res.statusCode < 200 ){
+        return next();
+      }
+
+      venter.emit( 'order:change', req.param('id') );
+      next();
+    })
   , m.update( db.orders )
   );
 
@@ -1376,4 +1429,5 @@ module.exports.register = function(app) {
     })
   , m.find( db.users )
   );
+
 }

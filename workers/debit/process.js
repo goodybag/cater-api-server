@@ -84,7 +84,7 @@ var task = function (message, callback) {
   db.orders.findOne( body.order.id, $options, function(error, order) {
     if ( error ) return logger.create('DB').error({error: error}), callback(error);
     if ( !order ) return utils.queues.debit.del(message.id, utils.noop), callback();
-    if (_.contains(['invoiced', 'paid'], order.payment_status)) return utils.queues.debit.del(message.id, utils.noop), callback();
+    if (_.contains(['invoiced', 'paid', 'ignore'], order.payment_status)) return utils.queues.debit.del(message.id, utils.noop), callback();
 
     // check to see if a debit was already successfuly processed for this order
     // if so it means that there was an error in updating our system with the

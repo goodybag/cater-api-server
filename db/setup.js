@@ -8,9 +8,11 @@ var async = require('async');
 var run = function( callback ) {
   var fns = [
     'destroyCreateDb'
+  , 'loadUtilityFunctions'
   , 'createExtensions'
   , 'createTypes'
   , 'createTables'
+  , 'createViews'
   , 'loadFixtures'
   , 'setLatestDelta'
   ];

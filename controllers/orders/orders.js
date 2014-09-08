@@ -270,7 +270,7 @@ module.exports.update = function(req, res) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(order.toJSON({plain:true}));
 
-    venter.emit('order:change', order.id);
+    venter.emit('order:change', order.attributes.id);
 
     if (datetimeChanged) {
       venter.emit('order:datetime:change', order, oldDatetime);

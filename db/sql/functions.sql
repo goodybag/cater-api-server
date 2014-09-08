@@ -135,9 +135,31 @@ begin
     order by fee asc
     limit 1);
 
+  if o.type = 'delivery' then
+    return coalesce(
+      (select fee from restaurant_delivery_zips rdz
+      where rdz.zip = o.zip
+        and rdz.restaurant_id = o.restaurant_id
+      order by fee asc
+      limit 1)
+    , default_fee
+    );
+  end if;
+
+  if o.type = 'courier' then
+    return coalesce(
+      (select dsz.price from delivery_service_zips dsz
+      left join restaurants rs on rs.id = o.restaurant_id
+      where dsz."from" = rs.zip
+        and dsz."to" = o.zip
+      limit 1)
+    , default_fee
+    );
+  end if;
+
   return coalesce(
-    get_delivery_fee( o.restaurant_id, o.zip, o.datetime, o.guests )
-  , default_fee
+    default_fee
+  , 0
   );
 end;
 $$ language plpgsql;

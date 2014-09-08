@@ -57,36 +57,7 @@
         <form class="register-form form-vertical" method="POST" action="/join{{queryParams query}}">
           <div class="errors"></div>
 
-          <div class="form-group">
-            <label for="register-email">Email</label>
-            <input type="email" name="email" id="register-email">
-          </div>
-
-          <div class="form-group">
-            <label for="register-region">I'm ordering food in:</label>
-            <select name="region_id" id="register-region">
-              {{#each regions}}
-                <option
-                  value="{{this.id}}"
-                  {{#eq ../reqQuery.region this.id}}selected{{/eq}}
-                >{{this.name}}</option>
-              {{/each}}
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="register-password">Password</label>
-            <input type="password" name="password" id="register-password">
-          </div>
-
-          <div class="form-group">
-            <label for="register-confirm-password">Confirm password</label>
-            <input type="password" name="password2" id="register-confirm-password">
-          </div>
-
-          <div class="form-group form-group-submit">
-            <button class="btn btn-primary btn-submit btn-large">Start using Goodybag</button>
-          </div>
+          {{> landing_register_form_fields}}
         </form>
       </div>
       <!--</Panel>-->

@@ -59,6 +59,7 @@
     "lodash": "2.2.x",
     "loglog": "^0.1.4",
     "loglog-mongodb": "^1.0.1",
+    "loglog-server": "^1.0.2",
     "mailcomposer": "0.2.x",
     "mailgun": "0.4.x",
     "microtime": "0.4.x",

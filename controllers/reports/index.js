@@ -40,6 +40,7 @@ var reports = {
     var sort = req.query.sort || 'asc';
     var restaurantId = req.query.restaurantId;
     var userId = req.query.userId;
+    var regionId = req.query.region;
 
     var filename = [
       status
@@ -63,6 +64,7 @@ var reports = {
     , 'Tip'
     , 'Total'
     , 'Caterer Name'
+    , 'Region'
     ]);
 
     var where = { status: status, restaurant_id: { $notNull: true } };
@@ -77,12 +79,17 @@ var reports = {
     , $lt: end
     };
 
+    if ( regionId ) {
+      where.region_id = regionId;
+    }
+
     options.order = {};
     options.order[range] = sort;
     options.distinct = [ 'orders.id', range ];
     options.one = [
       { table: 'users', alias: 'user' }
-    , { table: 'restaurants', alias: 'restaurant'}
+    , { table: 'restaurants', alias: 'restaurant' }
+    , { table: 'regions', alias: 'region' }
     ];
     options.submittedDate = true;
 
@@ -106,6 +113,7 @@ var reports = {
           , dollars(order.tip)
           , dollars(order.total)
           , order.restaurant.name
+          , order.region.name
           ]);
         });
       res.end();

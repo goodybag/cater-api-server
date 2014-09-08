@@ -17,6 +17,13 @@
         <option value="asc">Ascending</option>
         <option value="desc">Descending</option>
       </select>
+      <label>Region</label>
+      <select name="region">
+        <option value="0">All</option>
+        {{#each regions}}
+        <option value="{{id}}">{{name}}</option>
+        {{/each}}
+      </select>
     </div>
 
     <div class="form-group">

@@ -135,9 +135,31 @@ begin
     order by fee asc
     limit 1);
 
+  if o.type = 'delivery' then
+    return coalesce(
+      (select fee from restaurant_delivery_zips rdz
+      where rdz.zip = o.zip
+        and rdz.restaurant_id = o.restaurant_id
+      order by fee asc
+      limit 1)
+    , default_fee
+    );
+  end if;
+
+  if o.type = 'courier' then
+    return coalesce(
+      (select dsz.price from delivery_service_zips dsz
+      left join restaurants rs on rs.id = o.restaurant_id
+      where dsz."from" = rs.zip
+        and dsz."to" = o.zip
+      limit 1)
+    , default_fee
+    );
+  end if;
+
   return coalesce(
-    get_delivery_fee( o.restaurant_id, o.zip, o.datetime, o.guests )
-  , default_fee
+    default_fee
+  , 0
   );
 end;
 $$ language plpgsql;
@@ -316,41 +338,5 @@ begin
   from orders_search_view as osv
   where o.id = osv.order_id and osv.user_id = new.id;
   return new;
-end;
-$$ language plpgsql;
-
-create or replace function get_delivery_fee( rid int, delivery_zip varchar(5), delivery_date timestamp, guests int )
-returns int as $$
-begin
-  return (
-    select price from (
-      select restaurant_delivery_zips.fee as price from restaurant_delivery_zips
-        left join restaurants on restaurant_delivery_zips.restaurant_id = restaurants.id
-        left join regions on regions.id = restaurants.region_id
-        left join restaurant_lead_times on restaurant_lead_times.restaurant_id = restaurants.id
-        left join restaurant_delivery_times on restaurant_delivery_times.restaurant_id = restaurants.id
-      where restaurants.id = rid
-        and restaurant_delivery_zips.zip = delivery_zip
-        and restaurant_lead_times.lead_time * interval '1 minute' <= delivery_date at time zone regions.timezone - now()
-        and restaurant_lead_times.max_guests >= guests
-        and restaurant_delivery_times.day = extract( dow from delivery_date at time zone regions.timezone )
-        and restaurant_delivery_times.start_time <= delivery_date::time at time zone regions.timezone
-        and restaurant_delivery_times.end_time > delivery_date::time at time zone regions.timezone
-      union
-      select delivery_service_zips.price from delivery_service_zips
-        left join restaurants on delivery_service_zips.from = restaurants.zip
-        left join regions on regions.id = restaurants.region_id
-        left join restaurant_pickup_lead_times on restaurant_pickup_lead_times.restaurant_id = restaurants.id
-        left join restaurant_hours on restaurant_hours.restaurant_id = restaurants.id
-      where restaurants.id = rid
-        and delivery_service_zips.to = delivery_zip
-        and restaurant_pickup_lead_times.lead_time * interval '1 minute' <= delivery_date at time zone regions.timezone - now()
-        and restaurant_pickup_lead_times.max_guests >= guests
-        and restaurant_hours.day = extract( dow from delivery_date at time zone regions.timezone )
-        and restaurant_hours.start_time <= delivery_date::time at time zone regions.timezone
-        and restaurant_hours.end_time > delivery_date::time at time zone regions.timezone
-    ) as all_delivery_zips
-    order by price asc limit 1
-  );
 end;
 $$ language plpgsql;

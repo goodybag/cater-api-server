@@ -107,7 +107,7 @@ config.defaults = {
   , console: {
       json: true
     }
-  , mongoConnStr: 'mongodb://localhost:1337/logs'
+  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
   , mongoCollection: 'logs'
   , httpPort: 3001
   }
@@ -284,7 +284,7 @@ config.dev = {
     , filename: 'all.log'
     , json: true
     }
-  , mongoConnStr: 'mongodb://localhost:1337/logs'
+  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
   , mongoCollection: 'logs'
   , httpPort: 3001
   }

@@ -4,14 +4,11 @@ var utils     = require('../../../utils');
 var slogger   = require('../../../logger').scheduler;
 
 module.exports = function( job, done ){
-  var TAGS = [ 'upload-to-s3', 'job-' + job.id ];
-  var logger = {};
-
-  [ 'debug', 'info', 'warn', 'error' ].forEach( function( level ){
-    logger[ level ] = slogger[ level ].bind( slogger, TAGS );
+  var logger = slogger.create('Upload to S3', {
+    data: { job: job }
   });
 
-  logger.info( 'Building PDF', job );
+  logger.info('Uploading file');
 
   var missing = [
     'bucket'

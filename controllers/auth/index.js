@@ -229,6 +229,7 @@ module.exports.register = function( req, res ){
   , email:        req.body.email
   , password:     req.body.password
   , organization: req.body.organization
+  , region_id:    req.body.region_id || 1
   , groups:       ['client']
   };
 
@@ -271,72 +272,27 @@ module.exports.register = function( req, res ){
     });
   }
 
-  utils.async.series([
-    function( next ){
-      var $query, options = {};
-
-      // No Geo data? Let's still associate a region_id to them for now
-      // In the future, we'll want to prompt the user to select a region
-      // But for now, we'll go ahead and choose for them
-      if ( !req.geo || !( req.geo.region_code && req.geo.city ) ){
-        $query = { name: 'Austin, TX' };
-      // Lookup region based on geo data
-      } else {
-        $query = {
-          $or: [
-            { state:  req.geo.region_code
-            , cities: { $contains: [req.geo.city] }
-            }
-            // If they did provide region data that we don't currently support,
-            // still assign them to Austin, TX, but in the future, we will
-            // prompt the user to choose from the list
-          , { name: 'Austin, TX' }
-          ]
-        };
-
-        // Always put ATX at the bottom if there are multiple results
-        options = { order: "name = 'Austin, TX' asc" }
+  new Models.User( data ).create( function( error, user ){
+    if ( error ){
+      if ( error.routine === '_bt_check_unique' ){
+        error = errors.registration.EMAIL_TAKEN;
       }
 
-      db.regions.find( $query, options, function( error, regions ){
-        if ( error ){
-          return res.render( 'landing/register', {
-            layout: 'landing/layout'
-          , error: error
-          });
-        }
-
-        // There will at least be 1 result
-        data.region_id = regions[0].id;
-
-        next();
+      return res.render( 'landing/register', {
+        layout: 'landing/layout'
+      , error: error
       });
     }
 
-  , function(){
-      new Models.User( data ).create( function( error, user ){
-        if ( error ){
-          if ( error.routine === '_bt_check_unique' ){
-            error = errors.registration.EMAIL_TAKEN;
-          }
+    req.analytics.track({
+      userId: user.attributes.id+''
+    , event: 'Sign up'
+    });
 
-          return res.render( 'landing/register', {
-            layout: 'landing/layout'
-          , error: error
-          });
-        }
+    req.setSession( user.toJSON() );
 
-        req.analytics.track({
-          userId: user.attributes.id+''
-        , event: 'Sign up'
-        });
+    res.redirect('/restaurants');
 
-        req.setSession( user.toJSON() );
-
-        res.redirect('/restaurants');
-
-        venter.emit( 'user:registered', user );
-      });
-    }
-  ]);
+    venter.emit( 'user:registered', user );
+  });
 };

@@ -495,3 +495,51 @@ module.exports.menuCsv = function( req, res ){
     });
   });
 };
+
+module.exports.duplicate = function(req, res) {
+  var id = req.params.restaurant_id;
+
+  var tasks = [
+    db.restaurants.findOne.bind(db.restaurants, id)
+
+  , function createBalancedUri(restaurant, callback) {
+      utils.balanced.Customers.create({
+        name: restaurant.name
+      }, function(err, customer) {
+        callback(err, restaurant, customer);
+      });
+    }
+
+  , function copyRestaurant(restaurant, customer, callback) {
+      var data = utils.extend({ }, utils.omit(restaurant, 'id'), {
+        balanced_customer_uri: customer.uri
+      });
+      db.restaurants.insert( data, function(err, result) {
+        callback(err, restaurant, result[0].id);
+      });
+    }
+
+  , function getCategories(oldRestaurant, newId, callback) {
+      db.categories.find({ restaurant_id: oldRestaurant.id }, function(err, categories){
+        callback(err, oldRestaurant, newId, categories);
+      });
+    }
+
+  , function copyCategories(oldRestaurant, newId, categories, callback) {
+      categories = categories.map(function(cat) {
+        return utils.extend(utils.omit(cat, 'id'), { restaurant_id: newId });
+      });
+      db.categories.insert(categories, function(err, categories) {
+        callback(err, oldRestaurant, categories);
+      });
+    }
+  ];
+
+  utils.async.waterfall(tasks, function(err, restaurant) {
+    if ( err ) {
+      console.log('ERROR', err);
+      return res.send(500, err);
+    }
+    res.send(restaurant);
+  });
+};

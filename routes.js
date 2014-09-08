@@ -1101,6 +1101,10 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/api/restaurants/:restaurant_id/copy'
+  , controllers.restaurants.duplicate
+  );
+
   app.get('/api/restaurants/:restaurant_id/orders'
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')

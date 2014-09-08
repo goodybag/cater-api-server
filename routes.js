@@ -1301,6 +1301,14 @@ module.exports.register = function(app) {
   app.put('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.after( function( req, res, next ){
+      if ( res.statusCode >= 300 || res.statusCode < 200 ){
+        return next();
+      }
+
+      venter.emit( 'order:change', req.param('id') );
+      next();
+    })
   , m.update( db.orders )
   );
 

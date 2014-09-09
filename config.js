@@ -202,6 +202,7 @@ config.defaults = {
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   , rewards: [ local.testEmail || 'test@goodybag.com' ]
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]
+  , orderNotificationChecks: [ local.testEmail || 'test@goodybag.com' ]
   }
 
 , phone: {
@@ -518,6 +519,11 @@ config.production = {
   , dsOrders: [
       'sarahsouthwell@goodybag.com'
     , 'gillian@goodybag.com'
+    ]
+  , orderNotificationChecks: [
+      '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
+    , '"Gillian Lambert" <gillianlambert@goodybag.com>'
+    , '"John Fawcett" <john@goodybag.com>'
     ]
   }
 

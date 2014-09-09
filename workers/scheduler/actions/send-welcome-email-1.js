@@ -5,7 +5,7 @@ var welcomer  = require('../../../lib/welcome-emailer');
 
 module.exports = function( job, done ){
   var logger = slogger.create('Send Welcome Email', {
-    data: { job: job }
+    data: job
   });
 
   logger.info('Sending welcome email');

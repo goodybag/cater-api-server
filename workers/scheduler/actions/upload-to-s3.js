@@ -1,11 +1,11 @@
 var path      = require('path');
 var config    = require('../../../config');
 var utils     = require('../../../utils');
-var slogger   = require('../../../logger').scheduler;
+var slogger   = require('../logger');
 
 module.exports = function( job, done ){
   var logger = slogger.create('Upload to S3', {
-    data: { job: job }
+    data: job
   });
 
   logger.info('Uploading file');

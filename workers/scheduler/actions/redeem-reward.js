@@ -7,7 +7,7 @@ var db        = require('../../../db');
 
 module.exports = function( job, done ){
   var logger = slogger.create('Redeem Reward', {
-    data: { job: job }
+    data: job
   });
 
   logger.info('Sending redemption email');

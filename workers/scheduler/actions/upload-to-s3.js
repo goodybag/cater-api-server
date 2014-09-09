@@ -4,7 +4,7 @@ var utils     = require('../../../utils');
 var slogger   = require('../logger');
 
 module.exports = function( job, done ){
-  var logger = slogger.create('Upload to S3', {
+  var logger = slogger.create('UploadToS3', {
     data: job
   });
 

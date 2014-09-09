@@ -22,11 +22,11 @@ module.exports.register = function(app) {
   logger.info('Registering routes');
 
   app.before( m.analytics, m.queryParams(), function( app ){
-    app.get('/', controllers.auth.index);
+    app.get('/', m.findRegions, controllers.auth.index);
     app.get('/login', controllers.auth.login);
     app.post('/login', controllers.auth.login);
-    app.get('/join', controllers.auth.registerView);
-    app.post('/join', m.getGeoFromIp(), controllers.auth.register);
+    app.get('/join', m.findRegions, controllers.auth.registerView);
+    app.post('/join', m.findRegions, controllers.auth.register);
 
     app.get('/rewards', m.view( 'landing/rewards', {
       layout: 'landing/layout'

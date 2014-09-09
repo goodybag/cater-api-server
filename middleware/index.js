@@ -11,6 +11,7 @@ module.exports = {
 , enums: require('./enums')
 , exists: require('./exists')
 , filterBody: require('./filter-body')
+, findRegions: require('./find-regions')
 , getOrder: require('./get-order')
 , getOrder2: require('./get-order2')
 , getUser: require('./get-user')

@@ -513,6 +513,8 @@ module.exports.copy = function(req, res) {
   , function copyRestaurant(restaurant, customer, callback) {
       var data = utils.extend({ }, utils.omit(restaurant, 'id'), {
         balanced_customer_uri: customer.uri
+      , name: restaurant.name + ' Copy'
+      , is_hidden: true
       });
       db.restaurants.insert( data, function(err, result) {
         callback(err, restaurant, result[0].id);

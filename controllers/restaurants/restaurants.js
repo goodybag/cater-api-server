@@ -496,7 +496,7 @@ module.exports.menuCsv = function( req, res ){
   });
 };
 
-module.exports.duplicate = function(req, res) {
+module.exports.copy = function(req, res) {
   var id = req.params.restaurant_id;
 
   var tasks = [
@@ -526,20 +526,46 @@ module.exports.duplicate = function(req, res) {
     }
 
   , function copyCategories(oldRestaurant, newId, categories, callback) {
+      var oldCatIds = utils.pluck(categories, 'id');
+      var newCatIds;
       categories = categories.map(function(cat) {
         return utils.extend(utils.omit(cat, 'id'), { restaurant_id: newId });
       });
       db.categories.insert(categories, function(err, categories) {
-        callback(err, oldRestaurant, categories);
+        newCatIds = utils.pluck(categories, 'id');
+
+        var catMap = utils.object(oldCatIds, newCatIds);
+        callback(err, oldRestaurant, newId, catMap);
+      });
+    }
+
+  , function getItems(oldRestaurant, newId, catMap, callback) {
+      db.items.find({ restaurant_id: oldRestaurant.id }, function(err, items) {
+        if ( err ) return callback( err );
+        items.map(function(item) {
+          // associate to newly duplicated rows
+          item.category_id = catMap[item.category_id]; 
+          item.restaurant_id = newId;
+          item.options_sets = JSON.stringify(item.options_sets);
+          delete item.id;
+          return item;
+        });
+
+        callback(err, items, newId);
+      });
+    }
+
+  , function copyItems(items, newId, callback) {
+      db.items.insert(items, function(err, results) {
+        callback(err, newId);
       });
     }
   ];
 
-  utils.async.waterfall(tasks, function(err, restaurant) {
+  utils.async.waterfall(tasks, function(err, newId) {
     if ( err ) {
-      console.log('ERROR', err);
       return res.send(500, err);
     }
-    res.send(restaurant);
+     res.redirect('/admin/restaurants/' + newId);
   });
 };

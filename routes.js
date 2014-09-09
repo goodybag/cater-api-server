@@ -372,6 +372,15 @@ module.exports.register = function(app) {
   app.get('/admin/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
 
   /**
+   * Restaurant copy
+   */
+   
+  app.get('/admin/restaurants/:restaurant_id/copy'
+  , m.restrict('admin')
+  , controllers.restaurants.copy
+  );
+
+  /**
    * Restaurant items resource.  The collection of all items belonging to a restaurant.
    */
 
@@ -1099,10 +1108,6 @@ module.exports.register = function(app) {
       layout: 'invoice/payment-summary-layout'
     , method: 'findOne'
     })
-  );
-
-  app.get('/api/restaurants/:restaurant_id/copy'
-  , controllers.restaurants.duplicate
   );
 
   app.get('/api/restaurants/:restaurant_id/orders'

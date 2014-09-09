@@ -519,6 +519,115 @@ module.exports.copy = function(req, res) {
       });
     }
 
+  , function getContacts(oldRestaurant, newId, callback) {
+      db.contacts.find({ restaurant_id: oldRestaurant.id }, function(err, contacts) {
+        contacts = contacts.map(function(contact) {
+          contact.restaurant_id = newId;
+          contact.name = contact.name || '';
+          delete contact.id;
+          return contact;
+        });
+        callback(err, oldRestaurant, newId, contacts);
+      });
+    }
+
+  , function copyContacts(oldRestaurant, newId, contacts, callback) {
+      db.contacts.insert(contacts, function(err) {
+        callback(err, oldRestaurant, newId);
+      });
+    }
+
+  , function getDeliveryTimes(oldRestaurant, newId, callback) {
+      db.restaurant_delivery_times.find({ restaurant_id: oldRestaurant.id }, function(err, times) {
+        times = times.map(function(time) {
+          time.restaurant_id = newId;
+          delete time.id;
+          return time
+        });
+        callback(err, oldRestaurant, newId, times);
+      });
+    }
+
+  , function copyDeliveryTimes(oldRestaurant, newId, times, callback) {
+      db.restaurant_delivery_times.insert(times, function(err) {
+        callback(err, oldRestaurant, newId);
+      });
+    }
+
+  , function getLeadTimes(oldRestaurant, newId, callback) {
+      db.restaurant_lead_times.find({ restaurant_id: oldRestaurant.id }, function(err, times) {
+        times = times.map(function(time) {
+          time.restaurant_id = newId;
+          delete time.id;
+          return time
+        });
+        callback(err, oldRestaurant, newId, times);
+      });
+    }
+
+  , function copyLeadTimes(oldRestaurant, newId, times, callback) {
+      db.restaurant_lead_times.insert(times, function(err) {
+        callback(err, oldRestaurant, newId);
+      });
+    }
+
+  , function getHours(oldRestaurant, newId, callback) {
+      db.restaurant_hours.find({ restaurant_id: oldRestaurant.id }, function(err, times) {
+        times = times.map(function(time) {
+          time.restaurant_id = newId;
+          delete time.id;
+          return time
+        });
+        callback(err, oldRestaurant, newId, times);
+      });
+    }
+
+  , function copyHours(oldRestaurant, newId, times, callback) {
+      db.restaurant_hours.insert(times, function(err) {
+        callback(err, oldRestaurant, newId);
+      });
+    }
+
+  , function getPickupLeadTimes(oldRestaurant, newId, callback) {
+      db.restaurant_pickup_lead_times.find({ restaurant_id: oldRestaurant.id }, function(err, times) {
+        times = times.map(function(time) {
+          time.restaurant_id = newId;
+          delete time.id;
+          return time
+        });
+        callback(err, oldRestaurant, newId, times);
+      });
+    }
+
+  , function copyPickupLeadTimes(oldRestaurant, newId, times, callback) {
+      db.restaurant_pickup_lead_times.insert(times, function(err) {
+        callback(err, oldRestaurant, newId);
+      });
+    }
+
+  /**
+   *  dirac can't insert without id  
+   *  unfortunately restaurant_tags are keyed by (restaurant_id, tag)
+   *  so this doesn't work
+   */
+
+  // , function getTags(oldRestaurant, newId, callback) {
+  //     db.restaurant_tags.find({ restaurant_id: oldRestaurant.id }, function(err, tags) {
+  //       tags = tags.map(function(tag) {
+  //         tag.restaurant_id = newId;
+  //         console.log(tag);
+  //         return tag;
+  //       });
+  //       callback(err, oldRestaurant, newId, tags);
+  //     });
+  //   }
+
+  // , function copyTags(oldRestaurant, newId, tags, callback) {
+  //     db.restaurant_tags.insert(tags, function(err) {
+  //       callback(err, oldRestaurant, newId);
+  //     });
+  //   }
+
   , function getCategories(oldRestaurant, newId, callback) {
       db.categories.find({ restaurant_id: oldRestaurant.id }, function(err, categories){
         callback(err, oldRestaurant, newId, categories);

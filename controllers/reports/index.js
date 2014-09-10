@@ -80,7 +80,7 @@ var reports = {
     };
 
     if ( regionId ) {
-      where.region_id = regionId;
+      where['restaurants.region_id'] = regionId;
     }
 
     options.order = {};

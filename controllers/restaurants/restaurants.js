@@ -16,12 +16,10 @@ cuisines = cuisines.sort();
 
 var models = require('../../models');
 
-var logger = require('../../logger');
-
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
 module.exports.list = function(req, res) {
-  var rLogger = req.logger.create('Controller-Restaurants-List');
+  var logger = req.logger.create('Controller-Restaurants-List');
 
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
@@ -40,7 +38,7 @@ module.exports.list = function(req, res) {
       , limit: 'all'
       };
 
-      rLogger.info('Finding filtered restaurants', {
+      logger.info('Finding filtered restaurants', {
         orderParams: orderParams
       });
 
@@ -52,14 +50,14 @@ module.exports.list = function(req, res) {
     },
 
     function(callback) {
-      rLogger.info('Finding default address');
+      logger.info('Finding default address');
       models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
     }
   ];
 
   // Filters count needs a list of all restaurants
   if (Object.keys(orderParams).length > 0){
-    rLogger.info('Finding all restaurants');
+    logger.info('Finding all restaurants');
     tasks.push(
       models.Restaurant.find.bind( models.Restaurant, {
         where: {
@@ -72,7 +70,7 @@ module.exports.list = function(req, res) {
   }
 
   var done = function(err, results) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err), rLogger.error(err);
+    if (err) return res.error(errors.internal.DB_FAILURE, err), logger.error(err);
 
     var context = {
       restaurants:      utils.invoke(results[0], 'toJSON').filter( function( r ){
@@ -97,8 +95,8 @@ module.exports.list = function(req, res) {
 };
 
 module.exports.get = function(req, res) {
-  var TAGS = ['restaurants-get'];
-  logger.routes.info(TAGS, 'getting restaurant ' + req.params.rid);
+  var logger = req.logger.create('Controller-Restaurants-Get');
+  logger.info('getting restaurant %s', req.params.rid);
 
   var orderParams = req.query || {};
 
@@ -615,7 +613,7 @@ module.exports.copy = function(req, res) {
     }
 
   /**
-   *  dirac can't insert without id  
+   *  dirac can't insert without id
    *  unfortunately restaurant_tags are keyed by (restaurant_id, tag)
    *  so this doesn't work
    */
@@ -662,7 +660,7 @@ module.exports.copy = function(req, res) {
         if ( err ) return callback( err );
         items.map(function(item) {
           // associate to newly duplicated rows
-          item.category_id = catMap[item.category_id]; 
+          item.category_id = catMap[item.category_id];
           item.restaurant_id = newId;
           item.options_sets = JSON.stringify(item.options_sets);
           delete item.id;

@@ -12,7 +12,6 @@ var
 , crypto = require('crypto')
 , forky = require('forky')
 , utils = require('./utils')
-, logger = require('./logger')
 , routes = require('./routes')
 , helpers = require('./helpers')
 , partials = require('./lib/partials')
@@ -55,7 +54,6 @@ app.configure(function(){
     next();
   });
 
-  app.use(logger.expressError);
   app.use(express.cookieParser('WOOT THE FUCK'));
   app.use(express.cookieSession());
 
@@ -91,6 +89,7 @@ app.configure(function(){
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accessToken));
 
   app.use(function(err, req, res, next){
+    req.logger.error(err);
     res.error(errors.internal.UNKNOWN, err);
 
     // If the response stream does not close/finish in 2 seconds, just die anyway

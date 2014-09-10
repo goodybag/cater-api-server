@@ -378,6 +378,7 @@ config.staging = {
     }
   , mongoConnStr: process.env['MONGOHQ_URL']
   , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {
@@ -471,6 +472,7 @@ config.production = {
     }
   , mongoConnStr: process.env['MONGOHQ_URL']
   , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {

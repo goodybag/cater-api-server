@@ -376,6 +376,8 @@ config.staging = {
       host: 'logs.papertrailapp.com'
     , port: 34830
     }
+  , mongoConnStr: process.env['MONGOHQ_URL']
+  , mongoCollection: 'logs'
   }
 
 , rollbar: {
@@ -467,6 +469,8 @@ config.production = {
       host: 'logs.papertrailapp.com'
     , port: 64774
     }
+  , mongoConnStr: process.env['MONGOHQ_URL']
+  , mongoCollection: 'logs'
   }
 
 , rollbar: {

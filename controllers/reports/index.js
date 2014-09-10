@@ -40,7 +40,7 @@ var reports = {
     var sort = req.query.sort || 'asc';
     var restaurantId = req.query.restaurantId;
     var userId = req.query.userId;
-    var regionId = req.query.region;
+    var regionId = parseInt(req.query.region);
 
     var filename = [
       status

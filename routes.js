@@ -19,11 +19,11 @@ var m = utils.extend(
 
 module.exports.register = function(app) {
   app.before( m.analytics, m.queryParams(), function( app ){
-    app.get('/', m.findRegions(), controllers.auth.index);
+    app.get('/', m.findRegions({ is_hidden: false}), controllers.auth.index);
     app.get('/login', controllers.auth.login);
     app.post('/login', controllers.auth.login);
-    app.get('/join', m.findRegions(), controllers.auth.registerView);
-    app.post('/join', m.findRegions(), controllers.auth.register);
+    app.get('/join', m.findRegions({ is_hidden: false}), controllers.auth.registerView);
+    app.post('/join', m.findRegions({ is_hidden: false}), controllers.auth.register);
 
     app.get('/rewards', m.view( 'landing/rewards', {
       layout: 'landing/layout'

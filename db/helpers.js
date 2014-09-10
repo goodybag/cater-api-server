@@ -544,6 +544,15 @@ dirac.DAL = dirac.DAL.extend({
     this.dependencies = {};
     return init.apply( this, arguments );
   }
+, insert: function( values, options, callback ){
+    if ( Array.isArray( values ) && values.length === 0 ){
+      if ( typeof options === 'function' ){
+        callback = options;
+      }
+      return callback();
+    }
+    return this._super( values, options, callback );
+  }
 });
 
 dirac.use( function( dirac ){

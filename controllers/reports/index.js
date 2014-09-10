@@ -40,6 +40,7 @@ var reports = {
     var sort = req.query.sort || 'asc';
     var restaurantId = req.query.restaurantId;
     var userId = req.query.userId;
+    var regionId = parseInt(req.query.region);
 
     var filename = [
       status
@@ -63,6 +64,7 @@ var reports = {
     , 'Tip'
     , 'Total'
     , 'Caterer Name'
+    , 'Region'
     ]);
 
     var where = { status: status, restaurant_id: { $notNull: true } };
@@ -71,19 +73,41 @@ var reports = {
     if ( restaurantId ) where.restaurant_id = restaurantId;
     if ( userId ) where.user_id = userId;
     // by order datetime or submitted
-    range = (range === 'datetime') ? 'orders.datetime' : 'submitted.created_at';
+    range = (range === 'datetime') ? 'orders.datetime' : 'submitted_dates.submitted';
     where[range] = {
       $gte: start
     , $lt: end
     };
+
+    if ( regionId ) {
+      where['restaurants.region_id'] = regionId;
+    }
 
     options.order = {};
     options.order[range] = sort;
     options.distinct = [ 'orders.id', range ];
     options.one = [
       { table: 'users', alias: 'user' }
-    , { table: 'restaurants', alias: 'restaurant'}
+    , { table: 'restaurants', alias: 'restaurant' }
     ];
+
+    options.columns = [
+      '*'
+    , { type: 'row_to_json', expression: 'regions', as: 'region' }
+    ];
+
+    options.joins = [
+      { type: 'left'
+      , target: 'restaurants'
+      , on: { id: '$orders.restaurant_id$' }
+      }
+
+    , { type: 'left'
+      , target: 'regions'
+      , on: { id: '$restaurants.region_id$' }
+      }
+    ];
+
     options.submittedDate = true;
 
     db.orders.find(where, options, function(err, results) {
@@ -106,6 +130,7 @@ var reports = {
           , dollars(order.tip)
           , dollars(order.total)
           , order.restaurant.name
+          , order.region.name
           ]);
         });
       res.end();

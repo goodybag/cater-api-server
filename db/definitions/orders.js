@@ -196,8 +196,6 @@ define(function(require) {
     , default: 0
     }
   , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
-
-  , region_id: { type: types.int, references: { table: 'regions', column: 'id' } }
   };
 
   definition.indices = {};

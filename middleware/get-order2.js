@@ -4,6 +4,7 @@
  */
 
 var utils     = require('../utils');
+var errors    = require('../errors');
 var db        = require('../db');
 
 module.exports = function( options ){
@@ -12,9 +13,16 @@ module.exports = function( options ){
   });
 
   return function( req, res, next ){
+    var logger = req.logger.create('Middleware-GetOrder2');
+
     db.orders.findOne( +req.param( options.param ), function( error, order ){
-      if ( error ) return logger.db.error(TAGS, 'error trying to find order #' + req.params.id, error), res.error(errors.internal.DB_FAILURE, error);
+      if ( error ){
+        logger.error('error trying to find order #%s', req.params.id, error)
+        return res.error(errors.internal.DB_FAILURE, error);
+      }
+
       if ( !order ) return res.render('404');
+
       req.order = order;
       res.locals.order = order;
       next();

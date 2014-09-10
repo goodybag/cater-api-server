@@ -4,7 +4,6 @@ var utils   = require('../../utils');
 var config  = require('../../config');
 var states  = require('../../public/js/lib/states')
 var models  = require('../../models');
-var logger  = require('../../logger');
 var venter  = require('../../lib/venter');
 var pdfs    = require('../../lib/pdfs');
 var scheduler = require('../../lib/scheduler');
@@ -29,8 +28,8 @@ var addressFields = [
  * what control the user has over a particular order
  */
 module.exports.auth = function(req, res, next) {
-  var TAGS = ['orders-auth'];
-  logger.db.info(TAGS, 'auth for order #'+ req.params.id);
+  var logger = req.logger.create('Middleware-OrderAuth');
+  logger.info('auth for order #'+ req.params.id);
 
   if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
     req.order.isAdmin = true;
@@ -315,15 +314,15 @@ module.exports.generateEditToken = function(req, res) {
 };
 
 module.exports.changeStatus = function(req, res) {
-  var TAGS = ['orders-change-status'];
-  logger.routes.info(TAGS, 'attempting to change order status for order ' + req.params.oid+' to: '+ req.body.status + ' with review_token: ' + req.body.review_token);
+  var logger = req.logger.create('Controller-OrderChangeStatus');
+  logger.info('attempting to change order status for order #%s to: %s with review_token %s', req.params.oid, req.body.status, req.body.review_token);
 
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
 
 
   models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return logger.db.error(TAGS, err), res.error(errors.internal.DB_FAILURE, err);
+    if (err) return logger.error('Error looking up order', err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
 
     var previousStatus = order.attributes.status;

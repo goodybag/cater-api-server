@@ -73,7 +73,7 @@ var reports = {
     if ( restaurantId ) where.restaurant_id = restaurantId;
     if ( userId ) where.user_id = userId;
     // by order datetime or submitted
-    range = (range === 'datetime') ? 'orders.datetime' : 'submitted.created_at';
+    range = (range === 'datetime') ? 'orders.datetime' : 'submitted_dates.submitted';
     where[range] = {
       $gte: start
     , $lt: end

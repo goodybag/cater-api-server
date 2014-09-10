@@ -89,8 +89,25 @@ var reports = {
     options.one = [
       { table: 'users', alias: 'user' }
     , { table: 'restaurants', alias: 'restaurant' }
-    , { table: 'regions', alias: 'region' }
     ];
+
+    options.columns = [
+      '*'
+    , { type: 'row_to_json', expression: 'regions', as: 'region' }
+    ];
+
+    options.joins = [
+      { type: 'left'
+      , target: 'restaurants'
+      , on: { id: '$orders.restaurant_id$' }
+      }
+
+    , { type: 'left'
+      , target: 'regions'
+      , on: { id: '$restaurants.region_id$' }
+      }
+    ];
+
     options.submittedDate = true;
 
     db.orders.find(where, options, function(err, results) {

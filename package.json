@@ -88,9 +88,6 @@
     "twilio": "1.1.x",
     "udp-client": "0.1.x",
     "when": "2.2.x",
-    "winston": "0.7.x",
-    "winston-loggly": "0.6.x",
-    "winston-papertrail": "0.1.x",
     "wrench": "~1.5.8",
     "yelp": "~0.1.1",
     "react-tools": "^0.11.1"

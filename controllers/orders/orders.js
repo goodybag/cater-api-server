@@ -244,6 +244,7 @@ module.exports.create = function(req, res) {
 }
 
 module.exports.update = function(req, res) {
+  var logger = req.logger.create('Controller-OrderChangeStatus');
 
   // TODO: get this from not here
   var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed', 'type'];
@@ -315,7 +316,9 @@ module.exports.generateEditToken = function(req, res) {
 
 module.exports.changeStatus = function(req, res) {
   var logger = req.logger.create('Controller-OrderChangeStatus');
-  logger.info('attempting to change order status for order #%s to: %s with review_token %s', req.params.oid, req.body.status, req.body.review_token);
+  logger.info('Attempt to change status', {
+    order: { id: req.param('oid') }
+  });
 
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
@@ -364,6 +367,16 @@ module.exports.changeStatus = function(req, res) {
           });
         });
       }
+
+      logger.info('Order status changed. #%s from `%s` to `%s`', req.params.oid, previousStatus, req.body.status, {
+        data: {
+          review_token: req.body.review_token
+        , order:        order.toJSON()
+        , from:         previousStatus
+        , to:           req.body.status
+        , notify:       req.query.notify
+        }
+      });
 
       res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
 

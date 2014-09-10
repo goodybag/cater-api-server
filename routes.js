@@ -838,6 +838,7 @@ module.exports.register = function(app) {
   , m.queryOptions({
       limit: 'all'
     , order: 'id desc'
+    , one:  [ { table: 'regions', alias: 'region' } ]
     })
   , m.view( 'users', db.users, { method: 'find' })
   );

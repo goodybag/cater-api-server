@@ -86,7 +86,7 @@ config.defaults = {
   , template:       'emails/welcome-christy'
   , beginTime:      '09:04'
   , endTime:        '18:00'
-  , delay:          (0*60*1000)
+  , delay:          (9*60*1000)
   , timezone:       'America/Chicago'
   , days:           [ 1, 2, 3, 4, 5 ]
   }

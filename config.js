@@ -81,12 +81,13 @@ config.defaults = {
   ]
 
 , welcome: {
-    from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
+    from:           '"Christy Medlock" <christymedlock@goodybag.com>'
+  , subject:        'Hi there!'
+  , template:       'emails/welcome-christy'
   , beginTime:      '09:04'
   , endTime:        '18:00'
-  , delay1:         (4*60*1000)
+  , delay:          (0*60*1000)
   , timezone:       'America/Chicago'
-  , subject1:       'Hi there!'
   , days:           [ 1, 2, 3, 4, 5 ]
   }
 

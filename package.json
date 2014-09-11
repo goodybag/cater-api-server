@@ -60,7 +60,6 @@
     "lodash": "2.2.x",
     "loglog": "^0.2.0",
     "loglog-mongodb": "^1.0.1",
-    "loglog-server": "^1.0.2",
     "mailcomposer": "0.2.x",
     "mailgun": "0.4.x",
     "microtime": "0.4.x",
@@ -95,6 +94,7 @@
   "devDependencies": {
     "mocha": "~1.12.0",
     "mocha-perf-reporter": "^0.2.0",
+    "loglog-server": "^1.0.4",
     "omf": "~0.5.0"
   },
   "engines": {

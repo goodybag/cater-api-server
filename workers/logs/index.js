@@ -6,4 +6,6 @@ server.set( 'source', server.sources.mongodb({
 , collection: config.logging.mongoCollection
 }));
 
+server.set( 'url', config.logging.url );
+
 server.listen( config.logging.httpPort );

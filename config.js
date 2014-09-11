@@ -110,6 +110,7 @@ config.defaults = {
   , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
   , mongoCollection: 'logs'
   , httpPort: 3001
+  , url: 'http://localhost:3001'
   }
 
 , http: {

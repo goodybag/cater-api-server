@@ -18,6 +18,7 @@ var
 , rollbar = require("rollbar")
 , Handlebars = require('hbs')
 , moment = require('moment-timezone')
+, analytics = require('analytics-node')
 
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async}, require('./public/js/lib/utils'))
@@ -40,6 +41,10 @@ utils.template = Handlebars.compile.bind( Handlebars );
 utils.s3 = require('knox');
 
 utils.uuid = uuid;
+
+
+utils.analytics = analytics;
+utils.analytics.init({ secret: config.segmentIo.secret });
 
 // ironMQ stuff
 utils.iron = new ironMQ.Client({token: config.ironMQ.token, project_id: config.ironMQ.projectId});

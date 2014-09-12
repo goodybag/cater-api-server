@@ -164,7 +164,7 @@ module.exports.returnSession = function(req, res) {
     var session = utils.extend({}, req.session, {user: req.session.oldUser});
     req.session = utils.omit(session, 'oldUser');
   }
-  res.redirect(req.query.next || '/restaurants');
+  res.redirect(req.query.next || '/users');
 };
 
 module.exports.passwordResets = require('./password-resets');

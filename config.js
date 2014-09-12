@@ -81,12 +81,13 @@ config.defaults = {
   ]
 
 , welcome: {
-    from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
+    from:           '"Christy Medlock" <christymedlock@goodybag.com>'
+  , subject:        'Hi there!'
+  , template:       'emails/welcome-christy'
   , beginTime:      '09:04'
   , endTime:        '18:00'
-  , delay1:         (4*60*1000)
+  , delay:          (9*60*1000)
   , timezone:       'America/Chicago'
-  , subject1:       'Hi there!'
   , days:           [ 1, 2, 3, 4, 5 ]
   }
 
@@ -202,6 +203,7 @@ config.defaults = {
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   , rewards: [ local.testEmail || 'test@goodybag.com' ]
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]
+  , orderNotificationChecks: [ local.testEmail || 'test@goodybag.com' ]
   }
 
 , phone: {
@@ -518,6 +520,11 @@ config.production = {
   , dsOrders: [
       'sarahsouthwell@goodybag.com'
     , 'gillian@goodybag.com'
+    ]
+  , orderNotificationChecks: [
+      '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
+    , '"Gillian Lambert" <gillianlambert@goodybag.com>'
+    , '"John Fawcett" <john@goodybag.com>'
     ]
   }
 

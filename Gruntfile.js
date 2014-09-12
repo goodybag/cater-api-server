@@ -112,6 +112,12 @@ module.exports = function(grunt) {
           { expand: true, flatten: true, src: ['public/js/pdf/*'], dest: 'public/dist/<%= pkg.version %>/pdf/' }
         ]
       }
+    , legacy: {
+        files: [
+          { src: 'public/css/components.css', dest: 'public/dist/<%= pkg.version %>/css/components.css' }
+        , { expand: true, flatten: true, src: 'public/img/*.svg', dest: 'public/dist/<%= pkg.version %>/img/' }
+        ]
+      }
     }
 
   , concat: {
@@ -270,7 +276,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask( 'analyze',      ['complexity'] );
-  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'concat', 'shell:handlebars', 'react', 'requirejs'] );
+  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'react', 'requirejs'] );
   grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'shell:loggingServer', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 

@@ -10,5 +10,5 @@ module.exports = function( job, done ){
 
   logger.info('Sending welcome email');
 
-  welcomer.send( job.data.id, done );
+  welcomer.send( job.data.options, job.data.user.id, done );
 };

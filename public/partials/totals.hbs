@@ -24,5 +24,9 @@
   <dd>{{dollars order.tip}}</dd>
   {{/dneq}}
   <dt class="total">Total:</dt>
-  <dd class="total">{{dollars order.total}}</dd>
+  {{#eq user.id order.user_id}}
+    <dd class="total">{{dollars (add order.user_adjustment order.total)}}</dd>
+  {{else}}
+    <dd class="total">{{dollars order.total}}</dd>
+  {{/eq}}
 </dl>

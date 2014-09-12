@@ -244,7 +244,7 @@ module.exports.create = function(req, res) {
 }
 
 module.exports.update = function(req, res) {
-  var logger = req.logger.create('Controller-OrderChangeStatus');
+  var logger = req.logger.create('Controller-Update');
 
   // TODO: get this from not here
   var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed', 'type'];

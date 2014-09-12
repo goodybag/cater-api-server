@@ -13,6 +13,7 @@ module.exports = function( options ){
           id:     id
         , params: req.params
         , url:    req.url
+        , body:   req.body
         }
       }
     });

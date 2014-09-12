@@ -1,11 +1,11 @@
 var utils   = require('../../../utils');
 var config  = require('../../../config');
 var twilio  = require('twilio')(config.twilio.account, config.twilio.token);
-var slogger = require('../logger').scheduler;
+var slogger = require('../logger');
 
 module.exports = function(job, jobDone) {
   var logger = slogger.create('SMS GB Courier After Hours', {
-    data: { job: job }
+    data: job
   });
 
   var msg = {

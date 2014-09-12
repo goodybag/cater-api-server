@@ -9,7 +9,7 @@ var slogger   = require('../logger');
  */
 module.exports = function(job, done) {
   var logger = slogger.create('DeliveryServiceOrder', {
-    data: { job: job }
+    data: job
   });
   var data = job.data;
 

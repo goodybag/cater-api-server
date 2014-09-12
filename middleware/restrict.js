@@ -8,7 +8,7 @@ module.exports = function(groups) {
 
     if (req.creatorId){
       logger.info('Request has `creatorId` field, skipping group check', {
-        creatorId: creatorId
+        creatorId: req.creatorId
       });
 
       next();

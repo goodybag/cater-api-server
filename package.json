@@ -60,7 +60,6 @@
     "lodash": "2.2.x",
     "loglog": "^0.2.0",
     "loglog-mongodb": "^1.0.1",
-    "loglog-server": "^1.0.2",
     "mailcomposer": "0.2.x",
     "mailgun": "0.4.x",
     "microtime": "0.4.x",
@@ -88,9 +87,6 @@
     "twilio": "1.1.x",
     "udp-client": "0.1.x",
     "when": "2.2.x",
-    "winston": "0.7.x",
-    "winston-loggly": "0.6.x",
-    "winston-papertrail": "0.1.x",
     "wrench": "~1.5.8",
     "yelp": "~0.1.1",
     "react-tools": "^0.11.1"
@@ -98,6 +94,7 @@
   "devDependencies": {
     "mocha": "~1.12.0",
     "mocha-perf-reporter": "^0.2.0",
+    "loglog-server": "^1.0.4",
     "omf": "~0.5.0"
   },
   "engines": {

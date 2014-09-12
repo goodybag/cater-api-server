@@ -4,7 +4,7 @@ var slogger = require('../logger');
 
 module.exports = function(job, done) {
   var logger = slogger.create('MakeCall', {
-    data: { job: job }
+    data: job
   });
 
   logger.info('Making call');

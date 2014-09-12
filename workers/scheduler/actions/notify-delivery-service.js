@@ -8,7 +8,7 @@ require('../../../lib/order-notifications');
 
 module.exports = function(job, done) {
   var logger = slogger.create('Notify Delivery Service', {
-    data: { job: job }
+    data: job
   });
 
   var orderId = job.data.orderId;

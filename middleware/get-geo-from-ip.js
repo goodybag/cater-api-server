@@ -2,7 +2,6 @@
  * Get GEO Info from IP Address
  */
 
-var logger  = require('../logger');
 var utils   = require('../utils');
 var config  = require('../config');
 
@@ -18,7 +17,7 @@ module.exports = function( options ){
     utils.get( options.url.replace( ':ip', ip ), { timeout: 2000 }, function( error, gres, geo ){
       // Error getting geocode is not a shower-stopper
       if ( error ){
-        logger.routes.error( 'Could not get geo code info', { ip: ip, error: error } );
+        req.logger.error( 'Could not get geo code info', { ip: ip, error: error } );
         return next();
       }
 

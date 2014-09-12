@@ -190,11 +190,8 @@ define(function(require) {
       type: types.tsvector
     }
   , type: { type: types.order_type, nullable: false, default: '\'delivery\'::order_type' }
-  , sub_total: {
-      type: types.int
-    , nullable: false
-    , default: 0
-    }
+  , sub_total: { type: types.int, nullable: false, default: 0 }
+  , user_adjustment: { type: types.int, nullable: false, default: 0 }
   , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
   };
 

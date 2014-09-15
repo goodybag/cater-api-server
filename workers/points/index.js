@@ -1,6 +1,6 @@
 var domain = require('domain');
 var config = require('../../config');
-var logger = require('../../logger').points;
+var logger = require('../../lib/logger').create('Worker-Points');
 var models = require('../../models');
 var utils = require('../../utils');
 
@@ -12,8 +12,6 @@ var utils = require('../../utils');
 // - including delivery charge
 
 // Mark order as points are given
-var TAGS = ['worker-award-points'];
-
 var task = function() {
   var query = {
     limit: 1000
@@ -22,8 +20,9 @@ var task = function() {
     }
   };
 
+  logger.info('Order.findReadyForAwardingPoints');
   models.Order.findReadyForAwardingPoints(query, function (error, orders) {
-    if (error) return logger.error(TAGS, "failed to get orders", error), utils.rollbar.reportMessage(error);
+    if (error) return logger.create('DB').error("failed to get orders", {error: error}), utils.rollbar.reportMessage(error);
     if (orders.length == 0) return done();
     utils.async.each(orders, function(order, callback){
       models.User.addPointsForOrder(order, function(error){
@@ -33,7 +32,7 @@ var task = function() {
             " for order: " +
             order.attributes.id
           ;
-          logger.error(TAGS, message, error);
+          logger.create('DB').error(message, { error: error, order: order.toJSON() });
           utils.rollbar.reportMessage(error);
           return callback(error);
         };
@@ -46,6 +45,7 @@ var task = function() {
 
 var done = function (error) {
   if (!error) return process.exit(0);
+  logger.error({ error: error });
   console.log(error);
   console.log(error.stack);
   utils.rollbar.reportMessage(error);

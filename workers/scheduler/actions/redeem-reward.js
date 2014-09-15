@@ -1,19 +1,16 @@
 var path      = require('path');
 var config    = require('../../../config');
 var utils     = require('../../../utils');
-var slogger   = require('../../../logger').scheduler;
+var slogger   = require('../logger');
 var helpers   = require('../../../public/js/lib/hb-helpers');
 var db        = require('../../../db');
 
 module.exports = function( job, done ){
-  var TAGS = [ 'redeem-reward', 'job-' + job.id ];
-  var logger = {};
-
-  [ 'debug', 'info', 'warn', 'error' ].forEach( function( level ){
-    logger[ level ] = slogger[ level ].bind( slogger, TAGS );
+  var logger = slogger.create('Redeem Reward', {
+    data: job
   });
 
-  logger.info( 'Redeeming reward', job );
+  logger.info('Sending redemption email');
 
   var reward = job.data.reward;
   var userId = job.data.userId;
@@ -35,7 +32,9 @@ module.exports = function( job, done ){
     ].join('')
   }, function( error ){
     if ( error ) {
-      logger.error( 'Error sending redemption email', error, reward, userId );
+      logger.error( 'Error sending redemption email', {
+        error: error
+      });
       done( error );
     }
     var redemption = utils.extend({user_id: userId}, reward);

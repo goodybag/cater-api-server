@@ -11,8 +11,7 @@ var reminder  = require('./lib/reminder');
 var dir = __dirname + '/reminders';
 
 var logError = function( error ){
-  logger.reminder.error( error );
-  console.log( error );
+  logger.error( error );
 };
 
 var printrow = function( character ){
@@ -35,7 +34,7 @@ var logStat = function( group, result ){
     // Log errors by worker/reminder module
     if ( key === 'errors' && result.errors.value > 0 ){
       result.errors.objects.forEach( function( error ){
-        logger.reminder.error( [ key ], error );
+        logger.error( [ key ], error );
       });
     }
 

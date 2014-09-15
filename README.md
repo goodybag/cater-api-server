@@ -1,24 +1,52 @@
 # cater-api-server
 
-hacking this together as fast as possible
+> Mhmmmmm food
 
-```npm install```
+## Setup
 
-## routes
+__Download Postgres:__
 
-* `/users`
-  + `/users/:id`
-* `/restaurants`
-  + `/restaurants/:id`
-     - `/restaurants/:id/items`
-     - `/restaurants/:id/categories`
-         * `/restaurants/:id/categories/:id`
-              + `/restaurants/:id/categories/:id/items`
-* `/items`
-  + `/items/:id`
-* `/orders`
-  + `/orders/:id`
-     - `/orders/:id/items`
+http://postgresapp.com/
+
+Create databases:
+
+```
+psql -h localhost --command="create database cater"
+psql -h localhost --command="create database cater_test"
+```
+
+__Download MongoDB:__
+
+```
+brew install mongodb
+mongod
+```
+
+__Setup errthing:__
+
+```
+git clone git@github.com:goodybag/cater-api-server.git
+cd cater-api-server
+npm install
+```
+
+__Sync prod data with local:__
+
+```
+./bin/prod-to-local
+```
+
+__Watch files, start log server, etc:__
+
+```
+grunt
+```
+
+__Start server:__
+
+```
+npm start
+```
 
 ## Testing
 

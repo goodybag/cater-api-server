@@ -4,19 +4,18 @@ var errors  = require('../../errors');
 var utils   = require('../../utils');
 var config  = require('../../config');
 var models  = require('../../models');
-var logger = require('../../logger');
 
 /**
  * POST /users/:uid/cards
  */
 module.exports.create = function(req, res, next) {
-  var TAGS = [req.uuid, 'users-cards-create'];
+  var logger = req.logger.create('Controller-Users-Cards-List');
 
   if (!req.body.data || !req.body.data.uri) return res.error(errors.input.VALIDATION_FAILED, 'uri');
   utils.balanced.Customers.addCard(req.user.attributes.balanced_customer_uri, req.body.data.uri, function (error, customer) {
-    if (error) return logger.routes.error(TAGS, 'error adding card to balanced customer', error), res.error(errors.balanced.ERROR_ADDING_CARD);
+    if (error) return logger.error('error adding card to balanced customer', error), res.error(errors.balanced.ERROR_ADDING_CARD);
     models.User.createPaymentMethod( +req.param('uid'), req.body, function(error, card) {
-      if (error) return logger.db.error(TAGS, 'error adding payment method to user: ' + req.user.attributes.id, error), res.error(errors.internal.DB_FAILURE, error);
+      if (error) return logger.error('error adding payment method to user: ' + req.user.attributes.id, error), res.error(errors.internal.DB_FAILURE, error);
       return res.json(card);
     });
   });

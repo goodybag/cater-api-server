@@ -2,19 +2,16 @@ var path      = require('path');
 var phantom   = require('../../../lib/phantom');
 var config    = require('../../../config');
 var utils     = require('../../../utils');
-var slogger   = require('../../../logger').scheduler;
+var slogger   = require('../logger');
 
 var script = path.resolve( __dirname, '../../../', config.pdf.script );
 
 module.exports = function( job, done ){
-  var TAGS = [ 'build-pdf', 'job-' + job.id ];
-  var logger = {};
-
-  [ 'debug', 'info', 'warn', 'error' ].forEach( function( level ){
-    logger[ level ] = slogger[ level ].bind( slogger, TAGS );
+  var logger = slogger.create('BuildPDF', {
+    data: job
   });
 
-  logger.info( 'Building PDF', job );
+  logger.info('Building PDF');
 
   var missing = [
     'url'

@@ -2,7 +2,7 @@ var pg = require('pg');  // access db driver directly
 var uuid  = require('node-uuid');
 var config = require('../config');
 var utils = require('../utils');
-var logger = require('../logger');
+var logger = require('../lib/logger').create('Model-Order');
 var venter = require('../lib/venter');
 
 var db = require('../db');
@@ -539,8 +539,7 @@ module.exports = Model.extend({
   setPaymentPaid: function (type, uri, data, callback) {
     var self = this;
 
-    var TAGS = ['order-set-payment-paid'];
-    logger.models.info(TAGS, 'setting payment status to paid for order: ' + this.attributes.id);
+    logger.info('setting payment status to paid for order: ' + this.attributes.id);
 
     db.getClient(function (error, client, done) {
       var tasks = {
@@ -574,8 +573,7 @@ module.exports = Model.extend({
   setPaymentError: function (requestId, data, callback) {
     var self = this;
 
-    var TAGS = ['order-set-payment-error'];
-    logger.models.info(TAGS, 'setting payment status to error for order: ' + this.attributes.id);
+    logger.info('setting payment status to error for order: ' + this.attributes.id);
 
     db.getClient(function (error, client, done) {
 

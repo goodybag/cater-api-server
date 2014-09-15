@@ -3,6 +3,7 @@ var config = require('./config');
 var controllers = require('./controllers');
 var utils = require('./utils');
 var venter = require('./lib/venter');
+var logger = require('./lib/logger');
 var Models = require('./models');
 var hbHelpers = require('./public/js/lib/hb-helpers');
 var db = require('./db');
@@ -18,6 +19,8 @@ var m = utils.extend(
 );
 
 module.exports.register = function(app) {
+  logger.info('Registering routes');
+
   app.before( m.analytics, m.queryParams(), function( app ){
     app.get('/', m.findRegions({ is_hidden: false}), controllers.auth.index);
     app.get('/login', controllers.auth.login);

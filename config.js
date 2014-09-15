@@ -108,6 +108,10 @@ config.defaults = {
   , console: {
       json: true
     }
+  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
+  , mongoCollection: 'logs'
+  , httpPort: 3001
+  , url: 'http://localhost:3001'
   }
 
 , http: {
@@ -283,6 +287,9 @@ config.dev = {
     , filename: 'all.log'
     , json: true
     }
+  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {
@@ -371,6 +378,9 @@ config.staging = {
       host: 'logs.papertrailapp.com'
     , port: 34830
     }
+  , mongoConnStr: process.env['MONGOHQ_URL']
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {
@@ -462,6 +472,9 @@ config.production = {
       host: 'logs.papertrailapp.com'
     , port: 64774
     }
+  , mongoConnStr: process.env['MONGOHQ_URL']
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {

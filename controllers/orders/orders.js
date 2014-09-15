@@ -4,7 +4,6 @@ var utils   = require('../../utils');
 var config  = require('../../config');
 var states  = require('../../public/js/lib/states')
 var models  = require('../../models');
-var logger  = require('../../logger');
 var venter  = require('../../lib/venter');
 var pdfs    = require('../../lib/pdfs');
 var scheduler = require('../../lib/scheduler');
@@ -29,8 +28,8 @@ var addressFields = [
  * what control the user has over a particular order
  */
 module.exports.auth = function(req, res, next) {
-  var TAGS = ['orders-auth'];
-  logger.db.info(TAGS, 'auth for order #'+ req.params.id);
+  var logger = req.logger.create('Middleware-OrderAuth');
+  logger.info('auth for order #'+ req.params.id);
 
   if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
     req.order.isAdmin = true;
@@ -245,6 +244,7 @@ module.exports.create = function(req, res) {
 }
 
 module.exports.update = function(req, res) {
+  var logger = req.logger.create('Controller-Update');
 
   // TODO: get this from not here
   var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed', 'type'];
@@ -315,15 +315,17 @@ module.exports.generateEditToken = function(req, res) {
 };
 
 module.exports.changeStatus = function(req, res) {
-  var TAGS = ['orders-change-status'];
-  logger.routes.info(TAGS, 'attempting to change order status for order ' + req.params.oid+' to: '+ req.body.status + ' with review_token: ' + req.body.review_token);
+  var logger = req.logger.create('Controller-OrderChangeStatus');
+  logger.info('Attempt to change status', {
+    order: { id: req.param('oid') }
+  });
 
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
 
 
   models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return logger.db.error(TAGS, err), res.error(errors.internal.DB_FAILURE, err);
+    if (err) return logger.error('Error looking up order', err), res.error(errors.internal.DB_FAILURE, err);
     if (!order) return res.send(404);
 
     var previousStatus = order.attributes.status;
@@ -365,6 +367,16 @@ module.exports.changeStatus = function(req, res) {
           });
         });
       }
+
+      logger.info('Order status changed. #%s from `%s` to `%s`', req.params.oid, previousStatus, req.body.status, {
+        data: {
+          review_token: req.body.review_token
+        , order:        order.toJSON()
+        , from:         previousStatus
+        , to:           req.body.status
+        , notify:       req.query.notify
+        }
+      });
 
       res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
 

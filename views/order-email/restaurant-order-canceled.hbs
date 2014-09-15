@@ -29,9 +29,9 @@
             </td>
             <td style="width: 46%; padding-bottom: 22px;">
               {{#is order.type 'pickup' 'courier'}}
-                {{> order_email_details_pickup order}}
+                {{> order_email_details_pickup }}
               {{else}}
-                {{> order_email_details_delivery order}}
+                {{> order_email_details_delivery }}
               {{/is}}
             </td>
           </tr>

@@ -1,8 +1,4 @@
 var config  = require('./config');
-// they recommend newrelic require to be at the top of the file
-if ( config.isProduction ){
-  require('newrelic');
-}
 
 var forky   = require('forky');
 var rollbar = require('rollbar');

@@ -128,6 +128,10 @@ define(function(require, exports, module) {
       return moment(date).format('h:mm A');
     },
 
+    calendar: function(date) {
+      return date ? moment(date).calendar() : '';
+    },
+
     formatDateTime: function(date, format, options) {
       if (options === undefined) {
         options = format;

@@ -688,9 +688,11 @@ module.exports.register = function(app) {
 
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
   
-  app.get('/api/orders/:oid/items'
+  app.get('/api/orders/:id/items'
+  , m.editOrderAuth
   , m.restrict(['client', 'restaurant', 'admin'])
-  , controllers.orders.orderItems.summary
+  , m.param('id')
+  , m.find( db.order_items )
   );
 
   app.post('/api/orders/:oid/items'

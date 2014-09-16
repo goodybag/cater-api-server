@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var OrderItem = require('../models/order-item');
+  var config = require('config');
 
   return module.exports = Backbone.Collection.extend({
     initialize: function(models, options) {
@@ -12,6 +13,19 @@ define(function(require, exports, module) {
         });
       }
     },
+
+    setFetchInterval: function() {
+      var this_ = this;
+      var data = this.edit_token ?
+        { data: $.param({ edit_token: this.edit_token }) } : null;
+
+      this.intervalId = setInterval(this.fetch.bind(this, data), config.menuRefresh);
+    },
+
+    clearFetchInterval: function() {
+      clearInterval(this.intervalId);
+    },
+
     url: function() { return '/orders/' + this.orderId + '/items' },
     model: OrderItem,
 

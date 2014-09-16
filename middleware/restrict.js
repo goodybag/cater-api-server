@@ -8,10 +8,9 @@ module.exports = function(groups) {
     logger.info('Checking groups');
 
     if ( req.user ){ 
-      logger.info('Request has `creatorId` field, skipping group check', {
-        creatorId: req.creatorId
+      logger.info('Request has `user` field, skipping group check', {
+        user: req.user
       });
-
       next();
     }
     else if (req.order && req.order.isOwner){

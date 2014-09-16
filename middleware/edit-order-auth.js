@@ -1,8 +1,9 @@
 /**
- * Middleware for individual ordering checking
- *   - Edit token is valid
- *   - Order hasn't been submitted
- *   - Shared Link hasn't expired
+ * Middleware for shared order authentication
+ *   - Check and validate edit_token
+ *     - Order hasn't been submitted
+ *     - Shared Link hasn't expired
+ *   - Attaches req.user and req.order
  */
 
 var db = require('../db')
@@ -11,10 +12,7 @@ var moment = require('moment');
 var statuses = ['submitted', 'accepted', 'denied'];
 
 module.exports = function(req, res, next) {
-  // we don't want to make any changes with the token downstream
-  var token = req.query.edit_token || req.body.edit_token;
-  delete req.body.edit_token;
-
+  var token = req.query.edit_token;
   var logger = req.logger.create('EditOrderAuth', {
     data: { token: token }
   });

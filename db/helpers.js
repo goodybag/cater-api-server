@@ -5,9 +5,45 @@ var dirac       = require('dirac');
 var mosql       = require('mongo-sql');
 var mosqlUtils  = require('mongo-sql/lib/utils');
 var utils       = require('../utils');
+var logger      = require('../lib/logger');
 var config      = require('../config');
 
 dirac.setMoSql( mosql );
+
+// Logging for dals
+// Leaving commented for now because it just makes logs too noisy
+// We'll probably figure out a better way to do this
+// if ( config.isDev ){
+//   dirac.use( function( dirac ){
+//     var dbLogger = logger.create('DB');
+
+//     Object.keys( dirac.dals ).forEach( function( table ){
+//       var dalLogger = dbLogger.create( table );
+
+//       [
+//         'find', 'findOne', 'remove', 'insert', 'update'
+//       ].forEach( function( op ){
+//         dirac.dals[ table ].before( op, function( $query, schema, next ){
+//           var _query = utils.deepClone( $query );
+
+//           // use a different character for query helpers
+//           // because mongo does not like `$`
+//           utils.editAllKeys( _query, function( key ){
+//             if ( key[ 0 ] === '$' ){
+//               return '@' + key.slice(1);
+//             } else {
+//               return key;
+//             }
+//           });
+
+//           dalLogger.info( op, { query: _query });
+
+//           next();
+//         });
+//       });
+//     });
+//   });
+// }
 
 dirac.autoJoin = function( options ){
   [
@@ -536,13 +572,22 @@ dirac.use( function( dirac ){
   });
 });
 
-// Setup cached dependency graph for use by relationship helpers
-var init = dirac.DAL.prototype.initialize;
 dirac.DAL = dirac.DAL.extend({
   initialize: function(){
+    // Setup cached dependency graph for use by relationship helpers
     this.dependents   = {};
     this.dependencies = {};
-    return init.apply( this, arguments );
+    return this._super.apply( this, arguments );
+  }
+
+, insert: function( values, options, callback ){
+    if ( Array.isArray( values ) && values.length === 0 ){
+      if ( typeof options === 'function' ){
+        callback = options;
+      }
+      return callback();
+    }
+    return this._super( values, options, callback );
   }
 });
 

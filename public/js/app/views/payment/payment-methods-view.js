@@ -138,37 +138,42 @@ define(function(require, exports, module) {
       var template = Handlebars.partials.alert_error;
       var selector = '[name="{property}"]';
 
-      // Amanda errors object
       if ( _.isObject( errors ) && !_.isArray( errors ) ){
-        errors = Array.prototype.slice.call( errors )
+        // Amanda errors object
+        if ( '0' in errors ){
+          errors = Array.prototype.slice.call( errors )
 
-        // We're just going to use the `required` error text for everything
-        // so just take the unique on error.property
-        errors = _.chain(errors).map( function( error ){
-          return error.property;
-        }).unique().map( function( property ){
-          var message;
-          var noun = property;
+          // We're just going to use the `required` error text for everything
+          // so just take the unique on error.property
+          errors = _.chain(errors).map( function( error ){
+            return error.property;
+          }).unique().map( function( property ){
+            var message;
+            var noun = property;
 
-          if ( Model && typeof Model.fieldNounMap === 'object' )
-          if ( property in Model.fieldNounMap ){
-            noun = Model.fieldNounMap[ property ];
-          }
+            if ( Model && typeof Model.fieldNounMap === 'object' )
+            if ( property in Model.fieldNounMap ){
+              noun = Model.fieldNounMap[ property ];
+            }
 
-          message = this_.errorTypeMessages.required.replace(
-            '{noun}', noun
-          );
+            message = this_.errorTypeMessages.required.replace(
+              '{noun}', noun
+            );
 
-          return {
-            property: property
-          , message: message
-          };
-        }).value();
+            return {
+              property: property
+            , message: message
+            };
+          }).value();
+        } else {
+          errors = [ errors ];
+        }
       }
 
       var css = {
         position: 'absolute'
       , top: '11px'
+      , width: '260px'
       };
 
       for ( var i = 0, l = errors.length; i < l; ++i ){

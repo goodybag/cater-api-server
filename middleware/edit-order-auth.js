@@ -15,11 +15,18 @@ module.exports = function(req, res, next) {
   var token = req.query.edit_token || req.body.edit_token;
   delete req.body.edit_token;
 
-  if ( !token ) return next();
+  var logger = req.logger.create('EditOrderAuth', {
+    data: { token: token }
+  });
+
+  logger.info('Start');
+
+  if ( !token ) return logger.info('No token, skipping'), next();
 
   // Check to see if we even need to use the edit token to auth
   if ( utils.hasPropsDeep( req, ['user.attributes.groups'] ) )
   if ( utils.intersection( req.user.attributes.groups, ['admin', 'client'] ).length >= 1 ){
+    logger.info('User is logged in as admin or client, skipping');
     return next();
   }
 
@@ -32,12 +39,17 @@ module.exports = function(req, res, next) {
       var $options = { one: [ { table: 'users', alias: 'user' } ] }
 
       db.orders.findOne($query, $options, function(err, order) {
-        if (err)
+        if ( err ){
+          logger.error('Error looking up order', err);
           return done(err);
-        else if (!order)
+        } else if (!order){
+          logger.info('No order found');
           done(null, null);
-        else
+        } else {
+          order = order.toJSON();
+          logger.info('Order found', { order: order })
           done(null, order);
+        }
       });
     },
 

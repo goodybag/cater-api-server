@@ -6,7 +6,7 @@ var
   utils = require('../../utils')
 , models = require('../../models')
 , db = require('../../db')
-, moment = require('moment')
+, moment = require('moment-timezone')
 , fs = require('fs')
 , hbHelpers = require('../../public/js/lib/hb-helpers')
 , errors = require('../../errors')
@@ -33,6 +33,12 @@ var reports = {
    * POST /reports/orders
    */
   ordersCsv: function(req, res) {
+    var rlogger = req.logger.create('CSV Reports');
+
+    rlogger.info('Generate report', {
+      query: req.query
+    });
+
     var status = req.query.status || 'accepted';
     var start = req.query.start || '2012-01-01';
     var end = moment(req.query.end || new Date()).add('d',1).format('YYYY-MM-DD');
@@ -40,6 +46,7 @@ var reports = {
     var sort = req.query.sort || 'asc';
     var restaurantId = req.query.restaurantId;
     var userId = req.query.userId;
+    var regionId = parseInt(req.query.region);
 
     var filename = [
       status
@@ -63,6 +70,7 @@ var reports = {
     , 'Tip'
     , 'Total'
     , 'Caterer Name'
+    , 'Region'
     ]);
 
     var where = { status: status, restaurant_id: { $notNull: true } };
@@ -71,19 +79,41 @@ var reports = {
     if ( restaurantId ) where.restaurant_id = restaurantId;
     if ( userId ) where.user_id = userId;
     // by order datetime or submitted
-    range = (range === 'datetime') ? 'orders.datetime' : 'submitted.created_at';
+    range = (range === 'datetime') ? 'orders.datetime' : 'submitted_dates.submitted';
     where[range] = {
       $gte: start
     , $lt: end
     };
+
+    if ( regionId ) {
+      where['restaurants.region_id'] = regionId;
+    }
 
     options.order = {};
     options.order[range] = sort;
     options.distinct = [ 'orders.id', range ];
     options.one = [
       { table: 'users', alias: 'user' }
-    , { table: 'restaurants', alias: 'restaurant'}
+    , { table: 'restaurants', alias: 'restaurant' }
     ];
+
+    options.columns = [
+      '*'
+    , { type: 'row_to_json', expression: 'regions', as: 'region' }
+    ];
+
+    options.joins = [
+      { type: 'left'
+      , target: 'restaurants'
+      , on: { id: '$orders.restaurant_id$' }
+      }
+
+    , { type: 'left'
+      , target: 'regions'
+      , on: { id: '$restaurants.region_id$' }
+      }
+    ];
+
     options.submittedDate = true;
 
     db.orders.find(where, options, function(err, results) {
@@ -93,10 +123,14 @@ var reports = {
           res.csv.writeRow([
             order.id
           , hbHelpers.orderTypeAbbr(order)
+
+          // order.submitted is a timestamptz, it needs to be converted
           , order.submitted ? 
-              moment(order.submitted).format(reports.dateFormat) :
+              moment(order.submitted).tz(order.timezone).format(reports.dateFormat) :
               'N/A'
-          , moment(order.datetime).format(reports.dateFormat)
+
+          // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such
+          , moment.tz(order.datetime, order.timezone).format(reports.dateFormat)
           , order.user.name
           , order.user.email
           , order.user.organization
@@ -106,8 +140,10 @@ var reports = {
           , dollars(order.tip)
           , dollars(order.total)
           , order.restaurant.name
+          , order.region.name
           ]);
         });
+
       res.end();
     });
   },

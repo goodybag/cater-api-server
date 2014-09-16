@@ -57,6 +57,27 @@ utils.balanced = new Balanced({
 , secret: config.balanced.secret
 });
 
+utils.editAllKeys = function( obj, fn ){
+  var val, newKey;
+
+  for ( var key in obj ){
+    val = obj[ key ];
+
+    if ( typeof val === 'object' && val !== null && val !== undefined ){
+      utils.editAllKeys( val, fn );
+    }
+
+    newKey = fn( key, val, obj );
+
+    if ( key !== newKey ){
+      obj[ newKey ] = val;
+      delete obj[ key ];
+    }
+  }
+
+  return obj;
+};
+
 utils.test = {};
 function getRequestMethod( method, opts ){
   return function( url, data, callback ){

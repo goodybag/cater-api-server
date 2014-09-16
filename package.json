@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.130",
+  "version": "1.1.139",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -36,7 +36,7 @@
     "forky": "0.1.2",
     "gelf-encode": "0.2.x",
     "generic-pool": "2.0.x",
-    "grunt": "~0.4.1",
+    "grunt": "0.4.2",
     "grunt-cli": "~0.1.13",
     "grunt-complexity": "~0.1.3",
     "grunt-contrib-concat": "~0.3.0",
@@ -58,13 +58,14 @@
     "knox": "~0.8.6",
     "leFunc": "~1.2.1",
     "lodash": "2.2.x",
+    "loglog": "^0.2.0",
+    "loglog-mongodb": "^1.0.1",
     "mailcomposer": "0.2.x",
     "mailgun": "0.4.x",
     "microtime": "0.4.x",
     "moment": "~2.3.1",
     "moment-timezone": "0.0.x",
     "mongo-sql": "^2.5.6",
-    "newrelic": "^1.6.0",
     "node-uuid": "1.4.x",
     "npm": "*",
     "okay": "0.3.x",
@@ -85,9 +86,6 @@
     "twilio": "1.1.x",
     "udp-client": "0.1.x",
     "when": "2.2.x",
-    "winston": "0.7.x",
-    "winston-loggly": "0.6.x",
-    "winston-papertrail": "0.1.x",
     "wrench": "~1.5.8",
     "yelp": "~0.1.1",
     "react-tools": "^0.11.1"
@@ -95,6 +93,7 @@
   "devDependencies": {
     "mocha": "~1.12.0",
     "mocha-perf-reporter": "^0.2.0",
+    "loglog-server": "^1.0.4",
     "omf": "~0.5.0"
   },
   "engines": {

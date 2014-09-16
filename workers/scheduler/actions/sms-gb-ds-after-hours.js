@@ -1,9 +1,13 @@
-var utils  = require('../../../utils');
-var config = require('../../../config');
-var twilio = require('twilio')(config.twilio.account, config.twilio.token);
-var logger = require('../../../logger').scheduler;
+var utils   = require('../../../utils');
+var config  = require('../../../config');
+var twilio  = require('twilio')(config.twilio.account, config.twilio.token);
+var slogger = require('../logger');
 
 module.exports = function(job, jobDone) {
+  var logger = slogger.create('SMS GB Courier After Hours', {
+    data: job
+  });
+
   var msg = {
     from: config.phone.orders
   , body: [
@@ -14,10 +18,12 @@ module.exports = function(job, jobDone) {
     ].join(' ')
   };
 
+  logger.info('Sending Message', msg);
+
   utils.async.each(config.deliveryServices.supportPhones, function(phone, textDone) {
     msg.to = phone;
     twilio.sendSms(msg, function(error) {
-      if ( error ) logger.error('Could not send sms for job #' + job.id, error);
+      if ( error ) logger.error('Could not send sms', { error: error });
       textDone( error );
     });
   }, jobDone);

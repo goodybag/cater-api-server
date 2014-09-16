@@ -3,6 +3,7 @@ var config = require('./config');
 var controllers = require('./controllers');
 var utils = require('./utils');
 var venter = require('./lib/venter');
+var logger = require('./lib/logger');
 var Models = require('./models');
 var hbHelpers = require('./public/js/lib/hb-helpers');
 var db = require('./db');
@@ -18,12 +19,14 @@ var m = utils.extend(
 );
 
 module.exports.register = function(app) {
+  logger.info('Registering routes');
+
   app.before( m.analytics, m.queryParams(), function( app ){
-    app.get('/', controllers.auth.index);
+    app.get('/', m.findRegions({ is_hidden: false}), controllers.auth.index);
     app.get('/login', controllers.auth.login);
     app.post('/login', controllers.auth.login);
-    app.get('/join', controllers.auth.registerView);
-    app.post('/join', m.getGeoFromIp(), controllers.auth.register);
+    app.get('/join', m.findRegions({ is_hidden: false}), controllers.auth.registerView);
+    app.post('/join', m.findRegions({ is_hidden: false}), controllers.auth.register);
 
     app.get('/rewards', m.view( 'landing/rewards', {
       layout: 'landing/layout'
@@ -368,6 +371,15 @@ module.exports.register = function(app) {
   );
 
   app.get('/admin/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
+
+  /**
+   * Restaurant copy
+   */
+   
+  app.get('/admin/restaurants/:restaurant_id/copy'
+  , m.restrict('admin')
+  , controllers.restaurants.copy
+  );
 
   /**
    * Restaurant items resource.  The collection of all items belonging to a restaurant.
@@ -764,6 +776,7 @@ module.exports.register = function(app) {
 
   app.get('/reports'
   , m.restrict(['admin'])
+  , m.findRegions()
   , controllers.reports.index
   );
 
@@ -834,6 +847,7 @@ module.exports.register = function(app) {
   , m.queryOptions({
       limit: 'all'
     , order: 'id desc'
+    , one:  [ { table: 'regions', alias: 'region' } ]
     })
   , m.view( 'users', db.users, { method: 'find' })
   );
@@ -1307,6 +1321,14 @@ module.exports.register = function(app) {
   app.put('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.after( function( req, res, next ){
+      if ( res.statusCode >= 300 || res.statusCode < 200 ){
+        return next();
+      }
+
+      venter.emit( 'order:change', req.param('id') );
+      next();
+    })
   , m.update( db.orders )
   );
 

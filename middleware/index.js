@@ -11,6 +11,7 @@ module.exports = {
 , enums: require('./enums')
 , exists: require('./exists')
 , filterBody: require('./filter-body')
+, findRegions: require('./find-regions')
 , getOrder: require('./get-order')
 , getOrder2: require('./get-order2')
 , getUser: require('./get-user')
@@ -34,4 +35,7 @@ module.exports = {
 , pagination: require('./pagination')
 , queryOptions: require('./query-options')
 , json: require('./json')
+, logger: require('./logger')
+, logger: require('./logger')
+, timeout: require('./timeout')
 };

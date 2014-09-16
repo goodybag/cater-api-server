@@ -81,12 +81,13 @@ config.defaults = {
   ]
 
 , welcome: {
-    from:           '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
+    from:           '"Christy Medlock" <christymedlock@goodybag.com>'
+  , subject:        'Hi there!'
+  , template:       'emails/welcome-christy'
   , beginTime:      '09:04'
   , endTime:        '18:00'
-  , delay1:         (4*60*1000)
+  , delay:          (9*60*1000)
   , timezone:       'America/Chicago'
-  , subject1:       'Hi there!'
   , days:           [ 1, 2, 3, 4, 5 ]
   }
 
@@ -107,6 +108,10 @@ config.defaults = {
   , console: {
       json: true
     }
+  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
+  , mongoCollection: 'logs'
+  , httpPort: 3001
+  , url: 'http://localhost:3001'
   }
 
 , http: {
@@ -199,6 +204,7 @@ config.defaults = {
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   , rewards: [ local.testEmail || 'test@goodybag.com' ]
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]
+  , orderNotificationChecks: [ local.testEmail || 'test@goodybag.com' ]
   }
 
 , phone: {
@@ -281,6 +287,9 @@ config.dev = {
     , filename: 'all.log'
     , json: true
     }
+  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {
@@ -369,6 +378,9 @@ config.staging = {
       host: 'logs.papertrailapp.com'
     , port: 34830
     }
+  , mongoConnStr: process.env['MONGOHQ_URL']
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {
@@ -460,6 +472,9 @@ config.production = {
       host: 'logs.papertrailapp.com'
     , port: 64774
     }
+  , mongoConnStr: process.env['MONGOHQ_URL']
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {
@@ -511,7 +526,12 @@ config.production = {
     ]
   , dsOrders: [
       'sarahsouthwell@goodybag.com'
-    , 'gillian@goodybag.com'
+    , 'christymedlock@goodybag.com'
+    ]
+  , orderNotificationChecks: [
+      '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
+    , '"Christy Medlock" <christymedlock@goodybag.com>'
+    , '"John Fawcett" <john@goodybag.com>'
     ]
   }
 
@@ -519,7 +539,7 @@ config.production = {
     responseThresholdMins: 30
   , supportPhones: [
       '9788461970' // Sarah
-    , '2072997985' // Gillian
+    , '2105779226' // Christy Medlock
     ]
   }
 

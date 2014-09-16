@@ -11,7 +11,7 @@ var checkForExistingDebit = function (order, callback) {
   });
 
   var query = {'meta.order_uuid': order.uuid};
-  logger.info('Listing debits', { query: query });
+  logger.info('Listing debits');
   utils.balanced.Debits.list(query, function (error, debits) {
     if (error){
       logger.error({ error: error });

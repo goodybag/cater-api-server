@@ -739,16 +739,36 @@ var Restaurant = module.exports = Model.extend({
       unacceptable.push('(delivery_times.id IS NULL)');
 
       if ( !query.joins.delivery_services ){
-        query.joins.delivery_services = {
-          on: { 'region_id': '$regions.id$' }
-        };
+        query.joins.delivery_services = { on: {} };
       }
 
+      query.joins.delivery_services.on.region_id = '$regions.id$';
+
       if ( !query.joins.delivery_service_hours ){
-        query.joins.delivery_service_hours = {
-          on: { 'restaurant_id': '$restaurants.id$' }
-        };
+        query.joins.delivery_service_hours = { on: {} };
       }
+
+      var dshOn = query.joins.delivery_service_hours.on;
+      dshOn.ds_id = '$delivery_services.id$';
+
+      dshOn.day_now = {
+        $custom: ['delivery_service_hours.day = extract( dow from now() at time zone regions.timezone )']
+      };
+
+      dshOn.day_order = {
+        $custom: ['delivery_service_hours.day = extract( dow from $1 at time zone regions.timezone )', orderParams.date]
+      };
+
+      dshOn.start_time_now = {
+        $custom: ['extract( time from now() at time zone regions.timezone ) >= delivery_service_hours.start_time']
+      };
+
+      dshOn.start_time_order = {
+        $custom: ['($1::time at time zone regions.timezone) >= delivery_service_hours.start_time', order.date]
+      };
+
+      query.columns.push('(delivery_service_hours.id is null as is_bad_delivery_service_hour)');
+      unacceptable.push('(delivery_service_hours.id is null)');
     }
 
     // TODO: only allow valid dates in order params, currently assumes so
@@ -814,10 +834,6 @@ var Restaurant = module.exports = Model.extend({
       query.joins.delivery_times.on['delivery_times.start_time'] = {$lte: orderParams.time};
       query.joins.delivery_times.on['delivery_times.end_time'] = {$gte: orderParams.time};
     }
-
-    query.columns.push('(' + [
-      'extract( do now() at timezone regions.timezone)']
-    ].join(' and ') + ')')
 
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
 

@@ -737,6 +737,10 @@ var Restaurant = module.exports = Model.extend({
 
       query.columns.push('(delivery_times.id IS NULL) AS is_bad_delivery_time');
       unacceptable.push('(delivery_times.id IS NULL)');
+
+      query.joins.delivery_service_hours = {
+        on: { 'restaurant_id': '$restaurants.id$' }
+      };
     }
 
     // TODO: only allow valid dates in order params, currently assumes so

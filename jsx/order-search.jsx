@@ -125,7 +125,6 @@ define(function(require, exports, module) {
 
     render: function() {
       var orderUrl = '/orders/' + this.props.order.id;
-      console.log(this.props.order);
       var datetime = Handlebars.helpers.calendar( this.props.order.datetime );
       var total = Handlebars.helpers.dollars( this.props.order.total );
       var classString = 'search-row list-group-item';

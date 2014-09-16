@@ -82,7 +82,9 @@ app.configure(function(){
 
   app.use(app.router);
   app.use( function( req, res, next ){
-    req.logger.options.data.path = req.route.path;
+    if ( req.route && req.route.path ){
+      req.logger.options.data.path = req.route.path;
+    }
     next();
   });
 

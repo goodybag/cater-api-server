@@ -11,7 +11,7 @@ var checkForExistingDebit = function (order, callback) {
   });
 
   var query = {'meta.order_uuid': order.uuid};
-  logger.info('Listing debits', { query: query });
+  logger.info('Listing debits');
   utils.balanced.Debits.list(query, function (error, debits) {
     if (error){
       logger.error({ error: error });
@@ -135,6 +135,7 @@ var worker = function (message, callback) {
   d.uuid = utils.uuid.v4();
   d.logger = logger.create({ data: { uuid: d.uuid } });
   d.on('error', function (error) {
+    logger.error('Domain error', { error: error });
     callback(error);
   });
   d.run(function () {

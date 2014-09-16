@@ -125,7 +125,7 @@ define(function(require, exports, module) {
 
     render: function() {
       var orderUrl = '/orders/' + this.props.order.id;
-      var datetime = moment.tz( this.props.order.datetime, this.props.order.timezone ).local().calendar();
+      var datetime = Handlebars.helpers.calendar( this.props.order.datetime );
       var total = Handlebars.helpers.dollars( this.props.order.total );
       var classString = 'search-row list-group-item';
       var orgString = this.props.order.user.organization ?

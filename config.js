@@ -526,11 +526,11 @@ config.production = {
     ]
   , dsOrders: [
       'sarahsouthwell@goodybag.com'
-    , 'gillian@goodybag.com'
+    , 'christymedlock@goodybag.com'
     ]
   , orderNotificationChecks: [
       '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
-    , '"Gillian Lambert" <gillianlambert@goodybag.com>'
+    , '"Christy Medlock" <christymedlock@goodybag.com>'
     , '"John Fawcett" <john@goodybag.com>'
     ]
   }
@@ -539,7 +539,7 @@ config.production = {
     responseThresholdMins: 30
   , supportPhones: [
       '9788461970' // Sarah
-    , '2072997985' // Gillian
+    , '2105779226' // Christy Medlock
     ]
   }
 

@@ -138,8 +138,8 @@ define(function(require, exports, module) {
       var template = Handlebars.partials.alert_error;
       var selector = '[name="{property}"]';
 
-      // Amanda errors object
       if ( _.isObject( errors ) && !_.isArray( errors ) ){
+        // Amanda errors object
         if ( '0' in errors ){
           errors = Array.prototype.slice.call( errors )
 

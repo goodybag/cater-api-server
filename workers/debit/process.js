@@ -135,6 +135,7 @@ var worker = function (message, callback) {
   d.uuid = utils.uuid.v4();
   d.logger = logger.create({ data: { uuid: d.uuid } });
   d.on('error', function (error) {
+    logger.error('Domain error', { error: error });
     callback(error);
   });
   d.run(function () {

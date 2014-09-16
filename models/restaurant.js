@@ -738,9 +738,17 @@ var Restaurant = module.exports = Model.extend({
       query.columns.push('(delivery_times.id IS NULL) AS is_bad_delivery_time');
       unacceptable.push('(delivery_times.id IS NULL)');
 
-      query.joins.delivery_service_hours = {
-        on: { 'restaurant_id': '$restaurants.id$' }
-      };
+      if ( !query.joins.delivery_services ){
+        query.joins.delivery_services = {
+          on: { 'region_id': '$regions.id$' }
+        };
+      }
+
+      if ( !query.joins.delivery_service_hours ){
+        query.joins.delivery_service_hours = {
+          on: { 'restaurant_id': '$restaurants.id$' }
+        };
+      }
     }
 
     // TODO: only allow valid dates in order params, currently assumes so
@@ -806,6 +814,10 @@ var Restaurant = module.exports = Model.extend({
       query.joins.delivery_times.on['delivery_times.start_time'] = {$lte: orderParams.time};
       query.joins.delivery_times.on['delivery_times.end_time'] = {$gte: orderParams.time};
     }
+
+    query.columns.push('(' + [
+      'extract( do now() at timezone regions.timezone)']
+    ].join(' and ') + ')')
 
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');
 

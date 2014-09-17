@@ -19,7 +19,11 @@ module.exports = function(req, res, next) {
 
   logger.info('Start');
 
-  if ( !token ) return logger.info('No token, skipping'), next();
+  if ( !token ) {
+    logger.info('No token, skipping');
+    console.log(req.order);
+    return next();
+  }
 
   // // Check to see if we even need to use the edit token to auth
   // if ( utils.hasPropsDeep( req, ['user.attributes.groups'] ) )

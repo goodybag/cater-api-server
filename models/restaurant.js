@@ -746,8 +746,16 @@ var Restaurant = module.exports = Model.extend({
         query.joins.delivery_service_hours = { on: {} };
       }
 
-      query.columns.push('(delivery_service_hours.id is null as is_bad_delivery_service_hour)');
-      unacceptable.push('(delivery_service_hours.id is null)');
+      query.joins.delivery_service_zips.on.from = '$restaurants.zip$';
+
+      if ( orderParams.zip ){
+        query.joins.delivery_service_zips.on.to = orderParams.zip;
+      }
+
+      query.joins.delivery_service_hours.on.ds_id = '$delivery_service_zips.delivery_service_id$';
+
+      // query.columns.push('(delivery_service_hours.id is null as is_bad_delivery_service_hour)');
+      // unacceptable.push('(delivery_service_hours.id is null)');
     }
 
     // TODO: only allow valid dates in order params, currently assumes so
@@ -808,7 +816,7 @@ var Restaurant = module.exports = Model.extend({
         $custom: [ 'delivery_times.day = extract( dow from $1 at time zone regions.timezone )', datetime ]
       };
 
-      query.joins.delivery_service_hours.on.day = {
+      query.where['delivery_service_hours.day'] = {
         $extract: {
           field: 'dow'
         , from: '$now()$'
@@ -828,21 +836,21 @@ var Restaurant = module.exports = Model.extend({
       query.joins.delivery_times.on['delivery_times.start_time'] = {$lte: orderParams.time};
       query.joins.delivery_times.on['delivery_times.end_time'] = {$gte: orderParams.time};
 
-      query.joins.delivery_service_hours.on.start_time_now = {
-        $custom: ['(now()::time at time zone regions.timezone) >= delivery_service_hours.start_time']
-      };
+      // query.joins.delivery_service_hours.on.start_time_now = {
+      //   $custom: ['(now()::time at time zone regions.timezone) >= delivery_service_hours.start_time']
+      // };
 
-      query.joins.delivery_service_hours.on.start_time_order = {
-        $custom: ['($1::time at time zone regions.timezone) >= delivery_service_hours.start_time', order.date]
-      };
+      // query.joins.delivery_service_hours.on.start_time_order = {
+      //   $custom: ['($1::time at time zone regions.timezone) >= delivery_service_hours.start_time', orderParams.time ]
+      // };
 
-      query.joins.delivery_service_hours.on.end_time_now = {
-        $custom: ['delivery_service_hours.end_time < (now()::time at time zone regions.timezone)']
-      };
+      // query.joins.delivery_service_hours.on.end_time_now = {
+      //   $custom: ['delivery_service_hours.end_time < (now()::time at time zone regions.timezone)']
+      // };
 
-      query.joins.delivery_service_hours.on.end_time_order = {
-        $custom: ['delivery_service_hours.end_time < ($1::time at time zone regions.timezone)', order.date]
-      };
+      // query.joins.delivery_service_hours.on.end_time_order = {
+      //   $custom: ['delivery_service_hours.end_time < ($1::time at time zone regions.timezone)', orderParams.time ]
+      // };
     }
 
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');

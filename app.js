@@ -49,10 +49,6 @@ app.configure(function(){
     };
   })());
 
-  app.use( function( req, res, next ){
-    req.logger.info( '%s - %s', req.method, req.url );
-    next();
-  });
 
   app.use(express.cookieParser('WOOT THE FUCK'));
   app.use(express.cookieSession());
@@ -60,6 +56,7 @@ app.configure(function(){
   app.use(express.json());
   app.use(express.urlencoded());
   app.use(express.methodOverride());
+  app.use(middleware.logRequest());
 
   app.use(middleware.uuid());
   app.use(middleware.domains);

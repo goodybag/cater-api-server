@@ -1,0 +1,27 @@
+{{#extend "body"}}
+    <table cellpadding="0" cellspacing="0" style="width: 100%;">
+    <tr>
+      <td style="width: 10px"></td>
+      <td>
+        <table cellpadding="0" cellspacing="0" style="width: 100%;">
+          <tr>
+            <td style="width: 46%; padding-bottom: 22px;">
+              {{#is order.type 'pickup' 'courier'}}
+                {{> order_email_details_user_pickup }}
+              {{else}}
+                {{> order_email_details_user_delivery }}
+              {{/is}}
+            </td>
+            <td style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-left: 12px;">
+              <h1 style="line-height: 36px; margin-top: 0; margin-right: 0; margin-bottom: 10px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 28px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">You have an order coming up!</h1>
+              <h2 style="line-height: 28px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
+                This is just a friendly reminder of your order from <em>{{order.restaurant.name}}</em>. Please review the order link and feel free to call or chat us if there are any issues.
+              </h2>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td style="width: 10px"></td>
+    </tr>
+  </table>
+{{/extend}}

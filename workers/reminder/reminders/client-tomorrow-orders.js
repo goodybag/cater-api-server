@@ -31,7 +31,7 @@ function getOrderQuery( storage ){
 function notifyOrderFn( order ){
   return utils.partial( utils.async.parallelNoBail, {
     email: function( done ){
-      views.render( 'order-email/order-reminder', {
+      views.render( 'order-email/order-reminder-user', {
         layout: 'email-layout'
       , config: config
       , order:  order.toJSON()

@@ -30,7 +30,6 @@ define(function(require, exports, module) {
     model: OrderItem,
 
     sync: function(method, model, options) {
-      options.url = (method === 'read') ? '/api' + model.url() : model.url();
 
       // break aggressive caching on IE
       // this request provides live updates so dont cache reads

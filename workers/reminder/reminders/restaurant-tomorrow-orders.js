@@ -36,7 +36,7 @@ function notifyOrderFn( order ){
       db.contacts.find({ restaurant_id: order.attributes.restaurant_id, notify: true }, function( error, contacts ){
         if ( error ) return done( error );
 
-        views.render( 'order-email/order-reminder', {
+        views.render( 'order-email/order-reminder-restaurant', {
           layout: 'email-layout'
         , config: config
         , order:  order.toJSON({ review: true })

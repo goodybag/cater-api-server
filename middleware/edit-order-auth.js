@@ -44,7 +44,6 @@ module.exports = function(req, res, next) {
           logger.info('No order found');
           done(null, null);
         } else {
-          order = order.toJSON();
           logger.info('Order found', { order: order })
           done(null, order);
         }

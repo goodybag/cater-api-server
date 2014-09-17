@@ -67,6 +67,8 @@ module.exports.editability = function(req, res, next) {
   var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
                   !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
   var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], req.order.status);
+  var elogger = logger.create('Editable Order');
+  elogger.info('Checking if tip is editable', { editable: editable });
   return editable ? next() : res.json(403, 'order not editable');
 };
 

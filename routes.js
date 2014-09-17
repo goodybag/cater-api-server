@@ -686,15 +686,6 @@ module.exports.register = function(app) {
    *  This is a collection of OrderItems, not Items.
    */
 
-  //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
-  
-  app.get('/api/orders/:id/items'
-  , m.editOrderAuth
-  , m.restrict(['client', 'restaurant', 'admin'])
-  , m.param('id')
-  , m.find( db.order_items )
-  );
-
   app.post('/api/orders/:oid/items'
   , m.editOrderAuth
   , m.restrict(['client', 'admin'])
@@ -702,11 +693,16 @@ module.exports.register = function(app) {
   , controllers.orders.orderItems.add
   );
 
+  app.get('/orders/:oid/items'
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , controllers.orders.orderItems.summary
+  );
+/*
   app.all('/api/orders/:oid/items', function(req, res, next) {
     res.set('Allow', 'GET, POST');
     res.send(405);
   });
-
+*/
   /**
    *  Order item resource.  A single order item.
    */
@@ -1339,11 +1335,12 @@ module.exports.register = function(app) {
   , m.param('id')
   , m.remove( db.orders )
   );
-
-  app.get('/api/orders/:oid/items'
+  
+  app.get('/api/orders/:order_id/items'
   , m.editOrderAuth
-  , m.restrict(['client', 'admin'])
-  , controllers.orders.orderItems.list
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , m.param('order_id')
+  , m.find( db.order_items )
   );
 
   app.post('/api/orders/:order_id/generate_edit_token'

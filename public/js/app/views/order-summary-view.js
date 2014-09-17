@@ -17,7 +17,9 @@ define(function(require, exports, module) {
     initialize: function(options) {
       if (this.model) this.setModel(this.model);
       this.edit_token = options.editToken;
-      this.model.orderItems.setFetchInterval();
+      if (this.model.id) {
+        this.model.orderItems.setFetchInterval();
+      }
     },
 
     setModel: function(model) {

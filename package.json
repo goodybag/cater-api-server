@@ -61,7 +61,7 @@
     "loglog": "^0.2.0",
     "loglog-mongodb": "^1.0.1",
     "mailcomposer": "0.2.x",
-    "mailgun": "0.4.x",
+    "mailgun": "shz/node-mailgun",
     "microtime": "0.4.x",
     "moment": "~2.3.1",
     "moment-timezone": "0.0.x",

@@ -35,7 +35,7 @@ module.exports = function( job, done ){
       logger.error( 'Error sending redemption email', {
         error: error
       });
-      done( error );
+      return done( error );
     }
     var redemption = utils.extend({user_id: userId}, reward);
     db.users_redemptions.insert(redemption, done);

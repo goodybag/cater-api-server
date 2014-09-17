@@ -200,7 +200,7 @@ config.defaults = {
     support: 'support@goodybag.com'
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
-  , info: 'info@goodybag.com'
+  , info: [ local.testEmail || 'preston+redeem@goodybag.com' ]
   , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
   , rewards: [ local.testEmail || 'test@goodybag.com' ]
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]

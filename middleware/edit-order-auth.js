@@ -21,12 +21,12 @@ module.exports = function(req, res, next) {
 
   if ( !token ) return logger.info('No token, skipping'), next();
 
-  // Check to see if we even need to use the edit token to auth
-  if ( utils.hasPropsDeep( req, ['user.attributes.groups'] ) )
-  if ( utils.intersection( req.user.attributes.groups, ['admin', 'client'] ).length >= 1 ){
-    logger.info('User is logged in as admin or client, skipping');
-    return next();
-  }
+  // // Check to see if we even need to use the edit token to auth
+  // if ( utils.hasPropsDeep( req, ['user.attributes.groups'] ) )
+  // if ( utils.intersection( req.user.attributes.groups, ['admin', 'client'] ).length >= 1 ){
+  //   logger.info('User is logged in as admin or client, skipping');
+  //   return next();
+  // }
 
   var tasks = [
     function getOrder(done) {

@@ -17,7 +17,7 @@ module.exports = function( options ){
     Models.Order.findOne( +req.param( options.param ), function( error, order ){
       if ( error ) return next( error );
 
-      req.order = order;
+      req.order = order.toJSON();
       res.locals.order = order.toJSON();
 
       if ( !options.withItems ) return next();

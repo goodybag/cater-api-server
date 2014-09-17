@@ -26,7 +26,7 @@ define(function(require, exports, module) {
       clearInterval(this.intervalId);
     },
 
-    url: function() { return '/orders/' + this.orderId + '/items' },
+    url: function() { return '/api/orders/' + this.orderId + '/items' },
     model: OrderItem,
 
     sync: function(method, model, options) {

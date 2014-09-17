@@ -686,23 +686,26 @@ module.exports.register = function(app) {
    *  This is a collection of OrderItems, not Items.
    */
 
-  app.post('/api/orders/:oid/items'
+  app.post('/api/orders/:order_id/items'
+  , m.getOrder({ param: 'order_id' })
   , m.editOrderAuth
   , m.restrict(['client', 'admin'])
   , controllers.orders.editability
   , controllers.orders.orderItems.add
+  );  
+
+  app.get('/api/orders/:order_id/items'
+  , m.editOrderAuth
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , m.param('order_id')
+  , m.find( db.order_items )
   );
 
   app.get('/orders/:oid/items'
   , m.restrict(['client', 'restaurant', 'admin'])
   , controllers.orders.orderItems.summary
   );
-/*
-  app.all('/api/orders/:oid/items', function(req, res, next) {
-    res.set('Allow', 'GET, POST');
-    res.send(405);
-  });
-*/
+
   /**
    *  Order item resource.  A single order item.
    */
@@ -1334,13 +1337,6 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.orders )
-  );
-  
-  app.get('/api/orders/:order_id/items'
-  , m.editOrderAuth
-  , m.restrict(['client', 'restaurant', 'admin'])
-  , m.param('order_id')
-  , m.find( db.order_items )
   );
 
   app.post('/api/orders/:order_id/generate_edit_token'

@@ -73,20 +73,25 @@ function sanitizeOptions(oldOpts, newOpts) {
 }
 
 module.exports.add = function(req, res, next) {
-  var order = req.order;
-  var editable = 
-    req.creatorId ||
-    utils.contains(req.session.user.groups, 'admin') || 
-    utils.contains(['pending', 'submitted'], req.order.status);
+  var logger = req.logger.create('Order Items');
+  logger.info('Add item start', {order: req.order, body: req.body});
 
-  if (!editable) return res.json(403, 'nope');
   models.Item.findOne(parseInt(req.body.item_id), function(err, item) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (!item) return res.send(404);
-    var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id']), {order_id: req.params.oid});
+    if (err) { 
+      console.log(err);
+      logger.error('Item lookup error', { item_id : req.body.item_id, error: err });
+      return res.error(errors.internal.DB_FAILURE, err);
+    }
+    if (!item) {
+      console.log('no item found');
+      logger.error('No item found');
+      return res.send(404);
+    }
+    var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id']), {order_id: +req.params.order_id});
     attrs.options_sets = JSON.stringify(sanitizeOptions(attrs.options_sets, req.body.options_sets));
 
-    var orderItem = new models.OrderItem(utils.omit(attrs, ['id', 'created_at']));
+    var orderItem = new models.OrderItem(utils.omit(attrs, 'id', 'created_at'));
+    logger.info('Creating new order item', { item: orderItem });
     orderItem.save(function(error, rows, result) {
       if (error) return res.error(errors.internal.DB_FAILURE, error);
       orderItem.attributes = utils.clone(rows[0]);

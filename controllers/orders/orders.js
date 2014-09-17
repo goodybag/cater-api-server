@@ -33,6 +33,7 @@ module.exports.auth = function(req, res, next) {
 
   if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
     req.order.isAdmin = true;
+    logger.info('is admin');
     return next();
   }
 
@@ -45,13 +46,17 @@ module.exports.auth = function(req, res, next) {
     && utils.contains(req.user.attributes.restaurant_ids, req.order.restaurant_id)
   ) {
     req.order.isRestaurantManager = true;
+    logger.info('is restaurant admin');
     return next();
   }
 
   if (req.order.user_id !== (req.session.user||0).id &&
       req.order.review_token !== reviewToken &&
-      req.order.edit_token !== editToken)
+      req.order.edit_token !== editToken) {
+    logger.info('unauthorized');
     return res.status(404).render('404');
+  }
+    
 
   // There was a review token, so this is likely a restaurant manager
   if (reviewToken){
@@ -59,16 +64,19 @@ module.exports.auth = function(req, res, next) {
   }
 
   req.order.isOwner = true;
+  logger.info('authorized');
   next();
 };
 
 module.exports.editability = function(req, res, next) {
+  var elogger = req.logger.create('Editable Order');
   // ensure only tip fields are being adjusted
+  elogger.info('Start');
   var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
                   !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
   var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], req.order.status);
-  var elogger = logger.create('Editable Order');
-  elogger.info('Checking if tip is editable', { editable: editable });
+  console.log(req.order);
+  elogger.info('End', { editable: editable });
   return editable ? next() : res.json(403, 'order not editable');
 };
 

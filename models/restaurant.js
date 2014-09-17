@@ -738,11 +738,13 @@ var Restaurant = module.exports = Model.extend({
       query.columns.push('(delivery_times.id IS NULL) AS is_bad_delivery_time');
       unacceptable.push('(delivery_times.id IS NULL)');
 
-      if ( !query.joins.delivery_services ){
-        query.joins.delivery_services = { on: {} };
+      if ( !query.joins.delivery_service_zips ){
+        query.joins.delivery_service_zips = { on: {} };
       }
 
-      query.joins.delivery_services.on.region_id = '$regions.id$';
+      query['joins']
+        ['delivery_service_zips']
+        ['on']['from'] = '$restaurants.zip$';
 
       if ( !query.joins.delivery_service_hours ){
         query.joins.delivery_service_hours = { on: {} };

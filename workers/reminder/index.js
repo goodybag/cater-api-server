@@ -5,7 +5,7 @@
 var fs        = require('fs');
 var path      = require('path');
 var config    = require('../../config');
-var logger    = require('../../logger');
+var logger    = require('../../lib/logger').create('Worker-Reminder');
 var reminder  = require('./lib/reminder');
 
 var dir = __dirname + '/reminders';

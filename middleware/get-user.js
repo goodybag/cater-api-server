@@ -20,7 +20,7 @@ module.exports = function(req, res, next) {
   , embeds: ['groups']
   }
 
-  logger.info( 'Looking up user', { user_id: req.session.user.id } );
+  logger.info( 'Looking up user #%d', req.session.user.id, { user_id: req.session.user.id } );
   models.User.findOne( query, function (error, user) {
     if (error){
       logger.error( 'Failed to lookup user', { error: error } );
@@ -39,6 +39,7 @@ module.exports = function(req, res, next) {
 
     req.logger.options.data.user = res.locals.user;
 
+    logger.info( 'Found user "%s"', user.attributes.name || '(No name)', { user: user });
     next();
   });
 }

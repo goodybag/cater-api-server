@@ -13,7 +13,7 @@ var statuses = ['submitted', 'accepted', 'denied'];
 
 module.exports = function(req, res, next) {
   var token = req.query.edit_token;
-  var logger = req.logger.create('EditOrderAuth', {
+  var logger = req.logger.create('Middleware-EditOrderAuth', {
     data: { token: token }
   });
 

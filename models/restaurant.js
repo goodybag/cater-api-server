@@ -239,10 +239,10 @@ var Restaurant = module.exports = Model.extend({
           type: 'select'
         , table: 'delivery_service_hours'
         , columns: [
-            '*'
+            'ds_id'
           , { type: 'array_agg', expression: 'delivery_service_hours.day', alias: 'days' }
           ]
-        , groupBy: ['ds_id', 'id']
+        , groupBy: ['ds_id']
         };
 
         dsQuery.joins.push({
@@ -253,9 +253,9 @@ var Restaurant = module.exports = Model.extend({
           target: 'restaurant_hours', type: 'left', on: { restaurant_id: '$r.id$' }
         });
 
-        // dsQuery.joins.push({
-        //   target: 'hrs', type: 'left', on: { ds_id: '$r.delivery_service_id$' }
-        // });
+        dsQuery.joins.push({
+          target: 'hrs', type: 'left', on: { ds_id: '$r.delivery_service_id$' }
+        });
       }
 
       if ( options.date ){

@@ -15,6 +15,7 @@ module.exports = {
 , getOrder: require('./get-order')
 , getOrder2: require('./get-order2')
 , getUser: require('./get-user')
+, logRequest: require('./log-request')
 , orderParams: require('./order-params')
 , owner: require('./owner')
 , queryParams: require('./query-params')

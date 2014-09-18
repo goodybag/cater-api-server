@@ -69,14 +69,12 @@ module.exports.auth = function(req, res, next) {
 };
 
 module.exports.editability = function(req, res, next) {
-  var elogger = req.logger.create('Editable Order');
+  var elogger = req.logger.create('Middleware-Editability');
   // ensure only tip fields are being adjusted
-  elogger.info('Start');
   var isTipEdit = (req.order.isOwner || req.order.isRestaurantManager) &&
                   !utils.difference(utils.keys(req.body), ['tip', 'tip_percent']).length;
   var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], req.order.status);
-  console.log(req.order);
-  elogger.info('End', { editable: editable });
+  elogger.info(editable ? 'Order is editable' : 'Order is not editable', { editable: editable });
   return editable ? next() : res.json(403, 'order not editable');
 };
 

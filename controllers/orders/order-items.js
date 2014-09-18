@@ -74,7 +74,7 @@ function sanitizeOptions(oldOpts, newOpts) {
 
 module.exports.add = function(req, res, next) {
   var logger = req.logger.create('Order Items');
-  logger.info('Add item start', {order: req.order, body: req.body});
+  logger.info('Adding Item #%d', req.body.item_id, {order: req.order, body: req.body});
 
   models.Item.findOne(parseInt(req.body.item_id), function(err, item) {
     if (err) { 

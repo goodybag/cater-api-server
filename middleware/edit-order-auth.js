@@ -21,7 +21,6 @@ module.exports = function(req, res, next) {
 
   if ( !token ) {
     logger.info('No token, skipping');
-    console.log(req.order);
     return next();
   }
 

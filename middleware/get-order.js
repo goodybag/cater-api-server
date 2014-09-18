@@ -14,16 +14,27 @@ module.exports = function( options ){
   });
 
   return function( req, res, next ){
-    Models.Order.findOne( +req.param( options.param ), function( error, order ){
-      if ( error ) return next( error );
+    var logger = req.logger.create('Middleware-GetOrder');
+    var orderId = +req.param( options.param );
+    Models.Order.findOne( orderId, function( error, order ){
+      if ( error ) {
+        logger.error('Could not get order #%d', orderId, { error: error });
+        return next( error );
+      }
 
       req.order = order.toJSON();
       res.locals.order = order.toJSON();
 
-      if ( !options.withItems ) return next();
+      if ( !options.withItems ) {
+        logger.info('Found order #%d (excluding items)', orderId, { order: req.order });
+        return next();
+      }
 
       order.getOrderItems( function( error ){
-        if ( error ) return next( error );
+        if ( error ) {
+          logger.error('Could not get order #%d\'s items', orderId, { error: error });
+          return next( error );
+        }
 
         var jsonOptions = {};
 
@@ -31,6 +42,7 @@ module.exports = function( options ){
 
         res.locals.order = order.toJSON( jsonOptions );
 
+        logger.info('Found order #%d (including items)', orderId, { order: order });
         next();
       });
     });

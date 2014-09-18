@@ -267,6 +267,10 @@ var Restaurant = module.exports = Model.extend({
                     }
         };
 
+        // Ensure that both today and the day of the order are within the
+        // courier hours of operation
+        // NOTE: You must use the array contains syntax because simply doing
+        // an `or` clause would result in two records rather than one
         dsQuery.where['delivery_service_hours.day'] = {
           $custom: [[
             'Array['

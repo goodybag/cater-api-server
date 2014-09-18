@@ -121,6 +121,7 @@ var Restaurant = module.exports = Model.extend({
 
     var rQuery, dsQuery, query = {
       type: 'union'
+    , with: {}
     , queries: [
         rQuery = {
           type: 'select'
@@ -217,7 +218,9 @@ var Restaurant = module.exports = Model.extend({
         , { table: 'r', name: 'id', alias: 'restaurant_id' }
         , { table: 'r', name: 'region_id', alias: 'region_id' }
         ]
-      , where: utils.extend( { 'r.disable_courier': false }, options.where )
+      , where: utils.extend({
+          'r.disable_courier': false
+        }, options.where )
       , joins: [
           { target: 'restaurants'
           , alias:  'r'
@@ -232,6 +235,16 @@ var Restaurant = module.exports = Model.extend({
       }
 
       if ( options.date || options.time ){
+        query.with.hrs = {
+          type: 'select'
+        , table: 'delivery_service_hours'
+        , columns: [
+            '*'
+          , { type: 'array_agg', expression: 'delivery_service_hours.day', alias: 'days' }
+          ]
+        , groupBy: ['ds_id', 'id']
+        };
+
         dsQuery.joins.push({
           target: 'regions', type: 'left', on: { id: '$r.region_id$' }
         });
@@ -239,15 +252,29 @@ var Restaurant = module.exports = Model.extend({
         dsQuery.joins.push({
           target: 'restaurant_hours', type: 'left', on: { restaurant_id: '$r.id$' }
         });
+
+        // dsQuery.joins.push({
+        //   target: 'hrs', type: 'left', on: { ds_id: '$r.delivery_service_id$' }
+        // });
       }
 
       if ( options.date ){
         dsQuery.where['restaurant_hours.day'] = {
-          $custom: [
-            'restaurant_hours.day = extract( dow from $1::timestamp at time zone regions.timezone )'
-          , options.date
-          ]
+          $extract: { field:    'dow'
+                    , from:     options.date
+                    , cast:     'timestamp'
+                    , timezone: '$regions.timezone$'
+                    }
         };
+
+        dsQuery.where['delivery_service_hours.day'] = {
+          $custom: [[
+            'Array['
+          , '  extract( dow from now() at time zone regions.timezone )::int'
+          , ', extract( dow from $1 at time zone regions.timezone )::int'
+          , ']::int[] <@ hrs.days'
+          ].join('\n'), options.date ]
+        }
       }
 
       if ( options.time ){
@@ -450,9 +477,9 @@ var Restaurant = module.exports = Model.extend({
         }
       , groupBy: 'restaurant_id'
       }
-    , all_delivery_zips: Restaurant.getDeliveryZipsQuery({
+    , all_delivery_zips: Restaurant.getDeliveryZipsQuery( utils.extend({
         with_delivery_services: query.with_delivery_services
-      })
+      }, orderParams))
     };
 
     query.columns.push({
@@ -738,21 +765,11 @@ var Restaurant = module.exports = Model.extend({
       query.columns.push('(delivery_times.id IS NULL) AS is_bad_delivery_time');
       unacceptable.push('(delivery_times.id IS NULL)');
 
-      if ( !query.joins.delivery_service_zips ){
-        query.joins.delivery_service_zips = { on: {} };
-      }
+      // if ( !query.joins.delivery_service_hours ){
+      //   query.joins.delivery_service_hours = { on: {} };
+      // }
 
-      if ( !query.joins.delivery_service_hours ){
-        query.joins.delivery_service_hours = { on: {} };
-      }
-
-      query.joins.delivery_service_zips.on.from = '$restaurants.zip$';
-
-      if ( orderParams.zip ){
-        query.joins.delivery_service_zips.on.to = orderParams.zip;
-      }
-
-      query.joins.delivery_service_hours.on.ds_id = '$delivery_service_zips.delivery_service_id$';
+      // query.joins.delivery_service_hours.on.ds_id = '$restaurants.delivery_service_id$';
 
       // query.columns.push('(delivery_service_hours.id is null as is_bad_delivery_service_hour)');
       // unacceptable.push('(delivery_service_hours.id is null)');
@@ -816,20 +833,20 @@ var Restaurant = module.exports = Model.extend({
         $custom: [ 'delivery_times.day = extract( dow from $1 at time zone regions.timezone )', datetime ]
       };
 
-      query.where['delivery_service_hours.day'] = {
-        $extract: {
-          field: 'dow'
-        , from: '$now()$'
-        , timezone: '$regions.timezone$'
-        }
-      , $and: {
-          $extract: {
-            field: 'dow'
-          , from: formattedDateTime
-          , timezone: '$regions.timezone$'
-          }
-        }
-      };
+      // query.where['delivery_service_hours.day'] = {
+      //   $extract: {
+      //     field: 'dow'
+      //   , from: '$now()$'
+      //   , timezone: '$regions.timezone$'
+      //   }
+      // , $and: {
+      //     $extract: {
+      //       field: 'dow'
+      //     , from: formattedDateTime
+      //     , timezone: '$regions.timezone$'
+      //     }
+      //   }
+      // };
     }
 
     if (orderParams && orderParams.time) {

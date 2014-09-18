@@ -231,13 +231,17 @@ mosql.registerConditionalHelper(
     throw new Error('$extract helper value must provide `field`');
   }
 
+  if ( !value.from ){
+    throw new Error('$extract helper value must provide `from`');
+  }
+
   var result = [
     column
   , value.operation || '='
   , 'extract('
   , value.field
   , 'from'
-  , mosqlUtils.getValue( value.from, values )
+  , mosqlUtils.getValue( value.from, values ) + (value.cast ? ('::' + value.cast) : '')
   ];
 
   if ( value.timezone ){

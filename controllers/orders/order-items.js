@@ -74,31 +74,38 @@ function sanitizeOptions(oldOpts, newOpts) {
 
 module.exports.add = function(req, res, next) {
   var logger = req.logger.create('Order Items');
-  logger.info('Adding Item #%d', req.body.item_id, {order: req.order, body: req.body});
 
-  models.Item.findOne(parseInt(req.body.item_id), function(err, item) {
-    if (err) { 
-      console.log(err);
-      logger.error('Item lookup error', { item_id : req.body.item_id, error: err });
-      return res.error(errors.internal.DB_FAILURE, err);
+  var tasks = [
+    function getItem(callback) {
+      models.Item.findOne(req.body.item_id, callback);
     }
-    if (!item) {
-      console.log('no item found');
-      logger.error('No item found');
-      return res.send(404);
+  , function convert(item, callback) {
+      // Given an item, spit out a new order item
+      var attrs = utils.extend(
+        {}
+      , item.toJSON()
+      , utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id'])
+      , {order_id: +req.params.id}
+      );
+      attrs.options_sets = JSON.stringify(sanitizeOptions(attrs.options_sets, req.body.options_sets));
+      attrs = utils.omit(attrs, 'id', 'created_at');
+      callback(null, new models.OrderItem(attrs));
     }
-    var attrs = utils.extend(item.toJSON(), utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id']), {order_id: +req.params.order_id});
-    attrs.options_sets = JSON.stringify(sanitizeOptions(attrs.options_sets, req.body.options_sets));
+  , function saveOrderItem(orderItem, callback) {
+      orderItem.save(function(err, rows, result) {
+        callback(err, result[0]);
+      });
+    }
+  ];
 
-    var orderItem = new models.OrderItem(utils.omit(attrs, 'id', 'created_at'));
-    logger.info('Creating new order item', { item: orderItem });
-    orderItem.save(function(error, rows, result) {
-      if (error) return res.error(errors.internal.DB_FAILURE, error);
-      orderItem.attributes = utils.clone(rows[0]);
-      res.send(201, orderItem.toJSON());
-    });
+  utils.async.waterfall(tasks, function done(err, orderItem) {
+    if ( err ) {
+      logger.error('Could not create order item', err);
+    }
+    logger.info('Created new order item', { order_item: orderItem });
+    return res.send(201, orderItem);
   });
-}
+};
 
 module.exports.update = function(req, res, next) {
   models.OrderItem.findOne(parseInt(req.params.iid), function(err, orderItem) {

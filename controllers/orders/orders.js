@@ -56,7 +56,6 @@ module.exports.auth = function(req, res, next) {
     logger.info('unauthorized');
     return res.status(404).render('404');
   }
-    
 
   // There was a review token, so this is likely a restaurant manager
   if (reviewToken){

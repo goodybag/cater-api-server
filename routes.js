@@ -686,13 +686,14 @@ module.exports.register = function(app) {
    *  This is a collection of OrderItems, not Items.
    */
 
-  app.post('/api/orders/:order_id/items'
-  , m.getOrder({ param: 'order_id' })
+  app.post('/api/orders/:id/items'
+  , m.getOrder2({ param: 'id' })
+  , controllers.orders.auth
   , m.editOrderAuth
   , m.restrict(['client', 'admin'])
   , controllers.orders.editability
   , controllers.orders.orderItems.add
-  );  
+  );
 
   app.get('/api/orders/:order_id/items'
   , m.editOrderAuth

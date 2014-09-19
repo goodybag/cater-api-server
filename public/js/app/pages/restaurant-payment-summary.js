@@ -73,7 +73,7 @@ define(function(require){
       utils.dom('[data-role="order-fetch"]').click( function( e ){
         this.fetchOrders(
           utils.dom('[name="order_from"]').val()
-        , utils.dom('[name="order_from"]').val()
+        , utils.dom('[name="order_to"]').val()
         );
       }.bind( this ));
 
@@ -118,11 +118,18 @@ define(function(require){
     }
 
   , fetchOrders: function( from, to ){
-      console.log(orders.filter( function( order ){
-        var tz = order.timezone;
-        var date = moment( order.datetime ).tz( tz );
+      orders.filter( function( order ){
+        var tz    = order.attributes.timezone;
+        var date  = moment( order.get('datetime') ).tz( tz );
+        
         return moment( from ).tz( tz ) <= date && date <= moment( to ).tz( tz );
-      }));
+      }).forEach( function( order ){
+        // Funky way of adding each item, but this ensures our previous
+        // way of propagating order changes on a record translates over nicely
+        var item = items.createModel();
+        items.add( item );
+        item.set( 'order_id', order.get('id') );
+      });
     }
   });
 });

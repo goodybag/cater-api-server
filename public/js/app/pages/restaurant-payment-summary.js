@@ -2,7 +2,7 @@ define(function(require){
   var Hbs           = require('handlebars');
   var async         = require('async');
   var utils         = require('utils');
-  var moment        = require('moment');
+  var moment        = require('moment-timezone');
   var summary       = require('data/payment-summary');
   var items         = require('data/payment-summary-items');
   var orders        = require('data/orders');
@@ -118,9 +118,11 @@ define(function(require){
     }
 
   , fetchOrders: function( from, to ){
-      orders.filter( function( order ){
-        return order.
-      });
+      console.log(orders.filter( function( order ){
+        var tz = order.timezone;
+        var date = moment( order.datetime ).tz( tz );
+        return moment( from ).tz( tz ) <= date && date <= moment( to ).tz( tz );
+      }));
     }
   });
 });

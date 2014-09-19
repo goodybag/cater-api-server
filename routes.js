@@ -698,9 +698,11 @@ module.exports.register = function(app) {
   , controllers.orders.orderItems.add
   );
 
-  app.get('/api/orders/:order_id/items'
+  app.get('/api/orders/:oid/items'
   , m.restrict(['client', 'restaurant', 'admin'])
-  , m.param('order_id')
+  , m.param('oid', function(order_id, $query, options) {
+      $query.order_id = order_id;
+    })
   , m.find( db.order_items )
   );
 
@@ -725,7 +727,6 @@ module.exports.register = function(app) {
   );
 
   app.patch('/api/orders/:oid/items/:iid'
-  , m.editOrderAuth
   , m.restrict(['client', 'admin'])
   , controllers.orders.editability
   , controllers.orders.orderItems.update

@@ -17,13 +17,13 @@ module.exports = function(req, res, next) {
     data: { token: token }
   });
 
-  logger.info('Start');
 
   if ( !token ) {
     logger.info('No token, skipping');
     return next();
   }
 
+  logger.info('Checking token "%s"', token);
   // // Check to see if we even need to use the edit token to auth
   // if ( utils.hasPropsDeep( req, ['user.attributes.groups'] ) )
   // if ( utils.intersection( req.user.attributes.groups, ['admin', 'client'] ).length >= 1 ){
@@ -53,7 +53,18 @@ module.exports = function(req, res, next) {
       });
     },
 
-    function auth(order, done) {
+    function getUser(order, done) {
+      db.users.findOne(order.user_id, function(err, user) {
+        if ( err ){
+          logger.error('Error looking up user', err);
+          return done(err);
+        }
+        logger.info('User found', { user: user });
+        done(err, order, user);
+      });
+    },
+
+    function auth(order, user, done) {
       if ( !order )
         return done(null);
       else if ( utils.contains(statuses, order.status) )
@@ -62,7 +73,7 @@ module.exports = function(req, res, next) {
         return res.render('shared-link/expired');
 
       // Replace user with order creator
-      req.user = order.user;
+      req.user = user;
 
       // Attach shared order
       req.order = order;
@@ -73,7 +84,7 @@ module.exports = function(req, res, next) {
     }
   ];
 
-  utils.async.waterfall(tasks, function(err, order) {
+  utils.async.waterfall(tasks, function(err, order, user) {
     if ( err )
       return res.error(500, err);
     else if ( !order )

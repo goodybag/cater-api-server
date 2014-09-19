@@ -40,17 +40,19 @@ module.exports.auth = function(req, res, next) {
   var reviewToken = req.query.review_token || req.body.review_token;
   var editToken = req.query.edit_token || req.body.edit_token;
 
+  // commenting out restaurant management functionality
   // allow restaurant user to view orders at their own restaurant
-  if (req.user
-    && req.user.attributes.restaurant_ids
-    && utils.contains(req.user.attributes.restaurant_ids, req.order.restaurant_id)
-  ) {
-    req.order.isRestaurantManager = true;
-    logger.info('is restaurant admin');
-    return next();
-  }
+  // if (req.user
+  //   && req.user.attributes.restaurant_ids
+  //   && utils.contains(req.user.attributes.restaurant_ids, req.order.restaurant_id)
+  // ) {
+  //   req.order.isRestaurantManager = true;
+  //   logger.info('is restaurant admin');
+  //   return next();
+  // }
 
-  if (req.order.user_id !== (req.session.user||0).id &&
+console.log(req.user);
+  if (req.order.user_id !== (req.user||0).id &&
       req.order.review_token !== reviewToken &&
       req.order.edit_token !== editToken) {
     logger.info('unauthorized');

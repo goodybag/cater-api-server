@@ -261,6 +261,25 @@ mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
   return '';
 });
 
+dirac.use( function(){
+  var includeUserGroups = function($query, schema, next ){
+    $query.columns = $query.columns || [ '*' ];
+    $query.columns.push({
+        type: 'array'
+      , expression: {
+          type: 'select'
+        , table: 'users_groups'
+        , columns: ['group']
+        , where: { user_id: '$users.id$' }
+        }
+      , alias: 'groups'
+    });
+    next();
+  }
+  dirac.dals.users.before( 'find', includeUserGroups );
+  dirac.dals.users.before( 'findOne', includeUserGroups );
+});
+
 // Make sure dates are formatted correctly
 dirac.use( function(){
   var afterPSFinds = function( results, $query, schema, next ){

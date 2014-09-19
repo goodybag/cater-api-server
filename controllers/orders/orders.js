@@ -29,7 +29,7 @@ var addressFields = [
  */
 module.exports.auth = function(req, res, next) {
   var logger = req.logger.create('Middleware-OrderAuth');
-  logger.info('auth for order #'+ req.params.id);
+  logger.info('Auth for order #'+ req.params.oid);
 
   if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
     req.order.isAdmin = true;

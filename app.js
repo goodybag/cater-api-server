@@ -91,6 +91,7 @@ app.configure(function(){
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accessToken));
 
   app.use(function(err, req, res, next){
+    console.error(err);
     req.logger.error(err);
     res.error(errors.internal.UNKNOWN, err);
 

@@ -85,7 +85,7 @@ module.exports.add = function(req, res, next) {
         {}
       , item.toJSON()
       , utils.pick(req.body, ['quantity', 'notes', 'recipient', 'item_id'])
-      , {order_id: +req.params.id}
+      , {order_id: +req.params.oid}
       );
       attrs.options_sets = JSON.stringify(sanitizeOptions(attrs.options_sets, req.body.options_sets));
       attrs = utils.omit(attrs, 'id', 'created_at');

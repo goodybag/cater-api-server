@@ -686,17 +686,19 @@ module.exports.register = function(app) {
    *  This is a collection of OrderItems, not Items.
    */
 
-  app.post('/api/orders/:id/items'
-  , m.getOrder2({ param: 'id' })
-  , controllers.orders.auth
+  app.all('/api/orders/:oid/*'
+  , m.getOrder2({ param: 'oid' })
   , m.editOrderAuth
+  , controllers.orders.auth
+  );
+
+  app.post('/api/orders/:oid/items'
   , m.restrict(['client', 'admin'])
   , controllers.orders.editability
   , controllers.orders.orderItems.add
   );
 
   app.get('/api/orders/:order_id/items'
-  , m.editOrderAuth
   , m.restrict(['client', 'restaurant', 'admin'])
   , m.param('order_id')
   , m.find( db.order_items )
@@ -717,7 +719,6 @@ module.exports.register = function(app) {
   );
 
   app.put('/api/orders/:oid/items/:iid'
-  , m.editOrderAuth
   , m.restrict(['client', 'admin'])
   , controllers.orders.editability
   , controllers.orders.orderItems.update
@@ -731,7 +732,6 @@ module.exports.register = function(app) {
   );
 
   app.del('/api/orders/:oid/items/:iid'
-  , m.editOrderAuth
   , m.restrict(['client', 'admin'])
   , controllers.orders.editability
   , controllers.orders.orderItems.remove

@@ -1,4 +1,5 @@
 var config  = require('../config');
+var pkg     = require('../package');
 var utils   = require('../utils');
 var logger  = require('../lib/logger').create('Requests');
 
@@ -14,6 +15,9 @@ module.exports = function( options ){
         , params: req.params
         , url:    req.url
         , body:   req.body
+        }
+      , app: {
+          version: pkg.version
         }
       }
     });

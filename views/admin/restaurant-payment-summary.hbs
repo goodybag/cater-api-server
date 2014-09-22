@@ -19,8 +19,15 @@
 </div>
 
 <div class="container page-content">
-  <h2 class="payment-date-header">Payout Date</h2>
-  <input type="date" name="payment_date">
+  <div class="table-actions">
+    <h2 class="action-header payment-date-header">Payout Date</h2>
+    <input type="date" name="payment_date" class="action">
+    <h3 class="action-header">From</h3>
+    <input type="date" name="order_from" class="action">
+    <h3 class="action-header">To</h3>
+    <input type="date" name="order_to" class="action">
+    <button class="btn btn-default action" data-role="order-fetch">Fetch</button>
+  </div>
   <table class="table table-striped" id="payment-summary-items-table"></table>
   <h3>Adjustment</h3>
   <div class="row">

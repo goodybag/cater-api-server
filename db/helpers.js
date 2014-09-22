@@ -10,6 +10,11 @@ var config      = require('../config');
 
 dirac.setMoSql( mosql );
 
+mosqlUtils.getValue = function( value, values ){
+  return value[0] === '$' && value.slice(-1) === '$'
+    ? value.slice( 1, -1 ) : ( '$' + values.push( value ) );
+};
+
 // Logging for dals
 // Leaving commented for now because it just makes logs too noisy
 // We'll probably figure out a better way to do this
@@ -216,6 +221,37 @@ mosql.registerConditionalHelper( '$partialMatches', function( column, set, value
                   .map(function(str) { return str.replace(/\W+/g, ''); } )
                   .join(':*&') + ':*';
   return column + ' @@ to_tsquery(' + set + ')';
+});
+
+mosql.registerConditionalHelper(
+  '$extract'
+, { cascade: false }
+, function( column, value, values, table, query ){
+  if ( !value.field ){
+    throw new Error('$extract helper value must provide `field`');
+  }
+
+  if ( !value.from ){
+    throw new Error('$extract helper value must provide `from`');
+  }
+
+  var result = [
+    column
+  , value.operation || '='
+  , 'extract('
+  , value.field
+  , 'from'
+  , mosqlUtils.getValue( value.from, values ) + (value.cast ? ('::' + value.cast) : '')
+  ];
+
+  if ( value.timezone ){
+    result.push('at time zone');
+    result.push( mosqlUtils.getValue( value.timezone, values ) );
+  }
+
+  result.push(')')
+
+  return result.join(' ');
 });
 
 // Upsert query type

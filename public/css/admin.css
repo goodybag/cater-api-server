@@ -21,15 +21,19 @@
   text-align: right;
 }
 
-.payment-date-header {
+.table-actions .action-header,
+.table-actions .action {
   display: inline-block;
   vertical-align: middle;
 }
 
-.payment-date-header + input {
-  vertical-align: middle;
+.table-actions .action-header:first-child ~ .action-header {
+  margin-left: 40px;
+}
+
+.table-actions .action {
   margin-top: 8px;
-  margin-left: 20px;
+  margin-left: 12px;
 }
 
 #payment-summary-items-table input {

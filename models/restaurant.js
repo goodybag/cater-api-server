@@ -121,6 +121,7 @@ var Restaurant = module.exports = Model.extend({
 
     var rQuery, dsQuery, query = {
       type: 'union'
+    , with: {}
     , queries: [
         rQuery = {
           type: 'select'
@@ -217,7 +218,9 @@ var Restaurant = module.exports = Model.extend({
         , { table: 'r', name: 'id', alias: 'restaurant_id' }
         , { table: 'r', name: 'region_id', alias: 'region_id' }
         ]
-      , where: utils.extend( { 'r.disable_courier': false }, options.where )
+      , where: utils.extend({
+          'r.disable_courier': false
+        }, options.where )
       , joins: [
           { target: 'restaurants'
           , alias:  'r'
@@ -232,6 +235,16 @@ var Restaurant = module.exports = Model.extend({
       }
 
       if ( options.date || options.time ){
+        query.with.hrs = {
+          type: 'select'
+        , table: 'delivery_service_hours'
+        , columns: [
+            'ds_id'
+          , { type: 'array_agg', expression: 'delivery_service_hours.day', alias: 'days' }
+          ]
+        , groupBy: ['ds_id']
+        };
+
         dsQuery.joins.push({
           target: 'regions', type: 'left', on: { id: '$r.region_id$' }
         });
@@ -239,15 +252,33 @@ var Restaurant = module.exports = Model.extend({
         dsQuery.joins.push({
           target: 'restaurant_hours', type: 'left', on: { restaurant_id: '$r.id$' }
         });
+
+        dsQuery.joins.push({
+          target: 'hrs', type: 'left', on: { ds_id: '$r.delivery_service_id$' }
+        });
       }
 
       if ( options.date ){
         dsQuery.where['restaurant_hours.day'] = {
-          $custom: [
-            'restaurant_hours.day = extract( dow from $1::timestamp at time zone regions.timezone )'
-          , options.date
-          ]
+          $extract: { field:    'dow'
+                    , from:     options.date
+                    , cast:     'timestamp'
+                    , timezone: '$regions.timezone$'
+                    }
         };
+
+        // Ensure that both today and the day of the order are within the
+        // courier hours of operation
+        // NOTE: You must use the array contains syntax because simply doing
+        // an `or` clause would result in two records rather than one
+        dsQuery.where['delivery_service_hours.day'] = {
+          $custom: [[
+            'Array['
+          , '  extract( dow from now() at time zone regions.timezone )::int'
+          , ', extract( dow from $1 at time zone regions.timezone )::int'
+          , ']::int[] <@ hrs.days'
+          ].join('\n'), options.date ]
+        }
       }
 
       if ( options.time ){
@@ -450,9 +481,9 @@ var Restaurant = module.exports = Model.extend({
         }
       , groupBy: 'restaurant_id'
       }
-    , all_delivery_zips: Restaurant.getDeliveryZipsQuery({
+    , all_delivery_zips: Restaurant.getDeliveryZipsQuery( utils.extend({
         with_delivery_services: query.with_delivery_services
-      })
+      }, orderParams))
     };
 
     query.columns.push({
@@ -737,6 +768,15 @@ var Restaurant = module.exports = Model.extend({
 
       query.columns.push('(delivery_times.id IS NULL) AS is_bad_delivery_time');
       unacceptable.push('(delivery_times.id IS NULL)');
+
+      // if ( !query.joins.delivery_service_hours ){
+      //   query.joins.delivery_service_hours = { on: {} };
+      // }
+
+      // query.joins.delivery_service_hours.on.ds_id = '$restaurants.delivery_service_id$';
+
+      // query.columns.push('(delivery_service_hours.id is null as is_bad_delivery_service_hour)');
+      // unacceptable.push('(delivery_service_hours.id is null)');
     }
 
     // TODO: only allow valid dates in order params, currently assumes so
@@ -796,11 +836,42 @@ var Restaurant = module.exports = Model.extend({
       query.joins.delivery_times.on['delivery_times.day'] = {
         $custom: [ 'delivery_times.day = extract( dow from $1 at time zone regions.timezone )', datetime ]
       };
+
+      // query.where['delivery_service_hours.day'] = {
+      //   $extract: {
+      //     field: 'dow'
+      //   , from: '$now()$'
+      //   , timezone: '$regions.timezone$'
+      //   }
+      // , $and: {
+      //     $extract: {
+      //       field: 'dow'
+      //     , from: formattedDateTime
+      //     , timezone: '$regions.timezone$'
+      //     }
+      //   }
+      // };
     }
 
     if (orderParams && orderParams.time) {
       query.joins.delivery_times.on['delivery_times.start_time'] = {$lte: orderParams.time};
       query.joins.delivery_times.on['delivery_times.end_time'] = {$gte: orderParams.time};
+
+      // query.joins.delivery_service_hours.on.start_time_now = {
+      //   $custom: ['(now()::time at time zone regions.timezone) >= delivery_service_hours.start_time']
+      // };
+
+      // query.joins.delivery_service_hours.on.start_time_order = {
+      //   $custom: ['($1::time at time zone regions.timezone) >= delivery_service_hours.start_time', orderParams.time ]
+      // };
+
+      // query.joins.delivery_service_hours.on.end_time_now = {
+      //   $custom: ['delivery_service_hours.end_time < (now()::time at time zone regions.timezone)']
+      // };
+
+      // query.joins.delivery_service_hours.on.end_time_order = {
+      //   $custom: ['delivery_service_hours.end_time < ($1::time at time zone regions.timezone)', orderParams.time ]
+      // };
     }
 
     query.columns.push((unacceptable.length) ? '('+unacceptable.join(' OR')+') as is_unacceptable' : '(false) as is_unacceptable');

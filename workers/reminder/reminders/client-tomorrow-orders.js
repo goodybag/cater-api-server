@@ -23,7 +23,7 @@ function getOrderQuery( storage ){
   return queries.orders.acceptedButNot(
     Object.keys( storage.lastNotified ).map( function( id ){
       return parseInt( id );
-    }).filter(function(id){ return id !== 2800 })
+    })
   );
 }
 

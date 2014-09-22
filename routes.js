@@ -896,10 +896,15 @@ module.exports.register = function(app) {
      *  User Orders resource.  All the orders placed by an individual user.
      */
 
-    app.get('/users/:uid/orders'
+    app.get('/users/:user_id/orders'
     // , controllers.users.listOrders
     // , m.restaurant( {param: 'restaurant_id'} )
-
+    , m.param('user_id')
+    , m.queryOptions({
+        one:  [ { table: 'restaurants', alias: 'restaurant' }
+              , { table: 'users', alias: 'user' }
+              ]
+      })
     , m.pagination({ pageParam: 'p' })
     , m.view( 'user-orders', db.orders )
     );

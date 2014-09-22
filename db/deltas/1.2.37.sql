@@ -20,4 +20,8 @@ begin
     add constraint "payment_summary_items_order_id_fkey" FOREIGN KEY (order_id)
       REFERENCES orders(id) on delete set null;
 
+  alter table password_resets
+    drop constraint if exists "password_resets_user_id_fkey",
+    add constraint "password_resets_user_id_fkey" FOREIGN KEY (user_id)
+      REFERENCES users(id) on delete cascade;
 end$$;

@@ -6,11 +6,12 @@
  *   on an order within a certain timeframe
  */
 
-var Models  = require('../../../models');
-var utils   = require('../../../utils');
-var config  = require('../../../config');
-var views   = require('../lib/views');
-var helpers = require('../../../public/js/lib/hb-helpers');
+var Models    = require('../../../models');
+var utils     = require('../../../utils');
+var config    = require('../../../config');
+var notifier  = require('../../../lib/order-notifier');
+var views     = require('../lib/views');
+var helpers   = require('../../../public/js/lib/hb-helpers');
 
 module.exports.name = 'Restaurant Action Timeframe';
 
@@ -31,31 +32,11 @@ module.exports.schema = {
 function notifyOrderFn( order ){
   return utils.partial( utils.async.parallelNoBail, {
     email: function( done ){
-      views.render( 'order-email/order-submitted-but-ignored', {
-        layout: 'email-layout'
-      , config: config
-      , order:  order.toJSON()
-      }, function( error, html ){
-        if ( error ) return done( error );
-
-        utils.sendMail2({
-          to:       module.exports.alertEmails
-        , from:     config.emails.orders
-        , html:     html
-
-        , subject:  [
-                      '[WARNING] Order #'
-                    , order.attributes.id
-                    , ' ($'
-                    , helpers.dollars( order.toJSON().total )
-                    , ') needs attention!'
-                    ].join('')
-        }, function( error ){
-          // If successful, we want an easy way to know on the receiving end
-          // So just pass back the original order object as the results
-          done( error, error ? null : order );
-        });
-      })
+      notifier.send( 'order-submitted-but-ignored', order.attributes.id function( error ){
+        // If successful, we want an easy way to know on the receiving end
+        // So just pass back the original order object as the results
+        done( error, error ? null : order );
+      });
     }
   });
 };

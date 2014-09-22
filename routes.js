@@ -897,14 +897,23 @@ module.exports.register = function(app) {
      */
 
     app.get('/users/:user_id/orders'
+    // , m.pagination({ pageParam: 'p' }) // todo: paging set up for users orders
     , m.param('user_id')
+    , m.param('status')
+    , m.param('type')
+    , m.sort('-id')
     , m.queryOptions({
         one:  [ { table: 'restaurants', alias: 'restaurant' }
               , { table: 'users', alias: 'user' }
               ]
       })
-    , m.sort('-id')
-    // , m.pagination({ pageParam: 'p' }) // todo: paging set up for users orders
+    , function( req, res, next ){
+        res.locals.status = req.param('status');
+        if ( req.param('status') == 'accepted' ){
+          req.queryOptions.statusDateSort = { status: req.param('status') };
+        }
+        return next();
+      }
     , m.view( 'user-orders', db.orders )
     );
 

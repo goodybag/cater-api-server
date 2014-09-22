@@ -32,6 +32,7 @@ config.defaults = {
 , deniedRecipients: [
     'jag@goodybag.com'
   , 'sarah.southwell@goodybag.com'
+  , 'christymedlock@goodybag.com'
   , 'om@goodybag.com'
   , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -40,6 +41,7 @@ config.defaults = {
 , deliveryServiceOrderAboveThresholdRecipients: [
     'jag@goodybag.com'
   , 'sarah.southwell@goodybag.com'
+  , 'christymedlock@goodybag.com'
   , 'om@goodybag.com'
   , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -520,6 +522,7 @@ config.production = {
   , rewards: [
       'jacobparker@goodybag.com'
     , 'sarahsouthwell@goodybag.com'
+    , 'christymedlock@goodybag.com'
     , 'jag@goodybag.com'
     , 'om@goodybag.com'
     , 'redemptions@goodybag.com'

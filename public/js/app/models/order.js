@@ -419,7 +419,7 @@ define(function(require, exports, module) {
         title: [
           Handlebars.helpers.timepart(this.get('datetime'))
         , '\n'
-        , Handlebars.helpers.truncate(this.get('restaurant_name'), 15)
+        , Handlebars.helpers.truncate(this.restaurant.get('name'), 15)
         ].join('')
       , start: this.get('datetime')
       , color: this.getStatusColor()

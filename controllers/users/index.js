@@ -133,18 +133,6 @@ module.exports.del = function(req, res) {
   });
 }
 
-module.exports.listOrders = function(req, res) {
-  var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : 'all';
-  models.Order.findByStatus({where: {user_id: req.params.uid}}, filter, function(err, orders) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.render('user-orders', {
-      orders: utils.invoke(orders, 'toJSON')
-    , hideUserDetails: true
-    , filter: filter
-    });
-  });
-}
-
 module.exports.createSessionAs = function(req, res) {
   var query = queries.user.get(req.params.uid, req.query.columns);
   var sql = db.builder.sql(query);

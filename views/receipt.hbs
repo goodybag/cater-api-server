@@ -86,9 +86,9 @@
         <div class="clearfix">
           <div class="delivery-header pull-left">
             {{order.restaurant.name}} [Order #{{order.id}}]
-            {{#if order.restaurant}}{{#unless isRestaurantManager}}
+            {{#unless order.restaurant.is_hidden}}{{#unless isRestaurantManager}}
             <a href="javascript:void(0);" class="copy-order-btn text-muted">Order Again?</a>
-            {{/unless}}{{/if}}
+            {{/unless}}{{/unless}}
           </div>
           {{#if isAdmin}}
           <div class="pull-right btn-group">

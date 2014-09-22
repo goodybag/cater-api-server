@@ -2,6 +2,7 @@ define(function(require){
   var Hbs           = require('handlebars');
   var async         = require('async');
   var utils         = require('utils');
+  var moment        = require('moment-timezone');
   var summary       = require('data/payment-summary');
   var items         = require('data/payment-summary-items');
   var orders        = require('data/orders');
@@ -69,6 +70,13 @@ define(function(require){
         }});
       });
 
+      utils.dom('[data-role="order-fetch"]').click( function( e ){
+        this.fetchOrders(
+          utils.dom('[name="order_from"]').val()
+        , utils.dom('[name="order_to"]').val()
+        );
+      }.bind( this ));
+
       utils.dom('#save-payment-summary-btn').click( function(){
         tableView.updateModels();
 
@@ -106,6 +114,21 @@ define(function(require){
       // When order_id changes, set the order on that mofo
       items.on( 'change:order_id', function( model, id ){
         model.set( 'order', orders.get( id ) );
+      });
+    }
+
+  , fetchOrders: function( from, to ){
+      orders.filter( function( order ){
+        var tz    = order.attributes.timezone;
+        var date  = moment( order.get('datetime') ).tz( tz );
+        
+        return moment( from ).tz( tz ) <= date && date <= moment( to ).tz( tz );
+      }).forEach( function( order ){
+        // Funky way of adding each item, but this ensures our previous
+        // way of propagating order changes on a record translates over nicely
+        var item = items.createModel();
+        items.add( item );
+        item.set( 'order_id', order.get('id') );
       });
     }
   });

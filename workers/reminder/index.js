@@ -8,6 +8,8 @@ var config    = require('../../config');
 var logger    = require('../../lib/logger').create('Worker-Reminder');
 var reminder  = require('./lib/reminder');
 
+require('../../lib/order-notifications');
+
 var dir = __dirname + '/reminders';
 
 var logError = function( error ){

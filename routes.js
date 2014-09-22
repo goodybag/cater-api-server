@@ -896,7 +896,13 @@ module.exports.register = function(app) {
      *  User Orders resource.  All the orders placed by an individual user.
      */
 
-    app.get('/users/:uid/orders', controllers.users.listOrders);
+    app.get('/users/:uid/orders'
+    // , controllers.users.listOrders
+    // , m.restaurant( {param: 'restaurant_id'} )
+
+    , m.pagination({ pageParam: 'p' })
+    , m.view( 'user-orders', db.orders )
+    );
 
     app.all('/users/:uid', function(req, res, next) {
       res.set('Allow', 'GET');

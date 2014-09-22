@@ -905,6 +905,7 @@ module.exports.register = function(app) {
               , { table: 'users', alias: 'user' }
               ]
       })
+    , m.sort('-id')
     , m.pagination({ pageParam: 'p' })
     , m.view( 'user-orders', db.orders )
     );

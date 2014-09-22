@@ -21,14 +21,14 @@ module.exports.schema = {
 
 function getQuery( storage ){
   var query = {
-    /*status: 'submitted'
-  , */id: 1000/*{
+    status: 'submitted'
+  , id: {
       $nin: {
         type:     'select'
       , table:    'order_notifications'
       , columns:  ['order_id']
       }
-    }*/
+    }
   };
 
   if ( Object.keys( storage.notified ).length > 0 ){

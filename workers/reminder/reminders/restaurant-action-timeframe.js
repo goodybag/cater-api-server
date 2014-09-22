@@ -32,7 +32,7 @@ module.exports.schema = {
 function notifyOrderFn( order ){
   return utils.partial( utils.async.parallelNoBail, {
     email: function( done ){
-      notifier.send( 'order-submitted-but-ignored', order.attributes.id function( error ){
+      notifier.send( 'order-submitted-but-ignored', order.attributes.id, function( error ){
         // If successful, we want an easy way to know on the receiving end
         // So just pass back the original order object as the results
         done( error, error ? null : order );

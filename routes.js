@@ -897,8 +897,6 @@ module.exports.register = function(app) {
      */
 
     app.get('/users/:user_id/orders'
-    // , controllers.users.listOrders
-    // , m.restaurant( {param: 'restaurant_id'} )
     , m.param('user_id')
     , m.queryOptions({
         one:  [ { table: 'restaurants', alias: 'restaurant' }
@@ -906,7 +904,7 @@ module.exports.register = function(app) {
               ]
       })
     , m.sort('-id')
-    , m.pagination({ pageParam: 'p' })
+    // , m.pagination({ pageParam: 'p' }) // todo: paging set up for users orders
     , m.view( 'user-orders', db.orders )
     );
 

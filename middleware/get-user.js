@@ -38,7 +38,7 @@ module.exports = function(req, res, next) {
     delete res.locals.user.password;
 
     req.logger.options.data.user = res.locals.user;
-    logger.info('Found User %s', user.attributes.name, { user: user });
+
     next();
   });
 }

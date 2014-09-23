@@ -11,5 +11,5 @@ if ( config.isDev ){
     console.error( error, error.stack );
   });
 
-  require('./workers/scheduler');
+  // forky( __dirname + '/workers/scheduler', 1 );
 }

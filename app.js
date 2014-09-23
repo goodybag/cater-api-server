@@ -34,7 +34,7 @@ app.configure(function(){
   // If our request times out, something must be wrong with
   // our server. Likely caught in some impossible condition,
   // so let's just kill the worker
-  app.use( middleware.timeout() );
+  // app.use( middleware.timeout() );
 
   app.use(express.favicon(__dirname + '/public/favicon.ico'));
   app.use(express.compress());

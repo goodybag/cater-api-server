@@ -103,6 +103,12 @@ module.exports.editability = function(req, res, next) {
 // }
 
 module.exports.get = function(req, res) {
+  var logger = req.logger.create('Controller-Get', {
+    data: { order_id: req.param('oid') }
+  });
+
+  logger.info('Get order');
+
   var tasks = [
     function(cb) {
       var query = {
@@ -118,26 +124,36 @@ module.exports.get = function(req, res) {
         ]
       , where: { id: parseInt(req.params.oid) }
       };
+
+      logger.info('Find order');
       models.Order.findOne(query, function(err, order) {
         if (err) return cb(err);
         if (!order) return cb(404);
+
+        logger = logger.create({
+          data: { order: order }
+        });
+
         return cb(null, order);
       });
     },
 
     function( order, cb ){
+      logger.info('Get restaurant');
       order.getRestaurant( function( error ){
         return cb( error, order );
       });
     },
 
     function(order, cb) {
+      logger.info('Get order items');
       order.getOrderItems(function(err, items) {
         return cb(err, order);
       });
     },
 
     function(order, cb) {
+      logger.info('Find user');
       var query = {
         where: { id: order.attributes.user_id },
         embeds: {
@@ -162,8 +178,12 @@ module.exports.get = function(req, res) {
   ];
 
   utils.async.waterfall(tasks, function(err, order, user) {
-    if (err)
+    if (err){
+      logger.error('waterfall error', { error: err });
       return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
+    }
+
+    logger.info('waterfall complete');
 
     // Redirect empty orders to item summary
     if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
@@ -230,6 +250,7 @@ module.exports.get = function(req, res) {
       context.layout = 'invoice/invoice-layout';
     }
 
+    logger.info('rendering %s', view, { context: context });
     res.render(view, context);
   });
 
@@ -347,24 +368,28 @@ module.exports.changeStatus = function(req, res) {
     }
 
     var done = function() {
+      logger.info('Done called');
       if (order.attributes.status === 'submitted') {
+        logger.info('Done called and status is submitted');
 
         // TODO: extract this address logic into address model
         // Save address based on this order's attributes
         var orderAddressFields = utils.pick(order.attributes, addressFields);
 
+        logger.info('Finding default address for user');
         // Set `is_default == true` if there's no default set
-        models.Address.find({ where: {user_id: req.session.user.id, is_default: true}}, function(error, addresses) {
+        db.addresses.findOne({user_id: req.session.user.id, is_default: true}, function(error, address) {
           if (error) return res.error(errors.internal.DB_FAILURE, error);
 
-          var noExistingDefault = !addresses.length;
+          var noExistingDefault = !address;
           var addressData = utils.extend(orderAddressFields, { user_id: req.session.user.id, is_default: noExistingDefault });
-          var address = new models.Address(addressData);
-          address.save(function(err, rows, result) {
 
-            // Db enforces unique addresses, so ignore 23505 UNIQUE VIOLATION
-            if (err && err.code !== '23505') return res.error(errors.internal.DB_FAILURE, err);
-          });
+          logger.info('Saving address');
+          if ( noExistingDefault ){
+            db.addresses.insert( addressData );
+          } else {
+            db.addresses.update( address.id, addressData );
+          }
         });
       }
 
@@ -394,7 +419,9 @@ module.exports.changeStatus = function(req, res) {
     if (review) order.attributes.token_used = 'now()';
 
     order.attributes.status = req.body.status;
+    logger.info('Saving order');
     order.save(function(err){
+      logger.info('Saving order complete!', err ? { error: err } : null);
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       return done();
     });

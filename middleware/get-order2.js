@@ -15,6 +15,7 @@ module.exports = function( options ){
   return function( req, res, next ){
     var logger = req.logger.create('Middleware-GetOrder2');
 
+    logger.info('Finding order');
     db.orders.findOne( +req.param( options.param ), function( error, order ){
       if ( error ){
         logger.error('error trying to find order #%s', req.params.id, error)

@@ -431,13 +431,13 @@ dirac.use( function( dirac ){
             type: 'array_to_json'
           , expression: {
               type: 'array'
-            , expression: {
+            , expression: utils.extend({
                 type: 'select'
               , alias: 'r'
               , table: data.target
               , columns: [{ type: 'row_to_json', expression: 'r' }]
-              , where: where
-              }
+              // Mixin regular query props like `where`, `joins`, etc.
+              }, utils.omit( data, ['table', 'alias', 'pivots', 'target', 'source'] ) )
             }
           }
         }
@@ -472,13 +472,16 @@ dirac.use( function( dirac ){
             });
           }
 
-          var col = options.tmpl({
+          var context = utils.extend({
             source:     table_name
           , target:     target.table
-          , where:      target.where
           , alias:      target.alias || target.table
           , pivots:     pivots
-          });
+          }, target );
+
+          context.alias = context.alias || target.table;
+
+          var col = options.tmpl( context );
 
           if ( !$query.columns ){
             $query.columns = ['*'];

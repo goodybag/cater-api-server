@@ -623,16 +623,23 @@ module.exports.register = function(app) {
   , controllers.orders.get
   );
 
-  app.all(/^\/orders\/(\d+)(?:\/.*)?$/
-  , function (req, res, next) {
-      req.params.id = req.params[0];
-      next();
-    }
-  , m.getOrder2({ param: 'id' })
-  , controllers.orders.auth
-  );
+  // app.all(/^\/orders\/(\d+)(?:\/.*)?$/
+  // , function (req, res, next) {
+  //     req.params.id = req.params[0];
+  //     next();
+  //   }
+  // , m.getOrder2({ param: 'id' })
+  // , controllers.orders.auth
+  // );
 
   app.get('/orders/:oid'
+  , m.getOrder2({
+      param: 'id'
+    , items: true
+    , userAddresses: true
+    , userPaymentMethods: true
+    })
+  , controllers.orders.auth
     // If they're using ?receipt=true, make sure we restrict the group
   , function(req, res, next){
       // If they were using a review_token we don't need to worry about it
@@ -1326,6 +1333,10 @@ module.exports.register = function(app) {
       one: [
         { table: 'users',       alias: 'user' }
       , { table: 'restaurants', alias: 'restaurant' }
+      ]
+    , many: [
+        { table: 'addresses', alias: 'user_addresses', where: { 'user_id': '$orders.user_id$' } }
+      , { table: 'users_payment_methods', alias: 'user_payment_methods', where: { 'user_id': '$orders.user_id$' }, joins: { payment_methods: { on: { id: '$users_payment_methods.payment_method_id$'} } } }
       ]
     })
   , m.findOne( db.orders )

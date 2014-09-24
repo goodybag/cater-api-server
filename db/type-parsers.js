@@ -12,18 +12,18 @@
 var pg = require('pg');
 var types = pg.types;
 
-var parsers = module.exports = {
-  timestamp: {
-    oid: 1114
+var parsers = module.exports = [
+  {
+    type: 'timestamp'
+  , oid: 1114
   , fn: function(val) {
       return val;
     }
   }
-};
+];
 
-var setTypeParser = function(type) {
-  var parser = parsers[type];
+var setTypeParser = function(parser) {
   types.setTypeParser(parser.oid, parser.fn);
 };
 
-Object.keys(parsers).forEach(setTypeParser);
+parsers.forEach(setTypeParser);

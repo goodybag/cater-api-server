@@ -16,6 +16,7 @@ var
 , path    = require('path')
 , helpers = require('./helpers')
 , Tx      = require('pg-transaction')
+, types   = require('./type-parsers')
 ;
 
 //apply the parse-float plugin to node-postgres

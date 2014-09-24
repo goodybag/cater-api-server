@@ -659,22 +659,6 @@ dirac.use( function( dirac ){
   });
 });
 
-// Coerces order datetime to text. 
-//
-// This prevents pg from parsing the datetime as a Date object with a 
-// timezone offset. We explicitly separate the timezone into another column 
-// so we just want the datetime in plain text.
-dirac.use( function( dirac ){
-  dirac.dals.orders.before( 'find', function( $query, schema, next ){
-    $query.columns  = $query.columns  || ['*'];
-    $query.columns.push({
-      expression: '("orders"."datetime"::text)'
-    , alias: 'datetime'
-    });
-    next();
-  });
-});
-
 // Order submitted date
 dirac.use( function( dirac ){
   dirac.dals.orders.before( 'find', function( $query, schema, next ){

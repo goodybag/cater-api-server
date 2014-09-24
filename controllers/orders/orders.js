@@ -128,11 +128,9 @@ module.exports.get = function(req, res) {
     }),
     show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
     states: states,
-    orderAddress: function() {
-      return {
-        address: order.toJSON(),
-        states: states
-      };
+    orderAddress: {
+      address: order,
+      states: states
     },
     orderParams: req.session.orderParams,
     query: req.query,

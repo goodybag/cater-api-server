@@ -656,9 +656,36 @@ module.exports.register = function(app) {
   , controllers.orders.get
   );
 
-  app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
+  app.put('/orders/:oid'
+  , m.restrict(['client', 'admin'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , controllers.orders.update
+  );
 
-  app.patch('/orders/:oid', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.editability, controllers.orders.update);
+  app.patch('/orders/:oid'
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , controllers.orders.editability
+  , controllers.orders.update
+  );
 
   app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
@@ -705,9 +732,32 @@ module.exports.register = function(app) {
    */
 
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
-  app.get('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.orderItems.summary);  // not currently used
+  app.get('/orders/:oid/items'
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , controllers.orders.orderItems.summary
+  );  // not currently used
 
   app.post('/orders/:oid/items'
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
   , m.editOrderAuth
   , m.exists('creatorId', {
       then: function(req, res, next) { next(); }
@@ -729,6 +779,16 @@ module.exports.register = function(app) {
   app.get('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
 
   app.put('/orders/:oid/items/:iid'
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
   , m.editOrderAuth
   , m.exists('creatorId', {
       then: function(req, res, next) { next(); }
@@ -738,7 +798,25 @@ module.exports.register = function(app) {
   , controllers.orders.orderItems.update
   );
 
-  app.patch('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.patch('/orders/:oid/items/:iid'
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , m.editOrderAuth
+  , m.exists('creatorId', {
+      then: function(req, res, next) { next(); }
+    , else: m.restrict(['client', 'admin'])
+    })
+  , controllers.orders.editability
+  , controllers.orders.orderItems.update
+  );
 
   app.del('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
 

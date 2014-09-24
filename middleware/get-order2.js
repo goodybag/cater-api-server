@@ -55,7 +55,7 @@ module.exports = function( options ){
         }
       });
 
-      $options.many.push({ table: 'upm', alias: 'user_addresses', where: { user_id: '$orders.user_id$' } })
+      $options.many.push({ table: 'upm', alias: 'user_payment_methods', where: { user_id: '$orders.user_id$' } })
     }
 
     logger.info('Finding order');
@@ -74,7 +74,7 @@ module.exports = function( options ){
       }
 
       if ( options.user )
-      if ( options.userPaymetnMethods ){
+      if ( options.userPaymentMethods ){
         order.user.payment_methods = order.user_payment_methods;
         delete order.user_payment_methods;
       }

@@ -1,0 +1,30 @@
+{{#extend "body"}}
+  <table cellpadding="0" cellspacing="0" style="width: 100%;">
+    <tr>
+      <td>
+        <table cellpadding="0" cellspacing="0" style="width: 100%;">
+          <tr>
+            <td style="width: 46%; padding-bottom: 22px;">
+              {{#is order.type 'pickup' 'courier'}}
+                {{> order_email_details_restaurant_pickup }}
+              {{else}}
+                {{> order_email_details_restaurant_delivery }}
+              {{/is}}
+            </td>
+            <td style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-left: 12px;">
+              <h1 style="line-height: 36px; margin-top: 0; margin-right: 0; margin-bottom: 10px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 28px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">This order is now for {{order.type}}!</h1>
+              <h2 style="line-height: 24px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
+                {{#is order.type 'pickup' 'courier'}}
+                  You are now responsible for preparing this order for pickup. Someone will come
+                  by to pickup at {{datepart order.pickup_datetime}} {{timepart order.pickup_datetime}}.
+                {{else}}
+                  You are now responsible for delivering this order. Hungry folks are counting on you!
+                {{/is}}
+              </h2>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+{{/extend}}

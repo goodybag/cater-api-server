@@ -377,7 +377,7 @@ module.exports.register = function(app) {
   /**
    * Restaurant copy
    */
-   
+
   app.get('/admin/restaurants/:restaurant_id/copy'
   , m.restrict('admin')
   , controllers.restaurants.copy
@@ -634,10 +634,13 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid'
   , m.getOrder2({
-      param: 'id'
-    , items: true
-    , userAddresses: true
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
     , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
     })
   , controllers.orders.auth
     // If they're using ?receipt=true, make sure we restrict the group
@@ -1330,13 +1333,27 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.queryOptions({
-      one: [
+      with: {
+        upm: {
+          type: 'select'
+        , table: 'users_payment_methods'
+        , columns: ['users_payment_methods.*', 'payment_methods.*']
+        , joins: {
+            payment_methods: {
+              type: 'left'
+            , on: { id: '$users_payment_methods.payment_method_id$' }
+            }
+          }
+        }
+      }
+    , one: [
         { table: 'users',       alias: 'user' }
       , { table: 'restaurants', alias: 'restaurant' }
       ]
     , many: [
-        { table: 'addresses', alias: 'user_addresses', where: { 'user_id': '$orders.user_id$' } }
-      , { table: 'users_payment_methods', alias: 'user_payment_methods', where: { 'user_id': '$orders.user_id$' }, joins: { payment_methods: { on: { id: '$users_payment_methods.payment_method_id$'} } } }
+        { table: 'order_items', alias: 'orderItems' }
+      , { table: 'addresses', alias: 'user_addresses', where: { 'user_id': '$orders.user_id$' } }
+      , { table: 'upm', alias: 'user_payment_methods', where: { 'user_id': '$orders.user_id$' } }
       ]
     })
   , m.findOne( db.orders )

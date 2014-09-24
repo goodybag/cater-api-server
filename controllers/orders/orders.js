@@ -29,7 +29,7 @@ var addressFields = [
  */
 module.exports.auth = function(req, res, next) {
   var logger = req.logger.create('Middleware-OrderAuth');
-  logger.info('auth for order #'+ req.params.id);
+  logger.info('auth for order #', req.order.id);
 
   if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
     req.order.isAdmin = true;
@@ -103,157 +103,74 @@ module.exports.editability = function(req, res, next) {
 // }
 
 module.exports.get = function(req, res) {
-  var logger = req.logger.create('Controller-Get', {
-    data: { order_id: req.param('oid') }
-  });
+  var logger = req.logger.create('Controller-Get');
 
-  logger.info('Get order');
+  var order = req.order;
 
-  var tasks = [
-    function(cb) {
-      var query = {
-        columns: ['*', 'submitted_date', {
-            alias: 'payment_method'
-          , expression: {
-              type: 'one'
-            , table: 'payment_methods'
-            , parenthesis: true
-            , where: { id: '$orders.payment_method_id$' }
-            }
-          }
-        ]
-      , where: { id: parseInt(req.params.oid) }
-      };
+  // Redirect empty orders to item summary
+  if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
 
-      logger.info('Find order');
-      models.Order.findOne(query, function(err, order) {
-        if (err) return cb(err);
-        if (!order) return cb(404);
+  var isReview = order.status === 'submitted'
+    && (req.query.review_token === order.review_token || req.order.isRestaurantManager)
+  ;
 
-        logger = logger.create({
-          data: { order: order }
-        });
-
-        return cb(null, order);
-      });
-    },
-
-    function( order, cb ){
-      logger.info('Get restaurant');
-      order.getRestaurant( function( error ){
-        return cb( error, order );
-      });
-    },
-
-    function(order, cb) {
-      logger.info('Get order items');
-      order.getOrderItems(function(err, items) {
-        return cb(err, order);
-      });
-    },
-
-    function(order, cb) {
-      logger.info('Find user');
-      var query = {
-        where: { id: order.attributes.user_id },
-        embeds: {
-          payment_methods: {}
-        , addresses: {
-            order: ['is_default desc', 'id asc']
-          , where: { user_id: order.attributes.user_id }
-          // Actually, we can probably just display this restriction client-side
-          // , where: {
-          //     zip: { $in: order.attributes.restaurant.delivery_zips }
-          //   }
-          }
-        }
-      };
-
-      models.User.find(query, function(err, results) {
-        if (err) return cb(err);
-
-        return cb(null, order, results[0]);
-      });
-    }
-  ];
-
-  utils.async.waterfall(tasks, function(err, order, user) {
-    if (err){
-      logger.error('waterfall error', { error: err });
-      return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
-    }
-
-    logger.info('waterfall complete');
-
-    // Redirect empty orders to item summary
-    if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
-
-    var isReview = order.attributes.status === 'submitted'
-      && (req.query.review_token === order.attributes.review_token || req.order.isRestaurantManager)
-    ;
-
-    user = user.toJSON();
-    user.addresses = utils.invoke(user.addresses, 'toJSON');
-
-    utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
-    var context = {
-      order: order.toJSON(),
-      isRestaurantReview: isReview,
+  utils.findWhere(states, {abbr: order.state || 'TX'}).default = true;
+  var context = {
+    order: order,
+    isRestaurantReview: isReview,
+    isOwner: req.order.isOwner,
+    isRestaurantManager: req.order.isRestaurantManager,
+    isAdmin: req.order.isAdmin,
+    isTipEditable: new models.Order( order ).isTipEditable({
       isOwner: req.order.isOwner,
       isRestaurantManager: req.order.isRestaurantManager,
       isAdmin: req.order.isAdmin,
-      isTipEditable: order.isTipEditable({
-        isOwner: req.order.isOwner,
-        isRestaurantManager: req.order.isRestaurantManager,
-        isAdmin: req.order.isAdmin,
-      }),
-      show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
-      states: states,
-      orderAddress: function() {
-        return {
-          address: order.toJSON(),
-          states: states
-        };
-      },
-      orderParams: req.session.orderParams,
-      query: req.query,
-      user: user,
-      step: order.attributes.status === 'pending' ? 2 : 3
-    };
+    }),
+    show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
+    states: states,
+    orderAddress: function() {
+      return {
+        address: order.toJSON(),
+        states: states
+      };
+    },
+    orderParams: req.session.orderParams,
+    query: req.query,
+    user: req.order.user,
+    step: order.status === 'pending' ? 2 : 3
+  };
 
-    // Put address grouped on order for convenience
-    context.order.address = utils.pick(
-      context.order,
-      ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
-    );
+  // Put address grouped on order for convenience
+  context.order.address = utils.pick(
+    context.order,
+    ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
+  );
 
-    // Decide where to show the `Thanks` message
-    if (moment(context.order.submitted_date).add('hours', 1) > moment())
-    if (req.session && req.session.user)
-    if (context.order.user_id == req.session.user.id){
-      context.showThankYou = true;
-    }
+  // Decide where to show the `Thanks` message
+  if (moment(context.order.submitted_date).add('hours', 1) > moment())
+  if (req.session && req.session.user)
+  if (context.order.user_id == req.session.user.id){
+    context.showThankYou = true;
+  }
 
-    // don't allow restaurant manager to edit orders
-    // in the future we will/should support this
-    if (req.order.isRestaurantManager)
-      context.order.editable = false;
+  // don't allow restaurant manager to edit orders
+  // in the future we will/should support this
+  if (req.order.isRestaurantManager)
+    context.order.editable = false;
 
-    // orders are always editable for an admin
-    if (req.order.isAdmin)
-      context.order.editable = true;
+  // orders are always editable for an admin
+  if (req.order.isAdmin)
+    context.order.editable = true;
 
-    var view = order.attributes.status === 'pending' ? 'checkout' : 'receipt';
+  var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
-    if (req.param('receipt')) {
-      view = 'invoice/receipt';
-      context.layout = 'invoice/invoice-layout';
-    }
+  if (req.param('receipt')) {
+    view = 'invoice/receipt';
+    context.layout = 'invoice/invoice-layout';
+  }
 
-    logger.info('rendering %s', view, { context: context });
-    res.render(view, context);
-  });
-
+  logger.info('rendering %s', view, { context: context });
+  res.render(view, context);
 }
 
 module.exports.create = function(req, res) {

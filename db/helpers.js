@@ -92,16 +92,12 @@ mosql.registerQueryType( 'one', [
 , '  limit 1'
 ].join(''));
 
-// Fix PG date parsing (`date` type not to be confused with something with a timezone)
-pg.types.setTypeParser( 1082, 'text', function( val ){
-  return new Date( val + ' 00:00:00' );
-});
-
 // Temporaray fix for http://github.com/goodybag/mongo-sql/issues/80
 mosql.registerConditionalHelper('$nin', { cascade: false }, function(column, set, values, collection){
   if (Array.isArray(set)) {
     return column + ' not in (' + set.map( function(val){
       return '$' + values.push( val );
+
     }).join(', ') + ')';
   }
 
@@ -435,9 +431,10 @@ dirac.use( function( dirac ){
                 type: 'select'
               , alias: 'r'
               , table: data.target
+              , where: where
               , columns: [{ type: 'row_to_json', expression: 'r' }]
               // Mixin regular query props like `where`, `joins`, etc.
-              }, utils.omit( data, ['table', 'alias', 'pivots', 'target', 'source'] ) )
+              }, utils.omit( data, ['table', 'alias', 'pivots', 'target', 'source', 'where'] ) )
             }
           }
         }
@@ -456,13 +453,17 @@ dirac.use( function( dirac ){
           var targetDal = dirac.dals[ target.table ];
 
           // Immediate dependency not met and not specifying how to get there
+          if ( targetDal )
           if ( !targetDal.dependencies[ table_name ] )
           if ( !target.where ){
             throw new Error( 'Table: `' + target.table + '` does not depend on `' + table_name + '`' );
+          } else if ( !targetDal && !target.where ){
+            throw new Error( 'Must specify how to relate table `' + table_name + '` to target `' + target.table + '`' );
           }
 
           var pivots = [];
 
+          if ( targetDal )
           if ( targetDal.dependencies[ table_name ] ){
              pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
               return {

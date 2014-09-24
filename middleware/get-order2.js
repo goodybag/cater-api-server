@@ -18,6 +18,7 @@ module.exports = function( options ){
     var $options = {
       one:  []
     , many: []
+    , with: []
     };
 
     if ( options.user ){
@@ -28,16 +29,33 @@ module.exports = function( options ){
       $options.one.push({ table: 'restaurants', alias: 'restaurant' });
     }
 
+    if ( options.deliveryService ){
+      $options.one.push({ table: 'delivery_services', alias: 'delivery_service' });
+    }
+
     if ( options.items ){
       $options.many.push({ table: 'order_items', alias: 'orderItems' })
     }
 
     if ( options.userAddresses ){
-      $options.many.push({ table: 'addresses', alias: 'user_addresses', where: { user_id: '$addresses.user_id$' } })
+      $options.many.push({ table: 'addresses', alias: 'user_addresses', where: { user_id: '$orders.user_id$' } })
     }
 
     if ( options.userPaymentMethods ){
-      
+      $options.with.push({
+        type: 'select'
+      , name: 'upm'
+      , table: 'users_payment_methods'
+      , columns: ['users_payment_methods.*', 'payment_methods.*']
+      , joins: {
+          payment_methods: {
+            type: 'left'
+          , on: { id: '$users_payment_methods.payment_method_id$' }
+          }
+        }
+      });
+
+      $options.many.push({ table: 'upm', alias: 'user_addresses', where: { user_id: '$orders.user_id$' } })
     }
 
     logger.info('Finding order');
@@ -49,8 +67,26 @@ module.exports = function( options ){
 
       if ( !order ) return res.render('404');
 
+      if ( options.user )
+      if ( options.userAddresses ){
+        order.user.addresses = order.user_addresses;
+        delete order.user_addresses;
+      }
+
+      if ( options.user )
+      if ( options.userPaymetnMethods ){
+        order.user.payment_methods = order.user_payment_methods;
+        delete order.user_payment_methods;
+      }
+
+      if ( options.restaurant )
+      if ( options.deliveryService ){
+        order.restaurant.delivery_service = order.delivery_service;
+      }
+
       req.order = order;
       res.locals.order = order;
+      req.logger.options.data.order = { id: order.id };
       next();
     });
   };

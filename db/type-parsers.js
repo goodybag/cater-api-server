@@ -3,7 +3,7 @@
  * parsing functions.
  * 
  * If you wanted you could convert all timestamps into moment
- * objects, you could. But that might not be a good idea.
+ * objects. But that might not be a good idea.
  *
  * OIDs can be found by
  * select oid, typname from pg_type where typtype = 'b' order by oid;

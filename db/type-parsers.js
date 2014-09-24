@@ -1,5 +1,6 @@
 /**
- * Configures custom pg type parsers
+ * Configures custom pg type parsers. Returns hash of data types and their
+ * parsing functions.
  * 
  * If you wanted you could convert all timestamps into moment
  * objects, you could. But that might not be a good idea.

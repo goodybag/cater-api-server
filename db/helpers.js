@@ -637,6 +637,11 @@ dirac.use( function( dirac ){
     , alias:  'status_date'
     });
 
+    $query.columns.push({
+      expression: '("orders"."datetime"::text)'
+    , alias: 'datetime'
+    });
+
     $query.with.push({
       name:     'statuses'
     , type:     'select'

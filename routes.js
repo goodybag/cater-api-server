@@ -1409,24 +1409,16 @@ module.exports.register = function(app) {
 
   app.get('/api/orders/:id'
   , m.restrict(['admin'])
-  , m.param('id')
-  , m.queryOptions({
-      one:  [ { table:  'restaurants', alias:  'restaurant'
-              , one:  [ { table: 'delivery_services', alias: 'delivery_service'
-                        , many: [ { table: 'delivery_service_zips', alias: 'zips' }
-                                ]
-                        }
-                      ]
-              , many: [ { table: 'restaurant_delivery_times', alias: 'delivery_times' }
-                      , { table: 'restaurant_hours', alias: 'hours_of_operation' }
-                      ]
-              }
-            ]
-      // Get items called `apple`
-    , many: [ { table: 'order_items', alias: 'items' }
-            ]
+  , m.getOrder2({
+      param:              'id'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
     })
-  , m.findOne( db.orders )
+  , function( req, res ){ res.json( req.order ); }
   );
 
   app.put('/api/orders/:id'

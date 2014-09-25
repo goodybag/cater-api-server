@@ -29,17 +29,17 @@ exports.builder = builder;
 pgQuery.connectionParameters = config.postgresConnStr;
 exports.query = pgQuery;
 
-setInterval(
-  function(){
-    logger.info( 'Pools', { pools: pg.pools.all } );
+// setInterval(
+//   function(){
+//     logger.info( 'Pools', { pools: pg.pools.all } );
 
-    Object.keys( pg.pools.all ).forEach( function( k ){
-      var pool = pg.pools.all[ k ];
-      logger.info('Available %s', pool.availableObjectsCount());
-    });
-  }
-, 5000
-);
+//     Object.keys( pg.pools.all ).forEach( function( k ){
+//       var pool = pg.pools.all[ k ];
+//       logger.info('Available %s', pool.availableObjectsCount());
+//     });
+//   }
+// , 5000
+// );
 
 exports.query2 = function(query, callback) {
   var sql = builder.sql(query);

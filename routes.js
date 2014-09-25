@@ -1411,28 +1411,20 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.queryOptions({
-      with: {
-        upm: {
-          type: 'select'
-        , table: 'users_payment_methods'
-        , columns: ['users_payment_methods.*', 'payment_methods.*']
-        , joins: {
-            payment_methods: {
-              type: 'left'
-            , on: { id: '$users_payment_methods.payment_method_id$' }
-            }
-          }
-        }
-      }
-    , one: [
-        { table: 'users',       alias: 'user' }
-      , { table: 'restaurants', alias: 'restaurant' }
-      ]
-    , many: [
-        { table: 'order_items', alias: 'orderItems' }
-      , { table: 'addresses', alias: 'user_addresses', where: { 'user_id': '$orders.user_id$' } }
-      , { table: 'upm', alias: 'user_payment_methods', where: { 'user_id': '$orders.user_id$' } }
-      ]
+      one:  [ { table:  'restaurants', alias:  'restaurant'
+              , one:  [ { table: 'delivery_services', alias: 'delivery_service'
+                        , many: [ { table: 'delivery_service_zips', alias: 'zips' }
+                                ]
+                        }
+                      ]
+              , many: [ { table: 'restaurant_delivery_times', alias: 'delivery_times' }
+                      , { table: 'restaurant_hours', alias: 'hours_of_operation' }
+                      ]
+              }
+            ]
+      // Get items called `apple`
+    , many: [ { table: 'order_items', alias: 'items' }
+            ]
     })
   , m.findOne( db.orders )
   );

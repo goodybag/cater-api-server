@@ -1108,11 +1108,6 @@ a.list-group-item .list-group-item-heading {
   padding: 10px;
 }
 
-.photos .jumbo {
-  position: relative;
-  padding: 10px;
-}
-
 .photos .tile {
   position: relative;
   float: left;
@@ -1123,12 +1118,11 @@ a.list-group-item .list-group-item-heading {
 .photos .tile.jumbo {
   position: relative;
   width: 100%;
-  padding: 10px;
 }
 
 .photos .tile h2 {
   position: absolute;
-  bottom: 10px;
+  bottom: 0;
   left: 10px;
   width: 100%;
   font-size: 15px;
@@ -1139,5 +1133,6 @@ a.list-group-item .list-group-item-heading {
   color: white;
   background: rgb(0, 0, 0); /* fallback color */
   background: rgba(0, 0, 0, 0.7);
-  padding: 10px; 
+  padding: 10px;
+  line-height: 36px;
 }

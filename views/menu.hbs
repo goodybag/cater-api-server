@@ -22,6 +22,9 @@
     </div>
     <ul class="nav nav-tabs menu-info-tabs">
       <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
+      {{#if photos.length}}
+      <li><a href="#photos" data-toggle="tab">Photos</a></li>
+      {{/if}}
       <li><a class="info-tab" href="#info" data-toggle="tab">Info</a></li>
       {{#if restaurant.yelp_data}}
       {{#if restaurant.yelp_data.review_count}}
@@ -36,9 +39,6 @@
         </a>
       </li>
       {{/if}}
-      {{/if}}
-      {{#if photos.length}}
-      <li><a href="#photos" data-toggle="tab">Photos</a></li>
       {{/if}}
       {{#contains user.groups "admin"}}
         <li><a href="/admin/restaurants/{{restaurant.id}}">Edit Restaurant</a></li>

@@ -157,7 +157,7 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
-      db.restaurant_photos.find({ restaurant_id: parseInt(req.params.rid) }, {orderBy: 'priority asc'}, callback);
+      db.restaurant_photos.find({ restaurant_id: parseInt(req.params.rid) }, {order: 'priority asc'}, callback);
     }
   ];
 

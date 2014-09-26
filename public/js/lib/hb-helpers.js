@@ -371,9 +371,8 @@ define(function(require, exports, module) {
       return utils.uuid();
     },
 
-    filepicker: function(url, width, height, fit){
+    filepicker: function(url, width, height){
       if (!url) return "";
-      fit = fit || 'crop';
 
       url = url.replace('www', 'cdn');
 

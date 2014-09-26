@@ -1103,6 +1103,11 @@ a.list-group-item .list-group-item-heading {
 /**
  * Photo gallery
  */
+
+#photos .panel-body {
+  padding: 10px;
+}
+
 .photos .jumbo {
   position: relative;
   padding: 10px;

@@ -37,6 +37,9 @@
       </li>
       {{/if}}
       {{/if}}
+      {{#if photos.length}}
+      <li><a href="#photos" data-toggle="tab">Photos</a></li>
+      {{/if}}
       {{#contains user.groups "admin"}}
         <li><a href="/admin/restaurants/{{restaurant.id}}">Edit Restaurant</a></li>
         <li><a href="/restaurants/{{restaurant.id}}/events">Calendar</a></li>
@@ -136,6 +139,10 @@
 
       <div class="tab-pane panel" id="reviews">
         <div class="panel-body">{{> menu_tab_reviews}}</div>
+      </div>
+
+      <div class="tab-pane panel" id="photos">
+        <div class="panel-body">{{> menu_photo_gallery}}</div>
       </div>
     </div>
   </div>

@@ -1,0 +1,30 @@
+{{#extend "css"}}
+
+{{/extend}}
+
+{{#if photos}}
+<div class="photos">
+  <div class="selected-photo">
+    {{#with defaultPhoto}}
+    <img class="img-rounded" src="{{filepicker url}}">
+    {{#if name}}<div>{{name}}</div>{{/if}}
+    {{/with}}
+  </div>
+  
+  {{#with defaultPhoto}}
+  <a target="_blank" href="{{url}}">
+    <div class="gallery-item selected">
+      <img class="img-rounded" src="{{filepicker url 100 100}}">
+    </div>
+  </a>
+  {{/with}}
+
+  {{#each photos}}
+  <a target="_blank" href="{{url}}">
+    <div class="gallery-item">
+      <img class="img-rounded" src="{{filepicker url 100 100}}">
+    </div>
+  </a>
+  {{/each}}
+</div>
+{{/if}}

@@ -1099,3 +1099,23 @@ a.list-group-item .list-group-item-heading {
 #order-search .search-results:empty {
   display: none;
 }
+
+/**
+ * Photo gallery
+ */
+.photos .selected-photo {
+}
+
+.photos .selected {
+  background-color: #ddd;
+}
+
+.photos .gallery-item {
+  float: left;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.photos .gallery-item > img {
+  border-radius: 5px;
+}

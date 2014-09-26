@@ -170,7 +170,7 @@ module.exports.get = function(req, res) {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
       defaultAddress:   results[2] ? results[2].toJSON() : null,
-      photos:           results[3].slice(1),
+      photos:           results[3],
       defaultPhoto:     results[3][0],
       orderParams:      orderParams
     }

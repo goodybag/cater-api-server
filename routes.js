@@ -614,23 +614,6 @@ module.exports.register = function(app) {
     })
   );
 
-  app.get(
-    config.receipt.orderRoute
-  , m.basicAuth()
-  , m.restrict(['admin', 'receipts'])
-  , m.getOrder2({
-      param:              'oid'
-    , items:              true
-    , user:               true
-    , userAddresses:      true
-    , userPaymentMethods: true
-    , restaurant:         true
-    , deliveryService:    true
-    })
-  , function(req, res, next){ req.params.receipt = true; next(); }
-  , controllers.orders.get
-  );
-
   // app.all(/^\/orders\/(\d+)(?:\/.*)?$/
   // , function (req, res, next) {
   //     req.params.id = req.params[0];
@@ -671,7 +654,7 @@ module.exports.register = function(app) {
   );
 
   app.patch('/orders/:oid'
-  , m.restrict(['client', 'restaurant', 'admin'])
+  , m.restrict(['client', 'order-restaurant', 'admin'])
   , m.getOrder2({
       param:              'oid'
     , items:              true
@@ -695,6 +678,23 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
+
+  app.get(
+    config.receipt.orderRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , function(req, res, next){ req.params.receipt = true; next(); }
+  , controllers.orders.get
+  );
 
   app.get('/receipts/order-:oid.pdf', m.s3({
     path:   '/' + config.receipt.fileName

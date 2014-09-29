@@ -50,13 +50,16 @@ module.exports.auth = function(req, res, next) {
   }
 
   // There was a review token, so this is likely a restaurant manager
-  if (reviewToken){
+  if (reviewToken === req.order.review_token){
     req.order.isRestaurantManager = true;
     req.user.attributes.groups.push('order-restaurant');
   }
 
-  req.user.attributes.groups.push('order-owner');
-  req.order.isOwner = true;
+  if ( req.user && req.user.attributes && req.user.attributes.id === req.order.user_id ){
+    req.user.attributes.groups.push('order-owner');
+    req.order.isOwner = true;
+  }
+
   next();
 };
 

@@ -1,7 +1,8 @@
-{{#if photos}}
+{{!-- This partial expects the context to be a list of photos --}}
+{{#if this}}
 <div class="photos">
 
-  {{#each photos}}
+  {{#each this}}
   {{#eq @index 0}}
   <div class="tile jumbo">
     <img src="{{filepicker url 718 350}}">

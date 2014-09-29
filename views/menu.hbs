@@ -142,7 +142,9 @@
       </div>
 
       <div class="tab-pane panel" id="photos">
+        {{#with restaurant.photos}}
         <div class="panel-body">{{> menu_photo_gallery}}</div>
+        {{/with}}
       </div>
     </div>
   </div>

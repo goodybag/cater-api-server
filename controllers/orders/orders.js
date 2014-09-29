@@ -252,6 +252,7 @@ module.exports.generateEditToken = function(req, res) {
 
 module.exports.changeStatus = function(req, res) {
   var logger = req.logger.create('Controller-OrderChangeStatus');
+
   logger.info('Attempt to change status', {
     order: { id: req.param('oid') }
   });
@@ -259,87 +260,83 @@ module.exports.changeStatus = function(req, res) {
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
 
+  var orderModel = new Order( req.order );
 
-  models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return logger.error('Error looking up order', err), res.error(errors.internal.DB_FAILURE, err);
-    if (!order) return res.send(404);
+  var previousStatus = req.order.status;
 
-    var previousStatus = order.attributes.status;
+  // if they're not an admin, check if the status change is ok.
+  if(!req.session.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {
+    if (!utils.contains(models.Order.statusFSM[req.order.status], req.body.status))
+      return res.send(403, 'Cannot transition from status '+ req.order.status + ' to status ' + req.body.status);
 
-    // if they're not an admin, check if the status change is ok.
-    if(!req.session.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {
-      if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
-        return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
+    var review = utils.contains(['accepted', 'denied'], req.body.status);
+    if (review && (req.body.review_token !== req.order.review_token || req.order.token_used != null))
+      return res.send(401, 'bad review token');
 
-      var review = utils.contains(['accepted', 'denied'], req.body.status);
-      if (review && (req.body.review_token !== order.attributes.review_token || order.attributes.token_used != null))
-        return res.send(401, 'bad review token');
+    if (req.body.status === 'submitted' && !order.isComplete())
+      return res.send(403, 'order not complete');
 
-      if (req.body.status === 'submitted' && !order.isComplete())
-        return res.send(403, 'order not complete');
+    if (req.body.status === 'submitted' && !order.toJSON().submittable)
+      return res.send(403, 'order not submittable');
+  }
 
-      if (req.body.status === 'submitted' && !order.toJSON().submittable)
-        return res.send(403, 'order not submittable');
-    }
+  var done = function() {
+    logger.info('Done called');
+    if (req.order.status === 'submitted') {
+      logger.info('Done called and status is submitted');
 
-    var done = function() {
-      logger.info('Done called');
-      if (order.attributes.status === 'submitted') {
-        logger.info('Done called and status is submitted');
+      // TODO: extract this address logic into address model
+      // Save address based on this order's attributes
+      var orderAddressFields = utils.pick(req.order, addressFields);
 
-        // TODO: extract this address logic into address model
-        // Save address based on this order's attributes
-        var orderAddressFields = utils.pick(order.attributes, addressFields);
+      logger.info('Finding default address for user');
+      // Set `is_default == true` if there's no default set
+      db.addresses.findOne({user_id: req.session.user.id, is_default: true}, function(error, address) {
+        if (error) return res.error(errors.internal.DB_FAILURE, error);
 
-        logger.info('Finding default address for user');
-        // Set `is_default == true` if there's no default set
-        db.addresses.findOne({user_id: req.session.user.id, is_default: true}, function(error, address) {
-          if (error) return res.error(errors.internal.DB_FAILURE, error);
+        var noExistingDefault = !address;
+        var addressData = utils.extend(orderAddressFields, { user_id: req.session.user.id, is_default: noExistingDefault });
 
-          var noExistingDefault = !address;
-          var addressData = utils.extend(orderAddressFields, { user_id: req.session.user.id, is_default: noExistingDefault });
-
-          logger.info('Saving address');
-          if ( noExistingDefault ){
-            db.addresses.insert( addressData );
-          } else {
-            db.addresses.update( address.id, addressData );
-          }
-        });
-      }
-
-      logger.info('Order status changed. #%s from `%s` to `%s`', req.params.oid, previousStatus, req.body.status, {
-        data: {
-          review_token: req.body.review_token
-        , order:        order.toJSON()
-        , from:         previousStatus
-        , to:           req.body.status
-        , notify:       req.query.notify
+        logger.info('Saving address');
+        if ( noExistingDefault ){
+          db.addresses.insert( addressData );
+        } else {
+          db.addresses.update( address.id, addressData );
         }
       });
-
-      res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
-
-      // If we are an admin and we received a ?notify=false then don't send notifications.
-      // Otherwise send the notification.
-      if (!(req.session.user
-        && req.order.isAdmin
-        && req.query.notify
-        && req.query.notify.toLowerCase() == 'false'
-      )) venter.emit('order:status:change', order, previousStatus);
     }
 
-    if (req.body.status === 'submitted' && order.attributes.user.is_invoiced) order.attributes.payment_status = 'invoiced';
-
-    if (review) order.attributes.token_used = 'now()';
-
-    order.attributes.status = req.body.status;
-    logger.info('Saving order');
-    order.save(function(err){
-      logger.info('Saving order complete!', err ? { error: err } : null);
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-      return done();
+    logger.info('Order status changed. #%s from `%s` to `%s`', req.params.oid, previousStatus, req.body.status, {
+      data: {
+        review_token: req.body.review_token
+      , order:        order.toJSON()
+      , from:         previousStatus
+      , to:           req.body.status
+      , notify:       req.query.notify
+      }
     });
+
+    res.send(201, {order_id: req.order.id, status: req.order.status});
+
+    // If we are an admin and we received a ?notify=false then don't send notifications.
+    // Otherwise send the notification.
+    if (!(req.session.user
+      && req.order.isAdmin
+      && req.query.notify
+      && req.query.notify.toLowerCase() == 'false'
+    )) venter.emit('order:status:change', order, previousStatus);
+  }
+
+  if (req.body.status === 'submitted' && req.order.user.is_invoiced) req.order.payment_status = 'invoiced';
+
+  if (review) req.order.token_used = 'now()';
+
+  req.order.status = req.body.status;
+  logger.info('Saving order');
+  order.save(function(err){
+    logger.info('Saving order complete!', err ? { error: err } : null);
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    return done();
   });
 };
 

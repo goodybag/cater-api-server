@@ -1099,3 +1099,40 @@ a.list-group-item .list-group-item-heading {
 #order-search .search-results:empty {
   display: none;
 }
+
+/**
+ * Photo gallery
+ */
+
+#photos .panel-body {
+  padding: 10px;
+}
+
+.photos .tile {
+  position: relative;
+  float: left;
+  width: 50%;
+  padding: 10px;
+}
+
+.photos .tile.jumbo {
+  position: relative;
+  width: 100%;
+}
+
+.photos .tile h2 {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  width: 100%;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.photos .tile h2 span {
+  color: white;
+  background: rgb(0, 0, 0); /* fallback color */
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  line-height: 36px;
+}

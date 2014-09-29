@@ -415,7 +415,6 @@ dirac.use( function( dirac ){
       data.pivots.forEach( function( p ){
         where[ p.target_col ] = '$' + mosqlUtils.quoteObject( p.source_col, data.source ) + '$';
       });
-console.log('one', data.qAlias);
 
       var main = utils.extend({
         type:     'select'
@@ -470,7 +469,7 @@ console.log('one', data.qAlias);
       }
 
       var context = utils.extend({
-        source:     target.qAlias || table_name
+        source:     target.source || table_name
       , target:     target.table
       , alias:      target.alias || target.table
       , pivots:     pivots
@@ -494,7 +493,7 @@ console.log('one', data.qAlias);
       data.pivots.forEach( function( p ){
         where[ p.target_col ] = '$' + mosqlUtils.quoteObject( p.source_col, data.source ) + '$';
       });
-console.log('many', data.qAlias);
+
       var main = utils.extend({
         type:     'select'
       , table:    data.target
@@ -503,12 +502,20 @@ console.log('many', data.qAlias);
       }, utils.omit( data, ['table', 'alias', 'pivots', 'target', 'source', 'where'] ));
 
       if ( Array.isArray( main.one ) ){
-        main.one.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
+        main.one.forEach( function( t ){
+          t.qAlias = t.qAlias || (data.qAlias + 'r');
+          t.source = data.qAlias;
+        });
+
         applyOne( main.table, main );
       }
 
       if ( Array.isArray( main.many ) ){
-        main.many.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
+        main.many.forEach( function( t ){
+          t.qAlias = t.qAlias || (data.qAlias + 'r');
+          t.source = data.qAlias;
+        });
+
         applyMany( main.table, main );
       }
 
@@ -553,7 +560,7 @@ console.log('many', data.qAlias);
       }
 
       var context = utils.extend({
-        source:     target.qAlias || table_name
+        source:     target.source || table_name
       , target:     target.table
       , alias:      target.alias || target.table
       , pivots:     pivots

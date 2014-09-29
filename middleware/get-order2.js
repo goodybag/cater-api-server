@@ -22,11 +22,45 @@ module.exports = function( options ){
     };
 
     if ( options.user ){
-      $options.one.push({ table: 'users', alias: 'user' });
+      var users = $options.one.push({
+        table: 'users'
+      , alias: 'user'
+      , many:  []
+      , one:   []
+      });
+
+      users = $options.one[ users - 1 ];
+
+      if ( options.userAddresses ){
+        users.many.push({ table: 'addresses' });
+      }
+
+      if ( options.userPaymentMethods ){
+        users.many.push({
+          table:    'users_payment_methods'
+        , columns:  [ 'users_payment_methods.*'
+                    , 'payment_methods.type'
+                    , 'payment_methods.uri'
+                    , 'payment_methods.data' ]
+        , alias:    'payment_methods'
+        , joins:    { payment_methods: {
+                        type: 'left'
+                      , on:   { id: '$users_payment_methods.payment_method_id$' }
+                      }
+                    }
+        });
+      }
     }
 
     if ( options.restaurant ){
-      $options.one.push({ table: 'restaurants', alias: 'restaurant' });
+      $options.one.push({
+        table:  'restaurants'
+      , alias:  'restaurant'
+      , one:    [ { table: 'regions', alias: 'region' } ]
+      , many:   [ { table: 'restaurant_delivery_times', 'delivery_times' }
+                , { table: 'restaurant_delivery_zips', 'delivery_zips' }
+                , { table: 'restaurant_lead_times', 'lead_times' } ]
+      });
     }
 
     if ( options.deliveryService ){
@@ -37,27 +71,6 @@ module.exports = function( options ){
       $options.many.push({ table: 'order_items', alias: 'orderItems' })
     }
 
-    if ( options.userAddresses ){
-      $options.many.push({ table: 'addresses', alias: 'user_addresses', where: { user_id: '$orders.user_id$' } })
-    }
-
-    if ( options.userPaymentMethods ){
-      $options.with.push({
-        type: 'select'
-      , name: 'upm'
-      , table: 'users_payment_methods'
-      , columns: ['users_payment_methods.*', 'payment_methods.*']
-      , joins: {
-          payment_methods: {
-            type: 'left'
-          , on: { id: '$users_payment_methods.payment_method_id$' }
-          }
-        }
-      });
-
-      $options.many.push({ table: 'upm', alias: 'user_payment_methods', where: { user_id: '$orders.user_id$' } })
-    }
-
     logger.info('Finding order');
     db.orders.findOne( +req.param( options.param ), $options, function( error, order ){
       if ( error ){
@@ -66,18 +79,6 @@ module.exports = function( options ){
       }
 
       if ( !order ) return res.render('404');
-
-      if ( options.user )
-      if ( options.userAddresses ){
-        order.user.addresses = order.user_addresses;
-        delete order.user_addresses;
-      }
-
-      if ( options.user )
-      if ( options.userPaymentMethods ){
-        order.user.payment_methods = order.user_payment_methods;
-        delete order.user_payment_methods;
-      }
 
       if ( options.restaurant )
       if ( options.deliveryService ){

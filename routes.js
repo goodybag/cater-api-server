@@ -618,7 +618,15 @@ module.exports.register = function(app) {
     config.receipt.orderRoute
   , m.basicAuth()
   , m.restrict(['admin', 'receipts'])
-  , function(req,res, next){ req.order = {}; next(); } // normally this would get added in orders.auth, but we don't hit that from here
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
   , function(req, res, next){ req.params.receipt = true; next(); }
   , controllers.orders.get
   );
@@ -705,7 +713,20 @@ module.exports.register = function(app) {
   );
 
   // people with restaurant review token can access this route.  leave auth to controllers.orders.auth.
-  app.post('/orders/:oid/status-history', controllers.orders.changeStatus);
+  app.post('/orders/:oid/status-history'
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , m.restrict(['admin', 'order-owner', 'order-restaurant'])
+  , controllers.orders.changeStatus
+  );
 
   app.all('/orders/:oid/status-history', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');

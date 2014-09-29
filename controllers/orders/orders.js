@@ -72,6 +72,7 @@ module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Get');
 
   var order = req.order;
+  var orderModel = new models.Order( order );
 
   // Redirect empty orders to item summary
   if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
@@ -80,61 +81,73 @@ module.exports.get = function(req, res) {
     && (req.query.review_token === order.review_token || req.order.isRestaurantManager)
   ;
 
-  utils.findWhere(states, {abbr: order.state || 'TX'}).default = true;
-  var context = {
-    order: order,
-    isRestaurantReview: isReview,
-    isOwner: req.order.isOwner,
-    isRestaurantManager: req.order.isRestaurantManager,
-    isAdmin: req.order.isAdmin,
-    isTipEditable: new models.Order( order ).isTipEditable({
+  utils.async.waterfall([
+    // Can't yet rely on order.restaurant to have all of the right info
+    // in the legacy formats
+    orderModel.getRestaurant.bind( orderModel )
+  ], function( error, restaurant ){
+    if ( error ){
+      return res.error(errors.internal.DB_FAILURE, err);
+    }
+
+    order.restaurant = restaurant.toJSON();
+
+    utils.findWhere(states, {abbr: order.state || 'TX'}).default = true;
+    var context = {
+      order: order,
+      isRestaurantReview: isReview,
       isOwner: req.order.isOwner,
       isRestaurantManager: req.order.isRestaurantManager,
       isAdmin: req.order.isAdmin,
-    }),
-    show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
-    states: states,
-    orderAddress: {
-      address: order,
-      states: states
-    },
-    orderParams: req.session.orderParams,
-    query: req.query,
-    user: req.order.user,
-    step: order.status === 'pending' ? 2 : 3
-  };
+      isTipEditable: new models.Order( order ).isTipEditable({
+        isOwner: req.order.isOwner,
+        isRestaurantManager: req.order.isRestaurantManager,
+        isAdmin: req.order.isAdmin,
+      }),
+      show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
+      states: states,
+      orderAddress: {
+        address: order,
+        states: states
+      },
+      orderParams: req.session.orderParams,
+      query: req.query,
+      user: req.order.user,
+      step: order.status === 'pending' ? 2 : 3
+    };
 
-  // Put address grouped on order for convenience
-  context.order.address = utils.pick(
-    context.order,
-    ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
-  );
+    // Put address grouped on order for convenience
+    context.order.address = utils.pick(
+      context.order,
+      ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
+    );
 
-  // Decide where to show the `Thanks` message
-  if (moment(context.order.submitted_date).add('hours', 1) > moment())
-  if (req.session && req.session.user)
-  if (context.order.user_id == req.session.user.id){
-    context.showThankYou = true;
-  }
+    // Decide where to show the `Thanks` message
+    if (moment(context.order.submitted_date).add('hours', 1) > moment())
+    if (req.session && req.session.user)
+    if (context.order.user_id == req.session.user.id){
+      context.showThankYou = true;
+    }
 
-  // don't allow restaurant manager to edit orders
-  // in the future we will/should support this
-  if (req.order.isRestaurantManager)
-    context.order.editable = false;
+    // don't allow restaurant manager to edit orders
+    // in the future we will/should support this
+    if (req.order.isRestaurantManager)
+      context.order.editable = false;
 
-  // orders are always editable for an admin
-  if (req.order.isAdmin)
-    context.order.editable = true;
+    // orders are always editable for an admin
+    if (req.order.isAdmin)
+      context.order.editable = true;
 
-  var view = order.status === 'pending' ? 'checkout' : 'receipt';
+    var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
-  if (req.param('receipt')) {
-    view = 'invoice/receipt';
-    context.layout = 'invoice/invoice-layout';
-  }
+    if (req.param('receipt')) {
+      view = 'invoice/receipt';
+      context.layout = 'invoice/invoice-layout';
+    }
 
-  logger.info('rendering %s', view, { context: context });
-  res.render(view, context);
+    logger.info('rendering %s', view, { context: context });
+    res.render(view, context);
+  });
 }
 
 module.exports.create = function(req, res) {
@@ -226,8 +239,6 @@ module.exports.changeStatus = function(req, res) {
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
 
-  var orderModel = new models.Order( req.order );
-
   var previousStatus = req.order.status;
 
   // if they're not an admin, check if the status change is ok.
@@ -275,7 +286,6 @@ module.exports.changeStatus = function(req, res) {
     logger.info('Order status changed. #%s from `%s` to `%s`', req.params.oid, previousStatus, req.body.status, {
       data: {
         review_token: req.body.review_token
-      , order:        order.toJSON()
       , from:         previousStatus
       , to:           req.body.status
       , notify:       req.query.notify
@@ -284,22 +294,24 @@ module.exports.changeStatus = function(req, res) {
 
     res.send(201, {order_id: req.order.id, status: req.order.status});
 
-    // If we are an admin and we received a ?notify=false then don't send notifications.
-    // Otherwise send the notification.
-    if (!(req.session.user
+     if (!(req.session.user
       && req.order.isAdmin
       && req.query.notify
       && req.query.notify.toLowerCase() == 'false'
-    )) venter.emit('order:status:change', order, previousStatus);
+    )) venter.emit('order:status:change', new models.Order( req.order ), previousStatus), console.log('EMITTED GOD DAMN');
   }
 
-  if (req.body.status === 'submitted' && req.order.user.is_invoiced) req.order.payment_status = 'invoiced';
+  var $update = {
+    status: req.body.status
+  };
 
-  if (review) req.order.token_used = 'now()';
+  if (req.body.status === 'submitted' && req.order.user.is_invoiced) $update.payment_status = 'invoiced';
+
+  if (review) $update.token_used = 'now()';
 
   req.order.status = req.body.status;
   logger.info('Saving order');
-  order.save(function(err){
+  db.orders.update( req.order.id, $update, function(err){
     logger.info('Saving order complete!', err ? { error: err } : null);
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     return done();

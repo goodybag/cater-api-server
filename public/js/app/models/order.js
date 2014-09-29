@@ -19,13 +19,11 @@ define(function(require, exports, module) {
         type: 'object',
         properties: {
           user_id: {
-            type: 'string',
-            minLength: 1,
+            type: ['string', 'integer'],
             required: true
           },
           restaurant_id: {
-            type: 'string',
-            minLength: 1,
+            type: ['string', 'integer'],
             required: true
           },
           guests: {

@@ -18,6 +18,7 @@ var
 , rollbar = require("rollbar")
 , Handlebars = require('hbs')
 , moment = require('moment-timezone')
+, mandrill = require('mandrill-api/mandrill')
 
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async}, require('./public/js/lib/utils'))
@@ -268,6 +269,7 @@ utils.del = function(url, callback){
 };
 
 var mailgun = new Mailgun(config.mailgun.apiKey);
+mandrill = new mandrill.Mandrill(config.mandrill.apiKey);
 
 /**
  * Send mail. Why are there two versions? Because sendMail1
@@ -322,8 +324,20 @@ utils.sendMail2 = function( options, callback ){
   composer.buildMessage( function( error, message ){
     if ( error ) return callback( error );
 
-    mailgun.sendRaw( options.from, options.to, message, callback );
+    utils.sendRawEmail( options.from, options.to, message, callback );
   });
+};
+
+utils.sendRawEmail = function( from, to, text, callback ){
+  if ( config.emailProvider === 'mailgun' ){
+    mailgun.sendRaw( options.from, options.to, message, callback );
+  } else if ( config.emailProvider === 'mandrill' ){
+    mandrill.messages.sendRaw({
+      from_email: from
+    , to: Array.isArray( to ) ? to : [ to ]
+    , raw_message: text
+    }, function( result ){ callback( null, result ); }, callback );
+  }
 };
 
 utils.sendMail = function(to, from, subject, html, text, callback) {

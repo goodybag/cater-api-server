@@ -59,8 +59,8 @@ var debitCustomer = function (order, callback) {
 };
 
 var task = function (message, callback) {
+  var d = process.domain;
   if (!message) return callback();
-
   var logger = process.domain.logger.create('task', {
     data: { message: message }
   });
@@ -81,7 +81,7 @@ var task = function (message, callback) {
     , { table: 'users', alias: 'user' }
     ]
   };
-  db.orders.findOne( body.order.id, $options, function(error, order) {
+  db.orders.findOne( body.order.id, $options, d.bind(function(error, order) {
     if ( error ) return logger.create('DB').error({error: error}), callback(error);
     if ( !order ) return utils.queues.debit.del(message.id, utils.noop), callback();
     if (_.contains(['invoiced', 'paid', 'ignore'], order.payment_status)) return utils.queues.debit.del(message.id, utils.noop), callback();
@@ -95,7 +95,6 @@ var task = function (message, callback) {
         logger.error('checkForExistingDebit - attempt to process this from the queue again later', { error: error });
         return callback(error);
       }
-      if (error)
 
       if (debit) {
         logger.info('found existing debit for order: ' + order.id, { order: order });
@@ -111,14 +110,14 @@ var task = function (message, callback) {
       // if the status is processing there is no need to set the payment status to processing again
       if (order.payment_status != 'processing') {
         var $update = { payment_status: 'processing' };
-        db.orders.update( order.id, $update, function(error) {
+        db.orders.update( order.id, $update, d.bind(function(error) {
           if (error) return logger.create('DB').error({error: error}), callback(error);
           debitCustomer(order, function (error) {
             utils.queues.debit.del(message.id, utils.noop);
             if (error) logger.create('DB').error({error: error});
             return callback(error);
           });
-        });
+        }));
       } else {
         debitCustomer(order, function (error) {
           utils.queues.debit.del(message.id, utils.noop);
@@ -127,7 +126,7 @@ var task = function (message, callback) {
         });
       }
     });
-  });
+  }));
 };
 
 var worker = function (message, callback) {
@@ -147,6 +146,7 @@ var done = function (error) {
   if (!error) return;
   console.log(error);
   console.log(error.stack);
+  logger.error({ error: error });
   utils.rollbar.reportMessage(error);
 };
 

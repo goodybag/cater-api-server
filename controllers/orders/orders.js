@@ -44,20 +44,18 @@ module.exports.auth = function(req, res, next) {
     && req.user.attributes.restaurant_ids
     && utils.contains(req.user.attributes.restaurant_ids, req.order.restaurant_id)
   ) {
+    req.user.attributes.groups.push('order-restaurant');
     req.order.isRestaurantManager = true;
     return next();
   }
 
-  if (req.order.user_id !== (req.session.user||0).id &&
-      req.order.review_token !== reviewToken &&
-      req.order.edit_token !== editToken)
-    return res.status(404).render('404');
-
   // There was a review token, so this is likely a restaurant manager
   if (reviewToken){
     req.order.isRestaurantManager = true;
+    req.user.attributes.groups.push('order-restaurant');
   }
 
+  req.user.attributes.groups.push('order-owner');
   req.order.isOwner = true;
   next();
 };
@@ -69,38 +67,6 @@ module.exports.editability = function(req, res, next) {
   var editable = isTipEdit || req.order.isAdmin || utils.contains(['pending', 'submitted'], req.order.status);
   return editable ? next() : res.json(403, 'order not editable');
 };
-
-// module.exports.get = function(req, res) {
-//   models.Order.findOne(parseInt(req.params.oid), function(error, order) {
-//     if (error) return res.error(errors.internal.DB_FAILURE, error);
-//     if (!order) return res.status(404).render('404');
-//     order.getOrderItems(function(err, items) {
-//       if (err) return res.error(errors.internal.DB_FAILURE, err);
-
-//       var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
-//       var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
-//       utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
-//       var context = {
-//         order: order.toJSON(),
-//         restaurantReview: review,
-//         owner: isOwner,
-//         admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
-//         states: states,
-//         orderParams: req.session.orderParams,
-//         query: req.query
-//       };
-
-//       // orders are always editable for an admin
-//       if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
-//         context.order.editable = true;
-
-//       res.render('order', context, function(err, html) {
-//         if (err) return res.error(errors.internal.UNKNOWN, err);
-//         res.send(html);
-//       });
-//     });
-//   });
-// }
 
 module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Get');
@@ -260,7 +226,7 @@ module.exports.changeStatus = function(req, res) {
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
 
-  var orderModel = new Order( req.order );
+  var orderModel = new models.Order( req.order );
 
   var previousStatus = req.order.status;
 

@@ -643,16 +643,7 @@ module.exports.register = function(app) {
     , deliveryService:    true
     })
   , controllers.orders.auth
-    // If they're using ?receipt=true, make sure we restrict the group
-  , function(req, res, next){
-      // If they were using a review_token we don't need to worry about it
-      // since the controllers.orders.auth middleware would have taken care of it
-      if (req.param('review_token') && !req.param('receipt')) return next();
-
-      return (
-        m.restrict(!req.param('receipt') ? ['admin', 'restaurant', 'client'] : ['admin', 'restaurant', 'receipts'])
-      )(req, res, next);
-    }
+  , m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant'])
   , controllers.orders.get
   );
 
@@ -708,7 +699,10 @@ module.exports.register = function(app) {
    *  Order status resource.  The collection of all statuses on a single order.
    */
 
-  app.get('/orders/:oid/status-history', m.restrict(['client', 'admin']), controllers.orders.listStatus); // latest is on order.  not currently used.
+  app.get('/orders/:oid/status-history'
+  , m.restrict(['client', 'admin'])
+  , controllers.orders.listStatus
+  );
 
   // people with restaurant review token can access this route.  leave auth to controllers.orders.auth.
   app.post('/orders/:oid/status-history', controllers.orders.changeStatus);

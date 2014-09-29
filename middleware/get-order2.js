@@ -57,9 +57,9 @@ module.exports = function( options ){
         table:  'restaurants'
       , alias:  'restaurant'
       , one:    [ { table: 'regions', alias: 'region' } ]
-      , many:   [ { table: 'restaurant_delivery_times', 'delivery_times' }
-                , { table: 'restaurant_delivery_zips', 'delivery_zips' }
-                , { table: 'restaurant_lead_times', 'lead_times' } ]
+      , many:   [ { table: 'restaurant_delivery_times', alias: 'delivery_times' }
+                , { table: 'restaurant_delivery_zips', alias: 'delivery_zips' }
+                , { table: 'restaurant_lead_times', alias: 'lead_times' } ]
       });
     }
 

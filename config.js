@@ -20,6 +20,8 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, emailProvider: 'mandrill'
+
 , tmpDir: './tmp'
 
 , geoipUrl: 'http://freegeoip.net/json/:ip'
@@ -186,6 +188,10 @@ config.defaults = {
 , mailgun: {
     apiKey: 'key-8ffj79wzb2dda3s6r7u93o4yz07oxxu8'
   , publicApiKey: 'pubkey-45a1-ynm6dw4tmk8egc6izhgqntwir79'
+  }
+
+, mandrill: {
+    apiKey: 'dpZRzRo0ZAIpfAAQ2JL5pg'
   }
 
 , twilio: {

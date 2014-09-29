@@ -8,15 +8,16 @@ var
   config = require('../config')
 
   // Database
-, pg = require('pg')
-, pgQuery = require('pg-query')
-, builder = require('mongo-sql')
-, dirac   = require('dirac')
-, fs      = require('fs')
-, path    = require('path')
-, helpers = require('./helpers')
-, Tx      = require('pg-transaction')
-, logger  = require('../lib/logger').create('DB')
+, pg            = require('pg')
+, pgQuery       = require('pg-query')
+, builder       = require('mongo-sql')
+, dirac         = require('dirac')
+, fs            = require('fs')
+, path          = require('path')
+, helpers       = require('./helpers')
+, Tx            = require('pg-transaction')
+, typeParsers   = require('./type-parsers')
+, logger        = require('../lib/logger').create('DB')
 ;
 
 //apply the parse-float plugin to node-postgres

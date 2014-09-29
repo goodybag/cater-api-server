@@ -102,7 +102,7 @@ define(function(require, exports, module) {
 
           var errors = {
               property: 'card_number'
-            , message: res.error.additional
+            , message: res.error.additional || res.error.security_code
           };
 
           return callback ? callback( errors ) : notify.error( errors );

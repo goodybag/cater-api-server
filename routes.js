@@ -999,9 +999,12 @@ module.exports.register = function(app) {
      *  User Orders resource.  All the orders placed by an individual user.
      */
 
-    app.get('/users/:user_id/orders'
+    app.get('/users/:uid/orders'
     // , m.pagination({ pageParam: 'p' }) // todo: paging set up for users orders
-    , m.param('user_id')
+    , m.param('uid', function(user_id, $query, options) {
+        $query.where = $query.where || {};
+        $query.where.user_id = user_id;
+      })
     , m.param('status')
     , m.param('type')
     , m.sort('-id')

@@ -24,6 +24,7 @@ define(function(require) {
   , timezone:           { type: types.text, nullable: false }
   , sales_tax:          { type: types.numeric( 5, 5 ), nullable: false, default: 0 }
   , lead_time_modifier: { type: types.interval, nullable: false, default: '\'0 minutes\'::interval' }
+  , is_hidden:          { type: types.boolean, default: false }
   };
 
   definition.indices = {};

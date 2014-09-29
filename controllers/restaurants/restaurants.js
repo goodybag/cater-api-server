@@ -143,6 +143,27 @@ module.exports.get = function(req, res) {
         }
       });
 
+      query.columns.push({
+        alias: 'photos'
+      , expression: {
+          parenthesis: true
+        , expression: {
+            type: 'array_to_json'
+          , expression: {
+              type: 'array'
+            , expression: {
+                type: 'select'
+              , alias: 'p'
+              , table: 'restaurant_photos'
+              , columns: [{ type: 'row_to_json', expression: 'p' }]
+              , order: 'priority asc'
+              , where: { restaurant_id: '$restaurants.id$' }
+              }
+            }
+          }
+        }
+      });
+
       models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');
@@ -154,10 +175,6 @@ module.exports.get = function(req, res) {
 
     function(callback) {
       models.Address.findOne({where: { user_id: userId, is_default: true }}, callback);
-    },
-
-    function(callback) {
-      db.restaurant_photos.find({ restaurant_id: parseInt(req.params.rid) }, {order: 'priority asc'}, callback);
     }
   ];
 
@@ -170,7 +187,6 @@ module.exports.get = function(req, res) {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
       defaultAddress:   results[2] ? results[2].toJSON() : null,
-      photos:           results[3],
       orderParams:      orderParams
     }
 

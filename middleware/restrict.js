@@ -1,3 +1,7 @@
+/**
+ * Restrict
+ */
+
 var utils = require('../utils');
 
 module.exports = function(groups) {
@@ -6,33 +10,20 @@ module.exports = function(groups) {
     var logger = req.logger.create('Middleware-Restrict');
     logger.info('Checking groups');
 
-    if (req.creatorId){
-      logger.info('Request has `creatorId` field, skipping group check', {
-        creatorId: req.creatorId
-      });
+    if (utils.intersection(req.user.attributes.groups, groups).length === 0){
+      // Not logged in at all? Redirect
+      if (!req.user.attributes.id){
+        logger.info('User not logged in, redirecting to', '/login?next=' + req.url);
+        return res.redirect('/login?next=' + req.url);
+      }
 
-      next();
-    }
-    else if (req.order && req.order.isOwner){
-      logger.info('Request has `order` field and `isOwner` is true, skipping group check');
-      next();
-    }
-    // else if (req.user == null || req.user.attributes.id == null){
-    //   logger.info('User not logged in, redirecting to login', {
-    //     redirectUrl: '/login?next=' + req.url
-    //   });
-
-    //   res.redirect('/login?next=' + req.url);
-    // }
-    else if (utils.intersection(req.user.attributes.groups, groups).length === 0){
       logger.warn('User attempting to access restricted resource. Sending `404`', {
         groupsRequired: groups
       });
 
-      res.send(404);
+      return res.send(404);
     }
-    else {
-      next();
-    }
+
+    return next();
   }
 }

@@ -62,5 +62,6 @@ __`def` Properties:__
   type            - Category of notification, i.e. "submitted"
   description     - Description of the notification
   requiredOptions - Properties that are required to exist on `options`
+  format          - One of 'text' | 'email' | 'phone' (default 'email')
 }
 ```

@@ -49,14 +49,10 @@ module.exports.list = function(req, res) {
 module.exports.current = function(req, res, next) {
   var where = {restaurant_id: req.params.rid, 'orders.status': 'pending'};
 
-  where.$or = {};
-
-  if ( req.user.attributes.id ){
-    where.$or.user_id = req.user.attributes.id;
-  }
-
   if ( req.param('edit_token') || req.body.edit_token ){
-    where.$or.edit_token = req.param('edit_token') || req.body.edit_token;
+    where.edit_token = req.param('edit_token') || req.body.edit_token;
+  } else {
+    where.user_id = req.user.attributes.id;
   }
 
   db.orders.findOne(where, function(err, order) {

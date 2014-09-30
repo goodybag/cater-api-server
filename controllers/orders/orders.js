@@ -102,7 +102,7 @@ module.exports.get = function(req, res) {
       isOwner: req.order.isOwner,
       isRestaurantManager: req.order.isRestaurantManager,
       isAdmin: req.order.isAdmin,
-      isTipEditable: new models.Order( order ).isTipEditable({
+      isTipEditable: orderModel.isTipEditable({
         isOwner: req.order.isOwner,
         isRestaurantManager: req.order.isRestaurantManager,
         isAdmin: req.order.isAdmin,

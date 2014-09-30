@@ -47,13 +47,24 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.current = function(req, res, next) {
-  if ( !req.session.user && !req.creatorId ) return next();
-  var where = {restaurant_id: req.params.rid, user_id: req.creatorId || req.session.user.id, 'orders.status': 'pending'};
-  models.Order.findOne({where: where}, function(err, order) {
+  var where = {restaurant_id: req.params.rid, 'orders.status': 'pending'};
+
+  where.$or = {};
+
+  if ( req.user.attributes.id ){
+    where.$or.user_id = req.user.attributes.id;
+  }
+
+  if ( req.param('edit_token') || req.body.edit_token ){
+    where.$or.edit_token = req.param('edit_token') || req.body.edit_token;
+  }
+
+  db.orders.findOne(where, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 
     if (order) {
-      req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.attributes.id);
+      req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.id);
+      req.order = order;
     }
 
     next();

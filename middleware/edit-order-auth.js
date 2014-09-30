@@ -15,7 +15,7 @@ module.exports = function(req, res, next) {
   var token = req.query.edit_token || req.body.edit_token;
   delete req.body.edit_token;
 
-  var logger = req.logger.create('EditOrderAuth', {
+  var logger = req.logger.create('Middleware-EditOrderAuth', {
     data: { token: token }
   });
 
@@ -30,6 +30,12 @@ module.exports = function(req, res, next) {
     return next();
   }
 
+  // Incorrect token? Do nothing and let the restrict middleware
+  // do its thing
+  if ( req.order.edit_token !== token ){
+    return next();
+  }
+
   if ( utils.contains(statuses, order.status) ){
     return res.render('shared-link/submitted');
   }
@@ -40,5 +46,6 @@ module.exports = function(req, res, next) {
 
   req.creatorId = order.user_id;
   res.locals.edit_token = token;
+  req.user.attributes.groups.push('order-editor');
   next();
 };

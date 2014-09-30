@@ -62,7 +62,7 @@ __`def` Properties:__
   type            - Category of notification, i.e. "submitted"
   description     - Description of the notification
   requiredOptions - Properties that are required to exist on `options`
-  format          - One of 'text' | 'email' | 'phone' (default 'email')
+  format          - One of 'text' | 'email' | 'voice' (default 'email')
 }
 ```
 
@@ -110,7 +110,6 @@ notifier.register({
     var viewOptions = {
       layout: false
     , order: order
-    , url: 'www.lolpoop.com'
     };
 
     var sms = {

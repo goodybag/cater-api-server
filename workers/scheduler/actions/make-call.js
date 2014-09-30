@@ -1,6 +1,6 @@
 var config  = require('../../../config');
-var twilio  = require('twilio')(config.twilio.account, config.twilio.token);
 var slogger = require('../logger');
+var notifier = require('../../../lib/order-notifier');
 
 module.exports = function(job, done) {
   var logger = slogger.create('MakeCall', {
@@ -8,11 +8,5 @@ module.exports = function(job, done) {
   });
 
   logger.info('Making call');
-
-  twilio.makeCall(job.data, function(error) {
-    if (error) {
-      logger.error('Could not place call', { error: error });
-    }
-    done(error);
-  });
+  notifier.send('restaurant-order-submitted-voice', job.data.order_id, done);
 };

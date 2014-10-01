@@ -6,6 +6,7 @@ var Order = require('./order');
 var Address = require('./address');
 var queries = require('../db/queries');
 var config = require('../config');
+var logger = require('./logger').create('User');
 
 var table = 'users';
 
@@ -464,7 +465,10 @@ var User = module.exports = Model.extend({
       });
     }
 
+    logger.info('Running tasks', { tasks: Object.keys( tasks ) });
+
     utils.async.parallel( tasks, function( error, result ){
+      logger.info('Complete', error, result );
       if ( error ) return callback( error );
 
       // Embed the results into the user objects invoking toJSON on sub-models

@@ -1,7 +1,7 @@
 /**
  * Configures custom pg type parsers. Returns hash of data types and their
  * parsing functions.
- * 
+ *
  * If you wanted you could convert all timestamps into moment
  * objects. But that might not be a good idea.
  *
@@ -18,6 +18,14 @@ var parsers = module.exports = [
   , oid: 1114
   , fn: function(val) {
       return val;
+    }
+  }
+
+  // Fix PG date parsing (`date` type not to be confused with something with a timezone)
+, {
+    oid: 1082
+  , fn: function( val ){
+      return new Date( val + ' 00:00:00' );
     }
   }
 ];

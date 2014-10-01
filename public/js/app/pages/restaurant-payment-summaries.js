@@ -1,17 +1,24 @@
 define(function(require){
   var Hbs       = require('handlebars');
   var utils     = require('utils');
-  var summaries = require('data/payment-summaries');
+  var Summaries = require('app/collections/payment-summaries');
   var TableView = require('views/table-view');
 
-  summaries.fetch({ data: { limit: 'all' } });
-
   return Object.create({
-    init: function(){
+    init: function( options ){
+      this.options = options = options || {};
+
+      var summaries = this.summaries = new Summaries( null, {
+        restaurant_id: options.restaurant.id
+      });
+
+      summaries.fetch({ data: { limit: 'all' } });
+
       var tableView = this.tableView = new TableView({
         collection:   summaries
       , template:     Hbs.partials.payment_summaries_table
       , rowTemplate:  Hbs.partials.payment_summaries_table_row
+      , restaurant:   options.restaurant
       });
 
       utils.domready( function(){

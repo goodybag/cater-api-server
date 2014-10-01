@@ -1063,6 +1063,9 @@ module.exports.register = function(app) {
   app.get('/admin/restaurants/:id/payment-summaries'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.queryOptions({
+      many: [{ table: 'contacts' }]
+    })
   , m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
       layout: 'admin/layout'
     , method: 'findOne'

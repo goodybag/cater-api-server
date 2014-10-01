@@ -736,6 +736,12 @@ dirac.use( function( dirac ){
         return Math.floor( order.total / 100 );
       }
     });
+
+    Object.defineProperty( order, 'editable', {
+      get: function(){
+        return [ 'pending', 'submitted' ].indexOf( this.status ) > -1;
+      }
+    });
   };
 
   var afterOrderFind = function( results, $query, schema, next ){

@@ -255,14 +255,18 @@ module.exports.register = function(app) {
    * Restaurant edit resource
    */
 
-  app.get('/admin/restaurants/:rid'
+  app.get('/admin/restaurants/:id'
   , m.restrict('admin')
+  , m.param('id')
   , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'basic-info'} )
   , m.db.regions.find( {}, { limit: 'all' } )
-  , m.restaurant( {param: 'rid' } )
-  , m.view('admin/restaurant/edit-basic-info', {
+  , m.queryOptions({
+      many: [{ table: 'contacts' }]
+    })
+  , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
       layout: 'admin/layout-two-column'
+    , method: 'findOne'
     })
   );
 
@@ -1135,6 +1139,46 @@ module.exports.register = function(app) {
       layout: 'invoice/payment-summary-layout'
     , method: 'findOne'
     })
+  );
+
+  app.get('/api/restaurants'
+  , m.restrict(['admin'])
+  , m.sort('-id')
+  , m.param('region_id')
+  , m.queryOptions({
+      many: []
+    , one:  [{ table: 'regions', alias: 'region' }]
+    })
+  , m.find( db.restaurants )
+  );
+
+  app.post('/api/restaurants'
+  , m.restrict(['admin'])
+  , m.insert( db.restaurants )
+  );
+
+  app.get('/api/restaurants/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.findOne( db.restaurants )
+  );
+
+  app.put('/api/restaurants/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.restaurants )
+  );
+
+  app.patch('/api/restaurants/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.restaurants )
+  );
+
+  app.del('/api/restaurants/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.restaurants )
   );
 
   app.get('/api/restaurants/:restaurant_id/orders'

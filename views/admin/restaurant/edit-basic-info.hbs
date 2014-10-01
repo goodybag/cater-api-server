@@ -87,6 +87,15 @@
       </select>
     </div>
     <div class="form-group">
+      <label for="pms_contact_id_selector" class="control-label">Default Contact for Payment Summaries</label>
+      <select name="pms_contact_id" id="pms_contact_id_selector" type="number">
+        <option value="null">None</option>
+        {{#each restaurant.contacts}}
+          <option value="{{this.id}}"{{#eq ../restaurant.pms_contact_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
       <div class="row">
         <div class="col-logo-color">
           <label class="control-label">Logo</label>
@@ -112,7 +121,7 @@
          Hidden from listing
       </label>
     </div>
-    <div class="actions">
+    <div class="form-group actions">
       <button class="btn-update" type="submit">Update</button>
     </div>
   </form>

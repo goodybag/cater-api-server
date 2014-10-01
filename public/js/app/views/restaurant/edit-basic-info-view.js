@@ -25,6 +25,7 @@ define(function(require, exports, module) {
     , delivery_service_head_count_threshold:    '[name="delivery_service_head_count_threshold"]'
     , delivery_service_order_total_upperbound:  '[name="delivery_service_order_total_upperbound"]'
     , delivery_service_order_amount_threshold:  '[name="delivery_service_order_amount_threshold"]'
+    , pms_contact_id:                           '[name="pms_contact_id"]'
     },
 
     fieldGetters: _.extend({

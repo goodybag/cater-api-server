@@ -80,11 +80,11 @@ define(function(require, exports, module) {
     save: function(e) {
       e.preventDefault();
       this.model.save(this.getFields(), {
-        patch:    true
-      , wait: true
-      , singleError: false
-      , success:  this.options.alertView.show.bind(this.options.alertView, 'success')
-      , error:    this.options.alertView.show.bind(this.options.alertView, 'error')
+        patch:        true
+      , wait:         true
+      , singleError:  false
+      , success:      this.options.alertView.show.bind(this.options.alertView, 'success')
+      , error:        this.options.alertView.show.bind(this.options.alertView, 'error')
       });
 
       this.displayErrors(this.model.validationError);

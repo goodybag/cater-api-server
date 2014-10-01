@@ -9,6 +9,10 @@ define(function(require){
 
   var page = {
     init: function( options ){
+      page.options = options;
+
+      options.models.restaurant.urlRoot = '/api/restaurants';
+
       var alertView = new Views.AlertView({
         el: '.alert-container'
       });

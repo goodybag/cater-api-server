@@ -57,8 +57,8 @@ module.exports.current = function(req, res, next) {
   } else if ( req.user.attributes.id ) {
     where.user_id = req.user.attributes.id;
   } else {
-    logger.info('User not logged in, redirecting to', '/login?next=' + req.url);
-    return res.redirect('/login?next=' + req.url);
+    logger.info('Guest user and missing edit token; cannot find pending order');
+    return next();
   }
 
   db.orders.findOne(where, function(err, order) {
@@ -67,9 +67,9 @@ module.exports.current = function(req, res, next) {
     if (order) {
       req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.id);
       req.order = order;
+      logger.info('Found pending order', { order: req.order });
     }
 
-    logger.info('Found pending order', { order: req.order });
     next();
   });
 };

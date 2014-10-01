@@ -60,19 +60,19 @@ define(function(require, exports, module) {
       data = data || this.attributes;
 
       var val = data.sub_total + data.delivery_fee
-      var tax = Math.round( val * data.sales_tax );
+      var tax = val * data.sales_tax;
       val += data.tip;
 
-      val -= Math.round( (val + tax) * data.gb_fee );
+      val -= (val + tax) * data.gb_fee;
 
-      return val;
+      return Math.round( val );
     }
 
   , getTotal: function(){
       var total = this.attributes.sub_total + this.attributes.delivery_fee;
-      total += Math.round( total * this.attributes.sales_tax );
+      total += total * this.attributes.sales_tax;
       total += this.attributes.tip;
-      return total;
+      return Math.round( total );
     }
 
   , onOrderChange: function( psi, order ){

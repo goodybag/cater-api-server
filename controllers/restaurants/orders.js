@@ -47,12 +47,18 @@ module.exports.list = function(req, res) {
 }
 
 module.exports.current = function(req, res, next) {
+  var logger = req.logger.create('Current Order');
+
+  logger.info('Lookup existing pending order');
   var where = {restaurant_id: req.params.rid, 'orders.status': 'pending'};
 
   if ( req.param('edit_token') || req.body.edit_token ){
     where.edit_token = req.param('edit_token') || req.body.edit_token;
-  } else {
+  } else if ( req.user.attributes.id ) {
     where.user_id = req.user.attributes.id;
+  } else {
+    logger.info('User not logged in, redirecting to', '/login?next=' + req.url);
+    return res.redirect('/login?next=' + req.url);
   }
 
   db.orders.findOne(where, function(err, order) {
@@ -63,6 +69,7 @@ module.exports.current = function(req, res, next) {
       req.order = order;
     }
 
+    logger.info('Found pending order', { order: req.order });
     next();
   });
 };

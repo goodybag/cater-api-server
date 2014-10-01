@@ -22,6 +22,7 @@ module.exports = function(req, res, next) {
       req.session.user = res.locals.user;
     }
 
+    logger.info('User not logged in, viewing as guest', { user: req.user });
     return next();
   }
 

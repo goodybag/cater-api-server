@@ -33,11 +33,19 @@
   <ul class="header-nav">
     <li class="recipient-wrapper">
       <label>Send To:</label>
-      <select name="recipient" class="form-control">
+      <input
+        type="text"
+        name="recipient"
+        class="form-conrol"
+        list="recipients"
+        {{~#each restaurant.contacts}}
+        {{#eq this.id ../restaurant.pms_contact_id}} value="{{join this.emails ','}}"{{/eq}}
+        {{/each~}}>
+      <datalist id="recipients">
         {{#each restaurant.contacts}}
-          <option value="{{join this.emails}}"{{#eq this.id ../restaurant.pms_contact_id}} selected="true"{{/eq}}>{{this.name}}</option>
+          <option value="{{join this.emails ','}}"{{#eq this.id ../restaurant.pms_contact_id}} selected="true"{{/eq}}>{{this.name}}</option>
         {{/each}}
-      </select>
+      </datalist>
     </li>
     <li>
       <button id="create-payment-summary-btn" class="btn btn-default">Create</button>

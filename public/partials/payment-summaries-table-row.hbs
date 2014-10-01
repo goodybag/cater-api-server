@@ -3,7 +3,7 @@
   <td>${{dollars model.total_payout}}</td>
   <td>{{formatDateTime model.payment_date}}</td>
   <td class="col-actions">
-    <button class="btn btn-sm btn-default">Send</button>
+    <button class="btn btn-sm btn-default" data-role="pms-send" data-id="{{model.id}}">Send</button>
     <a href="/payment-summaries/ps-{{model.id}}.pdf" class="btn btn-sm btn-default item-view">View PDF</a>
     <a href="/admin/restaurants/{{model.restaurant_id}}/payment-summaries/{{model.id}}" class="btn btn-sm btn-default item-edit">Edit</a>
     <button class="btn btn-sm btn-danger item-delete">&times;</button>

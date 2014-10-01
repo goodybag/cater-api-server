@@ -275,14 +275,18 @@ module.exports.register = function(app) {
   , controllers.restaurants.update
   );
 
-  app.get('/admin/restaurants/:rid/basic-info'
+  app.get('/admin/restaurants/:id/basic-info'
   , m.restrict('admin')
+  , m.param('id')
   , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'basic-info'} )
   , m.db.regions.find( {}, { limit: 'all' } )
-  , m.restaurant( {param: 'rid' } )
-  , m.view('admin/restaurant/edit-basic-info', {
+  , m.queryOptions({
+      many: [{ table: 'contacts' }]
+    })
+  , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
       layout: 'admin/layout-two-column'
+    , method: 'findOne'
     })
   );
 
@@ -1250,6 +1254,10 @@ module.exports.register = function(app) {
   , m.param('id')
   , m.param('restaurant_id')
   , m.remove( db.payment_summaries )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/send'
+  , controllers.paymentSummaries.send
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items'

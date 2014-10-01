@@ -41,6 +41,15 @@
       </div>
     </div>
     <div class="form-group">
+      <label for="pms_contact_id_selector" class="control-label">Default Contact for Payment Summaries</label>
+      <select name="pms_contact_id" id="pms_contact_id_selector" type="number">
+        <option value="null">None</option>
+        {{#each restaurant.contacts}}
+          <option value="{{this.id}}"{{#eq ../restaurant.pms_contact_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
       <label class="control-label" for="input-is_fee_on_total">
         <input type="checkbox" class="form-control" name="is_fee_on_total" id="input-is_fee_on_total" {{#if restaurant.is_fee_on_total}}checked="checked"{{/if}}>
          Is the GB fee applied to Order Total?

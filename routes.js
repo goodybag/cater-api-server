@@ -288,24 +288,25 @@ module.exports.register = function(app) {
   , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'basic-info'} )
   , m.db.regions.find( {}, { limit: 'all' } )
-  , m.queryOptions({
-      many: [{ table: 'contacts' }]
-    })
   , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
       layout: 'admin/layout-two-column'
     , method: 'findOne'
     })
   );
 
-  app.get('/admin/restaurants/:rid/billing-info'
+  app.get('/admin/restaurants/:id/billing-info'
   , m.restrict('admin')
+  , m.param('id')
   , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.defaultLocals( { active_tab: 'billing-info'} )
   , m.states()
   , m.db.regions.find( {}, { limit: 'all' } )
-  , m.restaurant( {param: 'rid' } )
-  , m.view('admin/restaurant/edit-billing-info', {
+  , m.queryOptions({
+      many: [{ table: 'contacts' }]
+    })
+  , m.view('admin/restaurant/edit-billing-info', db.restaurants, {
       layout: 'admin/layout-two-column'
+    , method: 'findOne'
     })
   );
 

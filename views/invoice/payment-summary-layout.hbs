@@ -62,26 +62,42 @@
             {{/if}}
           </h2>
           <address class="info-item-address info-item">
-            {{#if restaurant.street}}
-              {{restaurant.street}}
+            {{#if restaurant.billing_street}}
+              {{restaurant.billing_street}}
             {{else}}
-              [123 Your St.]
+              {{#if restaurant.street}}
+                {{restaurant.street}}
+              {{else}}
+                [123 Your St.]
+              {{/if}}
             {{/if}}
             <br />
-            {{#if restaurant.city}}
-              {{restaurant.city}}
+            {{#if restaurant.billing_city}}
+              {{restaurant.billing_city}}
             {{else}}
-              [Your City]
+              {{#if restaurant.city}}
+                {{restaurant.city}}
+              {{else}}
+                [Your City]
+              {{/if}}
             {{/if}},
-            {{#if restaurant.state}}
-              {{restaurant.state}}
+            {{#if restaurant.billing_state}}
+              {{restaurant.billing_state}}
             {{else}}
-              [Your State]
+              {{#if restaurant.state}}
+                {{restaurant.state}}
+              {{else}}
+                [Your State]
+              {{/if}}
             {{/if}}
-            {{#if restaurant.zip}}
-              {{restaurant.zip}}
+            {{#if restaurant.billing_zip}}
+              {{restaurant.billing_zip}}
             {{else}}
-              [Your Zip]
+              {{#if restaurant.zip}}
+                {{restaurant.zip}}
+              {{else}}
+                [Your Zip]
+              {{/if}}
             {{/if}}
           </address>
           {{{block "info"}}}

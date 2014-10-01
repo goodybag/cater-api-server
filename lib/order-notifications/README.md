@@ -66,6 +66,39 @@ __`def` Properties:__
 }
 ```
 
+For the `def.build` function, you must callback with the notification object. For the following formats, you must supply
+some required fields:
+
+* __email__
+  * to - list of recipient email addresses
+  * from - the sender's email address
+  * subject - the email subject
+  * html - the email body
+* __sms__
+  * to - list of recipient phone numbers for texting
+  * from - the sending phone number
+  * html - the sms body text
+* __voice__
+  * to - list of recipient phone numbers for calling
+  * from - the caller's phone number
+  * html - the voice message  (optional for notification previewing)
+  * url - a publicly accessible url for twilio xml formatted phone messages
+     * Example `/orders/:order_id/voice` serves our automated submitted voice messages
+
+Here's a simple example of building a voice notification
+
+```js
+build: function( order, logger, options, callback ) {
+  var notification = {
+    to: order.user.phone_number
+  , from: '2813308804'
+  , html: 'Want a free amazon giftcard from Goodybag.com? Finish placing order #' + order.id + 'by today to receive $20 giftcard.'
+  , url: getPromoUrl(order)
+  }
+  callback(null, notification);
+});
+```
+
 ### Definition Examples
 
 Email notification

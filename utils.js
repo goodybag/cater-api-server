@@ -19,8 +19,8 @@ var
 , Handlebars = require('hbs')
 , moment = require('moment-timezone')
 , mandrill = require('mandrill-api/mandrill')
-, twilio  = require('twilio')
-, Bitly     = require('bitly')
+, twilio = require('twilio')
+, Bitly = require('bitly')
 
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async}, require('./public/js/lib/utils'))

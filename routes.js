@@ -377,7 +377,7 @@ module.exports.register = function(app) {
   /**
    * Restaurant copy
    */
-   
+
   app.get('/admin/restaurants/:restaurant_id/copy'
   , m.restrict('admin')
   , controllers.restaurants.copy
@@ -1140,6 +1140,7 @@ module.exports.register = function(app) {
   app.get('/api/restaurants/:restaurant_id/orders'
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
+  , m.param('status')
   , m.queryOptions({
       one:  [{ table: 'restaurants', alias: 'restaurant' }]
     , many: [{ table: 'order_items', alias: 'items' }]

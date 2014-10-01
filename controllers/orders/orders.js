@@ -29,7 +29,7 @@ var addressFields = [
  */
 module.exports.auth = function(req, res, next) {
   var logger = req.logger.create('Middleware-OrderAuth');
-  logger.info('auth for order #'+ req.params.id);
+  logger.info('auth for order #%s', req.order.id);
 
   if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
     req.order.isAdmin = true;
@@ -44,21 +44,22 @@ module.exports.auth = function(req, res, next) {
     && req.user.attributes.restaurant_ids
     && utils.contains(req.user.attributes.restaurant_ids, req.order.restaurant_id)
   ) {
+    req.user.attributes.groups.push('order-restaurant');
     req.order.isRestaurantManager = true;
     return next();
   }
 
-  if (req.order.user_id !== (req.session.user||0).id &&
-      req.order.review_token !== reviewToken &&
-      req.order.edit_token !== editToken)
-    return res.status(404).render('404');
-
   // There was a review token, so this is likely a restaurant manager
-  if (reviewToken){
+  if (reviewToken === req.order.review_token){
     req.order.isRestaurantManager = true;
+    req.user.attributes.groups.push('order-restaurant');
   }
 
-  req.order.isOwner = true;
+  if ( req.user && req.user.attributes && req.user.attributes.id === req.order.user_id ){
+    req.user.attributes.groups.push('order-owner');
+    req.order.isOwner = true;
+  }
+
   next();
 };
 
@@ -70,135 +71,52 @@ module.exports.editability = function(req, res, next) {
   return editable ? next() : res.json(403, 'order not editable');
 };
 
-// module.exports.get = function(req, res) {
-//   models.Order.findOne(parseInt(req.params.oid), function(error, order) {
-//     if (error) return res.error(errors.internal.DB_FAILURE, error);
-//     if (!order) return res.status(404).render('404');
-//     order.getOrderItems(function(err, items) {
-//       if (err) return res.error(errors.internal.DB_FAILURE, err);
-
-//       var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
-//       var isOwner = req.session.user && req.session.user.id === order.attributes.user_id;
-//       utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
-//       var context = {
-//         order: order.toJSON(),
-//         restaurantReview: review,
-//         owner: isOwner,
-//         admin: req.session.user && utils.contains(req.session.user.groups, 'admin'),
-//         states: states,
-//         orderParams: req.session.orderParams,
-//         query: req.query
-//       };
-
-//       // orders are always editable for an admin
-//       if (req.session.user && utils.contains(req.session.user.groups, 'admin'))
-//         context.order.editable = true;
-
-//       res.render('order', context, function(err, html) {
-//         if (err) return res.error(errors.internal.UNKNOWN, err);
-//         res.send(html);
-//       });
-//     });
-//   });
-// }
-
 module.exports.get = function(req, res) {
-  var tasks = [
-    function(cb) {
-      var query = {
-        columns: ['*', 'submitted_date', {
-            alias: 'payment_method'
-          , expression: {
-              type: 'one'
-            , table: 'payment_methods'
-            , parenthesis: true
-            , where: { id: '$orders.payment_method_id$' }
-            }
-          }
-        ]
-      , where: { id: parseInt(req.params.oid) }
-      };
-      models.Order.findOne(query, function(err, order) {
-        if (err) return cb(err);
-        if (!order) return cb(404);
-        return cb(null, order);
-      });
-    },
+  var logger = req.logger.create('Controller-Get');
 
-    function( order, cb ){
-      order.getRestaurant( function( error ){
-        return cb( error, order );
-      });
-    },
+  var order = req.order;
+  var orderModel = new models.Order( order );
 
-    function(order, cb) {
-      order.getOrderItems(function(err, items) {
-        return cb(err, order);
-      });
-    },
+  // Redirect empty orders to item summary
+  if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
 
-    function(order, cb) {
-      var query = {
-        where: { id: order.attributes.user_id },
-        embeds: {
-          payment_methods: {}
-        , addresses: {
-            order: ['is_default desc', 'id asc']
-          , where: { user_id: order.attributes.user_id }
-          // Actually, we can probably just display this restriction client-side
-          // , where: {
-          //     zip: { $in: order.attributes.restaurant.delivery_zips }
-          //   }
-          }
-        }
-      };
+  var isReview = order.status === 'submitted'
+    && (req.query.review_token === order.review_token || req.order.isRestaurantManager)
+  ;
 
-      models.User.find(query, function(err, results) {
-        if (err) return cb(err);
-
-        return cb(null, order, results[0]);
-      });
+  utils.async.waterfall([
+    // Can't yet rely on order.restaurant to have all of the right info
+    // in the legacy formats
+    orderModel.getRestaurant.bind( orderModel )
+  ], function( error, restaurant ){
+    if ( error ){
+      return res.error(errors.internal.DB_FAILURE, err);
     }
-  ];
 
-  utils.async.waterfall(tasks, function(err, order, user) {
-    if (err)
-      return err === 404 ? res.status(404).render('404') : res.error(errors.internal.DB_FAILURE, err);
+    order.restaurant = restaurant.toJSON();
 
-    // Redirect empty orders to item summary
-    if (!order.orderItems.length) return res.redirect(302, '/orders/' + req.params.oid + '/items');
-
-    var isReview = order.attributes.status === 'submitted'
-      && (req.query.review_token === order.attributes.review_token || req.order.isRestaurantManager)
-    ;
-
-    user = user.toJSON();
-    user.addresses = utils.invoke(user.addresses, 'toJSON');
-
-    utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+    utils.findWhere(states, {abbr: order.state || 'TX'}).default = true;
     var context = {
-      order: order.toJSON(),
+      order: order,
       isRestaurantReview: isReview,
       isOwner: req.order.isOwner,
       isRestaurantManager: req.order.isRestaurantManager,
       isAdmin: req.order.isAdmin,
-      isTipEditable: order.isTipEditable({
+      isTipEditable: orderModel.isTipEditable({
         isOwner: req.order.isOwner,
         isRestaurantManager: req.order.isRestaurantManager,
         isAdmin: req.order.isAdmin,
       }),
       show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
       states: states,
-      orderAddress: function() {
-        return {
-          address: order.toJSON(),
-          states: states
-        };
+      orderAddress: {
+        address: order,
+        states: states
       },
       orderParams: req.session.orderParams,
       query: req.query,
-      user: user,
-      step: order.attributes.status === 'pending' ? 2 : 3
+      user: req.order.user,
+      step: order.status === 'pending' ? 2 : 3
     };
 
     // Put address grouped on order for convenience
@@ -223,16 +141,16 @@ module.exports.get = function(req, res) {
     if (req.order.isAdmin)
       context.order.editable = true;
 
-    var view = order.attributes.status === 'pending' ? 'checkout' : 'receipt';
+    var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
     if (req.param('receipt')) {
       view = 'invoice/receipt';
       context.layout = 'invoice/invoice-layout';
     }
 
+    logger.info('rendering %s', view, { context: context });
     res.render(view, context);
   });
-
 }
 
 module.exports.create = function(req, res) {
@@ -316,6 +234,7 @@ module.exports.generateEditToken = function(req, res) {
 
 module.exports.changeStatus = function(req, res) {
   var logger = req.logger.create('Controller-OrderChangeStatus');
+
   logger.info('Attempt to change status', {
     order: { id: req.param('oid') }
   });
@@ -323,81 +242,82 @@ module.exports.changeStatus = function(req, res) {
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
     return res.send(400, req.body.status + ' is not a valid order status');
 
+  var previousStatus = req.order.status;
 
-  models.Order.findOne(req.params.oid, function(err, order) {
-    if (err) return logger.error('Error looking up order', err), res.error(errors.internal.DB_FAILURE, err);
-    if (!order) return res.send(404);
+  // if they're not an admin, check if the status change is ok.
+  if(!req.session.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {
+    if (!utils.contains(models.Order.statusFSM[req.order.status], req.body.status))
+      return res.send(403, 'Cannot transition from status '+ req.order.status + ' to status ' + req.body.status);
 
-    var previousStatus = order.attributes.status;
+    var review = utils.contains(['accepted', 'denied'], req.body.status);
+    if (review && (req.body.review_token !== req.order.review_token || req.order.token_used != null))
+      return res.send(401, 'bad review token');
 
-    // if they're not an admin, check if the status change is ok.
-    if(!req.session.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {
-      if (!utils.contains(models.Order.statusFSM[order.attributes.status], req.body.status))
-        return res.send(403, 'Cannot transition from status '+ order.attributes.status + ' to status ' + req.body.status);
+    if (req.body.status === 'submitted' && !order.isComplete())
+      return res.send(403, 'order not complete');
 
-      var review = utils.contains(['accepted', 'denied'], req.body.status);
-      if (review && (req.body.review_token !== order.attributes.review_token || order.attributes.token_used != null))
-        return res.send(401, 'bad review token');
+    if (req.body.status === 'submitted' && !order.toJSON().submittable)
+      return res.send(403, 'order not submittable');
+  }
 
-      if (req.body.status === 'submitted' && !order.isComplete())
-        return res.send(403, 'order not complete');
+  var done = function() {
+    logger.info('Done called');
+    if (req.order.status === 'submitted') {
+      logger.info('Done called and status is submitted');
 
-      if (req.body.status === 'submitted' && !order.toJSON().submittable)
-        return res.send(403, 'order not submittable');
-    }
+      // TODO: extract this address logic into address model
+      // Save address based on this order's attributes
+      var orderAddressFields = utils.pick(req.order, addressFields);
 
-    var done = function() {
-      if (order.attributes.status === 'submitted') {
+      logger.info('Finding default address for user');
+      // Set `is_default == true` if there's no default set
+      db.addresses.findOne({user_id: req.session.user.id, is_default: true}, function(error, address) {
+        if (error) return res.error(errors.internal.DB_FAILURE, error);
 
-        // TODO: extract this address logic into address model
-        // Save address based on this order's attributes
-        var orderAddressFields = utils.pick(order.attributes, addressFields);
+        var noExistingDefault = !address;
+        var addressData = utils.extend(orderAddressFields, { user_id: req.session.user.id, is_default: noExistingDefault });
 
-        // Set `is_default == true` if there's no default set
-        models.Address.find({ where: {user_id: req.session.user.id, is_default: true}}, function(error, addresses) {
-          if (error) return res.error(errors.internal.DB_FAILURE, error);
-
-          var noExistingDefault = !addresses.length;
-          var addressData = utils.extend(orderAddressFields, { user_id: req.session.user.id, is_default: noExistingDefault });
-          var address = new models.Address(addressData);
-          address.save(function(err, rows, result) {
-
-            // Db enforces unique addresses, so ignore 23505 UNIQUE VIOLATION
-            if (err && err.code !== '23505') return res.error(errors.internal.DB_FAILURE, err);
-          });
-        });
-      }
-
-      logger.info('Order status changed. #%s from `%s` to `%s`', req.params.oid, previousStatus, req.body.status, {
-        data: {
-          review_token: req.body.review_token
-        , order:        order.toJSON()
-        , from:         previousStatus
-        , to:           req.body.status
-        , notify:       req.query.notify
+        logger.info('Saving address');
+        if ( noExistingDefault ){
+          db.addresses.insert( addressData );
+        } else {
+          db.addresses.update( address.id, addressData );
         }
       });
-
-      res.send(201, {order_id: order.attributes.id, status: order.attributes.status});
-
-      // If we are an admin and we received a ?notify=false then don't send notifications.
-      // Otherwise send the notification.
-      if (!(req.session.user
-        && req.order.isAdmin
-        && req.query.notify
-        && req.query.notify.toLowerCase() == 'false'
-      )) venter.emit('order:status:change', order, previousStatus);
     }
 
-    if (req.body.status === 'submitted' && order.attributes.user.is_invoiced) order.attributes.payment_status = 'invoiced';
-
-    if (review) order.attributes.token_used = 'now()';
-
-    order.attributes.status = req.body.status;
-    order.save(function(err){
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
-      return done();
+    logger.info('Order status changed. #%s from `%s` to `%s`', req.params.oid, previousStatus, req.body.status, {
+      data: {
+        review_token: req.body.review_token
+      , from:         previousStatus
+      , to:           req.body.status
+      , notify:       req.query.notify
+      }
     });
+
+    res.send(201, {order_id: req.order.id, status: req.order.status});
+
+     if (!(req.session.user
+      && req.order.isAdmin
+      && req.query.notify
+      && req.query.notify.toLowerCase() == 'false'
+    )) venter.emit('order:status:change', new models.Order( req.order ), previousStatus), console.log('EMITTED GOD DAMN');
+  }
+
+  var $update = {
+    status: req.body.status
+  };
+
+  if (req.body.status === 'submitted' && req.order.user.is_invoiced) $update.payment_status = 'invoiced';
+
+  if (review) $update.token_used = 'now()';
+
+  req.order.status = req.body.status;
+  logger.info('Saving order');
+  db.orders.update( req.order.id, $update, function(err){
+    logger.info('Saving order complete!', err ? { error: err } : null);
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+    return done();
   });
 };
 

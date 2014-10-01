@@ -13,13 +13,23 @@ var basic   = express.basicAuth( auth );
 
 module.exports = function(){
   return function( req, res, next ){
-    if ( req.session && req.session.user ) return next();
+    if ( req.session && req.session.user && req.session.user.id ) return next();
+
+    // Remove the guest user
+    var guest = req.user;
+    delete req.user;
 
     // express basic puts user on request,
     // so override next and capture the value on session
     basic( req, res, function(){
-      req.session.user = req.user;
-      req.user = new Models.User( req.user );
+      // No user found via basic auth, so reset to guest
+      if ( !req.user ){
+        req.user = guest
+      } else {
+        req.session.user = req.user;
+        req.user = new Models.User( req.user );
+      }
+
       next();
     });
   };

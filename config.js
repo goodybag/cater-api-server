@@ -85,7 +85,7 @@ config.defaults = {
   ]
 
 , welcome: {
-    from:           '"Christy Medlock" <christymedlock@goodybag.com>'
+    from:           'christymedlock@goodybag.com'
   , subject:        'Hi there!'
   , template:       'emails/welcome-christy'
   , beginTime:      '09:04'
@@ -209,7 +209,7 @@ config.defaults = {
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
-  , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
+  , welcome: 'jacobparker@goodybag.com'
   , rewards: [ local.testEmail || 'test@goodybag.com' ]
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]
   , orderNotificationChecks: [ local.testEmail || 'test@goodybag.com' ]
@@ -523,7 +523,7 @@ config.production = {
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
-  , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
+  , welcome: 'jacobparker@goodybag.com'
   , info: 'info@goodybag.com'
   , rewards: [
       'jacobparker@goodybag.com'
@@ -538,9 +538,9 @@ config.production = {
     , 'christymedlock@goodybag.com'
     ]
   , orderNotificationChecks: [
-      '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
-    , '"Christy Medlock" <christymedlock@goodybag.com>'
-    , '"John Fawcett" <john@goodybag.com>'
+      'sarahsouthwell@goodybag.com'
+    , 'christymedlock@goodybag.com'
+    , 'john@goodybag.com'
     ]
   }
 

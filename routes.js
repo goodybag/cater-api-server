@@ -85,12 +85,19 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
-  app.get('/restaurants/:rid', m.editOrderAuth, controllers.restaurants.orders.current);  // individual restaurant needs current order.
-
   app.get('/restaurants/:rid'
-  , m.editOrderAuth
-  , m.restrict(['client', 'admin'])
-  , controllers.restaurants.get);
+  , controllers.restaurants.orders.current
+  , m.exists( 'order', {
+      then: controllers.orders.auth
+    , else: m.noop()
+    })
+  , m.exists( 'order', {
+      then: m.editOrderAuth
+    , else: m.noop()
+    })
+  , m.restrict(['client', 'admin', 'order-owner', 'order-editor'])
+  , controllers.restaurants.get
+  );
 
   app.put('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
 
@@ -377,7 +384,7 @@ module.exports.register = function(app) {
   /**
    * Restaurant copy
    */
-   
+
   app.get('/admin/restaurants/:restaurant_id/copy'
   , m.restrict('admin')
   , controllers.restaurants.copy
@@ -614,41 +621,60 @@ module.exports.register = function(app) {
     })
   );
 
-  app.get(
-    config.receipt.orderRoute
-  , m.basicAuth()
-  , m.restrict(['admin', 'receipts'])
-  , function(req,res, next){ req.order = {}; next(); } // normally this would get added in orders.auth, but we don't hit that from here
-  , function(req, res, next){ req.params.receipt = true; next(); }
-  , controllers.orders.get
-  );
-
-  app.all(/^\/orders\/(\d+)(?:\/.*)?$/
-  , function (req, res, next) {
-      req.params.id = req.params[0];
-      next();
-    }
-  , m.getOrder2({ param: 'id' })
-  , controllers.orders.auth
-  );
+  // app.all(/^\/orders\/(\d+)(?:\/.*)?$/
+  // , function (req, res, next) {
+  //     req.params.id = req.params[0];
+  //     next();
+  //   }
+  // , m.getOrder2({ param: 'id' })
+  // , controllers.orders.auth
+  // );
 
   app.get('/orders/:oid'
-    // If they're using ?receipt=true, make sure we restrict the group
-  , function(req, res, next){
-      // If they were using a review_token we don't need to worry about it
-      // since the controllers.orders.auth middleware would have taken care of it
-      if (req.param('review_token') && !req.param('receipt')) return next();
-
-      return (
-        m.restrict(!req.param('receipt') ? ['admin', 'restaurant', 'client'] : ['admin', 'restaurant', 'receipts'])
-      )(req, res, next);
-    }
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant'])
   , controllers.orders.get
   );
 
-  app.put('/orders/:oid', m.restrict(['client', 'admin']), controllers.orders.update);
+  app.put('/orders/:oid'
+  , m.restrict(['client', 'admin'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , controllers.orders.update
+  );
 
-  app.patch('/orders/:oid', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.editability, controllers.orders.update);
+  app.patch('/orders/:oid'
+  , m.restrict(['client', 'order-restaurant', 'admin'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , controllers.orders.editability
+  , controllers.orders.update
+  );
 
   app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
@@ -659,6 +685,23 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
+
+  app.get(
+    config.receipt.orderRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , function(req, res, next){ req.params.receipt = true; next(); }
+  , controllers.orders.get
+  );
 
   app.get('/receipts/order-:oid.pdf', m.s3({
     path:   '/' + config.receipt.fileName
@@ -671,10 +714,26 @@ module.exports.register = function(app) {
    *  Order status resource.  The collection of all statuses on a single order.
    */
 
-  app.get('/orders/:oid/status-history', m.restrict(['client', 'admin']), controllers.orders.listStatus); // latest is on order.  not currently used.
+  app.get('/orders/:oid/status-history'
+  , m.restrict(['client', 'admin'])
+  , controllers.orders.listStatus
+  );
 
   // people with restaurant review token can access this route.  leave auth to controllers.orders.auth.
-  app.post('/orders/:oid/status-history', controllers.orders.changeStatus);
+  app.post('/orders/:oid/status-history'
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , m.restrict(['admin', 'order-owner', 'order-restaurant'])
+  , controllers.orders.changeStatus
+  );
 
   app.all('/orders/:oid/status-history', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -695,14 +754,34 @@ module.exports.register = function(app) {
    */
 
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
-  app.get('/orders/:oid/items', m.restrict(['client', 'restaurant', 'admin']), controllers.orders.orderItems.summary);  // not currently used
+  app.get('/orders/:oid/items'
+  , m.restrict(['client', 'restaurant', 'admin'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , controllers.orders.orderItems.summary
+  );  // not currently used
 
   app.post('/orders/:oid/items'
-  , m.editOrderAuth
-  , m.exists('creatorId', {
-      then: function(req, res, next) { next(); }
-    , else: m.restrict(['client', 'admin'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
     })
+  , controllers.orders.auth
+  , m.editOrderAuth
+  , m.restrict(['admin', 'order-owner', 'order-editor'])
   , controllers.orders.editability
   , controllers.orders.orderItems.add
   );
@@ -719,18 +798,56 @@ module.exports.register = function(app) {
   app.get('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get);  // not currently used
 
   app.put('/orders/:oid/items/:iid'
-  , m.editOrderAuth
-  , m.exists('creatorId', {
-      then: function(req, res, next) { next(); }
-    , else: m.restrict(['client', 'admin'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
     })
+  , controllers.orders.auth
+  , m.editOrderAuth
+  , m.restrict(['admin', 'order-owner', 'order-editor'])
   , controllers.orders.editability
   , controllers.orders.orderItems.update
   );
 
-  app.patch('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.update);
+  app.patch('/orders/:oid/items/:iid'
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , m.editOrderAuth
+  , m.restrict(['admin', 'order-owner', 'order-editor'])
+  , controllers.orders.editability
+  , controllers.orders.orderItems.update
+  );
 
-  app.del('/orders/:oid/items/:iid', m.editOrderAuth, m.restrict(['client', 'admin']), controllers.orders.editability, controllers.orders.orderItems.remove);
+  app.del(
+    '/orders/:oid/items/:iid'
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , m.editOrderAuth
+  , m.restrict(['admin', 'order-owner', 'order-editor'])
+  , controllers.orders.editability
+  , controllers.orders.orderItems.remove
+  );
 
   app.all('/orders/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
@@ -1324,14 +1441,16 @@ module.exports.register = function(app) {
 
   app.get('/api/orders/:id'
   , m.restrict(['admin'])
-  , m.param('id')
-  , m.queryOptions({
-      one: [
-        { table: 'users',       alias: 'user' }
-      , { table: 'restaurants', alias: 'restaurant' }
-      ]
+  , m.getOrder2({
+      param:              'id'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
     })
-  , m.findOne( db.orders )
+  , function( req, res ){ res.json( req.order ); }
   );
 
   app.put('/api/orders/:id'
@@ -1355,11 +1474,18 @@ module.exports.register = function(app) {
   );
 
   app.get('/api/orders/:oid/items'
-  , m.editOrderAuth
-  , m.exists('creatorId', {
-      then: function(req, res, next) { next(); }
-    , else: m.restrict(['client', 'admin'])
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
     })
+  , controllers.orders.auth
+  , m.editOrderAuth
+  , m.restrict(['admin', 'order-owner', 'order-editor'])
   , controllers.orders.orderItems.list
   );
 

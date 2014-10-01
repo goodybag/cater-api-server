@@ -132,7 +132,7 @@ module.exports.JSON.history = function( req, res ){
         }
 
         notes = notes.map( function( note ){
-          note.email.url = getEmailUrl( req.param('oid'), note.nid );
+          note.data.url = getEmailUrl( req.param('oid'), note.nid );
           return utils.extend( note, utils.omit( notifier.defs[ note.nid ], 'id' ) );
         });
 

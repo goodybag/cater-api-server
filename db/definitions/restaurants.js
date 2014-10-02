@@ -160,6 +160,10 @@ define(function(require) {
       type: types.boolean
     , default: false
     }
+  , pms_contact_id: {
+      type: types.int
+    , references: {table: 'contacts', column: 'id', onDelete: 'set null'}
+    }
   };
 
   definition.indices = {};

@@ -137,10 +137,6 @@ module.exports.get = function(req, res) {
     if (req.order.isRestaurantManager)
       context.order.editable = false;
 
-    // orders are always editable for an admin
-    if (req.order.isAdmin)
-      context.order.editable = true;
-
     var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
     if (req.param('receipt')) {
@@ -243,6 +239,7 @@ module.exports.changeStatus = function(req, res) {
     return res.send(400, req.body.status + ' is not a valid order status');
 
   var previousStatus = req.order.status;
+  var orderModel = new models.Order( req.order );
 
   // if they're not an admin, check if the status change is ok.
   if(!req.session.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {
@@ -253,10 +250,10 @@ module.exports.changeStatus = function(req, res) {
     if (review && (req.body.review_token !== req.order.review_token || req.order.token_used != null))
       return res.send(401, 'bad review token');
 
-    if (req.body.status === 'submitted' && !order.isComplete())
+    if (req.body.status === 'submitted' && !orderModel.isComplete())
       return res.send(403, 'order not complete');
 
-    if (req.body.status === 'submitted' && !order.toJSON().submittable)
+    if (req.body.status === 'submitted' && !orderModel.toJSON().submittable)
       return res.send(403, 'order not submittable');
   }
 

@@ -35,7 +35,7 @@ define(function(require){
   });
 
   items.fetch();
-  orders.fetch({ data: { limit: 'all' } });
+  orders.fetch({ data: { limit: 'all', status: 'accepted' } });
 
   return Object.create({
     init: function(){
@@ -121,7 +121,7 @@ define(function(require){
       orders.filter( function( order ){
         var tz    = order.attributes.timezone;
         var date  = moment( order.get('datetime') ).tz( tz );
-        
+
         return moment( from ).tz( tz ) <= date && date <= moment( to ).tz( tz );
       }).forEach( function( order ){
         // Funky way of adding each item, but this ensures our previous

@@ -736,6 +736,7 @@ dirac.use( function( dirac ){
         return Math.floor( order.total / 100 );
       }
     });
+
   };
 
   var afterOrderFind = function( results, $query, schema, next ){
@@ -745,6 +746,8 @@ dirac.use( function( dirac ){
 
   dirac.dals.orders.after( 'find', afterOrderFind );
   dirac.dals.orders.after( 'findOne', afterOrderFind );
+  dirac.dals.orders.after( 'update', afterOrderFind );
+  dirac.dals.orders.after( 'insert', afterOrderFind );
 });
 
 // Log queries to dirac

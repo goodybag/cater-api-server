@@ -17,6 +17,7 @@ module.exports = {
 , getUser: require('./get-user')
 , logRequest: require('./log-request')
 , noop: require('./noop')
+, orderEditable: require('./order-editable')
 , orderParams: require('./order-params')
 , owner: require('./owner')
 , queryParams: require('./query-params')

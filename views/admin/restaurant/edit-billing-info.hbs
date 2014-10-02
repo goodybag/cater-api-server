@@ -15,16 +15,16 @@
       <input name="billing_city" type="text" class="form-control restaurant-address restaurant-billing_city" value="{{restaurant.billing_city}}" placeholder="Austin">
     </div>
     <div class="form-group">
-      <label class="control-label">Zip</label>
-      <input name="billing_zip" type="text" maxlength="5" class="form-control restaurant-address restaurant-billing_zip" value="{{restaurant.billing_zip}}" placeholder="78701">
-    </div>
-    <div class="form-group">
       <label class="control-label">State</label>
       <select class="form-control restaurant-address restaurant-billing_state" name="billing_state">
         {{#each states}}
         <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq ../restaurant.billing_state this.abbr}} selected="selected"{{/eq}}>{{this.name}}</option>
         {{/each}}
       </select>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Zip</label>
+      <input name="billing_zip" type="text" maxlength="5" class="form-control restaurant-address restaurant-billing_zip" value="{{restaurant.billing_zip}}" placeholder="78701">
     </div>
     <div class="form-group">
       <label class="control-label" for="input-rate">GB Fee (0 for tiered)</label>
@@ -39,6 +39,15 @@
           value="{{factorToPercent restaurant.gb_fee}}">
         <div class="input-addon">%</div>
       </div>
+    </div>
+    <div class="form-group">
+      <label for="pms_contact_id_selector" class="control-label">Default Contact for Payment Summaries</label>
+      <select name="pms_contact_id" id="pms_contact_id_selector" type="number">
+        <option value="null">None</option>
+        {{#each restaurant.contacts}}
+          <option value="{{this.id}}"{{#eq ../restaurant.pms_contact_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
+        {{/each}}
+      </select>
     </div>
     <div class="form-group">
       <label class="control-label" for="input-is_fee_on_total">

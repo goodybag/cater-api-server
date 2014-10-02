@@ -736,6 +736,19 @@ dirac.use( function( dirac ){
         return Math.floor( order.total / 100 );
       }
     });
+
+    Object.defineProperty( order, 'isAddressComplete', {
+      get: function(){
+        return utils.reduce(
+          utils.map(
+            utils.pick(this, ['street', 'city', 'state', 'zip', 'phone'])
+          , function(val) { return val != null && val !== ''; }
+          )
+        , function(memo, item, list) { return memo && item; }
+        , true
+        );
+      }
+    });
   };
 
   var afterOrderFind = function( results, $query, schema, next ){

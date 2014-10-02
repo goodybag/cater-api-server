@@ -17,9 +17,9 @@ module.exports = function( options ){
     var logger = req.logger.create('Middleware-GetOrder2');
 
     var $options = {
-      one:  []
-    , many: []
-    , with: []
+      one:    []
+    , many:   []
+    , with:   []
     };
 
     if ( options.user ){
@@ -33,6 +33,10 @@ module.exports = function( options ){
       users = $options.one[ users - 1 ];
 
       if ( options.userAddresses ){
+        // Technically we should limit the addresses to what
+        // the restaurant can deliver to, but given that that query
+        // is quite complex with delivery services, they'll just have
+        // to put up with errors if they select an address that doesn't work
         users.many.push({ table: 'addresses' });
       }
 

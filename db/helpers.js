@@ -736,7 +736,6 @@ dirac.use( function( dirac ){
         return Math.floor( order.total / 100 );
       }
     });
-
   };
 
   var afterOrderFind = function( results, $query, schema, next ){

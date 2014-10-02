@@ -386,14 +386,9 @@ dirac.use( function(){
     $query.columns.push({
       type:     'select'
     , table:    'payment_summary_items'
-    , columns:  [[
-      , 'sum(round('
-      , '+ ( sub_total + delivery_fee + tip )'
-        // We aggressively round to match our notion of cents better
-      , '- ( round( ( sub_total + delivery_fee ) + round( ( sub_total + delivery_fee ) * sales_tax ) + tip ) * gb_fee )'
-      , '))::int + payment_summaries.adjustment as ' + options.column
-      ].join('  \n')]
+    , columns:  [{ type: 'sum', expression: 'payment_summary_items.net_payout' }]
     , where:    { payment_summary_id: '$payment_summaries.id$' }
+    , alias:    options.column
     });
 
     next();

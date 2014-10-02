@@ -76,6 +76,10 @@ module.exports = function( options ){
       $options.many.push({ table: 'order_items', alias: 'orderItems' })
     }
 
+    if ( options.paymentMethod ){
+      $options.one.push({ table: 'payment_methods', alias: 'payment_method' });
+    }
+
     logger.info('Finding order');
     db.orders.findOne( +req.param( options.param ), $options, function( error, order ){
       if ( error ){

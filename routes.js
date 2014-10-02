@@ -707,6 +707,7 @@ module.exports.register = function(app) {
     , userPaymentMethods: true
     , restaurant:         true
     , deliveryService:    true
+    , paymentMethod:       true
     })
   , function(req, res, next){ req.params.receipt = true; next(); }
   , controllers.orders.get

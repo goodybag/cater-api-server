@@ -3,9 +3,9 @@ var slogger = require('../logger');
 var notifier = require('../../../lib/order-notifier');
 
 module.exports = function(job, done) {
-  var logger = slogger.create('Send SMS', {
+  var logger = slogger.create('Send Notification', {
     data: job
   });
   logger.info('Sending');
-  notifier.send( 'restaurant-order-submitted-sms', job.data.order_id, done );
+  notifier.send( job.data.notification_id, job.data.order_id, done );
 }

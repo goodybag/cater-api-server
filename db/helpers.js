@@ -737,11 +737,7 @@ dirac.use( function( dirac ){
       }
     });
 
-    Object.defineProperty( order, 'editable', {
-      get: function(){
-        return [ 'pending', 'submitted' ].indexOf( this.status ) > -1;
-      }
-    });
+    order.editable = order.editable || [ 'pending', 'submitted' ].indexOf( this.status ) > -1;
   };
 
   var afterOrderFind = function( results, $query, schema, next ){
@@ -751,6 +747,8 @@ dirac.use( function( dirac ){
 
   dirac.dals.orders.after( 'find', afterOrderFind );
   dirac.dals.orders.after( 'findOne', afterOrderFind );
+  dirac.dals.orders.after( 'update', afterOrderFind );
+  dirac.dals.orders.after( 'insert', afterOrderFind );
 });
 
 // Log queries to dirac

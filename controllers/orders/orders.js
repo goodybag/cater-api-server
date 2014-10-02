@@ -137,10 +137,6 @@ module.exports.get = function(req, res) {
     if (req.order.isRestaurantManager)
       context.order.editable = false;
 
-    // orders are always editable for an admin
-    if (req.order.isAdmin)
-      context.order.editable = true;
-
     var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
     if (req.param('receipt')) {
@@ -170,6 +166,7 @@ module.exports.update = function(req, res) {
   if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 
   // Instantiate order model for save functionality
+  console.log('update', req.order.editable);
   var order = new models.Order(req.order);
 
   var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;

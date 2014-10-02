@@ -3,9 +3,10 @@
  * Attaches an order model to the request based on request parameter ID
  */
 
-var utils     = require('../utils');
-var errors    = require('../errors');
-var db        = require('../db');
+var utils           = require('../utils');
+var errors          = require('../errors');
+var db              = require('../db');
+var orderEditable   = require('./order-editable');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
@@ -88,7 +89,7 @@ module.exports = function( options ){
       req.order = order;
       res.locals.order = order;
       req.logger.options.data.order = { id: order.id };
-      next();
+      orderEditable().call(this, req, res, next);
     });
   };
 };

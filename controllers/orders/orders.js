@@ -137,10 +137,6 @@ module.exports.get = function(req, res) {
     if (req.order.isRestaurantManager)
       context.order.editable = false;
 
-    // orders are always editable for an admin
-    if (req.order.isAdmin)
-      context.order.editable = true;
-
     var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
     if (req.param('receipt')) {

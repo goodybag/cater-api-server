@@ -161,7 +161,7 @@ module.exports.JSON.historyItem = function( req, res ){
 module.exports.getEmail = function( req, res ){
   var logger = req.logger.create('Controller-Notifications');
 
-  logger.info( 'Getting order notification email' + req.param('nid') + ' for order #' + req.param('oid') );
+  logger.info( 'Getting order notification email ' + req.param('nid') + ' for order #' + req.param('oid') );
 
   var notification = notifier.defs[ req.param('nid') ];
 

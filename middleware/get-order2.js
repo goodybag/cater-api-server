@@ -17,9 +17,9 @@ module.exports = function( options ){
     var logger = req.logger.create('Middleware-GetOrder2');
 
     var $options = {
-      one:  []
-    , many: []
-    , with: []
+      one:    []
+    , many:   []
+    , with:   []
     };
 
     if ( options.user ){
@@ -33,7 +33,15 @@ module.exports = function( options ){
       users = $options.one[ users - 1 ];
 
       if ( options.userAddresses ){
-        users.many.push({ table: 'addresses' });
+        users.many.push({
+          table: 'addresses'
+        // , where: {
+        //     zip: { $in: {
+        //       type: 'select'
+        //     ,
+        //     }}
+        //   }
+        });
       }
 
       if ( options.userPaymentMethods ){

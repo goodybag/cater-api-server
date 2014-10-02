@@ -31,7 +31,9 @@ module.exports = function(req, res, next) {
   };
 
   var options = {
-    many: [{ table: 'users_groups', alias: 'groups' }]
+    many: [ { table: 'users_groups', alias: 'groups' }
+          , { table: 'addresses' }
+          ]
   };
 
   logger.info( 'Looking up user', { user_id: req.session.user.id } );
@@ -47,6 +49,7 @@ module.exports = function(req, res, next) {
     user = new models.User( user );
 
     req.user = user;
+console.log(user.attributes.addresses);
     req.user.isAdmin = utils.contains(req.user.attributes.groups, 'admin');
     req.user.isRestaurant =
       utils.contains(req.user.attributes.groups, 'restaurant') &&
@@ -55,7 +58,6 @@ module.exports = function(req, res, next) {
     res.locals.user = user.toJSON();
     res.locals.user.isAdmin = req.user.isAdmin;
     delete res.locals.user.password;
-
     req.logger.options.data.user = res.locals.user;
     logger.info('User found')
 

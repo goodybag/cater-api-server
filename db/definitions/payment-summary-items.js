@@ -56,6 +56,10 @@ define(function(require) {
       type: types.numeric( 5, 5 )
     , default: 0
     }
+  , net_payout: {
+      type: types.int
+    , default: 0
+    }
   };
 
   definition.indices = {};

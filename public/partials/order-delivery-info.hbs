@@ -1,8 +1,16 @@
 <div class="col-md-12">
   <legend>2. Delivery Info</legend>
-  Poop: {{order.isAddressComplete}}
   <div class="order-address read-only{{#unless order.isAddressComplete}} hide{{/unless}}">
     {{> address order}}
+    <ul class="list-inline address-actions">
+      <li><a href="javascript:void(0)" class="edit-address-btn toggle-edit">Edit</a></li>
+      <li>|</li>
+      {{#if user.addresses}}
+      <li><a href="#select-address-modal" class="select-address" data-toggle="modal">Select Different Address</a></li>
+      <li>|</li>
+      {{/if}}
+      <li><a href="javascript:void(0)" class="add-address">Add New Address</a></li>
+    </ul>
   </div>
   <div class="order-address edit{{#if order.isAddressComplete}} hide{{/if}}">
     {{#with orderAddress}}
@@ -15,13 +23,4 @@
     </div>
     {{/if}}
   </div>
-  <ul class="list-inline address-actions">
-    <li><a href="javascript:void(0)" class="edit-address-btn toggle-edit">Edit</a></li>
-    <li>|</li>
-    {{#if user.addresses}}
-    <li><a href="#select-address-modal" class="select-address" data-toggle="modal">Select Different Address</a></li>
-    <li>|</li>
-    {{/if}}
-    <li><a href="javascript:void(0)" class="add-address">Add New Address</a></li>
-  </ul>
 </div>

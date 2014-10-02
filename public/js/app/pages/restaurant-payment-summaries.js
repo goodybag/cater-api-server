@@ -13,7 +13,6 @@ define(function(require){
 
   , onPmsSendClick: function( e ){
       var id = utils.dom( e.currentTarget ).data('id');
-      console.log('click');
       page.sendPms( id );
     }
   });

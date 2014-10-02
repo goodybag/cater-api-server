@@ -44,7 +44,7 @@ module.exports = function(grunt) {
       }
 
     , handlebars: {
-        files: [ 'public/partials/*.hbs' ]
+        files: [ 'public/partials/*.hbs', 'views/**/partials/*.hbs', 'views/**/**/partials/*.hbs' ]
       , tasks: [ 'shell:handlebars' ]
       , options: { spawn: false }
       }

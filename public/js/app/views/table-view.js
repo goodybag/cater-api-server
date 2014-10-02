@@ -65,8 +65,6 @@ define(function(require){
       this.rowTemplate  = options.rowTemplate;
       this.RowView      = options.RowView || RowView;
 
-      console.log(this.RowView.prototype.events);
-
       this.collection.on( 'reset',  this.onCollectionReset, this );
       this.collection.on( 'add',    this.onCollectionReset, this );
       this.collection.on( 'remove', this.onCollectionReset, this );

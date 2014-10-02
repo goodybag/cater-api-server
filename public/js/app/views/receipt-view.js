@@ -163,7 +163,6 @@ define(function(require, exports, module) {
     autoSave: _.debounce(FormView.prototype.onSave, 600),
 
     toggleEdit: function() {
-      console.log(this.model.get('editable'))
       if (this.model.get('editable')) {
         this.edit = !this.edit;
         var order = this.model;

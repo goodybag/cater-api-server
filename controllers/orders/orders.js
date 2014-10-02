@@ -166,7 +166,6 @@ module.exports.update = function(req, res) {
   if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 
   // Instantiate order model for save functionality
-  console.log('update', req.order.editable);
   var order = new models.Order(req.order);
 
   var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;

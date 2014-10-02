@@ -737,7 +737,6 @@ dirac.use( function( dirac ){
       }
     });
 
-    order.editable = order.editable || [ 'pending', 'submitted' ].indexOf( this.status ) > -1;
   };
 
   var afterOrderFind = function( results, $query, schema, next ){

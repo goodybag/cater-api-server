@@ -327,6 +327,14 @@ define(function(require, exports, module) {
       obj.orderItems = this.orderItems.toJSON();
       obj.restaurant = this.restaurant.toJSON();
       _.extend(obj, this.address.toJSON());
+      obj.isAddressComplete = utils.reduce(
+        utils.map(
+          utils.pick(this.attributes, ['street', 'city', 'state', 'zip', 'phone'])
+        , function(val) { return val != null && val !== ''; }
+        )
+      , function(memo, item, list) { return memo && item; }
+      , true
+      );
       return obj;
     },
 

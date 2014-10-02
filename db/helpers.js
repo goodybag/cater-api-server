@@ -266,8 +266,8 @@ dirac.use( function(){
 
       // If we did a many to items, let's apply some virtual props
       if ( Array.isArray( $query.many ) )
-      if ( utils.findWhere( $query.many, { table: 'payment_summary_items' } ) ){
-        var many = utils.findWhere( $query.many, { table: 'payment_summary_items' } );
+      var many = utils.findWhere( $query.many, { table: 'payment_summary_items' } );
+      if ( many ){
         r[ many.alias || many.table ] = r[ many.alias || many.table ].map( function( item ){
            return new PMSItem( item ).toJSON();
         });

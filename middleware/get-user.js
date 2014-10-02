@@ -49,7 +49,7 @@ module.exports = function(req, res, next) {
     user = new models.User( user );
 
     req.user = user;
-console.log(user.attributes.addresses);
+
     req.user.isAdmin = utils.contains(req.user.attributes.groups, 'admin');
     req.user.isRestaurant =
       utils.contains(req.user.attributes.groups, 'restaurant') &&

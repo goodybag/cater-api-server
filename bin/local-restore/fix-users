@@ -52,7 +52,7 @@ User.find( { limit: 999999 }, function( error, users ){
   async.parallelLimit( fns, options.concurrency, function( error ){
     if ( error ) return onError( error );
 
-    console.log( users.length, "users updated!" );
+    console.log( '✓', users.length, "users updated!" );
     process.exit(0);
   });
 });

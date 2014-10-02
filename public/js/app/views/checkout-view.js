@@ -231,24 +231,19 @@ define(function(require, exports, module) {
       e.preventDefault();
       var addressId = this.$el.find('#select-address-form input[name="address-radio"]:checked').data('id');
       var address = this.options.user.addresses.get(addressId);
-      var sent = this.model.save(address.omit(['id', 'user_id', 'is_default']), {
-        success: function() {
-          this_.$el.find('#select-address-modal').modal('hide');
-          this_.clear();
-          this_.addressView.render();
-        },
 
-        error: function(err) {
-          notify.error(err);
-        }
-      });
+      // NOTE: this used to be this.model.save(...)
+      this.model.address.set(address.omit(['id', 'user_id', 'is_default']));
+      this_.$el.find('#select-address-modal').modal('hide');
+      this_.clear();
+      this_.addressView.render();
 
       // Can I do this to capture an invalid order.save? I only want to show
       // alerts in the modal when selecting another address from the user's
       // address book.
-      if (!sent) {
-        this_.setAlerts('.alert-bad-zip-modal', this_.model, _.contains(this.model.validationError, 'is_bad_zip'));
-      }
+      // if (!sent) {
+      //   this_.setAlerts('.alert-bad-zip-modal', this_.model, _.contains(this.model.validationError, 'is_bad_zip'));
+      // }
     },
 
     cancel: function() {

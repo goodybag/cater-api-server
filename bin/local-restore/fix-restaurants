@@ -2,7 +2,6 @@
 
 var options = {
   email: 'test@goodybag.com'
-, phone: '1234567890'
 };
 
 var fs = require('fs');
@@ -18,20 +17,13 @@ if ( fs.existsSync( __dirname + '/../../local-config.json') ){
   options.email = localConfig.testEmail || options.email;
 }
 
-console.log( "updating delivery_services with:", JSON.stringify(options) );
+var $query = {};
+var $update = { billing_email: options.email };
+var opts = { returning: [ '*' ] };
 
-var query = {
-  type: 'update'
-, ifExists: true
-, table: 'delivery_services'
-, updates: {
-    order_email: options.email
-  , order_phone: options.phone
-  }
-, returning: ['*']
-};
+console.log( "updating restaurants with:", JSON.stringify(options) );
 
-db.query2(query, function(error, results) {
-  console.log(error ? error : '✓ ' + results.length + ' delivery_services updated');
+db.restaurants.update( $query, $update, opts, function( error, restaurants ) {
+  console.log(error ? error : '✓ ' + restaurants.length + ' restaurants updated');
   process.exit(error ? 1 : 0);
 });

@@ -44,3 +44,8 @@
 #payment-summary-items-table td {
   vertical-align: middle;
 }
+
+/* even out the PMS actions because of the label for hte recipient dropdown */
+.header-nav li.recipient-wrapper {
+  margin-top: -16px;
+}

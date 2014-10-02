@@ -75,7 +75,6 @@ define(function(require){
   , render: function(){
       var this_   = this;
       var $els    = $();
-      var RowView = this.RowView;
       var options = utils.clone( this.options );
 
       options.template = options.rowTemplate;
@@ -90,7 +89,7 @@ define(function(require){
       );
 
       this.collection.each( function( model ){
-        var child = new RowView( utils.extend({
+        var child = new this_.RowView( utils.extend({
           model: model
         }, options ));
 

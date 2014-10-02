@@ -6,7 +6,7 @@ define(function(require, exports, module) {
   return module.exports = EditRestaurantView.extend({
     events: function() {
       return _.extend({}, EditRestaurantView.prototype.events, {
-        
+
       });
     },
 
@@ -27,10 +27,11 @@ define(function(require, exports, module) {
     , billing_city:           '[name="billing_city"]'
     , billing_state:          '[name="billing_state"]'
     , billing_zip:            '[name="billing_zip"]'
+    , pms_contact_id:         '[name="pms_contact_id"]'
     },
 
     fieldGetters: _.extend({
-      
+
     }, EditRestaurantView.prototype.fieldGetters ),
 
     initialize: function() {

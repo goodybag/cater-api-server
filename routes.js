@@ -8,7 +8,6 @@ var Models = require('./models');
 var hbHelpers = require('./public/js/lib/hb-helpers');
 var db = require('./db');
 var errors = require('./errors');
-var PaymentSummaryItem = require('./public/js/app/models/payment-summary-item');
 
 var m = utils.extend(
   {}
@@ -1236,18 +1235,9 @@ module.exports.register = function(app) {
   , m.param('id')
   , m.param('restaurant_id')
   , m.restaurant({ param: 'restaurant_id' })
-  , function( req, res, next ){
-      var $query = { payment_summary_id: req.param('id') };
-      db.payment_summary_items.find( $query, function( error, results ){
-        if ( error ) return res.error(500);
-
-        res.locals.payment_summary_items = results.map( function( r ){
-          return new PaymentSummaryItem( r ).toJSON();
-        });
-
-        next();
-      });
-    }
+  , m.queryOptions({
+      many: [{ table: 'payment_summary_items', alias: 'items' }]
+    })
   , m.view( 'invoice/payment-summary', db.payment_summaries, {
       layout: 'invoice/payment-summary-layout'
     , method: 'findOne'

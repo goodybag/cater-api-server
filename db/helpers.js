@@ -7,6 +7,7 @@ var mosqlUtils  = require('mongo-sql/lib/utils');
 var utils       = require('../utils');
 var logger      = require('../lib/logger');
 var config      = require('../config');
+var PMSItem     = require('../public/js/app/models/payment-summary-item');
 
 dirac.setMoSql( mosql );
 
@@ -262,6 +263,15 @@ dirac.use( function(){
   var afterPSFinds = function( results, $query, schema, next ){
     results.forEach( function( r ){
       r.payment_date = moment( r.payment_date ).format('YYYY-MM-DD');
+
+      // If we did a many to items, let's apply some virtual props
+      if ( Array.isArray( $query.many ) )
+      if ( utils.findWhere( $query.many, { table: 'payment_summary_items' } ) ){
+        var many = utils.findWhere( $query.many, { table: 'payment_summary_items' } );
+        r[ many.alias || many.table ] = r[ many.alias || many.table ].map( function( item ){
+           return new PMSItem( item ).toJSON();
+        });
+      }
     });
 
     next();
@@ -386,9 +396,11 @@ dirac.use( function(){
     $query.columns.push({
       type:     'select'
     , table:    'payment_summary_items'
-    , columns:  [{ type: 'sum', expression: 'payment_summary_items.net_payout' }]
+    , columns:  [{ type: 'sum'
+                , expression: 'payment_summary_items.net_payout'
+                , alias: options.column
+                }]
     , where:    { payment_summary_id: '$payment_summaries.id$' }
-    , alias:    options.column
     });
 
     next();

@@ -1,7 +1,7 @@
 -- Delta
 
 DO $$
-  declare version       text := '1.2.37';
+  declare version       text := '1.2.39';
 begin
   raise notice '## Running Delta v% ##', version;
 

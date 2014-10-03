@@ -94,8 +94,8 @@ define(function(require, exports, module) {
         })
       , title: [
           '<strong>Create order on '
-        , date.format('MMM Do') 
-        , '</strong>' 
+        , date.format('MMM Do')
+        , '</strong>'
         , '<button class="close">&times</button>'
         ].join('')
       , trigger: 'click'
@@ -104,7 +104,7 @@ define(function(require, exports, module) {
       , container: '#main'
       });
 
-      // popover DOM isn't added until a date is clicked, 
+      // popover DOM isn't added until a date is clicked,
       // so hook into this event
       $element.on('shown.bs.popover', function (e) {
 
@@ -136,10 +136,10 @@ define(function(require, exports, module) {
       $element.popover({
         content: this.templates.detailsPopover(utils.omit(event, 'source'))
       , title: [
-          '<strong>#' 
-        , event.id 
-        , '</strong> ' 
-        , event.restaurant.name 
+          '<strong>#'
+        , event.id
+        , '</strong> '
+        , event.restaurant.name
         , '<button class="close">&times</button>'
         ].join('')
       , trigger: 'click'

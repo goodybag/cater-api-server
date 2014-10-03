@@ -101,9 +101,11 @@ define(function(require, exports, module) {
 
     scrollToElement: function( options ) {
       var $el = this.$el.find(options.el);
-      var padding = options.padding || 10;
-      var y = $el.position().top - padding;
-      $('html,body').animate({ scrollTop: y }, 'slow');
+      if ( $el ){
+        var padding = options.padding || 10;
+        var y = $el.position().top - padding;
+        $('html,body').animate({ scrollTop: y }, 'slow');
+      }
     },
 
     // set the model and add listeners here

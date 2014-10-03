@@ -749,6 +749,20 @@ dirac.use( function( dirac ){
         );
       }
     });
+
+    Object.defineProperty( order, 'adjustment', {
+      get: function(){
+        return {
+          description:  this.adjustment_description
+        , amount:       this.adjustment_amount
+        };
+      }
+
+    , set: function( v ){
+        this.adjustment_description = v.description;
+        this.adjustment_amount      = v.amount;
+      }
+    });
   };
 
   var afterOrderFind = function( results, $query, schema, next ){

@@ -99,6 +99,13 @@ define(function(require, exports, module) {
       this.setModel((this.model) ? this.model : new Order());
     },
 
+    scrollToElement: function( options ) {
+      var $el = this.$el.find(options.el);
+      var padding = options.padding || 10;
+      var y = $el.position().top - padding;
+      $('html,body').animate({ scrollTop: y }, 'slow');
+    },
+
     // set the model and add listeners here
     setModel: function(model) {
       if (this.model) this.stopListening(this.model);
@@ -205,6 +212,8 @@ define(function(require, exports, module) {
       }).join(', ');
 
       if (selector) this.$el.find( selector ).removeClass('hide');
+
+      this.scrollToElement({ el: this.options.alertSelector || '.alerts' });
 
       return this;
     },

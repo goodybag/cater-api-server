@@ -48,7 +48,7 @@ define(function(require, exports, module) {
       }
     }),
 
-    patch: false,
+    patch: true,
     setThenSave: true,
 
     errorTypeMessages: {

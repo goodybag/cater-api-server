@@ -250,6 +250,7 @@ module.exports.register = function(app) {
   , m.restrict('admin')
   , m.viewPlugin( 'mainNav', { active: 'restaurants' })
   , m.states()
+  , m.db.regions.find( {}, { limit: 'all' } )
   , m.view('admin/restaurant/create', { layout: 'admin/layout-page' })
   );
 

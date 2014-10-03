@@ -359,6 +359,8 @@ var fields = [
 ];
 
 module.exports.create = function(req, res) {
+  var logger = req.logger.create('Controller-RestaurantsCreate');
+
   utils.balanced.Customers.create({
     name: req.body.name
   }, function (error, customer) {
@@ -394,7 +396,11 @@ module.exports.create = function(req, res) {
       });
 
       var done = function(err, results) {
-        if (err) return res.error(errors.internal.UNKNOWN, err);
+        if (err) {
+          logger.info('Unable to create restaurant');
+          return res.error(errors.internal.UNKNOWN, err);
+        }
+        logger.info('Created new restaurant', { restaurant: rows[0] });
         res.redirect('/admin/restaurants/' + rows[0].id);
       };
 

@@ -19,6 +19,8 @@ var
 , Handlebars = require('hbs')
 , moment = require('moment-timezone')
 , mandrill = require('mandrill-api/mandrill')
+, twilio = require('twilio')
+, Bitly = require('bitly')
 
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async}, require('./public/js/lib/utils'))
@@ -28,6 +30,9 @@ var local = {};
 if (fs.existsSync('./local-config.json')){
   local = require('./local-config.json');
 }
+
+utils.twilio = twilio(config.twilio.account, config.twilio.token);
+utils.bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 
 utils.words = require('pluralize');
 

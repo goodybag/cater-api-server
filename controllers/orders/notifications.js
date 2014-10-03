@@ -132,7 +132,7 @@ module.exports.JSON.history = function( req, res ){
         }
 
         notes = notes.map( function( note ){
-          note.email.url = getEmailUrl( req.param('oid'), note.nid );
+          note.data.url = getEmailUrl( req.param('oid'), note.nid );
           return utils.extend( note, utils.omit( notifier.defs[ note.nid ], 'id' ) );
         });
 
@@ -161,7 +161,7 @@ module.exports.JSON.historyItem = function( req, res ){
 module.exports.getEmail = function( req, res ){
   var logger = req.logger.create('Controller-Notifications');
 
-  logger.info( 'Getting order notification email' + req.param('nid') + ' for order #' + req.param('oid') );
+  logger.info( 'Getting order notification email ' + req.param('nid') + ' for order #' + req.param('oid') );
 
   var notification = notifier.defs[ req.param('nid') ];
 

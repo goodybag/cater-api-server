@@ -1,8 +1,7 @@
 var scheduler = require('../../../lib/scheduler');
 
 var actions = [
-  { fn: require('./make-call'), name: 'make-call' }
-, { fn: require('./send-sms'), name: 'send-sms' }
+  { fn: require('./send-order-notification'), name: 'send-order-notification' }
 , { fn: require('./send-welcome-email'), name: 'send-welcome-email' }
 , { fn: require('./build-pdf'), name: 'build-pdf' }
 , { fn: require('./upload-to-s3'), name: 'upload-to-s3' }

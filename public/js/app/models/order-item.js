@@ -134,6 +134,13 @@ define(function(require, exports, module) {
         }).value()
       );
 
+      if ( this.attributes.min_qty && attrs.quantity < this.attributes.min_qty ) {
+        errors.push({
+          name: 'MIN_QUANTITY_REQUIRED',
+          message: 'Item quantity must be ' + attrs.min_qty + ' or greater'
+        });
+      }
+
       errors = errors.concat(schemaErrors ? Array.prototype.slice.call(schemaErrors) : [])
 
       return errors.length ? errors : null;

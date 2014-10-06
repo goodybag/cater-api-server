@@ -16,15 +16,22 @@
       <div class="col-feeds-max">
         <label>Feeds Max<input class="item-feeds-max form-control" type="number" step="1.0" min="1" value="{{feeds_max}}"></label>
       </div>
+      <div class="col-min-qty">
+        <label>Min. Qty<input class="item-min-qty form-control" type="number" step="1.0" min="0" value="{{min_qty}}"></label>
+      </div>
     </div>
     <div class="row row-description">
-      <label>Description</label>
-      <textarea class="item-description form-control" rows="3">{{description}}</textarea>
+      <div class="col-description">
+        <label>Description</label>
+        <textarea class="item-description form-control" rows="3">{{description}}</textarea>
+      </div>
     </div>
     <div class="row row-hide">
-      <label>
-        Hide <input class="item-hide form-control" type="checkbox" {{#if is_hidden}}checked="checked"{{/if}}>
-      </label>
+      <div class="col-hide">
+        <label>
+          Hide <input class="item-hide form-control" type="checkbox" {{#if is_hidden}}checked="checked"{{/if}}>
+        </label>
+      </div>
     </div>
     <div class="row row-actions">
       <a href="#" class="item-edit-options">+ Edit Options</a>

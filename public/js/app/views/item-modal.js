@@ -99,7 +99,10 @@ define(function(require, exports, module) {
           }
         });
       } else {
-        orderItem = this.options.orderItems.create(_.extend( { item_id: this.model.attributes.id }, data ), { wait: true });
+        orderItem = this.options.orderItems.create(_.extend( {
+          item_id: this.model.attributes.id
+        , min_qty: this.model.attributes.min_qty
+        }, data ), { wait: true });
       }
 
       orderItem.validationError ? this.displayErrors( orderItem.validationError ) : this.hide();
@@ -111,7 +114,7 @@ define(function(require, exports, module) {
       var $errorTmpl  = $errors.find('.alert-generic');
 
       _( errors ).forEach( function( error ){
-        var $error = $errorTmpl.clone().html( error.message ).removeClass('hide');
+        var $error = $errorTmpl.clone().removeClass('alert-generic').html( error.message ).removeClass('hide');
 
         if ( error.optionSetId ){
           $error.addClass('error-options-set-required');

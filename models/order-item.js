@@ -1,11 +1,9 @@
 var Model = require('./model');
 var utils = require('../utils');
 var venter = require('../lib/venter');
-var logger = require('../lib/logger').create('Model-OrderItem');
 
 module.exports = Model.extend({
   save: function(returning, callback) {
-    logger.info('Saving');
     var self = this;
 
     if (utils.isFunction(returning)) {
@@ -26,12 +24,7 @@ module.exports = Model.extend({
       venter.emit( 'order:change', self.attributes.order_id );
     };
 
-    if ( this.validate && typeof this.validate === 'function' ) this.validate();
     Model.prototype.save.call(self, returning, callback);
-  },
-
-  validate: function(attributes, options) {
-    logger.info('Validating', { attributes: this.attributes, options: this.options });
   },
 
   destroy: function(callback) {

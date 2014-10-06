@@ -61,6 +61,11 @@ define(function(require) {
       type: types.int
     , nullable: false
     }
+  , min_qty: {
+      type: types.int
+    , nullable: false
+    , default: 0
+    }
   , notes: {
       type: types.text
     , nullable: true

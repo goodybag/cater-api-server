@@ -65,6 +65,7 @@ define(function(require, exports, module) {
       price: '.item-price',
       feeds_min: '.item-feeds-min',
       feeds_max: '.item-feeds-max',
+      min_qty: '.item-min-qty',
       description: '.item-description',
       tags: '.edit-item-tags input',
       is_hidden: '.item-hide',

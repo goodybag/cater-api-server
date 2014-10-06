@@ -22,6 +22,10 @@ module.exports = function( options ){
     , with:   []
     };
 
+    if ( options.submittedDate ) {
+      $options.submittedDate = options.submittedDate;
+    }
+
     if ( options.user ){
       var users = $options.one.push({
         table: 'users'

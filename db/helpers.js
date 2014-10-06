@@ -690,32 +690,22 @@ dirac.use( function( dirac ){
 
 // Order submitted date
 dirac.use( function( dirac ){
-  dirac.dals.orders.before( 'find', function( $query, schema, next ){
+  var submittedDate = function( $query, schema, next ){
     if ( !$query.submittedDate ) return next();
 
-    $query.with     = $query.with     || [];
-    $query.joins    = $query.joins    || [];
     $query.columns  = $query.columns  || ['*'];
-
-    $query.with.push({
-      name:     'submitted_dates'
-    , type:     'select'
-    , table:    'order_statuses'
-    , columns:  [ 'order_id', { type: 'max', expression: 'created_at', alias: 'submitted' } ]
-    , groupBy:  'order_id'
-    , where:    { status: 'submitted' }
+    $query.columns.push({
+      type: 'select'
+    , table: 'order_statuses'
+    , alias: 'submitted'
+    , columns: [ { type: 'max', expression: 'created_at' } ]
+    , where: { status: 'submitted', order_id: '$orders.id$' }
     });
-
-    $query.joins.push({
-      type:     'left'
-    , target:   'submitted_dates'
-    , on:       { order_id: '$orders.id$' }
-    })
-
-    $query.columns.push('submitted_dates.submitted');
-
     next();
-  });
+  };
+
+  dirac.dals.orders.before( 'find', submittedDate );
+  dirac.dals.orders.before( 'findOne', submittedDate );
 });
 
 dirac.use( function( dirac ){

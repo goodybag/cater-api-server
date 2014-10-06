@@ -15,10 +15,10 @@
   }
 
   .row-details .col-order {
-    .col-detail(@width: 15%, @margin-left: 0);
+    .col-detail(@width: 15%);
   }
   .row-details .col-name {
-    .col-detail(199px);
+    .col-detail(@width: 83%);
   }
   .row-details .col-price {
     .col-detail(15%);
@@ -29,9 +29,19 @@
   .row-details .col-feeds-max {
     .col-detail(15%);
   }
+  .row-details .col-min-qty {
+    .col-detail(15%);
+  }
+  .row-description .col-description {
+    .col-detail(100%);
+  }
+  .row-hide .col-hide {
+    .col-detail(100%);
+  }
 
   .row-actions {
     margin: 10px 0;
+    padding-left: 5px;
   }
   .row-actions .btn {
     float: right;

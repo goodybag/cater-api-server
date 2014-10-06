@@ -199,6 +199,7 @@ define(function(require, exports, module) {
 
     displayErrors: function() {
       FormView.prototype.displayErrors.apply(this, arguments);
+      this.clearErrors();
 
       var selector = _.map(_.filter(this.model.validationError, _.isString), function(err) {
         return '.alert[data-error="' + err + '"]';

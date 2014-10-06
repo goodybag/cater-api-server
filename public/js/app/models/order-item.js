@@ -134,6 +134,15 @@ define(function(require, exports, module) {
         }).value()
       );
 
+      if ( attrs.min_qty && attrs.quantity < attrs.min_qty ) {
+        errors.push({
+          name: 'MIN_QUANTITY_REQUIRED',
+          // optionSetName:  'min-qty',
+          // optionSetId:    'min-qty',
+          message: 'Item quantity must be ' + attrs.min_qty + ' or greater'
+        });
+      }
+
       errors = errors.concat(schemaErrors ? Array.prototype.slice.call(schemaErrors) : [])
 
       return errors.length ? errors : null;

@@ -26,7 +26,6 @@ module.exports = Model.extend({
 
     Model.prototype.save.call(self, returning, callback);
   },
-
   destroy: function(callback) {
     var model = this, args = arguments;
     Model.prototype.destroy.apply(model, function(error){

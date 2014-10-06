@@ -20,6 +20,8 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, emailProvider: 'mandrill'
+
 , tmpDir: './tmp'
 
 , geoipUrl: 'http://freegeoip.net/json/:ip'
@@ -32,6 +34,7 @@ config.defaults = {
 , deniedRecipients: [
     'jag@goodybag.com'
   , 'sarah.southwell@goodybag.com'
+  , 'christymedlock@goodybag.com'
   , 'om@goodybag.com'
   , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -40,6 +43,7 @@ config.defaults = {
 , deliveryServiceOrderAboveThresholdRecipients: [
     'jag@goodybag.com'
   , 'sarah.southwell@goodybag.com'
+  , 'christymedlock@goodybag.com'
   , 'om@goodybag.com'
   , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -81,7 +85,7 @@ config.defaults = {
   ]
 
 , welcome: {
-    from:           '"Christy Medlock" <christymedlock@goodybag.com>'
+    from:           'christymedlock@goodybag.com'
   , subject:        'Hi there!'
   , template:       'emails/welcome-christy'
   , beginTime:      '09:04'
@@ -108,6 +112,10 @@ config.defaults = {
   , console: {
       json: true
     }
+  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
+  , mongoCollection: 'logs'
+  , httpPort: 3001
+  , url: 'http://localhost:3001'
   }
 
 , http: {
@@ -182,6 +190,10 @@ config.defaults = {
   , publicApiKey: 'pubkey-45a1-ynm6dw4tmk8egc6izhgqntwir79'
   }
 
+, mandrill: {
+    apiKey: 'dpZRzRo0ZAIpfAAQ2JL5pg'
+  }
+
 , twilio: {
     account: 'AC4ec9863aecd8248803144972fc51bac0'
   , token: 'f45e26c40cd7481c872c3552676b598b'
@@ -197,7 +209,7 @@ config.defaults = {
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
-  , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
+  , welcome: 'jacobparker@goodybag.com'
   , rewards: [ local.testEmail || 'test@goodybag.com' ]
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]
   , orderNotificationChecks: [ local.testEmail || 'test@goodybag.com' ]
@@ -283,6 +295,9 @@ config.dev = {
     , filename: 'all.log'
     , json: true
     }
+  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {
@@ -371,6 +386,9 @@ config.staging = {
       host: 'logs.papertrailapp.com'
     , port: 34830
     }
+  , mongoConnStr: process.env['MONGOHQ_URL']
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {
@@ -462,6 +480,9 @@ config.production = {
       host: 'logs.papertrailapp.com'
     , port: 64774
     }
+  , mongoConnStr: process.env['MONGOHQ_URL']
+  , mongoCollection: 'logs'
+  , httpPort: 3001
   }
 
 , rollbar: {
@@ -502,23 +523,24 @@ config.production = {
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
-  , welcome: '"Jacob Parker" <jacobparker@goodybag.com>'
+  , welcome: 'jacobparker@goodybag.com'
   , info: 'info@goodybag.com'
   , rewards: [
       'jacobparker@goodybag.com'
     , 'sarahsouthwell@goodybag.com'
+    , 'christymedlock@goodybag.com'
     , 'jag@goodybag.com'
     , 'om@goodybag.com'
     , 'redemptions@goodybag.com'
     ]
   , dsOrders: [
       'sarahsouthwell@goodybag.com'
-    , 'gillian@goodybag.com'
+    , 'christymedlock@goodybag.com'
     ]
   , orderNotificationChecks: [
-      '"Sarah Southwell" <sarahsouthwell@goodybag.com>'
-    , '"Gillian Lambert" <gillianlambert@goodybag.com>'
-    , '"John Fawcett" <john@goodybag.com>'
+      'sarahsouthwell@goodybag.com'
+    , 'christymedlock@goodybag.com'
+    , 'john@goodybag.com'
     ]
   }
 
@@ -526,7 +548,7 @@ config.production = {
     responseThresholdMins: 30
   , supportPhones: [
       '9788461970' // Sarah
-    , '2072997985' // Gillian
+    , '2105779226' // Christy Medlock
     ]
   }
 

@@ -5,9 +5,46 @@ var dirac       = require('dirac');
 var mosql       = require('mongo-sql');
 var mosqlUtils  = require('mongo-sql/lib/utils');
 var utils       = require('../utils');
+var logger      = require('../lib/logger');
 var config      = require('../config');
+var PMSItem     = require('../public/js/app/models/payment-summary-item');
 
 dirac.setMoSql( mosql );
+
+// Logging for dals
+// Leaving commented for now because it just makes logs too noisy
+// We'll probably figure out a better way to do this
+// if ( config.isDev ){
+//   dirac.use( function( dirac ){
+//     var dbLogger = logger.create('DB');
+
+//     Object.keys( dirac.dals ).forEach( function( table ){
+//       var dalLogger = dbLogger.create( table );
+
+//       [
+//         'find', 'findOne', 'remove', 'insert', 'update'
+//       ].forEach( function( op ){
+//         dirac.dals[ table ].before( op, function( $query, schema, next ){
+//           var _query = utils.deepClone( $query );
+
+//           // use a different character for query helpers
+//           // because mongo does not like `$`
+//           utils.editAllKeys( _query, function( key ){
+//             if ( key[ 0 ] === '$' ){
+//               return '@' + key.slice(1);
+//             } else {
+//               return key;
+//             }
+//           });
+
+//           dalLogger.info( op, { query: _query });
+
+//           next();
+//         });
+//       });
+//     });
+//   });
+// }
 
 dirac.autoJoin = function( options ){
   [
@@ -56,16 +93,12 @@ mosql.registerQueryType( 'one', [
 , '  limit 1'
 ].join(''));
 
-// Fix PG date parsing (`date` type not to be confused with something with a timezone)
-pg.types.setTypeParser( 1082, 'text', function( val ){
-  return new Date( val + ' 00:00:00' );
-});
-
 // Temporaray fix for http://github.com/goodybag/mongo-sql/issues/80
 mosql.registerConditionalHelper('$nin', { cascade: false }, function(column, set, values, collection){
   if (Array.isArray(set)) {
     return column + ' not in (' + set.map( function(val){
       return '$' + values.push( val );
+
     }).join(', ') + ')';
   }
 
@@ -230,6 +263,15 @@ dirac.use( function(){
   var afterPSFinds = function( results, $query, schema, next ){
     results.forEach( function( r ){
       r.payment_date = moment( r.payment_date ).format('YYYY-MM-DD');
+
+      // If we did a many to items, let's apply some virtual props
+      if ( Array.isArray( $query.many ) )
+      var many = utils.findWhere( $query.many, { table: 'payment_summary_items' } );
+      if ( many ){
+        r[ many.alias || many.table ] = r[ many.alias || many.table ].map( function( item ){
+           return new PMSItem( item ).toJSON();
+        });
+      }
     });
 
     next();
@@ -354,13 +396,10 @@ dirac.use( function(){
     $query.columns.push({
       type:     'select'
     , table:    'payment_summary_items'
-    , columns:  [[
-      , 'sum(round('
-      , '+ ( sub_total + delivery_fee + tip )'
-        // We aggressively round to match our notion of cents better
-      , '- ( round( ( sub_total + delivery_fee ) + round( ( sub_total + delivery_fee ) * sales_tax ) + tip ) * gb_fee )'
-      , '))::int + payment_summaries.adjustment as ' + options.column
-      ].join('  \n')]
+    , columns:  [{ type: 'sum'
+                , expression: 'payment_summary_items.net_payout'
+                , alias: options.column
+                }]
     , where:    { payment_summary_id: '$payment_summaries.id$' }
     });
 
@@ -376,15 +415,116 @@ dirac.use( function(){
 
 // Embed queries into each other
 dirac.use( function( dirac ){
-  var options = {
-    operations: ['find', 'findOne']
-  , pluginName: 'many'
-  , tmpl: function( data ){
+  var applyOne = function( table_name, $query ){
+    var tmpl = function( data ){
       var where = utils.extend( {}, data.where );
 
       data.pivots.forEach( function( p ){
         where[ p.target_col ] = '$' + mosqlUtils.quoteObject( p.source_col, data.source ) + '$';
       });
+
+      var main = utils.extend({
+        type:     'select'
+      , table:    data.target
+      , alias:    data.qAlias
+      , where:    where
+      , limit:    1
+      }, utils.omit( data, ['table', 'alias', 'pivots', 'target', 'source', 'where'] ));
+
+      if ( Array.isArray( main.one ) ){
+        main.one.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
+        applyOne( main.table, main );
+      }
+
+      if ( Array.isArray( main.many ) ){
+        main.many.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
+        applyMany( main.table, main );
+      }
+
+      return {
+        type: 'expression'
+      , alias: data.alias
+      , expression: {
+          parenthesis: true
+        , expression: {
+            type: 'select'
+          , columns: [{ type: 'row_to_json', expression: data.qAlias }]
+          , table: main
+          }
+        }
+      };
+    };
+
+    $query.one.forEach( function( target ){
+      var targetDal = dirac.dals[ target.table ];
+
+      // Immediate dependency not met and not specifying how to get there
+      if ( !targetDal && !target.where ){
+        throw new Error( 'Must specify how to relate table `' + table_name + '` to target `' + target.table + '`' );
+      }
+
+      var pivots = [];
+
+      if ( targetDal )
+      if ( targetDal.dependents[ table_name ] ){
+         pivots = Object.keys( targetDal.dependents[ table_name ] ).map( function( p ){
+          return {
+            source_col: targetDal.dependents[ table_name ][ p ]
+          , target_col: p
+          };
+        });
+      }
+
+      var context = utils.extend({
+        source:     target.source || table_name
+      , target:     target.table
+      , alias:      target.alias || target.table
+      , pivots:     pivots
+      , qAlias:     'r'
+      }, target );
+
+      context.alias = context.alias || target.table;
+
+      if ( !$query.columns ){
+        $query.columns = ['*'];
+      }
+
+      $query.columns.push( tmpl( context ) );
+    });
+  };
+
+  var applyMany = function( table_name, $query ){
+    var tmpl = function( data ){
+      var where = utils.extend( {}, data.where );
+
+      data.pivots.forEach( function( p ){
+        where[ p.target_col ] = '$' + mosqlUtils.quoteObject( p.source_col, data.source ) + '$';
+      });
+
+      var main = utils.extend({
+        type:     'select'
+      , table:    data.target
+      , where:    where
+      , alias:    data.qAlias
+      }, utils.omit( data, ['table', 'alias', 'pivots', 'target', 'source', 'where'] ));
+
+      if ( Array.isArray( main.one ) ){
+        main.one.forEach( function( t ){
+          t.qAlias = t.qAlias || (data.qAlias + 'r');
+          t.source = data.qAlias;
+        });
+
+        applyOne( main.table, main );
+      }
+
+      if ( Array.isArray( main.many ) ){
+        main.many.forEach( function( t ){
+          t.qAlias = t.qAlias || (data.qAlias + 'r');
+          t.source = data.qAlias;
+        });
+
+        applyMany( main.table, main );
+      }
 
       return {
         type: 'expression'
@@ -397,95 +537,55 @@ dirac.use( function( dirac ){
               type: 'array'
             , expression: {
                 type: 'select'
-              , alias: 'r'
-              , table: data.target
-              , columns: [{ type: 'row_to_json', expression: 'r' }]
-              , where: where
+              , columns: [{ type: 'row_to_json', expression: data.qAlias }]
+              , table: main
               }
             }
           }
         }
       };
-    }
+    };
+
+    $query.many.forEach( function( target ){
+      var targetDal = dirac.dals[ target.table ];
+
+      // Immediate dependency not met and not specifying how to get there
+      if ( !targetDal && !target.where ){
+        throw new Error( 'Must specify how to relate table `' + table_name + '` to target `' + target.table + '`' );
+      }
+
+      var pivots = [];
+
+      if ( targetDal )
+      if ( targetDal.dependencies[ table_name ] ){
+         pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
+          return {
+            source_col: targetDal.dependencies[ table_name ][ p ]
+          , target_col: p
+          };
+        });
+      }
+
+      var context = utils.extend({
+        source:     target.source || table_name
+      , target:     target.table
+      , alias:      target.alias || target.table
+      , pivots:     pivots
+      , qAlias:     'r'
+      }, target );
+
+      context.alias = context.alias || target.table;
+
+      if ( !$query.columns ){
+        $query.columns = ['*'];
+      }
+
+      $query.columns.push( tmpl( context ) );
+    });
   };
 
-  Object.keys( dirac.dals ).forEach( function( table_name ){
-    var dal = dirac.dals[ table_name ];
-
-    options.operations.forEach( function( op ){
-      dal.before( op, function( $query, schema, next ){
-        if ( !Array.isArray( $query[ options.pluginName ] ) ) return next();
-
-        $query[ options.pluginName ].forEach( function( target ){
-          var targetDal = dirac.dals[ target.table ];
-
-          // Immediate dependency not met and not specifying how to get there
-          if ( !targetDal.dependencies[ table_name ] )
-          if ( !target.where ){
-            throw new Error( 'Table: `' + target.table + '` does not depend on `' + table_name + '`' );
-          }
-
-          var pivots = [];
-
-          if ( targetDal.dependencies[ table_name ] ){
-             pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
-              return {
-                source_col: targetDal.dependencies[ table_name ][ p ]
-              , target_col: p
-              };
-            });
-          }
-
-          var col = options.tmpl({
-            source:     table_name
-          , target:     target.table
-          , where:      target.where
-          , alias:      target.alias || target.table
-          , pivots:     pivots
-          });
-
-          if ( !$query.columns ){
-            $query.columns = ['*'];
-          }
-
-          $query.columns.push( col );
-        });
-
-        next();
-      });
-    });
-  });
-});
-
-// Same as one-to-many, but with a single JSON object
-// and searches target dependents instead of dependencies
-dirac.use( function( dirac ){
   var options = {
     operations: ['find', 'findOne']
-  , pluginName: 'one'
-  , tmpl: function( data ){
-      var where = utils.extend( {}, data.where );
-
-      data.pivots.forEach( function( p ){
-        where[ p.target_col ] = '$' + mosqlUtils.quoteObject( p.source_col, data.source ) + '$';
-      });
-
-      return {
-        type: 'expression'
-      , alias: data.alias
-      , expression: {
-          parenthesis: true
-        , expression: {
-            type: 'select'
-          , alias: 'r'
-          , table: data.target
-          , columns: [{ type: 'row_to_json', expression: 'r' }]
-          , where: where
-          , limit: 1
-          }
-        }
-      };
-    }
   };
 
   Object.keys( dirac.dals ).forEach( function( table_name ){
@@ -493,57 +593,22 @@ dirac.use( function( dirac ){
 
     options.operations.forEach( function( op ){
       dal.before( op, function( $query, schema, next ){
-        if ( !Array.isArray( $query[ options.pluginName ] ) ) return next();
-
-        $query[ options.pluginName ].forEach( function( target ){
-          var targetDal = dirac.dals[ target.table ];
-
-          // Immediate dependency not met and not specifying how to get there
-          if ( !targetDal.dependents[ table_name ] )
-          if ( !target.where ){
-            throw new Error( 'Table: `' + target.table + '` does not depend on `' + table_name + '`' );
-          }
-
-          var pivots = [];
-
-          if ( targetDal.dependents[ table_name ] ){
-             pivots = Object.keys( targetDal.dependents[ table_name ] ).map( function( p ){
-              return {
-                source_col: targetDal.dependents[ table_name ][ p ]
-              , target_col: p
-              };
-            });
-          }
-
-          var col = options.tmpl({
-            source:     table_name
-          , target:     target.table
-          , where:      target.where
-          , alias:      target.alias || target.table
-          , pivots:     pivots
-          });
-
-          if ( !$query.columns ){
-            $query.columns = ['*'];
-          }
-
-          $query.columns.push( col );
-        });
-
-        next();
+        if ( Array.isArray( $query.many ) ) applyMany( table_name, $query );
+        if ( Array.isArray( $query.one ) ) applyOne( table_name, $query );
+        return next();
       });
     });
   });
 });
 
-// Setup cached dependency graph for use by relationship helpers
-var init = dirac.DAL.prototype.initialize;
 dirac.DAL = dirac.DAL.extend({
   initialize: function(){
+    // Setup cached dependency graph for use by relationship helpers
     this.dependents   = {};
     this.dependencies = {};
-    return init.apply( this, arguments );
+    return this._super.apply( this, arguments );
   }
+
 , insert: function( values, options, callback ){
     if ( Array.isArray( values ) && values.length === 0 ){
       if ( typeof options === 'function' ){
@@ -678,6 +743,33 @@ dirac.use( function( dirac ){
         return Math.floor( order.total / 100 );
       }
     });
+
+    Object.defineProperty( order, 'isAddressComplete', {
+      get: function(){
+        return utils.reduce(
+          utils.map(
+            utils.pick(this, ['street', 'city', 'state', 'zip', 'phone'])
+          , function(val) { return val != null && val !== ''; }
+          )
+        , function(memo, item, list) { return memo && item; }
+        , true
+        );
+      }
+    });
+
+    Object.defineProperty( order, 'adjustment', {
+      get: function(){
+        return {
+          description:  this.adjustment_description
+        , amount:       this.adjustment_amount
+        };
+      }
+
+    , set: function( v ){
+        this.adjustment_description = v.description;
+        this.adjustment_amount      = v.amount;
+      }
+    });
   };
 
   var afterOrderFind = function( results, $query, schema, next ){
@@ -687,6 +779,8 @@ dirac.use( function( dirac ){
 
   dirac.dals.orders.after( 'find', afterOrderFind );
   dirac.dals.orders.after( 'findOne', afterOrderFind );
+  dirac.dals.orders.after( 'update', afterOrderFind );
+  dirac.dals.orders.after( 'insert', afterOrderFind );
 });
 
 // Log queries to dirac

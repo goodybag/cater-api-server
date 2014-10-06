@@ -34,7 +34,7 @@
     </thead>
 
     <tbody>
-      {{#each payment_summary_items}}
+      {{#each payment_summary.items}}
       <tr>
         <td>{{this.order_id}}</td>
         <td>${{dollars this.delivery_fee}}</td>

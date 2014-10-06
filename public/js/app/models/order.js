@@ -19,13 +19,11 @@ define(function(require, exports, module) {
         type: 'object',
         properties: {
           user_id: {
-            type: 'string',
-            minLength: 1,
+            type: ['string', 'integer'],
             required: true
           },
           restaurant_id: {
-            type: 'string',
-            minLength: 1,
+            type: ['string', 'integer'],
             required: true
           },
           guests: {
@@ -329,6 +327,14 @@ define(function(require, exports, module) {
       obj.orderItems = this.orderItems.toJSON();
       obj.restaurant = this.restaurant.toJSON();
       _.extend(obj, this.address.toJSON());
+      obj.isAddressComplete = utils.reduce(
+        utils.map(
+          utils.pick(this.attributes, ['street', 'city', 'state', 'zip', 'phone'])
+        , function(val) { return val != null && val !== ''; }
+        )
+      , function(memo, item, list) { return memo && item; }
+      , true
+      );
       return obj;
     },
 
@@ -419,7 +425,7 @@ define(function(require, exports, module) {
         title: [
           Handlebars.helpers.timepart(this.get('datetime'))
         , '\n'
-        , Handlebars.helpers.truncate(this.get('restaurant_name'), 15)
+        , Handlebars.helpers.truncate(this.restaurant.get('name'), 15)
         ].join('')
       , start: this.get('datetime')
       , color: this.getStatusColor()

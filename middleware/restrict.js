@@ -1,17 +1,29 @@
+/**
+ * Restrict
+ */
+
 var utils = require('../utils');
 
 module.exports = function(groups) {
   if (typeof groups === 'string') groups = groups.trim().split(' ');
   return function(req, res, next) {
-    if (req.creatorId) 
-      next();
-    else if (req.order && req.order.isOwner)
-      next();
-    else if (req.session.user == null || req.session.user.id == null)
-      res.redirect('/login?next=' + req.url);
-    else if (utils.intersection(req.session.user.groups, groups).length === 0)
-      res.send(404);
-    else
-      next();
+    var logger = req.logger.create('Middleware-Restrict');
+    logger.info('Checking groups');
+
+    if (utils.intersection(req.user.attributes.groups, groups).length === 0){
+      // Not logged in at all? Redirect
+      if (!req.user.attributes.id){
+        logger.info('User not logged in, redirecting to', '/login?next=' + req.url);
+        return res.redirect('/login?next=' + req.url);
+      }
+
+      logger.warn('User attempting to access restricted resource. Sending `404`', {
+        groupsRequired: groups
+      });
+
+      return res.send(404);
+    }
+
+    return next();
   }
 }

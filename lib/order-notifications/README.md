@@ -62,5 +62,98 @@ __`def` Properties:__
   type            - Category of notification, i.e. "submitted"
   description     - Description of the notification
   requiredOptions - Properties that are required to exist on `options`
+  format          - One of 'text' | 'email' | 'voice' (default 'email')
 }
+```
+
+For the `def.build` function, you must callback with the notification object. For the following formats, you must supply
+some required fields:
+
+* __email__
+  * to - list of recipient email addresses
+  * from - the sender's email address
+  * subject - the email subject
+  * html - the email body
+* __sms__
+  * to - list of recipient phone numbers for texting
+  * from - the sending phone number
+  * html - the sms body text
+* __voice__
+  * to - list of recipient phone numbers for calling
+  * from - the caller's phone number
+  * html - the voice message  (optional for notification previewing)
+  * url - a publicly accessible url for twilio xml formatted phone messages
+     * Example `/orders/:order_id/voice` serves our automated submitted voice messages
+
+Here's a simple example of building a voice notification
+
+```js
+build: function( order, logger, options, callback ) {
+  var notification = {
+    to: order.user.phone_number
+  , from: '2813308804'
+  , html: 'Want a free amazon giftcard from Goodybag.com? Finish placing order #' + order.id + 'by today to receive $20 giftcard.'
+  , url: getPromoUrl(order)
+  }
+  callback(null, notification);
+});
+```
+
+### Definition Examples
+
+Email notification
+```js
+{
+  type: 'submitted'
+, id: 'user-order-submitted'
+, name: 'User Order Submitted'
+, format: 'email' // can be omitted, format: 'email' is by default
+, description: 'Sends the user an order submitted notice'
+, build: function( order, logger, options, callback ){
+    var viewOptions = {
+      layout: 'email-layout'
+    , config: config
+    , order:  order
+    };
+
+    var email = {
+      to:         order.user.email
+    , from:       config.emails.orders
+    , subject:    [ 'Goodybag order (#', order.id, ') has been submitted' ].join('')
+    };
+
+    app.render( 'order-email/user-order-submitted', viewOptions, function( error, html ){
+      email.html = html;
+      callback( error, email );
+    });
+  }
+}
+```
+
+SMS notification
+```js
+
+notifier.register({
+  type: 'submitted'
+, id: 'restaurant-order-submitted-sms'
+, name: 'Restaurant Order Submitted SMS'
+, format: 'sms'
+, description: 'Send a text to the restaurant\'s SMS phone numbers'
+, build: function( order, logger, options, callback) {
+    var viewOptions = {
+      layout: false
+    , order: order
+    };
+
+    var sms = {
+      to: order.restaurant.contacts.sms_phones
+    , from: '512-123-1234'
+    };
+
+    app.render( 'sms/restaurant-order-submitted-sms', viewOptions, function( error, html ){
+      sms.html = html;
+      callback(error, sms);
+    });
+  }
+});
 ```

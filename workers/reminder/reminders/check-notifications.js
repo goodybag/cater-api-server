@@ -7,10 +7,11 @@
  *   to not be sent, we _should_ be able to just check one type.
  */
 
-var db      = require('../../../db');
-var utils   = require('../../../utils');
-var config  = require('../../../config');
-var views   = require('../lib/views');
+var db        = require('../../../db');
+var utils     = require('../../../utils');
+var notifier  = require('../../../lib/order-notifier');
+var config    = require('../../../config');
+var views     = require('../lib/views');
 
 module.exports.name = 'Check Notifications';
 
@@ -55,22 +56,7 @@ module.exports.work = function( storage, callback ){
       return callback( error );
     }
 
-    utils.sendMail2({
-      to:       config.emails.orderNotificationChecks
-    , from:     config.emails.info
-    , subject:  '[Warning] Some Notifications Not Sent'
-    , html:     [ '<p><strong>So yeah, sorry, these orders notifications probably didn\'t send</strong></p>'
-                , '<ul>'
-                , orders.map( function( order ){
-                    return [
-                      '<li>'
-                    , '  <a href="' + config.baseUrl + '/admin/orders/' + order.id + '">#' + order.id + '</a>'
-                    , '</li>'
-                    ].join('')
-                  }).join('\n')
-                , '</ul>'
-                ].join('\n')
-    }, function( error ){
+    utils.async.each( orders, notifier.send.bind( notifier, 'some-notifications-not-sent' ), function( error ){
       if ( error ){
         return callback( error );
       }

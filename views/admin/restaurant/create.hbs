@@ -32,6 +32,18 @@
       </div>
 
       <div class="form-group">
+        <label class="control-label">Region</label>
+        <select name="region_id" class="form-control">
+          {{#each regions}}
+            <option
+              value="{{this.id}}"
+              {{#eq ../reqQuery.region this.id}}selected{{/eq}}
+            >{{this.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="form-group">
         <label class="control-label">Price</label>
         <select name="price" class="form-control">
           <option value="1"{{#eq restaurant.price 1}} selected="selected"{{/eq}}>$</option>

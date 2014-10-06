@@ -58,7 +58,9 @@
             {{#eq status "pending"}}
               <button type="button" class="btn btn-default cancel-order-btn">Cancel Order</button>
             {{else}}
+              {{#unless restaurant.is_hidden}}
               <button type="button" class="btn btn-default copy-order-btn">Order Again?</button>
+              {{/unless}}
             {{/eq}}
           {{/unless}}
         {{/if}}

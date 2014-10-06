@@ -13,6 +13,8 @@ define(function(require){
         el: '.alert-container'
       });
 
+      options.models.restaurant.urlRoot = '/api/restaurants';
+
       var restaurantEditView = new Views.EditBasicInfoView({
         el : '.restaurant-edit'
       , model: options.models.restaurant

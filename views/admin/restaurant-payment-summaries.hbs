@@ -31,6 +31,22 @@
   </div>
   <h2 class="page-sub-title">Payment Summaries</h2>
   <ul class="header-nav">
+    <li class="recipient-wrapper">
+      <label>Send To:</label>
+      <input
+        type="text"
+        name="recipient"
+        class="form-conrol"
+        list="recipients"
+        {{~#each restaurant.contacts}}
+        {{#eq this.id ../restaurant.pms_contact_id}} value="{{join this.emails ','}}"{{/eq}}
+        {{/each~}}>
+      <datalist id="recipients">
+        {{#each restaurant.contacts}}
+          <option value="{{join this.emails ','}}"{{#eq this.id ../restaurant.pms_contact_id}} selected="true"{{/eq}}>{{this.name}}</option>
+        {{/each}}
+      </datalist>
+    </li>
     <li>
       <button id="create-payment-summary-btn" class="btn btn-default">Create</button>
     </li>
@@ -44,16 +60,10 @@
 
 {{#extend "scripts"}}
 <script>
-  define(
-    'data/payment-summaries'
-  , ['app/collections/payment-summaries']
-  , function( PaymentSummaries ){
-      return new PaymentSummaries( null, { restaurant_id: {{restaurant.id}} } );
-    }
-  );
-
   require( ['app/pages/restaurant-payment-summaries'], function( page ){
-    page.init();
+    page.init({
+      restaurant: {{{json restaurant}}}
+    });
   });
 </script>
 {{/extend}}

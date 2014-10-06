@@ -15,6 +15,9 @@ module.exports = {
 , getOrder: require('./get-order')
 , getOrder2: require('./get-order2')
 , getUser: require('./get-user')
+, logRequest: require('./log-request')
+, noop: require('./noop')
+, orderEditable: require('./order-editable')
 , orderParams: require('./order-params')
 , owner: require('./owner')
 , queryParams: require('./query-params')
@@ -35,4 +38,7 @@ module.exports = {
 , pagination: require('./pagination')
 , queryOptions: require('./query-options')
 , json: require('./json')
+, logger: require('./logger')
+, logger: require('./logger')
+, timeout: require('./timeout')
 };

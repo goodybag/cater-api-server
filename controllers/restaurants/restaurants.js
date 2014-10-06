@@ -16,13 +16,11 @@ cuisines = cuisines.sort();
 
 var models = require('../../models');
 
-var logger = require('../../logger');
-
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
 module.exports.list = function(req, res) {
-  var TAGS = ['restaurants-list'];
-  logger.routes.info(TAGS, 'listing restaurants');
+  var logger = req.logger.create('Controller-Restaurants-List');
+
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
   if (orderParams.prices)
@@ -39,6 +37,11 @@ module.exports.list = function(req, res) {
         }
       , limit: 'all'
       };
+
+      logger.info('Finding filtered restaurants', {
+        orderParams: orderParams
+      });
+
       models.Restaurant.find(
         query
       , utils.extend({ is_hidden: false }
@@ -47,12 +50,14 @@ module.exports.list = function(req, res) {
     },
 
     function(callback) {
+      logger.info('Finding default address');
       models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
     }
   ];
 
   // Filters count needs a list of all restaurants
   if (Object.keys(orderParams).length > 0){
+    logger.info('Finding all restaurants');
     tasks.push(
       models.Restaurant.find.bind( models.Restaurant, {
         where: {
@@ -65,7 +70,7 @@ module.exports.list = function(req, res) {
   }
 
   var done = function(err, results) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err), logger.db.error(err);
+    if (err) return res.error(errors.internal.DB_FAILURE, err), logger.error(err);
 
     var context = {
       restaurants:      utils.invoke(results[0], 'toJSON').filter( function( r ){
@@ -90,8 +95,8 @@ module.exports.list = function(req, res) {
 };
 
 module.exports.get = function(req, res) {
-  var TAGS = ['restaurants-get'];
-  logger.routes.info(TAGS, 'getting restaurant ' + req.params.rid);
+  var logger = req.logger.create('Controller-Restaurants-Get');
+  logger.info('getting restaurant %s', req.params.rid);
 
   var orderParams = req.query || {};
 
@@ -135,6 +140,27 @@ module.exports.get = function(req, res) {
           // Just pick one delivery service that applies
           // We'll come up with better logic later
         , where: { region_id: '$restaurants.region_id$' }
+        }
+      });
+
+      query.columns.push({
+        alias: 'photos'
+      , expression: {
+          parenthesis: true
+        , expression: {
+            type: 'array_to_json'
+          , expression: {
+              type: 'array'
+            , expression: {
+                type: 'select'
+              , alias: 'p'
+              , table: 'restaurant_photos'
+              , columns: [{ type: 'row_to_json', expression: 'p' }]
+              , order: 'priority asc'
+              , where: { restaurant_id: '$restaurants.id$' }
+              }
+            }
+          }
         }
       });
 
@@ -333,6 +359,8 @@ var fields = [
 ];
 
 module.exports.create = function(req, res) {
+  var logger = req.logger.create('Controller-RestaurantsCreate');
+
   utils.balanced.Customers.create({
     name: req.body.name
   }, function (error, customer) {
@@ -368,7 +396,11 @@ module.exports.create = function(req, res) {
       });
 
       var done = function(err, results) {
-        if (err) return res.error(errors.internal.UNKNOWN, err);
+        if (err) {
+          logger.info('Unable to create restaurant');
+          return res.error(errors.internal.UNKNOWN, err);
+        }
+        logger.info('Created new restaurant', { restaurant: rows[0] });
         res.redirect('/admin/restaurants/' + rows[0].id);
       };
 
@@ -608,7 +640,7 @@ module.exports.copy = function(req, res) {
     }
 
   /**
-   *  dirac can't insert without id  
+   *  dirac can't insert without id
    *  unfortunately restaurant_tags are keyed by (restaurant_id, tag)
    *  so this doesn't work
    */
@@ -655,7 +687,7 @@ module.exports.copy = function(req, res) {
         if ( err ) return callback( err );
         items.map(function(item) {
           // associate to newly duplicated rows
-          item.category_id = catMap[item.category_id]; 
+          item.category_id = catMap[item.category_id];
           item.restaurant_id = newId;
           item.options_sets = JSON.stringify(item.options_sets);
           delete item.id;

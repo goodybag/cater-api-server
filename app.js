@@ -12,7 +12,6 @@ var
 , crypto = require('crypto')
 , forky = require('forky')
 , utils = require('./utils')
-, logger = require('./logger')
 , routes = require('./routes')
 , helpers = require('./helpers')
 , partials = require('./lib/partials')
@@ -27,27 +26,15 @@ hbs.handlebars = require('handlebars');
 var app = module.exports = express();
 
 app.configure(function(){
+  app.use( middleware.logger() );
+
   // Intercept status codes and render HTML if necessary
   app.use( middleware.statusCodeIntercept() );
 
   // If our request times out, something must be wrong with
   // our server. Likely caught in some impossible condition,
   // so let's just kill the worker
-  app.use( function( req, res, next ){
-    res.setTimeout( config.http.timeout, function(){
-      logger.routes.error( ['request-timeout'], 'Request timed out', utils.pick( req, [
-        'url', 'method', 'route', 'params', 'cookies', 'user'
-      ]));
-
-      res.send(503);
-      req.on( 'end', function(){
-        forky.disconnect();
-        process.exit();
-      });
-    });
-
-    next();
-  });
+  app.use( middleware.timeout() );
 
   app.use(express.favicon(__dirname + '/public/favicon.ico'));
   app.use(express.compress());
@@ -62,13 +49,14 @@ app.configure(function(){
     };
   })());
 
-  app.use(logger.expressError);
+
   app.use(express.cookieParser('WOOT THE FUCK'));
   app.use(express.cookieSession());
 
   app.use(express.json());
   app.use(express.urlencoded());
   app.use(express.methodOverride());
+  app.use(middleware.logRequest());
 
   app.use(middleware.uuid());
   app.use(middleware.domains);
@@ -90,10 +78,17 @@ app.configure(function(){
   });
 
   app.use(app.router);
+  app.use( function( req, res, next ){
+    if ( req.route && req.route.path ){
+      req.logger.options.data.path = req.route.path;
+    }
+    next();
+  });
 
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accessToken));
 
   app.use(function(err, req, res, next){
+    req.logger.error(err);
     res.error(errors.internal.UNKNOWN, err);
 
     // If the response stream does not close/finish in 2 seconds, just die anyway

@@ -6,7 +6,7 @@ var
   utils = require('../../utils')
 , models = require('../../models')
 , db = require('../../db')
-, moment = require('moment')
+, moment = require('moment-timezone')
 , fs = require('fs')
 , hbHelpers = require('../../public/js/lib/hb-helpers')
 , errors = require('../../errors')
@@ -33,6 +33,12 @@ var reports = {
    * POST /reports/orders
    */
   ordersCsv: function(req, res) {
+    var rlogger = req.logger.create('CSV Reports');
+
+    rlogger.info('Generate report', {
+      query: req.query
+    });
+
     var status = req.query.status || 'accepted';
     var start = req.query.start || '2012-01-01';
     var end = moment(req.query.end || new Date()).add('d',1).format('YYYY-MM-DD');
@@ -117,10 +123,14 @@ var reports = {
           res.csv.writeRow([
             order.id
           , hbHelpers.orderTypeAbbr(order)
+
+          // order.submitted is a timestamptz, it needs to be converted
           , order.submitted ? 
-              moment(order.submitted).format(reports.dateFormat) :
+              moment(order.submitted).tz(order.timezone).format(reports.dateFormat) :
               'N/A'
-          , moment(order.datetime).format(reports.dateFormat)
+
+          // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such
+          , moment.tz(order.datetime, order.timezone).format(reports.dateFormat)
           , order.user.name
           , order.user.email
           , order.user.organization
@@ -133,6 +143,7 @@ var reports = {
           , order.region.name
           ]);
         });
+
       res.end();
     });
   },

@@ -9,15 +9,6 @@ var Models      = require('../../models');
 var errors      = require('../../errors');
 var db          = require('../../db');
 var venter      = require('../../lib/venter');
-var rLogger     = require('../../logger').routes;
-
-// Copy the routes logger interface, but with make a new version
-// of each level function with local tags built in
-var logger = {};
-var loggerTags = ['Orders', 'Order Notifcations'];
-[ 'debug', 'info', 'warn', 'error' ].forEach( function( level ){
-  logger[ level ] = rLogger[ level ].bind( rLogger, loggerTags );
-});
 
 var getEmailUrl = function( oid, nid ){
   return [
@@ -37,6 +28,8 @@ var $ordersOptions = {
 module.exports.JSON = {};
 
 module.exports.JSON.list = function( req, res ){
+  var logger = req.logger.create('Controller-Notifications');
+
   logger.info( 'Getting order notifications for order #' + req.param('oid') );
 
   db.orders.findOne( +req.param('oid'), $ordersOptions, function( error, order ){
@@ -81,6 +74,8 @@ module.exports.JSON.list = function( req, res ){
 };
 
 module.exports.JSON.sendNotification = function( req, res ){
+  var logger = req.logger.create('Controller-Notifications');
+
   logger.info( ['Sending notification', req.param('id'), ' for order #', req.param('oid') ].join('') );
 
   var notification = notifier.defs[ req.param('id') ];
@@ -109,6 +104,8 @@ module.exports.JSON.sendNotification = function( req, res ){
 };
 
 module.exports.JSON.history = function( req, res ){
+  var logger = req.logger.create('Controller-Notifications');
+
   logger.info( 'Getting order notification history for order #' + req.param('oid') );
 
   utils.async.waterfall([
@@ -135,7 +132,7 @@ module.exports.JSON.history = function( req, res ){
         }
 
         notes = notes.map( function( note ){
-          note.email.url = getEmailUrl( req.param('oid'), note.nid );
+          note.data.url = getEmailUrl( req.param('oid'), note.nid );
           return utils.extend( note, utils.omit( notifier.defs[ note.nid ], 'id' ) );
         });
 
@@ -146,6 +143,8 @@ module.exports.JSON.history = function( req, res ){
 };
 
 module.exports.JSON.historyItem = function( req, res ){
+  var logger = req.logger.create('Controller-Notifications');
+
   logger.info( 'Getting order notification history for order #' + req.param('oid') );
 
   db.order_notifications.findOne( +req.param('id'), function( error, note ){
@@ -160,7 +159,9 @@ module.exports.JSON.historyItem = function( req, res ){
 };
 
 module.exports.getEmail = function( req, res ){
-  logger.info( 'Getting order notification email' + req.param('nid') + ' for order #' + req.param('oid') );
+  var logger = req.logger.create('Controller-Notifications');
+
+  logger.info( 'Getting order notification email ' + req.param('nid') + ' for order #' + req.param('oid') );
 
   var notification = notifier.defs[ req.param('nid') ];
 

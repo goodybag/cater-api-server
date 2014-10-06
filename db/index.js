@@ -8,14 +8,16 @@ var
   config = require('../config')
 
   // Database
-, pg = require('pg')
-, pgQuery = require('pg-query')
-, builder = require('mongo-sql')
-, dirac   = require('dirac')
-, fs      = require('fs')
-, path    = require('path')
-, helpers = require('./helpers')
-, Tx      = require('pg-transaction')
+, pg            = require('pg')
+, pgQuery       = require('pg-query')
+, builder       = require('mongo-sql')
+, dirac         = require('dirac')
+, fs            = require('fs')
+, path          = require('path')
+, helpers       = require('./helpers')
+, Tx            = require('pg-transaction')
+, typeParsers   = require('./type-parsers')
+, logger        = require('../lib/logger').create('DB')
 ;
 
 //apply the parse-float plugin to node-postgres
@@ -27,6 +29,18 @@ exports.builder = builder;
 
 pgQuery.connectionParameters = config.postgresConnStr;
 exports.query = pgQuery;
+
+// setInterval(
+//   function(){
+//     logger.info( 'Pools', { pools: pg.pools.all } );
+
+//     Object.keys( pg.pools.all ).forEach( function( k ){
+//       var pool = pg.pools.all[ k ];
+//       logger.info('Available %s', pool.availableObjectsCount());
+//     });
+//   }
+// , 5000
+// );
 
 exports.query2 = function(query, callback) {
   var sql = builder.sql(query);

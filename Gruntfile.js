@@ -44,7 +44,7 @@ module.exports = function(grunt) {
       }
 
     , handlebars: {
-        files: [ 'public/partials/*.hbs' ]
+        files: [ 'public/partials/*.hbs', 'views/**/partials/*.hbs', 'views/**/**/partials/*.hbs' ]
       , tasks: [ 'shell:handlebars' ]
       , options: { spawn: false }
       }
@@ -52,6 +52,12 @@ module.exports = function(grunt) {
     , react: {
         files: [ 'jsx/*.jsx' ]
       , tasks: [ 'react' ]
+      , options: { spawn: false }
+      }
+
+    , css: {
+        files: ['public/css/components.css']
+      , tasks: ['copy:legacy']
       , options: { spawn: false }
       }
     }
@@ -86,6 +92,10 @@ module.exports = function(grunt) {
     , versionPatch: {
         options: { stdout: true }
       , command: 'npm version patch'
+      }
+    , loggingServer: {
+        options: { stdout: true }
+      , command: 'node workers/logs'
       }
     }
 
@@ -273,7 +283,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'analyze',      ['complexity'] );
   grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'react', 'requirejs'] );
-  grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'watch'] );
+  grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'copy:legacy', 'shell:loggingServer', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 
   grunt.registerTask( 'deploy', [

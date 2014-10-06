@@ -1,31 +1,19 @@
 {{#extend "body"}}
   <table cellpadding="0" cellspacing="0" style="width: 100%;">
     <tr>
-      <td style="width: 10px"></td>
       <td>
         <table cellpadding="0" cellspacing="0" style="width: 100%;">
           <tr>
-            <td class="main-width-constraint" style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-right: 12px;">
-              <h1 style="line-height: 22px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">Your <strong>{{order.restaurant.name}}</strong> order for <strong>{{datepart order.datetime}}</strong> has been</h1>
-              <!--<StatusLabel>-->
-              <table cellpadding="0" cellspacing="0" style="width: 100%;">
-                <tr>
-                  <td colspan="3" style="width: 100%; padding-top: 16px"></td>
-                </tr>
-                <tr>
-                  <td width="50%"></td>
-                  <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 24px; padding-right: 24px; background: #5CB85C; color: #ffffff; font-size: 16px; font-family: Helvetica, arial, sans-serif; text-align: center;">accepted</td>
-                  <td width="50%"></td>
-                </tr>
-              </table>
-              <!--</StatusLabel>-->
-            </td>
             <td class="main-width-constraint" style="width: 46%; padding-bottom: 22px;">
               {{#eq order.type 'pickup'}}
-              {{> order_email_details_pickup order }}
+              {{> order_email_details_user_pickup}}
               {{else}}
-              {{> order_email_details_delivery order }}
+              {{> order_email_details_user_delivery}}
               {{/eq}}
+            </td>
+            <td class="main-width-constraint" style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-left: 12px;">
+              <h1 style="line-height: 36px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 28px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">Order #{{order.id}}<br>has been <span style="color: #5CB85C; font-weight: 700">Accepted</span></h1>
+              <p style="text-align: left; line-height: 22px; font-weight: 300; font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px;">Order placed at <a style="color: #1155cc" href="{{config.baseUrl}}/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a></p>
             </td>
           </tr>
         </table>
@@ -36,7 +24,7 @@
         <table cellpadding="0" cellspacing="0" style="width: 100%;">
           <tr>
             <td width="50%"></td>
-            <td style="padding-top: 2px; padding-top: 12px; font-size: 24px; font-weight: 300;">
+            <td style="padding-top: 30px; font-size: 24px; font-weight: 300;">
               <a href="{{config.baseUrl}}/orders/{{order.id}}" style="text-decoration: none; color: #ffffff; font-family: Helvetica, arial, sans-serif;">
                 <table cellpadding="0" cellspacing="0" style="">
                   <tr>
@@ -52,7 +40,6 @@
         </table>
         <!--</BigOlButton>-->
       </td>
-      <td style="width: 10px"></td>
     </tr>
   </table>
 

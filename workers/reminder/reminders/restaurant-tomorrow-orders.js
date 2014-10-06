@@ -7,12 +7,13 @@
  *   the same notification twice within the same window.
  */
 
-var Models  = require('../../../models');
-var utils   = require('../../../utils');
-var config  = require('../../../config');
-var views   = require('../lib/views');
-var queries = require('../../../db/queries');
-var db      = require('../../../db');
+var Models    = require('../../../models');
+var utils     = require('../../../utils');
+var config    = require('../../../config');
+var notifier  = require('../../../lib/order-notifier');
+var views     = require('../lib/views');
+var queries   = require('../../../db/queries');
+var db        = require('../../../db');
 
 module.exports.name = 'Restaurant Tomorrow Orders';
 
@@ -33,37 +34,10 @@ function getOrderQuery( storage ){
 function notifyOrderFn( order ){
   return utils.partial( utils.async.parallelNoBail, {
     email: function( done ){
-      db.contacts.find({ restaurant_id: order.attributes.restaurant_id, notify: true }, function( error, contacts ){
-        if ( error ) return done( error );
-
-        views.render( 'order-email/order-reminder', {
-          layout: 'email-layout'
-        , config: config
-        , order:  order.toJSON({ review: true })
-        }, function( error, html ){
-          if ( error ) return done( error );
-
-          utils.sendMail2({
-            to:       utils.flatten( utils.pluck( contacts, 'emails' ) )
-          , from:     config.emails.orders
-          , html:     html
-
-          , subject:  [
-                        '[REMINDER] Goodybag Order #'
-                      , order.attributes.id
-                      , ' to be delivered '
-                      , order.attributes.datetime
-                        ? 'on ' + moment( order.attributes.datetime ).format(
-                            'MM-DD-YYYY h:mma'
-                          ).split(' ').join(' at ')
-                        : 'tomorrow'
-                      ].join('')
-          }, function( error ){
-            // If successful, we want an easy way to know on the receiving end
-            // So just pass back the original order object as the results
-            done( error, error ? null : order );
-          });
-        });
+      notifier.send('restaurant-tomorrow-order', order.toJSON({ reivew: true }), function( error ){
+        // If successful, we want an easy way to know on the receiving end
+        // So just pass back the original order object as the results
+        done( error, error ? null : order );
       });
     }
 
@@ -79,7 +53,6 @@ module.exports.check = function( storage, callback ){
 
   Models.Order.findTomorrow( $query, function( error, results ){
     if ( error ) return callback( error );
-
     // Filter out restaurants that have already been notified
     results = results.filter( function( result ){
       if ( !storage.lastNotified[ result.attributes.id ] ) return true;

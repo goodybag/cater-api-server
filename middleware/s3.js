@@ -35,10 +35,17 @@ module.exports = function( options ){
       s3path = s3path.replace( new RegExp( ':' + part.name, 'g' ), req.param( part.name ) );
     });
 
+    var logger = req.logger.create('Middleware-S3', {
+      data: { path: s3path }
+    });
+
     knox.createClient(
       options
     ).getFile( s3path, function( error, fileRes ){
-      if ( error ) return res.error( error );
+      if ( error ){
+        logger.error( 'Error getting file from s3', error );
+        return res.error( error );
+      }
 
       fileRes.pipe( res );
     });

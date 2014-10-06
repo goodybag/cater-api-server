@@ -1,0 +1,24 @@
+{{!-- This partial expects the context to be a list of photos --}}
+{{#if this}}
+<div class="photos">
+
+  {{#each this}}
+  {{#eq @index 0}}
+  <div class="tile jumbo">
+    <img src="{{filepicker url 718 350}}">
+    <h2><span>{{name}}</span></h2>
+  </div>
+  {{else}}
+  <div class="tile">
+    <img src="{{filepicker url 350 350}}">
+    {{#if name}}
+    <h2>
+      <span>{{name}}</span>
+    </h2>
+    {{/if}}
+  </div>
+
+  {{/eq}}
+  {{/each}}
+</div>
+{{/if}}

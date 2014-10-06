@@ -6,6 +6,10 @@ var CronJob = require('cron').CronJob;
 var config = require('../../config');
 var utils = require('../../utils');
 
+// Ensure scheduler actions and scheduler module share
+// the same base logging instance
+scheduler.provideLogger( require('./logger') );
+
 var reduceJobTriggered = function(memo, data) {
   return memo || data.value;
 }

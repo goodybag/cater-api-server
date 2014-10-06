@@ -6,11 +6,12 @@
  *   be delivered tomorrow.
  */
 
-var Models  = require('../../../models');
-var utils   = require('../../../utils');
-var config  = require('../../../config');
-var views   = require('../lib/views');
-var queries = require('../../../db/queries');
+var Models    = require('../../../models');
+var utils     = require('../../../utils');
+var config    = require('../../../config');
+var notifier  = require('../../../lib/order-notifier');
+var views     = require('../lib/views');
+var queries   = require('../../../db/queries');
 
 module.exports.name = 'Client Tomorrow Orders';
 
@@ -31,32 +32,11 @@ function getOrderQuery( storage ){
 function notifyOrderFn( order ){
   return utils.partial( utils.async.parallelNoBail, {
     email: function( done ){
-      views.render( 'order-email/order-reminder', {
-        layout: 'email-layout'
-      , config: config
-      , order:  order.toJSON()
-      }, function( error, html ){
-        if ( error ) return done( error );
-
-        utils.sendMail2({
-          to:       order.attributes.user.email
-        , from:     config.emails.orders
-        , html:     html
-
-        , subject:  [
-                      '[REMINDER] Goodybag Order #'
-                    , order.attributes.id
-                    , ' to be delivered '
-                    , order.attributes.datetime
-                      ? 'on ' + moment( order.attributes.datetime ).format('MM-DD-YYYY')
-                      : 'tomorrow'
-                    ].join('')
-        }, function( error ){
-          // If successful, we want an easy way to know on the receiving end
-          // So just pass back the original order object as the results
-          done( error, error ? null : order );
-        });
-      })
+      notifier.send('client-tomorrow-order', order.toJSON(), function( error ){
+        // If successful, we want an easy way to know on the receiving end
+        // So just pass back the original order object as the results
+        done( error, error ? null : order );
+      });
     }
   });
 };

@@ -18,6 +18,9 @@ var
 , rollbar = require("rollbar")
 , Handlebars = require('hbs')
 , moment = require('moment-timezone')
+, mandrill = require('mandrill-api/mandrill')
+, twilio = require('twilio')
+, Bitly = require('bitly')
 
   // Make underscores/async functionality available on utils
 , utils     = lodash.extend({}, lodash, {async: async}, require('./public/js/lib/utils'))
@@ -27,6 +30,9 @@ var local = {};
 if (fs.existsSync('./local-config.json')){
   local = require('./local-config.json');
 }
+
+utils.twilio = twilio(config.twilio.account, config.twilio.token);
+utils.bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 
 utils.words = require('pluralize');
 
@@ -56,6 +62,27 @@ utils.balanced = new Balanced({
   marketplace_uri: config.balanced.marketplaceUri
 , secret: config.balanced.secret
 });
+
+utils.editAllKeys = function( obj, fn ){
+  var val, newKey;
+
+  for ( var key in obj ){
+    val = obj[ key ];
+
+    if ( typeof val === 'object' && val !== null && val !== undefined ){
+      utils.editAllKeys( val, fn );
+    }
+
+    newKey = fn( key, val, obj );
+
+    if ( key !== newKey ){
+      obj[ newKey ] = val;
+      delete obj[ key ];
+    }
+  }
+
+  return obj;
+};
 
 utils.test = {};
 function getRequestMethod( method, opts ){
@@ -247,6 +274,7 @@ utils.del = function(url, callback){
 };
 
 var mailgun = new Mailgun(config.mailgun.apiKey);
+mandrill = new mandrill.Mandrill(config.mandrill.apiKey);
 
 /**
  * Send mail. Why are there two versions? Because sendMail1
@@ -301,8 +329,20 @@ utils.sendMail2 = function( options, callback ){
   composer.buildMessage( function( error, message ){
     if ( error ) return callback( error );
 
-    mailgun.sendRaw( options.from, options.to, message, callback );
+    utils.sendRawEmail( options.from, options.to, message, callback );
   });
+};
+
+utils.sendRawEmail = function( from, to, text, callback ){
+  if ( config.emailProvider === 'mailgun' ){
+    mailgun.sendRaw( options.from, options.to, message, callback );
+  } else if ( config.emailProvider === 'mandrill' ){
+    mandrill.messages.sendRaw({
+      from_email: from
+    , to: Array.isArray( to ) ? to : [ to ]
+    , raw_message: text
+    }, function( result ){ callback( null, result ); }, callback );
+  }
 };
 
 utils.sendMail = function(to, from, subject, html, text, callback) {

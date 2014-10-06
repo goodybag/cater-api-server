@@ -1,0 +1,24 @@
+<div style="font-family: Helvetica, arial, sans-serif">
+  <p>Hello!</p>
+
+  <p>{{order.user.organization}} wants to make the following change to their order scheduled
+    {{#is order.type 'pickup' 'courier'}}
+      for pickup at {{timepart order.pickup_datetime}} on {{datepart order.pickup_datetime}}.
+    {{else}}
+      for delivery at {{timepart order.datetime}} on {{datepart order.datetime}}.
+    {{/is}}
+  </p>
+
+  <blockquote style="background: #f9f9f9; border-left: 5px solid #ccc; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">{{options.changedDescription}}</blockquote>
+
+  <p>Here is your updated order reflecting that change: <a href="{{config.baseUrl}}/manifests/manifest-{{order.id}}.pdf">{{config.baseUrl}}/manifests/manifest-{{order.id}}.pdf</a></p>
+
+  <p>PLEASE CONFIRM that you have received this email by replying!</p>
+
+  <p>Thanks,</p>
+
+  <strong>Sarah Southwell </strong>
+  <div>Business Development Manager | Goodybag</div>
+  <div>tel: 512.270.6555 | mobile: 978.846.1970 </div>
+  <div>sarahsouthwell@goodybag.com | goodybag.com</div>
+</div>

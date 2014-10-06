@@ -22,6 +22,9 @@
     </div>
     <ul class="nav nav-tabs menu-info-tabs">
       <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
+      {{#if restaurant.photos.length}}
+      <li><a href="#photos" data-toggle="tab">Photos</a></li>
+      {{/if}}
       <li><a class="info-tab" href="#info" data-toggle="tab">Info</a></li>
       {{#if restaurant.yelp_data}}
       {{#if restaurant.yelp_data.review_count}}
@@ -136,6 +139,12 @@
 
       <div class="tab-pane panel" id="reviews">
         <div class="panel-body">{{> menu_tab_reviews}}</div>
+      </div>
+
+      <div class="tab-pane panel" id="photos">
+        {{#with restaurant.photos}}
+        <div class="panel-body">{{> menu_photo_gallery}}</div>
+        {{/with}}
       </div>
     </div>
   </div>

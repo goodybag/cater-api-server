@@ -4,7 +4,6 @@ var options = {
   email: 'test@goodybag.com'
 , phoneSms: '1234567890'
 , phoneVoice: '1234567890'
-, concurrency: 10
 };
 
 var fs = require('fs');
@@ -37,6 +36,6 @@ var query = {
 };
 
 db.query2(query, function(error, results) {
-  console.log(error ? error : results.length + ' contacts updated');
+  console.log(error ? error : '✓ ' + results.length + ' contacts updated');
   process.exit(error ? 1 : 0);
 });

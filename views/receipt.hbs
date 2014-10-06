@@ -212,12 +212,15 @@
       {{#if isAdmin}}
       <div class="row adjustment editable">
         <div class="col-lg-8">
-          <textarea class="form-control adjustment-description" rows="3">{{order.adjustment.description}}</textarea>
+          <textarea class="form-control adjustment-description" rows="3" name="adjustment_description">{{order.adjustment.description}}</textarea>
+          <textarea class="form-control adjustment-description" rows="3" name="user_adjustment_description">{{order.user_adjustment_description}}</textarea>
         </div>
         <div class="col-lg-4">
           <dl class="adjustment-input pull-right">
             <dt>Adjustment:</dt>
-            <dd><input type="number" class="form-control adjustment-amount" value="{{dollars order.adjustment.amount}}"></dd>
+            <dd><input type="number" class="form-control adjustment-amount" value="{{dollars order.adjustment.amount}}" name="adjustment_amount"></dd>
+            <dt>User Adjustment:</dt>
+            <dd><input type="number" class="form-control adjustment-amount" value="{{dollars order.user_adjustment_amount}}" name="user_adjustment_amount"></dd>
           </dl>
         </div>
       </div>

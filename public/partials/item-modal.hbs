@@ -41,7 +41,7 @@
         </div>
         <div class="col-xs-6 modal-footer-right-actions form-inline">
             <div class="form-group">
-              <label class="control-label col-lg-2" for="item-modal-quantity">Quantity</label>
+              <label class="control-label col-lg-2" for="item-modal-quantity">Quantity {{#if item.min_qty}}(min. {{item.min_qty}}){{/if}}</label>
             </div>
             <div class="form-group">
               <input type="number" class="form-control item-quantity col-lg-1" id="item-modal-quantity" maxlength="4" min="0" value="{{#if item.quantity}}{{item.quantity}}{{else}}1{{/if}}"{{#unless editable}} disabled="true"{{/unless}} />

@@ -137,8 +137,6 @@ define(function(require, exports, module) {
       if ( attrs.min_qty && attrs.quantity < attrs.min_qty ) {
         errors.push({
           name: 'MIN_QUANTITY_REQUIRED',
-          // optionSetName:  'min-qty',
-          // optionSetId:    'min-qty',
           message: 'Item quantity must be ' + attrs.min_qty + ' or greater'
         });
       }

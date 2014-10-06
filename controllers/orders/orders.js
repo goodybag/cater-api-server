@@ -299,7 +299,7 @@ module.exports.changeStatus = function(req, res) {
       && req.order.isAdmin
       && req.query.notify
       && req.query.notify.toLowerCase() == 'false'
-    )) venter.emit('order:status:change', new models.Order( req.order ), previousStatus), console.log('EMITTED GOD DAMN');
+    )) venter.emit('order:status:change', new models.Order( req.order ), previousStatus);
   }
 
   var $update = {

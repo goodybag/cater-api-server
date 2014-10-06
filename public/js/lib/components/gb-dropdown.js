@@ -8,7 +8,6 @@ if (typeof module === 'object' && typeof define !== 'function') {
   };
 }
 
-
 define(function(require){
   var $ = require('jquery');
 

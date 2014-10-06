@@ -648,6 +648,7 @@ module.exports.register = function(app) {
     , userPaymentMethods: true
     , restaurant:         true
     , deliveryService:    true
+    , submittedDate:      true
     })
   , controllers.orders.auth
   , m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant'])

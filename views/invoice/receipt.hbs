@@ -106,6 +106,9 @@
     <div class="order-bottom">
       <div class="order-adjustment columns">
         <p class="adjustment-notes column-fluid">{{order.adjustment.description}}</p>
+        {{#if order.user_adjustment_description}}
+        <p class="adjustment-notes column-fluid">{{order.user_adjustment_description}}</p>
+        {{/if}}
         <div class="column-fluid adjustment-amount-wrapper">
           <dl class="dl-adjustment-amount dl-horizontal">
             <dt>Adjustment:</dt>

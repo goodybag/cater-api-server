@@ -572,6 +572,34 @@ config.production = {
   }
 };
 
+config.india = {
+  env: 'india'
+, baseUrl: 'https://india.goodybag.com'
+, isIndia: true
+, http: {
+    port: process.env['PORT'] || 5000
+  , timeout: 8000
+  }
+, logging: {
+    enabled: true
+  , transports: {
+      console: true
+    , papertrail: true
+    }
+  , console: {
+      json: true
+    , raw: true
+    }
+  , papertrail: {
+      host: 'logs.papertrailapp.com'
+    , port: 34830
+    }
+  , mongoConnStr: process.env['MONGOHQ_URL']
+  , mongoCollection: 'logs'
+  , httpPort: 3001
+  }
+};
+
 config.test = _.extend( _.clone( config.dev ), {
   env: 'test'
 , baseUrl: 'http://localhost:3001'

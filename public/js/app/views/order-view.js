@@ -9,6 +9,7 @@ define(function(require, exports, module) {
   var OrderAddressView = require('./order-address-view');
   var CopyErrorModalView = require('./copy-error-modal');
   var TipView = require('./tip-view');
+  var helpers = require('hb-helpers');
 
 
   var OrderView = FormView.extend({
@@ -40,7 +41,9 @@ define(function(require, exports, module) {
       tip: '.order-tip',
       tip_percent: '.tip-percent',
       quantity: '.order-item-quantity',
-      adjustment: '.adjustment .form-control'
+      adjustment: '[name="adjustment_description"]',
+      user_adjustment_description: '[name="user_adjustment_description"]',
+      user_adjustment_amount: '[name="user_adjustment_amount"]'
     },
 
     fieldGetters: {
@@ -73,12 +76,18 @@ define(function(require, exports, module) {
         if (!$adj.hasClass('editable'))
           return this.model.get('adjustment');
 
-        var desc = $adj.find('.adjustment-description').val().trim() || null
-        var amount = Math.round($adj.find('.adjustment-amount').val().trim() * 100)
+        var desc = $adj.find('[name="adjustment_description]').val().trim() || null
+        var amount = Math.round($adj.find('[name="adjustment_amount]').val().trim() * 100)
         return {
           description: desc,
           amount: !utils.isNaN(amount) ? amount : null
         };
+      }
+
+    , user_adjustment_amount: function(){
+        return helpers.pennies(
+          this.$el.find( this.fieldMap.user_adjustment_amount ).val()
+        );
       }
     },
 

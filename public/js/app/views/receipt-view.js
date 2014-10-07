@@ -82,30 +82,10 @@ define(function(require, exports, module) {
 
     fieldMap: _.extend({
       reason_denied: '.reason-denied'
-    , adjustment: '[name="adjustment_description"]'
-    , user_adjustment_description: '[name="user_adjustment_description"]'
-    , user_adjustment_amount: '[name="user_adjustment_amount"]'
     }, OrderView.prototype.fieldMap),
 
     fieldGetters: _.extend({
-      adjustment: function() {
-        var $adj = this.$el.find('.adjustment');
-        if (!$adj.hasClass('editable'))
-          return this.model.get('adjustment');
 
-        var desc = $adj.find('[name="adjustment_description]').val().trim() || null
-        var amount = Math.round($adj.find('[name="adjustment_amount]').val().trim() * 100)
-        return {
-          description: desc,
-          amount: !utils.isNaN(amount) ? amount : null
-        };
-      }
-
-    , user_adjustment_amount: function(){
-        return helpers.pennies(
-          this.$el.find( this.fieldMap.user_adjustment_amount ).val()
-        );
-      }
     }, OrderView.prototype.fieldGetters),
 
     rejectOrder: function() {

@@ -598,6 +598,7 @@ config.india = {
   , mongoCollection: 'logs'
   , httpPort: 3001
   }
+, ironMq: config.staging.ironMq
 };
 
 config.test = _.extend( _.clone( config.dev ), {

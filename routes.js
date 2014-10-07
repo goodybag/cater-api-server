@@ -243,6 +243,20 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/admin/users/:id'
+  , m.param('id')
+  , m.queryOptions({
+      one: [{ table: 'regions', alias: 'region' }]
+    , userGroups: false
+    })
+  // , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
+  , m.viewPlugin( 'mainNav', { active: 'users' })
+  , m.view( 'admin/user/edit', db.users, {
+      layout: 'admin/layout2'
+    , method: 'findOne'
+    })
+  );
+
   /**
    * Restaurant list
    */

@@ -651,6 +651,26 @@ dirac.use( function( dirac ){
   });
 });
 
+dirac.use( function( dirac ){
+  var userGroups = function( $query, schema, next ){
+    if ( !$query.userGroups ) return next();
+
+    $query.columns  = $query.columns  || ['*'];
+    $query.columns.push({
+      type: 'array'
+    , expression: {
+        type: 'select'
+      , columns: 'group'
+      , table: 'users_groups'
+      , where: { 'user_id': '$users.id$' }
+      }
+    });
+    next();
+  };
+  dirac.dals.users.before('find', userGroups);
+  dirac.dals.users.before('findOne', userGroups);
+});
+
 // Order status sorting
 dirac.use( function( dirac ){
   dirac.dals.orders.before( 'find', function( $query, schema, next ){

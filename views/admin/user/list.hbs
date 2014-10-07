@@ -33,10 +33,10 @@
       <tbody>
       {{#each users}}
         <tr>
-          <td>{{id}}</td>
           <td>
-            <a href="/admin/users/{{id}}">{{name}}</a>
+            <a href="/admin/users/{{id}}">{{id}}</a>
           </td>
+          <td>{{name}}</td>
           <td>{{email}}</td>
           <td>{{organization}}</td>
           <td>{{region.name}}</td>
@@ -51,23 +51,6 @@
 
 {{#extend "scripts"}}
 <script>
-  define(
-    'page'
-  , [ 'jquery-loaded', 'app/views/admin/readable-table', '{{collection.path}}' ]
-  , function( $, Table, Collection ){
-      var page = {
-        init: function(){
-          $(function(){
-            page.table = new Table({ collection: new Collection() });
-            page.table.setElement( $('#delivery-services-table > table') );
-          });
-        }
-      };
 
-      return page;
-    }
-  );
-
-  require(['page'], function( page ){ page.init(); });
 </script>
 {{/extend}}

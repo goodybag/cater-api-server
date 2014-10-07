@@ -187,6 +187,7 @@ returns void as $$
   declare sales_tax         int := 0;
   declare total             int := 0;
   declare restaurant_total  int := 0;
+  declare r_sales_tax       int := 0;
   declare curr              int := 0;
   declare tax_exempt        boolean;
 begin
@@ -228,8 +229,7 @@ begin
     sub_total := sub_total + (curr * order_item.quantity);
   end loop;
 
-  sub_total         := sub_total + coalesce( o.adjustment_amount, 0 );
-  total             := sub_total + delivery_fee;
+  total             := sub_total + delivery_fee + coalesce( o.adjustment_amount, 0 );
 
   -- Values for restaurant_total and total can diverge
   -- since there are user specific adjustements now
@@ -244,29 +244,31 @@ begin
   total             := total + sales_tax + o.tip;
 
   if not tax_exempt then
-    sales_tax       := round( restaurant_total * tax_rate );
+    r_sales_tax     := round( restaurant_total * tax_rate );
   end if;
 
-  restaurant_total  := restaurant_total + sales_tax + o.tip;
+  restaurant_total  := restaurant_total + r_sales_tax + o.tip;
 
   -- Debug
-  raise notice '#############################';
-  raise notice 'Delivery Fee:           %', delivery_fee;
-  raise notice 'Tax Rate:               %', tax_rate;
-  raise notice 'Sub Total:              %', sub_total;
-  raise notice 'Sales Tax:              %', sales_tax;
-  raise notice 'Total:                  %', total;
-  raise notice 'R. Total:               %', restaurant_total;
-  raise notice '#############################';
+  -- raise notice '#############################';
+  -- raise notice 'Delivery Fee:           %', delivery_fee;
+  -- raise notice 'Tax Rate:               %', tax_rate;
+  -- raise notice 'Sub Total:              %', sub_total;
+  -- raise notice 'Sales Tax:              %', sales_tax;
+  -- raise notice 'Total:                  %', total;
+  -- raise notice 'R. Sales Tax:           %', r_sales_tax;
+  -- raise notice 'R. Total:               %', restaurant_total;
+  -- raise notice '#############################';
 
   execute 'update orders set '
     || 'sub_total = $1, '
     || 'total = $2, '
     || 'sales_tax = $3, '
     || 'delivery_fee = $4, '
-    || 'restaurant_total = $5 '
-    || 'where id = $6'
-    using sub_total, total, sales_tax, delivery_fee, restaurant_total, o.id;
+    || 'restaurant_total = $5, '
+    || 'restaurant_sales_tax = $6 '
+    || 'where id = $7'
+    using sub_total, total, sales_tax, delivery_fee, restaurant_total, r_sales_tax, o.id;
 end;
 $$ language plpgsql;
 

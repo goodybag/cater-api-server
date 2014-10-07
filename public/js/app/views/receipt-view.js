@@ -3,6 +3,7 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var states = require('states');
   var moment = require('moment');
+  var helpers = require('hb-helpers');
 
   var OrderView = require('./order-view');
   var FormView = require('./form-view');
@@ -98,6 +99,12 @@ define(function(require, exports, module) {
           description: desc,
           amount: !utils.isNaN(amount) ? amount : null
         };
+      }
+
+    , user_adjustment_amount: function(){
+        return helpers.pennies(
+          this.$el.find( this.fieldMap.user_adjustment_amount ).val()
+        );
       }
     }, OrderView.prototype.fieldGetters),
 

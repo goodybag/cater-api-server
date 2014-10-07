@@ -660,10 +660,11 @@ dirac.use( function( dirac ){
       type: 'array'
     , expression: {
         type: 'select'
-      , columns: 'group'
+      , columns: ['group']
       , table: 'users_groups'
       , where: { 'user_id': '$users.id$' }
       }
+    , alias: 'groups'
     });
     next();
   };

@@ -52,7 +52,8 @@ define(function(require, exports, module) {
       e.preventDefault();
       console.log('submit');
       this.model.save(this.model.changedAttributes(), {
-        success: this.onSuccess
+        patch: true
+      , success: this.onSuccess
       , error: this.onError
       });
     }

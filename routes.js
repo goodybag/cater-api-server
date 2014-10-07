@@ -247,7 +247,7 @@ module.exports.register = function(app) {
   , m.param('id')
   , m.queryOptions({
       one: [{ table: 'regions', alias: 'region' }]
-    , userGroups: false
+    , userGroups: true
     })
   // , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
   , m.viewPlugin( 'mainNav', { active: 'users' })

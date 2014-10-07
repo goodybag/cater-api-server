@@ -38,6 +38,37 @@
         <input type="text" class="form-control" placeholder="Enter region">
       </div>
       <div class="form-group">
+        <label>Permission Groups</label>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              class="form-control"
+              {{#contains user.groups "client"}}checked="checked"{{/contains}}>
+              Client
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              class="form-control"
+              {{#contains user.groups "admin"}}checked="checked"{{/contains}}>
+              Admin
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              class="form-control"
+              {{#contains user.groups "receipts"}}checked="checked"{{/contains}}>
+              Receipts
+          </label>
+        </div>
+
+      </div>
+      <div class="form-group">
         <button class="btn btn-primary" type="submit">Save</button>
       </div>
     </form>

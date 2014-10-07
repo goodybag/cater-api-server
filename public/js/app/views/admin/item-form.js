@@ -23,6 +23,7 @@ define(function(require, exports, module) {
     }
 
   , initialize: function( options ){
+      this.options = options;
       return this;
     }
 
@@ -33,7 +34,8 @@ define(function(require, exports, module) {
       spinner.start();
 
       this.model.save( this.getModelData(), {
-        success: function(){
+        patch: this.options.patch || false
+      , success: function(){
           spinner.stop();
           venter.trigger( 'item:saved', this_.model );
           this_.trigger( 'item:saved', this_.model, this_ );

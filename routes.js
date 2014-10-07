@@ -249,6 +249,7 @@ module.exports.register = function(app) {
       one: [{ table: 'regions', alias: 'region' }]
     , userGroups: true
     })
+  , m.db.regions.find( {}, { limit: 'all' } )
   // , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
   , m.viewPlugin( 'mainNav', { active: 'users' })
   , m.view( 'admin/user/edit', db.users, {

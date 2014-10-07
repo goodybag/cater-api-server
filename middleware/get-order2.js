@@ -5,7 +5,9 @@
 
 var utils           = require('../utils');
 var errors          = require('../errors');
+var Models          = require('../models');
 var db              = require('../db');
+var manifest        = require('../lib/order-manifester');
 var orderEditable   = require('./order-editable');
 
 module.exports = function( options ){
@@ -92,6 +94,10 @@ module.exports = function( options ){
       if ( options.restaurant )
       if ( options.deliveryService ){
         order.restaurant.delivery_service = order.delivery_service;
+      }
+
+      if ( options.manifest ){
+        order.manifest = manifest.create( order.orderItems );
       }
 
       req.order = order;

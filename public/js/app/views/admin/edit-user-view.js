@@ -42,10 +42,22 @@ define(function(require, exports, module) {
     }
   , onChange: function(e) {
       var $changed = this.$(e.currentTarget);
-      var val = $changed.val();
       var prop = $changed.attr('name');
+      var type = $changed.data('type');
+      var val;
+
+      // Handle various input data-types
+      if ( type === 'list' ) {
+        var $checkboxes = this.$el.find('[name="' + prop + '"]:checked');
+        val = $checkboxes.map( function() {
+          return $(this).val();
+        }).get();
+      } else {
+        val = $changed.val();
+      }
+
+      // Update model
       this.model.set(prop, val);
-      console.log(this.model.changedAttributes());
     }
 
   , onSubmit: function(e) {
@@ -57,6 +69,7 @@ define(function(require, exports, module) {
       , error: this.onError
       });
     }
+
   , onSuccess: function() {
       console.log('success');
     }

@@ -598,8 +598,14 @@ config.india = {
   , mongoCollection: 'logs'
   , httpPort: 3001
   }
-, ironMQ: config.staging.ironMQ
 };
+
+// fields to copy from staging to india
+[
+  'ironMQ', 'balanced', 'rollbar', 'mandrill'
+].forEach( function( key ){
+  config.india[ key ] = config.staging[ key ];
+});
 
 config.test = _.extend( _.clone( config.dev ), {
   env: 'test'

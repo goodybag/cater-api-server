@@ -76,8 +76,8 @@ define(function(require, exports, module) {
         if (!$adj.hasClass('editable'))
           return this.model.get('adjustment');
 
-        var desc = $adj.find('[name="adjustment_description]').val().trim() || null
-        var amount = Math.round($adj.find('[name="adjustment_amount]').val().trim() * 100)
+        var desc = $adj.find('[name="adjustment_description"]').val().trim() || null
+        var amount = Math.round($adj.find('[name="adjustment_amount"]').val().trim() * 100)
         return {
           description: desc,
           amount: !utils.isNaN(amount) ? amount : null

@@ -226,6 +226,24 @@ module.exports.register = function(app) {
   );
 
   /**
+   * Users list
+   */
+
+
+  app.get('/admin/users'
+  , m.sort('-id')
+  , m.queryOptions({
+      one: [{ table: 'regions', alias: 'region' }]
+    })
+  // , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
+  , m.viewPlugin( 'mainNav', { active: 'users' })
+  , m.view( 'admin/user/list', db.users, {
+      layout: 'admin/layout2'
+    , method: 'find'
+    })
+  );
+
+  /**
    * Restaurant list
    */
 

@@ -1,0 +1,73 @@
+{{#extend "page"}}page-users{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <ul class="breadcrumbs main-breadcrumbs">
+    <li>
+      <a href="/admin">Admin Panel</a>
+    </li>
+    <li>Users</a></li>
+  </ul>
+
+  <h1 class="page-title">Users</h1>
+  <div class="page-actions">
+    <a
+      class="btn btn-primary"
+      href="/admin/user/new">
+      Create
+    </a>
+  </div>
+
+  <section class="panel-component" id="users-table">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Organization</th>
+          <th>Region</th>
+          <th>Signed up</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each users}}
+        <tr>
+          <td>{{id}}</td>
+          <td>
+            <a href="/admin/users/{{id}}">{{name}}</a>
+          </td>
+          <td>{{email}}</td>
+          <td>{{organization}}</td>
+          <td>{{region.name}}</td>
+          <td>{{datepart created_at}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </section>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  define(
+    'page'
+  , [ 'jquery-loaded', 'app/views/admin/readable-table', '{{collection.path}}' ]
+  , function( $, Table, Collection ){
+      var page = {
+        init: function(){
+          $(function(){
+            page.table = new Table({ collection: new Collection() });
+            page.table.setElement( $('#delivery-services-table > table') );
+          });
+        }
+      };
+
+      return page;
+    }
+  );
+
+  require(['page'], function( page ){ page.init(); });
+</script>
+{{/extend}}

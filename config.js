@@ -577,6 +577,7 @@ config.india = {
 , baseUrl: 'https://india.goodybag.com'
 , isIndia: true
 , cdn: config.production.cdn
+, postgresConnStr: process.env['DATABASE_URL']
 };
 
 // fields to copy from staging to india

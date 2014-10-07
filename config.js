@@ -582,7 +582,8 @@ config.india = {
 
 // fields to copy from staging to india
 [
-  'http', 'logging', 'ironMQ', 'balanced', 'rollbar', 'mandrill'
+  'http', 'logging', 'ironMQ', 'balanced', 'rollbar'
+, 'mandrill', 'segmentIo', 'intercom'
 ].forEach( function( key ){
   config.india[ key ] = config.staging[ key ];
 });

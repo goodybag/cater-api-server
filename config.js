@@ -212,6 +212,7 @@ config.defaults = {
   , welcome: 'jacobparker@goodybag.com'
   , rewards: [ local.testEmail || 'test@goodybag.com' ]
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]
+  , reminderIgnored: [ local.testEmail || 'test@goodybag.com' ]
   , orderNotificationChecks: [ local.testEmail || 'test@goodybag.com' ]
   }
 
@@ -535,6 +536,14 @@ config.production = {
     ]
   , dsOrders: [
       'sarahsouthwell@goodybag.com'
+    , 'christymedlock@goodybag.com'
+    ]
+  , reminderIgnored: [
+      'om@goodybag.com'
+    , 'jay@goodybag.com'
+    , 'jag@goodybag.com'
+    , 'jacobparker@goodybag.com'
+    , 'sarahsouthwell@goodybag.com'
     , 'christymedlock@goodybag.com'
     ]
   , orderNotificationChecks: [

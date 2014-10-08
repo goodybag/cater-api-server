@@ -17,6 +17,15 @@ var dollars = hbHelpers.dollars;
 var quoteVal = function(val) {
   return val ? '"'+val+'"' : '';
 };
+var parseDatetime = function(opts) {
+  opts = opts || {};
+  opts.fmt = opts.fmt || 'YYYY-MM-DD HH:mm';
+  var datetime = opts.time ? opts.date + ' ' + opts.time : opts.date;
+  datetime = moment(datetime);
+
+  if ( opts.addDay ) datetime.add('d', 1);
+  return datetime.format(opts.fmt);
+};
 
 var reports = {
 
@@ -40,8 +49,18 @@ var reports = {
     });
 
     var status = req.query.status || 'accepted';
-    var start = req.query.start || '2012-01-01';
-    var end = moment(req.query.end || new Date()).add('d',1).format('YYYY-MM-DD');
+
+    var start = parseDatetime({
+      date: req.query.startDate || '2012-01-01'
+    , time: req.query.startTime
+    });
+
+    var end = parseDatetime({
+      date: req.query.endDate || new Date()
+    , time: req.query.endTime
+    , addDay: true // make end datetime inclusive
+    });
+
     var range = req.query.range || 'datetime';
     var sort = req.query.sort || 'asc';
     var restaurantId = req.query.restaurantId;
@@ -116,8 +135,12 @@ var reports = {
 
     options.submittedDate = true;
 
+    rlogger.info('Filtering by %s', range, { start: start, end: end });
     db.orders.find(where, options, function(err, results) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      if (err) {
+        rlogger.error('Unable to find orders', err);
+        return res.end();
+      }
       results
         .forEach( function(order) {
           res.csv.writeRow([
@@ -125,7 +148,7 @@ var reports = {
           , hbHelpers.orderTypeAbbr(order)
 
           // order.submitted is a timestamptz, it needs to be converted
-          , order.submitted ? 
+          , order.submitted ?
               moment(order.submitted).tz(order.timezone).format(reports.dateFormat) :
               'N/A'
 

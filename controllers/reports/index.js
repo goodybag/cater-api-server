@@ -23,7 +23,6 @@ var parseDatetime = function(opts) {
   var datetime = opts.time ? opts.date + ' ' + opts.time : opts.date;
   datetime = moment(datetime);
 
-  if ( opts.addDay ) datetime.add('d', 1);
   return datetime.format(opts.fmt);
 };
 
@@ -58,7 +57,6 @@ var reports = {
     var end = parseDatetime({
       date: req.query.endDate || new Date()
     , time: req.query.endTime
-    , addDay: true // make end datetime inclusive
     });
 
     var range = req.query.range || 'datetime';
@@ -79,6 +77,7 @@ var reports = {
       'Order Number'
     , 'Order Type'
     , 'Date Submitted'
+    , 'Date Accepted'
     , 'Delivery Date'
     , 'User Name'
     , 'User Email'
@@ -134,6 +133,7 @@ var reports = {
     ];
 
     options.submittedDate = true;
+    options.acceptedDate = true;
 
     rlogger.info('Filtering by %s', range, { start: start, end: end });
     db.orders.find(where, options, function(err, results) {
@@ -150,6 +150,9 @@ var reports = {
           // order.submitted is a timestamptz, it needs to be converted
           , order.submitted ?
               moment(order.submitted).tz(order.timezone).format(reports.dateFormat) :
+              'N/A'
+          , order.accepted ?
+              moment(order.accepted).tz(order.timezone).format(reports.dateFormat) :
               'N/A'
 
           // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such

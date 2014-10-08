@@ -31,11 +31,22 @@
       <select name="range">
         <option value="datetime">Delivery Date</option>
         <option value="submitted">Date Submitted</option>
+        <option value="accepted">Date Accepted</option>
       </select>
-      <label>Start</label>
-      <input class="datepicker" name="start">
-      <label>End</label>
-      <input class="datepicker" name="end">
+    </div>
+
+    <div class="form-group">
+      <label>Start Date</label>
+      <input class="datepicker" name="startDate">
+      <label>Start Time</label>
+      <input class="timepicker" name="startTime">
+    </div>
+
+    <div class="form-group">
+      <label>End Date</label>
+      <input class="datepicker" name="endDate">
+      <label>End Time</label>
+      <input class="timepicker" name="endTime">
     </div>
 
     <div class="form-group">
@@ -76,6 +87,7 @@
       $('.datepicker').pickadate({
         format: 'yyyy-mm-dd'
       });
+      $('.timepicker').pickatime();
     }
   );
 </script>

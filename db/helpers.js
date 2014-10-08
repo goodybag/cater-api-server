@@ -688,24 +688,52 @@ dirac.use( function( dirac ){
   });
 });
 
-// Order submitted date
+/** Optional query options for `orders.find`
+   - submittedDate is a boolean to attach datetime submitted
+   - acceptedDate is a boolean to attach datetime accepted
+*/
 dirac.use( function( dirac ){
-  var submittedDate = function( $query, schema, next ){
-    if ( !$query.submittedDate ) return next();
 
-    $query.columns  = $query.columns  || ['*'];
-    $query.columns.push({
-      type: 'select'
-    , table: 'order_statuses'
-    , alias: 'submitted'
-    , columns: [ { type: 'max', expression: 'created_at' } ]
-    , where: { status: 'submitted', order_id: '$orders.id$' }
-    });
-    next();
+  var statuses = [ 'submitted', 'accepted' ];
+
+  // Create and register an order middleware for retrieving
+  // latest status timestamp
+  var registerMiddleware = function(status) {
+    var mw = function( $query, schema, next ){
+      var flag = status + 'Date';
+
+      // Must opt-in to this middleware
+      if ( !$query[flag] ) return next();
+
+      $query.with     = $query.with     || [];
+      $query.joins    = $query.joins    || [];
+      $query.columns  = $query.columns  || ['*'];
+
+      var cteName = status + '_dates';
+      $query.with.push({
+        name:     cteName
+      , type:     'select'
+      , table:    'order_statuses'
+      , columns:  [ 'order_id', { type: 'max', expression: 'created_at', alias: status } ]
+      , groupBy:  'order_id'
+      , where:    { status: status }
+      });
+
+      $query.joins.push({
+        type:     'left'
+      , target:   cteName
+      , on:       { order_id: '$orders.id$' }
+      })
+
+      $query.columns.push( cteName + '.' + status );
+      next();
+    };
+
+    dirac.dals.orders.before( 'find', mw );
+    dirac.dals.orders.before( 'findOne', mw );
   };
 
-  dirac.dals.orders.before( 'find', submittedDate );
-  dirac.dals.orders.before( 'findOne', submittedDate );
+  statuses.forEach(registerMiddleware);
 });
 
 dirac.use( function( dirac ){

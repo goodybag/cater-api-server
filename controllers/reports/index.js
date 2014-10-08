@@ -23,6 +23,10 @@ var parseDatetime = function(opts) {
   var datetime = opts.time ? opts.date + ' ' + opts.time : opts.date;
   datetime = moment(datetime);
 
+  // orders.datetime is timestamp without timezone
+  // orders.accepted and orders.submi
+  if (opts.utc) datetime = datetime.utc();
+
   return datetime.format(opts.fmt);
 };
 
@@ -52,14 +56,15 @@ var reports = {
     var start = parseDatetime({
       date: req.query.startDate || '2012-01-01'
     , time: req.query.startTime
+    , utc: req.query.range !== 'datetime'
     });
 
     var end = parseDatetime({
       date: req.query.endDate || new Date()
     , time: req.query.endTime
+    , utc: req.query.range !== 'datetime'
     });
 
-    var range = req.query.range || 'datetime';
     var sort = req.query.sort || 'asc';
     var restaurantId = req.query.restaurantId;
     var userId = req.query.userId;
@@ -97,12 +102,24 @@ var reports = {
     if ( restaurantId ) where.restaurant_id = restaurantId;
     if ( userId ) where.user_id = userId;
     // by order datetime or submitted
-    range = (range === 'datetime') ? 'orders.datetime' : 'submitted_dates.submitted';
+    var range;
+    switch ( req.query.range ) {
+      case 'submitted':
+        range = 'submitted_dates.submitted';
+        break;
+      case 'accepted':
+        range = 'accepted_dates.accepted';
+        break;
+      case 'datetime':
+      default:
+        range = 'orders.datetime'
+        break;
+    }
+
     where[range] = {
       $gte: start
     , $lt: end
     };
-
     if ( regionId ) {
       where['restaurants.region_id'] = regionId;
     }

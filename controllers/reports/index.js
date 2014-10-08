@@ -32,7 +32,8 @@ var parseDatetime = function(opts) {
 
 var reports = {
 
-  dateFormat: 'MM-DD-YYYY hh:mm a',
+  dateFormat: 'MM-DD-YYYY',
+  timeFormat: 'hh:mm a',
 
   /**
    * Create a report page
@@ -82,8 +83,11 @@ var reports = {
       'Order Number'
     , 'Order Type'
     , 'Date Submitted'
+    , 'Time Submitted'
     , 'Date Accepted'
+    , 'Time Accepted'
     , 'Delivery Date'
+    , 'Delivery Time'
     , 'User Name'
     , 'User Email'
     , 'Company Name'
@@ -168,12 +172,22 @@ var reports = {
           , order.submitted ?
               moment(order.submitted).tz(order.timezone).format(reports.dateFormat) :
               'N/A'
+
+          , order.submitted ?
+              moment(order.submitted).tz(order.timezone).format(reports.timeFormat) :
+              'N/A'
+
           , order.accepted ?
               moment(order.accepted).tz(order.timezone).format(reports.dateFormat) :
               'N/A'
 
+          , order.accepted ?
+              moment(order.accepted).tz(order.timezone).format(reports.timeFormat) :
+              'N/A'
+
           // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such
           , moment.tz(order.datetime, order.timezone).format(reports.dateFormat)
+          , moment.tz(order.datetime, order.timezone).format(reports.timeFormat)
           , order.user.name
           , order.user.email
           , order.user.organization

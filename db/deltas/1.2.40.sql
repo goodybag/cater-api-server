@@ -11,4 +11,5 @@ begin
   perform add_column( 'orders', 'user_adjustment_amount', 'int not null default 0' );
   perform add_column( 'orders', 'user_adjustment_description', 'text' );
   perform add_column( 'orders', 'restaurant_total', 'int not null default 0' );
+  perform add_column( 'payment_summary_items', 'adjustment', 'int not null default 0' );
 end$$;

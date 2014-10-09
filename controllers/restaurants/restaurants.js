@@ -92,7 +92,7 @@ module.exports.list = function(req, res) {
     var min, max, restaurant, group;
     for ( var i = context.restaurants.length - 1; i >= 0; i-- ){
       restaurant = context.restaurants[ i ];
-      min = 0xffff;
+      min = Number.MAX_VALUE;
       max = 0;
 
       for ( var ii = restaurant.delivery_zip_groups.length - 1; ii >= 0; ii-- ){
@@ -115,7 +115,7 @@ module.exports.list = function(req, res) {
         min = max;
       }
 
-      restaurant.delivery_fee_from  = min === 0xffff ? max : min;
+      restaurant.delivery_fee_from  = min === Number.MAX_VALUE ? max : min;
       restaurant.delivery_fee_to    = max;
     }
 

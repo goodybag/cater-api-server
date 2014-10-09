@@ -1,0 +1,4 @@
+<div class="alert alert-danger alert-bad-guests{{#unless order.restaurant.is_bad_guests}} hide{{/unless}}" data-error="is_bad_guests">
+  <p>This order cannot be delivered for that many guests.</p>
+  <p><strong>Maximum guests:</strong> {{order.restaurant.max_guests}}</p>
+</div>

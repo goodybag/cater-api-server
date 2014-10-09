@@ -1,0 +1,9 @@
+<div class="alert alert-danger alert-bad-lead-time row{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}" data-error="is_bad_lead_time">
+  <div class="col-sm-8 alert-left">
+    <h3 class="alert-header">Invalid Delivery Time :(</h3>
+    <p>This order cannot be delivered for that many guests without more lead time. Please check lead times for this restaurant.</p>
+  </div>
+  <div class="col-sm-4 alert-right">
+    {{> lead_times order.restaurant }}
+  </div>
+</div>

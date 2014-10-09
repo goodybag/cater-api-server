@@ -170,6 +170,7 @@ define(function(require, exports, module) {
     },
 
     setAlerts: function(selector, model, value, options) {
+      console.log('setAlerts');
       this.$el.find(selector).toggleClass('hide', !value);
     },
 
@@ -204,6 +205,16 @@ define(function(require, exports, module) {
         return '.alert[data-error="' + err + '"]';
       }).join(', ');
 
+      // Recompile error template
+      var this_ = this;
+      this.model.validationError.forEach(function(err) {
+        var context = { order: this_.model.toJSON() };
+        var markup = Handlebars.partials['alert_' + err](context);
+        var selector = '.alert[data-error="' + err + '"]'; // TODO dont select alert modal
+        this_.$el.find(selector).html(markup);
+      });
+
+      // Unhide these errors
       if (selector) this.$el.find( selector ).removeClass('hide');
 
       return this;

@@ -88,6 +88,37 @@ module.exports.list = function(req, res) {
       ? utils.invoke(results[2], 'toJSON')
       : context.restaurants;
 
+    // Delivery fee from-to
+    var min, max, restaurant, group;
+    for ( var i = context.restaurants.length - 1; i >= 0; i-- ){
+      restaurant = context.restaurants[ i ];
+      min = 0xffff;
+      max = 0;
+
+      for ( var ii = restaurant.delivery_zip_groups.length - 1; ii >= 0; ii-- ){
+        group = restaurant.delivery_zip_groups[ ii ];
+
+        if ( group.fee < min ){
+          min = group.fee;
+        }
+
+        if ( group.fee > max ){
+          max = group.fee;
+        }
+      }
+
+      // They entered a zip, so we must have drilled down the min/max
+      // to the restaurant delivery and the courier delivery
+      // We're just going to choose the highest
+      if ( orderParams.zip )
+      if ( min !== max ){
+        min = max;
+      }
+
+      restaurant.delivery_fee_from  = min === 0xffff ? max : min;
+      restaurant.delivery_fee_to    = max;
+    }
+
     res.render('restaurants', context);
   };
 

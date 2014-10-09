@@ -50,11 +50,15 @@
                 <div class="fee-info">
                   <dl class="dl-horizontal-inline">
                     <dt>Delivery:</dt>
-                      {{#if delivery_fee}}
-                        <dd>{{#unless ../../orderParams.zip}}Starting from {{else}}{{/unless}}${{dollarsOmit00 ../delivery_fee}}</dd>
+                      {{#eq delivery_fee_from delivery_fee_to}}
+                        {{#if delivery_fee_from}}
+                          <dd>${{dollarsOmit00 ../delivery_fee_from}}</dd>
+                        {{else}}
+                          <dd>Free</dd>
+                        {{/if}}
                       {{else}}
-                        <dd>Free</dd>
-                      {{/if}}
+                        <dd>${{dollarsOmit00 delivery_fee_from}} - ${{dollarsOmit00 delivery_fee_to}}</dd>
+                      {{/eq}}
                     <dt>Order minimum:</dt>
                     <dd>${{dollarsOmit00 (or minimum_order 0)}}</dd>
                   </dl>

@@ -613,6 +613,7 @@ module.exports.register = function(app) {
   , m.getOrder2({
       items:    true
     , manifest: true
+    , user:     true
     })
   , m.view( 'order-manifest/manifest-1', {
       layout: 'order-manifest/layout'

@@ -175,12 +175,16 @@
     <dd>{{order.notes}}</dd>
     <dt>Sub-Total:</dt>
     <dd>${{dollars order.sub_total}}</dd>
+    {{#eq order.type 'delivery'}}
     <dt>Delivery Fee:</dt>
     <dd>${{dollars order.delivery_fee}}</dd>
+    {{/eq}}
     <dt>Tax:</dt>
     <dd>${{dollars order.restaurant_sales_tax}}</dd>
+    {{#is order.type 'delivery' 'pickup'}}
     <dt>Tip:</dt>
     <dd>${{dollars order.tip}}</dd>
+    {{/is}}
     {{#if order.adjustment.amount}}
     <dt>Adjustment:</dt>
     <dd>${{dollars order.adjustment.amount}}

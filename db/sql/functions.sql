@@ -229,13 +229,20 @@ begin
     sub_total := sub_total + (curr * order_item.quantity);
   end loop;
 
-  total             := sub_total + delivery_fee + coalesce( o.adjustment_amount, 0 );
+  total             := sub_total + coalesce( o.adjustment_amount, 0 );
 
   -- Values for restaurant_total and total can diverge
   -- since there are user specific adjustements now
   -- We repeat operations for the two values
   restaurant_total  := total;
   total             := total + o.user_adjustment_amount;
+
+  -- Only add delivery fee to restaurant total if they're delivering
+  if o.type = 'delivery' then
+    restaurant_total := restaurant_total + delivery_fee;
+  end if;
+
+  total := total + delivery_fee;
 
   if not tax_exempt then
     sales_tax       := round( total * tax_rate );
@@ -247,7 +254,12 @@ begin
     r_sales_tax     := round( restaurant_total * tax_rate );
   end if;
 
-  restaurant_total  := restaurant_total + r_sales_tax + o.tip;
+  restaurant_total  := restaurant_total + r_sales_tax;
+
+  -- Only add tip if it was pickup or delivery
+  if o.type != 'courier' then
+    restaurant_total := restaurant_total + o.tip;
+  end if;
 
   -- Debug
   -- raise notice '#############################';

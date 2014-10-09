@@ -4,6 +4,17 @@
       <td>
         <table cellpadding="0" cellspacing="0" style="width: 100%;">
           <tr>
+            <td style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-right: 12px;">
+              <h1 style="line-height: 24px; margin-top: 0; margin-right: 0; margin-bottom: 6px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">You have a new order for</h1>
+              <h2 style="line-height: 36px; margin-top: 0; margin-right: 0; margin-bottom: 10px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 700; font-size: 40px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
+                {{#eq order.type 'courier'}}courier pickup{{else}}{{order.type}}{{/eq}}!
+              </h2>
+              {{#eq order.type 'courier'}}
+              <h2 style="line-height: 24px; margin-top: 0; margin-right: 0; margin-bottom: 6px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 16px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
+                *But you can deliver the order if you prefer!
+              </h2>
+              {{/eq}}
+            </td>
             <td style="width: 46%; padding-bottom: 22px;">
               {{#is order.type 'pickup' 'courier'}}
                 {{> order_email_details_restaurant_pickup }}
@@ -11,16 +22,14 @@
                 {{> order_email_details_restaurant_delivery }}
               {{/is}}
             </td>
-            <td style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-left: 12px;">
-              <h1 style="line-height: 36px; margin-top: 0; margin-right: 0; margin-bottom: 10px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 28px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">You have received a new order!</h1>
-              <h2 style="line-height: 28px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
-                <span style="color: #D9534F; font-weight: 500">Important!</span> Please click the button below to accept the order. We will followup with a call if the order is still pending after one hour.
-              </h2>
-            </td>
           </tr>
         </table>
 
         {{!-- {{> email_order_items order}} --}}
+
+        {{#eq order.type 'courier'}}
+          {{> email_courier_reasoning}}
+        {{/eq}}
 
         {{> email_accept_reject}}
       </td>

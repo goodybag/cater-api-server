@@ -610,9 +610,9 @@ module.exports.register = function(app) {
   app.get('/orders/:oid/manifest'
   , m.basicAuth()
   , m.restrict(['admin', 'receipts'])
-  , m.getOrder({
-      withItems:    true
-    , withManifest: true
+  , m.getOrder2({
+      items:    true
+    , manifest: true
     })
   , m.view( 'order-manifest/manifest-1', {
       layout: 'order-manifest/layout'

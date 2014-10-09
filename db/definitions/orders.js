@@ -195,6 +195,7 @@ define(function(require) {
   , user_adjustment_description: { type: types.text, nullable: true }
   , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
   , restaurant_total: { type: types.int, nullable: false, default: 0 }
+  , restaurant_sales_tax: { type: types.int, nullable: false, default: 0 }
   };
 
   definition.indices = {};

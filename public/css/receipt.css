@@ -108,11 +108,3 @@
 .delivery-service-note {
   font-style: italic;
 }
-
-.adjustment-input {
-  width: 140px;
-}
-
-.adjustment-input :first-child ~ dt {
-  margin-top: 12px;
-}

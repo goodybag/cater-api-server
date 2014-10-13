@@ -210,7 +210,7 @@ define(function(require, exports, module) {
       this.model.validationError.forEach(function(err) {
         var context = { order: this_.model.toJSON() };
         var markup = Handlebars.partials['alert_' + err](context);
-        var selector = '.alert[data-error="' + err + '"]'; // TODO dont select alert modal
+        var selector = '.alert[data-error="' + err + '"]';
         this_.$el.find(selector).html(markup);
       });
 

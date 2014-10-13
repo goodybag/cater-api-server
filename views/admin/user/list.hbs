@@ -28,6 +28,7 @@
           <th>Organization</th>
           <th>Region</th>
           <th>Signed up</th>
+          <th>Login</th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +42,7 @@
           <td>{{organization}}</td>
           <td>{{region.name}}</td>
           <td>{{datepart created_at}}</td>
+          <td><a href="/users/{{id}}/session">login</a></td>
         </tr>
       {{/each}}
       </tbody>

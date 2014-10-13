@@ -235,7 +235,6 @@ module.exports.register = function(app) {
   , m.queryOptions({
       one: [{ table: 'regions', alias: 'region' }]
     })
-  // , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
   , m.viewPlugin( 'mainNav', { active: 'users' })
   , m.view( 'admin/user/list', db.users, {
       layout: 'admin/layout2'
@@ -245,12 +244,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/users/new'
   , m.param('id')
-  // , m.queryOptions({
-  //     one: [{ table: 'regions', alias: 'region' }]
-  //   , userGroups: true
-  //   })
   , m.db.regions.find( {}, { limit: 'all' } )
-  // , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
   , m.viewPlugin( 'mainNav', { active: 'users' })
   , m.view( 'admin/user/create', {
       layout: 'admin/layout2'
@@ -265,7 +259,6 @@ module.exports.register = function(app) {
     , userGroups: true
     })
   , m.db.regions.find( {}, { limit: 'all' } )
-  // , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
   , m.viewPlugin( 'mainNav', { active: 'users' })
   , m.view( 'admin/user/edit', db.users, {
       layout: 'admin/layout2'

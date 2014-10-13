@@ -279,6 +279,9 @@ module.exports.changeStatus = function(req, res) {
         if ( noExistingDefault ){
           db.addresses.insert( addressData );
         } else {
+          // No need to change default setting on this address
+          // but allow other changes
+          delete addressData.is_default;
           db.addresses.update( address.id, addressData );
         }
       });

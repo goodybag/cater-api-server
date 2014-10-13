@@ -17,10 +17,23 @@ var dollars = hbHelpers.dollars;
 var quoteVal = function(val) {
   return val ? '"'+val+'"' : '';
 };
+var parseDatetime = function(opts) {
+  opts = opts || {};
+  opts.fmt = opts.fmt || 'YYYY-MM-DD HH:mm';
+  var datetime = opts.time ? opts.date + ' ' + opts.time : opts.date;
+  datetime = moment(datetime);
+
+  // orders.datetime is timestamp without timezone
+  // orders.accepted and orders.submi
+  if (opts.utc) datetime = datetime.utc();
+
+  return datetime.format(opts.fmt);
+};
 
 var reports = {
 
-  dateFormat: 'MM-DD-YYYY hh:mm a',
+  dateFormat: 'MM-DD-YYYY',
+  timeFormat: 'hh:mm a',
 
   /**
    * Create a report page
@@ -40,9 +53,19 @@ var reports = {
     });
 
     var status = req.query.status || 'accepted';
-    var start = req.query.start || '2012-01-01';
-    var end = moment(req.query.end || new Date()).add('d',1).format('YYYY-MM-DD');
-    var range = req.query.range || 'datetime';
+
+    var start = parseDatetime({
+      date: req.query.startDate || '2012-01-01'
+    , time: req.query.startTime
+    , utc: req.query.range !== 'datetime'
+    });
+
+    var end = parseDatetime({
+      date: req.query.endDate || new Date()
+    , time: req.query.endTime
+    , utc: req.query.range !== 'datetime'
+    });
+
     var sort = req.query.sort || 'asc';
     var restaurantId = req.query.restaurantId;
     var userId = req.query.userId;
@@ -60,7 +83,11 @@ var reports = {
       'Order Number'
     , 'Order Type'
     , 'Date Submitted'
+    , 'Time Submitted'
+    , 'Date Accepted'
+    , 'Time Accepted'
     , 'Delivery Date'
+    , 'Delivery Time'
     , 'User Name'
     , 'User Email'
     , 'Company Name'
@@ -79,12 +106,24 @@ var reports = {
     if ( restaurantId ) where.restaurant_id = restaurantId;
     if ( userId ) where.user_id = userId;
     // by order datetime or submitted
-    range = (range === 'datetime') ? 'orders.datetime' : 'submitted_dates.submitted';
+    var range;
+    switch ( req.query.range ) {
+      case 'submitted':
+        range = 'submitted_dates.submitted';
+        break;
+      case 'accepted':
+        range = 'accepted_dates.accepted';
+        break;
+      case 'datetime':
+      default:
+        range = 'orders.datetime'
+        break;
+    }
+
     where[range] = {
       $gte: start
     , $lt: end
     };
-
     if ( regionId ) {
       where['restaurants.region_id'] = regionId;
     }
@@ -115,9 +154,14 @@ var reports = {
     ];
 
     options.submittedDate = true;
+    options.acceptedDate = true;
 
+    rlogger.info('Filtering by %s', range, { start: start, end: end });
     db.orders.find(where, options, function(err, results) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      if (err) {
+        rlogger.error('Unable to find orders', err);
+        return res.end();
+      }
       results
         .forEach( function(order) {
           res.csv.writeRow([
@@ -125,12 +169,25 @@ var reports = {
           , hbHelpers.orderTypeAbbr(order)
 
           // order.submitted is a timestamptz, it needs to be converted
-          , order.submitted ? 
+          , order.submitted ?
               moment(order.submitted).tz(order.timezone).format(reports.dateFormat) :
+              'N/A'
+
+          , order.submitted ?
+              moment(order.submitted).tz(order.timezone).format(reports.timeFormat) :
+              'N/A'
+
+          , order.accepted ?
+              moment(order.accepted).tz(order.timezone).format(reports.dateFormat) :
+              'N/A'
+
+          , order.accepted ?
+              moment(order.accepted).tz(order.timezone).format(reports.timeFormat) :
               'N/A'
 
           // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such
           , moment.tz(order.datetime, order.timezone).format(reports.dateFormat)
+          , moment.tz(order.datetime, order.timezone).format(reports.timeFormat)
           , order.user.name
           , order.user.email
           , order.user.organization

@@ -27,7 +27,7 @@
 
     if ( $this.length > 1 ){
       return $this.each( function(){
-        $.fn.toggler.call( this, options );
+        $.fn.toggler.call( $(this), options );
       });
     }
 

@@ -572,6 +572,22 @@ config.production = {
   }
 };
 
+config.india = {
+  env: 'india'
+, baseUrl: 'https://india.goodybag.com'
+, isIndia: true
+, cdn: config.production.cdn
+, postgresConnStr: process.env['DATABASE_URL']
+};
+
+// fields to copy from staging to india
+[
+  'http', 'logging', 'ironMQ', 'balanced', 'rollbar'
+, 'mandrill', 'segmentIo', 'intercom'
+].forEach( function( key ){
+  config.india[ key ] = config.staging[ key ];
+});
+
 config.test = _.extend( _.clone( config.dev ), {
   env: 'test'
 , baseUrl: 'http://localhost:3001'

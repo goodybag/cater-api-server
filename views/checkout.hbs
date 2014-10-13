@@ -22,9 +22,15 @@
       <div class="alert alert-danger alert-bad-zip row{{#unless order.restaurant.is_bad_zip}} hide{{/unless}}" data-error="is_bad_zip">
         {{> alert_is_bad_zip }}
       </div>
-      {{> alert_is_bad_delivery_time }}
-      {{> alert_is_bad_guests }}
-      {{> alert_is_bad_lead_time }}
+      <div class="alert alert-danger alert-bad-delivery-time row{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}" data-error="is_bad_delivery_time">
+        {{> alert_is_bad_delivery_time }}
+      </div>
+      <div class="alert alert-danger alert-bad-guests{{#unless order.restaurant.is_bad_guests}} hide{{/unless}}" data-error="is_bad_guests">
+        {{> alert_is_bad_guests }}
+      </div>
+      <div class="alert alert-danger alert-bad-lead-time row{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}" data-error="is_bad_lead_time">
+        {{> alert_is_bad_lead_time }}
+      </div>
     </div>
   </div>
   {{/if}}

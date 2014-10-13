@@ -69,6 +69,9 @@ define(function(require){
 
       if ( !$el ) return val;
 
+      if ( $el.data('type') === 'list' )
+        return this.getDomList($el);
+
       switch ( $el.attr('type') ){
         case 'number':    val = +$el.val(); break;
         case 'checkbox':  val = $el[0].checked; break;
@@ -84,6 +87,13 @@ define(function(require){
       }
 
       return val;
+    }
+
+  , getDomList: function( $el ) {
+      var result = $el.find('input[type="checkbox"]:checked').map( function() {
+        return this.value;
+      }).get();
+      return result;
     }
 
   , updateDomWithModel: function( props ){

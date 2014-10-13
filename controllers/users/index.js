@@ -97,19 +97,61 @@ module.exports.create = function(req, res) {
 }
 
 module.exports.update = function(req, res) {
+  var logger = req.logger.create('Controller-Users');
   // TODO: require auth header with old password for password update
   if (!req.body.password) delete req.body.password; // Strip null passwords
+
   var update = function() {
-    var query = queries.user.update(req.body, req.params.uid);
-    var sql = db.builder.sql(query);
-    db.query(sql.query, sql.values, function(err, rows, result) {
-      if (err) return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
+    // this all should be in a transaction..
+    var tasks = [
+      function updateUser( callback ) {
+        logger.info('Update user #%d', req.params.uid);
+        var data = utils.omit(req.body, 'groups');
+        var groups = req.body.groups;
+        var query = queries.user.update(data, req.params.uid);
+        var sql = db.builder.sql(query);
+        db.query(sql.query, sql.values, function(err, rows, result) {
+          req.logger.info('update user complete');
+          callback(err, rows[0], groups);
+        });
+      },
+
+      function removeUserGroups( user, groups, callback ) {
+        if ( groups ) {
+          logger.info('Remove user groups');
+          db.users_groups.remove( { user_id: req.params.uid }, { returning: ['*'] }, function(err) {
+            callback(err, user, groups);
+          });
+        } else {
+          callback(null, user, groups);
+        }
+      },
+
+      function addUserGroups( user, groups, callback ) {
+        if ( groups ) {
+          logger.info('Adding user groups');
+
+          groups = groups.map(function(group) {
+            return { user_id: req.params.uid, group: group };
+          });
+
+          db.users_groups.insert(groups, { returning: ['*'] }, function( err ) {
+            callback(err, user);
+          });
+        } else {
+          callback(null, user);
+        }
+      },
+    ];
+
+    utils.async.waterfall(tasks, function(err, user) {
+      if ( err ) return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
 
       if ( req.header('Content-Type').indexOf( 'application/json' ) >= 0 ){
         return res.send(204);
       }
 
-      res.render('user', {user: rows[0], alert: true}, function(err, html) {
+      res.render('user', {user: user, alert: true}, function(err, html) {
         if (err) return res.error(errors.internal.UNKNOWN, err);
         return res.send(200, html);
       });

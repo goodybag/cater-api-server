@@ -18,7 +18,9 @@ define(function(require, exports, module) {
   var ItemForm  = require('app/views/admin/item-form');
 
   return module.exports = ItemForm.extend({
-
+    redirect: function() {
+      window.location = '/admin/users/' + this.model.get('id');
+    }
   });
   // return module.exports = utils.View.extend({
   //   events: {

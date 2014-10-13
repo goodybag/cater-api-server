@@ -74,7 +74,7 @@ module.exports.create = function(req, res) {
         || isNaN(parseInt(req.body.restaurant_ids[0]))
       ) {
         callback(null);
-        return res.send(204);
+        return res.send( 201, user );
       }
       var query = queries.userRestaurant.create({
         user_id: user.id
@@ -87,7 +87,7 @@ module.exports.create = function(req, res) {
           return callback(error);
         } else {
           callback(null);
-          return res.send(204);
+          return res.send( 201, user );
         }
       });
     }

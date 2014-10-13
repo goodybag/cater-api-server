@@ -170,7 +170,6 @@ define(function(require, exports, module) {
     },
 
     setAlerts: function(selector, model, value, options) {
-      console.log('setAlerts');
       this.$el.find(selector).toggleClass('hide', !value);
     },
 

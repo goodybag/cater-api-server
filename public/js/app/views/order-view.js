@@ -206,8 +206,9 @@ define(function(require, exports, module) {
 
       // Recompile error template
       var this_ = this;
+      var context = { order: this_.model.toJSON() };
+
       this.model.validationError.forEach(function(err) {
-        var context = { order: this_.model.toJSON() };
         var markup = Handlebars.partials['alert_' + err](context);
         var selector = '.alert[data-error="' + err + '"]';
         this_.$el.find(selector).html(markup);

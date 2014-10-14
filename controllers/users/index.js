@@ -102,24 +102,26 @@ module.exports.update = function(req, res) {
   if (!req.body.password) delete req.body.password; // Strip null passwords
 
   var update = function() {
-    // this all should be in a transaction..
+
+    var tx = db.dirac.tx.create();
     var tasks = [
-      function updateUser( callback ) {
+      function beginTx( callback ) {
+        logger.info('Begin transaction');
+        tx.begin( callback );
+      },
+      function updateUser( results, callback ) {
         logger.info('Update user #%d', req.params.uid);
         var data = utils.omit(req.body, 'groups');
         var groups = req.body.groups;
-        var query = queries.user.update(data, req.params.uid);
-        var sql = db.builder.sql(query);
-        db.query(sql.query, sql.values, function(err, rows, result) {
-          req.logger.info('update user complete');
-          callback(err, rows[0], groups);
+        tx.users.update(req.params.uid, data, { returning: ['*'] }, function(err, users) {
+          callback(err, users[0], groups);
         });
       },
 
       function removeUserGroups( user, groups, callback ) {
         if ( groups ) {
           logger.info('Remove user groups');
-          db.users_groups.remove( { user_id: req.params.uid }, { returning: ['*'] }, function(err) {
+          tx.users_groups.remove( { user_id: req.params.uid }, { returning: ['*'] }, function(err) {
             callback(err, user, groups);
           });
         } else {
@@ -135,7 +137,7 @@ module.exports.update = function(req, res) {
             return { user_id: req.params.uid, group: group };
           });
 
-          db.users_groups.insert(groups, { returning: ['*'] }, function( err ) {
+          tx.users_groups.insert(groups, { returning: ['*'] }, function( err ) {
             callback(err, user);
           });
         } else {
@@ -145,15 +147,27 @@ module.exports.update = function(req, res) {
     ];
 
     utils.async.waterfall(tasks, function(err, user) {
-      if ( err ) return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
-
-      if ( req.header('Content-Type').indexOf( 'application/json' ) >= 0 ){
-        return res.send(204);
+      if ( err ) {
+        logger.error('Transaction Error');
+        tx.rollback();
+        return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
       }
 
-      res.render('user', {user: user, alert: true}, function(err, html) {
-        if (err) return res.error(errors.internal.UNKNOWN, err);
-        return res.send(200, html);
+      tx.commit(function(err) {
+        if ( err ) {
+          logger.error('Transaction Commit Error');
+          return res.error( errors.internal.DB_FAILURE, err );
+        }
+
+        logger.info('Transaction Committed');
+        if ( req.header('Content-Type').indexOf( 'application/json' ) >= 0 ){
+          return res.send(204);
+        }
+
+        res.render('user', {user: user, alert: true}, function(err, html) {
+          if (err) return res.error(errors.internal.UNKNOWN, err);
+          return res.send(200, html);
+        });
       });
     });
   }

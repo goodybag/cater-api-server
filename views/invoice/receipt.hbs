@@ -104,14 +104,37 @@
 
   <div class="order-bottom-wrapper">
     <div class="order-bottom">
-      <div class="order-adjustment columns">
-        <p class="adjustment-notes column-fluid">{{order.adjustment.description}}</p>
-        <div class="column-fluid adjustment-amount-wrapper">
-          <dl class="dl-adjustment-amount dl-horizontal">
-            <dt>Adjustment:</dt>
-            <dd>${{dollars order.adjustment.amount}}</dd>
-          </dl>
-        </div>
+      <div class="order-adjustment">
+        {{#if order.adjustment.amount}}
+          <div class="columns">
+            <div class="adjustment-notes column-fluid">
+              {{#if order.adjustment.description}}
+              <p class="adjustment-notes column-fluid">{{order.adjustment.description}}</p>
+              {{/if}}
+            </div>
+            <div class="column-fluid adjustment-amount-wrapper">
+              <dl class="dl-adjustment-amount dl-horizontal">
+                <dt>Adjustment:</dt>
+                <dd>${{dollars order.adjustment.amount}}</dd>
+              </dl>
+            </div>
+          </div>
+        {{/if}}
+        {{#if order.user_adjustment_amount}}
+          <div class="columns">
+            <div class="adjustment-notes column-fluid">
+              {{#if order.user_adjustment_description}}
+              <p class="adjustment-notes column-fluid">{{order.user_adjustment_description}}</p>
+              {{/if}}
+            </div>
+            <div class="column-fluid adjustment-amount-wrapper">
+              <dl class="dl-adjustment-amount dl-horizontal">
+                <dt>{{#unless order.adjustment.amount}}Adjustment:{{/unless}}</dt>
+                <dd>${{dollars order.user_adjustment_amount}}</dd>
+              </dl>
+            </div>
+          </div>
+        {{/if}}
       </div>
 
       <div class="order-summary">

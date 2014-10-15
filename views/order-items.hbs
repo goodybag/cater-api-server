@@ -108,27 +108,46 @@
 
     <div class="panel-body totals-panel">
       {{#if isAdmin}}
-      <div class="row adjustment editable">
-        <div class="col-lg-8">
-          <textarea class="form-control adjustment-description" rows="3">{{order.adjustment.description}}</textarea>
+      <div class="adjustment editable">
+        <div class="row">
+          <div class="col-lg-8">
+            <textarea class="form-control adjustment-description" rows="3" name="adjustment_description">{{order.adjustment.description}}</textarea>
+          </div>
+          <div class="col-lg-4">
+            <dl class="adjustment-input pull-right">
+              <dt>Adjustment:</dt>
+              <dd><input type="number" class="form-control adjustment-amount" value="{{dollars order.adjustment.amount}}" name="adjustment_amount"></dd>
+            </dl>
+          </div>
         </div>
-        <div class="col-lg-4">
-          <dl class="adjustment-input pull-right">
-            <dt>Adjustment:</dt>
-            <dd><input type="number" class="form-control adjustment-amount" value="{{dollars order.adjustment.amount}}"></dd>
-          </dl>
+        <div class="row">
+          <div class="col-lg-8">
+            <textarea class="form-control adjustment-description" rows="3" name="user_adjustment_description">{{order.user_adjustment_description}}</textarea>
+          </div>
+          <div class="col-lg-4">
+            <dl class="adjustment-input pull-right">
+              <dt>User Adjustment:</dt>
+              <dd><input type="number" class="form-control adjustment-amount" value="{{dollars order.user_adjustment_amount}}" name="user_adjustment_amount"></dd>
+            </dl>
+          </div>
         </div>
       </div>
       {{else}}
-      {{#if order.adjustment.amount}}
+      {{#if (or order.adjustment order.user_adjustment_amount)}}
       <div class="row adjustment">
         <div class="col-lg-8">
+          {{#if order.adjustment.description}}
           <p class="adjustment-description">{{order.adjustment.description}}</p>
+          {{/if}}
+          {{#if order.user_adjustment_description}}
+          <p class="adjustment-description">{{order.user_adjustment_description}}</p>
+          {{/if}}
         </div>
         <div class="col-lg-4">
           <dl class="dl-horizontal order-totals adjustment-amount-description pull-right">
             <dt>Adjustment:</dt>
-            <dd class="adjustment-amount">{{dollars order.adjustment.amount}}<dd>
+            {{#if order.adjustment.amount}}<dd class="adjustment-amount">{{dollars order.adjustment.amount}}<dd>{{/if}}
+            {{#if order.user_adjustment_amount}}<dd class="adjustment-amount">{{dollars order.user_adjustment_amount}}<dd>{{/if}}
           </dl>
         </div>
       </div>

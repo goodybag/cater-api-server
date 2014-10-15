@@ -162,7 +162,15 @@ module.exports.update = function(req, res) {
   var logger = req.logger.create('Controller-Update');
 
   // TODO: get this from not here
-  var updateableFields = ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes', 'datetime', 'timezone', 'guests', 'adjustment', 'tip', 'tip_percent', 'name', 'delivery_instructions', 'payment_method_id', 'reason_denied', 'reviewed', 'type'];
+  var updateableFields = [
+    'street', 'street2', 'city', 'state', 'zip'
+  , 'phone', 'notes', 'datetime', 'timezone', 'guests'
+  , 'adjustment', 'tip', 'tip_percent', 'name'
+  , 'delivery_instructions', 'payment_method_id'
+  , 'reason_denied', 'reviewed', 'type'
+  , 'user_adjustment_description', 'user_adjustment_amount'
+  ];
+
   var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
   if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 

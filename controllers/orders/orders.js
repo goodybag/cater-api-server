@@ -134,6 +134,10 @@ module.exports.get = function(req, res) {
       context.layout = 'invoice/invoice-layout';
     }
 
+    if ( context.order.review_token !== req.param('review_token') ) {
+      delete context.order.review_token;
+    }
+
     logger.info('rendering %s', view, { context: context });
     res.render(view, context);
   });

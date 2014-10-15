@@ -51,7 +51,7 @@ define(function(require){
         var k     = $this.attr('name');
         var val   = this_.getDomValue( k, $this );
 
-        if ( val ) data[ k ] = val;
+        data[ k ] = val;
       });
 
       return data;

@@ -3,6 +3,7 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var states = require('states');
   var moment = require('moment');
+  var helpers = require('hb-helpers');
 
   var OrderView = require('./order-view');
   var FormView = require('./form-view');
@@ -82,6 +83,10 @@ define(function(require, exports, module) {
     fieldMap: _.extend({
       reason_denied: '.reason-denied'
     }, OrderView.prototype.fieldMap),
+
+    fieldGetters: _.extend({
+
+    }, OrderView.prototype.fieldGetters),
 
     rejectOrder: function() {
       var self = this;

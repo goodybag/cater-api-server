@@ -204,6 +204,17 @@ define(function(require, exports, module) {
         return '.alert[data-error="' + err + '"]';
       }).join(', ');
 
+      // Recompile error template
+      var this_ = this;
+      var context = { order: this_.model.toJSON() };
+
+      this.model.validationError.forEach(function(err) {
+        var markup = Handlebars.partials['alert_' + err](context);
+        var selector = '.alert[data-error="' + err + '"]';
+        this_.$el.find(selector).html(markup);
+      });
+
+      // Unhide these errors
       if (selector) this.$el.find( selector ).removeClass('hide');
 
       return this;

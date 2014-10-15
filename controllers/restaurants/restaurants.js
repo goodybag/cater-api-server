@@ -107,14 +107,6 @@ module.exports.list = function(req, res) {
         }
       }
 
-      // They entered a zip, so we must have drilled down the min/max
-      // to the restaurant delivery and the courier delivery
-      // We're just going to choose the highest
-      if ( orderParams.zip )
-      if ( min !== max ){
-        min = max;
-      }
-
       restaurant.delivery_fee_from  = min === Number.MAX_VALUE ? max : min;
       restaurant.delivery_fee_to    = max;
     }

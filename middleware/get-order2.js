@@ -104,6 +104,10 @@ module.exports = function( options ){
         order.manifest = manifest.create( order.orderItems );
       }
 
+      if (  order.review_token !== req.param('review_token') ) {
+        delete order.review_token;
+      }
+
       req.order = order;
       res.locals.order = order;
       req.logger.options.data.order = { id: order.id };

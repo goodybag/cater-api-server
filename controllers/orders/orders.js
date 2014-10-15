@@ -40,7 +40,7 @@ module.exports.auth = function(req, res, next) {
   var editToken = req.query.edit_token || req.body.edit_token;
 
   // There was a review token, so this is a restaurant
-  if ( reviewToken === req.order.review_token ){
+  if ( reviewToken && (reviewToken === req.order.review_token) ){
     req.order.isRestaurantManager = true;
     req.user.attributes.groups.push('order-restaurant');
   }
@@ -132,6 +132,10 @@ module.exports.get = function(req, res) {
     if (req.param('receipt')) {
       view = 'invoice/receipt';
       context.layout = 'invoice/invoice-layout';
+    }
+
+    if ( context.order.review_token !== req.param('review_token') ) {
+      delete context.order.review_token;
     }
 
     logger.info('rendering %s', view, { context: context });

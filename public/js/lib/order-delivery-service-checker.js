@@ -100,7 +100,7 @@ define(function( require, exports, module ){
 
       // Only allow a single criterion of a given name
       if ( existing > -1 ){
-        exports.criteriap[ existing ] = criterion;
+        exports.criteria[ existing ] = criterion;
       } else {
         exports.criteria.push( criterion );
       }

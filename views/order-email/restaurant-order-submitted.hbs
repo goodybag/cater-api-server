@@ -28,7 +28,7 @@
         {{!-- {{> email_order_items order}} --}}
 
         {{#eq order.type 'courier'}}
-          {{> email_courier_reasoning}}
+          {{> order_email_courier_reasoning}}
         {{/eq}}
 
         {{> email_accept_reject}}

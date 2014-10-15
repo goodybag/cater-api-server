@@ -26,7 +26,7 @@
 
   , packages: [
       // utility
-      {name: 'lodash',            location: '../../components/lodash/dist',               main: 'lodash.underscore.js'}
+      {name: 'lodash',            location: '../../components/lodash/dist',               main: 'lodash.compat.js'}
     , {name: 'async',             location: '../../components/async/lib',                 main: 'async.js'}
     , {name: 'amanda',            location: '../../components/amanda/releases/latest',    main: 'amanda.js'}
 

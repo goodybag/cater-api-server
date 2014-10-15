@@ -31,7 +31,7 @@ module.exports.auth = function(req, res, next) {
   var logger = req.logger.create('Middleware-OrderAuth');
   logger.info('auth for order #%s', req.order.id);
 
-  if( req.session.user != null && utils.contains(req.session.user.groups, 'admin')) {
+  if ( req.session.user != null && utils.contains(req.session.user.groups, 'admin') ){
     req.order.isAdmin = true;
     return next();
   }
@@ -39,19 +39,8 @@ module.exports.auth = function(req, res, next) {
   var reviewToken = req.query.review_token || req.body.review_token;
   var editToken = req.query.edit_token || req.body.edit_token;
 
-  // allow restaurant user to view orders at their own restaurant
-  if (req.user
-    && req.user.attributes.restaurant_ids
-    && utils.contains(req.user.attributes.restaurant_ids, req.order.restaurant_id)
-  ) {
-    req.user.attributes.groups.push('order-restaurant');
-    req.order.isRestaurantManager = true;
-    return next();
-  }
-
-  // There was a review token, so this is likely a restaurant manager
-  if ( utils.contains( req.user.attributes.groups, 'guest' ) )
-  if (reviewToken === req.order.review_token){
+  // There was a review token, so this is a restaurant
+  if ( reviewToken === req.order.review_token ){
     req.order.isRestaurantManager = true;
     req.user.attributes.groups.push('order-restaurant');
   }

@@ -46,6 +46,8 @@
         <dd>
           <a href="/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a>
         </dd>
+        <dt>Review Link</dt>
+        <dd><a href="{{config.baseUrl}}/orders/{{order.id}}?review_token={{order.review_token}}">/orders/{{order.id}}?review_token={{order.review_token}}</a></dd>
         <dt>Delivery Time</dt>
         <dd>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</dd>
 

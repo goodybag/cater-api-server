@@ -88,6 +88,29 @@ module.exports.list = function(req, res) {
       ? utils.invoke(results[2], 'toJSON')
       : context.restaurants;
 
+    // Delivery fee from-to
+    var min, max, restaurant, group;
+    for ( var i = context.restaurants.length - 1; i >= 0; i-- ){
+      restaurant = context.restaurants[ i ];
+      min = Number.MAX_VALUE;
+      max = 0;
+
+      for ( var ii = restaurant.delivery_zip_groups.length - 1; ii >= 0; ii-- ){
+        group = restaurant.delivery_zip_groups[ ii ];
+
+        if ( group.fee < min ){
+          min = group.fee;
+        }
+
+        if ( group.fee > max ){
+          max = group.fee;
+        }
+      }
+
+      restaurant.delivery_fee_from  = min === Number.MAX_VALUE ? max : min;
+      restaurant.delivery_fee_to    = max;
+    }
+
     res.render('restaurants', context);
   };
 

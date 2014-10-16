@@ -14,7 +14,7 @@ define(function(require){
     window.location.href = href.substring( 0, href.lastIndexOf('/') );
   };
 
-  var dataListId = 'orders-datalist'
+  var dataListId = 'orders-datalist';
 
   summary.fetch({
     error: function( model, res ){

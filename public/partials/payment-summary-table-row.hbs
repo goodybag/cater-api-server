@@ -44,6 +44,17 @@
   </td>
   <td>
     <div class="input-group">
+      <span class="input-group-addon">$</span>
+      <input name="adjustment"
+        class="form-control"
+        type="number"
+        data-in="dollars"
+        data-out="pennies"
+        value="{{dollars model.adjustment}}">
+    </div>
+  </td>
+  <td>
+    <div class="input-group">
       <span class="input-group-addon">-%</span>
       <input name="gb_fee"
         class="form-control"

@@ -48,6 +48,10 @@ define(function(require) {
       type: types.int
     , default: 0
     }
+  , adjustment: {
+      type: types.int
+    , default: 0
+    }
   , sales_tax: {
       type: types.numeric( 5, 5 )
     , default: 0

@@ -20,44 +20,16 @@
   <div class="row">
     <div class="alerts col-lg-12">
       <div class="alert alert-danger alert-bad-zip row{{#unless order.restaurant.is_bad_zip}} hide{{/unless}}" data-error="is_bad_zip">
-        <div class="col-sm-8 alert-left">
-          <h3 class="alert-header">Invalid Delivery Zip :(</h3>
-          <p>This order can only be delivered to the zip codes listed</p>
-        </div>
-        <div class="col-sm-4 alert-right">
-          <ul class="list-delivery-zips">
-          {{#each order.restaurant.delivery_zip_groups}}
-            {{#each this.zips}}
-              <li class="delivery-zip">{{this}}</li>
-            {{/each}}
-          {{/each}}
-          </ul>
-        </div>
+        {{> alert_is_bad_zip }}
       </div>
-
       <div class="alert alert-danger alert-bad-delivery-time row{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}}" data-error="is_bad_delivery_time">
-        <div class="col-sm-8 alert-left">
-          <h3 class="alert-header">Invalid Delivery Time :(</h3>
-          <p>This order cannot be delivered for that date and time. Please ensure that your delivery time is within the restaurants schedule.</p>
-        </div>
-        <div class="col-sm-4 alert-right">
-          {{> delivery_times order.restaurant }}
-        </div>
+        {{> alert_is_bad_delivery_time }}
       </div>
-
       <div class="alert alert-danger alert-bad-guests{{#unless order.restaurant.is_bad_guests}} hide{{/unless}}" data-error="is_bad_guests">
-        <p>This order cannot be delivered for that many guests.</p>
-        <p><strong>Maximum guests:</strong> {{order.restaurant.max_guests}}</p>
+        {{> alert_is_bad_guests }}
       </div>
-
       <div class="alert alert-danger alert-bad-lead-time row{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}" data-error="is_bad_lead_time">
-        <div class="col-sm-8 alert-left">
-          <h3 class="alert-header">Invalid Delivery Time :(</h3>
-          <p>This order cannot be delivered for that many guests without more lead time. Please check lead times for this restaurant.</p>
-        </div>
-        <div class="col-sm-4 alert-right">
-          {{> lead_times order.restaurant }}
-        </div>
+        {{> alert_is_bad_lead_time }}
       </div>
     </div>
   </div>

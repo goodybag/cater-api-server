@@ -178,16 +178,18 @@ $$ language plpgsql;
 
 create or replace function update_order_totals( o orders )
 returns void as $$
-  declare order_item record;
-  declare option record;
-  declare tax_rate      numeric;
-  declare options_total int := 0;
-  declare delivery_fee  int := 0;
-  declare sub_total     int := 0;
-  declare sales_tax     int := 0;
-  declare total         int := 0;
-  declare curr          int := 0;
-  declare tax_exempt    boolean;
+  declare order_item        record;
+  declare option            record;
+  declare tax_rate          numeric;
+  declare options_total     int := 0;
+  declare delivery_fee      int := 0;
+  declare sub_total         int := 0;
+  declare sales_tax         int := 0;
+  declare total             int := 0;
+  declare restaurant_total  int := 0;
+  declare r_sales_tax       int := 0;
+  declare curr              int := 0;
+  declare tax_exempt        boolean;
 begin
   tax_rate := (
     select regions.sales_tax
@@ -227,24 +229,58 @@ begin
     sub_total := sub_total + (curr * order_item.quantity);
   end loop;
 
-  sub_total   := sub_total + coalesce( o.adjustment_amount, 0 );
-  total       := sub_total + delivery_fee;
-  if not tax_exempt then
-    sales_tax := round( total * tax_rate );
+  total             := sub_total + coalesce( o.adjustment_amount, 0 );
+
+  -- Values for restaurant_total and total can diverge
+  -- since there are user specific adjustements now
+  -- We repeat operations for the two values
+  restaurant_total  := total;
+  total             := total + o.user_adjustment_amount;
+
+  -- Only add delivery fee to restaurant total if they're delivering
+  if o.type = 'delivery' then
+    restaurant_total := restaurant_total + delivery_fee;
   end if;
-  total       := total + sales_tax + o.tip;
+
+  total := total + delivery_fee;
+
+  if not tax_exempt then
+    sales_tax       := round( total * tax_rate );
+  end if;
+
+  total             := total + sales_tax + o.tip;
+
+  if not tax_exempt then
+    r_sales_tax     := round( restaurant_total * tax_rate );
+  end if;
+
+  restaurant_total  := restaurant_total + r_sales_tax;
+
+  -- Only add tip if it was pickup or delivery
+  if o.type != 'courier' then
+    restaurant_total := restaurant_total + o.tip;
+  end if;
 
   -- Debug
   -- raise notice '#############################';
-  -- raise notice 'Delivery Fee:   %', delivery_fee;
-  -- raise notice 'Tax Rate:       %', tax_rate;
-  -- raise notice 'Sub Total:      %', sub_total;
-  -- raise notice 'Sales Tax:      %', sales_tax;
-  -- raise notice 'Total:          %', total;
+  -- raise notice 'Delivery Fee:           %', delivery_fee;
+  -- raise notice 'Tax Rate:               %', tax_rate;
+  -- raise notice 'Sub Total:              %', sub_total;
+  -- raise notice 'Sales Tax:              %', sales_tax;
+  -- raise notice 'Total:                  %', total;
+  -- raise notice 'R. Sales Tax:           %', r_sales_tax;
+  -- raise notice 'R. Total:               %', restaurant_total;
   -- raise notice '#############################';
 
-  execute 'update orders set sub_total = $1, total = $2, sales_tax = $3, delivery_fee = $4 where id = $5'
-    using sub_total, total, sales_tax, delivery_fee, o.id;
+  execute 'update orders set '
+    || 'sub_total = $1, '
+    || 'total = $2, '
+    || 'sales_tax = $3, '
+    || 'delivery_fee = $4, '
+    || 'restaurant_total = $5, '
+    || 'restaurant_sales_tax = $6 '
+    || 'where id = $7'
+    using sub_total, total, sales_tax, delivery_fee, restaurant_total, r_sales_tax, o.id;
 end;
 $$ language plpgsql;
 
@@ -290,14 +326,14 @@ $$ language plpgsql;
 create or replace function update_orders_search_vector_from_orders()
 returns trigger as $$
 begin
-  update orders as o 
-  set search_vector = to_tsvector( 'english', 
+  update orders as o
+  set search_vector = to_tsvector( 'english',
       o.id                            || ' ' ||
       coalesce(new.name, '')          || ' ' ||
       coalesce(restaurant_name, '')   || ' ' ||
       coalesce(user_name, '')         || ' ' ||
       coalesce(user_email, '')        || ' ' ||
-      coalesce(user_organization, '') || ' ' 
+      coalesce(user_organization, '') || ' '
     )
   from orders_search_view as osv
   where o.id = osv.order_id and osv.order_id = new.id;
@@ -308,14 +344,14 @@ $$ language plpgsql;
 create or replace function update_orders_search_vector_from_restaurants()
 returns trigger as $$
 begin
-  update orders as o 
-  set search_vector = to_tsvector( 'english', 
+  update orders as o
+  set search_vector = to_tsvector( 'english',
       o.id                            || ' ' ||
       coalesce(order_name, '')        || ' ' ||
       coalesce(new.name, '')          || ' ' ||
       coalesce(user_name, '')         || ' ' ||
       coalesce(user_email, '')        || ' ' ||
-      coalesce(user_organization, '') || ' ' 
+      coalesce(user_organization, '') || ' '
     )
   from orders_search_view as osv
   where o.id = osv.order_id and osv.restaurant_id = new.id;
@@ -326,14 +362,14 @@ $$ language plpgsql;
 create or replace function update_orders_search_vector_from_users()
 returns trigger as $$
 begin
-  update orders as o 
-  set search_vector = to_tsvector( 'english', 
+  update orders as o
+  set search_vector = to_tsvector( 'english',
       o.id                            || ' ' ||
       coalesce(order_name, '')        || ' ' ||
       coalesce(restaurant_name, '')   || ' ' ||
       coalesce(new.name, '')          || ' ' ||
       coalesce(new.email, '')         || ' ' ||
-      coalesce(new.organization, '')  || ' ' 
+      coalesce(new.organization, '')  || ' '
     )
   from orders_search_view as osv
   where o.id = osv.order_id and osv.user_id = new.id;

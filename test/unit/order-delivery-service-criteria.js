@@ -20,6 +20,7 @@ describe ('Order Delivery Service Criteria', function(){
   , datetime:   now.format('YYYY-MM-DD 12:00:00')
   , restaurant: {
       minimum_order: 100
+    , disable_courier: false
     , delivery_service_order_amount_threshold:  500
     , delivery_service_order_total_upperbound:  200000
     , delivery_service_head_count_threshold:    20

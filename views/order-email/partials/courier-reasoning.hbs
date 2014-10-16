@@ -4,13 +4,7 @@
       <h5 style="font-size: 16px; margin-top: 0; margin-bottom: 0">This order was flagged for courier pickup because of the following:</h5>
       <ol style="margin-bottom: 0">
       {{#each order.courierReasons}}
-        <li>
-        {{#eq this.name 'head_count'}}The numbers of guests this order serves is too few{{/eq}}
-        {{#eq this.name 'delivery_zips'}}The delivery was outside of your delivery zip range{{/eq}}
-        {{#eq this.name 'delivery_times'}}The delivery time is outside of your delivery hours{{/eq}}
-        {{#eq this.name 'lead_times'}}There was not enough lead time for you to delivery{{/eq}}
-        {{#eq this.name 'dollar_amount'}}The order was too small{{/eq}}
-        </li>
+        <li>{{> courier_reasoning}}</li>
       {{/each}}
       </ol>
     </td>

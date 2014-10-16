@@ -11,7 +11,7 @@
               </h2>
               {{#eq order.type 'courier'}}
               <h2 style="line-height: 24px; margin-top: 0; margin-right: 0; margin-bottom: 6px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 16px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
-                But <em>you can deliver</em> the order if you need!
+                But <em>deliver</em> the order if you can!
               </h2>
               {{/eq}}
               {{#eq order.type 'delivery'}}
@@ -37,6 +37,12 @@
         {{/eq}}
 
         {{> email_accept_reject}}
+
+        {{#eq order.type 'courier'}}
+          <div class="order-type-explanation" style="margin-top: 40px">
+            <h2 style="line-height: 28px; font-weight: 500; font-size: 22px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42; border-bottom: solid 1px #ccc">Why should <em>you</em> deliver?</h2>
+          </div>
+        {{/eq}}
       </td>
     </tr>
   </table>

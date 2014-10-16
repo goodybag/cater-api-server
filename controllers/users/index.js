@@ -74,7 +74,7 @@ module.exports.create = function(req, res) {
         || isNaN(parseInt(req.body.restaurant_ids[0]))
       ) {
         callback(null);
-        return res.send(204);
+        return res.send( 201, user );
       }
       var query = queries.userRestaurant.create({
         user_id: user.id
@@ -87,7 +87,7 @@ module.exports.create = function(req, res) {
           return callback(error);
         } else {
           callback(null);
-          return res.send(204);
+          return res.send( 201, user );
         }
       });
     }
@@ -97,21 +97,77 @@ module.exports.create = function(req, res) {
 }
 
 module.exports.update = function(req, res) {
+  var logger = req.logger.create('Controller-Users');
   // TODO: require auth header with old password for password update
   if (!req.body.password) delete req.body.password; // Strip null passwords
-  var update = function() {
-    var query = queries.user.update(req.body, req.params.uid);
-    var sql = db.builder.sql(query);
-    db.query(sql.query, sql.values, function(err, rows, result) {
-      if (err) return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
 
-      if ( req.header('Content-Type').indexOf( 'application/json' ) >= 0 ){
-        return res.send(204);
+  var update = function() {
+
+    var tx = db.dirac.tx.create();
+    var tasks = [
+      function beginTx( callback ) {
+        logger.info('Begin transaction');
+        tx.begin( callback );
+      },
+      function updateUser( results, callback ) {
+        logger.info('Update user #%d', req.params.uid);
+        var data = utils.omit(req.body, 'groups');
+        var groups = req.body.groups;
+        tx.users.update(req.params.uid, data, { returning: ['*'] }, function(err, users) {
+          callback(err, users[0], groups);
+        });
+      },
+
+      function removeUserGroups( user, groups, callback ) {
+        if ( groups ) {
+          logger.info('Remove user groups');
+          tx.users_groups.remove( { user_id: req.params.uid }, { returning: ['*'] }, function(err) {
+            callback(err, user, groups);
+          });
+        } else {
+          callback(null, user, groups);
+        }
+      },
+
+      function addUserGroups( user, groups, callback ) {
+        if ( groups ) {
+          logger.info('Adding user groups');
+
+          groups = groups.map(function(group) {
+            return { user_id: req.params.uid, group: group };
+          });
+
+          tx.users_groups.insert(groups, { returning: ['*'] }, function( err ) {
+            callback(err, user);
+          });
+        } else {
+          callback(null, user);
+        }
+      },
+    ];
+
+    utils.async.waterfall(tasks, function(err, user) {
+      if ( err ) {
+        logger.error('Transaction Error');
+        tx.rollback();
+        return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
       }
 
-      res.render('user', {user: rows[0], alert: true}, function(err, html) {
-        if (err) return res.error(errors.internal.UNKNOWN, err);
-        return res.send(200, html);
+      tx.commit(function(err) {
+        if ( err ) {
+          logger.error('Transaction Commit Error');
+          return res.error( errors.internal.DB_FAILURE, err );
+        }
+
+        logger.info('Transaction Committed');
+        if ( req.header('Content-Type').indexOf( 'application/json' ) >= 0 ){
+          return res.send(204);
+        }
+
+        res.render('user', {user: user, alert: true}, function(err, html) {
+          if (err) return res.error(errors.internal.UNKNOWN, err);
+          return res.send(200, html);
+        });
       });
     });
   }
@@ -152,7 +208,7 @@ module.exports.returnSession = function(req, res) {
     var session = utils.extend({}, req.session, {user: req.session.oldUser});
     req.session = utils.omit(session, 'oldUser');
   }
-  res.redirect(req.query.next || '/users');
+  res.redirect(req.query.next || '/admin/users');
 };
 
 module.exports.passwordResets = require('./password-resets');

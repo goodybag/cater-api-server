@@ -13,7 +13,7 @@ var pg = require('pg');
 var dirac = require('dirac');
 
 // Ensure all instances of pg have custom type parsers registered
-var typeSets = [ pg.types, dirac.pg.types ];
+var typeSets = [ pg.types, dirac.db.pg.types ];
 
 var parsers = module.exports = [
   {

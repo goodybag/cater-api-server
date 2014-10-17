@@ -9,7 +9,7 @@ var logger      = require('../lib/logger');
 var config      = require('../config');
 var PMSItem     = require('../public/js/app/models/payment-summary-item');
 
-dirac.setMoSql( mosql );
+dirac.db.setMosql( mosql );
 
 // Logging for dals
 // Leaving commented for now because it just makes logs too noisy

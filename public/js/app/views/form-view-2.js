@@ -87,7 +87,12 @@ define(function(require){
 
       if ( !$el ) return val;
 
-      type    = $el.attr('type') || $el.data('type') || 'default';
+      type = $el.attr('type') || $el.data('type');
+
+      if ( !( type in this.typeGetters ) ){
+        type = 'default';
+      }
+
       val     = this.typeGetters[ type ]( $el );
       helper  = ($el.data('out') || "").split(' ');
       args    = [ val ].concat( helper.slice(1) );

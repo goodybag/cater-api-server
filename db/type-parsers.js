@@ -10,7 +10,10 @@
  */
 
 var pg = require('pg');
-var types = pg.types;
+var dirac = require('dirac');
+
+// Ensure all instances of pg have custom type parsers registered
+var typeSets = [ pg.types, dirac.db.pg.types ];
 
 var parsers = module.exports = [
   {
@@ -31,7 +34,9 @@ var parsers = module.exports = [
 ];
 
 var setTypeParser = function(parser) {
-  types.setTypeParser(parser.oid, parser.fn);
+  typeSets.forEach(function(types) {
+    types.setTypeParser(parser.oid, parser.fn);
+  });
 };
 
 parsers.forEach(setTypeParser);

@@ -11,13 +11,30 @@ define(function(require){
   var Hbs       = require('handlebars');
 
   return Backbone.View.extend({
+    // Given an input type ( the key ) and a jquery element
+    // ( the value function argument ), what is the value on
+    // that jquery element?
+    typeGetters: {
+      default:  function( $el ){ return $el.val(); }
+    , number:   function( $el ){ return +$el.val(); }
+    , checkbox: function( $el ){ return $el[0].checked; }
+
+    , list: function( $el ) {
+        var result = $el.find('input[type="checkbox"]:checked').map( function() {
+          return this.value;
+        }).get();
+
+        return result;
+      }
+    }
+
     /**
      * Appends errors to the $errors param
      * @param  {Array}    errors  Amanda style errors array or object
      * @param  {Element}  $errors jQuery Element where errors go
      * @param  {Object}   Model   Model to pull the fieldNounMap from
      */
-    displayErrors: function( errors, $errors, Model ){
+  , displayErrors: function( errors, $errors, Model ){
       var frag = document.createDocumentFragment();
       var template = Handlebars.partials.alert_error;
       var selector = '[name="{property}"]';
@@ -46,6 +63,7 @@ define(function(require){
   , getModelData: function(){
       var this_ = this, data = {};
 
+      // Maybe check to see if the name is in schema?
       this.$el.find('[name]').each( function(){
         var $this = $(this);
         var k     = $this.attr('name');
@@ -64,20 +82,18 @@ define(function(require){
      * @return {Mixed}      The value
      */
   , getDomValue: function( key, $el ){
-      var val, args, helper;
+      var val, args, helper, type;
       $el = $el || this.$el.find('[name="' + key + '"]');
 
       if ( !$el ) return val;
 
-      if ( $el.data('type') === 'list' )
-        return this.getDomList($el);
+      type = $el.attr('type') || $el.data('type');
 
-      switch ( $el.attr('type') ){
-        case 'number':    val = +$el.val(); break;
-        case 'checkbox':  val = $el[0].checked; break;
-        default:          val = $el.val(); break;
+      if ( !( type in this.typeGetters ) ){
+        type = 'default';
       }
 
+      val     = this.typeGetters[ type ]( $el );
       helper  = ($el.data('out') || "").split(' ');
       args    = [ val ].concat( helper.slice(1) );
       helper  = helper[0];
@@ -89,13 +105,20 @@ define(function(require){
       return val;
     }
 
-  , getDomList: function( $el ) {
-      var result = $el.find('input[type="checkbox"]:checked').map( function() {
-        return this.value;
-      }).get();
-      return result;
+    /**
+     * Updates the model with values from the DOM
+     * @return {Object} This instance
+     */
+  , updateModelWithDom: function(){
+      this.model.set( this.getModelData() );
+      return this;
     }
 
+    /**
+     * Given some props (model attr by default), update DOM
+     * @param  {Object} props Update the DOM with
+     * @return {Object}       This instance
+     */
   , updateDomWithModel: function( props ){
       props = props || this.model.attributes;
 
@@ -119,6 +142,8 @@ define(function(require){
           $el.html( val );
         }
       }
+
+      return this;
     }
   });
 });

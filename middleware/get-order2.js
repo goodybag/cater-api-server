@@ -49,10 +49,8 @@ module.exports = function( options ){
       if ( options.userPaymentMethods ){
         users.many.push({
           table:    'users_payment_methods'
-        , columns:  [ 'users_payment_methods.*'
-                    , 'payment_methods.type'
-                    , 'payment_methods.uri'
-                    , 'payment_methods.data' ]
+        , columns:  [ 'payment_methods.*'
+                    , 'users_payment_methods.name' ]
         , alias:    'payment_methods'
         , joins:    { payment_methods: {
                         type: 'left'

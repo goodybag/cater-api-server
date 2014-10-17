@@ -226,6 +226,47 @@ module.exports.register = function(app) {
   );
 
   /**
+   * Users list
+   */
+
+
+  app.get('/admin/users'
+  , m.sort('-id')
+  , m.queryOptions({
+      one: [{ table: 'regions', alias: 'region' }]
+    })
+  , m.viewPlugin( 'mainNav', { active: 'users' })
+  , m.view( 'admin/user/list', db.users, {
+      layout: 'admin/layout2'
+    , method: 'find'
+    })
+  );
+
+  app.get('/admin/users/new'
+  , m.param('id')
+  , m.db.regions.find( {}, { limit: 'all' } )
+  , m.viewPlugin( 'mainNav', { active: 'users' })
+  , m.view( 'admin/user/create', {
+      layout: 'admin/layout2'
+    , user: {}
+    })
+  );
+
+  app.get('/admin/users/:id'
+  , m.param('id')
+  , m.queryOptions({
+      one: [{ table: 'regions', alias: 'region' }]
+    , userGroups: true
+    })
+  , m.db.regions.find( {}, { limit: 'all' } )
+  , m.viewPlugin( 'mainNav', { active: 'users' })
+  , m.view( 'admin/user/edit', db.users, {
+      layout: 'admin/layout2'
+    , method: 'findOne'
+    })
+  );
+
+  /**
    * Restaurant list
    */
 

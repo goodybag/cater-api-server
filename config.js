@@ -206,6 +206,7 @@ config.defaults = {
 
 , emails: {
     support: 'support@goodybag.com'
+  , tech: [ local.testEmail || 'test@goodybag.com' ]
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
@@ -521,6 +522,10 @@ config.production = {
 
 , emails: {
     support: 'support@goodybag.com'
+  , tech: [
+      'john@goodybag.com'
+    , 'preston@goodybag.com'
+    ]
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']

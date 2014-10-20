@@ -1,0 +1,58 @@
+{{#extend "page"}}page-users{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <ul class="breadcrumbs main-breadcrumbs">
+    <li>
+      <a href="/admin">Admin Panel</a>
+    </li>
+    <li>Users</a></li>
+  </ul>
+
+  <h1 class="page-title">Users</h1>
+  <div class="page-actions">
+    <a
+      class="btn btn-primary"
+      href="/admin/users/new">
+      Create
+    </a>
+  </div>
+
+  <section class="panel-component" id="users-table">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Organization</th>
+          <th>Region</th>
+          <th>Signed up</th>
+          <th>Login</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each users}}
+        <tr>
+          <td>
+            <a href="/admin/users/{{id}}">{{id}}</a>
+          </td>
+          <td>{{name}}</td>
+          <td>{{email}}</td>
+          <td>{{organization}}</td>
+          <td>{{region.name}}</td>
+          <td>{{datepart created_at}}</td>
+          <td><a href="/users/{{id}}/session">login</a></td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </section>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+
+</script>
+{{/extend}}

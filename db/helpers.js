@@ -9,7 +9,7 @@ var logger      = require('../lib/logger');
 var config      = require('../config');
 var PMSItem     = require('../public/js/app/models/payment-summary-item');
 
-dirac.setMoSql( mosql );
+dirac.db.setMosql( mosql );
 
 // Logging for dals
 // Leaving commented for now because it just makes logs too noisy
@@ -649,6 +649,27 @@ dirac.use( function( dirac ){
       dal.dependencies[ col.references.table ][ col_name ] = col.references.column;
     });
   });
+});
+
+dirac.use( function( dirac ){
+  var userGroups = function( $query, schema, next ){
+    if ( !$query.userGroups ) return next();
+
+    $query.columns  = $query.columns  || ['*'];
+    $query.columns.push({
+      type: 'array'
+    , expression: {
+        type: 'select'
+      , columns: ['group']
+      , table: 'users_groups'
+      , where: { 'user_id': '$users.id$' }
+      }
+    , alias: 'groups'
+    });
+    next();
+  };
+  dirac.dals.users.before('find', userGroups);
+  dirac.dals.users.before('findOne', userGroups);
 });
 
 // Order status sorting

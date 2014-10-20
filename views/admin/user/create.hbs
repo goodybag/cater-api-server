@@ -1,0 +1,29 @@
+{{#extend "page"}}page-users{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <ul class="breadcrumbs main-breadcrumbs">
+    <li><a href="/admin">Admin Panel</a></li>
+    <li><a href="/admin/users">Users</a></li>
+    <li>Create user</li>
+  </ul>
+
+  <h1 class="page-title">Create user</h1>
+
+  {{> admin_user_edit_form }}
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require([
+  'app/models/user'
+, 'app/views/admin/edit-user-view'
+], function( User, View ) {
+  var view = new View( {
+    model: new User()
+  , el: '#users-edit'
+  , patch: true } );
+  });
+</script>
+{{/extend}}

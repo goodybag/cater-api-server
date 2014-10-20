@@ -63,6 +63,8 @@ config.defaults = {
 
 , rewardsStartDate: '2014-03-25 00:00:00'
 
+, paymentFailedStartDate: '2014-10-20 00:00:00'
+
 // temp solution, would be better in a table
 // , rewardsPromos: [
 //     { start: '2014-04-21 00:00:00', end: '2014-04-22 00:00:00', rate: 2.0 }
@@ -206,6 +208,7 @@ config.defaults = {
 
 , emails: {
     support: 'support@goodybag.com'
+  , tech: [ local.testEmail || 'test@goodybag.com' ]
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
@@ -521,6 +524,10 @@ config.production = {
 
 , emails: {
     support: 'support@goodybag.com'
+  , tech: [
+      'john@goodybag.com'
+    , 'preston@goodybag.com'
+    ]
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']

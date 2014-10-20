@@ -220,7 +220,7 @@ module.exports = {
           type: 'select',
           table: 'users',
           columns: ['id'],
-          where: {email: email}
+          where: {email: email.toLowerCase()}
         }
       };
 

@@ -78,13 +78,12 @@ app.configure(function(){
   });
 
   // Re-register partials
-  app.use( function( req, res, next ){
-    if ( config.isDev ){
+  if ( config.isDev ){
+    app.use( function( req, res, next ){
       partials.register( hbs );
-    }
-
-    return next();
-  });
+      return next();
+    });
+  }
 
   app.use(app.router);
   app.use( function( req, res, next ){

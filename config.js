@@ -63,6 +63,8 @@ config.defaults = {
 
 , rewardsStartDate: '2014-03-25 00:00:00'
 
+, paymentFailedStartDate: '2014-10-20 00:00:00'
+
 // temp solution, would be better in a table
 // , rewardsPromos: [
 //     { start: '2014-04-21 00:00:00', end: '2014-04-22 00:00:00', rate: 2.0 }

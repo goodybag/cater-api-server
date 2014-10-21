@@ -695,7 +695,7 @@ module.exports.register = function(app) {
     , deliveryService:    true
     })
   , controllers.orders.auth
-  , m.restrict(['client', 'order-restaurant', 'admin'])
+  , m.restrict(['order-owner', 'order-restaurant', 'admin'])
   , controllers.orders.update
   );
 

@@ -119,25 +119,21 @@ define(function(require, exports, module) {
       return new Array(price + 1).join('$');
     },
 
-    datepart: function(date) {
+    datepart: function(date, timezone) {
       return date ? moment(date).format('l') : '';
     },
 
-    timepart: function(date) {
+    timepart: function(date, timezone) {
       if (!date) return '';
       return moment(date).format('h:mm A');
     },
 
-    calendar: function(date) {
+    calendar: function(date, timezone) {
       return date ? moment(date).calendar() : '';
     },
 
-    formatDateTime: function(date, format, options) {
-      if (options === undefined) {
-        options = format;
-        format = undefined;
-      }
-      return utils.dateTimeFormatter(date, format || "MM/DD/YYYY");
+    formatDateTime: function(date, format, timezone, options) {
+      return utils.dateTimeFormatter(date, format || "MM/DD/YYYY", timezone);
     },
 
     formatTime: function(time, format, timezone, options) {

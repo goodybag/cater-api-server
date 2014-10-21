@@ -96,7 +96,8 @@ app.configure(function(){
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accessToken));
 
   app.use(function(err, req, res, next){
-    req.logger.error(err);
+    console.error( err, err.stack );
+    req.logger.error('Request error!', err);
     res.error(errors.internal.UNKNOWN, err);
 
     // If the response stream does not close/finish in 2 seconds, just die anyway

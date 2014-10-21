@@ -7,7 +7,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 define(function(require, exports, module) {
   var _ = require('lodash');
 
-  var moment = require('moment');
+  var moment = require('moment-timezone');
 
   var helpers = {};
   helpers.getPrice = function( $el ) {

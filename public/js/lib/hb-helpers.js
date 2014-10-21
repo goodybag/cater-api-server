@@ -140,12 +140,8 @@ define(function(require, exports, module) {
       return utils.dateTimeFormatter(date, format || "MM/DD/YYYY");
     },
 
-    formatTime: function(time, format, options) {
-      if (options === undefined) {
-        options = format;
-        format = undefined;
-      }
-      return utils.timeFormatter(time, format || "h:mm A");
+    formatTime: function(time, format, timezone, options) {
+      return utils.timeFormatter(time, format || "h:mm A", timezone);
     },
 
     unixTimestamp: function(datetime) {

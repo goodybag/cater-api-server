@@ -1535,15 +1535,36 @@ module.exports.register = function(app) {
   app.put('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.queryOptions({
+      returning: ['*', {
+        type: 'select'
+      , table: 'orders'
+      , columns: ['type']
+      , alias: 'old_type'
+      , where: { id: '$orders.id$' }
+      }]
+    })
   , m.after( function( req, res, next ){
       if ( res.statusCode >= 300 || res.statusCode < 200 ){
         return next();
       }
 
       venter.emit( 'order:change', req.param('id') );
+
       next();
     })
-  , m.update( db.orders )
+  , m.update( db.orders, {
+      callback: function(err, orders) {
+        var orderTypeChanged = orders &&
+                               orders[0] &&
+                               orders[0].type !== orders[0].old_type;
+
+        if ( orderTypeChanged ){
+          var order = orders[0];
+          venter.emit('order:type:change', order.type, order.old_type, order);
+        }
+      }
+    })
   );
 
   app.del('/api/orders/:id'

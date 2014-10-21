@@ -39,3 +39,24 @@ create trigger orders_search_update
   on users
   for each row
   execute procedure update_orders_search_vector_from_users();
+
+drop trigger if exists on_order_items_change on order_items;
+create trigger on_order_items_change
+  after insert or update of quantity, price, options_sets
+  on order_items
+  for each row
+  execute procedure on_order_items_change();
+
+drop trigger if exists on_order_items_remove on order_items;
+create trigger on_order_items_remove
+  after delete
+  on order_items
+  for each row
+  execute procedure on_order_items_remove();
+
+drop trigger if exists on_order_datetime_change on orders;
+create trigger on_order_datetime_change
+  after insert or update of datetime
+  on orders
+  for each row
+  execute procedure on_order_datetime_change();

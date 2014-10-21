@@ -1555,7 +1555,14 @@ module.exports.register = function(app) {
     })
   , m.update( db.orders, {
       callback: function(err, orders) {
-        if ( orders && orders[0] ) venter.emit('order:type:change', orders[0]);
+        var orderTypeChanged = orders &&
+                               orders[0] &&
+                               orders[0].type !== orders[0].old_type;
+
+        if ( orderTypeChanged ){
+          var order = orders[0];
+          venter.emit('order:type:change', order.type, order.old_type, order);
+        }
       }
     })
   );

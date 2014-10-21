@@ -103,9 +103,8 @@ define(function(require, exports, module) {
         success: function () {
           self.changeStatus('denied');
         },
-        error: function() {
+        error: function(model, res, options) {
           if(console && console.error) console.error('Could not save reason for rejection', arguments);
-          self.changeStatus('denied');
         }
       });
     },

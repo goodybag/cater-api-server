@@ -356,6 +356,7 @@ module.exports = Model.extend({
     , 'guests'
     , 'adjustment_amount'
     , 'adjustment_description'
+    , 'delivery_instructions'
     , 'tip'
     , 'payment_method_id'
     , 'delivery_service_id'

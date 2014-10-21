@@ -99,13 +99,18 @@ define(function(require, exports, module) {
 
       this.model.save({
         reason_denied: $reasonDenied.val()
+      , review_token: this.model.get('review_token')
       }, {
         success: function () {
           self.changeStatus('denied');
         },
-        error: function() {
-          if(console && console.error) console.error('Could not save reason for rejection', arguments);
-          self.changeStatus('denied');
+        error: function(model, res, options) {
+          if(console && console.error) {
+            var args = Array.prototype.slice.call(arguments);
+            args.forEach(function(arg) {
+              alert(JSON.stringify(arg));
+            });
+          }
         }
       });
     },

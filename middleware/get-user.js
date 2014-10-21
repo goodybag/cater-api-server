@@ -15,7 +15,7 @@ module.exports = function(req, res, next) {
       req.session.user = res.locals.user;
     }
 
-    if ( req.param('review_token') ){
+    if ( req.param('review_token') || req.body.review_token ){
       req.user.isAdmin = false;
       req.user.isRestaurant = true;
       res.locals.user = req.user.toJSON();

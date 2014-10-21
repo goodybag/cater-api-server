@@ -685,7 +685,6 @@ module.exports.register = function(app) {
   );
 
   app.put('/orders/:oid'
-  , m.restrict(['client', 'admin'])
   , m.getOrder2({
       param:              'oid'
     , items:              true
@@ -696,6 +695,7 @@ module.exports.register = function(app) {
     , deliveryService:    true
     })
   , controllers.orders.auth
+  , m.restrict(['client', 'order-restaurant', 'admin'])
   , controllers.orders.update
   );
 

@@ -24,5 +24,9 @@
   <dd>{{dollars order.tip}}</dd>
   {{/dneq}}
   <dt class="total">Total:</dt>
+  {{#if isRestaurantReview}}
+  <dd class="total">{{dollars order.restaurant_total}}</dd>
+  {{else}}
   <dd class="total">{{dollars order.total}}</dd>
+  {{/if}}
 </dl>

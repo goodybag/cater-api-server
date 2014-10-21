@@ -16,14 +16,6 @@ var dirac = require('dirac');
 var typeSets = [ pg.types, dirac.db.pg.types ];
 
 var parsers = module.exports = [
-  {
-    type: 'timestamp'
-  , oid: 1114
-  , fn: function(val) {
-      return val;
-    }
-  }
-
   // Fix PG date parsing (`date` type not to be confused with something with a timezone)
 , {
     oid: 1082

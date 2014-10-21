@@ -133,10 +133,6 @@ module.exports.JSON.history = function( req, res ){
 
         notes = notes.map( function( note ){
           note.data.url = getEmailUrl( req.param('oid'), note.nid );
-
-          // Embed timezone information so the client can adjust
-          note.send_date = new Date( note.send_date );
-
           return utils.extend( note, utils.omit( notifier.defs[ note.nid ], 'id' ) );
         });
 

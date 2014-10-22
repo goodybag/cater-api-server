@@ -15,17 +15,48 @@
   <h1>Welcome to Ol' Greg</h1>
   <p>Ol' Greg is a <a href="https://www.youtube.com/watch?v=XxaP19pY1FI">scaly man-fish</a>. <em>This</em> is a tool to generate bulk Restaurant Payment Summaries</p>
 
-  <section class="panel-component" id="">
+  <section class="panel-component og-range-processor" id="range-processor">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label>Start</label>
+        <input type="date" name="start">
+      </div>
+      <div class="form-group">
+        <label>Stop</label>
+        <input type="date" name="stop">
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary">Make an assessment</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel-component" id="range-results">
+    <h2 class="component-title">Results</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <td>id</td>
+          <td>restaurant</td>
+          <td>actions</td>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each restaurants}}
+
+        {{/each}}
+      </tbody>
+    </table>
   </section>
 </div>
 {{/extend}}
 
 {{#extend "scripts"}}
 <script>
-  // require( ['app/pages/admin-home'], function( page ){
-  //   page.init({
+  require( ['app/pages/admin/ol-greg'], function( page ){
+    page.init({
 
-  //   });
-  // });
+    });
+  });
 </script>
 {{/extend}}

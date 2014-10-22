@@ -44,8 +44,10 @@ module.exports.list = function(req, res) {
 
       models.Restaurant.find(
         query
-      , utils.extend({ is_hidden: false }
-      , orderParams)
+      , utils.extend(
+          { is_hidden: false }
+        , orderParams
+        )
       , callback);
     },
 

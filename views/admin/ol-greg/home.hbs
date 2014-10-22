@@ -1,4 +1,7 @@
 {{#extend "page"}}page-ol-greg{{/extend}}
+{{#extend "css"}}
+<link rel="stylesheet" href="{{cdn (format '/dist/<%= version %>/ol-greg.css' pkg)}}">
+{{/extend}}
 
 {{#extend "body"}}
 <div class="container" id="main-container">

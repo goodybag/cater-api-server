@@ -11,7 +11,18 @@ define(function(require){
   };
 
   var page = {
-    init: function( options ){
+    typeChangeFunnies: [
+      'You are very handsome.'
+    , 'Have a great day!'
+    , 'You. Are. The. Best.'
+    , 'I like what you\'ve done with your hair'
+    , 'Remember the old days?'
+    , 'Please click softer next time :('
+    , 'You rock!'
+    , 'Bet, let, get, pet, Boba Fet'
+    ]
+
+  , init: function( options ){
       if ( !options.order ){
         throw new Error('Missing required property: `order`');
       }
@@ -50,7 +61,12 @@ define(function(require){
               return flash.info( 'Error :(', 1000 );
             }
 
-            flash.info( "It's set!<br>You are very handsome." );
+            flash.info([
+              "It's set!<br>"
+            , '<small class="really-small">'
+            , page.typeChangeFunnies[ ~~( Math.random() * page.typeChangeFunnies.length ) ]
+            , '</small>'
+            ].join(''));
           });
         });
       });

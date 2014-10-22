@@ -424,6 +424,13 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants/:restaurant_id/copy'
     , controllers.restaurants.copy
     );
+
+    app.get('/admin/ol-greg'
+    , m.viewPlugin( 'mainNav', { active: 'home' })
+    , m.view( 'admin/ol-greg/home', {
+        layout: 'admin/layout2'
+      })
+    );
   });
 
 

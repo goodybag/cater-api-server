@@ -70,17 +70,19 @@ define( function( require ){
         el: '#sort'
       });
 
+      var restaurantSearchView = new Views.RestaurantSearchView({
+        el: '#search'
+      });
+
       var restaurantsListView = new Views.RestaurantsListView({
         el: '#main'
       , filtersView: restaurantFiltersView
       , sortView: restaurantSortView
+      , searchView: restaurantSearchView
       , paramsView: orderParamsView
       , searchUrl: '/restaurants'
       });
 
-      var restaurantSearchView = new Views.RestaurantSearchView({
-        el: '#search'
-      });
     }
   };
 

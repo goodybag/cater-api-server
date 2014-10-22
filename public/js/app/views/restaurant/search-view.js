@@ -12,9 +12,13 @@ define(function(require, exports, module) {
     },
 
     submit: function(e) {
+      e.preventDefault();
       analytics.track('Filter Change', { type: 'Sorting' });
-      this.trigger('sort:change');
-    }
+      this.trigger('search:change');
+    },
 
+    getProps: function() {
+      return { search:  this.$el.find('.search-input').val() };
+    }
   });
 });

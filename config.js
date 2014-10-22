@@ -176,6 +176,7 @@ config.defaults = {
 , scheduler: {
     cron: '*/10 * * * * *'
   , start: true
+  , limit: 4 // max # of parallel jobs
   }
 
 , outputActivePoolIds: false

@@ -6,14 +6,18 @@
 <div class="panel-group panel-group-filters" id="search">
   <form class="search-form">
     <div class="form-group">
-      <input
-        class="form-control search-input"
-        type="text"
-        placeholder="Search restaurants"
-        value="{{orderParams.search}}">
-    </div>
-    <div class="form-group">
-      <button class="btn btn-primary" type="submit">Search</button>
+      <div class="panel">
+          <input
+            class="form-control-borderless search-input"
+            type="text"
+            placeholder="Search restaurants"
+            value="{{orderParams.search}}">
+          <button
+            class="btn-inline-icon pull-right"
+            type="submit">
+            <i class="gb-icon-magnifier"></i>
+          </button>
+      </div>
     </div>
   </form>
 </div>

@@ -13,7 +13,7 @@ define(function(require, exports, module) {
 
     submit: function(e) {
       e.preventDefault();
-      analytics.track('Filter Change', { type: 'Sorting' });
+      analytics.track('Filter Change', { type: 'Searching' });
       this.trigger('search:change');
     },
 

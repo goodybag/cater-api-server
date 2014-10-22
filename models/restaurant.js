@@ -530,6 +530,13 @@ var Restaurant = module.exports = Model.extend({
     var unacceptable = [];
 
     /**
+     * Search restaurants
+     */
+    if (orderParams && orderParams.search) {
+      query.where.search_vector = { $partialMatches: orderParams.search };
+    }
+
+    /**
      * Sort by price, order min, or delivery fee
      */
     if (orderParams && orderParams.sort) {

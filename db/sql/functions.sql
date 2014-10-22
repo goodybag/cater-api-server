@@ -376,3 +376,15 @@ begin
   return new;
 end;
 $$ language plpgsql;
+
+create or replace function update_restaurant_search_vector()
+returns trigger as $$
+begin
+  update restaurants as r
+  set search_vector = to_tsvector( 'english',
+      r.name
+    )
+  where r.id = new.id;
+  return new;
+end;
+$$ language plpgsql;

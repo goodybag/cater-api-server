@@ -44,10 +44,16 @@ define(function(require, exports, module) {
       var data = {
         delivery_fee:     order.get('delivery_fee')
       , sub_total:        order.get('sub_total')
+      , adjustment:       order.get('adjustment_amount')
       , tip:              order.get('tip')
       , gb_fee:           order.restaurant.get('gb_fee') || 0
       , sales_tax:        order.get('sales_tax') === 0 ? 0 : this.get('sales_tax')
       };
+
+      if ( order.get('type') === 'courier' ){
+        data.tip          = 0;
+        data.delivery_fee = 0;
+      }
 
       data.net_payout = this.getNetPayout( data );
 
@@ -59,7 +65,7 @@ define(function(require, exports, module) {
   , getNetPayout: function( data ){
       data = data || this.attributes;
 
-      var val = data.sub_total + data.delivery_fee
+      var val = data.sub_total + data.adjustment + data.delivery_fee
       var tax = val * data.sales_tax;
       val += data.tip;
 
@@ -69,8 +75,8 @@ define(function(require, exports, module) {
     }
 
   , getTotal: function(){
-      var total = this.attributes.sub_total + this.attributes.delivery_fee;
-      total += total * this.attributes.sales_tax;
+      var total = this.get('sub_total') + this.get('adjustment') + this.get('delivery_fee');
+      total += total * this.get('sales_tax');
       total += this.attributes.tip;
       return Math.round( total );
     }

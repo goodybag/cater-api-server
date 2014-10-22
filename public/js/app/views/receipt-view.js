@@ -3,6 +3,7 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var states = require('states');
   var moment = require('moment');
+  var helpers = require('hb-helpers');
 
   var OrderView = require('./order-view');
   var FormView = require('./form-view');
@@ -83,6 +84,10 @@ define(function(require, exports, module) {
       reason_denied: '.reason-denied'
     }, OrderView.prototype.fieldMap),
 
+    fieldGetters: _.extend({
+
+    }, OrderView.prototype.fieldGetters),
+
     rejectOrder: function() {
       var self = this;
 
@@ -98,9 +103,8 @@ define(function(require, exports, module) {
         success: function () {
           self.changeStatus('denied');
         },
-        error: function() {
+        error: function(model, res, options) {
           if(console && console.error) console.error('Could not save reason for rejection', arguments);
-          self.changeStatus('denied');
         }
       });
     },

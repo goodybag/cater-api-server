@@ -76,3 +76,5 @@ exports.transaction = function( callback ){
     return callback( null, new Tx( client ) );
   });
 };
+
+exports.dirac = dirac;

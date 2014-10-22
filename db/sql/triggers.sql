@@ -5,6 +5,13 @@ create trigger on_order_create
     for each row
     execute procedure on_order_create();
 
+drop trigger if exists order_total_change on orders;
+create trigger order_total_change
+    after insert or update of zip, tip, adjustment_amount, user_adjustment_amount
+    on orders
+    for each row
+    execute procedure on_order_total_change();
+
 drop trigger if exists on_order_type_change on orders;
 create trigger on_order_type_change
     after update of type

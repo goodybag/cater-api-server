@@ -5,7 +5,9 @@
 
 var utils           = require('../utils');
 var errors          = require('../errors');
+var Models          = require('../models');
 var db              = require('../db');
+var manifest        = require('../lib/order-manifester');
 var orderEditable   = require('./order-editable');
 
 module.exports = function( options ){
@@ -47,10 +49,8 @@ module.exports = function( options ){
       if ( options.userPaymentMethods ){
         users.many.push({
           table:    'users_payment_methods'
-        , columns:  [ 'users_payment_methods.*'
-                    , 'payment_methods.type'
-                    , 'payment_methods.uri'
-                    , 'payment_methods.data' ]
+        , columns:  [ 'payment_methods.*'
+                    , 'users_payment_methods.name' ]
         , alias:    'payment_methods'
         , joins:    { payment_methods: {
                         type: 'left'
@@ -96,6 +96,10 @@ module.exports = function( options ){
       if ( options.restaurant )
       if ( options.deliveryService ){
         order.restaurant.delivery_service = order.delivery_service;
+      }
+
+      if ( options.manifest ){
+        order.manifest = manifest.create( order.orderItems );
       }
 
       req.order = order;

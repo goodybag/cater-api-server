@@ -23,6 +23,7 @@ define(function(require, exports, module) {
     }
 
   , initialize: function( options ){
+      this.options = options;
       return this;
     }
 
@@ -32,11 +33,16 @@ define(function(require, exports, module) {
       e.preventDefault();
       spinner.start();
 
+      var redirect = this.model.isNew();
       this.model.save( this.getModelData(), {
-        success: function(){
+        patch: this.options.patch || false
+      , success: function(){
           spinner.stop();
           venter.trigger( 'item:saved', this_.model );
           this_.trigger( 'item:saved', this_.model, this_ );
+          if (redirect && this_.redirect) {
+            this_.redirect();
+          }
         }
 
       , error: function( error ){

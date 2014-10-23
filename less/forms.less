@@ -145,3 +145,16 @@ input[disabled] {
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
+
+// Chrome datepicker spinner adds some extra height to the spinner
+// Tried changing the height to no avail. I'm not sure why this works
+// on number but not date
+input[type="date"] {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    height: 0;
+  }
+}

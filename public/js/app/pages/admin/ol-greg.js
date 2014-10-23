@@ -3,9 +3,11 @@ define(function(require){
   var Hbs           = require('handlebars');
   var async         = require('async');
   var utils         = require('utils');
+  var PMSItem       = require('app/models/payment-summary-item');
 
   return Object.create({
-    init: function(){
+    init: function( options ){
+      this.options = options;
 
     }
 

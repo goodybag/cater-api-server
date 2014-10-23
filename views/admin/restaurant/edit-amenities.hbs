@@ -1,6 +1,24 @@
 {{#extend "body"}}
 <h2>Amenities</h2>
 <p>Configure various amenities available like napkins, utensils and plates.</p>
+
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Price</th>
+    <th>Actions</th>
+  </tr>
+  {{#each restaurant.amenities}}
+  <tr data-amenity-id="{{id}}">
+    <td>{{name}}</td>
+    <td>{{description}}</td>
+    <td><code>${{dollars price}}</code></td>
+    <td><a href="#">Edit</a></td>
+  </tr>
+  {{/each}}
+</table>
+
 {{/extend}}
 
 {{#extend "scripts"}}

@@ -403,12 +403,16 @@ module.exports.register = function(app) {
       })
     );
 
-    app.get('/admin/restaurants/:rid/amenities'
+    app.get('/admin/restaurants/:id/amenities'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.defaultLocals( { active_tab: 'amenities'} )
-    , m.restaurant( { param: 'rid' } )
-    , m.view('admin/restaurant/edit-amenities', {
+    , m.param('id')
+    , m.queryOptions({
+        many: [ { table: 'amenities' } ]
+      })
+    , m.view('admin/restaurant/edit-amenities', db.restaurants, {
         layout: 'admin/layout-two-column'
+      , method: 'findOne'
       })
     );
 

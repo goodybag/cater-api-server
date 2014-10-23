@@ -164,6 +164,9 @@ define(function(require) {
       type: types.int
     , references: {table: 'contacts', column: 'id', onDelete: 'set null'}
     }
+  , search_vector: {
+      type: types.tsvector
+    }
   };
 
   definition.indices = {};

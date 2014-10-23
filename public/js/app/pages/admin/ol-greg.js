@@ -13,6 +13,19 @@ define(function(require){
 
   , generateSummary: function( rid, d1, d2, callback ){
       // Get orders for restaurant date range
+      $.ajax({
+        type:   'GET'
+      , url:    [ '/api/restaurants'
+                , rid
+                , 'orders'
+                , utils.queryParams({
+                    start_date: d1
+                  , end_date:   d2
+                  , limit:      'all'
+                  , status:     'accepted'
+                  })
+                ]
+      })
       // Create new payment summary
       // for each order, create new pms item with order
       // save payment summary

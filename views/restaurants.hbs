@@ -1,5 +1,5 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="{{cdn "/css/restaurants.css"}}">
+<link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/restaurants.css' pkg)}}">
 {{/extend}}
 
 {{#extend "title"}} - Restaurants{{/extend}}

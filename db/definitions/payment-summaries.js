@@ -71,6 +71,7 @@ define(function(require) {
         tx.payment_summary_items
       , items
       )
+      // Update the original document
     , tx.payment_summaries.update.bind(
         tx.payment_summaries
       , $where

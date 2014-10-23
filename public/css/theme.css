@@ -93,6 +93,18 @@ fieldset[disabled] .btn-primary.active {
   color: #FFBDCA;
 }
 
+.btn-inline-icon {
+  padding: 0;
+  margin: 0;
+  display: inline;
+  background: none;
+  border: none;
+  outline: none;
+  color: #aaa;
+  height: 36px;
+  padding: 10px;
+}
+
 
 /**
  * Forms
@@ -100,6 +112,15 @@ fieldset[disabled] .btn-primary.active {
 .form-control {
   border-color: #C2C2BC;
   font-weight: 300;
+}
+
+.form-control-borderless {
+  border: none;
+  background: none;
+  box-shadow: none;
+  outline: none;
+  height: 36px;
+  padding: 12px;
 }
 
 /**

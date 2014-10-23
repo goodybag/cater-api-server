@@ -14,6 +14,7 @@ define(function(require, exports, module) {
       this.listenTo(this.options.paramsView, 'params:submit', this.search);
       this.listenTo(this.options.filtersView, 'filters:change', this.search);
       this.listenTo(this.options.sortView, 'sort:change', this.search);
+      this.listenTo(this.options.searchView, 'search:change', this.search);
     }
 
   , search: function() {
@@ -22,6 +23,7 @@ define(function(require, exports, module) {
       , this.options.filtersView.getProps()
       , this.options.paramsView.getProps()
       , this.options.sortView.getProps()
+      , this.options.searchView.getProps()
       );
 
       // Clone props because analytics is mutating the date property

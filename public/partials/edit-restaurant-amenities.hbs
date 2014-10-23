@@ -1,0 +1,21 @@
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Price</th>
+    <th>Actions</th>
+  </tr>
+
+  {{#each amenities}}
+  <tr data-amenity-id="{{id}}">
+    <td>{{name}}</td>
+    <td>{{description}}</td>
+    <td><code>${{dollars price}}</code></td>
+    <td><a href="#">Edit</a></td>
+  </tr>
+  {{/each}}
+</table>
+
+<p class="actions">
+  <button class="btn btn-primary btn-add-amenity">Add new amenity</button>
+</p>

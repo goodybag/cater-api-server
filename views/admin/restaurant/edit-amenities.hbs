@@ -2,26 +2,11 @@
 <h2>Amenities</h2>
 <p>Configure various amenities available like napkins, utensils and plates.</p>
 
-<table class="table">
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Price</th>
-    <th>Actions</th>
-  </tr>
-  {{#each restaurant.amenities}}
-  <tr data-amenity-id="{{id}}">
-    <td>{{name}}</td>
-    <td>{{description}}</td>
-    <td><code>${{dollars price}}</code></td>
-    <td><a href="#">Edit</a></td>
-  </tr>
-  {{/each}}
-</table>
-
-<p class="actions">
-  <button class="btn btn-primary">Add new amenity</button>
-</p>
+{{#with restaurant}}
+<div class="amenities">
+  {{> edit_restaurant_amenities }}
+</div>
+{{/with}}
 
 {{/extend}}
 
@@ -29,10 +14,14 @@
 <script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
 <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
 <script>
-  // Init views on this page
-  require( ['app/pages/admin/restaurant/edit-amenities', 'app/models/restaurant'], function( page, Restaurant ){
-    page.init({
-      restaurant: new Restaurant({{{json restaurant}}})
+  require( [
+    'app/views/restaurant/edit-amenities-view'
+  , 'app/collections/amenities'
+  ],
+  function( View, Amenities ){
+    var view = new View({
+      el: '.amenities'
+    , amenities: new Amenities({{{json restaurant.amenities}}})
     });
   });
 </script>

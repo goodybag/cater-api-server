@@ -133,6 +133,14 @@ utils.test.logout = function( callback ){
   return utils.test.get( '/auth/logout', callback );
 };
 
+utils.async.log = function(){
+  var args = arguments;
+  return function(){
+    console.log.apply( console, args );
+    return arguments[ arguments.length - 1 ]();
+  };
+};
+
 utils.async.noop = function(){
   var callback = arguments[ arguments.length - 1 ];
   if ( typeof callback === 'function' ) return callback();

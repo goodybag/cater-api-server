@@ -12,7 +12,6 @@ define(function(require){
   return Object.create({
     init: function( options ){
       this.options = options;
-
     }
 
   , generateSummary: function( rid, d1, d2, callback ){

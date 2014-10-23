@@ -19,6 +19,10 @@
   {{/each}}
 </table>
 
+<p class="actions">
+  <button class="btn btn-primary">Add new amenity</button>
+</p>
+
 {{/extend}}
 
 {{#extend "scripts"}}
@@ -26,9 +30,9 @@
 <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
 <script>
   // Init views on this page
-  require( ['app/pages/admin/restaurant/edit-basic-info', 'app/models/restaurant'], function( page, Restaurant ){
+  require( ['app/pages/admin/restaurant/edit-amenities', 'app/models/restaurant'], function( page, Restaurant ){
     page.init({
-      models: { restaurant: new Restaurant({{{json restaurant}}}) }
+      restaurant: new Restaurant({{{json restaurant}}})
     });
   });
 </script>

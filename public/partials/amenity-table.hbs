@@ -7,12 +7,7 @@
   </tr>
 
   {{#each amenities}}
-  <tr data-amenity-id="{{id}}">
-    <td>{{name}}</td>
-    <td>{{description}}</td>
-    <td><code>${{dollars price}}</code></td>
-    <td><a href="#">Edit</a></td>
-  </tr>
+    {{> amenity_row }}
   {{/each}}
 </table>
 

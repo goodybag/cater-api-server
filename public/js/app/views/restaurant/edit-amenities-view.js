@@ -25,12 +25,20 @@ define(function(require, exports, module) {
     initialize: function(opts){
       this.amenities = opts.amenities || new Amenities();
       this.listen();
+      this.render();
     },
 
     render: function() {
-      var context = { amenities: this.amenities.toJSON() };
-      var markup = Handlebars.partials.edit_restaurant_amenities(context);
-      this.$el.html(markup);
+      // Render table in memory
+      var $table = $(Handlebars.partials.amenity_table());
+
+      // Render each row
+      this.amenities.each(function(amenity) {
+        var rowView = new AmenityRowView(amenity);
+        $table.append()
+      })
+      // Repaint one time!
+      // this.$el.html($html);
     }
 
   });

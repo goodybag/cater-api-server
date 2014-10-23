@@ -46,14 +46,22 @@ define(function(require) {
 
   definition.indices = {};
 
-  definition.update = function( $where, options, callback ){
-    if ( !$where.id ) return this.super.apply( this, arguments );
-    if ( !Array.isArray( options.values.items ) ) return this.super.apply( this, arguments );
+  definition.update = function( $where, $update, options, callback ){
+    // We should standardize this upstream with a convenience method
+    if ( typeof options == 'function' ){
+      callback = options;
+      options = {};
+    }
+
+    if ( typeof $where != 'object' ) $where = { id: $where };
+
+    if ( !$where.id ) return this._super.apply( this, arguments );
+    if ( !Array.isArray( $update.items ) ) return this._super.apply( this, arguments );
 
     var tx = dirac.tx.create();
 
-    var items = options.values.items;
-    delete options.values.items;
+    var items = $update.items;
+    delete $update.items;
 
     for ( var i = items.length - 1; i >= 0; i-- ){
       items[i].payment_summary_id = $where.id;
@@ -67,10 +75,10 @@ define(function(require) {
       , { payment_summary_id: $where.id }
       )
       // Add items
-    , tx.payment_summary_items.insert.bind(
+    , items.length > 0 ? tx.payment_summary_items.insert.bind(
         tx.payment_summary_items
       , items
-      )
+      ) : utils.async.noop
       // Update the original document
     , tx.payment_summaries.update.bind(
         tx.payment_summaries

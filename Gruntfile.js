@@ -123,7 +123,6 @@ module.exports = function(grunt) {
           { src: 'public/css/components.css', dest: 'public/dist/<%= pkg.version %>/css/components.css' }
         , { src: 'public/css/restaurants.css', dest: 'public/dist/<%= pkg.version %>/css/restaurants.css' }
         , { src: 'public/css/theme.css', dest: 'public/dist/<%= pkg.version %>/css/theme.css' }
-        , { src: 'public/img/body-bg.png', dest: 'public/dist/<%= pkg.version %>/img/body-bg.png' }
         , { expand: true, flatten: true, src: 'public/img/*.svg', dest: 'public/dist/<%= pkg.version %>/img/' }
         ]
       }

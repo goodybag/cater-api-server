@@ -157,4 +157,13 @@ input[type="date"] {
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
     height: 0;
   }
+
+  // My inputs do not expect extra padding on the text
+  // Turn that shit off
+  &::-webkit-datetime-edit-fields-wrapper,
+  &::-webkit-datetime-edit-month-field,
+  &::-webkit-datetime-edit-day-field,
+  &::-webkit-datetime-edit-year-field {
+    padding: 0;
+  }
 }

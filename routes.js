@@ -403,6 +403,15 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/admin/restaurants/:rid/amenities'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'amenities'} )
+    , m.restaurant( { param: 'rid' } )
+    , m.view('admin/restaurant/edit-amenities', {
+        layout: 'admin/layout-two-column'
+      })
+    );
+
     app.get('/admin/restaurants/:restaurant_id/photos'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.defaultLocals( { active_tab: 'photos'} )

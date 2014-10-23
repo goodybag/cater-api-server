@@ -1,0 +1,17 @@
+{{#extend "body"}}
+<h2>Amenities</h2>
+<p>Configure various amenities available like napkins, utensils and plates.</p>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
+<script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
+<script>
+  // Init views on this page
+  require( ['app/pages/admin/restaurant/edit-basic-info', 'app/models/restaurant'], function( page, Restaurant ){
+    page.init({
+      models: { restaurant: new Restaurant({{{json restaurant}}}) }
+    });
+  });
+</script>
+{{/extend}}

@@ -1,16 +1,18 @@
-<table class="table">
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Price</th>
-    <th>Actions</th>
-  </tr>
+<div>
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Actions</th>
+    </tr>
 
-  {{#each amenities}}
-    {{> amenity_row }}
-  {{/each}}
-</table>
+    {{#each amenities}}
+      {{> amenity_row }}
+    {{/each}}
+  </table>
 
-<p class="actions">
-  <button class="btn btn-primary btn-add-amenity">Add new amenity</button>
-</p>
+  <p class="actions">
+    <button class="btn btn-primary btn-add-amenity">Add new amenity</button>
+  </p>
+</div>

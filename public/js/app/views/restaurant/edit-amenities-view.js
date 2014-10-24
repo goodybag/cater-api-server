@@ -7,6 +7,7 @@ define(function(require, exports, module) {
   var Handlebars = require('handlebars');
   var Amenities = require('app/collections/amenities');
   var Amenity = require('app/models/amenity');
+  var AmenityRowView = require('app/views/restaurant/amenity-row-view');
 
   var EditAmenitiesView = module.exports = Backbone.View.extend({
 
@@ -30,15 +31,21 @@ define(function(require, exports, module) {
 
     render: function() {
       // Render table in memory
-      var $table = $(Handlebars.partials.amenity_table());
+      var $table = $(Handlebars.partials.amenity_table()).find('.table');
 
+      var myviews = [];
       // Render each row
       this.amenities.each(function(amenity) {
-        var rowView = new AmenityRowView(amenity);
-        $table.append()
-      })
+        var rowView = new AmenityRowView({ amenity: amenity });
+        $table.append(rowView.render().el);
+        myviews.push(rowView);
+      });
       // Repaint one time!
-      // this.$el.html($html);
+      this.$el.find('.table').html($table);
+      myviews.forEach(function(view) {
+        console.log(view);
+        view.delegateEvents();
+      });
     }
 
   });

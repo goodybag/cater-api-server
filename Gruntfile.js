@@ -121,6 +121,8 @@ module.exports = function(grunt) {
     , legacy: {
         files: [
           { src: 'public/css/components.css', dest: 'public/dist/<%= pkg.version %>/css/components.css' }
+        , { src: 'public/css/restaurants.css', dest: 'public/dist/<%= pkg.version %>/css/restaurants.css' }
+        , { src: 'public/css/theme.css', dest: 'public/dist/<%= pkg.version %>/css/theme.css' }
         , { expand: true, flatten: true, src: 'public/img/*.svg', dest: 'public/dist/<%= pkg.version %>/img/' }
         ]
       }
@@ -283,7 +285,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'analyze',      ['complexity'] );
   grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'react', 'requirejs'] );
-  grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'copy:legacy', 'shell:loggingServer', 'watch'] );
+  grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'copy:legacy', 'loglog', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 
   grunt.registerTask( 'deploy', [

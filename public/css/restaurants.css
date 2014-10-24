@@ -78,3 +78,20 @@ a.list-group-item:hover + a.list-group-item {
 .search-info {
   margin-top: -12px;
 }
+
+.search-form input {
+  width: 100%;
+  padding-right: 20px;
+}
+
+.search-form button {
+  position: absolute;
+  right: 14px;
+  top: 30px;
+}
+
+@media screen and (min-width: 992px) {
+  .search-form button {
+    top: 40px;
+  }
+}

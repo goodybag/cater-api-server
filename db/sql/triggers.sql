@@ -39,3 +39,10 @@ create trigger orders_search_update
   on users
   for each row
   execute procedure update_orders_search_vector_from_users();
+
+drop trigger if exists restaurants_search_update on restaurants;
+create trigger restaurants_search_update
+  after update of name
+  on restaurants
+  for each row
+  execute procedure update_restaurant_search_vector();

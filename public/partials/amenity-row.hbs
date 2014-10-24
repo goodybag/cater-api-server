@@ -1,6 +1,17 @@
-<tr data-amenity-id="{{id}}">
-  <td>{{name}}</td>
-  <td>{{description}}</td>
-  <td><code>${{dollars price}}</code></td>
-  <td><a href="#" class="btn-edit">Edit</a></td>
-</tr>
+  <td>
+    <input class="amenity-edit hide" type="text" value="{{name}}">
+    <span class="amenity-read">{{name}}</span>
+  </td>
+  <td>
+    {{!-- <textarea class="amenity-edit hide">{{description}}</textarea> --}}
+    <input type="text" class="amenity-edit hide" value="{{description}}">
+    <span class="amenity-read">{{description}}</span>
+  </td>
+  <td>
+    <input class="amenity-edit hide" type="number" step="0.01" value="{{dollars price}}">
+    <code class="amenity-read">${{dollars price}}</code>
+  </td>
+  <td>
+    <a href="#" class="btn-edit">Edit</a> |
+    <a href="#" class="btn-remove">Remove</a>
+  </td>

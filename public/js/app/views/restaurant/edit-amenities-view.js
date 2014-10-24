@@ -10,6 +10,7 @@ define(function(require, exports, module) {
   var AmenityRowView = require('app/views/restaurant/amenity-row-view');
 
   var EditAmenitiesView = module.exports = Backbone.View.extend({
+    template: Handlebars.partials.amenity_table,
 
     events: {
       'click .btn-add-amenity': 'onAddAmenityClick'
@@ -19,33 +20,32 @@ define(function(require, exports, module) {
       this.amenities.add(new Amenity());
     },
 
-    listen: function() {
-      this.amenities.on('add', this.render.bind(this));
+    initialize: function(){
+
+      var this_ = this;
+      this.$table = this.$el.find('#amenities-table');
+      this.amenities = this.options.amenities || new Amenities();
+      this.amenityRowViews = this.amenities.map(function(amenity) {
+        var view = new AmenityRowView({ amenity: amenity });
+        this_.$table.append(view.render().el);
+        return view;
+      });
+
+      this.listenTo(this.amenities, 'add', this.addOne);
     },
 
-    initialize: function(opts){
-      this.amenities = opts.amenities || new Amenities();
-      this.listen();
-      this.render();
+    addOne: function(amenity) {
+      var view = new AmenityRowView({ amenity: amenity });
+      this.$table.append(view.render().el);
     },
 
     render: function() {
-      // Render table in memory
-      var $table = $(Handlebars.partials.amenity_table()).find('.table');
+      this.$el.html( this.template() );
+      return this;
+    },
 
-      var myviews = [];
-      // Render each row
-      this.amenities.each(function(amenity) {
-        var rowView = new AmenityRowView({ amenity: amenity });
-        $table.append(rowView.render().el);
-        myviews.push(rowView);
-      });
-      // Repaint one time!
-      this.$el.find('.table').html($table);
-      myviews.forEach(function(view) {
-        console.log(view);
-        view.delegateEvents();
-      });
+    renderNested: function( views, selector ) {
+      var this_ = this;
     }
 
   });

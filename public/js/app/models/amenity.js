@@ -26,6 +26,8 @@ define(function(require, exports, module) {
       }
     },
 
+    urlRoot: '/api/amenities',
+
     validator: amanda('json'),
 
     validate: function(attrs, options) {

@@ -1702,4 +1702,18 @@ module.exports.register = function(app) {
   , m.find( db.users )
   );
 
+  /**
+   * Amenities
+   */
+  app.get('/api/amenities/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.findOne( db.amenities )
+  );
+
+  app.put('/api/amenities/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.amenities )
+  );
 }

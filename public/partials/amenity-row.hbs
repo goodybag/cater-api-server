@@ -1,5 +1,5 @@
   <td>
-    <input class="amenity-edit hide" type="text" value="{{name}}">
+    <input class="amenity-edit hide" type="text" name="name" value="{{name}}">
     <span class="amenity-read">{{name}}</span>
   </td>
   <td>
@@ -12,6 +12,7 @@
     <code class="amenity-read">${{dollars price}}</code>
   </td>
   <td>
-    <a href="#" class="btn-edit">Edit</a> |
+    <a href="#" class="btn-edit amenity-read">Edit</a>
+    <a href="#" class="btn-save hide amenity-edit">Save</a>
     <a href="#" class="btn-remove">Remove</a>
   </td>

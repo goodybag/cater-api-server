@@ -9,12 +9,22 @@ define(function(require, exports, module) {
     tagName: 'tr',
 
     events: {
-      'click .btn-edit': 'onClickEdit'
-    , 'click .btn-remove': 'onClickRemove'
+      'click .btn-edit':      'onClickEdit'
+    , 'click .btn-save':      'onClickSave'
+    , 'click .btn-remove':    'onClickRemove'
     },
 
     onClickEdit: function(e){
       e.preventDefault();
+      this.editMode = !this.editMode;
+      this.trigger('toggle:edit', this.editMode);
+    },
+
+    onClickSave: function(e){
+      e.preventDefault();
+      this.options.amenity.save({
+        name: this.$el.find('[name="name"]').val()
+      });
       this.editMode = !this.editMode;
       this.trigger('toggle:edit', this.editMode);
     },
@@ -27,6 +37,7 @@ define(function(require, exports, module) {
 
     toggleEdit: function(toggle) {
       this.$el.find('.hide').removeClass('hide');
+
       if (toggle) {
         this.$el.find('.amenity-read').addClass('hide');
       } else {
@@ -37,7 +48,6 @@ define(function(require, exports, module) {
     initialize: function() {
       this.amenity = this.amenity || new Amenity();
       this.editMode = false;
-      console.log('hi');
 
       this.on('toggle:edit', this.toggleEdit);
     },

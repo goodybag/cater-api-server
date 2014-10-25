@@ -684,6 +684,22 @@ module.exports.register = function(app) {
   , controllers.orders.get
   );
 
+  app.get('/orders/:oid/driver'
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    , submittedDate:      true
+    })
+  , m.view('order-driver', {
+      layout: 'layouts/cater-tool-2'
+    })
+  );
+
   app.put('/orders/:oid'
   , m.getOrder2({
       param:              'oid'

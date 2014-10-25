@@ -1,0 +1,39 @@
+{{#extend "page"}}page-order-driver{{/extend}}
+
+{{#extend "body"}}
+<!--<BreadCrumbs>-->
+<div class="container">
+  <ul class="breadcrumbs main-breadcrumbs">
+    <li>
+      <a href="/users/me/orders">My Orders</a>
+    </li>
+    <li>Order #{{order.id}}</li>
+  </ul>
+</div>
+<!--</BreadCrumbs>-->
+
+<!--<AcceptDecline>-->
+<div class="accept-decline action-group">
+  <button class="btn btn-primary">Accept</button>
+  <button class="btn btn-default">Decline</button>
+</div>
+<!--</AcceptDecline>-->
+
+<!--<MainInfo>-->
+<div class="dl-row-list collapsible">
+  <h3 class="title">Can you deliver?</h3>
+  <dl>
+    <dt>When</dt>
+    <dd>Sat. Oct. 25 5:00pm</dd>
+    <dt>Your Cut</dt>
+    <dd>$21.27</dd>
+    <dt>Distance</dt>
+    <dd><a href="#">4.2mi</a></dd>
+  </dl>
+</div>
+<!--</MainInfo>-->
+{{/extend}}
+
+{{#extend "script"}}
+
+{{/extend}}

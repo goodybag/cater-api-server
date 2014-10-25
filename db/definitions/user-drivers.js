@@ -18,7 +18,7 @@ define(function(require) {
 
   definition.schema = {
     id:                 { type: types.serial, pk: true }
-    user_id:            { type: types.serial
+  , user_id:            { type: types.serial
                         , nullable: false
                         , references: { table: 'users', column: 'id', onDelete: 'cascade' }
                         }

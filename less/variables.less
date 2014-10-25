@@ -65,23 +65,31 @@
 @btn-font-size:                 @font-size-base;
 @btn-large-font-size:           @font-size-large;
 @btn-small-font-size:           @font-size-small;
+@btn-base-height:               40px;
+@btn-small-height:              30px;
+@btn-large-height:              50px;
+@btn-border-width-base:         1px;
 
-@btn-padding-top-base:          11px;
+@btn-border-width-top-base:     @btn-border-width-base;
+@btn-border-width-right-base:   @btn-border-width-base;
+@btn-border-width-bottom-base:  @btn-border-width-base + 1;
+@btn-border-width-left-base:    @btn-border-width-base;
+
+@btn-padding-top-base:          ((@btn-base-height - (@btn-border-width-top-base + @btn-border-width-bottom-base)) / 2) + 1;
 @btn-padding-right-base:        18px;
-@btn-padding-bottom-base:       @btn-padding-top-base - 1;
+@btn-padding-bottom-base:       @btn-padding-top-base - 2;
 @btn-padding-left-base:         @btn-padding-right-base;
 
-@btn-padding-top-small:         7px;
+@btn-padding-top-small:         (@btn-small-height / 2) + 1;
 @btn-padding-right-small:       22px;
-@btn-padding-bottom-small:      @btn-padding-top-small - 1;
+@btn-padding-bottom-small:      @btn-padding-top-small - 2;
 @btn-padding-left-small:        @btn-padding-right-small;
 
-@btn-padding-top-large:         14px;
+@btn-padding-top-large:         (@btn-small-height / 2) + 2;
 @btn-padding-right-large:       22px;
-@btn-padding-bottom-large:      @btn-padding-top-large - 2;
+@btn-padding-bottom-large:      @btn-padding-top-large - 4;
 @btn-padding-left-large:        @btn-padding-right-large;
 
-@btn-border-width-base:         1px;
 
 @btn-border-radius-base:        @border-radius-base;
 

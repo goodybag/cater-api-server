@@ -11,5 +11,7 @@ begin
   create table if not exists "user_drivers" ();
 
   perform add_column( 'user_drivers', 'id', 'serial primary key' );
-  perform add_column( 'user_drivers', 'user_id', 'int references user("id") on delete cascade' );
+  perform add_column( 'user_drivers', 'user_id', 'int references users("id") on delete cascade' );
+
+  perform add_column( 'orders', 'driver_id', 'int references users("id") on delete set null' );
 end$$;

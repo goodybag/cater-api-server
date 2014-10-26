@@ -2,14 +2,14 @@
 
 {{#extend "body"}}
 <!--<BreadCrumbs>-->
-<div class="container">
+{{!-- <div class="container">
   <ul class="breadcrumbs main-breadcrumbs">
     <li>
       <a href="/users/me/orders">My Orders</a>
     </li>
     <li>Order #{{order.id}}</li>
   </ul>
-</div>
+</div> --}}
 <!--</BreadCrumbs>-->
 
 <!--<AcceptDecline>-->
@@ -20,16 +20,32 @@
 <!--</AcceptDecline>-->
 
 <!--<MainInfo>-->
-<div class="dl-row-list collapsible">
-  <h3 class="title">Can you deliver?</h3>
-  <dl>
-    <dt>When</dt>
-    <dd>Sat. Oct. 25 5:00pm</dd>
-    <dt>Your Cut</dt>
-    <dd>$21.27</dd>
-    <dt>Distance</dt>
-    <dd><a href="#">4.2mi</a></dd>
-  </dl>
+<div class="container container-full-collapse">
+  <div class="definition-row-list striped collapsible">
+    <h3 class="title">Can you deliver?</h3>
+    <dl>
+      <div class="row">
+        <dt>When</dt>
+        <dd>Sat. Oct. 25 5:00pm</dd>
+      </div>
+      <div class="row">
+        <dt>Your Cut</dt>
+        <dd>$21.27</dd>
+      </div>
+      <div class="row">
+        <dt>Distance</dt>
+        <dd><a href="#">4.2mi</a></dd>
+      </div>
+      <div class="row">
+        <dt>Pickup</dt>
+        <dd><a href="#">Blue Dahlia Bistro</a></dd>
+      </div>
+      <div class="row">
+        <dt>Dropoff</dt>
+        <dd><a href="#">10203 Falcon Dr<br>Austin, TX, 78756</a></dd>
+      </div>
+    </dl>
+  </div>
 </div>
 <!--</MainInfo>-->
 {{/extend}}

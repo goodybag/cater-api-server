@@ -1,0 +1,52 @@
+/////////////////////////
+// Definition Row List //
+/////////////////////////
+
+.definition-row-list {
+  .row {
+    border-top: solid 1px @gray-light;
+    padding: 10px 4px;
+    #grid > .row();
+  }
+
+  &.striped .row:nth-child(2n) {
+    background: @off-gray;
+    box-shadow: inset 0 1px 0 #fff;
+  }
+
+  // Title
+  .title {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  // Definition List
+  dl {
+    margin-top: 0;
+  }
+
+  dt, dd {
+    display: block;
+    float: left;
+    font-size: 15px;
+  }
+
+  dt {
+    width: 30%;
+    font-weight: 700;
+  }
+
+  dd {
+    width: 70%;
+    margin: 0;
+  }
+
+  @media screen and ( max-width: @container-width ){
+    .title,
+    .row {
+      .standard-padding();
+    }
+  }
+}

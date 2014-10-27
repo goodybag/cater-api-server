@@ -310,7 +310,7 @@ dirac.use( function(){
 // dirac.use( function( driac ){
 //   dirac.dals.payment_summaries.before( 'insert', function( $query, schema, next ){
 //     if ( !Array.isArray( $query.values.items ) ) return next();
-    
+
 //     // Values that don't exist on the schema will get filtered out
 //     // We could easily generalize this behavior with a plugin
 //     // For now we'll manually define
@@ -323,7 +323,7 @@ dirac.use( function(){
 
 //     var items = $query._items;
 
-    
+
 //   });
 // });
 

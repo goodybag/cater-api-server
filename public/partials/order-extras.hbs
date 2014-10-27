@@ -1,1 +1,12 @@
-<div class="col-md-12"><legend>2. Extras</legend></div>
+<div class="col-md-12">
+  <legend>2. Extras</legend>
+  <p>
+    {{#each order.restaurant.amenities}}
+    {{#if enabled}}
+    <div>
+      <input type="checkbox"> {{name}} {{#if description}}- {{description}}{{/if}} ({{surcharge price}})
+    </div>
+    {{/if}}
+    {{/each}}
+    </p>
+</div>

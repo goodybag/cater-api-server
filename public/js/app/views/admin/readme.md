@@ -20,6 +20,7 @@ __Events Emitted__
 
 * item:destroyed
 * item:saved
+* item:error
 
 __Example__
 

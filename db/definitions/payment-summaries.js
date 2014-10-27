@@ -46,7 +46,7 @@ define(function(require) {
 
   definition.indices = {};
 
-  definition.update = function( $where, $update, options, callback ){
+  definition.update = function update( $where, $update, options, callback ){
     // We should standardize this upstream with a convenience method
     if ( typeof options == 'function' ){
       callback = options;
@@ -98,8 +98,65 @@ define(function(require) {
     ], callback );
   };
 
+  // Insert with items as a transaction
+  // This function is a bit funky since if they specify .items, then
+  // the top-level query is actually inserting on `payment_summary_items`
+  // Options would then apply to _that_ query, whereas if .items is not
+  // specified, then the top-level query is as expected.
+  // I didn't go the transaction route because I needed to use the ID
+  // from the `payment_summary` insert.
+  //
+  // Don't specify function name so we don't run before filters on insert
   definition.insert = function( $doc, options, callback ){
-    
+    // We should standardize this upstream with a convenience method
+    if ( typeof options == 'function' ){
+      callback = options;
+      options = {};
+    }
+
+    if ( !Array.isArray( $doc.items ) ) return this._super( $doc, options, callback );
+
+    var items = $doc.items;
+    delete $doc.items;
+
+    var idSelect = {
+      type: 'select'
+    , table: 'summary'
+    , columns: ['id']
+    };
+
+    for ( var i = items.length - 1; i >= 0; i-- ){
+      items[ i ].payment_summary_id = idSelect;
+    }
+
+    var $query = utils.extend({
+      type: 'insert'
+    , table: 'payment_summary_items'
+    , with: {
+        summary: {
+          type:       'insert'
+        , table:      'payment_summaries'
+        , values:     $doc
+        , returning:  ['*']
+        }
+      }
+    , values: items
+    , returning: {
+        type: 'select'
+      , columns: ['*']
+      , table: 'summary'
+      }
+    }, options );
+
+    utils.async.series([
+      dirac.dals.payment_summary_items.runBeforeFilters.bind(
+        dirac.dals.payment_summary_items, 'insert', $query
+      )
+    , dirac.dals.payment_summaries.runBeforeFilters.bind(
+        dirac.dals.payment_summaries, 'insert', $query.with.summary
+      )
+    , this.query.bind( this, $query, callback )
+    ], callback );
   };
 
   return definition;

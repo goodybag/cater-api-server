@@ -10,45 +10,19 @@ define(function(require, exports, module) {
     tagName: 'tr',
 
     events: {
-      'click .js-btn-edit':      'onClickEdit'
-    , 'click .js-btn-save':      'onClickSave'
-    , 'click .js-btn-remove':    'onClickRemove'
+      'click .js-btn-edit':      'onBtnEditClick'
+    , 'click .js-btn-save':      'onBtnSaveClick'
+    , 'click .js-btn-delete':    'onBtnDeleteClick'
     },
 
-    onClickEdit: function(e){
+    onBtnEditClick: function(e){
       e.preventDefault();
       this.toggleEditMode();
     },
 
-    onClickSave: function(e){
+    onBtnSaveClick: function(e){
       e.preventDefault();
-      this.onSubmit();
-      
-      // spinner.start();
-      // var sent = this.options.amenity.save(this.getViewState(), {
-      //   success: function() {
-      //     spinner.stop();
-      //   }
-      // , error: function() {
-      //     spinner.stop();
-      //   }
-      // , patch: true
-      // });
-      this.toggleEditMode();
-    },
-
-    onClickRemove: function(e) {
-      spinner.start();
-      this.options.amenity.destroy({ 
-        success: function() {
-          spinner.stop();
-        }
-      , error: function() {
-          spinner.stop();
-        }
-      });
-      this.remove();
-      return this;
+      this.onSubmit(e);
     },
 
     toggleEditMode: function() {
@@ -56,39 +30,23 @@ define(function(require, exports, module) {
       return this;
     },
 
-    onChange: function(model) {
+    initialize: function() {
       var this_ = this;
-      Object.keys(model.changed).forEach(function updateEachAttr(key) {
-        var $el = this_.$el.find('.js-'+key);
-        var output = model.changed[key];
-        switch ( $el.attr('type') ){
-          case 'number':
-            output = Handlebars.helpers.dollars(output);
-            break;
-          default:
-            break;
-        }
-        $el.text(output);
-        $el.attr('value', output);
+
+      this.on('item:saved', function() {
+        this_.render();
+      });
+
+      this.on('item:error', function() {
+      });
+
+      this.on('item:destroyed', function() {
+        this.remove();
       });
     },
 
-    initialize: function() {
-      this.amenity = this.amenity || new Amenity();
-      this.options.amenity.on('change', this.onChange.bind(this));
-    },
-
-    getViewState: function() {
-      // read the inputs off the dom
-      return {
-        name: this.$el.find('[name="name"]').val()
-      , description: this.$el.find('[name="description"]').val()
-      , price: Handlebars.helpers.pennies(this.$el.find('[name="price"]').val())
-      };
-    },
-
     render: function() {
-      this.$el.html(this.template(this.options.amenity.toJSON()));
+      this.$el.html(this.template(this.model.toJSON()));
       return this;
     }
   });

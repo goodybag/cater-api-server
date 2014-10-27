@@ -7,11 +7,18 @@
   <span class="js-description js-read">{{description}}</span>
 </td>
 <td>
-  <input class="js-price js-edit hide" type="number" step="0.01" name="price" value="{{dollars price}}">
+  <input 
+    class="js-price js-edit hide" 
+    type="number" 
+    step="0.01" 
+    name="price" 
+    data-in="dollars"
+    data-out="pennies"
+    value="{{dollars price}}">
   <code class="js-price js-read">${{dollars price}}</code>
 </td>
 <td>
   <a href="#" class="js-btn-save js-read hide">Save</a>
   <a href="#" class="js-btn-edit js-edit">Edit</a>
-  <a href="#" class="js-btn-remove">Remove</a>
+  <a href="#" class="js-btn-delete">Remove</a>
 </td>

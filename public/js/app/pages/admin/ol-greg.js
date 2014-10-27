@@ -8,7 +8,6 @@ define(function(require){
   var Orders        = require('app/collections/restaurant-orders');
   var Order         = require('app/models/order');
 
-
   return Object.create({
     init: function( options ){
       this.options = options;

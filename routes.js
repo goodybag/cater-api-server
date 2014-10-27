@@ -1740,20 +1740,36 @@ module.exports.register = function(app) {
    * Order amenities
    */
 
-  app.post('/api/orders/:id/amenities'
+  app.post('/api/orders/:order_id/amenities'
   , m.restrict(['order-owner', 'admin'])
-  , m.param('id')
   , m.insert( db.order_amenities )
   );
 
+  // list amenities per order
   app.get('/api/orders/:order_id/amenities'
   , m.restrict(['order-owner', 'admin'])
   , m.param('order_id')
   , m.find( db.order_amenities )
   );
 
+  // list specific order amenity
+  app.get('/api/orders/:order_id/amenities/:amenity_id'
+  , m.restrict(['order-owner', 'admin'])
+  , m.param('order_id')
+  , m.param('amenity_id')
+  , m.find( db.order_amenities )
+  );
+
+  // delete all order amenities
+  app.del('/api/orders/:order_id/amenities'
+  , m.restrict(['order-owner', 'admin'])
+  , m.param('order_id')
+  , m.remove( db.order_amenities )
+  );
+
+  // delete specific order amenity
   app.del('/api/orders/:order_id/amenities/:amenity_id'
-  , m.restrict(['admin'])
+  , m.restrict(['order-owner', 'admin'])
   , m.param('order_id')
   , m.param('amenity_id')
   , m.remove( db.order_amenities )

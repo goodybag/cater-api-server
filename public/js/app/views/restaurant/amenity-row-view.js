@@ -2,7 +2,6 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var Handlebars = require('handlebars');
   var Amenity = require('app/models/amenity');
-  var spinner = require('spinner');
   var ItemForm = require('app/views/admin/item-form');
 
   var AmenityRowView = module.exports = ItemForm.extend({
@@ -23,16 +22,18 @@ define(function(require, exports, module) {
 
     onClickSave: function(e){
       e.preventDefault();
-      spinner.start();
-      var sent = this.options.amenity.save(this.getViewState(), {
-        success: function() {
-          spinner.stop();
-        }
-      , error: function() {
-          spinner.stop();
-        }
-      , patch: true
-      });
+      this.onSubmit();
+      
+      // spinner.start();
+      // var sent = this.options.amenity.save(this.getViewState(), {
+      //   success: function() {
+      //     spinner.stop();
+      //   }
+      // , error: function() {
+      //     spinner.stop();
+      //   }
+      // , patch: true
+      // });
       this.toggleEditMode();
     },
 

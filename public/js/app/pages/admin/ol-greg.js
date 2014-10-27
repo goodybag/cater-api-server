@@ -5,45 +5,30 @@ define(function(require){
   var utils         = require('utils');
   var PMSItem       = require('app/models/payment-summary-item');
   var Summaries     = require('app/collections/payment-summaries');
-  var Orders        = require('app/collections/orders');
+  var Orders        = require('app/collections/restaurant-orders');
   var Order         = require('app/models/order');
 
 
   return Object.create({
     init: function( options ){
       this.options = options;
+      this.restaurants = utils.indexBy( options.restaurants, 'id' );
     }
 
   , generateSummary: function( rid, d1, d2, callback ){
-      var orders = new Orders( null, { restaurant_id: rid } );
-      var summaries = new Summaries( null, {
-        restaurant_id: options.restaurant.id
+      var summary = new Summaries(
+        { restaurant_id:  options.restaurant.id }
+      , { sales_tax:      this.restaurants[ rid ].region.sales_tax
+      }).createModel();
+
+      summary.generate( function( error ){
+        if ( error ) return callback( error );
+
+        summary.save( null, {
+          error: callback
+        , success: function(){ if ( callback ) callback(); }
+        });
       });
-
-      var fetchOrdersAndSaveNewSummary = utils.async.parallel.bind( utils.async, {
-        orders: function( done ){
-          orders.fetch({
-            start_date: d1
-          , end_date:   d2
-          , limit:      'all'
-          , status:     'accepted'
-          , success:    function(){ done( null, orders ); }
-          , error:      done
-          })
-        }
-
-      , summary: function( done ){
-          var summary = summaries.createModel();
-          summary.save( null, {
-            success: function(){ done( null, summary ); }
-          , error:   done
-          });
-        }
-      });
-
-      // Create new payment summary
-      // for each order, create new pms item with order
-      // save payment summary
     }
   });
 });

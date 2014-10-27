@@ -427,7 +427,10 @@ module.exports.register = function(app) {
 
     app.get('/admin/ol-greg'
     , m.viewPlugin( 'mainNav', { active: 'home' })
-    , m.db.restaurants.find( {}, { limit: 'all' } )
+    , m.db.restaurants.find( {}, {
+        limit:  'all'
+      , one:    [{ table: 'regions', alias: 'region' }]
+      })
     , m.view( 'admin/ol-greg/home', {
         layout: 'admin/layout2'
       })

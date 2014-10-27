@@ -18,12 +18,12 @@
   <section class="panel-component" id="range-processor">
     <form class="form-horizontal og-range-processor">
       <div class="form-group">
-        <label>Start</label>
-        <input type="date" name="start">
+        <label>From</label>
+        <input type="date" name="from">
       </div>
       <div class="form-group">
-        <label>Stop</label>
-        <input type="date" name="stop">
+        <label>To</label>
+        <input type="date" name="to">
       </div>
       <div class="form-group">
         <button class="btn btn-primary">Make an assessment</button>
@@ -59,7 +59,7 @@
                 <td class="restaurant">
                   {{this.name}}
                 </td>
-                <td class="status og-status" data-status="waiting"></td>
+                <td class="status og-status"></td>
                 <td class="actions">
                   <button class="btn btn-default btn-small">Generate</button>
                 </td>

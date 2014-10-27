@@ -22,6 +22,7 @@
     var view = new View({
       el: '.amenities'
     , amenities: new Amenities({{{json restaurant.amenities}}})
+    , restaurant_id: {{restaurant.id}}
     });
   });
 </script>

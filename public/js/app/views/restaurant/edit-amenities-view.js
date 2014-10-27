@@ -25,7 +25,7 @@ define(function(require, exports, module) {
       var this_ = this;
       this.$table = this.$el.find('#amenities-table');
       this.amenities = this.options.amenities || new Amenities();
-      this.amenityRowViews = this.amenities.map(function(amenity) {
+      this.amenityRowViews = this.amenities.map(function renderRow(amenity) {
         var view = new AmenityRowView({ amenity: amenity });
         this_.$table.append(view.render().el);
         return view;
@@ -35,6 +35,7 @@ define(function(require, exports, module) {
     },
 
     addOne: function(amenity) {
+      if (!amenity.get('restaurant_id')) amenity.set('restaurant_id', this.options.restaurant_id);
       var view = new AmenityRowView({ amenity: amenity });
       this.$table.append(view.render().el);
     },

@@ -1705,6 +1705,12 @@ module.exports.register = function(app) {
   /**
    * Amenities
    */
+
+  app.post('/api/amenities'
+  , m.restrict(['admin'])
+  , m.insert( db.amenities )
+  );
+
   app.get('/api/amenities/:id'
   , m.restrict(['admin'])
   , m.param('id')
@@ -1715,5 +1721,17 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.update( db.amenities )
+  );
+
+  app.patch('/api/amenities/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.amenities )
+  );
+
+  app.del('/api/amenities/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.amenities )
   );
 }

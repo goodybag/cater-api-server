@@ -2,59 +2,91 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var Handlebars = require('handlebars');
   var Amenity = require('app/models/amenity');
+  var spinner = require('spinner');
+  var ItemForm = require('app/views/admin/item-form');
 
-  var AmenityRowView = module.exports = Backbone.View.extend({
+  var AmenityRowView = module.exports = ItemForm.extend({
     template: Handlebars.partials.amenity_row,
 
     tagName: 'tr',
 
     events: {
-      'click .btn-edit':      'onClickEdit'
-    , 'click .btn-save':      'onClickSave'
-    , 'click .btn-remove':    'onClickRemove'
+      'click .js-btn-edit':      'onClickEdit'
+    , 'click .js-btn-save':      'onClickSave'
+    , 'click .js-btn-remove':    'onClickRemove'
     },
 
     onClickEdit: function(e){
       e.preventDefault();
-      this.editMode = !this.editMode;
-      this.trigger('toggle:edit', this.editMode);
+      this.toggleEditMode();
     },
 
     onClickSave: function(e){
       e.preventDefault();
-      this.options.amenity.save({
-        name: this.$el.find('[name="name"]').val()
+      spinner.start();
+      var sent = this.options.amenity.save(this.getViewState(), {
+        success: function() {
+          spinner.stop();
+        }
+      , error: function() {
+          spinner.stop();
+        }
+      , patch: true
       });
-      this.editMode = !this.editMode;
-      this.trigger('toggle:edit', this.editMode);
+      this.toggleEditMode();
     },
 
     onClickRemove: function(e) {
-      // this.options.amenity.destroy();
+      spinner.start();
+      this.options.amenity.destroy({ 
+        success: function() {
+          spinner.stop();
+        }
+      , error: function() {
+          spinner.stop();
+        }
+      });
       this.remove();
       return this;
     },
 
-    toggleEdit: function(toggle) {
-      this.$el.find('.hide').removeClass('hide');
+    toggleEditMode: function() {
+      this.$el.find('.js-read, .js-edit').toggleClass('hide');
+      return this;
+    },
 
-      if (toggle) {
-        this.$el.find('.amenity-read').addClass('hide');
-      } else {
-        this.$el.find('.amenity-edit').addClass('hide');
-      }
+    onChange: function(model) {
+      var this_ = this;
+      Object.keys(model.changed).forEach(function updateEachAttr(key) {
+        var $el = this_.$el.find('.js-'+key);
+        var output = model.changed[key];
+        switch ( $el.attr('type') ){
+          case 'number':
+            output = Handlebars.helpers.dollars(output);
+            break;
+          default:
+            break;
+        }
+        $el.text(output);
+        $el.attr('value', output);
+      });
     },
 
     initialize: function() {
       this.amenity = this.amenity || new Amenity();
-      this.editMode = false;
+      this.options.amenity.on('change', this.onChange.bind(this));
+    },
 
-      this.on('toggle:edit', this.toggleEdit);
+    getViewState: function() {
+      // read the inputs off the dom
+      return {
+        name: this.$el.find('[name="name"]').val()
+      , description: this.$el.find('[name="description"]').val()
+      , price: Handlebars.helpers.pennies(this.$el.find('[name="price"]').val())
+      };
     },
 
     render: function() {
-      // this.el = Handlebars.partials.amenity_row( this.options.amenity.toJSON() );
-      console.log('rending row view');
       this.$el.html(this.template(this.options.amenity.toJSON()));
       return this;
     }

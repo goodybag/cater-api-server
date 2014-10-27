@@ -141,12 +141,11 @@ console.log('update:', $where.id)
         }
       }
     , values: items
-    , returning: {
-        type: 'select'
-      , columns: ['*']
-      , table: 'summary'
-      }
-    }, options );
+    }, options, {
+      // Always use our returning
+      // Cannot return all columns, only id - better than nothing
+      returning: [ idSelect ]
+    });
 
     utils.async.series([
       dirac.dals.payment_summary_items.runBeforeFilters.bind(

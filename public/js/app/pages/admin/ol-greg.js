@@ -31,5 +31,9 @@ define(function(require){
 
       return summary;
     }
+
+  , runAllSummaries: function(){
+
+    }
   });
 });

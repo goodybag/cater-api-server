@@ -17,30 +17,37 @@ module.exports.list = function(req, res, next) {
 
 // TODO: remove all the stuff we don't need here
 module.exports.summary = function(req, res, next) {
-  var order = res.locals.order;
-  var review = order.status === 'submitted' && req.query.review_token === order.review_token;
-  utils.findWhere(states, {abbr: order.state || 'TX'}).default = true;
-  var context = {
-    order: order,
-    restaurantReview: review,
-    isRestaurantManager: req.order.isRestaurantManager,
-    isOwner: req.order.isOwner,
-    isAdmin: req.order.isAdmin,
-    states: states,
-    orderParams: req.session.orderParams,
-    query: req.query,
-    step: 1
-  };
+  models.Order.findOne(parseInt(req.params.oid), function(error, order) {
+    if (error) return res.error(errors.internal.DB_FAILURE, error);
+    if (!order) return res.status(404).render('404');
+    order.getOrderItems(function(err, items) {
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
 
-  if (!context.isOwner && !context.isAdmin && !context.isRestaurantManager) return res.status(404).render('404');
+      var review = order.attributes.status === 'submitted' && req.query.review_token === order.attributes.review_token;
+      utils.findWhere(states, {abbr: order.attributes.state || 'TX'}).default = true;
+      var context = {
+        order: order.toJSON(),
+        restaurantReview: review,
+        isRestaurantManager: req.order.isRestaurantManager,
+        isOwner: req.order.isOwner,
+        isAdmin: req.order.isAdmin,
+        states: states,
+        orderParams: req.session.orderParams,
+        query: req.query,
+        step: 1
+      };
 
-  // orders are always editable for an admin
-  if (req.order.isAdmin)
-    context.order.editable = true;
+      if (!context.isOwner && !context.isAdmin && !context.isRestaurantManager) return res.status(404).render('404');
 
-  res.render('order-items', context, function(err, html) {
-    if (err) return res.error(errors.internal.UNKNOWN, err);
-    res.send(html);
+      // orders are always editable for an admin
+      if (req.order.isAdmin)
+        context.order.editable = true;
+
+      res.render('order-items', context, function(err, html) {
+        if (err) return res.error(errors.internal.UNKNOWN, err);
+        res.send(html);
+      });
+    });
   });
 };
 

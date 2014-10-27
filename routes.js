@@ -691,6 +691,7 @@ module.exports.register = function(app) {
     , restaurant:         true
     , deliveryService:    true
     , submittedDate:      true
+    , amenities:          true
     })
   , controllers.orders.auth
   , m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant'])
@@ -817,7 +818,6 @@ module.exports.register = function(app) {
     , userPaymentMethods: true
     , restaurant:         true
     , deliveryService:    true
-    , amenities:          true
     })
   , controllers.orders.auth
   , controllers.orders.orderItems.summary

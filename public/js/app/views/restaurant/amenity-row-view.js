@@ -26,7 +26,7 @@ define(function(require, exports, module) {
     },
 
     toggleEditMode: function() {
-      this.$el.find('.js-read, .js-edit').toggleClass('hide');
+      this.$el.find('.js-toggle').toggleClass('hide');
       return this;
     },
 

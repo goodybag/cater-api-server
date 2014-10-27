@@ -817,6 +817,7 @@ module.exports.register = function(app) {
     , userPaymentMethods: true
     , restaurant:         true
     , deliveryService:    true
+    , amenities:          true
     })
   , controllers.orders.auth
   , controllers.orders.orderItems.summary

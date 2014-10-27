@@ -62,13 +62,17 @@ module.exports = function( options ){
     }
 
     if ( options.restaurant ){
+      var restaurantOne = [ { table: 'regions', alias: 'region' } ];
+      var restaurantMany = [ { table: 'restaurant_delivery_times', alias: 'delivery_times' }
+                , { table: 'restaurant_delivery_zips', alias: 'delivery_zips' }
+                , { table: 'restaurant_lead_times', alias: 'lead_times' } ];
+
+      if ( options.amenities ) restaurantMany.push({ table: 'amenities', alias: 'amenities' });
       $options.one.push({
         table:  'restaurants'
       , alias:  'restaurant'
-      , one:    [ { table: 'regions', alias: 'region' } ]
-      , many:   [ { table: 'restaurant_delivery_times', alias: 'delivery_times' }
-                , { table: 'restaurant_delivery_zips', alias: 'delivery_zips' }
-                , { table: 'restaurant_lead_times', alias: 'lead_times' } ]
+      , one:    restaurantOne
+      , many:   restaurantMany
       });
     }
 

@@ -18,6 +18,10 @@
   <code class="js-toggle">${{dollars price}}</code>
 </td>
 <td>
+  <input class="js-toggle hide" type="checkbox" name="enabled">
+  <input class="js-toggle" type="checkbox" disabled="disabled" {{#if enabled}}checked{{/if}}>
+</td>
+<td>
   <a href="#" class="js-btn-save js-toggle hide">Save</a>
   <a href="#" class="js-btn-edit js-toggle">Edit</a>
   <a href="#" class="js-btn-delete">Remove</a>

@@ -55,8 +55,8 @@ define(function(require) {
 
     if ( typeof $where != 'object' ) $where = { id: $where };
 
-    if ( !$where.id ) return this._super.apply( this, arguments );
-    if ( !Array.isArray( $update.items ) ) return this._super.apply( this, arguments );
+    if ( !$where.id ) return this._super( $where, $update, options, callback );
+    if ( !Array.isArray( $update.items ) ) return this._super( $where, $update, options, callback );
 
     var tx = dirac.tx.create();
 
@@ -70,21 +70,30 @@ define(function(require) {
     utils.async.series([
       tx.begin.bind( tx )
       // Remove items
+    , utils.async.log('remove')
     , tx.payment_summary_items.remove.bind(
         tx.payment_summary_items
       , { payment_summary_id: $where.id }
       )
       // Add items
-    , items.length > 0 ? tx.payment_summary_items.insert.bind(
-        tx.payment_summary_items
-      , items
-      ) : utils.async.noop
+    , utils.async.log('add/noop')
+    , items.length > 0
+      ? tx.payment_summary_items.insert.bind(
+          tx.payment_summary_items
+        , items
+        )
+      : utils.async.noop
       // Update the original document
-    , tx.payment_summaries.update.bind(
-        tx.payment_summaries
-      , $where
-      , options
-      )
+    , utils.async.log('update')
+    , Object.keys( $update ).length > 0
+      ? tx.payment_summaries.update.bind(
+          tx.payment_summaries
+        , $where
+        , $update
+        , options
+        )
+      : utils.async.noop
+    , utils.async.log('commit')
     , tx.commit.bind( tx )
     ], callback );
   };

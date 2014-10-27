@@ -14,7 +14,7 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'order-amenities';
+  definition.name = 'order_amenities';
 
   definition.schema = {
     id: {

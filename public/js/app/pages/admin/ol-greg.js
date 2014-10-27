@@ -16,19 +16,21 @@ define(function(require){
     }
 
   , generateSummary: function( rid, d1, d2, callback ){
-      var summary = new Summaries(
-        { restaurant_id:  options.restaurant.id }
-      , { sales_tax:      this.restaurants[ rid ].region.sales_tax
+      var summary = new Summaries( null, {
+        sales_tax:      this.restaurants[ rid ].region.sales_tax
+      , restaurant_id:  rid
       }).createModel();
 
-      summary.generate( function( error ){
+      summary.generate( d1, d2, function( error ){
         if ( error ) return callback( error );
 
         summary.save( null, {
           error: callback
-        , success: function(){ if ( callback ) callback(); }
+        , success: function(){ if ( callback ) callback( null, summary ); }
         });
       });
+
+      return summary;
     }
   });
 });

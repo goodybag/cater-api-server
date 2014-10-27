@@ -1341,14 +1341,6 @@ module.exports.register = function(app) {
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
   , m.param('status')
-  , m.queryOptions({
-      where: {
-        datetimeRange: {
-          $gte: m.values.param('start_date')
-        , $lt:  m.values.param('end_date')
-        }
-      }
-    })
   , m.param( 'start_date', function( value, $where, options ){
       $where.datetimeRange = $where.datetimeRange || { datetime: {} };
       $where.datetimeRange.datetime.$gte = value;

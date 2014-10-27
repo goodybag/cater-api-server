@@ -1,0 +1,12 @@
+////////////////////
+// Ol Greg Status //
+////////////////////
+
+.og-status {
+  text-align: center;
+
+  &[data-status="pending"] {
+    &:after { content: "Pending" }
+    background: rgba( 255, 255, 0, 0.5 );
+  }
+}

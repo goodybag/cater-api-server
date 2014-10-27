@@ -32,11 +32,14 @@ it as **450**.
 
 Here's an example of how we can set this up easily with some data attributes. 
 Note that the transformations leverage the `hb-helpers.js` module which 
-contains our templating extensions. For this transformation we use `pennies(val)`
-and `dollars(val)`.
+contains our templating extensions. 
+
+For this transformation we use `data-in="dollars"` to convert the integer 
+values to dollar formatted strings. The other `data-out="pennies(val)"` pipes 
+the currency formatted string to integers when we talk to the server.
 
 HTML
 
 ```
-<input name="price" type="number" step="0.01" data-in="pennies" data-out="dollars" value="{{price}}">
+<input name="price" type="number" step="0.01" data-in="dollars" data-out="pennies" value="{{price}}">
 ```

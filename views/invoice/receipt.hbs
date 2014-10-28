@@ -147,6 +147,10 @@
           <dd>${{dollars order.sales_tax}}</dd>
           <dt>Tip:</dt>
           <dd>${{dollars order.tip}}</dd>
+          {{#if order.amenities_total}}
+          <dt>Extras:</dt>
+          <dd>${{dollars order.amenities_total}}</dd>
+          {{/if}}
         </dl>
       </div>
 

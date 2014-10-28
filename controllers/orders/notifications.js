@@ -26,7 +26,8 @@ var $ordersOptions = {
 };
 
 /**
- * Enforces required options on a notification for a request
+ * Gets the HTTP error for a notification/option combo if it exists
+ * Otherwise, returns false
  * @param  {Object}   notification The notification
  * @param  {Object}   options      The parsed options
  * @return {Mixed}                 Error or false

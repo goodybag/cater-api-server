@@ -1,12 +1,16 @@
-<div class="col-md-12">
-  <legend>2. Extras</legend>
-  <p>
-    {{#each order.restaurant.amenities}}
-    {{#if enabled}}
-    <div>
-      <input type="checkbox" class="amenity-checkbox" data-amenity-id="{{id}}" {{#if checked}}checked{{/if}}> {{name}} {{#if description}}- {{description}}{{/if}} ({{surcharge price}})
-    </div>
-    {{/if}}
-    {{/each}}
-    </p>
+{{#if order.restaurant.amenities}}
+<div class="list-group-item extras clearfix">
+  <div class="col-md-12">
+    <legend>Extras</legend>
+    <p>
+      {{#each order.restaurant.amenities}}
+      {{#if enabled}}
+      <div>
+        <input type="checkbox" class="amenity-checkbox" data-amenity-id="{{id}}" {{#if checked}}checked{{/if}}> {{name}} {{#if description}}- {{description}}{{/if}} ({{surcharge price}})
+      </div>
+      {{/if}}
+      {{/each}}
+      </p>
+  </div>
 </div>
+{{/if}}

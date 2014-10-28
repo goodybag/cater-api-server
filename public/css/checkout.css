@@ -106,3 +106,12 @@ input[name="card_number"] {
   background-repeat: no-repeat;
   background-position: right;
 }
+
+.page-checkout {
+  counter-reset: section;
+}
+
+.page-checkout legend:before {
+  counter-increment: section;
+  content: counter(section)". ";
+}

@@ -41,7 +41,7 @@
         <div class="list-group">
           {{! added clearfixes in 557 to address `list-group-item` with missing heights }}
           <div class="list-group-item clearfix">
-            <div class="col-md-12"><legend>1. Order Details</legend></div>
+            <div class="col-md-12"><legend>Order Details</legend></div>
             <div class="form-group col-sm-12">
               <h5 class="restaurant-name">{{order.restaurant.name}}</h5>
             </div>
@@ -96,18 +96,13 @@
             </div>
           </div>
 
-          <div class="list-group-item extras clearfix">
-            {{> order_extras }}
-          </div>
-
-          <div class="list-group-item delivery-info clearfix">
-            {{> order_delivery_info}}
-          </div>
+          {{> order_extras }}
+          {{> order_delivery_info}}
 
           {{#unless user.name}}
           <div id="user-info" class="list-group-item clearfix">
             <div class="col-md-12">
-              <legend>4. User Information</legend>
+              <legend>User Information</legend>
               <p>We never got your name! We need to know your first and last name for the receipt</p>
               <div class="row">
                 <div class="form-group col-sm-6">
@@ -127,7 +122,7 @@
 
           <div id="payment-info" class="list-group-item clearfix">
             <div class="col-md-12">
-              <legend>{{#unless user.name}}5{{else}}4{{/unless}}. Payment Info</legend>
+              <legend>Payment Info</legend>
               <div class="payment-info-details">Your card will not be charged until you receive your order.</div>
               <div class="radio card-select-toggle {{#unless user.payment_methods}}hide{{/unless}}">
                 <label>
@@ -266,8 +261,6 @@
     </div>
   </div>
 </div>
-
-{{{ dump order.restaurant }}}
 
 <!-- End Modals -->
 

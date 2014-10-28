@@ -23,8 +23,7 @@ define(function(require, exports, module) {
       'change #payment-method-id':                    'onPaymentMethodIdChange',
       'submit #order-form':                           'submit',
       'submit #select-address-form':                  'selectAddress',
-      'input input[name="card_number"]':              'onCardNumberChange',
-      'click .amenity-checkbox':                      'onAmenityToggle'
+      'input input[name="card_number"]':              'onCardNumberChange'
     }),
 
     fieldMap: {
@@ -55,40 +54,6 @@ define(function(require, exports, module) {
 
     errorTypeMessages: {
       required: 'Please enter a valid {noun}'
-    },
-
-    onAmenityToggle: function (e){
-      // crappy placeholder
-      var $el = $(e.target);
-      var amenityId = $el.attr('data-amenity-id');
-      var orderId = this.model.id;
-      var add = $el.is(':checked');
-      if ( add ) {
-        var url = '/api/orders/' + orderId + '/amenities';
-        $.ajax({
-          type: 'POST'
-        , url: url
-        , data: { amenity_id: amenityId, order_id: orderId }
-        , success: function() {
-            console.log('insert success');
-          }
-        , error: function() {
-            console.log('insert error');
-          }
-        });
-      } else {
-        var url = '/api/orders/' + orderId + '/amenities/' + amenityId;
-        $.ajax({
-          type: 'DELETE'
-        , url: url
-        , success: function() {
-            console.log('remove success');
-          }
-        , error: function() {
-            console.log('remove error');
-          }
-        });
-      }
     },
 
     initialize: function() {

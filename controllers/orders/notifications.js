@@ -33,17 +33,19 @@ var $ordersOptions = {
  * @return {Mixed}                 Error or false
  */
 var getNotificationError = function( notification, options ){
-  if ( notification.requiredOptions ){
-    for ( var i = notification.requiredOptions.length - 1; i >= 0; i-- ){
-      if ( [ null, undefined ].indexOf( options[ notification.requiredOptions[i] ] ) > -1 ){
-        return utils.extend( {}, errors.internal.BAD_DATA, {
-          message: 'Missing required property: `' + notification.requiredOptions[i] + '`'
-        });
-      }
-    }
-  }
+  if ( !Array.isArray( notification.requiredOptions ) ) return false;
 
-  return false;
+  // Filter down to keys that are null/undefined in options obj
+  var missing = notification.requiredOptions.filter( function( k ){
+    return ~[ null, undefined ].indexOf( options[ k ] );
+  });
+
+  if ( !missing.length ) return false;
+
+  return utils.extend( {}, errors.internal.BAD_DATA, {
+    message: 'Missing required properties'
+  , details: missing
+  });
 };
 
 module.exports.JSON = {};

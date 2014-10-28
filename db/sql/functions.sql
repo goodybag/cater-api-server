@@ -257,7 +257,7 @@ begin
     amenities_total := amenities_total + order_amenity.price;
   end loop;
 
-  total := amenities_total;
+  total := total + amenities_total;
   -- Values for restaurant_total and total can diverge
   -- since there are user specific adjustements now
   -- We repeat operations for the two values

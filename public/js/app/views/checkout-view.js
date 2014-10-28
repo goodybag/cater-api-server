@@ -6,6 +6,7 @@ define(function(require, exports, module) {
   var notify = require('../../notify');
 
   var OrderView = require('./order-view');
+  var AmenitiesView = require('app/views/order/amenities-view');
 
   var Order = require('../models/order');
   var Address = require('../models/address');
@@ -63,30 +64,28 @@ define(function(require, exports, module) {
       var orderId = this.model.id;
       var add = $el.is(':checked');
       if ( add ) {
-        console.log('INSERT');
         var url = '/api/orders/' + orderId + '/amenities';
         $.ajax({
           type: 'POST'
         , url: url
         , data: { amenity_id: amenityId, order_id: orderId }
         , success: function() {
-            console.log('success');
+            console.log('insert success');
           }
         , error: function() {
-            console.log('error');
+            console.log('insert error');
           }
         });
       } else {
-        console.log('REMOVE');
         var url = '/api/orders/' + orderId + '/amenities/' + amenityId;
         $.ajax({
           type: 'DELETE'
         , url: url
         , success: function() {
-            console.log('success');
+            console.log('remove success');
           }
         , error: function() {
-            console.log('error');
+            console.log('remove error');
           }
         });
       }
@@ -94,6 +93,8 @@ define(function(require, exports, module) {
 
     initialize: function() {
       OrderView.prototype.initialize.apply(this, arguments);
+      this.amenitiesView = new AmenitiesView({el: '.amenities', model: this.model, orderView: this});
+
       this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
         format: 'mm/dd/yyyy'
       , min: new Date()

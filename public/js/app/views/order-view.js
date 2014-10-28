@@ -134,6 +134,7 @@ define(function(require, exports, module) {
     },
 
     onPriceChange: function(model, value, options) {
+      console.log(this.getDiff());
       var updatedOrder = _.extend(this.model.toJSON(), this.getDiff());
       this.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder}));
     },

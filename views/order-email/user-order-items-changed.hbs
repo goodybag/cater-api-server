@@ -13,7 +13,7 @@
             </td>
             <td class="main-width-constraint" style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-left: 12px;">
               <h1 style="line-height: 36px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 28px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">Order #{{order.id}}<br>has changed!</h1>
-              <p style="text-align: left; line-height: 22px; font-weight: 300; font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px;">One or more items have been added or removed from this order. Please review the changes and let us know they are incorrect.</p>
+              <p style="text-align: left; line-height: 22px; font-weight: 300; font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px;">{{#if options.changedDescription}}{{options.changedDescription}}{{else}}One or more items have been added or removed from this order. Please review the changes and let us know they are incorrect.{{/if}}</p>
               <p style="text-align: left; line-height: 22px; font-weight: 300; font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px;">Order placed at <a style="color: #1155cc" href="{{config.baseUrl}}/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a></p>
             </td>
           </tr>

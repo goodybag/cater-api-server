@@ -25,6 +25,26 @@ var $ordersOptions = {
         ]
 };
 
+/**
+ * Enforces required options on a notification for a request
+ * @param  {Object}   notification The notification
+ * @param  {Object}   options      The parsed options
+ * @return {Mixed}                 Error or false
+ */
+var getNotificationError = function( notification, options ){
+  if ( notification.requiredOptions ){
+    for ( var i = notification.requiredOptions.length - 1; i >= 0; i-- ){
+      if ( [ null, undefined ].indexOf( options[ notification.requiredOptions[i] ] ) > -1 ){
+        return utils.extend( {}, errors.internal.BAD_DATA, {
+          message: 'Missing required property: `' + notification.requiredOptions[i] + '`'
+        });
+      }
+    }
+  }
+
+  return false;
+};
+
 module.exports.JSON = {};
 
 module.exports.JSON.list = function( req, res ){
@@ -84,18 +104,14 @@ module.exports.JSON.sendNotification = function( req, res ){
     return res.error( errors.internal.NOT_FOUND );
   }
 
-  var options = {};
-  if ( notification.requiredOptions ){
-    for ( var i = 0, l = notification.requiredOptions.length; i < l; ++i ){
-      if ( !req.param( notification.requiredOptions[i] ) ){
-        return res.error( errors.internal.BAD_DATA, {
-          message: 'Missing required property: `' + notification.requiredOptions[i] + '`'
-        });
-      }
+  var options = utils.extend(
+    utils.pick( req.query, notification.requiredOptions || [] )
+  , utils.pick( req.query, notification.options         || [] )
+  );
 
-      options[ notification.requiredOptions[i] ] = req.param( notification.requiredOptions[i] );
-    }
-  }
+  var error = getNotificationError( notification, options );
+
+  if ( error ) return res.error( error );
 
   notifier.send( req.param('id'), +req.param('oid'), options, function( error ){
     if ( error ) return res.error( error );
@@ -173,18 +189,14 @@ module.exports.getEmail = function( req, res ){
     return res.error( errors.internal.NOT_FOUND );
   }
 
-  var options = {};
-  if ( notification.requiredOptions ){
-    for ( var i = 0, l = notification.requiredOptions.length; i < l; ++i ){
-      if ( !req.param( notification.requiredOptions[i] ) ){
-        return res.error( errors.internal.BAD_DATA, {
-          message: 'Missing required property: `' + notification.requiredOptions[i] + '`'
-        });
-      }
+  var options = utils.extend(
+    utils.pick( req.query, notification.requiredOptions || [] )
+  , utils.pick( req.query, notification.options         || [] )
+  );
 
-      options[ notification.requiredOptions[i] ] = req.param( notification.requiredOptions[i] );
-    }
-  }
+  var error = getNotificationError( notification, options );
+
+  if ( error ) return res.error( error );
 
   notifier.getNotification( req.param('nid'), +req.param('oid'), options, function( error, result ){
     if ( error ){

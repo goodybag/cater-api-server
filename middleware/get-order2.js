@@ -67,7 +67,29 @@ module.exports = function( options ){
                 , { table: 'restaurant_delivery_zips', alias: 'delivery_zips' }
                 , { table: 'restaurant_lead_times', alias: 'lead_times' } ];
 
-      if ( options.amenities ) restaurantMany.push({ table: 'amenities', alias: 'amenities' });
+      if ( options.amenities ){
+        // I am sorry for this.
+        // I wanted to look at all of the available amenities as well as if there's
+        // a order_amenity record. It's aliased as "amenity.checked", so that I know which 
+        // have been added to an order.
+        restaurantMany.push({
+          table: 'amenities'
+        , alias: 'amenities'
+        , columns:  [ '*'
+                    , {
+                        type: 'exists'
+                      , expression: {
+                          type: 'select'
+                        , columns: [ { expression: 1 } ]
+                        , table: 'order_amenities'
+                        , where: { order_id: '$orders.id$', amenity_id: '$amenities.id$' }
+                        }
+                      , alias: 'checked'
+                      }
+                    ]
+        });
+      }
+
       $options.one.push({
         table:  'restaurants'
       , alias:  'restaurant'

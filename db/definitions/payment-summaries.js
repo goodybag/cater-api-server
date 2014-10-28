@@ -62,7 +62,7 @@ define(function(require) {
 
     var items = $update.items;
     delete $update.items;
-console.log('update:', $where.id)
+
     for ( var i = items.length - 1; i >= 0; i-- ){
       items[i].payment_summary_id = $where.id;
     }
@@ -118,6 +118,8 @@ console.log('update:', $where.id)
 
     var items = $doc.items;
     delete $doc.items;
+
+    if ( items.length === 0 ) return this._super( $doc, options, callback );
 
     var idSelect = {
       type: 'select'

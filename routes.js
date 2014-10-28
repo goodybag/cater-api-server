@@ -428,7 +428,7 @@ module.exports.register = function(app) {
     app.get('/admin/ol-greg'
     , m.viewPlugin( 'mainNav', { active: 'home' })
     , m.db.restaurants.find( {}, {
-        limit:  'all'
+        limit:  5
       , one:    [{ table: 'regions', alias: 'region' }]
       })
     , m.view( 'admin/ol-greg/home', {

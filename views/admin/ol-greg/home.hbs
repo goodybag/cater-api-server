@@ -1,4 +1,7 @@
+{{#extend "title"}}Ol' Greg{{/extend}}
+
 {{#extend "page"}}page-ol-greg{{/extend}}
+
 {{#extend "css"}}
 <link rel="stylesheet" href="{{cdn (format '/dist/<%= version %>/ol-greg.css' pkg)}}">
 {{/extend}}
@@ -32,6 +35,8 @@
         <button class="btn btn-default btn-cancel hide">Cancel</button>
       </div>
     </form>
+
+    <div class="progress-indicator"></div>
   </section>
 
   <section class="panel-component" id="range-results">
@@ -63,7 +68,17 @@
                 </td>
                 <td class="status og-status"></td>
                 <td class="actions">
-                  <button class="btn btn-default btn-small">Generate</button>
+                  <a
+                    class="btn btn-default btn-small hide"
+                    href="#"
+                    data-role="edit">Edit</a>
+                  <a
+                    class="btn btn-default btn-small hide"
+                    href="#"
+                    data-role="view">PDF</a>
+                  <button
+                    class="btn btn-default btn-small"
+                    data-role="create">Generate</button>
                 </td>
               </tr>
             {{/each}}

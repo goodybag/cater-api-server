@@ -29,4 +29,11 @@
     box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.1);
     border-color: rgba(255, 0, 0, 0.26);
   }
+
+  &[data-status="complete"] {
+    &:after { content: "Complete" }
+    background: rgba( 0, 255, 0, 0.3 )!important;
+    box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.1);
+    border-color: rgba(0, 255, 0, 0.26);
+  }
 }

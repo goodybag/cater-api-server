@@ -49,11 +49,15 @@ define(function(require){
       if ( errors.length ){
         var selectors = '[name="' + errors.join('"], [name="') + '"]';
         this.error( selectors, 'Enter a valid date range');
+        return false;
       }
 
       if ( new Date( range.from ) >= new Date( range.to ) ){
         this.error( '[name="to"]', 'To must be a greater date than From' );
+        return false;
       }
+
+      return true;
     }
 
   , clearErrors: function(){
@@ -73,9 +77,9 @@ define(function(require){
 
       var range = this.getValues();
 
-      if ( this.validate( range ) ) return;
+      if ( !this.validate( range ) ) return;
 
-      this.emit( 'submit', range, this );
+      this.trigger( 'submit', range, this );
     }
   });
 });

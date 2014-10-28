@@ -428,7 +428,7 @@ module.exports.register = function(app) {
     app.get('/admin/ol-greg'
     , m.viewPlugin( 'mainNav', { active: 'home' })
     , m.db.restaurants.find( {}, {
-        limit:  5
+        limit:  'all'
       , one:    [{ table: 'regions', alias: 'region' }]
       })
     , m.view( 'admin/ol-greg/home', {
@@ -1394,7 +1394,11 @@ module.exports.register = function(app) {
   app.post('/api/restaurants/:restaurant_id/payment-summaries'
     // Ensure restaurant ID in the URL is what is in the body
   , m.queryToBody('restaurant_id')
-  , m.insert( db.payment_summaries )
+  , m.insert( db.payment_summaries, {
+      callback: function( error, results ){
+        console.log(results);
+      }
+    })
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'

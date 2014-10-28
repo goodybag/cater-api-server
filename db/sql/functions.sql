@@ -1,6 +1,22 @@
 --------------------
 -- Event Handlers --
 --------------------
+create or replace function on_order_amenities_update()
+returns trigger as $$
+begin
+  perform update_order_totals( NEW.order_id );
+  return NEW;
+end;
+$$ language plpgsql;
+
+create or replace function on_order_amenities_remove()
+returns trigger as $$
+begin
+  perform update_order_totals( OLD.order_id );
+  return OLD;
+end;
+$$ language plpgsql;
+
 create or replace function on_order_create()
 returns trigger as $$
 begin

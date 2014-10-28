@@ -180,6 +180,7 @@ create or replace function update_order_totals( o orders )
 returns void as $$
   declare order_item        record;
   declare option            record;
+  declare order_amenity     record;
   declare tax_rate          numeric;
   declare options_total     int := 0;
   declare delivery_fee      int := 0;
@@ -187,6 +188,7 @@ returns void as $$
   declare sales_tax         int := 0;
   declare total             int := 0;
   declare restaurant_total  int := 0;
+  declare amenities_total   int := 0;
   declare r_sales_tax       int := 0;
   declare curr              int := 0;
   declare tax_exempt        boolean;
@@ -231,6 +233,15 @@ begin
 
   total             := sub_total + coalesce( o.adjustment_amount, 0 );
 
+  for order_amenity in (
+    select * from order_amenities
+    join amenities on amenities.id = order_amenities.amenity_id
+    where order_id = o.id
+  ) loop
+    amenities_total := amenities_total + order_amenity.price;
+  end loop;
+
+  total := amenities_total;
   -- Values for restaurant_total and total can diverge
   -- since there are user specific adjustements now
   -- We repeat operations for the two values
@@ -278,9 +289,10 @@ begin
     || 'sales_tax = $3, '
     || 'delivery_fee = $4, '
     || 'restaurant_total = $5, '
-    || 'restaurant_sales_tax = $6 '
-    || 'where id = $7'
-    using sub_total, total, sales_tax, delivery_fee, restaurant_total, r_sales_tax, o.id;
+    || 'restaurant_sales_tax = $6, '
+    || 'amenities_total = $7 '
+    || 'where id = $8'
+    using sub_total, total, sales_tax, delivery_fee, restaurant_total, r_sales_tax, amenities_total, o.id;
 end;
 $$ language plpgsql;
 

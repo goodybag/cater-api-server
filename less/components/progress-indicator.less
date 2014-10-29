@@ -1,0 +1,33 @@
+////////////////////////
+// Progress Indicator //
+////////////////////////
+
+@indicator-track-height:  1px;
+@indicator-size:          5px;
+@indicator-color:         #0FADFF;
+
+.progress-indicator {
+  height: @indicator-track-height;
+
+  > .indicator {
+    &:after {
+      content: "";
+      position: absolute;
+      top: floor( @indicator-size / 2 ) * -1;
+      right: 0;
+      width: 5px;
+      height: 5px;
+      border-radius: 5px;
+      box-shadow: 0 0 12px @indicator-color;
+      background: fade( @indicator-color, 10% )
+    }
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: @indicator-color;
+    .transition( 0.2s, linear );
+  }
+}

@@ -2,7 +2,8 @@
 // Core Ol Greg //
 //////////////////
 
-@import "core-admin.less";
+@import "variables.less";
+@import "mixins.less";
 
 @import "components/og-range-processor.less";
 @import "components/og-status.less";
@@ -13,6 +14,10 @@ body {
   , url('http://storage.j0.hn/old-greg.jpg');
 }
 
-#range-processor {
-  margin-top: 50px;
+#top-panel {
+  margin-top: 32px;
+
+  .progress-indicator {
+    margin-bottom: 25px;
+  }
 }

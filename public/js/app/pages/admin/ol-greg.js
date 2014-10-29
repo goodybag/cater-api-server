@@ -10,6 +10,7 @@ define(function(require){
   var Order         = require('app/models/order');
   var RangeSelector = require('app/views/admin/og-range-selector');
   var SummaryTRView = require('app/views/admin/og-summary-tr-view');
+  var progress      = require('progress-indicator');
 
   return Object.create({
     init: function( options ){
@@ -22,7 +23,7 @@ define(function(require){
   , domready: function(){
       this.rangeSelector = new RangeSelector().setElement('#range-processor');
       this.rangeSelector.on( 'submit', function( range ){
-        this.run( range.from, range.to )
+        this.run( range.from, range.to );
       }.bind( this ));
 
       this.$restaurantsById = {};
@@ -31,6 +32,8 @@ define(function(require){
         this.$restaurantsById[ r.id ] = summaryView;
         return summaryView;
       }.bind( this ));
+
+      this.pindicator = progress( $('.progress-indicator')[0] );
 
       $('#results [data-role="create"]').click( function( e ){
         if ( !this.rangeSelector.validate() ) return;
@@ -54,6 +57,7 @@ define(function(require){
     }
 
   , run: function( d1, d2 ){
+      $('.progress-indicator').removeClass('hide');
       $('.og-status').data( 'status', 'waiting' );
 
       this.generateAllSummaries( d1, d2, {
@@ -62,6 +66,7 @@ define(function(require){
         }
 
       , onProgress: function( step, total, restaurant, summary ){
+          this.pindicator.set( (step / total) * 100 );
           this.$restaurantsById[ restaurant.id ].setSummary( summary );
           this.$restaurantsById[ restaurant.id ].setStatus('complete');
         }.bind( this )
@@ -71,7 +76,7 @@ define(function(require){
         }.bind( this )
 
       , onComplete: function(){
-
+          $('.progress-indicator').addClass('hide');
         }.bind( this )
       });
     }
@@ -104,7 +109,7 @@ define(function(require){
         onProgress: function( step, total, restaurant ){}
       , onError:    function( error, restaurant ){}
       , onComplete: function(){}
-      , delay:      5000
+      , delay:      4000
       });
 
       var MAX  = this.options.restaurants.length;

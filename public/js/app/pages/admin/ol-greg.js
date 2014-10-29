@@ -9,60 +9,7 @@ define(function(require){
   var Orders        = require('app/collections/restaurant-orders');
   var Order         = require('app/models/order');
   var RangeSelector = require('app/views/admin/og-range-selector');
-
-  var restaurantView = function( $el, restaurant ){
-    return Object.create({
-      $el: $el
-    , restaurant: restaurant
-    , status: 'none'
-    , statuses: ['none', 'waiting', 'working', 'error', 'complete']
-
-    , setStatus: function( status ){
-        var $status = this.$el.find('.og-status');
-
-        $status.attr( 'data-status', status );
-
-        if ( status === 'working' ){
-          this.disableActions();
-        } else {
-          this.enableActions();
-        }
-
-        status = status;
-
-        return this;
-      }
-
-    , setSummary: function( summary ){
-        this.summary = summary;
-
-        $el.find('[data-role="edit"]')
-          .removeClass('hide')
-          .attr( 'href', [
-            '/admin/restaurants'
-          , this.restaurant.id
-          , 'payment-summaries'
-          , summary.get('id')
-          ].join('/'));
-
-        $el.find('[data-role="view"]')
-          .removeClass('hide')
-          .attr( 'href', '/payment-summaries/ps-:id.pdf'.replace( ':id', summary.get('id') ) );
-
-        return this;
-      }
-
-    , enableActions: function(){
-        $el.find('.actions .btn').attr( 'disabled', null ).removeClass('disabled');
-        return this;
-      }
-
-    , disableActions: function(){
-        $el.find('.actions .btn').attr( 'disabled', true ).addClass('disabled');
-        return this;
-      }
-    });
-  };
+  var SummaryTRView = require('app/views/admin/og-summary-tr-view');
 
   return Object.create({
     init: function( options ){
@@ -78,13 +25,12 @@ define(function(require){
         this.run( range.from, range.to )
       }.bind( this ));
 
-      this.$restaurants = this.options.restaurants.map( function( r ){
-        return restaurantView( $('[data-rid="' + r.id + '"]'), r );
-      });
-
-      this.$restaurantsById = utils.indexBy( this.$restaurants, function( obj ){
-        return obj.restaurant.id;
-      });
+      this.$restaurantsById = {};
+      this.$restaurants = this.options.restaurants.forEach( function( r ){
+        var summaryView = new SummaryTRView().setElement('[data-rid="' + r.id + '"]');
+        this.$restaurantsById[ r.id ] = summaryView;
+        return summaryView;
+      }.bind( this ));
 
       $('#results [data-role="create"]').click( function( e ){
         if ( !this.rangeSelector.validate() ) return;
@@ -158,6 +104,7 @@ define(function(require){
         onProgress: function( step, total, restaurant ){}
       , onError:    function( error, restaurant ){}
       , onComplete: function(){}
+      , delay:      5000
       });
 
       var MAX  = this.options.restaurants.length;
@@ -171,7 +118,7 @@ define(function(require){
             options.onError( error, restaurant );
           }
 
-          done();
+          setTimeout( done, options.delay );
         });
       }.bind( this );
 

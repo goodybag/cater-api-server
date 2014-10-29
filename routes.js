@@ -1402,7 +1402,7 @@ module.exports.register = function(app) {
       venter.emit(
         'payment-summary:change'
       , res.locals.payment_summary.id
-      , req.param('restuarant_id')
+      , req.param('restaurant_id')
       );
 
       next();

@@ -98,15 +98,6 @@ define(function(require) {
     ], callback );
   };
 
-  // Insert with items as a transaction
-  // This function is a bit funky since if they specify .items, then
-  // the top-level query is actually inserting on `payment_summary_items`
-  // Options would then apply to _that_ query, whereas if .items is not
-  // specified, then the top-level query is as expected.
-  // I didn't go the transaction route because I needed to use the ID
-  // from the `payment_summary` insert.
-  //
-  // Don't specify function name so we don't run before filters on insert
   definition.insert = function( $doc, options, callback ){
     // We should standardize this upstream with a convenience method
     if ( typeof options == 'function' ){
@@ -121,42 +112,24 @@ define(function(require) {
 
     if ( items.length === 0 ) return this._super( $doc, options, callback );
 
-    var idSelect = {
-      type: 'select'
-    , table: 'summary'
-    , columns: ['id']
-    };
+    utils.async.waterfall([
+      dirac.dals.payment_summaries.insert.bind(
+        dirac.dals.payment_summaries, $doc, options
+      )
 
-    for ( var i = items.length - 1; i >= 0; i-- ){
-      items[ i ].payment_summary_id = idSelect;
-    }
+    , function( summary, next ){
+        items.forEach( function( item ){
+          item.payment_summary_id = summary.id;
+        });
 
-    var $query = utils.extend({
-      type: 'insert'
-    , table: 'payment_summary_items'
-    , with: {
-        summary: {
-          type:       'insert'
-        , table:      'payment_summaries'
-        , values:     $doc
-        , returning:  ['*']
-        }
+        dirac.dals.payment_summary_items.insert( items, { returning: ['*'] }, function( error, results ){
+          if ( error ) return next( error );
+
+          summary.items = results;
+
+          return next( null, summary );
+        });
       }
-    , values: items
-    }, options, {
-      // Always use our returning
-      // Cannot return all columns, only id - better than nothing
-      returning: [ idSelect ]
-    });
-
-    utils.async.series([
-      dirac.dals.payment_summary_items.runBeforeFilters.bind(
-        dirac.dals.payment_summary_items, 'insert', $query
-      )
-    , dirac.dals.payment_summaries.runBeforeFilters.bind(
-        dirac.dals.payment_summaries, 'insert', $query.with.summary
-      )
-    , this.query.bind( this, $query, callback )
     ], callback );
   };
 

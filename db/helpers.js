@@ -46,6 +46,36 @@ dirac.db.setMosql( mosql );
 //   });
 // }
 
+dirac.use( function(){
+  var options = {
+    operations: [ 'insert', 'update',  ]
+  };
+
+  var checkSingular = function( results, $query, schema, next ){
+    var columns = Object.keys( schema ), vals, target;
+
+    if ( $query.type === 'insert' ){
+      vals = Array.isArray( $query.values ) ? $query.values : [ $query.values ];
+    } else if ( $query.type === 'update' ){
+      vals = [ $query.updates ];
+    }
+
+    vals.forEach( function( val ){
+      for ( var key in val ){
+        if ( columns.indexOf( key ) === -1 ){
+          delete val[ key ];
+        }
+      }
+    });
+
+    next();
+  };
+
+  Object.keys( dirac.dals ).forEach( function( table ){
+    dirac.dals[ table ]
+  });
+});
+
 dirac.autoJoin = function( options ){
   [
     'target', 'on'
@@ -656,13 +686,25 @@ dirac.DAL = dirac.DAL.extend({
   }
 
 , insert: function( values, options, callback ){
+    // Do not attempt to insert empty values
     if ( Array.isArray( values ) && values.length === 0 ){
       if ( typeof options === 'function' ){
         callback = options;
       }
       return callback();
     }
-    return this._super( values, options, callback );
+
+    return this._super( values, options, function( error, results ){
+      if ( error ) return callback( error );
+
+      // If there was only want result, then it's likely they just
+      if ( !Array.isArray( values ) || values.length === 0 )
+      if ( results.length === 1 ){
+         results = results[0];
+      }
+
+      return callback( null, results );
+    });
   }
 });
 

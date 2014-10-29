@@ -621,7 +621,8 @@ dirac.DAL = dirac.DAL.extend({
     return this._super( values, options, function( error, results ){
       if ( error ) return callback( error );
 
-      // If there was only want result, then it's likely they just
+      // If there was only one result, values was length 1,
+      // then it's likely they just inserted a single doc, want a single doc back
       if ( !Array.isArray( values ) || values.length === 0 )
       if ( results.length === 1 ){
          results = results[0];

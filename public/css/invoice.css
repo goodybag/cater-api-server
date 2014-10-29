@@ -128,13 +128,15 @@
   margin: 0;
 }
 
-.order .order-summary {
+.order .order-summary,
+.order .order-amenities {
   padding-left: 16px;
   padding-right: 16px;
   text-align: right;
 }
 
-.order .order-summary .dl-order-summary {
+.order .order-summary .dl-order-summary,
+.order .order-amenities .dl-order-amenities {
   display: inline-block;
 }
 
@@ -149,24 +151,28 @@
 
 .dl-adjustment-amount,
 .dl-order-summary,
-.dl-order-total {
+.dl-order-total,
+.dl-order-amenities {
   font-size: 13px;
 }
 
 .dl-adjustment-amount > dt,
 .dl-order-summary > dt,
-.dl-order-total > dt {
+.dl-order-total > dt,
+.dl-order-amenities > dt {
   font-style: normal;
 }
 
 .dl-adjustment-amount > dd,
 .dl-order-summary > dd,
-.dl-order-total > dd {
+.dl-order-total > dd,
+.dl-order-amenities > dd {
   margin-left: 190px;
   min-width: 60px;
 }
 
-.dl-order-summary {
+.dl-order-summary,
+.dl-order-amenities {
   line-height: 24px;
   margin-bottom: 0;
 }

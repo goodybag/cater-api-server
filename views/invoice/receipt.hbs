@@ -104,6 +104,16 @@
 
   <div class="order-bottom-wrapper">
     <div class="order-bottom">
+      {{#if order.restaurant.amenities}}
+      <div class="order-amenities">
+        <p>Amenities</p>
+        <dl class="dl-horizontal dl-order-amenities">
+        {{#each order.restaurant.amenities}}
+          <dt>{{name}} {{description}}</dt>
+          <dd>{{surcharge price}}</dd>
+        {{/each}}
+        </dl>
+      </div>
       <div class="order-adjustment">
         {{#if order.adjustment.amount}}
           <div class="columns">
@@ -136,6 +146,7 @@
           </div>
         {{/if}}
       </div>
+      {{/if}}
 
       <div class="order-summary">
         <dl class="dl-horizontal dl-order-summary">

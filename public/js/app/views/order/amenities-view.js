@@ -67,7 +67,7 @@ define(function(require, exports, module) {
     },
 
     onAmenityToggle: function (e){
-      this
+      return this
         .cacheTotal()
         .updateSummary(e)
         .update(e);

@@ -752,6 +752,7 @@ module.exports.register = function(app) {
     , restaurant:         true
     , deliveryService:    true
     , paymentMethod:      true
+    , amenities:          true
     })
   , function(req, res, next){ req.params.receipt = true; next(); }
   , controllers.orders.get

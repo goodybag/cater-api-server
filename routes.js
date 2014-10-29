@@ -1394,11 +1394,19 @@ module.exports.register = function(app) {
   app.post('/api/restaurants/:restaurant_id/payment-summaries'
     // Ensure restaurant ID in the URL is what is in the body
   , m.queryToBody('restaurant_id')
-  , m.insert( db.payment_summaries, {
-      callback: function( error, results ){
-        console.log(results);
-      }
+  , function( req, res, next ){
+      m.db.insert( req.body )( req, res, next );
+    }
+  , m.after( function( req, res, next ){
+      venter.emit(
+        'payment-summary:change'
+      , res.locals.payment_summary.id
+      , req.param('restuarant_id')
+      );
+
+      next();
     })
+  , m.jsonLocals('payment_summary')
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'

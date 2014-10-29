@@ -1,5 +1,5 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="{{cdn "/css/restaurants.css"}}">
+<link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/restaurants.css' pkg)}}">
 {{/extend}}
 
 {{#extend "title"}} - Restaurants{{/extend}}
@@ -16,6 +16,7 @@
 
   <div class="row">
     <div class="col-md-3 restaurants-left-col">
+      {{> restaurant_search }}
       {{> restaurant_sort }}
       {{> restaurant_filters }}
     </div>

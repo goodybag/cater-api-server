@@ -27,10 +27,9 @@ define(function(require){
       }.bind( this ));
 
       this.$restaurantsById = {};
-      this.$restaurants = this.options.restaurants.forEach( function( r ){
+      this.options.restaurants.forEach( function( r ){
         var summaryView = new SummaryTRView().setElement('[data-rid="' + r.id + '"]');
         this.$restaurantsById[ r.id ] = summaryView;
-        return summaryView;
       }.bind( this ));
 
       this.pindicator = progress( $('.progress-indicator')[0] );
@@ -58,7 +57,9 @@ define(function(require){
 
   , run: function( d1, d2 ){
       $('.progress-indicator').removeClass('hide');
-      $('.og-status').data( 'status', 'waiting' );
+      for ( var id in this.$restaurantsById ){
+        this.$restaurantsById[ id ].setStatus('waiting');
+      }
 
       this.generateAllSummaries( d1, d2, {
         onRestaurant: function( restaurant ){

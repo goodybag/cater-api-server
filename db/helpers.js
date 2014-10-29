@@ -311,52 +311,6 @@ dirac.use( function(){
   dirac.dals.payment_summaries.after( 'findOne',  afterPSFinds );
 });
 
-// Remove/add payment summary items on update
-// dirac.use( function( dirac ){
-//   dirac.dals.payment_summaries.before( 'update', function( $query, schema, next ){
-//     if ( !Array.isArray( $query.values.items ) ) return next();
-//     if ( !$query.where.id ) return next();
-
-//     var items = $query.values.items;
-//     delete $query.value.items;
-
-//     items.forEach( function( item ){
-//       item.payment_summary_id = $query.where.id;
-//     });
-
-//     utils.series([
-//       dirac.dals.payment_summary_items.remove.bind(
-//         dirac.dals.payment_summary_items
-//       , { payment_summary_id: $query.where.id }
-//       )
-//     , dirac.dals.payment_summary_items.insert.bind(
-//         dirac.dals.payment_summary_items, items
-//       )
-//     ], next );
-//   });
-// });
-
-// // add payment summary items on insert
-// dirac.use( function( driac ){
-//   dirac.dals.payment_summaries.before( 'insert', function( $query, schema, next ){
-//     if ( !Array.isArray( $query.values.items ) ) return next();
-
-//     // Values that don't exist on the schema will get filtered out
-//     // We could easily generalize this behavior with a plugin
-//     // For now we'll manually define
-//     $query._items = items;
-//     next();
-//   });
-
-//   dirac.dals.payment_summaries.after( 'insert', function( results, $query, schema, next ){
-//     if ( !Array.isArray( $query._items ) ) return next();
-
-//     var items = $query._items;
-
-
-//   });
-// });
-
 // Remove existing zip defs, replace with new ones
 // TODO: use transaction
 dirac.use( function( dirac ){

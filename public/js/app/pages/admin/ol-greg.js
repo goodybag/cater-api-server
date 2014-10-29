@@ -110,7 +110,7 @@ define(function(require){
         onProgress: function( step, total, restaurant ){}
       , onError:    function( error, restaurant ){}
       , onComplete: function(){}
-      , delay:      4000
+      , delay:      3000
       });
 
       var MAX  = this.options.restaurants.length;

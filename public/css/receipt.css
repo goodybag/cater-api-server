@@ -108,3 +108,15 @@
 .delivery-service-note {
   font-style: italic;
 }
+
+.amenities input {
+  height: inherit;
+}
+
+.amenities {
+  text-align: right;
+}
+
+.amenities {
+  padding-top: 10px;
+}

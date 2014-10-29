@@ -208,9 +208,23 @@
     </div>
     {{/unless}}
 
+
+    {{!-- only allow admins to edit amenities on this page --}}
     {{#if order.restaurant.amenities}}
     <div class="amenities">
-    {{> order_extras }}
+      {{#if isAdmin}}
+      {{> order_extras }}
+      {{else}}
+      <div class="col-md-12">
+      <legend>Extras</legend>
+      {{#each order.restaurant.amenities}}
+      <dl>
+        <dt>{{name}}{{#if description}} - {{description}}{{/if}}</dt>
+        <dd>{{surcharge price}}</dd>
+      </dl>
+      {{/each}}
+      </div>
+      {{/if}}
     </div>
     {{/if}}
 
@@ -385,8 +399,6 @@
 {{> copy_order_error_modal}}
 
 <div class="modal fade modal-item" id="item-modal" role="dialog" aria-labelledby="itemModal" aria-hidden="true"></div>
-
-{{{ dump order.restaurant }}}
 
 {{#extend "scripts"}}
 <script>

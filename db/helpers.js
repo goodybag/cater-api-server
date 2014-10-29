@@ -46,36 +46,6 @@ dirac.db.setMosql( mosql );
 //   });
 // }
 
-dirac.use( function(){
-  var options = {
-    operations: [ 'insert', 'update',  ]
-  };
-
-  var checkSingular = function( results, $query, schema, next ){
-    var columns = Object.keys( schema ), vals, target;
-
-    if ( $query.type === 'insert' ){
-      vals = Array.isArray( $query.values ) ? $query.values : [ $query.values ];
-    } else if ( $query.type === 'update' ){
-      vals = [ $query.updates ];
-    }
-
-    vals.forEach( function( val ){
-      for ( var key in val ){
-        if ( columns.indexOf( key ) === -1 ){
-          delete val[ key ];
-        }
-      }
-    });
-
-    next();
-  };
-
-  Object.keys( dirac.dals ).forEach( function( table ){
-    dirac.dals[ table ]
-  });
-});
-
 dirac.autoJoin = function( options ){
   [
     'target', 'on'

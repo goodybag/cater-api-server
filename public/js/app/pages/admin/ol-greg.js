@@ -22,28 +22,32 @@ define(function(require){
 
         $status.attr( 'data-status', status );
 
-        if ( status === 'none' ){
-          this.enableActions();
-        } else {
+        if ( status === 'working' ){
           this.disableActions();
-        }
-
-        if ( status === 'complete' ){
-          $el.find('[data-role="edit"]')
-            .removeClass('hide')
-            .attr( 'href', [
-              '/admin/restaurants'
-            , restaurant.id
-            , 'payment-summaries'
-            , restaurant.pmsId
-            ].join('/'));
-
-          $el.find('[data-role="view"]')
-            .removeClass('hide')
-            .attr( 'href', '/payment-summaries/ps-:id.pdf'.replace( ':id', restaurant.pmsId ) );
+        } else {
+          this.enableActions();
         }
 
         status = status;
+
+        return this;
+      }
+
+    , setSummary: function( summary ){
+        this.summary = summary;
+
+        $el.find('[data-role="edit"]')
+          .removeClass('hide')
+          .attr( 'href', [
+            '/admin/restaurants'
+          , this.restaurant.id
+          , 'payment-summaries'
+          , summary.get('id')
+          ].join('/'));
+
+        $el.find('[data-role="view"]')
+          .removeClass('hide')
+          .attr( 'href', '/payment-summaries/ps-:id.pdf'.replace( ':id', summary.get('id') ) );
 
         return this;
       }
@@ -97,7 +101,7 @@ define(function(require){
             return;
           }
 
-          $restaurant.restaurant.pmsId = summary.get('id');
+          $restaurant.setSummary( summary );
           $restaurant.setStatus('complete');
         }.bind( this ));
       }.bind( this ));
@@ -112,7 +116,7 @@ define(function(require){
         }
 
       , onProgress: function( step, total, restaurant, summary ){
-          restaurant.pmsId = summary.get('id');
+          this.$restaurantsById[ restaurant.id ].setSummary( summary );
           this.$restaurantsById[ restaurant.id ].setStatus('complete');
         }.bind( this )
 

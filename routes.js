@@ -430,6 +430,7 @@ module.exports.register = function(app) {
     , m.db.restaurants.find( {}, {
         limit:  'all'
       , one:    [{ table: 'regions', alias: 'region' }]
+      , order:  'name asc'
       })
     , m.view( 'admin/ol-greg/home', {
         layout: 'admin/layout2'
@@ -1395,7 +1396,7 @@ module.exports.register = function(app) {
     // Ensure restaurant ID in the URL is what is in the body
   , m.queryToBody('restaurant_id')
   , function( req, res, next ){
-      m.db.insert( req.body )( req, res, next );
+      m.db.payment_summaries.insert( req.body )( req, res, next );
     }
   , m.after( function( req, res, next ){
       venter.emit(

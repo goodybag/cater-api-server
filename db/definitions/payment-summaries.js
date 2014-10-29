@@ -64,6 +64,8 @@ define(function(require) {
     delete $update.items;
 
     for ( var i = items.length - 1; i >= 0; i-- ){
+      delete items[i].id;
+      delete items[i].created_at;
       items[i].payment_summary_id = $where.id;
     }
 

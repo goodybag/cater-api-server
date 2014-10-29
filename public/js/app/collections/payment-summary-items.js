@@ -25,6 +25,9 @@ define(function(require, exports, module) {
   , _prepareModel: function( attrs, options ){
       if ( attrs instanceof utils.Model ) return attrs;
 
+      attrs = attrs || {};
+      options = options || {};
+
       // Always set payment_summary_id/sales_tax on new models
       attrs.payment_summary_id = this.payment_summary_id;
       attrs.sales_tax = this.sales_tax;

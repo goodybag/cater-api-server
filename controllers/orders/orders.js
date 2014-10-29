@@ -74,61 +74,73 @@ module.exports.get = function(req, res) {
     && (req.query.review_token === order.review_token || req.order.isRestaurantManager)
   ;
 
-  utils.findWhere(states, {abbr: order.state || 'TX'}).default = true;
-  var context = {
-    order: order,
-    isRestaurantReview: isReview,
-    isOwner: req.order.isOwner,
-    isRestaurantManager: req.order.isRestaurantManager,
-    isAdmin: req.order.isAdmin,
-    isTipEditable: orderModel.isTipEditable({
+  utils.async.waterfall([
+    // Can't yet rely on order.restaurant to have all of the right info
+    // in the legacy formats
+    orderModel.getRestaurant.bind( orderModel )
+  ], function( error, restaurant ){
+    if ( error ){
+      return res.error(errors.internal.DB_FAILURE, err);
+    }
+
+    order.restaurant = restaurant.toJSON();
+
+    utils.findWhere(states, {abbr: order.state || 'TX'}).default = true;
+    var context = {
+      order: order,
+      isRestaurantReview: isReview,
       isOwner: req.order.isOwner,
       isRestaurantManager: req.order.isRestaurantManager,
       isAdmin: req.order.isAdmin,
-    }),
-    show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
-    states: states,
-    orderAddress: {
-      address: order,
-      states: states
-    },
-    orderParams: req.session.orderParams,
-    query: req.query,
-    user: req.order.user,
-    step: order.status === 'pending' ? 2 : 3
-  };
+      isTipEditable: orderModel.isTipEditable({
+        isOwner: req.order.isOwner,
+        isRestaurantManager: req.order.isRestaurantManager,
+        isAdmin: req.order.isAdmin,
+      }),
+      show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
+      states: states,
+      orderAddress: {
+        address: order,
+        states: states
+      },
+      orderParams: req.session.orderParams,
+      query: req.query,
+      user: req.order.user,
+      step: order.status === 'pending' ? 2 : 3
+    };
 
-  // Put address grouped on order for convenience
-  context.order.address = utils.pick(
-    context.order,
-    ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
-  );
+    // Put address grouped on order for convenience
+    context.order.address = utils.pick(
+      context.order,
+      ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
+    );
 
-  // Decide where to show the `Thanks` message
-  if (moment(context.order.submitted_date).add('hours', 1) > moment())
-  if (req.session && req.session.user)
-  if (context.order.user_id == req.session.user.id){
-    context.showThankYou = true;
-  }
+    // Decide where to show the `Thanks` message
+    if (moment(context.order.submitted_date).add('hours', 1) > moment())
+    if (req.session && req.session.user)
+    if (context.order.user_id == req.session.user.id){
+      context.showThankYou = true;
+    }
 
-  // don't allow restaurant manager to edit orders
-  // in the future we will/should support this
-  if (req.order.isRestaurantManager)
-    context.order.editable = false;
+    // don't allow restaurant manager to edit orders
+    // in the future we will/should support this
+    if (req.order.isRestaurantManager)
+      context.order.editable = false;
 
-  var view = order.status === 'pending' ? 'checkout' : 'receipt';
+    var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
-  if (req.param('receipt')) {
-    view = 'invoice/receipt';
-    context.layout = 'invoice/invoice-layout';
-  }
+    if (req.param('receipt')) {
+      view = 'invoice/receipt';
+      context.layout = 'invoice/invoice-layout';
+    }
 
-  if ( context.order.review_token !== req.param('review_token') ) {
-    delete context.order.review_token;
-  }
+    if ( context.order.review_token !== req.param('review_token') ) {
+      delete context.order.review_token;
+    }
 
-  logger.info('rendering %s', view, { context: context });
-  res.render(view, context);
+    logger.info('rendering %s', view, { context: context });
+    res.render(view, context);
+  });
 }
 
 module.exports.create = function(req, res) {

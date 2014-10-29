@@ -8,6 +8,7 @@ define(function(require, exports, module) {
   var FormView = require('./form-view');
   var OrderAddressView = require('./order-address-view');
   var CopyErrorModalView = require('./copy-error-modal');
+  var AmenitiesView = require('app/views/order/amenities-view');
   var TipView = require('./tip-view');
   var helpers = require('hb-helpers');
 
@@ -98,6 +99,7 @@ define(function(require, exports, module) {
     },
 
     initialize: function(options) {
+      this.amenitiesView = new AmenitiesView({el: '.amenities', model: this.model, orderView: this});
       this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address, orderView: this, user: this.options.user});
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});

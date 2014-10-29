@@ -1,22 +1,18 @@
 {{#if order.restaurant.amenities}}
-<div class="list-group-item amenities clearfix">
-  <div class="col-md-12">
-    <legend>Extras</legend>
-    <p>
-      {{#each order.restaurant.amenities}}
-      {{#if enabled}}
-      <div>
-        <input
-          type="checkbox"
-          class="amenity-checkbox"
-          data-amenity-id="{{id}}"
-          value="{{price}}"
-          {{#if checked}}checked{{/if}}> {{name}} {{#if description}}- {{description}}{{/if}}
-          ({{surcharge price}})
-      </div>
-      {{/if}}
-      {{/each}}
-      </p>
+<legend>Extras</legend>
+<p>
+  {{#each order.restaurant.amenities}}
+  {{#if enabled}}
+  <div>
+    <input
+      type="checkbox"
+      class="amenity-checkbox"
+      data-amenity-id="{{id}}"
+      value="{{price}}"
+      {{#if checked}}checked{{/if}}> {{name}} {{#if description}}- {{description}}{{/if}}
+      ({{surcharge price}})
   </div>
-</div>
+  {{/if}}
+  {{/each}}
+</p>
 {{/if}}

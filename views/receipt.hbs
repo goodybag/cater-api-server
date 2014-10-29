@@ -208,6 +208,12 @@
     </div>
     {{/unless}}
 
+    {{#if order.restaurant.amenities}}
+    <div class="amenities">
+    {{> order_extras }}
+    </div>
+    {{/if}}
+
     <div class="panel-body totals-panel">
       {{#if isAdmin}}
       <div class="adjustment editable">
@@ -379,6 +385,8 @@
 {{> copy_order_error_modal}}
 
 <div class="modal fade modal-item" id="item-modal" role="dialog" aria-labelledby="itemModal" aria-hidden="true"></div>
+
+{{{ dump order.restaurant }}}
 
 {{#extend "scripts"}}
 <script>

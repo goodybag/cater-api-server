@@ -4,7 +4,6 @@
 
 {{#extend "title"}} - Checkout{{/extend}}
 
-
 {{#extend "head"}}
   {{> facebook_pixel config.facebook.pixel.checkout }}
 {{/extend}}
@@ -96,7 +95,11 @@
             </div>
           </div>
 
-          {{> order_extras }}
+          <div class="list-group-item amenities clearfix">
+            <div class="col-md-12">
+            {{> order_extras }}
+            </div>
+          </div>
           {{> order_delivery_info}}
 
           {{#unless user.name}}
@@ -263,6 +266,7 @@
 </div>
 
 <!-- End Modals -->
+{{{ dump order.restaurant }}}
 
 {{#extend "scripts"}}
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>

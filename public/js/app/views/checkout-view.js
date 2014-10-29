@@ -6,7 +6,6 @@ define(function(require, exports, module) {
   var notify = require('../../notify');
 
   var OrderView = require('./order-view');
-  var AmenitiesView = require('app/views/order/amenities-view');
 
   var Order = require('../models/order');
   var Address = require('../models/address');
@@ -58,7 +57,6 @@ define(function(require, exports, module) {
 
     initialize: function() {
       OrderView.prototype.initialize.apply(this, arguments);
-      this.amenitiesView = new AmenitiesView({el: '.amenities', model: this.model, orderView: this});
 
       this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
         format: 'mm/dd/yyyy'

@@ -6,6 +6,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var utils = require('utils');
+
   return module.exports = Backbone.View.extend({
     events: {
       'change .amenity-checkbox': 'onAmenityToggle'
@@ -16,17 +17,16 @@ define(function(require, exports, module) {
       this.delta = 0;
     },
 
-
     updateSummary: function(e){
       var $el = $(e.target);
       var amenityId = $el.data('amenity-id');
 
-      // Update order items
+      // 1. Update order items
       this.options.orderView.$el
       .find('.order-table [data-amenity-id="' + amenityId + '"]')
       .toggleClass('hide');
 
-      // Update totals
+      // 2. Update totals
       var data = { 
         total: this.model.get('total') + this.delta
       , sub_total: this.model.get('sub_total') + this.delta
@@ -69,7 +69,6 @@ define(function(require, exports, module) {
           }
         });
       }
-
       return this;
     },
 
@@ -78,11 +77,9 @@ define(function(require, exports, module) {
       var checked = $el.is(':checked');
       var price = parseInt($el.val());
       this.delta += checked ? price : -price;
-
       return this
         .updateSummary(e)
         .update(e);
     }
-
   });
 });

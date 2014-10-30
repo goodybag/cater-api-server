@@ -247,8 +247,6 @@ begin
     sub_total := sub_total + (curr * order_item.quantity);
   end loop;
 
-  total             := sub_total + coalesce( o.adjustment_amount, 0 );
-
   for order_amenity in (
     select * from order_amenities
     join amenities on amenities.id = order_amenities.amenity_id
@@ -257,7 +255,10 @@ begin
     amenities_total := amenities_total + order_amenity.price;
   end loop;
 
-  total := total + amenities_total;
+  sub_total := sub_total + amenities_total;
+
+  total             := sub_total + coalesce( o.adjustment_amount, 0 );
+
   -- Values for restaurant_total and total can diverge
   -- since there are user specific adjustements now
   -- We repeat operations for the two values
@@ -305,10 +306,9 @@ begin
     || 'sales_tax = $3, '
     || 'delivery_fee = $4, '
     || 'restaurant_total = $5, '
-    || 'restaurant_sales_tax = $6, '
-    || 'amenities_total = $7 '
-    || 'where id = $8'
-    using sub_total, total, sales_tax, delivery_fee, restaurant_total, r_sales_tax, amenities_total, o.id;
+    || 'restaurant_sales_tax = $6 '
+    || 'where id = $7'
+    using sub_total, total, sales_tax, delivery_fee, restaurant_total, r_sales_tax, o.id;
 end;
 $$ language plpgsql;
 

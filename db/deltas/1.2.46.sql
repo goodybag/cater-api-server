@@ -27,5 +27,4 @@ begin
   , amenity_id    int not null references amenities(id) on delete cascade
   );
 
-  perform add_column ('orders', 'amenities_total', 'int default 0');
 end$$;

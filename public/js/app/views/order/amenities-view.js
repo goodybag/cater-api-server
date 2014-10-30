@@ -8,8 +8,7 @@ define(function(require, exports, module) {
   var utils = require('utils');
   return module.exports = Backbone.View.extend({
     events: {
-      'change .amenity-checkbox': 'onCheckboxChange'
-    , 'change .amenity-checkbox': 'onAmenityToggle'
+      'change .amenity-checkbox': 'onAmenityToggle'
     },
 
     initialize: function() {
@@ -24,7 +23,11 @@ define(function(require, exports, module) {
     },
 
     updateSummary: function(e){
-      var data = { amenities_total: this.amenityTotal, total: this.model.get('total') + this.amenityTotal };
+      var data = { 
+        amenities_total: this.amenityTotal
+      , total: this.model.get('total') + this.amenityTotal
+      , sub_total: this.model.get('sub_total') + this.amenityTotal
+      };
       var updatedOrder = _.extend(this.model.toJSON(), data);
       this.options.orderView.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder}));
       return this;

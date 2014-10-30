@@ -99,21 +99,24 @@
         <td class="line-item-price" data-title="Price">${{dollars this.sub_total}}</td>
       </tr>
       {{/each}}
+      {{#each order.restaurant.amenities}}
+      {{#if checked}}
+      <tr id="order-amenity-{{id}}">
+      <td class="line-item-name">
+        <div class="item-name">{{name}}</div>
+      </td>
+      <td class="line-item-recipient"></td>
+      <td class="line-item-quantity">(Extra)</td>
+      <td class="line-item-notes">{{description}}</td>
+      <td class="line-item-price">{{surcharge price}}</td>
+      </tr>
+      {{/if}}
+      {{/each}}
     </tbody>
   </table>
 
   <div class="order-bottom-wrapper">
     <div class="order-bottom">
-      {{#if order.restaurant.amenities}}
-      <div class="order-amenities">
-        <p>Amenities</p>
-        <dl class="dl-horizontal dl-order-amenities">
-        {{#each order.restaurant.amenities}}
-          <dt>{{name}} {{description}}</dt>
-          <dd>{{surcharge price}}</dd>
-        {{/each}}
-        </dl>
-      </div>
       <div class="order-adjustment">
         {{#if order.adjustment.amount}}
           <div class="columns">
@@ -146,8 +149,6 @@
           </div>
         {{/if}}
       </div>
-      {{/if}}
-
       <div class="order-summary">
         <dl class="dl-horizontal dl-order-summary">
           <dt>Subtotal:</dt>
@@ -158,10 +159,6 @@
           <dd>${{dollars order.sales_tax}}</dd>
           <dt>Tip:</dt>
           <dd>${{dollars order.tip}}</dd>
-          {{#if order.amenities_total}}
-          <dt>Extras:</dt>
-          <dd>${{dollars order.amenities_total}}</dd>
-          {{/if}}
         </dl>
       </div>
 

@@ -528,6 +528,7 @@ config.production = {
   , tech: [
       'john@goodybag.com'
     , 'preston@goodybag.com'
+    , 'om@goodybag.com' // temp for failed cc payments
     ]
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'

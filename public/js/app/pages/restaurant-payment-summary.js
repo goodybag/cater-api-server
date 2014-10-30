@@ -80,18 +80,16 @@ define(function(require){
       utils.dom('#save-payment-summary-btn').click( function(){
         tableView.updateModels();
 
-        async.parallel(
-          items.toArray().map( function( model ){
-            return function( done ){
-              model.save( null, { success: function(){ done(); }, error: done } );
-            };
-          }).concat( function( done ){
+        async.series([
+          function( done ){
             summary.save({
               payment_date:     utils.dom('[name="payment_date"]').val()
             , adjustment:       Hbs.helpers.pennies( utils.dom('[name="adjustment"]').val() )
             , adjustment_text:  utils.dom('[name="adjustment_text"]').val()
+            , items:            items.toArray()
             }, { success: function(){ done() }, error: done } );
-          })
+          }
+        ]
         , function( error ){
             if ( error ) return alert( error );
             goBack();

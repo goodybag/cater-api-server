@@ -12,22 +12,17 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
-      this.cacheTotal();
+      // Cache a price delta for amenities
+      this.delta = 0;
     },
 
-    cacheTotal: function() {
-      this.amenityTotal = utils.reduce(utils.pluck(this.$el.find('.amenity-checkbox:checked'), 'value'), function(total, val) {
-        return total + parseInt(val);
-      }, 0);
-      return this;
-    },
 
     updateSummary: function(e){
       var data = { 
-        amenities_total: this.amenityTotal
-      , total: this.model.get('total') + this.amenityTotal
-      , sub_total: this.model.get('sub_total') + this.amenityTotal
+        total: this.model.get('total') + this.delta
+      , sub_total: this.model.get('sub_total') + this.delta
       };
+
       var updatedOrder = _.extend(this.model.toJSON(), data);
       this.options.orderView.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder}));
       return this;
@@ -70,8 +65,12 @@ define(function(require, exports, module) {
     },
 
     onAmenityToggle: function (e){
+      var $el = $(e.target);
+      var checked = $el.is(':checked');
+      var price = parseInt($el.val());
+      this.delta += checked ? price : -price;
+
       return this
-        .cacheTotal()
         .updateSummary(e)
         .update(e);
     }

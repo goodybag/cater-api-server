@@ -1751,12 +1751,16 @@ module.exports.register = function(app) {
    */
 
   app.post('/api/orders/:order_id/amenities'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
   , m.insert( db.order_amenities )
   );
 
   // list amenities per order
   app.get('/api/orders/:order_id/amenities'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
   , m.param('order_id')
   , m.find( db.order_amenities )
@@ -1764,6 +1768,8 @@ module.exports.register = function(app) {
 
   // list specific order amenity
   app.get('/api/orders/:order_id/amenities/:amenity_id'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
   , m.param('order_id')
   , m.param('amenity_id')
@@ -1772,6 +1778,8 @@ module.exports.register = function(app) {
 
   // delete all order amenities
   app.del('/api/orders/:order_id/amenities'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
   , m.param('order_id')
   , m.remove( db.order_amenities )
@@ -1779,6 +1787,8 @@ module.exports.register = function(app) {
 
   // delete specific order amenity
   app.del('/api/orders/:order_id/amenities/:amenity_id'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
   , m.param('order_id')
   , m.param('amenity_id')

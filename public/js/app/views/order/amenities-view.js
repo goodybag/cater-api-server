@@ -18,13 +18,22 @@ define(function(require, exports, module) {
 
 
     updateSummary: function(e){
+      var $el = $(e.target);
+      var amenityId = $el.data('amenity-id');
+
+      // Update order items
+      this.options.orderView.$el
+      .find('.order-table [data-amenity-id="' + amenityId + '"]')
+      .toggleClass('hide');
+
+      // Update totals
       var data = { 
         total: this.model.get('total') + this.delta
       , sub_total: this.model.get('sub_total') + this.delta
       };
-
       var updatedOrder = _.extend(this.model.toJSON(), data);
       this.options.orderView.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder}));
+
       return this;
     },
 

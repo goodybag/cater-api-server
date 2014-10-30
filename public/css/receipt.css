@@ -109,14 +109,6 @@
   font-style: italic;
 }
 
-.amenities input {
-  height: inherit;
-}
-
-.amenities {
-  text-align: right;
-}
-
-.amenities {
-  padding-top: 10px;
+.amenity-checkbox[data-amenity-id] {
+  margin-left: 22px;
 }

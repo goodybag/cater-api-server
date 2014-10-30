@@ -203,29 +203,52 @@
             <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>
           {{/each}}
+
+          {{!-- Show all amenities and checkboxes  --}}
+          {{#if isAdmin}}
+          {{#each order.restaurant.amenities}}
+          <tr class="amenities">
+            <td class="line-item-name" data-title="Name">
+              <div class="item-name" data-amenity-id="{{id}}">{{name}}</div>
+              {{#if description}}<p class="item-description">{{description}}</p>{{/if}}
+            </td>
+            <td class="line-item-quantity" data-title="Quantity">
+              <input
+                type="checkbox"
+                class="amenity-checkbox"
+                data-amenity-id="{{id}}"
+                value="{{price}}"
+                {{#if checked}}checked{{/if}}>
+            </td>
+            <td class="line-item-notes" data-title="Notes"></td>
+            <td class="line-item-recipient" data-title="Recipient"></td>
+            <td class="line-item-feeds" data-title="Feeds"></td>
+            <td class="line-item-price" data-title="Price">{{surcharge price}}</td>
+          </tr>
+          {{/each}}
+          {{else}}
+          {{!-- Only show checked amenities --}}
+          {{#each order.restaurant.amenities}}
+          {{#if checked}}
+          <tr>
+            <td class="line-item-name" data-title="Name">
+              <div class="item-name" data-amenity-id="{{id}}">{{name}}</div>
+              {{#if description}}<p class="item-description">{{description}}</p>{{/if}}
+            </td>
+            <td class="line-item-quantity" data-title="Quantity"></td>
+            <td class="line-item-notes" data-title="Notes"></td>
+            <td class="line-item-recipient" data-title="Recipient"></td>
+            <td class="line-item-feeds" data-title="Feeds"></td>
+            <td class="line-item-price" data-title="Price">{{surcharge price}}</td>
+          </tr>
+          {{/if}}
+          {{/each}}
+          {{/if}}
+
         </tbody>
       </table>
     </div>
     {{/unless}}
-
-    {{!-- only allow admins to edit amenities on this page --}}
-    {{#if order.restaurant.amenities}}
-    <div class="amenities">
-      {{#if isAdmin}}
-      {{> order_extras }}
-      {{else}}
-      <div class="col-md-12">
-      <legend>Extras</legend>
-      {{#each order.restaurant.amenities}}
-      <dl>
-        <dt>{{name}}{{#if description}} - {{description}}{{/if}}</dt>
-        <dd>{{surcharge price}}</dd>
-      </dl>
-      {{/each}}
-      </div>
-      {{/if}}
-    </div>
-    {{/if}}
 
     <div class="panel-body totals-panel">
       {{#if isAdmin}}

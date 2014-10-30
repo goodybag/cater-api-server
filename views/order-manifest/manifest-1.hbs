@@ -151,6 +151,18 @@
         <td class="price">${{dollars this.sub_total}}</td>
       </tr>
       {{/each}}
+      {{log order.restaurant}}
+      {{#each order.restaurant.amenities}}
+      <tr>
+        <td class="checkbox"></td>
+        <td class="item">{{name}}</td>
+        <td class="options"></td>
+        <td class="recipient"></td>
+        <td class="feeds"></td>
+        <td class="qty"></td>
+        <td class="price">{{surcharge price}}</td>
+      </tr>
+      {{/each}}
     </tbody>
   </table>
   <div class="page-number">

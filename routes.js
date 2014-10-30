@@ -652,9 +652,11 @@ module.exports.register = function(app) {
   , m.basicAuth()
   , m.restrict(['admin', 'receipts'])
   , m.getOrder2({
-      items:    true
-    , manifest: true
-    , user:     true
+      items:      true
+    , manifest:   true
+    , user:       true
+    , restaurant: true
+    // , amenities:  true
     })
   , m.view( 'order-manifest/manifest-1', {
       layout: 'order-manifest/layout'

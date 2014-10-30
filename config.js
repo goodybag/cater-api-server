@@ -528,6 +528,7 @@ config.production = {
   , tech: [
       'john@goodybag.com'
     , 'preston@goodybag.com'
+    , 'om@goodybag.com' // temp for failed cc payments
     ]
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
@@ -545,6 +546,12 @@ config.production = {
   , dsOrders: [
       'sarahsouthwell@goodybag.com'
     , 'christymedlock@goodybag.com'
+
+    // temp
+    , 'jacobparker@goodybag.com'
+    , 'jag@goodybag.com'
+    , 'om@goodybag.com'
+    , 'alexlauzon@goodybag.com'
     ]
   , reminderIgnored: [
       'om@goodybag.com'

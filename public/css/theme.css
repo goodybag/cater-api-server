@@ -11,7 +11,7 @@ offGrayBrown: #535145;
 */
 
 body {
-  background: #FBF9E5 url('../img/body-bg.png');
+  background: #FBF9E5 url('/img/body-bg.png');
   color: #695A42;
 }
 

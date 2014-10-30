@@ -509,20 +509,12 @@ dirac.use( function( dirac ){
       }, utils.omit( data, ['table', 'alias', 'pivots', 'target', 'source', 'where'] ));
 
       if ( Array.isArray( main.one ) ){
-        main.one.forEach( function( t ){
-          t.qAlias = t.qAlias || (data.qAlias + 'r');
-          t.source = data.qAlias;
-        });
-
+        main.one.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
         applyOne( main.table, main );
       }
 
       if ( Array.isArray( main.many ) ){
-        main.many.forEach( function( t ){
-          t.qAlias = t.qAlias || (data.qAlias + 'r');
-          t.source = data.qAlias;
-        });
-
+        main.many.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
         applyMany( main.table, main );
       }
 

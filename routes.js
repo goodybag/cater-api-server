@@ -545,10 +545,6 @@ module.exports.register = function(app) {
     }
   , m.view( 'restaurant-orders', db.orders, {
       method: 'find'
-    , error: function( error, req, res ){
-        console.log( error );
-        res.send(500);
-      }
     })
   );
 

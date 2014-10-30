@@ -256,9 +256,12 @@ define(function(require, exports, module) {
     updateTotal: function(){
       var total = this.get('sub_total') + this.get('adjustment').amount + this.get('delivery_fee');
       var rtotal = total;
+      var taxRate = this.restaurant && this.get('region')
+        ? this.restaurant.get('region').sales_tax : config.taxRate;
+
       total  += this.get('user_adjustment_amount');
-      total  += total * this.restaurant.get('region').sales_tax || config.taxRate;
-      rtotal += rtotal * this.restaurant.get('region').sales_tax || config.taxRate;
+      total  += total * taxRate;
+      rtotal += rtotal * taxRate;
       total  += this.get('tip');
       rtotal += this.get('tip');
       this.set( 'total', Math.round( total ) );

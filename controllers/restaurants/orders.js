@@ -15,37 +15,6 @@ module.exports.listJSON = function(req, res) {
   });
 };
 
-module.exports.list = function(req, res) {
-  // only show restaurant managers orders with a status of submitted, denied, or accepted
-  var defaultFilter = (req.order.isRestaurantManager) ? ['submitted', 'denied', 'accepted'] : 'all';
-  if (req.order.isRestaurantManager && !utils.contains(defaultFilter, req.query.filter)) req.query.filter = null;
-  var filter = utils.contains(models.Order.statuses, req.query.filter) ? req.query.filter : defaultFilter;
-
-  //TODO: middleware to validate and sanitize query object
-  var tasks = [
-    function(callback) {
-      var query = utils.extend({where: {}}, req.query);
-      utils.extend(query.where, {'restaurant_id': req.params.rid});
-      models.Order.findByStatus(query, filter, callback);
-    },
-
-    function(callback) {
-      models.Restaurant.findOne(req.params.rid, callback);
-    }
-  ];
-
-  utils.async.parallel(tasks, function(err, results) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.render('restaurant-orders', {
-      orders: utils.invoke(results[0], 'toJSON')
-    , restaurant: results[1].toJSON()
-    , isRestaurantManager: req.order.isRestaurantManager
-    , isAdmin: req.order.isAdmin
-    , filter: filter
-    });
-  });
-}
-
 module.exports.current = function(req, res, next) {
   var logger = req.logger.create('Current Order');
 

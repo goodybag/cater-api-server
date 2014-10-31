@@ -95,10 +95,11 @@ input[disabled] {
 
   input, textarea {
     padding: @input-padding-small;
-    line-height: @line-height-small;
+    height: @btn-small-height;
   }
 
-  input[type='checkbox'] {
+  input[type='checkbox'], input[type='checkbox'] {
+    height: auto;
     padding: 0;
   }
 
@@ -108,7 +109,7 @@ input[disabled] {
 
   button {
     padding: @btn-padding-small;
-    line-height: @line-height-small;
+    height: @btn-small-height;
   }
 }
 
@@ -168,5 +169,26 @@ input[type="date"] {
   &::-webkit-datetime-edit-day-field,
   &::-webkit-datetime-edit-year-field {
     padding: 0;
+  }
+}
+
+.action-group {
+  #flex > .parent();
+
+  .action-wrapper {
+    #flex > .child();
+    padding: 0 6px;
+
+    > .btn {
+      width: 100%;
+    }
+  }
+
+  .btn {
+    margin-left: 12px;
+  }
+
+  :first-child {
+    margin-left: 0;
   }
 }

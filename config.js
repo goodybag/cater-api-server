@@ -269,7 +269,7 @@ config.defaults = {
 , defaultLogo: 'https://www.filepicker.io/api/file/jLhugLRSQAJVdUe88acg'
 , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
 
-, enums: ['Tag', 'MealType', 'MealStyle']
+, enums: ['tags', 'meal_types', 'meal_styles', 'cuisines']
 };
 
 config.dev = {

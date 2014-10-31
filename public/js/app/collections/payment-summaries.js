@@ -14,26 +14,22 @@ define(function(require, exports, module) {
     }
 
   , initialize: function( models, options ){
-      this.restaurant_id = options.restaurant_id;
+      this.restaurant_id  = options.restaurant_id;
+      this.sales_tax      = options.sales_tax;
       return this;
     }
 
-  , create: function(){
-      if ( arguments[0] === undefined ) arguments[0] = {};
+  , _prepareModel: function( attrs, options ){
+      if ( attrs instanceof utils.Model ) return attrs;
 
-      // Always set restaurant_id on new models
-      arguments[0].restaurant_id = this.restaurant_id;
+      attrs = attrs || {};
+      options = options || {};
 
-      return utils.Collection.prototype.create.apply( this, arguments );
-    }
+      // Always set payment_summary_id/sales_tax on new models
+      attrs.restaurant_id = this.restaurant_id;
+      options.sales_tax = this.sales_tax;
 
-  , createModel: function(){
-      if ( arguments[0] === undefined ) arguments[0] = {};
-
-      // Always set restaurant_id on new models
-      arguments[0].restaurant_id = this.restaurant_id;
-
-      return utils.Collection.prototype.createModel.apply( this, arguments );
+      return utils.Collection.prototype._prepareModel.call( this, attrs, options );
     }
   });
 });

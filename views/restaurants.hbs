@@ -4,9 +4,11 @@
 
 {{#extend "title"}} - Restaurants{{/extend}}
 
+{{#if reqQuery.signed_up}}
 {{#extend "head"}}
   {{> facebook_pixel config.facebook.pixel.restaurantList }}
 {{/extend}}
+{{/if}}
 
 <div class="page-restaurants container">
 

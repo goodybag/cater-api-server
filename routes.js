@@ -437,6 +437,18 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants/:restaurant_id/copy'
     , controllers.restaurants.copy
     );
+
+    app.get('/admin/ol-greg'
+    , m.viewPlugin( 'mainNav', { active: 'home' })
+    , m.db.restaurants.find( {}, {
+        limit:  'all'
+      , one:    [{ table: 'regions', alias: 'region' }]
+      , order:  'name asc'
+      })
+    , m.view( 'admin/ol-greg/home', {
+        layout: 'admin/layout2'
+      })
+    );
   });
 
 
@@ -1353,9 +1365,18 @@ module.exports.register = function(app) {
   );
 
   app.get('/api/restaurants/:restaurant_id/orders'
+  , m.restrict(['admin'])
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
   , m.param('status')
+  , m.param( 'start_date', function( value, $where, options ){
+      $where.datetimeRange = $where.datetimeRange || { datetime: {} };
+      $where.datetimeRange.datetime.$gte = value;
+    })
+  , m.param( 'end_date', function( value, $where, options ){
+      $where.datetimeRange = $where.datetimeRange || { datetime: {} };
+      $where.datetimeRange.datetime.$lt = value;
+    })
   , m.queryOptions({
       one:  [{ table: 'restaurants', alias: 'restaurant' }]
     , many: [{ table: 'order_items', alias: 'items' }]
@@ -1398,7 +1419,19 @@ module.exports.register = function(app) {
   app.post('/api/restaurants/:restaurant_id/payment-summaries'
     // Ensure restaurant ID in the URL is what is in the body
   , m.queryToBody('restaurant_id')
-  , m.insert( db.payment_summaries )
+  , function( req, res, next ){
+      m.db.payment_summaries.insert( req.body )( req, res, next );
+    }
+  , m.after( function( req, res, next ){
+      venter.emit(
+        'payment-summary:change'
+      , res.locals.payment_summary.id
+      , req.param('restaurant_id')
+      );
+
+      next();
+    })
+  , m.jsonLocals('payment_summary')
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'

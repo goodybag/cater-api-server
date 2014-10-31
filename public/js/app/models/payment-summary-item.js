@@ -14,6 +14,7 @@ define(function(require, exports, module) {
     , sub_total:          0
     , delivery_fee:       0
     , tip:                0
+    , adjustment:         0
     }
 
   , initialize: function( attr, options ){
@@ -44,7 +45,7 @@ define(function(require, exports, module) {
       var data = {
         delivery_fee:     order.get('delivery_fee')
       , sub_total:        order.get('sub_total')
-      , adjustment:       order.get('adjustment_amount')
+      , adjustment:       order.get('adjustment_amount') || 0
       , tip:              order.get('tip')
       , gb_fee:           order.restaurant.get('gb_fee') || 0
       , sales_tax:        order.get('sales_tax') === 0 ? 0 : this.get('sales_tax')

@@ -291,7 +291,7 @@ module.exports.register = function( req, res ){
 
     req.setSession( user.toJSON() );
 
-    res.redirect('/restaurants');
+    res.redirect('/restaurants?signed_up=true');
 
     venter.emit( 'user:registered', user );
   });

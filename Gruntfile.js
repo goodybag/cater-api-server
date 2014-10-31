@@ -108,6 +108,7 @@ module.exports = function(grunt) {
         , "public/dist/<%= pkg.version %>/cater-tool-2.css":       "less/core-cater-tool-2.less"
         , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
         , "public/dist/<%= pkg.version %>/admin.css":              "less/core-admin.less"
+        , "public/dist/<%= pkg.version %>/ol-greg.css":            "less/core-ol-greg.less"
         , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
         }
       }

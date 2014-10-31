@@ -424,6 +424,18 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants/:restaurant_id/copy'
     , controllers.restaurants.copy
     );
+
+    app.get('/admin/ol-greg'
+    , m.viewPlugin( 'mainNav', { active: 'home' })
+    , m.db.restaurants.find( {}, {
+        limit:  'all'
+      , one:    [{ table: 'regions', alias: 'region' }]
+      , order:  'name asc'
+      })
+    , m.view( 'admin/ol-greg/home', {
+        layout: 'admin/layout2'
+      })
+    );
   });
 
 
@@ -518,27 +530,34 @@ module.exports.register = function(app) {
    *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
    */
 
-  app.get('/restaurants/:rid/orders'
-  , function(req, res, next) {
-      req.order = {};
-      if (isNaN(parseInt(req.params.rid))) return res.error(errors.internal.UNKNOWN);
-
-      if (utils.contains(req.user.attributes.groups, 'admin')){
-        req.order.isAdmin = true;
-        return next();
-      }
-
-      if (
-           utils.contains(req.user.attributes.groups, 'restaurant')
-        && utils.contains(req.user.attributes.restaurant_ids, parseInt(req.params.rid))
-      ) {
-        req.order.isRestaurantManager = true;
-        return next();
-      }
-
-      return res.error(errors.auth.NOT_ALLOWED);
+  app.get('/restaurants/:restaurant_id/orders'
+  , function( req, res, next ){
+      m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
     }
-  , controllers.restaurants.orders.list
+  , m.param('status')
+  , m.param('restaurant_id')
+  , m.sort('-id')
+  , m.queryOptions({ limit: 'all'
+    , one:  [ { table: 'users', alias: 'user' }
+            , { table: 'restaurants', alias: 'restaurant'
+              , one:  [ { table: 'delivery_services'
+                        , alias: 'delivery_service'
+                        , where: { region_id: '$restaurants.region_id$' }
+                        }
+                      ]
+              }
+            ]
+    })
+  , function( req, res, next ){
+      res.locals.status = req.param('status');
+      if ( req.param('status') == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.param('status') };
+      }
+      return next();
+    }
+  , m.view( 'restaurant-orders', db.orders, {
+      method: 'find'
+    })
   );
 
   app.post('/restaurants/:rid/orders', m.restrict(['client', 'admin']), function(req, res, next) {
@@ -639,9 +658,10 @@ module.exports.register = function(app) {
   , m.basicAuth()
   , m.restrict(['admin', 'receipts'])
   , m.getOrder2({
-      items:    true
-    , manifest: true
-    , user:     true
+      items:      true
+    , manifest:   true
+    , user:       true
+    , restaurant: true
     })
   , m.view( 'order-manifest/manifest-1', {
       layout: 'order-manifest/layout'
@@ -1345,9 +1365,18 @@ module.exports.register = function(app) {
   );
 
   app.get('/api/restaurants/:restaurant_id/orders'
+  , m.restrict(['admin'])
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
   , m.param('status')
+  , m.param( 'start_date', function( value, $where, options ){
+      $where.datetimeRange = $where.datetimeRange || { datetime: {} };
+      $where.datetimeRange.datetime.$gte = value;
+    })
+  , m.param( 'end_date', function( value, $where, options ){
+      $where.datetimeRange = $where.datetimeRange || { datetime: {} };
+      $where.datetimeRange.datetime.$lt = value;
+    })
   , m.queryOptions({
       one:  [{ table: 'restaurants', alias: 'restaurant' }]
     , many: [{ table: 'order_items', alias: 'items' }]
@@ -1390,7 +1419,19 @@ module.exports.register = function(app) {
   app.post('/api/restaurants/:restaurant_id/payment-summaries'
     // Ensure restaurant ID in the URL is what is in the body
   , m.queryToBody('restaurant_id')
-  , m.insert( db.payment_summaries )
+  , function( req, res, next ){
+      m.db.payment_summaries.insert( req.body )( req, res, next );
+    }
+  , m.after( function( req, res, next ){
+      venter.emit(
+        'payment-summary:change'
+      , res.locals.payment_summary.id
+      , req.param('restaurant_id')
+      );
+
+      next();
+    })
+  , m.jsonLocals('payment_summary')
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'

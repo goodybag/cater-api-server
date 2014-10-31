@@ -15,6 +15,7 @@ module.exports = {
 , getOrder: require('./get-order')
 , getOrder2: require('./get-order2')
 , getUser: require('./get-user')
+, jsonLocals: require('./json-locals')
 , logRequest: require('./log-request')
 , noop: require('./noop')
 , orderEditable: require('./order-editable')

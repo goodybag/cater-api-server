@@ -29,6 +29,12 @@
     <script src="/js/require-config.js"></script>
     {{/unless}}
 
+    <script>
+      require( ['config'], function( config ){
+        config.cdn = { baseUrl: '{{{config.cdn.baseUrl}}}' };
+      });
+    </script>
+
     {{{block "views"}}}
     {{{block "scripts"}}}
   </body>

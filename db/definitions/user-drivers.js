@@ -17,8 +17,7 @@ define(function(require) {
   definition.name = 'user_drivers';
 
   definition.schema = {
-    id:                 { type: types.serial, pk: true }
-  , user_id:            { type: types.serial
+    id:                 { type: types.int, pk: true
                         , nullable: false
                         , references: { table: 'users', column: 'id', onDelete: 'cascade' }
                         }

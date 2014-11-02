@@ -81,9 +81,18 @@
             <dt>Driver</dt>
             <dd>
               <select name="order_driver">
-                <option value="#">Courtney Williams</option>
+                <option>None</option>
+                {{#each drivers}}
+                  <option value="{{this.id}}"
+                  {{~#eq this.id ../order.driver_id}} selected="true"{{/eq~}}
+                  >{{this.name}}</option>
+                {{/each}}
               </select>
             </dd>
+          </div>
+          <div class="row">
+            <dt>Driver Link</dt>
+            <dd><a href="/orders/{{order.id}}/driver">/orders/{{order.id}}/driver</a></dd>
           </div>
         </dl>
       </div>

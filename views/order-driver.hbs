@@ -30,11 +30,19 @@
 <!--<MainInfo>-->
 <div class="container container-full-collapse">
   <div class="definition-row-list striped collapsible">
-    <h3 class="title">Can you deliver?</h3>
+    {{#eq order.driver_id user.id}}
+      <h3 class="title">You are delivering</h3>
+    {{else}}
+      <h3 class="title">Can you deliver?</h3>
+    {{/eq}}
     <dl>
       <div class="row">
-        <dt>When</dt>
+        <dt>Delivery Date</dt>
         <dd>Sat. Oct. 25 5:00pm</dd>
+      </div>
+      <div class="row">
+        <dt>Delivery Time</dt>
+        <dd>5:00pm</dd>
       </div>
       <div class="row">
         <dt>Your Cut</dt>
@@ -42,7 +50,7 @@
       </div>
       <div class="row">
         <dt>Distance</dt>
-        <dd><a href="#">4.2mi</a></dd>
+        <dd><a href="#">4.2mi</a> (From pickup to dropoff)</dd>
       </div>
       <div class="row">
         <dt>Pickup</dt>

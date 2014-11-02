@@ -22,6 +22,7 @@ define(function(require) {
                         , nullable: false
                         , references: { table: 'users', column: 'id', onDelete: 'cascade' }
                         }
+  , phone:              { type: types.varchar(10), checks: ["similar to '[[:digit:]]{10}'"] }
   };
 
   definition.indices = {};

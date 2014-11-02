@@ -12,6 +12,7 @@ begin
 
   perform add_column( 'user_drivers', 'id', 'serial primary key' );
   perform add_column( 'user_drivers', 'user_id', 'int references users("id") on delete cascade' );
+  perform add_column( 'user_drivers', 'phone', E'varchar(10) similar to \'[[:digit:]]{10}\'' );
 
   perform add_column( 'orders', 'driver_id', 'int references users("id") on delete set null' );
 

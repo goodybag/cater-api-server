@@ -32,6 +32,31 @@ module.exports = function( name, options ){
   };
 };
 
+// If they pass in collection options, see if we need to parse params
+viewPlugins.itemForm = {
+  fn: function( options, req, res, done ){
+    if ( !options.collectionOptions ){
+      return done( null, options );
+    }
+
+    var collectionOptions = utils.clone( options );
+
+    for ( var ok in options.collectionOptions ){
+      var opt = collectionOptions[ ok ];
+
+      if ( typeof opt !== 'string' ) continue;
+
+      req.route.keys.forEach( function( key ){
+        opt = opt.replace( new RegExp( ':' + key.name, 'g' ), req.param( key.name ) )
+      });
+
+      collectionOptions[ ok ] = opt;
+    }
+
+    return done( null, utils.extend( {}, options, { collectionOptions: collectionOptions } ) );
+  }
+};
+
 viewPlugins.sidebarNav = {
   fn: function( options, req, res, done ){
     var url = options.baseUrl;

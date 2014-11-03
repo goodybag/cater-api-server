@@ -4,8 +4,9 @@
   , [ 'jquery-loaded', 'app/views/admin/item-form', '{{itemForm.collection}}' ]
   , function( $, FormView, Collection ){
       return new FormView({
-        el: $('{{itemForm.selector}}')
-      , model: new Collection().createModel({{{json this itemForm.localModelProp}}})
+        el:     $('{{itemForm.selector}}')
+      , model:  new Collection( null, {{json this.itemForm.collectionOptions}})
+                  .createModel({{{json this itemForm.localModelProp}}})
       });
     }
   );

@@ -15,5 +15,13 @@ begin
 
   perform add_column( 'orders', 'driver_id', 'int references users("id") on delete set null' );
 
+  create table if not exists "driver_order_requests" ();
+  perform add_column( 'driver_order_requests', 'id', 'serial primary key' );
+  perform add_column( 'driver_order_requests', 'user_id', 'int references users("id") on delete cascade' );
+  perform add_column( 'driver_order_requests', 'order_id', 'int references orders("id") on delete cascade' );
+  perform add_column( 'driver_order_requests', 'response', 'boolean' );
+  perform add_column( 'driver_order_requests', 'response_date', 'timestamp without time zone' );
+  perform add_column( 'driver_order_requests', 'created_at', 'timestamp without time zone default now()' );
+
   insert into groups ( name ) values ('driver');
 end$$;

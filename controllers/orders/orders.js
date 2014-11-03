@@ -64,7 +64,7 @@ module.exports.editability = function(req, res, next) {
 module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Get');
 
-  if ( req.user.attributes.groups.indexOf('order-driver') ){
+  if ( req.user.attributes.groups.indexOf('order-driver') > -1 ){
     return res.render('order-driver', {
       layout: 'layouts/cater-tool-2'
     });

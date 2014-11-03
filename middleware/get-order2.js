@@ -18,6 +18,8 @@ module.exports = function( options ){
   return function( req, res, next ){
     var logger = req.logger.create('Middleware-GetOrder2');
 
+    var orderId = +req.param( options.param );
+
     var $options = {
       one:    []
     , many:   []
@@ -85,10 +87,10 @@ module.exports = function( options ){
     }
 
     logger.info('Finding order');
-    db.orders.findOne( +req.param( options.param ), $options, function( error, order ){
+    db.orders.findOne( orderId, $options, function( error, order ){
       if ( error ){
-        logger.error('error trying to find order #%s', req.params.id, error)
-        return res.error(errors.internal.DB_FAILURE, error);
+        logger.error( 'error trying to find order #%s', orderId, error );
+        return res.error( errors.internal.DB_FAILURE, error );
       }
 
       if ( !order ) return res.render('404');

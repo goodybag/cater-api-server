@@ -704,22 +704,6 @@ module.exports.register = function(app) {
   , controllers.orders.get
   );
 
-  app.get('/orders/:oid/driver'
-  , m.getOrder2({
-      param:              'oid'
-    , items:              true
-    , user:               true
-    , userAddresses:      true
-    , userPaymentMethods: true
-    , restaurant:         true
-    , deliveryService:    true
-    , submittedDate:      true
-    })
-  , m.view('order-driver', {
-      layout: 'layouts/cater-tool-2'
-    })
-  );
-
   app.put('/orders/:oid'
   , m.getOrder2({
       param:              'oid'
@@ -760,6 +744,22 @@ module.exports.register = function(app) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
     res.send(405);
   });
+
+  app.get('/orders/:oid/driver'
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    , submittedDate:      true
+    })
+  , m.view('order-driver', {
+      layout: 'layouts/cater-tool-2'
+    })
+  );
 
   app.get(
     config.receipt.orderRoute
@@ -1286,16 +1286,18 @@ module.exports.register = function(app) {
 
   app.get('/admin/orders/:id'
   , m.restrict(['admin'])
-  , m.param('id')
-  , m.queryOptions({
-      one:  [ { table: 'restaurants', alias: 'restaurant' }
-            , { table: 'users', alias: 'user' }
-            ]
-    , many: [{ table: 'order_items', alias: 'items' }]
+  , m.getOrder2({
+      param:              'id'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    , paymentMethod:      true
     })
-  , m.view( 'admin/order', db.orders, {
+  , m.view( 'admin/order', {
       layout: 'admin/layout2'
-    , method: 'findOne'
     })
   );
 

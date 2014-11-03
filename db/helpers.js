@@ -415,6 +415,25 @@ dirac.use( function(){
 
 // Embed queries into each other
 dirac.use( function( dirac ){
+  var getPivots = function( from, to ){
+    var target = dirac.dals[ to ];
+
+    return {
+      incoming: Object.keys( target.dependencies[ table_name ] || {} ).map( function( p ){
+        return {
+          source_col: target.dependencies[ table_name ][ p ]
+        , target_col: p
+        };
+      })
+    , outgoing: Object.keys( target.dependents[ table_name ] || {} ).map( function( p ){
+        return {
+          source_col: target.dependents[ table_name ][ p ]
+        , target_col: p
+        };
+      })
+    };
+  };
+
   var applyOne = function( table_name, $query ){
     var tmpl = function( data ){
       var where = utils.extend( {}, data.where );

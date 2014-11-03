@@ -21,6 +21,11 @@
     <script src="/js/require-config.js"></script>
     {{/unless}}
 
+    <script>
+      // Make sure chit like navbar is loaded
+      require(['jquery-loaded'], function(){});
+    </script>
+
     {{{block "scripts"}}}
   </body>
 </html>

@@ -196,7 +196,7 @@ define(function(require) {
   , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
   , restaurant_total: { type: types.int, nullable: false, default: 0 }
   , restaurant_sales_tax: { type: types.int, nullable: false, default: 0 }
-  , driver_id: { type: types.int, references: { table: 'users', column: 'id', onDelete: 'set null' } }
+  , driver_id: { type: types.int, references: { table: 'user_drivers', column: 'id', onDelete: 'set null' } }
   };
 
   definition.indices = {};

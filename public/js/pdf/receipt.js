@@ -6,7 +6,7 @@ var options = {
   // Describes when to break the page
   magicNumber: 920
 
-, readyTimeout: 20000
+, readyTimeout: 15000
 
   // Used to select the elements in a $page that will determine
   // the innerHeight of the element (since page is has a min-height),

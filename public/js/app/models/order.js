@@ -155,6 +155,13 @@ define(function(require, exports, module) {
       this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id, edit_token: options.edit_token });
       this.unset('orderItems');
 
+      if ( !attrs.adjustment ){
+        this.attributes.adjustment = {
+          amount:       attrs.adjustment_amount || 0
+        , description:  attrs.adjustment_description
+        };
+      }
+
       if ( attrs.restaurant.delivery_service ){
         this.set( 'delivery_service_id', attrs.restaurant.delivery_service.id );
       }
@@ -175,8 +182,19 @@ define(function(require, exports, module) {
         this.set( 'type', 'courier' );
       }
 
-      this.on('change:adjustment', this.updateSubtotal, this);
       this.listenTo(this.orderItems, 'change:sub_total add remove', this.updateSubtotal, this);
+
+      var fieldsThatChangeTotal = [
+        'sub_total'
+      , 'adjustment'
+      , 'user_adjustment_amount'
+      , 'delivery_fee'
+      , 'tip'
+      ].map( function( f ){
+        return 'change:' + f
+      }).join(' ');
+
+      this.on( fieldsThatChangeTotal, this.updateTotal, this);
 
       this.listenTo(this.restaurant, 'change:is_bad_zip change:is_bad_delivery_time change:is_bad_lead_time change:is_bad_guests', function(model, value, options) {
         this.set('is_unacceptable', _.reduce(_.pick(model.toJSON(), ['is_bad_zip', 'is_bad_delivery_time', 'is_bad_lead_time', 'is_bad_guests']), function(a, b) {
@@ -228,10 +246,26 @@ define(function(require, exports, module) {
     },
 
     updateSubtotal: function() {
-      this.set('sub_total',
-               _.reduce(this.orderItems.pluck('sub_total'),
-                        function(a, b) { return a + b; }, (this.get('adjustment') || 0).amount || 0)
-              );
+      var sub_total = _.reduce( this.orderItems.pluck('sub_total'), function(a, b) {
+        return a + b;
+      }, 0 ) || 0;
+
+      this.set( 'sub_total', sub_total );
+    },
+
+    updateTotal: function(){
+      var total = this.get('sub_total') + this.get('adjustment').amount + this.get('delivery_fee');
+      var rtotal = total;
+      var taxRate = this.restaurant && this.get('region')
+        ? this.restaurant.get('region').sales_tax : config.taxRate;
+
+      total  += this.get('user_adjustment_amount');
+      total  += total * taxRate;
+      rtotal += rtotal * taxRate;
+      total  += this.get('tip');
+      rtotal += this.get('tip');
+      this.set( 'total', Math.round( total ) );
+      this.set( 'restaurant_total', Math.round( rtotal ) );
     },
 
     setSubmittable: function(model, value, options) {

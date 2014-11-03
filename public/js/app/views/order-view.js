@@ -128,7 +128,7 @@ define(function(require, exports, module) {
       this.model = model;
 
       this.listenTo(this.model, {
-        'change:sub_total change:tip': this.onPriceChange,
+        'change:total': this.onPriceChange,
         'change:phone': this.onPhoneChange
       }, this);
 

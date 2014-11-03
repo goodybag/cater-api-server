@@ -304,7 +304,7 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'basic-info'
-      , baseUrl:  '/admin/restaurants/:rid'
+      , baseUrl:  '/admin/restaurants/:id'
       })
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.queryOptions({
@@ -462,29 +462,35 @@ module.exports.register = function(app) {
         one:  [{ table: 'regions', alias: 'region' }]
       , many: [{ table: 'restaurant_locations', alias: 'locations' }]
       })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'locations'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
     , m.viewPlugin( 'collection', { path: 'app/collections/restaurant-locations' } )
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.view( 'admin/restaurant/locations-list', db.restaurants, {
-        layout: 'admin/layout-two-column'
+        layout: 'admin/layout-single-object'
       , method: 'findOne'
       })
     );
 
-    app.get('/admin/restaurants/:restaurant_id/locations/new'
-    , m.db.regions.find( {}, { limit: 'all' } )
+    app.get('/admin/restaurants/:id/locations/new'
+    , m.queryOptions({
+        one:  [{ table: 'regions', alias: 'region' }]
+      })
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'locations'
-      , baseUrl:  '/admin/restaurants/:restaurant_id'
-      , isNew:    true
+      , baseUrl:  '/admin/restaurants/:id'
       })
     , m.viewPlugin( 'itemForm', {
-        selector:       '#create-item-form'
-      , collection:     'app/collections/restaurant-locations'
-      , localModelProp: 'restaurant_location'
+        selector:           '#create-item-form'
+      , collection:         'app/collections/restaurant-locations'
+      , collectionOptions:  { restaurant_id: ':restaurant_id' }
       })
-    , m.view( 'admin/restaurant/location-new', {
+    , m.view( 'admin/restaurant/location-new', db.restaurants, {
         layout: 'admin/layout-single-object'
+      , method: 'findOne'
       })
     );
 

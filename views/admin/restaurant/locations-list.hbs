@@ -1,56 +1,64 @@
-{{#extend "page"}}page-delivery-services{{/extend}}
+{{#extend "page"}}page-restaurant-locations{{/extend}}
+
+{{#extend "banner"}}
+  <div class="container">
+    <ul class="breadcrumbs main-breadcrumbs">
+      <li>
+        <a href="/admin">Admin Panel</a>
+      </li>
+      <li>
+        <a href="/admin/restaurants">Restaurants</a>
+      </li>
+      <li>
+        <a href="/admin/restaurants/{{restaurant.id}}">
+          {{restaurant.name}}
+        </a>
+      </li>
+      <li>Locations</li>
+    </ul>
+
+    <h1>Editing {{restaurant.name}}</h1>
+  </div>
+{{/extend}}
+
+{{#extend "nav-col"}}
+<nav>{{> restaurant_edit_nav}}</nav>
+{{/extend}}
 
 {{#extend "body"}}
-<div class="container" id="main-container">
-  <ul class="breadcrumbs main-breadcrumbs">
-    <li>
-      <a href="/admin">Admin Panel</a>
-    </li>
-    <li>
-      <a href="/admin/restaurants">Restaurants</a>
-    </li>
-    <li>
-      <a href="/admin/restaurants/{{restaurant.id}}">
-        {{restaurant.name}}
-      </a>
-    </li>
-    <li>Locations</li>
-  </ul>
-
-  <h1 class="page-title">Locations</h1>
-  <div class="page-actions">
-    <a
-      class="btn btn-primary"
-      href="/admin/restaurants/{{restaurant.id}}/locations/new">
-      Create
-    </a>
-  </div>
-
-  <section class="panel-component" id="locations-table">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-      {{#each restaurant.locations}}
-        <tr>
-          <td>{{this.id}}</td>
-          <td>
-            <a href="/admin/restaurants/{{restaurant.id}}/locations/{{this.id}}">{{this.name}}</a>
-          </td>
-          <td class="actions">
-            <button class="btn btn-small btn-default btn-delete" data-id="{{this.id}}">X</button>
-          </td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </section>
+<h2 class="page-title">Locations</h2>
+<div class="page-actions">
+  <a
+    class="btn btn-primary"
+    href="/admin/restaurants/{{restaurant.id}}/locations/new">
+    Create
+  </a>
 </div>
+
+<section class="panel-component" id="locations-table">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {{#each restaurant.locations}}
+      <tr>
+        <td>{{this.id}}</td>
+        <td>
+          <a href="/admin/restaurants/{{restaurant.id}}/locations/{{this.id}}">{{this.name}}</a>
+        </td>
+        <td class="actions">
+          <button class="btn btn-small btn-default btn-delete" data-id="{{this.id}}">X</button>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</section>
 {{/extend}}
 
 {{#extend "scripts"}}
@@ -63,7 +71,7 @@
         init: function(){
           $(function(){
             page.table = new Table({
-              collection: new Collection({ restaurant_id: {{restaurant.id}} })
+              collection: new Collection( null, { restaurant_id: {{restaurant.id}} } )
             });
             page.table.setElement( $('#locations-table > table') );
           });

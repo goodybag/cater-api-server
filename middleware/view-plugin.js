@@ -39,7 +39,7 @@ viewPlugins.itemForm = {
       return done( null, options );
     }
 
-    var collectionOptions = utils.clone( options );
+    var collectionOptions = utils.clone( options.collectionOptions );
 
     for ( var ok in options.collectionOptions ){
       var opt = collectionOptions[ ok ];

@@ -325,7 +325,7 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'basic-info'
-      , baseUrl:  '/admin/restaurants/:rid'
+      , baseUrl:  '/admin/restaurants/:id'
       })
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
@@ -339,7 +339,7 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'billing-info'
-      , baseUrl:  '/admin/restaurants/:rid'
+      , baseUrl:  '/admin/restaurants/:id'
       })
     , m.states()
     , m.db.regions.find( {}, { limit: 'all' } )
@@ -455,17 +455,18 @@ module.exports.register = function(app) {
     , controllers.restaurants.copy
     );
 
-    app.get('/admin/restaurants/:restaurant_id/locations'
-    , m.param('restaurant_id')
+    app.get('/admin/restaurants/:id/locations'
+    , m.param('id')
     , m.sort('+name')
     , m.queryOptions({
-        one: [{ table: 'regions', alias: 'region' }]
+        one:  [{ table: 'regions', alias: 'region' }]
+      , many: [{ table: 'restaurant_locations', alias: 'locations' }]
       })
     , m.viewPlugin( 'collection', { path: 'app/collections/restaurant-locations' } )
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.view( 'restaurant/locations-list', db.restaurant_locations, {
-        layout: 'admin/layout2'
-      , method: 'find'
+    , m.view( 'admin/restaurant/locations-list', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
       })
     );
 
@@ -482,7 +483,7 @@ module.exports.register = function(app) {
       , collection:     'app/collections/restaurant-locations'
       , localModelProp: 'restaurant_location'
       })
-    , m.view( 'admin/restaurants/location-new', {
+    , m.view( 'admin/restaurant/location-new', {
         layout: 'admin/layout-single-object'
       })
     );
@@ -506,7 +507,7 @@ module.exports.register = function(app) {
       , localModelProp:     'restaurant_location'
       , collectionOptions:  { restaurant_id: ':restaurant_id' }
       })
-    , m.view( 'admin/restaurants/location-edit', db.restaurant_locations, {
+    , m.view( 'admin/restaurant/location-edit', db.restaurant_locations, {
         layout: 'admin/layout-single-object'
       , method: 'findOne'
       })

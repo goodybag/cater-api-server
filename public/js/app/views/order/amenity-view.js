@@ -9,7 +9,7 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     events: {
-      'change .checkbox': 'onAmenityToggle'
+      'change input[type="checkbox"]': 'onAmenityToggle'
     },
 
     initialize: function() {
@@ -37,7 +37,6 @@ define(function(require, exports, module) {
     update: function (e) {
       // crappy placeholder
       var $el = $(e.target);
-      var amenityId = $el.attr('data-amenity-id');
       var orderId = this.options.order.id;
       var add = $el.is(':checked');
       if ( add ) {

@@ -1394,6 +1394,35 @@ module.exports.register = function(app) {
   , m.remove( db.contacts )
   );
 
+  app.get('/api/restaurants/:restaurant_id/locations'
+  , m.pagination({ allowLimit: true })
+  , m.param('restaurant_id')
+  , m.find( db.restaurant_locations )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/locations'
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.restaurant_locations )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/locations/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.findOne( db.restaurant_locations )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/locations/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.update( db.restaurant_locations )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/locations/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.remove( db.restaurant_locations )
+  );
+
   app.get('/api/restaurants/:restaurant_id/payment-summaries'
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')

@@ -10,6 +10,7 @@ define( function( require ){
       var marketPlaceUri  = options.marketplaceUri;
       var user            = options.user;
       var order           = options.order;
+      var amenities       = options.amenities;
 
       page.options = options;
 
@@ -18,7 +19,8 @@ define( function( require ){
       var view = new Views.CheckoutView({
         el: '#main',
         model: order,
-        user: user
+        user: user,
+        amenities: amenities
       });
 
       analytics.page('Checkout');

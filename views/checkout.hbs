@@ -269,8 +269,8 @@
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
 
 <script>
-  require(['app/pages/checkout', 'app/models/index', 'order-delivery-service-criteria'],
-    function(page, Models, odsCriteria) {
+  require(['app/pages/checkout', 'app/models/index', 'app/collections/amenities', 'order-delivery-service-criteria'],
+    function(page, Models, Amenities, odsCriteria) {
       // Is dollar amount too low?
       // Only check this on the checkout page
       odsCriteria.add({
@@ -291,6 +291,7 @@
         marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
       , user: new Models.User({{{json user}}})
       , order: new Models.Order({{{json order}}})
+      , amenities: new Amenities({{{json order.restaurant.amenities}}})
       });
     }
   );

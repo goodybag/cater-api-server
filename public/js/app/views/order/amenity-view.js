@@ -9,7 +9,7 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     events: {
-      'change .amenity-checkbox': 'onAmenityToggle'
+      'change .checkbox': 'onAmenityToggle'
     },
 
     initialize: function() {
@@ -41,14 +41,14 @@ define(function(require, exports, module) {
       // crappy placeholder
       var $el = $(e.target);
       var amenityId = $el.attr('data-amenity-id');
-      var orderId = this.model.id;
+      var orderId = this.options.order.id;
       var add = $el.is(':checked');
       if ( add ) {
         var url = '/api/orders/' + orderId + '/amenities';
         $.ajax({
           type: 'POST'
         , url: url
-        , data: { amenity_id: amenityId, order_id: orderId }
+        , data: { amenity_id: this.model.id, order_id: orderId }
         , success: function() {
             console.log('insert success');
           }
@@ -57,7 +57,7 @@ define(function(require, exports, module) {
           }
         });
       } else {
-        var url = '/api/orders/' + orderId + '/amenities/' + amenityId;
+        var url = '/api/orders/' + orderId + '/amenities/' + this.model.id;
         $.ajax({
           type: 'DELETE'
         , url: url

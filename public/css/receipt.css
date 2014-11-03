@@ -109,6 +109,6 @@
   font-style: italic;
 }
 
-.amenity-checkbox[data-amenity-id] {
+.amenity .checkbox {
   margin-left: 22px;
 }

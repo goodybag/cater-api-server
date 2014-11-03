@@ -1,0 +1,7 @@
+{{#each enums.cuisines}}
+<div class="checkbox">
+  <label>
+    <input type="checkbox" value="{{name}}" {{#contains ../restaurant.cuisine name}}checked="checked"{{/contains}}> {{name}}
+  </label>
+</div>
+{{/each}}

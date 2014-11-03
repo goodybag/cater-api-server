@@ -19,7 +19,6 @@ define(function(require){
       , alertView: alertView
       });
     },
-
   };
 
   return page;

@@ -13,26 +13,23 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
-      // Cache a price delta for amenities
-      this.delta = 0;
     },
 
     updateSummary: function(e){
       var $el = $(e.target);
-      var amenityId = $el.data('amenity-id');
+      var checked = $el.is(':checked');
+      var price = (checked ? 1 : -1 ) * parseInt($el.val());
 
       // 1. Update order items
       this.options.orderView.$el
-      .find('.order-table [data-amenity-id="' + amenityId + '"]')
+      .find('.order-table [data-amenity-id="' + this.model.id + '"]')
       .toggleClass('hide');
 
       // 2. Update totals
-      var data = { 
-        total: this.model.get('total') + this.delta
-      , sub_total: this.model.get('sub_total') + this.delta
-      };
-      var updatedOrder = _.extend(this.model.toJSON(), data);
-      this.options.orderView.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder}));
+      this.options.order.set({
+        total: this.options.order.get('total') + price
+      , sub_total: this.options.order.get('sub_total') + price
+      });
 
       return this;
     },
@@ -73,10 +70,6 @@ define(function(require, exports, module) {
     },
 
     onAmenityToggle: function (e){
-      var $el = $(e.target);
-      var checked = $el.is(':checked');
-      var price = parseInt($el.val());
-      this.delta += checked ? price : -price;
       return this
         .updateSummary(e)
         .update(e);

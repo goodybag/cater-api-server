@@ -207,16 +207,15 @@
           {{!-- Show all amenities and checkboxes  --}}
           {{#if isAdmin}}
           {{#each order.restaurant.amenities}}
-          <tr class="amenities">
+          <tr class="amenity" data-amenity-id="{{id}}">
             <td class="line-item-name" data-title="Name">
-              <div class="item-name" data-amenity-id="{{id}}">{{name}}</div>
+              <div class="item-name">{{name}}</div>
               {{#if description}}<p class="item-description">{{description}}</p>{{/if}}
             </td>
             <td class="line-item-quantity" data-title="Quantity">
               <input
                 type="checkbox"
-                class="amenity-checkbox"
-                data-amenity-id="{{id}}"
+                class="checkbox"
                 value="{{price}}"
                 {{#if checked}}checked{{/if}}>
             </td>
@@ -230,9 +229,9 @@
           {{!-- Only show checked amenities --}}
           {{#each order.restaurant.amenities}}
           {{#if checked}}
-          <tr>
+          <tr class="amenity" data-amenity-id="{{id}}">
             <td class="line-item-name" data-title="Name">
-              <div class="item-name" data-amenity-id="{{id}}">{{name}}</div>
+              <div class="item-name">{{name}}</div>
               {{#if description}}<p class="item-description">{{description}}</p>{{/if}}
             </td>
             <td class="line-item-quantity" data-title="Quantity"></td>
@@ -424,10 +423,11 @@
 
 {{#extend "scripts"}}
 <script>
-  require(['app/pages/receipt', 'app/models/index'], function( page, Models ){
+  require(['app/pages/receipt', 'app/models/index', 'app/collections/amenities'], function( page, Models, Amenities ){
     page.init({
       order: new Models.Order( {{{json order}}} )
     , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
+    , amenities: new Amenities( {{{json order.restaurant.amenities }}} )
     });
   });
 </script>

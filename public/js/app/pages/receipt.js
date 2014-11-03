@@ -32,12 +32,14 @@ define(function(require){
     init: function( options ){
       var order = options.order;
       var isAdmin = options.isAdmin;
+      var amenities = options.amenities;
 
       page.view = new Views.Receipt({
         el:               '#main'
       , model:            order
       , review_token:     query.review_token
       , validate:         !isAdmin
+      , amenities:        amenities
       });
 
       order.orderItems.each( function( item ){

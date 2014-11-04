@@ -15,6 +15,9 @@ $$ language plpgsql;
 create or replace function on_order_create()
 returns trigger as $$
 begin
+  if ( NEW.restaurant_location_id is null ) then
+    set_order_default_location( NEW );
+  end if;
   return NEW;
 end;
 $$ language plpgsql;
@@ -398,4 +401,28 @@ begin
   where r.id = new.id;
   return new;
 end;
+$$ language plpgsql;
+
+create or replace function set_order_default_location( oid int )
+returns void as $$
+  declare o orders;
+begin
+  for o in ( select * from orders where id = oid )
+  loop
+    perform set_order_default_location( o );
+    return;
+  end loop;
+end;
+$$ language plpgsql;
+
+create or replace function set_order_default_location( o orders )
+returns void as $$
+  declare o orders;
+begin
+  update orders
+    set restaurant_location_id = (
+      select id from restaurant_locations rl
+        where rl.restaurant_id = orders.id
+          and rl.is_default = true
+    );
 $$ language plpgsql;

@@ -260,10 +260,10 @@ define(function(require, exports, module) {
         ? this.restaurant.get('region').sales_tax : config.taxRate;
 
       total  += this.get('user_adjustment_amount');
-      this.attributes.sales_tax = total * taxRate;
+      this.attributes.sales_tax             = total * taxRate;
+      this.attributes.restaurant_sales_tax  = rtotal * taxRate;
       total  += this.get('sales_tax');
-      this.attributes.restaurant_sales_tax = rtotal * taxRate;
-      total  += this.get('restaurant_sales_tax');
+      rtotal += this.get('restaurant_sales_tax');
       total  += this.get('tip');
       rtotal += this.get('tip');
       this.set( 'total', Math.round( total ) );

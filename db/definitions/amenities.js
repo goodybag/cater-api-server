@@ -47,6 +47,10 @@ define(function(require) {
       , onDelete: 'cascade'
       }
     }
+  , scale: {
+      type: types.amenity_scale
+    , default: '\'flat\'::amenity_scale'
+    }
   , enabled: {
       type: types.boolean
     , default: false

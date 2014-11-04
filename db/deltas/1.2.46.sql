@@ -16,6 +16,7 @@ begin
   , description   text
   , price         int not null default 0
   , restaurant_id int not null references restaurants(id) on delete cascade
+  , scale         amenity_scale default 'flat'
   , enabled       boolean default false
   );
 

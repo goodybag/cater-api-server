@@ -15,11 +15,10 @@ define(function(require){
     // ( the value function argument ), what is the value on
     // that jquery element?
     typeGetters: {
-      default:  function( $el ){ return $el.val(); }
-    , number:   function( $el ){ return +$el.val(); }
-    , checkbox: function( $el ){ return $el[0].checked; }
-
-    , list: function( $el ) {
+      'default':  function( $el ){ return $el.val(); }
+    , 'number':   function( $el ){ return +$el.val(); }
+    , 'checkbox': function( $el ){ return $el[0].checked; }
+    , 'list': function( $el ) {
         var result = $el.find('input[type="checkbox"]:checked').map( function() {
           return this.value;
         }).get();
@@ -63,8 +62,13 @@ define(function(require){
   , getModelData: function(){
       var this_ = this, data = {};
 
+      // group radio elements by name
+      var radios = this.$el.find('[name]').filter('[type="radio"]:checked');
+      var others = this.$el.find('[name]').filter(':not([type="radio"])');
+      var inputs = $.merge(radios, others);
+
       // Maybe check to see if the name is in schema?
-      this.$el.find('[name]').each( function(){
+      inputs.each( function(){
         var $this = $(this);
         var k     = $this.attr('name');
         var val   = this_.getDomValue( k, $this );

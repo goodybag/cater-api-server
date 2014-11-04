@@ -1779,7 +1779,7 @@ module.exports.register = function(app) {
   , m.remove( db.amenities )
   );
 
-  /** 
+  /**
    * Order amenities
    */
 

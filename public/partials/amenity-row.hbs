@@ -7,15 +7,25 @@
   <span class="js-toggle">{{description}}</span>
 </td>
 <td>
-  <input 
-    class="js-toggle hide" 
-    type="number" 
-    step="0.01" 
-    name="price" 
+  <input
+    class="js-toggle hide"
+    type="number"
+    step="0.01"
+    name="price"
     data-in="dollars"
     data-out="pennies"
     value="{{dollars price}}">
   <code class="js-toggle">${{dollars price}}</code>
+</td>
+<td>
+  <span class="js-toggle hide">
+    <div><input type="radio" name="scaling" value="multiply" {{#eq scaling "multiply"}}checked{{/eq}}> Multiply</div>
+    <div><input type="radio" name="scaling" value="flat" {{#eq scaling "flat"}}checked{{/eq}}> Flat</div>
+  </span>
+  <span class="js-toggle">
+    <div><input type="radio" disabled="disabled" name="scaling" value="multiply" {{#eq scaling "multiply"}}checked{{/eq}}> Multiply</div>
+    <div><input type="radio" disabled="disabled" name="scaling" value="flat" {{#eq scaling "flat"}}checked{{/eq}}> Flat</div>
+  </span>
 </td>
 <td>
   <input class="js-toggle hide" type="checkbox" name="enabled" {{#if enabled}}checked{{/if}}>

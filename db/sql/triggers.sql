@@ -46,3 +46,11 @@ create trigger restaurants_search_update
   on restaurants
   for each row
   execute procedure update_restaurant_search_vector();
+
+drop trigger if exists restaurant_locations_is_default_change on restaurant_locations;
+create trigger restaurant_locations_is_default_change
+  before insert or update of is_default
+  on restaurant_locations
+  for each row
+  when ( NEW.is_default is true )
+  execute procedure restaurant_locations_is_default_change();

@@ -1,6 +1,16 @@
 --------------------
 -- Event Handlers --
 --------------------
+create or replace function restaurant_locations_is_default_change()
+returns trigger as $$
+begin
+  update restaurant_locations
+    set is_default = false
+    where restaurant_id = NEW.restaurant_id;
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function on_order_create()
 returns trigger as $$
 begin

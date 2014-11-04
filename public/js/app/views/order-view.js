@@ -124,6 +124,11 @@ define(function(require, exports, module) {
       this.setModel((this.model) ? this.model : new Order());
     },
 
+    updateGuests: function(e) {
+      var $el = $(e.target);
+      this.model.set('guests', $el.val());
+    },
+
     // set the model and add listeners here
     setModel: function(model) {
       if (this.model) this.stopListening(this.model);

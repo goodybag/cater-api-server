@@ -5,6 +5,7 @@
 
 define(function(require, exports, module) {
   var Backbone = require('backbone');
+  var Handlebars = require('handlebars');
   var utils = require('utils');
 
   return module.exports = Backbone.View.extend({
@@ -13,8 +14,15 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
+      this.options.order.on('change:guests', this.updatePrice.bind(this));
     },
 
+    updatePrice: function() {
+      var guests = this.options.order.get('guests');
+      var price = this.model.get('price');
+
+      // Update pricing to guests*price
+    },
     updateSummary: function(e){
       var $el = $(e.target);
       var checked = $el.is(':checked');

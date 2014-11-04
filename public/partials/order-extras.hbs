@@ -3,13 +3,7 @@
   <p>
     {{#each order.restaurant.amenities}}
     {{#if enabled}}
-    <div class="amenity" data-amenity-id="{{id}}">
-      <input
-        type="checkbox"
-        value="{{price}}"
-        {{#if checked}}checked{{/if}}> {{name}} {{#if description}}- {{description}}{{/if}}
-        ({{surcharge price}})
-    </div>
+      {{> order_amenity }}
     {{/if}}
     {{/each}}
   </p>

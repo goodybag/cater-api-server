@@ -22,6 +22,7 @@ define(function(require, exports, module) {
       'change #payment-method-id':                    'onPaymentMethodIdChange',
       'submit #order-form':                           'submit',
       'submit #select-address-form':                  'selectAddress',
+      'keyup #order-guests': 'updateGuests',
       'input input[name="card_number"]':              'onCardNumberChange'
     }),
 

@@ -484,6 +484,10 @@ define(function(require, exports, module) {
       return (+value) + (+addition);
     },
 
+    multiply: function(a, b) {
+      return a * b;
+    },
+
     commatize: function( x, options ){
       if ( !x && x != 0 ) return;
 

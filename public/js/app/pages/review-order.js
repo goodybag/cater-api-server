@@ -20,6 +20,7 @@ define( function( require ){
       , review_token: query.review_token
       , validate: !isAdmin
       , amenities: []
+      , step: 1
       });
 
       orderItems = utils.map(orderItems, function(orderItem) {

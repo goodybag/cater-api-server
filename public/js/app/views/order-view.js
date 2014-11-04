@@ -34,6 +34,8 @@ define(function(require, exports, module) {
       });
     },
 
+    step: 1,
+
     fieldMap: {
       datetime: '.order-datetime',
       guests: '#order-guests',
@@ -149,7 +151,7 @@ define(function(require, exports, module) {
 
     onPriceChange: function(model, value, options) {
       var updatedOrder = _.extend(this.model.toJSON(), this.getDiff());
-      this.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder}));
+      this.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder, step: this.step }));
     },
 
     setItems: function(items) {

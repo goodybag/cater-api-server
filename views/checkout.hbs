@@ -95,9 +95,12 @@
             </div>
           </div>
 
+          {{#if order.restaurant.amenities}}
           <div class="list-group-item amenities clearfix">
             {{> order_extras }}
           </div>
+          {{/if}}
+
           {{> order_delivery_info}}
 
           {{#unless user.name}}

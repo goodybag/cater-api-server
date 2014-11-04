@@ -19,6 +19,7 @@ define( function( require ){
       , model: order
       , review_token: query.review_token
       , validate: !isAdmin
+      , amenities: []
       });
 
       orderItems = utils.map(orderItems, function(orderItem) {

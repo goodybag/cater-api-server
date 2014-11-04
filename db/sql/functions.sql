@@ -16,7 +16,7 @@ create or replace function on_order_create()
 returns trigger as $$
 begin
   if ( NEW.restaurant_location_id is null ) then
-    set_order_default_location( NEW );
+    perform set_order_default_location( NEW );
   end if;
   return NEW;
 end;
@@ -163,8 +163,8 @@ begin
   if o.type = 'courier' then
     return coalesce(
       (select dsz.price from delivery_service_zips dsz
-      left join restaurants rs on rs.id = o.restaurant_id
-      where dsz."from" = rs.zip
+      left join restaurant_locations rl on rl.id = o.restaurant_location_id
+      where dsz."from" = rl.zip
         and dsz."to" = o.zip
       limit 1)
     , default_fee
@@ -425,4 +425,5 @@ begin
         where rl.restaurant_id = orders.id
           and rl.is_default = true
     );
+end;
 $$ language plpgsql;

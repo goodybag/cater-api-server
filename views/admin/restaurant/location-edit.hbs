@@ -22,7 +22,7 @@
       <li>New</li>
     </ul>
 
-    <h1>Create Location</h1>
+    <h1>Edit Location - {{restaurant_location.name}}</h1>
   </div>
 {{/extend}}
 
@@ -33,7 +33,7 @@
 {{#extend "body"}}
 <h2>Basic Info</h2>
 
-<form id="create-item-form"
+<form id="edit-item-form"
   action="{{sidebarNav.baseUrl}}"
   method="POST"
   class="form ap-form form-vertical">
@@ -46,7 +46,7 @@
 <script>
   require( ['item-form'], function( form ){
     form.on('item:saved', function( model ){
-      window.location.href = '{{sidebarNav.baseUrl}}/locations/' + model.get('id');
+      console.log('saved!');
     });
   });
 </script>

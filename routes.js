@@ -457,10 +457,10 @@ module.exports.register = function(app) {
 
     app.get('/admin/restaurants/:id/locations'
     , m.param('id')
-    , m.sort('+name')
     , m.queryOptions({
         one:  [{ table: 'regions', alias: 'region' }]
       , many: [{ table: 'restaurant_locations', alias: 'locations' }]
+      , sort: [ 'is_default', 'name asc']
       })
     , m.viewPlugin( 'sidebarNav', {
         active:   'locations'
@@ -478,6 +478,7 @@ module.exports.register = function(app) {
     , m.queryOptions({
         one:  [{ table: 'regions', alias: 'region' }]
       })
+    , m.states()
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'locations'
@@ -486,7 +487,7 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'itemForm', {
         selector:           '#create-item-form'
       , collection:         'app/collections/restaurant-locations'
-      , collectionOptions:  { restaurant_id: ':restaurant_id' }
+      , collectionOptions:  { restaurant_id: ':id' }
       })
     , m.view( 'admin/restaurant/location-new', db.restaurants, {
         layout: 'admin/layout-single-object'
@@ -497,12 +498,12 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants/:restaurant_id/locations/:id'
     , m.param('restaurant_id')
     , m.param('id')
-    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.states()
     , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'locations'
-      , baseUrl:  '/admin/restaurants/:restaurant_id/locations'
+      , baseUrl:  '/admin/restaurants/:restaurant_id'
       })
     , m.viewPlugin( 'breadCrumbs', {
         currentPage: 'basic-info'
@@ -513,6 +514,9 @@ module.exports.register = function(app) {
       , localModelProp:     'restaurant_location'
       , collectionOptions:  { restaurant_id: ':restaurant_id' }
       })
+    , function( req, res, next ){
+        return m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
+      }
     , m.view( 'admin/restaurant/location-edit', db.restaurant_locations, {
         layout: 'admin/layout-single-object'
       , method: 'findOne'

@@ -6,7 +6,8 @@ returns trigger as $$
 begin
   update restaurant_locations
     set is_default = false
-    where restaurant_id = NEW.restaurant_id;
+    where restaurant_id = NEW.restaurant_id
+      and id != NEW.id;
   return NEW;
 end;
 $$ language plpgsql;

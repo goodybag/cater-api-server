@@ -41,6 +41,7 @@
       <tr>
         <th>ID</th>
         <th>Name</th>
+        <th>Default</th>
         <th></th>
       </tr>
     </thead>
@@ -49,8 +50,9 @@
       <tr>
         <td>{{this.id}}</td>
         <td>
-          <a href="/admin/restaurants/{{restaurant.id}}/locations/{{this.id}}">{{this.name}}</a>
+          <a href="/admin/restaurants/{{../restaurant.id}}/locations/{{this.id}}">{{this.name}}</a>
         </td>
+        <td>{{#if this.is_default}}X{{/if}}</td>
         <td class="actions">
           <button class="btn btn-small btn-default btn-delete" data-id="{{this.id}}">X</button>
         </td>

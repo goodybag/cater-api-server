@@ -459,8 +459,10 @@ module.exports.register = function(app) {
     , m.param('id')
     , m.queryOptions({
         one:    [{ table: 'regions', alias: 'region' }]
-      , many:   [{ table: 'restaurant_locations', alias: 'locations' }]
-      , order:  [ 'is_default desc', 'name asc' ]
+      , many:   [ { table: 'restaurant_locations', alias: 'locations'
+                  , order: [ 'is_default desc', 'name asc' ]
+                  }
+                ]
       })
     , m.viewPlugin( 'sidebarNav', {
         active:   'locations'

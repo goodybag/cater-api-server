@@ -1,22 +1,53 @@
 <section style="text-align: left; margin: 0 20px; font-family: Helvetica, Arial, sans-serif; line-height: 24px">
   <h2>Goodybag Order #{{order.id}} is scheduled for delivery.</h2>
-  <p>
-    <div><strong style="display: inline-block; width: 180px">Pickup Order By</strong>: {{datepart order.pickup_datetime}} {{timepart order.pickup_datetime}}</div>
-    <div><span style="display: inline-block; width: 180px">Pickup Order From</span>: {{order.restaurant.name}} - {{order.location.name}}<br>{{> plain_address order.location}}</div>
-  </p>
+  <table cellpadding="4" cellspacing="0">
+    <tbody>
+      <tr>
+        <td style="width: 180px; font-weight: 700">Pickup Order By</td>
+        <td>{{datepart order.pickup_datetime}} {{timepart order.pickup_datetime}}</td>
+      </tr>
+      <tr>
+        <td>Pickup Order From</td>
+        <td>{{order.restaurant.name}} - {{order.location.name}}<br>{{> plain_address order.location}}</td>
+      </tr>
 
-  <p>
-    <div><strong style="display: inline-block; width: 180px">Deliver Order By</strong>: {{datepart order.datetime}} {{timepart order.datetime}}</div>
-    <div><span style="display: inline-block; width: 180px">Deliver Order To</span>: {{#if order.user.organization}}{{order.user.organization}}{{else}}Contact Goodybag{{/if}}</div>
-    <div><span style="display: inline-block; width: 180px">Contact</span>: {{order.user.name}} {{phoneNumber order.phone}}</div>
-    <div><span style="display: inline-block; width: 180px">Office Address</span>: {{> plain_address order}}</div>
-    <div><span style="display: inline-block; width: 180px">Head Count</span>: {{order.guests}}</div>
-    {{#if order.delivery_instructions}}
-    <div><strong style="display: inline-block; width: 180px">Delivery instructions</strong>: "{{order.delivery_instructions}}"</div>
-    {{/if}}
-  </p>
+      <tr><td colspan="2" style="height: 20px"></td></tr>
 
-  <p><span style="display: inline-block; width: 180px">Order subtotal</span>: ${{dollars order.sub_total}}</p>
+      <tr>
+        <td style="font-weight: 700">Deliver Order By</td>
+        <td>{{datepart order.datetime}} {{timepart order.datetime}}</td>
+      </tr>
+      <tr>
+        <td>Deliver Order To</td>
+        <td>{{#if order.user.organization}}{{order.user.organization}}{{else}}Contact Goodybag{{/if}}</td>
+      </tr>
+      <tr>
+        <td>Contact</td>
+        <td>{{order.user.name}} {{phoneNumber order.phone}}</td>
+      </tr>
+      <tr>
+        <td>Office Address</td>
+        <td>{{> plain_address order}}</td>
+      </tr>
+      <tr>
+        <td>Head Count</td>
+        <td>{{order.guests}}</td>
+      </tr>
+      {{#if order.delivery_instructions}}
+      <tr>
+        <td style="font-weight: 700">Delivery instructions</td>
+        <td>"{{order.delivery_instructions}}"</td>
+      </tr>
+      {{/if}}
+
+      <tr><td colspan="2" style="height: 20px"></td></tr>
+
+      <tr>
+        <td>Order subtotal</td>
+        <td>${{dollars order.sub_total}}</td>
+      </tr>
+    </tbody>
+  </table>
 
   <p>Contact Goodybag for any issues or questions at: {{phoneNumber config.phone.support}} or {{{mailto config.emails.orders}}}</p>
 

@@ -1,6 +1,11 @@
 /**
  * Handles changes to order amenities like adding
  * plates, napkins, utensils and updating total summary.
+ *
+ * Feature Checklist
+ * 1. Changing guests will recalculate amenity item-price
+ * 2. Toggle amenity in the item summary
+ * 3. Update total
  */
 
 define(function(require, exports, module) {
@@ -15,6 +20,7 @@ define(function(require, exports, module) {
 
     initialize: function() {
       this.options.order.on('change:guests', this.updateQuantity.bind(this));
+
       this.model.on('change:quantity', this.updatePrice.bind(this));
       this.model.on('change:quantity', this.updateSummaryItem.bind(this));
 
@@ -32,6 +38,7 @@ define(function(require, exports, module) {
 
     updatePrice: function() {
       this.$price.text('(' + Handlebars.helpers.surcharge(this.model.getTotalPrice()) + ')');
+      return this;
     },
 
     updateSummaryItem: function(){
@@ -42,7 +49,7 @@ define(function(require, exports, module) {
       // 1. Update order items
       this.$summaryItem
       .find('.item-price')
-      .text('(' + Handlebars.helpers.surcharge(price) + ')');
+      .text(Handlebars.helpers.surcharge(price));
 
       // 2. Update totals
       this.options.order.set({
@@ -93,8 +100,8 @@ define(function(require, exports, module) {
 
     onToggle: function() {
       return this
-        .toggleSummaryItem()
-        .updateSummaryItem() // these should not live here
+        // .toggleSummaryItem()
+        // .updateSummaryItem() // these should not live here
         .update();
     },
 

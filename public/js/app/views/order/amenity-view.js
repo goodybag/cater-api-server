@@ -18,6 +18,8 @@ define(function(require, exports, module) {
       this.model.on('change:quantity', this.updatePrice.bind(this));
       this.model.on('change:quantity', this.updateSummaryItem.bind(this));
 
+      this.listenTo(this.model, 'change:checked', this.onToggle.bind(this));
+
       this.$price = this.$el.find('.amenity-price');
       this.$summaryItem = this.options.orderView.$el
         .find('.order-table [data-amenity-id="' + this.model.id + '"]');
@@ -32,9 +34,8 @@ define(function(require, exports, module) {
       this.$price.text('(' + Handlebars.helpers.surcharge(this.model.getTotalPrice()) + ')');
     },
 
-    updateSummaryItem: function(e){
-      var $el = $(e.target);
-      var checked = $el.is(':checked');
+    updateSummaryItem: function(){
+      var checked = this.model.get('checked');
       var price = this.model.getTotalPrice();
       var delta = (checked ? 1 : -1 ) * price;
 
@@ -52,11 +53,10 @@ define(function(require, exports, module) {
       return this;
     },
 
-    update: function (e) {
+    update: function () {
       // crappy placeholder
-      var $el = $(e.target);
       var orderId = this.options.order.id;
-      var add = $el.is(':checked');
+      var add = this.model.get('checked');
       if ( add ) {
         var url = '/api/orders/' + orderId + '/amenities';
         $.ajax({
@@ -86,17 +86,20 @@ define(function(require, exports, module) {
       return this;
     },
 
-    toggleSummaryItem: function(e) {
+    toggleSummaryItem: function() {
       this.$summaryItem.toggleClass('hide');
       return this;
     },
 
-    onAmenityToggle: function (e){
-      // Toggle summary item
+    onToggle: function() {
       return this
-        .toggleSummaryItem(e)
-        .updateSummaryItem(e) // these should not live here
-        .update(e);
+        .toggleSummaryItem()
+        .updateSummaryItem() // these should not live here
+        .update();
+    },
+
+    onAmenityToggle: function (e){
+      this.model.set('checked', !this.model.get('checked'));
     }
   });
 });

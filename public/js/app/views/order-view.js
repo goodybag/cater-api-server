@@ -108,7 +108,7 @@ define(function(require, exports, module) {
         var selector = '[data-amenity-id="' + amenity.id + '"]';
         return new AmenityView({
           el: selector
-        , model: new Amenity(amenity)
+        , model: new Amenity(utils.extend({ quantity: this.model.get('guests') }, amenity))
         , order: this.model
         , orderView: this
         });

@@ -27,7 +27,7 @@ define(function(require, exports, module) {
     },
 
     getTotalPrice: function() {
-      if ( this.get('quantity') ) {
+      if ( this.get('scale') === 'multiply' && this.get('quantity') ) {
         return this.get('quantity') * this.get('price');
       } else {
         return this.get('price');

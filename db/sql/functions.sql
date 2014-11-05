@@ -419,7 +419,6 @@ $$ language plpgsql;
 
 create or replace function set_order_default_location( o orders )
 returns void as $$
-  declare o orders;
 begin
   update orders
     set restaurant_location_id = (

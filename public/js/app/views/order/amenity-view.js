@@ -14,30 +14,39 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
-      this.options.order.on('change:guests', this.updatePrice.bind(this));
+      this.options.order.on('change:guests', this.updateQuantity.bind(this));
+      this.model.on('change:quantity', this.updatePrice.bind(this));
+      this.model.on('change:quantity', this.updateSummaryItem.bind(this));
+
       this.$price = this.$el.find('.amenity-price');
+      this.$summaryItem = this.options.orderView.$el
+        .find('.order-table [data-amenity-id="' + this.model.id + '"]');
+    },
+
+    updateQuantity: function() {
+      // Cache local quantity per amenity
+      this.model.set('quantity', this.options.order.get('guests'));
     },
 
     updatePrice: function() {
-      var guests = this.options.order.get('guests');
-      var price = this.model.get('price');
-      this.$price.text('(' + Handlebars.helpers.surcharge(guests*price) + ')');
+      this.$price.text('(' + Handlebars.helpers.surcharge(this.model.getTotalPrice()) + ')');
     },
 
-    updateSummary: function(e){
+    updateSummaryItem: function(e){
       var $el = $(e.target);
       var checked = $el.is(':checked');
-      var price = (checked ? 1 : -1 ) * parseInt($el.val());
+      var price = this.model.getTotalPrice();
+      var delta = (checked ? 1 : -1 ) * price;
 
       // 1. Update order items
-      this.options.orderView.$el
-      .find('.order-table [data-amenity-id="' + this.model.id + '"]')
-      .toggleClass('hide');
+      this.$summaryItem
+      .find('.item-price')
+      .text('(' + Handlebars.helpers.surcharge(price) + ')');
 
       // 2. Update totals
       this.options.order.set({
-        total: this.options.order.get('total') + price
-      , sub_total: this.options.order.get('sub_total') + price
+        total: this.options.order.get('total') + delta
+      , sub_total: this.options.order.get('sub_total') + delta
       });
 
       return this;
@@ -77,9 +86,16 @@ define(function(require, exports, module) {
       return this;
     },
 
+    toggleSummaryItem: function(e) {
+      this.$summaryItem.toggleClass('hide');
+      return this;
+    },
+
     onAmenityToggle: function (e){
+      // Toggle summary item
       return this
-        .updateSummary(e)
+        .toggleSummaryItem(e)
+        .updateSummaryItem(e) // these should not live here
         .update(e);
     }
   });

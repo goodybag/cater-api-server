@@ -427,7 +427,6 @@
     page.init({
       order: new Models.Order( {{{json order}}} )
     , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
-    , amenities: new Amenities( {{{json order.restaurant.amenities }}} )
     });
   });
 </script>

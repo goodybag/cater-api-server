@@ -9,6 +9,7 @@ define(function(require, exports, module) {
   var OrderAddressView = require('./order-address-view');
   var CopyErrorModalView = require('./copy-error-modal');
   var AmenityView = require('app/views/order/amenity-view');
+  var Amenity = require('app/models/amenity');
   var TipView = require('./tip-view');
   var helpers = require('hb-helpers');
 
@@ -103,11 +104,11 @@ define(function(require, exports, module) {
     initialize: function(options) {
 
       // Attach amenity views
-      this.amenitiesViews = this.options.amenities.map(function(amenity) {
+      this.amenitiesViews = this.model.restaurant.attributes.amenities.map(function(amenity) {
         var selector = '[data-amenity-id="' + amenity.id + '"]';
         return new AmenityView({
           el: selector
-        , model: amenity
+        , model: new Amenity(amenity)
         , order: this.model
         , orderView: this
         });

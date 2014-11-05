@@ -26,6 +26,14 @@ define(function(require, exports, module) {
       }
     },
 
+    getTotalPrice: function() {
+      if ( this.get('quantity') ) {
+        return this.get('quantity') * this.get('price');
+      } else {
+        return this.get('price');
+      }
+    },
+
     urlRoot: '/api/amenities',
 
     validator: amanda('json'),

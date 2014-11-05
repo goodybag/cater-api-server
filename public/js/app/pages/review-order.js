@@ -19,7 +19,6 @@ define( function( require ){
       , model: order
       , review_token: query.review_token
       , validate: !isAdmin
-      , amenities: []
       , step: 1
       });
 

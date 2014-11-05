@@ -294,7 +294,6 @@
         marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
       , user: new Models.User({{{json user}}})
       , order: new Models.Order({{{json order}}})
-      , amenities: new Amenities({{{json order.restaurant.amenities}}})
       });
     }
   );

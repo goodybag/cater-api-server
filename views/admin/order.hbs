@@ -7,7 +7,7 @@
       <select name="restaurant_location_id" id="order-restaurant_location_id" class="form-control">
       {{#each order.restaurant.locations}}
         <option value="{{this.id}}"
-        {{~#eq ../order.restaurant_location_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
+        {{~#eq ../order.restaurant_location_id this.id}} selected="true"{{/eq}}>Location: {{this.name}}</option>
       {{/each}}
       </select>
     </div>

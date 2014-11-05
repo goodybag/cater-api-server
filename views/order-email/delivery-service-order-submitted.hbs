@@ -2,7 +2,7 @@
   <h2>Goodybag Order #{{order.id}} is scheduled for delivery.</h2>
   <p>
     <div><strong style="display: inline-block; width: 180px">Pickup Order By</strong>: {{datepart order.pickup_datetime}} {{timepart order.pickup_datetime}}</div>
-    <div><span style="display: inline-block; width: 180px">Pickup Order From</span>: {{order.restaurant.name}} - {{> plain_address order.restaurant}}</div>
+    <div><span style="display: inline-block; width: 180px">Pickup Order From</span>: {{order.restaurant.name}} - {{order.location.name}}<br>{{> plain_address order.location}}</div>
   </p>
 
   <p>

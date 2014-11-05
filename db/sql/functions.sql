@@ -213,9 +213,11 @@ begin
     where orders.id = o.id
   );
 
+  tax_rate := coalesce( tax_rate, 0 );
+
   tax_exempt := (select is_tax_exempt from users where users.id = o.user_id);
 
-  delivery_fee := get_order_delivery_fee( o );
+  delivery_fee := coalesce( get_order_delivery_fee( o ), 0 );
 
   for order_item in (
     select * from order_items where order_id = o.id
@@ -422,8 +424,9 @@ begin
   update orders
     set restaurant_location_id = (
       select id from restaurant_locations rl
-        where rl.restaurant_id = orders.id
+        where rl.restaurant_id = orders.restaurant_id
           and rl.is_default = true
-    );
+    )
+    where orders.id = o.id;
 end;
 $$ language plpgsql;

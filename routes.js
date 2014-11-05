@@ -1370,8 +1370,10 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.queryOptions({
-      one:  [ { table: 'restaurants', alias: 'restaurant' }
+      one:  [ { table: 'restaurants', alias: 'restaurant'
+              , many: [{ table: 'restaurant_locations', alias: 'locations' }] }
             , { table: 'users', alias: 'user' }
+            , { table: 'restaurant_locations', alias: 'location' }
             ]
     , many: [{ table: 'order_items', alias: 'items' }]
     })

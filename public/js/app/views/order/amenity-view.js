@@ -15,14 +15,15 @@ define(function(require, exports, module) {
 
     initialize: function() {
       this.options.order.on('change:guests', this.updatePrice.bind(this));
+      this.$price = this.$el.find('.amenity-price');
     },
 
     updatePrice: function() {
       var guests = this.options.order.get('guests');
       var price = this.model.get('price');
-
-      // Update pricing to guests*price
+      this.$price.text('(' + Handlebars.helpers.surcharge(guests*price) + ')');
     },
+
     updateSummary: function(e){
       var $el = $(e.target);
       var checked = $el.is(':checked');

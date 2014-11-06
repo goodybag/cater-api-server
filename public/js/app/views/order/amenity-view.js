@@ -22,13 +22,10 @@ define(function(require, exports, module) {
       this.options.order.on('change:guests', this.updateQuantity.bind(this));
 
       this.model.on('change:quantity', this.updatePrice.bind(this));
-      this.model.on('change:quantity', this.updateSummaryItem.bind(this));
 
       this.listenTo(this.model, 'change:checked', this.onToggle.bind(this));
 
       this.$price = this.$el.find('.amenity-price');
-      this.$summaryItem = this.options.orderView.$el
-        .find('.order-table [data-amenity-id="' + this.model.id + '"]');
     },
 
     updateQuantity: function() {
@@ -38,25 +35,6 @@ define(function(require, exports, module) {
 
     updatePrice: function() {
       this.$price.text('(' + Handlebars.helpers.surcharge(this.model.getTotalPrice()) + ')');
-      return this;
-    },
-
-    updateSummaryItem: function(){
-      var checked = this.model.get('checked');
-      var price = this.model.getTotalPrice();
-      var delta = (checked ? 1 : -1 ) * price;
-
-      // 1. Update order items
-      this.$summaryItem
-      .find('.item-price')
-      .text(Handlebars.helpers.surcharge(price));
-
-      // 2. Update totals
-      this.options.order.set({
-        total: this.options.order.get('total') + delta
-      , sub_total: this.options.order.get('sub_total') + delta
-      });
-
       return this;
     },
 
@@ -93,16 +71,8 @@ define(function(require, exports, module) {
       return this;
     },
 
-    toggleSummaryItem: function() {
-      this.$summaryItem.toggleClass('hide');
-      return this;
-    },
-
     onToggle: function() {
-      return this
-        // .toggleSummaryItem()
-        // .updateSummaryItem() // these should not live here
-        .update();
+      return this.update();
     },
 
     onAmenityToggle: function (e){

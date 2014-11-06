@@ -103,6 +103,7 @@ define(function(require, exports, module) {
 
     initialize: function(options) {
       var this_ = this;
+
       // Attach amenity views
       this.amenitiesViews = this.model.restaurant.attributes.amenities.map(function(amenity) {
         var selector = '[data-amenity-id="' + amenity.id + '"]';
@@ -110,6 +111,9 @@ define(function(require, exports, module) {
 
         this_.listenTo(model, 'change:quantity', this_.updateAmenity);
         this_.listenTo(model, 'change:checked', this_.toggleAmenity);
+
+        this_.listenTo(model, 'change:quantity', this_.updateAmenitiesTotal);
+        this_.listenTo(model, 'change:checked', this_.updateAmenitiesTotal);
 
         return new AmenityView({
           el: selector
@@ -130,9 +134,16 @@ define(function(require, exports, module) {
       this.setModel((this.model) ? this.model : new Order());
     },
 
+    updateAmenitiesTotal: function(amenity) {
+      var total = this.amenitiesViews.reduce(function(total, view) {
+        return total += view.model.getTotalPrice();
+      }, 0);
+      this.model.set('amenities_total', total);
+    },
+
     updateAmenity: function(amenity) {
       var $el = this.$el.find('.order-summary [data-amenity-id="' + amenity.id + '"] .item-price');
-      $el.text(amenity.getTotalPrice());
+      $el.text(Handlebars.helpers.surcharge(amenity.getTotalPrice()));
     },
 
     toggleAmenity: function(amenity) {

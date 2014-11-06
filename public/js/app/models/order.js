@@ -178,6 +178,8 @@ define(function(require, exports, module) {
         this.orderItems.orderId = model.id;
       });
 
+      this.on('change:amenities_total', this.updateSubtotal);
+
       if ( this.shouldBeDeliveryService() ){
         this.set( 'type', 'courier' );
       }
@@ -250,6 +252,7 @@ define(function(require, exports, module) {
         return a + b;
       }, 0 ) || 0;
 
+      sub_total += this.get('amenities_total');
       this.set( 'sub_total', sub_total );
     },
 

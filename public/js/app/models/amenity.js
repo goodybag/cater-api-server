@@ -27,11 +27,14 @@ define(function(require, exports, module) {
     },
 
     getTotalPrice: function() {
-      if ( this.get('scale') === 'multiply' && this.get('quantity') ) {
-        return this.get('quantity') * this.get('price');
-      } else {
-        return this.get('price');
+      if ( this.get('checked') ) {
+        if ( this.get('scale') === 'multiply' && this.get('quantity') ) {
+          return this.get('quantity') * this.get('price');
+        } else {
+          return this.get('price');
+        }
       }
+      return 0;
     },
 
     urlRoot: '/api/amenities'

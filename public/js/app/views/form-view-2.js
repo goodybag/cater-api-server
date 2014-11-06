@@ -62,10 +62,8 @@ define(function(require){
   , getModelData: function(){
       var this_ = this, data = {};
 
-      // group radio elements by name
-      var radios = this.$el.find('[name]').filter('[type="radio"]:checked');
-      var others = this.$el.find('[name]').filter(':not([type="radio"])');
-      var inputs = $.merge(radios, others);
+      // Scan all named input elements (only pick checked radio inputs)
+      var inputs = this.$el.find('[name][type="radio"]:checked, [name]:not([type="radio"])');
 
       // Maybe check to see if the name is in schema?
       inputs.each( function(){

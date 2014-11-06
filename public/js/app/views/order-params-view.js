@@ -9,10 +9,12 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     events: {
-      'submit form':        'onFormSubmit'
-    , 'click .form-group':  'focusInputs'
-    , 'click .btn-search':  'onSearchClick'
-    , 'keyup input':        'onKeyUp'
+      'submit form':                'onFormSubmit'
+    , 'click .form-group':          'focusInputs'
+    , 'click .btn-search':          'onSearchClick'
+    , 'keyup input':                'onKeyUp'
+    // , 'blur [name="time-range"]':   'onTimeRangeBlur'
+    , 'focus [name="time-range"]':  'onTimeRangeFocus'
     }
 
   , template: template
@@ -24,11 +26,12 @@ define(function(require, exports, module) {
       , min: new Date()
       }).pickadate('picker');
 
-      this.timepicker = this.$el.find("input[name='time']").eq(0).pickatime({
+      window.$time = this.timepicker = this.$el.find("input[name='time']").eq(0).pickatime({
         format: 'h:i A'
       , interval: 15
       }).pickatime('picker');
 
+      this.timepicker.on( 'set', _(this.onTimePickerSet).bind(this) );
       this.timepicker.on( 'open', _(this.onTimePickerOpen).bind(this) );
     }
 
@@ -97,11 +100,28 @@ define(function(require, exports, module) {
       this.convertTimesToRanges();
     }
 
+  , onTimePickerSet: function( ctx ){
+      this.$el.find('[name="fake-time"]').val('poop');
+      console.log(ctx, this.timepicker.get());
+    }
+
   , onKeyUp: function( e ){
       // Enter they intended to submit
       if ( e.keyCode === 13 ){
         this.search();
       }
+    }
+
+  , onTimeRangeFocus: function( e ){
+    e.preventDefault();
+    console.log('open')
+      this.timepicker.$node.focus();
+      // this.timepicker.open();
+    }
+
+  , onTimeRangeBlur: function( e ){
+    console.log('close')
+      this.timepicker.close();
     }
   });
 });

@@ -352,6 +352,10 @@
   background-color: #fff;
 }
 
+.order-params-bar [name="time-range"] {
+  position: absolute;
+}
+
 @media ( max-width: 768px ){
   .order-params-bar,
   .order-params-bar .form-inline {

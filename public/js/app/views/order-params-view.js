@@ -13,8 +13,6 @@ define(function(require, exports, module) {
     , 'click .form-group':          'focusInputs'
     , 'click .btn-search':          'onSearchClick'
     , 'keyup input':                'onKeyUp'
-    // , 'blur [name="time-range"]':   'onTimeRangeBlur'
-    , 'focus [name="time-range"]':  'onTimeRangeFocus'
     }
 
   , template: template

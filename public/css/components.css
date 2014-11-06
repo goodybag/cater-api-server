@@ -802,7 +802,7 @@ a.list-group-item .list-group-item-heading {
 /** Order Params Modal Overrides **/
 @media (min-width: 768px) {
   .modal-order-params > .modal-dialog {
-    width: 586px;
+    width: 614px;
   }
 }
 

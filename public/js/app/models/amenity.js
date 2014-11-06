@@ -4,8 +4,9 @@
 define(function(require, exports, module) {
   var amanda = require('amanda');
   var utils = require('utils');
+  var BaseModel = require('app/models/base');
 
-  var Amenity = module.exports = Backbone.Model.extend({
+  var Amenity = module.exports = BaseModel.extend({
     schema: {
       type: 'object',
       properties: {
@@ -34,13 +35,7 @@ define(function(require, exports, module) {
       }
     },
 
-    urlRoot: '/api/amenities',
-
-    validator: amanda('json'),
-
-    validate: function(attrs, options) {
-      return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
-    }
+    urlRoot: '/api/amenities'
   });
 
   return Amenity;

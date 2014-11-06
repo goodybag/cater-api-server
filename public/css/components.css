@@ -336,13 +336,17 @@
   width: 125px;
 }
 
+.order-params-bar .form-control.form-control-time {
+  width: 156px;
+}
+
 .order-params-bar .form-control.form-control-zip,
 .order-params-bar .form-control.form-control-guests {
   width: 100px;
 }
 
-.order-params-bar .form-group-icon.gb-icon-time {
-  margin-left: 100px
+.order-params-bar .form-group[data-icon="gb-icon-time"]:before {
+  margin-top: 8px
 }
 
 .order-params-bar .form-control[readonly],

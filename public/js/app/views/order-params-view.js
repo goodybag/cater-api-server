@@ -1,7 +1,9 @@
 define(function(require, exports, module) {
-  var Backbone = require('backbone');
-  var Handlebars = require('handlebars');
-  var utils = require('utils');
+  var Backbone    = require('backbone');
+  var Handlebars  = require('handlebars');
+  var moment      = require('moment');
+  var config      = require('config');
+  var utils       = require('utils');
 
   var template = Handlebars.partials.order_params_bar;
 
@@ -62,6 +64,25 @@ define(function(require, exports, module) {
       this.trigger('params:submit');
     }
 
+  , scrollTimeToTime: function( time ){
+      // Scroll to 8am
+      var $el = this.timepicker.$root.find('.picker__holder');
+      $el[0].scrollTop = $el.find('[data-pick="' + (60 * time) + '"]')[0].offsetTop;
+    }
+
+    /**
+     * Converts the timepicker times from regla-ass times to ranges
+     */
+  , convertTimesToRanges: function(){
+      var timeFormat = 'hh:mm A';
+
+      this.timepicker.$root.find('.picker__list-item').each( function(){
+        var $this = $(this);
+        var range = utils.timeToRange( $this.text(), timeFormat, config.deliveryTime );
+        $this.text( range.join(' - ') );
+      });
+    }
+
   , onSearchClick: function(e){
       e.preventDefault();
       this.search();
@@ -72,9 +93,8 @@ define(function(require, exports, module) {
     }
 
   , onTimePickerOpen: function (e) {
-      // Scroll to 8am
-      var $el = this.timepicker.$root.find('.picker__holder');
-      $el[0].scrollTop = $el.find('[data-pick="' + (60 * 8) + '"]')[0].offsetTop;
+      this.scrollTimeToTime(8);
+      this.convertTimesToRanges();
     }
 
   , onKeyUp: function( e ){

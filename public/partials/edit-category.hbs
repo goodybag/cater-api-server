@@ -47,12 +47,8 @@
       </div>
     </div>
   </div>
-  <hr class="panel-separator">
-  <h2>Items</h2>
-  <div class="items-list">
-  {{#each items}}
-    {{>edit_item_row}}
-  {{/each}}
+  <div class="items indent">
+    {{> admin_edit_items }}
   </div>
   <button type="button" class="btn btn-primary new-item pull-right">New Item</button>
 </form>

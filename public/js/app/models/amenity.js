@@ -4,9 +4,8 @@
 define(function(require, exports, module) {
   var amanda = require('amanda');
   var utils = require('utils');
-  var BaseModel = require('app/models/base');
 
-  var Amenity = module.exports = BaseModel.extend({
+  var Amenity = module.exports = utils.Model.extend({
     schema: {
       type: 'object',
       properties: {

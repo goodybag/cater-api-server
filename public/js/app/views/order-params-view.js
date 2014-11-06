@@ -1,16 +1,18 @@
 define(function(require, exports, module) {
-  var Backbone = require('backbone');
-  var Handlebars = require('handlebars');
-  var utils = require('utils');
+  var Backbone    = require('backbone');
+  var Handlebars  = require('handlebars');
+  var moment      = require('moment');
+  var config      = require('config');
+  var utils       = require('utils');
 
   var template = Handlebars.partials.order_params_bar;
 
   return module.exports = Backbone.View.extend({
     events: {
-      'submit form':        'onFormSubmit'
-    , 'click .form-group':  'focusInputs'
-    , 'click .btn-search':  'onSearchClick'
-    , 'keyup input':        'onKeyUp'
+      'submit form':                'onFormSubmit'
+    , 'click .form-group':          'focusInputs'
+    , 'click .btn-search':          'onSearchClick'
+    , 'keyup input':                'onKeyUp'
     }
 
   , template: template
@@ -27,6 +29,10 @@ define(function(require, exports, module) {
       , interval: 15
       }).pickatime('picker');
 
+      // Handle discrepancy between pickadates and moments formatting
+      this.timepickerMomentFormat = this.timepicker.component.settings.format.replace( /\i/g, 'mm' );
+
+      this.timepicker.on( 'set', _(this.onTimePickerSet).bind(this) );
       this.timepicker.on( 'open', _(this.onTimePickerOpen).bind(this) );
     }
 
@@ -62,6 +68,30 @@ define(function(require, exports, module) {
       this.trigger('params:submit');
     }
 
+  , scrollTimeToTime: function( time ){
+      // Scroll to 8am
+      var $el = this.timepicker.$root.find('.picker__holder');
+      $el[0].scrollTop = $el.find('[data-pick="' + (60 * time) + '"]')[0].offsetTop;
+    }
+
+    /**
+     * Converts the timepicker times from regla-ass times to ranges
+     */
+  , convertTimesToRanges: function(){
+      var timeFormat = this.timepickerMomentFormat;
+
+      this.timepicker.$root.find('.picker__list-item').each( function(){
+        var $this = $(this);
+        var range = utils.timeToRange( $this.text(), timeFormat, config.deliveryTime );
+        $this.text( range.join(' - ') );
+      });
+    }
+
+  , setTimeRangeInput: function( time, format ){
+      var range = utils.timeToRange( time, format, config.deliveryTime );
+      this.$el.find('[name="time-range"]').val( range.join(' - ') );
+    }
+
   , onSearchClick: function(e){
       e.preventDefault();
       this.search();
@@ -72,9 +102,15 @@ define(function(require, exports, module) {
     }
 
   , onTimePickerOpen: function (e) {
-      // Scroll to 8am
-      var $el = this.timepicker.$root.find('.picker__holder');
-      $el[0].scrollTop = $el.find('[data-pick="' + (60 * 8) + '"]')[0].offsetTop;
+      this.scrollTimeToTime(8);
+      this.convertTimesToRanges();
+    }
+
+  , onTimePickerSet: function( ctx ){
+      this.setTimeRangeInput(
+        this.timepicker.get()
+      , this.timepickerMomentFormat
+      );
     }
 
   , onKeyUp: function( e ){

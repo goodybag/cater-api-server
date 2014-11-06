@@ -23,8 +23,8 @@ config.defaults = {
 , deliveryTime: {
     padding: 15
   , distribution: {
-      before: [ 1, 3 ]
-    , after:  [ 2, 3 ]
+      before: [ 0, 1 ]
+    , after:  [ 1, 1 ]
     }
   }
 

@@ -20,7 +20,15 @@
         <tr data-amenity-id="{{id}}" class="{{#unless checked}}hide{{/unless}}" >
           <td class="item-name">{{name}}{{#if description}}<p>{{description}}{{/if}}</td>
           <td class="item-quantity"></td>
-          <td class="item-price">{{surcharge price}}</td>
+          <td class="item-price">
+            {{#eq scale "multiply"}}
+            {{surcharge (multiply price ../../order.guests)}}
+            {{/eq}}
+            {{#eq scale "flat"}}
+            {{surcharge price}}
+            {{/eq}}
+          </td>
+          </label>
         </tr>
         {{/each}}
       </tbody>

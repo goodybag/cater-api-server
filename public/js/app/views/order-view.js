@@ -130,14 +130,14 @@ define(function(require, exports, module) {
       this.setModel((this.model) ? this.model : new Order());
     },
 
-    updateAmenity: function( ) {
-      console.log('Update quantity');
-      console.log(arguments);
+    updateAmenity: function(amenity) {
+      var $el = this.$el.find('.order-summary [data-amenity-id="' + amenity.id + '"] .item-price');
+      $el.text(amenity.getTotalPrice());
     },
 
-    toggleAmenity: function( ) {
-      console.log('Toggle amenity');
-      console.log(arguments);
+    toggleAmenity: function(amenity) {
+      var $el = this.$el.find('.order-summary [data-amenity-id="' + amenity.id + '"]');
+      $el.toggleClass('hide');
     },
 
     updateGuests: function(e) {

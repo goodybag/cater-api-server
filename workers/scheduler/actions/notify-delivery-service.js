@@ -13,9 +13,9 @@ module.exports = function(job, done) {
 
   var orderId = job.data.orderId;
 
-  logger.info('Sending delivery service order accepted notification');
+  logger.info('Sending delivery service order submitted notification');
 
   utils.async.parallel([
-    notifier.send.bind( notifier, 'delivery-service-order-accepted', orderId )
+    notifier.send.bind( notifier, 'delivery-service-order-submitted', orderId )
   ], done );
 };

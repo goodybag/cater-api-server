@@ -109,336 +109,335 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-  app.get('/admin'
-  , m.restrict('admin')
-  , m.viewPlugin( 'mainNav', { active: 'home' })
-  , m.view( 'admin/home', { layout: 'admin/layout2' } )
-  );
+  app.before( m.restrict('admin'), function( app ){
+    app.get('/admin'
+    , m.viewPlugin( 'mainNav', { active: 'home' })
+    , m.view( 'admin/home', { layout: 'admin/layout2' } )
+    );
 
-  app.get('/admin/query-inspector'
-  , m.view( 'admin/query-inspector', { layout: 'admin/layout2' } )
-  );
+    app.get('/admin/query-inspector'
+    , m.view( 'admin/query-inspector', { layout: 'admin/layout2' } )
+    );
 
-  /**
-   * Regions
-   */
+    /**
+     * Regions
+     */
 
-  app.get('/admin/regions'
-  , m.restrict('admin')
-  , m.viewPlugin( 'mainNav', { active: 'regions' })
-  , m.sort('+name')
-  , m.view( 'admin/regions', db.regions, {
-      layout: 'admin/layout2'
-    , method: 'find'
-    , activeTab: 'regions'
-    })
-  );
+    app.get('/admin/regions'
+    , m.viewPlugin( 'mainNav', { active: 'regions' })
+    , m.sort('+name')
+    , m.view( 'admin/regions', db.regions, {
+        layout: 'admin/layout2'
+      , method: 'find'
+      , activeTab: 'regions'
+      })
+    );
 
-  /**
-   * Kitchen Sink
-   */
+    /**
+     * Kitchen Sink
+     */
 
-  app.get('/admin/kitchen-sink'
-  , m.view( 'admin/kitchen-sink', {
-      layout: 'admin/layout2'
-    })
-  );
+    app.get('/admin/kitchen-sink'
+    , m.view( 'admin/kitchen-sink', {
+        layout: 'admin/layout2'
+      })
+    );
 
-  /**
-   * Delivery Services
-   */
+    /**
+     * Delivery Services
+     */
 
-  app.get('/admin/delivery-services'
-  , m.sort('+name')
-  , m.queryOptions({
-      one: [{ table: 'regions', alias: 'region' }]
-    })
-  , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
-  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
-  , m.view( 'admin/delivery-service/list', db.delivery_services, {
-      layout: 'admin/layout2'
-    , method: 'find'
-    })
-  );
+    app.get('/admin/delivery-services'
+    , m.sort('+name')
+    , m.queryOptions({
+        one: [{ table: 'regions', alias: 'region' }]
+      })
+    , m.viewPlugin( 'collection', { path: 'app/collections/delivery-services' } )
+    , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
+    , m.view( 'admin/delivery-service/list', db.delivery_services, {
+        layout: 'admin/layout2'
+      , method: 'find'
+      })
+    );
 
-  app.get('/admin/delivery-services/new'
-  , m.db.regions.find( {}, { limit: 'all' } )
-  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
-  , m.viewPlugin( 'sidebarNav', {
-      active:   'basic-info'
-    , baseUrl:  '/admin/delivery-services'
-    , isNew:    true
-    })
-  , m.viewPlugin( 'itemForm', {
-      selector:       '#create-item-form'
-    , collection:     'app/collections/delivery-services'
-    , localModelProp: 'delivery_service'
-    })
-  , m.view( 'admin/delivery-service/new-item', {
-      layout: 'admin/layout-single-object'
-    })
-  );
+    app.get('/admin/delivery-services/new'
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/delivery-services'
+      , isNew:    true
+      })
+    , m.viewPlugin( 'itemForm', {
+        selector:       '#create-item-form'
+      , collection:     'app/collections/delivery-services'
+      , localModelProp: 'delivery_service'
+      })
+    , m.view( 'admin/delivery-service/new-item', {
+        layout: 'admin/layout-single-object'
+      })
+    );
 
-  app.get('/admin/delivery-services/:id'
-  , m.redirect('/admin/delivery-services/:id/basic-info')
-  );
+    app.get('/admin/delivery-services/:id'
+    , m.redirect('/admin/delivery-services/:id/basic-info')
+    );
 
-  app.get('/admin/delivery-services/:id/basic-info'
-  , m.param('id')
-  , m.db.regions.find( {}, { limit: 'all' } )
-  , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
-  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
-  , m.viewPlugin( 'sidebarNav', {
-      active:   'basic-info'
-    , baseUrl:  '/admin/delivery-services/:id'
-    })
-  , m.viewPlugin( 'breadCrumbs', {
-      currentPage: 'basic-info'
-    })
-  , m.viewPlugin( 'itemForm', {
-      selector:       '#edit-item-form'
-    , collection:     'app/collections/delivery-services'
-    , localModelProp: 'delivery_service'
-    })
-  , m.view( 'admin/delivery-service/basic-info', db.delivery_services, {
-      layout: 'admin/layout-single-object'
-    , method: 'findOne'
-    })
-  );
+    app.get('/admin/delivery-services/:id/basic-info'
+    , m.param('id')
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
+    , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/delivery-services/:id'
+      })
+    , m.viewPlugin( 'breadCrumbs', {
+        currentPage: 'basic-info'
+      })
+    , m.viewPlugin( 'itemForm', {
+        selector:       '#edit-item-form'
+      , collection:     'app/collections/delivery-services'
+      , localModelProp: 'delivery_service'
+      })
+    , m.view( 'admin/delivery-service/basic-info', db.delivery_services, {
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
 
-  app.get('/admin/delivery-services/:id/delivery-zips'
-  , m.param('id')
-  , m.db.regions.find( {}, { limit: 'all' } )
-  , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
-  , m.queryOptions({ many: [{ table: 'delivery_service_zips', alias: 'zips' }] })
-  , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
-  , m.viewPlugin( 'sidebarNav', {
-      active:   'delivery-zips'
-    , baseUrl:  '/admin/delivery-services/:id'
-    })
-  , m.viewPlugin( 'breadCrumbs', {
-      currentPage: 'delivery-zips'
-    })
-  , m.view( 'admin/delivery-service/delivery-zips', db.delivery_services, {
-      layout: 'admin/layout-single-object'
-    , method: 'findOne'
-    })
-  );
+    app.get('/admin/delivery-services/:id/delivery-zips'
+    , m.param('id')
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
+    , m.queryOptions({ many: [{ table: 'delivery_service_zips', alias: 'zips' }] })
+    , m.viewPlugin( 'mainNav', { active: 'delivery-services' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'delivery-zips'
+      , baseUrl:  '/admin/delivery-services/:id'
+      })
+    , m.viewPlugin( 'breadCrumbs', {
+        currentPage: 'delivery-zips'
+      })
+    , m.view( 'admin/delivery-service/delivery-zips', db.delivery_services, {
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
 
-  /**
-   * Users list
-   */
+    /**
+     * Users list
+     */
 
 
-  app.get('/admin/users'
-  , m.sort('-id')
-  , m.queryOptions({
-      one: [{ table: 'regions', alias: 'region' }]
-    })
-  , m.viewPlugin( 'mainNav', { active: 'users' })
-  , m.view( 'admin/user/list', db.users, {
-      layout: 'admin/layout2'
-    , method: 'find'
-    })
-  );
+    app.get('/admin/users'
+    , m.sort('-id')
+    , m.queryOptions({
+        one: [{ table: 'regions', alias: 'region' }]
+      })
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.view( 'admin/user/list', db.users, {
+        layout: 'admin/layout2'
+      , method: 'find'
+      })
+    );
 
-  app.get('/admin/users/new'
-  , m.param('id')
-  , m.db.regions.find( {}, { limit: 'all' } )
-  , m.viewPlugin( 'mainNav', { active: 'users' })
-  , m.view( 'admin/user/create', {
-      layout: 'admin/layout2'
-    , user: {}
-    })
-  );
+    app.get('/admin/users/new'
+    , m.param('id')
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.view( 'admin/user/create', {
+        layout: 'admin/layout2'
+      , user: {}
+      })
+    );
 
-  app.get('/admin/users/:id'
-  , m.param('id')
-  , m.queryOptions({
-      one: [{ table: 'regions', alias: 'region' }]
-    , userGroups: true
-    })
-  , m.db.regions.find( {}, { limit: 'all' } )
-  , m.viewPlugin( 'mainNav', { active: 'users' })
-  , m.view( 'admin/user/edit', db.users, {
-      layout: 'admin/layout2'
-    , method: 'findOne'
-    })
-  );
+    app.get('/admin/users/:id'
+    , m.param('id')
+    , m.queryOptions({
+        one: [{ table: 'regions', alias: 'region' }]
+      , userGroups: true
+      })
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.view( 'admin/user/edit', db.users, {
+        layout: 'admin/layout2'
+      , method: 'findOne'
+      })
+    );
 
-  /**
-   * Restaurant list
-   */
+    /**
+     * Restaurant list
+     */
 
-  app.get('/admin/restaurants'
-  , m.restrict('admin')
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.db.restaurants.find( {}, {
-      limit: 'all'
-    , order: 'name'
-    })
-  , m.view('admin/restaurant/edit-restaurants', {
-      layout: 'admin/layout-page'
-    })
-  );
+    app.get('/admin/restaurants'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.db.restaurants.find( {}, {
+        limit: 'all'
+      , order: 'name'
+      })
+    , m.view('admin/restaurant/edit-restaurants', {
+        layout: 'admin/layout-page'
+      })
+    );
 
-  /**
-   * Restaurant create
-   */
+    /**
+     * Restaurant create
+     */
 
-  app.get('/admin/restaurants/create'
-  , m.restrict('admin')
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.states()
-  , m.db.regions.find( {}, { limit: 'all' } )
-  , m.view('admin/restaurant/create', { layout: 'admin/layout-page' })
-  );
+    app.get('/admin/restaurants/create'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.states()
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.view('admin/restaurant/create', { layout: 'admin/layout-page' })
+    );
 
-  app.post('/admin/restaurants/create'
-  , m.restrict('admin')
-  , controllers.restaurants.create
-  );
+    app.post('/admin/restaurants/create'
+    , controllers.restaurants.create
+    );
 
-  /**
-   * Restaurant edit resource
-   */
+    /**
+     * Restaurant edit resource
+     */
 
-  app.get('/admin/restaurants/:id'
-  , m.restrict('admin')
-  , m.param('id')
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.defaultLocals( { active_tab: 'basic-info'} )
-  , m.db.regions.find( {}, { limit: 'all' } )
-  , m.queryOptions({
-      many: [{ table: 'contacts' }]
-    })
-  , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
-      layout: 'admin/layout-two-column'
-    , method: 'findOne'
-    })
-  );
+    app.get('/admin/restaurants/:id'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'basic-info'} )
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.queryOptions({
+        many: [{ table: 'contacts' }]
+      })
+    , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
+    );
 
-  app.put('/admin/restaurants/:rid'
-  , m.restrict('admin')
-  , controllers.restaurants.update
-  );
+    app.put('/admin/restaurants/:rid'
+    , controllers.restaurants.update
+    );
 
-  app.get('/admin/restaurants/:id/basic-info'
-  , m.restrict('admin')
-  , m.param('id')
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.defaultLocals( { active_tab: 'basic-info'} )
-  , m.db.regions.find( {}, { limit: 'all' } )
-  , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
-      layout: 'admin/layout-two-column'
-    , method: 'findOne'
-    })
-  );
+    app.get('/admin/restaurants/:id/basic-info'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'basic-info'} )
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
+    );
 
-  app.get('/admin/restaurants/:id/billing-info'
-  , m.restrict('admin')
-  , m.param('id')
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.defaultLocals( { active_tab: 'billing-info'} )
-  , m.states()
-  , m.db.regions.find( {}, { limit: 'all' } )
-  , m.queryOptions({
-      many: [{ table: 'contacts' }]
-    })
-  , m.view('admin/restaurant/edit-billing-info', db.restaurants, {
-      layout: 'admin/layout-two-column'
-    , method: 'findOne'
-    })
-  );
+    app.get('/admin/restaurants/:id/billing-info'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'billing-info'} )
+    , m.states()
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.queryOptions({
+        many: [{ table: 'contacts' }]
+      })
+    , m.view('admin/restaurant/edit-billing-info', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
+    );
 
-  app.get('/admin/restaurants/:rid/delivery-settings'
-  , m.restrict('admin')
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.defaultLocals( { active_tab: 'delivery-settings'} )
-  , m.restaurant( {param: 'rid' } )
-  , m.view('admin/restaurant/edit-delivery-settings', {
-      layout: 'admin/layout-two-column'
-    })
-  );
+    app.get('/admin/restaurants/:rid/delivery-settings'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'delivery-settings'} )
+    , m.restaurant( {param: 'rid' } )
+    , m.view('admin/restaurant/edit-delivery-settings', {
+        layout: 'admin/layout-two-column'
+      })
+    );
 
-  app.get('/admin/restaurants/:rid/hours-of-operation'
-  , m.restrict('admin')
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.defaultLocals( { active_tab: 'hours-of-operation'} )
-  , m.restaurant( {param: 'rid' } )
-  , m.view('admin/restaurant/hours-of-operation', {
-      layout: 'admin/layout-two-column'
-    })
-  );
+    app.get('/admin/restaurants/:rid/hours-of-operation'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'hours-of-operation'} )
+    , m.restaurant( {param: 'rid' } )
+    , m.view('admin/restaurant/hours-of-operation', {
+        layout: 'admin/layout-two-column'
+      })
+    );
 
-  app.get('/admin/restaurants/:rid/tags'
-  , m.restrict('admin')
-  , m.enums()
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.defaultLocals( { active_tab: 'tags'} )
-  , m.restaurant( {param: 'rid' } )
-  , m.view('admin/restaurant/edit-tags', {
-      layout: 'admin/layout-two-column'
-    })
-  );
+    app.get('/admin/restaurants/:rid/tags'
+    , m.enums()
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'tags'} )
+    , m.restaurant( {param: 'rid' } )
+    , m.view('admin/restaurant/edit-tags', {
+        layout: 'admin/layout-two-column'
+      })
+    );
 
-  app.get('/admin/restaurants/:rid/address'
-  , m.restrict('admin')
-  , m.states()
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.defaultLocals( { active_tab: 'address'} )
-  , m.restaurant( {param: 'rid' } )
-  , m.view('admin/restaurant/edit-address', {
-      layout: 'admin/layout-two-column'
-    })
-  );
+    app.get('/admin/restaurants/:rid/address'
+    , m.states()
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'address'} )
+    , m.restaurant( {param: 'rid' } )
+    , m.view('admin/restaurant/edit-address', {
+        layout: 'admin/layout-two-column'
+      })
+    );
 
-  app.get('/admin/restaurants/:restaurant_id/contacts'
-  , m.restrict(['admin'])
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.defaultLocals( { active_tab: 'contacts'} )
-  , m.param('restaurant_id')
-  , m.sort('+id')
-  , m.restaurant( { param: 'restaurant_id' } )
-  , m.view('admin/restaurant/edit-contacts', db.contacts, {
-      layout: 'admin/layout-two-column'
-    , method: 'find'
-    })
-  );
+    app.get('/admin/restaurants/:restaurant_id/contacts'
+    , m.restrict(['admin'])
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'contacts'} )
+    , m.param('restaurant_id')
+    , m.sort('+id')
+    , m.restaurant( { param: 'restaurant_id' } )
+    , m.view('admin/restaurant/edit-contacts', db.contacts, {
+        layout: 'admin/layout-two-column'
+      , method: 'find'
+      })
+    );
 
-  app.get('/admin/restaurants/:rid/menu'
-  , m.restrict('admin')
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.defaultLocals( { active_tab: 'menu'} )
-  , m.restaurant( { param: 'rid', withMenuItems: true } )
-  , m.view('admin/restaurant/edit-menu', {
-      layout: 'admin/layout-two-column'
-    })
-  );
+    app.get('/admin/restaurants/:rid/menu'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'menu'} )
+    , m.restaurant( { param: 'rid', withMenuItems: true } )
+    , m.view('admin/restaurant/edit-menu', {
+        layout: 'admin/layout-two-column'
+      })
+    );
 
-  app.get('/admin/restaurants/:restaurant_id/photos'
-  , m.restrict('admin')
-  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-  , m.defaultLocals( { active_tab: 'photos'} )
-  , m.restaurant( { param: 'restaurant_id' } )
-  , m.param('restaurant_id')
-  , m.sort('+priority')
-  , m.view('admin/restaurant/edit-photos', db.restaurant_photos, {
-      layout: 'admin/layout-two-column'
-    , method: 'find'
-    })
-  );
+    app.get('/admin/restaurants/:restaurant_id/photos'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'photos'} )
+    , m.restaurant( { param: 'restaurant_id' } )
+    , m.param('restaurant_id')
+    , m.sort('+priority')
+    , m.view('admin/restaurant/edit-photos', db.restaurant_photos, {
+        layout: 'admin/layout-two-column'
+      , method: 'find'
+      })
+    );
 
-  app.get('/admin/restaurants/:rid/sort', m.restrict('admin'), controllers.restaurants.sort);
+    app.get('/admin/restaurants/:rid/sort', controllers.restaurants.sort);
 
-  /**
-   * Restaurant copy
-   */
+    /**
+     * Restaurant copy
+     */
 
-  app.get('/admin/restaurants/:restaurant_id/copy'
-  , m.restrict('admin')
-  , controllers.restaurants.copy
-  );
+    app.get('/admin/restaurants/:restaurant_id/copy'
+    , controllers.restaurants.copy
+    );
+
+    app.get('/admin/ol-greg'
+    , m.viewPlugin( 'mainNav', { active: 'home' })
+    , m.db.restaurants.find( {}, {
+        limit:  'all'
+      , one:    [{ table: 'regions', alias: 'region' }]
+      , order:  'name asc'
+      })
+    , m.view( 'admin/ol-greg/home', {
+        layout: 'admin/layout2'
+      })
+    );
+  });
+
 
   /**
    * Restaurant items resource.  The collection of all items belonging to a restaurant.
@@ -531,27 +530,34 @@ module.exports.register = function(app) {
    *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
    */
 
-  app.get('/restaurants/:rid/orders'
-  , function(req, res, next) {
-      req.order = {};
-      if (isNaN(parseInt(req.params.rid))) return res.error(errors.internal.UNKNOWN);
-
-      if (utils.contains(req.user.attributes.groups, 'admin')){
-        req.order.isAdmin = true;
-        return next();
-      }
-
-      if (
-           utils.contains(req.user.attributes.groups, 'restaurant')
-        && utils.contains(req.user.attributes.restaurant_ids, parseInt(req.params.rid))
-      ) {
-        req.order.isRestaurantManager = true;
-        return next();
-      }
-
-      return res.error(errors.auth.NOT_ALLOWED);
+  app.get('/restaurants/:restaurant_id/orders'
+  , function( req, res, next ){
+      m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
     }
-  , controllers.restaurants.orders.list
+  , m.param('status')
+  , m.param('restaurant_id')
+  , m.sort('-id')
+  , m.queryOptions({ limit: 'all'
+    , one:  [ { table: 'users', alias: 'user' }
+            , { table: 'restaurants', alias: 'restaurant'
+              , one:  [ { table: 'delivery_services'
+                        , alias: 'delivery_service'
+                        , where: { region_id: '$restaurants.region_id$' }
+                        }
+                      ]
+              }
+            ]
+    })
+  , function( req, res, next ){
+      res.locals.status = req.param('status');
+      if ( req.param('status') == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.param('status') };
+      }
+      return next();
+    }
+  , m.view( 'restaurant-orders', db.orders, {
+      method: 'find'
+    })
   );
 
   app.post('/restaurants/:rid/orders', m.restrict(['client', 'admin']), function(req, res, next) {
@@ -652,9 +658,10 @@ module.exports.register = function(app) {
   , m.basicAuth()
   , m.restrict(['admin', 'receipts'])
   , m.getOrder2({
-      items:    true
-    , manifest: true
-    , user:     true
+      items:      true
+    , manifest:   true
+    , user:       true
+    , restaurant: true
     })
   , m.view( 'order-manifest/manifest-1', {
       layout: 'order-manifest/layout'
@@ -698,7 +705,6 @@ module.exports.register = function(app) {
   );
 
   app.put('/orders/:oid'
-  , m.restrict(['client', 'admin'])
   , m.getOrder2({
       param:              'oid'
     , items:              true
@@ -709,6 +715,7 @@ module.exports.register = function(app) {
     , deliveryService:    true
     })
   , controllers.orders.auth
+  , m.restrict(['order-owner', 'order-restaurant', 'admin'])
   , controllers.orders.update
   );
 
@@ -1342,9 +1349,18 @@ module.exports.register = function(app) {
   );
 
   app.get('/api/restaurants/:restaurant_id/orders'
+  , m.restrict(['admin'])
   , m.pagination({ allowLimit: true })
   , m.param('restaurant_id')
   , m.param('status')
+  , m.param( 'start_date', function( value, $where, options ){
+      $where.datetimeRange = $where.datetimeRange || { datetime: {} };
+      $where.datetimeRange.datetime.$gte = value;
+    })
+  , m.param( 'end_date', function( value, $where, options ){
+      $where.datetimeRange = $where.datetimeRange || { datetime: {} };
+      $where.datetimeRange.datetime.$lt = value;
+    })
   , m.queryOptions({
       one:  [{ table: 'restaurants', alias: 'restaurant' }]
     , many: [{ table: 'order_items', alias: 'items' }]
@@ -1387,7 +1403,19 @@ module.exports.register = function(app) {
   app.post('/api/restaurants/:restaurant_id/payment-summaries'
     // Ensure restaurant ID in the URL is what is in the body
   , m.queryToBody('restaurant_id')
-  , m.insert( db.payment_summaries )
+  , function( req, res, next ){
+      m.db.payment_summaries.insert( req.body )( req, res, next );
+    }
+  , m.after( function( req, res, next ){
+      venter.emit(
+        'payment-summary:change'
+      , res.locals.payment_summary.id
+      , req.param('restaurant_id')
+      );
+
+      next();
+    })
+  , m.jsonLocals('payment_summary')
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries/:id'
@@ -1548,15 +1576,36 @@ module.exports.register = function(app) {
   app.put('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.queryOptions({
+      returning: ['*', {
+        type: 'select'
+      , table: 'orders'
+      , columns: ['type']
+      , alias: 'old_type'
+      , where: { id: '$orders.id$' }
+      }]
+    })
   , m.after( function( req, res, next ){
       if ( res.statusCode >= 300 || res.statusCode < 200 ){
         return next();
       }
 
       venter.emit( 'order:change', req.param('id') );
+
       next();
     })
-  , m.update( db.orders )
+  , m.update( db.orders, {
+      callback: function(err, orders) {
+        var orderTypeChanged = orders &&
+                               orders[0] &&
+                               orders[0].type !== orders[0].old_type;
+
+        if ( orderTypeChanged ){
+          var order = orders[0];
+          venter.emit('order:type:change', order.type, order.old_type, order);
+        }
+      }
+    })
   );
 
   app.del('/api/orders/:id'

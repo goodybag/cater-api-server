@@ -20,6 +20,14 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, deliveryTime: {
+    padding: 15
+  , distribution: {
+      before: [ 0, 1 ]
+    , after:  [ 1, 1 ]
+    }
+  }
+
 , emailProvider: 'mandrill'
 
 , tmpDir: './tmp'
@@ -62,6 +70,8 @@ config.defaults = {
 , googleAnalytics: 'UA-23372459-4'
 
 , rewardsStartDate: '2014-03-25 00:00:00'
+
+, paymentFailedStartDate: '2014-10-20 00:00:00'
 
 // temp solution, would be better in a table
 // , rewardsPromos: [
@@ -174,6 +184,7 @@ config.defaults = {
 , scheduler: {
     cron: '*/10 * * * * *'
   , start: true
+  , limit: 4 // max # of parallel jobs
   }
 
 , outputActivePoolIds: false
@@ -206,6 +217,7 @@ config.defaults = {
 
 , emails: {
     support: 'support@goodybag.com'
+  , tech: [ local.testEmail || 'test@goodybag.com' ]
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
@@ -265,7 +277,7 @@ config.defaults = {
 , defaultLogo: 'https://www.filepicker.io/api/file/jLhugLRSQAJVdUe88acg'
 , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
 
-, enums: ['Tag', 'MealType', 'MealStyle']
+, enums: ['tags', 'meal_types', 'meal_styles', 'cuisines']
 };
 
 config.dev = {
@@ -521,6 +533,11 @@ config.production = {
 
 , emails: {
     support: 'support@goodybag.com'
+  , tech: [
+      'john@goodybag.com'
+    , 'preston@goodybag.com'
+    , 'om@goodybag.com' // temp for failed cc payments
+    ]
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , onDeny: ['orders@goodybag.com', 'jag@goodybag.com']
@@ -537,6 +554,12 @@ config.production = {
   , dsOrders: [
       'sarahsouthwell@goodybag.com'
     , 'christymedlock@goodybag.com'
+
+    // temp
+    , 'jacobparker@goodybag.com'
+    , 'jag@goodybag.com'
+    , 'om@goodybag.com'
+    , 'alexlauzon@goodybag.com'
     ]
   , reminderIgnored: [
       'om@goodybag.com'

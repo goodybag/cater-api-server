@@ -58,7 +58,7 @@
     <link href="{{cdn "css/main.css"}}" rel="stylesheet">
     <link href="{{cdn (format 'dist/<%= version %>/css/components.css' pkg)}}" rel="stylesheet">
     <link href="{{cdn (format 'dist/<%= version %>/cater-tool.css' pkg)}}" rel="stylesheet">
-    <link href="{{cdn "css/theme.css"}}" rel="stylesheet">
+    <link href="{{cdn (format 'dist/<%= version %>/css/theme.css' pkg)}}" rel="stylesheet">
 
     <!--[if lte IE 9]>
     <link rel="stylesheet" href="{{cdn "css/ie-lte-9.css"}}">
@@ -189,6 +189,7 @@
     <script>
       require( ['config'], function( config ){
         config.cdn = { baseUrl: '{{{config.cdn.baseUrl}}}' };
+        config.deliveryTime = {{{json config.deliveryTime}}};
       });
     </script>
 

@@ -35,6 +35,8 @@ define(function(require, exports, module) {
       });
     },
 
+    step: 3,
+
     initialize: function() {
       OrderView.prototype.initialize.apply(this, arguments);
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
@@ -103,9 +105,8 @@ define(function(require, exports, module) {
         success: function () {
           self.changeStatus('denied');
         },
-        error: function() {
+        error: function(model, res, options) {
           if(console && console.error) console.error('Could not save reason for rejection', arguments);
-          self.changeStatus('denied');
         }
       });
     },
@@ -135,7 +136,7 @@ define(function(require, exports, module) {
 
     onPriceChange: function(model, value, options) {
       var updatedOrder = _.extend(this.model.toJSON(), this.getDiff());
-      this.$el.find('.totals').html(Handlebars.partials['totals']({order: updatedOrder}));
+      this.$el.find('.totals').html(Handlebars.partials['totals']({order: updatedOrder, step: this.step}));
     },
 
     onPhoneChange: function(model, value, options) {

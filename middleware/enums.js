@@ -1,12 +1,12 @@
-var models = require('../models');
+var db = require('../db');
 var utils = require('../utils');
 var config = require('../config');
 
 // map to parallel task
 function tableReduce(memo, table) {
   memo[table] = function(done) {
-    models[table].find({}, function(err, results) {
-      done(err, utils.invoke(results, 'toJSON'));
+    db[table].find({}, function(err, results) {
+      done(err, results);
     });
   };
   return memo;

@@ -107,6 +107,7 @@ module.exports = function(grunt) {
         , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less"
         , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
         , "public/dist/<%= pkg.version %>/admin.css":              "less/core-admin.less"
+        , "public/dist/<%= pkg.version %>/ol-greg.css":            "less/core-ol-greg.less"
         , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
         }
       }
@@ -121,6 +122,8 @@ module.exports = function(grunt) {
     , legacy: {
         files: [
           { src: 'public/css/components.css', dest: 'public/dist/<%= pkg.version %>/css/components.css' }
+        , { src: 'public/css/restaurants.css', dest: 'public/dist/<%= pkg.version %>/css/restaurants.css' }
+        , { src: 'public/css/theme.css', dest: 'public/dist/<%= pkg.version %>/css/theme.css' }
         , { expand: true, flatten: true, src: 'public/img/*.svg', dest: 'public/dist/<%= pkg.version %>/img/' }
         ]
       }
@@ -283,7 +286,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'analyze',      ['complexity'] );
   grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'react', 'requirejs'] );
-  grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'copy:legacy', 'shell:loggingServer', 'watch'] );
+  grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'copy:legacy', 'loglog', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 
   grunt.registerTask( 'deploy', [

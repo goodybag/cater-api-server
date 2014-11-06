@@ -12,7 +12,7 @@
     <dt>Delivery Date:</dt>
     <dd>{{datepart order.datetime}}</dd>
     <dt>Delivery Time:</dt>
-    <dd>{{timepart order.datetime}}</dd>
+    <dd>{{join (timeToRange (timepart order.datetime) "h:mm A") " - "}}</dd>
     {{/if}}
     <dt>Guests:</dt>
     <dd>{{order.guests}}</dd>

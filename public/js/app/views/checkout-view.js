@@ -25,6 +25,8 @@ define(function(require, exports, module) {
       'input input[name="card_number"]':              'onCardNumberChange'
     }),
 
+    step: 2,
+
     fieldMap: {
       payment_method_id: '#payment-method-id'
     , datetime: '.order-datetime'

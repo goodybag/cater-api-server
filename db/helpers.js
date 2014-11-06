@@ -9,7 +9,7 @@ var logger      = require('../lib/logger');
 var config      = require('../config');
 var PMSItem     = require('../public/js/app/models/payment-summary-item');
 
-dirac.setMoSql( mosql );
+dirac.db.setMosql( mosql );
 
 // Logging for dals
 // Leaving commented for now because it just makes logs too noisy
@@ -509,20 +509,12 @@ dirac.use( function( dirac ){
       }, utils.omit( data, ['table', 'alias', 'pivots', 'target', 'source', 'where'] ));
 
       if ( Array.isArray( main.one ) ){
-        main.one.forEach( function( t ){
-          t.qAlias = t.qAlias || (data.qAlias + 'r');
-          t.source = data.qAlias;
-        });
-
+        main.one.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
         applyOne( main.table, main );
       }
 
       if ( Array.isArray( main.many ) ){
-        main.many.forEach( function( t ){
-          t.qAlias = t.qAlias || (data.qAlias + 'r');
-          t.source = data.qAlias;
-        });
-
+        main.many.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
         applyMany( main.table, main );
       }
 
@@ -610,13 +602,26 @@ dirac.DAL = dirac.DAL.extend({
   }
 
 , insert: function( values, options, callback ){
+    // Do not attempt to insert empty values
     if ( Array.isArray( values ) && values.length === 0 ){
       if ( typeof options === 'function' ){
         callback = options;
       }
       return callback();
     }
-    return this._super( values, options, callback );
+
+    return this._super( values, options, function( error, results ){
+      if ( error ) return callback( error );
+
+      // If there was only one result, values was length 1,
+      // then it's likely they just inserted a single doc, want a single doc back
+      if ( !Array.isArray( values ) || values.length === 0 )
+      if ( results.length === 1 ){
+         results = results[0];
+      }
+
+      return callback( null, results );
+    });
   }
 });
 

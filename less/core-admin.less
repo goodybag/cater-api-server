@@ -11,6 +11,14 @@
 @import (less) "../public/components/pickadate/lib/themes/classic.time.css";
 
 @import "variables.less";
+
+// Grid
+////////////////////////////////////////////////////
+@container-width:           1300px;
+@columns:                   12;
+@gutter-width:              34px;
+@column-width: ( @container-width - ( @gutter-width * (@columns - 1) ) ) / @columns;
+
 @import "mixins.less";
 @import "animations.less";
 
@@ -24,6 +32,7 @@
 @import "buttons.less";
 
 // Components
+@import "components/indent.less";
 @import "components/table.less";
 @import "components/page-section.less";
 @import "components/footer.less";
@@ -48,6 +57,8 @@
 @import "components/list-group.less";
 @import "components/modals.less";
 @import "components/gb-dropdown.less";
+@import "components/logs.less";
+@import "components/progress-indicator.less";
 
 // Bootstrap components
 @import "../public/components/bootstrap/less/dropdowns.less";

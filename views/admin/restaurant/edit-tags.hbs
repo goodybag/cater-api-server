@@ -13,19 +13,11 @@
     </div>
 
     <div class="form-group">
-      <label class="control-label">Cuisine
-        <span class="help-block">Please enter cuisine as a comma separated list
-        of cuisine tags.</span>
-      </label>
-      <input name="cuisine" type="text" class="form-control restaurant-cuisine" value="{{array restaurant.cuisine}}" placeholder="Mexican, Korean, Amish">
-    </div>
-
-    <div class="form-group">
       <div class="row">
         <div class="col-2">
           <label class="control-label">Special Diets</label>
           <div class="restaurant-tags">
-          {{> edit_tags restaurant.tags }}
+            {{> edit_tags restaurant.tags }}
           </div>
         </div>
         <div class="col-2">
@@ -38,6 +30,12 @@
           <label class="control-label">Meal Styles</label>
           <div class="restaurant-meal-styles">
             {{> edit_meal_styles }}
+          </div>
+        </div>
+        <div class="col-2">
+          <label class="control-label">Cuisines</label>
+          <div class="restaurant-cuisines">
+            {{> edit_cuisines }}
           </div>
         </div>
       </div>

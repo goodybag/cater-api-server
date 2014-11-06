@@ -23,7 +23,7 @@
     </div>
 
     <div class="form-group" data-icon="gb-icon-time">
-      <input type="text" class="form-control" name="time-range" placeholder="delivery time" value="{{#if orderParams.time}}{{timeToRange (formatTime orderParams.time "h:mm A") "h:mm A"}}{{/if}}"/>
+      <input type="text" class="form-control" name="time-range" placeholder="delivery time" value="{{#if orderParams.time}}{{timeToRange (formatTime orderParams.time "h:mm A") "h:mm A"}}{{/if}}" disabled="true" />
       <input type="text" class="form-control" name="time" placeholder="delivery time" maxlength="8" value="{{#if orderParams}}{{formatTime orderParams.time}}{{/if}}"/>
     </div>
 

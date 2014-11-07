@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
     surcharge: function(pennies) {
       if (pennies)
-        return '$' + helpers.dollars(pennies);
+        return '$'  + helpers.dollars(pennies);
       return 'Free';
     },
 

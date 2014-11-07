@@ -252,7 +252,11 @@ begin
     join amenities on amenities.id = order_amenities.amenity_id
     where order_id = o.id
   ) loop
-    amenities_total := amenities_total + order_amenity.price;
+    if order_amenity.scale = 'multiply' then
+      amenities_total := amenities_total + (order_amenity.price * o.guests);
+    else
+      amenities_total := amenities_total + order_amenity.price;
+    end if;
   end loop;
 
   sub_total := sub_total + amenities_total;

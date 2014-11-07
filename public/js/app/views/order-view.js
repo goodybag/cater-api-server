@@ -136,7 +136,7 @@ define(function(require, exports, module) {
 
     updateAmenitiesTotal: function(amenity) {
       var total = this.amenitiesViews.reduce(function(total, view) {
-        return total += view.model.getTotalPrice();
+        return total += view.model.get('checked') ? view.model.getTotalPrice() : 0;
       }, 0);
       this.model.set('amenities_total', total);
     },

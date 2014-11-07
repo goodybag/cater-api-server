@@ -34,7 +34,10 @@ define(function(require, exports, module) {
     },
 
     updatePrice: function() {
-      this.$price.text('(' + Handlebars.helpers.surcharge(this.model.getTotalPrice()) + ')');
+      if ( this.model.get('scale') === 'multiply' )
+        this.$price.text('(' + Handlebars.helpers.surcharge(this.model.get('price')) + ' per person)');
+      else
+        this.$price.text('(' + Handlebars.helpers.surcharge(this.model.get('price')) + ')');
       return this;
     },
 

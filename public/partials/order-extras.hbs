@@ -11,7 +11,7 @@
           {{#if checked}}checked{{/if}}>
         {{name}} {{#if description}}- {{description}}{{/if}}
         {{#eq scale "multiply"}}
-        <span class="amenity-price">({{surcharge (multiply price ../../../order.guests)}})</span>
+        <span class="amenity-price">({{surcharge price}} per person)</span>
         {{/eq}}
         {{#eq scale "flat"}}
         <span class="amenity-price">({{surcharge price}})</span>

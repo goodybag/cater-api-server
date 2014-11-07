@@ -241,13 +241,17 @@
               <div class="item-name">{{name}}</div>
               {{#if description}}<p class="item-description">{{description}}</p>{{/if}}
             </td>
-            <td class="line-item-quantity" data-title="Quantity"></td>
+            <td class="line-item-quantity" data-title="Quantity">
+              {{#eq scale "multiply"}}
+              <span class="item-quantity-span order-item-field order-item-quantity">{{ ../../../order.guests}}</span>
+              {{/eq}}
+            </td>
             <td class="line-item-notes" data-title="Notes"></td>
             <td class="line-item-recipient" data-title="Recipient"></td>
             <td class="line-item-feeds" data-title="Feeds"></td>
             <td class="line-item-price" data-title="Price">
               {{#eq scale "multiply"}}
-              {{surcharge (multiply price ../../order.guests)}}
+              {{surcharge (multiply price ../../../order.guests)}}
               {{/eq}}
               {{#eq scale "flat"}}
               {{surcharge price}}

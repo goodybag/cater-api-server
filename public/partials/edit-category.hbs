@@ -1,58 +1,56 @@
 <form class="category-form">
-  <h2>Category</h2>
-  <div class="row">
-    <div class="col-details">
-      <div class="row-details">
-        <div class="col-order">
-          <label class="control-label">Order
-            <input type="number" value="{{order}}" class="form-control category-order">
-          </label>
-        </div>
-        <div class="col-name">
-          <label class="control-label">Name
-            <input type="text" value="{{name}}" class="form-control category-name">
-          </label>
-        </div>
-      </div>
-      <div class="row">
-        <label class="control-label">Description</label>
-        <textarea class="form-control category-description" rows="3">{{description}}</textarea>
-      </div>
-      <div class="row row-actions">
-        <button class="btn btn-default category-copy">Copy</button>
-        <button class="btn btn-primary category-remove">Remove</button>
-        <button type="submit" class="btn btn-save category-save">Save</button>
-      </div>
-
-    </div>{{!-- end category left col --}}
-    <div class="col-checkboxes">
-      <div class="form-group">
-        <label class="control-label">Type</label>
-        <div class="row">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" name="categoryMenus" class="category-menus" value="group" {{#contains this.menus "group"}}checked{{/contains}}>
-              Group
+  <div class="category-wrapper">
+    <h2><strong>Category</strong></h2>
+    <div class="row">
+      <div class="col-details">
+        <div class="row-details">
+          <div class="col-order">
+            <label class="control-label">Order
+              <input type="number" value="{{order}}" class="form-control category-order">
+            </label>
+          </div>
+          <div class="col-name">
+            <label class="control-label">Name
+              <input type="text" value="{{name}}" class="form-control category-name">
             </label>
           </div>
         </div>
         <div class="row">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" name="categoryMenus" class="category-menus" value="individual" {{#contains this.menus "individual"}}checked{{/contains}}>
-              Individual
-            </label>
+          <label class="control-label">Description</label>
+          <textarea class="form-control category-description" rows="3">{{description}}</textarea>
+        </div>
+        <div class="row row-actions">
+          <button class="btn btn-default category-copy">Copy</button>
+          <button class="btn btn-primary category-remove">Remove</button>
+          <button type="submit" class="btn btn-save category-save">Save</button>
+        </div>
+
+      </div>{{!-- end category left col --}}
+      <div class="col-checkboxes">
+        <div class="form-group">
+          <label class="control-label">Type</label>
+          <div class="row">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="categoryMenus" class="category-menus" value="group" {{#contains this.menus "group"}}checked{{/contains}}>
+                Group
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="categoryMenus" class="category-menus" value="individual" {{#contains this.menus "individual"}}checked{{/contains}}>
+                Individual
+              </label>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <hr class="panel-separator">
-  <h2>Items</h2>
-  <div class="items-list">
-  {{#each items}}
-    {{>edit_item_row}}
-  {{/each}}
+  <div class="items indent">
+    {{> admin_edit_items }}
   </div>
   <button type="button" class="btn btn-primary new-item pull-right">New Item</button>
 </form>

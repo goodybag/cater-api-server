@@ -7,7 +7,7 @@
     <dt>Date:</dt>
     <dd>{{#if datetime}}{{datepart datetime}}{{else}}--{{/if}}</dd>
     <dt>Time:</dt>
-    <dd>{{#if datetime}}{{timepart datetime}}{{else}}--{{/if}}</dd>
+    <dd>{{#if datetime}}{{join (timeToRange (timepart datetime) "h:mm A") " - "}}{{else}}--{{/if}}</dd>
     <dt>Guests:</dt>
     <dd>{{#if guests}}{{guests}}{{else}}--{{/if}}
       {{!-- hide the change button from shared view --}}

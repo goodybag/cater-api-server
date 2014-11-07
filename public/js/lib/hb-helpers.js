@@ -577,6 +577,10 @@ define(function(require, exports, module) {
         utils.any( rest, function( b ){ return a == b; })
           ? 'fn' : 'inverse'
       ](this);
+    },
+
+    timeToRange: function( time, format ){
+      return utils.timeToRange( time, format, config.deliveryTime );
     }
   }
 

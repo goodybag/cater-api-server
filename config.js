@@ -20,6 +20,14 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, deliveryTime: {
+    padding: 15
+  , distribution: {
+      before: [ 0, 1 ]
+    , after:  [ 1, 1 ]
+    }
+  }
+
 , emailProvider: 'mandrill'
 
 , tmpDir: './tmp'

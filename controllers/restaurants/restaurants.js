@@ -384,10 +384,16 @@ var fields = [
 module.exports.create = function(req, res) {
   var logger = req.logger.create('Controller-RestaurantsCreate');
 
+  // Normalize single quotes to apostrophe for balanced
+  var name = req.body.name.replace(/[‘’]/g, '\'');
+
   utils.balanced.Customers.create({
-    name: req.body.name
+    name: name
   }, function (error, customer) {
-    if (error) return res.error(errors.internal.UNKNOWN, error), callback(error);
+    if (error) {
+      logger.error('Unable to create restaurant in balanced', error);
+      return res.error(errors.internal.UNKNOWN, error);
+    }
 
     var values = utils.pick(req.body, fields);
     values.balanced_customer_uri = customer.uri;

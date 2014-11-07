@@ -159,7 +159,7 @@
         <td class="options"></td>
         <td class="recipient"></td>
         <td class="feeds"></td>
-        <td class="qty"></td>
+        <td class="qty">{{#eq scale "multiply"}}x{{../../../order.guests}}{{/eq}}</td>
         <td class="price">
           {{#eq scale "multiply"}}
           {{surcharge (multiply price ../../../order.guests)}}

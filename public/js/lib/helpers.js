@@ -10,6 +10,34 @@ define(function(require, exports, module) {
   var moment = require('moment');
 
   var helpers = {};
+
+  helpers.timeToRange = function( time, format, options ){
+    if ( typeof time !== 'string' ){
+      throw new Error('Invalid type for parameter `time`');
+    }
+
+    if ( typeof format !== 'string' ){
+      throw new Error('Invalid type for parameter `format`');
+    }
+
+    options = options || {};
+    options.padding = options.padding || 15;
+    options.distribution = options.distribution || {
+      before: [ 1, 3 ]
+    , after:  [ 2, 3 ]
+    };
+
+    var padding       = options.padding;
+    var distribution  = options.distribution;
+    var before = -distribution.before[0] * ( padding / distribution.before[1] );
+    var after  =  distribution.after[0]  * ( padding / distribution.after[1]  );
+
+    return [
+      moment( time, format ).add( 'minute', before ).format( format )
+    , moment( time, format ).add( 'minute', after ).format( format )
+    ];
+  };
+
   helpers.getPrice = function( $el ) {
     var val = $el.val().trim();
     return val ? Math.round(parseFloat(val) * 100) : null;

@@ -252,7 +252,7 @@ define(function(require, exports, module) {
         return a + b;
       }, 0 ) || 0;
 
-      sub_total += this.get('amenities_total');
+      sub_total += this.get('amenities_total') || 0;
       this.set( 'sub_total', sub_total );
     },
 

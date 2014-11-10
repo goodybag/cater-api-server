@@ -820,6 +820,19 @@ dirac.use( function( dirac ){
       }
     });
 
+    Object.defineProperty( order, 'dropoffLocation', {
+      get: function(){
+        var location = utils.pick( this, [
+          'street', 'street2'
+        , 'city', 'state', 'zip', 'phone'
+        ]);
+
+        location.name = this.user ? this.user.organization : null;
+
+        return location;
+      }
+    });
+
     Object.defineProperty( order, 'adjustment', {
       get: function(){
         return {

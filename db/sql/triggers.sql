@@ -46,3 +46,10 @@ create trigger restaurants_search_update
   on restaurants
   for each row
   execute procedure update_restaurant_search_vector();
+
+drop trigger if exists driver_request_response_set on order_driver_requests;
+create trigger driver_request_response_set
+  after update of response
+  on order_driver_requests
+  for each row
+  execute procedure on_driver_request_response_set();

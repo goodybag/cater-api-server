@@ -20,6 +20,12 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, googleMaps: {
+    apiKey: 'AIzaSyAMfj24xp1FDT04uyRMFd2NJsF128NBIb8'
+  , embedBaseUrl: 'https://www.google.com/maps/embed/v1/directions'
+  , searchBaseUrl: 'https://www.google.com/maps/place/'
+  }
+
 , deliveryTime: {
     padding: 15
   , distribution: {

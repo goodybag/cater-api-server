@@ -571,6 +571,51 @@ define(function(require, exports, module) {
 
     timeToRange: function( time, format ){
       return utils.timeToRange( time, format, config.deliveryTime );
+    },
+
+    mapSearch: function( location ){
+      var relevantKeys = [
+        'name', 'street', 'street2'
+      , 'city', 'state', 'zip'
+      ];
+
+      var parts = utils.chain( location )
+        .pick( relevantKeys )
+        .values()
+        .value();
+
+      return config.googleMaps.searchBaseUrl + parts.join('+');
+    },
+
+    directions: function( a, b ){
+      var locationStr = function( location ){
+        var relevantKeys = [
+          'name', 'street', 'street2'
+        , 'city', 'state', 'zip'
+        ];
+
+        var parts = utils.chain( location )
+          .pick( relevantKeys )
+          .values()
+          .value();
+
+        return parts.join(' ');
+      };
+
+      return [ '<iframe class="direction-iframe" '
+      , 'width="100%" height="450" frameborder="0" src="'
+      , config.googleMaps.embedBaseUrl
+      , utils.queryParams({
+          origin: locationStr( a )
+        , destination: locationStr( b )
+        , key: config.googleMaps.apiKey
+        })
+      , '"></iframe>'
+      ].join('');
+    },
+
+    driverCut: function( order ){
+      return Math.round( order.sub_total * 0.05 ) + order.delivery_fee;
     }
   }
 

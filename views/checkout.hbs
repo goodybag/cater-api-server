@@ -1,5 +1,5 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="{{cdn "/css/checkout.css"}}">
+<link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/checkout.css' pkg)}}">
 {{/extend}}
 
 {{#extend "title"}} - Checkout{{/extend}}

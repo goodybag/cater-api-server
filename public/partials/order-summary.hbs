@@ -18,7 +18,9 @@
 
         {{#each order.restaurant.amenities}}
         <tr data-amenity-id="{{id}}" class="{{#unless checked}}hide{{/unless}}" >
-          <td class="item-name">{{name}}{{#if description}}<p>{{description}}{{/if}}</td>
+          <td class="item-name">{{name}}
+          {{#if description}}<ul class="comma-separated item-options"><li>{{description}}</li></ul>{{/if}}
+          </td>
           <td class="item-quantity">
             {{#eq scale "multiply"}}
             x {{ ../../order.guests }}

@@ -115,3 +115,7 @@ input[name="card_number"] {
   counter-increment: section;
   content: counter(section)". ";
 }
+
+.page-checkout .amenity label {
+  font-weight: 400;
+}

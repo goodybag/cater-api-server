@@ -19,7 +19,11 @@ var
 , middleware = require('./middleware')
 , Models = require('./models')
 , pkg = require('./package.json')
+, odsChecker = require('./public/js/lib/order-delivery-service-checker')
 ;
+
+// Register delivery service criteria for the whole app to use
+require('./public/js/lib/order-delivery-service-criteria').forEach( odsChecker.add );
 
 hbs.handlebars = require('handlebars');
 

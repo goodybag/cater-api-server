@@ -11,7 +11,8 @@ define(function(require, exports, module) {
   var OrderItem = require('./order-item');
   var Address = require('./address');
 
-  var orderDeliveryServiceCriteria = require('order-delivery-service-criteria');
+  var odsChecker = require('order-delivery-service-checker');
+  utils.each( require('order-delivery-service-criteria'), odsChecker.add );
 
   var Order = Backbone.Model.extend({
     schema: function() {
@@ -496,7 +497,7 @@ define(function(require, exports, module) {
         restaurant: this.restaurant.toJSON()
       });
 
-      return orderDeliveryServiceCriteria.check( order )
+      return odsChecker.check( order )
     },
 
     onOrderTypeChange: function( model, type, options ){

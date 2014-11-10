@@ -179,9 +179,18 @@ define(function(require, exports, module) {
         this.orderItems.orderId = model.id;
       });
 
-      if ( this.shouldBeDeliveryService() ){
-        this.set( 'type', 'courier' );
-      }
+      var fieldsThatShouldPromptCourierCheck = [
+        'sub_total'
+      , 'datetime'
+      , 'zip'
+      , 'guests'
+      ].map( function( f ){
+        return 'change:' + f
+      }).join(' ');
+
+      this.on( fieldsThatShouldPromptCourierCheck, this.updateOrderType, this);
+
+      this.updateOrderType();
 
       this.listenTo(this.orderItems, 'change:sub_total add remove', this.updateSubtotal, this);
 
@@ -204,9 +213,6 @@ define(function(require, exports, module) {
       }, this);
 
       this.on('change:sub_total', function(model, value, options) {
-        if ( this.shouldBeDeliveryService() ){
-          this.set( 'type', 'courier' );
-        }
         model.set('below_min', value < model.restaurant.get('minimum_order'));
         model.setSubmittable(model, value, options);
       }, this);
@@ -286,9 +292,6 @@ define(function(require, exports, module) {
     ],
 
     zipChanged: function(model, value, options) {
-      if ( this.shouldBeDeliveryService() ){
-        this.set( 'type', 'courier' );
-      }
       model.restaurant.set('is_bad_zip', !this.restaurant.isValidZip(this));
     },
 
@@ -297,10 +300,6 @@ define(function(require, exports, module) {
     },
 
     datetimeChanged: function(model, value, options) {
-      if ( this.shouldBeDeliveryService() ){
-        this.set( 'type', 'courier' );
-      }
-
       if (!value) {
         model.restaurant.set({
           is_bad_delivery_time: null,
@@ -330,10 +329,6 @@ define(function(require, exports, module) {
     },
 
     guestsChanged: function(model, value, options) {
-      if ( this.shouldBeDeliveryService() ){
-        this.set( 'type', 'courier' );
-      }
-
       if (value == null) {
         model.restaurant.set({
           is_bad_guests: null,
@@ -513,6 +508,14 @@ define(function(require, exports, module) {
           , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
           ).format('YYYY-MM-DD hh:mm:ss')
         );
+      }
+    },
+
+    updateOrderType: function(){
+      if ( this.shouldBeDeliveryService() ){
+        this.set( 'type', 'courier' );
+      } else {
+        this.set( 'type', 'delivery' );
       }
     }
   }, {

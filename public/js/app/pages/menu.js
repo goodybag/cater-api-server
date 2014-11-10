@@ -35,17 +35,17 @@ define( function( require ){
       , model:  restaurant
       });
 
-      var paramsView = new Views.OrderParams({
-        model:  orderParams
-      , el:     '.order-params-bar'
-      });
-
       var orderModal = new Views.OrderModal({
         model:          orderModel
       , el:             '#order-params-modal'
       , defaultAddress: defaultAddress
       , orderModel:     orderModel
       , restaurant:     restaurant
+      });
+
+      var paramsView = new Views.OrderParams({
+        model:  orderParams
+      , el:     '.order-params-bar'
       });
 
       var itemModalView = new Views.ItemModal({

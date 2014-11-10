@@ -1,5 +1,39 @@
 <h1>Oh noe</h1>
 <p>Payment processing failed for order <a href="{{config.baseUrl}}/orders/{{order.id}}">#{{order.id}}</a>
 </p>
-<div>Warm regards,</div>
-<div>Goodybot</div>
+<dl>
+  <dt>User</dt>
+  <dd>{{order.user.name}}</dd>
+  <dt>Organization</dt>
+  <dd>{{order.user.organization}}</dd>
+  <dt>Restaurant</dt>
+  <dd>{{order.restaurant.name}}</dd>
+  <dt>Attempted Total Charged</dt>
+  <dd>${{dollars order.total}}</dd>
+  <dt>Payment Method ID</dt>
+  <dd>{{order.payment_method_id}}</dd>
+</dl>
+
+{{#if order.transaction_errors}}
+<h1>Errors</h1>
+<table style="border: 1px solid #000" cellpadding="10">
+  <tr>
+    <th>Status</th>
+    <th>Category Code</th>
+    <th>Description</th>
+    <th>Additional</th>
+  </tr>
+  {{#each order.transaction_errors}}
+  <tr>
+    <td>{{data.status}}</td>
+    <td>{{data.category_code}}</td>
+    <td>{{data.description}}</td>
+    <td>{{data.additional}}</td>
+  </tr>
+  {{/each}}
+</table>
+{{/if}}
+<p>
+  <div>Warm regards,</div>
+  <div>Goodybot</div>
+</p>

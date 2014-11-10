@@ -107,10 +107,12 @@ define(function(require, exports, module) {
     }
 
   , onTimePickerSet: function( ctx ){
-      this.setTimeRangeInput(
-        this.timepicker.get()
-      , this.timepickerMomentFormat
-      );
+      if ( 'select' in ctx ){
+        this.setTimeRangeInput(
+          this.timepicker.get()
+        , this.timepickerMomentFormat
+        );
+      }
     }
 
   , onKeyUp: function( e ){

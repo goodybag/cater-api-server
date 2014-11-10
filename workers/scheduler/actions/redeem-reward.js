@@ -10,6 +10,10 @@ var getUser = function( userId ){
   return db.users.findOne.bind(db.users, userId);
 };
 
+var insertRedemption = function( redemption ){
+  return db.users_redemptions.insert.bind(db.users_redemptions, redemption);
+};
+
 var notifyGb = function( reward, userId ){
   return function(done, results) {
     var context = {
@@ -73,12 +77,13 @@ module.exports = function( job, done ){
   var redemption = utils.extend({user_id: userId}, reward);
 
   utils.async.auto({
-    getUser:    getUser( userId )
-  , notifyGb:   [ 'getUser', notifyGb(reward, userId) ]
-  , notifyUser: [ 'getUser', notifyUser(reward, userId) ]
+    getUser:            getUser( userId )
+  , insertRedemption:   insertRedemption( redemption )
+  , notifyGb:           [ 'getUser', notifyGb(reward, userId) ]
+  , notifyUser:         [ 'getUser', notifyUser(reward, userId) ]
   }, function (err, results) {
     if ( err )
       logger.error('Unable to notify reward redemption', err);
-    db.users_redemptions.insert(redemption, done);
+    done(err);
   });
 };

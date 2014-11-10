@@ -191,6 +191,8 @@ define(function(require, exports, module) {
       this.on( fieldsThatShouldPromptCourierCheck, this.updateOrderType, this);
 
       this.updateOrderType();
+      
+      this.on('change:amenities_total', this.updateSubtotal);
 
       this.listenTo(this.orderItems, 'change:sub_total add remove', this.updateSubtotal, this);
 
@@ -257,6 +259,7 @@ define(function(require, exports, module) {
         return a + b;
       }, 0 ) || 0;
 
+      sub_total += this.get('amenities_total') || 0;
       this.set( 'sub_total', sub_total );
     },
 

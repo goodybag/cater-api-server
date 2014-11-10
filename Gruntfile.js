@@ -124,6 +124,8 @@ module.exports = function(grunt) {
           { src: 'public/css/components.css', dest: 'public/dist/<%= pkg.version %>/css/components.css' }
         , { src: 'public/css/restaurants.css', dest: 'public/dist/<%= pkg.version %>/css/restaurants.css' }
         , { src: 'public/css/theme.css', dest: 'public/dist/<%= pkg.version %>/css/theme.css' }
+        , { src: 'public/css/checkout.css', dest: 'public/dist/<%= pkg.version %>/css/checkout.css' }
+        , { src: 'public/css/receipt.css', dest: 'public/dist/<%= pkg.version %>/css/receipt.css' }
         , { expand: true, flatten: true, src: 'public/img/*.svg', dest: 'public/dist/<%= pkg.version %>/img/' }
         ]
       }

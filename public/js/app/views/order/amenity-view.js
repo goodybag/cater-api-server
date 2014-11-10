@@ -12,6 +12,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
   var utils = require('utils');
+  var notify = require('notify');
 
   return module.exports = Backbone.View.extend({
     events: {
@@ -52,10 +53,9 @@ define(function(require, exports, module) {
         , url: url
         , data: { amenity_id: this.model.id, order_id: orderId }
         , success: function() {
-            console.log('insert success');
           }
         , error: function() {
-            console.log('insert error');
+            notify.error('Unable to add amenity');
           }
         });
       } else {
@@ -64,10 +64,9 @@ define(function(require, exports, module) {
           type: 'DELETE'
         , url: url
         , success: function() {
-            console.log('remove success');
           }
         , error: function() {
-            console.log('remove error');
+            notify.error('Unable to remove amenity');
           }
         });
       }

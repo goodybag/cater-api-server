@@ -104,7 +104,21 @@ define(function( require, exports, module ){
       } else {
         exports.criteria.push( criterion );
       }
+    }
 
+    /**
+     * Removes the criterion with a given name
+     * @param  {String} name Name identifier
+     * @return {Object}      Criterion removed
+     */
+  , remove: function( name ){
+      var idx = utils.findIndex( exports.criteria, function( criterion ){
+        return criterion.name === name;
+      });
+
+      if ( idx === -1 ) return;
+
+      return exports.criteria.splice( idx, 1 )[0]
     }
   };
 

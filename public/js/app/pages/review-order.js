@@ -1,10 +1,15 @@
 define( function( require ){
   var utils = require('utils');
+  var odsChecker = require('order-delivery-service-checker');
 
   var Views = {
     OrderView:          require('app/views/order-view')
   , OrderItemView:      require('app/views/order-item-view')
   };
+
+  // Do not check dollar amount check for this page
+  require('app/models/order'); // Ensure that this code is executed _after_ order
+  odsChecker.remove('dollar_amount');
 
   var page = {
     init: function(options) {

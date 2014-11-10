@@ -1,5 +1,6 @@
 define( function( require ){
   var $ = require('jquery')
+  var odsChecker = require('order-delivery-service-checker');
 
   require('bootstrap');
 
@@ -15,6 +16,10 @@ define( function( require ){
   , MenuShareLink:      require('app/views/menu-share-link-view')
   , Menu:               require('app/views/menu-view')
   };
+
+  // Do not check dollar amount check for this page
+  require('app/models/order'); // Ensure that this code is executed _after_ order
+  odsChecker.remove('dollar_amount');
 
   var page = {
     init: function( options ){

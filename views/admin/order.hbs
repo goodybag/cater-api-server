@@ -56,6 +56,15 @@
           <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}}</dd>
         {{/is}}
       </dl>
+
+      {{#eq order.type 'courier'}}
+        <h3>Courier Reasoning</h3>
+        <ul>
+          {{#each order.courierReasons}}
+            <li>{{> courier_reasoning}}</li>
+          {{/each}}
+        </ul>
+      {{/eq}}
     </section>
   </div>
 

@@ -1270,12 +1270,12 @@ module.exports.register = function(app) {
 
   app.get('/admin/orders/:id'
   , m.restrict(['admin'])
-  , m.param('id')
-  , m.queryOptions({
-      one:  [ { table: 'restaurants', alias: 'restaurant' }
-            , { table: 'users', alias: 'user' }
-            ]
-    , many: [{ table: 'order_items', alias: 'items' }]
+  , m.getOrder2({
+      param:            'id'
+    , restaurant:       true
+    , user:             true
+    , courierReasoning: true
+    , items:            true
     })
   , m.view( 'admin/order', db.orders, {
       layout: 'admin/layout2'

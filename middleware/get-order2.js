@@ -9,6 +9,7 @@ var Models          = require('../models');
 var db              = require('../db');
 var manifest        = require('../lib/order-manifester');
 var orderEditable   = require('./order-editable');
+var odsChecker      = require('../public/js/lib/order-delivery-service-checker');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
@@ -100,6 +101,10 @@ module.exports = function( options ){
 
       if ( options.manifest ){
         order.manifest = manifest.create( order.orderItems );
+      }
+
+      if ( options.courierReasons && order.type === 'courier' ){
+        order.courierReasons = odsChecker.why( order );
       }
 
       req.order = order;

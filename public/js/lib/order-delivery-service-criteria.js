@@ -82,7 +82,7 @@ define(function( require, exports, module ){
 
       if ( result ) return false;
 
-      date  = moment( date ).push( 'minutes', -moment.duration( restaurant.region.lead_time_modifier ).asMinutes() );
+      date  = moment( date ).add( 'minutes', -moment.duration( restaurant.region.lead_time_modifier ).asMinutes() );
       day   = date.day();
       hours = restaurant.delivery_times[ day ];
       time  = date.format('HH:mm:ss');

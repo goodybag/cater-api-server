@@ -39,9 +39,9 @@
         {{> email_accept_reject}}
 
         {{#eq order.type 'courier'}}
-          <div class="order-type-explanation" style="margin-top: 40px">
+          <div class="order-type-explanation" style="margin-top: 40px; text-align: left;">
             <h2 style="line-height: 28px; font-weight: 500; font-size: 22px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42; border-bottom: solid 1px #ccc">Why should <em>you</em> deliver?</h2>
-            <p>We only use a courier if we absolutely have to. Using a courier means that you do not collect a delivery fee or tip!</p>
+            <p>You should only use a Courier if <em>you absolutely have to</em>. Here are a few reasons why:</p>
             {{> order_email_why_deliver_points}}
           </div>
         {{/eq}}

@@ -1,4 +1,3 @@
-{{#if order.courierReasons.length}}
 <table cellpadding="0" cellspacing="0" style="width: 100%; margin-top: 12px; border-radius: 4px; border: solid #ccc 1px; background: #f0f0f0; text-align: left;">
   <tr>
     <td style="padding: 20px">
@@ -7,8 +6,10 @@
       {{#each order.courierReasons}}
         <li>{{> courier_reasoning}}</li>
       {{/each}}
+      {{#unless order.courierReasons.length}}
+        <li>Because Goodybag manually set it</li>
+      {{/unless}}
       </ol>
     </td>
   </tr>
 </table>
-{{/if}}

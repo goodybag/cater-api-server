@@ -1,11 +1,7 @@
 {{#extend "body"}}
-  <a href="{{config.baseUrl}}/users/{{userId}}">User #{{ userId }}</a>
+  <p>
+    <a href="{{config.baseUrl}}/users/{{userId}}">User #{{ userId }}</a>
    just redeemed a giftcard.
-  <br>
-  <strong>Details:</strong><br>
-  <ul>
-    <li>Location: {{reward.location}}</li>
-    <li>Amount: ${{dollars reward.amount}}</li>
-    <li>Points: {{reward.cost}}</li>
-  </ul>
+  </p>
+  {{> rewards_redemption_details }}
 {{/extend}}

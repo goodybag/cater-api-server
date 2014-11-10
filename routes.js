@@ -1274,12 +1274,11 @@ module.exports.register = function(app) {
       param:            'id'
     , restaurant:       true
     , user:             true
-    , courierReasoning: true
+    , courierReasons:   true
     , items:            true
     })
-  , m.view( 'admin/order', db.orders, {
+  , m.view( 'admin/order', {
       layout: 'admin/layout2'
-    , method: 'findOne'
     })
   );
 

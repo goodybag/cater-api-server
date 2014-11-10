@@ -151,6 +151,26 @@
         <td class="price">${{dollars this.sub_total}}</td>
       </tr>
       {{/each}}
+      {{#each order.restaurant.amenities}}
+      {{#if checked}}
+      <tr>
+        <td class="checkbox"></td>
+        <td class="item">{{name}}{{#if description}} - {{description}}{{/if}}</td>
+        <td class="options"></td>
+        <td class="recipient"></td>
+        <td class="feeds"></td>
+        <td class="qty">{{#eq scale "multiply"}}x{{../../../order.guests}}{{/eq}}</td>
+        <td class="price">
+          {{#eq scale "multiply"}}
+          {{surcharge (multiply price ../../../order.guests)}}
+          {{/eq}}
+          {{#eq scale "flat"}}
+          {{surcharge price}}
+          {{/eq}}
+        </td>
+      </tr>
+      {{/if}}
+      {{/each}}
     </tbody>
   </table>
   <div class="page-number">

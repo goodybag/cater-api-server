@@ -12,6 +12,24 @@
       <td style="{{#isOdd @index}}background: #f1f1f1; border-top: solid 1px #e0e0e0;{{/isOdd}}font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: right;">{{dollars sub_total}}</td>
     </tr>
   {{/each}}
+  {{#each restaurant.amenities}}
+  {{#if checked}}
+    <tr>
+      <td style="{{#isOdd @index}}background: #f1f1f1; border-top: solid 1px #e0e0e0;{{/isOdd}}font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: left; width: 66%">{{name}}</td>
+      <td style="{{#isOdd @index}}background: #f1f1f1; border-top: solid 1px #e0e0e0;{{/isOdd}}font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: left;">
+        {{#eq scale "multiply"}}x{{../../../guests}}{{/eq}}
+      </td>
+      <td style="{{#isOdd @index}}background: #f1f1f1; border-top: solid 1px #e0e0e0;{{/isOdd}}font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 12px; padding-right: 12px; text-align: right;">
+        {{#eq scale "multiply"}}
+        {{surcharge (multiply price ../../../guests)}}
+        {{/eq}}
+        {{#eq scale "flat"}}
+        {{surcharge price}}
+        {{/eq}}
+      </td>
+    </tr>
+  {{/if}}
+  {{/each}}
   <tr>
     <td colspan="2" style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 26px; padding-bottom: 6px; padding-left: 12px; padding-right: 0; text-align: right; border-top: solid #CCCCC0 1px">Subtotal:</td>
     <td style="font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; padding-top: 26px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; text-align: right; border-top: solid #CCCCC0 1px">${{dollars sub_total}}</td>

@@ -1,26 +1,28 @@
-<div class="col-md-12">
-  <legend>2. Delivery Info</legend>
-  <div class="order-address read-only{{#unless order.isAddressComplete}} hide{{/unless}}">
-    {{> address order}}
-    <ul class="list-inline address-actions">
-      <li><a href="javascript:void(0)" class="edit-address-btn toggle-edit">Edit</a></li>
-      <li>|</li>
-      {{#if user.addresses}}
-      <li><a href="#select-address-modal" class="select-address" data-toggle="modal">Select Different Address</a></li>
-      <li>|</li>
-      {{/if}}
-      <li><a href="javascript:void(0)" class="add-address">Add New Address</a></li>
-    </ul>
-  </div>
-  <div class="order-address edit{{#if order.isAddressComplete}} hide{{/if}}">
-    {{#with orderAddress}}
-      {{> edit_address}}
-    {{/with}}
-    {{#if order.isAddressComplete}}
-    <div class="btn-toolbar">
-      <button type="button" class="btn btn-default cancel-edit-btn">Cancel</button>
-      <button type="button" class="btn btn-primary save-address">Save Address</button>
+<div class="list-group-item delivery-info clearfix">
+  <div class="col-md-12">
+    <legend>Delivery Info</legend>
+    <div class="order-address read-only{{#unless order.isAddressComplete}} hide{{/unless}}">
+      {{> address order}}
+      <ul class="list-inline address-actions">
+        <li><a href="javascript:void(0)" class="edit-address-btn toggle-edit">Edit</a></li>
+        <li>|</li>
+        {{#if user.addresses}}
+        <li><a href="#select-address-modal" class="select-address" data-toggle="modal">Select Different Address</a></li>
+        <li>|</li>
+        {{/if}}
+        <li><a href="javascript:void(0)" class="add-address">Add New Address</a></li>
+      </ul>
     </div>
-    {{/if}}
+    <div class="order-address edit{{#if order.isAddressComplete}} hide{{/if}}">
+      {{#with orderAddress}}
+        {{> edit_address}}
+      {{/with}}
+      {{#if order.isAddressComplete}}
+      <div class="btn-toolbar">
+        <button type="button" class="btn btn-default cancel-edit-btn">Cancel</button>
+        <button type="button" class="btn btn-primary save-address">Save Address</button>
+      </div>
+      {{/if}}
+    </div>
   </div>
 </div>

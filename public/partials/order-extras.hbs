@@ -1,0 +1,24 @@
+<div class="col-md-12">
+  <legend>Extras</legend>
+  <p>
+    {{#each order.restaurant.amenities}}
+    {{#if enabled}}
+      <div class="amenity" data-amenity-id="{{id}}">
+        <label>
+        <input
+          type="checkbox"
+          value="{{price}}"
+          {{#if checked}}checked{{/if}}>
+        {{name}} {{#if description}}- {{description}}{{/if}}
+        {{#eq scale "multiply"}}
+        <span class="amenity-price">({{surcharge price}} per person)</span>
+        {{/eq}}
+        {{#eq scale "flat"}}
+        <span class="amenity-price">({{surcharge price}})</span>
+        {{/eq}}
+        </label>
+      </div>
+    {{/if}}
+    {{/each}}
+  </p>
+</div>

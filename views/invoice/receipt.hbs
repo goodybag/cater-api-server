@@ -99,6 +99,26 @@
         <td class="line-item-price" data-title="Price">${{dollars this.sub_total}}</td>
       </tr>
       {{/each}}
+      {{#each order.restaurant.amenities}}
+      {{#if checked}}
+      <tr id="order-amenity-{{id}}">
+      <td class="line-item-name">
+        <div class="item-name">{{name}}</div>
+      </td>
+      <td class="line-item-recipient"></td>
+      <td class="line-item-quantity">{{#eq scale "multiply"}}x {{../../../order.guests}}{{/eq}}</td>
+      <td class="line-item-notes">{{description}}</td>
+      <td class="line-item-price">
+        {{#eq scale "multiply"}}
+        {{surcharge (multiply price ../../../order.guests)}}
+        {{/eq}}
+        {{#eq scale "flat"}}
+        {{surcharge price}}
+        {{/eq}}
+      </td>
+      </tr>
+      {{/if}}
+      {{/each}}
     </tbody>
   </table>
 
@@ -136,7 +156,6 @@
           </div>
         {{/if}}
       </div>
-
       <div class="order-summary">
         <dl class="dl-horizontal dl-order-summary">
           <dt>Subtotal:</dt>

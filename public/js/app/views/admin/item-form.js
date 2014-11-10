@@ -47,6 +47,8 @@ define(function(require, exports, module) {
 
       , error: function( error ){
           spinner.stop();
+          venter.trigger( 'item:error', error, this_.model );
+          this_.trigger( 'item:error', error, this_.model, this_ );
           notify.error( error );
         }
       });

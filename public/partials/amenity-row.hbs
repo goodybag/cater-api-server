@@ -1,0 +1,38 @@
+<td>
+  <input class="js-toggle hide" type="text" name="name" value="{{name}}">
+  <span class="js-toggle">{{name}}</span>
+</td>
+<td>
+  <input class="js-toggle hide" type="text" name="description" value="{{description}}">
+  <span class="js-toggle">{{description}}</span>
+</td>
+<td>
+  <input
+    class="js-toggle hide"
+    type="number"
+    step="0.01"
+    name="price"
+    data-in="dollars"
+    data-out="pennies"
+    value="{{dollars price}}">
+  <code class="js-toggle">${{dollars price}}</code>
+</td>
+<td>
+  <form class="js-toggle hide">
+    <div><input type="radio" name="scale" value="multiply" {{#eq scale "multiply"}}checked{{/eq}}> Guests</div>
+    <div><input type="radio" name="scale" value="flat" {{#eq scale "flat"}}checked{{/eq}}> Flat</div>
+  </form>
+  <form class="js-toggle">
+    <div><input type="radio" disabled="disabled" value="multiply" {{#eq scale "multiply"}}checked{{/eq}}> Guests</div>
+    <div><input type="radio" disabled="disabled" value="flat" {{#eq scale "flat"}}checked{{/eq}}> Flat</div>
+  </form>
+</td>
+<td>
+  <input class="js-toggle hide" type="checkbox" name="enabled" {{#if enabled}}checked{{/if}}>
+  <input class="js-toggle" type="checkbox" disabled="disabled" {{#if enabled}}checked{{/if}}>
+</td>
+<td>
+  <a href="#" class="js-btn-save js-toggle hide">Save</a>
+  <a href="#" class="js-btn-edit js-toggle">Edit</a>
+  <a href="#" class="js-btn-delete">Remove</a>
+</td>

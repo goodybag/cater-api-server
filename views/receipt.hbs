@@ -1,6 +1,6 @@
 {{#extend "css"}}
 <link rel="stylesheet" href="{{cdn "/css/order.css"}}">
-<link rel="stylesheet" href="{{cdn "/css/receipt.css"}}">
+<link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/receipt.css' pkg)}}">
 {{/extend}}
 
 {{#extend "title"}} - Receipt{{/extend}}
@@ -203,6 +203,65 @@
             <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>
           {{/each}}
+
+          {{!-- Show all amenities and checkboxes  --}}
+          {{#if isAdmin}}
+          {{#each order.restaurant.amenities}}
+          <tr class="amenity" data-amenity-id="{{id}}">
+            <td class="line-item-name" data-title="Name">
+              <div class="item-name">{{name}}</div>
+              {{#if description}}<p class="item-description">{{description}}</p>{{/if}}
+            </td>
+            <td class="line-item-quantity" data-title="Quantity">
+              <input
+                type="checkbox"
+                class="checkbox"
+                value="{{price}}"
+                {{#if checked}}checked{{/if}}>
+            </td>
+            <td class="line-item-notes" data-title="Notes"></td>
+            <td class="line-item-recipient" data-title="Recipient"></td>
+            <td class="line-item-feeds" data-title="Feeds"></td>
+            <td class="line-item-price" data-title="Price">
+              {{#eq scale "multiply"}}
+              {{surcharge (multiply price ../../order.guests)}}
+              {{/eq}}
+              {{#eq scale "flat"}}
+              {{surcharge price}}
+              {{/eq}}
+            </td>
+          </tr>
+          {{/each}}
+          {{else}}
+          {{!-- Only show checked amenities --}}
+          {{#each order.restaurant.amenities}}
+          {{#if checked}}
+          <tr class="amenity" data-amenity-id="{{id}}">
+            <td class="line-item-name" data-title="Name">
+              <div class="item-name">{{name}}</div>
+              {{#if description}}<p class="item-description">{{description}}</p>{{/if}}
+            </td>
+            <td class="line-item-quantity" data-title="Quantity">
+              {{#eq scale "multiply"}}
+              <span class="item-quantity-span order-item-field order-item-quantity">{{ ../../../order.guests}}</span>
+              {{/eq}}
+            </td>
+            <td class="line-item-notes" data-title="Notes"></td>
+            <td class="line-item-recipient" data-title="Recipient"></td>
+            <td class="line-item-feeds" data-title="Feeds"></td>
+            <td class="line-item-price" data-title="Price">
+              {{#eq scale "multiply"}}
+              {{surcharge (multiply price ../../../order.guests)}}
+              {{/eq}}
+              {{#eq scale "flat"}}
+              {{surcharge price}}
+              {{/eq}}
+            </td>
+          </tr>
+          {{/if}}
+          {{/each}}
+          {{/if}}
+
         </tbody>
       </table>
     </div>
@@ -382,7 +441,7 @@
 
 {{#extend "scripts"}}
 <script>
-  require(['app/pages/receipt', 'app/models/index'], function( page, Models ){
+  require(['app/pages/receipt', 'app/models/index', 'app/collections/amenities'], function( page, Models, Amenities ){
     page.init({
       order: new Models.Order( {{{json order}}} )
     , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}

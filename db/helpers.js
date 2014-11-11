@@ -396,8 +396,8 @@ dirac.use( function(){
     $query.columns.push({
       type:     'select'
     , table:    'payment_summary_items'
-    , columns:  [{ type: 'sum'
-                , expression: 'payment_summary_items.net_payout'
+    , columns:  [{ type: 'expression'
+                , expression: 'sum( payment_summary_items.net_payout ) + payment_summaries.adjustment'
                 , alias: options.column
                 }]
     , where:    { payment_summary_id: '$payment_summaries.id$' }

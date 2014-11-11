@@ -103,6 +103,7 @@ config.defaults = {
   , delay:          (9*60*1000)
   , timezone:       'America/Chicago'
   , days:           [ 1, 2, 3, 4, 5 ]
+  , isEnabled:      false
   }
 
 , pagination: {

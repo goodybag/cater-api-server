@@ -432,7 +432,10 @@ module.exports.register = function(app) {
 
     app.get('/admin/restaurants/:id/amenities'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'amenities'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'amenities'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
     , m.param('id')
     , m.queryOptions({
         many: [ { table: 'amenities' } ]
@@ -447,7 +450,7 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'photos'
-      , baseUrl:  '/admin/restaurants/:rid'
+      , baseUrl:  '/admin/restaurants/:restaurant_id'
       })
     , m.restaurant( { param: 'restaurant_id' } )
     , m.param('restaurant_id')

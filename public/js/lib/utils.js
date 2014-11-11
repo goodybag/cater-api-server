@@ -72,6 +72,17 @@ define(function(require, exports, module) {
     toJSON: function( options ){
       options = options || {};
       return utils.extend( {}, this.attributes , options.cid ? { cid: this.cid } : null );
+    },
+
+    schema: {
+      type: 'object',
+      properties: {}
+    },
+
+    validator: amanda('json'),
+
+    validate: function(attrs, options) {
+      return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
     }
   });
 

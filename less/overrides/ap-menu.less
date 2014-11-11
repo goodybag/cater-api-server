@@ -269,11 +269,44 @@ th.name-column {
   margin-bottom: 10px;
 }
 
-.items-list > .row:nth-child(odd) {
-  background-color: #f0f0f0;
-}
+// Color coding menu sections
+.ap-menu {
+  .items-list > .row {
+    margin-bottom: 10px;
+    padding-left: 10px;
+  }
 
-.items-list > .row {
-  margin-bottom: 10px;
-  padding: 10px 0;
+  .category-wrapper {
+    background: #ffdada;
+    padding-left: 10px;
+    border-left: 5px solid #9e1010;
+    margin-bottom: 10px;
+  }
+
+  .category-wrapper h2 {
+    color: #9e1010;
+  }
+
+  .items-list > .row {
+    background: #ecdbff;
+    border-left: 5px solid #6b02d5;
+    padding-left: 10px;
+  }
+
+  .items-list > .row h2 {
+    color: #6b02d5;
+    margin: 0;
+  }
+
+  .edit-item-options-wrapper {
+    background: #d3ebff;
+    border-left: 5px solid #133d85;
+    padding-left: 10px;
+    margin-bottom: 10px;
+  }
+
+  .edit-item-options-wrapper h2 {
+    color: #133d85;
+    margin: 0;
+  }
 }

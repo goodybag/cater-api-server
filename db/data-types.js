@@ -74,4 +74,5 @@ module.exports = {
 , paymentstatus: 'payment_status'
 , jobstatus: 'job_status'
 , order_type: 'order_type'
-}
+, amenity_scale: 'amenity_scale'
+};

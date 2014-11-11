@@ -1,6 +1,7 @@
 --------------------
 -- Event Handlers --
 --------------------
+
 create or replace function restaurant_locations_is_default_change()
 returns trigger as $$
 begin
@@ -8,7 +9,20 @@ begin
     set is_default = false
     where restaurant_id = NEW.restaurant_id
       and id != NEW.id;
+
+create or replace function on_order_amenities_update()
+returns trigger as $$
+begin
+  perform update_order_totals( NEW.order_id );
   return NEW;
+end;
+$$ language plpgsql;
+
+create or replace function on_order_amenities_remove()
+returns trigger as $$
+begin
+  perform update_order_totals( OLD.order_id );
+  return OLD;
 end;
 $$ language plpgsql;
 
@@ -194,6 +208,7 @@ create or replace function update_order_totals( o orders )
 returns void as $$
   declare order_item        record;
   declare option            record;
+  declare order_amenity     record;
   declare tax_rate          numeric;
   declare options_total     int := 0;
   declare delivery_fee      int := 0;
@@ -201,6 +216,7 @@ returns void as $$
   declare sales_tax         int := 0;
   declare total             int := 0;
   declare restaurant_total  int := 0;
+  declare amenities_total   int := 0;
   declare r_sales_tax       int := 0;
   declare curr              int := 0;
   declare tax_exempt        boolean;
@@ -244,6 +260,20 @@ begin
 
     sub_total := sub_total + (curr * order_item.quantity);
   end loop;
+
+  for order_amenity in (
+    select * from order_amenities
+    join amenities on amenities.id = order_amenities.amenity_id
+    where order_id = o.id
+  ) loop
+    if order_amenity.scale = 'multiply' then
+      amenities_total := amenities_total + (order_amenity.price * o.guests);
+    else
+      amenities_total := amenities_total + order_amenity.price;
+    end if;
+  end loop;
+
+  sub_total := sub_total + amenities_total;
 
   total             := sub_total + coalesce( o.adjustment_amount, 0 );
 

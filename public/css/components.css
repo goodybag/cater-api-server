@@ -336,13 +336,17 @@
   width: 125px;
 }
 
+.order-params-bar .form-control.form-control-time {
+  width: 168px;
+}
+
 .order-params-bar .form-control.form-control-zip,
 .order-params-bar .form-control.form-control-guests {
   width: 100px;
 }
 
-.order-params-bar .form-group-icon.gb-icon-time {
-  margin-left: 100px
+.order-params-bar .form-group[data-icon="gb-icon-time"]:before {
+  margin-top: 8px
 }
 
 .order-params-bar .form-control[readonly],
@@ -350,6 +354,16 @@
  {
   cursor: default;
   background-color: #fff;
+}
+
+/*  this thing needs to cover the actual timepicker
+    so we can display a time range without it screwing
+    up the value pickadate gives us back */
+.order-params-bar [name="time-range"] {
+  position: absolute;
+  pointer-events: none;
+  cursor: auto;
+  background: #fff;
 }
 
 @media ( max-width: 768px ){
@@ -788,7 +802,7 @@ a.list-group-item .list-group-item-heading {
 /** Order Params Modal Overrides **/
 @media (min-width: 768px) {
   .modal-order-params > .modal-dialog {
-    width: 586px;
+    width: 614px;
   }
 }
 

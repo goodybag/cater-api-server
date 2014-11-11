@@ -8,6 +8,8 @@ define(function(require, exports, module) {
   var FormView = require('./form-view');
   var OrderAddressView = require('./order-address-view');
   var CopyErrorModalView = require('./copy-error-modal');
+  var AmenityView = require('app/views/order/amenity-view');
+  var Amenity = require('app/models/amenity');
   var TipView = require('./tip-view');
   var helpers = require('hb-helpers');
 
@@ -32,6 +34,8 @@ define(function(require, exports, module) {
         'keyup .adjustment': 'autoSave'
       });
     },
+
+    step: 1,
 
     fieldMap: {
       datetime: '.order-datetime',
@@ -98,6 +102,28 @@ define(function(require, exports, module) {
     },
 
     initialize: function(options) {
+      var this_ = this;
+
+      // Attach amenity views
+      this.amenitiesViews = this.model.restaurant.attributes.amenities.map(function(amenity) {
+        var selector = '[data-amenity-id="' + amenity.id + '"]';
+        var model = new Amenity(utils.extend({ quantity: this.model.get('guests') }, amenity));
+
+        this_.listenTo(model, 'change:quantity', this_.updateAmenity);
+        this_.listenTo(model, 'change:checked', this_.toggleAmenity);
+
+        this_.listenTo(model, 'change:quantity', this_.updateAmenitiesTotal);
+        this_.listenTo(model, 'change:checked', this_.updateAmenitiesTotal);
+
+        return new AmenityView({
+          el: selector
+        , model: model
+        , order: this.model
+        , orderView: this
+        });
+      }.bind(this));
+
+      // this.amenitiesView = new AmenitiesView({el: '.amenities', order: this.model, orderView: this});
       this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address, orderView: this, user: this.options.user});
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
@@ -108,13 +134,35 @@ define(function(require, exports, module) {
       this.setModel((this.model) ? this.model : new Order());
     },
 
+    updateAmenitiesTotal: function(amenity) {
+      var total = this.amenitiesViews.reduce(function(total, view) {
+        return total += view.model.get('checked') ? view.model.getTotalPrice() : 0;
+      }, 0);
+      this.model.set('amenities_total', total);
+    },
+
+    updateAmenity: function(amenity) {
+      var $el = this.$el.find('.order-summary [data-amenity-id="' + amenity.id + '"] .item-price');
+      $el.text(Handlebars.helpers.surcharge(amenity.getTotalPrice()));
+    },
+
+    toggleAmenity: function(amenity) {
+      var $el = this.$el.find('.order-summary [data-amenity-id="' + amenity.id + '"]');
+      $el.toggleClass('hide');
+    },
+
+    updateGuests: function(e) {
+      var $el = $(e.target);
+      this.model.set('guests', $el.val());
+    },
+
     // set the model and add listeners here
     setModel: function(model) {
       if (this.model) this.stopListening(this.model);
       this.model = model;
 
       this.listenTo(this.model, {
-        'change:sub_total change:tip': this.onPriceChange,
+        'change:total': this.onPriceChange,
         'change:phone': this.onPhoneChange
       }, this);
 
@@ -135,7 +183,7 @@ define(function(require, exports, module) {
 
     onPriceChange: function(model, value, options) {
       var updatedOrder = _.extend(this.model.toJSON(), this.getDiff());
-      this.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder}));
+      this.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder, step: this.step }));
     },
 
     setItems: function(items) {

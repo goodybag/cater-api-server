@@ -11,7 +11,7 @@ define(function(require, exports, module) {
 
     fieldMap: {
       price: '.restaurant-price'
-    , cuisine: '.restaurant-cuisine'
+    , cuisine: '.restaurant-cuisines input'
     , tags: '.restaurant-tags input'
     , meal_types: '.restaurant-meal-types input'
     , meal_styles: '.restaurant-meal-styles input'
@@ -19,7 +19,7 @@ define(function(require, exports, module) {
 
     fieldGetters: _.extend({
       cuisine: function() {
-        return EditRestaurantView.fieldSplit.call(this, this.fieldMap.cuisine);
+        return _.pluck(this.$el.find(this.fieldMap.cuisine + ':checked'), 'value');
       },
 
       tags: function() {

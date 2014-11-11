@@ -179,10 +179,6 @@ define(function(require, exports, module) {
       // Initially reset everything
       this.timepicker.set( 'enable', disabled );
 
-      // Scroll to 8am initially
-      var $scroller = this.timepicker.$root.find('.picker__holder');
-      $scroller[0].scrollTop = $scroller.find('[data-pick="' + (60 * 8) + '"]')[0].offsetTop;
-
       // Don't do anything if we haven't already selected a day
       if ( !day ) return;
 
@@ -208,15 +204,6 @@ define(function(require, exports, module) {
           });
         })
       );
-
-      // Scroll to the first non-disabled time
-      var $last = $scroller.find(
-        '.picker__list-item:not(.picker__list-item--disabled)'
-      ).eq(0);
-
-      if ( $last.length ){
-        $scroller[0].scrollTop = $last[0].offsetTop;
-      }
     }
 
   , onKeyUp: function( e ){

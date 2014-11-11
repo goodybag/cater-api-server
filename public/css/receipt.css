@@ -108,3 +108,7 @@
 .delivery-service-note {
   font-style: italic;
 }
+
+.amenity .checkbox {
+  margin-left: 22px;
+}

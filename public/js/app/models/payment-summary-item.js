@@ -76,10 +76,14 @@ define(function(require, exports, module) {
     }
 
   , getTotal: function(){
-      var total = this.get('sub_total') + this.get('adjustment') + this.get('delivery_fee');
+      var total = this.getPreSalesTaxTotal();
       total += total * this.get('sales_tax');
       total += this.attributes.tip;
       return Math.round( total );
+    }
+
+  , getPreSalesTaxTotal: function(){
+      return this.get('sub_total') + this.get('adjustment') + this.get('delivery_fee');
     }
 
   , onOrderChange: function( psi, order ){
@@ -95,7 +99,7 @@ define(function(require, exports, module) {
     }
 
   , onTaxChange: function( pse, factor ){
-      var val = this.attributes.sub_total + this.attributes.delivery_fee
+      var val = this.getPreSalesTaxTotal();
       val = Math.round( val * this.attributes.sales_tax );
 
       this.set( 'sales_tax_amount', val );

@@ -1,3 +1,17 @@
+drop trigger if exists on_order_amenities_update on order_amenities;
+create trigger on_order_amenities_update
+  after insert or update
+  on order_amenities
+  for each row
+  execute procedure on_order_amenities_update();
+
+drop trigger if exists on_order_amenities_remove on order_amenities;
+create trigger on_order_amenities_remove
+  after delete
+  on order_amenities
+  for each row
+  execute procedure on_order_amenities_remove();
+
 drop trigger if exists on_order_create on orders;
 create trigger on_order_create
     after insert

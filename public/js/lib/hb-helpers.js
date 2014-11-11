@@ -38,6 +38,12 @@ define(function(require, exports, module) {
       return val;
     },
 
+    surcharge: function(pennies) {
+      if (pennies)
+        return '$'  + helpers.dollars(pennies);
+      return 'Free';
+    },
+
     dollars: function(pennies) {
       var cents = pennies == null ? 0 : parseFloat(pennies); // parse as float incase of partial cents
       return utils.isNaN(cents) ? '' : utils.Math.round10(cents / 100, -2).toFixed(2); // partial cents get rounded here
@@ -478,6 +484,10 @@ define(function(require, exports, module) {
       return (+value) + (+addition);
     },
 
+    multiply: function(a, b) {
+      return a * b;
+    },
+
     commatize: function( x, options ){
       if ( !x && x != 0 ) return;
 
@@ -567,6 +577,10 @@ define(function(require, exports, module) {
         utils.any( rest, function( b ){ return a == b; })
           ? 'fn' : 'inverse'
       ](this);
+    },
+
+    timeToRange: function( time, format ){
+      return utils.timeToRange( time, format, config.deliveryTime );
     }
   }
 

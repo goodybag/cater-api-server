@@ -1,0 +1,29 @@
+{{#extend "body"}}
+<h2>Amenities</h2>
+<p>Configure various amenities available like napkins, utensils and plates.</p>
+
+{{#with restaurant}}
+<div class="amenities">
+  {{> amenity_table }}
+</div>
+{{/with}}
+
+{{/extend}}
+
+{{#extend "scripts"}}
+<script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
+<script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
+<script>
+  require( [
+    'app/views/restaurant/edit-amenities-view'
+  , 'app/collections/amenities'
+  ],
+  function( View, Amenities ){
+    var view = new View({
+      el: '.amenities'
+    , amenities: new Amenities({{{json restaurant.amenities}}})
+    , restaurant_id: {{restaurant.id}}
+    });
+  });
+</script>
+{{/extend}}

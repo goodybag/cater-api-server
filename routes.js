@@ -430,6 +430,19 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/admin/restaurants/:id/amenities'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.defaultLocals( { active_tab: 'amenities'} )
+    , m.param('id')
+    , m.queryOptions({
+        many: [ { table: 'amenities' } ]
+      })
+    , m.view('admin/restaurant/edit-amenities', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
+    );
+
     app.get('/admin/restaurants/:restaurant_id/photos'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
@@ -762,6 +775,7 @@ module.exports.register = function(app) {
     , manifest:   true
     , user:       true
     , restaurant: true
+    , amenities:  true
     })
   , m.view( 'order-manifest/manifest-1', {
       layout: 'order-manifest/layout'
@@ -798,6 +812,7 @@ module.exports.register = function(app) {
     , restaurant:         true
     , deliveryService:    true
     , submittedDate:      true
+    , amenities:          true
     })
   , controllers.orders.auth
   , m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant'])
@@ -858,6 +873,7 @@ module.exports.register = function(app) {
     , restaurant:         true
     , deliveryService:    true
     , paymentMethod:      true
+    , amenities:          true
     })
   , function(req, res, next){ req.params.receipt = true; next(); }
   , controllers.orders.get
@@ -923,6 +939,7 @@ module.exports.register = function(app) {
     , userAddresses:      true
     , userPaymentMethods: true
     , restaurant:         true
+    , amenities:          true
     , deliveryService:    true
     })
   , controllers.orders.auth
@@ -1861,4 +1878,85 @@ module.exports.register = function(app) {
   , m.find( db.users )
   );
 
+  /**
+   * Amenities
+   */
+
+  app.post('/api/amenities'
+  , m.restrict(['admin'])
+  , m.insert( db.amenities )
+  );
+
+  app.get('/api/amenities/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.findOne( db.amenities )
+  );
+
+  app.put('/api/amenities/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.amenities )
+  );
+
+  app.patch('/api/amenities/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.amenities )
+  );
+
+  app.del('/api/amenities/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.amenities )
+  );
+
+  /**
+   * Order amenities
+   */
+
+  app.post('/api/orders/:order_id/amenities'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
+  , m.insert( db.order_amenities )
+  );
+
+  // list amenities per order
+  app.get('/api/orders/:order_id/amenities'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
+  , m.param('order_id')
+  , m.find( db.order_amenities )
+  );
+
+  // list specific order amenity
+  app.get('/api/orders/:order_id/amenities/:amenity_id'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
+  , m.param('order_id')
+  , m.param('amenity_id')
+  , m.find( db.order_amenities )
+  );
+
+  // delete all order amenities
+  app.del('/api/orders/:order_id/amenities'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
+  , m.param('order_id')
+  , m.remove( db.order_amenities )
+  );
+
+  // delete specific order amenity
+  app.del('/api/orders/:order_id/amenities/:amenity_id'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
+  , m.param('order_id')
+  , m.param('amenity_id')
+  , m.remove( db.order_amenities )
+  );
 }

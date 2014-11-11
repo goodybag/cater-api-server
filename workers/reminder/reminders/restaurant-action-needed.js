@@ -10,12 +10,7 @@
 module.exports.name = 'Restaurant Action Needed';
 var db              = require('../../../db');
 var utils           = require('../../../utils');
-var notifier  = require('../../../lib/order-notifier');
-
-// Ensures typeof storage.lastNotified === 'object'
-module.exports.schema = {
-  lastNotified: true
-};
+var notifier        = require('../../../lib/order-notifier');
 
 var getQuery = function( storage ){
   // 1. Filter submitted orders over an hour
@@ -58,6 +53,10 @@ var notifyOrderFn = function( order ) {
       done( error, error ? null : order );
     });
   };
+};
+
+module.exports.schema = {
+  lastNotified: true
 };
 
 module.exports.check = function( storage, callback ){

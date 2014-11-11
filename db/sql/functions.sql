@@ -9,6 +9,9 @@ begin
     set is_default = false
     where restaurant_id = NEW.restaurant_id
       and id != NEW.id;
+  return NEW;
+end;
+$$ language plpgsql;
 
 create or replace function on_order_amenities_update()
 returns trigger as $$

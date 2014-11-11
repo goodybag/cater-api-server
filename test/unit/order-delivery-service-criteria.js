@@ -3,8 +3,6 @@ var moment    = require('moment-timezone');
 var utils     = require('../../utils');
 var criteria  = require('../../public/js/lib/order-delivery-service-checker');
 
-require('../../public/js/lib/order-delivery-service-criteria').forEach( criteria.add );
-
 describe ('Order Delivery Service Criteria', function(){
   var now = moment().tz('America/Chicago');
 

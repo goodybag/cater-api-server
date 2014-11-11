@@ -20,6 +20,8 @@ define(function( require, exports, module ){
   var moment = require('moment-timezone');
   var utils = require('utils');
 
+  var criteria = require('./order-delivery-service-criteria');
+
   exports = {
     criteria: []
 
@@ -121,6 +123,8 @@ define(function( require, exports, module ){
       return exports.criteria.splice( idx, 1 )[0]
     }
   };
+
+  utils.each( criteria, exports.add );
 
   return exports;
 });

@@ -12,7 +12,6 @@ define(function(require, exports, module) {
   var Address = require('./address');
 
   var odsChecker = require('order-delivery-service-checker');
-  utils.each( require('order-delivery-service-criteria'), odsChecker.add );
 
   var Order = Backbone.Model.extend({
     schema: function() {
@@ -191,7 +190,7 @@ define(function(require, exports, module) {
       this.on( fieldsThatShouldPromptCourierCheck, this.updateOrderType, this);
 
       this.updateOrderType();
-      
+
       this.on('change:amenities_total', this.updateSubtotal);
 
       this.listenTo(this.orderItems, 'change:sub_total add remove', this.updateSubtotal, this);

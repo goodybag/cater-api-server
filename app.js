@@ -22,9 +22,6 @@ var
 , odsChecker = require('./public/js/lib/order-delivery-service-checker')
 ;
 
-// Register delivery service criteria for the whole app to use
-require('./public/js/lib/order-delivery-service-criteria').forEach( odsChecker.add );
-
 hbs.handlebars = require('handlebars');
 
 var app = module.exports = express();

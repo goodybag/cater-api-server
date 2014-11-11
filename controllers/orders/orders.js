@@ -71,6 +71,7 @@ module.exports.get = function(req, res) {
   }
 
   var order = req.order;
+  var amenities = order.restaurant.amenities;
   var orderModel = new models.Order( order );
 
   // Redirect empty orders to item summary
@@ -89,7 +90,9 @@ module.exports.get = function(req, res) {
       return res.error(errors.internal.DB_FAILURE, err);
     }
 
-    order.restaurant = restaurant.toJSON();
+    // order.restaurant is mutated by order.getRestaurant
+    // Hack: re-attach amenities object back to restaurant
+    order.restaurant.amenities = amenities;
 
     utils.findWhere(states, {abbr: order.state || 'TX'}).default = true;
     var context = {

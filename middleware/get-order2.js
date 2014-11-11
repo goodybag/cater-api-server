@@ -30,6 +30,10 @@ module.exports = function( options ){
       $options.submittedDate = options.submittedDate;
     }
 
+    if ( options.location ){
+      $options.one.push({ table: 'restaurant_locations', alias: 'locations' });
+    }
+
     if ( options.user ){
       var users = $options.one.push({
         table: 'users'
@@ -64,13 +68,40 @@ module.exports = function( options ){
     }
 
     if ( options.restaurant ){
+      var restaurantOne = [ { table: 'regions', alias: 'region' } ];
+      var restaurantMany = [
+        { table: 'restaurant_delivery_times', alias: 'delivery_times' }
+      , { table: 'restaurant_delivery_zips', alias: 'delivery_zips' }
+      , { table: 'restaurant_lead_times', alias: 'lead_times' } ];
+
+      if ( options.amenities ){
+        // I am sorry for this.
+        // I wanted to look at all of the available amenities as well as if there's
+        // a order_amenity record. It's aliased as "amenity.checked", so that I know which 
+        // have been added to an order.
+        restaurantMany.push({
+          table: 'amenities'
+        , alias: 'amenities'
+        , columns:  [ '*'
+                    , {
+                        type: 'exists'
+                      , expression: {
+                          type: 'select'
+                        , columns: [ { expression: 1 } ]
+                        , table: 'order_amenities'
+                        , where: { order_id: '$orders.id$', amenity_id: '$amenities.id$' }
+                        }
+                      , alias: 'checked'
+                      }
+                    ]
+        });
+      }
+
       $options.one.push({
         table:  'restaurants'
       , alias:  'restaurant'
-      , one:    [ { table: 'regions', alias: 'region' } ]
-      , many:   [ { table: 'restaurant_delivery_times', alias: 'delivery_times' }
-                , { table: 'restaurant_delivery_zips', alias: 'delivery_zips' }
-                , { table: 'restaurant_lead_times', alias: 'lead_times' } ]
+      , one:    restaurantOne
+      , many:   restaurantMany
       });
     }
 

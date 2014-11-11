@@ -1,32 +1,38 @@
-<ul class="restaurant-edit-menu nav nav-vertical ap-nav-vertical">
-  <li {{#eq active_tab "basic-info"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/basic-info">Basic info</a>
+<ul class="restaurant-edit-menu nav nav-vertical ap-nav-vertical
+{{~#if sidebarNav.isNew}} disabled{{/if}}">
+  <li{{#eq sidebarNav.active "basic-info"}} class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/basic-info">Basic Info</a>
   </li>
-  <li {{#eq active_tab "contacts"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/contacts">Contacts</a>
+  <li {{#eq sidebarNav.active "contacts"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/contacts">Contacts</a>
   </li>
-  <li {{#eq active_tab "delivery-settings"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/delivery-settings">Delivery Settings</a>
+  <li {{#eq sidebarNav.active "delivery-settings"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/delivery-settings">Delivery Settings</a>
   </li>
-  <li {{#eq active_tab "hours-of-operation"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/hours-of-operation">Hours of Operation</a>
+  <li {{#eq sidebarNav.active "hours-of-operation"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/hours-of-operation">Hours of Operation</a>
   </li>
-  <li {{#eq active_tab "tags"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/tags">Tags</a>
+  <li {{#eq sidebarNav.active "tags"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/tags">Tags</a>
   </li>
-  <li {{#eq active_tab "address"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/address">Address</a>
+  <li {{#eq sidebarNav.active "address"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/address">Address</a>
   </li>
-  <li {{#eq active_tab "menu"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/menu">Menu</a>
+  <li {{#eq sidebarNav.active "locations"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/locations">Locations</a>
   </li>
-  <li {{#eq active_tab "photos"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/photos">Photos</a>
+  <li {{#eq sidebarNav.active "menu"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/menu">Menu</a>
+  <li {{#eq sidebarNav.active "amenities"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/amenities">Amenities</a>
   </li>
-  <li {{#eq active_tab "billing-info"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/billing-info">Billing Info</a>
+  <li {{#eq sidebarNav.active "photos"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/photos">Photos</a>
   </li>
-  <li {{#eq active_tab "payment-summaries"}}class="active"{{/eq}}>
-    <a href="/admin/restaurants/{{restaurant.id}}/payment-summaries" target="_blank">Payment Summaries</a>
+  <li {{#eq sidebarNav.active "billing-info"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/billing-info">Billing Info</a>
+  </li>
+  <li {{#eq sidebarNav.active "payment-summaries"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/payment-summaries" target="_blank">Payment Summaries</a>
   </li>
 </ul>

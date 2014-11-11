@@ -12,4 +12,5 @@ module.exports = {
 , job_status:     ['pending', 'in-progress', 'completed', 'failed']
 , order_type:     ['pickup', 'delivery', 'courier', 'gb-delivery']
 , timezone:       { type: 'domain', as: 'text check ( is_timezone( value ) )' }
+, amenity_scale:  ['multiply', 'flat']
 };

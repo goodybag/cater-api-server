@@ -22,6 +22,7 @@ define(function(require, exports, module) {
       'change #payment-method-id':                    'onPaymentMethodIdChange',
       'submit #order-form':                           'submit',
       'submit #select-address-form':                  'selectAddress',
+      'keyup #order-guests':                          'updateGuests',
       'input input[name="card_number"]':              'onCardNumberChange'
     }),
 
@@ -59,6 +60,7 @@ define(function(require, exports, module) {
 
     initialize: function() {
       OrderView.prototype.initialize.apply(this, arguments);
+
       this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
         format: 'mm/dd/yyyy'
       , min: new Date()

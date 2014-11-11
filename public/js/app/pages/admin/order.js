@@ -69,6 +69,16 @@ define(function(require){
             ].join(''));
           });
         });
+
+        $('[name="restaurant_location_id"]').change( function( e ){
+          var order = { restaurant_location_id: +$(this).val() };
+
+          page.updateOrder( order, function( error, order ){
+            if ( error ){
+              return flash.info( 'Error :(', 1000 );
+            }
+          });
+        });
       });
     }
 

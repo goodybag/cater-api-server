@@ -1,3 +1,17 @@
+drop trigger if exists on_order_amenities_update on order_amenities;
+create trigger on_order_amenities_update
+  after insert or update
+  on order_amenities
+  for each row
+  execute procedure on_order_amenities_update();
+
+drop trigger if exists on_order_amenities_remove on order_amenities;
+create trigger on_order_amenities_remove
+  after delete
+  on order_amenities
+  for each row
+  execute procedure on_order_amenities_remove();
+
 drop trigger if exists on_order_create on orders;
 create trigger on_order_create
     after insert
@@ -7,7 +21,7 @@ create trigger on_order_create
 
 drop trigger if exists order_total_change on orders;
 create trigger order_total_change
-    after insert or update of zip, tip, adjustment_amount, user_adjustment_amount
+    after insert or update of zip, tip, adjustment_amount, user_adjustment_amount, restaurant_location_id
     on orders
     for each row
     execute procedure on_order_total_change();
@@ -46,3 +60,11 @@ create trigger restaurants_search_update
   on restaurants
   for each row
   execute procedure update_restaurant_search_vector();
+
+drop trigger if exists restaurant_locations_is_default_change on restaurant_locations;
+create trigger restaurant_locations_is_default_change
+  after insert or update of is_default
+  on restaurant_locations
+  for each row
+  when ( NEW.is_default is true )
+  execute procedure restaurant_locations_is_default_change();

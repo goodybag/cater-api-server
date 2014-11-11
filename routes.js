@@ -407,7 +407,7 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'contacts'
-      , baseUrl:  '/admin/restaurants/:rid'
+      , baseUrl:  '/admin/restaurants/:restaurant_id'
       })
     , m.param('restaurant_id')
     , m.sort('+id')

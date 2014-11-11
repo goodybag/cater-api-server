@@ -302,7 +302,10 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants/:id'
     , m.param('id')
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'basic-info'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.queryOptions({
         many: [{ table: 'contacts' }]
@@ -320,7 +323,10 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants/:id/basic-info'
     , m.param('id')
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'basic-info'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
         layout: 'admin/layout-two-column'
@@ -331,7 +337,10 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants/:id/billing-info'
     , m.param('id')
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'billing-info'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'billing-info'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
     , m.states()
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.queryOptions({
@@ -345,7 +354,10 @@ module.exports.register = function(app) {
 
     app.get('/admin/restaurants/:rid/delivery-settings'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'delivery-settings'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'delivery-settings'
+      , baseUrl:  '/admin/restaurants/:rid'
+      })
     , m.restaurant( {param: 'rid' } )
     , m.view('admin/restaurant/edit-delivery-settings', {
         layout: 'admin/layout-two-column'
@@ -354,7 +366,10 @@ module.exports.register = function(app) {
 
     app.get('/admin/restaurants/:rid/hours-of-operation'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'hours-of-operation'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'hours-of-operation'
+      , baseUrl:  '/admin/restaurants/:rid'
+      })
     , m.restaurant( {param: 'rid' } )
     , m.view('admin/restaurant/hours-of-operation', {
         layout: 'admin/layout-two-column'
@@ -364,7 +379,10 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants/:rid/tags'
     , m.enums()
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'tags'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'tags'
+      , baseUrl:  '/admin/restaurants/:rid'
+      })
     , m.restaurant( {param: 'rid' } )
     , m.view('admin/restaurant/edit-tags', {
         layout: 'admin/layout-two-column'
@@ -374,7 +392,10 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants/:rid/address'
     , m.states()
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'address'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'address'
+      , baseUrl:  '/admin/restaurants/:rid'
+      })
     , m.restaurant( {param: 'rid' } )
     , m.view('admin/restaurant/edit-address', {
         layout: 'admin/layout-two-column'
@@ -384,7 +405,10 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants/:restaurant_id/contacts'
     , m.restrict(['admin'])
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'contacts'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'contacts'
+      , baseUrl:  '/admin/restaurants/:rid'
+      })
     , m.param('restaurant_id')
     , m.sort('+id')
     , m.restaurant( { param: 'restaurant_id' } )
@@ -396,7 +420,10 @@ module.exports.register = function(app) {
 
     app.get('/admin/restaurants/:rid/menu'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'menu'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'menu'
+      , baseUrl:  '/admin/restaurants/:rid'
+      })
     , m.restaurant( { param: 'rid', withMenuItems: true } )
     , m.view('admin/restaurant/edit-menu', {
         layout: 'admin/layout-two-column'
@@ -418,7 +445,10 @@ module.exports.register = function(app) {
 
     app.get('/admin/restaurants/:restaurant_id/photos'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.defaultLocals( { active_tab: 'photos'} )
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'photos'
+      , baseUrl:  '/admin/restaurants/:rid'
+      })
     , m.restaurant( { param: 'restaurant_id' } )
     , m.param('restaurant_id')
     , m.sort('+priority')
@@ -436,6 +466,76 @@ module.exports.register = function(app) {
 
     app.get('/admin/restaurants/:restaurant_id/copy'
     , controllers.restaurants.copy
+    );
+
+    app.get('/admin/restaurants/:id/locations'
+    , m.param('id')
+    , m.queryOptions({
+        one:    [{ table: 'regions', alias: 'region' }]
+      , many:   [ { table: 'restaurant_locations', alias: 'locations'
+                  , order: [ 'is_default desc', 'name asc' ]
+                  }
+                ]
+      })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'locations'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.viewPlugin( 'collection', { path: 'app/collections/restaurant-locations' } )
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.view( 'admin/restaurant/locations-list', db.restaurants, {
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
+
+    app.get('/admin/restaurants/:id/locations/new'
+    , m.queryOptions({
+        one:  [{ table: 'regions', alias: 'region' }]
+      })
+    , m.states()
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'locations'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.viewPlugin( 'itemForm', {
+        selector:           '#create-item-form'
+      , collection:         'app/collections/restaurant-locations'
+      , collectionOptions:  { restaurant_id: ':id' }
+      })
+    , m.view( 'admin/restaurant/location-new', db.restaurants, {
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
+
+    app.get('/admin/restaurants/:restaurant_id/locations/:id'
+    , m.param('restaurant_id')
+    , m.param('id')
+    , m.states()
+    , m.queryOptions({ one: [{ table: 'regions', alias: 'region' }] })
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'locations'
+      , baseUrl:  '/admin/restaurants/:restaurant_id'
+      })
+    , m.viewPlugin( 'breadCrumbs', {
+        currentPage: 'basic-info'
+      })
+    , m.viewPlugin( 'itemForm', {
+        selector:           '#edit-item-form'
+      , collection:         'app/collections/restaurant-locations'
+      , localModelProp:     'restaurant_location'
+      , collectionOptions:  { restaurant_id: ':restaurant_id' }
+      })
+    , function( req, res, next ){
+        return m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
+      }
+    , m.view( 'admin/restaurant/location-edit', db.restaurant_locations, {
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
     );
 
     app.get('/admin/ol-greg'
@@ -1289,8 +1389,10 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.queryOptions({
-      one:  [ { table: 'restaurants', alias: 'restaurant' }
+      one:  [ { table: 'restaurants', alias: 'restaurant'
+              , many: [{ table: 'restaurant_locations', alias: 'locations' }] }
             , { table: 'users', alias: 'user' }
+            , { table: 'restaurant_locations', alias: 'location' }
             ]
     , many: [{ table: 'order_items', alias: 'items' }]
     })
@@ -1409,6 +1511,35 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.param('id')
   , m.remove( db.contacts )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/locations'
+  , m.pagination({ allowLimit: true })
+  , m.param('restaurant_id')
+  , m.find( db.restaurant_locations )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/locations'
+  , m.queryToBody('restaurant_id')
+  , m.insert( db.restaurant_locations )
+  );
+
+  app.get('/api/restaurants/:restaurant_id/locations/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.findOne( db.restaurant_locations )
+  );
+
+  app.put('/api/restaurants/:restaurant_id/locations/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.update( db.restaurant_locations )
+  );
+
+  app.del('/api/restaurants/:restaurant_id/locations/:id'
+  , m.param('id')
+  , m.param('restaurant_id')
+  , m.remove( db.restaurant_locations )
   );
 
   app.get('/api/restaurants/:restaurant_id/payment-summaries'

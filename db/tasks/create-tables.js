@@ -50,6 +50,7 @@ var definitions = [
 , 'order-notifications'
 , 'scheduled-jobs'
 , 'restaurant-requests'
+, 'restaurant-locations'
 ];
 
 // var definitions = fs.readdirSync(__dirname + '/definitions');

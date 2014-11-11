@@ -72,13 +72,11 @@ define(function(require) {
     utils.async.series([
       tx.begin.bind( tx )
       // Remove items
-    , utils.async.log('remove')
     , tx.payment_summary_items.remove.bind(
         tx.payment_summary_items
       , { payment_summary_id: $where.id }
       )
       // Add items
-    , utils.async.log('add/noop')
     , items.length > 0
       ? tx.payment_summary_items.insert.bind(
           tx.payment_summary_items
@@ -86,7 +84,6 @@ define(function(require) {
         )
       : utils.async.noop
       // Update the original document
-    , utils.async.log('update')
     , Object.keys( $update ).length > 0
       ? tx.payment_summaries.update.bind(
           tx.payment_summaries
@@ -95,7 +92,6 @@ define(function(require) {
         , options
         )
       : utils.async.noop
-    , utils.async.log('commit')
     , tx.commit.bind( tx )
     ], callback );
   };

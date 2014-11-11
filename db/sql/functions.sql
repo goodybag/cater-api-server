@@ -1,6 +1,18 @@
 --------------------
 -- Event Handlers --
 --------------------
+
+create or replace function restaurant_locations_is_default_change()
+returns trigger as $$
+begin
+  update restaurant_locations
+    set is_default = false
+    where restaurant_id = NEW.restaurant_id
+      and id != NEW.id;
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function on_order_amenities_update()
 returns trigger as $$
 begin
@@ -20,6 +32,9 @@ $$ language plpgsql;
 create or replace function on_order_create()
 returns trigger as $$
 begin
+  if ( NEW.restaurant_location_id is null ) then
+    perform set_order_default_location( NEW );
+  end if;
   return NEW;
 end;
 $$ language plpgsql;
@@ -165,8 +180,8 @@ begin
   if o.type = 'courier' then
     return coalesce(
       (select dsz.price from delivery_service_zips dsz
-      left join restaurants rs on rs.id = o.restaurant_id
-      where dsz."from" = rs.zip
+      left join restaurant_locations rl on rl.id = o.restaurant_location_id
+      where dsz."from" = rl.zip
         and dsz."to" = o.zip
       limit 1)
     , default_fee
@@ -217,9 +232,11 @@ begin
     where orders.id = o.id
   );
 
+  tax_rate := coalesce( tax_rate, 0 );
+
   tax_exempt := (select is_tax_exempt from users where users.id = o.user_id);
 
-  delivery_fee := get_order_delivery_fee( o );
+  delivery_fee := coalesce( get_order_delivery_fee( o ), 0 );
 
   for order_item in (
     select * from order_items where order_id = o.id
@@ -418,5 +435,30 @@ begin
     )
   where r.id = new.id;
   return new;
+end;
+$$ language plpgsql;
+
+create or replace function set_order_default_location( oid int )
+returns void as $$
+  declare o orders;
+begin
+  for o in ( select * from orders where id = oid )
+  loop
+    perform set_order_default_location( o );
+    return;
+  end loop;
+end;
+$$ language plpgsql;
+
+create or replace function set_order_default_location( o orders )
+returns void as $$
+begin
+  update orders
+    set restaurant_location_id = (
+      select id from restaurant_locations rl
+        where rl.restaurant_id = orders.restaurant_id
+          and rl.is_default = true
+    )
+    where orders.id = o.id;
 end;
 $$ language plpgsql;

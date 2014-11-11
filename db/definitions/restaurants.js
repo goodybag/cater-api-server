@@ -167,6 +167,15 @@ define(function(require) {
   , search_vector: {
       type: types.tsvector
     }
+  , has_contract: {
+      type: types.boolean
+    , default: false
+    }
+  , no_contract_fee: {
+      type: types.numeric(5,5)
+    , nullable: false
+    , default: 0
+    }
   };
 
   definition.indices = {};

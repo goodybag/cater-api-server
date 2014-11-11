@@ -9,6 +9,7 @@ var Models          = require('../models');
 var db              = require('../db');
 var manifest        = require('../lib/order-manifester');
 var orderEditable   = require('./order-editable');
+var odsChecker      = require('../public/js/lib/order-delivery-service-checker');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
@@ -26,6 +27,10 @@ module.exports = function( options ){
 
     if ( options.submittedDate ) {
       $options.submittedDate = options.submittedDate;
+    }
+
+    if ( options.location ){
+      $options.one.push({ table: 'restaurant_locations', alias: 'location' });
     }
 
     if ( options.user ){
@@ -70,7 +75,7 @@ module.exports = function( options ){
       if ( options.amenities ){
         // I am sorry for this.
         // I wanted to look at all of the available amenities as well as if there's
-        // a order_amenity record. It's aliased as "amenity.checked", so that I know which 
+        // a order_amenity record. It's aliased as "amenity.checked", so that I know which
         // have been added to an order.
         restaurantMany.push({
           table: 'amenities'
@@ -126,6 +131,10 @@ module.exports = function( options ){
 
       if ( options.manifest ){
         order.manifest = manifest.create( order.orderItems );
+      }
+
+      if ( options.courierReasons && order.type === 'courier' ){
+        order.courierReasons = odsChecker.why( order );
       }
 
       req.order = order;

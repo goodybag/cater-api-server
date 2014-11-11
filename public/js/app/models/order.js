@@ -11,7 +11,8 @@ define(function(require, exports, module) {
   var OrderItem = require('./order-item');
   var Address = require('./address');
 
-  var orderDeliveryServiceCriteria = require('order-delivery-service-criteria');
+  var odsChecker = require('order-delivery-service-checker');
+  utils.each( require('order-delivery-service-criteria'), odsChecker.add );
 
   var Order = Backbone.Model.extend({
     schema: function() {
@@ -178,11 +179,20 @@ define(function(require, exports, module) {
         this.orderItems.orderId = model.id;
       });
 
-      this.on('change:amenities_total', this.updateSubtotal);
+      var fieldsThatShouldPromptCourierCheck = [
+        'sub_total'
+      , 'datetime'
+      , 'zip'
+      , 'guests'
+      ].map( function( f ){
+        return 'change:' + f
+      }).join(' ');
 
-      if ( this.shouldBeDeliveryService() ){
-        this.set( 'type', 'courier' );
-      }
+      this.on( fieldsThatShouldPromptCourierCheck, this.updateOrderType, this);
+
+      this.updateOrderType();
+      
+      this.on('change:amenities_total', this.updateSubtotal);
 
       this.listenTo(this.orderItems, 'change:sub_total add remove', this.updateSubtotal, this);
 
@@ -205,9 +215,6 @@ define(function(require, exports, module) {
       }, this);
 
       this.on('change:sub_total', function(model, value, options) {
-        if ( this.shouldBeDeliveryService() ){
-          this.set( 'type', 'courier' );
-        }
         model.set('below_min', value < model.restaurant.get('minimum_order'));
         model.setSubmittable(model, value, options);
       }, this);
@@ -288,9 +295,6 @@ define(function(require, exports, module) {
     ],
 
     zipChanged: function(model, value, options) {
-      if ( this.shouldBeDeliveryService() ){
-        this.set( 'type', 'courier' );
-      }
       model.restaurant.set('is_bad_zip', !this.restaurant.isValidZip(this));
     },
 
@@ -299,10 +303,6 @@ define(function(require, exports, module) {
     },
 
     datetimeChanged: function(model, value, options) {
-      if ( this.shouldBeDeliveryService() ){
-        this.set( 'type', 'courier' );
-      }
-
       if (!value) {
         model.restaurant.set({
           is_bad_delivery_time: null,
@@ -332,10 +332,6 @@ define(function(require, exports, module) {
     },
 
     guestsChanged: function(model, value, options) {
-      if ( this.shouldBeDeliveryService() ){
-        this.set( 'type', 'courier' );
-      }
-
       if (value == null) {
         model.restaurant.set({
           is_bad_guests: null,
@@ -499,7 +495,7 @@ define(function(require, exports, module) {
         restaurant: this.restaurant.toJSON()
       });
 
-      return orderDeliveryServiceCriteria.check( order )
+      return odsChecker.check( order )
     },
 
     onOrderTypeChange: function( model, type, options ){
@@ -515,6 +511,14 @@ define(function(require, exports, module) {
           , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
           ).format('YYYY-MM-DD hh:mm:ss')
         );
+      }
+    },
+
+    updateOrderType: function(){
+      if ( this.shouldBeDeliveryService() ){
+        this.set( 'type', 'courier' );
+      } else {
+        this.set( 'type', 'delivery' );
       }
     }
   }, {

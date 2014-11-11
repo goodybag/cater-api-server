@@ -11,6 +11,20 @@ define(function(require, exports, module) {
 
   var helpers = {};
 
+  helpers.findIndex = function( collection, iFn ){
+    if ( typeof iFn !== 'function' ){
+      return collection.indexOf( iFn );
+    }
+
+    for ( var i = 0, l = collection.length; i < l; ++i ){
+      if ( iFn( collection[ i ], i, collection ) ){
+        return i;
+      }
+    }
+
+    return -1;
+  };
+
   helpers.timeToRange = function( time, format, options ){
     if ( typeof time !== 'string' ){
       throw new Error('Invalid type for parameter `time`');

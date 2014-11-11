@@ -64,6 +64,14 @@
                       {{/eq}}
                     <dt>Order minimum:</dt>
                     <dd>${{dollarsOmit00 (or minimum_order 0)}}</dd>
+                    {{#unless has_contract}}
+                    {{#if no_contract_fee}}
+                      <span class="tx-fee" data-toggle="popover">
+                        <dt>Transaction Fee:</dt>
+                        <dd>{{factorToPercent no_contract_fee}}%</dd>
+                      </span>
+                    {{/if}}
+                    {{/unless}}
                   </dl>
                 </div>
               </div>

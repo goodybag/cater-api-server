@@ -22,6 +22,7 @@ define( function( require ){
       var allRestaurants  = options.allRestaurants;
 
       $(".tag-tooltip").tooltip();
+      $('.tx-fee').popover({ trigger: 'hover' });
 
       // Prepare listing to be usable by the facet serach
       utils.each( restaurants, function( r ){

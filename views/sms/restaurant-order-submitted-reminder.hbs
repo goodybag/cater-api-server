@@ -1,4 +1,3 @@
 {{#with order}}
-Resending: New Goodybag order for ${{dollars total}} {{#eq type 'delivery'}}for delivery at {{timepart datetime}} on {{datepart datetime}}.
-{{else}}for pickup at {{timepart pickup_datetime}} on {{datepart pickup_datetime}}.{{/eq}}
+Goodybag order #{{id}} was submitted over an hour ago, please review here
 {{/with}}{{url}}

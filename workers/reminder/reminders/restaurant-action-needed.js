@@ -54,8 +54,7 @@ var getOptions = function( storage ){
 
 var notifyOrderFn = function( order ) {
   return function( done ) {
-    // TODO create sms notification
-    notifier.send( 'blah blah', order.id, function(error) {
+    notifier.send( 'order-submitted-needs-action-sms', order.id, function(error) {
       done( error, error ? null : order );
     });
   };
@@ -80,10 +79,9 @@ module.exports.work = function( storage, callback ){
 
     utils.async.parallelNoBail(orders.map(notifyOrderFn), function done(errors, results) {
       if ( errors ) stats.errors.val = errors.length;
-      console.log(results);
+      stats.orders.value = results.length;
       /// TODO mark last notified = new Date()
+      callback( null, stats );
     });
-    stats.orders.value = results.length;
-    callback( null, stats );
   });
 };

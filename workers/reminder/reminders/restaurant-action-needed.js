@@ -27,15 +27,18 @@ var getQuery = function( storage ){
     }
   };
 
-  var staleIds = Object.keys(storage.lastNotified).reduce( function(list, id) {
-    var hourAgo = new Date() - 60*60*1000;
-    if ( storage.lastNotified[id] < hourAgo ) list.push(id);
+  var recent = Object.keys(storage.lastNotified).reduce( function(list, id) {
+    var hourAgo = new Date(new Date() - 60*60*1000);
+    var date = new Date(storage.lastNotified[id]);
+    if ( date >= hourAgo ) {
+      list.push(id);
+    }
     return list;
   }, []);
 
-  if ( staleIds.length ) {
+  if ( recent.length ) {
     $query.where.id = {
-      $nin: staleIds
+      $nin: recent
     };
   }
 
@@ -45,9 +48,6 @@ var getQuery = function( storage ){
 var getOptions = function( storage ){
   var options = {
     submittedDate: true
-  , one: [ { table: 'restaurants', alias: 'restaurant', many: [
-            { table: 'contacts', alias: 'contacts' }
-          ] } ]
   };
   return options;
 };
@@ -63,7 +63,6 @@ var notifyOrderFn = function( order ) {
 module.exports.check = function( storage, callback ){
   db.orders.find( getQuery( storage ), getOptions( storage ), function( error, results ){
     if ( error ) return callback( error );
-
     return callback( null, results.length > 0 );
   });
 };
@@ -71,16 +70,26 @@ module.exports.check = function( storage, callback ){
 module.exports.work = function( storage, callback ){
   var stats = {
     orders: { text: 'Idle submitted orders', value: 0 }
+  , sent:   { text: 'Notifications Sent', value: 0 }
   , errors: { text: 'Errors', value: 0 }
   };
 
   db.orders.find( getQuery( storage ), getOptions( storage ), function( error, orders ){
     if ( error ) return callback( error );
-
+    stats.orders.value = orders.length;
     utils.async.parallelNoBail(orders.map(notifyOrderFn), function done(errors, results) {
-      if ( errors ) stats.errors.val = errors.length;
-      stats.orders.value = results.length;
-      /// TODO mark last notified = new Date()
+      if ( errors ) {
+        stats.errors.val = errors.length;
+        return callback( errors, stats );
+      }
+
+      results.forEach(function( result, i ){
+        if ( !result || Object.keys(result).length === 0 ) return;
+
+        stats.sent.value++;
+        storage.lastNotified[ result.id ] = new Date().toString();
+      });
+
       callback( null, stats );
     });
   });

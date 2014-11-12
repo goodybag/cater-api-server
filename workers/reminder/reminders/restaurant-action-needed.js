@@ -19,7 +19,7 @@ var getQuery = function( storage ){
   var $query = {
     where: {
       status: 'submitted'
-    , 'submitted_dates.submitted': { $older_than: { value: 1, unit: 'hours' } }
+    , 'submitted_dates.submitted': { $older_than: config.workers.reminders.actionNeeded.threshold }
     }
   };
 

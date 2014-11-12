@@ -368,6 +368,7 @@ config.dev = {
   , reminders: {
       actionNeeded: {
         interval: 5 * 60 * 1000 // 5 minute
+      , threshold: { value: 1, unit: 'hours' }
       }
     }
   }
@@ -461,6 +462,7 @@ config.staging = {
   , reminders: {
       actionNeeded: {
         interval: 60 * 60 * 1000 // 1 hour
+      , threshold: { value: 1, unit: 'hours' }
       }
     }
   }
@@ -605,6 +607,7 @@ config.production = {
   , reminders: {
       actionNeeded: {
         interval: 60 * 60 * 1000 // 1 hour
+      , threshold: { value: 1, unit: 'hours' }
       }
     }
   }

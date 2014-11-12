@@ -1,0 +1,18 @@
+<span class="popover-wrapper table-list-popover-wrapper">
+  <a href="#" data-role="popover" data-target="visible-modal">
+    Show hidden <span class="gb-icon-caret-down va-middle"></span>
+  </a>
+  <div class="popover-modal visible-modal">
+    <div class="popover-header">
+      Showing<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+    </div>
+    <div class="popover-body">
+      {{#each filters.show}}
+      <a class="popover-item" href="?q={{this.qs}}">
+        <span class="popover-item-icon">{{#if active}}<span class="gb-icon-checkmark va-middle"></span>{{/if}}</span>
+        <span class="popover-item-label">{{name}}</span>
+      </a>
+      {{/each}}
+    </div>
+  </div>
+</span>

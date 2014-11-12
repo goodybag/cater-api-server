@@ -14,6 +14,7 @@ define(function(require, exports, module) {
   require('jquery.toggler');
   require('jquery.prefixer');
   require('jquery.modern-modal');
+  require('jquery.popover');
 
   $(function(){
     $('input, textarea').placeholder();

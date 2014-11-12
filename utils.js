@@ -34,6 +34,7 @@ if (fs.existsSync('./local-config.json')){
 utils.useragent = require('useragent');
 utils.Promise = require('bluebird');
 utils.http = utils.Promise.promisify( request );
+utils.request = request;
 utils.twilio = twilio(config.twilio.account, config.twilio.token);
 utils.bitly = new Bitly(config.bitly.username, config.bitly.apiKey);
 

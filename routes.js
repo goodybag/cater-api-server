@@ -61,6 +61,11 @@ module.exports.register = function(app) {
     app.post('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
   });
 
+  // Temporary for job fair
+  app.get('/fsjse.md', function( req, res ){
+    utils.request('https://gist.githubusercontent.com/jrf0110/5b3a3ae62d3b2c39e89f/raw/292c6d1578d127e0173bf60d6057f1fcff6ebf4c/js-dev-2.md')
+      .pipe( res );
+  });
 
   /**
    * Restaurants resource.  The collection of all restaurants.
@@ -271,10 +276,12 @@ module.exports.register = function(app) {
 
     app.get('/admin/restaurants'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
-    , m.db.restaurants.find( {}, {
-        limit: 'all'
-      , order: 'name'
-      })
+    , m.filters([
+        'restaurant-region'
+      , 'restaurant-visibility'
+      , 'restaurant-sort'
+      ])
+    , m.getRestaurants()
     , m.view('admin/restaurant/edit-restaurants', {
         layout: 'admin/layout-page'
       })

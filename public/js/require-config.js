@@ -22,6 +22,7 @@
       // directories
     , app:    '../app'
     , views:  '../app/views'
+    , spec:   '../../test/unit'
     }
 
   , packages: [

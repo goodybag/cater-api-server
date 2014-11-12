@@ -1,0 +1,58 @@
+.popover-wrapper {
+  position: relative;
+}
+
+.popover-modal {
+  .drop-shadow;
+  display: none;
+  position: absolute;
+  right: 15px;
+  top: 20px;
+  z-index: 1000;
+  width: 300px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border: 1px solid @table-list-border-color;
+  background-color: @palette-white;
+  color: @palette-black;
+}
+
+.popover-modal .popover-header {
+  padding: 8px;
+  line-height: 19px;
+  border-bottom: 1px solid @palette-gray;
+}
+
+.popover-modal .popover-header a {
+  color: @palette-dark-gray;
+  text-decoration: none;
+  line-height: 19px;
+}
+
+.popover-modal .popover-header a:hover {
+  color: @palette-black;
+}
+
+.popover-modal .popover-item {
+  display: block;
+  color: @palette-black;
+}
+
+.popover-modal .popover-item:hover {
+  background-color: @palette-gray;
+}
+
+.popover-modal .popover-item .popover-item-icon {
+  display: table-cell;
+  padding: 8px 0 8px 8px;
+  width: 22px;
+}
+
+.popover-modal .popover-item .popover-item-label {
+  display: table-cell;
+  padding: 8px;
+}
+
+.popover-modal.open {
+  display: block;
+}

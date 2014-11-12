@@ -1,0 +1,130 @@
+.table-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  color: @table-list-color;
+  font-size: @font-size-base;
+}
+
+.table-list-bordered {
+  border: 1px solid @table-list-border-color;
+}
+
+.table-list-header {
+  background-color: @table-list-header-background-color;
+  color: @table-list-header-color;
+  font-family: 'Proxima Nova', Helvetica, sans-serif;
+  border-top-left-radius: @table-list-border-radius;
+  border-top-right-radius: @table-list-border-radius;
+  .clearfix;
+}
+
+.table-list-header .table-list-header-title {
+  float: left;
+  padding: @table-list-padding;
+}
+
+.table-list-header .table-list-header-actions {
+  float: right;
+  // let child elements define padding
+}
+
+.table-list > a {
+  text-decoration: none;
+  color: @palette-black;
+}
+
+.table-list-item {
+  display: inline-block;
+  width: 100%;
+  padding: @table-list-padding;
+  border-bottom: 1px solid @palette-dark-gray;
+}
+
+.table-list-item:last-child {
+  border: none;
+}
+
+.table-list-bordered .table-list-item:hover {
+  background-color: @table-list-hover-background;
+}
+
+.table-list-item .table-list-info {
+  font-weight: @semibold;
+}
+
+.table-list-item .gb-icon-eye-slash {
+  font-size: 36px;
+  color: @palette-dark-gray;
+}
+
+.table-list-header .filter-link {
+  display: inline-block;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.filter-icon {
+  font-size: 9px;
+}
+
+.table-list-header a {
+  text-decoration: none;
+  color: @palette-white;
+}
+.table-list-item a {
+  text-decoration: none;
+  color: @palette-blue;
+}
+
+.table-list-clear {
+  display: inline-block;
+  text-decoration: none;
+  color: @palette-black;
+  margin-bottom: 20px;
+  font-size: @font-size-large;
+}
+
+.table-list-clear > span {
+  vertical-align: middle;
+}
+
+.table-list-clear .gb-icon-x-mark {
+  display: inline-block;
+  background-color: @palette-black;
+  color: @palette-white;
+  border-radius: @table-list-border-radius;
+  font-size: @font-size-large;
+  height: @table-list-close-btn-size;
+  width: @table-list-close-btn-size;
+  line-height: @table-list-close-btn-size;
+  text-align: center;
+}
+
+.table-list-clear:hover .gb-icon-x-mark {
+  background-color: @palette-blue;
+}
+
+.table-list-clear:hover {
+  color: @palette-blue;
+  text-decoration: none;
+}
+
+.table-list-popover-wrapper > a {
+  padding: @table-list-padding;
+  display: inline-block;
+  color: @palette-dark-gray;
+}
+
+.table-list-popover-wrapper > a:hover {
+  color: @white;
+}
+
+@table-list-border-radius: 3px;
+@table-list-padding: 15px;
+@table-list-border-color: @palette-black;
+@table-list-color: @palette-black;
+@table-list-header-background-color: @palette-black;
+@table-list-header-color: @palette-white;
+@table-list-hover-background: @palette-gray;
+@table-list-close-btn-size: 20px;

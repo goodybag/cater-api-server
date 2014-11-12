@@ -11,6 +11,7 @@ module.exports.name = 'Restaurant Action Needed';
 var db              = require('../../../db');
 var utils           = require('../../../utils');
 var notifier        = require('../../../lib/order-notifier');
+var config          = require('../../../config');
 
 var getQuery = function( storage ){
   // 1. Filter submitted orders over an hour
@@ -22,8 +23,9 @@ var getQuery = function( storage ){
     }
   };
 
+  // Don't notify until one hour since last notification
   var recent = Object.keys(storage.lastNotified).reduce( function(list, id) {
-    var hourAgo = new Date(new Date() - 60*60*1000);
+    var hourAgo = new Date(new Date() - config.workers.reminders.actionNeeded.interval);
     var date = new Date(storage.lastNotified[id]);
     if ( date >= hourAgo ) {
       list.push(id);

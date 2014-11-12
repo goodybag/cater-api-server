@@ -365,6 +365,11 @@ config.dev = {
         interval: 1000 * 5 // 5 seconds
       }
     }
+  , reminders: {
+      actionNeeded: {
+        interval: 5 * 60 * 1000 // 5 minute
+      }
+    }
   }
 };
 
@@ -451,6 +456,11 @@ config.staging = {
     debit: {
       enqueue: {
         interval: 1000 * 5 // 5 seconds
+      }
+    }
+  , reminders: {
+      actionNeeded: {
+        interval: 60 * 60 * 1000 // 1 hour
       }
     }
   }
@@ -590,6 +600,11 @@ config.production = {
     debit: {
       enqueue: {
         interval: 1000 * 60 * 30 // 30 minutes
+      }
+    }
+  , reminders: {
+      actionNeeded: {
+        interval: 60 * 60 * 1000 // 1 hour
       }
     }
   }

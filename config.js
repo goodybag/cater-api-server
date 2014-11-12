@@ -366,6 +366,12 @@ config.dev = {
         interval: 1000 * 5 // 5 seconds
       }
     }
+  , reminders: {
+      actionNeeded: {
+        interval: 5 * 60 * 1000 // 5 minute
+      , threshold: { value: 1, unit: 'hours' }
+      }
+    }
   }
 };
 
@@ -452,6 +458,12 @@ config.staging = {
     debit: {
       enqueue: {
         interval: 1000 * 5 // 5 seconds
+      }
+    }
+  , reminders: {
+      actionNeeded: {
+        interval: 60 * 60 * 1000 // 1 hour
+      , threshold: { value: 1, unit: 'hours' }
       }
     }
   }
@@ -589,6 +601,12 @@ config.production = {
     debit: {
       enqueue: {
         interval: 1000 * 60 * 30 // 30 minutes
+      }
+    }
+  , reminders: {
+      actionNeeded: {
+        interval: 60 * 60 * 1000 // 1 hour
+      , threshold: { value: 1, unit: 'hours' }
       }
     }
   }

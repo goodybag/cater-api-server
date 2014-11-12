@@ -45,6 +45,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="icon-"] {
 */
+.gb-icon-question,
 .gb-icon-caret-down,
 .gb-icon-x-mark,
 .gb-icon-magnifier,
@@ -68,6 +69,10 @@ you can use the generic selector below, but it's slower:
   text-transform: none;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
+}
+.gb-icon-question:before,
+[data-icon="gb-icon-question"]:before {
+  content: "\e608";
 }
 .gb-icon-caret-down:before,
 [data-icon="gb-icon-caret-down"]:before {

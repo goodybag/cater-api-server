@@ -22,7 +22,12 @@ define( function( require ){
       var allRestaurants  = options.allRestaurants;
 
       $(".tag-tooltip").tooltip();
-      $('.tx-fee').popover({ trigger: 'hover' });
+      $('.tx-fee').popover({
+        trigger:    'hover'
+      , content:    Handlebars.partials.restaurant_list_tx_fee_popover()
+      , placement:  'top'
+      , html:       true
+      });
 
       // Prepare listing to be usable by the facet serach
       utils.each( restaurants, function( r ){

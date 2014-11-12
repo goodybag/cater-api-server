@@ -51,7 +51,44 @@ define(function(require, exports, module) {
         , el: $el[0]
         });
       });
+
+      this.initPopOver();
+
       return this;
+    },
+
+    initPopOver: function(){
+      var $el = this.$el.find('.tx-fee-popover');
+      var isShowing = false;
+      var hideTimeout;
+
+      $el.popover('destroy');
+
+      $el.popover({
+        placement: 'top'
+      , container: $el
+      , trigger: 'manual'
+      , content: Handlebars.partials.menu_order_summary_tx_fee_popover()
+      , html: true
+      // , delay: { hide: 1000 }
+      });
+
+      // Using hover + delay produces some funky blinking
+      // Some implement my own solution for delayed hiding and hover show
+      $el.mouseenter( function(){
+        if ( hideTimeout ) clearTimeout( hideTimeout );
+        if ( !isShowing ){
+          isShowing = true;
+          $el.popover('show');
+        }
+      });
+
+      $el.mouseleave( function(){
+        hideTimeout = setTimeout( function(){
+          isShowing = false;
+          $el.popover('hide');
+        }, 1000 );
+      });
     },
 
     addItem: function(model, collection, options) {

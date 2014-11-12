@@ -546,8 +546,6 @@ config.production = {
   , info: 'info@goodybag.com'
   , rewards: [
       'jacobparker@goodybag.com'
-    , 'sarahsouthwell@goodybag.com'
-    , 'christymedlock@goodybag.com'
     , 'jag@goodybag.com'
     , 'om@goodybag.com'
     , 'redemptions@goodybag.com'

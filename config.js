@@ -44,7 +44,7 @@ config.defaults = {
   , 'sarah.southwell@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'om@goodybag.com'
-  , 'jay@goodybag.com'
+  // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
   ]
 
@@ -53,7 +53,7 @@ config.defaults = {
   , 'sarah.southwell@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'om@goodybag.com'
-  , 'jay@goodybag.com'
+  // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
   ]
 
@@ -564,7 +564,7 @@ config.production = {
     ]
   , reminderIgnored: [
       'om@goodybag.com'
-    , 'jay@goodybag.com'
+    // , 'jay@goodybag.com'
     , 'jag@goodybag.com'
     , 'jacobparker@goodybag.com'
     , 'sarahsouthwell@goodybag.com'

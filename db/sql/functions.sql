@@ -1,3 +1,5 @@
+-- @import "./order-functions.sql";
+
 --------------------
 -- Event Handlers --
 --------------------
@@ -140,61 +142,6 @@ begin
 end;
 $$ language plpgsql;
 
-create or replace function get_order_delivery_fee( oid int )
-returns int as $$
-  declare o orders;
-begin
-  for o in ( select * from orders where id = oid )
-  loop
-    return get_order_delivery_fee( o );
-  end loop;
-end;
-$$ language plpgsql;
-
-create or replace function get_order_delivery_fee( o orders )
-returns int as $$
-  declare default_fee int;
-begin
-  -- Pickup Order
-  if o.type = 'pickup' then
-    return 0;
-  end if;
-
-  -- If `zip` does not exist, just pick the least expensive one
-  default_fee := (select fee from restaurant_delivery_zips
-    where restaurant_id = o.restaurant_id
-    order by fee asc
-    limit 1);
-
-  if o.type = 'delivery' then
-    return coalesce(
-      (select fee from restaurant_delivery_zips rdz
-      where rdz.zip = o.zip
-        and rdz.restaurant_id = o.restaurant_id
-      order by fee asc
-      limit 1)
-    , default_fee
-    );
-  end if;
-
-  if o.type = 'courier' then
-    return coalesce(
-      (select dsz.price from delivery_service_zips dsz
-      left join restaurant_locations rl on rl.id = o.restaurant_location_id
-      where dsz."from" = rl.zip
-        and dsz."to" = o.zip
-      limit 1)
-    , default_fee
-    );
-  end if;
-
-  return coalesce(
-    default_fee
-  , 0
-  );
-end;
-$$ language plpgsql;
-
 create or replace function update_order_totals( oid int )
 returns void as $$
   declare o orders;
@@ -209,74 +156,19 @@ $$ language plpgsql;
 
 create or replace function update_order_totals( o orders )
 returns void as $$
-  declare order_item        record;
-  declare option            record;
-  declare order_amenity     record;
   declare tax_rate          numeric;
-  declare options_total     int := 0;
   declare delivery_fee      int := 0;
   declare sub_total         int := 0;
   declare sales_tax         int := 0;
   declare total             int := 0;
   declare restaurant_total  int := 0;
-  declare amenities_total   int := 0;
   declare r_sales_tax       int := 0;
-  declare curr              int := 0;
-  declare tax_exempt        boolean;
 begin
-  tax_rate := (
-    select regions.sales_tax
-    from orders
-    left join restaurants on orders.restaurant_id = restaurants.id
-    left join regions on restaurants.region_id = regions.id
-    where orders.id = o.id
-  );
+  delivery_fee := order_delivery_fee( o );
 
-  tax_rate := coalesce( tax_rate, 0 );
+  sub_total = order_sub_total( o );
 
-  tax_exempt := (select is_tax_exempt from users where users.id = o.user_id);
-
-  delivery_fee := coalesce( get_order_delivery_fee( o ), 0 );
-
-  for order_item in (
-    select * from order_items where order_id = o.id
-  ) loop
-    curr := order_item.price;
-
-    options_total := coalesce( (
-      with options1 as (
-        select json_array_elements(
-          json_array_elements( order_item.options_sets )->'options'
-        ) as option
-      ),
-      options as (
-        select
-          (options1.option->>'state')::boolean as state
-        , (options1.option->>'price')::int as price
-        from options1
-      )
-
-      select sum( options.price ) from options where options.state is true
-    ), 0 );
-
-    curr := curr + options_total;
-
-    sub_total := sub_total + (curr * order_item.quantity);
-  end loop;
-
-  for order_amenity in (
-    select * from order_amenities
-    join amenities on amenities.id = order_amenities.amenity_id
-    where order_id = o.id
-  ) loop
-    if order_amenity.scale = 'multiply' then
-      amenities_total := amenities_total + (order_amenity.price * o.guests);
-    else
-      amenities_total := amenities_total + order_amenity.price;
-    end if;
-  end loop;
-
-  sub_total := sub_total + amenities_total;
+  sub_total := sub_total + order_amenities_total( o );
 
   total             := sub_total + coalesce( o.adjustment_amount, 0 );
 
@@ -293,16 +185,13 @@ begin
 
   total := total + delivery_fee;
 
-  if not tax_exempt then
+  if not order_is_tax_exempt( o ) then
+    tax_rate        := order_tax_rate( o );
     sales_tax       := round( total * tax_rate );
-  end if;
-
-  total             := total + sales_tax + o.tip;
-
-  if not tax_exempt then
     r_sales_tax     := round( restaurant_total * tax_rate );
   end if;
 
+  total             := total + sales_tax + o.tip;
   restaurant_total  := restaurant_total + r_sales_tax;
 
   -- Only add tip if it was pickup or delivery

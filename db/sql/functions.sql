@@ -5,6 +5,8 @@ create or replace function on_driver_request_response_set()
 returns trigger as $$
 begin
   update order_driver_requests set response_date = now() where id = NEW.id;
+end;
+$$ language plpgsql;
 
 create or replace function restaurant_locations_is_default_change()
 returns trigger as $$

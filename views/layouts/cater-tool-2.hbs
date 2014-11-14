@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="page {{{block "page"}}}">
   <head>
-    <title>[Admin] Goodybag{{{block "html-title"}}}</title>
+    <title>Goodybag{{{block "html-title"}}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Goodybag Catering CSS Stuff -->
@@ -23,7 +23,12 @@
 
     <script>
       // Make sure chit like navbar is loaded
-      require(['jquery-loaded'], function(){});
+      require(['jquery-loaded'], function(){
+        $('.navbar').navbar({
+          {{#if user.id}}toggleText: false
+        , toggleLogin: false{{/if}}
+        });
+      });
     </script>
 
     {{{block "scripts"}}}

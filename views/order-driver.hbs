@@ -13,14 +13,14 @@
 <!--</BreadCrumbs>-->
 
 <!--<AcceptDecline>-->
-<div class="accept-decline panel-component panel-island">
+<div class="accept-decline panel-component panel-island" id="accept-decline">
   <div class="container">
     <div class="action-group">
       <div class="action-wrapper">
-        <button class="btn btn-primary">Yes</button>
+        <button class="btn btn-primary" data-response="true">Yes</button>
       </div>
       <div class="action-wrapper">
-        <button class="btn btn-default">No</button>
+        <button class="btn btn-default" data-response="false">No</button>
       </div>
     </div>
   </div>
@@ -94,6 +94,13 @@
 <!--</MainInfo>-->
 {{/extend}}
 
-{{#extend "script"}}
-
+{{#extend "scripts"}}
+<script>
+  require(['app/pages/driver/order'], function( page ){
+    page.init({
+      order:          {{{json order}}}
+    , driver_request: {{{json driver_request}}}
+    });
+  });
+</script>
 {{/extend}}

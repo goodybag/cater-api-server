@@ -626,6 +626,11 @@ define(function(require, exports, module) {
 
     driverCut: function( order ){
       return Math.round( order.sub_total * 0.05 ) + order.delivery_fee;
+    },
+
+    scope: function( options ){
+      var data = JSON.parse( options.fn(this) );
+      return options.inverse( data );
     }
   }
 

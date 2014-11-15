@@ -12,29 +12,30 @@
 </div> --}}
 <!--</BreadCrumbs>-->
 
+{{#isNull order_driver_request.response}}
+{{#with ../this}}
 <!--<AcceptDecline>-->
 <div class="accept-decline panel-component panel-island" id="accept-decline">
   <div class="container">
-    <div class="action-group">
-      <div class="action-wrapper">
-        <button class="btn btn-primary" data-response="true">Yes</button>
-      </div>
-      <div class="action-wrapper">
-        <button class="btn btn-default" data-response="false">No</button>
-      </div>
-    </div>
+    {{> order_driver_accept_decline}}
   </div>
 </div>
 <!--</AcceptDecline>-->
+{{/with}}
+{{/isNull}}
 
 <!--<MainInfo>-->
 <div class="container container-full-collapse">
   <div class="definition-row-list striped collapsible">
-    {{#eq order.driver_id user.id}}
-      <h3 class="title">You are delivering</h3>
+    {{#notNull order_driver_request.response}}
+      {{#if ../order_driver_request.response}}
+        <h3 class="title">You are delivering</h3>
+      {{else}}
+        <h3 class="title">You <em>declined</em> to deliver this order</h3>
+      {{/if}}
     {{else}}
       <h3 class="title">Can you deliver?</h3>
-    {{/eq}}
+    {{/notNull}}
     <dl>
       <div class="row">
         <dt>Delivery Date</dt>
@@ -98,8 +99,8 @@
 <script>
   require(['app/pages/driver/order'], function( page ){
     page.init({
-      order:          {{{json order}}}
-    , driver_request: {{{json driver_request}}}
+      order:                {{{json order}}}
+    , order_driver_request: {{{json order_driver_request}}}
     });
   });
 </script>

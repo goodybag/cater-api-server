@@ -1,0 +1,17 @@
+<div class="action-group">
+  <div class="action-wrapper">
+    <button
+      class="btn btn-primary
+      {{~#if order_driver_request.response}} selected{{/if}}"
+      {{#notNull order_driver_request.response}}disabled="true"{{/notNull}}
+      data-response="true">Yes</button>
+  </div>
+  <div class="action-wrapper">
+    <button
+      class="btn btn-default
+      {{~#notNull order_driver_request.response}}
+      {{~#if order_driver_request.response}} selected{{/if}}{{/notNull}}"
+      {{#notNull order_driver_request.response}}disabled="true"{{/notNull}}
+      data-response="false">No</button>
+  </div>
+</div>

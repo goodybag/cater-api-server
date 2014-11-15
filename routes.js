@@ -863,11 +863,12 @@ module.exports.register = function(app) {
     res.send(405);
   });
 
-  app.get('/orders/:oid/driver-requests/:id'
+  app.get('/orders/:order_id/driver-requests/:id'
   , m.restrict(['admin', 'order-driver'])
+  , m.param('order_id')
   , m.param('id')
   , m.getOrder2({
-      param:              'oid'
+      param:              'order_id'
     , items:              true
     , user:               true
     , userAddresses:      true
@@ -876,7 +877,7 @@ module.exports.register = function(app) {
     , deliveryService:    true
     , submittedDate:      true
     })
-  , m.view('order-driver', db.driver_requests, {
+  , m.view('order-driver', db.order_driver_requests, {
       layout: 'layouts/cater-tool-2'
     , method: 'findOne'
     })
@@ -1831,6 +1832,49 @@ module.exports.register = function(app) {
   , controllers.orders.notifications.JSON.historyItem
   );
 
+
+  app.post('/api/orders/:order_id/driver-requests'
+  , m.restrict(['admin'])
+  , m.param('order_id')
+  , m.getOrder2({ param: 'order_id' })
+  , m.insert( db.order_driver_requests )
+  );
+
+  app.get('/api/orders/:order_id/driver-requests/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.param('order_id')
+  , m.getOrder2({ param: 'order_id' })
+  , m.findOne( db.order_driver_requests )
+  );
+
+  app.put('/api/orders/:order_id/driver-requests/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.param('order_id')
+  , m.getOrder2({ param: 'order_id' })
+  , m.update( db.order_driver_requests )
+  );
+
+  app.post('/api/orders/:order_id/driver-requests/:id/set-response'
+  , m.param('id')
+  , m.param('order_id')
+  , m.getOrder2({ param: 'order_id' })
+  , m.restrict(['admin', 'order-driver'])
+  , m.filterBody({
+      'order-driver': ['response']
+    })
+  , m.update( db.order_driver_requests )
+  );
+
+  app.del('/api/orders/:order_id/driver-requests/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.param('order_id')
+  , m.getOrder2({ param: 'order_id' })
+  , m.remove( db.order_driver_requests )
+  );
+
   /**
    * Users
    */
@@ -1889,38 +1933,7 @@ module.exports.register = function(app) {
   , m.queryOptions({
       
     })
-  , m.find( db.driver_requests )
-  );
-
-  app.post('/api/driver-requests'
-  , m.restrict(['admin'])
-  , m.insert( db.driver_requests )
-  );
-
-  app.get('/api/driver-requests/:id'
-  , m.restrict(['admin'])
-  , m.param('id')
-  , m.findOne( db.driver_requests )
-  );
-
-  app.put('/api/driver-requests/:id'
-  , m.restrict(['admin'])
-  , m.param('id')
-  , m.update( db.driver_requests )
-  );
-
-  app.post('/api/driver-requests/:id/response'
-  , m.restrict(['admin', 'driver'])
-  , m.filterBody({
-      driver: ['response']
-    })
-  , m.update( db.driver_requests )
-  );
-
-  app.del('/api/driver-requests/:id'
-  , m.restrict(['admin'])
-  , m.param('id')
-  , m.remove( db.driver_requests )
+  , m.find( db.order_driver_requests )
   );
 
   app.get('/api/users'

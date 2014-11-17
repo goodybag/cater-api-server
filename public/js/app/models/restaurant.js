@@ -6,7 +6,7 @@ define(function(require, exports, module) {
   var utils = require('utils');
 
   var regex = {
-    url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
+    // url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
   };
 
   return module.exports = Backbone.Model.extend({
@@ -219,6 +219,15 @@ define(function(require, exports, module) {
       return result;
     },
 
+    getLeadTime: function(order) {
+      // Get the lowest lead time per guest amt
+      var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
+        return obj.max_guests >= order.get('guests');
+      });
+
+      return limit;
+    },
+
     isValidMaxGuests: function( num ){
       // Non-number value, probably null or undefined
       if ( typeof this.get('max_guests') !== 'number' ) return true;
@@ -231,30 +240,38 @@ define(function(require, exports, module) {
 
     isValidGuestDateCombination: function( order ){
       var date = order.get('datetime');
+
+      // Ensure datetime is validate
       if (date == null) return true;
       if ( typeof date !== 'string' ) return false;
-
       if ( !moment(date).isValid() ) return false;
 
       // In case of lead_times being null or an empty array
       // return true because there is nothing specified, so all must
       // be a allowed
       if ( this.get('lead_times') == null ) return true;
-
       if ( _.isArray( this.get('lead_times') ) && this.get('lead_times').length === 0 ){
         return true;
       }
 
+      // Get the lowest lead time per guest amt
       var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
         return obj.max_guests >= order.get('guests');
       });
 
+      // get the current time
       var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');
+
+      // get delta between order datetime and now
       var minutes = (moment(date) - moment(now)) / 60000;
+
+      // get lead time
       var leadTime = limit.lead_time;
 
+      // plenty of time? good to go
       if ( limit && minutes >= leadTime ) return true;
 
+      // not enough leadtime bro
       if ( !limit || minutes < leadTime ){
         limit = _.find(_.sortBy(this.get('pickup_lead_times'), 'max_guests'), function(obj) {
           return obj.max_guests >= order.get('guests');

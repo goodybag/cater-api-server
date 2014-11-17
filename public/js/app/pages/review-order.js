@@ -2,13 +2,14 @@ define( function( require ){
   var utils = require('utils');
 
   var Views = {
-    OrderView:          require('app/views/order-view')
-  , OrderItemView:      require('app/views/order-item-view')
+    OrderView:            require('app/views/order-view')
+  , OrderItemView:        require('app/views/order-item-view')
+  , LeadTimeCounterView:  require('app/views/restaurant/lead-time-counter-view')
   };
 
   var page = {
     init: function(options) {
-      var order         = options.order;
+      var order         = this.order = options.order;
       var orderItems    = options.orderItems;
       var isAdmin       = options.isAdmin;
 
@@ -31,6 +32,16 @@ define( function( require ){
       });
 
       view.setItems(orderItems);
+
+      var leadtime = order.restaurant.getLeadTime(order).lead_time;
+      var time = moment(order.get('datetime')).subtract(leadtime, 'minutes');
+      var diff = time.diff(moment(), 'minutes');
+
+      var leadTimeCounter = new Views.LeadTimeCounterView({
+        time: diff
+        // time: order.get('datetime') - order.restaurant.getLeadTime().
+      , el: '#lead-time-counter'
+      });
 
       analytics.page('Review Order');
     }

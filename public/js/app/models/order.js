@@ -270,7 +270,6 @@ define(function(require, exports, module) {
       rtotal += this.get('restaurant_sales_tax');
       total  += this.get('tip');
       rtotal += this.get('tip');
-      console.log(this.restaurant);
       if ( this.restaurant ){
         if ( this.restaurant.get('has_contract') === false ){
           noContractAmt = total * this.restaurant.get('no_contract_fee')

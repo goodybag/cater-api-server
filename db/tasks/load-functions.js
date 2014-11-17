@@ -43,7 +43,6 @@ var addImports = function( contents ){
 module.exports.run = function(callback) {
   var file = path.join(__dirname, '/../sql/functions.sql');
   var functions = addImports( fs.readFileSync(file).toString() );
-  console.log(functions);
   db.query(functions, done(callback));
 };
 

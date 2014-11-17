@@ -154,6 +154,11 @@ begin
 end;
 $$ language plpgsql;
 
+-- NOTE:  This function is subject to small rounding errors because we
+--        round into an integer each time multiplication happens with
+--        some sort of rate (like tax). We _should_ round only at the
+--        very end of the calculations. The margin of error is not very
+--        large, so we'll deal with it later.
 create or replace function update_order_totals( o orders )
 returns void as $$
   declare tax_rate          numeric;
@@ -163,20 +168,19 @@ returns void as $$
   declare total             int := 0;
   declare restaurant_total  int := 0;
   declare r_sales_tax       int := 0;
+  declare no_contract_amt   int := 0;
 begin
-  delivery_fee := order_delivery_fee( o );
-
-  sub_total = order_sub_total( o );
-
-  sub_total := sub_total + order_amenities_total( o );
-
-  total             := sub_total + coalesce( o.adjustment_amount, 0 );
+  sub_total   := order_sub_total( o );
+  sub_total   := sub_total + order_amenities_total( o );
+  total       := sub_total + coalesce( o.adjustment_amount, 0 );
 
   -- Values for restaurant_total and total can diverge
   -- since there are user specific adjustements now
   -- We repeat operations for the two values
   restaurant_total  := total;
   total             := total + o.user_adjustment_amount;
+
+  delivery_fee := order_delivery_fee( o );
 
   -- Only add delivery fee to restaurant total if they're delivering
   if o.type = 'delivery' then
@@ -199,6 +203,9 @@ begin
     restaurant_total := restaurant_total + o.tip;
   end if;
 
+  no_contract_amt  := round( order_no_contract_rate( o ) * total );
+  total            := total + no_contract_amt;
+
   -- Debug
   -- raise notice '#############################';
   -- raise notice 'Delivery Fee:           %', delivery_fee;
@@ -211,14 +218,18 @@ begin
   -- raise notice '#############################';
 
   execute 'update orders set '
-    || 'sub_total = $1, '
-    || 'total = $2, '
-    || 'sales_tax = $3, '
-    || 'delivery_fee = $4, '
-    || 'restaurant_total = $5, '
-    || 'restaurant_sales_tax = $6 '
-    || 'where id = $7'
-    using sub_total, total, sales_tax, delivery_fee, restaurant_total, r_sales_tax, o.id;
+    || 'sub_total = $2, '
+    || 'total = $3, '
+    || 'sales_tax = $4, '
+    || 'delivery_fee = $5, '
+    || 'restaurant_total = $6, '
+    || 'restaurant_sales_tax = $7, '
+    || 'no_contract_amount = $8 '
+    || 'where id = $1'
+    using o.id, sub_total, total
+    , sales_tax, delivery_fee
+    , restaurant_total, r_sales_tax
+    , no_contract_amt;
 end;
 $$ language plpgsql;
 

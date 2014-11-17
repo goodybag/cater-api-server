@@ -144,7 +144,7 @@ $$ language plpgsql;
 
 -- Order.tax_rate
 create or replace function order_tax_rate( o int )
-returns int as $$
+returns numeric( 5, 5 ) as $$
   declare o orders;
 begin
   for o in ( select * from orders where id = oid )
@@ -155,13 +155,13 @@ end;
 $$ language plpgsql;
 
 create or replace function order_tax_rate( o orders )
-returns int as $$
+returns numeric( 5, 5 ) as $$
 begin
   return coalesce(
     (select regions.sales_tax
     from restaurants
     left join regions on restaurants.region_id = regions.id
-    where id = o.restaurant_id)
+    where restaurants.id = o.restaurant_id)
   , 0
   );
 end;
@@ -183,5 +183,30 @@ create or replace function order_is_tax_exempt( o orders )
 returns boolean as $$
 begin
   return (select is_tax_exempt from users where users.id = o.user_id);
+end;
+$$ language plpgsql;
+
+-- Order.no_contract_amount
+create or replace function order_no_contract_amount( o int )
+returns numeric( 5,5 ) as $$
+  declare o orders;
+begin
+  for o in ( select * from orders where id = oid )
+  loop
+    return order_no_contract_amount( o );
+  end loop;
+end;
+$$ language plpgsql;
+
+create or replace function order_no_contract_rate( o orders )
+returns numeric( 5,5 ) as $$
+begin
+  return coalesce(
+    (select no_contract_fee
+    from restaurants
+    where restaurants.id = o.restaurant_id
+      and has_contract is false)
+  , 0
+  );
 end;
 $$ language plpgsql;

@@ -259,6 +259,7 @@ define(function(require, exports, module) {
     updateTotal: function(){
       var total = this.get('sub_total') + this.get('adjustment').amount + this.get('delivery_fee');
       var rtotal = total;
+      var noContractAmt = 0;
       var taxRate = this.restaurant && this.get('region')
         ? this.restaurant.get('region').sales_tax : config.taxRate;
 
@@ -269,6 +270,14 @@ define(function(require, exports, module) {
       rtotal += this.get('restaurant_sales_tax');
       total  += this.get('tip');
       rtotal += this.get('tip');
+      if ( this.restaurant ){
+        console.log(this.restaurant);
+        if ( this.restaurant.get('has_contract') === false ){
+          noContractAmt = total * this.restaurant.get('no_contract_fee')
+          this.attributes.no_contract_amount = Math.round( noContractAmt );
+          total += noContractAmt;
+        }
+      }
       this.set( 'total', Math.round( total ) );
       this.set( 'restaurant_total', Math.round( rtotal ) );
     },

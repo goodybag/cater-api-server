@@ -132,6 +132,8 @@ define(function(require, exports, module) {
 
       // please add any model listeners in the setModel function
       this.setModel((this.model) ? this.model : new Order());
+
+      this.initTxFeePopover();
     },
 
     updateAmenitiesTotal: function(amenity) {
@@ -184,6 +186,7 @@ define(function(require, exports, module) {
     onPriceChange: function(model, value, options) {
       var updatedOrder = _.extend(this.model.toJSON(), this.getDiff());
       this.$el.find('.totals').html(Handlebars.partials.totals({order: updatedOrder, step: this.step }));
+      this.initTxFeePopover();
     },
 
     setItems: function(items) {
@@ -293,6 +296,8 @@ define(function(require, exports, module) {
 
     autoSave: _.debounce(FormView.prototype.onSave, 600)
   });
+
+  utils.extend( OrderView.prototype, require('app/views/mixins/tx-fee-popover')() );
 
   return module.exports = OrderView;
 });

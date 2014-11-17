@@ -23,7 +23,7 @@ define(function(require){
         placement: 'top'
       , container: $el
       , trigger: 'manual'
-      , content: options.template()
+      , content: options.template.apply( Hbs, arguments )
       , html: true
       });
 

@@ -52,7 +52,7 @@ define(function(require, exports, module) {
         });
       });
 
-      this.initTxFeePopover();
+      this.initTxFeePopover( this.model.restaurant.toJSON() );
 
       return this;
     },

@@ -22,11 +22,16 @@ define( function( require ){
       var allRestaurants  = options.allRestaurants;
 
       $(".tag-tooltip").tooltip();
-      $('.tx-fee').popover({
-        trigger:    'hover'
-      , content:    Handlebars.partials.restaurant_list_tx_fee_popover()
-      , placement:  'top'
-      , html:       true
+      $('.tx-fee').each( function(){
+        var $this = $(this);
+        $this.popover({
+          trigger:    'hover'
+        , content:    Handlebars.partials.restaurant_list_tx_fee_popover(
+                        utils.find( restaurants, { id: +$this.data('rid') })
+                      )
+        , placement:  'top'
+        , html:       true
+        });
       });
 
       // Prepare listing to be usable by the facet serach

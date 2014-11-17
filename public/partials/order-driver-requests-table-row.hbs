@@ -1,0 +1,22 @@
+<tr>
+  <td>
+    <a href="/admin/users/{{user.id}}">{{user.name}}</a> - {{phoneNumber user.phone}}
+  </td>
+  <td>
+    <a href="/orders/{{order_id}}/driver-requests/{{id}}">/orders/{{order_id}}/driver-requests/{{id}}</a>
+  </td>
+  <td>
+    {{~#isNull response}}
+      No response
+    {{else}}
+      {{~#if response}}
+        Yes
+      {{else}}
+        No
+      {{/if~}}
+    {{/isNull~}}
+  </td>
+  <td>
+    {{formatDateTime created_at "MM/DD/YYYY h:mm A"}}
+  </td>
+</tr>

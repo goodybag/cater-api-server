@@ -117,6 +117,21 @@ module.exports = function( options ){
       $options.one.push({ table: 'payment_methods', alias: 'payment_method' });
     }
 
+    if ( options.driverRequests ){
+      $options.many.push({
+        table:  'order_driver_requests'
+      , alias:  'driver_requests'
+      , one:    [ { table: 'users', alias: 'user'
+                  , joins: [
+                      { type: 'left', target: 'user_drivers'
+                      , on: { user_id: '$users.id$' }
+                      }
+                    ]
+                  }
+                ]
+      });
+    }
+
     logger.info('Finding order');
     db.orders.findOne( orderId, $options, function( error, order ){
       if ( error ){

@@ -32,7 +32,6 @@
     </div>
   </div>
 
-
   <div>
     <section class="panel-component" id="order-user">
       <h1 class="component-title">User</h1>
@@ -89,27 +88,8 @@
               <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}}</dd>
             </div>
           {{/is}}
-
-          <div class="row">
-            <dt>Driver</dt>
-            <dd>
-              <select name="order_driver">
-                <option>None</option>
-                {{#each drivers}}
-                  <option value="{{this.id}}"
-                  {{~#eq this.id ../order.driver_id}} selected="true"{{/eq~}}
-                  >{{this.name}}</option>
-                {{/each}}
-              </select>
-            </dd>
-          </div>
-          <div class="row">
-            <dt>Driver Link</dt>
-            <dd><a href="/orders/{{order.id}}/driver">/orders/{{order.id}}/driver</a></dd>
-          </div>
         </dl>
       </div>
-
     </section>
   </div>
 
@@ -177,6 +157,47 @@
       </div>
     </div>
   </section>
+
+  <div>
+    <section class="panel-component" id="driver-requests">
+      <h1 class="component-title">Driver Requests</h1>
+      <div class="component-actions">
+        <button class="btn btn-primary">Create Request</button>
+      </div>
+      <div class="component-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Link</th>
+              <th>Response</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="new-request hide">
+              <td colspan="3">
+                <form action="/api/orders/{{order.id}}/driver-requests" method="POST">
+                  <div class="form-group">
+                    <select name="user_id" id="order-driver-request-user-id-select">
+                      <option>Select a Driver</option>
+                      {{#each user_drivers}}
+                        <option value="{{this.id}}">{{this.name}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                </form>
+              </td>
+            </tr>
+            {{#each order.driver_requests}}
+              {{> order_driver_requests_table_row}}
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
 {{/extend}}
 
 {{#extend "scripts"}}

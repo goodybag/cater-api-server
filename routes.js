@@ -1420,6 +1420,12 @@ module.exports.register = function(app) {
     , deliveryService:    true
     , paymentMethod:      true
     , location:           true
+    , driverRequests:     true
+    })
+  , m.db.user_drivers.find( {}, {
+      joins: [
+        { type: 'left', target: 'users', on: { id: '$user_drivers.user_id$' } }
+      ]
     })
   , m.view( 'admin/order', {
       layout: 'admin/layout2'
@@ -1836,7 +1842,15 @@ module.exports.register = function(app) {
   app.post('/api/orders/:order_id/driver-requests'
   , m.restrict(['admin'])
   , m.param('order_id')
-  , m.getOrder2({ param: 'order_id' })
+  , m.after( function( req, res, next ){
+      venter.emit(
+        'driver-requests:created'
+      , res.locals.order_driver_request.id
+      , req.param('order_id')
+      );
+
+      next();
+    })
   , m.insert( db.order_driver_requests )
   );
 

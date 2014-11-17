@@ -147,3 +147,20 @@ errors.balanced.ERROR_ADDING_CARD = {
 };
 
 errors[errors.balanced.ERROR_ADDING_CARD.code] = errors.balanced.ERROR_ADDING_CARD;
+
+
+/**
+ * Bitly Errors
+ */
+
+errors.bitly = {};
+
+errors.bitly.BAD_RESPONSE_URL = {
+  type: "bad_response"
+, code: "0501"
+, httpCode: "401"
+, name: "BAD_RESPONSE_URL"
+, message: "Could not determine the shortened URL from bitly"
+};
+
+errors[errors.bitly.BAD_RESPONSE_URL.code] = errors.bitly.BAD_RESPONSE_URL;

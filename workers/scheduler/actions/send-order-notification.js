@@ -7,5 +7,5 @@ module.exports = function(job, done) {
     data: job
   });
   logger.info('Sending');
-  notifier.send( job.data.notification_id, job.data.order_id, done );
+  notifier.send( job.data.notification_id, job.data.order_id, job.data, done );
 }

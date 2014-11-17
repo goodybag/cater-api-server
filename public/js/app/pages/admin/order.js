@@ -8,6 +8,7 @@ define(function(require){
     NotificationHistoryTable:     require('app/views/notification-history-table')
   , NotificationsTable:           require('app/views/notifications-table')
   , PdfPreview:                   require('app/views/pdf-preview')
+  , OrderDriverRequests:          require('./views/order-driver-requests')
   };
 
   var page = {

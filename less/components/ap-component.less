@@ -5,6 +5,7 @@
 // Most general panel component
 // Describes how various components interact
 
+@component-title-padding-bottom: 8px;
 @component-title-margin-bottom: 18px;
 
 .panel-component {
@@ -14,7 +15,7 @@
 }
 
 .panel-component .component-title {
-  padding-bottom: 8px;
+  padding-bottom: @component-title-padding-bottom;
   font-size: 2em;
   border-bottom: solid 1px @gray;
 
@@ -27,6 +28,10 @@
     //   margin-top: -2 * @component-title-margin-bottom
     // }
   }
+
+  + .component-actions {
+    margin-top: -@component-title-margin-bottom - @component-title-padding-bottom - @btn-base-height;
+  }
 }
 
 .panel-component .component-nav {
@@ -34,10 +39,7 @@
 }
 
 .panel-component .component-actions {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  top: -@component-title-margin-bottom;
+  float: right;
   text-align: right;
 
   & button {

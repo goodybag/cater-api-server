@@ -11,4 +11,6 @@ begin
   perform add_column( 'restaurants', 'has_contract', 'boolean not null default false' );
   perform add_column( 'restaurants', 'no_contract_fee', 'numeric(5,5) not null default 0.0000' );
   perform add_column( 'orders', 'no_contract_amount', 'int not null default 0' );
+
+  update restaurants set has_contract = true;
 end$$;

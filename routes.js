@@ -1388,11 +1388,10 @@ module.exports.register = function(app) {
   app.get('/admin/orders/:id'
   , m.restrict(['admin'])
   , m.getOrder2({
-      param:            'id'
-    , restaurant:       true
-    , user:             true
-    , courierReasons:   true
-    , items:            true
+      param:                  'id'
+    , restaurantDbModelFind:  true
+    , user:                   true
+    , items:                  true
     })
   , m.view( 'admin/order', {
       layout: 'admin/layout2'

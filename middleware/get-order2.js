@@ -133,14 +133,23 @@ module.exports = function( options ){
         order.manifest = manifest.create( order.orderItems );
       }
 
-      if ( options.courierReasons && order.type === 'courier' ){
-        order.courierReasons = odsChecker.why( order );
-      }
-
       req.order = order;
       res.locals.order = order;
       req.logger.options.data.order = { id: order.id };
-      orderEditable().call(this, req, res, next);
+
+      utils.async.series([
+        !options.restaurantDbModelFind ? utils.async.noop : function( done ){
+          Models.Restaurant.findOne( order.restaurant_id, function( error, restaurant ){
+            if ( error ){
+              logger.error('error trying to lookup restaurant %s for order #%s', order.restaurant_id, req.params.id, error);
+              return res.error(errors.internal.DB_FAILURE, error);
+            }
+            req.order.restaurant = restaurant.toJSON();
+            return done();
+          });
+        }
+      , orderEditable().bind(this, req, res)
+      ], next );
     });
   };
 };

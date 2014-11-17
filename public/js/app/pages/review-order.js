@@ -33,13 +33,8 @@ define( function( require ){
 
       view.setItems(orderItems);
 
-      var leadtime = order.restaurant.getLeadTime(order).lead_time;
-      var time = moment(order.get('datetime')).subtract(leadtime, 'minutes');
-      var diff = time.diff(moment(), 'minutes');
-
       var leadTimeCounter = new Views.LeadTimeCounterView({
-        time: diff
-        // time: order.get('datetime') - order.restaurant.getLeadTime().
+        time: order.restaurant.getTimeLeft(order)
       , el: '#lead-time-counter'
       });
 

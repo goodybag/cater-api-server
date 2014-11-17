@@ -224,8 +224,16 @@ define(function(require, exports, module) {
       var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
         return obj.max_guests >= order.get('guests');
       });
-
       return limit;
+    },
+
+    getTimeLeft: function(order) {
+      // returns the time left to order in minutes (based on guests/datetime)
+      var leadtime  = this.getLeadTime(order).lead_time;
+      var deadline  = moment(order.get('datetime')).subtract(leadtime, 'minutes');
+      var now       = moment();
+      var timeleft  = deadline.diff(now, 'minutes', true);
+      return timeleft;
     },
 
     isValidMaxGuests: function( num ){
@@ -255,9 +263,7 @@ define(function(require, exports, module) {
       }
 
       // Get the lowest lead time per guest amt
-      var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
-        return obj.max_guests >= order.get('guests');
-      });
+      var limit = this.getLeadTime(order);
 
       // get the current time
       var now = moment().tz(order.get('timezone')).format('YYYY-MM-DD HH:mm:ss');

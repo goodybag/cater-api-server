@@ -1150,3 +1150,36 @@ a.list-group-item .list-group-item-heading {
   padding: 10px;
   line-height: 36px;
 }
+
+/**
+ * Stick header
+ */
+.sticky-header {
+  background-color: gray;
+  color: white;
+  padding: 15px;
+  -webkit-transition: padding .1s linear;
+}
+.sticky-header.stuck {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  padding: 5px;
+}
+
+.sticky-header .shrinky-text {
+  -webkit-transition: letter-spacing .1s linear;
+  letter-spacing: 2px;
+}
+
+.sticky-header.stuck .shrinky-text {
+  letter-spacing: inherit;
+}
+
+#lead-time-counter {
+  float: right;
+}
+.sticky-header.stuck #lead-time-counter{
+
+}

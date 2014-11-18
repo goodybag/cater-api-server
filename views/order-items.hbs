@@ -5,7 +5,11 @@
 {{/extend}}
 
 {{#extend "title"}} - Review Order{{/extend}}
-<div id="lead-time-counter"></div>
+<div class="sticky-header">
+  <div class="container">
+    <div id="lead-time-counter" class="shrinky-text"></div>
+  </div>
+</div>
 <div class="page page-order container">
   <div class="row">
     {{> wizard }}
@@ -236,6 +240,14 @@
         order: new Models.Order({{{json order}}})
       , orderItems: {{{json order.orderItems}}}
       , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
+      });
+      var num = 50;
+      $(window).bind('scroll', function () {
+        if ($(window).scrollTop() > num) {
+            $('.sticky-header').addClass('stuck');
+        } else {
+            $('.sticky-header').removeClass('stuck');
+        }
       });
     }
   );

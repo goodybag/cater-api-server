@@ -33,7 +33,7 @@ define(function(require, exports, module) {
     render: function() {
       // var html = Handlebars.partials[this.template].render(this.context);
       // this.$el.html(html);
-      this.$el.html(this.fromNow());
+      this.$el.html('Order must be placed in ' + this.fromNow());
     }
   });
   return LeadTimeCounterView;

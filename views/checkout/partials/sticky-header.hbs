@@ -1,0 +1,21 @@
+<div class="sticky-header">
+  <div class="container">
+    <div class="shrinky-text sticky-note">Order #{{order.id}}</div>
+    <div id="lead-time-counter" class="shrinky-text sticky-note pull-right">Loading</div>
+  </div>
+</div>
+
+{{#extend "scripts"}}
+<script>
+require(['jquery-loaded'], function($) {
+  var num = 50;
+  $(window).bind('scroll', function () {
+    if ($(window).scrollTop() > num) {
+        $('.sticky-header').addClass('stuck');
+    } else {
+        $('.sticky-header').removeClass('stuck');
+    }
+  });
+});
+</script>
+{{/extend}}

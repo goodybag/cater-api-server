@@ -4,7 +4,6 @@ define( function( require ){
   var Views = {
     OrderView:            require('app/views/order-view')
   , OrderItemView:        require('app/views/order-item-view')
-  , LeadTimeCounterView:  require('app/views/restaurant/lead-time-counter-view')
   };
 
   var page = {
@@ -32,11 +31,6 @@ define( function( require ){
       });
 
       view.setItems(orderItems);
-
-      var leadTimeCounter = new Views.LeadTimeCounterView({
-        time: order.restaurant.getTimeLeft(order)
-      , el: '#lead-time-counter'
-      });
 
       analytics.page('Review Order');
     }

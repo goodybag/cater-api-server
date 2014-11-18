@@ -9,6 +9,7 @@ define(function(require, exports, module) {
   var OrderAddressView = require('./order-address-view');
   var CopyErrorModalView = require('./copy-error-modal');
   var AmenityView = require('app/views/order/amenity-view');
+  var LeadTimeCounterView = require('app/views/restaurant/lead-time-counter-view');
   var Amenity = require('app/models/amenity');
   var TipView = require('./tip-view');
   var helpers = require('hb-helpers');
@@ -127,7 +128,10 @@ define(function(require, exports, module) {
       this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address, orderView: this, user: this.options.user});
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
-
+      this.leadTimeCounterView = new LeadTimeCounterView({
+        time: this.model.restaurant.getTimeLeft(this.model)
+      , el: '#lead-time-counter'
+      });
       this.subViews = [this.addressView];
 
       // please add any model listeners in the setModel function

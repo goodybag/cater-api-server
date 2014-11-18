@@ -6,8 +6,8 @@ define(function(require, exports, module) {
 
   var LeadTimeCounterView = module.exports = Backbone.View.extend({
     initialize: function() {
-      this.time = this.options.time || 0; // minutes
-      this.interval = this.options.interval || 1000 * 60; // defaulte 1 min
+      this.time = moment.duration(this.options.time || 0, 'minutes'); // minutes
+      this.interval = this.options.interval || 1000; // defaulte 1 min
       this.template = this.options.template;
       this.context = this.options.context;
       this.tick();
@@ -15,25 +15,32 @@ define(function(require, exports, module) {
 
     tick: function() {
       this.render();
-      this.time--;
-      if ( this.time >= 0)
-        setTimeout(this.tick.bind(this), this.interval);
+      this.time.subtract(1, 'second');
+      setTimeout(this.tick.bind(this), this.interval);
     },
 
     fromNow: function() {
-      if ( this.time <= 0 ){
-        return 'Time\'s up!';
-      }
+      // if ( this.time <= 0 ){
+      //   return 'Time\'s up!';
+      // }
+      var days = this.time.days();
+      var hrs = this.time.hours();
+      var mins = this.time.hours();
+      var secs = this.time.seconds();
 
-      return moment()
-              .add(this.time, 'minutes')
-              .fromNow(true);
+      if ( days ){
+        return days + ' days';
+      } else if ( hrs ){
+        return hrs + ' hours';
+      } else {
+        return mins + ' minutes ' + secs + ' seconds';
+      }
     },
 
     render: function() {
       // var html = Handlebars.partials[this.template].render(this.context);
       // this.$el.html(html);
-      this.$el.html('Order must be placed in ' + this.fromNow());
+      this.$el.html('Time remaining to submit order: ' + this.fromNow());
     }
   });
   return LeadTimeCounterView;

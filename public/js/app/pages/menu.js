@@ -14,6 +14,8 @@ define( function( require ){
   , MenuOrderParams:    require('app/views/menu-order-params-view')
   , MenuShareLink:      require('app/views/menu-share-link-view')
   , Menu:               require('app/views/menu-view')
+  , StickyHeader:       require('app/views/sticky-header-view')
+  , LeadTimeCounter:    require('app/views/restaurant/lead-time-counter-view')
   };
 
   var page = {
@@ -107,12 +109,27 @@ define( function( require ){
       , orderModal:   orderModal
       });
 
+      var stickyHeader = this.stickyHeader = window.stickyHeader = new Views.StickyHeader({
+        el: '.sticky-header'
+      });
+
+      // any successfull syncs
+      var this_ = this;
+      orderModel.once('sync', function(order){
+        stickyHeader.show();
+      });
+
       var menuShareLinkView = new Views.MenuShareLink({
         el:           '.menu-share-link'
       , editToken:    editToken
       , model:        orderModel
       , restaurant:   restaurant
       , baseUrl:      baseUrl
+      });
+
+      this.leadTimeCounter = new Views.LeadTimeCounter({
+        time: restaurant.getTimeLeft(orderModel)
+      , el: '#lead-time-counter'
       });
 
       $('.tag-tooltip').tooltip();

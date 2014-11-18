@@ -227,10 +227,15 @@ define(function(require, exports, module) {
       return limit;
     },
 
+    getDeadline: function(order) {
+      // the leadtime deadline
+      var leadtime  = this.getLeadTime(order).lead_time;
+      return moment(order.get('datetime')).subtract(leadtime, 'minutes');
+    },
+
     getTimeLeft: function(order) {
       // returns the time left to order in minutes (based on guests/datetime)
-      var leadtime  = this.getLeadTime(order).lead_time;
-      var deadline  = moment(order.get('datetime')).subtract(leadtime, 'minutes');
+      var deadline  = this.getDeadline(order);
       var now       = moment();
       var timeleft  = deadline.diff(now, 'minutes', true);
       return timeleft;

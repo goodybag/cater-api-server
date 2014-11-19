@@ -270,12 +270,20 @@
 
 <!-- End Modals -->
 
+{{#extend "bootstrap"}}
+<script>
+  define('data/order', ['app/models/index'], function(Models) {
+    return new Models.Order({{{json order}}});
+  });
+</script>
+{{/extend}}
+
 {{#extend "scripts"}}
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
 
 <script>
-  require(['app/pages/checkout', 'app/models/index', 'app/collections/amenities', 'order-delivery-service-criteria'],
-    function(page, Models, Amenities, odsCriteria) {
+  require(['app/pages/checkout', 'app/models/index', 'app/collections/amenities', 'order-delivery-service-criteria', 'data/order'],
+    function(page, Models, Amenities, odsCriteria, order) {
       // Is dollar amount too low?
       // Only check this on the checkout page
       odsCriteria.add({
@@ -295,7 +303,7 @@
       page.init({
         marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
       , user: new Models.User({{{json user}}})
-      , order: new Models.Order({{{json order}}})
+      , order: order
       });
     }
   );

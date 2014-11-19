@@ -127,10 +127,6 @@ define(function(require, exports, module) {
       this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address, orderView: this, user: this.options.user});
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
-      this.leadTimeCounterView = new LeadTimeCounterView({
-        time: this.model.restaurant.getTimeLeft(this.model)
-      , el: '#lead-time-counter'
-      });
       this.subViews = [this.addressView];
 
       // please add any model listeners in the setModel function

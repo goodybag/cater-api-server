@@ -6,18 +6,23 @@ define(function(require, exports, module) {
 
   var StickyHeaderView = module.exports = utils.View.extend({
     initialize: function() {
+      this.$page = $('.page');
       utils.defaults(this.options, {
         scrollYTrigger: 50
       });
 
       $(window).bind('scroll', this.onScroll.bind(this));
+      this.model.once('change:id', this.show.bind(this));
     },
 
     onScroll: function(e) {
       if ($(window).scrollTop() > this.options.scrollYTrigger) {
           this.$el.addClass('stuck');
+          // also push page container down
+          this.$page.css('margin-top', this.options.scrollYTrigger+'px');
       } else {
           this.$el.removeClass('stuck');
+          this.$page.css('margin-top', '0');
       }
     },
 
@@ -27,7 +32,7 @@ define(function(require, exports, module) {
     },
 
     show: function(){
-      this.$el.addClass('in');
+      this.render().$el.addClass('in');
       return this;
     },
 
@@ -37,7 +42,7 @@ define(function(require, exports, module) {
     },
 
     render: function() {
-      var context = { order: this.options.order };
+      var context = { order: this.model };
       var html = Handlebars.partials.checkout_sticky_header(context);
       // this.$el.replaceWith(html);
       return this;

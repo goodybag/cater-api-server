@@ -5,12 +5,9 @@ define(function(require, exports, module) {
 
   var LeadTimeCounterView = module.exports = Backbone.View.extend({
     initialize: function() {
-      if ( this.options.show ) this.showHeader();
       this.time = moment.duration(this.options.time || 0, 'minutes'); // minutes
       this.deadline = moment(this.options.deadline);
       this.interval = this.options.interval || 1000; // defaulte 1 min
-      this.template = this.options.template;
-      this.context = this.options.context;
       this.tick();
     },
 
@@ -19,7 +16,6 @@ define(function(require, exports, module) {
     },
 
     tick: function() {
-      console.log('tick');
       this.render();
       this.time.subtract(1, 'second');
       setTimeout(this.tick.bind(this), this.interval);
@@ -48,8 +44,6 @@ define(function(require, exports, module) {
     },
 
     render: function() {
-      // var html = Handlebars.partials[this.template].render(this.context);
-      // this.$el.html(html);
       this.$el.html(this.fromNow());
     }
   });

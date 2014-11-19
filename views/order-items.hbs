@@ -227,16 +227,29 @@
 
 {{> copy_order_error_modal}}
 
+
+{{#extend "bootstrap"}}
+<script>
+  define('data/order', ['app/models/index'], function(Models) {
+    return new Models.Order({{{json order}}});
+  });
+  define('data/order-items', ['app/models/index'], function(Models) {
+    return {{{json order.orderItems}}};
+  });
+</script>
+{{/extend}}
+
 {{#extend "scripts"}}
 <script>
   require([
     'app/pages/review-order'
-  , 'app/models/index'
+  , 'data/order'
+  , 'data/order-items'
   ]
-  , function(page, Models) {
+  , function(page, order, orderItems) {
       page.init({
-        order: new Models.Order({{{json order}}})
-      , orderItems: {{{json order.orderItems}}}
+        order: order
+      , orderItems: orderItems
       , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
       });
     }

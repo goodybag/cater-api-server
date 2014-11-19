@@ -12,15 +12,12 @@ define(function(require, exports, module) {
       });
 
       $(window).bind('scroll', this.onScroll.bind(this));
-
-      console.log('order model', this.model);
-      this.model.once('change', this.show, this);
-      this.model.once('change', function() {
-        console.log("SYNC!");
-      });
+      this.model.once('change:id', this.show, this);
     },
 
     onScroll: function(e) {
+      if ( !this.model.id ) return;
+
       if ($(window).scrollTop() > this.options.scrollYTrigger) {
           this.$el.addClass('stuck');
           // also push page container down
@@ -47,9 +44,7 @@ define(function(require, exports, module) {
     },
 
     render: function() {
-      var context = { order: this.model };
-      var html = Handlebars.partials.checkout_sticky_header(context);
-      // this.$el.replaceWith(html);
+      this.$el.find('#order-id-container').html('Order #' + this.model.id);
       return this;
     }
   });

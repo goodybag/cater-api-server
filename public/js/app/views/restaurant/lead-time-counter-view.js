@@ -8,7 +8,12 @@ define(function(require, exports, module) {
       this.time = moment.duration(this.options.time || 0, 'minutes'); // minutes
       this.deadline = moment(this.options.deadline);
       this.interval = this.options.interval || 1000; // defaulte 1 min
+      this.model.on('change:guests', this.onChangeGuests, this);
       this.tick();
+    },
+
+    onChangeGuests: function() {
+      this.setTime(this.model.restaurant.getTimeLeft(this.model));
     },
 
     setTime: function(time) {

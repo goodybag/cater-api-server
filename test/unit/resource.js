@@ -17,14 +17,7 @@ describe ('Resource', function(){
   });
 
   it ('resource( string )( string )( string )( string )', function(){
-    var a = resource('')('users')(27);
-    assert.equal( a.url, '/users/27');
-    assert.equal( a('addresses').url, '/users/27/addresses' );
-    assert.equal( a.url, '/users/27');
-  });
-
-  it ('resource( string )( string )( string )( string )', function(){
-    var a = resource('')('users')(27);
+    var a = resource()('/users')(27);
     assert.equal( a.url, '/users/27');
     assert.equal( a('addresses').url, '/users/27/addresses' );
     assert.equal( a.url, '/users/27');

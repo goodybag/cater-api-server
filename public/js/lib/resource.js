@@ -6,51 +6,46 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define(function(require){
   var utils = require('utils');
-  var resource;
 
   var normalizeUrlArg = function( def ){
     if ( ~[ 'string', 'number' ].indexOf( typeof def ) ){
       def = { url: def };
     }
 
-    def.url += '';
+    if ( def.url ) def.url += '';
 
     return def;
-  }
+  };
 
-  return resource = function( def, childrenDefs ){
-    def = normalizeUrlArg( def );
-
-    if ( typeof def.url !== 'string' ){
-      throw new Error('Invalid property `url`');
+  var baseFns = {
+    getUrl: function(){
+      return this.url
     }
+  };
+
+  var resource = function( def, childrenDefs ){
+    def = normalizeUrlArg( def || {} );
 
     var item = function( child, childChildrenDefs ){
-      child = normalizeUrlArg( child );
+      child = normalizeUrlArg( child || {} );
 
-      if ( typeof child.url !== 'string' ){
-        throw new Error('Invalid property `url`');
+      if ( def.url ){
+        child.url = def.url + ( child.url ? '/' + child.url : '' );
       }
-
-      child.url = [ def.url, child.url ].join('/');
 
       var _resource = resource( child, childChildrenDefs );
 
       for ( var key in childrenDefs ){
-        childrenDefs[ key ] = normalizeUrlArg( childrenDefs[ key ] );
+        childrenDefs[ key ] = normalizeUrlArg( childrenDefs[ key ] || {} );
         _resource[ key ] = resource( utils.extend( {}, childrenDefs[ key ], {
-          url: [ child.url, childrenDefs[ key ].url ].join('/')
+          url: ( child.url ? child.url + '/' : '' ) + ( childrenDefs[ key ].url || '')
         }));
       }
 
       return _resource;
     };
 
-    var proto = utils.extend({
-      getUrl: function(){
-        return this.url;
-      }
-    }, def );
+    var proto = utils.extend({}, baseFns, def );
 
     for ( var key in proto ){
       if ( typeof proto[ key ] === 'function' ){
@@ -62,6 +57,8 @@ define(function(require){
 
     return item;
   };
+
+  return resource()
 
   // return resource = function( def, childDefs ){
   //   if ( typeof def === 'string' ){

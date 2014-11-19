@@ -65,6 +65,22 @@ app.configure(function(){
   app.use(middleware.setSession());
   app.use(middleware.getUser);
 
+  (function(){
+    var regions = [];
+    app.use( function( req, res, next ){
+      if ( regions.length ){
+        res.locals.regions = regions;
+        return next();
+      }
+      m.db.regions.find({})( req, res, next );
+    });
+
+    app.use( function( req, res, next ){
+      if ( !regions.length ) regions = res.locals.regions;
+      return next()
+    });
+  })();
+
   if (config.isProduction || config.isStaging) {
     app.use(middleware.sslRedirect);
   }

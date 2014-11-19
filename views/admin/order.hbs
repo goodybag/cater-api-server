@@ -69,6 +69,19 @@
           <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}}</dd>
         {{/is}}
       </dl>
+
+      {{#eq order.type 'courier'}}
+        <h2 class="sub-component-title">Why is this a courier order?</h2>
+        <ul>
+          {{#if order.courierReasons}}
+          {{#each order.courierReasons}}
+            <li>{{> courier_reasoning}}</li>
+          {{/each}}
+          {{else}}
+            <li>I honestly do not know</li>
+          {{/if}}
+        </ul>
+      {{/eq}}
     </section>
   </div>
 

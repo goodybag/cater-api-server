@@ -19,6 +19,7 @@ var
 , middleware = require('./middleware')
 , Models = require('./models')
 , pkg = require('./package.json')
+, odsChecker = require('./public/js/lib/order-delivery-service-checker')
 ;
 
 hbs.handlebars = require('handlebars');

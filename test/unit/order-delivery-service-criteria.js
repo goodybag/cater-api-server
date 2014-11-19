@@ -1,21 +1,7 @@
 var assert    = require('assert');
 var moment    = require('moment-timezone');
 var utils     = require('../../utils');
-var criteria  = require('../../public/js/lib/order-delivery-service-criteria');
-
-criteria.add({
-  name: 'dollar_amount'
-, type: 'some'
-, requirements: [
-    'sub_total'
-  , 'restaurant.minimum_order'
-  , 'restaurant.delivery_service_order_amount_threshold'
-  ]
-, fn: function( order ){
-    if ( order.sub_total < order.restaurant.minimum_order ) return false;
-    return order.sub_total < order.restaurant.delivery_service_order_amount_threshold;
-  }
-});
+var criteria  = require('../../public/js/lib/order-delivery-service-checker');
 
 describe ('Order Delivery Service Criteria', function(){
   var now = moment().tz('America/Chicago');

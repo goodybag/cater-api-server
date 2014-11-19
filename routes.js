@@ -1390,18 +1390,14 @@ module.exports.register = function(app) {
 
   app.get('/admin/orders/:id'
   , m.restrict(['admin'])
-  , m.param('id')
-  , m.queryOptions({
-      one:  [ { table: 'restaurants', alias: 'restaurant'
-              , many: [{ table: 'restaurant_locations', alias: 'locations' }] }
-            , { table: 'users', alias: 'user' }
-            , { table: 'restaurant_locations', alias: 'location' }
-            ]
-    , many: [{ table: 'order_items', alias: 'items' }]
+  , m.getOrder2({
+      param:                  'id'
+    , restaurantDbModelFind:  true
+    , user:                   true
+    , items:                  true
     })
-  , m.view( 'admin/order', db.orders, {
+  , m.view( 'admin/order', {
       layout: 'admin/layout2'
-    , method: 'findOne'
     })
   );
 

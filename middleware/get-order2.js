@@ -9,6 +9,7 @@ var Models          = require('../models');
 var db              = require('../db');
 var manifest        = require('../lib/order-manifester');
 var orderEditable   = require('./order-editable');
+var odsChecker      = require('../public/js/lib/order-delivery-service-checker');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
@@ -26,6 +27,10 @@ module.exports = function( options ){
 
     if ( options.submittedDate ) {
       $options.submittedDate = options.submittedDate;
+    }
+
+    if ( options.location ){
+      $options.one.push({ table: 'restaurant_locations', alias: 'location' });
     }
 
     if ( options.user ){
@@ -70,7 +75,7 @@ module.exports = function( options ){
       if ( options.amenities ){
         // I am sorry for this.
         // I wanted to look at all of the available amenities as well as if there's
-        // a order_amenity record. It's aliased as "amenity.checked", so that I know which 
+        // a order_amenity record. It's aliased as "amenity.checked", so that I know which
         // have been added to an order.
         restaurantMany.push({
           table: 'amenities'
@@ -131,7 +136,20 @@ module.exports = function( options ){
       req.order = order;
       res.locals.order = order;
       req.logger.options.data.order = { id: order.id };
-      orderEditable().call(this, req, res, next);
+
+      utils.async.series([
+        !options.restaurantDbModelFind ? utils.async.noop : function( done ){
+          Models.Restaurant.findOne( order.restaurant_id, function( error, restaurant ){
+            if ( error ){
+              logger.error('error trying to lookup restaurant %s for order #%s', order.restaurant_id, req.params.id, error);
+              return res.error(errors.internal.DB_FAILURE, error);
+            }
+            req.order.restaurant = restaurant.toJSON();
+            return done();
+          });
+        }
+      , orderEditable().bind(this, req, res)
+      ], next );
     });
   };
 };

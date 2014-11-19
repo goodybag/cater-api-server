@@ -1,15 +1,3 @@
-/**
- * Order delivery service criteria
- *
- * An array of functions of the following schema
- *
- * Boolean function( Object order ){}
- *
- * The function should describe a single criterion for whether
- * or not an order should be picked up by a delivery service.
- * Returns true for delivery service, false for no
- */
-
 if ( typeof module === "object" && module && typeof module.exports === "object" ){
   var isNode = true, define = function( factory ){
     module.exports = factory( require, exports, module );
@@ -20,97 +8,9 @@ define(function( require, exports, module ){
   var moment = require('moment-timezone');
   var utils = require('utils');
 
-  exports = {
-    criteria: []
+  exports = [];
 
-    /**
-     * Checks an order object for whether or not a delivery service
-     * shoudl orderr
-     * @param  {Object} order Order object
-     * @return {Boolean}      Should use DS
-     */
-  , check: function( order ){
-      var criteria = exports.criteria.filter( function( c ){
-        return c.type === 'every';
-      });
-
-      var result = utils.every( criteria, function( criterion ){
-        return criterion.fn( order );
-      });
-
-      if ( !result ) return false;
-
-      criteria = exports.criteria.filter( function( c ){
-        return c.type === 'some';
-      });
-
-      return utils.some( criteria, function( criterion ){
-        return criterion.fn( order );
-      });
-    }
-
-  , why: function( order ){
-      return exports.criteria.filter( function( c ){
-        return c.type === 'some' ? c.fn( order )  : !c.fn( order );
-      }).map( function( c ){
-        return {
-          type: c.type
-        , name: c.name
-        };
-      });
-    }
-
-    /**
-     * Adds a new criterion
-     *
-     * I think all of the properties in criterion are pretty
-     * self-explanatory except maybe `type`.
-     *
-     * There are two valid types: ['every', 'some']
-     *
-     * Every `every` type needs to be true for the order to be
-     * considered a DS order. Otherwise, it is not. Then, we check
-     * for some true `some` criterion. If any one of those is true,
-     * AND every `every` type is true, then it is a DS Order.
-     *
-     * @param {Object} criterion criterion object
-     */
-  , add: function( criterion ){
-      utils.enforceRequired( criterion, [
-        'name', 'fn'
-      ]);
-
-      criterion = utils.defaults( criterion, {
-        requirements: []
-      });
-
-      // Simply return false if the required fields are not present
-      criterion.fn = utils.wrap( criterion.fn, function( fn, order ){
-        if ( !utils.hasPropsDeep( order, criterion.requirements ) ){
-          return false;
-        }
-
-        return fn( order );
-      });
-
-      exports.criteria.push( criterion );
-    }
-  };
-
-  // Is dollar amount too high?
-  // exports.add({
-  //   name: 'dollar_amount_too_high'
-  // , type: 'every'
-  // , requirements: [
-  //     'sub_total'
-  //   , 'restaurant.delivery_service_order_total_upperbound'
-  //   ]
-  // , fn: function( order ){
-  //     return order.sub_total < order.restaurant.delivery_service_order_total_upperbound;
-  //   }
-  // });
-
-  exports.add({
+  exports.push({
     name: 'restaurant_disabled_courier'
   , type: 'every'
   , requirements: [
@@ -122,7 +22,7 @@ define(function( require, exports, module ){
   });
 
   // Is head count too low?
-  exports.add({
+  exports.push({
     name: 'head_count'
   , type: 'some'
   , requirements: [
@@ -135,7 +35,7 @@ define(function( require, exports, module ){
   });
 
   // Delivery zips
-  exports.add({
+  exports.push({
     name: 'delivery_zips'
   , type: 'some'
   , requirements: [
@@ -157,7 +57,7 @@ define(function( require, exports, module ){
   });
 
   // Delivery times
-  exports.add({
+  exports.push({
     name: 'delivery_times'
   , type: 'some'
   , requirements: [
@@ -197,7 +97,7 @@ define(function( require, exports, module ){
   });
 
   // Lead times
-  exports.add({
+  exports.push({
     name: 'lead_times'
   , type: 'some'
   , requirements: [
@@ -239,7 +139,22 @@ define(function( require, exports, module ){
         return !(minutes >= leadTime);
       }
     }
-  })
+  });
+
+  // Is dollar amount too low?
+  exports.push({
+    name: 'dollar_amount'
+  , type: 'some'
+  , requirements: [
+      'sub_total'
+    , 'restaurant.minimum_order'
+    , 'restaurant.delivery_service_order_amount_threshold'
+    ]
+  , fn: function( order ){
+      if ( order.sub_total < order.restaurant.minimum_order ) return false;
+      return order.sub_total < order.restaurant.delivery_service_order_amount_threshold;
+    }
+  });
 
   return exports;
 });

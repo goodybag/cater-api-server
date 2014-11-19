@@ -272,24 +272,8 @@
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
 
 <script>
-  require(['app/pages/checkout', 'app/models/index', 'app/collections/amenities', 'order-delivery-service-criteria'],
-    function(page, Models, Amenities, odsCriteria) {
-      // Is dollar amount too low?
-      // Only check this on the checkout page
-      odsCriteria.add({
-        name: 'dollar_amount'
-      , type: 'some'
-      , requirements: [
-          'sub_total'
-        , 'restaurant.minimum_order'
-        , 'restaurant.delivery_service_order_amount_threshold'
-        ]
-      , fn: function( order ){
-          if ( order.sub_total < order.restaurant.minimum_order ) return false;
-          return order.sub_total < order.restaurant.delivery_service_order_amount_threshold;
-        }
-      });
-
+  require(['app/pages/checkout', 'app/models/index'],
+    function(page, Models) {
       page.init({
         marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
       , user: new Models.User({{{json user}}})

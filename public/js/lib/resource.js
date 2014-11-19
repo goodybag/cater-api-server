@@ -19,7 +19,56 @@ define(function(require){
 
   var baseFns = {
     getUrl: function(){
-      return this.url
+      return this.url;
+    }
+
+  , request: function( options, callback ){
+      callback = callback || utils.noop;
+
+      options = utils.defaults( options || {}, {
+        headers:  { 'Conetnt-Type': 'application/json' }
+      , json:     true
+      });
+
+      if ( options.body ){
+        options.body = JSON.stringify( options.body );
+      }
+
+      return utils.http( options )
+        .error( callback )
+        .then( function( data ){ callback( null, data ) } );
+    }
+
+  , get: utils.overload({
+      'String,Object,Function':
+      function( urlAddon, data, callback ){
+        return this.request({
+          method: 'GET'
+        , url:    [ this.url, urlAddon ].join('/') + utils.queryParams( data )
+        }, callback );
+      }
+    , 'Object,Function':
+      function( data, callback ){
+        return this.request({
+          method: 'GET'
+        , url:    this.url + utils.queryParams( data )
+        }, callback );
+      }
+    , 'String,Function':
+      function( urlAddon, callback ){
+        return this.request({
+          method: 'GET'
+        , url:    [ this.url, urlAddon ].join('/')
+        }, callback );
+      }
+    , 'Function':
+      function( callback ){
+        return this.request( { method: 'GET' }, callback );
+      }
+    })
+
+  , post: function( data, callback ){
+      
     }
   };
 
@@ -35,11 +84,13 @@ define(function(require){
 
       var _resource = resource( child, childChildrenDefs );
 
-      for ( var key in childrenDefs ){
-        childrenDefs[ key ] = normalizeUrlArg( childrenDefs[ key ] || {} );
-        _resource[ key ] = resource( utils.extend( {}, childrenDefs[ key ], {
-          url: ( child.url ? child.url + '/' : '' ) + ( childrenDefs[ key ].url || '')
-        }));
+      if ( childrenDefs ){
+        for ( var key in childrenDefs ){
+          childrenDefs[ key ] = normalizeUrlArg( childrenDefs[ key ] || {} );
+          _resource[ key ] = resource( utils.extend( {}, childrenDefs[ key ], {
+            url: ( child.url ? child.url + '/' : '' ) + ( childrenDefs[ key ].url || '')
+          }));
+        }
       }
 
       return _resource;
@@ -58,7 +109,7 @@ define(function(require){
     return item;
   };
 
-  return resource()
+  return resource;
 
   // return resource = function( def, childDefs ){
   //   if ( typeof def === 'string' ){

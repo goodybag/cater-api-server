@@ -14,7 +14,8 @@ define(function(require){
 
   return utils.View.extend({
     events: {
-      'click .create-btn': 'onCreateBtnClick'
+    , 'click .create-btn': 'onCreateBtnClick'
+    , 'submit .create-form': 'onCreateFormSubmit'
     }
 
   , initialize: function(){
@@ -32,7 +33,7 @@ define(function(require){
       this.$createBtn.removeClass('hide');
     }
 
-  , addNew: function(){
+  , addNew: function( data ){
       var $tr = $( Hbs.driver_requests_table_row() );
 
       this.$el.find('tbody').prepend( $tr );
@@ -42,6 +43,10 @@ define(function(require){
 
   , onCreateBtnClick: function( e ){
       this.showNewForm();
+    }
+
+  , onCreateFormSubmit: function( e ){
+      // need user obj. wait on cool api client
     }
   });
 });

@@ -2,13 +2,13 @@ define( function( require ){
   var utils = require('utils');
 
   var Views = {
-    OrderView:            require('app/views/order-view')
-  , OrderItemView:        require('app/views/order-item-view')
+    OrderView:          require('app/views/order-view')
+  , OrderItemView:      require('app/views/order-item-view')
   };
 
   var page = {
     init: function(options) {
-      var order         = this.order = options.order;
+      var order         = options.order;
       var orderItems    = options.orderItems;
       var isAdmin       = options.isAdmin;
 

@@ -184,8 +184,6 @@
 
           <div class="alert alert-danger error-blank-fields hide">You must fill out all fields</div>
         </div>
-
-
         <div class="order-params-wrapper">
           {{> order_params_bar}}
         </div>
@@ -200,9 +198,19 @@
   </div>
 </div>
 
+{{#extend "bootstrap"}}
+<script>
+  define( 'data/order', ['app/models/index'], function( Models ){
+    return new Models.Order(
+      {{{json order}}}
+    , { edit_token: "{{{edit_token}}}" }
+    );
+  });
+</script>
+{{/extend}}
+
 {{#extend "scripts"}}
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-
 <script>
   require( ['app/pages/menu', 'app/models/index'], function( page, Models ){
     page.init({

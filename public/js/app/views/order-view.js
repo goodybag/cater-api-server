@@ -9,7 +9,6 @@ define(function(require, exports, module) {
   var OrderAddressView = require('./order-address-view');
   var CopyErrorModalView = require('./copy-error-modal');
   var AmenityView = require('app/views/order/amenity-view');
-  var LeadTimeCounterView = require('app/views/restaurant/lead-time-counter-view');
   var Amenity = require('app/models/amenity');
   var TipView = require('./tip-view');
   var helpers = require('hb-helpers');

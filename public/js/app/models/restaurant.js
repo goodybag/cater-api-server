@@ -234,6 +234,7 @@ define(function(require, exports, module) {
     },
 
     getTimeLeft: function(order) {
+      if ( !order.id ) return 0;
       // returns the time left to order in minutes (based on guests/datetime)
       var deadline  = this.getDeadline(order);
       var now       = moment();

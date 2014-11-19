@@ -1,0 +1,27 @@
+<div class="sticky-header {{#dneq order.id "undefined"}}in{{/dneq}}">
+  <div class="container">
+    <div class="shrinky-text sticky-note">Order #{{order.id}}</div>
+    <div id="lead-time-counter" class="shrinky-text sticky-note pull-right">Loading</div>
+  </div>
+</div>
+
+{{#extend "scripts"}}
+<script>
+require([
+  'app/views/sticky-header-view'
+, 'app/views/restaurant/lead-time-counter-view'
+, 'data/order'
+], function(StickyHeader, Counter, order) {
+
+  var stickyHeader = new StickyHeader({
+    el: '.sticky-header'
+  , model: order
+  });
+
+  // var counter = new Counter({
+  //   el: '#lead-time-counter'
+  // , time: order.restaurant.getTimeLeft(order)
+  // });
+});
+</script>
+{{/extend}}

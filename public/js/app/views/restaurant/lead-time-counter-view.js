@@ -2,7 +2,6 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var Handlebars = require('handlebars');
   var Backbone = require('backbone');
-  // var Amenity = require('app/models/amenity');
 
   var LeadTimeCounterView = module.exports = Backbone.View.extend({
     initialize: function() {
@@ -15,7 +14,12 @@ define(function(require, exports, module) {
       this.tick();
     },
 
+    setTime: function(time) {
+      this.time = moment.duration(time || 0, 'minutes');
+    },
+
     tick: function() {
+      console.log('tick');
       this.render();
       this.time.subtract(1, 'second');
       setTimeout(this.tick.bind(this), this.interval);

@@ -26,15 +26,15 @@ define(function(require, exports, module) {
     },
 
     fromNow: function() {
-      // if ( this.time <= 0 ){
-      //   return 'Time\'s up!';
-      // }
       var days = this.time.days();
       var hrs = this.time.hours();
-      var mins = this.time.hours();
+      var mins = this.time.minutes();
       var secs = this.time.seconds();
+      var pastDue = this.time.asMinutes() <= 0;
 
-      if ( days ){
+      if (pastDue) {
+        return 'Time\'s up!';
+      } else if ( days ){
         return 'Must order by: ' + this.deadline.format('MMM Do YYYY');
       } else if ( hrs ){
         return 'Time remaining to submit order: ' + hrs + ' hours';

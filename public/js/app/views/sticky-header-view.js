@@ -12,7 +12,12 @@ define(function(require, exports, module) {
       });
 
       $(window).bind('scroll', this.onScroll.bind(this));
-      this.model.once('change:id', this.show.bind(this));
+
+      console.log('order model', this.model);
+      this.model.once('change', this.show, this);
+      this.model.once('change', function() {
+        console.log("SYNC!");
+      });
     },
 
     onScroll: function(e) {

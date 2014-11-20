@@ -212,9 +212,9 @@
 {{#extend "scripts"}}
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script>
-  require( ['app/pages/menu', 'app/models/index'], function( page, Models ){
+  require( ['app/pages/menu', 'app/models/index', 'data/order'], function( page, Models, order ){
     page.init({
-      order:          new Models.Order( {{{json order}}}, { edit_token: "{{{edit_token}}}"} )
+      order:          order
     , orderParams:    new Models.OrderParams( {{{json orderParams}}} )
     , restaurant:     new Models.Restaurant( {{{json restaurant}}} )
     , defaultAddress: new Models.Address( {{{json defaultAddress}}} )

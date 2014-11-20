@@ -6,7 +6,6 @@ define(function(require, exports, module) {
 
   var StickyHeaderView = module.exports = utils.View.extend({
     initialize: function() {
-      this.$page = $('.page');
       utils.defaults(this.options, {
         scrollYTrigger: 50
       });
@@ -20,11 +19,8 @@ define(function(require, exports, module) {
 
       if ($(window).scrollTop() > this.options.scrollYTrigger) {
           this.$el.addClass('stuck');
-          // also push page container down
-          this.$page.css('margin-top', this.options.scrollYTrigger+'px');
       } else {
           this.$el.removeClass('stuck');
-          this.$page.css('margin-top', '0');
       }
     },
 

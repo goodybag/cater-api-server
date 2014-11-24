@@ -31,3 +31,23 @@
     </div>
   </div>
 </div>
+
+{{#extend "scripts"}}
+<script>
+define('view/order-modal', [
+  'app/views/order-modal'
+, 'data/order'
+, 'data/defaultAddress'
+],
+function ( OrderModalView, order, defaultAddress ){
+  var orderModal = new OrderModalView({
+    model:          order
+  , el:             '#order-params-modal'
+  , defaultAddress: defaultAddress
+  , orderModel:     order // wtf..
+  , restaurant:     order.restaurant
+  });
+  return orderModal;
+});
+</script>
+{{/extend}}

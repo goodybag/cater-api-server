@@ -231,11 +231,16 @@
 
 {{#extend "bootstrap"}}
 <script>
-  define('data/order', ['app/models/index'], function(Models) {
+  define( 'data/order', ['app/models/index'], function(Models) {
     return new Models.Order({{{json order}}});
   });
-  define('data/order-items', ['app/models/index'], function(Models) {
+
+  define( 'data/order-items', ['app/models/index'], function(Models) {
     return {{{json order.orderItems}}};
+  });
+
+  define( 'data/defaultAddress', ['app/models/index'], function( Models ){
+    return new Models.Address( {{{json defaultAddress}}} )
   });
 </script>
 {{/extend}}
@@ -246,8 +251,9 @@
     'app/pages/review-order'
   , 'data/order'
   , 'data/order-items'
+  , 'view/order-modal'
   ]
-  , function(page, order, orderItems) {
+  , function(page, order, orderItems, orderModal) {
       page.init({
         order: order
       , orderItems: orderItems

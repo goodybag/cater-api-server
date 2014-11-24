@@ -19,6 +19,7 @@ define(function(require, exports, module) {
 
     onClickOrderParams: function(e) {
       e.preventDefault();
+      console.log('trigger open:order-params');
       venter.trigger('open:order-params', e);
     },
 

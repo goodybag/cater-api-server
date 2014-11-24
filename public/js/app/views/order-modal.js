@@ -35,6 +35,15 @@ define(function(require, exports, module) {
 
       // Remove the paneliness from the order params partial
       this.$el.find('.order-params-bar').removeClass('panel');
+
+      venter.on('open:order-params', this.openOrderParams, this);
+    },
+
+    openOrderParams: function() {
+      this.show({
+        success: function(model) { this.hide(); }.bind(this)
+        , error: function(){ alert('sorry we were unable to change your order information, please refresh page and try again'); }
+      });
     },
 
     show: function(submitHandlers) {

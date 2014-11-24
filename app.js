@@ -65,6 +65,7 @@ app.configure(function(){
 
   app.use(middleware.setSession());
   app.use(middleware.getUser);
+  app.use( middleware.getRegions() )
 
   if (config.isProduction || config.isStaging) {
     app.use(middleware.sslRedirect);

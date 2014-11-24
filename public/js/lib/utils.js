@@ -38,12 +38,14 @@ define(function(require, exports, module) {
     utils.dom = $;
     utils.domready = $;
     utils.ajax = $.ajax;
+    utils.http = $.ajax;
     utils.key = require('keymaster');
   }
 
   utils.async = async;
   utils.validator = amanda('json');
   utils.Math = require('./math');
+  utils.overload = require('leFunc');
 
   utils.Backbone    = Backbone;
   utils.Events      = Backbone.Events;

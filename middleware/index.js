@@ -14,6 +14,7 @@ module.exports = {
 , findRegions: require('./find-regions')
 , getOrder: require('./get-order')
 , getOrder2: require('./get-order2')
+, getRegions: require('./get-regions')
 , getUser: require('./get-user')
 , jsonLocals: require('./json-locals')
 , logRequest: require('./log-request')

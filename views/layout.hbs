@@ -101,7 +101,7 @@
             {{#if user.id}}
             <ul class="nav navbar-nav navbar-right">
               {{#contains user.groups 'admin'}}
-                <li>{{> region_selector}}</li>
+                <li class="form-control-wrapper">{{> region_selector}}</li>
               {{/contains}}
               {{#contains user.groups 'restaurant'}}
                 <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
@@ -193,6 +193,7 @@
       require( ['config'], function( config ){
         config.cdn = { baseUrl: '{{{config.cdn.baseUrl}}}' };
         config.deliveryTime = {{{json config.deliveryTime}}};
+        config.baseUrl = '{{config.baseUrl}}';
       });
     </script>
 

@@ -1,8 +1,11 @@
 {{#extend "scripts"}}
 <script>
   require( ['jquery', 'api'], function( $, api ){
+    var user = api.users({{user.id}});
     $('#user-region-selector').change( function( e ){
-      api.users.put( {{user.id}}, { region_id: e.target.value }, function( error ){
+      if ( !e.target.value ) return;
+
+      user.put({ region_id: e.target.value }, function( error ){
         if ( error ){
           return alert('Something went wrong :(');
         }
@@ -15,7 +18,6 @@
 {{/extend}}
 
 <select name="region_id" id="user-region-selector" class="form-control">
-  <option>Select a Region</option>
 {{#each regions}}
   <option value="{{this.id}}"
   {{~#eq ../user.region_id this.id}} selected="true"{{/eq}}>

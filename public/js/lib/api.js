@@ -3,9 +3,9 @@ define(function(require){
   var config = require('config');
   var resource = require('./resource');
 
-  return {
-    users: resource( require('./api/users'), {
-      payment_methods:
-    })
-  };
+  var api = resource( config.baseUrl + '/api' );
+
+  api.users = api('users');
+
+  return api;
 });

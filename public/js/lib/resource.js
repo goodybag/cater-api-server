@@ -28,7 +28,10 @@ define(function(require){
       options = utils.defaults( options || {}, {
         headers:  { 'Conetnt-Type': 'application/json' }
       , json:     true
+      , url:      this.url
       });
+
+      options.type = options.method;
 
       if ( options.body ){
         options.body = JSON.stringify( options.body );
@@ -40,36 +43,103 @@ define(function(require){
     }
 
   , get: utils.overload({
-      'String,Object,Function':
+      'String,Object,Function?':
       function( urlAddon, data, callback ){
         return this.request({
           method: 'GET'
         , url:    [ this.url, urlAddon ].join('/') + utils.queryParams( data )
         }, callback );
       }
-    , 'Object,Function':
+    , 'Object,Function?':
       function( data, callback ){
         return this.request({
           method: 'GET'
         , url:    this.url + utils.queryParams( data )
         }, callback );
       }
-    , 'String,Function':
+    , 'String,Function?':
       function( urlAddon, callback ){
         return this.request({
           method: 'GET'
         , url:    [ this.url, urlAddon ].join('/')
         }, callback );
       }
-    , 'Function':
+    , 'Number,Function?':
+      function( urlAddon, callback ){
+        return this.get( urlAddon + '', callback )
+      }
+    , 'Number,Object,Function?':
+      function( urlAddon, data, callback ){
+        return this.request({
+          method: 'GET'
+        , url:    [ this.url, urlAddon ].join('/') + utils.queryParams( data )
+        }, callback );
+      }
+    , 'Function?':
       function( callback ){
         return this.request( { method: 'GET' }, callback );
       }
     })
 
-  , post: function( data, callback ){
-      
-    }
+  , post: utils.overload({
+      'Object,Function?':
+      function( data, callback ){
+        return this.request({
+          method: 'POST'
+        , data:   data
+        }, callback );
+      }
+    , 'Function?':
+      function( data, callback ){
+        return this.request( { method: 'POST'}, callback );
+      }
+    })
+
+  , put: utils.overload({
+      'Object,Function?':
+      function( data, callback ){
+        return this.request({
+          method: 'PUT'
+        , data:   data
+        }, callback );
+      }
+    , 'Function?':
+      function( data, callback ){
+        return this.request( { method: 'PUT'}, callback );
+      }
+    })
+
+  , patch: utils.overload({
+      'Object,Function?':
+      function( data, callback ){
+        return this.request({
+          method: 'PATCH'
+        , data:   data
+        }, callback );
+      }
+    , 'Function?':
+      function( data, callback ){
+        return this.request( { method: 'PATCH'}, callback );
+      }
+    })
+
+  , del: utils.overload({
+      'String,Function?':
+      function( urlAddon, callback ){
+        return this.request({
+          method: 'DELETE'
+        , url:    [ this.url, urlAddon ].join('/')
+        }, callback );
+      }
+    , 'Number,Function?':
+      function( urlAddon, callback ){
+        return this.del( urlAddon + '', callback )
+      }
+    , 'Function?':
+      function( callback ){
+        return this.request( { method: 'DELETE' }, callback );
+      }
+    })
   };
 
   var resource = function( def, childrenDefs ){

@@ -1881,6 +1881,18 @@ module.exports.register = function(app) {
   , m.find( db.users )
   );
 
+  app.put('/api/users/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.users )
+  );
+
+  app.del('/api/users/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.users )
+  );
+
   /**
    * Amenities
    */

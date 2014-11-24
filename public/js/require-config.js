@@ -29,6 +29,7 @@
       {name: 'lodash',            location: '../../components/lodash/dist',               main: 'lodash.underscore.js'}
     , {name: 'async',             location: '../../components/async/lib',                 main: 'async.js'}
     , {name: 'amanda',            location: '../../components/amanda/releases/latest',    main: 'amanda.js'}
+    , {name: 'leFunc',            location: '../../components/lefunc/lib',                main: 'leFunc.js'}
 
       // backbone stuff
     , {name: 'backbone',          location: '../../components/backbone',                  main: 'backbone.js'}

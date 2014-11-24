@@ -72,7 +72,7 @@ app.configure(function(){
         res.locals.regions = regions;
         return next();
       }
-      m.db.regions.find({})( req, res, next );
+      middleware.db.regions.find({})( req, res, next );
     });
 
     app.use( function( req, res, next ){

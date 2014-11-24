@@ -1194,6 +1194,15 @@ a.list-group-item .list-group-item-heading {
   padding-bottom: 5px;
 }
 
+.sticky-header a {
+  color: #fff;
+  text-decoration: underline;
+}
+.sticky-header a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
 .sticky-header + .sticky-spacer {
   display: none;
 }
@@ -1201,4 +1210,13 @@ a.list-group-item .list-group-item-heading {
 .sticky-header.stuck + .sticky-spacer {
   height: 50px;
   display: block;
+}
+
+.sticky-header .popover-content {
+  color: #111;
+  text-shadow: none;
+}
+
+.sticky-header .popover-content a {
+  color: #0039a1;
 }

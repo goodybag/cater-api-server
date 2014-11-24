@@ -28,12 +28,12 @@ define(function(require, exports, module) {
 
     setTime: function(time) {
       this.time = moment.duration(time || 0, 'minutes');
+      this.tick();
     },
 
     tick: function() {
       this.render();
       this.time.subtract(1, 'second');
-      setTimeout(this.tick.bind(this), this.interval);
     },
 
     showHeader: function() {
@@ -47,8 +47,9 @@ define(function(require, exports, module) {
       var secs = this.time.seconds();
       var pastDue = this.time.asMinutes() <= 0;
 
+      if ( !pastDue ) setTimeout(this.tick.bind(this), this.interval);
       if (pastDue) {
-        return 'More time is needed to prepare this meal! Click <a href="#" class="order-params-btn">here</a> to set a later date.';
+        return Handlebars.partials.lead_time_past_due();
       } else if ( days ){
         var deadline = this.model.restaurant.getDeadline(this.model).format('MMM Do YYYY');
         return 'Must order by: ' + deadline;
@@ -61,6 +62,7 @@ define(function(require, exports, module) {
 
     render: function() {
       this.$el.html(this.fromNow());
+      $('[data-toggle="popover"]').popover();
     }
   });
   return LeadTimeCounterView;

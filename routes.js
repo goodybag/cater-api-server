@@ -21,11 +21,11 @@ module.exports.register = function(app) {
   logger.info('Registering routes');
 
   app.before( m.analytics, m.queryParams(), function( app ){
-    app.get('/', m.findRegions({ is_hidden: false}), controllers.auth.index);
+    app.get('/', m.getRegions({ where: { is_hidden: false } }), controllers.auth.index);
     app.get('/login', controllers.auth.login);
     app.post('/login', controllers.auth.login);
-    app.get('/join', m.findRegions({ is_hidden: false}), controllers.auth.registerView);
-    app.post('/join', m.findRegions({ is_hidden: false}), controllers.auth.register);
+    app.get('/join', m.getRegions({ where: { is_hidden: false } }), controllers.auth.registerView);
+    app.post('/join', m.getRegions({ where: { is_hidden: false } }), controllers.auth.register);
 
     app.get('/rewards', m.view( 'landing/rewards', {
       layout: 'landing/layout'
@@ -1067,7 +1067,7 @@ module.exports.register = function(app) {
 
   app.get('/reports'
   , m.restrict(['admin'])
-  , m.findRegions()
+  , m.getRegions()
   , controllers.reports.index
   );
 

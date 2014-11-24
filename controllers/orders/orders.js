@@ -313,8 +313,6 @@ module.exports.changeStatus = function(req, res) {
     status: req.body.status
   };
 
-  if (req.body.status === 'submitted' && req.order.user.is_invoiced) $update.payment_status = 'invoiced';
-
   if (review) $update.token_used = 'now()';
 
   req.order.status = req.body.status;

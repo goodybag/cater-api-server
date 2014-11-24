@@ -8,6 +8,7 @@ var utils       = require('../utils');
 var logger      = require('../lib/logger');
 var config      = require('../config');
 var PMSItem     = require('../public/js/app/models/payment-summary-item');
+var odsChecker  = require('../public/js/lib/order-delivery-service-checker');
 
 dirac.db.setMosql( mosql );
 
@@ -396,8 +397,8 @@ dirac.use( function(){
     $query.columns.push({
       type:     'select'
     , table:    'payment_summary_items'
-    , columns:  [{ type: 'sum'
-                , expression: 'payment_summary_items.net_payout'
+    , columns:  [{ type: 'expression'
+                , expression: 'sum( payment_summary_items.net_payout ) + payment_summaries.adjustment'
                 , alias: options.column
                 }]
     , where:    { payment_summary_id: '$payment_summaries.id$' }
@@ -812,6 +813,14 @@ dirac.use( function( dirac ){
     , set: function( v ){
         this.adjustment_description = v.description;
         this.adjustment_amount      = v.amount;
+      }
+    });
+
+    Object.defineProperty( order, 'courierReasons', {
+      get: function(){
+        if ( this.type !== 'courier' ) return [];
+
+        return odsChecker.why( this );
       }
     });
   };

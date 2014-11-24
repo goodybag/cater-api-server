@@ -1048,19 +1048,19 @@ a.list-group-item .list-group-item-heading {
  */
 
 .cc-visa {
-  background: url(../img/credit-cards/visa.png) #fff no-repeat right;
+  background: url(/img/credit-cards/visa.png) #fff no-repeat right;
 }
 
 .cc-master {
-  background: url(../img/credit-cards/master.png) #fff no-repeat right;
+  background: url(/img/credit-cards/master.png) #fff no-repeat right;
 }
 
 .cc-amex {
-  background: url(../img/credit-cards/amex.png) #fff no-repeat right;
+  background: url(/img/credit-cards/amex.png) #fff no-repeat right;
 }
 
 .cc-discover {
-  background: url(../img/credit-cards/discover.png) #fff no-repeat right;
+  background: url(/img/credit-cards/discover.png) #fff no-repeat right;
 }
 
 /**
@@ -1166,36 +1166,3 @@ a.list-group-item .list-group-item-heading {
   padding: 10px;
   line-height: 36px;
 }
-
-/**
- * Tooltips
- */
-/*
-.tooltip .tooltip-inner {
-  background: #fcfcfc;
-  box-shadow: 0 0 14px rgba( 0,0,0,0.3 );
-  border: solid 1px #8B8B8B;
-  color: #340F02;
-  padding: 6px 12px;
-}
-
-.tooltip .tooltip-arrow {
-  width: 0;
-  height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-top: 10px solid #8B8B8B;
-  margin-left: -15px;
-}
-
-.tooltip .tooltip-arrow:after {
-  content: "";
-  position: absolute;
-  left: -13px;
-  top: -9px;
-  width: 0;
-  height: 0;
-  border-left: 13px solid transparent;
-  border-right: 13px solid transparent;
-  border-top: 8px solid #fcfcfc;
-}*/

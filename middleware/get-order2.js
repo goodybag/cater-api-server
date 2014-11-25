@@ -98,6 +98,20 @@ module.exports = function( options ){
       $options.one.push({
         table:  'restaurants'
       , alias:  'restaurant'
+      , with:   { hours_of_operation : Models.Restaurant.getHoursQuery( ) }
+      , joins: {
+          hoo: {
+            type: 'left'
+          , target: 'hours_of_operation'
+          , on: { 'restaurant_id': '$restaurants.id$' }
+          }
+        }
+
+      , columns: [ '*', {
+          alias: 'hours_of_operation'
+        , type: 'coalesce'
+        , expression: 'hoo.hours_times, \'[]\'::json'
+        }]
       , one:    restaurantOne
       , many:   restaurantMany
       });
@@ -132,6 +146,21 @@ module.exports = function( options ){
       if ( options.manifest ){
         order.manifest = manifest.create( order.orderItems );
       }
+
+      // crazy legacy hack - models/restaurant.js line 823
+      // todo: improve solution
+      if ( options.legacy || true ) {
+        var blah = utils.range(7).map(function() {
+          return [];
+        });
+
+        order.restaurant.delivery_times.forEach(function(dt) {
+          blah[dt.day] = [ [dt.start_time, dt.end_time] ];
+        });
+
+        order.restaurant.delivery_times = utils.object(utils.range(7), blah);
+      }
+      order.restaurant.hours_of_operation = utils.object(order.restaurant.hours_of_operation);
 
       req.order = order;
       res.locals.order = order;

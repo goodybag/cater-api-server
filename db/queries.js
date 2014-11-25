@@ -220,7 +220,9 @@ module.exports = {
           type: 'select',
           table: 'users',
           columns: ['id'],
-          where: {email: email.toLowerCase()}
+          where: {
+            $custom: [ 'lower(users.email) = lower($1)', email ]
+          }
         }
       };
 

@@ -16,7 +16,6 @@ define(function(require, exports, module) {
     submitHandlers: {},
 
     initialize: function( options ) {
-      console.log('order-modal');
       utils.enforceRequired( options, [
         'orderModel', 'restaurant'
       ]);

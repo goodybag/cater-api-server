@@ -12,7 +12,7 @@ begin
   if not exists ( select id from regions where name = 'Seattle, WA' )
   then
     insert into regions ( name, state, cities, sales_tax, timezone )
-      values ( 'Seattle, WA', 'WA', Array['Seattle'], 0.095, 'US/Pacific' )
+      values ( 'Seattle, WA', 'WA', Array['Seattle'], 0.095, 'America/Los_Angeles' )
       returning id into rid;
 
     insert into region_zips ( region_id, zip ) values

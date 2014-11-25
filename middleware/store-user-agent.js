@@ -7,7 +7,7 @@ var db    = require('../db');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
-    age: 1000*60//*60 // Update UA each hour a request comes in
+    age: 1000*60*60 // Update UA each hour a request comes in
   });
 
   var end = {};

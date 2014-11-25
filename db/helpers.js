@@ -836,6 +836,25 @@ dirac.use( function( dirac ){
   dirac.dals.orders.after( 'insert', afterOrderFind );
 });
 
+dirac.use( function(){
+  var onUser = function( user ){
+    Object.defineProperty( user, 'user_agent_display', {
+      get: function(){
+        if ( !user.user_agent ) return null;
+        return utils.useragent.parse( user.user_agent ).toString();
+      }
+    });
+  };
+
+  var afterUserFind = function( results, $query, schema, next ){
+    results.forEach( onUser );
+    next();
+  };
+
+  dirac.dals.users.after( 'find', afterUserFind );
+  dirac.dals.users.after( 'findOne', afterUserFind );
+});
+
 // Log queries to dirac
 // dirac.use( function( dirac ){
 //   var query_ = dirac.DAL.prototype.query;

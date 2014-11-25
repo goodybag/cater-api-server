@@ -40,6 +40,7 @@ define('view/order-modal', [
 , 'data/defaultAddress'
 ],
 function ( OrderModalView, order, defaultAddress ){
+  console.log(defaultAddress);
   var orderModal = new OrderModalView({
     model:          order
   , el:             '#order-params-modal'

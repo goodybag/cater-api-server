@@ -161,6 +161,8 @@ module.exports = function( options ){
         order.restaurant.delivery_times = utils.object(utils.range(7), blah);
       }
       order.restaurant.hours_of_operation = utils.object(order.restaurant.hours_of_operation);
+      order.restaurant.delivery_zips = utils.pluck(order.restaurant.delivery_zips, 'zip');
+      // end of legacy shit 
 
       req.order = order;
       res.locals.order = order;

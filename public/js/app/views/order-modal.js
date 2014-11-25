@@ -16,6 +16,7 @@ define(function(require, exports, module) {
     submitHandlers: {},
 
     initialize: function( options ) {
+      console.log('order-modal');
       utils.enforceRequired( options, [
         'orderModel', 'restaurant'
       ]);
@@ -32,6 +33,7 @@ define(function(require, exports, module) {
       , interval: 15
       }).pickatime('picker');
 
+      this.timepicker.on( 'set', _(this.onTimePickerSet).bind( this ) );
       this.timepicker.on( 'open', _(this.onTimePickerOpen).bind( this ) );
 
       // Remove the paneliness from the order params partial
@@ -189,6 +191,20 @@ define(function(require, exports, module) {
         var range = utils.timeToRange( $this.text(), timeFormat, config.deliveryTime );
         $this.text( range.join(' - ') );
       });
+    },
+
+    setTimeRangeInput: function( time, format ){
+      var range = utils.timeToRange( time, format, config.deliveryTime );
+      this.$el.find('[name="time-range"]').val( range.join(' - ') );
+    },
+
+    onTimePickerSet: function( ctx ){
+      if ( 'select' in ctx ){
+        this.setTimeRangeInput(
+          this.timepicker.get()
+        , this.timepickerMomentFormat
+        );
+      }
     },
 
     onTimePickerOpen: function(){

@@ -15,6 +15,8 @@ module.exports = function( options ){
   return function( req, res, next ){
     next();
 
+    if ( !utils.hasPropsDeep( req, ['user.attributes.id'] ) ) return;
+
     var uid = req.user.attributes.id;
 
     if ( end[ uid ] && Date.now() < end[ uid ] ) return;

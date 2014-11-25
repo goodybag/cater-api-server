@@ -42,5 +42,6 @@ module.exports = {
 , json: require('./json')
 , logger: require('./logger')
 , logger: require('./logger')
+, storeUserAgent: require('./store-user-agent')
 , timeout: require('./timeout')
 };

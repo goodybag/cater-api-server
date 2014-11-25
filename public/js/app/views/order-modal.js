@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var utils = require('utils');
   var venter = require('venter');
+  var config = require('config');
 
   return module.exports = Backbone.View.extend({
     events: {
@@ -35,6 +36,9 @@ define(function(require, exports, module) {
 
       // Remove the paneliness from the order params partial
       this.$el.find('.order-params-bar').removeClass('panel');
+
+      // Handle discrepancy between pickadates and moments formatting
+      this.timepickerMomentFormat = this.timepicker.component.settings.format.replace( /\i/g, 'mm' );
 
       venter.on('open:order-params', this.openOrderParams, this);
     },
@@ -174,6 +178,19 @@ define(function(require, exports, module) {
       this.datepicker.set( 'disable', disabledTimes );
     },
 
+    /**
+     * Converts the timepicker times from regla-ass times to ranges
+     */
+    convertTimesToRanges: function(){
+      var timeFormat = this.timepickerMomentFormat;
+
+      this.timepicker.$root.find('.picker__list-item').each( function(){
+        var $this = $(this);
+        var range = utils.timeToRange( $this.text(), timeFormat, config.deliveryTime );
+        $this.text( range.join(' - ') );
+      });
+    },
+
     onTimePickerOpen: function(){
       var day = this.datepicker.get();
 
@@ -214,6 +231,8 @@ define(function(require, exports, module) {
           });
         })
       );
+
+      this.convertTimesToRanges();
     }
 
   , onKeyUp: function( e ){

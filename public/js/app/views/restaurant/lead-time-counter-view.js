@@ -11,7 +11,7 @@ define(function(require, exports, module) {
 
     initialize: function() {
       this.time = moment.duration(this.options.time || 0, 'minutes'); // minutes
-      this.interval = this.options.interval || 1000; // defaulte 1 min
+      this.interval = this.options.interval || 1000; // default 1 min
       this.model.on('change:guests', this.updateTime, this);
       this.model.on('change:datetime', this.updateTime, this);
       this.tick();
@@ -19,7 +19,6 @@ define(function(require, exports, module) {
 
     onClickOrderParams: function(e) {
       e.preventDefault();
-      console.log('trigger open:order-params');
       venter.trigger('open:order-params', e);
     },
 

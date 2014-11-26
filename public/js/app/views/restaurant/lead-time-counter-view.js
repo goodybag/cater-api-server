@@ -12,10 +12,11 @@ define(function(require, exports, module) {
     initialize: function() {
       this.time = moment.duration(this.options.time || 0, 'minutes'); // minutes
       this.interval = this.options.interval || 1000; // default 1 min
-      this.intervalId = setInterval(this.tick.bind(this), this.interval);
 
       this.model.on('change:guests', this.updateTime, this);
       this.model.on('change:datetime', this.updateTime, this);
+
+      this.start();
     },
 
     onClickOrderParams: function(e) {
@@ -29,7 +30,7 @@ define(function(require, exports, module) {
 
     setTime: function(time) {
       this.time = moment.duration(time || 0, 'minutes');
-      this.tick();
+      if ( !this.intervalId ) this.start();
     },
 
     tick: function() {
@@ -61,8 +62,14 @@ define(function(require, exports, module) {
       }
     },
 
+    start: function() {
+      this.intervalId = setInterval(this.tick.bind(this), this.interval);
+      return this;
+    },
+
     stop: function() {
       clearInterval(this.intervalId);
+      this.intervalId = null;
       return this;
     },
 

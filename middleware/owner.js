@@ -3,7 +3,7 @@
  * to ensure resource ownership. Sends a 401 if non-owner
  */
 
-var utils = require('utils');
+var utils = require('../utils');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {

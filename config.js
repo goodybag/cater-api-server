@@ -363,7 +363,10 @@ config.dev = {
 , workers: {
     debit: {
       enqueue: {
-        interval: 1000 * 5 // 5 seconds
+        interval: 1000 * 5    // 5 seconds
+      }
+    , process: {
+        interval: 1000 * 5    // 5 seconds
       }
     }
   , reminders: {
@@ -457,6 +460,9 @@ config.staging = {
 , workers: {
     debit: {
       enqueue: {
+        interval: 1000 * 5 // 5 seconds
+      }
+    , process: {
         interval: 1000 * 5 // 5 seconds
       }
     }
@@ -601,6 +607,9 @@ config.production = {
     debit: {
       enqueue: {
         interval: 1000 * 60 * 30 // 30 minutes
+      }
+    , process: {
+        interval: 1000 * 20      // 20 seconds (~900k request/month)
       }
     }
   , reminders: {

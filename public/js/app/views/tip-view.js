@@ -18,7 +18,7 @@ define(function(require, exports, module) {
       if (!_.isNaN(val)) {
         var tip = this.model.get('sub_total') * (val / 100);
         this.$el.find('.order-tip').val(Handlebars.helpers.dollars(tip));
-        this.options.orderView.onPriceChange();
+        this.model.set('tip', tip)
       }
     },
 
@@ -29,7 +29,7 @@ define(function(require, exports, module) {
     customTip: function(e) {
       if (this.tip !== e.currentTarget.value) {
         this.$el.find('.tip-percent option[value="custom"]').attr('selected', 'selected');
-        this.options.orderView.onPriceChange();
+        this.model.set('tip', +e.currentTarget.value)
       }
     }
   });

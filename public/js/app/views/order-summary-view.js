@@ -7,7 +7,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var OrderItemSummaryView = require('./order-item-summary-view');
 
-  return module.exports = Backbone.View.extend({
+  var OrderSummaryView = module.exports = Backbone.View.extend({
     events: {
       'click .btn-checkout': 'checkout'
     },
@@ -51,6 +51,9 @@ define(function(require, exports, module) {
         , el: $el[0]
         });
       });
+
+      this.initTxFeePopover( this.model.restaurant.toJSON() );
+
       return this;
     },
 
@@ -116,4 +119,8 @@ define(function(require, exports, module) {
       });
     }
   });
+
+  utils.extend( OrderSummaryView.prototype, require('app/views/mixins/tx-fee-popover')() );
+
+  return OrderSummaryView;
 });

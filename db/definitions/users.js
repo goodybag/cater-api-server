@@ -72,6 +72,7 @@ define(function(require) {
     }
   , ordrin_email:     { type: types.text, unique: true }
   , ordrin_password:  { type: types.text }
+  , user_agent:       { type: types.text }
   };
 
   definition.indices = {};

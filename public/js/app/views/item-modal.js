@@ -53,7 +53,7 @@ define(function(require, exports, module) {
           this_.submit(e);
         }
       , error: function(){
-          alert('sorry we were unable to add item to order, please refresh page and try again');
+          alert('Something went wrong, please refresh page and try again!');
         }
       , enforceRequired: false
       });

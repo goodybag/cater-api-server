@@ -59,6 +59,9 @@
     , { "q": "Something was wrong with my order, what do I do?"
       , "a": "If you aren't completely satisfied with your order, please let us know immediately and we can find a solution. We will contact the restaurant and/or can adjust the billing info if necessary."
       }
+    , { "q": "What is a Transaction Fee?"
+      , "a": "Transaction fees are a small percentage applied to the order total. They are collected when the restaurant you are ordering from is not one of our partner businesses."
+      }
     ]
   }
 , {

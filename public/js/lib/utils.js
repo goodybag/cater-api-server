@@ -38,12 +38,14 @@ define(function(require, exports, module) {
     utils.dom = $;
     utils.domready = $;
     utils.ajax = $.ajax;
+    utils.http = $.ajax;
     utils.key = require('keymaster');
   }
 
   utils.async = async;
   utils.validator = amanda('json');
   utils.Math = require('./math');
+  utils.overload = require('leFunc');
 
   utils.Backbone    = Backbone;
   utils.Events      = Backbone.Events;
@@ -90,74 +92,6 @@ define(function(require, exports, module) {
     utils.history = Backbone.history;
     utils.history.start();
     utils.navigate = function(){ utils.history.navigate.apply(utils.history, arguments); };
-  };
-
-  /**
-   * Searches object structure for properties definition
-   *
-   * Example:
-   *
-   * var obj = {
-   *   a: 1
-   * , b: {
-   *     c: 2
-   *   , d: { e: { f: 1 } }
-   *   }
-   * }
-   *
-   * //=> true
-   * hasPropsDeep( obj, ['a', 'b.c', 'b.d.e.f' ] )
-   *
-   * //=> false
-   * hasPropsDeep( obj, ['a', 'b.c', 'b.d.e.g' ] )
-   *
-   * @param  {Object}  obj        Object to search
-   * @param  {Array}  properties  Array of string keys
-   * @return {Boolean}            Whether or not obj passes properties schema
-   */
-  utils.hasPropsDeep = function( obj, properties ){
-    if ( !_.isObject( obj ) ){
-      throw new Error('Invalid first parameter');
-    }
-
-    if ( !_.isArray( properties ) ){
-      throw new Error('Invalid second parameter');
-    }
-
-    var prop, levels;
-    for ( var i = 0; i < properties.length; i++ ){
-      levels = properties[i].split('.');
-      prop = levels.shift();
-
-      if ( !(prop in obj) ){
-        return false;
-      }
-
-      if ( levels.length > 0 )
-      if ( !utils.hasPropsDeep( obj[ prop ], [ levels.join('.') ] ) ){
-        return false;
-      }
-    }
-
-    return true;
-  };
-
-  utils.hasProps = function( obj, properties ){
-    if ( !_.isObject( obj ) ){
-      throw new Error('Invalid first parameter');
-    }
-
-    if ( !_.isArray( properties ) ){
-      throw new Error('Invalid second parameter');
-    }
-
-    for ( var i = 0; i < properties.length; i++ ){
-      if ( !(properties[i] in obj) ){
-        return false;
-      }
-    }
-
-    return true;
   };
 
   /**

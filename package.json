@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.183",
+  "version": "1.1.189",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -16,7 +16,7 @@
     "underscore": "./node_modules/lodash/lodash.js",
     "config": "./config.js",
     "errors": "./errors.js",
-    "utils": "./public/js/lib/utils.js"
+    "utils": "./utils.js"
   },
   "dependencies": {
     "Faker": "0.5.x",
@@ -27,6 +27,7 @@
     "balanced-official": "goodybag/balanced-node",
     "bcrypt": "0.7.x",
     "bitly": "1.2.x",
+    "bluebird": "^2.3.11",
     "bower": "^1.3.3",
     "cron": "^1.0.4",
     "deep-extend": "~0.2.8",
@@ -56,7 +57,7 @@
     "jade": "0.34.x",
     "json2csv": "~2.2.1",
     "knox": "~0.8.6",
-    "leFunc": "~1.2.1",
+    "leFunc": "~1.2.4",
     "lodash": "2.2.x",
     "loglog": "^0.2.0",
     "loglog-mongodb": "^1.0.1",
@@ -87,6 +88,7 @@
     "time": "^0.10.0",
     "twilio": "1.1.x",
     "udp-client": "0.1.x",
+    "useragent": "^2.1.3",
     "when": "2.2.x",
     "wrench": "~1.5.8",
     "yelp": "~0.1.1"

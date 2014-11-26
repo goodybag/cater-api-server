@@ -255,6 +255,15 @@
   padding-right: 0;
 }
 
+.navbar .form-control-wrapper {
+  margin-right: 8px;
+}
+
+.navbar li > .form-control {
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+
 /**
  * Panels
  */
@@ -563,6 +572,7 @@ a.list-group-item .list-group-item-heading {
 }
 
 .order-summary .subtotal-row,
+.order-summary .tx-fee-row,
 .order-summary .order-totals dt.total,
 .order-summary .order-totals dd.total {
   font-weight: 700;
@@ -570,6 +580,20 @@ a.list-group-item .list-group-item-heading {
 
 .order-summary .checkout-row {
   padding-top: 30px;
+}
+
+.order-summary .tx-fee-row .tx-fee-popover {
+  margin-bottom: 5px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.order-summary .tx-fee-row .tx-fee-popover .tx-fee {
+  line-height: 16px;
+}
+
+.order-summary .tx-fee-row .tx-fee-popover:before {
+  font-size: 16px;
 }
 
 .order-summary .order-totals dt {
@@ -585,6 +609,7 @@ a.list-group-item .list-group-item-heading {
   font-weight:  lighter;
   font-style:   italic;
 }
+
 
 /**
  * Order Summary > Order Summary Table

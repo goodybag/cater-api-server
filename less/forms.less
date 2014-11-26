@@ -24,6 +24,10 @@ label {
   display: block;
   font-weight: @semibold;
   font-size: @font-size-small + 1;
+
+  input {
+    margin-right: 6px;
+  }
 }
 
 // Whitelist all input types except checkbox, radio
@@ -167,5 +171,16 @@ input[type="date"] {
   &::-webkit-datetime-edit-day-field,
   &::-webkit-datetime-edit-year-field {
     padding: 0;
+  }
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 12px 0 20px;
+
+  .fieldset-title {
+    padding-bottom: 8px;
+    border-bottom: solid 1px @off-gray;
   }
 }

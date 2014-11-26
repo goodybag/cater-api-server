@@ -60,6 +60,9 @@
     <link href="{{cdn (format 'dist/<%= version %>/cater-tool.css' pkg)}}" rel="stylesheet">
     <link href="{{cdn (format 'dist/<%= version %>/css/theme.css' pkg)}}" rel="stylesheet">
 
+    <!--[if lt IE 11]>
+    <link rel="stylesheet" href="{{cdn "css/ie-lt-11.css"}}">
+    <![endif]-->
     <!--[if lte IE 9]>
     <link rel="stylesheet" href="{{cdn "css/ie-lte-9.css"}}">
     <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/cater-tool-ielt9.css' pkg)}}">

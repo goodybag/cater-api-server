@@ -1217,6 +1217,7 @@ a.list-group-item .list-group-item-heading {
   color: #111;
   text-shadow: none;
 }
+
 .sticky-header.stuck .popover {
   top: 25px !important;
 }

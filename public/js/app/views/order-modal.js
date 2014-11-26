@@ -25,6 +25,7 @@ define(function(require, exports, module) {
       , min: new Date()
       }).pickadate('picker');
 
+      this.datepicker.on( 'set', _(this.onDatePickerSet).bind( this ) );
       this.datepicker.on( 'open', _(this.onDatePickerOpen).bind( this ) );
 
       this.timepicker = this.$el.find('input[name="time"]').eq(0).pickatime({
@@ -109,18 +110,7 @@ define(function(require, exports, module) {
       }
     },
 
-    submit: function(e) {
-      e.preventDefault();
-
-      this.clear();
-
-      var blank = this.$el.find('form input:visible').filter(function(index) { return $(this).val() === '' });
-      if (blank.length > 0) {
-        blank.parent().addClass('has-error');
-        this.$el.find('.error-blank-fields').removeClass('hide');
-        return;
-      }
-
+    updateParams: function () {
       var order = {
         zip: this.$el.find('input[name="zip"]').val().trim() || null,
         guests: parseInt(this.$el.find('input[name="guests"]').val()) || null,
@@ -137,6 +127,21 @@ define(function(require, exports, module) {
         _.extend(order, this.options.defaultAddress.pick(this.model.constructor.addressFields));
 
       this.model.set( order );
+    },
+
+    submit: function(e) {
+      e.preventDefault();
+
+      this.clear();
+
+      var blank = this.$el.find('form input:visible').filter(function(index) { return $(this).val() === ''; });
+      if (blank.length > 0) {
+        blank.parent().addClass('has-error');
+        this.$el.find('.error-blank-fields').removeClass('hide');
+        return;
+      }
+
+      this.updateParams();
 
       if ( this.showErrors() ) return;
 
@@ -145,6 +150,10 @@ define(function(require, exports, module) {
         self.model.trigger('change:orderparams');
         self.submitHandlers.success( self.model );
       }).error( self.submitHandlers.error );
+    },
+
+    onDatePickerSet: function() {
+      this.updateParams();
     },
 
     onDatePickerOpen: function(){
@@ -204,6 +213,8 @@ define(function(require, exports, module) {
         , this.timepickerMomentFormat
         );
       }
+
+      this.updateParams();
     },
 
     onTimePickerOpen: function(){

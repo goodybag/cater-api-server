@@ -12,9 +12,10 @@ define(function(require, exports, module) {
     initialize: function() {
       this.time = moment.duration(this.options.time || 0, 'minutes'); // minutes
       this.interval = this.options.interval || 1000; // default 1 min
+      this.intervalId = setInterval(this.tick.bind(this), this.interval);
+
       this.model.on('change:guests', this.updateTime, this);
       this.model.on('change:datetime', this.updateTime, this);
-      this.tick();
     },
 
     onClickOrderParams: function(e) {
@@ -47,8 +48,8 @@ define(function(require, exports, module) {
       var secs = this.time.seconds();
       var pastDue = this.time.asMinutes() <= 0;
 
-      if ( !pastDue ) setTimeout(this.tick.bind(this), this.interval);
       if (pastDue) {
+        this.stop();
         return Handlebars.partials.lead_time_past_due();
       } else if ( days ){
         var deadline = this.model.restaurant.getDeadline(this.model).format('MMM Do YYYY');
@@ -58,6 +59,11 @@ define(function(require, exports, module) {
       } else {
         return 'Time remaining to submit order: ' + mins + ' minutes ' + secs + ' seconds';
       }
+    },
+
+    stop: function() {
+      clearInterval(this.intervalId);
+      return this;
     },
 
     render: function() {

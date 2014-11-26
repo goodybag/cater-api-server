@@ -61,14 +61,14 @@ define(function(require, exports, module) {
     initialize: function() {
       OrderView.prototype.initialize.apply(this, arguments);
 
-      this.datepicker = this.$el.find('input[name="date"]').eq(0).pickadate({
+      this.datepicker = this.$el.find('input[name="date"]').pickadate({
         format: 'mm/dd/yyyy'
       , min: new Date()
       }).pickadate('picker');
 
       this.datepicker.on( 'open', _(this.onDatePickerOpen).bind( this ) );
 
-      this.timepicker = this.$el.find('input[name="time"]').eq(0).pickatime({
+      this.timepicker = this.$el.find('input[name="time"]').pickatime({
         format: 'hh:i A'
       , interval: 15
       }).pickatime('picker');

@@ -9,6 +9,7 @@
 {{/extend}}
 
 {{> checkout_sticky_header }}
+{{> order_params_modal }}
 
 <div class="page page-checkout container">
   <div class="row">
@@ -275,21 +276,30 @@
   define('data/order', ['app/models/index'], function(Models) {
     return new Models.Order({{{json order}}});
   });
+
+  define( 'data/defaultAddress', ['app/models/index'], function( Models ){
+    return new Models.Address( {{{json defaultAddress}}} )
+  });
 </script>
+
 {{/extend}}
 
 {{#extend "scripts"}}
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
 
 <script>
-  require(['app/pages/checkout', 'app/models/index', 'data/order'],
-    function(page, Models, order) {
-      page.init({
-        marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
-      , user: new Models.User({{{json user}}})
-      , order: order
-      });
-    }
-  );
+require([
+  'app/pages/checkout'
+, 'app/models/index'
+, 'data/order'
+, 'view/order-modal'
+],
+function(page, Models, order, orderModal) {
+  page.init({
+    marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
+  , user: new Models.User({{{json user}}})
+  , order: order
+  });
+});
 </script>
 {{/extend}}

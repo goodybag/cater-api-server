@@ -2,17 +2,27 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var Handlebars = require('handlebars');
   var Backbone = require('backbone');
+  var venter = require('venter');
 
   var LeadTimeCounterView = module.exports = Backbone.View.extend({
+    events: {
+      'click .order-params-btn': 'onClickOrderParams'
+    },
+
     initialize: function() {
       this.time = moment.duration(this.options.time || 0, 'minutes'); // minutes
-      this.deadline = moment(this.options.deadline);
       this.interval = this.options.interval || 1000; // defaulte 1 min
-      this.model.on('change:guests', this.onChangeGuests, this);
+      this.model.on('change:guests', this.updateTime, this);
+      this.model.on('change:datetime', this.updateTime, this);
       this.tick();
     },
 
-    onChangeGuests: function() {
+    onClickOrderParams: function(e) {
+      e.preventDefault();
+      venter.trigger('open:order-params', e);
+    },
+
+    updateTime: function() {
       this.setTime(this.model.restaurant.getTimeLeft(this.model));
     },
 
@@ -38,9 +48,10 @@ define(function(require, exports, module) {
       var pastDue = this.time.asMinutes() <= 0;
 
       if (pastDue) {
-        return 'Time\'s up!';
+        return 'More time is needed to prepare this meal! Click <a href="#" class="order-params-btn">here</a> to set a later date.';
       } else if ( days ){
-        return 'Must order by: ' + this.deadline.format('MMM Do YYYY');
+        var deadline = this.model.restaurant.getDeadline(this.model).format('MMM Do YYYY');
+        return 'Must order by: ' + deadline;
       } else if ( hrs ){
         return 'Time remaining to submit order: ' + hrs + ' hours';
       } else {

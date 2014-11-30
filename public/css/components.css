@@ -1195,13 +1195,10 @@ a.list-group-item .list-group-item-heading {
 }
 
 .sticky-header + .sticky-spacer {
-  height: 50px;
   display: none;
-  background-color: red;
-  -webkit-transition: height .2s linear;
 }
 
 .sticky-header.stuck + .sticky-spacer {
-  height: 30px;
+  height: 50px;
   display: block;
 }

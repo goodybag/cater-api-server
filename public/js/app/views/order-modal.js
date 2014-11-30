@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var utils = require('utils');
+  var venter = require('venter');
 
   return module.exports = Backbone.View.extend({
     events: {

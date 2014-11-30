@@ -46,22 +46,26 @@ define(function(require, exports, module) {
       this.$el.modal('hide');
     },
 
+    showOrderModal: function() {
+      return this.options.orderModal.show({
+        success: function(model) {
+          this_.options.orderModal.hide();
+          this_.submit(e);
+        }
+      , error: function(){
+          alert('sorry we were unable to add item to order, please refresh page and try again');
+        }
+      , enforceRequired: false
+      });
+    },
+
     submit: function(e) {
       e.preventDefault();
       var this_ = this;
       var noOrder = !this.options.orderModel.id;
       var unfulfillable = !this.options.isAdmin && !this.options.orderModel.isFulfillableOrder();
       if ( noOrder ||  unfulfillable ) {
-        return this.options.orderModal.show({
-          success: function(model) {
-            this_.options.orderModal.hide();
-            this_.submit(e);
-          }
-        , error: function(){
-            alert('sorry we were unable to add item to order, please refresh page and try again');
-          }
-        , enforceRequired: false
-        });
+        return this.showOrderModal();
       }
 
       var orderItem = this.model instanceof OrderItem ? this.model : null;

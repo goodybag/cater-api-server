@@ -108,7 +108,6 @@ module.exports.get = function(req, res) {
       },
       orderParams: req.session.orderParams,
       query: req.query,
-      user: req.order.user,
       step: order.status === 'pending' ? 2 : 3
     };
 

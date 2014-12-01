@@ -62,11 +62,11 @@
         <dt>Review Link</dt>
         <dd><a href="{{config.baseUrl}}/orders/{{order.id}}?review_token={{order.review_token}}">/orders/{{order.id}}?review_token={{order.review_token}}</a></dd>
         <dt>Delivery Time</dt>
-        <dd>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</dd>
+        <dd>{{formatDateTimeWithTz order.datetime order.timezone "MM/DD/YYYY h:mm A z"}}</dd>
 
         {{#is order.type 'pickup' 'courier'}}
           <dt>Pickup Time</dt>
-          <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}}</dd>
+          <dd>{{formatDateTimeWithTz order.pickup_datetime order.timezone "MM/DD/YYYY h:mm A z"}}</dd>
         {{/is}}
       </dl>
 

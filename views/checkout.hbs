@@ -103,7 +103,7 @@
 
           {{> order_delivery_info}}
 
-          {{#unless user.name}}
+          {{#unless order.user.name}}
           <div id="user-info" class="list-group-item clearfix">
             <div class="col-md-12">
               <legend>User Information</legend>
@@ -111,13 +111,13 @@
               <div class="row">
                 <div class="form-group col-sm-6">
                   <label class="control-label">Your First and Last Name (required)</label>
-                  <input value="{{user.name}}" type="text" name="user_name" class="form-control">
+                  <input value="{{order.user.name}}" type="text" name="user_name" class="form-control">
                 </div>
               </div>
               <div class="row">
                 <div class="form-group col-sm-6">
                   <label class="control-label">Organization</label>
-                  <input value="{{user.organization}}" type="text" name="user_organization" class="form-control">
+                  <input value="{{order.user.organization}}" type="text" name="user_organization" class="form-control">
                 </div>
               </div>
             </div>
@@ -128,13 +128,13 @@
             <div class="col-md-12">
               <legend>Payment Info</legend>
               <div class="payment-info-details">Your card will not be charged until you receive your order.</div>
-              <div class="radio card-select-toggle {{#unless user.payment_methods}}hide{{/unless}}">
+              <div class="radio card-select-toggle {{#unless order.user.payment_methods}}hide{{/unless}}">
                 <label>
-                  <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" {{#unless user.is_invoiced}}checked="checked"{{/unless}}>
+                  <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" {{#unless order.user.is_invoiced}}checked="checked"{{/unless}}>
                 </label>
                 Pay using
                 <select class="form-control card-select" id="payment-method-id" name="payment_method_id">
-                  {{#each user.payment_methods}}
+                  {{#each order.user.payment_methods}}
                     {{> payment_method_option}}
                   {{/each}}
                 </select>
@@ -155,12 +155,12 @@
 
               <div class="radio">
                 <label>
-                  <input type="radio" name="payment-method" value="new" class="payment-method" data-target="#new-card" data-parent="#payment-info" {{#unless user.payment_methods}}checked="checked"{{/unless}}>
+                  <input type="radio" name="payment-method" value="new" class="payment-method" data-target="#new-card" data-parent="#payment-info" {{#unless order.user.payment_methods}}checked="checked"{{/unless}}>
                   Use a new card.
                 </label>
               </div>
 
-              <div id="new-card" class="form-group{{#if user.payment_methods}} collapse{{/if}}">
+              <div id="new-card" class="form-group{{#if order.user.payment_methods}} collapse{{/if}}">
                 {{> edit_card}}
                 <div class="checkbox">
                   <label>
@@ -170,7 +170,7 @@
                 </div>
               </div>
 
-              {{#if user.is_invoiced}}
+              {{#if order.user.is_invoiced}}
               <div class="radio">
                 <label>
                   <input type="radio" name="payment-method" value="invoice" class="payment-method" data-parent="#payment-info" checked="checked">
@@ -223,7 +223,7 @@
           </div>
         </div>
 
-        {{#each user.addresses}}
+        {{#each order.user.addresses}}
         <div class="radio">
           <label>
             <input type="radio" name="address-radio" data-id="{{id}}"{{#if this.is_default}} checked="checked"{{/if}}>
@@ -236,7 +236,7 @@
       </div>
       <div class="modal-footer btn-toolbar">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        {{#if user.addresses}}
+        {{#if order.user.addresses}}
         <button type="submit" class="btn btn-primary">Deliver to selected address</button>
         {{/if}}
       </div>
@@ -276,7 +276,7 @@
     function(page, Models) {
       page.init({
         marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
-      , user: new Models.User({{{json user}}})
+      , user: new Models.User({{{json order.user}}})
       , order: new Models.Order({{{json order}}})
       });
     }

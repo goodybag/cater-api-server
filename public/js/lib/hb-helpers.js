@@ -5,7 +5,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 }
 
 define(function(require, exports, module) {
-  var moment = require('moment');
+  var moment = require('moment-timezone');
   var utils = require('./utils');
   var states = require('./states');
   var config = require('config');
@@ -136,6 +136,10 @@ define(function(require, exports, module) {
 
     calendar: function(date) {
       return date ? moment(date).calendar() : '';
+    },
+
+    formatDateTimeWithTz: function( date, tz, format, options ){
+      return moment( date ).tz( tz ).format( format || "MM/DD/YYYY h:MM A z");
     },
 
     formatDateTime: function(date, format, options) {

@@ -59,6 +59,17 @@
     }
   }
 
+  .column-percent( @width, @gutter: @gutter-width ){
+    .column(0);
+    margin-left: 0;
+    padding-left: @gutter;
+    width: @width;
+
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+
   .nchilds-margin-left( @nchilds ) when ( @nchilds > 1 ){
     &:nth-of-type(@{nchilds}n){
       margin-left: 0;

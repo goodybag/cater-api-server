@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.184",
+  "version": "1.1.191",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -88,6 +88,7 @@
     "time": "^0.10.0",
     "twilio": "1.1.x",
     "udp-client": "0.1.x",
+    "useragent": "^2.1.3",
     "when": "2.2.x",
     "wrench": "~1.5.8",
     "yelp": "~0.1.1"

@@ -3,6 +3,7 @@ var utils = require('../../utils');
 var logger = require('./logger').create('Process');
 var models = require('../../models');
 var db = require('../../db');
+var config = require('../../config');
 var _ = utils._;
 
 var checkForExistingDebit = function (order, callback) {
@@ -164,4 +165,4 @@ setInterval(function () {
       q.push(m, done);
     });
   });
-}, 1000);
+}, config.workers.debit.process.interval);

@@ -45,6 +45,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="icon-"] {
 */
+.gb-icon-question,
 .gb-icon-caret-down,
 .gb-icon-x-mark,
 .gb-icon-magnifier,
@@ -69,63 +70,67 @@ you can use the generic selector below, but it's slower:
   line-height: 1;
   -webkit-font-smoothing: antialiased;
 }
+.gb-icon-question:before,
+[data-icon="gb-icon-question"]:before {
+  content: "\e608";
+}
 .gb-icon-caret-down:before,
 [data-icon="gb-icon-caret-down"]:before {
-  content: "\e000";
+  content: "\e600";
 }
 .gb-icon-x-mark:before,
 [data-icon="gb-icon-x-mark"]:before {
-  content: "\e001";
+  content: "\e612";
 }
 .gb-icon-magnifier:before,
 [data-icon="gb-icon-magnifier"]:before {
-  content: "\e002";
+  content: "\e60b";
 }
 .gb-icon-location:before,
 [data-icon="gb-icon-location"]:before {
-  content: "\e003";
+  content: "\e60a";
 }
 .gb-icon-time:before,
 [data-icon="gb-icon-time"]:before {
-  content: "\e004";
+  content: "\e602";
 }
 .gb-icon-calendar:before,
 [data-icon="gb-icon-calendar"]:before {
-  content: "\e005";
+  content: "\e601";
 }
 .gb-icon-user:before,
 [data-icon="gb-icon-user"]:before {
-  content: "\e006";
+  content: "\e60f";
 }
 .gb-icon-email:before,
 [data-icon="gb-icon-email"]:before {
-  content: "\e007";
+  content: "\e60c";
 }
 .gb-icon-phone:before,
 [data-icon="gb-icon-phone"]:before {
-  content: "\e008";
+  content: "\e60e";
 }
 .gb-icon-warning:before,
 [data-icon="gb-icon-warning"]:before {
-  content: "\e600";
+  content: "\e611";
 }
 .gb-icon-star:before,
 [data-icon="gb-icon-star"]:before {
-  content: "\e602";
+  content: "\e605";
 }
 .gb-icon-star-half-empty:before,
 [data-icon="gb-icon-star-half-empty"]:before {
-  content: "\e603";
+  content: "\e606";
 }
 .gb-icon-star-empty:before,
 [data-icon="gb-icon-star-empty"]:before {
-  content: "\e601";
+  content: "\e603";
 }
 .gb-icon-hamburger:before,
 [data-icon="gb-icon-hamburger"]:before {
-  content: "\e604";
+  content: "\e60d";
 }
 .gb-icon-hamburger:before,
 [data-icon="gb-icon-heart"]:before {
-  content: "\e609";
+  content: "\e607";
 }

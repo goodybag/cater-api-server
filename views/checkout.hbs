@@ -276,7 +276,7 @@
     function(page, Models) {
       page.init({
         marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
-      , user: new Models.User({{{json user}}})
+      , user: new Models.User({{{json order.user}}})
       , order: new Models.Order({{{json order}}})
       });
     }

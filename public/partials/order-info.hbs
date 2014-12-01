@@ -20,7 +20,7 @@
     <dd>
       {{join (timeToRange (timepart order.datetime) "h:mm A") " - "}}
       {{#contains user.groups 'admin'}}
-        {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}
+        {{formatDateTimeWithTz order.datetime order.timezone "z"}}
       {{/contains}}
     </dd>
     {{/if}}

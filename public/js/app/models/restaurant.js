@@ -254,7 +254,7 @@ define(function(require, exports, module) {
     isValidGuestDateCombination: function( order ){
       var date = order.get('datetime');
 
-      // Ensure datetime is validate
+      // Ensure datetime is valid
       if (date == null) return true;
       if ( typeof date !== 'string' ) return false;
       if ( !moment(date).isValid() ) return false;

@@ -1182,8 +1182,9 @@ a.list-group-item .list-group-item-heading {
 }
 
 /**
- * Stick header
+ * Sticky header
  */
+
 .sticky-header {
   display: none;
   background-color: #7C7C7C;

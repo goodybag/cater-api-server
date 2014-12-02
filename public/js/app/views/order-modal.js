@@ -1,6 +1,8 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var utils = require('utils');
+  var venter = require('venter');
+  var config = require('config');
 
   return module.exports = Backbone.View.extend({
     events: {
@@ -23,6 +25,7 @@ define(function(require, exports, module) {
       , min: new Date()
       }).pickadate('picker');
 
+      this.datepicker.on( 'set', _(this.onDatePickerSet).bind( this ) );
       this.datepicker.on( 'open', _(this.onDatePickerOpen).bind( this ) );
 
       this.timepicker = this.$el.find('input[name="time"]').eq(0).pickatime({
@@ -30,10 +33,23 @@ define(function(require, exports, module) {
       , interval: 15
       }).pickatime('picker');
 
+      this.timepicker.on( 'set', _(this.onTimePickerSet).bind( this ) );
       this.timepicker.on( 'open', _(this.onTimePickerOpen).bind( this ) );
 
       // Remove the paneliness from the order params partial
       this.$el.find('.order-params-bar').removeClass('panel');
+
+      // Handle discrepancy between pickadates and moments formatting
+      this.timepickerMomentFormat = this.timepicker.component.settings.format.replace( /\i/g, 'mm' );
+
+      venter.on('open:order-params', this.openOrderParams, this);
+    },
+
+    openOrderParams: function() {
+      this.show({
+        success: function(model) { this.hide(); }.bind(this)
+        , error: function(){ alert('sorry we were unable to change your order information, please refresh page and try again'); }
+      });
     },
 
     show: function(submitHandlers) {
@@ -94,18 +110,7 @@ define(function(require, exports, module) {
       }
     },
 
-    submit: function(e) {
-      e.preventDefault();
-
-      this.clear();
-
-      var blank = this.$el.find('form input:visible').filter(function(index) { return $(this).val() === '' });
-      if (blank.length > 0) {
-        blank.parent().addClass('has-error');
-        this.$el.find('.error-blank-fields').removeClass('hide');
-        return;
-      }
-
+    updateParams: function () {
       var order = {
         zip: this.$el.find('input[name="zip"]').val().trim() || null,
         guests: parseInt(this.$el.find('input[name="guests"]').val()) || null,
@@ -122,6 +127,21 @@ define(function(require, exports, module) {
         _.extend(order, this.options.defaultAddress.pick(this.model.constructor.addressFields));
 
       this.model.set( order );
+    },
+
+    submit: function(e) {
+      e.preventDefault();
+
+      this.clear();
+
+      var blank = this.$el.find('form input:visible').filter(function(index) { return $(this).val() === ''; });
+      if (blank.length > 0) {
+        blank.parent().addClass('has-error');
+        this.$el.find('.error-blank-fields').removeClass('hide');
+        return;
+      }
+
+      this.updateParams();
 
       if ( this.showErrors() ) return;
 
@@ -130,6 +150,10 @@ define(function(require, exports, module) {
         self.model.trigger('change:orderparams');
         self.submitHandlers.success( self.model );
       }).error( self.submitHandlers.error );
+    },
+
+    onDatePickerSet: function() {
+      this.updateParams();
     },
 
     onDatePickerOpen: function(){
@@ -162,6 +186,35 @@ define(function(require, exports, module) {
       }
 
       this.datepicker.set( 'disable', disabledTimes );
+    },
+
+    /**
+     * Converts the timepicker times from regla-ass times to ranges
+     */
+    convertTimesToRanges: function(){
+      var timeFormat = this.timepickerMomentFormat;
+
+      this.timepicker.$root.find('.picker__list-item').each( function(){
+        var $this = $(this);
+        var range = utils.timeToRange( $this.text(), timeFormat, config.deliveryTime );
+        $this.text( range.join(' - ') );
+      });
+    },
+
+    setTimeRangeInput: function( time, format ){
+      var range = utils.timeToRange( time, format, config.deliveryTime );
+      this.$el.find('[name="time-range"]').val( range.join(' - ') );
+    },
+
+    onTimePickerSet: function( ctx ){
+      if ( 'select' in ctx ){
+        this.setTimeRangeInput(
+          this.timepicker.get()
+        , this.timepickerMomentFormat
+        );
+      }
+
+      this.updateParams();
     },
 
     onTimePickerOpen: function(){
@@ -204,6 +257,8 @@ define(function(require, exports, module) {
           });
         })
       );
+
+      this.convertTimesToRanges();
     }
 
   , onKeyUp: function( e ){

@@ -18,7 +18,6 @@ define(function(require, exports, module) {
   , template: template
 
   , initialize: function() {
-
       this.datepicker = this.$el.find("input[name='date']").eq(0).pickadate({
         format: 'mm/dd/yyyy'
       , min: new Date()

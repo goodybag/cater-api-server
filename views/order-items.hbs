@@ -5,6 +5,10 @@
 {{/extend}}
 
 {{#extend "title"}} - Review Order{{/extend}}
+
+{{> checkout_sticky_header }}
+{{> order_params_modal }}
+
 <div class="page page-order container">
   <div class="row">
     {{> wizard }}
@@ -224,16 +228,35 @@
 
 {{> copy_order_error_modal}}
 
+
+{{#extend "bootstrap"}}
+<script>
+  define( 'data/order', ['app/models/index'], function(Models) {
+    return new Models.Order({{{json order}}});
+  });
+
+  define( 'data/order-items', ['app/models/index'], function(Models) {
+    return {{{json order.orderItems}}};
+  });
+
+  define( 'data/defaultAddress', ['app/models/index'], function( Models ){
+    return new Models.Address( {{{json defaultAddress}}} )
+  });
+</script>
+{{/extend}}
+
 {{#extend "scripts"}}
 <script>
   require([
     'app/pages/review-order'
-  , 'app/models/index'
+  , 'data/order'
+  , 'data/order-items'
+  , 'view/order-modal'
   ]
-  , function(page, Models) {
+  , function(page, order, orderItems, orderModal) {
       page.init({
-        order: new Models.Order({{{json order}}})
-      , orderItems: {{{json order.orderItems}}}
+        order: order
+      , orderItems: orderItems
       , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
       });
     }

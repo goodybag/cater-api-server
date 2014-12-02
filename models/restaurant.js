@@ -529,6 +529,37 @@ var Restaurant = module.exports = Model.extend({
 
     var unacceptable = [];
 
+    if (orderParams && orderParams.id) {
+      // If associated to an order, attach amenities
+      query.columns.push({
+        type: 'array_to_json'
+      , alias: 'amenities'
+      , expression: {
+          type: 'array'
+        , expression: {
+            type: 'select'
+          , columns: [ { expression: 'row_to_json(r)', alias: 'amenities' } ]
+          , table: {
+              type: 'select'
+            , columns: [ '*', {
+                type: 'exists'
+              , alias: 'checked'
+              , expression: {
+                  type: 'select'
+                , columns: [ { expression: 1 } ]
+                , table: 'order_amenities'
+                , where: { order_id: orderParams.id, amenity_id: '$amenities.id$' }
+                }
+              }]
+            , table: 'amenities'
+            , where: { restaurant_id: '$restaurants.id$' }
+            , alias: 'r'
+            }
+          }
+        }
+      });
+    }
+
     /**
      * Search restaurants
      */

@@ -936,14 +936,15 @@ module.exports.register = function(app) {
   app.get('/orders/:oid/items'
   , m.restrict(['client', 'restaurant', 'admin'])
   , m.getOrder2({
-      param:              'oid'
-    , items:              true
-    , user:               true
-    , userAddresses:      true
-    , userPaymentMethods: true
-    , restaurant:         true
-    , amenities:          true
-    , deliveryService:    true
+      param:                    'oid'
+    , items:                    true
+    , user:                     true
+    , userAddresses:            true
+    , userPaymentMethods:       true
+    , restaurant:               true
+    , amenities:                true
+    , deliveryService:          true
+    , restaurantDbModelFind:    true
     })
   , controllers.orders.auth
   , controllers.orders.orderItems.summary

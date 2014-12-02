@@ -391,7 +391,7 @@ define(function(require, exports, module) {
       if (url.indexOf('convert') == -1){
         url += "/convert";
         params.cache = true;
-        params.fit = 'crop';
+        params.fit = 'scale';
       }
 
       if (typeof width === 'number') params.w = width;

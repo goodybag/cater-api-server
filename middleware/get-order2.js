@@ -139,7 +139,8 @@ module.exports = function( options ){
 
       utils.async.series([
         !options.restaurantDbModelFind ? utils.async.noop : function( done ){
-          Models.Restaurant.findOne( order.restaurant_id, function( error, restaurant ){
+          var orderParams = { id: order.id };
+          Models.Restaurant.findOne( order.restaurant_id, orderParams, function( error, restaurant ){
             if ( error ){
               logger.error('error trying to lookup restaurant %s for order #%s', order.restaurant_id, req.params.id, error);
               return res.error(errors.internal.DB_FAILURE, error);

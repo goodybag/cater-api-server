@@ -1971,4 +1971,39 @@ module.exports.register = function(app) {
   , m.param('amenity_id')
   , m.remove( db.order_amenities )
   );
+
+  app.get('/api/plans'
+  , m.restrict(['admin'])
+  , m.sort('-id')
+  , m.find( db.restaurant_plans )
+  );
+
+  app.post('/api/plans'
+  , m.restrict(['admin'])
+  , m.insert( db.restaurant_plans )
+  );
+
+  app.get('/api/plans/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.findOne( db.restaurant_plans )
+  );
+
+  app.put('/api/plans/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.restaurant_plans )
+  );
+
+  app.patch('/api/plans/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.restaurant_plans )
+  );
+
+  app.del('/api/plans/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.restaurant_plans )
+  );
 }

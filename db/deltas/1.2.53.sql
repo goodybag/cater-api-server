@@ -8,6 +8,8 @@ begin
 
   create table if not exists "restaurant_plans" ();
 
+  create type plan_type as enum ('tiered');
+
   perform add_column( 'restaurant_plans', 'id', 'serial primary key' );
   perform add_column( 'restaurant_plans', 'type', E'plan_type not null default \'tiered\'' );
   perform add_column( 'restaurant_plans', 'name', 'text' );

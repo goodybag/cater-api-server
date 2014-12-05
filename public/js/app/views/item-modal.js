@@ -46,7 +46,8 @@ define(function(require, exports, module) {
       this.$el.modal('hide');
     },
 
-    showOrderModal: function() {
+    showOrderModal: function(e) {
+      var this_ = this;
       return this.options.orderModal.show({
         success: function(model) {
           this_.options.orderModal.hide();
@@ -65,7 +66,7 @@ define(function(require, exports, module) {
       var noOrder = !this.options.orderModel.id;
       var unfulfillable = !this.options.isAdmin && !this.options.orderModel.isFulfillableOrder();
       if ( noOrder ||  unfulfillable ) {
-        return this.showOrderModal();
+        return this.showOrderModal(e);
       }
 
       var orderItem = this.model instanceof OrderItem ? this.model : null;

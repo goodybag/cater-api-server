@@ -2,6 +2,8 @@
  * Postgres enum types
  */
 
+var config = requrie('../config');
+
 module.exports = {
   order_status:   ['canceled', 'pending', 'submitted', 'denied', 'accepted', 'delivered']
 , payment_method: ['card', 'bank']
@@ -13,5 +15,5 @@ module.exports = {
 , order_type:     ['pickup', 'delivery', 'courier']
 , timezone:       { type: 'domain', as: 'text check ( is_timezone( value ) )' }
 , amenity_scale:  ['multiply', 'flat']
-, plan_types:     ['tiered', 'flat']
+, plan_types:     config.availableRestaurantPlanTypes
 };

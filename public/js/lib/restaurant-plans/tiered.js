@@ -12,7 +12,7 @@
  */
 
 var Plan = require('plan.js');
-var OrderTotalStrategies = require('../../public/js/lib/order-total-strategies');
+var OrderTotalStrategies = require('../order-total-strategies');
 
 var payoutPlan = new Plans.Reduce(0)
   .use( OrderTotalStrategies.subTotal )

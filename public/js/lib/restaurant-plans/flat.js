@@ -6,21 +6,16 @@
  * }
  */
 
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
+  };
+}
 
-var payoutPlan = new Plans.Reduce(0)
-  .use( OrderTotalStrategies.subTotal )
-  .use( OrderTotalStrategies.adjustment )
-  .use( OrderTotalStrategies.deliveryFee )
-  .use( OrderTotalStrategies.tax )
-  .use( OrderTotalStrategies.tip )
-  .use( function( curr ){
-    return curr - ( curr * this.plan.fee );
-  })
-  .use( Math.round );
-
-module.exports.getPayoutForOrder = function( plan, order ){
-  return payoutPlan
-    .set( 'plan', plan )
-    .set( 'order', order )
-    .value();
-};
+define( function( require, exports, module ){
+  return {
+    getPayoutForOrder: function( plan, order ){
+      return Math.round( order.restaurant_total - ( order.restaurant_total * plan.data.fee ) );
+    }
+  };
+});

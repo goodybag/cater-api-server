@@ -11,29 +11,22 @@
  * }
  */
 
-var Plan = require('plan.js');
-var OrderTotalStrategies = require('../order-total-strategies');
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
+  };
+}
 
-var payoutPlan = new Plans.Reduce(0)
-  .use( OrderTotalStrategies.subTotal )
-  .use( OrderTotalStrategies.adjustment )
-  .use( OrderTotalStrategies.deliveryFee )
-  .use( OrderTotalStrategies.tax )
-  .use( OrderTotalStrategies.tip )
-  .use( function( curr ){
-    var tier;
-    for ( var i = 0; i < this.plan.tiers.length; i++ ){
-      tier = this.plan.tiers[ i ];
-      if ( order.total < this.plan.tier ) break;
+define( function( require, exports, module ){
+  return {
+    getPayoutForOrder: function( plan, order ){
+      var tier, i;
+      for ( i = 0; i < plan.data.tiers.length; i++ ){
+        tier = plan.data.tiers[ i ];
+        if ( order.restaurant_total < tier.amount ) break;
+      }
+
+      return Math.round( order.restaurant_total - ( order.restaurant_total * tier.fee ) );
     }
-
-    return curr - ( curr * tier.fee );
-  })
-  .use( Math.round );
-
-module.exports.getPayoutForOrder = function( plan, order ){
-  return payoutPlan
-    .set( 'order',  order )
-    .set( 'plan',   plan )
-    .value();
-};
+  };
+});

@@ -1,0 +1,68 @@
+<div class="form-group">
+  <label class="control-label" for="input-name">
+    Name
+    <span class="help-block">Required</span>
+  </label>
+  <input type="text" class="form-control" name="name" id="input-name" value="{{restaurant_plan.name}}">
+</div>
+<div class="form-group">
+  <label class="control-label" for="input-rate">
+    Rate
+    <span class="help-block">Required</span>
+  </label>
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      name="rate"
+      id="input-rate"
+      data-in="factorToPercent"
+      data-out="percentToFactor 4"
+      value="{{#if delivery_service.rate}}{{factorToPercent delivery_service.rate}}{{/if}}">
+    <div class="input-addon">%</div>
+  </div>
+</div>
+<div class="form-group">
+  <label class="control-label" for="input-email">
+  Email
+  </label>
+  <div class="input-group">
+    <input
+      type="email"
+      class="form-control"
+      name="order_email"
+      id="input-email"
+      value="{{delivery_service.order_email}}">
+  </div>
+</div>
+<div class="form-group">
+  <label class="control-label" for="input-phone">
+  Phone
+  </label>
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      name="order_phone"
+      id="input-phone"
+      data-in="phoneNumber"
+      data-out="sanitizePhoneNumber"
+      value="{{phoneNumber delivery_service.order_phone}}">
+  </div>
+</div>
+<div class="form-group">
+  <label for="region_id_selector" class="control-label">Region</label>
+  <select name="region_id" id="region_id_selector">
+    {{#each regions}}
+      <option value="{{this.id}}"{{#eq ../delivery_service.region.id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
+    {{/each}}
+  </select>
+</div>
+<div class="form-group actions">
+  {{#unless delivery_service.id}}
+  <a class="btn btn-default" href="{{sidebarNav.baseUrl}}">Cancel</a>
+  {{else}}
+  <button class="btn btn-default btn-delete" type="button">Delete</button>
+  {{/unless}}
+  <button class="btn btn-primary" type="submit">Save</button>
+</div>

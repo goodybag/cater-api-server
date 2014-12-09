@@ -17,12 +17,12 @@
   {{#eq type 'tiered'}}
     <dl class="plan-tiers">
     {{#each data.tiers}}
-      {{#isLast @index ../data.tiers.length}}
-        <dt></dt>
+      {{#eq @index (sub ../data.tiers.length 1)}}
+        <dt>Over ${{dollars amount}}</dt>
       {{else}}
-
-      {{/isLast}}
-      <dd></dd>
+        <dt>Under ${{dollars amount}}</dt>
+      {{/eq}}
+      <dd>{{factorToPercent data.fee}}%</dd>
     {{/each}}
     </dl>
   {{/eq}}

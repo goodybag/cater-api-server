@@ -158,6 +158,25 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/admin/restaurant-plans/new'
+    , m.restrict(['admin'])
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'mainNav', { active: 'restaurant-plans' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/restaurant-plans'
+      , isNew:    true
+      })
+    , m.viewPlugin( 'itemForm', {
+        selector:       '#create-item-form'
+      , collection:     'app/collections/restaurant-plans'
+      , localModelProp: 'restaurant_plan'
+      })
+    , m.view( 'admin/restaurant-plans/new-item', {
+        layout: 'admin/layout-single-object'
+      })
+    );
+
     app.get('/admin/delivery-services'
     , m.sort('+name')
     , m.queryOptions({
@@ -1983,36 +2002,36 @@ module.exports.register = function(app) {
   , m.remove( db.order_amenities )
   );
 
-  app.get('/api/plans'
+  app.get('/api/restaurant-plans'
   , m.restrict(['admin'])
   , m.sort('-id')
   , m.find( db.restaurant_plans )
   );
 
-  app.post('/api/plans'
+  app.post('/api/restaurant-plans'
   , m.restrict(['admin'])
   , m.insert( db.restaurant_plans )
   );
 
-  app.get('/api/plans/:id'
+  app.get('/api/restaurant-plans/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.findOne( db.restaurant_plans )
   );
 
-  app.put('/api/plans/:id'
+  app.put('/api/restaurant-plans/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.update( db.restaurant_plans )
   );
 
-  app.patch('/api/plans/:id'
+  app.patch('/api/restaurant-plans/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.update( db.restaurant_plans )
   );
 
-  app.del('/api/plans/:id'
+  app.del('/api/restaurant-plans/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.restaurant_plans )

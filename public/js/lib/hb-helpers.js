@@ -488,6 +488,10 @@ define(function(require, exports, module) {
       return (+value) + (+addition);
     },
 
+    sub: function (a, b) {
+      return (+a) - (+b);
+    },
+
     multiply: function(a, b) {
       return a * b;
     },

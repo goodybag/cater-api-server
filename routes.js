@@ -147,6 +147,17 @@ module.exports.register = function(app) {
      * Delivery Services
      */
 
+   app.get('/admin/restaurant-plans'
+    , m.restrict(['admin'])
+    , m.sort('+name')
+    , m.viewPlugin( 'collection', { path: 'app/collections/restaurant-plans' } )
+    , m.viewPlugin( 'mainNav', { active: 'restaurant-plans' })
+    , m.view( 'admin/restaurant-plans/list', db.restaurant_plans, {
+        layout: 'admin/layout2'
+      , method: 'find'
+      })
+    );
+
     app.get('/admin/delivery-services'
     , m.sort('+name')
     , m.queryOptions({

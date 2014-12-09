@@ -2,7 +2,7 @@
  * Postgres enum types
  */
 
-var config = requrie('../config');
+var config = require('../config');
 
 module.exports = {
   order_status:   ['canceled', 'pending', 'submitted', 'denied', 'accepted', 'delivered']

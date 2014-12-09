@@ -558,6 +558,10 @@ define(function(require, exports, module) {
       return options[ val !== null ? 'fn' : 'inverse' ]();
     },
 
+    isLast: function( i, list, options ){
+      return options[ i === ( list.length - 1 ) ? 'fn' : 'inverse' ]();
+    },
+
     orderTypeAbbr: function( order ){
       switch( order.type ){
         case 'pickup': return 'P';

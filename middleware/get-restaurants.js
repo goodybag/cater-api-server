@@ -73,7 +73,6 @@ module.exports = function( options ){
 
     db.restaurants.find($query, $options, function(err, restaurants){
       if(err) {
-        console.log(err);
         logger.error('Error finding restaurants', err);
       }
       res.locals.restaurants = restaurants;

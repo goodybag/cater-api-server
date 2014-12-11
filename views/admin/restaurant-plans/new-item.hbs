@@ -30,12 +30,9 @@
 {{/extend}}
 
 {{#extend "scripts"}}
-{{> admin_item_form}}
 <script>
-  require( ['item-form'], function( form ){
-    form.on('item:saved', function( model ){
-      window.location.href = '{{sidebarNav.baseUrl}}/' + model.get('id');
-    });
+  require( ['jquery-loaded'], function( $ ){
+
   });
 </script>
 {{/extend}}

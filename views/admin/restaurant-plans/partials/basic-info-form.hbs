@@ -1,3 +1,9 @@
+{{#extend "scripts"}}
+<script>
+  
+</script>
+{{/extend}}
+
 <div class="form-group">
   <label class="control-label" for="input-name">
     Name
@@ -6,58 +12,33 @@
   <input type="text" class="form-control" name="name" id="input-name" value="{{restaurant_plan.name}}">
 </div>
 <div class="form-group">
-  <label class="control-label" for="input-rate">
-    Rate
-    <span class="help-block">Required</span>
-  </label>
-  <div class="input-group">
-    <input
-      type="text"
-      class="form-control"
-      name="rate"
-      id="input-rate"
-      data-in="factorToPercent"
-      data-out="percentToFactor 4"
-      value="{{#if delivery_service.rate}}{{factorToPercent delivery_service.rate}}{{/if}}">
-    <div class="input-addon">%</div>
-  </div>
-</div>
-<div class="form-group">
-  <label class="control-label" for="input-email">
-  Email
-  </label>
-  <div class="input-group">
-    <input
-      type="email"
-      class="form-control"
-      name="order_email"
-      id="input-email"
-      value="{{delivery_service.order_email}}">
-  </div>
-</div>
-<div class="form-group">
-  <label class="control-label" for="input-phone">
-  Phone
-  </label>
-  <div class="input-group">
-    <input
-      type="text"
-      class="form-control"
-      name="order_phone"
-      id="input-phone"
-      data-in="phoneNumber"
-      data-out="sanitizePhoneNumber"
-      value="{{phoneNumber delivery_service.order_phone}}">
-  </div>
-</div>
-<div class="form-group">
-  <label for="region_id_selector" class="control-label">Region</label>
-  <select name="region_id" id="region_id_selector">
-    {{#each regions}}
-      <option value="{{this.id}}"{{#eq ../delivery_service.region.id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
+  <label for="type_selector" class="control-label">Type</label>
+  <select name="type" id="type_selector" data-role="el-toggler" data-target=".tab-panes">
+    {{#each config.availableRestaurantPlanTypes}}
+      <option
+        value="{{this}}"
+      {{~#if ../restaurant_plan.type}}
+        {{~#eq ../restaurant_plan.type this}} selected="true"{{/eq~}}
+      {{else}}
+        {{~#eq this 'tiered'}} selected="true"{{/eq~}}
+      {{/if~}}
+      >{{capitalize this}}</option>
     {{/each}}
   </select>
 </div>
+<div class="tab-panes">
+  <div
+    class="tab-pane{{#eq restaurant_plan.type 'flat'}} active{{/eq}}"
+    data-toggler-id="flat">
+    <h2>Flat</h2>
+  </div>
+  <div
+    class="tab-pane{{#unless (eq restaurant_plan.type 'flat')}} active{{/unless}}"
+    data-toggler-id="tiered">
+    <h2>Tiered</h2>
+  </div>
+</div>
+
 <div class="form-group actions">
   {{#unless delivery_service.id}}
   <a class="btn btn-default" href="{{sidebarNav.baseUrl}}">Cancel</a>

@@ -1428,6 +1428,9 @@ module.exports.register = function(app) {
       res.locals.payment_summary_id = req.param('payment_summary_id');
       return next();
     }
+  , m.queryOptions({
+      one:  [{ table: 'restaurant_plans', alias: 'plan' }]
+    })
   , m.view( 'admin/restaurant-payment-summary', db.restaurants, {
       layout: 'admin/layout'
     , method: 'findOne'

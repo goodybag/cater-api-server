@@ -32,6 +32,7 @@ define(function(require, exports, module) {
         this.items = new PMSItems( items, {
           restaurant_id:  this.get('restaurant_id')
         , sales_tax:      this.sales_tax
+        , plan:           this.get('plan')
         });
         this.items.invoke('updatePropertiesBasedOnOrder');
       } else {

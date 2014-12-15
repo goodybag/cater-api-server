@@ -58,7 +58,10 @@
       return new PaymentSummaries( null, {
         restaurant_id: {{restaurant.id}}
       , sales_tax:          {{restaurant.sales_tax}}
-      }).createModel({ id: {{payment_summary_id}} });
+      }).createModel({
+        id: {{payment_summary_id}}
+      , plan: {{{json restaurant.plan}}}
+      });
     }
   );
 

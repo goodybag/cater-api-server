@@ -11,7 +11,7 @@ define(function(require, exports, module) {
 
   var helpers = {};
 
-
+  helpers.Plan = require('plan.js');
 
   /**
    * Searches object structure for properties definition

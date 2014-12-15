@@ -16,4 +16,6 @@ begin
   perform add_column( 'restaurant_plans', 'name', 'text' );
   perform add_column( 'restaurant_plans', 'data', E'json not null default \'{}\'' );
   perform add_column( 'restaurant_plans', 'created_at', 'timestamp not null default now()' );
+
+  perform add_column( 'restaurants', 'plan_id', 'int references restaurant_plans("id") on delete set null');
 end$$;

@@ -189,7 +189,6 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'sidebarNav', {
         active:   'basic-info'
       , baseUrl:  '/admin/restaurant-plans'
-      , isNew:    true
       })
     , m.viewPlugin( 'itemForm', {
         selector:       '#edit-item-form'
@@ -398,6 +397,7 @@ module.exports.register = function(app) {
       })
     , m.states()
     , m.db.regions.find( {}, { limit: 'all' } )
+    , m.db.restaurant_plans.find( {}, { limit: 'all' } )
     , m.queryOptions({
         many: [{ table: 'contacts' }]
       })

@@ -224,7 +224,7 @@ define(function(require, exports, module) {
       var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
         return obj.max_guests >= order.get('guests');
       });
-      return limit;
+      return limit || 0;
     },
 
     getDeadline: function(order) {

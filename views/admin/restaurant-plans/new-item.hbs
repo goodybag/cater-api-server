@@ -31,8 +31,10 @@
 
 {{#extend "scripts"}}
 <script>
-  require( ['jquery-loaded'], function( $ ){
-
+  require( ['item-form'], function( form ){
+    form.on('item:saved', function( model ){
+      window.location.href = '{{sidebarNav.baseUrl}}/' + model.get('id');
+    });
   });
 </script>
 {{/extend}}

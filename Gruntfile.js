@@ -74,7 +74,7 @@ module.exports = function(grunt) {
 
   , shell: {
       handlebars: {
-        options: { stdout: true }
+        options: { stdout: true, stderr: true }
       , command: './node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js'
       }
     , ensureDir: {

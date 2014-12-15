@@ -1,6 +1,64 @@
 {{#extend "scripts"}}
 <script>
-  
+  define(
+    'item-form'
+  , [ 'utils'
+    , 'handlebars'
+    , 'app/views/admin/item-form'
+    , '{{itemForm.collection}}'
+    ]
+  , function( utils, Hbs, ItemForm, Collection ){
+      ItemForm = ItemForm.extend({
+        events: utils.extend( {}, ItemForm.prototype.events || {}, {
+          'click [data-role="new-tier"]': 'onNewTierClick'
+        })
+
+      , twoways: { type: true }
+      , tierTmpl: Hbs.partials.restaurant_plan_edit_tier
+
+      , typeGetters: utils.extend({
+          data: function( $el ){
+            if ( this.model.attributes.type === 'flat' ){
+              var $target = $el.find('[data-toggler-id="flat"] [name="rate"]');
+              return {
+                rate: this.getDomValue( 'rate', $target )
+              };
+            } else if ( this.model.attributes.type === 'tiered' ){
+              var tiers = [];
+
+              $el.find('.tier').each( function(){
+                var $this = $(this);
+                tiers.push({
+                  rate:   this.getDomValue( 'rate', $this.find('[name="rate"]') )
+                , amount: this.getDomValue( 'amount', $this.find('[name="amount"]') )
+                });
+              });
+
+              return {
+                tiers: tiers
+              };
+            }
+          }
+        }, ItemForm.prototype.typeGetters )
+
+      , addNewTier: function(){
+          this.$el.find('.tiers').append(
+            this.tierTmpl()
+          );
+        }
+
+      , onNewTierClick: function( e ){
+          this.addNewTier({ amount: 0, fee: 0 });
+        }
+      });
+
+      return new ItemForm({
+        el:     $('{{itemForm.selector}}')
+      , model:  new Collection( null{{#if itemForm.collectionOptions}}, {{{json this.itemForm.collectionOptions}}}{{/if}})
+                  .createModel({{#if itemForm.localModelProp}}{{{json this itemForm.localModelProp}}}{{/if}})
+      });
+    }
+  );
 </script>
 {{/extend}}
 
@@ -26,17 +84,45 @@
     {{/each}}
   </select>
 </div>
-<div class="tab-panes">
-  <div
+<div class="tab-panes" type="data" name="data">
+  <fieldset
     class="tab-pane{{#eq restaurant_plan.type 'flat'}} active{{/eq}}"
     data-toggler-id="flat">
     <h2>Flat</h2>
-  </div>
-  <div
+    <div class="form-group">
+      <label class="control-label" for="input-rate">
+        Rate
+        <span class="help-block">Required</span>
+      </label>
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          name="rate"
+          id="input-rate"
+          data-in="factorToPercent"
+          data-out="percentToFactor 4"
+          value="{{#if restaurant_plan.data.rate}}{{factorToPercent restaurant_plan.data.rate}}{{/if}}">
+        <div class="input-addon">%</div>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset
     class="tab-pane{{#unless (eq restaurant_plan.type 'flat')}} active{{/unless}}"
     data-toggler-id="tiered">
     <h2>Tiered</h2>
-  </div>
+    <div class="tiers edit-tiers">
+    {{#each restaurant_plan.data.tiers}}
+      {{> restaurant_plan_edit_tier}}
+    {{/each}}
+    </div>
+    <div class="form-group actions">
+      <button
+       type="button"
+        class="btn btn-primary"
+        data-role="new-tier">New Tier</button>
+    </div>
+  </fieldset>
 </div>
 
 <div class="form-group actions">

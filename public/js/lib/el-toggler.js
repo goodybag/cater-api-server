@@ -8,7 +8,7 @@
  * // Explicit wiring
  * require('el-toggler').init('#my-toggler', {
  *   optional options
- * })
+ * }).show('my-target');
  */
 
 if ( typeof module === "object" && module && typeof module.exports === "object" ){
@@ -18,20 +18,21 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
-  var utils = require('utils');
+  var $ = require('jquery');
+  var _ = require('lodash');
 
   return Object.create({
     init: function( $el, options ){
-      options = utils.defaults( options || {}, {
+      options = _.defaults( options || {}, {
         activeClass:    'active'
       , targetSelector: '[data-toggler-id="{id}"]'
       });
 
-      $el = utils.dom( $el );
+      $el = $( $el );
 
       return Object.create({
         $el:      $el
-      , $target:  utils.dom( $el.data('target') || options.target )
+      , $target:  $( $el.data('target') || options.target )
       , options:  options
 
       , init: function(){
@@ -58,8 +59,8 @@ define( function( require, exports, module ){
 
   , auto: function(){
       var this_ = this;
-      utils.domready( function(){
-        utils.dom('[data-role~="el-toggler"]').each( function( el ){
+      $( function(){
+        $('[data-role~="el-toggler"]').each( function( el ){
           this_.init( this );
         });
       });

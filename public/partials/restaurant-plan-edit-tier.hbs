@@ -1,19 +1,22 @@
 <div class="tier">
   <div class="form-group">
     <label class="control-label" for="input-rate">
-      <span class="amount-text"></span> ${{dollars amount}}
+      <span class="amount-text">
+        <span class="under">Under</span>
+        <span class="over">Over</span>
+      </span>
       <span class="help-block">Required</span>
     </label>
     <div class="input-group">
       <input
         type="text"
         class="form-control"
-        name="rate"
-        id="input-rate"
-        data-in="factorToPercent"
-        data-out="percentToFactor 4"
-        value="{{#if this.rate}}{{factorToPercent this.rate}}{{/if}}">
-      <div class="input-addon">%</div>
+        name="amount"
+        id="input-amount"
+        data-in="dollars"
+        data-out="pennies"
+        value="{{#if amount}}{{dollars amount}}{{/if}}">
+      <div class="input-addon">$</div>
     </div>
   </div>
   <div class="form-group">

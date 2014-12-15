@@ -10,3 +10,14 @@
     font-size: 2em;
   }
 }
+
+.tiers {
+  > .tier .amount-text {
+    .under { display: inline; }
+    .over { display: none; }
+  }
+  > .tier:last-child .amount-text {
+    .under { display: none; }
+    .over { display: inline; }
+  }
+}

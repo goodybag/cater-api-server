@@ -30,13 +30,13 @@ define( function( require, exports, module ){
             rate: this.getDomValue( 'rate', $target )
           };
         } else if ( this.model.attributes.type === 'tiered' ){
-          var tiers = [];
+          var tiers = [], this_ = this;
 
           $el.find('.tier').each( function(){
             var $this = $(this);
             tiers.push({
-              rate:   this.getDomValue( 'rate', $this.find('[name="rate"]') )
-            , amount: this.getDomValue( 'amount', $this.find('[name="amount"]') )
+              rate:   this_.getDomValue( 'rate', $this.find('[name="rate"]') )
+            , amount: this_.getDomValue( 'amount', $this.find('[name="amount"]') )
             });
           });
 
@@ -60,9 +60,12 @@ define( function( require, exports, module ){
     }
 
   , addNewTier: function(){
-      this.$el.find('.tiers').append(
-        this.tierTmpl()
-      );
+      var $el = utils.dom( this.tierTmpl() );
+      $el.find('[data-role="remove"]').click( function(){
+        $el.remove();
+      });
+      this.$el.find('.tiers').append( $el );
+      return this;
     }
 
   , onNewTierClick: function( e ){

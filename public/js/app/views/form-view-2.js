@@ -27,6 +27,13 @@ define(function(require){
       }
     }
 
+    /**
+     * Describes which keys should be two-way data-bound
+     * {
+     *   someKey: true
+     * }
+     * @type {Object}
+     */
   , twoway: {}
 
   , initialize: function( options ){

@@ -1,0 +1,40 @@
+{{#extend "html-title"}}Edit Plan{{/extend}}
+{{#extend "page"}}page-restaurant-plan{{/extend}}
+
+{{#extend "page-head"}}
+<div class="container" id="main-container">
+  <ul class="breadcrumbs main-breadcrumbs">
+    <li>
+      <a href="/admin/delivery-services">Restaurant Plans</a>
+    </li>
+    <li>{{restaurant_plan.name}}</li>
+  </ul>
+
+  <h1 class="page-title">Edit Restaurant Plan - {{restaurant_plan.name}}</h1>
+</div>
+{{/extend}}
+
+{{#extend "nav-col"}}
+{{> admin_restaurant_plans_sidebar_nav}}
+{{/extend}}
+
+{{#extend "body"}}
+<h2>Basic Info</h2>
+
+<form id="edit-item-form"
+  action="{{sidebarNav.baseUrl}}"
+  method="POST"
+  class="form ap-form form-vertical">
+  {{> admin_restaurant_plans_basic_info_form}}
+</form>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( ['item-form'], function( form ){
+    form.on('item:saved', function( model ){
+      window.location.href = '{{sidebarNav.baseUrl}}/' + model.get('id');
+    });
+  });
+</script>
+{{/extend}}

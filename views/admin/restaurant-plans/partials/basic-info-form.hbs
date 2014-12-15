@@ -30,7 +30,7 @@
       <option
         value="{{this}}"
       {{~#if ../restaurant_plan.type}}
-        {{~#eq ../restaurant_plan.type this}} selected="true"{{/eq~}}
+        {{~#eq ../../restaurant_plan.type ../this}} selected="true"{{/eq~}}
       {{else}}
         {{~#eq this 'tiered'}} selected="true"{{/eq~}}
       {{/if~}}

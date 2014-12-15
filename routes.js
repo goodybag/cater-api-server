@@ -177,6 +177,31 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/admin/restaurant-plans/:id'
+    , m.redirect('/admin/restaurant-plans/:id/basic-info')
+    );
+
+    app.get('/admin/restaurant-plans/:id/basic-info'
+    , m.restrict(['admin'])
+    , m.param('id')
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'mainNav', { active: 'restaurant-plans' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/restaurant-plans'
+      , isNew:    true
+      })
+    , m.viewPlugin( 'itemForm', {
+        selector:       '#edit-item-form'
+      , collection:     'app/collections/restaurant-plans'
+      , localModelProp: 'restaurant_plan'
+      })
+    , m.view( 'admin/restaurant-plans/edit-item', db.restaurant_plans, {
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
+
     app.get('/admin/delivery-services'
     , m.sort('+name')
     , m.queryOptions({

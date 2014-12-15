@@ -2,57 +2,11 @@
 <script>
   define(
     'item-form'
-  , [ 'utils'
-    , 'handlebars'
-    , 'app/views/admin/item-form'
+  , [ 'app/views/admin/restaurant-plans/basic-info-form'
     , '{{itemForm.collection}}'
     ]
-  , function( utils, Hbs, ItemForm, Collection ){
-      ItemForm = ItemForm.extend({
-        events: utils.extend( {}, ItemForm.prototype.events || {}, {
-          'click [data-role="new-tier"]': 'onNewTierClick'
-        })
-
-      , twoways: { type: true }
-      , tierTmpl: Hbs.partials.restaurant_plan_edit_tier
-
-      , typeGetters: utils.extend({
-          data: function( $el ){
-            if ( this.model.attributes.type === 'flat' ){
-              var $target = $el.find('[data-toggler-id="flat"] [name="rate"]');
-              return {
-                rate: this.getDomValue( 'rate', $target )
-              };
-            } else if ( this.model.attributes.type === 'tiered' ){
-              var tiers = [];
-
-              $el.find('.tier').each( function(){
-                var $this = $(this);
-                tiers.push({
-                  rate:   this.getDomValue( 'rate', $this.find('[name="rate"]') )
-                , amount: this.getDomValue( 'amount', $this.find('[name="amount"]') )
-                });
-              });
-
-              return {
-                tiers: tiers
-              };
-            }
-          }
-        }, ItemForm.prototype.typeGetters )
-
-      , addNewTier: function(){
-          this.$el.find('.tiers').append(
-            this.tierTmpl()
-          );
-        }
-
-      , onNewTierClick: function( e ){
-          this.addNewTier({ amount: 0, fee: 0 });
-        }
-      });
-
-      return new ItemForm({
+  , function( BasicInfoForm, Collection ){
+      return new BasicInfoForm({
         el:     $('{{itemForm.selector}}')
       , model:  new Collection( null{{#if itemForm.collectionOptions}}, {{{json this.itemForm.collectionOptions}}}{{/if}})
                   .createModel({{#if itemForm.localModelProp}}{{{json this itemForm.localModelProp}}}{{/if}})
@@ -71,7 +25,7 @@
 </div>
 <div class="form-group">
   <label for="type_selector" class="control-label">Type</label>
-  <select name="type" id="type_selector" data-role="el-toggler" data-target=".tab-panes">
+  <select name="type" id="type_selector" data-target=".tab-panes">
     {{#each config.availableRestaurantPlanTypes}}
       <option
         value="{{this}}"
@@ -111,16 +65,16 @@
     class="tab-pane{{#unless (eq restaurant_plan.type 'flat')}} active{{/unless}}"
     data-toggler-id="tiered">
     <h2>Tiered</h2>
-    <div class="tiers edit-tiers">
-    {{#each restaurant_plan.data.tiers}}
-      {{> restaurant_plan_edit_tier}}
-    {{/each}}
-    </div>
     <div class="form-group actions">
       <button
        type="button"
         class="btn btn-primary"
         data-role="new-tier">New Tier</button>
+    </div>
+    <div class="tiers edit-tiers">
+    {{#each restaurant_plan.data.tiers}}
+      {{> restaurant_plan_edit_tier}}
+    {{/each}}
     </div>
   </fieldset>
 </div>

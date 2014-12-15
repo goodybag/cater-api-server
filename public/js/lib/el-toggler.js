@@ -26,6 +26,7 @@ define( function( require, exports, module ){
       options = _.defaults( options || {}, {
         activeClass:    'active'
       , targetSelector: '[data-toggler-id="{id}"]'
+      , manual:          false
       });
 
       $el = $( $el );
@@ -36,6 +37,8 @@ define( function( require, exports, module ){
       , options:  options
 
       , init: function(){
+          if ( options.manual ) return this;
+
           var this_ = this;
           if ( this.$el[0].tagName === 'SELECT' ){
             this.$el.on( 'change', function(){

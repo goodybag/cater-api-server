@@ -48,6 +48,11 @@ define(function(require){
         this[ methodname ] = function( e ){
           this.model.set( key, this.getDomValue( key, $( e.currentTarget ) ) );
         }.bind( this );
+
+        this.model.on( 'change:' + key, function( model, val ){
+          if ( this.getDomValue( key ) === val ) return;
+          this.updateDomWithModelProp( key );
+        }.bind( this ));
       }.bind( this ));
 
       this.delegateEvents();

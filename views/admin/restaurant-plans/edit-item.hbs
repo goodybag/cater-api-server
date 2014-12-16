@@ -38,6 +38,10 @@
     form.on('item:saved', function( model ){
       window.location.href = '{{sidebarNav.baseUrl}}/' + model.get('id');
     });
+
+    form.on('item:destroyed', function( model ){
+      window.location.href = '{{sidebarNav.baseUrl}}';
+    });
   });
 </script>
 {{/extend}}

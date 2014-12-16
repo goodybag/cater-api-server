@@ -14,7 +14,6 @@
   {{/eq}}
 
   {{#eq type 'tiered'}}
-    {{{dump this}}}
     <dl class="plan-tiers">
     {{#each data.tiers}}
       {{#if @last}}
@@ -22,7 +21,7 @@
       {{else}}
         <dt>Under ${{dollars amount}}</dt>
       {{/if}}
-      <dd>{{factorToPercent data.fee}}%</dd>
+      <dd>{{factorToPercent fee}}%</dd>
     {{/each}}
     </dl>
   {{/eq}}

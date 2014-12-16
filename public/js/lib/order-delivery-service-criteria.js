@@ -151,6 +151,9 @@ define(function( require, exports, module ){
     , 'restaurant.delivery_service_order_amount_threshold'
     ]
   , fn: function( order ){
+      console.log('order.sub_total', order.sub_total);
+      console.log('order.restaurant.minimum_order', order.restaurant.minimum_order);
+      console.log('order.restaurant.delivery_service_order_amount_threshold', order.restaurant.delivery_service_order_amount_threshold);
       if ( order.sub_total < order.restaurant.minimum_order ) return false;
       return order.sub_total < order.restaurant.delivery_service_order_amount_threshold;
     }

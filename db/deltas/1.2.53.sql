@@ -8,7 +8,6 @@ begin
 
   create table if not exists "restaurant_plans" ();
 
-  drop type plan_type cascade;
   create type plan_type as enum ('tiered', 'flat');
 
   perform add_column( 'restaurant_plans', 'id', 'serial primary key' );

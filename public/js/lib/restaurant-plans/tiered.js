@@ -40,7 +40,6 @@ define( function( require, exports, module ){
 
   return Object.create({
     getPayoutForOrder: function( plan, order ){
-      console.log(this.getTier( plan, order ));
       return payoutPlan
         .set( 'tier', this.getTier( plan, order ) )
         .set( 'order', order )

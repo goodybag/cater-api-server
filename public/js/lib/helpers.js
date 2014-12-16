@@ -1,17 +1,16 @@
-if (typeof module === 'object' && typeof define !== 'function') {
-  var define = function(factory) {
-    return module.exports = factory(require, exports, module);
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
   };
 }
 
 define(function(require, exports, module) {
+  var isBrowser = typeof isNode === 'undefined';
   var _ = require('lodash');
 
   var moment = require('moment');
 
   var helpers = {};
-
-  helpers.Plan = require('plan.js');
 
   /**
    * Searches object structure for properties definition

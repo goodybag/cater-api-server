@@ -7,6 +7,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 define(function(require, exports, module) {
   var utils   = require('utils');
   var config  = require('config');
+  var rPlans  = require('restaurant-plans/index');
 
   return module.exports = utils.Model.extend({
     defaults: {
@@ -24,6 +25,8 @@ define(function(require, exports, module) {
 
       this.onFeeChange( this, this.get('gb_fee') );
       this.onTaxChange( this, this.get('sales_tax') );
+
+      this.plan = rPlans[ attr.plan.type ];
     }
 
   , toJSON: function( options ){
@@ -65,14 +68,7 @@ define(function(require, exports, module) {
 
   , getNetPayout: function( data ){
       data = data || this.attributes;
-
-      var val = data.sub_total + data.adjustment + data.delivery_fee
-      var tax = val * data.sales_tax;
-      val += data.tip;
-
-      val -= (val + tax) * data.gb_fee;
-
-      return Math.round( val );
+      return this.plan( this.get('plan'), this.get('order').toJSON() );
     }
 
   , getTotal: function(){

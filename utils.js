@@ -31,6 +31,8 @@ if (fs.existsSync('./local-config.json')){
   local = require('./local-config.json');
 }
 
+utils.Plan = require('plan.js');
+
 utils.useragent = require('useragent');
 utils.Promise = require('bluebird');
 utils.http = utils.Promise.promisify( request );

@@ -25,9 +25,9 @@ define( function( require, exports, module ){
   , typeGetters: utils.extend({
       data: function( $el ){
         if ( this.model.attributes.type === 'flat' ){
-          var $target = $el.find('[data-toggler-id="flat"] [name="rate"]');
+          var $target = $el.find('[data-toggler-id="flat"] [name="fee"]');
           return {
-            rate: this.getDomValue( 'rate', $target )
+            fee: this.getDomValue( 'fee', $target )
           };
         } else if ( this.model.attributes.type === 'tiered' ){
           var tiers = [], this_ = this;
@@ -35,7 +35,7 @@ define( function( require, exports, module ){
           $el.find('.tier').each( function(){
             var $this = $(this);
             tiers.push({
-              rate:   this_.getDomValue( 'rate', $this.find('[name="rate"]') )
+              fee:   this_.getDomValue( 'fee', $this.find('[name="fee"]') )
             , amount: this_.getDomValue( 'amount', $this.find('[name="amount"]') )
             });
           });

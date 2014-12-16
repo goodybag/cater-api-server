@@ -21,3 +21,37 @@
     .over { display: inline; }
   }
 }
+
+.restaurant-plans-list {
+  a {
+    text-decoration: none;
+    > .restaurant-plan {
+      color: @color-base;
+    }
+  }
+
+  .restaurant-plan {
+    border-radius: 3px;
+    background: @off-gray;
+    border: solid 1px @gray;
+    box-shadow:
+      inset 0 1px 0 #FFF
+    , 0 0 6px rgba(0, 0, 0, 0.15);
+  }
+
+  .plan-title {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .plan-body {
+    padding: 12px 20px;
+  }
+
+  .fee-wrapper {
+    font-size: 64px;
+    line-height: 64px;
+    text-align: center;
+    color: @brand-primary;
+  }
+}

@@ -44,7 +44,7 @@
     data-toggler-id="flat">
     <h2>Flat</h2>
     <div class="form-group">
-      <label class="control-label" for="input-rate">
+      <label class="control-label" for="input-fee">
         Rate
         <span class="help-block">Required</span>
       </label>
@@ -52,11 +52,11 @@
         <input
           type="text"
           class="form-control"
-          name="rate"
-          id="input-rate"
+          name="fee"
+          id="input-fee"
           data-in="factorToPercent"
           data-out="percentToFactor 4"
-          value="{{#if restaurant_plan.data.rate}}{{factorToPercent restaurant_plan.data.rate}}{{/if}}">
+          value="{{#if restaurant_plan.data.fee}}{{factorToPercent restaurant_plan.data.fee}}{{/if}}">
         <div class="input-addon">%</div>
       </div>
     </div>

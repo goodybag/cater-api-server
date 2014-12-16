@@ -19,9 +19,11 @@
   </div>
 
   <section class="panel-component" id="restaurant-plans-list-wrapper">
+    <div class="restaurant-plans-list">
     {{#each restaurant_plans}}
-      {{> restaurant_plan}}
+      <a href="/admin/restaurant-plans/{{this.id}}" class="plan-wrapper">{{> restaurant_plan}}</a>
     {{/each}}
+    </div>
   </section>
 </div>
 {{/extend}}

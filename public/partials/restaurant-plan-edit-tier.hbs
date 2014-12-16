@@ -1,6 +1,6 @@
 <div class="tier">
   <div class="form-group">
-    <label class="control-label" for="input-rate">
+    <label class="control-label" for="input-amount">
       <span class="amount-text">
         <span class="under">Under</span>
         <span class="over">Over</span>
@@ -20,7 +20,7 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="control-label" for="input-rate">
+    <label class="control-label" for="input-fee">
       Rate
       <span class="help-block">Required</span>
     </label>
@@ -28,11 +28,11 @@
       <input
         type="text"
         class="form-control"
-        name="rate"
-        id="input-rate"
+        name="fee"
+        id="input-fee"
         data-in="factorToPercent"
         data-out="percentToFactor 4"
-        value="{{#if this.rate}}{{factorToPercent this.rate}}{{/if}}">
+        value="{{#if this.fee}}{{factorToPercent this.fee}}{{/if}}">
       <div class="input-addon">%</div>
     </div>
   </div>

@@ -50,8 +50,10 @@ define(function(require, exports, module) {
       , sub_total:        order.get('sub_total')
       , adjustment:       order.get('adjustment_amount') || 0
       , tip:              order.get('tip')
-      , gb_fee:           order.restaurant.get('gb_fee') || 0
+      , gb_fee:           0
       , sales_tax:        order.get('sales_tax') === 0 ? 0 : this.get('sales_tax')
+      , order:            order
+      , plan:             this.attributes.plan
       };
 
       if ( order.get('type') === 'courier' ){
@@ -61,6 +63,14 @@ define(function(require, exports, module) {
 
       data.net_payout = this.getNetPayout( data );
 
+      if ( this.plan ){
+        if ( this.get('plan').type === 'tiered' ){
+          data.gb_fee = this.plan.getTier( this.get('plan'), order.toJSON() ).fee;
+        } else if ( this.get('plan').type === 'flat' ){
+          data.gb_fee = this.get('plan').data.fee;
+        }
+      }
+
       this.set( data );
 
       return this;
@@ -68,7 +78,16 @@ define(function(require, exports, module) {
 
   , getNetPayout: function( data ){
       data = data || this.attributes;
-      return this.plan( this.get('plan'), this.get('order').toJSON() );
+
+      var val = data.sub_total + data.adjustment + data.delivery_fee
+      var tax = val * data.sales_tax;
+      val += data.tip;
+
+      if ( this.plan ){
+        val - this.plan.getGbFee( data.plan, { restaurant_total: val });
+      }
+
+      return Math.round( val )
     }
 
   , getTotal: function(){

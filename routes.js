@@ -600,7 +600,9 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'mainNav', { active: 'home' })
     , m.db.restaurants.find( {}, {
         limit:  'all'
-      , one:    [{ table: 'regions', alias: 'region' }]
+      , one:    [ { table: 'regions', alias: 'region' }
+                , { table: 'restaurant_plans', alias: 'plan' }
+                ]
       , order:  'name asc'
       })
     , m.view( 'admin/ol-greg/home', {

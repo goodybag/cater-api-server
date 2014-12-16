@@ -11,6 +11,7 @@ define(function(require){
   var RangeSelector = require('app/views/admin/og-range-selector');
   var SummaryTRView = require('app/views/admin/og-summary-tr-view');
   var progress      = require('progress-indicator');
+  var flash         = require('flash');
 
   return Object.create({
     init: function( options ){
@@ -83,10 +84,17 @@ define(function(require){
     }
 
   , generateSummary: function( rid, d1, d2, callback ){
+      var restaurant = this.restaurants[ rid ];
+
+      if ( !restaurant.plan ){
+        flash.info( restaurant.name + '<br>ain\'t got no plan, motherlicker' );
+        return callback({ name: 'NO_PLAN' });
+      }
+
       var summary = new Summaries( null, {
-        sales_tax:      this.restaurants[ rid ].region.sales_tax
+        sales_tax:      restaurant.region.sales_tax
       , restaurant_id:  rid
-      }).createModel();
+      }).createModel({ plan: restaurant.plan });
 
       summary.generate( d1, d2, function( error ){
         if ( error ) return callback( error );

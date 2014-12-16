@@ -3,12 +3,11 @@ var m         = require('../../middleware');
 var utils     = require('../../utils');
 
 var req, res;
-var next = function() {};
 
 describe('Filters', function() {
   beforeEach(function(){
     req = { query: {} };
-    res = { query: { }, locals: { } };
+    res = { query: {}, locals: {} };
   });
 
   it('Should load filters into locals', function(done) {

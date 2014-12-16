@@ -68,6 +68,13 @@ define( function( require, exports, module ){
       return this;
     }
 
+  , onSubmit: function( e ){
+      // Always ensure `type` is set first
+      e.preventDefault();
+      this.model.set( 'type', this.getDomValue('type') );
+      return ItemForm.prototype.onSubmit.apply( this, arguments );
+    }
+
   , onNewTierClick: function( e ){
       this.addNewTier({ amount: 0, fee: 0 });
     }

@@ -1728,6 +1728,21 @@ module.exports.register = function(app) {
   , function( req, res ){ res.json( req.order ); }
   );
 
+  app.put('/api/orders/silent/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.queryOptions({
+      returning: ['*', {
+        type: 'select'
+        , table: 'orders'
+        , columns: ['type']
+        , alias: 'old_type'
+        , where: { id: '$orders.id$' }
+      }]
+    })
+  , m.update( db.orders )
+  );
+
   app.put('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')

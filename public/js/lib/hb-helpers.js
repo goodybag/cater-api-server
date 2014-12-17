@@ -5,10 +5,11 @@ if (typeof module === 'object' && typeof define !== 'function') {
 }
 
 define(function(require, exports, module) {
-  var moment = require('moment-timezone');
-  var utils = require('./utils');
-  var states = require('./states');
-  var config = require('config');
+  var moment        = require('moment-timezone');
+  var utils         = require('./utils');
+  var states        = require('./states');
+  var config        = require('config');
+  var Handlebars    = require('handlebars');
 
   var blocks = {};
 
@@ -244,6 +245,22 @@ define(function(require, exports, module) {
     // Append http protocol if missing
     website: function(url) {
       return (/^https?:\/\//).test(url) ? url : 'http://' + url;
+    },
+
+    raw: function(options) {
+      var output = options.fn(this);
+      var replaceMap = {
+        '<': '&lt;'
+      , '>': '&gt;'
+      , '&': '&amp;'
+      , '\'': '&apos;'
+      , '"': '&quot;'
+      , '`': '&grave;'
+      };
+      var regex = new RegExp(Object.keys(replaceMap).join('|'), 'gi');
+      return output.replace(regex, function(match) {
+        return replaceMap[match];
+      });
     },
 
     eq: function(a, b, options){

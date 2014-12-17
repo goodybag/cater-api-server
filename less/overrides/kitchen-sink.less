@@ -8,7 +8,7 @@
     padding-top: 80px;
     padding-botom: 50px;
     border-bottom: none;
-    overflow: hidden;
+    // overflow: hidden;
   }
 
   .lead {
@@ -84,3 +84,48 @@
 @-moz-keyframes     cupcake-slide-in-from-bottom { #animations > .slide-in-from-bottom(150px) }
 @-o-keyframes       cupcake-slide-in-from-bottom { #animations > .slide-in-from-bottom(150px) }
 @keyframes          cupcake-slide-in-from-bottom { #animations > .slide-in-from-bottom(150px) }
+
+// Palette Swatch
+.palette-sample {
+  width: 100%;
+  padding: 15px;
+  font-family: monospace, serif;
+  font-size: 14px;
+  font-weight: 300;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+.palette-sample-red {
+  background-color: @palette-red;
+  color: @palette-white;
+}
+.palette-sample-black {
+  background-color: @palette-black;
+  color: @palette-white;
+}
+.palette-sample-white {
+  background-color: @palette-white;
+  color: @palette-black;
+  border: 1px solid @palette-black;
+}
+.palette-sample-gray {
+  background-color: @palette-gray;
+  color: @palette-black;
+}
+.palette-sample-dark-gray {
+  background-color: @palette-dark-gray;
+  color: @palette-white;
+}
+.palette-sample-blue {
+  background-color: @palette-blue;
+  color: @palette-white;
+}
+
+.pull-left { float: left; }
+.pull-right { float: right; }
+.clearfix:after {
+   content: " ";
+   display: block;
+   height: 0;
+   clear: both;
+}

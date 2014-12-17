@@ -12,7 +12,9 @@
               {{/is}}
             </td>
             <td style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-left: 12px;">
-              <h1 style="line-height: 36px; margin-top: 0; margin-right: 0; margin-bottom: 10px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 28px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">You have received a new order!</h1>
+              <h1 style="line-height: 36px; margin-top: 0; margin-right: 0; margin-bottom: 10px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 28px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">You have received a new
+                <span style="font-weight: 800;">{{#is order.type 'pickup' 'courier'}}Pickup{{else}}Delivery{{/is}}</span>
+              order!</h1>
               <h2 style="line-height: 28px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
                 <span style="color: #D9534F; font-weight: 500">Important!</span> Please click the button below to accept the order. We will followup with a call if the order is still pending after one hour.
               </h2>

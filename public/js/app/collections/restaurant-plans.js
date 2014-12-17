@@ -1,9 +1,9 @@
 define(function(require, exports, module) {
-  var utils           = require('utils');
-  var DeliveryService = require('../models/restaurant-plan');
+  var utils = require('utils');
+  var Model = require('../models/restaurant-plan');
 
   return module.exports = utils.Collection.extend({
-    model: DeliveryService
+    model: Model
 
   , url: '/api/restaurant-plans'
 

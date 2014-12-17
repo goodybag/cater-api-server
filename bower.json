@@ -49,6 +49,7 @@
     "react": "~0.11.1",
     "pickadate": "~3.5.4",
     "lefunc": "~1.2.4",
-    "plan.js": "~1.0.4"
+    "plan.js": "~1.0.4",
+    "prism": "git@github.com:LeaVerou/prism.git#gh-pages"
   }
 }

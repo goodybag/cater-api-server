@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'gb';
-  src:url('/font/gb/icomoon.eot');
-  src:url('/font/gb/icomoon.eot?#iefix') format('embedded-opentype'),
-    url('/font/gb/icomoon.woff') format('woff'),
-    url('/font/gb/icomoon.ttf') format('truetype'),
-    url('/font/gb/icomoon.svg#icomoon') format('svg');
+  src:url('../font/gb/icomoon.eot');
+  src:url('../font/gb/icomoon.eot?#iefix') format('embedded-opentype'),
+    url('../font/gb/icomoon.woff') format('woff'),
+    url('../font/gb/icomoon.ttf') format('truetype'),
+    url('../font/gb/icomoon.svg#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -48,6 +48,7 @@ you can use the generic selector below, but it's slower:
 .gb-icon-question,
 .gb-icon-caret-down,
 .gb-icon-x-mark,
+.gb-icon-checkmark,
 .gb-icon-magnifier,
 .gb-icon-location,
 .gb-icon-time,
@@ -57,6 +58,8 @@ you can use the generic selector below, but it's slower:
 .gb-icon-warning,
 .gb-icon-user,
 .gb-icon-heart,
+.gb-icon-eye,
+.gb-icon-eye-slash,
 .gb-icon-hamburger,
 .gb-icon-star,
 .gb-icon-star-half-empty,
@@ -81,6 +84,18 @@ you can use the generic selector below, but it's slower:
 .gb-icon-x-mark:before,
 [data-icon="gb-icon-x-mark"]:before {
   content: "\e612";
+}
+.gb-icon-checkmark:before,
+[data-icon="gb-icon-checkmark"]:before {
+  content: "\e614";
+}
+.gb-icon-eye-slash:before,
+[data-icon="gb-icon-eye-slash"]:before {
+  content: "\e613";
+}
+.gb-icon-eye:before,
+[data-icon="gb-icon-eye"]:before {
+  content: "\e615";
 }
 .gb-icon-magnifier:before,
 [data-icon="gb-icon-magnifier"]:before {

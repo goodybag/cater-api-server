@@ -84,7 +84,7 @@ define(function(require, exports, module) {
       val += data.tip;
 
       if ( this.plan ){
-        val - this.plan.getGbFee( data.plan, { restaurant_total: val });
+        val -= this.plan.getGbFee( data.plan, { restaurant_total: val });
       }
 
       return Math.round( val )

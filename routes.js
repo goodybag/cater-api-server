@@ -149,12 +149,15 @@ module.exports.register = function(app) {
     );
 
     /**
-     * Delivery Services
+     * Restaurant Plans
      */
 
    app.get('/admin/restaurant-plans'
     , m.restrict(['admin'])
     , m.sort('+name')
+    , m.viewPlugin( 'section', {
+        url: '/admin/restaurant-plans'
+      })
     , m.viewPlugin( 'collection', { path: 'app/collections/restaurant-plans' } )
     , m.viewPlugin( 'mainNav', { active: 'restaurant-plans' })
     , m.view( 'admin/restaurant-plans/list', db.restaurant_plans, {
@@ -166,6 +169,9 @@ module.exports.register = function(app) {
     app.get('/admin/restaurant-plans/new'
     , m.restrict(['admin'])
     , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'section', {
+        url: '/admin/restaurant-plans'
+      })
     , m.viewPlugin( 'mainNav', { active: 'restaurant-plans' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'basic-info'
@@ -190,10 +196,13 @@ module.exports.register = function(app) {
     , m.restrict(['admin'])
     , m.param('id')
     , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'section', {
+        url: '/admin/restaurant-plans'
+      })
     , m.viewPlugin( 'mainNav', { active: 'restaurant-plans' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'basic-info'
-      , baseUrl:  '/admin/restaurant-plans'
+      , baseUrl:  '/admin/restaurant-plans/:id'
       })
     , m.viewPlugin( 'itemForm', {
         selector:       '#edit-item-form'
@@ -205,6 +214,10 @@ module.exports.register = function(app) {
       , method: 'findOne'
       })
     );
+
+    /**
+     * Delivery Services
+     */
 
     app.get('/admin/delivery-services'
     , m.sort('+name')

@@ -36,7 +36,7 @@
 <script>
   require( ['item-form'], function( form ){
     form.on('item:saved', function( model ){
-      window.location.href = '{{sidebarNav.baseUrl}}/' + model.get('id');
+      window.location.href = '{{section.url}}/' + model.get('id');
     });
   });
 </script>

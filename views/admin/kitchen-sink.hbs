@@ -9,6 +9,103 @@
   </div>
 </section>
 
+<section class="page-section" id="section-colors">
+  <div class="container">
+    <h2 class="component-title">Color Palette</h2>
+    <div class="palette-swatch">
+      <div class="palette-sample palette-sample-red">@palette-red: #dc0000</div>
+      <div class="palette-sample palette-sample-black">@palette-black: #5d616b</div>
+      <div class="palette-sample palette-sample-white">@palette-white: #ffffff</div>
+      <div class="palette-sample palette-sample-blue">@palette-blue: #0988d2</div>
+      <div class="palette-sample palette-sample-gray">@palette-gray: #f0f0f0</div>
+      <div class="palette-sample palette-sample-dark-gray">@palette-dark-gray: #f0f0f0</div>
+    </div>
+    <p>Avoid using pure black (#000). In the context of other colors, @palette-black should serve as the darkest color.
+    </p>
+    <p>The palette should be used to create semantic class tags, not color classes.</p>
+    <p>Good</p>
+    <pre><code class="language-css">.alert-warning { color: @palette-red }</code></pre>
+    <p>Bad</p>
+    <pre><code class="language-css">.red { color: @palette-red }</code></pre>
+  </div>
+</section>
+
+<section class="page-section" id="section-popovers">
+  <div class="container">
+    <h2 class="component-title">Popovers</h2>
+    <p>Use popovers for contextual alerts or extra info.</p>
+    <p>The popover is composed of a "trigger" element such as a
+      button or link and a "modal" element that toggles visibility.
+    </p>
+    <blockquote class="blockquote blockquote-info">
+      <h1>Note</h1>
+      <p>The modal element is `position: absolute` so it will be positioned
+      relative to it's parent.</p>
+      <p>Ensure that the trigger and modal elements are under
+      under a `.popover-wrapper` element.</p>
+      <pre><code class="language-markup">{{#raw}}<div class="popover-wrapper">
+  <a href="#" data-role="popover" data-target="example-popover">Open popover</a>
+  <div class="popover-body"> ... </div>
+</div>{{/raw}}</code></pre>
+    </blockquote>
+
+    <p>Demo</p>
+    <span class="popover-wrapper">
+      <a href="#" data-role="popover" data-target="example-popover">Open popover</a>
+      <div class="popover-modal example-popover">
+        <div class="popover-header">
+          Header<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+        </div>
+        <div class="popover-body">
+          <div class="popover-item">Foo</div>
+          <div class="popover-item">Bar</div>
+          <div class="popover-item">Baz</div>
+        </div>
+      </div>
+    </span>
+    <p>HTML</p>
+<pre><code class="language-markup">{{#raw}}<span class="popover-wrapper">
+  <a href="#" data-role="popover" data-target="example-popover">Open popover</a>
+  <div class="popover-modal example-popover">
+    <div class="popover-header">
+      Header<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+    </div>
+    <div class="popover-body">
+      <div class="popover-item">Foo</div>
+      <div class="popover-item">Bar</div>
+      <div class="popover-item">Baz</div>
+    </div>
+  </div>
+</span>{{/raw}}</code></pre>
+    <p>Javascript</p>
+    <pre><code class="language-javascript">$('[data-role="popover"]').gb_popover();</code></pre>
+  </div>
+</section>
+
+<section class="page-section" id="section-blockquote">
+  <div class="container">
+    <h2 class="component-title">Blockquote</h2>
+    <p>Demo</p>
+    <blockquote class="blockquote blockquote-info">
+      <h1>Title</h1>
+      Body text goes here.
+    </blockquote>
+    <p>Markup</p>
+
+<pre><code class="language-markup">{{#raw}}<blockquote class="blockquote blockquote-info">
+  <h1>Title</h1>
+  Body text goes here.
+</blockquote>{{/raw}}</code></pre>
+
+</section>
+
+<section class="page-section" id="section-colors">
+  <div class="container">
+    <h2 class="component-title">Mixins</h2>
+    <h4>Drop shadow</h4>
+    <p>Demo</p>
+</section>
+
 <section class="page-section" id="section-dropdowns">
   <div class="container">
     <h2 class="component-title">Dropdowns</h2>
@@ -29,27 +126,53 @@
   </div>
 </section>
 
-<section class="page-section" id="section-typeahead">
+<section class="page-section" id="section-table-list">
   <div class="container">
-    <div id="order-search"></div>
+    <h2 class="component-title">Table List</h2>
+    <p>This list component allows you sort by various filters and supports
+      pagination</p>
+    <p>LESS Import</p>
+    <pre>@import "overrides/components/table-list.less";</pre>
+    <p>Demo</p>
+    <div class="table-list-header">
+        <div class="table-list-header-title">Restaurants</div>
+        <div class="table-list-header-actions">
+          {{> admin_restaurant_filter_region }}
+          {{> admin_restaurant_filter_visible }}
+          {{> admin_restaurant_filter_sort }}
+        </div>
+    </div>
+    <ul class="table-list table-list-bordered">
+      <li class="table-list-item">All Star Burger</li>
+      <li class="table-list-item">Taco Deli</li>
+      <li class="table-list-item">Taj Palace</li>
+    </ul>
+    <p>Markup</p>
+<pre><code class="language-markup">{{#raw}}<div class="table-list-header">
+  <div class="table-list-header-title">Restaurants</div>
+  <div class="table-list-header-actions">
+    <!-- filters here -->
+  </div>
+</div>
+<ul class="table-list table-list-bordered">
+  <li class="table-list-item">All Star Burger</li>
+  <li class="table-list-item">Taco Deli</li>
+  <li class="table-list-item">Taj Palace</li>
+</ul>
+{{/raw}}</code></pre>
   </div>
 </section>
+
 {{/extend}}
 
 {{#extend "scripts"}}
+<script src="/components/prism/prism.js"></script>
 <script>
-
-  require(['jquery-loaded', 'react', 'components/order-search']
-    , function($, React, OrderSearch){
-
-    // TODO: ratelimit?
-    // Render this lovely component
-    React.renderComponent(
-      OrderSearch({ endpoint: '/api/orders/search' })
-    , document.getElementById('order-search')
-    );
+  require(['jquery-loaded'], function($){
+    $('[data-role="popover"]').gb_popover();
   });
 </script>
+
 <script>
   require(['jquery-loaded'], function($){
     var tmpl = function( data ){

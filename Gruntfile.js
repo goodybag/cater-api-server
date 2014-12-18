@@ -158,6 +158,9 @@ module.exports = function(grunt) {
         , include: ['requireLib']
         , mainConfigFile: 'public/js/require-config.js'
 
+          // a better solution is to provide a browser version of plan.js?
+        , thirdpartyUmdWhitelist: ['components/plan.js']
+
           // For some reason, r.js is not playing nicely with UMD modules
           // We use the same code-snippet everywhere to define UMD modules so
           // the module can be used in node.js as well. However, we don't
@@ -165,11 +168,12 @@ module.exports = function(grunt) {
           // has UMD, remove that code.
         , onBuildRead: function( name, path, contents ){
             // Ignore 3rd-party libs
-            if ( /components\/\S+\/\S+/.test( path ) ) return contents;
+            if ( path.indexOf( gruntConfig.requirejs.app.options.thirdpartyUmdWhitelist ) === -1 ){
+              if ( /components\/\S+\/\S+/.test( path ) ) return contents;
+            }
 
             // Contents not UMDing
             if ( contents.indexOf('module.exports = factory') === -1 ) return contents;
-
             // Start from the first occurrence of a define call
             return contents.substring( contents.search(/define\s*\(/) );
           }

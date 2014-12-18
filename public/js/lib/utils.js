@@ -40,6 +40,7 @@ define(function(require, exports, module) {
     utils.ajax = $.ajax;
     utils.http = $.ajax;
     utils.key = require('keymaster');
+    utils.Plan = require('plan');
   }
 
   utils.async = async;

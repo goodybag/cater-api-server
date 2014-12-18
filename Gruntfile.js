@@ -74,7 +74,7 @@ module.exports = function(grunt) {
 
   , shell: {
       handlebars: {
-        options: { stdout: true }
+        options: { stdout: true, stderr: true }
       , command: './node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js'
       }
     , ensureDir: {
@@ -106,7 +106,7 @@ module.exports = function(grunt) {
         , "public/dist/<%= pkg.version %>/landing-ielt9.css":      "less/ielt9-landing.less"
         , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less"
         , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
-        , "public/dist/<%= pkg.version %>/admin.css":              "less/core-admin.less"
+        , "public/dist/<%= pkg.version %>/css/admin.css":          "less/core-admin.less"
         , "public/dist/<%= pkg.version %>/ol-greg.css":            "less/core-ol-greg.less"
         , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
         }

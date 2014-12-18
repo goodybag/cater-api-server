@@ -27,6 +27,9 @@
           <option value="pickup"{{#eq order.type 'pickup'}} selected="true"{{/eq}}>Type: Pickup</option>
           <option value="delivery"{{#eq order.type 'delivery'}} selected="true"{{/eq}}>Type: Delivery</option>
           <option value="courier"{{#eq order.type 'courier'}} selected="true"{{/eq}}>Type: Courier Service</option>
+          <option value="pickup silent">Type: Pickup (No Notifications)</option>
+          <option value="delivery silent">Type: Delivery (No Notifications)</option>
+          <option value="courier silent">Type: Courier Service (No Notifications)</option>
         </select>
       </div>
     </div>

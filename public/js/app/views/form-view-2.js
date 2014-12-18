@@ -28,6 +28,46 @@ define(function(require){
     }
 
     /**
+     * Describes which keys should be two-way data-bound
+     * {
+     *   someKey: true
+     * }
+     * @type {Object}
+     */
+  , twoway: {}
+
+  , initialize: function( options ){
+      this.options = options;
+
+      this.initTwoWays();
+
+      return this;
+    }
+
+  , initTwoWays: function(){
+      Object.keys( this.twoway ).forEach( function( key ){
+        if ( typeof this.twoway[ key ] !== 'boolean' || !this.twoway[ key ] ) return;
+
+        var methodname = [ 'on', key, 'change' ].join('_');
+
+        this.events['change [name="' + key + '"]'] = methodname;
+
+        this[ methodname ] = function( e ){
+          this.model.set( key, this.getDomValue( key, $( e.currentTarget ) ) );
+        }.bind( this );
+
+        this.model.on( 'change:' + key, function( model, val ){
+          if ( this.getDomValue( key ) === val ) return;
+          this.updateDomWithModelProp( key );
+        }.bind( this ));
+      }.bind( this ));
+
+      this.delegateEvents();
+
+      return this;
+    }
+
+    /**
      * Appends errors to the $errors param
      * @param  {Array}    errors  Amanda style errors array or object
      * @param  {Element}  $errors jQuery Element where errors go
@@ -95,7 +135,7 @@ define(function(require){
         type = 'default';
       }
 
-      val     = this.typeGetters[ type ]( $el );
+      val     = this.typeGetters[ type ].call( this, $el );
       helper  = ($el.data('out') || "").split(' ');
       args    = [ val ].concat( helper.slice(1) );
       helper  = helper[0];
@@ -127,22 +167,31 @@ define(function(require){
       var $el, val;
 
       for ( var key in props ){
-        $el = this.$el.find('[name="' + key + '"]');
+        this.updateDomWithModelProp( key, props );
+      }
 
-        if ( $el.length === 0 ) continue;
-        if ( this.getDomValue( key, $el ) == this.model.get( key ) ) continue;
-        // Do we need to transform the value first?
-        if ( $el.data('in') && Hbs.helpers[ $el.data('in') ] ){
-          val = Hbs.helpers[ $el.data('in') ].call( Hbs, props[ key ] );
-        } else {
-          val = props[ key ];
-        }
+      return this;
+    }
 
-        if ( $el[0].tagName === 'INPUT' ){
-          $el.val( val );
-        } else {
-          $el.html( val );
-        }
+  , updateDomWithModelProp: function( key, props ){
+      props = props || this.model.attributes;
+
+      var val;
+      var $el = this.$el.find('[name="' + key + '"]');
+
+      if ( $el.length === 0 ) return this;
+      if ( this.getDomValue( key, $el ) == this.model.get( key ) ) return this;
+      // Do we need to transform the value first?
+      if ( $el.data('in') && Hbs.helpers[ $el.data('in') ] ){
+        val = Hbs.helpers[ $el.data('in') ].call( Hbs, props[ key ] );
+      } else {
+        val = props[ key ];
+      }
+
+      if ( $el[0].tagName === 'INPUT' ){
+        $el.val( val );
+      } else {
+        $el.html( val );
       }
 
       return this;

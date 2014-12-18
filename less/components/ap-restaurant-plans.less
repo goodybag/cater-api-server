@@ -1,0 +1,20 @@
+////////////////////////////
+// Admin Restaurant Plans //
+////////////////////////////
+
+.edit-tiers {
+  .amount-text { content: "Under"; }
+  > :last-child .amount-text { content: "Over"; }
+
+  .tier {
+    #grid > .row();
+
+    > .form-group {
+      #grid > .column-percent(40%);
+      margin-top: 0;
+    }
+    > .form-group.actions {
+      #grid > .column-percent(10%);
+    }
+  }
+}

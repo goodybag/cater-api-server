@@ -161,7 +161,7 @@ module.exports = function(grunt) {
         , 'public/css/kit.css'
         , 'public/css/main.css'
         , 'public/css/components.css'
-        , 'public/css/cater-tool.css'
+        , 'public/dist/<%= pkg.version %>/cater-tool.css'
         , 'public/css/theme.css'
         , 'public/css/restaurants.css'
         , 'public/css/restaurant-filters.css'

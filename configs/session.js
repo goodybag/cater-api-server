@@ -9,8 +9,10 @@ module.exports = {
     host:   redis.host
   , port:   redis.port
   , db:     redis.db
-  , pass:   redis.pass
+  // , pass:   redis.pass
   , ttl:      14 * 24 * 60 * 60
   }
 , secret:   'rainbow kittens'
+, resave:   false
+, saveUninitialized: true
 };

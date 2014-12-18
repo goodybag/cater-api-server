@@ -7,6 +7,8 @@ var
   config = require('./config')
 , rollbar = require('rollbar')
 , express = require('express')
+, session = require('express-session')
+, RedisStore = require('connect-redis')( session )
 , fs = require('fs')
 , hbs = require('hbs')
 , crypto = require('crypto')
@@ -23,7 +25,7 @@ var
 ;
 
 hbs.handlebars = require('handlebars');
-
+console.log(config.session);
 var app = module.exports = express();
 
 app.configure(function(){
@@ -53,8 +55,10 @@ app.configure(function(){
 
   app.use(express.cookieParser( config.session.secret ) );
   app.use( session({
-    store:  new RedisStore( config.session.store )
-  , secret: config.session.secret
+    store:              new RedisStore( config.session.store )
+  , secret:             config.session.secret
+  , resave:             config.session.resave
+  , saveUninitialized:  config.session.saveUninitialized
   }));
 
   app.use(express.json());
@@ -102,7 +106,8 @@ app.configure(function(){
   if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accessToken));
 
   app.use(function(err, req, res, next){
-    req.logger.error(err);
+    console.error(err);
+    req.logger.error(err instanceof Error ? err.toString() : err);
     res.error(errors.internal.UNKNOWN, err);
 
     // If the response stream does not close/finish in 2 seconds, just die anyway

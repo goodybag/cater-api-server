@@ -1,5 +1,8 @@
 {{#extend "css"}}
+{{#if config.isDev}}
 <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/restaurants.css' pkg)}}">
+<link rel="stylesheet" href="{{cdn "/css/restaurant-filters.css"}}">
+{{/if}}
 {{/extend}}
 
 {{#extend "title"}} - Restaurants{{/extend}}

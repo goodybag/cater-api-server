@@ -75,4 +75,5 @@ module.exports = {
 , jobstatus: 'job_status'
 , order_type: 'order_type'
 , amenity_scale: 'amenity_scale'
+, plan_type: 'plan_type'
 };

@@ -17,7 +17,6 @@
       // plugins
       text: '../../components/requirejs-text/text'
     , json: '../../components/requirejs-plugins/src/json'
-    , requireLib: '../../dist/require'
 
       // directories
     , app:    '../app'
@@ -31,6 +30,8 @@
     , {name: 'async',             location: '../../components/async/lib',                 main: 'async.js'}
     , {name: 'amanda',            location: '../../components/amanda/releases/latest',    main: 'amanda.js'}
     , {name: 'leFunc',            location: '../../components/lefunc/lib',                main: 'leFunc.js'}
+    , {name: 'plan.js',           location: '../../components/plan.js',                   main: 'index.js'}
+    , {name: 'plan',              location: '../../components/plan.js',                   main: 'index.js'}
 
       // backbone stuff
     , {name: 'backbone',          location: '../../components/backbone',                  main: 'backbone.js'}

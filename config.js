@@ -20,6 +20,8 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, availableRestaurantPlanTypes: ['tiered', 'flat']
+
 , deliveryTime: {
     padding: 15
   , distribution: {

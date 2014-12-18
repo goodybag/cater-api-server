@@ -7,6 +7,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 define(function(require, exports, module) {
   var utils   = require('utils');
   var config  = require('config');
+  var rPlans  = require('restaurant-plans/index');
 
   return module.exports = utils.Model.extend({
     defaults: {
@@ -24,6 +25,8 @@ define(function(require, exports, module) {
 
       this.onFeeChange( this, this.get('gb_fee') );
       this.onTaxChange( this, this.get('sales_tax') );
+
+      this.plan = rPlans[ attr.plan.type ];
     }
 
   , toJSON: function( options ){
@@ -47,8 +50,10 @@ define(function(require, exports, module) {
       , sub_total:        order.get('sub_total')
       , adjustment:       order.get('adjustment_amount') || 0
       , tip:              order.get('tip')
-      , gb_fee:           order.restaurant.get('gb_fee') || 0
+      , gb_fee:           0
       , sales_tax:        order.get('sales_tax') === 0 ? 0 : this.get('sales_tax')
+      , order:            order
+      , plan:             this.attributes.plan
       };
 
       if ( order.get('type') === 'courier' ){
@@ -57,6 +62,14 @@ define(function(require, exports, module) {
       }
 
       data.net_payout = this.getNetPayout( data );
+
+      if ( this.plan ){
+        if ( this.get('plan').type === 'tiered' ){
+          data.gb_fee = this.plan.getTier( this.get('plan'), order.toJSON() ).fee;
+        } else if ( this.get('plan').type === 'flat' ){
+          data.gb_fee = this.get('plan').data.fee;
+        }
+      }
 
       this.set( data );
 
@@ -70,9 +83,11 @@ define(function(require, exports, module) {
       var tax = val * data.sales_tax;
       val += data.tip;
 
-      val -= (val + tax) * data.gb_fee;
+      if ( this.plan ){
+        val -= this.plan.getGbFee( data.plan, { restaurant_total: val });
+      }
 
-      return Math.round( val );
+      return Math.round( val )
     }
 
   , getTotal: function(){

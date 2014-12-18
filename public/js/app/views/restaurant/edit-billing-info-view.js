@@ -28,6 +28,7 @@ define(function(require, exports, module) {
     , billing_state:          '[name="billing_state"]'
     , billing_zip:            '[name="billing_zip"]'
     , pms_contact_id:         '[name="pms_contact_id"]'
+    , plan_id:                '[name="plan_id"]'
     },
 
     fieldGetters: _.extend({

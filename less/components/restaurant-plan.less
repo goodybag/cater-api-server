@@ -1,0 +1,79 @@
+/////////////////////
+// Restaurant Plan //
+/////////////////////
+
+.tiers {
+  > .tier .amount-text {
+    .under { display: inline; }
+    .over { display: none; }
+  }
+  > .tier:last-child .amount-text {
+    .under { display: none; }
+    .over { display: inline; }
+  }
+}
+
+.restaurant-plans-list {
+  a {
+    text-decoration: none;
+    > .restaurant-plan {
+      color: @color-base;
+    }
+  }
+
+  .restaurant-plan {
+    font-size: 15px;
+    border-radius: 3px;
+    background: @off-gray;
+    border: solid 1px @gray;
+    box-shadow:
+      inset 0 1px 0 #FFF
+    , 0 0 6px rgba(0, 0, 0, 0.15);
+  }
+
+  .plan-title {
+    text-align: center;
+    font-size: 2em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .plan-body {
+    padding: 12px 0;
+  }
+
+  .fee-wrapper {
+    font-size: 64px;
+    line-height: 64px;
+    text-align: center;
+    color: @brand-primary;
+  }
+
+  .plan-tiers {
+    display: table;
+    width: 100%;
+    margin: 0;
+  }
+
+  .plan-tiers > dt,
+  .plan-tiers > dd {
+    #grid > .column-percent( 50%, 0 );
+    margin-left: 0!important;
+    padding: 4px 12px!important;
+    border-top: solid 1px @gray;
+  }
+
+  .plan-tiers > :first-child,
+  .plan-tiers > :first-child + dd {
+    border-top: none;
+  }
+
+  .plan-tiers > dd {
+    text-align: right;
+  }
+
+  .plan-tiers > dt:nth-of-type(2n),
+  .plan-tiers > dt:nth-of-type(2n) + dd {
+    background: @white;
+  }
+}

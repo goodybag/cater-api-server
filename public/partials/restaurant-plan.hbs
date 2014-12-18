@@ -1,0 +1,29 @@
+{{#extend "scripts"}}
+<script>
+  require( ['jquery'], function( $ ){
+
+  });
+</script>
+{{/extend}}
+
+<div class="restaurant-plan restaurant-plan-{{type}}">
+  <h3 class="plan-title">{{name}}</h3>
+  <div class="plan-body">
+  {{#eq type 'flat'}}
+    <div class="fee-wrapper">{{factorToPercent data.fee}}%</div>
+  {{/eq}}
+
+  {{#eq type 'tiered'}}
+    <dl class="plan-tiers">
+    {{#each data.tiers}}
+      {{#if @last}}
+        <dt>Over ${{dollars amount}}</dt>
+      {{else}}
+        <dt>Under ${{dollars amount}}</dt>
+      {{/if}}
+      <dd>{{factorToPercent fee}}%</dd>
+    {{/each}}
+    </dl>
+  {{/eq}}
+  </div>
+</div>

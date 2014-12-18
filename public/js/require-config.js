@@ -17,6 +17,7 @@
       // plugins
       text: '../../components/requirejs-text/text'
     , json: '../../components/requirejs-plugins/src/json'
+    , requireLib: '../../dist/require'
 
       // directories
     , app:    '../app'

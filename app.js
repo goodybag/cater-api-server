@@ -53,7 +53,7 @@ app.configure(function(){
   })());
 
 
-  app.use(express.cookieParser( config.session.secret ) );
+  // app.use(express.cookieParser( config.session.secret ) );
   app.use( session({
     store:              new RedisStore( config.session.store )
   , secret:             config.session.secret

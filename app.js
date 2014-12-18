@@ -51,8 +51,11 @@ app.configure(function(){
   })());
 
 
-  app.use(express.cookieParser('WOOT THE FUCK'));
-  app.use(express.cookieSession());
+  app.use(express.cookieParser( config.session.secret ) );
+  app.use( session({
+    store:  new RedisStore( config.session.store )
+  , secret: config.session.secret
+  }));
 
   app.use(express.json());
   app.use(express.urlencoded());

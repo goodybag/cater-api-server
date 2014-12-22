@@ -25,7 +25,6 @@ var
 ;
 
 hbs.handlebars = require('handlebars');
-console.log(config.session);
 var app = module.exports = express();
 
 app.use( middleware.logger() );

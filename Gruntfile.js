@@ -127,6 +127,12 @@ module.exports = function(grunt) {
         , { src: 'public/css/checkout.css', dest: 'public/dist/<%= pkg.version %>/css/checkout.css' }
         , { src: 'public/css/receipt.css', dest: 'public/dist/<%= pkg.version %>/css/receipt.css' }
         , { src: 'public/css/gb-icon.css', dest: 'public/dist/<%= pkg.version %>/css/gb-icon.css' }
+        , { src: 'public/img/olark-buttons-light.png', dest: 'public/dist/<%= pkg.version %>/img/olark-buttons-light.png' }
+        , { src: 'public/components/bootstrap/fonts/glyphicons-halflings-regular.woff',
+            dest: 'public/dist/<%= pkg.version %>/fonts/glyphicons-halflings-regular.woff' }
+        , { src: 'public/components/bootstrap/fonts/glyphicons-halflings-regular.ttf',
+            dest: 'public/dist/<%= pkg.version %>/fonts/glyphicons-halflings-regular.ttf' }
+        , { src: 'public/img/olark-buttons-light.png', dest: 'public/dist/<%= pkg.version %>/img/olark-buttons-light.png' }
         , { expand: true, flatten: true, src: 'public/img/*.svg', dest: 'public/dist/<%= pkg.version %>/img/' }
         , { expand: true, flatten: true, src: 'public/font/gb/*', dest: 'public/dist/<%= pkg.version %>/font/gb/' }
         ]
@@ -142,6 +148,25 @@ module.exports = function(grunt) {
         , 'public/js/require-config.js'
         ]
       , dest: 'public/dist/require.js'
+      }
+    , style: {
+        src: [
+          'public/components/select2/select2.css'
+        , 'public/components/bootstrap/dist/css/bootstrap.min.css'
+        , 'public/css/gb-icon.css'
+        , 'public/css/proxima-nova.css'
+        , 'public/components/pickadate/lib/themes/classic.css'
+        , 'public/components/pickadate/lib/themes/classic.date.css'
+        , 'public/components/pickadate/lib/themes/classic.time.css'
+        , 'public/css/kit.css'
+        , 'public/css/main.css'
+        , 'public/css/components.css'
+        , 'public/dist/<%= pkg.version %>/cater-tool.css'
+        , 'public/css/theme.css'
+        , 'public/css/restaurants.css'
+        , 'public/css/restaurant-filters.css'
+        ]
+      , dest: 'public/dist/<%= pkg.version %>/css/gb-style.css'
       }
     }
 

@@ -269,6 +269,7 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'itemForm', {
         selector:       '#edit-item-form'
       , collection:     'app/collections/delivery-services'
+      , collectionOptions:  { }
       , localModelProp: 'delivery_service'
       })
     , m.view( 'admin/delivery-service/basic-info', db.delivery_services, {

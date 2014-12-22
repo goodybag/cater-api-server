@@ -9,7 +9,7 @@ var express = require('express');
 var auth    = require('../lib/auth');
 var Models  = require('../models');
 
-var basic   = express.basicAuth( auth );
+var basic   = require('basic-auth-connect')( auth );
 
 module.exports = function(){
   return function( req, res, next ){

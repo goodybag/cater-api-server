@@ -31,7 +31,6 @@
     , {name: 'async',             location: '../../components/async/lib',                 main: 'async.js'}
     , {name: 'amanda',            location: '../../components/amanda/releases/latest',    main: 'amanda.js'}
     , {name: 'leFunc',            location: '../../components/lefunc/lib',                main: 'leFunc.js'}
-    , {name: 'plan.js',           location: '../../components/plan.js',                   main: 'index.js'}
     , {name: 'plan',              location: '../../components/plan.js',                   main: 'index.js'}
 
       // backbone stuff

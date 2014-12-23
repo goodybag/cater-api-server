@@ -51,7 +51,7 @@ module.exports.list = function(req, res) {
 
     function(callback) {
       logger.info('Finding default address');
-      models.Address.findOne({where: { user_id: req.session.user.id, is_default: true }}, callback);
+      models.Address.findOne({where: { user_id: req.user.id, is_default: true }}, callback);
     }
   ];
 
@@ -123,7 +123,7 @@ module.exports.get = function(req, res) {
 
   var orderParams = req.query || {};
 
-  var userId = req.creatorId || req.session.user.id;
+  var userId = req.creatorId || req.user.id;
   var tasks = [
     function(callback) {
       if (!userId) return callback(null, null);

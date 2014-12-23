@@ -149,6 +149,73 @@ module.exports.register = function(app) {
     );
 
     /**
+     * Restaurant Plans
+     */
+
+   app.get('/admin/restaurant-plans'
+    , m.restrict(['admin'])
+    , m.sort('+name')
+    , m.viewPlugin( 'section', {
+        url: '/admin/restaurant-plans'
+      })
+    , m.viewPlugin( 'collection', { path: 'app/collections/restaurant-plans' } )
+    , m.viewPlugin( 'mainNav', { active: 'restaurant-plans' })
+    , m.view( 'admin/restaurant-plans/list', db.restaurant_plans, {
+        layout: 'admin/layout2'
+      , method: 'find'
+      })
+    );
+
+    app.get('/admin/restaurant-plans/new'
+    , m.restrict(['admin'])
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'section', {
+        url: '/admin/restaurant-plans'
+      })
+    , m.viewPlugin( 'mainNav', { active: 'restaurant-plans' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/restaurant-plans'
+      , isNew:    true
+      })
+    , m.viewPlugin( 'itemForm', {
+        selector:       '#create-item-form'
+      , collection:     'app/collections/restaurant-plans'
+      , localModelProp: 'restaurant_plan'
+      })
+    , m.view( 'admin/restaurant-plans/new-item', {
+        layout: 'admin/layout-single-object'
+      })
+    );
+
+    app.get('/admin/restaurant-plans/:id'
+    , m.redirect('/admin/restaurant-plans/:id/basic-info')
+    );
+
+    app.get('/admin/restaurant-plans/:id/basic-info'
+    , m.restrict(['admin'])
+    , m.param('id')
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'section', {
+        url: '/admin/restaurant-plans'
+      })
+    , m.viewPlugin( 'mainNav', { active: 'restaurant-plans' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/restaurant-plans/:id'
+      })
+    , m.viewPlugin( 'itemForm', {
+        selector:       '#edit-item-form'
+      , collection:     'app/collections/restaurant-plans'
+      , localModelProp: 'restaurant_plan'
+      })
+    , m.view( 'admin/restaurant-plans/edit-item', db.restaurant_plans, {
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
+
+    /**
      * Delivery Services
      */
 
@@ -202,6 +269,7 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'itemForm', {
         selector:       '#edit-item-form'
       , collection:     'app/collections/delivery-services'
+      , collectionOptions:  { }
       , localModelProp: 'delivery_service'
       })
     , m.view( 'admin/delivery-service/basic-info', db.delivery_services, {
@@ -350,6 +418,7 @@ module.exports.register = function(app) {
       })
     , m.states()
     , m.db.regions.find( {}, { limit: 'all' } )
+    , m.db.restaurant_plans.find( {}, { limit: 'all' } )
     , m.queryOptions({
         many: [{ table: 'contacts' }]
       })
@@ -552,7 +621,9 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'mainNav', { active: 'home' })
     , m.db.restaurants.find( {}, {
         limit:  'all'
-      , one:    [{ table: 'regions', alias: 'region' }]
+      , one:    [ { table: 'regions', alias: 'region' }
+                , { table: 'restaurant_plans', alias: 'plan' }
+                ]
       , order:  'name asc'
       })
     , m.view( 'admin/ol-greg/home', {
@@ -1380,6 +1451,9 @@ module.exports.register = function(app) {
       res.locals.payment_summary_id = req.param('payment_summary_id');
       return next();
     }
+  , m.queryOptions({
+      one:  [{ table: 'restaurant_plans', alias: 'plan' }]
+    })
   , m.view( 'admin/restaurant-payment-summary', db.restaurants, {
       layout: 'admin/layout'
     , method: 'findOne'
@@ -1426,7 +1500,10 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.restaurant({ param: 'restaurant_id' })
   , m.queryOptions({
-      many: [{ table: 'payment_summary_items', alias: 'items' }]
+      many: [ { table: 'payment_summary_items', alias: 'items' }]
+    , one:  [ { table: 'restaurants', alias: 'restaurant'
+              , one: [{ table: 'restaurant_plans', alias: 'plan' }]
+              }]
     })
   , m.view( 'invoice/payment-summary', db.payment_summaries, {
       layout: 'invoice/payment-summary-layout'
@@ -1728,6 +1805,21 @@ module.exports.register = function(app) {
   , function( req, res ){ res.json( req.order ); }
   );
 
+  app.put('/api/orders/silent/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.queryOptions({
+      returning: ['*', {
+        type: 'select'
+        , table: 'orders'
+        , columns: ['type']
+        , alias: 'old_type'
+        , where: { id: '$orders.id$' }
+      }]
+    })
+  , m.update( db.orders )
+  );
+
   app.put('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')
@@ -1977,5 +2069,40 @@ module.exports.register = function(app) {
   , m.param('order_id')
   , m.param('amenity_id')
   , m.remove( db.order_amenities )
+  );
+
+  app.get('/api/restaurant-plans'
+  , m.restrict(['admin'])
+  , m.sort('-id')
+  , m.find( db.restaurant_plans )
+  );
+
+  app.post('/api/restaurant-plans'
+  , m.restrict(['admin'])
+  , m.insert( db.restaurant_plans )
+  );
+
+  app.get('/api/restaurant-plans/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.findOne( db.restaurant_plans )
+  );
+
+  app.put('/api/restaurant-plans/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.restaurant_plans )
+  );
+
+  app.patch('/api/restaurant-plans/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.restaurant_plans )
+  );
+
+  app.del('/api/restaurant-plans/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.restaurant_plans )
   );
 }

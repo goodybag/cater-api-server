@@ -50,10 +50,13 @@
       </select>
     </div>
     <div class="form-group">
-      <label class="control-label" for="input-is_fee_on_total">
-        <input type="checkbox" class="form-control" name="is_fee_on_total" id="input-is_fee_on_total" {{#if restaurant.is_fee_on_total}}checked="checked"{{/if}}>
-         Is the GB fee applied to Order Total?
-      </label>
+      <label for="plan_selector" class="control-label">Plan</label>
+      <select name="plan_id" id="plan_selector" type="number">
+        <option value="null">None</option>
+        {{#each restaurant_plans}}
+          <option value="{{this.id}}"{{#eq ../restaurant.plan_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
+        {{/each}}
+      </select>
     </div>
     <div class="form-group">
       <label class="control-label" for="input-is_direct_deposit">

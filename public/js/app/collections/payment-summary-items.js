@@ -19,6 +19,7 @@ define(function(require, exports, module) {
       this.restaurant_id      = options.restaurant_id;
       this.payment_summary_id = options.payment_summary_id;
       this.sales_tax          = options.sales_tax;
+      this.plan               = options.plan;
       return this;
     }
 
@@ -31,6 +32,7 @@ define(function(require, exports, module) {
       // Always set payment_summary_id/sales_tax on new models
       attrs.payment_summary_id = this.payment_summary_id;
       attrs.sales_tax = this.sales_tax;
+      attrs.plan = this.plan;
       return utils.Collection.prototype._prepareModel.call( this, attrs, options );
     }
   });

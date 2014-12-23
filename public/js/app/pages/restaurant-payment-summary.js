@@ -16,6 +16,10 @@ define(function(require){
 
   var dataListId = 'orders-datalist';
 
+  if ( !summary.get('plan') ){
+    alert('ERROR! This restaurant does not have a plan, Stan');
+  }
+
   summary.fetch({
     error: function( model, res ){
       if ( res.status === 404 ){

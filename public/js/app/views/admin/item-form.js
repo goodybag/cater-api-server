@@ -22,11 +22,6 @@ define(function(require, exports, module) {
     , 'click .btn-delete':  'onBtnDeleteClick'
     }
 
-  , initialize: function( options ){
-      this.options = options;
-      return this;
-    }
-
   , onSubmit: function( e ){
       var this_ = this;
 

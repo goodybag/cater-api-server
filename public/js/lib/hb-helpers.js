@@ -505,6 +505,10 @@ define(function(require, exports, module) {
       return (+value) + (+addition);
     },
 
+    sub: function (a, b) {
+      return (+a) - (+b);
+    },
+
     multiply: function(a, b) {
       return a * b;
     },
@@ -573,6 +577,10 @@ define(function(require, exports, module) {
 
     notNull: function( val, options ){
       return options[ val !== null ? 'fn' : 'inverse' ]();
+    },
+
+    isLast: function( i, list, options ){
+      return options[ i === ( list.length - 1 ) ? 'fn' : 'inverse' ]();
     },
 
     orderTypeAbbr: function( order ){

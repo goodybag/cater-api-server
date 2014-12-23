@@ -74,7 +74,7 @@ module.exports = function(grunt) {
 
   , shell: {
       handlebars: {
-        options: { stdout: true }
+        options: { stdout: true, stderr: true }
       , command: './node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js'
       }
     , ensureDir: {
@@ -106,7 +106,7 @@ module.exports = function(grunt) {
         , "public/dist/<%= pkg.version %>/landing-ielt9.css":      "less/ielt9-landing.less"
         , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less"
         , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
-        , "public/dist/<%= pkg.version %>/admin.css":              "less/core-admin.less"
+        , "public/dist/<%= pkg.version %>/css/admin.css":          "less/core-admin.less"
         , "public/dist/<%= pkg.version %>/ol-greg.css":            "less/core-ol-greg.less"
         , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
         }
@@ -127,6 +127,12 @@ module.exports = function(grunt) {
         , { src: 'public/css/checkout.css', dest: 'public/dist/<%= pkg.version %>/css/checkout.css' }
         , { src: 'public/css/receipt.css', dest: 'public/dist/<%= pkg.version %>/css/receipt.css' }
         , { src: 'public/css/gb-icon.css', dest: 'public/dist/<%= pkg.version %>/css/gb-icon.css' }
+        , { src: 'public/img/olark-buttons-light.png', dest: 'public/dist/<%= pkg.version %>/img/olark-buttons-light.png' }
+        , { src: 'public/components/bootstrap/fonts/glyphicons-halflings-regular.woff',
+            dest: 'public/dist/<%= pkg.version %>/fonts/glyphicons-halflings-regular.woff' }
+        , { src: 'public/components/bootstrap/fonts/glyphicons-halflings-regular.ttf',
+            dest: 'public/dist/<%= pkg.version %>/fonts/glyphicons-halflings-regular.ttf' }
+        , { src: 'public/img/olark-buttons-light.png', dest: 'public/dist/<%= pkg.version %>/img/olark-buttons-light.png' }
         , { expand: true, flatten: true, src: 'public/img/*.svg', dest: 'public/dist/<%= pkg.version %>/img/' }
         , { expand: true, flatten: true, src: 'public/font/gb/*', dest: 'public/dist/<%= pkg.version %>/font/gb/' }
         ]
@@ -143,6 +149,25 @@ module.exports = function(grunt) {
         ]
       , dest: 'public/dist/require.js'
       }
+    , style: {
+        src: [
+          'public/components/select2/select2.css'
+        , 'public/components/bootstrap/dist/css/bootstrap.min.css'
+        , 'public/css/gb-icon.css'
+        , 'public/css/proxima-nova.css'
+        , 'public/components/pickadate/lib/themes/classic.css'
+        , 'public/components/pickadate/lib/themes/classic.date.css'
+        , 'public/components/pickadate/lib/themes/classic.time.css'
+        , 'public/css/kit.css'
+        , 'public/css/main.css'
+        , 'public/css/components.css'
+        , 'public/dist/<%= pkg.version %>/cater-tool.css'
+        , 'public/css/theme.css'
+        , 'public/css/restaurants.css'
+        , 'public/css/restaurant-filters.css'
+        ]
+      , dest: 'public/dist/<%= pkg.version %>/css/gb-style.css'
+      }
     }
 
   , requirejs: {
@@ -158,6 +183,9 @@ module.exports = function(grunt) {
         , include: ['requireLib']
         , mainConfigFile: 'public/js/require-config.js'
 
+          // a better solution is to provide a browser version of plan.js?
+        , thirdpartyUmdWhitelist: ['components/plan.js']
+
           // For some reason, r.js is not playing nicely with UMD modules
           // We use the same code-snippet everywhere to define UMD modules so
           // the module can be used in node.js as well. However, we don't
@@ -165,11 +193,12 @@ module.exports = function(grunt) {
           // has UMD, remove that code.
         , onBuildRead: function( name, path, contents ){
             // Ignore 3rd-party libs
-            if ( /components\/\S+\/\S+/.test( path ) ) return contents;
+            if ( path.indexOf( gruntConfig.requirejs.app.options.thirdpartyUmdWhitelist ) === -1 ){
+              if ( /components\/\S+\/\S+/.test( path ) ) return contents;
+            }
 
             // Contents not UMDing
             if ( contents.indexOf('module.exports = factory') === -1 ) return contents;
-
             // Start from the first occurrence of a define call
             return contents.substring( contents.search(/define\s*\(/) );
           }

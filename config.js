@@ -22,6 +22,7 @@ config.defaults = {
 
 , redis: require('./configs/redis')
 , session: require('./configs/session')
+, availableRestaurantPlanTypes: ['tiered', 'flat']
 
 , deliveryTime: {
     padding: 15
@@ -34,6 +35,9 @@ config.defaults = {
 , emailProvider: 'mandrill'
 
 , tmpDir: './tmp'
+
+, notableUserIds: [ 1944 ] // Send various notifications to Om based on user actions
+, notableUserWarningRecipient: [ local.testEmail || 'test@goodybag.com' ]
 
 , geoipUrl: 'http://freegeoip.net/json/:ip'
 , geoTestIp: '216.201.168.18'
@@ -488,6 +492,9 @@ config.production = {
     'jag@goodybag.com'
   , 'alexlauzon@goodybag.com'
   ]
+
+, notableUserIds: [ 1944 ] // Send various notifications to Om based on user actions
+, notableUserWarningRecipient: [ 'om@goodybag.com', 'preston@goodybag.com' ]
 
 , cdn: {
     baseUrl: 'https://d3bqck8kwfkhx5.cloudfront.net'

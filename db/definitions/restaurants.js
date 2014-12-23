@@ -176,6 +176,10 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , plan_id: {
+      type: types.int
+    , references: { table: 'restaurant_plans', column: 'id', onDelete: 'set null' }
+    }
   };
 
   definition.indices = {};

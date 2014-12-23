@@ -1,0 +1,35 @@
+{{#extend "page"}}page-delivery-services{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <ul class="breadcrumbs main-breadcrumbs">
+    <li>
+      <a href="/admin">Admin Panel</a>
+    </li>
+    <li>Restaurant Plans</a></li>
+  </ul>
+
+  <h1 class="page-title">Restaurant Plans</h1>
+  <div class="page-actions">
+    <a
+      class="btn btn-primary"
+      href="/admin/restaurant-plans/new">
+      Create
+    </a>
+  </div>
+
+  <section class="panel-component" id="restaurant-plans-list-wrapper">
+    <div class="restaurant-plans-list">
+    {{#each restaurant_plans}}
+      <a href="/admin/restaurant-plans/{{this.id}}" class="plan-wrapper">{{> restaurant_plan}}</a>
+    {{/each}}
+    </div>
+  </section>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  
+</script>
+{{/extend}}

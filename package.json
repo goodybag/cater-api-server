@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.196",
+  "version": "1.1.204",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -16,7 +16,8 @@
     "underscore": "./node_modules/lodash/lodash.js",
     "config": "./config.js",
     "errors": "./errors.js",
-    "utils": "./utils.js"
+    "utils": "./utils.js",
+    "restaurant-plans": "./public/js/lib/restaurant-plans"
   },
   "dependencies": {
     "Faker": "0.5.x",
@@ -33,6 +34,7 @@
     "compression": "^1.2.2",
     "connect-redis": "^2.1.0",
     "cookie-parser": "^1.3.3",
+    "bower": "^1.3.11",
     "cron": "^1.0.4",
     "deep-extend": "~0.2.8",
     "dirac": "~0.4.6",
@@ -51,7 +53,7 @@
     "grunt-contrib-requirejs": "~0.4.1",
     "grunt-contrib-uglify": "~0.3.2",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-named-modules": "~1.0.1",
+    "grunt-named-modules": "~1.0.2",
     "grunt-react": "^0.9.0",
     "grunt-requirejs": "~0.4.0",
     "grunt-s3": "~0.2.0-alpha.3",
@@ -83,6 +85,7 @@
     "pg-parse-float": "0.0.x",
     "pg-query": "~0.3.0",
     "pg-transaction": "1.0.x",
+    "plan.js": "^1.0.2",
     "pluralize": "0.0.9",
     "react-tools": "^0.11.1",
     "request": "2.25.x",

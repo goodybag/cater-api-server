@@ -270,7 +270,8 @@ dirac.use( function(){
       var many = utils.findWhere( $query.many, { table: 'payment_summary_items' } );
       if ( many ){
         r[ many.alias || many.table ] = r[ many.alias || many.table ].map( function( item ){
-           return new PMSItem( item ).toJSON();
+          item.plan = r.restaurant.plan;
+          return new PMSItem( item ).toJSON();
         });
       }
     });

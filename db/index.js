@@ -50,7 +50,7 @@ exports.query2 = function(query, callback) {
 var dir = path.join( __dirname, './definitions' );
 fs.readdirSync( dir ).filter( function( f ){
   return fs.statSync( path.join( dir, f ) ).isFile() && f.slice(-3) == '.js'
-}).forEach( function( f ){
+}).concat('../../lib/session-and-user/dal').forEach( function( f ){
   dirac.register( require( path.join( dir, f ) ) );
 });
 

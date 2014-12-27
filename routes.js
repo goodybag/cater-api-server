@@ -2100,7 +2100,7 @@ module.exports.register = function(app) {
   , m.update( db.restaurant_plans )
   );
 
-  app.del('/api/restaurant-plans/:id'
+  app.delete('/api/restaurant-plans/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.restaurant_plans )

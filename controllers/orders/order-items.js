@@ -68,7 +68,7 @@ module.exports.add = function(req, res, next) {
   var order = req.order;
   var editable =
     req.creatorId ||
-    utils.contains(req.user.groups, 'admin') ||
+    utils.contains(req.user.attributes.groups, 'admin') ||
     utils.contains(['pending', 'submitted'], req.order.status);
 
   if (!editable) return res.json(403, 'nope');

@@ -31,7 +31,7 @@ module.exports.auth = function(req, res, next) {
   var logger = req.logger.create('Middleware-OrderAuth');
   logger.info('auth for order #%s', req.order.id);
 
-  if ( req.user != null && utils.contains(req.user.groups, 'admin') ){
+  if ( req.user != null && utils.contains(req.user.attributes.groups, 'admin') ){
     req.order.isAdmin = true;
     return next();
   }
@@ -120,7 +120,7 @@ module.exports.get = function(req, res) {
     // Decide where to show the `Thanks` message
     if (moment(context.order.submitted_date).add('hours', 1) > moment())
     if (req.user)
-    if (context.order.user_id == req.user.id){
+    if (context.order.user_id == req.user.attributes.id){
       context.showThankYou = true;
     }
 
@@ -146,7 +146,7 @@ module.exports.get = function(req, res) {
 }
 
 module.exports.create = function(req, res) {
-  var order = new models.Order(utils.extend({user_id: req.user.id}, req.body));
+  var order = new models.Order(utils.extend({user_id: req.user.attributes.id}, req.body));
   order.save(function(err) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(201, order.toJSON());
@@ -225,7 +225,7 @@ module.exports.generateEditToken = function(req, res) {
   models.Order.update(query, function(err, order) {
     if (err || !order.length)
       return res.error(errors.internal.DB_FAILURE, err);
-    else if (order[0].attributes.user_id !== req.user.id) {
+    else if (order[0].attributes.user_id !== req.user.attributes.id) {
       return res.error(errors.auth.NOT_ALLOWED);
     }
     res.send(200, order[0]);
@@ -272,11 +272,11 @@ module.exports.changeStatus = function(req, res) {
 
       logger.info('Finding default address for user');
       // Set `is_default == true` if there's no default set
-      db.addresses.findOne({user_id: req.user.id, is_default: true}, function(error, address) {
+      db.addresses.findOne({user_id: req.user.attributes.id, is_default: true}, function(error, address) {
         if (error) return res.error(errors.internal.DB_FAILURE, error);
 
         var noExistingDefault = !address;
-        var addressData = utils.extend(orderAddressFields, { user_id: req.user.id, is_default: noExistingDefault });
+        var addressData = utils.extend(orderAddressFields, { user_id: req.user.attributes.id, is_default: noExistingDefault });
 
         logger.info('Saving address');
         if ( noExistingDefault ){

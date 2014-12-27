@@ -26,7 +26,7 @@ module.exports = function(){
       if ( !req.user ){
         req.user = guest
       } else {
-        req.session.user = { id: req.user.id };
+        req.session.user = { id: req.user.attributes.id };
         req.user = new Models.User( req.user );
       }
 

@@ -50,14 +50,7 @@ app.use((function(){
   };
 })());
 
-
-app.use(require('cookie-parser')( config.session.secret ) );
-app.use( session({
-  store:              new RedisStore( config.session.store )
-, secret:             config.session.secret
-, resave:             config.session.resave
-, saveUninitialized:  config.session.saveUninitialized
-}));
+app.use( middleware.getUser2() );
 
 app.use(require('body-parser').json());
 app.use(require('body-parser').urlencoded({ extended: true }));
@@ -69,7 +62,6 @@ app.use(middleware.domains);
 app.use(middleware.cors);
 
 app.use(middleware.setSession());
-app.use(middleware.getUser);
 app.use(middleware.storeUserAgent());
 app.use( middleware.getRegions() )
 
@@ -108,7 +100,7 @@ app.use(function(err, req, res, next){
   res.error(errors.internal.UNKNOWN, err);
 
   // If the response stream does not close/finish in 2 seconds, just die anyway
-  forky.disconnect(2000);
+  // forky.disconnect(2000);
   res.on( 'finish', process.exit.bind( process ) );
   res.on( 'close', process.exit.bind( process ) );
 });

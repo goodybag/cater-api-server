@@ -13,6 +13,6 @@ module.exports = {
   }
 , secret:   'rainbow kittens'
 , resave:   false
-, maxAge:   14 * 24 * 60 * 60 * 1000
+, cookie:   { maxAge: 14 * 24 * 60 * 60 * 1000 }
 , saveUninitialized: true
 };

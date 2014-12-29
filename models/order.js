@@ -217,7 +217,7 @@ module.exports = Model.extend({
 
     var ids = ['id', 'restaurant_id', 'user_id'];
     utils.each(ids, function(key) {
-      obj[key] = '' + obj[key]
+      if ( obj[key] ) obj[key] = '' + obj[key]
     });
 
     if (options && options.plain)

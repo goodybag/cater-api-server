@@ -35,7 +35,7 @@ define(function(require) {
     }
   , user_id: {
       type: types.int
-    , nullable: false
+    , nullable: true
     , references: {table: 'users', column: 'id'}
     }
   , restaurant_id: {

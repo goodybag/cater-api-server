@@ -11,7 +11,13 @@ var logger = require('./logger').create('User');
 var table = 'users';
 
 var User = module.exports = Model.extend({
-  createPaymentMethod: function( pm, callback, client ){
+  isGuest: function(){
+    if ( !Array.isArray( this.attributes.groups ) ) return false;
+
+    return this.attributes.groups.indexOf('guest') > -1;
+  }
+
+, createPaymentMethod: function( pm, callback, client ){
     User.createPaymentMethod( this.attributes.id, pm, callback, client );
     return this;
   }

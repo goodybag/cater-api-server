@@ -1012,7 +1012,6 @@ module.exports.register = function(app) {
 
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
   app.get('/orders/:oid/items'
-  , m.restrict(['client', 'restaurant', 'admin'])
   , m.getOrder2({
       param:                    'oid'
     , items:                    true
@@ -1025,8 +1024,9 @@ module.exports.register = function(app) {
     , restaurantDbModelFind:    true
     })
   , controllers.orders.auth
+  , m.restrict(['admin', 'order-owner', 'order-editor'])
   , controllers.orders.orderItems.summary
-  );  // not currently used
+  );
 
   app.post('/orders/:oid/items'
   , m.getOrder2({

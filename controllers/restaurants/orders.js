@@ -45,32 +45,30 @@ module.exports.current = function(req, res, next) {
 
 module.exports.get = function(req, res, next) {
   // Load up the menu page with the specified order
-  models.Order.findOne(req.params.oid, function(err, order) {
+  var order = new models.Order( req.order );
+
+  req.logger.info('OHAI');
+
+  if (!req.user.isAdmin && !order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
+  // if (order.status === 'pending') return res.redirect('/restaurants/' + req.params.rid);
+  if (err) return res.error(errors.internal.DB_FAILURE, err);
+  models.Restaurant.findOne(order.attributes.restaurant_id, function(err, restaurant) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
-    if (!order) return res.render('404');
-    if (!req.user.isAdmin && !order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
-    // if (order.status === 'pending') return res.redirect('/restaurants/' + req.params.rid);
-    order.getOrderItems(function(err, items) {
+    if (!restaurant) return res.error(errors.internal.UNKNOWN, 'no restaurant for existing order');
+    restaurant.getItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
-      models.Restaurant.findOne(order.attributes.restaurant_id, function(err, restaurant) {
-        if (err) return res.error(errors.internal.DB_FAILURE, err);
-        if (!restaurant) return res.error(errors.internal.UNKNOWN, 'no restaurant for existing order');
-        restaurant.getItems(function(err, items) {
-          if (err) return res.error(errors.internal.DB_FAILURE, err);
-          var context = {
-            order: order.toJSON(),
-            restaurant: restaurant.toJSON()
-          };
+      var context = {
+        order: order.toJSON(),
+        restaurant: restaurant.toJSON()
+      };
 
-          for ( var key in context.restaurant ){
-            if ( !(key in context.order.restaurant) ){
-              context.order.restaurant[ key ] = context.restaurant[ key ];
-            }
-          }
+      for ( var key in context.restaurant ){
+        if ( !(key in context.order.restaurant) ){
+          context.order.restaurant[ key ] = context.restaurant[ key ];
+        }
+      }
 
-          return res.render('menu', context);
-        });
-      });
+      return res.render('menu', context);
     });
   });
 };

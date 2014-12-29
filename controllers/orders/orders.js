@@ -76,7 +76,7 @@ module.exports.editability = function(req, res, next) {
 
 module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Get');
-
+logger.info('OHAI');
   var order = req.order;
   var amenities = order.restaurant.amenities;
   var orderModel = new models.Order( order );
@@ -163,7 +163,7 @@ module.exports.create = function(req, res) {
   order.save(function(err) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 
-    if ( !req.user || !req.user.id ){
+    if ( req.user.isGuest() ){
       if ( !req.session.guestOrders ){
         req.session.guestOrders = [];
       }

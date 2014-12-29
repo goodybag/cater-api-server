@@ -33,6 +33,7 @@ var parse = function( connStr ){
 
 var envs = [ 'production', 'staging', 'india' ];
 
-if ( envs.indexOf( process.env['GB_ENV'] ) > -1 ){
+if ( envs.indexOf( process.env['GB_ENV'] ) > -1 )
+if ( typeof process.env['REDISCLOUD_URL'] === 'string' ){
   module.exports = parse( process.env['REDISCLOUD_URL'] );
 }

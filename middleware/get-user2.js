@@ -35,13 +35,11 @@ module.exports = function( options ){
     })( req, res, function( error ){
       if ( error ) return next( error );
 
-      console.log('HI', req.session);
       if ( !req.session || !req.session.user || req.session.user.id == null ){
         req.user = new Models.User({ groups: ['guest'], name: 'Guest' });
       } else {
-        console.log('SETTING USER!');
         req.user = req.session.user;
-        delete req.session.user;
+        req.session.user = { id: req.user.id };
 
         req.user.groups = utils.pluck( req.user.groups, 'group' );
         req.user = new Models.User( req.user );

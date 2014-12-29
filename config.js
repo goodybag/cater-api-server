@@ -20,6 +20,8 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, redis: require('./configs/redis')
+, session: require('./configs/session')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
 
 , deliveryTime: {

@@ -12,14 +12,14 @@ module.exports = function(req, res, next) {
       req.user.isAdmin = false;
       req.user.isRestaurant = false;
       res.locals.user = req.user.toJSON();
-      req.session.user = res.locals.user;
+      req.session.user = { id: res.locals.user.id };
     }
 
     if ( req.param('review_token') ){
       req.user.isAdmin = false;
       req.user.isRestaurant = true;
       res.locals.user = req.user.toJSON();
-      req.session.user = res.locals.user;
+      req.session.user = { id: res.locals.user.id };
     }
 
     logger.info('User not logged in, viewing as guest', { user: req.user });

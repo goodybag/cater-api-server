@@ -9,7 +9,7 @@ var express = require('express');
 var auth    = require('../lib/auth');
 var Models  = require('../models');
 
-var basic   = express.basicAuth( auth );
+var basic   = require('basic-auth-connect')( auth );
 
 module.exports = function(){
   return function( req, res, next ){
@@ -26,7 +26,7 @@ module.exports = function(){
       if ( !req.user ){
         req.user = guest
       } else {
-        req.session.user = req.user;
+        req.session.user = { id: req.user.attributes.id };
         req.user = new Models.User( req.user );
       }
 

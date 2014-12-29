@@ -17,6 +17,12 @@ var User = module.exports = Model.extend({
     return this.attributes.groups.indexOf('guest') > -1;
   }
 
+, get isAdmin () {
+    if ( !this.attributes ) return false;
+    var groups = this.attributes.groups;
+    return Array.isArray( groups ) && groups.indexOf('admin') > -1;
+  }
+
 , createPaymentMethod: function( pm, callback, client ){
     User.createPaymentMethod( this.attributes.id, pm, callback, client );
     return this;

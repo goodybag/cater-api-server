@@ -18,6 +18,7 @@ module.exports = {
 , getRegions: require('./get-regions')
 , getRestaurants: require('./get-restaurants')
 , getUser: require('./get-user')
+, getUser2: require('./get-user2')
 , jsonLocals: require('./json-locals')
 , logRequest: require('./log-request')
 , noop: require('./noop')
@@ -44,6 +45,7 @@ module.exports = {
 , json: require('./json')
 , logger: require('./logger')
 , logger: require('./logger')
+, sessionAndUser: require('../lib/session-and-user')
 , storeUserAgent: require('./store-user-agent')
 , timeout: require('./timeout')
 };

@@ -31,7 +31,7 @@ module.exports.auth = function(req, res, next) {
   var logger = req.logger.create('Middleware-OrderAuth');
   logger.info('auth for order #%s', req.order.id);
 
-  if ( req.session.user != null && utils.contains(req.session.user.groups, 'admin') ){
+  if ( req.user != null && utils.contains(req.user.attributes.groups, 'admin') ){
     req.order.isAdmin = true;
     return next();
   }
@@ -119,8 +119,8 @@ module.exports.get = function(req, res) {
 
     // Decide where to show the `Thanks` message
     if (moment(context.order.submitted_date).add('hours', 1) > moment())
-    if (req.session && req.session.user)
-    if (context.order.user_id == req.session.user.id){
+    if (req.user)
+    if (context.order.user_id == req.user.attributes.id){
       context.showThankYou = true;
     }
 
@@ -146,7 +146,7 @@ module.exports.get = function(req, res) {
 }
 
 module.exports.create = function(req, res) {
-  var order = new models.Order(utils.extend({user_id: req.session.user.id}, req.body));
+  var order = new models.Order(utils.extend({user_id: req.user.attributes.id}, req.body));
   order.save(function(err) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(201, order.toJSON());
@@ -225,7 +225,7 @@ module.exports.generateEditToken = function(req, res) {
   models.Order.update(query, function(err, order) {
     if (err || !order.length)
       return res.error(errors.internal.DB_FAILURE, err);
-    else if (order[0].attributes.user_id !== req.session.user.id) {
+    else if (order[0].attributes.user_id !== req.user.attributes.id) {
       return res.error(errors.auth.NOT_ALLOWED);
     }
     res.send(200, order[0]);
@@ -246,7 +246,7 @@ module.exports.changeStatus = function(req, res) {
   var orderModel = new models.Order( req.order );
 
   // if they're not an admin, check if the status change is ok.
-  if(!req.session.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {
+  if(!req.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {
     if (!utils.contains(models.Order.statusFSM[req.order.status], req.body.status))
       return res.send(403, 'Cannot transition from status '+ req.order.status + ' to status ' + req.body.status);
 
@@ -272,11 +272,11 @@ module.exports.changeStatus = function(req, res) {
 
       logger.info('Finding default address for user');
       // Set `is_default == true` if there's no default set
-      db.addresses.findOne({user_id: req.session.user.id, is_default: true}, function(error, address) {
+      db.addresses.findOne({user_id: req.user.attributes.id, is_default: true}, function(error, address) {
         if (error) return res.error(errors.internal.DB_FAILURE, error);
 
         var noExistingDefault = !address;
-        var addressData = utils.extend(orderAddressFields, { user_id: req.session.user.id, is_default: noExistingDefault });
+        var addressData = utils.extend(orderAddressFields, { user_id: req.user.attributes.id, is_default: noExistingDefault });
 
         logger.info('Saving address');
         if ( noExistingDefault ){
@@ -301,7 +301,7 @@ module.exports.changeStatus = function(req, res) {
 
     res.send(201, {order_id: req.order.id, status: req.order.status});
 
-     if (!(req.session.user
+     if (!(req.user
       && req.order.isAdmin
       && req.query.notify
       && req.query.notify.toLowerCase() == 'false'

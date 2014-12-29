@@ -4,7 +4,7 @@
 
 ## Setup
 
-__Download Postgres:__
+__Install Postgres:__
 
 http://postgresapp.com/
 
@@ -15,11 +15,18 @@ psql -h localhost --command="create database cater"
 psql -h localhost --command="create database cater_test"
 ```
 
-__Download MongoDB:__
+__Install MongoDB:__
 
 ```
 brew install mongodb
 mongod
+```
+
+__Install Redis:__
+
+```
+brew install redis
+redis-server
 ```
 
 __Setup errthing:__

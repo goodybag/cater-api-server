@@ -107,7 +107,7 @@ module.exports.register = function(app) {
 
   app.patch('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.update);
 
-  app.del('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.remove);
+  app.delete('/restaurants/:rid', m.restrict('admin'), controllers.restaurants.remove);
 
   app.all('/restaurants/:rid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
@@ -665,7 +665,7 @@ module.exports.register = function(app) {
 
   app.patch('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.update);
 
-  app.del('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.remove);
+  app.delete('/restaurants/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.remove);
 
   app.all('/restaurants/:rid/events/:eid', m.restrict(['admin']), function(req, res, next) {
     res.set('Allow', 'PUT', 'PATCH, DELETE');
@@ -700,7 +700,7 @@ module.exports.register = function(app) {
 
   app.patch('/restaurants/:rid/categories/:cid', m.restrict('admin'), controllers.restaurants.categories.update);
 
-  app.del('/restaurants/:rid/categories/:cid', m.restrict('admin'), controllers.restaurants.categories.remove);
+  app.delete('/restaurants/:rid/categories/:cid', m.restrict('admin'), controllers.restaurants.categories.remove);
 
   app.all('/restaurants/:rid/categories/:cid', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH, DELETE');
@@ -792,7 +792,7 @@ module.exports.register = function(app) {
 
   app.patch('/items/:id', m.restrict('admin'), controllers.items.update);
 
-  app.del('/items/:id', m.restrict('admin'), controllers.items.remove);
+  app.delete('/items/:id', m.restrict('admin'), controllers.items.remove);
 
   app.all('/items/:id', m.restrict(['client', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, PUT, PATCH,  DELETE');
@@ -931,7 +931,7 @@ module.exports.register = function(app) {
   , controllers.orders.update
   );
 
-  app.del('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
+  app.delete('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body = {status: 'canceled'};
     next();
   }, controllers.orders.changeStatus);
@@ -1090,7 +1090,7 @@ module.exports.register = function(app) {
   , controllers.orders.orderItems.update
   );
 
-  app.del(
+  app.delete(
     '/orders/:oid/items/:iid'
   , m.getOrder2({
       param:              'oid'
@@ -1194,7 +1194,7 @@ module.exports.register = function(app) {
 
   app.post('/session', controllers.session.create);
 
-  app.del('/session', controllers.session.del)
+  app.delete('/session', controllers.session.del)
 
   app.all('/session', function(req, res, next) {
     res.set('Allow', 'GET, POST, DELETE');
@@ -1261,7 +1261,7 @@ module.exports.register = function(app) {
     app.put('/users/:uid', restrictUpdate, controllers.users.update);
     app.patch('/users/:uid', restrictUpdate, controllers.users.update);
 
-    app.del('/users/:uid', function(req, res) { res.send(501); });
+    app.delete('/users/:uid', function(req, res) { res.send(501); });
 
     app.all('/users/:uid', function(req, res, next) {
       res.set('Allow', 'GET, PUT, DELETE');
@@ -1332,7 +1332,7 @@ module.exports.register = function(app) {
 
     app.patch('/users/:uid/addresses/:aid', controllers.users.addresses.update);
 
-    app.del('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
+    app.delete('/users/:uid/addresses/:aid', controllers.users.addresses.remove);
 
     app.all('/users/:uid/addresses/:aid', function(req, res, next) {
       res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
@@ -1353,7 +1353,7 @@ module.exports.register = function(app) {
 
     app.patch('/users/:uid/cards/:cid', controllers.users.cards.update);
 
-    app.del('/users/:uid/cards/:cid', controllers.users.cards.remove);
+    app.delete('/users/:uid/cards/:cid', controllers.users.cards.remove);
 
     app.all('/users/:uid/cards/:cid', function(req, res, next) {
       res.set('Allow', 'GET', 'PUT', 'PATCH', 'DELETE');
@@ -1545,7 +1545,7 @@ module.exports.register = function(app) {
   , m.update( db.restaurants )
   );
 
-  app.del('/api/restaurants/:id'
+  app.delete('/api/restaurants/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.restaurants )
@@ -1590,7 +1590,7 @@ module.exports.register = function(app) {
   , m.update( db.contacts )
   );
 
-  app.del('/api/restaurants/:restaurant_id/contacts/:id'
+  app.delete('/api/restaurants/:restaurant_id/contacts/:id'
   , m.restrict( ['admin'] )
   , m.param('restaurant_id')
   , m.param('id')
@@ -1620,7 +1620,7 @@ module.exports.register = function(app) {
   , m.update( db.restaurant_locations )
   );
 
-  app.del('/api/restaurants/:restaurant_id/locations/:id'
+  app.delete('/api/restaurants/:restaurant_id/locations/:id'
   , m.param('id')
   , m.param('restaurant_id')
   , m.remove( db.restaurant_locations )
@@ -1663,7 +1663,7 @@ module.exports.register = function(app) {
   , m.update( db.payment_summaries )
   );
 
-  app.del('/api/restaurants/:restaurant_id/payment-summaries/:id'
+  app.delete('/api/restaurants/:restaurant_id/payment-summaries/:id'
   , m.param('id')
   , m.param('restaurant_id')
   , m.remove( db.payment_summaries )
@@ -1703,7 +1703,7 @@ module.exports.register = function(app) {
   , m.update( db.payment_summary_items )
   );
 
-  app.del('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
+  app.delete('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/items/:id'
   , controllers.paymentSummaries.applyRestaurantIdForNonJoins()
   , m.param('payment_summary_id')
   , m.param('id')
@@ -1740,7 +1740,7 @@ module.exports.register = function(app) {
   , m.update( db.restaurant_photos )
   );
 
-  app.del('/api/restaurants/:restaurant_id/photos/:id'
+  app.delete('/api/restaurants/:restaurant_id/photos/:id'
   , m.restrict( ['admin'] )
   , m.param('restaurant_id')
   , m.param('id')
@@ -1855,7 +1855,7 @@ module.exports.register = function(app) {
     })
   );
 
-  app.del('/api/orders/:id'
+  app.delete('/api/orders/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.orders )
@@ -1949,7 +1949,7 @@ module.exports.register = function(app) {
   , m.update( db.delivery_services )
   );
 
-  app.del('/api/delivery-services/:id'
+  app.delete('/api/delivery-services/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.delivery_services )
@@ -1962,6 +1962,13 @@ module.exports.register = function(app) {
       many: [{ table: 'addresses' }, { table: 'orders' }]
     })
   , m.find( db.users )
+  );
+
+  app.get('/api/users/me'
+  , function( req, res ){
+      delete req.user.attributes.password;
+      res.json( req.user );
+    }
   );
 
   app.get('/api/users/:id'
@@ -1983,7 +1990,7 @@ module.exports.register = function(app) {
   , m.update( db.users )
   );
 
-  app.del('/api/users/:id'
+  app.delete('/api/users/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.users )
@@ -2016,7 +2023,7 @@ module.exports.register = function(app) {
   , m.update( db.amenities )
   );
 
-  app.del('/api/amenities/:id'
+  app.delete('/api/amenities/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.amenities )
@@ -2053,7 +2060,7 @@ module.exports.register = function(app) {
   );
 
   // delete all order amenities
-  app.del('/api/orders/:order_id/amenities'
+  app.delete('/api/orders/:order_id/amenities'
   , m.getOrder2({ param: 'order_id' })
   , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
@@ -2062,7 +2069,7 @@ module.exports.register = function(app) {
   );
 
   // delete specific order amenity
-  app.del('/api/orders/:order_id/amenities/:amenity_id'
+  app.delete('/api/orders/:order_id/amenities/:amenity_id'
   , m.getOrder2({ param: 'order_id' })
   , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
@@ -2100,7 +2107,7 @@ module.exports.register = function(app) {
   , m.update( db.restaurant_plans )
   );
 
-  app.del('/api/restaurant-plans/:id'
+  app.delete('/api/restaurant-plans/:id'
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.restaurant_plans )

@@ -1964,6 +1964,13 @@ module.exports.register = function(app) {
   , m.find( db.users )
   );
 
+  app.get('/api/users/me'
+  , function( req, res ){
+      delete req.user.attributes.password;
+      res.json( req.user );
+    }
+  );
+
   app.get('/api/users/:id'
   , m.restrict(['admin'])
   , m.param('id')

@@ -126,9 +126,7 @@ module.exports.get = function(req, res) {
   var userId = req.creatorId || req.user.attributes.id;
   var tasks = [
     function(callback) {
-      if (!userId) return callback(null, null);
-      var where = {restaurant_id: req.params.rid, user_id: userId, 'orders.status': 'pending'};
-      models.Order.findOne({where: where}, function(err, order) {
+      models.Order.findOne(req.order.id, function(err, order) {
         if (err) return callback(err);
         if (order == null) {
           order = new models.Order({ restaurant_id: req.params.rid,
@@ -197,6 +195,7 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
+      if ( !userId ) return callback();
       models.Address.findOne({where: { user_id: userId, is_default: true }}, callback);
     }
   ];

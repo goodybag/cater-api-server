@@ -25,6 +25,12 @@ module.exports.current = function(req, res, next) {
     where.edit_token = req.param('edit_token') || req.body.edit_token;
   } else if ( req.user.attributes.id ) {
     where.user_id = req.user.attributes.id;
+  } else if ( req.user.isGuest() && Array.isArray( req.session.guestOrders ) && req.session.guestOrders.length > 0 ){
+    // Take the greatest ID's first
+    logger.info('User is guest and has guestOrders', {
+      guestOrders: req.session.guestOrders
+    });
+    where.id = { $in: req.session.guestOrders.sort(function(a,b){ return b > a; }) };
   } else {
     logger.info('Guest user and missing edit token; cannot find pending order');
     return next();
@@ -50,8 +56,6 @@ module.exports.get = function(req, res, next) {
   req.logger.info('OHAI');
 
   if (!req.user.isAdmin && !order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
-  // if (order.status === 'pending') return res.redirect('/restaurants/' + req.params.rid);
-  if (err) return res.error(errors.internal.DB_FAILURE, err);
   models.Restaurant.findOne(order.attributes.restaurant_id, function(err, restaurant) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!restaurant) return res.error(errors.internal.UNKNOWN, 'no restaurant for existing order');

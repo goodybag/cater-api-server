@@ -197,7 +197,7 @@ module.exports.createSessionAs = function(req, res) {
     if (rows.length === 0) return res.send(404);
     var user = rows[0];
     // req.session = utils.extend({oldUser: req.session.user}, req.session, {user: utils.pick(user, ['id', 'groups', 'email', 'created_at'])});
-    req.session.oldUser = req.session.user;
+    req.session.oldUser = utils.pick(req.user.attributes, 'id', 'name');
     req.session.user = { id: user.id };
     res.redirect(req.query.next || '/restaurants');
   });

@@ -76,7 +76,6 @@ module.exports.editability = function(req, res, next) {
 
 module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Get');
-logger.info('OHAI');
   var order = req.order;
   var amenities = order.restaurant.amenities;
   var orderModel = new models.Order( order );

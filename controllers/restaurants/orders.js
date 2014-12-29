@@ -53,8 +53,6 @@ module.exports.get = function(req, res, next) {
   // Load up the menu page with the specified order
   var order = new models.Order( req.order );
 
-  req.logger.info('OHAI');
-
   if (!req.user.isAdmin && !order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
   models.Restaurant.findOne(order.attributes.restaurant_id, function(err, restaurant) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);

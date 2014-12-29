@@ -19,8 +19,7 @@ define(function(require, exports, module) {
         type: 'object',
         properties: {
           user_id: {
-            type: ['string', 'integer'],
-            required: true
+            type: ['string', 'integer', 'null']
           },
           restaurant_id: {
             type: ['string', 'integer'],

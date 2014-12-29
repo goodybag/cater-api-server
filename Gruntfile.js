@@ -109,6 +109,7 @@ module.exports = function(grunt) {
         , "public/dist/<%= pkg.version %>/css/admin.css":          "less/core-admin.less"
         , "public/dist/<%= pkg.version %>/ol-greg.css":            "less/core-ol-greg.less"
         , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
+        , "public/dist/<%= pkg.version %>/goodybag.css":           "less/core-goodybag.less"
         }
       }
     }
@@ -135,6 +136,7 @@ module.exports = function(grunt) {
         , { src: 'public/img/olark-buttons-light.png', dest: 'public/dist/<%= pkg.version %>/img/olark-buttons-light.png' }
         , { expand: true, flatten: true, src: 'public/img/*.svg', dest: 'public/dist/<%= pkg.version %>/img/' }
         , { expand: true, flatten: true, src: 'public/font/gb/*', dest: 'public/dist/<%= pkg.version %>/font/gb/' }
+        , { expand: true, flatten: true, src: 'public/font/aleo/*', dest: 'public/dist/<%= pkg.version %>/font/aleo/' }
         ]
       }
     }

@@ -29,17 +29,26 @@ module.exports = function( options ){
     sessionAndUser({
       secret: config.session.secret
     , cookie: config.session.cookie
+    , resave: config.session.resave
+    , saveUninitialized: config.session.saveUninitialized
     , queryOptions: queryOptions
     })( req, res, function( error ){
       if ( error ) return next( error );
 
-      req.user = req.session.user;
-      delete req.session.user;
+      console.log('HI', req.session);
+      if ( !req.session || !req.session.user || req.session.user.id == null ){
+        req.user = new Models.User({ groups: ['guest'], name: 'Guest' });
+      } else {
+        console.log('SETTING USER!');
+        req.user = req.session.user;
+        delete req.session.user;
 
-      req.user.groups = utils.pluck( req.user.groups, 'group' );
-console.log('USER', req.user);
-      req.user = new Models.User( req.user );
+        req.user.groups = utils.pluck( req.user.groups, 'group' );
+        req.user = new Models.User( req.user );
+      }
+
       res.locals.user = req.user.toJSON();
+
       next();
     });
   };

@@ -9,7 +9,6 @@ define(function(require, exports, module) {
   var utils         = require('./utils');
   var states        = require('./states');
   var config        = require('config');
-  var Handlebars    = require('handlebars');
 
   var blocks = {};
 
@@ -614,5 +613,4 @@ define(function(require, exports, module) {
   }
 
   return module.exports = helpers;
-
 });

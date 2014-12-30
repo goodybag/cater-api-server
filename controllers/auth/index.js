@@ -205,30 +205,10 @@ module.exports.login = function ( req, res ){
 
     res.redirect( req.query.next || '/' );
 
-    if ( Array.isArray( req.session.guestOrders ) && req.session.guestOrders.length > 0 ){
+    if ( Array.isArray( req.session.guestOrders ) ){
       venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
+      delete req.session.guestOrders;
     }
-
-    logger.info('Consuming guest orders', {
-      guestOrders: req.session.guestOrders
-    });
-
-    consumeGuestOrders( req.session.guestOrders, user.id, function( error ){
-      if ( error ){
-        logger.error('Error consuming guest orders!', {
-          error: error
-        , guestOrders: req.session.guestOrders
-        });
-
-        // Still call onsuccess because login was successful. We just had some
-        // orders that didnt go from guest->user
-        return onSuccess();
-      }
-
-      cleanupGuestOrders( req );
-
-      return onSuccess();
-    });
   });
 };
 
@@ -260,30 +240,12 @@ module.exports.signup = function( req, res ){
 
     req.setSession( user.toJSON() );
 
-    if ( !Array.isArray( req.session.guestOrders ) || req.session.guestOrders.length === 0 ){
-      return onSuccess();
+    res.redirect('/restaurants');
+
+    if ( Array.isArray( req.session.guestOrders ) ){
+      venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
+      delete req.session.guestOrders;
     }
-
-    logger.info('Consuming guest orders', {
-      guestOrders: req.session.guestOrders
-    });
-
-    consumeGuestOrders( req.session.guestOrders, user.id, function( error ){
-      if ( error ){
-        logger.error('Error consuming guest orders!', {
-          error: error
-        , guestOrders: req.session.guestOrders
-        });
-
-        // Still call onsuccess because login was successful. We just had some
-        // orders that didnt go from guest->user
-        return onSuccess();
-      }
-
-      cleanupGuestOrders( req );
-
-      return onSuccess();
-    });
   });
 };
 
@@ -364,5 +326,10 @@ module.exports.register = function( req, res ){
     res.redirect('/restaurants?signed_up=true');
 
     venter.emit( 'user:registered', user );
+
+    if ( Array.isArray( req.session.guestOrders ) ){
+      venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
+      delete req.session.guestOrders;
+    }
   });
 };

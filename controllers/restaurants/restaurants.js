@@ -121,24 +121,27 @@ module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-Get');
   logger.info('getting restaurant %s', req.params.rid);
 
+  var order;
   var orderParams = req.query || {};
 
   var userId = req.creatorId || req.user.attributes.id;
   var tasks = [
     function(callback) {
-      if (!userId) return callback(null, null);
-      var where = {restaurant_id: req.params.rid, user_id: userId, 'orders.status': 'pending'};
-      models.Order.findOne({where: where}, function(err, order) {
+      if ( !req.order ){
+        order = new models.Order({
+          restaurant_id:  req.params.rid
+        , user_id:        userId
+        , adjustment:     { description: null, amount: null }
+        });
+
+        return order.getRestaurant( function( error ){
+          console.log( 'returning', order.toJSON() );
+          callback( error, order );
+        });
+      }
+
+      models.Order.findOne(req.order.id, function(err, order) {
         if (err) return callback(err);
-        if (order == null) {
-          order = new models.Order({ restaurant_id: req.params.rid,
-                                     user_id: userId,
-                                     adjustment: {description: null, amount: null}});
-          order.getRestaurant(function(error){
-            callback(error, order);
-          });
-          return;
-        }
         order.getOrderItems(function(err, items) {
           callback(err, order);
         });
@@ -197,6 +200,7 @@ module.exports.get = function(req, res) {
     },
 
     function(callback) {
+      if ( !userId ) return callback();
       models.Address.findOne({where: { user_id: userId, is_default: true }}, callback);
     }
   ];

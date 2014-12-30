@@ -1,4 +1,4 @@
-<div class="sticky-header {{#dneq order.id "undefined"}}in{{/dneq}}">
+<div class="sticky-header {{#if order.id}}in{{/if}}">
   <div class="container">
     <div class="sticky-note" id="order-id-container">Order #{{order.id}}</div>
     <div id="lead-time-counter" class="shrinky-text sticky-note pull-right">Loading</div>

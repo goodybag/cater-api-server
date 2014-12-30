@@ -217,7 +217,7 @@ module.exports = Model.extend({
 
     var ids = ['id', 'restaurant_id', 'user_id'];
     utils.each(ids, function(key) {
-      obj[key] = '' + obj[key]
+      if ( obj[key] ) obj[key] = '' + obj[key]
     });
 
     if (options && options.plain)
@@ -254,7 +254,7 @@ module.exports = Model.extend({
 
     var requiredAddrFields = ['street', 'city', 'state', 'zip', 'phone']
     obj.isAddressComplete = utils.reduce(utils.map(utils.pick(obj, requiredAddrFields),
-                                                   function(val) { return val != null && val !== ''; }),
+                                                   function(val) { return [ null, undefined, '' ].indexOf( val ) === -1; }),
                                          function(memo, item, list) { return memo && item; }, true);
 
     if (options && options.manifest){

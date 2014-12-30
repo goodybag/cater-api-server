@@ -825,7 +825,7 @@ module.exports.register = function(app) {
   , m.view('orders', db.orders)
   );
 
-  app.post('/orders', m.restrict(['client', 'admin']), controllers.orders.create);
+  app.post('/orders', m.restrict(['guest', 'client', 'admin']), controllers.orders.create);
 
   app.all('/orders', function(req, res, next) {
     res.set('Allow', 'GET');
@@ -1012,7 +1012,6 @@ module.exports.register = function(app) {
 
   //app.get('/orders/:oid/items', m.restrict(['client', 'admin']), controllers.orders.orderItems.list);  // not currently used
   app.get('/orders/:oid/items'
-  , m.restrict(['client', 'restaurant', 'admin'])
   , m.getOrder2({
       param:                    'oid'
     , items:                    true
@@ -1025,8 +1024,9 @@ module.exports.register = function(app) {
     , restaurantDbModelFind:    true
     })
   , controllers.orders.auth
+  , m.restrict(['admin', 'order-owner', 'order-editor'])
   , controllers.orders.orderItems.summary
-  );  // not currently used
+  );
 
   app.post('/orders/:oid/items'
   , m.getOrder2({
@@ -1128,12 +1128,20 @@ module.exports.register = function(app) {
    * Order add items resource.  Page to add items to an order.  (basically the menu page)
    */
 
-  app.get('/orders/:oid/add-items', m.restrict(['client', 'admin']), controllers.restaurants.orders.get);
-
-  app.all('/orders/:oid/add-items', m.restrict(['client', 'admin']), function(req, res, next) {
-    res.set('Allow', 'GET');
-    res.send(405);
-  });
+  app.get('/orders/:oid/add-items'
+  , m.getOrder2({
+    param:              'oid'
+  , items:              true
+  , user:               true
+  , userAddresses:      true
+  , userPaymentMethods: true
+  , restaurant:         true
+  , deliveryService:    true
+  })
+, controllers.orders.auth
+, m.restrict(['admin', 'order-owner', 'order-editor'])
+, controllers.restaurants.orders.get
+);
 
   app.get('/orders/:oid/notifications/:nid'
   , m.restrict(['admin'])

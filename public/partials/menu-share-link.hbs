@@ -4,7 +4,7 @@ The "Share Link" panel can be in one of these states:
   * Display Share Order button if token is missing
   * Share link URL view if token is present
 --}}
-<div class="menu-share-link {{#eq order.id "undefined"}}hide{{/eq}}">
+<div class="menu-share-link {{#unless order.id}}hide{{/unless}}">
   <div class="panel-title">Share order:</div>
   <section class="generate-token-view {{#if order.edit_token}}hide{{/if}}">
     <p class="description">Let others pick and choose their own items</p>

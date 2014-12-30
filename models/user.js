@@ -11,7 +11,13 @@ var logger = require('./logger').create('User');
 var table = 'users';
 
 var User = module.exports = Model.extend({
-  get isAdmin () {
+  isGuest: function(){
+    if ( !Array.isArray( this.attributes.groups ) ) return false;
+
+    return this.attributes.groups.indexOf('guest') > -1;
+  }
+
+, get isAdmin () {
     if ( !this.attributes ) return false;
     var groups = this.attributes.groups;
     return Array.isArray( groups ) && groups.indexOf('admin') > -1;

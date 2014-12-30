@@ -8,6 +8,18 @@ var auth    = require('../../lib/auth');
 var putils  = require('../../public/js/lib/utils');
 var venter  = require('../../lib/venter');
 
+function consumeGuestOrders( orders, userId, callback ){
+  var onOrder = function( order, next ){
+    db.orders.update( order.id, { user_id: userId }, next );
+  };
+
+  utils.async.each( orders, onOrder, callback );
+}
+
+function cleanupGuestOrders( req ){
+  delete req.session.guestOrders;
+}
+
 module.exports.index = function(req, res) {
   if (req.user && req.user.attributes.id != null){
     if ( req.user.attributes.groups.indexOf('restaurant') > -1 ){
@@ -154,11 +166,17 @@ module.exports.forgotPasswordCreate = function( req, res ){
 };
 
 module.exports.login = function ( req, res ){
+  var logger = req.logger.create('Controller-Auth.Login');
+
   if ( !req.body.email && !req.body.password ){
     return res.render('landing/login', {
       layout: 'landing/layout'
     });
   }
+
+  var onSuccess = function(){
+    return res.redirect( req.query.next || '/' );
+  };
 
   auth( req.body.email, req.body.password, function( error, user ){
     if ( error ){
@@ -185,7 +203,12 @@ module.exports.login = function ( req, res ){
       return res.redirect(req.query.next || '/restaurants/manage');
     }
 
-    return res.redirect( req.query.next || '/' );
+    if ( Array.isArray( req.session.guestOrders ) ){
+      venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
+      delete req.session.guestOrders;
+    }
+
+    res.redirect( req.query.next || '/' );
   });
 };
 
@@ -196,6 +219,10 @@ module.exports.signup = function( req, res ){
   , password:     req.body.password
   , organization: req.body.organization
   , groups:       ['client']
+  };
+
+  var onSuccess = function(){
+    return res.redirect('/restaurants');
   };
 
   new Models.User( data ).create( function( error, user ){
@@ -212,6 +239,11 @@ module.exports.signup = function( req, res ){
     }
 
     req.setSession( user.toJSON() );
+
+    if ( Array.isArray( req.session.guestOrders ) ){
+      venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
+      delete req.session.guestOrders;
+    }
 
     res.redirect('/restaurants');
   });
@@ -290,6 +322,11 @@ module.exports.register = function( req, res ){
     });
 
     req.setSession( user.toJSON() );
+
+    if ( Array.isArray( req.session.guestOrders ) ){
+      venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
+      delete req.session.guestOrders;
+    }
 
     res.redirect('/restaurants?signed_up=true');
 

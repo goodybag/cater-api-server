@@ -50,6 +50,19 @@ module.exports.auth = function(req, res, next) {
     req.order.isOwner = true;
   }
 
+  logger.info('checking guest status');
+  if ( req.user.isGuest() ){
+    logger.info('user is guest');
+    if ( Array.isArray( req.session.guestOrders ) ){
+      logger.info('guest orders is available');
+      if ( req.session.guestOrders.indexOf( req.order.id ) > -1 ){
+        logger.info('adding order-owner');
+        req.user.attributes.groups.push('order-owner');
+        req.order.isOwner = true;
+      }
+    }
+  }
+
   next();
 };
 
@@ -63,7 +76,6 @@ module.exports.editability = function(req, res, next) {
 
 module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Get');
-
   var order = req.order;
   var amenities = order.restaurant.amenities;
   var orderModel = new models.Order( order );
@@ -146,9 +158,23 @@ module.exports.get = function(req, res) {
 }
 
 module.exports.create = function(req, res) {
-  var order = new models.Order(utils.extend({user_id: req.user.attributes.id}, req.body));
+  var order = new models.Order(
+    utils.extend({
+      user_id: req.user.attributes.user ? req.user.attributes.user.id : null
+    }, req.body)
+  );
+  
   order.save(function(err) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+
+    if ( req.user.isGuest() ){
+      if ( !req.session.guestOrders ){
+        req.session.guestOrders = [];
+      }
+
+      req.session.guestOrders.push( order.attributes.id );
+    }
+
     res.send(201, order.toJSON());
   });
 }

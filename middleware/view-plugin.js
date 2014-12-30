@@ -46,8 +46,8 @@ viewPlugins.itemForm = {
 
       if ( typeof opt !== 'string' ) continue;
 
-      req.route.keys.forEach( function( key ){
-        opt = opt.replace( new RegExp( ':' + key.name, 'g' ), req.param( key.name ) )
+      Object.keys(req.params).forEach( function( key ){
+        opt = opt.replace( new RegExp( ':' + key, 'g' ), req.params[key] );
       });
 
       collectionOptions[ ok ] = opt;
@@ -61,8 +61,8 @@ viewPlugins.sidebarNav = {
   fn: function( options, req, res, done ){
     var url = options.baseUrl;
 
-    req.route.keys.forEach( function( key ){
-      url = url.replace( new RegExp( ':' + key.name, 'g' ), req.param( key.name ) )
+    Object.keys(req.params).forEach( function( key ){
+      url = url.replace( new RegExp( ':' + key, 'g' ), req.params[key] );
     });
 
     done( null, utils.extend( {}, options, { baseUrl: url } ) );

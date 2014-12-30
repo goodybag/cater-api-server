@@ -166,7 +166,7 @@ module.exports.forgotPasswordCreate = function( req, res ){
 };
 
 module.exports.login = function ( req, res ){
-  var logger = req.logger('Controller-Auth.Login');
+  var logger = req.logger.create('Controller-Auth.Login');
 
   if ( !req.body.email && !req.body.password ){
     return res.render('landing/login', {
@@ -203,8 +203,10 @@ module.exports.login = function ( req, res ){
       return res.redirect(req.query.next || '/restaurants/manage');
     }
 
-    if ( !Array.isArray( req.session.guestOrders ) || req.session.guestOrders.length === 0 ){
-      return onSuccess();
+    res.redirect( req.query.next || '/' );
+
+    if ( Array.isArray( req.session.guestOrders ) && req.session.guestOrders.length > 0 ){
+      venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
     }
 
     logger.info('Consuming guest orders', {

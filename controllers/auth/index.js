@@ -203,12 +203,12 @@ module.exports.login = function ( req, res ){
       return res.redirect(req.query.next || '/restaurants/manage');
     }
 
-    res.redirect( req.query.next || '/' );
-
     if ( Array.isArray( req.session.guestOrders ) ){
       venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
       delete req.session.guestOrders;
     }
+
+    res.redirect( req.query.next || '/' );
   });
 };
 
@@ -240,12 +240,12 @@ module.exports.signup = function( req, res ){
 
     req.setSession( user.toJSON() );
 
-    res.redirect('/restaurants');
-
     if ( Array.isArray( req.session.guestOrders ) ){
       venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
       delete req.session.guestOrders;
     }
+
+    res.redirect('/restaurants');
   });
 };
 
@@ -323,13 +323,13 @@ module.exports.register = function( req, res ){
 
     req.setSession( user.toJSON() );
 
-    res.redirect('/restaurants?signed_up=true');
-
-    venter.emit( 'user:registered', user );
-
     if ( Array.isArray( req.session.guestOrders ) ){
       venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
       delete req.session.guestOrders;
     }
+
+    res.redirect('/restaurants?signed_up=true');
+
+    venter.emit( 'user:registered', user );
   });
 };

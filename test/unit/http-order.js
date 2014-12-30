@@ -5,8 +5,9 @@ var http    = require('http');
 var app     = require('../../app');
 var db      = require('../../db');
 var utils   = require('../../utils');
+var config  = require('../../config');
 
-var SERVER_URL = 'http://localhost:3000';
+var SERVER_URL = config.baseUrl;
 
 console.log();
 console.log("**************! WARNING !**************");
@@ -75,11 +76,12 @@ describe('HTTP Server', function(){
             assert.equal( error, null );
             assert( !!user.id );
 
+            // Give some time for events to fire
             setTimeout( db.orders.findOne.bind( db.orders, order.id, function( error, order ){
               assert.equal( error, null );
               assert.equal( order.user_id, user.id );
               done();
-            }), 2000 );
+            }), 50 );
           });
         });
       });

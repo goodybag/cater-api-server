@@ -154,6 +154,7 @@ module.exports = function(grunt) {
           'public/components/select2/select2.css'
         , 'public/components/bootstrap/dist/css/bootstrap.min.css'
         , 'public/css/gb-icon.css'
+        , 'public/css/aleo.css'
         , 'public/css/proxima-nova.css'
         , 'public/components/pickadate/lib/themes/classic.css'
         , 'public/components/pickadate/lib/themes/classic.date.css'

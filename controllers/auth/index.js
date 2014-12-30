@@ -303,7 +303,7 @@ module.exports.register = function( req, res ){
     , error: { message: message }
     });
   }
-
+console.log('CREATING USER', data);
   new Models.User( data ).create( function( error, user ){
     if ( error ){
       if ( error.routine === '_bt_check_unique' ){
@@ -329,7 +329,7 @@ module.exports.register = function( req, res ){
     }
 
     res.redirect('/restaurants?signed_up=true');
-
+console.log('BOOM DONE');
     venter.emit( 'user:registered', user );
   });
 };

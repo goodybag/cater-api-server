@@ -253,33 +253,51 @@ utils.get = function(url, options, callback){
   request(options, callback);
 };
 
-utils.post = function(url, data, callback){
-  var options = {
+utils.post = function(url, data, options, callback){
+  if (typeof options === "function"){
+    callback = options;
+    options = {};
+  }
+
+  options = utils.extend({
     url: url
   , method: "POST"
   , json: true
   , form: data
-  };
+  }, options);
+
   request(options, callback);
 };
 
-utils.put = function(url, data, callback){
-  var options = {
+utils.put = function(url, data, options, callback){
+  if (typeof options === "function"){
+    callback = options;
+    options = {};
+  }
+
+  options = utils.extend({
     url: url
   , method: "PUT"
   , json: true
   , form: data
-  };
+  }, options);
+
   request(options, callback);
 };
 
-utils.patch = function(url, data, callback){
-  var options = {
+utils.patch = function(url, data, options, callback){
+  if (typeof options === "function"){
+    callback = options;
+    options = {};
+  }
+
+  options = utils.extend({
     url: url
   , method: "PATCH"
   , json: true
   , form: data
-  };
+  }, options);
+  
   request(options, callback);
 };
 

@@ -8,18 +8,6 @@ var auth    = require('../../lib/auth');
 var putils  = require('../../public/js/lib/utils');
 var venter  = require('../../lib/venter');
 
-function consumeGuestOrders( orders, userId, callback ){
-  var onOrder = function( order, next ){
-    db.orders.update( order.id, { user_id: userId }, next );
-  };
-
-  utils.async.each( orders, onOrder, callback );
-}
-
-function cleanupGuestOrders( req ){
-  delete req.session.guestOrders;
-}
-
 module.exports.index = function(req, res) {
   if (req.user && req.user.attributes.id != null){
     if ( req.user.attributes.groups.indexOf('restaurant') > -1 ){

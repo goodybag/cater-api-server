@@ -52,7 +52,7 @@ describe('HTTP Server', function(){
     it( 'should create an order without a user_id and transfer them when registered', function( done ){
       this.timeout(4000);
 
-      var jar = utils.jar();
+      var jar = utils.request.jar();
 
       var data = {
         restaurant_id: 25
@@ -92,7 +92,7 @@ describe('HTTP Server', function(){
     it( 'should create an order without a user_id and transfer them when user logs in', function( done ){
       this.timeout(4000);
 
-      var jar = utils.jar();
+      var jar = utils.request.jar();
 
       var userId = 11;
 

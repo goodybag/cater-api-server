@@ -52,6 +52,8 @@ describe('HTTP Server', function(){
     it( 'should create an order without a user_id and transfer them when registered', function( done ){
       this.timeout(4000);
 
+      var jar = utils.jar();
+
       var data = {
         restaurant_id: 25
       };
@@ -61,7 +63,7 @@ describe('HTTP Server', function(){
       , password: 'password'
       };
 
-      utils.post( SERVER_URL + '/orders', data, { jar: true }, function( error, res, order ){
+      utils.post( SERVER_URL + '/orders', data, { jar: jar }, function( error, res, order ){
         assert.equal( error, null );
         assert.equal( typeof order, 'object' );
         assert.notEqual( order.id, null );
@@ -69,7 +71,7 @@ describe('HTTP Server', function(){
         assert( order.id > 0 );
         assert.equal( order.user_id, null );
 
-        utils.post( SERVER_URL + '/join', udata, { jar: true }, function( error ){
+        utils.post( SERVER_URL + '/join', udata, { jar: jar }, function( error ){
           assert.equal( error, null );
 
           db.users.findOne( {}, { order: 'id desc' }, function( error, user ){
@@ -83,6 +85,43 @@ describe('HTTP Server', function(){
               done();
             }), 50 );
           });
+        });
+      });
+    });
+
+    it( 'should create an order without a user_id and transfer them when user logs in', function( done ){
+      this.timeout(4000);
+
+      var jar = utils.jar();
+
+      var userId = 11;
+
+      var data = {
+        restaurant_id: 25
+      };
+
+      var udata = {
+        email: utils.getTestEmail( userId )
+      , password: 'password'
+      };
+
+      utils.post( SERVER_URL + '/orders', data, { jar: jar }, function( error, res, order ){
+        assert.equal( error, null );
+        assert.equal( typeof order, 'object' );
+        assert.notEqual( order.id, null );
+        assert.notEqual( order.id, undefined );
+        assert( order.id > 0 );
+        assert.equal( order.user_id, null );
+
+        utils.post( SERVER_URL + '/login', udata, { jar: jar }, function( error ){
+          assert.equal( error, null );
+
+          // Give some time for events to fire
+          setTimeout( db.orders.findOne.bind( db.orders, order.id, function( error, order ){
+            assert.equal( error, null );
+            assert.equal( order.user_id, userId );
+            done();
+          }), 50 );
         });
       });
     });

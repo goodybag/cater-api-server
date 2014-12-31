@@ -72,7 +72,6 @@ module.exports.register = function(app) {
    */
 
   app.get('/restaurants'
-  , m.restrict(['client', 'restaurant', 'admin'])
   , controllers.restaurants.list
   );
 
@@ -99,7 +98,6 @@ module.exports.register = function(app) {
       then: m.editOrderAuth
     , else: m.noop()
     })
-  , m.restrict(['client', 'admin', 'order-owner', 'order-editor'])
   , controllers.restaurants.get
   );
 

@@ -14,14 +14,6 @@ define(function(require){
           }
         });
 
-        $('#section-restaurants .btn-call-to-action').click( function( e ){
-          e.preventDefault();
-
-          $('body').animate({ scrollTop: 0 }, function(){
-            $('#register-email').focus();
-          });
-        });
-
         analytics.page('Landing');
       });
     }

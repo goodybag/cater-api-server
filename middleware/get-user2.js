@@ -36,7 +36,9 @@ module.exports = function( options ){
       if ( error ) return next( error );
 
       if ( !req.session || !req.session.user || req.session.user.id == null ){
-        req.user = new Models.User({ groups: ['guest'], name: 'Guest' });
+        req.user = new Models.User(
+          utils.extend( { groups: ['guest'], name: 'Guest' }, req.session.user )
+        );
       } else {
         req.user = req.session.user;
         req.session.user = { id: req.user.id };

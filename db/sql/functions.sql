@@ -4,6 +4,14 @@
 -- Event Handlers --
 --------------------
 
+create or replace function on_restaurant_name_change()
+returns trigger as $$
+begin
+  update_restaurant_text_id( NEW.id, NEW.name );
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function restaurant_locations_is_default_change()
 returns trigger as $$
 begin

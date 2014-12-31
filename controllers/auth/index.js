@@ -7,6 +7,7 @@ var queries = require('../../db/queries');
 var auth    = require('../../lib/auth');
 var putils  = require('../../public/js/lib/utils');
 var venter  = require('../../lib/venter');
+var Models  = require('../../models');
 
 module.exports.index = function(req, res) {
   if (req.user && req.user.attributes.id != null){
@@ -185,14 +186,14 @@ module.exports.login = function ( req, res ){
       });
     }
 
-    req.session.user = user;
+    req.session.user = { id: user.id };
 
     if ( user.groups.indexOf('restaurant') > -1 ){
       return res.redirect(req.query.next || '/restaurants/manage');
     }
 
     if ( Array.isArray( req.session.guestOrders ) ){
-      venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
+      venter.emit('auth-with-guest-orders', new Models.User( user ), req.session.guestOrders );
       delete req.session.guestOrders;
     }
 

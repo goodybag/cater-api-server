@@ -11,7 +11,7 @@ var SERVER_URL = config.baseUrl;
 
 console.log();
 console.log("**************! WARNING !**************");
-console.log("** These tests require your DEV MOD  **");
+console.log("** These tests require your DEV MODE **");
 console.log("** webserver to be running. See      **");
 console.log("** comments for further explanation  **");
 console.log("** Thank you for your understanding. **");

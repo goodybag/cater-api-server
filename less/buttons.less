@@ -127,12 +127,12 @@
 }
 
 // middle btns
-.btn-group > .btn:not(:nth-of-type(1)):not(:last-child) {
+.btn-group > .btn:not(:nth-of-type(1)):not(:nth-last-of-type(1)) {
   border-radius: 0;
 }
 
 // last button
-.btn-group > .btn:last-child:not(:first-child) {
+.btn-group > .btn:nth-last-of-type(1):not(:nth-of-type(1)) {
   border-radius: @border-radius-base;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -163,7 +163,7 @@
   }
 
   // Last button
-  .btn-group > .btn:last-child:not(:first-child) {
+  .btn-group > .btn:nth-last-of-type(1):not(:nth-of-type(1)) {
     border-radius: @border-radius-base;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

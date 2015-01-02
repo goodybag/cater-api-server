@@ -1,0 +1,69 @@
+<!-- Zip -->
+<div class="form-group">
+  <input
+    list="zips"
+    type="text"
+    class="form-control form-control-zip"
+    name="zip"
+    placeholder="zip"
+    maxlength="5"
+    value="{{#if search.zip}}{{search.zip}}{{else}}{{order.zip}}{{/if}}"
+  />
+
+  <datalist id="zips">
+    {{#if order}}
+    {{#if defaultAddress }}
+    <option value="{{defaultAddress.zip}}">Your Default Address</option>
+    {{/if}}
+    {{#each order.restaurant.delivery_zip_groups}}
+      {{#each this.zips}}
+        <option value="{{this}}">
+      {{/each}}
+    {{/each}}
+    {{/order}}
+  </datalist>
+</div>
+
+<!-- Date -->
+<div class="form-group">
+  <input
+    type="text"
+    class="form-control"
+    name="date"
+    placeholder="delivery date"
+    maxlength="10"
+    value="{{#if search}}{{formatDateTime search.date}}{{/if}}"
+  />
+</div>
+
+<!-- Time -->
+<div class="form-group">
+  <input
+    type="text"
+    class="form-control form-control-time"
+    name="time-range"
+    placeholder="delivery time"
+    value="{{#if search.time}}{{join (timeToRange (formatTime search.time "h:mm A") "h:mm A") " - "}}{{/if}}"
+    disabled="true"
+  />
+  <input
+    type="text"
+    class="form-control form-control-time"
+    name="time"
+    placeholder="delivery time"
+    maxlength="8"
+    value="{{#if search}}{{formatTime search.time}}{{/if}}"
+  />
+</div>
+
+<!-- Guests -->
+<div class="form-group">
+  <input
+    type="text"
+    class="form-control form-control-guests"
+    name="guests"
+    placeholder="guests"
+    maxlength="4"
+    value="{{#if search}}{{search.guests}}{{/if}}"
+  />
+</div>

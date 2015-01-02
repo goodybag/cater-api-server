@@ -23,6 +23,12 @@ var User = module.exports = Model.extend({
     return Array.isArray( groups ) && groups.indexOf('admin') > -1;
   }
 
+, isRestaurant: function(rid) {
+    if ( !this.attributes ) return false;
+    return utils.contains(this.attributes.groups, 'restaurant') &&
+           utils.contains(this.attributes.restaurant_ids, rid);
+  }
+
 , createPaymentMethod: function( pm, callback, client ){
     User.createPaymentMethod( this.attributes.id, pm, callback, client );
     return this;

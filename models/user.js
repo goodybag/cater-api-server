@@ -17,7 +17,7 @@ var User = module.exports = Model.extend({
     return this.attributes.groups.indexOf('guest') > -1;
   }
 
-, get isAdmin () {
+, isAdmin: function() {
     if ( !this.attributes ) return false;
     var groups = this.attributes.groups;
     return Array.isArray( groups ) && groups.indexOf('admin') > -1;

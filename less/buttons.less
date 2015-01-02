@@ -119,16 +119,15 @@
   background-color: @palette-gray;
 }
 
+.btn-group > .btn {
+  border-radius: 0;
+}
+
 // first button
 .btn-group > .btn:nth-of-type(1) {
   border-radius: @border-radius-base;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-}
-
-// middle btns
-.btn-group > .btn:not(:nth-of-type(1)):not(:nth-last-of-type(1)) {
-  border-radius: 0;
 }
 
 // last button

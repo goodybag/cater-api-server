@@ -201,7 +201,7 @@
 
 <section class="page-section" id="section-radio-btns">
   <div class="container">
-    <h2 class="component-title">Radio Buttons!</h2>
+    <h2 class="component-title">Radio Buttons</h2>
     <p>Demo</p>
     <div class="btn-group">
       <input type="radio" name="opts" id="popular">
@@ -219,6 +219,23 @@
       <input type="radio" name="opts" id="order_min">
       <label class="btn" for="order_min">Order Minimum</label>
     </div>
+    <p>Markup</p>
+<code class="language-markup">{{#raw}}<div class="btn-group">
+  <input type="radio" name="opts" id="popular">
+  <label class="btn" for="popular">Popular</label>
+
+  <input type="radio" name="opts" id="ascending">
+  <label class="btn" for="ascending">A-Z</label>
+
+  <input type="radio" name="opts" id="price">
+  <label class="btn" for="price">Price</label>
+
+  <input type="radio" name="opts" id="delivery_fee">
+  <label class="btn" for="delivery_fee">Delivery Fee</label>
+
+  <input type="radio" name="opts" id="order_min">
+  <label class="btn" for="order_min">Order Minimum</label>
+</div>{{/raw}}</code>
   </div>
 </section>
 

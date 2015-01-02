@@ -100,6 +100,10 @@
 // Button Groups
 //////////////
 
+.btn-group {
+  .clearfix;
+}
+
 .btn-group > .btn {
   display: block;
   color: @palette-black;
@@ -124,21 +128,21 @@
 }
 
 // first button
-.btn-group > .btn:nth-of-type(1) {
+.btn-group > .btn:first-of-type:not(:last-of-type) {
   border-radius: @border-radius-base;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
 // last button
-.btn-group > .btn:nth-last-of-type(1):not(:nth-of-type(1)) {
+.btn-group > .btn:last-of-type:not(:first-of-type) {
   border-radius: @border-radius-base;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
 
 // tail
-.btn-group input[type="radio"]:not(:nth-of-type(1)) + label{
+.btn-group > .btn:first-of-type ~ .btn {
   margin-top: -1px;
 }
 
@@ -155,21 +159,21 @@
   }
 
   // First button
-  .btn-group > .btn:nth-of-type(1) {
+  .btn-group > .btn:first-of-type:not(:last-of-type) {
     border-radius: @border-radius-base;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
 
   // Last button
-  .btn-group > .btn:nth-last-of-type(1):not(:nth-of-type(1)) {
+  .btn-group > .btn:last-of-type:not(:first-of-type) {
     border-radius: @border-radius-base;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
 
   // Tail
-  .btn-group input[type="radio"]:not(:nth-of-type(1)) + label{
+  .btn-group > .btn:first-of-type ~ .btn {
     margin-top: 0;
     margin-left: -1px;
   }

@@ -1,5 +1,4 @@
 var utils   = require('../../utils');
-var db      = require('../../db');
 var Models  = require('../../models');
 var assert = require('assert');
 

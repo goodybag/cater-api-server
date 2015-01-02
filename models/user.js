@@ -159,6 +159,11 @@ var User = module.exports = Model.extend({
 
       callback( null, this_ );
     });
+  },
+
+  toJSON: function() {
+    this.attributes.isAdmin = this.isAdmin();
+    return Model.prototype.toJSON.call(this);
   }
 }, {
   table: table

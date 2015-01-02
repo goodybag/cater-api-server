@@ -63,7 +63,7 @@ define(function(require, exports, module) {
           />
           <SearchResults
             orders={this.state.orders}
-            searchText={this.state.searchText} 
+            searchText={this.state.searchText}
           />
         </div>
       );
@@ -128,13 +128,14 @@ define(function(require, exports, module) {
       var datetime = Handlebars.helpers.calendar( this.props.order.datetime );
       var total = Handlebars.helpers.dollars( this.props.order.total );
       var classString = 'search-row list-group-item';
-      var orgString = this.props.order.user.organization ?
+      var orgString = this.props.order.user && this.props.order.user.organization ?
                         '(' + this.props.order.user.organization +')' : '';
+      var userName = this.props.order.user ? this.props.order.user.name : 'N/A';
       return (
         <div className={classString} onClick={this.handleClick}>
           <a href={orderUrl}>
             <div><strong>#{this.props.order.id}</strong> {datetime} for ${total}</div>
-            <div>{this.props.order.restaurant.name} to {this.props.order.user.name} {orgString}</div>
+            <div>{this.props.order.restaurant.name} to {userName} {orgString}</div>
           </a>
         </div>
       );

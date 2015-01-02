@@ -11,6 +11,8 @@ module.exports = function( options ){
   });
 
   return function( req, res, next ){
+    var logger = req.logger.create('SetGuestRegion');
+
     if ( !req.user.isGuest() ){
       return next();
     }
@@ -19,8 +21,18 @@ module.exports = function( options ){
       return next();
     }
 
-    req.user.attributes.region_id = utils.find( req.regions, function( region ){
+    var region = utils.find( req.regions, function( region ){
       region.zips.indexOf( req.session.orderParams.zip ) > -1;
-    });
+    })[0];
+
+    if ( region ){
+      logger.info('Setting guest region', {
+        region: region
+      });
+
+      req.user.attributes.region_id = region.id;
+    }
+
+    return next();
   };
 };

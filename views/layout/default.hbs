@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Goodybag Catering CSS Stuff -->
-  <link rel="stylesheet" href="{{cdn (format '/dist/<%= version %>/css/admin.css' pkg)}}">
+  <link rel="stylesheet" href="{{cdn (format '/dist/<%= version %>/css/core-goodybag.css' pkg)}}">
 
   {{{block "css"}}}
 
@@ -23,7 +23,7 @@
   </div>
 
   {{#unless config.isDev}}
-  <script src="{{cdn (format 'dist/<%= version %>/admin.js' pkg)}}"></script>
+  <script src="{{cdn (format 'dist/<%= version %>/goodybag.js' pkg)}}"></script>
   {{else}}
   <script src="/components/requirejs/require.js"></script>
   <script src="/js/require-config.js"></script>

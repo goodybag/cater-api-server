@@ -7,7 +7,7 @@ var utils = require('../utils');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
-
+    field: 'orderParams'
   });
 
   return function( req, res, next ){
@@ -17,12 +17,12 @@ module.exports = function( options ){
       return next();
     }
 
-    if ( !req.session.orderParams || !req.session.orderParams.zip ){
+    if ( !req.session[ options.field ] || !req.session[ options.field ].zip ){
       return next();
     }
 
     var region = utils.find( req.regions, function( region ){
-      region.zips.indexOf( req.session.orderParams.zip ) > -1;
+      region.zips.indexOf( req.session[ options.field ].zip ) > -1;
     })[0];
 
     if ( region ){

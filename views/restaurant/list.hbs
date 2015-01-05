@@ -1,10 +1,27 @@
 {{#extend "page"}}page-home{{/extend}}
 
 {{#extend "body"}}
-<div class="container" id="main-container">
-  <h1>restaurant list</h1>
-
+<div class="search-restaurants">
+  {{!-- Find catering for: [ Zip ] [ Delivery date ] [ Delivery Time ] [ Guests ] <button>Search</button> --}}
+  {{> restaurant_search_form }}
 </div>
+
+  <div class="search-advanced">
+    Show all search tools &or;
+  </div>
+
+  <div class="list-options">
+    <div class="list-tags">{{!-- show currently applied filters here --}}</div>
+    <div class="list-sort">Sort by: [Popular|A-Z|Price|Delivery fee|Order minimum]</div>
+  </div>
+
+  <div class="restaurant-list">
+    <div>888 Mini Cafe</div>
+    <div>All Star Burger</div>
+    <div>A-OK Chinese</div>
+    {{!-- foreach restaurant --}}
+      {{!-- restaurant tile --}}
+  </div>
 {{/extend}}
 
 {{#extend "scripts"}}

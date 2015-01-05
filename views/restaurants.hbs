@@ -112,7 +112,7 @@
   });
 
   require(['app/pages/restaurant-list', 'data/restaurants', 'data/all-restaurants'], function( page, restaurants, allRestaurants ){
-    page.init({ restaurants: restaurants, userId: {{{ user.id }}}, allRestaurants: allRestaurants });
+    page.init({ restaurants: restaurants, allRestaurants: allRestaurants });
   });
 </script>
 {{/extend}}

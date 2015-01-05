@@ -72,6 +72,9 @@ module.exports.register = function(app) {
    */
 
   app.get('/restaurants'
+  // , m.view('restaurants', db.restaurants, {
+  //     method: 'find'
+  //   })
   , controllers.restaurants.list
   );
 

@@ -1,0 +1,57 @@
+@diet-tag-size: 25px;
+
+.diet-tag {
+  display: inline-block;
+  vertical-align: bottom;
+  width: @diet-tag-size;
+  line-height: @diet-tag-size;
+  border-radius: @diet-tag-size;
+  font-size: 14px;
+  font-family: 'Proxima Nova';
+  font-weight: 800;
+  text-align: center;
+  color: @palette-white;
+}
+
+.diet-tag-gluten-free {
+  background-color: #FF5B4B;
+  &:before { content: 'GF'; }
+}
+
+.diet-tag-vegan {
+  background-color: #02BE9E;
+  font-size: 13px;
+  &:before { content: 'Veg'; }
+}
+
+.diet-tag-vegetarian {
+  background-color: #7f7b1e;
+  font-size: 18px;
+  &:before { content: 'V'; }
+}
+
+.diet-tag-kosher {
+  background-color: #81C05F;
+  font-size: 18px;
+  &:before { content: 'K'; }
+}
+
+.diet-tag-halal {
+  background-color: #b52a48;
+  font-size: 18px;
+  &:before { content: 'H'; }
+}
+
+.diet-tag-dairy-free {
+  background-color: #6cddcb;
+  &:before { content: 'DF'; }
+}
+
+.diet-tag-nuts {
+  background: url('../img/07_nuts.svg');
+  background-size: 20px 20px;
+}
+.diet-tag-spicy {
+  background: url('../img/08_spicy.svg');
+  background-size: 20px 20px;
+}

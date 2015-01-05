@@ -12,8 +12,8 @@ module.exports = function( _url, options ){
   return function( req, res, next ){
     var url = _url;
 
-    req.route.keys.forEach( function( key ){
-      url = url.replace( new RegExp( ':' + key.name, 'g' ), req.param( key.name ) )
+    Object.keys(req.params).forEach( function( key ){
+      url = url.replace( new RegExp( ':' + key, 'g' ), req.params[key] );
     });
 
     res.redirect( url );

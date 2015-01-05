@@ -69,6 +69,13 @@ utils.balanced = new Balanced({
 , secret: config.balanced.secret
 });
 
+utils.getTestEmail = function( id ){
+  var email = config.testEmail.split('@');
+  email[0] += '+' + id;
+  if ( local.emailSalt ) email[0] += local.emailSalt;
+  return email.join('@');
+};
+
 utils.editAllKeys = function( obj, fn ){
   var val, newKey;
 
@@ -123,11 +130,7 @@ utils.test.json = {};
 });
 
 utils.test.loginAsUserId = function( id, callback ){
-  var email = config.testEmail.split('@');
-  email[0] += '+' + id;
-  if ( local.emailSalt ) email[0] += local.emailSalt;
-  email = email.join('@');
-  return utils.test.login( email, 'password', callback );
+  return utils.test.login( utils.getTestEmail(), 'password', callback );
 };
 
 utils.test.login = function( user, password, callback ){

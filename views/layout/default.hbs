@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>[Admin] Goodybag{{{block "html-title"}}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Goodybag Catering CSS Stuff -->
+  <link rel="stylesheet" href="{{cdn (format '/dist/<%= version %>/css/core-goodybag.css' pkg)}}">
+
+  {{{block "css"}}}
+
+  <!--[if lte IE 9]>
+  <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
+  <![endif]-->
+</head>
+<body class="page {{{block "page"}}}">
+  {{> admin_navbar}}
+
+  {{{block "banner"}}}
+
+  <div id="main">
+    {{{block "body"}}}
+  </div>
+
+  {{#unless config.isDev}}
+  <script src="{{cdn (format 'dist/<%= version %>/goodybag.js' pkg)}}"></script>
+  {{else}}
+  <script src="/components/requirejs/require.js"></script>
+  <script src="/js/require-config.js"></script>
+  {{/unless}}
+
+  <script>
+  require( ['config'], function( config ){
+    config.cdn = { baseUrl: '{{{config.cdn.baseUrl}}}' };
+  });
+  </script>
+
+  {{{block "views"}}}
+  {{{block "bootstrap"}}}
+  {{{block "scripts"}}}
+</body>
+</html>

@@ -16,6 +16,7 @@ define(function(require, exports, module) {
   require('jquery.modern-modal');
   require('el-toggler').auto();
   require('jquery.popover');
+  require('jquery.collapsible');
 
   $(function(){
     $('input, textarea').placeholder();

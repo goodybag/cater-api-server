@@ -95,3 +95,86 @@
     padding-right: @btn-padding-right-small - 10;
   }
 }
+
+//////////////
+// Button Groups
+//////////////
+
+.btn-group {
+  .clearfix;
+}
+
+.btn-group > .btn {
+  display: block;
+  color: @palette-black;
+  border: 1px solid @palette-dark-gray;
+  &:active {
+    bottom: 0;
+    margin-bottom: 0;
+  }
+}
+
+.btn-group > input[type="radio"] {
+  display: none;
+}
+
+.btn-group > .btn:hover {
+  cursor: pointer;
+  background-color: @palette-gray;
+}
+
+.btn-group > .btn {
+  border-radius: 0;
+}
+
+// first button
+.btn-group > .btn:first-of-type:not(:last-of-type) {
+  border-radius: @border-radius-base;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+// last button
+.btn-group > .btn:last-of-type:not(:first-of-type) {
+  border-radius: @border-radius-base;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+// tail
+.btn-group > .btn:first-of-type ~ .btn {
+  margin-top: -1px;
+}
+
+// selected radio
+.btn-group > input[type="radio"]:checked + .btn {
+  background-color: @palette-gray;
+}
+
+
+@media (min-width: @breakpoint-tablet) {
+  .btn-group > .btn {
+    position: relative;
+    float: left;
+  }
+
+  // First button
+  .btn-group > .btn:first-of-type:not(:last-of-type) {
+    border-radius: @border-radius-base;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  // Last button
+  .btn-group > .btn:last-of-type:not(:first-of-type) {
+    border-radius: @border-radius-base;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  // Tail
+  .btn-group > .btn:first-of-type ~ .btn {
+    margin-top: 0;
+    margin-left: -1px;
+  }
+}

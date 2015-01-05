@@ -126,21 +126,22 @@ module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-Get');
   logger.info('getting restaurant %s', req.params.rid);
 
-  var order;
   var orderParams = req.query || {};
 
   var userId = req.creatorId || req.user.attributes.id;
   var tasks = [
     function(callback) {
-      if ( req.order ){
-        return callback( null, new models.Order( req.order ) );
-      }
+      var order;
 
-      order = new models.Order({
-        restaurant_id:  req.params.rid
-      , user_id:        userId
-      , adjustment:     { description: null, amount: null }
-      });
+      if ( req.order ){
+        order = new models.Order( req.order );
+      } else {
+        order = new models.Order({
+          restaurant_id:  req.params.rid
+        , user_id:        userId
+        , adjustment:     { description: null, amount: null }
+        });
+      }
 
       return order.getRestaurant( function( error ){
         callback( error, order );

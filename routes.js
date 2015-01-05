@@ -72,9 +72,6 @@ module.exports.register = function(app) {
    */
 
   app.get('/restaurants'
-  // , m.view('restaurants', db.restaurants, {
-  //     method: 'find'
-  //   })
   , controllers.restaurants.list
   );
 
@@ -917,7 +914,6 @@ module.exports.register = function(app) {
   );
 
   app.patch('/orders/:oid'
-  , m.restrict(['client', 'order-restaurant', 'admin'])
   , m.getOrder2({
       param:              'oid'
     , items:              true
@@ -928,14 +924,29 @@ module.exports.register = function(app) {
     , deliveryService:    true
     })
   , controllers.orders.auth
+  , m.restrict(['order-owner', 'order-restaurant', 'admin'])
   , controllers.orders.editability
   , controllers.orders.update
   );
 
-  app.delete('/orders/:oid', m.restrict(['client', 'admin']), function(req, res, next) {
-    req.body = {status: 'canceled'};
-    next();
-  }, controllers.orders.changeStatus);
+  app.delete('/orders/:oid'
+  , m.getOrder2({
+      param:              'oid'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'order-restaurant', 'admin'])
+  , function(req, res, next) {
+      req.body = {status: 'canceled'};
+      next();
+    }
+  , controllers.orders.changeStatus
+  );
 
   app.all('/orders/:oid', m.restrict(['client', 'restaurant', 'admin']), function(req, res, next) {
     res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');

@@ -132,24 +132,18 @@ module.exports.get = function(req, res) {
   var userId = req.creatorId || req.user.attributes.id;
   var tasks = [
     function(callback) {
-      if ( !req.order ){
-        order = new models.Order({
-          restaurant_id:  req.params.rid
-        , user_id:        userId
-        , adjustment:     { description: null, amount: null }
-        });
-
-        return order.getRestaurant( function( error ){
-          console.log( 'returning', order.toJSON() );
-          callback( error, order );
-        });
+      if ( req.order ){
+        return callback( null, new models.Order( req.order ) );
       }
 
-      models.Order.findOne(req.order.id, function(err, order) {
-        if (err) return callback(err);
-        order.getOrderItems(function(err, items) {
-          callback(err, order);
-        });
+      order = new models.Order({
+        restaurant_id:  req.params.rid
+      , user_id:        userId
+      , adjustment:     { description: null, amount: null }
+      });
+
+      return order.getRestaurant( function( error ){
+        callback( error, order );
       });
     },
 

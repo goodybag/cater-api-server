@@ -12,9 +12,9 @@ END;
 $$ language plpgsql STABLE;
 
 create or replace function str_to_slug( str text )
-return text as $$
+returns text as $$
 begin
-  str := replace( lower( str ), ' ', '-' )
+  str := replace( lower( str ), ' ', '-' );
   return regexp_replace( str, E'[^\\w -]', '', 'g' );
 end;
 $$ language plpgsql;

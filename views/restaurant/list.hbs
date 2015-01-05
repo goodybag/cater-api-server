@@ -1,19 +1,20 @@
-{{#extend "page"}}page-home{{/extend}}
+{{#extend "page"}}page-restaurant-list{{/extend}}
 
 {{#extend "body"}}
 <div class="search-restaurants">
-  {{!-- Find catering for: [ Zip ] [ Delivery date ] [ Delivery Time ] [ Guests ] <button>Search</button> --}}
   {{> restaurant_search_form }}
 </div>
 
-  <div class="search-advanced">
-    Show all search tools &or;
-  </div>
+<div class="search-restaurants search-advanced">
+  {{> restaurant_search_advanced }}
+</div>
 
-  <div class="list-options">
-    <div class="list-tags">{{!-- show currently applied filters here --}}</div>
-    <div class="list-sort">Sort by: [Popular|A-Z|Price|Delivery fee|Order minimum]</div>
+<div class="list-options">
+  <div class="container">
+    {{> restaurant_list_tags }}
+    {{> restaurant_list_sort }}
   </div>
+</div>
 
   <div class="restaurant-list">
     <div>888 Mini Cafe</div>

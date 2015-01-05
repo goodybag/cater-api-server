@@ -87,6 +87,14 @@ module.exports.get = function(req, res) {
     && (req.query.review_token === order.review_token || req.order.isRestaurantManager)
   ;
 
+  // Require guests to signup
+  if ( req.user.isGuest() ){
+    return res.redirect( '/join' + utils.queryParams({
+      next: '/orders/' + req.order.id
+    , fromGuestOrder: true
+    }));
+  }
+
   utils.async.waterfall([
     // Can't yet rely on order.restaurant to have all of the right info
     // in the legacy formats

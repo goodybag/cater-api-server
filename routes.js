@@ -1223,9 +1223,9 @@ module.exports.register = function(app) {
 
 
   // For the order params
-  app.get('/session/order-params', m.restrict(['client', 'admin']), controllers.session.getOrderParams);
+  app.get('/session/order-params', controllers.session.getOrderParams);
 
-  app.put('/session/order-params', m.restrict(['client', 'admin']), controllers.session.updateOrderParams);
+  app.put('/session/order-params', controllers.session.updateOrderParams);
 
   /**
    *  Users resource.  All the users.

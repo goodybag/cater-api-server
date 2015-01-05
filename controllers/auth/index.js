@@ -241,6 +241,7 @@ module.exports.signup = function( req, res ){
 module.exports.registerView = function( req, res ){
   res.render( 'landing/register', {
     layout: 'landing/layout'
+  , fromGuestOrder: req.param('fromGuestOrder')
   });
 };
 
@@ -317,7 +318,7 @@ module.exports.register = function( req, res ){
       delete req.session.guestOrders;
     }
 
-    res.redirect('/restaurants?signed_up=true');
+    res.redirect( req.param('next') || '/restaurants?signed_up=true' );
 
     venter.emit( 'user:registered', user );
   });

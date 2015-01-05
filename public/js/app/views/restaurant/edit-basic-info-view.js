@@ -27,6 +27,7 @@ define(function(require, exports, module) {
     , delivery_service_order_amount_threshold:  '[name="delivery_service_order_amount_threshold"]'
     , has_contract:                             '[name="has_contract"]'
     , no_contract_fee:                          '[name="no_contract_fee"]'
+    , list_photo_url:                           '[name="list_photo_url"]'
     },
 
     fieldGetters: _.extend({

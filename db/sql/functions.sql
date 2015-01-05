@@ -7,7 +7,7 @@
 create or replace function on_restaurant_name_change()
 returns trigger as $$
 begin
-  perform update_restaurant_text_id( NEW.id, NEW.name );
+  perform update_restaurant_text_id( NEW.id, str_to_slug( NEW.name ) );
   return NEW;
 end;
 $$ language plpgsql;
@@ -371,22 +371,32 @@ begin
 end;
 $$ language plpgsql;
 
-create or replace function update_restaurant_text_id( rid int, name text )
+create or replace function update_restaurant_text_id( rid int, new_text_id text )
 returns void as $$
-  declare new_text_id text;
   declare num_existing int;
 begin
-  new_text_id := str_to_slug( name );
+  perform update_restaurant_text_id( rid, new_text_id, 0 );
+end;
+$$ language plpgsql;
+
+create or replace function update_restaurant_text_id( rid int, new_text_id text, idx int )
+returns void as $$
+  declare modified_text_id text;
+  declare num_existing int;
+begin
+  modified_text_id := new_text_id;
+
+  if idx > 0 then
+    new_text_id := new_text_id || '-' || num_existing;
+  end if;
 
   select count(*) into num_existing
   from restaurants where text_id = new_text_id;
 
-  if num_existing > 0 then
-    update restaurants set text_id = new_text_id
-    where id = rid;
+  if num_existing = 0 then
+    update restaurants set text_id = modified_text_id where id = rid;
   else
-    update restaurants set text_id = new_text_id || '_' || num_existing
-    where id = rid;
+    perform update_restaurant_text_id( rid, new_text_id, idx + 1 );
   end if;
 end;
 $$ language plpgsql;

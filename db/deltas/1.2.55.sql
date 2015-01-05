@@ -2,6 +2,7 @@
 
 DO $$
   declare version       text := '1.2.55';
+  declare r             restaurants;
 begin
   raise notice '## Running Delta v% ##', version;
 
@@ -9,4 +10,9 @@ begin
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
   perform add_column( 'restaurants', 'list_photo_url', 'text' );
+
+  -- update existing restaurants
+  for r in ( select * from restaurants ) loop
+    perform update_restaurant_text_id( r.id, str_to_slug( r.name ) );
+  end loop;
 end$$;

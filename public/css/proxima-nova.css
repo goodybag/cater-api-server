@@ -1,3 +1,12 @@
+/* Condensed Bold */
+@font-face {
+  font-family: 'Proxima Nova';
+  src: url('/font/proxima-nova/ProximaNovaExtraCondensedBold.otf') format('opentype');
+  font-weight: 800;
+  font-stretch: condensed;
+  font-style: normal;
+}
+
 /* Light */
 @font-face {
   font-family: 'Proxima Nova';

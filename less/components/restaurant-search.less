@@ -3,7 +3,34 @@
 //////////////////////////////
 
 .restaurant-search {
-  .main-fields {
+
+  &.with-labels {
+    ::-webkit-input-placeholder {
+       opacity: 0;
+    }
     
+    :-moz-placeholder {
+       opacity: 0;
+    }
+    
+    ::-moz-placeholder {
+       opacity: 0;
+    }
+    
+    :-ms-input-placeholder {
+       opacity: 0;
+    }
+
+    label {
+      display: block;
+    }
+  }
+
+  label {
+    display: none;
+  }
+
+  [name="time-range"] {
+    position: absolute;
   }
 }

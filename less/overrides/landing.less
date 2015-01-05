@@ -16,6 +16,9 @@
 .page-home {
 
   #intro {
+    // So pickadate can overflow
+    overflow: auto;
+
     background-position-x: 25%;
 
     @media screen and ( max-width: @container-width ){
@@ -36,12 +39,12 @@
       }
     }
 
-    .register-panel {
+    .restaurant-search-panel {
       #grid > .column(4);
       box-shadow: 0 0 20px rgba( 0, 0, 0, 0.15 );
     }
 
-    .register-form .btn-submit {
+    .restaurant-search .btn-submit {
       width: 100%;
     }
 

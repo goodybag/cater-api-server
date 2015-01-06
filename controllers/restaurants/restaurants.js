@@ -129,6 +129,7 @@ module.exports.get = function(req, res) {
     function(callback) {
       if ( !req.order ){
         order = new models.Order({
+          // HOW DO GET RID WHEN USING TEXT_ID???
           restaurant_id:  req.params.rid
         , user_id:        userId
         , adjustment:     { description: null, amount: null }

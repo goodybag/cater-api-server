@@ -79,6 +79,7 @@ module.exports.register = function(app) {
 
   app.get('/restaurants2'
   , m.restrict(['admin'])
+  , m.getRestaurants()
   , m.view( 'restaurant/list', { layout: 'layout/default' } )
   );
 

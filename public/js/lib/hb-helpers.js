@@ -373,6 +373,11 @@ define(function(require, exports, module) {
       return n.length >= width ? n : new Array( width - n.length + 1 ).join(z) + n;
     },
 
+    join: function(list, delimiter) {
+      if ( !Array.isArray(list) ) return list;
+      return list.join(delimiter || ',');
+    },
+
     queryParams: function( obj ){
       var params = obj || {};
       var rest = Array.prototype.slice.call( arguments, 1 );

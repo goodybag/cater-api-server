@@ -17,9 +17,23 @@
 </div>
 
   <div class="restaurant-list">
-    <div>888 Mini Cafe</div>
-    <div>All Star Burger</div>
-    <div>A-OK Chinese</div>
+    <div class="container">
+    {{#each restaurants }}
+      <div class="tile">
+        <div class="tile-cover" style="background-image: url('{{list_photo_url}}');">
+          <div class="tile-caption">
+            <div class="tile-title">{{name}}</div>
+            <div class="tile-rating">{{{ratingStars yelp_data.rating}}}</div>
+          </div>
+        </div>
+        <div class="tile-info">
+          {{join cuisine ", "}}
+          <span class="dollar-meter">{{{dollarMeter this.price}}}</span>
+          <div>very taste</div>
+        </div>
+      </div>
+    {{/each}}
+    </div>
     {{!-- foreach restaurant --}}
       {{!-- restaurant tile --}}
   </div>

@@ -73,6 +73,7 @@ module.exports.list = function(req, res) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.error(err);
 
     var context = {
+      layout:           'layout/default',
       restaurants:      utils.invoke(results[0], 'toJSON').filter( function( r ){
                           return !r.is_unacceptable;
                         }),
@@ -111,7 +112,7 @@ module.exports.list = function(req, res) {
       restaurant.delivery_fee_to    = max;
     }
 
-    res.render('restaurants', context);
+    res.render('restaurant/list', context);
   };
 
   utils.async.parallel(tasks, done);

@@ -14,10 +14,9 @@ module.exports = function( options ){
 
   var queryOptions = {
     one:  [ { table: 'users', alias: 'user'
-            , one:  []
-            , many: [ { table: 'users_groups', alias: 'groups' }
-                    , { table: 'addresses' }
-                    ]
+            , one:    []
+            , many:   [ { table: 'addresses' } ]
+            , pluck:  [ { table: 'users_groups', alias: 'groups', column: 'group' } ]
             }
           ]
   };
@@ -39,11 +38,14 @@ module.exports = function( options ){
         req.user = new Models.User(
           utils.extend( { groups: ['guest'], name: 'Guest' }, req.session.user )
         );
+
+        if ( !req.session.user ){
+          req.session.user = req.user.toJSON();
+        }
       } else {
-        req.user = req.session.user;
+        req.user = req.session.canonical;
         req.session.user = { id: req.user.id };
 
-        req.user.groups = utils.pluck( req.user.groups, 'group' );
         req.user = new Models.User( req.user );
 
         // todo: find better solution

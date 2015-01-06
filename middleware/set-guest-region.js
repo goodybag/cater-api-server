@@ -23,9 +23,15 @@ module.exports = function( options ){
       zip = req.session.orderParams ? req.session.orderParams.zip : null;
     }
 
+    // Did not specify a zip and they already have a region set?
+    if ( !zip && req.user.attributes.region_id ){
+      return next();
+    }
+
     if ( !zip ){
       logger.info( 'Setting default region', options.defaultRegion );
       req.user.attributes.region_id = options.defaultRegion;
+      req.session.user.region_id = req.user.attributes.region_id;
       return next();
     }
 
@@ -44,6 +50,7 @@ module.exports = function( options ){
       req.user.attributes.region_id = options.defaultRegion;
     }
 
+    req.session.user.region_id = req.user.attributes.region_id;
     return next();
   };
 };

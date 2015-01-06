@@ -312,13 +312,14 @@ module.exports.register = function( req, res ){
     });
 
     req.setSession( user.toJSON() );
+    req.session.isNewSignup = true;
 
     if ( Array.isArray( req.session.guestOrders ) ){
       venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
       delete req.session.guestOrders;
     }
 
-    res.redirect( req.param('next') || '/restaurants?signed_up=true' );
+    res.redirect( req.param('next') || '/restaurants' );
 
     venter.emit( 'user:registered', user );
   });

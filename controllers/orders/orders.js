@@ -89,9 +89,10 @@ module.exports.get = function(req, res) {
 
   // Require guests to signup
   if ( req.user.isGuest() ){
+    req.session.user.currentOrder = req.order;
+
     return res.redirect( '/join' + utils.queryParams({
       next: '/orders/' + req.order.id
-    , fromGuestOrder: true
     }));
   }
 

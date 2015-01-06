@@ -7,9 +7,7 @@ var utils = require('../utils');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
-    field: 'orderParams'
-  , whereToLook: ['query', 'session']
-  , defaultRegion: 1
+    defaultRegion: 1
   });
 
   return function( req, res, next ){
@@ -19,21 +17,21 @@ module.exports = function( options ){
       return next();
     }
 
-    var result = options.whereToLook.map( function( k ){
-      return req[ k ][ options.field ];
-    }).filter( function( v ){
-      return [ null, undefined ].indexOf( v ) === 0;
-    })[0];
+    var zip = req.query.zip;
 
-    if ( !result ){
+    if ( !zip ){
+      zip = req.session.orderParams ? req.session.orderParams.zip : null;
+    }
+
+    if ( !zip ){
       logger.info( 'Setting default region', options.defaultRegion );
       req.user.attributes.region_id = options.defaultRegion;
       return next();
     }
-
+    
     var region = utils.find( req.regions, function( region ){
-      region.zips.indexOf( result.zip ) > -1;
-    })[0];
+      return region.zips.indexOf( zip ) > -1;
+    });
 
     if ( region ){
       logger.info('Setting guest region', {

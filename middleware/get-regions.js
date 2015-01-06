@@ -23,6 +23,7 @@ module.exports = function( options ){
 
   return function( req, res, next ){
     if ( regions.length && Date.now() < end ){
+      req.regions = regions;
       res.locals.regions = regions;
       return next();
     }

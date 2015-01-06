@@ -28,7 +28,7 @@ module.exports = function( options ){
       req.user.attributes.region_id = options.defaultRegion;
       return next();
     }
-    
+
     var region = utils.find( req.regions, function( region ){
       return region.zips.indexOf( zip ) > -1;
     });

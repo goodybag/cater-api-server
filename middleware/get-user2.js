@@ -53,6 +53,7 @@ module.exports = function( options ){
           utils.contains(req.user.attributes.restaurant_ids, parseInt(req.param('rid')));
       }
 
+      res.locals.session = req.session;
       res.locals.user = req.user.toJSON();
 
       next();

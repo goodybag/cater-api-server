@@ -387,7 +387,7 @@ begin
   modified_text_id := new_text_id;
 
   if idx > 0 then
-    new_text_id := new_text_id || '-' || num_existing;
+    modified_text_id := new_text_id || '-' || idx;
   end if;
 
   select count(*) into num_existing

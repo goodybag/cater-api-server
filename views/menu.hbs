@@ -5,6 +5,12 @@
 {{> checkout_sticky_header }}
 
 {{#extend "title"}} - {{restaurant.name}} Menu{{/extend}}
+
+{{#extend "head"}}
+<meta name="description" content="{{restaurant.description}}">
+<meta name="keywords" content="{{join restaurant.tags ','}}">
+{{/extend}}
+
 <div class="page page-menu container">
 
 <div class="row">

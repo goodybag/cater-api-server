@@ -10,7 +10,6 @@ var db          = require('../db');
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
     param:        'rid'
-  , column:       'id'
   , region:       true
   , delivery:     true
   , items:        true
@@ -23,7 +22,15 @@ module.exports = function( options ){
 
     var $where = {};
 
-    $where[ options.column ] = req.param( options.param );
+    var param = req.param( options.param );
+
+    // use + instead of parseInt because:
+    // parseInt('888-mini-cafe') === 888
+    if ( isNaN( +param ) ){
+      $where.text_id = param;
+    } else {
+      $where.id = param;
+    }
 
     var $options = {
       one:    []

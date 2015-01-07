@@ -93,8 +93,7 @@ module.exports.register = function(app) {
     // Just do a barebones lookup since the controller
     // has to do a legacy db model lookup
   , m.getRestaurant({
-      column:       'text_id'
-    , region:       false
+      region:       false
     , delivery:     false
     , items:        false
     , amenities:    false

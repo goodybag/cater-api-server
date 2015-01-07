@@ -54,7 +54,7 @@ app.use( middleware.getUser2() );
 
 app.use(require('body-parser').json());
 app.use(require('body-parser').urlencoded({ extended: true }));
-app.use(require('method-override')());
+app.use(middleware.methodOverride);
 app.use(middleware.logRequest());
 
 app.use(middleware.uuid());

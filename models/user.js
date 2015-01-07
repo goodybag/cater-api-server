@@ -17,10 +17,16 @@ var User = module.exports = Model.extend({
     return this.attributes.groups.indexOf('guest') > -1;
   }
 
-, get isAdmin () {
+, isAdmin: function() {
     if ( !this.attributes ) return false;
     var groups = this.attributes.groups;
     return Array.isArray( groups ) && groups.indexOf('admin') > -1;
+  }
+
+, isRestaurant: function(rid) {
+    if ( !this.attributes ) return false;
+    return utils.contains(this.attributes.groups, 'restaurant') &&
+           utils.contains(this.attributes.restaurant_ids, rid);
   }
 
 , createPaymentMethod: function( pm, callback, client ){
@@ -153,6 +159,11 @@ var User = module.exports = Model.extend({
 
       callback( null, this_ );
     });
+  },
+
+  toJSON: function() {
+    this.attributes.isAdmin = this.isAdmin();
+    return Model.prototype.toJSON.call(this);
   }
 }, {
   table: table

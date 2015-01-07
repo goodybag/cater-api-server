@@ -141,6 +141,10 @@ module.exports.get = function(req, res) {
         , user_id:        userId
         , adjustment:     { description: null, amount: null }
         });
+
+        return order.getRestaurant( function( error ){
+          callback( error, order );
+        });
       }
 
       return order.getRestaurant( function( error ){

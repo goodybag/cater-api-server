@@ -22,6 +22,7 @@ module.exports = {
 , getUser2: require('./get-user2')
 , jsonLocals: require('./json-locals')
 , logRequest: require('./log-request')
+, methodOverride: require('./method-override')
 , noop: require('./noop')
 , orderEditable: require('./order-editable')
 , orderParams: require('./order-params')

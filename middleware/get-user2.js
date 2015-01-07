@@ -47,12 +47,6 @@ module.exports = function( options ){
         req.session.user = { id: req.user.id };
 
         req.user = new Models.User( req.user );
-
-        // todo: find better solution
-        req.user.isAdmin = utils.contains(req.user.attributes.groups, 'admin');
-        req.user.isRestaurant =
-          utils.contains(req.user.attributes.groups, 'restaurant') &&
-          utils.contains(req.user.attributes.restaurant_ids, parseInt(req.param('rid')));
       }
 
       res.locals.session = req.session;

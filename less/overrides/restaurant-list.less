@@ -1,5 +1,6 @@
-.page-restaurant-list {
+@restaurant-list-link-color: @palette-white;
 
+.page-restaurant-list {
   .search-restaurants {
     background-color: @palette-black;
     color: @palette-white;
@@ -62,6 +63,27 @@
 
   @media (min-width: @breakpoint-tablet) {
 
+  }
+
+  .search-advanced-content {
+    .collapsible-content;
+  }
+
+  .search-advanced-wrapper {
+    padding: 10px 0;
+  }
+
+  .search-advanced-link {
+    color: @restaurant-list-link-color;
+    text-decoration: none;
+  }
+
+  .search-advanced-link .search-advanced-link-icon {
+    vertical-align: middle;
+  }
+
+  .search-advanced-link.expand .search-advanced-link-icon {
+    color: blue;
   }
 
 }

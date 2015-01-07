@@ -7,13 +7,12 @@
   overflow: hidden;
   transition: max-height 0.15s ease-out;
   box-sizing: border-box;
+  &.in {
+    max-height: 1000px; // arbitrary
+    transition: max-height 0.25s ease-in;
+  }
 }
 
 .collapsible-wrapper {
   padding: 10px;
-}
-
-.collapsible-content.in {
-  max-height: 1000px; // arbitrary
-  transition: max-height 0.25s ease-in;
 }

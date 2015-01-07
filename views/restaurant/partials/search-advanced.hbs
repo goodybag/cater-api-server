@@ -1,3 +1,18 @@
 <div class="container">
-  Show all search tools &or;
+  <section class="search-advanced-content">
+    <div class="search-advanced-wrapper">
+      Some stuff
+    </div>
+  </section>
+  <a href="#" class="search-advanced-link" data-role="collapsible" data-target="search-advanced-content">
+    Show all <span class="search-advanced-link-icon gb-icon-caret-down"></span>
+  </a>
 </div>
+
+{{#extend "scripts"}}
+<script>
+require(['jquery-loaded'], function($){
+  $('[data-role="collapsible"]').gb_collapsible();
+});
+</script>
+{{/extend}}

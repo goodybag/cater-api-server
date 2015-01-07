@@ -19,8 +19,20 @@ describe('Order Data Access', function() {
       done();
     });
   });
+
+  it('should expose points property', function(done) {
+    // Terrible but points depends on submitted date
+    // Order points should just be cached instead of calculated every time
+    // rewards are viewed
+    db.orders.findOne(5195, {submittedDate: true}, function(err, order) {
+      assert(!err);
+      assert(order);
+      assert(order.points);
+      done();
+    });
+  });
 });
 
 describe('Order Model', function() {
-  
+
 });

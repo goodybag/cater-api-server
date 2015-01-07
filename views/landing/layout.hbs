@@ -34,6 +34,7 @@
 
     <footer class="footer">
       <ul class="nav footer-nav">
+        <li><a href="/join">Sign Up</a></li>
         <li><a href="/contact-us">Contact Us</a></li>
         <li><a href="/faqs">Frequently Asked Questions</a></li>
         <li><a href="/testimonials">Testimonials</a></li>
@@ -49,11 +50,7 @@
     <script src="/components/requirejs/require.js"></script>
     <script src="/js/require-config.js"></script>
     {{/unless}}
-    <script>
-      require( ['config'], function( config ){
-        config.cdn = { baseUrl: '{{{config.cdn.baseUrl}}}' };
-      });
-    </script>
+    {{> config}}
 
     {{> olark }}
 

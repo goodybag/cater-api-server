@@ -2,6 +2,7 @@ module.exports = {
   after: require('./after')
 , analytics: require('./analytics')
 , basicAuth: require('./basic-session-auth')
+, consumeNewSignup: require('./consume-new-signup')
 , cors: require('./cors')
 , csv: require('./csv')
 , defaultLocals: require('./default-locals')
@@ -47,6 +48,7 @@ module.exports = {
 , logger: require('./logger')
 , logger: require('./logger')
 , sessionAndUser: require('../lib/session-and-user')
+, setGuestRegion: require('./set-guest-region')
 , storeUserAgent: require('./store-user-agent')
 , timeout: require('./timeout')
 };

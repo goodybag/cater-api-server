@@ -87,6 +87,15 @@ module.exports.get = function(req, res) {
     && (req.query.review_token === order.review_token || req.order.isRestaurantManager)
   ;
 
+  // Require guests to signup
+  if ( req.user.isGuest() && !req.user.isRestaurant ){
+    req.session.user.currentOrder = req.order;
+
+    return res.redirect( '/join' + utils.queryParams({
+      next: '/orders/' + req.order.id
+    }));
+  }
+
   utils.async.waterfall([
     // Can't yet rely on order.restaurant to have all of the right info
     // in the legacy formats
@@ -163,7 +172,7 @@ module.exports.create = function(req, res) {
       user_id: req.user.attributes.user ? req.user.attributes.user.id : null
     }, req.body)
   );
-  
+
   order.save(function(err) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 

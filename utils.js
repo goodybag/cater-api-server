@@ -71,7 +71,7 @@ utils.balanced = new Balanced({
 
 utils.getTestEmail = function( id ){
   var email = config.testEmail.split('@');
-  email[0] += '+' + id;
+  email[0] += '+' + ( id ? id : parseInt(Math.random()*9999999).toString(36) );
   if ( local.emailSalt ) email[0] += local.emailSalt;
   return email.join('@');
 };

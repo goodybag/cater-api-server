@@ -27,7 +27,7 @@ module.exports.create = function(req, res) {
 }
 
 module.exports.del = function(req, res) {
-  [ 'user', 'orderParams' ].forEach( function( k ){
+  [ 'user', 'orderParams', 'isNewSignup' ].forEach( function( k ){
     delete req.session[ k ];
   });
   return res.redirect(req.query.next || '/');

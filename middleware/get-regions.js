@@ -15,6 +15,7 @@ module.exports = function( options ){
   , where:  {}
             // Refresh every hour
   , age:    1000*60*60
+  , pluck:  [{ table: 'region_zips', alias: 'zips', column: 'zip' }]
   });
 
   var end = 0;
@@ -22,6 +23,7 @@ module.exports = function( options ){
 
   return function( req, res, next ){
     if ( regions.length && Date.now() < end ){
+      req.regions = regions;
       res.locals.regions = regions;
       return next();
     }
@@ -30,6 +32,7 @@ module.exports = function( options ){
       if ( error ) return next( error );
 
       regions = results;
+      req.regions = regions;
       res.locals.regions = regions;
       end = Date.now() + options.age;
 

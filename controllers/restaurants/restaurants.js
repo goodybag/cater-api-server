@@ -32,15 +32,17 @@ module.exports.list = function(req, res) {
         includes: [
           { type: 'filter_restaurant_events' }
         ]
-      , where: {
-          region_id: req.user.attributes.region_id
-        }
+      , where: {}
       , limit: 'all'
       };
 
       logger.info('Finding filtered restaurants', {
         orderParams: orderParams
       });
+
+      if ( req.user.attributes.region_id ){
+        query.where.region_id = req.user.attributes.region_id;
+      }
 
       models.Restaurant.find(
         query
@@ -50,6 +52,9 @@ module.exports.list = function(req, res) {
     },
 
     function(callback) {
+      if ( req.user.isGuest() ){
+        return callback();
+      }
       logger.info('Finding default address');
       models.Address.findOne({where: { user_id: req.user.attributes.id, is_default: true }}, callback);
     }
@@ -122,13 +127,16 @@ module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-Get');
   logger.info('getting restaurant %s', req.params.rid);
 
-  var order;
   var orderParams = req.query || {};
 
   var userId = req.creatorId || req.user.attributes.id;
   var tasks = [
     function(callback) {
-      if ( !req.order ){
+      var order;
+
+      if ( req.order ){
+        order = new models.Order( req.order );
+      } else {
         order = new models.Order({
           restaurant_id:  req.params.rid
         , user_id:        userId
@@ -136,16 +144,12 @@ module.exports.get = function(req, res) {
         });
 
         return order.getRestaurant( function( error ){
-          console.log( 'returning', order.toJSON() );
           callback( error, order );
         });
       }
 
-      models.Order.findOne(req.order.id, function(err, order) {
-        if (err) return callback(err);
-        order.getOrderItems(function(err, items) {
-          callback(err, order);
-        });
+      return order.getRestaurant( function( error ){
+        callback( error, order );
       });
     },
 

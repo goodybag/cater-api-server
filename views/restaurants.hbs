@@ -7,12 +7,6 @@
 
 {{#extend "title"}} - Restaurants{{/extend}}
 
-{{#if reqQuery.signed_up}}
-{{#extend "head"}}
-  {{> facebook_pixel config.facebook.pixel.restaurantList }}
-{{/extend}}
-{{/if}}
-
 <div class="page-restaurants container">
 
   <div class="row">
@@ -112,7 +106,7 @@
   });
 
   require(['app/pages/restaurant-list', 'data/restaurants', 'data/all-restaurants'], function( page, restaurants, allRestaurants ){
-    page.init({ restaurants: restaurants, userId: {{{ user.id }}}, allRestaurants: allRestaurants });
+    page.init({ restaurants: restaurants, allRestaurants: allRestaurants });
   });
 </script>
 {{/extend}}

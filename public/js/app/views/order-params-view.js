@@ -5,8 +5,6 @@ define(function(require, exports, module) {
   var config      = require('config');
   var utils       = require('utils');
 
-  var template = Handlebars.partials.order_params_bar;
-
   return module.exports = Backbone.View.extend({
     events: {
       'submit form':                'onFormSubmit'
@@ -15,9 +13,13 @@ define(function(require, exports, module) {
     , 'keyup input':                'onKeyUp'
     }
 
-  , template: template
+  , initialize: function( options ) {
+      options = utils.defaults( options || {}, {
+        template: Handlebars.partials.order_params_bar
+      });
 
-  , initialize: function() {
+      this.template = options.template;
+
       this.datepicker = this.$el.find("input[name='date']").eq(0).pickadate({
         format: 'mm/dd/yyyy'
       , min: new Date()
@@ -97,6 +99,7 @@ define(function(require, exports, module) {
     }
 
   , onFormSubmit: function (e) {
+      e.preventDefault();
       this.search();
     }
 

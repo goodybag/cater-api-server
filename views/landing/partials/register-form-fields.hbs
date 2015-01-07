@@ -9,7 +9,11 @@
     {{#each regions}}
       <option
         value="{{this.id}}"
+        {{#eq user.region_id this.id}}
+        selected
+        {{else}}
         {{#eq ../reqQuery.region this.id}}selected{{/eq}}
+        {{/eq}}
       >{{this.name}}</option>
     {{/each}}
   </select>

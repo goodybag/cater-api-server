@@ -443,6 +443,11 @@ dirac.use( function( dirac ){
         applyMany( main.table, main );
       }
 
+      if ( Array.isArray( main.pluck ) ){
+        main.pluck.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
+        applyPluck( main.table, main );
+      }
+
       return {
         type: 'expression'
       , alias: data.alias
@@ -520,6 +525,11 @@ dirac.use( function( dirac ){
         applyMany( main.table, main );
       }
 
+      if ( Array.isArray( main.pluck ) ){
+        main.pluck.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
+        applyPluck( main.table, main );
+      }
+
       return {
         type: 'expression'
       , alias: data.alias
@@ -578,6 +588,91 @@ dirac.use( function( dirac ){
     });
   };
 
+  var applyPluck = function( table_name, $query ){
+    var tmpl = function( data ){
+      var where = utils.extend( {}, data.where );
+
+      data.pivots.forEach( function( p ){
+        where[ p.target_col ] = '$' + mosqlUtils.quoteObject( p.source_col, data.source ) + '$';
+      });
+
+      var main = utils.extend({
+        type:     'select'
+      , table:    data.target
+      , where:    where
+      , alias:    data.qAlias
+      }, utils.omit( data, ['table', 'alias', 'pivots', 'target', 'source', 'where', 'column'] ));
+
+      if ( Array.isArray( main.one ) ){
+        main.one.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
+        applyOne( main.table, main );
+      }
+
+      if ( Array.isArray( main.many ) ){
+        main.many.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
+        applyMany( main.table, main );
+      }
+
+      if ( Array.isArray( main.pluck ) ){
+        main.pluck.forEach( function( t ){ t.qAlias = t.qAlias || (data.qAlias + 'r'); });
+        applyPluck( main.table, main );
+      }
+
+      return {
+        type: 'expression'
+      , alias: data.alias
+      , expression: {
+          parenthesis: true
+        , expression: {
+            type: 'array'
+          , expression: {
+              type: 'select'
+            , columns: [ data.column ]
+            , table: main
+            }
+          }
+        }
+      };
+    };
+
+    $query.pluck.forEach( function( target ){
+      var targetDal = dirac.dals[ target.table ];
+
+      // Immediate dependency not met and not specifying how to get there
+      if ( !targetDal && !target.where ){
+        throw new Error( 'Must specify how to relate table `' + table_name + '` to target `' + target.table + '`' );
+      }
+
+      var pivots = [];
+
+      if ( targetDal )
+      if ( targetDal.dependencies[ table_name ] ){
+         pivots = Object.keys( targetDal.dependencies[ table_name ] ).map( function( p ){
+          return {
+            source_col: targetDal.dependencies[ table_name ][ p ]
+          , target_col: p
+          };
+        });
+      }
+
+      var context = utils.extend({
+        source:     target.source || table_name
+      , target:     target.table
+      , alias:      target.alias || target.table
+      , pivots:     pivots
+      , qAlias:     'r'
+      }, target );
+
+      context.alias = context.alias || target.table;
+
+      if ( !$query.columns ){
+        $query.columns = ['*'];
+      }
+
+      $query.columns.push( tmpl( context ) );
+    });
+  };
+
   var options = {
     operations: ['find', 'findOne']
   };
@@ -587,8 +682,9 @@ dirac.use( function( dirac ){
 
     options.operations.forEach( function( op ){
       dal.before( op, function( $query, schema, next ){
-        if ( Array.isArray( $query.many ) ) applyMany( table_name, $query );
-        if ( Array.isArray( $query.one ) ) applyOne( table_name, $query );
+        if ( Array.isArray( $query.many ) )   applyMany( table_name, $query );
+        if ( Array.isArray( $query.one ) )    applyOne( table_name, $query );
+        if ( Array.isArray( $query.pluck ) )  applyPluck( table_name, $query );
         return next();
       });
     });

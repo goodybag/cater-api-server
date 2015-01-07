@@ -109,7 +109,7 @@ module.exports = function(grunt) {
         , "public/dist/<%= pkg.version %>/css/admin.css":          "less/core-admin.less"
         , "public/dist/<%= pkg.version %>/ol-greg.css":            "less/core-ol-greg.less"
         , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
-        , "public/dist/<%= pkg.version %>/css/goodybag.css":           "less/core-goodybag.less"
+        , "public/dist/<%= pkg.version %>/css/goodybag.css":       "less/core-goodybag.less"
         }
       }
     }

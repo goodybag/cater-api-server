@@ -135,7 +135,6 @@ module.exports.get = function(req, res) {
         });
 
         return order.getRestaurant( function( error ){
-          console.log( 'returning', order.toJSON() );
           callback( error, order );
         });
       }

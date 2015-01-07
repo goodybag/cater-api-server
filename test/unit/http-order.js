@@ -196,7 +196,7 @@ describe('HTTP Server', function(){
           var url = [ SERVER_URL, 'orders', order.id ].join('/');
           utils.get( url, reqOptions, function( error, res ){
             assert( !error );
-            assert.equal( res.request.uri.path, [ '/join?next=/orders/', order.id, '&fromGuestOrder=true' ].join('') );
+            assert.equal( res.request.uri.path, [ '/join?next=/orders/', order.id ].join('') );
             next( null, order );
           });
         }

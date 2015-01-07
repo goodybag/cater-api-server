@@ -95,6 +95,7 @@ var reports = {
     , 'Delivery Fee'
     , 'Tax'
     , 'Tip'
+    , 'Adjustment'
     , 'Total'
     , 'Caterer Name'
     , 'Region'
@@ -195,6 +196,7 @@ var reports = {
           , dollars(order.delivery_fee)
           , dollars(order.sales_tax)
           , dollars(order.tip)
+          , dollars(order.adjustment_amount)
           , dollars(order.total)
           , order.restaurant.name
           , order.region.name

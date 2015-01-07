@@ -121,38 +121,32 @@ module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-Get');
   logger.info('getting restaurant %s', req.params.rid);
 
-  var order;
   var orderParams = req.query || {};
 
   var userId = req.creatorId || req.user.attributes.id;
   var tasks = [
     function(callback) {
-      if ( !req.order ){
+      var order;
+
+      if ( req.order ){
+        order = new models.Order( req.order );
+      } else {
         order = new models.Order({
-          // HOW DO GET RID WHEN USING TEXT_ID???
-          restaurant_id:  req.params.rid
+          restaurant_id:  req.restaurant.id
         , user_id:        userId
         , adjustment:     { description: null, amount: null }
         });
-
-        return order.getRestaurant( function( error ){
-          console.log( 'returning', order.toJSON() );
-          callback( error, order );
-        });
       }
 
-      models.Order.findOne(req.order.id, function(err, order) {
-        if (err) return callback(err);
-        order.getOrderItems(function(err, items) {
-          callback(err, order);
-        });
+      return order.getRestaurant( function( error ){
+        callback( error, order );
       });
     },
 
     function(callback) {
       var query = {
         where: {
-          id: parseInt(req.params.rid)
+          id: req.restaurant.id
         }
       , columns: ['*']
       , includes: [ {type: 'closed_restaurant_events'} ]
@@ -244,7 +238,7 @@ module.exports.get = function(req, res) {
   };
 
   utils.async.parallel(tasks, done);
-}
+};
 
 module.exports.sort = function(req, res) {
   models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {

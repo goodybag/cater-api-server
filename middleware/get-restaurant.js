@@ -9,15 +9,26 @@ var db          = require('../db');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
-    param:        'id'
+    param:        'rid'
+  , column:       'id'
+  , region:       true
+  , delivery:     true
+  , items:        true
+  , amenities:    true
+  , photos:       true
   });
 
   return function( req, res, next ){
     var logger = req.logger.create('Middleware-GetOrder2');
 
+    var $where = {};
+
+    $where[ options.column ] = req.param( options.param );
+
     var $options = {
       one:    []
     , many:   []
+    , pluck:  []
     , with:   []
     };
 
@@ -32,52 +43,40 @@ module.exports = function( options ){
     }
 
     if ( options.items ){
-      $options.many.push({ table: 'items' });
+      $options.many.push({
+        table: 'items'
+      , pluck: [{ table: 'tags', column: 'tag', order: { tag: 'asc' } }]
+      });
     }
 
     if ( options.amenities ){
-      // I am sorry for this.
-      // I wanted to look at all of the available amenities as well as if there's
-      // a order_amenity record. It's aliased as "amenity.checked", so that I know which
-      // have been added to an order.
-      $options.many.push({
-        table: 'amenities'
-      , alias: 'amenities'
-      , columns:  [ '*'
-                  , { type: 'exists'
-                    , expression: {
-                        type: 'select'
-                      , columns: [ { expression: 1 } ]
-                      , table: 'order_amenities'
-                      , where: { order_id: '$orders.id$', amenity_id: '$amenities.id$' }
-                      }
-                    , alias: 'checked'
-                    }
-                  ]
+      $options.many.push({ table: 'amenities', alias: 'amenities' });
+    }
+
+    if ( options.photos ){
+      $options.manypush({
+        table: 'restaurant_photos'
+      , alias: 'photos'
+      , order: 'priority asc'
       });
     }
 
     logger.info('Finding restaurant');
-    db.restaurants.findOne( +req.param( options.param ), $options, function( error, restaurant ){
+    db.restaurants.findOne( $where, $options, function( error, restaurant ){
       if ( error ){
-        logger.error('error trying to find restaurant #%s', req.params.id, error)
-        return res.error(errors.internal.DB_FAILURE, error);
+        logger.error( 'error trying to find restaurant #%s', +req.param( options.param ), {
+          error: error
+        });
+
+        return res.error( errors.internal.DB_FAILURE, error );
       }
 
       if ( !restaurant ) return res.render('404');
-
-      if ( options.restaurant )
-      if ( options.deliveryService ){
-        order.restaurant.delivery_service = order.delivery_service;
-      }
-
-      if ( options.manifest ){
-        order.manifest = manifest.create( order.orderItems );
-      }
 
       req.restaurant = restaurant;
       res.locals.restaurant = restaurant;
 
       return next();
+    });
   };
 };

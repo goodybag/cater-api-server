@@ -90,6 +90,16 @@ module.exports.register = function(app) {
   app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
   app.get('/restaurants/:rid'
+    // Just do a barebones lookup since the controller
+    // has to do a legacy db model lookup
+  , m.getRestaurant({
+      column:       'text_id'
+    , region:       false
+    , delivery:     false
+    , items:        false
+    , amenities:    false
+    , photos:       false 
+    })
   , controllers.restaurants.orders.current
   , m.exists( 'order', {
       then: controllers.orders.auth

@@ -78,6 +78,10 @@
     <!--[if lt IE 9]>
     <script src="{{cdn "components/respond/src/respond.js"}}"></script>
     <![endif]-->
+
+    {{#if isNewSignup}}
+      {{> facebook_pixel config.facebook.pixel.restaurantList }}
+    {{/if}}
   </head>
   <body>
     <header id="header" class="{{#if session.oldUser}}navbar-impersonate{{/if}}">
@@ -148,6 +152,15 @@
                 {{/if}}
               </div>
             </a>
+            {{else}}
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <a href="/join">Sign Up</a>
+              </li>
+              <li>
+                <a href="/login">Login</a>
+              </li>
+            </ul>
             {{/if}}
           </div>
         </nav>

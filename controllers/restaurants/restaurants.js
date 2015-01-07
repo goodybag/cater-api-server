@@ -32,15 +32,17 @@ module.exports.list = function(req, res) {
         includes: [
           { type: 'filter_restaurant_events' }
         ]
-      , where: {
-          region_id: req.user.attributes.region_id
-        }
+      , where: {}
       , limit: 'all'
       };
 
       logger.info('Finding filtered restaurants', {
         orderParams: orderParams
       });
+
+      if ( req.user.attributes.region_id ){
+        query.where.region_id = req.user.attributes.region_id;
+      }
 
       models.Restaurant.find(
         query
@@ -50,6 +52,9 @@ module.exports.list = function(req, res) {
     },
 
     function(callback) {
+      if ( req.user.isGuest() ){
+        return callback();
+      }
       logger.info('Finding default address');
       models.Address.findOne({where: { user_id: req.user.attributes.id, is_default: true }}, callback);
     }
@@ -135,6 +140,10 @@ module.exports.get = function(req, res) {
           restaurant_id:  req.restaurant.id
         , user_id:        userId
         , adjustment:     { description: null, amount: null }
+        });
+
+        return order.getRestaurant( function( error ){
+          callback( error, order );
         });
       }
 

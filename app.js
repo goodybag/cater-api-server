@@ -63,7 +63,10 @@ app.use(middleware.cors);
 
 app.use(middleware.setSession());
 app.use(middleware.storeUserAgent());
-app.use( middleware.getRegions() )
+app.use( middleware.getRegions() );
+app.use( middleware.consumeNewSignup() );
+
+app.use( middleware.setGuestRegion() );
 
 if (config.isProduction || config.isStaging) {
   app.use(middleware.sslRedirect);

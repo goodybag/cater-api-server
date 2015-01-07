@@ -21,6 +21,10 @@ module.exports.current = function(req, res, next) {
   logger.info('Lookup existing pending order');
   var where = {restaurant_id: req.restaurant.id, 'orders.status': 'pending'};
 
+  var options = {
+    many: [{ table: 'order_items', alias: 'orderItems' }]
+  };
+
   if ( req.param('edit_token') || req.body.edit_token ){
     where.edit_token = req.param('edit_token') || req.body.edit_token;
   } else if ( req.user.attributes.id ) {
@@ -36,7 +40,7 @@ module.exports.current = function(req, res, next) {
     return next();
   }
 
-  db.orders.findOne(where, function(err, order) {
+  db.orders.findOne(where, options, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 
     if (order) {

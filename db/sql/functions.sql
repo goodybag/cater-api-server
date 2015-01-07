@@ -391,7 +391,7 @@ begin
   end if;
 
   select count(*) into num_existing
-  from restaurants where text_id = new_text_id;
+  from restaurants where text_id = modified_text_id;
 
   if num_existing = 0 then
     update restaurants set text_id = modified_text_id where id = rid;

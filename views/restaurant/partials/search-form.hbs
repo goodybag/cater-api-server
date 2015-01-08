@@ -1,10 +1,25 @@
 <div class="container">
   <span class="search-lead">Find catering for:</span>
   <div class="restaurant-params form-inline">
-    <div class="form-group"><input type="text" placeholder="Zip"></div>
-    <div class="form-group"><input type="text" name="date" placeholder="Delivery date"></div>
-    <div class="form-group"><input type="text" name="time" placeholder="Delivery time"></div>
-    <div class="form-group"><input type="text" placeholder="Guests"></div>
+    <div class="form-group">
+      <input list="zips" type="text" class="" name="zip" placeholder="zip" maxlength="5" value="{{#if orderParams.zip}}{{orderParams.zip}}{{else}}{{ order.zip}}{{/if}}"/>
+      <datalist id="zips">
+        {{#if defaultAddress }}
+        <option value="{{defaultAddress.zip}}">Your Default Address</option>
+        {{/if}}
+        {{#each order.restaurant.delivery_zip_groups}}
+        {{#each this.zips}}
+        <option value="{{this}}">
+          {{/each}}
+          {{/each}}
+        </datalist>
+    </div>
+    <div class="form-group"><input type="text" name="date" placeholder="Delivery date" value="{{#if orderParams}}{{formatDateTime orderParams.date}}{{/if}}"></div>
+    <div class="form-group">
+      <input type="text" class="form-control form-control-time" name="time-range" placeholder="delivery time" value="{{#if orderParams.time}}{{join (timeToRange (formatTime orderParams.time "h:mm A") "h:mm A") " - "}}{{/if}}" disabled="true" />
+      <input type="text" class="form-control form-control-time" name="time" placeholder="delivery time" maxlength="8" value="{{#if orderParams}}{{formatTime orderParams.time}}{{/if}}"/>
+    </div>
+    <div class="form-group"><input type="text" name="guests" placeholder="Guests" value="{{#if orderParams}}{{orderParams.guests}}{{/if}}"></div>
     <div class="form-group"><button class="btn btn-primary btn-search">Search</button></div>
   </div>
 </div>

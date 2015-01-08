@@ -1,0 +1,31 @@
+{{#each restaurants }}
+<div class="tile">
+  <a class="tile-link" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
+    <div class="tile-cover" style="background-image: url('{{list_photo_url}}');">
+      <div class="tile-caption">
+        <div class="tile-title">{{name}}</div>
+        <div class="tile-rating">{{{ratingStars yelp_data.rating}}}</div>
+      </div>
+    </div>
+    <div class="tile-info">
+      <div>
+        <span class="bullet-inline">{{join cuisine ", "}}</span><span class="bullet-inline dollar-meter">{{{dollarMeter this.price}}}</span>
+      </div>
+      <div>
+        <span class="bullet-inline">Delivery:
+          {{#eq delivery_fee_from delivery_fee_to}}
+          {{#if delivery_fee_from}}
+          ${{dollarsOmit00 ../delivery_fee_from}}
+          {{else}}
+          Free
+          {{/if}}
+          {{else}}
+          ${{dollarsOmit00 delivery_fee_from}} - ${{dollarsOmit00 delivery_fee_to}}
+          {{/eq}}
+        </span><span class="bullet-inline">Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</span>
+        <span class="tile-tags">{{> tags tags }}</span>
+      </div>
+    </div>
+  </a>
+</div>
+{{/each}}

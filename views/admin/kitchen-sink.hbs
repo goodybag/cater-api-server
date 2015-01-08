@@ -12,16 +12,15 @@
 <section class="page-section" id="section-colors">
   <div class="container">
     <h2 class="component-title">Color Palette</h2>
-    <div class="palette-swatch">
-      <div class="palette-sample palette-sample-red">@palette-red: #dc0000</div>
-      <div class="palette-sample palette-sample-black">@palette-black: #5d616b</div>
-      <div class="palette-sample palette-sample-white">@palette-white: #ffffff</div>
-      <div class="palette-sample palette-sample-blue">@palette-blue: #0988d2</div>
-      <div class="palette-sample palette-sample-gray">@palette-gray: #f0f0f0</div>
-      <div class="palette-sample palette-sample-dark-gray">@palette-dark-gray: #f0f0f0</div>
+    <div class="color-blocks">
+      {{#each palette}}
+      <div class="color-block" data-color="{{this.name}}">
+        <div class="box"></div>
+        <div class="title">{{this.name}}</div>
+        <div class="color">{{this.color}}</div>
+      </div>
+      {{/each}}
     </div>
-    <p>Avoid using pure black (#000). In the context of other colors, @palette-black should serve as the darkest color.
-    </p>
     <p>The palette should be used to create semantic class tags, not color classes.</p>
     <p>Good</p>
     <code class="language-css">.alert-warning { color: @palette-red }</code>
@@ -97,13 +96,6 @@
   Body text goes here.
 </blockquote>{{/raw}}</code>
 
-</section>
-
-<section class="page-section" id="section-colors">
-  <div class="container">
-    <h2 class="component-title">Mixins</h2>
-    <h4>Drop shadow</h4>
-    <p>Demo</p>
 </section>
 
 <section class="page-section" id="section-dropdowns">

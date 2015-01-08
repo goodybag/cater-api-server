@@ -104,15 +104,24 @@
     <div class="dropdowns-list">
       <div class="doc-dropdown-item">
         <h5 class="item-title">Plain</h5>
-        <button class="gb-dropdown btn btn-default">
-          regions
-          <ul class="gb-dropdown-items">
-            <li>Austin, TX</li>
-            <li>Houston, TX</li>
-            <li>Dallas, TX</li>
-            <li>San Antonio, TX</li>
-          </ul>
-        </button>
+        <span class="popover-wrapper gb-dropdown">
+          <button
+            class="btn btn-default btn-dropdown"
+            data-role="popover"
+            data-target="dropdown-popover">
+            My Orders
+            <i class="gb-icon-caret-down"></i>
+          </button>
+          
+          <div class="popover-modal dropdown-popover">
+            <ul class="gb-dropdown-items">
+              <li>Austin, TX</li>
+              <li>Houston, TX</li>
+              <li>Dallas, TX</li>
+              <li>San Antonio, TX</li>
+            </ul>
+          </div>
+        </span>
       </div>
     </div>
   </div>
@@ -308,6 +317,44 @@
   <div class="container">
     <h2 class="component-title">Navbar</h2>
     <h3>With Links</h3>
+  </div>
+  <div class="demo-navbar">
+    <header class="navbar collapsed">
+      <div class="container">
+        <a href="/">
+          <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
+        </a>
+
+        <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
+        <ul class="nav">
+          <li><a href="/join">Sign Up</a></li>
+          <li><a href="/login">Login</a></li>
+        </ul>
+      </div>
+    </header>
+  </div>
+  <div class="container">
+    <code class="language-markup">
+    {{~#raw~}}
+<header class="navbar collapsed">
+  <div class="container">
+    <a href="/">
+      <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
+    </a>
+
+    <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
+    <ul class="nav">
+      <li><a href="/join">Sign Up</a></li>
+      <li><a href="/login">Login</a></li>
+    </ul>
+  </div>
+</header>
+    {{~/raw~}}
+    </code>
+  </div>
+
+  <div class="container">
+    <h3>With User Links</h3>
   </div>
   <div class="demo-navbar">
     <header class="navbar collapsed">

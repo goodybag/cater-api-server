@@ -51,7 +51,8 @@
   .brand-btn( @white );
   border-width: @btn-border-width-base;
   border-bottom-width: @btn-border-width-base + 1;
-  color: @color-base;
+  border-color: @palette-gray;
+  color: @color-primary-text;
 }
 
 .btn-primary {
@@ -93,6 +94,29 @@
   &.btn-small {
     padding-left: @btn-padding-left-small - 10;
     padding-right: @btn-padding-right-small - 10;
+  }
+}
+
+.btn-dropdown {
+  border-bottom-width: 1px;
+  padding-right: 28px;
+
+  .gb-icon-caret-down {
+    font-size: 12px;
+    top: -1px;
+    right: -14px;
+  }
+
+  .open & {
+    color: @palette-blue;
+    outline: none;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    + .popover-modal {
+      border-top-left-radius: 0;
+    }
   }
 }
 

@@ -10,7 +10,7 @@
   width: 300px;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
-  border: 1px solid @table-list-border-color;
+  border: 1px solid @palette-gray;
   background-color: @palette-white;
   color: @palette-black;
 }
@@ -27,7 +27,7 @@
 }
 
 .popover-modal .popover-header a {
-  color: @palette-gray-dark;
+  color: @color-primary-text;
   text-decoration: none;
   line-height: 19px;
 }
@@ -56,6 +56,6 @@
   padding: 8px;
 }
 
-.popover-modal.open {
+.popover-wrapper.open .popover-modal {
   display: block;
 }

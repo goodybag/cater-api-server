@@ -35,6 +35,8 @@ define(function(require, exports, module) {
 
       this.timepicker.on( 'set', _(this.onTimePickerSet).bind(this) );
       this.timepicker.on( 'open', _(this.onTimePickerOpen).bind(this) );
+
+      this.options.changeEvent = this.options.changeEvent || 'params:submit';
     }
 
   , render: function(){
@@ -66,7 +68,7 @@ define(function(require, exports, module) {
     }
 
   , search: function() {
-      this.trigger('params:submit');
+      this.trigger(this.options.changeEvent);
     }
 
   , scrollTimeToTime: function( time ){

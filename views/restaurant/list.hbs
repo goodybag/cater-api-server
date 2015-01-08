@@ -48,9 +48,10 @@ function( SortView, OrderParamsView, ListView, OrderParams ){
 
   var orderParamsView = new OrderParamsView({
     model: new OrderParams()
-  , el: '.order-params-bar'
+  , el: '.restaurant-params'
   });
 
+  listView.addFilter(orderParamsView);
   listView.addFilter(sortView);
 });
 </script>

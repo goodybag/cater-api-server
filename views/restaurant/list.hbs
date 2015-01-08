@@ -29,10 +29,14 @@
 
 {{#extend "scripts"}}
 <script>
-// require( ['app/pages/admin-home'], function( page ){
-//   page.init({
+require( ['app/views/restaurant-sort-view', 'app/views/restaurants-list-view'], function( SortView, ListView ){
+  var sortView = new SortView({ el: '#sort', inputSelector: '[name="list-sort"]:checked' });
 
-//   });
-// });
+  var listView = new ListView({
+    el: '#main'
+  , sortView: sortView
+  , searchUrl: '/restaurants'
+  });
+});
 </script>
 {{/extend}}

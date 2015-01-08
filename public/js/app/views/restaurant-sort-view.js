@@ -21,7 +21,7 @@ define(function(require, exports, module) {
     }
 
   , getProps: function() {
-      return { sort:  this.$el.find('.sort').val() };
+      return { sort:  this.$el.find(this.options.inputSelector || '.sort').val() };
     }
 
   });

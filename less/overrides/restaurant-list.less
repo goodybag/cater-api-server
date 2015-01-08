@@ -9,7 +9,7 @@
 
   .search-restaurants + .search-restaurants {
     border-top: 1px solid @palette-dark-gray;
-    padding: 15px 0;
+    padding: 0;
     font-size: 16px;
   }
   .search-restaurants .search-lead {
@@ -75,20 +75,27 @@
 
   .search-advanced-link {
     color: @restaurant-list-link-color;
+    outline: 0;
+    padding: 15px 0;
+    display: block;
     text-decoration: none;
   }
 
   .search-advanced-link .search-advanced-link-icon {
     vertical-align: middle;
+    -webkit-transition: all .15s ease;
+       -moz-transition: all .15s ease;
+         -o-transition: all .15s ease;
+            transition: all .15s ease;
   }
 
   .search-advanced-link.expand .search-advanced-link-icon {
     display: inline-block;
-    -webkit-transform: rotate(180deg);
-       -moz-transform: rotate(180deg);
-        -ms-transform: rotate(180deg);
-         -o-transform: rotate(180deg);
-            transform: rotate(180deg);
+    -webkit-transform: rotateX(180deg);
+       -moz-transform: rotateX(180deg);
+        -ms-transform: rotateX(180deg);
+         -o-transform: rotateX(180deg);
+            transform: rotateX(180deg);
 
   }
 

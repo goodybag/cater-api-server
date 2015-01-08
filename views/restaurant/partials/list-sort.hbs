@@ -4,16 +4,16 @@
     <input type="radio" name="list-sort" id="popular" value="popular">
     <label class="btn btn-small" for="popular">Popular</label>
 
-    <input type="radio" name="list-sort" id="ascending" value="ascending">
-    <label class="btn btn-small" for="ascending">A-Z</label>
+    <input type="radio" name="list-sort" id="name" value="name" {{#eq orderParams.sort "name"}}checked{{/eq}}>
+    <label class="btn btn-small" for="name">A-Z</label>
 
-    <input type="radio" name="list-sort" id="price" value="price">
+    <input type="radio" name="list-sort" id="price" value="price" {{#eq orderParams.sort "price"}}checked{{/eq}}>
     <label class="btn btn-small" for="price">Price</label>
 
-    <input type="radio" name="list-sort" id="delivery_fee" value="delivery_fee">
-    <label class="btn btn-small" for="delivery_fee">Delivery Fee</label>
+    <input type="radio" name="list-sort" id="deliveryfee" value="deliveryfee" {{#eq orderParams.sort "deliveryfee"}}checked{{/eq}}>
+    <label class="btn btn-small" for="deliveryfee">Delivery Fee</label>
 
-    <input type="radio" name="list-sort" id="minorder" value="minorder">
+    <input type="radio" name="list-sort" id="minorder" value="minorder" {{#eq orderParams.sort "minorder"}}checked{{/eq}}>
     <label class="btn btn-small" for="minorder">Order Minimum</label>
   </div>
 </div>

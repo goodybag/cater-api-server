@@ -29,14 +29,29 @@
 
 {{#extend "scripts"}}
 <script>
-require( ['app/views/restaurant-sort-view', 'app/views/restaurants-list-view'], function( SortView, ListView ){
+require( [
+  'app/views/restaurant-sort-view'
+, 'app/views/order-params-view'
+, 'app/views/restaurants-list-view'
+, 'app/models/order-params'
+],
+function( SortView, OrderParamsView, ListView, OrderParams ){
+
+  // Move all of this stuff into their respective partial extend script block
+  // :)
   var sortView = new SortView({ el: '#sort', inputSelector: '[name="list-sort"]:checked' });
 
   var listView = new ListView({
     el: '#main'
-  , sortView: sortView
   , searchUrl: '/restaurants'
   });
+
+  var orderParamsView = new OrderParamsView({
+    model: new OrderParams()
+  , el: '.order-params-bar'
+  });
+
+  listView.addFilter(sortView);
 });
 </script>
 {{/extend}}

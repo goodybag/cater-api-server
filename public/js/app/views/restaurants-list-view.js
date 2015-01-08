@@ -11,20 +11,22 @@ define(function(require, exports, module) {
   return module.exports = Backbone.View.extend({
     initialize: function() {
       analytics.page('Restaurants List');
-      this.listenTo(this.options.paramsView, 'params:submit', this.search);
-      this.listenTo(this.options.filtersView, 'filters:change', this.search);
-      this.listenTo(this.options.sortView, 'sort:change', this.search);
-      this.listenTo(this.options.searchView, 'search:change', this.search);
+      // this.listenTo(this.options.paramsView, 'params:submit', this.search);
+      // this.listenTo(this.options.filtersView, 'filters:change', this.search);
+      // this.listenTo(this.options.sortView, 'sort:change', this.search);
+      // this.listenTo(this.options.searchView, 'search:change', this.search);
+      this.options.filters = this.options.filters || [];
+    }
+
+  , addFilter: function(filterView) {
+      this.listenTo( filterView, filterView.options.changeEvent, this.search );
+      this.options.filters.push(filterView);
     }
 
   , search: function() {
-      var props = _.extend(
-        {}
-      , this.options.filtersView.getProps()
-      , this.options.paramsView.getProps()
-      , this.options.sortView.getProps()
-      , this.options.searchView.getProps()
-      );
+      var props = this.options.filters.reduce(function(memo, filterView) {
+        return _.extend(memo, filterView.getProps());
+      }, {});
 
       // Clone props because analytics is mutating the date property
       analytics.track( 'Restaurant Search', {searchParams: _.clone(props)} );

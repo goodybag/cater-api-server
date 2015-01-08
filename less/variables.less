@@ -12,23 +12,35 @@
 @gray-darker:               darken( @gray, 20% );
 @salmon:                    #FC8176;
 
-@brand-primary:             #dc0000;
-@brand-secondary:           #FBF8E7;
-@brand-tertiary:            #0039a1;
-@brand-quaternary:          #432012;
-
 @off-gray:                  desaturate( @brand-secondary, 50% );
 @body-bg-color:             @white;
 
 // Palette
 ////////////////////////////////////////////////////
 
-@palette-black:       #434a54;
-@palette-white:       #ffffff;
-@palette-red:         #ed4242;
-@palette-blue:        #0988d2;
-@palette-gray:        #e6e9ed;
-@palette-dark-gray:   #aab2bd;
+@palette-black:         #000000;
+@palette-gray-darker:   #333a43;
+@palette-gray-dark:     #434a54;
+@palette-gray:          #aab2bd;
+@palette-gray-light:    #ccd1d9;
+@palette-gray-lighter:  #e6e9ed;
+@palette-white:         #ffffff;
+@palette-brown:         #ba9b65;
+@palette-orange:        #f6bb42;
+@palette-red:           #ed4242;
+@palette-tomato:        #fc6e51;
+@palette-pink:          #ed5565;
+@palette-blue:          #5d9cec;
+@palette-green:         #00916d;
+@palette-green-2:       #8cc152;
+@palette-green-3:       #37bc9b;
+
+// Brand Colors
+////////////////////////////////////////////////////
+@brand-primary:             @palette-red;
+@brand-secondary:           #FBF8E7;
+@brand-tertiary:            #0039a1;
+@brand-quaternary:          #432012;
 
 // Font Weight Constants
 ////////////////////////////////////////////////////
@@ -61,6 +73,13 @@
 @letter-spacing-base:       0;
 @anchor-color:              @brand-tertiary;
 @dl-horizontal-offset:      150px;
+
+@color-primary-text:        @palette-gray-dark;
+@color-secondary-text:      @palette-gray;
+
+// Borders
+////////////////////////////////////////////////////
+@border-color-primary:      @palette-gray;
 
 // Grid
 ////////////////////////////////////////////////////

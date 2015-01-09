@@ -56,6 +56,9 @@ define(function(require, exports, module) {
       },
       is_hidden: function() {
         return this.$el.find(this.fieldMap.is_hidden).is(':checked');
+      },
+      hide_pricing: function() {
+        return this.$el.find(this.fieldMap.hide_pricing).is(':checked');
       }
     },
 
@@ -69,6 +72,7 @@ define(function(require, exports, module) {
       description: '.item-description',
       tags: '.edit-item-tags input',
       is_hidden: '.item-hide',
+      hide_pricing: '.item-hide-pricing'
     },
 
     /**

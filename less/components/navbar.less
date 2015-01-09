@@ -16,6 +16,13 @@
 @logo-padding-top: (@logo-padding-height / 2) + @logo-padding-offset;
 @logo-padding-bottom: (@logo-padding-height / 2) - @logo-padding-offset;
 
+// - 2 for the borders
+@dropdown-padding-top: (
+  (@navbar-height - @btn-padding-top-base - @btn-padding-bottom-base - 2 ) / 2
+);
+
+@dropdown-padding-bottom: @dropdown-padding-top;
+
 body {
   // -1 because some browsers are rendering artifacts
   // at that pixel border
@@ -40,6 +47,10 @@ body {
 
   // Otherwise chrome leaves trails
   -webkit-backface-visibility: hidden;
+}
+
+.navbar .user-links {
+  margin-top: (@navbar-height - @btn-base-height) / 2;
 }
 
 .navbar-logo {
@@ -102,6 +113,12 @@ body {
 
   .transition( 0.2s, ease-in-out );
   .transition-property( padding );
+}
+
+.navbar .nav > li .gb-dropdown {
+  display: inline-block;
+  padding-top: @dropdown-padding-top;
+  padding-bottom: @dropdown-padding-bottom;
 }
 
 .navbar .nav > li > a:hover,

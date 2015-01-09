@@ -69,6 +69,11 @@ define(function(require) {
     , nullable: false
     , default: false
     }
+  , hide_pricing: {
+      type: types.boolean
+    , nullable: false
+    , default: false
+    }
   };
 
   definition.indices = {};

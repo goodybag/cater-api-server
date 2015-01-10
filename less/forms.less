@@ -57,6 +57,7 @@ select,
 textarea {
   display: block;
   width: 100%;
+  height: @input-base-height;
   box-sizing: border-box;
   border-radius: @input-border-radius;
   border: solid @input-border-color @input-border-width;
@@ -98,10 +99,11 @@ input[disabled] {
 
   input, textarea {
     padding: @input-padding-small;
-    line-height: @line-height-small;
+    height: @btn-small-height;
   }
 
-  input[type='checkbox'] {
+  input[type='checkbox'], input[type='radio'] {
+    height: auto;
     padding: 0;
   }
 
@@ -110,8 +112,7 @@ input[disabled] {
   }
 
   button {
-    padding: @btn-padding-small;
-    line-height: @line-height-small;
+    &:extend(.btn-small);
   }
 }
 

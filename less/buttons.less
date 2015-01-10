@@ -25,15 +25,15 @@
 }
 
 .btn-large {
+  height: @btn-small-height;
   font-size: @btn-large-font-size;
-  line-height: @line-height-base;
   padding: @btn-padding-large;
   font-weight: @light;
 }
 
 .btn-small {
+  height: @btn-small-height;
   font-size: @btn-small-font-size;
-  line-height: @line-height-base;
   padding: @btn-padding-small;
   font-weight: @bold;
 }
@@ -42,7 +42,6 @@
   display: block;
   width: 100%;
   font-size: @font-size-small;
-  line-height: @line-height-small;
   padding: @btn-padding-small;
   font-weight: @semibold;
 }
@@ -99,24 +98,16 @@
 
 .btn-dropdown {
   border-bottom-width: 1px;
-  padding-right: 28px;
+  padding-right: 48px;
 
+  [class*="gb-icon-"],
   .gb-icon-caret-down {
+    position: absolute;
+    // TODO: generalize positioning
+    right: 17px;
+    top: 15px;
+
     font-size: 12px;
-    top: -1px;
-    right: -14px;
-  }
-
-  .open & {
-    color: @palette-blue;
-    outline: none;
-    border-bottom: none;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-
-    + .popover-modal {
-      border-top-left-radius: 0;
-    }
   }
 }
 

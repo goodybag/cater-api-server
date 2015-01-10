@@ -49,10 +49,6 @@ body {
   -webkit-backface-visibility: hidden;
 }
 
-.navbar .user-links {
-  margin-top: (@navbar-height - @btn-base-height) / 2;
-}
-
 .navbar-logo {
   float: left;
   // Make the logo conform to navbar size
@@ -99,9 +95,6 @@ body {
 
 .navbar .nav {
   float: right;
-  .transition( 0.5s, ease-in-out );
-  .transition-property-transform();
-  .translate( 0, 0 );
 }
 
 .navbar .nav > li > a {
@@ -115,15 +108,20 @@ body {
   .transition-property( padding );
 }
 
-.navbar .nav > li .gb-dropdown {
-  display: inline-block;
-  padding-top: @dropdown-padding-top;
-  padding-bottom: @dropdown-padding-bottom;
-}
-
 .navbar .nav > li > a:hover,
 .navbar .nav .active a {
   background: darken( @navbar-bg-color, 5% );
+}
+
+.navbar .nav .btn {
+  margin-top: (@navbar-height - @btn-base-height) / 2;
+  margin-bottom: (@navbar-height - @btn-base-height) / 2;
+  margin-left: 12px;
+
+  + .popover-modal {
+    margin-top: -(@navbar-height - @btn-base-height) / 2;
+    margin-left: 12px;
+  }
 }
 
 .navbar .navbar-toggle {

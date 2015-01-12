@@ -21,6 +21,10 @@ define(function(require) {
       type: types.serial
     , pk: true
     }
+  , text_id: {
+      type: types.text
+    , unique: true
+    }
   , created_at: {
       type: types.timestamptz
     , nullable: false
@@ -171,6 +175,10 @@ define(function(require) {
       type: types.tsvector
     }
   , has_contract: {
+      type: types.boolean
+    , default: false
+    }
+  , disable_courier_notifications: {
       type: types.boolean
     , default: false
     }

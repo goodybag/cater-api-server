@@ -84,7 +84,7 @@ define(function(require){
 
     // Because I'm too lazy to fulfill all required properties on the Order Model
   , updateOrder: function( props, callback ){
-      var silent = props.type.indexOf('silent') >= 0;
+      var silent = typeof props.type === 'string' && props.type.indexOf('silent') >= 0;
       if (silent) props.type = props.type.replace('silent', '').trim();
       $.ajax({
         type: 'PUT'

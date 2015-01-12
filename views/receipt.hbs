@@ -28,11 +28,9 @@
   {{/if}}
 
   {{#if isAdmin }}
-    {{#eq order.status "denied"}}
     {{#if order.reason_denied }}
     <div class="reason-denied-header">Reason Denied: {{order.reason_denied}}</div>
     {{/if}}
-    {{/eq}}
   {{/if}}
 
   {{#if order.editable}}

@@ -68,3 +68,10 @@ create trigger restaurant_locations_is_default_change
   for each row
   when ( NEW.is_default is true )
   execute procedure restaurant_locations_is_default_change();
+
+drop trigger if exists on_restaurant_name_change on restaurants;
+create trigger on_restaurant_name_change
+    after insert or update of name
+    on restaurants
+    for each row
+    execute procedure on_restaurant_name_change();

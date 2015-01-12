@@ -68,9 +68,12 @@ module.exports = function( options ){
 
     if ( options.restaurant ){
       var restaurantOne = [ { table: 'regions', alias: 'region' } ];
-      var restaurantMany = [ { table: 'restaurant_delivery_times', alias: 'delivery_times' }
-                , { table: 'restaurant_delivery_zips', alias: 'delivery_zips' }
-                , { table: 'restaurant_lead_times', alias: 'lead_times' } ];
+      var restaurantMany = [
+        { table: 'restaurant_delivery_times', alias: 'delivery_times' }
+      , { table: 'restaurant_delivery_zips', alias: 'delivery_zips' }
+      , { table: 'restaurant_lead_times', alias: 'lead_times' }
+      , { table: 'restaurant_locations', alias: 'locations' }
+      ];
 
       if ( options.amenities ){
         // I am sorry for this.
@@ -145,7 +148,16 @@ module.exports = function( options ){
               logger.error('error trying to lookup restaurant %s for order #%s', order.restaurant_id, req.params.id, error);
               return res.error(errors.internal.DB_FAILURE, error);
             }
-            req.order.restaurant = restaurant.toJSON();
+
+            restaurant = restaurant.toJSON();
+
+            if ( options.restaurant ){
+              utils.defaults( restaurant, order.restaurant );
+            }
+
+            req.order.restaurant = restaurant;
+            res.locals.order.restaurant = restaurant;
+
             return done();
           });
         }

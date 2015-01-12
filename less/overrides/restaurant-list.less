@@ -101,14 +101,23 @@
 
 
   //  extract restaurant params stylesheet?
-  /*  this thing needs to cover the actual timepicker
-  so we can display a time range without it screwing
-  up the value pickadate gives us back */
+  /**
+    this thing needs to cover the actual timepicker
+    so we can display a time range without it screwing
+    up the value pickadate gives us back
+  */
   .restaurant-params [name="time-range"] {
     position: absolute;
     pointer-events: none;
     cursor: auto;
     background: #fff;
+  }
+
+  .search-advanced-filter-col {
+    & > h1 {
+      text-transform: uppercase;
+      font-size: 16px;
+    }
   }
 
 

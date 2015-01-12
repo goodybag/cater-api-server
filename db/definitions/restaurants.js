@@ -178,6 +178,10 @@ define(function(require) {
       type: types.boolean
     , default: false
     }
+  , disable_notifications: {
+      type: types.boolean
+    , default: false
+    }
   , no_contract_fee: {
       type: types.numeric(5,5)
     , nullable: false

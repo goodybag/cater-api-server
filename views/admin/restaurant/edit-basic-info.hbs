@@ -107,7 +107,13 @@
     <div class="form-group">
       <label class="control-label" for="input-hidden">
         <input type="checkbox" class="form-control" name="is_hidden" id="input-hidden" {{#if restaurant.is_hidden}}checked="checked"{{/if}}>
-         Hidden from listing
+        Hidden from listing
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-disable-notifications">
+        <input type="checkbox" class="form-control" name="disable_notifications" id="input-disable-notifications" {{#if restaurant.disable_notifications}}checked="checked"{{/if}}>
+        Disable notifications (Goodybag must trigger all notifications manually!)
       </label>
     </div>
 

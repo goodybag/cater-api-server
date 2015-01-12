@@ -8,5 +8,5 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  perform add_column( 'restaurants', 'disable_notifications', 'boolean default false' );
+  perform add_column( 'restaurants', 'disable_courier_notifications', 'boolean default false' );
 end$$;

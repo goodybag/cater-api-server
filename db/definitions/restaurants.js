@@ -178,7 +178,7 @@ define(function(require) {
       type: types.boolean
     , default: false
     }
-  , disable_notifications: {
+  , disable_courier_notifications: {
       type: types.boolean
     , default: false
     }

@@ -19,7 +19,7 @@ module.exports.current = function(req, res, next) {
   var logger = req.logger.create('Current Order');
 
   logger.info('Lookup existing pending order');
-  var where = {restaurant_id: req.params.rid, 'orders.status': 'pending'};
+  var where = {restaurant_id: req.restaurant.id, 'orders.status': 'pending'};
 
   var options = {
     many: [{ table: 'order_items', alias: 'orderItems' }]

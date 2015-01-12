@@ -4,6 +4,14 @@
 -- Event Handlers --
 --------------------
 
+create or replace function on_restaurant_name_change()
+returns trigger as $$
+begin
+  perform update_restaurant_text_id( NEW.id, str_to_slug( NEW.name ) );
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function restaurant_locations_is_default_change()
 returns trigger as $$
 begin
@@ -360,5 +368,35 @@ begin
           and rl.is_default = true
     )
     where orders.id = o.id;
+end;
+$$ language plpgsql;
+
+create or replace function update_restaurant_text_id( rid int, new_text_id text )
+returns void as $$
+  declare num_existing int;
+begin
+  perform update_restaurant_text_id( rid, new_text_id, 0 );
+end;
+$$ language plpgsql;
+
+create or replace function update_restaurant_text_id( rid int, new_text_id text, idx int )
+returns void as $$
+  declare modified_text_id text;
+  declare num_existing int;
+begin
+  modified_text_id := new_text_id;
+
+  if idx > 0 then
+    modified_text_id := new_text_id || '-' || idx;
+  end if;
+
+  select count(*) into num_existing
+  from restaurants where text_id = modified_text_id;
+
+  if num_existing = 0 then
+    update restaurants set text_id = modified_text_id where id = rid;
+  else
+    perform update_restaurant_text_id( rid, new_text_id, idx + 1 );
+  end if;
 end;
 $$ language plpgsql;

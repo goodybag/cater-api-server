@@ -137,7 +137,7 @@ module.exports.get = function(req, res) {
         order = new models.Order( req.order );
       } else {
         order = new models.Order({
-          restaurant_id:  req.params.rid
+          restaurant_id:  req.restaurant.id
         , user_id:        userId
         , adjustment:     { description: null, amount: null }
         });
@@ -155,7 +155,7 @@ module.exports.get = function(req, res) {
     function(callback) {
       var query = {
         where: {
-          id: parseInt(req.params.rid)
+          id: req.restaurant.id
         }
       , columns: ['*']
       , includes: [ {type: 'closed_restaurant_events'} ]
@@ -247,7 +247,7 @@ module.exports.get = function(req, res) {
   };
 
   utils.async.parallel(tasks, done);
-}
+};
 
 module.exports.sort = function(req, res) {
   models.Restaurant.findOne(parseInt(req.params.rid), function(err, restaurant) {

@@ -30,7 +30,7 @@
       {{/notEmpty}}
       <div class="list-group list-group-restaurants">
       {{#each restaurants}}
-        <a href="/restaurants/{{this.id}}{{queryParams ../orderParams}}" class="list-group-item list-group-item-restaurant{{#if is_hidden}} hide{{/if}}" id="restaurant-{{id}}">
+        <a href="/restaurants/{{this.text_id}}{{queryParams ../orderParams}}" class="list-group-item list-group-item-restaurant{{#if is_hidden}} hide{{/if}}" id="restaurant-{{id}}">
           <div class="row">
             <div class="col-xs-1 logo-wrapper">
               <img class="business-logo" src="{{#if this.logo_url}}{{filepicker this.logo_url 60 60}}{{else}}{{filepicker ../../config.defaultLogo 60 60}}{{/if}}" alt="{{this.name}}">

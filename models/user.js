@@ -407,8 +407,8 @@ var User = module.exports = Model.extend({
     , user_id: userId
     , created_at: { $gte: config.rewardsStartDate }
     };
-
-    db.orders.find(query, function(error, orders){
+    var options = { submittedDate: true };
+    db.orders.find(query, options, function(error, orders){
       if (error) return callback(error);
 
       var points = 0;

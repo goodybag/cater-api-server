@@ -96,7 +96,7 @@ module.exports.register = function(app) {
     , delivery:     false
     , items:        false
     , amenities:    false
-    , photos:       false 
+    , photos:       false
     })
   , controllers.restaurants.orders.current
   , m.exists( 'order', {
@@ -1503,6 +1503,7 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.getOrder2({
       param:                  'id'
+    , restaurant:             true
     , restaurantDbModelFind:  true
     , user:                   true
     , items:                  true

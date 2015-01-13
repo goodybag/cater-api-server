@@ -1,7 +1,7 @@
 <div id="sort" class="list-sort">
   <div class="list-sort-lead">Sort by:</div>
   <div class="list-sort-actions btn-group">
-    <input type="radio" name="list-sort" id="popular" value="popular">
+    <input type="radio" name="list-sort" id="popular" value="popular" {{#eq orderParams.sort "popular"}}checked{{/eq}}>
     <label class="btn btn-small" for="popular">Popular</label>
 
     <input type="radio" name="list-sort" id="name" value="name" {{#eq orderParams.sort "name"}}checked{{/eq}}>

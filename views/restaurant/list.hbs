@@ -16,37 +16,27 @@
   </div>
 </div>
 
-  <div class="restaurant-list">
-    <div class="container">
-      {{> restaurant_tiles }}
-    </div>
-    {{!-- foreach restaurant --}}
-      {{!-- restaurant tile --}}
+<div class="restaurant-list">
+  <div class="container">
+    {{> restaurant_tiles }}
   </div>
+</div>
 {{/extend}}
 
 {{#extend "scripts"}}
 <script>
 require( [
   'app/views/restaurant-sort-view'
-, 'app/views/restaurant-filters-view'
+, 'data/views/filters-view'
 , 'app/views/order-params-view'
 , 'app/views/restaurants-list-view'
 , 'app/models/order-params'
 ],
-function( SortView, FiltersView, OrderParamsView, ListView, OrderParams ){
+function( SortView, filtersView, OrderParamsView, ListView, OrderParams ){
 
   // Move all of this stuff into their respective partial extend script block
   // :)
   var sortView = new SortView({ el: '#sort', inputSelector: '[name="list-sort"]:checked' });
-
-  var filtersView = new FiltersView({
-    el: '#filters'
-  });
-
-  filtersView.addFacet('cuisines', '.filter-cuisines input[type="checkbox"]:checked');
-  filtersView.addFacet('diets', '.filter-diets input[type="checkbox"]:checked');
-  filtersView.addFacet('mealTypes', '.filter-meal-types input[type="checkbox"]:checked');
 
   var listView = new ListView({
     el: '#main'
@@ -60,8 +50,6 @@ function( SortView, FiltersView, OrderParamsView, ListView, OrderParams ){
 
   listView.addFilter(orderParamsView);
   listView.addFilter(sortView);
-
-  window.filtersView = filtersView;
   listView.addFilter(filtersView);
 });
 </script>

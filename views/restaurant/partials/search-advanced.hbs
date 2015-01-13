@@ -37,5 +37,13 @@
 require(['jquery-loaded'], function($){
   $('[data-role="collapsible"]').gb_collapsible();
 });
+
+define('data/views/filters-view', ['app/views/restaurant-filters-view'], function(FiltersView) {
+  var filtersView = new FiltersView({ el: '#filters' });
+  filtersView.addFacet('cuisines', '.filter-cuisines input[type="checkbox"]:checked');
+  filtersView.addFacet('diets', '.filter-diets input[type="checkbox"]:checked');
+  filtersView.addFacet('mealTypes', '.filter-meal-types input[type="checkbox"]:checked');
+  return filtersView;
+});
 </script>
 {{/extend}}

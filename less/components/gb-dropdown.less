@@ -5,15 +5,18 @@
 .gb-dropdown {
   .nav & { &:extend(.nav > li); }
   .popover-modal {
-    // That doesn't necessarily work always because in
-    // navbar, the margin-top needs to be re-calculated
-    margin-top: -1px;
+  }
+
+  &.same-width-modal {
+    .popover-modal {
+      width: 100%;
+    }
   }
 
   &.open {
     > .btn {
       transition: box-shadow ease-out 0.3s;
-      box-shadow: 1px 2px 5px rgba( 0, 0, 0, 0.17 );
+      // box-shadow: 1px 2px 5px rgba( 0, 0, 0, 0.17 );
     }
   }
 }

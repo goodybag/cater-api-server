@@ -74,6 +74,10 @@ body {
   text-align: right;
 }
 
+.navbar .popover-modal {
+  margin-top: @popover-triangle-size - @dropdown-padding-bottom - 1;
+}
+
 .navbar .gb-points {
   // Positioning to the right uses text-alignment on navbar due to
   // weird floating stuff on mobile and when the navbar is not collapsed
@@ -141,10 +145,12 @@ body {
   margin-top: (@navbar-height - @btn-base-height) / 2;
   margin-bottom: (@navbar-height - @btn-base-height) / 2;
   margin-left: 12px;
+}
 
-  + .popover-modal {
-    margin-top: -(@navbar-height - @btn-base-height) / 2;
-    margin-left: 12px;
+.navbar .nav .gb-dropdown {
+  margin-left: 12px;
+  > .btn {
+    margin-left: 0;
   }
 }
 
@@ -274,13 +280,13 @@ body {
     text-align: right;
   }
 
-  .navbar .nav li {
+  .navbar .nav > li {
     display: block;
     text-align: right;
     margin-right: 0 - (@gutter-width / 2);
   }
 
-  .navbar .nav li:first-child {
+  .navbar .nav > li:first-child {
     margin-top: 20px;
   }
 
@@ -295,7 +301,7 @@ body {
   }
 
   .navbar .navbar-right .dropdown-menu {
-    margin-left: -12px;
+    // margin-left: -12px;
   }
 
   .navbar .gb-points-indicator {
@@ -317,9 +323,15 @@ body {
       width: 100%;
       margin-left: 0;
       margin-right: 0;
+      margin-bottom: 0;
       border: none;
       padding: 0;
       text-align: left;
+      font-weight: @semibold;
+
+      > .gb-icon-caret-down {
+        display: none;
+      }
     }
 
     &.open > .btn {
@@ -336,5 +348,10 @@ body {
       text-align: left;
       border: none;
     }
+  }
+
+  .navbar .popover-modal:before,
+  .navbar .popover-modal:after {
+    display: none;
   }
 }

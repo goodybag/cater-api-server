@@ -576,6 +576,7 @@ module.exports.register = function(app) {
     );
 
     app.get('/admin/restaurants/:id/locations/new'
+    , m.param('id')
     , m.queryOptions({
         one:  [{ table: 'regions', alias: 'region' }]
       })

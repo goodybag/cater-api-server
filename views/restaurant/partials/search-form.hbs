@@ -23,3 +23,17 @@
     <div class="form-group"><button class="btn btn-primary btn-search">Search</button></div>
   </div>
 </div>
+
+
+{{#extend "scripts"}}
+<script>
+define('data/views/order-params-view'
+, ['app/views/order-params-view', 'app/models/order-params']
+, function(OrderParamsView, OrderParams) {
+  return new OrderParamsView({
+    model: new OrderParams()
+    , el: '.restaurant-params'
+  });
+})
+</script>
+{{/extend}}

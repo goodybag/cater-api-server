@@ -17,3 +17,12 @@
     <label class="btn btn-small" for="minorder">Order Minimum</label>
   </div>
 </div>
+
+{{#extend "scripts"}}
+<script>
+define('data/views/sort-view', ['app/views/restaurant-sort-view'], function(SortView) {
+  var sortView = new SortView({ el: '#sort', inputSelector: '[name="list-sort"]:checked' });
+  return sortView;
+});
+</script>
+{{/extend}}

@@ -26,28 +26,16 @@
 {{#extend "scripts"}}
 <script>
 require( [
-  'app/views/restaurant-sort-view'
+  'data/views/sort-view'
 , 'data/views/filters-view'
-, 'app/views/order-params-view'
+, 'data/views/order-params-view'
 , 'app/views/restaurants-list-view'
-, 'app/models/order-params'
 ],
-function( SortView, filtersView, OrderParamsView, ListView, OrderParams ){
-
-  // Move all of this stuff into their respective partial extend script block
-  // :)
-  var sortView = new SortView({ el: '#sort', inputSelector: '[name="list-sort"]:checked' });
-
+function( sortView, filtersView, orderParamsView, ListView ){
   var listView = new ListView({
     el: '#main'
   , searchUrl: '/restaurants'
   });
-
-  var orderParamsView = new OrderParamsView({
-    model: new OrderParams()
-  , el: '.restaurant-params'
-  });
-
   listView.addFilter(orderParamsView);
   listView.addFilter(sortView);
   listView.addFilter(filtersView);

@@ -404,7 +404,7 @@
 
         <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
         <div class="nav">
-          <span class="popover-wrapper gb-dropdown right">
+          <span class="popover-wrapper gb-dropdown same-width-modal">
             <button
               class="btn btn-default btn-dropdown"
               data-role="popover"
@@ -414,10 +414,17 @@
             </button>
             
             <div class="popover-modal dropdown-popover">
-              <h2>Test</h2>
+              <ul class="popover-body">
+                <li class="popover-item">
+                  <a href="#">Start New Order</a>
+                </li>
+                <li class="popover-item">
+                  <a href="#">My Orders</a>
+                </li>
+              </ul>
             </div>
           </span>
-          <span class="popover-wrapper gb-dropdown right">
+          <span class="popover-wrapper gb-dropdown same-width-modal">
             <button
               class="btn btn-default btn-dropdown"
               data-role="popover"
@@ -427,7 +434,14 @@
             </button>
             
             <div class="popover-modal dropdown-popover">
-              <h2>Test</h2>
+              <ul class="popover-body">
+                <li class="popover-item">
+                  <a href="#">Start New Order</a>
+                </li>
+                <li class="popover-item">
+                  <a href="#">My Orders</a>
+                </li>
+              </ul>
             </div>
           </span>
         </div>
@@ -438,17 +452,56 @@
   <div class="container">
     <code class="language-markup">
     {{~#raw~}}
-<header class="navbar collapsed">
+<header class="navbar navbar-with-dropdowns collapsed">
   <div class="container">
     <a href="/">
       <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
     </a>
 
     <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
-    <ul class="nav">
-      <li><a href="/join">Sign Up</a></li>
-      <li><a href="/login">Login</a></li>
-    </ul>
+    <div class="nav">
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+          class="btn btn-default btn-dropdown"
+          data-role="popover"
+          data-target="dropdown-popover">
+          My Orders
+          <i class="gb-icon-caret-down"></i>
+        </button>
+        
+        <div class="popover-modal dropdown-popover">
+          <ul class="popover-body">
+            <li class="popover-item">
+              <a href="#">Start New Order</a>
+            </li>
+            <li class="popover-item">
+              <a href="#">My Orders</a>
+            </li>
+          </ul>
+        </div>
+      </span>
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+          class="btn btn-default btn-dropdown"
+          data-role="popover"
+          data-target="dropdown-popover">
+          My Account
+          <i class="gb-icon-caret-down"></i>
+        </button>
+        
+        <div class="popover-modal dropdown-popover">
+          <ul class="popover-body">
+            <li class="popover-item">
+              <a href="#">Start New Order</a>
+            </li>
+            <li class="popover-item">
+              <a href="#">My Orders</a>
+            </li>
+          </ul>
+        </div>
+      </span>
+    </div>
+    <a href="/users/me/rewards" class="gb-points">500 points</a>
   </div>
 </header>
     {{~/raw~}}

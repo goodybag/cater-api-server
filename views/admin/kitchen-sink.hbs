@@ -364,7 +364,7 @@
           <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
         </a>
 
-        <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
+        <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
         <ul class="nav">
           <li><a href="/join">Sign Up</a></li>
           <li><a href="/login">Login</a></li>
@@ -381,7 +381,7 @@
       <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
     </a>
 
-    <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
+    <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
     <ul class="nav">
       <li><a href="/join">Sign Up</a></li>
       <li><a href="/login">Login</a></li>
@@ -396,13 +396,13 @@
     <h3>With User Links</h3>
   </div>
   <div class="demo-navbar">
-    <header class="navbar collapsed">
+    <header class="navbar navbar-with-dropdowns collapsed">
       <div class="container">
         <a href="/">
           <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
         </a>
 
-        <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
+        <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
         <div class="nav">
           <span class="popover-wrapper gb-dropdown right">
             <button
@@ -435,6 +435,7 @@
     </header>
   </div>
   <div class="container">
+    <script src="https://gist.github.com/jrf0110/637a9a1842a1c2ac8c6c.js"></script>
     <code class="language-markup">
     {{~#raw~}}
 <header class="navbar collapsed">
@@ -443,7 +444,7 @@
       <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
     </a>
 
-    <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
+    <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
     <ul class="nav">
       <li><a href="/join">Sign Up</a></li>
       <li><a href="/login">Login</a></li>
@@ -464,7 +465,7 @@
           <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
         </a>
 
-        <button class="navbar-toggle btn btn-default">Sign In</button>
+        <button class="navbar-toggle btn btn-default btn-small">Sign In</button>
         <form class="login-form form-small" method="POST" action="/login{{queryParams query}}">
           <div class="form-group">
             <label for="login-email">Email</label>
@@ -497,7 +498,7 @@
       <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
     </a>
 
-    <button class="navbar-toggle btn btn-default">Sign In</button>
+    <button class="navbar-toggle btn btn-default btn-small">Sign In</button>
     <form class="login-form form-small" method="POST" action="/login{{queryParams query}}">
       <div class="form-group">
         <label for="login-email">Email</label>
@@ -552,6 +553,8 @@
     };
 
     $(function(){
+      $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+
       var $container = $('<div class="section-decorators"></div>');
 
       for ( var i = 0; i < options.numDecorators; ++i ){

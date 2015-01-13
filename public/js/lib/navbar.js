@@ -22,9 +22,13 @@ define(function(require){
 
   var $ = require('jquery');
 
-  require('bootstrap');
-
   $.fn.navbar = function( options ){
+    if ( this.length > 1 ){
+      return this.each( function(){
+        $(this).navbar( options );
+      });
+    }
+
     var $window = $(window);
     var $this = this;
 

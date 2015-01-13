@@ -277,4 +277,40 @@ body {
   .navbar .gb-points-indicator {
     clear: both;
   }
+
+  // Expand the size of nav
+  .navbar-with-dropdowns .nav {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  // Treat entire dropdowns as expanded hierarchy of links
+  .navbar-with-dropdowns .gb-dropdown {
+    display: block;
+
+    // Buttons become the headers
+    > .btn {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+      border: none;
+      padding: 0;
+      text-align: left;
+    }
+
+    &.open > .btn {
+      color: @color-primary-text;
+      box-shadow: none;
+    }
+
+    > .popover-modal {
+      position: static;
+      display: block;
+      width: 100%;
+      margin: 0;
+      box-shadow: none;
+      text-align: left;
+      border: none;
+    }
+  }
 }

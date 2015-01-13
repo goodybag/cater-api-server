@@ -120,5 +120,22 @@
     }
   }
 
+  @media (min-width: @breakpoint-tablet) {
+    .search-advanced-filter-col {
+      float: left;
+      margin: 0 50px;
+      &:first-of-type { margin-left: 0; }
+      &:last-of-type { margin-right: 0; }
+    }
+
+    .filter-special-diets {
+      & > label {
+        float: left;
+        width: 130px;
+        &:nth-of-type(4n+1) { clear: left; }
+      }
+    }
+  }
+
 
 }

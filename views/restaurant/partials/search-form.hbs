@@ -10,9 +10,9 @@
         {{#each order.restaurant.delivery_zip_groups}}
         {{#each this.zips}}
         <option value="{{this}}">
-          {{/each}}
-          {{/each}}
-        </datalist>
+        {{/each}}
+        {{/each}}
+      </datalist>
     </div>
     <div class="form-group"><input type="text" name="date" placeholder="Delivery date" value="{{#if orderParams}}{{formatDateTime orderParams.date}}{{/if}}"></div>
     <div class="form-group">

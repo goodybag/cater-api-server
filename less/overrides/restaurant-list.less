@@ -141,17 +141,33 @@
   }
 
   .search-advanced-search {
-    margin: 0.67em 0;
+    margin: 15px 0;
     & input[type="text"] {
-      margin: 10px 0;
+      border: none;
+      background: none;
+      box-shadow: none;
+      outline: none;
+      height: 36px;
+      padding: 12px;
+      display: inline-block;
+    }
+    & .btn {
+      position: absolute;
+      top: 0;
+      right: 0;
     }
   }
 
+  .search-advanced-search-wrapper {
+    display: block;
+    margin: 10px 0;
+  }
+
   @media (min-width: @breakpoint-tablet) {
+    .search-advanced-search-wrapper { margin-left: 20px; display: inline-block; }
     .search-advanced-search input[type="text"] {
       display: inline;
       width: 300px;
-      margin: 0 20px;
     }
   }
 }

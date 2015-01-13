@@ -1,1 +1,6 @@
-<div class="list-tags">{{!-- show currently applied filters here --}}</div>
+<div class="list-tags">
+  {{#notEmpty orderParams}}
+    <a class="back-to-results" href="/restaurants">Clear search</a>
+    <span> {{../restaurants.length}} result{{#gt ../restaurants.length 1}}s{{/gt}}</span>
+  {{/notEmpty}}
+</div>

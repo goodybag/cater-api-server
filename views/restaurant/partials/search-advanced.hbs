@@ -5,14 +5,14 @@
         <div>
           <div class="search-advanced-search">
             <span>Find restaurant by name:</span>
-              <div class="search-advanced-search-wrapper panel">
-                <input class="form-control-borderless" type="text" />
-                <button
-                class="btn btn-inline-icon"
-                type="submit">
-                <i class="gb-icon-magnifier"></i>
+              <div id="search" class="search-advanced-search-wrapper panel">
+                <form class="search-form">
+                  <input class="search-input form-control-borderless" type="text" value="{{orderParams.search}}"/>
+                  <button class="btn btn-inline-icon" type="submit">
+                    <i class="gb-icon-magnifier"></i>
+                  </button>
+                </form>
               </div>
-          </button>
           </div>
         </div>
       </div>
@@ -57,6 +57,14 @@
 <script>
 require(['jquery-loaded'], function($){
   $('[data-role="collapsible"]').gb_collapsible();
+});
+
+define('data/views/search-view', ['app/views/restaurant/search-view'], function(SearchView) {
+  var restaurantSearchView = new SearchView({
+    el: '#search'
+  , inputSelector: '.search-input'
+  });
+  return restaurantSearchView;
 });
 
 define('data/views/filters-view', ['app/views/restaurant-filters-view'], function(FiltersView) {

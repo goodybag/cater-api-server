@@ -8,17 +8,19 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
-
+      this.options.inputSelector = this.options.inputSelector || '.search-input';
+      this.options.changeEvent = this.options.changeEvent || 'search:change';
+      window.searchview = this;
     },
 
     submit: function(e) {
       e.preventDefault();
       analytics.track('Filter Change', { type: 'Searching' });
-      this.trigger('search:change');
+      this.trigger(this.options.changeEvent);
     },
 
     getProps: function() {
-      return { search:  this.$el.find('.search-input').val() };
+      return { search:  this.$el.find(this.options.inputSelector).val() };
     }
   });
 });

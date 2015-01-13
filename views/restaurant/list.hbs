@@ -29,9 +29,10 @@ require( [
   'data/views/sort-view'
 , 'data/views/filters-view'
 , 'data/views/order-params-view'
+, 'data/views/search-view'
 , 'app/views/restaurants-list-view'
 ],
-function( sortView, filtersView, orderParamsView, ListView ){
+function( sortView, filtersView, orderParamsView, searchView, ListView ){
   var listView = new ListView({
     el: '#main'
   , searchUrl: '/restaurants'
@@ -39,6 +40,7 @@ function( sortView, filtersView, orderParamsView, ListView ){
   listView.addFilter(orderParamsView);
   listView.addFilter(sortView);
   listView.addFilter(filtersView);
+  listView.addFilter(searchView);
 });
 </script>
 {{/extend}}

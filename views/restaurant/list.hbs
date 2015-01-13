@@ -40,7 +40,13 @@ function( SortView, FiltersView, OrderParamsView, ListView, OrderParams ){
   // :)
   var sortView = new SortView({ el: '#sort', inputSelector: '[name="list-sort"]:checked' });
 
-  var filtersView = new FiltersView({ el: '#filters' });
+  var filtersView = new FiltersView({
+    el: '#filters'
+  });
+
+  filtersView.addFacet('cuisines', '.filter-cuisines input[type="checkbox"]:checked');
+  filtersView.addFacet('diets', '.filter-diets input[type="checkbox"]:checked');
+  filtersView.addFacet('mealTypes', '.filter-meal-types input[type="checkbox"]:checked');
 
   var listView = new ListView({
     el: '#main'
@@ -54,6 +60,8 @@ function( SortView, FiltersView, OrderParamsView, ListView, OrderParams ){
 
   listView.addFilter(orderParamsView);
   listView.addFilter(sortView);
+
+  window.filtersView = filtersView;
   listView.addFilter(filtersView);
 });
 </script>

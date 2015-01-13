@@ -1,6 +1,10 @@
 @restaurant-list-link-color: @palette-white;
 
 .page-restaurant-list {
+  section {
+    border-top: 1px solid @palette-dark-gray;
+  }
+
   .search-restaurants {
     background-color: @palette-black;
     color: @palette-white;
@@ -8,7 +12,6 @@
   }
 
   .search-restaurants + .search-restaurants {
-    border-top: 1px solid @palette-dark-gray;
     padding: 0;
     font-size: 16px;
   }
@@ -70,7 +73,7 @@
   }
 
   .search-advanced-wrapper {
-    padding: 10px 0;
+    padding-bottom: 10px;
   }
 
   .search-advanced-link {
@@ -137,5 +140,18 @@
     }
   }
 
+  .search-advanced-search {
+    margin: 0.67em 0;
+    & input[type="text"] {
+      margin: 10px 0;
+    }
+  }
 
+  @media (min-width: @breakpoint-tablet) {
+    .search-advanced-search input[type="text"] {
+      display: inline;
+      width: 300px;
+      margin: 0 20px;
+    }
+  }
 }

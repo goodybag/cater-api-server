@@ -3,7 +3,7 @@ var config    = require('../../../config');
 var slogger   = require('../logger');
 var welcomer  = require('../../../lib/welcome-emailer');
 
-module.exports = function( job, done ){
+module.exports.fn = function( job, done ){
   var logger = slogger.create('Send Welcome Email', {
     data: job
   });
@@ -12,3 +12,5 @@ module.exports = function( job, done ){
 
   welcomer.send( job.data.options, job.data.user.id, done );
 };
+
+module.exports.name = 'send-welcome-email';

@@ -19,13 +19,13 @@ var getQuery = function( storage ){
   var $query = {
     where: {
       status: 'submitted'
-    , 'submitted_dates.submitted': { $older_than: config.workers.reminders.actionNeeded.threshold }
+    , 'submitted_dates.submitted': { $older_than: config.reminders.actionNeeded.threshold }
     }
   };
 
   // Don't notify until one hour since last notification
   var recent = Object.keys(storage.lastNotified).reduce( function(list, id) {
-    var hourAgo = new Date(new Date() - config.workers.reminders.actionNeeded.interval);
+    var hourAgo = new Date(new Date() - config.reminders.actionNeeded.interval);
     var date = new Date(storage.lastNotified[id]);
     if ( date >= hourAgo ) {
       list.push(id);

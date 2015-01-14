@@ -1,5 +1,5 @@
 /**
- * Config.Session
+ * Config.Reminders
  */
 
 var isDev = process.env['GB_ENV'] === 'dev';

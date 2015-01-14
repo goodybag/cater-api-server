@@ -224,7 +224,7 @@ config.defaults = {
   }
 
 , emails: {
-    support: 'support@goodybag.com'
+    support: [ local.testEmail || 'test@goodybag.com' ]
   , tech: [ local.testEmail || 'test@goodybag.com' ]
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'

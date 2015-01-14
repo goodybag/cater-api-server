@@ -9,6 +9,7 @@ var actions = [
 , { fn: require('./redeem-reward'), name: 'redeem-reward' }
 , { fn: require('./delivery-service-order'), name:'delivery-service-order' }
 , { fn: require('./sms-gb-ds-after-hours'), name: 'sms-gb-ds-after-hours' }
+, { fn: require('./non-contracted-restaurant-order'), name: 'non-contracted-restaurant-order' }
 ];
 
 actions.forEach( function( action ){

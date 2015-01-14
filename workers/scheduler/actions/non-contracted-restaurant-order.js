@@ -16,7 +16,7 @@ module.exports = function(job, done) {
   logger.info('Sending CS sms and email notifications');
 
   utils.async.parallel([
-    notifier.send.bind( notifier, 'cs-non-contracted-order-email', orderId )
-  , notifier.send.bind( notifier, 'cs-non-contracted-order-sms', orderId )
+    notifier.send.bind( notifier, 'gb-non-contracted-order-email', orderId )
+  , notifier.send.bind( notifier, 'gb-non-contracted-order-sms', orderId )
   ], done );
 };

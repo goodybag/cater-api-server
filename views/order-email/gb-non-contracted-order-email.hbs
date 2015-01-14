@@ -1,0 +1,21 @@
+Order #{{order.id}} was placed at non-contracted restaurant. Please review <a href="{{config.baseUrl}}/orders/{{order.id}}">here</a>
+
+<dl>
+  <dt>User</dt>
+  <dd>{{#if order.user.name}}{{order.user.name}}{{else}}N/A{{/if}}</dd>
+  <dt>Restaurant</dt>
+  <dd>{{order.restaurant.name}}</dd>
+
+  <dt>Region</dt>
+  <dd>{{order.region.name}}</dd>
+  <dt>Datetime</dt>
+  <dd>{{datepart order.datetime}} {{timepart order.datetime}}</dd>
+</dl>
+
+<p>Workflow</p>
+<ol>
+  <li>Select which location the courier will pickup from</li>
+  <li>Send courier notification</li>
+  <li>Call in order to restaurant manually</li>
+  <li>Accept order if possible</li>
+</ol>

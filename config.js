@@ -33,6 +33,11 @@ config.defaults = {
     }
   }
 
+, afterHours: {
+    start:  8   // 8am
+  , end:    18  // 6pm
+  }
+
 , emailProvider: 'mandrill'
 
 , tmpDir: './tmp'

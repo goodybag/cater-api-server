@@ -18,3 +18,5 @@ yrp.populate( 25, function( error ){
 #### `.populate( restaurant_id, [callback( error )] )`
 
 Runs all data strategies and populates the restaurant
+
+#### `.getYelpData( restaurant_id, callback( error, data ) )`

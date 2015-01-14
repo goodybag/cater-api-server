@@ -3,6 +3,8 @@ Order #{{order.id}} was placed at non-contracted restaurant. Please review <a hr
 <dl>
   <dt>User</dt>
   <dd>{{#if order.user.name}}{{order.user.name}}{{else}}N/A{{/if}}</dd>
+  <dt>Organization</dt>
+  <dd>{{#if order.user.organization}}{{order.user.organization}}{{else}}N/A{{/if}}</dd>
   <dt>Restaurant</dt>
   <dd>{{order.restaurant.name}}</dd>
 

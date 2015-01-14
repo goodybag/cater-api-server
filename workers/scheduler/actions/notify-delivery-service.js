@@ -6,7 +6,7 @@ var notifier  = require('../../../lib/order-notifier');
 
 require('../../../lib/order-notifications');
 
-module.exports = function(job, done) {
+module.exports.fn = function(job, done) {
   var logger = slogger.create('Notify Delivery Service', {
     data: job
   });
@@ -19,3 +19,5 @@ module.exports = function(job, done) {
     notifier.send.bind( notifier, 'delivery-service-order-submitted', orderId )
   ], done );
 };
+
+module.exports.name = 'notify-delivery-service';

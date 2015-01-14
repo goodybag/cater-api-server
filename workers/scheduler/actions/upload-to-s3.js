@@ -3,7 +3,7 @@ var config    = require('../../../config');
 var utils     = require('../../../utils');
 var slogger   = require('../logger');
 
-module.exports = function( job, done ){
+module.exports.fn = function( job, done ){
   var logger = slogger.create('UploadToS3', {
     data: job
   });
@@ -35,3 +35,5 @@ module.exports = function( job, done ){
 
   client.putFile( job.data.src, job.data.dest, done );
 };
+
+module.exports.name = 'upload-to-s3';

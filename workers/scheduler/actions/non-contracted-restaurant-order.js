@@ -6,7 +6,7 @@ var notifier  = require('../../../lib/order-notifier');
 
 require('../../../lib/order-notifications');
 
-module.exports = function(job, done) {
+module.exports.fn = function(job, done) {
   var logger = slogger.create('Notify CS of non-contracted restaurant order', {
     data: job
   });
@@ -20,3 +20,5 @@ module.exports = function(job, done) {
   , notifier.send.bind( notifier, 'gb-non-contracted-order-sms', orderId )
   ], done );
 };
+
+module.exports.name = 'non-contracted-restaurant-order';

@@ -1,12 +1,13 @@
 var path      = require('path');
 var phantom   = require('../../../lib/phantom');
+var scheduler = require('../../../lib/scheduler');
 var config    = require('../../../config');
 var utils     = require('../../../utils');
 var slogger   = require('../logger');
 
 var script = path.resolve( __dirname, '../../../', config.pdf.script );
 
-module.exports = function( job, done ){
+module.exports.fn = function( job, done ){
   var logger = slogger.create('BuildPDF', {
     data: job
   });
@@ -63,3 +64,5 @@ module.exports = function( job, done ){
     done();
   }));
 };
+
+module.exports.name = 'build-pdf';

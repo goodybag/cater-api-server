@@ -65,7 +65,7 @@ var notifyUser = function( reward, userId ){
   };
 };
 
-module.exports = function( job, done ){
+module.exports.fn = function( job, done ){
   var logger = slogger.create('Redeem Reward', {
     data: job
   });
@@ -87,3 +87,5 @@ module.exports = function( job, done ){
     done(err);
   });
 };
+
+module.exports.name = 'redeem-reward';

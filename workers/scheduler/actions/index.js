@@ -1,18 +1,16 @@
+var fs = require('fs');
+var path = require('path');
 var scheduler = require('../../../lib/scheduler');
+var actions = [];
 
-var actions = [
-  { fn: require('./send-order-notification'), name: 'send-order-notification' }
-, { fn: require('./send-welcome-email'), name: 'send-welcome-email' }
-, { fn: require('./build-pdf'), name: 'build-pdf' }
-, { fn: require('./upload-to-s3'), name: 'upload-to-s3' }
-, { fn: require('./notify-delivery-service'), name: 'notify-delivery-service' }
-, { fn: require('./redeem-reward'), name: 'redeem-reward' }
-, { fn: require('./delivery-service-order'), name:'delivery-service-order' }
-, { fn: require('./sms-gb-ds-after-hours'), name: 'sms-gb-ds-after-hours' }
-];
-
-actions.forEach( function( action ){
+fs.readdirSync( __dirname ).filter( function( f ){
+  return fs.statSync( path.join( __dirname, f ) ).isFile();
+}).filter( function( f ){
+  return f.slice(-3) === '.js' && f !== 'index.js';
+}).forEach( function( f ){
+  var action = require( path.join( __dirname, f ) );
   scheduler.registerAction(action.name, action.fn);
+  actions.push(action);
 });
 
 module.exports = actions;

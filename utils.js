@@ -300,7 +300,7 @@ utils.patch = function(url, data, options, callback){
   , json: true
   , form: data
   }, options);
-  
+
   request(options, callback);
 };
 
@@ -552,6 +552,26 @@ utils.getWorkingTime = function( datetime, timezone ){
       .second( 0 );
   }
   return datetime.toISOString();
+};
+
+// Weekend defined as sat & sun
+utils.isWeekend = function(datetime) {
+  datetime = moment(datetime);
+  return datetime.day() === 0 || datetime.day() === 6;
+}
+
+utils.isWeekday = function(datetime) {
+  return !utils.isWeekend(datetime);
+}
+
+utils.isAfterHours = function(datetime) {
+  datetime = moment(datetime);
+  return datetime.hour() <= config.afterHours.start ||
+         datetime.hour() >  config.afterHours.end;
+};
+
+utils.duringBusinessHours = function(datetime) {
+  return !utils.isAfterHours(datetime);
 };
 
 module.exports = utils;

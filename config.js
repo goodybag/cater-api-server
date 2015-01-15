@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, reminders: require('./configs/reminders')
 , redis: require('./configs/redis')
 , session: require('./configs/session')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
@@ -30,6 +31,11 @@ config.defaults = {
       before: [ 0, 1 ]
     , after:  [ 1, 1 ]
     }
+  }
+
+, afterHours: {
+    start:  8   // 8am
+  , end:    18  // 6pm
   }
 
 , emailProvider: 'mandrill'
@@ -224,7 +230,7 @@ config.defaults = {
   }
 
 , emails: {
-    support: 'support@goodybag.com'
+    support: [ local.testEmail || 'test@goodybag.com' ]
   , tech: [ local.testEmail || 'test@goodybag.com' ]
   , orders: 'orders@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
@@ -376,12 +382,6 @@ config.dev = {
         interval: 1000 * 5    // 5 seconds
       }
     }
-  , reminders: {
-      actionNeeded: {
-        interval: 5 * 60 * 1000 // 5 minute
-      , threshold: { value: 1, unit: 'hours' }
-      }
-    }
   }
 };
 
@@ -471,12 +471,6 @@ config.staging = {
       }
     , process: {
         interval: 1000 * 5 // 5 seconds
-      }
-    }
-  , reminders: {
-      actionNeeded: {
-        interval: 60 * 60 * 1000 // 1 hour
-      , threshold: { value: 1, unit: 'hours' }
       }
     }
   }
@@ -620,12 +614,6 @@ config.production = {
       }
     , process: {
         interval: 1000 * 20      // 20 seconds (~900k request/month)
-      }
-    }
-  , reminders: {
-      actionNeeded: {
-        interval: 60 * 60 * 1000 // 1 hour
-      , threshold: { value: 1, unit: 'hours' }
       }
     }
   }

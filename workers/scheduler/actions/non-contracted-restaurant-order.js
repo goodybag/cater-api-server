@@ -7,17 +7,18 @@ var notifier  = require('../../../lib/order-notifier');
 require('../../../lib/order-notifications');
 
 module.exports.fn = function(job, done) {
-  var logger = slogger.create('Notify Delivery Service', {
+  var logger = slogger.create('Notify CS of non-contracted restaurant order', {
     data: job
   });
 
   var orderId = job.data.orderId;
 
-  logger.info('Sending delivery service order submitted notification');
+  logger.info('Sending CS sms and email notifications');
 
   utils.async.parallel([
-    notifier.send.bind( notifier, 'delivery-service-order-submitted', orderId )
+    notifier.send.bind( notifier, 'gb-non-contracted-order-email', orderId )
+  , notifier.send.bind( notifier, 'gb-non-contracted-order-sms', orderId )
   ], done );
 };
 
-module.exports.name = 'notify-delivery-service';
+module.exports.name = 'non-contracted-restaurant-order';

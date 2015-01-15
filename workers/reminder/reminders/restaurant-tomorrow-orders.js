@@ -45,6 +45,8 @@ function notifyOrderFn( order ){
     .set( 'minute', config.reminders.tomorrowOrdersTime.split(':')[1] )
     .startOf('minute');
 
+  // If sendDate is in the past, just send now
+  // Also, let's go ahead and cast to a normal date object
   if ( sendDate < moment() ){
     sendDate = new Date();
   } else {

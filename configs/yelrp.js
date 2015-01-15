@@ -13,7 +13,7 @@ module.exports = {
                   , "Seafood Markets", "Burgers", "Chicken Wings"
                   ]
 
-, fromCatsToTags: {
+, fromCatsToCuisines: {
     "American (Traditional)": "American"
   , "American (New)": "American"
   }
@@ -22,7 +22,7 @@ module.exports = {
 // For values not explicitly set, there's a 1-to-1 mapping
 module.exports.yelpCategories.forEach( function( cat ){
   // Don't override existing values
-  if ( module.exports.fromCatsToTags[ cat ] ) return;
+  if ( module.exports.fromCatsToCuisines[ cat ] ) return;
 
-  module.exports.fromCatsToTags[ cat ] = cat;
+  module.exports.fromCatsToCuisines[ cat ] = cat;
 });

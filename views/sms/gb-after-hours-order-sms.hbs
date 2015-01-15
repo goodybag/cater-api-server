@@ -1,2 +1,2 @@
-Goodybag DS Order #{{order.id}} was placed over the weekend or after hours.
-Please ensure the delivery service can fulfill this order.
+Goodybag {{capitalize order.type}} Order #{{order.id}} was placed over the weekend or after hours.
+Please ensure the {{#eq order.type "courier"}}courier service{{else}}restaurant{{/eq}} can fulfill this order.

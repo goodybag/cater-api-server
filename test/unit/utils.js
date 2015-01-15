@@ -78,4 +78,27 @@ describe ('Utils', function(){
     assert(result);
   });
 
+  it('.isWeekend should return true for weekend', function() {
+    var datetime = '2015-01-17 12:00';
+    var result = utils.isWeekend( moment(datetime) );
+    assert(result);
+  });
+
+  it('.isWeekend should return false for a weekday', function() {
+    var datetime = '2015-01-15 12:00';
+    var result = !utils.isWeekend( moment(datetime) );
+    assert(result);
+  });
+
+  it('.isWeekday should return false for weekday', function() {
+    var datetime = '2015-01-17 12:00';
+    var result = !utils.isWeekday( moment(datetime) );
+    assert(result);
+  });
+
+  it('.isWeekday should return true for a weekday', function() {
+    var datetime = '2015-01-15 12:00';
+    var result = utils.isWeekday( moment(datetime) );
+    assert(result);
+  });
 });

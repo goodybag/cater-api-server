@@ -554,6 +554,16 @@ utils.getWorkingTime = function( datetime, timezone ){
   return datetime.toISOString();
 };
 
+// Weekend defined as sat & sun
+utils.isWeekend = function(datetime) {
+  datetime = moment(datetime);
+  return datetime.day() === 0 || datetime.day() === 6;
+}
+
+utils.isWeekday = function(datetime) {
+  return !utils.isWeekend(datetime);
+}
+
 utils.isAfterHours = function(datetime) {
   datetime = moment(datetime);
   return datetime.hour() <= config.afterHours.start ||

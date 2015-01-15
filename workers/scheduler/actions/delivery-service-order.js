@@ -7,7 +7,7 @@ var slogger   = require('../logger');
  * Send GB admins a notification if a delivery service is sitting on
  * a delivery email
  */
-module.exports = function(job, done) {
+module.exports.fn = function(job, done) {
   var logger = slogger.create('DeliveryServiceOrder', {
     data: job
   });
@@ -26,3 +26,5 @@ module.exports = function(job, done) {
     done(null);
   });
 };
+
+module.exports.name = 'delivery-service-order';

@@ -7,10 +7,12 @@
  *   the same notification twice within the same window.
  */
 
+var moment    = require('moment-timezone');
 var Models    = require('../../../models');
 var utils     = require('../../../utils');
 var config    = require('../../../config');
 var notifier  = require('../../../lib/order-notifier');
+var scheduler = require('../../../lib/scheduler');
 var views     = require('../lib/views');
 var queries   = require('../../../db/queries');
 var db        = require('../../../db');
@@ -32,9 +34,31 @@ function getOrderQuery( storage ){
 // Return the function for carrying out all the notifications
 // for an order
 function notifyOrderFn( order ){
+  // Since reminder runs periodically, and this function is run with
+  // "orders that are tomorrow", we can safely assume that we'll get
+  // to this point in code _before the time specified in
+  // `tomorrowOrdersTime`. This function will most likely be called
+  // at around midnight
+  var sendDate = moment()
+    .tz( order.attributes.timezone )
+    .set( 'hour', config.reminders.tomorrowOrdersTime.split(':')[0] )
+    .set( 'minute', config.reminders.tomorrowOrdersTime.split(':')[1] )
+    .startOf('minute');
+
+  // If sendDate is in the past, just send now
+  // Also, let's go ahead and cast to a normal date object
+  if ( sendDate < moment() ){
+    sendDate = new Date();
+  } else {
+    sendDate = sendDate.toDate();
+  }
+
   return utils.partial( utils.async.parallelNoBail, {
     email: function( done ){
-      notifier.send('restaurant-tomorrow-order', order.toJSON({ reivew: true }), function( error ){
+      scheduler.enqueue( 'send-order-notification', sendDate, {
+        notification_id: 'restaurant-tomorrow-order'
+      , order_id:         order.attributes.id
+      }, function( error ){
         // If successful, we want an easy way to know on the receiving end
         // So just pass back the original order object as the results
         done( error, error ? null : order );

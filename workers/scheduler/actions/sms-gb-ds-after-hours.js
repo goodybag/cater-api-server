@@ -3,7 +3,7 @@ var config  = require('../../../config');
 var twilio  = require('twilio')(config.twilio.account, config.twilio.token);
 var slogger = require('../logger');
 
-module.exports = function(job, jobDone) {
+module.exports.fn = function(job, jobDone) {
   var logger = slogger.create('SMS GB Courier After Hours', {
     data: job
   });
@@ -28,3 +28,5 @@ module.exports = function(job, jobDone) {
     });
   }, jobDone);
 }
+
+module.exports.name = 'sms-gb-ds-after-hours';

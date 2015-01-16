@@ -14,13 +14,25 @@
   <![endif]-->
 </head>
 <body class="page {{{block "page"}}}">
-  {{> admin_navbar}}
+  <div class="main-wrapper">
+    {{> admin_navbar}}
 
-  {{{block "banner"}}}
+    {{{block "banner"}}}
 
-  <div id="main">
-    {{{block "body"}}}
+    <div id="main">
+      {{{block "body"}}}
+    </div>
+    <div class="main-push"></div>
   </div>
+
+  <footer class="footer">
+    <ul class="nav footer-nav">
+      <li><a href="/contact-us">Contact Us</a></li>
+      <li><a href="/contact-us">Request to be a caterer</a></li>
+      <li><a href="/legal">Terms of service</a></li>
+      <li><a href="/privacy">Privacy policy</a></li>
+    </ul>
+  </footer>
 
   {{#unless config.isDev}}
   <script src="{{cdn (format 'dist/<%= version %>/goodybag.js' pkg)}}"></script>

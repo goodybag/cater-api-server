@@ -137,6 +137,7 @@ module.exports = function(grunt) {
         , { expand: true, flatten: true, src: 'public/img/*.svg', dest: 'public/dist/<%= pkg.version %>/img/' }
         , { expand: true, flatten: true, src: 'public/font/gb/*', dest: 'public/dist/<%= pkg.version %>/font/gb/' }
         , { expand: true, flatten: true, src: 'public/font/aleo/*', dest: 'public/dist/<%= pkg.version %>/font/aleo/' }
+        , { expand: true, flatten: true, src: 'public/font/avenir/*', dest: 'public/dist/<%= pkg.version %>/font/avenir/' }
         ]
       }
     }

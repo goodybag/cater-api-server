@@ -4,7 +4,7 @@
 {{#extend "body"}}
 <section class="page-section" id="section-intro">
   <div class="container intro">
-    <h1>Welcome to the Goodybag Kitchen Sink</h1>
+    <h1>Welcome to the Kitchen Sink</h1>
     <p class="lead">It's a bit dirty, it doesn't drain very quickly, and - oh? Not that kitchen sink? Right! This is the place where we test out and document UI Components.</p>
   </div>
 </section>
@@ -12,16 +12,15 @@
 <section class="page-section" id="section-colors">
   <div class="container">
     <h2 class="component-title">Color Palette</h2>
-    <div class="palette-swatch">
-      <div class="palette-sample palette-sample-red">@palette-red: #dc0000</div>
-      <div class="palette-sample palette-sample-black">@palette-black: #5d616b</div>
-      <div class="palette-sample palette-sample-white">@palette-white: #ffffff</div>
-      <div class="palette-sample palette-sample-blue">@palette-blue: #0988d2</div>
-      <div class="palette-sample palette-sample-gray">@palette-gray: #f0f0f0</div>
-      <div class="palette-sample palette-sample-dark-gray">@palette-dark-gray: #f0f0f0</div>
+    <div class="color-blocks">
+      {{#each palette}}
+      <div class="color-block" data-color="{{this.name}}">
+        <div class="box"></div>
+        <div class="title">{{this.name}}</div>
+        <div class="color">{{this.color}}</div>
+      </div>
+      {{/each}}
     </div>
-    <p>Avoid using pure black (#000). In the context of other colors, @palette-black should serve as the darkest color.
-    </p>
     <p>The palette should be used to create semantic class tags, not color classes.</p>
     <p>Good</p>
     <code class="language-css">.alert-warning { color: @palette-red }</code>
@@ -99,30 +98,71 @@
 
 </section>
 
-<section class="page-section" id="section-colors">
-  <div class="container">
-    <h2 class="component-title">Mixins</h2>
-    <h4>Drop shadow</h4>
-    <p>Demo</p>
-</section>
-
 <section class="page-section" id="section-dropdowns">
   <div class="container">
     <h2 class="component-title">Dropdowns</h2>
     <div class="dropdowns-list">
       <div class="doc-dropdown-item">
         <h5 class="item-title">Plain</h5>
-        <button class="gb-dropdown btn btn-default">
-          regions
-          <ul class="gb-dropdown-items">
-            <li>Austin, TX</li>
-            <li>Houston, TX</li>
-            <li>Dallas, TX</li>
-            <li>San Antonio, TX</li>
-          </ul>
-        </button>
+        <span class="popover-wrapper gb-dropdown">
+          <button
+            class="btn btn-default btn-dropdown"
+            data-role="popover"
+            data-target="dropdown-popover">
+            My Orders
+            <i class="gb-icon-caret-down"></i>
+          </button>
+          
+          <div class="popover-modal dropdown-popover">
+            <ul class="gb-dropdown-items">
+              <li>Austin, TX</li>
+              <li>Houston, TX</li>
+              <li>Dallas, TX</li>
+              <li>San Antonio, TX</li>
+            </ul>
+          </div>
+        </span>
+      </div>
+      <div class="doc-dropdown-item">
+        <h5 class="item-title">Drops down to the right</h5>
+        <span class="popover-wrapper gb-dropdown right">
+          <button
+            class="btn btn-default btn-dropdown"
+            data-role="popover"
+            data-target="dropdown-popover">
+            My Orders
+            <i class="gb-icon-caret-down"></i>
+          </button>
+          
+          <div class="popover-modal dropdown-popover">
+            <ul class="gb-dropdown-items">
+              <li>Austin, TX</li>
+              <li>Houston, TX</li>
+              <li>Dallas, TX</li>
+              <li>San Antonio, TX</li>
+            </ul>
+          </div>
+        </span>
       </div>
     </div>
+    <code class="language-markup">
+    {{~#raw~}}
+<!-- Wrap in a popover thingy -->
+<span class="popover-wrapper gb-dropdown">
+  <button
+    class="btn btn-default btn-dropdown"
+    data-role="popover"
+    data-target="dropdown-popover">
+    My Orders
+    <i class="gb-icon-caret-down"></i>
+  </button>
+  
+  <div class="popover-modal dropdown-popover">
+    <!-- Dropdown content -->
+  </div>
+</span>
+    {{~/raw~}}
+    </code>
   </div>
 </section>
 
@@ -312,6 +352,233 @@
   </div>
 </section>
 
+<section id="section-navbar">
+  <div class="container">
+    <h2 class="component-title">Navbar</h2>
+    <h3>With Links</h3>
+  </div>
+  <div class="demo-navbar">
+    <header class="navbar collapsed">
+      <div class="container">
+        <a href="/">
+          <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
+        </a>
+
+        <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
+        <ul class="nav">
+          <li><a href="/join">Sign Up</a></li>
+          <li><a href="/login">Login</a></li>
+        </ul>
+      </div>
+    </header>
+  </div>
+  <div class="container">
+    <code class="language-markup">
+    {{~#raw~}}
+<header class="navbar collapsed">
+  <div class="container">
+    <a href="/">
+      <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
+    </a>
+
+    <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
+    <ul class="nav">
+      <li><a href="/join">Sign Up</a></li>
+      <li><a href="/login">Login</a></li>
+    </ul>
+  </div>
+</header>
+    {{~/raw~}}
+    </code>
+  </div>
+
+  <div class="container">
+    <h3>With User Links</h3>
+  </div>
+  <div class="demo-navbar">
+    <header class="navbar navbar-with-dropdowns collapsed">
+      <div class="container">
+        <a href="/">
+          <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
+        </a>
+
+        <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
+        <div class="nav">
+          <span class="popover-wrapper gb-dropdown same-width-modal">
+            <button
+              class="btn btn-default btn-dropdown"
+              data-role="popover"
+              data-target="dropdown-popover">
+              My Orders
+              <i class="gb-icon-caret-down"></i>
+            </button>
+            
+            <div class="popover-modal dropdown-popover">
+              <ul class="popover-body">
+                <li class="popover-item">
+                  <a href="#">Start New Order</a>
+                </li>
+                <li class="popover-item">
+                  <a href="#">My Orders</a>
+                </li>
+              </ul>
+            </div>
+          </span>
+          <span class="popover-wrapper gb-dropdown same-width-modal">
+            <button
+              class="btn btn-default btn-dropdown"
+              data-role="popover"
+              data-target="dropdown-popover">
+              My Account
+              <i class="gb-icon-caret-down"></i>
+            </button>
+            
+            <div class="popover-modal dropdown-popover">
+              <ul class="popover-body">
+                <li class="popover-item">
+                  <a href="#">Start New Order</a>
+                </li>
+                <li class="popover-item">
+                  <a href="#">My Orders</a>
+                </li>
+              </ul>
+            </div>
+          </span>
+        </div>
+        <a href="/users/me/rewards" class="gb-points">500 points</a>
+      </div>
+    </header>
+  </div>
+  <div class="container">
+    <code class="language-markup">
+    {{~#raw~}}
+<header class="navbar navbar-with-dropdowns collapsed">
+  <div class="container">
+    <a href="/">
+      <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
+    </a>
+
+    <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
+    <div class="nav">
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+          class="btn btn-default btn-dropdown"
+          data-role="popover"
+          data-target="dropdown-popover">
+          My Orders
+          <i class="gb-icon-caret-down"></i>
+        </button>
+        
+        <div class="popover-modal dropdown-popover">
+          <ul class="popover-body">
+            <li class="popover-item">
+              <a href="#">Start New Order</a>
+            </li>
+            <li class="popover-item">
+              <a href="#">My Orders</a>
+            </li>
+          </ul>
+        </div>
+      </span>
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+          class="btn btn-default btn-dropdown"
+          data-role="popover"
+          data-target="dropdown-popover">
+          My Account
+          <i class="gb-icon-caret-down"></i>
+        </button>
+        
+        <div class="popover-modal dropdown-popover">
+          <ul class="popover-body">
+            <li class="popover-item">
+              <a href="#">Start New Order</a>
+            </li>
+            <li class="popover-item">
+              <a href="#">My Orders</a>
+            </li>
+          </ul>
+        </div>
+      </span>
+    </div>
+    <a href="/users/me/rewards" class="gb-points">500 points</a>
+  </div>
+</header>
+    {{~/raw~}}
+    </code>
+  </div>
+
+  <div class="container">
+    <h3>With Login</h3>
+  </div>
+  <div class="demo-navbar">
+    <header class="navbar collapsed">
+      <div class="container">
+        <a href="/">
+          <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
+        </a>
+
+        <button class="navbar-toggle btn btn-default btn-small">Sign In</button>
+        <form class="login-form form-small" method="POST" action="/login{{queryParams query}}">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <label for="remember-me" class="remember-me">
+              <input type="checkbox" name="remember" value="1" id="remember-me" tabindex="3">
+              Remember me
+            </label>
+            <input type="email" name="email" id="login-email" placeholder="Email" tabindex="1">
+          </div>
+
+          <div class="form-group">
+            <a href="/forgot-password" class="forgot-password">Forgot password?</a>
+            <label for="login-password">Password</label>
+            <input type="password" name="password" id="login-password" placeholder="Password" tabindex="2">
+          </div>
+
+          <div class="form-group form-group-submit">
+            <button class="btn btn-default" tabindex="4">Sign In</button>
+          </div>
+        </form>
+      </div>
+    </header>
+  </div>
+  <div class="container">
+    <code class="language-markup">
+    {{~#raw~}}
+<header class="navbar collapsed">
+  <div class="container">
+    <a href="/">
+      <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
+    </a>
+
+    <button class="navbar-toggle btn btn-default btn-small">Sign In</button>
+    <form class="login-form form-small" method="POST" action="/login{{queryParams query}}">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <label for="remember-me" class="remember-me">
+          <input type="checkbox" name="remember" value="1" id="remember-me" tabindex="3">
+          Remember me
+        </label>
+        <input type="email" name="email" id="login-email" placeholder="Email" tabindex="1">
+      </div>
+
+      <div class="form-group">
+        <a href="/forgot-password" class="forgot-password">Forgot password?</a>
+        <label for="login-password">Password</label>
+        <input type="password" name="password" id="login-password" placeholder="Password" tabindex="2">
+      </div>
+
+      <div class="form-group form-group-submit">
+        <button class="btn btn-default" tabindex="4">Sign In</button>
+      </div>
+    </form>
+  </div>
+</header>
+    {{~/raw~}}
+    </code>
+  </div>
+</section>
+
 {{/extend}}
 
 {{#extend "scripts"}}
@@ -339,6 +606,8 @@
     };
 
     $(function(){
+      $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+
       var $container = $('<div class="section-decorators"></div>');
 
       for ( var i = 0; i < options.numDecorators; ++i ){

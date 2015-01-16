@@ -72,6 +72,7 @@ module.exports.register = function(app) {
    */
 
   app.get('/restaurants'
+  , m.searchTags()
   , controllers.restaurants.list
   );
 

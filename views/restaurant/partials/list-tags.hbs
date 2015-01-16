@@ -2,18 +2,11 @@
   {{#notEmpty orderParams}}
   <span> {{../restaurants.length}} result{{#gt ../restaurants.length 1}}s{{/gt}}: </span>
   {{/notEmpty}}
-  {{#each orderParams.cuisines}}
-  <a class="search-tag" href="#">{{this}} <span class="gb-icon-x-mark"></span></a>
+
+  {{#each searchTags}}
+  <a class="search-tag" href="{{baseUrl}}/restaurants?{{qs}}">{{text}} <span class="gb-icon-x-mark"></span></a>
   {{/each}}
-  {{#each orderParams.diets}}
-  <a class="search-tag" href="#">{{this}} <span class="gb-icon-x-mark"></span></a>
-  {{/each}}
-  {{#each orderParams.mealTypes}}
-  <a class="search-tag" href="#">{{this}} <span class="gb-icon-x-mark"></span></a>
-  {{/each}}
-  {{#if orderParams.search}}
-  <a class="search-tag" href="#">Search: {{orderParams.search}} <span class="gb-icon-x-mark"></span></a>
-  {{/if}}
+
   {{#notEmpty orderParams}}
   <a class="back-to-results" href="/restaurants">Clear search</a>
   {{/notEmpty}}

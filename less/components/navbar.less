@@ -16,6 +16,11 @@
 @logo-padding-top: (@logo-padding-height / 2) + @logo-padding-offset;
 @logo-padding-bottom: (@logo-padding-height / 2) - @logo-padding-offset;
 
+@logo-mobile-padding-height: @navbar-mobile-height - @navbar-mobile-logo-size;
+@logo-mobile-padding-offset: 2px;
+@logo-mobile-padding-top: (@logo-mobile-padding-height / 2) + @logo-mobile-padding-offset;
+@logo-mobile-padding-bottom: (@logo-mobile-padding-height / 2) - @logo-mobile-padding-offset;
+
 // - 2 for the borders
 @dropdown-padding-top: (
   (@navbar-height - @btn-padding-top-base - @btn-padding-bottom-base - 2 ) / 2
@@ -235,12 +240,12 @@ body {
     font-size: @navbar-logo-size / 2;
     line-height: @navbar-mobile-height;
 
-    & when ( @logo-padding-top > 0 ){
-      padding-top: @logo-padding-top * @navbar-mobile-factor;
+    & when ( @logo-mobile-padding-top > 0 ){
+      padding-top: @logo-mobile-padding-top;
     }
 
-    & when ( @logo-padding-bottom > 0 ){
-      padding-bottom: @logo-padding-bottom * @navbar-mobile-factor;
+    & when ( @logo-mobile-padding-bottom > 0 ){
+      padding-bottom: @logo-mobile-padding-bottom;
     }
   }
 

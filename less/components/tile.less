@@ -3,10 +3,13 @@
 @tile-cols: 3;
 @tile-gutter: 2.0%;
 @tile-width: (100% - (@tile-cols - 1) * @tile-gutter) / @tile-cols;
+@tile-link-color: @palette-gray-dark;
+@tile-border-color: @palette-gray;
+@tile-caption-color: @palette-white;
 
 .tile {
   margin-bottom: @tile-gutter;
-  border: 1px solid @palette-dark-gray;
+  border: 1px solid @tile-border-color;
   border-radius: @tile-border-radius;
 }
 
@@ -35,7 +38,7 @@
 }
 
 .tile-cover:not(:last-child) {
-  border-bottom: 1px solid @palette-dark-gray;
+  border-bottom: 1px solid @tile-border-color;
 }
 
 @media (min-width: @breakpoint-tablet) {
@@ -62,7 +65,7 @@
   position: absolute;
   bottom: 0px;
   width: 100%;
-  color: @palette-white;
+  color: @tile-caption-color;
   padding: @tile-padding;
   font-size: 18px;
   text-shadow: 0 1px 0 black;
@@ -84,7 +87,7 @@
 
 .tile-link {
   text-decoration: none;
-  color: @palette-black;
+  color: @tile-link-color;
 }
 
 .tile-link:hover {

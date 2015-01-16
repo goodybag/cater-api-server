@@ -1,12 +1,14 @@
 @restaurant-list-link-color: @palette-white;
+@restaurant-list-background-color: @palette-gray-dark;
+@restaurant-list-color: @palette-gray-dark;
 
 .page-restaurant-list {
   section {
-    border-top: 1px solid @palette-dark-gray;
+    border-top: 1px solid @palette-gray;
   }
 
   .search-restaurants {
-    background-color: @palette-black;
+    background-color: @restaurant-list-background-color;
     color: @palette-white;
     padding: 30px 0;
   }
@@ -59,7 +61,7 @@
       margin-right: 10px;
       font-size: 16px;
       font-weight: 700;
-      color: @palette-black;
+      color: @restaurant-list-color;
     }
   }
 

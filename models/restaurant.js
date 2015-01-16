@@ -580,19 +580,19 @@ var Restaurant = module.exports = Model.extend({
         case 'price':
           sortedCol = 'price ASC';
           break;
-        case 'priced':
+        case 'price desc':
           sortedCol = 'price DESC';
           break;
-        case 'minorder':
+        case 'order minimum':
           sortedCol = 'minimum_order ASC NULLS FIRST';
           break;
-        case 'minorderd':
+        case 'order minimum desc':
           sortedCol = 'minimum_order DESC NULLS LAST';
           break;
-        case 'deliveryfee':
+        case 'delivery fee':
           sortedCol = 'delivery_fee ASC';
           break;
-        case 'deliveryfeed':
+        case 'delivery fee desc':
           sortedCol = 'delivery_fee DESC';
           break;
       }

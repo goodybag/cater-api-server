@@ -14,7 +14,7 @@ var utils = require('../utils');
 */
 module.exports = function(opts) {
   return function searchTags(req, res, next) {
-    var searchTags = utils.pick(req.query, 'sort', 'cuisines', 'search');
+    var searchTags = utils.pick(req.query, 'sort', 'cuisines', 'diets', 'mealTypes', 'search');
 
     res.locals.searchTags = Object.keys(searchTags).reduce(function(list, param) {
       // Multiple value queries
@@ -27,7 +27,7 @@ module.exports = function(opts) {
       } else {
         list.push({
           text: param + ': '+req.query[param]
-        , qs: qs.stringify(utils.omit(req.query, param))
+        , qs: utils.queryParams(utils.omit(req.query, param))
         });
       }
       return list;

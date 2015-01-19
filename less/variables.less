@@ -121,13 +121,16 @@
 @btn-padding-bottom-large:      @btn-padding-top-large - 2;
 @btn-padding-left-large:        @btn-padding-right-large;
 
-@btn-border-width-base:         1px;
-
 @btn-border-radius-base:        @border-radius-base;
 
 
 // Forms
 ////////////////////////////////////////////////////
+@input-base-height:             @btn-base-height;
+@input-small-height:            @btn-small-height;
+@input-large-height:            @btn-large-height;
+@input-border-width-base:       @btn-border-width-base;
+
 @input-font-size:               @btn-font-size;
 @input-base-height:             @btn-base-height;
 @input-small-height:            @btn-small-height;
@@ -137,15 +140,20 @@
 @input-border-color:            @gray;
 @input-border-width:            1px;
 
-@input-padding-top-base:        @btn-padding-top-base;
+@input-padding-top-base:        ((@input-base-height - (@input-border-width-base * 2)) / 2) + 1;
 @input-padding-right-base:      12px;
-@input-padding-bottom-base:     @input-padding-top-base;
+@input-padding-bottom-base:     @input-padding-top-base - 2;
 @input-padding-left-base:       @input-padding-right-base;
 
-@input-padding-top-small:       @btn-padding-top-small;
+@input-padding-top-small:       ((@input-small-height - (@input-border-width-base * 2)) / 2) + 1;
 @input-padding-right-small:     12px;
-@input-padding-bottom-small:    @btn-padding-bottom-small;
+@input-padding-bottom-small:    @btn-padding-top-small - 2;
 @input-padding-left-small:      @input-padding-right-small;
+
+@input-padding-top-large:       ((@input-large-height - (@input-border-width-base * 2)) / 2) + 1;
+@input-padding-right-large:     12px;
+@input-padding-bottom-large:    @btn-padding-top-large - 2;
+@input-padding-left-large:      @input-padding-right-large;
 
 // Z-Indexes
 ////////////////////////////////////////////////////

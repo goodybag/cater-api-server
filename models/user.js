@@ -26,7 +26,7 @@ var User = module.exports = Model.extend({
 , isRestaurant: function(rid) {
     if ( !this.attributes ) return false;
     return utils.contains(this.attributes.groups, 'restaurant') &&
-           utils.contains(this.attributes.restaurant_ids, rid);
+           ( rid ? utils.contains(this.attributes.restaurant_ids, rid) : true );
   }
 
 , createPaymentMethod: function( pm, callback, client ){

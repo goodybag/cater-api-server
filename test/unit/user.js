@@ -3,6 +3,13 @@ var Models  = require('../../models');
 var assert = require('assert');
 
 describe ('models.User', function(){
+  it('isRestaurant at all', function() {
+    var user = new Models.User();
+    assert(!user.isRestaurant());
+    user = new Models.User({ groups: ['restaurant'] });
+    assert(user.isRestaurant());
+  });
+
   it('isRestaurant for non restaurant owner', function() {
     var user = new Models.User();
     assert(!user.isRestaurant(34));

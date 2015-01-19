@@ -322,7 +322,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'analyze',      ['complexity'] );
   grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'react', 'requirejs'] );
-  grunt.registerTask( 'default',      ['less', 'shell:handlebars', 'copy:legacy', 'loglog', 'watch'] );
+  grunt.registerTask( 'default',      ['less', 'namedModules', 'shell:handlebars', 'copy:legacy', 'loglog', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 
   grunt.registerTask( 'deploy', [

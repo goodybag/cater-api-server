@@ -70,8 +70,8 @@ define(function(require, exports, module) {
 
     changeTimes: function(e) {
       this.model.set('times', _.compact(_.map(this.$el.find('.open-period'), function(el) {
-        var open = utils.timeFormatter($(el).find(this.selectors.open).val()) || null;
-        var close = utils.timeFormatter($(el).find(this.selectors.close).val()) || null;
+        var open = utils.timeFormatter($(el).find(this.selectors.open).val(), 'hh:mm') || null;
+        var close = utils.timeFormatter($(el).find(this.selectors.close).val(), 'hh:mm') || null;
         return open || close ? [open, close] : null;
       }, this)));
     },

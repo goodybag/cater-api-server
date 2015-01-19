@@ -19,7 +19,7 @@ __Install MongoDB:__
 
 ```
 brew install mongodb
-mongod
+mongod --port 1337
 ```
 
 __Install Redis:__
@@ -29,12 +29,25 @@ brew install redis
 redis-server
 ```
 
+__Install Heroku Toolbelt__
+(heroku toolbelt)[https://toolbelt.heroku.com]
+
+```
+heroku login
+```
+
+
 __Setup errthing:__
 
 ```
 git clone git@github.com:goodybag/cater-api-server.git
 cd cater-api-server
 npm install
+```
+
+__Create a balanced config__
+```
+./bin/create-balanced-config.js
 ```
 
 __Sync prod data with local:__

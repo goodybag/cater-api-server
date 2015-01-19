@@ -197,7 +197,10 @@ module.exports.login = function ( req, res ){
       delete req.session.guestOrders;
     }
 
-    res.redirect( req.query.next || '/' );
+    req.session.save(function(err) {
+      if ( err ) logger.error('Unable to save session', err);
+      res.redirect( req.query.next || '/' );
+    });
   });
 };
 

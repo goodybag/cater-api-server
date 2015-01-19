@@ -525,6 +525,10 @@ define(function(require, exports, module) {
       return parts.join(".");
     },
 
+    formatDietTag: function(tag) {
+      return config.diets[tag] || tag;
+    },
+
     giftcardClasses: function( card, user ){
       var classList = [];
 

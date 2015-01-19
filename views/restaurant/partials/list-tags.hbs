@@ -4,7 +4,7 @@
   {{/notEmpty}}
 
   {{#each searchTags}}
-  <a class="search-tag" href="{{baseUrl}}/restaurants{{qs}}">{{text}} <span class="gb-icon-x-mark"></span></a>
+  <a class="search-tag" href="{{baseUrl}}/restaurants{{qs}}">{{formatDietTag text}} <span class="gb-icon-x-mark"></span></a>
   {{/each}}
 
   {{#notEmpty orderParams}}

@@ -22,20 +22,13 @@ brew install mongodb
 mongod --port 1337
 ```
 
-__Install Redis:__
-
-```
-brew install redis
-redis-server
-```
-
 __Install Heroku Toolbelt__
-(heroku toolbelt)[https://toolbelt.heroku.com]
+
+[https://toolbelt.heroku.com](https://toolbelt.heroku.com)
 
 ```
 heroku login
 ```
-
 
 __Setup errthing:__
 

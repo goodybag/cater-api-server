@@ -25,15 +25,15 @@
 }
 
 .btn-large {
+  height: @btn-small-height;
   font-size: @btn-large-font-size;
-  line-height: @line-height-base;
   padding: @btn-padding-large;
   font-weight: @light;
 }
 
 .btn-small {
+  height: @btn-small-height;
   font-size: @btn-small-font-size;
-  line-height: @line-height-base;
   padding: @btn-padding-small;
   font-weight: @bold;
 }
@@ -42,7 +42,6 @@
   display: block;
   width: 100%;
   font-size: @font-size-small;
-  line-height: @line-height-small;
   padding: @btn-padding-small;
   font-weight: @semibold;
 }
@@ -51,7 +50,8 @@
   .brand-btn( @white );
   border-width: @btn-border-width-base;
   border-bottom-width: @btn-border-width-base + 1;
-  color: @color-base;
+  border-color: @palette-gray;
+  color: @color-primary-text;
 }
 
 .btn-primary {
@@ -96,6 +96,21 @@
   }
 }
 
+.btn-dropdown {
+  border-bottom-width: 1px;
+  padding-right: 48px;
+
+  [class*="gb-icon-"],
+  .gb-icon-caret-down {
+    position: absolute;
+    // TODO: generalize positioning
+    right: 17px;
+    top: 15px;
+
+    font-size: 12px;
+  }
+}
+
 //////////////
 // Button Groups
 //////////////
@@ -106,8 +121,8 @@
 
 .btn-group > .btn {
   display: block;
-  color: @palette-black;
-  border: 1px solid @palette-dark-gray;
+  color: @color-primary-text;
+  border: 1px solid @border-color-primary;
   &:active {
     bottom: 0;
     margin-bottom: 0;
@@ -120,7 +135,7 @@
 
 .btn-group > .btn:hover {
   cursor: pointer;
-  background-color: @palette-gray;
+  background-color: @palette-gray-lighter;
 }
 
 .btn-group > .btn {
@@ -148,7 +163,7 @@
 
 // selected radio
 .btn-group > input[type="radio"]:checked + .btn {
-  background-color: @palette-gray;
+  background-color: @palette-gray-light;
 }
 
 

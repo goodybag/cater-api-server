@@ -150,6 +150,15 @@ module.exports.register = function(app) {
      */
 
     app.get('/admin/kitchen-sink'
+    , function( req, res, next ){
+        require('./lib/parse-palette-from-variables').parse( function( error, palette ){
+          if ( error ) return next( error );
+
+          res.locals.palette = palette;
+
+          next();
+        });
+      }
     , m.view( 'admin/kitchen-sink', {
         layout: 'admin/layout2'
       })

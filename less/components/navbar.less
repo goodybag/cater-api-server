@@ -16,6 +16,18 @@
 @logo-padding-top: (@logo-padding-height / 2) + @logo-padding-offset;
 @logo-padding-bottom: (@logo-padding-height / 2) - @logo-padding-offset;
 
+@logo-mobile-padding-height: @navbar-mobile-height - @navbar-mobile-logo-size;
+@logo-mobile-padding-offset: 2px;
+@logo-mobile-padding-top: (@logo-mobile-padding-height / 2) + @logo-mobile-padding-offset;
+@logo-mobile-padding-bottom: (@logo-mobile-padding-height / 2) - @logo-mobile-padding-offset;
+
+// - 2 for the borders
+@dropdown-padding-top: (
+  (@navbar-height - @btn-padding-top-base - @btn-padding-bottom-base - 2 ) / 2
+);
+
+@dropdown-padding-bottom: @dropdown-padding-top;
+
 body {
   // -1 because some browsers are rendering artifacts
   // at that pixel border
@@ -62,6 +74,34 @@ body {
   }
 }
 
+// Use text alignment to align the points
+.navbar-with-dropdowns .container {
+  text-align: right;
+}
+
+.navbar .popover-modal {
+  margin-top: @popover-triangle-size - @dropdown-padding-bottom - 1;
+}
+
+.navbar .gb-points {
+  // Positioning to the right uses text-alignment on navbar due to
+  // weird floating stuff on mobile and when the navbar is not collapsed
+  display: inline-block;
+  line-height: 0;
+  padding-top: @navbar-height / 2;
+  padding-bottom: @navbar-height / 2;
+  color: @brand-primary;
+  font-size: 15px;
+  text-decoration: none;
+  margin-right: 12px;
+
+  @media screen and (max-width: (@breakpoint-mobile)) {
+    padding-top: @navbar-mobile-height / 2;
+    padding-bottom: @navbar-mobile-height / 2;
+    margin-right: 52px;
+  }
+}
+
 .navbar .login-form {
   float: right;
   margin-top: 3px;
@@ -88,9 +128,6 @@ body {
 
 .navbar .nav {
   float: right;
-  .transition( 0.5s, ease-in-out );
-  .transition-property-transform();
-  .translate( 0, 0 );
 }
 
 .navbar .nav > li > a {
@@ -107,6 +144,19 @@ body {
 .navbar .nav > li > a:hover,
 .navbar .nav .active a {
   background: darken( @navbar-bg-color, 5% );
+}
+
+.navbar .nav .btn {
+  margin-top: (@navbar-height - @btn-base-height) / 2;
+  margin-bottom: (@navbar-height - @btn-base-height) / 2;
+  margin-left: 12px;
+}
+
+.navbar .nav .gb-dropdown {
+  margin-left: 12px;
+  > .btn {
+    margin-left: 0;
+  }
 }
 
 .navbar .navbar-toggle {
@@ -190,12 +240,12 @@ body {
     font-size: @navbar-logo-size / 2;
     line-height: @navbar-mobile-height;
 
-    & when ( @logo-padding-top > 0 ){
-      padding-top: @logo-padding-top * @navbar-mobile-factor;
+    & when ( @logo-mobile-padding-top > 0 ){
+      padding-top: @logo-mobile-padding-top;
     }
 
-    & when ( @logo-padding-bottom > 0 ){
-      padding-bottom: @logo-padding-bottom * @navbar-mobile-factor;
+    & when ( @logo-mobile-padding-bottom > 0 ){
+      padding-bottom: @logo-mobile-padding-bottom;
     }
   }
 
@@ -235,13 +285,13 @@ body {
     text-align: right;
   }
 
-  .navbar .nav li {
+  .navbar .nav > li {
     display: block;
     text-align: right;
     margin-right: 0 - (@gutter-width / 2);
   }
 
-  .navbar .nav li:first-child {
+  .navbar .nav > li:first-child {
     margin-top: 20px;
   }
 
@@ -256,10 +306,58 @@ body {
   }
 
   .navbar .navbar-right .dropdown-menu {
-    margin-left: -12px;
+    // margin-left: -12px;
   }
 
   .navbar .gb-points-indicator {
     clear: both;
+  }
+
+  // Expand the size of nav
+  .navbar-with-dropdowns .nav {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  // Treat entire dropdowns as expanded hierarchy of links
+  .navbar-with-dropdowns .nav .gb-dropdown {
+    display: block;
+    margin-left: 0;
+
+    // Buttons become the headers
+    > .btn {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+      margin-bottom: 0;
+      border: none;
+      padding: 0;
+      text-align: left;
+      font-weight: @semibold;
+
+      > .gb-icon-caret-down {
+        display: none;
+      }
+    }
+
+    &.open > .btn {
+      color: @color-primary-text;
+      box-shadow: none;
+    }
+
+    > .popover-modal {
+      position: static;
+      display: block;
+      width: 100%;
+      margin: 0;
+      box-shadow: none;
+      text-align: left;
+      border: none;
+    }
+  }
+
+  .navbar .popover-modal:before,
+  .navbar .popover-modal:after {
+    display: none;
   }
 }

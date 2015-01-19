@@ -1,0 +1,8 @@
+{{!--
+This email is to notify goodybaggers that a courier order was placed for delivery
+in two hours. That's soon!
+--}}
+<section style="text-align: left; margin: 0 20px;">
+  <h2>Goodybag ASAP Courier Order #{{order.id}} for {{datepart order.datetime}} {{timepart order.datetime}}</h2>
+  <a href="{{config.baseUrl}}/orders/{{order.id}}">View order pls</a>
+</section>

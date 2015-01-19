@@ -219,13 +219,12 @@
     text-decoration: none;
   }
 
-  &.active,
-  &:active {
-    border-bottom-width: @btn-border-width-base;
-    bottom: -1px;
-    margin-bottom: 1px;
-    outline-width: 0;
-  }
+    &.active,
+    &:active {
+      border-bottom-width: @btn-border-width-base;
+      height: @btn-base-height - 1;
+      outline-width: 0;
+    }
 
   > [class*="gb-icon-"] {
     vertical-align: middle;

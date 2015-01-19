@@ -6,21 +6,21 @@
 @footer-background-color: @palette-gray-dark;
 @footer-link-color: @palette-white;
 @footer-separator-background: @palette-white;
-
+@footer-height: 140px;
 // content classes
 .main-wrapper {
   min-height: 100%;
   height: auto !important;
   height: 100%;
-  margin: 0 auto -4em;
+  margin: 0 auto -@footer-height;
 }
 
 .main-push {
-  height: 4em;
+  height: @footer-height;
 }
 
 .footer {
-  height: 4em;
+  height: @footer-height;
 }
 
 .footer {

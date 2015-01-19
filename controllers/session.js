@@ -30,7 +30,11 @@ module.exports.del = function(req, res) {
   [ 'user', 'orderParams', 'isNewSignup' ].forEach( function( k ){
     delete req.session[ k ];
   });
-  return res.redirect(req.query.next || '/');
+
+  req.session.save(function(err) {
+    if ( err ) req.logger.error('Unable to save session', err);
+    return res.redirect(req.query.next || '/');
+  });
 }
 
 module.exports.patch = function(req, res) {

@@ -15,11 +15,16 @@ psql -h localhost --command="create database cater"
 psql -h localhost --command="create database cater_test"
 ```
 
+__Setup local config__
+
+In the root directory there is a file named `local-config.json.sample`, edit
+this file as needed and save it as `local-config.json`
+
 __Install MongoDB:__
 
 ```
 brew install mongodb
-mongod --port 1337
+mongod --port
 ```
 
 __Install Heroku Toolbelt__

@@ -581,7 +581,7 @@ module.exports.copy = function(req, res) {
     }
 
   , function copyRestaurant(restaurant, customer, callback) {
-      var data = utils.extend({ }, utils.omit(restaurant, 'id'), {
+      var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id'), {
         balanced_customer_uri: customer.uri
       , name: restaurant.name + ' Copy'
       , is_hidden: true

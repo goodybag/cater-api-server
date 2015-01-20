@@ -1,0 +1,82 @@
+{{#extend "body"}}
+  <form class="ap-form ap-lead-times form-vertical form-delivery-settings" method="POST">
+    <input type="hidden" name="_method" value="PUT">
+    <h1>Pickup Settings</h1>
+    <h2>Courier Configuration</h2>
+    <div class="form-group">
+      <label class="control-label" for="input-disable-courier">
+        <input type="checkbox" class="form-control disable-courier" name="disable-courier" id="input-disable-courier" {{#if restaurant.disable_courier}}checked="checked"{{/if}}>
+        Disable Courier Services for this restaurant
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-disable-courier-notifications">
+        <input type="checkbox" class="form-control" name="disable_courier_notifications" id="input-disable-courier-notifications" {{#if restaurant.disable_courier_notifications}}checked="checked"{{/if}}>
+        Disable courier notifications (Goodybag must trigger courier notifications manually!)
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-delivery_service_head_count_threshold">Head Count Delivery Service Threshold
+        <span class="help-block">Orders with head count below this will be delivered by a courier</span>
+      </label>
+      <input type="number" class="form-control" name="delivery_service_head_count_threshold" id="input-delivery_service_head_count_threshold" value="{{restaurant.delivery_service_head_count_threshold}}">
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-delivery_service_order_amount_threshold">Order Amount Delivery Service Threshold
+        <span class="help-block">Orders with order amount below this will be delivered by a courier</span>
+      </label>
+      <div class="input-group">
+        <div class="input-addon">$</div>
+        <input
+        type="number"
+        step="any"
+        class="form-control"
+        name="delivery_service_order_amount_threshold"
+        id="input-delivery_service_order_amount_threshold"
+        data-in="dollars"
+        data-out="pennies"
+        value="{{dollars restaurant.delivery_service_order_amount_threshold}}">
+      </div>
+    </div>
+
+    <h2>Hours of Operation</h2>
+
+    {{#each restaurant.hours_of_operation}}
+    <div class="delivery-time">
+      <div class="col-day">{{weekday @key}}</div>
+      <div id="hours-{{@key}}" class="hours-day col-times">
+        {{> hours_day }}
+      </div>
+    </div>
+    {{/each}}
+
+    <h2>Pickup Lead Times</h2>
+    <div class="lead-times-list">
+      {{#each restaurant.pickup_lead_times}}
+      {{> lead_time}}
+      {{/each}}
+    </div>
+
+    <div class="form-group">
+      <button type="button" class="btn btn-tertiary add-lead-time">
+        Add Restriction</button>
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">
+        Update</button>
+    </div>
+  </form>
+{{/extend}}
+
+{{#extend "scripts"}}
+
+<script>
+  require( ['app/pages/admin/restaurant/pickup-settings', 'app/models/restaurant'], function( page, Restaurant ){
+    page.init({
+      models: {
+        restaurant: new Restaurant({{{json restaurant}}})
+      }
+    });
+  });
+</script>
+{{/extend}}

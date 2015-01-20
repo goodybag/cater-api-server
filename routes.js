@@ -463,10 +463,24 @@ module.exports.register = function(app) {
       , baseUrl:  '/admin/restaurants/:rid'
       })
     , m.restaurant( {param: 'rid' } )
-    , m.view('admin/restaurant/pickup-settings', {
+    , m.view('admin/restaurant/edit-pickup-settings', {
         layout: 'admin/layout-two-column'
       })
     );
+
+
+    app.get('/admin/restaurants/:rid/courier-settings'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+      active:   'courier-settings'
+    , baseUrl:  '/admin/restaurants/:rid'
+    })
+    , m.restaurant( {param: 'rid' } )
+    , m.view('admin/restaurant/edit-courier-settings', {
+        layout: 'admin/layout-two-column'
+      })
+    );
+
 
     app.get('/admin/restaurants/:rid/tags'
     , m.enums()

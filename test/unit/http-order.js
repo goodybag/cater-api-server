@@ -228,4 +228,26 @@ describe('HTTP Server', function(){
       ]);
     });
   });
+
+  describe.only('Restaurants Orders', function(){
+    it ('Should allow a restaurant to view an order via the review_token', function( done ){
+      var jar = utils.request.jar();
+      var reqOptions = { jar: jar };
+
+      utils.async.waterfall([
+        // Lookup any ol' order
+        db.orders.findOne.bind( db.orders, 3000 )
+
+      , function( order, next ){
+          var urlPath = [ 'orders', order.id + '?review_token=' + order.review_token ].join('/');
+          utils.get( [ SERVER_URL, urlPath ].join('/'), reqOptions, function( error, res ){
+            assert( !error );
+            assert.equal( res.statusCode, 200 );
+            assert.equal( res.request.uri.path, '/' + urlPath );
+            done();
+          });
+        }
+      ], done );
+    });
+  });
 });

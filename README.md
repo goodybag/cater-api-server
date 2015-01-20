@@ -15,6 +15,11 @@ psql -h localhost --command="create database cater"
 psql -h localhost --command="create database cater_test"
 ```
 
+__Setup local config__
+
+In the root directory there is a file named `local-config.json.sample`, edit
+this file as needed and save it as `local-config.json`
+
 __Install MongoDB:__
 
 ```
@@ -22,11 +27,12 @@ brew install mongodb
 mongod
 ```
 
-__Install Redis:__
+__Install Heroku Toolbelt__
+
+[https://toolbelt.heroku.com](https://toolbelt.heroku.com)
 
 ```
-brew install redis
-redis-server
+heroku login
 ```
 
 __Setup errthing:__
@@ -35,6 +41,11 @@ __Setup errthing:__
 git clone git@github.com:goodybag/cater-api-server.git
 cd cater-api-server
 npm install
+```
+
+__Create a balanced config__
+```
+./bin/create-balanced-config.js
 ```
 
 __Sync prod data with local:__

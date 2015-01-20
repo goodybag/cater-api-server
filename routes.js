@@ -456,14 +456,14 @@ module.exports.register = function(app) {
       })
     );
 
-    app.get('/admin/restaurants/:rid/hours-of-operation'
+    app.get('/admin/restaurants/:rid/pickup-settings'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
-        active:   'hours-of-operation'
+        active:   'pickup-settings'
       , baseUrl:  '/admin/restaurants/:rid'
       })
     , m.restaurant( {param: 'rid' } )
-    , m.view('admin/restaurant/hours-of-operation', {
+    , m.view('admin/restaurant/pickup-settings', {
         layout: 'admin/layout-two-column'
       })
     );

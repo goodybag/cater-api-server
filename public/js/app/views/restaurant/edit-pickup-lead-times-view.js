@@ -5,8 +5,8 @@ define(function(require, exports, module) {
 
   return module.exports = EditLeadTimesView.extend({
     fieldMap: {
-      hours_of_operation:                       '.time'
-    , pickup_lead_times:                        '.lead-times'
+      hours_of_operation: '.time'
+    , pickup_lead_times: '.lead-times'
     },
 
     initialize: function() {

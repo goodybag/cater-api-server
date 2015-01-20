@@ -7,17 +7,7 @@ define(function(require, exports, module) {
     fieldMap: {
       hours_of_operation:                       '.time'
     , pickup_lead_times:                        '.lead-times'
-    , disable_courier:                          '.disable-courier'
-    , disable_courier_notifications:            '#input-disable-courier-notifications'
-    , delivery_service_head_count_threshold:    '[name="delivery_service_head_count_threshold"]'
-    , delivery_service_order_amount_threshold:  '[name="delivery_service_order_amount_threshold"]'
     },
-
-    fieldGetters: _.extend({
-      disable_courier: function() {
-        return this.$el.find(this.fieldMap.disable_courier).is(':checked');
-      }
-    }, EditLeadTimesView.prototype.fieldGetters ),
 
     initialize: function() {
       this.fieldGetters.hours_of_operation = this.fieldGetters.delivery_times;

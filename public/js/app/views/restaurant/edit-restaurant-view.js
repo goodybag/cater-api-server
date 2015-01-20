@@ -28,6 +28,7 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
+      this.fieldMap = this.options.fieldMap || this.fieldMap;
     },
 
     getField: function(selector, field, fieldMap) {

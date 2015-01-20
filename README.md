@@ -24,7 +24,7 @@ __Install MongoDB:__
 
 ```
 brew install mongodb
-mongod --port
+mongod
 ```
 
 __Install Heroku Toolbelt__

@@ -33,6 +33,8 @@ define(function(require, exports, module) {
 
   var utils = _.extend({}, _, helpers);
 
+  utils.stampit = require('stampit');
+
   if (isBrowser){
     var $ = require('jquery');
     utils.dom = $;
@@ -88,6 +90,18 @@ define(function(require, exports, module) {
       return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
     }
   });
+
+  utils.parseHourFromTime = function( time ){
+    var result = time.split(':');
+    result = parseInt( time[0] );
+
+    if ( time.toLowerCase().indexOf('pm') > -1 && result < 12 ){
+      result += 12;
+    }
+console.log( time[1] );
+    result += parseInt( time[1] ) / 60;
+    return result;
+  };
 
   utils.startHistory = function(){
     utils.history = Backbone.history;

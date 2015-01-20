@@ -13,3 +13,6 @@ Restaurant.create = function( data ){
   return new Restaurant( data );
 };
 
+Restaurant.prototype.method('getTypesFromHours', function(){
+  console.log('Name', this.name);
+});

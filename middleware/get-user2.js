@@ -40,7 +40,7 @@ module.exports = function( options ){
         );
 
         if ( !req.session.user ){
-          req.session.user = req.user.toJSON();
+          req.session.user = utils.cloneDeep( req.user.toJSON() );
         }
       } else {
         req.user = req.session.canonical;

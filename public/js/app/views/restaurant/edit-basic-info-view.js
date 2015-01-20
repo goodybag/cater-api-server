@@ -18,7 +18,6 @@ define(function(require, exports, module) {
     , is_hidden:                                '#input-hidden'
     , disable_courier_notifications:            '#input-disable-courier-notifications'
     , logo_url:                                 '#input-logo-url'
-    , logo_mono_url:                            '#input-mono-logo-url'
     , region_id:                                '[name="region_id"]'
     , gb_fee:                                   '[name="gb_fee"]'
     , is_fee_on_total:                          '[name="is_fee_on_total"]'

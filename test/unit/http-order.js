@@ -229,7 +229,7 @@ describe('HTTP Server', function(){
     });
   });
 
-  describe.only('Restaurants Orders', function(){
+  describe('Restaurants Orders', function(){
     it ('Should allow a restaurant to view an order via the review_token', function( done ){
       var jar = utils.request.jar();
       var reqOptions = { jar: jar };

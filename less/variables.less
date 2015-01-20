@@ -12,23 +12,37 @@
 @gray-darker:               darken( @gray, 20% );
 @salmon:                    #FC8176;
 
-@brand-primary:             #dc0000;
-@brand-secondary:           #FBF8E7;
-@brand-tertiary:            #0039a1;
-@brand-quaternary:          #432012;
-
 @off-gray:                  desaturate( @brand-secondary, 50% );
 @body-bg-color:             @white;
 
 // Palette
 ////////////////////////////////////////////////////
 
-@palette-black:       #434a54;
-@palette-white:       #ffffff;
-@palette-red:         #ed4242;
-@palette-blue:        #0988d2;
-@palette-gray:        #e6e9ed;
-@palette-dark-gray:   #aab2bd;
+@palette-black:         #000000;
+@palette-gray-darker:   #333a43;
+@palette-gray-dark:     #434a54;
+@palette-gray:          #aab2bd;
+@palette-gray-light:    #ccd1d9;
+@palette-gray-lighter:  #e6e9ed;
+@palette-white:         #ffffff;
+@palette-tan:           #fbf8e7;
+@palette-brown:         #ba9b65;
+@palette-orange:        #f6bb42;
+@palette-red:           #ed4242;
+@palette-tomato:        #fc6e51;
+@palette-pink:          #ed5565;
+@palette-blue-dark:     #0039a1;
+@palette-blue:          #5d9cec;
+@palette-green:         #00916d;
+@palette-green-2:       #8cc152;
+@palette-green-3:       #37bc9b;
+
+// Brand Colors
+////////////////////////////////////////////////////
+@brand-primary:             @palette-red;
+@brand-secondary:           @palette-tan;
+@brand-tertiary:            @palette-blue-dark;
+@brand-quaternary:          #432012;
 
 // Font Weight Constants
 ////////////////////////////////////////////////////
@@ -62,6 +76,13 @@
 @anchor-color:              @brand-tertiary;
 @dl-horizontal-offset:      150px;
 
+@color-primary-text:        @palette-gray-dark;
+@color-secondary-text:      @palette-gray;
+
+// Borders
+////////////////////////////////////////////////////
+@border-color-primary:      @palette-gray;
+
 // Grid
 ////////////////////////////////////////////////////
 @container-width:           974px;
@@ -76,43 +97,66 @@
 @btn-large-font-size:           @font-size-large;
 @btn-small-font-size:           @font-size-small;
 
-@btn-padding-top-base:          11px;
+@btn-base-height:               40px;
+@btn-small-height:              34px;
+@btn-large-height:              50px;
+@btn-border-width-base:         1px;
+
+@btn-border-width-top-base:     @btn-border-width-base;
+@btn-border-width-right-base:   @btn-border-width-base;
+@btn-border-width-bottom-base:  @btn-border-width-base;
+@btn-border-width-left-base:    @btn-border-width-base;
+
+@btn-padding-top-base:          ((@btn-base-height - (@btn-border-width-top-base + @btn-border-width-bottom-base)) / 2) + 1;
 @btn-padding-right-base:        18px;
-@btn-padding-bottom-base:       @btn-padding-top-base - 1;
+@btn-padding-bottom-base:       @btn-padding-top-base - 2;
 @btn-padding-left-base:         @btn-padding-right-base;
 
-@btn-padding-top-small:         7px;
+@btn-padding-top-small:         ((@btn-small-height - (@btn-border-width-top-base + @btn-border-width-bottom-base)) / 2) + 1;
 @btn-padding-right-small:       22px;
-@btn-padding-bottom-small:      @btn-padding-top-small - 1;
+@btn-padding-bottom-small:      @btn-padding-top-small - 2;
 @btn-padding-left-small:        @btn-padding-right-small;
 
-@btn-padding-top-large:         14px;
+@btn-padding-top-large:         ((@btn-large-height - (@btn-border-width-top-base + @btn-border-width-bottom-base)) / 2) + 1;
 @btn-padding-right-large:       22px;
 @btn-padding-bottom-large:      @btn-padding-top-large - 2;
 @btn-padding-left-large:        @btn-padding-right-large;
-
-@btn-border-width-base:         1px;
 
 @btn-border-radius-base:        @border-radius-base;
 
 
 // Forms
 ////////////////////////////////////////////////////
+@input-base-height:             @btn-base-height;
+@input-small-height:            @btn-small-height;
+@input-large-height:            @btn-large-height;
+@input-border-width-base:       @btn-border-width-base;
+@input-line-height:             @line-height-base;
+
 @input-font-size:               @btn-font-size;
+@input-base-height:             @btn-base-height;
+@input-small-height:            @btn-small-height;
+@input-large-height:            @btn-large-height;
 @input-width:                   154px;
 @input-border-radius:           @btn-border-radius-base;
 @input-border-color:            @gray;
 @input-border-width:            1px;
 
-@input-padding-top-base:        @btn-padding-top-base;
+@input-base-height-computed:    @input-line-height;
+@input-padding-top-base:        ((@input-base-height - @input-base-height-computed) / 2) + 1;
 @input-padding-right-base:      12px;
-@input-padding-bottom-base:     @input-padding-top-base - 1;
+@input-padding-bottom-base:     @input-padding-top-base - 2;
 @input-padding-left-base:       @input-padding-right-base;
 
-@input-padding-top-small:       @btn-padding-top-small;
+@input-padding-top-small:       ((@input-small-height - @input-base-height-computed) / 2) + 1;
 @input-padding-right-small:     12px;
-@input-padding-bottom-small:    @input-padding-top-small - 1;
+@input-padding-bottom-small:    @input-padding-top-small - 2;
 @input-padding-left-small:      @input-padding-right-small;
+
+@input-padding-top-large:       ((@input-large-height - @input-base-height-computed) / 2) + 1;
+@input-padding-right-large:     12px;
+@input-padding-bottom-large:    @input-padding-top-large - 2;
+@input-padding-left-large:      @input-padding-right-large;
 
 // Z-Indexes
 ////////////////////////////////////////////////////
@@ -128,13 +172,14 @@
 
 // Navbar
 ///////////////////////////////////////////////////
-@navbar-height:                 56px;
+@navbar-height:                 58px;
 @navbar-mobile-factor:          0.75;
 @navbar-bg-color:               @white;
 @navbar-color:                  @color-base;
 @navbar-logo-max-width:         138px;
 @navbar-mobile-logo-max-width:  98px;
 @navbar-logo-size:              25px;
+@navbar-mobile-logo-size:       19px;
 
 // Footer
 ///////////////////////////////////////////////////
@@ -301,6 +346,8 @@
 @popover-arrow-outer-color:           rgba(0,0,0,.25);
 @popover-arrow-outer-fallback-color:  #999;
 @zindex-popover:                      1010;
+@popover-triangle-size:          8px;
+@popover-triangle-right-offset:  16px;
 
 // Close
 // -------------------------

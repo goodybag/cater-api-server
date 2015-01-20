@@ -3,24 +3,20 @@
 /////////////////
 
 .gb-dropdown {
-  .gb-dropdown-items {
-    display: none;
-    position: absolute;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: @gb-dropdown-width;
-    background: rgba( 255, 255, 255, 0.9 );
-    box-shadow: 0 0 12px rgba( 0, 0, 0, 0.4 );
+  .nav & { &:extend(.nav > li); }
+  .popover-modal {
+  }
 
-    li {
-      margin: 0;
-      padding: 0;
+  &.same-width-modal {
+    .popover-modal {
+      width: 100%;
     }
   }
 
-  &.active .gb-dropdown-items {
-    display: block;
-    text-align: left;
+  &.open {
+    > .btn {
+      transition: box-shadow ease-out 0.3s;
+      // box-shadow: 1px 2px 5px rgba( 0, 0, 0, 0.17 );
+    }
   }
 }

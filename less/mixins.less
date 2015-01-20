@@ -209,7 +209,8 @@
   padding: @btn-padding-base;
   font-size: @btn-font-size;
   line-height: @line-height-small;
-  font-weight: @semibold;
+  height: @btn-base-height;
+  line-height: 0;
   text-decoration: none;
   letter-spacing: 0.4px;
   vertical-align: bottom;
@@ -218,12 +219,21 @@
     text-decoration: none;
   }
 
-  &.active,
-  &:active {
-    border-bottom-width: @btn-border-width-base;
+    &.active,
+    &:active {
+      border-bottom-width: @btn-border-width-base;
+      height: @btn-base-height - 1;
+      outline-width: 0;
+    }
+
+  > [class*="gb-icon-"] {
+    vertical-align: middle;
+  }
+
+  > .gb-icon-caret-down {
+    position: relative;
     bottom: -1px;
-    margin-bottom: 1px;
-    outline-width: 0;
+    right: -4px;
   }
 }
 

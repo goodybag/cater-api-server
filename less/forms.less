@@ -57,16 +57,13 @@ select,
 textarea {
   display: block;
   width: 100%;
+  height: @input-base-height;
   box-sizing: border-box;
   border-radius: @input-border-radius;
   border: solid @input-border-color @input-border-width;
   padding: @input-padding-base;
   line-height: @line-height-small;
   font-size: @input-font-size;
-}
-
-select {
-  height: @input-padding-top-base * 2 + @line-height-small;
 }
 
 select[size] {
@@ -98,10 +95,11 @@ input[disabled] {
 
   input, textarea {
     padding: @input-padding-small;
-    line-height: @line-height-small;
+    height: @input-small-height;
   }
 
-  input[type='checkbox'] {
+  input[type='checkbox'], input[type='radio'] {
+    height: auto;
     padding: 0;
   }
 
@@ -110,8 +108,7 @@ input[disabled] {
   }
 
   button {
-    padding: @btn-padding-small;
-    line-height: @line-height-small;
+    &:extend(.btn-small);
   }
 }
 

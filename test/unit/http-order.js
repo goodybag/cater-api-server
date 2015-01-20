@@ -27,10 +27,10 @@ console.log();
 // We don't have gaurantees of fixture data and simply haven't
 // kept up that environment. For now, it's just nicer for us to use
 // data from prod-to-local.
-// 
+//
 // We'll need to make these more robust later, but it's good that
 // we have something anything
-// 
+//
 // I understand we _could_ bootup the dev server here, but the output
 // from the server mucks everything up so it's just easier to keep
 // them separate for now.

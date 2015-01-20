@@ -1,10 +1,10 @@
 @table-list-border-radius: 3px;
 @table-list-padding: 15px;
-@table-list-border-color: @palette-black;
-@table-list-color: @palette-black;
-@table-list-header-background-color: @palette-black;
+@table-list-border-color: @palette-gray-darker;
+@table-list-color: @color-primary-text;
+@table-list-header-background-color: @palette-gray-dark;
 @table-list-header-color: @palette-white;
-@table-list-hover-background: @palette-gray;
+@table-list-hover-background: lighten( @palette-gray-lighter, 5% );
 @table-list-close-btn-size: 20px;
 
 .table-list {
@@ -47,7 +47,7 @@
   display: inline-block;
   width: 100%;
   padding: @table-list-padding;
-  border-bottom: 1px solid @palette-dark-gray;
+  border-bottom: 1px solid @palette-gray-dark;
 }
 
 .table-list-item:last-child {
@@ -64,7 +64,7 @@
 
 .table-list-item .gb-icon-eye-slash {
   font-size: 36px;
-  color: @palette-dark-gray;
+  color: @palette-gray-dark;
 }
 
 .table-list-header .filter-link {
@@ -122,7 +122,7 @@
 .table-list-popover-wrapper > a {
   padding: @table-list-padding;
   display: inline-block;
-  color: @palette-dark-gray;
+  color: @palette-white;
 }
 
 .table-list-popover-wrapper > a:hover {

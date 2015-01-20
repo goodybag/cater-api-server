@@ -93,6 +93,7 @@
     "selenium-webdriver": "~2.40.0",
     "semver": "~2.1.0",
     "serve-favicon": "^2.2.0",
+    "stampit": "^1.1.0",
     "stdm": "0.0.4",
     "sugar": "~1.4.1",
     "time": "^0.10.0",

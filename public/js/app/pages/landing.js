@@ -21,8 +21,9 @@ define(function(require){
         });
 
         page.orderParamsView = new Views.OrderParamsView({
-          el:       $('.restaurant-search-panel')[0]
-        , template: Handlebars.partials.restaurant_search_main
+          el:         $('.restaurant-search-panel')[0]
+        , template:   Handlebars.partials.restaurant_search_main
+        , requireZip: true
         });
 
         page.orderParamsView.on('params:submit', function(){

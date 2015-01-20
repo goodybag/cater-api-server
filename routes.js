@@ -150,6 +150,15 @@ module.exports.register = function(app) {
      */
 
     app.get('/admin/kitchen-sink'
+    , function( req, res, next ){
+        require('./lib/parse-palette-from-variables').parse( function( error, palette ){
+          if ( error ) return next( error );
+
+          res.locals.palette = palette;
+
+          next();
+        });
+      }
     , m.view( 'admin/kitchen-sink', {
         layout: 'admin/layout2'
       })
@@ -1152,18 +1161,20 @@ module.exports.register = function(app) {
 
   app.get('/orders/:oid/add-items'
   , m.getOrder2({
-    param:              'oid'
-  , items:              true
-  , user:               true
-  , userAddresses:      true
-  , userPaymentMethods: true
-  , restaurant:         true
-  , deliveryService:    true
-  })
-, controllers.orders.auth
-, m.restrict(['admin', 'order-owner', 'order-editor'])
-, controllers.restaurants.orders.get
-);
+      param:                  'oid'
+    , items:                  true
+    , user:                   true
+    , userAddresses:          true
+    , userPaymentMethods:     true
+    , restaurant:             true
+    , deliveryService:        true
+    , restaurantDbModelFind:  true
+    })
+  , controllers.orders.auth
+  , m.restrict(['admin', 'order-owner', 'order-editor'])
+  , controllers.restaurants.orders.get
+  );
+
 
   app.get('/orders/:oid/notifications/:nid'
   , m.restrict(['admin'])

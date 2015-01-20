@@ -1,0 +1,63 @@
+/////////////////
+// Color Block //
+/////////////////
+
+@color-block-size: 80px;
+
+.color-block-color( @name, @color ){
+  &[data-color="@{name}"] {
+    > .box {
+      background: @color;
+      border-color: @color;
+    }
+  }
+}
+
+.color-block {
+  display: inline-block;
+  vertical-align: top;
+  width: @color-block-size;
+  font-size: 13px;
+  line-height: 15px;
+  margin-right: 30px;
+  margin-bottom: 20px;
+
+  .box {
+    height: @color-block-size;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+  }
+
+  .title {
+    font-weight: @regular;
+    margin-top: 3px;
+  }
+
+  .color {
+    font-weight: @light;
+  }
+
+  &[data-color="white"] .box {
+    border-color: @palette-gray-light;
+  }
+}
+
+.color-block-color( 'black', @palette-black );
+.color-block-color( 'gray-darker', @palette-gray-darker );
+.color-block-color( 'gray-dark', @palette-gray-dark );
+.color-block-color( 'gray', @palette-gray );
+.color-block-color( 'gray-light', @palette-gray-light );
+.color-block-color( 'gray-lighter', @palette-gray-lighter );
+.color-block-color( 'white', @palette-white );
+.color-block-color( 'tan', @palette-tan );
+.color-block-color( 'brown', @palette-brown );
+.color-block-color( 'orange', @palette-orange );
+.color-block-color( 'red', @palette-red );
+.color-block-color( 'tomato', @palette-tomato );
+.color-block-color( 'pink', @palette-pink );
+.color-block-color( 'blue-dark', @palette-blue-dark );
+.color-block-color( 'blue', @palette-blue );
+.color-block-color( 'green', @palette-green );
+.color-block-color( 'green-2', @palette-green-2 );
+.color-block-color( 'green-3', @palette-green-3 );

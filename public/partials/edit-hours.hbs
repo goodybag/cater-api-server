@@ -1,14 +1,14 @@
 <div class="row open-period">
   <div class="col-time">
     <input type="text" class="time open-time"
-      {{#if this}} value="{{this.[0]}}"
+      {{#if this}} value="{{formatTime this.[0] 'hh:mm'}}"
       {{else}} disabled="disabled"{{/if}}
       {{#ifAllDay this}} disabled="disabled"{{/ifAllDay}}>
   </div>
   <div class="col-separator">-</div>
   <div class="col-time">
     <input type="text" class="time close-time"
-      {{#if this}} value="{{this.[1]}}"
+      {{#if this}} value="{{formatTime this.[1] 'hh:mm'}}"
       {{else}} disabled="disabled"{{/if}}
       {{#ifAllDay this}} disabled="disabled"{{/ifAllDay}}>
   </div>

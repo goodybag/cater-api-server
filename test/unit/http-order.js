@@ -27,10 +27,10 @@ console.log();
 // We don't have gaurantees of fixture data and simply haven't
 // kept up that environment. For now, it's just nicer for us to use
 // data from prod-to-local.
-// 
+//
 // We'll need to make these more robust later, but it's good that
 // we have something anything
-// 
+//
 // I understand we _could_ bootup the dev server here, but the output
 // from the server mucks everything up so it's just easier to keep
 // them separate for now.
@@ -226,6 +226,28 @@ describe('HTTP Server', function(){
           });
         }
       ]);
+    });
+  });
+
+  describe('Restaurants Orders', function(){
+    it ('Should allow a restaurant to view an order via the review_token', function( done ){
+      var jar = utils.request.jar();
+      var reqOptions = { jar: jar };
+
+      utils.async.waterfall([
+        // Lookup any ol' order
+        db.orders.findOne.bind( db.orders, 3000 )
+
+      , function( order, next ){
+          var urlPath = [ 'orders', order.id + '?review_token=' + order.review_token ].join('/');
+          utils.get( [ SERVER_URL, urlPath ].join('/'), reqOptions, function( error, res ){
+            assert( !error );
+            assert.equal( res.statusCode, 200 );
+            assert.equal( res.request.uri.path, '/' + urlPath );
+            done();
+          });
+        }
+      ], done );
     });
   });
 });

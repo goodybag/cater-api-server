@@ -54,21 +54,30 @@
   color: @color-primary-text;
 }
 
-.btn-primary {
-  .brand-btn( @brand-primary, @white );
-}
+.btn-primary { .brand-btn( @brand-primary, @white ); }
+.btn-secondary { .brand-btn( @brand-secondary, @color-primary-text ); }
+.btn-tertiary { .brand-btn( @brand-tertiary, @white ); }
 
-.btn-secondary {
-  .brand-btn( @brand-secondary, @white );
-}
+// Color buttons
+.btn-black { .brand-btn( @palette-black, @white ); }
+.btn-gray-darker { .brand-btn( @palette-gray-darker, @white ); }
+.btn-gray-dark { .brand-btn( @palette-gray-dark, @white ); }
+.btn-gray { .brand-btn( @palette-gray, @white ); }
+.btn-gray-light { .brand-btn( @palette-gray-light, @white ); }
+.btn-gray-lighter { .brand-btn( @palette-gray-lighter, @white ); }
+.btn-white { .brand-btn( @palette-white, @color-primary-text ); }
+.btn-tan { .brand-btn( @palette-tan, @color-primary-text ); }
+.btn-brown { .brand-btn( @palette-brown, @white ); }
+.btn-orange { .brand-btn( @palette-orange, @white ); }
+.btn-red { .brand-btn( @palette-red, @white ); }
+.btn-tomato { .brand-btn( @palette-tomato, @white ); }
+.btn-pink { .brand-btn( @palette-pink, @white ); }
+.btn-blue { .brand-btn( @palette-blue, @white ); }
+.btn-green { .brand-btn( @palette-green, @white ); }
+.btn-green-2 { .brand-btn( @palette-green-2, @white ); }
+.btn-green-3 { .brand-btn( @palette-green-3, @white ); }
 
-.btn-tertiary {
-  .brand-btn( @brand-tertiary, @white );
-}
-
-.btn-save{
-  .brand-btn( #6fc96a, @white );
-}
+.btn-save { .brand-btn( #6fc96a, @white ); }
 
 .btn-blank {
   border-color: transparent;

@@ -755,36 +755,6 @@ module.exports.register = function(app) {
    *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
    */
 
-  app.get('/restaurants/:restaurant_id/orders'
-  , function( req, res, next ){
-      m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
-    }
-  , m.param('status')
-  , m.param('restaurant_id')
-  , m.sort('-id')
-  , m.queryOptions({ limit: 'all'
-    , one:  [ { table: 'users', alias: 'user' }
-            , { table: 'restaurants', alias: 'restaurant'
-              , one:  [ { table: 'delivery_services'
-                        , alias: 'delivery_service'
-                        , where: { region_id: '$restaurants.region_id$' }
-                        }
-                      ]
-              }
-            ]
-    })
-  , function( req, res, next ){
-      res.locals.status = req.param('status');
-      if ( req.param('status') == 'accepted' ){
-        req.queryOptions.statusDateSort = { status: req.param('status') };
-      }
-      return next();
-    }
-  , m.view( 'restaurant-orders', db.orders, {
-      method: 'find'
-    })
-  );
-
   app.post('/restaurants/:rid/orders', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body.restaurant_id = req.params.rid;
     req.url = '/orders';

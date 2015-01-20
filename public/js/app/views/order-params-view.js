@@ -66,7 +66,14 @@ define(function(require, exports, module) {
     }
 
   , search: function() {
-      this.trigger('params:submit');
+      var props = this.getProps();
+      var isValidZip = /^\d{5}$/.test( props.zip );
+
+      if ( this.options.requireZip && !isValidZip ){
+        return this.displayValidationErrors(['zip']);
+      }
+
+      this.trigger('params:submit', props, this);
     }
 
   , scrollTimeToTime: function( time ){
@@ -91,6 +98,14 @@ define(function(require, exports, module) {
   , setTimeRangeInput: function( time, format ){
       var range = utils.timeToRange( time, format, config.deliveryTime );
       this.$el.find('[name="time-range"]').val( range.join(' - ') );
+    }
+
+  , displayValidationErrors: function( fields ){
+      var selector = fields.map( function( field ){
+        return '[name="' + field + '"]';
+      }).join(', ');
+
+      this.$el.find( selector ).parents('.form-group').addClass('has-error');
     }
 
   , onSearchClick: function(e){

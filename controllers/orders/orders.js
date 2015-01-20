@@ -42,6 +42,7 @@ module.exports.auth = function(req, res, next) {
   // There was a review token, so this is a restaurant
   if ( reviewToken && (reviewToken === req.order.review_token) ){
     req.order.isRestaurantManager = true;
+    req.user.attributes.groups.push('restaurant');
     req.user.attributes.groups.push('order-restaurant');
   }
 

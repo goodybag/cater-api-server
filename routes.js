@@ -1473,6 +1473,37 @@ module.exports.register = function(app) {
 
   app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
 
+  app.get('/admin/restaurants/:restaurant_id/orders'
+  , function( req, res, next ){
+      m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
+    }
+  , m.param('status')
+  , m.param('restaurant_id')
+  , m.sort('-id')
+  , m.queryOptions({ limit: 'all'
+    , one:  [ { table: 'users', alias: 'user' }
+            , { table: 'restaurants', alias: 'restaurant'
+              , one:  [ { table: 'delivery_services'
+                      , alias: 'delivery_service'
+                      , where: { region_id: '$restaurants.region_id$' }
+                      }
+                      ]
+              }
+            ]
+    })
+  , function( req, res, next ){
+      res.locals.status = req.param('status');
+      if ( req.param('status') == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.param('status') };
+      }
+      return next();
+    }
+  , m.view( 'restaurant-orders', db.orders, {
+      method: 'find'
+    })
+  );
+
+
   app.get('/admin/restaurants/:id/payment-summaries'
   , m.restrict(['admin'])
   , m.param('id')

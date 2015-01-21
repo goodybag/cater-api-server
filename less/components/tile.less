@@ -6,11 +6,13 @@
 @tile-link-color: @palette-gray-dark;
 @tile-border-color: @palette-gray;
 @tile-caption-color: @palette-white;
+@tile-height: 245px;
 
 .tile {
   margin-bottom: @tile-gutter;
   border: 1px solid @tile-border-color;
   border-radius: @tile-border-radius;
+  max-height: @tile-height;
 }
 
 .tile-cover {
@@ -72,11 +74,13 @@
 }
 
 .tile-rating {
-  float: right;
+  position: absolute;
+  right: @tile-padding;
+  bottom: @tile-padding;
 }
 
 .tile-title {
-  float: left;
+  width: 60%;
   font-size: 20px;
   font-weight: 700;
 }

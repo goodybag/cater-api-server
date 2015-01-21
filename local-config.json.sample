@@ -1,0 +1,8 @@
+{
+  "testEmail": "your+email@goodybag.com"
+, "testUserId": 10
+, "testRestaurantId": 25
+, "testPhoneSms": "XXXXXXXXXX"
+, "testPhoneVoice": "XXXXXXXXXX"
+, "loggingMongoConnStr": "mongodb://localhost:27017/logs"
+}

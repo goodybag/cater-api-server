@@ -18,7 +18,7 @@ module.exports = function( options ){
   });
 
   return function( req, res, next ){
-    var logger = req.logger.create('Middleware-GetOrder2');
+    var logger = req.logger.create('Middleware-GetRestaurant');
 
     var $where = {};
 
@@ -52,7 +52,7 @@ module.exports = function( options ){
     if ( options.items ){
       $options.many.push({
         table: 'items'
-      , pluck: [{ table: 'tags', column: 'tag', order: { tag: 'asc' } }]
+      , pluck: [{ table: 'tags', column: 'name', order: { name: 'asc' } }]
       });
     }
 
@@ -61,7 +61,7 @@ module.exports = function( options ){
     }
 
     if ( options.photos ){
-      $options.manypush({
+      $options.many.push({
         table: 'restaurant_photos'
       , alias: 'photos'
       , order: 'priority asc'

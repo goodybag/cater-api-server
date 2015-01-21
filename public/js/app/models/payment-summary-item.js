@@ -83,11 +83,9 @@ define(function(require, exports, module) {
       var tax = val * data.sales_tax;
       val += data.tip;
 
-      if ( this.plan ){
-        val -= this.plan.getGbFee( data.plan, { restaurant_total: val });
-      }
+      val -= data.gb_fee * val;
 
-      return Math.round( val )
+      return Math.round( val );
     }
 
   , getTotal: function(){

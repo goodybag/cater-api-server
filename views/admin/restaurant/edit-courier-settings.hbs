@@ -20,28 +20,43 @@
     </label>
     <input type="number" class="form-control" name="delivery_service_head_count_threshold" id="input-delivery_service_head_count_threshold" value="{{restaurant.delivery_service_head_count_threshold}}">
   </div>
-    <div class="form-group">
-      <label class="control-label" for="input-delivery_service_order_amount_threshold">Order Amount Delivery Service Threshold
-        <span class="help-block">Orders with order amount below this will be delivered by a courier</span>
-      </label>
-      <div class="input-group">
-        <div class="input-addon">$</div>
-        <input
-        type="number"
-        step="any"
-        class="form-control"
-        name="delivery_service_order_amount_threshold"
-        id="input-delivery_service_order_amount_threshold"
-        data-in="dollars"
-        data-out="pennies"
-        value="{{dollars restaurant.delivery_service_order_amount_threshold}}">
-      </div>
+  <div class="form-group">
+    <label class="control-label" for="input-delivery_service_order_amount_threshold">Order Amount Delivery Service Threshold
+      <span class="help-block">Orders with order amount below this will be delivered by a courier</span>
+    </label>
+    <div class="input-group">
+      <div class="input-addon">$</div>
+      <input
+      type="number"
+      step="any"
+      class="form-control"
+      name="delivery_service_order_amount_threshold"
+      id="input-delivery_service_order_amount_threshold"
+      data-in="dollars"
+      data-out="pennies"
+      value="{{dollars restaurant.delivery_service_order_amount_threshold}}">
     </div>
-
+  </div>
+  <div class="form-group">
+    <label class="control-label" for="input-delivery_service_order_total_upperbound">Order Amount Delivery Service Upperbound
+      <span class="help-block">Delivery Service Orders with order amount <em>above</em> this will trigger the notifications on the order to stop and wait for Goodybag action</span>
+    </label>
+    <div class="input-group">
+      <div class="input-addon">$</div>
+      <input
+      type="number"
+      step="any"
+      class="form-control"
+      name="delivery_service_order_total_upperbound"
+      id="input-delivery_service_order_total_upperbound"
+      data-in="dollars"
+      data-out="pennies"
+      value="{{dollars restaurant.delivery_service_order_total_upperbound}}">
+    </div>
+  </div>
+  <div class="form-group">
     <div class="form-group">
-      <div class="form-group">
-        <button class="btn btn-primary" type="submit">Update</button>
-      </div>
+      <button class="btn btn-primary" type="submit">Update</button>
     </div>
   </div>
 </form>
@@ -62,6 +77,7 @@ function( AlertView, EditRestaurantView, Restaurant ){
     , disable_courier_notifications:            '[name="disable_courier_notifications"]'
     , delivery_service_head_count_threshold:    '[name="delivery_service_head_count_threshold"]'
     , delivery_service_order_amount_threshold:  '[name="delivery_service_order_amount_threshold"]'
+    , delivery_service_order_total_upperbound:  '[name="delivery_service_order_total_upperbound"]'
     }
   });
 });

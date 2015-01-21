@@ -21,7 +21,6 @@ define(function(require, exports, module) {
     , gb_fee:                                   '[name="gb_fee"]'
     , is_fee_on_total:                          '[name="is_fee_on_total"]'
     , is_direct_deposit:                        '[name="is_direct_deposit"]'
-    , delivery_service_order_total_upperbound:  '[name="delivery_service_order_total_upperbound"]'
     , has_contract:                             '[name="has_contract"]'
     , no_contract_fee:                          '[name="no_contract_fee"]'
     , list_photo_url:                           '[name="list_photo_url"]'

@@ -18,11 +18,8 @@ define(function(require, exports, module) {
     , is_hidden:                                '#input-hidden'
     , logo_url:                                 '#input-logo-url'
     , region_id:                                '[name="region_id"]'
-    , gb_fee:                                   '[name="gb_fee"]'
     , is_fee_on_total:                          '[name="is_fee_on_total"]'
     , is_direct_deposit:                        '[name="is_direct_deposit"]'
-    , has_contract:                             '[name="has_contract"]'
-    , no_contract_fee:                          '[name="no_contract_fee"]'
     , list_photo_url:                           '[name="list_photo_url"]'
     },
 

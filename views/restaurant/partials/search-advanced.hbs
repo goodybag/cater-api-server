@@ -2,22 +2,20 @@
   <div class="search-advanced-wrapper">
     <section>
       <div class="container">
-        <div>
-          <div class="search-advanced-search">
-            <span>Find restaurant by name:</span>
-              <div id="search" class="search-advanced-search-wrapper panel">
-                <form class="search-form">
-                  <input class="search-input form-control-borderless" type="text" value="{{orderParams.search}}"/>
-                  <button class="btn btn-inline-icon" type="submit">
-                    <i class="gb-icon-magnifier"></i>
-                  </button>
-                </form>
-              </div>
-          </div>
+        <div class="search-advanced-search">
+          <span>Find restaurant by name:</span>
+            <div id="search" class="search-advanced-search-wrapper panel">
+              <form class="search-form">
+                <input class="search-input form-control-borderless" type="text" value="{{orderParams.search}}"/>
+                <button class="btn btn-inline-icon" type="submit">
+                  <i class="gb-icon-magnifier"></i>
+                </button>
+              </form>
+            </div>
         </div>
       </div>
     </section>
-    <section class="section-search-advanced">
+    <section>
       <div class="container">
         <div class="search-advanced-filter-col filter-cuisines">
           <h1>Cuisine</h1>
@@ -44,13 +42,11 @@
     </section>
   </div>
 </div>
-<section>
-  <a href="#" class="search-advanced-link" data-role="collapsible" data-target="search-advanced-content">
-    <div class="container">
-      Show all search tools <span class="search-advanced-link-icon gb-icon-chevron-down"></span>
-    </div>
-  </a>
-</section>
+<a href="#" class="search-advanced-link section" data-role="collapsible" data-target="search-advanced-content">
+  <div class="container">
+    Show all search tools <span class="search-advanced-link-icon gb-icon-chevron-down"></span>
+  </div>
+</a>
 
 
 {{#extend "scripts"}}

@@ -1,12 +1,13 @@
 {{#extend "page"}}page-restaurant-list{{/extend}}
 
 {{#extend "body"}}
-<div class="search-restaurants">
-  {{> restaurant_search_form }}
-</div>
-
-<div class="search-restaurants search-advanced">
-  {{> restaurant_search_advanced }}
+<div class="restaurant-list-search">
+  <div class="search-params">
+    {{> restaurant_search_form }}
+  </div>
+  <div class="search-restaurants search-advanced">
+    {{> restaurant_search_advanced }}
+  </div>
 </div>
 
 <div class="list-options">
@@ -15,7 +16,6 @@
     {{> restaurant_list_sort }}
   </div>
 </div>
-
 <div class="restaurant-list">
   <div class="container">
     {{> restaurant_tiles }}

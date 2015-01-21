@@ -3,3 +3,11 @@
 {{else}}
   {{> layout_navbar_login }}
 {{/if}}
+
+{{#extend "scripts"}}
+<script>
+require(['jquery-loaded'], function($){
+  $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+});
+</script>
+{{/extend}}

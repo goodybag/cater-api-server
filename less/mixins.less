@@ -202,8 +202,8 @@
   display: inline-block;
   border: none;
   border-style: solid;
-  border-width: 0;
-  border-bottom-width: @btn-border-width-base + 1;
+  border-width: @btn-border-width-top-base;
+  border-bottom-width: @btn-border-width-bottom-base;
   border-radius: @btn-border-radius-base;
   background: transparent;
   padding: @btn-padding-base;
@@ -223,6 +223,7 @@
   &:active {
     border-bottom-width: @btn-border-width-base;
     height: @btn-base-height - 1;
+    margin-top: 1px;
     outline-width: 0;
   }
 
@@ -253,6 +254,7 @@
   }
 
   border-color: darken( @bg, 12% );
+  border-top-color: @bg;
 
   & when ( @bg = @white ){
     border-color: @gray;

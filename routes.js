@@ -464,17 +464,31 @@ module.exports.register = function(app) {
       })
     );
 
-    app.get('/admin/restaurants/:rid/hours-of-operation'
+    app.get('/admin/restaurants/:rid/pickup-settings'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
-        active:   'hours-of-operation'
+        active:   'pickup-settings'
       , baseUrl:  '/admin/restaurants/:rid'
       })
     , m.restaurant( {param: 'rid' } )
-    , m.view('admin/restaurant/hours-of-operation', {
+    , m.view('admin/restaurant/edit-pickup-settings', {
         layout: 'admin/layout-two-column'
       })
     );
+
+
+    app.get('/admin/restaurants/:rid/courier-settings'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+      active:   'courier-settings'
+    , baseUrl:  '/admin/restaurants/:rid'
+    })
+    , m.restaurant( {param: 'rid' } )
+    , m.view('admin/restaurant/edit-courier-settings', {
+        layout: 'admin/layout-two-column'
+      })
+    );
+
 
     app.get('/admin/restaurants/:rid/tags'
     , m.enums()
@@ -748,36 +762,6 @@ module.exports.register = function(app) {
   /**
    *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
    */
-
-  app.get('/restaurants/:restaurant_id/orders'
-  , function( req, res, next ){
-      m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
-    }
-  , m.param('status')
-  , m.param('restaurant_id')
-  , m.sort('-id')
-  , m.queryOptions({ limit: 'all'
-    , one:  [ { table: 'users', alias: 'user' }
-            , { table: 'restaurants', alias: 'restaurant'
-              , one:  [ { table: 'delivery_services'
-                        , alias: 'delivery_service'
-                        , where: { region_id: '$restaurants.region_id$' }
-                        }
-                      ]
-              }
-            ]
-    })
-  , function( req, res, next ){
-      res.locals.status = req.param('status');
-      if ( req.param('status') == 'accepted' ){
-        req.queryOptions.statusDateSort = { status: req.param('status') };
-      }
-      return next();
-    }
-  , m.view( 'restaurant-orders', db.orders, {
-      method: 'find'
-    })
-  );
 
   app.post('/restaurants/:rid/orders', m.restrict(['client', 'admin']), function(req, res, next) {
     req.body.restaurant_id = req.params.rid;
@@ -1480,6 +1464,37 @@ module.exports.register = function(app) {
   );
 
   app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
+
+  app.get('/admin/restaurants/:restaurant_id/orders'
+  , function( req, res, next ){
+      m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
+    }
+  , m.param('status')
+  , m.param('restaurant_id')
+  , m.sort('-id')
+  , m.queryOptions({ limit: 'all'
+    , one:  [ { table: 'users', alias: 'user' }
+            , { table: 'restaurants', alias: 'restaurant'
+              , one:  [ { table: 'delivery_services'
+                      , alias: 'delivery_service'
+                      , where: { region_id: '$restaurants.region_id$' }
+                      }
+                      ]
+              }
+            ]
+    })
+  , function( req, res, next ){
+      res.locals.status = req.param('status');
+      if ( req.param('status') == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.param('status') };
+      }
+      return next();
+    }
+  , m.view( 'restaurant-orders', db.orders, {
+      method: 'find'
+    })
+  );
+
 
   app.get('/admin/restaurants/:id/payment-summaries'
   , m.restrict(['admin'])

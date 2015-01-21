@@ -19,7 +19,9 @@ define(function(require, exports, module) {
     ],
 
     fieldMap: {
-      gb_fee:                 '[name="gb_fee"]'
+      has_contract:           '[name="has_contract"]'
+    , no_contract_fee:        '[name="no_contract_fee"]'
+    , gb_fee:                 '[name="gb_fee"]'
     , is_fee_on_total:        '[name="is_fee_on_total"]'
     , is_direct_deposit:      '[name="is_direct_deposit"]'
     , billing_street:         '[name="billing_street"]'

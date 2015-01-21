@@ -12,7 +12,6 @@
   background: @search-tag-background;
   padding: 2px 5px;
   color: @search-tag-color;
-  &:hover { text-decoration: none; }
   & > .gb-icon-x-mark {
     // need a better solution to center vertically
     position: relative;
@@ -20,4 +19,9 @@
     display: inline-block;
     top: 2px;
   }
+}
+
+.search-tag:hover {
+  text-decoration: none;
+  background-color: @palette-gray-light;
 }

@@ -43,6 +43,8 @@ define(function(require, exports, module) {
     }, EditRestaurantView.prototype.fieldGetters ),
 
     initialize: function() {
+      // ensure gb_fee is number type
+      this.model.set('gb_fee', +this.model.get('gb_fee'));
     },
 
     onFilePickerChange: function(e){

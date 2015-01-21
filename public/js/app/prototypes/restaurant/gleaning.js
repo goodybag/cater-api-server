@@ -58,8 +58,6 @@ define( function( require, exports, module ){
           var constraints = this.mealTypeMap[ type ];
           var time, intersection;
 
-          if ( constraints.length === 0 ) return true;
-
           for ( var i = 0; i < times.length; i++ ){
             time = times[ i ];
 

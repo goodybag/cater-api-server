@@ -19,7 +19,7 @@ describe('Restaurant Gleaning', function(){
     var types = r1.getMealTypesFromHours();
 
     assert.deepEqual( types, [
-      'Appetizers', 'Lunch', 'Dinner'
+      'Lunch', 'Dinner'
     ]);
   });
 });

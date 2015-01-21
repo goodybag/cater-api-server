@@ -32,23 +32,6 @@ if (fs.existsSync('./local-config.json')){
   local = require('./local-config.json');
 }
 
-utils.eachModule = function(){
-  var parts     = Array.prototype.slice.call( arguments );
-  var onModule  = utils.noop;
-
-  if ( typeof parts[ parts.length - 1 ] === 'function' ){
-    onModule = parts.pop();
-  }
-
-  var fPath = path.join.apply( path, parts );
-
-  fs.readdirSync( eventsPath ).map( function( p ){
-    return path.join( eventsPath, p );
-  }).filter( function( p ){
-    return fs.statSync( p ).isFile() && p.slice(-3) === '.js';
-  })
-};
-
 utils.Plan = require('plan.js');
 
 utils.useragent = require('useragent');

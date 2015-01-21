@@ -1,7 +1,7 @@
 var
   // Module Dependencies
   fs     = require('fs')
-  path   = require('path')
+, path   = require('path')
 , config = require('./config')
 , errors = require('./errors')
 

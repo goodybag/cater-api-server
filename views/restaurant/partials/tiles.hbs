@@ -9,7 +9,7 @@
     </div>
     <div class="tile-info">
       <div>
-        <span class="bullet-inline">{{join cuisine ", "}}</span><span class="bullet-inline dollar-meter">{{{dollarMeter this.price}}}</span>
+        <span class="bullet-inline">{{truncate (join cuisine ", ") 35}}</span><span class="bullet-inline dollar-meter">{{{dollarMeter this.price}}}</span>
       </div>
       <div>
         <span class="bullet-inline">Delivery:

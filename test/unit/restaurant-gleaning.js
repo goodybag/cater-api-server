@@ -3,7 +3,7 @@ var config      = require('../../config');
 var rgleaning   = require('../../public/js/app/prototypes/restaurant/gleaning');
 
 describe('Restaurant Gleaning', function(){
-  it.only('Should glean Meal Types from hours', function(){
+  it('Should glean Meal Types from hours', function(){
     var r1 = rgleaning({
       delivery_times: [
         { day: 0, start_time: '10:30:00', end_time: '22:30:00' }

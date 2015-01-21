@@ -1593,6 +1593,12 @@ module.exports.register = function(app) {
   , m.remove( db.restaurants )
   );
 
+  app.post('/api/restaurants/:id/auto-populate'
+  , m.restrict(['admin'])
+  , m.getRestaurant()
+  , controllers.api.restaurants.autoPopulate
+  );
+
   app.get('/api/restaurants/:restaurant_id/orders'
   , m.restrict(['admin'])
   , m.pagination({ allowLimit: true })

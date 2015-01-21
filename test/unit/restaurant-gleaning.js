@@ -1,6 +1,6 @@
 var assert      = require('assert');
 var config      = require('../../config');
-var rgleaning   = require('../../public/js/app/prototypes/restaurant/gleaning');
+var rgleaning   = require('../../public/js/app/stamps/restaurant/gleaning');
 
 describe('Restaurant Gleaning', function(){
   it('Should glean Meal Types from hours', function(){

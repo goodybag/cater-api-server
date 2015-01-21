@@ -1,8 +1,9 @@
 {{#extend "body"}}
-  <h2>Hours of Operation</h2>
-
-  <form class="ap-form ap-lead-times form-vertical form-delivery-settings" action="/restaurants/{{restaurant.id}}/edit" method="POST">
+  <form class="ap-form ap-lead-times form-vertical form-pickup-settings" method="POST">
     <input type="hidden" name="_method" value="PUT">
+    <h1>Pickup Settings</h1>
+
+    <h2>Hours of Operation</h2>
 
     {{#each restaurant.hours_of_operation}}
     <div class="delivery-time">
@@ -13,7 +14,7 @@
     </div>
     {{/each}}
 
-    <h2>Lead Times</h2>
+    <h2>Pickup Lead Times</h2>
     <div class="lead-times-list">
       {{#each restaurant.pickup_lead_times}}
       {{> lead_time}}
@@ -35,7 +36,7 @@
 {{#extend "scripts"}}
 
 <script>
-  require( ['app/pages/admin/restaurant/hours-of-operation', 'app/models/restaurant'], function( page, Restaurant ){
+  require( ['app/pages/admin/restaurant/edit-pickup-settings', 'app/models/restaurant'], function( page, Restaurant ){
     page.init({
       models: {
         restaurant: new Restaurant({{{json restaurant}}})

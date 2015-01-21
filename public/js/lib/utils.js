@@ -91,18 +91,6 @@ define(function(require, exports, module) {
     }
   });
 
-  utils.parseHourFromTime = function( time ){
-    var result = time.split(':');
-    result = parseInt( time[0] );
-
-    if ( time.toLowerCase().indexOf('pm') > -1 && result < 12 ){
-      result += 12;
-    }
-console.log( time[1] );
-    result += parseInt( time[1] ) / 60;
-    return result;
-  };
-
   utils.startHistory = function(){
     utils.history = Backbone.history;
     utils.history.start();

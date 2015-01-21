@@ -575,6 +575,7 @@ utils.getWorkingTime = function( datetime, timezone ){
 // Weekend defined as sat & sun
 utils.isWeekend = function(datetime) {
   datetime = moment(datetime);
+  console.log(datetime.toDate(), datetime.day());
   return datetime.day() === 0 || datetime.day() === 6;
 }
 

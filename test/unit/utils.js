@@ -2,7 +2,7 @@ var assert  = require('assert');
 var utils   = require('../../utils');
 var moment  = require('moment-timezone');
 
-describe ('Utils', function(){
+describe.only ('Utils', function(){
   it('.timeToRange', function(){
     var time    = '12:15 PM';
     var format  = 'hh:mm A';

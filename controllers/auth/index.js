@@ -317,6 +317,11 @@ putils.validator.validate( data, {
       req.setSession( user.toJSON() );
       req.session.isNewSignup = true;
 
+      if ( Array.isArray( req.session.guestOrders ) ){
+        venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
+        delete req.session.guestOrders;
+      }
+
       req.session.save( function( error ){
         if ( error ){
           logger.error('Error saving session!', {
@@ -324,11 +329,6 @@ putils.validator.validate( data, {
           });
 
           res.status(500).render('500');
-        }
-
-        if ( Array.isArray( req.session.guestOrders ) ){
-          venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
-          delete req.session.guestOrders;
         }
 
         res.redirect( req.query.next || '/restaurants' );

@@ -335,6 +335,6 @@ putils.validator.validate( data, {
 
         venter.emit( 'user:registered', user );
       });
+    });
   });
-
 };

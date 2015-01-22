@@ -16,27 +16,30 @@ define( function( require ){
       , inputSelector: '[name="list-sort"]:checked'
       });
 
-      var listView = new ListView({
-        el: '#main'
-      , searchUrl: '/restaurants'
-      });
-
       var orderParamsView = new OrderParamsView({
         model: new OrderParams()
       , el: '.restaurant-params'
       });
 
-      var filtersView = new FiltersView({ el: '#filters' });
+      var filtersView = new FiltersView({
+        el: '#filters'
+      , facets: {
+          cuisines:   '.filter-cuisines input[type="checkbox"]:checked'
+        , diets:      '.filter-diets input[type="checkbox"]:checked'
+        , mealTypes:  '.filter-meal-types input[type="checkbox"]:checked'
+        }
+      });
 
       var searchView = new SearchView({
         el: '#search'
       , inputSelector: '.search-input'
       });
 
-      listView.addFilter(sortView);
-      listView.addFilter(orderParamsView);
-      listView.addFilter(filtersView);
-      listView.addFilter(searchView);
+      var listView = new ListView({
+        el: '#main'
+        , searchUrl: '/restaurants'
+        , filters: [ sortView, orderParamsView, filtersView, searchView ]
+      });
 
       $('[data-role="collapsible"]').gb_collapsible();
     }

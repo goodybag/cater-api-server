@@ -11,16 +11,17 @@ define(function(require, exports, module) {
   return module.exports = Backbone.View.extend({
     initialize: function() {
       analytics.page('Restaurants List');
-      // this.listenTo(this.options.paramsView, 'params:submit', this.search);
-      // this.listenTo(this.options.filtersView, 'filters:change', this.search);
-      // this.listenTo(this.options.sortView, 'sort:change', this.search);
-      // this.listenTo(this.options.searchView, 'search:change', this.search);
       this.options.filters = this.options.filters || [];
+      this.options.filters.forEach(this.listenToFilter.bind(this));
     }
 
   , addFilter: function(filterView) {
-      this.listenTo( filterView, filterView.options.changeEvent, this.search );
       this.options.filters.push(filterView);
+      this.listenToFilter(filterView);
+    }
+
+  , listenToFilter: function(filterView) {
+      this.listenTo( filterView, filterView.options.changeEvent, this.search );
     }
 
   , search: function() {

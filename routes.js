@@ -76,13 +76,6 @@ module.exports.register = function(app) {
   , controllers.restaurants.list
   );
 
-
-  app.get('/restaurants2'
-  , m.restrict(['admin'])
-  , m.getRestaurants()
-  , m.view( 'restaurant/list', { layout: 'layout/default' } )
-  );
-
   app.post('/restaurants', m.restrict('admin'), controllers.restaurants.create);
 
   app.all('/restaurants', m.restrict(['client', 'admin']), function(req, res, next) {

@@ -26,6 +26,7 @@
   </div>
 
   {{> layout_footer }}
+  {{> layout_intercom }}
 
   {{#unless config.isDev}}
   <script src="{{cdn (format 'dist/<%= version %>/goodybag.js' pkg)}}"></script>
@@ -41,6 +42,11 @@
   </script>
 
   {{> analytics }}
+  {{> olark }}
+
+  {{#if isNewSignup}}
+  {{> facebook_pixel config.facebook.pixel.restaurantList }}
+  {{/if}}
 
   {{{block "views"}}}
   {{{block "bootstrap"}}}

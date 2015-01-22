@@ -24,7 +24,7 @@ define( function( require, exports, module ){
         }).filter( function( cuisine ){
           return [ null, undefined ].indexOf( cuisine ) === -1;
         }).filter( function( cuisine ){
-          return cuisines.indexOf( cuisine ) > -1;
+          return this.allCuisines.indexOf( cuisine ) > -1;
         }.bind( this ));
       }
     });

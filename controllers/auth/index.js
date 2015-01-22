@@ -328,7 +328,7 @@ putils.validator.validate( data, {
             error: error
           });
 
-          res.status(500).render('500');
+          return res.status(500).render('500');
         }
 
         res.redirect( req.query.next || '/restaurants' );

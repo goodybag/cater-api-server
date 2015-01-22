@@ -5,7 +5,7 @@
       <table cellpadding="0" cellspacing="0" style="width: 100%;">
         <tr>
           <td style="width: 46%; padding-bottom: 22px;">
-            {{#is order.type 'pickup' 'user'}}
+            {{#is order.type 'pickup' 'courier'}}
             {{> order_email_details_user_pickup }}
             {{else}}
             {{> order_email_details_user_delivery }}
@@ -14,9 +14,9 @@
           <td style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-left: 12px;">
             <h1 style="line-height: 36px; margin-top: 0; margin-right: 0; margin-bottom: 10px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 28px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">Details on this order have changed!</h1>
             <h2 style="line-height: 24px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
-              The {{#is order.type 'pickup' 'user'}}pickup{{else}}delivery{{/is}} date has changed<br>
+              The {{#is order.type 'pickup' 'courier'}}pickup{{else}}delivery{{/is}} date has changed<br>
               From {{formatDateTime oldDatetime "MM/DD/YYYY h:mm A"}}<br>
-              {{#is order.type 'pickup' 'user'}}
+              {{#is order.type 'pickup' 'courier'}}
               To <strong>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}}</strong>
               {{else}}
               To <strong>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</strong>

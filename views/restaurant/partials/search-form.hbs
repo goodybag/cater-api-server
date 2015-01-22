@@ -25,16 +25,3 @@
     </div>
   </div>
 </section>
-
-{{#extend "scripts"}}
-<script>
-define('data/views/order-params-view'
-, ['app/views/order-params-view', 'app/models/order-params']
-, function(OrderParamsView, OrderParams) {
-  return new OrderParamsView({
-    model: new OrderParams()
-  , el: '.restaurant-params'
-  });
-})
-</script>
-{{/extend}}

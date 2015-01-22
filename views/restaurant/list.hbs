@@ -31,20 +31,8 @@
 
 {{#extend "scripts"}}
 <script>
-require( [
-  'data/views/sort-view'
-, 'data/views/filters-view'
-, 'data/views/order-params-view'
-, 'data/views/search-view'
-, 'app/pages/restaurant-list'
-],
-function( sortView, filtersView, orderParamsView, searchView, page ){
-  page.init({
-    sortView: sortView
-  , filtersView: filtersView
-  , orderParamsView: orderParamsView
-  , searchView: searchView
-  });
+require( ['app/pages/restaurant-list'], function( page ){
+  page.init();
 });
 </script>
 {{/extend}}

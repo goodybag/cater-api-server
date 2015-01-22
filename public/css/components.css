@@ -359,6 +359,10 @@
   width: 100px;
 }
 
+.order-params-bar .form-group[data-icon]:before {
+  line-height: 1;
+}
+
 .order-params-bar .form-group[data-icon="gb-icon-time"]:before {
   margin-top: 8px
 }

@@ -1,5 +1,6 @@
 /**
- * Yelp Business
+ * YelpBusiness.Coercions
+ * Provides to coerce Yelp data to goodybag data
  */
 
 if ( typeof module === "object" && module && typeof module.exports === "object" ){
@@ -11,21 +12,20 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 define( function( require, exports, module ){
   var config = require('config');
 
-  return require('stampit')
-    .stampit()
+  return require('stampit')()
     .state({
       allCuisines: []
     , categories:  []
     })
     .methods({
       categoriesToGbCuisines: function(){
-        return yelpBiz.categories.map( function( cat ){
+        return this.categories.map( function( cat ){
           return config.yelrp.fromCatsToCuisines[ cat[ 0 ] ];
         }).filter( function( cuisine ){
           return [ null, undefined ].indexOf( cuisine ) === -1;
         }).filter( function( cuisine ){
           return cuisines.indexOf( cuisine ) > -1;
-        }.bind ( this ))
+        }.bind( this ));
       }
     });
 });

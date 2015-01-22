@@ -1593,9 +1593,12 @@ module.exports.register = function(app) {
   , m.remove( db.restaurants )
   );
 
-  app.post('/api/restaurants/:id/auto-populate'
+  app.post('/api/restaurants/:id/auto-update'
   , m.restrict(['admin'])
-  , m.getRestaurant()
+  , m.getRestaurant({
+      param: 'id'
+    , delivery: true
+    })
   , controllers.api.restaurants.autoPopulate
   );
 

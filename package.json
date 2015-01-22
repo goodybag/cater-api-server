@@ -17,6 +17,7 @@
     "config": "./config.js",
     "errors": "./errors.js",
     "utils": "./utils.js",
+    "db": "./db",
     "restaurant-plans": "./public/js/lib/restaurant-plans"
   },
   "dependencies": {

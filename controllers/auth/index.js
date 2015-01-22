@@ -322,8 +322,18 @@ module.exports.register = function( req, res ){
       delete req.session.guestOrders;
     }
 
-    res.redirect( req.param('next') || '/restaurants' );
-
     venter.emit( 'user:registered', user );
+
+    req.session.save( function( error ){
+      if ( error ){
+        logger.error('Error saving session!', {
+          error: error
+        });
+
+        res.status(500).render('500');
+      }
+
+      res.redirect( req.query.next || '/restaurants' );
+    });
   });
 };

@@ -210,6 +210,7 @@ module.exports = function(grunt) {
       }
     , landing: {}
     , admin: {}
+    , goodybag: {}
     }
 
   , s3: {
@@ -249,6 +250,10 @@ module.exports = function(grunt) {
   var admin   = gruntConfig.requirejs.admin.options = utils.clone( gruntConfig.requirejs.app.options );
   admin.name  = 'app/pages/admin/builder';
   admin.out   = 'public/dist/<%= pkg.version %>/admin.js';
+
+  var goodybag   = gruntConfig.requirejs.goodybag.options = utils.clone( gruntConfig.requirejs.app.options );
+  goodybag.name  = 'app/pages/main';
+  goodybag.out   = 'public/dist/<%= pkg.version %>/goodybag.js';
 
   grunt.initConfig( gruntConfig );
 

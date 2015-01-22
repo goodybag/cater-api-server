@@ -265,7 +265,7 @@ module.exports.register = function( req, res ){
     });
   }
 
-  var error = putils.validator.validate( data, {
+putils.validator.validate( data, {
     type: 'object'
   , properties: {
       email: {
@@ -280,60 +280,61 @@ module.exports.register = function( req, res ){
       , required: true
       }
     }
-  }, function( error ){ return error; });
+  }, function( error ){
 
-  if ( error && error.length > 0 ){
-    var message;
+    if ( error && error.length > 0 ){
+      var message;
 
-    if ( error[0].property === 'email' ){
-      message = 'Invalid Email';
-    } else {
-      message = 'Invalid Password';
-    }
-
-    return res.render( 'landing/register', {
-      layout: 'landing/layout'
-    , error: { message: message }
-    });
-  }
-
-  new Models.User( data ).create( function( error, user ){
-    if ( error ){
-      if ( error.routine === '_bt_check_unique' ){
-        error = errors.registration.EMAIL_TAKEN;
+      if ( error[0].property === 'email' ){
+        message = 'Invalid Email';
+      } else {
+        message = 'Invalid Password';
       }
 
       return res.render( 'landing/register', {
         layout: 'landing/layout'
-      , error: error
+      , error: { message: message }
       });
     }
 
-    req.analytics.track({
-      userId: user.attributes.id+''
-    , event: 'Sign up'
-    });
-
-    req.setSession( user.toJSON() );
-    req.session.isNewSignup = true;
-
-    if ( Array.isArray( req.session.guestOrders ) ){
-      venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
-      delete req.session.guestOrders;
-    }
-
-    venter.emit( 'user:registered', user );
-
-    req.session.save( function( error ){
+    new Models.User( data ).create( function( error, user ){
       if ( error ){
-        logger.error('Error saving session!', {
-          error: error
-        });
+        if ( error.routine === '_bt_check_unique' ){
+          error = errors.registration.EMAIL_TAKEN;
+        }
 
-        res.status(500).render('500');
+        return res.render( 'landing/register', {
+          layout: 'landing/layout'
+        , error: error
+        });
       }
 
-      res.redirect( req.query.next || '/restaurants' );
-    });
+      req.analytics.track({
+        userId: user.attributes.id+''
+      , event: 'Sign up'
+      });
+
+      req.setSession( user.toJSON() );
+      req.session.isNewSignup = true;
+
+      req.session.save( function( error ){
+        if ( error ){
+          logger.error('Error saving session!', {
+            error: error
+          });
+
+          res.status(500).render('500');
+        }
+
+        if ( Array.isArray( req.session.guestOrders ) ){
+          venter.emit('auth-with-guest-orders', user, req.session.guestOrders );
+          delete req.session.guestOrders;
+        }
+
+        res.redirect( req.query.next || '/restaurants' );
+
+        venter.emit( 'user:registered', user );
+      });
   });
+
 };

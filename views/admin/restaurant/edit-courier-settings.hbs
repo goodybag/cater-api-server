@@ -1,0 +1,85 @@
+{{#extend "body"}}
+<form class="ap-form form-vertical form-courier-settings" method="POST">
+  <input type="hidden" name="_method" value="PUT">
+  <h2>Courier Settings</h2>
+  <div class="form-group">
+    <label class="control-label" for="input-disable_courier">
+      <input type="checkbox" class="form-control disable-courier" name="disable_courier" id="input-disable_courier" {{#if restaurant.disable_courier}}checked="checked"{{/if}}>
+      Disable Courier Services for this restaurant
+    </label>
+  </div>
+  <div class="form-group">
+    <label class="control-label" for="input-disable_courier_notifications">
+      <input type="checkbox" class="form-control" name="disable_courier_notifications" id="input-disable_courier_notifications" {{#if restaurant.disable_courier_notifications}}checked="checked"{{/if}}>
+      Disable courier notifications (Goodybag must trigger courier notifications manually!)
+    </label>
+  </div>
+  <div class="form-group">
+    <label class="control-label" for="input-delivery_service_head_count_threshold">Head Count Delivery Service Threshold
+      <span class="help-block">Orders with head count below this will be delivered by a courier</span>
+    </label>
+    <input type="number" class="form-control" name="delivery_service_head_count_threshold" id="input-delivery_service_head_count_threshold" value="{{restaurant.delivery_service_head_count_threshold}}">
+  </div>
+  <div class="form-group">
+    <label class="control-label" for="input-delivery_service_order_amount_threshold">Order Amount Delivery Service Threshold
+      <span class="help-block">Orders with order amount below this will be delivered by a courier</span>
+    </label>
+    <div class="input-group">
+      <div class="input-addon">$</div>
+      <input
+      type="number"
+      step="any"
+      class="form-control"
+      name="delivery_service_order_amount_threshold"
+      id="input-delivery_service_order_amount_threshold"
+      data-in="dollars"
+      data-out="pennies"
+      value="{{dollars restaurant.delivery_service_order_amount_threshold}}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label" for="input-delivery_service_order_total_upperbound">Order Amount Delivery Service Upperbound
+      <span class="help-block">Delivery Service Orders with order amount <em>above</em> this will trigger the notifications on the order to stop and wait for Goodybag action</span>
+    </label>
+    <div class="input-group">
+      <div class="input-addon">$</div>
+      <input
+      type="number"
+      step="any"
+      class="form-control"
+      name="delivery_service_order_total_upperbound"
+      id="input-delivery_service_order_total_upperbound"
+      data-in="dollars"
+      data-out="pennies"
+      value="{{dollars restaurant.delivery_service_order_total_upperbound}}">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">Update</button>
+    </div>
+  </div>
+</form>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require( ['app/views/alert-view', 'app/views/restaurant/edit-restaurant-view', 'app/models/restaurant'],
+function( AlertView, EditRestaurantView, Restaurant ){
+  var alertView = new AlertView({ el: '.alert-container' });
+  var restaurant = new Restaurant({{{json restaurant}}}, {urlRoot: '/api/restaurants'});
+  var view = new EditRestaurantView({
+    el: '.restaurant-edit'
+  , model: restaurant
+  , alertView: alertView
+  , fieldMap: {
+      disable_courier:                          '[name="disable_courier"]'
+    , disable_courier_notifications:            '[name="disable_courier_notifications"]'
+    , delivery_service_head_count_threshold:    '[name="delivery_service_head_count_threshold"]'
+    , delivery_service_order_amount_threshold:  '[name="delivery_service_order_amount_threshold"]'
+    , delivery_service_order_total_upperbound:  '[name="delivery_service_order_total_upperbound"]'
+    }
+  });
+});
+</script>
+{{/extend}}

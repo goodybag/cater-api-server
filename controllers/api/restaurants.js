@@ -2,38 +2,42 @@
  * Controllers.Api.Restaurants
  */
 
-var db    = require('../../db');
-var utils = require('../../utils');
-var yelp  = require('yelp');
+var stampit = require('stampit');
+var db      = require('../../db');
+var utils   = require('../../utils');
+var yelp    = require('yelp');
 
-var stamps = {
-  yelpBusiness:       require('../../public/js/app/stamps/yelp-business')
-, restaurantGleaning: require('../../public/js/app/stamps/restaurant/gleaning')
-};
+var ybusinesses = stampit()
+  .compose( require('stamps/yelp-business/fetch') )
+  .compose( require('stamps/yelp-business/coercions') );
+
+var restaurants = stampit()
+  .compose( require('stamps/restaurant/gleaning') );
 
 module.exports.autoPopulate = function( req, res ){
   var logger = req.logger.create('Controller-Restaurant.AutoPopulate');
 
-  var restaurant = stamps.restaurantGleaning( req.restaurant );
+  var restaurant = restaurants.create( req.restaurant );
+  var yelpBiz    = ybusinesses.create({ id: restaurant.yelp_business_id });
 
   utils.async.auto({
     'removeExistingRestaurantMealTypes':
-    function( done ){
+    function( next ){
       logger.info('removeExistingRestaurantMealTypes');
       db.restaurant_meal_types.remove({ restaurant_id: restaurant.id }, function( error, results ){
-        return done( error );
+        return next( error );
       });
     }
 
   , 'getYelpData':
     function( next ){
       logger.info('getYelpData');
-      yelp.business( restaurant.yelp_business_id, next );
+      yelpBiz.fetch( next );
     }
 
   , 'insertNewMealTypes': [
       'removeExistingRestaurantMealTypes'
-    , function( done ){
+    , function( next ){
         logger.info('insertNewMealTypes');
         var types = restaurant.getMealTypesFromHours();
 
@@ -41,21 +45,20 @@ module.exports.autoPopulate = function( req, res ){
           return { restaurant_id: restaurant.id, meal_type: type };
         });
 
-        db.restaurant_meal_types.insert( types, done );
+        db.restaurant_meal_types.insert( types, next );
       }
     ]
 
   , 'updateRestaurant': [
       'getYelpData'
-    , function( yelpBiz, done ){
+    , function( yelpBiz, next ){
         logger.info('updateRestaurant');
-        yelpBiz = stamps.yelpBusiness( yelpBiz );
 
         var $update = {
           cuisines: yelpBiz.categoriesToGbCuisines()
         };
 
-        db.restaurants.update( restaurant.id, $update, done );
+        db.restaurants.update( restaurant.id, $update, next );
       }
     ]
   }, function( error ){

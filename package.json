@@ -18,7 +18,8 @@
     "errors": "./errors.js",
     "utils": "./utils.js",
     "db": "./db",
-    "restaurant-plans": "./public/js/lib/restaurant-plans"
+    "restaurant-plans": "./public/js/lib/restaurant-plans",
+    "stamps": "./public/js/app/stamps"
   },
   "dependencies": {
     "Faker": "0.5.x",

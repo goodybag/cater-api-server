@@ -23,12 +23,13 @@ module.exports = require('stampit')()
       if ( !this.id ){
         throw new Error('Missing required property `id`');
       }
-
+console.log(this.id);
       this.client.business( this.id, function( error, business ){
+console.log('done fetching', error);
         if ( error ) return callback( error );
 
         utils.extend( this, business );
-
+console.log('done fetching');
         return callback( null, this );
       }.bind( this ));
     }

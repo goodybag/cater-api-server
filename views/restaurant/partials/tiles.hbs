@@ -2,6 +2,11 @@
 <div class="tile">
   <a class="tile-link" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
     <div class="tile-cover" style="background-image: url('{{list_photo_url}}');">
+      {{#unless has_contract}}
+      <div class="tile-corner">
+        <div class="tile-fee">Fee</div>
+      </div>
+      {{/unless}}
       <div class="tile-caption">
         <div class="tile-title">{{name}}</div>
         <div class="tile-rating">{{{ratingStars yelp_data.rating}}}</div>

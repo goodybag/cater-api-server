@@ -6,7 +6,10 @@
 @tile-link-color: @palette-gray-dark;
 @tile-border-color: @palette-gray;
 @tile-caption-color: @palette-white;
+@tile-header-color: @palette-gray-dark;
 @tile-height: 245px;
+@tile-title-weight: @bold;
+@tile-corner-background-color: rgba(255,255,255,0.7);
 
 .tile {
   margin-bottom: @tile-gutter;
@@ -79,10 +82,34 @@
   bottom: @tile-padding;
 }
 
+@tile-corner-size: 70px;
+
+.tile-corner {
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 @tile-corner-size @tile-corner-size 0;
+  border-color: transparent @tile-corner-background-color transparent transparent;
+  color: @tile-header-color;
+  text-align: center;
+}
+
+.tile-fee {
+  position: relative;
+  right: -29px;
+  top: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
 .tile-title {
   width: 60%;
   font-size: 22px;
-  font-weight: 700;
+  font-weight: @tile-title-weight;
 }
 
 .tile-info {

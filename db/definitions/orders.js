@@ -69,6 +69,11 @@ define(function(require) {
     , nullable: true
     , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     }
+  , phone2: {
+      type: types.varchar(10)
+    , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
+    }
   , notes: {
       type: types.text
     , nullable: true

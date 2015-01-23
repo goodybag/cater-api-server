@@ -191,6 +191,14 @@ define(function(require, exports, module) {
           }]);
         }
 
+        if ( !userInfo.organization ){
+          spinner.stop();
+          return this.displayErrors2([{
+            property: 'user_organization'
+          , message: 'Please enter an organization'
+          }]);
+        }
+
         tasks.userSave = function( done ){
           self.options.user.save( userInfo, {
             success:  function(){ done(); }

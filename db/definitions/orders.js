@@ -184,7 +184,7 @@ define(function(require) {
   , total: {
       type: types.int
     , nullable: false
-    , default: 0qq
+    , default: 0
     }
   , search_vector: {
       type: types.tsvector

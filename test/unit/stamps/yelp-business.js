@@ -18,7 +18,7 @@ before(function( done ){
 
 describe('Stamps', function(){
   describe('YelpBusiness', function(){
-    describe.only('Coercions', function(){
+    describe('Coercions', function(){
       it('.categoriesToGbCuisines()', function(){
         var ybiz = ybusinesses.coercions.create({
           allCuisines: allCuisines

@@ -35,6 +35,17 @@ module.exports.autoPopulate = function( req, res ){
       yelpBiz.fetch( next );
     }
 
+  , 'getCuisines':
+    function( next ){
+      db.cuisines.find( {}, { limit: 'all' }, function( error, cuisines ){
+        if ( error ) return next( error );
+
+        yelpBiz.allCuisines = cuisines;
+
+        next();
+      });
+    }
+
   , 'insertNewMealTypes': [
       'removeExistingRestaurantMealTypes'
     , function( next ){
@@ -50,13 +61,16 @@ module.exports.autoPopulate = function( req, res ){
     ]
 
   , 'updateRestaurant': [
-      'getYelpData'
-    , function( yelpBiz, next ){
+      'getYelpData', 'getCuisines'
+    , function( next ){
         logger.info('updateRestaurant');
 
+        console.log(yelpBiz);
+
         var $update = {
-          cuisines: yelpBiz.categoriesToGbCuisines()
+          cuisine: yelpBiz.categoriesToGbCuisines()
         };
+
 
         db.restaurants.update( restaurant.id, $update, next );
       }

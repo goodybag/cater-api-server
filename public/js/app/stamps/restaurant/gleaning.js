@@ -60,7 +60,7 @@ define( function( require, exports, module ){
           .keys( this.mealTypeMap )
           .filter( function( type ){
             var constraints = this.mealTypeMap[ type ];
-            var time, intersection;
+            var time;
 
             for ( var i = 0; i < times.length; i++ ){
               time = times[ i ];

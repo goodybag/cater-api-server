@@ -280,8 +280,8 @@ putils.validator.validate( data, {
       , required: true
       }
     }
-  }, function( error ){ 
-    
+  }, function( error ){
+
     if ( error && error.length > 0 ){
       var message;
 
@@ -322,10 +322,19 @@ putils.validator.validate( data, {
         delete req.session.guestOrders;
       }
 
-      res.redirect( req.param('next') || '/restaurants' );
+      req.session.save( function( error ){
+        if ( error ){
+          logger.error('Error saving session!', {
+            error: error
+          });
 
-      venter.emit( 'user:registered', user );
+          return res.status(500).render('500');
+        }
+
+        res.redirect( req.query.next || '/restaurants' );
+
+        venter.emit( 'user:registered', user );
+      });
     });
   });
-
 };

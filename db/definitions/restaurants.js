@@ -191,6 +191,11 @@ define(function(require) {
       type: types.int
     , references: { table: 'restaurant_plans', column: 'id', onDelete: 'set null' }
     }
+  , popularity: {
+      type: types.numeric(1,1)
+    , default: 0
+    , checks: ['popularity <= 1']
+    }
   };
 
   definition.indices = {};

@@ -282,6 +282,9 @@ define(function(require, exports, module) {
       // plenty of time? good to go
       if ( limit && minutes >= leadTime ) return true;
 
+      // disabled courier so don't bother checking pickup lead times
+      if ( this.get('disable_courier') ) return false;
+
       // not enough leadtime bro
       if ( !limit || minutes < leadTime ){
         limit = _.find(_.sortBy(this.get('pickup_lead_times'), 'max_guests'), function(obj) {

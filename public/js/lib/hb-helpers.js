@@ -618,6 +618,10 @@ define(function(require, exports, module) {
 
     timeToRange: function( time, format ){
       return utils.timeToRange( time, format, config.deliveryTime );
+    },
+
+    getCurrentYear: function () {
+      return new Date().getFullYear();
     }
   }
 

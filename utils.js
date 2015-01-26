@@ -69,6 +69,10 @@ utils.balanced = new Balanced({
 , secret: config.balanced.secret
 });
 
+utils.normalize = function( x, MIN, MAX ){
+  return ( x - MIN ) / ( MAX - MIN );
+};
+
 utils.getTestEmail = function( id ){
   var email = config.testEmail.split('@');
   email[0] += '+' + ( id ? id : parseInt(Math.random()*9999999).toString(36) );

@@ -4,7 +4,14 @@
     <div class="tile-cover" style="background-image: url('{{list_photo_url}}');">
       {{#unless has_contract}}
       <div class="tile-corner">
-        <div class="tile-fee">Fee</div>
+        <div
+          class="tile-fee"
+          data-toggle="tooltip"
+          data-placement="auto"
+          data-container="body"
+          data-title="An order from this restaurant includes a {{factorToPercent no_contract_fee}}% transaction fee at checkout.">
+          Fee
+        </div>
       </div>
       {{/unless}}
       <div class="tile-caption">

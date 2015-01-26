@@ -42,6 +42,9 @@ define( function( require ){
       });
 
       $('[data-role="collapsible"]').gb_collapsible();
+
+      // reuse bootstrap tooltip for now
+      $('[data-toggle="tooltip"]').tooltip();
     }
   };
 

@@ -5,7 +5,7 @@ var dirac       = require('dirac');
 var mosql       = require('mongo-sql');
 var mosqlUtils  = require('mongo-sql/lib/utils');
 var utils       = require('../utils');
-var logger      = require('../lib/logger');
+var logger      = require('../lib/logger').create('DBHelpers');
 var config      = require('../config');
 var PMSItem     = require('../public/js/app/models/payment-summary-item');
 var odsChecker  = require('../public/js/lib/order-delivery-service-checker');
@@ -333,6 +333,8 @@ dirac.use( function( dirac ){
 
 // Only use columns specified in schema as insert/update targets
 dirac.use( function(){
+  var mLogger = logger.create('DBMiddleware-EnsureTargets');
+
   var options = {
     operations: [ 'insert', 'update' ]
   };
@@ -347,10 +349,17 @@ dirac.use( function(){
     }
 
     vals.forEach( function( val ){
+      var didDeleteAll = true;
       for ( var key in val ){
         if ( columns.indexOf( key ) === -1 ){
           delete val[ key ];
+        } else {
+          didDeleteAll = false;
         }
+      }
+
+      if ( didDeleteAll ){
+        mLogger.warn('Deleted all keys!');
       }
     });
 

@@ -27,19 +27,14 @@
   <div id="restaurant-list-items">
     <ul class="table-list table-list-bordered">
       {{#each restaurants}}
-      <a class="table-list-item" href="{{baseUrl}}/admin/restaurants/{{id}}">
-        <li>
-          <div>
-            <span class="table-list-info">{{name}}</span>
-            <div class="pull-right">
-              {{#if is_hidden}}
-              <span class="gb-icon-eye-slash icon-large"></span>
-              {{/if}}
-            </div>
-          </div>
-          <div>#{{id}} {{city}}, {{state}}</div>
-        </li>
-      </a>
+      <li class="table-list-item">
+        <span class="table-list-info"><a href="{{baseUrl}}/admin/restaurants/{{id}}">{{name}}</a></span>
+        <span class="table-list-item-actions">
+          <a class="table-list-item-action" href="#" data-toggle="tooltip" data-title="Toggle Visibility"><span class="gb-icon-eye-slash icon-large"></span>
+          <a class="table-list-item-action" href="{{baseUrl}}/admin/restaurants/{{id}}" data-toggle="tooltip" data-title="View Contacts"><span class="gb-icon-user icon-large"></span></a>
+        </span>
+        <div>#{{id}} {{city}}, {{state}}</div>
+      </li>
       {{/each}}
     </ul>
   </div>
@@ -61,6 +56,8 @@
     var tableListView = new TableListView({
       el: '#restaurant-list'
     });
+
+    $('[data-toggle="tooltip"]').tooltip();
   });
 </script>
 {{/extend}}

@@ -69,11 +69,6 @@ define(function(require) {
     , nullable: true
     , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     }
-  , phone2: {
-      type: types.varchar(10)
-    , nullable: true
-    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
-    }
   , notes: {
       type: types.text
     , nullable: true
@@ -189,7 +184,7 @@ define(function(require) {
   , total: {
       type: types.int
     , nullable: false
-    , default: 0
+    , default: 0qq
     }
   , search_vector: {
       type: types.tsvector
@@ -202,6 +197,12 @@ define(function(require) {
   , restaurant_total: { type: types.int, nullable: false, default: 0 }
   , restaurant_sales_tax: { type: types.int, nullable: false, default: 0 }
   , restaurant_location_id: { type: types.int, references: { table: 'restaurant_locations', column: 'id' } }
+  , secondary_contact_name: { type: types.text, nullable: true }
+  , secondary_contact_phone: {
+    type: types.varchar(10)
+    , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
+  }
   };
 
   definition.indices = {};

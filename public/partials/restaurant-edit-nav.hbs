@@ -9,8 +9,11 @@
   <li {{#eq sidebarNav.active "delivery-settings"}}class="active"{{/eq}}>
     <a href="{{sidebarNav.baseUrl}}/delivery-settings">Delivery Settings</a>
   </li>
-  <li {{#eq sidebarNav.active "hours-of-operation"}}class="active"{{/eq}}>
-    <a href="{{sidebarNav.baseUrl}}/hours-of-operation">Hours of Operation</a>
+  <li {{#eq sidebarNav.active "courier-settings"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/courier-settings">Courier Settings</a>
+  </li>
+  <li {{#eq sidebarNav.active "pickup-settings"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/pickup-settings">Pickup Settings</a>
   </li>
   <li {{#eq sidebarNav.active "tags"}}class="active"{{/eq}}>
     <a href="{{sidebarNav.baseUrl}}/tags">Tags</a>
@@ -34,5 +37,11 @@
   </li>
   <li {{#eq sidebarNav.active "payment-summaries"}}class="active"{{/eq}}>
     <a href="{{sidebarNav.baseUrl}}/payment-summaries" target="_blank">Payment Summaries</a>
+  </li>
+  <li>
+    <a href="{{sidebarNav.baseUrl}}/orders">View Orders</a>
+  </li>
+  <li>
+    <a href="{{sidebarNav.baseUrl}}/copy">Copy Restaurant</a>
   </li>
 </ul>

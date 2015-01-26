@@ -27,46 +27,6 @@
       <input type="text" class="form-control" name="yelp_business_id" id="input-yelp" value="{{config.yelp.businessBaseUrl}}/{{restaurant.yelp_business_id}}">
     </div>
     <div class="form-group">
-      <label class="control-label" for="input-delivery_service_head_count_threshold">Head Count Delivery Service Threshold
-        <span class="help-block">Orders with head count below this will be delivered by a courier</span>
-      </label>
-      <input type="number" class="form-control" name="delivery_service_head_count_threshold" id="input-delivery_service_head_count_threshold" value="{{restaurant.delivery_service_head_count_threshold}}">
-    </div>
-    <div class="form-group">
-      <label class="control-label" for="input-delivery_service_order_amount_threshold">Order Amount Delivery Service Threshold
-        <span class="help-block">Orders with order amount below this will be delivered by a courier</span>
-      </label>
-      <div class="input-group">
-        <div class="input-addon">$</div>
-        <input
-          type="number"
-          step="any"
-          class="form-control"
-          name="delivery_service_order_amount_threshold"
-          id="input-delivery_service_order_amount_threshold"
-          data-in="dollars"
-          data-out="pennies"
-          value="{{dollars restaurant.delivery_service_order_amount_threshold}}">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label" for="input-delivery_service_order_total_upperbound">Order Amount Delivery Service Upperbound
-        <span class="help-block">Delivery Service Orders with order amount <em>above</em> this will trigger the notifications on the order to stop and wait for Goodybag action</span>
-      </label>
-      <div class="input-group">
-        <div class="input-addon">$</div>
-        <input
-          type="number"
-          step="any"
-          class="form-control"
-          name="delivery_service_order_total_upperbound"
-          id="input-delivery_service_order_total_upperbound"
-          data-in="dollars"
-          data-out="pennies"
-          value="{{dollars restaurant.delivery_service_order_total_upperbound}}">
-      </div>
-    </div>
-    <div class="form-group">
       <label for="region_id_selector" class="control-label">Region</label>
       <select name="region_id" id="region_id_selector" type="number">
         {{#each regions}}
@@ -85,16 +45,6 @@
             id="input-logo-url">
         </div>
         <div class="col-filepicker-photo">
-          <label class="control-label">Monochromatic Logo</label>
-          <img class="restaurant-img" data-name="logo_mono_url"
-            src="{{#if restaurant.logo_mono_url}}{{restaurant.logo_mono_url}}{{else}}{{config.defaultMonoLogo}}{{/if}}">
-          <input type="filepicker" class="form-control btn btn-default btn-block"
-            name="logo_mono_url" value="{{#if restaurant.logo_mono_url}}{{restaurant.logo_mono_url}}{{else}}{{config.defaultMonoLogo}}{{/if}}"
-            id="input-mono-logo-url">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-filepicker-photo">
           <label class="control-label">List Photo</label>
           <img class="restaurant-img" data-name="list_photo_url"
           src="{{#if restaurant.list_photo_url}}{{restaurant.list_photo_url}}{{else}}{{config.defaultMonoLogo}}{{/if}}">
@@ -110,51 +60,6 @@
         Hidden from listing
       </label>
     </div>
-    <div class="form-group">
-      <label class="control-label" for="input-disable-courier-notifications">
-        <input type="checkbox" class="form-control" name="disable_courier_notifications" id="input-disable-courier-notifications" {{#if restaurant.disable_courier_notifications}}checked="checked"{{/if}}>
-        Disable courier notifications (Goodybag must trigger courier notifications manually!)
-      </label>
-    </div>
-
-    <fieldset id="fieldset-no-contract">
-      <h3 class="fieldset-title">Contract Info</h3>
-      <div class="form-group" id="has-contract-group">
-        <label class="control-label">
-          <input type="checkbox" class="form-control" name="has_contract" {{#if restaurant.has_contract}}checked="checked"{{/if}}>
-         Has a contract?
-        </label>
-      </div>
-      <div class="form-group" id="no-contract-fee-group">
-        <label>No Contract Transaction Fee</label>
-        <div class="input-group">
-          <input
-            type="text"
-            class="form-control"
-            name="no_contract_fee"
-            id="input-no_contract_fee"
-            data-in="factorToPercent"
-            data-out="percentToFactor 4"
-            value="{{factorToPercent restaurant.no_contract_fee}}">
-          <div class="input-addon">%</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label" for="input-rate">GB Fee</label>
-        <div class="input-group">
-          <input
-            type="text"
-            class="form-control"
-            name="gb_fee"
-            id="input-gb_fee"
-            data-in="factorToPercent"
-            data-out="percentToFactor 4"
-            value="{{factorToPercent restaurant.gb_fee}}">
-          <div class="input-addon">%</div>
-        </div>
-      </div>
-    </fieldset>
-
     <div class="form-group actions">
       <button class="btn-update" type="submit">Update</button>
       <button class="btn btn-default" type="button" id="auto-magic">Auto Magicka!</button>

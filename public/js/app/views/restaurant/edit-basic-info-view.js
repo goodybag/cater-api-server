@@ -16,18 +16,10 @@ define(function(require, exports, module) {
     , websites:                                 '#input-websites'
     , yelp_business_id:                         '#input-yelp'
     , is_hidden:                                '#input-hidden'
-    , disable_courier_notifications:            '#input-disable-courier-notifications'
     , logo_url:                                 '#input-logo-url'
-    , logo_mono_url:                            '#input-mono-logo-url'
     , region_id:                                '[name="region_id"]'
-    , gb_fee:                                   '[name="gb_fee"]'
     , is_fee_on_total:                          '[name="is_fee_on_total"]'
     , is_direct_deposit:                        '[name="is_direct_deposit"]'
-    , delivery_service_head_count_threshold:    '[name="delivery_service_head_count_threshold"]'
-    , delivery_service_order_total_upperbound:  '[name="delivery_service_order_total_upperbound"]'
-    , delivery_service_order_amount_threshold:  '[name="delivery_service_order_amount_threshold"]'
-    , has_contract:                             '[name="has_contract"]'
-    , no_contract_fee:                          '[name="no_contract_fee"]'
     , list_photo_url:                           '[name="list_photo_url"]'
     },
 
@@ -51,6 +43,8 @@ define(function(require, exports, module) {
     }, EditRestaurantView.prototype.fieldGetters ),
 
     initialize: function() {
+      // ensure gb_fee is number type
+      this.model.set('gb_fee', +this.model.get('gb_fee'));
     },
 
     onFilePickerChange: function(e){

@@ -21,6 +21,7 @@ config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
 , yelrp: require('./configs/yelrp')
+, popularity: require('./configs/popularity')
 , reminders: require('./configs/reminders')
 , redis: require('./configs/redis')
 , session: require('./configs/session')

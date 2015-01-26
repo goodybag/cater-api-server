@@ -75,7 +75,9 @@ var User = module.exports = Model.extend({
 
     var flow = {
       encrypt: function( done ){
-        utils.encryptPassword( attr.password, done );
+        utils.encryptPassword( attr.password, function (error, hash, salt) {
+          done(error, hash, salt);
+        });
       }
 
     , balanced: function( hash, salt, done ){

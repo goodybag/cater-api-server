@@ -1,7 +1,28 @@
 {{#extend "body"}}
-  <h2>Billing Info</h2>
-
   <form class="ap-form form-vertical">
+    <h2>Contract Info</h2>
+    <div class="form-group" id="has-contract-group">
+      <label class="control-label">
+        <input type="checkbox" class="form-control" name="has_contract" {{#if restaurant.has_contract}}checked="checked"{{/if}}>
+        Has a contract?
+      </label>
+    </div>
+    <div class="form-group" id="no-contract-fee-group">
+      <label>No Contract Transaction Fee</label>
+      <div class="input-group">
+        <input
+        type="text"
+        class="form-control"
+        name="no_contract_fee"
+        id="input-no_contract_fee"
+        data-in="factorToPercent"
+        data-out="percentToFactor 4"
+        value="{{factorToPercent restaurant.no_contract_fee}}">
+        <div class="input-addon">%</div>
+      </div>
+    </div>
+
+    <h2>Billing Info</h2>
     <div class="form-group">
       <label class="control-label">Street</label>
       <input name="billing_street" type="text" class="form-control restaurant-address restaurant-billing_street" value="{{restaurant.billing_street}}" placeholder="123 Fake St.">
@@ -64,7 +85,7 @@
          Uses Direct Deposit?
       </label>
     </div>
-    <div class="actions">
+    <div class="form-group actions">
       <button class="btn-update" type="submit">Update</button>
     </div>
   </form>

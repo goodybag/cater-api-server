@@ -26,7 +26,7 @@ define(function(require){
         });
       });
 
-      page.deliveryLeadTimesView = new Views.EditPickupLeadTimesView({
+      page.pickupSettingsView = new Views.EditPickupLeadTimesView({
         el : '.restaurant-edit'
       , model: options.models.restaurant
       , alertView: page.alertView

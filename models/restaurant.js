@@ -2,6 +2,7 @@ var moment = require('moment-timezone');
 var mosql = require('mongo-sql');
 
 var Model = require('./model');
+var config = require('../config');
 var utils = require('../utils');
 
 var Restaurant = module.exports = Model.extend({
@@ -396,9 +397,9 @@ var Restaurant = module.exports = Model.extend({
 
     query = query || {};
     query.columns = query.columns || ['*'];
-    query.order = query.order || ["is_unacceptable ASC", "restaurants.name ASC", "restaurants.id ASC"];
+    query.order = query.order || ["is_unacceptable ASC", "restaurants.popularity DESC", "restaurants.id ASC"];
     query.joins = query.joins || {};
-    query.distinct = (query.distinct != null) ? query.distinct : ["restaurants.name", "is_unacceptable", "restaurants.id"];
+    query.distinct = (query.distinct != null) ? query.distinct : ["restaurants.name", "is_unacceptable", "restaurants.id", "restaurants.popularity"];
     query.where = query.where || {};
     query.includes = query.includes || [];
 
@@ -571,32 +572,7 @@ var Restaurant = module.exports = Model.extend({
      * Sort by price, order min, or delivery fee
      */
     if (orderParams && orderParams.sort) {
-      var sortedCol = null;
-
-      switch (orderParams.sort) {
-        case 'name':
-          sortedCol = 'name ASC';
-          break;
-        case 'price':
-          sortedCol = 'price ASC';
-          break;
-        case 'price desc':
-          sortedCol = 'price DESC';
-          break;
-        case 'order minimum':
-          sortedCol = 'minimum_order ASC NULLS FIRST';
-          break;
-        case 'order minimum desc':
-          sortedCol = 'minimum_order DESC NULLS LAST';
-          break;
-        case 'delivery fee':
-          sortedCol = 'delivery_fee ASC';
-          break;
-        case 'delivery fee desc':
-          sortedCol = 'delivery_fee DESC';
-          break;
-      }
-
+      var sortedCol = config.sortQueryTable[orderParams.sort];
       if (sortedCol) {
 
         // insert after head of array (prioritize after is_unacceptable)

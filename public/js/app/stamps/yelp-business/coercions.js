@@ -20,9 +20,7 @@ define( function( require, exports, module ){
     .methods({
       categoriesToGbCuisines: function(){
         return this.categories.map( function( cat ){
-          return config.yelrp.fromCatsToCuisines[ cat[ 0 ] ];
-        }).filter( function( cuisine ){
-          return [ null, undefined ].indexOf( cuisine ) === -1;
+          return config.yelrp.fromCatsToCuisines[ cat[ 0 ] ] || cat[ 0 ];
         }).filter( function( cuisine ){
           return this.allCuisines.indexOf( cuisine ) > -1;
         }.bind( this ));

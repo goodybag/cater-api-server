@@ -40,7 +40,7 @@ module.exports.autoPopulate = function( req, res ){
       db.cuisines.find( {}, { limit: 'all' }, function( error, cuisines ){
         if ( error ) return next( error );
 
-        yelpBiz.allCuisines = cuisines;
+        yelpBiz.allCuisines = utils.pluck( cuisines, 'name' );
 
         next();
       });
@@ -65,21 +65,22 @@ module.exports.autoPopulate = function( req, res ){
     , function( next ){
         logger.info('updateRestaurant');
 
-        console.log(yelpBiz);
-
         var $update = {
           cuisine: yelpBiz.categoriesToGbCuisines()
         };
-
 
         db.restaurants.update( restaurant.id, $update, next );
       }
     ]
   }, function( error ){
     if ( error ){
-      throw error;
+      logger.error('Error doing update magic', {
+        error: error
+      });
+
+      return res.error( error );
     }
 
-    res.send(204);
+    res.sendStatus(204);
   });
 };

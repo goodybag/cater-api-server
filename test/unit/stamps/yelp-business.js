@@ -45,6 +45,12 @@ describe('Stamps', function(){
 
         ybiz.categories = [ ['Pizza', 'pizza'] ];
         assert.deepEqual( ybiz.categoriesToGbCuisines(), ['Pizza'] );
+
+        ybiz.categories = [ [ 'Chinese', 'chinese' ]
+                          , [ 'Thai', 'thai' ]
+                          , [ 'Asian Fusion', 'asianfusion' ]
+                          ];
+        assert.deepEqual( ybiz.categoriesToGbCuisines(), ['Chinese', 'Thai', 'Asian Fusion'] );
       });
     });
   });

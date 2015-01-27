@@ -56,7 +56,7 @@ module.exports = {
 , time: arg('time')
 , timetz: arg('timetz')
 , timestamp: 'timestamp'
-, timestamptz: arg('timestamptz')
+, timestamptz: 'timestamptz'
 , tsquery: 'tsquery'
 , tsvector: 'tsvector'
 , txidSnapshot: 'txid_snapshot'

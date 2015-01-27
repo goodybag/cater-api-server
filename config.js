@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, popularity: require('./configs/popularity')
 , reminders: require('./configs/reminders')
 , redis: require('./configs/redis')
 , session: require('./configs/session')
@@ -68,6 +69,7 @@ config.defaults = {
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
+  , 'alexlauzon@goodybag.com'
   ]
 
 , resultsTooFewContactUsThreshold: 5

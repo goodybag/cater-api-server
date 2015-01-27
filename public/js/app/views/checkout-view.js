@@ -181,6 +181,7 @@ define(function(require, exports, module) {
         userInfo = {
           name:         this.$el.find('[name="user_name"]').val()
         , organization: this.$el.find('[name="user_organization"]').val()
+        , organization_type: this.$el.find('input[name="organization_type"]:checked').val()
         };
 
         if ( !userInfo.name ){
@@ -191,7 +192,7 @@ define(function(require, exports, module) {
           }]);
         }
 
-        if ( !userInfo.organization ){
+        if ( !userInfo.organization && userInfo.organization_type === "business"){
           spinner.stop();
           return this.displayErrors2([{
             property: 'user_organization'

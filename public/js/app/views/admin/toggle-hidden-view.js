@@ -15,6 +15,7 @@ define(function(require) {
     }
 
     , toggleHiddenOnClick: function(e) {
+      e.preventDefault();
       var this_ = this;
       var restaurant = this.options.model;
       restaurant.save({ is_hidden: !restaurant.get('is_hidden') }, {

@@ -69,6 +69,7 @@ config.defaults = {
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
+  , 'alexlauzon@goodybag.com'
   ]
 
 , resultsTooFewContactUsThreshold: 5

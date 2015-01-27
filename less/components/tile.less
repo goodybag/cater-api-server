@@ -9,7 +9,10 @@
 @tile-header-color: @palette-gray-dark;
 @tile-height: 245px;
 @tile-title-weight: @bold;
+@tile-title-font-size: 24px;
+@tile-title-line-height: 26px;
 @tile-corner-background-color: rgba(255,255,255,0.7);
+@tile-rating-width: 110px;
 
 .tile {
   margin-bottom: @tile-gutter;
@@ -107,9 +110,14 @@
 }
 
 .tile-title {
-  width: 60%;
-  font-size: 22px;
+  width: 100%;
+  font-size: @tile-title-font-size;
+  line-height: @tile-title-line-height;
   font-weight: @tile-title-weight;
+}
+
+.tile-rating + .tile-title {
+  padding-right: @tile-rating-width + @tile-padding;
 }
 
 .tile-info {

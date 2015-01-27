@@ -17,13 +17,12 @@ define( function( require, exports, module ){
     gleaning: require('./gleaning')
   };
 
-  module.exports = module.exports.compose.apply( module.exports
-  , Object.keys( stamps ).map( function( k ){ return stamps[ k ]; })
+  module.exports = module.exports.compose.apply(
+    module.exports
+  , utils.values( stamps );
   );
 
-  for ( var key in stamps ){
-    module.exports[ key ] = stamps[ key ];
-  }
+  utils.extend( module.exports, stamps );
 
   return module.exports;
 });

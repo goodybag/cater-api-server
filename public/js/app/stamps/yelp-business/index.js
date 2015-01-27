@@ -10,6 +10,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   var stampit = require('stampit');
+  var utils   = require('utils');
 
   module.exports = stampit();
 
@@ -18,13 +19,12 @@ define( function( require, exports, module ){
   , fetch:      require('./fetch')
   };
 
-  module.exports = module.exports.compose.apply( module.exports
-  , Object.keys( stamps ).map( function( k ){ return stamps[ k ]; })
+  module.exports = module.exports.compose.apply(
+    module.exports
+  , utils.values( stamps );
   );
 
-  for ( var key in stamps ){
-    module.exports[ key ] = stamps[ key ];
-  }
+  utils.extend( module.exports, stamps );
 
   return module.exports;
 });

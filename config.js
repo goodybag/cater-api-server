@@ -39,6 +39,11 @@ config.defaults = {
   , end:    18  // 6pm
   }
 
+, disallowOrdersBetween: {
+    start: 16
+  , end:    8
+  }
+
 , emailProvider: 'mandrill'
 
 , tmpDir: './tmp'

@@ -106,10 +106,9 @@ define(function(require, exports, module) {
 
       // Add on the restaurant fulfillability errors
       errors = errors.concat(
-        // restaurant validate expects an order model and this instance does not
-        // have all the attrs set
         this.restaurant.validateOrderFulfillability( this )
       , this.validateRestaurantEvents()
+      , this.validateAfterHours()
       );
 
       return errors.length > 0 ? errors : null;
@@ -139,6 +138,31 @@ define(function(require, exports, module) {
 
         return memo;
       }, []);
+
+      return errors;
+    },
+
+    validateAfterHours: function(){
+      var errors = [];
+
+      var now    = moment();
+      var end    = moment( this.attributes.datetime )
+                    .hour( config.disallowOrdersBetween.end )
+                    .startOf('hour');
+      var start  = moment( this.attributes.datetime )
+                    .subtract( 'days', 1 )
+                    .hour( config.disallowOrdersBetween.start )
+                    .startOf('hour');
+
+      var datetime = moment( this.attributes.datetime );
+
+      // Both now and order date between after hours
+      if ( now > start )
+      if ( now < end )
+      if ( datetime > start )
+      if ( datetime < end ){
+        errors.push('after_hours')
+      }
 
       return errors;
     },
@@ -287,7 +311,13 @@ define(function(require, exports, module) {
     },
 
     setSubmittable: function(model, value, options) {
-      model.set('submittable', model.get('sub_total') > 0 && !model.get('below_min') && !model.get('is_unacceptable'));
+      this.validate( this.toJSON(), function( errors ){
+        if ( error ){
+          return model.set( 'submittable', false );
+        }
+
+        model.set('submittable', model.get('sub_total') > 0 && !model.get('below_min') && !model.get('is_unacceptable'));
+      });
     },
 
     requiredFields: [

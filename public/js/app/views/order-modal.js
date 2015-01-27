@@ -76,6 +76,7 @@ define(function(require, exports, module) {
       var errors = [].concat(
         this.model.validateOrderFulfillability()
       , this.model.validateRestaurantEvents()
+      , this.model.validateAfterHours()
       );
 
       var this_ = this;

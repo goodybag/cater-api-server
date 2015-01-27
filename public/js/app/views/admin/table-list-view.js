@@ -1,53 +1,27 @@
 define(function(require){
   var utils = require('utils');
-  var Restaurant = require('app/models/restaurant');
-
-  // todo extract
-  var ToggleHiddenView = utils.View.extend({
-    events: function() {
-      var ev = 'click ' + this.options.toggleSelector;
-      var events = {};
-      events[ev] = 'toggleHiddenOnClick';
-      return events;
-    }
-
-  , initialize: function() {
-      this.options.toggleSelector = this.options.toggleSelector || '.is-hidden-toggle';
-    }
-
-  , toggleHiddenOnClick: function(e) {
-      var restaurant = this.options.restaurant;
-      restaurant.save({ is_hidden: !restaurant.get('is_hidden') }, {
-        success: function(model, response, options) {
-          // swap toggle icon
-          console.log('success', arguments);
-        },
-
-        error: function(model, response, options) {
-          // alert!!!
-          console.log('error', arguments);
-        }
-      });
-    }
-  });
 
   return utils.View.extend({
     initialize: function() {
       var this_ = this;
+      var Model = this_.options.model;
+      var ItemView = this_.options.itemView;
 
-      // Enable popovers
+      // Enable plugins
       $('[data-role="popover"]').gb_popover();
+      $('[data-toggle="tooltip"]').tooltip();
 
       // Init toggle visibility views
       this.options.itemSelector = this.options.itemSelector || '.table-list-item';
       this.$el.find(this.options.itemSelector).each(function(idx, el) {
         var $el = $(el);
-        var thv = new ToggleHiddenView({
-          el: el,
-          restaurant: new Restaurant($el.data('restaurant'))
+        var json = $el.data(this_.options.dataAttr);
+        var itemView = new ItemView({
+          el: el
+        , model: new Model(json)
+        , parentView: this_
         });
       });
-
-    },
+    }
   });
 });

@@ -6,6 +6,8 @@
 @table-list-header-color: @palette-white;
 @table-list-hover-background: lighten( @palette-gray-lighter, 5% );
 @table-list-close-btn-size: 20px;
+@table-list-link-color: @palette-gray-darker;
+@table-list-link-hover-color: @palette-blue;
 
 .table-list {
   margin: 0;
@@ -38,9 +40,14 @@
   // let child elements define padding
 }
 
-.table-list > a {
+.table-list a {
   text-decoration: none;
-  color: @palette-black;
+  color: @table-list-link-color;
+}
+
+
+.table-list a:hover {
+  color: @table-list-link-hover-color;
 }
 
 .table-list-item {
@@ -60,10 +67,6 @@
 
 .table-list-item .table-list-info {
   font-weight: @semibold;
-}
-
-.table-list-item .gb-icon-eye-slash {
-  color: @palette-gray-dark;
 }
 
 .table-list-item-actions {
@@ -90,15 +93,14 @@
 }
 .table-list-item a {
   text-decoration: none;
-  color: @palette-blue;
 }
 
 .table-list-clear {
   display: inline-block;
   text-decoration: none;
-  color: @palette-black;
   margin-bottom: 10px;
   font-size: @font-size-large;
+  color: @table-list-link-color;
 }
 
 .table-list-clear > span {
@@ -107,7 +109,7 @@
 
 .table-list-clear .gb-icon-x-mark {
   display: inline-block;
-  background-color: @palette-black;
+  background-color: @table-list-link-color;
   color: @palette-white;
   border-radius: @table-list-border-radius;
   font-size: @font-size-large;

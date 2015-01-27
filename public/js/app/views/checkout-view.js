@@ -42,6 +42,7 @@ define(function(require, exports, module) {
     , phone: '.address-phone'
     , tip: '.order-tip'
     , tip_percent: '.tip-percent'
+    , organization_type: '.organization-type'
     },
 
     fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {
@@ -49,6 +50,10 @@ define(function(require, exports, module) {
         var existingCardSelected = this.$el.find('.payment-method[value="existing"]:checked').length;
         var pmid = this.$el.find(this.fieldMap.payment_method_id).val();
         return existingCardSelected ? pmid : null;
+      },
+
+      organization_type: function () {
+        return this.$el.find('input[name="organization_type"]:checked').val();
       }
     }),
 

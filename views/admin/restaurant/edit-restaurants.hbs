@@ -27,7 +27,7 @@
   <div id="restaurant-list-items">
     <ul class="table-list table-list-bordered">
       {{#each restaurants}}
-      <li class="table-list-item">
+      <li class="table-list-item" data-id="{{id}}">
         <span class="table-list-info"><a href="{{baseUrl}}/admin/restaurants/{{id}}">{{name}}</a></span>
         <span class="table-list-item-actions">
           <a class="table-list-item-action" href="#" data-toggle="tooltip" data-title="Toggle Visibility"><span class="gb-icon-eye-slash icon-large"></span>

@@ -23,7 +23,8 @@ define(function(require, exports, module) {
       'submit #order-form':                           'submit',
       'submit #select-address-form':                  'selectAddress',
       'keyup #order-guests':                          'updateGuests',
-      'input input[name="card_number"]':              'onCardNumberChange'
+      'input input[name="card_number"]':              'onCardNumberChange',
+      'change input[name="organization_type"]':       'onOrganizationTypeChange'
     }),
 
     step: 2,
@@ -79,6 +80,8 @@ define(function(require, exports, module) {
 
       // Trigger payment method id change to check if selected card is expired
       this.onPaymentMethodIdChange();
+
+      this.$orderOrganization = this.$el.find('#order-organization');
     },
 
     onDatePickerOpen: function(){
@@ -643,6 +646,14 @@ define(function(require, exports, module) {
         this_.selectCard(pm.get('id'));
         this_.clearCardForm($el);
       });
+    },
+
+    onOrganizationTypeChange: function (e) {
+      if (e.target.value === "business") {
+        this.$orderOrganization[0].classList.remove('hide');
+      } else {
+        this.$orderOrganization[0].classList.add('hide');
+      }
     }
   });
 });

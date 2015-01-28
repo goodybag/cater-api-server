@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, yelp: require('./configs/yelp')
 , popularity: require('./configs/popularity')
 , reminders: require('./configs/reminders')
 , redis: require('./configs/redis')
@@ -164,26 +165,6 @@ config.defaults = {
     , restaurantList: '6014846900654'
     }
   }
-
-, yelp: {
-    businessBaseUrl: 'http://www.yelp.com/biz'
-  , token: 'p2aFEzA20-W4kFttJqiATW3fyq7AUyW6'
-  , tokenSecret: 'gik4eZYy1PB8Fna4TMqIauXUGKs'
-  , consumerKey: '6F-LMALFlGTckzlBfg03fA'
-  , consumerSecret: 'OmclTS9gpl03vksQvA_Cr7OUPU4'
-  , apiUrl: 'http://api.yelp.com/v1'
-  , concernedFields: [
-      'url'
-    , 'review_count'
-    , 'rating'
-    , 'rating_img_url'
-    , 'rating_img_url_small'
-    , 'rating_img_url_large'
-    , 'reviews'
-    ]
-  , reviewThreshold: 3
-  }
-
 
 , notifications: {
     // appropriate hours to send notifications

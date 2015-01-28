@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "./node_modules/grunt-cli/bin/grunt namedModules && ./node_modules/grunt-cli/bin/grunt shell:ensureDir && ./bin/tasks.js loadUtilityFunctions && ./bin/tasks.js createTypes && ./bin/tasks.js loadFunctions && ./bin/tasks.js createViews && ./bin/tasks.js runDeltas && ./bin/tasks.js loadTriggers && node master",
-    "test": "./node_modules/mocha/bin/mocha -R spec test/functional",
+    "test": "./node_modules/mocha/bin/mocha -R spec",
     "postinstall": "./node_modules/.bin/bower install"
   },
   "namedModules": {
@@ -17,7 +17,9 @@
     "config": "./config.js",
     "errors": "./errors.js",
     "utils": "./utils.js",
-    "restaurant-plans": "./public/js/lib/restaurant-plans"
+    "db": "./db",
+    "restaurant-plans": "./public/js/lib/restaurant-plans",
+    "stamps": "./public/js/app/stamps"
   },
   "dependencies": {
     "Faker": "0.5.x",
@@ -27,7 +29,7 @@
     "backbone": "^1.1.2",
     "balanced-official": "goodybag/balanced-node",
     "basic-auth-connect": "^1.0.0",
-    "bcrypt": "0.7.x",
+    "bcrypt": "^0.7.8",
     "bitly": "1.2.x",
     "bluebird": "^2.3.11",
     "body-parser": "^1.10.0",
@@ -93,6 +95,7 @@
     "selenium-webdriver": "~2.40.0",
     "semver": "~2.1.0",
     "serve-favicon": "^2.2.0",
+    "stampit": "^1.1.0",
     "stdm": "0.0.4",
     "sugar": "~1.4.1",
     "time": "^0.10.0",

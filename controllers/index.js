@@ -1,5 +1,6 @@
 module.exports = {
   analytics: require('./analytics')
+, api: require('./api')
 , auth: require('./auth')
 , contactUs: require('./contact-us')
 , emails: require('./emails')

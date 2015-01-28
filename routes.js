@@ -1608,6 +1608,15 @@ module.exports.register = function(app) {
   , m.remove( db.restaurants )
   );
 
+  app.post('/api/restaurants/:id/auto-update'
+  , m.restrict(['admin'])
+  , m.getRestaurant({
+      param: 'id'
+    , delivery: true
+    })
+  , controllers.api.restaurants.autoPopulate
+  );
+
   app.get('/api/restaurants/:restaurant_id/orders'
   , m.restrict(['admin'])
   , m.pagination({ allowLimit: true })

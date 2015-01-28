@@ -1,5 +1,5 @@
 <div class="btn-group-vertical status-buttons">
-  <a href="?" class="btn btn-default {{#eq status "all"}}active{{/eq}}" data-status="all">
+  <a href="{{queryParams (omit reqQuery 'status')}}" class="btn btn-default {{#eq status "all"}}active{{/eq}}" data-status="all">
     All
   </a>
   {{#unless isRestaurantManager}}

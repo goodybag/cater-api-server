@@ -570,6 +570,12 @@ define(function(require, exports, module) {
       return obj[ key ];
     },
 
+    set: function( obj, key, val ){
+      obj = utils.clone( obj );
+      obj[ key ] = val;
+      return obj;
+    },
+
     isNull: function( val, options ){
       return options[ val === null ? 'fn' : 'inverse' ]();
     },

@@ -117,6 +117,11 @@ define(function(require, exports, module) {
           } })
         }
       });
+
+      if (!sent)
+      if (this.model.validationError){
+        this.trigger('invalid-order');
+      }
     }
   });
 

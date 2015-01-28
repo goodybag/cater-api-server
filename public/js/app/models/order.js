@@ -312,7 +312,7 @@ define(function(require, exports, module) {
 
     setSubmittable: function(model, value, options) {
       this.validate( this.toJSON(), function( errors ){
-        if ( error ){
+        if ( errors ){
           return model.set( 'submittable', false );
         }
 
@@ -382,6 +382,15 @@ define(function(require, exports, module) {
     },
 
     isFulfillableOrder: function(){
+      var errors;
+      this.validate( this.toJSON(), function( _errors ){
+        errors = _errors;
+      });
+
+      if ( errors ){
+        return false;
+      }
+
       return this.restaurant.validateOrderFulfillability( this ).length == 0;
     },
 

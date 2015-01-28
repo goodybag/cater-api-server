@@ -80,6 +80,12 @@ define( function( require ){
       , editToken:          editToken
       });
 
+      orderView.on('invalid-order', function(){
+        orderModal.show({
+          success: orderModal.hide.bind( orderModal )
+        });
+      });
+
       orderModel.orderItems.each( function( item ){
         new Views.OrderItemSummary({
           el:             '#order-item-' + item.get('id')

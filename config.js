@@ -40,7 +40,7 @@ config.defaults = {
   }
 
 , disallowOrdersBetween: {
-    start: 16
+    start: 20
   , end:    8
   }
 

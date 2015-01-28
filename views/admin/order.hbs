@@ -72,7 +72,7 @@
           <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
         {{/is}}
 
-        {{#if order.secondary_contact_number }}
+        {{#if order.secondary_contact_phone }}
           <dl>
             <dt>Secondary Contact</dt>
             <dd></dd>
@@ -84,7 +84,7 @@
             <dd>{{phoneNumber order.secondary_contact_phone}}</dd>
           </dl>
         {{/if}}
-        
+
       </dl>
 
       {{#eq order.type 'courier'}}

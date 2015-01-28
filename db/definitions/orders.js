@@ -199,7 +199,7 @@ define(function(require) {
   , restaurant_location_id: { type: types.int, references: { table: 'restaurant_locations', column: 'id' } }
   , secondary_contact_name: { type: types.text, nullable: true }
   , secondary_contact_phone: {
-    type: types.varchar(10)
+      type: types.varchar(10)
     , nullable: true
     , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
   }

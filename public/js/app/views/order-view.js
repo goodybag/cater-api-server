@@ -144,8 +144,14 @@ define(function(require, exports, module) {
     },
 
     updateAmenity: function(amenity) {
-      var $el = this.$el.find('.order-summary [data-amenity-id="' + amenity.id + '"] .item-price');
-      $el.text(Handlebars.helpers.surcharge(amenity.getTotalPrice()));
+      this.$el
+        .find('.order-summary [data-amenity-id="' + amenity.id + '"] .item-price')
+        .text(Handlebars.helpers.surcharge(amenity.getTotalPrice()));
+
+      if (amenity.get('scale') !== 'flat' )
+        this.$el
+          .find('.order-summary [data-amenity-id="' + amenity.id + '"] .item-quantity')
+          .text('x ' + amenity.get('quantity'));
     },
 
     toggleAmenity: function(amenity) {

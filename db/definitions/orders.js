@@ -202,7 +202,7 @@ define(function(require) {
       type: types.varchar(10)
     , nullable: true
     , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
-  }
+    }
   };
 
   definition.indices = {};

@@ -228,9 +228,9 @@ define(function(require, exports, module) {
       var pm = new PaymentMethod({ user_id: this.options.user.get('id') });
 
       // Save the card
-      pm.updateBalancedAndSave(data, function(error) {
+      pm.updateBalancedAndSave(data, function(errors) {
         spinner.stop();
-        if (error) return this_.displayErrors(error, PaymentMethod);
+        if (errors) return this_.displayErrors(errors, PaymentMethod);
         return window.location.reload();
       });
     },

@@ -5,6 +5,12 @@
 @restaurant-section-padding: 30px 0;
 
 .page-restaurant-list {
+
+  .restaurant-params .picker { width: 100%; }
+
+  @media (min-width: @breakpoint-tablet) {
+    .restaurant-params .picker { width: 400px; }
+  }
   .restaurant-list-search {
     background-color: @restaurant-list-background-color;
     color: @palette-white;

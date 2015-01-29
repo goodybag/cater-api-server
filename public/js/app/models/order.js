@@ -145,6 +145,8 @@ define(function(require, exports, module) {
     validateAfterHours: function(){
       var errors = [];
 
+      if ( !this.attributes.datetime ) return errors;
+
       var now    = moment().tz( this.attributes.timezone );
       var end    = moment( this.attributes.datetime )
                     .tz( this.attributes.timezone )

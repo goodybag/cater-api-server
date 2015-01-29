@@ -1,5 +1,6 @@
 define(function(require){
   var $ = require('jquery');
+  var api = require('api');
   require('jquery-loaded');
 
   var Views = {
@@ -21,6 +22,24 @@ define(function(require){
         el : '.restaurant-edit'
       , model: options.models.restaurant
       , alertView: alertView
+      });
+
+      $('#auto-magic').click( function( e ){
+        var restaurant = api.restaurants( options.models.restaurant.get('id') );
+        restaurant('auto-update').post( function( error ){
+          if ( error ){
+            console.log(error);
+            return alertView.show({
+              type: 'error'
+            , message: 'Blargle! Something went wrong. Go get John'
+            });
+          }
+
+          alertView.show({
+            type: 'success'
+          , message: 'Auto magic complete!'
+          });
+        });
       });
     }
   };

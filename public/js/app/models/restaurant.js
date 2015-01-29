@@ -176,6 +176,9 @@ define(function(require, exports, module) {
       this.categories = attrs.categories instanceof Categories ?
         attrs.categories : new Categories(attrs.categories || [], {restaurant: this});
       this.unset('categories');
+
+      if ( typeof this.get('gb_fee') === 'string')
+        this.set('gb_fee', Number( this.get('gb_fee') ));
     },
 
     isValidDeliveryTime: function( date ){

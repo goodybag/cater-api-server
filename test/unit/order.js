@@ -1,9 +1,10 @@
 var db = require('../../db');
 var assert = require('assert');
+var lconfig = require('../../local-config.json');
 
 describe('Order Data Access', function() {
   it('should retrieve order with submitted date', function(done) {
-    db.orders.findOne(5195, { submittedDate: true }, function(err, order) {
+    db.orders.findOne( lconfig.testOrderId || 5195, { submittedDate: true }, function(err, order) {
       assert(!err);
       assert(order);
       assert(order.submitted);
@@ -12,7 +13,7 @@ describe('Order Data Access', function() {
   });
 
   it('should retrieve order without submitted date by default', function(done) {
-    db.orders.findOne(5195, function(err, order) {
+    db.orders.findOne( lconfig.testOrderId || 5195, function(err, order) {
       assert(!err);
       assert(order);
       assert(!order.submitted);
@@ -24,7 +25,7 @@ describe('Order Data Access', function() {
     // Terrible but points depends on submitted date
     // Order points should just be cached instead of calculated every time
     // rewards are viewed
-    db.orders.findOne(5195, {submittedDate: true}, function(err, order) {
+    db.orders.findOne( lconfig.testOrderId || 5195, {submittedDate: true}, function(err, order) {
       assert(!err);
       assert(order);
       assert(order.points);

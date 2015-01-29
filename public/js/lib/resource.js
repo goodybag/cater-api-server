@@ -90,7 +90,7 @@ define(function(require){
         }, callback );
       }
     , 'Function?':
-      function( data, callback ){
+      function( callback ){
         return this.request( { method: 'POST'}, callback );
       }
     })
@@ -104,7 +104,7 @@ define(function(require){
         }, callback );
       }
     , 'Function?':
-      function( data, callback ){
+      function( callback ){
         return this.request( { method: 'PUT'}, callback );
       }
     })
@@ -118,7 +118,7 @@ define(function(require){
         }, callback );
       }
     , 'Function?':
-      function( data, callback ){
+      function( callback ){
         return this.request( { method: 'PATCH'}, callback );
       }
     })

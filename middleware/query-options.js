@@ -12,8 +12,11 @@ module.exports = function( options ){
   });
 
   return function( req, res, next ){
+
+    var clone = utils.deepClone( options );
+
     for ( var key in options ){
-      req.queryOptions[ key ] = options[ key ];
+      req.queryOptions[ key ] = clone[ key ];
     }
 
     return next();

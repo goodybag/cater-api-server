@@ -76,6 +76,7 @@ define(function(require, exports, module) {
       var errors = [].concat(
         this.model.validateOrderFulfillability()
       , this.model.validateRestaurantEvents()
+      , this.model.validateAfterHours()
       );
 
       var this_ = this;
@@ -148,7 +149,9 @@ define(function(require, exports, module) {
       var self = this;
       this.model.save().success(function(){
         self.model.trigger('change:orderparams');
-        self.submitHandlers.success( self.model );
+        if ( self.submitHandlers.success ){
+          self.submitHandlers.success( self.model );
+        }
       }).error( self.submitHandlers.error );
     },
 

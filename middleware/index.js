@@ -28,6 +28,7 @@ module.exports = {
 , orderEditable: require('./order-editable')
 , orderParams: require('./order-params')
 , owner: require('./owner')
+, param: require('./param')
 , queryParams: require('./query-params')
 , queryString: require('./query-string')
 , restaurant: require('./restaurant')

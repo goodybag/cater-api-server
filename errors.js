@@ -147,3 +147,19 @@ errors.balanced.ERROR_ADDING_CARD = {
 };
 
 errors[errors.balanced.ERROR_ADDING_CARD.code] = errors.balanced.ERROR_ADDING_CARD;
+
+/**
+ * Balanced Errors
+ */
+
+errors.restaurants = {};
+
+errors.restaurants.INVALID_YELP_BUSINESS_ID = {
+  type: "input"
+, code: "0501"
+, httpCode: "501"
+, name: "Error INVALID_YELP_BUSINESS_ID"
+, message: "The Yelp Business ID on this restaurant is invalid"
+};
+
+errors[errors.restaurants.INVALID_YELP_BUSINESS_ID.code] = errors.restaurants.INVALID_YELP_BUSINESS_ID;

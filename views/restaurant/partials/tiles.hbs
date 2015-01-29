@@ -1,7 +1,7 @@
 {{#each restaurants }}
 <div class="tile">
   <a class="tile-link" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
-    <div class="tile-cover" style="background-image: url('{{list_photo_url}}');">
+    <div class="tile-cover" style="background-image: url('{{filepicker list_photo_url}}');">
       {{#unless has_contract}}
       <div class="tile-corner">
         <div

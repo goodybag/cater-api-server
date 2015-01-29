@@ -235,6 +235,8 @@
       <li><button class="btn btn-green-2">btn-green-2</button></li>
       <li><button class="btn btn-green-3">btn-green-3</button></li>
     </ul>
+    <h3>Borderless</h3>
+    <button class="btn btn-borderless">btn-borderless</button>
   </div>
 </section>
 
@@ -268,6 +270,47 @@
         </div>
       </li>
     </ul>
+  </div>
+</section>
+
+<section class="page-section" id="section-blockquote">
+  <div class="container">
+    <h2 class="component-title">Form Controls</h2>
+    <h3>Form Control Combo</h3>
+    <p>Use this component to create form controls with inlined actions</p>
+    <div class="form-control-combo">
+      <div class="form-control-combo-full">
+        <input class="input-borderless" type="text" value="enter search"/>
+      </div>
+      <div class="form-control-combo-action">
+        <button class="btn btn-borderless" type="text" data-icon="gb-icon-magnifier"></button>
+      </div>
+      <div class="form-control-combo-action">
+        <button class="btn btn-borderless" type="text" data-icon="gb-icon-eye"></button>
+      </div>
+    </div>
+    <code class="language-markup">
+      {{~#raw~}}
+<div class="form-control-combo">
+  <div class="form-control-combo-full">
+    <input class="input-borderless" type="text" value="enter search"/>
+  </div>
+  <div class="form-control-combo-action">
+    <button class="btn btn-borderless" type="text" data-icon="gb-icon-magnifier"></button>
+  </div>
+  <div class="form-control-combo-action">
+    <button class="btn btn-borderless" type="text" data-icon="gb-icon-eye"></button>
+  </div>
+</div>
+      {{~/raw~}}
+    </code>
+    <p>
+      <blockquote class="blockquote blockquote-info">
+        <h1>Protip!</h1>
+        Instead of using the .form-control-combo classes consider creating new semantic
+        classes that extend .form-control-combo to fit your needs.
+      </blockquote>
+    </p>
   </div>
 </section>
 

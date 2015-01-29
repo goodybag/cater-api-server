@@ -148,23 +148,6 @@
     }
   }
 
-  .search-advanced-search {
-    & input[type="text"] {
-      border: none;
-      background: none;
-      box-shadow: none;
-      outline: none;
-      height: 36px;
-      padding: 12px;
-      display: inline-block;
-    }
-    & .btn {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-  }
-
   .panel { padding: 0; }
 
   .search-advanced-search-wrapper {
@@ -174,13 +157,13 @@
   @media (min-width: @breakpoint-tablet) {
     .search-advanced-search-wrapper {
       display: inline-block;
+      vertical-align: middle;
       margin-left: 45px;
-      padding: 0;
-    }
-
-    .search-advanced-search input[type="text"] {
-      display: inline;
-      width: 320px;
+      width: 319px;
     }
   }
+
+  .search-form { .form-control-combo; }
+  .search-form-input-cell { .form-control-combo .form-control-combo-full; }
+  .search-form-action-cell { .form-control-combo .form-control-combo-action; }
 }

@@ -54,6 +54,31 @@ describe ('Utils', function(){
     assert.deepEqual( result, [ '12:20 PM', '12:40 PM' ] );
   });
 
+
+  it('.isAfterHours should handle edge cases', function() {
+    var datetime;
+
+    // ensure that business hours are [start, end)
+
+    datetime = '2013-02-08 7:59';
+    assert( utils.isAfterHours( moment(datetime) ) );
+
+    datetime = '2013-02-08 8:00';
+    assert( !utils.isAfterHours( moment(datetime) ) );
+
+    datetime = '2013-02-08 8:01';
+    assert( !utils.isAfterHours( moment(datetime) ) );
+
+    datetime = '2013-02-08 17:59';
+    assert( !utils.isAfterHours( moment(datetime) ) );
+
+    datetime = '2013-02-08 18:00';
+    assert( utils.isAfterHours( moment(datetime) ) );
+
+    datetime = '2013-02-08 18:01';
+    assert( utils.isAfterHours( moment(datetime) ) );
+  });
+
   it('.isAfterHours should return true for late night times', function() {
     var datetime = '2013-02-08 20:30'; // 8:30pm
     var result = utils.isAfterHours( moment(datetime) );

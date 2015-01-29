@@ -5,7 +5,7 @@
 module.exports = function( field, def, fn ){
   if (typeof def == 'function') fn = def, def = null;
   return function(req, res, next){
-    var value = req.query[field] || def;
+    var value = req.params[field] || def;
     if (value == undefined || value == null) return next();
 
     if (typeof fn == 'function') fn(value, req.queryObj, req.queryOptions);

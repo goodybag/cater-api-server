@@ -808,12 +808,26 @@ module.exports.register = function(app) {
   , m.restrict('admin')
   , m.pagination({ pageParam: 'p' })
   , m.param('status')
-  , m.param( 'type')
+  , m.param('type')
+    // Cas IDs to ints so indexOf checks work
+  , function( req, res, next ){
+      if ( !Array.isArray( req.query['restaurants.region_id'] ) ) return next();
+
+      req.query['restaurants.region_id'] = req.query['restaurants.region_id'].map( function( id ){
+        return parseInt( id );
+      });
+
+      // Setup the url->sql where clause
+      return m.param('restaurants.region_id')( req, res, next );
+    }
   , m.sort('-id')
   , m.queryOptions({
       one: [
         { table: 'users',       alias: 'user' }
       , { table: 'restaurants', alias: 'restaurant' }
+      ]
+    , joins: [
+        { type: 'left', target: 'restaurants', on: { id: '$orders.restaurant_id$' } }
       ]
     })
   , function( req, res, next ){

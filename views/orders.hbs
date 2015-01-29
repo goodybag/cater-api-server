@@ -18,6 +18,25 @@
         </div>
       </div>
       {{/if}}
+
+      {{#if user.isAdmin}}
+      <div class="panel">
+        <div class="panel-heading panel-heading-small">
+          <h4 class="panel-title">Region</h4>
+        </div>
+        <div class="panel-body">
+          <select name="region_id" id="region-select" multiple="true" class="form-control">
+            {{#each regions}}
+              <option value="{{this.id}}"
+              {{#contains (ref ../reqQuery "restaurants.region_id") this.id}} selected="true"{{/contains}}>
+                {{~this.name~}}
+              </option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+      {{/if}}
+
       <div class="panel">
         <div class="panel-heading panel-heading-small">
           <h4 class="panel-title">Status</h4>
@@ -59,7 +78,9 @@
       'app/pages/orders'
     ]
   , function(orders) {
-      orders.init();
+      orders.init({
+        queryParams: {{{json reqQuery}}}
+      });
     }
   );
 </script>

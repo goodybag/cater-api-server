@@ -1,8 +1,8 @@
 @tile-border-radius: 5px;
 @tile-padding: 10px;
-@tile-cols: 3;
+@tile-cols-tablet: 2;
+@tile-cols-desktop-sm: 3;
 @tile-gutter: 2.0%;
-@tile-width: (100% - (@tile-cols - 1) * @tile-gutter) / @tile-cols;
 @tile-link-color: @palette-gray-dark;
 @tile-border-color: @palette-gray;
 @tile-caption-color: @palette-white;
@@ -13,6 +13,10 @@
 @tile-title-line-height: 26px;
 @tile-corner-background-color: rgba(255,255,255,0.7);
 @tile-rating-width: 110px;
+
+.tile-width(@cols) {
+  width: (100% - (@cols - 1) * @tile-gutter) / @cols;
+}
 
 .tile {
   margin-bottom: @tile-gutter;
@@ -52,8 +56,26 @@
 @media (min-width: @breakpoint-tablet) {
   .tile {
     float: left;
-    width: @tile-width;
+    .tile-width(@tile-cols-tablet);
     margin-right: @tile-gutter;
+  }
+
+  .tile:nth-of-type(2n+2) {
+    margin-right: 0;
+    clear: right;
+  }
+}
+
+@media (min-width: @breakpoint-desktop-sm) {
+  .tile {
+    float: left;
+    .tile-width(@tile-cols-desktop-sm);
+    margin-right: @tile-gutter;
+  }
+
+  .tile:nth-of-type(2n+2) {
+    margin-right: @tile-gutter;
+    clear: none;
   }
 
   .tile:nth-of-type(3n+3) {

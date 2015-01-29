@@ -145,16 +145,19 @@ define(function(require, exports, module) {
     validateAfterHours: function(){
       var errors = [];
 
-      var now    = moment();
+      var now    = moment().tz( this.attributes.timezone );
       var end    = moment( this.attributes.datetime )
+                    .tz( this.attributes.timezone )
                     .hour( config.disallowOrdersBetween.end )
                     .startOf('hour');
       var start  = moment( this.attributes.datetime )
+                    .tz( this.attributes.timezone )
                     .subtract( 'days', 1 )
                     .hour( config.disallowOrdersBetween.start )
                     .startOf('hour');
 
-      var datetime = moment( this.attributes.datetime );
+      var datetime = moment( this.attributes.datetime ) 
+                      .tz( this.attributes.timezone );
 
       // Both now and order date between after hours
       if ( now > start )

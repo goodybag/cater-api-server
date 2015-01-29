@@ -1,6 +1,6 @@
 {{#each restaurants }}
 <div class="tile">
-  <a class="tile-link" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
+  <a class="tile-link" title="{{name}}" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
     <div class="tile-cover" style="background-image: url('{{filepicker list_photo_url}}');">
       {{#unless has_contract}}
       <div class="tile-corner">
@@ -21,20 +21,25 @@
     </div>
     <div class="tile-info">
       <div>
-        <span class="bullet-inline">{{truncate (join cuisine ", ") 35}}</span><span class="bullet-inline dollar-meter">{{{dollarMeter this.price}}}</span>
+        <ul class="inline-list inline-list-bulleted">
+          <li>{{truncate (join cuisine ", ") 35}}</li>
+          <li><span class="dollar-meter">{{{dollarMeter this.price}}}</span></li>
       </div>
       <div>
-        <span class="bullet-inline">Delivery:
-          {{#eq delivery_fee_from delivery_fee_to}}
-          {{#if delivery_fee_from}}
-          ${{dollarsOmit00 ../delivery_fee_from}}
-          {{else}}
-          Free
-          {{/if}}
-          {{else}}
-          ${{dollarsOmit00 delivery_fee_from}} - ${{dollarsOmit00 delivery_fee_to}}
-          {{/eq}}
-        </span><span class="bullet-inline">Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</span>
+        <ul class="inline-list inline-list-bulleted">
+          <li>Delivery:
+            {{#eq delivery_fee_from delivery_fee_to}}
+            {{#if delivery_fee_from}}
+            ${{dollarsOmit00 ../delivery_fee_from}}
+            {{else}}
+            Free
+            {{/if}}
+            {{else}}
+            ${{dollarsOmit00 delivery_fee_from}} - ${{dollarsOmit00 delivery_fee_to}}
+            {{/eq}}
+          </li>
+          <li>Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</li>
+        </ul>
         <span class="tile-tags">{{> tags tags }}</span>
       </div>
     </div>

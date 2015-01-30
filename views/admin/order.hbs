@@ -73,16 +73,8 @@
         {{/is}}
 
         {{#if order.secondary_contact_phone }}
-          <dl>
-            <dt>Secondary Contact</dt>
-            <dd></dd>
-            {{#if order.secondary_contact_name}}
-              <dt>Name</dt>
-              <dd>{{order.secondary_contact_name}}</dd>
-            {{/if}}
-            <dt>Number</dt>
-            <dd>{{phoneNumber order.secondary_contact_phone}}</dd>
-          </dl>
+          <dd></dd>
+          <dd>{{phoneNumber order.secondary_contact_phone}}</dd>
         {{/if}}
 
       </dl>

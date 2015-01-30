@@ -41,6 +41,7 @@ define(function(require, exports, module) {
       , phone: '.address-phone'
       , tip: '.order-tip'
       , tip_percent: '.tip-percent'
+      , secondary_contact_phone: '.order-secondary-contact-phone'
     }),
 
     fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {
@@ -48,6 +49,10 @@ define(function(require, exports, module) {
         var existingCardSelected = this.$el.find('.payment-method[value="existing"]:checked').length;
         var pmid = this.$el.find(this.fieldMap.payment_method_id).val();
         return existingCardSelected ? pmid : null;
+      },
+
+      secondary_contact_phone: function () {
+        return this.$el.find(this.fieldMap.secondary_contact_phone).val().replace(/[^\d]/g, '') || null;
       }
     }),
 

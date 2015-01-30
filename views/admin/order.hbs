@@ -50,6 +50,10 @@
         <dd>{{order.user.organization}}</dd>
         <dt>Contact</dt>
         <dd>{{phoneNumber order.phone}}</dd>
+        {{#if order.secondary_contact_phone }}
+        <dt>Secondary Contact</dt>
+        <dd>{{phoneNumber order.secondary_contact_phone}}</dd>
+        {{/if}}
       </dl>
     </section>
 
@@ -71,12 +75,6 @@
           <dt>Pickup Time</dt>
           <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
         {{/is}}
-
-        {{#if order.secondary_contact_phone }}
-          <dt>secondary contact phone</dt>
-          <dd>{{phoneNumber order.secondary_contact_phone}}</dd>
-        {{/if}}
-
       </dl>
 
       {{#eq order.type 'courier'}}

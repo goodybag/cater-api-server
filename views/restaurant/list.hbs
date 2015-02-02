@@ -27,6 +27,12 @@
     {{> restaurant_tiles }}
   </div>
 </div>
+
+{{#gt pages.length 1}}
+<div class="container list-paginator">
+  {{> restaurant_list_pagination }}
+</div>
+{{/gt}}
 {{/extend}}
 
 {{#extend "scripts"}}

@@ -1,6 +1,6 @@
 <div class="list-tags">
   {{#notEmpty orderParams}}
-  <span> {{../restaurants.length}} result{{#gt ../restaurants.length 1}}s{{/gt}}: </span>
+  <span> {{../totalRestaurants}} result{{#gt ../totalRestaurants 1}}s{{/gt}}: </span>
   {{/notEmpty}}
 
   {{#each searchTags}}

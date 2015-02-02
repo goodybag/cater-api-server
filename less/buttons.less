@@ -29,10 +29,6 @@
   font-size: @btn-large-font-size;
   padding: @btn-padding-large;
   font-weight: @light;
-  &.active,
-  &:active {
-    height: @btn-large-height - 1;
-  }
 }
 
 .btn-small {
@@ -40,10 +36,6 @@
   font-size: @btn-small-font-size;
   padding: @btn-padding-small;
   font-weight: @bold;
-  &.active,
-  &:active {
-    height: @btn-small-height - 1;
-  }
 }
 
 .btn-block {
@@ -179,7 +171,8 @@
 }
 
 // selected radio
-.btn-group > input[type="radio"]:checked + .btn {
+.btn-group > input[type="radio"]:checked + .btn,
+.btn-group > .active.btn {
   background-color: @palette-gray-lighter;
 }
 

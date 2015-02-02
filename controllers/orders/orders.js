@@ -12,7 +12,7 @@ var moment = require('moment-timezone');
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer;
-var orderDefintionSchema = require('../../db/definitions/orders').schema;
+var orderDefinitionSchema  = require('../../db/definitions/orders').schema;
 
 var addressFields = [
   'street'
@@ -193,10 +193,11 @@ module.exports.create = function(req, res) {
 module.exports.update = function(req, res) {
   var logger = req.logger.create('Controller-Update');
 
-
-  // get keys from order def schema that allow editable 'client' access
-  var updateableFields = utils.filter(Object.keys(orderDefintionSchema), function (key) {
-    return utils.contains(orderDefintionSchema[key].editable, 'client');
+  // get keys from order def schema that allow editable access
+  var updateableFields = Object.keys( orderDefinitionSchema ).filter( function( key ){
+    return req.user.attributes.groups.some( function( group ){
+      return utils.contains( orderDefinitionSchema[ key ].editable, group );
+    });
   });
 
   var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];

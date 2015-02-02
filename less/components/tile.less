@@ -15,10 +15,22 @@
 @tile-rating-width: 110px;
 
 .tile-width(@cols) {
-  width: (100% - (@cols - 1) * @tile-gutter) / @cols;
+  width: (100% - (@cols * @tile-gutter)) / @cols;
+}
+
+.tiles {
+  display: table;
+
+  @media ( min-width: @breakpoint-tablet ){
+    width: 100% + @tile-gutter;
+    margin-left: -@tile-gutter;
+  }
 }
 
 .tile {
+  display: block;
+  width: 100%;
+  float: left;
   margin-bottom: @tile-gutter;
   border: 1px solid @tile-border-color;
   border-radius: @tile-border-radius;
@@ -55,32 +67,14 @@
 
 @media (min-width: @breakpoint-tablet) {
   .tile {
-    float: left;
     .tile-width(@tile-cols-tablet);
-    margin-right: @tile-gutter;
-  }
-
-  .tile:nth-of-type(2n+2) {
-    margin-right: 0;
-    clear: right;
+    margin-left: @tile-gutter;
   }
 }
 
 @media (min-width: @breakpoint-desktop-sm) {
   .tile {
-    float: left;
     .tile-width(@tile-cols-desktop-sm);
-    margin-right: @tile-gutter;
-  }
-
-  .tile:nth-of-type(2n+2) {
-    margin-right: @tile-gutter;
-    clear: none;
-  }
-
-  .tile:nth-of-type(3n+3) {
-    margin-right: 0;
-    clear: right;
   }
 }
 
@@ -99,6 +93,7 @@
   padding: @tile-padding @tile-padding 5px @tile-padding;
   font-size: 18px;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  filter: dropshadow(color=#000000, offx=0, offy=1);
 }
 
 .tile-rating {

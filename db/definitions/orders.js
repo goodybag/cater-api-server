@@ -46,36 +46,44 @@ define(function(require) {
   , street: {
       type: types.text
     , nullable: true
+    , editable: ['client', 'admin'] // some sort of access control list
     }
   , street2: {
       type: types.text
     , nullable: true
+    , editable: ['client', 'admin']
     }
   , city: {
       type: types.text
     , nullable: true
+    , editable: ['client', 'admin']
     }
   , state: {
       type: types.varchar(2)
     , nullable: true
+    , editable: ['client', 'admin']
     }
   , zip: {
       type: types.varchar(5)
     , nullable: true
     , checks: ["SIMILAR TO '[[:digit:]]{5}'"]
+    , editable: ['client', 'admin']
     }
   , phone: {
       type: types.varchar(10)
     , nullable: true
     , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
+    , editable: ['client', 'admin']
     }
   , notes: {
       type: types.text
     , nullable: true
+    , editable: ['client', 'admin']
     }
   , datetime: {
       type: types.timestamp
     , nullable: true
+    , editable: ['client', 'admin']
     }
   , pickup_datetime: {
       type: types.timestamp
@@ -85,10 +93,12 @@ define(function(require) {
       type: types.timezone
     , nullable: true
     , default:"'America/Chicago'" //TODO: determine timezone based on order info
+    , editable: ['client', 'admin']
     }
   , guests: {
       type: types.int
     , nullable: true
+    , editable: ['client', 'admin']
     }
   , edit_token: {
       type: types.text
@@ -126,19 +136,22 @@ define(function(require) {
       type: types.int
     , nullable: false
     , default: 0
+    , editable: ['client', 'admin']
     }
   , tip_percent: {
       type: types.tippercentage
     , nullable: true
-    ,
+    , editable: ['client', 'admin']
     }
   , name: {
       type: types.text
     , nullable: true
+    , editable: ['client', 'admin']
     }
   , delivery_instructions: {
       type: types.text
     , nullable: true
+    , editable: ['client', 'admin']
     }
   , status: {
       type:types.orderstatus
@@ -157,15 +170,18 @@ define(function(require) {
       type: types.int
     , nullable: true
     , references: {table: 'payment_methods', column: 'id'}
+    , editable: ['client', 'admin']
     }
   , reason_denied: {
       type: types.text
     , nullable: true
+    , editable: ['client', 'admin']
     }
   , reviewed: {
       type: types.boolean
     , nullable: false
     , default: false
+    , editable: ['client', 'admin']
     }
   , points_awarded: {
       type: types.boolean
@@ -189,14 +205,20 @@ define(function(require) {
   , search_vector: {
       type: types.tsvector
     }
-  , type: { type: types.order_type, nullable: false, default: '\'delivery\'::order_type' }
-  , sub_total: { type: types.int, nullable: false, default: 0 }
+  , type: { type: types.order_type, nullable: false, default: '\'delivery\'::order_type', editable: ['client', 'admin'] }
+  , sub_total: { type: types.int, nullable: false, default: 0, editable: ['client', 'admin']}
   , user_adjustment_amount: { type: types.int, nullable: false, default: 0 }
-  , user_adjustment_description: { type: types.text, nullable: true }
+  , user_adjustment_description: { type: types.text, nullable: true, editable: ['client', 'admin'] }
   , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
   , restaurant_total: { type: types.int, nullable: false, default: 0 }
   , restaurant_sales_tax: { type: types.int, nullable: false, default: 0 }
   , restaurant_location_id: { type: types.int, references: { table: 'restaurant_locations', column: 'id' } }
+  , secondary_contact_phone: {
+      type: types.varchar(10)
+    , nullable: true
+    , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
+    , editable: ['client', 'admin']
+    }
   };
 
   definition.indices = {};

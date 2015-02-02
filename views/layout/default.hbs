@@ -4,10 +4,27 @@
   <title>Goodybag{{{block "html-title"}}}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="shortcut icon" href="{{cdn "favicon.ico"}}">
+
+  <!-- Keep this up here! -->
+  <!--[if lt IE 9]>
+  <script src="{{cdn "/components/html5shiv/dist/html5shiv.js"}}"></script>
+  <script src="{{cdn "/components/es5-shim/es5-shim.js"}}"></script>
+  <script src="{{cdn "/components/es5-shim/es5-sham.js"}}"></script>
+  <![endif]-->
+  <!--[if lte IE 9]>
+  <script src="{{cdn "/components/console-polyfill/index.js"}}"></script>
+  <![endif]-->
+
   <!-- Goodybag Catering CSS Stuff -->
   <link href="{{cdn (format 'dist/<%= version %>/css/goodybag.css' pkg)}}" rel="stylesheet">
 
   {{{block "css"}}}
+
+  <!-- Keep THIS just AFTER all CSS -->
+  <!--[if lt IE 9]>
+  <script src="{{cdn "/components/respond/dest/respond.src.js"}}"></script>
+  <![endif]-->
 
   <!--[if lte IE 9]>
   <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">

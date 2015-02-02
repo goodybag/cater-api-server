@@ -1,0 +1,83 @@
+<section class="analytics-section panel-component">
+  <div class="container">
+    <div>
+      <span class="period-caption">{{period.caption}}</span>
+      <span class="btn-regions popover-wrapper gb-dropdown">
+        <button
+        class="btn btn-white btn-dropdown"
+        data-role="popover"
+        data-target="dropdown-popover">
+        Regions
+        <i class="gb-icon-caret-down"></i>
+        </button>
+
+        <div class="popover-modal dropdown-popover">
+          <!-- Dropdown content -->
+          <ul class="popover-body">
+            {{#each filters.region}}
+            <a class="popover-item" href="{{queryParams (omit ../reqQuery 'q')}}&q={{this.qs}}">
+              <span class="popover-item-icon">{{#if active}}<span class="gb-icon-checkmark va-middle"></span>{{/if}}</span>
+              <span class="popover-item-label">{{name}}</span>
+            </a>
+            {{/each}}
+          </ul>
+        </div>
+      </span>
+    </div>
+    <p>
+      <a href="?{{period.previous}}"><button class="btn btn-primary btn-small">← Older</button></a>
+      <a href="?{{period.next}}"><button class="btn btn-primary btn-small">Newer →</button></a>
+    </p>
+
+    {{#each orders}}
+    <table class="table">
+      <thead>
+        <th>ID</th>
+        <th>Region</th>
+        <th>Submitted</th>
+        <th>Week</th>
+        <th>Delivery Date</th>
+        <th>Organization</th>
+        <th>Subtotal</th>
+        <th>Delivery Fee</th>
+        <th>Tax</th>
+        <th>Tip</th>
+        <th>Total</th>
+        <th>Caterer</th>
+      </thead>
+      {{#each this}}
+      <tr>
+        <td><a href="/orders/{{id}}">{{id}}</a></td>
+        <td>{{restaurant.region.name}}</td>
+        <td>{{datepart submitted}}</td>
+        <td>{{week}}</td>
+        <td>{{datepart datetime}}</td>
+        <td>{{user.organization}}</td>
+        <td>${{commatize (dollars sub_total)}}</td>
+        <td>${{commatize (dollars delivery_fee)}}</td>
+        <td>${{commatize (dollars sales_tax)}}</td>
+        <td>${{commatize (dollars tip)}}</td>
+        <td>${{commatize (dollars total)}}</td>
+        <td>{{restaurant.name}}</td>
+      </tr>
+      {{/each}}
+    </table>
+    <section class="analytics-section analytics-section-week clearfix">
+      {{#with (ref ../stats.week @key)}}
+      <div class="col-4 analytics-col">
+        <div>${{commatize (dollars volume)}}</div>
+        <small>Week {{@key}} Volume</small>
+      </div>
+      <div class="col-4 analytics-col">
+        <div>{{commatize placed}}</div>
+        <small>Accepted Orders Placed</small>
+      </div>
+      <div class="col-4 analytics-col">
+        <div>{{commatize guests}}</div>
+        <small>Guests Fed</small>
+      </div>
+      {{/with}}
+    </section>
+    {{/each}}
+  </div>
+</section>

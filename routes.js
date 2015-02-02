@@ -159,7 +159,7 @@ module.exports.register = function(app) {
 
     app.get('/admin/kitchen-sink'
     , m.filters([
-        'restaurant-region'
+        'regions'
       , 'restaurant-visibility'
       , 'restaurant-sort'
       ])
@@ -393,7 +393,7 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.filters([
-        'restaurant-region'
+        'regions'
       , 'restaurant-visibility'
       , 'restaurant-sort'
       ])
@@ -1221,7 +1221,7 @@ module.exports.register = function(app) {
     , restaurant:             true
     , deliveryService:        true
     , restaurantDbModelFind:  true
-    })  
+    })
   , controllers.orders.auth
   , m.view( 'order-payment',{
 
@@ -1607,6 +1607,42 @@ module.exports.register = function(app) {
     , items:                  true
     })
   , m.view( 'admin/order', {
+      layout: 'admin/layout2'
+    })
+  );
+
+
+  app.get('/admin/analytics'
+  , m.restrict(['admin'])
+  , m.getOrders({
+      status: 'accepted'
+    , submittedDate: { ignoreColumn: true }
+    , groupByMonth: true
+    , rename: 'stats'
+    , user: false
+    , restaurant: false
+    , reverse: true
+    })
+  , m.view( 'admin/analytics/index.hbs', {
+      layout: 'admin/layout2'
+    })
+  );
+
+  app.get('/admin/analytics/demand'
+  , m.restrict(['admin'])
+  , m.filters(['regions'])
+  , m.defaultPeriod(['month', 'year'])
+  , m.getOrders({
+      status: 'accepted'
+    , submittedDate: true
+    , order: 'submitted'
+    , getWeek: true
+    , indexBy: 'week'
+    })
+  , m.orderAnalytics.period()
+  , m.orderAnalytics.month()
+  , m.orderAnalytics.week()
+  , m.view( 'admin/analytics/demand', {
       layout: 'admin/layout2'
     })
   );

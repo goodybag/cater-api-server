@@ -449,9 +449,7 @@ utils.parseBool = function(value){
   return true;
 };
 
-utils.deepClone = function (obj) {
-  return JSON.parse(JSON.stringify(obj)); // :TODO: non-hack deepclone
-};
+utils.deepClone = utils.cloneDeep;
 
 /**
  * Encrypts consumer passwords

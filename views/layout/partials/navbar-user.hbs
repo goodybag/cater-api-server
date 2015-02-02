@@ -7,9 +7,9 @@
     <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
     <div class="nav">
       {{#if session.oldUser}}
-      <a href="/users/return" class="btn btn-default">
-          Return to {{session.oldUser.name}}
-      </a>
+      <li>
+        <a href="/users/return">Return to {{session.oldUser.name}}</a>
+      </li>
       {{/if}}
       <span class="popover-wrapper gb-dropdown same-width-modal">
         <button

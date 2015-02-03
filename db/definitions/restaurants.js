@@ -144,6 +144,11 @@ define(function(require) {
     , nullable: false
     , default: true
     }
+  , is_archived: {
+      type: types.boolean
+    , nullable: false
+    , default: false 
+    }
   , region_id: {
       type: types.int
     , references: {table: 'regions', column: 'id', onDelete: 'set null'}

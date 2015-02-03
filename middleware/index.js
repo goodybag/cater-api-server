@@ -54,4 +54,5 @@ module.exports = {
 , setGuestRegion: require('./set-guest-region')
 , storeUserAgent: require('./store-user-agent')
 , timeout: require('./timeout')
+, userViewedEvent: require('./user-viewed-event')
 };

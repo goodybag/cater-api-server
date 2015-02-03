@@ -73,6 +73,11 @@ module.exports.register = function(app) {
 
   app.get('/restaurants'
   , m.searchTags()
+  , m.userViewedEvent({
+      name:     'promptSurvey'
+    , mode:     'once'
+    , threshold: 5
+    })
   , controllers.restaurants.list
   );
 

@@ -1,8 +1,6 @@
 <div id="results-pagination" class="paginator btn-group">
   {{#each pages}}
-    <a
-      href="{{this.url}}"
-      class="btn btn-small{{#if this.active}} active{{/if}}"
-    >{{this.index}}</a>
+    <input type="radio" name="list-pager" id="page-{{this.index}}" value="{{this.index}}">
+    <label class="btn btn-small{{#if this.active}} active{{/if}}" for="page-{{this.index}}">{{this.index}}</label>
   {{/each}}
 </div>

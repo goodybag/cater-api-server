@@ -1,0 +1,55 @@
+///////////////
+// Paginator //
+///////////////
+
+.paginator {
+  display: inline-block;
+  border: 1px solid @border-color-primary;
+  border-radius: @btn-border-radius-base;
+  overflow: hidden;
+}
+
+.paginator > .btn {
+  color: @color-primary-text;
+  border: none;
+  border-left: 1px solid @border-color-primary;
+  border-radius: 0;
+
+  // since we're using borders from the parent
+  height: @btn-base-height - 2;
+
+  padding-top: @btn-2b-padding-top-base;
+  padding-bottom: @btn-2b-padding-bottom-base;
+
+  &.btn-small {
+    height: @btn-small-height - 2;
+    padding-top: @btn-2b-padding-top-small;
+    padding-bottom: @btn-2b-padding-bottom-small;
+  }
+
+  &.btn-large {
+    height: @btn-large-height - 2;
+    padding-top: @btn-2b-padding-top-large;
+    padding-bottom: @btn-2b-padding-bottom-large;
+  }
+
+  &:first-child {
+    border-left: none;
+  }
+
+  &.active,
+  &:hover {
+    background: @palette-gray-lighter;
+  }
+}
+
+@media screen and ( max-width: @breakpoint-tablet ){
+  .paginator {
+    width: 100%;
+  }
+
+  .paginator .btn {
+    display: table-cell;
+    width: 1%;
+  }
+}

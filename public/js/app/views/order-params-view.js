@@ -37,8 +37,6 @@ define(function(require, exports, module) {
       this.timepicker.on( 'open', _(this.onTimePickerOpen).bind(this) );
 
       this.options.changeEvent = this.options.changeEvent || 'params:submit';
-
-      console.log('init');
     }
 
   , render: function(){

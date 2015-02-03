@@ -189,6 +189,8 @@
           <div class="alert restaurant_closed alert-danger{{#unless restaurant.restaurant_closed}} hide{{/unless}}">We're sorry, this restaurant is closed for selected date.</div>
 
           <div class="alert alert-danger error-blank-fields hide">You must fill out all fields</div>
+
+          <div class="alert alert-danger after_hours hide">We're sorry, it's too late to place an order for that time.</div>
         </div>
         <div class="order-params-wrapper">
           {{> order_params_bar}}

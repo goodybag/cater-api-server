@@ -25,6 +25,12 @@
         <td>Contact</td>
         <td>{{order.user.name}} {{phoneNumber order.phone}}</td>
       </tr>
+      {{#if order.secondary_contact_phone }}
+      <tr>
+        <td>Secondary Contact Phone</td>
+        <td>{{phoneNumber order.secondary_contact_phone}}</td>
+      </tr>
+      {{/if}}
       <tr>
         <td>Office Address</td>
         <td>{{> plain_address order}}</td>

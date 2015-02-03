@@ -41,10 +41,10 @@ define(function(require, exports, module) {
       this.delegateEvents();
 
       // Instantiate child views
-      this.$el.find('tr').each( function(){
-        var $el = $(this);
+      this.model.orderItems.each( function(item) {
+        var $el = this_.$el.find('tr[data-id="'+ item.id  +'"]');
         new OrderItemSummaryView({
-          model: this_.model.orderItems.get( $el.data('id') )
+          model: item
         , orderParams: this_.options.orderParams
         , itemModalView: this_.options.itemModalView
         , orderModel: this_.model
@@ -117,6 +117,11 @@ define(function(require, exports, module) {
           } })
         }
       });
+
+      if (!sent)
+      if (this.model.validationError){
+        this.trigger('invalid-order');
+      }
     }
   });
 

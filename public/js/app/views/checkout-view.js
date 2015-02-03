@@ -29,21 +29,22 @@ define(function(require, exports, module) {
 
     step: 2,
 
-    fieldMap: {
-      payment_method_id: '#payment-method-id'
-    , datetime: '.order-datetime'
-    , guests: '#order-guests'
-    , street: '.address-street'
-    , name: '#order-name'
-    , city: '.address-city'
-    , state: '.address-state'
-    , zip: '.address-zip'
-    , notes: '#order-notes'
-    , phone: '.address-phone'
-    , tip: '.order-tip'
-    , tip_percent: '.tip-percent'
-    , organization_type: '.organization-type'
-    },
+    fieldMap: _.extend({}, OrderView.prototype.fieldMap, {
+        payment_method_id: '#payment-method-id'
+      , datetime: '.order-datetime'
+      , guests: '#order-guests'
+      , street: '.address-street'
+      , name: '#order-name'
+      , city: '.address-city'
+      , state: '.address-state'
+      , zip: '.address-zip'
+      , notes: '#order-notes'
+      , phone: '.address-phone'
+      , tip: '.order-tip'
+      , tip_percent: '.tip-percent'
+      , organization_type: '.organization-type'
+      , secondary_contact_phone: '.order-secondary-contact-phone'
+    }),
 
     fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {
       payment_method_id: function() {
@@ -54,6 +55,10 @@ define(function(require, exports, module) {
 
       organization_type: function () {
         return this.$el.find('input[name="organization_type"]:checked').val();
+      },
+      
+      secondary_contact_phone: function () {
+        return this.$el.find(this.fieldMap.secondary_contact_phone).val().replace(/[^\d]/g, '') || null;
       }
     }),
 
@@ -183,6 +188,16 @@ define(function(require, exports, module) {
           spinner.stop();
           return this.displayErrors2(errors, Address);
         }
+      }
+
+      var secondaryContactPhone = this.$el.find('.order-secondary-contact-phone').val().replace(/[^\d]/g, '');
+
+      if ( secondaryContactPhone.length > 0 && secondaryContactPhone.length < 10 ) {
+          spinner.stop();
+          return this.displayErrors2([{
+            property: 'secondary_contact_phone'
+          , message: 'Please enter a valid phone number'
+          }]);
       }
 
       if ( this.$el.find('[name="user_name"]').length ){
@@ -493,7 +508,7 @@ define(function(require, exports, module) {
         if ( !val.length ) continue;
 
         if ( Order.addressFields[i] === 'phone' ){
-          val = val.replace(/\(|\)|\s|\-/g, '')
+          val = val.replace(/\(|\)|\s|\-/g, '');
         }
 
         address.set( Order.addressFields[i], val );

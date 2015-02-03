@@ -1,6 +1,7 @@
 var
   // Module Dependencies
   fs     = require('fs')
+, path   = require('path')
 , config = require('./config')
 , errors = require('./errors')
 
@@ -570,8 +571,8 @@ utils.isWeekday = function(datetime) {
 
 utils.isAfterHours = function(datetime) {
   datetime = moment(datetime);
-  return datetime.hour() <= config.afterHours.start ||
-         datetime.hour() >  config.afterHours.end;
+  return datetime.hour() < config.afterHours.start ||
+         datetime.hour() >=  config.afterHours.end;
 };
 
 utils.duringBusinessHours = function(datetime) {

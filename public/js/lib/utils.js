@@ -33,6 +33,8 @@ define(function(require, exports, module) {
 
   var utils = _.extend({}, _, helpers);
 
+  utils.stampit = require('stampit');
+
   if (isBrowser){
     var $ = require('jquery');
     utils.dom = $;

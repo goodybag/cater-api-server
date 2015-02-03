@@ -106,6 +106,18 @@
 
           {{> order_delivery_info}}
 
+          <div class="list-group-item clearfix">
+            <div class="col-md-12">
+              <legend>Secondary Contact</legend>
+              <div class="row">
+                <div class="form-group col-sm-6">
+                  <label for="secondary_phone">Phone <small>(in case we can't reach you)</small></label>
+                  <input type="text" id="secondary_phone" name="secondary_contact_phone" class="form-control order-secondary-contact-phone" value="{{phoneNumber order.secondary_contact_phone}}" placeholder="512 555 1234">
+                </div>
+              </div>
+            </div>
+          </div>
+
           {{#unless order.user.name}}
           <div id="user-info" class="list-group-item clearfix">
             <div class="col-md-12">

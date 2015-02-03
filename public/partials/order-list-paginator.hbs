@@ -1,3 +1,5 @@
 {{!-- TODO replace with better paginator --}}
-{{#gt p 1}}<a href="/orders?p={{add p -1}}{{#if status}}&status={{status}}{{/if}}">Previous</a>{{/gt}}
-<a href="/orders?p={{add p 1}}{{#if status}}&status={{status}}{{/if}}" class="pull-right">Next</a>
+{{#gt p 1}}
+<a href="/orders{{queryParams (set reqQuery "p" (add p -1))}}">Previous</a>
+{{/gt}}
+<a href="/orders{{queryParams (set reqQuery "p" (add p 1))}}" class="pull-right">Next</a>

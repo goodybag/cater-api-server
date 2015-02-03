@@ -100,10 +100,12 @@ define(function(require, exports, module) {
       balanced.card.create( _.omit(data, 'card_name'), function(res) {
         if (res.status !== 201){
 
-          var errors = {
-              property: 'card_number'
-            , message: res.error.additional || res.error.security_code
-          };
+          var errors = Object.keys(res.error).map(function(key) {
+            return {
+              property: key
+            , message: res.error[key]
+            };
+          });
 
           return callback ? callback( errors ) : notify.error( errors );
         }

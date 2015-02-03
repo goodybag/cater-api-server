@@ -104,6 +104,7 @@ module.exports = function(grunt) {
         files: {
           "public/dist/<%= pkg.version %>/landing.css":            "less/core-landing.less"
         , "public/dist/<%= pkg.version %>/landing-ielt9.css":      "less/ielt9-landing.less"
+        , "public/dist/<%= pkg.version %>/ie-lte9.css":            "less/overrides/ie-lte9.less"
         , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less"
         , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
         , "public/dist/<%= pkg.version %>/css/admin.css":          "less/core-admin.less"

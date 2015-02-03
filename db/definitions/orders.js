@@ -127,10 +127,12 @@ define(function(require) {
   , adjustment_amount: {
       type: types.int
     , nullable: true
+    , editable: ['admin']
     }
   , adjustment_description: {
       type: types.text
     , nullable: true
+    , editable: ['admin']
     }
   , tip: {
       type: types.int
@@ -207,8 +209,8 @@ define(function(require) {
     }
   , type: { type: types.order_type, nullable: false, default: '\'delivery\'::order_type', editable: ['client', 'admin'] }
   , sub_total: { type: types.int, nullable: false, default: 0, editable: ['client', 'admin']}
-  , user_adjustment_amount: { type: types.int, nullable: false, default: 0 }
-  , user_adjustment_description: { type: types.text, nullable: true, editable: ['client', 'admin'] }
+  , user_adjustment_amount: { type: types.int, nullable: false, default: 0, editable: ['admin'] }
+  , user_adjustment_description: { type: types.text, nullable: true, editable: ['admin'] }
   , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
   , restaurant_total: { type: types.int, nullable: false, default: 0 }
   , restaurant_sales_tax: { type: types.int, nullable: false, default: 0 }

@@ -1622,6 +1622,16 @@ module.exports.register = function(app) {
   , m.remove( db.restaurants )
   );
 
+  app.get('/api/restaurants/:id/similar'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , function (req, res){
+      db.restaurants.similar(req.param('id'), function (error, restaurants) {
+        res.json(restaurants);
+      });
+    }
+  );
+
   app.post('/api/restaurants/:id/auto-update'
   , m.restrict(['admin'])
   , m.getRestaurant({

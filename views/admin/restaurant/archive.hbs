@@ -1,0 +1,28 @@
+{{#extend "page"}}page-restaurants{{/extend}}
+
+{{#extend "body"}}
+<h1>Archived Restaurants</h1>
+
+<div id="restaurant-list">
+  <div id="restaurant-list-header">
+    <div class="table-list-header">
+      <div class="table-list-header-title">Restaurants</div>
+      <div class="table-list-header-actions">
+      </div>
+    </div>
+
+  </div>
+  <div id="restaurant-list-items">
+    <ul class="table-list table-list-bordered">
+      {{#each restaurants}}
+      <li class="table-list-item" data-restaurant="{{json this}}">
+        <span class="table-list-info"><a href="{{baseUrl}}/admin/restaurants/{{id}}">{{name}}</a></span>
+        <div>#{{id}} {{city}}, {{state}}</div>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+</div>
+
+{{/extend}}
+

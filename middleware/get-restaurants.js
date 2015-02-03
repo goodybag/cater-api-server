@@ -34,6 +34,7 @@ function format(res, $query, $options) {
         'is_hidden': {
           $in: options
         }
+        ,'is_archived': false
       });
     }
   }

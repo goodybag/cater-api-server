@@ -32,7 +32,7 @@ module.exports.list = function(req, res) {
         includes: [
           { type: 'filter_restaurant_events' }
         ]
-      , where: {}
+      , where: { is_archived: false }
       , limit: 'all'
       };
 
@@ -46,7 +46,7 @@ module.exports.list = function(req, res) {
 
       models.Restaurant.find(
         query
-      , utils.extend({ is_hidden: false, is_archived: false }
+      , utils.extend({ is_hidden: false }
       , orderParams)
       , callback);
     },
@@ -67,7 +67,6 @@ module.exports.list = function(req, res) {
       models.Restaurant.find.bind( models.Restaurant, {
         where: {
           is_hidden: false
-        , is_archived: false
         , region_id: req.user.attributes.region_id
         }
       , limit: 'all'
@@ -198,7 +197,7 @@ module.exports.get = function(req, res) {
       models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');
-        restaurant.getItems({ where: { 'is_hidden': false , 'is_archived': false } }, function(err, items) {
+        restaurant.getItems({ where: { 'is_hidden': false } }, function(err, items) {
           callback(err, restaurant);
         });
       });

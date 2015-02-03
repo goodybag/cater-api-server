@@ -10,6 +10,7 @@ define( function( require ){
       var OrderParams = require('app/models/order-params');
       var FiltersView = require('app/views/restaurant-filters-view');
       var SearchView = require('app/views/restaurant/search-view');
+      var PagerView = require('app/views/restaurant/pager-view');
 
       var sortView = new SortView({
         el: '#sort'
@@ -35,10 +36,21 @@ define( function( require ){
       , inputSelector: '.search-input'
       });
 
+      var pagerView = new PagerView({
+        el: '.list-paginator'
+      , inputSelector: '[name="list-pager"]:checked'
+      });
+
       var listView = new ListView({
         el: '#main'
         , searchUrl: '/restaurants'
-        , filters: [ sortView, orderParamsView, filtersView, searchView ]
+        , filters: [
+            sortView
+          , orderParamsView
+          , filtersView
+          , searchView
+          , pagerView
+          ]
       });
 
       $('[data-role="collapsible"]').gb_collapsible();

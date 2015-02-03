@@ -29,6 +29,7 @@ config.defaults = {
 , diets: require('./configs/diets')
 , sortQueryTable: require('./configs/sort-query-table')
 , support: require('./configs/support')
+, scheduler: require('./configs/scheduler')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
 , logging: require('./configs/logging')
 
@@ -167,12 +168,6 @@ config.defaults = {
 , deliveryServices: {
     responseThresholdMins: 30
   , supportPhones: [ local.testPhoneSms || '1234567890' ]
-  }
-
-, scheduler: {
-    cron: '*/10 * * * * *'
-  , start: true
-  , limit: 4 // max # of parallel jobs
   }
 
 , outputActivePoolIds: false

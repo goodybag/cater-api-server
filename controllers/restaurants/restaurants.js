@@ -359,6 +359,7 @@ var fields = [
   'logo_url',
   'logo_mono_url',
   'is_hidden',
+  'is_archived',
   'street',
   'city',
   'state',

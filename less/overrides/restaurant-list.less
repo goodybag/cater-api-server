@@ -6,6 +6,13 @@
 
 .page-restaurant-list {
 
+  @media (max-width: @breakpoint-tablet) {
+    .inline-list-bulleted li {
+      display: block;
+      &:before { display: none }
+    }
+  }
+
   .restaurant-params .picker { width: 100%; }
   .restaurant-params [name="time-range"] { z-index: 1 }
   .restaurant-params .form-group-search { width: auto }

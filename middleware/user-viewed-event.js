@@ -5,18 +5,30 @@ var modes = [
 ];
 
 module.exports = function( options ){
+  options = utils.defaults( options || {}, {
+    mustBeAuthed: false
+  });
+
   var evaluator = module.exports.getEvaluator( options );
 
   return function( req, res, next ){
+    if ( options.mustBeAuthed )
+    if ( req.user.isGuest() ){
+      return next();
+    }
+
+    console.log('evaluating');
+
     evaluator( req.session, res.locals );
+
     return next();
   };
 };
 
 module.exports.getEvaluator = function( options ){
   options = utils.defaults( options || {}, {
-    threshold:  5
-  , mode:       'once'
+    threshold:    5
+  , mode:         'once'
   });
 
   if ( typeof options.name !== 'string' ){

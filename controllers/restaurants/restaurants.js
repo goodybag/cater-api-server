@@ -26,6 +26,18 @@ module.exports.list = function(req, res) {
   if (orderParams.prices)
     orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
 
+  var page = +req.query.p || 1;
+  var paginationLimit = 30;
+
+  // Dont worry about pagination if they're filtering -
+  // it's just too complex to support right now
+  var shouldPaginate = !Object.keys( req.query )
+    .some( function( key ){
+      return [ 'p', 'sort' ].indexOf( key ) === -1;
+    });
+
+  res.locals.page = page;
+
   var tasks =  [
     function(callback) {
       var query = {
@@ -33,7 +45,8 @@ module.exports.list = function(req, res) {
           { type: 'filter_restaurant_events' }
         ]
       , where: {}
-      , limit: 'all'
+      , limit: shouldPaginate ? paginationLimit : 'all'
+      , offset: shouldPaginate ? (page - 1) * paginationLimit : 0
       };
 
       logger.info('Finding filtered restaurants', {
@@ -57,27 +70,48 @@ module.exports.list = function(req, res) {
       }
       logger.info('Finding default address');
       models.Address.findOne({where: { user_id: req.user.attributes.id, is_default: true }}, callback);
+    },
+
+    function countRestaurants( callback ){
+      if ( !shouldPaginate ){
+        res.locals.pages = [];
+        return callback();
+      }
+
+      db.query2({
+        type: 'select'
+      , columns: [{
+          type: 'select'
+        , columns: [{ type: 'count', expression: '*' }]
+        , table: 'restaurants'
+        , where: { region_id: req.user.attributes.region_id, is_hidden: false }
+        }]
+      , alias: 'total'
+      }, function( error, results ){
+        if ( error ) return callback( error );
+
+        var total = res.locals.totalRestaurants = results[0].total || 0;
+        res.locals.pages = utils.range( 1, Math.ceil( total / paginationLimit ) + 1 )
+          .map( function( i ){
+            return {
+              url: '/restaurants' + utils.queryParams(
+                      utils.extend( {}, req.query, { p: i } )
+                    )
+            , index: i
+            , active: page === i
+            }
+          });
+
+        callback();
+      });
     }
   ];
-
-  // Filters count needs a list of all restaurants
-  if (Object.keys(orderParams).length > 0){
-    logger.info('Finding all restaurants');
-    tasks.push(
-      models.Restaurant.find.bind( models.Restaurant, {
-        where: {
-          is_hidden: false
-        , region_id: req.user.attributes.region_id
-        }
-      , limit: 'all'
-      })
-    );
-  }
 
   var done = function(err, results) {
     if (err) return res.error(errors.internal.DB_FAILURE, err), logger.error(err);
 
     var context = {
+      layout:           'layout/default',
       restaurants:      utils.invoke(results[0], 'toJSON').filter( function( r ){
                           return !r.is_unacceptable;
                         }),
@@ -92,6 +126,10 @@ module.exports.list = function(req, res) {
     context.allRestaurants = results.length === 3
       ? utils.invoke(results[2], 'toJSON')
       : context.restaurants;
+
+    if ( !shouldPaginate ){
+      res.locals.totalRestaurants = context.restaurants.length;
+    }
 
     // Delivery fee from-to
     var min, max, restaurant, group;
@@ -116,7 +154,7 @@ module.exports.list = function(req, res) {
       restaurant.delivery_fee_to    = max;
     }
 
-    res.render('restaurants', context);
+    res.render('restaurant/list', context);
   };
 
   utils.async.parallel(tasks, done);

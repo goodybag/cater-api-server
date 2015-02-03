@@ -1,18 +1,59 @@
-{{#extend "page"}}page-home{{/extend}}
+{{#extend "page"}}page-restaurant-list{{/extend}}
 
 {{#extend "body"}}
-<div class="container" id="main-container">
-  <h1>restaurant list</h1>
-
+<div class="restaurant-list-search">
+  <div class="search-params">
+    {{> restaurant_search_form }}
+  </div>
+  <div class="search-advanced">
+    {{> restaurant_search_advanced }}
+  </div>
+  <a href="#" class="search-advanced-link section" data-role="collapsible" data-target="search-advanced-content">
+    <div class="container">
+      <span class="expand-hidden">Hide all search tools <span class="search-advanced-link-icon gb-icon-chevron-down"></span></span>
+      <span class="expand-show">Show all search tools <span class="search-advanced-link-icon gb-icon-chevron-down"></span></span>
+    </div>
+  </a>
 </div>
+
+{{#if promptSurvey}}
+<div class="alert alert-success alert-dismissable alert-survey">
+  <div class="container">
+    <a target="_blank" href="https://docs.google.com/forms/d/1n95SQSKK8x7mSihdcfShWU6C4MagmnfD831I1wOrvzw/viewform?usp=send_form">Would you mind telling us what you think of the changes?</a>
+    <span class="close">x</span>
+  </div>
+</div>
+{{/if}}
+
+<div class="list-options">
+  <div class="container">
+    {{> restaurant_list_tags }}
+    {{> restaurant_list_sort }}
+  </div>
+</div>
+<div class="restaurant-list">
+  <div class="container">
+    {{> restaurant_tiles }}
+  </div>
+</div>
+
+{{#gt pages.length 1}}
+<div class="container list-paginator">
+  {{> restaurant_list_pagination }}
+</div>
+{{/gt}}
 {{/extend}}
 
 {{#extend "scripts"}}
 <script>
-// require( ['app/pages/admin-home'], function( page ){
-//   page.init({
+require( ['app/pages/restaurant-list'], function( page ){
+  page.init();
 
-//   });
-// });
+  // hack to make the alerts dissmissiable
+  $('.alert .close').click( function( e ){
+    e.preventDefault();
+    $(this).closest('.alert').remove();
+  });
+});
 </script>
 {{/extend}}

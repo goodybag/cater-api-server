@@ -109,6 +109,36 @@
   &:hover { color: @palette-gray-lighter; }
 }
 
+.gb-icon-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  color: @palette-black;
+
+  & > li {
+    width: 50%;
+    height: 100px;
+    padding: 20px;
+    background-color: @palette-gray-lighter;
+    float: left;
+    text-align: center;
+    border: 1px solid @palette-white;
+  }
+
+
+  & > li:hover {
+    color: @palette-white;
+    background-color: @palette-gray-dark;
+  }
+}
+
+
+@media (min-width: @breakpoint-tablet) {
+  .gb-icon-list > li {
+    width: 12.5%;
+  }
+}
+
 // Palette Swatch
 .palette-sample {
   width: 100%;

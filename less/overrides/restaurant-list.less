@@ -1,0 +1,209 @@
+@restaurant-list-link-color: @palette-white;
+@restaurant-list-background-color: @palette-gray-dark;
+@restaurant-list-color: @palette-gray-dark;
+@restaurant-section-border-color: @palette-gray;
+@restaurant-section-padding: 30px 0;
+
+.page-restaurant-list {
+
+  @media (max-width: @breakpoint-tablet) {
+    .inline-list-bulleted li {
+      display: block;
+      &:before { display: none }
+    }
+  }
+
+  .restaurant-params .picker { width: 100%; }
+  .restaurant-params [name="time-range"] { z-index: 1 }
+  .restaurant-params .form-group-search { width: auto }
+
+  @media (min-width: @breakpoint-tablet) {
+    .restaurant-params .picker { width: 400px; }
+  }
+  .restaurant-list-search {
+    background-color: @restaurant-list-background-color;
+    color: @palette-white;
+  }
+
+  .restaurant-list-search section,
+  .restaurant-list-search .section {
+    padding: @restaurant-section-padding;
+    border-top: 1px solid @restaurant-section-border-color;
+  }
+
+  .restaurant-list-search a {
+    color: @restaurant-list-link-color;
+    outline: 0;
+    padding: @restaurant-section-padding;
+    display: block;
+    text-decoration: none;
+  }
+  .search-lead {
+    font-size: 16px;
+    display: block;
+  }
+
+  @media (min-width: @breakpoint-tablet) {
+    .search-lead {
+      margin-right: 10px;
+      line-height: 39px;
+      vertical-align: middle;
+      font-size: 25px;
+    }
+  }
+
+  @media (min-width: @breakpoint-desktop-sm) {
+    .search-lead {
+      display: inline-block;
+    }
+  }
+
+  .list-options {
+    margin-top: 30px;
+  }
+
+  .list-sort-actions {
+    width: 100%;
+  }
+
+  .list-tags { margin-bottom: 10px; }
+
+  @media (min-width: @breakpoint-tablet) {
+    .list-tags {
+      float: left;
+      margin: 0;
+    }
+
+    .list-sort {
+      float: right;
+    }
+
+    .list-sort-actions {
+      width: initial;
+    }
+
+    .list-sort .list-sort-lead {
+      display: inline-block;
+      line-height: 35px;
+      vertical-align: top;
+      margin-right: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: @restaurant-list-color;
+    }
+  }
+
+  .restaurant-list {
+    margin-top: 30px;
+  }
+
+  @media (min-width: @breakpoint-tablet) {
+
+  }
+
+  .search-advanced-content {
+    .collapsible-content;
+  }
+
+  .search-advanced-link .search-advanced-link-icon {
+    vertical-align: middle;
+    -webkit-transition: all .15s ease;
+       -moz-transition: all .15s ease;
+         -o-transition: all .15s ease;
+            transition: all .15s ease;
+  }
+
+  .search-advanced-link.expand .search-advanced-link-icon {
+    display: inline-block;
+    -webkit-transform: rotateX(180deg);
+       -moz-transform: rotateX(180deg);
+        -ms-transform: rotateX(180deg);
+         -o-transform: rotateX(180deg);
+            transform: rotateX(180deg);
+
+  }
+
+  .search-advanced-link .expand-hidden { display: none; }
+  .search-advanced-link .expand-show { display: inline; }
+
+  .search-advanced-link.expand .expand-hidden { display: inline; }
+  .search-advanced-link.expand .expand-show { display: none; }
+
+
+  //  extract restaurant params stylesheet?
+  /**
+    this thing needs to cover the actual timepicker
+    so we can display a time range without it screwing
+    up the value pickadate gives us back
+  */
+  .restaurant-params [name="time-range"] {
+    position: absolute;
+    pointer-events: none;
+    cursor: auto;
+    background: #fff;
+  }
+
+  .search-advanced-filter-col > h1 {
+    text-transform: uppercase;
+    font-size: 16px;
+    margin: 15px 0;
+  }
+  .search-advanced-filter-col:first-of-type > h1 { margin: 0 0 15px; }
+
+  @media (min-width: @breakpoint-tablet) {
+    .search-advanced-filter-col {
+      float: left;
+      margin: 0 50px;
+      &:first-of-type { margin-left: 0; }
+      &:last-of-type { margin-right: 0; }
+    }
+
+    .filter-cuisines > label {
+      float: left;
+      width: 130px;
+      &:nth-of-type(4n+1) { clear: left; }
+    }
+
+    .search-advanced-filter-col > h1 {
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+  }
+
+  .panel { padding: 0; }
+
+  .search-advanced-search-wrapper {
+    display: block;
+  }
+
+  @media (min-width: @breakpoint-tablet) {
+    .search-advanced-search-wrapper {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 45px;
+      width: 319px;
+    }
+  }
+
+  .search-form { .form-control-combo; }
+  .search-form-input-cell { .form-control-combo .form-control-combo-full; }
+  .search-form-action-cell { .form-control-combo .form-control-combo-action; }
+
+  .list-paginator {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+}
+
+.alert.alert-survey {
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 0;
+
+  .close {
+    position: absolute;
+    top: 0;
+    right: 10px;
+  }
+}

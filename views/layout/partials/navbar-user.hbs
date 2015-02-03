@@ -1,0 +1,69 @@
+<header class="navbar navbar-with-dropdowns {{#if session.oldUser}}navbar-impersonate{{/if}} collapsed">
+  <div class="container">
+    <a href="/">
+      <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
+    </a>
+
+    <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
+    <div class="nav">
+      {{#if session.oldUser}}
+      <li>
+        <a href="/users/return">Return to {{session.oldUser.name}}</a>
+      </li>
+      {{/if}}
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+        class="btn btn-default btn-dropdown"
+        data-role="popover"
+        data-target="dropdown-popover">
+        My Orders
+        <i class="gb-icon-caret-down"></i>
+      </button>
+
+      <div class="popover-modal dropdown-popover">
+        <ul class="popover-body">
+          <li class="popover-item">
+            <a href="/">Start New Order</a>
+          </li>
+          <li class="popover-item">
+            <a href="/users/me/orders">My Orders</a>
+          </li>
+        </ul>
+      </div>
+      </span>
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+          class="btn btn-default btn-dropdown"
+          data-role="popover"
+          data-target="dropdown-popover">
+          {{#if user.name}}{{user.name}}{{else}}My Account{{/if}}
+          <i class="gb-icon-caret-down"></i>
+        </button>
+
+        <div class="popover-modal dropdown-popover">
+          <ul class="popover-body">
+            <li class="popover-item">
+              <a href="/users/me">Settings</a>
+            </li>
+            <li class="popover-item">
+              <a href="/users/me/rewards">My Rewards</a>
+            </li>
+            <li class="popover-item">
+              <a href="/auth/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </span>
+    </div>
+    <a href="/users/me/rewards" class="gb-points">{{commatize user.points}} points</a>
+  </div>
+</header>
+
+{{#extend "scripts"}}
+<script>
+require(['jquery-loaded'], function($){
+  $('[data-role="collapsible"]').gb_collapsible();
+  $('[data-role="popover"]').gb_popover();
+});
+</script>
+{{/extend}}

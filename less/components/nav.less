@@ -29,10 +29,12 @@
 
 .nav > li > a {
   display: inline-block;
-  margin-left: 22px;
-  margin-right: 22px;
   font-size: @font-size-base;
   line-height: 0;
+}
+
+@media (min-width: @breakpoint-tablet) {
+  .nav > li > a { margin: 0 22px; }
 }
 
 .nav > li:first-child a {

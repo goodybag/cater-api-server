@@ -6,19 +6,8 @@ define(function(require, exports, module) {
   return module.exports = Backbone.View.extend({
     events: function() {
       return {
-        'change .checkbox': 'onFilterChange'
-      , 'change #panelDiet .checkbox':        this.logFilterEvent('Special Diets')
-      , 'change #panelCuisine .checkbox':     this.logFilterEvent('Cuisine')
-      , 'change #panelMealTypes .checkbox':   this.logFilterEvent('Meal Types')
-      , 'change #panelPrice .checkbox':       this.logFilterEvent('Price')
-      , 'change #panelMealStyles .checkbox':  this.logFilterEvent('Meal Styles')
+        'change input[type="checkbox"]': 'onFilterChange'
       };
-    }
-
-  , logFilterEvent: function(type) {
-      return function(e) {
-        analytics.track('Filter Change', { type: type });
-      }
     }
 
   , criteriaTypes: {
@@ -29,12 +18,9 @@ define(function(require, exports, module) {
     }
 
   , initialize: function() {
-      var collapsibles = this.$el.find('.collapse');
-      collapsibles.on('show.bs.collapse', this.toggleCollapsible);
-      collapsibles.on('hide.bs.collapse', this.toggleCollapsible);
-
+      this.options.changeEvent = this.options.changeEvent || 'filters:change';
+      this.options.facets = this.options.facets || {};
       this.$checkboxes = this.$el.find('.checkbox');
-
 
       // Sorry for this hackiness, but IE8 just will not stop having errors with this
       if ( window.navigator.userAgent.indexOf('MSIE 8.0') === -1 ){
@@ -42,23 +28,19 @@ define(function(require, exports, module) {
       }
     }
 
+  , addFacet: function(name, selector) {
+      this.options.facets[name] = selector;
+    }
+
   , onFilterChange: function(e) {
-      this.trigger('filters:change');
+      this.trigger(this.options.changeEvent);
     }
 
   , getProps: function() {
-      return {
-        diets:        _.pluck(this.$el.find('#panelDiet input:checked'), 'value')
-      , cuisines:     _.pluck(this.$el.find('#panelCuisine input:checked'), 'value')
-      , prices:       _.pluck(this.$el.find('#panelPrice input:checked'), 'value')
-      , mealTypes:    _.pluck(this.$el.find('#panelMealTypes input:checked'), 'value')
-      };
-    }
-
-  , toggleCollapsible: function(e) {
-      // toggle collapse panel icon
-      var $panelIcon = $(e.currentTarget).siblings('.panel-heading').find('.glyphicon');
-      $panelIcon.toggleClass('active');
+      return Object.keys(this.options.facets).reduce(function(props, facet) {
+        props[facet] = _.pluck(this.$el.find(this.options.facets[facet]), 'value');
+        return props;
+      }.bind(this), {});
     }
 
   , updateCounts: function(){

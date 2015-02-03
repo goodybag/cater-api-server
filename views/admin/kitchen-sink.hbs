@@ -9,6 +9,20 @@
   </div>
 </section>
 
+<section class="page-section" id="section-typography">
+  <div class="container">
+    <h2 class="component-title">Typography</h2>
+    <div>
+      <div style="font-weight:300">Quick zephyrs blow, vexing daft Jim (light)</div>
+      <div style="font-weight:300; font-style: italic">Quick zephyrs blow, vexing daft Jim (light italic)</div>
+      <div style="font-weight:400">Quick zephyrs blow, vexing daft Jim (normal)</div>
+      <div style="font-weight:400; font-style: italic">Quick zephyrs blow, vexing daft Jim (normal italic)</div>
+      <div style="font-weight:700">Quick zephyrs blow, vexing daft Jim (bold)</div>
+      <div style="font-weight:700; font-style: italic">Quick zephyrs blow, vexing daft Jim (bold italic)</div>
+    </div>
+  </div>
+</section>
+
 <section class="page-section" id="section-colors">
   <div class="container">
     <h2 class="component-title">Color Palette</h2>
@@ -26,6 +40,102 @@
     <code class="language-css">.alert-warning { color: @palette-red }</code>
     <p>Bad</p>
     <code class="language-css">.red { color: @palette-red }</code>
+  </div>
+</section>
+
+<section class="page-section" id="section-icons">
+  <div class="container">
+    <h2 class="component-title">Icons</h2>
+    <ul class="gb-icon-list clearfix">
+      <li>
+        <span class="gb-icon-question"></span>
+        <div class="gb-icon-class">gb-icon-question</span>
+        </li>
+      <li>
+        <span class="gb-icon-caret-down"></span>
+        <div class="gb-icon-class">gb-icon-caret-down</span>
+      </li>
+      <li>
+        <span class="gb-icon-x-mark"></span>
+        <div class="gb-icon-class">gb-icon-x-mark</span>
+      </li>
+      <li>
+        <span class="gb-icon-checkmark"></span>
+        <div class="gb-icon-class">gb-icon-checkmark</span>
+      </li>
+      <li>
+        <span class="gb-icon-magnifier"></span>
+        <div class="gb-icon-class">gb-icon-magnifier</span>
+        </li>
+        <li>
+          <span class="gb-icon-location"></span>
+          <div class="gb-icon-class">gb-icon-location</span>
+        </li>
+        <li>
+          <span class="gb-icon-time"></span>
+          <div class="gb-icon-class">gb-icon-time</span>
+        </li>
+        <li>
+          <span class="gb-icon-calendar"></span>
+          <div class="gb-icon-class">gb-icon-calendar</span>
+        </li>
+        <li>
+          <span class="gb-icon-email"></span>
+          <div class="gb-icon-class">gb-icon-email</span>
+        </li>
+        <li>
+          <span class="gb-icon-phone"></span>
+          <div class="gb-icon-class">gb-icon-phone</span>
+        </li>
+        <li>
+          <span class="gb-icon-warning"></span>
+          <div class="gb-icon-class">gb-icon-warning</span>
+        </li>
+        <li>
+          <span class="gb-icon-user"></span>
+          <div class="gb-icon-class">gb-icon-user</span>
+        </li>
+        <li>
+          <span class="gb-icon-heart"></span>
+          <div class="gb-icon-class">gb-icon-heart</span>
+        </li>
+        <li>
+          <span class="gb-icon-eye"></span>
+          <div class="gb-icon-class">gb-icon-eye</span>
+        </li>
+        <li>
+          <span class="gb-icon-eye-slash"></span>
+          <div class="gb-icon-class">gb-icon-eye-slash</span>
+        </li>
+        <li>
+          <span class="gb-icon-hamburger"></span>
+          <div class="gb-icon-class">gb-icon-hamburger</span>
+        </li>
+        <li>
+          <span class="gb-icon-star"></span>
+          <div class="gb-icon-class">gb-icon-star</span>
+        </li>
+        <li>
+          <span class="gb-icon-star-half-empty"></span>
+          <div class="gb-icon-class">gb-icon-star-half-empty</span>
+        </li>
+        <li>
+          <span class="gb-icon-star-empty"></span>
+          <div class="gb-icon-class">gb-icon-star-empty</span>
+        </li>
+        <li>
+          <span class="gb-icon-chevron-down"></span>
+          <div class="gb-icon-class">gb-icon-chevron-down</span>
+        </li>
+    </ul>
+
+    <p>Example</p>
+    <blockquote class="blockquote blockquote-info">Note that either class or data-icon attributes may be used to specify the icon.</blockquote>
+    <p>
+    <code class="language-markup">{{#raw}}<span class="gb-icon-heart"></span>{{/raw}}</code>
+    <br>
+    <code class="language-markup">{{#raw}}<span data-icon="gb-icon-heart"></span>{{/raw}}</code>
+    </p>
   </div>
 </section>
 
@@ -125,6 +235,8 @@
       <li><button class="btn btn-green-2">btn-green-2</button></li>
       <li><button class="btn btn-green-3">btn-green-3</button></li>
     </ul>
+    <h3>Borderless</h3>
+    <button class="btn btn-borderless">btn-borderless</button>
   </div>
 </section>
 
@@ -161,6 +273,47 @@
   </div>
 </section>
 
+<section class="page-section" id="section-form-controls">
+  <div class="container">
+    <h2 class="component-title">Form Controls</h2>
+    <h3>Form Control Combo</h3>
+    <p>Use this component to create form controls with inlined actions</p>
+    <div class="form-control-combo">
+      <div class="form-control-combo-full">
+        <input class="input-borderless" type="text" value="enter search"/>
+      </div>
+      <div class="form-control-combo-action">
+        <button class="btn btn-borderless" data-icon="gb-icon-magnifier"></button>
+      </div>
+      <div class="form-control-combo-action">
+        <button class="btn btn-borderless" data-icon="gb-icon-eye"></button>
+      </div>
+    </div>
+    <code class="language-markup">
+      {{~#raw~}}
+<div class="form-control-combo">
+  <div class="form-control-combo-full">
+    <input class="input-borderless" type="text" value="enter search"/>
+  </div>
+  <div class="form-control-combo-action">
+    <button class="btn btn-borderless" data-icon="gb-icon-magnifier"></button>
+  </div>
+  <div class="form-control-combo-action">
+    <button class="btn btn-borderless" data-icon="gb-icon-eye"></button>
+  </div>
+</div>
+      {{~/raw~}}
+    </code>
+    <p>
+      <blockquote class="blockquote blockquote-info">
+        <h1>Protip!</h1>
+        Instead of using the .form-control-combo classes consider creating new semantic
+        classes that extend .form-control-combo to fit your needs.
+      </blockquote>
+    </p>
+  </div>
+</section>
+
 <section class="page-section" id="section-blockquote">
   <div class="container">
     <h2 class="component-title">Blockquote</h2>
@@ -176,6 +329,66 @@
   Body text goes here.
 </blockquote>{{/raw}}</code>
 
+</section>
+
+<section class="page-section" id="section-colors">
+  <div class="container">
+    <h2 class="component-title">Mixins</h2>
+    <h4>Drop shadow</h4>
+    <p>Demo</p>
+</section>
+
+<section class="page-section" id="section-dollar-meter">
+  <div class="container">
+    <h2 class="component-title">Dollar Meter</h2>
+    <p>Demo</p>
+    <span class="dollar-meter">{{{dollarMeter 3}}}</span>
+    <p>Markup</p>
+    <code class="language-markup">{{#raw}}<span class="dollar-meter">\{{dollarMeter 3}}</span>{{/raw}}</code>
+</section>
+
+<section class="page-section" id="section-inline-list">
+  <div class="container">
+    <h2 class="component-title">Inline Lists</h2>
+    <p>Demo</p>
+    <ul class="inline-list">
+      <li>Abc</li>
+      <li>Bird</li>
+      <li>Dog</li>
+      <li>Cat</li>
+    </ul>
+    <p>
+      <code class="language-markup">
+{{~#raw~}}
+<ul class="inline-list">
+  <li>Abc</li>
+  <li>Bird</li>
+  <li>Dog</li>
+  <li>Cat</li>
+</ul>
+{{~/raw~}}
+      </code>
+    </p>
+    <h3>Bullet list</h3>
+    <ul class="inline-list inline-list-bulleted">
+      <li>Abc</li>
+      <li>Bird</li>
+      <li>Dog</li>
+      <li>Cat</li>
+    </ul>
+    <p>
+      <code class="language-markup">
+{{~#raw~}}
+<ul class="inline-list inline-list-bulleted">
+  <li>Abc</li>
+  <li>Bird</li>
+  <li>Dog</li>
+  <li>Cat</li>
+</ul>
+{{~/raw~}}
+      </code>
+    </p>
+  </div>
 </section>
 
 <section class="page-section" id="section-dropdowns">
@@ -367,7 +580,7 @@
     <div class="tile">
       <div class="tile-cover" style="background-image: url('https://s3.amazonaws.com/uploads.hipchat.com/42627/356137/LMC3pTqqJTQidcV/Vietnamese2_Spread.png');">
         <div class="tile-caption">
-          <div class="tile-title">A-OK Chinese</div>
+          <h1 class="tile-title">A-OK Chinese</h1>
           <div class="tile-rating">{{{ratingStars 3}}}</div>
         </div>
       </div>
@@ -380,7 +593,7 @@
     <div class="tile">
       <div class="tile-cover" style="background-image: url('https://s3.amazonaws.com/uploads.hipchat.com/42627/356137/dah9mc9lh8HgMhl/French1_Quiches.png');">
         <div class="tile-caption">
-          <div class="tile-title">A-OK Chinese</div>
+          <h1 class="tile-title">A-OK Chinese</h1>
           <div class="tile-rating">{{{ratingStars 3}}}</div>
         </div>
       </div>
@@ -393,7 +606,7 @@
     <div class="tile">
       <div class="tile-cover" style="background-image: url('https://s3.amazonaws.com/uploads.hipchat.com/42627/356137/yBYq2M3IZNtuAqo/Burgers3.png');">
         <div class="tile-caption">
-          <div class="tile-title">A-OK Chinese</div>
+          <h1 class="tile-title">A-OK Chinese</h1>
           <div class="tile-rating">{{{ratingStars 3}}}</div>
         </div>
       </div>
@@ -406,7 +619,7 @@
     <div class="tile">
       <div class="tile-cover" style="background-image: url('https://s3.amazonaws.com/uploads.hipchat.com/42627/356137/IBckepMWQIwXZkG/Mediterranean1.png');">
         <div class="tile-caption">
-          <div class="tile-title">A-OK Chinese</div>
+          <h1 class="tile-title">A-OK Chinese</h1>
           <div class="tile-rating">{{{ratingStars "3.5"}}}</div>
         </div>
       </div>
@@ -420,8 +633,8 @@
     <code class="language-markup">{{#raw}}<div class="tile">
   <div class="tile-cover" style="background-image: url('image/Mediterranean1.png');">
     <div class="tile-caption">
-      <div class="tile-title">A-OK Chinese</div>
-      <div class="tile-rating"><!-- use ratingStars helper --></div>
+      <h1 class="tile-title">A-OK Chinese</h1>
+      <div class="tile-rating">\{{{ratingStars 3}}}</div>
     </div>
   </div>
   <div class="tile-info">

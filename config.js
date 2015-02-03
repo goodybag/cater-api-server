@@ -25,6 +25,8 @@ config.defaults = {
 , reminders: require('./configs/reminders')
 , redis: require('./configs/redis')
 , session: require('./configs/session')
+, diets: require('./configs/diets')
+, sortQueryTable: require('./configs/sort-query-table')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
 
 , deliveryTime: {

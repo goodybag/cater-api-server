@@ -1,26 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>[Admin] Goodybag{{{block "html-title"}}}</title>
+  <title>Goodybag{{{block "html-title"}}}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="shortcut icon" href="{{cdn "favicon.ico"}}">
+
+  <!-- Keep this up here! -->
+  <!--[if lt IE 9]>
+  <script src="{{cdn "/components/html5shiv/dist/html5shiv.js"}}"></script>
+  <script src="{{cdn "/components/es5-shim/es5-shim.js"}}"></script>
+  <script src="{{cdn "/components/es5-shim/es5-sham.js"}}"></script>
+  <![endif]-->
+  <!--[if lte IE 9]>
+  <script src="{{cdn "/components/console-polyfill/index.js"}}"></script>
+  <![endif]-->
+
   <!-- Goodybag Catering CSS Stuff -->
-  <link rel="stylesheet" href="{{cdn (format '/dist/<%= version %>/css/core-goodybag.css' pkg)}}">
+  <link href="{{cdn (format 'dist/<%= version %>/css/goodybag.css' pkg)}}" rel="stylesheet">
 
   {{{block "css"}}}
 
+  <!-- Keep THIS just AFTER all CSS -->
+  <!--[if lt IE 9]>
+  <script src="{{cdn "/components/respond/dest/respond.src.js"}}"></script>
+  <![endif]-->
+
   <!--[if lte IE 9]>
-  <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
+  <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/ie-lte9.css' pkg)}}">
   <![endif]-->
 </head>
 <body class="page {{{block "page"}}}">
-  {{> admin_navbar}}
+  <div class="main-wrapper">
+    {{> layout_navbar }}
 
-  {{{block "banner"}}}
+    {{{block "banner"}}}
 
-  <div id="main">
-    {{{block "body"}}}
+    <div id="main">
+      {{{block "body"}}}
+    </div>
+    <div class="main-push"></div>
   </div>
+
+  {{> layout_footer }}
+  {{> layout_intercom }}
 
   {{#unless config.isDev}}
   <script src="{{cdn (format 'dist/<%= version %>/goodybag.js' pkg)}}"></script>
@@ -34,6 +57,13 @@
     config.cdn = { baseUrl: '{{{config.cdn.baseUrl}}}' };
   });
   </script>
+
+  {{> analytics }}
+  {{> olark }}
+
+  {{#if isNewSignup}}
+  {{> facebook_pixel config.facebook.pixel.restaurantList }}
+  {{/if}}
 
   {{{block "views"}}}
   {{{block "bootstrap"}}}

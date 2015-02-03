@@ -33,6 +33,7 @@ module.exports = {
 , queryString: require('./query-string')
 , restaurant: require('./restaurant')
 , restrict: require('./restrict')
+, searchTags: require('./search-tags')
 , setSession: require('./set-session')
 , sslRedirect: require('./ssl-redirect')
 , states: require('./states')
@@ -53,4 +54,5 @@ module.exports = {
 , setGuestRegion: require('./set-guest-region')
 , storeUserAgent: require('./store-user-agent')
 , timeout: require('./timeout')
+, userViewedEvent: require('./user-viewed-event')
 };

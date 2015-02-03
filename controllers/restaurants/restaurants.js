@@ -46,7 +46,7 @@ module.exports.list = function(req, res) {
 
       models.Restaurant.find(
         query
-      , utils.extend({ is_hidden: false }
+      , utils.extend({ is_hidden: false, is_archived: false }
       , orderParams)
       , callback);
     },
@@ -67,6 +67,7 @@ module.exports.list = function(req, res) {
       models.Restaurant.find.bind( models.Restaurant, {
         where: {
           is_hidden: false
+        , is_archived: false
         , region_id: req.user.attributes.region_id
         }
       , limit: 'all'
@@ -197,7 +198,7 @@ module.exports.get = function(req, res) {
       models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');
-        restaurant.getItems({ where: { 'is_hidden': false } }, function(err, items) {
+        restaurant.getItems({ where: { 'is_hidden': false , 'is_archived': false } }, function(err, items) {
           callback(err, restaurant);
         });
       });
@@ -359,7 +360,6 @@ var fields = [
   'logo_url',
   'logo_mono_url',
   'is_hidden',
-  'is_archived',
   'street',
   'city',
   'state',

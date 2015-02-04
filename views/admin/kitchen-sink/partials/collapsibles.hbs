@@ -1,0 +1,35 @@
+<section class="page-section" id="section-collapsible">
+  <div class="container">
+    <h2 class="component-title">Collapsible sections</h2>
+    <p>This component handles collapsing and expanding a section.</p>
+    <p>TODO: add data-speed option
+    <p>Demo</p>
+    <div class="collapsible-demo">
+      <section class="collapsible-content">
+        <div class="collapsible-wrapper">
+          <div>Lorem ipsum poop sum</div>
+          <div>Lorem ipsum poop sum</div>
+          <div>Lorem ipsum poop sum</div>
+          <div>Lorem ipsum poop sum</div>
+        </div>
+      </section>
+      <a href="#" class="collapsible-link" data-role="collapsible" data-target="collapsible-content">Show all <span class="gb-icon-caret-down va-middle"></span></a>
+    </div>
+    <p>Markup</p>
+<code class="language-markup">{{#raw}}<div class="collapsible-demo">
+  <section class="collapsible-content">
+    <div class="collapsible-wrapper">
+      <div>Lorem ipsum poop sum</div>
+      <div>Lorem ipsum poop sum</div>
+      <div>Lorem ipsum poop sum</div>
+      <div>Lorem ipsum poop sum</div>
+    </div>
+  </section>
+  <a href="#" data-role="collapsible" data-target="collapsible-content">
+    Show all <span class="gb-icon-caret-down va-middle"></span>
+  </a>
+</div>{{/raw}}</code>
+    <p>Javascript</p>
+    <code class="language-javascript">{{#raw}}$('[data-role="collapsible"]').gb_collapsible();{{/raw}}</code>
+  </div>
+</section>

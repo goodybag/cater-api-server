@@ -1,0 +1,84 @@
+{{#extend "html-title"}} Kitchen Sink{{/extend}}
+{{#extend "page"}}page-kitchen-sink{{/extend}}
+
+{{#extend "body"}}
+<section class="page-section" id="section-intro">
+  <div class="container intro">
+    <h1>Welcome to the Kitchen Sink</h1>
+    <p class="lead">It's a bit dirty, it doesn't drain very quickly, and - oh? Not that kitchen sink? Right! This is the place where we test out and document UI Components.</p>
+  </div>
+</section>
+
+{{> admin_kitchen_sink_typography}}
+{{> admin_kitchen_sink_color_palette}}
+{{> admin_kitchen_sink_icons}}
+{{> admin_kitchen_sink_popovers}}
+{{> admin_kitchen_sink_buttons}}
+{{> admin_kitchen_sink_inputs}}
+{{> admin_kitchen_sink_form_controls}}
+{{> admin_kitchen_sink_blockquote}}
+{{> admin_kitchen_sink_dollar_meter}}
+{{> admin_kitchen_sink_lists}}
+{{> admin_kitchen_sink_dropdowns}}
+{{> admin_kitchen_sink_table_list}}
+{{> admin_kitchen_sink_collapsibles}}
+{{> admin_kitchen_sink_radio_buttons}}
+{{> admin_kitchen_sink_tiles}}
+{{> admin_kitchen_sink_navbars}}
+
+{{/extend}}
+
+{{#extend "scripts"}}
+<script src="/components/prism/prism.js"></script>
+
+<script>
+  require(['jquery-loaded'], function($){
+    $('[data-role="collapsible"]').gb_collapsible();
+    $('[data-role="popover"]').gb_popover();
+  });
+</script>
+
+<script>
+  require(['jquery-loaded'], function($){
+    var tmpl = function( data ){
+      return [
+        '<div class="section-decorator-block animated-out">'
+      , '</div>'
+      ].join('\n');
+    };
+
+    var options = {
+      numDecorators: 80
+    , blockDelay: 15
+    };
+
+    $(function(){
+      $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+
+      var $container = $('<div class="section-decorators"></div>');
+
+      for ( var i = 0; i < options.numDecorators; ++i ){
+        var $el = $(tmpl());
+        $container.append( $el );
+
+        setTimeout(
+          $el.removeClass.bind( $el, 'animated-out' )
+        , i * options.blockDelay
+        );
+      }
+
+      $('#section-intro').append( $container );
+
+      $(window).one('scroll', function(){
+        $('.section-decorator-block').each(function( i ){
+          var $el = $(this);
+          setTimeout(
+            $el.addClass.bind( $el, 'animated-out-reverse' )
+          , i * options.blockDelay
+          );
+        });
+      });
+    });
+  });
+</script>
+{{/extend}}

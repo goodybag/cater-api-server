@@ -104,6 +104,10 @@ define(function(require, exports, module) {
       //   diff[key] = this.model.has(key) ? this.model.get(key) : params[key];
 
       var view = this;
+
+      // Always update the type first
+      diff.type = this.model.get('type');
+
       var sent = this.model.save(diff, {
         patch: true,
         wait: true,

@@ -1,0 +1,35 @@
+<section class="page-section" id="section-orders-table-list">
+  <div class="container">
+    <h2 class="component-title">Orders Table List</h2>
+    <p>This component builds on table list</p>
+    <p>LESS Import</p>
+    <pre>@import "overrides/components/table-list.less";</pre>
+    <p>Demo</p>
+    <div class="table-list-header">
+        <div class="table-list-header-title">Restaurants</div>
+        <div class="table-list-header-actions">
+          {{> admin_restaurant_filter_region }}
+          {{> admin_restaurant_filter_visible }}
+          {{> admin_restaurant_filter_sort }}
+        </div>
+    </div>
+    <ul class="table-list table-list-bordered">
+      <li class="table-list-item">All Star Burger</li>
+      <li class="table-list-item">Taco Deli</li>
+      <li class="table-list-item">Taj Palace</li>
+    </ul>
+    <p>Markup</p>
+<code class="language-markup">{{#raw}}<div class="table-list-header">
+  <div class="table-list-header-title">Restaurants</div>
+  <div class="table-list-header-actions">
+    <!-- filters here -->
+  </div>
+</div>
+<ul class="table-list table-list-bordered">
+  <li class="table-list-item">All Star Burger</li>
+  <li class="table-list-item">Taco Deli</li>
+  <li class="table-list-item">Taj Palace</li>
+</ul>
+{{/raw}}</code>
+  </div>
+</section>

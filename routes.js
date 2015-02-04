@@ -166,7 +166,7 @@ module.exports.register = function(app) {
           next();
         });
       }
-    , m.view( 'admin/kitchen-sink', {
+    , m.view( 'admin/kitchen-sink/index', {
         layout: 'admin/layout2'
       })
     );

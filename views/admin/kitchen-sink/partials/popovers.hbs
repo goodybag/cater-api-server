@@ -1,0 +1,51 @@
+<section class="page-section" id="section-popovers">
+  <div class="container">
+    <h2 class="component-title">Popovers</h2>
+    <p>Use popovers for contextual alerts or extra info.</p>
+    <p>The popover is composed of a "trigger" element such as a
+      button or link and a "modal" element that toggles visibility.
+    </p>
+    <blockquote class="blockquote blockquote-info">
+      <h2 class="title">Note</h2>
+      <p>The modal element is `position: absolute` so it will be positioned
+      relative to it's parent.</p>
+      <p>Ensure that the trigger and modal elements are under
+      under a `.popover-wrapper` element.</p>
+      <code class="language-markup">{{#raw}}<div class="popover-wrapper">
+  <a href="#" data-role="popover" data-target="example-popover">Open popover</a>
+  <div class="popover-body"> ... </div>
+</div>{{/raw}}</code>
+    </blockquote>
+
+    <p>Demo</p>
+    <span class="popover-wrapper">
+      <a href="#" data-role="popover" data-target="example-popover">Open popover</a>
+      <div class="popover-modal example-popover">
+        <div class="popover-header">
+          Header<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+        </div>
+        <div class="popover-body">
+          <div class="popover-item">Foo</div>
+          <div class="popover-item">Bar</div>
+          <div class="popover-item">Baz</div>
+        </div>
+      </div>
+    </span>
+    <p>HTML</p>
+<code class="language-markup">{{#raw}}<span class="popover-wrapper">
+  <a href="#" data-role="popover" data-target="example-popover">Open popover</a>
+  <div class="popover-modal example-popover">
+    <div class="popover-header">
+      Header<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+    </div>
+    <div class="popover-body">
+      <div class="popover-item">Foo</div>
+      <div class="popover-item">Bar</div>
+      <div class="popover-item">Baz</div>
+    </div>
+  </div>
+</span>{{/raw}}</code>
+    <p>Javascript</p>
+    <code class="language-javascript">$('[data-role="popover"]').gb_popover();</code>
+  </div>
+</section>

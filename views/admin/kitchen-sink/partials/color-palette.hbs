@@ -1,0 +1,19 @@
+<section class="page-section" id="section-colors">
+  <div class="container">
+    <h2 class="component-title">Color Palette</h2>
+    <div class="color-blocks">
+      {{#each palette}}
+      <div class="color-block" data-color="{{this.name}}">
+        <div class="box"></div>
+        <div class="title">{{this.name}}</div>
+        <div class="color">{{this.color}}</div>
+      </div>
+      {{/each}}
+    </div>
+    <p>The palette should be used to create semantic class tags, not color classes.</p>
+    <p>Good</p>
+    <code class="language-css">.alert-warning { color: @palette-red }</code>
+    <p>Bad</p>
+    <code class="language-css">.red { color: @palette-red }</code>
+  </div>
+</section>

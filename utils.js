@@ -449,8 +449,6 @@ utils.parseBool = function(value){
   return true;
 };
 
-utils.deepClone = utils.cloneDeep;
-
 /**
  * Encrypts consumer passwords
  * @param  {String}   password  The password to encrypt

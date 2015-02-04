@@ -11,6 +11,9 @@
         <a href="/users/return">Return to {{session.oldUser.name}}</a>
       </li>
       {{/if}}
+      {{#contains user.groups 'admin'}}
+      <span class="gb-dropdown">{{> region_selector}}</span>
+      {{/contains}}
       <span class="popover-wrapper gb-dropdown same-width-modal">
         <button
         class="btn btn-default btn-dropdown"

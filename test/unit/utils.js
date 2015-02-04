@@ -8,6 +8,27 @@ describe ('Utils', function(){
     var format  = 'hh:mm A';
 
     var options = {
+      padding: 15
+    , distribution: {
+        before: [ 0, 1 ]
+      , after:  [ 1, 1 ]
+      }
+    };
+
+    var result = utils.timeToRange( time, format, options );
+
+    assert.deepEqual( result, [ '12:15 PM', '12:30 PM' ] );
+
+    time = '1:00 PM';
+    result = utils.timeToRange( time, format, options );
+    assert.deepEqual( result, [ '01:00 PM', '01:15 PM' ] );
+  });
+
+  it('.timeToRange', function(){
+    var time    = '12:15 PM';
+    var format  = 'hh:mm A';
+
+    var options = {
       padding:    15
     , distribution: {
         before:   [ 1, 3 ]

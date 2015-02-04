@@ -30,6 +30,20 @@
                 <input type="email" id="input-email" name="email" class="form-control email" value="{{user.email}}">
               </div>
               <div class="form-group">
+                <div class="radio">
+                  <label>
+                    <input class="organization-type" name="organization_type" type="radio" value="residence" {{#if (eq user.organization_type 'residence') }} checked="checked" {{/if}}>
+                    Individual
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input class="organization-type" name="organization_type" type="radio" value="business" {{#if (eq user.organization_type 'business') }} checked="checked" {{/if}}>
+                    Business
+                  </label>
+                </div>
+              </div>
+              <div class="form-group" id="order-organization">
                 <label for="input-org" class="control-label">Organization</label>
                 <input type="text" id="input-org" name="organization" class="form-control organization" value="{{user.organization}}">
               </div>

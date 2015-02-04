@@ -118,7 +118,7 @@
             </div>
           </div>
 
-          {{#unless order.user.name}}
+          {{#unless (and order.user.name order.user.organization) }}
           <div id="user-info" class="list-group-item clearfix">
             <div class="col-md-12">
               <legend>User Information</legend>
@@ -133,13 +133,13 @@
                 <div class="form-group col-sm-6">
                   <div class="radio">
                     <label>
-                      <input class="organization-type" name="organization_type" type="radio" value="residence" >
+                      <input class="organization-type" name="organization_type" type="radio" value="residence" {{#if (eq user.organization_type 'residence') }} checked="checked" {{/if}}>
                       Residence
                     </label>
                   </div>
                   <div class="radio">
                     <label>
-                      <input class="organization-type" name="organization_type" type="radio" value="business" checked="checked">
+                      <input class="organization-type" name="organization_type" type="radio" value="business" {{#if (eq user.organization_type 'business') }} checked="checked" {{/if}}>
                       Business
                     </label>
                   </div>

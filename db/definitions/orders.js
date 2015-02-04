@@ -213,7 +213,6 @@ define(function(require) {
   , restaurant_total: { type: types.int, nullable: false, default: 0 }
   , restaurant_sales_tax: { type: types.int, nullable: false, default: 0 }
   , restaurant_location_id: { type: types.int, references: { table: 'restaurant_locations', column: 'id' } }
-  , organization_type: { type: types.text, nullable: true }
   , secondary_contact_phone: {
       type: types.varchar(10)
     , nullable: true

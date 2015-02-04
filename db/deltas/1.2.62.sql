@@ -8,5 +8,5 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  perform add_column('orders', 'organization_type', 'text');
+  perform add_column('users', 'organization_type', 'text default null');
 end$$;

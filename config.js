@@ -626,6 +626,8 @@ config.india = {
   config.india[ key ] = config.staging[ key ];
 });
 
+config.india.logging.mongoConnStr = false;
+
 config.test = _.extend( _.clone( config.dev ), {
   env: 'test'
 , baseUrl: 'http://localhost:3001'

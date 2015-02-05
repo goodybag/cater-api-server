@@ -5,15 +5,15 @@
   <div class="search-params">
     {{> restaurant_search_form }}
   </div>
-  <div class="search-advanced">
-    {{> restaurant_search_advanced }}
-  </div>
-  <a href="#" class="search-advanced-link section" data-role="collapsible" data-target="search-advanced-content">
+  <a href="#" class="search-advanced-link section{{#if expandSearchTools}} expand{{/if}}" data-role="collapsible" data-target="search-advanced-content">
     <div class="container">
       <span class="expand-hidden">Hide all search tools <span class="search-advanced-link-icon gb-icon-chevron-down"></span></span>
       <span class="expand-show">Show all search tools <span class="search-advanced-link-icon gb-icon-chevron-down"></span></span>
     </div>
   </a>
+  <div class="search-advanced">
+    {{> restaurant_search_advanced }}
+  </div>
 </div>
 
 {{#if promptSurvey}}

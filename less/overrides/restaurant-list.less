@@ -189,6 +189,12 @@
   .search-form-input-cell { .form-control-combo .form-control-combo-full; }
   .search-form-action-cell { .form-control-combo .form-control-combo-action; }
 
+  .search-advanced-btn-wrapper { text-align: center; }
+  .search-advanced-btn-wrapper > .btn { width: 100%; }
+
+  @media (min-width: @breakpoint-tablet) {
+    .search-advanced-btn-wrapper > .btn { width: auto; }
+  }
   .list-paginator {
     margin-top: 10px;
     margin-bottom: 20px;

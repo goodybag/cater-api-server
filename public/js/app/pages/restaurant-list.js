@@ -53,6 +53,8 @@ define( function( require ){
           ]
       });
 
+      $('.search-advanced .btn-search').click(listView.search.bind(listView));
+
       $('[data-role="collapsible"]').gb_collapsible();
 
       // reuse bootstrap tooltip for now

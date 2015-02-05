@@ -118,7 +118,7 @@
             </div>
           </div>
 
-          {{#unless (and order.user.name order.user.organization) }}
+          {{#unless (and (dneq order.user.organization_type 'individual') order.user.name) }}
           <div id="user-info" class="list-group-item clearfix">
             <div class="col-md-12">
               <legend>User Information</legend>
@@ -133,8 +133,8 @@
                 <div class="form-group col-sm-6">
                   <div class="radio">
                     <label>
-                      <input class="organization-type" name="organization_type" type="radio" value="residence" {{#if (eq user.organization_type 'residence') }} checked="checked" {{/if}}>
-                      Residence
+                      <input class="organization-type" name="organization_type" type="radio" value="individual" {{#if (eq user.organization_type 'individual') }} checked="checked" {{/if}}>
+                      Individual 
                     </label>
                   </div>
                   <div class="radio">
@@ -145,7 +145,7 @@
                   </div>
                 </div>
               </div>
-              <div id="order-organization" class="row">
+              <div id="order-organization" class="row {{#if (eq user.organization_type 'individual') }} hide {{/if}}">
                 <div class="form-group col-sm-6">
                   <label class="control-label">Organization</label>
                   <input value="{{order.user.organization}}" type="text" name="user_organization" class="form-control">

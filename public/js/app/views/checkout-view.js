@@ -4,6 +4,7 @@ define(function(require, exports, module) {
   var spinner = require('spinner');
   var utils = require('utils');
   var notify = require('../../notify');
+  var config = require('config');
 
   var OrderView = require('./order-view');
 
@@ -66,24 +67,36 @@ define(function(require, exports, module) {
     initialize: function() {
       OrderView.prototype.initialize.apply(this, arguments);
 
-      this.datepicker = this.$el.find('input[name="date"]').pickadate({
+      this.datepicker = this.$el.find('.checkout-form input[name="date"]').pickadate({
         format: 'mm/dd/yyyy'
       , min: new Date()
       }).pickadate('picker');
 
       this.datepicker.on( 'open', _(this.onDatePickerOpen).bind( this ) );
 
-      this.timepicker = this.$el.find('input[name="time"]').pickatime({
+      this.timepicker = this.$el.find('.checkout-form input[name="time"]').pickatime({
         format: 'hh:i A'
       , interval: 15
       }).pickatime('picker');
 
       this.timepicker.on( 'open', _(this.onTimePickerOpen).bind( this ) );
+      // Handle discrepancy between pickadates and moments formatting
+      this.timepickerMomentFormat = this.timepicker.component.settings.format.replace( /\i/g, 'mm' );
 
       this.$paymentMethodId = this.$el.find('#payment-method-id');
 
       // Trigger payment method id change to check if selected card is expired
       this.onPaymentMethodIdChange();
+    },
+
+    convertTimesToRanges: function(){
+      var timeFormat = this.timepickerMomentFormat;
+
+      this.timepicker.$root.find('.picker__list-item').each( function(){
+        var $this = $(this);
+        var range = utils.timeToRange( $this.text(), timeFormat, config.deliveryTime );
+        $this.text( range.join(' - ') );
+      });
     },
 
     onDatePickerOpen: function(){
@@ -136,6 +149,8 @@ define(function(require, exports, module) {
           });
         })
       );
+
+      this.convertTimesToRanges();
     },
 
     itemEditClick: function(e) {

@@ -17,7 +17,7 @@
 </script>
 {{/extend}}
 
-<select name="region_id" id="user-region-selector" class="btn btn-default btn-dropdown">
+<select name="region_id" id="user-region-selector" class="btn btn-default btn-dropdown form-control">
 {{#each regions}}
   <option value="{{this.id}}"
   {{~#eq ../user.region_id this.id}} selected="true"{{/eq}}>

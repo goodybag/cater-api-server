@@ -51,7 +51,7 @@ module.exports = {
 , logger: require('./logger')
 , logger: require('./logger')
 , sessionAndUser: require('../lib/session-and-user')
-, setGuestRegion: require('./set-guest-region')
+, setUserRegion: require('./set-user-region')
 , storeUserAgent: require('./store-user-agent')
 , timeout: require('./timeout')
 , userViewedEvent: require('./user-viewed-event')

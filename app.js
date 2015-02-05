@@ -66,7 +66,7 @@ app.use(middleware.storeUserAgent());
 app.use( middleware.getRegions() );
 app.use( middleware.consumeNewSignup() );
 
-app.use( middleware.setGuestRegion() );
+app.use( middleware.setUserRegion() );
 
 if (config.isProduction || config.isStaging) {
   app.use(middleware.sslRedirect);

@@ -126,7 +126,7 @@ define( function( require ){
       , baseUrl:      baseUrl
       });
 
-      $('.tag-tooltip').tooltip();
+      $('[data-toggle="tooltip"]').tooltip();
     }
   };
 

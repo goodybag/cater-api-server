@@ -88,6 +88,8 @@ var reports = {
     , 'Time Accepted'
     , 'Delivery Date'
     , 'Delivery Time'
+    , 'Origin Zip'
+    , 'Destination Zip'
     , 'User Name'
     , 'User Email'
     , 'Company Name'
@@ -189,6 +191,8 @@ var reports = {
           // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such
           , moment.tz(order.datetime, order.timezone).format(reports.dateFormat)
           , moment.tz(order.datetime, order.timezone).format(reports.timeFormat)
+          , order.restaurant.zip
+          , order.zip
           , order.user.name
           , order.user.email
           , order.user.organization

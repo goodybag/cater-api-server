@@ -2,27 +2,87 @@
   <div class="container">
     <h2 class="component-title">Orders Table List</h2>
     <p>This component builds on table list</p>
-    <p>LESS Import</p>
 
-    <div class="table-list">
-      <div class="table-list-header">
-        <div class="header-component "></div>
+    <div class="table-list2">
+      <div class="list-header">
+        <label class="component item-selector">
+          <input type="checkbox">
+        </label>
+
+        <div class="component list-info">
+          <div class="num-results">133 Orders</div>
+          <div class="sort-info">Sorted by Submitted Date Desc</div>
+        </div>
+
+        <ul class="component list-nav nav">
+          <li class="popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Restaurant
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+          <li class="popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Region
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+          <li class="popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Type
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+          <li class="popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Status
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+          <li class="popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Sort
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+        </ul>
       </div>
-    </div>
 
-    <div class="table-list table-list-bordered">
-      <div class="table-list-item">
-        <a href="#" class="item-title">#2723 - Bamboo Bistro</a>
+      <div class="list-items">
+        <div class="list-item">
+          <label class="component item-selector">
+            <input type="checkbox">
+          </label>
+          <div class="component main">
+            <a class="item-title" href="#">#3562</a> - <a href="#">Bamboo Bistro</a>
+            <div class="user-details">
+              <a href="#">Tony Tornado</a> -
+              <a href="#">Awesome, Inc.</a>
+            </div>
+            <dl class="item-details">
+              <dt>Submitted:</dt>
+              <dd>02/04/15 - 1:47 pm</dd>
+            </dl>
 
-        <dl class="item-details">
-          <div class="item-detail detail-user">
-            <a href="#">Tony Tornado</a> -
-            <a href="#">Awesome, Inc.</a>
+            <div class="item-detail detail-submitted-date">
+              Submitted: 02/04/15 - 1:47 pm
+            </div>
           </div>
-        </dl>
-
-        <div class="item-detail detail-submitted-date">
-          Submitted: 02/04/15 - 1:47 pm
         </div>
       </div>
     </div>

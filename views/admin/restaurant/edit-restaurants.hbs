@@ -34,6 +34,9 @@
             <span class="gb-icon-eye-slash icon-large {{#unless is_hidden}}hide{{/unless}}"></span>
             <span class="gb-icon-eye icon-large {{#if is_hidden}}hide{{/if}}"></span>
           <a class="table-list-item-action" href="{{baseUrl}}/admin/restaurants/{{id}}/contacts" data-toggle="tooltip" data-title="View Contacts"><span class="gb-icon-user icon-large"></span></a>
+          {{#if is_archived}}
+          <button class="btn btn-default btn-unarchive">unarchive</button>
+          {{/if}}
         </span>
         <div>#{{id}} {{city}}, {{state}}</div>
       </li>
@@ -53,15 +56,15 @@
   require([
     'jquery-loaded'
   , 'app/views/admin/table-list-view'
-  , 'app/views/admin/toggle-hidden-view'
+  , 'app/views/admin/item-manager-view'
   , 'app/models/restaurant'
   ],
-  function($, TableListView, ToggleHiddenView, Restaurant){
+  function($, TableListView, ItemManagerView, Restaurant){
     var tableListView = new TableListView({
       el: '#restaurant-list'
     , model: Restaurant
     , dataAttr: 'restaurant'
-    , itemView: ToggleHiddenView
+    , itemView: ItemManagerView 
     });
   });
 </script>

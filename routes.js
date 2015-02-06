@@ -372,18 +372,6 @@ module.exports.register = function(app) {
     );
 
     /**
-    * Archived restaurant list
-    */
-
-    app.get('/admin/restaurants/archive'
-    , m.viewPlugin('mainNav')
-    , m.db.restaurants.find({ is_archived: true })
-    , m.view('admin/restaurant/archive', {
-        layout: 'admin/layout-page'    
-      })
-    );
-
-    /**
      * Restaurant create
      */
 

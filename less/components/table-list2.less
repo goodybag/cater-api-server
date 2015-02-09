@@ -209,8 +209,9 @@
   position: absolute;
   right: 0;
   font-size: 0;
+  line-height: 0;
 
-  &.top { top: 0; }
+  &.top { top: 0; opacity: 0.7 }
   &.bottom { bottom: 0; }
 
   &.top > :first-child { border-bottom-left-radius: 3px; }
@@ -220,7 +221,7 @@
 .more-actions-and-info .info,
 .more-actions-and-info .action {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 8px 12px;
   border-width: 1px;
   border-style: solid;
   border-right: none;
@@ -229,9 +230,15 @@
 
 .more-actions-and-info.top .info,
 .more-actions-and-info.top .action {
+  border-top: none;
+}
+
+.more-actions-and-info.small .info,
+.more-actions-and-info.small .action {
   font-size: @font-size-small;
   line-height: @line-height-small;
-  border-top: none;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 .more-actions-and-info.bottom .info,

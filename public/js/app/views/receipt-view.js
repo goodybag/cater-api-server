@@ -12,7 +12,7 @@ define(function(require, exports, module) {
   var ItemModal = require('./item-modal');
   var AddTipModal = require('./add-tip-modal');
 
-  return module.exports = OrderView.extend({
+  var ReceiptView = OrderView.extend({
     events: function() {
       return _.extend({}, OrderView.prototype.events.call(this), {
         'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled', true),
@@ -61,6 +61,8 @@ define(function(require, exports, module) {
       });
 
       this.onPriceChange();
+     
+      this.initTxFeePopover( this.model.restaurant.toJSON() );
     },
 
     // set the model and add listeners here
@@ -193,4 +195,8 @@ define(function(require, exports, module) {
       });
     }
   });
+
+  utils.extend( ReceiptView.prototype, require('app/views/mixins/tx-fee-popover')() );
+
+  return module.exports = ReceiptView;
 });

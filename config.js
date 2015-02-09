@@ -27,6 +27,7 @@ config.defaults = {
 , session: require('./configs/session')
 , diets: require('./configs/diets')
 , sortQueryTable: require('./configs/sort-query-table')
+, support: require('./configs/support')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
 
 , deliveryTime: {
@@ -35,11 +36,6 @@ config.defaults = {
       before: [ 0, 1 ]
     , after:  [ 1, 1 ]
     }
-  }
-
-, afterHours: {
-    start:  8   // 8am
-  , end:    18  // 6pm
   }
 
 , disallowOrdersBetween: {

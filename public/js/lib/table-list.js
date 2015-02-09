@@ -40,7 +40,7 @@
   };
 
   TableList.prototype.state = function( state ){
-    // body...
+
   };
 
   TableList.prototype.getNumSelected = function(){

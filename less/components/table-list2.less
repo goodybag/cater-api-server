@@ -159,11 +159,6 @@
   margin-top: 2px;
 }
 
-// Status
-.table-list2 &[data-status] {
-  border-left-width: 4px;
-}
-
 // Components
 .table-list2 .component {
   // Selector
@@ -290,4 +285,19 @@
   text-align: center;
   font-weight: @bold;
   &:before { line-height: 22px; }
+}
+
+// Selected/Not Selected State
+.table-list2 .selected-only {
+  display: none;
+}
+
+.table-list2.some-selected {
+  .selected-only {
+    display: inline-block;
+  }
+
+  .not-selected-only {
+    display: none;
+  }
 }

@@ -25,7 +25,8 @@
   };
 
   TableList.prototype.init = function(){
-    this.$checkboxes = this.$el.find('.list-items [type="checkbox"]');
+    this.$items = this.$el.find('.list-item');
+    this.$checkboxes = this.$items.find('[type="checkbox"]');
     this.initEvents();
     this.numSelected = this.getNumSelected();
   };
@@ -52,9 +53,9 @@
     this.numSelected = this.getNumSelected();
 
     if ( this.numSelected === 0 ){
-      this.$el.removeClass('some-checked');
+      this.$el.removeClass('some-selected');
     } else {
-      this.$el.addClass('some-checked');
+      this.$el.addClass('some-selected');
     }
 
     return this;
@@ -66,6 +67,7 @@
     });
 
     this.checkNumSelected();
+    this.setItemStateSelected( this.$items );
 
     return this;
   };
@@ -76,7 +78,18 @@
     });
 
     this.checkNumSelected();
+    this.setItemStateUnselected( this.$items );
 
+    return this;
+  };
+
+  TableList.prototype.setItemStateSelected = function( $el ){
+    $el.addClass('selected');
+    return this;
+  };
+
+  TableList.prototype.setItemStateUnselected = function( $el ){
+    $el.removeClass('selected');
     return this;
   };
 
@@ -90,7 +103,15 @@
   };
 
   TableList.prototype.onItemSelectorChange = function( e ){
+    var $item = $( e.target ).closest('.list-item');
+
     this.checkNumSelected();
+
+    if ( e.target.checked ){
+      this.setItemStateSelected( $item );
+    } else {
+      this.setItemStateUnselected( $item );
+    }
   };
 
   var Plugin = function( options ){

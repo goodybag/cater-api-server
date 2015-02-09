@@ -1,0 +1,17 @@
+{{#extend "body"}}
+  <h2>Actions</h2>
+  <ul id="actions-list" class="list-group">
+    <li class="list-group-item">
+      <label class="control-label" for="input-hidden">
+        <input type="checkbox" class="form-control" name="is_hidden" id="input-hidden" {{#if restaurant.is_hidden}} checked="checked" {{/if}}>
+        Hidden from listing
+      </label>
+    </li>
+  </ul>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+// TODO: toggle actions
+</script>
+{{/extend}}

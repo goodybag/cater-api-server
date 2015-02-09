@@ -531,6 +531,18 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/admin/restaurants/:restaurant_id/actions'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'actions'
+      , baseUrl:  '/admin/restaurants/:restaurant_id'
+      })
+    , m.restaurant( {param: 'restaurant_id' } )
+    , m.view('admin/restaurant/edit-actions', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      })
+    );
+
     app.get('/admin/restaurants/:rid/menu'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {

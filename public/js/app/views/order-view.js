@@ -45,7 +45,8 @@ define(function(require, exports, module) {
       tip: '.order-tip',
       tip_percent: '.tip-percent',
       quantity: '.order-item-quantity',
-      adjustment: '[name="adjustment_description"]',
+      adjustment_description: '[name="adjustment_description"]',
+      adjustment_amount: '[name="adjustment_amount"]',
       user_adjustment_description: '[name="user_adjustment_description"]',
       user_adjustment_amount: '[name="user_adjustment_amount"]'
     },
@@ -75,20 +76,13 @@ define(function(require, exports, module) {
         return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
       },
 
-      adjustment: function() {
-        var $adj = this.$el.find('.adjustment');
-        if (!$adj.hasClass('editable'))
-          return this.model.get('adjustment');
+      adjustment_amount: function() {
+        return helpers.pennies(
+          this.$el.find(this.fieldMap.adjustment_amount).val()
+        );
+      },
 
-        var desc = $adj.find('[name="adjustment_description"]').val().trim() || null
-        var amount = Math.round($adj.find('[name="adjustment_amount"]').val().trim() * 100)
-        return {
-          description: desc,
-          amount: !utils.isNaN(amount) ? amount : null
-        };
-      }
-
-    , user_adjustment_amount: function(){
+      user_adjustment_amount: function(){
         return helpers.pennies(
           this.$el.find( this.fieldMap.user_adjustment_amount ).val()
         );

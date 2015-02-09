@@ -219,14 +219,6 @@
     text-decoration: none;
   }
 
-    &.active,
-    &:active {
-      border-bottom-width: @btn-border-width-base;
-      height: @btn-base-height - 1;
-      margin-top: 1px;
-      outline-width: 0;
-    }
-
   > [class*="gb-icon-"] {
     vertical-align: middle;
   }
@@ -251,6 +243,10 @@
   color: @color;
   &:hover {
     background-color: lighten( @bg, 2% );
+  }
+
+  &:active {
+    background-color: lighten( @bg, 1% );
   }
 
   border-color: darken( @bg, 12% );
@@ -417,4 +413,12 @@
 
 .va-middle {
   vertical-align: middle;
+}
+
+.font-smoothing {
+  // webkit
+  -webkit-font-smoothing: antialiased;
+
+  // firefox osx
+  -moz-osx-font-smoothing: grayscale;
 }

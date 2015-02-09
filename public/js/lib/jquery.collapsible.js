@@ -19,6 +19,7 @@
     this.$el.on('click', function(e) {
       e.preventDefault();
       this.$target.toggleClass('in');
+      this.$el.toggleClass('expand');
     }.bind(this));
     return this;
   };

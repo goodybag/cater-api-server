@@ -29,10 +29,6 @@
   font-size: @btn-large-font-size;
   padding: @btn-padding-large;
   font-weight: @light;
-  &.active,
-  &:active {
-    height: @btn-large-height - 1;
-  }
 }
 
 .btn-small {
@@ -40,10 +36,6 @@
   font-size: @btn-small-font-size;
   padding: @btn-padding-small;
   font-weight: @bold;
-  &.active,
-  &:active {
-    height: @btn-small-height - 1;
-  }
 }
 
 .btn-block {
@@ -132,6 +124,7 @@
 //////////////
 
 .btn-group {
+  display: inline-block;
   .clearfix;
 }
 
@@ -139,6 +132,20 @@
   display: block;
   color: @color-primary-text;
   border: 1px solid @border-color-primary;
+
+  padding-top: @btn-2b-padding-top-base;
+  padding-bottom: @btn-2b-padding-bottom-base;
+
+  &.btn-small {
+    padding-top: @btn-2b-padding-top-small;
+    padding-bottom: @btn-2b-padding-bottom-small;
+  }
+
+  &.btn-large {
+    padding-top: @btn-2b-padding-top-large;
+    padding-bottom: @btn-2b-padding-bottom-large;
+  }
+
   &:active {
     bottom: 0;
     margin-bottom: 0;
@@ -178,8 +185,16 @@
 }
 
 // selected radio
-.btn-group > input[type="radio"]:checked + .btn {
-  background-color: @palette-gray-light;
+.btn-group > input[type="radio"]:checked + .btn,
+.btn-group > .active.btn {
+  background-color: @palette-gray-lighter;
+}
+
+.btn-borderless {
+  background: none;
+  border: none;
+  outline: none;
+  color: @palette-gray;
 }
 
 

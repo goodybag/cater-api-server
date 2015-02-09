@@ -1,0 +1,8 @@
+<div id="results-pagination" class="paginator">
+  {{~#each pages~}}
+    <a
+      href="{{this.url}}"
+      class="btn btn-small{{#if this.active}} active{{/if}}"
+    >{{this.index}}</a>
+  {{~/each~}}
+</div>

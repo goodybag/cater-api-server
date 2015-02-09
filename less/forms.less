@@ -94,6 +94,14 @@ input[disabled] {
   }
 }
 
+@media (max-width: @breakpoint-tablet) {
+  .form-group {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+  }
+}
+
 .form-small {
   .typography('small');
 
@@ -139,6 +147,15 @@ input[disabled] {
   @media screen and ( max-width: @breakpoint-tablet ){
     position: static;
   }
+}
+
+input.input-borderless {
+  display: inline-block;
+  width: auto;
+  border: none;
+  background: none;
+  box-shadow: none;
+  outline: none;
 }
 
 .has-error .control-label,
@@ -187,5 +204,25 @@ fieldset {
   .fieldset-title {
     padding-bottom: 8px;
     border-bottom: solid 1px @off-gray;
+  }
+}
+
+
+.form-control-combo {
+  display: table;
+  .panel;
+  .panel-no-padding;
+
+  .form-control-combo-full {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+    & input { width: 100%; }
+  }
+
+  .form-control-combo-action {
+    display: table-cell;
+    vertical-align: middle;
+    width: 30px;
   }
 }

@@ -83,7 +83,7 @@ define(function(require, exports, module) {
     },
 
     fieldMap: _.extend({
-      reason_denied: '.reason-denied'
+
     }, OrderView.prototype.fieldMap),
 
     fieldGetters: _.extend({

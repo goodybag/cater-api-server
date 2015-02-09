@@ -1,12 +1,38 @@
 @tile-border-radius: 5px;
 @tile-padding: 10px;
-@tile-cols: 3;
+@tile-cols-tablet: 2;
+@tile-cols-desktop-sm: 3;
 @tile-gutter: 2.0%;
-@tile-width: (100% - (@tile-cols - 1) * @tile-gutter) / @tile-cols;
+@tile-link-color: @palette-gray-dark;
+@tile-border-color: @palette-gray;
+@tile-caption-color: @palette-white;
+@tile-header-color: @palette-gray-dark;
+@tile-height: 245px;
+@tile-title-weight: @bold;
+@tile-title-font-size: 24px;
+@tile-title-line-height: 26px;
+@tile-corner-background-color: rgba(255,255,255,0.7);
+@tile-rating-width: 110px;
+
+.tile-width(@cols) {
+  width: (100% - (@cols * @tile-gutter)) / @cols;
+}
+
+.tiles {
+  display: table;
+
+  @media ( min-width: @breakpoint-tablet ){
+    width: 100% + @tile-gutter;
+    margin-left: -@tile-gutter;
+  }
+}
 
 .tile {
+  display: block;
+  width: 100%;
+  float: left;
   margin-bottom: @tile-gutter;
-  border: 1px solid @palette-gray;
+  border: 1px solid @tile-border-color;
   border-radius: @tile-border-radius;
 }
 
@@ -35,19 +61,20 @@
 }
 
 .tile-cover:not(:last-child) {
-  border-bottom: 1px solid @palette-gray-dark;
+  border-bottom: 1px solid @tile-border-color;
 }
 
 @media (min-width: @breakpoint-tablet) {
   .tile {
-    float: left;
-    width: @tile-width;
-    margin-right: @tile-gutter;
+    .tile-width(@tile-cols-tablet);
+    margin-left: @tile-gutter;
+    max-height: @tile-height;
   }
+}
 
-  .tile:nth-of-type(3n+3) {
-    margin-right: 0;
-    clear: right;
+@media (min-width: @breakpoint-desktop-sm) {
+  .tile {
+    .tile-width(@tile-cols-desktop-sm);
   }
 }
 
@@ -62,21 +89,80 @@
   position: absolute;
   bottom: 0px;
   width: 100%;
-  color: @palette-white;
-  padding: @tile-padding;
+  color: @tile-caption-color;
+  padding: @tile-padding @tile-padding 5px @tile-padding;
   font-size: 18px;
-  text-shadow: 0 1px 0 black;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
 
 .tile-rating {
-  float: right;
+  position: absolute;
+  right: @tile-padding;
+  bottom: @tile-padding;
+  letter-spacing: -2px;
+}
+
+@tile-corner-size: 70px;
+
+.tile-corner {
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 @tile-corner-size @tile-corner-size 0;
+  border-color: transparent @tile-corner-background-color transparent transparent;
+  color: @tile-header-color;
+  text-align: center;
+}
+
+.tile-fee {
+  position: relative;
+  right: -35px;
+  top: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .tile-title {
-  float: left;
-  font-size: 20px;
+  margin: 0;
+  width: 100%;
+  font-size: @tile-title-font-size;
+  line-height: @tile-title-line-height;
+  font-weight: @tile-title-weight;
+}
+
+.tile-rating + .tile-title {
+  padding-right: @tile-rating-width + @tile-padding;
 }
 
 .tile-info {
   padding: @tile-padding;
+}
+
+.tile-link {
+  text-decoration: none;
+  color: @tile-link-color;
+}
+
+.tile-link:hover {
+  text-decoration: none;
+}
+
+.tile-link:hover .tile-cover:before {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.2)
+    );
+}
+
+.tile-tags {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding-left: 20px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%,#FFF 20px,#FFF 100%);
 }

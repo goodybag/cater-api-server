@@ -241,6 +241,10 @@
       </dd>
       <dt>Phone:</dt>
       <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}}</dd>
+      {{#if order.secondary_contact_phone }}
+      <dt>Secondary Phone:</dt>
+      <dd>{{phoneNumber order.secondary_contact_phone "xxx.xxx.xxxx"}}</dd>
+      {{/if}}
       <dt>Delivery Date:</dt>
       <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
       <dt>Delivery Time:</dt>
@@ -255,6 +259,10 @@
       <dd>
         {{order.user.name}} - {{phoneNumber order.phone "xxx.xxx.xxxx"}}
       </dd>
+      {{#if order.secondary_contact_phone }}
+      <dt>Secondary Phone:</dt>
+      <dd>{{phoneNumber order.secondary_contact_phone "xxx.xxx.xxxx"}}</dd>
+      {{/if}}
       {{#if order.user.organization}}
       <dt>Company:</dt>
       <dd>{{order.user.organization}}</dd>

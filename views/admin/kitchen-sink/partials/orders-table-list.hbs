@@ -292,3 +292,13 @@
     </div>
   </div>
 </section>
+
+{{#extend "scripts"}}
+<script>
+  require(['jquery', 'table-list'], function( $ ){
+    $(function(){
+      $('#section-orders-table-list .table-list2').gb_tablelist();
+    });
+  });
+</script>
+{{/extend}}

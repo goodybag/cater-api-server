@@ -90,6 +90,18 @@
   }
 }
 
+.table-list-item-type-icon( @type ) when (@type = 'delivery'){
+  & [data-type="@{type}"] .type-icon:before {
+    margin-left: 1px;
+  }
+}
+
+.table-list-item-type-icon( @type ) when (@type = 'pickup'){
+  & [data-type="@{type}"] .type-icon:before {
+    margin-left: 1px;
+  }
+}
+
 .table-list-theme( @name, @header-bg, @header-color, @border-color, @text-color ) when (@name) {
   &.@{name} {
     .table-list-theme( @header-bg, @header-color, @border-color, @text-color );
@@ -174,6 +186,7 @@
   // Type icon
   &.order-type {
     width: 35px;
+    padding-right: 3px;
   }
 
   // Main
@@ -272,7 +285,7 @@
   width: 20px;
   height: 20px;
   border-radius: 20px;
-  opacity: 0.7;
+  opacity: 0.3;
   color: #fff;
   text-align: center;
   font-weight: @bold;

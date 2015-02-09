@@ -44,9 +44,8 @@ module.exports.list = function(req, res) {
         includes: [
           { type: 'filter_restaurant_events' }
         ]
-      , where: { is_archived: false }
       , limit: 'all'
-      , where: {}
+      , where: { is_archived: false }
       , limit: shouldPaginate ? paginationLimit : 'all'
       , offset: shouldPaginate ? (page - 1) * paginationLimit : 0
       };

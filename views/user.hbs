@@ -105,6 +105,11 @@
           return alert('passwords must match');
         if (!data.password) delete data.password;
 
+        if ($("[name='organization_type']:checked").val() === "business" 
+          && $(".organization").val() === "") {
+          return alert('please enter an organization name');
+        }
+
         this.submit();
       });
     }

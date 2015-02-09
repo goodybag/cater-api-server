@@ -118,7 +118,7 @@
             </div>
           </div>
 
-          {{#unless (and (dneq order.user.organization_type 'individual') order.user.name) }}
+          {{#unless (and (eq order.user.organization_type 'business') order.user.organization)}}
           <div id="user-info" class="list-group-item clearfix">
             <div class="col-md-12">
               <legend>User Information</legend>

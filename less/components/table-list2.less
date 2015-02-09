@@ -52,6 +52,11 @@
   & .list-item {
     border-top-color: fade( @border-color, 50% );
   }
+
+  & .more-actions-and-info .info,
+  & .more-actions-and-info .action {
+    border-color: fade( @border-color, 50% );
+  }
 }
 
 .table-list-item-status( @status ){
@@ -59,6 +64,13 @@
 
   & [data-status="@{status}"].list-item {
     border-left-color: @color;
+  }
+
+  & [data-status="@{status}"] .order-status {
+    background: @color;
+    color: @palette-white;
+    border-left-color: rgba( 0, 0, 0, 0.25 );
+    text-shadow: 0 -1px 0 rgba( 0, 0, 0, 0.25 );
   }
 }
 
@@ -191,4 +203,38 @@
 // List Item specific components
 .table-list2 .list-item .component {
 
+}
+
+.more-actions-and-info {
+  position: absolute;
+  right: 0;
+  font-size: 0;
+
+  &.top { top: 0; }
+  &.bottom { bottom: 0; }
+
+  &.top > :first-child { border-bottom-left-radius: 3px; }
+  &.bottom > :first-child { border-top-left-radius: 3px; }
+}
+
+.more-actions-and-info .info,
+.more-actions-and-info .action {
+  display: inline-block;
+  padding: 4px 12px;
+  border-width: 1px;
+  border-style: solid;
+  border-right: none;
+  font-size: @font-size-base;
+}
+
+.more-actions-and-info.top .info,
+.more-actions-and-info.top .action {
+  font-size: @font-size-small;
+  line-height: @line-height-small;
+  border-top: none;
+}
+
+.more-actions-and-info.bottom .info,
+.more-actions-and-info.bottom .action {
+  border-bottom: none;
 }

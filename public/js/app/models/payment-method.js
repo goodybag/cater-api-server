@@ -99,13 +99,21 @@ define(function(require, exports, module) {
 
       balanced.card.create( _.omit(data, 'card_name'), function(res) {
         if (res.status !== 201){
+          var errors;
 
-          var errors = Object.keys(res.error).map(function(key) {
-            return {
-              property: key
-            , message: res.error[key]
-            };
-          });
+          if (res.error.category_code === 'card-declined') {
+            errors = [{
+              property: 'card_number'
+            , message: 'Card Declined. Please check all card details and try again.'
+            }];
+          } else {
+            errors = Object.keys(res.error).map(function(key) {
+              return {
+                property: key
+              , message: res.error[key]
+              };
+            });
+          }
 
           return callback ? callback( errors ) : notify.error( errors );
         }

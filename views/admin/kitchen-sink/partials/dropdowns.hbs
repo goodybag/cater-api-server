@@ -1,0 +1,67 @@
+<section class="page-section" id="section-dropdowns">
+  <div class="container">
+    <h2 class="component-title">Dropdowns</h2>
+    <div class="dropdowns-list">
+      <div class="doc-dropdown-item">
+        <h5 class="item-title">Plain</h5>
+        <span class="popover-wrapper gb-dropdown">
+          <button
+            class="btn btn-default btn-dropdown"
+            data-role="popover"
+            data-target="dropdown-popover">
+            My Orders
+            <i class="gb-icon-caret-down"></i>
+          </button>
+
+          <div class="popover-modal dropdown-popover">
+            <ul class="gb-dropdown-items">
+              <li>Austin, TX</li>
+              <li>Houston, TX</li>
+              <li>Dallas, TX</li>
+              <li>San Antonio, TX</li>
+            </ul>
+          </div>
+        </span>
+      </div>
+      <div class="doc-dropdown-item">
+        <h5 class="item-title">Drops down to the right</h5>
+        <span class="popover-wrapper gb-dropdown right">
+          <button
+            class="btn btn-default btn-dropdown"
+            data-role="popover"
+            data-target="dropdown-popover">
+            My Orders
+            <i class="gb-icon-caret-down"></i>
+          </button>
+
+          <div class="popover-modal dropdown-popover">
+            <ul class="gb-dropdown-items">
+              <li>Austin, TX</li>
+              <li>Houston, TX</li>
+              <li>Dallas, TX</li>
+              <li>San Antonio, TX</li>
+            </ul>
+          </div>
+        </span>
+      </div>
+    </div>
+    <code class="language-markup">
+    {{~#raw~}}
+<!-- Wrap in a popover thingy -->
+<span class="popover-wrapper gb-dropdown">
+  <button
+    class="btn btn-default btn-dropdown"
+    data-role="popover"
+    data-target="dropdown-popover">
+    My Orders
+    <i class="gb-icon-caret-down"></i>
+  </button>
+
+  <div class="popover-modal dropdown-popover">
+    <!-- Dropdown content -->
+  </div>
+</span>
+    {{~/raw~}}
+    </code>
+  </div>
+</section>

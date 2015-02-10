@@ -449,10 +449,6 @@ utils.parseBool = function(value){
   return true;
 };
 
-utils.deepClone = function (obj) {
-  return JSON.parse(JSON.stringify(obj)); // :TODO: non-hack deepclone
-};
-
 /**
  * Encrypts consumer passwords
  * @param  {String}   password  The password to encrypt
@@ -531,14 +527,14 @@ utils.error = function(message, type){
   };
 };
 
-utils.queryParams = function(data){
+utils.queryParams = function(data, urlEncode){
   if (typeof data !== "object") return "";
   var params = "?";
   for (var key in data){
     if ([null, undefined, ""].indexOf(data[key]) > -1) continue;
     if (utils.isArray(data[key])){
       for (var i = 0, l = data[key].length; i < l; ++i){
-        params += key + "[]=" + data[key][i] + "&";
+        params += key + (urlEncode ? "%5B%5D=" : "[]=" ) + data[key][i] + "&";
       }
     } else {
       params += key + "=" + data[key] + "&";

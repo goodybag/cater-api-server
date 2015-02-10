@@ -26,7 +26,7 @@ dirac.db.setMosql( mosql );
 //         'find', 'findOne', 'remove', 'insert', 'update'
 //       ].forEach( function( op ){
 //         dirac.dals[ table ].before( op, function( $query, schema, next ){
-//           var _query = utils.deepClone( $query );
+//           var _query = utils.cloneDeep( $query );
 
 //           // use a different character for query helpers
 //           // because mongo does not like `$`

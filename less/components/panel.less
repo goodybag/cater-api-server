@@ -3,11 +3,15 @@
 ///////////
 
 .panel {
+  display: inline-block;
   border-radius: @border-radius-base;
   border: solid 1px @gray;
+  background: @white;
   .standard-padding();
   padding-bottom: 20px;
-  background: @white;
+  &.panel-no-padding {
+    padding: 0;
+  }
 }
 
 .panel .panel-header {

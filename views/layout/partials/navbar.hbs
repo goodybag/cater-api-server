@@ -1,0 +1,13 @@
+{{#if user.id}}
+  {{> layout_navbar_user }}
+{{else}}
+  {{> layout_navbar_guest }}
+{{/if}}
+
+{{#extend "scripts"}}
+<script>
+require(['jquery-loaded'], function($){
+  $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+});
+</script>
+{{/extend}}

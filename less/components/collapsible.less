@@ -2,18 +2,17 @@
 // Collapsible sections
 ///////////////////////
 
-.collapsible-content {
+.collapsible-content(@speed: 0.15s) {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.15s ease-out;
+  transition: max-height @speed ease-out;
   box-sizing: border-box;
+  &.in {
+    max-height: 2000px; // make arbitrarily high, it will fill height
+    transition: max-height @speed ease-in;
+  }
 }
 
 .collapsible-wrapper {
   padding: 10px;
-}
-
-.collapsible-content.in {
-  max-height: 1000px; // arbitrary
-  transition: max-height 0.25s ease-in;
 }

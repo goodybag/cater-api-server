@@ -1,0 +1,51 @@
+<div class="tiles">
+  {{#each restaurants }}
+  <div class="tile">
+    <a class="tile-link" title="{{name}}" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
+      <div class="tile-cover" style="background-image: url('{{filepicker list_photo_url}}');">
+        {{#unless has_contract}}
+        <div class="tile-corner">
+          <div
+            class="tile-fee"
+            data-toggle="tooltip"
+            data-placement="auto"
+            data-container="body"
+            data-title="An order from this restaurant includes a {{factorToPercent no_contract_fee}}% transaction fee at checkout.">
+            Fee
+          </div>
+        </div>
+        {{/unless}}
+        <div class="tile-caption">
+          <div class="tile-rating">{{{ratingStars yelp_data.rating}}}</div>
+          <h1 class="tile-title">{{name}}</h1>
+        </div>
+      </div>
+      <div class="tile-info">
+        <div>
+          <ul class="inline-list inline-list-bulleted">
+            <li>{{truncate (join cuisine ", ") 35}}</li>
+            <li><span class="dollar-meter">{{{dollarMeter this.price}}}</span></li>
+          </ul>
+        </div>
+        <div>
+          <ul class="inline-list inline-list-bulleted">
+            <li>Delivery:
+              {{#eq delivery_fee_from delivery_fee_to}}
+              {{#if delivery_fee_from}}
+              ${{dollarsOmit00 ../delivery_fee_from}}
+              {{else}}
+              Free
+              {{/if}}
+              {{else}}
+              ${{dollarsOmit00 delivery_fee_from}} - ${{dollarsOmit00 delivery_fee_to}}
+              {{/eq}}
+            </li>
+            <li>Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</li>
+          </ul>
+          <span class="tile-tags">{{> tags tags }}</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  {{/each}}
+</div>

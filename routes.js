@@ -72,6 +72,13 @@ module.exports.register = function(app) {
    */
 
   app.get('/restaurants'
+  , m.searchTags()
+  , m.userViewedEvent({
+      name:         'promptSurvey'
+    , mode:         'once'
+    , threshold:    3
+    , mustBeAuthed: true
+    })
   , controllers.restaurants.list
   );
 
@@ -159,7 +166,7 @@ module.exports.register = function(app) {
           next();
         });
       }
-    , m.view( 'admin/kitchen-sink', {
+    , m.view( 'admin/kitchen-sink/index', {
         layout: 'admin/layout2'
       })
     );

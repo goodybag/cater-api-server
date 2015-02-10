@@ -25,6 +25,8 @@ config.defaults = {
 , reminders: require('./configs/reminders')
 , redis: require('./configs/redis')
 , session: require('./configs/session')
+, diets: require('./configs/diets')
+, sortQueryTable: require('./configs/sort-query-table')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
 
 , deliveryTime: {
@@ -623,6 +625,8 @@ config.india = {
 ].forEach( function( key ){
   config.india[ key ] = config.staging[ key ];
 });
+
+config.india.logging.mongoConnStr = false;
 
 config.test = _.extend( _.clone( config.dev ), {
   env: 'test'

@@ -13,7 +13,7 @@ module.exports = function( options ){
 
   return function( req, res, next ){
 
-    var clone = utils.deepClone( options );
+    var clone = utils.cloneDeep( options );
 
     for ( var key in options ){
       req.queryOptions[ key ] = clone[ key ];

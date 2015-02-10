@@ -1,99 +1,64 @@
 define( function( require ){
-  var $               = require('jquery');
+  var $               = require('jquery-loaded');
   var utils           = require('utils');
-
-  require('bootstrap');
-
-  var Models = {
-    OrderParams:              require('app/models/order-params')
-  };
-
-  var Views = {
-    OrderParamsView:          require('app/views/order-params-view')
-  , RestaurantFiltersView:    require('app/views/restaurant-filters-view')
-  , RestaurantSortView:       require('app/views/restaurant-sort-view')
-  , RestaurantSearchView:     require('app/views/restaurant/search-view')
-  , RestaurantsListView:      require('app/views/restaurants-list-view')
-  };
 
   var page = {
     init: function(options) {
-      var restaurants = options.restaurants;
-      var allRestaurants  = options.allRestaurants;
+      var ListView = require('app/views/restaurants-list-view');
+      var SortView = require('app/views/restaurant-sort-view');
+      var OrderParamsView = require('app/views/order-params-view')
+      var OrderParams = require('app/models/order-params');
+      var FiltersView = require('app/views/restaurant-filters-view');
+      var SearchView = require('app/views/restaurant/search-view');
+      var PagerView = require('app/views/restaurant/pager-view');
 
-      $(".tag-tooltip").tooltip();
-      $('.tx-fee').each( function(){
-        var $this = $(this);
-        $this.popover({
-          trigger:    'hover'
-        , content:    Handlebars.partials.restaurant_list_tx_fee_popover(
-                        utils.find( restaurants, { id: +$this.data('rid') })
-                      )
-        , placement:  'top'
-        , html:       true
-        });
+      var sortView = new SortView({
+        el: '#sort'
+      , inputSelector: '[name="list-sort"]:checked'
       });
 
-      // Prepare listing to be usable by the facet serach
-      utils.each( restaurants, function( r ){
-        // Facet values need to be arrays
-        r.prices = [r.price];
+      var orderParamsView = new OrderParamsView({
+        model: new OrderParams()
+      , el: '.restaurant-params'
       });
 
-      utils.each( allRestaurants, function( r ){
-        // Facet values need to be arrays
-        r.prices = [r.price];
-      });
-
-      // Get existing filter criteria from the URL Parameters
-      var existingCriteria = utils.parseQueryParams();
-
-      // The URL parameters don't match up with the actual restaurant fields
-      utils.each({
-        mealTypes:  'meal_types'
-      , diets:      'tags'
-      , cuisines:   'cuisine'
-      }, function( newName, oldName ){
-        if ( existingCriteria[ oldName ] ){
-          existingCriteria[ newName ] = existingCriteria[ oldName ];
-          delete existingCriteria[ oldName ];
+      var filtersView = new FiltersView({
+        el: '#filters'
+      , facets: {
+          cuisines:   '.filter-cuisines input[type="checkbox"]:checked'
+        , diets:      '.filter-diets input[type="checkbox"]:checked'
+        , mealTypes:  '.filter-meal-types input[type="checkbox"]:checked'
         }
       });
 
-      if ( existingCriteria.prices ){
-        utils.each( existingCriteria.prices, function( p, i, pp ){ pp[ i ] = +p; } );
-      }
-
-      var orderParams = new Models.OrderParams();
-
-      var orderParamsView = new Views.OrderParamsView({
-        model: orderParams
-      , el: '.order-params-bar'
-      });
-
-      var restaurantFiltersView = new Views.RestaurantFiltersView({
-        el: '#filters'
-      , existingCriteria: existingCriteria
-      , restaurants: allRestaurants
-      });
-
-      var restaurantSortView = new Views.RestaurantSortView({
-        el: '#sort'
-      });
-
-      var restaurantSearchView = new Views.RestaurantSearchView({
+      var searchView = new SearchView({
         el: '#search'
+      , inputSelector: '.search-input'
       });
 
-      var restaurantsListView = new Views.RestaurantsListView({
+      var pagerView = new PagerView({
+        el: '.list-paginator'
+      , inputSelector: '[name="list-pager"]:checked'
+      });
+
+      var listView = new ListView({
         el: '#main'
-      , filtersView: restaurantFiltersView
-      , sortView: restaurantSortView
-      , searchView: restaurantSearchView
-      , paramsView: orderParamsView
-      , searchUrl: '/restaurants'
+        , searchUrl: '/restaurants'
+        , filters: [
+            sortView
+          , orderParamsView
+          , filtersView
+          , searchView
+          , pagerView
+          ]
       });
 
+      $('.search-advanced .btn-search').click(listView.search.bind(listView));
+
+      $('[data-role="collapsible"]').gb_collapsible();
+
+      // reuse bootstrap tooltip for now
+      $('[data-toggle="tooltip"]').tooltip();
     }
   };
 

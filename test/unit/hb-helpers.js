@@ -29,4 +29,14 @@ describe ('Handlebars Helpers', function(){
     assert( result.indexOf('c=7') > -1 );
     assert( result.indexOf('d=poop') > -1 );
   });
+
+  it('formatDietTag - should map diet tags to display text', function() {
+    var results = ['glutenFree', 'vegan', 'dairyFree'].map(helpers.formatDietTag);
+    assert.deepEqual( results, ['Gluten-Free', 'Vegan', 'Dairy-Free']);
+  });
+
+  it('formatDietTag - should just return non diet tags', function() {
+    var results = ['glutenFree', 'vegan', 'dairyFree', 'THIS SHOULD BE THE SAME'].map(helpers.formatDietTag);
+    assert.deepEqual( results, ['Gluten-Free', 'Vegan', 'Dairy-Free', 'THIS SHOULD BE THE SAME']);
+  })
 });

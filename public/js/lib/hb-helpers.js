@@ -373,6 +373,11 @@ define(function(require, exports, module) {
       return n.length >= width ? n : new Array( width - n.length + 1 ).join(z) + n;
     },
 
+    join: function(list, delimiter) {
+      if ( !Array.isArray(list) ) return list;
+      return list.join(delimiter || ',');
+    },
+
     queryParams: function( obj ){
       var params = obj || {};
       var rest = Array.prototype.slice.call( arguments, 1 );
@@ -518,6 +523,10 @@ define(function(require, exports, module) {
       var parts = x.toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
+    },
+
+    formatDietTag: function(tag) {
+      return config.diets[tag] || tag;
     },
 
     giftcardClasses: function( card, user ){

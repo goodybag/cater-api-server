@@ -104,12 +104,13 @@ module.exports = function(grunt) {
         files: {
           "public/dist/<%= pkg.version %>/landing.css":            "less/core-landing.less"
         , "public/dist/<%= pkg.version %>/landing-ielt9.css":      "less/ielt9-landing.less"
+        , "public/dist/<%= pkg.version %>/ie-lte9.css":            "less/overrides/ie-lte9.less"
         , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less"
         , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
         , "public/dist/<%= pkg.version %>/css/admin.css":          "less/core-admin.less"
         , "public/dist/<%= pkg.version %>/ol-greg.css":            "less/core-ol-greg.less"
         , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
-        , "public/dist/<%= pkg.version %>/goodybag.css":           "less/core-goodybag.less"
+        , "public/dist/<%= pkg.version %>/css/goodybag.css":       "less/core-goodybag.less"
         }
       }
     }
@@ -137,6 +138,7 @@ module.exports = function(grunt) {
         , { expand: true, flatten: true, src: 'public/img/*.svg', dest: 'public/dist/<%= pkg.version %>/img/' }
         , { expand: true, flatten: true, src: 'public/font/gb/*', dest: 'public/dist/<%= pkg.version %>/font/gb/' }
         , { expand: true, flatten: true, src: 'public/font/aleo/*', dest: 'public/dist/<%= pkg.version %>/font/aleo/' }
+        , { expand: true, flatten: true, src: 'public/font/avenir/*', dest: 'public/dist/<%= pkg.version %>/font/avenir/' }
         ]
       }
     }
@@ -210,6 +212,7 @@ module.exports = function(grunt) {
       }
     , landing: {}
     , admin: {}
+    , goodybag: {}
     }
 
   , s3: {
@@ -249,6 +252,10 @@ module.exports = function(grunt) {
   var admin   = gruntConfig.requirejs.admin.options = utils.clone( gruntConfig.requirejs.app.options );
   admin.name  = 'app/pages/admin/builder';
   admin.out   = 'public/dist/<%= pkg.version %>/admin.js';
+
+  var goodybag   = gruntConfig.requirejs.goodybag.options = utils.clone( gruntConfig.requirejs.app.options );
+  goodybag.name  = 'app/pages/main';
+  goodybag.out   = 'public/dist/<%= pkg.version %>/goodybag.js';
 
   grunt.initConfig( gruntConfig );
 

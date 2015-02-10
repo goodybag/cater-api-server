@@ -199,7 +199,10 @@ module.exports.createSessionAs = function(req, res) {
     // req.session = utils.extend({oldUser: req.session.user}, req.session, {user: utils.pick(user, ['id', 'groups', 'email', 'created_at'])});
     req.session.oldUser = utils.pick(req.user.attributes, 'id', 'name');
     req.session.user = { id: user.id };
-    res.redirect(req.query.next || '/restaurants');
+    req.session.save(function(err) {
+      if ( err ) req.logger.error('Unable to save session', err);
+      return res.redirect(req.query.next || '/restaurants');
+    });
   });
 };
 
@@ -210,7 +213,10 @@ module.exports.returnSession = function(req, res) {
     req.session.user = req.session.oldUser;
     delete req.session.oldUser;
   }
-  res.redirect(req.query.next || '/admin/users');
+  req.session.save(function(err) {
+    if ( err ) req.logger.error('Unable to save session', err);
+    return res.redirect(req.query.next || '/admin/users');
+  });
 };
 
 module.exports.passwordResets = require('./password-resets');

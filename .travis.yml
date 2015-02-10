@@ -6,6 +6,6 @@ before_script:
   - ./bin/prod-to-local
   - node server.js
 env:
-  - GB_ENV=travis"
+  - GB_ENV=travis
 node_js:
   - "0.10"

@@ -1,0 +1,65 @@
+///////////////
+// Label Tag //
+///////////////
+
+@label-tag-height-small:    20px;
+@label-tag-height-base:     30px;
+@label-tag-height-large:    40px;
+@label-tag-height-xlarge:   50px;
+
+.label-tag {
+  display: inline-block;
+  font-size: @font-size-small;
+  font-weight: @bold;
+  border-radius: 100%;
+  line-height: 0;
+  padding: 0 12px;
+  color: rgba( 255, 255, 255, 0.9 );
+  text-shadow: 0 -1px 0 rgba( 0, 0, 0, 0.3 );
+
+  .label-tag-theme('black');
+  .label-tag-theme('gray-darker');
+  .label-tag-theme('gray-dark');
+  .label-tag-theme('gray');
+  .label-tag-theme('gray-light');
+  .label-tag-theme('brown');
+  .label-tag-theme('orange');
+  .label-tag-theme('red');
+  .label-tag-theme('tomato');
+  .label-tag-theme('pink');
+  .label-tag-theme('blue-dark');
+  .label-tag-theme('blue');
+  .label-tag-theme('green');
+  .label-tag-theme('green-2');
+  .label-tag-theme('green-3');
+
+  .label-tag-size( @label-tag-height-base, @font-size-base );
+
+  &.small {
+    .label-tag-size( @label-tag-height-small, @font-size-small );
+  }
+
+  &.large {
+    .label-tag-size( @label-tag-height-large, @font-size-large );
+  }
+
+  &.xlarge {
+    .label-tag-size( @label-tag-height-xlarge, @font-size-large );
+  }
+}
+
+.label-tag-theme( @color ){
+  @palette-color: ~"@{palette-@{color}}";
+
+  &[class*="@{color}"] {
+    background-color: @palette-color;
+    border: solid;
+  }
+}
+
+.label-tag-size( @label-height, @label-font-size ){
+  padding-top: (@label-height / 2) + 1;
+  padding-bottom: (@label-height / 2) - 1;
+  border-radius: (@label-height / 2) - 5;
+  font-size: @label-font-size;
+}

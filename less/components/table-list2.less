@@ -10,21 +10,11 @@
   , @color-primary-text
   , @palette-gray
   , @color-primary-text
+  , @palette-white
   );
-
-  .table-list-item-status('pending');
-  .table-list-item-status('submitted');
-  .table-list-item-status('accepted');
-  .table-list-item-status('denied');
-  .table-list-item-status('canceled');
-  .table-list-item-status('delivered');
-
-  .table-list-item-type-icon('courier');
-  .table-list-item-type-icon('delivery');
-  .table-list-item-type-icon('pickup');
 }
 
-.table-list-theme( @header-bg, @header-color, @border-color, @text-color ){
+.table-list-theme( @header-bg, @header-color, @border-color, @text-color, @items-bg ){
   & {
     color: @text-color;
   }
@@ -46,6 +36,11 @@
 
   & .list-items {
     border-color: @border-color;
+    background-color: @items-bg;
+  }
+
+  &.striped .list-items > :nth-child(2n+1){
+    background-color: fade( @border-color, 8% );
   }
 
   & .list-item {
@@ -63,48 +58,9 @@
   }
 }
 
-.table-list-item-status( @status ){
-  @color: ~"@{status-@{status}}";
-
-  & [data-status="@{status}"].list-item {
-    border-left-color: @color;
-  }
-
-  & [data-status="@{status}"] .order-status {
-    background: @color;
-    color: @palette-white;
-    border-left-color: rgba( 0, 0, 0, 0.25 );
-    text-shadow: 0 -1px 0 rgba( 0, 0, 0, 0.25 );
-  }
-}
-
-.table-list-item-type-icon( @type ){
-  @type-courier: "C";
-  @type-delivery: "D";
-  @type-pickup: "P";
-
-  @content: ~"@{type-@{type}}";
-
-  & [data-type="@{type}"] .type-icon:before {
-    content: "@{content}";
-  }
-}
-
-.table-list-item-type-icon( @type ) when (@type = 'delivery'){
-  & [data-type="@{type}"] .type-icon:before {
-    margin-left: 1px;
-  }
-}
-
-.table-list-item-type-icon( @type ) when (@type = 'pickup'){
-  & [data-type="@{type}"] .type-icon:before {
-    margin-left: 1px;
-  }
-}
-
-.table-list-theme( @name, @header-bg, @header-color, @border-color, @text-color ) when (@name) {
+.table-list-theme( @name, @header-bg, @header-color, @border-color, @text-color, @items-bg ) when (@name) {
   &.@{name} {
-    .table-list-theme( @header-bg, @header-color, @border-color, @text-color );
+    .table-list-theme( @header-bg, @header-color, @border-color, @text-color, @items-bg );
   }
 }
 

@@ -166,6 +166,17 @@ module.exports.register = function(app) {
           next();
         });
       }
+
+    , function( req, res, next ){
+        var not = [ 'white', 'gray-lighter', 'tan' ];
+
+        res.locals.labelTags = res.local.palette.filter( function( palette ){
+          return not.indexOf( palette.name ) === -1;
+        }).map( function( palette ){
+          return name: palette.name;
+        });
+      }
+
     , m.view( 'admin/kitchen-sink/index', {
         layout: 'admin/layout2'
       })

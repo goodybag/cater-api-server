@@ -1,0 +1,10 @@
+<section class="page-section" id="section-label-tags">
+  <div class="container">
+    <h2 class="component-title">Label Tags</h2>
+    <ul class="label-tags-list inline-list">
+      {{#each palette}}
+        <li><div class="label-tag {{this.name}}">{{capitalize this.name}}</div></li>
+      {{/each}}
+    </ul>
+  </div>
+</section>

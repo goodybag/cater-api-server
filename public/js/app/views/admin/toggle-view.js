@@ -17,7 +17,7 @@ define(function (require, exports, module) {
       this.options.model.save(options, {
         success: function (model, response, options) {
           if (this_.options.success && typeof this_.options.success === "function") {
-            return this_.options.success.call(model, response, options);
+            return this_.options.success.call(this, model, response, options);
           } else {
             return window.location.reload();
           }
@@ -25,7 +25,7 @@ define(function (require, exports, module) {
 
         error: function (model, response, options) {
           if (this_.options.error && typeof this_.options.error === "function") {
-            return this_.options.error.call(model, response, options);
+            return this_.options.error.call(this, model, response, options);
           } else {
             return alert('Could not toggle model!');
           }

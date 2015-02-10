@@ -15,7 +15,7 @@ define(function(require, exports, module) {
         var json = $el.data(this_.options.dataAttr);
         var model = new this_.options.model(json);
 
-        this_.initToggleViews(model, "[data-id='"+$el.data('id')+"']", this);
+        this_.initToggleViews.call(this, model, "[data-id='"+$el.data('id')+"']");
       });
     },
 
@@ -23,25 +23,26 @@ define(function(require, exports, module) {
     * Init Toggle Views
     * @param {object} - should be an instance of a model
     * @param {string} - view element
-    * @param {object} - scope
     */
-    initToggleViews: function (model, el, self) {
-        var HiddenView = new ToggleView({
-          el: el
-        , field: 'is_hidden'
-        , model: model
-        , toggleSelector: '.is-hidden-toggle'
-        , success: function(model, response, options) {
-            $(self).find('.is-hidden-toggle > span').toggleClass('hide');
-        }
-        });
+    initToggleViews: function (model, el) {
+      var this_ = this;
+       
+      var HiddenView = new ToggleView({
+        el: el
+      , field: 'is_hidden'
+      , model: model
+      , toggleSelector: '.is-hidden-toggle'
+      , success: function(model, response, options) {
+          $(this_).find('.is-hidden-toggle > span').toggleClass('hide');
+      }
+      });
 
-        var ArchiveView = new ToggleView({
-          el: el
-        , field: 'is_archived'
-        , model: model
-        , toggleSelector: '.is-archived-toggle'
-        });
+      var ArchiveView = new ToggleView({
+        el: el
+      , field: 'is_archived'
+      , model: model
+      , toggleSelector: '.is-archived-toggle'
+      });
     }
   });
 

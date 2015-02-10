@@ -27,16 +27,14 @@
   <div id="restaurant-list-items">
     <ul class="table-list table-list-bordered">
       {{#each restaurants}}
-      <li class="table-list-item" data-restaurant="{{json this}}">
+      <li class="table-list-item" data-id="{{id}}" data-restaurant="{{json this}}">
         <span class="table-list-info"><a href="{{baseUrl}}/admin/restaurants/{{id}}">{{name}}</a></span>
         <span class="table-list-item-actions">
           <a class="table-list-item-action is-hidden-toggle" href="#" data-toggle="tooltip" data-title="Toggle Visibility">
             <span class="gb-icon-eye-slash icon-large {{#unless is_hidden}}hide{{/unless}}"></span>
             <span class="gb-icon-eye icon-large {{#if is_hidden}}hide{{/if}}"></span>
           <a class="table-list-item-action" href="{{baseUrl}}/admin/restaurants/{{id}}/contacts" data-toggle="tooltip" data-title="View Contacts"><span class="gb-icon-user icon-large"></span></a>
-          {{#if is_archived}}
-          <button class="btn btn-default btn-unarchive">unarchive</button>
-          {{/if}}
+          <button class="btn btn-default is-archived-toggle">{{#if is_archived}} unarchive {{else}} archive {{/if}}</button>
         </span>
         <div>#{{id}} {{city}}, {{state}}</div>
       </li>
@@ -55,16 +53,14 @@
 <script>
   require([
     'jquery-loaded'
-  , 'app/views/admin/table-list-view'
   , 'app/views/admin/item-manager-view'
   , 'app/models/restaurant'
   ],
-  function($, TableListView, ItemManagerView, Restaurant){
-    var tableListView = new TableListView({
+  function($, ItemManagerView, Restaurant){
+    var ItemManagerView = new ItemManagerView({
       el: '#restaurant-list'
     , model: Restaurant
     , dataAttr: 'restaurant'
-    , itemView: ItemManagerView 
     });
   });
 </script>

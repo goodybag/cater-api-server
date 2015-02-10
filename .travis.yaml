@@ -1,0 +1,11 @@
+language: node_js
+addons:
+  postgresql: "9.3"
+before_script:
+  - cp local-config.json.sample local-config.json
+  - ./bin/prod-to-local
+  - node server.js
+env:
+  - GB_ENV=travis"
+node_js:
+  - "0.10"

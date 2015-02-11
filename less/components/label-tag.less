@@ -33,6 +33,13 @@
   .label-tag-theme('green-2');
   .label-tag-theme('green-3');
 
+  &.pending { .label-tag-theme( @status-pending ); }
+  &.accepted { .label-tag-theme( @status-accepted ); }
+  &.canceled { .label-tag-theme( @status-canceled ); }
+  &.denied { .label-tag-theme( @status-denied ); }
+  &.submitted { .label-tag-theme( @status-submitted ); }
+  &.delivered { .label-tag-theme( @status-delivered ); }
+
   .label-tag-size( @label-tag-height-base, @font-size-base );
 
   &.small {
@@ -52,14 +59,18 @@
   }
 }
 
-.label-tag-theme( @color ){
+.label-tag-theme( @color ) when ( isstring( @color ) ){
   @palette-color: ~"@{palette-@{color}}";
 
   // Less not outputing correct selector if I do
   // &.@{color} - hack this for now
   &[class~="@{color}"] {
-    background-color: @palette-color;
+    .label-tag-theme( color( @palette-color ) );
   }
+}
+
+.label-tag-theme( @color ) when ( iscolor( @color ) ){
+  background-color: @color;
 }
 
 .label-tag-size( @label-height, @label-font-size ){

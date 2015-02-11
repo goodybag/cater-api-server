@@ -171,11 +171,12 @@ module.exports.register = function(app) {
         var not = [ 'white', 'gray-lighter', 'tan' ];
 
         res.locals.labelTags = res.locals.palette.filter( function( palette ){
-          console.log(palette.name);
           return not.indexOf( palette.name ) === -1;
         }).map( function( palette ){
           return palette.name;
-        });
+        }).concat([
+          'pending', 'submitted', 'delivered', 'canceled', 'accepted', 'denied'
+        ]);
 
         next();
       }

@@ -2,6 +2,8 @@
 
 > Mhmmmmm food
 
+![Travis CI](https://magnum.travis-ci.com/goodybag/cater-api-server.svg?token=Y9pCkdx3gqFuzfxv2XR4)
+
 ## Setup
 
 __Install Postgres:__

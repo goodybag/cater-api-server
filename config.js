@@ -641,6 +641,10 @@ config.test = _.extend( _.clone( config.dev ), {
   }
 });
 
+config.travis = _.extend( _.clone( config.dev ), {
+  env: 'travis'
+});
+
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';
 if (GB_ENV == null || !config.hasOwnProperty(GB_ENV)) GB_ENV = 'dev';
 

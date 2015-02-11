@@ -1,0 +1,155 @@
+var assert = require('assert');
+var moment = require('moment-timezone');
+var stamps = {
+  datetime: require('stamps/datetime')
+};
+
+describe('Stamps', function() {
+  describe('base', function() {
+    it('defaults should be set', function() {
+      var dt = stamps.datetime();
+      assert(dt.datetime);
+      assert(!dt.timezone);
+      assert(dt.businessHours && dt.businessHours.start && dt.businessHours.end);
+    });
+
+    it('.toISOString should return string', function() {
+      var str = stamps.datetime({
+        datetime: '2015-11-05 14:15'
+        , timezone: 'America/New_York'
+      }).toISOString();
+      assert(typeof str === 'string');
+    });
+  });
+
+  describe('business-hours', function() {
+    it('.getWorkingTime should return the earliest time during business hours given a datetime that is after hours', function() {
+      var datetime = stamps.datetime({
+        datetime: '2015-01-15 3:00 AM'
+      , businessHours: { start: 8, end: 22 }
+      }).getWorkingTime();
+      assert(datetime.hour() === 8);
+    });
+
+    it('.getWorkingTime should return now given datetime during business hours', function() {
+      var datetime = stamps.datetime({
+        datetime: '2015-01-15 12:00 PM'
+      , businessHours: { start: 8, end : 22 }
+      }).getWorkingTime();
+      assert(datetime.hour() === 12);
+    });
+
+    it('.getWorkingTime should return earliest datetime next day given after hours', function() {
+      var datetime = stamps.datetime({
+        datetime: '2015-01-15 23:00'
+        , businessHours: { start: 8, end : 22 }
+      }).getWorkingTime();
+      assert(datetime.hour() === 8);
+      assert(datetime.date() === 16); // past end time, rollover to next day
+    });
+
+    it('.isWeekend should return true for weekend', function() {
+      var isWeekend = stamps.datetime({
+        datetime: '2015-01-17 12:00'
+      }).isWeekend();
+      assert(isWeekend);
+    });
+
+    it('.isWeekend should return false for a weekday', function() {
+      var isWeekend = stamps.datetime({
+        datetime: '2015-01-15 12:00'
+      }).isWeekend();
+      assert(!isWeekend);
+    });
+
+    it('.isWeekday should return false for weekday', function() {
+      var isWeekday = stamps.datetime({
+        datetime: '2015-01-17 12:00'
+      }).isWeekday();
+      assert(!isWeekday);
+    });
+
+    it('.isWeekday should return true for a weekday', function() {
+      var isWeekday = stamps.datetime({
+        datetime:  '2015-01-15 12:00'
+      }).isWeekday();
+      assert(isWeekday);
+    });
+
+    it('.isAfterHours should handle edge cases', function() {
+      var dt;
+
+      // ensure that business hours are [start, end)
+      dt = stamps.datetime({
+        datetime: '2013-02-08 7:59'
+      , businessHours: { start: 8, end: 18 }
+      });
+      assert( dt.isAfterHours() );
+
+      dt.datetime = '2013-02-08 8:00';
+      assert( !dt.isAfterHours() );
+
+      dt.datetime = '2013-02-08 8:01';
+      assert( !dt.isAfterHours() );
+
+      dt.datetime = '2013-02-08 17:59';
+      assert( !dt.isAfterHours() );
+
+      dt.datetime = '2013-02-08 18:00';
+      assert( dt.isAfterHours() );
+
+      dt.datetime = '2013-02-08 18:01';
+      assert( dt.isAfterHours() );
+    });
+
+    it('.isAfterHours should return true for late night times', function() {
+      var datetime = stamps.datetime({
+        datetime: '2013-02-08 20:30' // 8:30pm
+      , businessHours: { start: 8, end: 18 }
+      });
+      var result = datetime.isAfterHours( );
+      assert(result);
+    });
+
+    it('.isAfterHours should return false for day times', function() {
+      var datetime = stamps.datetime({
+        datetime: '2013-02-08 12:00' // 12:00pm
+      , businessHours: { start: 8, end: 18 }
+      });
+      var result = !datetime.isAfterHours();
+      assert(result);
+    });
+
+    it('.duringBusinessHours should return true for business hours', function(){
+      var datetime = stamps.datetime({
+        datetime: '2013-02-08 12:00' // 12:00pm
+      , businessHours: { start: 8, end: 18 }
+      });
+      var result = datetime.duringBusinessHours();
+      assert(result);
+    });
+
+    it('.duringBusinessHours should return false for hours outside biz hours', function() {
+      var datetime = stamps.datetime({
+        datetime: '2013-02-08 20:30' // 8:30pm
+      , businessHours: { start: 8, end: 18 }
+      });
+      var result = !datetime.duringBusinessHours();
+      assert(result);
+    });
+
+    it('.isWithin should return true', function() {
+      var isWithin = stamps.datetime({
+        datetime: moment().add(3, 'hours')
+      }).isWithin( 12, 'hours' );
+      assert(isWithin);
+    });
+
+    it('.isWithin should return false', function() {
+      var isWithin = stamps.datetime({
+        datetime: moment().add(15, 'hours')
+      }).isWithin( 12, 'hours' );
+      assert(!isWithin);
+    });
+  });
+});

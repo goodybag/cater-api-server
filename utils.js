@@ -543,36 +543,4 @@ utils.queryParams = function(data, urlEncode){
   return params.substring(0, params.length - 1);
 };
 
-// sanitize notification times so they're during work hours
-utils.getWorkingTime = function( datetime, timezone ){
-  datetime = moment(datetime).tz(timezone);
-  if ( datetime.hour() < config.notifications.start ){
-    datetime
-      .hour( config.notifications.start )
-      .minute( 0 )
-      .second( 0 );
-  }
-  return datetime.toISOString();
-};
-
-// Weekend defined as sat & sun
-utils.isWeekend = function(datetime) {
-  datetime = moment(datetime);
-  return datetime.day() === 0 || datetime.day() === 6;
-}
-
-utils.isWeekday = function(datetime) {
-  return !utils.isWeekend(datetime);
-}
-
-utils.isAfterHours = function(datetime) {
-  datetime = moment(datetime);
-  return datetime.hour() < config.afterHours.start ||
-         datetime.hour() >=  config.afterHours.end;
-};
-
-utils.duringBusinessHours = function(datetime) {
-  return !utils.isAfterHours(datetime);
-};
-
 module.exports = utils;

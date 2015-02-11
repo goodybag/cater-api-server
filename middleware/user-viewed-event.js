@@ -17,8 +17,6 @@ module.exports = function( options ){
       return next();
     }
 
-    console.log('evaluating');
-
     evaluator( req.session, res.locals );
 
     return next();

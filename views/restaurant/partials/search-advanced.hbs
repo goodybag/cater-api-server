@@ -1,4 +1,4 @@
-<div id="filters" class="search-advanced-content">
+<div id="filters" class="search-advanced-content{{#if expandSearchTools}} in{{/if}}">
   <div class="search-advanced-wrapper">
     <section>
       <div class="container">
@@ -39,6 +39,13 @@
           {{#each filterMealTypes}}
           <label><input type="checkbox" value="{{name}}" {{#contains ../orderParams.mealTypes name}}checked="checked"{{/contains}}> {{name}}</label>
           {{/each}}
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="container">
+        <div class="search-advanced-btn-wrapper">
+          <button class="btn btn-primary btn-search">Show restaurants</button>
         </div>
       </div>
     </section>

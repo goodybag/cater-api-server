@@ -626,6 +626,8 @@ config.india = {
   config.india[ key ] = config.staging[ key ];
 });
 
+config.india.logging.mongoConnStr = false;
+
 config.test = _.extend( _.clone( config.dev ), {
   env: 'test'
 , baseUrl: 'http://localhost:3001'
@@ -637,6 +639,10 @@ config.test = _.extend( _.clone( config.dev ), {
   , apiKeyPrivate: 'JSRbZdQTBWtpDxIxXtO2aPmKc26M98V2NHjG7h09-iQ'
   , emailFormat: 'ordrin-user{salt}+{id}@goodybag.com'.replace( '{salt}', local.ordrinEmailSalt || '' )
   }
+});
+
+config.travis = _.extend( _.clone( config.dev ), {
+  env: 'travis'
 });
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';

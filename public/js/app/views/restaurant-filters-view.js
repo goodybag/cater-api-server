@@ -6,7 +6,6 @@ define(function(require, exports, module) {
   return module.exports = Backbone.View.extend({
     events: function() {
       return {
-        'change input[type="checkbox"]': 'onFilterChange'
       };
     }
 

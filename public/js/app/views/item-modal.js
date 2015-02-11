@@ -27,7 +27,7 @@ define(function(require, exports, module) {
 
       this.$el.html( this.template( context ) );
 
-      this.$el.find('.tag-tooltip').tooltip();
+      this.$el.find('[data-toggle="tooltip"]').tooltip();
     },
 
     provideModel: function(model) {

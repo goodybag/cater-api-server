@@ -170,11 +170,14 @@ module.exports.register = function(app) {
     , function( req, res, next ){
         var not = [ 'white', 'gray-lighter', 'tan' ];
 
-        res.locals.labelTags = res.local.palette.filter( function( palette ){
+        res.locals.labelTags = res.locals.palette.filter( function( palette ){
+          console.log(palette.name);
           return not.indexOf( palette.name ) === -1;
         }).map( function( palette ){
-          return name: palette.name;
+          return palette.name;
         });
+
+        next();
       }
 
     , m.view( 'admin/kitchen-sink/index', {

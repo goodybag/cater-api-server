@@ -1,9 +1,31 @@
 <section class="page-section" id="section-label-tags">
   <div class="container">
     <h2 class="component-title">Label Tags</h2>
+    <h3>Small</h3>
     <ul class="label-tags-list inline-list">
-      {{#each palette}}
-        <li><div class="label-tag {{this.name}}">{{capitalize this.name}}</div></li>
+      {{#each labelTags}}
+        <li><div class="label-tag small {{this}}">{{capitalize this}}</div></li>
+      {{/each}}
+    </ul>
+
+    <h3>Base</h3>
+    <ul class="label-tags-list inline-list">
+      {{#each labelTags}}
+        <li><div class="label-tag {{this}}">{{capitalize this}}</div></li>
+      {{/each}}
+    </ul>
+
+    <h3>Large</h3>
+    <ul class="label-tags-list inline-list">
+      {{#each labelTags}}
+        <li><div class="label-tag large {{this}}">{{capitalize this}}</div></li>
+      {{/each}}
+    </ul>
+
+    <h3>Extra Large</h3>
+    <ul class="label-tags-list inline-list">
+      {{#each labelTags}}
+        <li><div class="label-tag xlarge {{this}}">{{capitalize this}}</div></li>
       {{/each}}
     </ul>
   </div>

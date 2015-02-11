@@ -31,8 +31,8 @@
         <span class="table-list-info"><a href="{{baseUrl}}/admin/restaurants/{{id}}">{{name}}</a></span>
         <span class="table-list-item-actions">
           <a class="table-list-item-action is-hidden-toggle" href="#" data-toggle="tooltip" data-title="Toggle Visibility">
-            <span class="gb-icon-eye-slash icon-large {{#unless is_hidden}}hide{{/unless}}"></span>
-            <span class="gb-icon-eye icon-large {{#if is_hidden}}hide{{/if}}"></span>
+            <span class="is-hidden-icon gb-icon-eye-slash icon-large {{#unless is_hidden}}hide{{/unless}}"></span>
+            <span class="is-hidden-icon gb-icon-eye icon-large {{#if is_hidden}}hide{{/if}}"></span>
           <a class="table-list-item-action" href="{{baseUrl}}/admin/restaurants/{{id}}/contacts" data-toggle="tooltip" data-title="View Contacts"><span class="gb-icon-user icon-large"></span></a>
           <button class="btn btn-default is-archived-toggle">{{#if is_archived}} unarchive {{else}} archive {{/if}}</button>
         </span>
@@ -53,14 +53,16 @@
 <script>
   require([
     'jquery-loaded'
-  , 'app/views/admin/item-manager-view'
+  , 'app/views/admin/table-list-view'
+  , 'app/views/admin/edit-restaurants-view'
   , 'app/models/restaurant'
   ],
-  function($, ItemManagerView, Restaurant){
-    var ItemManagerView = new ItemManagerView({
+  function($,TableListView, EditRestaurantsView, Restaurant){
+    var TableListView = new TableListView({
       el: '#restaurant-list'
-    , model: Restaurant
+    , model: Restaurant 
     , dataAttr: 'restaurant'
+    , itemView: EditRestaurantsView 
     });
   });
 </script>

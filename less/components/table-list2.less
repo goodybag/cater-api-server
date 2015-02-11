@@ -56,6 +56,10 @@
   & .more-actions-and-info .action {
     border-color: fade( @border-color, 50% );
   }
+
+  & .more-actions-and-info .action:hover {
+    background: fade( @border-color, 10% );
+  }
 }
 
 .table-list-theme( @name, @header-bg, @header-color, @border-color, @text-color, @items-bg ) when (@name) {

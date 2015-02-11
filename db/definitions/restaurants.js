@@ -84,6 +84,7 @@ define(function(require) {
   , cuisine: {
       type: types.array(types.text)
     , nullable: true
+    , editable: ['client', 'admin']
     }
   , is_hidden: {
       type: types.boolean

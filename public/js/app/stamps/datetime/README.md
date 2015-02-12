@@ -48,6 +48,8 @@ Object containing `start` and `end` hours
 { start: 8, end: 17 } // 8am - 5pm
 ```
 
+All `businessHours` should represent time relative to the system timezone.
+
 ### Business Hours
 
 > stamps/datetime/business-hours.js
@@ -57,11 +59,16 @@ hours.
 
 #### Methods
 
-##### .getWorkingHour()
+##### .getWorkingHour( toTimezone )
 
 Used to determine appropriate times for notifications. If datetime is
 after hours, use the earliest datetime from the following day. Otherwise,
 for hours during business hours return time.
+
+* toTimezone - timezone string like 'America/Chicago'
+
+This ensures dates from any timezone can be converted and checked against
+business hours.
 
 ##### .isWeekend()
 

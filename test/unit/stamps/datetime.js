@@ -16,7 +16,7 @@ describe('Stamps', function() {
     it('.toISOString should return string', function() {
       var str = stamps.datetime({
         datetime: '2015-11-05 14:15'
-        , timezone: 'America/New_York'
+      , timezone: 'America/New_York'
       }).toISOString();
       assert(typeof str === 'string');
     });
@@ -42,10 +42,37 @@ describe('Stamps', function() {
     it('.getWorkingTime should return earliest datetime next day given after hours', function() {
       var datetime = stamps.datetime({
         datetime: '2015-01-15 23:00'
-        , businessHours: { start: 8, end : 22 }
+      , businessHours: { start: 8, end : 22 }
       }).getWorkingTime();
       assert(datetime.hour() === 8);
       assert(datetime.date() === 16); // past end time, rollover to next day
+    });
+
+    it('.getWorkingTime should return earliest datetime with timezone conversion', function() {
+      // This test case ensures that dates from any server can be
+      // tested against business hours.
+      // i.e. checking if now() is within business hours
+      // `stamps.datetime({ businessHours: hours }).getWorkingTime(order.timezone);`
+
+      var datetime = stamps.datetime({
+        datetime: '2015-01-15 09:00 GMT+0'
+      , businessHours: { start: 8, end : 22 }
+      }).tz('America/Chicago').getWorkingTime();
+
+      // 3:00 AM Central should return 8:00 AM
+      assert(datetime.hour() === 8);
+      assert(datetime.date() === 15);
+    });
+
+    it('.getWorkingTime should return datetime with timezone conversion', function() {
+      var datetime = stamps.datetime({
+        datetime: '2015-01-15 23:00 GMT+0'
+      , businessHours: { start: 8, end : 22 }
+      }).tz('America/Chicago').getWorkingTime();
+
+      // 5:00 PM Central should return 5:00 PM since it's within business hours
+      assert(datetime.hour() === 17);
+      assert(datetime.date() === 15);
     });
 
     it('.isWeekend should return true for weekend', function() {
@@ -78,27 +105,42 @@ describe('Stamps', function() {
 
     it('.isAfterHours should handle edge cases', function() {
       var dt;
-
+      var businessHours = { start: 8, end: 18 };
       // ensure that business hours are [start, end)
       dt = stamps.datetime({
         datetime: '2013-02-08 7:59'
-      , businessHours: { start: 8, end: 18 }
+      , businessHours: businessHours
       });
       assert( dt.isAfterHours() );
 
-      dt.datetime = '2013-02-08 8:00';
+      dt = stamps.datetime({
+        datetime: '2013-02-08 8:00'
+      , businessHours: businessHours
+      });
       assert( !dt.isAfterHours() );
 
-      dt.datetime = '2013-02-08 8:01';
+      dt = stamps.datetime({
+        datetime: '2013-02-08 8:01'
+      , businessHours: businessHours
+      });
       assert( !dt.isAfterHours() );
 
-      dt.datetime = '2013-02-08 17:59';
+      dt = stamps.datetime({
+        datetime: '2013-02-08 17:59'
+      , businessHours: businessHours
+      });
       assert( !dt.isAfterHours() );
 
-      dt.datetime = '2013-02-08 18:00';
+      dt = stamps.datetime({
+        datetime: '2013-02-08 18:00'
+      , businessHours: businessHours
+      });
       assert( dt.isAfterHours() );
 
-      dt.datetime = '2013-02-08 18:01';
+      dt = stamps.datetime({
+        datetime: '2013-02-08 18:01'
+      , businessHours: businessHours
+      })
       assert( dt.isAfterHours() );
     });
 

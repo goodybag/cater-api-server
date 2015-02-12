@@ -181,6 +181,14 @@ module.exports.register = function(app) {
         next();
       }
 
+    , m.db.restaurants.find({ is_hidden: false })
+
+    , function( req, res, next ){
+        res.locals.ordersTableRestaurants = res.locals.restaurants;
+        console.log(res.locals.ordersTableRestaurants);
+        next();
+      }
+
     , m.view( 'admin/kitchen-sink/index', {
         layout: 'admin/layout2'
       })

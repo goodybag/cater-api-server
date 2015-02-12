@@ -1,20 +1,15 @@
-(function(factory){
-  if ( typeof define === 'function' && define.amd ){
-    // AMD. Register as an anonymous module.
-    define( ['jquery'], factory );
-  } else {
-    // Browser globals
-    factory(jQuery);
-  }
-}(function( $ ){
+define( function( require, exports, module ){
   'use strict';
 
+  var $ = require('jquery');
+  var utils = require('utils');
   var old = $.fn.gb_popover;
 
   var Popover = function(el, options) {
     this.$el = $(el);
     this.options  = this.getOptions(options);
     this.$wrapper = this.$el.parents('.popover-wrapper').eq(0);
+    this.$body    = this.$wrapper.find('.popover-body');
     this.listenEvents();
     return this;
   };
@@ -82,6 +77,15 @@
       this_.close();
     });
 
+    this.$body.on( 'scroll', utils.throttle( function( e ){
+    console.log(e.target.scrollTop);
+      if ( e.target.scrollTop > 0 ){
+        this.$wrapper.addClass('has-scrolled');
+      } else {
+        this.$wrapper.removeClass('has-scrolled');
+      }
+    }, 50 ).bind( this ) );
+
     return this;
   };
 
@@ -121,4 +125,4 @@
     $.fn.gb_popover = old;
     return this;
   };
-}));
+});

@@ -22,6 +22,24 @@
             </a>
             <div class="popover-modal dropdown-popover">
               <div class="popover-header">Restaurants</div>
+              <div class="popover-filter"
+                data-role="filter-list"
+                data-input="> input"
+                data-target="+ .popover-body > .popover-item"
+                data-fields="name">
+
+                <input type="text" placeholder="Filter...">
+              </div>
+              <div class="popover-body">
+                {{#each ordersTableRestaurants}}
+                <a href="#" class="popover-item" data-name="{{this.name}}">
+                  <span class="popover-item-icon">
+                    {{!-- <span class="gb-icon-checkmark va-middle"></span> --}}
+                  </span>
+                  <span class="popover-item-label">{{this.name}}</span>
+                </a>
+                {{/each}}
+              </div>
             </div>
           </li>
           <li class="not-selected-only popover-wrapper gb-dropdown right">

@@ -57,7 +57,7 @@ describe('Stamps', function() {
       var datetime = stamps.datetime({
         datetime: '2015-01-15 09:00 GMT+0'
       , businessHours: { start: 8, end : 22 }
-      }).getWorkingTime('America/Chicago');
+      }).tz('America/Chicago').getWorkingTime();
 
       // 3:00 AM Central should return 8:00 AM
       assert(datetime.hour() === 8);
@@ -68,7 +68,7 @@ describe('Stamps', function() {
       var datetime = stamps.datetime({
         datetime: '2015-01-15 23:00 GMT+0'
       , businessHours: { start: 8, end : 22 }
-      }).getWorkingTime('America/Chicago');
+      }).tz('America/Chicago').getWorkingTime();
 
       // 5:00 PM Central should return 5:00 PM since it's within business hours
       assert(datetime.hour() === 17);
@@ -105,27 +105,42 @@ describe('Stamps', function() {
 
     it('.isAfterHours should handle edge cases', function() {
       var dt;
-
+      var businessHours = { start: 8, end: 18 };
       // ensure that business hours are [start, end)
       dt = stamps.datetime({
         datetime: '2013-02-08 7:59'
-      , businessHours: { start: 8, end: 18 }
+      , businessHours: businessHours
       });
       assert( dt.isAfterHours() );
 
-      dt.datetime = '2013-02-08 8:00';
+      dt = stamps.datetime({
+        datetime: '2013-02-08 8:00'
+      , businessHours: businessHours
+      });
       assert( !dt.isAfterHours() );
 
-      dt.datetime = '2013-02-08 8:01';
+      dt = stamps.datetime({
+        datetime: '2013-02-08 8:01'
+      , businessHours: businessHours
+      });
       assert( !dt.isAfterHours() );
 
-      dt.datetime = '2013-02-08 17:59';
+      dt = stamps.datetime({
+        datetime: '2013-02-08 17:59'
+      , businessHours: businessHours
+      });
       assert( !dt.isAfterHours() );
 
-      dt.datetime = '2013-02-08 18:00';
+      dt = stamps.datetime({
+        datetime: '2013-02-08 18:00'
+      , businessHours: businessHours
+      });
       assert( dt.isAfterHours() );
 
-      dt.datetime = '2013-02-08 18:01';
+      dt = stamps.datetime({
+        datetime: '2013-02-08 18:01'
+      , businessHours: businessHours
+      })
       assert( dt.isAfterHours() );
     });
 

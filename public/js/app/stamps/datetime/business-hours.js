@@ -10,8 +10,9 @@ define( function( require, exports, module ){
   var stampit = require('stampit');
   return stampit()
     .methods({
-      getWorkingTime: function(){
+      getWorkingTime: function(toTimezone){
         var datetime = moment.tz(this.datetime, this.timezone);
+        if ( toTimezone ) datetime.tz(toTimezone);
         var hr = datetime.hour();
 
         if (hr < this.businessHours.start){

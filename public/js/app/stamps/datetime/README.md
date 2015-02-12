@@ -25,7 +25,7 @@ datetime.isAfterHours();  // false
 
 ## Stamps
 
-### Defaults
+### Base
 
 > stamps/datetime/base.js
 
@@ -81,13 +81,15 @@ Returns boolean if `.datetime` is within `.businessHours`.
 
 ##### .isWithin()
 
-`.isWithin` acceptes the same parameters as [http://momentjs.com/docs/#/manipulating/add/](moment.add)
+Used to determine if the datetime is within some time from now.
 
-.isWithin(Number, String)
-.isWithin(Duration)
-.isWithin(Object)
+`.isWithin` accepts the same parameters as [moment.add](http://momentjs.com/docs/#/manipulating/add/)
 
-This is used to determine if the datetime is within some time from now.
+>.isWithin(Number, String)
+
+>.isWithin(Duration)
+
+>.isWithin(Object)
 
 ```javascript
 datetime({ datetime: '2015-04-13 12:00 PM' }).isWithin(4, 'hours');

@@ -5,7 +5,7 @@ var stamps = {
 };
 
 describe('Stamps', function() {
-  describe('Time', function() {
+  describe('base', function() {
     it('defaults should be set', function() {
       var dt = stamps.datetime();
       assert(dt.datetime);
@@ -13,6 +13,16 @@ describe('Stamps', function() {
       assert(dt.businessHours && dt.businessHours.start && dt.businessHours.end);
     });
 
+    it('.toISOString should return string', function() {
+      var str = stamps.datetime({
+        datetime: '2015-11-05 14:15'
+        , timezone: 'America/New_York'
+      }).toISOString();
+      assert(typeof str === 'string');
+    });
+  });
+
+  describe('business-hours', function() {
     it('.getWorkingTime should return the earliest time during business hours given a datetime that is after hours', function() {
       var datetime = stamps.datetime({
         datetime: '2015-01-15 3:00 AM'
@@ -128,12 +138,18 @@ describe('Stamps', function() {
       assert(result);
     });
 
-    it('.toISOString should return string', function() {
-      var str = stamps.datetime({
-        datetime: '2015-11-05 14:15'
-      , timezone: 'America/New_York'
-      }).toISOString();
-      assert(typeof str === 'string');
+    it('.isWithin should return true', function() {
+      var isWithin = stamps.datetime({
+        datetime: moment().add(3, 'hours')
+      }).isWithin( 12, 'hours' );
+      assert(isWithin);
+    });
+
+    it('.isWithin should return false', function() {
+      var isWithin = stamps.datetime({
+        datetime: moment().add(15, 'hours')
+      }).isWithin( 12, 'hours' );
+      assert(!isWithin);
     });
   });
 });

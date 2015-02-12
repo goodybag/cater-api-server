@@ -15,7 +15,7 @@ define( function( require, exports, module ){
   module.exports = stampit();
 
   var stamps = {
-    defaults: require('./defaults')
+    base: require('./base')
   , businessHours: require('./business-hours')
   };
 

@@ -10,7 +10,7 @@ var datetime = datetimeStamp.create();
 
 // Create a custom stamp
 datetime = require('stampit')()
-  .compose( require('stamps/datetime/defaults') )
+  .compose( require('stamps/datetime/base') )
   .compose( require('stamps/datetime/business-hours') );
 
 // Usage
@@ -27,7 +27,7 @@ datetime.isAfterHours();  // false
 
 ### Defaults
 
-> stamps/datetime/defaults.js
+> stamps/datetime/base.js
 
 #### Properties
 
@@ -78,3 +78,17 @@ Returns boolean if `.datetime` is outside of `.businessHours`.
 ##### .duringBusinessHours()
 
 Returns boolean if `.datetime` is within `.businessHours`.
+
+##### .isWithin()
+
+`.isWithin` acceptes the same parameters as [http://momentjs.com/docs/#/manipulating/add/](moment.add)
+
+.isWithin(Number, String)
+.isWithin(Duration)
+.isWithin(Object)
+
+This is used to determine if the datetime is within some time from now.
+
+```javascript
+datetime({ datetime: '2015-04-13 12:00 PM' }).isWithin(4, 'hours');
+```

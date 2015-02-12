@@ -49,8 +49,12 @@ define( function( require, exports, module ){
         return !this.isAfterHours();
       }
 
-    , toISOString: function() {
-        return moment.tz(this.datetime, this.timezone).toISOString();
+    , isWithin: function( ) {
+        var args = Array.prototype.slice.call(arguments);
+        var dt = moment.tz(this.datetime, this.timezone);
+        var timeFromNow = moment();
+        timeFromNow = timeFromNow.add.apply(timeFromNow, args);
+        return dt < timeFromNow;
       }
     });
 });

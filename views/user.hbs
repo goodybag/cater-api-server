@@ -6,12 +6,15 @@
 
 <div class="container account-settings">
 
-  {{#if alert}}
-    <div class="alert alert-success fade in">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <strong>Settings Saved!</strong>
-    </div>
-  {{/if}}
+  <div class="alert alert-success fade in" style="display: none;">
+    <button type="button" class="close" aria-hidden="true">×</button>
+    <strong>Settings Saved!</strong>
+  </div>
+
+  <div class="alert alert-danger fade in" style="display: none;">
+    <button type="button" class="close" aria-hidden="true">×</button>
+    <strong>Failed to updated account settings :(</strong>
+  </div>
 
   <h1 class="text-center page-title">Account Settings</h1>
   <div class="row">
@@ -19,27 +22,29 @@
       <div class="panel">
         <ul class="list-group">
           <li class="list-group-item">
-            <form class="user-settings-form" action="/users/me" method="post">
+            <form id="user-settings-form">
               <input type="hidden" name="_method" value="put"/>
               <div class="form-group">
                 <label for="input-name" class="control-label">Name</label>
-                <input type="text" id="input-name" name="name" class="form-control name col-lg-12" value="{{user.name}}">
+                <input type="text" id="input-name" name="name" class="form-control user-name col-lg-12" value="{{user.name}}">
               </div>
               <div class="form-group">
                 <label for="input-email" class="control-label">Email</label>
-                <input type="email" id="input-email" name="email" class="form-control email" value="{{user.email}}">
+                <input type="email" id="input-email" name="email" class="form-control user-email" value="{{user.email}}">
               </div>
-              <div class="form-group">
-                <label for="input-org" class="control-label">Organization</label>
-                <input type="text" id="input-org" name="organization" class="form-control organization" value="{{user.organization}}">
+              <div class="form-group" id="user-organization">
+                <label for="input-org" id="organization-label" class="control-label">Organization</label>
+                <input type="text" id="input-org" name="organization" class="form-control user-organization" value="{{user.organization}}">
               </div>
               <div class="form-group">
                 <label for="input-pass1" class="control-label">Password</label>
-                <input type="password" name="password" id="input-pass1" class="form-control password">
+                <input type="password" name="password" id="input-password" class="form-control user-password">
               </div>
               <div class="form-group">
-                <label for="input-pass2" class="control-label">Confirm Password</label>
-                <input type="password" id="input-pass2" class="form-control confirm_password">
+                <label for="input-pass2" id="confirm-password-label" class="control-label">Confirm Password
+                <span class="error-message hide">*passwords must match</span> 
+                </label>
+                <input type="password" id="user-confirm-password" class="form-control">
               </div>
               <div class="clearfix">
                 <button type="submit" class="btn btn-primary pull-right">Save</button>
@@ -76,24 +81,14 @@
 
 {{#extend "scripts"}}
 <script>
-  require([
-      'jquery-loaded'
-    ]
-  , function($) {
-      $('.user-settings-form').on('submit', function(e) {
-        // Client side validation
-        e.preventDefault();
-        var fields = ['name', 'email', 'organization', 'password'];
-        var data = {};
-        for (var i=0, l=fields.length; i<l; i++)
-          data[fields[i]] = $('.user-settings-form .' + fields[i]).val();
-        if (data.password && data.password !== $('.user-settings-form .confirm_password').val())
-          return alert('passwords must match');
-        if (!data.password) delete data.password;
-
-        this.submit();
-      });
-    }
-  );
+require([
+  'app/views/account-settings-view'
+, 'app/models/user'
+  ], function (AccountSettingsView, User) {
+    var accoutSettingsView = new AccountSettingsView({
+      el: '.account-settings'
+    , model: new User( {{{json user}}} )
+    })
+  });
 </script>
 {{/extend}}

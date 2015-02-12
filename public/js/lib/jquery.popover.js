@@ -15,7 +15,6 @@
     this.$el = $(el);
     this.options  = this.getOptions(options);
     this.$wrapper = this.$el.parents('.popover-wrapper').eq(0);
-    this.$modal   = this.$el.find('.popover-modal');
     this.listenEvents();
     return this;
   };
@@ -39,12 +38,17 @@
 
     // click outside to close modal
     $(document).click(function(e) {
-      var clickedOutsideModal =
-        !$(e.target).closest(this.$modal).length &&
-        !$(e.target).closest(this.$el).length &&
-        this.$wrapper.hasClass('open');
-      if ( clickedOutsideModal ) {
-        this.$wrapper.removeClass('open');
+      if ( !this.$wrapper.hasClass('open') ){
+        return;
+      }
+
+      var shouldClose = (
+        !$.contains( this.$wrapper[0], e.target )
+        && this.$wrapper[0] !== e.target
+      )
+
+      if ( shouldClose ) {
+        this.close();
       }
     }.bind(this));
 
@@ -73,12 +77,10 @@
     }
 
     // Listen to close buttons
-    if (this.$modal) {
-      this.$modal.find('[data-toggle-role="close"]').on('click', function(e) {
-        e.preventDefault();
-        this_.close();
-      });
-    }
+    this.$wrapper.find('[data-toggle-role="close"]').on('click', function(e) {
+      e.preventDefault();
+      this_.close();
+    });
 
     return this;
   };

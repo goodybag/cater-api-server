@@ -119,6 +119,10 @@
   border-top: none;
 }
 
+.table-list .list-item a {
+  text-decoration: none;
+}
+
 .table-list .item-title {
   display: inline-block;
   font-size: @font-size-large;
@@ -156,6 +160,15 @@
     margin-bottom: 0;
     margin-top: 0;
     font-size: @font-size-small;
+  }
+
+  // Actions
+  &.actions {
+    text-align: right;
+  }
+
+  &.actions .table-list-item-action {
+    display: inline-block;
   }
 
   // list Nav

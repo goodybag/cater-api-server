@@ -15,7 +15,7 @@ define(function(require){
       this.$el.gb_tablelist();
 
       // Init toggle visibility views
-      this.options.itemSelector = this.options.itemSelector || '.table-list-item';
+      this.options.itemSelector = this.options.itemSelector || '.list-item';
       this.$el.find(this.options.itemSelector).each(function(idx, el) {
         var $el = $(el);
         var json = $el.data(this_.options.dataAttr);

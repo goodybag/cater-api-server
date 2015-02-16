@@ -39,6 +39,12 @@
         <a class="item-title" href="{{config.baseUrl}}/admin/restaurants/{{id}}">{{name}}</a>
         <div class="item-details">#{{id}} {{city}}, {{state}}</div>
       </div>
+      <div class="component actions">
+        <a class="table-list-item-action is-hidden-toggle" href="#" data-toggle="tooltip" data-title="Toggle Visibility">
+          <span class="gb-icon-eye-slash icon-large {{#unless is_hidden}}hide{{/unless}}"></span>
+          <span class="gb-icon-eye icon-large {{#if is_hidden}}hide{{/if}}"></span>
+        <a class="table-list-item-action" href="{{baseUrl}}/admin/restaurants/{{id}}/contacts" data-toggle="tooltip" data-title="View Contacts"><span class="gb-icon-user icon-large"></span></a>
+      </div>
     </div>
     {{/each}}
   </div>

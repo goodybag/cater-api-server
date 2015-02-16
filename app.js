@@ -52,7 +52,7 @@ app.use((function(){
 
 app.use( middleware.getUser2() );
 
-app.use(require('body-parser').json());
+app.use(require('body-parser').json({ limit: '200kb' }));
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(middleware.methodOverride);
 app.use(middleware.logRequest());

@@ -11,7 +11,7 @@ define( function( require, exports, module ){
   return stampit()
     .methods({
       getWorkingTime: function(){
-        var datetime = moment.tz(this.datetime, this.timezone);
+        var datetime = this._moment;
         var hr = datetime.hour();
 
         if (hr < this.businessHours.start){
@@ -31,7 +31,7 @@ define( function( require, exports, module ){
       }
 
     , isWeekend: function() {
-        datetime = moment.tz(this.datetime, this.timezone);
+        var datetime = this._moment;
         return datetime.day() === 0 || datetime.day() === 6;
       }
 
@@ -40,7 +40,7 @@ define( function( require, exports, module ){
       }
 
     , isAfterHours: function() {
-        var datetime = moment.tz(this.datetime, this.timezone);
+        var datetime = this._moment;
         return datetime.hour() <  this.businessHours.start ||
                datetime.hour() >= this.businessHours.end;
       }
@@ -51,7 +51,7 @@ define( function( require, exports, module ){
 
     , isWithin: function( ) {
         var args = Array.prototype.slice.call(arguments);
-        var dt = moment.tz(this.datetime, this.timezone);
+        var dt = this._moment;
         var timeFromNow = moment();
         timeFromNow = timeFromNow.add.apply(timeFromNow, args);
         return dt < timeFromNow;

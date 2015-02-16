@@ -136,7 +136,7 @@ app.response.render = function(path, options, callback) {
   );
 
   if (this.req.user && this.req.user.attributes && this.req.user.attributes.email) {
-    options.intercom = {
+    options.intercom = !config.intercom.enabled ? false : {
       user_hash: crypto.createHmac('sha256', new Buffer(config.intercom.apiSecret, 'utf8')).update(this.req.user.attributes.email).digest('hex')
     };
   }

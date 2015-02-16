@@ -5,11 +5,6 @@ define(function(require, exports, module) {
 
   var ItemManagerView = utils.View.extend({
     initialize: function () {
-      var this_ = this;
-        
-      // Enable plugins
-      $('[data-role="popover"]').gb_popover();
-      $('[data-toggle="tooltip"]').tooltip();
       this.initToggleViews.call(this, this.options.model);
     },
 

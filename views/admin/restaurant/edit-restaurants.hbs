@@ -58,6 +58,11 @@
   , 'app/models/restaurant'
   ],
   function($,TableListView, EditRestaurantsView, Restaurant){
+
+    // Enable plugins
+    $('[data-role="popover"]').gb_popover();
+    $('[data-toggle="tooltip"]').tooltip();
+      
     var TableListView = new TableListView({
       el: '#restaurant-list'
     , model: Restaurant 

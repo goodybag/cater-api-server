@@ -1,6 +1,8 @@
 define(function(require){
   var utils = require('utils');
 
+  require('table-list');
+
   return utils.View.extend({
     initialize: function() {
       var this_ = this;
@@ -10,6 +12,7 @@ define(function(require){
       // Enable plugins
       $('[data-role="popover"]').gb_popover();
       $('[data-toggle="tooltip"]').tooltip();
+      this.$el.gb_tablelist();
 
       // Init toggle visibility views
       this.options.itemSelector = this.options.itemSelector || '.table-list-item';

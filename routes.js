@@ -157,6 +157,11 @@ module.exports.register = function(app) {
      */
 
     app.get('/admin/kitchen-sink'
+    , m.filters([
+        'restaurant-region'
+      , 'restaurant-visibility'
+      , 'restaurant-sort'
+      ])
     , function( req, res, next ){
         require('./lib/parse-palette-from-variables').parse( function( error, palette ){
           if ( error ) return next( error );
@@ -185,7 +190,6 @@ module.exports.register = function(app) {
 
     , function( req, res, next ){
         res.locals.ordersTableRestaurants = res.locals.restaurants;
-        console.log(res.locals.ordersTableRestaurants);
         next();
       }
 

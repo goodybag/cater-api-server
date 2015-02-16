@@ -2,6 +2,19 @@ var assert    = require('assert');
 var m         = require('../../middleware');
 var utils     = require('../../utils');
 
+var mockRegions = [
+  { name: 'Houston, TX', id: 1 }
+, { name: 'Austin, TX', id: 2 }
+];
+
+var mockDb = {
+  regions: {
+    find: function(query, callback) {
+      callback(null, mockRegions);
+    }
+  }
+};
+
 var req, res;
 
 describe('Filters', function() {
@@ -15,9 +28,9 @@ describe('Filters', function() {
       'restaurant-region'
     , 'restaurant-visibility'
     , 'restaurant-sort'
-    ]);
+    ], mockDb);
 
-    mw(req, res, function() {
+  mw(req, res, function() {
       assert(res.locals.filters);
       assert('region' in res.locals.filters);
       assert('show' in res.locals.filters);
@@ -28,7 +41,7 @@ describe('Filters', function() {
 
 
   it('Should format links according to query params', function(done) {
-    var mw = m.filters(['restaurant-region']);
+    var mw = m.filters(['restaurant-region'], mockDb);
     // todo don't hardcode the region here
     var _req = utils.extend({}, req, { query: { q: 'region:houston, tx' } } );
     mw(_req, res, function() {
@@ -45,7 +58,7 @@ describe('Filters', function() {
   });
 
   it('Should toggle active', function(done) {
-    var mw = m.filters(['restaurant-region', 'restaurant-visibility']);
+    var mw = m.filters(['restaurant-region', 'restaurant-visibility'], mockDb);
     var _req = utils.extend({}, req, { query: { q: 'region:austin, tx region:houston, tx' } } );
     mw(_req, res, function() {
       assert(res.locals.filters);

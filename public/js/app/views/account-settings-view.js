@@ -41,8 +41,8 @@ define(function (require, exports, module) {
 
       var diff = this.getDiff();
 
-      if (!diff.password) {
-        delete diff.password;
+      if (diff && !diff.password) {
+        diff.password = null;
       }
 
       var view = this;

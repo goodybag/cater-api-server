@@ -824,6 +824,12 @@ var Restaurant = module.exports = Model.extend({
       query.columns.push(Restaurant.getContactsInfo(type));
     });
 
+    if ( query.limit !== 1 && orderParams && orderParams.withContractFirst ){
+      query.order.unshift('restaurants.plan_id is not null desc');
+      query.distinct.unshift('restaurants.plan_id is not null');
+      query.distinct = query.distinct.join(', ');
+    }
+
     Model.find.call(this, query, function(err, restaurants) {
       if (!err) {
         utils.invoke(restaurants, function() {

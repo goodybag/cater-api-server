@@ -455,11 +455,15 @@ define(function(require, exports, module) {
       return this;
     },
 
-    // Shouldn't be used a view method
-    // Should be used as an event handler
-    saveNewCardAndSubmit: function(e) {
-      var this_ = this;
-      var $el = this.$el.find('#new-card');
+    processCard: function (options, callback) {
+      if (utils.isFunction(options)) {
+        callback = options;
+        options = {};
+      }
+
+      var $el       = options.$el       || this.$el.find('#newCard');
+      var userId    = options.userId    || this.options.user.get('id');
+      var paymentId = options.paymentId || undefined;
 
       var data = {
         card_name:         $el.find('[name="card_name"]').val()
@@ -467,7 +471,7 @@ define(function(require, exports, module) {
       , security_code:     $el.find('[name="security_code"]').val()
       , expiration_month: +$el.find('[name="expiration_month"]').val()
       , expiration_year:  +$el.find('[name="expiration_year"]').val()
-      , save_card:         $el.find('[name="save_card"]:checked').length === 1
+      , save_card:         options.saveCard || false 
       };
 
       if (PaymentMethod.getCardType(data.card_number) == 'amex') {
@@ -478,10 +482,20 @@ define(function(require, exports, module) {
         , data);
       }
 
-      var pm = new PaymentMethod({ user_id: this.options.user.get('id') });
+      var pm = new PaymentMethod({ user_id: userId, id: paymentId });
+      pm.updateBalancedAndSave(data, callback);
+    },
 
-      // Save the card
-      pm.updateBalancedAndSave(data, function(error) {
+    saveNewCardAndSubmit: function(e) {
+      var this_ = this;
+      var $el = this.$el.find('#new-card');
+
+      this.processCard({
+        $el: $el
+      , userId: this.options.user.get('id')
+      , saveCard: true
+      }, 
+      function(errors) {
         if (error) return this_.displayErrors2(error, PaymentMethod);
 
         // Then revert back to "Pay Using" and select the newly added card
@@ -634,28 +648,13 @@ define(function(require, exports, module) {
       var this_ = this;
       var $el = this.$el.find('#update-card');
 
-      var pm = new PaymentMethod({
-        user_id: this.options.user.get('id')
-      , id: $el.find('[name="id"]').val()
-      });
-
-      var data = {
-        card_name:         $el.find('[name="card_name"]').val()
-      , card_number:       $el.find('[name="card_number"]').inputmask('unmaskedvalue')
-      , security_code:     $el.find('[name="security_code"]').val()
-      , expiration_month: +$el.find('[name="expiration_month"]').val()
-      , expiration_year:  +$el.find('[name="expiration_year"]').val()
-      };
-
-      if (PaymentMethod.getCardType(data.card_number) == 'amex') {
-        data = _.extend({
-          postal_code: $el.find('[name="postal_code"]').val()
-        , country_code: 'USA'
-        }
-        , data);
-      }
-
-      pm.updateBalancedAndSave(data, function(error) {
+      this.processCard({
+        $el: $el
+      , user_id: this.options.user.get('id')
+      , paymentId: $el.find('[name="id"]').val()
+      , saveCard: false
+      }, 
+      function(error) {
         if (error) return notify.error(error);
 
         this_.hideCardExpired();

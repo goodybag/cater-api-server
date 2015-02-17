@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var Handlebars = require('handlebars');
   var spinner = require('spinner');
+  var utils = require('utils');
 
   var PaymentMethod = require('../../models/payment-method');
 
@@ -202,11 +203,15 @@ define(function(require, exports, module) {
       this.saveNewCardAndSubmit(e);
     },
 
-    // Shouldn't be used a view method
-    // Should be used as an event handler
-    saveNewCardAndSubmit: function(e) {
-      var this_ = this;
-      var $el = this.$el.find('#new-card');
+    processCard: function (options, callback) {
+      if (utils.isFunction(options)) {
+        callback = options;
+        options = {};
+      }
+
+      var $el       = options.$el       || this.$el.find('#newCard');
+      var userId    = options.userId    || this.options.user.get('id');
+      var paymentId = options.paymentId || undefined;
 
       var data = {
         card_name:         $el.find('[name="card_name"]').val()
@@ -214,7 +219,7 @@ define(function(require, exports, module) {
       , security_code:     $el.find('[name="security_code"]').val()
       , expiration_month: +$el.find('[name="expiration_month"]').val()
       , expiration_year:  +$el.find('[name="expiration_year"]').val()
-      , save_card:         true
+      , save_card:         options.saveCard || false 
       };
 
       if (PaymentMethod.getCardType(data.card_number) == 'amex') {
@@ -225,10 +230,20 @@ define(function(require, exports, module) {
         , data);
       }
 
-      var pm = new PaymentMethod({ user_id: this.options.user.get('id') });
+      var pm = new PaymentMethod({ user_id: userId, id: paymentId });
+      pm.updateBalancedAndSave(data, callback);
+    },
 
-      // Save the card
-      pm.updateBalancedAndSave(data, function(errors) {
+    saveNewCardAndSubmit: function(e) {
+      var this_ = this;
+      var $el = this.$el.find('#new-card');
+
+      this.processCard({
+        $el: $el
+      , userId: this.options.user.get('id')
+      , saveCard: true 
+      }, 
+      function(errors) {
         spinner.stop();
         if (errors) return this_.displayErrors(errors, PaymentMethod);
         return window.location.reload();

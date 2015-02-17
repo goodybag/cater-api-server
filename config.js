@@ -537,7 +537,7 @@ config.india = {
   config.india[ key ] = config.staging[ key ];
 });
 
-config.india.logging = config.defaults.logging; // logging self manages env
+config.india.logging = _.cloneDeep(config.defaults.logging); // logging self manages env
 
 config.india.logging.mongoConnStr = false;
 

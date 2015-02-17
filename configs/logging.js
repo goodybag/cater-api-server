@@ -4,7 +4,7 @@ var
 , fs = require('fs')
 ;
 
-if (fs.existsSync('../local-config.json')){
+if (fs.existsSync('./local-config.json')){
   local = require('../local-config.json');
 }
 
@@ -13,11 +13,12 @@ module.exports = {
 , transports: {
     console: true
   , rollbar: true
+  , mongo:   true
   }
 , console: {
     json: true
   }
-, mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
+, mongoConnStr: local.loggingMongoConnStr || process.env['MONGOHQ_URL'] || 'mongodb://localhost:1337/logs'
 , mongoCollection: 'logs'
 , httpPort: 3001
 , url: 'http://localhost:3001'
@@ -25,44 +26,23 @@ module.exports = {
 
 var config = {
   dev: {
-    enabled: true
-  , transports: {
-      console: true
-    , rollbar: true
-    }
-  , console: {
+    console: {
       json: true
     }
-  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
-  , mongoCollection: 'logs'
   }
 
 , staging: {
-    enabled: true
-  , transports: {
-      console: true
-    , rollbar: true
-    }
-  , console: {
+    console: {
       json: true
     , raw: true
     }
-  , mongoConnStr: process.env['MONGOHQ_URL']
-  , mongoCollection: 'logs'
   }
 
 , production: {
-    enabled: true
-  , transports: {
-      console: true
-    , rollbar: true
-    }
-  , console: {
+    console: {
       json: true
     , raw: true
     }
-  , mongoConnStr: process.env['MONGOHQ_URL']
-  , mongoCollection: 'logs'
   }
 };
 

@@ -1629,6 +1629,12 @@ module.exports.register = function(app) {
   , m.remove( db.restaurants )
   );
 
+  app.put('/api/restaurants/:id/delivery-settings'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , controllers.api.restaurants.updateDeliverySettings
+  );
+
   app.post('/api/restaurants/:id/auto-update'
   , m.restrict(['admin'])
   , m.getRestaurant({

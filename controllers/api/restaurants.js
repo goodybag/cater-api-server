@@ -84,3 +84,32 @@ module.exports.autoPopulate = function( req, res ){
     res.sendStatus(204);
   });
 };
+
+module.exports.updateDeliverySettings = function(req, res) {
+  var deliveryZips = req.body.delivery_zips;
+  var restaurantId = req.params.id;
+  if ( deliveryZips.length ) {
+    var tx = db.tx.create();
+
+    deliveryZips = deliveryZips.map(function(dz) {
+      dz.restaurant_id = restaurantId;
+      return dz;
+    });
+    utils.async.series([
+      tx.begin.bind(tx)
+    , tx.restaurant_delivery_zips.remove.bind(tx.restaurant_delivery_zips, { restaurant_id: restaurantId }, { returning: ['*'] })
+    , tx.restaurant_delivery_zips.insert.bind(tx.restaurant_delivery_zips, deliveryZips)
+    ], function(err) {
+      if ( err ) {
+        tx.rollback();
+        return res.send(500, err);
+      }
+
+      return res.send(204);
+    });
+
+    // create transaction
+    // delete all delivery zips per this restaurant
+  }
+  res.sendStatus(204);
+};

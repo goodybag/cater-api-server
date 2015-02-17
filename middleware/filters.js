@@ -8,11 +8,14 @@
 var utils = require('../utils');
 var logger = require('../lib/logger').create('Middleware:Filters');
 
-var middleware = function(filters) {
+var middleware = function(filters, db) {
+  if (!db) {
+    db = require('db');
+  }
   return function middleware(req, res, next) {
     var fns = filters.map(function(filter) {
       return function(callback) {
-        require('../lib/filters/' + filter)(callback);
+        require('../lib/filters/' + filter)(callback, db);
       };
     });
 

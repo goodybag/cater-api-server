@@ -224,7 +224,8 @@ define(function(require, exports, module) {
 
     getLeadTime: function(order) {
       // Get the lowest lead time per guest amt
-      var limit = _.find(_.sortBy(this.get('lead_times'), 'max_guests'), function(obj) {
+      var leadtimes = order.get('type') === 'delivery' ? this.get('lead_times') : this.get('pickup_lead_times');
+      var limit = _.find(_.sortBy(leadtimes, 'max_guests'), function(obj) {
         return obj.max_guests >= order.get('guests');
       });
       return limit || 0;

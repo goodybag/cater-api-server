@@ -26,23 +26,12 @@ module.exports = {
 
 var config = {
   dev: {
-    console: {
-      json: true
-    }
   }
 
 , staging: {
-    console: {
-      json: true
-    , raw: true
-    }
   }
 
 , production: {
-    console: {
-      json: true
-    , raw: true
-    }
   }
 };
 

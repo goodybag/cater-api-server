@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, intercom: require('./configs/intercom')
 , yelp: require('./configs/yelp')
 , popularity: require('./configs/popularity')
 , reminders: require('./configs/reminders')
@@ -27,6 +28,7 @@ config.defaults = {
 , session: require('./configs/session')
 , diets: require('./configs/diets')
 , sortQueryTable: require('./configs/sort-query-table')
+, support: require('./configs/support')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
 
 , deliveryTime: {
@@ -35,11 +37,6 @@ config.defaults = {
       before: [ 0, 1 ]
     , after:  [ 1, 1 ]
     }
-  }
-
-, afterHours: {
-    start:  8   // 8am
-  , end:    18  // 6pm
   }
 
 , disallowOrdersBetween: {
@@ -326,11 +323,6 @@ config.dev = {
     secret: 'q3r0t2euni'
   }
 
-, intercom: {
-    apiSecret: 'A4NvND_qEf-ksKYhVw-GduUS2ruW2NlC39murXx2'
-  , appId: 'qsetwlny'
-  }
-
 , balanced: balancedConfig
 
 , ironMQ: {
@@ -418,11 +410,6 @@ config.staging = {
 
 , segmentIo: {
     secret: 'q3r0t2euni' // TODO: same as dev for now, replace later?
-  }
-
-, intercom: {
-    apiSecret: 'tumIlUFE__wGfvVxtAyESXRMroQJAz5csfMKULAY'
-  , appId: '6bxgiurw'
   }
 
 , balanced: {
@@ -518,11 +505,6 @@ config.production = {
 
 , segmentIo: {
     secret: 'k9ju1kq8vc'
-  }
-
-, intercom: {
-    apiSecret: '5I1eNUY_F6HKl_Gb15965fr5VgGfNlwny7WmyKZx'
-  , appId: '13s9qu57'
   }
 
 , balanced: {

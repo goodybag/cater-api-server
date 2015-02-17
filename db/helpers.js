@@ -259,6 +259,27 @@ mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
   return '';
 });
 
+mosql.registerQueryHelper('distinct', function(distinct, values, query){
+  if (typeof distinct != 'boolean' && typeof distinct != 'string' && !Array.isArray(distinct))
+    throw new Error('Invalid distinct type: ' + typeof distinct);
+
+  // distinct on
+  if (Array.isArray(distinct)) {
+     if(distinct.length === 0) return '';
+
+    return 'distinct on (' + distinct.map(function(col){
+      return mosqlUtils.quoteObject( col );
+    }).join(', ') + ')';
+  }
+
+  if ( typeof distinct === 'string' ){
+    return 'distinct on ( ' + distinct + ' )';
+  }
+
+  // distinct
+  return (distinct) ? 'distinct ': '';
+});
+
 // Make sure dates are formatted correctly
 dirac.use( function(){
   var afterPSFinds = function( results, $query, schema, next ){

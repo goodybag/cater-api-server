@@ -45,19 +45,26 @@ define(function (require, exports, module) {
         delete diff.password;
       }
 
-      this.model.save(diff,{
-        success: function (response) {
+      var view = this;
+      this.model.set(diff);
+      this.model.save(null, {
+        patch: true
+      , wait: true
+      , validate: false
+      , success: function (model, response, options) {
+          view.clearErrors();
           $('.alert-success').show();
         }
-      , error: function (error) {
-          notify.error(error);       
+      , error: function (model, response, options) {
+          view.clearErrors();
+          notify.error(response);       
           $('.alert-danger').show();
         }
       });
     },
 
     displayErrors: function (errors) {
-      if (errors.length <= 0) return;
+      if (!errors || errors.length < 1) return;
       errors.forEach(function (error) {
         var $el = $(error.selector);
         $el.find('.error-message').removeClass('hide');

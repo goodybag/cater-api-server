@@ -35,7 +35,6 @@ var config = {
     }
   , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
   , mongoCollection: 'logs'
-  , httpPort: 3001
   }
 
 , staging: {
@@ -50,7 +49,6 @@ var config = {
     }
   , mongoConnStr: process.env['MONGOHQ_URL']
   , mongoCollection: 'logs'
-  , httpPort: 3001
   }
 
 , production: {
@@ -65,7 +63,6 @@ var config = {
     }
   , mongoConnStr: process.env['MONGOHQ_URL']
   , mongoCollection: 'logs'
-  , httpPort: 3001
   }
 };
 

@@ -1,4 +1,4 @@
--- #772 restaurant contacts
+--- #772 restaurant contacts
 
 DO $$
  declare version       text := '1.2.6';

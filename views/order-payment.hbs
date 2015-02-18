@@ -14,19 +14,31 @@
 {{/extend}}
 
 <div class="page container">
-  <div class="row order-payment-view">
-    <div class="col-md-8">
-      <form id="payment-form">
-
-        {{> order_payment_info}}
-
-        <div class="list-group-item clearfix">
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-      </form>
+  <div class="order-payment-view">
+    <div class="alert alert-success fade in hide">
+       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Order Payment Received!</strong>
     </div>
-    <div class="col-md-4">
-      {{> checkout_order_summary }}
+
+    <div class="alert alert-danger fade in hide">
+       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Order Payment Failed!</strong>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <form id="payment-form">
+
+          {{> order_payment_info}}
+
+          <div class="list-group-item clearfix">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-4">
+        {{> checkout_order_summary }}
+      </div>
     </div>
   </div>
 </div>
@@ -36,118 +48,11 @@
 
 <script>
 require([
-  'app/views/checkout-view'
+  'app/views/order-payment-view'
 , 'app/models/index'
-, 'spinner'
 ],
-function(CheckoutView, Models, spinner) {
+function(OrderPaymentView, Models, spinner, FormView) {
   balanced.init({{{json config.balanced.marketplaceUri}}});
-
-  var OrderPaymentView = CheckoutView.extend({
-    events: {
-      'submit #payment-form':                         'submit',
-      'change input[type="radio"].payment-method':    'changePaymentMethod',
-      'change #payment-method-id':                    'onPaymentMethodIdChange',
-      'input input[name="card_number"]':              'onCardNumberChange'
-    },
-
-    fieldMap: {
-      payment_method_id: "#payment-method-id"
-    },
-
-    initialize: function () {
-      this.$paymentMethodId = this.$el.find('#payment-method-id');
-
-      // Trigger payment method id change to check if selected card is expired
-      this.onPaymentMethodIdChange();
-    },
-
-    submit: function (e) {
-      e.preventDefault();
-      spinner.start();
-      var this_ = this;
-      var $el = this.$el.find('#new-card');
-
-      this.processCard({
-        $el: $el
-      , userId: this.options.user.get('id')
-      , saveCard: true 
-      }, 
-      function(errors) {
-        spinner.stop();
-        if (errors) return this_.displayErrors(errors, Models.PaymentMethod);
-        return window.location.reload();
-      });
-    },
-
-        displayErrors: function( errors, Model ){
-      // Just in case!
-      spinner.stop();
-
-      var this_ = this;
-      var error, $el, $parent;
-      var template = Handlebars.partials.alert_error;
-      var selector = '[name="{property}"]';
-
-      if ( _.isObject( errors ) && !_.isArray( errors ) ){
-        // Amanda errors object
-        if ( '0' in errors ){
-          errors = Array.prototype.slice.call( errors )
-
-          // We're just going to use the `required` error text for everything
-          // so just take the unique on error.property
-          errors = _.chain(errors).map( function( error ){
-            return error.property;
-          }).unique().map( function( property ){
-            var message;
-            var noun = property;
-
-            if ( Model && typeof Model.fieldNounMap === 'object' )
-            if ( property in Model.fieldNounMap ){
-              noun = Model.fieldNounMap[ property ];
-            }
-
-            message = this_.errorTypeMessages.required.replace(
-              '{noun}', noun
-            );
-
-            return {
-              property: property
-            , message: message
-            };
-          }).value();
-        } else {
-          errors = [ errors ];
-        }
-      }
-
-      var css = {
-        position: 'absolute'
-      , top: '11px'
-      , width: '260px'
-      };
-
-      for ( var i = 0, l = errors.length; i < l; ++i ){
-        error = errors[i];
-
-        $el = $( template( error ) );
-        $el.css( css );
-
-        $parent = this.$el.find(
-          selector.replace( '{property}', error.property )
-        ).parents('.form-group').eq(0);
-
-        $parent.prepend( $el );
-        $parent.addClass('has-error');
-
-        $el.css( 'right', 0 - $el[0].offsetWidth );
-      }
-
-      // Scroll to the first error
-      $(document.body).animate({ scrollTop: this.$el.find('.has-error').eq(0).offset().top - 20 });
-    },
-
-  });
 
   var OrderPaymentView = new OrderPaymentView({
     el: '.order-payment-view'

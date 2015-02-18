@@ -483,7 +483,9 @@ define(function(require, exports, module) {
       }
 
       var pm = new PaymentMethod({ user_id: userId, id: paymentId });
-      pm.updateBalancedAndSave(data, callback);
+      pm.updateBalancedAndSave(data, function (errors) {
+        return callback(errors, pm);
+      });
     },
 
     saveNewCardAndSubmit: function(e) {
@@ -495,8 +497,8 @@ define(function(require, exports, module) {
       , userId: this.options.user.get('id')
       , saveCard: true
       }, 
-      function(errors) {
-        if (error) return this_.displayErrors2(error, PaymentMethod);
+      function(errors, pm) {
+        if (errors) return this_.displayErrors2(error, PaymentMethod);
 
         // Then revert back to "Pay Using" and select the newly added card
         this_.selectPaymentType('existing');

@@ -231,7 +231,9 @@ define(function(require, exports, module) {
       }
 
       var pm = new PaymentMethod({ user_id: userId, id: paymentId });
-      pm.updateBalancedAndSave(data, callback);
+      pm.updateBalancedAndSave(data, function (errors) {
+        callback(errors, pm);
+      });
     },
 
     saveNewCardAndSubmit: function(e) {

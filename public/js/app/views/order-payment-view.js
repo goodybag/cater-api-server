@@ -1,7 +1,9 @@
 define(function (require, exports, module) {
+  var utils = require('utils');
   var spinner = require('spinner');
   var FormView = require('./form-view');
   var CheckoutView = require('./checkout-view');
+  var PaymentMethod = require('../models/payment-method');
 
   return module.exports = CheckoutView.extend({
 
@@ -28,7 +30,6 @@ define(function (require, exports, module) {
       var this_ = this;
       spinner.start();
       this.clear();
-      console.log('submiting...')
 
       if (this.$el.find('[name="payment-method"]:checked').val() === 'new') {
         this.saveNewCardAndSubmit(e);
@@ -40,15 +41,18 @@ define(function (require, exports, module) {
     updateOrder: function (callback) {
         var this_ = this;
         var diff = this.getDiff();
+
+        // set payment_status to null for worker
+        this.options.model.set("payment_status", null);
+
         this.options.model.set(diff);
         this.options.model.save(null, {
-          patch: true
+          url: '/api/orders/'+this.options.model.get('id')
         , wait: true
         , validate: true
         , success: function (model, response, options) {
             spinner.stop();
             this_.$el.find('.alert-success').removeClass('hide');
-            console.log('finished ', model);
           }
         , errors: function (model, response, options) {
             spinner.stop();
@@ -67,7 +71,7 @@ define(function (require, exports, module) {
       }, 
       function(errors, pm) {
         spinner.stop();
-        if (errors) return this_.displayErrors(errors, Models.PaymentMethod);
+        if (errors) return this_.displayErrors(errors, PaymentMethod);
 
         // Then revert back to "Pay Using" and select the newly added card
         this_.selectPaymentType('existing');

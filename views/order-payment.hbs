@@ -10,6 +10,7 @@
   .item-edit {
     display: none;
   }
+  .center-text { text-align: center; }
 </style>
 {{/extend}}
 
@@ -38,6 +39,10 @@
       </div>
       <div class="col-md-4">
         {{> checkout_order_summary }}
+
+        <div class="list-group-item center-text">
+          <a href="{{config.baseUrl}}/orders/{{order.id}}">view full order</a>
+        </div>
       </div>
     </div>
   </div>

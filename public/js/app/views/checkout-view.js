@@ -498,7 +498,7 @@ define(function(require, exports, module) {
       , saveCard: true
       }, 
       function(errors, pm) {
-        if (errors) return this_.displayErrors2(error, PaymentMethod);
+        if (errors) return this_.displayErrors2(errors, PaymentMethod);
 
         // Then revert back to "Pay Using" and select the newly added card
         this_.selectPaymentType('existing');

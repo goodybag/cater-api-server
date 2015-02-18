@@ -31,6 +31,19 @@ var parsers = module.exports = [
       return new Date( val + ' 00:00:00' );
     }
   }
+
+, {
+    type: 'point'
+  , oid: 600
+  , fn: function( val ){
+    console.log('parsing point', val);
+      val = val.substring( 1, val.length - 1 ).split(',');
+      return {
+        x: parseFloat( val[0] )
+      , y: parseFloat( val[1] )
+      };
+    }
+  }
 ];
 
 var setTypeParser = function(parser) {

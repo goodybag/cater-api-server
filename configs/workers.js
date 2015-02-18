@@ -14,7 +14,7 @@ module.exports = {
     }
   , payment: {
       declined: {
-        interval: isDev ? 1000 * 10 : 1000 * 86400   // 1 day
+        interval: isDev ? 1000 * 10 : 24 * 60 * 60 * 1000   // 1 day
       }  
     }
 };

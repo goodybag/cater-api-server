@@ -17,7 +17,7 @@
         {{/unless}}
         <div class="tile-caption">
           <div class="tile-rating">{{{ratingStars yelp_data.rating}}}</div>
-          <h1 class="tile-title">{{name}}</h1>
+          <h1 class="tile-title">{{#if is_featured}}[Featured] {{/if}}{{name}}</h1>
         </div>
       </div>
       <div class="tile-info">

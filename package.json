@@ -105,7 +105,7 @@
     "when": "2.2.x",
     "wrench": "~1.5.8",
     "yelp": "~0.1.1",
-    "loglog-rollbar": "0.0.1"
+    "loglog-rollbar": "~0.0.2"
   },
   "devDependencies": {
     "loglog-server": "^1.0.6",

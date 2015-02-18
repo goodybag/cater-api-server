@@ -28,6 +28,7 @@ function worker() {
     function (next) {
       db.orders.find({
         payment_status: 'error'
+      , status: 'accepted'
       , datetime: { $gte: config.paymentFailedStartDate }
       }, next);
     }

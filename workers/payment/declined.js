@@ -8,12 +8,12 @@
 
 var config  = require('../../config');
 var db      = require('../../db');
-var logger  = require('../../lib/logger').create('Worker-Popularity');
+var logger  = require('../../lib/logger').create('Schedule Declined CC');
 var utils   = require('../../utils');
 var scheduler = require('../../lib/scheduler');
 
 
-function processOrder(order, done) {
+function scheduleOrder(order, done) {
   scheduler.enqueue('send-order-notifications', new Date(), {
     notification_id: 'user-order-payment-failed'
   , order_id: order.id
@@ -22,7 +22,7 @@ function processOrder(order, done) {
 
 function worker() {
   logger.info('Scheduling declined cc notiications');
-  
+
   utils.async.waterfall(
   [
     function (next) {
@@ -40,7 +40,7 @@ function worker() {
     };
 
     var limit = 5;
-    utils.async.eachLimit(orders, limit, processOrder, next);
+    utils.async.eachLimit(orders, limit, scheduleOrder, next);
   }
   ], function (error) {
     if (error) {

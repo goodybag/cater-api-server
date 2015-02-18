@@ -51,7 +51,7 @@ module.exports.work = function( storage, callback ){
       callback( err );
     }
 
-    var notifyFn = notifier.send.bind( notifier, 'gb-order-payment-failed' ); 
+    var notifyFn = notifier.send.bind( notifier, 'gb-order-payment-failed' );
     utils.async.each( orders, notifyFn, function done( err ){
       if ( err ){
         return callback( err );

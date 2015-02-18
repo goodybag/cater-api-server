@@ -51,8 +51,12 @@ define(function (require, exports, module) {
         , wait: true
         , validate: true
         , success: function (model, response, options) {
-            spinner.stop();
-            this_.$el.find('.alert-success').removeClass('hide');
+            model.changeStatus('submitted', true, function (error, data) {
+              if (error) return notify.error(error);
+
+              spinner.stop();
+              this_.$el.find('.alert-success').removeClass('hide');
+            });
           }
         , errors: function (model, response, options) {
             spinner.stop();

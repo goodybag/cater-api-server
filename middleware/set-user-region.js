@@ -29,6 +29,10 @@ module.exports = function( options ){
     }
 
     if ( !zip && !region && req.user.attributes.region_id ){
+      req.user.attributes.region = utils.findWhere( req.regions, {
+        id: req.user.attributes.region_id
+      });
+      
       return next();
     }
 
@@ -57,6 +61,8 @@ module.exports = function( options ){
     }
 
     req.user.attributes.region = utils.findWhere( req.regions, { id: region_id } );
+
+    console.log(req.user.attributes.region);
 
     return next();
   };

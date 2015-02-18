@@ -365,6 +365,11 @@ config.dev = {
         interval: 1000 * 5    // 5 seconds
       }
     }
+  , payment: {
+      declined: {
+        interval: 1000 * 86400 // 1 day
+      }  
+    }
   }
 };
 

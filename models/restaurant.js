@@ -397,9 +397,9 @@ var Restaurant = module.exports = Model.extend({
 
     query = query || {};
     query.columns = query.columns || ['*'];
-    query.order = query.order || ["is_unacceptable ASC", "restaurants.popularity DESC", "restaurants.id ASC"];
+    query.order = query.order || ["is_unacceptable ASC", "restaurants.is_featured DESC", "restaurants.popularity DESC", "restaurants.id ASC"];
     query.joins = query.joins || {};
-    query.distinct = (query.distinct != null) ? query.distinct : ["restaurants.name", "is_unacceptable", "restaurants.id", "restaurants.popularity"];
+    query.distinct = (query.distinct != null) ? query.distinct : ["restaurants.name", "is_unacceptable", "restaurants.id", "restaurants.popularity", "restaurants.is_featured"];
     query.where = query.where || {};
     query.includes = query.includes || [];
 

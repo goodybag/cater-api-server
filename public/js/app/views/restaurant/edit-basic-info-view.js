@@ -17,6 +17,7 @@ define(function(require, exports, module) {
     , yelp_business_id:                         '#input-yelp'
     , is_hidden:                                '#input-hidden'
     , is_archived:                              '#input-archived'
+    , is_featured:                              '#input-featured'
     , logo_url:                                 '#input-logo-url'
     , region_id:                                '[name="region_id"]'
     , is_fee_on_total:                          '[name="is_fee_on_total"]'
@@ -35,6 +36,10 @@ define(function(require, exports, module) {
 
       is_archived: function() {
         return this.$el.find(this.fieldMap.is_archived).is(':checked');
+      },
+
+      is_featured: function() {
+        return this.$el.find(this.fieldMap.is_featured).is(':checked');
       },
 
       yelp_business_id: function() {

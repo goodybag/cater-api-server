@@ -26,7 +26,7 @@ module.exports.fn = function(job, done) {
       return done(error);
     }
     if ( valid(order) ) {
-      logger.info('Sending delivery service order submitted notification');
+      logger.info('Sending restaurant tomorrow order notification');
       return notifier.send('restaurant-tomorrow-order', orderId, done);
     }
     return done();

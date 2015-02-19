@@ -53,7 +53,15 @@ var debitCustomer = function (order, callback) {
         }
       }, function (error, debit) {
         // construct a model to run the following transactions
-        if (error) return (new models.Order(order)).setPaymentError(error.uri, error, callback);
+        if (error) {
+          // also enqueue declined cc notification on scheduler
+          return scheduler.enqueue('send-order-notifications', new Date(), {
+            notification_id: 'user-order-payment-failed'
+          , order_id: order.id
+          }, function (err) {
+            return (new models.Order(order)).setPaymentError(error.uri, error, callback);
+          }); 
+        }
         return (new models.Order(order)).setPaymentPaid('debit', debit.uri, debit, callback);
       });
   });

@@ -122,7 +122,9 @@
           <div id="user-info" class="list-group-item clearfix">
             <div class="col-md-12">
               <legend>User Information</legend>
-              <p>We never got your name! We need to know your first and last name for the receipt</p>
+              {{#if (not order.user.name)}}
+                <p>We never got your name! We need to know your first and last name for the receipt</p>
+              {{/if}}
               <div class="row">
                 <div class="form-group col-sm-6">
                   <label class="control-label">Your First and Last Name (required)</label>

@@ -171,7 +171,13 @@ define(function(require) {
   , is_archived: {
       type: types.boolean
     , nullable: false
-    , default: false 
+    , default: false
+    , editable: ['admin']
+    }
+  , is_featured: {
+      type: types.boolean
+    , nullable: false
+    , default: false
     , editable: ['admin']
     }
   , region_id: {

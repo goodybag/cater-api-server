@@ -25,6 +25,11 @@
           <ul class="inline-list inline-list-bulleted">
             <li>{{truncate (join cuisine ", ") 35}}</li>
             <li><span class="dollar-meter">{{{dollarMeter this.price}}}</span></li>
+            {{#if is_featured}}
+            <div class="tile-featured">
+              Featured <span class="gb-icon-flame" data-toggle="tooltip" data-title="Featured Restaurant"></span>
+            </div>
+            {{/if}}
           </ul>
         </div>
         <div>

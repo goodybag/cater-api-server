@@ -7,10 +7,6 @@ define(function(require){
       var Model = this_.options.model;
       var ItemView = this_.options.itemView;
 
-      // Enable plugins
-      $('[data-role="popover"]').gb_popover();
-      $('[data-toggle="tooltip"]').tooltip();
-
       // Init toggle visibility views
       this.options.itemSelector = this.options.itemSelector || '.table-list-item';
       this.$el.find(this.options.itemSelector).each(function(idx, el) {

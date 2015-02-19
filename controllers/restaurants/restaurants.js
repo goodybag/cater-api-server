@@ -15,6 +15,7 @@ var
 cuisines = cuisines.sort();
 
 var models = require('../../models');
+var restaurantDefinitionSchema = require('../../db/definitions/restaurants').schema;
 
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
@@ -48,7 +49,8 @@ module.exports.list = function(req, res) {
         includes: [
           { type: 'filter_restaurant_events' }
         ]
-      , where: {}
+      , limit: 'all'
+      , where: { is_archived: false }
       , limit: shouldPaginate ? paginationLimit : 'all'
       , offset: shouldPaginate ? (page - 1) * paginationLimit : 0
       };
@@ -395,44 +397,19 @@ var mealStyles = function(body, id) {
   });
 };
 
-// maybe this ought to come from the restaurant model?
-var fields = [
-  'name',
-  'logo_url',
-  'logo_mono_url',
-  'is_hidden',
-  'street',
-  'city',
-  'state',
-  'zip',
-  'sms_phones',
-  'voice_phones',
-  'display_phone',
-  'emails',
-  'minimum_order',
-  'price',
-  'cuisine',
-  'yelp_business_id',
-  'websites',
-  'description',
-  'billing_email',
-  'billing_street',
-  'billing_street2',
-  'billing_city',
-  'billing_state',
-  'billing_zip',
-  'gb_fee',
-  'is_direct_deposit',
-  'is_fee_on_total',
-  'disable_courier',
-  'delivery_service_head_count_threshold',
-  'delivery_service_order_amount_threshold',
-  'delivery_service_order_total_upperbound',
-  'region_id'
-];
+// get keys from restaurant definition shema
+var getFields = function (req) {
+  return Object.keys( restaurantDefinitionSchema ).filter( function ( key ) {
+    return req.user.attributes.groups.some( function ( group ) {
+      return utils.contains( restaurantDefinitionSchema[ key ].editable, group);
+    });
+  });
+};
 
 module.exports.create = function(req, res) {
   var logger = req.logger.create('Controller-RestaurantsCreate');
+
+  var fields = getFields( req );
 
   // Normalize single quotes to apostrophe for balanced
   var name = req.body.name.replace(/[‘’]/g, '\'');
@@ -489,6 +466,8 @@ module.exports.create = function(req, res) {
 }
 
 module.exports.update = function(req, res) {
+  var fields = getFields( req );
+
   // this should be an array of three functions, each an async eachSeries to destroy and recreate
   // the subrecords associated with this restaurant.
   // it's a series, so the delete query should always complete before the assocated insert query on the same table.

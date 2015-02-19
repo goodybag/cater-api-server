@@ -124,6 +124,10 @@
               <legend>User Information</legend>
               {{#if (not order.user.name)}}
                 <p>We never got your name! We need to know your first and last name for the receipt</p>
+              {{else}}
+                {{#if (and (eq order.user.organization_type 'business') (not order.user.organization)) }}
+                <p>We never got your organization!</p>
+                {{/if}}
               {{/if}}
               <div class="row">
                 <div class="form-group col-sm-6">

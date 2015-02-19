@@ -52,13 +52,16 @@ var debitCustomer = function (order, callback) {
         , order_uuid: order.uuid
         }
       }, function (error, debit) {
-        // construct a model to run the following transactions
         if (error) {
-          // also enqueue declined cc notification on scheduler
+          // enqueue declined cc notification on scheduler
           return scheduler.enqueue('send-order-notifications', new Date(), {
             notification_id: 'user-order-payment-failed'
           , order_id: order.id
           }, function (err) {
+            if (err) {
+              logger.error({ error: err });
+            }
+            // construct a model to run the following transactions
             return (new models.Order(order)).setPaymentError(error.uri, error, callback);
           }); 
         }

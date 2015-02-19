@@ -28,14 +28,37 @@
 
     <div class="row">
       <div class="col-md-8">
+        {{#if (eq order.payment_status "error") }}
         <form id="payment-form">
-
           {{> order_payment_info}}
-
           <div class="list-group-item clearfix">
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
         </form>
+        {{else}}
+        <div class="list-group-item">
+          <div class="col-md-12">
+            <legend>Payment Info</legend>
+          </div>
+          <dl class="dl-horizontal">
+            {{#each order.user.payment_methods}}
+              {{#if (eq ../order.payment_method_id id)}}
+                <dt>Card</dt>
+                <dd>*****{{data.last_four}}</dd>
+                <dt>Card Name</dt>
+                <dd>{{name}}</dd>
+                <dt>Card Type</dt>
+                <dd>{{data.brand}}</dd>
+                <dt>Exp</dt>
+                <dd>{{data.expiration_month}} / {{data.expiration_year}}</dd>
+              {{/if}}
+            {{/each}}
+            <dt>Payment Status</dt>
+            <dd>{{order.payment_status}}</dd>
+          </dl>
+
+        </div>
+        {{/if}}
       </div>
       <div class="col-md-4">
         {{> checkout_order_summary }}

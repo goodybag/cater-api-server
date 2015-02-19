@@ -55,4 +55,5 @@ module.exports = {
 , storeUserAgent: require('./store-user-agent')
 , timeout: require('./timeout')
 , userViewedEvent: require('./user-viewed-event')
+, updateBalancedCustomer: require('./update-balanced-customer')
 };

@@ -29,6 +29,9 @@
     <div class="row">
       <div class="col-md-8">
         {{#if (eq order.payment_status "error") }}
+        <div class="alert alert-danger">
+          <strong>Card Declined!</strong> An error occurred while trying to process your card, please resubmit your order payment. If you have any questions, contact our customer support team at (512) 270-6555.
+        </div>
         <form id="payment-form">
           {{> order_payment_info}}
           <div class="list-group-item clearfix">
@@ -53,6 +56,14 @@
                 <dd>{{data.expiration_month}} / {{data.expiration_year}}</dd>
               {{/if}}
             {{/each}}
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Payment Type</dt>
+            {{#if order.user.is_invoiced}}
+              <dd>invoiced</dd>
+            {{else}}
+              <dd>card</dd>
+            {{/if}}
             <dt>Payment Status</dt>
             <dd>{{order.payment_status}}</dd>
           </dl>

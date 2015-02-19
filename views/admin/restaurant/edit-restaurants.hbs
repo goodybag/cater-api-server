@@ -23,13 +23,13 @@
       <div class="sort-info">Sorted by Name Desc</div>
     </div>
   
-    <ul class="component list-nav nav">
+    <div class="component list-nav nav">
       {{> admin_restaurant_filter_region }}
       {{> admin_restaurant_filter_visible }}
       {{> admin_restaurant_filter_sort }}
-    </ul>
+    </div>
   </div>
-  <div class="list-items">
+  <div class="list-items" id="restaurant-list-items">
     {{#each restaurants}}
     <div class="list-item" data-restaurant="{{json this}}">
       <label class="component item-selector">
@@ -43,7 +43,9 @@
         <a class="table-list-item-action is-hidden-toggle" href="#" data-toggle="tooltip" data-title="Toggle Visibility">
           <span class="gb-icon-eye-slash icon-large {{#unless is_hidden}}hide{{/unless}}"></span>
           <span class="gb-icon-eye icon-large {{#if is_hidden}}hide{{/if}}"></span>
+        </a>
         <a class="table-list-item-action" href="{{baseUrl}}/admin/restaurants/{{id}}/contacts" data-toggle="tooltip" data-title="View Contacts"><span class="gb-icon-user icon-large"></span></a>
+        <button class="table-list-item-action btn btn-default is-archived-toggle">{{#if is_archived}} unarchive {{else}} archive {{/if}}</button>
       </div>
     </div>
     {{/each}}
@@ -61,15 +63,20 @@
   require([
     'jquery-loaded'
   , 'app/views/admin/table-list-view'
-  , 'app/views/admin/toggle-hidden-view'
+  , 'app/views/admin/edit-restaurants-view'
   , 'app/models/restaurant'
   ],
-  function($, TableListView, ToggleHiddenView, Restaurant){
-    var tableListView = new TableListView({
+  function($,TableListView, EditRestaurantsView, Restaurant){
+
+    // Enable plugins
+    $('[data-role="popover"]').gb_popover();
+    $('[data-toggle="tooltip"]').tooltip();
+      
+    var TableListView = new TableListView({
       el: '#restaurant-list'
-    , model: Restaurant
+    , model: Restaurant 
     , dataAttr: 'restaurant'
-    , itemView: ToggleHiddenView
+    , itemView: EditRestaurantsView 
     });
   });
 </script>

@@ -1,14 +1,16 @@
 var utils = require('utils');
 
 module.exports = function(options) {
+  if (typeof options !== 'object')
+    throw new Error('Update Balanced Customer requires options');
+
+  utils.enforceRequired(options, [
+    'required'
+  , 'pick'
+  ]);
+
   return function(req, res, next) {
     var logger = req.logger.create('Update balanced customer');
-
-    utils.enforceRequired(options, [
-      'required'
-    , 'pick'
-    ]);
-
     var obj = req[options.required];
     var data = utils.pick(req.body, options.pick);
 

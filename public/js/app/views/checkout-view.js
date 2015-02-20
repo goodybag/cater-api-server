@@ -461,9 +461,14 @@ define(function(require, exports, module) {
         options = {};
       }
 
-      var $el       = options.$el       || this.$el.find('#newCard');
-      var userId    = options.userId    || this.options.user.get('id');
-      var paymentId = options.paymentId || undefined;
+      utils.defaults(options, {
+        $el: this.$el.find('#newCard')
+      , userId: this.options.user.get('id')
+      , paymentId: undefined
+      , saveCard: false
+      });
+
+      var $el = options.$el;
 
       var data = {
         card_name:         $el.find('[name="card_name"]').val()
@@ -471,7 +476,7 @@ define(function(require, exports, module) {
       , security_code:     $el.find('[name="security_code"]').val()
       , expiration_month: +$el.find('[name="expiration_month"]').val()
       , expiration_year:  +$el.find('[name="expiration_year"]').val()
-      , save_card:         options.saveCard || false 
+      , save_card:         options.saveCard
       };
 
       if (PaymentMethod.getCardType(data.card_number) == 'amex') {
@@ -482,7 +487,7 @@ define(function(require, exports, module) {
         , data);
       }
 
-      var pm = new PaymentMethod({ user_id: userId, id: paymentId });
+      var pm = new PaymentMethod({ user_id: options.userId, id: options.paymentId });
       pm.updateBalancedAndSave(data, function (errors) {
         return callback(errors, pm);
       });

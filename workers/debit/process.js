@@ -54,7 +54,7 @@ var debitCustomer = function (order, callback) {
       }, function (error, debit) {
         if (error) {
           // enqueue declined cc notification on scheduler
-          return scheduler.enqueue('send-order-notifications', new Date(), {
+          return scheduler.enqueue('send-order-notification', new Date(), {
             notification_id: 'user-order-payment-failed'
           , order_id: order.id
           }, function (err) {

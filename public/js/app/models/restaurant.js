@@ -1,9 +1,16 @@
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
+  };
+}
+
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
   var Categories = require('../collections/categories');
   var states = require('states');
   var utils = require('utils');
+  var _ = require('lodash');
 
   var regex = {
     url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/

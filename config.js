@@ -6,7 +6,7 @@ var
   os = require('os')
 , fs =  require('fs')
 , _ = require('lodash')
-, balancedConfig = fs.existsSync(__dirname+'/balanced-config.json') ? require('./balanced-config.json') : undefined // used in dev
+, balancedConfig = fs.existsSync(__dirname+'/balanced-config.json') ? require('./balanced-config.json') : require('./balanced-test-config.json') // used in dev
 , local = {}
 , pdf = require('./pdf-config')
 ;

@@ -6,5 +6,5 @@
   , "margin": { "left": "1.4cm", "right": "1.4cm", "top": "1.5cm", "bottom": "1cm" }
   , "orientation": "portrait"
   },
-  "zoomFactor": 1
+  "zoomFactor": 0.75
 }

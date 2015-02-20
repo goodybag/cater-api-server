@@ -495,7 +495,7 @@ define(function(require, exports, module) {
       this.processCard({
         $el: $el
       , userId: this.options.user.get('id')
-      , saveCard: true
+      , saveCard: $el.find('[name="save_card"]:checked').length === 1
       }, 
       function(errors, pm) {
         if (errors) return this_.displayErrors2(errors, PaymentMethod);

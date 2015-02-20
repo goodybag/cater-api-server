@@ -5,6 +5,7 @@ var models = require('../../models');
 var db = require('../../db');
 var config = require('../../config');
 var _ = utils._;
+var scheduler = require('../../lib/scheduler')
 
 var checkForExistingDebit = function (order, callback) {
   var logger = process.domain.logger.create('checkForExistingDebit', {

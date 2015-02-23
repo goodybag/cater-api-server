@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
     initialize: function() {
       OrderView.prototype.initialize.apply(this, arguments);
-      this.addressView = new OrderAddressView({el: '.edit-address-view', model: this.model.address, orderView: this, user: this.options.user});
+      this.addressView = new OrderAddressView({el: '.delivery-info-address', model: this.model.address, orderView: this, user: this.options.user});
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.originalTipValue = this.$el.find('.order-tip').val();
       this.originalTipPercent = this.$el.find('.tip-percent').val();

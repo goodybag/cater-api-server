@@ -91,7 +91,12 @@ define(function(require, exports, module) {
 
     getDiff: function() {
       var diff = FormView.prototype.getDiff.apply(this, arguments);
-      var addrDiff = this.addressView.getDiff.apply(this.addressView, arguments);
+      var addrDiff = this.addressView.getDiff.apply({
+        fieldMap: this.addressView.fieldMap
+      , fieldGetters: this.addressView.fieldGetters
+      , $el: this.$el
+      , model: this.model
+      }, arguments);
       return diff || addrDiff ? _.extend({}, diff, addrDiff) : null;
     },
 

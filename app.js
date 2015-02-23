@@ -97,6 +97,8 @@ app.use( function( req, res, next ){
 
 if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accessToken));
 
+rollbar.handleUncaughtExceptions(config.rollbar.accessToken, { exitOnUncaughtException: false });
+
 app.use(function(err, req, res, next){
   console.error(err);
   req.logger.error(err instanceof Error ? err.toString() : err);

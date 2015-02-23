@@ -1592,7 +1592,7 @@ module.exports.register = function(app) {
               }]
     })
   , m.view( 'invoice/payment-summary', db.payment_summaries, {
-      layout: 'invoice/payment-summary-layout'
+      layout: 'invoice/invoice-layout'
     , method: 'findOne'
     })
   );

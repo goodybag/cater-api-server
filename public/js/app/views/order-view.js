@@ -95,8 +95,13 @@ define(function(require, exports, module) {
         fieldMap: this.addressView.fieldMap
       , fieldGetters: this.addressView.fieldGetters
       , $el: this.$el
-      , model: this.model
+      , model: this.addressView.model
       }, arguments);
+
+      if (addrDiff && 'name' in addrDiff) {
+        //TODO: match order address to order api
+        delete addrDiff['name'];
+      }
       return diff || addrDiff ? _.extend({}, diff, addrDiff) : null;
     },
 

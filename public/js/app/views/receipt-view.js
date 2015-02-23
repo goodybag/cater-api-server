@@ -7,6 +7,7 @@ define(function(require, exports, module) {
 
   var OrderView = require('./order-view');
   var FormView = require('./form-view');
+  var OrderAddressView = require('./order-address-view');
   var TipView = require('./tip-view');
   var CopyErrorModalView = require('./copy-error-modal');
   var ItemModal = require('./item-modal');
@@ -39,6 +40,7 @@ define(function(require, exports, module) {
 
     initialize: function() {
       OrderView.prototype.initialize.apply(this, arguments);
+      this.addressView = new OrderAddressView({el: '.edit-address-view', model: this.model.address, orderView: this, user: this.options.user});
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.originalTipValue = this.$el.find('.order-tip').val();
       this.originalTipPercent = this.$el.find('.tip-percent').val();

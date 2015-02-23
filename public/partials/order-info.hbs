@@ -70,7 +70,9 @@
   {{> address order}}
   {{else}}
   {{#with orderAddress}}
-  {{> edit_address}}
+  <div class="edit-address-view">
+    {{> edit_address}}
+  </div>
   {{/with}}
   <div class="btn-toolbar pull-right">
     <button type="button" class="btn btn-default cancel-edit-btn">Cancel</button>

@@ -89,6 +89,15 @@ dirac.autoJoin = function( options ){
   }
 };
 
+// mosql.registerQueryType( 'insert-one-with-many', [
+//   'do $$'
+// , '  declare r record;'
+// , 'begin'
+// , '  {{mainInsert}} into r;'
+// , '  {{mainInsert}} into r;'
+// , 'end$$;'
+// ].join(''));
+
 mosql.registerQueryType( 'one', [
   'select row_to_json( {table} )'
 , '  from {table}'

@@ -5,9 +5,9 @@ var options = {
   name: 'generate.stamp'
 , description: [
     'Generate a stamp worker file\n'
-  , '  Usage: grunt generate.stamp:filename'
+  , '  Usage: grunt generate.stamp:folder'
   ].join('')
-, dest: 'workers/reminder/reminders'
+, dest: 'public/js/app/stamps'
 };
 
 var tmpl = function( data ){
@@ -49,10 +49,14 @@ module.exports = function( grunt ){
       fs.mkdirSync( options.dest );
     }
 
-    Array.prototype.slice.call( arguments ).forEach( function( filename ){
-      var dest = path.join( options.dest, filename ) + '.js';
+    Array.prototype.slice.call( arguments ).forEach( function( folder ){
+      var dest = path.join( options.dest, folder );
       grunt.log.writeln( 'Creating', dest );
-      fs.writeFileSync( dest, tmpl({ name: filename[0].toUpperCase() + filename.slice(1) }) );
+      fs.mkdirSync( dest );
+      fs.writeFileSync(
+        path.join( dest, 'index.js')
+      , tmpl({ name: folder[0].toUpperCase() + folder.slice(1) })
+      );
     });
   });
 };

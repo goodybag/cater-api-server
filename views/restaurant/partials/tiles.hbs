@@ -3,7 +3,7 @@
   <div class="tile">
     <a class="tile-link" title="{{name}}" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
       <div class="tile-cover" style="background-image: url('{{filepicker list_photo_url}}');">
-        {{#unless has_contract}}
+        {{#if (and no_contract_fee (not has_contract))}}
         <div class="tile-corner">
           <div
             class="tile-fee"
@@ -14,7 +14,7 @@
             Fee
           </div>
         </div>
-        {{/unless}}
+        {{/if}}
         <div class="tile-caption">
           <div class="tile-rating">{{{ratingStars yelp_data.rating}}}</div>
           <h1 class="tile-title">{{name}}</h1>

@@ -1197,6 +1197,7 @@ module.exports.register = function(app) {
     , deliveryService:        true
     , restaurantDbModelFind:  true
     })  
+  , controllers.orders.auth
   , m.view( 'order-payment',{
 
    })

@@ -47,7 +47,7 @@ define(function (require, exports, module) {
 
         this.options.model.set(diff);
         this.options.model.save(null, {
-          url: '/api/orders/'+this.options.model.get('id')
+          patch: true
         , wait: true
         , validate: true
         , success: function (model, response, options) {

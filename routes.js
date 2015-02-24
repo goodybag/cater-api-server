@@ -2095,6 +2095,65 @@ module.exports.register = function(app) {
   );
 
   /**
+   * User Invoices
+   */
+
+  app.get('/api/invoices'
+  , m.restrict(['admin'])
+  , m.sort('-id')
+  , m.queryOptions({
+      many: []
+    })
+  , m.find( db.user_invoices )
+  );
+
+  app.post('/api/invoices'
+  , m.restrict(['admin'])
+  , m.insert( db.user_invoices )
+  );
+
+  app.get('/api/invoices/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.sort('-id')
+  , m.queryOptions({
+      one:  [ { table: 'users', alias: 'user' } ]
+    , many: [ { table: 'user_invoice_orders'
+              , alias: 'orders'
+              , mixin: [{ table: 'orders' }]
+              }
+            ]
+    })
+  , m.find( db.user_invoices )
+  );
+
+  app.put('/api/invoices/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.user_invoices )
+  );
+
+  app.delete('/api/invoices/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.user_invoices )
+  );
+
+  app.post('/api/invoices/:user_invoice_id/orders/:order_id'
+  , m.restrict(['admin'])
+  , m.queryToBody('user_invoice_id')
+  , m.queryToBody('order_id')
+  , m.insert( db.user_invoice_orders )
+  );
+
+  app.del('/api/invoices/:user_invoice_id/orders/:order_id'
+  , m.restrict(['admin'])
+  , m.param('user_invoice_id')
+  , m.param('order_id')
+  , m.remove( db.user_invoice_orders )
+  );
+
+  /**
    * Amenities
    */
 

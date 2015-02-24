@@ -2101,8 +2101,21 @@ module.exports.register = function(app) {
   app.get('/api/invoices'
   , m.restrict(['admin'])
   , m.sort('-id')
-  , m.queryOptions({
-      many: []
+  , m.pagination({ allowLimit: true })
+  , m.param('user_id')
+  , m.param( 'from', function( value, $where, $options ){
+      utils.defaults( $where, {
+        billing_period_start: {}
+      });
+
+      $where.billing_period_start.$gte = value;
+    })
+  , m.param( 'to', function( value, $where, $options ){
+      utils.defaults( $where, {
+        billing_period_end: {}
+      });
+
+      $where.billing_period_end.$lt = value;
     })
   , m.find( db.user_invoices )
   );

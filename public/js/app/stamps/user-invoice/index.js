@@ -13,16 +13,17 @@ define( function( require, exports, module ){
 
   module.exports = stampit();
 
-var stamps = {
-  
-};
+  var stamps = {
+    autoPopulate: require('./auto-populate')
+  , db:           require('./db')
+  };
 
-module.exports = module.exports.compose.apply(
-  module.exports
-, utils.values( stamps )
-);
+  module.exports = module.exports.compose.apply(
+    module.exports
+  , utils.values( stamps )
+  );
 
-utils.extend( module.exports, stamps );
+  utils.extend( module.exports, stamps );
 
-return module.exports;
+  return module.exports;
 });

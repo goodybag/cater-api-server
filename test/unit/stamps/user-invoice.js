@@ -25,8 +25,8 @@ describe('Stamps', function(){
       it ('.save() update existing record', function( done ){
         var doc = {
           user_id: 1
-        , billing_period_start: '2015-01-01'
-        , billing_period_end: '2015-01-15'
+        , billing_period_start: new Date('2015-01-01')
+        , billing_period_end: new Date('2015-01-15')
         };
 
         db.user_invoices.insert( doc, function( error, result ){
@@ -34,8 +34,8 @@ describe('Stamps', function(){
 
           var invoice = invoices.db.create( result[0] );
 
-          invoice.billing_period_start = '2015-01-15';
-          invoice.billing_period_end = '2015-02-01';
+          invoice.billing_period_start = new Date('2015-01-15');
+          invoice.billing_period_end = new Date('2015-02-01');
 
           invoice.save( function( error ){
             if ( error ) return done( error );
@@ -43,8 +43,8 @@ describe('Stamps', function(){
             db.user_invoices.findOne( invoice.id, function( error, record ){
               if ( error ) return done( error );
 
-              assert.equal( record.billing_period_start, invoice.billing_period_start );
-              assert.equal( record.billing_period_end, invoice.billing_period_end );
+              assert.equal( record.billing_period_start.toString(), invoice.billing_period_start.toString() );
+              assert.equal( record.billing_period_end.toString(), invoice.billing_period_end.toString() );
 
               done();
             });

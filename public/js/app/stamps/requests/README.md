@@ -44,8 +44,10 @@ __usage:__
 require('stamps/requests/geocode').create()
   .address('5336 Krueger Ln., Austin, TX, 78723')
   .send()
-  .then( function( ) )
   .catch( console.log.bind( console ) )
+  .then( function( geoRes ){
+    geoRes.status === 'OK';
+  });
 ```
 
 ### `.geocode().address( string address ) -> this`

@@ -13,6 +13,8 @@
 @tile-title-line-height: 26px;
 @tile-corner-background-color: rgba(255,255,255,0.7);
 @tile-rating-width: 110px;
+@tile-featured-color: @palette-red;
+@tile-featured-font-size: 16px;
 
 .tile-width(@cols) {
   width: (100% - (@cols * @tile-gutter)) / @cols;
@@ -165,4 +167,14 @@
   bottom: 0;
   padding-left: 20px;
   background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%,#FFF 20px,#FFF 100%);
+}
+
+.tile-featured {
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: @tile-featured-color;
+  .gb-icon-flame {
+    font-size: @tile-featured-font-size;
+  }
 }

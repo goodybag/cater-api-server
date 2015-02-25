@@ -28,13 +28,19 @@ function format(res, $query, $options) {
       return option.active;
     });
 
-    options = utils.pluck(options, 'value');
     if ( options.length ) {
+      var hidden = utils.findWhere(options, { name: 'Hidden' });
+      // !xor the user's selections
+      var hiddenAndVisible = !utils.result(hidden,'active') ^ utils.result(utils.findWhere(options, { name: 'Visible' }), 'active');
+
       utils.extend($query, {
-        'is_hidden': {
-          $in: options
-        }
+        'is_hidden':  utils.result(hidden, 'value') || false
+      , 'is_archived': utils.result(utils.findWhere(options, { name: 'Archived' }), 'value') || false
       });
+
+      if (hiddenAndVisible) {
+        delete $query['is_hidden'];
+      }
     }
   }
 

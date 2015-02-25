@@ -30,6 +30,11 @@ var parseDatetime = function(opts) {
   return datetime.format(opts.fmt);
 };
 
+var getAddress = function(obj) {
+  if (!obj) return 'N/A';
+  return [obj.street, obj.street2, obj.city, ', ' + obj.state, obj.zip].join(' ');
+};
+
 var reports = {
 
   dateFormat: 'MM-DD-YYYY',
@@ -88,6 +93,8 @@ var reports = {
     , 'Time Accepted'
     , 'Delivery Date'
     , 'Delivery Time'
+    , 'Delivery Address'
+    , 'Pickup Address'
     , 'Origin Zip'
     , 'Destination Zip'
     , 'User Name'
@@ -137,6 +144,7 @@ var reports = {
     options.one = [
       { table: 'users', alias: 'user' }
     , { table: 'restaurants', alias: 'restaurant' }
+    , { table: 'restaurant_locations', alias: 'location' }
     ];
 
     options.columns = [
@@ -191,6 +199,8 @@ var reports = {
           // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such
           , moment.tz(order.datetime, order.timezone).format(reports.dateFormat)
           , moment.tz(order.datetime, order.timezone).format(reports.timeFormat)
+          , getAddress(order)
+          , order.type === 'courier' ? getAddress(order.location) : ''
           , order.restaurant.zip
           , order.zip
           , order.user.name

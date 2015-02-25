@@ -1321,8 +1321,16 @@ module.exports.register = function(app) {
       client: Models.User.ownerWritable
     });
 
-    app.put('/users/:uid', restrictUpdate, controllers.users.update);
-    app.patch('/users/:uid', restrictUpdate, controllers.users.update);
+    app.put('/users/:uid'
+    , restrictUpdate
+    , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+    , controllers.users.update
+    );
+
+    app.patch('/users/:uid'
+    , restrictUpdate
+    , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+    , controllers.users.update);
 
     app.delete('/users/:uid', function(req, res) { res.send(501); });
 
@@ -1637,6 +1645,8 @@ module.exports.register = function(app) {
   app.patch('/api/restaurants/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.getRestaurant({ param: 'id' })
+  , m.updateBalancedCustomer({ required: 'restaurant', pick: ['name'] })
   , m.update( db.restaurants )
   );
 
@@ -2091,6 +2101,7 @@ module.exports.register = function(app) {
   app.put('/api/users/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
   , m.update( db.users )
   );
 

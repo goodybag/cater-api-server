@@ -22,6 +22,9 @@ define(function(require, exports, module) {
           type: 'boolean',
           required: 'true'
         },
+        is_archived: {
+          type: 'boolean'
+        },
         display_phone: {
           type: ['string', 'null'],
           required: false,

@@ -26,7 +26,7 @@ define(function(require){
       callback = callback || utils.noop;
 
       options = utils.defaults( options || {}, {
-        headers:  { 'Conetnt-Type': 'application/json' }
+        headers:  { 'Content-Type': 'application/json' }
       , json:     true
       , url:      this.url
       });

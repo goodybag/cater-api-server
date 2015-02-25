@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-  apikey: 'AIzaSyBbsgtm6Tqdh3ZyWfRj2Mg_eSZDW8ajLss'
+  apiKey: 'AIzaSyBbsgtm6Tqdh3ZyWfRj2Mg_eSZDW8ajLss'
 
 , adwords: {
     conversionId: 973544387
@@ -13,6 +13,7 @@ module.exports = {
 
 , geocoding: {
     limit: { daily: 2500, second: 5 }
+  , url: 'https://maps.googleapis.com/maps/api/geocode/json'
   }
   
 , directions: {

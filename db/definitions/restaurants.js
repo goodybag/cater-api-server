@@ -10,6 +10,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 
 var
   types = require('../data-types')
+, utils   = require('../../utils')
 ;
 
 define(function(require) {
@@ -240,6 +241,39 @@ define(function(require) {
   };
 
   definition.indices = {};
+
+  definition.similar = function (id, options, callback) {
+    if (utils.isFunction(options)) {
+      callback = options;
+      options = {};
+    }
+
+    utils.defaults(options, {
+      limit: 10
+    });
+
+    //self join
+    var query = [
+        'select ' 
+      , ' r2.id,'
+      , ' r2.name,' 
+      , ' r2.cuisine'
+      ,' from '
+      , ' restaurants r1,'
+      , ' restaurants r2'
+      ,' where '
+      , ' r1.id = $1'
+      , ' and r2.cuisine <@ r1.cuisine'
+      , ' and r2.city = r1.city'
+      , ' and r2.state = r1.state'
+      , ' order by r2.cuisine desc'
+      , ' limit $2'
+    ].join('');
+
+    return this.raw(query, [id, options.limit], function (error, results) {
+      return callback(error, results.rows);
+    });
+  };
 
   return definition;
 });

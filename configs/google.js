@@ -20,7 +20,6 @@ module.exports = {
   }
 };
 
-({ production: function(){
-    module.exports.analytics = 'UA-23372459-3';
-  }
-})( process.env['GB_ENV'] );
+if ( process.env['GB_ENV'] === 'production' ){
+  module.exports.analytics = 'UA-23372459-3';
+}

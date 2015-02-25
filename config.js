@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, google: require('./configs/google')
 , intercom: require('./configs/intercom')
 , yelp: require('./configs/yelp')
 , popularity: require('./configs/popularity')
@@ -88,9 +89,6 @@ config.defaults = {
     // baseUrl: 'http://cater-cdn-dev.s3-website-us-east-1.amazonaws.com'
   , bucket: 'cater-cdn-dev'
   }
-
-, googleAnalytics: 'UA-23372459-4'
-, googleAdwordsConversionId: 973544387
 
 , rewardsStartDate: '2014-03-25 00:00:00'
 
@@ -415,8 +413,6 @@ config.production = {
     baseUrl: 'https://d3bqck8kwfkhx5.cloudfront.net'
   , bucket: 'cater-cdn-prod'
   }
-
-, googleAnalytics: 'UA-23372459-3'
 
 , http: {
     port: process.env['PORT'] || 5000

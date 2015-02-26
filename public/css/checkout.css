@@ -115,3 +115,7 @@ input[name="card_number"] {
 .page-checkout .amenity label {
   font-weight: 400;
 }
+
+.promo-field {
+  margin-top: 32px;
+}

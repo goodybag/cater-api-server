@@ -11,7 +11,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 define( function( require, exports, module ){
   return require('stampit')()
     .state({
-      address: {}
+
     })
     .enclose( function(){
 

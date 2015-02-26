@@ -72,7 +72,7 @@ module.exports = function( options, callback ){
   , function( next ){
       progress.write('\n\n');
       progress.write('Errors:    ' + results.errors.length + '\n');
-      progress.write('Completed: ' + results.errors.completed + '\n');
+      progress.write('Completed: ' + results.completed.length + '\n');
 
       logs.write( JSON.stringify( results ) );
       logs.end( next );

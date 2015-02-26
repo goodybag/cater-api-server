@@ -30,7 +30,7 @@ module.exports = function( options, callback ){
         ({
           restaurants: db.restaurants.find.bind( db.restaurants,  {} )
         , locations:   db.restaurant_locations.find.bind( db.restaurant_locations,  {} )
-        , users:       db.users.find.bind( db.users,  {} )
+        , users:       db.addresses.find.bind( db.addresses,  {} )
         })[ options.type ]( next );
       } catch ( e ){
         return callback({ message: 'invalid type' });
@@ -40,7 +40,7 @@ module.exports = function( options, callback ){
   , function( locations, next ){
       progress.write('\n\n');
 
-      progress.write('Processing ' + locations.length + ' addresses');
+      progress.write( 'Processing ' + locations.length + ' ' + options.type );
       progress.write('\n');
 
       var onLocation = function( location, done ){
@@ -57,7 +57,13 @@ module.exports = function( options, callback ){
 
             if ( error ){
               results.errors.push({
-                address: address
+                address:  utils.pick( address, [
+                            'street', 'street2', 'city', 'state', 'zip', 'id', 'name'
+                          ].concat( ({
+                            restaurants:  []
+                          , locations:    ['restaurant_id']
+                          , users:        ['user_id']
+                          })[ options.type ] ))
               , error: error
               });
 
@@ -83,7 +89,7 @@ module.exports = function( options, callback ){
       progress.write('Errors:    ' + results.errors.length + '\n');
       progress.write('Completed: ' + results.completed.length + '\n');
 
-      logs.write( JSON.stringify( results ) );
+      logs.write( JSON.stringify( results, true, '  ' ) );
       logs.end( next );
     }
   ], callback );
@@ -92,5 +98,6 @@ module.exports = function( options, callback ){
 if ( require.main === module ){
   module.exports( require('minimist')( process.argv.slice(2) ), function ( error ){
     if ( error ) throw error;
+    process.exit(1);
   });
 }

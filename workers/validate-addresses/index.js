@@ -14,7 +14,8 @@ var rate = 1000 / config.google.geocoding.limit.second;
 
 module.exports = function( options, callback ){
   options = utils.defaults( options || {}, {
-    progress: process.stdout
+    type: 'restaurants'
+  , progress: process.stdout
   , logs: __dirname + '/log.json'
   });
 
@@ -25,7 +26,15 @@ module.exports = function( options, callback ){
 
   utils.async.waterfall([
     function( next ){
-      db.restaurant_locations.find( {}, next );
+      try {
+        ({
+          restaurants: db.restaurants.find.bind( db.restaurants,  {} )
+        , locations:   db.restaurant_locations.find.bind( db.restaurant_locations,  {} )
+        , users:       db.users.find.bind( db.users,  {} )
+        })[ options.type ]( next );
+      } catch ( e ){
+        return callback({ message: 'invalid type' });
+      }
     }
 
   , function( locations, next ){
@@ -81,5 +90,7 @@ module.exports = function( options, callback ){
 };
 
 if ( require.main === module ){
-  module.exports()
+  module.exports( require('minimist')( process.argv.slice(2) ), function ( error ){
+    if ( error ) throw error;
+  });
 }

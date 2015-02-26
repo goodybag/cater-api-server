@@ -143,12 +143,7 @@
             <div class="col-md-12">
               <legend>Payment Info</legend>
               <div class="payment-info-details">Your card will not be charged until you receive your order.</div>
-              <div class="row">
-                <div class="form-group col-sm-6">
-                  <label for="promo_code">Promo Code <small>(optional)</small></label>
-                    <input type="text" value="{{order.promo_code}}" name="promo_code" class="form-control promo-code" placeholder="enter promo code">
-                </div>
-              </div>
+
               <div class="radio card-select-toggle {{#unless order.user.payment_methods}}hide{{/unless}}">
                 <label>
                   <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" {{#unless order.user.is_invoiced}}checked="checked"{{/unless}}>
@@ -199,6 +194,12 @@
                 </label>
               </div>
               {{/if}}
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-6">
+                <label for="promo_code">Promo Code <small>(optional)</small></label>
+                  <input type="text" value="{{order.promo_code}}" name="promo_code" class="form-control promo-code" placeholder="enter promo code">
+              </div>
             </div>
           </div>
 

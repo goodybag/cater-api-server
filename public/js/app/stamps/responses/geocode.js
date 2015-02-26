@@ -42,13 +42,13 @@ define( function( require, exports, module ){
             }).length > 0;
           }
 
-        , function(){
-            return this.results.filter( function( result ){
-              return result.types.indexOf('street_address') > -1;
-            }).some( function( result ){
-              return this.requestAddress
-            });
-          }
+        // , function(){
+        //     return this.results.filter( function( result ){
+        //       return result.types.indexOf('street_address') > -1;
+        //     }).some( function( result ){
+        //       return this.requestAddress
+        //     });
+        //   }
         ].reduce( function( a, b ){
           if ( !a ) return false;
 

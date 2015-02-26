@@ -39,8 +39,10 @@ define( function( require, exports, module ){
 
         return base.fixed.methods.send.call( this )
           .then( function( res ){
-            console.log(res[1]);
-            return GeoRes.create({ body: res[1] })
+            return GeoRes.create({
+              res: res
+            , requestAddress: this.req.qs.address
+            });
           }).then( function( geores ){
             if ( callback ) return callback( null, geores );
           }).error( function( error ){

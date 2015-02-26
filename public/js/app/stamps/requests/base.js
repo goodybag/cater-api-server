@@ -83,7 +83,6 @@ define( function( require, exports, module ){
           options = utils.omit( options, ['body'] );
         }
 
-        console.log(options);
         return utils.http( options )
           .error( function( error ){
             if ( callback ) callback( error );

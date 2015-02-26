@@ -43,11 +43,13 @@ define( function( require, exports, module ){
               res: res
             , requestAddress: this.req.qs.address
             });
-          }).then( function( geores ){
+          }.bind( this ))
+          .then( function( geores ){
             if ( callback ) return callback( null, geores );
-          }).error( function( error ){
+          }.bind( this ))
+          .error( function( error ){
             if ( callback ) callback( error );
-          });
+          }.bind( this ));
       }
     })
 });

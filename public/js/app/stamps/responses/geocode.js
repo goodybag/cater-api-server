@@ -42,6 +42,7 @@ define( function( require, exports, module ){
             }).length > 0;
           }
 
+        // TODO compare tokens for similarity
         // , function(){
         //     return this.results.filter( function( result ){
         //       return result.types.indexOf('street_address') > -1;

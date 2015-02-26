@@ -1,4 +1,4 @@
-{
+module.exports = {
    "results" : [
       {
          "address_components" : [
@@ -61,4 +61,4 @@
       }
    ],
    "status" : "OK"
-}
+};

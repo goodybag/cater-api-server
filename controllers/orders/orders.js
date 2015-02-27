@@ -227,6 +227,11 @@ module.exports.update = function(req, res) {
     if (datetimeChanged) {
       venter.emit('order:datetime:change', order, oldDatetime);
     }
+
+    if (order.attributes.promo_code)
+    if (order.attributes.promo_code === order.attributes.restaurant.promo_code) {
+      venter.emit('order:submitted:promo', order);
+    }
   });
 };
 

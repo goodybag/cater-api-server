@@ -43,6 +43,7 @@ define(function(require, exports, module) {
       , tip: '.order-tip'
       , tip_percent: '.tip-percent'
       , secondary_contact_phone: '.order-secondary-contact-phone'
+      , promo_code: '.promo-code'
     }),
 
     fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {

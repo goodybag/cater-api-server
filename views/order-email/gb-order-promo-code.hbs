@@ -1,0 +1,51 @@
+<p style="font-size: 17px;"><b>{{order.user.email}}</b> submitted promo code: <b>{{order.promo_code}}</b></p>
+
+<p>
+  <b>user email</b>: {{order.user.email}}<br>
+  <b>user id</b>:    {{order.user.id}}<br>
+  <b>user name</b>: {{order.user.name}}<br>
+  {{#if order.user.organization}}
+  <b>user organization</b>: {{order.user.organization}}
+  {{/if}}
+</p>
+
+<table cellpadding="0" cellspacing="0" style="width: 100%; background: #ffffff;border-color: #777777;">
+  <tbody>
+    <tr style="background: #EEEEEE;">
+      <td style="padding: 5px;">Order Number</td>
+      <td style="padding: 5px;">#{{order.id}}</td>
+    </tr>
+    <tr>
+      <td style="padding: 5px;">Created On </td>
+      <td style="padding: 5px;">{{datepart order.created_at}} - {{timepart order.created_at}}</td>
+    </tr>
+    <tr style="background: #EEEEEE;">
+      <td style="padding: 5px;">Delivery Date</td>
+      <td style="padding: 5px;">{{datepart order.datetime}} - {{timepart order.datetime}}</td>
+    </tr>
+    <tr>
+      <td style="padding: 5px;">Phone</td>
+      <td style="padding: 5px;">{{phoneNumber order.phone}}</td>
+    </tr>
+    {{#if order.secondary_contact_phone}}
+    <tr>
+      <td style="padding: 5px;">Secondary Phone</td>
+      <td style="padding: 5px;">{{phoneNumber order.secondary_contact_phone}}</td>
+    </tr>
+    {{/if}}
+    <tr style="background: #EEEEEE;">
+      <td style="padding: 5px;">Type</td>
+      <td style="padding: 5px;">{{order.type}}</td>
+    </tr>    
+    <tr>
+      <td style="padding: 5px;">Guests</td>
+      <td style="padding: 5px;">{{order.guests}}</td>
+    </tr>    
+    <tr style="background: #EEEEEE;">
+      <td style="padding: 5px;">Subtotal</td>
+      <td style="padding: 5px;">${{dollars order.sub_total}}</td>
+    </tr>
+  </tbody>
+</tr>
+</table>
+<p> <a href="/orders/{{order.id}}">view full order</a> </p>

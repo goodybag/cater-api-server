@@ -1,15 +1,17 @@
 /**
  * Config.Workers
  */
-var isDev = process.env['GB_ENV'] === 'dev';
+var isProduction = process.env['GB_ENV'] === 'production';
 
 module.exports = {
     debit: {
       enqueue: {
-        interval: isDev ? 1000 * 5 : 1000 * 50 * 30   // 30 minutes
+        // 30 minutes in production
+        interval: isProduction ?  1000 * 50 * 30 : 1000 * 5
       }
     , process: {
-        interval: isDev ? 1000 * 5 : 1000 * 20      // 20 seconds (~900k request/month)
+        // 20 seconds (~900k request/month) in production
+        interval: isProduction ? 1000 * 20 : 1000 * 5
       }
     }
 };

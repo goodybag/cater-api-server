@@ -348,7 +348,7 @@ config.staging = {
   }
 
 , rollbar: {
-    accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+    accessToken: '8d240c636751439791b214c9ec8cf8af'
   }
 
 , segmentIo: {

@@ -231,7 +231,7 @@ define(function(require, exports, module) {
       var limit = _.find(_.sortBy(leadtimes, 'max_guests'), function(obj) {
         return obj.max_guests >= order.get('guests');
       });
-      return limit || 0;
+      return limit || { lead_time: 0 };
     },
 
     getDeadline: function(order) {

@@ -230,7 +230,16 @@ define(function(require, exports, module) {
           }]);
         }
 
-        if ( !userInfo.organization && userInfo.organization_type === "business"){
+        if( !userInfo.organization_type ){
+          spinner.stop();
+          return this.displayErrors2([{
+            property: 'organization_type'
+          , message: 'Please select an organization type'
+          }]);
+        }
+
+        if ( !userInfo.organization)
+        if( userInfo.organization_type === "business"){
           spinner.stop();
           return this.displayErrors2([{
             property: 'user_organization'

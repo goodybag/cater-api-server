@@ -15,11 +15,13 @@ begin
   perform add_column( 'user_invoices', 'user_id', 'int references users("id")' );
   perform add_column( 'user_invoices', 'billing_period_start', 'date not null');
   perform add_column( 'user_invoices', 'billing_period_end', 'date not null');
+  perform add_column( 'user_invoices', 'status', E'invoice_status not null default \'pending\'');
   perform add_column( 'user_invoices', 'created_at', 'timestamp not null default now()' );
   
-  perform add_column( 'user_invoice_orders', 'id', 'serial primary key' );
-  perform add_column( 'user_invoice_orders', 'user_invoice_id', 'int references user_invoices("id")' );
-  perform add_column( 'user_invoice_orders', 'order_id', 'int references orders("id")' );
+  perform add_column( 'user_invoice_orders', 'user_invoice_id', 'int not null references user_invoices("id") on delete cascade' );
+  perform add_column( 'user_invoice_orders', 'order_id', 'int not null references orders("id")' );
+
+  alter table "user_invoice_orders" add primary key ( user_invoice_id, order_id );
 
   -- Ensure we don't conflict with current invoice numbers:
   perform setval( 'user_invoices_id_seq', 100 );

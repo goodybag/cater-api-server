@@ -380,20 +380,23 @@ dirac.use( function(){
       vals = [ $query.updates ];
     }
 
-    vals.forEach( function( val ){
-      var didDeleteAll = true;
-      for ( var key in val ){
-        if ( columns.indexOf( key ) === -1 ){
-          delete val[ key ];
-        } else {
-          didDeleteAll = false;
-        }
-      }
+    vals = vals.map( function( val ){
+      val = utils.pick( val, columns );
 
-      if ( didDeleteAll ){
+      if ( Object.keys( val ).length === 0 ){
         mLogger.warn('Deleted all keys!');
       }
+
+      console.log('returning', val);
+
+      return val;
     });
+
+    if ( $query.type === 'update' ){
+      $query.updates = vals[0];
+    } else {
+      $query.values = vals;
+    }
 
     next();
   };

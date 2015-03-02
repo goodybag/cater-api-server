@@ -22,6 +22,16 @@ describe('Stamps', function() {
     });
   });
 
+  describe('billing', function() {
+    it('.isFirstOfMonth()', function(){
+
+    });
+
+    it('.isMiddleOfMonth()', function(){
+
+    });
+  });
+
   describe('business-hours', function() {
     it('.getWorkingTime should return the earliest time during business hours given a datetime that is after hours', function() {
       var datetime = stamps.datetime({

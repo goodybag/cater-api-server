@@ -13,6 +13,7 @@ module.exports = {
 , email_status:   ['pending', 'delivered', 'error']
 , job_status:     ['pending', 'in-progress', 'completed', 'failed']
 , order_type:     ['pickup', 'delivery', 'courier']
+, invoice_status: ['pending', 'paid']
 , timezone:       { type: 'domain', as: 'text check ( is_timezone( value ) )' }
 , amenity_scale:  ['multiply', 'flat']
 , plan_types:     config.availableRestaurantPlanTypes

@@ -1,3 +1,4 @@
+var db    = require('db');
 var utils = require('utils');
 
 module.exports = require('stampit')()
@@ -8,15 +9,11 @@ module.exports = require('stampit')()
         throw new Error('Must provide a callback');
       }
 
-      if ( !this.id ){
-        throw new Error('Mising id, must be saved first');
-      }
-
       if ( !this.user_id ){
         throw new Error('Invalid user');
       }
 
-      if ( !this.billing_period_start || this.billing_period_end ){
+      if ( !this.billing_period_start || !this.billing_period_end ){
         throw new Error('Invalid billing period');
       }
 
@@ -32,22 +29,11 @@ module.exports = require('stampit')()
       db.orders.find( $where, function( error, orders ){
         if ( error ) return callback( error );
 
-        var uios = orders.map( function( order ){
+        this.orders = orders.map( function( order ){
           return { user_invoice_id: this.id, order_id: order.id };
         }.bind( this ));
 
-        db.user_invoice_orders.insert( uios, function( error, results ){
-          if ( error ) return callback( error );
-
-          var orderIndex = utils.indexBy( orders, 'id' );
-          this.orders = results;
-
-          this.orders.forEach( function( order ){
-            utils.extend( order, orderIndex[ order.id ] );
-          });
-
-          return callback();
-        }.bind( this ));
+        return callback( null, orders );
       }.bind( this ));
     }
   });

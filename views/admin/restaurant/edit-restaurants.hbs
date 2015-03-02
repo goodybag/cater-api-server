@@ -45,6 +45,10 @@
           <span class="is-hidden-icon gb-icon-eye-slash icon-large {{#unless is_hidden}}hide{{/unless}}"></span>
           <span class="is-hidden-icon gb-icon-eye icon-large {{#if is_hidden}}hide{{/if}}"></span>
         </a>
+        <a class="table-list-item-action is-featured-toggle" href="#" data-toggle="tooltip" data-title="Toggle Featured Restaurant">
+          <span class="is-featured-icon gb-icon-star icon-large {{#unless is_featured}}hide{{/unless}}"></span>
+          <span class="is-featured-icon gb-icon-star-empty icon-large {{#if is_featured}}hide{{/if}}"></span>
+        </a>
         <a class="table-list-item-action" href="{{baseUrl}}/admin/restaurants/{{id}}/contacts" data-toggle="tooltip" data-title="View Contacts"><span class="gb-icon-user icon-large"></span></a>
         <button class="table-list-item-action btn btn-default is-archived-toggle">{{#if is_archived}} unarchive {{else}} archive {{/if}}</button>
       </div>
@@ -72,12 +76,12 @@
     // Enable plugins
     $('[data-role="popover"]').gb_popover();
     $('[data-toggle="tooltip"]').tooltip();
-      
+
     var TableListView = new TableListView({
       el: '#restaurant-list'
-    , model: Restaurant 
+    , model: Restaurant
     , dataAttr: 'restaurant'
-    , itemView: EditRestaurantsView 
+    , itemView: EditRestaurantsView
     });
   });
 </script>

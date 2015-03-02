@@ -34,7 +34,7 @@ module.exports.list = function(req, res) {
   // it's just too complex to support right now
   var shouldPaginate = !Object.keys( req.query )
     .some( function( key ){
-      return [ 'p', 'sort' ].indexOf( key ) === -1;
+      return [ 'p', 'sort', 'withContractFirst' ].indexOf( key ) === -1;
     });
 
   res.locals.page = page;

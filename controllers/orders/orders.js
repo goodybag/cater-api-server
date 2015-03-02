@@ -228,10 +228,6 @@ module.exports.update = function(req, res) {
       venter.emit('order:datetime:change', order, oldDatetime);
     }
 
-    if (order.attributes.promo_code)
-    if (order.attributes.promo_code === order.attributes.restaurant.promo_code) {
-      venter.emit('order:submitted:promo', order);
-    }
   });
 };
 
@@ -345,6 +341,11 @@ module.exports.changeStatus = function(req, res) {
       && req.query.notify
       && req.query.notify.toLowerCase() == 'false'
     )) venter.emit('order:status:change', new models.Order( req.order ), previousStatus);
+
+    if (req.order.promo_code)
+    if (req.order.promo_code === req.order.restaurant.promo_code) {
+      venter.emit('order:submitted:promo', req.order);
+    }
   }
 
   var $update = {

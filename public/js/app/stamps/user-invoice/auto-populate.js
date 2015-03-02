@@ -1,3 +1,5 @@
+var utils = require('utils');
+
 module.exports = require('stampit')()
   .compose( require('./db') )
   .methods({
@@ -37,7 +39,12 @@ module.exports = require('stampit')()
         db.user_invoice_orders.insert( uios, function( error, results ){
           if ( error ) return callback( error );
 
+          var orderIndex = utils.indexBy( orders, 'id' );
           this.orders = results;
+
+          this.orders.forEach( function( order ){
+            utils.extend( order, orderIndex[ order.id ] );
+          });
 
           return callback();
         }.bind( this ));

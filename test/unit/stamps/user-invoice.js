@@ -5,6 +5,18 @@ var invoices    = require('stamps/user-invoice');
 
 describe('Stamps', function(){
   describe('User Invoice', function(){
+    describe('Base', function(){
+      it ('.total()', function(){
+        var invoice = invoices.create({
+          orders: [{ total: 1 }, { total: 2 }, { total: 3 }]
+        });
+
+        assert.equal( invoice.total(), 6 );
+        assert.equal( invoice.total().pennies(), 6 );
+        assert.equal( invoice.total().dollars(), '0.06' );
+      });
+    });
+
     describe('DB', function(){
       it ('.save() insert new record', function( done ){
         var invoice = invoices.db.create({

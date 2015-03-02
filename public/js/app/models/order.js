@@ -17,7 +17,7 @@ define(function(require, exports, module) {
   var OrderItem = require('./order-item');
   var Address = require('./address');
 
-  var odsChecker = require('../../lib/order-delivery-service-checker');
+  var odsChecker = require('lib/order-delivery-service-checker');
 
   var Order = Backbone.Model.extend({
     schema: function() {

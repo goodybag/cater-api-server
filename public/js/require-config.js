@@ -23,6 +23,7 @@
     , app:    '../app'
     , views:  '../app/views'
     , spec:   '../../test/unit'
+    , lib:    '../lib'
     }
 
   , packages: [

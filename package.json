@@ -19,7 +19,8 @@
     "utils": "./utils.js",
     "db": "./db",
     "restaurant-plans": "./public/js/lib/restaurant-plans",
-    "stamps": "./public/js/app/stamps"
+    "stamps": "./public/js/app/stamps",
+    "lib": "./public/js/lib"
   },
   "dependencies": {
     "Faker": "0.5.x",

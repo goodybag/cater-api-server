@@ -348,6 +348,10 @@ module.exports.register = function(app) {
     );
 
     app.get('/admin/users/:id'
+    , m.redirect('/admin/users/:id/basic-info')
+    );
+
+    app.get('/admin/users/:id/basic-info'
     , m.param('id')
     , m.queryOptions({
         one: [{ table: 'regions', alias: 'region' }]
@@ -356,7 +360,22 @@ module.exports.register = function(app) {
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.viewPlugin( 'mainNav', { active: 'users' })
     , m.view( 'admin/user/edit', db.users, {
-        layout: 'admin/layout2'
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
+
+    app.get('/admin/users/:id/invoices'
+    , m.param('id')
+    , m.queryOptions({
+        one: [{ table: 'regions', alias: 'region' }]
+      , many: [ { table: 'user_invoices', alias: 'invoices' } ]
+      , userGroups: true
+      })
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.view( 'admin/user/invoices', db.users, {
+        layout: 'admin/layout-single-object'
       , method: 'findOne'
       })
     );

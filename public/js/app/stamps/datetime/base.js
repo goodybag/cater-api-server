@@ -6,7 +6,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   var stampit = require('stampit');
-  var moment  = require('moment-timezone')
+  var moment  = require('moment-timezone');
 
   return stampit().state({
     timezone: null

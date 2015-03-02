@@ -343,7 +343,8 @@ module.exports.changeStatus = function(req, res) {
     )) venter.emit('order:status:change', new models.Order( req.order ), previousStatus);
 
     if (req.order.promo_code)
-    if (req.order.promo_code === req.order.restaurant.promo_code) {
+    if (req.order.promo_code === req.order.restaurant.promo_code) 
+    if (req.order.status === 'submitted') {
       venter.emit('order:submitted:promo', req.order);
     }
   }

@@ -328,7 +328,6 @@ define(function(require, exports, module) {
       if ( order.get('type') === 'courier' ){
         zips = this.get('delivery_service_zips');
       }
-
       return zips.indexOf( order.address.get('zip') ) > -1;
     },
 
@@ -372,6 +371,7 @@ define(function(require, exports, module) {
     defaults: {
       cuisine: []
     , delivery_zips: []
+    , delivery_service_zips: []
     , lead_times: []
     , gb_fee: 0.1275
     }

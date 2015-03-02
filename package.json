@@ -20,7 +20,8 @@
     "db": "./db",
     "restaurant-plans": "./public/js/lib/restaurant-plans",
     "stamps": "./public/js/app/stamps",
-    "lib": "./public/js/lib"
+    "states": "./public/js/lib/states.js",
+    "order-delivery-service-checker": "./public/js/lib/order-delivery-service-checker.js"
   },
   "dependencies": {
     "Faker": "0.5.x",

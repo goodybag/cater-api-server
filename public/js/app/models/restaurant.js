@@ -9,7 +9,7 @@ define(function(require, exports, module) {
   var amanda = require('amanda');
   var _ = require('lodash');
   var Categories = require('../collections/categories');
-  var states = require('lib/states');
+  var states = require('states');
   var utils = require('utils');
 
   var regex = {

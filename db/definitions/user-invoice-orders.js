@@ -17,12 +17,13 @@ define(function(require) {
   definition.name = 'user_invoice_orders';
 
   definition.schema = {
-    id:                   { type: types.serial, nullable: false, pk: true }
-  , user_invoice_id:      { type: types.int , nullable: false , references: { table: 'user_invoices', column: 'id' } }
+    user_invoice_id:      { type: types.int , nullable: false , references: { table: 'user_invoices', column: 'id' } }
   , order_id:             { type: types.int , nullable: false , references: { table: 'orders', column: 'id' } }
   };
 
   definition.indices = {};
+
+  definition.extras = ['primary key ("user_invoice_id", "order_id")'];
 
   return definition;
 });

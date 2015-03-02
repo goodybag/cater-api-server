@@ -30,6 +30,10 @@ describe('Stamps', function() {
     it('.isMiddleOfMonth()', function(){
 
     });
+
+    it('.isStartOfBillingPeriod()', function(){
+
+    });
   });
 
   describe('business-hours', function() {

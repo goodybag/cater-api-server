@@ -387,8 +387,6 @@ dirac.use( function(){
         mLogger.warn('Deleted all keys!');
       }
 
-      console.log('returning', val);
-
       return val;
     });
 

@@ -21,6 +21,7 @@ define(function(require) {
   , user_id:              { type: types.int , nullable: false , references: { table: 'users', column: 'id' } }
   , billing_period_start: { type: types.date, nullable: false }
   , billing_period_end:   { type: types.date, nullable: false }
+  , status:               { type: types.invoice_status, nullable: false, default: 'pending' }
   , created_at:           { type: types.timestamp, nullable: false, default: 'now()' }
   };
 

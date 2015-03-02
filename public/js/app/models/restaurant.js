@@ -1,8 +1,15 @@
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
+  };
+}
+
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
+  var _ = require('lodash');
   var Categories = require('../collections/categories');
-  var states = require('states');
+  var states = require('../../lib/states');
   var utils = require('utils');
 
   var regex = {
@@ -227,10 +234,13 @@ define(function(require, exports, module) {
 
     getLeadTime: function(order) {
       // Get the lowest lead time per guest amt
-      var leadtimes = order.get('type') === 'delivery' ? this.get('lead_times') : this.get('pickup_lead_times');
+      var leadtimes;
 
-      // Fall back on delivery lead times
-      if ( !leadtimes.length ) leadtimes = this.get('lead_times');
+      if ( order.get('type') === 'delivery' ) {
+        leadtimes = this.get('lead_times');
+      } else {
+        leadtimes = this.get('pickup_lead_times') || this.get('lead_times');
+      }
 
       var limit = _.find(_.sortBy(leadtimes, 'max_guests'), function(obj) {
         return obj.max_guests >= order.get('guests');

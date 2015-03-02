@@ -239,7 +239,8 @@ define(function(require, exports, module) {
       if ( order.get('type') === 'delivery' ) {
         leadtimes = this.get('lead_times');
       } else {
-        leadtimes = this.get('pickup_lead_times') || this.get('lead_times');
+        leadtimes = this.get('pickup_lead_times');
+        if (Array.isArray(leadtimes) && !leadtimes.length) leadtimes = this.get('lead_times');
       }
 
       var limit = _.find(_.sortBy(leadtimes, 'max_guests'), function(obj) {

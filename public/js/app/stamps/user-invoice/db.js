@@ -118,7 +118,6 @@ module.exports = require('stampit')()
   , updateOrdersInvoiceId: function(){
       this.orders.forEach( function( order ){
         order.user_invoice_id = this.id;
-        delete order.id;
       }.bind( this ));
 
       return this;

@@ -29,8 +29,11 @@ module.exports = require('stampit')()
       db.orders.find( $where, function( error, orders ){
         if ( error ) return callback( error );
 
-        this.orders = orders.map( function( order ){
-          return { user_invoice_id: this.id, order_id: order.id };
+        this.orders = orders;
+
+        this.orders.forEach( function( order ){
+          order.user_invoice.id = this.id;
+          order.order_id = order.id;
         }.bind( this ));
 
         return callback( null, orders );

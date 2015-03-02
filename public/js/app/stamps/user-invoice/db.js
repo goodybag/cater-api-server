@@ -19,7 +19,6 @@ module.exports = require('stampit')()
       db.user_invoices.findOne( this.id, options, function( error, result ){
         if ( error ) return callback( error );
 
-        console.log(result);
         utils.extend( this, result );
 
         callback( null, this );

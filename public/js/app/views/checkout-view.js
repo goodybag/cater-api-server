@@ -24,7 +24,8 @@ define(function(require, exports, module) {
       'submit #order-form':                           'submit',
       'submit #select-address-form':                  'selectAddress',
       'keyup #order-guests':                          'updateGuests',
-      'input input[name="card_number"]':              'onCardNumberChange'
+      'input input[name="card_number"]':              'onCardNumberChange',
+      'change input[name="organization_type"]':       'onOrganizationTypeChange'
     }),
 
     step: 2,
@@ -42,6 +43,7 @@ define(function(require, exports, module) {
       , phone: '.address-phone'
       , tip: '.order-tip'
       , tip_percent: '.tip-percent'
+      , organization_type: '.organization-type'
       , secondary_contact_phone: '.order-secondary-contact-phone'
       , promo_code: '.promo-code'
     }),
@@ -53,6 +55,10 @@ define(function(require, exports, module) {
         return existingCardSelected ? pmid : null;
       },
 
+      organization_type: function () {
+        return this.$el.find('input[name="organization_type"]:checked').val();
+      },
+      
       secondary_contact_phone: function () {
         return this.$el.find(this.fieldMap.secondary_contact_phone).val().replace(/[^\d]/g, '') || null;
       }
@@ -88,6 +94,8 @@ define(function(require, exports, module) {
 
       // Trigger payment method id change to check if selected card is expired
       this.onPaymentMethodIdChange();
+
+      this.$orderOrganization = this.$el.find('#order-organization');
     },
 
     convertTimesToRanges: function(){
@@ -212,6 +220,7 @@ define(function(require, exports, module) {
         userInfo = {
           name:         this.$el.find('[name="user_name"]').val()
         , organization: this.$el.find('[name="user_organization"]').val()
+        , organization_type: this.$el.find('input[name="organization_type"]:checked').val()
         };
 
         if ( !userInfo.name ){
@@ -219,6 +228,23 @@ define(function(require, exports, module) {
           return this.displayErrors2([{
             property: 'user_name'
           , message: 'Please enter a valid name'
+          }]);
+        }
+
+        if( !userInfo.organization_type ){
+          spinner.stop();
+          return this.displayErrors2([{
+            property: 'organization_type'
+          , message: 'Please select an organization type'
+          }]);
+        }
+
+        if ( !userInfo.organization)
+        if( userInfo.organization_type === "business"){
+          spinner.stop();
+          return this.displayErrors2([{
+            property: 'user_organization'
+          , message: 'Please enter an organization'
           }]);
         }
 
@@ -665,6 +691,14 @@ define(function(require, exports, module) {
         this_.selectCard(pm.get('id'));
         this_.clearCardForm($el);
       });
+    },
+
+    onOrganizationTypeChange: function (e) {
+      if (e.target.value === "business") {
+        this.$orderOrganization[0].classList.remove('hide');
+      } else {
+        this.$orderOrganization[0].classList.add('hide');
+      }
     }
   });
 });

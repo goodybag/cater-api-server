@@ -1,9 +1,15 @@
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
+  };
+}
+
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
   var utils = require('utils');
   var config = require('config');
-
+  var _ = require('lodash');
   var OrderItems = require('../collections/order-items');
 
   var Restaurant = require('./restaurant');
@@ -158,7 +164,7 @@ define(function(require, exports, module) {
                     .hour( config.disallowOrdersBetween.start )
                     .startOf('hour');
 
-      var datetime = moment( this.attributes.datetime ) 
+      var datetime = moment( this.attributes.datetime )
                       .tz( this.attributes.timezone );
 
       // Both now and order date between after hours

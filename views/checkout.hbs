@@ -118,11 +118,17 @@
             </div>
           </div>
 
-          {{#unless order.user.name}}
+          {{#unless (and (eq order.user.organization_type 'business') order.user.organization)}}
           <div id="user-info" class="list-group-item clearfix">
             <div class="col-md-12">
               <legend>User Information</legend>
-              <p>We never got your name! We need to know your first and last name for the receipt</p>
+              {{#if (not order.user.name)}}
+                <p>We never got your name! We need to know your first and last name for the receipt</p>
+              {{else}}
+                {{#if (and (eq order.user.organization_type 'business') (not order.user.organization)) }}
+                <p>We never got your organization!</p>
+                {{/if}}
+              {{/if}}
               <div class="row">
                 <div class="form-group col-sm-6">
                   <label class="control-label">Your First and Last Name (required)</label>
@@ -130,6 +136,22 @@
                 </div>
               </div>
               <div class="row">
+                <div class="form-group col-sm-6">
+                  <div class="radio">
+                    <label>
+                      <input class="organization-type" name="organization_type" type="radio" value="individual" {{#if (eq user.organization_type 'individual') }} checked="checked" {{/if}}>
+                      Individual 
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input class="organization-type" name="organization_type" type="radio" value="business" {{#if (eq user.organization_type 'business') }} checked="checked" {{/if}}>
+                      Business
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div id="order-organization" class="row {{#if (eq user.organization_type 'individual') }} hide {{/if}}">
                 <div class="form-group col-sm-6">
                   <label class="control-label">Organization</label>
                   <input value="{{order.user.organization}}" type="text" name="user_organization" class="form-control">

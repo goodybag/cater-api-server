@@ -31,6 +31,7 @@ config.defaults = {
 , support: require('./configs/support')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
 , logging: require('./configs/logging')
+, invoice: require('./configs/invoice')
 
 , deliveryTime: {
     padding: 15

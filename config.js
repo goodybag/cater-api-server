@@ -32,6 +32,7 @@ config.defaults = {
 , scheduler: require('./configs/scheduler')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
 , logging: require('./configs/logging')
+, promo: require('./configs/promo')
 
 , deliveryTime: {
     padding: 15

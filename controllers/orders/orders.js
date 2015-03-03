@@ -227,6 +227,7 @@ module.exports.update = function(req, res) {
     if (datetimeChanged) {
       venter.emit('order:datetime:change', order, oldDatetime);
     }
+
   });
 };
 
@@ -340,6 +341,12 @@ module.exports.changeStatus = function(req, res) {
       && req.query.notify
       && req.query.notify.toLowerCase() == 'false'
     )) venter.emit('order:status:change', new models.Order( req.order ), previousStatus);
+
+    if (req.order.promo_code)
+    if (req.order.promo_code === req.order.restaurant.promo_code) 
+    if (req.order.status === 'submitted') {
+      venter.emit('order:submitted:promo', req.order);
+    }
   }
 
   var $update = {

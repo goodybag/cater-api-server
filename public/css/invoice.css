@@ -1,4 +1,4 @@
-.order-number-info {
+.doc-id-info {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -9,14 +9,14 @@
   text-align: right;
 }
 
-.order-number-info .order-number-key {
+.doc-id-info .doc-id-key {
   float: left;
   display: inline-block;
   margin-top: 5px;
   font-size: 14px;
 }
 
-.order-number-info .order-number {
+.doc-id-info .doc-id {
   display: inline-block;
   font-size: 26px;
   font-weight: 300;

@@ -8,65 +8,44 @@
 
 {{#extend "info"}}
 <h2 class="customer-company-name info-item">
-  {{#if restaurant.name}}
-    {{restaurant.name}}
+  {{#if invoice.user.name}}
+    {{invoice.user.name}}
   {{else}}
     [Your Organization]
   {{/if}}
 </h2>
 <address class="info-item-address info-item">
-  {{#if restaurant.billing_street}}
-    {{restaurant.billing_street}}
-  {{else}}
-    {{#if restaurant.street}}
-      {{restaurant.street}}
-    {{else}}
-      [123 Your St.]
+  {{#if invoice.user.address.street}}
+    {{invoice.user.address.street}}
+    {{#if invoice.user.address.street2}}
+      <br />
+      {{invoice.user.address.street2}}
     {{/if}}
+  {{else}}
+    [123 Your St.]
   {{/if}}
   <br />
-  {{#if restaurant.billing_city}}
-    {{restaurant.billing_city}}
+  {{#if invoice.user.address.city}}
+    {{invoice.user.address.city}}
   {{else}}
-    {{#if restaurant.city}}
-      {{restaurant.city}}
-    {{else}}
-      [Your City]
-    {{/if}}
+    [Your City]
   {{/if}},
-  {{#if restaurant.billing_state}}
-    {{restaurant.billing_state}}
+  {{#if invoice.user.address.state}}
+    {{invoice.user.address.state}}
   {{else}}
-    {{#if restaurant.state}}
-      {{restaurant.state}}
-    {{else}}
-      [Your State]
-    {{/if}}
+    [Your State]
   {{/if}}
-  {{#if restaurant.billing_zip}}
-    {{restaurant.billing_zip}}
+  {{#if invoice.user.address.zip}}
+    {{invoice.user.address.zip}}
   {{else}}
-    {{#if restaurant.zip}}
-      {{restaurant.zip}}
-    {{else}}
-      [Your Zip]
-    {{/if}}
+    [Your Zip]
   {{/if}}
 </address>
-<div class="info-item-date info-item">Payout Date: {{formatDateTime payment_summary.payment_date}}</div>
-<div class="info-item-contact info-item">
-  {{#if order.user.name}}
-    {{order.user.name}}
-  {{/if}}
-  {{#if order.phone}}
-    <br>
-    {{phoneNumber order.phone "xxx.xxx.xxxx"}}
-  {{/if}}
-</div>
+<div class="info-item-date info-item">Billing Period: {{formatDateTime invoice.billing_period_start "MM/DD"}} - {{formatDateTime invoice.billing_period_end "MM/DD"}}</div>
 
 <div class="doc-id-info order-number-info">
   <span class="doc-id-key order-number-key"></span>
-  <span class="doc-id order-number">#{{payment_summary.id}}</span>
+  <span class="doc-id order-number">#{{invoice.id}}</span>
 </div>
 {{/extend}}
 
@@ -77,52 +56,31 @@
   <table class="gb-table" style="">
     <thead>
       <tr>
-        <th>Order #</th>
-        <th>Delivery Fee</th>
+        <th>Order Info</th>
+        <th>Sub Total</th>
+        <th>Delivery</th>
+        <th>Tax</th>
         <th>Tip</th>
-        <th>Order Total</th>
-        <th>GB Fee</th>
-        <th>Sales Tax</th>
-        <th>Net Payout</th>
+        <th>Total</th>
       </tr>
     </thead>
 
     <tbody>
-      {{#each payment_summary.items}}
+      {{#each invoice.orders}}
       <tr>
-        <td>{{this.order_id}}</td>
+        <td>
+          <div class="order-id">#{{this.id}}</div>
+          <div class="restaurant">{{this.restaurant.name}}</div>
+          <div class="date">{{datepart this.datetime}}</div>
+        </td>
+        <td>${{dollars this.sub_tota}}</td>
         <td>${{dollars this.delivery_fee}}</td>
+        <td>${{dollars this.tax}}</td>
         <td>${{dollars this.tip}}</td>
-        <td>${{dollars this.order_total}}</td>
-        <td>-${{dollars this.gb_fee_amount}}</td>
-        <td>-${{dollars this.sales_tax_amount}}</td>
-        <td>${{dollars this.net_payout}}</td>
+        <td>${{dollars this.total}}</td>
       </tr>
       {{/each}}
     </tbody>
   </table>
-
-  <div class="order-bottom-wrapper">
-    <div class="order-bottom">
-      <div class="order-adjustment columns">
-        <p class="adjustment-notes column-fluid">{{payment_summary.adjustment_text}}</p>
-        <div class="column-fluid adjustment-amount-wrapper">
-          <dl class="dl-adjustment-amount dl-horizontal">
-            <dt>Adjustment:</dt>
-            <dd>${{dollars payment_summary.adjustment}}</dd>
-          </dl>
-        </div>
-      </div>
-
-      <div class="order-summary"></div>
-
-      <div class="total-wrapper">
-        <dl class="dl-horizontal dl-order-total">
-          <dt>Total:</dt>
-          <dd>${{dollars payment_summary.total_payout}}</dd>
-        </dl>
-      </div>
-    </div>
-  </div>
 </div>
 {{/extend}}

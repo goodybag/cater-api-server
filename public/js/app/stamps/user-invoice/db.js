@@ -7,16 +7,36 @@ module.exports = require('stampit')()
     orders: []
   })
   .methods({
-    fetch: function( callback ){
+    getQueryOptions: function(){
+      return {
+        many: [ { table: 'user_invoice_orders'
+                , alias: 'orders'
+                , mixin:  [ { table: 'orders' }]
+                , one:    [ { table: 'restaurants'
+                            , alias: 'restaurant'
+                            }
+                          ]
+                }
+              ]
+
+      , one:  [ { table: 'users'
+                , alias: 'user'
+                , one:  [ { table: 'addresses', alias: 'address'
+                          , where: { is_default: true }
+                          }
+                        ]
+                // , many: [ { table: 'addresses', where: { is_default: true } }]
+                }
+              ]
+      }
+    }
+
+  , fetch: function( callback ){
       if ( !this.id ){
         throw new Error('Cannot fetch without ID');
       }
 
-      var options = {
-        many: [{ table: 'user_invoice_orders', alias: 'orders' }]
-      };
-
-      db.user_invoices.findOne( this.id, options, function( error, result ){
+      db.user_invoices.findOne( this.id, this.getQueryOptions(), function( error, result ){
         if ( error ) return callback( error );
 
         utils.extend( this, result );

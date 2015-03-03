@@ -1505,6 +1505,37 @@ module.exports.register = function(app) {
 
   app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
 
+  app.get(
+    config.invoice.htmlRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , function( req, res, next ){
+      var invoice = require('stamps/user-invoice').create({
+        id: req.param('id')
+      }).fetch( function( error ){
+        if ( error ) return next( error );
+
+        res.locals.invoice = invoice;
+
+        return next();
+      });
+    }
+  , m.view( 'invoice/invoice', {
+      layout: 'invoice/invoice-layout'
+    })
+  );
+
+  app.get( config.invoice.pdfRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , m.s3({
+      path:   '/' + config.invoice.fileName
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.invoice.bucket
+    })
+  );
+
   app.get('/admin/restaurants/:restaurant_id/orders'
   , function( req, res, next ){
       m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );

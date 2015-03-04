@@ -34,7 +34,12 @@
 </div>
 <div class="restaurant-list">
   <div class="container">
-    {{> restaurant_tiles }}
+    <div class="restaurant-toggle-list">
+      {{> restaurant_tiles }}
+    </div>
+    <div class="restaurant-toggle-list hide">
+      {{> restaurant_list}}
+    </div>
   </div>
 </div>
 

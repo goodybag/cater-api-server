@@ -1,0 +1,65 @@
+<div>
+  {{#each restaurants }}
+  <div class="list-list" style="margin-bottom: 5px; border-bottom: 1px solid #aab2bd;">
+    <a title="{{name}}" href="/restaurants/{{id}}{{queryParams ../orderParams}}" style="color: #333;">
+      <div class="row">
+      <div class="col-sm-6">
+        <img src="{{logo_url}}" width="62">
+      </div>
+      <div class="col-sm-6">
+        {{#if (and no_contract_fee (not plan_id) )}}
+        <div class="tile-corner">
+          <div
+            class="tile-fee"
+            data-toggle="tooltip"
+            data-placement="auto"
+            data-container="body"
+            data-title="An order from this restaurant includes a {{factorToPercent no_contract_fee}}% transaction fee at checkout.">
+            Fee
+          </div>
+        </div>
+        {{/if}}
+        <div>
+          <h1 style="margin: 0px; font-size: 22px;">
+            {{name}}
+            {{#if is_featured}}
+            <span style="font-size: 14px;color: #ED4242;">
+              Featured <span class="gb-icon-flame" data-toggle="tooltip" data-title="Featured Restaurant"></span>
+            </span>
+            {{/if}}
+          </h1>
+        </div>
+      </div>
+      <div>
+        <div>
+          <ul class="inline-list inline-list-bulleted">
+            <li>{{truncate (join cuisine ", ") 35}}</li>
+            <li><span>{{{dollarMeter this.price}}}</span></li>
+
+          </ul>
+        </div>
+        <div>
+          <ul class="inline-list inline-list-bulleted">
+            <li>Delivery:
+              {{#eq delivery_fee_from delivery_fee_to}}
+              {{#if delivery_fee_from}}
+              ${{dollarsOmit00 ../delivery_fee_from}}
+              {{else}}
+              Free
+              {{/if}}
+              {{else}}
+              ${{dollarsOmit00 delivery_fee_from}} - ${{dollarsOmit00 delivery_fee_to}}
+              {{/eq}}
+            </li>
+            <li>Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</li>
+          </ul>
+          <span class="">{{> tags tags }}</span>
+        </div>
+      </div>
+      </div>
+
+      <div style="float: right;position: relative;top: -85px;">{{{ratingStars yelp_data.rating}}}</div>
+    </a>
+  </div>
+  {{/each}}
+</div>

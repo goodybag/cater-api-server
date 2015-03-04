@@ -25,19 +25,19 @@
 </div>
 {{/if}}
 
-{{> restaurant_toggle_list }}
 <div class="list-options">
   <div class="container">
     {{> restaurant_list_tags }}
+    {{> restaurant_toggle_list }}
     {{> restaurant_list_sort }}
   </div>
 </div>
 <div class="restaurant-list">
   <div class="container">
-    <div class="restaurant-toggle-list">
+    <div class="restaurant-toggle-list" data-state="tile">
       {{> restaurant_tiles }}
     </div>
-    <div class="restaurant-toggle-list hide">
+    <div class="restaurant-toggle-list hide" data-state="list">
       {{> restaurant_list}}
     </div>
   </div>

@@ -22,12 +22,21 @@ define(function (require, exports, module) {
       if (e.preventDefaults) {
         e.preventDefaults();
       }
+      $(this.options.trigger).removeClass('active');
+      e.target.classList.add('active');
+
       var self = this;
       var toggleClass = e.target.getAttribute('data-class');
+      var state = e.target.getAttribute('data-state');
       var $targets = this.$el.find( this.options.targetSelector )
 
       $targets.each( function (i, target) {
-        toggleClass && target.classList.toggle( toggleClass );
+        if (toggleClass)
+        if (state === target.getAttribute('data-state')) {
+          target.classList.remove( toggleClass );
+        } else {
+          target.classList.add( toggleClass );
+        }
       });
     }
   });

@@ -2,41 +2,40 @@ var db      = require('db');
 var utils   = require('utils');
 var Promise = require('bluebird');
 
+function getQueryOptions(){
+  return {
+    many: [ { table: 'user_invoice_orders'
+            , alias: 'orders'
+            , mixin:  [ { table: 'orders' }]
+            , one:    [ { table: 'restaurants'
+                        , alias: 'restaurant'
+                        }
+                      ]
+            }
+          ]
+
+  , one:  [ { table: 'users'
+            , alias: 'user'
+            , one:  [ { table: 'addresses', alias: 'address'
+                      , where: { is_default: true }
+                      }
+                    ]
+            }
+          ]
+  }
+}
+
 module.exports = require('stampit')()
   .state({
     orders: []
   })
   .methods({
-    getQueryOptions: function(){
-      return {
-        many: [ { table: 'user_invoice_orders'
-                , alias: 'orders'
-                , mixin:  [ { table: 'orders' }]
-                , one:    [ { table: 'restaurants'
-                            , alias: 'restaurant'
-                            }
-                          ]
-                }
-              ]
-
-      , one:  [ { table: 'users'
-                , alias: 'user'
-                , one:  [ { table: 'addresses', alias: 'address'
-                          , where: { is_default: true }
-                          }
-                        ]
-                // , many: [ { table: 'addresses', where: { is_default: true } }]
-                }
-              ]
-      }
-    }
-
-  , fetch: function( callback ){
+    fetch: function( callback ){
       if ( !this.id ){
         throw new Error('Cannot fetch without ID');
       }
 
-      db.user_invoices.findOne( this.id, this.getQueryOptions(), function( error, result ){
+      db.user_invoices.findOne( this.id, getQueryOptions(), function( error, result ){
         if ( error ) return callback( error );
 
         utils.extend( this, result );
@@ -148,3 +147,5 @@ module.exports = require('stampit')()
       utils.extend( this, results );
     }
   });
+
+module.exports.getQueryOptions = getQueryOptions;

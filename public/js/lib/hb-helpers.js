@@ -628,6 +628,15 @@ define(function(require, exports, module) {
 
     getCurrentYear: function () {
       return new Date().getFullYear();
+    },
+
+    invoke: function( obj, fnName, ctx ){
+      var fn = obj[ fnName ];
+
+      if ( !ctx ) return fn();
+
+      var args = Array.prototype.slice.call( arguments, 3 );
+      return fn.apply( ctx, args );
     }
   }
 

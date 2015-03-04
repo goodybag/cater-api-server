@@ -139,7 +139,21 @@
 }
 
 .total-wrapper {
+  display: table;
+  width: 100%;
   text-align: right;
+}
+
+.total-wrapper > .left,
+.total-wrapper > .right {
+  box-sizing: border-box;
+  float: left;
+  width: 50%;
+}
+
+.total-wrapper > .left {
+  text-align: left;
+  padding-left: 20px;
 }
 
 .total-wrapper .dl-order-total {
@@ -191,6 +205,15 @@
 .delivery-service-note {
   margin-bottom: 0;
   font-style: italic;
+}
+
+.payment-note {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.order-id {
+  font-weight: 700;
 }
 
 @media print {

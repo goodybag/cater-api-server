@@ -18,6 +18,7 @@ define( function( require, exports, module ){
     })
     .methods({
       total: function(){
+        console.log('total',this);
         var total = this.orders.reduce( function( curr, order ){
           return curr + order.total;
         }, 0 );

@@ -41,6 +41,17 @@
     [Your Zip]
   {{/if}}
 </address>
+
+<div class="info-item-contact info-item">
+  {{#if invoice.user.name}}
+    {{invoice.user.name}}
+  {{/if}}
+  {{#if invoice.user.address.phone}}
+    <br>
+    {{phoneNumber invoice.user.address.phone "xxx.xxx.xxxx"}}
+  {{/if}}
+</div>
+
 <div class="info-item-date info-item">Billing Period: {{formatDateTime invoice.billing_period_start "MM/DD"}} - {{formatDateTime invoice.billing_period_end "MM/DD"}}</div>
 
 <div class="doc-id-info order-number-info">
@@ -50,8 +61,8 @@
 {{/extend}}
 
 {{#extend "body"}}
-<div class="order-info"></div>
-
+{{{dump testObj}}}
+<h1>getA {{testObj.getA}}</h1>
 <div class="order">
   <table class="gb-table" style="">
     <thead>
@@ -73,7 +84,7 @@
           <div class="restaurant">{{this.restaurant.name}}</div>
           <div class="date">{{datepart this.datetime}}</div>
         </td>
-        <td>${{dollars this.sub_tota}}</td>
+        <td>${{dollars this.sub_total}}</td>
         <td>${{dollars this.delivery_fee}}</td>
         <td>${{dollars this.tax}}</td>
         <td>${{dollars this.tip}}</td>
@@ -82,5 +93,19 @@
       {{/each}}
     </tbody>
   </table>
+
+  <div class="order-bottom-wrapper">
+    <div class="total-wrapper">
+      <div class="left">
+        <span class="payment-note">To pay by credit card, call (512) 270-6555. To pay by check, make payable to Goodybag Inc. and mail to address above.</span>
+      </div>
+      <div class="right">
+        <dl class="dl-horizontal dl-order-total">
+          <dt>Amount to be paid:</dt>
+          {{!-- <dd>${{invoice.total.dollars}}</dd> --}}
+        </dl>
+      </div>
+    </div>
+  </div>
 </div>
 {{/extend}}

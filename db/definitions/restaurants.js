@@ -77,6 +77,11 @@ define(function(require) {
     , nullable: false
     , editable: ['client', 'admin']
     }
+  , promo_code: {
+      type: types.text
+    , nullable: true
+    , editable: ['admin']  
+    }
   , delivery_instructions: {
       type: types.text
     , nullable: true

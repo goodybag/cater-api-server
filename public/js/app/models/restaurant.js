@@ -1,6 +1,13 @@
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
+  };
+}
+
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
+  var _ = require('lodash');
   var Categories = require('../collections/categories');
   var states = require('states');
   var utils = require('utils');
@@ -227,11 +234,20 @@ define(function(require, exports, module) {
 
     getLeadTime: function(order) {
       // Get the lowest lead time per guest amt
-      var leadtimes = order.get('type') === 'delivery' ? this.get('lead_times') : this.get('pickup_lead_times');
+      var leadtimes;
+
+      if ( order.get('type') === 'delivery' ) {
+        leadtimes = this.get('lead_times');
+      } else {
+        leadtimes = this.get('pickup_lead_times');
+        if (Array.isArray(leadtimes) && !leadtimes.length) leadtimes = this.get('lead_times');
+      }
+
       var limit = _.find(_.sortBy(leadtimes, 'max_guests'), function(obj) {
         return obj.max_guests >= order.get('guests');
       });
-      return limit || 0;
+
+      return limit || { lead_time: 0 };
     },
 
     getDeadline: function(order) {
@@ -313,7 +329,6 @@ define(function(require, exports, module) {
       if ( order.get('type') === 'courier' ){
         zips = this.get('delivery_service_zips');
       }
-
       return zips.indexOf( order.address.get('zip') ) > -1;
     },
 
@@ -357,6 +372,7 @@ define(function(require, exports, module) {
     defaults: {
       cuisine: []
     , delivery_zips: []
+    , delivery_service_zips: []
     , lead_times: []
     , gb_fee: 0.1275
     }

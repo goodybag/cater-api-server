@@ -1,23 +1,25 @@
 {{#extend "page"}}page-users{{/extend}}
 
+{{#extend "page-head"}}
+{{> admin_user_page_head}}
+{{/extend}}
+
+{{#extend "nav-col"}}
+{{> admin_user_sidebar_nav}}
+{{/extend}}
+
 {{#extend "body"}}
 <div class="container" id="main-container">
-  <ul class="breadcrumbs main-breadcrumbs">
-    <li>
-      <a href="/admin">Admin Panel</a>
-    </li>
-    <li>
-      <a href="/admin/users">Users</a>
-    </li>
-    <li>{{#if user.name}}{{user.name}}{{else}}#{{user.id}}{{/if}}</li>
-    <li>Invoices</li>
+  <ul class="invoices">
+    {{#each user.invoices}}
+      <li>
+        <a href="{{replace ../config.invoice.pdfRoute ':id' this.id}}">#{{this.id}} 
+          {{datepart this.billing_period_begin}} -
+          {{datepart this.billing_period_end~}}
+        </a>
+      </li>
+    {{/each}}
   </ul>
-
-  <h1 class="page-title">#{{user.id}}{{#if user.name}} - {{user.name}}{{/if}} - Invoices</h1>
-  
-  <div class="invoice-list table-list">
-    
-  </div>
 </div>
 {{/extend}}
 

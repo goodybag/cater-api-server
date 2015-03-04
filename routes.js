@@ -353,6 +353,14 @@ module.exports.register = function(app) {
 
     app.get('/admin/users/:id/basic-info'
     , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/users'
+      })
+    , m.viewPlugin( 'breadCrumbs', {
+        currentPage: 'Basic Info'
+      })
     , m.queryOptions({
         one: [{ table: 'regions', alias: 'region' }]
       , userGroups: true
@@ -367,6 +375,14 @@ module.exports.register = function(app) {
 
     app.get('/admin/users/:id/invoices'
     , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'invoices'
+      , baseUrl:  '/admin/users'
+      })
+    , m.viewPlugin( 'breadCrumbs', {
+        currentPage: 'Invoices'
+      })
     , m.queryOptions({
         one: [{ table: 'regions', alias: 'region' }]
       , many: [ { table: 'user_invoices', alias: 'invoices' } ]

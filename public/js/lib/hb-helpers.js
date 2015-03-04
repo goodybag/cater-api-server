@@ -637,6 +637,10 @@ define(function(require, exports, module) {
 
       var args = Array.prototype.slice.call( arguments, 3 );
       return fn.apply( ctx, args );
+    },
+
+    replace: function( str, a, b ){
+      return str.replace( a, b );
     }
   }
 

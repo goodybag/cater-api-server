@@ -46,6 +46,7 @@
 
       // templating related
     , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}
+    , {name: 'handlebars.runtime',location: '../../components/handlebars',                main: 'handlebars.runtime.js'}
     , {name: 'partials',          location: '../../dist',                                 main: 'partials.js'}
 
       // moment stuff
@@ -99,12 +100,12 @@
         deps: ['lodash', 'jquery']
       , exports: 'Backbone'
       }
-    , 'hbs': {
-        exports: 'Handlebars'
-      }
-    , 'lib/partials': {
-        deps: ['hbs']
-      }
+    // , 'hbs': {
+    //     exports: 'Handlebars'
+    //   }
+    // , 'lib/partials': {
+    //     deps: ['hbs']
+    //   }
     , 'backbone.trackit': {
         deps: ['backbone']
       }
@@ -140,9 +141,9 @@
     , 'jquery.placeholder': {
         deps: ['jquery']
       }
-    , partials: {
-        deps: ['hbs']
-      }
+    // , partials: {
+    //     deps: ['hbs']
+    //   }
     , fullcalendar: {
         deps: ['jquery']
       }

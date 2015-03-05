@@ -9,13 +9,15 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
+  var moment = require('moment');
+
   return module.exports = require('stampit')()
     .state({
 
     })
     .enclose( function(){
-      this.startDate = new Date();
-      this.endDate = new Date();
+      this.startDate = this.startDate || moment().format('YYYY-MM-DD');
+      this.endDate = this.endDate || moment().format('YYYY-MM-DD');
     })
     .methods({
       start: function( startDate ){

@@ -25,34 +25,20 @@ describe('Stamps', function() {
   describe('billing', function() {
     it('.getBillingPeriod()', function(){
       var period = stamps.datetime({
-        datetime: '2015-11-05'
+        datetime: '2015-11-05 00:00:00'
       }).getBillingPeriod();
 
-      assert.equal(
-        new Date('2015-11-01').toString()
-      , period.startDate.toString()
-      );
-
-      assert.equal(
-        new Date('2015-11-16').toString()
-      , period.endDate
-      );
+      assert.equal( '2015-11-01', period.startDate );
+      assert.equal( '2015-11-16', period.endDate );
     });
 
     it('.getBillingPeriod()', function(){
       var period = stamps.datetime({
-        datetime: '2015-11-25'
+        datetime: '2015-11-25 00:00:00'
       }).getBillingPeriod();
 
-      assert.equal(
-        new Date('2015-11-16').toString()
-      , period.startDate.toString()
-      );
-
-      assert.equal(
-        new Date('2015-12-01').toString()
-      , period.endDate
-      );
+      assert.equal( '2015-11-16', period.startDate );
+      assert.equal( '2015-12-01', period.endDate );
     });
   });
 

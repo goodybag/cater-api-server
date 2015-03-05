@@ -28,16 +28,18 @@
 <div class="list-options">
   <div class="container">
     {{> restaurant_list_tags }}
+  </div>
+  <div class="container">
     {{> restaurant_toggle_list }}
     {{> restaurant_list_sort }}
   </div>
 </div>
 <div class="restaurant-list">
   <div class="container">
-    <div class="restaurant-toggle-list" data-state="tile">
+    <div class="restaurant-toggle-list hide" data-state="tile">
       {{> restaurant_tiles }}
     </div>
-    <div class="restaurant-toggle-list hide" data-state="list">
+    <div class="restaurant-toggle-list" data-state="list">
       {{> restaurant_list}}
     </div>
   </div>

@@ -1,45 +1,37 @@
+{{#extend "css"}}
+<style>
+
+</style>
+{{/extend}}
 <div>
   {{#each restaurants }}
-  <div class="list-list" style="margin-bottom: 5px; border-bottom: 1px solid #aab2bd;">
-    <a title="{{name}}" href="/restaurants/{{id}}{{queryParams ../orderParams}}" style="color: #333;">
-      <div class="row">
-      <div class="col-sm-6">
-        <img src="{{logo_url}}" width="62">
-      </div>
-      <div class="col-sm-6">
-        {{#if (and no_contract_fee (not plan_id) )}}
-        <div class="tile-corner">
-          <div
-            class="tile-fee"
-            data-toggle="tooltip"
-            data-placement="auto"
-            data-container="body"
-            data-title="An order from this restaurant includes a {{factorToPercent no_contract_fee}}% transaction fee at checkout.">
-            Fee
-          </div>
-        </div>
-        {{/if}}
-        <div>
-          <h1 style="margin: 0px; font-size: 22px;">
-            {{name}}
-            {{#if is_featured}}
-            <span style="font-size: 14px;color: #ED4242;">
-              Featured <span class="gb-icon-flame" data-toggle="tooltip" data-title="Featured Restaurant"></span>
-            </span>
-            {{/if}}
-          </h1>
-        </div>
-      </div>
-      <div>
-        <div>
-          <ul class="inline-list inline-list-bulleted">
-            <li>{{truncate (join cuisine ", ") 35}}</li>
-            <li><span>{{{dollarMeter this.price}}}</span></li>
+  <div class="list-list" style="margin-bottom: 5px; border-bottom: 1px solid #aab2bd; padding-bottom: 25px; padding-top: 25px;">
 
-          </ul>
+  <a class="tile-link" title="{{name}}" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
+    <ul class="inline-list">
+      <li>
+        <div class="list-img">
+          <img src="{{logo_url}}" width="70">
         </div>
-        <div>
-          <ul class="inline-list inline-list-bulleted">
+      </li>
+      <li>
+        <h1 style="margin: 0px; font-size: 28px;">
+          {{name}}
+          {{#if is_featured}}
+          <span style="font-size: 14px;color: #ED4242;">
+            Featured <span class="gb-icon-flame" data-toggle="tooltip" data-title="Featured Restaurant"></span>
+          </span>
+          {{/if}}
+        </h1>
+
+        <ul class="inline-list inline-list-bulleted">
+          <li>{{truncate (join cuisine ", ") 35}}</li>
+          <li>
+            <span class="dollar-meter">{{{dollarMeter this.price}}}</span>
+          </li>
+        </ul>
+
+        <ul class="inline-list inline-list-bulleted">
             <li>Delivery:
               {{#eq delivery_fee_from delivery_fee_to}}
               {{#if delivery_fee_from}}
@@ -53,13 +45,12 @@
             </li>
             <li>Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</li>
           </ul>
-          <span class="">{{> tags tags }}</span>
-        </div>
-      </div>
-      </div>
 
-      <div style="float: right;position: relative;top: -85px;">{{{ratingStars yelp_data.rating}}}</div>
-    </a>
+        <span class="tile-tags">{{> tags tags }}</span>
+      </li>
+    </ul>
+    <div class="tile-rating">{{{ratingStars yelp_data.rating}}}</div>
+  </a>
   </div>
   {{/each}}
 </div>

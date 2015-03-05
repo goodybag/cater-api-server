@@ -23,16 +23,36 @@ describe('Stamps', function() {
   });
 
   describe('billing', function() {
-    it('.isFirstOfMonth()', function(){
+    it('.getBillingPeriod()', function(){
+      var period = stamps.datetime({
+        datetime: '2015-11-05'
+      }).getBillingPeriod();
 
+      assert.equal(
+        new Date('2015-11-01').toString()
+      , period.startDate.toString()
+      );
+
+      assert.equal(
+        new Date('2015-11-16').toString()
+      , period.endDate
+      );
     });
 
-    it('.isMiddleOfMonth()', function(){
+    it('.getBillingPeriod()', function(){
+      var period = stamps.datetime({
+        datetime: '2015-11-25'
+      }).getBillingPeriod();
 
-    });
+      assert.equal(
+        new Date('2015-11-16').toString()
+      , period.startDate.toString()
+      );
 
-    it('.isStartOfBillingPeriod()', function(){
-
+      assert.equal(
+        new Date('2015-12-01').toString()
+      , period.endDate
+      );
     });
   });
 

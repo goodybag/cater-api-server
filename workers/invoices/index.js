@@ -1,13 +1,11 @@
-var now = require('stamps/datetime')();
-
-if ( !now.isFirstOfMonth() && !now.isMiddleOfMonth() ){
-  process.exit(1);
-}
-
 var db        = require('db');
 var utils     = require('utils');
 var invoices  = require('stamps/user-invoice');
 var logger    = require('../../lib/logger').create('Worker-Invoices');
+var now       = require('stamps/datetime')();
+var period    = now.getBillingPeriod();
+
+logger.info( 'Processing billing period % to %', period.startDate, period.endDate );
 
 utils.async.waterfall([
   db.users.find.bind( db.users, { is_invoiced: true } )
@@ -16,8 +14,16 @@ utils.async.waterfall([
     logger.info('Processing', users.length, 'users');
 
     utils.async.each( users, function( user, done ){
-      var invoice = invoices.create({
-        user_id
+      var invoice = invoices.create({ user_id: user.id })
+        .billing( period )
+        .fetch( function( error ){
+          if ( error ) return done( error );
+
+          invoice.populateOrdersBasedOnDate( function( error ){
+            if ( error ) return done( error );
+
+            invoice.save( done );
+          });
       });
     }, next );
   }

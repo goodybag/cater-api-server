@@ -252,7 +252,7 @@ mosql.registerQueryType(
   , ')'
   , 'insert into {table} {columns}'
   , 'select {expression}'
-  , 'where not exists ( select * from "update_tbl" )'
+  , 'where not exists ( select * from "update_tbl" ) returning *'
   ].join('\n')
 );
 
@@ -262,9 +262,8 @@ mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
 
   query.updates = upsert;
   query.columns = Object.keys( upsert );
-  query.expression = utils.values( upsert ).map( function( v ){
-    if ( typeof v !== 'string' ) return v;
-    return "'" + v + "'";
+  query.expression = utils.values( upsert ).map( function( v, i ){
+    return "$" + (i + 1);
   });
 
   return '';
@@ -486,6 +485,28 @@ dirac.DAL = dirac.DAL.extend({
 
       return callback( null, results );
     });
+  }
+
+, upsert: function( where, doc, options, callback ){
+    if ( typeof options === 'function' ){
+      callback = options;
+      options = {};
+    }
+
+    var $query = utils.extend({
+      type: 'upsert'
+    , table: this.table
+    , where: where
+    , upsert: doc
+    }, options );
+
+    console.log($query);
+
+    $query = mosql.sql( $query );
+
+    console.log( $query.toString() );
+
+    return this.raw( $query.toString(), $query.values, callback );
   }
 });
 

@@ -31,11 +31,21 @@ module.exports = require('stampit')()
   })
   .methods({
     fetch: function( callback ){
-      if ( !this.id ){
-        throw new Error('Cannot fetch without ID');
+      var where = {
+          billing_period_start: this.billing_period_start
+        , billing_period_end:   this.billing_period_end
+        , user_id:              this.user_id
+      };
+
+      if ( this.id ){
+        where = { id: this.id };
       }
 
-      db.user_invoices.findOne( this.id, getQueryOptions(), function( error, result ){
+      var options = utils.extend( getQueryOptions(), {
+        order: ['id desc']
+      });
+
+      db.user_invoices.findOne( where, options, function( error, result ){
         if ( error ) return callback( error );
 
         utils.extend( this, result );

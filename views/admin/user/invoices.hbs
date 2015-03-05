@@ -13,7 +13,7 @@
   <ul class="invoices">
     {{#each user.invoices}}
       <li>
-        <a href="{{replace ../config.invoice.pdfRoute ':id' this.id}}">#{{this.id}} 
+        <a href="{{replace ../config.invoice.pdfRoute ':id' this.id}}">#{{this.id}}
           {{datepart this.billing_period_begin}} -
           {{datepart this.billing_period_end~}}
         </a>

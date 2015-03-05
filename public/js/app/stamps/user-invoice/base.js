@@ -9,8 +9,9 @@ if ( typeof module === 'object' && module && typeof module.exports === 'object' 
 }
 
 define( function( require, exports, module ){
-  var stampit = require('stampit');
-  var usd     = require('usd');
+  var stampit   = require('stampit');
+  var billingP  = require('../datetime/billing-period');
+  var usd       = require('usd');
 
   return module.exports = stampit()
     .state({
@@ -18,12 +19,25 @@ define( function( require, exports, module ){
     })
     .methods({
       total: function(){
-        console.log('total',this);
         var total = this.orders.reduce( function( curr, order ){
           return curr + order.total;
         }, 0 );
 
         return usd().pennies( total );
+      }
+
+    , billing: function( period ){
+        if ( period ){
+          period = billingP( period );
+          this.billing_period_start = period.startDate;
+          this.billing_period_end = period.startDate;
+          return this;
+        }
+
+        return billingP({
+          startDate: this.billing_period_start
+        , endDate: this.billing_period_end
+        });
       }
     });
 });

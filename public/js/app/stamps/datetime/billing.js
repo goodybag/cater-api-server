@@ -6,20 +6,11 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   var stampit = require('stampit');
-  var moment  = require('moment-timezone');
 
   return stampit()
     .methods({
-      isStartOfBilling: function(){
-
-      }
-
-    , isStartOfMonth: function(){
-
-      }
-
-    , isEndOfMonth: function(){
-
+      getBillingPeriod: function(){
+        
       }
     });
 });

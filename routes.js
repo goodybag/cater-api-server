@@ -356,7 +356,7 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'mainNav', { active: 'users' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'basic-info'
-      , baseUrl:  '/admin/users'
+      , baseUrl:  '/admin/users/:id'
       })
     , m.viewPlugin( 'breadCrumbs', {
         currentPage: 'Basic Info'
@@ -378,14 +378,43 @@ module.exports.register = function(app) {
     , m.viewPlugin( 'mainNav', { active: 'users' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'invoices'
-      , baseUrl:  '/admin/users'
+      , baseUrl:  '/admin/users/:id'
       })
     , m.viewPlugin( 'breadCrumbs', {
         currentPage: 'Invoices'
       })
     , m.queryOptions({
-        one: [{ table: 'regions', alias: 'region' }]
-      , many: [ { table: 'user_invoices', alias: 'invoices' } ]
+        one:  [ { table: 'regions', alias: 'region' }]
+      , many: [ { table: 'user_invoices', alias: 'invoices'
+                , order: { billing_period_end: 'desc' }
+                }
+              ]
+      , userGroups: true
+      })
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.view( 'admin/user/invoices', db.users, {
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
+
+    app.get('/admin/users/:id/invoices/new'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'invoices'
+      , baseUrl:  '/admin/users/:id'
+      })
+    , m.viewPlugin( 'breadCrumbs', {
+        currentPage: 'Invoices'
+      })
+    , m.queryOptions({
+        one:  [ { table: 'regions', alias: 'region' }]
+      , many: [ { table: 'user_invoices', alias: 'invoices'
+                , order: { billing_period_end: 'desc' }
+                }
+              ]
       , userGroups: true
       })
     , m.db.regions.find( {}, { limit: 'all' } )
@@ -673,7 +702,7 @@ module.exports.register = function(app) {
       , baseUrl:  '/admin/restaurants/:restaurant_id'
       })
     , m.viewPlugin( 'breadCrumbs', {
-        currentPage: 'basic-info'
+        currentPage: 'New Invoice'
       })
     , m.viewPlugin( 'itemForm', {
         selector:           '#edit-item-form'

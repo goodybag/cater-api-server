@@ -25,6 +25,7 @@ describe('Stamps', function(){
         , billing_period_end: '2015-01-15'
         });
 
+        console.log('invoice.save');
         invoice.save( function( error ){
           if ( error ) return done( error );
 
@@ -60,6 +61,54 @@ describe('Stamps', function(){
 
               done();
             });
+          });
+        });
+      });
+
+      it ('.fetch() by id', function( done ){
+        var doc = {
+          user_id: 1
+        , billing_period_start: new Date('2015-01-01')
+        , billing_period_end: new Date('2015-01-15')
+        };
+
+        db.user_invoices.insert( doc, function( error, result ){
+          if ( error ) return done( error );
+
+          var invoice = invoices.db.create({ id: result[0].id });
+
+          invoice.fetch( function( error ){
+            if ( error ) return done( error );
+
+            assert.equal( invoice.id, result[0].id );
+            assert.equal( invoice.billing_period_start.toString(), result[0].billing_period_start.toString() );
+            assert.equal( invoice.billing_period_end.toString(), result[0].billing_period_end.toString() );
+
+            done();
+          });
+        });
+      });
+
+      it ('.fetch() by user/billing_period', function( done ){
+        var doc = {
+          user_id: 1
+        , billing_period_start: new Date('2015-01-01')
+        , billing_period_end: new Date('2015-01-15')
+        };
+
+        db.user_invoices.insert( doc, function( error, result ){
+          if ( error ) return done( error );
+
+          var invoice = invoices.db.create( doc );
+
+          invoice.fetch( function( error ){
+            if ( error ) return done( error );
+
+            assert.equal( invoice.id, result[0].id );
+            assert.equal( invoice.billing_period_start.toString(), result[0].billing_period_start.toString() );
+            assert.equal( invoice.billing_period_end.toString(), result[0].billing_period_end.toString() );
+
+            done();
           });
         });
       });

@@ -24,6 +24,7 @@ module.exports = require('stampit')()
           $gte: this.billing_period_start
         , $lt:  this.billing_period_end
         }
+      , payment_method_id: { $null: true }
       };
 
       db.orders.find( $where, function( error, orders ){

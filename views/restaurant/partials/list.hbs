@@ -1,24 +1,19 @@
-{{#extend "css"}}
-<style>
-
-</style>
-{{/extend}}
 <div>
   {{#each restaurants }}
-  <div class="list-list" style="margin-bottom: 5px; border-bottom: 1px solid #aab2bd; padding-bottom: 25px; padding-top: 25px;">
+  <div class="listing">
 
   <a class="tile-link" title="{{name}}" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
     <ul class="inline-list">
       <li>
-        <div class="list-img">
-          <img src="{{logo_url}}" width="70">
+        <div class="listing-img">
+          <img src="{{logo_url}}">
         </div>
       </li>
       <li>
-        <h1 style="margin: 0px; font-size: 28px;">
+        <h1 class="listing-title">
           {{name}}
           {{#if is_featured}}
-          <span style="font-size: 14px;color: #ED4242;">
+          <span class="listing-feature">
             Featured <span class="gb-icon-flame" data-toggle="tooltip" data-title="Featured Restaurant"></span>
           </span>
           {{/if}}

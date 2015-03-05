@@ -1,0 +1,35 @@
+@listing-padding: 25px;
+@listing-border: 1px solid @palette-gray;
+@listing-title-font-size: 28px;
+@listing-featured-color: @palette-red;
+@listing-featured-font-size: 14px;
+@listing-image-width: 70px;
+@listing-link-color: @palette-gray-dark;
+
+.listing {
+  margin-bottom: 5px;
+  border-bottom: @listing-border;
+  padding-bottom: @listing-padding;
+  padding-top: @listing-padding;
+}
+
+.listing-title {
+  margin: 0;
+  font-size: @listing-title-font-size;
+}
+
+.listing-feature {
+  color: @listing-featured-color;
+  .gb-icon-flame {
+    font-size: @listing-featured-font-size;
+  }
+}
+
+.listing-img {
+  width: @listing-image-width;
+}
+
+.listing-link {
+  text-decoration: none;
+  color: @listing-link-color;
+}

@@ -58,7 +58,7 @@ define( function( require ){
         el: '#main'
       , trigger: '.btn-toggle-list'
       , targetSelector: '.restaurant-toggle-list'
-      })
+      });
 
       $('.search-advanced .btn-search').click(listView.search.bind(listView));
       $('.btn-toggle-list').click(toggleClassView.toggle.bind(toggleClassView));

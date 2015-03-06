@@ -17,18 +17,25 @@ define(function (require, exports, module) {
         events['click '+this.options.trigger] = 'showhide';
       return events;
     }
-
-  , toggle: function (e) {
-      if (e.preventDefaults) {
-        e.preventDefaults();
+  , initialize: function () {
+      var state = window.localStorage ? window.localStorage.getItem('gb-display') : null;
+      if (state) {
+        var $el = $(this.options.trigger+'[data-state="'+state+'"]');
+        this.setState($el[0]);
       }
-      $(this.options.trigger).removeClass('active');
-      e.target.classList.add('active');
+    }
 
-      var self = this;
-      var toggleClass = e.target.getAttribute('data-class');
-      var state = e.target.getAttribute('data-state');
+  , setState: function ( el ) {
+      $(this.options.trigger).removeClass('active');
+      el.classList.add('active');
+
+      var toggleClass = el.getAttribute('data-class');
+      var state = el.getAttribute('data-state');
       var $targets = this.$el.find( this.options.targetSelector )
+
+      if (window.localStorage) {
+        window.localStorage.setItem('gb-display', state);
+      }
 
       $targets.each( function (i, target) {
         if (toggleClass)
@@ -38,6 +45,13 @@ define(function (require, exports, module) {
           target.classList.add( toggleClass );
         }
       });
+    }
+
+  , toggle: function ( e ) {
+      if (e.preventDefaults) {
+        e.preventDefaults();
+      }
+      this.setState.call(this, e.target);
     }
   });
 });

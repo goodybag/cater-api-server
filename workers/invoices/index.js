@@ -14,7 +14,7 @@ utils.async.waterfall([
     logger.info('Processing', users.length, 'users');
 
     utils.async.each( users, function( user, done ){
-      var invoice = invoices.create({ user_id: user.id })
+      var invoice = invoices({ user_id: user.id })
         .billing( period )
         .fetch( function( error ){
           if ( error ) return done( error );

@@ -45,7 +45,6 @@ define(function(require, exports, module) {
       , tip_percent: '.tip-percent'
       , organization_type: '.organization-type'
       , secondary_contact_phone: '.order-secondary-contact-phone'
-      , promo_code: '.promo-code'
     }),
 
     fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {

@@ -61,8 +61,6 @@
 {{/extend}}
 
 {{#extend "body"}}
-{{{dump testObj}}}
-<h1>getA {{testObj.getA}}</h1>
 <div class="order">
   <table class="gb-table" style="">
     <thead>
@@ -86,7 +84,7 @@
         </td>
         <td>${{dollars this.sub_total}}</td>
         <td>${{dollars this.delivery_fee}}</td>
-        <td>${{dollars this.tax}}</td>
+        <td>${{dollars this.sales_tax}}</td>
         <td>${{dollars this.tip}}</td>
         <td>${{dollars this.total}}</td>
       </tr>
@@ -102,7 +100,7 @@
       <div class="right">
         <dl class="dl-horizontal dl-order-total">
           <dt>Amount to be paid:</dt>
-          {{!-- <dd>${{invoice.total.dollars}}</dd> --}}
+          <dd>${{dollars invoice.total}}</dd>
         </dl>
       </div>
     </div>

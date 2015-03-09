@@ -1560,23 +1560,9 @@ module.exports.register = function(app) {
       }).fetch( function( error ){
         if ( error ) return next( error );
 
-        var Ctr = function(){
-          this.a = 1;
-        };
-
-        Ctr.prototype.getA = function() {
-          console.trace('THIS', 'a' in this);
-          return this.a;
-        };
-
-        res.locals.testObj = new Ctr();
-        res.locals.invoice = invoice;
-
+        console.log(invoice.total);
         // So HBS doesn't screw EVERYTHING up
-        // res.locals.invoice.total = {
-        //   pennies: invoice.total().pennies()
-        // , dollars: invoice.total().dollars()
-        // };
+        res.locals.invoice = invoice.toJSON();
 
         return next();
       });

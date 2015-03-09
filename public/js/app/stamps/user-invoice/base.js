@@ -11,6 +11,7 @@ if ( typeof module === 'object' && module && typeof module.exports === 'object' 
 define( function( require, exports, module ){
   var stampit   = require('stampit');
   var billingP  = require('../datetime/billing-period');
+  var utils     = require('utils');
   var usd       = require('usd');
 
   return module.exports = stampit()
@@ -19,11 +20,10 @@ define( function( require, exports, module ){
     })
     .methods({
       total: function(){
-        var total = this.orders.reduce( function( curr, order ){
+        return this.orders.reduce( function( curr, order ){
+          console.log('order', order.total);
           return curr + order.total;
         }, 0 );
-
-        return usd().pennies( total );
       }
 
     , billing: function( period ){
@@ -38,6 +38,10 @@ define( function( require, exports, module ){
           startDate: this.billing_period_start
         , endDate: this.billing_period_end
         });
+      }
+
+    , toJSON: function(){
+        return utils.extend( { total: this.total() }, this );
       }
     });
 });

@@ -54,5 +54,5 @@ utils.async.waterfall([
       .catch( next );
   }
 ], function( error ){
-  process.exit( error ? 1 : 0 )
+  process.exit( error ? 1 : 0 );
 });

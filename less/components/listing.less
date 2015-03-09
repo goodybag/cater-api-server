@@ -3,7 +3,7 @@
 @listing-title-font-size: 24px;
 @listing-featured-color: @palette-red;
 @listing-featured-font-size: 14px;
-@listing-image-width: 85px;
+@listing-image-width: 190px;
 @listing-link-color: @palette-gray-dark;
 
 .listing {
@@ -16,6 +16,7 @@
 .listing-title {
   margin: 0;
   font-size: @listing-title-font-size;
+  font-weight: 500;
 }
 
 .listing-feature {
@@ -30,4 +31,21 @@
 .listing-link {
   text-decoration: none;
   color: @listing-link-color;
+}
+
+.listing-info {
+  position: relative;
+  bottom: 10px;
+}
+
+.listing-rating {
+  position: absolute;
+  right: 10px;
+  top: 25px;
+  letter-spacing: -2px;
+}
+
+.listing-tags {
+  position: relative;
+  top: 5px;
 }

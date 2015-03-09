@@ -6,45 +6,47 @@
     <ul class="inline-list">
       <li>
         <div class="listing-img">
-          <img src="{{logo_url}}">
+          <img src="{{list_photo_url}}">
         </div>
       </li>
       <li>
-        <h1 class="listing-title">
-          {{name}}
-          {{#if is_featured}}
-          <span class="listing-feature">
-            Featured <span class="gb-icon-flame" data-toggle="tooltip" data-title="Featured Restaurant"></span>
-          </span>
-          {{/if}}
-        </h1>
+        <div class="listing-info">
+          <h1 class="listing-title">
+            {{name}}
+            {{#if is_featured}}
+            <span class="listing-feature">
+              Featured <span class="gb-icon-flame" data-toggle="tooltip" data-title="Featured Restaurant"></span>
+            </span>
+            {{/if}}
+          </h1>
 
-        <ul class="inline-list inline-list-bulleted">
-          <li>{{truncate (join cuisine ", ") 35}}</li>
-          <li>
-            <span class="dollar-meter">{{{dollarMeter this.price}}}</span>
-          </li>
-        </ul>
-
-        <ul class="inline-list inline-list-bulleted">
-            <li>Delivery:
-              {{#eq delivery_fee_from delivery_fee_to}}
-              {{#if delivery_fee_from}}
-              ${{dollarsOmit00 ../delivery_fee_from}}
-              {{else}}
-              Free
-              {{/if}}
-              {{else}}
-              ${{dollarsOmit00 delivery_fee_from}} - ${{dollarsOmit00 delivery_fee_to}}
-              {{/eq}}
+          <ul class="inline-list inline-list-bulleted">
+            <li>{{truncate (join cuisine ", ") 35}}</li>
+            <li>
+              <span class="dollar-meter">{{{dollarMeter this.price}}}</span>
             </li>
-            <li>Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</li>
           </ul>
 
-        <span class="listing-tags">{{> tags tags }}</span>
+          <ul class="inline-list inline-list-bulleted">
+              <li>Delivery:
+                {{#eq delivery_fee_from delivery_fee_to}}
+                {{#if delivery_fee_from}}
+                ${{dollarsOmit00 ../delivery_fee_from}}
+                {{else}}
+                Free
+                {{/if}}
+                {{else}}
+                ${{dollarsOmit00 delivery_fee_from}} - ${{dollarsOmit00 delivery_fee_to}}
+                {{/eq}}
+              </li>
+              <li>Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</li>
+            </ul>
+
+          <span class="listing-tags">{{> tags tags }}</span>
+        </div>
       </li>
     </ul>
-    <div class="tile-rating">{{{ratingStars yelp_data.rating}}}</div>
+    <div class="listing-rating">{{{ratingStars yelp_data.rating}}}</div>
   </a>
   </div>
   {{/each}}

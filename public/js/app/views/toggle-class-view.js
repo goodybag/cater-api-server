@@ -14,13 +14,7 @@ define(function (require, exports, module) {
   var cookie = require('../../cookie');
 
   return module.exports = utils.View.extend({
-    events: function () {
-      var events = {};
-        events['click '+this.options.trigger] = 'showhide';
-      return events;
-    }
-
-  , setState: function ( el ) {
+    setState: function ( el ) {
       $(this.options.trigger).removeClass('active');
       el.classList.add('active');
 

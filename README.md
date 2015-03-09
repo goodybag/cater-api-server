@@ -72,6 +72,8 @@ __Install Heroku Toolbelt__
 heroku login
 ```
 
+if you have multiple heroku accounts, checkout `https://github.com/ddollar/heroku-accounts`
+
 __Watch files, start log server, etc:__
 
 ```

@@ -1,3 +1,4 @@
+var Promise   = require('bluebird');
 var db        = require('db');
 var utils     = require('utils');
 var invoices  = require('stamps/user-invoice');
@@ -36,18 +37,21 @@ utils.async.waterfall([
 , function( users, next ){
     logger.info('Processing', users.length, 'users');
 
-    utils.async.each( users, function( user, done ){
+    var pusers = users.map( function( user ){
       var invoice = invoices({ user_id: user.id }).billing( period );
 
-      console.log('processing', user.id);
+      return invoice.fetchAsync()
+        .then( function(){
+          return invoice.populateOrdersBasedOnDateAsync();
+        })
+        .then( function(){
+          return invoice.saveAsync();
+        })
+    });
 
-      return done();
-
-      invoice.fetch()
-        .error( done )
-        .then( invoice.populateOrdersBasedOnDate )
-        .then( invoice.save );
-    }, next );
+    Promise.all( pusers )
+      .then( next )
+      .catch( next );
   }
 ], function( error ){
   process.exit( error ? 1 : 0 )

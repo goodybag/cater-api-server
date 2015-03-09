@@ -30,7 +30,7 @@ define( function( require, exports, module ){
         if ( period ){
           period = billingP( period );
           this.billing_period_start = period.startDate;
-          this.billing_period_end = period.startDate;
+          this.billing_period_end = period.endDate;
           return this;
         }
 

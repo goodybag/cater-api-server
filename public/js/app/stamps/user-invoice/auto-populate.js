@@ -33,7 +33,7 @@ module.exports = require('stampit')()
         this.orders = orders;
 
         this.orders.forEach( function( order ){
-          order.user_invoice.id = this.id;
+          order.user_invoice_id = this.id;
           order.order_id = order.id;
         }.bind( this ));
 

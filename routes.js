@@ -79,6 +79,7 @@ module.exports.register = function(app) {
     , threshold:    3
     , mustBeAuthed: true
     })
+  , m.localCookies(['gb_display'])
   , controllers.restaurants.list
   );
 

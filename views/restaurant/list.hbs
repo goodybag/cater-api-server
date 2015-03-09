@@ -36,10 +36,10 @@
 </div>
 <div class="restaurant-list">
   <div class="container">
-    <div class="restaurant-toggle-list" data-state="tile">
+    <div class="restaurant-toggle-list {{#if (eq cookies.gb_display 'list') }} hide {{/if}}" data-state="tile">
       {{> restaurant_tiles }}
     </div>
-    <div class="restaurant-toggle-list hide" data-state="list">
+    <div class="restaurant-toggle-list {{#unless (eq cookies.gb_display 'list') }} hide {{/unless}}" data-state="list">
       {{> restaurant_list}}
     </div>
   </div>

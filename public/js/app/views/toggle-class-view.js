@@ -10,19 +10,13 @@
 */
 define(function (require, exports, module) {
   var utils = require('utils');
+  var cookie = require('../../cookie');
 
   return module.exports = utils.View.extend({
     events: function () {
       var events = {};
         events['click '+this.options.trigger] = 'showhide';
       return events;
-    }
-  , initialize: function () {
-      var state = window.localStorage ? window.localStorage.getItem('gb-display') : null;
-      if (state) {
-        var $el = $(this.options.trigger+'[data-state="'+state+'"]');
-        this.setState($el[0]);
-      }
     }
 
   , setState: function ( el ) {
@@ -33,10 +27,6 @@ define(function (require, exports, module) {
       var state = el.getAttribute('data-state');
       var $targets = this.$el.find( this.options.targetSelector )
 
-      if (window.localStorage) {
-        window.localStorage.setItem('gb-display', state);
-      }
-
       $targets.each( function (i, target) {
         if (toggleClass)
         if (state === target.getAttribute('data-state')) {
@@ -45,6 +35,11 @@ define(function (require, exports, module) {
           target.classList.add( toggleClass );
         }
       });
+
+      // set state in local cookie
+      if (this.options.cookie) {
+        cookie.setItem(this.options.cookie, state);
+      }
     }
 
   , toggle: function ( e ) {

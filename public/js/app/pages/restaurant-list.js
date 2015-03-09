@@ -58,6 +58,7 @@ define( function( require ){
         el: '#main'
       , trigger: '.btn-toggle-list'
       , targetSelector: '.restaurant-toggle-list'
+      , cookie: 'gb_display'
       });
 
       $('.search-advanced .btn-search').click(listView.search.bind(listView));

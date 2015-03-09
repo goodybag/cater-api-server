@@ -1,7 +1,7 @@
 <div class="list-display-actions" style="float: left;">
   <div class="list-sort-lead">Show:</div>
   <div class="list-sort-actions btn-group">
-    <button class="btn btn-small btn-toggle-list {{#unless (eq cookies.gb_display 'list') }} active {{/unless}}" data-class="hide" data-state="tile">Tile</button>
+    <button class="btn btn-small btn-toggle-list {{#if (deq cookies.gb_display 'list') }} active {{/if}}" data-class="hide" data-state="tile">Tile</button>
 
     <button class="btn btn-small btn-toggle-list {{#if (eq cookies.gb_display 'list') }} active {{/if}}" data-class="hide" data-state="list">List</button>
   </div>

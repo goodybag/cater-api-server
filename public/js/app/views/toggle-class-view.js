@@ -1,11 +1,12 @@
 /*
-* Show and Hide view elements.
+* Toggle Class View
 * options: {
 *    trigger: '.toggle-btn'      // button or link to toggle view
-*  , targetSelector: '.mytoggle' // swap showhide class for this el
+*  , targetSelector: '.mytoggle' // swap class for this el
+*  , cookie:  'cookie_name'      // persist state in browser cookie
 *  }
 *
-* trigger: should have attribute data-class="className"
+* trigger: should have attributes data-class="className" and data-state="classState"
 * 
 */
 define(function (require, exports, module) {

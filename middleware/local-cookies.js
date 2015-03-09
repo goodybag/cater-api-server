@@ -7,11 +7,11 @@
 */
 
 module.exports = function ( cookies ) {
-	return function ( req, res, next ) {
-		res.locals.cookies = {};
-		cookies.forEach( function ( key ) {
-			res.locals.cookies[ key ] = req.cookies[ key ];
-		});
-		next();
-	}
+  return function ( req, res, next ) {
+    res.locals.cookies = {};
+    cookies.forEach( function ( key ) {
+      res.locals.cookies[ key ] = req.cookies[ key ];
+    });
+    next();
+  }
 };

@@ -1,14 +1,13 @@
 define(function (require, exports, module) {
   return module.exports = {
-  	getItem: function (key) {
-  		if (!key) { return null; }
+    getItem: function (key) {
+      if (!key) { return null; }
   		var exp = [
-  				'(?:(?:^|.*;)\\s*' 
-  			, encodeURIComponent(key).replace(/[\-\.\+\*]/g, '\\$&') 
-  			, '\\s*\\=\\s*([^;]*).*$)|^.*$'
-  				].join('');
-
-  		return decodeURIComponent(document.cookie.replace(new RegExp(exp), '$1')) || null;
+        '(?:(?:^|.*;)\\s*'
+        , encodeURIComponent(key).replace(/[\-\.\+\*]/g, '\\$&')
+        , '\\s*\\=\\s*([^;]*).*$)|^.*$'
+      ].join('');
+      return decodeURIComponent(document.cookie.replace(new RegExp(exp), '$1')) || null;
     }
 
   , setItem: function (key, value) {
@@ -18,9 +17,9 @@ define(function (require, exports, module) {
     }
 
   , removeItem: function (key) {
-  		if (!this.hasItem(key)) { return false; }
-  		document.cookie = encodeURIComponent(key) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-  		return true;
+      if (!this.hasItem(key)) { return false; }
+      document.cookie = encodeURIComponent(key) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      return true;
     }
 
   , hasItem: function (key) {

@@ -39,7 +39,7 @@
     <div class="restaurant-toggle-list {{#if (eq cookies.gb_display 'list') }} hide {{/if}}" data-state="tile">
       {{> restaurant_tiles }}
     </div>
-    <div class="restaurant-toggle-list {{#unless (eq cookies.gb_display 'list') }} hide {{/unless}}" data-state="list">
+    <div class="restaurant-toggle-list {{#if (deq cookies.gb_display 'list') }} hide {{/if}}" data-state="list">
       {{> restaurant_list}}
     </div>
   </div>

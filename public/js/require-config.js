@@ -46,7 +46,6 @@
 
       // templating related
     , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}
-    , {name: 'handlebars.runtime',location: '../../components/handlebars',                main: 'handlebars.runtime.js'}
     , {name: 'partials',          location: '../../dist',                                 main: 'partials.js'}
 
       // moment stuff
@@ -73,6 +72,7 @@
       // custom replacements
       '*': {
         'moment': 'moment-loaded'
+      , 'handlebars.runtime': 'hbs'
       }
 
       // deal with jquery
@@ -151,10 +151,10 @@
         exports: 'key'
       }
     }
-  // , hbs: {
-  //     disableI18n: true
-  //   , disableHelpers: true
-  //   }
+  , hbs: {
+      disableI18n: true
+    , disableHelpers: true
+    }
   };
 
   if ( typeof requirejs !== 'undefined' ){

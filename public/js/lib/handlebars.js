@@ -1,8 +1,10 @@
 define(function(require, exports, module) {
+  console.log('ohai')
+
   var Handlebars = require('hbs');
   var helpers = require('hb-helpers');
 
-  require('partials');
+  var partials = require('partials');
 
   for (var key in helpers) {
     Handlebars.registerHelper(key, helpers[key]);
@@ -10,11 +12,11 @@ define(function(require, exports, module) {
 
   // for Handlebars partials replace dashes with underscores
   // (alternatively, have filenames with underscores instead of hyphens)
-  var newPartials = {};
-  Handlebars.partials = _.map(Handlebars.partials, function(value, key) {
-    newPartials[key.replace(/-/g, '_')] = value;
-  });
-  Handlebars.partials = newPartials;
+  console.log('partials', Handlebars.partials);
+  for ( var key in partials ){
+    console.log(key);
+    Handlebars.partials[ key.replace(/-/g, '_') ] = partials[ key ];
+  }
 
   return module.exports = Handlebars;
 });

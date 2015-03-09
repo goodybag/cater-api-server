@@ -21,7 +21,7 @@ module.exports = ({
 , staging: promo
 , dev: {
     test: {
-      email: local.testEmail || 'test@goodybag.com' 
+      email: local.testEmail || 'test@goodybag.com'
     , promo_code: 'worf'
     }
   }

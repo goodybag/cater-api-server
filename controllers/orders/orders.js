@@ -348,7 +348,7 @@ module.exports.changeStatus = function(req, res) {
 
       // get a list of emails senders from the promo config
       var emails = Object.keys(promoCofig).filter( function (k) {
-        return promoCofig[k].promo_code = req.order.promo_code;
+        return promoCofig[k].promo_code === req.order.promo_code;
       }).map( function (k) {
         return promoCofig[k].email;
       });

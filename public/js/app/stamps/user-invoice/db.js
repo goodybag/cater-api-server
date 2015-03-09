@@ -1,6 +1,5 @@
 var db      = require('db');
 var utils   = require('utils');
-var Promise = require('bluebird');
 
 function getQueryOptions(){
   return {
@@ -32,9 +31,9 @@ module.exports = require('stampit')()
   .methods({
     fetch: function( callback ){
       var where = {
-          billing_period_start: this.billing_period_start
-        , billing_period_end:   this.billing_period_end
-        , user_id:              this.user_id
+        billing_period_start: this.billing_period_start
+      , billing_period_end:   this.billing_period_end
+      , user_id:              this.user_id
       };
 
       if ( this.id ){

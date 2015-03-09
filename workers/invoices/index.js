@@ -14,17 +14,12 @@ utils.async.waterfall([
     logger.info('Processing', users.length, 'users');
 
     utils.async.each( users, function( user, done ){
-      var invoice = invoices({ user_id: user.id })
-        .billing( period )
-        .fetch( function( error ){
-          if ( error ) return done( error );
+      var invoice = invoices({ user_id: user.id }).billing( period );
 
-          invoice.populateOrdersBasedOnDate( function( error ){
-            if ( error ) return done( error );
-
-            invoice.save( done );
-          });
-      });
+      invoice.fetch()
+        .error( done )
+        .then( invoice.populateOrdersBasedOnDate )
+        .then( invoice.save );
     }, next );
   }
 ]);

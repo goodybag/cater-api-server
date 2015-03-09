@@ -25,7 +25,6 @@ describe('Stamps', function(){
         , billing_period_end: '2015-01-15'
         });
 
-        console.log('invoice.save');
         invoice.save( function( error ){
           if ( error ) return done( error );
 
@@ -63,6 +62,21 @@ describe('Stamps', function(){
             });
           });
         });
+      });
+
+      it( '.saveAsync()', function( done ){
+        var invoice = invoices.create({
+          user_id: 1
+        , billing_period_start: '2015-01-01'
+        , billing_period_end: '2015-01-15'
+        });
+
+        invoice.saveAsync()
+          .then( function(){
+            assert( invoice.id );
+            done();
+          })
+          .error( done );
       });
 
       it ('.fetch() by id', function( done ){

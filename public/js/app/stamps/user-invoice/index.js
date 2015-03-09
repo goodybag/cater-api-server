@@ -9,6 +9,7 @@ if ( typeof module === 'object' && module && typeof module.exports === 'object' 
 
 define( function( require, exports, module ){
   var stampit = require('stampit');
+  var Promise = require('bluebird');
   var utils   = require('utils');
 
   module.exports = stampit();
@@ -25,6 +26,8 @@ define( function( require, exports, module ){
   );
 
   utils.extend( module.exports, stamps );
+
+  Promise.promisifyAll( module.exports.fixed.methods );
 
   return module.exports;
 });

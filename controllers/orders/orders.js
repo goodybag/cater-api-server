@@ -13,7 +13,7 @@ var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer;
 var orderDefinitionSchema  = require('../../db/definitions/orders').schema;
-var promoCofig = require('../../configs/promo');
+var promoConfig = require('../../configs/promo');
 
 var addressFields = [
   'street'
@@ -345,17 +345,8 @@ module.exports.changeStatus = function(req, res) {
 
     if (req.order.promo_code)
     if (req.order.status === 'submitted') {
-
-      // get a list of emails senders from the promo config
-      var emails = Object.keys(promoCofig).filter( function (k) {
-        return promoCofig[k].promo_code === req.order.promo_code;
-      }).map( function (k) {
-        return promoCofig[k].email;
-      });
-
-      if (emails.length > 0) {
-        venter.emit('order:submitted:promo', req.order, emails);
-      }
+    if (utils.where( promoConfig, { promo_code: req.order.promo_code} ).length >= 0)
+      venter.emit('order:submitted:promo', req.order);
     }
   }
 

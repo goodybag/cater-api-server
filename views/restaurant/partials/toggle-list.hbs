@@ -1,8 +1,11 @@
-<div class="list-display-actions" style="float: left;">
+<div class="list-display-actions list-sort">
   <div class="list-sort-lead">Show:</div>
   <div class="list-sort-actions btn-group">
-    <button class="btn btn-small btn-toggle-list {{#if (dneq cookies.gb_display 'list') }} active {{/if}}" data-class="hide" data-state="tile">Tile</button>
+    {{#with cookies}}
+      <button class="btn btn-small btn-toggle-list {{#if (or (eq gb_display 'tile') (not gb_display)) }} active {{/if}}" data-class="hide" data-state="tile">Tile</button>
 
-    <button class="btn btn-small btn-toggle-list {{#if (eq cookies.gb_display 'list') }} active {{/if}}" data-class="hide" data-state="list">List</button>
+      <button class="btn btn-small btn-toggle-list {{#if (eq gb_display 'list') }} active {{/if}}" data-class="hide" data-state="list">List</button>
+    {{/with}}
   </div>
 </div>
+

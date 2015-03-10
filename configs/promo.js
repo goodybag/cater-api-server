@@ -7,7 +7,7 @@ try {
 
 var promo = {
   adam: {
-    email: ''
+    email: 'adam.peacock@goodybag.com'
   , promo_code: ''
   }
 , jacob: {

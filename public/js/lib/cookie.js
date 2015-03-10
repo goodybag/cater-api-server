@@ -1,3 +1,10 @@
+/*
+*   cookie.js
+*
+*   This is a simplified version of mozilla's cookie lib
+*   https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
+*/
+
 define(function (require, exports, module) {
   return module.exports = {
     getItem: function (key) {

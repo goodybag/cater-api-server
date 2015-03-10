@@ -1,9 +1,9 @@
 /**
 *  Attach local cookies to response object
+*  @param {Array} - cookies - array of keys of type string
 *
-*	 @param {Array} - cookies - array of keys of type string
 *  usage:
-*		m.localCookies(['gb_display'])
+*	  m.localCookies(['gb_display', 'my_cookie_name'])
 */
 
 module.exports = function ( cookies ) {

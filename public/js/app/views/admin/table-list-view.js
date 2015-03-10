@@ -10,8 +10,8 @@ define(function(require){
       var ItemView = this_.options.itemView;
 
       // Enable plugins
-      this.$el('[data-role="popover"]').gb_popover();
-      this.$el('[data-toggle="tooltip"]').tooltip();
+      this.$el.find('[data-role="popover"]').gb_popover();
+      this.$el.find('[data-toggle="tooltip"]').tooltip();
       this.$el.gb_tablelist();
 
       // Init toggle visibility views

@@ -1,5 +1,6 @@
 module.exports = {
   after: require('./after')
+, aliasLocals: require('./alias-locals')
 , analytics: require('./analytics')
 , basicAuth: require('./basic-session-auth')
 , consumeNewSignup: require('./consume-new-signup')

@@ -188,10 +188,7 @@ module.exports.register = function(app) {
 
     , m.db.restaurants.find({ is_hidden: false })
 
-    , function( req, res, next ){
-        res.locals.ordersTableRestaurants = res.locals.restaurants;
-        next();
-      }
+    , m.aliasLocals({ ordersTableRestaurants: 'restaurants' })
 
     , m.view( 'admin/kitchen-sink/index', {
         layout: 'admin/layout2'

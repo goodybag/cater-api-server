@@ -1550,6 +1550,21 @@ module.exports.register = function(app) {
 
   app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
 
+  app.get( config.invoice.pdfRoute
+  , function(req,res,next){
+      console.log('hi');
+      return next();
+    }
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , m.s3({
+      path:   '/' + config.invoice.fileFormat
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.invoice.bucket
+    })
+  );
+
   app.get(
     config.invoice.htmlRoute
   , m.basicAuth()
@@ -1569,17 +1584,6 @@ module.exports.register = function(app) {
     }
   , m.view( 'invoice/invoice', {
       layout: 'invoice/invoice-layout'
-    })
-  );
-
-  app.get( config.invoice.pdfRoute
-  , m.basicAuth()
-  , m.restrict(['admin', 'receipts'])
-  , m.s3({
-      path:   '/' + config.invoice.fileName
-    , key:    config.amazon.awsId
-    , secret: config.amazon.awsSecret
-    , bucket: config.invoice.bucket
     })
   );
 

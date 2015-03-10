@@ -5,32 +5,29 @@
       pagination</p>
     <p>LESS Import</p>
     <pre>@import "overrides/components/table-list.less";</pre>
-    <p>Demo</p>
-    <div class="table-list-header">
-        <div class="table-list-header-title">Restaurants</div>
-        <div class="table-list-header-actions">
-          {{> admin_restaurant_filter_region }}
-          {{> admin_restaurant_filter_visible }}
-          {{> admin_restaurant_filter_sort }}
-        </div>
+    <p>Default</p>
+    <div class="table-list">
+      {{> admin_kitchen_sink_table_list_restaurants_contents}}
     </div>
-    <ul class="table-list table-list-bordered">
-      <li class="table-list-item">All Star Burger</li>
-      <li class="table-list-item">Taco Deli</li>
-      <li class="table-list-item">Taj Palace</li>
-    </ul>
-    <p>Markup</p>
-<code class="language-markup">{{#raw}}<div class="table-list-header">
-  <div class="table-list-header-title">Restaurants</div>
-  <div class="table-list-header-actions">
-    <!-- filters here -->
-  </div>
-</div>
-<ul class="table-list table-list-bordered">
-  <li class="table-list-item">All Star Burger</li>
-  <li class="table-list-item">Taco Deli</li>
-  <li class="table-list-item">Taj Palace</li>
-</ul>
-{{/raw}}</code>
+
+    <p>Add class `striped`</p>
+    <div class="table-list striped">
+      {{> admin_kitchen_sink_table_list_restaurants_contents}}
+    </div>
+
+    <p>Add class `dark`</p>
+    <div class="table-list striped dark">
+      {{> admin_kitchen_sink_table_list_restaurants_contents}}
+    </div>
   </div>
 </section>
+
+{{#extend "scripts"}}
+<script>
+  require(['jquery', 'table-list'], function( $ ){
+    $(function(){
+      $('#section-table-list .table-list').gb_tablelist();
+    });
+  });
+</script>
+{{/extend}}

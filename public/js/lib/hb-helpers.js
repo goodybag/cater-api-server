@@ -641,6 +641,11 @@ define(function(require, exports, module) {
 
     replace: function( str, a, b ){
       return str.replace( a, b );
+    },
+    
+    without: function( arr ){
+      var rest = Array.prototype.slice.call( arguments, 1 );
+      return utils.without.apply( utils, arr, rest );
     }
   }
 

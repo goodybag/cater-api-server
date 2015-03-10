@@ -24,7 +24,8 @@ define(function(require, exports, module) {
       'submit #order-form':                           'submit',
       'submit #select-address-form':                  'selectAddress',
       'keyup #order-guests':                          'updateGuests',
-      'input input[name="card_number"]':              'onCardNumberChange'
+      'input input[name="card_number"]':              'onCardNumberChange',
+      'change input[name="organization_type"]':       'onOrganizationTypeChange'
     }),
 
     step: 2,
@@ -42,7 +43,9 @@ define(function(require, exports, module) {
       , phone: '.address-phone'
       , tip: '.order-tip'
       , tip_percent: '.tip-percent'
+      , organization_type: '.organization-type'
       , secondary_contact_phone: '.order-secondary-contact-phone'
+      , promo_code: '.promo-code'
     }),
 
     fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {
@@ -52,6 +55,10 @@ define(function(require, exports, module) {
         return existingCardSelected ? pmid : null;
       },
 
+      organization_type: function () {
+        return this.$el.find('input[name="organization_type"]:checked').val();
+      },
+      
       secondary_contact_phone: function () {
         return this.$el.find(this.fieldMap.secondary_contact_phone).val().replace(/[^\d]/g, '') || null;
       }
@@ -87,6 +94,8 @@ define(function(require, exports, module) {
 
       // Trigger payment method id change to check if selected card is expired
       this.onPaymentMethodIdChange();
+
+      this.$orderOrganization = this.$el.find('#order-organization');
     },
 
     convertTimesToRanges: function(){
@@ -211,6 +220,7 @@ define(function(require, exports, module) {
         userInfo = {
           name:         this.$el.find('[name="user_name"]').val()
         , organization: this.$el.find('[name="user_organization"]').val()
+        , organization_type: this.$el.find('input[name="organization_type"]:checked').val()
         };
 
         if ( !userInfo.name ){
@@ -218,6 +228,23 @@ define(function(require, exports, module) {
           return this.displayErrors2([{
             property: 'user_name'
           , message: 'Please enter a valid name'
+          }]);
+        }
+
+        if( !userInfo.organization_type ){
+          spinner.stop();
+          return this.displayErrors2([{
+            property: 'organization_type'
+          , message: 'Please select an organization type'
+          }]);
+        }
+
+        if ( !userInfo.organization)
+        if( userInfo.organization_type === "business"){
+          spinner.stop();
+          return this.displayErrors2([{
+            property: 'user_organization'
+          , message: 'Please enter an organization'
           }]);
         }
 
@@ -455,11 +482,20 @@ define(function(require, exports, module) {
       return this;
     },
 
-    // Shouldn't be used a view method
-    // Should be used as an event handler
-    saveNewCardAndSubmit: function(e) {
-      var this_ = this;
-      var $el = this.$el.find('#new-card');
+    processCard: function (options, callback) {
+      if (utils.isFunction(options)) {
+        callback = options;
+        options = {};
+      }
+
+      utils.defaults(options, {
+        $el: this.$el.find('#newCard')
+      , userId: this.options.user.get('id')
+      , paymentId: undefined
+      , saveCard: false
+      });
+
+      var $el = options.$el;
 
       var data = {
         card_name:         $el.find('[name="card_name"]').val()
@@ -467,7 +503,7 @@ define(function(require, exports, module) {
       , security_code:     $el.find('[name="security_code"]').val()
       , expiration_month: +$el.find('[name="expiration_month"]').val()
       , expiration_year:  +$el.find('[name="expiration_year"]').val()
-      , save_card:         $el.find('[name="save_card"]:checked').length === 1
+      , save_card:         options.saveCard
       };
 
       if (PaymentMethod.getCardType(data.card_number) == 'amex') {
@@ -478,11 +514,23 @@ define(function(require, exports, module) {
         , data);
       }
 
-      var pm = new PaymentMethod({ user_id: this.options.user.get('id') });
+      var pm = new PaymentMethod({ user_id: options.userId, id: options.paymentId });
+      pm.updateBalancedAndSave(data, function (errors) {
+        return callback(errors, pm);
+      });
+    },
 
-      // Save the card
-      pm.updateBalancedAndSave(data, function(error) {
-        if (error) return this_.displayErrors2(error, PaymentMethod);
+    saveNewCardAndSubmit: function(e) {
+      var this_ = this;
+      var $el = this.$el.find('#new-card');
+
+      this.processCard({
+        $el: $el
+      , userId: this.options.user.get('id')
+      , saveCard: $el.find('[name="save_card"]:checked').length === 1
+      }, 
+      function(errors, pm) {
+        if (errors) return this_.displayErrors2(errors, PaymentMethod);
 
         // Then revert back to "Pay Using" and select the newly added card
         this_.selectPaymentType('existing');
@@ -634,28 +682,13 @@ define(function(require, exports, module) {
       var this_ = this;
       var $el = this.$el.find('#update-card');
 
-      var pm = new PaymentMethod({
-        user_id: this.options.user.get('id')
-      , id: $el.find('[name="id"]').val()
-      });
-
-      var data = {
-        card_name:         $el.find('[name="card_name"]').val()
-      , card_number:       $el.find('[name="card_number"]').inputmask('unmaskedvalue')
-      , security_code:     $el.find('[name="security_code"]').val()
-      , expiration_month: +$el.find('[name="expiration_month"]').val()
-      , expiration_year:  +$el.find('[name="expiration_year"]').val()
-      };
-
-      if (PaymentMethod.getCardType(data.card_number) == 'amex') {
-        data = _.extend({
-          postal_code: $el.find('[name="postal_code"]').val()
-        , country_code: 'USA'
-        }
-        , data);
-      }
-
-      pm.updateBalancedAndSave(data, function(error) {
+      this.processCard({
+        $el: $el
+      , user_id: this.options.user.get('id')
+      , paymentId: $el.find('[name="id"]').val()
+      , saveCard: false
+      }, 
+      function(error) {
         if (error) return notify.error(error);
 
         this_.hideCardExpired();
@@ -664,6 +697,14 @@ define(function(require, exports, module) {
         this_.selectCard(pm.get('id'));
         this_.clearCardForm($el);
       });
+    },
+
+    onOrganizationTypeChange: function (e) {
+      if (e.target.value === "business") {
+        this.$orderOrganization[0].classList.remove('hide');
+      } else {
+        this.$orderOrganization[0].classList.add('hide');
+      }
     }
   });
 });

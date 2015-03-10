@@ -21,6 +21,7 @@ begin
   perform add_column( 'user_invoice_orders', 'user_invoice_id', 'int not null references user_invoices("id") on delete cascade' );
   perform add_column( 'user_invoice_orders', 'order_id', 'int not null references orders("id")' );
 
+  alter table "user_invoice_orders" drop constraint if exists user_invoice_orders_pkey;
   alter table "user_invoice_orders" add primary key ( user_invoice_id, order_id );
 
   -- Ensure we don't conflict with current invoice numbers:

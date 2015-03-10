@@ -3,7 +3,7 @@
 @listing-title-font-size: 24px;
 @listing-featured-color: @palette-red;
 @listing-featured-font-size: 14px;
-@listing-image-width: 190px;
+@listing-image-width: 195px;
 @listing-link-color: @palette-gray-dark;
 
 .listing {
@@ -14,6 +14,7 @@
 }
 
 .listing-title {
+  display: inline-block;
   margin: 0;
   font-size: @listing-title-font-size;
   font-weight: 500;
@@ -48,4 +49,30 @@
 .listing-tags {
   position: relative;
   top: 5px;
+}
+
+@media (max-width: @breakpoint-tablet) {
+  .listing-title {
+    display: block;
+  }
+
+  .listing-img {
+    display: none;
+  }
+
+  .listing-rating {
+    position: relative;
+    right: 0px;
+    top: 5px;
+  }
+
+  .btn-toggle-list {
+    width: 100%;
+  }
+
+  .page-restaurant-list {
+    .inline-list .inline-list-bulleted li {
+      display: inline-block;
+    }
+  }
 }

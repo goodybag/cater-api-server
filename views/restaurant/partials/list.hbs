@@ -11,15 +11,12 @@
       </li>
       <li>
         <div class="listing-info">
-          <h1 class="listing-title">
-            {{name}}
-            {{#if is_featured}}
-            <span class="listing-feature">
-              Featured <span class="gb-icon-flame" data-toggle="tooltip" data-title="Featured Restaurant"></span>
-            </span>
-            {{/if}}
-          </h1>
-
+          <h1 class="listing-title">{{name}}</h1>
+          {{~#if is_featured~}}
+          <span class="listing-feature">
+            Featured <span class="gb-icon-flame" data-toggle="tooltip" data-title="Featured Restaurant"></span>
+          </span>
+          {{~/if~}}
           <ul class="inline-list inline-list-bulleted">
             <li>{{truncate (join cuisine ", ") 35}}</li>
             <li>

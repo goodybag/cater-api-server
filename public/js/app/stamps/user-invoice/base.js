@@ -12,7 +12,6 @@ define( function( require, exports, module ){
   var stampit   = require('stampit');
   var billingP  = require('../datetime/billing-period');
   var utils     = require('utils');
-  var usd       = require('usd');
 
   return module.exports = stampit()
     .state({
@@ -21,7 +20,6 @@ define( function( require, exports, module ){
     .methods({
       total: function(){
         return this.orders.reduce( function( curr, order ){
-          console.log('order', order.total);
           return curr + order.total;
         }, 0 );
       }

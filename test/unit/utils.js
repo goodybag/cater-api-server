@@ -3,6 +3,71 @@ var utils   = require('../../utils');
 var moment  = require('moment-timezone');
 
 describe ('Utils', function(){
+  it('.search', function(){
+    var list = [
+      { id: 1, name: 'foo' }
+    , { id: 2, name: 'bar' }
+    , { id: 3, name: 'baz' }
+    , { id: 4, name: 'foo' }
+    , { id: 5, name: 'bar' }
+    , { id: 6, name: 'baz' }
+    ];
+
+    var searchInput = 'foo';
+
+    var fields = ['id', 'name'];
+
+    var result = utils.search( list, searchInput, fields );
+
+    assert.deepEqual( result, [
+      { id: 1, name: 'foo' }
+    , { id: 4, name: 'foo' }
+    ]);
+  });
+
+  it('.search', function(){
+    var list = [
+      { id: 1, name: 'foo' }
+    , { id: 2, name: 'bar' }
+    , { id: 3, name: 'baz' }
+    , { id: 4, name: 'foo' }
+    , { id: 5, name: 'bar' }
+    , { id: 6, name: 'baz' }
+    ];
+
+    var searchInput = 3;
+
+    var fields = ['id', 'name'];
+
+    var result = utils.search( list, searchInput, fields );
+
+    assert.deepEqual( result, [
+      { id: 3, name: 'baz' }
+    ]);
+  });
+
+  it('.search', function(){
+    var list = [
+      { id: 1, name: 'Foo' }
+    , { id: 2, name: 'Bar' }
+    , { id: 3, name: 'Baz' }
+    , { id: 4, name: 'Foo' }
+    , { id: 5, name: 'Bar' }
+    , { id: 6, name: 'Baz' }
+    ];
+
+    var searchInput = 'baz';
+
+    var fields = ['id', 'name'];
+
+    var result = utils.search( list, searchInput, fields );
+
+    assert.deepEqual( result, [
+      { id: 3, name: 'Baz' }
+    , { id: 6, name: 'Baz' }
+    ]);
+  });
+
   it('.timeToRange', function(){
     var time    = '12:15 PM';
     var format  = 'hh:mm A';

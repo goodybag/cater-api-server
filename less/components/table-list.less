@@ -6,25 +6,31 @@
 
 .table-list {
   .table-list-theme(
-    @palette-gray-lighter
-  , @color-primary-text
-  , @palette-gray
-  , @color-primary-text
-  , @palette-white
+    @header-bg:     @palette-gray-lighter
+  , @header-color:  @color-primary-text
+  , @border-color:  @palette-gray
+  , @text-color:    @color-primary-text
+  , @items-bg:      @palette-white
   );
 
   &.dark {
     .table-list-theme(
-      @palette-gray-dark
-    , @palette-white
-    , @palette-gray-darker
-    , @palette-white
-    , fade( @palette-gray-dark, 90% )
+      @header-bg:     @palette-gray-dark
+    , @header-color:  @palette-white
+    , @border-color:  @palette-gray-darker
+    , @text-color:    @palette-white
+    , @items-bg:      fade( @palette-gray-dark, 90% )
     );
   }
 }
 
-.table-list-theme( @header-bg, @header-color, @border-color, @text-color, @items-bg ){
+.table-list-theme(
+  @header-bg
+, @header-color
+, @border-color
+, @text-color
+, @items-bg
+){
   & {
     color: @text-color;
   }

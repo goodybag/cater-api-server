@@ -4,6 +4,7 @@ var utils     = require('utils');
 var invoices  = require('stamps/user-invoice');
 var logger    = require('../../lib/logger').create('Worker-Invoices');
 var now       = require('stamps/datetime')();
+var venter    = require('../../venter');
 var period    = now.getBillingPeriod();
 
 logger.info( 'Processing billing period %s to %s', period.startDate, period.endDate );
@@ -47,6 +48,9 @@ utils.async.waterfall([
         .then( function(){
           return invoice.saveAsync();
         })
+        .then( function(){
+          venter.emit( 'invoice:change', invoice.id, invoice );
+        });
     });
 
     Promise.all( pusers )

@@ -1186,6 +1186,23 @@ module.exports.register = function(app) {
   , controllers.orders.notifications.getEmail
   );
 
+  app.get('/orders/:oid/payment'
+  , m.getOrder2({
+      param:                  'oid'
+    , items:                  true
+    , user:                   true
+    , userAddresses:          true
+    , userPaymentMethods:     true
+    , restaurant:             true
+    , deliveryService:        true
+    , restaurantDbModelFind:  true
+    })  
+  , controllers.orders.auth
+  , m.view( 'order-payment',{
+
+   })
+  );
+
   /**
    * Reporting resource
    */

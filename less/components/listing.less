@@ -37,6 +37,7 @@
 .listing-info {
   position: relative;
   bottom: 10px;
+  margin-left: 5px;
 }
 
 .listing-rating {
@@ -74,5 +75,11 @@
     .inline-list .inline-list-bulleted li {
       display: inline-block;
     }
+  }
+}
+
+@media (max-width: @breakpoint-desktop-sm) {
+  .listing-info {
+    margin-left: 0px;
   }
 }

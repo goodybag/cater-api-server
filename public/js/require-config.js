@@ -63,6 +63,8 @@
     , {name: 'pickatime',         location: '../../components/pickadate/lib',             main: 'picker.time.js'}
     , {name: 'bootstrap',         location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
     , {name: 'select2',           location: '../../components/select2',                   main: 'select2.js'}
+    , {name: 'jquery.lazyload-any', location: '../../components/jquery-lazyload-any/src', main: 'jquery.lazyload-any.js'}
+    , {name: 'lazy',              location: '../../components/javascript',                main: 'lazy.js'}
 
     , {name: 'config',            location: '../app',                                     main: 'config.js'}
     ]

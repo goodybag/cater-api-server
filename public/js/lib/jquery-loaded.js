@@ -11,12 +11,14 @@ define(function(require, exports, module) {
   require('field-matcher');
   require('jquery.preview');
   require('jquery.row-expand');
+  require('jquery.lazy');
   require('jquery.toggler');
   require('jquery.prefixer');
   require('jquery.modern-modal');
   require('el-toggler').auto();
   require('jquery.popover');
   require('jquery.collapsible');
+  require('jquery.lazyload-any');
 
   $(function(){
     $('input, textarea').placeholder();

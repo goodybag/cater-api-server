@@ -38,6 +38,13 @@ define( function( require, exports, module ){
         });
       }
 
+    , getBillingPeriodFormatted: function(){
+        return [
+          moment( this.billing_period_start ).format('MM/DD/YYYY')
+        , moment( this.billing_period_end ).format('MM/DD/YYYY')
+        ].join(' - ');
+      }
+
     , toJSON: function(){
         return utils.extend( { total: this.total() }, this );
       }

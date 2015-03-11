@@ -22,4 +22,6 @@ module.exports = {
   , staging:    'invoices-staging.goodybag.com'
   , dev:        'invoices-dev.goodybag.com'
   })[ env ]
+
+, fromMail: 'payments@goodybag.com'
 };

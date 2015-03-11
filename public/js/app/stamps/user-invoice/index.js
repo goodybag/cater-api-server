@@ -17,6 +17,7 @@ define( function( require, exports, module ){
   var stamps = {
     autoPopulate: require('./auto-populate')
   , base:         require('./base')
+  , email:        require('./email')
   , db:           require('./db')
   };
 

@@ -4,7 +4,7 @@ var utils     = require('utils');
 var invoices  = require('stamps/user-invoice');
 var logger    = require('../../lib/logger').create('Worker-Invoices');
 var now       = require('stamps/datetime')();
-var venter    = require('../../venter');
+var pdfs      = require('../../lib/pdfs');
 var period    = now.getBillingPeriod();
 
 logger.info( 'Processing billing period %s to %s', period.startDate, period.endDate );
@@ -49,14 +49,32 @@ utils.async.waterfall([
           return invoice.saveAsync();
         })
         .then( function(){
-          venter.emit( 'invoice:change', invoice.id, invoice );
+          console.log('build pdf');
+          return new Promise( function( resolve, reject ){
+            pdfs.invoice.build( { id: invoice.id }, function( error, results ){
+              console.log(error, results);
+              if ( error ){
+                return reject( error );
+              }
+
+              return resolve();
+            });
+          });
         });
     });
 
     Promise.all( pusers )
-      .then( next )
+      .then( next.bind( null, null ) )
       .catch( next );
   }
 ], function( error ){
+  if ( error ){
+    console.log(error);
+    throw error;
+    logger.error('Error processing invoices', {
+      error: error
+    });
+  }
+
   process.exit( error ? 1 : 0 );
 });

@@ -12,8 +12,19 @@ describe('Stamps', function(){
         });
 
         assert.equal( invoice.total(), 6 );
-        assert.equal( invoice.total().pennies(), 6 );
-        assert.equal( invoice.total().dollars(), '0.06' );
+      });
+
+      it ( '.getBillingPeriodFormatted()', function(){
+        var invoice = invoices.create({
+          user_id: 1
+        , billing_period_start: '2015-01-01'
+        , billing_period_end: '2015-01-15'
+        });
+
+        assert.equal(
+          invoice.getBillingPeriodFormatted()
+        , '01/01/2015 - 01/15/2015'
+        );
       });
     });
 

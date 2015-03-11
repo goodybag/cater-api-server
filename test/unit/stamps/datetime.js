@@ -29,7 +29,7 @@ describe('Stamps', function() {
       }).getBillingPeriod();
 
       assert.equal( '2015-11-01', period.startDate );
-      assert.equal( '2015-11-16', period.endDate );
+      assert.equal( '2015-11-15', period.endDate );
     });
 
     it('.getBillingPeriod()', function(){
@@ -38,7 +38,7 @@ describe('Stamps', function() {
       }).getBillingPeriod();
 
       assert.equal( '2015-11-16', period.startDate );
-      assert.equal( '2015-12-01', period.endDate );
+      assert.equal( '2015-11-30', period.endDate );
     });
   });
 

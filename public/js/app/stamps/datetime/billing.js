@@ -19,12 +19,12 @@ define( function( require, exports, module ){
         var start = moment( d ).startOf('month');
         var end   = moment( d ).startOf('month');
 
-        if ( this._moment.date() < 16 ){
+        if ( this._moment.date() < 15 ){
           start.set( 'date', 1 );
-          end.set( 'date', 16 );
+          end.set( 'date', 15 );
         } else {
           start.set( 'date', 16 );
-          end.add( 1, 'month' ).set( 'date', 1 );
+          end.endOf('month');
         }
 
         return billingP({

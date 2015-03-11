@@ -23,6 +23,7 @@ module.exports = {
 , getUser: require('./get-user')
 , getUser2: require('./get-user2')
 , jsonLocals: require('./json-locals')
+, localCookies: require('./local-cookies')
 , logRequest: require('./log-request')
 , methodOverride: require('./method-override')
 , noop: require('./noop')

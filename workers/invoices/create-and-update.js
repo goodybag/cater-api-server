@@ -26,8 +26,8 @@ utils.async.waterfall([
       , where: {
           status: 'accepted'
         , datetime: {
-            $gte: period.startDate
-          , $lt:  period.endDate
+            $gte:   period.startDate
+          , $lte:   period.endDate
           }
         , payment_method_id: { $null: true }
         }

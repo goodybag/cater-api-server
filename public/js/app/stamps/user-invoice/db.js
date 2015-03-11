@@ -4,10 +4,12 @@ var utils   = require('utils');
 function getQueryOptions(){
   return {
     many: [ { table: 'user_invoice_orders'
-            , alias: 'orders'
-            , mixin:  [ { table: 'orders' }]
-            , one:    [ { table: 'restaurants'
-                        , alias: 'restaurant'
+            , one:    [ { table: 'orders'
+                        , alias: 'order'
+                        , one:  [ { table: 'restaurants'
+                                  , alias: 'restaurant'
+                                  }
+                                ]
                         }
                       ]
             }
@@ -46,6 +48,10 @@ module.exports = require('stampit')()
 
       db.user_invoices.findOne( where, options, function( error, result ){
         if ( error ) return callback( error );
+
+        result.orders = result.user_invoice_orders.map( function( order ){
+          return order.order;
+        });
 
         utils.extend( this, result );
 

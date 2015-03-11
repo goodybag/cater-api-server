@@ -10,15 +10,12 @@ module.exports = require('stampit')()
     sendEmail: function( callback ){
       // No user record, go ahead and run a fetch
       if ( !this.user ){
-        console.log('Fetching invoice');
         return this.fetch( function( error ){
           if ( error ) return callback( error );
 
           this.sendEmail( callback );
         }.bind( this ));
       }
-
-      console.log('sending email');
 
       pdfs.invoice.get( { id: this.id }, function( error, res ){
         if ( error ) return callback( error );
@@ -42,7 +39,13 @@ module.exports = require('stampit')()
             fileName:     config.invoice.fileFormat.replace( ':id', this.id )
           , streamSource: res
           }
-        }, callback );
+        }, function( error ){
+          if ( error ) return callback( error );
+
+          this.status = 'emailed';
+
+          this.save( callback );
+        }.bind( this ));
       }.bind( this ));
 
       return this;

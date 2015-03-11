@@ -49,10 +49,8 @@ utils.async.waterfall([
           return invoice.saveAsync();
         })
         .then( function(){
-          console.log('build pdf');
           return new Promise( function( resolve, reject ){
             pdfs.invoice.build( { id: invoice.id }, function( error, results ){
-              console.log(error, results);
               if ( error ){
                 return reject( error );
               }
@@ -69,7 +67,6 @@ utils.async.waterfall([
   }
 ], function( error ){
   if ( error ){
-    console.log(error);
     throw error;
     logger.error('Error processing invoices', {
       error: error

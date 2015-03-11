@@ -16,18 +16,20 @@ define(function (require, exports, module) {
   return module.exports = utils.View.extend({
     setState: function ( el ) {
       $(this.options.trigger).removeClass('active');
-      el.classList.add('active');
+      var $el = $(el);
+      $el.addClass('active');
 
-      var toggleClass = el.getAttribute('data-class');
-      var state = el.getAttribute('data-state');
+      var toggleClass = $el.attr('data-class');
+      var state = $el.attr('data-state');
       var $targets = this.$el.find( this.options.targetSelector )
 
       $targets.each( function (i, target) {
+        var $target = $(target);
         if (toggleClass)
-        if (state === target.getAttribute('data-state')) {
-          target.classList.remove( toggleClass );
+        if (state === $target.attr('data-state')) {
+          $target.removeClass( toggleClass );
         } else {
-          target.classList.add( toggleClass );
+          $target.addClass( toggleClass );
         }
       });
 

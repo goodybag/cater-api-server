@@ -1,5 +1,5 @@
 {{#extend "css"}}
-{{!-- <link rel="stylesheet" href="/css/invoice-pdf.css"> --}}
+<link rel="stylesheet" href="/css/invoice-pdf.css">
 {{/extend}}
 
 {{#extend "scripts"}}
@@ -69,6 +69,7 @@
         <th>Sub Total</th>
         <th>Delivery</th>
         <th>Tax</th>
+        <th>Transaction Fee</th>
         <th>Tip</th>
         <th>Total</th>
       </tr>
@@ -85,6 +86,7 @@
         <td>${{dollars this.sub_total}}</td>
         <td>${{dollars this.delivery_fee}}</td>
         <td>${{dollars this.sales_tax}}</td>
+        <td>${{dollars this.no_contract_amount}}</td>
         <td>${{dollars this.tip}}</td>
         <td>${{dollars this.total}}</td>
       </tr>

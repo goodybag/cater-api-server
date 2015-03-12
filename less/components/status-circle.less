@@ -1,0 +1,19 @@
+@diameter: 10px;
+
+.status-circle {
+  position: relative;
+  top: 2px;
+  .circle(@palette-gray-light; @diameter);
+
+  &.paid {
+    .circle(@palette-green; @diameter);
+  }
+
+  &.pending, &.processing {
+    .circle(@palette-blue; @diameter);
+  }
+
+  &.error {
+    .circle(@palette-red; @diameter);
+  }
+}

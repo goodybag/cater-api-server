@@ -75,6 +75,11 @@
           <dt>Pickup Time</dt>
           <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
         {{/is}}
+        <dt>Payment Status</dt>
+        <dd>
+          <span class="status-circle {{order.payment_status}}"></span>
+          <span>{{or order.payment_status 'null'}}</span>
+        </dd>
       </dl>
 
       {{#eq order.type 'courier'}}

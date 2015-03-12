@@ -422,3 +422,11 @@
   // firefox osx
   -moz-osx-font-smoothing: grayscale;
 }
+
+.circle (@color; @diameter: 5px; @display: inline-block) {
+  display: @display;
+  border-radius: 50%;
+  background-color: @color;
+  height: @diameter;
+  width: @diameter;
+}

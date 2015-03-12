@@ -49,17 +49,7 @@ module.exports = require('stampit')()
       db.user_invoices.findOne( where, options, function( error, result ){
         if ( error ) return callback( error );
 
-        if ( result ){
-          result.orders = result.user_invoice_orders.map( function( order ){
-            ['user_invoice_id', 'order_id'].forEach( function( k ){
-              order.order[ k ] = order[ k ];
-            });
-
-            return order.order;
-          });
-        }
-
-        utils.extend( this, result );
+        this.parseDbResult( result );
 
         callback( null, this );
       }.bind( this ));
@@ -167,6 +157,22 @@ console.log('saveorders', callback);
   , parseResults: function( results ){
       results = results[0] || results;
       utils.extend( this, results );
+    }
+
+  , parseDbResult: function( result ){
+      if ( result ){
+        result.orders = result.user_invoice_orders.map( function( order ){
+          ['user_invoice_id', 'order_id'].forEach( function( k ){
+            order.order[ k ] = order[ k ];
+          });
+
+          return order.order;
+        });
+      }
+
+      utils.extend( this, result );
+
+      return this;
     }
   });
 

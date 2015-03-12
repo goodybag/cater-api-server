@@ -43,6 +43,7 @@ module.exports = require('stampit')()
           if ( error ) return callback( error );
 
           this.status = 'emailed';
+          this.email_sent_date = new Date();
 
           this.save( callback );
         }.bind( this ));

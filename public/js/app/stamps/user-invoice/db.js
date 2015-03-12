@@ -51,6 +51,10 @@ module.exports = require('stampit')()
 
         if ( result ){
           result.orders = result.user_invoice_orders.map( function( order ){
+            ['user_invoice_id', 'order_id'].forEach( function( k ){
+              order.order[ k ] = order[ k ];
+            });
+
             return order.order;
           });
         }
@@ -116,7 +120,7 @@ module.exports = require('stampit')()
         callback = tx;
         tx = db.dirac.tx.create();
       }
-
+console.log('saveorders', callback);
       utils.async.series([
         // Remove existing orders on this invoice
         tx.user_invoice_orders.remove.bind(
@@ -144,10 +148,11 @@ module.exports = require('stampit')()
       , tx.commit.bind( tx )
       ], function( error ){
         if ( error ){
-          tx.rollback();
+          console.log('saveorders error', error);
+          return tx.rollback( callback.bind( null, error ) );
         }
 
-        callback( error );
+        callback();
       });
     }
 

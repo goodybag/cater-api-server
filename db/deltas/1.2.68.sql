@@ -16,6 +16,7 @@ begin
   perform add_column( 'user_invoices', 'billing_period_start', 'date not null');
   perform add_column( 'user_invoices', 'billing_period_end', 'date not null');
   perform add_column( 'user_invoices', 'status', E'invoice_status not null default \'pending\'');
+  perform add_column( 'user_invoices', 'email_sent_date', 'timestamp' );
   perform add_column( 'user_invoices', 'created_at', 'timestamp not null default now()' );
   
   perform add_column( 'user_invoice_orders', 'user_invoice_id', 'int not null references user_invoices("id") on delete cascade' );

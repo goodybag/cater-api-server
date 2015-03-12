@@ -1,4 +1,4 @@
-var CONCURRENCY = 10;
+var CONCURRENCY = 5;
 
 var Promise   = require('bluebird');
 var db        = require('db');
@@ -7,7 +7,6 @@ var now       = require('stamps/datetime')();
 var logger    = require('../../lib/logger').create('Worker-SendInvoices');
 
 if ( !now.isStartOfBillingPeriod() ){
-  console.log('not first day');
   process.exit(0);
 }
 
@@ -23,20 +22,25 @@ db.user_invoices.findAsync({
 , billing_period_end:   { $lte: period.endDate }
 })
 .catch( function( error ){
-  console.log('error', error);
   logger.error({ error: error });
   process.exit(1);
 })
 .then( function( invoices ){
-  console.log(invoices);
+  logger.info( 'Processing %s invoices', invoices.length );
   return Promise.resolve( invoices );
 })
 .map( function( invoice ){;
-  console.log('sending', invoice.id)
   return invoices.create( invoice )
     .sendEmailAsync()
     .error( function( error ){
-      errors.push( error );
+      errors.push({
+        invoice:  invoice
+      , error:    error
+      });
+
+      invoice.status = 'error';
+
+      return invoice.saveAsync();
     });
 }, { concurrency: CONCURRENCY })
 .then( function(){

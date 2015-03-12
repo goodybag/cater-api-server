@@ -63,7 +63,6 @@ describe ('Order Delivery Service Criteria', function(){
 
   it ('should not be delivery service', function(){
     var order = defaultOrder;
-console.log( criteria.why(order));
     assert( !criteria.check( order ) );
   });
 

@@ -2,9 +2,15 @@
 <script>
 require(['jquery-loaded'], function( $ ){
 
-$(document).ready(function(){
-  $('.tile-cover').lazy().lazyload({threshold: 200})
-  });
+  $('.tile-cover').lazy();
+  // $('.tile-cover').lazyload({
+  //   threshold: 200,
+  //   load: function($el) { 
+  //     console.log('loading pic');
+  //     $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')) )
+  //   }
+  // });
+
 });
 </script>
 {{/extend}}

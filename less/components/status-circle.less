@@ -1,19 +1,21 @@
-@diameter: 10px;
+//////////////////
+// Status Circle
+//////////////////
 
 .status-circle {
   position: relative;
   top: 2px;
-  .circle(@palette-gray-light; @diameter);
+  .circle(@palette-gray-light);
 
   &.paid {
-    .circle(@palette-green; @diameter);
+    .circle(@palette-green);
   }
 
   &.pending, &.processing {
-    .circle(@palette-blue; @diameter);
+    .circle(@palette-blue);
   }
 
   &.error {
-    .circle(@palette-red; @diameter);
+    .circle(@palette-red);
   }
 }

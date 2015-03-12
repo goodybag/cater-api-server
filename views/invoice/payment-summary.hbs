@@ -36,7 +36,7 @@
     <tbody>
       {{#each payment_summary.items}}
       <tr>
-        <td>{{this.order_id}}</td>
+        <td><strong>{{this.order_id}}</strong><br>{{formatDateTime item_order.datetime 'M/D/YY HH:mm a'}}</td>
         <td>${{dollars this.delivery_fee}}</td>
         <td>${{dollars this.tip}}</td>
         <td>${{dollars this.order_total}}</td>

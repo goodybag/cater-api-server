@@ -1221,7 +1221,7 @@ module.exports.register = function(app) {
     , restaurant:             true
     , deliveryService:        true
     , restaurantDbModelFind:  true
-    })  
+    })
   , controllers.orders.auth
   , m.view( 'order-payment',{
 
@@ -1628,7 +1628,10 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.restaurant({ param: 'restaurant_id' })
   , m.queryOptions({
-      many: [ { table: 'payment_summary_items', alias: 'items' }]
+      many: [ { table: 'payment_summary_items', alias: 'items'
+              , one: [{ table: 'orders', alias: 'item_order' }]
+              }
+            ]
     , one:  [ { table: 'restaurants', alias: 'restaurant'
               , one: [{ table: 'restaurant_plans', alias: 'plan' }]
               }]

@@ -6,11 +6,12 @@ var criteria  = require('../../public/js/lib/order-delivery-service-checker');
 describe ('Order Delivery Service Criteria', function(){
   var now = moment().tz('America/Chicago');
 
-  // If it's within an hour or after 12pm, just advance to the next monday
-  // just in case
-  if ( now.get('hour') >= 11 ){
+  // If it's within a couple hours or after 12pm,
+  // advance to the next monday just in case
+  if ( now.get('hour') >= 10 ){
     now = now.day(8);
   }
+
   var defaultOrder = {
     sub_total:  1000
   , guests:     25
@@ -62,7 +63,7 @@ describe ('Order Delivery Service Criteria', function(){
 
   it ('should not be delivery service', function(){
     var order = defaultOrder;
-
+console.log( criteria.why(order));
     assert( !criteria.check( order ) );
   });
 

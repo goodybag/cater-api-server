@@ -409,12 +409,21 @@ module.exports.register = function(app) {
       })
     , m.queryOptions({
         one:  [ { table: 'regions', alias: 'region' }]
-      , many: [ { table: 'user_invoices', alias: 'invoices'
-                , order: { billing_period_end: 'desc' }
-                }
-              ]
       , userGroups: true
       })
+    , function( req, res, next ){
+        var options = {
+          order: ['id desc']
+        };
+
+        require('stamps/user-invoice').find( {}, options, function( error, results ){
+          if ( error ) return next( error );
+
+          res.locals.invoices = results;
+
+          return next();
+        });
+      }
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.viewPlugin( 'mainNav', { active: 'users' })
     , m.view( 'admin/user/invoices', db.users, {

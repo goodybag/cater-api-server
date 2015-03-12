@@ -185,6 +185,10 @@ define(function(require, exports, module) {
     },
 
     submit: function(e) {
+      if ( utils.contains(['accepted', 'submitted'], this.model.get('status')) ) {
+        return;
+      }
+
       spinner.start();
 
       var self = this, userInfo;

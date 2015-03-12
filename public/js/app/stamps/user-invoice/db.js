@@ -49,9 +49,11 @@ module.exports = require('stampit')()
       db.user_invoices.findOne( where, options, function( error, result ){
         if ( error ) return callback( error );
 
-        result.orders = result.user_invoice_orders.map( function( order ){
-          return order.order;
-        });
+        if ( result ){
+          result.orders = result.user_invoice_orders.map( function( order ){
+            return order.order;
+          });
+        }
 
         utils.extend( this, result );
 

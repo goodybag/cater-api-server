@@ -1713,6 +1713,23 @@ module.exports.register = function(app) {
   , m.find( db.orders )
   );
 
+  app.get('/api/restaurants/:restaurant_id/payments'
+  , m.getRestaurant({ param: 'restaurant_id' })
+  , m.payments.list()
+  );
+
+  app.get('/api/restaurants/:restaurant_id/credit-test'
+  , m.getRestaurant({ param: 'restaurant_id' })
+  , m.payments.credit()
+  );
+
+  // app.post('/api/restaurants/:restaurant_id/payments'
+  // , m.restrict(['admin'])
+  // , function(req, res, next) {
+  //     res.send({abc: 'def'});
+  //   }
+  // );
+
   app.get('/api/restaurants/:restaurant_id/contacts'
   , m.restrict( ['admin'] )
   , m.param('restaurant_id')

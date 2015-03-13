@@ -31,6 +31,7 @@ module.exports = {
 , orderParams: require('./order-params')
 , owner: require('./owner')
 , param: require('./param')
+, payments: require('./payments')
 , queryParams: require('./query-params')
 , queryString: require('./query-string')
 , restaurant: require('./restaurant')

@@ -106,14 +106,18 @@ module.exports = require('stampit')()
     }
 
   , saveOrders: function( tx, callback ){
+      var didNotPassTx = false;
       if ( typeof tx === 'function' ||  !tx ){
         callback = tx;
         tx = db.dirac.tx.create();
+        didNotPassTx = true;
       }
-console.log('saveorders', callback);
+
       utils.async.series([
+        didNotPassTx ? tx.begin.bind( tx ) : utils.async.noop
+
         // Remove existing orders on this invoice
-        tx.user_invoice_orders.remove.bind(
+      , tx.user_invoice_orders.remove.bind(
           tx.user_invoice_orders
         , { user_invoice_id: this.id }
         )
@@ -138,11 +142,10 @@ console.log('saveorders', callback);
       , tx.commit.bind( tx )
       ], function( error ){
         if ( error ){
-          console.log('saveorders error', error);
           return tx.rollback( callback.bind( null, error ) );
         }
 
-        callback();
+        callback( null, this );
       });
     }
 

@@ -41,4 +41,4 @@ module.exports.find = function( where, options, callback ){
   );
 };
 
-Promise.promisify( module.exports.find )
+Promise.promisify( module.exports.find );

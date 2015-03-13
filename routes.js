@@ -2292,7 +2292,7 @@ module.exports.register = function(app) {
               }
             ]
     })
-  , m.find( db.user_invoices )
+  , m.findOne( db.user_invoices )
   );
 
   app.put('/api/invoices/:id'
@@ -2305,6 +2305,11 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.user_invoices )
+  );
+
+  app.post('/api/invoices/:id/emails'
+  , m.restrict(['admin'])
+  , controllers.api.invoices.sendEmail
   );
 
   app.post('/api/invoices/:user_invoice_id/orders/:order_id'

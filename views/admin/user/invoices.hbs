@@ -26,19 +26,31 @@
             <i class="gb-icon-caret-down"></i>
           </a>
           <div class="popover-modal dropdown-popover">
-            <a href="#" class="popover-item" data-name="pending">
+            <a href="#"
+              class="popover-item"
+              data-action="set-status"
+              data-status="pending">
               <span class="popover-item-icon"></span>
               <span class="popover-item-label">Pending</span>
             </a>
-            <a href="#" class="popover-item" data-name="emailed">
+            <a href="#"
+              class="popover-item"
+              data-action="set-status"
+              data-status="emailed">
               <span class="popover-item-icon"></span>
               <span class="popover-item-label">Emailed</span>
             </a>
-            <a href="#" class="popover-item" data-name="paid">
+            <a href="#"
+              class="popover-item"
+              data-action="set-status"
+              data-status="paid">
               <span class="popover-item-icon"></span>
               <span class="popover-item-label">Paid</span>
             </a>
-            <a href="#" class="popover-item" data-name="error">
+            <a href="#"
+              class="popover-item"
+              data-action="set-status"
+              data-status="error">
               <span class="popover-item-icon"></span>
               <span class="popover-item-label">Error</span>
             </a>
@@ -101,8 +113,9 @@ require([
 , 'app/views/admin/edit-user-view'
 , 'jquery-loaded'
 , 'api'
+, 'utils'
 , 'table-list'
-], function( User, View, $, api ) {
+], function( User, View, $, api, utils ) {
   api.invoices = api('invoices');
 
   var user = new User( {{{json user}}} );
@@ -117,29 +130,51 @@ require([
     $('[data-role="popover"]').gb_popover();
 
     var actions = {
-      'delete': function( id ){
+      'delete': function( $target, $el, id ){
         api.invoices( id ).del( function( error ){
           if ( error ){
             console.error( error );
             return alert('Error deleting invoice. CMD+Shift+J for details');
           }
 
-          $('[data-id="' + id + '"]').remove();
+          $el.remove();
         });
       }
 
-    , 'send-email': function( id ){
+    , 'send-email': function( $target, $el, id ){
         api.invoices( id )('emails').post( function( error, result ){
           if ( error ){
             console.error( error );
             return alert('Error deleting invoice. CMD+Shift+J for details');
           }
 
-          $('[data-id="' + id + '"]')
-            .find('.label-status')
+          $el.find('.label-status')
             .removeClass('pending error paid')
             .addClass('emailed')
             .text('Emailed');
+        });
+      }
+
+    , 'set-status': function( $target, $el, id ){
+        var status = $target.data('status');
+        var $items = $('.list-item.selected');
+
+        utils.async.each( $items, function( item, next ){
+          var $item = $(item);
+          api.invoices( +$item.data('id') ).put({ status: status }, next );
+        }, function( error ){
+          if ( error ){
+            console.error( error );
+            return alert('Error saving invoice. CMD+Shift+J for details');
+          }
+
+          $items.find('.label-status')
+            .removeClass('pending emailed error paid')
+            .addClass( status )
+            .text( status[0].toUpperCase() + status.slice(1) );
+
+          // close the popover
+          $el.closest('.open').removeClass('open');
         });
       }
     };
@@ -147,9 +182,11 @@ require([
     $('[data-action]').click( function( e ){
       e.preventDefault();
 
-      var $this = $(this);
+      var $this   = $(this);
+      var id      = +$this.data('id');
+      var action  = $this.data('action');
 
-      actions[ $this.data('action') ]( +$this.data('id') );
+      actions[ action ]( $this, $('.list-item[data-id="' + id + '"]'), id );
     });
   });
 });

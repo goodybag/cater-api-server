@@ -48,7 +48,7 @@
     </div>
     <div class="list-items">
     {{#each invoices}}
-      <div class="list-item">
+      <div class="list-item" data-id="{{this.id}}">
         <label class="component item-selector">
           <input type="checkbox">
         </label>
@@ -77,11 +77,13 @@
           <div class="more-actions-and-info bottom">
             <button
               class="action btn-default"
+              data-id="{{this.id}}"
               data-action="send-email">
                 {{~#is this.status 'pending' 'error'}}Send Email{{else}}Re-Send Email{{/is~}}
             </button>
             <button
               class="action btn-default"
+              data-id="{{this.id}}"
               data-action="delete">Delete</button>
           </div>
         </div>
@@ -98,17 +100,57 @@ require([
   'app/models/user'
 , 'app/views/admin/edit-user-view'
 , 'jquery-loaded'
+, 'api'
 , 'table-list'
-], function( User, View, $ ) {
+], function( User, View, $, api ) {
+  api.invoices = api('invoices');
+
   var user = new User( {{{json user}}} );
   var view = new View( {
     model: user
   , el: '#users-edit'
   , patch: true
   });
+
   $(function(){
     $('.table-list').gb_tablelist();
     $('[data-role="popover"]').gb_popover();
+
+    var actions = {
+      'delete': function( id ){
+        api.invoices( id ).del( function( error ){
+          if ( error ){
+            console.error( error );
+            return alert('Error deleting invoice. CMD+Shift+J for details');
+          }
+
+          $('[data-id="' + id + '"]').remove();
+        });
+      }
+
+    , 'send-email': function( id ){
+        api.invoices( id )('emails').post( function( error, result ){
+          if ( error ){
+            console.error( error );
+            return alert('Error deleting invoice. CMD+Shift+J for details');
+          }
+
+          $('[data-id="' + id + '"]')
+            .find('.label-status')
+            .removeClass('pending error paid')
+            .addClass('emailed')
+            .text('Emailed');
+        });
+      }
+    };
+
+    $('[data-action]').click( function( e ){
+      e.preventDefault();
+
+      var $this = $(this);
+
+      actions[ $this.data('action') ]( +$this.data('id') );
+    });
   });
 });
 </script>

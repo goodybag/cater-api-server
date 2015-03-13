@@ -2,7 +2,7 @@ define( function( require, exports, module ){
   'use strict';
 
   var $ = require('jquery');
-  var utils = require('utils');
+  var utils = require('lodash');
   var old = $.fn.gb_popover;
 
   var Popover = function(el, options) {
@@ -78,7 +78,6 @@ define( function( require, exports, module ){
     });
 
     this.$body.on( 'scroll', utils.throttle( function( e ){
-    console.log(e.target.scrollTop);
       if ( e.target.scrollTop > 0 ){
         this.$wrapper.addClass('has-scrolled');
       } else {

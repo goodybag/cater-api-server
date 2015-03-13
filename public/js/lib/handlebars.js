@@ -12,9 +12,7 @@ define(function(require, exports, module) {
 
   // for Handlebars partials replace dashes with underscores
   // (alternatively, have filenames with underscores instead of hyphens)
-  console.log('partials', Handlebars.partials);
   for ( var key in partials ){
-    console.log(key);
     Handlebars.partials[ key.replace(/-/g, '_') ] = partials[ key ];
   }
 

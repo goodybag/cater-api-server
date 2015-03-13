@@ -146,6 +146,11 @@ define(function(require, exports, module) {
     },
 
     changeStatus: function(status, notify) {
+      if (event){
+        // disable all events. NOTE: this is only ok
+        // because the page is reloaded
+        this.$el.off(event.type);
+      }
       this.model.changeStatus(status, notify, this.options.review_token, function(err) {
         if (err) return alert(err);
         window.location.reload();

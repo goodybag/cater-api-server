@@ -416,7 +416,11 @@ module.exports.register = function(app) {
           order: ['id desc']
         };
 
-        require('stamps/user-invoice').find( {}, options, function( error, results ){
+        var where = {
+          user_id: req.params.id
+        };
+
+        require('stamps/user-invoice').find( where, options, function( error, results ){
           if ( error ) return next( error );
 
           res.locals.invoices = results;

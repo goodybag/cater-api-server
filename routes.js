@@ -1605,10 +1605,6 @@ module.exports.register = function(app) {
   app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
 
   app.get( config.invoice.pdfRoute
-  , function(req,res,next){
-      console.log('hi');
-      return next();
-    }
   , m.basicAuth()
   , m.restrict(['admin', 'receipts'])
   , m.s3({
@@ -1629,7 +1625,6 @@ module.exports.register = function(app) {
       }).fetch( function( error ){
         if ( error ) return next( error );
 
-        console.log(invoice.total);
         // So HBS doesn't screw EVERYTHING up
         res.locals.invoice = invoice.toJSON();
 

@@ -5,3 +5,7 @@
 .gb-table th {
   font-size: 12px;
 }
+
+.gb-table .sub-total {
+  min-width: 64px;
+}

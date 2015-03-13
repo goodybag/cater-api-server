@@ -9,11 +9,17 @@ define(function(require){
   RowView = RowView.extend({
     events: utils.extend({
       'click [data-role="pms-send"]': 'onPmsSendClick'
+    , 'click [data-role="pms-credit"]': 'onPmsCreditClick'
     }, RowView.prototype.events )
 
   , onPmsSendClick: function( e ){
       var id = utils.dom( e.currentTarget ).data('id');
       page.sendPms( id );
+    }
+
+  , onPmsCreditClick: function( e ){
+      var id = utils.dom( e.currentTarget ).data('id');
+      page.creditPms( id );
     }
   });
 
@@ -85,6 +91,10 @@ define(function(require){
       .done( function( data, status, xhr ){
         $btn.text('Success!');
       });
+    }
+  , creditPms: function( id ){
+      spinner.start();
+      // ajax post
     }
   });
 

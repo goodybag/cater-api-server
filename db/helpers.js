@@ -500,13 +500,8 @@ dirac.DAL = dirac.DAL.extend({
     , upsert: doc
     }, options );
 
-    console.log($query);
-
     $query = mosql.sql( $query );
 
-    console.log( $query.toString() );
-
-    return this.raw( $query.toString(), $query.values, callback );
   }
 });
 

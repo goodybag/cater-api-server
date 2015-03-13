@@ -1,6 +1,4 @@
 define(function(require, exports, module) {
-  console.log('ohai')
-
   var Handlebars = require('hbs');
   var helpers = require('hb-helpers');
 

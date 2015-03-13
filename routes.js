@@ -1566,7 +1566,7 @@ module.exports.register = function(app) {
       many: [{ table: 'contacts' }]
     })
   , m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
-      layout: 'admin/layout'
+      layout: 'admin/layout2'
     , method: 'findOne'
     })
   );

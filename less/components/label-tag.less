@@ -40,6 +40,13 @@
   &.submitted { .label-tag-theme( @status-submitted ); }
   &.delivered { .label-tag-theme( @status-delivered ); }
 
+  &.payment-pending { .label-tag-theme( @payment-status-pending ); }
+  &.payment-processing { .label-tag-theme( @payment-status-processing ); }
+  &.payment-paid { .label-tag-theme( @payment-status-paid ); }
+  &.payment-invoiced { .label-tag-theme( @payment-status-invoiced ); }
+  &.payment-error { .label-tag-theme( @payment-status-error ); }
+  &.payment-ignore { .label-tag-theme( @payment-status-ignore ); }
+
   .label-tag-size( @label-tag-height-base, @font-size-base );
 
   &.small {

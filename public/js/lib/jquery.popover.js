@@ -2,7 +2,7 @@ define( function( require, exports, module ){
   'use strict';
 
   var $ = require('jquery');
-  var utils = require('utils');
+  var _ = require('lodash');
   var old = $.fn.gb_popover;
 
   var Popover = function(el, options) {

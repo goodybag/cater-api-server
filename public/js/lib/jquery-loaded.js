@@ -17,6 +17,7 @@ define(function(require, exports, module) {
   require('el-toggler').auto();
   require('jquery.popover');
   require('jquery.collapsible');
+  require('jquery.appear');
   require('jquery.filter-list');
 
   $(function(){

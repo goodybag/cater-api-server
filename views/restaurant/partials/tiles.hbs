@@ -20,7 +20,6 @@ $('.tile-cover').bind('appear', load);
   <div class="tile">
     <a class="tile-link" title="{{name}}" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
       <div class="tile-cover" data-pic='{{filepicker list_photo_url}}'>
-
         {{#if (and no_contract_fee (not plan_id) )}}
         <div class="tile-corner">
           <div

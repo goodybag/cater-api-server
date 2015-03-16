@@ -1,1 +1,7 @@
-Order #{{order.id}}'s date changed to {{datepart order.datetime}} {{timepart order.datetime}} {{url}}
+Order #{{order.id}}'s date changed to
+{{#eq order.type 'delivery'~}}
+{{datepart order.datetime}} {{timepart order.datetime}} for delivery
+{{else}}
+{{datepart order.pickup_datetime}} {{timepart order.pickup_datetime}} for pickup
+{{~/eq}}
+{{url}}

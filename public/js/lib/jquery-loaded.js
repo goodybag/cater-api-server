@@ -19,6 +19,7 @@ define(function(require, exports, module) {
   require('jquery.popover');
   require('jquery.collapsible');
   require('jquery.appear');
+  require('jquery.filter-list');
 
   $(function(){
     $('input, textarea').placeholder();

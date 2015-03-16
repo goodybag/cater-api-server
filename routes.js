@@ -79,6 +79,7 @@ module.exports.register = function(app) {
     , threshold:    3
     , mustBeAuthed: true
     })
+  , m.localCookies(['gb_display'])
   , controllers.restaurants.list
   );
 
@@ -157,6 +158,11 @@ module.exports.register = function(app) {
      */
 
     app.get('/admin/kitchen-sink'
+    , m.filters([
+        'restaurant-region'
+      , 'restaurant-visibility'
+      , 'restaurant-sort'
+      ])
     , function( req, res, next ){
         require('./lib/parse-palette-from-variables').parse( function( error, palette ){
           if ( error ) return next( error );
@@ -166,6 +172,25 @@ module.exports.register = function(app) {
           next();
         });
       }
+
+    , function( req, res, next ){
+        var not = [ 'white', 'gray-lighter', 'tan' ];
+
+        res.locals.labelTags = res.locals.palette.filter( function( palette ){
+          return not.indexOf( palette.name ) === -1;
+        }).map( function( palette ){
+          return palette.name;
+        }).concat([
+          'pending', 'submitted', 'delivered', 'canceled', 'accepted', 'denied'
+        ]);
+
+        next();
+      }
+
+    , m.db.restaurants.find({ is_hidden: false })
+
+    , m.aliasLocals({ ordersTableRestaurants: 'restaurants' })
+
     , m.view( 'admin/kitchen-sink/index', {
         layout: 'admin/layout2'
       })
@@ -1184,6 +1209,23 @@ module.exports.register = function(app) {
   app.get('/orders/:oid/notifications/:nid'
   , m.restrict(['admin'])
   , controllers.orders.notifications.getEmail
+  );
+
+  app.get('/orders/:oid/payment'
+  , m.getOrder2({
+      param:                  'oid'
+    , items:                  true
+    , user:                   true
+    , userAddresses:          true
+    , userPaymentMethods:     true
+    , restaurant:             true
+    , deliveryService:        true
+    , restaurantDbModelFind:  true
+    })  
+  , controllers.orders.auth
+  , m.view( 'order-payment',{
+
+   })
   );
 
   /**

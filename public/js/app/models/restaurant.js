@@ -285,21 +285,15 @@ define(function(require, exports, module) {
 
       // Null? Should be valid!
       if ( this.get('lead_times') === null )
-      if ( this.get('pickup_lead_times') === null ) {
-        console.log('nullo');
+      if ( this.get('pickup_lead_times') === null )
         return true;
-      }
 
       // Empty? Should be valid!
       if ( Array.isArray( this.get('lead_times') ) )
       if ( this.get('lead_times').length === 0 )
       if ( Array.isArray( this.get('pickup_lead_times') ) )
-      if ( this.get('pickup_lead_times').length === 0 ) {
-        console.log('empto');
+      if ( this.get('pickup_lead_times').length === 0 )
         return true;
-      }
-
-      console.log('getting lead time ');
 
       // Get the lowest lead time per guest amt
       var limit = this.getLeadTime(order);

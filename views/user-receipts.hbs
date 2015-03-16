@@ -1,5 +1,7 @@
 {{> scripts_copy_order}}
 
+{{#extend "page"}}receipts-page{{/extend}}
+
 {{#extend "body"}}
   <div class="container">
     <ul class="breadcrumbs main-breadcrumbs">
@@ -17,7 +19,7 @@
 
     <h1 class="page-title">My Receipts</h1>
 
-    <table class="table table-striped">
+    <table class="table table-lg table-striped table-receipts">
       <thead>
         <th>ID</th>
         <th>Date</th>

@@ -18,7 +18,6 @@ define(function(require, exports, module) {
   require('el-toggler').auto();
   require('jquery.popover');
   require('jquery.collapsible');
-  require('jquery.lazyload-any');
   require('jquery.appear');
 
   $(function(){

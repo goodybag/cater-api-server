@@ -1,14 +1,15 @@
 {{#extend "scripts"}}
 <script>
 require(['jquery-loaded'], function( $ ){
-  // $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')) )
-  // $('.tile-cover').lazy();
-  $('.tile-cover').lazyload({
-    load: function($el) { 
-      console.log('loading pic');
-      $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')) )
-    }
-    });
+
+function load(){
+  var $el = $(this);
+    $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')))
+}
+$('.tile-cover').bind('appear', load);
+
+
+
 
   });
 </script>

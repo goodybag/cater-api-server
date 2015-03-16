@@ -1,0 +1,102 @@
+{{#extend "page"}}page-analytics{{/extend}}
+
+{{#extend "body"}}
+
+<div class="container" id="main-container">
+  <div class="page-header">
+    <ul class="breadcrumbs main-breadcrumbs">
+      <li>
+        <a href="/admin">Admin Panel</a>
+      </li>
+      <li>
+        Analytics
+      </li>
+    </ul>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <h2>Monthly order volume</h2>
+      <canvas id="chart-volume" style=""></canvas>
+    </div>
+    <div class="col-6">
+      <h2>Monthly guests fed</h2>
+      <canvas id="chart-guests" style=""></canvas>
+    </div>
+  </div>
+  <ul>
+    <li>
+      <a href="/admin/analytics/demand">Demand Metrics (All regions)</a>
+    </li>
+    <ul>
+      {{#each regions}}
+      <li><a href="/admin/analytics/demand?q=region:{{lowercase name}}">{{name}}</a></li>
+      {{/each}}
+    </ul>
+    <li><a href="/admin/analytics/unique-offices">Unique Offices</a></li>
+    <li><a href="/admin/analytics/monthly-new">Monthly New</a></li>
+  </ul>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+
+require(['jquery-loaded', '/components/Chart.js/Chart.js', 'handlebars', 'moment', 'lodash'], function($, Chart, Hbs, moment, _){
+  $('[data-role="popover"]').gb_popover();
+
+  // Format data
+  var stats = {{{json stats}}};
+
+  var volumes = stats.map(function(stat) {
+    return Hbs.helpers.dollars(stat.volume);
+  });
+
+  var labels = stats.map(function(stat) {
+    return moment(stat.month + '-' + stat.year, 'MM-YYYY').format('MMM YY');
+  });
+
+  var guests = stats.map(function(stat) {
+    return stat.guests;
+  });
+
+  // Graph defaults
+  var fillColor = 'rgba(220,220,220,0.2)';
+  var strokeColor = pointColor = pointHighlightStroke = 'rgba(220,220,220,1)';
+  var pointStrokeColor = pointHighlightFill = '#fff';
+  var datasetDefault = {
+    fillColor: fillColor
+  , strokeColor: strokeColor
+  , pointColor: strokeColor
+  , pointStrokeColor: pointStrokeColor
+  , pointHighlightFill: pointHighlightFill
+  , pointHighlightStroke: pointHighlightStroke
+  };
+
+  // Volume per month
+  var volumeCtx = document.getElementById('chart-volume').getContext('2d');
+  var volumeData = {
+    labels: labels,
+    datasets: [ _.defaults({ label: "Total volume per month", data: volumes }, datasetDefault ) ]
+  };
+  var volumeOpts = {
+    responsive: true
+  , scaleLabel: '$<%= parseInt(value).toLocaleString() %>'
+  , tooltipTemplate: "$<%= parseFloat(value).toLocaleString() %>",
+  };
+  var volumeChart = new Chart(volumeCtx).Line(volumeData, volumeOpts);
+
+  // Guests per month
+  var guestsCtx = document.getElementById('chart-guests').getContext('2d');
+  var guestsData = {
+    labels: labels,
+    datasets: [ _.defaults({ label: 'Guests fed per month', data: guests }, datasetDefault ) ]
+  };
+  var guestsOpts = {
+    responsive: true
+  , scaleLabel: '<%= parseInt(value).toLocaleString() %>'
+  , tooltipTemplate: "<%= parseInt(value).toLocaleString() %> guests",
+  };
+  var guestChart = new Chart(guestsCtx).Line(guestsData, guestsOpts);
+});
+</script>
+{{/extend}}

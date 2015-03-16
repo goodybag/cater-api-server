@@ -1,16 +1,16 @@
 {{#extend "scripts"}}
 <script>
 require(['jquery-loaded'], function( $ ){
-
-  $('.tile-cover').lazy();
+  // $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')) )
+  // $('.tile-cover').lazy();
   $('.tile-cover').lazyload({
-    threshold: 200,
     load: function($el) { 
       console.log('loading pic');
+      $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')) )
     }
-  });
+    });
 
-});
+  });
 </script>
 {{/extend}}
 

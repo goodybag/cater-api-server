@@ -19,6 +19,7 @@ define(function(require, exports, module) {
   require('jquery.popover');
   require('jquery.collapsible');
   require('jquery.lazyload-any');
+  require('jquery.appear');
 
   $(function(){
     $('input, textarea').placeholder();

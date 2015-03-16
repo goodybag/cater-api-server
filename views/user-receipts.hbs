@@ -30,7 +30,7 @@
       <tbody>
         {{#each orders}}
         <tr>
-          <td><a href="{{this.id}}">#{{this.id}}</a></td>
+          <td><a href="/orders/{{this.id}}">#{{this.id}}</a></td>
           <td>{{formatDateTime this.datetime}}</td>
           <td>{{this.restaurant.name}}</td>
           <td>${{commatize (dollars this.total)}}</td>

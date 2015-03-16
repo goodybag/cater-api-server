@@ -1392,6 +1392,23 @@ module.exports.register = function(app) {
     , m.view( 'user-orders', db.orders )
     );
 
+    app.get('/users/:uid/orders/receipts'
+    , m.param('uid', function(user_id, $query, options) {
+        $query.where = $query.where || {};
+        $query.where.user_id = user_id;
+      })
+    , m.param('status', 'accepted')
+    , m.sort('-datetime')
+    , m.queryOptions({
+        one:  [ { table: 'restaurants', alias: 'restaurant' }
+              , { table: 'users', alias: 'user' }
+              ]
+      })
+    , m.view('user-receipts', db.orders, {
+        layout: 'layout/default'
+      })
+    );
+
     app.all('/users/:uid', function(req, res, next) {
       res.set('Allow', 'GET');
       res.send(405);

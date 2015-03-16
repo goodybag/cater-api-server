@@ -53,6 +53,7 @@
     "prism": "git://github.com/LeaVerou/prism.git#gh-pages",
     "stampit": "~1.1.0",
     "isotope": "~2.1.0",
-    "jquery-appear": "~0.2.2"
+    "jquery-appear": "~0.2.2",
+    "Chart.js": "~1.0.1"
   }
 }

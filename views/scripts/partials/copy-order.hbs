@@ -1,0 +1,20 @@
+{{#extend "scripts"}}
+<script>
+  require( ['api', 'jquery'], function( api, $ ){
+    $(function(){
+      $('[data-action~="copy-order"]').click(function(e){
+        e.preventDefault();
+        var id = $(this).data('id');
+
+        api.legacy.orders( id )('duplicates').post( function( error, order ){
+          if ( error ){
+            return console.error( error );
+          }
+
+          window.location.href = [ '/orders', order.id, 'add-items' ].join('/');
+        });
+      });
+    })
+  });
+</script>
+{{/extend}}

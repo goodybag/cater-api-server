@@ -32,7 +32,10 @@ module.exports.list = function(req, res) {
 
   // Dont worry about pagination if they're filtering -
   // it's just too complex to support right now
-  var shouldPaginate = false;
+  var shouldPaginate = !Object.keys( req.query )
+   .some( function( key ){
+      return [ 'p', 'sort', 'withContractFirst' ].indexOf( key ) === -1;
+    });
 
   res.locals.page = page;
 

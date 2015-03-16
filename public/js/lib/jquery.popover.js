@@ -77,7 +77,7 @@ define( function( require, exports, module ){
       this_.close();
     });
 
-    this.$body.on( 'scroll', utils.throttle( function( e ){
+    this.$body.on( 'scroll', _.throttle( function( e ){
     console.log(e.target.scrollTop);
       if ( e.target.scrollTop > 0 ){
         this.$wrapper.addClass('has-scrolled');

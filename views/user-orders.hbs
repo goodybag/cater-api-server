@@ -27,6 +27,11 @@
               <i class="icon-list"></i> List
             </a>
           </li>
+          <li>
+            <a href="#receipts-view" data-toggle="tab">
+              <i class="icon-list-alt"></i> Receipts
+            </a>
+          </li>
         </ul>
         <div class="tab-content">
           <div class="tab-pane fade in active" id="calendar-view">
@@ -34,6 +39,9 @@
           </div>
           <div class="tab-pane fade" id="list-view">
             {{> orders_list }}
+          </div>
+          <div class="tab-pane fade" id="receipts-view">
+            {{> orders_receipts_list }}
           </div>
         </div>
       </div>

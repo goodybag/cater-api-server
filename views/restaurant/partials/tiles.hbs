@@ -1,17 +1,12 @@
 {{#extend "scripts"}}
 <script>
 require(['jquery-loaded'], function( $ ){
-
-function load(){
-  var $el = $(this);
-    $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')))
-}
-$('.tile-cover').bind('appear', load);
-
-
-
-
-  });
+  function load(){
+    var $el = $(this);
+      $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')))
+  }
+  $('.tile-cover').bind('appear', load);
+});
 </script>
 {{/extend}}
 

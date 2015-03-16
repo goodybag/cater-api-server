@@ -13,7 +13,7 @@ require(['jquery-loaded'], function( $ ){
 <div class="tiles">
   {{#each restaurants }}
   <div class="tile">
-    <a class="tile-link" title="{{name}}" href="/restaurants/{{id}}{{queryParams ../orderParams}}">
+    <a class="tile-link" title="{{name}}" href="/restaurants/{{text_id}}{{queryParams ../orderParams}}">
       <div class="tile-cover" data-pic='{{filepicker list_photo_url}}'>
         {{#if (and no_contract_fee (not plan_id) )}}
         <div class="tile-corner">

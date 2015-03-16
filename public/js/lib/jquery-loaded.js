@@ -8,6 +8,9 @@ define(function(require, exports, module) {
   require('jquery.placeholder');
   require('select2');
   require('navbar');
+  require('field-matcher');
+  require('jquery.preview');
+  require('jquery.row-expand');
   require('jquery.toggler');
   require('jquery.prefixer');
   require('jquery.modern-modal');

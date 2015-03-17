@@ -11,6 +11,7 @@ define( function( require ){
       var FiltersView = require('app/views/restaurant-filters-view');
       var SearchView = require('app/views/restaurant/search-view');
       var PagerView = require('app/views/restaurant/pager-view');
+      var ToggleClassView = require('app/views/toggle-class-view');
 
       var sortView = new SortView({
         el: '#sort'
@@ -53,7 +54,15 @@ define( function( require ){
           ]
       });
 
+      var toggleClassView = new ToggleClassView({
+        el: '#main'
+      , trigger: '.btn-toggle-list'
+      , targetSelector: '.restaurant-toggle-list'
+      , cookie: 'gb_display'
+      });
+
       $('.search-advanced .btn-search').click(listView.search.bind(listView));
+      $('.btn-toggle-list').click(toggleClassView.toggle.bind(toggleClassView));
 
       $('[data-role="collapsible"]').gb_collapsible();
 

@@ -1,0 +1,53 @@
+{{> scripts_copy_order}}
+
+{{#extend "page"}}receipts-page{{/extend}}
+
+{{#extend "body"}}
+  <div class="container">
+    <ul class="breadcrumbs main-breadcrumbs">
+      <li>
+        <a href="/">Home</a>
+      </li>
+      <li>
+        <a href="/users/me">{{#if user.name}}{{user.name}}{{else}}Me{{/if}}</a>
+      </li>
+      <li>
+        <a href="/users/me/orders">My Orders</a>
+      </li>
+      <li>Receipts</li>
+    </ul>
+
+    <h1 class="page-title">My Receipts</h1>
+
+    <table class="table table-lg table-striped table-receipts">
+      <thead>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Restaurant</th>
+        <th>Total</th>
+        <th></th>
+      </thead>
+      <tbody>
+        {{#each orders}}
+        <tr>
+          <td><a href="/orders/{{this.id}}">#{{this.id}}</a></td>
+          <td>{{formatDateTime this.datetime}}</td>
+          <td>{{this.restaurant.name}}</td>
+          <td>${{commatize (dollars this.total)}}</td>
+          <td class="actions">
+            {{#unless this.restaurant.is_hidden}}
+              <a  href="#"
+                  class="btn btn-default"
+                  data-action="copy-order"
+                  data-id="{{../id}}">Order Again?</a>
+            {{/unless}}
+            <a  href="/receipts/order-{{this.id}}.pdf"
+                class="btn btn-primary"
+                target="_blank">Download PDF</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+{{/extend}}

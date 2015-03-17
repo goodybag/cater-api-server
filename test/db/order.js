@@ -1,6 +1,7 @@
 var db = require('../../db');
 var assert = require('assert');
 var lconfig = require('../../local-config.json');
+var moment = require('moment-timezone');
 
 describe('Order Data Access', function() {
   it('should retrieve order with submitted date', function(done) {
@@ -32,9 +33,22 @@ describe('Order Data Access', function() {
       done();
     });
   });
+
+  it('should filter by month', function(done) {
+    var orders = require('../../lib/stamps/db/orders');
+    var sql = orders({ query: { month: 12 } }).get();
+    db.orders.find(sql.$query, sql.$options, function(err, orders) {
+      assert(!err);
+      assert(orders.length);
+      var ordersNotInDecember = orders.filter(function(o) {
+        return moment( o.created_at ).month() !== 11; // moment is zero-indexed
+      });
+      assert(!ordersNotInDecember.length);
+      done();
+    });
+  });
 });
 
 describe('Order Model', function() {
 
 });
-

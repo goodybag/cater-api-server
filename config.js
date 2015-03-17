@@ -6,7 +6,7 @@ var
   os = require('os')
 , fs =  require('fs')
 , _ = require('lodash')
-, balancedConfig = fs.existsSync(__dirname+'/balanced-config.json') ? require('./balanced-config.json') : undefined // used in dev
+, balancedConfig = fs.existsSync(__dirname+'/balanced-config.json') ? require('./balanced-config.json') : require('./balanced-test-config.json') // used in dev
 , local = {}
 , pdf = require('./pdf-config')
 ;
@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, intercom: require('./configs/intercom')
 , yelp: require('./configs/yelp')
 , popularity: require('./configs/popularity')
 , reminders: require('./configs/reminders')
@@ -28,7 +29,11 @@ config.defaults = {
 , diets: require('./configs/diets')
 , sortQueryTable: require('./configs/sort-query-table')
 , support: require('./configs/support')
+, workers: require('./configs/workers')
+, scheduler: require('./configs/scheduler')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
+, logging: require('./configs/logging')
+, promo: require('./configs/promo')
 
 , deliveryTime: {
     padding: 15
@@ -134,21 +139,6 @@ config.defaults = {
 
 , taxRate: .0825
 
-, logging: {
-    enabled: true
-  , transports: {
-      console: true
-    , fileRotate: false
-    }
-  , console: {
-      json: true
-    }
-  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
-  , mongoCollection: 'logs'
-  , httpPort: 3001
-  , url: 'http://localhost:3001'
-  }
-
 , http: {
     port: 3000
   , timeout: 8000
@@ -180,12 +170,6 @@ config.defaults = {
 , deliveryServices: {
     responseThresholdMins: 30
   , supportPhones: [ local.testPhoneSms || '1234567890' ]
-  }
-
-, scheduler: {
-    cron: '*/10 * * * * *'
-  , start: true
-  , limit: 4 // max # of parallel jobs
   }
 
 , outputActivePoolIds: false
@@ -295,36 +279,12 @@ config.dev = {
   , timeout: 8000
   }
 
-, logging: {
-    enabled: true
-  , transports: {
-      console: true
-    , fileRotate: true
-    }
-  , console: {
-      json: true
-    }
-  , fileRotate: {
-      dirname: 'logs'
-    , filename: 'all.log'
-    , json: true
-    }
-  , mongoConnStr: local.loggingMongoConnStr || 'mongodb://localhost:1337/logs'
-  , mongoCollection: 'logs'
-  , httpPort: 3001
-  }
-
 , rollbar: {
     accessToken: 'c7f82820e02c4bd7a759015518948ce3'
   }
 
 , segmentIo: {
     secret: 'q3r0t2euni'
-  }
-
-, intercom: {
-    apiSecret: 'A4NvND_qEf-ksKYhVw-GduUS2ruW2NlC39murXx2'
-  , appId: 'qsetwlny'
   }
 
 , balanced: balancedConfig
@@ -360,16 +320,6 @@ config.dev = {
     { bucket: 'dev-receipts.goodybag.com' }
   )
 
-, workers: {
-    debit: {
-      enqueue: {
-        interval: 1000 * 5    // 5 seconds
-      }
-    , process: {
-        interval: 1000 * 5    // 5 seconds
-      }
-    }
-  }
 };
 
 config.staging = {
@@ -389,36 +339,12 @@ config.staging = {
   , timeout: 8000
   }
 
-, logging: {
-    enabled: true
-  , transports: {
-      console: true
-    , papertrail: true
-    }
-  , console: {
-      json: true
-    , raw: true
-    }
-  , papertrail: {
-      host: 'logs.papertrailapp.com'
-    , port: 34830
-    }
-  , mongoConnStr: process.env['MONGOHQ_URL']
-  , mongoCollection: 'logs'
-  , httpPort: 3001
-  }
-
 , rollbar: {
-    accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+    accessToken: '8d240c636751439791b214c9ec8cf8af'
   }
 
 , segmentIo: {
     secret: 'q3r0t2euni' // TODO: same as dev for now, replace later?
-  }
-
-, intercom: {
-    apiSecret: 'tumIlUFE__wGfvVxtAyESXRMroQJAz5csfMKULAY'
-  , appId: '6bxgiurw'
   }
 
 , balanced: {
@@ -451,16 +377,6 @@ config.staging = {
     { bucket: 'staging-receipts.goodybag.com' }
   )
 
-, workers: {
-    debit: {
-      enqueue: {
-        interval: 1000 * 5 // 5 seconds
-      }
-    , process: {
-        interval: 1000 * 5 // 5 seconds
-      }
-    }
-  }
 };
 
 config.production = {
@@ -489,36 +405,12 @@ config.production = {
   , timeout: 8000
   }
 
-, logging: {
-    enabled: true
-  , transports: {
-      console: true
-    , papertrail: true
-    }
-  , console: {
-      json: true
-    , raw: true
-    }
-  , papertrail: {
-      host: 'logs.papertrailapp.com'
-    , port: 64774
-    }
-  , mongoConnStr: process.env['MONGOHQ_URL']
-  , mongoCollection: 'logs'
-  , httpPort: 3001
-  }
-
 , rollbar: {
     accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
   }
 
 , segmentIo: {
     secret: 'k9ju1kq8vc'
-  }
-
-, intercom: {
-    apiSecret: '5I1eNUY_F6HKl_Gb15965fr5VgGfNlwny7WmyKZx'
-  , appId: '13s9qu57'
   }
 
 , balanced: {
@@ -594,16 +486,6 @@ config.production = {
 
 , emailEnabled: true
 
-, workers: {
-    debit: {
-      enqueue: {
-        interval: 1000 * 60 * 30 // 30 minutes
-      }
-    , process: {
-        interval: 1000 * 20      // 20 seconds (~900k request/month)
-      }
-    }
-  }
 };
 
 config.india = {
@@ -616,11 +498,13 @@ config.india = {
 
 // fields to copy from staging to india
 [
-  'http', 'logging', 'ironMQ', 'balanced', 'rollbar'
+  'http', 'ironMQ', 'balanced', 'rollbar'
 , 'mandrill', 'segmentIo', 'intercom'
 ].forEach( function( key ){
   config.india[ key ] = config.staging[ key ];
 });
+
+config.india.logging = _.cloneDeep(config.defaults.logging); // logging self manages env
 
 config.india.logging.mongoConnStr = false;
 

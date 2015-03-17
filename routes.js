@@ -79,6 +79,7 @@ module.exports.register = function(app) {
     , threshold:    3
     , mustBeAuthed: true
     })
+  , m.localCookies(['gb_display'])
   , controllers.restaurants.list
   );
 
@@ -157,6 +158,11 @@ module.exports.register = function(app) {
      */
 
     app.get('/admin/kitchen-sink'
+    , m.filters([
+        'regions'
+      , 'restaurant-visibility'
+      , 'restaurant-sort'
+      ])
     , function( req, res, next ){
         require('./lib/parse-palette-from-variables').parse( function( error, palette ){
           if ( error ) return next( error );
@@ -166,6 +172,25 @@ module.exports.register = function(app) {
           next();
         });
       }
+
+    , function( req, res, next ){
+        var not = [ 'white', 'gray-lighter', 'tan' ];
+
+        res.locals.labelTags = res.locals.palette.filter( function( palette ){
+          return not.indexOf( palette.name ) === -1;
+        }).map( function( palette ){
+          return palette.name;
+        }).concat([
+          'pending', 'submitted', 'delivered', 'canceled', 'accepted', 'denied'
+        ]);
+
+        next();
+      }
+
+    , m.db.restaurants.find({ is_hidden: false })
+
+    , m.aliasLocals({ ordersTableRestaurants: 'restaurants' })
+
     , m.view( 'admin/kitchen-sink/index', {
         layout: 'admin/layout2'
       })
@@ -368,7 +393,7 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.filters([
-        'restaurant-region'
+        'regions'
       , 'restaurant-visibility'
       , 'restaurant-sort'
       ])
@@ -1186,6 +1211,23 @@ module.exports.register = function(app) {
   , controllers.orders.notifications.getEmail
   );
 
+  app.get('/orders/:oid/payment'
+  , m.getOrder2({
+      param:                  'oid'
+    , items:                  true
+    , user:                   true
+    , userAddresses:          true
+    , userPaymentMethods:     true
+    , restaurant:             true
+    , deliveryService:        true
+    , restaurantDbModelFind:  true
+    })
+  , controllers.orders.auth
+  , m.view( 'order-payment',{
+
+   })
+  );
+
   /**
    * Reporting resource
    */
@@ -1304,8 +1346,16 @@ module.exports.register = function(app) {
       client: Models.User.ownerWritable
     });
 
-    app.put('/users/:uid', restrictUpdate, controllers.users.update);
-    app.patch('/users/:uid', restrictUpdate, controllers.users.update);
+    app.put('/users/:uid'
+    , restrictUpdate
+    , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+    , controllers.users.update
+    );
+
+    app.patch('/users/:uid'
+    , restrictUpdate
+    , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+    , controllers.users.update);
 
     app.delete('/users/:uid', function(req, res) { res.send(501); });
 
@@ -1340,6 +1390,23 @@ module.exports.register = function(app) {
         return next();
       }
     , m.view( 'user-orders', db.orders )
+    );
+
+    app.get('/users/:uid/orders/receipts'
+    , m.param('uid', function(user_id, $query, options) {
+        $query.where = $query.where || {};
+        $query.where.user_id = user_id;
+      })
+    , m.param('status', 'accepted')
+    , m.sort('-datetime')
+    , m.queryOptions({
+        one:  [ { table: 'restaurants', alias: 'restaurant' }
+              , { table: 'users', alias: 'user' }
+              ]
+      })
+    , m.view('user-receipts', db.orders, {
+        layout: 'layout/default'
+      })
     );
 
     app.all('/users/:uid', function(req, res, next) {
@@ -1561,6 +1628,42 @@ module.exports.register = function(app) {
     })
   );
 
+
+  app.get('/admin/analytics'
+  , m.restrict(['admin'])
+  , m.getOrders({
+      status: 'accepted'
+    , submittedDate: { ignoreColumn: true }
+    , groupByMonth: true
+    , rename: 'stats'
+    , user: false
+    , restaurant: false
+    , reverse: true
+    })
+  , m.view( 'admin/analytics/index.hbs', {
+      layout: 'admin/layout2'
+    })
+  );
+
+  app.get('/admin/analytics/demand'
+  , m.restrict(['admin'])
+  , m.filters(['regions'])
+  , m.defaultPeriod(['month', 'year'])
+  , m.getOrders({
+      status: 'accepted'
+    , submittedDate: true
+    , order: 'submitted'
+    , getWeek: true
+    , indexBy: 'week'
+    })
+  , m.orderAnalytics.period()
+  , m.orderAnalytics.month()
+  , m.orderAnalytics.week()
+  , m.view( 'admin/analytics/demand', {
+      layout: 'admin/layout2'
+    })
+  );
+
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
   , m.s3({
@@ -1620,6 +1723,8 @@ module.exports.register = function(app) {
   app.patch('/api/restaurants/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.getRestaurant({ param: 'id' })
+  , m.updateBalancedCustomer({ required: 'restaurant', pick: ['name'] })
   , m.update( db.restaurants )
   );
 
@@ -2074,6 +2179,7 @@ module.exports.register = function(app) {
   app.put('/api/users/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
   , m.update( db.users )
   );
 

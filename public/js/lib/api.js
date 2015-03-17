@@ -8,5 +8,9 @@ define(function(require){
   api.users       = api('users');
   api.restaurants = api('restaurants');
 
+  api.legacy      = resource( config.baseUrl );
+
+  api.legacy.orders = api.legacy('orders');
+
   return api;
 });

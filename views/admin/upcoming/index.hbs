@@ -1,0 +1,53 @@
+{{#extend "page"}}page-analytics page-upcoming{{/extend}}
+
+{{#extend "body"}}
+
+<div class="container" id="main-container">
+  <div class="page-header">
+    <ul class="breadcrumbs main-breadcrumbs">
+      <li>
+        <a href="/admin">Admin Panel</a>
+      </li>
+      <li>
+        Upcoming Orders
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="container">
+  <table class="table table-upcoming">
+    <thead>
+      <tr>
+        <th><a href="#" class="btn-sort-by" data-sort="id">ID</a></th>
+        <th><a href="#" class="btn-sort-by" data-sort="type">Type</a></th>
+        <th><a href="#" class="btn-sort-by" data-sort="has_contract">Has Contract</a></th>
+        <th><a href="#" class="btn-sort-by active" data-sort="datetime">Datetime</a></th>
+        <th><a href="#" class="btn-sort-by" data-sort="user">User</a></th>
+        <th><a href="#" class="btn-sort-by" data-sort="organization">Organization</a></th>
+        <th><a href="#" class="btn-sort-by" data-sort="restaurant">Restaurant</a></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{> upcoming_rows }}
+    </tbody>
+  </table>
+</div>
+{{/extend}}
+
+
+{{#extend "scripts"}}
+<script>
+require([
+  'app/views/admin/upcoming-orders'
+, 'app/collections/orders'
+],
+function(UpcomingOrdersView, Orders){
+  var view = new UpcomingOrdersView({
+    el: '.table-upcoming'
+  , endpoint: '/api/upcoming'
+  , orders: new Orders({{{json orders}}}, { comparator: 'datetime' })
+  });
+});
+</script>
+{{/extend}}

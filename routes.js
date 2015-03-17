@@ -139,6 +139,24 @@ module.exports.register = function(app) {
     , m.view( 'admin/query-inspector', { layout: 'admin/layout2' } )
     );
 
+    app.get('/admin/upcoming'
+    , m.getOrders({
+        submittedDate: true
+      , upcoming: true
+      })
+    , m.view('admin/upcoming', { layout: 'admin/layout2' })
+    );
+
+    app.get('/api/upcoming'
+    , m.getOrders({
+        submittedDate: true
+      , upcoming: true
+      })
+    , function(req, res, next) {
+        res.send(res.locals.orders);
+      }
+    );
+
     /**
      * Regions
      */

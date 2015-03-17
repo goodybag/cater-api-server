@@ -21,7 +21,7 @@ var middleware = function(filters, db) {
 
     utils.async.parallel(fns, function(err, results) {
       if (err) return logger.error('Error: ' + err);
-      res.locals.filters = results.reduce(function(obj, format) {
+      req.filters = res.locals.filters = results.reduce(function(obj, format) {
         var filter = format(req.query.q);
         obj[filter.resource] = filter.data;
         return obj;

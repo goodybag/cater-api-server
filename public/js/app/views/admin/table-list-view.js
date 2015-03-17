@@ -1,14 +1,21 @@
 define(function(require){
   var utils = require('utils');
 
+  require('table-list');
+
   return utils.View.extend({
     initialize: function() {
       var this_ = this;
       var Model = this_.options.model;
       var ItemView = this_.options.itemView;
 
+      // Enable plugins
+      this.$el.find('[data-role="popover"]').gb_popover();
+      this.$el.find('[data-toggle="tooltip"]').tooltip();
+      this.$el.gb_tablelist();
+
       // Init toggle visibility views
-      this.options.itemSelector = this.options.itemSelector || '.table-list-item';
+      this.options.itemSelector = this.options.itemSelector || '.list-item';
       this.$el.find(this.options.itemSelector).each(function(idx, el) {
         var $el = $(el);
         var json = $el.data(this_.options.dataAttr);

@@ -44,11 +44,11 @@ module.exports = function( options ){
         , region_id:  region_id
         });
 
-        db.users.update( req.user.attributes.id, { region_id: region.id }, function( error ){
+        db.users.update( req.user.attributes.id, { region_id: region_id }, function( error ){
           if ( error ){
             logger.error( 'Could not update user region', {
               user_id:    req.user.attributes.id
-            , region_id:  region.id
+            , region_id:  region_id
             , error:      error
             });
           }

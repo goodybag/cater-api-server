@@ -30,7 +30,7 @@ module.exports = function( options, callback ){
         ({
           restaurants: db.restaurants.find.bind( db.restaurants,  {} )
         , locations:   db.restaurant_locations.find.bind( db.restaurant_locations,  {} )
-        , users:       db.addresses.find.bind( db.addresses,  {} )
+        , users:       db.addresses.find.bind( db.addresses, {} )
         })[ options.type ]( next );
       } catch ( e ){
         return callback({ message: 'invalid type' });

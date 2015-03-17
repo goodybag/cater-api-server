@@ -1622,6 +1622,7 @@ module.exports.register = function(app) {
   app.put('/api/restaurants/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.validateAddress()
   , m.update( db.restaurants )
   );
 

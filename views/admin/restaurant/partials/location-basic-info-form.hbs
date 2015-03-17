@@ -8,7 +8,7 @@
     class="form-control"
     name="name"
     id="input-name"
-    value="{{restaurant_location.name}}">
+    value="{{restaurant_location.name}}" required>
 </div>
 <div class="form-group">
   <label class="control-label" for="input-street">
@@ -20,7 +20,7 @@
     class="form-control"
     name="street"
     id="input-street"
-    value="{{restaurant_location.street}}">
+    value="{{restaurant_location.street}}" required>
 </div>
 <div class="form-group">
   <label class="control-label" for="input-street2">
@@ -44,7 +44,7 @@
       class="form-control"
       name="city"
       id="input-city"
-      value="{{restaurant_location.city}}">
+      value="{{restaurant_location.city}}" required>
   </div>
   <div class="form-group form-group-inline">
     <label class="control-label" for="input-state">
@@ -75,12 +75,13 @@
       class="form-control"
       name="zip"
       id="input-zip"
-      value="{{restaurant_location.zip}}">
+      value="{{restaurant_location.zip}}" required>
   </div>
 </div>
 <div class="form-group">
   <label class="control-label" for="input-phone">
   Phone
+  <span class="help-block">Required</span>
   </label>
   <div class="input-group">
     <input
@@ -90,7 +91,8 @@
       id="input-phone"
       data-in="phoneNumber"
       data-out="sanitizePhoneNumber"
-      value="{{phoneNumber restaurant_location.phone}}">
+      value="{{phoneNumber restaurant_location.phone}}"
+      required>
   </div>
 </div>
 <div class="form-group">

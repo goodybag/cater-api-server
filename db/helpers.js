@@ -149,6 +149,31 @@ mosql.registerConditionalHelper('$notExists', {cascade: false}, function( column
   return 'not exists (' + mosql.sql( value, values ).toString() + ')';
 });
 
+// { $extract: { field: 'year', $equals: 2015 } }
+mosql.registerConditionalHelper('$extract', { cascade: false }, function ( column, value, values, table ){
+  var field = value.field;
+
+  var helper = utils.find(Object.keys(value), function(helper) {
+    return helper in mosql.conditionalHelpers.helpers;
+  });
+
+  var expression = [
+  'extract( ',
+  , field
+  , ' from '
+  , column
+  , ' )'
+  ].join('');
+
+  return helper ? mosql.conditionalHelpers.get(helper).fn(expression, value[helper]) : null;
+});
+
+mosql.registerConditionalHelper('$toChar', { cascade: false }, function ( column, value, values, collection ){
+  var format = value.format;
+
+  return ['to_char(', column, ',\'', format,'\')'].join('');
+});
+
 mosql.registerConditionalHelper(
   '$between_days_from_now'
 , { cascade: false }
@@ -267,6 +292,57 @@ mosql.registerQueryHelper( 'upsert', function( upsert, values, query ){
   });
 
   return '';
+});
+
+// Override groupBy
+mosql.registerQueryHelper('groupBy', function(groupBy, values, query) {
+  if ( !Array.isArray(groupBy) ) {
+    groupBy = [ groupBy ];
+  }
+
+  return 'group by ' + groupBy.map( function( item ){
+    if ( typeof item === 'object' ){
+      return mosql.queryHelpers.get('expression').fn( item, values, query );
+    } else if ( typeof item !== 'string' ) {
+      throw new Error( 'Invalid groupBy type: ' + typeof item );
+    }
+
+    return mosql.quoteObject( item, query.__defaultTable );
+  }).join(', ');
+});
+
+// override order by
+// Support strings, objects, and mixed type lists
+mosql.queryHelpers.register('order', function(order, values, query) {
+  var output = 'order by ';
+
+  if ( typeof order === 'string' ) {
+    return output + order;
+  }
+
+  if ( Array.isArray(order) ) {
+    output = output + order.map( function( item ){
+      if ( typeof item === 'object' ){
+        return mosql.queryHelpers.get('expression').fn( item, values, query );
+      } else if ( typeof item === 'string' ) {
+        return item;
+      } else {
+        throw new Error('Invalid order by type: ' + typeof item );
+      }
+    }).join(', ');
+
+    return output;
+  }
+
+  if ( typeof order === 'object' ) {
+    for ( var key in order ){
+      output += mosql.quoteObject(key, query.__defaultTable) + ' ' + order[key] + ', ';
+    }
+
+    if ( output === 'order by ') return "";
+
+    return output.substring(0, output.length - 2 );
+  }
 });
 
 mosql.registerQueryHelper('distinct', function(distinct, values, query){
@@ -629,9 +705,11 @@ dirac.use( function( dirac ){
         type:     'left'
       , target:   cteName
       , on:       { order_id: '$orders.id$' }
-      })
+      });
 
-      $query.columns.push( cteName + '.' + status );
+      if ( !$query[flag].ignoreColumn ) {
+        $query.columns.push( cteName + '.' + status );
+      }
       next();
     };
 
@@ -735,16 +813,18 @@ dirac.use( function(){
 });
 
 // Log queries to dirac
-// dirac.use( function( dirac ){
-//   var query_ = dirac.DAL.prototype.query;
-//   dirac.DAL.prototype.query = function( query, callback ){
-//     console.log( JSON.stringify(query, true, '  ') );
-//     return query_.apply( this, arguments );
-//   };
+/*
+dirac.use( function( dirac ){
+  // var query_ = dirac.DAL.prototype.query;
+  // dirac.DAL.prototype.query = function( query, callback ){
+  //   console.log( JSON.stringify(query, true, '  ') );
+  //   return query_.apply( this, arguments );
+  // };
 
-//   var raw = dirac.DAL.prototype.raw;
-//   dirac.DAL.prototype.raw = function( query, values, callback ){
-//     console.log( query );
-//     return raw.apply( this, arguments );
-//   };
-// });
+  var raw = dirac.DAL.prototype.raw;
+  dirac.DAL.prototype.raw = function( query, values, callback ){
+    console.log( query, values );
+    return raw.apply( this, arguments );
+  };
+});
+//*/

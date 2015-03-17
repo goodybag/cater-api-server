@@ -185,6 +185,10 @@ define(function(require, exports, module) {
     },
 
     submit: function(e) {
+      if ( utils.contains(['accepted', 'submitted'], this.model.get('status')) ) {
+        return;
+      }
+
       spinner.start();
 
       var self = this, userInfo;
@@ -701,9 +705,9 @@ define(function(require, exports, module) {
 
     onOrganizationTypeChange: function (e) {
       if (e.target.value === "business") {
-        this.$orderOrganization[0].classList.remove('hide');
+        this.$orderOrganization.removeClass('hide');
       } else {
-        this.$orderOrganization[0].classList.add('hide');
+        this.$orderOrganization.addClass('hide');
       }
     }
   });

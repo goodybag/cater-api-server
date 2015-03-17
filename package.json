@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.258",
+  "version": "1.1.264",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -59,7 +59,7 @@
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-named-modules": "^1.0.3",
-    "grunt-react": "^0.10.0",
+    "grunt-react": "^0.9.0",
     "grunt-requirejs": "^0.4.2",
     "grunt-s3": "^0.2.0-alpha.3",
     "grunt-shell": "^1.1.1",
@@ -81,7 +81,7 @@
     "microtime": "0.4.x",
     "moment": "~2.3.1",
     "moment-timezone": "0.0.x",
-    "mongo-sql": "^2.5.6",
+    "mongo-sql": "^2.6.2",
     "node-uuid": "1.4.x",
     "npm": "*",
     "okay": "0.3.x",

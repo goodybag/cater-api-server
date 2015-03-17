@@ -63,6 +63,7 @@
     , {name: 'pickatime',         location: '../../components/pickadate/lib',             main: 'picker.time.js'}
     , {name: 'bootstrap',         location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
     , {name: 'select2',           location: '../../components/select2',                   main: 'select2.js'}
+    , {name: 'jquery.appear',     location: '../../components/jquery-appear/src',         main: 'jquery.appear.js'}
 
     , {name: 'config',            location: '../app',                                     main: 'config.js'}
     ]

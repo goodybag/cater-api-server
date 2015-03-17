@@ -18,14 +18,15 @@ define( function( require, exports, module ){
     })
     .methods({
       toString: function(){
-        return [ 'street', 'street2', 'city', 'state', 'zip', 'country'
-          ].map( function( key ){
-            return this[ key ];
-          }.bind( this ))
-          .filter( function( val ){
-            return !!val;
-          }.bind( this ))
-          .join(', ');
+        return [
+          'street', 'street2', 'city', 'state', 'zip', 'country'
+        ].map( function( key ){
+          return this[ key ];
+        }.bind( this ))
+        .filter( function( val ){
+          return !!val;
+        }.bind( this ))
+        .join(', ');
       }
     });
 });

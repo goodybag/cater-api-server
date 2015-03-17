@@ -1,4 +1,58 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/payment-summary-pdf.css">
+{{/extend}}
+
+{{#extend "scripts"}}
+<script src="/js/pdf/payment-summary.js"></script>
+{{/extend}}
+
 {{#extend "info"}}
+<h2 class="customer-company-name info-item">
+  {{#if restaurant.name}}
+    {{restaurant.name}}
+  {{else}}
+    [Your Organization]
+  {{/if}}
+</h2>
+<address class="info-item-address info-item">
+  {{#if restaurant.billing_street}}
+    {{restaurant.billing_street}}
+  {{else}}
+    {{#if restaurant.street}}
+      {{restaurant.street}}
+    {{else}}
+      [123 Your St.]
+    {{/if}}
+  {{/if}}
+  <br />
+  {{#if restaurant.billing_city}}
+    {{restaurant.billing_city}}
+  {{else}}
+    {{#if restaurant.city}}
+      {{restaurant.city}}
+    {{else}}
+      [Your City]
+    {{/if}}
+  {{/if}},
+  {{#if restaurant.billing_state}}
+    {{restaurant.billing_state}}
+  {{else}}
+    {{#if restaurant.state}}
+      {{restaurant.state}}
+    {{else}}
+      [Your State]
+    {{/if}}
+  {{/if}}
+  {{#if restaurant.billing_zip}}
+    {{restaurant.billing_zip}}
+  {{else}}
+    {{#if restaurant.zip}}
+      {{restaurant.zip}}
+    {{else}}
+      [Your Zip]
+    {{/if}}
+  {{/if}}
+</address>
 <div class="info-item-date info-item">Payout Date: {{formatDateTime payment_summary.payment_date}}</div>
 <div class="info-item-contact info-item">
   {{#if order.user.name}}

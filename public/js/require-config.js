@@ -73,6 +73,7 @@
       // custom replacements
       '*': {
         'moment': 'moment-loaded'
+      , 'handlebars.runtime': 'hbs'
       }
 
       // deal with jquery
@@ -100,12 +101,12 @@
         deps: ['lodash', 'jquery']
       , exports: 'Backbone'
       }
-    , 'hbs': {
-        exports: 'Handlebars'
-      }
-    , 'lib/partials': {
-        deps: ['hbs']
-      }
+    // , 'hbs': {
+    //     exports: 'Handlebars'
+    //   }
+    // , 'lib/partials': {
+    //     deps: ['hbs']
+    //   }
     , 'backbone.trackit': {
         deps: ['backbone']
       }
@@ -141,9 +142,9 @@
     , 'jquery.placeholder': {
         deps: ['jquery']
       }
-    , partials: {
-        deps: ['hbs']
-      }
+    // , partials: {
+    //     deps: ['hbs']
+    //   }
     , fullcalendar: {
         deps: ['jquery']
       }
@@ -151,10 +152,10 @@
         exports: 'key'
       }
     }
-  // , hbs: {
-  //     disableI18n: true
-  //   , disableHelpers: true
-  //   }
+  , hbs: {
+      disableI18n: true
+    , disableHelpers: true
+    }
   };
 
   if ( typeof requirejs !== 'undefined' ){

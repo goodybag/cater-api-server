@@ -15,10 +15,10 @@ define(function(require, exports, module) {
   var ReceiptView = OrderView.extend({
     events: function() {
       return _.extend({}, OrderView.prototype.events.call(this), {
-        'click .btn-cancel': _.bind(this.changeStatus, this, 'canceled', true),
+        'click .btn-cancel': _.bind(_.debounce(this.changeStatus, 200), this, 'canceled', true),
         'click .copy-order-btn': 'copyOrder',
         'click .btn-reject': 'rejectOrder',
-        'click .btn-accept': _.bind(this.changeStatus, this, 'accepted', true),
+        'click .btn-accept': _.bind(_.debounce(this.changeStatus, 200), this, 'accepted', true),
         'click #change-status-pending': _.bind(this.changeStatus, this, 'pending', true),
         'click #change-status-canceled': _.bind(this.changeStatus, this, 'canceled', true),
         'click #change-status-submitted': _.bind(this.changeStatus, this, 'submitted', true),

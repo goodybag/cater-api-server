@@ -43,6 +43,11 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , organization_type: { 
+      type: types.text
+    , nullable: true 
+    , default: null
+    }
   , balanced_customer_uri: { //can be null if they're going to be invoiced
       type: types.text
     , nullable: true

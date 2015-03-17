@@ -228,6 +228,10 @@
   margin-left: 4px;
 }
 
+.nav .dropdown + .dropdown {
+  margin-left: 8px;
+}
+
 .navbar-nav {
   text-align: right;
 }

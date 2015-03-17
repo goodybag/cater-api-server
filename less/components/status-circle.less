@@ -1,0 +1,19 @@
+//////////////////
+// Status Circle
+//////////////////
+
+.status-circle {
+  .circle(@palette-gray-light);
+
+  &.paid {
+    .circle(@palette-green);
+  }
+
+  &.pending, &.processing {
+    .circle(@palette-blue);
+  }
+
+  &.error {
+    .circle(@palette-red);
+  }
+}

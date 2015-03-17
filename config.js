@@ -30,9 +30,11 @@ config.defaults = {
 , diets: require('./configs/diets')
 , sortQueryTable: require('./configs/sort-query-table')
 , support: require('./configs/support')
+, workers: require('./configs/workers')
 , scheduler: require('./configs/scheduler')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
 , logging: require('./configs/logging')
+, promo: require('./configs/promo')
 
 , deliveryTime: {
     padding: 15
@@ -316,16 +318,6 @@ config.dev = {
     { bucket: 'dev-receipts.goodybag.com' }
   )
 
-, workers: {
-    debit: {
-      enqueue: {
-        interval: 1000 * 5    // 5 seconds
-      }
-    , process: {
-        interval: 1000 * 5    // 5 seconds
-      }
-    }
-  }
 };
 
 config.staging = {
@@ -346,7 +338,7 @@ config.staging = {
   }
 
 , rollbar: {
-    accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+    accessToken: '8d240c636751439791b214c9ec8cf8af'
   }
 
 , segmentIo: {
@@ -383,16 +375,6 @@ config.staging = {
     { bucket: 'staging-receipts.goodybag.com' }
   )
 
-, workers: {
-    debit: {
-      enqueue: {
-        interval: 1000 * 5 // 5 seconds
-      }
-    , process: {
-        interval: 1000 * 5 // 5 seconds
-      }
-    }
-  }
 };
 
 config.production = {
@@ -500,16 +482,6 @@ config.production = {
 
 , emailEnabled: true
 
-, workers: {
-    debit: {
-      enqueue: {
-        interval: 1000 * 60 * 30 // 30 minutes
-      }
-    , process: {
-        interval: 1000 * 20      // 20 seconds (~900k request/month)
-      }
-    }
-  }
 };
 
 config.india = {

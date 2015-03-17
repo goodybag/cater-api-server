@@ -5,6 +5,7 @@ var models = require('../../models');
 var db = require('../../db');
 var config = require('../../config');
 var _ = utils._;
+var scheduler = require('../../lib/scheduler')
 
 var checkForExistingDebit = function (order, callback) {
   var logger = process.domain.logger.create('checkForExistingDebit', {
@@ -52,8 +53,19 @@ var debitCustomer = function (order, callback) {
         , order_uuid: order.uuid
         }
       }, function (error, debit) {
-        // construct a model to run the following transactions
-        if (error) return (new models.Order(order)).setPaymentError(error.uri, error, callback);
+        if (error) {
+          // enqueue declined cc notification on scheduler
+          return scheduler.enqueue('send-order-notification', new Date(), {
+            notification_id: 'user-order-payment-failed'
+          , order_id: order.id
+          }, function (err) {
+            if (err) {
+              logger.error({ error: err });
+            }
+            // construct a model to run the following transactions
+            return (new models.Order(order)).setPaymentError(error.uri, error, callback);
+          }); 
+        }
         return (new models.Order(order)).setPaymentPaid('debit', debit.uri, debit, callback);
       });
   });

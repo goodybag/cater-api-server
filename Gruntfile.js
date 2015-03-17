@@ -79,7 +79,7 @@ module.exports = function(grunt) {
       }
     , ensureDir: {
         options: { stdout: true }
-      , command: 'mkdir tmp'
+      , command: 'mkdir -p tmp'
       }
     , deployStaging: {
         options: { stdout: true }

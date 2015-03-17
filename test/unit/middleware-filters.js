@@ -25,7 +25,7 @@ describe('Filters', function() {
 
   it('Should load filters into locals', function(done) {
     var mw = m.filters([
-      'restaurant-region'
+      'regions'
     , 'restaurant-visibility'
     , 'restaurant-sort'
     ], mockDb);
@@ -41,7 +41,7 @@ describe('Filters', function() {
 
 
   it('Should format links according to query params', function(done) {
-    var mw = m.filters(['restaurant-region'], mockDb);
+    var mw = m.filters(['regions'], mockDb);
     // todo don't hardcode the region here
     var _req = utils.extend({}, req, { query: { q: 'region:houston, tx' } } );
     mw(_req, res, function() {
@@ -58,7 +58,7 @@ describe('Filters', function() {
   });
 
   it('Should toggle active', function(done) {
-    var mw = m.filters(['restaurant-region', 'restaurant-visibility'], mockDb);
+    var mw = m.filters(['regions', 'restaurant-visibility'], mockDb);
     var _req = utils.extend({}, req, { query: { q: 'region:austin, tx region:houston, tx' } } );
     mw(_req, res, function() {
       assert(res.locals.filters);

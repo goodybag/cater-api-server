@@ -8,6 +8,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var moment = require('moment');
   var FullCalendar = require('fullcalendar');
+  var Handlebars = require('handlebars');
 
   // Lib
   var utils = require('utils');

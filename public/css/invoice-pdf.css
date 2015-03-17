@@ -9,3 +9,7 @@
 .gb-table .sub-total {
   min-width: 64px;
 }
+
+header {
+  min-height: 200px;
+}

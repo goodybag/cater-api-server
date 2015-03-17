@@ -49,6 +49,7 @@ module.exports = {
 , profile: require('./profile')
 , getGeoFromIp: require('./get-geo-from-ip')
 , redirect: require('./redirect')
+, validateAddress: require('./validate-address')
 , viewPlugin: require('./view-plugin')
 , pagination: require('./pagination')
 , queryOptions: require('./query-options')

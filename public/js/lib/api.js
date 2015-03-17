@@ -8,6 +8,9 @@ define(function(require){
   api.users       = api('users');
   api.restaurants = api('restaurants');
 
+  api.maps        = api('maps');
+  api.maps.validateAddress = api.maps('address-validity');
+
   api.legacy      = resource( config.baseUrl );
 
   api.legacy.orders = api.legacy('orders');

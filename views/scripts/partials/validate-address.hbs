@@ -1,0 +1,15 @@
+{{#extend "scripts"}}
+<script>
+  require( ['api', 'jquery'], function( api, $ ){
+    var onChange = function(e){
+      e.preventDefault();
+
+      
+    };
+
+    $(function(){
+      $('[data-action~="validate-address"]').change( onChange );
+    })
+  });
+</script>
+{{/extend}}

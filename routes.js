@@ -437,32 +437,6 @@ module.exports.register = function(app) {
       })
     );
 
-    app.get('/admin/users/:id/invoices/new'
-    , m.param('id')
-    , m.viewPlugin( 'mainNav', { active: 'users' })
-    , m.viewPlugin( 'sidebarNav', {
-        active:   'invoices'
-      , baseUrl:  '/admin/users/:id'
-      })
-    , m.viewPlugin( 'breadCrumbs', {
-        currentPage: 'Invoices'
-      })
-    , m.queryOptions({
-        one:  [ { table: 'regions', alias: 'region' }]
-      , many: [ { table: 'user_invoices', alias: 'invoices'
-                , order: { billing_period_end: 'desc' }
-                }
-              ]
-      , userGroups: true
-      })
-    , m.db.regions.find( {}, { limit: 'all' } )
-    , m.viewPlugin( 'mainNav', { active: 'users' })
-    , m.view( 'admin/user/invoices', db.users, {
-        layout: 'admin/layout-single-object'
-      , method: 'findOne'
-      })
-    );
-
     /**
      * Restaurant list
      */

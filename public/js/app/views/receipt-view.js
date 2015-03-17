@@ -3,6 +3,7 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var states = require('states');
   var moment = require('moment');
+  var Handlebars = require('handlebars');
   var helpers = require('hb-helpers');
 
   var OrderView = require('./order-view');

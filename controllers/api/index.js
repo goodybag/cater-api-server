@@ -1,4 +1,5 @@
 module.exports = {
-  maps: require('./maps')
+  invoices: require('./invoices')
+, maps: require('./maps')
 , restaurants: require('./restaurants')
 };

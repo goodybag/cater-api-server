@@ -11,6 +11,7 @@ define(function(require, exports, module) {
   var config = require('config');
   var _ = require('lodash');
   var moment = require('moment-timezone');
+  var Handlebars = require('handlebars');
   var OrderItems = require('../collections/order-items');
 
   var Restaurant = require('./restaurant');

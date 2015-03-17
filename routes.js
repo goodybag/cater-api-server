@@ -373,7 +373,19 @@ module.exports.register = function(app) {
     );
 
     app.get('/admin/users/:id'
+    , m.redirect('/admin/users/:id/basic-info')
+    );
+
+    app.get('/admin/users/:id/basic-info'
     , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/users/:id'
+      })
+    , m.viewPlugin( 'breadCrumbs', {
+        currentPage: 'Basic Info'
+      })
     , m.queryOptions({
         one: [{ table: 'regions', alias: 'region' }]
       , userGroups: true
@@ -381,7 +393,46 @@ module.exports.register = function(app) {
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.viewPlugin( 'mainNav', { active: 'users' })
     , m.view( 'admin/user/edit', db.users, {
-        layout: 'admin/layout2'
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
+
+    app.get('/admin/users/:id/invoices'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'invoices'
+      , baseUrl:  '/admin/users/:id'
+      })
+    , m.viewPlugin( 'breadCrumbs', {
+        currentPage: 'Invoices'
+      })
+    , m.queryOptions({
+        one:  [ { table: 'regions', alias: 'region' }]
+      , userGroups: true
+      })
+    , function( req, res, next ){
+        var options = {
+          order: ['id desc']
+        };
+
+        var where = {
+          user_id: req.params.id
+        };
+
+        require('stamps/user-invoice').find( where, options, function( error, results ){
+          if ( error ) return next( error );
+
+          res.locals.invoices = results;
+
+          return next();
+        });
+      }
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.view( 'admin/user/invoices', db.users, {
+        layout: 'admin/layout-single-object'
       , method: 'findOne'
       })
     );
@@ -663,7 +714,7 @@ module.exports.register = function(app) {
       , baseUrl:  '/admin/restaurants/:restaurant_id'
       })
     , m.viewPlugin( 'breadCrumbs', {
-        currentPage: 'basic-info'
+        currentPage: 'New Invoice'
       })
     , m.viewPlugin( 'itemForm', {
         selector:           '#edit-item-form'
@@ -1545,6 +1596,38 @@ module.exports.register = function(app) {
 
   app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
 
+  app.get( config.invoice.pdfRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , m.s3({
+      path:   '/' + config.invoice.fileFormat
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.invoice.bucket
+    })
+  );
+
+  app.get(
+    config.invoice.htmlRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , function( req, res, next ){
+      var invoice = require('stamps/user-invoice').create({
+        id: req.param('id')
+      }).fetch( function( error ){
+        if ( error ) return next( error );
+
+        // So HBS doesn't screw EVERYTHING up
+        res.locals.invoice = invoice.toJSON();
+
+        return next();
+      });
+    }
+  , m.view( 'invoice/invoice', {
+      layout: 'invoice/invoice-layout'
+    })
+  );
+
   app.get('/admin/restaurants/:restaurant_id/orders'
   , function( req, res, next ){
       m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
@@ -1687,7 +1770,7 @@ module.exports.register = function(app) {
               }]
     })
   , m.view( 'invoice/payment-summary', db.payment_summaries, {
-      layout: 'invoice/payment-summary-layout'
+      layout: 'invoice/invoice-layout'
     , method: 'findOne'
     })
   );
@@ -2190,6 +2273,83 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.users )
+  );
+
+  /**
+   * User Invoices
+   */
+
+  app.get('/api/invoices'
+  , m.restrict(['admin'])
+  , m.sort('-id')
+  , m.pagination({ allowLimit: true })
+  , m.param('user_id')
+  , m.param( 'from', function( value, $where, $options ){
+      utils.defaults( $where, {
+        billing_period_start: {}
+      });
+
+      $where.billing_period_start.$gte = value;
+    })
+  , m.param( 'to', function( value, $where, $options ){
+      utils.defaults( $where, {
+        billing_period_end: {}
+      });
+
+      $where.billing_period_end.$lt = value;
+    })
+  , m.find( db.user_invoices )
+  );
+
+  app.post('/api/invoices'
+  , m.restrict(['admin'])
+  , m.insert( db.user_invoices )
+  );
+
+  app.get('/api/invoices/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.sort('-id')
+  , m.queryOptions({
+      one:  [ { table: 'users', alias: 'user' } ]
+    , many: [ { table: 'user_invoice_orders'
+              , alias: 'orders'
+              , mixin: [{ table: 'orders' }]
+              }
+            ]
+    })
+  , m.findOne( db.user_invoices )
+  );
+
+  app.put('/api/invoices/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.user_invoices )
+  );
+
+  app.delete('/api/invoices/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.user_invoices )
+  );
+
+  app.post('/api/invoices/:id/emails'
+  , m.restrict(['admin'])
+  , controllers.api.invoices.sendEmail
+  );
+
+  app.post('/api/invoices/:user_invoice_id/orders/:order_id'
+  , m.restrict(['admin'])
+  , m.queryToBody('user_invoice_id')
+  , m.queryToBody('order_id')
+  , m.insert( db.user_invoice_orders )
+  );
+
+  app.del('/api/invoices/:user_invoice_id/orders/:order_id'
+  , m.restrict(['admin'])
+  , m.param('user_invoice_id')
+  , m.param('order_id')
+  , m.remove( db.user_invoice_orders )
   );
 
   /**

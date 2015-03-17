@@ -34,6 +34,7 @@ config.defaults = {
 , scheduler: require('./configs/scheduler')
 , availableRestaurantPlanTypes: ['tiered', 'flat']
 , logging: require('./configs/logging')
+, invoice: require('./configs/invoice')
 , promo: require('./configs/promo')
 
 , deliveryTime: {

@@ -14,6 +14,7 @@ var
 , dirac         = require('dirac')
 , fs            = require('fs')
 , path          = require('path')
+, Promise       = require('bluebird')
 , helpers       = require('./helpers')
 , Tx            = require('pg-transaction')
 , typeParsers   = require('./type-parsers')
@@ -58,6 +59,7 @@ dirac.init( config.postgresConnStr );
 
 for ( var key in dirac.dals ){
   exports[ key ] = dirac.dals[ key ];
+  Promise.promisifyAll( exports[ key ] );
 }
 
 exports.getClient = function(connStr, callback) {

@@ -9,6 +9,9 @@ define( function( require, exports, module ){
   var moment  = require('moment-timezone');
   var stampit = require('stampit');
   return stampit()
+    .state({
+      businessHours: { start: 6, end: 22 }
+    })
     .methods({
       getWorkingTime: function(){
         var datetime = this._moment;

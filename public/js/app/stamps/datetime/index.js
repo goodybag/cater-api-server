@@ -17,6 +17,7 @@ define( function( require, exports, module ){
   var stamps = {
     base: require('./base')
   , businessHours: require('./business-hours')
+  , billing: require('./billing')
   };
 
   module.exports = module.exports.compose.apply(

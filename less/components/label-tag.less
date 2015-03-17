@@ -35,10 +35,13 @@
 
   &.pending { .label-tag-theme( @status-pending ); }
   &.accepted { .label-tag-theme( @status-accepted ); }
+  &.paid { .label-tag-theme( @status-accepted ); }
   &.canceled { .label-tag-theme( @status-canceled ); }
   &.denied { .label-tag-theme( @status-denied ); }
+  &.error { .label-tag-theme( @status-denied ); }
   &.submitted { .label-tag-theme( @status-submitted ); }
   &.delivered { .label-tag-theme( @status-delivered ); }
+  &.emailed { .label-tag-theme( @status-submitted ); }
 
   .label-tag-size( @label-tag-height-base, @font-size-base );
 

@@ -8,7 +8,7 @@ var invoices  = require('stamps/user-invoice');
 module.exports.sendEmail = function( req, res ){
   invoices({ id: req.params.id })
     .sendEmailAsync()
-    .error( function( error ){
+    .catch( function( error ){
       logger.error('Error sending invoice', {
         invoice: { id: req.params.id }
       , error:   error

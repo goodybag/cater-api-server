@@ -146,7 +146,7 @@ module.exports = require('stampit')()
         }
 
         callback( null, this );
-      });
+      }.bind( this ));
     }
 
   , updateOrdersInvoiceId: function(){

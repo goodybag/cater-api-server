@@ -30,6 +30,11 @@
       <li class="table-list-item" data-id="{{id}}" data-restaurant="{{json this}}">
         <span class="table-list-info"><a href="{{baseUrl}}/admin/restaurants/{{id}}">{{name}}</a></span>
         <span class="table-list-item-actions">
+
+
+          <a class="table-list-item-action" href="{{baseUrl}}/restaurants/{{id}}" data-toggle="tooltip" data-title="View Menu"><span class="gb-icon-user icon-large"></span></a>
+
+
           <a class="table-list-item-action is-hidden-toggle" href="#" data-toggle="tooltip" data-title="Toggle Visibility">
             <span class="is-hidden-icon gb-icon-eye-slash icon-large {{#unless is_hidden}}hide{{/unless}}"></span>
             <span class="is-hidden-icon gb-icon-eye icon-large {{#if is_hidden}}hide{{/if}}"></span>

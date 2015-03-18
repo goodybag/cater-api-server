@@ -21,7 +21,7 @@
     <div id="main">
       <div class="restaurant-edit">
         <div class="container">
-        <h1>Editing {{restaurant.name}}</h1>
+        <a href="{{baseUrl}}/restaurants/{{restaurant.id}}"><h1 class="page-title">Editing {{restaurant.name}}</h1></a>
           <div>
             {{> restaurant_edit_nav }}
             <div class="restaurant-edit-body">

@@ -41,6 +41,7 @@
       <tr>
         <th>ID</th>
         <th>Name</th>
+        <th>Address</th>
         <th>Default</th>
         <th></th>
       </tr>
@@ -51,6 +52,9 @@
         <td>{{this.id}}</td>
         <td>
           <a href="/admin/restaurants/{{../restaurant.id}}/locations/{{this.id}}">{{this.name}}</a>
+        </td>
+        <td>
+          {{this.street}}{{#if this.street2}} {{this.street2}}{{/if}}, {{this.city}}, {{this.state}}, {{this.zip}}
         </td>
         <td>{{#if this.is_default}}X{{/if}}</td>
         <td class="actions">

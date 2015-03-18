@@ -76,4 +76,5 @@ module.exports = {
 , order_type: 'order_type'
 , amenity_scale: 'amenity_scale'
 , plan_type: 'plan_type'
+, invoice_status: 'invoice_status'
 };

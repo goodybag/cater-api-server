@@ -1,4 +1,3 @@
-var isDev = process.env['GB_ENV'] === 'dev';
 
 try {
   local = require('../local-config.json');
@@ -6,6 +5,24 @@ try {
 	if (error) local = {};
 }
 
-module.exports = {
-  email: isDev ? local.testEmail || 'test@goodybag.com' : 'jacobparker@goodybag.com'
+var promo = {
+  adam: {
+    email: 'adam.peacock@goodybag.com'
+  , promo_code: 'G315B'
+  }
+, jacob: {
+    email: 'jacobparker@goodybag.com'
+  , promo_code: 'Goodybag315'
+  }
 };
+
+module.exports = ({
+  production: promo
+, staging: promo
+, dev: {
+    test: {
+      email: local.testEmail || 'test@goodybag.com'
+    , promo_code: 'worf'
+    }
+  }
+})[ process.env['GB_ENV'] || 'dev' ];

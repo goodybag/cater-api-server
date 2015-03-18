@@ -1,3 +1,111 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/invoice-pdf.css">
+{{/extend}}
+
+{{#extend "scripts"}}
+<script src="/js/pdf/invoice.js"></script>
+{{/extend}}
+
+{{#extend "info"}}
+<h2 class="customer-company-name info-item">
+  {{#if invoice.user.name}}
+    {{invoice.user.name}}
+  {{else}}
+    [Your Organization]
+  {{/if}}
+</h2>
+<address class="info-item-address info-item">
+  {{#if invoice.user.address.street}}
+    {{invoice.user.address.street}}
+    {{#if invoice.user.address.street2}}
+      <br />
+      {{invoice.user.address.street2}}
+    {{/if}}
+  {{else}}
+    [123 Your St.]
+  {{/if}}
+  <br />
+  {{#if invoice.user.address.city}}
+    {{invoice.user.address.city}}
+  {{else}}
+    [Your City]
+  {{/if}},
+  {{#if invoice.user.address.state}}
+    {{invoice.user.address.state}}
+  {{else}}
+    [Your State]
+  {{/if}}
+  {{#if invoice.user.address.zip}}
+    {{invoice.user.address.zip}}
+  {{else}}
+    [Your Zip]
+  {{/if}}
+</address>
+
+<div class="info-item-contact info-item">
+  {{#if invoice.user.name}}
+    {{invoice.user.name}}
+  {{/if}}
+  {{#if invoice.user.address.phone}}
+    <br>
+    {{phoneNumber invoice.user.address.phone "xxx.xxx.xxxx"}}
+  {{/if}}
+</div>
+
+<div class="info-item-date info-item">Billing Period: {{formatDateTime invoice.billing_period_start "MM/DD"}} - {{formatDateTime invoice.billing_period_end "MM/DD"}}</div>
+
+<div class="doc-id-info order-number-info">
+  <span class="doc-id-key order-number-key"></span>
+  <span class="doc-id order-number">#{{invoice.id}}</span>
+</div>
+{{/extend}}
+
 {{#extend "body"}}
-<h1>Hello, Order #{{order.id}}</h1>
+<div class="order">
+  <table class="gb-table" style="">
+    <thead>
+      <tr>
+        <th>Order Info</th>
+        <th class="sub-total">Sub Total</th>
+        <th>Delivery</th>
+        <th>Tax</th>
+        <th>TX Fee</th>
+        <th>Tip</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each invoice.orders}}
+      <tr>
+        <td>
+          <div class="order-id">#{{this.id}}</div>
+          <div class="restaurant">{{this.restaurant.name}}</div>
+          <div class="date">{{datepart this.datetime}}</div>
+        </td>
+        <td>${{dollars this.sub_total}}</td>
+        <td>${{dollars this.delivery_fee}}</td>
+        <td>${{dollars this.sales_tax}}</td>
+        <td>${{dollars this.no_contract_amount}}</td>
+        <td>${{dollars this.tip}}</td>
+        <td>${{dollars this.total}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div class="order-bottom-wrapper">
+    <div class="total-wrapper">
+      <div class="left">
+        <span class="payment-note">To pay by credit card, call (512) 270-6555. To pay by check, make payable to Goodybag Inc. and mail to address above.</span>
+      </div>
+      <div class="right">
+        <dl class="dl-horizontal dl-order-total">
+          <dt>Amount to be paid:</dt>
+          <dd>${{dollars invoice.total}}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
 {{/extend}}

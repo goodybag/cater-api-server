@@ -22,6 +22,76 @@ describe('Stamps', function() {
     });
   });
 
+  describe('billing', function() {
+    it('.getBillingPeriod()', function(){
+      var period = stamps.datetime({
+        datetime: '2015-11-05 00:00:00'
+      }).getBillingPeriod();
+
+      assert.equal( '2015-11-01', period.startDate );
+      assert.equal( '2015-11-15', period.endDate );
+    });
+
+    it('.getBillingPeriod()', function(){
+      var period = stamps.datetime({
+        datetime: '2015-11-25 00:00:00'
+      }).getBillingPeriod();
+
+      assert.equal( '2015-11-16', period.startDate );
+      assert.equal( '2015-11-30', period.endDate );
+    });
+
+    it('.getPreviousBillingPeriod()', function(){
+      var period = stamps.datetime({
+        datetime: '2015-11-05 00:00:00'
+      }).getPreviousBillingPeriod();
+
+      assert.equal( '2015-10-16', period.startDate );
+      assert.equal( '2015-10-31', period.endDate );
+    });
+
+    it('.getPreviousBillingPeriod()', function(){
+      var period = stamps.datetime({
+        datetime: '2015-11-25 00:00:00'
+      }).getPreviousBillingPeriod();
+
+      assert.equal( '2015-11-01', period.startDate );
+      assert.equal( '2015-11-15', period.endDate );
+    });
+
+    it('.isStartOfBillingPeriod()', function(){
+      var date = stamps.datetime({
+        datetime: '2015-11-1 00:00:00'
+      });
+
+      assert.equal( date.isStartOfBillingPeriod(), true );
+    });
+
+    it('.isStartOfBillingPeriod()', function(){
+      var date = stamps.datetime({
+        datetime: '2015-11-16 00:00:00'
+      });
+
+      assert.equal( date.isStartOfBillingPeriod(), true );
+    });
+
+    it('.isStartOfBillingPeriod()', function(){
+      var date = stamps.datetime({
+        datetime: '2015-11-10 00:00:00'
+      });
+
+      assert.equal( date.isStartOfBillingPeriod(), false );
+    });
+
+    it('.isStartOfBillingPeriod()', function(){
+      var date = stamps.datetime({
+        datetime: '2015-11-17 00:00:00'
+      });
+
+      assert.equal( date.isStartOfBillingPeriod(), false );
+    });
+  });
+
   describe('business-hours', function() {
     it('.getWorkingTime should return the earliest time during business hours given a datetime that is after hours', function() {
       var datetime = stamps.datetime({

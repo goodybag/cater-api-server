@@ -1,21 +1,15 @@
-(function(factory){
-  if ( typeof define === 'function' && define.amd ){
-    // AMD. Register as an anonymous module.
-    define( ['jquery'], factory );
-  } else {
-    // Browser globals
-    factory(jQuery);
-  }
-}(function( $ ){
+define( function( require, exports, module ){
   'use strict';
 
+  var $ = require('jquery');
+  var _ = require('lodash');
   var old = $.fn.gb_popover;
 
   var Popover = function(el, options) {
     this.$el = $(el);
     this.options  = this.getOptions(options);
     this.$wrapper = this.$el.parents('.popover-wrapper').eq(0);
-    this.$modal   = this.$el.find('.popover-modal');
+    this.$body    = this.$wrapper.find('.popover-body');
     this.listenEvents();
     return this;
   };
@@ -39,12 +33,17 @@
 
     // click outside to close modal
     $(document).click(function(e) {
-      var clickedOutsideModal =
-        !$(e.target).closest(this.$modal).length &&
-        !$(e.target).closest(this.$el).length &&
-        this.$wrapper.hasClass('open');
-      if ( clickedOutsideModal ) {
-        this.$wrapper.removeClass('open');
+      if ( !this.$wrapper.hasClass('open') ){
+        return;
+      }
+
+      var shouldClose = (
+        !$.contains( this.$wrapper[0], e.target )
+        && this.$wrapper[0] !== e.target
+      )
+
+      if ( shouldClose ) {
+        this.close();
       }
     }.bind(this));
 
@@ -73,12 +72,18 @@
     }
 
     // Listen to close buttons
-    if (this.$modal) {
-      this.$modal.find('[data-toggle-role="close"]').on('click', function(e) {
-        e.preventDefault();
-        this_.close();
-      });
-    }
+    this.$wrapper.find('[data-toggle-role="close"]').on('click', function(e) {
+      e.preventDefault();
+      this_.close();
+    });
+
+    this.$body.on( 'scroll', _.throttle( function( e ){
+      if ( e.target.scrollTop > 0 ){
+        this.$wrapper.addClass('has-scrolled');
+      } else {
+        this.$wrapper.removeClass('has-scrolled');
+      }
+    }, 50 ).bind( this ) );
 
     return this;
   };
@@ -119,4 +124,4 @@
     $.fn.gb_popover = old;
     return this;
   };
-}));
+});

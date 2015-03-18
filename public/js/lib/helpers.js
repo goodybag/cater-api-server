@@ -12,6 +12,46 @@ define(function(require, exports, module) {
 
   var helpers = {};
 
+  helpers.search = function( list, term, fields ){
+    var tokens;
+
+    if ( typeof term === 'number' ){
+      tokens = [];
+    } else if ( typeof term === 'string' ){
+      tokens = term.match( /\w+/g );
+      term = term.toLowerCase();
+    } else {
+      throw new Error('Invalid search term type');
+    }
+
+    var tokens = typeof term === 'number' ? [] : term.match( /\w+/g );
+
+    return list.filter( function( item ){
+      return fields.some( function( field ){
+        var value = item[ field ];
+
+        if ( value === undefined ) return false;
+        if ( value === null && term !== null ) return false;
+
+        if ( typeof term === 'number' ){
+          return value === term;
+        }
+
+        if ( ['string', 'number'].indexOf( typeof value ) === -1 ){
+          return false;
+        }
+
+        if ( typeof value === 'string' ){
+          value = value.toLowerCase();
+        }
+
+        return tokens.some( function( token ){
+          return ('' + value).indexOf( token ) > -1;
+        });
+      });
+    });
+  };
+
   /**
    * Searches object structure for properties definition
    *

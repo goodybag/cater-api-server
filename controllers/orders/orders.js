@@ -13,6 +13,7 @@ var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer;
 var orderDefinitionSchema  = require('../../db/definitions/orders').schema;
+var promoConfig = require('../../configs/promo');
 
 var addressFields = [
   'street'
@@ -343,8 +344,8 @@ module.exports.changeStatus = function(req, res) {
     )) venter.emit('order:status:change', new models.Order( req.order ), previousStatus);
 
     if (req.order.promo_code)
-    if (req.order.promo_code === req.order.restaurant.promo_code) 
     if (req.order.status === 'submitted') {
+    if (utils.where( promoConfig, { promo_code: req.order.promo_code} ))
       venter.emit('order:submitted:promo', req.order);
     }
   }

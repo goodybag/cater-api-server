@@ -50,40 +50,6 @@
         </div>
 
         <div class="customer-info info-items">
-          <h2 class="customer-company-name info-item">
-            {{#if order.user.organization}}
-              {{order.user.organization}}
-            {{else}}
-              [Your Organization]
-            {{/if}}
-          </h2>
-          <address class="info-item-address info-item">
-            {{#if order.street}}
-              {{order.street}}
-              {{#if order.street2}}
-                <br />
-                {{order.street2}}
-              {{/if}}
-            {{else}}
-              [123 Your St.]
-            {{/if}}
-            <br />
-            {{#if order.city}}
-              {{order.city}}
-            {{else}}
-              [Your City]
-            {{/if}},
-            {{#if order.state}}
-              {{order.state}}
-            {{else}}
-              [Your State]
-            {{/if}}
-            {{#if order.zip}}
-              {{order.zip}}
-            {{else}}
-              [Your Zip]
-            {{/if}}
-          </address>
           {{{block "info"}}}
         </div>
       </header>

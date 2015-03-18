@@ -63,6 +63,7 @@
     , {name: 'pickatime',         location: '../../components/pickadate/lib',             main: 'picker.time.js'}
     , {name: 'bootstrap',         location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
     , {name: 'select2',           location: '../../components/select2',                   main: 'select2.js'}
+    , {name: 'jquery.appear',     location: '../../components/jquery-appear/src',         main: 'jquery.appear.js'}
 
     , {name: 'config',            location: '../app',                                     main: 'config.js'}
     ]
@@ -72,6 +73,7 @@
       // custom replacements
       '*': {
         'moment': 'moment-loaded'
+      , 'handlebars.runtime': 'hbs'
       }
 
       // deal with jquery
@@ -99,12 +101,12 @@
         deps: ['lodash', 'jquery']
       , exports: 'Backbone'
       }
-    , 'hbs': {
-        exports: 'Handlebars'
-      }
-    , 'lib/partials': {
-        deps: ['hbs']
-      }
+    // , 'hbs': {
+    //     exports: 'Handlebars'
+    //   }
+    // , 'lib/partials': {
+    //     deps: ['hbs']
+    //   }
     , 'backbone.trackit': {
         deps: ['backbone']
       }
@@ -140,9 +142,9 @@
     , 'jquery.placeholder': {
         deps: ['jquery']
       }
-    , partials: {
-        deps: ['hbs']
-      }
+    // , partials: {
+    //     deps: ['hbs']
+    //   }
     , fullcalendar: {
         deps: ['jquery']
       }
@@ -150,10 +152,10 @@
         exports: 'key'
       }
     }
-  // , hbs: {
-  //     disableI18n: true
-  //   , disableHelpers: true
-  //   }
+  , hbs: {
+      disableI18n: true
+    , disableHelpers: true
+    }
   };
 
   if ( typeof requirejs !== 'undefined' ){

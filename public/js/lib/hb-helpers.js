@@ -9,6 +9,7 @@ define(function(require, exports, module) {
   var utils         = require('./utils');
   var states        = require('./states');
   var config        = require('config');
+  var invoices      = require('../app/stamps/user-invoice/base');
 
   var blocks = {};
 
@@ -628,6 +629,34 @@ define(function(require, exports, module) {
 
     getCurrentYear: function () {
       return new Date().getFullYear();
+    },
+
+    invoke: function( obj, fnName, ctx ){
+      var fn = obj[ fnName ];
+
+      if ( !ctx ) return fn();
+
+      var args = Array.prototype.slice.call( arguments, 3 );
+      return fn.apply( ctx, args );
+    },
+
+    replace: function( str, a, b ){
+      return str.replace( a, b );
+    },
+    
+    without: function( arr ){
+      var rest = Array.prototype.slice.call( arguments, 1 );
+      return utils.without.apply( utils, arr, rest );
+    },
+
+    invoice: function( obj, field ){
+      var invoice = invoices.create( obj );
+
+      if ( field === 'total' ){
+        return invoice.total();
+      }
+
+      return invoice[ obj ];
     }
   }
 

@@ -1,0 +1,375 @@
+<section class="page-section" id="section-orders-table-list">
+  <div class="container">
+    <h2 class="component-title">Orders Table List</h2>
+    <p>This component builds on table list</p>
+
+    <div class="table-list orders-table-list striped">
+      <div class="list-header">
+        <label class="component item-selector">
+          <input type="checkbox">
+        </label>
+
+        <div class="component list-info">
+          <div class="num-results">133 Orders</div>
+          <div class="sort-info">Sorted by Submitted Date Desc</div>
+        </div>
+
+        <ul class="component list-nav nav">
+          <li class="not-selected-only popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Restaurant
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              <div class="popover-header">Restaurants</div>
+              <div class="popover-filter"
+                data-role="filter-list"
+                data-input="> input"
+                data-target="+ .popover-body > .popover-item"
+                data-fields="name">
+
+                <input type="text" placeholder="Filter...">
+              </div>
+              <div class="popover-body">
+                {{#each ordersTableRestaurants}}
+                <a href="#" class="popover-item" data-name="{{this.name}}">
+                  <span class="popover-item-icon">
+                    {{!-- <span class="gb-icon-checkmark va-middle"></span> --}}
+                  </span>
+                  <span class="popover-item-label">{{this.name}}</span>
+                </a>
+                {{/each}}
+              </div>
+            </div>
+          </li>
+          <li class="not-selected-only popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Region
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+          <li class="not-selected-only popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Type
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+          <li class="not-selected-only popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Status
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+          <li class="not-selected-only popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Sort
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+          <li class="selected-only popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Set Status
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+          <li class="selected-only popover-wrapper gb-dropdown right">
+            <a data-role="popover" data-target="dropdown-popover" href="#">
+              Set Type
+              <i class="gb-icon-caret-down"></i>
+            </a>
+            <div class="popover-modal dropdown-popover">
+              Test
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="list-items">
+        <div class="list-item" data-type="courier" data-status="pending">
+          <label class="component item-selector">
+            <input type="checkbox">
+          </label>
+          <div class="component order-type">
+            <div class="type-icon"
+              data-toggle="tooltip"
+              data-placement="auto"
+              data-container="body"
+              data-title="Courier Order"></div>
+          </div>
+          <div class="component main">
+            <a class="item-title" href="#">#3562 - Bamboo Bistro</a>
+            <span class="label-tag label-status small pending">Pending</span>
+            <div class="user-details">
+              <a href="#">Tony Tornado</a> - Awesome, Inc.
+            </div>
+            <dl class="item-details dl-horizontal-auto">
+              <div>
+                <dt>Submitted:</dt>
+                <dd>02/04/15 - 1:47 pm</dd>
+              </div>
+              <div>
+                <dt>Total:</dt>
+                <dd>$576.28</dd>
+              </div>
+            </dl>
+            <div class="more-actions-and-info small top">
+              <div class="info order-type">Delivery</div>
+              <div class="info order-status">Pending</div>
+            </div>
+            <div class="more-actions-and-info bottom">
+              <button class="action btn-default" data-action="cancel">Cancel</button>
+              <button class="action btn-default" data-action="copy">Order Again?</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-item" data-type="courier" data-status="accepted">
+          <label class="component item-selector">
+            <input type="checkbox">
+          </label>
+          <div class="component order-type">
+            <div class="type-icon"
+              data-toggle="tooltip"
+              data-placement="auto"
+              data-container="body"
+              data-title="Courier Order"></div>
+          </div>
+          <div class="component main">
+            <a class="item-title" href="#">#3562 - Bamboo Bistro</a>
+            <span class="label-tag label-status small accepted">Accepted</span>
+            <div class="user-details">
+              <a href="#">Tony Tornado</a> - Awesome, Inc.
+            </div>
+            <dl class="item-details dl-horizontal-auto">
+              <div>
+                <dt>Submitted:</dt>
+                <dd>02/04/15 - 1:47 pm</dd>
+              </div>
+              <div>
+                <dt>Total:</dt>
+                <dd>$576.28</dd>
+              </div>
+            </dl>
+            <div class="more-actions-and-info small top">
+              <div class="info order-type">Delivery</div>
+              <div class="info order-status">Accepted</div>
+            </div>
+            <div class="more-actions-and-info bottom">
+              <button class="action btn-default" data-action="cancel">Cancel</button>
+              <button class="action btn-default" data-action="copy">Order Again?</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-item" data-type="delivery" data-status="submitted">
+          <label class="component item-selector">
+            <input type="checkbox">
+          </label>
+          <div class="component order-type">
+            <div class="type-icon"
+              data-toggle="tooltip"
+              data-placement="auto"
+              data-container="body"
+              data-title="Delivery Order"></div>
+          </div>
+          <div class="component main">
+            <a class="item-title" href="#">#3562 - Bamboo Bistro</a>
+            <span class="label-tag label-status small submitted">Submitted</span>
+            <div class="user-details">
+              <a href="#">Tony Tornado</a> - Awesome, Inc.
+            </div>
+            <dl class="item-details dl-horizontal-auto">
+              <div>
+                <dt>Submitted:</dt>
+                <dd>02/04/15 - 1:47 pm</dd>
+              </div>
+              <div>
+                <dt>Total:</dt>
+                <dd>$576.28</dd>
+              </div>
+            </dl>
+            <div class="more-actions-and-info small top">
+              <div class="info order-type">Delivery</div>
+              <div class="info order-status">Submitted</div>
+            </div>
+            <div class="more-actions-and-info bottom">
+              <button class="action btn-default" data-action="cancel">Cancel</button>
+              <button class="action btn-default" data-action="copy">Order Again?</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-item" data-type="delivery" data-status="pending">
+          <label class="component item-selector">
+            <input type="checkbox">
+          </label>
+          <div class="component order-type">
+            <div class="type-icon"
+              data-toggle="tooltip"
+              data-placement="auto"
+              data-container="body"
+              data-title="Delivery Order"></div>
+          </div>
+          <div class="component main">
+            <a class="item-title" href="#">#3562 - Bamboo Bistro</a>
+            <span class="label-tag label-status small pending">Pending</span>
+            <div class="user-details">
+              <a href="#">Tony Tornado</a> - Awesome, Inc.
+            </div>
+            <dl class="item-details dl-horizontal-auto">
+              <div>
+                <dt>Submitted:</dt>
+                <dd>02/04/15 - 1:47 pm</dd>
+              </div>
+              <div>
+                <dt>Total:</dt>
+                <dd>$576.28</dd>
+              </div>
+            </dl>
+            <div class="more-actions-and-info small top">
+              <div class="info order-type">Delivery</div>
+              <div class="info order-status">Pending</div>
+            </div>
+            <div class="more-actions-and-info bottom">
+              <button class="action btn-default" data-action="cancel">Cancel</button>
+              <button class="action btn-default" data-action="copy">Order Again?</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-item" data-type="pickup" data-status="pending">
+          <label class="component item-selector">
+            <input type="checkbox">
+          </label>
+          <div class="component order-type">
+            <div class="type-icon"
+              data-toggle="tooltip"
+              data-placement="auto"
+              data-container="body"
+              data-title="Pickup Order"></div>
+          </div>
+          <div class="component main">
+            <a class="item-title" href="#">#3562 - Bamboo Bistro</a>
+            <span class="label-tag label-status small pending">Pending</span>
+            <div class="user-details">
+              <a href="#">Tony Tornado</a> - Awesome, Inc.
+            </div>
+            <dl class="item-details dl-horizontal-auto">
+              <div>
+                <dt>Submitted:</dt>
+                <dd>02/04/15 - 1:47 pm</dd>
+              </div>
+              <div>
+                <dt>Total:</dt>
+                <dd>$576.28</dd>
+              </div>
+            </dl>
+            <div class="more-actions-and-info small top">
+              <div class="info order-type">Delivery</div>
+              <div class="info order-status">Pending</div>
+            </div>
+            <div class="more-actions-and-info bottom">
+              <button class="action btn-default" data-action="cancel">Cancel</button>
+              <button class="action btn-default" data-action="copy">Order Again?</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-item" data-type="courier" data-status="canceled">
+          <label class="component item-selector">
+            <input type="checkbox">
+          </label>
+          <div class="component order-type">
+            <div class="type-icon"
+              data-toggle="tooltip"
+              data-placement="auto"
+              data-container="body"
+              data-title="Courier Order"></div>
+          </div>
+          <div class="component main">
+            <a class="item-title" href="#">#3562 - Bamboo Bistro</a>
+            <span class="label-tag label-status small canceled">Canceled</span>
+            <div class="user-details">
+              <a href="#">Tony Tornado</a> - Awesome, Inc.
+            </div>
+            <dl class="item-details dl-horizontal-auto">
+              <div>
+                <dt>Submitted:</dt>
+                <dd>02/04/15 - 1:47 pm</dd>
+              </div>
+              <div>
+                <dt>Total:</dt>
+                <dd>$576.28</dd>
+              </div>
+            </dl>
+            <div class="more-actions-and-info small top">
+              <div class="info order-type">Delivery</div>
+              <div class="info order-status">Canceled</div>
+            </div>
+            <div class="more-actions-and-info bottom">
+              <button class="action btn-default" data-action="cancel">Cancel</button>
+              <button class="action btn-default" data-action="copy">Order Again?</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-item" data-type="delivery" data-status="denied">
+          <label class="component item-selector">
+            <input type="checkbox">
+          </label>
+          <div class="component order-type">
+            <div class="type-icon"
+              data-toggle="tooltip"
+              data-placement="auto"
+              data-container="body"
+              data-title="Delivery Order"></div>
+          </div>
+          <div class="component main">
+            <a class="item-title" href="#">#3562 - Bamboo Bistro</a>
+            <span class="label-tag label-status small denied">Denied</span>
+            <div class="user-details">
+              <a href="#">Tony Tornado</a> - Awesome, Inc.
+            </div>
+            <dl class="item-details dl-horizontal-auto">
+              <div>
+                <dt>Submitted:</dt>
+                <dd>02/04/15 - 1:47 pm</dd>
+              </div>
+              <div>
+                <dt>Total:</dt>
+                <dd>$576.28</dd>
+              </div>
+            </dl>
+            <div class="more-actions-and-info small top">
+              <div class="info order-type">Delivery</div>
+              <div class="info order-status">Denied</div>
+            </div>
+            <div class="more-actions-and-info bottom">
+              <button class="action btn-default" data-action="cancel">Cancel</button>
+              <button class="action btn-default" data-action="copy">Order Again?</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{#extend "scripts"}}
+<script>
+  require(['jquery', 'table-list'], function( $ ){
+    $(function(){
+      $('#section-orders-table-list .table-list').gb_tablelist();
+    });
+  });
+</script>
+{{/extend}}

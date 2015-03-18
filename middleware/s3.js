@@ -43,7 +43,10 @@ module.exports = function( options ){
       options
     ).getFile( s3path, function( error, fileRes ){
       if ( error ){
-        logger.error( 'Error getting file from s3', error );
+        logger.error( 'Error getting file from s3', {
+          error: error
+        , path:  s3path
+        });
         return res.error( error );
       }
 

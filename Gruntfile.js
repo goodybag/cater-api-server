@@ -75,11 +75,11 @@ module.exports = function(grunt) {
   , shell: {
       handlebars: {
         options: { stdout: true, stderr: true }
-      , command: './node_modules/.bin/handlebars public/partials/*.hbs -p -e hbs -f public/dist/partials.js'
+      , command: './node_modules/.bin/handlebars public/partials/*.hbs --amd -p -e hbs -f public/dist/partials.js'
       }
     , ensureDir: {
         options: { stdout: true }
-      , command: 'mkdir tmp'
+      , command: 'mkdir -p tmp'
       }
     , deployStaging: {
         options: { stdout: true }

@@ -15,5 +15,4 @@ begin
     set
       organization_type='business'
     where organization is not null and organization_type is null;
-    
 end$$;

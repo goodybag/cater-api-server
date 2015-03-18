@@ -161,68 +161,7 @@
           </div>
           {{/unless}}
 
-          <div id="payment-info" class="list-group-item clearfix">
-            <div class="col-md-12">
-              <legend>Payment Info</legend>
-              <div class="payment-info-details">Your card will not be charged until you receive your order.</div>
-              <div class="radio card-select-toggle {{#unless order.user.payment_methods}}hide{{/unless}}">
-                <label>
-                  <input type="radio" name="payment-method" value="existing" class="payment-method" data-parent="#payment-info" {{#unless order.user.is_invoiced}}checked="checked"{{/unless}}>
-                </label>
-                Pay using
-                <select class="form-control card-select" id="payment-method-id" name="payment_method_id">
-                  {{#each order.user.payment_methods}}
-                    {{> payment_method_option}}
-                  {{/each}}
-                </select>
-                <div class="expired-wrapper hide" data-icon="gb-icon-warning">
-                  {{! If a card is selected that is expired, this will be filled with {>checkout_card_expired} !}}
-                  <div class="expired-text"></div>
-                  <a href="#" class="btn-expired-update">Update</a>
-                </div>
-              </div>
-
-              <div id="update-card" class="hide">
-                <div class="update-card-wrapper"></div>
-                <div class="form-group">
-                  <button type="button" class="btn btn-default btn-cancel">Cancel</button>
-                  <button type="button" class="btn btn-primary btn-submit">Save changes to card</button>
-                </div>
-              </div>
-
-              <div class="radio">
-                <label>
-                  <input type="radio" name="payment-method" value="new" class="payment-method" data-target="#new-card" data-parent="#payment-info" {{#unless order.user.payment_methods}}checked="checked"{{/unless}}>
-                  Use a new card.
-                </label>
-              </div>
-
-              <div id="new-card" class="form-group{{#if order.user.payment_methods}} collapse{{/if}}">
-                {{> edit_card}}
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" name="save_card" checked="checked">
-                    Save this card for future orders.
-                  </label>
-                </div>
-              </div>
-
-              {{#if order.user.is_invoiced}}
-              <div class="radio">
-                <label>
-                  <input type="radio" name="payment-method" value="invoice" class="payment-method" data-parent="#payment-info" checked="checked">
-                  Pay via invoice.
-                </label>
-              </div>
-              {{/if}}
-            </div>
-            <div class="row promo-field">
-              <div class="form-group col-sm-6">
-                <label for="promo_code">Promo Code <small>(optional)</small></label>
-                <input type="text" value="{{order.promo_code}}" name="promo_code" class="form-control promo-code" placeholder="enter promo code">
-              </div>
-            </div>
-          </div>
+          {{> order_payment_info}}
 
           <div class="panel-actions">
             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#cancel-confirm-modal">Cancel Order</button>

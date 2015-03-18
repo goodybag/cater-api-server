@@ -1,3 +1,4 @@
 module.exports = {
-  restaurants: require('./restaurants')
+  invoices: require('./invoices')
+, restaurants: require('./restaurants')
 };

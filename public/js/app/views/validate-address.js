@@ -50,7 +50,6 @@ define( function( require, exports, module ){
     }
 
   , renderState: function(){
-      console.log('render', this._state, this.getStateSymbol());
       this.$wrapper
         .removeClass( this.states.join(' ') )
         .addClass( this._state )
@@ -62,8 +61,6 @@ define( function( require, exports, module ){
 
   , validateAddress: function( address, callback ){
       callback = callback || utils.noop;
-
-      console.log('validating', address);
 
       api.maps.validateAddress( address, function( error, result ){
         if ( error ){

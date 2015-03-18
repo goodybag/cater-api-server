@@ -1800,7 +1800,6 @@ module.exports.register = function(app) {
   app.put('/api/restaurants/:id'
   , m.restrict(['admin'])
   , m.param('id')
-  , m.validateAddress()
   , m.update( db.restaurants )
   );
 
@@ -1881,7 +1880,6 @@ module.exports.register = function(app) {
 
   app.post('/api/restaurants/:restaurant_id/locations'
   , m.queryToBody('restaurant_id')
-  , m.validateAddress()
   , m.insert( db.restaurant_locations )
   );
 
@@ -1894,7 +1892,6 @@ module.exports.register = function(app) {
   app.put('/api/restaurants/:restaurant_id/locations/:id'
   , m.param('id')
   , m.param('restaurant_id')
-  , m.validateAddress()
   , m.update( db.restaurant_locations )
   );
 

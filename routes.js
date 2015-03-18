@@ -197,6 +197,15 @@ module.exports.register = function(app) {
     );
 
     /**
+    * Widgets
+    */
+    app.get('/admin/widgets'
+    , m.view('admin/widgets/index', {
+        layout: 'admin/layout2'
+      })
+    );
+
+    /**
      * Restaurant Plans
      */
 

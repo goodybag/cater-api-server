@@ -9,7 +9,10 @@ define(function(require){
   api.restaurants = api('restaurants');
 
   api.maps        = api('maps');
-  api.maps.validateAddress = api.maps('address-validity');
+
+  api.maps.validateAddress = function( address, callback ){
+    api.maps('address-validity').get( address, callback );
+  };
 
   api.legacy      = resource( config.baseUrl );
 

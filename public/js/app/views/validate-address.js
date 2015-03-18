@@ -44,8 +44,8 @@ define( function( require, exports, module ){
   , getStateSymbol: function(){
       return ({
         pending:  '…'
-      , error:    'x'
-      , success:  '✓'
+      , error:    '<span class="gb-icon-x-mark"></span>'
+      , success:  '<span class="gb-icon-checkmark"></span>'
       })[ this._state ];
     }
 

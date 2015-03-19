@@ -10,80 +10,57 @@
 {{/extend}}
 
 {{#extend "body"}}
-
-<!-- TODO: add styles -->
-<nav>
-  <ol class="inline-list">
-    <li class="active">Basic Info</li>
-    <li class="">Restaurant Info</li>
-    <li class="">Delivery + Pickup</li>
-    <li class="">Payments</li>
-  </ol>
-</nav>
-
-<!-- TODO: move to basic-info partial -->
-<div id="basic-info">
-  <div>
-    <h1>Start feeding offices</h1>
-    <p>Get exposure to hundreds of offices and new customers.</p>
-  </div>
+<div id="restaurant-join">
+  <!-- TODO: add styles -->
+  <nav>
+    <ol class="inline-list">
+      <li class="active">Basic Info</li>
+      <li class="">Restaurant Info</li>
+      <li class="">Delivery + Pickup</li>
+      <li class="">Payments</li>
+    </ol>
+  </nav>
 
   <form class="form-vertical form-restaurant-signup">
-    <div class="form-group">
-      <label for="name">Your Name</label>
-      <input type="text" name="name" id="name">
+    <div class="form-step" data-step="1">
+      <div id="basic-info">
+        <div>
+          <h1>Start feeding offices</h1>
+          <p>Get exposure to hundreds of offices and new customers.</p>
+        </div>
+      </div>
+      {{> landing_restaurant_basic_info}}
     </div>
-    <div class="form-group">
-      <label for="number">Your Number</label>
-      <input type="text" name="number" id="number">
+    <div class="form-step hide" data-step="2">
+      <h3>step 2</h3>
     </div>
-    <div class="form-group">
-      <label for="email">Your Email</label>
-      <input type="text" name="email" id="email">
+    <div class="form-step hide" data-step="3">
+      <h3>step 3</h3>
     </div>
-    <div class="form-group">
-      <label for="restaurant_name">Restaurant Name</label>
-      <input type="text" name="restaurant_name" id="restaurant-name">
+    <div class="form-step hide" data-step="4">
+      <h3>step 4</h3>
     </div>
+
     <div class="form-group">
-      <label for="website">Restaurant Website</label>
-      <input type="text" name="website" id="website">
-    </div>
-    <div class="form-group">
-      <label for="delivery_type">Which can you provide?</label>
-      <ul class="inline-list">
-        <li>
-          <label>Delivery</label>
-          <input type="checkbox">
-        </li>
-        <li>
-          <label>Pickup</label>
-          <input type="checkbox">
-        </li>
-        <li>
-          <label>Both</label>
-          <input type="checkbox">
-        </li>
-      </ul>
-    </div>
-    <div class="form-group">
-      <button class="btn btn-default">Continue ></button>
+      <button type="submit" class="btn btn-default btn-continue">Continue ></button>
     </div>
   </form>
-</div>
 
+</div>
 {{/extend}}
 
-{{#extend "script"}}
+{{#extend "scripts"}}
 <script>
 require([
-  'app/pages/restaurant-signup'
-  'app/models/restaurant'
+  'app/views/restaurant/join'
+, 'app/models/restaurant'
 ], 
-function ( page, Restaurant ){
-  page.init({
-    restaurant: new Restaurant()
-  , tab: ''
+function ( JoinView, Restaurant ){
+
+  var joinView = new JoinView({
+    el: '#restaurant-join'
+  , model: new Restaurant()
+  , steps: 4
   });
 });
 </script>

@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, stripe: require('./configs/stripe')
 , intercom: require('./configs/intercom')
 , yelp: require('./configs/yelp')
 , popularity: require('./configs/popularity')

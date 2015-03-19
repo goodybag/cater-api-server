@@ -5,7 +5,7 @@
     $<input type="text" name="delivery_fee">
   </div>
   <div class="form-group">
-    <label for="delivery_lead_time">Delivery Lead Times</label>
+    <h4>Delivery Lead Times</h4>
     <p>
       The time you need to prepare and deliver an order for a given number
       of guests. Below are the lead times we recommend for our restaurants.
@@ -13,54 +13,19 @@
       <strong>Cancel Time</strong> is the ammount of notice needed if someone
       wants to cancel their order with you.
     </p>
+    <h4>Default Lead Times</h4>
+    {{> landing_default_lead_time_table}}
     <div class="form-group">
-      <h4>Default Lead Times</h4>
-      <table class="table">
-        <thead>
-          <tr>
-            <td>Max. Guests</td>
-            <td>Lead Time</td>
-            <td>Cancel Time</td>
-          </tr> 
-        </thead>
-        <tbody>
-          <tr>
-            <td>25</td>
-            <td>3 hrs</td>
-            <td>2 hrs</td>
-          </tr>
-          <tr>
-            <td>50</td>
-            <td>12 hrs</td>
-            <td>6 hrs</td>
-          </tr> 
-          <tr>
-            <td>100</td>
-            <td>18 hrs</td>
-            <td>12 hrs</td>
-          </tr>
-          <tr>
-            <td>250</td>
-            <td>24 hrs</td>
-            <td>18 hrs</td>
-          </tr>
-          <tr>
-            <td>2000</td>
-            <td>72 hrs</td>
-            <td>72 hrs</td>
-          </tr>
-        </tbody>
-      </table>
       <ol class="inline-list">
         <li>
-          <label for="default_lead_times">
-            <input type="radio" name="default_lead_times">
+          <label for="delivery_lead_times">
+            <input type="radio" name="delivery_lead_times">
             Use default lead times
           </label>
         </li>
         <li>
-          <label for="default_lead_times">
-            <input type="radio" name="default_lead_times">
+          <label for="delivery_lead_times">
+            <input type="radio" name="delivery_lead_times">
             Customize my lead times
           </label>
         </li>

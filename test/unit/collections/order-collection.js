@@ -20,7 +20,7 @@ var sortedBy = function(list, prop) {
   return check.sorted;
 };
 
-describe.only('orders collection', function() {
+describe('orders collection', function() {
   var restaurant = { region: {} };
 
   describe('sorting', function() {

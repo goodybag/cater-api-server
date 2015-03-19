@@ -38,7 +38,7 @@ define(function (require, exports, module) {
       this.step++;
 
       if (this.step > this.options.steps - 1) {
-        this.$el.find('.btn-continue').text('submit');
+        this.$el.find('.btn-continue').text('Save and Finish >');
       }
       return this;
     }

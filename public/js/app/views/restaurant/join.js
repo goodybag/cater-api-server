@@ -25,6 +25,10 @@ define(function (require, exports, module) {
         return;
       }
 
+      this.nextView();
+
+    }
+  , nextView: function () {
       this.$current = this.getStep( this.step );
       this.$next = this.getStep( this.step + 1 );
       this.$steps = this.$el.find('.form-step');
@@ -32,6 +36,11 @@ define(function (require, exports, module) {
       this.$steps.addClass('hide');
       this.$next.removeClass('hide')
       this.step++;
+
+      if (this.step > this.options.steps - 1) {
+        this.$el.find('.btn-continue').text('submit');
+      }
+      return this;
     }
   });
 });

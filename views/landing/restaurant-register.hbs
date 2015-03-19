@@ -6,18 +6,34 @@
     margin: 0 auto;
     max-width: 500px;
   }
+  .restaurant-join nav {
+    margin: 0 auto;
+    width: 50%;
+  }
+  .restaurant-join .tabs li {
+    background-color: #fafafa;
+    margin: -3px;
+    padding: 0;
+    border: 1px solid #ddd;
+    height: 60px;
+    width: 150px;
+    border-radius: 3px;
+  }
+  .restaurant-join .tabs .active {
+    background-color: #eee;
+  }
 </style>
 {{/extend}}
 
 {{#extend "body"}}
-<div id="restaurant-join">
+<div id="restaurant-join" class="restaurant-join">
   <!-- TODO: add styles -->
   <nav>
-    <ol class="inline-list">
+    <ol class="inline-list tabs">
       <li class="active">Basic Info</li>
-      <li class="">Restaurant Info</li>
-      <li class="">Delivery + Pickup</li>
-      <li class="">Payments</li>
+      <li>Restaurant Info</li>
+      <li>Delivery + Pickup</li>
+      <li>Payments</li>
     </ol>
   </nav>
 

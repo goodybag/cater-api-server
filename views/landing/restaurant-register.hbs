@@ -38,26 +38,14 @@
 
   <form class="form-vertical form-restaurant-signup">
     <div class="form-step hide" data-step="1">
-      <div id="basic-info">
-        <div>
-          <h2>Start feeding offices</h2>
-          <p>Get exposure to hundreds of offices and new customers.</p>
-        </div>
-      </div>
       {{> landing_restaurant_basic_info}}
     </div>
-    <div class="form-step" data-step="2">
-      <div id="restaurant-info">
-        <h3>Restaurant Info</h3>
+    <div class="form-step hide" data-step="2">
         {{> landing_restaurant_info}}
-      </div>
-      <div id="restaurant-order-contact-info">
-        <h3>Order Contact Info</h3>
         {{> landing_restaurant_order_contact_info}}
-      </div>
     </div>
-    <div class="form-step hide" data-step="3">
-      <h3>step 3</h3>
+    <div class="form-step" data-step="3">
+        {{> landing_restaurant_delivery_info}}
     </div>
     <div class="form-step hide" data-step="4">
       <h3>step 4</h3>

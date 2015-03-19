@@ -27,7 +27,6 @@
 
 {{#extend "body"}}
 <div id="restaurant-join" class="restaurant-join">
-  <!-- TODO: add styles -->
   <nav>
     <ol class="inline-list tabs">
       <li class="active">Basic Info</li>
@@ -38,17 +37,20 @@
   </nav>
 
   <form class="form-vertical form-restaurant-signup">
-    <div class="form-step" data-step="1">
+    <div class="form-step hide" data-step="1">
       <div id="basic-info">
         <div>
-          <h1>Start feeding offices</h1>
+          <h2>Start feeding offices</h2>
           <p>Get exposure to hundreds of offices and new customers.</p>
         </div>
       </div>
       {{> landing_restaurant_basic_info}}
     </div>
-    <div class="form-step hide" data-step="2">
-      <h3>step 2</h3>
+    <div class="form-step" data-step="2">
+      <div id="restaurant-info">
+        <h3>Restaurant Info</h3>
+        {{> landing_restaurant_info}}
+      </div>
     </div>
     <div class="form-step hide" data-step="3">
       <h3>step 3</h3>

@@ -46,7 +46,7 @@ function(UpcomingOrdersView, Orders){
   var view = new UpcomingOrdersView({
     el: '.table-upcoming'
   , endpoint: '/api/upcoming'
-  , orders: new Orders({{{json orders}}}, { comparator: 'datetime' })
+  , orders: new Orders({{{json orders}}}, { comparator: 'datetime', ignoreOrderTypeInit: true })
   });
 });
 </script>

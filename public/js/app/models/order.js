@@ -225,7 +225,9 @@ define(function(require, exports, module) {
 
       this.on( fieldsThatShouldPromptCourierCheck, this.updateOrderType, this);
 
-      this.updateOrderType();
+      if ( !options.ignoreOrderTypeInit) {
+        this.updateOrderType();
+      }
 
       this.on('change:amenities_total', this.updateSubtotal);
 

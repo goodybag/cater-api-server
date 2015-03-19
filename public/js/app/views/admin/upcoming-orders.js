@@ -36,7 +36,9 @@ define(function(require){
     },
 
     update: function(orders) {
-      this.options.orders.reset(orders);
+      // When resetting, do not check if order needs to be courier or delivery
+      // i.e. the order type at initialization should not change
+      this.options.orders.reset(orders, { ignoreOrderTypeInit: true });
       this.render();
 
       return this;

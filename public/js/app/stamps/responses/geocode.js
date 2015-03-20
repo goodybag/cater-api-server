@@ -50,10 +50,10 @@ define( function( require, exports, module ){
         //       return this.requestAddress
         //     });
         //   }
-        ].reduce( function( a, b ){
-          if ( !a ) return false;
+        ].reduce( function( isValid, fn ){
+          if ( !isValid ) return false;
 
-          return a && b.call( this );
+          return isValid && fn.call( this );
         }.bind( this ), true );
       }
     });

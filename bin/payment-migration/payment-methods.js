@@ -39,17 +39,15 @@ q.drain = function drained() {
 // 1. look up balanced payment method
 // 2. db update payment_method with balanced customer metadata stripe_customer.funding_instrument.id
 function migratePaymentMethod(pm, callback) {
-  // utils.balanced.Customers.get(user.balanced_customer_uri, function(err, customer){
-  //   if ( err )
-  //     return logger.error('Unable to get balanced customer ' + user.balanced_customer_uri, err);
-  //
-  //   if ( !customer.meta['stripe.customer_id'] )
-  //     return logger.error('Unable to associate stripe metadata', err);
-  //
-  //   db.users.update({ id: user.id }, { stripe_id: customer.meta['stripe.customer_id'] }, { returning: ['*'] }, function(err) {
-  //     logger.info('User #' + user.id  + ' Balanced URI: ' + user.balanced_customer_uri + ' -> Stripe: ' + customer.meta['stripe.customer_id']);
-  //     callback(err, user);
-  //   });
-  // });
-  callback(null);
+  utils.balanced.Cards.get(pm.uri, function(err, card) {
+    if ( err )
+      return logger.error('Unable to get balanced card ' + pm.uri, err);
+
+    if ( !card.meta['stripe_customer.funding_instrument.id'] )
+      return logger.error('Unable to associate stripe metadata ', err);
+
+      // TODO add new test card and associate stripe
+
+    callback(null);
+  });
 };

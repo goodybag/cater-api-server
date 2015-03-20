@@ -1,6 +1,4 @@
 var db = require('db');
-var config = require('config');
-var stripe = require('stripe')(config.stripe.secret);
 var logger = require('./logger').create('User Setup');
 var utils = require('utils');
 var concurrency = 5;
@@ -22,7 +20,10 @@ db.users.find($query, function(err, users) {
 });
 
 var q = utils.async.queue(migrateUser, concurrency);
-q.drain = function drained() { logger.info('Migration Queue Drained'); }
+q.drain = function drained() {
+  logger.info('Migration Queue Drained');
+  process.exit();
+}
 
 // 1. look up balanced customer by user.balanced_customer_uri
 // 2. db update users.stripe_id with balanced customer metadata stripe.customer_id

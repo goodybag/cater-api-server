@@ -21,6 +21,7 @@ module.exports.get = function(req, res) {
   });
 }
 
+// deprecated by models/user#create
 module.exports.create = function(req, res) {
   var flow = {
     encrypt: function(callback) {

@@ -17,11 +17,11 @@ define( function( require, exports, module ){
   , states:   ['pending', 'error', 'success']
   , initialize: function( options ){
       this.options = utils.defaults( options || {}, {
-
+        inputDebounceInterval: 260
       });
 
-      this.$el.bind(
-        'input', _.debounce( this.onChange.bind( this ), 260 )
+      this.$el.on(
+        'input', _.debounce( this.onChange.bind( this ), this.options.inputDebounceInterval )
       );
 
       this.$wrapper = this.$el.closest('.form-group');

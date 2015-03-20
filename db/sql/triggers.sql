@@ -75,3 +75,11 @@ create trigger on_restaurant_name_change
     on restaurants
     for each row
     execute procedure on_restaurant_name_change();
+
+
+drop trigger if exists on_orders_change on orders;
+create trigger audit
+  after update
+  on orders
+  for each row
+  execute procedure audit_orders();

@@ -4,6 +4,16 @@
 -- Event Handlers --
 --------------------
 
+
+create or replace function audit_orders()
+  returns trigger as $$
+begin
+  INSERT INTO audit_orders(before, after)
+       SELECT hstore(old), hstore(new);
+  return new;
+end;
+$$ language plpgsql;
+
 create or replace function on_restaurant_name_change()
 returns trigger as $$
 begin

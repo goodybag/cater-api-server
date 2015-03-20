@@ -6,18 +6,24 @@ var concurrency = 5;
 logger.info('Mapping balanced uri to stripe ids');
 
 var $query = {
-
+  $null: { 'payment_methods.stripe_id': true }
 };
 
 var $options = {
-  // join payment_methods
-  // payment_methods.stripe = $null
+  joins: [
+    { type: 'left'
+    , target: 'payment_methods'
+    , on: { id: '$users_payment_methods.payment_method_id$'}
+    }
+  ]
+, columns: [ { expression: '*' } ]
 };
 
-db.users_payment_methods.find($query, function(err, pms) {
+db.users_payment_methods.find($query, $options, function(err, pms) {
   if ( err ) return logger.error('Unable to find user payment methods', err);
   if ( !pms.length ) return logger.info('No remaining payment methods to migrate');
 
+  logger.info(pms.length + ' cards to update..');
   q.push(pms, function completed(err, paymentMethod) {
     if (err) return logger.error('Unable to migrate payment method', err);
   });
@@ -32,7 +38,7 @@ q.drain = function drained() {
 
 // 1. look up balanced payment method
 // 2. db update payment_method with balanced customer metadata stripe_customer.funding_instrument.id
-function migratePaymentMethod(user, callback) {
+function migratePaymentMethod(pm, callback) {
   // utils.balanced.Customers.get(user.balanced_customer_uri, function(err, customer){
   //   if ( err )
   //     return logger.error('Unable to get balanced customer ' + user.balanced_customer_uri, err);

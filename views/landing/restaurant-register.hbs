@@ -4,18 +4,18 @@
 <div id="restaurant-join" class="restaurant-join container">
   <nav>
     <ol class="inline-list tabs">
-      <li class="active">Basic Info</li>
-      <li>Restaurant Info</li>
-      <li>Delivery + Pickup</li>
-      <li>Payments</li>
+      <li class="active"><span>1</span> Basic Info</li>
+      <li><span>2</span> Restaurant Info</li>
+      <li><span>3</span> Delivery + Pickup</li>
+      <li><span>4</span> Payments</li>
     </ol>
   </nav>
 
   <form class="form-vertical form-restaurant-signup">
-    <div class="form-step hide" data-step="1">
+    <div class="form-step" data-step="1">
       {{> landing_restaurant_basic_info}}
     </div>
-    <div class="form-step hide" data-step="2">
+    <div class="form-step" data-step="2">
         {{> landing_restaurant_info}}
         {{> landing_restaurant_order_contact_info}}
     </div>
@@ -25,7 +25,7 @@
         {{> landing_restaurant_hours_of_operation}}
 
     </div>
-    <div class="form-step hide" data-step="4">
+    <div class="form-step" data-step="4">
         {{> landing_restaurant_billing_address}}
         {{> landing_restaurant_direct_deposit_info}}
         {{> landing_restaurant_fee_schedule}}

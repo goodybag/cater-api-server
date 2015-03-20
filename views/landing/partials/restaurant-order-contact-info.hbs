@@ -1,34 +1,38 @@
-<div id="restaurant-order-contact-info">
-  <h3>Order Contact Info</h3>
-  <p>
-    When your restaurant receives a new order through Goodybag, 
-    you will be automatically notified via text, email, and phone
-    call. If the order isn't accepted within an hour, we will try
-    contacting you directly. Please note that the more contacts you
-    enter, the better chances we have of getting in touch.
-  </p>
-  <div class="contact-group">
-    <h3>MAIN CONTACT</h3>
-    <hr>
-    <div class="form-group">
-      <label for="contact_name">Contact Name</label>
-      <input type="text" name="contact_name">
-      <span>When you receive an order, this person will be notified</span>
-    </div>
-    <div class="form-group">
-      <label for="contact_number">Contact Number</label>
-      <input type="text" name="contact_number">
-      <span>When you receive an order, this number will be called and
-        texted (if it's a cellular number).</span>
-    </div>
-    <div class="form-group">
-      <label for="contact_email">Contact Email</label>
-      <input type="text" name="contact_email">
-      <span>When you receive an order, we will send an email here.</span>
-    </div>
+<div class="panel">
+  <div class="panel-head">
+    <h3 class="panel-title">Order Contact Info</h3>
   </div>
-  <div>
-    <button class="btn-add-contact">+ Add Contact</button>
-    <p>You can add more contacts at any point in the future</p>
+  <div class="panel-body">
+    <p>
+      When your restaurant receives a new order through Goodybag, 
+      you will be automatically notified via text, email, and phone
+      call. If the order isn't accepted within an hour, we will try
+      contacting you directly. Please note that the more contacts you
+      enter, the better chances we have of getting in touch.
+    </p>
+    <div class="contact-group">
+      <h4 class="panel-subtitle">MAIN CONTACT</h4>
+      <hr>
+      <div class="form-group">
+        <label class="label-left">Contact Name</label>
+        <input type="text" class="form-control" name="contact_name">
+        <p class="panel-info">When you receive an order, this person will be notified</p>
+      </div>
+      <div class="form-group">
+        <label class="label-left">Contact Number</label>
+        <input type="text" class="form-control" name="contact_number">
+        <p class="panel-info">When you receive an order, this number will be called and
+          texted (if it's a cellular number).</p>
+      </div>
+      <div class="form-group">
+        <label class="label-left">Contact Email</label>
+        <input type="text" class="form-control" name="contact_email">
+        <p class="panel-info">When you receive an order, we will send an email here.</p>
+      </div>
+    </div>
+    <div>
+      <button class="btn btn-default btn-add-contact">+ Add Contact</button>
+      <p class="panel-info">You can add more contacts at any point in the future</p>
+    </div>
   </div>
 </div>

@@ -1,17 +1,30 @@
 @restaurant-join-border: 2px solid @palette-gray-light;
 
 .restaurant-join {
+  color: @palette-gray-dark;
+
   label {
     display: inline;
     font-size: 14px;
   }
+  .label-left {
+    width: 170px;
+    float: left;
+    clear: left;
+    text-align: right;
+    margin-right: 23px;
+  }
   p { margin: 0; }
 
-  input.form-text-input {
+  input.form-control {
     max-width: 500px;
-    border: 2px solid #ccc;
+    border: 1px solid @palette-gray-light;
     display: inline-block;
   }
+
+  dd { margin-bottom: 15px;}
+
+  .col { float: left; }
 
   .form-restaurant-signup {
     margin: 0 auto;
@@ -43,8 +56,8 @@
     padding: 0;
     border: @restaurant-join-border;
     border-radius: 2px;
-    color: @palette-gray-dark;
     margin-bottom: 26px;
+    min-width: 100%;
   }
 
   .panel-head {
@@ -72,5 +85,51 @@
 
   .panel-body {
       padding: 30px 45px 30px 45px;
+  }
+
+  /* Lead Time */
+  @media (min-width: 40rem) {
+    .lead-time {
+      .col-remove {
+        float: left;
+        margin: 0 10px;
+        line-height: 59px;
+      }
+
+      .col-guests {
+        float: left;
+        margin: 0 10px;
+        width: 10%;
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+
+      .col-time {
+        float: left;
+        margin: 0 10px;
+        width: 10%;
+      }
+
+      .remove-lead-time {
+        vertical-align: bottom;
+      }
+    }
+  }
+
+  /* Tabs */
+  .tabs {
+    text-align: center;
+    text-transform: uppercase;
+    color: @palette-gray;
+    font-weight: 800;
+    margin-bottom: 40px;
+  }
+
+  .tabs li {
+    border: 2px solid #ccc;
+    padding: 19px 48px;
+    margin: -3px;
+    border-radius: 3px;
   }
 }

@@ -1,0 +1,76 @@
+@restaurant-join-border: 2px solid @palette-gray-light;
+
+.restaurant-join {
+  label {
+    display: inline;
+    font-size: 14px;
+  }
+  p { margin: 0; }
+
+  input.form-text-input {
+    max-width: 500px;
+    border: 2px solid #ccc;
+    display: inline-block;
+  }
+
+  .form-restaurant-signup {
+    margin: 0 auto;
+  }
+
+  .table {
+    margin: 0 auto;
+    max-width: 330px;
+    border: @restaurant-join-border;
+    border-radius: 2px;
+
+    td{
+      border: none;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+    thead { border-bottom: @restaurant-join-border; }
+    thead td { font-weight: 800; }
+  }
+
+  .table-title {
+    text-align: center;
+    margin: 0;
+    font-weight: 800;
+  }
+
+  /* Panel */
+  .panel {
+    padding: 0;
+    border: @restaurant-join-border;
+    border-radius: 2px;
+    color: @palette-gray-dark;
+    margin-bottom: 26px;
+  }
+
+  .panel-head {
+    margin: 0;
+    padding: 17px;
+    background-color: @palette-gray-lighter;
+    border-bottom: @restaurant-join-border;
+  }
+
+  .panel-title {
+    margin: 0;
+    padding: 0;
+    font-weight: 800;
+    font-size: 1.2em;
+  }
+
+  .panel-subtitle {
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .panel-info {
+    color: @palette-gray;
+  }
+
+  .panel-body {
+      padding: 30px 45px 30px 45px;
+  }
+}

@@ -1,35 +1,44 @@
-<div>
-  <h2>Delivery Info</h2>
-  <div class="form-group">
-    <label for="delivery_fee">Delivery Fee</label>
-    $<input type="text" name="delivery_fee">
+<div class="panel">
+  <div class="panel-head">
+    <h2 class="panel-title">Delivery Info</h2>
   </div>
-  <div class="form-group">
-    <h4>Delivery Lead Times</h4>
-    <p>
-      The time you need to prepare and deliver an order for a given number
-      of guests. Below are the lead times we recommend for our restaurants.
-      The smaller the lead time, the more orders you can receive.
-      <strong>Cancel Time</strong> is the ammount of notice needed if someone
-      wants to cancel their order with you.
-    </p>
-    <h4>Default Lead Times</h4>
-    {{> landing_default_lead_time_table}}
+  <div class="panel-body">
     <div class="form-group">
-      <ol class="inline-list">
-        <li>
-          <label for="delivery_lead_times">
-            <input type="radio" name="delivery_lead_times">
-            Use default lead times
-          </label>
-        </li>
-        <li>
-          <label for="delivery_lead_times">
-            <input type="radio" name="delivery_lead_times">
-            Customize my lead times
-          </label>
-        </li>
-      </ol>
+      <label for="delivery_fee">Delivery Fee</label>
+      <span>$</span>
+      <input type="text" class="form-text-input" name="delivery_fee">
+    </div>
+    <div class="form-group">
+
+      <h4 class="panel-subtitle">Delivery Lead Times</h4>
+      <div class="panel-info">
+        <p>
+          The time you need to prepare and deliver an order for a given number
+          of guests. Below are the lead times we recommend for our restaurants.
+          The smaller the lead time, the more orders you can receive.
+          <strong>Cancel Time</strong> is the ammount of notice needed if someone
+          wants to cancel their order with you.
+        </p>
+        <h4 class="table-title">Default Lead Times</h4>
+        {{> landing_default_lead_time_table}}
+      </div>
+
+      <div class="form-group">
+        <ol class="inline-list">
+          <li>
+            <label for="delivery_lead_times">
+              <input type="radio" name="delivery_lead_times">
+              Use default lead times
+            </label>
+          </li>
+          <li>
+            <label for="delivery_lead_times">
+              <input type="radio" name="delivery_lead_times">
+              Customize my lead times
+            </label>
+          </li>
+        </ol>
+      </div>
     </div>
   </div>
 </div>

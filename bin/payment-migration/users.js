@@ -30,7 +30,7 @@ function migrateUser(user, callback) {
   utils.balanced.Customers.get(user.balanced_customer_uri, function(err, customer){
     if (err) return logger.error('Unable to get balanced customer ' + user.balanced_customer_uri, err);
 
-    logger.info('Mapped Balanced: ' + user.balanced_customer_uri + ' -> Stripe: ' + customer.meta.stripe.id);
+    logger.info('Mapped Balanced: ' + user.balanced_customer_uri + ' -> Stripe: ' + customer.meta.stripe.customer_id);
     callback(null, user);
   });
 };

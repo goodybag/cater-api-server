@@ -14,10 +14,10 @@ var $query = {
 
 db.users.find($query, function(err, users) {
   if ( err ) return logger.error('Unable to find users', err);
+  if ( !users.length ) return logger.info('No remaining balanced users to migrate');
 
   q.push(users, function completed(err, user) {
     if (err) return logger.error('Unable to migrate customers', err);
-    logger.info('Migrated customer #' + user.id);
   });
 });
 
@@ -28,9 +28,15 @@ q.drain = function drained() { logger.info('Migration Queue Drained'); }
 // 2. db update users.stripe_id with balanced customer metadata stripe.customer_id
 function migrateUser(user, callback) {
   utils.balanced.Customers.get(user.balanced_customer_uri, function(err, customer){
-    if (err) return logger.error('Unable to get balanced customer ' + user.balanced_customer_uri, err);
+    if ( err )
+      return logger.error('Unable to get balanced customer ' + user.balanced_customer_uri, err);
 
-    logger.info('Mapped Balanced: ' + user.balanced_customer_uri + ' -> Stripe: ' + customer.meta.stripe.customer_id);
-    callback(null, user);
+    if ( !customer.meta['stripe.customer_id'] )
+      return logger.error('Unable to associate stripe metadata', err);
+
+    db.users.update({ id: user.id }, { stripe_id: customer.meta['stripe.customer_id'] }, { returning: ['*'] }, function(err) {
+      logger.info('User #' + user.id  + ' Balanced URI: ' + user.balanced_customer_uri + ' -> Stripe: ' + customer.meta['stripe.customer_id']);
+      callback(err, user);
+    });
   });
 };

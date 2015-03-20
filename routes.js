@@ -2483,4 +2483,12 @@ module.exports.register = function(app) {
   , m.param('id')
   , m.remove( db.restaurant_plans )
   );
+
+  /**
+   * Address verification
+   */
+
+  app.get('/api/maps/address-validity/:address'
+  , controllers.api.maps.addressValidity
+  );
 }

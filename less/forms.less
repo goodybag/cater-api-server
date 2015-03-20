@@ -159,11 +159,19 @@ input.input-borderless {
 }
 
 .has-error .control-label,
-[name].has-error {
+[name].has-error,
+.error .control-label,
+.has-error .input-addon,
+.error .input-addon,
+[name].error {
   color: @brand-primary;
 }
 
 .has-error .form-control,
+.error .form-control,
+.has-error .input-addon,
+.error .input-addon,
+[name].error,
 [name].has-error {
   border-color: @brand-primary;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);

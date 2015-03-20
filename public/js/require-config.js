@@ -142,6 +142,9 @@
     , 'jquery.placeholder': {
         deps: ['jquery']
       }
+    , 'jquery.appear': {
+        deps: ['jquery']
+      }
     // , partials: {
     //     deps: ['hbs']
     //   }

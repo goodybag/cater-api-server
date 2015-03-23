@@ -39,7 +39,9 @@
 </div>
 
 {{#extend "scripts"}}
+{{!-- todo remove balanced --}}
 <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
 <script>
   require([
@@ -48,6 +50,7 @@
     , 'app/models/user'
     ]
   , function(cards, Models, User) {
+      Stripe.setPublishableKey('{{{config.stripe.public}}}');
       cards.init({
         user: new User( {{{json user}}} )
       , marketplaceUri: "{{{config.balanced.marketplaceUri}}}"

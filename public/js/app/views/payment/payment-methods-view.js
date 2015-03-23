@@ -11,7 +11,7 @@ define(function(require, exports, module) {
     events: {
       'click .btn-add-card':                          'submit',
       'click .btn-remove-card':                       'showRemoveCardModal',
-      'input input[name="card_number"]':              'onCardNumberChange'
+      'input input[data-stripe="number"]':              'onCardNumberChange'
     },
 
     initialize: function() {
@@ -58,7 +58,7 @@ define(function(require, exports, module) {
       };
 
       var $newCard = this.$el.find('#new-card');
-      var $cardNumber = $newCard.find('input[name="card_number"]');
+      var $cardNumber = $newCard.find('input[data-stripe="number"]');
       var $postalCode = $newCard.find('input[name="postal_code"]');
       var cardNumber = $cardNumber.val();
 
@@ -213,11 +213,11 @@ define(function(require, exports, module) {
       var paymentId = options.paymentId || undefined;
 
       var data = {
-        card_name:         $el.find('[name="card_name"]').val()
-      , card_number:       $el.find('[name="card_number"]').inputmask('unmaskedvalue')
-      , security_code:     $el.find('[name="security_code"]').val()
-      , expiration_month: +$el.find('[name="expiration_month"]').val()
-      , expiration_year:  +$el.find('[name="expiration_year"]').val()
+        card_name:         $el.find('[data-stripe="name"]').val()
+      , card_number:       $el.find('[data-stripe="number"]').inputmask('unmaskedvalue')
+      , security_code:     $el.find('[data-stripe="cvc"]').val()
+      , expiration_month: +$el.find('[data-stripe="exp-month"]').val()
+      , expiration_year:  +$el.find('[data-stripe="exp-year"]').val()
       , save_card:         options.saveCard || false
       };
 
@@ -229,10 +229,7 @@ define(function(require, exports, module) {
         , data);
       }
 
-      var pm = new PaymentMethod({ user_id: userId, id: paymentId });
-      pm.updateBalancedAndSave(data, function (errors) {
-        callback(errors, pm);
-      });
+      Stripe.card.createToken($el, this.stripeResponseHandler.bind(this, userId));
     },
 
     saveNewCardAndSubmit: function(e) {
@@ -250,5 +247,22 @@ define(function(require, exports, module) {
         return window.location.reload();
       });
     },
+
+    stripeResponseHandler: function(userId, status, response) {
+      var pm = new PaymentMethod({
+        data: response.card
+      , user_id: userId
+      , stripe_id: response.card.id
+      });
+
+      pm.save({
+        success: function() {
+          console.log('success');
+        }
+      , error: function() {
+          console.log('failure');
+        }
+      });
+    }
   });
 });

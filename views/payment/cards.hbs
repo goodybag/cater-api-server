@@ -20,13 +20,13 @@
           <li class="list-group-item">
             <div id="add-payment-method">
               <h3>Add Credit Card</h3>
-              <div id="new-card">
+              <form action="" method="POST" id="new-card">
                 {{> edit_card }}
-              </div>
-              <div class="btn-toolbar">
-                <a class="btn btn-default" href="/users/me/">Back to settings</a>
-                <a class="btn btn-primary btn-add-card" href="/users/me/cards/">Add Credit Card</a>
-              </div>
+                <div class="btn-toolbar">
+                  <a class="btn btn-default" href="/users/me/">Back to settings</a>
+                  <a class="btn btn-primary btn-add-card" href="/users/me/cards/">Add Credit Card</a>
+                </div>
+              </form>
             </div>
           </li>
         </ul>

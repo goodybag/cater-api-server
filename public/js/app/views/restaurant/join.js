@@ -1,11 +1,12 @@
 define(function (require, exports, module) {
   var utils = require('utils');
   var FormView = require('../form-view');
+  var Handlebars = require('handlebars');
 
   return module.exports = FormView.extend({
     events: {
       'click .add-lead-time': 'addLeadTime'
-    , 'click .add-contact'  : 'addContact'
+    , 'click .btn-add-contact'  : 'addContact'
     , 'click .add-hours'    : 'addHours'
     , 'click .btn-continue' : 'saveAndContinue'
     }
@@ -23,7 +24,7 @@ define(function (require, exports, module) {
     }
   , addContact: function (e) {
       if (e) e.preventDefault();
-
+      this.$el.find('.contact-list').append(Handlebars.partials.restaurant_contact_info_fields({}));
     }
   , addHours: function (e) {
       if (e) e.preventDefault();

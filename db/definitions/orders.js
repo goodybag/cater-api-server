@@ -89,6 +89,11 @@ define(function(require) {
       type: types.timestamp
     , nullable: true
     }
+  , promo_code: {
+      type: types.text
+    , nullable: true
+    , editable: ['client', 'admin']
+    }
   , timezone: {
       type: types.timezone
     , nullable: true

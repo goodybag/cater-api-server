@@ -1,0 +1,33 @@
+{{#extend "page"}}page-analytics page-analytics-demand{{/extend}}
+
+{{#extend "body"}}
+
+<div class="container" id="main-container">
+  <div class="page-header">
+    <ul class="breadcrumbs main-breadcrumbs">
+      <li>
+        <a href="/admin">Admin Panel</a>
+      </li>
+      <li>
+        <a href="/admin/analytics">Analytics</a>
+      </li>
+      <li>
+        Demand Metrics
+      </li>
+    </ul>
+  </div>
+</div>
+
+{{> admin_analytics_demand_stats }}
+{{> admin_analytics_demand_orders }}
+
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require(['jquery-loaded'], function($){
+  $('[data-role="popover"]').gb_popover();
+});
+</script>
+{{/extend}}

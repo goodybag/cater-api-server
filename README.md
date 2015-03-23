@@ -10,11 +10,25 @@ __Install Postgres:__
 
 http://postgresapp.com/
 
-Create databases:
+Current version requirement: 9.3 and up
+
+__Install Node.js:__
+
+https://nodejs.org/  v0.10.36
+
+__Create databases:__
 
 ```
 psql -h localhost --command="create database cater"
 psql -h localhost --command="create database cater_test"
+```
+
+__Setup errthing:__
+
+```
+git clone git@github.com:goodybag/cater-api-server.git
+cd cater-api-server
+npm install
 ```
 
 __Setup local config__
@@ -22,10 +36,31 @@ __Setup local config__
 In the root directory there is a file named `local-config.json.sample`, edit
 this file as needed and save it as `local-config.json`
 
+Change the information in `local-config.json`:  
+- change email to your current goodybag email  
+- enter testUserID (this will be provided to you)  
+- you have the option to receive test calls and texts if you change the X's with your phone number 
+
 __Install MongoDB:__
 
 ```
 brew install mongodb
+mongod
+```
+
+If you run into this error after running the last command:
+********************************************************
+ ERROR: dbpath (/data/db) does not exist.
+ Create this directory or give existing directory in --dbpath.
+ See http://dochub.mongodb.org/core/startingandstoppingmongo
+********************************************************
+ 
+ 
+```
+sudo mkdir /data
+sudo mkdir /data/db
+sudo chown <YOUR_USERNAME> /data
+sudo chown <YOUR_USERNAME> /data/db
 mongod
 ```
 
@@ -37,29 +72,24 @@ __Install Heroku Toolbelt__
 heroku login
 ```
 
-__Setup errthing:__
+if you have multiple heroku accounts, checkout https://github.com/ddollar/heroku-accounts
+
+__Watch files, start log server, etc:__
 
 ```
-git clone git@github.com:goodybag/cater-api-server.git
-cd cater-api-server
-npm install
+npm install -g grunt-cli
+grunt
 ```
 
 __Create a balanced config__
 ```
-./bin/create-balanced-config.js
+./bin/create-balanced-configs.js
 ```
 
 __Sync prod data with local:__
 
 ```
 ./bin/prod-to-local
-```
-
-__Watch files, start log server, etc:__
-
-```
-grunt
 ```
 
 __Start server:__

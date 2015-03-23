@@ -79,6 +79,7 @@ module.exports.register = function(app) {
     , threshold:    3
     , mustBeAuthed: true
     })
+  , m.localCookies(['gb_display'])
   , controllers.restaurants.list
   );
 
@@ -138,6 +139,24 @@ module.exports.register = function(app) {
     , m.view( 'admin/query-inspector', { layout: 'admin/layout2' } )
     );
 
+    app.get('/admin/upcoming'
+    , m.getOrders({
+        submittedDate: true
+      , upcoming: true
+      })
+    , m.view('admin/upcoming', { layout: 'admin/layout2' })
+    );
+
+    app.get('/api/upcoming'
+    , m.getOrders({
+        submittedDate: true
+      , upcoming: true
+      })
+    , function(req, res, next) {
+        res.send(res.locals.orders);
+      }
+    );
+
     /**
      * Regions
      */
@@ -157,6 +176,11 @@ module.exports.register = function(app) {
      */
 
     app.get('/admin/kitchen-sink'
+    , m.filters([
+        'regions'
+      , 'restaurant-visibility'
+      , 'restaurant-sort'
+      ])
     , function( req, res, next ){
         require('./lib/parse-palette-from-variables').parse( function( error, palette ){
           if ( error ) return next( error );
@@ -166,6 +190,25 @@ module.exports.register = function(app) {
           next();
         });
       }
+
+    , function( req, res, next ){
+        var not = [ 'white', 'gray-lighter', 'tan' ];
+
+        res.locals.labelTags = res.locals.palette.filter( function( palette ){
+          return not.indexOf( palette.name ) === -1;
+        }).map( function( palette ){
+          return palette.name;
+        }).concat([
+          'pending', 'submitted', 'delivered', 'canceled', 'accepted', 'denied'
+        ]);
+
+        next();
+      }
+
+    , m.db.restaurants.find({ is_hidden: false })
+
+    , m.aliasLocals({ ordersTableRestaurants: 'restaurants' })
+
     , m.view( 'admin/kitchen-sink/index', {
         layout: 'admin/layout2'
       })
@@ -348,7 +391,19 @@ module.exports.register = function(app) {
     );
 
     app.get('/admin/users/:id'
+    , m.redirect('/admin/users/:id/basic-info')
+    );
+
+    app.get('/admin/users/:id/basic-info'
     , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'basic-info'
+      , baseUrl:  '/admin/users/:id'
+      })
+    , m.viewPlugin( 'breadCrumbs', {
+        currentPage: 'Basic Info'
+      })
     , m.queryOptions({
         one: [{ table: 'regions', alias: 'region' }]
       , userGroups: true
@@ -356,7 +411,46 @@ module.exports.register = function(app) {
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.viewPlugin( 'mainNav', { active: 'users' })
     , m.view( 'admin/user/edit', db.users, {
-        layout: 'admin/layout2'
+        layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
+
+    app.get('/admin/users/:id/invoices'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'invoices'
+      , baseUrl:  '/admin/users/:id'
+      })
+    , m.viewPlugin( 'breadCrumbs', {
+        currentPage: 'Invoices'
+      })
+    , m.queryOptions({
+        one:  [ { table: 'regions', alias: 'region' }]
+      , userGroups: true
+      })
+    , function( req, res, next ){
+        var options = {
+          order: ['id desc']
+        };
+
+        var where = {
+          user_id: req.params.id
+        };
+
+        require('stamps/user-invoice').find( where, options, function( error, results ){
+          if ( error ) return next( error );
+
+          res.locals.invoices = results;
+
+          return next();
+        });
+      }
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.viewPlugin( 'mainNav', { active: 'users' })
+    , m.view( 'admin/user/invoices', db.users, {
+        layout: 'admin/layout-single-object'
       , method: 'findOne'
       })
     );
@@ -368,7 +462,7 @@ module.exports.register = function(app) {
     app.get('/admin/restaurants'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.filters([
-        'restaurant-region'
+        'regions'
       , 'restaurant-visibility'
       , 'restaurant-sort'
       ])
@@ -638,7 +732,7 @@ module.exports.register = function(app) {
       , baseUrl:  '/admin/restaurants/:restaurant_id'
       })
     , m.viewPlugin( 'breadCrumbs', {
-        currentPage: 'basic-info'
+        currentPage: 'New Invoice'
       })
     , m.viewPlugin( 'itemForm', {
         selector:           '#edit-item-form'
@@ -1186,6 +1280,23 @@ module.exports.register = function(app) {
   , controllers.orders.notifications.getEmail
   );
 
+  app.get('/orders/:oid/payment'
+  , m.getOrder2({
+      param:                  'oid'
+    , items:                  true
+    , user:                   true
+    , userAddresses:          true
+    , userPaymentMethods:     true
+    , restaurant:             true
+    , deliveryService:        true
+    , restaurantDbModelFind:  true
+    })
+  , controllers.orders.auth
+  , m.view( 'order-payment',{
+
+   })
+  );
+
   /**
    * Reporting resource
    */
@@ -1304,8 +1415,16 @@ module.exports.register = function(app) {
       client: Models.User.ownerWritable
     });
 
-    app.put('/users/:uid', restrictUpdate, controllers.users.update);
-    app.patch('/users/:uid', restrictUpdate, controllers.users.update);
+    app.put('/users/:uid'
+    , restrictUpdate
+    , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+    , controllers.users.update
+    );
+
+    app.patch('/users/:uid'
+    , restrictUpdate
+    , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+    , controllers.users.update);
 
     app.delete('/users/:uid', function(req, res) { res.send(501); });
 
@@ -1340,6 +1459,23 @@ module.exports.register = function(app) {
         return next();
       }
     , m.view( 'user-orders', db.orders )
+    );
+
+    app.get('/users/:uid/orders/receipts'
+    , m.param('uid', function(user_id, $query, options) {
+        $query.where = $query.where || {};
+        $query.where.user_id = user_id;
+      })
+    , m.param('status', 'accepted')
+    , m.sort('-datetime')
+    , m.queryOptions({
+        one:  [ { table: 'restaurants', alias: 'restaurant' }
+              , { table: 'users', alias: 'user' }
+              ]
+      })
+    , m.view('user-receipts', db.orders, {
+        layout: 'layout/default'
+      })
     );
 
     app.all('/users/:uid', function(req, res, next) {
@@ -1478,6 +1614,38 @@ module.exports.register = function(app) {
 
   app.get('/docs/style', m.restrict('admin'), controllers.statics.styleGuide);
 
+  app.get( config.invoice.pdfRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , m.s3({
+      path:   '/' + config.invoice.fileFormat
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.invoice.bucket
+    })
+  );
+
+  app.get(
+    config.invoice.htmlRoute
+  , m.basicAuth()
+  , m.restrict(['admin', 'receipts'])
+  , function( req, res, next ){
+      var invoice = require('stamps/user-invoice').create({
+        id: req.param('id')
+      }).fetch( function( error ){
+        if ( error ) return next( error );
+
+        // So HBS doesn't screw EVERYTHING up
+        res.locals.invoice = invoice.toJSON();
+
+        return next();
+      });
+    }
+  , m.view( 'invoice/invoice', {
+      layout: 'invoice/invoice-layout'
+    })
+  );
+
   app.get('/admin/restaurants/:restaurant_id/orders'
   , function( req, res, next ){
       m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
@@ -1561,6 +1729,42 @@ module.exports.register = function(app) {
     })
   );
 
+
+  app.get('/admin/analytics'
+  , m.restrict(['admin'])
+  , m.getOrders({
+      status: 'accepted'
+    , submittedDate: { ignoreColumn: true }
+    , groupByMonth: true
+    , rename: 'stats'
+    , user: false
+    , restaurant: false
+    , reverse: true
+    })
+  , m.view( 'admin/analytics/index.hbs', {
+      layout: 'admin/layout2'
+    })
+  );
+
+  app.get('/admin/analytics/demand'
+  , m.restrict(['admin'])
+  , m.filters(['regions'])
+  , m.defaultPeriod(['month', 'year'])
+  , m.getOrders({
+      status: 'accepted'
+    , submittedDate: true
+    , order: 'submitted'
+    , getWeek: true
+    , indexBy: 'week'
+    })
+  , m.orderAnalytics.period()
+  , m.orderAnalytics.month()
+  , m.orderAnalytics.week()
+  , m.view( 'admin/analytics/demand', {
+      layout: 'admin/layout2'
+    })
+  );
+
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
   , m.s3({
@@ -1584,7 +1788,7 @@ module.exports.register = function(app) {
               }]
     })
   , m.view( 'invoice/payment-summary', db.payment_summaries, {
-      layout: 'invoice/payment-summary-layout'
+      layout: 'invoice/invoice-layout'
     , method: 'findOne'
     })
   );
@@ -1620,6 +1824,8 @@ module.exports.register = function(app) {
   app.patch('/api/restaurants/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.getRestaurant({ param: 'id' })
+  , m.updateBalancedCustomer({ required: 'restaurant', pick: ['name'] })
   , m.update( db.restaurants )
   );
 
@@ -2074,6 +2280,7 @@ module.exports.register = function(app) {
   app.put('/api/users/:id'
   , m.restrict(['admin'])
   , m.param('id')
+  , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
   , m.update( db.users )
   );
 
@@ -2081,6 +2288,83 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.users )
+  );
+
+  /**
+   * User Invoices
+   */
+
+  app.get('/api/invoices'
+  , m.restrict(['admin'])
+  , m.sort('-id')
+  , m.pagination({ allowLimit: true })
+  , m.param('user_id')
+  , m.param( 'from', function( value, $where, $options ){
+      utils.defaults( $where, {
+        billing_period_start: {}
+      });
+
+      $where.billing_period_start.$gte = value;
+    })
+  , m.param( 'to', function( value, $where, $options ){
+      utils.defaults( $where, {
+        billing_period_end: {}
+      });
+
+      $where.billing_period_end.$lt = value;
+    })
+  , m.find( db.user_invoices )
+  );
+
+  app.post('/api/invoices'
+  , m.restrict(['admin'])
+  , m.insert( db.user_invoices )
+  );
+
+  app.get('/api/invoices/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.sort('-id')
+  , m.queryOptions({
+      one:  [ { table: 'users', alias: 'user' } ]
+    , many: [ { table: 'user_invoice_orders'
+              , alias: 'orders'
+              , mixin: [{ table: 'orders' }]
+              }
+            ]
+    })
+  , m.findOne( db.user_invoices )
+  );
+
+  app.put('/api/invoices/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.update( db.user_invoices )
+  );
+
+  app.delete('/api/invoices/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.user_invoices )
+  );
+
+  app.post('/api/invoices/:id/emails'
+  , m.restrict(['admin'])
+  , controllers.api.invoices.sendEmail
+  );
+
+  app.post('/api/invoices/:user_invoice_id/orders/:order_id'
+  , m.restrict(['admin'])
+  , m.queryToBody('user_invoice_id')
+  , m.queryToBody('order_id')
+  , m.insert( db.user_invoice_orders )
+  );
+
+  app.del('/api/invoices/:user_invoice_id/orders/:order_id'
+  , m.restrict(['admin'])
+  , m.param('user_invoice_id')
+  , m.param('order_id')
+  , m.remove( db.user_invoice_orders )
   );
 
   /**
@@ -2198,5 +2482,13 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.restaurant_plans )
+  );
+
+  /**
+   * Address verification
+   */
+
+  app.get('/api/maps/address-validity/:address'
+  , controllers.api.maps.addressValidity
   );
 }

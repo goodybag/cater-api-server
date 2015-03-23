@@ -1,7 +1,6 @@
 // Map sort queries to order by clause
 module.exports = {
-  'popular':                'popularity DESC'
-, 'name':                   'name ASC'
+  'name':                   'name ASC'
 , 'price':                  'price ASC'
 , 'price desc':             'price DESC'
 , 'order minimum':          'minimum_order ASC NULLS FIRST'

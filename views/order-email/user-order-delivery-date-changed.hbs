@@ -16,9 +16,9 @@
             <h2 style="line-height: 24px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">
               The {{#is order.type 'pickup'}}pickup{{else}}delivery{{/is}} date has changed<br>
               {{#is order.type 'pickup'}}
-              to <strong>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}}</strong>
+              to <strong>{{formatDateTime order.pickup_datetime "MM/DD/YYYY"}} {{join (timeToRange (timepart order.pickup_datetime) "h:mm A") " - "}}</strong>
               {{else}}
-              to <strong>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</strong>
+              to <strong>{{formatDateTime order.datetime "MM/DD/YYYY"}} {{join (timeToRange (timepart order.datetime) "h:mm A") " - "}}</strong>
               {{/is}}
             </h2>
           </td>
@@ -27,7 +27,4 @@
     </td>
   </tr>
 </table>
-
-<p style="padding-left: 10px; padding-right: 10px; font-family: Helvetica, arial, sans-serif; color: #695A42; text-align: left; font-size: 15px;">PLEASE CONFIRM that you have received this email by replying!</p>
-
 {{/extend}}

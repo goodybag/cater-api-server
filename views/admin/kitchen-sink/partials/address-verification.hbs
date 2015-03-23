@@ -1,0 +1,38 @@
+{{> scripts_validate_address}}
+
+<section class="page-section" id="section-address-verification">
+  <div class="container">
+    <h2 class="component-title">Address Verification</h2>
+
+    <div class="form-group" style="width: 320px;">
+      <label>Enter Address</label>
+      <div class="input-group">
+        <span class="input-addon"></span>
+        <input type="text"
+          class="form-control"
+          data-action="validate-address"
+          placeholder="123 Sesame St.">
+      </div>
+    </div>
+
+
+    <h4>Usage</h4>
+    <p>Include the partial `scripts_validate_address`</p>
+    <p>Just ensure you're using `[data-action="validate-address"]` on your input.</p>
+
+    <code class="language-markup">
+      {{~#raw~}}
+<div class="form-group">
+  <label>Enter Address</label>
+  <div class="input-group">
+    <span class="input-addon"></span>
+    <input type="text"
+      class="form-control"
+      data-action="validate-address"
+      placeholder="123 Sesame St.">
+  </div>
+</div>
+      {{~/raw~}}
+    </code>
+  </div>
+</section>

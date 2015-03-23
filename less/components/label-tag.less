@@ -1,0 +1,85 @@
+///////////////
+// Label Tag //
+///////////////
+
+@label-tag-height-small:    20px;
+@label-tag-height-base:     30px;
+@label-tag-height-large:    40px;
+@label-tag-height-xlarge:   50px;
+
+.label-tag {
+  display: inline-block;
+  font-size: @font-size-small;
+  font-weight: @bold;
+  line-height: 0;
+  padding: 0 12px;
+  color: rgba( 255, 255, 255, 0.9 );
+  text-shadow: 0 -1px 0 rgba( 0, 0, 0, 0.3 );
+  // border: solid 1px rgba( 0, 0, 0, 0.15 );
+
+  .label-tag-theme('black');
+  .label-tag-theme('gray-darker');
+  .label-tag-theme('gray-dark');
+  .label-tag-theme('gray');
+  .label-tag-theme('gray-light');
+  .label-tag-theme('brown');
+  .label-tag-theme('orange');
+  .label-tag-theme('red');
+  .label-tag-theme('tomato');
+  .label-tag-theme('pink');
+  .label-tag-theme('blue-dark');
+  .label-tag-theme('blue');
+  .label-tag-theme('green');
+  .label-tag-theme('green-2');
+  .label-tag-theme('green-3');
+
+  &.pending { .label-tag-theme( @status-pending ); }
+  &.accepted { .label-tag-theme( @status-accepted ); }
+  &.paid { .label-tag-theme( @status-accepted ); }
+  &.canceled { .label-tag-theme( @status-canceled ); }
+  &.denied { .label-tag-theme( @status-denied ); }
+  &.error { .label-tag-theme( @status-denied ); }
+  &.submitted { .label-tag-theme( @status-submitted ); }
+  &.delivered { .label-tag-theme( @status-delivered ); }
+  &.emailed { .label-tag-theme( @status-submitted ); }
+
+  .label-tag-size( @label-tag-height-base, @font-size-base );
+
+  &.small {
+    .label-tag-size( @label-tag-height-small, @font-size-small );
+    text-shadow: none;
+  }
+
+  &.large {
+    .label-tag-size( @label-tag-height-large, @font-size-large );
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  &.xlarge {
+    .label-tag-size( @label-tag-height-xlarge, @font-size-large );
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+.label-tag-theme( @color ) when ( isstring( @color ) ){
+  @palette-color: ~"@{palette-@{color}}";
+
+  // Less not outputing correct selector if I do
+  // &.@{color} - hack this for now
+  &[class~="@{color}"] {
+    .label-tag-theme( color( @palette-color ) );
+  }
+}
+
+.label-tag-theme( @color ) when ( iscolor( @color ) ){
+  background-color: @color;
+}
+
+.label-tag-size( @label-height, @label-font-size ){
+  padding-top: (@label-height / 2) + 1;
+  padding-bottom: (@label-height / 2) - 1;
+  border-radius: (@label-height / 2) - 5;
+  font-size: @label-font-size;
+}

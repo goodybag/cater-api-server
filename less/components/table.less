@@ -19,6 +19,10 @@
   border-left: solid #CCC 1px;
 }
 
+.table.table-lg td {
+  padding: 8px;
+}
+
 .table tr > td:first-child {
   border-left: none;
 }
@@ -28,10 +32,20 @@
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 12px;
+  font-weight: @regular;
   color: #111;
   text-align: left;
 }
 
+.table th.active,
+.table th .active {
+  font-weight: @bold;
+}
+
 .table-striped tr:nth-child(2n) td {
-  background: @gray-lighter;
+  background: @palette-gray-lighter;
+}
+
+.table tr.table-row-highlight {
+  background-color: @palette-tan;
 }

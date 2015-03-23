@@ -12,6 +12,8 @@
     <label class="control-label" for="input-disable_courier_notifications">
       <input type="checkbox" class="form-control" name="disable_courier_notifications" id="input-disable_courier_notifications" {{#if restaurant.disable_courier_notifications}}checked="checked"{{/if}}>
       Disable courier notifications (Goodybag must trigger courier notifications manually!)
+      <br>
+      <em>NOTE: If the order is canceled, the courier will still be notified</em>
     </label>
   </div>
   <div class="form-group">

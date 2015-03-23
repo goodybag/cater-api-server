@@ -173,6 +173,7 @@ var User = module.exports = Model.extend({
 , ownerWritable: [
     'name'
   , 'organization'
+  , 'organization_type'
   , 'email'
   , 'password'
   ]

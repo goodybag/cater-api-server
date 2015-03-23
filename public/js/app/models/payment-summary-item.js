@@ -61,8 +61,6 @@ define(function(require, exports, module) {
         data.delivery_fee = 0;
       }
 
-      data.net_payout = this.getNetPayout( data );
-
       if ( this.plan ){
         if ( this.get('plan').type === 'tiered' ){
           data.gb_fee = this.plan.getTier( this.get('plan'), order.toJSON() ).fee;
@@ -70,6 +68,8 @@ define(function(require, exports, module) {
           data.gb_fee = this.get('plan').data.fee;
         }
       }
+
+      data.net_payout = this.getNetPayout( data );
 
       this.set( data );
 
@@ -79,11 +79,13 @@ define(function(require, exports, module) {
   , getNetPayout: function( data ){
       data = data || this.attributes;
 
-      var val = data.sub_total + data.adjustment + data.delivery_fee
+      var val = data.sub_total + data.adjustment + data.delivery_fee;
       var tax = val * data.sales_tax;
+      val += tax;
       val += data.tip;
 
       val -= data.gb_fee * val;
+      val -= tax;
 
       return Math.round( val );
     }

@@ -1,4 +1,5 @@
 define(function(require, exports, module) {
+  var Handlebars = require('handlebars');
   var FormView = require('./form-view');
   var EditItemView = require('./edit-item-view');
   var Category = require('../models/category');

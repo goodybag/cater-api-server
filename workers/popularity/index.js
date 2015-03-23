@@ -16,7 +16,7 @@ var utils   = require('../../utils');
 
 utils.async.waterfall([
   // Get restaurants with num orders
-  db.restaurants.find.bind( db.restaurants, { is_hidden: false }, {
+  db.restaurants.find.bind( db.restaurants, { is_hidden: false, is_archived: false }, {
     limit: 'all'
   , order: 'num_orders desc'
   , columns: [ '*', {

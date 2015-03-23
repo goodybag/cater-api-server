@@ -51,7 +51,7 @@
       {{#contains user.groups "admin"}}
         <li><a href="/admin/restaurants/{{restaurant.id}}">Edit Restaurant</a></li>
         <li><a href="/restaurants/{{restaurant.id}}/events">Calendar</a></li>
-        <li><a href="/admin/restaurants/{{restaurant.id}}/menu.csv">CSV Menu</a></li>
+        <li><a href="/admin/restaurants/{{restaurant.id}}/orders">Orders</a></li>
       {{/contains}}
     </ul>
   </div>
@@ -184,7 +184,7 @@
 
           <div class="alert is_bad_guests alert-danger{{#unless restaurant.is_bad_guests}} hide{{/unless}}">We're sorry, this restaurant cannot fulfill orders for this many guests.</div>
 
-          <div class="alert is_bad_lead_time alert-danger{{#unless restaurant.is_bad_lead_time}} hide{{/unless}}">We're sorry, this restaurant cannot fulfill an order for this many guests without more lead time.</div>
+          <div class="alert is_bad_lead_time alert-danger{{#unless restaurant.is_bad_lead_time}} hide{{/unless}}">Please select a later datetime so this restaurant can prepare your meal in a timely fashion.</div>
 
           <div class="alert restaurant_closed alert-danger{{#unless restaurant.restaurant_closed}} hide{{/unless}}">We're sorry, this restaurant is closed for selected date.</div>
 

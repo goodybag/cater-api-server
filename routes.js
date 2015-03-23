@@ -73,12 +73,6 @@ module.exports.register = function(app) {
 
   app.get('/restaurants'
   , m.searchTags()
-  , m.userViewedEvent({
-      name:         'promptSurvey'
-    , mode:         'once'
-    , threshold:    3
-    , mustBeAuthed: true
-    })
   , m.localCookies(['gb_display'])
   , controllers.restaurants.list
   );

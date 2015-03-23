@@ -13,23 +13,23 @@
 
   <form class="form-vertical form-restaurant-signup">
     <div class="form-step" data-step="1">
-      {{> landing_restaurant_basic_info}}
+      {{> restaurant_signup_basic_info}}
     </div>
     <div class="form-step" data-step="2">
-        {{> landing_restaurant_info}}
-        {{> landing_restaurant_order_contact_info}}
+        {{> restaurant_signup_restaurant_info}}
+        {{> restaurant_signup_order_contact_info}}
     </div>
     <div class="form-step" data-step="3">
-        {{> landing_restaurant_delivery_info}}
-        {{> landing_restaurant_pickup_info}}
-        {{> landing_restaurant_hours_of_operation}}
+        {{> restaurant_signup_delivery_info}}
+        {{> restaurant_signup_pickup_info}}
+        {{> restaurant_signup_hours_of_operation}}
 
     </div>
     <div class="form-step" data-step="4">
-        {{> landing_restaurant_billing_address}}
-        {{> landing_restaurant_direct_deposit_info}}
-        {{> landing_restaurant_fee_schedule}}
-        {{> landing_restaurant_terms_of_service}}
+        {{> restaurant_signup_billing_address}}
+        {{> restaurant_signup_direct_deposit_info}}
+        {{> restaurant_signup_fee_schedule}}
+        {{> restaurant_signup_terms_of_service}}
     </div>
 
     <div class="form-group">
@@ -51,7 +51,6 @@ function ( JoinView, Restaurant ){
   var joinView = new JoinView({
     el: '#restaurant-join'
   , model: new Restaurant()
-  , steps: 4
   });
 });
 </script>

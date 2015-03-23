@@ -97,7 +97,7 @@ module.exports.register = function(app) {
   app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
   app.get('/restaurants/join'
-  , m.view('landing/restaurant-register', {
+  , m.view('restaurant-signup/register', {
       layout: 'layout/default'
     })
   );

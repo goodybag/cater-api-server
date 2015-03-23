@@ -6,15 +6,38 @@ define(function(require, exports, module) {
 
   var PaymentMethod = require('../../models/payment-method');
 
-  return module.exports = Backbone.View.extend({
+  var PaymentMethodsView = Backbone.View.extend({
 
     events: {
       'click .btn-add-card':                          'submit',
       'click .btn-remove-card':                       'showRemoveCardModal',
-      'input input[data-stripe="number"]':              'onCardNumberChange'
+      'input input[data-stripe="number"]':            'onCardNumberChange'
     },
 
     initialize: function() {
+    },
+
+    cardTypeRegexes: {
+      visa: {
+        likely: /^4/
+      , valid: /^4[0-9]{15}$/
+      , mask: '9999 9999 9999 9999'
+      }
+    , master: {
+        likely: /^5[1-5]/
+      , valid: /^5[1-5][0-9]{14}/
+      , mask: '9999 9999 9999 9999'
+      }
+    , amex: {
+        likely: /^3[47]/
+      , valid: /^3[47][0-9]{13}$/
+      , mask: '9999 999999 99999'
+      }
+    , discover: {
+        likely: /^6(?:011|5[0-9]{2})/
+      , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
+      , mask: '9999 9999 9999 9999'
+      }
     },
 
     showRemoveCardModal: function(e) {
@@ -33,79 +56,71 @@ define(function(require, exports, module) {
       required: 'Please enter a valid {noun}'
     },
 
+    removeCCLogos: function () {
+      this.$cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
+      return this;
+    },
+
+    showPostalCode: function() {
+      this.$postalCode.closest('.row').removeClass('hide');
+      return this;
+    },
+
+    hidePostalCode: function() {
+      this.$postalCode.closest('.row').addClass('hide');
+      return this;
+    },
+
+    clearPostalCode: function() {
+      this.$postalCode.val('');
+      return this;
+    },
+
     onCardNumberChange: function(e) {
-      var cardTypeRegexes = {
-        visa: {
-          likely: /^4/
-        , valid: /^4[0-9]{15}$/
-        , mask: '9999 9999 9999 9999'
-        }
-      , master: {
-          likely: /^5[1-5]/
-        , valid: /^5[1-5][0-9]{14}/
-        , mask: '9999 9999 9999 9999'
-        }
-      , amex: {
-          likely: /^3[47]/
-        , valid: /^3[47][0-9]{13}$/
-        , mask: '9999 999999 99999'
-        }
-      , discover: {
-          likely: /^6(?:011|5[0-9]{2})/
-        , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
-        , mask: '9999 9999 9999 9999'
-        }
-      };
+      this.$newCard    = this.$newCard || this.$el.find('#new-card');
+      this.$cardNumber = this.$cardNumber || this.$newCard.find('input[data-stripe="number"]');
+      this.$postalCode = this.$postalCode || this.$newCard.find('input[name="postal_code"]');
 
-      var $newCard = this.$el.find('#new-card');
-      var $cardNumber = $newCard.find('input[data-stripe="number"]');
-      var $postalCode = $newCard.find('input[name="postal_code"]');
-      var cardNumber = $cardNumber.val();
-
-      var removeCCLogos = function () {
-        $cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
-      };
+      var cardNumber = this.$cardNumber.val();
 
       var foundMatch = false;
-      for (var type in cardTypeRegexes) {
-        if (!cardTypeRegexes.hasOwnProperty(type)) return;
+      for (var type in this.cardTypeRegexes) {
+        if (this.cardTypeRegexes.hasOwnProperty(type)) {
+          var cardType = this.cardTypeRegexes[type];
 
-        var cardType = cardTypeRegexes[type];
+          // TODO: improve later - apply input mask and change logo only if the card type changes
+          if (cardType.likely.test(cardNumber)) {
+            foundMatch = true;
+            this.$cardNumber.inputmask(cardType.mask, {
+              placeholder:" "
+            , oncleared: function() {
+                this.$cardNumber.inputmask('remove');
+                this.removeCCLogos();
+                this.hidePostalCode();
+              }.bind(this)
+            , onincomplete: function() {
+                this.$cardNumber.inputmask('remove');
+                this.removeCCLogos();
+              }.bind(this)
+            });
 
-        // TODO: improve later - apply input mask and change logo only if the card type changes
-        if (cardType.likely.test(cardNumber)) {
-          foundMatch = true;
-          $cardNumber.inputmask(cardType.mask, {
-            placeholder:" "
-          , oncleared: function() {
-              $cardNumber.inputmask('remove');
-              removeCCLogos();
-              $postalCode.closest('.row').addClass('hide');
-            }
-          , onincomplete: function() {
-              $cardNumber.inputmask('remove');
-              removeCCLogos();
-            }
-          });
+            this.removeCCLogos();
+            this.$cardNumber.addClass('cc-' + type);
 
-          removeCCLogos();
-          $cardNumber.addClass('cc-'+type)
-          ;
-
-          if (type == 'amex') {
-            $postalCode.closest('.row').removeClass('hide');
-          } else {
-            $postalCode.closest('.row').addClass('hide');
+            if (type == 'amex')
+              this.showPostalCode();
+            else
+              this.hidePostalCode();
+            break;
           }
-          break;
         }
       }
 
-      if (!foundMatch){
+      if ( !foundMatch ){
         $(e.target).inputmask('remove');
-        $cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
-        $postalCode.val('');
-        $postalCode.closest('.row').addClass('hide');
+        this.removeCCLogos()
+            .clearPostalCode()
+            .hidePostalCode();
       }
     },
 
@@ -232,6 +247,12 @@ define(function(require, exports, module) {
       Stripe.card.createToken($el, this.stripeResponseHandler.bind(this, userId, callback));
     },
 
+    processCardComplete: function(errors) {
+      spinner.stop();
+      if (errors) return this.displayErrors(errors, PaymentMethod);
+      return window.location.reload();
+    },
+
     saveNewCardAndSubmit: function(e) {
       var this_ = this;
       var $el = this.$el.find('#new-card');
@@ -240,12 +261,7 @@ define(function(require, exports, module) {
         $el: $el
       , userId: this.options.user.get('id')
       , saveCard: true
-      },
-      function(errors) {
-        spinner.stop();
-        if (errors) return this_.displayErrors(errors, PaymentMethod);
-        return window.location.reload();
-      });
+      }, processCardComplete.bind(this));
     },
 
     stripeResponseHandler: function(userId, callback, status, response) {
@@ -269,4 +285,8 @@ define(function(require, exports, module) {
       pm.save(props, opts);
     }
   });
+
+  module.exports = PaymentMethodsView;
+
+  return module.exports;
 });

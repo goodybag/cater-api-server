@@ -229,7 +229,7 @@ define(function(require, exports, module) {
         , data);
       }
 
-      Stripe.card.createToken($el, this.stripeResponseHandler.bind(this, userId));
+      Stripe.card.createToken($el, this.stripeResponseHandler.bind(this, userId, callback));
     },
 
     saveNewCardAndSubmit: function(e) {
@@ -248,23 +248,25 @@ define(function(require, exports, module) {
       });
     },
 
-    stripeResponseHandler: function(userId, status, response) {
-      var pm = new PaymentMethod({
+    stripeResponseHandler: function(userId, callback, status, response) {
+      if ( status !== '200' ) return callback([response.error]);
+
+      var pm = new PaymentMethod();
+
+      var props = {
         data: response.card
       , name: response.card.name
       , type: response.type
       , user_id: userId
       , token_id: response.id
-      });
+      };
 
-      pm.save({
-        success: function() {
-          console.log('success');
-        }
-      , error: function() {
-          console.log('failure');
-        }
-      });
+      var opts = {
+        success: function() { callback(null); }
+      , error: function() { callback(new Error('unable to create payment method')); }
+      };
+
+      pm.save(props, opts);
     }
   });
 });

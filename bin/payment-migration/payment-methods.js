@@ -46,8 +46,11 @@ function migratePaymentMethod(pm, callback) {
     if ( !card.meta['stripe_customer.funding_instrument.id'] )
       return logger.error('Unable to associate stripe metadata ', err);
 
-      // TODO add new test card and associate stripe
-
-    callback(null);
+    db.payment_methods.update(
+      { id: pm.payment_method_id }
+    , { stripe_id: card.meta['stripe_customer.funding_instrument.id'] }
+    , { returning: ['*'] }
+    , callback
+    );
   });
 };

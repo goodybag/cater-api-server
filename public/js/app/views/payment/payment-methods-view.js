@@ -15,7 +15,6 @@ define(function(require, exports, module) {
     },
 
     initialize: function() {
-      this.$el.find('.remove-tooltip').tooltip();
     },
 
     showRemoveCardModal: function(e) {
@@ -56,7 +55,7 @@ define(function(require, exports, module) {
         , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
         , mask: '9999 9999 9999 9999'
         }
-      }
+      };
 
       var $newCard = this.$el.find('#new-card');
       var $cardNumber = $newCard.find('input[name="card_number"]');
@@ -68,7 +67,7 @@ define(function(require, exports, module) {
       };
 
       var foundMatch = false;
-      for(type in cardTypeRegexes) {
+      for (var type in cardTypeRegexes) {
         if (!cardTypeRegexes.hasOwnProperty(type)) return;
 
         var cardType = cardTypeRegexes[type];
@@ -142,7 +141,7 @@ define(function(require, exports, module) {
       if ( _.isObject( errors ) && !_.isArray( errors ) ){
         // Amanda errors object
         if ( '0' in errors ){
-          errors = Array.prototype.slice.call( errors )
+          errors = Array.prototype.slice.call( errors );
 
           // We're just going to use the `required` error text for everything
           // so just take the unique on error.property
@@ -219,7 +218,7 @@ define(function(require, exports, module) {
       , security_code:     $el.find('[name="security_code"]').val()
       , expiration_month: +$el.find('[name="expiration_month"]').val()
       , expiration_year:  +$el.find('[name="expiration_year"]').val()
-      , save_card:         options.saveCard || false 
+      , save_card:         options.saveCard || false
       };
 
       if (PaymentMethod.getCardType(data.card_number) == 'amex') {
@@ -243,8 +242,8 @@ define(function(require, exports, module) {
       this.processCard({
         $el: $el
       , userId: this.options.user.get('id')
-      , saveCard: true 
-      }, 
+      , saveCard: true
+      },
       function(errors) {
         spinner.stop();
         if (errors) return this_.displayErrors(errors, PaymentMethod);

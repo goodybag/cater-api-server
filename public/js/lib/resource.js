@@ -24,13 +24,17 @@ define(function(require){
 
   , request: function( options, callback ){
       callback = callback || utils.noop;
-
+      if ( typeof options.data === "object" ) {
+        options.data = JSON.stringify(options.data)
+      }
+      
       options = utils.defaults( options || {}, {
-        headers:  { contentType: 'application/json' }
+        contentType: 'application/json'
       , json:     true
       , url:      this.url
       });
 
+      options.headers = { 'Content-Type': options.contentType };
       options.type = options.method;
 
       if ( options.body ){

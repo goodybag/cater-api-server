@@ -251,8 +251,10 @@ define(function(require, exports, module) {
     stripeResponseHandler: function(userId, status, response) {
       var pm = new PaymentMethod({
         data: response.card
+      , name: response.card.name
+      , type: response.type
       , user_id: userId
-      , stripe_id: response.card.id
+      , token_id: response.id
       });
 
       pm.save({

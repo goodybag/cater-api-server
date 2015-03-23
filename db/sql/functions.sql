@@ -118,10 +118,10 @@ begin
   -- Just select some arbitrary in-region delivery service for now
   update orders
     set delivery_service_id = (
-      select delivery_services.id from delivery_services
-        left join orders on orders.id = oid
+      select ds.id from orders
         left join restaurants on orders.restaurant_id = restaurants.id
         left join regions on restaurants.region_id = regions.id
+        left join delivery_services ds on regions.id = ds.region_id
         where orders.id = oid
         limit 1
     )

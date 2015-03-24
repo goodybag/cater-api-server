@@ -20,6 +20,9 @@
           <textarea class="form-control category-description" rows="3">{{description}}</textarea>
         </div>
         <div class="row row-actions">
+
+          <a href="#" class="item-edit-show">+ Edit Items</a>
+
           <button class="btn btn-default category-copy">Copy</button>
           <button class="btn btn-primary category-remove">Remove</button>
           <button type="submit" class="btn btn-save category-save">Save</button>
@@ -54,3 +57,20 @@
   </div>
   <button type="button" class="btn btn-primary new-item pull-right">New Item</button>
 </form>
+
+
+
+{{#extend "scripts"}}
+<script>
+require( ['jquery-loaded'], function( page ){
+    //hide items when page loads
+    $(".items-list").hide();
+    //show those items when category is clicked
+    $(".item-edit-show").click(function($){
+      //prevent default
+      console.log('hi');      
+    });
+  
+});
+</script>
+{{/extend}}

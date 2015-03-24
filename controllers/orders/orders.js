@@ -244,7 +244,6 @@ module.exports.listStatus = function(req, res) {
 }
 
 module.exports.generateEditToken = function(req, res) {
-  console.log("GENERATING");
   var query = {
     updates: {
       edit_token: utils.uuid.v4()

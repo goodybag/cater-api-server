@@ -1711,12 +1711,33 @@ module.exports.register = function(app) {
 
   app.get('/admin/orders/:id'
   , m.restrict(['admin'])
+  , function( req, res, next ){
+      var where = {
+        where: { 'orders.id': req.params.id }
+      };
+
+      var options = {
+        columns: ['delivery_services.*']
+
+      , joins: [
+          { type: 'left', target: 'restaurants',        on: { 'orders.restaurant_id': '$restaurants.id$' } }
+        , { type: 'left', target: 'regions',            on: { 'restaurants.region_id': '$regions.id$' } }
+        , { type: 'left', target: 'delivery_services',  on: { 'regions.id': '$delivery_services.region_id$' } }
+        ]
+      };
+
+      return m.db.orders.find( where, options )( req, res, next );
+    }
+    // previous query aliased result as `orders`
+    // it should be `delivery_services`
+  , m.aliasLocals({ delivery_services: 'orders' })
   , m.getOrder2({
       param:                  'id'
     , restaurant:             true
     , restaurantDbModelFind:  true
     , user:                   true
     , items:                  true
+    , deliverService:         true
     })
   , m.view( 'admin/order', {
       layout: 'admin/layout2'

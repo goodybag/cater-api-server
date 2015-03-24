@@ -2,17 +2,24 @@ define(function (require, exports, module) {
   var utils = require('utils');
   var FormView = require('../form-view');
   var Handlebars = require('handlebars');
+  var cookie = require('../../../cookie');
 
   return module.exports = FormView.extend({
     events: {
-      'click .add-lead-time': 'addLeadTime'
-    , 'click .btn-add-contact'  : 'addContact'
-    , 'click .add-hours'    : 'addHours'
-    , 'click .btn-continue' : 'saveAndContinue'
+      'click .add-lead-time'          : 'addLeadTime'
+    , 'click .btn-add-contact'        : 'addContact'
+    , 'click .add-hours'              : 'addHours'
+    , 'click .datetime-days-list > li': 'addDeliveryHours'
+    , 'click .btn-continue'           : 'saveAndContinue'
     }
   , initialize: function () {
       console.log('init');
+      // TODO: use local storage to store restaurant data
+      this.store = window.localStorage;
+      //this.model.set(this.store.getItem('gb_restaurant'));
+      // TODO: use cookies to store view state
       this.step = 1;
+      debugger;
     }
 
   , saveAndContinue: function (e) {
@@ -52,7 +59,11 @@ define(function (require, exports, module) {
     }
   , addHours: function (e) {
       if (e) e.preventDefault();
-
+    }
+  , addDeliveryHours: function (e) {
+      if (e) e.preventDefault();
+      console.log('click', e.target.getAttribute('data-day'))
+      //this.set('hours_of_operation', hours)
     }
   });
 });

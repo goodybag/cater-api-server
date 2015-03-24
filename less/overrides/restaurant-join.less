@@ -1,19 +1,24 @@
-@restaurant-join-border: 2px solid @palette-gray-light;
+@restaurant-join-border: 1px solid @palette-gray-light;
+
+
+.label-col {
+  width: 170px;
+  float: left;
+  clear: left;
+  text-align: right;
+  margin-right: 23px;
+  font-size: 14px;
+}
+
+.field-col {
+  float: left;
+}
+
+.col { float: left; }
 
 .restaurant-join {
   color: @palette-gray-dark;
 
-  label {
-    display: inline;
-    font-size: 14px;
-  }
-  .label-left {
-    width: 170px;
-    float: left;
-    clear: left;
-    text-align: right;
-    margin-right: 23px;
-  }
   p { margin: 0; }
 
   input.form-control {
@@ -24,7 +29,13 @@
 
   dd { margin-bottom: 15px;}
 
-  .col { float: left; }
+  .spacer {
+    display: block;
+    margin: 0px 8px 0px 8px;
+    padding-top: 6px;
+    font-size: 20px;
+    font-weight: 800;
+  }
 
   .form-restaurant-signup {
     margin: 0 auto;
@@ -127,9 +138,39 @@
   }
 
   .tabs li {
-    border: 2px solid #ccc;
+    border: 1px solid @palette-gray-light;
     padding: 19px 48px;
     margin: -3px;
     border-radius: 3px;
   }
 }
+
+/* datetime popover TODO: move to component */
+.datetime-popover {
+  position: absolute;
+  display: none;
+  margin-top: 3px;
+  padding: 22px;
+  background-color: @white;
+  box-shadow: 0px 0px 8px 1px @palette-gray;
+  min-width: 392px;
+  z-index: 9999;
+}
+
+.open .datetime-popover {
+  display: block;
+}
+
+.datetime-days-list > li {
+  display: inline-block;
+  margin-left: -5px;
+  padding: 12px;
+  border: 1px solid @palette-gray;
+  border-right: none;
+  font-weight: 800;
+  cursor: pointer;
+}
+.datetime-days-list > li:last-child {
+  border-right: 1px solid @palette-gray;
+}
+

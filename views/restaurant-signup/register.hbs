@@ -12,10 +12,10 @@
   </nav>
 
   <form class="form-vertical form-restaurant-signup">
-    <div class="form-step" data-step="1">
+    <div class="form-step hide" data-step="1">
       {{> restaurant_signup_basic_info}}
     </div>
-    <div class="form-step" data-step="2">
+    <div class="form-step hide" data-step="2">
         {{> restaurant_signup_restaurant_info}}
         {{> restaurant_signup_order_contact_info}}
     </div>
@@ -25,7 +25,7 @@
         {{> restaurant_signup_hours_of_operation}}
 
     </div>
-    <div class="form-step" data-step="4">
+    <div class="form-step hide" data-step="4">
         {{> restaurant_signup_billing_address}}
         {{> restaurant_signup_direct_deposit_info}}
         {{> restaurant_signup_fee_schedule}}
@@ -47,10 +47,11 @@ require([
 , 'app/models/restaurant'
 ], 
 function ( JoinView, Restaurant ){
-
+  
   var joinView = new JoinView({
     el: '#restaurant-join'
   , model: new Restaurant()
+  , steps: 4
   });
 });
 </script>

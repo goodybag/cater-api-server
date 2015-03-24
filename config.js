@@ -46,8 +46,8 @@ config.defaults = {
   }
 
 , disallowOrdersBetween: {
-    start: 20
-  , end:    8
+    start:  { hour: 20, minute: 0 }
+  , end:    { hour: 8, minute: 30 }
   }
 
 , emailProvider: 'mandrill'

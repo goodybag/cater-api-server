@@ -36,6 +36,10 @@ define(function(require){
       if ( options.body ){
         options.body = JSON.stringify( options.body );
       }
+      
+      if ( typeof options.data === "object" ) {
+        options.data = JSON.stringify( options.data );
+      }
 
       return utils.http( options )
         .error( callback )

@@ -2165,7 +2165,9 @@ module.exports.register = function(app) {
   );
 
   app.post('/api/orders/:order_id/generate_edit_token'
-  , m.restrict(['client', 'admin'])
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
   , controllers.orders.generateEditToken
   );
 

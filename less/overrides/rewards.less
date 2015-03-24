@@ -1,3 +1,5 @@
+@rewards-container-width: 974px;
+
 .page-rewards {
   .marketing-points > .point {
     padding-left: 50px;
@@ -92,7 +94,7 @@
         height: 75px;
         background: url('/img/red_arrow.png');
 
-        @media screen and ( max-width: @container-width ){
+        @media screen and ( max-width: @rewards-container-width ){
           display: none;
         }
       }
@@ -103,6 +105,9 @@
     overflow: hidden;
 
     // Cake BG
+    .container {
+      width: @rewards-container-width;
+    }           
     .container:before {
       content: "";
       position: absolute;

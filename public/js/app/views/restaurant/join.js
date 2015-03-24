@@ -12,10 +12,34 @@ define(function (require, exports, module) {
     }
   , initialize: function () {
       console.log('init');
+      this.step = 1;
     }
 
   , saveAndContinue: function (e) {
-      if (e) e.preventDefault();
+      if (e) {
+        e.preventDefault();
+      }
+
+      if ( this.step >= this.options.steps ) {
+        // submit form
+        return;
+      }
+
+      this.$current = this.getStep( this.step );
+      this.$next = this.getStep( this.step + 1 );
+      this.$steps = this.$el.find('.form-step');
+
+      this.$steps.addClass('hide');
+      this.$next.removeClass('hide')
+      this.step++;
+    }
+
+  , getStep: function (step) {
+      return this.$el.find(
+        '.form-step[data-step=":step"]'.replace(':step', step)
+      );
+    }
+  , updateModel: function ( data ) {
     }
 
   , addLeadTime: function(e) {

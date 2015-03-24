@@ -13,4 +13,8 @@ begin
     'supported_order_types',
     E'order_type[] default Array[\'pickup\', \'courier\', \'delivery\']::order_type[]'
   );
+
+  update restaurants
+    set supported_order_types = Array['pickup', 'delivery']::order_type[]
+    where disable_courier is true;
 end$$;

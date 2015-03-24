@@ -261,9 +261,6 @@ module.exports.generateEditToken = function(req, res) {
   models.Order.update(query, function(err, order) {
     if (err || !order.length)
       return res.error(errors.internal.DB_FAILURE, err);
-    else if (order[0].attributes.user_id !== req.user.attributes.id) {
-      return res.error(errors.auth.NOT_ALLOWED);
-    }
     res.send(200, order[0]);
   });
 };

@@ -261,11 +261,11 @@ define(function(require, exports, module) {
         $el: $el
       , userId: this.options.user.get('id')
       , saveCard: true
-      }, processCardComplete.bind(this));
+      }, this.processCardComplete.bind(this));
     },
 
     stripeResponseHandler: function(userId, callback, status, response) {
-      if ( status !== '200' ) return callback([response.error]);
+      if ( status !== '200' ) return callback(response.error);
 
       var pm = new PaymentMethod();
 

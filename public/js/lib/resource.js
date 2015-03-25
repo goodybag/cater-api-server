@@ -26,7 +26,7 @@ define(function(require){
       callback = callback || utils.noop;
 
       options = utils.defaults( options || {}, {
-        headers:  { 'Conetnt-Type': 'application/json' }
+        headers:  { 'Content-Type': 'application/json' }
       , json:     true
       , url:      this.url
       });
@@ -35,6 +35,10 @@ define(function(require){
 
       if ( options.body ){
         options.body = JSON.stringify( options.body );
+      }
+      
+      if ( typeof options.data === "object" ) {
+        options.data = JSON.stringify( options.data );
       }
 
       return utils.http( options )

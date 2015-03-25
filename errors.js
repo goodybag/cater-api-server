@@ -132,6 +132,16 @@ errors.input.VALIDATION_FAILED = {
 
 errors[errors.input.VALIDATION_FAILED.code] = errors.input.VALIDATION_FAILED;
 
+errors.input.INVALID_ADDRESS = {
+  type: "input"
+, code: "0302"
+, httpCode: "400"
+, name: "INVALID_ADDRESS"
+, message: "The address provided is invalid"
+};
+
+errors[errors.input.INVALID_ADDRESS.code] = errors.input.INVALID_ADDRESS;
+
 /**
  * Stripe Errors
  */

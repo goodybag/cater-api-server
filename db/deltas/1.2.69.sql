@@ -8,8 +8,13 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  perform add_column( 'users', 'stripe_id', 'text' );
-  perform add_column( 'payment_methods', 'stripe_id', 'text' );
+  perform add_column(
+    'restaurants',
+    'supported_order_types',
+    E'order_type[] default Array[\'pickup\', \'courier\', \'delivery\']::order_type[]'
+  );
 
-  execute 'alter table payment_methods alter column uri drop not null';
+  update restaurants
+    set supported_order_types = Array['pickup', 'delivery']::order_type[]
+    where disable_courier is true;
 end$$;

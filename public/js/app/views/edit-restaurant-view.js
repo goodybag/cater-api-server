@@ -1,4 +1,5 @@
 define(function(require, exports, module) {
+  var Handlebars = require('handlebars');
   var utils = require('utils');
   var FormView = require('./form-view');
   var Restaurant = require('../models/restaurant');

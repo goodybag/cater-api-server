@@ -72,8 +72,7 @@
 
       // custom replacements
       '*': {
-        'moment': 'moment-loaded'
-      , 'handlebars.runtime': 'hbs'
+        'handlebars.runtime': 'hbs'
       }
 
       // deal with jquery
@@ -87,10 +86,6 @@
     , 'pickatime': {'jquery': 'jquery'}
     , 'bootstrap': {'jquery': 'jquery'}
     , 'select2': {'jquery': 'jquery'}
-
-      // deal with moment
-    , 'moment-loaded': {'moment': 'moment'}
-    , 'moment-timezone': {'moment': 'moment'}
 
     // deal with backbone
     , 'backbone.trackit': {'backbone': 'backbone'}
@@ -140,6 +135,9 @@
         deps: ['jquery']
       }
     , 'jquery.placeholder': {
+        deps: ['jquery']
+      }
+    , 'jquery.appear': {
         deps: ['jquery']
       }
     // , partials: {

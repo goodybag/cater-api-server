@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.267",
+  "version": "1.1.272",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -114,6 +114,7 @@
   },
   "devDependencies": {
     "loglog-server": "^1.0.6",
+    "minimist": "^1.1.1",
     "mocha": "~1.12.0",
     "mocha-perf-reporter": "^0.2.0",
     "omf": "~0.5.0"

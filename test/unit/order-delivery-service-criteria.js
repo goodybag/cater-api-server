@@ -19,6 +19,7 @@ describe ('Order Delivery Service Criteria', function(){
   , datetime:   now.format('YYYY-MM-DD 12:00:00')
   , restaurant: {
       minimum_order: 100
+    , supported_order_types: ['pickup', 'delivery', 'courier']
     , disable_courier: false
     , delivery_service_order_amount_threshold:  500
     , delivery_service_order_total_upperbound:  200000
@@ -127,6 +128,30 @@ describe ('Order Delivery Service Criteria', function(){
         ]
       }
     });
+
+    assert( criteria.check( order ) );
+  });
+
+  it ('should not be delivery service because courier not supported', function(){
+    var order = utils.deepExtend( {}, defaultOrder, {
+      zip: '78755'
+    , restaurant: {
+        // Make delivery zips trigger courier
+        delivery_zips: ['78756']
+      }
+    });
+
+    order.restaurant.supported_order_types = ['pickup', 'delivery'];
+
+    assert( !criteria.check( order ) );
+  });
+
+  it ('should be delivery service because delivery not supported', function(){
+    var order = utils.deepExtend( {}, defaultOrder, {
+      
+    });
+
+    order.restaurant.supported_order_types = ['courier'];
 
     assert( criteria.check( order ) );
   });

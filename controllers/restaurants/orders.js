@@ -40,6 +40,17 @@ module.exports.current = function(req, res, next) {
     return next();
   }
 
+  // Unless they're using an edit token, let's drill down the results
+  // so that we only see relevant pending orders -
+  // (that is, orders that haven't been expired for too long)
+  if ( !(req.param('edit_token') || req.body.edit_token) ){
+    where.datetime = {
+      $custom: [
+        "orders.datetime + interval '2 days' > now() at time zone orders.timezone"
+      ]
+    };
+  }
+
   db.orders.findOne(where, options, function(err, order) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 

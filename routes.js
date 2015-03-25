@@ -73,12 +73,6 @@ module.exports.register = function(app) {
 
   app.get('/restaurants'
   , m.searchTags()
-  , m.userViewedEvent({
-      name:         'promptSurvey'
-    , mode:         'once'
-    , threshold:    3
-    , mustBeAuthed: true
-    })
   , m.localCookies(['gb_display'])
   , controllers.restaurants.list
   );
@@ -2171,7 +2165,9 @@ module.exports.register = function(app) {
   );
 
   app.post('/api/orders/:order_id/generate_edit_token'
-  , m.restrict(['client', 'admin'])
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
   , controllers.orders.generateEditToken
   );
 
@@ -2482,5 +2478,13 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.restaurant_plans )
+  );
+
+  /**
+   * Address verification
+   */
+
+  app.get('/api/maps/address-validity/:address'
+  , controllers.api.maps.addressValidity
   );
 }

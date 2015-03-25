@@ -16,10 +16,12 @@
     <div class="dropdown-actions">
       <div class="form-group form-group-inline form-group-location">
         <select name="restaurant_location_id" id="order-restaurant_location_id" class="form-control">
-        {{#each order.restaurant.locations}}
-          <option value="{{this.id}}"
-          {{~#eq ../order.restaurant_location_id this.id}} selected="true"{{/eq}}>Location: {{this.name}}</option>
-        {{/each}}
+          <option value="null"
+            {{~#unless this.id}} selected="true"{{/unless}}>None</option>
+          {{#each order.restaurant.locations}}
+            <option value="{{this.id}}"
+            {{~#eq ../order.restaurant_location_id this.id}} selected="true"{{/eq}}>Location: {{this.name}}</option>
+          {{/each}}
         </select>
       </div>
       <div class="form-group form-group-inline form-group-type">

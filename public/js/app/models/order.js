@@ -158,13 +158,13 @@ define(function(require, exports, module) {
       var now    = moment().tz( this.attributes.timezone );
       var end    = moment( this.attributes.datetime )
                     .tz( this.attributes.timezone )
-                    .hour( config.disallowOrdersBetween.end )
-                    .startOf('hour');
+                    .set( config.disallowOrdersBetween.end )
+                    .startOf( 'minute' );
       var start  = moment( this.attributes.datetime )
                     .tz( this.attributes.timezone )
                     .subtract( 'days', 1 )
-                    .hour( config.disallowOrdersBetween.start )
-                    .startOf('hour');
+                    .set( config.disallowOrdersBetween.start )
+                    .startOf( 'minute' );
 
       var datetime = moment( this.attributes.datetime )
                       .tz( this.attributes.timezone );

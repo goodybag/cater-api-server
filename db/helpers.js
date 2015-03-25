@@ -550,6 +550,7 @@ dirac.DAL = dirac.DAL.extend({
     }
 
     return this._super( values, options, function( error, results ){
+      callback = callback || utils.noop;
       if ( error ) return callback( error );
 
       // If there was only one result, values was length 1,

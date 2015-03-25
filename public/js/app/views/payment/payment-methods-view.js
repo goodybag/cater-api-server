@@ -264,8 +264,8 @@ define(function(require, exports, module) {
       }, this.processCardComplete.bind(this));
     },
 
-    stripeResponseHandler: function(userId, callback, status, response) {
-      if ( status !== '200' ) return callback(response.error);
+    stripeResponseHandler: function(user_id, callback, status, response) {
+      if ( status !== 200 ) return callback(response.error);
 
       var pm = new PaymentMethod();
 
@@ -273,13 +273,16 @@ define(function(require, exports, module) {
         data: response.card
       , name: response.card.name
       , type: response.type
-      , user_id: userId
+      , user_id: user_id
       , token_id: response.id
       };
 
       var opts = {
-        success: function() { callback(null); }
-      , error: function() { callback(new Error('unable to create payment method')); }
+        success: function() {
+          callback(null);
+        }, error: function() {
+          callback(new Error('unable to create payment method'));
+        }
       };
 
       pm.save(props, opts);

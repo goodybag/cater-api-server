@@ -237,6 +237,10 @@ define(function(require) {
     , default: 0
     , checks: ['popularity <= 1']
     }
+  , supported_order_types: {
+      type: types.array(types.order_type)
+    , default: "Array['pickup', 'courier', 'delivery']::order_type[]"
+    }
   };
 
   definition.indices = {};

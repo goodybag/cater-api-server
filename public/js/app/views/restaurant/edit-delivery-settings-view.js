@@ -14,35 +14,28 @@ define(function(require, exports, module) {
 
     fieldMap: {
       delivery_zips:    '.delivery-zip-group'
-    , minimum_order:    '.minimum_order'
+    , minimum_order:    '.minimum-order'
     },
 
     fieldGetters: _.extend({
       minimum_order: function() {
-        return +Handlebars.helpers.pennies( this.$el.find('.minimum-order').val() ) || null;
+        return +Handlebars.helpers.pennies( this.$el.find(this.fieldMap.minimum_order).val() ) || null;
       },
 
       delivery_zips: function() {
-        var delivery_zips = []
-        this.$el.find('.delivery-zip-group').each(function() {
-          var $group = $(this);
-          var fee = +Handlebars.helpers.pennies( $group.find('[name="fee"]').val() );
-          $group.find('[name="zips"]').val()
-            .replace( /\s/g, '' )
-            .split(',')
-            .map( function( z ){
-              return parseInt( z );
-            }).forEach( function( zip ){
-              delivery_zips.push({
-                fee: fee
-              , zip: zip
-              })
-            });
-        });
-        return delivery_zips;
+        return utils.flatten(this.$el.find(this.fieldMap.delivery_zips).map(function (i, el) {
+          var zips = utils.uniq( $(el).find('input[name="zips"]').val().replace( /\s/g, '' ).split(',') );
+          zips = zips.filter(function (zip) {
+            return zip.length === 5 && +(zip);
+          });
+          var fee = +Handlebars.helpers.pennies( $(el).find('#input-minimum-order').val() );
+          return {
+            fee: fee
+          , zips: zips 
+          };
+        }));
       }
     }, EditRestaurantView.prototype.fieldGetters ),
-
 
     addDeliveryTier: function() {
       var last = this.$el.find('.delivery-zip-group:last-child');

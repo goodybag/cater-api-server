@@ -41,13 +41,11 @@ q.drain = function drained() {
 }
 
 // 1. look up balanced payment method
-// 2. db update payment_method with
-//     * stripe_customer.funding_instrument.id
-//     *
+// 2. db update payment_method
+// todo waterfall
 function migratePaymentMethod(pm, callback) {
   utils.balanced.Cards.get(pm.uri, function(err, card) {
     if ( err ) {
-      console.log(err);
       logger.error('Unable to get balanced card ' + pm.uri);
       return callback(err);
     }
@@ -61,17 +59,18 @@ function migratePaymentMethod(pm, callback) {
       pm.user.stripe_id
     , card.meta['stripe_customer.funding_instrument.id']
     , function(err, stripeCard) {
-        if ( err )
-          return logger.error('Unable to get stripe card');
-        callback(null);
+        if ( err ) {
+          logger.error('Unable to get stripe card');
+          return callback(new Error('Unable to get stripe card'));
+        }
+        db.payment_methods.update(
+          { id: pm.payment_method_id }
+        , { stripe_id: stripeCard.id
+          , data: stripeCard }
+        , { returning: ['*'] }
+        , callback
+        );
       }
     );
-    //
-    // db.payment_methods.update(
-    //   { id: pm.payment_method_id }
-    // , { stripe_id: card.meta['stripe_customer.funding_instrument.id'] }
-    // , { returning: ['*'] }
-    // , callback
-    // );
   });
 };

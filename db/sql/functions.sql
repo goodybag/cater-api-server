@@ -133,7 +133,7 @@ begin
       limit 1
     )
     where id = oid
-      and deliver_service_id is null;
+      and delivery_service_id is null;
 end;
 $$ language plpgsql;
 

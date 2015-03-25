@@ -18,7 +18,11 @@
     <dd>{{datepart order.datetime}}</dd>
     <dt>Delivery Time:</dt>
     <dd>
-      {{join (timeToRange (timepart order.datetime) "h:mm A") " - "}}
+      {{~#if (contains user.groups 'restaurant')}}
+        {{timepart order.datetime}}
+      {{else}}
+        {{join (timeToRange (timepart order.datetime) "h:mm A") " - "}}
+      {{/if~}}
       {{#contains user.groups 'admin'}}
         {{formatDateTimeWithTz order.datetime order.timezone "z"}}
       {{/contains}}

@@ -1,5 +1,5 @@
 {{#each orders}}
-<tr>
+<tr class="table-row" data-order-type="{{type}}">
   <td><a href="/orders/{{id}}">#{{id}}</td>
   <td>{{capitalize type}}</td>
   <td><input type="checkbox" {{#if restaurant.has_contract}}checked="checked"{{/if}} disabled></td>

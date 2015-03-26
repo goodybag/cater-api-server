@@ -1,6 +1,11 @@
 @restaurant-join-border: 1px solid @palette-gray-light;
 
 
+/*TODO: a major seperation of concerns overhaul */
+.active {
+  background-color: @palette-gray-lighter;
+}
+
 .label-col {
   width: 170px;
   float: left;
@@ -170,6 +175,11 @@
   font-weight: 800;
   cursor: pointer;
 }
+
+.datetime-days-list > li:hover {
+  background-color: @palette-gray-lighter;
+}
+
 .datetime-days-list > li:last-child {
   border-right: 1px solid @palette-gray;
 }

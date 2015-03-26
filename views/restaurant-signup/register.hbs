@@ -12,14 +12,14 @@
   </nav>
 
   <form class="form-vertical form-restaurant-signup">
-    <div class="form-step hide" data-step="1">
+    <div class="form-step" data-step="1">
       {{> restaurant_signup_basic_info}}
     </div>
     <div class="form-step hide" data-step="2">
         {{> restaurant_signup_restaurant_info}}
         {{> restaurant_signup_order_contact_info}}
     </div>
-    <div class="form-step" data-step="3">
+    <div class="form-step hide" data-step="3">
         {{> restaurant_signup_delivery_info}}
         {{> restaurant_signup_pickup_info}}
         {{> restaurant_signup_hours_of_operation}}

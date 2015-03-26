@@ -49,3 +49,16 @@
 .table tr.table-row-highlight {
   background-color: @palette-tan;
 }
+
+.table {
+  .table-row-highlight('courier');
+  .table-row-highlight('pickup');
+  .table-row-highlight('delivery');
+}
+
+.table-row-highlight( @type ){
+  @color: ~"@{type-@{type}}";
+  & tr.table-row[data-order-type="@{type}"] {
+    background-color: @color;
+  }
+}

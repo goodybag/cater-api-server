@@ -11,7 +11,7 @@ define(function(require){
   };
 
   var page = {
-    typeChangeFunnies: [
+    successFunnies: [
       'You are very handsome.'
     , 'Have a great day!'
     , 'You. Are. The. Best.'
@@ -187,7 +187,7 @@ define(function(require){
       flash.info([
         "It's set!<br>"
       , '<small class="really-small">'
-      , page.typeChangeFunnies[ ~~( Math.random() * page.typeChangeFunnies.length ) ]
+      , page.successFunnies[ ~~( Math.random() * page.successFunnies.length ) ]
       , '</small>'
       ].join(''));
     }

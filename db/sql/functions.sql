@@ -124,14 +124,14 @@ begin
   update orders
     set delivery_service_id = (
       select id from (
-          select ds.id, sum( ds.region_order_distribution ) over ( order by ds.id ) s
+          select ds.id, sum( ds.region_order_distribution ) over ( order by ds.id ) s, random() r
           from orders
             left join restaurants on orders.restaurant_id = restaurants.id
             left join regions on restaurants.region_id = regions.id
             left join delivery_services ds on regions.id = ds.region_id
             where orders.id = oid
       ) q
-      where s >= random()
+      where s >= q.r
       order by id
       limit 1
     )

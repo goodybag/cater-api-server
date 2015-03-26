@@ -53,7 +53,10 @@ create or replace function on_order_type_change()
 returns trigger as $$
 begin
   if NEW.type = 'courier' then
-    perform update_order_delivery_service_id( NEW.id );
+    if NEW.delivery_service_id is null then
+      perform update_order_delivery_service_id( NEW.id );
+    end if;
+
     perform update_order_delivery_service_pickup_time( NEW.id );
 
     -- Since update_order_delivery_service_id could affect the delivery_fee

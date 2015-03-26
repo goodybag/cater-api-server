@@ -32,8 +32,8 @@ define(function(require){
 
       page.order = options.order;
 
-      page.state.set( 'order_type', options.order.type );
-      page.state.set( 'restaurant_location_id', options.order.restaurant_location_id );
+      page.state.set( 'order_type', options.order.get('type') );
+      page.state.set( 'restaurant_location_id', options.order.get('restaurant_location_id') );
 
       page.state.on( 'change', page.onStateChange );
 
@@ -62,23 +62,17 @@ define(function(require){
         });
 
         $('[name="order_type"]').change( function( e ){
-          var order = { type: $(this).val() };
-
-          page.updateOrder( order, function( error, order ){
-            if ( error ){
-              return flash.info( 'Error :(', 1000 );
-            }
-
-            page.flashSuccess();
-
-            page.state.set( 'order_type', order.type );
-            page.state.trigger('order_type:change');
-          });
+          page.state.set( 'order_type', $(this).val() );
         });
 
         $('[name="delivery_service_id"]').change( function( e ){
+          if ( $(this).val() === 'null' ){
+            flash.info([
+              'Wait!<br><small class="really-small">You can\'t do that!</small>'
+            ]);
+          }
+
           page.state.set( 'order_courier', +$(this).val() );
-          page.state.trigger('order_courier:change');
         });
 
         $('[name="restaurant_location_id"]').change( function( e ){
@@ -110,7 +104,13 @@ define(function(require){
         props.delivery_service_id = page.state.get('order_courier');
       }
 
-      return page.updateOrder( props, callback );
+      return page.updateOrder( props, function( error ){
+        if ( error ) return callback( error );
+
+        callback();
+
+        page.onSave();
+      });
     }
 
     // Because I'm too lazy to fulfill all required properties on the Order Model
@@ -179,7 +179,7 @@ define(function(require){
   , updateCourierServiceSelector: function(){
       $('.form-group-courier').toggleClass(
         'hide'
-      , page.state.get('order_type') !== 'courier'
+      , page.state.get('order_type').indexOf('courier') === -1
       );
     }
 
@@ -194,7 +194,10 @@ define(function(require){
 
   , flashError: function( error ){
       console.error( error );
-      flash.info( 'Error :( <br> Press CMD+Alt+J', 1000 );
+      flash.info([
+        'Error :(<br>'
+      , '<small class="really-small">Press CMD+Alt+J</small>'
+      ].join(''), 1000 );
     }
 
   , onNotificationsSend: function(){
@@ -224,6 +227,10 @@ define(function(require){
         });
 
       $('.form-group-save').removeClass('hide');
+    }
+
+  , onSave: function(){
+      $('.form-group-save').addClass('hide');
     }
   };
 

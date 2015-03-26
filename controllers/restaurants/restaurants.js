@@ -58,8 +58,7 @@ module.exports.list = function(req, res) {
 
       models.Restaurant.find(
         query
-      , utils.extend({ is_hidden: false }
-      , utils.extned( {}, orderParams, {
+      , utils.extend({ is_hidden: false }, orderParams, {
           withContractFirst: req.user.attributes.region.sorts_by_no_contract
         })
       , callback);

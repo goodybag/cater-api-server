@@ -19,7 +19,19 @@ define(function (require, exports, module) {
       //this.model.set(this.store.getItem('gb_restaurant'));
       // TODO: use cookies to store view state
       this.step = 1;
-      debugger;
+
+      this.deliveryHoursStart = this.$el.find("input[name='time']").pickatime({
+        format: 'h:i A'
+      , interval: 15
+      }).pickatime('picker');
+
+      this.deliveryHoursEnd = this.$el.find("input[name='time']").pickatime({
+        format: 'h:i A'
+      , interval: 15
+      }).pickatime('picker');
+
+      this.deliveryHoursStart.on( 'set', _(this.onTimePickerSet).bind(this) );
+      this.deliveryHoursEnd.on( 'set', _(this.onTimePickerSet).bind(this) );
     }
 
   , saveAndContinue: function (e) {
@@ -65,5 +77,13 @@ define(function (require, exports, module) {
       console.log('click', e.target.getAttribute('data-day'))
       //this.set('hours_of_operation', hours)
     }
+
+
+  , onTimePickerSet: function( ctx ){
+      console.log(ctx)
+      if ( 'select' in ctx ){
+      }
+    }
+
   });
 });

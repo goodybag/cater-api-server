@@ -16,12 +16,16 @@ var $options = {
     , on: { id: '$users_payment_methods.payment_method_id$'}
     }
   ]
+, one: [{ table: 'users', alias: 'user' }]
 , columns: [ { expression: '*' } ]
 };
 
 db.users_payment_methods.find($query, $options, function(err, pms) {
   if ( err ) return logger.error('Unable to find user payment methods', err);
-  if ( !pms.length ) return logger.info('No remaining payment methods to migrate');
+  if ( !pms.length ) {
+    logger.info('No remaining payment methods to migrate');
+    process.exit();
+  }
 
   logger.info(pms.length + ' cards to update..');
   q.push(pms, function completed(err, paymentMethod) {
@@ -37,20 +41,36 @@ q.drain = function drained() {
 }
 
 // 1. look up balanced payment method
-// 2. db update payment_method with balanced customer metadata stripe_customer.funding_instrument.id
+// 2. db update payment_method
+// todo waterfall
 function migratePaymentMethod(pm, callback) {
   utils.balanced.Cards.get(pm.uri, function(err, card) {
-    if ( err )
-      return logger.error('Unable to get balanced card ' + pm.uri, err);
+    if ( err ) {
+      logger.error('Unable to get balanced card ' + pm.uri);
+      return callback(err);
+    }
 
-    if ( !card.meta['stripe_customer.funding_instrument.id'] )
-      return logger.error('Unable to associate stripe metadata ', err);
+    if ( !card.meta['stripe_customer.funding_instrument.id'] ) {
+      logger.error('Unable to associate stripe metadata ', err);
+      return callback( new Error('Unable to associate stripe metadata') );
+    }
 
-    db.payment_methods.update(
-      { id: pm.payment_method_id }
-    , { stripe_id: card.meta['stripe_customer.funding_instrument.id'] }
-    , { returning: ['*'] }
-    , callback
+    utils.stripe.customers.retrieveCard(
+      pm.user.stripe_id
+    , card.meta['stripe_customer.funding_instrument.id']
+    , function(err, stripeCard) {
+        if ( err ) {
+          logger.error('Unable to get stripe card');
+          return callback(new Error('Unable to get stripe card'));
+        }
+        db.payment_methods.update(
+          { id: pm.payment_method_id }
+        , { stripe_id: stripeCard.id
+          , data: stripeCard }
+        , { returning: ['*'] }
+        , callback
+        );
+      }
     );
   });
 };

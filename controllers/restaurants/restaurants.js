@@ -408,7 +408,7 @@ module.exports.create = function(req, res) {
 
   var fields = getFields( req );
 
-  // Normalize single quotes to apostrophe for balanced
+  // Normalize single quotes to apostrophe
   var name = req.body.name.replace(/[‘’]/g, '\'');
 
   utils.stripe.customers.create({

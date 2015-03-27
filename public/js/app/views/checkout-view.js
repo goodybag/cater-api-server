@@ -24,7 +24,7 @@ define(function(require, exports, module) {
       'submit #order-form':                           'submit',
       'submit #select-address-form':                  'selectAddress',
       'keyup #order-guests':                          'updateGuests',
-      'input input[name="card_number"]':              'onCardNumberChange',
+      'input input[data-stripe="number"]':            'onCardNumberChange',
       'change input[name="organization_type"]':       'onOrganizationTypeChange'
     }),
 
@@ -313,44 +313,22 @@ define(function(require, exports, module) {
       });
     },
 
-    onCardNumberChange: function(e) {
-      var cardTypeRegexes = {
-        visa: {
-          likely: /^4/
-        , valid: /^4[0-9]{15}$/
-        , mask: '9999 9999 9999 9999'
-        }
-      , master: {
-          likely: /^5[1-5]/
-        , valid: /^5[1-5][0-9]{14}/
-        , mask: '9999 9999 9999 9999'
-        }
-      , amex: {
-          likely: /^3[47]/
-        , valid: /^3[47][0-9]{13}$/
-        , mask: '9999 999999 99999'
-        }
-      , discover: {
-          likely: /^6(?:011|5[0-9]{2})/
-        , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
-        , mask: '9999 9999 9999 9999'
-        }
-      }
+    removeCCLogos = function () {
+      $cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
+    },
 
-      var $newCard = this.$el.find('#new-card');
-      var $cardNumber = $newCard.find('input[name="card_number"]');
-      var $postalCode = $newCard.find('input[name="postal_code"]');
+    onCardNumberChange: function(e) {
+      this.$newCard = this.$newCard || this.$el.find('#new-card');
+      this.$cardNumber = this.$cardNumber || this.$newCard.find('input[data-stripe="number"]');
+      this.$postalCode = this.$postalCode || this.$newCard.find('input[name="postal_code"]');
+
       var cardNumber = $cardNumber.val();
 
-      var removeCCLogos = function () {
-        $cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
-      };
-
       var foundMatch = false;
-      for(type in cardTypeRegexes) {
-        if (!cardTypeRegexes.hasOwnProperty(type)) return;
+      for(type in this.cardTypeRegexes) {
+        if (!this.cardTypeRegexes.hasOwnProperty(type)) return;
 
-        var cardType = cardTypeRegexes[type];
+        var cardType = this.cardTypeRegexes[type];
 
         // TODO: improve later - apply input mask and change logo only if the card type changes
         if (cardType.likely.test(cardNumber)) {
@@ -710,6 +688,29 @@ define(function(require, exports, module) {
         this.$orderOrganization.removeClass('hide');
       } else {
         this.$orderOrganization.addClass('hide');
+      }
+    },
+
+    cardTypeRegexes: {
+      visa: {
+        likely: /^4/
+      , valid: /^4[0-9]{15}$/
+      , mask: '9999 9999 9999 9999'
+      }
+    , master: {
+        likely: /^5[1-5]/
+      , valid: /^5[1-5][0-9]{14}/
+      , mask: '9999 9999 9999 9999'
+      }
+    , amex: {
+        likely: /^3[47]/
+      , valid: /^3[47][0-9]{13}$/
+      , mask: '9999 999999 99999'
+      }
+    , discover: {
+        likely: /^6(?:011|5[0-9]{2})/
+      , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
+      , mask: '9999 9999 9999 9999'
       }
     }
   });

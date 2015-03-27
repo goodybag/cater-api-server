@@ -411,16 +411,16 @@ module.exports.create = function(req, res) {
   // Normalize single quotes to apostrophe for balanced
   var name = req.body.name.replace(/[‘’]/g, '\'');
 
-  utils.balanced.Customers.create({
-    name: name
+  utils.stripe.customers.create({
+    metadata: { name: name }
   }, function (error, customer) {
     if (error) {
-      logger.error('Unable to create restaurant in balanced', error);
+      logger.error('Unable to create restaurant in stripe', error);
       return res.error(errors.internal.UNKNOWN, error);
     }
 
     var values = utils.pick(req.body, fields);
-    values.balanced_customer_uri = customer.uri;
+    values.stripe_id = customer.id;
 
     var restaurantQuery = queries.restaurant.create(values);
 

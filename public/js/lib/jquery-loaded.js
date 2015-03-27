@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
   var $ = require('jquery');
+  var jQuery = $;
 
   require('bootstrap');
   require('pickadate');

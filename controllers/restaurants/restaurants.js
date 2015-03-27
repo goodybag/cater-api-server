@@ -332,14 +332,10 @@ module.exports.listManageable = function(req, res) {
   );
 };
 
-var zips = function (body, id) {
-  return utils.flatten(
-    utils.map( body.delivery_zips, function ( group ) {
-      return utils.map( group.zips, function ( zip ) {
-       return { restaurant_id: id, fee: group.fee, zip: zip };
-      })
-    })
-  );
+var zips = function(body, id) {
+  return utils.map(body.delivery_zips, function(zip, index, arr) {
+    return {restaurant_id: id,  zip: zip.zip, fee: zip.fee }
+  });
 }
 
 var deliveryTimes = function(body, id) {

@@ -23,19 +23,23 @@ define(function(require, exports, module) {
       },
 
       delivery_zips: function() {
-        return utils.flatten(this.$el.find(this.fieldMap.delivery_zips).map(function (i, el) {
-          var zips = utils.uniq( $(el).find('input[name="zips"]').val().replace( /\s/g, '' ).split(',') );
-          zips = zips.filter(function (zip) {
-            return zip.length === 5 && +(zip);
-          });
-          var fee = +Handlebars.helpers.pennies( $(el).find('#input-minimum-order').val() );
-          return {
-            fee: fee
-          , zips: zips 
-          };
-        }));
+        return utils.uniq(this.$el.find(this.fieldMap.delivery_zips).map(function (i, el) {
+          var $el = $(el);
+          return $el.find('input[name="zips"]').val()
+            .replace( /\s/g, '' )
+            .split(',')
+            .filter(function ( zip ) {
+              return zip.length === 5 && +(zip);
+            }).map(function ( zip ) {
+              return {
+                fee: +Handlebars.helpers.pennies( $el.find('#input-minimum-order').val() )
+              , zip: zip
+              };
+            })
+        }), 'zip');
       }
     }, EditRestaurantView.prototype.fieldGetters ),
+
 
     addDeliveryTier: function() {
       var last = this.$el.find('.delivery-zip-group:last-child');

@@ -24,21 +24,18 @@ define(function (require, exports, module) {
     , name         : '.restaurant-name'
     , websites     : '.restaurant-website'
     , services     : '.restaurant-services' // not in db
-    , yelp_url     : '' // not in db
-    , cuisine      : ''
-    , price        : ''
-    , street       : ''
-    , city         : ''
-    , state        : ''
-    , zip          : ''
-    , display_phone: ''
-    , billing_email: ''
-    , meal_style   : ''
-    , tags         : ''
-    , amenities    : '' // map to restaurant
-    , menu         : '' // not in db (requires file uploader)
-    , logo_url     : '' //(requires file uploader)
-    , minimum_order: ''
+    , yelp_url     : '.yelp-url' // not in db
+    , cuisine      : '.restaurant-cuisine'
+    , price        : '.restaurant-price'
+    , address      : '.restaurant-address' // map to fields (street, city, state, zip)
+    , display_phone: '.restaurant-phone'
+    , billing_email: '.restaurant-email'
+    , meal_style   : '.meal-type'
+    , tags         : '.restaurant-tags'
+    , amenities    : '.restaurant-amenities' // map to restaurant
+    , menu         : '.restaurant-menu' // not in db (requires file uploader)
+    , logo_url     : '.restaurant-logo' //(requires file uploader)
+    , minimum_order: '.order-minimum'
     , contacts     : ''
     , gb_fee       : '' // this may be the wrong column
     , pickup_lead_time: '' // (require some extra mapping)

@@ -3,143 +3,234 @@
     <h3 class="panel-title">Restaurant Info</h3>
   </div>
   <div class="panel-body">
-    <div class="form-group">
-      <label class="label-left">Yelp URL</label>
-      <input type="text" class="form-control" name="yelp_url">
+    <div class="row">
+        <label class="label-col">Yelp URL</label>
+        <div class="field-col">
+          <div class="form-group">
+            <input type="text" class="form-control yelp-url" name="yelp_url">
+          </div>
+        </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Cuisine</label>
-      <input type="text" class="form-control" name="cuisine">
+    <div class="row">
+      <label class="label-col">Cuisine</label>
+      <div class="field-col">
+        <div class="form-group">
+          <input type="text" class="form-control restaurant-cuisine" name="cuisine">
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Price</label>
-      <ol class="inline-list">
-        <li>
-          <input type="checkbox" name="price">
-          $$$$
-        </li>
-        <li>
-          <input type="checkbox" name="price">
-          $$$$
-        </li>
-        <li>
-          <input type="checkbox" name="price">
-          $$$$
-        </li>
-        <li>
-          <input type="checkbox" name="price">
-          $$$$
-        </li>
-      </ol>
+    <div class="row">
+      <label class="label-col">Price</label>
+      <div class="field-col">
+        <ol class="inline-list">
+          <li>
+            <input type="radio" class="restaurant-price" name="price">
+            $$$$
+          </li>
+          <li>
+            <input type="radio" class="restaurant-price" name="price">
+            $$$$
+          </li>
+          <li>
+            <input type="radio" class="restaurant-price" name="price">
+            $$$$
+          </li>
+          <li>
+            <input type="radio" class="restaurant-price" name="price">
+            $$$$
+          </li>
+        </ol>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Restaurant Address</label>
-      <input type="text" class="form-control" name="address">
+    <div class="row">
+      <label class="label-col">Restaurant Address</label>
+      <div class="field-col">
+        <div class="form-group">
+          <input type="text" class="form-control restaurant-address" name="address">
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Restaurant Phone</label>
-      <input type="text" class="form-control" name="phone">
+    <div class="row">
+      <label class="label-col">Restaurant Phone</label>
+      <div class="field-col">
+        <div class="form-group">
+          <input type="text" class="form-control restaurant-phone" name="phone">
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Restaurant Email</label>
-      <input type="email" class="form-control" name="email">
+    <div class="row">
+      <label class="label-col">Restaurant Email</label>
+      <div class="field-col">
+        <div class="form-group">
+          <input type="email" class="form-control restaurant-email" name="email">
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Meal Types Offered</label>
-      <ol class="inline-list">
-        <li>
-          <input type="checkbox" name="meal_type">
-          Breakfast
-        </li>
-        <li>
-          <input type="checkbox" name="meal_type">
-          Lunch
-        </li>
-        <li>
-          <input type="checkbox" name="meal_type">
-          Dinner
-        </li>
-        <li>
-          <input type="checkbox" name="meal_type">
-          Appetizer
-        </li>
-        <li>
-          <input type="checkbox" name="meal_type">
-          Dessert
-        </li>
-      </ol>
+    <div class="row">
+      <label class="label-col">Meal Types Offered</label>
+      <div class="field-col">
+        <ol class="inline-list">
+          <li>
+            <label>
+              <input type="checkbox" class="meal-type" name="meal_type" value="breakfast">
+              Breakfast
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="meal-type" name="meal_type" value="lunch">
+              Lunch
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="meal-type" name="meal_type" value="dinner">
+              Dinner
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="meal-type" name="meal_type" value="appetizer">
+              Appetizer
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="meal-type" name="meal_type" value="dessert">
+              Dessert
+            </label>
+          </li>
+        </ol>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Dietary Restrictions</label>
-      <ol class="inline-list">
-        <li>
-          <label>
-            <input type="checkbox">
-            Vegetarian
-          </label>
-        </li>
-        <li>
-          <input type="checkbox">
-          Vegan
-        </li>
-        <li>
-          <input type="checkbox">
-          Gluten free
-        </li>
-        <li>
-          <input type="checkbox">
-          Dairy free
-        </li>
-        <li>
-          <input type="checkbox">
-          Halai
-        </li>
-        <li>
-          <input type="checkbox">
-          Kosher
-        </li>
-      </ol>
+    <div class="row">
+      <label class="label-col">Dietary Restrictions</label>
+      <div class="field-col">
+        <ol class="inline-list">
+          <li>
+            <label>
+              <input type="checkbox" class="restaurant-tags" value="vegetarian">
+              Vegetarian
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="restaurant-tags" value="vegan">
+              Vegan
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="restaurant-tags" value="glutenFree">
+              Gluten free
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="restaurant-tags" value="dairyFree">
+              Dairy free
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="restaurant-tags" value="halai">
+              Halai
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="restaurant-tags" value="kosher">
+              Kosher
+            </label>
+          </li>
+        </ol>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Which can you include?</label>
-      <ol class="inline-list">
-        <li>
-          <input type="checkbox">
-          Napkins
-        </li>
-        <li>
-          <input type="checkbox">
-          Utensils
-        </li>
-        <li>
-          <input type="checkbox">
-          Plates
-        </li>
-        <li>
-          <input type="checkbox">
-          None of these
-        </li>
-      </ol>
+    <div class="row">
+      <label class="label-col">Which can you include?</label>
+      <div class="field-col">
+        <ol class="inline-list">
+          <li>
+            <label>
+              <input type="checkbox" class="restaurant-amenities" value="napkins">
+              Napkins
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="restaurant-amenities" value="utensils">
+              Utensils
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="restaurant-amenities" value="plates">
+              Plates
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" class="restaurant-amenities" value="none">
+              None of these
+            </label>
+          </li>
+        </ol>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Your Menu</label>
-      <span>Enter a link:</span>
-      <input type="text" class="form-control" name="menu"> 
-      <strong>Or</strong><br>
-      <span>upload a file:</span>
-      <input type="file" class="form-control">
+    <div class="row">
+      <label class="label-col">Your Menu</label>
+      <div class="field-col">
+        <div class="row">
+          <label class="label-col">Enter a link:</label>
+          <div class="field-col">
+            <div class="form-group">
+              <input type="text" class="form-control restaurant-menu" name="menu"> 
+            </div>
+          </div>
+        </div>
+        <strong>Or</strong>
+        <div class="row">
+          <label class="label-col">upload a file:</label>
+          <div class="field-col">
+            <div class="form-group">
+              <input type="file" class="form-control restaurant-menu">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Your Logo</label>
-      <span>Enter a link:</span>
-      <input type="text" class="form-control" name="menu">
-      <strong>Or</strong><br>
-      <span>Upload a file:</span>
-      <input type="file">
+
+    <div class="row">
+      <label class="label-col">Your Logo</label>
+      <div class="field-col">
+        <div class="row">
+          <label class="label-col">Enter a link:</label>
+          <div class="field-col">
+            <div class="form-group">
+              <input type="text" class="form-control restaurant-logo" name="menu">
+            </div>
+          </div>
+        </div>
+        <strong>Or</strong>
+        <div class="row">
+          <label class="label-col">Upload a file:</label>
+          <div class="field-col">
+            <div class="form-group">
+              <input type="file" class="restaurant-logo">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="label-left">Order minimum</label> 
-      $<input type="text" class="form-control" name="order_minimum">
+
+    <div class="row">
+      <label class="label-col">Order minimum</label> 
+      <div class="field-col">
+        <div class="form-group">
+          $<input type="text" class="form-control order-minimum" name="order_minimum">
+        </div>
+      </div>
     </div>
+
   </div>
 </div>

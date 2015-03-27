@@ -18,11 +18,11 @@ define(function (require, exports, module) {
     // any field related to the user will have the
     // format user_{field name}
   , fieldMap: {
-      user_name    : ''
-    , user_phone   : ''
-    , user_email   : ''
-    , name         : ''
-    , websites     : ''
+      user_name    : '.user-name'
+    , user_phone   : '.user-phone'
+    , user_email   : '.user-email'
+    , name         : '.restaurant-name'
+    , websites     : '.restaurant-website'
     , services     : '' // not in db
     , yelp_url     : '' // not in db
     , cuisine      : ''
@@ -93,22 +93,54 @@ define(function (require, exports, module) {
         // submit form
         return;
       }
+      this.startValidations(function (errors) {
+        if (errors) {
+          return console.log(errors)
+          // display errors
+        }
+        return this.updateModel(function () {});
+      }.bind(this));
 
-      this.$current = this.getStep( this.step );
-      this.$next = this.getStep( this.step + 1 );
-      this.$steps = this.$el.find('.form-step');
-
-      this.$steps.addClass('hide');
-      this.$next.removeClass('hide')
-      this.step++;
     }
 
-  , getStep: function (step) {
-      return this.$el.find(
-        '.form-step[data-step=":step"]'.replace(':step', step)
-      );
+  , updateModel: function (callback) {
     }
-  , updateModel: function ( data ) {
+
+  , startValidations: function (callback) {
+      // runs validation based on the form's step number
+      var self = this;
+      return [
+          function (done) {
+            var errors = self.validateFields(['name', 'websites'], self.getDiff());
+            done(errors);
+          }
+        , function () {
+
+          }
+        , function () {
+
+          }
+        , function () {
+
+          }
+        ][ 0 ](callback);
+    }
+
+  , validateFields: function (keys, diff) {
+      // only validates specified keys in the
+      // model schema
+      var schema = {
+        type: this.model.schema['type']
+      , properties: {}
+      };
+      keys.forEach(function (k) {
+        if (k in this.model.schema.properties){
+          schema['properties'][k] = this.model.schema.properties[k];
+        }
+      });
+      return this.model.validator.validate(diff, schema, function (errors) {
+        return errors;
+      });
     }
 
   , addLeadTime: function(e) {

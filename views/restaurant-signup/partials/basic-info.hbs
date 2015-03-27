@@ -5,41 +5,65 @@
   </div>
 </div>
 <div class="container">
-  <div class="form-group">
-    <label class="label-left">Your Name</label>
-    <input type="text" class="form-control" name="name" id="name">
+  <div class="row">
+    <label class="label-col">Your Name</label>
+    <div class="field-col">
+      <div class="form-group">
+        <input type="text" class="form-control user-name" name="name" id="name">
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label class="label-left">Your Number</label>
-    <input type="text" class="form-control" name="number" id="number">
+  <div class="row">
+    <label class="label-col">Your Number</label>
+    <div class="field-col">
+      <div class="form-group">
+        <input type="text" class="form-control user-phone" name="number" id="number">
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label class="label-left">Your Email</label>
-    <input type="text" class="form-control" name="email" id="email">
+  <div class="row">
+    <label class="label-col">Your Email</label>
+    <div class="field-col">
+      <div class="form-group">
+        <input type="email" class="form-control user-email" name="email" id="email">
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label class="label-left">Restaurant Name</label>
-    <input type="text" class="form-control" name="restaurant_name" id="restaurant-name">
+  <div class="row">
+    <label class="label-col">Restaurant Name</label>
+    <div class="field-col">
+      <div class="form-group">
+        <input type="text" class="form-control restaurant-name" name="restaurant_name" id="restaurant-name">
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label class="label-left">Restaurant Website</label>
-    <input type="text" class="form-control" name="website" id="website">
+  <div class="row">
+    <label class="label-col">Restaurant Website</label>
+    <div class="field-col">
+      <div class="form-group">
+        <input type="text" class="form-control restaurant-website" name="website" id="website">
+      </div>
+    </div>
   </div>
-  <label class="label-left">Which can you provide?</label>
-  <ul class="inline-list">
-    <li>
-      <input type="checkbox">
-      <label>Delivery and Pickup</label>
-    </li>
-    <li>
-      <input type="checkbox">
-      <label>Delivery only</label>
-      <p class="panel-info">Your restaurant delivers the food</p>
-    </li>
-    <li>
-      <input type="checkbox">
-      <label>Pickup only</label>
-      <p class="panel-info">A courier will come get the food</p>
-    </li>
-  </ul>
+  <div class="row">
+    <label class="label-col">Which can you provide?</label>
+    <div class="field-col">
+      <ul class="inline-list">
+        <li>
+          <input type="checkbox">
+          <label>Delivery and Pickup</label>
+        </li>
+        <li>
+          <input type="checkbox">
+          <label>Delivery only</label>
+          <p class="panel-info">Your restaurant delivers the food</p>
+        </li>
+        <li>
+          <input type="checkbox">
+          <label>Pickup only</label>
+          <p class="panel-info">A courier will come get the food</p>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

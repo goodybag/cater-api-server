@@ -589,9 +589,9 @@ module.exports.copy = function(req, res) {
   var tasks = [
     db.restaurants.findOne.bind(db.restaurants, id)
 
-  , function createBalancedUri(restaurant, callback) {
-      utils.balanced.Customers.create({
-        name: restaurant.name
+  , function createStripeUri(restaurant, callback) {
+      utils.stripe.customers.create({
+        metadata: { name: restaurant.name }
       }, function(err, customer) {
         callback(err, restaurant, customer);
       });
@@ -599,7 +599,7 @@ module.exports.copy = function(req, res) {
 
   , function copyRestaurant(restaurant, customer, callback) {
       var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id'), {
-        balanced_customer_uri: customer.uri
+        stripe_id: customer.id
       , name: restaurant.name + ' Copy'
       , is_hidden: true
       });

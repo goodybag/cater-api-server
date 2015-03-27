@@ -23,7 +23,7 @@ define(function (require, exports, module) {
     , user_email   : '.user-email'
     , name         : '.restaurant-name'
     , websites     : '.restaurant-website'
-    , services     : '' // not in db
+    , services     : '.restaurant-services' // not in db
     , yelp_url     : '' // not in db
     , cuisine      : ''
     , price        : ''
@@ -63,11 +63,12 @@ define(function (require, exports, module) {
       //expose model for _dev_
       window.model = this.model;
 
-      // TODO: use local storage to store restaurant data
-      this.store = window.localStorage;
+      this.cookieName = 'gb_s';
+      this.store = 'gb_restaurant';
+      if (localStorage && localStorage.getItem(this.store)) {
+        this.model.set(JSON.parse(localStorage.getItem(this.store)));
+      }
 
-      //this.model.set(this.store.getItem('gb_restaurant'));
-      // TODO: use cookies to store view state
       this.step = 1;
 
       this.deliveryHoursStart = this.$el.find("input[name='time']").pickatime({
@@ -89,29 +90,43 @@ define(function (require, exports, module) {
         e.preventDefault();
       }
 
-      if ( this.step >= this.options.steps ) {
+      /*
+      if ( parseInt(cookie.getItem(this.cookieName)) > this.options.steps ) {
         // submit form
         return;
       }
+      */
       this.startValidations(function (errors) {
         if (errors) {
+          this.model.validationError = errors;
+          this.displayErrors();
           return console.log(errors)
-          // display errors
         }
-        return this.updateModel(function () {});
+
+        this.model.set(this.getDiff());
+        if (localStorage) {
+          localStorage.setItem( this.store, JSON.stringify(this.model.toJSON()) );
+        }
+
+        //update view cookie state
+        // var next = $('.btn-continue').data('next');
+        //cookie.setItem(this.cookieName, next);
+        //window.location.reload();
       }.bind(this));
 
     }
 
-  , updateModel: function (callback) {
-    }
 
   , startValidations: function (callback) {
       // runs validation based on the form's step number
       var self = this;
       return [
           function (done) {
-            var errors = self.validateFields(['name', 'websites'], self.getDiff());
+            var errors = self.validateFields([
+                'name'
+              , 'websites'
+              , 'services'
+              ], self.getDiff() );
             done(errors);
           }
         , function () {

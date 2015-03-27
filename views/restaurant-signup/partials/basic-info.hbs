@@ -38,7 +38,10 @@
     </div>
   </div>
   <div class="row">
-    <label class="label-col">Restaurant Website</label>
+    <label class="label-col">
+      Restaurant Website
+      <span class="panel-info">Optional</span>
+    </label>
     <div class="field-col">
       <div class="form-group">
         <input type="text" class="form-control restaurant-website" name="website" id="website">
@@ -50,16 +53,16 @@
     <div class="field-col">
       <ul class="inline-list">
         <li>
-          <input type="checkbox">
+          <input type="radio" class="restaurant-services" name="services" value="delivery, pickup">
           <label>Delivery and Pickup</label>
         </li>
         <li>
-          <input type="checkbox">
+          <input type="radio" class="restaurant-services" name="services" value="delivery">
           <label>Delivery only</label>
           <p class="panel-info">Your restaurant delivers the food</p>
         </li>
         <li>
-          <input type="checkbox">
+          <input type="radio" class="restaurant-services" name="services" value="pickup">
           <label>Pickup only</label>
           <p class="panel-info">A courier will come get the food</p>
         </li>

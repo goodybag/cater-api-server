@@ -494,13 +494,14 @@ define(function(require, exports, module) {
       });
 
       var $el = options.$el;
+      var userId = options.userId;
 
       var data = {
-        card_name:         $el.find('[name="card_name"]').val()
-      , card_number:       $el.find('[name="card_number"]').inputmask('unmaskedvalue')
-      , security_code:     $el.find('[name="security_code"]').val()
-      , expiration_month: +$el.find('[name="expiration_month"]').val()
-      , expiration_year:  +$el.find('[name="expiration_year"]').val()
+        card_name:         $el.find('[data-stripe="name"]').val()
+      , card_number:       $el.find('[data-stripe="number"]').inputmask('unmaskedvalue')
+      , security_code:     $el.find('[data-stripe="cvc"]').val()
+      , expiration_month: +$el.find('[data-stripe="exp-month"]').val()
+      , expiration_year:  +$el.find('[data-stripe="exp-year"]').val()
       , save_card:         options.saveCard
       };
 
@@ -512,10 +513,7 @@ define(function(require, exports, module) {
         , data);
       }
 
-      var pm = new PaymentMethod({ user_id: options.userId, id: options.paymentId });
-      pm.updateBalancedAndSave(data, function (errors) {
-        return callback(errors, pm);
-      });
+      Stripe.card.createToken($el, this.stripeResponseHandler.bind(this, userId, callback));
     },
 
     saveNewCardAndSubmit: function(e) {
@@ -538,6 +536,30 @@ define(function(require, exports, module) {
 
         return _.defer(function(){ this_.submit(e); });
       });
+    },
+
+    stripeResponseHandler: function(user_id, callback, status, response) {
+      if ( status !== 200 ) return callback(response.error);
+
+      var pm = new PaymentMethod();
+
+      var props = {
+        data: response.card
+      , name: response.card.name
+      , type: response.type
+      , user_id: user_id
+      , token_id: response.id
+      };
+
+      var opts = {
+        success: function() {
+          callback(null);
+        }, error: function() {
+          callback(new Error('unable to create payment method'));
+        }
+      };
+
+      pm.save(props, opts);
     },
 
     validateAddress: function(){

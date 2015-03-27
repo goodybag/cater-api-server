@@ -553,7 +553,7 @@ define(function(require, exports, module) {
 
       var opts = {
         success: function() {
-          callback(null);
+          callback(null, pm);
         }, error: function() {
           callback(new Error('unable to create payment method'));
         }

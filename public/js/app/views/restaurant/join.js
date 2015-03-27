@@ -60,10 +60,12 @@ define(function (require, exports, module) {
   , initialize: function () {
       console.log('init');
 
-      //expose model for _dev_
+      //expose stuff for _dev_
       window.model = this.model;
+      window.cookie = cookie;
 
-      this.cookieName = 'gb_s';
+      //restaurant signup view state
+      this.cookieName = 'gb_rs';
       this.store = 'gb_restaurant';
       if (localStorage && localStorage.getItem(this.store)) {
         this.model.set(JSON.parse(localStorage.getItem(this.store)));
@@ -90,12 +92,11 @@ define(function (require, exports, module) {
         e.preventDefault();
       }
 
-      /*
-      if ( parseInt(cookie.getItem(this.cookieName)) > this.options.steps ) {
+      if ( parseInt(cookie.getItem(this.cookieName)) > this.options.steps - 1 ) {
         // submit form
         return;
       }
-      */
+
       this.startValidations(function (errors) {
         if (errors) {
           this.model.validationError = errors;
@@ -108,10 +109,9 @@ define(function (require, exports, module) {
           localStorage.setItem( this.store, JSON.stringify(this.model.toJSON()) );
         }
 
-        //update view cookie state
-        // var next = $('.btn-continue').data('next');
-        //cookie.setItem(this.cookieName, next);
-        //window.location.reload();
+        //update cookie view state
+        cookie.setItem(this.cookieName, $('.btn-continue').data('next'));
+        window.location.reload();
       }.bind(this));
 
     }
@@ -120,6 +120,7 @@ define(function (require, exports, module) {
   , startValidations: function (callback) {
       // runs validation based on the form's step number
       var self = this;
+      var step = parseInt(cookie.getItem(this.cookieName)) - 1 || 0;
       return [
           function (done) {
             var errors = self.validateFields([
@@ -129,16 +130,16 @@ define(function (require, exports, module) {
               ], self.getDiff() );
             done(errors);
           }
-        , function () {
-
+        , function (done) {
+            done();
           }
-        , function () {
-
+        , function (done) {
+            done();
           }
-        , function () {
-
+        , function (done) {
+            done();
           }
-        ][ 0 ](callback);
+        ][ step ](callback);
     }
 
   , validateFields: function (keys, diff) {

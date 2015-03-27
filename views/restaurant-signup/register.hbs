@@ -10,30 +10,28 @@
       <li><span>4</span> Payments</li>
     </ol>
   </nav>
-
   <form class="form-vertical form-restaurant-signup">
-    <div class="form-step" data-step="1">
+    <div class="form-step {{#unless (or (not cookies.gb_rs) (eq cookies.gb_rs '1'))}}hide{{/unless}}" data-step="1">
       {{> restaurant_signup_basic_info}}
     </div>
-    <div class="form-step hide" data-step="2">
-        {{> restaurant_signup_restaurant_info}}
-        {{> restaurant_signup_order_contact_info}}
+    <div class="form-step {{or (eq cookies.gb_rs '2') 'hide'}}" data-step="2">
+      {{> restaurant_signup_restaurant_info}}
+      {{> restaurant_signup_order_contact_info}}
     </div>
-    <div class="form-step hide" data-step="3">
-        {{> restaurant_signup_delivery_info}}
-        {{> restaurant_signup_pickup_info}}
-        {{> restaurant_signup_hours_of_operation}}
-
+    <div class="form-step {{or (eq cookies.gb_rs '3') 'hide' }}" data-step="3">
+      {{> restaurant_signup_delivery_info}}
+      {{> restaurant_signup_pickup_info}}
+      {{> restaurant_signup_hours_of_operation}}
     </div>
-    <div class="form-step hide" data-step="4">
-        {{> restaurant_signup_billing_address}}
-        {{> restaurant_signup_direct_deposit_info}}
-        {{> restaurant_signup_fee_schedule}}
-        {{> restaurant_signup_terms_of_service}}
+    <div class="form-step {{or (eq cookies.gb_rs '4') 'hide'}}" data-step="4">
+      {{> restaurant_signup_billing_address}}
+      {{> restaurant_signup_direct_deposit_info}}
+      {{> restaurant_signup_fee_schedule}}
+      {{> restaurant_signup_terms_of_service}}
     </div>
 
     <div class="form-group">
-      <button type="submit" class="btn btn-default btn-continue">Save and Continue &gt;</button>
+      <button type="submit" class="btn btn-default btn-continue" data-next="{{add (or cookies.gb_rs '1') '1'}}">Save and Continue &gt;</button>
     </div>
   </form>
 

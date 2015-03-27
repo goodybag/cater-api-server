@@ -483,11 +483,8 @@ define(function(require, exports, module) {
     },
 
     contains: function(arr, element, options){
-      if(utils.contains(arr, element)){
-        return options.fn(this);
-      } else {
-        return options.inverse(this);
-      }
+      if ( typeof options.fn !== 'function' ) return utils.contains(arr, element);
+      return options[utils.contains(arr, element) ? 'fn' : 'inverse'](this);
     },
 
     factorToPercent: function( factor, precision, options ){

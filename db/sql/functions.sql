@@ -53,6 +53,7 @@ create or replace function on_order_type_change()
 returns trigger as $$
 begin
   if NEW.type = 'courier' then
+    -- No delivery service set? Assign one
     if NEW.delivery_service_id is null then
       perform update_order_delivery_service_id( NEW.id );
     end if;
@@ -64,6 +65,11 @@ begin
     perform update_order_totals( NEW.id );
   else
     perform update_order_totals( NEW );
+
+    -- No longer courier, check to see if we need to null out dsid
+    if NEW.delivery_service_id is not null then
+      update orders set delivery_service_id = null where id = NEW.id;
+    end if;
   end if;
   return NEW;
 end;

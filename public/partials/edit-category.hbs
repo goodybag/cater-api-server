@@ -63,14 +63,12 @@
 {{#extend "scripts"}}
 <script>
 require( ['jquery-loaded'], function( page ){
-    //hide items when page loads
-    $(".items-list").hide();
-    //show those items when category is clicked
-    $(".item-edit-show").click(function($){
-      //prevent default
-      console.log('hi');      
+    $('.item-edit-show').click(function(event){
+      event.preventDefault();
+      $(this).closest('.categories').append('.items-list');
+      console.log('hi');
+      $('.items-list').show();
     });
-  
 });
 </script>
 {{/extend}}

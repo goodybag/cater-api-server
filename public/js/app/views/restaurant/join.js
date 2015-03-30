@@ -30,7 +30,7 @@ define(function (require, exports, module) {
     , address      : '.restaurant-address' // map to fields (street, city, state, zip)
     , display_phone: '.restaurant-phone'
     , billing_email: '.restaurant-email'
-    , meal_style   : '.meal-type'
+    , meal_type    : '.meal-type'
     , tags         : '.restaurant-tags'
     , amenities    : '.restaurant-amenities' // map to restaurant
     , menu         : '.restaurant-menu' // not in db (requires file uploader)
@@ -52,8 +52,22 @@ define(function (require, exports, module) {
     , terms_date: '' // not in db
     }
   , fieldGetters: {
-
+      meal_type: function () {
+        return $('.meal-type').filter(function (i, el) {
+          return $(el).is(':checked');
+          }).map(function(i, el) {
+            return { meal_type: el.value };
+          });
+      }
+      , tags: function () {
+          return $('.restaurant-tags').filter(function (i, el) {
+            return $(el).is(':checked');
+          }).map(function (i, el) {
+            return { tag: el.value };
+          });
+      }
     }
+
   , initialize: function () {
       console.log('init');
 
@@ -118,6 +132,7 @@ define(function (require, exports, module) {
       // runs validation based on the form's step number
       var self = this;
       var step = parseInt(cookie.getItem(this.cookieName)) - 1 || 0;
+      console.log(self.getDiff())
       return [
           function (done) {
             var errors = self.validateFields([
@@ -128,7 +143,14 @@ define(function (require, exports, module) {
             done(errors);
           }
         , function (done) {
-            done();
+            var errors = self.validateFields([
+                'address'
+              , 'display_phone'
+              , 'menu'
+              , 'logo_url'
+              , 'minimum_order'
+            ], self.getDiff() );
+            done(errors);
           }
         , function (done) {
             done();

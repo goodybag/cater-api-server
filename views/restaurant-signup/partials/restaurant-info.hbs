@@ -4,7 +4,7 @@
   </div>
   <div class="panel-body">
     <div class="row">
-        <label class="label-col">Yelp URL</label>
+        <label class="label-col">Yelp URL <div class="panel-info">Optional</div></label>
         <div class="field-col">
           <div class="form-group">
             <input type="text" class="form-control yelp-url" name="yelp_url">
@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="row">
-      <label class="label-col">Cuisine</label>
+      <label class="label-col">Cuisine <div class="panel-info">Optional</div></label>
       <div class="field-col">
         <div class="form-group">
           <input type="text" class="form-control restaurant-cuisine" name="cuisine">
@@ -20,24 +20,32 @@
       </div>
     </div>
     <div class="row">
-      <label class="label-col">Price</label>
+      <label class="label-col">Price <div class="panel-info">Optional</div></label>
       <div class="field-col">
         <ol class="inline-list">
           <li>
-            <input type="radio" class="restaurant-price" name="price">
-            $$$$
+            <label>
+              <input type="radio" class="restaurant-price" name="price">
+              $$$$
+            </label>
           </li>
           <li>
-            <input type="radio" class="restaurant-price" name="price">
-            $$$$
+            <label>
+              <input type="radio" class="restaurant-price" name="price">
+              $$$$
+            </label>
           </li>
           <li>
-            <input type="radio" class="restaurant-price" name="price">
-            $$$$
+            <label>
+              <input type="radio" class="restaurant-price" name="price">
+              $$$$
+            </label>
           </li>
           <li>
-            <input type="radio" class="restaurant-price" name="price">
-            $$$$
+            <label>
+              <input type="radio" class="restaurant-price" name="price">
+              $$$$
+            </label>
           </li>
         </ol>
       </div>
@@ -59,7 +67,7 @@
       </div>
     </div>
     <div class="row">
-      <label class="label-col">Restaurant Email</label>
+      <label class="label-col">Restaurant Email <span class="panel-info">Optional</span></label>
       <div class="field-col">
         <div class="form-group">
           <input type="email" class="form-control restaurant-email" name="email">
@@ -67,7 +75,7 @@
       </div>
     </div>
     <div class="row">
-      <label class="label-col">Meal Types Offered</label>
+      <label class="label-col">Meal Types Offered <div class="panel-info">Optional</div></label>
       <div class="field-col">
         <ol class="inline-list">
           <li>
@@ -104,7 +112,7 @@
       </div>
     </div>
     <div class="row">
-      <label class="label-col">Dietary Restrictions</label>
+      <label class="label-col">Dietary Restrictions <div class="panel-info">Optional</div></label>
       <div class="field-col">
         <ol class="inline-list">
           <li>
@@ -144,10 +152,11 @@
             </label>
           </li>
         </ol>
+        <span class="panel-info">Do you offer any entrées that fall user one of these?</span>
       </div>
     </div>
     <div class="row">
-      <label class="label-col">Which can you include?</label>
+      <label class="label-col">Which can you include? <div class="panel-info">Optional</div></label>
       <div class="field-col">
         <ol class="inline-list">
           <li>
@@ -228,6 +237,7 @@
       <div class="field-col">
         <div class="form-group">
           $<input type="text" class="form-control order-minimum" name="order_minimum">
+          <div class="panel-info">The smallest order you're willing to accept. The lower your order minimum the more orders you can receive</div>
         </div>
       </div>
     </div>

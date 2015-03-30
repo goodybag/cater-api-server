@@ -19,7 +19,7 @@ define(function(require, exports, module) {
       'click .new-item': 'newItem',
       'keyup .category-form .form-control': 'onChange',
       'change .category-form .form-control': 'onChange',
-      'change .category-form .category-menus': 'onChange',
+      'change .category-form input': 'onChange',
       'click .category-form .category-remove': 'onRemove',
       'submit .category-form': 'onSave'
     },

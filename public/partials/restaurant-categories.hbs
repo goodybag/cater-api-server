@@ -1,4 +1,5 @@
 {{#each restaurant.categories}}
+  {{#unless is_hidden}}
   {{#contains menus "group"}}
     <div id="group-{{id}}" class="panel menu-category menu-full menu-group">
       <div class="panel-heading menu-category-heading">
@@ -40,9 +41,11 @@
       </div>
     </div>
   {{/contains}}
+  {{/unless}}
 {{/each}}
 
 {{#each restaurant.categories}}
+  {{#unless is_hidden}}
   {{#contains menus "individual"}}
     <div id="individual-{{id}}" class="panel menu-category menu-full menu-individual">
       <div class="panel-heading menu-category-heading">
@@ -78,4 +81,5 @@
       </div>
     </div>
   {{/contains}}
+  {{/unless}}
 {{/each}}

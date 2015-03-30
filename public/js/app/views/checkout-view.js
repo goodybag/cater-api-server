@@ -58,7 +58,7 @@ define(function(require, exports, module) {
       organization_type: function () {
         return this.$el.find('input[name="organization_type"]:checked').val();
       },
-      
+
       secondary_contact_phone: function () {
         return this.$el.find(this.fieldMap.secondary_contact_phone).val().replace(/[^\d]/g, '') || null;
       }
@@ -163,11 +163,13 @@ define(function(require, exports, module) {
     },
 
     itemEditClick: function(e) {
+      e.preventDefault();
       this.showMenu();
     },
 
     showMenu: function() {
-      window.location = this.model.restaurant.url();
+      // TODO edit order item should show item modals instead of redirecting page
+      window.location = this.model.url() + '/add-items';
     },
 
     changePaymentMethod: function(e) {
@@ -532,7 +534,7 @@ define(function(require, exports, module) {
         $el: $el
       , userId: this.options.user.get('id')
       , saveCard: $el.find('[name="save_card"]:checked').length === 1
-      }, 
+      },
       function(errors, pm) {
         if (errors) return this_.displayErrors2(errors, PaymentMethod);
 
@@ -691,7 +693,7 @@ define(function(require, exports, module) {
       , user_id: this.options.user.get('id')
       , paymentId: $el.find('[name="id"]').val()
       , saveCard: false
-      }, 
+      },
       function(error) {
         if (error) return notify.error(error);
 

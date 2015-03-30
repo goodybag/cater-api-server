@@ -5,7 +5,7 @@ var models = require('../../models');
 var db = require('../../db');
 var config = require('../../config');
 var _ = utils._;
-var scheduler = require('../../lib/scheduler')
+var scheduler = require('../../lib/scheduler');
 
 var checkForExistingDebit = function (order, callback) {
   var logger = process.domain.logger.create('checkForExistingDebit', {
@@ -21,13 +21,13 @@ var checkForExistingDebit = function (order, callback) {
     }
 
     if (debits && debits.total > 1){
-      logger.error('Multiple debits for a single order')
+      logger.error('Multiple debits for a single order');
       return callback(new Error('multiple debits for a single order: ' + order.id));
     }
     if (debits && debits.total == 1) return callback (null, debits.items[0]);
     return callback(null, null);
   });
-}
+};
 
 var debitCustomer = function (order, callback) {
   var logger = process.domain.logger.create('debitCustomer', {
@@ -35,24 +35,24 @@ var debitCustomer = function (order, callback) {
   });
 
   var amount = Math.floor(order.total);
-  if (typeof amount === 'undefined' || amount == null || amount == 0) return callback(new Error('invalid amount: ' + amount));
+  if (typeof amount === 'undefined' || amount === null || amount === 0) return callback(new Error('invalid amount: ' + amount));
 
   var pmId = order.payment_method_id;
   models.PaymentMethod.findOne(pmId, function(error, paymentMethod) {
     if (error) return callback(new Error('invalid payment method: ' + pmId));
-      utils.balanced.Debits.create({
-        amount: amount
-      , source_uri: paymentMethod.attributes.uri
-      , customer_uri: order.user.balanced_customer_uri
-      , on_behalf_of_uri: order.restaurant.balanced_customer_uri
-      , appears_on_statement_as: 'GB ORDER #'+ order.id
-      , meta: { // note, cannot search on nested properties so keep searchable properties top-level
+      utils.stripe.charges.create({
+        amount: amount,
+        currency: 'usd',
+        source: paymentMethod.attributes.stripe_id,
+        statement_descriptor: 'GOODYBAG CATER #' + order.id,
+        metadata: {
           user_id: order.user.id
         , restaurant_id: order.restaurant.id
         , order_id: order.id
         , order_uuid: order.uuid
         }
-      }, function (error, debit) {
+      },
+      function (error, charge) {
         if (error) {
           // enqueue declined cc notification on scheduler
           return scheduler.enqueue('send-order-notification', new Date(), {
@@ -64,9 +64,9 @@ var debitCustomer = function (order, callback) {
             }
             // construct a model to run the following transactions
             return (new models.Order(order)).setPaymentError(error.uri, error, callback);
-          }); 
+          });
         }
-        return (new models.Order(order)).setPaymentPaid('debit', debit.uri, debit, callback);
+        return (new models.Order(order)).setPaymentPaid('debit', debit, callback);
       });
   });
 };
@@ -79,8 +79,9 @@ var task = function (message, callback) {
   });
 
   // if data is bad remove it from the queue immediately
+  var body;
   try {
-    var body = JSON.parse(message.body);
+    body = JSON.parse(message.body);
   } catch (e) {
     logger.error('unable to parse message body: ' + message.body);
     return utils.queues.debit.del(message.id, utils.noop), callback(e);

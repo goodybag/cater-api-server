@@ -465,7 +465,7 @@ module.exports = Model.extend({
     });
   },
 
-  setPaymentPaid: function (type, uri, data, callback) {
+  setPaymentPaid: function (type, data, callback) {
     var self = this;
 
     logger.info('setting payment status to paid for order: ' + this.attributes.id);
@@ -480,7 +480,7 @@ module.exports = Model.extend({
           self.save(cb, client);
         }
       , createTransaction: function (cb) {
-          var query = queries.transaction.createIfUriNotExists(type, self.attributes.id, uri, data);
+          var query = queries.transaction.createIfUriNotExists(type, self.attributes.id, data);
           var sql = db.builder.sql(query);
           client.query(sql.query, sql.values, cb);
         }

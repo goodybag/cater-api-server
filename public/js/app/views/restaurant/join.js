@@ -1,6 +1,7 @@
 define(function (require, exports, module) {
   var utils = require('utils');
   var FormView = require('../form-view');
+  var spinner = require('spinner');
   var Handlebars = require('handlebars');
   var cookie = require('../../../cookie');
 
@@ -52,6 +53,10 @@ define(function (require, exports, module) {
     , terms_date: '' // not in db
     }
   , fieldGetters: {
+      services: function () {
+        return this.$el.find(this.fieldMap.services+':checked').val() || null;
+      },
+
       meal_type: function () {
         var types = [];
         this.$el.find(this.fieldMap.meal_type).each(function (i, el) {
@@ -60,15 +65,16 @@ define(function (require, exports, module) {
           }
         });
         return types;
-      }
-      , tags: function () {
-          var tags = [];
-          this.$el.find(this.fieldMap.tags).each(function (i, el) {
-            if ( $(el).is(':checked') ) {
-              tags.push({ tag: el.value });
-            }
-          });
-          return tags;
+      },
+
+      tags: function () {
+        var tags = [];
+        this.$el.find(this.fieldMap.tags).each(function (i, el) {
+          if ( $(el).is(':checked') ) {
+            tags.push({ tag: el.value });
+          }
+        });
+        return tags;
       }
     }
 
@@ -106,6 +112,8 @@ define(function (require, exports, module) {
       if (e) {
         e.preventDefault();
       }
+      this.clearErrors();
+      spinner.start();
 
       if ( parseInt(cookie.getItem(this.cookieName)) > this.options.steps - 1 ) {
         // submit form
@@ -113,10 +121,8 @@ define(function (require, exports, module) {
       }
 
       this.startValidations(function (errors) {
-        if (errors) {
-          this.model.validationError = errors;
-          this.displayErrors();
-          return console.log(errors)
+        if (errors.length > 0) {
+          return;
         }
 
         this.model.set(this.getDiff());
@@ -124,9 +130,9 @@ define(function (require, exports, module) {
           localStorage.setItem( this.store, JSON.stringify(this.model.toJSON()) );
         }
 
-        debugger;
         //update cookie view state
         cookie.setItem(this.cookieName, $('.btn-continue').data('next'));
+        spinner.stop();
         window.location.reload();
       }.bind(this));
 
@@ -137,24 +143,53 @@ define(function (require, exports, module) {
       // runs validation based on the form's step number
       var self = this;
       var step = parseInt(cookie.getItem(this.cookieName)) - 1 || 0;
-      console.log(self.getDiff())
       return [
           function (done) {
             var errors = self.validateFields([
-                'name'
-              , 'websites'
-              , 'services'
-              ], self.getDiff() );
-            done(errors);
+                {
+                  property: 'name'
+                , message: 'Please provide a restaurant name.'
+                }
+              , {
+                  property: 'services'
+                , message: 'Tell us which service you can provide.'
+                }
+              ]);
+
+            if (errors) {
+              self.displayErrors(errors)
+              return done(errors);
+            }
+
+            return done(null);
           }
         , function (done) {
             var errors = self.validateFields([
-                'address'
-              , 'display_phone'
-              , 'menu'
-              , 'logo_url'
-              , 'minimum_order'
-            ], self.getDiff() );
+              {
+                property: 'address'
+              , message: 'Please provide an address'
+              }
+            , {
+                property: 'display_phone'
+              , message: 'Please provide a phone number.'
+              }
+            , {
+                property: 'menu'
+              , message: 'Please provide a menu.'
+              }
+            , {
+                property: 'logo_url'
+              , message: 'Please provide a logo.'
+              }
+            , {
+                property: 'minimum_order'
+              , message: 'Please tell us your order minimum.'
+              }
+            ]);
+            if (errors) {
+              self.displayErrors(errors)
+              return done(errors);
+            }
             done(errors);
           }
         , function (done) {
@@ -166,21 +201,63 @@ define(function (require, exports, module) {
         ][ step ](callback);
     }
 
-  , validateFields: function (keys, diff) {
-      // only validates specified keys in the
-      // model schema
-      var schema = {
-        type: this.model.schema['type']
-      , properties: {}
+  , displayErrors: function( errors ){
+      // Just in case!
+      spinner.stop();
+
+      var this_ = this;
+      var error, $el, $parent;
+      var template = Handlebars.partials.alert_error;
+
+       var css = {
+        position: 'absolute'
+      , top: '-9px'
       };
-      keys.forEach(function (k) {
-        if (k in this.model.schema.properties){
-          schema['properties'][k] = this.model.schema.properties[k];
+
+      for ( var i = 0, l = errors.length; i < l; ++i ){
+        error = errors[i];
+
+        $el = $( template( error ) );
+        $el.css( css );
+
+        $parent = this.$el.find(
+          this.fieldMap[error.property]
+        ).parents('.form-group').eq(0);
+
+        $parent.prepend( $el );
+        $parent.addClass('has-error');
+
+        $el.css( 'right', 0 - $el[0].offsetWidth );
+      }
+
+      // Scroll to the first error
+      $el = this.$el.find('.has-error');
+
+      if ( $el.length ){
+        $('html,body').animate({ scrollTop: $el.eq(0).offset().top - 20 });
+      }
+    }
+  , clearErrors: function() {
+      this.$el.find('.has-error').removeClass('has-error');
+      this.$el.find('.alert').addClass('hide');
+    }
+
+    /**
+    * validateFields()
+    *
+    * @param {Array} field map keys
+    * @return {Array} invalid properties
+    */
+  , validateFields: function (properties) {
+      var errors = [];
+      properties.forEach(function (prop) {
+        var $el = this.$el.find(this.fieldMap[prop.property]);
+        var val = prop.property in this.fieldGetters ? this.fieldGetters[prop.property].call(this) : $el.val();
+        if (!val) {
+          errors.push(prop);
         }
-      });
-      return this.model.validator.validate(diff, schema, function (errors) {
-        return errors;
-      });
+      }.bind(this));
+      return errors;
     }
 
   , addLeadTime: function(e) {

@@ -18,7 +18,8 @@ module.exports.create = function(req, res, next) {
   , { source: req.body.token_id }
   , function(err, card) {
       if (err) return logger.error('error adding card to stripe customer', err), res.error(errors.stripe.ERROR_ADDING_CARD);
-      models.User.createPaymentMethod( +req.param('uid'), req.body, function(err, card) {
+      var pmData = utils.extend( {}, req.body, { stripe_id: req.body.data.id } );
+      models.User.createPaymentMethod( +req.param('uid'), pmData, function(err, card) {
         if (err) return logger.error('error adding payment method to user: ' + req.user.attributes.id, err), res.error(errors.internal.DB_FAILURE, err);
         return res.json(card);
       });

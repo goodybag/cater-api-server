@@ -499,7 +499,7 @@ module.exports = Model.extend({
     });
   },
 
-  setPaymentError: function (requestId, data, callback) {
+  setPaymentError: function (data, callback) {
     var self = this;
 
     logger.info('setting payment status to error for order: ' + this.attributes.id);
@@ -517,7 +517,7 @@ module.exports = Model.extend({
       , createTransactionError: function (cb) {
           var transactionError = new TransactionError({
             order_id: self.attributes.id
-          , request_id: requestId
+          , request_id: 'request_id deprecated by stripe migration'
           , data: data
           });
           transactionError.save(cb, client);

@@ -40,9 +40,13 @@ var debitCustomer = function (order, callback) {
   var pmId = order.payment_method_id;
   models.PaymentMethod.findOne(pmId, function(error, paymentMethod) {
     if (error) return callback(new Error('invalid payment method: ' + pmId));
+
+    db.users.findOne(order.user_id, function(err, user) {
+      if ( err ) return callback({ error: err });
       utils.stripe.charges.create({
         amount: amount,
         currency: 'usd',
+        customer: user.stripe_id,
         source: paymentMethod.attributes.stripe_id,
         statement_descriptor: 'GOODYBAG CATER #' + order.id,
         metadata: {
@@ -63,11 +67,13 @@ var debitCustomer = function (order, callback) {
               logger.error({ error: err });
             }
             // construct a model to run the following transactions
-            return (new models.Order(order)).setPaymentError(error.uri, error, callback);
+            console.log(error, 'bazinga');
+            return (new models.Order(order)).setPaymentError(error, callback);
           });
         }
-        return (new models.Order(order)).setPaymentPaid('debit', debit, callback);
+        return (new models.Order(order)).setPaymentPaid('debit', charge, callback);
       });
+    });
   });
 };
 
@@ -112,7 +118,7 @@ var task = function (message, callback) {
 
       if (debit) {
         logger.info('found existing debit for order: ' + order.id, { order: order });
-        return (new models.Order(order)).setPaymentPaid('debit', debit.uri, debit, function (error) {
+        return (new models.Order(order)).setPaymentPaid('debit', debit, function (error) {
           if (error) return logger.create('DB').error({error: error}), callback(error);
           utils.queues.debit.del(message.id, utils.noop);
           callback();

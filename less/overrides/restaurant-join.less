@@ -4,6 +4,35 @@
 /*TODO: a major seperation of concerns overhaul */
 .active {
   background-color: @palette-gray-lighter;
+  color: @palette-gray-darker;
+}
+
+.alert-danger {
+  color: #b94a48;
+  background-color: #f2dede;
+  border-color: #eed3d7;
+}
+
+.close {
+  float: right;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1;
+  text-shadow: 0 1px 0 #fff;
+  opacity: .2;
+  filter: alpha(opacity=20);
+}
+
+button.close {
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  -webkit-appearance: none;
+}
+
+.btn-continue {
+  float: right;
 }
 
 .label-col {
@@ -25,6 +54,10 @@
 
 .restaurant-join {
   color: @palette-gray-dark;
+  max-width: 1016px;
+  margin: 0 auto;
+  width: 100%;
+  padding-bottom: 70px;
 
   .row { margin-bottom: 15px; }
 

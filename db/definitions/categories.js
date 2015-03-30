@@ -48,6 +48,12 @@ define(function(require) {
     , nullable: false
     , default: "'{}'"
     }
+
+  , is_hidden: {
+      type: types.boolean
+    , nullable: false
+    , default: false
+    }
   };
 
   definition.indices = {};

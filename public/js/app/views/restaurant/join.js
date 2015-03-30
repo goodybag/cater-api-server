@@ -53,18 +53,22 @@ define(function (require, exports, module) {
     }
   , fieldGetters: {
       meal_type: function () {
-        return $('.meal-type').filter(function (i, el) {
-          return $(el).is(':checked');
-          }).map(function(i, el) {
-            return { meal_type: el.value };
-          });
+        var types = [];
+        this.$el.find(this.fieldMap.meal_type).each(function (i, el) {
+          if ( $(el).is(':checked') ) {
+            types.push({ meal_type: el.value });
+          }
+        });
+        return types;
       }
       , tags: function () {
-          return $('.restaurant-tags').filter(function (i, el) {
-            return $(el).is(':checked');
-          }).map(function (i, el) {
-            return { tag: el.value };
+          var tags = [];
+          this.$el.find(this.fieldMap.tags).each(function (i, el) {
+            if ( $(el).is(':checked') ) {
+              tags.push({ tag: el.value });
+            }
           });
+          return tags;
       }
     }
 
@@ -120,6 +124,7 @@ define(function (require, exports, module) {
           localStorage.setItem( this.store, JSON.stringify(this.model.toJSON()) );
         }
 
+        debugger;
         //update cookie view state
         cookie.setItem(this.cookieName, $('.btn-continue').data('next'));
         window.location.reload();

@@ -353,8 +353,6 @@ module.exports = Model.extend({
     , 'notes'
     , 'timezone'
     , 'guests'
-    , 'adjustment_amount'
-    , 'adjustment_description'
     , 'delivery_instructions'
     , 'tip'
     , 'payment_method_id'

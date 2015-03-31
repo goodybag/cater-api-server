@@ -1737,7 +1737,6 @@ module.exports.register = function(app) {
     , restaurantDbModelFind:  true
     , user:                   true
     , items:                  true
-    , deliverService:         true
     })
   , m.view( 'admin/order', {
       layout: 'admin/layout2'

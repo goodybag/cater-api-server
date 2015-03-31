@@ -21,7 +21,7 @@
         </div>
         <div class="row row-actions">
 
-          <a href="#" class="item-edit-show">+ Edit Items</a>
+          <button class="item-edit-show">Add Items</button>
 
           <button class="btn btn-default category-copy">Copy</button>
           <button class="btn btn-primary category-remove">Remove</button>
@@ -59,16 +59,8 @@
 </form>
 
 
-
 {{#extend "scripts"}}
 <script>
-require( ['jquery-loaded'], function( page ){
-    $('.item-edit-show').click(function(event){
-      event.preventDefault();
-      $(this).closest('.categories').append('.items-list');
-      console.log('hi');
-      $('.items-list').show();
-    });
-});
+require( ['jquery-loaded',   'app/views/restaurant/edit-menu-items-view']);
 </script>
 {{/extend}}

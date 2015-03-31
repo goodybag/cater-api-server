@@ -770,7 +770,7 @@ var Restaurant = module.exports = Model.extend({
       , on: {'restaurants.id': '$lead_times.restaurant_id$'}
       , distinct: true
       , target: {
-          type: 'union'
+          type: 'intersect'
         , queries: [
             {
               type: 'select'

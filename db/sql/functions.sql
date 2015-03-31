@@ -4,6 +4,14 @@
 -- Event Handlers --
 --------------------
 
+create or replace function on_order_datetime_change()
+returns trigger as $$
+begin
+  -- PERFORM func
+  return new;
+end;
+$$ language plpgsql;
+
 create or replace function on_restaurant_name_change()
 returns trigger as $$
 begin

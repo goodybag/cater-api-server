@@ -75,3 +75,10 @@ create trigger on_restaurant_name_change
     on restaurants
     for each row
     execute procedure on_restaurant_name_change();
+
+drop trigger if exists on_order_datetime_change on orders;
+create trigger on_order_datetime_change
+  after insert or update of datetime
+  on orders
+  for each row
+  execute procedure on_order_datetime_change();

@@ -126,7 +126,10 @@ $$ language plpgsql;
 -- NOTE: Probabilities _NEED_ to add up to 1
 create or replace function update_order_delivery_service_id( oid int )
 returns void as $$
+  declare rand_val double precision;
 begin
+  select random() into rand_val;
+
   update orders
     set delivery_service_id = (
       select id from (
@@ -137,7 +140,7 @@ begin
             left join delivery_services ds on regions.id = ds.region_id
             where orders.id = oid
       ) q
-      where s >= q.r
+      where s >= rand_val
       order by id
       limit 1
     )

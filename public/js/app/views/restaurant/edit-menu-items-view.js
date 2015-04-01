@@ -4,22 +4,23 @@ define(function(require, exports, module) {
 
   module.exports = Backbone.View.extend({
     events: {
-      'click .item-edit-show': 'show'
+      'click .item-edit-show': 'show',
+      'click .open': 'hide'
     },
 
-    initialize: function() {
+    initialize: function(category) {
     },
 
     show: function(e) {
       e.preventDefault();
-      this.console.log('hi');
-      // var type = $(e.target).data('type');
+      this.$el.find('.items-list').show();
+      this.$el.find('.item-edit-show').addClass('open').text('Hide Items');
+    },
 
-      // // Hide all categories
-      // this.$el.find('.menu-category').hide();
-
-      // // Show menu category type (full, group, individual)
-      // this.$el.find('.menu-' + type).show();
+    hide: function(e) {
+      e.preventDefault();
+      this.$el.find('.items-list').hide();
+      this.$el.find('.item-edit-show').removeClass('open').text('Show Items');
     }
   });
 });

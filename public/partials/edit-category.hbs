@@ -20,9 +20,7 @@
           <textarea class="form-control category-description" rows="3">{{description}}</textarea>
         </div>
         <div class="row row-actions">
-
-          <button class="item-edit-show">Add Items</button>
-
+          <button class="item-edit-show">Show Items</button>
           <button class="btn btn-default category-copy">Copy</button>
           <button class="btn btn-primary category-remove">Remove</button>
           <button type="submit" class="btn btn-save category-save">Save</button>
@@ -57,10 +55,3 @@
   </div>
   <button type="button" class="btn btn-primary new-item pull-right">New Item</button>
 </form>
-
-
-{{#extend "scripts"}}
-<script>
-require( ['jquery-loaded',   'app/views/restaurant/edit-menu-items-view']);
-</script>
-{{/extend}}

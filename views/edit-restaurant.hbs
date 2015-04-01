@@ -52,16 +52,14 @@
     , 'app/views/edit-item-view'
     , 'app/models/hours'
     , 'app/views/edit-hours-view'
-
     , 'jquery-ui'
     ]
-  , function(Restaurant, EditRestaurantView, EditCategoryView, EditItemView, Hours, EditHoursView) {
+  , function(Restaurant, EditRestaurantView, EditCategoryView, EditItemView, Hours, EditHoursView, $) {
       var hours = [
         {{#each restaurant.delivery_times}}
         new EditHoursView({model: new Hours({day: {{@key}}, times: {{{json this}}} }), el: '#hours-{{@key}}'}),
         {{/each}}
       ];
-
       var restaurant = new EditRestaurantView({ el: '#main', model: new Restaurant({{{json restaurant}}}), hours: hours });
       {{#each restaurant.categories}}
       var category{{this.id}} = new EditCategoryView({el: '#category-{{id}}', model: restaurant.model.categories.get({{id}}), restaurant: restaurant });

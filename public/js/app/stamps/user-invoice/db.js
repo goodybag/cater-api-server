@@ -12,6 +12,12 @@ function getQueryOptions(){
                                 ]
                         }
                       ]
+            , joins:  [ { type: 'left'
+                        , target: 'orders'
+                        , on: { id: '$user_invoice_orders.order_id$' }
+                        }
+                      ]
+            , order:  ['orders.datetime desc']
             }
           ]
 

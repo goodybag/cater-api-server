@@ -74,10 +74,6 @@ require([
 
 require( ['jquery-loaded', 'app/views/restaurant/edit-menu-items-view'],
 function($, EditMenuItemsView) {
-  // pseudocode
-  // select dom for each category (done)
-  // each category create a new editmenuitemsview (done)
-
   var editMenuItemsViews = $('.category-form').map(function(idx, el) {
     return new EditMenuItemsView({
       el: $(el)

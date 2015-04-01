@@ -3,22 +3,21 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
 
   module.exports = Backbone.View.extend({
+
     events: {
-      'click .item-edit-show': 'show',
-      'click .open': 'hide'
+      'click .item-edit-show': 'showItems',
+      'click .open': 'hideItems'
     },
 
-    initialize: function(category) {
+    initialize: function() {
     },
 
-    show: function(e) {
-      e.preventDefault();
+    showItems: function(e) {
       this.$el.find('.items-list').show();
       this.$el.find('.item-edit-show').addClass('open').text('Hide Items');
     },
 
-    hide: function(e) {
-      e.preventDefault();
+    hideItems: function(e) {
       this.$el.find('.items-list').hide();
       this.$el.find('.item-edit-show').removeClass('open').text('Show Items');
     }

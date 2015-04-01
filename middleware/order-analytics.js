@@ -129,7 +129,6 @@ var OrderAnalytics = {
 
       db.orders.find($query, $options, function(err, stats) {
         if ( err ) {
-          console.log(err);
           logger.error('Unable to get weekly order stats', err);
           return res.send(500, err);
         }

@@ -80,7 +80,9 @@ var OrderAnalytics = {
 
       var monthMoment = moment(req.query.year + '-' + req.query.month, 'YYYY-M').startOf('month');
       var start = monthMoment.format('YYYY-MM-DD');
-      var end = monthMoment.add(1, 'month').format('YYYY-MM-DD');
+      var end = monthMoment.endOf('month');
+      if ( end.day() !== 7 ) end.day(7);
+      end = end.format('YYYY-MM-DD');
 
       var regions = utils.chain(res.locals.filters.region)
         .filter(function(option) {

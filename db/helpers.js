@@ -157,6 +157,8 @@ mosql.registerConditionalHelper('$extract', { cascade: false }, function ( colum
     return helper in mosql.conditionalHelpers.helpers;
   });
 
+  if (value.timezone) column += ' at time zone ' + value.timezone;
+
   var expression = [
   'extract( ',
   , field

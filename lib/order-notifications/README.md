@@ -109,6 +109,9 @@ Email notification
 , name: 'User Order Submitted'
 , format: 'email' // can be omitted, format: 'email' is by default
 , description: 'Sends the user an order submitted notice'
+, isAvailable: function( order ){
+    return order.type === 'courier';
+  }
 , build: function( order, logger, options, callback ){
     var viewOptions = {
       layout: 'email-layout'

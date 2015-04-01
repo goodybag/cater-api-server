@@ -31,8 +31,8 @@ var OrderAnalytics = {
         'status': 'accepted'
 
       , 'submitted_dates.submitted': [
-          { $extract: { field: 'month', $equals: req.query.month, timezone: 'timezone' } }
-        , { $extract: { field: 'year', $equals: req.query.year , timezone: 'timezone' } }
+          { $extract: { field: 'month', $equals: req.query.month, timezone: 'orders.timezone' } }
+        , { $extract: { field: 'year', $equals: req.query.year , timezone: 'orders.timezone' } }
         ]
       };
 
@@ -99,7 +99,7 @@ var OrderAnalytics = {
         , '1 week'
         ]
       , 'submitted_dates.submitted': [
-          { $extract: { field: 'year', $equals: req.query.year, timezone: 'timezone' } }
+          { $extract: { field: 'year', $equals: req.query.year, timezone: 'orders.timezone' } }
         ]
       };
 
@@ -129,6 +129,7 @@ var OrderAnalytics = {
 
       db.orders.find($query, $options, function(err, stats) {
         if ( err ) {
+          console.log(err);
           logger.error('Unable to get weekly order stats', err);
           return res.send(500, err);
         }

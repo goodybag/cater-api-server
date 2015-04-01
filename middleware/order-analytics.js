@@ -82,9 +82,7 @@ var OrderAnalytics = {
       var start = monthMoment.format('YYYY-MM-DD');
       var end = monthMoment.endOf('month');
       if ( end.day() !== 7 ) end.day(7);
-
       end = end.format('YYYY-MM-DD');
-      // some months span 5 weeks
 
       var regions = utils.chain(res.locals.filters.region)
         .filter(function(option) {

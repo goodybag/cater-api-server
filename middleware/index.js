@@ -16,6 +16,7 @@ module.exports = {
 , filterBody: require('./filter-body')
 , filters: require('./filters')
 , findRegions: require('./find-regions')
+, getInvoices: require('./get-invoices')
 , getOrder: require('./get-order')
 , getOrder2: require('./get-order2')
 , getOrders: require('./get-orders')

@@ -27,12 +27,12 @@ var OrderAnalytics = {
         })
         .pluck('name')
         .value();
-
       var $query = {
         'status': 'accepted'
+
       , 'submitted_dates.submitted': [
-          { $extract: { field: 'month', $equals: req.query.month } }
-        , { $extract: { field: 'year', $equals: req.query.year } }
+          { $extract: { field: 'month', $equals: req.query.month, timezone: 'timezone' } }
+        , { $extract: { field: 'year', $equals: req.query.year , timezone: 'timezone' } }
         ]
       };
 
@@ -42,8 +42,8 @@ var OrderAnalytics = {
           { type: 'sum', expression: 'total', alias: 'volume' }
         , { type: 'sum', expression: 'guests', alias: 'guests' }
         , { type: 'count', expression: '*', alias: 'placed' }
-        , { expression: 'extract(month from submitted) as month' }
-        , { expression: 'extract(year from submitted) as year' }
+        , { expression: 'extract(month from submitted at time zone timezone) as month' }
+        , { expression: 'extract(year from submitted at time zone timezone) as year' }
         ]
       , groupBy: [
           { expression: 'month' }
@@ -99,7 +99,7 @@ var OrderAnalytics = {
         , '1 week'
         ]
       , 'submitted_dates.submitted': [
-          { $extract: { field: 'year', $equals: req.query.year } }
+          { $extract: { field: 'year', $equals: req.query.year, timezone: 'timezone' } }
         ]
       };
 

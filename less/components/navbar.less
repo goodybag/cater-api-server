@@ -93,7 +93,17 @@ body {
 }
 @media (min-width: @breakpoint-desktop-sm) {
   .navbar-caption .short { display: none; }
-  .navbar-caption .full { display: inline; }
+  .navbar-caption .full {
+    display: inline;
+  }
+  .navbar-caption .full-number {
+    display: inline;
+    color: @brand-primary;
+  }
+}
+
+.navbar-caption .short {
+  color: @brand-primary;
 }
 
 .navbar-impersonate {

@@ -25,10 +25,7 @@ utils.async.waterfall([
       , columns: ['user_id']
       , where: {
           status: 'accepted'
-        , datetime: {
-            $gte:   period.startDate
-          , $lte:   period.endDate
-          }
+        , datetime: period.getMosqlRangeQuery()
         , payment_method_id: { $null: true }
         }
       }

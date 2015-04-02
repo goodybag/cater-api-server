@@ -41,15 +41,11 @@
 {{#extend "scripts"}}
 <script>
 require([
-  'app/views/restaurant/join'
-, 'app/models/restaurant'
+  'app/pages/restaurant-signup'
 ], 
-function ( JoinView, Restaurant ){
-  
-  var joinView = new JoinView({
-    el: '#restaurant-join'
-  , model: new Restaurant()
-  , steps: 4
+function ( page ){
+  page.init({
+    step: {{or cookies.gb_rs '1'}}
   });
 });
 </script>

@@ -20,13 +20,33 @@ define(function (require, exports, module) {
       }
     }
 
-  , initialize: function () {
-      console.log('init basic info view')
+  , initialize: function (options) {
+      BaseView.prototype.initialize.apply(this, options);
+      console.log('init basic info view');
     }
 
   , submit: function (e) {
       e.preventDefault();
+      this.clearErrors();
 
+      if (!this.$el.find(this.fieldMap.name).val()) {
+        return this.displayErrors([{
+          property: 'name'
+        , message: 'Please provide a restaurant name.'
+        }]);
+      }
+
+      if (!this.fieldGetters.services.call(this)) {
+        return this.displayErrors([{
+          property: 'services'
+        , message: 'Tell us which service you can provide.'
+        }]);
+      }
+
+      this.model.set(this.getDiff());
+      this.setLocalStorage(this.model.toJSON());
+      this.setCookie('2');
+      window.location.reload();
     }
   });
 });

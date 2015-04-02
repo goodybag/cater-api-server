@@ -6,7 +6,7 @@ define(function (require, exports, module) {
 
   return module.exports = BaseView.extend({
     fieldMap: {
-      , billing_name : '' // not in db
+        billing_name : '' // not in db
       , billing_phone: ''// not in db
       , billing_street: ''
       , billing_street2: ''

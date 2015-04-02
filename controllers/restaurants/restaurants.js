@@ -589,16 +589,18 @@ module.exports.copy = function(req, res) {
     db.restaurants.findOne.bind(db.restaurants, id)
 
   , function createStripeUri(restaurant, callback) {
-      utils.stripe.customers.create({
-        metadata: { name: restaurant.name }
-      }, function(err, customer) {
-        callback(err, restaurant, customer);
+      utils.stripe.accounts.create({
+        managed: true
+      , country: 'US'
+      , business_name: restaurant.name
+      }, function(err, acct) {
+        callback(err, restaurant, acct);
       });
     }
 
-  , function copyRestaurant(restaurant, customer, callback) {
+  , function copyRestaurant(restaurant, acct, callback) {
       var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id'), {
-        stripe_id: customer.id
+        stripe_id: acct.id
       , name: restaurant.name + ' Copy'
       , is_hidden: true
       });

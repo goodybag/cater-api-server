@@ -2,6 +2,7 @@ var db = require('db');
 var logger = require('./logger').create('User Setup');
 var utils = require('utils');
 var concurrency = 5;
+var balanced = utils.balanced;
 
 logger.info('Mapping balanced uri to stripe ids');
 
@@ -18,7 +19,7 @@ db.restaurants.find($query, function(err, restaurants) {
   }
 
   q.push(restaurants, function completed(err, restaurant) {
-    if (err) return logger.error('Unable to migrate customers', err);
+    if (err) return logger.error('Unable to migrate merchants', err);
   });
 });
 
@@ -29,19 +30,39 @@ q.drain = function drained() {
   process.exit();
 };
 
-// 1. look up balanced customer by restaurant.balanced_customer_uri
-// 2. db update restaurant.stripe_id with balanced customer metadata stripe.customer_id
-function migrateRestaurant(restaurant, callback) {
-  utils.balanced.Customers.get(restaurant.balanced_customer_uri, function(err, customer){
-    if ( err )
-      return logger.error('Unable to get balanced customer ' + restaurant.balanced_customer_uri, err);
+function migrateRestaurant(restaurant, done) {
+  utils.async.waterfall([
+    function getBalancedCustomer(callback) {
+      balanced.Customers.get(restaurant.balanced_customer_uri, callback);
+    },
 
-    if ( !customer.meta['stripe.customer_id'] )
-      return logger.error('Unable to associate stripe metadata', err);
+    function getStripeId(customer, callback) {
+      if (customer.meta['stripe.account_id']) {
+        // existing balanced customer has transaction history
+        // so stripe automatically creates an account
+        return callback(null, customer.meta['stripe.account_id']);
+      } else {
+        // this restaurant has no transaction history, so we must
+        // manually create an account
+        utils.stripe.accounts.create({
+          managed: true
+        , country: 'US'
+        , business_name: restaurant.name
+        }, function(err, acct) {
+          return callback(err, err ? acct.id : null);
+        });
+      }
+    },
 
-    db.restaurants.update({ id: restaurant.id }, { stripe_id: customer.meta['stripe.customer_id'] }, { returning: ['*'] }, function(err) {
-      logger.info('Restaurant #' + restaurant.id  + ' Balanced URI: ' + restaurant.balanced_customer_uri + ' -> Stripe: ' + customer.meta['stripe.customer_id']);
-      callback(err, restaurant);
-    });
-  });
+    function setStripeId(stripe_id, callback) {
+      logger.info([
+        'Restaurant #' + restaurant.id
+      , 'Balanced URI:'
+      , restaurant.balanced_customer_uri
+      , '-> Stripe ID'
+      , stripe_id
+      , ].join(' '));
+      db.restaurants.update({ id: restaurant.id }, { stripe_id: stripe_id }, { returning: ['*'] }, callback);
+    }
+  ], done);
 }

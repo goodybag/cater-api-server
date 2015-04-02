@@ -27,12 +27,12 @@ var OrderAnalytics = {
         })
         .pluck('name')
         .value();
-
       var $query = {
         'status': 'accepted'
+
       , 'submitted_dates.submitted': [
-          { $extract: { field: 'month', $equals: req.query.month } }
-        , { $extract: { field: 'year', $equals: req.query.year } }
+          { $extract: { field: 'month', $equals: req.query.month, timezone: 'orders.timezone' } }
+        , { $extract: { field: 'year', $equals: req.query.year , timezone: 'orders.timezone' } }
         ]
       };
 
@@ -42,8 +42,8 @@ var OrderAnalytics = {
           { type: 'sum', expression: 'total', alias: 'volume' }
         , { type: 'sum', expression: 'guests', alias: 'guests' }
         , { type: 'count', expression: '*', alias: 'placed' }
-        , { expression: 'extract(month from submitted) as month' }
-        , { expression: 'extract(year from submitted) as year' }
+        , { expression: 'extract(month from submitted at time zone orders.timezone) as month' }
+        , { expression: 'extract(year from submitted at time zone orders.timezone) as year' }
         ]
       , groupBy: [
           { expression: 'month' }
@@ -80,7 +80,9 @@ var OrderAnalytics = {
 
       var monthMoment = moment(req.query.year + '-' + req.query.month, 'YYYY-M').startOf('month');
       var start = monthMoment.format('YYYY-MM-DD');
-      var end = monthMoment.add(1, 'month').format('YYYY-MM-DD');
+      var end = monthMoment.endOf('month');
+      if ( end.day() !== 7 ) end.day(7);
+      end = end.format('YYYY-MM-DD');
 
       var regions = utils.chain(res.locals.filters.region)
         .filter(function(option) {
@@ -99,7 +101,7 @@ var OrderAnalytics = {
         , '1 week'
         ]
       , 'submitted_dates.submitted': [
-          { $extract: { field: 'year', $equals: req.query.year } }
+          { $extract: { field: 'year', $equals: req.query.year, timezone: 'orders.timezone' } }
         ]
       };
 

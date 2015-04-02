@@ -408,16 +408,18 @@ module.exports.create = function(req, res) {
   // Normalize single quotes to apostrophe
   var name = req.body.name.replace(/[‘’]/g, '\'');
 
-  utils.stripe.customers.create({
-    metadata: { name: name }
-  }, function (error, customer) {
+  utils.stripe.accounts.create({
+    managed: true
+  , country: 'US'
+  , business_name: name
+  }, function(error, acct) {
     if (error) {
       logger.error('Unable to create restaurant in stripe', error);
       return res.error(errors.internal.UNKNOWN, error);
     }
 
     var values = utils.pick(req.body, fields);
-    values.stripe_id = customer.id;
+    values.stripe_id = acct.id;
 
     var restaurantQuery = queries.restaurant.create(values);
 

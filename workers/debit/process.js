@@ -67,7 +67,6 @@ var debitCustomer = function (order, callback) {
               logger.error({ error: err });
             }
             // construct a model to run the following transactions
-            console.log(error, 'bazinga');
             return (new models.Order(order)).setPaymentError(error, callback);
           });
         }
@@ -164,8 +163,6 @@ var worker = function (message, callback) {
 
 var done = function (error) {
   if (!error) return;
-  console.log(error);
-  console.log(error.stack);
   logger.error({ error: error });
   utils.rollbar.reportMessage(error);
 };

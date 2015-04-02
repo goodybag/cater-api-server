@@ -516,7 +516,7 @@ module.exports = Model.extend({
           var transactionError = new TransactionError({
             order_id: self.attributes.id
           , request_id: 'request_id deprecated by stripe migration'
-          , data: data
+          , data: JSON.stringify(data)
           });
           transactionError.save(cb, client);
         }

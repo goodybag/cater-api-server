@@ -1,23 +1,39 @@
 <div class="contact-group">
-  <h4 class="panel-subtitle">Contact {{contactCount}}</h4>
+  <h3 class="panel-title">Contact {{contactCount}}</h3>
   <p class="panel-info">
   You only need to fill out any one of the following fields for this contact. However, the more information you provide, the better chance we have of getting in touch about an order.
   </p>
   <hr>
-  <div class="form-group">
-    <label class="label-left">Contact Name</label>
-    <input type="text" class="form-control" name="contact_name">
+  <div class="row">
+    <label class="label-col">Contact Name</label>
+    <div class="field-col">
+      <div class="form-group">
+        <input type="text" class="form-control contact-name" name="contact_name">
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label class="label-left">Contact Position</label>
-    <input type="text" class="form-control" name="contact_position">
+  <div class="row">
+    <label class="label-col">Contact Position<p class="panel-info">Optional</p></label>
+    <div class="field-col">
+      <div class="form-group">
+        <input type="text" class="form-control contact-position" name="contact_position">
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label class="label-left">Contact Number</label>
-    <input type="text" class="form-control" name="contact_number">
+  <div class="row">
+    <label class="label-col">Contact Number</label>
+    <div class="field-col">
+      <div class="form-group">
+        <input type="text" class="form-control contact-phone" name="contact_number">
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label class="label-left">Contact Email</label>
-    <input type="text" class="form-control" name="contact_email">
+  <div class="row">
+    <label class="label-col">Contact Email</label>
+    <div class="field-col">
+      <div class="form-group">
+        <input type="text" class="form-control contact-email" name="contact_email">
+      </div>
+    </div>
   </div>
 </div>

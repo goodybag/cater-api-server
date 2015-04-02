@@ -42,8 +42,8 @@ var OrderAnalytics = {
           { type: 'sum', expression: 'total', alias: 'volume' }
         , { type: 'sum', expression: 'guests', alias: 'guests' }
         , { type: 'count', expression: '*', alias: 'placed' }
-        , { expression: 'extract(month from submitted at time zone timezone) as month' }
-        , { expression: 'extract(year from submitted at time zone timezone) as year' }
+        , { expression: 'extract(month from submitted at time zone orders.timezone) as month' }
+        , { expression: 'extract(year from submitted at time zone orders.timezone) as year' }
         ]
       , groupBy: [
           { expression: 'month' }

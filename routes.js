@@ -539,6 +539,19 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/admin/restaurants/:id/make-payment'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'make-payment'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.view('admin/restaurant/edit-make-payment', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
+    );
+
     app.get('/admin/restaurants/:rid/delivery-settings'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {

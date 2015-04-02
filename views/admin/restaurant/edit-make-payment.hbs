@@ -1,0 +1,74 @@
+{{#extend "body"}}
+  <h2>Make a payment</h2>
+  <form>
+    <div class="form-group">
+      <div class="input-group input-group">
+        <div class="input-addon">$</div>
+        <input type="number" placeholder="10.50" class="form-control">
+      </div>
+    </div>
+    <button class="btn btn-primary">Pay Now</button>
+  </form>
+
+  <div class="table-list">
+    <div class="list-header">
+      <div class="component list-info">
+        <div class="num-results">Past Payments</div>
+      </div>
+    </div>
+
+        <div class="list-items">
+          <div class="list-item">
+            <label class="component item-selector">
+              <input type="checkbox">
+            </label>
+            <div class="component main">
+              <a class="item-title" href="#">Order</a>
+              <div class="item-details">#100 Austin, TX</div>
+            </div>
+          </div>
+          <div class="list-item">
+            <label class="component item-selector">
+              <input type="checkbox">
+            </label>
+            <div class="component main">
+              <a class="item-title" href="#">All-Star Burger</a>
+              <div class="item-details">#100 Austin, TX</div>
+            </div>
+          </div>
+          <div class="list-item">
+            <label class="component item-selector">
+              <input type="checkbox">
+            </label>
+            <div class="component main">
+              <a class="item-title" href="#">Taco Deli</a>
+              <div class="item-details">#100 Austin, TX</div>
+            </div>
+          </div>
+          <div class="list-item">
+            <label class="component item-selector">
+              <input type="checkbox">
+            </label>
+            <div class="component main">
+              <a class="item-title" href="#">Taj Palace</a>
+              <div class="item-details">#100 Austin, TX</div>
+            </div>
+          </div>
+        </div>    </div>
+{{/extend}}
+
+
+{{#extend "scripts"}}
+
+<script>
+/*
+  require( ['app/pages/', 'app/models/'], function( page, model ){
+    page.init({
+      models: {
+        restaurant: new Restaurant({{{json restaurant}}})
+      }
+    });
+  });
+*/
+</script>
+{{/extend}}

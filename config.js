@@ -471,6 +471,10 @@ config.production = {
     , 'christymedlock@goodybag.com'
     , 'john@goodybag.com'
     ]
+  , reminderPaymentStatusIgnore: [
+      'sarahsouthwell@goodybag.com'
+    , 'christymedlock@goodybag.com'
+    ]
   }
 
 , deliveryServices: {

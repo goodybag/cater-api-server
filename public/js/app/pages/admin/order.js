@@ -79,7 +79,7 @@ define(function(require){
           page.state.set( 'restaurant_location_id', +$(this).val() );
         });
 
-        $('[name="order_status"]').change(function (e) {
+        $('[name="payment_status"]').change(function (e) {
           if (!!e.target.value) {
             page.updateOrder({ payment_status: e.target.value }, function (error) {
               if (error) {

@@ -7,6 +7,8 @@ define(function (require, exports, module) {
   return module.exports = BaseView.extend({
     events: utils.extend(BaseView.prototype.events, {
       'click .btn-add-contact': 'addContact'
+    , 'click #input-logo-url': 'uploadLogo'
+    , 'click #input-menu-url': 'uploadMenu'
     })
   , fieldMap: {
         yelp_business_id: '.yelp-url' 
@@ -127,6 +129,20 @@ define(function (require, exports, module) {
   , addContact: function (e) {
       if (e) e.preventDefault();
       this.$el.find('.contact-list').append(Handlebars.partials.restaurant_contact_info_fields({}));
+    }
+  , uploadLogo: function (e) {
+      if (e) e.preventDefault();
+      if (!filepicker) return;
+      filepicker.pick(function (blob) {
+        this.model.set('logo_url', blob.url);
+      }.bind(this));
+    }
+  , uploadMenu: function (e) {
+      if (e) e.preventDefault();
+      if (!filepicker) return;
+      filepicker.pick(function (blob) {
+        this.model.set('menu_url', blob.url);
+      }.bind(this));
     }
   });
 });

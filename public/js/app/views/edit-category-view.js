@@ -79,12 +79,6 @@ define(function(require, exports, module) {
       }
     },
 
-    // onSave: function(e) {
-    //   e.preventDefault();
-    //   var newBtn = this.$el.find('.new-item');
-    //   if (.error) newBtn.attr('style', 'display: inline-block');
-    // },
-
     onRemove: function(e) {
       var view = this;
       this.model.destroy({

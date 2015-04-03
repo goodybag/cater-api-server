@@ -21,6 +21,7 @@ module.exports = {
 , getOrders: require('./get-orders')
 , getRegions: require('./get-regions')
 , getRestaurant: require('./get-restaurant')
+, getRestaurantPayments: require('./get-restaurant-payments')
 , getRestaurants: require('./get-restaurants')
 , getUser: require('./get-user')
 , getUser2: require('./get-user2')

@@ -546,6 +546,7 @@ module.exports.register = function(app) {
         active:   'make-payment'
       , baseUrl:  '/admin/restaurants/:id'
       })
+    , m.getRestaurantPayments({ param: 'id' })
     , m.view('admin/restaurant/edit-make-payment', db.restaurants, {
         layout: 'admin/layout-two-column'
       , method: 'findOne'

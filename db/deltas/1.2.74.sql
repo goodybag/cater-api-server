@@ -15,5 +15,6 @@ begin
   , created_at    timestamp not null default now()
   , restaurant_id int references restaurants(id) on delete cascade
   , amount        int not null
+  , error         text
   );
 end$$;

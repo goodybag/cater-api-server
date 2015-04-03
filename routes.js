@@ -1992,10 +1992,8 @@ module.exports.register = function(app) {
   app.post('/api/restaurants/:restaurant_id/payments'
   , m.restrict(['accounting', 'admin'])
   , m.getRestaurant({ param: 'restaurant_id' })
-  , m.stripe.insertRestaurantPayment()
-  , m.param('restaurant_id')
-  , m.queryOptions({ returning: ['*'] })
-  , m.insert( db.restaurant_payments )
+  , m.stripe.createRestaurantPayment()
+  , m.stripe.logRestaurantPayment()
   );
 
   app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/send'

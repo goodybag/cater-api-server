@@ -37,6 +37,9 @@ define(function(require) {
     , nullable: false
     , default: 0
     }
+  , error: {
+      type: types.text
+    }
   };
 
   definition.indices = {};

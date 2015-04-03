@@ -1989,6 +1989,12 @@ module.exports.register = function(app) {
   , m.remove( db.payment_summaries )
   );
 
+  app.post('/api/restaurants/:restaurant_id/payments',
+  , m.restrict(['accounting', 'admin']);
+  , m.param('restaurant_id')
+  , m.insert( db.restaurant_payments )
+  );
+
   app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/send'
   , controllers.paymentSummaries.send
   );

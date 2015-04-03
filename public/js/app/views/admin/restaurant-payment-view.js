@@ -14,6 +14,35 @@ define(function(require, exports, module) {
   var utils     = require('utils');
 
   var RestaurantPaymentView = utils.View.extend({
+    events: function() {
+        var events = {};
+        events['submit ' + this.options.form] = 'onFormSubmit';
+        return events;
+    },
+
+    initialize: function(){
+      this.options.$form = this.options.$form || this.$el.find(this.options.form);
+      this.options.$list = this.options.$list || this.$el.find(this.options.list);
+    },
+
+    onFormSubmit: function(e){
+      e.preventDefault();
+      this.submit();
+    },
+
+    submit: function() {
+      var amt = this.options.$form.find('.input-amount').val();
+      var data = {
+        amount: Hbs.helpers.pennies(amt)
+      };
+
+      $.ajax({
+        url: '/api/restaurants/' + this.options.restaurant.id + '/payments'
+      , method: 'POST'
+      , data: data
+      });
+
+    }
 
   });
 

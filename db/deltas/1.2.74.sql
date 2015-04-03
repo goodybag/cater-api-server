@@ -8,7 +8,9 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  create restaurant_invoice_payouts (
+  INSERT INTO groups (name) VALUES ('accounting');
+
+  create table if not exists restaurant_payments (
     id            serial primary key
   , created_at    timestamp not null default now()
   , restaurant_id int references restaurants(id) on delete cascade

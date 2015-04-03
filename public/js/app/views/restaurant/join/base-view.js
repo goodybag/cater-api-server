@@ -60,9 +60,8 @@ define(function (require, exports, module) {
         $el = $( template( error ) );
         $el.css( css );
 
-        $parent = this.$el.find(
-          this.fieldMap[error.property]
-        ).parents('.form-group').eq(0);
+        var selector = error.property ? this.fieldMap[error.property] : error.selector;
+        $parent = this.$el.find( selector ).parents('.form-group').eq(0);
 
         $parent.prepend( $el );
         $parent.addClass('has-error');

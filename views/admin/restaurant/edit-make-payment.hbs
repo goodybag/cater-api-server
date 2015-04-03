@@ -61,14 +61,12 @@
 {{#extend "scripts"}}
 
 <script>
-/*
-  require( ['app/pages/', 'app/models/'], function( page, model ){
-    page.init({
-      models: {
-        restaurant: new Restaurant({{{json restaurant}}})
-      }
-    });
+require( ['app/views/admin/restaurant-payment-view', 'app/models/restaurant'], function( RestaurantPaymentView, Restaurant ){
+  var view = new RestaurantPaymentView({
+    $form: '#form-restaurant-payment'
+  , $list: 'table-restaurant-payments'
+  , restaurant: new Restaurant({{{json restaurant}}})
   });
-*/
+});
 </script>
 {{/extend}}

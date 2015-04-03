@@ -43,6 +43,7 @@ module.exports = {
 , sslRedirect: require('./ssl-redirect')
 , states: require('./states')
 , statusCodeIntercept: require('./status-code-intercept')
+, stripe: require('./stripe')
 , uuid: require('./uuid')
 , s3: require('./s3')
 , db: require('./db')

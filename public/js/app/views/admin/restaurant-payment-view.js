@@ -31,19 +31,28 @@ define(function(require, exports, module) {
     },
 
     submit: function() {
-      var amt = this.options.$form.find('.input-amount').val();
       var data = {
-        amount: Hbs.helpers.pennies(amt)
+        amount: Hbs.helpers.pennies(this.options.$form.find('.input-amount').val())
+      , restaurant_id: this.options.restaurant.id
       };
 
       $.ajax({
         url: '/api/restaurants/' + this.options.restaurant.id + '/payments'
       , method: 'POST'
       , data: data
-      });
+      })
+      .done(this.addRow.bind(this))
+      .fail(this.error.bind(this))
+    },
 
+    addRow: function(payment) {
+      // compile template from payment
+      // insert into $list
+    },
+
+    error: function() {
+      // trigger alertView
     }
-
   });
 
   module.exports = RestaurantPaymentView;

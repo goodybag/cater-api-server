@@ -539,15 +539,15 @@ module.exports.register = function(app) {
       })
     );
 
-    app.get('/admin/restaurants/:id/make-payment'
+    app.get('/admin/restaurants/:id/payments'
     , m.param('id')
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
-        active:   'make-payment'
+        active:   'payments'
       , baseUrl:  '/admin/restaurants/:id'
       })
     , m.getRestaurantPayments({ param: 'id' })
-    , m.view('admin/restaurant/edit-make-payment', db.restaurants, {
+    , m.view('admin/restaurant/edit-payments', db.restaurants, {
         layout: 'admin/layout-two-column'
       , method: 'findOne'
       })

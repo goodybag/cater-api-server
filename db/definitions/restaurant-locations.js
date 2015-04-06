@@ -27,6 +27,7 @@ define(function(require) {
   , zip:            { type: types.varchar(5) , nullable: false }
   , is_default:     { type: types.bool, nullable: false }
   , phone:          { type: types.varchar(10), nullable: false, checks: ["similar to '[[:digit:]]{10}'"] }
+  , price_per_mile: { type: types.int, default: 0 }
   };
 
   definition.indices = {};

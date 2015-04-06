@@ -541,12 +541,13 @@ module.exports.register = function(app) {
 
     app.get('/admin/restaurants/:id/payments'
     , m.param('id')
+    , m.getRestaurant({ param: 'id' })
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
         active:   'payments'
       , baseUrl:  '/admin/restaurants/:id'
       })
-    , m.getRestaurantPayments({ param: 'id' })
+    , m.stripe.getRestaurantTransfers()
     , m.view('admin/restaurant/edit-payments', db.restaurants, {
         layout: 'admin/layout-two-column'
       , method: 'findOne'
@@ -1993,8 +1994,7 @@ module.exports.register = function(app) {
   app.post('/api/restaurants/:restaurant_id/payments'
   , m.restrict(['accounting', 'admin'])
   , m.getRestaurant({ param: 'restaurant_id' })
-  , m.stripe.createRestaurantPayment()
-  , m.stripe.logRestaurantPayment()
+  , m.stripe.createRestaurantTransfer()
   );
 
   app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/send'

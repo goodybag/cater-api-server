@@ -1,13 +1,13 @@
 var utils = require('utils');
 var db = require('db');
 
-// todo: add logger
 // todo: refactor weird data expectations
 
 // various stripe replated middleware
 var stripe = {
-  createRestaurantPayment: function(options) {
+  createRestaurantTransfer: function(options) {
     return function(req, res, next) {
+      var logger = req.logger.create('Stripe Create Restaurant Payment');
       var data = req.restaurant_payment = res.locals.restaurant_payment =
         utils.defaults({}, options, {
           amount: req.body.amount
@@ -21,17 +21,18 @@ var stripe = {
 
       utils.stripe.transfers.create(utils.omit(data, 'error', 'restaurant_id'), function(err) {
         if ( err ) data.error = err.message;
+        logger.info('Complete');
         next();
       });
     };
   }
-, logRestaurantPayment: function(options) {
+, getRestaurantTransfers: function(options) {
     return function(req, res, next) {
-      var data = utils.omit(req.restaurant_payment, 'destination');
-      if ( !data ) return res.send(500, 'Missing Restaurant Payment');;
-      db.restaurant_payments.insert(data, { returning: ['*'] }, function(err, result) {
+      var id = req.restaurant.stripe_id;
+      utils.stripe.transfers.list({ destination: id }, function(err, transfers) {
         if ( err ) return res.send(500, err);
-        return res.send(200, result);
+        req.restaurant_transfers = res.locals.restaurant_transfers = transfers;
+        next();
       });
     };
   }

@@ -33,12 +33,13 @@
 {{#extend "scripts"}}
 
 <script>
-require( ['app/views/admin/restaurant-payment-view', 'app/models/restaurant'], function( RestaurantPaymentView, Restaurant ){
+require( ['app/views/admin/restaurant-payment-view', 'app/views/alert-view', 'app/models/restaurant'], function( RestaurantPaymentView, AlertView, Restaurant ){
   var view = new RestaurantPaymentView({
     el: '.page-restaurant-payments'
   , form: '.form-restaurant-payments'
   , list: '.table-restaurant-payments .list-items'
   , restaurant: new Restaurant({{{json restaurant}}})
+  , alertView: new AlertView({ el: '.alert-container' })
   });
 });
 </script>

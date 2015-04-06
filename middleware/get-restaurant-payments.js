@@ -7,7 +7,9 @@ module.exports = function(options) {
   });
   return function(req, res, next) {
     var restaurant_id = req.params[options.param];
-    db.restaurant_payments.find({ restaurant_id: restaurant_id }, function(err, payments) {
+    var $query = { restaurant_id: restaurant_id };
+    var $options = { order: 'id desc' };
+    db.restaurant_payments.find($query, $options, function(err, payments) {
       if ( err ) return res.send(500, 'unable to find payments');
       res.locals.payments = payments;
       return next();

@@ -51,11 +51,11 @@ define(function(require, exports, module) {
 
     addRow: function(payment) {
       var html = Hbs.partials.restaurant_payment_row(payment);
-      this.options.$list.append(html);
+      this.options.$list.prepend(html);
     },
 
     error: function() {
-      // trigger alertView
+      this.options.alertView.show({ type: 'error', message: 'Unable to make payment - Ask tech for assistance before trying again!' });
     }
   });
 

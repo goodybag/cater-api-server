@@ -11,15 +11,19 @@ define(function (require, exports, module) {
     , 'click .add-days'               : 'addDays'
     , 'click .datetime-days-list > li': 'addDeliveryHours'
     }
+
   , fieldMap: {
-      gb_fee       : '' // this may be the wrong column
+      delivery_fee    : '.delivery-fee' // this may be the wrong column
+    , delivery_times  : '.delivery-lead-times' // (require some extra mapping)
     , pickup_lead_time: '' // (require some extra mapping)
-    , delivery_times: '' // (require some extra mapping)
     }
+
   , fieldGetter: {
 
     }
-  , initialize: function () {
+
+  , initialize: function (options) {
+     BaseView.prototype.initialize.apply(this, options);
       console.log('init delivery pickup view');
 
       this.deliveryHoursStart = this.$el.find("input[name='time']").pickatime({
@@ -42,7 +46,7 @@ define(function (require, exports, module) {
 
   , addLeadTime: function(e) {
       if (e) e.preventDefault();
-      this.$el.find('.lead-times-list').append(Handlebars.partials.lead_time({}));
+      this.$el.find('.lead-times-list').append(Handlebars.partials.lead_time());
     }
 
   , addDays: function (e) {

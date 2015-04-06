@@ -378,7 +378,20 @@ define(function(require, exports, module) {
       cuisine: []
     , delivery_zips: []
     , delivery_service_zips: []
-    , lead_times: []
+    , lead_times: [
+        { 'max_guests': 25,  'lead_time':  3*60, 'cancel_time':  2*60 }
+      , { 'max_guests': 50,  'lead_time': 12*60, 'cancel_time':  6*60 }
+      , { 'max_guests': 100, 'lead_time': 18*60, 'cancel_time': 12*60 }
+      , { 'max_guests': 250, 'lead_time': 24*60, 'cancel_time': 18*60 }
+      , { 'max_guests': 2000,'lead_time': 72*60, 'cancel_time': 72*60 }
+      ]
+    , pickup_lead_times: [
+        { 'max_guests': 25,  'lead_time':  3*60, 'cancel_time':  2*60 }
+      , { 'max_guests': 50,  'lead_time': 12*60, 'cancel_time':  6*60 }
+      , { 'max_guests': 100, 'lead_time': 18*60, 'cancel_time': 12*60 }
+      , { 'max_guests': 250, 'lead_time': 24*60, 'cancel_time': 18*60 }
+      , { 'max_guests': 2000,'lead_time': 72*60, 'cancel_time': 72*60 }
+      ]
     , gb_fee: 0.1275
     }
   });

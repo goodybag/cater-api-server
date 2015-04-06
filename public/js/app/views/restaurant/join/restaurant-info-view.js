@@ -170,15 +170,10 @@ console.log( fields.contacts );
         }
       }
 
-
-
-
-      //todo: validate contacts. check first contact group
-      // if an additional contact is empty ingore it
-
-console.log('diff ', this.getDiff());
       this.model.set(this.getDiff());
-console.log('model ', this.model.toJSON());
+      this.setLocalStorage(this.model.toJSON());
+      this.setCookie('3');
+      window.location.reload();
     }
 
   , addContact: function (e) {

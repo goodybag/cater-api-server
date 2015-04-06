@@ -14,7 +14,7 @@ define(function(require, exports, module) {
   var utils     = require('utils');
   var spinner   = require('spinner');
 
-  var RestaurantPaymentView = utils.View.extend({
+  var RestaurantTransfersView = utils.View.extend({
     events: function() {
         var events = {};
         events['submit ' + this.options.form] = 'onFormSubmit';
@@ -40,7 +40,7 @@ define(function(require, exports, module) {
       spinner.start();
 
       $.ajax({
-        url: '/api/restaurants/' + this.options.restaurant.id + '/payments'
+        url: this.options.url || '/api/restaurants/' + this.options.restaurant.id + '/transfers'
       , method: 'POST'
       , data: data
       })
@@ -50,7 +50,8 @@ define(function(require, exports, module) {
     },
 
     addRow: function(payment) {
-      var html = Hbs.partials.restaurant_payment_row(payment);
+      var template = this.options.template || Hbs.partials.restaurant_transfer_row;
+      var html = template(payment);
       this.options.$list.prepend(html);
     },
 
@@ -59,6 +60,6 @@ define(function(require, exports, module) {
     }
   });
 
-  module.exports = RestaurantPaymentView;
+  module.exports = RestaurantTransfersView;
   return module.exports;
 });

@@ -19,6 +19,11 @@ module.exports = {
 , directions: {
     limit: { daily: 10000, second: 2 }
   }
+  
+, distanceMatrix: {
+    limit: { daily: 2500, second: 1000 }
+  , url: 'https://maps.googleapis.com/maps/api/distancematrix/json'
+  }
 };
 
 if ( process.env['GB_ENV'] === 'production' ){

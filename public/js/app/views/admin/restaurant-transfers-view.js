@@ -24,6 +24,7 @@ define(function(require, exports, module) {
     initialize: function(){
       this.options.$form = this.options.$form || this.$el.find(this.options.form);
       this.options.$list = this.options.$list || this.$el.find(this.options.list);
+      this.options.template = this.options.template || Hbs.partials.restaurant_transfer_row;
     },
 
     onFormSubmit: function(e){
@@ -50,8 +51,7 @@ define(function(require, exports, module) {
     },
 
     addRow: function(payment) {
-      var template = this.options.template || Hbs.partials.restaurant_transfer_row;
-      var html = template(payment);
+      var html = this.options.template(payment);
       this.options.$list.prepend(html);
     },
 

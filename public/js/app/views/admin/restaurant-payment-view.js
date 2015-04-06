@@ -12,6 +12,7 @@ define(function(require, exports, module) {
   var $         = require('jquery-loaded');
   var Hbs       = require('handlebars');
   var utils     = require('utils');
+  var spinner   = require('spinner');
 
   var RestaurantPaymentView = utils.View.extend({
     events: function() {
@@ -36,6 +37,8 @@ define(function(require, exports, module) {
       , restaurant_id: this.options.restaurant.id
       };
 
+      spinner.start();
+
       $.ajax({
         url: '/api/restaurants/' + this.options.restaurant.id + '/payments'
       , method: 'POST'
@@ -43,11 +46,12 @@ define(function(require, exports, module) {
       })
       .done(this.addRow.bind(this))
       .fail(this.error.bind(this))
+      .always(spinner.stop);
     },
 
     addRow: function(payment) {
-      // compile template from payment
-      // insert into $list
+      var html = Hbs.partials.restaurant_payment_row(payment);
+      this.options.$list.append(html);
     },
 
     error: function() {

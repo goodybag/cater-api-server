@@ -22,7 +22,7 @@
     </div>
     <div class="list-items">
       {{#each payments}}
-      {{> admin_restaurant_payment_row }}
+      {{> restaurant_payment_row }}
       {{/each}}
     </div>
   </div>
@@ -37,7 +37,7 @@ require( ['app/views/admin/restaurant-payment-view', 'app/models/restaurant'], f
   var view = new RestaurantPaymentView({
     el: '.page-restaurant-payments'
   , form: '.form-restaurant-payments'
-  , list: '.table-restaurant-payments'
+  , list: '.table-restaurant-payments .list-items'
   , restaurant: new Restaurant({{{json restaurant}}})
   });
 });

@@ -20,7 +20,7 @@ define(function (require, exports, module) {
       , meal_type    : '.meal-type'
       , tags         : '.restaurant-tags'
       , amenities    : '.restaurant-amenities' // map to restaurant
-      , menu         : '.restaurant-menu' // not in db (requires file uploader)
+      , menu_url     : '.restaurant-menu' // not in db (requires file uploader)
       , logo_url     : '.restaurant-logo' //(requires file uploader)
       , minimum_order: '.order-minimum'
       , contacts     : '.contact-group'
@@ -69,6 +69,14 @@ define(function (require, exports, module) {
         return this.$el.find(this.fieldMap.display_phone).val().replace(/[^\d]/g, '') || null;
       },
 
+      menu_url: function () {
+        return this.$el.find(this.fieldMap.menu_url).val() || this.model.get('menu_url');
+      },
+
+      logo_url: function () {
+        return this.$el.find(this.fieldMap.logo_url).val() || this.model.get('logo_url');
+      },
+
       contacts: function () {
         return utils.map(this.$el.find(this.fieldMap.contacts), function (el) {
           var $el = $(el);
@@ -96,6 +104,8 @@ define(function (require, exports, module) {
       var fields = {
           address: this.$el.find(this.fieldMap.address).val()
         , phone: this.fieldGetters.display_phone.call(this)
+        , menu_url: this.fieldGetters.menu_url.call(this)
+        , logo_url: this.fieldGetters.logo_url.call(this)
         , orderMinimum: this.$el.find(this.fieldMap.minimum_order).val()
         , contacts: this.fieldGetters.contacts.call(this)
       };
@@ -111,6 +121,20 @@ define(function (require, exports, module) {
         return this.displayErrors([{
           property: 'display_phone'
         , message: 'Please provide a valid phone number.'
+        }]);
+      }
+
+      if (!fields.menu_url) {
+        return this.displayErrors([{
+          property: 'menu_url'
+        , message: 'Please provide your restaurant menu'
+        }]);
+      }
+
+      if (!fields.logo_url) {
+        return this.displayErrors([{
+          property: 'logo_url'
+        , message: 'Please provide your restaurant logo'
         }]);
       }
 
@@ -153,6 +177,8 @@ console.log( fields.contacts );
       // if an additional contact is empty ingore it
 
 console.log('diff ', this.getDiff());
+      this.model.set(this.getDiff());
+console.log('model ', this.model.toJSON());
     }
 
   , addContact: function (e) {
@@ -165,6 +191,7 @@ console.log('diff ', this.getDiff());
       if (!filepicker) return;
       filepicker.pick(function (blob) {
         this.model.set('logo_url', blob.url);
+        this.$el.find('.logo-url-file').val(blob.filename);
       }.bind(this));
     }
   , uploadMenu: function (e) {
@@ -172,6 +199,7 @@ console.log('diff ', this.getDiff());
       if (!filepicker) return;
       filepicker.pick(function (blob) {
         this.model.set('menu_url', blob.url);
+        this.$el.find('.menu-url-file').val(blob.filename);
       }.bind(this));
     }
   });

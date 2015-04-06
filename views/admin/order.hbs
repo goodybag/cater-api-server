@@ -92,18 +92,14 @@
         {{/is}}
         <dt>Payment Status</dt>
         <dd>
-          {{#if (dneq order.payment_status 'error')}}
           <select name="payment_status">
             <option value="" {{#if (not order.payment_status) }}selected="true"{{/if}}>Status is pending</option>
             <option value="paid" {{#eq order.payment_status 'paid'}}selected="true"{{/eq}}>Paid</option>
             <option value="invoiced" {{#eq order.payment_status 'invoiced'}}selected="true"{{/eq}}>Invoiced</option>
             <option value="pending" {{#eq order.payment_status 'pending'}}selected="true"{{/eq}}>Pending</option>
             <option value="ignore" {{#eq order.payment_status 'ignore'}}selected="true"{{/eq}}>Ignore</option>
+            <option value="error" {{#eq order.payment_status 'error'}}selected="true"{{/eq}}>Error</option>
           </select>
-          {{else}}
-            <span class="status-circle error"></span>
-            <span>Error</span>
-          {{/if}}
         </dd>
       </dl>
 

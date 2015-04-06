@@ -32,8 +32,8 @@ define(function(require, exports, module) {
       this.listenTo(this.model.items, 'sort', this.sortItems, this);
 
       this.on('save:success', function(model, res) {
-        var newBtn = this.$el.find('.new-item');
-        newBtn.attr('style', 'display: inline-block').show();
+        var $newBtn = this.$el.find('.new-item');
+        $newBtn.attr('style', 'display: inline-block').show();
       });
     },
 

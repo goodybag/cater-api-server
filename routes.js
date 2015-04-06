@@ -2082,6 +2082,7 @@ module.exports.register = function(app) {
       var query = req.query.q;
       if ( !query ) return next();
       req.queryObj.search_vector = { $partialMatches: query };
+      req.queryObj.status = { $in: [ 'accepted', 'submitted', 'denied' ] };
       next();
     }
   , m.sort('-id')

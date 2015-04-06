@@ -424,27 +424,24 @@ module.exports.register = function(app) {
         one:  [ { table: 'regions', alias: 'region' }]
       , userGroups: true
       })
-    , function( req, res, next ){
-        var options = {
-          order: ['id desc']
-        };
-
-        var where = {
-          user_id: req.params.id
-        };
-
-        require('stamps/user-invoice').find( where, options, function( error, results ){
-          if ( error ) return next( error );
-
-          res.locals.invoices = results;
-
-          return next();
-        });
-      }
+    , m.getInvoices({ userIdParam: 'id' })
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.viewPlugin( 'mainNav', { active: 'users' })
     , m.view( 'admin/user/invoices', db.users, {
         layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
+
+    /**
+     * Invoices standalone
+     */
+
+    app.get('/admin/invoices'
+    , m.getInvoices()
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.view( 'admin/invoices', db.users, {
+        layout: 'admin/layout2'
       , method: 'findOne'
       })
     );

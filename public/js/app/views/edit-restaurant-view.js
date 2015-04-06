@@ -296,6 +296,9 @@ define(function(require, exports, module) {
       this.model.categories.add(categoryView.model, {sort: false});
 
       categoryView.render().attach();
+
+      var newCat = this.$el.find('.category-form').last();
+      newCat.find('.new-item').attr('style', "display: none");
     },
 
     sortCategories: function(collection, options) {

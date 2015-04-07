@@ -1,0 +1,91 @@
+<div class="panel">
+  <div class="panel-head">
+    <h2 class="panel-title">Hours of Operation</h2>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <label class="label-col">Delivery Hours</label>
+      <div class="field-col">
+        <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <span class="popover-wrapper gb-dropdown same-width-modal">
+                  <button class="btn btn-white btn-dropdown" data-role="popover" data-target="datetime-popover">
+                    Choose a day
+                    <i class="gb-icon-caret-down"></i>
+                  </button>
+                  {{> restaurant_signup_datetime_popover}}
+                </span>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <input type="text" class="form-control form-control-time" name="time" value="" />
+              </div>
+            </div>
+            <div class="col">
+              <span class="spacer"> - </span>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <input type="text" class="form-control form-control-time" name="time" value="" />
+              </div>
+            </div>
+        </div>
+        <button class="btn btn-default">+ add hours</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <label class="label-col">Pickup Hours</label>
+      <div class="field-col">
+        <ol class="inline-list">
+          <li>
+            <label for="pickup_hours">
+              <input type="checkbox">
+              Use same hours as delivery
+            </label>
+          </li>
+          <li>
+            <label for="pickup_hours">
+              <input type="checkbox">
+              Use different hours
+            </label>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="row">
+      <label class="label-col">Closed Dates (optional)</label>
+      <div class="field-col">
+        <ol class="inline-list">
+          <li>
+            <label for="closed_dates">
+              <input type="checkbox" name="closed_dates">
+              New Year's Day (Jan 1)
+            </label>
+          </li>
+          <li>
+            <label for="closed_dates">
+              <input type="checkbox" name="closed_dates">
+              Thanksgiving Day
+            </label>
+          </li>
+          <li>
+            <label for="closed_dates">
+              <input type="checkbox" name="closed_dates">
+              Christmas Day (Dec 25)
+            </label>
+          </li>
+        </ol>
+      </div>
+      <div class="row">
+        <label class="label-col">Other</label>
+        <div class="field-col">
+          <input type="text" name="closed_dates">
+          <p>Any dates you know you won't be available to accept orders. Holidays, events, etcs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

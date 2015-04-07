@@ -90,6 +90,13 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
+  app.get('/restaurants/join'
+  , m.localCookies(['gb_rs'])
+  , m.view('restaurant-signup/register', {
+      layout: 'layout/default'
+    })
+  );
+
   app.get('/restaurants/:rid'
     // Just do a barebones lookup since the controller
     // has to do a legacy db model lookup

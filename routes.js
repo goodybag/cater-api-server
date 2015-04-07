@@ -136,7 +136,7 @@ module.exports.register = function(app) {
     app.get('/admin/upcoming'
     , m.getOrders({
         submittedDate: true
-      , upcoming: true
+      , upcoming: '3 hours'
       })
     , m.view('admin/upcoming', { layout: 'admin/layout2' })
     );
@@ -144,7 +144,7 @@ module.exports.register = function(app) {
     app.get('/api/upcoming'
     , m.getOrders({
         submittedDate: true
-      , upcoming: true
+      , upcoming: '3 hours'
       })
     , function(req, res, next) {
         res.send(res.locals.orders);

@@ -9,10 +9,11 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
+  var Promise = require('bluebird');
   var config  = require('config');
   var utils   = require('utils');
   var base    = require('./base');
-  var GeoRes  = require('../responses/geocode');
+  var errors  = require('errors');
 
   return module.exports = require('stampit')()
     .compose( base )
@@ -20,6 +21,9 @@ define( function( require, exports, module ){
       this.json();
       this.url( config.google.distanceMatrix.url );
       this.query( 'key', config.google.apiKey );
+
+      // Get back distances in miles and feet
+      this.query( 'units', 'imperial' );
     })
     .methods({
       origins:      []
@@ -31,29 +35,36 @@ define( function( require, exports, module ){
       }
 
     , destination: function( destination ){
-        this.destinations.push( origin );
+        this.destinations.push( destination );
         return this;
       }
 
     , getOriginDestinationQuery: function(){
         return {
-          origin:       this.origins.join('|')
-        , destination:  this.destinations.join('|')
+          origins:      this.origins.join('|')
+        , destinations: this.destinations.join('|')
         };
       }
 
-    , send: function(){
+    , parseResponse: function( res ){
+        var body = res[1];
+
+        if ( body.status in errors.google.distanceMatrix ){
+          return Promise.reject( errors.google.distanceMatrix[ body.status ] );
+        }
+
+        return body.rows;
+      }
+
+    , send: function( callback ){
         this.query( this.getOriginDestinationQuery() );
 
         return base.fixed.methods.send.call( this )
           .then( function( res ){
-            return GeoRes.create({
-              res: res
-            , requestAddress: this.req.qs.address
-            });
+            return this.parseResponse( res );
           }.bind( this ))
-          .then( function( geores ){
-            if ( callback ) return callback( null, geores );
+          .then( function( res ){
+            if ( callback ) return callback( null, res );
           }.bind( this ))
           .error( function( error ){
             if ( callback ) callback( error );

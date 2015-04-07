@@ -9,9 +9,50 @@ describe('Stamps', function(){
       [ { origins: ['Austin, TX']
         , destinations: ['Dallas, TX']
         , expected: [
-            { elements: [ { distance: { text: '195 mi', value: 314413 }
-            , duration: { text: '2 hours 56 mins', value: 10548 }
-            , status: 'OK' } ]
+            { elements: [
+                { distance: { text: '195 mi', value: 314413 }
+                , duration: { text: '2 hours 56 mins', value: 10548 }
+                , status: 'OK'
+                }
+              ]
+            }
+          ]
+        }
+      , { origins: ['Austin, TX', 'Houston, TX']
+        , destinations: ['Dallas, TX']
+        , expected: [
+            {
+              "elements" : [
+                { "distance" : { "text" : "195 mi", "value" : 314413 }
+                , "duration" : { "text" : "2 hours 56 mins", "value" : 10548 }
+                , "status" : "OK"
+                }
+              ]
+            },
+            {
+              "elements" : [
+                { "distance" : { "text" : "239 mi", "value" : 384815 }
+                , "duration" : { "text" : "3 hours 26 mins", "value" : 12382 }
+                , "status" : "OK"
+                }
+              ]
+            }
+          ]
+        }
+      , { origins: ['5336 Krueger Lane, Austin, TX 78723']
+        , destinations: ['1900 Ullrich Avenue, Austin, TX 78756', '569 East Linda Lane, Royse City, TX 75189']
+        , expected: [
+            {
+              "elements": [
+                { "distance": { "text": "7.4 mi", "value": 11957 }
+                , "duration": { "text": "14 mins","value": 824 }
+                , "status": "OK"
+                },
+                { "distance": { "text": "227 mi","value": 365646 }
+                , "duration": { "text": "3 hours 24 mins", "value": 12223 }
+                , "status": "OK"
+                }
+              ]
             }
           ]
         }

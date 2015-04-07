@@ -6,33 +6,10 @@
     <div class="row">
       <label class="label-col">Delivery Hours</label>
       <div class="field-col">
-        <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <span class="popover-wrapper gb-dropdown same-width-modal">
-                  <button class="btn btn-white btn-dropdown" data-role="popover" data-target="datetime-popover">
-                    Choose a day
-                    <i class="gb-icon-caret-down"></i>
-                  </button>
-                  {{> restaurant_signup_datetime_popover}}
-                </span>
-              </div>
-            </div>
-            <div class="col">
-              <div class="form-group">
-                <input type="text" class="form-control form-control-time" name="time" value="" />
-              </div>
-            </div>
-            <div class="col">
-              <span class="spacer"> - </span>
-            </div>
-            <div class="col">
-              <div class="form-group">
-                <input type="text" class="form-control form-control-time" name="time" value="" />
-              </div>
-            </div>
+        <div class="delivery-hours-container">
+          {{> edit_delivery_hours}}
         </div>
-        <button class="btn btn-default">+ add hours</button>
+        <button class="btn btn-default add-hours">+ add hours</button>
       </div>
     </div>
 

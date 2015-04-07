@@ -14,7 +14,7 @@ define(function (require, exports, module) {
     })
 
   , fieldMap: {
-      delivery_fee     : '.delivery-fee' // this may be the wrong column
+      gb_fee     : '.delivery-fee' // this may be the wrong column
     , lead_times       : '.delivery-lead-times'
     , pickup_lead_times: '.pickup-lead-times'
     }
@@ -53,7 +53,8 @@ define(function (require, exports, module) {
   , submit: function (e) {
       e.preventDefault();
       var fields = {
-        lead_times: this.fieldGetters.lead_times.call(this)
+        gb_fee: this.$el.find(this.fieldMap.gb_fee).val()
+      , lead_times: this.fieldGetters.lead_times.call(this)
       , pickup_lead_times: this.fieldGetters.pickup_lead_times.call(this)
       };
 
@@ -77,6 +78,10 @@ define(function (require, exports, module) {
 
   , addHours: function (e) {
       if (e) e.preventDefault();
+      var $el = $(e.target);
+      var template = Handlebars.partials.edit_delivery_hours;
+      $el.parent().find('.delivery-hours-container').append(template());
+      $('[data-role="popover"]').gb_popover();
     }
 
   , addDeliveryHours: function (e) {

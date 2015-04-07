@@ -342,7 +342,7 @@ module.exports.changeStatus = function(req, res) {
 
     if (req.order.promo_code)
     if (req.order.status === 'submitted') {
-    if (utils.where( promoConfig, { promo_code: req.order.promo_code} ))
+    if (utils.flatten(utils.pluck( promoConfig,'promo_code')).indexOf(req.order.promo_code) > -1)
       venter.emit('order:submitted:promo', req.order);
     }
   }

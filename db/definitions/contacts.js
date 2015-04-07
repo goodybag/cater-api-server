@@ -58,6 +58,11 @@ define(function(require) {
   , notes: {
       type: types.text
     }
+  , disable_sms: {
+      type: types.boolean
+    , nullable: false
+    , default: false
+    }
   };
 
   definition.indices = {};

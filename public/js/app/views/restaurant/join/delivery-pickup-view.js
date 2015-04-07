@@ -6,7 +6,8 @@ define(function (require, exports, module) {
 
   return module.exports = BaseView.extend({
     events: {
-      'click .add-lead-time'          : 'addLeadTime'
+      'click .add-custom-lead-times'  : 'addLeadTime'
+    , 'click .default-lead-times'     : 'defaultLeadTimes'
     , 'click .add-hours'              : 'addHours'
     , 'click .add-days'               : 'addDays'
     , 'click .datetime-days-list > li': 'addDeliveryHours'
@@ -45,8 +46,12 @@ define(function (require, exports, module) {
     }
 
   , addLeadTime: function(e) {
-      if (e) e.preventDefault();
-      this.$el.find('.lead-times-list').append(Handlebars.partials.lead_time());
+      var template = Handlebars.partials.edit_lead_times;
+      var html = template( this.model.toJSON() );
+      this.$el.find('.custom-lead-times-container').html( html );
+    }
+  , defaultLeadTimes: function (e) {
+      this.$el.find('.custom-lead-times-container').empty();
     }
 
   , addDays: function (e) {

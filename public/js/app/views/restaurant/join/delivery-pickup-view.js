@@ -5,26 +5,35 @@ define(function (require, exports, module) {
   var Handlebars = require('handlebars');
 
   return module.exports = BaseView.extend({
-    events: {
+    events: utils.extend(BaseView.prototype.events, {
       'click .add-custom-lead-times'  : 'addLeadTime'
     , 'click .default-lead-times'     : 'defaultLeadTimes'
     , 'click .add-hours'              : 'addHours'
     , 'click .add-days'               : 'addDays'
     , 'click .datetime-days-list > li': 'addDeliveryHours'
-    }
+    })
 
   , fieldMap: {
-      delivery_fee    : '.delivery-fee' // this may be the wrong column
-    , delivery_times  : '.delivery-lead-times' // (require some extra mapping)
-    , pickup_lead_time: '' // (require some extra mapping)
+      delivery_fee     : '.delivery-fee' // this may be the wrong column
+    , lead_times       : '.delivery-lead-times'
+    , pickup_lead_times: '.pickup-lead-times'
     }
 
-  , fieldGetter: {
-
+  , fieldGetters: {
+      lead_times: function () {
+        var leadTimesView = this.options.deliveryLeadTimesView;
+        var lt = leadTimesView.fieldGetters.lead_times.call(leadTimesView);
+        return lt.length > 0 ? lt : this.model.get('lead_times') || null;
+      },
+      pickup_lead_times: function () {
+        var leadTimesView = this.options.pickupLeadTimesView;
+        var lt = leadTimesView.fieldGetters.lead_times.call(leadTimesView);
+        return lt.length > 0 ? lt : this.model.get('pickup_lead_times') || null;
+      }
     }
 
   , initialize: function (options) {
-     BaseView.prototype.initialize.apply(this, options);
+      BaseView.prototype.initialize.apply(this, options);
       console.log('init delivery pickup view');
 
       this.deliveryHoursStart = this.$el.find("input[name='time']").pickatime({
@@ -43,6 +52,11 @@ define(function (require, exports, module) {
     }
   , submit: function (e) {
       e.preventDefault();
+      var fields = {
+        lead_times: this.fieldGetters.lead_times.call(this)
+      , pickup_lead_times: this.fieldGetters.pickup_lead_times.call(this)
+      };
+
     }
 
   , addLeadTime: function(e) {

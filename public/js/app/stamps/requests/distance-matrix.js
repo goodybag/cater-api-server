@@ -17,6 +17,10 @@ define( function( require, exports, module ){
 
   return module.exports = require('stampit')()
     .compose( base )
+    .state({
+      origins:      []
+    , destinations: []
+    })
     .enclose( function(){
       this.json();
       this.url( config.google.distanceMatrix.url );
@@ -26,10 +30,7 @@ define( function( require, exports, module ){
       this.query( 'units', 'imperial' );
     })
     .methods({
-      origins:      []
-    , destinations: []
-
-    , origin: function( origin ){
+      origin: function( origin ){
         this.origins.push( origin );
         return this;
       }

@@ -48,10 +48,12 @@ define(function (require, exports, module) {
   , addLeadTime: function(e) {
       var template = Handlebars.partials.edit_lead_times;
       var html = template( this.model.toJSON() );
-      this.$el.find('.custom-lead-times-container').html( html );
+      var type = $(e.target).data('type');
+      this.$el.find('.:type-lead-times-container'.replace(':type', type)).html( html );
     }
   , defaultLeadTimes: function (e) {
-      this.$el.find('.custom-lead-times-container').empty();
+      var type = $(e.target).data('type');
+      this.$el.find('.:type-lead-times-container'.replace(':type', type)).empty();
     }
 
   , addDays: function (e) {

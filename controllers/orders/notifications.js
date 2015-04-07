@@ -17,13 +17,7 @@ var getEmailUrl = function( oid, nid ){
 };
 
 // Order query options
-var $ordersOptions = {
-  many: [ { table: 'order_items', alias: 'orderItems' } ]
-, one:  [ { table: 'restaurants', alias: 'restaurant' }
-        , { table: 'users', alias: 'user' }
-        , { table: 'delivery_services', alias: 'deliveryService' }
-        ]
-};
+var $ordersOptions = notifier.$requiredOrderOptions;
 
 /**
  * Gets the HTTP error for a notification/option combo if it exists

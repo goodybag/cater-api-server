@@ -48,8 +48,6 @@ module.exports.find = function( storage, callback ){
   Models.Order.findTomorrow( $query, function( error, orders ){
     if ( error ) return callback( error );
 
-    var l1 = orders.length;
-
     // Filter to orders with timezones where it's currently 8am
     orders = orders.filter( function( order ){
       return moment().tz( order.attributes.timezone ).hour() === 8;

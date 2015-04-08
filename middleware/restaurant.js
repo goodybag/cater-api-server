@@ -9,7 +9,7 @@ module.exports = function( options ){
 
   return function( req, res, next ){
     var $query = {
-      where: { id: req.param( options.param ) }
+      where: { id: req.params[options.param] }
     , with_delivery_services: options.with_delivery_services
     };
 

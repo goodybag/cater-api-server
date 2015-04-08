@@ -88,6 +88,7 @@
     "ordrin-api": "^1.0.1",
     "path-to-regexp": "^0.1.2",
     "pg": "2.3.x",
+    "pg-delta": "^0.1.2",
     "pg-parse-float": "0.0.x",
     "pg-query": "~0.3.0",
     "pg-transaction": "1.0.x",

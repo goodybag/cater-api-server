@@ -2374,7 +2374,7 @@ module.exports.register = function(app) {
   , m.insert( db.user_invoice_orders )
   );
 
-  app.del('/api/invoices/:user_invoice_id/orders/:order_id'
+  app.delete('/api/invoices/:user_invoice_id/orders/:order_id'
   , m.restrict(['admin'])
   , m.param('user_invoice_id')
   , m.param('order_id')

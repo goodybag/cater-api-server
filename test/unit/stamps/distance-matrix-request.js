@@ -1,5 +1,6 @@
 var assert      = require('assert');
 var config      = require('../../../config');
+var errors      = require('../../../errors');
 var db          = require('../../../db');
 var DMReq       = require('stamps/requests/distance-matrix');
 
@@ -73,6 +74,15 @@ describe('Stamps', function(){
             done();
           });
         });
+      });
+
+      it('Should throw INVALID_REQUEST', function( done ){
+        DMReq()
+          .origin('Poop')
+          .send( function( error ){
+            assert.deepEqual( error, errors.google.distanceMatrix );
+            done();
+          });
       });
     });
   });

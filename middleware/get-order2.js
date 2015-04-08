@@ -119,7 +119,7 @@ module.exports = function( options ){
     }
 
     logger.info('Finding order');
-    db.orders.findOne( +req.param( options.param ), $options, function( error, order ){
+    db.orders.findOne( +req.params[options.param], $options, function( error, order ){
       if ( error ){
         logger.error('error trying to find order #%s', req.params.id, error)
         return res.error(errors.internal.DB_FAILURE, error);

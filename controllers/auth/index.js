@@ -34,7 +34,7 @@ module.exports.forgotPasswordConsume = function( req, res ){
     var sql = db.builder.sql({
       type: 'select'
     , table: 'password_resets'
-    , where: { token: req.param('token'), token_used: { $null: true } }
+    , where: { token: req.params.token, token_used: { $null: true } }
     });
 
     db.query(sql.query, sql.values, function(err, rows, result) {
@@ -49,7 +49,7 @@ module.exports.forgotPasswordConsume = function( req, res ){
     if ( !req.body.password ){
       return res.render( 'landing/forgot-password-consume', {
         layout: 'landing/layout'
-      , token: req.param('token')
+      , token: req.params.token
       });
     }
 
@@ -88,7 +88,7 @@ module.exports.forgotPasswordConsume = function( req, res ){
       if ( error ){
         return res.render( 'landing/forgot-password-consume', {
           layout: 'landing/layout'
-        , token: req.param('token')
+        , token: req.params.token
         , error: error
         });
       }
@@ -244,7 +244,7 @@ module.exports.signup = function( req, res ){
 module.exports.registerView = function( req, res ){
   res.render( 'landing/register', {
     layout: 'landing/layout'
-  , fromGuestOrder: req.param('fromGuestOrder')
+  , fromGuestOrder: req.params.fromGuestOrder
   });
 };
 

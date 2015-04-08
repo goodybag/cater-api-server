@@ -263,15 +263,15 @@ define(function(require, exports, module) {
       });
     },
 
-    eq: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a == b;
-      return options[a == b ? 'fn' : 'inverse'](this);
-    },
+    // eq: function(a, b, options){
+    //   if ( typeof options.fn !== 'function' ) return a == b;
+    //   return options[a == b ? 'fn' : 'inverse'](this);
+    // },
 
-    dneq: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a != b;
-      return options[a != b ? 'fn' : 'inverse'](this);
-    },
+    // dneq: function(a, b, options){
+    //   if ( typeof options.fn !== 'function' ) return a != b;
+    //   return options[a != b ? 'fn' : 'inverse'](this);
+    // },
 
     lt: function(a, b, options){
       if ( typeof options.fn !== 'function' ) return a < b;
@@ -427,10 +427,6 @@ define(function(require, exports, module) {
       return str.substring( from, to );
     },
 
-    truncate: function(str, length) {
-      return str.length > length ? str.substring(0, length) + '...' : str;
-    },
-
     typeOf: function(a){
       return typeof a;
     },
@@ -480,11 +476,6 @@ define(function(require, exports, module) {
       mergeContext(this);
       mergeContext(options.hash);
       return options.fn(context);
-    },
-
-    contains: function(arr, element, options){
-      if ( typeof options.fn !== 'function' ) return utils.contains(arr, element);
-      return options[utils.contains(arr, element) ? 'fn' : 'inverse'](this);
     },
 
     factorToPercent: function( factor, precision, options ){
@@ -583,14 +574,6 @@ define(function(require, exports, module) {
       return obj;
     },
 
-    isNull: function( val, options ){
-      return options[ val === null ? 'fn' : 'inverse' ]();
-    },
-
-    notNull: function( val, options ){
-      return options[ val !== null ? 'fn' : 'inverse' ]();
-    },
-
     isLast: function( i, list, options ){
       return options[ i === ( list.length - 1 ) ? 'fn' : 'inverse' ]();
     },
@@ -606,18 +589,6 @@ define(function(require, exports, module) {
 
     omit: function( obj, key ){
       return utils.omit( obj, key );
-    },
-
-    // Is a === any of rest
-    is: function( a ){
-      var rest = Array.prototype.slice.call( arguments, 1 );
-      var options = rest.pop();
-
-      // If any of the values are truthy, run `fn`, otherwise `inverse`
-      return options[
-        utils.any( rest, function( b ){ return a == b; })
-          ? 'fn' : 'inverse'
-      ](this);
     },
 
     timeToRange: function( time, format ){
@@ -640,7 +611,7 @@ define(function(require, exports, module) {
     replace: function( str, a, b ){
       return str.replace( a, b );
     },
-    
+
     without: function( arr ){
       var rest = Array.prototype.slice.call( arguments, 1 );
       return utils.without.apply( utils, arr, rest );

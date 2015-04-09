@@ -17,13 +17,7 @@ var getEmailUrl = function( oid, nid ){
 };
 
 // Order query options
-var $ordersOptions = {
-  many: [ { table: 'order_items', alias: 'orderItems' } ]
-, one:  [ { table: 'restaurants', alias: 'restaurant' }
-        , { table: 'users', alias: 'user' }
-        , { table: 'delivery_services', alias: 'deliveryService' }
-        ]
-};
+var $ordersOptions = notifier.$requiredOrderOptions;
 
 /**
  * Gets the HTTP error for a notification/option combo if it exists
@@ -53,11 +47,11 @@ module.exports.JSON = {};
 module.exports.JSON.list = function( req, res ){
   var logger = req.logger.create('Controller-Notifications');
 
-  logger.info( 'Getting order notifications for order #' + req.param('oid') );
+  logger.info( 'Getting order notifications for order #' + req.params.oid );
 
-  db.orders.findOne( +req.param('oid'), $ordersOptions, function( error, order ){
+  db.orders.findOne( +req.params.oid, $ordersOptions, function( error, order ){
     if ( error ){
-      logger.error( 'Error getting order #' + req.param('oid'), error );
+      logger.error( 'Error getting order #' + req.params.oid, error );
       return res.error( error );
     }
 
@@ -78,7 +72,7 @@ module.exports.JSON.list = function( req, res ){
           var def = utils.clone( notifier.defs[ nid ] );
 
           def.email = result;
-          def.email.url = getEmailUrl( req.param('oid'), def.id );
+          def.email.url = getEmailUrl( req.params.oid, def.id );
 
           return done( null, def );
         });
@@ -87,7 +81,7 @@ module.exports.JSON.list = function( req, res ){
 
     utils.async.parallel( fns, function( error, results ){
       if ( error ){
-        logger.error( 'Error getting order notifications for order #' + req.param('oid'), error );
+        logger.error( 'Error getting order notifications for order #' + req.params.oid, error );
         return res.error( error );
       }
 
@@ -99,9 +93,9 @@ module.exports.JSON.list = function( req, res ){
 module.exports.JSON.sendNotification = function( req, res ){
   var logger = req.logger.create('Controller-Notifications');
 
-  logger.info( ['Sending notification', req.param('id'), ' for order #', req.param('oid') ].join('') );
+  logger.info( ['Sending notification', req.params.id, ' for order #', req.params.oid ].join('') );
 
-  var notification = notifier.defs[ req.param('id') ];
+  var notification = notifier.defs[ req.params.id ];
 
   if ( !notification ){
     return res.error( errors.internal.NOT_FOUND );
@@ -116,7 +110,7 @@ module.exports.JSON.sendNotification = function( req, res ){
 
   if ( error ) return res.error( error );
 
-  notifier.send( req.param('id'), +req.param('oid'), options, function( error ){
+  notifier.send( req.params.id, +req.params.oid, options, function( error ){
     if ( error ) return res.error( error );
     return res.send(204);
   });
@@ -125,14 +119,14 @@ module.exports.JSON.sendNotification = function( req, res ){
 module.exports.JSON.history = function( req, res ){
   var logger = req.logger.create('Controller-Notifications');
 
-  logger.info( 'Getting order notification history for order #' + req.param('oid') );
+  logger.info( 'Getting order notification history for order #' + req.params.oid );
 
   utils.async.waterfall([
     // Prepare order model
     function( next ){
-      db.orders.findOne( +req.param('oid'), $ordersOptions, function( error, order ){
+      db.orders.findOne( +req.params.oid, $ordersOptions, function( error, order ){
         if ( error ){
-          logger.error( 'Error getting order #' + req.param('oid'), error );
+          logger.error( 'Error getting order #' + req.params.oid, error );
           return res.error( error );
         }
         return next( null, order );
@@ -141,17 +135,17 @@ module.exports.JSON.history = function( req, res ){
 
     // Get order notifications
   , function( order, next ){
-      var $where = { order_id: +req.param('oid') };
+      var $where = { order_id: +req.params.oid };
       var options = { order: { send_date: 'desc' } };
 
       db.order_notifications.find( $where, options, function( error, notes ){
         if ( error ){
-          logger.error( 'Error getting order notifications for order #' + req.param('oid'), error );
+          logger.error( 'Error getting order notifications for order #' + req.params.oid, error );
           return res.error( error );
         }
 
         notes = notes.map( function( note ){
-          note.data.url = getEmailUrl( req.param('oid'), note.nid );
+          note.data.url = getEmailUrl( req.params.oid, note.nid );
 
           // Embed timezone information so the client can adjust
           note.send_date = new Date( note.send_date );
@@ -168,9 +162,9 @@ module.exports.JSON.history = function( req, res ){
 module.exports.JSON.historyItem = function( req, res ){
   var logger = req.logger.create('Controller-Notifications');
 
-  logger.info( 'Getting order notification history for order #' + req.param('oid') );
+  logger.info( 'Getting order notification history for order #' + req.params.oid );
 
-  db.order_notifications.findOne( +req.param('id'), function( error, note ){
+  db.order_notifications.findOne( +req.params.id, function( error, note ){
     if ( error ){
       return res.error( error );
     }
@@ -184,9 +178,9 @@ module.exports.JSON.historyItem = function( req, res ){
 module.exports.getEmail = function( req, res ){
   var logger = req.logger.create('Controller-Notifications');
 
-  logger.info( 'Getting order notification email ' + req.param('nid') + ' for order #' + req.param('oid') );
+  logger.info( 'Getting order notification email ' + req.params.nid + ' for order #' + req.params.oid );
 
-  var notification = notifier.defs[ req.param('nid') ];
+  var notification = notifier.defs[ req.params.nid ];
 
   if ( !notification ){
     return res.error( errors.internal.NOT_FOUND );
@@ -201,9 +195,9 @@ module.exports.getEmail = function( req, res ){
 
   if ( error ) return res.error( error );
 
-  notifier.getNotification( req.param('nid'), +req.param('oid'), options, function( error, result ){
+  notifier.getNotification( req.params.nid, +req.params.oid, options, function( error, result ){
     if ( error ){
-      logger.error( 'Error getting notfication ' + req.param('nid') + ' for order #' + req.param('oid'), error );
+      logger.error( 'Error getting notfication ' + req.params.nid + ' for order #' + req.params.oid, error );
       return res.error( error );
     }
 

@@ -241,6 +241,7 @@ define(function(require) {
       type: types.array(types.order_type)
     , default: "Array['pickup', 'courier', 'delivery']::order_type[]"
     }
+  , stripe_id: { type: types.text }
   };
 
   definition.indices = {};

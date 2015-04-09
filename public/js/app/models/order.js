@@ -162,7 +162,7 @@ define(function(require, exports, module) {
                     .startOf( 'minute' );
       var start  = moment( this.attributes.datetime )
                     .tz( this.attributes.timezone )
-                    .subtract( 'days', 1 )
+                    .subtract( 1, 'days' )
                     .set( config.disallowOrdersBetween.start )
                     .startOf( 'minute' );
 

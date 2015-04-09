@@ -11,8 +11,8 @@ describe('Stamps', function(){
         , destinations: ['Dallas, TX']
         , expected: [
             { elements: [
-                { distance: { text: '195 mi', value: 314413 }
-                , duration: { text: '2 hours 56 mins', value: 10548 }
+                { distance: { text: '195 mi', value: 314264 }
+                , duration: { text: '2 hours 56 mins', value: 10558 }
                 , status: 'OK'
                 }
               ]
@@ -24,8 +24,8 @@ describe('Stamps', function(){
         , expected: [
             {
               "elements" : [
-                { "distance" : { "text" : "195 mi", "value" : 314413 }
-                , "duration" : { "text" : "2 hours 56 mins", "value" : 10548 }
+                { "distance" : { "text" : "195 mi", "value" : 314264 }
+                , "duration" : { "text" : "2 hours 56 mins", "value" : 10558 }
                 , "status" : "OK"
                 }
               ]
@@ -70,7 +70,23 @@ describe('Stamps', function(){
 
           req.send( function( error, rows ){
             assert( !error, error ? error.message : '' );
-            assert.deepEqual( testCase.expected, rows );
+            assert.equal( testCase.expected.length, rows.length );
+            testCase.expected.forEach( function( row, i ){
+              assert.equal( row.elements.length, rows[ i ].elements.length );
+
+              row.elements.forEach( function( element, ii ){
+                // Result is within 50 meters of expected
+                var d1 = element.distance.value;
+                var d2 = rows[ i ].elements[ ii ].distance.value;
+                assert( Math.abs( d1 - d2 ) < 50 );
+
+                // Result is within 1min of expected
+                var t1 = element.duration.value;
+                var t2 = rows[ i ].elements[ ii ].duration.value;
+                assert( Math.abs( t1 - t2 ) < 60 );
+              });
+            });
+
             done();
           });
         });
@@ -80,7 +96,7 @@ describe('Stamps', function(){
         DMReq()
           .origin('Poop')
           .send( function( error ){
-            assert.deepEqual( error, errors.google.distanceMatrix );
+            assert.deepEqual( error, errors.google.distanceMatrix.INVALID_REQUEST );
             done();
           });
       });

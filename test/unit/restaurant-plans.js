@@ -16,6 +16,10 @@ describe ('Restaurant Plans', function(){
     });
 
     assert.equal( plan({
+      restaurant_total: 100, restaurant_sales_tax: 1
+    }), 89 );
+
+    assert.equal( plan({
       restaurant_total: 100
     }), 90 );
 
@@ -40,6 +44,10 @@ describe ('Restaurant Plans', function(){
     var plan = rPlans.flat.getPayoutForOrder.bind( rPlans.flat, {
        data: { fee: 0.5 }
     });
+
+    assert.equal( plan({
+      restaurant_total: 100, restaurant_sales_tax: 1
+    }), 49 );
 
     assert.equal( plan({
       restaurant_total: 100

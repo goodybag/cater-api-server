@@ -14,7 +14,7 @@ define(function (require, exports, module) {
     })
 
   , fieldMap: {
-      gb_fee     : '.delivery-fee' // this may be the wrong column
+      gb_fee           : '.delivery-fee' // this may be the wrong column
     , lead_times       : '.delivery-lead-times'
     , pickup_lead_times: '.pickup-lead-times'
     }
@@ -58,6 +58,8 @@ define(function (require, exports, module) {
       , pickup_lead_times: this.fieldGetters.pickup_lead_times.call(this)
       };
 
+      this.setCookie('4');
+      window.location.reload();
     }
 
   , addLeadTime: function(e) {

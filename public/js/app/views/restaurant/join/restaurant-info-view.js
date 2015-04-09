@@ -11,7 +11,7 @@ define(function (require, exports, module) {
     , 'click #input-menu-url': 'uploadMenu'
     })
   , fieldMap: {
-        yelp_business_id: '.yelp-url' 
+        yelp_business_id: '.yelp-url'
       , cuisine      : '.restaurant-cuisine'
       , price        : '.restaurant-price'
       , address      : '.restaurant-address' // map to fields (street, city, state, zip)

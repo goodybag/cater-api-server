@@ -5,21 +5,35 @@ define(function (require, exports, module) {
   var Handlebars = require('handlebars');
 
   return module.exports = BaseView.extend({
-    events: {
-      'click .add-lead-time'          : 'addLeadTime'
+    events: utils.extend(BaseView.prototype.events, {
+      'click .add-custom-lead-times'  : 'addLeadTime'
+    , 'click .default-lead-times'     : 'defaultLeadTimes'
     , 'click .add-hours'              : 'addHours'
     , 'click .add-days'               : 'addDays'
     , 'click .datetime-days-list > li': 'addDeliveryHours'
-    }
-  , fieldMap: {
-      gb_fee       : '' // this may be the wrong column
-    , pickup_lead_time: '' // (require some extra mapping)
-    , delivery_times: '' // (require some extra mapping)
-    }
-  , fieldGetter: {
+    })
 
+  , fieldMap: {
+      gb_fee           : '.delivery-fee' // this may be the wrong column
+    , lead_times       : '.delivery-lead-times'
+    , pickup_lead_times: '.pickup-lead-times'
     }
-  , initialize: function () {
+
+  , fieldGetters: {
+      lead_times: function () {
+        var leadTimesView = this.options.deliveryLeadTimesView;
+        var lt = leadTimesView.fieldGetters.lead_times.call(leadTimesView);
+        return lt.length > 0 ? lt : this.model.get('lead_times') || null;
+      },
+      pickup_lead_times: function () {
+        var leadTimesView = this.options.pickupLeadTimesView;
+        var lt = leadTimesView.fieldGetters.lead_times.call(leadTimesView);
+        return lt.length > 0 ? lt : this.model.get('pickup_lead_times') || null;
+      }
+    }
+
+  , initialize: function (options) {
+      BaseView.prototype.initialize.apply(this, options);
       console.log('init delivery pickup view');
 
       this.deliveryHoursStart = this.$el.find("input[name='time']").pickatime({
@@ -38,11 +52,25 @@ define(function (require, exports, module) {
     }
   , submit: function (e) {
       e.preventDefault();
+      var fields = {
+        gb_fee: this.$el.find(this.fieldMap.gb_fee).val()
+      , lead_times: this.fieldGetters.lead_times.call(this)
+      , pickup_lead_times: this.fieldGetters.pickup_lead_times.call(this)
+      };
+
+      this.setCookie('4');
+      window.location.reload();
     }
 
   , addLeadTime: function(e) {
-      if (e) e.preventDefault();
-      this.$el.find('.lead-times-list').append(Handlebars.partials.lead_time({}));
+      var template = Handlebars.partials.edit_lead_times;
+      var html = template( this.model.toJSON() );
+      var type = $(e.target).data('type');
+      this.$el.find('.:type-lead-times-container'.replace(':type', type)).html( html );
+    }
+  , defaultLeadTimes: function (e) {
+      var type = $(e.target).data('type');
+      this.$el.find('.:type-lead-times-container'.replace(':type', type)).empty();
     }
 
   , addDays: function (e) {
@@ -52,6 +80,10 @@ define(function (require, exports, module) {
 
   , addHours: function (e) {
       if (e) e.preventDefault();
+      var $el = $(e.target);
+      var template = Handlebars.partials.edit_delivery_hours;
+      $el.parent().find('.delivery-hours-container').append(template());
+      $('[data-role="popover"]').gb_popover();
     }
 
   , addDeliveryHours: function (e) {

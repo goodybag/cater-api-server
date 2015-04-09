@@ -1,5 +1,6 @@
-var db    = require('db');
-var utils = require('utils');
+var db        = require('db');
+var utils     = require('utils');
+var datetime  = require('stamps/datetime');
 
 module.exports = require('stampit')()
   .compose( require('./db') )
@@ -20,10 +21,9 @@ module.exports = require('stampit')()
       var $where = {
         status:     'accepted'
       , user_id:    this.user_id
-      , datetime: {
-          $gte: this.billing_period_start
-        , $lt:  this.billing_period_end
-        }
+      , datetime:   datetime({ datetime: this.billing_period_start })
+                      .getBillingPeriod()
+                      .getMosqlRangeQuery()
       , payment_method_id: { $null: true }
       };
 

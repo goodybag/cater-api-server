@@ -1,4 +1,5 @@
 define(function(require, exports, module) {
+  var Handlebars = require('handlebars');
   var FormView = require('./form-view');
   var EditItemView = require('./edit-item-view');
   var Category = require('../models/category');
@@ -18,7 +19,7 @@ define(function(require, exports, module) {
       'click .new-item': 'newItem',
       'keyup .category-form .form-control': 'onChange',
       'change .category-form .form-control': 'onChange',
-      'change .category-form .category-menus': 'onChange',
+      'change .category-form input': 'onChange',
       'click .category-form .category-remove': 'onRemove',
       'submit .category-form': 'onSave'
     },
@@ -29,6 +30,11 @@ define(function(require, exports, module) {
       if (this.model.id) this.id = 'category-' + this.model.id;
       this.items = [];
       this.listenTo(this.model.items, 'sort', this.sortItems, this);
+
+      this.on('save:success', function(model, res) {
+        var $newBtn = this.$el.find('.new-item');
+        $newBtn.attr('style', 'display: inline-block').show();
+      });
     },
 
     render: function() {
@@ -56,7 +62,8 @@ define(function(require, exports, module) {
       name: '.category-form .category-name',
       description: '.category-form .category-description',
       order: '.category-form .category-order',
-      menus: '.category-form .category-menus'
+      menus: '.category-form .category-menus',
+      is_hidden: '.category-form .category-is-hidden'
     },
 
     fieldGetters: {
@@ -66,6 +73,9 @@ define(function(require, exports, module) {
       },
       menus: function() {
         return _.pluck(this.$el.find(this.fieldMap.menus + ':checked'), 'value');
+      },
+      is_hidden: function() {
+        return this.$el.find(this.fieldMap.is_hidden).is(':checked');
       }
     },
 

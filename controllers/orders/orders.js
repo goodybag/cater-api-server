@@ -155,12 +155,12 @@ module.exports.get = function(req, res) {
 
     var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
-    if (req.param('receipt')) {
+    if (req.params.receipt) {
       view = 'invoice/receipt';
       context.layout = 'invoice/invoice-layout';
     }
 
-    if ( context.order.review_token !== req.param('review_token') ) {
+    if ( context.order.review_token !== req.params.review_token ) {
       delete context.order.review_token;
     }
 
@@ -261,9 +261,6 @@ module.exports.generateEditToken = function(req, res) {
   models.Order.update(query, function(err, order) {
     if (err || !order.length)
       return res.error(errors.internal.DB_FAILURE, err);
-    else if (order[0].attributes.user_id !== req.user.attributes.id) {
-      return res.error(errors.auth.NOT_ALLOWED);
-    }
     res.send(200, order[0]);
   });
 };
@@ -272,7 +269,7 @@ module.exports.changeStatus = function(req, res) {
   var logger = req.logger.create('Controller-OrderChangeStatus');
 
   logger.info('Attempt to change status', {
-    order: { id: req.param('oid') }
+    order: { id: req.params.oid }
   });
 
   if (!req.body.status || !utils.has(models.Order.statusFSM, req.body.status))
@@ -345,7 +342,7 @@ module.exports.changeStatus = function(req, res) {
 
     if (req.order.promo_code)
     if (req.order.status === 'submitted') {
-    if (utils.where( promoConfig, { promo_code: req.order.promo_code} ))
+    if (utils.flatten(utils.pluck( promoConfig,'promo_code')).indexOf(req.order.promo_code) > -1)
       venter.emit('order:submitted:promo', req.order);
     }
   }
@@ -402,7 +399,7 @@ module.exports.receipt = function( req, res ){
 };
 
 module.exports.rebuildPdf = function( req, res ){
-  if ( !(req.param('type') in pdfs) ){
+  if ( !(req.params.type in pdfs) ){
     return res.error({
       type: 'input'
     , httpCode: '403'
@@ -411,7 +408,7 @@ module.exports.rebuildPdf = function( req, res ){
     });
   }
 
-  pdfs[ req.param('type') ].build({ orderId: req.param('oid') });
+  pdfs[ req.params.type ].build({ orderId: req.params.oid });
 
   res.send(204);
 };

@@ -14,10 +14,10 @@ module.exports = function( options ){
   });
 
   return function( req, res, next ){
-    var page = ( req.param( options.pageParam ) - 1 ) || 0;
+    var page = ( req.params[options.pageParam] - 1 ) || 0;
 
-    req.queryOptions.limit = options.allowLimit && req.param('limit')
-      ? req.param('limit') : options.limit;
+    req.queryOptions.limit = options.allowLimit && req.params.limit
+      ? req.params.limit : options.limit;
 
     req.queryOptions.offset = page * req.queryOptions.limit;
 

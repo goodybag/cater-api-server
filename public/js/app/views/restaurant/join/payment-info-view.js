@@ -6,25 +6,67 @@ define(function (require, exports, module) {
 
   return module.exports = BaseView.extend({
     fieldMap: {
-        billing_name : '' // not in db
-      , billing_phone: ''// not in db
-      , billing_street: ''
-      , billing_street2: ''
-      , billing_city : ''
-      , billing_state: ''
-      , billing_zip  : ''
-      , terms_name   : '' // not in db
-      , terms_contact_name: '' // not in db
-      , terms_date: '' // not in db
+        billing_name   : '.billing-name' // not in db
+      , billing_phone  : '.billing-phone'// not in db
+      , billing_street : '.billing-street'
+      , billing_street2: '.billing-street2'
+      , billing_city   : '.billing-city'
+      , billing_state  : '.billing-state'
+      , billing_zip    : '.billing-zip'
+      , terms_name     : '.terms-name' // not in db
+      , terms_contact_name: '.terms-contact-name' // not in db
+      , terms_date     : '.term-date' // not in db
     }
   , fieldGetter: {
 
     }
-  , initialize: function () {
-
+  , initialize: function (options) {
+      BaseView.prototype.initialize.apply(this, options);
     }
   , submit: function (e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
+      this.clearErrors();
+
+      var depositInfo = {
+          bank_name: '.bank-name'
+        , account_type: '.account-type'
+        , account_name: '.account-name'
+        , routing_number: '.routing-number'
+        , account_number: '.account-number'
+      };
+
+      var requiredFields = _.omit(this.fieldMap
+        , ['billing_street2', 'billing_phone', 'terms_name'
+          ,'terms_contact_name', 'terms_date']);
+
+      if (!this.validateFields(requiredFields)) return;
+      if (!this.validateFields(depositInfo, true)) return;
+      
+
+      //TODO: insert deposit info into stripe
+
+      //this.model.set(this.getDiff());
+      //this.model.save(null {});
+    }
+
+    // validates against null input values
+  , validateFields: function (fields, useClassSelector) {
+      for (var f in fields) {
+        if(!this.$el.find(fields[f]).val()) {
+
+          var errorOpts = {
+            message: 'Please provide a :f'.replace(':f', f.replace('_', ' '))
+          };
+
+          useClassSelector ?
+            errorOpts['selector'] = '.'+f.replace('_', '-')
+            : errorOpts['property'] = f
+
+          this.displayErrors([errorOpts]);
+          return false;
+        }
+      }
+      return true;
     }
 
   })

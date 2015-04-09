@@ -30,7 +30,7 @@ var utils = require('../utils');
 var exists = function( prop, opts ) {
 
   return function(req, res, next) {
-    var check = getProperty(req, prop);
+    var check = utils.getProperty(req, prop);
 
     // simple check and run fn
     if ( typeof opts === 'function')
@@ -43,34 +43,5 @@ var exists = function( prop, opts ) {
     (check ? opts.then : opts.else).apply(this, arguments);
   };
 };
-
-/**
- * Access object properties via string
- * supporting nested access
- *
- * Example
- * ```
- * getProperty(user, 'attributes.name') === user.attributes.name
- * ```
- *
- * @param {object} obj - source object
- * @param {string} prop - target property relative to object
- * @return obj property
- */
-var getProperty = function( obj, prop ) {
-  if (prop.indexOf('.') < 0) return obj[prop];
-  var parts = prop.split('.')
-    , last = parts.pop()
-    , len = parts.length
-    , idx = 1
-    , current = parts[0];
-
-  while( (obj = obj[current]) && idx < len ) {
-    current = parts[idx++];
-  }
-  if ( obj )
-    return obj[last];
-  return obj;
-}
 
 module.exports = exists;

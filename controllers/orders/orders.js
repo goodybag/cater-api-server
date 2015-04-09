@@ -16,7 +16,7 @@ var orderDefinitionSchema = require('../../db/definitions/orders').schema;
 var promoConfig = require('../../configs/promo');
 var DMReq = require('stamps/requests/distance-matrix');
 var address = require('stamps/addresses');
-var distance = require('stamps/distance');
+var deliveryFee = require('stamps/orders/delivery-fee');
 
 var addressFields = [
   'street'
@@ -440,7 +440,7 @@ module.exports.getDeliveryFee = function( req, res ){
         distance:     result.distance
       , duration:     result.duration
       , pricePerMile: req.order.location.price_per_mile
-      , price:        distance()
+      , price:        deliveryFee()
                         .meters( result.distance.value )
                         .pricePerMile( req.order.location.price_per_mile )
                         .price()

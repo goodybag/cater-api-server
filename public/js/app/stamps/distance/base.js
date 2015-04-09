@@ -14,7 +14,6 @@ define( function( require, exports, module ){
   return require('stampit')()
     .state({
       _meters: 0
-    , _pricePerMile: 0
     })
     .enclose( function(){
 
@@ -34,16 +33,6 @@ define( function( require, exports, module ){
         this.meters( value * METERS_IN_A_MILE );
 
         return this;
-      }
-
-    , pricePerMile: function( value ){
-        if ( [ undefined, null ].indexOf( value ) > -1 ) return this._pricePerMile;
-        this._pricePerMile = value;
-        return this;
-      }
-
-    , price: function(){
-        return Math.round( this.pricePerMile() * this.miles() );
       }
     });
 });

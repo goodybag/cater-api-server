@@ -106,6 +106,8 @@ var reports = {
     , 'Tip'
     , 'Adjustment'
     , 'Total'
+    , 'GB Fee'
+    , 'GB Percent'
     , 'Caterer Name'
     , 'Region'
     ]);
@@ -212,6 +214,8 @@ var reports = {
           , dollars(order.tip)
           , dollars(order.adjustment_amount)
           , dollars(order.total)
+          , dollars(order.total * order.restaurant.gb_fee)
+          , hbHelpers.factorToPercent(order.restaurant.gb_fee) + '%'
           , order.restaurant.name
           , order.region.name
           ]);

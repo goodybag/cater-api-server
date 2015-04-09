@@ -16,11 +16,13 @@ define( function( require, exports, module ){
 
     })
     .enclose( function(){
-      this.startDate = this.startDate || moment().format('YYYY-MM-DD');
-      this.endDate = this.endDate || moment().format('YYYY-MM-DD');
+      this.startDate = this.startDate || moment().format( this.format );
+      this.endDate = this.endDate || moment().format( this.format );
     })
     .methods({
-      start: function( startDate ){
+      format: 'YYYY-MM-DD'
+
+    , start: function( startDate ){
         if ( !startDate ) return this.startDate;
         this.startDate = startDate;
         return this;
@@ -30,6 +32,13 @@ define( function( require, exports, module ){
         if ( !endDate ) return this.endDate;
         this.endDate = endDate;
         return this;
+      }
+
+    , getMosqlRangeQuery: function(){
+        return {
+          $gt: this.startDate
+        , $lt: moment( this.endDate ).add( 'days', 1 ).format( this.format )
+        };
       }
     });
 });

@@ -22,7 +22,7 @@ module.exports = function( options ){
 
     var $where = {};
 
-    var param = req.param( options.param );
+    var param = req.params[options.param];
 
     // use + instead of parseInt because:
     // parseInt('888-mini-cafe') === 888
@@ -71,7 +71,7 @@ module.exports = function( options ){
     logger.info('Finding restaurant');
     db.restaurants.findOne( $where, $options, function( error, restaurant ){
       if ( error ){
-        logger.error( 'error trying to find restaurant #%s', +req.param( options.param ), {
+        logger.error( 'error trying to find restaurant #%s', +req.params[options.param], {
           error: error
         });
 

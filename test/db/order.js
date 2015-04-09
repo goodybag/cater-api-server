@@ -36,12 +36,12 @@ describe('Order Data Access', function() {
 
   it('should filter by month', function(done) {
     var orders = require('../../lib/stamps/db/orders');
-    var sql = orders({ query: { month: 12 } }).get();
+    var sql = orders({ month: 12, submittedDate: true }).get();
     db.orders.find(sql.$query, sql.$options, function(err, orders) {
       assert(!err);
       assert(orders.length);
       var ordersNotInDecember = orders.filter(function(o) {
-        return moment( o.created_at ).month() !== 11; // moment is zero-indexed
+        return moment( o.submitted ).month() !== 11; // moment is zero-indexed
       });
       assert(!ordersNotInDecember.length);
       done();

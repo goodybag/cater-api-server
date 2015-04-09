@@ -3,8 +3,13 @@
 @restaurant-list-color: @palette-gray-dark;
 @restaurant-section-border-color: @palette-gray;
 @restaurant-section-padding: 30px 0;
+@restaurant-container-width: 1300px;
 
 .page-restaurant-list {
+  // override .container width
+  .container { 
+    #grid .container(@restaurant-container-width);
+  }
 
   @media (max-width: @breakpoint-tablet) {
     .inline-list-bulleted li {

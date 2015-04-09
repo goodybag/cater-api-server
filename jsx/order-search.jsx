@@ -127,6 +127,7 @@ define(function(require, exports, module) {
       var orderUrl = '/orders/' + this.props.order.id;
       var datetime = Handlebars.helpers.calendar( this.props.order.datetime );
       var total = Handlebars.helpers.dollars( this.props.order.total );
+      var statusClassString = 'label ' +  ('label-' + this.props.order.status);
       var classString = 'search-row list-group-item';
       var orgString = this.props.order.user && this.props.order.user.organization ?
                         '(' + this.props.order.user.organization +')' : '';
@@ -134,7 +135,7 @@ define(function(require, exports, module) {
       return (
         <div className={classString} onClick={this.handleClick}>
           <a href={orderUrl}>
-            <div><strong>#{this.props.order.id}</strong> {datetime} for ${total}</div>
+            <div><span className={statusClassString}>#{this.props.order.id}</span><strong>{datetime} for ${total}</strong></div>
             <div>{this.props.order.restaurant.name} to {userName} {orgString}</div>
           </a>
         </div>

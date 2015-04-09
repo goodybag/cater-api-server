@@ -41,6 +41,17 @@ describe('Stamps', function() {
       assert.equal( '2015-11-30', period.endDate );
     });
 
+    it('.getMosqlRangeQuery()', function(){
+      var period = stamps.datetime({
+        datetime: '2015-11-05 00:00:00'
+      }).getBillingPeriod();
+
+      assert.deepEqual( period.getMosqlRangeQuery(), {
+        $gt: '2015-11-01'
+      , $lt: '2015-11-16'
+      });
+    });
+
     it('.getPreviousBillingPeriod()', function(){
       var period = stamps.datetime({
         datetime: '2015-11-05 00:00:00'

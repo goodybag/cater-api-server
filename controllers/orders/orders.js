@@ -440,10 +440,12 @@ module.exports.getDeliveryFee = function( req, res ){
         distance:     result.distance
       , duration:     result.duration
       , pricePerMile: req.order.location.price_per_mile
-      , price:        deliveryFee()
-                        .meters( result.distance.value )
-                        .pricePerMile( req.order.location.price_per_mile )
-                        .price()
+      , basePrice:    req.order.location.base_delivery_fee
+      , price:        deliveryFee({
+                        pricePerMile: req.order.location.price_per_mile
+                      , basePrice:    req.order.location.base_delivery_fee
+                      , meters:       result.distance.value
+                      }).getPrice()
       });
     })
     .catch( function( error ){

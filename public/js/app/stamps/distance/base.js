@@ -13,24 +13,18 @@ define( function( require, exports, module ){
 
   return require('stampit')()
     .state({
-      _meters: 0
+      meters: 0
     })
     .enclose( function(){
 
     })
     .methods({
-      meters: function( value ){
-        if ( [ undefined, null ].indexOf( value ) > -1 ) return this._meters;
-        this._meters = value;
-        return this;
-      }
-
-    , miles: function( value ){
+      miles: function( value ){
         if ( [ undefined, null ].indexOf( value ) > -1 ){
-          return this.meters() / METERS_IN_A_MILE;
+          return this.meters / METERS_IN_A_MILE;
         }
 
-        this.meters( value * METERS_IN_A_MILE );
+        this.meters = value * METERS_IN_A_MILE;
 
         return this;
       }

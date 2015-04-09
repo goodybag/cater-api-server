@@ -8,5 +8,5 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  perform add_column( 'restaurant_locations', 'base_delivery_fee', 'not null default 0' );
+  perform add_column( 'restaurant_locations', 'base_delivery_fee', 'int not null default 0' );
 end$$;

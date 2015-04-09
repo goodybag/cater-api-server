@@ -19,11 +19,18 @@ define( function( require, exports, module ){
     return curr + this.order.restaurant_total;
   };
 
+  var restaurantPlanFlatFee = function( curr ){
+    return curr - ( curr * this.fee );
+  };
+
+  var restaurantSalesTax = function( curr ){
+    return curr - (this.order.restaurant_sales_tax || 0);
+  };
+
   var payoutPlan = new utils.Plan.Reduce(0)
     .use( restaurantTotal )
-    .use( function( curr ){
-      return curr - ( curr * this.fee );
-    })
+    .use( restaurantPlanFlatFee )
+    .use( restaurantSalesTax )
     .use( Math.round );
 
   var gbFeePlan = new utils.Plan.Reduce(0)

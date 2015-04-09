@@ -15,7 +15,7 @@ define(function (require, exports, module) {
       , billing_zip    : '.billing-zip'
       , terms_name     : '.terms-name' // not in db
       , terms_contact_name: '.terms-contact-name' // not in db
-      , terms_date: '.term-date' // not in db
+      , terms_date     : '.term-date' // not in db
     }
   , fieldGetter: {
 
@@ -24,23 +24,23 @@ define(function (require, exports, module) {
       BaseView.prototype.initialize.apply(this, options);
     }
   , submit: function (e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
 
-      return this.runValidations({exclude: ['billing_street2']});
-    }
+      // validate against null input values
+      var requiredFields = _.omit(this.fieldMap
+        , ['billing_street2', 'billing_phone']);
 
-    // validates against null input values
-  , runValidations: function (options) {
-      this.clearErrors();
-      for (var field in this.fieldMap) {
-        if (!~options.exclude.indexOf(field))
-        if(!this.$el.find(this.fieldMap[field]).val()) {
+      for (var field in requiredFields) {
+        if(!this.$el.find(requiredFields[field]).val()) {
           return this.displayErrors([{
             property: field
           , message: 'Please provide a :f'.replace(':f', field.replace('_', ' '))
           }]);
         }
       }
+
+      //this.model.set(this.getDiff());
+      //this.model.save(null {});
     }
 
   })

@@ -47,6 +47,7 @@
     "express": "^4.10.6",
     "express-session": "^1.9.3",
     "forky": "~0.3.0",
+    "gb-handlebars-helpers": "0.0.1",
     "gelf-encode": "0.2.x",
     "generic-pool": "2.0.x",
     "grunt": "^0.4.5",

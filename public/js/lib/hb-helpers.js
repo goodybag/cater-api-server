@@ -45,11 +45,6 @@ define(function(require, exports, module) {
       return 'Free';
     },
 
-    dollars: function(pennies) {
-      var cents = pennies == null ? 0 : parseFloat(pennies); // parse as float incase of partial cents
-      return utils.isNaN(cents) ? '' : utils.Math.round10(cents / 100, -2).toFixed(2); // partial cents get rounded here
-    },
-
     dollarsOmit00: function(pennies) {
       var cents = pennies == null ? 0 : parseFloat(pennies); // parse as float incase of partial cents
       var dollars = utils.isNaN(cents) ? '' : utils.Math.round10(cents / 100, -2).toFixed(2); // partial cents get rounded here
@@ -59,11 +54,6 @@ define(function(require, exports, module) {
       }
 
       return dollars;
-    },
-
-    pennies: function(dollars) {
-      var val = Math.round( dollars * 100 );
-      return utils.isNaN(val) ? '' : val;
     },
 
     dollarsNoCents: function(pennies){
@@ -194,18 +184,6 @@ define(function(require, exports, module) {
 
     floor: function(value) {
       return Math.floor(value);
-    },
-
-    divide: function(dividend, divisor) {
-      return dividend / divisor;
-    },
-
-    intDivide: function(dividend, divisor) {
-      return Math.floor( dividend / divisor );
-    },
-
-    mod: function(dividend, divisor) {
-      return dividend % divisor;
     },
 
     leadtime: function(minutes) {
@@ -492,18 +470,6 @@ define(function(require, exports, module) {
       }
 
       return parseFloat( ( percent / 100 ).toFixed( precision ) );
-    },
-
-    add: function (value, addition) {
-      return (+value) + (+addition);
-    },
-
-    sub: function (a, b) {
-      return (+a) - (+b);
-    },
-
-    multiply: function(a, b) {
-      return a * b;
     },
 
     commatize: function( x, options ){

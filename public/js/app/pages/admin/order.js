@@ -81,7 +81,7 @@ define(function(require){
 
         $('[name="payment_status"]').change(function (e) {
           var status = e.target.value || null;
-          if (status === null) alert('Changing payment status to pending will attempt to recharge the credit card!');
+          if (status === null) alert('Changing payment status to unprocessed will attempt to recharge the credit card!');
           page.updateOrder({ payment_status: status }, function (error) {
             if (error) {
               return page.flashError( error );

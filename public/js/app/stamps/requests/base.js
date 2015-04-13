@@ -85,9 +85,9 @@ define( function( require, exports, module ){
         }
 
         return utils.http( options )
-          .error( function( error ){
-            if ( callback ) callback( error );
-          });
+          .error( callback )
+          .catch( callback )
+          .then( function( res ){ if ( callback ) callback( null, res ); })
       }
     });
 });

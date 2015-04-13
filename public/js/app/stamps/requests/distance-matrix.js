@@ -47,29 +47,43 @@ define( function( require, exports, module ){
         };
       }
 
-    , parseResponse: function( res ){
+    , parseResponse: function( res, callback ){
         var body = res[1];
 
         if ( body.status in errors.google.distanceMatrix ){
-          return Promise.reject( errors.google.distanceMatrix[ body.status ] );
+          return callback( errors.google.distanceMatrix[ body.status ] );
         }
 
-        return body.rows;
+        return callback( null, body.rows );
       }
 
     , send: function( callback ){
         this.query( this.getOriginDestinationQuery() );
 
-        return base.fixed.methods.send.call( this )
-          .then( function( res ){
-            return this.parseResponse( res );
-          }.bind( this ))
-          .then( function( res ){
-            if ( callback ) return callback( null, res );
-          }.bind( this ))
-          .error( function( error ){
-            if ( callback ) callback( error );
+        return new Promise( function( resolve, reject ){
+          base.fixed.methods.send.call( this, function( error, res ){
+            if ( error ){
+              return reject( error );
+            }
+
+            this.parseResponse( res, function( error, result ){
+              if ( error ) return reject( error );
+              return resolve( result );
+            })
           }.bind( this ));
+        }.bind( this ));
+
+        // if ( typeof callback !== 'function' ){
+        //   return p;
+        // }
+
+        // return p
+        //   .error( callback )
+        //   .catch( callback )
+        //   .then( function( res ){
+        //     if ( callback ) callback( null, res );
+        //     return res;
+        //   }.bind( this ));
       }
     });
 });

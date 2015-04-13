@@ -9,10 +9,21 @@ define(function(require){
     initialize: function() {
       this.$tbody = this.$el.find('tbody');
       this.start();
+
+      this.startDate = this.$el.find("input[name='startDate']").eq(0).pickadate({
+        format: 'mm/dd/yyyy'
+      , min: new Date()
+      }).pickadate('picker');
+
+      this.endDate = this.$el.find("input[name='endDate']").eq(0).pickadate({
+        format: 'mm/dd/yyyy'
+      , min: new Date()
+      }).pickadate('picker');
     },
 
     events: {
       'click .btn-sort-by': 'sortByOnClick'
+    , 'click .btn-filter': 'poll'
     },
 
     start: function() {
@@ -36,6 +47,8 @@ define(function(require){
     },
 
     update: function(orders) {
+      orders = this.filterByDateRange(orders)
+
       // When resetting, do not check if order needs to be courier or delivery
       // i.e. the order type at initialization should not change
       this.options.orders.reset(orders, { ignoreOrderTypeInit: true });
@@ -63,6 +76,15 @@ define(function(require){
       // sort
       this.options.orders.setComparator(sortBy);
       this.poll();
+    },
+
+    filterByDateRange: function (orders) {
+      var startDate = this.startDate.get();
+      var endDate = this.endDate.get();
+      if (!(startDate && endDate)) return orders;
+      return utils.filter(orders, function (order) {
+        return moment(order.datetime).isBetween(startDate, endDate);
+      });
     }
   });
 });

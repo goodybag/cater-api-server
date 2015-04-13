@@ -2,6 +2,17 @@
 
 {{#extend "body"}}
 
+{{#extend "css"}}
+<style>
+.picker {
+  min-width: 400px;
+}
+#main {
+  overflow: inherit;
+}
+</style>
+{{/extend}}
+
 <div class="container" id="main-container">
   <div class="page-header">
     <ul class="breadcrumbs main-breadcrumbs">
@@ -16,6 +27,18 @@
 </div>
 
 <div class="container">
+   <div class="form-group">
+    <label>Start Date</label>
+    <input class="datepicker" name="startDate">
+  </div>
+  <div class="form-group">
+    <label>End Date</label>
+    <input class="datepicker" name="endDate">
+  </div>
+  <div class="form-group">
+    <button class="btn btn-white btn-filter">Filter</button>
+  </div>
+
   <table class="table table-upcoming">
     <thead>
       <tr>
@@ -46,7 +69,7 @@ require([
 ],
 function(UpcomingOrdersView, Orders){
   var view = new UpcomingOrdersView({
-    el: '.table-upcoming'
+    el: '#main'
   , endpoint: '/api/upcoming'
   , orders: new Orders({{{json orders}}}, { comparator: 'datetime', ignoreOrderTypeInit: true })
   });

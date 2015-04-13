@@ -7,7 +7,7 @@ module.exports.get = function( req, res ){
   , showControls: true
   };
 
-  res.render( [ 'emails', req.param('name') ].join('/'), options );
+  res.render( [ 'emails', req.params.name ].join('/'), options );
 };
 
 module.exports.post = function( req, res ){
@@ -15,16 +15,16 @@ module.exports.post = function( req, res ){
     layout: 'emails/layout'
   };
 
-  res.render( [ 'emails', req.param('name') ].join('/'), options, function( error, html ){
+  res.render( [ 'emails', req.params.name ].join('/'), options, function( error, html ){
     utils.sendMail2({
       to: config.testEmail
     , from: config.emails.info
-    , subject: 'Test Email: ' + req.param('name')
+    , subject: 'Test Email: ' + req.params.name
     , html: html
     });
 
     options.showControls = true;
 
-    res.render( [ 'emails', req.param('name') ].join('/'), options );
+    res.render( [ 'emails', req.params.name ].join('/'), options );
   });
 };

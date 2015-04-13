@@ -136,7 +136,7 @@ module.exports.register = function(app) {
     app.get('/admin/upcoming'
     , m.getOrders({
         submittedDate: true
-      , upcoming: true
+      , upcoming: '3 hours'
       })
     , m.view('admin/upcoming', { layout: 'admin/layout2' })
     );
@@ -144,7 +144,7 @@ module.exports.register = function(app) {
     app.get('/api/upcoming'
     , m.getOrders({
         submittedDate: true
-      , upcoming: true
+      , upcoming: '3 hours'
       })
     , function(req, res, next) {
         res.send(res.locals.orders);
@@ -732,7 +732,7 @@ module.exports.register = function(app) {
       , collectionOptions:  { restaurant_id: ':restaurant_id' }
       })
     , function( req, res, next ){
-        return m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
+        return m.db.restaurants.findOne( req.params.restaurant_id )( req, res, next );
       }
     , m.view( 'admin/restaurant/location-edit', db.restaurant_locations, {
         layout: 'admin/layout-single-object'
@@ -923,9 +923,9 @@ module.exports.register = function(app) {
       ]
     })
   , function( req, res, next ){
-      res.locals.status = req.param('status');
-      if ( req.param('status') == 'accepted' ){
-        req.queryOptions.statusDateSort = { status: req.param('status') };
+      res.locals.status = req.params.status;
+      if ( req.params.status == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.params.status };
       }
       return next();
     }
@@ -1443,9 +1443,9 @@ module.exports.register = function(app) {
               ]
       })
     , function( req, res, next ){
-        res.locals.status = req.param('status');
-        if ( req.param('status') == 'accepted' ){
-          req.queryOptions.statusDateSort = { status: req.param('status') };
+        res.locals.status = req.params.status;
+        if ( req.params.status == 'accepted' ){
+          req.queryOptions.statusDateSort = { status: req.params.status };
         }
         return next();
       }
@@ -1622,7 +1622,7 @@ module.exports.register = function(app) {
   , m.restrict(['admin', 'receipts'])
   , function( req, res, next ){
       var invoice = require('stamps/user-invoice').create({
-        id: req.param('id')
+        id: req.params.id
       }).fetch( function( error ){
         if ( error ) return next( error );
 
@@ -1639,7 +1639,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:restaurant_id/orders'
   , function( req, res, next ){
-      m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
+      m.db.restaurants.findOne( req.params.restaurant_id )( req, res, next );
     }
   , m.param('status')
   , m.param('restaurant_id')
@@ -1656,9 +1656,9 @@ module.exports.register = function(app) {
             ]
     })
   , function( req, res, next ){
-      res.locals.status = req.param('status');
-      if ( req.param('status') == 'accepted' ){
-        req.queryOptions.statusDateSort = { status: req.param('status') };
+      res.locals.status = req.params.status;
+      if ( req.params.status == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.params.status };
       }
       return next();
     }
@@ -1684,7 +1684,7 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , function( req, res, next ){
-      res.locals.payment_summary_id = req.param('payment_summary_id');
+      res.locals.payment_summary_id = req.params.payment_summary_id;
       return next();
     }
   , m.queryOptions({
@@ -1946,7 +1946,7 @@ module.exports.register = function(app) {
       venter.emit(
         'payment-summary:change'
       , res.locals.payment_summary.id
-      , req.param('restaurant_id')
+      , req.params.restaurant_id
       );
 
       next();
@@ -2056,9 +2056,9 @@ module.exports.register = function(app) {
   , m.pagination()
   , m.param('status')
   , function( req, res, next ){
-      res.locals.status = req.param('status');
-      if ( req.param('status') == 'accepted' ){
-        req.queryOptions.statusDateSort = { status: req.param('status') };
+      res.locals.status = req.params.status;
+      if ( req.params.status == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.params.status };
       }
       return next();
     }
@@ -2142,7 +2142,7 @@ module.exports.register = function(app) {
         return next();
       }
 
-      venter.emit( 'order:change', req.param('id') );
+      venter.emit( 'order:change', req.params.id );
 
       next();
     })
@@ -2164,6 +2164,21 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.orders )
+  );
+
+  app.get('/api/orders/:id/delivery-fee'
+  , m.getOrder2({
+      param:              'id'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , location:           true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , controllers.orders.getDeliveryFee
   );
 
   app.get('/api/orders/:oid/items'
@@ -2374,7 +2389,7 @@ module.exports.register = function(app) {
   , m.insert( db.user_invoice_orders )
   );
 
-  app.del('/api/invoices/:user_invoice_id/orders/:order_id'
+  app.delete('/api/invoices/:user_invoice_id/orders/:order_id'
   , m.restrict(['admin'])
   , m.param('user_invoice_id')
   , m.param('order_id')

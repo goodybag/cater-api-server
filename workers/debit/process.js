@@ -50,7 +50,9 @@ var debitCustomer = function (order, callback) {
         customer: user.stripe_id,
         source: paymentMethod.attributes.stripe_id,
         destination: order.restaurant.stripe_id,
-        application_fee: restaurantPlans[order.restaurant.plan.type].getGbFee(order.restaurant.plan, order),
+        application_fee: order.restaurant.plan_id ?
+                           restaurantPlans[order.restaurant.plan.type].getGbFee(order.restaurant.plan, order) :
+                           0,
         statement_descriptor: 'GOODYBAG CATER #' + order.id,
         metadata: {
           user_id: order.user.id

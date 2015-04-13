@@ -1,0 +1,9 @@
+<div class="list-item">
+  <div class="component main">
+    <div class="item-title" href="#">${{dollars amount}} {{capitalize status}}</div>
+    <div class="item-details">{{datepart (multiply created 1000)}} {{timepart (multiply created 1000)}} ({{reversals.total_count}} reversals)</div>
+    {{#if failure_code~}}
+    <div>{{failure_code}}: {{failure_message}}</div>
+    {{~/if}}
+  </div>
+</div>

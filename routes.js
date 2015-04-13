@@ -536,6 +536,21 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/admin/restaurants/:id/transfers'
+    , m.param('id')
+    , m.getRestaurant({ param: 'id' })
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'transfers'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.stripe.getRestaurantTransfers()
+    , m.view('admin/restaurant/edit-transfers', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
+    );
+
     app.get('/admin/restaurants/:rid/delivery-settings'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
@@ -1971,6 +1986,12 @@ module.exports.register = function(app) {
   , m.param('id')
   , m.param('restaurant_id')
   , m.remove( db.payment_summaries )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/transfers'
+  , m.restrict(['accounting', 'admin'])
+  , m.getRestaurant({ param: 'restaurant_id' })
+  , m.stripe.createRestaurantTransfer()
   );
 
   app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/send'

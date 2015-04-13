@@ -1,0 +1,46 @@
+{{#extend "page"}}page-restaurant-transfers{{/extend}}
+
+{{#extend "body"}}
+<h2>Restaurant Transfers</h2>
+<p>
+  <form class="form-restaurant-transfers">
+    <div class="form-group">
+      <div class="input-group input-group">
+        <div class="input-addon">$</div>
+        <input type="number" step="0.01" placeholder="10.50" class="input-amount form-control">
+      </div>
+    </div>
+    <button class="btn btn-primary">Submit Payment</button>
+  </form>
+</p>
+<p>
+  <div class="table-list table-restaurant-transfers">
+    <div class="list-header">
+      <div class="component list-info">
+        <div class="num-results">Past Payments</div>
+      </div>
+    </div>
+    <div class="list-items">
+      {{#each restaurant_transfers.data}}
+      {{> restaurant_transfer_row }}
+      {{/each}}
+    </div>
+  </div>
+</p>
+{{/extend}}
+
+
+{{#extend "scripts"}}
+
+<script>
+require( ['app/views/admin/restaurant-transfers-view', 'app/views/alert-view', 'app/models/restaurant'], function( RestaurantTransfersView, AlertView, Restaurant ){
+  var view = new RestaurantTransfersView({
+    el: '.page-restaurant-transfers'
+  , form: '.form-restaurant-transfers'
+  , list: '.table-restaurant-transfers .list-items'
+  , restaurant: new Restaurant({{{json restaurant}}})
+  , alertView: new AlertView({ el: '.alert-container' })
+  });
+});
+</script>
+{{/extend}}

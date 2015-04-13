@@ -1,4 +1,4 @@
-<div class="panel">
+<div class="panel restaurant-join">
   <div class="panel-head">
     <h2 class="panel-title">Delivery Info</h2>
   </div>
@@ -8,13 +8,13 @@
       <div class="field-col">
         <div class="form-group">
           <span>$</span>
-          <input type="text" class="form-control delivery-fee" name="delivery_fee">
+          <input type="text" class="form-control delivery-fee dollar-entry" name="delivery_fee">
         </div>
       </div>
     </div>
 
     <h4 class="panel-subtitle">Delivery Lead Times</h4>
-    <div class="panel-info">
+    <div class="panel-info medium-text">
       <p>
         The time you need to prepare and deliver an order for a given number
         of guests. Below are the lead times we recommend for our restaurants.
@@ -22,7 +22,7 @@
         <strong>Cancel Time</strong> is the ammount of notice needed if someone
         wants to cancel their order with you.
       </p>
-      <h4 class="table-title">Default Lead Times</h4>
+      <h4 class="table-title large-text">Default Lead Times</h4>
       {{> restaurant_signup_default_lead_time_table}}
     </div>
 
@@ -35,7 +35,7 @@
       </li>
       <li>
         <label>
-          <input type="radio" name="delivery_lead_times" class="delivery-lead-times add-custom-lead-times" data-type="delivery" value="custom"> 
+          <input type="radio" name="delivery_lead_times" class="delivery-lead-times add-custom-lead-times" data-type="delivery" value="custom">
           Customize my lead times
         </label>
       </li>

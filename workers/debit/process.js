@@ -6,6 +6,7 @@ var db = require('../../db');
 var config = require('../../config');
 var _ = utils._;
 var scheduler = require('../../lib/scheduler');
+var restaurantPlans = require('../../public/js/lib/restaurant-plans');
 
 var checkForExistingDebit = function (order, callback) {
   var logger = process.domain.logger.create('checkForExistingDebit', {
@@ -48,6 +49,8 @@ var debitCustomer = function (order, callback) {
         currency: 'usd',
         customer: user.stripe_id,
         source: paymentMethod.attributes.stripe_id,
+        destination: order.restaurant.stripe_id,
+        application_fee: restaurantPlans[order.restaurant.plan.type].getGbFee(order.restaurant.plan, order),
         statement_descriptor: 'GOODYBAG CATER #' + order.id,
         metadata: {
           user_id: order.user.id
@@ -96,7 +99,7 @@ var task = function (message, callback) {
 
   var $options = {
     one: [
-      { table: 'restaurants', alias: 'restaurant' }
+      { table: 'restaurants', alias: 'restaurant', one: [ { table: 'restaurant_plans', alias: 'plan' } ] }
     , { table: 'users', alias: 'user' }
     ]
   };

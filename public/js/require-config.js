@@ -52,7 +52,7 @@
 
       // moment stuff
     , {name: 'moment',                  location: '../../components/moment',                    main: 'moment.js'}
-    , {name: 'moment-timezone',         location: '../../components/moment-timezone',           main: 'moment-timezone.js'}
+    , {name: 'moment-timezone',         location: '../../components/moment-timezone/builds',    main: 'moment-timezone-with-data-2010-2020.min.js'}
 
       // jquery stuff
     , {name: 'jquery',                  location: '../../components/jquery',                    main: 'jquery.js'}

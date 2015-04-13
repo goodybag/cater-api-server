@@ -12,8 +12,11 @@ var moment = require('moment-timezone');
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer;
-var orderDefinitionSchema  = require('../../db/definitions/orders').schema;
+var orderDefinitionSchema = require('../../db/definitions/orders').schema;
 var promoConfig = require('../../configs/promo');
+var DMReq = require('stamps/requests/distance-matrix');
+var address = require('stamps/addresses');
+var deliveryFee = require('stamps/orders/delivery-fee');
 
 var addressFields = [
   'street'
@@ -411,4 +414,41 @@ module.exports.rebuildPdf = function( req, res ){
   pdfs[ req.params.type ].build({ orderId: req.params.oid });
 
   res.send(204);
+};
+
+module.exports.getDeliveryFee = function( req, res ){
+  var origin = address( req.order ).toString();
+  var destination = address( req.order.location ).toString();
+
+  DMReq()
+    .origin( origin )
+    .destination( destination )
+    .send( function( error, results ){
+      if ( error ){
+        req.logger.warn('Error getting distance between order and restaurant', {
+          order_id: order.id
+        , origin: origin
+        , destination: destination
+        });
+
+        return res.error( error );
+      }
+
+      var result = results[0].elements[0];
+
+      res.json({
+        distance:     result.distance
+      , duration:     result.duration
+      , pricePerMile: req.order.location.price_per_mile
+      , basePrice:    req.order.location.base_delivery_fee
+      , price:        deliveryFee({
+                        pricePerMile: req.order.location.price_per_mile
+                      , basePrice:    req.order.location.base_delivery_fee
+                      , meters:       result.distance.value
+                      }).getPrice()
+      });
+    })
+    .catch( function( error ){
+      return res.error( error );
+    });
 };

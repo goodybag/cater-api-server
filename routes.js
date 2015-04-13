@@ -2166,6 +2166,21 @@ module.exports.register = function(app) {
   , m.remove( db.orders )
   );
 
+  app.get('/api/orders/:id/delivery-fee'
+  , m.getOrder2({
+      param:              'id'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , location:           true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , controllers.orders.getDeliveryFee
+  );
+
   app.get('/api/orders/:oid/items'
   , m.getOrder2({
       param:              'oid'

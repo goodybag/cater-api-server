@@ -8,14 +8,14 @@ module.exports = function(req, res, next) {
   if(!req.session || !req.session.user || req.session.user.id == null){
     req.user = new models.User({ groups: ['guest'], name: 'Guest' });
 
-    if ( req.param('edit_token') ){
+    if ( req.params.edit_token ){
       req.user.isAdmin = false;
       req.user.isRestaurant = false;
       res.locals.user = req.user.toJSON();
       req.session.user = { id: res.locals.user.id };
     }
 
-    if ( req.param('review_token') ){
+    if ( req.params.review_token ){
       req.user.isAdmin = false;
       req.user.isRestaurant = true;
       res.locals.user = req.user.toJSON();
@@ -53,7 +53,7 @@ module.exports = function(req, res, next) {
     req.user.isAdmin = utils.contains(req.user.attributes.groups, 'admin');
     req.user.isRestaurant =
       utils.contains(req.user.attributes.groups, 'restaurant') &&
-      utils.contains(req.user.attributes.restaurant_ids, parseInt(req.param('rid')));
+      utils.contains(req.user.attributes.restaurant_ids, parseInt(req.params.rid));
 
     res.locals.user = user.toJSON();
     res.locals.user.isAdmin = req.user.isAdmin;

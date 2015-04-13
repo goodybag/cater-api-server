@@ -38,8 +38,8 @@ module.exports.emitPaymentSummaryChange = function( options ){
 
     venter.emit(
       'payment-summary:change'
-    , req.param( options.idField )
-    , req.param('restaurant_id')
+    , req.params[options.idField]
+    , req.params[restaurant_id]
     );
 
     next();
@@ -53,7 +53,7 @@ module.exports.send = function( req, res ){
     });
   }
 
-  var id        = req.param('payment_summary_id');
+  var id        = req.params[payment_summary_id];
   var s3        = pdfs.pms.getS3Client();
   var fileName  = 'payment-summary-' + id + '.pdf';
 

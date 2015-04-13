@@ -8,11 +8,11 @@ try {
 var promo = {
   adam: {
     email: 'adam.peacock@goodybag.com'
-  , promo_code: 'G315B'
+  , promo_code: ['G315B', 'GBSEA15']
   }
 , jacob: {
     email: 'jacobparker@goodybag.com'
-  , promo_code: 'Goodybag315'
+  , promo_code: ['Goodybag315', 'GB315', 'GB415', 'GBAUSTIN15', 'GBHOU15']
   }
 };
 
@@ -22,7 +22,7 @@ module.exports = ({
 , dev: {
     test: {
       email: local.testEmail || 'test@goodybag.com'
-    , promo_code: 'worf'
+    , promo_code: ['worf']
     }
   }
 })[ process.env['GB_ENV'] || 'dev' ];

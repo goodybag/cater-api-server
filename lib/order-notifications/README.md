@@ -61,6 +61,7 @@ __`def` Properties:__
                   - callback( error, notificationObj ) to define
   type            - Category of notification, i.e. "submitted"
   description     - Description of the notification
+  isAvailable     - function ( order ) return truthy value
   requiredOptions - Properties that are required to exist on `options`
   format          - One of 'text' | 'email' | 'voice' (default 'email')
 }
@@ -109,6 +110,9 @@ Email notification
 , name: 'User Order Submitted'
 , format: 'email' // can be omitted, format: 'email' is by default
 , description: 'Sends the user an order submitted notice'
+, isAvailable: function( order ){
+    return order.type === 'courier';
+  }
 , build: function( order, logger, options, callback ){
     var viewOptions = {
       layout: 'email-layout'
@@ -139,6 +143,9 @@ notifier.register({
 , name: 'Restaurant Order Submitted SMS'
 , format: 'sms'
 , description: 'Send a text to the restaurant\'s SMS phone numbers'
+, isAvailable: function( order ){
+    return order.type === 'courier';
+  }
 , build: function( order, logger, options, callback) {
     var viewOptions = {
       layout: false

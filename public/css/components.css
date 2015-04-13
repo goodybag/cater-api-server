@@ -216,6 +216,10 @@
   font-weight: 700;
 }
 
+.navbar .contact-info .phone-number {
+  color: #ed4242;
+}
+
 @media screen and ( max-width: 982px ){
   .navbar .contact-info .help-text {
     display: none;

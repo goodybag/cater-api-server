@@ -30,6 +30,11 @@ define(function(require, exports, module) {
       if (this.model.id) this.id = 'category-' + this.model.id;
       this.items = [];
       this.listenTo(this.model.items, 'sort', this.sortItems, this);
+
+      this.on('save:success', function(model, res) {
+        var $newBtn = this.$el.find('.new-item');
+        $newBtn.attr('style', 'display: inline-block').show();
+      });
     },
 
     render: function() {

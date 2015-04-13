@@ -25,6 +25,7 @@ define( function( require, exports, module ){
     })
     .methods({
       url: function( url ){
+        if ( !url ) return this.req.url;
         this.req.url = url;
         return this;
       }
@@ -73,7 +74,7 @@ define( function( require, exports, module ){
       }
 
     , send: function( callback ){
-        if ( !this.url ){
+        if ( !this.req.url ){
           throw new Error('Cannot send without `url` set');
         }
 

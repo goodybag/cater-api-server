@@ -6,11 +6,11 @@ define(function (require, exports, module) {
 
   return module.exports = BaseView.extend({
     events: utils.extend(BaseView.prototype.events, {
-      'click .add-custom-lead-times'  : 'addLeadTime'
+      'click .add-custom-lead-times'  : 'setLeadTime'
     , 'click .default-lead-times'     : 'defaultLeadTimes'
-    , 'click .add-hours'              : 'addHours'
-    , 'click .add-days'               : 'addDays'
-    , 'click .datetime-days-list > li': 'addDeliveryHours'
+    , 'click .add-hours'              : 'setHours'
+    , 'click .add-days'               : 'setDays'
+    , 'click .datetime-days-list > li': 'setDeliveryHours'
     })
 
   , fieldMap: {
@@ -62,7 +62,7 @@ define(function (require, exports, module) {
       window.location.reload();
     }
 
-  , addLeadTime: function(e) {
+  , setLeadTime: function(e) {
       var template = Handlebars.partials.edit_lead_times;
       var html = template( this.model.toJSON() );
       var type = $(e.target).data('type');
@@ -73,12 +73,24 @@ define(function (require, exports, module) {
       this.$el.find('.:type-lead-times-container'.replace(':type', type)).empty();
     }
 
-  , addDays: function (e) {
+  ,setDays: function (e) {
       if (e) e.preventDefault();
-      console.log('adding delivery days')
+      var $parent = $(e.target).parent();
+      var days = utils.map($parent.find('.datetime-days-list > li.active')
+        , function (el) {
+          return +el.getAttribute('data-day');
+        });
+      days = utils.groupBy(days, function (i, d) { return i - d; });
+      days = utils.map(days, function (d) {
+        var len = d.length;
+        return len - 1 > 0 ?
+          moment.weekdaysMin(d[0])+'-'+moment.weekdaysMin(d[len-1])
+          : moment.weekdaysMin(d[0]);
+        }).join(',');
+        $parent.siblings('.btn-dropdown').find('.dropdown-text').text(days);
     }
 
-  , addHours: function (e) {
+  , setHours: function (e) {
       if (e) e.preventDefault();
       var $el = $(e.target);
       var template = Handlebars.partials.edit_delivery_hours;
@@ -86,12 +98,10 @@ define(function (require, exports, module) {
       $('[data-role="popover"]').gb_popover();
     }
 
-  , addDeliveryHours: function (e) {
+  , setDeliveryHours: function (e) {
       if (e) e.preventDefault();
       var $el = $(e.target);
-      console.log('click', $el.data('day'))
       $el.toggleClass('active');
-      //this.set('hours_of_operation', hours)
     }
     
   , onTimePickerSet: function( ctx ){

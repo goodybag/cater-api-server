@@ -25,22 +25,48 @@ define(function (require, exports, module) {
     }
   , submit: function (e) {
       if (e) e.preventDefault();
+      this.clearErrors();
 
-      // validate against null input values
+      var depositInfo = {
+          bank_name: '.bank-name'
+        , account_type: '.account-type'
+        , account_name: '.account-name'
+        , routing_number: '.routing-number'
+        , account_number: '.account-number'
+      };
+
       var requiredFields = _.omit(this.fieldMap
-        , ['billing_street2', 'billing_phone']);
+        , ['billing_street2', 'billing_phone', 'terms_name'
+          ,'terms_contact_name', 'terms_date']);
 
-      for (var field in requiredFields) {
-        if(!this.$el.find(requiredFields[field]).val()) {
-          return this.displayErrors([{
-            property: field
-          , message: 'Please provide a :f'.replace(':f', field.replace('_', ' '))
-          }]);
-        }
-      }
+      if (!this.validateFields(requiredFields)) return;
+      if (!this.validateFields(depositInfo, true)) return;
+      
+
+      //TODO: insert deposit info into stripe
 
       //this.model.set(this.getDiff());
       //this.model.save(null {});
+    }
+
+    // validates against null input values
+  , validateFields: function (fields, useClassSelector) {
+      for (var f in fields) {
+        if(!this.$el.find(fields[f]).val()) {
+
+          var errorOpts = {
+            message: 'Please provide a :f'.replace(':f', f.replace('_', ' '))
+          };
+
+          useClassSelector ?
+            errorOpts['selector'] = '.'+f.replace('_', '-')
+            : errorOpts['property'] = f
+
+          this.displayErrors([errorOpts]);
+          return false;
+        }
+      }
+      return true;
     }
 
   })

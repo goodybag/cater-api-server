@@ -8,7 +8,7 @@ define(function (require, exports, module) {
     events: utils.extend(BaseView.prototype.events, {
       'click .add-custom-lead-times'  : 'setLeadTime'
     , 'click .default-lead-times'     : 'defaultLeadTimes'
-    , 'click .add-hours'              : 'setHours'
+    , 'click .add-hours'              : 'addHours'
     , 'click .add-days'               : 'setDays'
     , 'click .datetime-days-list > li': 'setDeliveryHours'
     })
@@ -36,20 +36,22 @@ define(function (require, exports, module) {
       BaseView.prototype.initialize.apply(this, options);
       console.log('init delivery pickup view');
 
-      this.deliveryHoursStart = this.$el.find("input[name='time']").pickatime({
-        format: 'h:i A'
-      , interval: 15
-      }).pickatime('picker');
-
-      this.deliveryHoursEnd = this.$el.find("input[name='time']").pickatime({
-        format: 'h:i A'
-      , interval: 15
-      }).pickatime('picker');
-
-      this.deliveryHoursStart.on( 'set', _(this.onTimePickerSet).bind(this) );
-      this.deliveryHoursEnd.on( 'set', _(this.onTimePickerSet).bind(this) );
+      this.setPickers();
 
     }
+
+  , setPickers: function () {
+      this.$el.find("input[name='time']").pickatime({
+        format: 'h:i A'
+      , interval: 15
+      }).pickatime('picker');
+
+      this.$el.find("input[name='time']").pickatime({
+        format: 'h:i A'
+      , interval: 15
+      }).pickatime('picker');
+    }
+
   , submit: function (e) {
       e.preventDefault();
       var fields = {
@@ -68,12 +70,13 @@ define(function (require, exports, module) {
       var type = $(e.target).data('type');
       this.$el.find('.:type-lead-times-container'.replace(':type', type)).html( html );
     }
+
   , defaultLeadTimes: function (e) {
       var type = $(e.target).data('type');
       this.$el.find('.:type-lead-times-container'.replace(':type', type)).empty();
     }
 
-  ,setDays: function (e) {
+  , setDays: function (e) {
       if (e) e.preventDefault();
       var $parent = $(e.target).parent();
       var days = utils.map($parent.find('.datetime-days-list > li.active')
@@ -90,12 +93,13 @@ define(function (require, exports, module) {
         $parent.siblings('.btn-dropdown').find('.dropdown-text').text(days);
     }
 
-  , setHours: function (e) {
+  , addHours: function (e) {
       if (e) e.preventDefault();
       var $el = $(e.target);
       var template = Handlebars.partials.edit_delivery_hours;
       $el.parent().find('.delivery-hours-container').append(template());
       $('[data-role="popover"]').gb_popover();
+      this.setPickers();
     }
 
   , setDeliveryHours: function (e) {
@@ -104,10 +108,5 @@ define(function (require, exports, module) {
       $el.toggleClass('active');
     }
     
-  , onTimePickerSet: function( ctx ){
-      console.log(ctx)
-      if ( 'select' in ctx ){
-      }
-    }
   });
 });

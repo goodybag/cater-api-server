@@ -417,8 +417,26 @@ module.exports.rebuildPdf = function( req, res ){
 };
 
 module.exports.getDeliveryFee = function( req, res ){
+  var location = req.order.location;
+
+  if ( req.query.location_id ){
+    var locations = req.order.restaurant.locations.filter( function( loc ){
+      return loc.id == req.query.location_id;
+    });
+
+    if ( locations.length ){
+      location = locations[0];
+    } else {
+      return res.error({
+        type: 'INVALID_LOCATION'
+      , message: 'Invalid parameter `location_id`'
+      , httpCode: '403'
+      });
+    }
+  }
+
   var origin = address( req.order ).toString();
-  var destination = address( req.order.location ).toString();
+  var destination = address( location ).toString();
 
   DMReq()
     .origin( origin )

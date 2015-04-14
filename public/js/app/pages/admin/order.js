@@ -220,6 +220,10 @@ define(function(require){
       var $tds = page.notifications.$el.find( '#notification-' + cid + ' > td' );
       $tds.addClass('highlight');
       $tds.eq(0).one( 'animationend', $tds.removeClass.bind( $tds, 'highlight') );
+      // scroll to the middle of screen
+      $('html, body').animate({
+        scrollTop: $tds.offset().top - Math.floor(window.innerHeight/2)
+      }, 200);
     }
 
   , onStateChange: function( state ){

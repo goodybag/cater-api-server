@@ -220,3 +220,19 @@ errors.google.distanceMatrix.REQUEST_DENIED = {
 , name: 'UNKNOWN_ERROR'
 , message: 'Request could not be processed due to a server error. The request may succeed if you try again.'
 };
+
+errors.google.distanceMatrix.NOT_FOUND = {
+  type: 'input'
+, code: '0606'
+, httpCode: '403'
+, name: 'UNKNOWN_ERROR'
+, message: 'The origin and/or destination of this pairing could not be geocoded'
+};
+
+errors.google.distanceMatrix.ZERO_RESULTS = {
+  type: 'input'
+, code: '0607'
+, httpCode: '403'
+, name: 'UNKNOWN_ERROR'
+, message: 'No route could be found between the origin and destination'
+};

@@ -423,18 +423,13 @@ module.exports.getDeliveryFee = function( req, res ){
   DMReq()
     .origin( origin )
     .destination( destination )
-    .send( function( error, results ){
-      if ( error ){
-        req.logger.warn('Error getting distance between order and restaurant', {
-          order_id: order.id
-        , origin: origin
-        , destination: destination
-        });
-
-        return res.error( error );
-      }
-
+    .send()
+    .then( function( results ){
       var result = results[0].elements[0];
+
+      if ( result.status in errors.google.distanceMatrix ){
+        throw errors.google.distanceMatrix[ result.status ];
+      }
 
       res.json({
         distance:     result.distance
@@ -449,6 +444,13 @@ module.exports.getDeliveryFee = function( req, res ){
       });
     })
     .catch( function( error ){
-      return res.error( error );
+      req.logger.warn('Error getting distance between order and restaurant', {
+        order_id: req.order.id
+      , origin: origin
+      , destination: destination
+      , error: error
+      });
+
+      res.error( error );
     });
 };

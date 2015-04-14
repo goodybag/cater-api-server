@@ -506,6 +506,9 @@ utils.sendJSON = function(res, json){
 };
 
 utils.sendError = function(res, error, details){
+  if (error instanceof Error) {
+    error = utils.extend({}, errors.runtime.ERROR, { message: error.message, stack: error.stack });
+  }
   if (typeof error === 'string') {
     error = errors[error];
   }

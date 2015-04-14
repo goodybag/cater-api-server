@@ -427,6 +427,10 @@ module.exports.getDeliveryFee = function( req, res ){
     .then( function( results ){
       var result = results[0].elements[0];
 
+      if ( result.status in errors.google.distanceMatrix ){
+        throw errors.google.distanceMatrix[ result.status ];
+      }
+
       res.json({
         distance:     result.distance
       , duration:     result.duration
@@ -444,6 +448,7 @@ module.exports.getDeliveryFee = function( req, res ){
         order_id: req.order.id
       , origin: origin
       , destination: destination
+      , error: error
       });
 
       res.error( error );

@@ -62,7 +62,6 @@ define( function( require, exports, module ){
 
         var p = base.fixed.methods.send.call( this )
           .then( function( res ){
-            console.log('parse res', res);
             return this.parseResponse( res );
           }.bind( this ));
 

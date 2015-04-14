@@ -3,6 +3,7 @@ define(function (require, exports, module) {
   var spinner = require('spinner');
   var BaseView = require('./base-view');
   var Handlebars = require('handlebars');
+  var _ = require('lodash');
 
   return module.exports = BaseView.extend({
     events: utils.extend(BaseView.prototype.events, {
@@ -17,6 +18,7 @@ define(function (require, exports, module) {
       gb_fee           : '.delivery-fee' // this may be the wrong column
     , lead_times       : '.delivery-lead-times'
     , pickup_lead_times: '.pickup-lead-times'
+    , delivery_hours   : '.delivery-hours'
     }
 
   , fieldGetters: {
@@ -29,6 +31,24 @@ define(function (require, exports, module) {
         var leadTimesView = this.options.pickupLeadTimesView;
         var lt = leadTimesView.fieldGetters.lead_times.call(leadTimesView);
         return lt.length > 0 ? lt : this.model.get('pickup_lead_times') || null;
+      },
+      delivery_hours: function () {
+        var currentTimes = this.model.get('delivery_times') || {};
+        var $deliveryTimes = this.$el.find(this.fieldMap.delivery_hours)
+        return _.extend(currentTimes, _.reduce($deliveryTimes, function (result, el, key) {
+          var $el = $(el);
+          var hours = [
+            $el.find('.delivery-hours-start').val()
+          , $el.find('.delivery-hours-end').val()
+          ];
+
+          $el.find('.datetime-days-list > li.active').each(function (i, el) {
+            var day = el.getAttribute('data-day');
+            if (day in result) result[day].push(hours)
+            else result[day] = [hours]
+          });
+          return result;
+        }, {}) );
       }
     }
 
@@ -58,10 +78,13 @@ define(function (require, exports, module) {
         gb_fee: this.$el.find(this.fieldMap.gb_fee).val()
       , lead_times: this.fieldGetters.lead_times.call(this)
       , pickup_lead_times: this.fieldGetters.pickup_lead_times.call(this)
+      , delivery_hours: this.fieldGetters.delivery_hours.call(this)
       };
 
-      this.setCookie('4');
-      window.location.reload();
+      console.log(fields.delivery_hours);
+
+      //this.setCookie('4');
+      //window.location.reload();
     }
 
   , setLeadTime: function(e) {

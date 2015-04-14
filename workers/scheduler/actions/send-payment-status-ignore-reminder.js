@@ -4,19 +4,19 @@ var notifier = require('../../../lib/order-notifier');
 var db = require('../../../db');
 
 module.exports.fn = function(job, done) {
-  var logger = slogger.create('Remind GB Payment Status is Ignore', {
+  var logger = slogger.create('StatusIgnoredReminder', {
     data: job
   });
 
-  db.orders.findOne(job.data.orderId, function (error, order) {
+  db.orders.findOne(job.data.order_id, function (error, order) {
     if ( error ) {
       logger.error('Could not find order ', error);
       return done (error);
     }
 
     if (order.payment_status === 'ignore') {
-      logger.info('Sending payment status is ignore reminder');
-      return notifier.send( job.data.notification_id, job.data.order_id, job.data, done );
+      logger.info('Sending status ignored reminder');
+      return notifier.send( 'gb-payment-status-ignore', job.data.order_id, job.data, done );
     }
     return done();
   });

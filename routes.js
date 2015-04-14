@@ -2144,9 +2144,8 @@ module.exports.register = function(app) {
 
       venter.emit( 'order:change', req.params.id );
 
-      if (req.param('payment_status') === 'ignore')
       if (req.user.attributes.groups.indexOf('admin') > -1) {
-        venter.emit('order:paymentStatus:change:ignore', req.param('id'));
+        venter.emit('order:paymentStatus:change', req.param('payment_status'), req.param('id'));
       }
 
       next();

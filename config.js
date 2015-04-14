@@ -211,6 +211,7 @@ config.defaults = {
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]
   , reminderIgnored: [ local.testEmail || 'test@goodybag.com' ]
   , orderNotificationChecks: [ local.testEmail || 'test@goodybag.com' ]
+  , reminderPaymentStatusIgnore: [local.testEmail || 'test@goodybag.com']
   }
 
 , phone: {

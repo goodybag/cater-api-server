@@ -7,7 +7,7 @@
   </div>
   <div class="col-time">
     <div class="form-group">
-      <label class="control-label">Hours</label>
+      <label class="control-label">Time (hrs)</label>
       <input type="number" step="1" class="form-control lead-times lead-hours" value="{{intDivide lead_time 60}}">
     </div>
   </div>
@@ -20,7 +20,7 @@
   <div class="col-time">
     <div class="form-group">
       <label class="control-label">Cancel Time</label>
-      <input type="number" class="form-control lead-times lead-cancel-time" value="{{cancel_time}}">
+      <input type="number" class="form-control lead-times lead-cancel-time" value="{{intDivide cancel_time 60}}">
     </div>
   </div>
   <div class="col-remove">

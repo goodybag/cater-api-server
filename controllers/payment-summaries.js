@@ -27,10 +27,10 @@ module.exports.applyRestaurantIdForNonJoins = function(){
 };
 
 module.exports.emitPaymentSummaryChange = function( options ){
-  options = options || {
+  options = utils.defaults( options || {}, {
     idField: 'id'
   , restaurantIdField: 'restaurant_id'
-  };
+  });
 
   if ( !options.idField ) throw new Error('emitPaymentSummaryChange - options.idField is required');
 

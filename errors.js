@@ -248,5 +248,5 @@ errors.runtime.ERROR = {
 , code: '0701'
 , httpCode: '500'
 , name: 'RUNTIME_ERROR'
-, message: 'The application has encountered an run time error'
+, message: 'The application has encountered a run time error'
 }

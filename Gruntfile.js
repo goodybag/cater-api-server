@@ -201,7 +201,7 @@ module.exports = function(grunt) {
           // has UMD, remove that code.
         , onBuildRead: function( name, path, contents ){
             // Ignore 3rd-party libs
-            var isInWhiteList = gruntConfig.requirejs.admin.options.thirdpartyUmdWhitelist
+            var isInWhiteList = gruntConfig.requirejs.app.options.thirdpartyUmdWhitelist
               .some( function( item ){
                 return path.indexOf( item ) > -1;
               });

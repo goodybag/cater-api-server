@@ -70,6 +70,8 @@ utils.balanced = new Balanced({
 , secret: config.balanced.secret
 });
 
+utils.stripe = require('stripe')(config.stripe.secret);
+
 utils.normalize = function( x, MIN, MAX ){
   return ( x - MIN ) / ( MAX - MIN );
 };

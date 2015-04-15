@@ -60,16 +60,22 @@ define( function( require, exports, module ){
     , send: function( callback ){
         this.query( this.getOriginDestinationQuery() );
 
-        return base.fixed.methods.send.call( this )
+        var p = base.fixed.methods.send.call( this )
           .then( function( res ){
             return this.parseResponse( res );
-          }.bind( this ))
-          .then( function( res ){
-            if ( callback ) return callback( null, res );
-          }.bind( this ))
-          .error( function( error ){
-            if ( callback ) callback( error );
           }.bind( this ));
+
+        if ( typeof callback !== 'function' ){
+          return p;
+        }
+
+        return p
+          .then( function( res ){
+            if ( callback ) callback( null, res );
+            return res;
+          }.bind( this ))
+          .error( callback )
+          .catch( callback )
       }
     });
 });

@@ -1748,6 +1748,7 @@ module.exports.register = function(app) {
     , restaurant:             true
     , restaurantDbModelFind:  true
     , user:                   true
+    , userPaymentMethods:     true
     , items:                  true
     })
   , m.view( 'admin/order', {

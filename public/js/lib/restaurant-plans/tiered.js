@@ -83,6 +83,7 @@ define( function( require, exports, module ){
         .set( 'order', order )
         .value();
     }
+
   , getApplicationFee: function( plan, order ){
       // return the application fee we take out of every charge
       // on behalf of the managed accounts (restaurants).

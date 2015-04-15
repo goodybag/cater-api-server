@@ -58,13 +58,50 @@ describe ('Restaurant Plans', function(){
     }), 500 );
   });
 
-  it.skip ('application fee - tiered', function(){
-    var tieredPlan = rPlans.tiered.getApplicationFee.bind( rPlans.tiered, {
-      data: { fee: 0.4 }
+  it ('application fee - tiered', function(){
+    var plan = rPlans.tiered.getApplicationFee.bind( rPlans.tiered, {
+      data: {
+        tiers: [
+          { amount: 1000, fee: 0.1 }
+        , { amount: 2000, fee: 0.2 }
+        , { amount: 3000, fee: 0.3 }
+        , { fee: 0.5 }
+        ]
+      }
     });
 
-    assert.equal( tieredPlan({
-      restaurant_total: 9, restaurant_sales_tax: 1
-    }), 9);
+    assert.equal( plan({
+      restaurant_total: 2343, restaurant_sales_tax: 123
+    }), 826);
+
+    assert.equal( plan({
+      restaurant_total: 1231, restaurant_sales_tax: 123
+    }), 369);
+
+    assert.equal( plan({
+      restaurant_total: 10, restaurant_sales_tax: 123
+    }), 124);
+
+    assert.equal( plan({
+      restaurant_total: 10000, restaurant_sales_tax: 123
+    }), 5123);
+  });
+
+  it.only ('application fee - flat', function(){
+    var plan = rPlans.flat.getApplicationFee.bind( rPlans.flat, {
+      data: { fee: 0.25 }
+    });
+
+    assert.equal( plan({
+      restaurant_total: 100, restaurant_sales_tax: 13
+    }), 38);
+
+    assert.equal( plan({
+      restaurant_total: 100
+    }), 25);
+
+    assert.equal( plan({
+      restaurant_total: 8435, restaurant_sales_tax: 4689
+    }), 6798);
   });
 });

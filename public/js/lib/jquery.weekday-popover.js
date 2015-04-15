@@ -16,7 +16,7 @@ define( function( require, exports, module ){
     Popover.call(this, el, options);
     this.$el = $(el).parent();
     this.selectors = {
-      weekdays_list_item: '.weekday-days-list li' 
+      item_day: '.weekday-days-list li'
     , all_days: '.select-all-days'
     };
     this.attachEvents();
@@ -25,49 +25,59 @@ define( function( require, exports, module ){
   };
 
   WeekDayPopover.prototype.attachEvents = function (options) {
+    var $el = this.$el;
+    var this_ = this;
 
     // toggle active days
-    this.$el.find(this.selectors.weekdays_list_item).on('click', function (e) {
+    $el.find( this_.selectors.item_day ).on('click', function (e) {
       e.preventDefault();
       $(e.target).toggleClass('active');
     });
 
     //select all days
-    this.$el.find(this.selectors.all_days).on('click', function (e) {
+    $el.find( this_.selectors.all_days ).on('click', function (e) {
       e.preventDefault();
-      this.$el.find(this.selectors.weekdays_list_item).addClass('active');
-    }.bind(this));
+      this_.$el.find( this_.selectors.item_day ).addClass('active');
+    });
 
     // apply changes to dropdown text
-    this.$el.find('.add-days').on('click', function (e) {
+    $el.find('.add-days').on('click', function (e) {
       e.preventDefault();
-      var $el = $(e.target).parent();
-      var $items = $el.find( this.selectors.weekdays_list_item + '.active' );
-
-      var days = _.chain( $items )
-        .map(function (el) { return +el.getAttribute('data-day'); })
-        .groupBy(function (a, b) { return a - b; })
-        .map(function (d) {
-          var len = d.length;
-          return len - 1 > 0 ?
-             moment.weekdaysShort(d[0])+'-'+moment.weekdaysShort(d[len-1])
-           : moment.weekdaysShort(d[0])
-        })
-        .value().join(',');
-
-      $el.siblings('.btn-dropdown').find('.dropdown-text').text(days);
-    }.bind(this));
-  }
+      this_.setDropdownText( this_.daysText() );
+    });
+  };
 
   /**
   * days
   * @return {Array} - list of days represented as numbers.
   */
   WeekDayPopover.prototype.days = function () {
-    return this.$el.find(this.selectors.weekdays_list_item + ' li.active')
-      .map(function(i, el) {
-        return parseInt(el.getAttribute('data-day'));
-      });
+    var $items = this.$el.find( this.selectors.item_day + '.active' );
+    return _.chain( $items )
+        .map(function (el) { return +el.getAttribute('data-day'); })
+        .groupBy(function (a, b) { return a - b; })
+        .value();
+  };
+
+  WeekDayPopover.prototype.daysText = function() {
+    return _.map(this.days(), function (d) {
+          var len = d.length;
+          return len - 1 > 0 ?
+             moment.weekdaysShort(d[0])+'-'+moment.weekdaysShort(d[len-1])
+           : moment.weekdaysShort(d[0])
+        })
+        .join(',');
+  };
+
+  WeekDayPopover.prototype.setDropdownText = function(text) {
+    this.$el.find('.dropdown-text').text(text);
+    return this;
+  };
+
+  WeekDayPopover.prototype.close = function() {
+    if (this.$wrapper) this.$wrapper.removeClass('open');
+    this.setDropdownText( this.daysText() || 'Choose a day' );
+    return this;
   };
 
   // inherit from Popover
@@ -81,7 +91,6 @@ define( function( require, exports, module ){
 
       if (!data) {
         data = new WeekDayPopover(this, options);
-        console.log(data)
         $this.data('gb.weekday-popover', data);
       }
     });

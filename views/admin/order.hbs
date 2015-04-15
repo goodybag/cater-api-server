@@ -101,6 +101,16 @@
             <option value="error" {{#eq order.payment_status 'error'}}selected="true"{{/eq}}>Error</option>
           </select>
         </dd>
+
+        <dt>Payment Method</dt>
+        <dd>
+          <select name="payment_method_id">
+            <option {{#isNull ../order.payment_method_id}} selected="true"{{/isNull}}>Invoiced</option>
+            {{#each order.user.payment_methods}}
+            <option value="{{id}}" {{#eq ../../order.payment_method_id id~}} selected="true"{{~/eq}}>{{capitalize data.brand}} - {{name}} **** **** **** {{data.last_four}} - Exp {{data.expiration_month}}/{{data.expiration_year}}</option>
+            {{/each}}
+          </select>
+        </dd>
       </dl>
 
       {{#eq order.type 'courier'}}

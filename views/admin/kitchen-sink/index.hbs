@@ -23,6 +23,7 @@
 {{> admin_kitchen_sink_dollar_meter}}
 {{> admin_kitchen_sink_lists}}
 {{> admin_kitchen_sink_dropdowns}}
+{{> admin_kitchen_sink_weekday_dropdowns}}
 {{> admin_kitchen_sink_table_list}}
 {{> admin_kitchen_sink_orders_table_list}}
 {{> admin_kitchen_sink_collapsibles}}
@@ -39,6 +40,7 @@
   require(['jquery-loaded'], function($){
     $('[data-role="collapsible"]').gb_collapsible();
     $('[data-role="popover"]').gb_popover();
+    $('[data-role="weekday-popover"]').gb_weekday_popover();
   });
 </script>
 

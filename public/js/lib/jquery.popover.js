@@ -124,4 +124,6 @@ define( function( require, exports, module ){
     $.fn.gb_popover = old;
     return this;
   };
+
+  return module.exports = Popover;
 });

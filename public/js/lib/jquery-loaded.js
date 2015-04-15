@@ -19,6 +19,7 @@ define(function(require, exports, module) {
   require('jquery.collapsible');
   require('jquery.appear');
   require('jquery.filter-list');
+  require('jquery.weekday-popover');
 
   $(function(){
     $('input, textarea').placeholder();

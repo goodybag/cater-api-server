@@ -1,0 +1,66 @@
+<section class="page-section" id="section-weekday-dropdowns">
+  <div class="container">
+    <h2 class="component-title">Weekday Dropdown</h2>
+
+    <div>
+      <span class="popover-wrapper gb-dropdown">
+        <button class="btn btn-white btn-dropdown" data-role="weekday-popover" data-target="weekday-popover">
+          <span class="dropdown-text">Choose a day</span>
+          <i class="gb-icon-caret-down"></i>
+        </button>
+
+        <div class="dropdown-popover weekday-popover">
+          <ol class="inline-list weekday-days-list">
+            <li data-day="0">Sun</li>
+            <li data-day="1">Mon</li>
+            <li data-day="2">Tues</li>
+            <li data-day="3">Wed</li>
+            <li data-day="4">Thu</li>
+            <li data-day="5">Fri</li>
+            <li data-day="6">Sat</li>
+          </ol>
+          <span>Select all that apply</span>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" class="select-all-days">
+              Apply to all days
+            </label>
+          </div>
+          <button class="btn btn-gray add-days">Add</button>
+        </div>
+      </span>
+    </div>
+
+    <code class="language-markup">
+{{~#raw~}}
+<span class="popover-wrapper gb-dropdown">
+  <button class="btn btn-white btn-dropdown" data-role="popover" data-target="weekday-popover">
+    <span class="dropdown-text">Choose a day</span>
+    <i class="gb-icon-caret-down"></i>
+  </button>
+
+  <div class="dropdown-popover weekday-popover">
+    <ol class="inline-list weekday-days-list">
+      <li data-day="0">Sun</li>
+      <li data-day="1">Mon</li>
+      <li data-day="2">Tues</li>
+      <li data-day="3">Wed</li>
+      <li data-day="4">Thu</li>
+      <li data-day="5">Fri</li>
+      <li data-day="6">Sat</li>
+    </ol>
+    <span>Select all that apply</span>
+    <label>
+      <div class="form-group">
+        <input type="checkbox" class="select-all-days">
+        Apply to all days
+      </div>
+    </label>
+    <button class="btn btn-gray add-days">Add</button>
+  </div>
+</span>
+{{~/raw~}}
+    </code>
+
+  </div>
+</section>

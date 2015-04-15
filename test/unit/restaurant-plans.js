@@ -57,4 +57,14 @@ describe ('Restaurant Plans', function(){
       restaurant_total: 1000
     }), 500 );
   });
+
+  it.skip ('application fee - tiered', function(){
+    var tieredPlan = rPlans.tiered.getApplicationFee.bind( rPlans.tiered, {
+      data: { fee: 0.4 }
+    });
+
+    assert.equal( tieredPlan({
+      restaurant_total: 9, restaurant_sales_tax: 1
+    }), 9);
+  });
 });

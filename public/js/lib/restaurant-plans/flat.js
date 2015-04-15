@@ -35,6 +35,13 @@ define( function( require, exports, module ){
     return curr += this.order.restaurant_sales_tax || 0;
   };
 
+  var addCourierFees = function( curr ){
+    if ( this.order.type !== 'courier' ) return curr;
+    curr += this.order.delivery_fee || 0;
+    curr += this.order.tip || 0;
+    return curr;
+  };
+
   var payoutPlan = new utils.Plan.Reduce(0)
     .use( restaurantTotal )
     .use( restaurantPlanFlatFee )
@@ -52,6 +59,7 @@ define( function( require, exports, module ){
     .use( restaurantTotal )
     .use( applyFlatFee )
     .use( addSalesTax )
+    .use( addCourierFees )
     .use( Math.round );
 
   return {

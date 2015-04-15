@@ -373,8 +373,8 @@ define(function(require, exports, module) {
         , moment(
             model.get('datetime')
           ).add(
-            'minutes'
-          , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+            -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+          , 'minutes'
           ).format('YYYY-MM-DD hh:mm:ss')
         );
       }
@@ -567,8 +567,8 @@ define(function(require, exports, module) {
         , moment(
             model.get('datetime')
           ).add(
-            'minutes'
-          , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+            -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+          , 'minutes'
           ).format('YYYY-MM-DD hh:mm:ss')
         );
       }

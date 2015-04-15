@@ -145,7 +145,6 @@ define(function (require, exports, module) {
         }]);
       }
 
-console.log( fields.contacts );
       for (var i=0; i < fields.contacts.length; i++) {
         var selector = '.contact-group:nth-child(:g)'.replace(':g', i+2)
         if (!fields.contacts[i].name) {

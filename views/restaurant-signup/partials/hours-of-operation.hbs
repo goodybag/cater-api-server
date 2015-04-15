@@ -18,18 +18,23 @@
       <div class="field-col">
         <ol class="inline-list">
           <li>
-            <label>
-              <input type="checkbox">
-              Use same hours as delivery
-            </label>
+            <div class="form-group">
+              <label>
+                <input type="checkbox">
+                Use same hours as delivery
+              </label>
+            </div>
           </li>
           <li>
-            <label>
-              <input type="checkbox">
-              Use different hours
-            </label>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" class="">
+                Use different hours
+              </label>
+            </div>
           </li>
         </ol>
+        <div class="pickup-hours-container"></div>
       </div>
     </div>
     <div class="row">
@@ -59,7 +64,9 @@
       <div class="row">
         <label class="label-col">Other</label>
         <div class="field-col">
-          <input type="text" name="closed_dates">
+          <div class="form-group">
+            <input type="text" class="other-closed-dates" name="closed_dates">
+          </div>
           <p class="panel-info">Any dates you know you won't be available to accept orders. Holidays, events, etcs.</p>
         </div>
       </div>

@@ -15,7 +15,7 @@ define(function (require, exports, module) {
     })
 
   , fieldMap: {
-      gb_fee           : '.delivery-fee' // this may be the wrong column
+      gb_fee           : '.delivery-fee'
     , lead_times       : '.delivery-lead-times'
     , pickup_lead_times: '.pickup-lead-times'
     , delivery_hours   : '.delivery-hours'
@@ -74,14 +74,57 @@ define(function (require, exports, module) {
 
   , submit: function (e) {
       e.preventDefault();
+      this.clearErrors();
+
+      // Input field values. We're not using fieldGetters here
+      // b/c some inputs give a 'default' option (i.e default lead times)
       var fields = {
-        gb_fee: this.$el.find(this.fieldMap.gb_fee).val()
+        gb_fee: Math.abs(this.$el.find(this.fieldMap.gb_fee).val())
+      , lead_times: this.$el.find(this.fieldMap.lead_times+':checked').val()
+      , pickup_lead_times: this.$el.find(this.fieldMap.pickup_lead_times+':checked').val()
+      , delivery_hours: this.$el.find(this.fieldMap.delivery_hours)
+      };
+
+      if (!fields.gb_fee || !parseInt(fields.gb_fee)) {
+        return this.displayErrors([{
+          property: 'gb_fee'
+        , message: 'Please provide a delivery fee.'
+        }]);
+      }
+
+      if (!fields.lead_times) {
+        return this.displayErrors([{
+          property: 'lead_times'
+        , message: 'Please select delivery lead times'
+        }]);
+      }
+
+      if (!fields.pickup_lead_times) {
+        return this.displayErrors([{
+          property: 'pickup_lead_times'
+        , message: 'Please select pick lead times'
+        }]);
+      }
+
+      for (var i=0; i < fields.delivery_hours.length; i++) {
+        var days = fields.delivery_hours.eq(i).find('.datetime-days-list > li.active');
+        if (days.length < 1) {
+          return alert('select a day');
+        }
+        var startTime = fields.delivery_hours.eq(i).find('.delivery-hours-start').val();
+        var endTime = fields.delivery_hours.eq(i).find('.delivery-hours-end').val();
+        if (!startTime || !endTime) {
+          return alert('select a time')
+        }
+      }
+
+      var fieldsData = {
+        gb_fee: fields.gb_fee
       , lead_times: this.fieldGetters.lead_times.call(this)
       , pickup_lead_times: this.fieldGetters.pickup_lead_times.call(this)
       , delivery_hours: this.fieldGetters.delivery_hours.call(this)
       };
 
-      console.log(fields.delivery_hours);
 
       //this.setCookie('4');
       //window.location.reload();

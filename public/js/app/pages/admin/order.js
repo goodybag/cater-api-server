@@ -82,12 +82,12 @@ define(function(require){
         $('[name="payment_status"]').change(function (e) {
           var status = e.target.value || null;
           if (status === null) alert('Changing payment status to unprocessed will attempt to recharge the credit card!');
-          page.updateOrder({ payment_status: status }, function (error) {
-            if (error) {
-              return page.flashError( error );
-            }
-            return page.flashSuccess();
-          });
+          page.updateOrder({ payment_status: status }, page.flash);
+        });
+
+        $('[name="payment_method_id"]').change( function( e ){
+          var pmid = isNaN(e.target.value) ? null : e.target.value;
+          page.updateOrder({ payment_method_id: pmid }, page.flash);
         });
 
         $('[role="save"]').click( function( e ){
@@ -192,6 +192,13 @@ define(function(require){
         'hide'
       , page.state.get('order_type').indexOf('courier') === -1
       );
+    }
+
+  , flash: function(error) {
+      if (error) {
+        return page.flashError( error );
+      }
+      return page.flashSuccess();
     }
 
   , flashSuccess: function(){

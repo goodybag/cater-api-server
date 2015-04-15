@@ -59,9 +59,15 @@ define( function( require, exports, module ){
     }.bind(this));
   }
 
-  // returns an array of days
+  /**
+  * days
+  * @return {Array} - list of days represented as numbers.
+  */
   WeekDayPopover.prototype.days = function () {
-    return;
+    return this.$el.find(this.selectors.weekdays_list_item + ' li.active')
+      .map(function(i, el) {
+        return parseInt(el.getAttribute('data-day'));
+      });
   };
 
   // inherit from Popover

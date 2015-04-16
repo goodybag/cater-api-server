@@ -139,4 +139,19 @@ describe ('Utils', function(){
 
     assert.deepEqual( result, [ '12:20 PM', '12:40 PM' ] );
   });
+
+  it('.sendError should handle Error instances', function(done) {
+    var res = {
+      status: function(httpCode) { assert.equal(httpCode, 500); }
+    , header: function() {}
+    , json: function(resp) {
+        assert(resp && resp.error);
+        assert.equal(resp.error.code, '0701');
+        assert.equal(resp.error.message, 'poop');
+        done();
+      }
+    };
+
+    utils.sendError(res, new Error('poop'));
+  });
 });

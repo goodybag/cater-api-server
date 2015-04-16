@@ -416,24 +416,37 @@ module.exports.rebuildPdf = function( req, res ){
 };
 
 module.exports.getDeliveryFee = function( req, res ){
+  var location = req.order.location;
+
+  if ( req.query.location_id ){
+    var locations = req.order.restaurant.locations.filter( function( loc ){
+      return loc.id == req.query.location_id;
+    });
+
+    if ( locations.length ){
+      location = locations[0];
+    } else {
+      return res.error({
+        type: 'INVALID_LOCATION'
+      , message: 'Invalid parameter `location_id`'
+      , httpCode: '403'
+      });
+    }
+  }
+
   var origin = address( req.order ).toString();
-  var destination = address( req.order.location ).toString();
+  var destination = address( location ).toString();
 
   DMReq()
     .origin( origin )
     .destination( destination )
-    .send( function( error, results ){
-      if ( error ){
-        req.logger.warn('Error getting distance between order and restaurant', {
-          order_id: order.id
-        , origin: origin
-        , destination: destination
-        });
-
-        return res.error( error );
-      }
-
+    .send()
+    .then( function( results ){
       var result = results[0].elements[0];
+
+      if ( result.status in errors.google.distanceMatrix ){
+        throw errors.google.distanceMatrix[ result.status ];
+      }
 
       res.json({
         distance:     result.distance
@@ -448,6 +461,13 @@ module.exports.getDeliveryFee = function( req, res ){
       });
     })
     .catch( function( error ){
-      return res.error( error );
+      req.logger.warn('Error getting distance between order and restaurant', {
+        order_id: req.order.id
+      , origin: origin
+      , destination: destination
+      , error: error
+      });
+
+      res.error( error );
     });
 };

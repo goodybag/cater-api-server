@@ -27,9 +27,10 @@ module.exports.applyRestaurantIdForNonJoins = function(){
 };
 
 module.exports.emitPaymentSummaryChange = function( options ){
-  options = options || {
+  options = utils.defaults( options || {}, {
     idField: 'id'
-  };
+  , restaurantIdField: 'restaurant_id'
+  });
 
   if ( !options.idField ) throw new Error('emitPaymentSummaryChange - options.idField is required');
 
@@ -39,7 +40,7 @@ module.exports.emitPaymentSummaryChange = function( options ){
     venter.emit(
       'payment-summary:change'
     , req.params[options.idField]
-    , req.params[restaurant_id]
+    , req.params[options.restaurantIdField]
     );
 
     next();

@@ -92,8 +92,24 @@
         {{/is}}
         <dt>Payment Status</dt>
         <dd>
-          <span class="status-circle {{order.payment_status}}"></span>
-          <span>{{or (capitalize order.payment_status) 'Pending'}}</span>
+          <select name="payment_status">
+            <option value="" {{#if (not order.payment_status) }}selected="true"{{/if}}>Unprocessed</option>
+            <option value="pending" {{#eq order.payment_status 'pending'}}selected="true"{{/eq}}>Queued for Processing</option>
+            <option value="paid" {{#eq order.payment_status 'paid'}}selected="true"{{/eq}}>Paid</option>
+            <option value="invoiced" {{#eq order.payment_status 'invoiced'}}selected="true"{{/eq}}>Invoiced</option>
+            <option value="ignore" {{#eq order.payment_status 'ignore'}}selected="true"{{/eq}}>Ignore</option>
+            <option value="error" {{#eq order.payment_status 'error'}}selected="true"{{/eq}}>Error</option>
+          </select>
+        </dd>
+
+        <dt>Payment Method</dt>
+        <dd>
+          <select name="payment_method_id">
+            <option {{#isNull ../order.payment_method_id}} selected="true"{{/isNull}}>Invoiced</option>
+            {{#each order.user.payment_methods}}
+            <option value="{{id}}" {{#eq ../../order.payment_method_id id~}} selected="true"{{~/eq}}>{{capitalize data.brand}} - {{name}} **** **** **** {{data.last_four}} - Exp {{data.expiration_month}}/{{data.expiration_year}}</option>
+            {{/each}}
+          </select>
         </dd>
       </dl>
 

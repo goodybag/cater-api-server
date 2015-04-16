@@ -42,7 +42,6 @@ module.exports.auth = function(req, res, next) {
   }
 
   var reviewToken = req.query.review_token || req.body.review_token;
-  var editToken = req.query.edit_token || req.body.edit_token;
 
   // There was a review token, so this is a restaurant
   if ( reviewToken && (reviewToken === req.order.review_token) ){

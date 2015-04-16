@@ -1982,6 +1982,19 @@ module.exports.register = function(app) {
   , m.pagination()
   , controllers.paymentSummaries.applyRestaurantId()
   , m.param('payment_summary_id')
+  , m.queryOptions({
+      one:  [ { table: 'orders'
+              , alias: 'order'
+              , one:  [ { table: 'delivery_services'
+                        , alias: 'delivery_service'
+                        }
+                      , { table: 'restaurants'
+                        , alias: 'restaurant' 
+                        }
+                      ]
+              }
+            ]
+    })
   , m.find( db.payment_summary_items )
   );
 

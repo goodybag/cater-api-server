@@ -340,7 +340,7 @@ module.exports.changeStatus = function(req, res) {
     venter.emit('order:status:change'
       , new models.Order( req.order )
       , previousStatus
-      , req.query.notify);
+      , !req.query.notify ? true : Boolean(req.query.notify));
 
     if (req.order.promo_code)
     if (req.order.status === 'submitted') {

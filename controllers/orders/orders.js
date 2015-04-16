@@ -337,12 +337,10 @@ module.exports.changeStatus = function(req, res) {
 
     res.send(201, {order_id: req.order.id, status: req.order.status});
 
-     if (!(req.user && req.order.isAdmin)) {
-      venter.emit('order:status:change'
-        , new models.Order( req.order )
-        , previousStatus
-        , req.query.notify);
-     }
+    venter.emit('order:status:change'
+      , new models.Order( req.order )
+      , previousStatus
+      , req.query.notify);
 
     if (req.order.promo_code)
     if (req.order.status === 'submitted') {

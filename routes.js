@@ -1794,10 +1794,25 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.restaurant({ param: 'restaurant_id' })
   , m.queryOptions({
-      many: [ { table: 'payment_summary_items', alias: 'items' }]
+      many: [ { table:  'payment_summary_items'
+              , alias:  'items'
+              , one:    [ { table: 'orders'
+                          , alias: 'order'
+                          , one:  [ { table: 'delivery_services'
+                                    , alias: 'delivery_service'
+                                    }
+                                  , { table: 'restaurants'
+                                    , alias: 'restaurant' 
+                                    }
+                                  ]
+                          }
+                        ]
+              }
+            ]
     , one:  [ { table: 'restaurants', alias: 'restaurant'
-              , one: [{ table: 'restaurant_plans', alias: 'plan' }]
-              }]
+              , one: [{ table: 'restaurant_plans', alias: 'plan' }, { table: 'regions', alias: 'region' }]
+              }
+            ]
     })
   , m.view( 'invoice/payment-summary', db.payment_summaries, {
       layout: 'invoice/invoice-layout'

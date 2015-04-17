@@ -11,5 +11,10 @@ if ( config.isDev ){
     console.error( error, error.stack );
   });
 
+  process.on('unhandledRejection', function( error ){
+    logger.error( 'Unhandled Rejection', error );
+    console.error( error, error.stack );
+  });
+
   require('./workers/scheduler');
 }

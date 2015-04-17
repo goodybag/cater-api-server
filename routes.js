@@ -1740,6 +1740,7 @@ module.exports.register = function(app) {
     , restaurant:             true
     , restaurantDbModelFind:  true
     , user:                   true
+    , userPaymentMethods:     true
     , items:                  true
     })
   , m.view( 'admin/order', {
@@ -1988,6 +1989,19 @@ module.exports.register = function(app) {
   , m.pagination()
   , controllers.paymentSummaries.applyRestaurantId()
   , m.param('payment_summary_id')
+  , m.queryOptions({
+      one:  [ { table: 'orders'
+              , alias: 'order'
+              , one:  [ { table: 'delivery_services'
+                        , alias: 'delivery_service'
+                        }
+                      , { table: 'restaurants'
+                        , alias: 'restaurant' 
+                        }
+                      ]
+              }
+            ]
+    })
   , m.find( db.payment_summary_items )
   );
 
@@ -2171,6 +2185,21 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.remove( db.orders )
+  );
+
+  app.get('/api/orders/:id/delivery-fee'
+  , m.getOrder2({
+      param:              'id'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , location:           true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , controllers.orders.getDeliveryFee
   );
 
   app.get('/api/orders/:oid/items'

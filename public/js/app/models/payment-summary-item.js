@@ -78,14 +78,23 @@ define(function(require, exports, module) {
 
   , getNetPayout: function( data ){
       data = data || this.attributes;
+      var order = data.order;
 
-      var val = data.sub_total + data.adjustment + data.delivery_fee;
+      if ( !order ) return 0;
+
+      order = order.attributes;
+
+      var val = order.sub_total + order.adjustment_amount + order.delivery_fee;
       var tax = val * data.sales_tax;
+
       val += tax;
-      val += data.tip;
+      val += order.tip;
 
       val -= data.gb_fee * val;
       val -= tax;
+
+      val -= order.delivery_fee;
+      val -= order.tip;
 
       return Math.round( val );
     }
@@ -98,7 +107,9 @@ define(function(require, exports, module) {
     }
 
   , getPreSalesTaxTotal: function(){
-      return this.get('sub_total') + this.get('adjustment') + this.get('delivery_fee');
+      var order = this.get('order');
+      if ( !order ) return 0;
+      return order.get('sub_total') + order.get('adjustment_amount') + order.get('delivery_fee');
     }
 
   , onOrderChange: function( psi, order ){

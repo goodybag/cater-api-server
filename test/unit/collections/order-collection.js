@@ -107,5 +107,18 @@ describe('orders collection', function() {
       assert( orders.at(1).id === 30 );
       assert( orders.at(2).id === 14 );
     });
+
+    it('should sort by location', function() {
+      var orders = new Orders([
+        { id: 30, datetime: '3/19/2015 10:30 AM', restaurant: restaurant, location: { name: 'Spicewood' } }
+      , { id: 14, datetime: '5/19/2015 10:30 AM', restaurant: restaurant, location: { name: 'Anderson Lane' } }
+      , { id: 45, datetime: '2/19/2015 10:30 AM', restaurant: restaurant, location: { name: 'Xylophone' } }
+      ]);
+
+      orders.setComparator('location');
+      assert.equal( orders.at(0).id, 14 );
+      assert.equal( orders.at(1).id, 30 );
+      assert.equal( orders.at(2).id, 45 );
+    });
   });
 });

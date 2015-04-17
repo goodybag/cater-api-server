@@ -41,6 +41,7 @@ var OrderAnalytics = {
       , columns: [
           { type: 'sum', expression: 'total', alias: 'volume' }
         , { type: 'sum', expression: 'guests', alias: 'guests' }
+        , { type: 'count', expression: { type: 'distinct', expression: 'users.organization' }, alias: 'organizations' }
         , { type: 'count', expression: '*', alias: 'placed' }
         , { expression: 'extract(month from submitted at time zone orders.timezone) as month' }
         , { expression: 'extract(year from submitted at time zone orders.timezone) as year' }
@@ -50,6 +51,7 @@ var OrderAnalytics = {
         , { expression: 'year' }
         ]
       , joins: [ { type: 'left', target: 'restaurants', on: { id: '$orders.restaurant_id$' } }
+               , { type: 'left', target: 'users', on: { id: '$orders.user_id$' } }
                ]
       };
 

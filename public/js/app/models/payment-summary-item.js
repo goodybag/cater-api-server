@@ -84,7 +84,7 @@ define(function(require, exports, module) {
 
       order = order.attributes;
 
-      var val = order.sub_total + order.adjustment_amount + order.delivery_fee;
+      var val = this.getPreSalesTaxTotal();
       var tax = val * data.sales_tax;
 
       val += tax;
@@ -93,8 +93,10 @@ define(function(require, exports, module) {
       val -= data.gb_fee * val;
       val -= tax;
 
-      val -= order.delivery_fee;
-      val -= order.tip;
+      if ( order.type === 'courier' ){
+        val -= order.delivery_fee;
+        val -= order.tip;
+      }
 
       return Math.round( val );
     }
@@ -103,13 +105,13 @@ define(function(require, exports, module) {
       var total = this.getPreSalesTaxTotal();
       total += total * this.get('sales_tax');
       total += this.attributes.tip;
-      return Math.round( total );
+      return total;
     }
 
   , getPreSalesTaxTotal: function(){
       var order = this.get('order');
       if ( !order ) return 0;
-      return order.get('sub_total') + order.get('adjustment_amount') + order.get('delivery_fee');
+      return order.get('sub_total') + (order.get('adjustment_amount') || 0) + order.get('delivery_fee');
     }
 
   , onOrderChange: function( psi, order ){
@@ -117,7 +119,10 @@ define(function(require, exports, module) {
       if ( order )
       if ( !porder || porder.cid !== order.cid ) {
         this.updatePropertiesBasedOnOrder( order );
+        this.onFeeChange( this, this.get('gb_fee') );
+        this.onTaxChange( this, this.get('sales_tax') );
       }
+
     }
 
   , onFeeChange: function( pse, factor ){
@@ -126,13 +131,12 @@ define(function(require, exports, module) {
 
   , onTaxChange: function( pse, factor ){
       var val = this.getPreSalesTaxTotal();
-      val = Math.round( val * this.attributes.sales_tax );
-
+      val = Math.round( val * factor );
       this.set( 'sales_tax_amount', val );
     }
 
   , onChange: function(){
-      this.set( 'order_total',  this.getTotal() );
+      this.set( 'order_total',  Math.round( this.getTotal() ) );
       this.set( 'net_payout',   this.getNetPayout() );
     }
   });

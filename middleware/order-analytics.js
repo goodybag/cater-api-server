@@ -112,6 +112,7 @@ var OrderAnalytics = {
           { type: 'sum', expression: 'total', alias: 'volume' }
         , { type: 'sum', expression: 'guests', alias: 'guests' }
         , { type: 'count', expression: '*', alias: 'placed' }
+        , { type: 'count', expression: { type: 'distinct', expression: 'users.organization' }, alias: 'organizations' }
         , { expression: 'extract(year from submitted) as year' }
         , { expression: 'extract(week from submitted) as week' }
         ]
@@ -126,6 +127,7 @@ var OrderAnalytics = {
       , submittedDate: { ignoreColumn: true }
       , joins: [ { type: 'left', target: 'restaurants', on: { id: '$orders.restaurant_id$' } }
                , { type: 'left', target: 'regions', on: { id: '$restaurants.region_id$' } }
+               , { type: 'left', target: 'users', on: { id: '$orders.user_id$' } }
                ]
       };
 

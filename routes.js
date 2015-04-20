@@ -2151,7 +2151,14 @@ module.exports.register = function(app) {
         , where: { id: '$orders.id$' }
       }]
     })
-  , m.update( db.orders )
+  , m.update( db.orders, {
+      callback: function (error, orders) {
+        if (error) return;
+
+        var order = order[0];
+        venter.emit('order:build:pdf', order.id);
+      }
+    })
   );
 
   app.put('/api/orders/:id'

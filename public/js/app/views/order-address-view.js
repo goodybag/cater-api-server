@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var AddressView = require('./address-view');
   var Handlebars = require('handlebars');
   var states = require('states');
+  var utils =require('utils');
 
   var template = Handlebars.partials.order_delivery_info;
 
@@ -16,17 +17,21 @@ define(function(require, exports, module) {
     template: template,
 
     initialize: function(options) {
+      this.order = this.options.orderView.model;
     },
 
     render: function() {
+      var order = this.order;
       var context = {
         user: this.options.user,
-        order: this.options.orderView.model.toJSON(),
+        order: order.toJSON(),
         states: states
       };
       context.orderAddress = function() {
         return {
-          address: context.order,
+          address:  utils.extend( order.address.toJSON(), {
+                      name: context.order.address_name
+                    }),
           states: context.states
         };
       };

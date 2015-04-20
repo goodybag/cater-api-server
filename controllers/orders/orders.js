@@ -129,7 +129,7 @@ module.exports.get = function(req, res) {
       show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
       states: states,
       orderAddress: {
-        address: order,
+        address: utils.extend( {}, order, { name: order.address_name } ),
         states: states
       },
       orderParams: req.session.orderParams,
@@ -221,6 +221,7 @@ module.exports.update = function(req, res) {
   if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
 
   utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+
   order.save(function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(order.toJSON({plain:true}));
@@ -312,6 +313,10 @@ module.exports.changeStatus = function(req, res) {
 
         var noExistingDefault = !address;
         var addressData = utils.extend(orderAddressFields, { user_id: req.user.attributes.id, is_default: noExistingDefault });
+
+        if (req.order.address_name) {
+          addressData.name = req.order.address_name;
+        }
 
         logger.info('Saving address');
         if ( noExistingDefault ){

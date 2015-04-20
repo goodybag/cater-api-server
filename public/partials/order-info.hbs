@@ -71,7 +71,9 @@
   {{/if}}
 
   {{#unless edit}}
-  {{> address order}}
+  {{#with orderAddress.address}}
+  {{> address}}
+  {{/with}}
   {{else}}
   {{#with orderAddress}}
   {{> edit_address}}

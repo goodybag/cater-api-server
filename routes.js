@@ -489,11 +489,8 @@ module.exports.register = function(app) {
         active:   'dashboard'
       , baseUrl:  '/admin/restaurants/:id'
       })
-    , m.db.regions.find( {}, { limit: 'all' } )
-    , m.queryOptions({
-        many: [{ table: 'contacts' }]
-      })
-    , m.view('admin/restaurant/edit-dashboard', db.restaurants, {
+    , m.getRestaurant({ param: 'id', notes: true })
+    , m.view('admin/restaurant/edit-dashboard', {
         layout: 'admin/layout-two-column'
       , method: 'findOne'
       })
@@ -510,8 +507,8 @@ module.exports.register = function(app) {
         active:   'dashboard'
       , baseUrl:  '/admin/restaurants/:id'
       })
-    , m.db.regions.find( {}, { limit: 'all' } )
-    , m.view('admin/restaurant/edit-dashboard', db.restaurants, {
+    , m.getRestaurant({ param: 'id', notes: true })
+    , m.view('admin/restaurant/edit-dashboard', {
         layout: 'admin/layout-two-column'
       , method: 'findOne'
       })

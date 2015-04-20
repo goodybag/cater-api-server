@@ -5,6 +5,12 @@
   <p>It's happening!!!!!</p>
 
   <h3>Notes</h3>
+  <form>
+    <input type="text" placeholder="leave a note here"></input>
+    <p class="actions">
+      <button class="btn btn-default">Submit</button>
+    </p>
+  </form>
   <table class="table table-striped">
   <thead>
     <tr>
@@ -14,16 +20,13 @@
     </tr>
   </thead>
   <tbody>
+    {{#each restaurant.notes}}
     <tr>
-      <td>4/20/2015</td>
-      <td>The quick brown fox jumped over the dog.</td>
-      <td>Preston</td>
+      <td>{{datepart created_at}} {{timepart created_at}}</td>
+      <td>{{note}}</td>
+      <td><a href="/admin/users/{{user.id}}">{{user.name}}</a></td>
     </tr>
-    <tr>
-      <td>4/18/2015</td>
-      <td>wat is happening</td>
-      <td>Paul</td>
-    </tr>
+    {{/each}}
   </tbody>
 </table>
 {{/extend}}

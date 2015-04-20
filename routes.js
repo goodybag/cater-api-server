@@ -1777,6 +1777,19 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/admin/analytics/retention'
+  , m.restrict(['admin'])
+  , m.getOrders({
+      organizationSubmitted: true
+    , restaurant: false
+    , user: false
+    , rename: 'organization_submissions'
+    })
+  , m.view( 'admin/analytics/retention', {
+      layout: 'admin/layout2'
+    })
+  );
+
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
   , m.s3({
@@ -2549,18 +2562,4 @@ module.exports.register = function(app) {
   app.get('/api/maps/address-validity/:address'
   , controllers.api.maps.addressValidity
   );
-
-
-  app.get('/lol'
-  , m.getOrders({
-      organizationSubmitted: true
-    , restaurant: false
-    , user: false
-    , rename: 'organization_submissions'
-    })
-  , function(req, res, next) {
-      console.log(res.locals.organization_submissions.length);
-      res.send(res.locals.organization_submissions);
-    }
-  )
 }

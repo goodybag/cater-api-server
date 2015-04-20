@@ -1802,7 +1802,7 @@ module.exports.register = function(app) {
                                     , alias: 'delivery_service'
                                     }
                                   , { table: 'restaurants'
-                                    , alias: 'restaurant' 
+                                    , alias: 'restaurant'
                                     }
                                   ]
                           }
@@ -2004,7 +2004,7 @@ module.exports.register = function(app) {
                         , alias: 'delivery_service'
                         }
                       , { table: 'restaurants'
-                        , alias: 'restaurant' 
+                        , alias: 'restaurant'
                         }
                       ]
               }
@@ -2549,4 +2549,18 @@ module.exports.register = function(app) {
   app.get('/api/maps/address-validity/:address'
   , controllers.api.maps.addressValidity
   );
+
+
+  app.get('/lol'
+  , m.getOrders({
+      organizationSubmitted: true
+    , restaurant: false
+    , user: false
+    , rename: 'organization_submissions'
+    })
+  , function(req, res, next) {
+      console.log(res.locals.organization_submissions.length);
+      res.send(res.locals.organization_submissions);
+    }
+  )
 }

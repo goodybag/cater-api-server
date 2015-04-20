@@ -12,18 +12,16 @@ define(function(require){
 
       this.startDate = this.$el.find("input[name='startDate']").eq(0).pickadate({
         format: 'mm/dd/yyyy'
-      , min: new Date()
       }).pickadate('picker');
 
       this.endDate = this.$el.find("input[name='endDate']").eq(0).pickadate({
         format: 'mm/dd/yyyy'
-      , min: new Date()
       }).pickadate('picker');
     },
 
     events: {
       'click .btn-sort-by': 'sortByOnClick'
-    , 'click .btn-filter': 'poll'
+    , 'change .datepicker': 'poll'
     },
 
     start: function() {
@@ -83,7 +81,10 @@ define(function(require){
       var endDate = this.endDate.get();
       if (!(startDate && endDate)) return orders;
       return utils.filter(orders, function (order) {
-        return moment(order.datetime).isBetween(startDate, endDate);
+        var orderDate = moment(order.datetime);
+        return orderDate.isBetween(startDate, endDate)
+            || orderDate.diff(startDate, 'days') === 0
+            || orderDate.diff(endDate, 'days') === 0;
       });
     }
   });

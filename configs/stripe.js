@@ -9,7 +9,7 @@ var stripe = {
   , public: 'pk_test_9N1srz1fVmWGyRAAhmzAA7aP'
   }
 
-  staging: {
+, staging: {
     secret: 'sk_test_XksbwDuLK1xbpOFaSVLVf9qZ'
   , public: 'pk_test_9N1srz1fVmWGyRAAhmzAA7aP'
   }

@@ -283,6 +283,10 @@ define(function(require, exports, module) {
       // Why do we take out the address fields from the top-level attributes?
       // attrs = _.omit(attrs, addressFields);
 
+      if (attrs.address_name){
+        addr.name = attrs.address_name;
+      }
+
       if (this.address != null)
         this.address.set(addr, options);
       else
@@ -373,8 +377,8 @@ define(function(require, exports, module) {
         , moment(
             model.get('datetime')
           ).add(
-            'minutes'
-          , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+            -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+          , 'minutes'
           ).format('YYYY-MM-DD hh:mm:ss')
         );
       }
@@ -421,7 +425,12 @@ define(function(require, exports, module) {
       var obj = Backbone.Model.prototype.toJSON.apply(this, arguments);
       obj.orderItems = this.orderItems.toJSON();
       obj.restaurant = this.restaurant.toJSON();
-      _.extend(obj, this.address.toJSON());
+
+      var addr = this.address.toJSON();
+      addr.address_name = addr.name;
+      delete addr.name;
+
+      _.extend(obj, addr);
       obj.isAddressComplete = utils.reduce(
         utils.map(
           utils.pick(this.attributes, ['street', 'city', 'state', 'zip', 'phone'])
@@ -567,8 +576,8 @@ define(function(require, exports, module) {
         , moment(
             model.get('datetime')
           ).add(
-            'minutes'
-          , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+            -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+          , 'minutes'
           ).format('YYYY-MM-DD hh:mm:ss')
         );
       }

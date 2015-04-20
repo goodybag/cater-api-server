@@ -64,12 +64,7 @@ define( function( require, exports, module ){
           .then( function( res ){
             return this.parseResponse( res );
           }.bind( this ))
-          .then( function( res ){
-            if ( callback ) return callback( null, res );
-          }.bind( this ))
-          .error( function( error ){
-            if ( callback ) callback( error );
-          }.bind( this ));
+          .asCallback( callback );
       }
     });
 });

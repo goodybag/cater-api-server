@@ -44,7 +44,7 @@ define(function(require, exports, module) {
       var order;
 
       if ( attrs.order ){
-        order = new Order( attrs.order );
+        order = new Order( attrs.order, { lockOrderType: true } );
         delete attrs.order;
       }
 

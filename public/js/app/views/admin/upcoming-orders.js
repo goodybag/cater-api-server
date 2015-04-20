@@ -2,6 +2,7 @@ define(function(require){
   var utils = require('utils');
   var $ = require('jquery-loaded');
   var Handlebars = require('handlebars');
+  var moment = require('moment');
 
   return utils.View.extend({
     template: Handlebars.partials.upcoming_rows,
@@ -80,8 +81,12 @@ define(function(require){
       var startDate = this.startDate.get();
       var endDate = this.endDate.get();
       if (!(startDate && endDate)) return orders;
+
+      startDate = new Date(startDate);
+      endDate = new Date(endDate);
+
       return utils.filter(orders, function (order) {
-        var orderDate = moment(order.datetime);
+        var orderDate = moment( new Date(order.datetime) );
         return orderDate.isBetween(startDate, endDate)
             || orderDate.diff(startDate, 'days') === 0
             || orderDate.diff(endDate, 'days') === 0;

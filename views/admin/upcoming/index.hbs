@@ -26,7 +26,7 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container" id="upcoming-orders">
   <div class="form-group">
     <label>Start Date</label>
     <input class="datepicker" name="startDate">
@@ -69,7 +69,7 @@ require([
 ],
 function(UpcomingOrdersView, Orders){
   var view = new UpcomingOrdersView({
-    el: '#main'
+    el: '#upcoming-orders'
   , endpoint: '/api/upcoming'
   , orders: new Orders({{{json orders}}}, { comparator: 'datetime', ignoreOrderTypeInit: true })
   });

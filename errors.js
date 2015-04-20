@@ -236,3 +236,17 @@ errors.google.distanceMatrix.ZERO_RESULTS = {
 , name: 'UNKNOWN_ERROR'
 , message: 'No route could be found between the origin and destination'
 };
+
+/**
+ * Runtime Errors
+ */
+
+errors.runtime = {};
+
+errors.runtime.ERROR = {
+  type: 'runtime'
+, code: '0701'
+, httpCode: '500'
+, name: 'RUNTIME_ERROR'
+, message: 'The application has encountered a run time error'
+}

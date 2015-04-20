@@ -38,8 +38,8 @@ define(function(require, exports, module) {
           return new Date(a.get('datetime')) - new Date(b.get('datetime'));
         }
       , 'location': function(a, b) {
-          var aLoc = a.restaurant.get('location');
-          var bLoc = b.restaurant.get('location');
+          var aLoc = a.get('location');
+          var bLoc = b.get('location');
           if ( !aLoc ) return -1;
           if ( !bLoc ) return 1;
           return aLoc.name.localeCompare(bLoc.name);

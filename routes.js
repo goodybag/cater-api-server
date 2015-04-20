@@ -486,14 +486,14 @@ module.exports.register = function(app) {
     , m.param('id')
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
-        active:   'basic-info'
+        active:   'dashboard'
       , baseUrl:  '/admin/restaurants/:id'
       })
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.queryOptions({
         many: [{ table: 'contacts' }]
       })
-    , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
+    , m.view('admin/restaurant/edit-dashboard', db.restaurants, {
         layout: 'admin/layout-two-column'
       , method: 'findOne'
       })
@@ -501,6 +501,20 @@ module.exports.register = function(app) {
 
     app.put('/admin/restaurants/:rid'
     , controllers.restaurants.update
+    );
+
+    app.get('/admin/restaurants/:id/dashboard'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'dashboard'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.view('admin/restaurant/edit-dashboard', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
     );
 
     app.get('/admin/restaurants/:id/basic-info'
@@ -1802,7 +1816,7 @@ module.exports.register = function(app) {
                                     , alias: 'delivery_service'
                                     }
                                   , { table: 'restaurants'
-                                    , alias: 'restaurant' 
+                                    , alias: 'restaurant'
                                     }
                                   ]
                           }
@@ -2004,7 +2018,7 @@ module.exports.register = function(app) {
                         , alias: 'delivery_service'
                         }
                       , { table: 'restaurants'
-                        , alias: 'restaurant' 
+                        , alias: 'restaurant'
                         }
                       ]
               }

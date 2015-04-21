@@ -68,6 +68,15 @@ module.exports = function( options ){
       });
     }
 
+    if ( options.notes ){
+      $options.many.push({
+        table: 'restaurant_notes'
+      , alias: 'notes'
+      , order: 'created_at desc'
+      , one: [ { table: 'users', alias: 'user' } ]
+      });
+    }
+
     logger.info('Finding restaurant');
     db.restaurants.findOne( $where, $options, function( error, restaurant ){
       if ( error ){

@@ -35,18 +35,14 @@ define(function(require, exports, module) {
       var note = new RestaurantNote({
         note: this.$note.val()
       , restaurant_id: this.options.restaurant_id
+      , user_id: this.options.user_id
       });
 
-      note.save({
+      note.save(null, {
         success: function() {
-          // todo alert
-          console.log('poop');
+          window.location.reload();
         },
-
-        error: function() {
-          // todo alert
-          console.log('toilet');
-        }
+        error: this.options.alertView.show.bind(this.options.alertView, 'error')
       });
     }
   });

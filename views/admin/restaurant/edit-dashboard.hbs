@@ -37,9 +37,15 @@
 <script>
 require([
     'app/views/restaurant/notes-view'
+  , 'app/views/alert-view'
   ]
-, function(NotesView) {
-    var view = new NotesView({ el: '.restaurant-notes', restaurant_id: {{restaurant.id}} });
+, function(NotesView, AlertView) {
+    var view = new NotesView({
+      el:             '.restaurant-notes'
+    , restaurant_id:  {{restaurant.id}}
+    , user_id:        {{user.id}}
+    , alertView:      new AlertView({ el: '.alert-container' })
+    });
   }
 );
 </script>

@@ -19,8 +19,9 @@ define(function(require, exports, module) {
     validator: amanda('json'),
 
     url: function() {
-      return ['/restaurants', this.attributes.restaurant_id, 'notes'].join('/');
+      return ['/api/restaurants', this.attributes.restaurant_id, 'notes'].join('/');
     },
+
     validate: function(attrs, options) {
       return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
     }

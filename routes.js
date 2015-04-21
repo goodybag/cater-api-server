@@ -2091,6 +2091,11 @@ module.exports.register = function(app) {
   , m.remove( db.restaurant_photos )
   );
 
+  app.post('/api/restaurants/:restaurant_id/notes'
+  , m.restrict( ['admin'] )
+  , m.insert( db.restaurant_notes )
+  );
+
   app.get('/api/orders'
   , m.restrict(['admin'])
   , m.pagination()

@@ -61,6 +61,11 @@
               {{>tags tags}}
             </h5>
             <dl class="item-legend col-sm-5">
+              {{#if hide_pricing}}
+              <div class="feeds-price-wrapper">
+                <div class="feeds"><dt>Click for price</dt></div>
+              </div>
+              {{else}}
               <div class="feeds-price-wrapper">
                 <div class="feeds">
                   <dt>Feeds</dt>
@@ -71,6 +76,7 @@
                   <dd>{{dollars price}}</dd>
                 </div>
               </div>
+              {{/if}}
             </dl>
           </div>
           <div class="row">

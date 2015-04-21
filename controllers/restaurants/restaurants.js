@@ -22,6 +22,11 @@ utils.findWhere(states, {abbr: 'TX'}).default = true;
 module.exports.list = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-List');
 
+  return res.render('restaurant/list', {
+    layout: 'layout/default'
+  , restaurants: db.cache.restaurants.byRegion( req.user.attributes.region_id )
+  })
+
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};
   if (orderParams.prices)

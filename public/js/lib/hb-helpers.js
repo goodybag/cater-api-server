@@ -375,6 +375,7 @@ define(function(require, exports, module) {
     },
 
     join: function(list, delimiter) {
+      console.log('join', list, delimiter);
       if ( !Array.isArray(list) ) return list;
       return list.join(delimiter || ',');
     },

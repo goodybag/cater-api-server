@@ -5,33 +5,42 @@
   <p>It's happening!!!!!</p>
 
   <h3>Notes</h3>
-  <form>
-    <input type="text" placeholder="leave a note here"></input>
-    <p class="actions">
-      <button class="btn btn-default">Submit</button>
-    </p>
-  </form>
-  <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Added</th>
-      <th>Comment</th>
-      <th>User</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each restaurant.notes}}
-    <tr>
-      <td>{{datepart created_at}} {{timepart created_at}}</td>
-      <td>{{note}}</td>
-      <td><a href="/admin/users/{{user.id}}">{{user.name}}</a></td>
-    </tr>
-    {{/each}}
-  </tbody>
-</table>
+  <section class="restaurant-notes">
+    <form>
+      <input class="input-note" type="text" placeholder="leave a note here"></input>
+      <p class="actions">
+        <button class="btn btn-default">Submit</button>
+      </p>
+    </form>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Added</th>
+          <th>Comment</th>
+          <th>User</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each restaurant.notes}}
+        <tr>
+          <td>{{datepart created_at}} {{timepart created_at}}</td>
+          <td>{{note}}</td>
+          <td><a href="/admin/users/{{user.id}}">{{user.name}}</a></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </section>
 {{/extend}}
 
 {{#extend "scripts"}}
 <script>
+require([
+    'app/views/restaurant/notes-view'
+  ]
+, function(NotesView) {
+    var view = new NotesView({ el: '.restaurant-notes', restaurant_id: {{restaurant.id}} });
+  }
+);
 </script>
 {{/extend}}

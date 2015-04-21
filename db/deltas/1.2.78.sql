@@ -14,7 +14,7 @@ begin
     id              serial primary key
   , created_at      timestamp not null default now()
   , restaurant_id   int not null references restaurants(id) on delete cascade
-  , user_id         int not null references restaurants(id) on delete cascade
+  , user_id         int references restaurants(id) on delete set null
   , note            text
   );
 end$$;

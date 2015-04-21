@@ -22,7 +22,7 @@
       <tbody>
         {{#each restaurant.notes}}
         <tr>
-          <td><a href="/admin/users/{{user.id}}">{{user.name}}</a></td>
+          <td>{{#if user}}<a href="/admin/users/{{user.id}}">{{user.name}}{{else}}N/A{{/if}}</a></td>
           <td>{{note}}</td>
           <td>{{datepart created_at}} {{timepart created_at}}</td>
         </tr>

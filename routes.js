@@ -2168,8 +2168,8 @@ module.exports.register = function(app) {
       callback: function (error, orders) {
         if (error) return;
 
-        var order = order[0];
-        venter.emit('order:build:pdf', order.id);
+        var order = orders[0];
+        venter.emit('order:change', order.id);
       }
     })
   );

@@ -12,7 +12,6 @@ define(function(require, exports, module) {
   var $                   = require('jquery-loaded');
   var Hbs                 = require('handlebars');
   var utils               = require('utils');
-  var config              = require('config');
   var spinner             = require('spinner');
   var RestaurantNote      = require('app/models/restaurant-note');
 
@@ -38,11 +37,17 @@ define(function(require, exports, module) {
       , user_id: this.options.user_id
       });
 
+      spinner.start();
+
       note.save(null, {
         success: function() {
+          spinner.stop();
           window.location.reload();
         },
-        error: this.options.alertView.show.bind(this.options.alertView, 'error')
+        error: function() {
+          spinner.stop();
+          this.options.alertView.show('error');
+        }.bind(this)
       });
     }
   });

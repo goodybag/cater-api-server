@@ -1,8 +1,7 @@
 {{#extend "page"}}page-restaurant{{/extend}}
 
 {{#extend "body"}}
-  <marquee><h2>{{restaurant.name }} Dashboard</h2></marquee>
-  <p>It's happening!!!!!</p>
+  <h2>{{restaurant.name }} Dashboard</h2>
 
   <h3>Notes</h3>
   <section class="restaurant-notes">
@@ -15,17 +14,17 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Added</th>
-          <th>Comment</th>
           <th>User</th>
+          <th>Comment</th>
+          <th>Added</th>
         </tr>
       </thead>
       <tbody>
         {{#each restaurant.notes}}
         <tr>
-          <td>{{datepart created_at}} {{timepart created_at}}</td>
-          <td>{{note}}</td>
           <td><a href="/admin/users/{{user.id}}">{{user.name}}</a></td>
+          <td>{{note}}</td>
+          <td>{{datepart created_at}} {{timepart created_at}}</td>
         </tr>
         {{/each}}
       </tbody>

@@ -7,7 +7,7 @@
 
 .page-restaurant-list {
   // override .container width
-  .container { 
+  .container {
     #grid .container(@restaurant-container-width);
   }
 
@@ -71,21 +71,24 @@
     width: 100%;
   }
 
-  .list-tags { margin-bottom: 10px; }
+  .list-tags {
+    display: inline-block;
+    line-height: 35px;
+    vertical-align: top;
+  }
 
   @media (min-width: @breakpoint-tablet) {
     .list-tags {
       float: left;
       margin: 0;
-      padding-bottom: 20px;
     }
 
     .list-sort {
-      float: right;
+      float: left;
     }
 
     .list-display-actions {
-      float: left;
+      float: right;
     }
 
     .list-sort-actions {

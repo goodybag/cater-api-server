@@ -5,12 +5,6 @@
   <div class="search-params">
     {{> restaurant_search_form }}
   </div>
-  <a href="#" class="search-advanced-link section{{#if expandSearchTools}} expand{{/if}}" data-role="collapsible" data-target="search-advanced-content">
-    <div class="container">
-      <span class="expand-hidden">Hide all search tools <span class="search-advanced-link-icon gb-icon-chevron-down"></span></span>
-      <span class="expand-show">Show all search tools <span class="search-advanced-link-icon gb-icon-chevron-down"></span></span>
-    </div>
-  </a>
   <div class="search-advanced">
     {{> restaurant_search_advanced }}
   </div>
@@ -18,11 +12,10 @@
 
 <div class="list-options">
   <div class="container">
-    {{> restaurant_list_tags }}
   </div>
   <div class="container">
+    {{> restaurant_list_tags }}
     {{> restaurant_toggle_list }}
-    {{> restaurant_list_sort }}
   </div>
 </div>
 <div class="restaurant-list">

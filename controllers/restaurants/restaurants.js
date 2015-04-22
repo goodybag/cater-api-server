@@ -121,6 +121,7 @@ module.exports.list = function(req, res) {
 
   return res.render('restaurant/list', {
     layout:           'layout/default'
+  , defaultAddress:   req.user.attributes.defaultAddress
   , restaurants:      results
   , filterCuisines:   cuisines
   , filterPrices:     utils.range(1, 5)

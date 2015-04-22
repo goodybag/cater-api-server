@@ -2,6 +2,7 @@ var assert      = require('assert');
 var utils       = require('utils');
 var config      = require('../../../config');
 var orders      = require('../../../lib/stamps/db/orders');
+var fulfillability = require('stamps/orders/fulfillability');
 
 describe('Orders Stamps', function(){
   it('Should filter by month', function() {
@@ -83,5 +84,62 @@ describe('Orders Stamps', function(){
     assert(!utils.filter(sql.$options.one, function(clause) {
       return clause.table === 'restaurants';
     }).length);
+  });
+
+  describe.only('Fulfillability', function() {
+    it( '.isFulfillable() empty', function(){
+      var result = fulfillability().isFulfillable();
+      assert( result );
+    });
+
+    it( '.isFulfillable()', function(){
+      var result = fulfillability({
+        zip: '78723'
+      , restaurant: {
+          delivery_zips: [{ zip: '78723', fee: 100 }]
+        , supported_order_types: ['delivery']
+        }
+      }).isFulfillable();
+
+      assert( result );
+    });
+
+    it( '.isFulfillable()', function(){
+      var result = fulfillability({
+        zip: '78724'
+      , restaurant: {
+          delivery_zips: [{ zip: '78723', fee: 100 }]
+        , supported_order_types: ['delivery']
+        }
+      }).isFulfillable();
+
+      assert( !result );
+    });
+
+    it( '.isFulfillable()', function(){
+      var result = fulfillability({
+        date: '2015-04-22'
+      , restaurant: {
+          hours: [{ day: 3 }]
+        , delivery_hours: []
+        , supported_order_types: ['delivery', 'courier']
+        }
+      }).isFulfillable();
+
+      assert( result );
+    });
+
+    it( '.isFulfillable()', function(){
+      var result = fulfillability({
+        date: '2015-04-22'
+      , restaurant: {
+          hours: [{ day: 4 }]
+        , delivery_hours: []
+        , supported_order_types: ['delivery', 'courier']
+        }
+      }).isFulfillable();
+
+      assert( !result );
+    });
   });
 });

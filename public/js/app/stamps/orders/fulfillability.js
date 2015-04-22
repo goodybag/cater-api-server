@@ -68,11 +68,15 @@ define( function( require, exports, module ){
       , function strategyLeadTimes(){
           if ( !this.datetime ) return true;
 
+          var leadTimes = this.getAllSupportedLeadTimes();
+
+          if ( leadTimes.length === 0 ) return true;
+
           var minutes = moment.duration(
             Math.abs( new Date() - this.datetime )
           ).asMinutes();
 
-          return this.getAllSupportedLeadTimes()
+          return leadTimes
             .some( function( time ){
               return [
                 minutes >= time.lead_time

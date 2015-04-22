@@ -10,28 +10,23 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   var _ = require('lodash');
+  var moment = require('moment');
 
   return require('stampit')()
     .state({
       
     })
     .enclose( function(){
-
+      if ( this.datetime ){
+        this.datetime = moment( this.datetime );
+      }
     })
     .methods({
       // Since _all_ of these strategies are required to be fulfillable
       // put the computationally least complex strategies first
       fulfillmentRequirements: [
-        // function orderFulfillmentStrategyGuests(){
-        //   if ( !this.guests ) return true;
-
-        //   if ( !this.restaurant.)
-        //   if ( this.guests )
-        //   return true;
-        // }
-
         // Simply check if the zip is supported by delivery
-      , function orderFulfillmentStrategyZip(){
+        function orderFulfillmentStrategyZip(){
           if ( !this.zip ) return true;
 
           var zips = this.getAllSupportedDeliveryZips();
@@ -39,9 +34,36 @@ define( function( require, exports, module ){
           return !!_.findWhere( zips, { zip: this.zip } );
         }
 
-        // Is
+        // Is the restaurant even open?
+      , function orderFulfillmentStrategyHours(){
+          if ( !this.datetime ) return true;
+
+          var day = this.datetime.day();
+          var days = this.restaurant.hours.filter( function( dayHours ){
+            return dayHours.day === day;
+          });
+
+          if ( days.length === 0 ) return false;
+
+          return days.any( function( dayHours ){
+            return [
+              moment( dayHours.start_time ) <= this.datetime
+            , this.datetime < moment( dayHours.end_time )
+            ].every( _.identity );
+          });
+        }
+
+        // Is there a lead time that satisfies?
       , function orderFulfillmentStrategyDate(){
           return true;
+
+          if ( this.restaurant.lead_times.length === 0 ){
+            return true;
+          }
+
+          if ( !this.datetime ) return true;
+
+
         }
       ]
 

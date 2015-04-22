@@ -85,6 +85,10 @@ module.exports.list = function(req, res) {
     results = results.filter( filters[ filter ] );
   });
 
+  if ( req.query.search ){
+    results = utils.search( results, req.query.search, ['name'] );
+  }
+
   if ( Object.keys( orderParams ).length > 0 ){
     results = results.filter( function( result ){
       orderParams.restaurant = result;

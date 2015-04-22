@@ -375,7 +375,6 @@ define(function(require, exports, module) {
     },
 
     join: function(list, delimiter) {
-      console.log('join', list, delimiter);
       if ( !Array.isArray(list) ) return list;
       return list.join(delimiter || ',');
     },
@@ -564,7 +563,7 @@ define(function(require, exports, module) {
         set = utils.pluck( set, prop );
       }
 
-      return utils.isArray( set ) ? set.join( joiner || ', ' ) : set;
+      return utils.isArray( set ) ? set.join( joiner || ', ' ) : '';
     },
 
     uncamelize: function( text ){

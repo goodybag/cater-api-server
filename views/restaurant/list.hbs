@@ -46,6 +46,8 @@ require( ['app/pages/restaurant-list'], function( page ){
     e.preventDefault();
     $(this).closest('.alert').remove();
   });
+
+  $('[data-role="popover"]').gb_popover();
 });
 </script>
 {{/extend}}

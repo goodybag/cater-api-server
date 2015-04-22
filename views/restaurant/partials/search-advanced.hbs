@@ -16,7 +16,7 @@
             </div>
         </div>
 
-          {{> restaurant_list_sort }}
+        {{> restaurant_list_sort }}
       </div>
     </section>
     <section>
@@ -26,6 +26,7 @@
           {{#each filterCuisines}}
           <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}/> {{this}}</label>
           {{/each}}
+          {{> restaurant_filter_cuisines }}
         </div>
         <div class="search-advanced-filter-col filter-diets">
           <h1>Special Diets</h1>

@@ -13,6 +13,7 @@ define(function(require, exports, module) {
     },
 
     showItems: function(e) {
+      e.preventDefault();
       this.$el.find('.items-list').show();
       this.$el.find('.item-edit-show').addClass('open').text('Hide Items');
     },

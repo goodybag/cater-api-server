@@ -77,7 +77,7 @@ module.exports.list = function(req, res) {
     return res.error( results.error );
   }
 
-  var orderParams = utils.pick( req.query, 'zip', 'datetime', 'guests' );
+  var orderParams = utils.pick( req.query, 'zip', 'date', 'time', 'guests' );
 
   Object.keys( filters ).forEach( function( filter ){
     if ( !(filter in req.query) ) return;
@@ -89,10 +89,12 @@ module.exports.list = function(req, res) {
     results = utils.search( results, req.query.search, ['name'] );
   }
 
+
   if ( Object.keys( orderParams ).length > 0 ){
+    var fulfillability = orderFulfillability( orderParams );
     results = results.filter( function( result ){
-      orderParams.restaurant = result;
-      return orderFulfillability( orderParams ).isFulfillable();
+      fulfillability.restaurant = result;
+      return fulfillability.isFulfillable();
     });
   }
 

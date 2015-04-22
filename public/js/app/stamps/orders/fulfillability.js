@@ -17,16 +17,17 @@ define( function( require, exports, module ){
       
     })
     .enclose( function(){
-      if ( this.datetime ){
-        this.datetime = moment( this.datetime );
+      if ( this.date ){
+        this.datetime = moment( this.date + ( this.time ? (' ' + this.time) : '' ) );
       }
+      console.log(this.date, this.time);
     })
     .methods({
       // Since _all_ of these strategies are required to be fulfillable
       // put the computationally least complex strategies first
       fulfillmentRequirements: [
         // Simply check if the zip is supported by delivery
-        function orderFulfillmentStrategyZip(){
+        function strategyZip(){
           if ( !this.zip ) return true;
 
           var zips = this.getAllSupportedDeliveryZips();
@@ -34,27 +35,38 @@ define( function( require, exports, module ){
           return !!_.findWhere( zips, { zip: this.zip } );
         }
 
-        // Is the restaurant even open?
-      , function orderFulfillmentStrategyHours(){
+        // Is the restaurant even open on that day?
+      , function strategyOpenDay(){
           if ( !this.datetime ) return true;
 
-          var day = this.datetime.day();
-          var days = this.restaurant.hours.filter( function( dayHours ){
-            return dayHours.day === day;
-          });
+          var hours = this.restaurant.hours.concat( this.restaurant.delivery_hours );
 
-          if ( days.length === 0 ) return false;
-
-          return days.any( function( dayHours ){
-            return [
-              moment( dayHours.start_time ) <= this.datetime
-            , this.datetime < moment( dayHours.end_time )
-            ].every( _.identity );
+          return !!_.findWhere( hours, {
+            day: this.datetime.day()
           });
         }
 
+        // Restaurant is open on that day, but what about time?
+      , function strategyOpenHours(){
+          if ( !this.time ) return true;
+
+          var day = this.datetime.day();
+
+          return this.restaurant.hours
+            .concat( this.restaurant.delivery_hours )
+            .filter( function( dayHours ){
+              return dayHours.day === day;
+            })
+            .some( function( dayHours ){
+              return [
+                moment( this.date + ' ' + dayHours.start_time ) <= this.datetime
+              , this.datetime < moment( this.date + ' ' + dayHours.end_time )
+              ].every( _.identity );
+            }.bind( this ));
+        }
+
         // Is there a lead time that satisfies?
-      , function orderFulfillmentStrategyDate(){
+      , function strategyDate(){
           return true;
 
           if ( this.restaurant.lead_times.length === 0 ){
@@ -62,8 +74,6 @@ define( function( require, exports, module ){
           }
 
           if ( !this.datetime ) return true;
-
-
         }
       ]
 

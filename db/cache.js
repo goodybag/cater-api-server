@@ -54,6 +54,7 @@ module.exports = function( db ){
         options.one.push({ table: 'regions', alias: 'region' });
 
         options.many.push({ table: 'restaurant_locations', alias: 'locations' });
+        options.many.push({ table: 'restaurant_delivery_times', alias: 'delivery_hours' });
         options.many.push({ table: 'restaurant_hours', alias: 'hours' });
         options.many.push({ table: 'restaurant_delivery_times', alias: 'delivery_times' });
         options.many.push({ table: 'restaurant_delivery_zips', alias: 'delivery_zips' });

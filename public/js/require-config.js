@@ -33,6 +33,7 @@
     , {name: 'leFunc',            location: '../../components/lefunc/lib',                main: 'leFunc.js'}
     , {name: 'plan',              location: '../../components/plan.js',                   main: 'index.js'}
     , {name: 'stampit',           location: '../../components/stampit/dist',              main: 'stampit.js'}
+    , {name: 'resource',          location: '../../components/resource.js',               main: 'index.js'}
 
       // backbone stuff
     , {name: 'backbone',          location: '../../components/backbone',                  main: 'backbone.js'}
@@ -50,7 +51,7 @@
 
       // moment stuff
     , {name: 'moment',            location: '../../components/moment',                    main: 'moment.js'}
-    , {name: 'moment-timezone',   location: '../../components/moment-timezone',           main: 'moment-timezone.js'}
+    , {name: 'moment-timezone',   location: '../../components/moment-timezone/builds',    main: 'moment-timezone-with-data-2010-2020.min.js'}
 
       // jquery stuff
     , {name: 'jquery',            location: '../../components/jquery',                    main: 'jquery.js'}
@@ -72,8 +73,7 @@
 
       // custom replacements
       '*': {
-        'moment': 'moment-loaded'
-      , 'handlebars.runtime': 'hbs'
+        'handlebars.runtime': 'hbs'
       }
 
       // deal with jquery
@@ -87,10 +87,6 @@
     , 'pickatime': {'jquery': 'jquery'}
     , 'bootstrap': {'jquery': 'jquery'}
     , 'select2': {'jquery': 'jquery'}
-
-      // deal with moment
-    , 'moment-loaded': {'moment': 'moment'}
-    , 'moment-timezone': {'moment': 'moment'}
 
     // deal with backbone
     , 'backbone.trackit': {'backbone': 'backbone'}

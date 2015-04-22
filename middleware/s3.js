@@ -32,7 +32,7 @@ module.exports = function( options ){
     var s3path = options.path;
 
     pathParts.forEach( function( part ){
-      s3path = s3path.replace( new RegExp( ':' + part.name, 'g' ), req.param( part.name ) );
+      s3path = s3path.replace( new RegExp( ':' + part.name, 'g' ), req.params[part.name] );
     });
 
     var logger = req.logger.create('Middleware-S3', {

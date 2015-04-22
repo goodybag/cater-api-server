@@ -25,8 +25,9 @@ module.exports.current = function(req, res, next) {
     many: [{ table: 'order_items', alias: 'orderItems' }]
   };
 
-  if ( req.param('edit_token') || req.body.edit_token ){
-    where.edit_token = req.param('edit_token') || req.body.edit_token;
+  var edit_token = req.query.edit_token || req.params.edit_token || req.body.edit_token;
+  if ( edit_token ){
+    where.edit_token = edit_token;
   } else if ( req.user.attributes.id ) {
     where.user_id = req.user.attributes.id;
   } else if ( req.user.isGuest() && Array.isArray( req.session.guestOrders ) && req.session.guestOrders.length > 0 ){
@@ -38,6 +39,17 @@ module.exports.current = function(req, res, next) {
   } else {
     logger.info('Guest user and missing edit token; cannot find pending order');
     return next();
+  }
+
+  // Unless they're using an edit token, let's drill down the results
+  // so that we only see relevant pending orders -
+  // (that is, orders that haven't been expired for too long)
+  if ( !edit_token ){
+    where.datetime = {
+      $custom: [
+        "orders.datetime + interval '2 days' > now() at time zone orders.timezone"
+      ]
+    };
   }
 
   db.orders.findOne(where, options, function(err, order) {

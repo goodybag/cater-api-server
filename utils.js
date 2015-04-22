@@ -70,6 +70,8 @@ utils.balanced = new Balanced({
 , secret: config.balanced.secret
 });
 
+utils.stripe = require('stripe')(config.stripe.secret);
+
 utils.normalize = function( x, MIN, MAX ){
   return ( x - MIN ) / ( MAX - MIN );
 };
@@ -504,6 +506,9 @@ utils.sendJSON = function(res, json){
 };
 
 utils.sendError = function(res, error, details){
+  if (error instanceof Error) {
+    error = utils.extend({}, errors.runtime.ERROR, { message: error.message, stack: error.stack });
+  }
   if (typeof error === 'string') {
     error = errors[error];
   }

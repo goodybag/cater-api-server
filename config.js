@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, stripe: require('./configs/stripe')
 , google: require('./configs/google')
 , intercom: require('./configs/intercom')
 , yelp: require('./configs/yelp')
@@ -46,8 +47,8 @@ config.defaults = {
   }
 
 , disallowOrdersBetween: {
-    start: 20
-  , end:    8
+    start:  { hour: 20, minute: 0 }
+  , end:    { hour: 8, minute: 30 }
   }
 
 , emailProvider: 'mandrill'

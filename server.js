@@ -9,6 +9,12 @@ process.on('uncaughtException', function(err) {
   process.exit();
 });
 
+process.on('unhandledRejection', function(err) {
+  console.log('Unhandled Rejection', err, err.stack);
+  forky.disconnect();
+  process.exit();
+});
+
 if (config.rollbar) {
   rollbar.init(config.rollbar.accessToken, {environment: config.env});
   rollbar.handleUncaughtExceptions();

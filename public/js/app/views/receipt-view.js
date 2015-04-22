@@ -180,11 +180,18 @@ define(function(require, exports, module) {
           edit: this.edit,
           orderAddress: function() {
             return {
-              address: order.toJSON(),
+              address:  utils.extend( order.address.toJSON(), {
+                          name: context.order.address_name
+                        }),
               states: states
             };
           }
         };
+
+        // {{#with}} HBS helper not working with context functions
+        context.orderAddress = context.orderAddress();
+
+        console.log('rendering with', context);
         this.$el.find('.delivery-info').html(Handlebars.partials.order_info(context));
       }
     },

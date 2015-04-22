@@ -43,6 +43,7 @@ define(function(require) {
     , nullable: false
     , references: {table: 'restaurants', column: 'id', onDelete: 'set null'}
     }
+  , address_name: { type: types.text, editable: ['client', 'admin'] }
   , street: {
       type: types.text
     , nullable: true

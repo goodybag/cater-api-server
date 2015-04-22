@@ -73,12 +73,6 @@ module.exports.register = function(app) {
 
   app.get('/restaurants'
   , m.searchTags()
-  , m.userViewedEvent({
-      name:         'promptSurvey'
-    , mode:         'once'
-    , threshold:    3
-    , mustBeAuthed: true
-    })
   , m.localCookies(['gb_display'])
   , controllers.restaurants.list
   );
@@ -142,7 +136,7 @@ module.exports.register = function(app) {
     app.get('/admin/upcoming'
     , m.getOrders({
         submittedDate: true
-      , upcoming: true
+      , upcoming: '3 hours'
       })
     , m.view('admin/upcoming', { layout: 'admin/layout2' })
     );
@@ -150,7 +144,7 @@ module.exports.register = function(app) {
     app.get('/api/upcoming'
     , m.getOrders({
         submittedDate: true
-      , upcoming: true
+      , upcoming: '3 hours'
       })
     , function(req, res, next) {
         res.send(res.locals.orders);
@@ -430,27 +424,24 @@ module.exports.register = function(app) {
         one:  [ { table: 'regions', alias: 'region' }]
       , userGroups: true
       })
-    , function( req, res, next ){
-        var options = {
-          order: ['id desc']
-        };
-
-        var where = {
-          user_id: req.params.id
-        };
-
-        require('stamps/user-invoice').find( where, options, function( error, results ){
-          if ( error ) return next( error );
-
-          res.locals.invoices = results;
-
-          return next();
-        });
-      }
+    , m.getInvoices({ userIdParam: 'id' })
     , m.db.regions.find( {}, { limit: 'all' } )
     , m.viewPlugin( 'mainNav', { active: 'users' })
     , m.view( 'admin/user/invoices', db.users, {
         layout: 'admin/layout-single-object'
+      , method: 'findOne'
+      })
+    );
+
+    /**
+     * Invoices standalone
+     */
+
+    app.get('/admin/invoices'
+    , m.getInvoices()
+    , m.db.regions.find( {}, { limit: 'all' } )
+    , m.view( 'admin/invoices', db.users, {
+        layout: 'admin/layout2'
       , method: 'findOne'
       })
     );
@@ -495,14 +486,11 @@ module.exports.register = function(app) {
     , m.param('id')
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
-        active:   'basic-info'
+        active:   'dashboard'
       , baseUrl:  '/admin/restaurants/:id'
       })
-    , m.db.regions.find( {}, { limit: 'all' } )
-    , m.queryOptions({
-        many: [{ table: 'contacts' }]
-      })
-    , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
+    , m.getRestaurant({ param: 'id', notes: true })
+    , m.view('admin/restaurant/edit-dashboard', {
         layout: 'admin/layout-two-column'
       , method: 'findOne'
       })
@@ -510,6 +498,20 @@ module.exports.register = function(app) {
 
     app.put('/admin/restaurants/:rid'
     , controllers.restaurants.update
+    );
+
+    app.get('/admin/restaurants/:id/dashboard'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'dashboard'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.getRestaurant({ param: 'id', notes: true })
+    , m.view('admin/restaurant/edit-dashboard', {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
     );
 
     app.get('/admin/restaurants/:id/basic-info'
@@ -741,7 +743,7 @@ module.exports.register = function(app) {
       , collectionOptions:  { restaurant_id: ':restaurant_id' }
       })
     , function( req, res, next ){
-        return m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
+        return m.db.restaurants.findOne( req.params.restaurant_id )( req, res, next );
       }
     , m.view( 'admin/restaurant/location-edit', db.restaurant_locations, {
         layout: 'admin/layout-single-object'
@@ -932,9 +934,9 @@ module.exports.register = function(app) {
       ]
     })
   , function( req, res, next ){
-      res.locals.status = req.param('status');
-      if ( req.param('status') == 'accepted' ){
-        req.queryOptions.statusDateSort = { status: req.param('status') };
+      res.locals.status = req.params.status;
+      if ( req.params.status == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.params.status };
       }
       return next();
     }
@@ -1452,9 +1454,9 @@ module.exports.register = function(app) {
               ]
       })
     , function( req, res, next ){
-        res.locals.status = req.param('status');
-        if ( req.param('status') == 'accepted' ){
-          req.queryOptions.statusDateSort = { status: req.param('status') };
+        res.locals.status = req.params.status;
+        if ( req.params.status == 'accepted' ){
+          req.queryOptions.statusDateSort = { status: req.params.status };
         }
         return next();
       }
@@ -1631,7 +1633,7 @@ module.exports.register = function(app) {
   , m.restrict(['admin', 'receipts'])
   , function( req, res, next ){
       var invoice = require('stamps/user-invoice').create({
-        id: req.param('id')
+        id: req.params.id
       }).fetch( function( error ){
         if ( error ) return next( error );
 
@@ -1648,7 +1650,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/restaurants/:restaurant_id/orders'
   , function( req, res, next ){
-      m.db.restaurants.findOne( req.param('restaurant_id') )( req, res, next );
+      m.db.restaurants.findOne( req.params.restaurant_id )( req, res, next );
     }
   , m.param('status')
   , m.param('restaurant_id')
@@ -1665,9 +1667,9 @@ module.exports.register = function(app) {
             ]
     })
   , function( req, res, next ){
-      res.locals.status = req.param('status');
-      if ( req.param('status') == 'accepted' ){
-        req.queryOptions.statusDateSort = { status: req.param('status') };
+      res.locals.status = req.params.status;
+      if ( req.params.status == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.params.status };
       }
       return next();
     }
@@ -1693,7 +1695,7 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , function( req, res, next ){
-      res.locals.payment_summary_id = req.param('payment_summary_id');
+      res.locals.payment_summary_id = req.params.payment_summary_id;
       return next();
     }
   , m.queryOptions({
@@ -1717,11 +1719,32 @@ module.exports.register = function(app) {
 
   app.get('/admin/orders/:id'
   , m.restrict(['admin'])
+  , function( req, res, next ){
+      var where = {
+        where: { 'orders.id': req.params.id }
+      };
+
+      var options = {
+        columns: ['delivery_services.*']
+
+      , joins: [
+          { type: 'left', target: 'restaurants',        on: { 'orders.restaurant_id': '$restaurants.id$' } }
+        , { type: 'left', target: 'regions',            on: { 'restaurants.region_id': '$regions.id$' } }
+        , { type: 'left', target: 'delivery_services',  on: { 'regions.id': '$delivery_services.region_id$' } }
+        ]
+      };
+
+      return m.db.orders.find( where, options )( req, res, next );
+    }
+    // previous query aliased result as `orders`
+    // it should be `delivery_services`
+  , m.aliasLocals({ delivery_services: 'orders' })
   , m.getOrder2({
       param:                  'id'
     , restaurant:             true
     , restaurantDbModelFind:  true
     , user:                   true
+    , userPaymentMethods:     true
     , items:                  true
     })
   , m.view( 'admin/order', {
@@ -1765,6 +1788,19 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/admin/analytics/retention'
+  , m.restrict(['admin'])
+  , m.getOrders({
+      organizationSubmitted: true
+    , restaurant: false
+    , user: false
+    , rename: 'organization_submissions'
+    })
+  , m.view( 'admin/analytics/retention', {
+      layout: 'admin/layout2'
+    })
+  );
+
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
   , m.s3({
@@ -1782,10 +1818,25 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.restaurant({ param: 'restaurant_id' })
   , m.queryOptions({
-      many: [ { table: 'payment_summary_items', alias: 'items' }]
+      many: [ { table:  'payment_summary_items'
+              , alias:  'items'
+              , one:    [ { table: 'orders'
+                          , alias: 'order'
+                          , one:  [ { table: 'delivery_services'
+                                    , alias: 'delivery_service'
+                                    }
+                                  , { table: 'restaurants'
+                                    , alias: 'restaurant'
+                                    }
+                                  ]
+                          }
+                        ]
+              }
+            ]
     , one:  [ { table: 'restaurants', alias: 'restaurant'
-              , one: [{ table: 'restaurant_plans', alias: 'plan' }]
-              }]
+              , one: [{ table: 'restaurant_plans', alias: 'plan' }, { table: 'regions', alias: 'region' }]
+              }
+            ]
     })
   , m.view( 'invoice/payment-summary', db.payment_summaries, {
       layout: 'invoice/invoice-layout'
@@ -1935,7 +1986,7 @@ module.exports.register = function(app) {
       venter.emit(
         'payment-summary:change'
       , res.locals.payment_summary.id
-      , req.param('restaurant_id')
+      , req.params.restaurant_id
       );
 
       next();
@@ -1970,6 +2021,19 @@ module.exports.register = function(app) {
   , m.pagination()
   , controllers.paymentSummaries.applyRestaurantId()
   , m.param('payment_summary_id')
+  , m.queryOptions({
+      one:  [ { table: 'orders'
+              , alias: 'order'
+              , one:  [ { table: 'delivery_services'
+                        , alias: 'delivery_service'
+                        }
+                      , { table: 'restaurants'
+                        , alias: 'restaurant'
+                        }
+                      ]
+              }
+            ]
+    })
   , m.find( db.payment_summary_items )
   );
 
@@ -2040,14 +2104,19 @@ module.exports.register = function(app) {
   , m.remove( db.restaurant_photos )
   );
 
+  app.post('/api/restaurants/:restaurant_id/notes'
+  , m.restrict( ['admin'] )
+  , m.insert( db.restaurant_notes )
+  );
+
   app.get('/api/orders'
   , m.restrict(['admin'])
   , m.pagination()
   , m.param('status')
   , function( req, res, next ){
-      res.locals.status = req.param('status');
-      if ( req.param('status') == 'accepted' ){
-        req.queryOptions.statusDateSort = { status: req.param('status') };
+      res.locals.status = req.params.status;
+      if ( req.params.status == 'accepted' ){
+        req.queryOptions.statusDateSort = { status: req.params.status };
       }
       return next();
     }
@@ -2071,6 +2140,7 @@ module.exports.register = function(app) {
       var query = req.query.q;
       if ( !query ) return next();
       req.queryObj.search_vector = { $partialMatches: query };
+      req.queryObj.status = { $in: [ 'accepted', 'submitted', 'denied' ] };
       next();
     }
   , m.sort('-id')
@@ -2130,7 +2200,7 @@ module.exports.register = function(app) {
         return next();
       }
 
-      venter.emit( 'order:change', req.param('id') );
+      venter.emit( 'order:change', req.params.id );
 
       next();
     })
@@ -2154,6 +2224,21 @@ module.exports.register = function(app) {
   , m.remove( db.orders )
   );
 
+  app.get('/api/orders/:id/delivery-fee'
+  , m.getOrder2({
+      param:              'id'
+    , items:              true
+    , user:               true
+    , userAddresses:      true
+    , userPaymentMethods: true
+    , restaurant:         true
+    , location:           true
+    , deliveryService:    true
+    })
+  , controllers.orders.auth
+  , controllers.orders.getDeliveryFee
+  );
+
   app.get('/api/orders/:oid/items'
   , m.getOrder2({
       param:              'oid'
@@ -2171,7 +2256,9 @@ module.exports.register = function(app) {
   );
 
   app.post('/api/orders/:order_id/generate_edit_token'
-  , m.restrict(['client', 'admin'])
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
   , controllers.orders.generateEditToken
   );
 
@@ -2360,7 +2447,7 @@ module.exports.register = function(app) {
   , m.insert( db.user_invoice_orders )
   );
 
-  app.del('/api/invoices/:user_invoice_id/orders/:order_id'
+  app.delete('/api/invoices/:user_invoice_id/orders/:order_id'
   , m.restrict(['admin'])
   , m.param('user_invoice_id')
   , m.param('order_id')

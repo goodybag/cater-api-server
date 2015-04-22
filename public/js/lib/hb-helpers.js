@@ -483,11 +483,8 @@ define(function(require, exports, module) {
     },
 
     contains: function(arr, element, options){
-      if(utils.contains(arr, element)){
-        return options.fn(this);
-      } else {
-        return options.inverse(this);
-      }
+      if ( typeof options.fn !== 'function' ) return utils.contains(arr, element);
+      return options[utils.contains(arr, element) ? 'fn' : 'inverse'](this);
     },
 
     factorToPercent: function( factor, precision, options ){
@@ -497,6 +494,8 @@ define(function(require, exports, module) {
 
       return parseFloat( ( factor * 100 ).toFixed( precision ) );
     },
+
+    pluck: utils.pluck,
 
     percentToFactor: function( percent, precision, options ){
       if ( typeof precision === 'object' || !precision ){
@@ -643,7 +642,7 @@ define(function(require, exports, module) {
     replace: function( str, a, b ){
       return str.replace( a, b );
     },
-    
+
     without: function( arr ){
       var rest = Array.prototype.slice.call( arguments, 1 );
       return utils.without.apply( utils, arr, rest );

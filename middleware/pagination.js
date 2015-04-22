@@ -14,12 +14,15 @@ module.exports = function( options ){
   });
 
   return function( req, res, next ){
-    var page = ( req.param( options.pageParam ) - 1 ) || 0;
+    var page = ( req.query[options.pageParam] - 1 ) || 0;
 
-    req.queryOptions.limit = options.allowLimit && req.param('limit')
-      ? req.param('limit') : options.limit;
+    req.queryOptions.limit = options.allowLimit && req.query.limit
+      ? req.query.limit : options.limit;
 
-    req.queryOptions.offset = page * req.queryOptions.limit;
+    if ( req.queryOptions.limit !== 'all' ){
+      req.queryOptions.limit = +req.queryOptions.limit;
+      req.queryOptions.offset = page * req.queryOptions.limit;
+    }
 
     res.locals[ options.pageParam ] = page + 1;
 

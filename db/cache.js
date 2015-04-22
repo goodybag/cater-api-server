@@ -57,9 +57,10 @@ module.exports = function( db ){
         options.many.push({ table: 'restaurant_delivery_times', alias: 'delivery_times' });
         options.many.push({ table: 'restaurant_delivery_zips', alias: 'delivery_zips' });
         options.many.push({ table: 'restaurant_lead_times', alias: 'lead_times' });
+        options.many.push({ table: 'restaurant_tags', alias: 'tags' });
 
-        // options.pluck.push({ table: 'restaurant_meal_styles', alias: 'meal_styles' });
-        // options.pluck.push({ table: 'restaurant_meal_types', alias: 'meal_types' });
+        options.pluck.push({ table: 'restaurant_meal_styles', alias: 'meal_styles', column: 'meal_style' });
+        options.pluck.push({ table: 'restaurant_meal_types', alias: 'meal_types', column: 'meal_type' });
 
         db.restaurants.find( $query, options, function( error, results ){
           if ( error ){

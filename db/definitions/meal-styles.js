@@ -17,7 +17,7 @@ define(function(require) {
   definition.name = 'meal_styles';
 
   definition.schema = {
-    name: {
+    meal_style: {
       type: types.text
     , pk: true
     }
@@ -25,6 +25,10 @@ define(function(require) {
       type: types.serial
     , nullable: false
     , unique: true
+    }
+  , restaurant_id: {
+      type: types.int
+    , references: {table: 'restaurants', column: 'id'}
     }
   , created_at: {
       type: types.timestamptz

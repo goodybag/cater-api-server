@@ -49,11 +49,41 @@ module.exports.list = function(req, res) {
     }
   };
 
+  var filters = {
+    'cuisines': function( restaurant ){
+      return utils.intersection(
+        restaurant.cuisine, req.query.cuisines
+      ).length > 0;
+    }
+
+  , 'diets': function( restaurant ){
+      return utils.intersection(
+        restaurant.tags, req.query.diets
+      ).length > 0;
+    }
+
+  , 'mealTypes': function( restaurant ){
+      return utils.intersection(
+        restaurant.meal_types, req.query.mealTypes
+      ).length > 0;
+    }
+  };
+
   var sort = sorts[ req.query.sort ] || sorts.popular;
 
   var results = db.cache.restaurants.byRegion( req.user.attributes.region_id );
 
+  if ( results.error ){
+    return res.error( results.error );
+  }
+
   var orderParams = utils.pick( req.query, 'zip', 'datetime', 'guests' );
+
+  Object.keys( filters ).forEach( function( filter ){
+    if ( !(filter in req.query) ) return;
+
+    results = results.filter( filters[ filter ] );
+  });
 
   if ( Object.keys( orderParams ).length > 0 ){
     results = results.filter( function( result ){

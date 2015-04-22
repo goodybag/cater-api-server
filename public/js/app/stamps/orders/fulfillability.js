@@ -26,17 +26,8 @@ define( function( require, exports, module ){
       // Since _all_ of these strategies are required to be fulfillable
       // put the computationally least complex strategies first
       fulfillmentRequirements: [
-        // Simply check if the zip is supported by delivery
-        function strategyZip(){
-          if ( !this.zip ) return true;
-
-          var zips = this.getAllSupportedDeliveryZips();
-
-          return !!_.findWhere( zips, { zip: this.zip } );
-        }
-
         // Is the restaurant even open on that day?
-      , function strategyOpenDay(){
+        function strategyOpenDay(){
           if ( !this.datetime ) return true;
 
           var hours = this.restaurant.hours.concat( this.restaurant.delivery_hours );
@@ -65,15 +56,32 @@ define( function( require, exports, module ){
             }.bind( this ));
         }
 
+        // Simply check if the zip is supported by delivery
+      , function strategyZip(){
+          if ( !this.zip ) return true;
+
+          var zips = this.getAllSupportedDeliveryZips();
+
+          return !!_.findWhere( zips, { zip: this.zip } );
+        }
+
         // Is there a lead time that satisfies?
-      , function strategyDate(){
-          return true;
-
-          if ( this.restaurant.lead_times.length === 0 ){
-            return true;
-          }
-
+      , function strategyLeadTimes(){
           if ( !this.datetime ) return true;
+
+          var minutes = moment.duration(
+            Math.abs( new Date() - this.datetime )
+          ).asMinutes();
+
+          console.log('NUM MINUTES', minutes);
+
+          return this.getAllSupportedLeadTimes()
+            .some( function( time ){
+              return [
+                minutes >= time.lead_time
+              , !this.guests ? true : this.guests <= time.max_guests
+              ].every( _.identity );
+            }.bind( this ));
         }
       ]
 
@@ -97,6 +105,15 @@ define( function( require, exports, module ){
         }
 
         return zips;
+      }
+
+    , getAllSupportedLeadTimes: function(){
+        var supported = this.restaurant.supported_order_types;
+
+        return _.flatten(
+          supported.indexOf('delivery') > -1 ? this.restaurant.lead_times : []
+        , supported.indexOf('courier') > -1 ? this.restaurant.pickup_lead_times : []
+        );
       }
 
     , getDeliveryServiceZips: function(){

@@ -1,8 +1,4 @@
 <title>
-  {{~#if restaurant.name}}
-    [{{truncate restaurant.name 10}}]
-  {{else}}
-    [{{or order.id 'Admin'}}]
-  {{~/if}}
-  Goodybag{{{block "html-title"}}}
+  {{{or (block "html-title") '[Admin]'}}}
+  Goodybag
 </title>

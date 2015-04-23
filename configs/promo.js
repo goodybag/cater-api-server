@@ -16,7 +16,7 @@ var promo = {
   }
 , om: {
     email: 'om@goodybag.com'
-  , promo_code: [ 'APRILSHOWERS', 'MAYFLOWERS' ]
+  , promo_code: [ 'bv250' ]
   }
 };
 

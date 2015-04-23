@@ -1,11 +1,14 @@
 <section>
   <div class="container">
-    <div class="col-7">
+    <div class="half">
       {{> restaurant_search_name }}
       {{> restaurant_list_sort }}
       </div>
-    <div class="col-8">
-      {{> restaurant_filter_cuisines }}
+    <div class="half">
+      {{!-- abolish whitespace for inline columns --}}
+      {{> restaurant_filter_cuisines ~}}
+      {{~> restaurant_filter_diets ~}}
+      {{~> restaurant_filter_meal_types ~}}
     </div>
   </div>
 </section>

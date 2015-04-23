@@ -1,0 +1,29 @@
+<div class="third filter-diets">
+  <h1>Special Diets</h1>
+  <div>
+    <label>
+      <input type="checkbox" value="glutenFree" {{#contains ../orderParams.cuisines "glutenFree"}}checked="checked"{{/contains}}/> Gluten-Free
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" value="dairyFree" {{#contains ../orderParams.cuisines "dairyFree"}}checked="checked"{{/contains}}/> Dairy-Free
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" value="Vegan" {{#contains ../orderParams.cuisines "vegan"}}checked="checked"{{/contains}}/> Vegan
+    </label>
+  </div>
+  <span class="popover-wrapper">
+    <a href="#" data-role="popover" data-target="diets-popover">more special diets</a>
+    <div class="popover-modal diets-popover">
+      <div class="popover-header">
+        Cuisines<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+      </div>
+      <div class="popover-body">
+        <div class="popover-item">ABC jdpsadja podksapodk kjdapojdspaj pjdosaj pdsoajWI 0i49</div>
+      </div>
+    </div>
+  </span>
+</div>

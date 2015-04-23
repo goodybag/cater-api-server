@@ -11,6 +11,17 @@
     #grid .container(@restaurant-container-width);
   }
 
+  .half { #grid > .column-percent( 50%, 0 ); }
+
+  .third { #grid > .column-percent( 33.33%, 0 ); }
+
+  .third > h1 {
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: @bold;
+    margin: 0 0 10px;
+  }
+
   @media (max-width: @breakpoint-tablet) {
     .inline-list-bulleted li {
       display: block;
@@ -148,11 +159,6 @@
     background: #fff;
   }
 
-  .search-advanced-filter-col > h1 {
-    text-transform: uppercase;
-    font-size: 16px;
-    margin: 15px 0;
-  }
   .search-advanced-filter-col:first-of-type > h1 { margin: 0 0 15px; }
 
   @media (min-width: @breakpoint-tablet) {
@@ -161,12 +167,6 @@
       margin: 0 50px;
       &:first-of-type { margin-left: 0; }
       &:last-of-type { margin-right: 0; }
-    }
-
-    .filter-cuisines > label {
-      float: left;
-      width: 130px;
-      &:nth-of-type(4n+1) { clear: left; }
     }
 
     .search-advanced-filter-col > h1 {
@@ -207,7 +207,7 @@
   }
 
   .popover-modal {
-    transform-origin: default;
+    transform-origin: 50px 110px;
     right: auto;
     left: -21px;
     top: -106px;
@@ -225,6 +225,7 @@
     margin: 0 0 10px;
     font-size: 14px;
     font-weight: @bold;
+    text-transform: uppercase;
   }
 
   .popover-body label {

@@ -1,0 +1,29 @@
+<div class="third filter-diets">
+  <h1>Meal Type</h1>
+  <div>
+    <label>
+      <input type="checkbox" value="glutenFree" {{#contains ../orderParams.cuisines "glutenFree"}}checked="checked"{{/contains}}/> Breakfast
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" value="dairyFree" {{#contains ../orderParams.cuisines "dairyFree"}}checked="checked"{{/contains}}/> Lunch
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" value="Vegan" {{#contains ../orderParams.cuisines "vegan"}}checked="checked"{{/contains}}/> Dinner
+    </label>
+  </div>
+  <span class="popover-wrapper">
+    <a href="#" data-role="popover" data-target="meal-types-popover">more meal types</a>
+    <div class="popover-modal meal-types-popover">
+      <div class="popover-header">
+        Cuisines<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+      </div>
+      <div class="popover-body">
+        <div class="popover-item">ABC jdpsadja podksapodk kjdapojdspaj pjdosaj pdsoajWI 0i49</div>
+      </div>
+    </div>
+  </span>
+</div>

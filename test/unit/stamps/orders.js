@@ -137,7 +137,7 @@ describe('Orders Stamps', function(){
     }).length);
   });
 
-  describe.only('Fulfillability', function() {
+  describe('Fulfillability', function() {
     it( '.isFulfillable() empty', function(){
       var result = fulfillability().isFulfillable();
       assert( result );

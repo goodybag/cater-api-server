@@ -51,7 +51,7 @@ The following properties on the order are optional params that affect the fulfil
 * time
 * guests
 
-##### `.fulfillabilityRequiremets` Function[]
+##### `.fulfillabilityRequirements` Function[]
 
 #### Methods
 

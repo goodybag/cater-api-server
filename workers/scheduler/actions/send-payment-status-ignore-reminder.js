@@ -16,7 +16,7 @@ module.exports.fn = function(job, done) {
 
     if (order.payment_status === 'ignore') {
       logger.info('Sending status ignored reminder');
-      return notifier.send( 'gb-payment-status-ignore', job.data.order_id, job.data, done );
+      return notifier.send( 'gb-payment-status-ignore', order, job.data, done );
     }
     return done();
   });

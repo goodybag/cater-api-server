@@ -2200,7 +2200,10 @@ module.exports.register = function(app) {
         return next();
       }
 
-      venter.emit( 'order:change', req.params.id );
+      var id = req.params.id || req.query.id || req.body.id;
+      var payment_status = req.params.payment_status || req.query.payment_status || req.body.payment_status;
+      venter.emit( 'order:change', id );
+      venter.emit('order:paymentStatus:change', payment_status, id);
 
       next();
     })

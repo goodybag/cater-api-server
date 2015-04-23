@@ -136,13 +136,9 @@ define(function(require){
       , data: JSON.stringify( props )
       , success: function( order ){
           if ( !silent ) return callback( null, order );
-          utils.async.waterfall([
-            function (next) {
-              page.buildPdf( order.id, 'receipt', next);
-            }
-          , function (res, next) {
-              page.buildPdf( order.id, 'manifest', next);
-            }
+          utils.async.parallel([
+            page.buildPdf.bind(page, order.id, 'receipt')
+          , page.buildPdf.bind(page, order.id, 'manifest')
           ], callback);
         }
       , error: callback

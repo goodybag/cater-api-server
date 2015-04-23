@@ -143,7 +143,7 @@ describe('Orders Stamps', function(){
       assert( result );
     });
 
-    it( '.isFulfillable()', function(){
+    it( '.isFulfillable() test zip is fulfillable', function(){
       var result = fulfillability({
         zip: '78723'
       , restaurant: restaurants()
@@ -154,7 +154,7 @@ describe('Orders Stamps', function(){
       assert( result );
     });
 
-    it( '.isFulfillable()', function(){
+    it( '.isFulfillable() test zip is not fulfillable', function(){
       var result = fulfillability({
         zip: '78724'
       , restaurant: restaurants()
@@ -165,7 +165,7 @@ describe('Orders Stamps', function(){
       assert( !result );
     });
 
-    it( '.isFulfillable()', function(){
+    it( '.isFulfillable() test day is fulfillable', function(){
       var result = fulfillability({
         date: '2015-04-22'
       , restaurant: restaurants()
@@ -176,7 +176,7 @@ describe('Orders Stamps', function(){
       assert( result );
     });
 
-    it( '.isFulfillable()', function(){
+    it( '.isFulfillable() test day is not fulfillable', function(){
       var result = fulfillability({
         date: '2015-04-22'
       , restaurant: restaurants()
@@ -187,16 +187,18 @@ describe('Orders Stamps', function(){
       assert( !result );
     });
 
-    it.only( '.isFulfillable()', function(){
+    it( '.isFulfillable() test lead times is fulfillable', function(){
       // Order in 24 hours
       var date = moment().add('days', 1);
 
       var result = fulfillability({
-        date: date.format('YYYY-MM-DD hh:mm:ss')
+        date: date.format('YYYY-MM-DD')
+      , time: date.format('HH:mm:ss')
       , guests: 20
       , restaurant: restaurants()
                       .openTwentyFourHour()
                       .supports('delivery', 'courier')
+                      .leadTime( 10, 15 * 60 )
                       // Restaurant needs 23 hours
                       .leadTime( 20, 23 * 60 )
       }).isFulfillable();
@@ -204,16 +206,18 @@ describe('Orders Stamps', function(){
       assert( result );
     });
 
-    it( '.isFulfillable()', function(){
+    it( '.isFulfillable() test lead times is not fulfillable', function(){
       // Order in 24 hours
       var date = moment().add('days', 1);
 
       var result = fulfillability({
-        date: date.format('YYYY-MM-DD hh:mm:ss')
+        date: date.format('YYYY-MM-DD')
+      , time: date.format('HH:mm:ss')
       , guests: 20
       , restaurant: restaurants()
                       .openTwentyFourHour()
                       .supports('delivery', 'courier')
+                      .leadTime( 10, 15 * 60 )
                       // Restaurant needs 25 hours
                       .leadTime( 20, 25 * 60 )
       }).isFulfillable();

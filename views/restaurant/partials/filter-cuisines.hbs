@@ -1,11 +1,89 @@
-<span class="popover-wrapper right">
-  <a href="#" data-role="popover" data-target="cuisines-popover">more cuisines</a>
-  <div class="popover-modal cuisines-popover">
-    <div class="popover-header">
-      Cuisines<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
-    </div>
-    <div class="popover-body">
-      <div class="popover-item">ABC jdpsadja podksapodk kjdapojdspaj pjdosaj pdsoajWI 0i49</div>
-    </div>
+<div class="search-advanced-filter-col filter-cuisines">
+  <h1>Cuisine</h1>
+  <div>
+    <label>
+      <input type="checkbox" value="American" {{#contains ../orderParams.cuisines "American"}}checked="checked"{{/contains}}/> American
+    </label>
   </div>
-</span>
+  <div>
+    <label>
+      <input type="checkbox" value="BBQ" {{#contains ../orderParams.cuisines "BBQ"}}checked="checked"{{/contains}}/> BBQ
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" value="Pizza" {{#contains ../orderParams.cuisines "Pizza"}}checked="checked"{{/contains}}/> Pizza
+    </label>
+  </div>
+  <span class="popover-wrapper right">
+    <a href="#" data-role="popover" data-target="cuisines-popover">more cuisines</a>
+    <div class="popover-modal cuisines-popover">
+      <div class="popover-header">
+        Cuisines<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+      </div>
+      <div class="popover-body">
+        <div class="popover-item">ABC jdpsadja podksapodk kjdapojdspaj pjdosaj pdsoajWI 0i49</div>
+      </div>
+    </div>
+  </span>
+</div>
+
+<div class="search-advanced-filter-col filter-diets">
+  <h1>Special Diets</h1>
+  <div>
+    <label>
+      <input type="checkbox" value="glutenFree" {{#contains ../orderParams.cuisines "glutenFree"}}checked="checked"{{/contains}}/> Gluten-Free
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" value="dairyFree" {{#contains ../orderParams.cuisines "dairyFree"}}checked="checked"{{/contains}}/> Dairy-Free
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" value="Vegan" {{#contains ../orderParams.cuisines "vegan"}}checked="checked"{{/contains}}/> Vegan
+    </label>
+  </div>
+  <span class="popover-wrapper right">
+    <a href="#" data-role="popover" data-target="diets-popover">more special diets</a>
+    <div class="popover-modal diets-popover">
+      <div class="popover-header">
+        Cuisines<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+      </div>
+      <div class="popover-body">
+        <div class="popover-item">ABC jdpsadja podksapodk kjdapojdspaj pjdosaj pdsoajWI 0i49</div>
+      </div>
+    </div>
+  </span>
+</div>
+
+<div class="search-advanced-filter-col filter-diets">
+  <h1>Meal Type</h1>
+  <div>
+    <label>
+      <input type="checkbox" value="glutenFree" {{#contains ../orderParams.cuisines "glutenFree"}}checked="checked"{{/contains}}/> Breakfast
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" value="dairyFree" {{#contains ../orderParams.cuisines "dairyFree"}}checked="checked"{{/contains}}/> Lunch
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" value="Vegan" {{#contains ../orderParams.cuisines "vegan"}}checked="checked"{{/contains}}/> Dinner
+    </label>
+  </div>
+  <span class="popover-wrapper right">
+    <a href="#" data-role="popover" data-target="meal-types-popover">more meal types</a>
+    <div class="popover-modal meal-types-popover">
+      <div class="popover-header">
+        Cuisines<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+      </div>
+      <div class="popover-body">
+        <div class="popover-item">ABC jdpsadja podksapodk kjdapojdspaj pjdosaj pdsoajWI 0i49</div>
+      </div>
+    </div>
+  </span>
+</div>

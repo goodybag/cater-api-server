@@ -111,10 +111,11 @@ define( function( require, exports, module ){
     , getAllSupportedLeadTimes: function(){
         var supported = this.restaurant.supported_order_types;
 
-        return _.flatten(
-          supported.indexOf('delivery') > -1 ? this.restaurant.lead_times : []
-        , supported.indexOf('courier') > -1 ? this.restaurant.pickup_lead_times : []
-        );
+        var r = this.restaurant;
+
+        return []
+          .concat( supported.indexOf('delivery') > -1 ? r.lead_times : [] )
+          .concat( supported.indexOf('courier') > -1 ? r.pickup_lead_times : [] );
       }
 
     , getDeliveryServiceZips: function(){

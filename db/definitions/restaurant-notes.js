@@ -30,12 +30,12 @@ define(function(require) {
   , restaurant_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'restaurants', column: 'id', onDelete: 'cascade'}
+    , references: { table: 'restaurants', column: 'id', onDelete: 'cascade' }
     }
   , user_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'users', column: 'id', onDelete: 'cascade'}
+    , references: { table: 'users', column: 'id', onDelete: 'cascade' }
     }
   , note: {
       type: types.text

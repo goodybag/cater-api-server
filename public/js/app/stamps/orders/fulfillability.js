@@ -38,6 +38,7 @@ define( function( require, exports, module ){
 
         // Restaurant is open on that day, but what about time?
       , function strategyOpenHours(){
+          if ( !this.datetime ) return true;
           if ( !this.time ) return true;
 
           var day = this.datetime.day();

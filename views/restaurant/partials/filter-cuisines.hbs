@@ -15,14 +15,15 @@
       <input type="checkbox" value="Pizza" {{#contains ../orderParams.cuisines "Pizza"}}checked="checked"{{/contains}}/> Pizza
     </label>
   </div>
-  <span class="popover-wrapper right">
+  <span class="popover-wrapper">
     <a href="#" data-role="popover" data-target="cuisines-popover">more cuisines</a>
     <div class="popover-modal cuisines-popover">
-      <div class="popover-header">
-        Cuisines<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
-      </div>
       <div class="popover-body">
-        <div class="popover-item">ABC jdpsadja podksapodk kjdapojdspaj pjdosaj pdsoajWI 0i49</div>
+        <h1>Cuisine</strong></h1>
+        {{#each filterCuisines~}}
+        <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}/> {{this}}</label>
+        {{~/each}}
+        <button class="btn btn-default">Save and close</button>
       </div>
     </div>
   </span>

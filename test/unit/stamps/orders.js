@@ -224,5 +224,24 @@ describe('Orders Stamps', function(){
 
       assert( !result );
     });
+
+    it( '.isFulfillable() test lead times is not fulfillable because date is in the past', function(){
+      // Order in -24 hours
+      var date = moment().add('days', -1);
+
+      var result = fulfillability({
+        date: date.format('YYYY-MM-DD')
+      , time: date.format('HH:mm:ss')
+      , guests: 20
+      , restaurant: restaurants()
+                      .openTwentyFourHour()
+                      .supports('delivery', 'courier')
+                      .leadTime( 10, 15 * 60 )
+                      // Restaurant needs 23 hours
+                      .leadTime( 20, 23 * 60 )
+      }).isFulfillable();
+
+      assert( !result );
+    });
   });
 });

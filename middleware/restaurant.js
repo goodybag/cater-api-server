@@ -18,7 +18,12 @@ module.exports = function( options ){
       if ( !restaurant ) return res.send( 404 );
 
       if ( options.withMenuItems ){
-        restaurant.getItems( function( error, items ){
+        var query = {
+          where: {
+            is_hidden: { $equals: { $or: [true, false] } }
+          }
+        };
+        restaurant.getItems(query, function( error, items ){
           if ( error ) return res.send( 500 );
           res.locals.restaurant = restaurant.toJSON();
           next();

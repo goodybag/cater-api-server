@@ -24,11 +24,18 @@ define( function( require, exports, module ){
     return curr + this.order.restaurant_total;
   };
 
+  var restaurantPlanTierFee = function( curr ){
+    return curr - ( curr * this.tier.fee );
+  };
+
+  var restaurantSalesTax = function( curr ){
+    return curr - (this.order.restaurant_sales_tax || 0);
+  };
+
   var payoutPlan = new utils.Plan.Reduce(0)
     .use( restaurantTotal )
-    .use( function( curr ){
-      return curr - ( curr * this.tier.fee );
-    })
+    .use( restaurantPlanTierFee )
+    .use( restaurantSalesTax )
     .use( Math.round );
 
   var gbFeePlan = new utils.Plan.Reduce(0)

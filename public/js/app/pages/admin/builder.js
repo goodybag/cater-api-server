@@ -16,4 +16,5 @@ define([
 , 'app/models/hours'
 , 'app/views/edit-hours-view'
 , 'jquery-ui'
+, 'api'
 ], function(){});

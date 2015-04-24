@@ -38,8 +38,11 @@ define(function(require){
     }
   });
 
-  items.fetch();
-  orders.fetch({ data: { limit: 'all', status: 'accepted' } });
+  orders
+    .fetch({ data: { limit: 'all', status: 'accepted' } })
+    .then( function(){
+      items.fetch();
+    });
 
   return Object.create({
     init: function(){

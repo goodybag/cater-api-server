@@ -79,6 +79,17 @@ define(function(require){
           page.state.set( 'restaurant_location_id', +$(this).val() );
         });
 
+        $('[name="payment_status"]').change(function (e) {
+          var status = e.target.value || null;
+          if (status === null) alert('Changing payment status to unprocessed will attempt to recharge the credit card!');
+          page.updateOrder({ payment_status: status }, page.flash);
+        });
+
+        $('[name="payment_method_id"]').change( function( e ){
+          var pmid = isNaN(e.target.value) ? null : e.target.value;
+          page.updateOrder({ payment_method_id: pmid }, page.flash);
+        });
+
         $('[role="save"]').click( function( e ){
           e.preventDefault();
 
@@ -183,6 +194,13 @@ define(function(require){
       );
     }
 
+  , flash: function(error) {
+      if (error) {
+        return page.flashError( error );
+      }
+      return page.flashSuccess();
+    }
+
   , flashSuccess: function(){
       flash.info([
         "It's set!<br>"
@@ -209,6 +227,10 @@ define(function(require){
       var $tds = page.notifications.$el.find( '#notification-' + cid + ' > td' );
       $tds.addClass('highlight');
       $tds.eq(0).one( 'animationend', $tds.removeClass.bind( $tds, 'highlight') );
+      // scroll to the middle of screen
+      $('html, body').animate({
+        scrollTop: $tds.offset().top - Math.floor(window.innerHeight/2)
+      }, 200);
     }
 
   , onStateChange: function( state ){

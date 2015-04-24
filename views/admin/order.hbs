@@ -54,47 +54,92 @@
   <div>
     <section class="panel-component" id="order-user">
       <h1 class="component-title">User</h1>
-      <dl class="user-profile dl-horizontal">
-        <dt>Name</dt>
-        <dd>
-          <a href="/admin/users/{{order.user.id}}">{{#if order.user.name}} {{order.user.name}} {{else}} No name provided {{/if}}</a>
-        </dd>
-        <dt>Email</dt>
-        <dd>{{order.user.email}}</dd>
-        <dt>Organization</dt>
-        <dd>{{order.user.organization}}</dd>
-        <dt>Contact</dt>
-        <dd>{{phoneNumber order.phone}}</dd>
+      <dl class="user-profile definition-row-list">
+        <div class="row">
+          <dt>Name</dt>
+          <dd>
+            <a href="/admin/users/{{order.user.id}}">{{#if order.user.name}} {{order.user.name}} {{else}} No name provided {{/if}}</a>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>Email</dt>
+          <dd>{{order.user.email}}</dd>
+        </div>
+        <div class="row">
+          <dt>Organization</dt>
+          <dd>{{order.user.organization}}</dd>
+        </div>
+        <div class="row">
+          <dt>Contact</dt>
+          <dd>{{phoneNumber order.phone}}</dd>
+        </div>
         {{#if order.secondary_contact_phone }}
-        <dt>Secondary Contact</dt>
-        <dd>{{phoneNumber order.secondary_contact_phone}}</dd>
+        <div class="row">
+          <dt>Secondary Contact</dt>
+          <dd>{{phoneNumber order.secondary_contact_phone}}</dd>
+        </div>
         {{/if}}
       </dl>
     </section>
 
     <section class="panel-component" id="order-restaurant">
       <h1 class="component-title">Details</h1>
-      <dl class="user-profile dl-horizontal">
-        <dt>Total</dt>
-        <dd>${{dollars order.total}}</dd>
-        <dt>Restaurant</dt>
-        <dd>
-          <a href="/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a>
-        </dd>
-        <dt>Review Link</dt>
-        <dd><a href="{{config.baseUrl}}/orders/{{order.id}}?review_token={{order.review_token}}">/orders/{{order.id}}?review_token={{order.review_token}}</a></dd>
-        <dt>Delivery Time</dt>
-        <dd>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
+      <dl class="user-profile definition-row-list">
+        <div class="row">
+          <dt>Total</dt>
+          <dd>${{dollars order.total}}</dd>
+        </div>
+        <div class="row">
+          <dt>Restaurant</dt>
+          <dd>
+            <a href="/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>Review Link</dt>
+          <dd><a href="{{config.baseUrl}}/orders/{{order.id}}?review_token={{order.review_token}}">/orders/{{order.id}}?review_token={{order.review_token}}</a></dd>
+        </div>
+        <div class="row">
+          <dt>Delivery Time</dt>
+          <dd>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
+        </div>
 
         {{#is order.type 'pickup' 'courier'}}
-          <dt>Pickup Time</dt>
-          <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
+          <div class="row">
+            <dt>Pickup Time</dt>
+            <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
+          </div>
         {{/is}}
-        <dt>Payment Status</dt>
-        <dd>
-          <span class="status-circle {{order.payment_status}}"></span>
-          <span>{{or (capitalize order.payment_status) 'Pending'}}</span>
-        </dd>
+        <div class="row">
+          <dt>Payment Status</dt>
+          <dd>
+            <select name="payment_status">
+              <option value="" {{#if (not order.payment_status) }}selected="true"{{/if}}>Unprocessed</option>
+              <option value="pending" {{#eq order.payment_status 'pending'}}selected="true"{{/eq}}>Queued for Processing</option>
+              <option value="paid" {{#eq order.payment_status 'paid'}}selected="true"{{/eq}}>Paid</option>
+              <option value="invoiced" {{#eq order.payment_status 'invoiced'}}selected="true"{{/eq}}>Invoiced</option>
+              <option value="ignore" {{#eq order.payment_status 'ignore'}}selected="true"{{/eq}}>Ignore</option>
+              <option value="error" {{#eq order.payment_status 'error'}}selected="true"{{/eq}}>Error</option>
+            </select>
+          </dd>
+        </div>
+
+        <div class="row">
+          <dt>Payment Method</dt>
+          <dd>
+            <select name="payment_method_id">
+              <option {{#isNull ../order.payment_method_id}} selected="true"{{/isNull}}>Invoiced</option>
+              {{#notNull order.payment_method_id}}
+              {{#unless (contains (pluck ../order.user.payment_methods "id") ../order.payment_method_id) }}
+              <option value="{{../../order.payment_method_id}}" selected="true">Removed Payment Method</option>
+              {{/unless}}
+              {{/notNull}}
+              {{#each order.user.payment_methods}}
+              <option value="{{id}}" {{#eq ../../order.payment_method_id id~}} selected="true"{{~/eq}}>{{capitalize data.brand}} - {{name}} **** **** **** {{data.last_four}} - Exp {{data.expiration_month}}/{{data.expiration_year}}</option>
+              {{/each}}
+            </select>
+          </dd>
+        </div>
       </dl>
 
       {{#eq order.type 'courier'}}

@@ -8,11 +8,11 @@ try {
 var promo = {
   adam: {
     email: 'adam.peacock@goodybag.com'
-  , promo_code: ['G315B', 'GBSEA15']
+  , promo_code: ['G315B', 'GBSEA15', 'GB315']
   }
 , jacob: {
     email: 'jacobparker@goodybag.com'
-  , promo_code: ['Goodybag315', 'GB315', 'GB415', 'GBAUSTIN15']
+  , promo_code: ['Goodybag315', 'GB415', 'GBAUSTIN15', 'GBHOU15']
   }
 };
 

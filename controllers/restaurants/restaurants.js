@@ -89,7 +89,6 @@ module.exports.list = function(req, res) {
     results = utils.search( results, req.query.search, ['name'] );
   }
 
-
   if ( Object.keys( orderParams ).length > 0 ){
     var fulfillability = orderFulfillability( orderParams );
     results = results.filter( function( result ){

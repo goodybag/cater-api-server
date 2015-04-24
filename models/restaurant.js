@@ -34,7 +34,7 @@ var Restaurant = module.exports = Model.extend({
         return callback(null, null);
       var categories = utils.map(self.categories, function(cat) { return cat.toJSON().id; });
       query = utils.deepExtend({
-        where: { 'category_id': { $in: categories }, 'is_hidden': { $equals: false } },
+        where: { 'category_id': { $in: categories }, 'is_hidden': false },
         order: {order: 'asc'},
         limit: null,
         columns: ['*', '(SELECT array(SELECT tag FROM item_tags WHERE item_id = items.id ORDER BY tag ASC)) AS tags']

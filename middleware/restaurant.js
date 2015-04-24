@@ -20,7 +20,7 @@ module.exports = function( options ){
       if ( options.withMenuItems ){
         var query = {
           where: {
-            is_hidden: { $equals: { $or: [true, false] } }
+            is_hidden: { $or: [true, false] }
           }
         };
         restaurant.getItems(query, function( error, items ){

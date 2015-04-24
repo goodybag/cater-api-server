@@ -1,26 +1,22 @@
 <div class="third filter-diets">
   <h1>Special Diets</h1>
+
+  <!-- Show truncated options -->
+  {{#each (slice filterDiets 0 3)}}
   <label>
-    <input class="immediate" type="checkbox" value="glutenFree" {{#contains orderParams.diets "glutenFree"}}checked="checked"{{/contains}}/> Gluten-Free
+    <input class="immediate" type="checkbox" value="{{name}}" {{#contains ../orderParams.diets name}}checked="checked"{{/contains}}/> {{ref ../config.diets name}}
   </label>
-  <label>
-    <input class="immediate" type="checkbox" value="dairyFree" {{#contains orderParams.diets "dairyFree"}}checked="checked"{{/contains}}/> Dairy-Free
-  </label>
-  <label>
-    <input class="immediate" type="checkbox" value="vegetarian" {{#contains orderParams.diets "vegetarian"}}checked="checked"{{/contains}}/> Vegetarian
-  </label>
+  {{/each}}
+
+  <!-- Show all filter options -->
   <span class="popover-wrapper">
     <a href="#" data-role="popover" data-target="diets-popover">more special diets</a>
     <div class="popover-modal diets-popover">
       <div class="popover-body">
         <h1>Special Diets</h1>
-        {{!--  TODO read cuisines from cache--}}
-        <label><input type="checkbox" value="glutenFree" {{#contains orderParams.diets "glutenFree"}}checked="checked"{{/contains}}> Gluten-Free</label>
-        <label><input type="checkbox" value="dairyFree" {{#contains orderParams.diets "dairyFree"}}checked="checked"{{/contains}}/> Dairy-free</label>
-        <label><input type="checkbox" value="vegetarian" {{#contains orderParams.diets "vegetarian"}}checked="checked"{{/contains}}/> Vegetarian</label>
-        <label><input type="checkbox" value="vegan" {{#contains orderParams.diets "vegan"}}checked="checked"{{/contains}}/> Vegan</label>
-        <label><input type="checkbox" value="halal" {{#contains orderParams.diets "halal"}}checked="checked"{{/contains}}/> Halal</label>
-        <label><input type="checkbox" value="kosher" {{#contains orderParams.diets "kosher"}}checked="checked"{{/contains}}/> Kosher</label>
+        {{#each filterDiets~}}
+        <label><input type="checkbox" value="{{name}}" {{#contains ../orderParams.diets name}}checked="checked"{{/contains}}/> {{ref ../config.diets name}}</label>
+        {{~/each}}
         <button class="btn btn-default">Save and close</button>
       </div>
     </div>

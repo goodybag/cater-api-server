@@ -121,6 +121,7 @@ module.exports.list = function(req, res) {
       filterPrices:     utils.range(1, 5),
       filterMealTypes:  enums.getMealTypes(),
       filterMealStyles: enums.getMealStyles(),
+      filterDiets:      enums.getTags()
     };
 
     context.allRestaurants = results.length === 3

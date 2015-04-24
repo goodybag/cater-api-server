@@ -1,4 +1,4 @@
-var 
+var
   models = require('../models')
 , utils = require('../utils');
 

@@ -3,7 +3,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var utils = require('utils');
 
-  return module.exports = Backbone.View.extend({
+  module.exports = Backbone.View.extend({
     events: function() {
       return {
         'change input[type="checkbox"]': 'onFilterChange'
@@ -73,4 +73,6 @@ define(function(require, exports, module) {
       });
     }
   });
+
+  return module.exports;
 });

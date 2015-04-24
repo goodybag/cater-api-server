@@ -3,8 +3,10 @@
 module.exports = {
   glutenFree: 'Gluten-Free'
 , dairyFree: 'Dairy-Free'
-, vegetarian: 'vegetarian'
+, vegetarian: 'Vegetarian'
 , vegan: 'Vegan'
 , halal: 'Halal'
 , kosher: 'Kosher'
+, spicy: 'Spicy'
+, nuts: 'Contains Nuts'
 };

@@ -46,7 +46,7 @@ module.exports.register = function(app) {
 
     app.post('/request-to-be-a-caterer'
     , m.after( function( req, res, next ){
-        venter.emit( 'restaurant_request:created', req.body );
+        venter.emit( 'restaurant_equest:created', req.body );
         next();
       })
     , m.view( 'landing/restaurant', db.restaurant_requests, {
@@ -1796,6 +1796,7 @@ module.exports.register = function(app) {
     , user: false
     , rename: 'organization_submissions'
     })
+  , m.orderAnalytics.retention()
   , m.view( 'admin/analytics/retention', {
       layout: 'admin/layout2'
     })

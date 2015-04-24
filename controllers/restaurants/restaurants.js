@@ -11,6 +11,7 @@ var
 , _ = require('lodash')
 , helpers = require('../../public/js/lib/hb-helpers')
 , orderFulfillability = require('stamps/orders/fulfillability')
+, restaurantsFilter = require('../../public/js/lib/restaurants-filter')
 ;
 
 cuisines = cuisines.sort();
@@ -22,112 +23,18 @@ utils.findWhere(states, {abbr: 'TX'}).default = true;
 
 module.exports.list = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-List');
-
-  var sorts = {
-    'popular': function( a, b ){
-      if ( a.popularity < b.popularity ) return 1;
-      if ( a.popularity > b.popularity ) return -1;
-      return 0;
-    }
-
-  , 'name': function( a, b ){
-      if ( a.name < b.name ) return -1;
-      if ( a.name > b.name ) return 1;
-      return 0;
-    }
-
-  , 'price': function( a, b ){
-      if ( a.price < b.price ) return -1;
-      if ( a.price > b.price ) return 1;
-      return 0;
-    }
-
-  , 'order minimum': function( a, b ){
-      if ( a.minimum_order < b.minimum_order ) return -1;
-      if ( a.minimum_order > b.minimum_order ) return 1;
-      return 0;
-    }
-  };
-
-  var filters = {
-    'cuisines': function( restaurant ){
-      return utils.intersection(
-        restaurant.cuisine, req.query.cuisines
-      ).length > 0;
-    }
-
-  , 'diets': function( restaurant ){
-      return utils.intersection(
-        restaurant.tags, req.query.diets
-      ).length > 0;
-    }
-
-  , 'mealTypes': function( restaurant ){
-      return utils.intersection(
-        restaurant.meal_types, req.query.mealTypes
-      ).length > 0;
-    }
-  };
-
-  var sort = sorts[ req.query.sort ] || sorts.popular;
-
   var results = db.cache.restaurants.byRegion( req.user.attributes.region_id );
 
   if ( results.error ){
     return res.error( results.error );
   }
 
-  var orderParams = utils.pick( req.query, 'zip', 'date', 'time', 'guests' );
-
-  Object.keys( filters ).forEach( function( filter ){
-    if ( !(filter in req.query) ) return;
-
-    results = results.filter( filters[ filter ] );
-  });
-
-  if ( req.query.search ){
-    results = utils.search( results, req.query.search, ['name'] );
-  }
-
-  if ( Object.keys( orderParams ).length > 0 ){
-    var fulfillability = orderFulfillability( orderParams );
-    results = results.filter( function( result ){
-      fulfillability.restaurant = result;
-      return fulfillability.isFulfillable();
-    });
-  }
-
-  var contractSort = req.user.attributes.region.sorts_by_no_contract;
-  var resultParts = [];
-
-  resultParts.push( results.filter( function( r ){
-    return !!r.is_featured;
-  }));
-
-  if ( contractSort ){
-    resultParts.push( results.filter( function( r ){
-      return !!r.plan_id && !r.is_featured;
-    }));
-  }
-
-  resultParts.push( results.filter( function( r ){
-    if ( contractSort ){
-      return !r.is_featured && !r.plan_id;
-    }
-
-    return !r.is_featured;
-  }));
-
-  resultParts.forEach( function( part, i ){
-    resultParts[ i ] = part.sort( sort );
-  });
-
-  results = utils.flatten( resultParts );
-
   return res.render('restaurant/list', {
     layout:           'layout/default'
   , defaultAddress:   req.user.attributes.defaultAddress
-  , restaurants:      results
+  , restaurants:      restaurantsFilter( results, req.query, {
+                        sorts_by_no_contract: req.user.attributes.region.sorts_by_no_contract
+                      })
   , filterCuisines:   cuisines
   , filterPrices:     utils.range(1, 5)
   , filterMealTypes:  enums.getMealTypes()

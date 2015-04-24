@@ -73,9 +73,7 @@ define( function( require, exports, module ){
 
           if ( leadTimes.length === 0 ) return true;
 
-          var minutes = moment.duration(
-            Math.max( 0, this.datetime - new Date() )
-          ).asMinutes();
+          var minutes = moment.duration( this.datetime - new Date() ).asMinutes();
 
           return leadTimes
             .some( function( time ){

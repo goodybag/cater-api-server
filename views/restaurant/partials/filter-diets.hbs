@@ -1,13 +1,13 @@
 <div class="third filter-diets">
   <h1>Special Diets</h1>
   <label>
-    <input type="checkbox" value="glutenFree" {{#contains orderParams.diets "glutenFree"}}checked="checked"{{/contains}}/> Gluten-Free
+    <input class="immediate" type="checkbox" value="glutenFree" {{#contains orderParams.diets "glutenFree"}}checked="checked"{{/contains}}/> Gluten-Free
   </label>
   <label>
-    <input type="checkbox" value="dairyFree" {{#contains orderParams.diets "dairyFree"}}checked="checked"{{/contains}}/> Dairy-Free
+    <input class="immediate" type="checkbox" value="dairyFree" {{#contains orderParams.diets "dairyFree"}}checked="checked"{{/contains}}/> Dairy-Free
   </label>
   <label>
-    <input type="checkbox" value="vegetarian" {{#contains orderParams.diets "vegetarian"}}checked="checked"{{/contains}}/> Vegetarian
+    <input class="immediate" type="checkbox" value="vegetarian" {{#contains orderParams.diets "vegetarian"}}checked="checked"{{/contains}}/> Vegetarian
   </label>
   <span class="popover-wrapper">
     <a href="#" data-role="popover" data-target="diets-popover">more special diets</a>

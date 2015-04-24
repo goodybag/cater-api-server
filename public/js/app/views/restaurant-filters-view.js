@@ -6,6 +6,9 @@ define(function(require, exports, module) {
   return module.exports = Backbone.View.extend({
     events: function() {
       return {
+        'change input[type="checkbox"]': 'onFilterChange'
+        // 'change .immediate':            'onFilterChange' // trigger the abbreviated filters
+      , 'click .popover-modal button':    'onFilterChange'
       };
     }
 
@@ -37,7 +40,7 @@ define(function(require, exports, module) {
 
   , getProps: function() {
       return Object.keys(this.options.facets).reduce(function(props, facet) {
-        props[facet] = _.pluck(this.$el.find(this.options.facets[facet]), 'value');
+        props[facet] = _.unique(_.pluck(this.$el.find(this.options.facets[facet]), 'value'));
         return props;
       }.bind(this), {});
     }

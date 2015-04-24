@@ -2,7 +2,7 @@
   <h1>Cuisine</h1>
   {{#each (slice filterCuisines 0 3)}}
   <label>
-    <input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}/> {{this}}
+    <input class="immediate" type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}/> {{this}}
   </label>
   {{/each}}
   <span class="popover-wrapper">

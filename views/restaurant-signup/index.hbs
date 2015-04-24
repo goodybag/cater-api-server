@@ -5,9 +5,9 @@
   <nav>
     <ol class="inline-list tabs">
       <li class="form-step {{#if (or (not cookies.gb_rs) (eq cookies.gb_rs '1'))}}active{{/if}}"><span>1</span> Basic Info</li>
-      <li class="{{#if (eq cookies.gb_rs '2')}}active{{/if}}"><span>2</span> Restaurant Info</li>
-      <li class="{{#if (eq cookies.gb_rs '3')}}active{{/if}}"><span>3</span> Delivery + Pickup</li>
-      <li class="{{#if (eq cookies.gb_rs '4')}}active{{/if}}"><span>4</span> Payments</li>
+      <li class="{{#eq cookies.gb_rs '2'}}active{{/eq}}"><span>2</span> Restaurant Info</li>
+      <li class="{{#eq cookies.gb_rs '3'}}active{{/eq}}"><span>3</span> Delivery + Pickup</li>
+      <li class="{{#eq cookies.gb_rs '4'}}active{{/eq}}"><span>4</span> Payments</li>
     </ol>
   </nav>
   <form class="form-vertical form-restaurant-signup">

@@ -1,19 +1,15 @@
 <div class="third filter-cuisines">
   <h1>Cuisine</h1>
+  {{#each (slice filterCuisines 0 3)}}
   <label>
-    <input type="checkbox" value="American" {{#contains ../orderParams.cuisines "American"}}checked="checked"{{/contains}}/> American
+    <input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}/> {{this}}
   </label>
-  <label>
-    <input type="checkbox" value="BBQ" {{#contains ../orderParams.cuisines "BBQ"}}checked="checked"{{/contains}}/> BBQ
-  </label>
-  <label>
-    <input type="checkbox" value="Pizza" {{#contains ../orderParams.cuisines "Pizza"}}checked="checked"{{/contains}}/> Pizza
-  </label>
+  {{/each}}
   <span class="popover-wrapper">
     <a href="#" data-role="popover" data-target="cuisines-popover">more cuisines</a>
     <div class="popover-modal cuisines-popover">
       <div class="popover-body">
-        <h1>Cuisine</strong></h1>
+        <h1>Cuisine</h1>
         {{#each filterCuisines~}}
         <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}/> {{this}}</label>
         {{~/each}}

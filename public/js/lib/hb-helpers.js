@@ -656,6 +656,10 @@ define(function(require, exports, module) {
       }
 
       return invoice[ obj ];
+    },
+
+    slice: function( list, start, end ) {
+      return list.slice(+start, +end);
     }
   }
 

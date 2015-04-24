@@ -74,7 +74,7 @@ define( function( require, exports, module ){
           if ( leadTimes.length === 0 ) return true;
 
           var minutes = moment.duration(
-            Math.abs( new Date() - this.datetime )
+            Math.max( 0, this.datetime - new Date() )
           ).asMinutes();
 
           return leadTimes

@@ -20,7 +20,6 @@ define( function( require, exports, module ){
       if ( this.date ){
         this.datetime = moment( this.date + ( this.time ? (' ' + this.time) : '' ) );
       }
-      console.log(this.date, this.time);
     })
     .methods({
       // Since _all_ of these strategies are required to be fulfillable
@@ -39,6 +38,7 @@ define( function( require, exports, module ){
 
         // Restaurant is open on that day, but what about time?
       , function strategyOpenHours(){
+          if ( !this.datetime ) return true;
           if ( !this.time ) return true;
 
           var day = this.datetime.day();
@@ -69,13 +69,15 @@ define( function( require, exports, module ){
       , function strategyLeadTimes(){
           if ( !this.datetime ) return true;
 
+          var leadTimes = this.getAllSupportedLeadTimes();
+
+          if ( leadTimes.length === 0 ) return true;
+
           var minutes = moment.duration(
             Math.abs( new Date() - this.datetime )
           ).asMinutes();
 
-          console.log('NUM MINUTES', minutes);
-
-          return this.getAllSupportedLeadTimes()
+          return leadTimes
             .some( function( time ){
               return [
                 minutes >= time.lead_time
@@ -110,10 +112,11 @@ define( function( require, exports, module ){
     , getAllSupportedLeadTimes: function(){
         var supported = this.restaurant.supported_order_types;
 
-        return _.flatten(
-          supported.indexOf('delivery') > -1 ? this.restaurant.lead_times : []
-        , supported.indexOf('courier') > -1 ? this.restaurant.pickup_lead_times : []
-        );
+        var r = this.restaurant;
+
+        return []
+          .concat( supported.indexOf('delivery') > -1 ? r.lead_times : [] )
+          .concat( supported.indexOf('courier') > -1 ? r.pickup_lead_times : [] );
       }
 
     , getDeliveryServiceZips: function(){

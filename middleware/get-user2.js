@@ -46,7 +46,11 @@ module.exports = function( options ){
         );
 
         if ( !req.session.user ){
-          req.session.user = utils.cloneDeep( req.user.toJSON() );
+          req.session.user = utils.cloneDeep(
+            utils.omit( req.user.toJSON(), [
+              'groups', 'password'
+            ])
+          );
         }
       } else {
         req.user = req.session.canonical;

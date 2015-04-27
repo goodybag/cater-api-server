@@ -27,8 +27,13 @@ var Restaurant = module.exports = Model.extend({
     });
   },
 
-  getItems: function(query, callback) {
+  getItems: function(query, options, callback) {
     var self = this;
+
+    if ( typeof options === 'function' ) {
+      callback = options;
+      options = {};
+    }
 
     if ( typeof query === 'function' ) {
       callback = query;
@@ -65,7 +70,13 @@ var Restaurant = module.exports = Model.extend({
       });
     }
 
-    self.categories ? items() : self.getCategories(items);
+    if (options.withHiddenCategories) {
+      query = {
+        where: { is_hidden: { $or: [true, false] } }
+      };
+    }
+
+    self.categories ? items() : self.getCategories(query, items);
   },
 
   toJSON: function() {

@@ -23,7 +23,7 @@ module.exports = function( options ){
             is_hidden: { $or: [true, false] }
           }
         };
-        restaurant.getItems(query, function( error, items ){
+        restaurant.getItems(query, { withHiddenCategories: true }, function( error, items ){
           if ( error ) return res.send( 500 );
           res.locals.restaurant = restaurant.toJSON();
           next();

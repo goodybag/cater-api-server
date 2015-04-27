@@ -9,7 +9,7 @@ var sessionAndUser  = require('../lib/session-and-user');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
-
+    omissions: [ 'password' ]
   });
 
   var queryOptions = {
@@ -60,7 +60,7 @@ module.exports = function( options ){
       }
 
       res.locals.session = req.session;
-      res.locals.user = req.user.toJSON();
+      res.locals.user = utils.omit(req.user.toJSON(), options.omissions);
 
       next();
     });

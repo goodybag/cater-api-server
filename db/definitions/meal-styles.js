@@ -26,10 +26,6 @@ define(function(require) {
     , nullable: false
     , unique: true
     }
-  , restaurant_id: {
-      type: types.int
-    , references: {table: 'restaurants', column: 'id'}
-    }
   , created_at: {
       type: types.timestamptz
     , nullable: false

@@ -4,7 +4,7 @@
   <!-- Show truncated options -->
   {{#each (slice filterCuisines 0 3)}}
   <label>
-    <input class="immediate" type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}/> {{this}}
+    <input class="immediate" type="checkbox" value="{{this}}" {{#contains ../reqQuery.cuisines this}}checked="checked"{{/contains}}/> {{this}}
   </label>
   {{/each}}
 
@@ -15,7 +15,7 @@
       <div class="popover-body">
         <h1>Cuisine</h1>
         {{#each filterCuisines~}}
-        <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}/> {{this}}</label>
+        <label><input type="checkbox" value="{{this}}" {{#contains ../reqQuery.cuisines this}}checked="checked"{{/contains}}/> {{this}}</label>
         {{~/each}}
         <button class="btn btn-default">Save and close</button>
       </div>

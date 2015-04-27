@@ -1,13 +1,13 @@
 <div class="list-tags">
-  {{#notEmpty orderParams}}
-  <span> {{../totalRestaurants}} result{{#gt ../totalRestaurants 1}}s{{/gt}}: </span>
+  {{#notEmpty reqQuery}}
+  <span> {{../restaurants.length}} result{{#gt ../restaurants.length 1}}s{{/gt}}: </span>
   {{/notEmpty}}
 
   {{#each searchTags}}
   <a class="search-tag" href="{{baseUrl}}/restaurants{{qs}}">{{formatDietTag text}} <span class="gb-icon-x-mark"></span></a>
   {{/each}}
 
-  {{#notEmpty orderParams}}
+  {{#notEmpty reqQuery}}
   <a class="back-to-results" href="/restaurants">Clear search</a>
   {{/notEmpty}}
 </div>

@@ -1796,6 +1796,7 @@ module.exports.register = function(app) {
     , user: false
     , rename: 'organization_submissions'
     })
+  , m.orderAnalytics.retention()
   , m.view( 'admin/analytics/retention', {
       layout: 'admin/layout2'
     })

@@ -151,6 +151,42 @@ var OrderAnalytics = {
       });
     };
   }
+
+, retention: function(options) {
+    options = utils.defaults({}, options, {
+      monthsBack: 3
+    });
+
+    return function(req, res, next) {
+      var submissions = res.locals.organization_submissions;
+      if (!submissions) return res.error(500);
+
+      var keys = utils.range(0, options.monthsBack + 1);
+      var vals = keys.map(function() { return 0; });
+
+      var init = {
+        totals: utils.object(keys, vals)
+      , uniqOrgs: submissions.length
+      , newOrgs: 0
+      };
+
+      var now = new Date();
+      var currMonth = now.getMonth();
+      var currYear = now.getYear();
+
+      var tallySubmission = function(stats, submission) {
+        var old = submission.months_since_last_submitted >= options.monthsBack; // clump all the old organizations together
+        stats.totals[ old ? options.monthsBack : submission.months_since_last_submitted ]++;
+
+        var date = new Date(submission.first_submitted);
+        if ( date.getMonth() === currMonth && date.getYear() === currYear ) stats.newOrgs++;
+        return stats;
+      };
+
+      res.locals.stats = submissions.reduce(tallySubmission, init);
+      next();
+    };
+  }
 };
 
 module.exports = OrderAnalytics;

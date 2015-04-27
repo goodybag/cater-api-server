@@ -17,17 +17,24 @@
   </div>
 </div>
 
+<section class="analytics-section analytics-section-retention">
+  <div class="container">
+    <div class="col-12 analytics-col">{{stats.newOrgs}} organizations have placed their first order this month!</div>
+  </div>
+</section>
+
 <div class="analytics-section container">
+
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Organization</th>
+        <th>Organizations ({{stats.uniqOrgs}})</th>
         <th>First Submitted</th>
         <th>Last Submitted</th>
-        <th>Last ordered this month</th>
-        <th>Last ordered 1 month ago</th>
-        <th>Last ordered 2 months ago</th>
-        <th>Last ordered 3 or more months ago</th>
+        <th>Last ordered this month ({{ref stats.totals 0}})</th>
+        <th>Last ordered 1 month ago ({{ref stats.totals 1}})</th>
+        <th>Last ordered 2 months ago ({{ref stats.totals 2}})</th>
+        <th>Last ordered 3 or more months ago ({{ref stats.totals 3}})</th>
       </tr>
     </thead>
     <tbody>

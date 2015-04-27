@@ -1,3 +1,33 @@
+/**
+ * Db.Cache
+ *
+ * Uses a fetchVal to cache resources.
+ *
+ * API
+ *
+ *    `db.cache.restaurants`
+ *      Contains resataurants fetchVals keyed by region.
+ *    `db.cache.restaurants.byRegion( region_id )`
+ *      Function to easily access restaurants by region id
+ *
+ *      var results = db.cache.restaurants.byRegion(1);
+ *
+ *      if ( results.error ){
+ *        return res.error( results.error );
+ *      }
+ *
+ *      results
+ *        .filter( function( resaurant ){
+ *          ...
+ *        })
+ *        ...
+ *        
+ *    `db.cache.delivery_services`
+ *      Same as restaurants, but delivery_services.
+ *    `db.cache.delivery_services.byRegion( region_id )`
+ *      Function to easily access delivery services by region id
+ */
+
 var fetchVal = require('../lib/fetch-val');
 
 module.exports = function( db ){
@@ -81,7 +111,7 @@ module.exports = function( db ){
 
     db.cache.delivery_services[ id ] = fetchVal({
       period: 1000 * 60 * 2
-      
+
     , fetch: function( callback ){
         var $query = {
           region_id: id

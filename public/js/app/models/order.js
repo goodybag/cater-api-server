@@ -188,6 +188,12 @@ define(function(require, exports, module) {
       attrs = attrs || {};
       options = options || {};
 
+      this.lockOrderType = false;
+
+      if ( options.lockOrderType ){
+        this.lockOrderType = true;
+      }
+
       this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id, edit_token: options.edit_token });
       this.unset('orderItems');
 
@@ -225,7 +231,7 @@ define(function(require, exports, module) {
 
       this.on( fieldsThatShouldPromptCourierCheck, this.updateOrderType, this);
 
-      if ( !options.ignoreOrderTypeInit) {
+      if (!options.ignoreOrderTypeInit) {
         this.updateOrderType();
       }
 
@@ -282,6 +288,10 @@ define(function(require, exports, module) {
       var addr = _.pick(attrs, addressFields);
       // Why do we take out the address fields from the top-level attributes?
       // attrs = _.omit(attrs, addressFields);
+
+      if (attrs.address_name){
+        addr.name = attrs.address_name;
+      }
 
       if (this.address != null)
         this.address.set(addr, options);
@@ -421,7 +431,12 @@ define(function(require, exports, module) {
       var obj = Backbone.Model.prototype.toJSON.apply(this, arguments);
       obj.orderItems = this.orderItems.toJSON();
       obj.restaurant = this.restaurant.toJSON();
-      _.extend(obj, this.address.toJSON());
+
+      var addr = this.address.toJSON();
+      addr.address_name = addr.name;
+      delete addr.name;
+
+      _.extend(obj, addr);
       obj.isAddressComplete = utils.reduce(
         utils.map(
           utils.pick(this.attributes, ['street', 'city', 'state', 'zip', 'phone'])
@@ -575,6 +590,8 @@ define(function(require, exports, module) {
     },
 
     updateOrderType: function(){
+      if ( this.lockOrderType ) return;
+
       if ( this.shouldBeDeliveryService() ){
         this.set( 'type', 'courier' );
       } else {

@@ -17,7 +17,7 @@ define(function(require) {
   definition.name = 'meal_styles';
 
   definition.schema = {
-    meal_style: {
+    name: {
       type: types.text
     , pk: true
     }

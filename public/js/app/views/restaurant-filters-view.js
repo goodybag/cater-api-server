@@ -6,8 +6,8 @@ define(function(require, exports, module) {
   module.exports = Backbone.View.extend({
     events: function() {
       return {
-        'change input[type="checkbox"]': 'onFilterChange'
-        // 'change .immediate':            'onFilterChange' // trigger the abbreviated filters
+        'change input':                   'propagate'
+      , 'change .immediate':              'onFilterChange'
       , 'click .popover-modal button':    'onFilterChange'
       };
     }
@@ -36,6 +36,14 @@ define(function(require, exports, module) {
 
   , onFilterChange: function(e) {
       this.trigger(this.options.changeEvent);
+    }
+
+  , propagate: function(e) {
+      // propagate input changes to mirror inputs
+      // some serious jquery hackery
+      var $target = $(e.target);
+      var checked = $target.is(':checked');
+      this.$el.find('input[value="' + $target.val() + '"]').prop('checked', checked);
     }
 
   , getProps: function() {

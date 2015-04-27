@@ -72,6 +72,7 @@ module.exports = function( options ){
       $options.many.push({
         table: 'restaurant_notes'
       , alias: 'notes'
+      , columns: [ 'note', { expression: 'created_at at time zone \'' + req.user.attributes.region.timezone + '\'', alias: 'created_at' } ]
       , order: 'created_at desc'
       , one: [ { table: 'users', alias: 'user' } ]
       });

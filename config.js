@@ -211,6 +211,7 @@ config.defaults = {
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]
   , reminderIgnored: [ local.testEmail || 'test@goodybag.com' ]
   , orderNotificationChecks: [ local.testEmail || 'test@goodybag.com' ]
+  , reminderPaymentStatusIgnore: [local.testEmail || 'test@goodybag.com']
   }
 
 , phone: {
@@ -471,6 +472,10 @@ config.production = {
       'sarahsouthwell@goodybag.com'
     , 'christymedlock@goodybag.com'
     , 'john@goodybag.com'
+    ]
+  , reminderPaymentStatusIgnore: [
+      'sarahsouthwell@goodybag.com'
+    , 'christymedlock@goodybag.com'
     ]
   }
 

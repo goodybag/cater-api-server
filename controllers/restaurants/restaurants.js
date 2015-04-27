@@ -40,7 +40,7 @@ module.exports.list = function(req, res) {
   , filterMealTypes:  enums.getMealTypes()
   , filterMealStyles: enums.getMealStyles()
   , orderParams:      orderParams
-  })
+  });
 
   //TODO: middleware to validate and sanitize query object
   var orderParams = req.query || {};

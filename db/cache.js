@@ -35,7 +35,7 @@ module.exports = function( db ){
 
   [ 1, 2, 3, 4 ].forEach( function( id ){
     db.cache.restaurants[ id ] = fetchVal({
-      period: 1000 * 10
+      period: 1000 * 60 * 2
 
     , fetch: function( callback ){
         var $query = {
@@ -80,7 +80,9 @@ module.exports = function( db ){
     });
 
     db.cache.delivery_services[ id ] = fetchVal({
-      fetch: function( callback ){
+      period: 1000 * 60 * 2
+      
+    , fetch: function( callback ){
         var $query = {
           region_id: id
         , is_hidden: false

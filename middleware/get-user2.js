@@ -14,7 +14,11 @@ module.exports = function( options ){
 
   var queryOptions = {
     one:  [ { table: 'users', alias: 'user'
-            , one:    [ { table: 'regions', alias: 'region' } ]
+            , one:    [ { table: 'regions', alias: 'region' }
+                      , { table: 'addresses', alias: 'defaultAddress'
+                        , where: { is_default: true }
+                        }
+                      ]
             , many:   [ { table: 'addresses' } ]
             , pluck:  [ { table: 'users_groups', alias: 'groups', column: 'group' } ]
             }

@@ -19,27 +19,19 @@ define( function( require, exports, module ){
 
     var sorts = {
       'popular': function( a, b ){
-        if ( a.popularity < b.popularity ) return 1;
-        if ( a.popularity > b.popularity ) return -1;
-        return 0;
+        return b.popularity - a.popularity;
       }
 
     , 'name': function( a, b ){
-        if ( a.name < b.name ) return -1;
-        if ( a.name > b.name ) return 1;
-        return 0;
+        return a.name.localeCompare( b.name );
       }
 
     , 'price': function( a, b ){
-        if ( a.price < b.price ) return -1;
-        if ( a.price > b.price ) return 1;
-        return 0;
+        return a.price - b.price;
       }
 
     , 'order minimum': function( a, b ){
-        if ( a.minimum_order < b.minimum_order ) return -1;
-        if ( a.minimum_order > b.minimum_order ) return 1;
-        return 0;
+        return a.minimum_order - b.minimum_order;
       }
     };
 

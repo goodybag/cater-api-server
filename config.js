@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, adroll: require('./configs/adroll')
 , stripe: require('./configs/stripe')
 , google: require('./configs/google')
 , intercom: require('./configs/intercom')

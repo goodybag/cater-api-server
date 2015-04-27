@@ -73,12 +73,10 @@ define( function( require, exports, module ){
 
           if ( leadTimes.length === 0 ) return true;
 
-          var minutes = moment.duration(
-            Math.max( 0, this.datetime - new Date() )
-          ).asMinutes();
+          var minutes = moment.duration( this.datetime - new Date() ).asMinutes();
+
           return leadTimes
             .some( function( time ){
-console.log(this.restaurant.name, minutes, time.lead_time);
               return [
                 minutes >= time.lead_time
               , !this.guests ? true : this.guests <= time.max_guests

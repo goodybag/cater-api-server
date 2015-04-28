@@ -31,10 +31,10 @@ define(function (require, exports, module) {
       , url: '/request-to-be-a-caterer'
       , data: fields
       , success: function () {
-          window.location.reload();
+          $('.alert-success').removeClass('hide');
         }
       , error: function () {
-          console.error('failed to submit form');
+          $('.alert-error').removeClass('hide');
         }
       });
     }

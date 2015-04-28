@@ -203,11 +203,6 @@ define(function(require) {
     , default: 0
     , editable: ['client', 'admin']
     }
-  , disable_courier: {
-      type: types.boolean
-    , default: false
-    , editable: ['client', 'admin']
-    }
   , pms_contact_id: {
       type: types.int
     , references: {table: 'contacts', column: 'id', onDelete: 'set null'}

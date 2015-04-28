@@ -17,6 +17,7 @@ module.exports = function( options ){
       if ( error ) return res.send( 500 );
       if ( !restaurant ) return res.send( 404 );
 
+      // return all menu items, this includes hidden items and categories
       if ( options.withMenuItems ){
         var query = {
           where: {

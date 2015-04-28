@@ -19,12 +19,12 @@ results
 
 npm-debug.log
 node_modules
-balanced-config.json
+configs/balanced.local.js
 public/receipts/*.pdf
 public/components
 backups
 *~
-local-config.json
+configs/local.js
 tmp/
 !tmp/index
 workers/validate-addresses/log.json

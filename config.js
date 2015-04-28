@@ -6,7 +6,6 @@ var
   os = require('os')
 , fs =  require('fs')
 , _ = require('lodash')
-, balancedConfig = fs.existsSync(__dirname+'/balanced-config.json') ? require('./balanced-config.json') : require('./balanced-test-config.json') // used in dev
 , local = {}
 , pdf = require('./pdf-config')
 ;
@@ -20,6 +19,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, balanced: require('./configs/balanced')
 , stripe: require('./configs/stripe')
 , google: require('./configs/google')
 , intercom: require('./configs/intercom')
@@ -288,8 +288,6 @@ config.dev = {
     secret: 'q3r0t2euni'
   }
 
-, balanced: balancedConfig
-
 , ironMQ: {
     token: '_2rd5UzCv7_-chOc4rDZ0Y7y74A'
   , projectId: '526990a7f2d1570005000038'
@@ -346,11 +344,6 @@ config.staging = {
 
 , segmentIo: {
     secret: 'q3r0t2euni' // TODO: same as dev for now, replace later?
-  }
-
-, balanced: {
-    secret: "ak-test-PuuQnMAqL7pNQ0t9xuMDV3upU2Pz5sLn"
-  , marketplaceUri: "/v1/marketplaces/TEST-MP3gr1uHmPi0i42cNhdL4rEs"
   }
 
 , ironMQ: {
@@ -410,11 +403,6 @@ config.production = {
 
 , segmentIo: {
     secret: 'k9ju1kq8vc'
-  }
-
-, balanced: {
-    secret: "ak-prod-OmLnG7ftnzB145uM4Ycu4YIE0mgPx4eE"
-  , marketplaceUri: "/v1/marketplaces/MPwgAAAdaGmk4BhrmL0qkRM"
   }
 
 , ironMQ: {

@@ -6,21 +6,34 @@ var config = require('../config');
 var utils = require('../utils');
 
 var Restaurant = module.exports = Model.extend({
-  getCategories: function(callback) {
+  getCategories: function(query, callback) {
     var self = this;
+
+    if (utils.isFunction(query)) {
+      callback = query;
+      query = {};
+    }
+
+    query = utils.deepExtend({
+      where: { 'restaurant_id': this.attributes.id, 'is_hidden': false }
+    , order: { order: 'asc' }
+    }, query);
+
     callback = callback || function() {};
-    require('./category').find(
-      {where: {'restaurant_id': this.attributes.id},
-       order: {order: 'asc'}},
-      function(err, results) {
-        if (err) return callback(err);
-        self.categories = results;
-        callback(null, results);
-      });
+    require('./category').find(query, function(err, results) {
+      if (err) return callback(err);
+      self.categories = results;
+      callback(null, results);
+    });
   },
 
-  getItems: function(query, callback) {
+  getItems: function(query, options, callback) {
     var self = this;
+
+    if ( typeof options === 'function' ) {
+      callback = options;
+      options = {};
+    }
 
     if ( typeof query === 'function' ) {
       callback = query;
@@ -57,7 +70,13 @@ var Restaurant = module.exports = Model.extend({
       });
     }
 
-    self.categories ? items() : self.getCategories(items);
+    if (options.withHiddenCategories) {
+      query = {
+        where: { is_hidden: { $or: [true, false] } }
+      };
+    }
+
+    self.categories ? items() : self.getCategories(query, items);
   },
 
   toJSON: function() {

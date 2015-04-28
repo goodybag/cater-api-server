@@ -15,7 +15,7 @@ var Restaurant = module.exports = Model.extend({
     }
 
     query = utils.deepExtend({
-      where: { 'restaurant_id': this. attributes.id, 'is_hidden': false }
+      where: { 'restaurant_id': this.attributes.id, 'is_hidden': false }
     , order: { order: 'asc' }
     }, query);
 

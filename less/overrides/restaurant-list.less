@@ -13,13 +13,19 @@
 
   .half { #grid > .column-percent( 50%, 0 ); }
 
-  .third { #grid > .column-percent( 33.33%, 0 ); }
+  .third {
+    margin: 15px 0;
+  }
 
   .third > h1 {
     text-transform: uppercase;
     font-size: 14px;
     font-weight: @bold;
     margin: 0 0 10px;
+  }
+
+  @media (min-width: @breakpoint-tablet) {
+    .third { #grid > .column-percent( 33.33%, 0 ); }
   }
 
   @media (max-width: @breakpoint-tablet) {

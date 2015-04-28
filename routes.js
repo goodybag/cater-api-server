@@ -67,6 +67,15 @@ module.exports.register = function(app) {
       .pipe( res );
   });
 
+  app.get('/jobs/customer-service-specialist.pdf'
+  , m.s3({
+      path:   '/customer-service-specialist-1.pdf'
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.cdn.bucket
+    })
+  );
+
   /**
    * Restaurants resource.  The collection of all restaurants.
    */

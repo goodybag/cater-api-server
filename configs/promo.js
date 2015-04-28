@@ -14,6 +14,10 @@ var promo = {
     email: 'jacobparker@goodybag.com'
   , promo_code: ['Goodybag315', 'GB415', 'GBAUSTIN15', 'GBHOU15']
   }
+, om: {
+    email: 'om@goodybag.com'
+  , promo_code: [ 'bv250' ]
+  }
 };
 
 module.exports = ({

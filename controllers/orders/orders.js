@@ -57,17 +57,16 @@ module.exports.auth = function(req, res, next) {
 
   logger.info('checking guest status');
   if ( req.user.isGuest() ){
-    logger.info('user is guest');
     if ( Array.isArray( req.session.guestOrders ) ){
       logger.info('guest orders is available');
       if ( req.session.guestOrders.indexOf( req.order.id ) > -1 ){
-        logger.info('adding order-owner');
         req.user.attributes.groups.push('order-owner');
         req.order.isOwner = true;
       }
     }
   }
 
+  logger.info('user permissions [' + req.user.attributes.groups.join(', ') + ']');
   next();
 };
 

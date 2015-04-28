@@ -20,6 +20,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, adroll: require('./configs/adroll')
 , stripe: require('./configs/stripe')
 , google: require('./configs/google')
 , intercom: require('./configs/intercom')
@@ -211,6 +212,7 @@ config.defaults = {
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]
   , reminderIgnored: [ local.testEmail || 'test@goodybag.com' ]
   , orderNotificationChecks: [ local.testEmail || 'test@goodybag.com' ]
+  , reminderPaymentStatusIgnore: [local.testEmail || 'test@goodybag.com']
   }
 
 , phone: {
@@ -471,6 +473,10 @@ config.production = {
       'sarahsouthwell@goodybag.com'
     , 'christymedlock@goodybag.com'
     , 'john@goodybag.com'
+    ]
+  , reminderPaymentStatusIgnore: [
+      'sarahsouthwell@goodybag.com'
+    , 'christymedlock@goodybag.com'
     ]
   }
 

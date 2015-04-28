@@ -188,6 +188,12 @@ define(function(require, exports, module) {
       attrs = attrs || {};
       options = options || {};
 
+      this.lockOrderType = false;
+
+      if ( options.lockOrderType ){
+        this.lockOrderType = true;
+      }
+
       this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id, edit_token: options.edit_token });
       this.unset('orderItems');
 
@@ -225,7 +231,7 @@ define(function(require, exports, module) {
 
       this.on( fieldsThatShouldPromptCourierCheck, this.updateOrderType, this);
 
-      if ( !options.ignoreOrderTypeInit) {
+      if (!options.ignoreOrderTypeInit) {
         this.updateOrderType();
       }
 
@@ -584,6 +590,8 @@ define(function(require, exports, module) {
     },
 
     updateOrderType: function(){
+      if ( this.lockOrderType ) return;
+
       if ( this.shouldBeDeliveryService() ){
         this.set( 'type', 'courier' );
       } else {

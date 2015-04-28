@@ -19,6 +19,8 @@ module.exports = function( options ){
   return function( req, res, next ){
     var logger = req.logger.create('Middleware-GetOrder2');
 
+    if ( !req.params[options.param].match(/^\d+$/) ) return res.status(404).render('404');
+
     var $options = {
       one:    []
     , many:   []

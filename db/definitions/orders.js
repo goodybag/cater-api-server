@@ -183,7 +183,7 @@ define(function(require) {
   , reason_denied: {
       type: types.text
     , nullable: true
-    , editable: ['client', 'admin']
+    , editable: ['admin', 'order-restaurant']
     }
   , reviewed: {
       type: types.boolean

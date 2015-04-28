@@ -486,14 +486,11 @@ module.exports.register = function(app) {
     , m.param('id')
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
-        active:   'basic-info'
+        active:   'dashboard'
       , baseUrl:  '/admin/restaurants/:id'
       })
-    , m.db.regions.find( {}, { limit: 'all' } )
-    , m.queryOptions({
-        many: [{ table: 'contacts' }]
-      })
-    , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
+    , m.getRestaurant({ param: 'id', notes: true })
+    , m.view('admin/restaurant/edit-dashboard', {
         layout: 'admin/layout-two-column'
       , method: 'findOne'
       })
@@ -501,6 +498,20 @@ module.exports.register = function(app) {
 
     app.put('/admin/restaurants/:rid'
     , controllers.restaurants.update
+    );
+
+    app.get('/admin/restaurants/:id/dashboard'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'dashboard'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.getRestaurant({ param: 'id', notes: true })
+    , m.view('admin/restaurant/edit-dashboard', {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
     );
 
     app.get('/admin/restaurants/:id/basic-info'
@@ -1777,6 +1788,20 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/admin/analytics/retention'
+  , m.restrict(['admin'])
+  , m.getOrders({
+      organizationSubmitted: true
+    , restaurant: false
+    , user: false
+    , rename: 'organization_submissions'
+    })
+  , m.orderAnalytics.retention()
+  , m.view( 'admin/analytics/retention', {
+      layout: 'admin/layout2'
+    })
+  );
+
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
   , m.s3({
@@ -1802,7 +1827,7 @@ module.exports.register = function(app) {
                                     , alias: 'delivery_service'
                                     }
                                   , { table: 'restaurants'
-                                    , alias: 'restaurant' 
+                                    , alias: 'restaurant'
                                     }
                                   ]
                           }
@@ -2004,7 +2029,7 @@ module.exports.register = function(app) {
                         , alias: 'delivery_service'
                         }
                       , { table: 'restaurants'
-                        , alias: 'restaurant' 
+                        , alias: 'restaurant'
                         }
                       ]
               }
@@ -2078,6 +2103,11 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.param('id')
   , m.remove( db.restaurant_photos )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/notes'
+  , m.restrict( ['admin'] )
+  , m.insert( db.restaurant_notes )
   );
 
   app.get('/api/orders'
@@ -2171,7 +2201,10 @@ module.exports.register = function(app) {
         return next();
       }
 
-      venter.emit( 'order:change', req.params.id );
+      var id = req.params.id || req.query.id || req.body.id;
+      var payment_status = req.params.payment_status || req.query.payment_status || req.body.payment_status;
+      venter.emit( 'order:change', id );
+      venter.emit('order:paymentStatus:change', payment_status, id);
 
       next();
     })

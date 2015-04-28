@@ -155,7 +155,11 @@ define(function(require){
       , headers: { 'Content-Type': 'application/json' }
       , data: JSON.stringify( props )
       , success: function( order ){
-          return callback( null, order );
+          if ( !silent ) return callback( null, order );
+          utils.async.parallel([
+            page.buildPdf.bind(page, order.id, 'receipt')
+          , page.buildPdf.bind(page, order.id, 'manifest')
+          ], callback);
         }
       , error: callback
       });
@@ -182,6 +186,19 @@ define(function(require){
       , headers: { 'Content-Type': 'application/json' }
       , success: function( notes ){
           return callback( null, notes );
+        }
+      , error: callback
+      });
+    }
+
+  , buildPdf: function ( orderId, pdfType, callback ) {
+      $.ajax({
+        type: 'POST'
+      , url: ['/api/orders', orderId, 'rebuild-pdf', pdfType].join('/')
+      , json: true
+      , headers: { 'Content-Type': 'application/json' }
+      , success: function ( res ) {
+          return callback( null, res );
         }
       , error: callback
       });

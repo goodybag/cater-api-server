@@ -57,6 +57,10 @@
   {{> analytics }}
   {{> olark }}
 
+  {{#if config.isProduction}}
+    {{> adroll }}
+  {{/if}}
+
   {{#if isNewSignup}}
   {{> facebook_pixel config.facebook.pixel.restaurantList }}
   {{/if}}

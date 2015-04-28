@@ -132,3 +132,8 @@ module.exports.run = function( callback ){
     }, callback);
   });
 };
+
+if (require.main === module) {
+  cli = true;
+  module.exports.run();
+}

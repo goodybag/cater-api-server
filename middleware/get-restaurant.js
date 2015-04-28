@@ -68,6 +68,16 @@ module.exports = function( options ){
       });
     }
 
+    if ( options.notes ){
+      $options.many.push({
+        table: 'restaurant_notes'
+      , alias: 'notes'
+      , columns: [ 'note', { expression: 'created_at at time zone \'' + req.user.attributes.region.timezone + '\'', alias: 'created_at' } ]
+      , order: 'created_at desc'
+      , one: [ { table: 'users', alias: 'user' } ]
+      });
+    }
+
     logger.info('Finding restaurant');
     db.restaurants.findOne( $where, $options, function( error, restaurant ){
       if ( error ){

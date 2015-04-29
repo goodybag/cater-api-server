@@ -10,15 +10,17 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   var _ = require('lodash');
-  var moment = require('moment');
+  var moment = require('moment-timezone');
 
   return require('stampit')()
     .state({
-      
+      timezone: 'UTC'
     })
     .enclose( function(){
       if ( this.date ){
-        this.datetime = moment( this.date + ( this.time ? (' ' + this.time) : '' ) );
+        this.datetime = moment(
+          this.date + ( this.time ? (' ' + this.time) : '' )
+        ).tz( this.timezone );
       }
     })
     .methods({
@@ -50,8 +52,8 @@ define( function( require, exports, module ){
             })
             .some( function( dayHours ){
               return [
-                moment( this.date + ' ' + dayHours.start_time ) <= this.datetime
-              , this.datetime < moment( this.date + ' ' + dayHours.end_time )
+                moment( this.date + ' ' + dayHours.start_time ).tz( this.timezone ) <= this.datetime
+              , this.datetime < moment( this.date + ' ' + dayHours.end_time ).tz( this.timezone )
               ].every( _.identity );
             }.bind( this ));
         }
@@ -73,7 +75,9 @@ define( function( require, exports, module ){
 
           if ( leadTimes.length === 0 ) return true;
 
-          var minutes = moment.duration( this.datetime - new Date() ).asMinutes();
+          var minutes = moment.duration(
+            this.datetime - moment().tz( this.timezone )
+          ).asMinutes();
 
           return leadTimes
             .some( function( time ){

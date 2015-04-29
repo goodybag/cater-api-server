@@ -31,7 +31,12 @@
   opacity: 1;
 }
 
-// Popover triangle
+.popover-wrapper.open .btn-dropdown { outline: none; }
+
+/**
+ * Popover triangle
+ */
+
 .popover-modal:before {
   content: "";
   position: absolute;
@@ -52,6 +57,10 @@
   border-bottom-color: @palette-white;
 }
 
+/**
+ * Popover Body
+ */
+
 .popover-modal .popover-body {
   list-style: none;
   margin: 0;
@@ -63,6 +72,10 @@
     margin: 0;
   }
 }
+
+/**
+ * Popover header
+ */
 
 .popover-modal .popover-header {
   padding: 8px;
@@ -83,6 +96,10 @@
 .popover-modal .popover-header .popover-close-btn {
   float: right;
 }
+
+/**
+ * Popover item
+ */
 
 .popover-modal .popover-item {
   display: block;
@@ -133,12 +150,9 @@
   }
 }
 
-// Not sure these fit here..
-
-.open .btn-dropdown {
-  // color: @palette-blue;
-  outline: none;
-}
+/**
+ * Popover filter
+ */
 
 .popover-filter {
   padding: 8px;

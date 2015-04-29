@@ -70,7 +70,7 @@ var Restaurant = module.exports = Model.extend({
       });
     }
 
-    if (options.withHiddenCategories) {
+    if (options && options.withHiddenCategories) {
       query = {
         where: { is_hidden: { $or: [true, false] } }
       };

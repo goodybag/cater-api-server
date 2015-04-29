@@ -1,10 +1,10 @@
-// Map diet tag enums to display text and icon classes
+// Map diet tag enums to display text
 
 module.exports = {
-  glutenFree:  { name: 'Gluten-Free', icon: 'diet-tag-gluten-free' }
-, dairyFree:   { name: 'Dairy-Free',  icon: 'diet-tag-dairy-free' }
-, vegetarian:  { name: 'Vegetarian',  icon: 'diet-tag-vegetarian' }
-, vegan:       { name: 'Vegan',       icon: 'diet-tag-vegan' }
-, halal:       { name: 'Halal',       icon: 'diet-tag-halal' }
-, kosher:      { name: 'Kosher',      icon: 'diet-tag-kosher' }
+  glutenFree: 'Gluten-Free'
+, dairyFree: 'Dairy-Free'
+, vegetarian: 'vegetarian'
+, vegan: 'Vegan'
+, halal: 'Halal'
+, kosher: 'Kosher'
 };

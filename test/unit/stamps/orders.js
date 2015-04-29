@@ -14,6 +14,9 @@ var restaurants = require('stampit')()
   , delivery_zips:          []
   , locations:              []
   , supported_order_types:  []
+  , region: {
+      delivery_services:    []
+    }
   })
   .methods({
     openTwentyFourHour: function(){
@@ -51,6 +54,11 @@ var restaurants = require('stampit')()
 
   , leadTime: function( guests, time ){
       this.lead_times.push({ max_guests: guests, lead_time: time });
+      return this;
+    }
+
+  , deliveryService: function( ds ){
+      this.region.delivery_services.push( ds );
       return this;
     }
   });
@@ -149,6 +157,22 @@ describe('Orders Stamps', function(){
       , restaurant: restaurants()
                       .zip( '78723', 100 )
                       .supports('delivery')
+      }).isFulfillable();
+
+      assert( result );
+    });
+
+    it( '.isFulfillable() test zip is fulfillable because of delivery service', function(){
+      var result = fulfillability({
+        zip: '78723'
+      , restaurant: restaurants({ zip: '78722' })
+                      .deliveryService({
+                        name: 'Blah Courier'
+                      , zips: [
+                          { "from": '78722', "to": '78723', price: 100 }
+                        ]
+                      })
+                      .supports('delivery', 'courier')
       }).isFulfillable();
 
       assert( result );

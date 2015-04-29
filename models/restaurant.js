@@ -38,6 +38,7 @@ var Restaurant = module.exports = Model.extend({
     if ( typeof query === 'function' ) {
       callback = query;
       query = {};
+      options = {};
     }
 
     callback = callback || function() {};
@@ -70,7 +71,7 @@ var Restaurant = module.exports = Model.extend({
       });
     }
 
-    if (options && options.withHiddenCategories) {
+    if (options.withHiddenCategories) {
       query = {
         where: { is_hidden: { $or: [true, false] } }
       };

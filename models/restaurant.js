@@ -38,6 +38,7 @@ var Restaurant = module.exports = Model.extend({
     if ( typeof query === 'function' ) {
       callback = query;
       query = {};
+      options = {};
     }
 
     callback = callback || function() {};

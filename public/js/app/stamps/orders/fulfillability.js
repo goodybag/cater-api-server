@@ -126,7 +126,7 @@ define( function( require, exports, module ){
               return originZips.indexOf( dszip.from ) > -1;
             })
             .map( function( dszip ){
-              return { zip: dszip.from, fee: dszip.price };
+              return { zip: dszip.to, fee: dszip.price };
             });
         });
 

@@ -118,7 +118,6 @@ module.exports = function( db ){
       , fetch: function( callback ){
           var $query = {
             region_id: region.id
-          , is_hidden: false
           };
 
           var options = {

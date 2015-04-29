@@ -34,6 +34,7 @@ module.exports.list = function(req, res) {
   , defaultAddress:   req.user.attributes.defaultAddress
   , restaurants:      restaurantsFilter( results, req.query, {
                         sorts_by_no_contract: req.user.attributes.region.sorts_by_no_contract
+                      , timezone:             req.user.attributes.region.timezone
                       })
   , filterCuisines:   cuisines
   , filterPrices:     utils.range(1, 5)

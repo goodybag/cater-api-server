@@ -71,8 +71,9 @@ define( function( require, exports, module ){
     }
 
     if ( Object.keys( orderParams ).length > 0 ){
-      var fulfillability = orderFulfillability( orderParams );
-      fulfillability.timezone = options.timezone;
+      var fulfillability = orderFulfillability(
+        utils.extend( orderParams, { timezone: options.timezone } )
+      );
 
       restaurants = restaurants.filter( function( result ){
         fulfillability.restaurant = result;

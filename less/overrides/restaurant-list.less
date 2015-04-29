@@ -6,6 +6,8 @@
 @restaurant-container-width: 1300px;
 
 .page-restaurant-list {
+  .back-to-results { margin-left: 10px; }
+
   // override .container width
   .container {
     #grid .container(@restaurant-container-width);
@@ -96,17 +98,7 @@
     width: 100%;
   }
 
-  .list-tags {
-    display: inline-block;
-    vertical-align: top;
-  }
-
   @media (min-width: @breakpoint-tablet) {
-    .list-tags {
-      float: left;
-      margin: 0;
-    }
-
     .half:first-of-type div ~ div {
       margin-top: 20px;
     }

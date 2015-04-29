@@ -20,7 +20,6 @@ describe ('Order Delivery Service Criteria', function(){
   , restaurant: {
       minimum_order: 100
     , supported_order_types: ['pickup', 'delivery', 'courier']
-    , disable_courier: false
     , delivery_service_order_amount_threshold:  500
     , delivery_service_order_total_upperbound:  200000
     , delivery_service_head_count_threshold:    20
@@ -148,7 +147,7 @@ describe ('Order Delivery Service Criteria', function(){
 
   it ('should be delivery service because delivery not supported', function(){
     var order = utils.deepExtend( {}, defaultOrder, {
-      
+
     });
 
     order.restaurant.supported_order_types = ['courier'];

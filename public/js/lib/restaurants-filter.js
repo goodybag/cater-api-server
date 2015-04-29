@@ -15,6 +15,7 @@ define( function( require, exports, module ){
   module.exports = function( restaurants, query, options ){
     options = utils.defaults( options || {}, {
       sorts_by_no_contract: false
+    , timezone:             'UTC'
     });
 
     var sorts = {
@@ -70,7 +71,10 @@ define( function( require, exports, module ){
     }
 
     if ( Object.keys( orderParams ).length > 0 ){
-      var fulfillability = orderFulfillability( orderParams );
+      var fulfillability = orderFulfillability(
+        utils.extend( orderParams, { timezone: options.timezone } )
+      );
+
       restaurants = restaurants.filter( function( result ){
         fulfillability.restaurant = result;
         return fulfillability.isFulfillable();

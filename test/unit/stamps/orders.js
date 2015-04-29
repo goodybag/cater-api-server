@@ -153,7 +153,8 @@ describe('Orders Stamps', function(){
 
     it( '.isFulfillable() test zip is fulfillable', function(){
       var result = fulfillability({
-        zip: '78723'
+        timezone: 'America/Chicago'
+      , zip: '78723'
       , restaurant: restaurants()
                       .zip( '78723', 100 )
                       .supports('delivery')
@@ -164,7 +165,8 @@ describe('Orders Stamps', function(){
 
     it( '.isFulfillable() test zip is fulfillable because of delivery service', function(){
       var result = fulfillability({
-        zip: '78723'
+        timezone: 'America/Chicago'
+      , zip: '78723'
       , restaurant: restaurants({ zip: '78722' })
                       .deliveryService({
                         name: 'Blah Courier'
@@ -180,7 +182,8 @@ describe('Orders Stamps', function(){
 
     it( '.isFulfillable() test zip is not fulfillable', function(){
       var result = fulfillability({
-        zip: '78724'
+        timezone: 'America/Chicago'
+      , zip: '78724'
       , restaurant: restaurants()
                       .zip( '78723', 100 )
                       .supports('delivery')
@@ -191,7 +194,8 @@ describe('Orders Stamps', function(){
 
     it( '.isFulfillable() test day is fulfillable', function(){
       var result = fulfillability({
-        date: '2015-04-22'
+        timezone: 'America/Chicago'
+      , date: '2015-04-22'
       , restaurant: restaurants()
                       .open(3)
                       .supports('delivery', 'courier')
@@ -202,7 +206,8 @@ describe('Orders Stamps', function(){
 
     it( '.isFulfillable() test day is not fulfillable', function(){
       var result = fulfillability({
-        date: '2015-04-22'
+        timezone: 'America/Chicago'
+      , date: '2015-04-22'
       , restaurant: restaurants()
                       .open(4)
                       .supports('delivery', 'courier')
@@ -216,8 +221,9 @@ describe('Orders Stamps', function(){
       var date = moment().add('days', 1);
 
       var result = fulfillability({
-        date: date.format('YYYY-MM-DD')
-      , time: date.format('HH:mm:ss')
+        timezone: 'America/Chicago'
+      , date: date.format('YYYY-MM-DD')
+      , time: date.format('HH:mm a')
       , guests: 20
       , restaurant: restaurants()
                       .openTwentyFourHour()
@@ -225,9 +231,9 @@ describe('Orders Stamps', function(){
                       .leadTime( 10, 15 * 60 )
                       // Restaurant needs 23 hours
                       .leadTime( 20, 23 * 60 )
-      }).isFulfillable();
+      });
 
-      assert( result );
+      assert( result.isFulfillable() );
     });
 
     it( '.isFulfillable() test lead times is not fulfillable', function(){
@@ -235,8 +241,9 @@ describe('Orders Stamps', function(){
       var date = moment().add('days', 1);
 
       var result = fulfillability({
-        date: date.format('YYYY-MM-DD')
-      , time: date.format('HH:mm:ss')
+        timezone: 'America/Chicago'
+      , date: date.format('YYYY-MM-DD')
+      , time: date.format('HH:mm a')
       , guests: 20
       , restaurant: restaurants()
                       .openTwentyFourHour()
@@ -254,8 +261,9 @@ describe('Orders Stamps', function(){
       var date = moment().add('days', -1);
 
       var result = fulfillability({
-        date: date.format('YYYY-MM-DD')
-      , time: date.format('HH:mm:ss')
+        timezone: 'America/Chicago'
+      , date: date.format('YYYY-MM-DD')
+      , time: date.format('HH:mm a')
       , guests: 20
       , restaurant: restaurants()
                       .openTwentyFourHour()

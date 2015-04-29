@@ -15,12 +15,25 @@ define( function( require, exports, module ){
   return require('stampit')()
     .state({
       timezone: 'UTC'
+    , dateFormat: 'YYYY-MM-DD'
+    , timeFormat: 'HH:mm a'
+    , availabilityTimeFormat: 'HH:mm:ss'
     })
     .enclose( function(){
       if ( this.date ){
-        this.datetime = moment(
-          this.date + ( this.time ? (' ' + this.time) : '' )
-        ).tz( this.timezone );
+        if ( this.time ){
+          this.datetime = moment.tz(
+            this.date + ' ' + this.time
+          , [ this.dateFormat, this.timeFormat ].join(' ')
+          , this.timezone
+          );
+        } else {
+          this.datetime = moment.tz(
+            this.date
+          , this.dateFormat
+          , this.timezone
+          );
+        }
       }
     })
     .methods({
@@ -45,15 +58,29 @@ define( function( require, exports, module ){
 
           var day = this.datetime.day();
 
+          var format = [ this.dateFormat, this.availabilityTimeFormat ].join(' ');
+
           return this.restaurant.hours
             .concat( this.restaurant.delivery_hours )
             .filter( function( dayHours ){
               return dayHours.day === day;
             })
             .some( function( dayHours ){
+              var startDate = moment.tz(
+                this.date + ' ' + dayHours.start_time
+              , format
+              , this.timezone
+              );
+
+              var endDate = moment.tz(
+                this.date + ' ' + dayHours.end_time
+              , format
+              , this.timezone
+              );
+
               return [
-                moment( this.date + ' ' + dayHours.start_time ).tz( this.timezone ) <= this.datetime
-              , this.datetime < moment( this.date + ' ' + dayHours.end_time ).tz( this.timezone )
+                startDate <= this.datetime
+              , this.datetime < endDate
               ].every( _.identity );
             }.bind( this ));
         }
@@ -93,6 +120,16 @@ define( function( require, exports, module ){
         return this.fulfillmentRequirements.every( function( strategy ){
           return strategy.call( this );
         }.bind( this ));
+      }
+
+    , why: function(){
+        return this.fulfillmentRequirements
+          .filter( function( strategy ){
+            return !strategy.call( this );
+          }.bind( this ))
+          .map( function( strategy ){
+            return strategy.name.replace('strategy', '');
+          }.bind( this ));
       }
 
     , getAllSupportedDeliveryZips: function(){

@@ -103,7 +103,7 @@ define( function( require, exports, module ){
           if ( leadTimes.length === 0 ) return true;
 
           var minutes = moment.duration(
-            this.datetime - moment().tz( this.timezone )
+            this.datetime - moment.tz( this.timezone )
           ).asMinutes();
 
           return leadTimes

@@ -1,5 +1,5 @@
 {{#each tags}}
 {{#with (ref ../config.diets tag)}}
-<span class="diet-tag {{icon}}" data-title="{{name}}" data-container="body" data-toggle="tooltip"></span>
+<span class="diet-tag diet-tag-{{class}}" data-title="{{name}}" data-container="body" data-toggle="tooltip"></span>
 {{/with}}
 {{/each}}

@@ -80,10 +80,8 @@ define(function(require){
         });
 
         $('[name="order_status"]').change(function (e) {
-          var status = e.target.value;
-          var notify = !(status.indexOf('silent') >= 0);
-          status = status.replace('silent', '').trim();
-          page.updateOrder({ status: status },{ notify: notify }, page.flash);
+          var silent = !!$(this).find(':selected').data('silent');
+          page.updateOrder({ status: e.target.value },{ silent: silent }, page.flash);
         });
 
         $('[name="payment_status"]').change(function (e) {
@@ -139,14 +137,14 @@ define(function(require){
       }
 
       utils.defaults(options, {
-        notify: true
+        silent: false
       });
 
       var silent = typeof props.type === 'string' && props.type.indexOf('silent') >= 0;
       if (silent) props.type = props.type.replace('silent', '').trim();
 
       // shim silent hack
-      silent = silent || !options.notify;
+      silent = silent || options.silent;
 
       $.ajax({
         type: 'PUT'

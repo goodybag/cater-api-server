@@ -122,9 +122,9 @@
               <option value="denied" {{#eq order.status 'denied'}}selected="true"{{/eq}}>Denied</option>
               <option value="accepted" {{#eq order.status 'accepted'}}selected="true"{{/eq}}>Accepted</option>
               <option value="delivered" {{#eq order.status 'delivered'}}selected="true"{{/eq}}>Delivered</option>
-              <option value="submitted silent">Submitted - no notification</option>
-              <option value="accepted silent">Accepted - no notification</option>
-              <option value="canceled silent">Canceled - no notification</option>
+              <option data-silent="true" value="submitted">Submitted - no notification</option>
+              <option data-silent="true" value="accepted">Accepted - no notification</option>
+              <option data-silent="true" value="canceled">Canceled - no notification</option>
             </select>
           </dd>
         </div>

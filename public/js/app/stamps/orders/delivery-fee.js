@@ -42,8 +42,8 @@ define( function( require, exports, module ){
         var fees = utils.pluck( order.getAllSupportedDeliveryZips(), 'fee' );
 
         return {
-          min: Math.min.apply( null, fees ) || 0
-        , max: Math.max.apply( null, fees ) || 0
+          min: ~~Math.min.apply( null, fees ) || 0
+        , max: ~~Math.max.apply( null, fees ) || 0
         };
       }
     });

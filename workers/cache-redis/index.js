@@ -19,7 +19,7 @@ var db      = require('../../db');
 var utils   = require('../../utils');
 var logger  = require('../../lib/logger').create('Worker-CacheRedis');
 
-var client  = require('redis').createClient( config.redis );
+var client  = require('redis').createClient( config.redis.port, config.redis.hostname, config.redis );
 
 var regionCaches = {
   restaurants: function( region ){

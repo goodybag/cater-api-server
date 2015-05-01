@@ -75,7 +75,7 @@ module.exports.autoFetchFromRedis = function( db ){
         period: 1000 * 60 * 2
 
       , fetch: function( callback ){
-          var client = redis.createClient( config.redis );
+          var client = redis.createClient( config.redis.port, config.redis.hostname, config.redis );
 
           client.get( 'restaurants-' + region.id, function( error, results ){
             client.quit();
@@ -103,7 +103,7 @@ module.exports.autoFetchFromRedis = function( db ){
         period: 1000 * 60 * 2
 
       , fetch: function( callback ){
-          var client = redis.createClient( config.redis );
+          var client = redis.createClient( config.redis.port, config.redis.hostname, config.redis );
 
           client.get( 'delivery_services-' + region.id, function( error, results ){
             client.quit();

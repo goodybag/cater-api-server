@@ -52,7 +52,6 @@ $$ language plpgsql;
 create or replace function on_order_type_change()
 returns trigger as $$
 begin
-  perform insert_order_type( NEW );
   if NEW.type = 'courier' then
     -- No delivery service set? Assign one
     if NEW.delivery_service_id is null then
@@ -389,13 +388,6 @@ begin
           and rl.is_default = true
     )
     where orders.id = o.id;
-end;
-$$ language plpgsql;
-
-create or replace function insert_order_type( o orders )
-returns void as $$
-begin
-  insert into order_types (order_id, type) values (o.id, o.type);
 end;
 $$ language plpgsql;
 

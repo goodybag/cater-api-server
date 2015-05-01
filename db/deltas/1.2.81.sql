@@ -13,6 +13,7 @@ begin
     id              serial primary key
   , created_at      timestamptz not null default now()
   , order_id        int references orders(id) on delete set null
+  , user_id         int references users(id) on delete set null
   , type            order_type not null default 'delivery'::order_type
   );
 

@@ -12,24 +12,24 @@
   </nav>
   <form class="form-vertical form-restaurant-signup">
     <div class="form-step">
-    {{#if (or (not cookies.gb_rs) (eq cookies.gb_rs '1')) }}
+    {{! {{#if (or (not cookies.gb_rs) (eq cookies.gb_rs '1')) }}
       {{> restaurant_signup_basic_info}}
-    {{/if}}
-    {{#if (eq cookies.gb_rs '2') }}
+    {{! {{/if}}
+    {{! {{#if (eq cookies.gb_rs '2') }}
       {{> restaurant_signup_restaurant_info}}
       {{> restaurant_signup_order_contact_info}}
-    {{/if}}
-    {{#if (eq cookies.gb_rs '3') }}
+    {{! {{/if}} }}
+    {{! {{#if (eq cookies.gb_rs '3') }}
       {{> restaurant_signup_delivery_info}}
       {{> restaurant_signup_pickup_info}}
       {{> restaurant_signup_hours_of_operation}}
-    {{/if}}
-    {{#if (eq cookies.gb_rs '4') }}
+    {{! {{/if}}
+    {{! {{#if (eq cookies.gb_rs '4') }}
       {{> restaurant_signup_billing_address}}
       {{> restaurant_signup_direct_deposit_info}}
       {{> restaurant_signup_fee_schedule}}
       {{> restaurant_signup_terms_of_service}}
-    {{/if}}
+    {{! {{/if}}
     </div>
 
     <div class="form-group">

@@ -36,4 +36,5 @@ var envs = [ 'production', 'staging', 'india' ];
 if ( envs.indexOf( process.env['GB_ENV'] ) > -1 )
 if ( typeof process.env['REDISCLOUD_URL'] === 'string' ){
   module.exports = parse( process.env['REDISCLOUD_URL'] );
+  console.log('using parsed redis cloud url', module.exports);
 }

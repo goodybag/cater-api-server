@@ -79,6 +79,6 @@ exports.transaction = function( callback ){
   });
 };
 
-require('./cache')( exports );
-
 exports.dirac = dirac;
+
+require('./cache').setupBasicStructure( exports );

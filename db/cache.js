@@ -28,9 +28,11 @@
  *      Function to easily access delivery services by region id
  */
 
-var fetchVal = require('../lib/fetch-val');
+var redis     = require('redis');
+var config    = require('../config');
+var fetchVal  = require('../lib/fetch-val');
 
-module.exports = function( db ){
+module.exports.setupBasicStructure = function( db ){
   db.cache = {};
 
   db.cache.restaurants = {};
@@ -62,7 +64,69 @@ module.exports = function( db ){
 
     return result;
   };
+};
 
+module.exports.autoFetchFromRedis = function( db ){
+  db.regions.find( {}, { limit: 'all' }, function( error, regions ){
+    if ( error ) throw error;
+
+    regions.forEach( function( region ){
+      db.cache.restaurants[ region.id ] = fetchVal({
+        period: 1000 * 60 * 6
+
+      , fetch: function( callback ){
+          var client = redis.createClient( config.redis.port, config.redis.hostname, config.redis );
+
+          client.get( 'restaurants-' + region.id, function( error, results ){
+            client.quit();
+
+            if ( error ){
+              return callback( error );
+            }
+
+            try {
+              results = JSON.parse( results );
+            } catch( e ){
+              return callback( e );
+            }
+
+            results.forEach( function( restaurant ){
+              restaurant.region.delivery_services = db.cache.delivery_services.byRegion( region.id );
+            });
+
+            callback( null, results );
+          });
+        }
+      });
+
+      db.cache.delivery_services[ region.id ] = fetchVal({
+        period: 1000 * 60 * 6
+
+      , fetch: function( callback ){
+          var client = redis.createClient( config.redis.port, config.redis.hostname, config.redis );
+
+          client.get( 'delivery_services-' + region.id, function( error, results ){
+            client.quit();
+
+            if ( error ){
+              return callback( error );
+            }
+
+            try {
+              results = JSON.parse( results );
+            } catch( e ){
+              return callback( e );
+            }
+
+            callback( null, results );
+          });
+        }
+      });
+    });
+  });
+};
+
+module.exports.autoFetchFromDb = function( db ){
   db.regions.find( {}, { limit: 'all' }, function( error, regions ){
     if ( error ) throw error;
 

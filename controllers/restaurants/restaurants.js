@@ -26,6 +26,10 @@ module.exports.list = function(req, res) {
   var results = db.cache.restaurants.byRegion( req.user.attributes.region_id );
 
   if ( results.error ){
+    logger.error('Error getting restaurants by region', {
+      error: error
+    });
+
     return res.error( results.error );
   }
 

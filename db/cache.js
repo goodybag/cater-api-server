@@ -72,7 +72,7 @@ module.exports.autoFetchFromRedis = function( db ){
 
     regions.forEach( function( region ){
       db.cache.restaurants[ region.id ] = fetchVal({
-        period: 1000 * 60 * 2
+        period: 1000 * 60 * 6
 
       , fetch: function( callback ){
           var client = redis.createClient( config.redis.port, config.redis.hostname, config.redis );
@@ -100,7 +100,7 @@ module.exports.autoFetchFromRedis = function( db ){
       });
 
       db.cache.delivery_services[ region.id ] = fetchVal({
-        period: 1000 * 60 * 2
+        period: 1000 * 60 * 6
 
       , fetch: function( callback ){
           var client = redis.createClient( config.redis.port, config.redis.hostname, config.redis );

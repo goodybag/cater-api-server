@@ -11,6 +11,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 define( function( require, exports, module ){
   var utils = require('utils');
   var orderFulfillability = require('stamps/orders/fulfillability');
+  var orderDeliveryFee = require('stamps/orders/delivery-fee');
 
   module.exports = function( restaurants, query, options ){
     options = utils.defaults( options || {}, {
@@ -70,10 +71,10 @@ define( function( require, exports, module ){
       restaurants = utils.search( restaurants, query.search, ['name'] );
     }
 
+    var fulfillabilityOptions = utils.extend( orderParams, { timezone: options.timezone } );
+
     if ( Object.keys( orderParams ).length > 0 ){
-      var fulfillability = orderFulfillability(
-        utils.extend( orderParams, { timezone: options.timezone } )
-      );
+      var fulfillability = orderFulfillability( fulfillabilityOptions );
 
       restaurants = restaurants.filter( function( result ){
         fulfillability.restaurant = result;
@@ -106,7 +107,17 @@ define( function( require, exports, module ){
       resultParts[ i ] = part.sort( sort );
     });
 
-    return utils.flatten( resultParts );
+    restaurants = utils.flatten( resultParts );
+
+    // Add in delivery fee range
+    restaurants.forEach( function( restaurant ){
+      var range = orderDeliveryFee( fulfillabilityOptions );
+      range = range.getZipBasedRange( restaurant );
+      restaurant.delivery_fee_from = range.min;
+      restaurant.delivery_fee_to = range.max;
+    });
+
+    return restaurants;
   };
 
   return module.exports;

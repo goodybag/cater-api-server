@@ -9,6 +9,9 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
+  var utils = require('utils');
+  var fulfillability = require('./fulfillability');
+
   return require('stampit')()
     .compose( require('../distance/base') )
     .state({
@@ -21,6 +24,27 @@ define( function( require, exports, module ){
     .methods({
       getPrice: function(){
         return this.basePrice + Math.round( this.pricePerMile * this.miles() );
+      }
+
+      /**
+       * Gets the zip-based delivery fee range (min->max) based
+       * on a restaurant (if provided)
+       * @param  {[type]} restaurant [description]
+       * @return {[type]}            [description]
+       */
+    , getZipBasedRange: function( restaurant ){
+        var order = fulfillability( this );
+
+        if ( restaurant ){
+          order.restaurant = restaurant;
+        }
+
+        var fees = utils.pluck( order.getAllSupportedDeliveryZips(), 'fee' );
+
+        return {
+          min: Math.min.apply( null, fees ) || 0
+        , max: Math.max.apply( null, fees ) || 0
+        };
       }
     });
 });

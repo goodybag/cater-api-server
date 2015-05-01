@@ -113,6 +113,22 @@
           </div>
         {{/is}}
         <div class="row">
+          <dt>Order Status</dt>
+          <dd>
+            <select name="order_status">
+              <option value="pending" {{#eq order.status 'pending'}}selected="true"{{/eq}}>Pending</option>
+              <option value="canceled" {{#eq order.status 'canceled'}}selected="true"{{/eq}}>Canceled</option>
+              <option value="submitted" {{#eq order.status 'submitted'}}selected="true"{{/eq}}>Submitted</option>
+              <option value="denied" {{#eq order.status 'denied'}}selected="true"{{/eq}}>Denied</option>
+              <option value="accepted" {{#eq order.status 'accepted'}}selected="true"{{/eq}}>Accepted</option>
+              <option value="delivered" {{#eq order.status 'delivered'}}selected="true"{{/eq}}>Delivered</option>
+              <option data-silent="true" value="submitted">Submitted - no notification</option>
+              <option data-silent="true" value="accepted">Accepted - no notification</option>
+              <option data-silent="true" value="canceled">Canceled - no notification</option>
+            </select>
+          </dd>
+        </div>
+        <div class="row">
           <dt>Payment Status</dt>
           <dd>
             <select name="payment_status">

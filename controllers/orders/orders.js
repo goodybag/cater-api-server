@@ -188,7 +188,15 @@ module.exports.create = function(req, res) {
       req.session.guestOrders.push( order.attributes.id );
     }
 
-    res.send(201, order.toJSON());
+    db.order_types.insert({
+      order_id: order.attributes.id
+    , user_id:  order.attributes.user_id
+    , type:     order.attributes.type
+    },
+    function( err ){
+      if ( err ) return res.error(errors.internal.DB_FAILURE, err);
+      res.send(201, order.toJSON());
+    });
   });
 }
 

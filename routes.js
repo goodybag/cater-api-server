@@ -1039,6 +1039,7 @@ module.exports.register = function(app) {
     })
   , controllers.orders.auth
   , m.restrict(['order-owner', 'order-restaurant', 'admin'])
+  , m.audit.orderType()
   , controllers.orders.update
   );
 

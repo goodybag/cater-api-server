@@ -31,6 +31,11 @@ define(function(require) {
     , nullable: false
     , references: {table: 'orders', column: 'id'}
     }
+  , user_id: {
+      type: types.int
+    , nullable: false
+    , references: {table: 'users', column: 'id'}
+    }
   , type: {
       type: types.order_type
     , nullable: false

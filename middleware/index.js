@@ -2,6 +2,7 @@ module.exports = {
   after: require('./after')
 , aliasLocals: require('./alias-locals')
 , analytics: require('./analytics')
+, audit: require('./audit')
 , basicAuth: require('./basic-session-auth')
 , consumeNewSignup: require('./consume-new-signup')
 , cors: require('./cors')

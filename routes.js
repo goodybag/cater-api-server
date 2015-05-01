@@ -1799,6 +1799,7 @@ module.exports.register = function(app) {
 
   app.get('/admin/analytics/retention'
   , m.restrict(['admin'])
+  , m.filters([ 'regions' ])
   , m.getOrders({
       organizationSubmitted: true
     , restaurant: false

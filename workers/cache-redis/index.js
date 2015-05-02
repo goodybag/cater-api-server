@@ -45,8 +45,8 @@ var regionCaches = {
     options.many.push({ table: 'restaurant_delivery_zips', alias: 'delivery_zips' });
     options.many.push({ table: 'restaurant_lead_times', alias: 'lead_times' });
     options.many.push({ table: 'restaurant_pickup_lead_times', alias: 'pickup_lead_times' });
-    options.many.push({ table: 'restaurant_tags', alias: 'tags' });
 
+    options.pluck.push({ table: 'restaurant_tags', alias: 'tags', column: 'tag' });
     options.pluck.push({ table: 'restaurant_meal_styles', alias: 'meal_styles', column: 'meal_style' });
     options.pluck.push({ table: 'restaurant_meal_types', alias: 'meal_types', column: 'meal_type' });
 

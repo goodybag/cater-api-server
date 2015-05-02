@@ -526,7 +526,7 @@ define(function(require, exports, module) {
     },
 
     formatDietTag: function(tag) {
-      return config.diets[tag] || tag;
+      return config.diets[tag] ? config.diets[tag].name : tag;
     },
 
     giftcardClasses: function( card, user ){

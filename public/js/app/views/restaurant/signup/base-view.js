@@ -17,7 +17,7 @@ define(function (require, exports, module) {
       window.cookie = cookie;
 
       //restaurant signup view state
-      this.cookieName = 'gb_rs';
+      this.cookieName = 'gb_rs'; // restaurant signup id
       this.store = 'gb_restaurant';
       this.model.set(this.getLocalStorage());
     }

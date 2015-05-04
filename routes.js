@@ -102,12 +102,17 @@ module.exports.register = function(app) {
   app.get('/restaurants/join'
   , m.localCookies(['gb_rs'])
   , function (req, res, next) {
+      res.locals.restaurant = {};
+      res.locals.signup = {};
       if (!req.cookies.gb_rs) return next();
-      db.restaurant_signups.findOne({ id: req.cookies.gb_rs }, function (error, result) {
+
+      db.restaurant_signups.findOne({ id: req.cookies.gb_rs }, function (error, results) {
         if (error) return next();
 
-        res.locals.restaurant = result.data;
-        res.locals.signup = { id: result.id, step: result.step };
+        if (results) {
+          res.locals.restaurant = results.data;
+          res.locals.signup = { id: results.id, step: results.step };
+        }
 
         next();
       });

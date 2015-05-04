@@ -27,6 +27,7 @@ define(function (require, exports, module) {
 
   , submit: function (e) {
       e.preventDefault();
+      var this_ = this;
       this.clearErrors();
 
       if (!this.$el.find(this.fieldMap.name).val()) {
@@ -50,8 +51,13 @@ define(function (require, exports, module) {
       , url: '/api/restaurants/join'
       , dataType: 'JSON'
       , data: { step: 2, data: JSON.stringify( this.model.toJSON() )}
-      , success: function ( model ) {
-          console.log('worked!', model);
+      , success: function ( data ) {
+          // set restaurant signup id
+          this_.setCookie(data.id);
+          this_.$el.fadeOut('slow', function () {
+            window.scrollTo(0,0);
+            window.location.reload();
+          });
         }
       , error: function ( error ) {
           console.log('failed', error);

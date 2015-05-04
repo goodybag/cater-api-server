@@ -44,9 +44,20 @@ define(function (require, exports, module) {
       }
 
       this.model.set(this.getDiff());
-      this.setLocalStorage(this.model.toJSON());
-      this.setCookie('2');
-      window.location.reload();
+
+      $.ajax({
+        type: 'POST'
+      , url: '/api/restaurants/join'
+      , dataType: 'JSON'
+      , data: { step: 2, data: JSON.stringify( this.model.toJSON() )}
+      , success: function ( model ) {
+          console.log('worked!', model);
+        }
+      , error: function ( error ) {
+          console.log('failed', error);
+        }
+      })
+
     }
   });
 });

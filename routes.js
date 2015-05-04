@@ -101,18 +101,29 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/join'
   , m.localCookies(['gb_rs'])
+  , function (req, res, next) {
+      if (!req.cookies.gb_rs) return next();
+      db.restaurant_signups.findOne({ id: req.cookies.gb_rs }, function (error, result) {
+        if (error) return next();
+
+        res.locals.restaurant = result.data;
+        res.locals.signup = { id: result.id, step: result.step };
+
+        next();
+      });
+    }
   , m.view('restaurant-signup/register', {
       layout: 'layout/default'
     })
   );
 
   app.post('/api/restaurants/join'
-  , m.insert( db.restaurants_signups )
+  , m.insert( db.restaurant_signups )
   );
 
   app.put('/api/restaurants/join/:id'
   , m.param('id')
-  , m.update( db.restaurants_signups )
+  , m.update( db.restaurant_signups )
   );
 
   app.get('/restaurants/:rid'

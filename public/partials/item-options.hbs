@@ -36,7 +36,7 @@
           <span class="option-price">(+{{dollars this.price}})</span>
           {{/if}}
           {{#each tags}}
-          {{#with (ref ../../../config this)}}
+          {{#with (ref ../../../config.diets this)}}
           {{> diet_tag }}
           {{/with}}
           {{/each}}

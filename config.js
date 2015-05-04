@@ -29,7 +29,7 @@ config.defaults = {
 , reminders: require('./configs/reminders')
 , redis: require('./configs/redis')
 , session: require('./configs/session')
-, diets: require('./configs/diets')
+, diets: require('./public/js/lib/diets')
 , sortQueryTable: require('./configs/sort-query-table')
 , support: require('./configs/support')
 , workers: require('./configs/workers')

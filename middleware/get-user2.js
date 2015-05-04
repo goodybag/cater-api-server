@@ -9,12 +9,16 @@ var sessionAndUser  = require('../lib/session-and-user');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
-
+    omissions: [ 'password' ]
   });
 
   var queryOptions = {
     one:  [ { table: 'users', alias: 'user'
-            , one:    [ { table: 'regions', alias: 'region' } ]
+            , one:    [ { table: 'regions', alias: 'region' }
+                      , { table: 'addresses', alias: 'defaultAddress'
+                        , where: { is_default: true }
+                        }
+                      ]
             , many:   [ { table: 'addresses' } ]
             , pluck:  [ { table: 'users_groups', alias: 'groups', column: 'group' } ]
             }
@@ -24,14 +28,16 @@ module.exports = function( options ){
   var uOne = queryOptions.one[0].one;
   var uMany = queryOptions.one[0].many;
 
+  var middleware = sessionAndUser({
+    secret: config.session.secret
+  , cookie: config.session.cookie
+  , resave: config.session.resave
+  , saveUninitialized: config.session.saveUninitialized
+  , queryOptions: queryOptions
+  });
+
   return function( req, res, next ){
-    sessionAndUser({
-      secret: config.session.secret
-    , cookie: config.session.cookie
-    , resave: config.session.resave
-    , saveUninitialized: config.session.saveUninitialized
-    , queryOptions: queryOptions
-    })( req, res, function( error ){
+    middleware( req, res, function( error ){
       if ( error ) return next( error );
 
       if ( !req.session || !req.session.user || req.session.user.id == null ){
@@ -40,7 +46,11 @@ module.exports = function( options ){
         );
 
         if ( !req.session.user ){
-          req.session.user = utils.cloneDeep( req.user.toJSON() );
+          req.session.user = utils.cloneDeep(
+            utils.omit( req.user.toJSON(), [
+              'groups', 'password'
+            ])
+          );
         }
       } else {
         req.user = req.session.canonical;
@@ -50,7 +60,7 @@ module.exports = function( options ){
       }
 
       res.locals.session = req.session;
-      res.locals.user = req.user.toJSON();
+      res.locals.user = utils.omit(req.user.toJSON(), options.omissions);
 
       next();
     });

@@ -1,3 +1,9 @@
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
+  };
+}
+
 define(function(require, exports, module) {
   var utils               = require('utils');
   var PaymentSummaryItem  = require('../models/payment-summary-item');
@@ -38,7 +44,7 @@ define(function(require, exports, module) {
       var order;
 
       if ( attrs.order ){
-        order = new Order( attrs.order );
+        order = new Order( attrs.order, { lockOrderType: true } );
         delete attrs.order;
       }
 

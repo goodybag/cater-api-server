@@ -153,9 +153,6 @@ define(function(require, exports, module) {
         is_fee_on_total: {
           type: 'boolean'
         },
-        disable_courier: {
-          type: 'boolean'
-        },
         region_id: {
           type: ['number', 'null']
         },
@@ -218,7 +215,7 @@ define(function(require, exports, module) {
 
       // Restaurant couldn't ful-fill, what about delivery services?
       if ( !result ){
-        date  = moment( date ).add( 'minutes', -this.get('region').lead_time_modifier || 0 );
+        date  = moment( date ).add( -this.get('region').lead_time_modifier || 0 , 'minutes' );
         day   = date.day();
         hours = this.get('delivery_times')[ day ];
         time  = date.format('HH:mm:ss');
@@ -311,7 +308,7 @@ define(function(require, exports, module) {
       if ( limit && minutes >= leadTime ) return true;
 
       // disabled courier so don't bother checking pickup lead times
-      if ( this.get('disable_courier') ) return false;
+      if ( this.get('supported_order_types') && this.get('supported_order_types').indexOf('courier') < 0 ) return false;
 
       // not enough leadtime bro
       if ( !limit || minutes < leadTime ){

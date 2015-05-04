@@ -78,12 +78,24 @@ describe('Stamps', function(){
                 // Result is within 50 meters of expected
                 var d1 = element.distance.value;
                 var d2 = rows[ i ].elements[ ii ].distance.value;
-                assert( Math.abs( d1 - d2 ) < 50 );
+
+                assert(
+                  Math.abs( d1 - d2 ) < 0.02 * d1
+                , 'Distance not within 2% of expected. Expected: :d1 Actual: :d2'
+                    .replace( ':d1', d1 )
+                    .replace( ':d2', d2 )
+                );
 
                 // Result is within 1min of expected
                 var t1 = element.duration.value;
                 var t2 = rows[ i ].elements[ ii ].duration.value;
-                assert( Math.abs( t1 - t2 ) < 60 );
+
+                assert(
+                  Math.abs( t1 - t2 ) < 0.20 * t1
+                , 'Time not within 20% of expected. Expected: :t1 Actual: :t2'
+                    .replace( ':t1', t1 )
+                    .replace( ':t2', t2 )
+                );
               });
             });
 

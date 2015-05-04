@@ -3,6 +3,8 @@ var config  = require('./config');
 var forky   = require('forky');
 var rollbar = require('rollbar');
 
+require('./db/cache').autoFetchFromRedis( require('./db') );
+
 process.on('uncaughtException', function(err) {
   console.log('Uncaught Exception', err, err.stack);
   forky.disconnect();

@@ -41,7 +41,8 @@ module.exports.auth = function(req, res, next) {
     return next();
   }
 
-  var reviewToken = req.query.review_token || req.body.review_token;
+  var reviewToken = req.body.review_token || req.query.review_token;
+  if (req.body.review_token) delete req.body.review_token;
 
   // There was a review token, so this is a restaurant
   if ( reviewToken && (reviewToken === req.order.review_token) ){
@@ -57,17 +58,16 @@ module.exports.auth = function(req, res, next) {
 
   logger.info('checking guest status');
   if ( req.user.isGuest() ){
-    logger.info('user is guest');
     if ( Array.isArray( req.session.guestOrders ) ){
       logger.info('guest orders is available');
       if ( req.session.guestOrders.indexOf( req.order.id ) > -1 ){
-        logger.info('adding order-owner');
         req.user.attributes.groups.push('order-owner');
         req.order.isOwner = true;
       }
     }
   }
 
+  logger.info('user permissions [' + req.user.attributes.groups.join(', ') + ']');
   next();
 };
 
@@ -129,7 +129,7 @@ module.exports.get = function(req, res) {
       show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
       states: states,
       orderAddress: {
-        address: order,
+        address: utils.extend( {}, order, { name: order.address_name } ),
         states: states
       },
       orderParams: req.session.orderParams,
@@ -221,6 +221,7 @@ module.exports.update = function(req, res) {
   if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
 
   utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+
   order.save(function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(order.toJSON({plain:true}));
@@ -312,6 +313,10 @@ module.exports.changeStatus = function(req, res) {
 
         var noExistingDefault = !address;
         var addressData = utils.extend(orderAddressFields, { user_id: req.user.attributes.id, is_default: noExistingDefault });
+
+        if (req.order.address_name) {
+          addressData.name = req.order.address_name;
+        }
 
         logger.info('Saving address');
         if ( noExistingDefault ){

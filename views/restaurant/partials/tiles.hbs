@@ -51,7 +51,7 @@
           </ul>
           <span class="tile-tags">
             {{#each tags}}
-            {{#with (ref ../../config.diets tag)}}
+            {{#with (ref ../../config.diets this)}}
             {{> diet_tag }}
             {{/with}}
             {{/each}}

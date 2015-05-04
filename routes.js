@@ -106,6 +106,15 @@ module.exports.register = function(app) {
     })
   );
 
+  app.post('/api/restaurants/join'
+  , m.insert( db.restaurants_signups )
+  );
+
+  app.put('/api/restaurants/join/:id'
+  , m.param('id')
+  , m.update( db.restaurants_signups )
+  );
+
   app.get('/restaurants/:rid'
     // Just do a barebones lookup since the controller
     // has to do a legacy db model lookup

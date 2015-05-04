@@ -125,9 +125,10 @@ define(function (require, exports, module) {
       , delivery_hours: this.fieldGetters.delivery_hours.call(this)
       };
 
-
-      //this.setCookie('4');
-      //window.location.reload();
+      this.model.set(this.getDiff());
+      this.setLocalStorage(this.model.toJSON());
+      this.setCookie('4');
+      window.location.reload();
     }
 
   , setLeadTime: function(e) {

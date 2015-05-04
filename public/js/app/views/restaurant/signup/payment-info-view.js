@@ -45,8 +45,17 @@ define(function (require, exports, module) {
 
       //TODO: insert deposit info into stripe
 
-      //this.model.set(this.getDiff());
-      //this.model.save(null {});
+      this.model.set(this.getDiff());
+      this.model.save(null, {
+        patch: true
+      , validate: false
+      , success: function () {
+          console.log('works!')      
+        }
+      , error: function (error) {
+          console.log('failed!', error);      
+        }
+      });
     }
 
     // validates against null input values

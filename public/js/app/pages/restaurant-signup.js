@@ -1,9 +1,9 @@
 define ( function (require) {
   var _ = require('lodash');
-  var BasicInfoView = require('../views/restaurant/join/basic-info-view');
-  var RestaurantInfoView = require('../views/restaurant/join/restaurant-info-view');
-  var DeliveryPickupView = require('../views/restaurant/join/delivery-pickup-view');
-  var PaymentInfoView = require('../views/restaurant/join/payment-info-view');
+  var BasicInfoView = require('../views/restaurant/signup/basic-info-view');
+  var RestaurantInfoView = require('../views/restaurant/signup/restaurant-info-view');
+  var DeliveryPickupView = require('../views/restaurant/signup/delivery-pickup-view');
+  var PaymentInfoView = require('../views/restaurant/signup/payment-info-view');
   var EditLeadTimesView = require('../views/restaurant/edit-lead-times-view');
 
   var Restaurant = require('../models/restaurant');

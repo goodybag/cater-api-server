@@ -105,11 +105,19 @@ define(function (require, exports, module) {
       var fields = {
           address: this.$el.find(this.fieldMap.address).val()
         , phone: this.fieldGetters.display_phone.call(this)
+        , price: this.fieldGetters.price.call(this)
         , menu_url: this.fieldGetters.menu_url.call(this)
         , logo_url: this.fieldGetters.logo_url.call(this)
         , orderMinimum: this.$el.find(this.fieldMap.minimum_order).val()
         , contacts: this.fieldGetters.contacts.call(this)
       };
+
+      if (!fields.price) {
+        return this.displayErrors([{
+          property: 'price'
+        , message: 'Please select a price.'
+        }]);
+      }
 
       if (!fields.address) {
         return this.displayErrors([{

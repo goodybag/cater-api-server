@@ -46,14 +46,16 @@ define(function (require, exports, module) {
       //TODO: insert deposit info into stripe
 
       this.model.set(this.getDiff());
-      this.model.save(null, {
-        patch: true
-      , validate: false
+      $.ajax({
+        type: 'PUT'
+      , url: '/api/restaurants/join/:id'.replace(':id', this.getCookie())
+      , dataType: 'JSON'
+      , data: { status: 'completed', data: JSON.stringify( this.model.toJSON() )}
       , success: function () {
-          console.log('works!')      
+          console.log('worked');
         }
       , error: function (error) {
-          console.log('failed!', error);      
+          console.error('failed', error);
         }
       });
     }

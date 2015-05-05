@@ -191,7 +191,6 @@ define(function (require, exports, module) {
     }
 
   , setDeliveryHours: function (e) {
-    console.log('click')
       if (e) e.preventDefault();
       var $el = $(e.target);
       $el.toggleClass('active');

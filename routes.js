@@ -117,7 +117,7 @@ module.exports.register = function(app) {
         next();
       });
     }
-  , m.view('restaurant-signup/register', {
+  , m.view('restaurant-signup/', {
       layout: 'layout/default'
     })
   );

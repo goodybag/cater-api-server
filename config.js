@@ -327,7 +327,7 @@ config.dev = {
 config.staging = {
   env: 'staging'
 
-, numWorkers: 1
+, numWorkers: +process.env['WEB_CONCURRENCY']
 
 , isStaging: true
 
@@ -383,7 +383,7 @@ config.staging = {
 
 config.production = {
   env: 'production'
-, numWorkers: 3
+, numWorkers: +process.env['WEB_CONCURRENCY']
 
 , isProduction: true
 

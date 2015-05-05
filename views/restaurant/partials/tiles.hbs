@@ -49,7 +49,13 @@
             </li>
             <li>Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</li>
           </ul>
-          <span class="tile-tags">{{> tags config=../config }}</span>
+          <span class="tile-tags">
+            {{#each tags}}
+            {{#with (ref ../../config.diets this)}}
+            {{> diet_tag }}
+            {{/with}}
+            {{/each}}
+          </span>
         </div>
       </div>
     </a>

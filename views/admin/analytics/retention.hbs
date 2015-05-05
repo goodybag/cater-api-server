@@ -24,6 +24,27 @@
 </section>
 
 <div class="analytics-section container">
+  <span class="btn-regions popover-wrapper right">
+    <button
+    class="btn btn-white btn-dropdown"
+    data-role="popover"
+    data-target="dropdown-popover">
+    Regions
+    <i class="gb-icon-caret-down"></i>
+    </button>
+
+    <div class="popover-modal dropdown-popover">
+      <!-- Dropdown content -->
+      <ul class="popover-body">
+        {{#each filters.region}}
+        <a class="popover-item" href="{{queryParams (omit ../reqQuery 'q')}}&q={{this.qs}}">
+          <span class="popover-item-icon">{{#if active}}<span class="gb-icon-checkmark va-middle"></span>{{/if}}</span>
+          <span class="popover-item-label">{{name}}</span>
+        </a>
+        {{/each}}
+      </ul>
+    </div>
+  </span>
 
   <table class="table table-striped">
     <thead>
@@ -52,4 +73,12 @@
     </tbody>
   </table>
 </div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require(['jquery-loaded'], function($){
+  $('[data-role="popover"]').gb_popover();
+});
+</script>
 {{/extend}}

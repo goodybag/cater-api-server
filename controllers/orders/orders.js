@@ -41,7 +41,8 @@ module.exports.auth = function(req, res, next) {
     return next();
   }
 
-  var reviewToken = req.query.review_token || req.body.review_token;
+  var reviewToken = req.body.review_token || req.query.review_token;
+  if (req.body.review_token) delete req.body.review_token;
 
   // There was a review token, so this is a restaurant
   if ( reviewToken && (reviewToken === req.order.review_token) ){
@@ -188,7 +189,15 @@ module.exports.create = function(req, res) {
       req.session.guestOrders.push( order.attributes.id );
     }
 
-    res.send(201, order.toJSON());
+    db.order_types.insert({
+      order_id: order.attributes.id
+    , user_id:  order.attributes.user_id
+    , type:     order.attributes.type
+    },
+    function( err ){
+      if ( err ) return res.error(errors.internal.DB_FAILURE, err);
+      res.send(201, order.toJSON());
+    });
   });
 }
 

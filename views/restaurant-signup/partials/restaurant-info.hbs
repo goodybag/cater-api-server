@@ -70,7 +70,7 @@
       </div>
     </div>
     <div class="row">
-      <label class="label-col">Restaurant Email <span class="panel-info">Optional</span></label>
+      <label class="label-col">Restaurant Email <div class="panel-info">Optional</div></label>
       <div class="field-col">
         <div class="form-group">
           <input type="email" class="form-control restaurant-email" name="email" value="{{restaurant.billing_email}}">
@@ -194,27 +194,19 @@
       <label class="label-col">Your Menu</label>
       <div class="field-col">
         <div class="row">
-          <label class="label-col">Enter a link:</label>
-          <div class="field-col">
-            <div class="form-group">
-              <input type="text" class="form-control restaurant-menu" name="menu" value="{{restaurant.menu_url}}"> 
-            </div>
+          <label class="col">Enter a link:</label>
+          <div class="col">
+            <input type="text" class="restaurant-menu" name="menu" value="{{restaurant.menu_url}}"> 
           </div>
         </div>
         <strong>Or</strong>
         <div class="row">
-          <label class="label-col">upload a file:</label>
-          <div class="field-col">
-            <div class="row">
-              <div class="col">
-                <input type="text" class="form-control menu-url-file" placeholder="No file selected" readonly>
-              </div>
-              <div class="col">
-                <div class="form-group">
-                  <button class="form-control btn btn-default btn-block" id="input-menu-url">Pick File</button>
-                </div>
-              </div>
-            </div>
+          <label class="col">upload a file:</label>
+          <div class="col">
+            <input type="text" class="menu-url-file" placeholder="No file selected" readonly>
+          </div>
+          <div class="col">
+            <button class="form-control btn btn-default btn-block" id="input-menu-url">Pick File</button>
           </div>
         </div>
       </div>
@@ -224,26 +216,22 @@
       <label class="label-col">Your Logo</label>
       <div class="field-col">
         <div class="row">
-          <label class="label-col">Enter a link:</label>
-          <div class="field-col">
-            <div class="form-group">
-              <input type="text" class="form-control restaurant-logo" value="{{restaurant.logo_url}}">
-            </div>
+          <label class="col">Enter a link:</label>
+          <div class="col">
+            <input type="text" class="form-control restaurant-logo" value="{{restaurant.logo_url}}">
           </div>
         </div>
         <strong>Or</strong>
         <div class="row">
-          <label class="label-col">Upload a file:</label>
-          <div class="field-col">
-            <div class="row">
-              <div class="col">
-                <input type="text" class="form-control logo-url-file" placeholder="No file selected" readonly>
-              </div>
-              <div class="col">
+          <div class="row">
+            <label class="col">Upload a file:</label>
+            <div class="col">
                 <div class="form-group">
-                  <button class="form-control btn btn-default btn-block" id="input-logo-url">Pick File</button>
-                </div>
+                  <input type="text" class="form-control logo-url-file" placeholder="No file selected" readonly>
               </div>
+            </div>
+            <div class="col">
+              <button class="form-control btn btn-default btn-block" id="input-logo-url">Pick File</button>
             </div>
           </div>
         </div>

@@ -15,7 +15,7 @@ define(function (require, exports, module) {
     })
 
   , fieldMap: {
-      gb_fee           : '.delivery-fee'
+      delivery_fee     : '.delivery-fee'
     , lead_times       : '.delivery-lead-times'
     , pickup_lead_times: '.pickup-lead-times'
     , delivery_hours   : '.delivery-hours'
@@ -74,20 +74,20 @@ define(function (require, exports, module) {
 
   , submit: function (e) {
       e.preventDefault();
+      var this_ = this;
       this.clearErrors();
-
       // Input field values. We're not using fieldGetters here
       // b/c some inputs give a 'default' option (i.e default lead times)
       var fields = {
-        gb_fee: Math.abs(this.$el.find(this.fieldMap.gb_fee).val())
+        delivery_fee: Math.abs(this.$el.find(this.fieldMap.delivery_fee).val())
       , lead_times: this.$el.find(this.fieldMap.lead_times+':checked').val()
       , pickup_lead_times: this.$el.find(this.fieldMap.pickup_lead_times+':checked').val()
       , delivery_hours: this.$el.find(this.fieldMap.delivery_hours)
       };
 
-      if (!fields.gb_fee || !parseInt(fields.gb_fee)) {
+      if (!fields.delivery_fee || !parseInt(fields.delivery_fee)) {
         return this.displayErrors([{
-          property: 'gb_fee'
+          property: 'delivery_fee'
         , message: 'Please provide a delivery fee.'
         }]);
       }
@@ -109,12 +109,18 @@ define(function (require, exports, module) {
       for (var i=0; i < fields.delivery_hours.length; i++) {
         var days = fields.delivery_hours.eq(i).find('.datetime-days-list > li.active');
         if (days.length < 1) {
-          return alert('select a day');
+          return this.displayErrors([{
+            selector: '.gb-dropdown'
+          , message: 'Please select a day.'
+          }]);
         }
         var startTime = fields.delivery_hours.eq(i).find('.delivery-hours-start').val();
         var endTime = fields.delivery_hours.eq(i).find('.delivery-hours-end').val();
         if (!startTime || !endTime) {
-          return alert('select a time')
+          return this.displayErrors([{
+            selector: '.delivery-hours-end'
+          , message: 'Please select a delivery time.'
+          }]);
         }
       }
 
@@ -126,9 +132,24 @@ define(function (require, exports, module) {
       };
 
       this.model.set(this.getDiff());
-      this.setLocalStorage(this.model.toJSON());
-      this.setCookie('4');
-      window.location.reload();
+      $.ajax({
+        type: 'PUT'
+      , url: '/api/restaurants/join/:id'.replace(':id', this.getCookie())
+      , dataType: 'JSON'
+      , data: { step: 4, data: JSON.stringify( this.model.toJSON() )}
+      , success: function () {
+          this_.$el.animate({
+            left: '-100px',
+            opacity: '0'
+          }, 300, function () {
+            window.scrollTo(0,0);
+            window.location.reload();
+          });
+        }
+      , error: function (error) {
+          console.error('failed ', error);
+        }
+      });
     }
 
   , setLeadTime: function(e) {
@@ -170,6 +191,7 @@ define(function (require, exports, module) {
     }
 
   , setDeliveryHours: function (e) {
+    console.log('click')
       if (e) e.preventDefault();
       var $el = $(e.target);
       $el.toggleClass('active');

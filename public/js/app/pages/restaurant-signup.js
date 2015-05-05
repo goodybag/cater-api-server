@@ -14,7 +14,7 @@ define ( function (require) {
       page.model = options.model || new Restaurant();
 
       var viewOptions = {
-        el: '#restaurant-join'
+        el: '#restaurant-signup'
       , model: page.model
       };
 

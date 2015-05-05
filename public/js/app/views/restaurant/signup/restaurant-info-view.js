@@ -59,7 +59,7 @@ define(function (require, exports, module) {
         var amenities = [];
         this.$el.find(this.fieldMap.amenities).each(function (i, el) {
           if ( $(el).is(':checked') ) {
-            amenities.push({ amenities: el.value });
+            amenities.push({ name: el.value });
           }
         });
         return amenities;
@@ -184,7 +184,10 @@ define(function (require, exports, module) {
       , url: '/api/restaurants/join/:id'.replace(':id', this.getCookie())
       , data: { step: 3, data: JSON.stringify( this.model.toJSON() )}
       , success: function () {
-          this_.$el.fadeOut('slow', function () {
+          this_.$el.animate({
+           left: '-100px',
+           opacity: '0'
+          }, 300, function () {
             window.scrollTo(0,0);
             window.location.reload();
           });

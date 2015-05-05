@@ -54,7 +54,10 @@ define(function (require, exports, module) {
       , success: function ( data ) {
           // set restaurant signup id
           this_.setCookie(data.id);
-          this_.$el.fadeOut('slow', function () {
+          this_.$el.animate({
+            left: '-100px',
+            opacity: '0'
+          }, 300, function () {
             window.scrollTo(0,0);
             window.location.reload();
           });

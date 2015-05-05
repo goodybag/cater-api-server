@@ -1039,6 +1039,7 @@ module.exports.register = function(app) {
     })
   , controllers.orders.auth
   , m.restrict(['order-owner', 'order-restaurant', 'admin'])
+  , m.audit.orderType()
   , controllers.orders.update
   );
 
@@ -2191,6 +2192,7 @@ module.exports.register = function(app) {
         , where: { id: '$orders.id$' }
       }]
     })
+  , m.audit.orderType()
   , m.update( db.orders )
   );
 
@@ -2206,6 +2208,7 @@ module.exports.register = function(app) {
       , where: { id: '$orders.id$' }
       }]
     })
+  , m.audit.orderType()
   , m.after( function( req, res, next ){
       if ( res.statusCode >= 300 || res.statusCode < 200 ){
         return next();

@@ -1,6 +1,4 @@
-{{#notEmpty reqQuery}}
-<span> {{../restaurants.length}} result{{#gt ../restaurants.length 1}}s{{/gt}}: </span>
-{{/notEmpty}}
+<span class="results">{{restaurants.length}} result{{#dneq restaurants.length 1}}s{{/dneq}}: </span>
 
 {{#each searchTags}}
 <a class="search-tag" href="{{baseUrl}}/restaurants{{qs}}" data-toggle="tooltip" data-title="Remove filter">{{formatDietTag text}} <span class="gb-icon-x-mark"></span></a>

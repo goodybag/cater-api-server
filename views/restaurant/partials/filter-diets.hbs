@@ -5,7 +5,7 @@
   {{#each (slice filterDiets 0 3)}}
   {{#with (ref ../config.diets name)}}
   <label>
-    <input class="immediate" type="checkbox" value="{{name}}" {{#contains ../../reqQuery.diets name}}checked="checked"{{/contains}}/> {{name}}
+    <input class="immediate" type="checkbox" value="{{../name}}" {{#contains ../../reqQuery.diets ../name}}checked="checked"{{/contains}}/> {{name}}
   </label>
   {{/with}}
   {{/each}}
@@ -18,7 +18,7 @@
         <h1>Special Diets</h1>
         {{#each filterDiets~}}
         {{#with (ref ../config.diets name)}}
-        <label><input type="checkbox" value="{{name}}" {{#contains ../../reqQuery.diets name}}checked="checked"{{/contains}}/> {{name}}</label>
+        <label><input type="checkbox" value="{{../name}}" {{#contains ../../reqQuery.diets ../name}}checked="checked"{{/contains}}/> {{name}}</label>
         {{/with}}
         {{~/each}}
         <button class="btn btn-default">Save and close</button>

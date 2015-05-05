@@ -33,7 +33,6 @@ define(function(require) {
     }
   , user_id: {
       type: types.int
-    , nullable: false
     , references: {table: 'users', column: 'id'}
     }
   , type: {

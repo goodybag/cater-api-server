@@ -937,6 +937,7 @@ module.exports.register = function(app) {
       one: [
         { table: 'users',       alias: 'user' }
       , { table: 'restaurants', alias: 'restaurant' }
+      , { table: 'delivery_services', alias: 'delivery_service'}
       ]
     , joins: [
         { type: 'left', target: 'restaurants', on: { id: '$orders.restaurant_id$' } }

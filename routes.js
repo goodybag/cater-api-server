@@ -62,10 +62,14 @@ module.exports.register = function(app) {
   });
 
   // Temporary for job fair
-  app.get('/fsjse.md', function( req, res ){
-    utils.request('https://gist.githubusercontent.com/jrf0110/5b3a3ae62d3b2c39e89f/raw/292c6d1578d127e0173bf60d6057f1fcff6ebf4c/js-dev-2.md')
-      .pipe( res );
-  });
+  app.get('/fsjse.md'
+  , m.s3({
+      path:   '/fsjse-1.md'
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.cdn.bucket
+    })
+  );
 
   app.get('/jobs/customer-service-specialist.pdf'
   , m.s3({

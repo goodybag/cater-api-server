@@ -34,6 +34,7 @@ module.exports = {
 , orderAnalytics: require('./order-analytics')
 , orderEditable: require('./order-editable')
 , orderParams: require('./order-params')
+, organizationSubmissions: require('./organization-submissions')
 , owner: require('./owner')
 , param: require('./param')
 , queryParams: require('./query-params')

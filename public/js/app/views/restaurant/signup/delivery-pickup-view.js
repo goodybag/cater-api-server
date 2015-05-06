@@ -7,8 +7,9 @@ define(function (require, exports, module) {
 
   return module.exports = BaseView.extend({
     events: utils.extend(BaseView.prototype.events, {
-      'click .add-custom-lead-times'  : 'setLeadTime'
+      'click .add-custom-lead-times'  : 'addCustomLeadTime'
     , 'click .default-lead-times'     : 'defaultLeadTimes'
+    , 'click .add-restriction'        : 'addLeadTimeRestriction'
     , 'click .add-hours'              : 'addHours'
     , 'click .add-days'               : 'setDays'
     , 'click .datetime-days-list > li': 'setDeliveryHours'
@@ -152,11 +153,17 @@ define(function (require, exports, module) {
       });
     }
 
-  , setLeadTime: function(e) {
+  , addCustomLeadTime: function(e) {
       var template = Handlebars.partials.edit_lead_times;
       var html = template( this.model.toJSON() );
       var type = $(e.target).data('type');
       this.$el.find('.:type-lead-times-container'.replace(':type', type)).html( html );
+    }
+
+  , addLeadTimeRestriction: function (e) {
+      e.preventDefault();
+      var template = Handlebars.partials.lead_time;
+      $( template() ).insertBefore( e.target );
     }
 
   , defaultLeadTimes: function (e) {

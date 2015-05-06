@@ -4,7 +4,7 @@
 <div id="restaurant-signup" class="restaurant-join">
   <nav>
     <ol class="inline-list tabs">
-      <li class="form-step {{#if (or (not signup.step) (eq signup.step '1'))}}active{{/if}}"><span class="number">1</span> Basic Info</li>
+      <li class="{{#if (or (not signup.step) (eq signup.step '1'))}}active{{/if}}"><span class="number">1</span> Basic Info</li>
       <li class="{{#eq signup.step '2'}}active{{/eq}}"><span class="number">2</span> Restaurant Info</li>
       <li class="{{#eq signup.step '3'}}active{{/eq}}"><span class="number">3</span> Delivery + Pickup</li>
       <li class="{{#eq signup.step '4'}}active{{/eq}}"><span class="number">4</span> Payments</li>

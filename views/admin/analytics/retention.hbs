@@ -50,6 +50,8 @@
     <thead>
       <tr>
         <th>Organizations ({{stats.uniqOrgs}})</th>
+        <th>Email</th>
+        <th>Name</th>
         <th>First Submitted</th>
         <th>Last Submitted</th>
         <th>Last ordered this month ({{ref stats.totals 0}})</th>
@@ -62,6 +64,8 @@
     {{#each organization_submissions}}
       <tr>
         <td>{{#if organization}}{{organization}}{{else}}<strong>(No organization)</strong>{{/if}}</td>
+        <td><a href="/admin/users/{{user_id}}">{{email}}</a></td>
+        <td><a href="/admin/users/{{user_id}}">{{user_name}}</a></td>
         <td>{{datepart first_submitted}}</td>
         <td>{{datepart last_submitted}}</td>
         <td>{{#eq months_since_last_submitted 0}}<span class="gb-icon-checkmark"></span>{{/eq}}

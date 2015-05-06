@@ -15,7 +15,6 @@ module.exports = function(options) {
 
     db.orders.find(sql.$query, sql.$options, function(err, orders) {
       if (err) {
-        console.log(err);
         logger.error('Unable to find orders', err);
         return res.send(500);
       }
@@ -29,7 +28,6 @@ module.exports = function(options) {
         res.locals.orders = orders;
       }
 
-      console.log(orders);
       next();
     });
   };

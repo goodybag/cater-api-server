@@ -104,7 +104,7 @@ define(function(require, exports, module) {
         return $reasonDenied.closest('.form-group').addClass('has-error');
       }
 
-      this.model.save({ reason_denied: reasonDenied }, {
+      this.model.save({ reason_denied: reasonDenied, review_token: this.options.review_token }, {
         validate: false,
         patch: true,
         success: function () {

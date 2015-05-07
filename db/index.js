@@ -80,3 +80,5 @@ exports.transaction = function( callback ){
 };
 
 exports.dirac = dirac;
+
+require('./cache').setupBasicStructure( exports );

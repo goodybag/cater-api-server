@@ -62,10 +62,23 @@ module.exports.register = function(app) {
   });
 
   // Temporary for job fair
-  app.get('/fsjse.md', function( req, res ){
-    utils.request('https://gist.githubusercontent.com/jrf0110/5b3a3ae62d3b2c39e89f/raw/292c6d1578d127e0173bf60d6057f1fcff6ebf4c/js-dev-2.md')
-      .pipe( res );
-  });
+  app.get('/fsjse.md'
+  , m.s3({
+      path:   '/fsjse-1.md'
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.cdn.bucket
+    })
+  );
+
+  app.get('/jobs/customer-service-specialist.pdf'
+  , m.s3({
+      path:   '/customer-service-specialist-1.pdf'
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.cdn.bucket
+    })
+  );
 
   /**
    * Restaurants resource.  The collection of all restaurants.
@@ -943,6 +956,7 @@ module.exports.register = function(app) {
       one: [
         { table: 'users',       alias: 'user' }
       , { table: 'restaurants', alias: 'restaurant' }
+      , { table: 'delivery_services', alias: 'delivery_service'}
       ]
     , joins: [
         { type: 'left', target: 'restaurants', on: { id: '$orders.restaurant_id$' } }
@@ -1045,6 +1059,7 @@ module.exports.register = function(app) {
     })
   , controllers.orders.auth
   , m.restrict(['order-owner', 'order-restaurant', 'admin'])
+  , m.audit.orderType()
   , controllers.orders.update
   );
 
@@ -1805,12 +1820,9 @@ module.exports.register = function(app) {
 
   app.get('/admin/analytics/retention'
   , m.restrict(['admin'])
-  , m.getOrders({
-      organizationSubmitted: true
-    , restaurant: false
-    , user: false
-    , rename: 'organization_submissions'
-    })
+  , m.filters([ 'regions' ])
+  , m.organizationSubmissions()
+  , m.orderAnalytics.retention()
   , m.view( 'admin/analytics/retention', {
       layout: 'admin/layout2'
     })
@@ -2201,6 +2213,7 @@ module.exports.register = function(app) {
         , where: { id: '$orders.id$' }
       }]
     })
+  , m.audit.orderType()
   , m.update( db.orders )
   );
 
@@ -2216,6 +2229,7 @@ module.exports.register = function(app) {
       , where: { id: '$orders.id$' }
       }]
     })
+  , m.audit.orderType()
   , m.after( function( req, res, next ){
       if ( res.statusCode >= 300 || res.statusCode < 200 ){
         return next();

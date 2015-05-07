@@ -1,0 +1,24 @@
+<div class="third filter-meal-types">
+  <h1>Meal Type</h1>
+
+  <!-- Show truncated options -->
+  {{#each (slice filterMealTypes 0 3)}}
+  <label>
+    <input class="immediate" type="checkbox" value="{{name}}" {{#contains ../reqQuery.mealTypes name}}checked="checked"{{/contains}}/> {{name}}
+  </label>
+  {{/each}}
+
+  <!-- Show all filter options -->
+  <span class="popover-wrapper">
+    <a href="#" data-role="popover" data-target="meal-types-popover">more meal types</a>
+    <div class="popover-modal meal-types-popover">
+      <div class="popover-body">
+        <h1>Meal Types</h1>
+        {{#each filterMealTypes~}}
+        <label><input type="checkbox" value="{{name}}" {{#contains ../reqQuery.mealTypes name}}checked="checked"{{/contains}}> {{name}}</label>
+        {{~/each}}
+        <button class="btn btn-default">Save and close</button>
+      </div>
+    </div>
+  </span>
+</div>

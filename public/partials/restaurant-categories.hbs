@@ -1,5 +1,4 @@
 {{#each restaurant.categories}}
-  {{#unless is_hidden}}
   {{#contains menus "group"}}
     <div id="group-{{id}}" class="panel menu-category menu-full menu-group">
       <div class="panel-heading menu-category-heading">
@@ -12,7 +11,11 @@
           <div class="row">
             <h5 class="list-group-item-heading col-sm-7">
               {{name}}
-              {{>tags tags}}
+              {{#each tags}}
+              {{#with (ref ../../../../config.diets this)}}
+              {{> diet_tag}}
+              {{/with}}
+              {{/each}}
             </h5>
             <dl class="item-legend col-sm-5">
               {{#if hide_pricing}}
@@ -41,11 +44,9 @@
       </div>
     </div>
   {{/contains}}
-  {{/unless}}
 {{/each}}
 
 {{#each restaurant.categories}}
-  {{#unless is_hidden}}
   {{#contains menus "individual"}}
     <div id="individual-{{id}}" class="panel menu-category menu-full menu-individual">
       <div class="panel-heading menu-category-heading">
@@ -58,7 +59,11 @@
           <div class="row">
             <h5 class="list-group-item-heading col-sm-7">
               {{name}}
-              {{>tags tags}}
+              {{#each tags}}
+              {{#with (ref ../../../../config.diets this)}}
+              {{> diet_tag }}
+              {{/with}}
+              {{/each}}
             </h5>
             <dl class="item-legend col-sm-5">
               {{#if hide_pricing}}
@@ -87,5 +92,4 @@
       </div>
     </div>
   {{/contains}}
-  {{/unless}}
 {{/each}}

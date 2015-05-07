@@ -10,15 +10,30 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   var _ = require('lodash');
-  var moment = require('moment');
+  var moment = require('moment-timezone');
 
   return require('stampit')()
     .state({
-      
+      timezone: 'UTC'
+    , dateFormat: 'YYYY-MM-DD'
+    , timeFormat: 'HH:mm a'
+    , availabilityTimeFormat: 'HH:mm:ss'
     })
     .enclose( function(){
       if ( this.date ){
-        this.datetime = moment( this.date + ( this.time ? (' ' + this.time) : '' ) );
+        if ( this.time ){
+          this.datetime = moment.tz(
+            this.date + ' ' + this.time
+          , [ this.dateFormat, this.timeFormat ].join(' ')
+          , this.timezone
+          );
+        } else {
+          this.datetime = moment.tz(
+            this.date
+          , this.dateFormat
+          , this.timezone
+          );
+        }
       }
     })
     .methods({
@@ -43,15 +58,29 @@ define( function( require, exports, module ){
 
           var day = this.datetime.day();
 
+          var format = [ this.dateFormat, this.availabilityTimeFormat ].join(' ');
+
           return this.restaurant.hours
             .concat( this.restaurant.delivery_hours )
             .filter( function( dayHours ){
               return dayHours.day === day;
             })
             .some( function( dayHours ){
+              var startDate = moment.tz(
+                this.date + ' ' + dayHours.start_time
+              , format
+              , this.timezone
+              );
+
+              var endDate = moment.tz(
+                this.date + ' ' + dayHours.end_time
+              , format
+              , this.timezone
+              );
+
               return [
-                moment( this.date + ' ' + dayHours.start_time ) <= this.datetime
-              , this.datetime < moment( this.date + ' ' + dayHours.end_time )
+                startDate <= this.datetime
+              , this.datetime < endDate
               ].every( _.identity );
             }.bind( this ));
         }
@@ -73,7 +102,9 @@ define( function( require, exports, module ){
 
           if ( leadTimes.length === 0 ) return true;
 
-          var minutes = moment.duration( this.datetime - new Date() ).asMinutes();
+          var minutes = moment.duration(
+            this.datetime - moment.tz( this.timezone )
+          ).asMinutes();
 
           return leadTimes
             .some( function( time ){
@@ -89,6 +120,16 @@ define( function( require, exports, module ){
         return this.fulfillmentRequirements.every( function( strategy ){
           return strategy.call( this );
         }.bind( this ));
+      }
+
+    , why: function(){
+        return this.fulfillmentRequirements
+          .filter( function( strategy ){
+            return !strategy.call( this );
+          }.bind( this ))
+          .map( function( strategy ){
+            return strategy.name.replace('strategy', '');
+          }.bind( this ));
       }
 
     , getAllSupportedDeliveryZips: function(){
@@ -126,7 +167,7 @@ define( function( require, exports, module ){
               return originZips.indexOf( dszip.from ) > -1;
             })
             .map( function( dszip ){
-              return { zip: dszip.from, fee: dszip.price };
+              return { zip: dszip.to, fee: dszip.price };
             });
         });
 

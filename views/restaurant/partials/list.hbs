@@ -6,7 +6,7 @@
     <ul class="inline-list">
       <li>
         <div class="listing-img">
-          <img src="{{list_photo_url}}">
+          <img src="{{filepicker list_photo_url}}">
         </div>
       </li>
       <li>
@@ -39,7 +39,13 @@
               <li>Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</li>
             </ul>
 
-          <span class="listing-tags">{{> tags tags }}</span>
+          <span class="listing-tags">
+          {{#each tags}}
+          {{#with (ref ../../config.diets this)}}
+          {{> diet_tag }}
+          {{/with}}
+          {{/each}}
+          </span>
         </div>
       </li>
     </ul>

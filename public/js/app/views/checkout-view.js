@@ -61,6 +61,11 @@ define(function(require, exports, module) {
 
       secondary_contact_phone: function () {
         return this.$el.find(this.fieldMap.secondary_contact_phone).val().replace(/[^\d]/g, '') || null;
+      },
+
+      promo_code: function () {
+        var code = this.$el.find(this.fieldMap.promo_code).val();
+        return code ? code.toLowerCase() : null;
       }
     }),
 

@@ -89,6 +89,16 @@ describe('Restaurant Model', function() {
         order.restaurant.set('pickup_lead_times', []);
         assert(order.restaurant.isValidGuestDateCombination(order));
       });
+
+      it('should return false if does not support courier', function() {
+        order.restaurant.set('supported_order_types', [ 'delivery' ]);
+        assert(!order.restaurant.isValidGuestDateCombination(order));
+      });
+
+      it('should return true if it does support courier', function() {
+        order.restaurant.set('supported_order_types', [ 'delivery', 'courier' ]);
+        assert(!order.restaurant.isValidGuestDateCombination(order));
+      });
     });
   });
 });

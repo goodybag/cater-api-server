@@ -25,6 +25,14 @@
   background-color: @palette-white;
 }
 
+@media (max-width: @breakpoint-mobile) {
+  .nav .popover-modal {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .popover-wrapper.open .popover-modal {
   -webkit-transform: scale(1);
           transform: scale(1);

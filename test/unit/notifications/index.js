@@ -84,12 +84,11 @@ describe('Order Notifications', function(){
       , send: function(){}
       });
 
-      var order = orders()
-        .remove('deliveryService');
+      var order = orders();
 
-      var note = notes( order );
-
-      assert( !note.isValidOrder() );
+      assert.throws( function(){
+        var note = notes( order, {} );
+      });
     });
   });
 

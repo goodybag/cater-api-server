@@ -10,7 +10,9 @@ define ( function (require) {
 
   var page = {
     init: function ( options ) {
-      var step = options.step || 1; 
+      $('[data-role="popover"]').gb_popover();
+
+      var step = options.step || 1;
       page.model = options.model || new Restaurant();
 
       var viewOptions = {

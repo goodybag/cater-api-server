@@ -17,6 +17,10 @@ define(function (require, exports, module) {
   , fieldGetters: {
       services: function () {
         return this.$el.find(this.fieldMap.services+':checked').val() || null;
+      },
+      websites: function () {
+        var $websites = this.$el.find(this.fieldMap.websites).val();
+        return $websites ? '{:w}'.replace(':w', $websites.join(',')) : '{}';
       }
     }
 

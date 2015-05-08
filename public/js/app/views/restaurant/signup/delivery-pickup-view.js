@@ -135,7 +135,7 @@ define(function (require, exports, module) {
       this.model.set(this.getDiff());
       $.ajax({
         type: 'PUT'
-      , url: '/api/restaurants/join/:id'.replace(':id', this.getCookie())
+      , url: '/api/restaurants/join'
       , dataType: 'JSON'
       , data: { step: 4, data: JSON.stringify( this.model.toJSON() )}
       , success: function () {
@@ -202,6 +202,6 @@ define(function (require, exports, module) {
       var $el = $(e.target);
       $el.toggleClass('active');
     }
-    
+
   });
 });

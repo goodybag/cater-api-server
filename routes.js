@@ -104,9 +104,10 @@ module.exports.register = function(app) {
   , function (req, res, next) {
       res.locals.restaurant = {};
       res.locals.signup = {};
-      if (!req.cookies.gb_rs) return next();
+      var signupId = req.session.restaurant_signup_id;
+      if (!signupId) return next();
 
-      db.restaurant_signups.findOne({ id: req.cookies.gb_rs }, function (error, results) {
+      db.restaurant_signups.findOne({ id: signupId }, function (error, results) {
         if (error) return next();
 
         if (results) {
@@ -122,12 +123,15 @@ module.exports.register = function(app) {
     })
   );
 
-  app.post('/api/restaurants/join'
-  , m.insert( db.restaurant_signups )
-  );
+  app.post('/api/restaurants/join', controllers.restaurants.signups.create);
 
-  app.put('/api/restaurants/join/:id'
-  , m.param('id')
+  app.put('/api/restaurants/join'
+  , function (req, res, next) {
+      var signupId = req.session.restaurant_signup_id;
+      if (!signupId) return console.log('invalid signup id'), res.status(400).send();
+      req.queryObj = { id: req.session.restaurant_signup_id };
+      next();
+    }
   , m.update( db.restaurant_signups )
   );
 

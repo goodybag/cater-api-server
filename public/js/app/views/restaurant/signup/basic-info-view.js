@@ -52,8 +52,6 @@ define(function (require, exports, module) {
       , dataType: 'JSON'
       , data: { step: 2, data: JSON.stringify( this.model.toJSON() )}
       , success: function ( data ) {
-          // set restaurant signup id
-          this_.setCookie(data.id);
           this_.$el.animate({
             left: '-100px',
             opacity: '0'

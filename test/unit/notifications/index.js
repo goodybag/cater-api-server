@@ -74,6 +74,23 @@ describe('Order Notifications', function(){
 
       assert( !note.isValidOrder() );
     });
+
+    it('Should throw an error because the notification is missing required options', function(){
+      var notes = notifications.definition({
+        id: 'a'
+      , name: 'a'
+      , requiredOptions: ['optA']
+      , build: function(){}
+      , send: function(){}
+      });
+
+      var order = orders()
+        .remove('deliveryService');
+
+      var note = notes( order );
+
+      assert( !note.isValidOrder() );
+    });
   });
 
   describe('Email', function(){

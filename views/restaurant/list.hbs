@@ -36,7 +36,7 @@
 
 {{#extend "scripts"}}
 <script>
-require( ['app/pages/restaurant-list'], function( page ){
+require( ['jquery-loaded', 'app/pages/restaurant-list'], function( $, page ){
   page.init({
   });
 
@@ -47,6 +47,13 @@ require( ['app/pages/restaurant-list'], function( page ){
   });
 
   $('[data-role="popover"]').gb_popover();
+
+  function load(){
+    var $el = $(this);
+    $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')))
+  }
+
+  $('.tile-cover, .listing-img').on('appear', load);
 });
 </script>
 {{/extend}}

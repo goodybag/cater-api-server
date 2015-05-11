@@ -51,35 +51,29 @@
   <div class="row">
     <label class="label-col">Which can you provide?</label>
     <div class="field-col">
-      <ul class="inline-list">
-        <li>
+      <div class="grid-map">
+        <div class="grid-item">
           <div class="form-group">
-            <label>
-              <input type="radio" class="restaurant-services" name="services" value="both" {{#eq restaurant.services 'both'}}checked="true"{{/eq}}>
-              Delivery and Pickup
-            </label>
-          <p class="panel-info">&nbsp;</p>
+            <input type="radio" class="restaurant-services" name="services" id="services-1" value="both" {{#eq restaurant.services 'both'}}checked="true"{{/eq}}>
+            <label for="services-1">Delivery and Pickup</label>
           </div>
-        </li>
-        <li>
+          <p class="panel-info">&nbsp;</p>
+        </div>
+        <div class="grid-item">
           <div class="form-group">
-            <label>
-              <input type="radio" class="restaurant-services" name="services" value="delivery" {{#eq restaurant.services 'delivery'}}checked="true"{{/eq}}>
-              Delivery only
-            </label>
+            <input type="radio" class="restaurant-services" name="services" id="services-2" value="delivery" {{#eq restaurant.services 'delivery'}}checked="true"{{/eq}}>
+            <label for="services-2">Delivery only</label>
           </div>
           <p class="panel-info">Your restaurant delivers the food</p>
-        </li>
-        <li>
+        </div>
+        <div class="grid-item">
           <div class="form-group">
-            <label>
-              <input type="radio" class="restaurant-services" name="services" value="pickup" {{#eq restaurant.services 'pickup'}}checked="true"{{/eq}}>
-              Pickup only
-            </label>
+            <input type="radio" class="restaurant-services" name="services" id="services-3" value="pickup" {{#eq restaurant.services 'pickup'}}checked="true"{{/eq}}>
+            <label for="services-3">Pickup only</label>
           </div>
           <p class="panel-info">A courier will come get the food</p>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>

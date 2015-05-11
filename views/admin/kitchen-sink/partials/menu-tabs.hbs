@@ -2,17 +2,34 @@
   <div class="container">
     <h2 class="component-title">Menu Tabs</h2>
     <ul class="menu-tabs">
-      <li class="menu-tab menu-tab-catering"><a href="#section-catering" data-toggle="tab">Catering Menu</a></li>
+      <li class="menu-tab menu-tab-catering active"><a href="#section-catering" data-toggle="tab">Catering Menu</a></li>
       <li class="menu-tab menu-tab-individual"><a href="#section-individual" data-toggle="tab">Individual Menu</a></li>
     </ul>
     <div class="menu-tabs-content">
-      <section id="section-catering">
+      <section id="section-catering" class="active">
         <h1>Catering Menu</h1>
       </section>
       <section id="section-individual">
         <h1>Individual Menu</h1>
       </section>
     </div>
+
+    <code class="language-markup">
+    {{~#raw~}}
+<ul class="menu-tabs">
+  <li class="menu-tab menu-tab-catering active"><a href="#section-catering" data-toggle="tab">Catering Menu</a></li>
+  <li class="menu-tab menu-tab-individual"><a href="#section-individual" data-toggle="tab">Individual Menu</a></li>
+</ul>
+<div class="menu-tabs-content">
+  <section id="section-catering" class="active">
+    <h1>Catering Menu</h1>
+  </section>
+  <section id="section-individual">
+    <h1>Individual Menu</h1>
+  </section>
+</div>
+    {{~/raw~}}
+    </code>
   </div>
 </section>
 

@@ -389,6 +389,11 @@ define(function(require, exports, module) {
       , { 'max_guests': 250, 'lead_time': 24*60, 'cancel_time': 18*60 }
       , { 'max_guests': 2000,'lead_time': 72*60, 'cancel_time': 72*60 }
       ]
+    , delivery_times: {
+         "0":[] ,"1":[] ,"2":[]
+        ,"3":[] ,"4":[] ,"5":[]
+        ,"6":[]
+      }
     , gb_fee: 0.1275
     }
   });

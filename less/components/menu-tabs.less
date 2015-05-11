@@ -3,6 +3,11 @@
 @menu-tab-border-top: 3px solid @palette-gray-lighter;
 @menu-tab-border-invisible: 1px solid @palette-white;
 @menu-tab-radius: 3px;
+@menu-tab-font-size: .9rem;
+
+/**
+ * Menu Tabs
+ */
 
 .menu-tabs {
   margin: 0;
@@ -21,26 +26,25 @@
   border-top: @menu-tab-border-top;
 }
 
-.menu-tab.menu-tab-catering { border-top-color: @palette-green-3; }
-.menu-tab.menu-tab-individual { border-top-color: @palette-blue; }
+.menu-tabs .menu-tab.menu-tab-catering { border-top-color: @palette-green-3; }
+.menu-tabs .menu-tab.menu-tab-individual { border-top-color: @palette-blue; }
 
-.menu-tabs .menu-tab.active {
-  border-bottom: @menu-tab-border-invisible;
-}
-
-.menu-tabs .menu-tab.untab {
-  border: none;
-}
+.menu-tabs .menu-tab.active { border-bottom: @menu-tab-border-invisible; }
+.menu-tabs .menu-tab.untab { border: none; }
 
 .menu-tabs .menu-tab a {
   display: inline-block;
   padding: 15px 30px;
-  font-size: .9rem;
+  font-size: @menu-tab-font-size;
   font-weight: @bold;
   text-transform: uppercase;
   color: @menu-tab-color;
   &:hover { text-decoration: none; }
 }
+
+/**
+ * Menu Tabs Content
+ */
 
 .menu-tabs-content {
   border: @menu-tab-border;

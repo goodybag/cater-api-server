@@ -1,0 +1,77 @@
+//////////////////////
+// Datetime Popover
+/////////////////////
+.datetime-popover {
+  position: absolute;
+  display: none;
+  margin-top: 3px;
+  padding: 18px;
+  background-color: @white;
+  box-shadow: 0px 0px 8px 1px @palette-gray;
+  min-width: 415px;
+  z-index: @zIndex-10;
+  border-radius: 3px;
+}
+
+.datetime-popover:before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  right: 299px;
+  display: inline-block;
+  border: 8px solid rgba(0, 0, 0, 0);
+  border-bottom-color: #aab2bd;
+}
+
+.datetime-popover:after {
+  content: "";
+  position: absolute;
+  top: -14px;
+  right: 300px;
+  display: inline-block;
+  border: 7px solid rgba(0, 0, 0, 0);
+  border-bottom-color: #ffffff;
+}
+
+.open .datetime-popover {
+  display: block;
+}
+
+.datetime-days-list > li {
+  display: inline-block;
+  margin-left: -5px;
+  padding: 12px 15px;
+  border: 1px solid @palette-gray;
+  border-right: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.datetime-days-list > li:hover {
+  background-color: @palette-gray-lighter;
+}
+
+.datetime-days-list > li:last-child {
+  border-right: 1px solid @palette-gray;
+}
+
+.datetime-days-list > li.active {
+  background-color: @palette-gray-lighter;
+}
+
+.datetime-popover .btn {
+  float: right;
+}
+
+.datetime-popover span {
+  display: block;
+  margin-top: 5px;
+  margin-left: -6px;
+}
+
+.datetime-popover label {
+  font-weight: 400;
+  font-size: 14px;
+  margin-top: 11px;
+  margin-left: -10px;
+}

@@ -17,7 +17,7 @@
         <label class="label-col">Contact Name</label>
         <div class="field-col">
           <div class="form-group">
-            <input type="text" class="form-control contact-name" name="contact_name">
+            <input type="text" class="form-control contact-name" name="contact_name" value="{{restaurant.contacts.0.name}}">
           </div>
           <p class="panel-info">When you receive an order, this person will be notified</p>
         </div>
@@ -26,7 +26,7 @@
         <label class="label-col">Contact Position <p class="panel-info">Optional</p></label>
         <div class="field-col">
           <div class="form-group">
-            <input type="text" class="form-control contact-position" name="contact_position">
+            <input type="text" class="form-control contact-position" name="contact_position" value="{{restaurant.contacts.0.position}}">
           </div>
           <p class="panel-info">Owner, Manager, etc.</p>
         </div>
@@ -35,7 +35,7 @@
         <label class="label-col">Contact Number</label>
         <div class="field-col">
           <div class="form-group">
-            <input type="text" class="form-control contact-phone" name="contact_number">
+            <input type="text" class="form-control contact-phone" name="contact_number" value="{{restaurant.contacts.0.phone}}">
           </div>
           <p class="panel-info">When you receive an order, this number will be called and texted (if it's a cellular number).</p>
         </div>
@@ -44,7 +44,7 @@
         <label class="label-col">Contact Email</label>
         <div class="field-col">
           <div class="form-group">
-            <input type="text" class="form-control contact-email" name="contact_email">
+            <input type="text" class="form-control contact-email" name="contact_email" value="{{restaurant.contacts.0.emails}}">
           </div>
           <p class="panel-info">When you receive an order, we will send an email here.</p>
         </div>

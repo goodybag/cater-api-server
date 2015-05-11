@@ -1,13 +1,9 @@
-<div class="list-tags">
-  {{#notEmpty orderParams}}
-  <span> {{../totalRestaurants}} result{{#gt ../totalRestaurants 1}}s{{/gt}}: </span>
-  {{/notEmpty}}
+<span class="results">{{restaurants.length}} result{{#dneq restaurants.length 1}}s{{/dneq}}: </span>
 
-  {{#each searchTags}}
-  <a class="search-tag" href="{{baseUrl}}/restaurants{{qs}}">{{formatDietTag text}} <span class="gb-icon-x-mark"></span></a>
-  {{/each}}
+{{#each searchTags}}
+<a class="search-tag" href="{{baseUrl}}/restaurants{{qs}}" data-toggle="tooltip" data-title="Remove filter">{{formatDietTag text}} <span class="gb-icon-x-mark"></span></a>
+{{/each}}
 
-  {{#notEmpty orderParams}}
-  <a class="back-to-results" href="/restaurants">Clear search</a>
-  {{/notEmpty}}
-</div>
+{{#notEmpty reqQuery}}
+<a class="back-to-results" href="/restaurants">Clear search</a>
+{{/notEmpty}}

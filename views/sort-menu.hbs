@@ -17,7 +17,7 @@
           {{#each restaurant.categories}}
             <div class="panel menu-category" id="category-{{id}}">
               {{#include parent=..}}
-                {{> sort_category}}
+                {{> sort_category config=../../config}}
               {{/include}}
             </div>
           {{/each}}

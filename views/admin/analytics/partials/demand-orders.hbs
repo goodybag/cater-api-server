@@ -64,17 +64,21 @@
     </table>
     <section class="analytics-section analytics-section-week clearfix">
       {{#with (ref ../stats.week @key)}}
-      <div class="col-4 analytics-col">
+      <div class="col-3 analytics-col">
         <div>${{commatize (dollars volume)}}</div>
         <small>Week {{@key}} Volume</small>
       </div>
-      <div class="col-4 analytics-col">
+      <div class="col-3 analytics-col">
         <div>{{commatize placed}}</div>
         <small>Accepted Orders Placed</small>
       </div>
-      <div class="col-4 analytics-col">
+      <div class="col-3 analytics-col">
         <div>{{commatize guests}}</div>
         <small>Guests Fed</small>
+      </div>
+      <div class="col-3 analytics-col">
+        <div>{{commatize organizations}}</div>
+        <small>Organizations</small>
       </div>
       {{/with}}
     </section>

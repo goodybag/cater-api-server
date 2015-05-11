@@ -12,8 +12,11 @@ var moment = require('moment-timezone');
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
 var Mailgun = require('mailgun').Mailgun;
 var MailComposer = require('mailcomposer').MailComposer;
-var orderDefinitionSchema  = require('../../db/definitions/orders').schema;
+var orderDefinitionSchema = require('../../db/definitions/orders').schema;
 var promoConfig = require('../../configs/promo');
+var DMReq = require('stamps/requests/distance-matrix');
+var address = require('stamps/addresses');
+var deliveryFee = require('stamps/orders/delivery-fee');
 
 var addressFields = [
   'street'
@@ -38,8 +41,8 @@ module.exports.auth = function(req, res, next) {
     return next();
   }
 
-  var reviewToken = req.query.review_token || req.body.review_token;
-  var editToken = req.query.edit_token || req.body.edit_token;
+  var reviewToken = req.body.review_token || req.query.review_token;
+  if (req.body.review_token) delete req.body.review_token;
 
   // There was a review token, so this is a restaurant
   if ( reviewToken && (reviewToken === req.order.review_token) ){
@@ -55,17 +58,16 @@ module.exports.auth = function(req, res, next) {
 
   logger.info('checking guest status');
   if ( req.user.isGuest() ){
-    logger.info('user is guest');
     if ( Array.isArray( req.session.guestOrders ) ){
       logger.info('guest orders is available');
       if ( req.session.guestOrders.indexOf( req.order.id ) > -1 ){
-        logger.info('adding order-owner');
         req.user.attributes.groups.push('order-owner');
         req.order.isOwner = true;
       }
     }
   }
 
+  logger.info('user permissions [' + req.user.attributes.groups.join(', ') + ']');
   next();
 };
 
@@ -127,7 +129,7 @@ module.exports.get = function(req, res) {
       show_pickup: req.order.type === 'pickup' || (req.order.isRestaurantManager && req.order.type === 'courier'),
       states: states,
       orderAddress: {
-        address: order,
+        address: utils.extend( {}, order, { name: order.address_name } ),
         states: states
       },
       orderParams: req.session.orderParams,
@@ -187,7 +189,15 @@ module.exports.create = function(req, res) {
       req.session.guestOrders.push( order.attributes.id );
     }
 
-    res.send(201, order.toJSON());
+    db.order_types.insert({
+      order_id: order.attributes.id
+    , user_id:  order.attributes.user_id
+    , type:     order.attributes.type
+    },
+    function( err ){
+      if ( err ) return res.error(errors.internal.DB_FAILURE, err);
+      res.send(201, order.toJSON());
+    });
   });
 }
 
@@ -219,6 +229,7 @@ module.exports.update = function(req, res) {
   if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
 
   utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+
   order.save(function(err, rows, result) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     res.send(order.toJSON({plain:true}));
@@ -311,6 +322,10 @@ module.exports.changeStatus = function(req, res) {
         var noExistingDefault = !address;
         var addressData = utils.extend(orderAddressFields, { user_id: req.user.attributes.id, is_default: noExistingDefault });
 
+        if (req.order.address_name) {
+          addressData.name = req.order.address_name;
+        }
+
         logger.info('Saving address');
         if ( noExistingDefault ){
           db.addresses.insert( addressData );
@@ -334,11 +349,14 @@ module.exports.changeStatus = function(req, res) {
 
     res.send(201, {order_id: req.order.id, status: req.order.status});
 
-     if (!(req.user
-      && req.order.isAdmin
-      && req.query.notify
-      && req.query.notify.toLowerCase() == 'false'
-    )) venter.emit('order:status:change', new models.Order( req.order ), previousStatus);
+    venter.emit('order:status:change'
+      , new models.Order( req.order )
+      , previousStatus
+      , !(req.user
+          && req.order.isAdmin
+          && req.query.notify
+          && req.query.notify.toLowerCase() === 'false')
+      );
 
     if (req.order.promo_code)
     if (req.order.status === 'submitted') {
@@ -411,4 +429,61 @@ module.exports.rebuildPdf = function( req, res ){
   pdfs[ req.params.type ].build({ orderId: req.params.oid });
 
   res.send(204);
+};
+
+module.exports.getDeliveryFee = function( req, res ){
+  var location = req.order.location;
+
+  if ( req.query.location_id ){
+    var locations = req.order.restaurant.locations.filter( function( loc ){
+      return loc.id == req.query.location_id;
+    });
+
+    if ( locations.length ){
+      location = locations[0];
+    } else {
+      return res.error({
+        type: 'INVALID_LOCATION'
+      , message: 'Invalid parameter `location_id`'
+      , httpCode: '403'
+      });
+    }
+  }
+
+  var origin = address( req.order ).toString();
+  var destination = address( location ).toString();
+
+  DMReq()
+    .origin( origin )
+    .destination( destination )
+    .send()
+    .then( function( results ){
+      var result = results[0].elements[0];
+
+      if ( result.status in errors.google.distanceMatrix ){
+        throw errors.google.distanceMatrix[ result.status ];
+      }
+
+      res.json({
+        distance:     result.distance
+      , duration:     result.duration
+      , pricePerMile: req.order.location.price_per_mile
+      , basePrice:    req.order.location.base_delivery_fee
+      , price:        deliveryFee({
+                        pricePerMile: req.order.location.price_per_mile
+                      , basePrice:    req.order.location.base_delivery_fee
+                      , meters:       result.distance.value
+                      }).getPrice()
+      });
+    })
+    .catch( function( error ){
+      req.logger.warn('Error getting distance between order and restaurant', {
+        order_id: req.order.id
+      , origin: origin
+      , destination: destination
+      , error: error
+      });
+
+      res.error( error );
+    });
 };

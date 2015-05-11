@@ -2,6 +2,7 @@ define(function(require){
   var utils = require('utils');
   var $ = require('jquery-loaded');
   var Handlebars = require('handlebars');
+  var moment = require('moment');
 
   return utils.View.extend({
     template: Handlebars.partials.upcoming_rows,
@@ -9,10 +10,19 @@ define(function(require){
     initialize: function() {
       this.$tbody = this.$el.find('tbody');
       this.start();
+
+      this.startDate = this.$el.find("input[name='startDate']").eq(0).pickadate({
+        format: 'mm/dd/yyyy'
+      }).pickadate('picker');
+
+      this.endDate = this.$el.find("input[name='endDate']").eq(0).pickadate({
+        format: 'mm/dd/yyyy'
+      }).pickadate('picker');
     },
 
     events: {
       'click .btn-sort-by': 'sortByOnClick'
+    , 'change .datepicker': 'poll'
     },
 
     start: function() {
@@ -36,6 +46,8 @@ define(function(require){
     },
 
     update: function(orders) {
+      orders = this.filterByDateRange(orders)
+
       // When resetting, do not check if order needs to be courier or delivery
       // i.e. the order type at initialization should not change
       this.options.orders.reset(orders, { ignoreOrderTypeInit: true });
@@ -63,6 +75,22 @@ define(function(require){
       // sort
       this.options.orders.setComparator(sortBy);
       this.poll();
+    },
+
+    filterByDateRange: function (orders) {
+      var startDate = this.startDate.get();
+      var endDate = this.endDate.get();
+      if (!(startDate && endDate)) return orders;
+
+      startDate = new Date(startDate);
+      endDate = new Date(endDate);
+
+      return utils.filter(orders, function (order) {
+        var orderDate = moment( new Date(order.datetime) );
+        return orderDate.isBetween(startDate, endDate)
+            || orderDate.diff(startDate, 'days') === 0
+            || orderDate.diff(endDate, 'days') === 0;
+      });
     }
   });
 });

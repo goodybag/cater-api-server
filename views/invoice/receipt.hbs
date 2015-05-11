@@ -78,9 +78,6 @@
       <dt>Guests:</dt>
       <dd>{{order.guests}}</dd>
     </dl>
-    {{#eq order.type 'courier'}}
-    <p class="delivery-service-note">* This order will be delivered by a third-party delivery service.</p>
-    {{/eq}}
   </div>
   <div class="order-info-notes column-fluid">
     {{#if order.notes}}

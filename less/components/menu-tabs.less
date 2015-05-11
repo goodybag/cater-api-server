@@ -26,10 +26,11 @@
   border-top: @menu-tab-border-top;
 }
 
-.menu-tabs .menu-tab.menu-tab-catering { border-top-color: @palette-green-3; }
-.menu-tabs .menu-tab.menu-tab-individual { border-top-color: @palette-blue; }
+.menu-tabs .menu-tab.active {
+  border-top-color: @palette-blue;
+  border-bottom: @menu-tab-border-invisible;
+}
 
-.menu-tabs .menu-tab.active { border-bottom: @menu-tab-border-invisible; }
 .menu-tabs .menu-tab.untab { border: none; }
 
 .menu-tabs .menu-tab a {

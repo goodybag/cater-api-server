@@ -1,1 +1,66 @@
 # Order Notifications
+
+Order notifications are reified actions related to an order.  There are certain meta data requirements that aid in displaying these actions in a user interface. The best way to explain is to jump into a high-level usage example:
+
+__Creating and sending a notification object__
+
+```javascript
+var notifications = require('./order-notifications2');
+
+// Get user order accepted email notification factory
+try {
+  var UserOrderAcceptedEmail = notifications.get('user-order-accepted-email');
+} catch ( e ){
+  console.warn('Invalid notification');
+  process.exit();
+}
+
+// Create a notification object tied to order 7000
+var notification = UserOrderAcceptedEmail(7000);
+
+// Send the notification
+notification.send( function( error ){
+  
+});
+```
+
+__Creating a notification factory__
+
+We've abstracted the process of defining a notification to simply passing an object literal to the notification factory factory (yes, a factory that creates factories). We automatically instantiate the factory and add it to the registry if your notification is defined in [./notifications](./notifications).
+
+```javascript
+// order-notifications2/notifications/order-to-trello.js
+var trello = require('trello').createClient(
+  require('config').trello
+);
+
+var markdown = require('markdown');
+
+var tmpls = {
+  title: function( order ){
+    return [
+      'Card Title: #', order.id, ' ', order.restaurant.id
+    ].join('');
+  }
+
+, body: function( order ){
+    
+  }
+};
+
+module.exports = {
+  build: function( order, options, logger, callback ){
+    return callback( null, {
+      preview: tmpls.preview( order )
+    , cardDetails: {
+        title: tmpls.title( order )
+      , body: tmpls.title( order )
+      }
+    });
+  }
+
+, send: function( order, options, logger, callback ){
+    
+  }
+};
+```

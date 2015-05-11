@@ -1,11 +1,9 @@
 <div class="list-display-actions list-sort">
-  <div class="list-sort-lead">Show as:</div>
+  Show as:
   <div class="list-sort-actions btn-group">
     {{#with cookies}}
       <button class="btn btn-small btn-toggle-list {{#if (or (eq gb_display 'tile') (not gb_display)) }} active {{/if}}" data-class="hide" data-state="tile">Tile</button>
-
       <button class="btn btn-small btn-toggle-list {{#if (eq gb_display 'list') }} active {{/if}}" data-class="hide" data-state="list">List</button>
     {{/with}}
   </div>
 </div>
-

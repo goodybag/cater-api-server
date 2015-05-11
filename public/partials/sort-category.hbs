@@ -20,7 +20,7 @@
 <div class="list-group list-group-flush category">
   {{#each items}}
     <a class="list-group-item item sortable" id="item-{{id}}">
-      {{>sort_item this}}
+      {{>sort_item config=../config}}
     </a>
   {{/each}}
 </div>

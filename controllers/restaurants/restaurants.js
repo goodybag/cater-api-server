@@ -23,6 +23,7 @@ utils.findWhere(states, {abbr: 'TX'}).default = true;
 
 module.exports.list = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-List');
+
   var results = db.cache.restaurants.byRegion( req.user.attributes.region_id );
 
   if ( results.error ){
@@ -44,6 +45,7 @@ module.exports.list = function(req, res) {
   , filterPrices:     utils.range(1, 5)
   , filterMealTypes:  enums.getMealTypes()
   , filterMealStyles: enums.getMealStyles()
+  , filterDiets:      enums.getTags()
   });
 };
 

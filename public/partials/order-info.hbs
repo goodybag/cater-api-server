@@ -32,7 +32,9 @@
     <dd>{{order.guests}}</dd>
   </dl>
   {{#eq order.type 'courier'}}
-  <p class="delivery-service-note">* This order will be delivered by a third-party delivery service.</p>
+  {{#if user.isAdmin}}
+  <p class="delivery-service-note">* This order will be delivered by {{or order.delivery_service.name 'a third-party delivery service'}}.</p>
+  {{/if}}
   {{/eq}}
   <p>{{order.notes}}</p>
 

@@ -17,7 +17,7 @@ module.exports.name = 'Restaurant Action Timeframe';
 
 if ( config.isProduction ){
   module.exports.alertEmails = [
-    'om', 'jay', 'jag', 'jacobparker', 'sarahsouthwell'
+    'om', 'jay', 'jag', 'jacobparker'
   ].map( function( n ){ return n + '@goodybag.com' });
 } else {
   module.exports.alertEmails = [ config.testEmail ];

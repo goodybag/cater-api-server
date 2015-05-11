@@ -1,0 +1,88 @@
+{{#extend "page"}}page-analytics page-analytics-retention{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <div class="page-header">
+    <ul class="breadcrumbs main-breadcrumbs">
+      <li>
+        <a href="/admin">Admin Panel</a>
+      </li>
+      <li>
+        <a href="/admin/analytics">Analytics</a>
+      </li>
+      <li>
+        Organization Retention
+      </li>
+    </ul>
+  </div>
+</div>
+
+<section class="analytics-section analytics-section-retention">
+  <div class="container">
+    <div class="col-12 analytics-col">{{stats.newOrgs}} organizations have placed their first order this month!</div>
+  </div>
+</section>
+
+<div class="analytics-section container">
+  <span class="btn-regions popover-wrapper right">
+    <button
+    class="btn btn-white btn-dropdown"
+    data-role="popover"
+    data-target="dropdown-popover">
+    Regions
+    <i class="gb-icon-caret-down"></i>
+    </button>
+
+    <div class="popover-modal dropdown-popover">
+      <!-- Dropdown content -->
+      <ul class="popover-body">
+        {{#each filters.region}}
+        <a class="popover-item" href="{{queryParams (omit ../reqQuery 'q')}}&q={{this.qs}}">
+          <span class="popover-item-icon">{{#if active}}<span class="gb-icon-checkmark va-middle"></span>{{/if}}</span>
+          <span class="popover-item-label">{{name}}</span>
+        </a>
+        {{/each}}
+      </ul>
+    </div>
+  </span>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Organizations ({{stats.uniqOrgs}})</th>
+        <th>Email</th>
+        <th>Name</th>
+        <th>First Submitted</th>
+        <th>Last Submitted</th>
+        <th>Last ordered this month ({{ref stats.totals 0}})</th>
+        <th>Last ordered 1 month ago ({{ref stats.totals 1}})</th>
+        <th>Last ordered 2 months ago ({{ref stats.totals 2}})</th>
+        <th>Last ordered 3 or more months ago ({{ref stats.totals 3}})</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{#each organization_submissions}}
+      <tr>
+        <td>{{#if organization}}{{organization}}{{else}}<strong>(No organization)</strong>{{/if}}</td>
+        <td><a href="/admin/users/{{user_id}}">{{email}}</a></td>
+        <td><a href="/admin/users/{{user_id}}">{{user_name}}</a></td>
+        <td>{{datepart first_submitted}}</td>
+        <td>{{datepart last_submitted}}</td>
+        <td>{{#eq months_since_last_submitted 0}}<span class="gb-icon-checkmark"></span>{{/eq}}
+        <td>{{#eq months_since_last_submitted 1}}<span class="gb-icon-checkmark"></span>{{/eq}}
+        <td>{{#eq months_since_last_submitted 2}}<span class="gb-icon-checkmark"></span>{{/eq}}
+        <td>{{#gte months_since_last_submitted 3}}<span class="gb-icon-checkmark"></span>{{/gte}}
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require(['jquery-loaded'], function($){
+  $('[data-role="popover"]').gb_popover();
+});
+</script>
+{{/extend}}

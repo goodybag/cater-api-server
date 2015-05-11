@@ -11,17 +11,6 @@ define(function( require, exports, module ){
   exports = [];
 
   exports.push({
-    name: 'restaurant_disabled_courier'
-  , type: 'every'
-  , requirements: [
-      'restaurant.disable_courier'
-    ]
-  , fn: function( order ){
-      return !order.restaurant.disable_courier;
-    }
-  });
-
-  exports.push({
     name: 'restaurant_supported_types'
   , type: 'every'
   , requirements: [

@@ -495,6 +495,8 @@ define(function(require, exports, module) {
       return parseFloat( ( factor * 100 ).toFixed( precision ) );
     },
 
+    pluck: utils.pluck,
+
     percentToFactor: function( percent, precision, options ){
       if ( typeof precision === 'object' || !precision ){
         precision = 2;
@@ -524,7 +526,7 @@ define(function(require, exports, module) {
     },
 
     formatDietTag: function(tag) {
-      return config.diets[tag] || tag;
+      return config.diets[tag] ? config.diets[tag].name : tag;
     },
 
     giftcardClasses: function( card, user ){
@@ -561,7 +563,7 @@ define(function(require, exports, module) {
         set = utils.pluck( set, prop );
       }
 
-      return utils.isArray( set ) ? set.join( joiner || ', ' ) : set;
+      return utils.isArray( set ) ? set.join( joiner || ', ' ) : '';
     },
 
     uncamelize: function( text ){
@@ -640,7 +642,7 @@ define(function(require, exports, module) {
     replace: function( str, a, b ){
       return str.replace( a, b );
     },
-    
+
     without: function( arr ){
       var rest = Array.prototype.slice.call( arguments, 1 );
       return utils.without.apply( utils, arr, rest );
@@ -654,6 +656,10 @@ define(function(require, exports, module) {
       }
 
       return invoice[ obj ];
+    },
+
+    slice: function( list, start, end ) {
+      return list.slice(+start, +end);
     }
   }
 

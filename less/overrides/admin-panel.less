@@ -194,6 +194,10 @@ header {
   #order-user,
   #order-restaurant {
     #grid > .column(6);
+
+    .definition-row-list > :first-child {
+      border-top: 0;
+    }
   }
 
   #order-pdfs .pdf-preview {
@@ -321,4 +325,16 @@ header {
 
 .plan-wrapper {
   #grid > .column(3);
+}
+
+///////
+// Upcoming Orders
+///////
+
+.upcoming-orders {
+  min-height: 400px;
+}
+
+.upcoming-orders .picker {
+  min-width: 400px;
 }

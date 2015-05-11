@@ -1,5 +1,7 @@
 {{#extend "page"}}page-analytics{{/extend}}
 
+{{#extend "html-title"}}Analytics{{/extend}}
+
 {{#extend "body"}}
 
 <div class="container" id="main-container">
@@ -32,7 +34,7 @@
       <li><a href="/admin/analytics/demand?q=region:{{lowercase name}}">{{name}}</a></li>
       {{/each}}
     </ul>
-    <li><a href="/admin/analytics/unique-offices">Unique Offices</a></li>
+    <li><a href="/admin/analytics/retention">Organization Retention</a></li>
     <li><a href="/admin/analytics/monthly-new">Monthly New</a></li>
   </ul>
 </div>

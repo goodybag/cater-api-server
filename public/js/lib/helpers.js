@@ -44,16 +44,20 @@ define(function(require, exports, module) {
   helpers.search = function( list, term, fields ){
     var tokens;
 
+    var normalize = function( val ){
+      return val
+        .replace(/\'/g, '')
+        .toLowerCase();
+    }
+
     if ( typeof term === 'number' ){
       tokens = [];
     } else if ( typeof term === 'string' ){
+      term = normalize( term );
       tokens = term.match( /\w+/g );
-      term = term.toLowerCase();
     } else {
       throw new Error('Invalid search term type');
     }
-
-    var tokens = typeof term === 'number' ? [] : term.match( /\w+/g );
 
     return list.filter( function( item ){
       return fields.some( function( field ){
@@ -71,7 +75,7 @@ define(function(require, exports, module) {
         }
 
         if ( typeof value === 'string' ){
-          value = value.toLowerCase();
+          value = normalize( value );
         }
 
         return tokens.some( function( token ){

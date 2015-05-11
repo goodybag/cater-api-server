@@ -79,6 +79,22 @@ define(function(require){
           page.state.set( 'restaurant_location_id', +$(this).val() );
         });
 
+        $('[name="order_status"]').change(function (e) {
+          var silent = !!$(this).find(':selected').data('silent');
+          page.updateOrder({ status: e.target.value },{ silent: silent }, page.flash);
+        });
+
+        $('[name="payment_status"]').change(function (e) {
+          var status = e.target.value || null;
+          if (status === null) alert('Changing payment status to unprocessed will attempt to recharge the credit card!');
+          page.updateOrder({ payment_status: status }, page.flash);
+        });
+
+        $('[name="payment_method_id"]').change( function( e ){
+          var pmid = isNaN(e.target.value) ? null : e.target.value;
+          page.updateOrder({ payment_method_id: pmid }, page.flash);
+        });
+
         $('[role="save"]').click( function( e ){
           e.preventDefault();
 
@@ -114,9 +130,22 @@ define(function(require){
     }
 
     // Because I'm too lazy to fulfill all required properties on the Order Model
-  , updateOrder: function( props, callback ){
+  , updateOrder: function( props, options, callback ){
+      if (utils.isFunction(options)) {
+        callback = options;
+        options = {};
+      }
+
+      utils.defaults(options, {
+        silent: false
+      });
+
       var silent = typeof props.type === 'string' && props.type.indexOf('silent') >= 0;
       if (silent) props.type = props.type.replace('silent', '').trim();
+
+      // shim silent hack
+      silent = silent || options.silent;
+
       $.ajax({
         type: 'PUT'
       , url: '/api/orders/' + (silent ? 'silent/' : '') + page.order.get('id')
@@ -124,7 +153,11 @@ define(function(require){
       , headers: { 'Content-Type': 'application/json' }
       , data: JSON.stringify( props )
       , success: function( order ){
-          return callback( null, order );
+          if ( !silent ) return callback( null, order );
+          utils.async.parallel([
+            page.buildPdf.bind(page, order.id, 'receipt')
+          , page.buildPdf.bind(page, order.id, 'manifest')
+          ], callback);
         }
       , error: callback
       });
@@ -151,6 +184,19 @@ define(function(require){
       , headers: { 'Content-Type': 'application/json' }
       , success: function( notes ){
           return callback( null, notes );
+        }
+      , error: callback
+      });
+    }
+
+  , buildPdf: function ( orderId, pdfType, callback ) {
+      $.ajax({
+        type: 'POST'
+      , url: ['/api/orders', orderId, 'rebuild-pdf', pdfType].join('/')
+      , json: true
+      , headers: { 'Content-Type': 'application/json' }
+      , success: function ( res ) {
+          return callback( null, res );
         }
       , error: callback
       });
@@ -183,6 +229,13 @@ define(function(require){
       );
     }
 
+  , flash: function(error) {
+      if (error) {
+        return page.flashError( error );
+      }
+      return page.flashSuccess();
+    }
+
   , flashSuccess: function(){
       flash.info([
         "It's set!<br>"
@@ -209,6 +262,10 @@ define(function(require){
       var $tds = page.notifications.$el.find( '#notification-' + cid + ' > td' );
       $tds.addClass('highlight');
       $tds.eq(0).one( 'animationend', $tds.removeClass.bind( $tds, 'highlight') );
+      // scroll to the middle of screen
+      $('html, body').animate({
+        scrollTop: $tds.offset().top - Math.floor(window.innerHeight/2)
+      }, 200);
     }
 
   , onStateChange: function( state ){

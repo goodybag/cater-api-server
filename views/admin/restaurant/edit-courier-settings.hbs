@@ -1,13 +1,9 @@
+{{#extend "html-title"}}{{truncate restaurant.name 10}}{{/extend}}
+
 {{#extend "body"}}
 <form class="ap-form form-vertical form-courier-settings" method="POST">
   <input type="hidden" name="_method" value="PUT">
   <h2>Courier Settings</h2>
-  <div class="form-group">
-    <label class="control-label" for="input-disable_courier">
-      <input type="checkbox" class="form-control disable-courier" name="disable_courier" id="input-disable_courier" {{#if restaurant.disable_courier}}checked="checked"{{/if}}>
-      Disable Courier Services for this restaurant
-    </label>
-  </div>
   <div class="form-group">
     <label class="control-label" for="input-disable_courier_notifications">
       <input type="checkbox" class="form-control" name="disable_courier_notifications" id="input-disable_courier_notifications" {{#if restaurant.disable_courier_notifications}}checked="checked"{{/if}}>
@@ -75,8 +71,7 @@ function( AlertView, EditRestaurantView, Restaurant ){
   , model: restaurant
   , alertView: alertView
   , fieldMap: {
-      disable_courier:                          '[name="disable_courier"]'
-    , disable_courier_notifications:            '[name="disable_courier_notifications"]'
+      disable_courier_notifications:            '[name="disable_courier_notifications"]'
     , delivery_service_head_count_threshold:    '[name="delivery_service_head_count_threshold"]'
     , delivery_service_order_amount_threshold:  '[name="delivery_service_order_amount_threshold"]'
     , delivery_service_order_total_upperbound:  '[name="delivery_service_order_total_upperbound"]'

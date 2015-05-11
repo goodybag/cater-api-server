@@ -1,6 +1,8 @@
 <section class="page-section" id="section-menu-tabs">
   <div class="container">
     <h2 class="component-title">Menu Tabs</h2>
+    <p>This component relies on the bootstrap tab plugin, so you will need to
+      ensure that it is loaded onto jquery.</p>
     <ul class="menu-tabs">
       <li class="menu-tab menu-tab-catering active"><a href="#section-catering" data-toggle="tab">Catering Menu</a></li>
       <li class="menu-tab menu-tab-individual"><a href="#section-individual" data-toggle="tab">Individual Menu</a></li>
@@ -14,8 +16,9 @@
       </section>
     </div>
 
-    <code class="language-markup">
-    {{~#raw~}}
+    <p>
+      <code class="language-markup">
+      {{~#raw~}}
 <ul class="menu-tabs">
   <li class="menu-tab menu-tab-catering active"><a href="#section-catering" data-toggle="tab">Catering Menu</a></li>
   <li class="menu-tab menu-tab-individual"><a href="#section-individual" data-toggle="tab">Individual Menu</a></li>
@@ -28,9 +31,46 @@
     <h1>Individual Menu</h1>
   </section>
 </div>
-    {{~/raw~}}
-    </code>
+      {{~/raw~}}
+      </code>
+    </p>
+
+    <h3>Bonus! Untabbed tabs</h3>
+    <p>Ever needed to put adjacent items along the tab row? Do not fret! Simply
+    give li tags the `class="menu-tab untab"` treatment. So simple!</p>
+
+    <ul class="menu-tabs">
+      <li class="menu-tab menu-tab-catering active"><a href="#section-catering" data-toggle="tab">Catering Menu</a></li>
+      <li class="menu-tab menu-tab-individual"><a href="#section-individual" data-toggle="tab">Individual Menu</a></li>
+      <li class="menu-tab untab"><span class="label-tag tomato">Notifications 7</span></li>
+    </ul>
+    <div class="menu-tabs-content">
+      <section id="section-catering" class="active">
+        <h1>Catering Menu</h1>
+      </section>
+      <section id="section-individual">
+        <h1>Individual Menu</h1>
+      </section>
+    </div>
+
+    <p>
+      <code class="language-markup">
+      {{~#raw~}}
+<ul class="menu-tabs">
+  <li class="menu-tab menu-tab-catering active"><a href="#section-catering" data-toggle="tab">Catering Menu</a></li>
+  <li class="menu-tab menu-tab-individual"><a href="#section-individual" data-toggle="tab">Individual Menu</a></li>
+  <li class="menu-tab untab"><span class="label-tag tomato">Notifications 7</span></li>
+</ul>
+<div class="menu-tabs-content">
+  <section id="section-catering" class="active">
+    <h1>Catering Menu</h1>
+  </section>
+  <section id="section-individual">
+    <h1>Individual Menu</h1>
+  </section>
+</div>
+      {{~/raw~}}
+      </code>
+    </p>
   </div>
 </section>
-
-{{!-- Requires bootstrap tab plugin --}}

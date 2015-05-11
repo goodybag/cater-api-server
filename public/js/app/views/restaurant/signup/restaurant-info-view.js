@@ -49,7 +49,7 @@ define(function (require, exports, module) {
         var tags = [];
         this.$el.find(this.fieldMap.tags).each(function (i, el) {
           if ( $(el).is(':checked') ) {
-            tags.push({ tag: el.value });
+            tags.push(el.value);
           }
         });
         return tags;

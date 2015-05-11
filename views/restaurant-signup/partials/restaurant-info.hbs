@@ -24,32 +24,32 @@
       <label class="label-col">Price</label>
       <div class="field-col">
         <div class="form-group">
-          <ol class="inline-list">
-            <li>
+          <div class="grid-map">
+            <div class="grid-item">
               <label>
                 <input type="radio" class="restaurant-price" name="price" value="1" {{#eq restaurant.price 1}}checked="true"{{/eq}}>
                 <span class="dollar-meter" >{{{dollarMeter 1}}}</span>
               </label>
-            </li>
-            <li>
+            </div>
+            <div class="grid-item">
               <label>
                 <input type="radio" class="restaurant-price" name="price" value="2" {{#eq restaurant.price 2}}checked="true"{{/eq}}>
                 <span class="dollar-meter">{{{dollarMeter 2}}}</span>
               </label>
-            </li>
-            <li>
+            </div>
+            <div class="grid-item">
               <label>
                 <input type="radio" class="restaurant-price" name="price" value="3" {{#eq restaurant.price 3}}checked="true"{{/eq}}>
                 <span class="dollar-meter">{{{dollarMeter 3}}}</span>
               </label>
-            </li>
-            <li>
+            </div>
+            <div class="grid-item">
               <label>
                 <input type="radio" class="restaurant-price" name="price" value="4" {{#eq restaurant.price 4}}checked="true"{{/eq}}>
                 <span class="dollar-meter">{{{dollarMeter 4}}}</span>
               </label>
-            </li>
-          </ol>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@
       </div>
     </div>
     <div class="row">
-      <label class="label-col">Restaurant Email <span class="panel-info">Optional</span></label>
+      <label class="label-col">Restaurant Email <div class="panel-info">Optional</div></label>
       <div class="field-col">
         <div class="form-group">
           <input type="email" class="form-control restaurant-email" name="email" value="{{restaurant.billing_email}}">
@@ -80,141 +80,132 @@
     <div class="row">
       <label class="label-col">Meal Types Offered <div class="panel-info">Optional</div></label>
       <div class="field-col">
-        {{#contains restaurant.meal_type 'breakfast'}}ok{{/contains}}
-        <ol class="inline-list">
-          <li>
+        <div class="grid-map">
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="meal-type" name="meal_type" value="breakfast" {{#contains (pluck restaurant.meal_type 'meal_type') 'breakfast'}}checked="true"{{/contains}}>
               Breakfast
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="meal-type" name="meal_type" value="lunch" {{#contains (pluck restaurant.meal_type 'meal_type') 'lunch'}}checked="true"{{/contains}}>
               Lunch
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="meal-type" name="meal_type" value="dinner" {{#contains (pluck restaurant.meal_type 'meal_type') 'dinner'}}checked="true"{{/contains}}>
               Dinner
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="meal-type" name="meal_type" value="appetizer" {{#contains (pluck restaurant.meal_type 'meal_type') 'appetizer'}}checked="true"{{/contains}}>
               Appetizer
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="meal-type" name="meal_type" value="dessert" {{#contains (pluck restaurant.meal_type 'meal_type') 'dessert'}}checked="true"{{/contains}}>
               Dessert
             </label>
-          </li>
-        </ol>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">
       <label class="label-col">Dietary Restrictions <div class="panel-info">Optional</div></label>
       <div class="field-col">
-        <ol class="inline-list">
-          <li>
+        <div class="grid-map">
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="restaurant-tags" value="vegetarian" {{#contains (pluck restaurant.tags 'tag') 'vegetarian'}}checked="true"{{/contains}}>
               Vegetarian
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="restaurant-tags" value="vegan" {{#contains (pluck restaurant.tags 'tag') 'vegan'}}checked="true"{{/contains}}>
               Vegan
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="restaurant-tags" value="glutenFree" {{#contains (pluck restaurant.tags 'tag') 'glutenFree'}}checked="true"{{/contains}}>
               Gluten free
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="restaurant-tags" value="dairyFree" {{#contains (pluck restaurant.tags 'tag') 'dairyFree'}}checked="true"{{/contains}}>
               Dairy free
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="restaurant-tags" value="halai" {{#contains (pluck restaurant.tags 'tag') 'halai'}}checked="true"{{/contains}}>
               Halai
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="restaurant-tags" value="kosher" {{#contains (pluck restaurant.tags 'tag') 'kosher'}}checked="true"{{/contains}}>
               Kosher
             </label>
-          </li>
-        </ol>
+          </div>
+        </div>
         <span class="panel-info">Do you offer any entrées that fall user one of these?</span>
       </div>
     </div>
     <div class="row">
       <label class="label-col">Which can you include? <div class="panel-info">Optional</div></label>
       <div class="field-col">
-        <ol class="inline-list">
-          <li>
+        <div class="grid-map">
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="restaurant-amenities" value="napkins" {{#contains (pluck restaurant.amenities 'name') 'napkins'}}checked="true"{{/contains}}>
               Napkins
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="restaurant-amenities" value="utensils" {{#contains (pluck restaurant.amenities 'name') 'utensils'}}checked="true"{{/contains}}>
               Utensils
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="restaurant-amenities" value="plates" {{#contains (pluck restaurant.amenities 'name') 'plates'}}checked="true"{{/contains}}>
               Plates
             </label>
-          </li>
-          <li>
+          </div>
+          <div class="grid-item">
             <label>
               <input type="checkbox" class="restaurant-amenities" value="none" {{#contains (pluck restaurant.amenities 'name') 'none'}}checked="true"{{/contains}}>
               None of these
             </label>
-          </li>
-        </ol>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">
       <label class="label-col">Your Menu</label>
       <div class="field-col">
         <div class="row">
-          <label class="label-col">Enter a link:</label>
-          <div class="field-col">
-            <div class="form-group">
-              <input type="text" class="form-control restaurant-menu" name="menu" value="{{restaurant.menu_url}}"> 
-            </div>
+          <label class="col">Enter a link:</label>
+          <div class="col">
+            <input type="text" class="restaurant-menu" name="menu" value="{{restaurant.menu_url}}">
           </div>
         </div>
         <strong>Or</strong>
         <div class="row">
-          <label class="label-col">upload a file:</label>
-          <div class="field-col">
-            <div class="row">
-              <div class="col">
-                <input type="text" class="form-control menu-url-file" placeholder="No file selected" readonly>
-              </div>
-              <div class="col">
-                <div class="form-group">
-                  <button class="form-control btn btn-default btn-block" id="input-menu-url">Pick File</button>
-                </div>
-              </div>
-            </div>
+          <label class="col">upload a file:</label>
+          <div class="col">
+            <input type="text" class="menu-url-file" placeholder="No file selected" readonly>
+          </div>
+          <div class="col">
+            <button class="form-control btn btn-default btn-block" id="input-menu-url">Pick File</button>
           </div>
         </div>
       </div>
@@ -224,26 +215,22 @@
       <label class="label-col">Your Logo</label>
       <div class="field-col">
         <div class="row">
-          <label class="label-col">Enter a link:</label>
-          <div class="field-col">
-            <div class="form-group">
-              <input type="text" class="form-control restaurant-logo" value="{{restaurant.logo_url}}">
-            </div>
+          <label class="col">Enter a link:</label>
+          <div class="col">
+            <input type="text" class="form-control restaurant-logo" value="{{restaurant.logo_url}}">
           </div>
         </div>
         <strong>Or</strong>
         <div class="row">
-          <label class="label-col">Upload a file:</label>
-          <div class="field-col">
-            <div class="row">
-              <div class="col">
-                <input type="text" class="form-control logo-url-file" placeholder="No file selected" readonly>
-              </div>
-              <div class="col">
+          <div class="row">
+            <label class="col">Upload a file:</label>
+            <div class="col">
                 <div class="form-group">
-                  <button class="form-control btn btn-default btn-block" id="input-logo-url">Pick File</button>
-                </div>
+                  <input type="text" class="form-control logo-url-file" placeholder="No file selected" readonly>
               </div>
+            </div>
+            <div class="col">
+              <button class="form-control btn btn-default btn-block" id="input-logo-url">Pick File</button>
             </div>
           </div>
         </div>
@@ -251,7 +238,7 @@
     </div>
 
     <div class="row">
-      <label class="label-col">Order minimum</label> 
+      <label class="label-col">Order minimum</label>
       <div class="field-col">
         <div class="form-group">
           <div class="input-group">

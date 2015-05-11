@@ -4,18 +4,18 @@
   </div>
   <div class="panel-body">
     <div class="row">
-     <label class="label-col">Restaurant Name</label> 
-     <div class="field-col">
-      <div class="form-group">
-        <input type="text" class="form-control terms-restaurant-name" name="name">
+      <label class="label-col">Name</label>
+      <div class="field-col">
+        <div class="form-group">
+          <input type="text" class="form-control" name="name" value="{{restaurant.terms_name}}">
+        </div>
       </div>
-     </div>
     </div>
     <div class="row">
       <label class="label-col">Contact Name</label>
       <div class="field-col">
         <div class="form-group">
-          <input type="text" class="form-control terms-contact-name" name="contact_name">
+          <input type="text" class="form-control" name="contact_name" value="{{restaurant.terms_contact_name}}">
         </div>
       </div>
     </div>
@@ -23,7 +23,7 @@
       <label class="label-col">Date</label>
       <div class="field-col">
         <div class="form-group">
-          <input type="date" class="form-control terms-date" name="date">
+          <input type="date" class="form-control" name="date" value="{{restaurant.terms_date}}">
         </div>
       </div>
     </div>

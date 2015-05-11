@@ -1,13 +1,13 @@
 {{#extend "page"}}page-restaurant-signup{{/extend}}
 
 {{#extend "body"}}
-<div id="restaurant-join" class="restaurant-join">
+<div id="restaurant-signup" class="restaurant-join">
   <nav>
     <ol class="inline-list tabs">
-      <li class="form-step {{#if (or (not signup.step) (eq signup.step '1'))}}active{{/if}}"><span>1</span> Basic Info</li>
-      <li class="{{#eq signup.step '2'}}active{{/eq}}"><span>2</span> Restaurant Info</li>
-      <li class="{{#eq signup.step '3'}}active{{/eq}}"><span>3</span> Delivery + Pickup</li>
-      <li class="{{#eq signup.step '4'}}active{{/eq}}"><span>4</span> Payments</li>
+      <li class="{{#if (or (not signup.step) (eq signup.step '1'))}}active{{/if}}"><span class="number">1</span> Basic Info</li>
+      <li class="{{#eq signup.step '2'}}active{{/eq}}"><span class="number">2</span> Restaurant Info</li>
+      <li class="{{#eq signup.step '3'}}active{{/eq}}"><span class="number">3</span> Delivery + Pickup</li>
+      <li class="{{#eq signup.step '4'}}active{{/eq}}"><span class="number">4</span> Payments</li>
     </ol>
   </nav>
   <form class="form-vertical form-restaurant-signup">
@@ -50,7 +50,7 @@
 require([
   'app/pages/restaurant-signup'
 , 'app/models/restaurant'
-], 
+],
 function ( page, Restaurant ){
   page.init({
     step: {{or signup.step '1'}}

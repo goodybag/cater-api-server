@@ -17,6 +17,10 @@ define(function (require, exports, module) {
   , fieldGetters: {
       services: function () {
         return this.$el.find(this.fieldMap.services+':checked').val() || null;
+      },
+      websites: function () {
+        var $websites = this.$el.find(this.fieldMap.websites).val();
+        return $websites ? '{:w}'.replace(':w', $websites.join(',')) : '{}';
       }
     }
 
@@ -27,6 +31,7 @@ define(function (require, exports, module) {
 
   , submit: function (e) {
       e.preventDefault();
+      var this_ = this;
       this.clearErrors();
 
       if (!this.$el.find(this.fieldMap.name).val()) {
@@ -44,9 +49,26 @@ define(function (require, exports, module) {
       }
 
       this.model.set(this.getDiff());
-      this.setLocalStorage(this.model.toJSON());
-      this.setCookie('2');
-      window.location.reload();
+
+      $.ajax({
+        type: 'POST'
+      , url: '/api/restaurants/join'
+      , dataType: 'JSON'
+      , data: { step: 2, data: JSON.stringify( this.model.toJSON() )}
+      , success: function ( data ) {
+          this_.$el.animate({
+            left: '-100px',
+            opacity: '0'
+          }, 300, function () {
+            window.scrollTo(0,0);
+            window.location.reload();
+          });
+        }
+      , error: function ( error ) {
+          console.log('failed', error);
+        }
+      })
+
     }
   });
 });

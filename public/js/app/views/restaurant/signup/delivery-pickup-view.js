@@ -7,15 +7,16 @@ define(function (require, exports, module) {
 
   return module.exports = BaseView.extend({
     events: utils.extend(BaseView.prototype.events, {
-      'click .add-custom-lead-times'  : 'setLeadTime'
+      'click .add-custom-lead-times'  : 'addCustomLeadTime'
     , 'click .default-lead-times'     : 'defaultLeadTimes'
+    , 'click .add-restriction'        : 'addLeadTimeRestriction'
     , 'click .add-hours'              : 'addHours'
     , 'click .add-days'               : 'setDays'
     , 'click .datetime-days-list > li': 'setDeliveryHours'
     })
 
   , fieldMap: {
-      gb_fee           : '.delivery-fee'
+      delivery_fee     : '.delivery-fee'
     , lead_times       : '.delivery-lead-times'
     , pickup_lead_times: '.pickup-lead-times'
     , delivery_hours   : '.delivery-hours'
@@ -74,20 +75,20 @@ define(function (require, exports, module) {
 
   , submit: function (e) {
       e.preventDefault();
+      var this_ = this;
       this.clearErrors();
-
       // Input field values. We're not using fieldGetters here
       // b/c some inputs give a 'default' option (i.e default lead times)
       var fields = {
-        gb_fee: Math.abs(this.$el.find(this.fieldMap.gb_fee).val())
+        delivery_fee: Math.abs(this.$el.find(this.fieldMap.delivery_fee).val())
       , lead_times: this.$el.find(this.fieldMap.lead_times+':checked').val()
       , pickup_lead_times: this.$el.find(this.fieldMap.pickup_lead_times+':checked').val()
       , delivery_hours: this.$el.find(this.fieldMap.delivery_hours)
       };
 
-      if (!fields.gb_fee || !parseInt(fields.gb_fee)) {
+      if (!fields.delivery_fee || !parseInt(fields.delivery_fee)) {
         return this.displayErrors([{
-          property: 'gb_fee'
+          property: 'delivery_fee'
         , message: 'Please provide a delivery fee.'
         }]);
       }
@@ -109,12 +110,18 @@ define(function (require, exports, module) {
       for (var i=0; i < fields.delivery_hours.length; i++) {
         var days = fields.delivery_hours.eq(i).find('.datetime-days-list > li.active');
         if (days.length < 1) {
-          return alert('select a day');
+          return this.displayErrors([{
+            selector: '.gb-dropdown'
+          , message: 'Please select a day.'
+          }]);
         }
         var startTime = fields.delivery_hours.eq(i).find('.delivery-hours-start').val();
         var endTime = fields.delivery_hours.eq(i).find('.delivery-hours-end').val();
         if (!startTime || !endTime) {
-          return alert('select a time')
+          return this.displayErrors([{
+            selector: '.delivery-hours-end'
+          , message: 'Please select a delivery time.'
+          }]);
         }
       }
 
@@ -125,16 +132,38 @@ define(function (require, exports, module) {
       , delivery_hours: this.fieldGetters.delivery_hours.call(this)
       };
 
-
-      //this.setCookie('4');
-      //window.location.reload();
+      this.model.set(this.getDiff());
+      $.ajax({
+        type: 'PUT'
+      , url: '/api/restaurants/join'
+      , dataType: 'JSON'
+      , data: { step: 4, data: JSON.stringify( this.model.toJSON() )}
+      , success: function () {
+          this_.$el.animate({
+            left: '-100px',
+            opacity: '0'
+          }, 300, function () {
+            window.scrollTo(0,0);
+            window.location.reload();
+          });
+        }
+      , error: function (error) {
+          console.error('failed ', error);
+        }
+      });
     }
 
-  , setLeadTime: function(e) {
+  , addCustomLeadTime: function(e) {
       var template = Handlebars.partials.edit_lead_times;
       var html = template( this.model.toJSON() );
       var type = $(e.target).data('type');
       this.$el.find('.:type-lead-times-container'.replace(':type', type)).html( html );
+    }
+
+  , addLeadTimeRestriction: function (e) {
+      e.preventDefault();
+      var template = Handlebars.partials.lead_time;
+      $( template() ).insertBefore( e.target );
     }
 
   , defaultLeadTimes: function (e) {
@@ -173,6 +202,6 @@ define(function (require, exports, module) {
       var $el = $(e.target);
       $el.toggleClass('active');
     }
-    
+
   });
 });

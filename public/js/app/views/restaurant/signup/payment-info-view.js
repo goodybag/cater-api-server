@@ -41,12 +41,22 @@ define(function (require, exports, module) {
 
       if (!this.validateFields(requiredFields)) return;
       if (!this.validateFields(depositInfo, true)) return;
-      
 
       //TODO: insert deposit info into stripe
 
-      //this.model.set(this.getDiff());
-      //this.model.save(null {});
+      this.model.set(this.getDiff());
+      $.ajax({
+        type: 'PUT'
+      , url: '/api/restaurants/join'
+      , dataType: 'JSON'
+      , data: { status: 'completed', data: JSON.stringify( this.model.toJSON() )}
+      , success: function () {
+          console.log('worked');
+        }
+      , error: function (error) {
+          console.error('failed', error);
+        }
+      });
     }
 
     // validates against null input values

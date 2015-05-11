@@ -105,8 +105,52 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/join'
   , m.localCookies(['gb_rs'])
-  , m.view('restaurant-signup/register', {
+  , function (req, res, next) {
+      res.locals.restaurant = {};
+      res.locals.signup = {};
+      var signupId = req.session.restaurant_signup_id;
+      if (!signupId) return next();
+
+      db.restaurant_signups.findOne({ id: signupId }, function (error, results) {
+        if (error) return next();
+
+        if (results) {
+          res.locals.restaurant = results.data;
+          res.locals.signup = { id: results.id, step: results.step };
+        }
+
+        next();
+      });
+    }
+  , m.view('restaurant-signup/', {
       layout: 'layout/default'
+    })
+  );
+
+  app.post('/api/restaurants/join', controllers.restaurants.signups.create);
+
+  app.put('/api/restaurants/join'
+  , function (req, res, next) {
+      var signupId = req.session.restaurant_signup_id;
+      if (!signupId) return console.log('invalid signup id'), res.status(400).send();
+      req.queryObj = { id: signupId };
+      req.queryOptions.returning = ['id', 'status', 'data'];
+      next();
+    }
+  , m.update( db.restaurant_signups,
+    {
+      callback: function (error, results) {
+        if (error) return;
+        results = results.length > 0 ? results[0] : results;
+        if (results.status === 'completed') {
+          var restaurant = new Models.Restaurant(results.data);
+          restaurant.save(function (error, row, results) {
+            if (error) return console.log(error);
+            // notify user
+            // notify goodybag
+          });
+        }
+      }
     })
   );
 

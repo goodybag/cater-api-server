@@ -59,7 +59,7 @@ define(function (require, exports, module) {
         var amenities = [];
         this.$el.find(this.fieldMap.amenities).each(function (i, el) {
           if ( $(el).is(':checked') ) {
-            amenities.push({ amenities: el.value });
+            amenities.push({ name: el.value });
           }
         });
         return amenities;
@@ -100,15 +100,24 @@ define(function (require, exports, module) {
 
   , submit: function (e) {
       e.preventDefault();
+      var this_ = this;
       this.clearErrors();
       var fields = {
           address: this.$el.find(this.fieldMap.address).val()
         , phone: this.fieldGetters.display_phone.call(this)
+        , price: this.fieldGetters.price.call(this)
         , menu_url: this.fieldGetters.menu_url.call(this)
         , logo_url: this.fieldGetters.logo_url.call(this)
         , orderMinimum: this.$el.find(this.fieldMap.minimum_order).val()
         , contacts: this.fieldGetters.contacts.call(this)
       };
+
+      if (!fields.price) {
+        return this.displayErrors([{
+          property: 'price'
+        , message: 'Please select a price.'
+        }]);
+      }
 
       if (!fields.address) {
         return this.displayErrors([{
@@ -170,9 +179,23 @@ define(function (require, exports, module) {
       }
 
       this.model.set(this.getDiff());
-      this.setLocalStorage(this.model.toJSON());
-      this.setCookie('3');
-      window.location.reload();
+      $.ajax({
+        type: 'PUT'
+      , url: '/api/restaurants/join'
+      , data: { step: 3, data: JSON.stringify( this.model.toJSON() )}
+      , success: function () {
+          this_.$el.animate({
+           left: '-100px',
+           opacity: '0'
+          }, 300, function () {
+            window.scrollTo(0,0);
+            window.location.reload();
+          });
+        }
+      , error: function (error) {
+          console.error('failed ', error);
+        }
+      });
     }
 
   , addContact: function (e) {

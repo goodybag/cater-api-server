@@ -68,7 +68,6 @@ config.defaults = {
 
 , deniedRecipients: [
     'jag@goodybag.com'
-  , 'sarah.southwell@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
@@ -77,7 +76,6 @@ config.defaults = {
 
 , deliveryServiceOrderAboveThresholdRecipients: [
     'jag@goodybag.com'
-  , 'sarah.southwell@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
@@ -327,7 +325,7 @@ config.dev = {
 config.staging = {
   env: 'staging'
 
-, numWorkers: 1
+, numWorkers: +process.env['WEB_CONCURRENCY']
 
 , isStaging: true
 
@@ -383,7 +381,7 @@ config.staging = {
 
 config.production = {
   env: 'production'
-, numWorkers: 3
+, numWorkers: +process.env['WEB_CONCURRENCY']
 
 , isProduction: true
 
@@ -452,8 +450,7 @@ config.production = {
     , 'redemptions@goodybag.com'
     ]
   , dsOrders: [
-      'sarahsouthwell@goodybag.com'
-    , 'christymedlock@goodybag.com'
+      'christymedlock@goodybag.com'
 
     // temp
     , 'jacobparker@goodybag.com'
@@ -466,25 +463,21 @@ config.production = {
     // , 'jay@goodybag.com'
     , 'jag@goodybag.com'
     , 'jacobparker@goodybag.com'
-    , 'sarahsouthwell@goodybag.com'
     , 'christymedlock@goodybag.com'
     ]
   , orderNotificationChecks: [
-      'sarahsouthwell@goodybag.com'
-    , 'christymedlock@goodybag.com'
+      'christymedlock@goodybag.com'
     , 'john@goodybag.com'
     ]
   , reminderPaymentStatusIgnore: [
-      'sarahsouthwell@goodybag.com'
-    , 'christymedlock@goodybag.com'
+      'christymedlock@goodybag.com'
     ]
   }
 
 , deliveryServices: {
     responseThresholdMins: 30
   , supportPhones: [
-      '9788461970' // Sarah
-    , '2105779226' // Christy Medlock
+      '2105779226' // Christy Medlock
     ]
   }
 

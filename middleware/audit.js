@@ -16,6 +16,9 @@ module.exports = {
 
     return function(req, res, next) {
       var logger =  req.logger.create('AuditOrderType');
+
+      if ( !req.body.type ) return next();
+
       db.order_types.insert({
         order_id:     req.order ? req.order.id : req.params[options.param]
       , user_id:      req.user ? req.user.attributes.id : null

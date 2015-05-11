@@ -1,3 +1,5 @@
+{{> scripts_validate_address}}
+
 <div class="panel">
   <div class="panel-head">
     <h3 class="panel-title">Restaurant Info</h3>
@@ -56,8 +58,8 @@
     <div class="row">
       <label class="label-col">Restaurant Address</label>
       <div class="field-col">
-        <div class="form-group">
-          <input type="text" class="form-control restaurant-address" name="address" value="{{restaurant.address}}">
+        <div class="form-group input-group">
+          <span class="input-addon"></span><input type="text" class="form-control restaurant-address" name="address" data-action="validate-address">
         </div>
       </div>
     </div>
@@ -194,9 +196,11 @@
       <label class="label-col">Your Menu</label>
       <div class="field-col">
         <div class="row">
-          <label class="col">Enter a link:</label>
-          <div class="col">
-            <input type="text" class="restaurant-menu" name="menu" value="{{restaurant.menu_url}}"> 
+          <label class="label-col">Enter a link:</label>
+          <div class="field-col">
+            <div class="form-group">
+              <input type="text" class="form-control restaurant-menu" name="menu">
+            </div>
           </div>
         </div>
         <strong>Or</strong>
@@ -239,7 +243,7 @@
     </div>
 
     <div class="row">
-      <label class="label-col">Order minimum</label> 
+      <label class="label-col">Order minimum</label>
       <div class="field-col">
         <div class="form-group">
           <div class="input-group">

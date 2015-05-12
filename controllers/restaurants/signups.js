@@ -32,21 +32,35 @@ module.exports.update = function (req, res) {
 
     results = results.length > 0 ? results[0] : results;
 
-    if (results.status === 'completed') {
-      req.body = results.data;
-      restaurantsController._create(req, function (error, rows, results) {
-        if (error) {
-          console.log(error);
-          return res.error(errors.internal.DB_FAILURE, error);
-        }
-        // TODO:
-        // 1. notify user
-        // 2. notify goodybag
-        return res.status(200).json( results );
-      });
-    } else {
+    if (results.status !== 'completed') return res.status(200).json(results);
+
+    req.body = results.data;
+
+    var tasks = [
+      function createRestaurant (next) {
+        return restaurantsController._create(req, next);
+      }
+    , function createContacts (rows, results, next) {
+        var contacts = req.body.contacts.map(function (contact) {
+          contact.restaurant_id = rows[0].id;
+          return contact;
+        });
+
+        return db.contacts.insert(contacts, next);
+      }
+    ];
+
+    utils.async.waterfall(tasks, function (error) {
+      if (error) {
+        console.log(error);
+        return res.error(errors.internal.DB_FAILURE, error);
+      }
+
+      // TODO:
+      // 1. notify user
+      // 2. notify goodybag
       return res.status(200).json( results );
-    }
+    });
 
   });
 };

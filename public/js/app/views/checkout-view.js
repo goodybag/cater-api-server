@@ -120,7 +120,7 @@ define(function(require, exports, module) {
       _(this.model.restaurant.get('delivery_times')).each( function( t, i ){
         if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
       });
-
+      // debugger;
       this.datepicker.set( 'disable', disabledTimes );
     },
 

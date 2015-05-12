@@ -484,6 +484,7 @@ config.production = {
     responseThresholdMins: 30
   , supportPhones: [
       '2105779226' // Christy Medlock
+    , '3153457641' // Patrick Mugavin
     ]
   }
 

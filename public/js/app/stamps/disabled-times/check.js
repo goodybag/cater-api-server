@@ -31,11 +31,10 @@ define( function( require, exports, module ){
         });
 
         // Disable dates for closed restaurant events
-        if ( restaurant ) {
-          var closedEvents = restaurant.get('event_date_ranges');
-
+        var closedEvents = restaurant.get('event_date_ranges');
+        if ( closedEvents && closedEvents.length ) {
           // For each range, push each date
-          utils.each(closedEvents, function(val) {
+          closedEvents.forEach(function(val) {
             var range = val.replace(/[\[\]\(\)]/g, '').split(',');
             var start = moment(range[0]);
             var end = moment(range[1]);

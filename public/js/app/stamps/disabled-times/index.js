@@ -16,7 +16,7 @@ define( function( require, exports, module ){
 
   var stamps = {
     base: require('./base')
-  , disabledTimes: require('./disabled-times')
+  , check: require('./check')
   };
 
   module.exports = module.exports.compose.apply(

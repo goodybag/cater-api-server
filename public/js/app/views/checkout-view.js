@@ -5,7 +5,7 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var notify = require('../../notify');
   var config = require('config');
-
+  var disabledTimesStamp = require('../stamps/disabled-times/index');
   var OrderView = require('./order-view');
 
   var Order = require('../models/order');
@@ -114,13 +114,18 @@ define(function(require, exports, module) {
     },
 
     onDatePickerOpen: function(){
-      // Days of week the restaurant does not deliver
-      var disabledTimes = [];
-
-      _(this.model.restaurant.get('delivery_times')).each( function( t, i ){
-        if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
-      });
+      // var disabledTimes = [];
+      //
+      // _(this.model.restaurant.get('delivery_times')).each( function( t, i ){
+      //   if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
+      // });
       // debugger;
+
+      // Days of week the restaurant does not deliver
+      var disabledTimes = disabledTimesStamp
+        .create({ restaurant: this.model.restaurant })
+        .getDisabledTimes();
+
       this.datepicker.set( 'disable', disabledTimes );
     },
 

@@ -102,7 +102,7 @@ describe('Restaurant Model', function() {
     });
   });
 
-  describe.only('#getDaysClosed', function(){
+  describe('#getDaysClosed', function(){
     var restaurant;
     beforeEach(function resetRestaurant() {
       restaurant = new Restaurant({

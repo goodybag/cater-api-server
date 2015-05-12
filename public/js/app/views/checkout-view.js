@@ -5,7 +5,7 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var notify = require('../../notify');
   var config = require('config');
-  var disabledTimesStamp = require('../stamps/disabled-times/index');
+
   var OrderView = require('./order-view');
 
   var Order = require('../models/order');
@@ -114,13 +114,7 @@ define(function(require, exports, module) {
     },
 
     onDatePickerOpen: function(){
-      // Disable days when the restaurant is closed
-      // i.e. no hours of operation nor delivery hours for a given day
-      var disabledTimes = disabledTimesStamp
-        .create({ restaurant: this.model.restaurant })
-        .getDisabledTimes();
-
-      this.datepicker.set( 'disable', disabledTimes );
+      this.datepicker.set( 'disable', this.model.restaurant.getDaysClosed() );
     },
 
     onTimePickerOpen: function(){

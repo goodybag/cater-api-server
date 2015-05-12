@@ -114,14 +114,8 @@ define(function(require, exports, module) {
     },
 
     onDatePickerOpen: function(){
-      // var disabledTimes = [];
-      //
-      // _(this.model.restaurant.get('delivery_times')).each( function( t, i ){
-      //   if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
-      // });
-      // debugger;
-
-      // Days of week the restaurant does not deliver
+      // Disable days when the restaurant is closed
+      // i.e. no hours of operation nor delivery hours for a given day
       var disabledTimes = disabledTimesStamp
         .create({ restaurant: this.model.restaurant })
         .getDisabledTimes();

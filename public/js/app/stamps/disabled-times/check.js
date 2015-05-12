@@ -22,7 +22,6 @@ define( function( require, exports, module ){
       getDisabledTimes: function(){
         var disabledTimes = [];
         var restaurant = this.restaurant;
-
         _.each( _.range(7), function( i ){
           if ( restaurant.get('delivery_times')[ i ].length === 0 )
           if ( restaurant.get('hours_of_operation')[ i ].length === 0 ){

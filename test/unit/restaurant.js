@@ -184,9 +184,6 @@ describe('Restaurant Model', function() {
     });
 
     it('should return some days because of hours of operation', function() {
-      // For mocking a restaurant with delivery times, the actual
-      // representation of each time slot is irrelevant.
-      // We just need each day to have some length.
       restaurant.set({
         delivery_times: {
           0: [],

@@ -33,9 +33,11 @@ var overrideRender = function( returns ){
   };
 };
 
-utils.sendRawEmail = function( from, to, text, callback ){
-  return callback( null, from, to, text );
-};
+before( function(){
+  utils.sendRawEmail = function( from, to, text, callback ){
+    return callback( null, from, to, text );
+  };
+});
 
 after( function(){
   app.render = oldRender;
@@ -54,7 +56,7 @@ describe('Order Notifications', function(){
 
       var order = orders();
 
-      var note = notes( order );
+      var note = notes( order, 1 );
 
       assert( note.isValidOrder() );
     });
@@ -70,7 +72,7 @@ describe('Order Notifications', function(){
       var order = orders()
         .remove('deliveryService');
 
-      var note = notes( order );
+      var note = notes( order, 1 );
 
       assert( !note.isValidOrder() );
     });
@@ -158,13 +160,12 @@ describe('Order Notifications', function(){
       , subject: 'Bill Bob'
       });
 
-      var note = notes( order );
+      var note = notes( order, 1 );
 
       overrideRender('Test preview');
       
       note.send( function( error, from, to, text ){
         assert( !error );
-
         assert.equal( to, order.to );
         assert.equal( from, order.from );
         assert( text.indexOf('Test preview') > -1 );

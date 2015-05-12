@@ -8,5 +8,5 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  perform add_column( 'order_notifications', 'user_id', 'int references users("id")')
+  perform add_column( 'order_notifications', 'user_id', 'int references users("id")' );
 end$$;

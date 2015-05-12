@@ -47,7 +47,7 @@ after( function(){
 describe('Order Notifications', function(){
   describe('Base', function(){
     it('Should be a valid order object', function(){
-      var notes = notifications.definition({
+      var notes = notifications.notification({
         id: 'a'
       , name: 'a'
       , build: function(){}
@@ -62,7 +62,7 @@ describe('Order Notifications', function(){
     });
 
     it('Should NOT be a valid order object', function(){
-      var notes = notifications.definition({
+      var notes = notifications.notification({
         id: 'a'
       , name: 'a'
       , build: function(){}
@@ -78,7 +78,7 @@ describe('Order Notifications', function(){
     });
 
     it('Should throw an error because the notification is missing required options', function(){
-      var notes = notifications.definition({
+      var notes = notifications.notification({
         id: 'a'
       , name: 'a'
       , requiredOptions: ['optA']
@@ -133,7 +133,7 @@ describe('Order Notifications', function(){
     });
 
     it('Should email', function( done ){
-      var notes = notifications.definition(
+      var notes = notifications.notification(
         notifications.email({
           id: 'a'
         , name: 'a'

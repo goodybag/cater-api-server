@@ -29,38 +29,58 @@ __Creating a notification factory__
 We've abstracted the process of defining a notification to simply passing an object literal to the notification factory factory (yes, a factory that creates factories). We automatically instantiate the factory and add it to the registry if your notification is defined in [./notifications](./notifications).
 
 ```javascript
-// order-notifications2/notifications/order-to-trello.js
 var trello = require('trello').createClient(
   require('config').trello
 );
 
 var markdown = require('markdown');
+var usd = require('usd');
 
 var tmpls = {
   title: function( order ){
-    return [
-      'Card Title: #', order.id, ' ', order.restaurant.id
-    ].join('');
+    return [ '#', order.id, ' ', order.restaurant.id ].join('');
   }
 
 , body: function( order ){
-    
+    return [
+      'https://www.goodybag.com/admin/orders/' + order.id
+    , ''
+    , '* User: [https://www.goodybag.com/admin/users/' + order.user.id
+    , '* Total: $' + usd().pennies( order.total ).dollars()
+    , ''
+    , '## Restaurant'
+    , ''
+    , '...'
+    ].join('\n')
+  }
+
+, htmlPreview: function( order ){
+    return [
+      '<h1>' + tmpls.title( order ) + '</h1>'
+    , markdown.parse( tmpls.body( order ) ).toHTML()
+    ].join('\n');
   }
 };
 
 module.exports = {
   build: function( order, options, logger, callback ){
-    return callback( null, {
-      preview: tmpls.preview( order )
-    , cardDetails: {
+    var build = {
+      cardDetails: {
         title: tmpls.title( order )
-      , body: tmpls.title( order )
+      , body: tmpls.body( order )
+      , board: 'order-board-id'
       }
-    });
+    };
+
+    if ( options.render !== false ){
+      build.html = tmpls.htmlPreview( order );
+    }
+
+    return callback( null, );
   }
 
-, send: function( order, options, logger, callback ){
-    
+, send: function( build, order, options, logger, callback ){
+    trello.cards( build.cardDetails, callback );
   }
 };
 ```

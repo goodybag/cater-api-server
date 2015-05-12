@@ -5,6 +5,8 @@
 @menu-tab-radius: 3px;
 @menu-tab-font-size: .9rem;
 
+@menu-tab-content-font-size: 1.2rem;
+
 /**
  * Menu Tabs
  */
@@ -52,14 +54,9 @@
   border-top: none;
 }
 
-.menu-tabs-content h1,
-.menu-tabs-content h2,
-.menu-tabs-content h3,
-.menu-tabs-content h4,
-.menu-tabs-content h5 {
+.menu-tabs-content h1 {
   margin: 0;
-  padding: 0;
+  padding: 20px;
+  font-size: @menu-tab-content-font-size;
+  font-weight: @bold;
 }
-
-.menu-tabs-content section { display: none; }
-.menu-tabs-content section.active { display: block; }

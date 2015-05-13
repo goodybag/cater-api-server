@@ -19,15 +19,9 @@
       </div>
       {{/unless}}
       <div>
-        <dt>Date Created:</dt>
-        <dd class="date-created" data-date="{{this.created_at}}"></dd>
-      </div>
-      {{#if this.submitted}}
-      <div>
         <dt>Date Sumitted:</dt>
         <dd class="date-created" data-date="{{this.submitted}}"></dd>
       </div>
-      {{/if}}
       {{#if this.delivery_service.name}}
       <div>
         <dt>Delivery Service:</dt>

@@ -161,6 +161,12 @@ Create a notification instance from a Notification Factory:
 var notification = notifications.DropoffCreateDelivery(1000, 123)
 ```
 
+A NotificationFactory has the following function signature:
+
+```javascript
+( order_id, user_id ) -> Notification
+```
+
 The notification has the following members:
 
 #### Properties

@@ -2555,6 +2555,18 @@ module.exports.register = function(app) {
   , m.remove( db.order_amenities )
   );
 
+  /**
+  * Order Feedback
+  */
+  app.post('/api/orders/:order_id/feedback'
+  , m.getOrder2({ param: 'order_id' })
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
+  , m.param('order_id')
+  , m.insert( db.order_feedback )
+  );
+
+
   app.get('/api/restaurant-plans'
   , m.restrict(['admin'])
   , m.sort('-id')

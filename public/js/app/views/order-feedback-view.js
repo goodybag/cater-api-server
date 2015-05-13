@@ -33,12 +33,14 @@ define(function(require, exports, module) {
       var this_ = this;
 
       var feedback = {
-        rating: +e.target.getAttribute('data-rating')
+        order_id: this.model.get('id')
+      , question: 'How easy was your experience placing this order?'
+      , rating: +e.target.getAttribute('data-rating')
       };
 
       $.ajax({
         type: 'POST'
-      , url: '/orders/:oid/feedback'.replace(':oid', this_.model.get('id'))
+      , url: '/api/orders/:oid/feedback'.replace(':oid', this_.model.get('id'))
       , dataType: 'JSON'
       , data: feedback
       , success: function () {

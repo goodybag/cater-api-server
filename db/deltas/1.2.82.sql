@@ -11,8 +11,9 @@ begin
   DROP TABLE IF EXISTS "order_feeback";
   CREATE TABLE IF NOT EXISTS "order_feedback" (
     id          serial primary key
-  , order_id    int references orders(id) on delete set null
+  , created_at  timestamptz not null default now()
+  , order_id    int not null references orders(id) on delete cascade
   , question    text
-  , answer      text
+  , rating      int
   );
 end$$;

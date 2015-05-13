@@ -1468,6 +1468,7 @@ module.exports.register = function(app) {
         one:  [ { table: 'restaurants', alias: 'restaurant' }
               , { table: 'users', alias: 'user' }
               ]
+      , submittedDate: true
       })
     , function( req, res, next ){
         res.locals.status = req.params.status;

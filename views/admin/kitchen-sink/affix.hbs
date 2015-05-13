@@ -16,35 +16,28 @@
       <h1> Menu tab affix example</h1>
       <a href="/admin/kitchen-sink">← Back to Kitchen Sink</a>
       <ul class="menu-tabs">
-        <li class="menu-tab active"><a href="#section-inbox" data-toggle="tab">Catering Menu</a></li>
-        <li class="menu-tab"><a href="#section-individual" data-toggle="tab">Individual Menu</a></li>
+        <li class="menu-tab active"><a href="#section-catering">Catering Menu</a></li>
+        <li class="menu-tab"><a href="#section-individual">Individual Menu</a></li>
       </ul>
+
+      <section id="section-popular">
+        <h2>Popular Items</h2>
+        {{#repeat 3}}
+        <p style="background-color: #247ba0; height: 100px"></p>
+        {{/repeat}}
+      </section>
 
       <section id="section-catering">
         <h2>Catering Menu</h2>
-        {{#repeat 10}}
-        <p>Pour-over 90's chia, quinoa vegan gastropub chambray butcher four
-          dollar toast tattooed Banksy listicle. Tumblr polaroid normcore
-          drinking vinegar aesthetic craft beer. Selvage jean shorts squid,
-          Banksy normcore actually narwhal cronut twee Etsy. IPhone church-key
-          lomo VHS, DIY listicle Helvetica bitters retro four loko selvage.
-          Polaroid kogi Echo Park health goth PBR&B. IPhone biodiesel mlkshk next
-          level, post-ironic four dollar toast authentic fingerstache. Neutra
-          occupy quinoa, tofu next level cliche YOLO Thundercats.</p>
+        {{#repeat 8}}
+        <p style="background-color: #70c1b3; height: 100px"></p>
         {{/repeat}}
       </section>
 
       <section id="section-individual">
         <h2>Individual Menu</h2>
-        {{#repeat 10}}
-        <p>Pour-over 90's chia, quinoa vegan gastropub chambray butcher four
-          dollar toast tattooed Banksy listicle. Tumblr polaroid normcore
-          drinking vinegar aesthetic craft beer. Selvage jean shorts squid,
-          Banksy normcore actually narwhal cronut twee Etsy. IPhone church-key
-          lomo VHS, DIY listicle Helvetica bitters retro four loko selvage.
-          Polaroid kogi Echo Park health goth PBR&B. IPhone biodiesel mlkshk next
-          level, post-ironic four dollar toast authentic fingerstache. Neutra
-          occupy quinoa, tofu next level cliche YOLO Thundercats.</p>
+        {{#repeat 8}}
+        <p style="background-color: #b2dbbf; height: 100px"></p>
         {{/repeat}}
       </section>
     </div>
@@ -67,7 +60,53 @@
               return (this.top = $menuTabs.offset().top);
             }
           }
-        })
+        });
+
+
+
+        // cache elements
+        var lastId;
+        var menuTabsHeight = $('.menu-tabs').outerHeight();
+        var $tabs = $('.menu-tabs a');
+        var $tabTargets = $tabs.map(function() {
+          var target = $(this).attr('href');
+          var item = $(target);
+          if ( item.length ) return item;
+        });
+
+        // click tab
+        $menuTabs.find('a').click(function(e) {
+          e.preventDefault();
+          var href = $(this).attr('href');
+          var top = $(href).offset().top;
+
+          $('html, body').stop().animate({
+            scrollTop: top-menuTabsHeight+1
+          }, 300);
+        });
+
+        // scrollspy
+        $(window).scroll(function checkTab() {
+          var fromTop = $(this).scrollTop() + menuTabsHeight;
+
+          var current = $tabTargets.map(function() {
+            if ($(this).offset().top < fromTop)
+              return this;
+          });
+
+          current = current[current.length-1];
+          var id = current && current.length ? current[0].id : '';
+
+          if (lastId !== id) {
+            lastId = id;
+
+            $('.menu-tabs li')
+            .removeClass('active')
+            .end()
+            .find('a')
+            .filter('[href="#' + id + '"]').parent().addClass('active');
+          }
+        });
       });
     </script>
     <script src="/components/prism/prism.js"></script>

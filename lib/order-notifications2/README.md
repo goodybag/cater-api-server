@@ -20,8 +20,8 @@ try {
   process.exit();
 }
 
-// Create a notification object tied to order 7000
-var notification = UserOrderAcceptedEmail(7000);
+// Create a notification object tied to order 7000, user 123
+var notification = UserOrderAcceptedEmail(7000, 123);
 
 // Send the notification
 notification.send( function( error, result ){
@@ -157,7 +157,8 @@ Create a notification instance from a Notification Factory:
 
 ```javascript
 // Create a Dropoff delivery notification for order 1000
-var notification = notifications.DropoffCreateDelivery(1000)
+// Using actor user 123
+var notification = notifications.DropoffCreateDelivery(1000, 123)
 ```
 
 The notification has the following members:
@@ -207,3 +208,41 @@ This function is called when a notification is instantiated. Checks the options 
 ##### `isValidOrder() -> Boolean`
 
 Whether or not the order on the notification is valid (determines whether or not we need to do an additional fetch call).
+
+### Notification Sub-Types
+
+Since declaring notification involves creating a basic object structure, we can easily create abstraction on top of that.
+
+#### Notification Sub-Types: Email
+
+The email sub-type factory has the following signature:
+
+```javascript
+{
+  // Template teh email will use
+  template: 'order-email/user-order-accepted'
+
+  // The recipients field of the email
+, to: function( order ){
+    return order.user.email;
+  }
+
+  // The `from` field of the email
+, from: function( order ){
+    return config.emails.orders;
+  }
+
+  // The `subject` field of the email
+, subject: function( order ){
+    return [ 'Goodybag order (#', order.id, ') has been accepted' ].join('');
+  }
+}
+```
+
+#### Notification Sub-Types: SMS
+
+TODO
+
+#### Notification Sub-Types: Voice
+
+TODO

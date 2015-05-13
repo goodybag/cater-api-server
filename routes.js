@@ -938,7 +938,8 @@ module.exports.register = function(app) {
     }
   , m.sort('-id')
   , m.queryOptions({
-      one: [
+      submittedDate: true
+    , one: [
         { table: 'users',       alias: 'user' }
       , { table: 'restaurants', alias: 'restaurant' }
       , { table: 'delivery_services', alias: 'delivery_service'}
@@ -1467,6 +1468,7 @@ module.exports.register = function(app) {
         one:  [ { table: 'restaurants', alias: 'restaurant' }
               , { table: 'users', alias: 'user' }
               ]
+      , submittedDate: true
       })
     , function( req, res, next ){
         res.locals.status = req.params.status;

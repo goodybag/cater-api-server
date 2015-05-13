@@ -19,8 +19,13 @@
       </div>
       {{/unless}}
       <div>
+        {{#if (or (eq this.status 'submitted') (eq this.status 'accepted'))}}
+        <dt>Date Submitted:</dt>
+        <dd class="date-created" data-date="{{this.submitted}}"></dd>
+        {{else}}
         <dt>Date Created:</dt>
         <dd class="date-created" data-date="{{this.created_at}}"></dd>
+        {{/if}}
       </div>
       {{#if this.delivery_service.name}}
       <div>

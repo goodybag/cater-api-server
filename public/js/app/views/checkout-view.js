@@ -114,14 +114,7 @@ define(function(require, exports, module) {
     },
 
     onDatePickerOpen: function(){
-      // Days of week the restaurant does not deliver
-      var disabledTimes = [];
-
-      _(this.model.restaurant.get('delivery_times')).each( function( t, i ){
-        if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
-      });
-
-      this.datepicker.set( 'disable', disabledTimes );
+      this.datepicker.set( 'disable', this.model.restaurant.getDaysClosed() );
     },
 
     onTimePickerOpen: function(){

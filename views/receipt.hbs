@@ -78,6 +78,21 @@
   </div>
   {{/if}}
 
+  <div class="order-feedback">
+    <div class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>How easy was your experience placing this order?</strong>
+      <div class="star-group">
+        <span class="gb-icon-star-empty star" data-rating="1"></span>
+        <span class="gb-icon-star-empty star" data-rating="2"></span>
+        <span class="gb-icon-star-empty star" data-rating="3"></span>
+        <span class="gb-icon-star-empty star" data-rating="4"></span>
+        <span class="gb-icon-star-empty star" data-rating="5"></span>
+      </div>
+
+    </div>
+  </div>
+
   <div class="panel panel-order-details">
     <form id="order-form" class="form-light order-form" method="POST" action="javascript:void(0);">
       <div class="panel-body">
@@ -430,7 +445,7 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 </div>
 
 {{> copy_order_error_modal}}

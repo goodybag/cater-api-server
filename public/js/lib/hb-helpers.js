@@ -367,6 +367,14 @@ define(function(require, exports, module) {
       return out;
     },
 
+    repeat: function(n, options) {
+      var output = '';
+      for (var i = 0; i < n; i++) {
+        output += options.fn();
+      }
+      return output;
+    },
+
     pad: function( n, width, z ){
       width = ['number', 'string'].indexOf( typeof width ) === -1 ? 1 : width;
       z = ['number', 'string'].indexOf( typeof z ) === -1 ? '0' : z;

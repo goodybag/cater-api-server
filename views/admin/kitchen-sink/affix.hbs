@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{> admin_title}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Goodybag Catering CSS Stuff -->
+    <link rel="stylesheet" href="{{cdn (format '/dist/<%= version %>/css/admin.css' pkg)}}">
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <h1> Menu tab affix example</h1>
+      <a href="/admin/kitchen-sink">← Back to Kitchen Sink</a>
+      <ul class="menu-tabs">
+        <li class="menu-tab active"><a href="#section-inbox" data-toggle="tab">Inbox</a></li>
+        <li class="menu-tab"><a href="#section-social" data-toggle="tab">Social</a></li>
+        <li class="menu-tab untab"><span class="label-tag tomato">Notifications 7</span></li>
+      </ul>
+      <div class="menu-tabs-content">
+        <h1>Popular Items</h1>
+      </div>
+
+      {{#repeat 25}}
+      <p>Pour-over 90's chia, quinoa vegan gastropub chambray butcher four
+        dollar toast tattooed Banksy listicle. Tumblr polaroid normcore
+        drinking vinegar aesthetic craft beer. Selvage jean shorts squid,
+        Banksy normcore actually narwhal cronut twee Etsy. IPhone church-key
+        lomo VHS, DIY listicle Helvetica bitters retro four loko selvage.
+        Polaroid kogi Echo Park health goth PBR&B. IPhone biodiesel mlkshk next
+        level, post-ironic four dollar toast authentic fingerstache. Neutra
+        occupy quinoa, tofu next level cliche YOLO Thundercats.</p>
+      {{/repeat}}
+    </div>
+
+    {{#unless config.isDev}}
+    <script src="{{cdn (format 'dist/<%= version %>/admin.js' pkg)}}"></script>
+    {{else}}
+    <script src="/components/requirejs/require.js"></script>
+    <script src="/js/require-config.js"></script>
+    {{/unless}}
+
+    {{> config}}
+
+    <script>
+      require(['jquery-loaded'], function($){
+
+      });
+    </script>
+    <script src="/components/prism/prism.js"></script>
+  </body>
+</html>

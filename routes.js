@@ -938,7 +938,8 @@ module.exports.register = function(app) {
     }
   , m.sort('-id')
   , m.queryOptions({
-      one: [
+      submittedDate: true
+    , one: [
         { table: 'users',       alias: 'user' }
       , { table: 'restaurants', alias: 'restaurant' }
       , { table: 'delivery_services', alias: 'delivery_service'}

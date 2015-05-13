@@ -28,10 +28,6 @@ define(function(require) {
     , nullable: false
     , default: 'NOW()'
     }
-  , submitted_at: {
-      type: types.timestamptz
-    , nullable: true
-    }
   , uuid: {
       type: types.uuid
     , nullable: false

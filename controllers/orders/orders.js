@@ -370,9 +370,7 @@ module.exports.changeStatus = function(req, res) {
   };
 
   if (review) $update.token_used = 'now()';
-  if (req.body.status === 'submitted') {
-    $update.submitted_at = 'now()';
-  }
+
   req.order.status = req.body.status;
   logger.info('Saving order');
   db.orders.update( req.order.id, $update, function(err){

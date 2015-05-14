@@ -370,7 +370,12 @@ p.adjustment-description {
 /*
 * order feedback
 */
-.star {
+.feedback-order {
+  text-align: center;
+  font-size: 15px;
+}
+
+.feedback-order .star {
   font-size: 20px;
   cursor: pointer;
 }

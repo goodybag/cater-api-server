@@ -3,17 +3,23 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     events: {
-      'mouseover .star': 'fillStar'
-    , 'click .star': 'submit'
+      'mouseover  .star':            'onMouseOver'
+    , 'mouseleave .feedback-rating': 'onMouseLeave'
+    , 'click      .star':            'submit'
     }
 
-  , fillStar: function(e) {
+  , onMouseOver: function(e) {
       e.preventDefault();
       this.clearStars();
-      this.addStars(e.target);
+      this.fillStars(e.target);
     }
 
-  , addStars: function (el) {
+  , onMouseLeave: function (e) {
+      e.preventDefault();
+      this.clearStars();
+    }
+
+  , fillStars: function (el) {
       var rating = +el.getAttribute('data-rating');
       this.$el.find('.star').each(function (i, star) {
         if (+star.getAttribute('data-rating') <= rating) {
@@ -44,7 +50,7 @@ define(function(require, exports, module) {
       , dataType: 'JSON'
       , data: feedback
       , success: function () {
-          this_.$el.find('.star-group').text('thank you!');
+          this_.$el.find('.feedback-rating').text('thank you!');
         }
       , error: function (error) {
           console.error(error);
@@ -53,5 +59,4 @@ define(function(require, exports, module) {
     }
 
   });
-
 });

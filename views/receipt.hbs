@@ -79,16 +79,16 @@
   {{/if}}
 
   {{#if showFeedback}}
-  <div class="order-feedback">
+  <div class="feedback-order">
     <div class="alert alert-success alert-dismissible" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       <strong>How easy was your experience placing this order?</strong>
-      <div class="star-group">
-        <span class="gb-icon-star-empty star" data-rating="1"></span>
-        <span class="gb-icon-star-empty star" data-rating="2"></span>
-        <span class="gb-icon-star-empty star" data-rating="3"></span>
-        <span class="gb-icon-star-empty star" data-rating="4"></span>
-        <span class="gb-icon-star-empty star" data-rating="5"></span>
+      <div class="feedback-rating">
+        <span class="gb-icon-star-empty star" data-rating="1" data-toggle="tooltip" data-title="frustrating"></span>
+        <span class="gb-icon-star-empty star" data-rating="2" data-toggle="tooltip" data-title="not great"></span>
+        <span class="gb-icon-star-empty star" data-rating="3" data-toggle="tooltip" data-title="fine"></span>
+        <span class="gb-icon-star-empty star" data-rating="4" data-toggle="tooltip" data-title="good"></span>
+        <span class="gb-icon-star-empty star" data-rating="5" data-toggle="tooltip" data-title="great!"></span>
       </div>
     </div>
   </div>
@@ -455,11 +455,17 @@
 
 {{#extend "scripts"}}
 <script>
-  require(['app/pages/receipt', 'app/models/index', 'app/collections/amenities'], function( page, Models, Amenities ){
-    page.init({
-      order: new Models.Order( {{{json order}}} )
-    , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
+  require([
+      'jquery-loaded'
+    , 'app/pages/receipt'
+    , 'app/models/index'
+    , 'app/collections/amenities'],
+    function( $, page, Models, Amenities ){
+      $('[data-toggle="tooltip"]').tooltip();
+      page.init({
+        order: new Models.Order( {{{json order}}} )
+      , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
+      });
     });
-  });
 </script>
 {{/extend}}

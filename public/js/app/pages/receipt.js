@@ -51,7 +51,7 @@ define(function(require){
       });
 
       new Views.OrderFeedback({
-        el: '.order-feedback'
+        el: '.feedback-order'
       , model: order
       });
 

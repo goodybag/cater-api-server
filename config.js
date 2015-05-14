@@ -69,6 +69,7 @@ config.defaults = {
 , deniedRecipients: [
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
+  , 'patrickmugavin@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -77,6 +78,7 @@ config.defaults = {
 , deliveryServiceOrderAboveThresholdRecipients: [
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
+  , 'patrickmugavin@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -451,6 +453,7 @@ config.production = {
     ]
   , dsOrders: [
       'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
 
     // temp
     , 'jacobparker@goodybag.com'
@@ -464,13 +467,16 @@ config.production = {
     , 'jag@goodybag.com'
     , 'jacobparker@goodybag.com'
     , 'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
     ]
   , orderNotificationChecks: [
       'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
     , 'john@goodybag.com'
     ]
   , reminderPaymentStatusIgnore: [
       'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
     ]
   }
 
@@ -478,6 +484,7 @@ config.production = {
     responseThresholdMins: 30
   , supportPhones: [
       '2105779226' // Christy Medlock
+    , '3153457641' // Patrick Mugavin
     ]
   }
 

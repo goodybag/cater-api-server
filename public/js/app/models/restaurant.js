@@ -262,6 +262,37 @@ define(function(require, exports, module) {
       return timeleft;
     },
 
+    getDaysClosed: function() {
+      var daysClosed = [];
+
+      // Check days that don't have hours of operation
+      // or hours for delivery
+      _.each( _.range(7), function( i ){
+        if ( this.get('delivery_times')[ i ].length === 0 )
+        if ( this.get('hours_of_operation')[ i ].length === 0 ){
+          daysClosed.push( i + 1 );
+        }
+      }.bind(this));
+
+      // Disable dates for closed restaurant events
+      var closedEvents = this.get('event_date_ranges');
+      if ( closedEvents && closedEvents.length ) {
+        // For each range, push each date
+        closedEvents.forEach(function(val) {
+          var range = val.replace(/[\[\]\(\)]/g, '').split(',');
+          var start = moment(range[0]);
+          var end = moment(range[1]);
+
+          while(!start.isSame(end)) {
+            daysClosed.push([start.year(), start.month(), start.date()]);
+            start = start.add('days', 1);
+          }
+        });
+      }
+
+      return daysClosed;
+    },
+
     isValidMaxGuests: function( num ){
       // Non-number value, probably null or undefined
       if ( typeof this.get('max_guests') !== 'number' ) return true;

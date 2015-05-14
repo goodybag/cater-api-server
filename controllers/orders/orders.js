@@ -150,6 +150,12 @@ module.exports.get = function(req, res) {
       context.showThankYou = true;
     }
 
+    // Display order feedback, if submitted in the last 60 minutes
+    console.log(moment.duration(context.order.submitted).minutes())
+    if (moment.duration(context.order.submitted).minutes() < 60) {
+      context.showFeedback = true;
+    }
+
     // don't allow restaurant manager to edit orders
     // in the future we will/should support this
     if (req.order.isRestaurantManager)

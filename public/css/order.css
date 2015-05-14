@@ -367,6 +367,14 @@ p.adjustment-description {
   margin-left: 5px;
 }
 
+/*
+* order feedback
+*/
+.star {
+  font-size: 20px;
+  cursor: pointer;
+}
+
 /**
  * http://elvery.net/demo/responsive-tables
  */

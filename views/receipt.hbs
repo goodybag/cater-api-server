@@ -78,6 +78,7 @@
   </div>
   {{/if}}
 
+  {{#if showFeedback}}
   <div class="order-feedback">
     <div class="alert alert-success alert-dismissible" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -89,9 +90,9 @@
         <span class="gb-icon-star-empty star" data-rating="4"></span>
         <span class="gb-icon-star-empty star" data-rating="5"></span>
       </div>
-
     </div>
   </div>
+  {{/if}}
 
   <div class="panel panel-order-details">
     <form id="order-form" class="form-light order-form" method="POST" action="javascript:void(0);">

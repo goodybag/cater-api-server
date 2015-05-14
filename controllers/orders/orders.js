@@ -143,15 +143,12 @@ module.exports.get = function(req, res) {
       ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
     );
 
-    // Decide where to show the `Thanks` message
-    if (moment(context.order.submitted_date).add('hours', 1) > moment())
+    // Decide where to show the `Thanks` message, as well as order feedback
+    // only displays one hour after the order has been submitted.
+    if (moment(context.order.submitted).isAfter(moment().subtract(1, 'h')) )
     if (req.user)
     if (context.order.user_id == req.user.attributes.id){
       context.showThankYou = true;
-    }
-
-    // Display order feedback, if submitted in the last 60 minutes
-    if (moment.duration(context.order.submitted).minutes() < 60) {
       context.showFeedback = true;
     }
 

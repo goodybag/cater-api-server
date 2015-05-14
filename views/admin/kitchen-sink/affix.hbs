@@ -16,8 +16,9 @@
       <h1> Menu tab affix example</h1>
       <a href="/admin/kitchen-sink">← Back to Kitchen Sink</a>
       <ul class="menu-tabs">
-        <li class="menu-tab active"><a href="#section-catering">Catering Menu</a></li>
+        <li class="menu-tab"><a href="#section-catering">Catering Menu</a></li>
         <li class="menu-tab"><a href="#section-individual">Individual Menu</a></li>
+        <li class="menu-tab"><a href="#section-extras">Extras</a></li>
       </ul>
 
       <section id="section-popular">
@@ -38,6 +39,13 @@
         <h2>Individual Menu</h2>
         {{#repeat 8}}
         <p style="background-color: #b2dbbf; height: 100px"></p>
+        {{/repeat}}
+      </section>
+
+      <section id="section-extras">
+        <h2>Extras</h2>
+        {{#repeat 8}}
+        <p style="background-color: #f3ffbd; height: 100px"></p>
         {{/repeat}}
       </section>
     </div>

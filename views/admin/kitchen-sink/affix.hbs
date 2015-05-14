@@ -60,60 +60,11 @@
     {{> config}}
 
     <script>
-      require(['jquery-loaded'], function($){
-        var $menuTabs = $('.menu-tabs');
-        $menuTabs.affix({
-          offset: {
-            top: function() {
-              return (this.top = $menuTabs.offset().top);
-            }
-          }
-        });
-
-
-
-        // cache elements
-        var lastId;
-        var menuTabsHeight = $('.menu-tabs').outerHeight();
-        var $tabs = $('.menu-tabs a');
-        var $tabTargets = $tabs.map(function() {
-          var target = $(this).attr('href');
-          var item = $(target);
-          if ( item.length ) return item;
-        });
-
-        // click tab
-        $menuTabs.find('a').click(function(e) {
-          e.preventDefault();
-          var href = $(this).attr('href');
-          var top = $(href).offset().top;
-
-          $('html, body').stop().animate({
-            scrollTop: top-menuTabsHeight+1
-          }, 300);
-        });
-
-        // scrollspy
-        $(window).scroll(function checkTab() {
-          var fromTop = $(this).scrollTop() + menuTabsHeight;
-
-          var current = $tabTargets.map(function() {
-            if ($(this).offset().top < fromTop)
-              return this;
-          });
-
-          current = current[current.length-1];
-          var id = current && current.length ? current[0].id : '';
-
-          if (lastId !== id) {
-            lastId = id;
-
-            $('.menu-tabs li')
-            .removeClass('active')
-            .end()
-            .find('a')
-            .filter('[href="#' + id + '"]').parent().addClass('active');
-          }
+      require(['app/views/ui/menu-tabs-view', 'jquery-loaded'], function(MenuTabsView, $){
+        var menuTabsView = new MenuTabsView({
+          el: '.menu-tabs'
+        , scrollSpeed: 300
+        , debounceWait: 200
         });
       });
     </script>

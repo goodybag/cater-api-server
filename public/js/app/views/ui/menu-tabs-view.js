@@ -37,9 +37,9 @@ define(function(require, exports, module) {
 
     scroll: function() {
       var onScroll = this.onScroll.bind(this)
-      var wait = this.options.debounceWait || 200;
+      var wait = this.options.throttleWait || 200;
       var throttled = _.throttle(onScroll, wait);
-      $(window).scroll( throttled );
+      this.$window.scroll( throttled );
       return this;
     },
 

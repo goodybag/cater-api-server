@@ -54,9 +54,7 @@ define(function(require, exports, module) {
         this.lastId = id;
         this.$el.find('li')
           .removeClass('active')
-          .end()
-          .find('a')
-          .filter('[href="#' + id + '"]')
+          .find('a[href="#' + id + '"]')
           .parent()
           .addClass('active');
       }

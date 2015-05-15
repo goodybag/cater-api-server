@@ -10,6 +10,7 @@ define(function(require, exports, module) {
   var states        = require('./states');
   var config        = require('config');
   var invoices      = require('../app/stamps/user-invoice/base');
+  var Handlebars    = require('handlebars');
 
   var blocks = {};
 
@@ -41,7 +42,7 @@ define(function(require, exports, module) {
 
     surcharge: function(pennies) {
       if (pennies)
-        return '$'  + helpers.dollars(pennies);
+        return '$'  + Handlebars.helpers.dollars(pennies);
       return 'Free';
     },
 

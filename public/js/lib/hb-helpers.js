@@ -202,13 +202,6 @@ define(function(require, exports, module) {
       return utils.map(list, utils.compose(helpers.phoneNumber, utils.identity)).join(', ');
     },
 
-    capitalize: function(str) {
-      if(str && typeof str === 'string') {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-      }
-      return str;
-    },
-
     weekday: function(day) {
       return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day];
     },
@@ -242,36 +235,6 @@ define(function(require, exports, module) {
       });
     },
 
-    // eq: function(a, b, options){
-    //   if ( typeof options.fn !== 'function' ) return a == b;
-    //   return options[a == b ? 'fn' : 'inverse'](this);
-    // },
-
-    // dneq: function(a, b, options){
-    //   if ( typeof options.fn !== 'function' ) return a != b;
-    //   return options[a != b ? 'fn' : 'inverse'](this);
-    // },
-
-    lt: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a < b;
-      return options[a < b ? 'fn' : 'inverse'](this);
-    },
-
-    lte: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a <= b;
-      return options[a <= b ? 'fn' : 'inverse'](this);
-    },
-
-    gt: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a > b;
-      return options[a > b ? 'fn' : 'inverse'](this);
-    },
-
-    gte: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a >= b;
-      return options[a >= b ? 'fn' : 'inverse'](this);
-    },
-
     datePassed: function(datetime, options) {
       return options[ moment(datetime) < moment() ? 'fn' : 'inverse'](this);
     },
@@ -292,10 +255,6 @@ define(function(require, exports, module) {
 
     dump: function( val ){
       return [ '<pre>', JSON.stringify( val, true, '  ' ), '</pre>' ].join('\n');
-    },
-
-    lowercase: function( val ){
-      return val.toLowerCase();
     },
 
     capitalze: function( val ){

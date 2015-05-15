@@ -62,10 +62,23 @@ module.exports.register = function(app) {
   });
 
   // Temporary for job fair
-  app.get('/fsjse.md', function( req, res ){
-    utils.request('https://gist.githubusercontent.com/jrf0110/5b3a3ae62d3b2c39e89f/raw/292c6d1578d127e0173bf60d6057f1fcff6ebf4c/js-dev-2.md')
-      .pipe( res );
-  });
+  app.get('/fsjse.md'
+  , m.s3({
+      path:   '/fsjse-1.md'
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.cdn.bucket
+    })
+  );
+
+  app.get('/jobs/customer-service-specialist.pdf'
+  , m.s3({
+      path:   '/customer-service-specialist-1.pdf'
+    , key:    config.amazon.awsId
+    , secret: config.amazon.awsSecret
+    , bucket: config.cdn.bucket
+    })
+  );
 
   /**
    * Restaurants resource.  The collection of all restaurants.
@@ -486,14 +499,11 @@ module.exports.register = function(app) {
     , m.param('id')
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
-        active:   'basic-info'
+        active:   'dashboard'
       , baseUrl:  '/admin/restaurants/:id'
       })
-    , m.db.regions.find( {}, { limit: 'all' } )
-    , m.queryOptions({
-        many: [{ table: 'contacts' }]
-      })
-    , m.view('admin/restaurant/edit-basic-info', db.restaurants, {
+    , m.getRestaurant({ param: 'id', notes: true })
+    , m.view('admin/restaurant/edit-dashboard', {
         layout: 'admin/layout-two-column'
       , method: 'findOne'
       })
@@ -501,6 +511,20 @@ module.exports.register = function(app) {
 
     app.put('/admin/restaurants/:rid'
     , controllers.restaurants.update
+    );
+
+    app.get('/admin/restaurants/:id/dashboard'
+    , m.param('id')
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'dashboard'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.getRestaurant({ param: 'id', notes: true })
+    , m.view('admin/restaurant/edit-dashboard', {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
     );
 
     app.get('/admin/restaurants/:id/basic-info'
@@ -914,9 +938,11 @@ module.exports.register = function(app) {
     }
   , m.sort('-id')
   , m.queryOptions({
-      one: [
+      submittedDate: true
+    , one: [
         { table: 'users',       alias: 'user' }
       , { table: 'restaurants', alias: 'restaurant' }
+      , { table: 'delivery_services', alias: 'delivery_service'}
       ]
     , joins: [
         { type: 'left', target: 'restaurants', on: { id: '$orders.restaurant_id$' } }
@@ -1019,6 +1045,7 @@ module.exports.register = function(app) {
     })
   , controllers.orders.auth
   , m.restrict(['order-owner', 'order-restaurant', 'admin'])
+  , m.audit.orderType()
   , controllers.orders.update
   );
 
@@ -1441,6 +1468,7 @@ module.exports.register = function(app) {
         one:  [ { table: 'restaurants', alias: 'restaurant' }
               , { table: 'users', alias: 'user' }
               ]
+      , submittedDate: true
       })
     , function( req, res, next ){
         res.locals.status = req.params.status;
@@ -1733,6 +1761,7 @@ module.exports.register = function(app) {
     , restaurant:             true
     , restaurantDbModelFind:  true
     , user:                   true
+    , userPaymentMethods:     true
     , items:                  true
     })
   , m.view( 'admin/order', {
@@ -1776,6 +1805,16 @@ module.exports.register = function(app) {
     })
   );
 
+  app.get('/admin/analytics/retention'
+  , m.restrict(['admin'])
+  , m.filters([ 'regions' ])
+  , m.organizationSubmissions()
+  , m.orderAnalytics.retention()
+  , m.view( 'admin/analytics/retention', {
+      layout: 'admin/layout2'
+    })
+  );
+
   app.get('/payment-summaries/ps-:psid.pdf'
   , m.restrict(['admin'])
   , m.s3({
@@ -1793,10 +1832,25 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.restaurant({ param: 'restaurant_id' })
   , m.queryOptions({
-      many: [ { table: 'payment_summary_items', alias: 'items' }]
+      many: [ { table:  'payment_summary_items'
+              , alias:  'items'
+              , one:    [ { table: 'orders'
+                          , alias: 'order'
+                          , one:  [ { table: 'delivery_services'
+                                    , alias: 'delivery_service'
+                                    }
+                                  , { table: 'restaurants'
+                                    , alias: 'restaurant'
+                                    }
+                                  ]
+                          }
+                        ]
+              }
+            ]
     , one:  [ { table: 'restaurants', alias: 'restaurant'
-              , one: [{ table: 'restaurant_plans', alias: 'plan' }]
-              }]
+              , one: [{ table: 'restaurant_plans', alias: 'plan' }, { table: 'regions', alias: 'region' }]
+              }
+            ]
     })
   , m.view( 'invoice/payment-summary', db.payment_summaries, {
       layout: 'invoice/invoice-layout'
@@ -1981,6 +2035,19 @@ module.exports.register = function(app) {
   , m.pagination()
   , controllers.paymentSummaries.applyRestaurantId()
   , m.param('payment_summary_id')
+  , m.queryOptions({
+      one:  [ { table: 'orders'
+              , alias: 'order'
+              , one:  [ { table: 'delivery_services'
+                        , alias: 'delivery_service'
+                        }
+                      , { table: 'restaurants'
+                        , alias: 'restaurant'
+                        }
+                      ]
+              }
+            ]
+    })
   , m.find( db.payment_summary_items )
   );
 
@@ -2049,6 +2116,11 @@ module.exports.register = function(app) {
   , m.param('restaurant_id')
   , m.param('id')
   , m.remove( db.restaurant_photos )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/notes'
+  , m.restrict( ['admin'] )
+  , m.insert( db.restaurant_notes )
   );
 
   app.get('/api/orders'
@@ -2122,6 +2194,7 @@ module.exports.register = function(app) {
         , where: { id: '$orders.id$' }
       }]
     })
+  , m.audit.orderType()
   , m.update( db.orders )
   );
 
@@ -2137,12 +2210,16 @@ module.exports.register = function(app) {
       , where: { id: '$orders.id$' }
       }]
     })
+  , m.audit.orderType()
   , m.after( function( req, res, next ){
       if ( res.statusCode >= 300 || res.statusCode < 200 ){
         return next();
       }
 
-      venter.emit( 'order:change', req.params.id );
+      var id = req.params.id || req.query.id || req.body.id;
+      var payment_status = req.params.payment_status || req.query.payment_status || req.body.payment_status;
+      venter.emit( 'order:change', id );
+      venter.emit('order:paymentStatus:change', payment_status, id);
 
       next();
     })

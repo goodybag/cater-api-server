@@ -61,6 +61,11 @@ define(function(require, exports, module) {
 
       secondary_contact_phone: function () {
         return this.$el.find(this.fieldMap.secondary_contact_phone).val().replace(/[^\d]/g, '') || null;
+      },
+
+      promo_code: function () {
+        var code = this.$el.find(this.fieldMap.promo_code).val();
+        return code ? code.toLowerCase() : null;
       }
     }),
 
@@ -109,14 +114,7 @@ define(function(require, exports, module) {
     },
 
     onDatePickerOpen: function(){
-      // Days of week the restaurant does not deliver
-      var disabledTimes = [];
-
-      _(this.model.restaurant.get('delivery_times')).each( function( t, i ){
-        if ( t.length === 0 ) disabledTimes.push( ~~i + 1 );
-      });
-
-      this.datepicker.set( 'disable', disabledTimes );
+      this.datepicker.set( 'disable', this.model.restaurant.getDaysClosed() );
     },
 
     onTimePickerOpen: function(){

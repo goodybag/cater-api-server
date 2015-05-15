@@ -153,9 +153,6 @@ define(function(require, exports, module) {
         is_fee_on_total: {
           type: 'boolean'
         },
-        disable_courier: {
-          type: 'boolean'
-        },
         region_id: {
           type: ['number', 'null']
         },
@@ -218,7 +215,7 @@ define(function(require, exports, module) {
 
       // Restaurant couldn't ful-fill, what about delivery services?
       if ( !result ){
-        date  = moment( date ).add( 'minutes', -this.get('region').lead_time_modifier || 0 );
+        date  = moment( date ).add( -this.get('region').lead_time_modifier || 0 , 'minutes' );
         day   = date.day();
         hours = this.get('delivery_times')[ day ];
         time  = date.format('HH:mm:ss');
@@ -263,6 +260,37 @@ define(function(require, exports, module) {
       var now       = moment();
       var timeleft  = deadline.diff(now, 'minutes', true);
       return timeleft;
+    },
+
+    getDaysClosed: function() {
+      var daysClosed = [];
+
+      // Check days that don't have hours of operation
+      // or hours for delivery
+      _.each( _.range(7), function( i ){
+        if ( this.get('delivery_times')[ i ].length === 0 )
+        if ( this.get('hours_of_operation')[ i ].length === 0 ){
+          daysClosed.push( i + 1 );
+        }
+      }.bind(this));
+
+      // Disable dates for closed restaurant events
+      var closedEvents = this.get('event_date_ranges');
+      if ( closedEvents && closedEvents.length ) {
+        // For each range, push each date
+        closedEvents.forEach(function(val) {
+          var range = val.replace(/[\[\]\(\)]/g, '').split(',');
+          var start = moment(range[0]);
+          var end = moment(range[1]);
+
+          while(!start.isSame(end)) {
+            daysClosed.push([start.year(), start.month(), start.date()]);
+            start = start.add('days', 1);
+          }
+        });
+      }
+
+      return daysClosed;
     },
 
     isValidMaxGuests: function( num ){
@@ -311,7 +339,7 @@ define(function(require, exports, module) {
       if ( limit && minutes >= leadTime ) return true;
 
       // disabled courier so don't bother checking pickup lead times
-      if ( this.get('disable_courier') ) return false;
+      if ( this.get('supported_order_types') && this.get('supported_order_types').indexOf('courier') < 0 ) return false;
 
       // not enough leadtime bro
       if ( !limit || minutes < leadTime ){
@@ -378,7 +406,20 @@ define(function(require, exports, module) {
       cuisine: []
     , delivery_zips: []
     , delivery_service_zips: []
-    , lead_times: []
+    , lead_times: [
+        { 'max_guests': 25,  'lead_time':  3*60, 'cancel_time':  2*60 }
+      , { 'max_guests': 50,  'lead_time': 12*60, 'cancel_time':  6*60 }
+      , { 'max_guests': 100, 'lead_time': 18*60, 'cancel_time': 12*60 }
+      , { 'max_guests': 250, 'lead_time': 24*60, 'cancel_time': 18*60 }
+      , { 'max_guests': 2000,'lead_time': 72*60, 'cancel_time': 72*60 }
+      ]
+    , pickup_lead_times: [
+        { 'max_guests': 25,  'lead_time':  3*60, 'cancel_time':  2*60 }
+      , { 'max_guests': 50,  'lead_time': 12*60, 'cancel_time':  6*60 }
+      , { 'max_guests': 100, 'lead_time': 18*60, 'cancel_time': 12*60 }
+      , { 'max_guests': 250, 'lead_time': 24*60, 'cancel_time': 18*60 }
+      , { 'max_guests': 2000,'lead_time': 72*60, 'cancel_time': 72*60 }
+      ]
     , gb_fee: 0.1275
     }
   });

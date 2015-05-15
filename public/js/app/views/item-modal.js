@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   var Handlebars = require('handlebars');
   var helpers = require('hb-helpers');
-
+  var config = require('config');
   var Backbone = require('backbone');
   var OrderItem = require('../models/order-item');
 
@@ -21,6 +21,7 @@ define(function(require, exports, module) {
       var context = {
         item:     this.model.toJSON(),
         order:    order,
+        config:   config,
         inOrder:  this.model instanceof OrderItem,
         editable: this.options.isAdmin || order.editable
       };

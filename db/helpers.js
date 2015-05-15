@@ -7,7 +7,7 @@ var mosqlUtils  = require('mongo-sql/lib/utils');
 var utils       = require('../utils');
 var logger      = require('../lib/logger').create('DBHelpers');
 var config      = require('../config');
-var PMSItem     = require('../public/js/app/models/payment-summary-item');
+var PMSItems    = require('../public/js/app/collections/payment-summary-items');
 var odsChecker  = require('../public/js/lib/order-delivery-service-checker');
 
 dirac.db.setMosql( mosql );
@@ -378,10 +378,12 @@ dirac.use( function(){
       if ( Array.isArray( $query.many ) )
       var many = utils.findWhere( $query.many, { table: 'payment_summary_items' } );
       if ( many ){
-        r[ many.alias || many.table ] = r[ many.alias || many.table ].map( function( item ){
-          item.plan = r.restaurant.plan;
-          return new PMSItem( item ).toJSON();
-        });
+        r[ many.alias || many.table ] = new PMSItems( r[ many.alias || many.table ], {
+          payment_summary_id: r.id
+        , restaurant_id:      r.restaurant.id
+        , plan:               r.restaurant.plan
+        , sales_tax:          r.restaurant.region.sales_tax
+        }).toJSON();
       }
     });
 

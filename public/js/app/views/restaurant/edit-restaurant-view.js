@@ -22,7 +22,7 @@ define(function(require, exports, module) {
     },
 
     fieldGetters: {
-      default: function( key, $el ){
+      "default": function( key, $el ){
         return this.getDomValue( key, $el );
       }
     },

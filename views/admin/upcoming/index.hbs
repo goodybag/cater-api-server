@@ -1,5 +1,7 @@
 {{#extend "page"}}page-analytics page-upcoming{{/extend}}
 
+{{#extend "html-title"}}Upcoming{{/extend}}
+
 {{#extend "body"}}
 
 <div class="container" id="main-container">
@@ -15,7 +17,19 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container upcoming-orders">
+  <div class="form-group">
+    <label>Start Date</label>
+    <input class="datepicker" name="startDate">
+  </div>
+  <div class="form-group">
+    <label>End Date</label>
+    <input class="datepicker" name="endDate">
+  </div>
+  <div class="form-group">
+    <a href="{{config.baseUrl}}/admin/upcoming">clear</a>
+  </div>
+
   <table class="table table-upcoming">
     <thead>
       <tr>
@@ -46,7 +60,7 @@ require([
 ],
 function(UpcomingOrdersView, Orders){
   var view = new UpcomingOrdersView({
-    el: '.table-upcoming'
+    el: '.upcoming-orders'
   , endpoint: '/api/upcoming'
   , orders: new Orders({{{json orders}}}, { comparator: 'datetime', ignoreOrderTypeInit: true })
   });

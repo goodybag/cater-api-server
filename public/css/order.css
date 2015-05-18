@@ -370,7 +370,7 @@ p.adjustment-description {
 /*
 * order feedback
 */
-.feedback-order {
+.feedback-order .alert {
   text-align: center;
   font-size: 15px;
 }

@@ -11,6 +11,7 @@ define(function(require, exports, module) {
   var config        = require('config');
   var invoices      = require('../app/stamps/user-invoice/base');
   var Handlebars    = require('handlebars');
+  var GbHelpers     = require('gb-handlebars-helpers')._helpers; // todo extract all helpers to this lib
 
   var blocks = {};
 
@@ -558,7 +559,7 @@ define(function(require, exports, module) {
     slice: function( list, start, end ) {
       return list.slice(+start, +end);
     }
-  }
+  };
 
-  return module.exports = helpers;
+  return module.exports = utils.defaults(helpers, GbHelpers);
 });

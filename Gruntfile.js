@@ -196,6 +196,7 @@ module.exports = function(grunt) {
         , thirdpartyUmdWhitelist: [
             'components/plan.js'
           , 'components/resource.js'
+          , 'components/gb-handlebars-helpers'
           ]
 
           // For some reason, r.js is not playing nicely with UMD modules

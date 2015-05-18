@@ -58,8 +58,8 @@ define(function(require, exports, module) {
         var deadline = this.model.restaurant.getDeadline(this.model).format('MMM Do YYYY');
         return 'Must order by: ' + deadline;
       } else if ( hrs ){
-        var mins = hrs <= this.options.asapHrs ? ' ' + mins + ' mins' : '';
-        return 'Time remaining to submit order: ' + hrs + ' hours' + mins;
+        var minsText = hrs <= this.options.asapHrs ? ' ' + mins + ' mins' : '';
+        return 'Time remaining to submit order: ' + hrs + ' hours' + minsText;
       } else {
         return 'Time remaining to submit order: ' + mins + ' minutes ' + secs + ' seconds';
       }

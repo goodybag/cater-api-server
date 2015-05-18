@@ -45,7 +45,7 @@ var debitCustomer = function (order, callback) {
       , source_uri: paymentMethod.attributes.uri
       , customer_uri: order.user.balanced_customer_uri
       , on_behalf_of_uri: order.restaurant.balanced_customer_uri
-      , appears_on_statement_as: 'GB ORDER #'+ order.id
+      , appears_on_statement_as: 'GB #'+ order.id
       , meta: { // note, cannot search on nested properties so keep searchable properties top-level
           user_id: order.user.id
         , restaurant_id: order.restaurant.id

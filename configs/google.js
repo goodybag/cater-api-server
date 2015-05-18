@@ -24,8 +24,23 @@ module.exports = {
     limit: { daily: 2500, second: 1000 }
   , url: 'https://maps.googleapis.com/maps/api/distancematrix/json'
   }
+
+, places: {
+    server: {
+      key: 'AIzaSyBbsgtm6Tqdh3ZyWfRj2Mg_eSZDW8ajLss'
+    }
+
+  , browser: {
+      // NOTE: this should be used a DEV key only
+      // since referers are allowed from anywhere
+      key: 'AIzaSyAMfj24xp1FDT04uyRMFd2NJsF128NBIb8'
+    }
+  }
 };
 
 if ( process.env['GB_ENV'] === 'production' ){
   module.exports.analytics = 'UA-23372459-3';
+
+  // Only allows referers from *.goodybag.com
+  module.exports.places.browser = 'AIzaSyAoZKQUCqSukAJ1rfboWGCKYO3FqHgVVgg';
 }

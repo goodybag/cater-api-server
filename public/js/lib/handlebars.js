@@ -14,8 +14,5 @@ define(function(require, exports, module) {
     Handlebars.partials[ key.replace(/-/g, '_') ] = partials[ key ];
   }
 
-  var gbHelpers = require('gb-handlebars-helpers'); // todo move all helpers to this lib
-  gbHelpers.register(Handlebars);
-
   return module.exports = Handlebars;
 });

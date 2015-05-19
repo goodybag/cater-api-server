@@ -32,7 +32,7 @@ define(function(require) {
     , references: {table: 'orders', column: 'id', onDelete: 'cascade'}
     }
   , ease_of_submitting_rating: {
-      type: types.int
+      type: types.feedback_rating
     , nullable: true
     }
   };

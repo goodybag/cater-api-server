@@ -77,4 +77,5 @@ module.exports = {
 , amenity_scale: 'amenity_scale'
 , plan_type: 'plan_type'
 , invoice_status: 'invoice_status'
+, feedback_rating: 'feedback_rating'
 };

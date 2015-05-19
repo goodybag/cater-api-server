@@ -45,6 +45,7 @@ begin
   if ( NEW.restaurant_location_id is null ) then
     perform set_order_default_location( NEW );
   end if;
+  perform set_order_feedback( NEW );
   return NEW;
 end;
 $$ language plpgsql;
@@ -388,6 +389,14 @@ begin
           and rl.is_default = true
     )
     where orders.id = o.id;
+end;
+$$ language plpgsql;
+
+create or replace function set_order_feedback( o orders )
+returns void as $$
+begin
+  insert into order_feedback (order_id)
+    select id from orders where id = o.id;
 end;
 $$ language plpgsql;
 

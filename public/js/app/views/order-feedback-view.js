@@ -44,7 +44,7 @@ define(function(require, exports, module) {
       };
 
       $.ajax({
-        type: 'POST'
+        type: 'PUT'
       , url: '/api/orders/:oid/feedback'.replace(':oid', this_.model.get('id'))
       , dataType: 'JSON'
       , data: feedback

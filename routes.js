@@ -2558,12 +2558,17 @@ module.exports.register = function(app) {
   /**
   * Order Feedback
   */
-  app.post('/api/orders/:order_id/feedback'
+  app.put('/api/orders/:order_id/feedback'
   , m.getOrder2({ param: 'order_id' })
+  , function (req, res, next) {
+      req.queryObj = { order_id: req.params.order_id }
+      next();
+    }
   , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
+  , m.queryOptions({ returning: ['id'] })
   , m.param('order_id')
-  , m.insert( db.order_feedback )
+  , m.update( db.order_feedback )
   );
 
 

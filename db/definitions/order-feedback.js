@@ -31,11 +31,7 @@ define(function(require) {
     , nullable: false
     , references: {table: 'orders', column: 'id', onDelete: 'cascade'}
     }
-  , question: {
-      type: types.text
-    , nullable: true
-    }
-  , rating: {
+  , ease_of_submitting_rating: {
       type: types.int
     , nullable: true
     }

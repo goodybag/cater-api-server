@@ -40,8 +40,7 @@ define(function(require, exports, module) {
 
       var feedback = {
         order_id: this.model.get('id')
-      , question: 'How easy was your experience placing this order?'
-      , rating: +e.target.getAttribute('data-rating')
+      , ease_of_submitting_rating: +e.target.getAttribute('data-rating')
       };
 
       $.ajax({

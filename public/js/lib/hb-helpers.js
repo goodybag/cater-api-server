@@ -558,6 +558,18 @@ define(function(require, exports, module) {
 
     slice: function( list, start, end ) {
       return list.slice(+start, +end);
+    },
+
+    map: function( list, helper ){
+      if ( !(helper in Handlebars.helpers) ){
+        throw new Error('Invalid iterator helper');
+      }
+
+      var hhelper = Handlebars.helpers[ helper ];
+
+      return list.map( function( item ){
+        return hhelper( item );
+      });
     }
   };
 

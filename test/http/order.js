@@ -37,7 +37,7 @@ console.log();
 
 describe('HTTP Server', function(){
   describe('Orders', function(){
-    it.only( 'should send a 204 when changing attempting to add to status history with current status', function( done ){
+    it( 'should send a 204 when changing attempting to add to status history with current status', function( done ){
       var jar = utils.request.jar();
 
       var url = ':baseUrl/orders'.replace( ':baseUrl', SERVER_URL );

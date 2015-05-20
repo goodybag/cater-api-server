@@ -83,31 +83,31 @@
         <div class="grid-map">
           <div class="grid-item">
             <label>
-              <input type="checkbox" class="meal-type" name="meal_type" value="breakfast" {{#contains (pluck restaurant.meal_type 'meal_type') 'breakfast'}}checked="true"{{/contains}}>
+              <input type="checkbox" class="meal-type" name="meal_type" value="Breakfast" {{#contains restaurant.meal_types 'Breakfast'}}checked="true"{{/contains}}>
               Breakfast
             </label>
           </div>
           <div class="grid-item">
             <label>
-              <input type="checkbox" class="meal-type" name="meal_type" value="lunch" {{#contains (pluck restaurant.meal_type 'meal_type') 'lunch'}}checked="true"{{/contains}}>
+              <input type="checkbox" class="meal-type" name="meal_type" value="Lunch" {{#contains restaurant.meal_types 'Lunch'}}checked="true"{{/contains}}>
               Lunch
             </label>
           </div>
           <div class="grid-item">
             <label>
-              <input type="checkbox" class="meal-type" name="meal_type" value="dinner" {{#contains (pluck restaurant.meal_type 'meal_type') 'dinner'}}checked="true"{{/contains}}>
+              <input type="checkbox" class="meal-type" name="meal_type" value="Dinner" {{#contains restaurant.meal_types 'Dinner'}}checked="true"{{/contains}}>
               Dinner
             </label>
           </div>
           <div class="grid-item">
             <label>
-              <input type="checkbox" class="meal-type" name="meal_type" value="appetizer" {{#contains (pluck restaurant.meal_type 'meal_type') 'appetizer'}}checked="true"{{/contains}}>
+              <input type="checkbox" class="meal-type" name="meal_type" value="Appetizers" {{#contains restaurant.meal_types 'Appetizers'}}checked="true"{{/contains}}>
               Appetizer
             </label>
           </div>
           <div class="grid-item">
             <label>
-              <input type="checkbox" class="meal-type" name="meal_type" value="dessert" {{#contains (pluck restaurant.meal_type 'meal_type') 'dessert'}}checked="true"{{/contains}}>
+              <input type="checkbox" class="meal-type" name="meal_type" value="Dessert" {{#contains restaurant.meal_types 'Dessert'}}checked="true"{{/contains}}>
               Dessert
             </label>
           </div>
@@ -144,8 +144,8 @@
           </div>
           <div class="grid-item">
             <label>
-              <input type="checkbox" class="restaurant-tags" value="halai" {{#contains restaurant.tags 'halai'}}checked="true"{{/contains}}>
-              Halai
+              <input type="checkbox" class="restaurant-tags" value="halal" {{#contains restaurant.tags 'halal'}}checked="true"{{/contains}}>
+              Halal
             </label>
           </div>
           <div class="grid-item">

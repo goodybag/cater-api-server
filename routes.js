@@ -221,6 +221,13 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/admin/kitchen-sink/affix'
+    , m.view( 'admin/kitchen-sink/affix', {
+        layout: null
+      })
+    );
+
+
     /**
      * Restaurant Plans
      */

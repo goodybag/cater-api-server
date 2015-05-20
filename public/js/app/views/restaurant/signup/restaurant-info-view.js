@@ -17,7 +17,7 @@ define(function (require, exports, module) {
       , address      : '.restaurant-address' // map to fields (street, city, state, zip)
       , display_phone: '.restaurant-phone'
       , billing_email: '.restaurant-email'
-      , meal_type    : '.meal-type'
+      , meal_types   : '.meal-type'
       , tags         : '.restaurant-tags'
       , amenities    : '.restaurant-amenities' // map to restaurant
       , menu_url     : '.restaurant-menu' // not in db (requires file uploader)
@@ -32,37 +32,25 @@ define(function (require, exports, module) {
       },
 
       price: function () {
-        return $(this.fieldMap.price+':checked').val() || null;
+        return this.$el.find(this.fieldMap.price+':checked').val() || null;
       },
 
-      meal_type: function () {
-        var types = [];
-        this.$el.find(this.fieldMap.meal_type).each(function (i, el) {
-          if ( $(el).is(':checked') ) {
-            types.push({ meal_type: el.value });
-          }
+      meal_types: function () {
+        return utils.map(this.$el.find(this.fieldMap.meal_types+':checked'), function (el) {
+          return el.value;
         });
-        return types;
       },
 
       tags: function () {
-        var tags = [];
-        this.$el.find(this.fieldMap.tags).each(function (i, el) {
-          if ( $(el).is(':checked') ) {
-            tags.push(el.value);
-          }
+        return utils.map(this.$el.find(this.fieldMap.tags+':checked'), function (el) {
+          return el.value;
         });
-        return tags;
       },
 
       amenities: function () {
-        var amenities = [];
-        this.$el.find(this.fieldMap.amenities).each(function (i, el) {
-          if ( $(el).is(':checked') ) {
-            amenities.push({ name: el.value });
-          }
+        return utils.map(this.$el.find(this.fieldMap.amenities+':checked'), function (el) {
+            return el.value;
         });
-        return amenities;
       },
 
       display_phone: function () {

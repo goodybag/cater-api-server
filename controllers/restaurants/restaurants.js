@@ -324,7 +324,7 @@ module.exports._create = function (req, callback) {
 
     var sql = db.builder.sql(restaurantQuery);
     db.query(sql.query, sql.values, function(err, rows, result) {
-      if (err) return res.error(errors.internal.DB_FAILURE, err);
+      if (err) return callback(errors.internal.DB_FAILURE, err);
 
       var insert = function(values, method, callback) {
         if (!values || values.length === 0) return callback();

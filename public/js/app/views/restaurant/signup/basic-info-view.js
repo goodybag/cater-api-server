@@ -19,7 +19,7 @@ define(function (require, exports, module) {
         return this.$el.find(this.fieldMap.services+':checked').val() || null;
       },
       websites: function () {
-        var $websites = this.$el.find(this.fieldMap.websites).val();
+        var $websites = this.$el.find(this.fieldMap.websites).val().split(',');
         return $websites ? '{:w}'.replace(':w', $websites.join(',')) : '{}';
       }
     }

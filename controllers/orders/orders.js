@@ -143,13 +143,12 @@ module.exports.get = function(req, res) {
       ['street', 'street2', 'city', 'state', 'zip', 'phone', 'notes']
     );
 
-    // Decide where to show the `Thanks` message, as well as order feedback
+    // Decide where to show the `Thanks` message
     // only displays one hour after the order has been submitted.
     if (moment(context.order.submitted).isAfter(moment().subtract(1, 'h')) )
     if (req.user)
     if (context.order.user_id == req.user.attributes.id){
       context.showThankYou = true;
-      context.showFeedback = true;
     }
 
     // don't allow restaurant manager to edit orders

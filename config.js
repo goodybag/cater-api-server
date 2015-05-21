@@ -23,6 +23,7 @@ config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
 , credentials: require('./configs/credentials')
+, stores: require('./configs/stores')
 , adroll: require('./configs/adroll')
 , stripe: require('./configs/stripe')
 , google: require('./configs/google')

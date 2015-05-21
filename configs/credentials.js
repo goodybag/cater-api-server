@@ -106,25 +106,3 @@ module.exports = {
   , consumerSecret: 'OmclTS9gpl03vksQvA_Cr7OUPU4'
   }
 };
-
-if ( process.env.GB_ENV === 'dev' ){
-  module.exports['rollbar.com'] = {
-    accessToken: 'c7f82820e02c4bd7a759015518948ce3'
-  };
-
-  module.exports['iron.io'] = {
-    token: '_2rd5UzCv7_-chOc4rDZ0Y7y74A'
-  , projectId: '526990a7f2d1570005000038'
-  };
-}
-
-if ( ['staging', 'india'].indexOf( process.env.GB_ENV ) > -1 ){
-  module.exports['rollbar.com'] = {
-    accessToken: '8d240c636751439791b214c9ec8cf8af'
-  };
-
-  module.exports['iron.io'] = {
-    token: 'M-NmfDgtD66MCHYKTVS3m15BbSA'
-  , projectId: '526990bcf2d1570009000035'
-  };
-}

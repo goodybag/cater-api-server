@@ -45,7 +45,7 @@ module.exports = {
     credentials: 'aws.amazon.com'
   , s3: {
       bucket: 'invoices-{env}.goodybag.com'
-                .replace('{prefix}', ({
+                .replace('{env}', ({
                   dev:        'dev'
                 , test:       'dev'
                 , staging:    'staging'

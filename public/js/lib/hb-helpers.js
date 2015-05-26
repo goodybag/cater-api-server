@@ -306,6 +306,14 @@ define(function(require, exports, module) {
       return out;
     },
 
+    repeat: function(n, options) {
+      var output = '';
+      for (var i = 0; i < n; i++) {
+        output += options.fn();
+      }
+      return output;
+    },
+
     pad: function( n, width, z ){
       width = ['number', 'string'].indexOf( typeof width ) === -1 ? 1 : width;
       z = ['number', 'string'].indexOf( typeof z ) === -1 ? '0' : z;
@@ -558,6 +566,18 @@ define(function(require, exports, module) {
 
     slice: function( list, start, end ) {
       return list.slice(+start, +end);
+    },
+
+    map: function( list, helper ){
+      if ( !(helper in Handlebars.helpers) ){
+        throw new Error('Invalid iterator helper');
+      }
+
+      var hhelper = Handlebars.helpers[ helper ];
+
+      return list.map( function( item ){
+        return hhelper( item );
+      });
     }
   };
 

@@ -221,6 +221,13 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/admin/kitchen-sink/affix'
+    , m.view( 'admin/kitchen-sink/affix', {
+        layout: null
+      })
+    );
+
+
     /**
      * Restaurant Plans
      */
@@ -1774,6 +1781,7 @@ module.exports.register = function(app) {
   , m.getOrder2({
       param:                  'id'
     , restaurant:             true
+    , restaurantContacts:     true
     , restaurantDbModelFind:  true
     , user:                   true
     , userPaymentMethods:     true

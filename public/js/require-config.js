@@ -27,46 +27,47 @@
 
   , packages: [
       // utility
-      {name: 'lodash',            location: '../../components/lodash/dist',               main: 'lodash.underscore.js'}
-    , {name: 'async',             location: '../../components/async/lib',                 main: 'async.js'}
-    , {name: 'amanda',            location: '../../components/amanda/releases/latest',    main: 'amanda.js'}
-    , {name: 'leFunc',            location: '../../components/lefunc/lib',                main: 'leFunc.js'}
-    , {name: 'plan',              location: '../../components/plan.js',                   main: 'index.js'}
-    , {name: 'stampit',           location: '../../components/stampit/dist',              main: 'stampit.js'}
-    , {name: 'resource',          location: '../../components/resource.js',               main: 'index.js'}
+      {name: 'lodash',                  location: '../../components/lodash/dist',               main: 'lodash.underscore.js'}
+    , {name: 'async',                   location: '../../components/async/lib',                 main: 'async.js'}
+    , {name: 'amanda',                  location: '../../components/amanda/releases/latest',    main: 'amanda.js'}
+    , {name: 'leFunc',                  location: '../../components/lefunc/lib',                main: 'leFunc.js'}
+    , {name: 'plan',                    location: '../../components/plan.js',                   main: 'index.js'}
+    , {name: 'stampit',                 location: '../../components/stampit/dist',              main: 'stampit.js'}
+    , {name: 'resource',                location: '../../components/resource.js',               main: 'index.js'}
 
       // backbone stuff
-    , {name: 'backbone',          location: '../../components/backbone',                  main: 'backbone.js'}
-    , {name: 'backbone.trackit',  location: '../../components/backbone.trackit',          main: 'backbone.trackit'}
+    , {name: 'backbone',                location: '../../components/backbone',                  main: 'backbone.js'}
+    , {name: 'backbone.trackit',        location: '../../components/backbone.trackit',          main: 'backbone.trackit'}
 
       // ui related stuff
-    , {name: 'spin',              location: '../../components/spin.js',                   main: 'spin.js'}
-    , {name: 'fullcalendar',      location: '../../components/fullcalendar',              main: 'fullcalendar.js'}
-    , {name: 'keymaster',         location: '../../components/keymaster',                 main: 'keymaster.js'}
-    , {name: 'react',             location: '../../components/react',                     main: 'react.js'}
+    , {name: 'spin',                    location: '../../components/spin.js',                   main: 'spin.js'}
+    , {name: 'fullcalendar',            location: '../../components/fullcalendar',              main: 'fullcalendar.js'}
+    , {name: 'keymaster',               location: '../../components/keymaster',                 main: 'keymaster.js'}
+    , {name: 'react',                   location: '../../components/react',                     main: 'react.js'}
 
       // templating related
-    , {name: 'hbs',               location: '../../components/handlebars',                main: 'handlebars.js'}
-    , {name: 'partials',          location: '../../dist',                                 main: 'partials.js'}
+    , {name: 'hbs',                     location: '../../components/handlebars',                main: 'handlebars.js'}
+    , {name: 'partials',                location: '../../dist',                                 main: 'partials.js'}
+    , {name: 'gb-handlebars-helpers',   location: '../../components/gb-handlebars-helpers',     main: 'index.js'}
 
       // moment stuff
-    , {name: 'moment',            location: '../../components/moment',                    main: 'moment.js'}
-    , {name: 'moment-timezone',   location: '../../components/moment-timezone/builds',    main: 'moment-timezone-with-data-2010-2020.min.js'}
+    , {name: 'moment',                  location: '../../components/moment',                    main: 'moment.js'}
+    , {name: 'moment-timezone',         location: '../../components/moment-timezone/builds',    main: 'moment-timezone-with-data-2010-2020.min.js'}
 
       // jquery stuff
-    , {name: 'jquery',            location: '../../components/jquery',                    main: 'jquery.js'}
-    , {name: 'jquery.inputmask',  location: '../../components/jquery.inputmask/dist',     main: 'jquery.inputmask.bundle.js'}
-    , {name: 'jquery.placeholder',location: '../../components/jquery-placeholder',        main: 'jquery.placeholder.js'}
-    , {name: 'jquery-ui',         location: '../../components/jquery-ui/ui',              main: 'jquery-ui.js'}
-    , {name: 'picker',            location: '../../components/pickadate/lib',             main: 'picker.js'}
-    , {name: 'pickadate-legacy',  location: '../../components/pickadate/lib',             main: 'legacy.js'}
-    , {name: 'pickadate',         location: '../../components/pickadate/lib',             main: 'picker.date.js'}
-    , {name: 'pickatime',         location: '../../components/pickadate/lib',             main: 'picker.time.js'}
-    , {name: 'bootstrap',         location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
-    , {name: 'select2',           location: '../../components/select2',                   main: 'select2.js'}
-    , {name: 'jquery.appear',     location: '../../components/jquery-appear/src',         main: 'jquery.appear.js'}
+    , {name: 'jquery',                  location: '../../components/jquery',                    main: 'jquery.js'}
+    , {name: 'jquery.inputmask',        location: '../../components/jquery.inputmask/dist',     main: 'jquery.inputmask.bundle.js'}
+    , {name: 'jquery.placeholder',      location: '../../components/jquery-placeholder',        main: 'jquery.placeholder.js'}
+    , {name: 'jquery-ui',               location: '../../components/jquery-ui/ui',              main: 'jquery-ui.js'}
+    , {name: 'picker',                  location: '../../components/pickadate/lib',             main: 'picker.js'}
+    , {name: 'pickadate-legacy',        location: '../../components/pickadate/lib',             main: 'legacy.js'}
+    , {name: 'pickadate',               location: '../../components/pickadate/lib',             main: 'picker.date.js'}
+    , {name: 'pickatime',               location: '../../components/pickadate/lib',             main: 'picker.time.js'}
+    , {name: 'bootstrap',               location: '../../components/bootstrap/dist/js',         main: 'bootstrap.js'}
+    , {name: 'select2',                 location: '../../components/select2',                   main: 'select2.js'}
+    , {name: 'jquery.appear',           location: '../../components/jquery-appear/src',         main: 'jquery.appear.js'}
 
-    , {name: 'config',            location: '../app',                                     main: 'config.js'}
+    , {name: 'config',                  location: '../app',                                     main: 'config.js'}
     ]
 
   , map: {

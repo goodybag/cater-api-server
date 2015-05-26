@@ -13,6 +13,7 @@ define(function(require, exports, module) {
   , vegan:       { name: 'Vegan',       className: 'vegan' }
   , halal:       { name: 'Halal',       className: 'halal' }
   , kosher:      { name: 'Kosher',      className: 'kosher' }
+  , spicy:       { name: 'Spicy',       className: 'spicy' }
   };
   return module.exports;
 });

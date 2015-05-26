@@ -63,9 +63,15 @@ function notifyOrderFn( order ){
     }
 
   , sms: function( done ){
-      scheduler.enqueue( 'send-order-notification', sendDate, { notification_id: 'restaurant-tomorrow-order-sms', order_id: order.attributes.id }, function( error ){
-        done( error, error ? null : order );
-      });
+      scheduler.enqueue( 'send-order-notification'
+      , sendDate
+      , { notification_id: 'restaurant-tomorrow-order-sms'
+        , order_id: order.attributes.id
+        }
+      , function( error ){
+          done( error, error ? null : order );
+        }
+      );
     }
   });
 };

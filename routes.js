@@ -1766,6 +1766,7 @@ module.exports.register = function(app) {
   , m.getOrder2({
       param:                  'id'
     , restaurant:             true
+    , restaurantContacts:     true
     , restaurantDbModelFind:  true
     , user:                   true
     , userPaymentMethods:     true

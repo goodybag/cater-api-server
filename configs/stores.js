@@ -23,7 +23,7 @@ module.exports = {
                 , staging:    'staging'
                 , production: ''
                 , india:      'staging'
-                })[ process.env.GB_ENV ]))
+                })[ process.env.GB_ENV ])
     }
   }
 
@@ -37,7 +37,7 @@ module.exports = {
                 , staging:    'staging'
                 , production: 'prod'
                 , india:      'staging'
-                })[ process.env.GB_ENV ]))
+                })[ process.env.GB_ENV ])
     }
   }
 
@@ -51,7 +51,7 @@ module.exports = {
                 , staging:    'staging'
                 , production: 'prod'
                 , india:      'staging'
-                })[ process.env.GB_ENV ]))
+                })[ process.env.GB_ENV ])
     }
   }
 };

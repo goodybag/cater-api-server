@@ -32,7 +32,4 @@ module.exports = {
 
 if ( process.env['GB_ENV'] === 'production' ){
   module.exports.analytics = 'UA-23372459-3';
-
-  // Only allows referers from *.goodybag.com
-  module.exports.places.browser = 'AIzaSyAoZKQUCqSukAJ1rfboWGCKYO3FqHgVVgg';
 }

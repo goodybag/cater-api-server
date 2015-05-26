@@ -26,9 +26,7 @@ module.exports = {
   }
 
 , places: {
-    server: {
-      key: 'AIzaSyBbsgtm6Tqdh3ZyWfRj2Mg_eSZDW8ajLss'
-    }
+    limit: { daily: 150000 }
   }
 };
 

@@ -2,6 +2,8 @@
  * Module dependencies
  */
 
+process.env.GB_ENV = process.env.GB_ENV || 'dev';
+
 var
   os = require('os')
 , fs =  require('fs')
@@ -20,6 +22,8 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, credentials: require('./configs/credentials')
+, stores: require('./configs/stores')
 , adroll: require('./configs/adroll')
 , stripe: require('./configs/stripe')
 , google: require('./configs/google')
@@ -118,6 +122,7 @@ config.defaults = {
 
 , rewardHolidays: [
     { start: '2014-09-02 00:00:00', end: '2014-09-03 00:00:00', rate: '2.0', description: 'Post-Labor Day' }
+  , { start: '2015-05-26 00:00:00', end: '2015-05-27 00:00:00', rate: '2.0', description: 'Post-Memorial Day' }
   ]
 
 , welcome: {

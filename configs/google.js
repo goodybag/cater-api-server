@@ -29,12 +29,6 @@ module.exports = {
     server: {
       key: 'AIzaSyBbsgtm6Tqdh3ZyWfRj2Mg_eSZDW8ajLss'
     }
-
-  , browser: {
-      // NOTE: this should be used a DEV key only
-      // since referers are allowed from anywhere
-      key: 'AIzaSyAMfj24xp1FDT04uyRMFd2NJsF128NBIb8'
-    }
   }
 };
 

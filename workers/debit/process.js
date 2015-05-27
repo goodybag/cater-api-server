@@ -45,18 +45,15 @@ var debitCustomer = function (order, callback) {
     db.users.findOne(order.user_id, function(err, user) {
       if ( err ) return callback({ error: err });
 
+      // invoiced orders should use our own debit card
       var customer = paymentMethod ? user.stripe_id : config.stripe.invoicing.customer_id;
       var source = paymentMethod ? paymentMethod.attributes.stripe_id : config.stripe.invoicing.card_id;
 
-      utils.stripe.charges.create({
+      var data = {
         amount: amount,
         currency: 'usd',
         customer: customer,
         source: source,
-        destination: order.restaurant.stripe_id,
-        application_fee: order.restaurant.plan_id ?
-                           restaurantPlans[order.restaurant.plan.type].getGbFee(order.restaurant.plan, order) :
-                           0,
         statement_descriptor: 'GOODYBAG CATER #' + order.id,
         description: 'Order #' + order.id,
         metadata: {
@@ -64,9 +61,18 @@ var debitCustomer = function (order, callback) {
         , restaurant_id: order.restaurant.id
         , order_id: order.id
         , order_uuid: order.uuid
+        , charge_destination: 'Funds go to Goodybag Platform'
         }
-      },
-      function (error, charge) {
+      };
+
+      if ( order.restaurant.plan_id ) {
+        // route to restaurant if possible
+        data.destination = order.restaurant.stripe_id;
+        data.application_fee = restaurantPlans[order.restaurant.plan.type].getGbFee(order.restaurant.plan, order);
+        data.metadata.charge_destination = 'Funds go to restaurant';
+      }
+
+      utils.stripe.charges.create(data, function (error, charge) {
         if (error) {
           // enqueue declined cc notification on scheduler
           return scheduler.enqueue('send-order-notification', new Date(), {

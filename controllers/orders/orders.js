@@ -290,6 +290,10 @@ module.exports.changeStatus = function(req, res) {
   var previousStatus = req.order.status;
   var orderModel = new models.Order( req.order );
 
+  if ( req.order.status === req.body.status ){
+    return res.send(204);
+  }
+
   // if they're not an admin, check if the status change is ok.
   if(!req.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {
     if (!utils.contains(models.Order.statusFSM[req.order.status], req.body.status))

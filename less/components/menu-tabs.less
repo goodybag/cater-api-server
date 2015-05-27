@@ -1,10 +1,11 @@
 @menu-tab-color: @palette-gray-dark;
 @menu-tab-border: 1px solid @palette-gray-light;
-@menu-tab-border-top: 3px solid @palette-gray-lighter;
+@menu-tab-border-highlight: 3px solid @palette-gray-lighter;
+@menu-tab-border-highlight-active: @palette-blue;
 @menu-tab-border-invisible: 1px solid @palette-white;
 @menu-tab-radius: 3px;
 @menu-tab-font-size: .9rem;
-
+@menu-tab-background-color: @palette-white;
 @menu-tab-content-font-size: 1.2rem;
 
 /**
@@ -15,7 +16,17 @@
   margin: 0;
   padding: 0;
   border-bottom: @menu-tab-border;
+  background-color: @menu-tab-background-color;
 }
+
+.menu-tabs.affix {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: @zIndex-9;
+}
+
 .menu-tabs .menu-tab {
   display: inline-block;
   position: relative;
@@ -25,12 +36,24 @@
   border-top-left-radius: @menu-tab-radius;
   border-top-right-radius: @menu-tab-radius;
   border: @menu-tab-border;
-  border-top: @menu-tab-border-top;
+  border-top: @menu-tab-border-highlight;
+  background-color: @menu-tab-background-color;
+}
+
+.menu-tabs.affix .menu-tab {
+  border: none;
+  border-bottom: 3px solid @palette-white;
+  top: initial;
 }
 
 .menu-tabs .menu-tab.active {
-  border-top-color: @palette-blue;
+  border-top-color: @menu-tab-border-highlight-active;
   border-bottom: @menu-tab-border-invisible;
+}
+
+.menu-tabs.affix .menu-tab.active {
+  border-bottom: @menu-tab-border-highlight;
+  border-bottom-color: @menu-tab-border-highlight-active;
 }
 
 .menu-tabs .menu-tab.untab { border: none; }

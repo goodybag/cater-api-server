@@ -28,7 +28,6 @@ var task = function () {
     if (messages.length == 0) return;
     utils.queues.debit.post(messages, function (error, body) {
       if (error) {
-        console.log(error);
         // it's alright if we have an error, we'll get these orders on the next go;
         logger.error('failed to put orders onto debit queue', { error: error });
         return utils.rollbar.reportMessage(error);

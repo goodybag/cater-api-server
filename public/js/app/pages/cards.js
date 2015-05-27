@@ -11,9 +11,6 @@ define( function( require ){
   var page = {
     init: function(options) {
       var user            = options.user;
-      var marketPlaceUri  = options.marketplaceUri;
-
-      balanced.init(marketPlaceUri);
 
       var removeCardModal = new Views.RemoveCardModal({
         el: '#remove-card-modal'

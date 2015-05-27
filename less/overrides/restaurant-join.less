@@ -40,14 +40,16 @@
   ///////////////////
   // Doller Signs
   //////////////////
-  .dollar-meter > .dollar-meter-item.dollar-meter-item-filled {
-    color: @palette-gray-dark;
-  }
+  .dollar-meter {
+    & > .dollar-meter-item.dollar-meter-item-filled {
+      color: @palette-gray-dark;
+    }
 
-  .dollar-meter > .dollar-meter-item {
-    font-size: 14px;
-    font-weight: 400;
-    color: @palette-gray-light;
+    & > .dollar-meter-item {
+      font-size: 14px;
+      font-weight: 400;
+      color: @palette-gray-light;
+    }
   }
 
   ///////////////////////
@@ -89,14 +91,22 @@
   //////////
   //Grid
   /////////
+  .col { float: left; }
+  .row { margin-bottom: 25px; }
   .label-col {
-    .col-3;
     text-align: right;
     font-weight: 600;
+    .col-3;
   }
 
   .field-col {
     .col-7;
+  }
+
+  @media (max-width: @breakpoint-mobile) {
+    .label-col {
+      text-align: left;
+    }
   }
 
   ////////////
@@ -196,7 +206,7 @@
   /////////////////////
   // Lead Time Table
   ////////////////////
-  @media (min-width: 40rem) {
+  @media (min-width: 40em) {
     .lead-time {
       .col-remove {
         float: left;

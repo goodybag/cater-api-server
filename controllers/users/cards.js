@@ -25,13 +25,6 @@ module.exports.create = function(req, res, next) {
       });
     }
   );
-  // utils.balanced.Customers.addCard(req.user.attributes.balanced_customer_uri, req.body.data.uri, function (error, customer) {
-  //   if (error) return logger.error('error adding card to balanced customer', error), res.error(errors.balanced.ERROR_ADDING_CARD);
-  //   models.User.createPaymentMethod( +req.param('uid'), req.body, function(error, card) {
-  //     if (error) return logger.error('error adding payment method to user: ' + req.user.attributes.id, error), res.error(errors.internal.DB_FAILURE, error);
-  //     return res.json(card);
-  //   });
-  // });
 };
 
 /**

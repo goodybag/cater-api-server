@@ -44,16 +44,21 @@ var debitCustomer = function (order, callback) {
 
     db.users.findOne(order.user_id, function(err, user) {
       if ( err ) return callback({ error: err });
+
+      var customer = paymentMethod ? user.stripe_id : config.stripe.invoicing.customer_id;
+      var source = paymentMethod ? paymentMethod.attributes.stripe_id : config.stripe.invoicing.card_id;
+
       utils.stripe.charges.create({
         amount: amount,
         currency: 'usd',
-        customer: user.stripe_id,
-        source: paymentMethod.attributes.stripe_id,
+        customer: customer,
+        source: source,
         destination: order.restaurant.stripe_id,
         application_fee: order.restaurant.plan_id ?
                            restaurantPlans[order.restaurant.plan.type].getGbFee(order.restaurant.plan, order) :
                            0,
         statement_descriptor: 'GOODYBAG CATER #' + order.id,
+        description: 'Order #' + order.id,
         metadata: {
           user_id: order.user.id
         , restaurant_id: order.restaurant.id

@@ -7,6 +7,22 @@ var notifications   = require('../../../lib/order-notifications2');
 var events          = require('events');
 var Hbs             = require('handlebars');
 
+var mockDb = {
+  order_notifications: {
+    insert: function(options, callback) {
+      return callback(null); // always success
+    }
+  },
+
+  orders: {
+    findOne: function() {
+      var args = Array.prototype.slice.call(arguments);
+      var callback = args[args.length-1];
+      return callback(null, {});
+    }
+  }
+};
+
 var venter = new events.EventEmitter;
 
 var orders = require('stampit')()
@@ -70,6 +86,7 @@ describe('Order Notifications', function(){
       , name: 'a'
       , build: function(){}
       , send: function(){}
+      , db: mockDb
       });
 
       var order = orders()
@@ -87,6 +104,7 @@ describe('Order Notifications', function(){
       , requiredOptions: ['optA']
       , build: function(){}
       , send: function(){}
+      , db: mockDb
       });
 
       var order = orders();
@@ -113,6 +131,8 @@ describe('Order Notifications', function(){
       , subject: function( order ){
           return order.subject;
         }
+
+      , db: mockDb
       });
 
       assert.equal( typeof emailNote.build, 'function' );
@@ -154,6 +174,8 @@ describe('Order Notifications', function(){
         , subject: function( order ){
             return order.subject;
           }
+
+        , db: mockDb
         })
       );
 

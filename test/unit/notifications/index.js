@@ -3,7 +3,6 @@ var config          = require('../../../config');
 var errors          = require('../../../errors');
 var utils           = require('../../../utils');
 var notifications   = require('../../../lib/order-notifications2');
-// var app             = require('../../../app');
 var events          = require('events');
 var Hbs             = require('handlebars');
 

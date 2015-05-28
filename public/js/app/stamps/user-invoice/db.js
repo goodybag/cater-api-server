@@ -177,9 +177,9 @@ module.exports = require('stampit')()
 
           return order.order;
         });
-      }
 
-      utils.extend( this, result );
+        utils.extend( this, result );
+      }
 
       return this;
     }

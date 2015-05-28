@@ -154,6 +154,12 @@ module.exports.register = function(app) {
     , m.view('admin/upcoming', { layout: 'admin/layout2' })
     );
 
+    app.get('/api/places'
+    , require('gplaces').proxy({
+        key: config.credentials['google.com'].apiKey
+      })
+    );
+
     app.get('/api/upcoming'
     , m.getOrders({
         submittedDate: true

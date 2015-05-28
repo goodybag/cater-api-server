@@ -1,3 +1,10 @@
+drop trigger if exists on_user_organization_update on order_amenities;
+create trigger on_user_organization_update
+  after insert or update of organization
+  on users
+  for each row
+  execute procedure on_user_organization_update();
+
 drop trigger if exists on_order_amenities_update on order_amenities;
 create trigger on_order_amenities_update
   after insert or update

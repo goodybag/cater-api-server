@@ -56,6 +56,11 @@
   margin-top: 12px;
 }
 
+.delivery-info-address address > .group{
+  display: inline-block;
+  margin-top: 12px;
+}
+
 .thankyou-wrapper {
   margin: 20px 0 32px;
   text-align: center;

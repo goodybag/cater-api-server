@@ -3,8 +3,9 @@ var config          = require('../../../config');
 var errors          = require('../../../errors');
 var utils           = require('../../../utils');
 var notifications   = require('../../../lib/order-notifications2');
-var app             = require('../../../app');
+// var app             = require('../../../app');
 var events          = require('events');
+var Hbs             = require('handlebars');
 
 var venter = new events.EventEmitter;
 
@@ -24,13 +25,15 @@ var orders = require('stampit')()
     }
   })
 
-var oldRender = app.render;
+var oldRenderer = notifications.renderer;
 var oldSendRawEmail = utils.sendRawEmail;
 
 var overrideRender = function( returns ){
-  app.render = function( template, context, callback ){
-    return callback( null, returns );
-  };
+  notifications.setRenderer({
+    render: function( template, context ){
+      return returns;
+    }
+  });
 };
 
 before( function(){
@@ -40,7 +43,7 @@ before( function(){
 });
 
 after( function(){
-  app.render = oldRender;
+  notifications.setRenderer(oldRenderer);
   utils.sendRawEmail = oldSendRawEmail;
 });
 
@@ -163,7 +166,7 @@ describe('Order Notifications', function(){
       var note = notes( order, 1 );
 
       overrideRender('Test preview');
-      
+
       note.send( function( error, from, to, text ){
         assert( !error );
         assert.equal( to, order.to );

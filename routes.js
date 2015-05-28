@@ -1034,7 +1034,7 @@ module.exports.register = function(app) {
     , deliveryService:    true
     , submittedDate:      true
     , amenities:          true
-    , feedback:           true
+    , orderFeedback:      true
     })
   , controllers.orders.auth
   , m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant'])

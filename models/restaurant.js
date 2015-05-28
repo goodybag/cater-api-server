@@ -232,24 +232,26 @@ var Restaurant = module.exports = Model.extend({
         type: 'select'
       , table: 'delivery_service_zips'
       , columns: [
-          { table: 'delivery_service_zips', name: 'from', alias: 'from' }
-        , { table: 'delivery_service_zips', name: 'to', alias: 'to' }
-        , { table: 'delivery_service_zips', name: 'price', alias: 'price' }
-        , { table: 'r', name: 'id', alias: 'restaurant_id' }
+          { table: 'delivery_service_zips', name: 'from',           alias: 'from' }
+        , { table: 'delivery_service_zips', name: 'to',             alias: 'to' }
+        , { table: 'delivery_service_zips', name: 'price',          alias: 'price' }
+        , { table: 'restaurant_locations',  name: 'restaurant_id',  alias: 'restaurant_id' }
+        // , { table: 'r', name: 'id', alias: 'restaurant_id' }
         , { table: 'r', name: 'region_id', alias: 'region_id' }
         ]
-      , where: utils.extend( { 'r.disable_courier': false }, options.where )
+      , where: utils.extend( {
+          // 'r.disable_courier': false
+        }, options.where )
       , joins: [
           { target: 'restaurant_locations'
-          , alias:  'rl'
           , type:   'left'
           , on:     { zip: '$delivery_service_zips.from$' }
           }
 
         , { target: 'restaurants'
-          , alias:  'r'
           , type:   'left'
-          , on:     { id: '$rl.restaurant_id$' }
+          , alias:  'r'
+          , on:     { id: '$restaurant_locations.restaurant_id$' }
           }
         ]
       });
@@ -492,7 +494,7 @@ var Restaurant = module.exports = Model.extend({
       }
     });
     query.columns.push("(SELECT array(SELECT zip FROM restaurant_delivery_zips WHERE restaurant_id = restaurants.id ORDER BY zip ASC)) AS delivery_zips");
-    query.columns.push("(SELECT array(SELECT \"to\" FROM delivery_service_zips WHERE \"from\" = restaurants.zip ORDER BY \"to\" ASC)) AS delivery_service_zips");
+    query.columns.push("(SELECT array(SELECT \"to\" FROM delivery_service_zips WHERE restaurant_id = restaurants.id ORDER BY \"to\" ASC)) AS delivery_service_zips");
     query.columns.push([
       '(select array_to_json( array('
     , '  select row_to_json( r ) as delivery_zips from ('

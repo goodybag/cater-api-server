@@ -240,10 +240,16 @@ var Restaurant = module.exports = Model.extend({
         ]
       , where: utils.extend( { 'r.disable_courier': false }, options.where )
       , joins: [
-          { target: 'restaurants'
-          , alias:  'r'
+          { target: 'restaurant_locations'
+          , alias:  'rl'
           , type:   'left'
           , on:     { zip: '$delivery_service_zips.from$' }
+          }
+
+        , { target: 'restaurants'
+          , alias:  'r'
+          , type:   'left'
+          , on:     { id: '$rl.restaurant_id$' }
           }
         ]
       });

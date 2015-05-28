@@ -167,6 +167,7 @@ module.exports.get = function(req, res) {
 
     context.restaurant.menuLengths = menuLengths;
 
+    console.log(context.restaurant.delivery_service_zips);
     res.render('menu', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
       return res.send(html);

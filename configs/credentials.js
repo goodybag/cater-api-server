@@ -157,4 +157,11 @@ module.exports = {
   , consumerKey: '6F-LMALFlGTckzlBfg03fA'
   , consumerSecret: 'OmclTS9gpl03vksQvA_Cr7OUPU4'
   }
+
+, "loggly.com": {
+    type: 'logging'
+  , scope: 'global'
+  , token: '75cd986d-4598-424f-bb6f-d128499b2d99'
+  , subdomain: 'goodybag'
+  }
 };

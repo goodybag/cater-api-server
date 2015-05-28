@@ -8,6 +8,7 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
+  drop domain if exists feedback_rating cascade;
   create domain feedback_rating as int
   check(
       value > 0

@@ -108,8 +108,8 @@ fi
 if [ $do_backup == true ] ; then
   # make database backup
   mkdir -p $BACKUP_DIR
-  heroku pgbackups:capture --expire --app $heroku_app
-  wget --directory-prefix $BACKUP_DIR `heroku pgbackups:url --app $heroku_app`
+  heroku pg:backups capture --expire --app $heroku_app
+  wget --directory-prefix $BACKUP_DIR `heroku pg:backups public-url --app $heroku_app`
 fi
 
 if [ "$branch" == "master" ] && [ "$env" == "production" ] && [ $do_version == true ]; then

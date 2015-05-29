@@ -2,4 +2,4 @@
 
 heroku pg:reset --app goodybag-staging-cater DATABASE_URL
 
-heroku pgbackups:restore --app goodybag-staging-cater DATABASE_URL  `heroku pgbackups:url --app goodybag-production-cater`
+heroku pg:backups restore --app goodybag-staging-cater DATABASE_URL  `heroku pg:backups public-url --app goodybag-production-cater`

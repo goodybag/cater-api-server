@@ -46,7 +46,6 @@
 }
 
 #reviews .anchor-yelp {
-  position: absolute;
-  right: 32px;
-  bottom: -14px;
+  float: right;
+  margin: 20px 0;
 }

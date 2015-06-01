@@ -368,6 +368,21 @@ mosql.registerQueryHelper('distinct', function(distinct, values, query){
   return (distinct) ? 'distinct ': '';
 });
 
+console.log('register forUpdate');
+mosql.registerQueryHelper('forUpdate', function(update, values, query) {
+  console.log('forupdate', arguments);
+  if ( update === true ) {
+    return 'for update';
+  } else if ( update === 'string' ) {
+    return 'for update of ' + update;
+  } else if ( Array.isArray(update) ) {
+    return 'for update of ' + update.join(', ');
+  } else {
+    throw new Error('Invalid forUpdate value: ' + update);
+  }
+});
+console.log(mosql.queryHelpers);
+
 // Make sure dates are formatted correctly
 dirac.use( function(){
   var afterPSFinds = function( results, $query, schema, next ){
@@ -818,7 +833,7 @@ dirac.use( function(){
 });
 
 // Log queries to dirac
-/*
+//*
 dirac.use( function( dirac ){
   // var query_ = dirac.DAL.prototype.query;
   // dirac.DAL.prototype.query = function( query, callback ){

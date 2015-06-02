@@ -2614,41 +2614,10 @@ module.exports.register = function(app) {
 
   app.get('/api/stripe-events/:id'
   , m.restrict(['admin'])
-  , function(req, res, next) {
-      db.stripe_events.findOne(req.params.id, function(err, event) {
-        if ( err ) {
-          logger.error(err);
-          return res.send(err);
-        }
-        if (!event) return res.send(404);
-
-        return res.send(event);
-      });
-    }
+  , m.stripe.getStripeEvent()
   );
 
-  app.post('/hooks/stripe', function(req, res) {
-    var logger = req.logger.create('StripeHooks');
-    db.stripe_events.insert({
-      data: JSON.stringify(req.body)
-    }, { returning: ['*'] }, function(err, result) {
-      if (err) {
-        logger.error('Unable to save stripe event', err);
-        return res.send(500);
-      }
-
-      var hc = require('./lib/hipchat');
-      hc.postMessage({
-        room: config.hipchat.rooms.tech
-      , from: 'Goodybot'
-      , message: 'New Stripe Webhook Logged' + [config.baseUrl, 'api', 'stripe-events', result.id].join('/')
-      , message_format: 'text'
-      , color: 'green'
-      , format: 'json'
-      },
-      function(response) {
-        return res.send(response && response.status === 'sent' ? 200 : 500);
-      });
-    });
-  });
+  app.post('/hooks/stripe'
+  , m.stripe.insertStripeEvent()
+  );
 }

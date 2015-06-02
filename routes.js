@@ -2629,15 +2629,13 @@ module.exports.register = function(app) {
 
   app.post('/hooks/stripe', function(req, res) {
     var logger = req.logger.create('StripeHooks');
-    console.log('req.body', req.body);
     db.stripe_events.insert({
-      data: req.body
+      data: JSON.stringify(req.body)
     }, { returning: ['*'] }, function(err, result) {
       if (err) {
         logger.error('Unable to save stripe event', err);
         return res.send(500);
       }
-
       return res.send(200);
     });
   });

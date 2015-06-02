@@ -85,6 +85,7 @@
     "moment": "~2.3.1",
     "moment-timezone": "~0.3.0",
     "mongo-sql": "^2.6.2",
+    "node-hipchat": "^0.4.5",
     "node-uuid": "1.4.x",
     "npm": "*",
     "okay": "0.3.x",

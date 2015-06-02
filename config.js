@@ -42,6 +42,7 @@ config.defaults = {
 , logging: require('./configs/logging')
 , invoice: require('./configs/invoice')
 , promo: require('./configs/promo')
+, hipchat: require('./configs/hipchat')
 
 , deliveryTime: {
     padding: 15

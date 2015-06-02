@@ -2636,7 +2636,19 @@ module.exports.register = function(app) {
         logger.error('Unable to save stripe event', err);
         return res.send(500);
       }
-      return res.send(200);
+
+      var hc = require('./lib/hipchat');
+      hc.postMessage({
+        room: config.hipchat.rooms.tech
+      , from: 'Goodybot'
+      , message: 'New Stripe Webhook Logged' + [config.baseUrl, 'api', 'stripe-events', result.id].join('/')
+      , message_format: 'text'
+      , color: 'green'
+      , format: 'json'
+      },
+      function(response) {
+        return res.send(response && response.status === 'sent' ? 200 : 500);
+      });
     });
   });
 }

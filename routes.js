@@ -2629,7 +2629,7 @@ module.exports.register = function(app) {
 
   app.post('/hooks/stripe', function(req, res) {
     var logger = req.logger.create('StripeHooks');
-
+    console.log('req.body', req.body);
     db.stripe_events.insert({
       data: req.body
     }, { returning: ['*'] }, function(err, result) {

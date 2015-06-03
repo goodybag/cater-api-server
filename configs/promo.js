@@ -18,6 +18,15 @@ var promo = {
     email: 'om@goodybag.com'
   , promo_code: [ 'bv250' ]
   }
+, kebabstar: {
+    email: [
+      'om@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
+    , 'tobyshields@goodybag.com'
+    , 'christymedlock@goodybag.com'
+    ]
+  , promo_code: [ 'starkebab' ]
+  }
 };
 
 module.exports = ({

@@ -18,7 +18,7 @@ var promo = {
     email: 'om@goodybag.com'
   , promo_code: [ 'bv250' ]
   }
-, kebabstar: {
+, starkebab: {
     email: [
       'om@goodybag.com'
     , 'patrickmugavin@goodybag.com'

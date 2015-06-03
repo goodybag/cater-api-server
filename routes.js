@@ -154,6 +154,12 @@ module.exports.register = function(app) {
     , m.view('admin/upcoming', { layout: 'admin/layout2' })
     );
 
+    app.get('/api/places'
+    , require('gplaces').proxy({
+        key: config.credentials['google.com'].apiKey
+      })
+    );
+
     app.get('/api/upcoming'
     , m.getOrders({
         submittedDate: true
@@ -1049,6 +1055,7 @@ module.exports.register = function(app) {
     , deliveryService:    true
     , submittedDate:      true
     , amenities:          true
+    , orderFeedback:      true
     })
   , controllers.orders.auth
   , m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant'])
@@ -2583,6 +2590,22 @@ module.exports.register = function(app) {
   , m.param('amenity_id')
   , m.remove( db.order_amenities )
   );
+
+  /**
+  * Order Feedback
+  */
+  app.put('/api/order-feedback'
+  , function (req, res, next) {
+      req.queryObj = { order_id: req.body.order_id }
+      req.order = { id: req.body.order_id };
+      next();
+    }
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
+  , m.queryOptions({ returning: ['id'] })
+  , m.update( db.order_feedback )
+  );
+
 
   app.get('/api/restaurant-plans'
   , m.restrict(['admin'])

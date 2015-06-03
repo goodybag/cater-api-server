@@ -8,15 +8,19 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  -- All previous invoiced orders should be labeled 'paid'.
-  -- The new debit processing will automatically use our invoicing account
-  -- in place of the customer for invoiced orders.
+  drop domain if exists feedback_rating cascade;
+  create domain feedback_rating as int
+  check(
+      value > 0
+  and value < 6
+  );
 
-  -- An invoiced order is one such that payment_method_id is null.
+  drop table if exists "order_feedback";
+  create table if not exists "order_feedback" (
+    id                         serial primary key
+  , created_at                 timestamptz not null default now()
+  , order_id                   int not null references orders(id) on delete cascade
+  , ease_of_submitting_rating  feedback_rating
+  );
 
-  update orders
-    set payment_status = 'paid'
-    where payment_status is null
-      and payment_method_id is null
-      and status = 'accepted';
-end$$;
+  end$$;

@@ -381,12 +381,12 @@ p.adjustment-description {
 .feedback-order .star {
   font-size: 20px;
   cursor: pointer;
+  position: relative;
+  top: 2px;
 }
 
 .feedback-rating {
   display: inline-block;
-  position: relative;
-  top: 2px;
 }
 
 /*

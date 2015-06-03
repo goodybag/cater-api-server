@@ -131,6 +131,7 @@ module.exports = function(grunt) {
         , { src: 'public/css/theme.css', dest: 'public/dist/<%= pkg.version %>/css/theme.css' }
         , { src: 'public/css/checkout.css', dest: 'public/dist/<%= pkg.version %>/css/checkout.css' }
         , { src: 'public/css/receipt.css', dest: 'public/dist/<%= pkg.version %>/css/receipt.css' }
+        , { src: 'public/css/order.css', dest: 'public/dist/<%= pkg.version %>/css/order.css' }
         , { src: 'public/css/gb-icon.css', dest: 'public/dist/<%= pkg.version %>/css/gb-icon.css' }
         , { src: 'public/img/olark-buttons-light.png', dest: 'public/dist/<%= pkg.version %>/img/olark-buttons-light.png' }
         , { src: 'public/components/bootstrap/fonts/glyphicons-halflings-regular.woff',

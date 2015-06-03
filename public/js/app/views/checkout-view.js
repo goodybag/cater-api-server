@@ -552,8 +552,8 @@ define(function(require, exports, module) {
       var opts = {
         success: function() {
           callback(null, pm);
-        }, error: function() {
-          callback(new Error('unable to create payment method'));
+        }, error: function(model, res) {
+          callback(res.responseJSON.error);
         }
       };
 
@@ -608,7 +608,7 @@ define(function(require, exports, module) {
       var this_ = this;
       var error, $el, $parent;
       var template = Handlebars.partials.alert_error;
-      var selector = '[name="{property}"]';
+      var selector = '[name="{property}"], [data-stripe-alert="{property}"]';
 
       if ( _.isObject( errors ) && !_.isArray( errors ) ){
         // Amanda errors object
@@ -654,7 +654,7 @@ define(function(require, exports, module) {
         $el.css( css );
 
         $parent = this.$el.find(
-          selector.replace( '{property}', error.property )
+          selector.replace( /{property}/g, error.name.toLowerCase().replace(/_/g, '-') )
         ).parents('.form-group').eq(0);
 
         $parent.prepend( $el );

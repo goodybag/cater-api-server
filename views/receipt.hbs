@@ -5,6 +5,24 @@
 
 {{#extend "title"}} - Receipt{{/extend}}
 
+{{#extend "banner"}}
+  {{#if (not order.order_feedback.ease_of_submitting_rating)}}
+  <div class="feedback-order">
+    <div class="alert alert-info alert-dismissible fadeInDown" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>How easy was your experience placing this order?</strong>
+      <div class="feedback-rating">
+        <span class="gb-icon-star-empty star" data-rating="1" data-toggle="tooltip" data-title="frustrating" data-placement="right"></span>
+        <span class="gb-icon-star-empty star" data-rating="2" data-toggle="tooltip" data-title="not&nbsp;great" data-placement="right"></span>
+        <span class="gb-icon-star-empty star" data-rating="3" data-toggle="tooltip" data-title="fine" data-placement="right"></span>
+        <span class="gb-icon-star-empty star" data-rating="4" data-toggle="tooltip" data-title="good" data-placement="right"></span>
+        <span class="gb-icon-star-empty star" data-rating="5" data-toggle="tooltip" data-title="great!" data-placement="right"></span>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+{{/extend}}
+
 {{#if isAdmin}}
   {{#extend "navbar-links"}}
     <li>
@@ -430,7 +448,7 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 </div>
 
 {{> copy_order_error_modal}}
@@ -439,11 +457,17 @@
 
 {{#extend "scripts"}}
 <script>
-  require(['app/pages/receipt', 'app/models/index', 'app/collections/amenities'], function( page, Models, Amenities ){
-    page.init({
-      order: new Models.Order( {{{json order}}} )
-    , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
+  require([
+      'jquery-loaded'
+    , 'app/pages/receipt'
+    , 'app/models/index'
+    , 'app/collections/amenities'],
+    function( $, page, Models, Amenities ){
+      $('[data-toggle="tooltip"]').tooltip();
+      page.init({
+        order: new Models.Order( {{{json order}}} )
+      , isAdmin: {{#if isAdmin}}true{{else}}false{{/if}}
+      });
     });
-  });
 </script>
 {{/extend}}

@@ -35,7 +35,7 @@ function migrateUser(user, callback) {
   utils.request({
     url: 'https://api.balancedpayments.com/customers/'  + customer_uri
   , headers: { Accept: 'application/vnd.api+json;revision=1.1' }
-  , auth: { user: 'ak-prod-OmLnG7ftnzB145uM4Ycu4YIE0mgPx4eE' }//config.balanced.secret }
+  , auth: { user: config.balanced.secret }
   }, function(err, response, body) {
     if ( err )
       return logger.error('Unable to get balanced customer ' + customer_uri, err);

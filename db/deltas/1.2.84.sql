@@ -19,3 +19,4 @@ begin
     where payment_status is null
       and payment_method_id is null
       and status = 'accepted';
+end$$;

@@ -11,14 +11,20 @@ var models  = require('../../models');
 module.exports.create = function(req, res, next) {
   var logger = req.logger.create('Controller-Users-Cards-List');
 
-  if (!req.body.data || !req.body.data.uri) return res.error(errors.input.VALIDATION_FAILED, 'uri');
-  utils.balanced.Customers.addCard(req.user.attributes.balanced_customer_uri, req.body.data.uri, function (error, customer) {
-    if (error) return logger.error('error adding card to balanced customer', error), res.error(errors.balanced.ERROR_ADDING_CARD);
-    models.User.createPaymentMethod( +req.params.uid, req.body, function(error, card) {
-      if (error) return logger.error('error adding payment method to user: ' + req.user.attributes.id, error), res.error(errors.internal.DB_FAILURE, error);
-      return res.json(card);
-    });
-  });
+  if (!req.body.data || !req.body.token_id) return res.error(errors.input.VALIDATION_FAILED, 'data');
+
+  utils.stripe.customers.createCard(
+    req.user.attributes.stripe_id
+  , { source: req.body.token_id }
+  , function(err, card) {
+      if (err) return logger.error('error adding card to stripe customer', err), res.error(errors.stripe.ERROR_ADDING_CARD);
+      var pmData = utils.extend( {}, req.body, { stripe_id: req.body.data.id } );
+      models.User.createPaymentMethod( +req.param('uid'), pmData, function(err, card) {
+        if (err) return logger.error('error adding payment method to user: ' + req.user.attributes.id, err), res.error(errors.internal.DB_FAILURE, err);
+        return res.json(card);
+      });
+    }
+  );
 };
 
 /**

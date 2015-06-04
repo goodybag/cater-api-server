@@ -12,7 +12,7 @@ define(function(require, exports, module) {
   var Address = require('../models/address');
   var PaymentMethod = require('../models/payment-method');
 
-  return module.exports = OrderView.extend({
+  var CheckoutView = OrderView.extend({
     events: _.extend({}, OrderView.prototype.events, {
       'click .item-edit':                             'itemEditClick',
       'click  #cancel-confirm-modal .btn-cancel':     'cancel',
@@ -24,7 +24,7 @@ define(function(require, exports, module) {
       'submit #order-form':                           'submit',
       'submit #select-address-form':                  'selectAddress',
       'keyup #order-guests':                          'updateGuests',
-      'input input[name="card_number"]':              'onCardNumberChange',
+      'input input[data-stripe="number"]':            'onCardNumberChange',
       'change input[name="organization_type"]':       'onOrganizationTypeChange'
     }),
 
@@ -264,7 +264,7 @@ define(function(require, exports, module) {
               });
             }
           });
-        }
+        };
       }
 
       // If they're saving a new card, delegate to the `savenewCardAndSubmit` handler
@@ -275,7 +275,7 @@ define(function(require, exports, module) {
       // If they were editing an existing card, delegate to `onUpdateCardSubmitClick` handler
       if (!this.$el.find('#update-card').hasClass('hide')){
         return this.onUpdateCardSubmitClick(e);
-      };
+      }
 
       utils.async.parallel(tasks, function( err ){
         spinner.stop();
@@ -311,79 +311,71 @@ define(function(require, exports, module) {
       });
     },
 
+    removeCCLogos: function () {
+      this.$cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
+      return this;
+    },
+
+    hidePostalCode: function() {
+      this.$postalCode.closest('.row').addClass('hide');
+      return this;
+    },
+
+    showPostalCode: function() {
+      this.$postalCode.closest('.row').removeClass('hide');
+      return this;
+    },
+
+    clearPostalCode: function() {
+      this.$postalCode.val('');
+      return this;
+    },
+
     onCardNumberChange: function(e) {
-      var cardTypeRegexes = {
-        visa: {
-          likely: /^4/
-        , valid: /^4[0-9]{15}$/
-        , mask: '9999 9999 9999 9999'
-        }
-      , master: {
-          likely: /^5[1-5]/
-        , valid: /^5[1-5][0-9]{14}/
-        , mask: '9999 9999 9999 9999'
-        }
-      , amex: {
-          likely: /^3[47]/
-        , valid: /^3[47][0-9]{13}$/
-        , mask: '9999 999999 99999'
-        }
-      , discover: {
-          likely: /^6(?:011|5[0-9]{2})/
-        , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
-        , mask: '9999 9999 9999 9999'
-        }
-      }
+      this.$newCard = this.$newCard || this.$el.find('#new-card');
+      this.$cardNumber = this.$cardNumber || this.$newCard.find('input[data-stripe="number"]');
+      this.$postalCode = this.$postalCode || this.$newCard.find('input[name="postal_code"]');
 
-      var $newCard = this.$el.find('#new-card');
-      var $cardNumber = $newCard.find('input[name="card_number"]');
-      var $postalCode = $newCard.find('input[name="postal_code"]');
-      var cardNumber = $cardNumber.val();
-
-      var removeCCLogos = function () {
-        $cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
-      };
+      var cardNumber = this.$cardNumber.val();
 
       var foundMatch = false;
-      for(type in cardTypeRegexes) {
-        if (!cardTypeRegexes.hasOwnProperty(type)) return;
+      for(var type in this.cardTypeRegexes) {
+        if (!this.cardTypeRegexes.hasOwnProperty(type)) return;
 
-        var cardType = cardTypeRegexes[type];
+        var cardType = this.cardTypeRegexes[type];
 
         // TODO: improve later - apply input mask and change logo only if the card type changes
         if (cardType.likely.test(cardNumber)) {
           foundMatch = true;
-          $cardNumber.inputmask(cardType.mask, {
+          this.$cardNumber.inputmask(cardType.mask, {
             placeholder:" "
           , oncleared: function() {
-              $cardNumber.inputmask('remove');
-              removeCCLogos();
-              $postalCode.closest('.row').addClass('hide');
-            }
+              this.$cardNumber.inputmask('remove');
+              this.removeCCLogos();
+              this.hidePostalCode();
+            }.bind(this)
           , onincomplete: function() {
-              $cardNumber.inputmask('remove');
-              removeCCLogos();
-            }
+              this.$cardNumber.inputmask('remove');
+              this.removeCCLogos();
+            }.bind(this)
           });
 
-          removeCCLogos();
-          $cardNumber.addClass('cc-'+type)
-          ;
+          this.removeCCLogos();
+          this.$cardNumber.addClass('cc-'+type);
 
-          if (type == 'amex') {
-            $postalCode.closest('.row').removeClass('hide');
-          } else {
-            $postalCode.closest('.row').addClass('hide');
-          }
+          if (type == 'amex')
+            this.showPostalCode();
+          else
+            this.hidePostalCode();
           break;
         }
       }
 
       if (!foundMatch){
         $(e.target).inputmask('remove');
-        $cardNumber.removeClass('cc-visa cc-discover cc-master cc-amex');
-        $postalCode.val('');
-        $postalCode.closest('.row').addClass('hide');
+        this.removeCCLogos()
+          .clearPostalCode()
+          .hidePostalCode();
       }
     },
 
@@ -500,13 +492,14 @@ define(function(require, exports, module) {
       });
 
       var $el = options.$el;
+      var userId = options.userId;
 
       var data = {
-        card_name:         $el.find('[name="card_name"]').val()
-      , card_number:       $el.find('[name="card_number"]').inputmask('unmaskedvalue')
-      , security_code:     $el.find('[name="security_code"]').val()
-      , expiration_month: +$el.find('[name="expiration_month"]').val()
-      , expiration_year:  +$el.find('[name="expiration_year"]').val()
+        card_name:         $el.find('[data-stripe="name"]').val()
+      , card_number:       $el.find('[data-stripe="number"]').inputmask('unmaskedvalue')
+      , security_code:     $el.find('[data-stripe="cvc"]').val()
+      , expiration_month: +$el.find('[data-stripe="exp-month"]').val()
+      , expiration_year:  +$el.find('[data-stripe="exp-year"]').val()
       , save_card:         options.saveCard
       };
 
@@ -518,10 +511,7 @@ define(function(require, exports, module) {
         , data);
       }
 
-      var pm = new PaymentMethod({ user_id: options.userId, id: options.paymentId });
-      pm.updateBalancedAndSave(data, function (errors) {
-        return callback(errors, pm);
-      });
+      Stripe.card.createToken($el, this.stripeResponseHandler.bind(this, userId, callback));
     },
 
     saveNewCardAndSubmit: function(e) {
@@ -542,8 +532,32 @@ define(function(require, exports, module) {
         this_.selectCard(pm.get('id'));
         this_.clearCardForm();
 
-        return _.defer(function(){ this_.submit(e) });
+        return _.defer(function(){ this_.submit(e); });
       });
+    },
+
+    stripeResponseHandler: function(user_id, callback, status, response) {
+      if ( status !== 200 ) return callback(response.error);
+
+      var pm = new PaymentMethod();
+
+      var props = {
+        data: response.card
+      , name: response.card.name
+      , type: response.type
+      , user_id: user_id
+      , token_id: response.id
+      };
+
+      var opts = {
+        success: function() {
+          callback(null, pm);
+        }, error: function(model, res) {
+          callback(res.responseJSON.error);
+        }
+      };
+
+      pm.save(props, opts);
     },
 
     validateAddress: function(){
@@ -594,12 +608,12 @@ define(function(require, exports, module) {
       var this_ = this;
       var error, $el, $parent;
       var template = Handlebars.partials.alert_error;
-      var selector = '[name="{property}"]';
+      var selector = '[name="{property}"], [data-stripe-alert="{property}"]';
 
       if ( _.isObject( errors ) && !_.isArray( errors ) ){
         // Amanda errors object
         if ( '0' in errors ){
-          errors = Array.prototype.slice.call( errors )
+          errors = Array.prototype.slice.call( errors );
 
           // We're just going to use the `required` error text for everything
           // so just take the unique on error.property
@@ -640,7 +654,7 @@ define(function(require, exports, module) {
         $el.css( css );
 
         $parent = this.$el.find(
-          selector.replace( '{property}', error.property )
+          selector.replace( /{property}/g, error.name.toLowerCase().replace(/_/g, '-') )
         ).parents('.form-group').eq(0);
 
         $parent.prepend( $el );
@@ -709,6 +723,32 @@ define(function(require, exports, module) {
       } else {
         this.$orderOrganization.addClass('hide');
       }
+    },
+
+    cardTypeRegexes: {
+      visa: {
+        likely: /^4/
+      , valid: /^4[0-9]{15}$/
+      , mask: '9999 9999 9999 9999'
+      }
+    , master: {
+        likely: /^5[1-5]/
+      , valid: /^5[1-5][0-9]{14}/
+      , mask: '9999 9999 9999 9999'
+      }
+    , amex: {
+        likely: /^3[47]/
+      , valid: /^3[47][0-9]{13}$/
+      , mask: '9999 999999 99999'
+      }
+    , discover: {
+        likely: /^6(?:011|5[0-9]{2})/
+      , valid: /^6(?:011|5[0-9]{2})[0-9]{12}$/
+      , mask: '9999 9999 9999 9999'
+      }
     }
   });
+
+  module.exports = CheckoutView;
+  return module.exports;
 });

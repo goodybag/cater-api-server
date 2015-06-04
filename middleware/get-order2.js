@@ -127,6 +127,10 @@ module.exports = function( options ){
       $options.one.push({ table: 'payment_methods', alias: 'payment_method' });
     }
 
+    if ( options.orderFeedback ) {
+      $options.one.push({ table: 'order_feedback', alias: 'order_feedback' });
+    }
+
     logger.info('Finding order');
     db.orders.findOne( +req.params[options.param], $options, function( error, order ){
       if ( error ){

@@ -143,12 +143,12 @@ errors.input.INVALID_ADDRESS = {
 errors[errors.input.INVALID_ADDRESS.code] = errors.input.INVALID_ADDRESS;
 
 /**
- * Balanced Errors
+ * Stripe Errors
  */
 
-errors.balanced = {};
+errors.stripe = {};
 
-errors.balanced.ERROR_ADDING_CARD = {
+errors.stripe.ERROR_ADDING_CARD = {
   type: "input"
 , code: "0401"
 , httpCode: "401"
@@ -156,10 +156,10 @@ errors.balanced.ERROR_ADDING_CARD = {
 , message: "There was an error adding this card to your account"
 };
 
-errors[errors.balanced.ERROR_ADDING_CARD.code] = errors.balanced.ERROR_ADDING_CARD;
+errors[errors.stripe.ERROR_ADDING_CARD.code] = errors.stripe.ERROR_ADDING_CARD;
 
 /**
- * Balanced Errors
+ * Yelp Errors
  */
 
 errors.restaurants = {};

@@ -85,6 +85,25 @@ define(function(require, exports, module) {
       return [ '/users', this.get('user_id'), 'cards' ].join('/');
     },
 
+    updateStripeAndSave: function(data, callback) {
+      var this_ = this;
+
+      // if there is a postal code, then a country code must exist
+      if (data.postal_code && !data.country_code)
+        return callback('country_code is required if a postal_code is given');
+
+      var error;
+      this.validator.validate( data, this.balancedSchema, this.validatorOptions, function( _error ){
+        error = _error;
+      });
+
+      if ( error ) return callback ( error );
+
+      if (PaymentMethod.getCardType(data.card_number) === 'amex' && !data.postal_code)
+        return callback('postal_code is required for amex cards');
+        
+    },
+
     updateBalancedAndSave: function(data, callback){
       var this_ = this;
 
@@ -172,9 +191,9 @@ define(function(require, exports, module) {
       , master: /^5[1-5][0-9]{14}/
       , amex: /^3[47][0-9]{13}$/
       , discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/
-      }
+      };
 
-      for (type in cardTypeRegexes) {
+      for (var type in cardTypeRegexes) {
         if (!cardTypeRegexes.hasOwnProperty(type)) return null;
         if (cardTypeRegexes[type].test(cardNumber)) return type;
       }

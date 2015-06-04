@@ -34,7 +34,7 @@
       <input type="hidden" name="expiration">
       <label class="control-label">Expiration Date</label>
       <div class="form-group">
-        <select data-stripe="exp-month" class="form-control">
+        <select data-stripe-alert="exp-month" class="form-control">
           {{#range2 '1' '12'}}
             <option
               value="{{pad this 2}}"

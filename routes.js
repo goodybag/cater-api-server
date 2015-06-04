@@ -2649,4 +2649,13 @@ module.exports.register = function(app) {
   app.get('/api/maps/address-validity/:address'
   , controllers.api.maps.addressValidity
   );
+
+  app.get('/api/stripe-events/:id'
+  , m.restrict(['admin'])
+  , m.stripe.getStripeEvent()
+  );
+
+  app.post('/hooks/stripe'
+  , m.stripe.insertStripeEvent()
+  );
 }

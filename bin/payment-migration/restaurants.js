@@ -49,7 +49,7 @@ function migrateRestaurant(restaurant, done) {
         , country: 'US'
         , business_name: restaurant.name
         }, function(err, acct) {
-          return callback(err, err ? acct.id : null);
+          return callback(err, err ? null : acct.id );
         });
       }
     },

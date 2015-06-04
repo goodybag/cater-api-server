@@ -573,6 +573,21 @@ module.exports.register = function(app) {
       })
     );
 
+    app.get('/admin/restaurants/:id/transfers'
+    , m.param('id')
+    , m.getRestaurant({ param: 'id' })
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'transfers'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.stripe.getRestaurantTransfers()
+    , m.view('admin/restaurant/edit-transfers', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
+    );
+
     app.get('/admin/restaurants/:rid/delivery-settings'
     , m.viewPlugin( 'mainNav', { active: 'restaurants' })
     , m.viewPlugin( 'sidebarNav', {
@@ -1449,13 +1464,13 @@ module.exports.register = function(app) {
 
     app.put('/users/:uid'
     , restrictUpdate
-    , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+    , m.updateStripeCustomer({ required: 'user', pick: ['name'] })
     , controllers.users.update
     );
 
     app.patch('/users/:uid'
     , restrictUpdate
-    , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+    , m.updateStripeCustomer({ required: 'user', pick: ['name'] })
     , controllers.users.update);
 
     app.delete('/users/:uid', function(req, res) { res.send(501); });
@@ -1905,7 +1920,7 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.getRestaurant({ param: 'id' })
-  , m.updateBalancedCustomer({ required: 'restaurant', pick: ['name'] })
+  , m.updateStripeCustomer({ required: 'restaurant', pick: ['name'] })
   , m.update( db.restaurants )
   );
 
@@ -2040,6 +2055,12 @@ module.exports.register = function(app) {
   , m.param('id')
   , m.param('restaurant_id')
   , m.remove( db.payment_summaries )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/transfers'
+  , m.restrict(['accounting', 'admin'])
+  , m.getRestaurant({ param: 'restaurant_id' })
+  , m.stripe.createRestaurantTransfer()
   );
 
   app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/send'
@@ -2401,7 +2422,7 @@ module.exports.register = function(app) {
   app.put('/api/users/:id'
   , m.restrict(['admin'])
   , m.param('id')
-  , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+  , m.updateStripeCustomer({ required: 'user', pick: ['name'] })
   , m.update( db.users )
   );
 

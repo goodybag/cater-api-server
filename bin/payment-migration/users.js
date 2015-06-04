@@ -1,4 +1,5 @@
 var db = require('db');
+var config = require('config');
 var logger = require('./logger').create('User Setup');
 var utils = require('utils');
 var concurrency = 5;
@@ -28,9 +29,24 @@ q.drain = function drained() {
 // 1. look up balanced customer by user.balanced_customer_uri
 // 2. db update users.stripe_id with balanced customer metadata stripe.customer_id
 function migrateUser(user, callback) {
-  utils.balanced.Customers.get(user.balanced_customer_uri, function(err, customer){
+  var customer_uri = user.balanced_customer_uri.split('/');
+  customer_uri = customer_uri[customer_uri.length - 1];
+
+  utils.request({
+    url: 'https://api.balancedpayments.com/customers/'  + customer_uri
+  , headers: { Accept: 'application/vnd.api+json;revision=1.1' }
+  , auth: { user: config.balanced.secret }
+  }, function(err, response, body) {
     if ( err )
-      return logger.error('Unable to get balanced customer ' + user.balanced_customer_uri, err);
+      return logger.error('Unable to get balanced customer ' + customer_uri, err);
+
+    try {
+      body = JSON.parse(body);
+    } catch(e) {
+      return callback(e);
+    }
+
+    var customer = body['customers'][0];
 
     if ( !customer.meta['stripe.customer_id'] )
       return logger.error('Unable to associate stripe metadata', err);

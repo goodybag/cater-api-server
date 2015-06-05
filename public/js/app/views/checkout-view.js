@@ -654,7 +654,7 @@ define(function(require, exports, module) {
         $el.css( css );
 
         $parent = this.$el.find(
-          selector.replace( /{property}/g, (error.name || error.param).toLowerCase().replace(/_/g, '-') )
+          selector.replace( /{property}/g, (error.name || error.param || error.property).toLowerCase().replace(/_/g, '-') )
         ).parents('.form-group').eq(0);
 
         $parent.prepend( $el );

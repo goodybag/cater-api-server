@@ -52,7 +52,6 @@ function migratePaymentMethod(pm, callback) {
   , headers: { Accept: 'application/vnd.api+json;revision=1.1' }
   , auth: { user: config.balanced.secret }
   }, function(err, response, body) {
-  // utils.balanced.Cards.get(pm.uri, function(err, card) {
     if ( err ) {
       logger.error('Unable to get balanced card ' + pm.uri);
       return callback(err);

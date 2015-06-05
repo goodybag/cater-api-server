@@ -79,6 +79,7 @@ function migratePaymentMethod(pm, callback) {
           logger.error('Unable to get stripe card');
           return callback(new Error('Unable to get stripe card'));
         }
+        logger.info('Payment Method #' + pm.payment_method_id + ' - Stripe ID ' + stripeCard.id);
         db.payment_methods.update(
           { id: pm.payment_method_id }
         , { stripe_id: stripeCard.id

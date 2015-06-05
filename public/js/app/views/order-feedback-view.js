@@ -3,9 +3,22 @@ define(function(require, exports, module) {
 
   return module.exports = Backbone.View.extend({
     events: {
-      'mouseover  .star':            'onMouseOver'
-    , 'mouseleave .feedback-rating': 'onMouseLeave'
-    , 'click      .star':            'submit'
+      'mouseover .star': 'onMouseOver'
+    , 'click .star': 'setRating'
+    , 'click .btn-submit-feedback': 'submit'
+    }
+
+  , fieldMap: {
+      rating: '.star'
+    , notes: '.order-feedback-notes'
+    }
+
+  , fieldGetters: {
+      rating: function () {
+        return this.$el.find(this.fieldMap.rating).filter(function (i, el) {
+          return $(el).data('selected');
+        }).eq(0).data('rating');
+      }
     }
 
   , onMouseOver: function(e) {
@@ -14,9 +27,10 @@ define(function(require, exports, module) {
       this.fillStars(e.target);
     }
 
-  , onMouseLeave: function (e) {
+  , setRating: function (e) {
       e.preventDefault();
-      this.clearStars();
+      $('.star').data('selected', false);
+      $(e.target).data('selected', true);
     }
 
   , fillStars: function (el) {
@@ -40,8 +54,13 @@ define(function(require, exports, module) {
 
       var feedback = {
         order_id: this.model.get('id')
-      , ease_of_submitting_rating: +e.target.getAttribute('data-rating')
+      , ease_of_submitting_rating: this.fieldGetters.rating.call(this)
+      , submitting_notes: this.$el.find(this.fieldMap.notes).val() || null
       };
+
+      if (!feedback.ease_of_submitting_rating && !feedback.submitting_notes) {
+        return;
+      }
 
       $.ajax({
         type: 'PUT'
@@ -49,7 +68,7 @@ define(function(require, exports, module) {
       , dataType: 'JSON'
       , data: feedback
       , success: function () {
-          this_.$el.find('.feedback-rating').text('thank you!');
+          this_.$el.find('.order-feedback-form').text('thank you!');
         }
       , error: function (error) {
           console.error(error);

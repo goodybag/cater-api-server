@@ -386,7 +386,16 @@ p.adjustment-description {
 }
 
 .feedback-rating {
-  display: inline-block;
+  text-align: center;
+}
+
+.order-feedback-form {
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.order-feedback-form .form-group {
+  margin-bottom: 3px;
 }
 
 /*

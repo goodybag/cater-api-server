@@ -68,7 +68,7 @@ var debitCustomer = function (order, callback) {
       if ( order.restaurant.plan_id ) {
         // route to restaurant if possible
         data.destination = order.restaurant.stripe_id;
-        data.application_fee = restaurantPlans[order.restaurant.plan.type].getGbFee(order.restaurant.plan, order);
+        data.application_fee = restaurantPlans[order.restaurant.plan.type].getApplicationFee(order.restaurant.plan, order);
         data.metadata.charge_destination = 'Funds go to restaurant';
       }
 

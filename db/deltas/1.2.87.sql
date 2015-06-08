@@ -1,7 +1,7 @@
 -- Delta
 
 DO $$
-  declare version       text := '1.2.83';
+  declare version       text := '1.2.87';
   declare virtual_org   record;
   declare user_rec      users;
   declare org           record;

@@ -29,17 +29,20 @@ var stripe = {
           logger.error('Unable to save stripe event', err);
           return res.send(500);
         }
-
-        var message = 'Stripe Webhook ' +
-          [config.baseUrl, 'api', 'stripe-events', result.id].join('/');
+        var href = [config.baseUrl, 'api', 'stripe-events', result.id].join('/');
+        var message = [
+          'Event:'
+        , result.data.data.type
+        , '<a href="' + href + '">View</a>'
+        ].join(' ');
 
         hipchat.postMessage({
-          room: config.hipchat.rooms.tech
+          room: config.hipchat.rooms.payments
         , from: 'Goodybot'
         , message: message
         , message_format: 'text'
         , color: 'green'
-        , format: 'json'
+        , format: 'html'
         },
         function(response) {
           return res.send(response && response.status === 'sent' ? 200 : 500);

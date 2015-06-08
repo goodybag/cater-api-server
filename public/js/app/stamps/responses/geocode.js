@@ -67,37 +67,33 @@ define( function( require, exports, module ){
         };
       }
 
-    , getAddressComponentLongName: function( component ){
-        var component = utils.findWhere( this.address_components, function( c ){
+    , getAddressComponent: function( component ){
+        return utils.findWhere( this.results[0].address_components, function( c ){
           return c.types.indexOf( component ) > -1;
-        });
-
-        if ( !component ) return null;
-
-        return component.long_name;
+        }) || {};
       }
 
     , street1: function(){
         return [
-          this.getAddressComponentLongName('street_number')
-        , this.getAddressComponentLongName('route')
+          this.getAddressComponent('street_number').long_name
+        , this.getAddressComponent('route').long_name
         ].join(' ');
       }
 
     , street2: function(){
-        return this.getAddressComponentLongName('premise');
+        return this.getAddressComponent('premise').long_name || null;
       }
 
     , city: function(){
-        return this.getAddressComponentLongName('city');
+        return this.getAddressComponent('locality').long_name;
       }
 
     , state: function(){
-        return this.getAddressComponentLongName('state');
+        return this.getAddressComponent('administrative_area_level_1').short_name;
       }
 
     , zip: function(){
-        return this.getAddressComponentLongName('zip');
+        return this.getAddressComponent('postal_code').long_name;
       }
     });
 });

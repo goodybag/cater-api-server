@@ -32,7 +32,7 @@ var stripe = {
         var href = [config.baseUrl, 'api', 'stripe-events', result.id].join('/');
         var message = [
           'Event:'
-        , result.data.data.type
+        , result.data.type
         , '<a href="' + href + '">View</a>'
         ].join(' ');
 
@@ -40,9 +40,9 @@ var stripe = {
           room: config.hipchat.rooms.payments
         , from: 'Goodybot'
         , message: message
-        , message_format: 'text'
+        , message_format: 'html'
         , color: 'green'
-        , format: 'html'
+        , format: 'json'
         },
         function(response) {
           return res.send(response && response.status === 'sent' ? 200 : 500);

@@ -56,5 +56,48 @@ define( function( require, exports, module ){
           return isValid && fn.call( this );
         }.bind( this ), true );
       }
+
+    , regularAddressParts: function(){
+        return {
+          street1:  this.street1()
+        , street2:  this.street2()
+        , city:     this.city()
+        , state:    this.state()
+        , zip:      this.zip()
+        };
+      }
+
+    , getAddressComponentLongName: function( component ){
+        var component = utils.findWhere( this.address_components, function( c ){
+          return c.types.indexOf( component ) > -1;
+        });
+
+        if ( !component ) return null;
+
+        return component.long_name;
+      }
+
+    , street1: function(){
+        return [
+          this.getAddressComponentLongName('street_number')
+        , this.getAddressComponentLongName('route')
+        ].join(' ');
+      }
+
+    , street2: function(){
+        return this.getAddressComponentLongName('premise');
+      }
+
+    , city: function(){
+        return this.getAddressComponentLongName('city');
+      }
+
+    , state: function(){
+        return this.getAddressComponentLongName('state');
+      }
+
+    , zip: function(){
+        return this.getAddressComponentLongName('zip');
+      }
     });
 });

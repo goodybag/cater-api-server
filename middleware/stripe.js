@@ -3,6 +3,31 @@ var db          = require('db');
 var config      = require('config');
 var hipchat     = require('../lib/hipchat');
 
+var eventMessages = {
+  'charge.succeeded': function(res) {
+    return '#:order_id successfully charged. <a href=":url">View Details</a>'
+      .replace( /:order_id/g, res.data.data.object.metadata.order_id )
+      .replace( /:url/g, [ config.baseUrl, 'api', 'stripe-events', res.id ].join('/') );
+  }
+
+, 'account.updated': function(res) {
+    return ':name was updated. Changed :attrs attributes <a href=":url">View Details</a>'
+      .replace( /:name/g, res.data.data.object.display_name )
+      .replace( /:attrs/g, Object.keys(res.data.data.previous_attributes).join(', ') )
+      .replace( /:url/g, [ config.baseUrl, 'api', 'stripe-events', res.id ].join('/') );
+  }
+
+, 'default': function(res) {
+    return 'Stripe Event <a href=":url">View Details</a>'
+      .replace( /:url/g, [ config.baseUrl, 'api', 'stripe-events', res.id ].join('/') );
+  }
+};
+
+var formatMessage = function(res) {
+  var type = res.data.type in eventMessages ? res.data.type : 'default';
+  return eventMessages[type](res);
+};
+
 var stripe = {
   getStripeEvent: function(options) {
     return function(req, res, next) {
@@ -29,17 +54,11 @@ var stripe = {
           logger.error('Unable to save stripe event', err);
           return res.send(500);
         }
-        var href = [config.baseUrl, 'api', 'stripe-events', result.id].join('/');
-        var message = [
-          'Event:'
-        , result.data.type
-        , '<a href="' + href + '">View</a>'
-        ].join(' ');
 
         hipchat.postMessage({
           room: config.hipchat.rooms.payments
         , from: 'Goodybot'
-        , message: message
+        , message: formatMessage(result)
         , message_format: 'html'
         , color: 'green'
         , format: 'json'
@@ -48,7 +67,7 @@ var stripe = {
           return res.send(response && response.status === 'sent' ? 200 : 500);
         });
       });
-    }
+    };
   }
 
 , createRestaurantTransfer: function(options) {

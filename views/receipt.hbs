@@ -6,7 +6,8 @@
 {{#extend "title"}} - Receipt{{/extend}}
 
 {{#extend "banner"}}
-  {{#if (contains user.groups 'order-owner')}}
+  {{! comment out order-owner check for testing only}}
+  {{! {{#if (contains user.groups 'order-owner')}}
     {{#if (not order.order_feedback.ease_of_submitting_rating)}}
     <div class="feedback-order">
       <div class="alert alert-info alert-dismissible container" role="alert">
@@ -33,7 +34,7 @@
       </div>
     </div>
     {{/if}}
-  {{/if}}
+  {{! {{/if}}
 {{/extend}}
 
 {{#if isAdmin}}

@@ -1,5 +1,47 @@
 {{#extend "page"}}page-restaurant-list{{/extend}}
 
 {{#extend "body"}}
-<h1>Hello Stripe</h1>
+<div class="small-container">
+  <h1>Payment Agreement</h1>
+  <p>We've recently changed our payment vendor to
+    <a href="https://stripe.com">Stripe.com</a>. In order to continue bank
+    transfers to your account, we will need some info from you.
+  </p>
+  <form class="form-vertical">
+    <div class="form-group">
+      <label>First Name</label>
+      <input type="text">
+    </div>
+    <div class="form-group">
+      <label>Last Name</label>
+      <input type="text">
+    </div>
+    <div class="form-group">
+      <label>Date of Birth</label>
+      <input type="text">
+    </div>
+    <div class="form-group">
+      <label>Type</label>
+      <label><input type="radio" name="type" id="no" value="individual" /> Individual</label>
+      <label><input type="radio" name="type" id="yes" value="business" /> Business</label>
+    </div>
+
+    <div class="form-group">
+      <label for="bank-account">Bank Account #</label>
+      <input type="text" id="bank-account" name="bank_account"/>
+      <label for="bank-account">Bank Routing #</label>
+      <input type="text" id="bank-routing" name="bank_routing"/>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">I Accept</button>
+    </div>
+  </form>
+  <p>
+    <small>
+      By submitting, you agree to our <a href="/legal">Terms of Service</a>
+      and the <a href="{{config.stripe.tos_url}}">Stripe Connected Account
+      Agreement</a>.
+    </small>
+  </p>
+</div>
 {{/extend}}

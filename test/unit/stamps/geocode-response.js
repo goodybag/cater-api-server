@@ -86,6 +86,17 @@ describe('Stamps', function(){
         , zip: '78751'
         });
       });
+
+      it('.toAddress() should throw', function(){
+        var res = GeoRes.create({
+          res: [ null, require('./data/geo-res-2') ]
+        , requestAddress: 'Mountain View Road, California, USA'
+        });
+
+        assert.throws( function(){
+          res.toAddress();
+        }, Error );
+      });
     });
   });
 });

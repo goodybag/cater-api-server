@@ -294,19 +294,21 @@ module.exports.create = function(req, res) {
 
   var fields = getFields( req );
 
-  // Normalize single quotes to apostrophe for balanced
+  // Normalize single quotes to apostrophe
   var name = req.body.name.replace(/[‘’]/g, '\'');
 
-  utils.balanced.Customers.create({
-    name: name
-  }, function (error, customer) {
+  utils.stripe.accounts.create({
+    managed: true
+  , country: 'US'
+  , business_name: name
+  }, function(error, acct) {
     if (error) {
-      logger.error('Unable to create restaurant in balanced', error);
+      logger.error('Unable to create restaurant in stripe', error);
       return res.error(errors.internal.UNKNOWN, error);
     }
 
     var values = utils.pick(req.body, fields);
-    values.balanced_customer_uri = customer.uri;
+    values.stripe_id = acct.id;
 
     var restaurantQuery = queries.restaurant.create(values);
 
@@ -475,17 +477,19 @@ module.exports.copy = function(req, res) {
   var tasks = [
     db.restaurants.findOne.bind(db.restaurants, id)
 
-  , function createBalancedUri(restaurant, callback) {
-      utils.balanced.Customers.create({
-        name: restaurant.name
-      }, function(err, customer) {
-        callback(err, restaurant, customer);
+  , function createStripeUri(restaurant, callback) {
+      utils.stripe.accounts.create({
+        managed: true
+      , country: 'US'
+      , business_name: restaurant.name
+      }, function(err, acct) {
+        callback(err, restaurant, acct);
       });
     }
 
-  , function copyRestaurant(restaurant, customer, callback) {
+  , function copyRestaurant(restaurant, acct, callback) {
       var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id'), {
-        balanced_customer_uri: customer.uri
+        stripe_id: acct.id
       , name: restaurant.name + ' Copy'
       , is_hidden: true
       });

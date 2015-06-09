@@ -43,7 +43,7 @@ define(function(require, exports, module) {
 
     surcharge: function(pennies) {
       if (pennies)
-        return '$'  + Handlebars.helpers.dollars(pennies);
+        return '$'  + GbHelpers.dollars(pennies);
       return 'Free';
     },
 

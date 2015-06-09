@@ -46,6 +46,7 @@ module.exports = {
 , sslRedirect: require('./ssl-redirect')
 , states: require('./states')
 , statusCodeIntercept: require('./status-code-intercept')
+, stripe: require('./stripe')
 , uuid: require('./uuid')
 , s3: require('./s3')
 , db: require('./db')
@@ -64,5 +65,5 @@ module.exports = {
 , storeUserAgent: require('./store-user-agent')
 , timeout: require('./timeout')
 , userViewedEvent: require('./user-viewed-event')
-, updateBalancedCustomer: require('./update-balanced-customer')
+, updateStripeCustomer: require('./update-stripe-customer')
 };

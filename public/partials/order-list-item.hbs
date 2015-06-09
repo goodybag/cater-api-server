@@ -27,12 +27,14 @@
         <dd class="date-created" data-date="{{this.created_at}}"></dd>
         {{/if}}
       </div>
+      {{#eq this.type "courier"}}
       {{#if this.delivery_service.name}}
       <div>
         <dt>Delivery Service:</dt>
         <dd>{{this.delivery_service.name}}</dd>
       </div>
       {{/if}}
+      {{/eq}}
       <div>
         <dt>Delivery Date:</dt>
         <dd>{{datepart this.datetime}} {{timepart this.datetime}}</dd>

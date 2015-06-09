@@ -21,8 +21,7 @@ module.exports = require('stampit')()
       var $where = {
         status:     'accepted'
       , user_id:    this.user_id
-      , datetime:   datetime({ datetime: this.billing_period_start })
-                      .getBillingPeriod()
+      , datetime:   this.billing()
                       .getMosqlRangeQuery()
       , payment_method_id: { $null: true }
       };

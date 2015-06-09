@@ -14,6 +14,7 @@ define(function(require, exports, module) {
   , halal:       { name: 'Halal',       className: 'halal' }
   , kosher:      { name: 'Kosher',      className: 'kosher' }
   , spicy:       { name: 'Spicy',       className: 'spicy' }
+  , nuts:       { name: 'Contains Nuts', className: 'nuts' }
   };
   return module.exports;
 });

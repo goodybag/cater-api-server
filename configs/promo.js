@@ -12,11 +12,20 @@ var promo = {
   }
 , jacob: {
     email: 'jacobparker@goodybag.com'
-  , promo_code: ['goodybag315', 'gb415', 'gbaustin15', 'gbhou15']
+  , promo_code: ['goodybag315', 'gb415', 'gbaustin15', 'gbhou15', 'gbstar15', 'gbamaz15']
   }
 , om: {
     email: 'om@goodybag.com'
   , promo_code: [ 'bv250' ]
+  }
+, starkebab: {
+    email: [
+      'om@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
+    , 'tobyshields@goodybag.com'
+    , 'christymedlock@goodybag.com'
+    ]
+  , promo_code: [ 'starkebab' ]
   }
 };
 

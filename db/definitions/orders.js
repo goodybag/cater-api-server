@@ -227,6 +227,7 @@ define(function(require) {
     , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     , editable: ['client', 'admin']
     }
+  , lat_lon: { type: types.point }
   };
 
   definition.indices = {};

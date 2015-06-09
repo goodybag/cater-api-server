@@ -31,7 +31,7 @@ describe('Stamps', function(){
         });
 
         assert.deepEqual( res.regularAddressParts(), {
-          street1: '1600 Amphitheatre Parkway'
+          street: '1600 Amphitheatre Parkway'
         , street2: null
         , city: 'Mountain View'
         , state: 'CA'
@@ -43,7 +43,8 @@ describe('Stamps', function(){
         var res = GeoRes.create({
           res: [ null, {
             results: [{
-              address_components: [
+              types: ['street_address']
+            , address_components: [
                 { long_name: 'l131',
                   short_name: 'l131',
                   types: [ 'subpremise' ] },
@@ -78,7 +79,7 @@ describe('Stamps', function(){
         });
 
         assert.deepEqual( res.regularAddressParts(), {
-          street1: '5555 North Lamar Boulevard'
+          street: '5555 North Lamar Boulevard'
         , street2: 'l131'
         , city: 'Austin'
         , state: 'TX'

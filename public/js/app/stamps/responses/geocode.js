@@ -9,8 +9,9 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
-  var config  = require('config');
-  var utils   = require('utils');
+  var config        = require('config');
+  var utils         = require('utils');
+  var geocodeResult = require('./geocode-result');
 
   return module.exports = require('stampit')()
     .enclose( function(){
@@ -58,42 +59,7 @@ define( function( require, exports, module ){
       }
 
     , regularAddressParts: function(){
-        return {
-          street1:  this.street1()
-        , street2:  this.street2()
-        , city:     this.city()
-        , state:    this.state()
-        , zip:      this.zip()
-        };
-      }
-
-    , getAddressComponent: function( component ){
-        return utils.findWhere( this.results[0].address_components, function( c ){
-          return c.types.indexOf( component ) > -1;
-        }) || {};
-      }
-
-    , street1: function(){
-        return [
-          this.getAddressComponent('street_number').long_name
-        , this.getAddressComponent('route').long_name
-        ].join(' ');
-      }
-
-    , street2: function(){
-        return this.getAddressComponent('premise').long_name || null;
-      }
-
-    , city: function(){
-        return this.getAddressComponent('locality').long_name;
-      }
-
-    , state: function(){
-        return this.getAddressComponent('administrative_area_level_1').short_name;
-      }
-
-    , zip: function(){
-        return this.getAddressComponent('postal_code').long_name;
+        return geocodeResult( this.results[0] ).toAddress();
       }
     });
 });

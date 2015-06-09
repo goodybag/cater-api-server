@@ -2,6 +2,7 @@ var assert      = require('assert');
 var config      = require('../../../config');
 var db          = require('../../../db');
 var GeoRes      = require('stamps/responses/geocode');
+var GeoResult   = require('stamps/responses/geocode-result');
 
 describe('Stamps', function(){
   describe('Responses', function(){
@@ -96,6 +97,17 @@ describe('Stamps', function(){
         assert.throws( function(){
           res.toAddress();
         }, Error );
+      });
+
+      describe('GeocodeResult', function(){
+        it('.toLatLon()', function(){
+          var result = GeoResult.create( require('./data/geo-res-1').results[0] );
+
+          assert.deepEqual( result.toLatLon(), {
+            x: 37.4224879
+          , y: -122.08422
+          });
+        });
       });
     });
   });

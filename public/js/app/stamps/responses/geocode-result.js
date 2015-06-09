@@ -21,6 +21,13 @@ define( function( require, exports, module ){
         }) || null;
       }
 
+    , toLatLon: function(){
+        return {
+          x: this.geometry.location.lat
+        , y: this.geometry.location.lng
+        };
+      }
+
     , toAddress: function(){
         if ( !Array.isArray( this.types ) || this.types.indexOf('street_address') === -1 ){
           throw new Error('Invalid Geocode result');

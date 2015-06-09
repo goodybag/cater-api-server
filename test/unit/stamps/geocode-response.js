@@ -24,13 +24,13 @@ describe('Stamps', function(){
         assert( !res.isValidAddress() );
       });
 
-      it('.regularAddressParts()', function(){
+      it('.toAddress()', function(){
         var res = GeoRes.create({
           res: [ null, require('./data/geo-res-1') ]
         , requestAddress: '1600 Amphitheatre Parkway, Mountain View, CA 94043'
         });
 
-        assert.deepEqual( res.regularAddressParts(), {
+        assert.deepEqual( res.toAddress(), {
           street: '1600 Amphitheatre Parkway'
         , street2: null
         , city: 'Mountain View'
@@ -39,7 +39,7 @@ describe('Stamps', function(){
         });
       });
 
-      it('.regularAddressParts()', function(){
+      it('.toAddress()', function(){
         var res = GeoRes.create({
           res: [ null, {
             results: [{
@@ -78,7 +78,7 @@ describe('Stamps', function(){
         , requestAddress: '5555 N. Lamar Blvd Suite L131, Austin, TX, 78751'
         });
 
-        assert.deepEqual( res.regularAddressParts(), {
+        assert.deepEqual( res.toAddress(), {
           street: '5555 North Lamar Boulevard'
         , street2: 'l131'
         , city: 'Austin'

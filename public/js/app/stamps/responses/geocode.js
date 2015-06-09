@@ -58,8 +58,17 @@ define( function( require, exports, module ){
         }.bind( this ), true );
       }
 
-    , regularAddressParts: function(){
-        return geocodeResult( this.results[0] ).toAddress();
+      /**
+       * Uses the first result in body.results to be parsed
+       * into an address
+       * @return {Address} ../addresses/base
+       */
+    , toAddress: function(){
+        var result = utils.findWhere( this.results, function( r ){
+          return r.types.indexOf('street_address') > -1;
+        });
+
+        return geocodeResult( result ).toAddress();
       }
     });
 });

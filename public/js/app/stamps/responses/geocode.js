@@ -38,9 +38,9 @@ define( function( require, exports, module ){
           }
 
         , function(){
-            return this.results.filter( function( result ){
+            return this.results.some( function( result ){
               return result.types.indexOf('street_address') > -1;
-            }).length > 0;
+            });
           }
 
         // TODO compare tokens for similarity
@@ -59,8 +59,8 @@ define( function( require, exports, module ){
       }
 
       /**
-       * Uses the first result in body.results to be parsed
-       * into an address
+       * Uses the first street address result in body.results
+       * to be parsed into an address
        * @return {Address} ../addresses/base
        */
     , toAddress: function(){

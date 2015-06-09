@@ -62,7 +62,7 @@ define( function( require, exports, module ){
   , validateAddress: function( address, callback ){
       callback = callback || utils.noop;
 
-      api.maps.validateAddress( address, function( error, result ){
+      api.maps.geocode( address, function( error, result ){
         if ( error ){
           return this.state('error');
         }

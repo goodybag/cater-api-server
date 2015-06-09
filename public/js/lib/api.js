@@ -12,8 +12,8 @@ define(function(require){
 
   api.maps        = api('maps');
 
-  api.maps.validateAddress = function( address, callback ){
-    api.maps('address-validity').get( address, callback );
+  api.maps.geocode = function( address, callback ){
+    api.maps('geocode').get( address, callback );
   };
 
   api.legacy      = resource( config.baseUrl );

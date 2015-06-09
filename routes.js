@@ -55,14 +55,7 @@ module.exports.register = function(app) {
     app.post('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
   });
 
-  var verify = require('./routers/verify');
-  // var verify = express.Router();
-  // verify.get('/', function(req, res) {
-  //   console.log('hello');
-  //   return res.send(':)');
-  // });
-
-  app.use( '/verify', verify );
+  app.use( '/verify', require('./routers/verify') );
 
   // Temporary for job fair
   app.get('/fsjse.md'

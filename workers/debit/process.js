@@ -65,6 +65,7 @@ var debitCustomer = function (order, callback) {
         }
       };
 
+      if ( order.restaurant.is_direct_deposit )
       if ( order.restaurant.plan_id ) {
         // route to restaurant if possible
         data.destination = order.restaurant.stripe_id;

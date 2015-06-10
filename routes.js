@@ -116,7 +116,7 @@ module.exports.register = function(app) {
 
         if (results) {
           res.locals.restaurant = results.data;
-          res.locals.signup = { id: results.id, step: results.step };
+          res.locals.signup = { id: results.id, step: results.step.toString() };
         }
 
         next();

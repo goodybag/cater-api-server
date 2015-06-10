@@ -30,65 +30,67 @@
       </select>
     </div>
 
-    <div class="form-group">
-      <div name="groups" data-type="list">
-        <label>Permission Groups</label>
+    <div class="inline-columns form-group">
+      <div class="col">
+        <div name="groups" data-type="list">
+          <label>Permission Groups</label>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                data-type="list"
+                class="form-control"
+                value="client"
+                {{#contains user.groups "client"}}checked="checked"{{/contains}}>
+                Client
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                data-type="list"
+                class="form-control"
+                value="admin"
+                {{#contains user.groups "admin"}}checked="checked"{{/contains}}>
+                Admin
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                data-type="list"
+                class="form-control"
+                value="receipts"
+                {{#contains user.groups "receipts"}}checked="checked"{{/contains}}>
+                Receipts
+            </label>
+          </div>
+        </div>
+      </div> {{!-- end permission groups --}}
+      
+      <div class="col">
+        <label>Other</label>
         <div>
           <label>
             <input
               type="checkbox"
-              data-type="list"
+              name="is_tax_exempt"
               class="form-control"
-              value="client"
-              {{#contains user.groups "client"}}checked="checked"{{/contains}}>
-              Client
+              {{#if user.is_tax_exempt}}checked="checked"{{/if}}>
+              Tax Exempt
           </label>
-        </div>
-        <div>
           <label>
             <input
               type="checkbox"
-              data-type="list"
+              name="is_invoiced"
               class="form-control"
-              value="admin"
-              {{#contains user.groups "admin"}}checked="checked"{{/contains}}>
-              Admin
+              {{#if user.is_invoiced}}checked="checked"{{/if}}>
+              Invoiced
           </label>
         </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              data-type="list"
-              class="form-control"
-              value="receipts"
-              {{#contains user.groups "receipts"}}checked="checked"{{/contains}}>
-              Receipts
-          </label>
-        </div>
-      </div>
-    </div> {{!-- end permission groups --}}
-
-    <div class="form-group">
-      <label>Other</label>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            name="is_tax_exempt"
-            class="form-control"
-            {{#if user.is_tax_exempt}}checked="checked"{{/if}}>
-            Tax Exempt
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="is_invoiced"
-            class="form-control"
-            {{#if user.is_invoiced}}checked="checked"{{/if}}>
-            Invoiced
-        </label>
-      </div>
+    </div>
     </div>
     <div class="form-group">
       <button class="btn btn-primary" type="submit">Save</button>

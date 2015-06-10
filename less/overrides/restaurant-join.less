@@ -1,0 +1,248 @@
+@restaurant-join-border: 1px solid @palette-gray-light;
+
+.page-restaurant-signup {
+  color: @palette-gray-dark;
+
+  .container {
+    width: 100%;
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+
+  .restaurant-join {
+    max-width: 1016px;
+    margin: 0 auto;
+    width: 100%;
+    padding-bottom: 70px;
+  }
+
+  label input {
+    margin-right: initial;
+  }
+
+  label {
+    display: inline;
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 6px;
+  }
+
+  .input-group .input-addon {
+    color: @palette-gray-dark;
+    background-color: @palette-white;
+    border-color: @palette-gray;
+  }
+
+  .form-restaurant-signup {
+    margin: 0 auto;
+  }
+
+  ///////////////////
+  // Doller Signs
+  //////////////////
+  .dollar-meter {
+    & > .dollar-meter-item.dollar-meter-item-filled {
+      color: @palette-gray-dark;
+    }
+
+    & > .dollar-meter-item {
+      font-size: 14px;
+      font-weight: 400;
+      color: @palette-gray-light;
+    }
+  }
+
+  ///////////////////////
+  // Buttons and Alerts
+  //////////////////////
+  .active {
+    background-color: @palette-gray-lighter;
+    color: @palette-gray-darker;
+  }
+
+  .alert-danger {
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #eed3d7;
+  }
+
+  .close {
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .2;
+    filter: alpha(opacity=20);
+  }
+
+  button.close {
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    -webkit-appearance: none;
+  }
+
+  .btn-continue {
+    float: right;
+  }
+
+  //////////
+  //Grid
+  /////////
+  .col { float: left; }
+  .row { margin-bottom: 25px; }
+  .label-col {
+    text-align: right;
+    font-weight: 600;
+    .col-3;
+  }
+
+  .field-col {
+    .col-7;
+  }
+
+  @media (max-width: @breakpoint-mobile) {
+    .label-col {
+      text-align: left;
+    }
+  }
+
+  ////////////
+  // Table
+  ////////////
+  .table {
+    margin: 0 auto;
+    max-width: 330px;
+    border: @restaurant-join-border;
+    border-radius: 2px;
+
+    td{
+      border: none;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+    thead { border-bottom: @restaurant-join-border; }
+    thead td { font-weight: 800; }
+  }
+
+  .table-title {
+    text-align: center;
+    margin: 0;
+    font-weight: 800;
+  }
+
+  ////////////////////
+  // Progress Tabs
+  ///////////////////
+  .tabs {
+    text-align: center;
+    text-transform: uppercase;
+    color: @palette-gray;
+    font-weight: 800;
+    margin-bottom: 40px;
+  }
+
+  .tabs li {
+    border: 1px solid @palette-gray-light;
+    padding: 19px 48px;
+    margin: -3px;
+    border-radius: 3px;
+  }
+
+  .tabs .number {
+    border: 2px solid;
+    border-color: @palette-gray;
+    border-radius: 50%;
+    padding: 0px 4px;
+  }
+
+  .tabs .active .number {
+    border-color: @palette-gray-darker;
+  }
+
+  ///////////////////////
+  // Form Panel
+  //////////////////////
+  .panel {
+    padding: 0;
+    border: @restaurant-join-border;
+    border-radius: 2px;
+    margin-bottom: 26px;
+    min-width: 100%;
+  }
+
+  .panel-head {
+    margin: 0;
+    padding: 17px;
+    background-color: @palette-gray-lighter;
+    border-bottom: @restaurant-join-border;
+  }
+
+  .panel-title {
+    margin: 0;
+    padding: 0;
+    font-weight: 800;
+    font-size: 1.2em;
+  }
+
+  .panel-subtitle {
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .subtext {
+    color: @palette-gray;
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+  }
+
+  .panel-body {
+      padding: 30px 45px 30px 45px;
+  }
+
+  /////////////////////
+  // Lead Time Table
+  ////////////////////
+  @media (min-width: 40em) {
+    .lead-time {
+      .col-remove {
+        float: left;
+        margin: 0 10px;
+        line-height: 59px;
+      }
+
+      .col-guests {
+        float: left;
+        margin: 0 10px;
+        width: 10%;
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+
+      .col-time {
+        float: left;
+        margin: 0 10px;
+        width: 10%;
+      }
+
+      .remove-lead-time {
+        vertical-align: bottom;
+      }
+    }
+  }
+
+  //
+  // Spacer ( - , this character)
+  .spacer {
+    display: block;
+    margin: 0px 8px 0px 8px;
+    padding-top: 6px;
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+}

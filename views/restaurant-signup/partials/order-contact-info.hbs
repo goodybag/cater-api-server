@@ -1,0 +1,59 @@
+<div class="panel">
+  <div class="panel-head">
+    <h3 class="panel-title">Order Contact Info</h3>
+  </div>
+  <div class="panel-body">
+    <p class="subtext">
+      When your restaurant receives a new order through Goodybag,
+      you will be automatically notified via text, email, and phone
+      call. If the order isn't accepted within an hour, we will try
+      contacting you directly. Please note that the more contacts you
+      enter, the better chances we have of getting in touch.
+    </p>
+    <div class="contact-group">
+      <h4 class="panel-subtitle">MAIN CONTACT</h4>
+      <hr>
+      <div class="row">
+        <label class="label-col">Contact Name</label>
+        <div class="field-col">
+          <div class="form-group">
+            <input type="text" class="form-control contact-name" name="contact_name" value="{{restaurant.contacts.0.name}}">
+          </div>
+          <p class="subtext">When you receive an order, this person will be notified</p>
+        </div>
+      </div>
+      <div class="row">
+        <label class="label-col">Contact Position <p class="subtext">Optional</p></label>
+        <div class="field-col">
+          <div class="form-group">
+            <input type="text" class="form-control contact-position" name="contact_position" value="{{restaurant.contacts.0.position}}">
+          </div>
+          <p class="subtext">Owner, Manager, etc.</p>
+        </div>
+      </div>
+      <div class="row">
+        <label class="label-col">Contact Number</label>
+        <div class="field-col">
+          <div class="form-group">
+            <input type="text" class="form-control contact-phone" name="contact_number" value="{{restaurant.contacts.0.phone}}">
+          </div>
+          <p class="subtext">When you receive an order, this number will be called and texted (if it's a cellular number).</p>
+        </div>
+      </div>
+      <div class="row">
+        <label class="label-col">Contact Email</label>
+        <div class="field-col">
+          <div class="form-group">
+            <input type="text" class="form-control contact-email" name="contact_email" value="{{restaurant.contacts.0.emails}}">
+          </div>
+          <p class="subtext">When you receive an order, we will send an email here.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-btn-container">
+      <button class="btn btn-default btn-add-contact">+ Add Contact</button>
+      <p class="subtext">You can add more contacts at any point in the future</p>
+    </div>
+  </div>
+</div>

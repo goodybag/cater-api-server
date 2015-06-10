@@ -371,7 +371,7 @@ p.adjustment-description {
 * order feedback
 */
 .feedback-order .alert {
-  text-align: center;
+  text-align: left;
   font-size: 15px;
   border: none;
   background-color: #5d9cec;
@@ -385,18 +385,38 @@ p.adjustment-description {
   top: 2px;
 }
 
+.feedback-order .feedback-title {
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+.feedback-order label {
+  font-size: 15px;
+  color: #fff;
+  font-weight: inherit;
+}
+
 .feedback-rating {
-  text-align: center;
+  display: block;
 }
 
 .order-feedback-form {
-  max-width: 340px;
-  margin: 0 auto;
+  max-width: 500px;
 }
 
-.order-feedback-form .form-group {
-  margin-bottom: 3px;
+.btn-submit-feedback {
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 3px;
+
+  transition: all 0.3s;
 }
+.btn-submit-feedback:hover {
+  background-color: #fff;
+  color: #333;
+}
+
 
 /*
 * Animation: fadeInDown

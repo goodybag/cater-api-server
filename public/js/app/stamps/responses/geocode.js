@@ -62,9 +62,15 @@ define( function( require, exports, module ){
        * @return {Address} ../addresses/base
        */
     , toAddress: function(){
-        var result = utils.findWhere( this.results, function( r ){
-          return geocodeResult( r ).isValid();
-        }.bind( this ));
+        // Get the first match from the intersection of results and accepted types
+        var result;
+        for ( var i = 0, l = geocodeResult.acceptableTypes.length; i < l; i++ ){
+          result = utils.findWhere( this.results, function( r ){
+            return r.types.indexOf( geocodeResult.acceptableTypes[i] ) > -1;
+          }.bind( this ));
+
+          if ( result ) break;
+        }
 
         return geocodeResult( result ).toAddress();
       }

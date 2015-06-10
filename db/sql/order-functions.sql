@@ -206,7 +206,7 @@ begin
     (select no_contract_fee
     from restaurants
     where restaurants.id = o.restaurant_id
-      and has_contract is false)
+      and plan_id is null)
   , 0
   );
 end;

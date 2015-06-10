@@ -197,7 +197,7 @@
           <dd>${{dollars order.sales_tax}}</dd>
           <dt>Tip:</dt>
           <dd>${{dollars order.tip}}</dd>
-          {{#unless order.restaurant.has_contract}}
+          {{#unless order.restaurant.plan_id}}
           {{#if order.restaurant.no_contract_fee}}
           <dt>Transaction Fee</dt>
           <dd>{{dollars order.no_contract_amount}}</dd>

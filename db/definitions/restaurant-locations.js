@@ -29,6 +29,7 @@ define(function(require) {
   , phone:              { type: types.varchar(10), nullable: false, checks: ["similar to '[[:digit:]]{10}'"] }
   , price_per_mile:     { type: types.int, default: 0 }
   , base_delivery_fee:  { type: types.int, default: 0, nullable: false }
+  , lat_lon:            { type: types.point }
   };
 
   definition.indices = {};

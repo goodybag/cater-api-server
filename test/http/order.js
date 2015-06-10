@@ -37,6 +37,27 @@ console.log();
 
 describe('HTTP Server', function(){
   describe('Orders', function(){
+    it( 'should send a 204 when changing attempting to add to status history with current status', function( done ){
+      var jar = utils.request.jar();
+
+      var url = ':baseUrl/orders'.replace( ':baseUrl', SERVER_URL );
+
+      utils.async.waterfall([
+        utils.post.bind( null, url, { restaurant_id: 25 }, { jar: jar } )
+      , function( res, order, next ){
+          var url = ':baseUrl/orders/:id/status-history'
+            .replace( ':baseUrl', SERVER_URL )
+            .replace( ':id', order.id );
+          utils.post( url, { status: 'pending' }, { jar: jar }, next );
+        }
+      , function( res, body, next ){
+          assert.equal( res.statusCode, 204 );
+          assert( !body );
+          next();
+        }
+      ], done )
+    });
+
     it( 'should be able to create an order without a user_id', function( done ){
       var data = {
         restaurant_id: 25

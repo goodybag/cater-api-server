@@ -16,6 +16,8 @@ define(function(require, exports, module) {
       this.model.on('change:guests', this.updateTime, this);
       this.model.on('change:datetime', this.updateTime, this);
 
+      this.options.asapHrs = this.options.asapHrs || 3; // hours under this also show mins
+
       this.start();
     },
 
@@ -56,7 +58,8 @@ define(function(require, exports, module) {
         var deadline = this.model.restaurant.getDeadline(this.model).format('MMM Do YYYY');
         return 'Must order by: ' + deadline;
       } else if ( hrs ){
-        return 'Time remaining to submit order: ' + hrs + ' hours';
+        var minsText = hrs <= this.options.asapHrs ? ' ' + mins + ' mins' : '';
+        return 'Time remaining to submit order: ' + hrs + ' hours' + minsText;
       } else {
         return 'Time remaining to submit order: ' + mins + ' minutes ' + secs + ' seconds';
       }

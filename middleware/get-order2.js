@@ -100,6 +100,13 @@ module.exports = function( options ){
         });
       }
 
+      if ( options.restaurantContacts ){
+        restaurantMany.push({
+          table: 'contacts'
+        , order: 'notify = true, name asc'
+        });
+      }
+
       $options.one.push({
         table:  'restaurants'
       , alias:  'restaurant'
@@ -118,6 +125,10 @@ module.exports = function( options ){
 
     if ( options.paymentMethod ){
       $options.one.push({ table: 'payment_methods', alias: 'payment_method' });
+    }
+
+    if ( options.orderFeedback ) {
+      $options.one.push({ table: 'order_feedback', alias: 'order_feedback' });
     }
 
     logger.info('Finding order');

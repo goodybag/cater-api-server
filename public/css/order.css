@@ -367,6 +367,49 @@ p.adjustment-description {
   margin-left: 5px;
 }
 
+/*
+* order feedback
+*/
+.feedback-order .alert {
+  text-align: center;
+  font-size: 15px;
+  border: none;
+  background-color: #5d9cec;
+  color: #fff;
+}
+
+.feedback-order .star {
+  font-size: 20px;
+  cursor: pointer;
+  position: relative;
+  top: 2px;
+}
+
+.feedback-rating {
+  display: inline-block;
+}
+
+/*
+* Animation: fadeInDown
+*/
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fadeInDown {
+  animation-name: fadeInDown;
+  animation-duration: 0.6s;
+  transform: translate3d(0, 0, 0);
+}
+
 /**
  * http://elvery.net/demo/responsive-tables
  */

@@ -8,6 +8,7 @@
   {{> facebook_pixel config.facebook.pixel.checkout }}
 {{/extend}}
 
+{{> stripe }}
 {{> checkout_sticky_header }}
 {{> order_params_modal }}
 
@@ -140,7 +141,7 @@
                   <div class="radio">
                     <label>
                       <input class="organization-type" name="organization_type" type="radio" value="individual" {{#if (eq user.organization_type 'individual') }} checked="checked" {{/if}}>
-                      Individual 
+                      Individual
                     </label>
                   </div>
                   <div class="radio">

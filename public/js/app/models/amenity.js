@@ -20,7 +20,7 @@ define(function(require, exports, module) {
         price: {
           type: 'integer',
           minimum: 0,
-          default: 0,
+          "default": 0,
           required: true
         },
       }

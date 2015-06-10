@@ -9,6 +9,11 @@
 
     {{{block "css"}}}
 
+    <!--[if lt IE 9]>
+    <script src="{{cdn "/components/html5shiv/dist/html5shiv.js"}}"></script>
+    <script src="{{cdn "/components/es5-shim/es5-shim.js"}}"></script>
+    <script src="{{cdn "/components/es5-shim/es5-sham.js"}}"></script>
+    <![endif]-->
     <!--[if lte IE 9]>
     <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
     <![endif]-->

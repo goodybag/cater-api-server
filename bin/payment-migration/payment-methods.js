@@ -1,6 +1,7 @@
 var db = require('db');
 var logger = require('./logger').create('User Setup');
 var utils = require('utils');
+var config = require('config');
 var concurrency = 5;
 
 logger.info('Mapping balanced uri to stripe ids');
@@ -44,11 +45,26 @@ q.drain = function drained() {
 // 2. db update payment_method
 // todo waterfall
 function migratePaymentMethod(pm, callback) {
-  utils.balanced.Cards.get(pm.uri, function(err, card) {
+  var pm_uri = pm.uri.split('/');
+  pm_uri = pm_uri[pm_uri.length - 1];
+
+  utils.request({
+    url: 'https://api.balancedpayments.com/cards/' + pm_uri
+  , headers: { Accept: 'application/vnd.api+json;revision=1.1' }
+  , auth: { user: config.balanced.secret }
+  }, function(err, response, body) {
     if ( err ) {
       logger.error('Unable to get balanced card ' + pm.uri);
       return callback(err);
     }
+
+    try {
+      body = JSON.parse(body);
+    } catch(e) {
+      return callback(e);
+    }
+
+    var card = body['cards'][0];
 
     if ( !card.meta['stripe_customer.funding_instrument.id'] ) {
       logger.error('Unable to associate stripe metadata ', err);
@@ -63,6 +79,7 @@ function migratePaymentMethod(pm, callback) {
           logger.error('Unable to get stripe card');
           return callback(new Error('Unable to get stripe card'));
         }
+        logger.info('Payment Method #' + pm.payment_method_id + ' - Stripe ID ' + stripeCard.id);
         db.payment_methods.update(
           { id: pm.payment_method_id }
         , { stripe_id: stripeCard.id

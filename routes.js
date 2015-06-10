@@ -195,6 +195,12 @@ module.exports.register = function(app) {
     , m.view('admin/upcoming', { layout: 'admin/layout2' })
     );
 
+    app.get('/api/places'
+    , require('gplaces').proxy({
+        key: config.credentials['google.com'].apiKey
+      })
+    );
+
     app.get('/api/upcoming'
     , m.getOrders({
         submittedDate: true
@@ -261,6 +267,13 @@ module.exports.register = function(app) {
         layout: 'admin/layout2'
       })
     );
+
+    app.get('/admin/kitchen-sink/affix'
+    , m.view( 'admin/kitchen-sink/affix', {
+        layout: null
+      })
+    );
+
 
     /**
      * Restaurant Plans
@@ -596,6 +609,21 @@ module.exports.register = function(app) {
         many: [{ table: 'contacts' }]
       })
     , m.view('admin/restaurant/edit-billing-info', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
+      })
+    );
+
+    app.get('/admin/restaurants/:id/transfers'
+    , m.param('id')
+    , m.getRestaurant({ param: 'id' })
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'transfers'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.stripe.getRestaurantTransfers()
+    , m.view('admin/restaurant/edit-transfers', db.restaurants, {
         layout: 'admin/layout-two-column'
       , method: 'findOne'
       })
@@ -979,7 +1007,8 @@ module.exports.register = function(app) {
     }
   , m.sort('-id')
   , m.queryOptions({
-      one: [
+      submittedDate: true
+    , one: [
         { table: 'users',       alias: 'user' }
       , { table: 'restaurants', alias: 'restaurant' }
       , { table: 'delivery_services', alias: 'delivery_service'}
@@ -1067,6 +1096,7 @@ module.exports.register = function(app) {
     , deliveryService:    true
     , submittedDate:      true
     , amenities:          true
+    , orderFeedback:      true
     })
   , controllers.orders.auth
   , m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant'])
@@ -1475,13 +1505,13 @@ module.exports.register = function(app) {
 
     app.put('/users/:uid'
     , restrictUpdate
-    , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+    , m.updateStripeCustomer({ required: 'user', pick: ['name'] })
     , controllers.users.update
     );
 
     app.patch('/users/:uid'
     , restrictUpdate
-    , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+    , m.updateStripeCustomer({ required: 'user', pick: ['name'] })
     , controllers.users.update);
 
     app.delete('/users/:uid', function(req, res) { res.send(501); });
@@ -1508,6 +1538,7 @@ module.exports.register = function(app) {
         one:  [ { table: 'restaurants', alias: 'restaurant' }
               , { table: 'users', alias: 'user' }
               ]
+      , submittedDate: true
       })
     , function( req, res, next ){
         res.locals.status = req.params.status;
@@ -1798,6 +1829,7 @@ module.exports.register = function(app) {
   , m.getOrder2({
       param:                  'id'
     , restaurant:             true
+    , restaurantContacts:     true
     , restaurantDbModelFind:  true
     , user:                   true
     , userPaymentMethods:     true
@@ -1929,7 +1961,7 @@ module.exports.register = function(app) {
   , m.restrict(['admin'])
   , m.param('id')
   , m.getRestaurant({ param: 'id' })
-  , m.updateBalancedCustomer({ required: 'restaurant', pick: ['name'] })
+  , m.updateStripeCustomer({ required: 'restaurant', pick: ['name'] })
   , m.update( db.restaurants )
   );
 
@@ -2064,6 +2096,12 @@ module.exports.register = function(app) {
   , m.param('id')
   , m.param('restaurant_id')
   , m.remove( db.payment_summaries )
+  );
+
+  app.post('/api/restaurants/:restaurant_id/transfers'
+  , m.restrict(['accounting', 'admin'])
+  , m.getRestaurant({ param: 'restaurant_id' })
+  , m.stripe.createRestaurantTransfer()
   );
 
   app.post('/api/restaurants/:restaurant_id/payment-summaries/:payment_summary_id/send'
@@ -2425,7 +2463,7 @@ module.exports.register = function(app) {
   app.put('/api/users/:id'
   , m.restrict(['admin'])
   , m.param('id')
-  , m.updateBalancedCustomer({ required: 'user', pick: ['name'] })
+  , m.updateStripeCustomer({ required: 'user', pick: ['name'] })
   , m.update( db.users )
   );
 
@@ -2594,6 +2632,22 @@ module.exports.register = function(app) {
   , m.remove( db.order_amenities )
   );
 
+  /**
+  * Order Feedback
+  */
+  app.put('/api/order-feedback'
+  , function (req, res, next) {
+      req.queryObj = { order_id: req.body.order_id }
+      req.order = { id: req.body.order_id };
+      next();
+    }
+  , controllers.orders.auth
+  , m.restrict(['order-owner', 'admin'])
+  , m.queryOptions({ returning: ['id'] })
+  , m.update( db.order_feedback )
+  );
+
+
   app.get('/api/restaurant-plans'
   , m.restrict(['admin'])
   , m.sort('-id')
@@ -2635,5 +2689,14 @@ module.exports.register = function(app) {
 
   app.get('/api/maps/address-validity/:address'
   , controllers.api.maps.addressValidity
+  );
+
+  app.get('/api/stripe-events/:id'
+  , m.restrict(['admin'])
+  , m.stripe.getStripeEvent()
+  );
+
+  app.post('/hooks/stripe'
+  , m.stripe.insertStripeEvent()
   );
 }

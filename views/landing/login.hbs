@@ -1,21 +1,6 @@
 {{#extend "page"}}page-login{{/extend}}
 
 {{#extend "body"}}
-<!--<Navbar>-->
-<header class="navbar collapsed">
-  <div class="container">
-    <a href="/">
-      <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
-    </a>
-
-    <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
-    <ul class="nav">
-      <li><a href="/join">Sign Up</a></li>
-    </ul>
-  </div>
-</header>
-<!--</Navbar>-->
-
 <div class="page-section-standalone">
   <form id="login-form" class="login-form form-vertical{{#if error}} error{{/if}}" action="/login{{queryParams query}}" method="POST">
     {{#if error}}
@@ -52,8 +37,7 @@
 
 {{#extend "scripts"}}
 <script>
-  require( ['jquery', 'navbar'], function( $ ){
-    $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+  require( ['jquery'], function( $ ){
     analytics.page('Login');
   });
 </script>

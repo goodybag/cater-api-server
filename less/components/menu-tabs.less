@@ -1,0 +1,91 @@
+@menu-tab-color: @palette-gray-dark;
+@menu-tab-border: 1px solid @palette-gray-light;
+@menu-tab-border-highlight: 3px solid @palette-gray-lighter;
+@menu-tab-border-highlight-active: @palette-blue;
+@menu-tab-border-invisible: 1px solid @palette-white;
+@menu-tab-radius: 3px;
+@menu-tab-font-size: .9rem;
+@menu-tab-background-color: @palette-white;
+@menu-tab-content-font-size: 1.2rem;
+
+/**
+ * Menu Tabs
+ */
+
+.menu-tabs {
+  margin: 0;
+  padding: 0;
+  border-bottom: @menu-tab-border;
+  background-color: @menu-tab-background-color;
+}
+
+.menu-tabs.affix {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: @zIndex-9;
+}
+
+.menu-tabs .menu-tab {
+  display: inline-block;
+  position: relative;
+  top: 1px;
+  box-sizing: border-box;
+  list-style-type: none;
+  border-top-left-radius: @menu-tab-radius;
+  border-top-right-radius: @menu-tab-radius;
+  border: @menu-tab-border;
+  border-top: @menu-tab-border-highlight;
+  background-color: @menu-tab-background-color;
+}
+
+.menu-tabs.affix .menu-tab {
+  border: none;
+  border-bottom: 3px solid @palette-white;
+  top: initial;
+}
+
+.menu-tabs .menu-tab.active {
+  border-top-color: @menu-tab-border-highlight-active;
+  border-bottom: @menu-tab-border-invisible;
+}
+
+.menu-tabs.affix .menu-tab.active {
+  border-bottom: @menu-tab-border-highlight;
+  border-bottom-color: @menu-tab-border-highlight-active;
+}
+
+.menu-tabs .menu-tab.untab { border: none; }
+
+.menu-tabs .menu-tab a {
+  display: inline-block;
+  padding: 15px 30px;
+  font-size: @menu-tab-font-size;
+  font-weight: @bold;
+  text-transform: uppercase;
+  color: @menu-tab-color;
+  outline: none;
+  &:hover { text-decoration: none; }
+  &:focus {
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+  }
+}
+
+/**
+ * Menu Tabs Content
+ */
+
+.menu-tabs-content {
+  border: @menu-tab-border;
+  border-top: none;
+}
+
+.menu-tabs-content h1 {
+  margin: 0;
+  padding: 20px;
+  font-size: @menu-tab-content-font-size;
+  font-weight: @bold;
+}

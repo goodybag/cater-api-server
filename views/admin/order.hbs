@@ -52,7 +52,6 @@
     </div>
   </div>
 
-
   <div>
     <section class="panel-component" id="order-user">
       <h1 class="component-title">User</h1>
@@ -84,22 +83,12 @@
       </dl>
     </section>
 
-    <section class="panel-component" id="order-restaurant">
+    <section class="panel-component" id="order-details">
       <h1 class="component-title">Details</h1>
       <dl class="user-profile definition-row-list">
         <div class="row">
           <dt>Total</dt>
           <dd>${{dollars order.total}}</dd>
-        </div>
-        <div class="row">
-          <dt>Restaurant</dt>
-          <dd>
-            <a href="/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a>
-          </dd>
-        </div>
-        <div class="row">
-          <dt>Review Link</dt>
-          <dd><a href="{{config.baseUrl}}/orders/{{order.id}}?review_token={{order.review_token}}">/orders/{{order.id}}?review_token={{order.review_token}}</a></dd>
         </div>
         <div class="row">
           <dt>Delivery Time</dt>
@@ -172,6 +161,37 @@
           {{/if}}
         </ul>
       {{/eq}}
+    </section>
+  </div>
+
+  <div>
+    <section class="panel-component" id="order-restaurant">
+      <h1 class="component-title">Restaurant</h1>
+      <dl class="restaurant-info definition-row-list">
+        <div class="row">
+          <dt>Name</dt>
+          <dd>
+            <a href="/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a>
+            <a class="edit-restaurant" href="/admin/restaurants/{{order.restaurant.id}}"><span data-icon="gb-icon-pencil"> Edit</a>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>Review Link</dt>
+          <dd><a href="{{config.baseUrl}}/orders/{{order.id}}?review_token={{order.review_token}}">/orders/{{order.id}}?review_token={{order.review_token}}</a></dd>
+        </div>
+        {{#if order.restaurant.display_phone}}
+        <div class="row">
+          <dt>Phone</dt>
+          <dd>{{phoneNumber order.restaurant.display_phone}}</dd>
+        </div>
+        {{/if}}
+        {{#each order.restaurant.contacts}}
+        <div class="row">
+          <dt>{{this.name}}</dt>
+          <dd>{{join (map this.voice_phones "phoneNumber") ', '}}</dd>
+        </div>
+        {{/each}}
+      </dl>
     </section>
   </div>
 

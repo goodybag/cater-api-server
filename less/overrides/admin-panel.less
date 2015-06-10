@@ -192,6 +192,7 @@ header {
   padding-bottom: 80px;
 
   #order-user,
+  #order-details,
   #order-restaurant {
     #grid > .column(6);
 
@@ -223,6 +224,12 @@ header {
     .form-group-inline {
       width: auto;
     }
+  }
+
+  a.edit-restaurant {
+    text-decoration: none;
+    color: @palette-gray;
+    &:hover { color: @palette-gray-dark; }
   }
 }
 

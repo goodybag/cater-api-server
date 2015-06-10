@@ -55,6 +55,8 @@
     "isotope": "~2.1.0",
     "jquery-appear": "~0.2.2",
     "Chart.js": "~1.0.1",
-    "resource.js": "~1.0.2"
+    "resource.js": "~1.0.2",
+    "gplaces": "~1.0.5",
+    "gb-handlebars-helpers": "~0.0.4"
   }
 }

@@ -9,6 +9,11 @@
 .page-restaurant-list {
   .back-to-results { margin-left: 10px; }
 
+  // Make tiles/listing in their own layer
+  .restaurant-list {
+    .transform( translate3d( 0, 0, 0 ) );
+  }
+
   // override .container width
   .container {
     #grid .container(@restaurant-container-width);

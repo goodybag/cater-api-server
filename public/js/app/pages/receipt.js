@@ -4,6 +4,7 @@ define(function(require){
   var Views = {
     Receipt:    require('app/views/receipt-view')
   , OrderItem:  require('app/views/order-item-view')
+  , OrderFeedback: require('app/views/order-feedback-view')
   };
 
   var Router = utils.Router.extend({
@@ -47,6 +48,11 @@ define(function(require){
           el:     '#order-item-' + item.get('id')
         , model:  item
         })
+      });
+
+      new Views.OrderFeedback({
+        el: '.feedback-order'
+      , model: order
       });
 
       utils.startHistory();

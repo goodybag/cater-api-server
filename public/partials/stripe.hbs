@@ -1,0 +1,6 @@
+{{#extend "scripts"}}
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script>
+Stripe.setPublishableKey('{{{config.stripe.public}}}');
+</script>
+{{/extend}}

@@ -78,4 +78,5 @@ module.exports = {
 , plan_type: 'plan_type'
 , invoice_status: 'invoice_status'
 , signup_status: 'signup_status'
+, feedback_rating: 'feedback_rating'
 };

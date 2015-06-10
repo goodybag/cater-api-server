@@ -144,7 +144,8 @@ module.exports.get = function(req, res) {
     );
 
     // Decide where to show the `Thanks` message
-    if (moment(context.order.submitted_date).add('hours', 1) > moment())
+    // only displays one hour after the order has been submitted.
+    if (moment(context.order.submitted).isAfter(moment().subtract(1, 'h')) )
     if (req.user)
     if (context.order.user_id == req.user.attributes.id){
       context.showThankYou = true;
@@ -288,6 +289,10 @@ module.exports.changeStatus = function(req, res) {
 
   var previousStatus = req.order.status;
   var orderModel = new models.Order( req.order );
+
+  if ( req.order.status === req.body.status ){
+    return res.send(204);
+  }
 
   // if they're not an admin, check if the status change is ok.
   if(!req.user || (!req.order.isRestaurantManager && !req.order.isAdmin)) {

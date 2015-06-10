@@ -32,6 +32,10 @@ define( function( require, exports, module ){
         return a.price - b.price;
       }
 
+    , 'delivery fee': function( a, b ){
+        return a.delivery_fee_from - b.delivery_fee_from;
+      }
+
     , 'order minimum': function( a, b ){
         return a.minimum_order - b.minimum_order;
       }
@@ -104,18 +108,21 @@ define( function( require, exports, module ){
     }));
 
     resultParts.forEach( function( part, i ){
+      // Add in delivery fee range
+      // TODO: Move this to some restaurant model logic
+      for ( var i = part.length - 1, range, restaurant; i >= 0; i-- ){
+        restaurant = part[i];
+        range = orderDeliveryFee( fulfillabilityOptions );
+        range = range.getZipBasedRange( restaurant );
+
+        restaurant.delivery_fee_from = range.min;
+        restaurant.delivery_fee_to = range.max;
+      }
+
       resultParts[ i ] = part.sort( sort );
     });
 
     restaurants = utils.flatten( resultParts );
-
-    // Add in delivery fee range
-    restaurants.forEach( function( restaurant ){
-      var range = orderDeliveryFee( fulfillabilityOptions );
-      range = range.getZipBasedRange( restaurant );
-      restaurant.delivery_fee_from = range.min;
-      restaurant.delivery_fee_to = range.max;
-    });
 
     return restaurants;
   };

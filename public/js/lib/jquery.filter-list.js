@@ -1,8 +1,9 @@
 define(function( require ){
   'use strict';
-  
+
   var $     = require('jquery');
   var utils = require('lodash');
+  utils.search = require('utils').search;
 
   var old = $.fn.gb_tablelist;
 

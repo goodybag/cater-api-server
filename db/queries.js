@@ -145,9 +145,10 @@ module.exports = {
   },
 
   transaction: {
-    createIfUriNotExists: function (type, orderId, uri, data) {
+    createIfUriNotExists: function (type, orderId, data) {
       // must start with a character, not number for it to be valid dollar quoted string
       var rand = 'x'+Math.random().toString(36).substr(2, 5);
+      var uri = data.balance_transaction;
       if (typeof data === 'object') data = JSON.stringify(data);
       return {
         type: 'insert'

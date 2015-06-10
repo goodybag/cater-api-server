@@ -2,6 +2,8 @@
  * Module dependencies
  */
 
+process.env.GB_ENV = process.env.GB_ENV || 'dev';
+
 var
   os = require('os')
 , fs =  require('fs')
@@ -20,6 +22,8 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, credentials: require('./configs/credentials')
+, stores: require('./configs/stores')
 , adroll: require('./configs/adroll')
 , stripe: require('./configs/stripe')
 , google: require('./configs/google')
@@ -38,6 +42,7 @@ config.defaults = {
 , logging: require('./configs/logging')
 , invoice: require('./configs/invoice')
 , promo: require('./configs/promo')
+, hipchat: require('./configs/hipchat')
 
 , deliveryTime: {
     padding: 15
@@ -69,6 +74,7 @@ config.defaults = {
 , deniedRecipients: [
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
+  , 'patrickmugavin@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -77,6 +83,7 @@ config.defaults = {
 , deliveryServiceOrderAboveThresholdRecipients: [
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
+  , 'patrickmugavin@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -116,6 +123,7 @@ config.defaults = {
 
 , rewardHolidays: [
     { start: '2014-09-02 00:00:00', end: '2014-09-03 00:00:00', rate: '2.0', description: 'Post-Labor Day' }
+  , { start: '2015-05-26 00:00:00', end: '2015-05-27 00:00:00', rate: '2.0', description: 'Post-Memorial Day' }
   ]
 
 , welcome: {
@@ -451,6 +459,7 @@ config.production = {
     ]
   , dsOrders: [
       'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
 
     // temp
     , 'jacobparker@goodybag.com'
@@ -464,13 +473,16 @@ config.production = {
     , 'jag@goodybag.com'
     , 'jacobparker@goodybag.com'
     , 'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
     ]
   , orderNotificationChecks: [
       'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
     , 'john@goodybag.com'
     ]
   , reminderPaymentStatusIgnore: [
       'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
     ]
   }
 
@@ -478,6 +490,7 @@ config.production = {
     responseThresholdMins: 30
   , supportPhones: [
       '2105779226' // Christy Medlock
+    , '3153457641' // Patrick Mugavin
     ]
   }
 

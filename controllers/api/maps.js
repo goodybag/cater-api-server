@@ -20,7 +20,7 @@ module.exports.geocode = function( req, res ){
       }
 
       res.send({
-        address: geoRes.toAddress()
+        address: geoRes.isValidAddress() ? geoRes.toAddress() : null
       , valid:   geoRes.isValidAddress()
       });
     });

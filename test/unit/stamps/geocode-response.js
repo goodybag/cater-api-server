@@ -44,7 +44,7 @@ describe('Stamps', function(){
         var res = GeoRes.create({
           res: [ null, {
             results: [{
-              types: ['street_address']
+              types: ['subpremise']
             , address_components: [
                 { long_name: 'l131',
                   short_name: 'l131',
@@ -76,7 +76,7 @@ describe('Stamps', function(){
               ]
             }]
           }]
-        , requestAddress: '5555 N. Lamar Blvd Suite L131, Austin, TX, 78751'
+        , requestAddress: '5555 N. Lamar Blvd Suite L131'
         });
 
         assert.deepEqual( res.toAddress(), {

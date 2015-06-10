@@ -2,6 +2,42 @@ var utils       = require('utils');
 var db          = require('db');
 var config      = require('config');
 var hipchat     = require('../lib/hipchat');
+var helpers     = require('../public/js/lib/hb-helpers');
+
+var eventMessages = {
+  'charge.succeeded': function(res) {
+    return 'Order #:order_id successfully charged $:amount. <a href=":url">View Details</a>'
+      .replace( /:order_id/g, res.data.data.object.metadata.order_id )
+      .replace( /:amount/g, helpers.dollars(res.data.data.object.amount) )
+      .replace( /:url/g, [ config.baseUrl, 'api', 'stripe-events', res.id ].join('/') );
+  }
+
+, 'charge.failed': function(res) {
+    return 'Order #:order_id failed to charge $:amount. <a href=":url">View Details</a>'
+      .replace( /:order_id/g, res.data.data.object.metadata.order_id )
+      .replace( /:amount/g, helpers.dollars(res.data.data.object.amount) )
+      .replace( /:url/g, [ config.baseUrl, 'api', 'stripe-events', res.id ].join('/') );
+  }
+
+, 'account.updated': function(res) {
+    return ':name was updated. Changed :attrs attributes <a href=":url">View Details</a>'
+      .replace( /:name/g, res.data.data.object.display_name )
+      .replace( /:attrs/g, Object.keys(res.data.data.previous_attributes).join(', ') )
+      .replace( /:url/g, [ config.baseUrl, 'api', 'stripe-events', res.id ].join('/') );
+  }
+
+, 'default': function(res) {
+    return 'Stripe Event <a href=":url">View Details</a>'
+      .replace( /:url/g, [ config.baseUrl, 'api', 'stripe-events', res.id ].join('/') );
+  }
+};
+
+var env = '[:env]'.replace( ':env', helpers.capitalize(config.env) );
+
+var formatMessage = function(res) {
+  var type = res.data.type in eventMessages ? res.data.type : 'default';
+  return env + ' ' + eventMessages[type](res);
+};
 
 var stripe = {
   getStripeEvent: function(options) {
@@ -30,14 +66,11 @@ var stripe = {
           return res.send(500);
         }
 
-        var message = 'Stripe Webhook ' +
-          [config.baseUrl, 'api', 'stripe-events', result.id].join('/');
-
         hipchat.postMessage({
-          room: config.hipchat.rooms.tech
+          room: config.hipchat.rooms.payments
         , from: 'Goodybot'
-        , message: message
-        , message_format: 'text'
+        , message: formatMessage(result)
+        , message_format: 'html'
         , color: 'green'
         , format: 'json'
         },
@@ -45,7 +78,7 @@ var stripe = {
           return res.send(response && response.status === 'sent' ? 200 : 500);
         });
       });
-    }
+    };
   }
 
 , createRestaurantTransfer: function(options) {

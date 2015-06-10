@@ -9,8 +9,9 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
-  var config  = require('config');
-  var utils   = require('utils');
+  var config        = require('config');
+  var utils         = require('utils');
+  var geocodeResult = require('./geocode-result');
 
   return module.exports = require('stampit')()
     .enclose( function(){
@@ -37,9 +38,9 @@ define( function( require, exports, module ){
           }
 
         , function(){
-            return this.results.filter( function( result ){
+            return this.results.some( function( result ){
               return result.types.indexOf('street_address') > -1;
-            }).length > 0;
+            });
           }
 
         // TODO compare tokens for similarity
@@ -55,6 +56,19 @@ define( function( require, exports, module ){
 
           return isValid && fn.call( this );
         }.bind( this ), true );
+      }
+
+      /**
+       * Uses the first street address result in body.results
+       * to be parsed into an address
+       * @return {Address} ../addresses/base
+       */
+    , toAddress: function(){
+        var result = utils.findWhere( this.results, function( r ){
+          return r.types.indexOf('street_address') > -1;
+        });
+
+        return geocodeResult( result ).toAddress();
       }
     });
 });

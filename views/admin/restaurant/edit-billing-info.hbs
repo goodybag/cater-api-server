@@ -23,9 +23,18 @@
       </div>
     </div>
 
+    {{#if restaurant.stripe_id}}
     <h2>Stripe Info</h2>
+    <a href="https://dashboard.stripe.com/applications/users/{{restaurant.stripe_id}}">View account on Stripe</a>
     <label class="control-label">Customer URI</label>
     <blockquote class="blockquote blockquote-info">{{restaurant.stripe_id}}</blockquote>
+    {{/if}}
+
+    {{#if restaurant.balanced_customer_uri}}
+    <h2>Balanced Info</h2>
+    <label class="control-label">Customer URI</label>
+    <blockquote class="blockquote blockquote-info">{{restaurant.balanced_customer_uri}}</blockquote>
+    {{/if}}
 
     <h2>Billing Info</h2>
     <div class="form-group">

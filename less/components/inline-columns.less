@@ -1,0 +1,12 @@
+.inline-columns {
+  #grid > .container(100%);
+
+  > .col {
+    display: inline-block;
+    width: auto;
+    vertical-align: top;
+    + .col {
+      margin-left: @gutter-width;
+    }
+  }
+}

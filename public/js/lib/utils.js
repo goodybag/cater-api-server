@@ -43,6 +43,12 @@ define(function(require, exports, module) {
     utils.http = $.ajax;
     utils.key = require('keymaster');
     utils.Plan = require('plan');
+
+    require('gplaces').http( function( input, callback ){
+      $.getJSON( '/api/places?input=' + input )
+        .error( callback )
+        .success( callback.bind( null, null ) );
+    });
   }
 
   utils.async = async;

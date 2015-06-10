@@ -13,7 +13,7 @@ define( function( require, exports, module ){
   var address = require('../addresses/base');
   var utils   = require('utils');
 
-  return require('stampit')()
+  var gResult = require('stampit')()
     .methods({
       getAddressComponent: function( component ){
         return utils.findWhere( this.address_components, function( c ){
@@ -28,11 +28,27 @@ define( function( require, exports, module ){
         };
       }
 
-    , toAddress: function(){
-        if ( !Array.isArray( this.types ) || this.types.indexOf('street_address') === -1 ){
-          throw new Error('Invalid Geocode result');
-        }
+    , isValid: function(){
+        return [
+          function( res ){
+            return Array.isArray( res.types );
+          }
 
+        , function( res ){
+            return gResult.acceptableTypes.some( function( t ){
+              return res.types.indexOf( t ) > -1;
+            });
+          }
+        ].every( function( fn ){
+          return fn( this );
+        }.bind( this ));
+      }
+
+    , toAddress: function(){
+        if ( !this.isValid() ){
+          throw new Error('Invalid Geocode Result');
+        }
+        
         return address({
           street:   [ this.getAddressComponent('street_number').long_name
                     , this.getAddressComponent('route').long_name
@@ -50,4 +66,14 @@ define( function( require, exports, module ){
         });
       }
     });
+
+  gResult.acceptableTypes = [
+  , 'premise'
+  , 'subpremise'
+  , 'airport'
+  , 'park'
+  , 'street_address'
+  ];
+
+  return gResult;
 });

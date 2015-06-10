@@ -38,9 +38,9 @@ define( function( require, exports, module ){
           }
 
         , function(){
-            return this.results.some( function( result ){
-              return result.types.indexOf('street_address') > -1;
-            });
+            return this.results.some( function( r ){
+              return geocodeResult( r ).isValid();
+            }.bind( this ));
           }
 
         // TODO compare tokens for similarity
@@ -51,11 +51,9 @@ define( function( require, exports, module ){
         //       return this.requestAddress
         //     });
         //   }
-        ].reduce( function( isValid, fn ){
-          if ( !isValid ) return false;
-
-          return isValid && fn.call( this );
-        }.bind( this ), true );
+        ].every( function( fn ){
+          return fn.call( this );
+        }.bind( this ));
       }
 
       /**
@@ -65,8 +63,8 @@ define( function( require, exports, module ){
        */
     , toAddress: function(){
         var result = utils.findWhere( this.results, function( r ){
-          return r.types.indexOf('street_address') > -1;
-        });
+          return geocodeResult( r ).isValid();
+        }.bind( this ));
 
         return geocodeResult( result ).toAddress();
       }

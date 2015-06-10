@@ -8,33 +8,68 @@
     transfers to your account, we will need some info from you.
   </p>
   <form class="form-vertical">
-    <div class="form-group">
-      <label>First Name</label>
-      <input type="text">
-    </div>
-    <div class="form-group">
-      <label>Last Name</label>
-      <input type="text">
-    </div>
-    <div class="form-group">
-      <label>Date of Birth</label>
-      <input type="text">
-    </div>
-    <div class="form-group">
-      <label>Type</label>
-      <label><input type="radio" name="type" id="no" value="individual" /> Individual</label>
-      <label><input type="radio" name="type" id="yes" value="business" /> Business</label>
-    </div>
-
-    <div class="form-group">
-      <label for="bank-account">Bank Account #</label>
-      <input type="text" id="bank-account" name="bank_account"/>
-      <label for="bank-account">Bank Routing #</label>
-      <input type="text" id="bank-routing" name="bank_routing"/>
-    </div>
-    <div class="form-group">
-      <button class="btn btn-primary" type="submit">I Accept</button>
-    </div>
+    <section>
+      <div class="form-group">
+        <label for="business_name">Business Name</label>
+        <input id="business_name" type="text">
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <label><input type="radio" name="type" id="no" value="individual" /> Individual</label>
+        <label><input type="radio" name="type" id="yes" value="business" /> Business</label>
+      </div>
+      <div class="form-group">
+        <label for="business_address1">Address</label>
+        <input id="business_address1" type="text">
+      </div>
+      <div class="form-group">
+        <label for="business_address2">Address 2</label>
+        <input id="business_address2" type="text">
+      </div>
+      <div class="form-group">
+        <label for="business_city">City</label>
+        <input id="business_city" type="text">
+      </div>
+      <div class="form-group">
+        <label for="business_state">State</label>
+        <input id="business_state" type="text">
+      </div>
+      <div class="form-group">
+        <label for="business_zip">Zipcode</label>
+        <input id="business_zip" type="text">
+      </div>
+    </section>
+    <section>
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text">
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text">
+      </div>
+      <div class="form-group">
+        <label>Date of Birth</label>
+        <input type="text">
+      </div>
+      <div class="form-group">
+        <label for="ssn_last_4">Last 4 SSN</label>
+        <input id="ssn_last_4" type="text">
+      </div>
+    </section>
+    <section>
+      <div class="form-group">
+        <label for="bank-account">Bank Account #</label>
+        <input type="text" id="bank-account" name="bank_account"/>
+        <label for="bank-account">Bank Routing #</label>
+        <input type="text" id="bank-routing" name="bank_routing"/>
+      </div>
+    </section>
+    <section>
+      <div class="form-group">
+        <button class="btn btn-primary" type="submit">I Accept</button>
+      </div>
+    </section>
   </form>
   <p>
     <small>

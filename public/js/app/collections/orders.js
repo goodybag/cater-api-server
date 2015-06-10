@@ -24,9 +24,9 @@ define(function(require, exports, module) {
           return aOrg.localeCompare(bOrg);
         }
       , 'plan_id': function(a, b) {
-          var aPlanId = a.restaurant.get('plan_id');
-          var bPlanId = b.restaurant.get('plan_id');
-          return aPlanId === bPlanId ? 0 : aPlanId ? 1 : -1;
+          var aPlanId = a.restaurant.get('plan_id') !== null;
+          var bPlanId = b.restaurant.get('plan_id') !== null;
+          return aPlanId - bPlanId;
         }
       , 'restaurant': function(a, b) {
           return a.restaurant.get('name').localeCompare(b.restaurant.get('name'));

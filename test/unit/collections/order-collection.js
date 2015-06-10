@@ -59,11 +59,11 @@ describe('orders collection', function() {
       assert( sortedBy(orders.toJSON(), 'user.organization'));
     });
 
-    it('should sort by plan_id', function() {
+    it.only('should sort by plan_id', function() {
       var orders = new Orders([
-        { id: 30, restaurant: { plan_id: null } }
-      , { id: 14, restaurant: { plan_id: 2 } }
-      , { id: 45, restaurant: { plan_id: 1 } }
+        { id: 14, restaurant: { plan_id: 1 } }
+      , { id: 30, restaurant: { plan_id: null } }
+      , { id: 45, restaurant: { plan_id: 2 } }
       ]);
 
       orders.setComparator('plan_id');

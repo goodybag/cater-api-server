@@ -8,5 +8,5 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  update restaurants set has_contract = true where plan_id is null;
+  update restaurants set has_contract = false where plan_id is null;
 end$$;

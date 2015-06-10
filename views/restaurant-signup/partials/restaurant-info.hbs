@@ -73,13 +73,21 @@
       <label class="label-col">Restaurant State</label>
       <div class="field-col">
         <div class="form-group">
-          <select class="form-control address-state" name="state">
+          <select class="form-control restaurant-state" name="state">
             {{#each states}}
             <option value="{{this.abbr}}" label="{{this.abbr}}">
               {{this.name}}
             </option>
             {{/each}}
           </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <label class="label-col">Restaurant Zip</label>
+      <div class="field-col">
+        <div class="form-group">
+          <input type="text" class="form-control restaurant-zip" name="zip" value="{{restaurant.zip}}">
         </div>
       </div>
     </div>

@@ -16,6 +16,8 @@ module.exports.create = function (req, res) {
     }
 
     results = results.length > 0 ? results[0] : results;
+
+    //set user session with a restaurant signup id
     req.session.restaurant_signup_id = results.id;
 
     return res.json(results);
@@ -37,7 +39,18 @@ module.exports.update = function (req, res) {
     req.body = results.data;
 
     var tasks = [
-      function createRestaurant (next) {
+      function calculateRegionID(next) {
+        var nullRegion = 2;
+        if (!req.body.zip) {
+          req.body.region_id = nullRegion;
+          return next(null);
+        }
+        db.region_zips.findOne({ zip: req.body.zip }, function (error, result) {
+          req.body.region_id = result ? result.region_id || nullRegion : nullRegion;
+          return next(null);
+        });
+      }
+    , function createRestaurant (next) {
         return restaurantsController._create(req, next);
       }
     , function createContacts (rows, results, next) {

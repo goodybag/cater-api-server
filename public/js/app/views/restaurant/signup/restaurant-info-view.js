@@ -17,6 +17,7 @@ define(function (require, exports, module) {
       , street       : '.restaurant-street'
       , city         : '.restaurant-city'
       , state        : '.restaurant-state'
+      , zip          : '.restaurant-zip'
       , display_phone: '.restaurant-phone'
       , billing_email: '.restaurant-email'
       , meal_types   : '.meal-type'
@@ -96,6 +97,7 @@ define(function (require, exports, module) {
           street: this.$el.find(this.fieldMap.street).val()
         , city: this.$el.find(this.fieldMap.city).val()
         , state: this.$el.find(this.fieldMap.state).val()
+        , zip: this.$el.find(this.fieldMap.zip).val()
         , phone: this.fieldGetters.display_phone.call(this)
         , price: this.fieldGetters.price.call(this)
         , menu_url: this.fieldGetters.menu_url.call(this)
@@ -113,20 +115,29 @@ define(function (require, exports, module) {
 
       if (!fields.street) {
         return this.displayErrors([{
-          property: 'address'
+          property: 'street'
         , message: 'Please provide a valid street.'
         }]);
       }
+
       if (!fields.city) {
         return this.displayErrors([{
-          property: 'address'
+          property: 'city'
         , message: 'Please provide a valid city.'
         }]);
       }
+
       if (!fields.state) {
         return this.displayErrors([{
-          property: 'address'
+          property: 'state'
         , message: 'Please select a valid state.'
+        }]);
+      }
+
+      if (!fields.zip) {
+        return this.displayErrors([{
+          property: 'zip'
+        , message: 'Please provide a valid zipcode.'
         }]);
       }
 

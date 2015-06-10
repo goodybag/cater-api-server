@@ -44,6 +44,7 @@
     , {name: 'fullcalendar',            location: '../../components/fullcalendar',              main: 'fullcalendar.js'}
     , {name: 'keymaster',               location: '../../components/keymaster',                 main: 'keymaster.js'}
     , {name: 'react',                   location: '../../components/react',                     main: 'react.js'}
+    , {name: 'gplaces',                 location: '../../components/gplaces/dist',              main: 'gplaces.js'}
 
       // templating related
     , {name: 'hbs',                     location: '../../components/handlebars',                main: 'handlebars.js'}

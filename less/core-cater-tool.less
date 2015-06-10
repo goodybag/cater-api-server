@@ -4,6 +4,7 @@
 
 // Third-pary deps
 @import "../public/components/less-elements/elements.less";
+@import (less) "../public/components/gplaces/dist/gplaces.css";
 
 // Base
 @import "variables.less";
@@ -14,3 +15,7 @@
 @import "components/gb-points-indicator.less";
 @import "components/giftcard.less";
 @import "components/restaurant-plan.less";
+
+input[data-gplaces]:-webkit-autofill {
+  display: none!important;
+}

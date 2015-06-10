@@ -50,7 +50,7 @@
     "gb-handlebars-helpers": "0.0.4",
     "gelf-encode": "0.2.x",
     "generic-pool": "2.0.x",
-    "gplaces": "^1.0.5",
+    "gplaces": "^1.0.7",
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-complexity": "^0.3.0",

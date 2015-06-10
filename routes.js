@@ -104,6 +104,7 @@ module.exports.register = function(app) {
   app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
   app.get('/restaurants/join'
+  , m.states()
   , m.localCookies(['gb_rs'])
   , function (req, res, next) {
       res.locals.restaurant = {};

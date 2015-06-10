@@ -54,10 +54,32 @@
       </div>
     </div>
     <div class="row">
-      <label class="label-col">Restaurant Address</label>
+      <label class="label-col">Restaurant Street</label>
       <div class="field-col">
         <div class="form-group">
-          <input type="text" class="form-control restaurant-address" name="address" value="{{restaurant.address}}">
+          <input type="text" class="form-control restaurant-street" name="street" value="{{restaurant.street}}">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <label class="label-col">Restaurant City</label>
+      <div class="field-col">
+        <div class="form-group">
+          <input type="text" class="form-control restaurant-city" name="city" value="{{restaurant.city}}">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <label class="label-col">Restaurant State</label>
+      <div class="field-col">
+        <div class="form-group">
+          <select class="form-control address-state" name="state">
+            {{#each states}}
+            <option value="{{this.abbr}}" label="{{this.abbr}}">
+              {{this.name}}
+            </option>
+            {{/each}}
+          </select>
         </div>
       </div>
     </div>

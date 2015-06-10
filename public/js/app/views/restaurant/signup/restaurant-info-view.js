@@ -14,7 +14,9 @@ define(function (require, exports, module) {
         yelp_business_id: '.yelp-url'
       , cuisine      : '.restaurant-cuisine'
       , price        : '.restaurant-price'
-      , address      : '.restaurant-address' // map to fields (street, city, state, zip)
+      , street       : '.restaurant-street'
+      , city         : '.restaurant-city'
+      , state        : '.restaurant-state'
       , display_phone: '.restaurant-phone'
       , billing_email: '.restaurant-email'
       , meal_types   : '.meal-type'
@@ -91,7 +93,9 @@ define(function (require, exports, module) {
       var this_ = this;
       this.clearErrors();
       var fields = {
-          address: this.$el.find(this.fieldMap.address).val()
+          street: this.$el.find(this.fieldMap.street).val()
+        , city: this.$el.find(this.fieldMap.city).val()
+        , state: this.$el.find(this.fieldMap.state).val()
         , phone: this.fieldGetters.display_phone.call(this)
         , price: this.fieldGetters.price.call(this)
         , menu_url: this.fieldGetters.menu_url.call(this)
@@ -107,10 +111,22 @@ define(function (require, exports, module) {
         }]);
       }
 
-      if (!fields.address) {
+      if (!fields.street) {
         return this.displayErrors([{
           property: 'address'
-        , message: 'Please provide a valid address.'
+        , message: 'Please provide a valid street.'
+        }]);
+      }
+      if (!fields.city) {
+        return this.displayErrors([{
+          property: 'address'
+        , message: 'Please provide a valid city.'
+        }]);
+      }
+      if (!fields.state) {
+        return this.displayErrors([{
+          property: 'address'
+        , message: 'Please select a valid state.'
         }]);
       }
 

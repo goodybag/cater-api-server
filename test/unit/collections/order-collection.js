@@ -59,15 +59,15 @@ describe('orders collection', function() {
       assert( sortedBy(orders.toJSON(), 'user.organization'));
     });
 
-    it('should sort by has_contract', function() {
+    it.only('should sort by plan_id', function() {
       var orders = new Orders([
-        { id: 30, restaurant: { has_contract: false } }
-      , { id: 14, restaurant: { has_contract: true } }
-      , { id: 45, restaurant: { has_contract: true } }
+        { id: 14, restaurant: { plan_id: 1 } }
+      , { id: 30, restaurant: { plan_id: null } }
+      , { id: 45, restaurant: { plan_id: 2 } }
       ]);
 
-      orders.setComparator('has_contract');
-      assert( sortedBy(orders.toJSON(), 'restaurant.has_contract'));
+      orders.setComparator('plan_id');
+      assert( sortedBy(orders.toJSON(), 'restaurant.plan_id'));
       assert( !sortedBy(orders.toJSON(), 'id'));
     });
 

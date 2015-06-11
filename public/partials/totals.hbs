@@ -23,7 +23,7 @@
   <dt>Tip:</dt>
   <dd>{{dollars order.tip}}</dd>
   {{/dneq}}
-  {{#unless order.restaurant.has_contract}}
+  {{#unless order.restaurant.plan_id}}
   {{#if order.restaurant.no_contract_fee}}
   <dt>Transaction Fee <i class="gb-icon-question tx-fee-popover" data-toggle="popover"></i></dt>
   <dd>{{dollars order.no_contract_amount}}</dd>

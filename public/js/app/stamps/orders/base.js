@@ -9,14 +9,43 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
+  var utils = require('utils');
+  var items = require('./item');
+
   return require('stampit')()
     .state({
-
+      items: []
+    , adjustment: 0
+    , userAdjustment: 0
     })
     .enclose( function(){
 
     })
     .methods({
-      
+      getTax: function(){
+        var amount = this.getSubTotal() + this.adjustment + this.userAdjustment;
+        return amount * this.region.sales_tax;
+      }
+
+    , getSubTotal: function(){
+        return this.items.reduce( function( total, item ){
+          return total + items( item ).getPrice();
+        }, 0 );
+      }
+
+    , getTotal: function(){
+        return [
+          this.getSubTotal()
+        , this.adjustment
+        , this.userAdjustment
+        , this.getTax()
+        , this.delivery_fee
+        , this.tip
+        ].reduce( utils.add, 0 )
+      }
+
+    , getRestaurantTotal: function(){
+        
+      }
     });
 });

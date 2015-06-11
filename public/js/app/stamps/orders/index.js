@@ -16,6 +16,7 @@ define( function( require, exports, module ){
 
   var stamps = {
     base: require('./base')
+  , item: require('./item')
   , deliveryFee: require('./delivery-fee')
   };
 

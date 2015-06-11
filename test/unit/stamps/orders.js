@@ -2,8 +2,9 @@ var assert      = require('assert');
 var moment      = require('moment');
 var utils       = require('utils');
 var config      = require('../../../config');
-var orders      = require('../../../lib/stamps/db/orders');
+var orders      = require('stamps/orders');
 var fulfillability = require('stamps/orders/fulfillability');
+order.db        = require('../../../lib/stamps/db/orders')
 
 var restaurants = require('stampit')()
   .state({
@@ -64,8 +65,49 @@ var restaurants = require('stampit')()
   });
 
 describe('Orders Stamps', function(){
+  it('.getTax()', function(){
+    var order = orders({
+      region: { sales_tax: 0.0825 }
+    , items: [{ price: 100, quantity: 1 }]
+    });
+
+    assert.equal( order.getTax(), 8.25 );
+  });
+
+
+  it('.getSubTotal()', function(){
+    var order = orders({
+      items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      , { price: 100, quantity: 3, options_sets: [
+            options: [{ state: true, price: 50 }, { state: false, price: 10 } ]
+          ]
+        }
+      ]
+    });
+
+    assert.equal( order.getSubTotal(), 1150 );
+  });
+
+  it('.getTotal()', function(){
+    var order = orders({
+      region: { sales_tax: 0.0825 }
+    , items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      ]
+    , adjustment: -100
+    , userAdjustment: -50
+    , tip: 50
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getSubTotal(), 643 );
+  });
+  
   it('Should filter by month', function() {
-    var sql = orders({ month: 12 }).get();
+    var sql = orders.db({ month: 12 }).get();
     assert(sql.$query);
     assert(Array.isArray( sql.$query['submitted_dates.submitted'] ));
     assert(utils.find(sql.$query['submitted_dates.submitted'], function(o){
@@ -74,7 +116,7 @@ describe('Orders Stamps', function(){
   });
 
   it('Should filter by week', function() {
-    var sql = orders({ week: 22 }).get();
+    var sql = orders.db({ week: 22 }).get();
     assert(sql.$query);
     assert(Array.isArray( sql.$query['submitted_dates.submitted'] ));
     assert(utils.find(sql.$query['submitted_dates.submitted'], function(o){
@@ -83,7 +125,7 @@ describe('Orders Stamps', function(){
   });
 
   it('Should filter by year', function() {
-    var sql = orders({ year: 12 }).get();
+    var sql = orders.db({ year: 12 }).get();
     assert(sql.$query);
     assert(Array.isArray( sql.$query['submitted_dates.submitted'] ));
     assert(utils.find(sql.$query['submitted_dates.submitted'], function(o){
@@ -104,13 +146,13 @@ describe('Orders Stamps', function(){
       .filter(function(r) { return r.active; })
       .pluck('name')
       .value();
-    var sql = orders({ filters: filters }).get();
+    var sql = orders.db({ filters: filters }).get();
     assert(sql.$query);
     assert.deepEqual(sql.$query['regions.name']['$in'], activeRegions);
   });
 
   it('Should join user by default', function() {
-    var sql = orders().get();
+    var sql = orders.db().get();
     assert(sql.$options);
     assert(sql.$options.one);
     assert(utils.filter(sql.$options.one, function(clause) {
@@ -119,7 +161,7 @@ describe('Orders Stamps', function(){
   });
 
   it('Should join restaurant by default', function() {
-    var sql = orders().get();
+    var sql = orders.db().get();
     assert(sql.$options);
     assert(sql.$options.one);
     assert(utils.filter(sql.$options.one, function(clause) {
@@ -128,7 +170,7 @@ describe('Orders Stamps', function(){
   });
 
   it('Should opt-out joining user', function() {
-    var sql = orders({ user: false }).get();
+    var sql = orders.db({ user: false }).get();
     assert(sql.$options);
     assert(sql.$options.one);
     assert(!utils.filter(sql.$options.one, function(clause) {
@@ -137,7 +179,7 @@ describe('Orders Stamps', function(){
   });
 
   it('Should opt-out joining restaurant', function() {
-    var sql = orders({ restaurant: false }).get();
+    var sql = orders.db({ restaurant: false }).get();
     assert(sql.$options);
     assert(sql.$options.one);
     assert(!utils.filter(sql.$options.one, function(clause) {
@@ -274,6 +316,57 @@ describe('Orders Stamps', function(){
       }).isFulfillable();
 
       assert( !result );
+    });
+  });
+
+  describe('Items', function(){
+    it('.getTotal()', function(){
+      var item = orders.item({
+        price: 100
+      , quantity: 5
+      });
+
+      assert.equal( item.getTotal(), 500 );
+    });
+
+    it('.getTotal() with options', function(){
+      var item = orders.item({
+        price: 100
+      , quantity: 2
+      , options_sets: [
+          { options:  [ { price 50, state: true }
+                      , { price 50, state: false }
+                      ]
+          }
+        , { options:  [ { price 50, state: false }
+                      , { price 100, state: true }
+                      ]
+        , { options:  [ { price 50, state: false }
+                      , { price 100, state: false }
+                      ]
+          }
+        ]
+      });
+
+      assert.equal( item.getTotal(), 500 );
+    });
+  });
+
+  describe('Charges', function(){
+    it('.getCharge()', function(){
+
+    });
+
+    it('.getRestaurantCut()', function(){
+
+    });
+
+    it('.getApplicationCut()', function(){
+
+    });
+
+    it('.getRestaurantTotal()', function(){
+
     });
   });
 });

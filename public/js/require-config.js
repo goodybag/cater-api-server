@@ -23,6 +23,7 @@
     , app:    '../app'
     , views:  '../app/views'
     , spec:   '../../test/unit'
+    , stamps: '../app/stamps'
     }
 
   , packages: [

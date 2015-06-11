@@ -10,6 +10,7 @@ define(function(require, exports, module) {
   var states        = require('./states');
   var config        = require('config');
   var invoices      = require('../app/stamps/user-invoice/base');
+  var addresses     = require('../app/stamps/addresses/base');
   var Handlebars    = require('handlebars');
   var GbHelpers     = require('gb-handlebars-helpers')._helpers; // todo extract all helpers to this lib
 
@@ -165,6 +166,12 @@ define(function(require, exports, module) {
       var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
       return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span> ' : null,
                      line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
+    },
+
+    address2: function( loc ){
+      if ( !loc ) return '';
+
+      return addresses( loc ).toString();
     },
 
     phoneNumber: function(num, format, options) {

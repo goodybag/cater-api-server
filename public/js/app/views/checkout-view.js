@@ -5,6 +5,7 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var notify = require('../../notify');
   var config = require('config');
+  var api = require('api');
 
   var OrderView = require('./order-view');
 
@@ -193,7 +194,9 @@ define(function(require, exports, module) {
 
       var self = this, userInfo;
 
-      var tasks = {
+      var series = [];
+
+      var parallel = {
         formSave: utils.bind( this.onSave, this )
       };
 
@@ -203,11 +206,29 @@ define(function(require, exports, module) {
 
       // Check to see if we need to validate the address
       if ( !this.$el.find('.order-address.edit').hasClass('hide') ){
-        var errors = this.validateAddress();
-        if ( errors ){
-          spinner.stop();
-          return this.displayErrors2(errors, Address);
-        }
+        series.push( function( next ){
+          api.maps.geocode( self.$el.find('[name="address"]').val(), function( error, result ){
+            if ( error ){
+              spinner.stop();
+              return self.displayErrors2([{
+                property: 'address'
+              , message: 'Something went wrong setting this address'
+              }]);
+            }
+
+            if ( !result.valid ){
+              spinner.stop();
+              return self.displayErrors2([{
+                property: 'address'
+              , message: 'Invalid address'
+              }]);
+            }
+
+            self.model.set( result.address );
+
+            next();
+          });
+        });
       }
 
       var secondaryContactPhone = this.$el.find('.order-secondary-contact-phone').val().replace(/[^\d]/g, '');
@@ -252,7 +273,7 @@ define(function(require, exports, module) {
           }]);
         }
 
-        tasks.userSave = function( done ){
+        parallel.userSave = function( done ){
           self.options.user.save( userInfo, {
             success:  function(){ done(); }
           , validate: false
@@ -277,7 +298,9 @@ define(function(require, exports, module) {
         return this.onUpdateCardSubmitClick(e);
       }
 
-      utils.async.parallel(tasks, function( err ){
+      parallel = utils.async.parallel.bind( utils.async, parallel );
+
+      utils.async.series( series, function( err ){
         spinner.stop();
 
         if (err) return notify.error(err); // TODO: error handling

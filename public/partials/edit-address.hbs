@@ -8,54 +8,14 @@
 <div class="row">
   <div class="form-group col-sm-6">
     <label for="street">Address <small>(required)</small></label>
-    <input type="text" name="address" class="form-control address" data-gplaces autocomplete="off">
+    <input type="text" name="address" class="form-control address" data-gplaces autocomplete="off" value="{{address2 address}}">
   </div>
 </div>
 
 <div class="row">
   <div class="form-group col-sm-6">
-    <label for="street">Street 1 <small>(required)</small></label>
-    <input type="text" id="street" name="street" class="form-control address-street" value="{{address.street}}">
-  </div>
-</div>
-
-<div class="row">
-  <div class="form-group col-sm-6">
-    <label for="street2">Street 2</label>
+    <label for="street2">Secondary (Suite number, etc.)</label>
     <input type="text" id="street2" name="street2" class="form-control address-street2" value="{{address.street2}}">
-  </div>
-</div>
-
-<div class="row">
-  <div class="form-group col-sm-6">
-    <label for="city">City <small>(required)</small></label>
-    <input type="text" id="city" name="city" class="form-control address-city" value="{{address.city}}">
-  </div>
-</div>
-
-<div class="row">
-  <div class="form-group col-sm-6">
-    <label for="state">State <small>(required)</small></label>
-    <select class="form-control address-state" name="state">
-      {{! Show address.state otherwise default }}
-      {{#each states}}
-        <option value="{{this.abbr}}" label="{{this.abbr}}"
-        {{#if ../address.state }}
-          {{#eq this.abbr ../../address.state}} selected="selected"{{/eq}}
-        {{else}}
-          {{#if this.default}} selected="selected"{{/if}}
-        {{/if}}>
-        {{this.name}}
-        </option>
-      {{/each}}
-    </select>
-  </div>
-</div>
-
-<div class="row">
-  <div class="form-group col-sm-6">
-    <label for="zip">Zip <small>(required)</small></label>
-    <input type="text" id="zip" name="zip" class="form-control address-zip" value="{{address.zip}}" placeholder="Zipcode">
   </div>
 </div>
 
@@ -77,7 +37,6 @@
 <script>
   require(['jquery', 'gplaces'], function($, gplaces){
     $(function(){
-      console.log('hiiiiiiiiii');
       gplaces( $('[name="address"]')[0] );
     });
   });

@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
   var FormView = require('./form-view');
+  var api = require('api');
 
   return module.exports = FormView.extend({
     events: {
@@ -12,6 +13,7 @@ define(function(require, exports, module) {
       var this_ = this;
 
       // Cache elements
+      this.$address = this.$el.find('[name="address"]');
       this.$submitBtn = this.$el.find('.address-submit').button();
 
       this.on('save:success', function() {
@@ -26,11 +28,11 @@ define(function(require, exports, module) {
 
     fieldMap: {
       name:                     '.address-edit .address-name'
-    , street:                   '.address-edit .address-street'
+    // , street:                   '.address-edit .address-street'
     , street2:                  '.address-edit .address-street2'
-    , city:                     '.address-edit .address-city'
-    , state:                    '.address-edit .address-state'
-    , zip:                      '.address-edit .address-zip'
+    // , city:                     '.address-edit .address-city'
+    // , state:                    '.address-edit .address-state'
+    // , zip:                      '.address-edit .address-zip'
     , phone:                    '.address-edit .address-phone'
     , delivery_instructions:    '.address-edit .address-delivery-instructions'
     },
@@ -65,6 +67,30 @@ define(function(require, exports, module) {
           console.error('Unable to set a default address');
         }
       });
+    },
+
+    geocode: function( callback ){
+      api.maps.geocode( this.$address.val(), function( error, result ){
+        if ( error ){
+          return callback( error );
+        }
+
+        this.model.set( result.address );
+
+        return callback( null, result );
+      }.bind( this ));
+    },
+
+    onSave: function( e ){
+      e.preventDefault();
+
+      this.geocode( function( error, result ){
+        if ( error ){
+          return console.error( error );
+        }
+
+        return FormView.prototype.onSave.apply( this, arguments );
+      }.bind( this ));
     }
   });
 });

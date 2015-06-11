@@ -39,6 +39,10 @@ define( function( require, exports, module ){
               return res.types.indexOf( t ) > -1;
             });
           }
+
+        , function( res ){
+            return res.geometry && res.geometry.location && res.geometry.location.lat;
+          }
         ].every( function( fn ){
           return fn( this );
         }.bind( this ));

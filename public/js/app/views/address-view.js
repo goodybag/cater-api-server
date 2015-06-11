@@ -1,15 +1,17 @@
 define(function(require, exports, module) {
   var FormView = require('./form-view');
+  var api = require('api');
 
   return module.exports = FormView.extend({
     events: {
-      'submit .address-edit': 'onSave'
+      'submit .address-edit': 'onSave',
     },
 
     initialize: function() {
       var this_ = this;
 
       // Cache elements
+      this.$address = this.$el.find('[name="address"]');
       this.$submitBtn = this.$el.find('.address-submit').button();
 
       this.on('save:success', function() {
@@ -41,6 +43,30 @@ define(function(require, exports, module) {
       street2: function() {
         return this.$el.find(this.fieldMap.street2).val().trim();
       }
+    },
+
+    geocode: function( callback ){
+      api.maps.geocode( this.$address.val(), function( error, result ){
+        if ( error ){
+          return callback( error );
+        }
+
+        this.model.set( result.address );
+
+        return callback( null, result );
+      }.bind( this ));
+    },
+
+    onSave: function( e ){
+      e.preventDefault();
+
+      this.geocode( function( error, result ){
+        if ( error ){
+          return console.error( error );
+        }
+
+        return FormView.prototype.onSave.apply( this, arguments );
+      }.bind( this ));
     }
   });
 });

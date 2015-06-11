@@ -103,7 +103,7 @@ describe('Orders Stamps', function(){
     , delivery_fee: 100
     });
 
-    assert.equal( order.getSubTotal(), 643 );
+    assert.equal( order.getTotal(), 643 );
   });
   
   it('Should filter by month', function() {
@@ -353,12 +353,22 @@ describe('Orders Stamps', function(){
   });
 
   describe('Charges', function(){
-    it('.getCharge()', function(){
-
-    });
-
     it('.getRestaurantCut()', function(){
+      var charge = orders
+        .compose( require('stamps/charge') )
+        ({
+          region: { sales_tax: 0.0825 }
+        , items: [
+            { price: 100, quantity: 1 }
+          , { price: 200, quantity: 3 }
+          ]
+        , adjustment: -100
+        , userAdjustment: -50
+        , tip: 50
+        , delivery_fee: 100
+        });
 
+      assert.equal( order.getRestaurantCut(), 643 );
     });
 
     it('.getApplicationCut()', function(){

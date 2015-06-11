@@ -161,7 +161,6 @@ var stripe = {
         }
       }, function(err, account) {
         if (err) {
-          console.log(err);
           logger.error(new Error('Unable to update stripe account'), err);
           return res.send(500, err);
         }
@@ -177,12 +176,11 @@ var stripe = {
       , data: JSON.stringify(req.body)
       }, function(err, result) {
         if (err) {
-          console.log(err);
           logger.error(new Error('Unable to insert restaurant_verifications'), err);
           return res.send(500, err);
         }
         next();
-      })
+      });
     }
   }
 };

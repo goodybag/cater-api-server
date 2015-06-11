@@ -10,12 +10,12 @@
   <form method="post" action="/verify/{{restaurant.id}}/verifications" class="form-vertical">
     <section>
       <div class="form-group">
-        <label for="business_name">Business Name</label>
-        <input id="business_name" type="text">
+        <label for="business-name">Business Name</label>
+        <input id="business-name" name="business_name" type="text">
       </div>
       <div class="form-group">
         <label>Type</label>
-        <label><input type="radio" name="type" id="type-individual" value="individual" /> Individual</label>
+        <label><input type="radio" name="type" id="type-individual" value="individual" checked/> Individual</label>
         <label><input type="radio" name="type" id="type-company" value="business" /> Company</label>
       </div>
       <div class="form-group">
@@ -49,8 +49,8 @@
         <input id="last-name" name="last_name" type="text">
       </div>
       <div class="form-group">
-        <label>Date of Birth</label>
-        <input type="text">
+        <label for="dob">Date of Birth</label>
+        <input id="dob" name="dob" type="text" required>
       </div>
       <div class="form-group">
         <label for="ssn_last_4">Last 4 SSN</label>
@@ -60,9 +60,9 @@
     <section>
       <div class="form-group">
         <label for="bank-account">Bank Account #</label>
-        <input type="text" id="bank-account" name="bank_account"/>
+        <input type="text" id="bank-account" name="account_number" required/>
         <label for="bank-account">Bank Routing #</label>
-        <input type="text" id="bank-routing" name="bank_routing"/>
+        <input type="text" id="bank-routing" name="routing_number" required/>
       </div>
     </section>
     <section>

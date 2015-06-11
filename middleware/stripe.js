@@ -4,6 +4,7 @@ var config      = require('config');
 var hipchat     = require('../lib/hipchat');
 var helpers     = require('../public/js/lib/hb-helpers');
 var logger      = require('../lib/logger').create('Stripe');
+var moment      = require('moment-timezone');
 
 var eventMessages = {
   'charge.succeeded': function(res) {
@@ -127,12 +128,26 @@ var stripe = {
 , verifyRestaurant: function(options) {
     return function(req, res, next) {
       if (!req.restaurant && !req.restaurant.stripe_id) return res.send(500);
+      var dob = moment(req.body.dob, 'MM-DD-YYYY');
       utils.stripe.accounts.update(req.restaurant.stripe_id, {
         legal_entity: {
-          type:         req.body.type
-        , first_name:   req.body.first_name
-        , last_name:    req.body.last_name
-        , ssn_last_4:   req.body.ssn_last_4
+          type: req.body.type
+        , first_name: req.body.first_name
+        , last_name: req.body.last_name
+        , ssn_last_4: req.body.ssn_last_4
+        , business_name: req.body.business_name
+        , dob: {
+            day: dob.date()
+          , month: dob.month()
+          , year: dob.year()
+          }
+        , address: {
+            line1: req.body.line1
+          , line2: req.body.line2
+          , city: req.body.city
+          , state: req.body.state
+          , postal_code: req.body.postal_code
+          }
         }
       , tos_acceptance: {
           ip: req.connection.remoteAddress

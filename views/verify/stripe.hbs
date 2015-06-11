@@ -11,42 +11,42 @@
     <section>
       <div class="form-group">
         <label for="business-name">Business Name</label>
-        <input id="business-name" name="business_name" type="text">
+        <input id="business-name" name="business_name" type="text" required>
       </div>
       <div class="form-group">
         <label>Type</label>
         <label><input type="radio" name="type" id="type-individual" value="individual" checked/> Individual</label>
-        <label><input type="radio" name="type" id="type-company" value="business" /> Company</label>
+        <label><input type="radio" name="type" id="type-company" value="company" /> Company</label>
       </div>
       <div class="form-group">
-        <label for="business_address1">Address</label>
-        <input id="business_address1" type="text">
+        <label for="line1">Address</label>
+        <input id="line" name="line1" type="text" required>
       </div>
       <div class="form-group">
-        <label for="business_address2">Address 2</label>
-        <input id="business_address2" type="text">
+        <label for="line2">Address 2</label>
+        <input id="line2" name="line2" type="text" required>
       </div>
       <div class="form-group">
-        <label for="business_city">City</label>
-        <input id="business_city" type="text">
+        <label for="city">City</label>
+        <input id="city" name="city" type="text" required>
       </div>
       <div class="form-group">
-        <label for="business_state">State</label>
-        <input id="business_state" type="text">
+        <label for="state">State</label>
+        <input id="state" name="state" type="text" required>
       </div>
       <div class="form-group">
-        <label for="business_zip">Zipcode</label>
-        <input id="business_zip" type="text">
+        <label for="postal-code">Zipcode</label>
+        <input id="postal-code" name="postal_code" type="text" required>
       </div>
     </section>
     <section>
       <div class="form-group">
         <label for="first-name">First Name</label>
-        <input id="first-name" name="first_name" type="text">
+        <input id="first-name" name="first_name" type="text" required>
       </div>
       <div class="form-group">
         <label for="last-name">Last Name</label>
-        <input id="last-name" name="last_name" type="text">
+        <input id="last-name" name="last_name" type="text" required>
       </div>
       <div class="form-group">
         <label for="dob">Date of Birth</label>
@@ -54,7 +54,7 @@
       </div>
       <div class="form-group">
         <label for="ssn_last_4">Last 4 SSN</label>
-        <input id="ssn_last_4" type="text">
+        <input id="ssn_last_4" type="text" required>
       </div>
     </section>
     <section>
@@ -79,4 +79,17 @@
     </small>
   </p>
 </div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require( ['jquery-loaded'], function($) {
+  var datepicker = $('#dob').pickadate({
+    format: 'mm/dd/yyyy'
+  , selectYears: 100
+  , selectMonths: true
+  , max: true
+  });
+});
+</script>
 {{/extend}}

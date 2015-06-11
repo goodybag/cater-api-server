@@ -15,10 +15,14 @@ var onError = function( error ){
 if ( fs.existsSync( __dirname + '/../../local-config.json') ){
   var localConfig = require('../../local-config.json');
   options.email = localConfig.testEmail || options.email;
+  options.stripe_id = localConfig.restaurantStripeId || options.restaurantStripeId;
 }
 
 var $query = {};
-var $update = { billing_email: options.email };
+var $update = {
+  billing_email: options.email
+, stripe_id: options.stripe_id
+};
 var opts = { returning: [ '*' ] };
 
 console.log( "updating restaurants with:", JSON.stringify(options) );

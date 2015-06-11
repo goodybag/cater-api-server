@@ -151,7 +151,17 @@ var stripe = {
 
 , insertRestaurantVerification: function(options) {
     return function(req,res, next) {
-
+      db.restaurant_verifications.insert({
+        restaurant_id: req.restaurant.id
+      , data: JSON.stringify(req.body)
+      }, function(err, result) {
+        if (err) {
+          console.log(err);
+          logger.error(new Error('Unable to insert restaurant_verifications'), err);
+          return res.send(500, err);
+        }
+        next();
+      })
     }
   }
 };

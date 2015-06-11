@@ -3,6 +3,7 @@ var db          = require('db');
 var config      = require('config');
 var hipchat     = require('../lib/hipchat');
 var helpers     = require('../public/js/lib/hb-helpers');
+var logger      = require('../lib/logger').create('Stripe');
 
 var eventMessages = {
   'charge.succeeded': function(res) {
@@ -121,6 +122,37 @@ var stripe = {
         next();
       });
     };
+  }
+
+, verifyRestaurant: function(options) {
+    return function(req, res, next) {
+      if (!req.restaurant && !req.restaurant.stripe_id) return res.send(500);
+      utils.stripe.accounts.update(req.restaurant.stripe_id, {
+        legal_entity: {
+          type:         req.body.type
+        , first_name:   req.body.first_name
+        , last_name:    req.body.last_name
+        , ssn_last_4:   req.body.ssn_last_4
+        }
+      , tos_acceptance: {
+          ip: req.connection.remoteAddress
+        , date: Math.floor(Date.now() / 1000)
+        }
+      }, function(err, account) {
+        if (err) {
+          console.log(err);
+          logger.error(new Error('Unable to update stripe account'), err);
+          return res.send(500, err);
+        }
+        return next();
+      });
+    }
+  }
+
+, insertRestaurantVerification: function(options) {
+    return function(req,res, next) {
+
+    }
   }
 };
 

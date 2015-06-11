@@ -7,7 +7,7 @@
     <a href="https://stripe.com">Stripe.com</a>. In order to continue bank
     transfers to your account, we will need some info from you.
   </p>
-  <form class="form-vertical">
+  <form method="post" action="/verify/{{restaurant.id}}/verifications" class="form-vertical">
     <section>
       <div class="form-group">
         <label for="business_name">Business Name</label>
@@ -15,8 +15,8 @@
       </div>
       <div class="form-group">
         <label>Type</label>
-        <label><input type="radio" name="type" id="no" value="individual" /> Individual</label>
-        <label><input type="radio" name="type" id="yes" value="business" /> Business</label>
+        <label><input type="radio" name="type" id="type-individual" value="individual" /> Individual</label>
+        <label><input type="radio" name="type" id="type-company" value="business" /> Company</label>
       </div>
       <div class="form-group">
         <label for="business_address1">Address</label>
@@ -41,12 +41,12 @@
     </section>
     <section>
       <div class="form-group">
-        <label>First Name</label>
-        <input type="text">
+        <label for="first-name">First Name</label>
+        <input id="first-name" name="first_name" type="text">
       </div>
       <div class="form-group">
-        <label>Last Name</label>
-        <input type="text">
+        <label for="last-name">Last Name</label>
+        <input id="last-name" name="last_name" type="text">
       </div>
       <div class="form-group">
         <label>Date of Birth</label>

@@ -69,7 +69,7 @@
       <dd>{{join (timeToRange (timepart order.datetime) "h:mm A") " - "}}</dd>
       <dt>Payment Method:</dt>
       {{#if order.payment_method}}
-      <dd>**** **** **** {{order.payment_method.data.last_four}}</dd>
+      <dd>**** **** **** {{order.payment_method.data.last4}}</dd>
       <dt>Charge Date:</dt>
       <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
       {{else}}

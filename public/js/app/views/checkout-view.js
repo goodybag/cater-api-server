@@ -298,7 +298,7 @@ define(function(require, exports, module) {
         return this.onUpdateCardSubmitClick(e);
       }
 
-      parallel = utils.async.parallel.bind( utils.async, parallel );
+      series.push( utils.async.parallel.bind( utils.async, parallel ) );
 
       utils.async.series( series, function( err ){
         spinner.stop();
@@ -584,9 +584,10 @@ define(function(require, exports, module) {
     },
 
     validateAddress: function(){
+      var addressFields = ['address', 'phone'];
       var address = new Address(), $el, val;
-      for ( var i = 0, l = Order.addressFields.length; i < l; ++i ){
-        $el = this.$el.find('[name="' + Order.addressFields[i] + '"]');
+      for ( var i = 0, l = addressFields.length; i < l; ++i ){
+        $el = this.$el.find('[name="' + addressFields[i] + '"]');
 
         if ( !$el.length ) continue;
 
@@ -594,11 +595,11 @@ define(function(require, exports, module) {
 
         if ( !val.length ) continue;
 
-        if ( Order.addressFields[i] === 'phone' ){
+        if ( addressFields[i] === 'phone' ){
           val = val.replace(/\(|\)|\s|\-/g, '');
         }
 
-        address.set( Order.addressFields[i], val );
+        address.set( addressFields[i], val );
       }
 
       return address.validate(address.toJSON());

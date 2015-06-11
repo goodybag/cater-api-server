@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
   var FormView = require('./form-view');
   var api = require('api');
+  var gplaces = require('gplaces');
 
   return module.exports = FormView.extend({
     events: {
@@ -15,6 +16,8 @@ define(function(require, exports, module) {
       // Cache elements
       this.$address = this.$el.find('[name="address"]');
       this.$submitBtn = this.$el.find('.address-submit').button();
+
+      gplaces( this.$address[0] );
 
       this.on('save:success', function() {
         location.reload();

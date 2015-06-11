@@ -170,8 +170,11 @@ define(function(require, exports, module) {
 
     address2: function( loc ){
       if ( !loc ) return '';
-
       return addresses( loc ).toString();
+    },
+
+    isMinimumAddress: function( addr, options ){
+      return addresses( addr ).hasMinimumProperties();
     },
 
     phoneNumber: function(num, format, options) {

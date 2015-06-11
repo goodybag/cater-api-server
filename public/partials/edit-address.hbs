@@ -8,7 +8,12 @@
 <div class="row">
   <div class="form-group col-sm-6">
     <label for="street">Address <small>(required)</small></label>
-    <input type="text" name="address" class="form-control address" data-gplaces autocomplete="off" value="{{address2 address}}">
+    <input
+      type="text"
+      name="address"
+      class="form-control address"
+      autocomplete="off"
+      value="{{#if (isMinimumAddress address)}}{{address2 address}}{{/if}}">
   </div>
 </div>
 

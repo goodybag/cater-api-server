@@ -28,5 +28,13 @@ define( function( require, exports, module ){
         }.bind( this ))
         .join(', ');
       }
+
+    , hasMinimumProperties: function(){
+        return [
+          'street', 'city', 'state', 'zip'
+        ].every( function( k ){
+          return !!this[ k ];
+        }.bind( this ) );
+      }
     });
 });

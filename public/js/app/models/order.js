@@ -325,7 +325,7 @@ define(function(require, exports, module) {
       total  += this.get('tip');
       rtotal += this.get('tip');
       if ( this.restaurant ){
-        if ( this.restaurant.get('has_contract') === false ){
+        if ( this.restaurant.get('plan_id') === null ){
           noContractAmt = total * this.restaurant.get('no_contract_fee')
           this.attributes.no_contract_amount = Math.round( noContractAmt );
           total += noContractAmt;

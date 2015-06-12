@@ -26,7 +26,9 @@ module.exports = function( options ){
 
     // use + instead of parseInt because:
     // parseInt('888-mini-cafe') === 888
-    if ( isNaN( +param ) ){
+    if ( options.getByUuid ) {
+      $where.uuid = param;
+    } else if ( isNaN( +param ) ){
       $where.text_id = param;
     } else {
       $where.id = param;

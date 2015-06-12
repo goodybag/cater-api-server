@@ -161,7 +161,7 @@ var stripe = {
         }
       }, function(err, account) {
         if (err) {
-          logger.error(new Error('Unable to update stripe account'), err);
+          logger.error('Unable to update stripe account', err);
           return res.send(500, err);
         }
         return next();
@@ -176,7 +176,7 @@ var stripe = {
       , data: JSON.stringify(req.body)
       }, function(err, result) {
         if (err) {
-          logger.error(new Error('Unable to insert restaurant_verifications'), err);
+          logger.error('Unable to insert restaurant_verifications', err);
           return res.send(500, err);
         }
         next();

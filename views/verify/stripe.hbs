@@ -10,7 +10,7 @@
   <form method="post" action="/verify/{{restaurant.uuid}}/verifications" class="form-vertical">
     <section>
       <div class="form-group">
-        <label for="business-name">Business Name</label>
+        <label for="business-name">Legal Business Name</label>
         <input id="business-name" name="business_name" type="text" required>
       </div>
       <div class="form-group">
@@ -18,6 +18,16 @@
         <label><input type="radio" name="type" id="type-individual" value="individual" checked/> Individual</label>
         <label><input type="radio" name="type" id="type-company" value="company" /> Company</label>
       </div>
+      <div class="form-group tax-id">
+        <label for="personal-tax-id">Personal ID Number (SSN)</label>
+        <input id="personal-tax-id" name="personal_id_number" type="text">
+      </div>
+      <div class="form-group tax-id hide">
+        <label for="business-tax-id">Federal Tax ID Number (EIN)</label>
+        <input id="business-tax-id" name="business_tax_id" type="text">
+      </div>
+    </section>
+    <section>
       <div class="form-group">
         <label for="line1">Address</label>
         <input id="line" name="line1" type="text" required>
@@ -41,22 +51,19 @@
     </section>
     <section>
       <div class="form-group">
-        <label for="first-name">First Name</label>
+        <label for="first-name">Legal First Name (As written on Social Security Card)</label>
         <input id="first-name" name="first_name" type="text" required>
       </div>
       <div class="form-group">
-        <label for="last-name">Last Name</label>
+        <label for="last-name">Legal Last Name (As written on Social Security Card)</label>
         <input id="last-name" name="last_name" type="text" required>
       </div>
       <div class="form-group">
         <label for="dob">Date of Birth</label>
         <input id="dob" name="dob" type="text" required>
       </div>
-      <div class="form-group">
-        <label for="ssn_last_4">Last 4 SSN</label>
-        <input id="ssn_last_4" type="text" required>
-      </div>
     </section>
+    {{!--
     <section>
       <div class="form-group">
         <label for="bank-account">Bank Account #</label>
@@ -65,6 +72,7 @@
         <input type="text" id="bank-routing" name="routing_number" required/>
       </div>
     </section>
+    --}}
     <section>
       <div class="form-group">
         <button class="btn btn-primary" type="submit">I Accept</button>
@@ -89,6 +97,11 @@ require( ['jquery-loaded'], function($) {
   , selectYears: 100
   , selectMonths: true
   , max: true
+  });
+
+  var $taxInputs = $('.tax-id');
+  $('[name="type"]').change(function() {
+    $taxInputs.toggleClass('hide');
   });
 });
 </script>

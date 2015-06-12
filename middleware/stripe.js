@@ -134,7 +134,8 @@ var stripe = {
           type: req.body.type
         , first_name: req.body.first_name
         , last_name: req.body.last_name
-        , ssn_last_4: req.body.ssn_last_4
+        , personal_id_number: req.body.personal_id_number // SSN
+        , business_tax_id: req.body.business_tax_id // EIN
         , business_name: req.body.business_name
         , dob: {
             day: dob.date()
@@ -153,12 +154,12 @@ var stripe = {
           ip: req.connection.remoteAddress
         , date: Math.floor(Date.now() / 1000)
         }
-      , bank_account: {
-          routing_number: req.body.routing_number
-        , account_number: req.body.account_number
-        , country: 'US'
-        , currency: 'USD'
-        }
+      // , bank_account: {
+      //     routing_number: req.body.routing_number
+      //   , account_number: req.body.account_number
+      //   , country: 'US'
+      //   , currency: 'USD'
+      //   }
       }, function(err, account) {
         if (err) {
           logger.error('Unable to update stripe account', err);

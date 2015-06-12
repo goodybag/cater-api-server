@@ -101,7 +101,7 @@ define(function(require, exports, module) {
 
       if (PaymentMethod.getCardType(data.card_number) === 'amex' && !data.postal_code)
         return callback('postal_code is required for amex cards');
-        
+
     },
 
     updateBalancedAndSave: function(data, callback){
@@ -169,9 +169,9 @@ define(function(require, exports, module) {
       var data = this.get('data');
       var date = new Date();
       return (
-        date.getFullYear() > data.expiration_year ||
-        date.getFullYear() === data.expiration_year &&
-        date.getMonth() + 1 > data.expiration_month
+        date.getFullYear() > data.exp_year ||
+        date.getFullYear() === data.exp_year &&
+        date.getMonth() + 1 > data.exp_month
       );
     }
   }, {

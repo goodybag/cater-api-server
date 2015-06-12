@@ -35,7 +35,7 @@ app.use( middleware.statusCodeIntercept() );
 // If our request times out, something must be wrong with
 // our server. Likely caught in some impossible condition,
 // so let's just kill the worker
-app.use( middleware.timeout() );
+app.use( middleware.timeout( 20000 || config.http.timeout ) );
 
 app.use(require('serve-favicon')(__dirname + '/public/favicon.ico'));
 app.use(require('compression')());

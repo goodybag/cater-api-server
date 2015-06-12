@@ -34,7 +34,8 @@ define(function(require, exports, module) {
 
       if ( obj.order ){
         obj.order_id = obj.order.id;
-        delete obj.order;
+        obj.order = obj.order.toJSON();
+        // delete obj.order;
       }
 
       obj.net_payout = this.getNetPayout();

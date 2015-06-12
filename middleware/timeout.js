@@ -1,9 +1,8 @@
 var forky   = require('forky');
-var config  = require('../config');
 
-module.exports = function( options ){
+module.exports = function( time ){
   return function( req, res, next ){
-    res.setTimeout( config.http.timeout, function(){
+    res.setTimeout( time || 10000, function(){
       req.logger.error('Timeout');
 
       res.send(503);

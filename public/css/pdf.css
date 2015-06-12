@@ -217,6 +217,7 @@ dl > dt {
   text-transform: uppercase;
   font-size: 15px;
   font-weight: 500;
+  white-space: pre;
 }
 
 .gb-table th:first-child,

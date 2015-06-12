@@ -54,15 +54,6 @@
   {{/if}}
 </address>
 <div class="info-item-date info-item">Payout Date: {{formatDateTime payment_summary.payment_date}}</div>
-<div class="info-item-contact info-item">
-  {{#if order.user.name}}
-    {{order.user.name}}
-  {{/if}}
-  {{#if order.phone}}
-    <br>
-    {{phoneNumber order.phone "xxx.xxx.xxxx"}}
-  {{/if}}
-</div>
 
 <div class="doc-id-info order-number-info">
   <span class="doc-id-key order-number-key"></span>
@@ -77,7 +68,7 @@
   <table class="gb-table" style="">
     <thead>
       <tr>
-        <th>Order #</th>
+        <th>Order Info</th>
         <th>Delivery Fee</th>
         <th>Tip</th>
         <th>Order Total</th>
@@ -90,7 +81,11 @@
     <tbody>
       {{#each payment_summary.items}}
       <tr>
-        <td>{{this.order_id}}</td>
+        <td>
+          <div class="order-id">#{{this.order_id}}</div>
+          <div class="organization">{{this.order.user.organization}}</div>
+          <div class="datetime">{{datepart this.order.datetime}}</div>
+        </td>
         <td>${{dollars this.delivery_fee}}</td>
         <td>${{dollars this.tip}}</td>
         <td>${{dollars this.order_total}}</td>

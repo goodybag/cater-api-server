@@ -353,26 +353,43 @@ describe('Orders Stamps', function(){
   });
 
   describe('Charges', function(){
-    it('.getRestaurantCut()', function(){
-      var charge = orders
-        .compose( require('stamps/charge') )
-        ({
+    var OrderCharge = orders
+      .compose( require('stamps/charge') )
+      .state({
+        type: 'delivery'
+      , region: { sales_tax: 0.0825 }
+      , restaurant: {
           region: { sales_tax: 0.0825 }
-        , items: [
-            { price: 100, quantity: 1 }
-          , { price: 200, quantity: 3 }
-          ]
-        , adjustment: -100
-        , userAdjustment: -50
-        , tip: 50
-        , delivery_fee: 100
-        });
+        , plan: { type: 'flat', data: { fee: 0.1 } }
+        }
+      , items: [
+          { price: 100, quantity: 1 }
+        , { price: 200, quantity: 1 }
+        ]
+      , adjustment: -100
+      , userAdjustment: -50
+      , tip: 50
+      , delivery_fee: 100
+      });
 
-      assert.equal( order.getRestaurantCut(), 643 );
+    it('.getRestaurantCut()', function(){
+      var oc = OrderCharge();
+      assert.equal( order.getRestaurantCut(), 281 );
+    });
+
+    it('.getRestaurantCut({ userAdjustment: false })', function(){
+      var oc = OrderCharge();
+      assert.equal( order.getRestaurantCut({ userAdjustment: false }), 330 );
+    });
+
+    it('.getRestaurantCut() - courier', function(){
+      var oc = OrderCharge({ type: 'courier' });
+      assert.equal( order.getRestaurantCut(), 281 );
     });
 
     it('.getApplicationCut()', function(){
-
+      var oc = OrderCharge();
+      assert.equal( order.getApplicationCut(), 32 );
     });
 
     it('.getRestaurantTotal()', function(){

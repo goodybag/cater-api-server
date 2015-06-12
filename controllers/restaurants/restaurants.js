@@ -121,6 +121,10 @@ module.exports.get = function(req, res) {
         }
       });
 
+      if (orderParams.search) {
+        delete orderParams.search;
+      }
+
       models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');

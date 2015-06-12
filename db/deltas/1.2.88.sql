@@ -15,4 +15,6 @@ begin
     restaurant_id int not null references restaurants(id) on delete cascade,
     data          json
   );
+
+  perform add_column( 'restaurants', 'uuid', 'UUID NOT NULL DEFAULT uuid_generate_v4()' );
 end$$;

@@ -53,7 +53,7 @@ module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-Get');
   logger.info('getting restaurant %s', req.params.rid);
 
-  var orderParams = req.query || {};
+  var queryOptions = req.query || {};
 
   var userId = req.creatorId || req.user.attributes.id;
   var tasks = [
@@ -121,11 +121,7 @@ module.exports.get = function(req, res) {
         }
       });
 
-      if (orderParams.search) {
-        delete orderParams.search;
-      }
-
-      models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
+      models.Restaurant.findOne(query, queryOptions, function(err, restaurant) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');
         restaurant.getItems({ where: { 'is_hidden': false } }, function(err, items) {

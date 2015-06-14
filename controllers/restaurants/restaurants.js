@@ -34,10 +34,19 @@ module.exports.list = function(req, res) {
     return res.error( results.error );
   }
 
+  var searchParams = req.session.searchParams || {};
+
+  // TODO: don't rely on request query for search
+  for (var k in req.query) {
+    if (!(k in searchParams)) {
+      searchParams = req.session.searchParams = req.query;
+    }
+  }
+
   return res.render('restaurant/list', {
     layout:           'layout/default'
   , defaultAddress:   req.user.attributes.defaultAddress
-  , restaurants:      restaurantsFilter( results, req.query, {
+  , restaurants:      restaurantsFilter( results, searchParams, {
                         sorts_by_no_contract: req.user.attributes.region.sorts_by_no_contract
                       , timezone:             req.user.attributes.region.timezone
                       })
@@ -145,7 +154,8 @@ module.exports.get = function(req, res) {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
       defaultAddress:   results[2] ? results[2].toJSON() : null,
-      orderParams:      orderParams
+      orderParams:      orderParams,
+      searchParams:     req.session.searchParams
     }
 
     context.restaurant.delivery_fee = context.order.restaurant.delivery_fee;

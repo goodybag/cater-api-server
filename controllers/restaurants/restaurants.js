@@ -46,7 +46,7 @@ module.exports.list = function(req, res) {
   return res.render('restaurant/list', {
     layout:           'layout/default'
   , defaultAddress:   req.user.attributes.defaultAddress
-  , restaurants:      restaurantsFilter( results, searchParams, {
+  , restaurants:      restaurantsFilter( results, req.query, {
                         sorts_by_no_contract: req.user.attributes.region.sorts_by_no_contract
                       , timezone:             req.user.attributes.region.timezone
                       })

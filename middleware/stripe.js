@@ -3,6 +3,8 @@ var db          = require('db');
 var config      = require('config');
 var hipchat     = require('../lib/hipchat');
 var helpers     = require('../public/js/lib/hb-helpers');
+var logger      = require('../lib/logger').create('Stripe');
+var moment      = require('moment-timezone');
 
 var eventMessages = {
   'charge.succeeded': function(res) {
@@ -121,6 +123,74 @@ var stripe = {
         next();
       });
     };
+  }
+
+, verifyRestaurant: function(options) {
+    return function(req, res, next) {
+      if (!req.restaurant && !req.restaurant.stripe_id) return res.send(500);
+      var dob = moment(req.body.dob, 'MM-DD-YYYY');
+      var data = {
+        legal_entity: {
+          type: req.body.type
+        , first_name: req.body.first_name
+        , last_name: req.body.last_name
+        , personal_id_number: req.body.personal_id_number // SSN
+        , business_tax_id: req.body.business_tax_id // EIN
+        , business_name: req.body.business_name
+        , dob: {
+            day: dob.date()
+          , month: dob.month()
+          , year: dob.year()
+          }
+        , address: {
+            line1: req.body.line1
+          , line2: req.body.line2
+          , city: req.body.city
+          , state: req.body.state
+          , postal_code: req.body.postal_code
+          }
+        }
+      , tos_acceptance: {
+          ip: req.connection.remoteAddress
+        , date: Math.floor(Date.now() / 1000)
+        }
+      , bank_account: {
+          routing_number: req.body.routing_number
+        , account_number: req.body.account_number
+        , country: 'US'
+        , currency: 'USD'
+        }
+      };
+
+      delete data.legal_entity[data.legal_entity.type === 'individual' ? 'business_tax_id' : 'personal_id_number'];
+
+      utils.stripe.accounts.update(req.restaurant.stripe_id, data, function(err, account) {
+        if (err) {
+          logger.error('Unable to update stripe account', err);
+          // Propagate validation error and original req body fields to form
+          res.locals.error = err;
+          res.locals.data = data;
+          res.locals.dob = req.body.dob;
+          return res.render('verify/stripe', { layout: 'layout/default' });
+        }
+        return next();
+      });
+    }
+  }
+
+, insertRestaurantVerification: function(options) {
+    return function(req,res, next) {
+      db.restaurant_verifications.insert({
+        restaurant_id: req.restaurant.id
+      , data: JSON.stringify(req.body)
+      }, function(err, result) {
+        if (err) {
+          logger.error('Unable to insert restaurant_verifications', err);
+          return res.send(500, err);
+        }
+        next();
+      });
+    }
   }
 };
 

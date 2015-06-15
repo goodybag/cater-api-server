@@ -47,13 +47,13 @@
             {{#each order.user.payment_methods}}
               {{#if (eq ../order.payment_method_id id)}}
                 <dt>Card</dt>
-                <dd>*****{{data.last_four}}</dd>
+                <dd>*****{{data.last4}}</dd>
                 <dt>Card Name</dt>
                 <dd>{{name}}</dd>
                 <dt>Card Type</dt>
                 <dd>{{data.brand}}</dd>
                 <dt>Exp</dt>
-                <dd>{{data.expiration_month}} / {{data.expiration_year}}</dd>
+                <dd>{{pad data.exp_month 2}} / {{data.exp_year}}</dd>
               {{/if}}
             {{/each}}
           </dl>

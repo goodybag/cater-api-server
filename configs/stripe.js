@@ -12,6 +12,7 @@ var stripe = {
       customer_id:  'cus_6JlgrqVG6kjp18'
     , card_id:      'card_1678BrEQiCMC2eZ7TaSpmEGJ'
     }
+  , tos_url: 'https://stripe.com/connect/account-terms'
   }
 
 , staging: {
@@ -21,6 +22,7 @@ var stripe = {
       customer_id:  'cus_6JlgrqVG6kjp18'
     , card_id:      'card_1678BrEQiCMC2eZ7TaSpmEGJ'
     }
+  , tos_url: 'https://stripe.com/connect/account-terms'
   }
 
 , production: {
@@ -31,6 +33,7 @@ var stripe = {
     , card_id:      'card_1677pbEQiCMC2eZ7c3BDAdUv'
     }
   }
+  , tos_url: 'https://stripe.com/connect/account-terms'
 }
 
 module.exports = stripe[env];

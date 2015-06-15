@@ -154,12 +154,12 @@ var stripe = {
           ip: req.connection.remoteAddress
         , date: Math.floor(Date.now() / 1000)
         }
-      // , bank_account: {
-      //     routing_number: req.body.routing_number
-      //   , account_number: req.body.account_number
-      //   , country: 'US'
-      //   , currency: 'USD'
-      //   }
+      , bank_account: {
+          routing_number: req.body.routing_number
+        , account_number: req.body.account_number
+        , country: 'US'
+        , currency: 'USD'
+        }
       }, function(err, account) {
         if (err) {
           logger.error('Unable to update stripe account', err);

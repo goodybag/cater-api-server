@@ -8,9 +8,7 @@
     transfers to your account, we will need some info from you.
   </p>
   {{#if error}}
-  {{#if error.message}}
   <p class="alert alert-danger">{{or error.message "Unknown error occurred, please contact us for more assistance"}}</p>
-  {{/if}}
   {{/if}}
   <form method="post" action="/verify/{{restaurant.uuid}}/verifications" class="form-vertical">
     <section>

@@ -140,6 +140,14 @@ input[disabled] {
   }
 }
 
+.form-vertical > section + section:before {
+  content: "";
+  display: block;
+  height: 1px;
+  margin: 30px auto;
+  border-bottom: 1px solid @palette-gray-lighter;
+}
+
 .form-vertical .cupcake {
   position: absolute;
   right: -200px;

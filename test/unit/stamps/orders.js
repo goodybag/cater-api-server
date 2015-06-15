@@ -3,6 +3,7 @@ var moment      = require('moment');
 var utils       = require('utils');
 var config      = require('../../../config');
 var orders      = require('stamps/orders');
+var OrderCharge = require('stamps/orders/charge');
 var fulfillability = require('stamps/orders/fulfillability');
 order.db        = require('../../../lib/stamps/db/orders')
 
@@ -353,8 +354,7 @@ describe('Orders Stamps', function(){
   });
 
   describe('Charges', function(){
-    var OrderCharge = orders
-      .compose( require('stamps/charge') )
+    var DefaultOrderCharge = OrderCharge
       .state({
         type: 'delivery'
       , region: { sales_tax: 0.0825 }
@@ -373,27 +373,23 @@ describe('Orders Stamps', function(){
       });
 
     it('.getRestaurantCut()', function(){
-      var oc = OrderCharge();
+      var oc = DefaultOrderCharge();
       assert.equal( order.getRestaurantCut(), 281 );
     });
 
     it('.getRestaurantCut({ userAdjustment: false })', function(){
-      var oc = OrderCharge();
+      var oc = DefaultOrderCharge();
       assert.equal( order.getRestaurantCut({ userAdjustment: false }), 330 );
     });
 
     it('.getRestaurantCut() - courier', function(){
-      var oc = OrderCharge({ type: 'courier' });
+      var oc = DefaultOrderCharge({ type: 'courier' });
       assert.equal( order.getRestaurantCut(), 281 );
     });
 
     it('.getApplicationCut()', function(){
-      var oc = OrderCharge();
+      var oc = DefaultOrderCharge();
       assert.equal( order.getApplicationCut(), 32 );
-    });
-
-    it('.getRestaurantTotal()', function(){
-
     });
   });
 });

@@ -24,7 +24,7 @@ define( function( require, exports, module ){
     .methods({
       getTax: function(){
         var amount = this.getSubTotal() + this.adjustment + this.userAdjustment;
-        return amount * this.region.sales_tax;
+        return Math.ceil( amount * this.region.sales_tax );
       }
 
     , getSubTotal: function(){
@@ -45,7 +45,13 @@ define( function( require, exports, module ){
       }
 
     , getRestaurantTotal: function(){
-        
+        return [
+          this.getSubTotal()
+        , this.adjustment
+        , this.getTax()
+        , this.delivery_fee
+        , this.tip
+        ].reduce( utils.add, 0 )
       }
     });
 });

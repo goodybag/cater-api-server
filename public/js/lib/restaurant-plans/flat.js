@@ -14,6 +14,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   var utils = require('utils');
+  var orders = require('stamps/orders/base');
 
   var restaurantTotal = function( curr ){
     return curr + this.order.restaurant_total;
@@ -43,6 +44,8 @@ define( function( require, exports, module ){
   };
 
   var payoutPlan = new utils.Plan.Reduce(0)
+    .use( subTotal )
+    .use( )
     .use( restaurantTotal )
     .use( restaurantPlanFlatFee )
     .use( restaurantSalesTax )
@@ -66,24 +69,24 @@ define( function( require, exports, module ){
     getPayoutForOrder: function( plan, order ){
       return payoutPlan
         .set( 'fee', plan.data.fee )
-        .set( 'order', order )
+        .set( 'order', orders( order ) )
         .value();
     }
 
   , getGbFee: function( plan, order ){
       return gbFeePlan
         .set( 'fee', plan.data.fee )
-        .set( 'order', order )
+        .set( 'order', orders( order ) )
         .value();
     }
 
-  , getApplicationFee: function( plan, order ){
+  , getApplicationCut: function( plan, order ){
       // return the application fee we take out of every charge
       // on behalf of the managed accounts (restaurants).
       // https://stripe.com/docs/connect/payments-fees#collecting-fees
       return appFeePlan
         .set( 'fee', plan ? plan.data.fee : 0 )
-        .set( 'order', order )
+        .set( 'order', orders( order ) )
         .value();
     }
   };

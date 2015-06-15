@@ -18,16 +18,37 @@
       </div>
       <div class="form-group">
         <label>Type</label>
-        <label><input type="radio" name="type" id="type-individual" value="individual" {{#eq data.legal_entity.type "individual"}}checked{{/eq}} {{#unless data.legal_entity.type}}checked{{/unless}} required/> Individual</label>
-        <label><input type="radio" name="type" id="type-company" value="company" {{#eq data.legal_entity.type "company"}}checked{{/eq}}/> Company</label>
+        <label>
+          <input
+            type="radio" name="type" id="type-individual" value="individual"
+            {{#eq data.legal_entity.type "individual"}}checked{{/eq}}
+            {{#unless data.legal_entity.type}}checked{{/unless}}
+            required/>
+          Individual
+        </label>
+        <label>
+          <input
+            type="radio" name="type" id="type-company" value="company"
+            {{#eq data.legal_entity.type "company"}}checked{{/eq}}/>
+          Company
+        </label>
       </div>
-      <div class="form-group form-group-personal-tax-id {{#eq data.legal_entity.type 'company'}}hide{{/eq}}">
+      <div class="form-group
+                  form-group-personal-tax-id
+                  {{#eq data.legal_entity.type 'company'}}hide{{/eq}}">
         <label for="personal-tax-id">Personal ID Number (SSN)</label>
-        <input id="personal-tax-id" name="personal_id_number" type="text" {{#dneq data.legal_entity.type "company"}}value="{{data.legal_entity.personal_id_number}}"{{/dneq}}>
+        <input
+          id="personal-tax-id" name="personal_id_number" type="text"
+          {{#dneq data.legal_entity.type "company"}}value="{{data.legal_entity.personal_id_number}}"{{/dneq}}>
       </div>
-      <div class="form-group form-group-business-tax-id {{#eq data.legal_entity.type 'individual'}}hide{{/eq}} {{#unless data.legal_entity.type}}hide{{/unless}}">
+      <div class="form-group
+                  form-group-business-tax-id
+                  {{#eq data.legal_entity.type 'individual'}}hide{{/eq}}
+                  {{#unless data.legal_entity.type}}hide{{/unless}}">
         <label for="business-tax-id">Federal Tax ID Number (EIN)</label>
-        <input id="business-tax-id" name="business_tax_id" type="text" {{#dneq data.legal_entity.type 'individual'}}value="{{data.legal_entity.business_tax_id}}"{{/dneq}}>
+        <input
+          id="business-tax-id" name="business_tax_id" type="text"
+          {{#dneq data.legal_entity.type 'individual'}}value="{{data.legal_entity.business_tax_id}}"{{/dneq}}>
       </div>
     </section>
     <section>

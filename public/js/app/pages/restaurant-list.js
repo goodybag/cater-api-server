@@ -24,7 +24,7 @@ define( function( require ){
       });
 
       var filtersView = new FiltersView({
-        el: '#filters'
+        el: '.search-advanced'
       , facets: {
           cuisines:   '.filter-cuisines input[type="checkbox"]:checked'
         , diets:      '.filter-diets input[type="checkbox"]:checked'

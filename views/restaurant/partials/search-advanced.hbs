@@ -1,53 +1,14 @@
-<div id="filters" class="search-advanced-content{{#if expandSearchTools}} in{{/if}}">
-  <div class="search-advanced-wrapper">
-    <section>
-      <div class="container">
-        <div class="search-advanced-search">
-          <span>Find restaurant by name:</span>
-            <div id="search" class="search-advanced-search-wrapper">
-              <form class="search-form">
-                <div class="search-form-input-cell">
-                  <input class="search-input input-borderless" type="text" value="{{orderParams.search}}" placeholder="Enter search"/>
-                </div>
-                <div class="search-form-action-cell">
-                  <button class="btn btn-borderless" type="submit" data-icon="gb-icon-magnifier"></button>
-                </div>
-              </form>
-            </div>
-        </div>
+<section>
+  <div class="container">
+    <div class="half">
+      {{> restaurant_search_name }}
+      {{> restaurant_list_sort }}
       </div>
-    </section>
-    <section>
-      <div class="container">
-        <div class="search-advanced-filter-col filter-cuisines">
-          <h1>Cuisine</h1>
-          {{#each filterCuisines}}
-          <label><input type="checkbox" value="{{this}}" {{#contains ../orderParams.cuisines this}}checked="checked"{{/contains}}/> {{this}}</label>
-          {{/each}}
-        </div>
-        <div class="search-advanced-filter-col filter-diets">
-          <h1>Special Diets</h1>
-          <label><input type="checkbox" value="glutenFree" {{#contains orderParams.diets "glutenFree"}}checked="checked"{{/contains}}> Gluten-Free</label>
-          <label><input type="checkbox" value="dairyFree" {{#contains orderParams.diets "dairyFree"}}checked="checked"{{/contains}}/> Dairy-free</label>
-          <label><input type="checkbox" value="vegetarian" {{#contains orderParams.diets "vegetarian"}}checked="checked"{{/contains}}/> Vegetarian</label>
-          <label><input type="checkbox" value="vegan" {{#contains orderParams.diets "vegan"}}checked="checked"{{/contains}}/> Vegan</label>
-          <label><input type="checkbox" value="halal" {{#contains orderParams.diets "halal"}}checked="checked"{{/contains}}/> Halal</label>
-          <label><input type="checkbox" value="kosher" {{#contains orderParams.diets "kosher"}}checked="checked"{{/contains}}/> Kosher</label>
-        </div>
-        <div class="search-advanced-filter-col filter-meal-types">
-          <h1>Meal Type</h1>
-          {{#each filterMealTypes}}
-          <label><input type="checkbox" value="{{name}}" {{#contains ../orderParams.mealTypes name}}checked="checked"{{/contains}}> {{name}}</label>
-          {{/each}}
-        </div>
-      </div>
-    </section>
-    <section>
-      <div class="container">
-        <div class="search-advanced-btn-wrapper">
-          <button class="btn btn-primary btn-search">Show restaurants</button>
-        </div>
-      </div>
-    </section>
+    <div class="half">
+      {{!-- abolish whitespace for inline columns --}}
+      {{>  restaurant_filter_cuisines ~}}
+      {{~> restaurant_filter_diets ~}}
+      {{~> restaurant_filter_meal_types ~}}
+    </div>
   </div>
-</div>
+</section>

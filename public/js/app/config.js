@@ -10,6 +10,7 @@ define(function(require){
   , taxRate: 0.0825
   , menuRefresh: 5000
   , debounceWait: 300
+  , diets: require('diets')
   };
 
   return config;

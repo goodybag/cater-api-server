@@ -43,9 +43,9 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
-  , organization_type: { 
+  , organization_type: {
       type: types.text
-    , nullable: true 
+    , nullable: true
     , default: null
     }
   , balanced_customer_uri: { //can be null if they're going to be invoiced
@@ -78,6 +78,7 @@ define(function(require) {
   , ordrin_email:     { type: types.text, unique: true }
   , ordrin_password:  { type: types.text }
   , user_agent:       { type: types.text }
+  , stripe_id:        { type: types.text }
   };
 
   definition.indices = {};

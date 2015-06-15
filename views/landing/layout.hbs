@@ -17,7 +17,7 @@
     <![endif]-->
 
     <link rel="stylesheet" href="{{cdn "/css/gb-icon.css"}}">
-    <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/landing.css' pkg)}}">
+    <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/goodybag.css' pkg)}}">
 
     {{> analytics }}
 
@@ -53,6 +53,10 @@
     {{> config}}
 
     {{> olark }}
+
+    {{#unless config.isProduction}}
+      {{> adroll }}
+    {{/unless}}
 
     {{{block "scripts"}}}
   </body>

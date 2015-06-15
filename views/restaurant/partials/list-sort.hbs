@@ -1,19 +1,19 @@
-<div id="sort" class="list-sort">
-  <div class="list-sort-lead">Sort by:</div>
+<div id="sort">
+  Sort by:
   <div class="list-sort-actions btn-group">
-    <input type="radio" name="list-sort" id="popular" value="popular" {{#if (or (eq orderParams.sort "popular") (not orderParams.sort) )}}checked{{/if}}>
+    <input type="radio" name="list-sort" id="popular" value="popular" {{#if (or (eq reqQuery.sort "popular") (not reqQuery.sort) )}}checked{{/if}}>
     <label class="btn btn-small" for="popular">Popular</label>
 
-    <input type="radio" name="list-sort" id="name" value="name" {{#eq orderParams.sort "name"}}checked{{/eq}}>
+    <input type="radio" name="list-sort" id="name" value="name" {{#eq reqQuery.sort "name"}}checked{{/eq}}>
     <label class="btn btn-small" for="name">A-Z</label>
 
-    <input type="radio" name="list-sort" id="price" value="price" {{#eq orderParams.sort "price"}}checked{{/eq}}>
+    <input type="radio" name="list-sort" id="price" value="price" {{#eq reqQuery.sort "price"}}checked{{/eq}}>
     <label class="btn btn-small" for="price">Price</label>
 
-    <input type="radio" name="list-sort" id="deliveryfee" value="delivery fee" {{#eq orderParams.sort "delivery fee"}}checked{{/eq}}>
+    <input type="radio" name="list-sort" id="deliveryfee" value="delivery fee" {{#eq reqQuery.sort "delivery fee"}}checked{{/eq}}>
     <label class="btn btn-small" for="deliveryfee">Delivery Fee</label>
 
-    <input type="radio" name="list-sort" id="minorder" value="order minimum" {{#eq orderParams.sort "order minimum"}}checked{{/eq}}>
+    <input type="radio" name="list-sort" id="minorder" value="order minimum" {{#eq reqQuery.sort "order minimum"}}checked{{/eq}}>
     <label class="btn btn-small" for="minorder">Order Minimum</label>
   </div>
 </div>

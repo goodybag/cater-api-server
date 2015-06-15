@@ -34,6 +34,7 @@ define(function(require, exports, module) {
         , sales_tax:      this.sales_tax
         , plan:           this.get('plan')
         });
+
         this.items.invoke('updatePropertiesBasedOnOrder');
       } else {
         this.items = items;

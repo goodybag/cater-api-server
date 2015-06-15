@@ -33,8 +33,6 @@ module.exports = function(opts) {
       return list;
     }, []);
 
-    // Expand if any search tools are open
-    res.locals.expandSearchTools = !utils.isEmpty(utils.omit(searchTags, 'sort'));
     next();
   };
 };

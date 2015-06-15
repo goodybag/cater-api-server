@@ -19,7 +19,38 @@
 
     <p>Demo</p>
     <span class="popover-wrapper">
-      <a href="#" data-role="popover" data-target="example-popover">Open popover</a>
+      <a href="#" class="btn btn-primary" data-role="popover" data-target="example-popover">Open popover</a>
+      <div class="popover-modal example-popover">
+        <div class="popover-header">
+          Header<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+        </div>
+        <div class="popover-body">
+          <div
+            class="popover-filter"
+            data-role="filter-list"
+            data-input="> input"
+            data-target="~ .popover-item"
+            data-fields="id,name"
+            >
+            <input type="text" placeholder="Filter...">
+          </div>
+          <div class="popover-item" data-id="1" data-name="Foo">#1 - Foo</div>
+          <div class="popover-item" data-id="2" data-name="Bar">#2 - Bar</div>
+          <div class="popover-item" data-id="3" data-name="Baz">#3 - Baz</div>
+          <div class="popover-item" data-id="4" data-name="Bil">#4 - Bil</div>
+          <div class="popover-item" data-id="5" data-name="Fil">#5 - Fil</div>
+          <div class="popover-item" data-id="6" data-name="Nil">#6 - Nil</div>
+          <div class="popover-item" data-id="7" data-name="Foo">#7 - Foo</div>
+          <div class="popover-item" data-id="8" data-name="Bar">#8 - Bar</div>
+          <div class="popover-item" data-id="9" data-name="Baz">#9 - Baz</div>
+          <div class="popover-item" data-id="10" data-name="Bil">#10 - Bil</div>
+          <div class="popover-item" data-id="11" data-name="Fil">#11 - Fil</div>
+          <div class="popover-item" data-id="12" data-name="Nil">#12 - Nil</div>
+        </div>
+      </div>
+    </span>
+    <span class="popover-wrapper right">
+      <a href="#" class="btn btn-primary" data-role="popover" data-target="example-popover">Open popover right</a>
       <div class="popover-modal example-popover">
         <div class="popover-header">
           Header<a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
@@ -63,6 +94,9 @@
     </div>
   </div>
 </span>{{/raw}}</code>
+    <p>
+      <blockquote class="blockquote blockquote-info">Use class="popover-wrapper right" to align the popover to the right edge.</blockquote>
+    </p>
     <p>Javascript</p>
     <code class="language-javascript">$('[data-role="popover"]').gb_popover();</code>
   </div>

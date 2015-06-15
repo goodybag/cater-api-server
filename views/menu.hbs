@@ -13,199 +13,199 @@
 
 <div class="page page-menu container">
 
-<div class="row">
-  <div class="col-lg-12">
-    <a class="back-to-results" href="/restaurants{{queryParams orderParams}}">Back to search</a>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-8">
-    <div class="restaurant-header">
-      <img class="restaurant-header-logo" src="{{#if restaurant.logo_url}}{{filepicker restaurant.logo_url}}{{else}}{{filepicker config.defaultLogo}}{{/if}}" alt="{{restaurant.name}}">
-      <div class="restaurant-header-body">
-        <div class="restaurant-header-name {{#unless restaurant.description}}restaurant-header-name-full{{/unless}}">{{restaurant.name}}</div>
-        <div class="restaurant-header-description">{{restaurant.description}}</div>
-      </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <a class="back-to-results" href="/restaurants{{queryParams orderParams}}">Back to search</a>
     </div>
-    <ul class="nav nav-tabs menu-info-tabs">
-      <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
-      {{#if restaurant.photos.length}}
-      <li><a href="#photos" data-toggle="tab">Photos</a></li>
-      {{/if}}
-      <li><a class="info-tab" href="#info" data-toggle="tab">Info</a></li>
-      {{#if restaurant.yelp_data}}
-      {{#if restaurant.yelp_data.review_count}}
-      <li>
-        {{#if restaurant.yelp_data.reviews}}
-        <a href="#reviews" data-toggle="tab">
-        {{else}}
-        <a href="{{../restaurant.yelp_data.url}}" target="_blank">
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="restaurant-header">
+        <img class="restaurant-header-logo" src="{{#if restaurant.logo_url}}{{filepicker restaurant.logo_url}}{{else}}{{filepicker config.defaultLogo}}{{/if}}" alt="{{restaurant.name}}">
+        <div class="restaurant-header-body">
+          <div class="restaurant-header-name">{{restaurant.name}}</div>
+          <div class="restaurant-header-description">Call us to place your order or to get help placing it online! {{phoneNumber config.phone.support}}</div>
+        </div>
+      </div>
+      <ul class="nav nav-tabs menu-info-tabs">
+        <li class="active"><a href="#menu" data-toggle="tab">Menu</a></li>
+        {{#if restaurant.photos.length}}
+        <li><a href="#photos" data-toggle="tab">Photos</a></li>
         {{/if}}
-          Reviews
-          {{#if restaurant.yelp_data.review_count}}({{restaurant.yelp_data.review_count}}){{/if}}
-        </a>
-      </li>
-      {{/if}}
-      {{/if}}
-      {{#contains user.groups "admin"}}
-        <li><a href="/admin/restaurants/{{restaurant.id}}">Edit Restaurant</a></li>
-        <li><a href="/restaurants/{{restaurant.id}}/events">Calendar</a></li>
-        <li><a href="/admin/restaurants/{{restaurant.id}}/menu.csv">CSV Menu</a></li>
-      {{/contains}}
-    </ul>
+        <li><a class="info-tab" href="#info" data-toggle="tab">Info</a></li>
+        {{#if restaurant.yelp_data}}
+        {{#if restaurant.yelp_data.review_count}}
+        <li>
+          {{#if restaurant.yelp_data.reviews}}
+          <a href="#reviews" data-toggle="tab">
+          {{else}}
+          <a href="{{../restaurant.yelp_data.url}}" target="_blank">
+          {{/if}}
+            Reviews
+            {{#if restaurant.yelp_data.review_count}}({{restaurant.yelp_data.review_count}}){{/if}}
+          </a>
+        </li>
+        {{/if}}
+        {{/if}}
+        {{#contains user.groups "admin"}}
+          <li><a href="/admin/restaurants/{{restaurant.id}}">Edit Restaurant</a></li>
+          <li><a href="/restaurants/{{restaurant.id}}/events">Calendar</a></li>
+          <li><a href="/admin/restaurants/{{restaurant.id}}/orders">Orders</a></li>
+        {{/contains}}
+      </ul>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-md-8">
-    <div class="tab-content">
-      <div class="tab-pane active" id="menu">
-        <div class="menu">
-          {{> menu_picker }}
-          {{> restaurant_categories }}
+  <div class="row">
+    <div class="col-md-8">
+      <div class="tab-content">
+        <div class="tab-pane active" id="menu">
+          <div class="menu">
+            {{> menu_picker }}
+            {{> restaurant_categories config=config }}
+          </div>
         </div>
-      </div>
 
-      <div class="tab-pane panel" id="info">
-        <div class="panel-body">
-          {{! Left info column }}
-          <div  class="col-md-6 no-padding">
-            <div class="restaurant-info-item restaurant-info-item-categories">
-              <div class="info-item-title">
-                <ul class="list-restaurant-inline">
-                {{#each restaurant.cuisine}}
-                  <li class="cuisine-list-item">{{this}}</li>
-                {{/each}}
-                </ul>
-                <span class="dollar-meter">{{{dollarMeter restaurant.price}}}</span>
-              </div>
-            </div>
-
-            {{#if restaurant.minimum_order}}
-            <div class="restaurant-info-item restaurant-info-item-categories">
-              <h4 class="info-item-title">Order Minimum:</h4>
-              <div class="info-item-value">${{dollars restaurant.minimum_order}}</div>
-            </div>
-            {{/if}}
-
-            {{#if restaurant.delivery_fee}}
-            <div class="restaurant-info-item restaurant-info-item-categories">
-              <h4 class="info-item-title">Delivery Charge:</h4>
-              {{#unless order.zip}}
-              <div class="info-item-value">Starting from: ${{dollars restaurant.delivery_fee}}</div>
-              {{else}}
-              <div class="info-item-value">${{dollars restaurant.delivery_fee}}</div>
-              {{/unless}}
-            </div>
-            {{/if}}
-
-            {{#if restaurant.max_guests}}
-            <div class="restaurant-info-item restaurant-info-item-categories">
-              <h4 class="info-item-title">Max. Guests:</h4>
-              <div class="info-item-value">{{restaurant.max_guests}}</div>
-            </div>
-            {{/if}}
-
-            {{#if restaurant.delivery_times}}
-            <div class="restaurant-info-item restaurant-info-item-delivery-times">
-              <h4 class="info-item-title">Delivery Times:</h4>
-              <div class="info-item-value">
-                {{> delivery_times restaurant}}
-              </div>
-            </div>
-            {{/if}}
-
-            <div class="restaurant-info-item restaurant-info-item-lead-times">
-              <h4 class="info-item-title">Lead Times:</h4>
-              <div class="info-item-value">
-                {{> lead_times restaurant}}
-              </div>
-            </div>
-
-            <div class="restaurant-info-item restaurant-info-item-zips">
-              <h4 class="info-item-title">Zip Codes within delivery range:</h4>
-              {{#each restaurant.delivery_zip_groups}}
-                <div class="info-item-value">
-                  <h5 class="info-item-title delivery-zip-tier-title">${{dollars this.fee}}</h5>
-                  <ul class="list-delivery-zips">
-                    {{#each this.zips}}
-                    <li class="delivery-zip">{{this}}</li>
-                    {{/each}}
+        <div class="tab-pane panel" id="info">
+          <div class="panel-body">
+            {{! Left info column }}
+            <div  class="col-md-6 no-padding">
+              <div class="restaurant-info-item restaurant-info-item-categories">
+                <div class="info-item-title">
+                  <ul class="list-restaurant-inline">
+                  {{#each restaurant.cuisine}}
+                    <li class="cuisine-list-item">{{this}}</li>
+                  {{/each}}
                   </ul>
+                  <span class="dollar-meter">{{{dollarMeter restaurant.price}}}</span>
                 </div>
-              {{/each}}
+              </div>
+
+              {{#if restaurant.minimum_order}}
+              <div class="restaurant-info-item restaurant-info-item-categories">
+                <h4 class="info-item-title">Order Minimum:</h4>
+                <div class="info-item-value">${{dollars restaurant.minimum_order}}</div>
+              </div>
+              {{/if}}
+
+              {{#if restaurant.delivery_fee}}
+              <div class="restaurant-info-item restaurant-info-item-categories">
+                <h4 class="info-item-title">Delivery Charge:</h4>
+                {{#unless order.zip}}
+                <div class="info-item-value">Starting from: ${{dollars restaurant.delivery_fee}}</div>
+                {{else}}
+                <div class="info-item-value">${{dollars restaurant.delivery_fee}}</div>
+                {{/unless}}
+              </div>
+              {{/if}}
+
+              {{#if restaurant.max_guests}}
+              <div class="restaurant-info-item restaurant-info-item-categories">
+                <h4 class="info-item-title">Max. Guests:</h4>
+                <div class="info-item-value">{{restaurant.max_guests}}</div>
+              </div>
+              {{/if}}
+
+              {{#if restaurant.delivery_times}}
+              <div class="restaurant-info-item restaurant-info-item-delivery-times">
+                <h4 class="info-item-title">Delivery Times:</h4>
+                <div class="info-item-value">
+                  {{> delivery_times restaurant}}
+                </div>
+              </div>
+              {{/if}}
+
+              <div class="restaurant-info-item restaurant-info-item-lead-times">
+                <h4 class="info-item-title">Lead Times:</h4>
+                <div class="info-item-value">
+                  {{> lead_times restaurant}}
+                </div>
+              </div>
+
+              <div class="restaurant-info-item restaurant-info-item-zips">
+                <h4 class="info-item-title">Zip Codes within delivery range:</h4>
+                {{#each restaurant.delivery_zip_groups}}
+                  <div class="info-item-value">
+                    <h5 class="info-item-title delivery-zip-tier-title">${{dollars this.fee}}</h5>
+                    <ul class="list-delivery-zips">
+                      {{#each this.zips}}
+                      <li class="delivery-zip">{{this}}</li>
+                      {{/each}}
+                    </ul>
+                  </div>
+                {{/each}}
+              </div>
+            </div>
+
+            {{! Right info column}}
+            <div class="col-md-6 no-padding">
+              {{> restaurant_location }}
             </div>
           </div>
+        </div>
 
-          {{! Right info column}}
-          <div class="col-md-6 no-padding">
-            {{> restaurant_location }}
+        <div class="tab-pane panel" id="reviews">
+          {{> menu_tab_reviews}}
+        </div>
+
+        <div class="tab-pane panel" id="photos">
+          {{#with restaurant.photos}}
+          <div class="panel-body">{{> menu_photo_gallery}}</div>
+          {{/with}}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 order-summary-col">
+      <div class="order-meta">
+        {{!-- order params & share link --}}
+        {{> menu_order_meta }}
+      </div>
+      <div class="order-summary">
+        {{> menu_order_summary }}
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade modal-item" id="item-modal" role="dialog" aria-labelledby="itemModal" aria-hidden="true"></div>
+
+  <div class="modal fade modal-order-params" id="order-params-modal" role="dialog" aria-labelledby="orderParamsRequiredModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">All info must be entered before creating an order</h4>
+        </div>
+        <div class="modal-body">
+          <div class="errors">
+            <div class="alert is_bad_zip alert-danger{{#unless restaurant.is_bad_zip}} hide{{/unless}}">We're sorry, this restaurant does not deliver to that zip code.</div>
+
+            <div class="alert is_bad_delivery_time alert-danger{{#unless restaurant.is_bad_delivery_time}} hide{{/unless}}">We're sorry, this restaurant does not deliver for that date and time.</div>
+
+            <div class="alert is_bad_guests alert-danger{{#unless restaurant.is_bad_guests}} hide{{/unless}}">We're sorry, this restaurant cannot fulfill orders for this many guests.</div>
+
+            <div class="alert is_bad_lead_time alert-danger{{#unless restaurant.is_bad_lead_time}} hide{{/unless}}">Please select a later datetime so this restaurant can prepare your meal in a timely fashion.</div>
+
+            <div class="alert restaurant_closed alert-danger{{#unless restaurant.restaurant_closed}} hide{{/unless}}">We're sorry, this restaurant is closed for selected date.</div>
+
+            <div class="alert alert-danger error-blank-fields hide">You must fill out all fields</div>
+
+            <div class="alert alert-danger after_hours hide">We're sorry, it's too late to place an order for that time.</div>
+          </div>
+          <div class="order-params-wrapper">
+            {{> order_params_bar}}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="btn-toolbar pull-right">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-submit">Submit</button>
           </div>
         </div>
       </div>
-
-      <div class="tab-pane panel" id="reviews">
-        <div class="panel-body">{{> menu_tab_reviews}}</div>
-      </div>
-
-      <div class="tab-pane panel" id="photos">
-        {{#with restaurant.photos}}
-        <div class="panel-body">{{> menu_photo_gallery}}</div>
-        {{/with}}
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-4 order-summary-col">
-    <div class="order-meta">
-      {{!-- order params & share link --}}
-      {{> menu_order_meta }}
-    </div>
-    <div class="order-summary">
-      {{> menu_order_summary }}
     </div>
   </div>
 </div>
-
-<div class="modal fade modal-item" id="item-modal" role="dialog" aria-labelledby="itemModal" aria-hidden="true"></div>
-
-<div class="modal fade modal-order-params" id="order-params-modal" role="dialog" aria-labelledby="orderParamsRequiredModal" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">All info must be entered before creating an order</h4>
-      </div>
-      <div class="modal-body">
-        <div class="errors">
-          <div class="alert is_bad_zip alert-danger{{#unless restaurant.is_bad_zip}} hide{{/unless}}">We're sorry, this restaurant does not deliver to that zip code.</div>
-
-          <div class="alert is_bad_delivery_time alert-danger{{#unless restaurant.is_bad_delivery_time}} hide{{/unless}}">We're sorry, this restaurant does not deliver for that date and time.</div>
-
-          <div class="alert is_bad_guests alert-danger{{#unless restaurant.is_bad_guests}} hide{{/unless}}">We're sorry, this restaurant cannot fulfill orders for this many guests.</div>
-
-          <div class="alert is_bad_lead_time alert-danger{{#unless restaurant.is_bad_lead_time}} hide{{/unless}}">Please select a later datetime so this restaurant can prepare your meal in a timely fashion.</div>
-
-          <div class="alert restaurant_closed alert-danger{{#unless restaurant.restaurant_closed}} hide{{/unless}}">We're sorry, this restaurant is closed for selected date.</div>
-
-          <div class="alert alert-danger error-blank-fields hide">You must fill out all fields</div>
-
-          <div class="alert alert-danger after_hours hide">We're sorry, it's too late to place an order for that time.</div>
-        </div>
-        <div class="order-params-wrapper">
-          {{> order_params_bar}}
-        </div>
-      </div>
-      <div class="modal-footer">
-        <div class="btn-toolbar pull-right">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary btn-submit">Submit</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 {{#extend "bootstrap"}}
 <script>
   define( 'data/order', ['app/models/index'], function( Models ){

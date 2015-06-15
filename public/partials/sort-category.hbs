@@ -2,7 +2,7 @@
   <h3 class="panel-title menu-cateogry-title">
     <span class="category-order">{{order}}</span> - <span>{{name}}</span>
   </h3>
-  <span class="pull-right">
+    <p class="category-description">{{description}}</p>
     <!-- Single button -->
     <div class="btn-group">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -16,13 +16,11 @@
     </div>
     <input type="button" class="button btn-default toggle-items" value="Toggle Items" />
     <input type="button" class="button btn-primary hide save-items" value="Save Items" />
-    </span>
-  <p class="category-description">{{description}}</p>
 </div>
 <div class="list-group list-group-flush category">
   {{#each items}}
     <a class="list-group-item item sortable" id="item-{{id}}">
-      {{>sort_item this}}
+      {{>sort_item config=../config}}
     </a>
   {{/each}}
 </div>

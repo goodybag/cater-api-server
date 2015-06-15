@@ -130,6 +130,7 @@ begin
       left join restaurant_locations rl on rl.id = o.restaurant_location_id
       where dsz."from" = rl.zip
         and dsz."to" = o.zip
+        and dsz.delivery_service_id = o.delivery_service_id
       limit 1)
     , default_fee
     );
@@ -205,7 +206,7 @@ begin
     (select no_contract_fee
     from restaurants
     where restaurants.id = o.restaurant_id
-      and has_contract is false)
+      and plan_id is null)
   , 0
   );
 end;

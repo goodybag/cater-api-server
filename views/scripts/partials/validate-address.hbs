@@ -1,0 +1,13 @@
+{{#extend "scripts"}}
+<script>
+  require( ['utils', 'app/views/validate-address'], function( utils, ValidateAddressView ){
+    utils.domready(function(){
+      utils.dom('[data-action~="validate-address"]').each( function(){
+        new ValidateAddressView({
+          el: this
+        });
+      });
+    });
+  });
+</script>
+{{/extend}}

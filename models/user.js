@@ -80,23 +80,23 @@ var User = module.exports = Model.extend({
         });
       }
 
-    , balanced: function( hash, salt, done ){
-        var data = { name: attr.name };
-
-        utils.balanced.Customers.create( data, function( error, customer ){
-          if ( error ) return done( error );
-
-          done( null, hash, customer.uri );
+    , stripe: function( hash, salt, done ){
+        utils.stripe.customers.create({
+          email: attr.email.toLowerCase()
+        , metadata: { name: attr.name }
+        }, function(error, customer) {
+          if ( error ) return done ( error );
+          done( null, hash, customer.id );
         });
       }
 
-    , create: function( hash, balanced_customer_uri, done ){
+    , create: function( hash, stripe_id, done ){
         var groups = attr.groups || ['client'];
 
         var userData = utils.extend( attr, {
           email:                  attr.email.toLowerCase()
         , password:               hash
-        , balanced_customer_uri:  balanced_customer_uri
+        , stripe_id:              stripe_id
         });
 
         var query = queries.user.create(
@@ -148,7 +148,7 @@ var User = module.exports = Model.extend({
 
     utils.async.waterfall([
       flow.encrypt
-    , flow.balanced
+    , flow.stripe
     , flow.create
     , flow.group
     , flow.restaurant

@@ -19,6 +19,8 @@ module.exports = function( options ){
   return function( req, res, next ){
     var logger = req.logger.create('Middleware-GetOrder2');
 
+    if ( !req.params[options.param].match(/^\d+$/) ) return res.status(404).render('404');
+
     var $options = {
       one:    []
     , many:   []
@@ -98,6 +100,13 @@ module.exports = function( options ){
         });
       }
 
+      if ( options.restaurantContacts ){
+        restaurantMany.push({
+          table: 'contacts'
+        , order: 'notify = true, name asc'
+        });
+      }
+
       $options.one.push({
         table:  'restaurants'
       , alias:  'restaurant'
@@ -118,8 +127,12 @@ module.exports = function( options ){
       $options.one.push({ table: 'payment_methods', alias: 'payment_method' });
     }
 
+    if ( options.orderFeedback ) {
+      $options.one.push({ table: 'order_feedback', alias: 'order_feedback' });
+    }
+
     logger.info('Finding order');
-    db.orders.findOne( +req.param( options.param ), $options, function( error, order ){
+    db.orders.findOne( +req.params[options.param], $options, function( error, order ){
       if ( error ){
         logger.error('error trying to find order #%s', req.params.id, error)
         return res.error(errors.internal.DB_FAILURE, error);

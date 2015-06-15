@@ -15,8 +15,8 @@
     "tests"
   ],
   "dependencies": {
-    "moment-timezone": "0.0.1",
-    "moment": "2.5.0",
+    "moment-timezone": "~0.3.0",
+    "moment": "2.9.0",
     "underscore": "1.5.2",
     "jquery": "1.10.2",
     "handlebars": "~3.0.0",
@@ -54,6 +54,9 @@
     "stampit": "~1.1.0",
     "isotope": "~2.1.0",
     "jquery-appear": "~0.2.2",
-    "Chart.js": "~1.0.1"
+    "Chart.js": "~1.0.1",
+    "resource.js": "~1.0.2",
+    "gplaces": "~1.0.5",
+    "gb-handlebars-helpers": "~0.0.4"
   }
 }

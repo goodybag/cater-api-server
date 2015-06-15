@@ -1,16 +1,20 @@
 <section class="analytics-section analytics-section-month">
   <div class="container">
-    <div class="col-4 analytics-col">
+    <div class="col-3 analytics-col">
       <div>${{commatize (dollars stats.month.volume)}}</div>
       <small>Total Volume</small>
     </div>
-    <div class="col-4 analytics-col">
+    <div class="col-3 analytics-col">
       <div>{{commatize stats.month.placed}}</div>
       <small>Accepted Orders Placed</small>
     </div>
-    <div class="col-4 analytics-col">
+    <div class="col-3 analytics-col">
       <div>{{commatize stats.month.guests}}</div>
       <small>Guests Fed</small>
+    </div>
+    <div class="col-3 analytics-col">
+      <div>{{commatize stats.month.organizations}}</div>
+      <small>Organizations</small>
     </div>
   </div>
 </section>

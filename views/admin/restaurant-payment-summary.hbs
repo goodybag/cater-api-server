@@ -82,6 +82,20 @@
     'data/orders'
   , ['app/collections/restaurant-orders']
   , function( Orders ){
+      var OrdersOrig = Orders;
+      Orders = Orders.extend({
+        // Don't automatically parse the order type
+        _prepareModel: function( attrs, options ){
+          if ( attrs instanceof this.model ) return attrs;
+
+          options = options || {};
+
+          options.ignoreOrderTypeInit = true;
+
+          return OrdersOrig.prototype._prepareModel.call( this, attrs, options );
+        }
+      })
+
       return new Orders( null, { restaurant_id: {{restaurant.id}} } );
     }
   );

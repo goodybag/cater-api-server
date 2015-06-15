@@ -24,7 +24,7 @@ module.exports.index = function(req, res) {
 
 module.exports.forgotPassword = function( req, res ){
   res.render( 'landing/forgot-password', {
-    layout: 'landing/layout'
+    layout: 'layout/default'
   });
 };
 
@@ -34,7 +34,7 @@ module.exports.forgotPasswordConsume = function( req, res ){
     var sql = db.builder.sql({
       type: 'select'
     , table: 'password_resets'
-    , where: { token: req.param('token'), token_used: { $null: true } }
+    , where: { token: req.params.token, token_used: { $null: true } }
     });
 
     db.query(sql.query, sql.values, function(err, rows, result) {
@@ -48,8 +48,8 @@ module.exports.forgotPasswordConsume = function( req, res ){
 
     if ( !req.body.password ){
       return res.render( 'landing/forgot-password-consume', {
-        layout: 'landing/layout'
-      , token: req.param('token')
+        layout: 'layout/default'
+      , token: req.params.token
       });
     }
 
@@ -87,14 +87,14 @@ module.exports.forgotPasswordConsume = function( req, res ){
     utils.async.waterfall( flow, function( error ){
       if ( error ){
         return res.render( 'landing/forgot-password-consume', {
-          layout: 'landing/layout'
-        , token: req.param('token')
+          layout: 'layout/default'
+        , token: req.params.token
         , error: error
         });
       }
 
       res.render( 'landing/forgot-password-consume-success', {
-        layout: 'landing/layout'
+        layout: 'layout/default'
       });
     });
   });
@@ -103,7 +103,7 @@ module.exports.forgotPasswordConsume = function( req, res ){
 module.exports.forgotPasswordCreate = function( req, res ){
   var render = function( error ){
     var options = utils.extend( {}, req.body, {
-      layout: 'landing/layout'
+      layout: 'layout/default'
     });
 
     if ( error ) options.error = error;
@@ -159,7 +159,7 @@ module.exports.login = function ( req, res ){
 
   if ( !req.body.email && !req.body.password ){
     return res.render('landing/login', {
-      layout: 'landing/layout'
+      layout: 'layout/default'
     });
   }
 
@@ -174,7 +174,7 @@ module.exports.login = function ( req, res ){
       }
 
       return res.render('landing/login', {
-        layout: 'landing/layout'
+        layout: 'layout/default'
       , error: error
       });
     }
@@ -243,8 +243,8 @@ module.exports.signup = function( req, res ){
 
 module.exports.registerView = function( req, res ){
   res.render( 'landing/register', {
-    layout: 'landing/layout'
-  , fromGuestOrder: req.param('fromGuestOrder')
+    layout: 'layout/default'
+  , fromGuestOrder: req.params.fromGuestOrder
   });
 };
 
@@ -261,7 +261,7 @@ module.exports.register = function( req, res ){
   // Don't bother sending a validation error if they didn't fill anything out
   if ( !data.email && !data.password ){
     return res.render( 'landing/register', {
-      layout: 'landing/layout'
+      layout: 'layout/default'
     });
   }
 
@@ -292,7 +292,7 @@ putils.validator.validate( data, {
       }
 
       return res.render( 'landing/register', {
-        layout: 'landing/layout'
+        layout: 'layout/default'
       , error: { message: message }
       });
     }
@@ -304,7 +304,7 @@ putils.validator.validate( data, {
         }
 
         return res.render( 'landing/register', {
-          layout: 'landing/layout'
+          layout: 'landing/default'
         , error: error
         });
       }

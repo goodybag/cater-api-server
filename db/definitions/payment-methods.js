@@ -39,6 +39,7 @@ define(function(require) {
       type: types.json
     , nullable: false
     }
+  , stripe_id: { type: types.text }
   };
 
   definition.indices = {};

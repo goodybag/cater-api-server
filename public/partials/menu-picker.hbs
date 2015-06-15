@@ -20,36 +20,44 @@
       <div class="tab-pane active" id="full">
         {{! list all categories }}
         {{#each restaurant.categories}}
+        {{#unless is_hidden}}
         {{#contains menus "group"}}
         <div class="menu-picker-category"><a href="#group-{{id}}">[Group] {{name}}</a></div>
         {{/contains}}
+        {{/unless}}
         {{/each}}
 
         {{#each restaurant.categories}}
+        {{#unless is_hidden}}
         {{#contains menus "individual"}}
         <div class="menu-picker-category"><a href="#individual-{{id}}">[Individual] {{name}}</a></div>
         {{/contains}}
+        {{/unless}}
         {{/each}}
       </div>
-      
+
       <div class="tab-pane" id="group">
         {{! list group style categories }}
         {{#each restaurant.categories}}
+        {{#unless is_hidden}}
         {{#contains menus "group"}}
         <div class="menu-picker-category"><a href="#group-{{id}}">[Group] {{name}}</a></div>
         {{/contains}}
+        {{/unless}}
         {{/each}}
         {{#unless restaurant.menuLengths.group}}
         <div class="menu-missing">This restaurant does not have group serving options.</div>
         {{/unless}}
       </div>
-      
+
       <div class="tab-pane" id="individual">
         {{! list individual style categories }}
         {{#each restaurant.categories}}
+        {{#unless is_hidden}}
         {{#contains menus "individual"}}
         <div class="menu-picker-category"><a href="#individual-{{id}}">[Individual] {{name}}</a></div>
         {{/contains}}
+        {{/unless}}
         {{/each}}
         {{#unless restaurant.menuLengths.individual}}
         <div class="menu-missing">This restaurant does not have individual serving options.</div>

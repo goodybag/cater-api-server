@@ -10,6 +10,8 @@ var
 , json2csv = require('json2csv')
 , _ = require('lodash')
 , helpers = require('../../public/js/lib/hb-helpers')
+, orderFulfillability = require('stamps/orders/fulfillability')
+, restaurantsFilter = require('../../public/js/lib/restaurants-filter')
 ;
 
 cuisines = cuisines.sort();
@@ -22,145 +24,29 @@ utils.findWhere(states, {abbr: 'TX'}).default = true;
 module.exports.list = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-List');
 
-  //TODO: middleware to validate and sanitize query object
-  var orderParams = req.query || {};
-  if (orderParams.prices)
-    orderParams.prices = utils.map(orderParams.prices, function(price) { return parseInt(price); });
+  var results = db.cache.restaurants.byRegion( req.user.attributes.region_id );
 
-  var page = +req.query.p || 1;
-  var paginationLimit = 30;
+  if ( results.error ){
+    logger.error('Error getting restaurants by region', {
+      error: error
+    });
 
-  // Dont worry about pagination if they're filtering -
-  // it's just too complex to support right now
-  var shouldPaginate = false;
-
-  res.locals.page = page;
-
-  if ( req.user.attributes.region.sorts_by_no_contract ){
-    orderParams.withContractFirst = true;
+    return res.error( results.error );
   }
 
-  var tasks =  [
-    function(callback) {
-      var query = {
-        includes: [
-          { type: 'filter_restaurant_events' }
-        ]
-      , limit: 'all'
-      , where: { is_archived: false }
-      , limit: shouldPaginate ? paginationLimit : 'all'
-      , offset: shouldPaginate ? (page - 1) * paginationLimit : 0
-      };
-
-      logger.info('Finding filtered restaurants', {
-        orderParams: orderParams
-      });
-
-      if ( req.user.attributes.region_id ){
-        query.where.region_id = req.user.attributes.region_id;
-      }
-
-      models.Restaurant.find(
-        query
-      , utils.extend({ is_hidden: false }
-      , orderParams)
-      , callback);
-    },
-
-    function(callback) {
-      if ( req.user.isGuest() ){
-        return callback();
-      }
-      logger.info('Finding default address');
-      models.Address.findOne({where: { user_id: req.user.attributes.id, is_default: true }}, callback);
-    },
-
-    function countRestaurants( callback ){
-      if ( !shouldPaginate ){
-        res.locals.pages = [];
-        return callback();
-      }
-
-      db.query2({
-        type: 'select'
-      , columns: [{
-          type: 'select'
-        , columns: [{ type: 'count', expression: '*' }]
-        , table: 'restaurants'
-        , where: { region_id: req.user.attributes.region_id, is_hidden: false }
-        }]
-      , alias: 'total'
-      }, function( error, results ){
-        if ( error ) return callback( error );
-
-        var total = res.locals.totalRestaurants = results[0].total || 0;
-        res.locals.pages = utils.range( 1, Math.ceil( total / paginationLimit ) + 1 )
-          .map( function( i ){
-            return {
-              url: '/restaurants' + utils.queryParams(
-                      utils.extend( {}, req.query, { p: i } )
-                    )
-            , index: i
-            , active: page === i
-            }
-          });
-
-        callback();
-      });
-    }
-  ];
-
-  var done = function(err, results) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err), logger.error(err);
-
-    var context = {
-      layout:           'layout/default',
-      restaurants:      utils.invoke(results[0], 'toJSON').filter( function( r ){
-                          return !r.is_unacceptable;
-                        }),
-      defaultAddress:   results[1] ? results[1].toJSON() : null,
-      orderParams:      orderParams,
-      filterCuisines:   cuisines,
-      filterPrices:     utils.range(1, 5),
-      filterMealTypes:  enums.getMealTypes(),
-      filterMealStyles: enums.getMealStyles(),
-    };
-
-    context.allRestaurants = results.length === 3
-      ? utils.invoke(results[2], 'toJSON')
-      : context.restaurants;
-
-    if ( !shouldPaginate ){
-      res.locals.totalRestaurants = context.restaurants.length;
-    }
-
-    // Delivery fee from-to
-    var min, max, restaurant, group;
-    for ( var i = context.restaurants.length - 1; i >= 0; i-- ){
-      restaurant = context.restaurants[ i ];
-      min = Number.MAX_VALUE;
-      max = 0;
-
-      for ( var ii = restaurant.delivery_zip_groups.length - 1; ii >= 0; ii-- ){
-        group = restaurant.delivery_zip_groups[ ii ];
-
-        if ( group.fee < min ){
-          min = group.fee;
-        }
-
-        if ( group.fee > max ){
-          max = group.fee;
-        }
-      }
-
-      restaurant.delivery_fee_from  = min === Number.MAX_VALUE ? max : min;
-      restaurant.delivery_fee_to    = max;
-    }
-
-    res.render('restaurant/list', context);
-  };
-
-  utils.async.parallel(tasks, done);
+  return res.render('restaurant/list', {
+    layout:           'layout/default'
+  , defaultAddress:   req.user.attributes.defaultAddress
+  , restaurants:      restaurantsFilter( results, req.query, {
+                        sorts_by_no_contract: req.user.attributes.region.sorts_by_no_contract
+                      , timezone:             req.user.attributes.region.timezone
+                      })
+  , filterCuisines:   cuisines
+  , filterPrices:     utils.range(1, 5)
+  , filterMealTypes:  enums.getMealTypes()
+  , filterMealStyles: enums.getMealStyles()
+  , filterDiets:      enums.getTags()
+  });
 };
 
 module.exports.get = function(req, res) {
@@ -408,19 +294,21 @@ module.exports.create = function(req, res) {
 
   var fields = getFields( req );
 
-  // Normalize single quotes to apostrophe for balanced
+  // Normalize single quotes to apostrophe
   var name = req.body.name.replace(/[‘’]/g, '\'');
 
-  utils.balanced.Customers.create({
-    name: name
-  }, function (error, customer) {
+  utils.stripe.accounts.create({
+    managed: true
+  , country: 'US'
+  , business_name: name
+  }, function(error, acct) {
     if (error) {
-      logger.error('Unable to create restaurant in balanced', error);
+      logger.error('Unable to create restaurant in stripe', error);
       return res.error(errors.internal.UNKNOWN, error);
     }
 
     var values = utils.pick(req.body, fields);
-    values.balanced_customer_uri = customer.uri;
+    values.stripe_id = acct.id;
 
     var restaurantQuery = queries.restaurant.create(values);
 
@@ -589,17 +477,19 @@ module.exports.copy = function(req, res) {
   var tasks = [
     db.restaurants.findOne.bind(db.restaurants, id)
 
-  , function createBalancedUri(restaurant, callback) {
-      utils.balanced.Customers.create({
-        name: restaurant.name
-      }, function(err, customer) {
-        callback(err, restaurant, customer);
+  , function createStripeUri(restaurant, callback) {
+      utils.stripe.accounts.create({
+        managed: true
+      , country: 'US'
+      , business_name: restaurant.name
+      }, function(err, acct) {
+        callback(err, restaurant, acct);
       });
     }
 
-  , function copyRestaurant(restaurant, customer, callback) {
+  , function copyRestaurant(restaurant, acct, callback) {
       var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id'), {
-        balanced_customer_uri: customer.uri
+        stripe_id: acct.id
       , name: restaurant.name + ' Copy'
       , is_hidden: true
       });

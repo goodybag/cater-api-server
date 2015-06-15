@@ -1,0 +1,28 @@
+<div class="third filter-diets">
+  <h1>Special Diets</h1>
+
+  <!-- Show truncated options -->
+  {{#each (slice filterDiets 0 3)}}
+  {{#with (ref ../config.diets name)}}
+  <label>
+    <input class="immediate" type="checkbox" value="{{../name}}" {{#contains ../../reqQuery.diets ../name}}checked="checked"{{/contains}}/> {{name}}
+  </label>
+  {{/with}}
+  {{/each}}
+
+  <!-- Show all filter options -->
+  <span class="popover-wrapper">
+    <a href="#" data-role="popover" data-target="diets-popover">more special diets</a>
+    <div class="popover-modal diets-popover">
+      <div class="popover-body">
+        <h1>Special Diets</h1>
+        {{#each filterDiets~}}
+        {{#with (ref ../config.diets name)}}
+        <label><input type="checkbox" value="{{../name}}" {{#contains ../../reqQuery.diets ../name}}checked="checked"{{/contains}}/> {{name}}</label>
+        {{/with}}
+        {{~/each}}
+        <button class="btn btn-default">Save and close</button>
+      </div>
+    </div>
+  </span>
+</div>

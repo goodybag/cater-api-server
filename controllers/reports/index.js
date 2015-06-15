@@ -10,7 +10,9 @@ var
 , fs = require('fs')
 , hbHelpers = require('../../public/js/lib/hb-helpers')
 , errors = require('../../errors')
-, config = require('../../config');
+, config = require('../../config')
+, restaurantPlans = require('restaurant-plans')
+;
 
 
 var dollars = hbHelpers.dollars;
@@ -34,6 +36,17 @@ var getAddress = function(obj) {
   if (!obj) return 'N/A';
   return [obj.street, obj.street2, obj.city, ', ' + obj.state, obj.zip].join(' ');
 };
+
+var plannerCalc = function(order, fnName) {
+  var restaurant = order.restaurant;
+  var plan = restaurant.plan;
+
+  if (!plan) return 'N/A';
+
+  var rp = restaurantPlans[plan.type];
+  var fn = rp[fnName];
+  return fn.call(rp, plan, order);
+}
 
 var reports = {
 
@@ -106,6 +119,10 @@ var reports = {
     , 'Tip'
     , 'Adjustment'
     , 'Total'
+    , 'Plan'
+    , 'GB Fee'
+    , 'Restaurant Sales Tax'
+    , 'Restaurant Net Payout'
     , 'Caterer Name'
     , 'Region'
     ]);
@@ -143,7 +160,7 @@ var reports = {
     options.distinct = [ 'orders.id', range ];
     options.one = [
       { table: 'users', alias: 'user' }
-    , { table: 'restaurants', alias: 'restaurant' }
+    , { table: 'restaurants', alias: 'restaurant', one: [ { table: 'restaurant_plans', alias: 'plan' } ] }
     , { table: 'restaurant_locations', alias: 'location' }
     ];
 
@@ -212,6 +229,10 @@ var reports = {
           , dollars(order.tip)
           , dollars(order.adjustment_amount)
           , dollars(order.total)
+          , order.restaurant.plan ? order.restaurant.plan.name : 'N/A'
+          , dollars(plannerCalc(order, 'getGbFee'))
+          , dollars(order.restaurant_sales_tax)
+          , dollars(plannerCalc(order, 'getPayoutForOrder'))
           , order.restaurant.name
           , order.region.name
           ]);

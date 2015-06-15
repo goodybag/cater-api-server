@@ -3,8 +3,11 @@
     <a href="/">
       <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
     </a>
+    <div class="navbar-caption">
+      <span class="full"><strong>Let us help you with your order!</strong></span> <span class="full full-number">{{phoneNumber config.phone.support}}</span>
+      <span class="short">{{phoneNumber config.phone.support}}</span>
+    </div>
 
-    <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
     <div class="nav">
       {{#if session.oldUser}}
       <li>
@@ -61,7 +64,11 @@
         </div>
       </span>
     </div>
-    <a href="/users/me/rewards" class="gb-points">{{commatize user.points}} points</a>
+
+    <a class="gb-points" href="/users/me/rewards">{{commatize user.points}} points</a>
+
+    <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
+
   </div>
 </header>
 

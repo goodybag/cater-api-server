@@ -1,10 +1,45 @@
 @restaurant-list-link-color: @palette-white;
 @restaurant-list-background-color: @palette-gray-dark;
 @restaurant-list-color: @palette-gray-dark;
+@restaurant-list-results-line-height: @btn-padding-top-small + @btn-padding-bottom-small;
 @restaurant-section-border-color: @palette-gray;
 @restaurant-section-padding: 30px 0;
+@restaurant-container-width: 1300px;
 
 .page-restaurant-list {
+  .back-to-results { margin-left: 10px; }
+
+  // Make tiles/listing in their own layer
+  .restaurant-list {
+    .transform( translate3d( 0, 0, 0 ) );
+  }
+
+  // override .container width
+  .container {
+    #grid .container(@restaurant-container-width);
+  }
+
+  .half { #grid > .column-percent( 50%, 0 ); }
+
+  .third {
+    margin: 15px 0;
+  }
+
+  .third > h1 {
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: @bold;
+    margin: 0 0 10px;
+  }
+
+  .results { line-height: @restaurant-list-results-line-height; }
+
+  @media (min-width: @breakpoint-tablet) {
+    .third {
+      #grid > .column-percent( 33.33%, 0 );
+      margin: 0;
+    }
+  }
 
   @media (max-width: @breakpoint-tablet) {
     .inline-list-bulleted li {
@@ -28,16 +63,14 @@
   .restaurant-list-search section,
   .restaurant-list-search .section {
     padding: @restaurant-section-padding;
-    border-top: 1px solid @restaurant-section-border-color;
+    border-bottom: 1px solid @restaurant-section-border-color;
   }
 
-  .restaurant-list-search a {
-    color: @restaurant-list-link-color;
-    outline: 0;
-    padding: @restaurant-section-padding;
-    display: block;
-    text-decoration: none;
+  .restaurant-list-search .search-advanced {
+    background-color: @palette-white;
+    color: @palette-gray-darker;
   }
+
   .search-lead {
     font-size: 16px;
     display: block;
@@ -66,35 +99,18 @@
     width: 100%;
   }
 
-  .list-tags { margin-bottom: 10px; }
-
   @media (min-width: @breakpoint-tablet) {
-    .list-tags {
-      float: left;
-      margin: 0;
-      padding-bottom: 20px;
-    }
-
-    .list-sort {
-      float: right;
+    .half:first-of-type div ~ div {
+      margin-top: 20px;
     }
 
     .list-display-actions {
-      float: left;
+      float: right;
     }
 
     .list-sort-actions {
+      vertical-align: middle;
       width: initial;
-    }
-
-    .list-sort .list-sort-lead {
-      display: inline-block;
-      line-height: 35px;
-      vertical-align: top;
-      margin-right: 10px;
-      font-size: 16px;
-      font-weight: 700;
-      color: @restaurant-list-color;
     }
   }
 
@@ -104,10 +120,6 @@
 
   @media (min-width: @breakpoint-tablet) {
 
-  }
-
-  .search-advanced-content {
-    .collapsible-content;
   }
 
   .search-advanced-link .search-advanced-link-icon {
@@ -148,11 +160,6 @@
     background: #fff;
   }
 
-  .search-advanced-filter-col > h1 {
-    text-transform: uppercase;
-    font-size: 16px;
-    margin: 15px 0;
-  }
   .search-advanced-filter-col:first-of-type > h1 { margin: 0 0 15px; }
 
   @media (min-width: @breakpoint-tablet) {
@@ -161,12 +168,6 @@
       margin: 0 50px;
       &:first-of-type { margin-left: 0; }
       &:last-of-type { margin-right: 0; }
-    }
-
-    .filter-cuisines > label {
-      float: left;
-      width: 130px;
-      &:nth-of-type(4n+1) { clear: left; }
     }
 
     .search-advanced-filter-col > h1 {
@@ -204,6 +205,42 @@
     margin-top: 10px;
     margin-bottom: 20px;
     text-align: center;
+  }
+
+  // More filter option popovers
+  .container .half + .half {
+    .popover-modal {
+      transform-origin: 50px 110px;
+      right: auto;
+      left: -21px;
+      top: -114px;
+    }
+    .popover-modal:before, .popover-modal:after {
+      display: none;
+    }
+
+    .popover-body {
+      padding: 20px;
+      max-height: 500px;
+    }
+
+    .popover-body h1 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: @bold;
+      text-transform: uppercase;
+    }
+
+    .popover-body label {
+      display: inline-block;
+      width: 50%;
+    }
+
+    .popover-body .btn {
+      display: block;
+      width: 70%;
+      margin: 10px auto 0;
+    }
   }
 }
 

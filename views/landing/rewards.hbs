@@ -2,78 +2,7 @@
 
 {{#extend "body"}}
 <!--<Navbar>-->
-<header class="navbar collapsed">
-  <div class="container">
-    <a href="/">
-      <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
-    </a>
-
-    {{#if user.id}}
-      <button class="navbar-toggle btn btn-default" data-icon="gb-icon-hamburger"></button>
-      <ul class="nav navbar-nav navbar-right">
-        {{#contains user.groups 'restaurant'}}
-          <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
-        {{/contains}}
-        {{#if session.oldUser}}
-        <li>
-          <a href="/users/return" class="users-return navbar-btn">
-            Return to {{session.oldUser.name}}
-          </a>
-        </li>
-        {{/if}}
-        {{{block "navbar-links"}}}
-        <li class="nav-account dropdown">
-          <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
-            {{#if user.name }} {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a href="/users/me">My Settings</a></li>
-            <li><a href="/users/me/orders">My Orders</a></li>
-            <li><a href="/users/me/rewards">My Rewards</a></li>
-            <li><a href="/auth/logout">Logout</a></li>
-            {{#contains user.groups 'restaurant'}}
-              <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
-            {{else}}
-              <li><a href="/restaurants" class="btn-link">Home</a></li>
-            {{/contains}}
-          </ul>
-        </li>
-      </ul>
-
-      <a href="/users/me/rewards" class="gb-points-indicator">
-        <div class="points-wrapper">
-          {{#if user.points}}
-            {{user.points}}
-          {{else}}
-            0
-          {{/if}}
-        </div>
-      </a>
-    {{else}}
-      <button class="navbar-toggle btn btn-small btn-default">Sign In</button>
-      <form class="login-form form-small" method="POST" action="/login{{queryParams query}}">
-        <div class="form-group">
-          <label for="login-email">Email</label>
-          <label for="remember-me" class="remember-me">
-            <input type="checkbox" name="remember" value="1" id="remember-me" tabindex="3">
-            Remember me
-          </label>
-          <input type="email" name="email" id="login-email" placeholder="Email" tabindex="1">
-        </div>
-
-        <div class="form-group">
-          <a href="/forgot-password" class="forgot-password">Forgot password?</a>
-          <label for="login-password">Password</label>
-          <input type="password" name="password" id="login-password" placeholder="Password" tabindex="2">
-        </div>
-
-        <div class="form-group form-group-submit">
-          <button class="btn btn-default" tabindex="4">Sign In</button>
-        </div>
-      </form>
-    {{/if}}
-  </div>
-</header>
+{{>layout_navbar}}
 <!--</Navbar>-->
 
 <!--<HeroUnit>-->

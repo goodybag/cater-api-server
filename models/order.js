@@ -353,8 +353,6 @@ module.exports = Model.extend({
     , 'notes'
     , 'timezone'
     , 'guests'
-    , 'adjustment_amount'
-    , 'adjustment_description'
     , 'delivery_instructions'
     , 'tip'
     , 'payment_method_id'
@@ -465,7 +463,7 @@ module.exports = Model.extend({
     });
   },
 
-  setPaymentPaid: function (type, uri, data, callback) {
+  setPaymentPaid: function (type, data, callback) {
     var self = this;
 
     logger.info('setting payment status to paid for order: ' + this.attributes.id);
@@ -480,7 +478,7 @@ module.exports = Model.extend({
           self.save(cb, client);
         }
       , createTransaction: function (cb) {
-          var query = queries.transaction.createIfUriNotExists(type, self.attributes.id, uri, data);
+          var query = queries.transaction.createIfUriNotExists(type, self.attributes.id, data);
           var sql = db.builder.sql(query);
           client.query(sql.query, sql.values, cb);
         }
@@ -499,7 +497,7 @@ module.exports = Model.extend({
     });
   },
 
-  setPaymentError: function (requestId, data, callback) {
+  setPaymentError: function (data, callback) {
     var self = this;
 
     logger.info('setting payment status to error for order: ' + this.attributes.id);
@@ -517,8 +515,8 @@ module.exports = Model.extend({
       , createTransactionError: function (cb) {
           var transactionError = new TransactionError({
             order_id: self.attributes.id
-          , request_id: requestId
-          , data: data
+          , request_id: 'request_id deprecated by stripe migration'
+          , data: JSON.stringify(data)
           });
           transactionError.save(cb, client);
         }
@@ -1040,8 +1038,7 @@ module.exports = Model.extend({
     // it is ready for charging 3 days after the order has been delivered.
     var query = {
       where: {
-        payment_method_id: {$notNull: true}
-      , payment_status: {$null: true}
+        payment_status: {$null: true}
       , status: 'accepted'
       , $custom: ['now() > (("orders"."datetime" AT TIME ZONE "orders"."timezone") + interval \'3 days\')']
       }

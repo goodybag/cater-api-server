@@ -8,8 +8,8 @@
 
 {{#extend "info"}}
 <h2 class="customer-company-name info-item">
-  {{#if invoice.user.name}}
-    {{invoice.user.name}}
+  {{#if invoice.user.organization}}
+    {{invoice.user.organization}}
   {{else}}
     [Your Organization]
   {{/if}}
@@ -69,7 +69,7 @@
         <th class="sub-total">Sub Total</th>
         <th>Delivery</th>
         <th>Tax</th>
-        <th>TX Fee</th>
+        <th>Transaction<br>Fee</th>
         <th>Tip</th>
         <th>Total</th>
       </tr>

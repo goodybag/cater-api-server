@@ -9,7 +9,7 @@ module.exports = function( options ){
 
   return function( req, res, next ){
     var $query = {
-      where: { id: req.param( options.param ) }
+      where: { id: req.params[options.param] }
     , with_delivery_services: options.with_delivery_services
     };
 
@@ -17,8 +17,14 @@ module.exports = function( options ){
       if ( error ) return res.send( 500 );
       if ( !restaurant ) return res.send( 404 );
 
+      // return all menu items, this includes hidden items and categories
       if ( options.withMenuItems ){
-        restaurant.getItems( function( error, items ){
+        var query = {
+          where: {
+            is_hidden: { $or: [true, false] }
+          }
+        };
+        restaurant.getItems(query, { withHiddenCategories: true }, function( error, items ){
           if ( error ) return res.send( 500 );
           res.locals.restaurant = restaurant.toJSON();
           next();

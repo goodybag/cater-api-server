@@ -132,24 +132,34 @@ errors.input.VALIDATION_FAILED = {
 
 errors[errors.input.VALIDATION_FAILED.code] = errors.input.VALIDATION_FAILED;
 
+errors.input.INVALID_ADDRESS = {
+  type: "input"
+, code: "0302"
+, httpCode: "400"
+, name: "INVALID_ADDRESS"
+, message: "The address provided is invalid"
+};
+
+errors[errors.input.INVALID_ADDRESS.code] = errors.input.INVALID_ADDRESS;
+
 /**
- * Balanced Errors
+ * Stripe Errors
  */
 
-errors.balanced = {};
+errors.stripe = {};
 
-errors.balanced.ERROR_ADDING_CARD = {
+errors.stripe.ERROR_ADDING_CARD = {
   type: "input"
 , code: "0401"
 , httpCode: "401"
-, name: "Error ERROR_ADDING_CARD"
+, name: "ERROR_ADDING_CARD"
 , message: "There was an error adding this card to your account"
 };
 
-errors[errors.balanced.ERROR_ADDING_CARD.code] = errors.balanced.ERROR_ADDING_CARD;
+errors[errors.stripe.ERROR_ADDING_CARD.code] = errors.stripe.ERROR_ADDING_CARD;
 
 /**
- * Balanced Errors
+ * Yelp Errors
  */
 
 errors.restaurants = {};
@@ -157,9 +167,86 @@ errors.restaurants = {};
 errors.restaurants.INVALID_YELP_BUSINESS_ID = {
   type: "input"
 , code: "0501"
-, httpCode: "501"
-, name: "Error INVALID_YELP_BUSINESS_ID"
+, httpCode: "400"
+, name: "INVALID_YELP_BUSINESS_ID"
 , message: "The Yelp Business ID on this restaurant is invalid"
 };
 
 errors[errors.restaurants.INVALID_YELP_BUSINESS_ID.code] = errors.restaurants.INVALID_YELP_BUSINESS_ID;
+
+/**
+ * Google
+ */
+
+errors.google = {};
+
+errors.google.distanceMatrix = {};
+errors.google.distanceMatrix.INVALID_REQUEST = {
+  type: 'input'
+, code: '0601'
+, httpCode: '400'
+, name: 'INVALID_REQUEST'
+, message: 'The provided request was invalid'
+};
+
+errors.google.distanceMatrix.MAX_ELEMENTS_EXCEEDED = {
+  type: 'input'
+, code: '0602'
+, httpCode: '509'
+, name: 'MAX_ELEMENTS_EXCEEDED'
+, message: 'Product of origins and destinations exceeds the per-query limit'
+};
+
+errors.google.distanceMatrix.OVER_QUERY_LIMIT = {
+  type: 'input'
+, code: '0603'
+, httpCode: '509'
+, name: 'OVER_QUERY_LIMIT'
+, message: 'The service has received too many requests from your application within the allowed time period'
+};
+
+errors.google.distanceMatrix.REQUEST_DENIED = {
+  type: 'input'
+, code: '0604'
+, httpCode: '403'
+, name: 'REQUEST_DENIED'
+, message: 'The service denied use of the Distance Matrix service by your application'
+};
+
+errors.google.distanceMatrix.REQUEST_DENIED = {
+  type: 'input'
+, code: '0605'
+, httpCode: '403'
+, name: 'UNKNOWN_ERROR'
+, message: 'Request could not be processed due to a server error. The request may succeed if you try again.'
+};
+
+errors.google.distanceMatrix.NOT_FOUND = {
+  type: 'input'
+, code: '0606'
+, httpCode: '403'
+, name: 'UNKNOWN_ERROR'
+, message: 'The origin and/or destination of this pairing could not be geocoded'
+};
+
+errors.google.distanceMatrix.ZERO_RESULTS = {
+  type: 'input'
+, code: '0607'
+, httpCode: '403'
+, name: 'UNKNOWN_ERROR'
+, message: 'No route could be found between the origin and destination'
+};
+
+/**
+ * Runtime Errors
+ */
+
+errors.runtime = {};
+
+errors.runtime.ERROR = {
+  type: 'runtime'
+, code: '0701'
+, httpCode: '500'
+, name: 'RUNTIME_ERROR'
+, message: 'The application has encountered a run time error'
+}

@@ -1,0 +1,5 @@
+{{#with order}}
+Goodybag Order #{{id}} has been canceled {{#eq type 'delivery'}}for delivery at {{timepart datetime}} on {{datepart datetime}}.
+{{else}}for pickup at {{timepart pickup_datetime}} on {{datepart pickup_datetime}}!{{/eq}}
+{{/with}}
+{{url}}

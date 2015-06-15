@@ -7,7 +7,7 @@
 create or replace function on_restaurant_name_change()
 returns trigger as $$
 begin
-  perform update_restaurant_text_id( NEW.id, str_to_slug( NEW.name ) );
+  perform update_restaurant_text_id( NEW.id );
   return NEW;
 end;
 $$ language plpgsql;
@@ -45,6 +45,7 @@ begin
   if ( NEW.restaurant_location_id is null ) then
     perform set_order_default_location( NEW );
   end if;
+  perform set_order_feedback( NEW );
   return NEW;
 end;
 $$ language plpgsql;
@@ -53,7 +54,11 @@ create or replace function on_order_type_change()
 returns trigger as $$
 begin
   if NEW.type = 'courier' then
-    perform update_order_delivery_service_id( NEW.id );
+    -- No delivery service set? Assign one
+    if NEW.delivery_service_id is null then
+      perform update_order_delivery_service_id( NEW.id );
+    end if;
+
     perform update_order_delivery_service_pickup_time( NEW.id );
 
     -- Since update_order_delivery_service_id could affect the delivery_fee
@@ -61,6 +66,11 @@ begin
     perform update_order_totals( NEW.id );
   else
     perform update_order_totals( NEW );
+
+    -- No longer courier, check to see if we need to null out dsid
+    if NEW.delivery_service_id is not null then
+      update orders set delivery_service_id = null where id = NEW.id;
+    end if;
   end if;
   return NEW;
 end;
@@ -112,20 +122,31 @@ $$ language plpgsql;
 ---------------
 -- Functions --
 ---------------
+-- Need to pick a delivery service based on probabilities
+-- Source: http://stackoverflow.com/questions/13040246/select-random-row-from-a-postgresql-table-with-weighted-row-probabilities
+-- NOTE: Probabilities _NEED_ to add up to 1
 create or replace function update_order_delivery_service_id( oid int )
 returns void as $$
+  declare rand_val double precision;
 begin
-  -- Just select some arbitrary in-region delivery service for now
+  select random() into rand_val;
+
   update orders
     set delivery_service_id = (
-      select delivery_services.id from delivery_services
-        left join orders on orders.id = oid
-        left join restaurants on orders.restaurant_id = restaurants.id
-        left join regions on restaurants.region_id = regions.id
-        where orders.id = oid
-        limit 1
+      select id from (
+          select ds.id, sum( ds.region_order_distribution ) over ( order by ds.id ) s
+          from orders
+            left join restaurants on orders.restaurant_id = restaurants.id
+            left join regions on restaurants.region_id = regions.id
+            left join delivery_services ds on regions.id = ds.region_id
+            where orders.id = oid
+      ) q
+      where s >= rand_val
+      order by id
+      limit 1
     )
-    where id = oid;
+    where id = oid
+      and delivery_service_id is null;
 end;
 $$ language plpgsql;
 
@@ -371,16 +392,36 @@ begin
 end;
 $$ language plpgsql;
 
-create or replace function update_restaurant_text_id( rid int, new_text_id text )
+create or replace function set_order_feedback( o orders )
 returns void as $$
-  declare num_existing int;
 begin
-  perform update_restaurant_text_id( rid, new_text_id, 0 );
+  insert into order_feedback (order_id)
+    select id from orders where id = o.id;
 end;
 $$ language plpgsql;
 
-create or replace function update_restaurant_text_id( rid int, new_text_id text, idx int )
+create or replace function update_restaurant_text_id( rid int )
 returns void as $$
+  declare num_existing int;
+begin
+  update restaurants set text_id = get_restaurant_text_id( rid )
+    where id = rid;
+end;
+$$ language plpgsql;
+
+create or replace function get_restaurant_text_id( rid int )
+returns text as $$
+  declare rname text;
+begin
+  select restaurants.name from restaurants
+    where id = rid
+    into rname;
+  return get_restaurant_text_id( rid, str_to_slug( rname ), 0 );
+end;
+$$ language plpgsql;
+
+create or replace function get_restaurant_text_id( rid int, new_text_id text, idx int )
+returns text as $$
   declare modified_text_id text;
   declare num_existing int;
 begin
@@ -391,12 +432,14 @@ begin
   end if;
 
   select count(*) into num_existing
-  from restaurants where text_id = modified_text_id;
+  from restaurants
+  where text_id = modified_text_id
+    and id != rid;
 
   if num_existing = 0 then
-    update restaurants set text_id = modified_text_id where id = rid;
+    return modified_text_id;
   else
-    perform update_restaurant_text_id( rid, new_text_id, idx + 1 );
+    return get_restaurant_text_id( rid, new_text_id, idx + 1 );
   end if;
 end;
 $$ language plpgsql;

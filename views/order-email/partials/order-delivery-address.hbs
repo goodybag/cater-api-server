@@ -1,0 +1,12 @@
+<div style="font-style: normal;">
+  {{#if address }}
+    {{#if address.name}}
+    <strong>{{address.name}}</strong><br>
+    {{/if}}
+  {{/if}}
+  {{street}}<br>
+  {{#if street2}}
+  {{street2}}<br>
+  {{/if}}
+  {{#if city}}{{city}}, {{/if}}{{#if state}}{{state}} {{/if}}{{zip}}<br>
+</div>

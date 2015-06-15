@@ -12,6 +12,12 @@ function getQueryOptions(){
                                 ]
                         }
                       ]
+            , joins:  [ { type: 'left'
+                        , target: 'orders'
+                        , on: { id: '$user_invoice_orders.order_id$' }
+                        }
+                      ]
+            , order:  ['orders.datetime desc']
             }
           ]
 
@@ -171,9 +177,9 @@ module.exports = require('stampit')()
 
           return order.order;
         });
-      }
 
-      utils.extend( this, result );
+        utils.extend( this, result );
+      }
 
       return this;
     }

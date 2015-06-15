@@ -1,12 +1,7 @@
+{{#extend "html-title"}}{{truncate restaurant.name 10}}{{/extend}}
 {{#extend "body"}}
   <form class="ap-form form-vertical">
     <h2>Contract Info</h2>
-    <div class="form-group" id="has-contract-group">
-      <label class="control-label">
-        <input type="checkbox" class="form-control" name="has_contract" {{#if restaurant.has_contract}}checked="checked"{{/if}}>
-        Has a contract?
-      </label>
-    </div>
     <div class="form-group" id="no-contract-fee-group">
       <label>No Contract Transaction Fee</label>
       <div class="input-group">
@@ -22,9 +17,18 @@
       </div>
     </div>
 
+    {{#if restaurant.stripe_id}}
+    <h2>Stripe Info</h2>
+    <a href="https://dashboard.stripe.com/applications/users/{{restaurant.stripe_id}}">View account on Stripe</a>
+    <label class="control-label">Customer URI</label>
+    <blockquote class="blockquote blockquote-info">{{restaurant.stripe_id}}</blockquote>
+    {{/if}}
+
+    {{#if restaurant.balanced_customer_uri}}
     <h2>Balanced Info</h2>
     <label class="control-label">Customer URI</label>
     <blockquote class="blockquote blockquote-info">{{restaurant.balanced_customer_uri}}</blockquote>
+    {{/if}}
 
     <h2>Billing Info</h2>
     <div class="form-group">

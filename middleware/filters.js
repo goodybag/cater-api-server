@@ -3,6 +3,10 @@
  *
  * Dynamically attach filters to resources
  * app.use(m.filters(['region-filters']));
+ *
+ * Note: you will want to attach this early in the middleware
+ * stack so that other middleware can make use of the
+ * res.locals.filters.
  */
 
 var utils = require('../utils');

@@ -41,12 +41,12 @@ module.exports = function(){
     for ( var i = 0, l = orderParamsFields.length, key; i < l; ++i ){
       key = orderParamsFields[i];
 
-      if ( !req.param( key ) ) continue;
+      if ( !req.params[key] ) continue;
 
       // Add transformed value
       orderParams[ key ] = ( key in transforms
-        ? transforms[ key ]( req.param( key ), req )
-        : req.param( key )
+        ? transforms[ key ]( req.params[ key ], req )
+        : req.params[ key ]
       );
     }
 

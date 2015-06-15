@@ -21,7 +21,7 @@ define(function(require, exports, module) {
       });
 
       var FeaturedView = new ToggleView({
-        el: this.$el.find('.is-featured-toggle')
+          el: this.$el.find('.is-featured-toggle')
         , field: 'is_featured'
         , model: model
       });

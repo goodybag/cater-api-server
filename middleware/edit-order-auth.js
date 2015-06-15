@@ -36,12 +36,14 @@ module.exports = function(req, res, next) {
     return next();
   }
 
-  if ( utils.contains(statuses, order.status) ){
-    return res.render('shared-link/submitted');
-  }
+  if ( req.user.attributes.groups.indexOf('admin') < 0 ){
+    if ( utils.contains(statuses, order.status) ){
+      return res.render('shared-link/submitted');
+    }
 
-  if ( moment(order.edit_token_expires) < moment() ){
-    return res.render('shared-link/expired');
+    if ( moment(order.edit_token_expires) < moment() ){
+      return res.render('shared-link/expired');
+    }
   }
 
   req.creatorId = order.user_id;

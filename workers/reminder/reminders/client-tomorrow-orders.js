@@ -12,6 +12,7 @@ var config    = require('../../../config');
 var notifier  = require('../../../lib/order-notifier');
 var views     = require('../lib/views');
 var queries   = require('../../../db/queries');
+var moment    = require('moment-timezone');
 
 module.exports.name = 'Client Tomorrow Orders';
 
@@ -41,13 +42,26 @@ function notifyOrderFn( order ){
   });
 };
 
-module.exports.check = function( storage, callback ){
+module.exports.find = function( storage, callback ){
   var $query = getOrderQuery( storage );
 
-  Models.Order.findTomorrow( $query, function( error, results ){
+  Models.Order.findTomorrow( $query, function( error, orders ){
     if ( error ) return callback( error );
 
-    return callback( null, results.length > 0 );
+    // Filter to orders with timezones where it's currently 8am
+    orders = orders.filter( function( order ){
+      return moment().tz( order.attributes.timezone ).hour() === 8;
+    });
+
+    return callback( null, orders );
+  });
+};
+
+module.exports.check = function( storage, callback ){
+  module.exports.find( storage, function( error, orders ){
+    if ( error ) return callback( error );
+
+    return callback( null, orders.length > 0 );
   });
 };
 
@@ -57,9 +71,7 @@ module.exports.work = function( storage, callback ){
   , errors:               { text: 'Errors', value: 0, objects: [] }
   };
 
-  var $query = getOrderQuery( storage );
-
-  Models.Order.findTomorrow( $query, function( error, orders ){
+  module.exports.find( storage, function( error, orders ){
     if ( error ) return callback( error );
 
     utils.async.parallel(

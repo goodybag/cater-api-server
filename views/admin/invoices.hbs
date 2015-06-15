@@ -1,0 +1,122 @@
+{{#extend "page"}}page-invoices{{/extend}}
+
+{{#extend "body"}}
+<div class="container">
+  <h1 class="page-title">All Invoices</h1>
+  <div class="table-list invoices-table-list striped">
+    <div class="list-header">
+      <label class="component item-selector">
+        <input type="checkbox">
+      </label>
+      <div class="component list-info">
+        {{invoices.length}} Invoice
+        {{~#unless (eq invoices.length 1)}}s{{/unless}}
+      </div>
+      <ul class="component list-nav nav">
+        <li class="selected-only popover-wrapper gb-dropdown right">
+          <a data-role="popover" data-target="dropdown-popover" href="#">
+            Set Status
+            <i class="gb-icon-caret-down"></i>
+          </a>
+          <div class="popover-modal dropdown-popover">
+            <a href="#"
+              class="popover-item"
+              data-action="set-status"
+              data-status="pending">
+              <span class="popover-item-icon"></span>
+              <span class="popover-item-label">Pending</span>
+            </a>
+            <a href="#"
+              class="popover-item"
+              data-action="set-status"
+              data-status="emailed">
+              <span class="popover-item-icon"></span>
+              <span class="popover-item-label">Emailed</span>
+            </a>
+            <a href="#"
+              class="popover-item"
+              data-action="set-status"
+              data-status="paid">
+              <span class="popover-item-icon"></span>
+              <span class="popover-item-label">Paid</span>
+            </a>
+            <a href="#"
+              class="popover-item"
+              data-action="set-status"
+              data-status="error">
+              <span class="popover-item-icon"></span>
+              <span class="popover-item-label">Error</span>
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="list-items">
+    {{#each invoices}}
+      <div class="list-item" data-id="{{this.id}}">
+        <label class="component item-selector">
+          <input type="checkbox">
+        </label>
+        <div class="component main">
+          <a href="{{replace ../config.invoice.pdfRoute ':id' this.id}}" class="item-title">#{{this.id}}
+            {{this.user.name}} - {{this.user.organization}}
+          </a>
+          <span class="label-tag label-status small {{this.status}}">{{capitalize this.status}}</span>
+          <dl class="item-details dl-horizontal-auto">
+            <div>
+              <dt>Billing Period:</dt>
+              <dd>{{datepart this.billing_period_start}} -
+                  {{datepart this.billing_period_end~}}</dd>
+            </div>
+            <div>
+              <dt>Total:</dt>
+              <dd>${{dollars (invoice this 'total')}}</dd>
+            </div>
+            {{#if this.email_sent_date}}
+            <div>
+              <dt>Email Send Date:</dt>
+              <dd>{{formatDateTime ../this.email_sent_date}}</dd>
+            </div>
+            {{/if}}
+          </dl>
+          <div class="more-actions-and-info bottom">
+            <button
+              class="action btn-default"
+              data-id="{{this.id}}"
+              data-action="send-email">
+                {{~#is this.status 'pending' 'error'}}Send Email{{else}}Re-Send Email{{/is~}}
+            </button>
+            <button
+              class="action btn-default"
+              data-id="{{this.id}}"
+              data-action="delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+    </div>
+  </div>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require([
+  'jquery'
+, 'api'
+, 'utils'
+, 'app/views/admin/invoice-table'
+, 'table-list'
+], function( $, api, utils, invoiceTable ) {
+  api.invoices = api('invoices');
+
+  $(function(){
+    var $tableList = $('.table-list');
+    $tableList.gb_tablelist();
+    $('[data-role="popover"]').gb_popover();
+
+    invoiceTable( $tableList );
+  });
+});
+</script>
+{{/extend}}

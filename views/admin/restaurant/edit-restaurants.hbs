@@ -13,6 +13,7 @@
 </a>
 {{/notEmpty}}
 
+
 <div class="table-list" id="restaurant-list">
   <div class="list-header" id="restaurant-list-header">
     <label class="component item-selector">
@@ -41,6 +42,8 @@
         <div class="item-details">#{{id}} {{city}}, {{state}}</div>
       </div>
       <div class="component actions">
+        <a class="table-list-item-action" href="{{baseUrl}}/restaurants/{{id}}" data-toggle="tooltip" data-title="View Menu"><span class="gb-icon-menu icon-large"></span>
+        </a>
         <a class="table-list-item-action is-hidden-toggle" href="#" data-toggle="tooltip" data-title="Toggle Visibility">
           <span class="is-hidden-icon gb-icon-eye-slash icon-large {{#unless is_hidden}}hide{{/unless}}"></span>
           <span class="is-hidden-icon gb-icon-eye icon-large {{#if is_hidden}}hide{{/if}}"></span>

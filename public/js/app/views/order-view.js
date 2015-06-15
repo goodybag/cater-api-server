@@ -92,6 +92,13 @@ define(function(require, exports, module) {
     getDiff: function() {
       var diff = FormView.prototype.getDiff.apply(this, arguments);
       var addrDiff = this.addressView.getDiff.apply(this.addressView, arguments);
+
+      // Do not overwrite order name
+      if ( addrDiff && addrDiff.name ){
+        addrDiff.address_name = addrDiff.name;
+        delete addrDiff.name;
+      }
+
       return diff || addrDiff ? _.extend({}, diff, addrDiff) : null;
     },
 

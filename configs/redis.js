@@ -25,7 +25,7 @@ var parse = function( connStr ){
   };
 
   if ( parsed.auth ){
-    options.pass = ( parsed.auth || '' ).split(':')[1];
+    options.auth_pass = ( parsed.auth || '' ).split(':')[1];
   }
 
   return options;

@@ -14,6 +14,14 @@
 <section class="page-section" id="section-intro-signup">
   <div class="container">
     <h1 class="section-header">More Orders Instantly</h1>
+    <div class="alert alert-success alert-dismissable hide" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>Thanks for submitting your info!</strong> Someone will contact you within the next few days.
+    </div>
+    <div class="alert alert-error alert-dismissable hide" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>Whoops!</strong> Something went wrong on our end.
+    </div>
     <div class="signup-info-wrapper">
       <div class="signup-col">
         <div class="inner">
@@ -24,7 +32,7 @@
           <h3>Be a Goodybag caterer</h3>
           <p>Enter your info and we'll get in touch soon!</p>
           {{/if}}
-          <form action="/request-to-be-a-caterer" method="POST" class="form form-vertical">
+          <form action="/request-to-be-a-caterer" method="POST" id="request-to-cater-form" class="form form-vertical">
             <div class="form-group">
               <label for="request-form-full-name">Full Name</label>
               <input type="text" id="request-form-full-name" name="contact_name" required="true">
@@ -180,7 +188,11 @@
 
 {{#extend "scripts"}}
 <script>
-  require( ['jquery-loaded', 'navbar'], function( $ ){
+  require( [
+      'jquery-loaded'
+    , 'navbar'
+    , 'views/request-to-cater-view'
+    ], function ( $, navbar, CaterFormView ){
     $('.navbar').navbar({ toggleText: false });
 
     var $name             = $('#request-form-full-name');
@@ -203,6 +215,10 @@
         { scrollTop: $scrollToSection.offset().top }
       , $name.focus.bind( $name )
       );
+    });
+
+    var formView = new CaterFormView({
+      el: '#request-to-cater-form'
     });
   });
 

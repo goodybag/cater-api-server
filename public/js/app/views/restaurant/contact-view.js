@@ -21,6 +21,7 @@ define(function(require, exports, module) {
       var voice_phones = this.parsePhoneList(this.$el.find('input[name="voice_phones"]').val());
       var emails = '{' + this.$el.find('input[name="emails"]').val() + '}';
       var notify = this.$el.find('input[name="notify"]').is(':checked');
+      var disable_sms = this.$el.find('input[name="disable_sms"]').is(':checked');
 
       return {
         name: name
@@ -29,6 +30,7 @@ define(function(require, exports, module) {
       , voice_phones: voice_phones
       , emails: emails
       , notify: notify
+      , disable_sms: disable_sms
       };
     },
 

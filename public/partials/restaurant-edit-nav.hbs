@@ -1,5 +1,8 @@
 <ul class="restaurant-edit-menu nav nav-vertical ap-nav-vertical
 {{~#if sidebarNav.isNew}} disabled{{/if}}">
+  <li{{#eq sidebarNav.active "dashboard"}} class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/dashboard">Dashboard</a>
+  </li>
   <li{{#eq sidebarNav.active "basic-info"}} class="active"{{/eq}}>
     <a href="{{sidebarNav.baseUrl}}/basic-info">Basic Info</a>
   </li>
@@ -26,6 +29,7 @@
   </li>
   <li {{#eq sidebarNav.active "menu"}}class="active"{{/eq}}>
     <a href="{{sidebarNav.baseUrl}}/menu">Menu</a>
+  </li>
   <li {{#eq sidebarNav.active "amenities"}}class="active"{{/eq}}>
     <a href="{{sidebarNav.baseUrl}}/amenities">Amenities</a>
   </li>
@@ -34,6 +38,9 @@
   </li>
   <li {{#eq sidebarNav.active "billing-info"}}class="active"{{/eq}}>
     <a href="{{sidebarNav.baseUrl}}/billing-info">Billing Info</a>
+  </li>
+  <li {{#eq sidebarNav.active "transfers"}}class="active"{{/eq}}>
+    <a href="{{sidebarNav.baseUrl}}/transfers">Transfers</a>
   </li>
   <li {{#eq sidebarNav.active "payment-summaries"}}class="active"{{/eq}}>
     <a href="{{sidebarNav.baseUrl}}/payment-summaries" target="_blank">Payment Summaries</a>

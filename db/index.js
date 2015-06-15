@@ -80,3 +80,7 @@ exports.transaction = function( callback ){
 };
 
 exports.dirac = dirac;
+
+dirac.db.setPg( pg );
+
+require('./cache').setupBasicStructure( exports );

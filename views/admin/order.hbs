@@ -1,5 +1,7 @@
 {{#extend "page"}}page-order{{/extend}}
 
+{{#extend "html-title"}}#{{order.id}}{{/extend}}
+
 {{#extend "body"}}
 <div class="container" id="main-container">
   <div class="page-header">
@@ -16,10 +18,12 @@
     <div class="dropdown-actions">
       <div class="form-group form-group-inline form-group-location">
         <select name="restaurant_location_id" id="order-restaurant_location_id" class="form-control">
-        {{#each order.restaurant.locations}}
-          <option value="{{this.id}}"
-          {{~#eq ../order.restaurant_location_id this.id}} selected="true"{{/eq}}>Location: {{this.name}}</option>
-        {{/each}}
+          <option value="null"
+            {{~#unless this.id}} selected="true"{{/unless}}>None</option>
+          {{#each order.restaurant.locations}}
+            <option value="{{this.id}}"
+            {{~#eq ../order.restaurant_location_id this.id}} selected="true"{{/eq}}>Location: {{this.name}}</option>
+          {{/each}}
         </select>
       </div>
       <div class="form-group form-group-inline form-group-type">
@@ -32,54 +36,117 @@
           <option value="courier silent">Type: Courier Service (No Notifications)</option>
         </select>
       </div>
+      <div class="form-group form-group-inline form-group-courier{{#dneq order.type 'courier'}} hide{{/dneq}}">
+        <select name="delivery_service_id" id="order-delivery_service_id" class="form-control">
+          <option value="null"
+            {{~#unless this.id}} selected="true"{{/unless}}>None</option>
+          {{#each ../delivery_services}}
+            <option value="{{this.id}}"
+            {{~#eq ../../order.delivery_service_id this.id}} selected="true"{{/eq}}>Courier: {{this.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="form-group form-group-inline form-group-save hide">
+        <button class="btn btn-primary" role="save">Save Changes</button>
+      </div>
     </div>
   </div>
-
 
   <div>
     <section class="panel-component" id="order-user">
       <h1 class="component-title">User</h1>
-      <dl class="user-profile dl-horizontal">
-        <dt>Name</dt>
-        <dd>
-          <a href="/admin/users/{{order.user.id}}">{{#if order.user.name}} {{order.user.name}} {{else}} No name provided {{/if}}</a>
-        </dd>
-        <dt>Email</dt>
-        <dd>{{order.user.email}}</dd>
-        <dt>Organization</dt>
-        <dd>{{order.user.organization}}</dd>
-        <dt>Contact</dt>
-        <dd>{{phoneNumber order.phone}}</dd>
+      <dl class="user-profile definition-row-list">
+        <div class="row">
+          <dt>Name</dt>
+          <dd>
+            <a href="/admin/users/{{order.user.id}}">{{#if order.user.name}} {{order.user.name}} {{else}} No name provided {{/if}}</a>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>Email</dt>
+          <dd>{{order.user.email}}</dd>
+        </div>
+        <div class="row">
+          <dt>Organization</dt>
+          <dd>{{order.user.organization}}</dd>
+        </div>
+        <div class="row">
+          <dt>Contact</dt>
+          <dd>{{phoneNumber order.phone}}</dd>
+        </div>
         {{#if order.secondary_contact_phone }}
-        <dt>Secondary Contact</dt>
-        <dd>{{phoneNumber order.secondary_contact_phone}}</dd>
+        <div class="row">
+          <dt>Secondary Contact</dt>
+          <dd>{{phoneNumber order.secondary_contact_phone}}</dd>
+        </div>
         {{/if}}
       </dl>
     </section>
 
-    <section class="panel-component" id="order-restaurant">
+    <section class="panel-component" id="order-details">
       <h1 class="component-title">Details</h1>
-      <dl class="user-profile dl-horizontal">
-        <dt>Total</dt>
-        <dd>${{dollars order.total}}</dd>
-        <dt>Restaurant</dt>
-        <dd>
-          <a href="/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a>
-        </dd>
-        <dt>Review Link</dt>
-        <dd><a href="{{config.baseUrl}}/orders/{{order.id}}?review_token={{order.review_token}}">/orders/{{order.id}}?review_token={{order.review_token}}</a></dd>
-        <dt>Delivery Time</dt>
-        <dd>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
+      <dl class="user-profile definition-row-list">
+        <div class="row">
+          <dt>Total</dt>
+          <dd>${{dollars order.total}}</dd>
+        </div>
+        <div class="row">
+          <dt>Delivery Time</dt>
+          <dd>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
+        </div>
 
         {{#is order.type 'pickup' 'courier'}}
-          <dt>Pickup Time</dt>
-          <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
+          <div class="row">
+            <dt>Pickup Time</dt>
+            <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
+          </div>
         {{/is}}
-        <dt>Payment Status</dt>
-        <dd>
-          <span class="status-circle {{order.payment_status}}"></span>
-          <span>{{or (capitalize order.payment_status) 'Pending'}}</span>
-        </dd>
+        <div class="row">
+          <dt>Order Status</dt>
+          <dd>
+            <select name="order_status">
+              <option value="pending" {{#eq order.status 'pending'}}selected="true"{{/eq}}>Pending</option>
+              <option value="canceled" {{#eq order.status 'canceled'}}selected="true"{{/eq}}>Canceled</option>
+              <option value="submitted" {{#eq order.status 'submitted'}}selected="true"{{/eq}}>Submitted</option>
+              <option value="denied" {{#eq order.status 'denied'}}selected="true"{{/eq}}>Denied</option>
+              <option value="accepted" {{#eq order.status 'accepted'}}selected="true"{{/eq}}>Accepted</option>
+              <option value="delivered" {{#eq order.status 'delivered'}}selected="true"{{/eq}}>Delivered</option>
+              <option data-silent="true" value="submitted">Submitted - no notification</option>
+              <option data-silent="true" value="accepted">Accepted - no notification</option>
+              <option data-silent="true" value="canceled">Canceled - no notification</option>
+            </select>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>Payment Status</dt>
+          <dd>
+            <select name="payment_status">
+              <option value="" {{#if (not order.payment_status) }}selected="true"{{/if}}>Unprocessed</option>
+              <option value="pending" {{#eq order.payment_status 'pending'}}selected="true"{{/eq}}>Queued for Processing</option>
+              <option value="paid" {{#eq order.payment_status 'paid'}}selected="true"{{/eq}}>Paid</option>
+              <option value="invoiced" {{#eq order.payment_status 'invoiced'}}selected="true"{{/eq}}>Invoiced</option>
+              <option value="ignore" {{#eq order.payment_status 'ignore'}}selected="true"{{/eq}}>Ignore</option>
+              <option value="error" {{#eq order.payment_status 'error'}}selected="true"{{/eq}}>Error</option>
+            </select>
+          </dd>
+        </div>
+
+        <div class="row">
+          <dt>Payment Method</dt>
+          <dd>
+            <select name="payment_method_id">
+              <option {{#isNull ../order.payment_method_id}} selected="true"{{/isNull}}>Invoiced</option>
+              {{#notNull order.payment_method_id}}
+              {{#unless (contains (pluck ../order.user.payment_methods "id") ../order.payment_method_id) }}
+              <option value="{{../../order.payment_method_id}}" selected="true">Removed Payment Method</option>
+              {{/unless}}
+              {{/notNull}}
+              {{#each order.user.payment_methods}}
+              <option value="{{id}}" {{#eq ../../order.payment_method_id id~}} selected="true"{{~/eq}}>{{capitalize data.brand}} - {{name}} **** **** **** {{data.last4}} - Exp {{data.exp_month}}/{{data.exp_year}}</option>
+              {{/each}}
+            </select>
+          </dd>
+        </div>
       </dl>
 
       {{#eq order.type 'courier'}}
@@ -94,6 +161,37 @@
           {{/if}}
         </ul>
       {{/eq}}
+    </section>
+  </div>
+
+  <div>
+    <section class="panel-component" id="order-restaurant">
+      <h1 class="component-title">Restaurant</h1>
+      <dl class="restaurant-info definition-row-list">
+        <div class="row">
+          <dt>Name</dt>
+          <dd>
+            <a href="/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a>
+            <a class="edit-restaurant" href="/admin/restaurants/{{order.restaurant.id}}"><span data-icon="gb-icon-pencil"> Edit</a>
+          </dd>
+        </div>
+        <div class="row">
+          <dt>Review Link</dt>
+          <dd><a href="{{config.baseUrl}}/orders/{{order.id}}?review_token={{order.review_token}}">/orders/{{order.id}}?review_token={{order.review_token}}</a></dd>
+        </div>
+        {{#if order.restaurant.display_phone}}
+        <div class="row">
+          <dt>Phone</dt>
+          <dd>{{phoneNumber order.restaurant.display_phone}}</dd>
+        </div>
+        {{/if}}
+        {{#each order.restaurant.contacts}}
+        <div class="row">
+          <dt>{{this.name}}</dt>
+          <dd>{{join (map this.voice_phones "phoneNumber") ', '}}</dd>
+        </div>
+        {{/each}}
+      </dl>
     </section>
   </div>
 
@@ -167,7 +265,9 @@
 <script>
   require( ['app/pages/admin/order', 'app/models/order'], function( page, Order ){
     page.init({
-      order: new Order( {{{json order}}} )
+      order: new Order( {{{json order}}}, {
+        ignoreOrderTypeInit: true
+      })
     });
   });
 </script>

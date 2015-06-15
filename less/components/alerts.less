@@ -35,8 +35,8 @@
   border-color: darken(spin(@state-success-bg, -10), 10%)
 }
 
-.alert-error {
-  background-color: lighten(@brand-primary, 70%);
+.alert-error, .alert-danger {
+  background-color: lighten(@brand-primary, 33%);
   color: darken(@brand-primary, 10%);
 }
 // Dismissable alerts
@@ -53,5 +53,14 @@
     top: -2px;
     right: -21px;
     color: inherit;
+    background: transparent;
+    border: 0;
+    float: right;
+    opacity: .2;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    text-shadow: 0 1px 0 #fff;
+    -webkit-appearance: none;
   }
 }

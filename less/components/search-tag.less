@@ -4,26 +4,30 @@
 @search-tag-background: @palette-white;
 @search-border-radius: 3px;
 @search-tag-color: @palette-gray-dark;
+@search-tag-font-size: @font-size-small;
+@search-tag-font-weight: @bold;
+
 .search-tag {
   display: inline-block;
-  position: inherit;
+  padding: 10px;
   border: 1px solid @palette-gray;
   border-radius: @search-border-radius;
   background: @search-tag-background;
-  padding: 2px 5px;
+  line-height: 0;
+  font-size: @search-tag-font-size;
+  font-weight: @search-tag-font-weight;
   color: @search-tag-color;
-  & > .gb-icon-x-mark {
-    // need a better solution to center vertically
-    position: relative;
-    right: 0;
-    display: inline-block;
-    top: 2px;
-  }
-
-  margin-bottom: 4px;
+  text-transform: capitalize;
 }
+
+.search-tag ~ .search-tag { margin-left: 4px; }
 
 .search-tag:hover {
   text-decoration: none;
   background-color: @palette-gray-lighter;
+}
+
+.search-tag > .gb-icon-x-mark {
+  position: relative;
+  top: 1px;
 }

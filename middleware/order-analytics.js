@@ -27,12 +27,12 @@ var OrderAnalytics = {
         })
         .pluck('name')
         .value();
-
       var $query = {
         'status': 'accepted'
+
       , 'submitted_dates.submitted': [
-          { $extract: { field: 'month', $equals: req.query.month } }
-        , { $extract: { field: 'year', $equals: req.query.year } }
+          { $extract: { field: 'month', $equals: req.query.month, timezone: 'orders.timezone' } }
+        , { $extract: { field: 'year', $equals: req.query.year , timezone: 'orders.timezone' } }
         ]
       };
 
@@ -41,15 +41,17 @@ var OrderAnalytics = {
       , columns: [
           { type: 'sum', expression: 'total', alias: 'volume' }
         , { type: 'sum', expression: 'guests', alias: 'guests' }
+        , { type: 'count', expression: { type: 'distinct', expression: 'users.organization' }, alias: 'organizations' }
         , { type: 'count', expression: '*', alias: 'placed' }
-        , { expression: 'extract(month from submitted) as month' }
-        , { expression: 'extract(year from submitted) as year' }
+        , { expression: 'extract(month from submitted at time zone orders.timezone) as month' }
+        , { expression: 'extract(year from submitted at time zone orders.timezone) as year' }
         ]
       , groupBy: [
           { expression: 'month' }
         , { expression: 'year' }
         ]
       , joins: [ { type: 'left', target: 'restaurants', on: { id: '$orders.restaurant_id$' } }
+               , { type: 'left', target: 'users', on: { id: '$orders.user_id$' } }
                ]
       };
 
@@ -80,7 +82,9 @@ var OrderAnalytics = {
 
       var monthMoment = moment(req.query.year + '-' + req.query.month, 'YYYY-M').startOf('month');
       var start = monthMoment.format('YYYY-MM-DD');
-      var end = monthMoment.add(1, 'month').format('YYYY-MM-DD');
+      var end = monthMoment.endOf('month');
+      if ( end.day() !== 7 ) end.day(7);
+      end = end.format('YYYY-MM-DD');
 
       var regions = utils.chain(res.locals.filters.region)
         .filter(function(option) {
@@ -99,7 +103,7 @@ var OrderAnalytics = {
         , '1 week'
         ]
       , 'submitted_dates.submitted': [
-          { $extract: { field: 'year', $equals: req.query.year } }
+          { $extract: { field: 'year', $equals: req.query.year, timezone: 'orders.timezone' } }
         ]
       };
 
@@ -108,6 +112,7 @@ var OrderAnalytics = {
           { type: 'sum', expression: 'total', alias: 'volume' }
         , { type: 'sum', expression: 'guests', alias: 'guests' }
         , { type: 'count', expression: '*', alias: 'placed' }
+        , { type: 'count', expression: { type: 'distinct', expression: 'users.organization' }, alias: 'organizations' }
         , { expression: 'extract(year from submitted) as year' }
         , { expression: 'extract(week from submitted) as week' }
         ]
@@ -122,6 +127,7 @@ var OrderAnalytics = {
       , submittedDate: { ignoreColumn: true }
       , joins: [ { type: 'left', target: 'restaurants', on: { id: '$orders.restaurant_id$' } }
                , { type: 'left', target: 'regions', on: { id: '$restaurants.region_id$' } }
+               , { type: 'left', target: 'users', on: { id: '$orders.user_id$' } }
                ]
       };
 
@@ -143,6 +149,42 @@ var OrderAnalytics = {
 
         next();
       });
+    };
+  }
+
+, retention: function(options) {
+    options = utils.defaults({}, options, {
+      monthsBack: 3
+    });
+
+    return function(req, res, next) {
+      var submissions = res.locals.organization_submissions;
+      if (!submissions) return res.error(500);
+
+      var keys = utils.range(0, options.monthsBack + 1);
+      var vals = keys.map(function() { return 0; });
+
+      var init = {
+        totals: utils.object(keys, vals)
+      , uniqOrgs: submissions.length
+      , newOrgs: 0
+      };
+
+      var now = new Date();
+      var currMonth = now.getMonth();
+      var currYear = now.getYear();
+
+      var tallySubmission = function(stats, submission) {
+        var old = submission.months_since_last_submitted >= options.monthsBack; // clump all the old organizations together
+        stats.totals[ old ? options.monthsBack : submission.months_since_last_submitted ]++;
+
+        var date = new Date(submission.first_submitted);
+        if ( date.getMonth() === currMonth && date.getYear() === currYear ) stats.newOrgs++;
+        return stats;
+      };
+
+      res.locals.stats = submissions.reduce(tallySubmission, init);
+      next();
     };
   }
 };

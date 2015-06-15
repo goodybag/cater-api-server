@@ -10,6 +10,8 @@ define(function(require, exports, module) {
   var states        = require('./states');
   var config        = require('config');
   var invoices      = require('../app/stamps/user-invoice/base');
+  var Handlebars    = require('handlebars');
+  var GbHelpers     = require('gb-handlebars-helpers')._helpers; // todo extract all helpers to this lib
 
   var blocks = {};
 
@@ -41,13 +43,8 @@ define(function(require, exports, module) {
 
     surcharge: function(pennies) {
       if (pennies)
-        return '$'  + helpers.dollars(pennies);
+        return '$'  + GbHelpers.dollars(pennies);
       return 'Free';
-    },
-
-    dollars: function(pennies) {
-      var cents = pennies == null ? 0 : parseFloat(pennies); // parse as float incase of partial cents
-      return utils.isNaN(cents) ? '' : utils.Math.round10(cents / 100, -2).toFixed(2); // partial cents get rounded here
     },
 
     dollarsOmit00: function(pennies) {
@@ -59,11 +56,6 @@ define(function(require, exports, module) {
       }
 
       return dollars;
-    },
-
-    pennies: function(dollars) {
-      var val = Math.round( dollars * 100 );
-      return utils.isNaN(val) ? '' : val;
     },
 
     dollarsNoCents: function(pennies){
@@ -196,18 +188,6 @@ define(function(require, exports, module) {
       return Math.floor(value);
     },
 
-    divide: function(dividend, divisor) {
-      return dividend / divisor;
-    },
-
-    intDivide: function(dividend, divisor) {
-      return Math.floor( dividend / divisor );
-    },
-
-    mod: function(dividend, divisor) {
-      return dividend % divisor;
-    },
-
     leadtime: function(minutes) {
       var hours = Math.floor(minutes / 60);
       var minutes = minutes % 60;
@@ -221,13 +201,6 @@ define(function(require, exports, module) {
      */
     phoneList: function(list) {
       return utils.map(list, utils.compose(helpers.phoneNumber, utils.identity)).join(', ');
-    },
-
-    capitalize: function(str) {
-      if(str && typeof str === 'string') {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-      }
-      return str;
     },
 
     weekday: function(day) {
@@ -263,36 +236,6 @@ define(function(require, exports, module) {
       });
     },
 
-    eq: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a == b;
-      return options[a == b ? 'fn' : 'inverse'](this);
-    },
-
-    dneq: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a != b;
-      return options[a != b ? 'fn' : 'inverse'](this);
-    },
-
-    lt: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a < b;
-      return options[a < b ? 'fn' : 'inverse'](this);
-    },
-
-    lte: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a <= b;
-      return options[a <= b ? 'fn' : 'inverse'](this);
-    },
-
-    gt: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a > b;
-      return options[a > b ? 'fn' : 'inverse'](this);
-    },
-
-    gte: function(a, b, options){
-      if ( typeof options.fn !== 'function' ) return a >= b;
-      return options[a >= b ? 'fn' : 'inverse'](this);
-    },
-
     datePassed: function(datetime, options) {
       return options[ moment(datetime) < moment() ? 'fn' : 'inverse'](this);
     },
@@ -313,10 +256,6 @@ define(function(require, exports, module) {
 
     dump: function( val ){
       return [ '<pre>', JSON.stringify( val, true, '  ' ), '</pre>' ].join('\n');
-    },
-
-    lowercase: function( val ){
-      return val.toLowerCase();
     },
 
     capitalze: function( val ){
@@ -365,6 +304,14 @@ define(function(require, exports, module) {
         out += options.fn( i );
       }
       return out;
+    },
+
+    repeat: function(n, options) {
+      var output = '';
+      for (var i = 0; i < n; i++) {
+        output += options.fn();
+      }
+      return output;
     },
 
     pad: function( n, width, z ){
@@ -427,10 +374,6 @@ define(function(require, exports, module) {
       return str.substring( from, to );
     },
 
-    truncate: function(str, length) {
-      return str.length > length ? str.substring(0, length) + '...' : str;
-    },
-
     typeOf: function(a){
       return typeof a;
     },
@@ -482,14 +425,6 @@ define(function(require, exports, module) {
       return options.fn(context);
     },
 
-    contains: function(arr, element, options){
-      if(utils.contains(arr, element)){
-        return options.fn(this);
-      } else {
-        return options.inverse(this);
-      }
-    },
-
     factorToPercent: function( factor, precision, options ){
       if ( typeof precision === 'object' || !precision ){
         precision = 2;
@@ -498,24 +433,14 @@ define(function(require, exports, module) {
       return parseFloat( ( factor * 100 ).toFixed( precision ) );
     },
 
+    pluck: utils.pluck,
+
     percentToFactor: function( percent, precision, options ){
       if ( typeof precision === 'object' || !precision ){
         precision = 2;
       }
 
       return parseFloat( ( percent / 100 ).toFixed( precision ) );
-    },
-
-    add: function (value, addition) {
-      return (+value) + (+addition);
-    },
-
-    sub: function (a, b) {
-      return (+a) - (+b);
-    },
-
-    multiply: function(a, b) {
-      return a * b;
     },
 
     commatize: function( x, options ){
@@ -527,7 +452,7 @@ define(function(require, exports, module) {
     },
 
     formatDietTag: function(tag) {
-      return config.diets[tag] || tag;
+      return config.diets[tag] ? config.diets[tag].name : tag;
     },
 
     giftcardClasses: function( card, user ){
@@ -564,7 +489,7 @@ define(function(require, exports, module) {
         set = utils.pluck( set, prop );
       }
 
-      return utils.isArray( set ) ? set.join( joiner || ', ' ) : set;
+      return utils.isArray( set ) ? set.join( joiner || ', ' ) : '';
     },
 
     uncamelize: function( text ){
@@ -586,14 +511,6 @@ define(function(require, exports, module) {
       return obj;
     },
 
-    isNull: function( val, options ){
-      return options[ val === null ? 'fn' : 'inverse' ]();
-    },
-
-    notNull: function( val, options ){
-      return options[ val !== null ? 'fn' : 'inverse' ]();
-    },
-
     isLast: function( i, list, options ){
       return options[ i === ( list.length - 1 ) ? 'fn' : 'inverse' ]();
     },
@@ -609,18 +526,6 @@ define(function(require, exports, module) {
 
     omit: function( obj, key ){
       return utils.omit( obj, key );
-    },
-
-    // Is a === any of rest
-    is: function( a ){
-      var rest = Array.prototype.slice.call( arguments, 1 );
-      var options = rest.pop();
-
-      // If any of the values are truthy, run `fn`, otherwise `inverse`
-      return options[
-        utils.any( rest, function( b ){ return a == b; })
-          ? 'fn' : 'inverse'
-      ](this);
     },
 
     timeToRange: function( time, format ){
@@ -643,7 +548,7 @@ define(function(require, exports, module) {
     replace: function( str, a, b ){
       return str.replace( a, b );
     },
-    
+
     without: function( arr ){
       var rest = Array.prototype.slice.call( arguments, 1 );
       return utils.without.apply( utils, arr, rest );
@@ -657,8 +562,24 @@ define(function(require, exports, module) {
       }
 
       return invoice[ obj ];
-    }
-  }
+    },
 
-  return module.exports = helpers;
+    slice: function( list, start, end ) {
+      return list.slice(+start, +end);
+    },
+
+    map: function( list, helper ){
+      if ( !(helper in Handlebars.helpers) ){
+        throw new Error('Invalid iterator helper');
+      }
+
+      var hhelper = Handlebars.helpers[ helper ];
+
+      return list.map( function( item ){
+        return hhelper( item );
+      });
+    }
+  };
+
+  return module.exports = utils.defaults(helpers, GbHelpers);
 });

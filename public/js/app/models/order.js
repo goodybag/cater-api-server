@@ -158,13 +158,13 @@ define(function(require, exports, module) {
       var now    = moment().tz( this.attributes.timezone );
       var end    = moment( this.attributes.datetime )
                     .tz( this.attributes.timezone )
-                    .hour( config.disallowOrdersBetween.end )
-                    .startOf('hour');
+                    .set( config.disallowOrdersBetween.end )
+                    .startOf( 'minute' );
       var start  = moment( this.attributes.datetime )
                     .tz( this.attributes.timezone )
-                    .subtract( 'days', 1 )
-                    .hour( config.disallowOrdersBetween.start )
-                    .startOf('hour');
+                    .subtract( 1, 'days' )
+                    .set( config.disallowOrdersBetween.start )
+                    .startOf( 'minute' );
 
       var datetime = moment( this.attributes.datetime )
                       .tz( this.attributes.timezone );
@@ -187,6 +187,12 @@ define(function(require, exports, module) {
 
       attrs = attrs || {};
       options = options || {};
+
+      this.lockOrderType = false;
+
+      if ( options.lockOrderType ){
+        this.lockOrderType = true;
+      }
 
       this.orderItems = new OrderItems(attrs.orderItems || [], {orderId: this.id, edit_token: options.edit_token });
       this.unset('orderItems');
@@ -225,7 +231,9 @@ define(function(require, exports, module) {
 
       this.on( fieldsThatShouldPromptCourierCheck, this.updateOrderType, this);
 
-      this.updateOrderType();
+      if (!options.ignoreOrderTypeInit) {
+        this.updateOrderType();
+      }
 
       this.on('change:amenities_total', this.updateSubtotal);
 
@@ -281,6 +289,10 @@ define(function(require, exports, module) {
       // Why do we take out the address fields from the top-level attributes?
       // attrs = _.omit(attrs, addressFields);
 
+      if (attrs.address_name){
+        addr.name = attrs.address_name;
+      }
+
       if (this.address != null)
         this.address.set(addr, options);
       else
@@ -313,7 +325,7 @@ define(function(require, exports, module) {
       total  += this.get('tip');
       rtotal += this.get('tip');
       if ( this.restaurant ){
-        if ( this.restaurant.get('has_contract') === false ){
+        if ( this.restaurant.get('plan_id') === null ){
           noContractAmt = total * this.restaurant.get('no_contract_fee')
           this.attributes.no_contract_amount = Math.round( noContractAmt );
           total += noContractAmt;
@@ -371,8 +383,8 @@ define(function(require, exports, module) {
         , moment(
             model.get('datetime')
           ).add(
-            'minutes'
-          , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+            -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+          , 'minutes'
           ).format('YYYY-MM-DD hh:mm:ss')
         );
       }
@@ -419,7 +431,12 @@ define(function(require, exports, module) {
       var obj = Backbone.Model.prototype.toJSON.apply(this, arguments);
       obj.orderItems = this.orderItems.toJSON();
       obj.restaurant = this.restaurant.toJSON();
-      _.extend(obj, this.address.toJSON());
+
+      var addr = this.address.toJSON();
+      addr.address_name = addr.name;
+      delete addr.name;
+
+      _.extend(obj, addr);
       obj.isAddressComplete = utils.reduce(
         utils.map(
           utils.pick(this.attributes, ['street', 'city', 'state', 'zip', 'phone'])
@@ -565,14 +582,16 @@ define(function(require, exports, module) {
         , moment(
             model.get('datetime')
           ).add(
-            'minutes'
-          , -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+            -moment.duration( this.restaurant.attributes.region.lead_time_modifier ).asMinutes()
+          , 'minutes'
           ).format('YYYY-MM-DD hh:mm:ss')
         );
       }
     },
 
     updateOrderType: function(){
+      if ( this.lockOrderType ) return;
+
       if ( this.shouldBeDeliveryService() ){
         this.set( 'type', 'courier' );
       } else {

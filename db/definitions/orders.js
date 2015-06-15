@@ -43,6 +43,7 @@ define(function(require) {
     , nullable: false
     , references: {table: 'restaurants', column: 'id', onDelete: 'set null'}
     }
+  , address_name: { type: types.text, editable: ['client', 'admin'] }
   , street: {
       type: types.text
     , nullable: true
@@ -182,7 +183,7 @@ define(function(require) {
   , reason_denied: {
       type: types.text
     , nullable: true
-    , editable: ['client', 'admin']
+    , editable: ['admin', 'order-restaurant']
     }
   , reviewed: {
       type: types.boolean
@@ -226,6 +227,7 @@ define(function(require) {
     , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     , editable: ['client', 'admin']
     }
+  , lat_lon: { type: types.point }
   };
 
   definition.indices = {};

@@ -203,11 +203,6 @@ define(function(require) {
     , default: 0
     , editable: ['client', 'admin']
     }
-  , disable_courier: {
-      type: types.boolean
-    , default: false
-    , editable: ['client', 'admin']
-    }
   , pms_contact_id: {
       type: types.int
     , references: {table: 'contacts', column: 'id', onDelete: 'set null'}
@@ -237,6 +232,11 @@ define(function(require) {
     , default: 0
     , checks: ['popularity <= 1']
     }
+  , supported_order_types: {
+      type: types.array(types.order_type)
+    , default: "Array['pickup', 'courier', 'delivery']::order_type[]"
+    }
+  , stripe_id: { type: types.text }
   };
 
   definition.indices = {};

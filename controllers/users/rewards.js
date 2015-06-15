@@ -15,10 +15,10 @@ module.exports.list = function( req, res ){
   var user = req.user.attributes;
 
   var tasks = {
-    'pendingPoints':  Models.User.getPendingPoints.bind( Models.User, req.param('uid') )
+    'pendingPoints':  Models.User.getPendingPoints.bind( Models.User, req.params.uid )
 
   , 'pendingOrders':  db.orders.findWithPendingPoints.bind( db.orders, {
-                        user_id:        req.param('uid')
+                        user_id:        req.params.uid
                       }, {
                         order:          { datetime: 'desc' }
                       , one:            [{ table: 'restaurants', alias: 'restaurant' }]
@@ -29,7 +29,7 @@ module.exports.list = function( req, res ){
                         where: {
                           status: { $or: ['submitted', 'accepted', 'delivered'] }
                         , points_awarded: true
-                        , user_id: req.param('uid')
+                        , user_id: req.params.uid
                         }
                       })
 
@@ -76,11 +76,11 @@ module.exports.redeem = function( req, res ){
     return res.error( errors.input.VALIDATION_FAILED );
   }
 
-  Models.User.removePoints( req.param('uid'), req.body.cost, function( error ){
+  Models.User.removePoints( req.params.uid, req.body.cost, function( error ){
     if ( error ) return res.error( errors.internal.DB_FAILURE, error );
 
     res.send( 204 );
 
-    venter.emit( 'reward:redeemed', req.body, req.param('uid') );
+    venter.emit( 'reward:redeemed', req.body, req.params.uid );
   });
 };

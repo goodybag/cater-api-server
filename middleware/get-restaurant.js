@@ -22,7 +22,7 @@ module.exports = function( options ){
 
     var $where = {};
 
-    var param = req.param( options.param );
+    var param = req.params[options.param];
 
     // use + instead of parseInt because:
     // parseInt('888-mini-cafe') === 888
@@ -68,10 +68,20 @@ module.exports = function( options ){
       });
     }
 
+    if ( options.notes ){
+      $options.many.push({
+        table: 'restaurant_notes'
+      , alias: 'notes'
+      , columns: [ 'note', { expression: 'created_at at time zone \'' + req.user.attributes.region.timezone + '\'', alias: 'created_at' } ]
+      , order: 'created_at desc'
+      , one: [ { table: 'users', alias: 'user' } ]
+      });
+    }
+
     logger.info('Finding restaurant');
     db.restaurants.findOne( $where, $options, function( error, restaurant ){
       if ( error ){
-        logger.error( 'error trying to find restaurant #%s', +req.param( options.param ), {
+        logger.error( 'error trying to find restaurant #%s', +req.params[options.param], {
           error: error
         });
 

@@ -62,7 +62,7 @@ define(function(require, exports, module) {
       });
 
       this.onPriceChange();
-     
+
       this.initTxFeePopover( this.model.restaurant.toJSON() );
     },
 
@@ -97,14 +97,16 @@ define(function(require, exports, module) {
       var self = this;
 
       this.$el.find('#reject-confirm-modal .has-error').removeClass('has-error');
+
       var $reasonDenied = this.$el.find('.reason-denied');
-      if ( $reasonDenied.val().length === 0 ) {
+      var reasonDenied = $reasonDenied.val().trim();
+      if ( !reasonDenied.length ) {
         return $reasonDenied.closest('.form-group').addClass('has-error');
       }
 
-      this.model.save({
-        reason_denied: $reasonDenied.val()
-      }, {
+      this.model.save({ reason_denied: reasonDenied, review_token: this.options.review_token }, {
+        validate: false,
+        patch: true,
         success: function () {
           self.changeStatus('denied');
         },
@@ -180,11 +182,18 @@ define(function(require, exports, module) {
           edit: this.edit,
           orderAddress: function() {
             return {
-              address: order.toJSON(),
+              address:  utils.extend( order.address.toJSON(), {
+                          name: context.order.address_name
+                        }),
               states: states
             };
           }
         };
+
+        // {{#with}} HBS helper not working with context functions
+        context.orderAddress = context.orderAddress();
+
+        console.log('rendering with', context);
         this.$el.find('.delivery-info').html(Handlebars.partials.order_info(context));
       }
     },

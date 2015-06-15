@@ -12,19 +12,52 @@ define(function(require, exports, module) {
 
   var helpers = {};
 
+  /**
+   * Access object properties via string
+   * supporting nested access
+   *
+   * Example
+   * ```
+   * getProperty(user, 'attributes.name') === user.attributes.name
+   * ```
+   *
+   * @param {object} obj - source object
+   * @param {string} prop - target property relative to object
+   * @return obj property
+   */
+  helpers.getProperty = function( obj, prop ) {
+    if (prop.indexOf('.') < 0) return obj[prop];
+    var parts = prop.split('.')
+      , last = parts.pop()
+      , len = parts.length
+      , idx = 1
+      , current = parts[0];
+
+    while( (obj = obj[current]) && idx < len ) {
+      current = parts[idx++];
+    }
+    if ( obj )
+      return obj[last];
+    return obj;
+  }
+
   helpers.search = function( list, term, fields ){
     var tokens;
+
+    var normalize = function( val ){
+      return val
+        .replace(/\'/g, '')
+        .toLowerCase();
+    }
 
     if ( typeof term === 'number' ){
       tokens = [];
     } else if ( typeof term === 'string' ){
+      term = normalize( term );
       tokens = term.match( /\w+/g );
-      term = term.toLowerCase();
     } else {
       throw new Error('Invalid search term type');
     }
-
-    var tokens = typeof term === 'number' ? [] : term.match( /\w+/g );
 
     return list.filter( function( item ){
       return fields.some( function( field ){
@@ -42,7 +75,7 @@ define(function(require, exports, module) {
         }
 
         if ( typeof value === 'string' ){
-          value = value.toLowerCase();
+          value = normalize( value );
         }
 
         return tokens.some( function( token ){

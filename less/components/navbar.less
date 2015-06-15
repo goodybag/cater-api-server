@@ -56,6 +56,8 @@ body {
 
 .navbar-logo {
   float: left;
+  margin-right: 16px;
+
   // Make the logo conform to navbar size
   height: 100%;
   max-height: @navbar-height;
@@ -74,13 +76,38 @@ body {
   }
 }
 
-.navbar-impersonate {
-  border-top: 5px solid @palette-red;
+.navbar-caption {
+  display: none;
+  padding-top: @navbar-height / 2 + @navbar-height-offset;
+  padding-bottom: @navbar-height / 2 - @navbar-height-offset;
+  line-height: 0;
 }
 
-// Use text alignment to align the points
-.navbar-with-dropdowns .container {
-  text-align: right;
+@media (min-width: @breakpoint-tablet) {
+  .navbar-caption {
+    display: block;
+    float: left;
+  }
+
+  .navbar-caption .full { display: none; }
+}
+@media (min-width: @breakpoint-desktop-sm) {
+  .navbar-caption .short { display: none; }
+  .navbar-caption .full {
+    display: inline;
+  }
+  .navbar-caption .full-number {
+    display: inline;
+    color: @brand-primary;
+  }
+}
+
+.navbar-caption .short {
+  color: @brand-primary;
+}
+
+.navbar-impersonate {
+  border-top: 5px solid @palette-red;
 }
 
 .navbar .popover-modal {
@@ -91,6 +118,7 @@ body {
   // Positioning to the right uses text-alignment on navbar due to
   // weird floating stuff on mobile and when the navbar is not collapsed
   display: inline-block;
+  float: right;
   line-height: 0;
   padding-top: @navbar-height / 2;
   padding-bottom: @navbar-height / 2;
@@ -100,9 +128,10 @@ body {
   margin-right: 12px;
 
   @media screen and (max-width: (@breakpoint-mobile)) {
+    position: absolute;
+    right: 60px;
     padding-top: @navbar-mobile-height / 2;
     padding-bottom: @navbar-mobile-height / 2;
-    margin-right: 52px;
   }
 }
 

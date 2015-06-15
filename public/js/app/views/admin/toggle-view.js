@@ -19,7 +19,8 @@ define(function (require, exports, module) {
         var options = {};
         options[this.options.field] = !this.options.model.get(this.options.field);
         this.options.model.save(options, {
-          success: this.onSuccess.bind(this)
+          patch: true
+        , success: this.onSuccess.bind(this)
         , error: this.onError.bind(this)
         });
       }

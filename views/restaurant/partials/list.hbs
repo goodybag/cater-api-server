@@ -2,12 +2,10 @@
   {{#each restaurants }}
   <div class="listing">
 
-  <a class="tile-link" title="{{name}}" href="/restaurants/{{text_id}}{{queryParams ../orderParams}}">
+  <a class="tile-link" title="{{name}}" href="/restaurants/{{text_id}}{{queryParams ../reqQuery}}">
     <ul class="inline-list">
       <li>
-        <div class="listing-img">
-          <img src="{{list_photo_url}}">
-        </div>
+        <div class="listing-img" data-pic='{{filepicker list_photo_url}}'></div>
       </li>
       <li>
         <div class="listing-info">
@@ -39,7 +37,13 @@
               <li>Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</li>
             </ul>
 
-          <span class="listing-tags">{{> tags tags }}</span>
+          <span class="listing-tags">
+          {{#each tags}}
+          {{#with (ref ../../config.diets this)}}
+          {{> diet_tag }}
+          {{/with}}
+          {{/each}}
+          </span>
         </div>
       </li>
     </ul>

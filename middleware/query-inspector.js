@@ -6,7 +6,7 @@
 
 module.exports = function( options ){
   return function( req, res, next ){
-    if ( !req.param('query_inspector') ) return next();
+    if ( !req.params.query_inspector ) return next();
 
     var oend = res.end;
 

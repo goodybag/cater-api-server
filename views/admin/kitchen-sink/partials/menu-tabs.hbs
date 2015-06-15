@@ -1,0 +1,61 @@
+<section class="page-section" id="section-menu-tabs">
+  <div class="container">
+    <h2 class="component-title">Menu Tabs</h2>
+    <p>The javascript implementation will use tabs as <em>anchor links</em>
+      not for toggling views.</p>
+    <ul class="menu-tabs">
+      <li class="menu-tab active"><a href="#section-catering" data-toggle="tab">Catering Menu</a></li>
+      <li class="menu-tab"><a href="#section-individual" data-toggle="tab">Individual Menu</a></li>
+    </ul>
+    <div class="menu-tabs-content">
+      <h1>Popular Items</h1>
+    </div>
+
+    <p>
+      <code class="language-markup">
+      {{~#raw~}}
+<ul class="menu-tabs">
+  <li class="menu-tab active"><a href="#section-catering" data-toggle="tab">Catering Menu</a></li>
+  <li class="menu-tab"><a href="#section-individual" data-toggle="tab">Individual Menu</a></li>
+</ul>
+<div class="menu-tabs-content">
+  <h1>Popular Items</h1>
+</div>
+      {{~/raw~}}
+      </code>
+    </p>
+
+    <h3>Bonus! Untabbed tabs</h3>
+    <p>Ever needed to put adjacent items along the tab row? Do not fret! Simply
+    give li tags the `class="menu-tab untab"` treatment. So simple!</p>
+
+    <ul class="menu-tabs">
+      <li class="menu-tab active"><a href="#section-inbox" data-toggle="tab">Inbox</a></li>
+      <li class="menu-tab"><a href="#section-social" data-toggle="tab">Social</a></li>
+      <li class="menu-tab untab"><span class="label-tag tomato">Notifications 7</span></li>
+    </ul>
+    <div class="menu-tabs-content">
+      <h1>Popular Items</h1>
+    </div>
+
+    <p>
+      <code class="language-markup">
+      {{~#raw~}}
+<ul class="menu-tabs">
+  <li class="menu-tab active"><a href="#section-inbox" data-toggle="tab">Inbox</a></li>
+  <li class="menu-tab"><a href="#section-social" data-toggle="tab">Social</a></li>
+  <li class="menu-tab untab"><span class="label-tag tomato">Notifications 7</span></li>
+</ul>
+<div class="menu-tabs-content">
+  <h1>Popular Items</h1>
+</div>
+      {{~/raw~}}
+      </code>
+    </p>
+  </div>
+
+  <div class="container">
+    <h2 class="component-title">Affixed Menu Tab</h2>
+    <a href="kitchen-sink/affix">Demo</a>
+  </div>
+</section>

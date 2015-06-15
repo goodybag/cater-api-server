@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="/css/user-settings.css">
 {{/extend}}
 
+{{> stripe }}
 <div id="payment-methods" class="container">
   <h1 class="text-center page-title">Credit Cards</h1>
   <div class="row">
@@ -20,13 +21,13 @@
           <li class="list-group-item">
             <div id="add-payment-method">
               <h3>Add Credit Card</h3>
-              <div id="new-card">
+              <form action="" method="POST" id="new-card">
                 {{> edit_card }}
-              </div>
-              <div class="btn-toolbar">
-                <a class="btn btn-default" href="/users/me/">Back to settings</a>
-                <a class="btn btn-primary btn-add-card" href="/users/me/cards/">Add Credit Card</a>
-              </div>
+                <div class="btn-toolbar">
+                  <a class="btn btn-default" href="/users/me/">Back to settings</a>
+                  <a class="btn btn-primary btn-add-card" href="/users/me/cards/">Add Credit Card</a>
+                </div>
+              </form>
             </div>
           </li>
         </ul>
@@ -39,8 +40,6 @@
 </div>
 
 {{#extend "scripts"}}
-<script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
-
 <script>
   require([
       'app/pages/cards'
@@ -48,9 +47,9 @@
     , 'app/models/user'
     ]
   , function(cards, Models, User) {
+      Stripe.setPublishableKey('{{{config.stripe.public}}}');
       cards.init({
         user: new User( {{{json user}}} )
-      , marketplaceUri: "{{{config.balanced.marketplaceUri}}}"
       });
     }
   );

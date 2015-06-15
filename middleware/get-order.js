@@ -14,7 +14,7 @@ module.exports = function( options ){
   });
 
   return function( req, res, next ){
-    Models.Order.findOne( +req.param( options.param ), function( error, order ){
+    Models.Order.findOne( +req.params[options.param], function( error, order ){
       if ( error ) return next( error );
 
       req.order = order;

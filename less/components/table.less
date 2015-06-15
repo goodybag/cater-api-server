@@ -32,8 +32,14 @@
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 12px;
+  font-weight: @regular;
   color: #111;
   text-align: left;
+}
+
+.table th.active,
+.table th .active {
+  font-weight: @bold;
 }
 
 .table-striped tr:nth-child(2n) td {
@@ -42,4 +48,17 @@
 
 .table tr.table-row-highlight {
   background-color: @palette-tan;
+}
+
+.table {
+  .table-row-highlight('courier');
+  .table-row-highlight('pickup');
+  .table-row-highlight('delivery');
+}
+
+.table-row-highlight( @type ){
+  @color: ~"@{type-@{type}}";
+  & tr.table-row[data-order-type="@{type}"] {
+    background-color: @color;
+  }
 }

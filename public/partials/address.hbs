@@ -1,7 +1,9 @@
 <address>
-  {{#if address }}
+  {{#if address}}
     {{#if address.name}}
     <strong>{{address.name}}</strong><br>
+    {{else}}
+    <strong>{{../address_name}}</strong></br>
     {{/if}}
   {{else}}
   <strong>{{name}}</strong><br>
@@ -12,9 +14,9 @@
   {{/if}}
   {{#if city}}{{city}}, {{/if}}{{#if state}}{{state}} {{/if}}{{zip}}<br>
   {{#if phone}}
-  Phone: {{phoneNumber phone}}<br>
+  <span class="group">Phone: {{phoneNumber phone}}</span><br>
   {{/if}}
   {{#if delivery_instructions}}
-  Delivery Instructions: {{delivery_instructions}}<br>
+  <span class="group">Delivery Instructions: {{delivery_instructions}}</span><br>
   {{/if}}
 </address>

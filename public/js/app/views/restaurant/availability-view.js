@@ -1,8 +1,8 @@
 /**
- * Restaurant Availability View 
+ * Restaurant Availability View
  *
- * Handles the calendar for a restaurant's holidays or time off. 
- * Allows marking events so that admins are not able to place orders during 
+ * Handles the calendar for a restaurant's holidays or time off.
+ * Allows marking events so that admins are not able to place orders during
  * specified days.
  */
 
@@ -12,6 +12,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var moment = require('moment');
   var FullCalendar = require('fullcalendar');
+  var Handlebars = require('handlebars');
 
   // Lib
   var utils = require('utils');
@@ -51,7 +52,7 @@ define(function(require, exports, module) {
         var duringStart = $during.find('.event-date-start').text();
         var duringEnd = $during.find('.event-date-end').text();
 
-        // Note: Date ranges from backend are represented with [ start, end ) 
+        // Note: Date ranges from backend are represented with [ start, end )
         // but the frontend calendar plugin uses [ start, end ].
         return [
           '['
@@ -87,7 +88,7 @@ define(function(require, exports, module) {
       this.model.set({
         'edit': true            // display the 'edit' version of the modal
       , 'calEvent': calEvent    // save object for updating full calendar
-      }); 
+      });
       var html = this.templates.eventModal(this.model.toFullCalendarEvent());
       this.renderModal(html);
     },

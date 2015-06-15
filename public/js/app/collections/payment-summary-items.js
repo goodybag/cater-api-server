@@ -1,6 +1,13 @@
+if ( typeof module === "object" && module && typeof module.exports === "object" ){
+  var isNode = true, define = function (factory) {
+    module.exports = factory(require, exports, module);
+  };
+}
+
 define(function(require, exports, module) {
   var utils               = require('utils');
   var PaymentSummaryItem  = require('../models/payment-summary-item');
+  var Order               = require('../models/order');
 
   return module.exports = utils.Collection.extend({
     model: PaymentSummaryItem
@@ -33,7 +40,25 @@ define(function(require, exports, module) {
       attrs.payment_summary_id = this.payment_summary_id;
       attrs.sales_tax = this.sales_tax;
       attrs.plan = this.plan;
-      return utils.Collection.prototype._prepareModel.call( this, attrs, options );
+
+      var order;
+
+      if ( attrs.order ){
+        if ( !(attrs.order instanceof Order) ){
+          attrs.order = new Order( attrs.order, { lockOrderType: true } );
+        }
+
+        order = attrs.order;
+        delete attrs.order;
+      }
+
+      var model = utils.Collection.prototype._prepareModel.call( this, attrs, options );
+
+      if ( order ){
+        model.set( 'order', order );
+      }
+
+      return model
     }
   });
 });

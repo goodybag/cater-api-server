@@ -1,0 +1,24 @@
+<div class="third filter-cuisines">
+  <h1>Cuisine</h1>
+
+  <!-- Show truncated options -->
+  {{#each (slice filterCuisines 0 3)}}
+  <label>
+    <input class="immediate" type="checkbox" value="{{this}}" {{#contains ../reqQuery.cuisines this}}checked="checked"{{/contains}}/> {{this}}
+  </label>
+  {{/each}}
+
+  <!-- Show all filter options  -->
+  <span class="popover-wrapper">
+    <a href="#" data-role="popover" data-target="cuisines-popover">more cuisines</a>
+    <div class="popover-modal cuisines-popover">
+      <div class="popover-body">
+        <h1>Cuisine</h1>
+        {{#each filterCuisines~}}
+        <label><input type="checkbox" value="{{this}}" {{#contains ../reqQuery.cuisines this}}checked="checked"{{/contains}}/> {{this}}</label>
+        {{~/each}}
+        <button class="btn btn-default">Save and close</button>
+      </div>
+    </div>
+  </span>
+</div>

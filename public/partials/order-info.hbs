@@ -18,7 +18,11 @@
     <dd>{{datepart order.datetime}}</dd>
     <dt>Delivery Time:</dt>
     <dd>
-      {{join (timeToRange (timepart order.datetime) "h:mm A") " - "}}
+      {{#contains user.groups 'restaurant'}}
+        {{timepart order.datetime}}
+      {{else}}
+        {{join (timeToRange (timepart order.datetime) "h:mm A") " - "}}
+      {{/contains}}
       {{#contains user.groups 'admin'}}
         {{formatDateTimeWithTz order.datetime order.timezone "z"}}
       {{/contains}}
@@ -28,7 +32,9 @@
     <dd>{{order.guests}}</dd>
   </dl>
   {{#eq order.type 'courier'}}
-  <p class="delivery-service-note">* This order will be delivered by a third-party delivery service.</p>
+  {{#if user.isAdmin}}
+  <p class="delivery-service-note">* This order will be delivered by {{or order.delivery_service.name 'a third-party delivery service'}}.</p>
+  {{/if}}
   {{/eq}}
   <p>{{order.notes}}</p>
 
@@ -67,7 +73,9 @@
   {{/if}}
 
   {{#unless edit}}
-  {{> address order}}
+  {{#with orderAddress.address}}
+  {{> address}}
+  {{/with}}
   {{else}}
   {{#with orderAddress}}
   {{> edit_address}}

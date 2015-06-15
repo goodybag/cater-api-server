@@ -96,6 +96,25 @@
   </div>
 </div>
 <div class="form-group">
+  <label class="control-label" for="input-price_per_mile">
+  Price Per Mile
+  <span class="help-block">Required</span>
+  </label>
+  <div class="input-group">
+    <span class="input-addon">$</span>
+    <input
+      type="number"
+      step="0.01"
+      class="form-control"
+      name="price_per_mile"
+      id="input-price_per_mile"
+      data-in="dollars"
+      data-out="pennies"
+      value="{{dollars restaurant_location.price_per_mile}}"
+      required>
+  </div>
+</div>
+<div class="form-group">
   <label class="control-label" for="input-is_default">
     Default Location?
   </label>

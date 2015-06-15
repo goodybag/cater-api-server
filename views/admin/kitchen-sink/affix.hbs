@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{> admin_title}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Goodybag Catering CSS Stuff -->
+    <link rel="stylesheet" href="{{cdn (format '/dist/<%= version %>/css/admin.css' pkg)}}">
+
+    <!--[if lt IE 9]>
+    <script src="{{cdn "/components/html5shiv/dist/html5shiv.js"}}"></script>
+    <script src="{{cdn "/components/es5-shim/es5-shim.js"}}"></script>
+    <script src="{{cdn "/components/es5-shim/es5-sham.js"}}"></script>
+    <![endif]-->
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <h1> Menu tab affix example</h1>
+      <a href="/admin/kitchen-sink">← Back to Kitchen Sink</a>
+      <ul class="menu-tabs">
+        <li class="menu-tab"><a href="#section-catering">Catering Menu</a></li>
+        <li class="menu-tab"><a href="#section-individual">Individual Menu</a></li>
+        <li class="menu-tab"><a href="#section-extras">Extras</a></li>
+      </ul>
+
+      <section id="section-popular">
+        <h2>Popular Items</h2>
+        {{#repeat 3}}
+        <p style="background-color: #247ba0; height: 100px"></p>
+        {{/repeat}}
+      </section>
+
+      <section id="section-catering">
+        <h2>Catering Menu</h2>
+        {{#repeat 8}}
+        <p style="background-color: #70c1b3; height: 100px"></p>
+        {{/repeat}}
+      </section>
+
+      <section id="section-individual">
+        <h2>Individual Menu</h2>
+        {{#repeat 8}}
+        <p style="background-color: #b2dbbf; height: 100px"></p>
+        {{/repeat}}
+      </section>
+
+      <section id="section-extras">
+        <h2>Extras</h2>
+        {{#repeat 8}}
+        <p style="background-color: #f3ffbd; height: 100px"></p>
+        {{/repeat}}
+      </section>
+    </div>
+
+    {{#unless config.isDev}}
+    <script src="{{cdn (format 'dist/<%= version %>/admin.js' pkg)}}"></script>
+    {{else}}
+    <script src="/components/requirejs/require.js"></script>
+    <script src="/js/require-config.js"></script>
+    {{/unless}}
+
+    {{> config}}
+
+    <script>
+      require(['app/views/ui/menu-tabs-view', 'jquery-loaded'], function(MenuTabsView, $){
+        var menuTabsView = new MenuTabsView({
+          el: '.menu-tabs'
+        , scrollSpeed: 300
+        , throttleWait: 200
+        });
+      });
+    </script>
+  </body>
+</html>

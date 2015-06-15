@@ -11,7 +11,7 @@ define(function(require){
   };
 
   var page = {
-    typeChangeFunnies: [
+    successFunnies: [
       'You are very handsome.'
     , 'Have a great day!'
     , 'You. Are. The. Best.'
@@ -20,7 +20,10 @@ define(function(require){
     , 'Please click softer next time :('
     , 'You rock!'
     , 'Bet, let, get, pet, Boba Fet'
+    , 'You win... This time.'
     ]
+
+  , state: new utils.Model()
 
   , init: function( options ){
       if ( !options.order ){
@@ -28,6 +31,11 @@ define(function(require){
       }
 
       page.order = options.order;
+
+      page.state.set( 'order_type', options.order.get('type') );
+      page.state.set( 'restaurant_location_id', options.order.get('restaurant_location_id') );
+
+      page.state.on( 'change', page.onStateChange );
 
       page.notificationHistory  = new Views.NotificationHistoryTable({ order: options.order })
       page.notifications        = new Views.NotificationsTable({ order: options.order })
@@ -54,38 +62,90 @@ define(function(require){
         });
 
         $('[name="order_type"]').change( function( e ){
-          var order = { type: $(this).val() };
+          page.state.set( 'order_type', $(this).val() );
+        });
 
-          page.updateOrder( order, function( error, order ){
-            if ( error ){
-              return flash.info( 'Error :(', 1000 );
-            }
-
+        $('[name="delivery_service_id"]').change( function( e ){
+          if ( $(this).val() === 'null' ){
             flash.info([
-              "It's set!<br>"
-            , '<small class="really-small">'
-            , page.typeChangeFunnies[ ~~( Math.random() * page.typeChangeFunnies.length ) ]
-            , '</small>'
-            ].join(''));
-          });
+              'Wait!<br><small class="really-small">You can\'t do that!</small>'
+            ]);
+          }
+
+          page.state.set( 'order_courier', +$(this).val() );
         });
 
         $('[name="restaurant_location_id"]').change( function( e ){
-          var order = { restaurant_location_id: +$(this).val() };
+          page.state.set( 'restaurant_location_id', +$(this).val() );
+        });
 
-          page.updateOrder( order, function( error, order ){
+        $('[name="order_status"]').change(function (e) {
+          var silent = !!$(this).find(':selected').data('silent');
+          page.updateOrder({ status: e.target.value },{ silent: silent }, page.flash);
+        });
+
+        $('[name="payment_status"]').change(function (e) {
+          var status = e.target.value || null;
+          if (status === null) alert('Changing payment status to unprocessed will attempt to recharge the credit card!');
+          page.updateOrder({ payment_status: status }, page.flash);
+        });
+
+        $('[name="payment_method_id"]').change( function( e ){
+          var pmid = isNaN(e.target.value) ? null : e.target.value;
+          page.updateOrder({ payment_method_id: pmid }, page.flash);
+        });
+
+        $('[role="save"]').click( function( e ){
+          e.preventDefault();
+
+          page.saveOrder( function( error ){
             if ( error ){
-              return flash.info( 'Error :(', 1000 );
+              return page.flashError( error );
             }
+
+            return page.flashSuccess();
           });
         });
       });
     }
 
+  , saveOrder: function( callback ){
+      var props = {
+        type: page.state.get('order_type')
+      , restaurant_location_id: page.state.get('restaurant_location_id')
+      };
+
+      // Index of because of the whole `silent` thing
+      if ( props.type && props.type.indexOf('courier') > -1 ){
+        props.delivery_service_id = page.state.get('order_courier');
+      }
+
+      return page.updateOrder( props, function( error ){
+        if ( error ) return callback( error );
+
+        callback();
+
+        page.onSave();
+      });
+    }
+
     // Because I'm too lazy to fulfill all required properties on the Order Model
-  , updateOrder: function( props, callback ){
+  , updateOrder: function( props, options, callback ){
+      if (utils.isFunction(options)) {
+        callback = options;
+        options = {};
+      }
+
+      utils.defaults(options, {
+        silent: false
+      });
+
       var silent = typeof props.type === 'string' && props.type.indexOf('silent') >= 0;
       if (silent) props.type = props.type.replace('silent', '').trim();
+
+      // shim silent hack
+      silent = silent || options.silent;
+
       $.ajax({
         type: 'PUT'
       , url: '/api/orders/' + (silent ? 'silent/' : '') + page.order.get('id')
@@ -93,7 +153,11 @@ define(function(require){
       , headers: { 'Content-Type': 'application/json' }
       , data: JSON.stringify( props )
       , success: function( order ){
-          return callback( null, order );
+          if ( !silent ) return callback( null, order );
+          utils.async.parallel([
+            page.buildPdf.bind(page, order.id, 'receipt')
+          , page.buildPdf.bind(page, order.id, 'manifest')
+          ], callback);
         }
       , error: callback
       });
@@ -125,10 +189,23 @@ define(function(require){
       });
     }
 
+  , buildPdf: function ( orderId, pdfType, callback ) {
+      $.ajax({
+        type: 'POST'
+      , url: ['/api/orders', orderId, 'rebuild-pdf', pdfType].join('/')
+      , json: true
+      , headers: { 'Content-Type': 'application/json' }
+      , success: function ( res ) {
+          return callback( null, res );
+        }
+      , error: callback
+      });
+    }
+
   , fetchAndRenderHistory: function(){
       page.getHistory( function( error, items ){
         if ( error ){
-          return notify.error( error );
+          return page.flashError( error );
         }
 
         page.notificationHistory.setItems( items );
@@ -138,11 +215,42 @@ define(function(require){
   , fetchAndRenderNotifications: function(){
       page.getAvailable( function( error, items ){
         if ( error ){
-          return notify.error( error );
+          return page.flashError( error );
         }
 
         page.notifications.setItems( items );
       });
+    }
+
+  , updateCourierServiceSelector: function(){
+      $('.form-group-courier').toggleClass(
+        'hide'
+      , page.state.get('order_type').indexOf('courier') === -1
+      );
+    }
+
+  , flash: function(error) {
+      if (error) {
+        return page.flashError( error );
+      }
+      return page.flashSuccess();
+    }
+
+  , flashSuccess: function(){
+      flash.info([
+        "It's set!<br>"
+      , '<small class="really-small">'
+      , page.successFunnies[ ~~( Math.random() * page.successFunnies.length ) ]
+      , '</small>'
+      ].join(''));
+    }
+
+  , flashError: function( error ){
+      console.error( error );
+      flash.info([
+        'Error :(<br>'
+      , '<small class="really-small">Press CMD+Alt+J</small>'
+      ].join(''), 1000 );
     }
 
   , onNotificationsSend: function(){
@@ -154,6 +262,32 @@ define(function(require){
       var $tds = page.notifications.$el.find( '#notification-' + cid + ' > td' );
       $tds.addClass('highlight');
       $tds.eq(0).one( 'animationend', $tds.removeClass.bind( $tds, 'highlight') );
+      // scroll to the middle of screen
+      $('html, body').animate({
+        scrollTop: $tds.offset().top - Math.floor(window.innerHeight/2)
+      }, 200);
+    }
+
+  , onStateChange: function( state ){
+      var handlers = {
+        order_type: function(){
+          page.updateCourierServiceSelector();
+        }
+      };
+
+      Object.keys( state.changed )
+        .filter( function( key ){
+          return typeof handlers[ key ] === 'function';
+        })
+        .forEach( function( key ){
+          handlers[ key ]();
+        });
+
+      $('.form-group-save').removeClass('hide');
+    }
+
+  , onSave: function(){
+      $('.form-group-save').addClass('hide');
     }
   };
 

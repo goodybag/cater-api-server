@@ -1,5 +1,7 @@
 {{#extend "page"}}page-restaurant{{/extend}}
 
+{{#extend "html-title"}}{{truncate restaurant.name 10}}{{/extend}}
+
 {{#extend "body"}}
   <h2>Basic Info</h2>
 
@@ -32,6 +34,27 @@
         {{#each regions}}
           <option value="{{this.id}}"{{#eq ../restaurant.region_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
         {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="region_id_selector" class="control-label">Supported Order Types</label>
+      <select name="supported_order_types"
+      id="supported_order_types_selector"
+      multiple="true">
+        <option value="pickup"
+          {{~#contains restaurant.supported_order_types 'pickup'}}
+            selected="true"
+          {{~/contains}}>Pickup</option>
+
+        <option value="courier"
+          {{~#contains restaurant.supported_order_types 'courier'}}
+            selected="true"
+          {{~/contains}}>Courier</option>
+
+        <option value="delivery"
+          {{~#contains restaurant.supported_order_types 'delivery'}}
+            selected="true"
+          {{~/contains}}>Delivery</option>
       </select>
     </div>
     <div class="form-group">

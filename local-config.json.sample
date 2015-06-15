@@ -5,4 +5,5 @@
 , "testPhoneSms": "XXXXXXXXXX"
 , "testPhoneVoice": "XXXXXXXXXX"
 , "loggingMongoConnStr": "mongodb://localhost:27017/logs"
+, "restaurantStripeId": "acct_16CZlbImWewFwddn"
 }

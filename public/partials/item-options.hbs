@@ -35,7 +35,11 @@
           {{#if this.price}}
           <span class="option-price">(+{{dollars this.price}})</span>
           {{/if}}
-          {{> tags this.tags }}
+          {{#each tags}}
+          {{#with (ref ../../../config.diets this)}}
+          {{> diet_tag }}
+          {{/with}}
+          {{/each}}
           <p class="option-description">{{this.description}}</p>
         </label>
       </div>

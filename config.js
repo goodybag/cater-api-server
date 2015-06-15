@@ -2,6 +2,8 @@
  * Module dependencies
  */
 
+process.env.GB_ENV = process.env.GB_ENV || 'dev';
+
 var
   os = require('os')
 , fs =  require('fs')
@@ -20,13 +22,18 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, credentials: require('./configs/credentials')
+, stores: require('./configs/stores')
+, adroll: require('./configs/adroll')
+, stripe: require('./configs/stripe')
+, google: require('./configs/google')
 , intercom: require('./configs/intercom')
 , yelp: require('./configs/yelp')
 , popularity: require('./configs/popularity')
 , reminders: require('./configs/reminders')
 , redis: require('./configs/redis')
 , session: require('./configs/session')
-, diets: require('./configs/diets')
+, diets: require('./public/js/lib/diets')
 , sortQueryTable: require('./configs/sort-query-table')
 , support: require('./configs/support')
 , workers: require('./configs/workers')
@@ -35,6 +42,7 @@ config.defaults = {
 , logging: require('./configs/logging')
 , invoice: require('./configs/invoice')
 , promo: require('./configs/promo')
+, hipchat: require('./configs/hipchat')
 
 , deliveryTime: {
     padding: 15
@@ -45,8 +53,8 @@ config.defaults = {
   }
 
 , disallowOrdersBetween: {
-    start: 20
-  , end:    8
+    start:  { hour: 20, minute: 0 }
+  , end:    { hour: 8, minute: 30 }
   }
 
 , emailProvider: 'mandrill'
@@ -65,8 +73,8 @@ config.defaults = {
 
 , deniedRecipients: [
     'jag@goodybag.com'
-  , 'sarah.southwell@goodybag.com'
   , 'christymedlock@goodybag.com'
+  , 'patrickmugavin@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -74,8 +82,8 @@ config.defaults = {
 
 , deliveryServiceOrderAboveThresholdRecipients: [
     'jag@goodybag.com'
-  , 'sarah.southwell@goodybag.com'
   , 'christymedlock@goodybag.com'
+  , 'patrickmugavin@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -91,9 +99,6 @@ config.defaults = {
     // baseUrl: 'http://cater-cdn-dev.s3-website-us-east-1.amazonaws.com'
   , bucket: 'cater-cdn-dev'
   }
-
-, googleAnalytics: 'UA-23372459-4'
-, googleAdwordsConversionId: 973544387
 
 , rewardsStartDate: '2014-03-25 00:00:00'
 
@@ -118,6 +123,7 @@ config.defaults = {
 
 , rewardHolidays: [
     { start: '2014-09-02 00:00:00', end: '2014-09-03 00:00:00', rate: '2.0', description: 'Post-Labor Day' }
+  , { start: '2015-05-26 00:00:00', end: '2015-05-27 00:00:00', rate: '2.0', description: 'Post-Memorial Day' }
   ]
 
 , welcome: {
@@ -212,6 +218,7 @@ config.defaults = {
   , dsOrders: [ local.testEmail || 'test@goodybag.com' ]
   , reminderIgnored: [ local.testEmail || 'test@goodybag.com' ]
   , orderNotificationChecks: [ local.testEmail || 'test@goodybag.com' ]
+  , reminderPaymentStatusIgnore: [local.testEmail || 'test@goodybag.com']
   }
 
 , phone: {
@@ -326,7 +333,7 @@ config.dev = {
 config.staging = {
   env: 'staging'
 
-, numWorkers: 1
+, numWorkers: +process.env['WEB_CONCURRENCY']
 
 , isStaging: true
 
@@ -382,7 +389,7 @@ config.staging = {
 
 config.production = {
   env: 'production'
-, numWorkers: 3
+, numWorkers: +process.env['WEB_CONCURRENCY']
 
 , isProduction: true
 
@@ -398,8 +405,6 @@ config.production = {
     baseUrl: 'https://d3bqck8kwfkhx5.cloudfront.net'
   , bucket: 'cater-cdn-prod'
   }
-
-, googleAnalytics: 'UA-23372459-3'
 
 , http: {
     port: process.env['PORT'] || 5000
@@ -453,8 +458,8 @@ config.production = {
     , 'redemptions@goodybag.com'
     ]
   , dsOrders: [
-      'sarahsouthwell@goodybag.com'
-    , 'christymedlock@goodybag.com'
+      'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
 
     // temp
     , 'jacobparker@goodybag.com'
@@ -467,21 +472,25 @@ config.production = {
     // , 'jay@goodybag.com'
     , 'jag@goodybag.com'
     , 'jacobparker@goodybag.com'
-    , 'sarahsouthwell@goodybag.com'
     , 'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
     ]
   , orderNotificationChecks: [
-      'sarahsouthwell@goodybag.com'
-    , 'christymedlock@goodybag.com'
+      'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
     , 'john@goodybag.com'
+    ]
+  , reminderPaymentStatusIgnore: [
+      'christymedlock@goodybag.com'
+    , 'patrickmugavin@goodybag.com'
     ]
   }
 
 , deliveryServices: {
     responseThresholdMins: 30
   , supportPhones: [
-      '9788461970' // Sarah
-    , '2105779226' // Christy Medlock
+      '2105779226' // Christy Medlock
+    , '3153457641' // Patrick Mugavin
     ]
   }
 

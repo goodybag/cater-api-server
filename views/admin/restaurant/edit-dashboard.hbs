@@ -1,0 +1,53 @@
+{{#extend "page"}}page-restaurant{{/extend}}
+
+{{#extend "html-title"}}{{truncate restaurant.name 10}}{{/extend}}
+
+{{#extend "body"}}
+  <h2>{{restaurant.name }} Dashboard</h2>
+
+  <h3>Notes</h3>
+  <section class="restaurant-notes">
+    <form>
+      <input class="input-note" type="text" placeholder="leave a note here"></input>
+      <p class="actions">
+        <button class="btn btn-default">Submit</button>
+      </p>
+    </form>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Comment</th>
+          <th>Added</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each restaurant.notes}}
+        <tr>
+          <td>{{#if user}}<a href="/admin/users/{{user.id}}">{{user.name}}{{else}}N/A{{/if}}</a></td>
+          <td>{{note}}</td>
+          <td>{{datepart created_at}} {{timepart created_at}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </section>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require([
+    'app/views/restaurant/notes-view'
+  , 'app/views/alert-view'
+  ]
+, function(NotesView, AlertView) {
+    var view = new NotesView({
+      el:             '.restaurant-notes'
+    , restaurant_id:  {{restaurant.id}}
+    , user_id:        {{user.id}}
+    , alertView:      new AlertView({ el: '.alert-container' })
+    });
+  }
+);
+</script>
+{{/extend}}

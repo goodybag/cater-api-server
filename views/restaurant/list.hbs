@@ -5,33 +5,15 @@
   <div class="search-params">
     {{> restaurant_search_form }}
   </div>
-  <a href="#" class="search-advanced-link section{{#if expandSearchTools}} expand{{/if}}" data-role="collapsible" data-target="search-advanced-content">
-    <div class="container">
-      <span class="expand-hidden">Hide all search tools <span class="search-advanced-link-icon gb-icon-chevron-down"></span></span>
-      <span class="expand-show">Show all search tools <span class="search-advanced-link-icon gb-icon-chevron-down"></span></span>
-    </div>
-  </a>
   <div class="search-advanced">
     {{> restaurant_search_advanced }}
   </div>
 </div>
 
-{{#if promptSurvey}}
-<div class="alert alert-success alert-dismissable alert-survey">
-  <div class="container">
-    <a target="_blank" href="https://docs.google.com/forms/d/1n95SQSKK8x7mSihdcfShWU6C4MagmnfD831I1wOrvzw/viewform?usp=send_form">Would you mind telling us what you think of the changes?</a>
-    <span class="close">x</span>
-  </div>
-</div>
-{{/if}}
-
 <div class="list-options">
   <div class="container">
     {{> restaurant_list_tags }}
-  </div>
-  <div class="container">
     {{> restaurant_toggle_list }}
-    {{> restaurant_list_sort }}
   </div>
 </div>
 <div class="restaurant-list">
@@ -54,14 +36,24 @@
 
 {{#extend "scripts"}}
 <script>
-require( ['app/pages/restaurant-list'], function( page ){
-  page.init();
+require( ['jquery-loaded', 'app/pages/restaurant-list'], function( $, page ){
+  page.init({
+  });
 
   // hack to make the alerts dissmissiable
   $('.alert .close').click( function( e ){
     e.preventDefault();
     $(this).closest('.alert').remove();
   });
+
+  $('[data-role="popover"]').gb_popover();
+
+  function load(){
+    var $el = $(this);
+    $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')))
+  }
+
+  $('.tile-cover, .listing-img').on('appear', load);
 });
 </script>
 {{/extend}}

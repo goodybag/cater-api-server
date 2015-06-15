@@ -89,6 +89,151 @@ describe('Restaurant Model', function() {
         order.restaurant.set('pickup_lead_times', []);
         assert(order.restaurant.isValidGuestDateCombination(order));
       });
+
+      it('should return false if does not support courier', function() {
+        order.restaurant.set('supported_order_types', [ 'delivery' ]);
+        assert(!order.restaurant.isValidGuestDateCombination(order));
+      });
+
+      it('should return true if it does support courier', function() {
+        order.restaurant.set('supported_order_types', [ 'delivery', 'courier' ]);
+        assert(!order.restaurant.isValidGuestDateCombination(order));
+      });
+    });
+  });
+
+  describe('#getDaysClosed', function(){
+    var restaurant;
+    beforeEach(function resetRestaurant() {
+      restaurant = new Restaurant({
+        delivery_times: {
+          0: [],
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+          5: [],
+          6: []
+        },
+        hours_of_operation: {
+          0: [],
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+          5: [],
+          6: []
+        }
+      });
+    });
+    it('should return all days of the week', function() {
+      // Basically this is a restaurant that is never open
+      // so it should be disabled every day.
+      restaurant.set({
+        delivery_times: {
+          0: [],
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+          5: [],
+          6: []
+        },
+        hours_of_operation: {
+          0: [],
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+          5: [],
+          6: []
+        }
+      });
+      var daysClosed = restaurant.getDaysClosed();
+      assert(Array.isArray(daysClosed));
+      assert.deepEqual(daysClosed, utils.range(1, 8));
+    });
+
+    it('should return some days because of delivery times', function() {
+      // For mocking a restaurant with delivery times, the actual
+      // representation of each time slot is irrelevant.
+      // We just need each day to have some length.
+      restaurant.set({
+        delivery_times: {
+          0: [],
+          1: [true],
+          2: [],
+          3: [],
+          4: [true],
+          5: [],
+          6: []
+        },
+        hours_of_operation: {
+          0: [],
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+          5: [],
+          6: []
+        }
+      });
+      var daysClosed = restaurant.getDaysClosed();
+      assert(Array.isArray(daysClosed));
+      assert.deepEqual(daysClosed, [1,3,4,6,7]);
+    });
+
+    it('should return some days because of hours of operation', function() {
+      restaurant.set({
+        delivery_times: {
+          0: [],
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+          5: [],
+          6: []
+        },
+        hours_of_operation: {
+          0: [true],
+          1: [],
+          2: [],
+          3: [true],
+          4: [true],
+          5: [],
+          6: []
+        }
+      });
+      var daysClosed = restaurant.getDaysClosed();
+      assert(Array.isArray(daysClosed));
+      assert.deepEqual(daysClosed, [2,3,6,7]);
+    });
+
+
+    it('should return some days because of delivery times and hours of operation', function() {
+      restaurant.set({
+        delivery_times: {
+          0: [true],
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+          5: [],
+          6: [true]
+        },
+        hours_of_operation: {
+          0: [true],
+          1: [],
+          2: [],
+          3: [true],
+          4: [true],
+          5: [],
+          6: []
+        }
+      });
+      var daysClosed = restaurant.getDaysClosed();
+      assert(Array.isArray(daysClosed));
+      assert.deepEqual(daysClosed, [2,3,6]);
     });
   });
 });

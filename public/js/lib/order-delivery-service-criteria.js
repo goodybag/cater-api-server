@@ -11,13 +11,13 @@ define(function( require, exports, module ){
   exports = [];
 
   exports.push({
-    name: 'restaurant_disabled_courier'
+    name: 'restaurant_supported_types'
   , type: 'every'
   , requirements: [
-      'restaurant.disable_courier'
+      'restaurant.supported_order_types'
     ]
   , fn: function( order ){
-      return !order.restaurant.disable_courier;
+      return order.restaurant.supported_order_types.indexOf('courier') > -1;
     }
   });
 
@@ -153,6 +153,17 @@ define(function( require, exports, module ){
   , fn: function( order ){
       if ( order.sub_total < order.restaurant.minimum_order ) return false;
       return order.sub_total < order.restaurant.delivery_service_order_amount_threshold;
+    }
+  });
+
+  exports.push({
+    name: 'restaurant_no_delivery'
+  , type: 'some'
+  , requirements: [
+      'restaurant.supported_order_types'
+    ]
+  , fn: function( order ){
+      return order.restaurant.supported_order_types.indexOf('delivery') === -1;
     }
   });
 

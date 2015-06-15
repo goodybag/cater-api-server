@@ -1,9 +1,10 @@
 <div class="tiles">
   {{#each restaurants }}
   <div class="tile">
-    <a class="tile-link" title="{{name}}" href="/restaurants/{{text_id}}{{queryParams ../orderParams}}">
+    <a class="tile-link" title="{{name}}" href="/restaurants/{{text_id}}{{queryParams ../reqQuery}}">
       <div class="tile-cover" data-pic='{{filepicker list_photo_url}}'>
-        {{#if (and no_contract_fee (not plan_id) )}}
+        {{#if (and (gt no_contract_fee 0) (not plan_id) )}}
+
         <div class="tile-corner">
           <div
             class="tile-fee"
@@ -47,22 +48,16 @@
             </li>
             <li>Order minimum: ${{dollarsOmit00 (or minimum_order 0)}}</li>
           </ul>
-          <span class="tile-tags">{{> tags tags }}</span>
+          <span class="tile-tags">
+            {{#each tags}}
+            {{#with (ref ../../config.diets this)}}
+            {{> diet_tag }}
+            {{/with}}
+            {{/each}}
+          </span>
         </div>
       </div>
     </a>
   </div>
   {{/each}}
 </div>
-
-{{#extend "scripts"}}
-<script>
-require(['jquery-loaded'], function( $ ){
-  function load(){
-    var $el = $(this);
-      $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')))
-  }
-  $('.tile-cover').bind('appear', load);
-});
-</script>
-{{/extend}}

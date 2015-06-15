@@ -34,6 +34,7 @@ define(function(require, exports, module) {
       var html = this.template({
         order: this.model.toJSON()
       , edit_token: this.options.editToken
+      , config: config
       });
       this.$el.html( html );
       this.$tbody = this.$el.find('.order-table tbody');

@@ -64,6 +64,17 @@ sudo chown <YOUR_USERNAME> /data/db
 mongod
 ```
 
+__Install Redis__
+
+```
+wget http://download.redis.io/redis-stable.tar.gz
+tar xvzf redis-stable.tar.gz
+cd redis-stable
+make
+sudo cp src/redis-server /usr/local/bin/
+sudo cp src/redis-cli /usr/local/bin/
+```
+
 __Install Heroku Toolbelt__
 
 [https://toolbelt.heroku.com](https://toolbelt.heroku.com)

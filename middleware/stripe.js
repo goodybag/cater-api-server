@@ -168,7 +168,7 @@ var stripe = {
         if (err) {
           logger.error('Unable to update stripe account', err);
           // Propagate validation error and original req body fields to form
-          res.locals.flash = err.message || 'Unknown error occurred, contact us for more assistance';
+          res.locals.error = err;
           res.locals.data = data;
           res.locals.dob = req.body.dob;
           return res.render('verify/stripe', { layout: 'layout/default' });

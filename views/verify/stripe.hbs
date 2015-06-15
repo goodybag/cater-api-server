@@ -7,8 +7,10 @@
     <a href="https://stripe.com">Stripe.com</a>. In order to continue bank
     transfers to your account, we will need some info from you.
   </p>
-  {{#if flash}}
-  <p class="alert alert-danger">{{flash}}</p>
+  {{#if error}}
+  {{#if error.message}}
+  <p class="alert alert-danger">{{or error.message "Unknown error occurred, please contact us for more assistance"}}</p>
+  {{/if}}
   {{/if}}
   <form method="post" action="/verify/{{restaurant.uuid}}/verifications" class="form-vertical">
     <section>

@@ -34,13 +34,8 @@ module.exports.list = function(req, res) {
     return res.error( results.error );
   }
 
-  var searchParams = req.session.searchParams || {};
-
-  // TODO: don't rely on request query for search
-  for (var k in req.query) {
-    if (!(k in searchParams)) {
-      searchParams = req.session.searchParams = req.query;
-    }
+  if (!_.isEqual(req.session.searchParams, req.query)) {
+    req.session.searchParams = _.cloneDeep(req.query);
   }
 
   return res.render('restaurant/list', {

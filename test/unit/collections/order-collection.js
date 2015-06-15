@@ -59,7 +59,7 @@ describe('orders collection', function() {
       assert( sortedBy(orders.toJSON(), 'user.organization'));
     });
 
-    it.only('should sort by plan_id', function() {
+    it('should sort by plan_id', function() {
       var orders = new Orders([
         { id: 14, restaurant: { plan_id: 1 } }
       , { id: 30, restaurant: { plan_id: null } }

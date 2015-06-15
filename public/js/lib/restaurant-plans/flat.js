@@ -62,7 +62,7 @@ define( function( require, exports, module ){
 
   return {
     getPayoutForOrder: function( plan, order ){
-      console.warn('plan.getPayoutForOrder is being deprecated as it goes beyond the scope of plans. Use order model logic instead.');
+      console.warn('plan.getPayoutForOrder is deprecated as it goes beyond the scope of plans. Use order model logic instead.');
       return payoutPlan
         .set( 'fee', plan.data.fee )
         .set( 'order', Orders( order ) )
@@ -71,7 +71,7 @@ define( function( require, exports, module ){
 
     // Just an alias for `getApplicationFee` for legacy reasons
   , getGbFee: function( plan, order ){
-      console.warn('plan.getGbFee is being deprecated. Use plan.getApplicationCut');
+      console.warn('plan.getGbFee is deprecated. Use plan.getApplicationCut');
       return appFeePlan
         .set( 'fee', plan ? plan.data.fee : 0 )
         .set( 'order', Orders( order ) )

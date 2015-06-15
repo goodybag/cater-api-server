@@ -18,9 +18,6 @@ define( function( require, exports, module ){
     , adjustment: 0
     , userAdjustment: 0
     })
-    .enclose( function(){
-
-    })
     .methods({
       getTax: function(){
         var amount = this.getSubTotal() + this.adjustment + this.userAdjustment;

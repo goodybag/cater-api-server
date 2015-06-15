@@ -29,7 +29,7 @@ define( function( require, exports, module ){
   };
 
   var subtractSalesTax = function( curr ){
-    return curr - this.order.getSalesTax();
+    return curr - this.order.getTax();
   };
 
   var applyFlatFee = function( curr ){
@@ -46,7 +46,7 @@ define( function( require, exports, module ){
   var subtractCourierFees = function( curr ){
     if ( this.order.type !== 'courier' ) return curr;
     return curr - (this.order.delivery_fee + this.order.tip);
-  }
+  };
 
   var payoutPlan = new utils.Plan.Reduce(0)
     .use( addOrderTotal )
@@ -63,6 +63,7 @@ define( function( require, exports, module ){
   return {
     getPayoutForOrder: function( plan, order ){
       console.warn('plan.getPayoutForOrder is deprecated as it goes beyond the scope of plans. Use order model logic instead.');
+
       return payoutPlan
         .set( 'fee', plan.data.fee )
         .set( 'order', Orders( order ) )
@@ -72,6 +73,7 @@ define( function( require, exports, module ){
     // Just an alias for `getApplicationFee` for legacy reasons
   , getGbFee: function( plan, order ){
       console.warn('plan.getGbFee is deprecated. Use plan.getApplicationCut');
+
       return appFeePlan
         .set( 'fee', plan ? plan.data.fee : 0 )
         .set( 'order', Orders( order ) )

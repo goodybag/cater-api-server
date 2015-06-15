@@ -19,25 +19,26 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   var utils = require('utils');
+  var Orders = require('stamps/orders/base')
 
-  var restaurantTotal = function( curr ){
-    return curr + this.order.restaurant_total;
+  var addOrderTotal = function( curr ){
+    return curr + this.order.getTotal();
   };
 
-  var restaurantPlanTierFee = function( curr ){
-    return curr - ( curr * this.tier.fee );
+  var subtractUserAdjustments = function( curr ){
+    return curr - (this.order.user_adjustment || 0);
   };
 
-  var restaurantSalesTax = function( curr ){
-    return curr - (this.order.restaurant_sales_tax || 0);
+  var subtractFlatFee = function( curr ){
+    return curr - ( curr * this.fee );
   };
 
-  var applyTierFee = function( curr ){
-    return curr * this.tier.fee;
+  var subtractSalesTax = function( curr ){
+    return curr - this.order.getTax();
   };
 
-  var addSalesTax = function( curr ){
-    return curr += this.order.restaurant_sales_tax || 0;
+  var applyFlatFee = function( curr ){
+    return curr * this.fee;
   };
 
   var addCourierFees = function( curr ){
@@ -47,31 +48,42 @@ define( function( require, exports, module ){
     return curr;
   };
 
-  var payoutPlan = new utils.Plan.Reduce(0)
-    .use( restaurantTotal )
-    .use( restaurantPlanTierFee )
-    .use( restaurantSalesTax )
-    .use( Math.round );
+  var subtractCourierFees = function( curr ){
+    if ( this.order.type !== 'courier' ) return curr;
+    return curr - (this.order.delivery_fee + this.order.tip);
+  };
 
-  var gbFeePlan = new utils.Plan.Reduce(0)
-    .use( restaurantTotal )
-    .use( function( curr ){
-      return curr * this.tier.fee;
-    })
+  var subtractFee = function( curr ){
+    return curr - ( curr * this.tier.fee );
+  };
+
+  var restaurantSalesTax = function( curr ){
+    return curr - (this.order.restaurant_sales_tax || 0);
+  };
+
+  var applyFee = function( curr ){
+    return curr * this.tier.fee;
+  };
+
+  var payoutPlan = new utils.Plan.Reduce(0)
+    .use( addOrderTotal )
+    .use( subtractSalesTax )
+    .use( subtractFee )
     .use( Math.round );
 
   var appFeePlan = new utils.Plan.Reduce(0)
-    .use( restaurantTotal )
-    .use( applyTierFee )
-    .use( addSalesTax )
-    .use( addCourierFees )
+    .use( addOrderTotal )
+    .use( subtractUserAdjustments )
+    .use( applyFlatFee )
     .use( Math.round );
 
   return Object.create({
     getPayoutForOrder: function( plan, order ){
+      console.warn('plan.getPayoutForOrder is deprecated as it goes beyond the scope of plans. Use order model logic instead.');
+
       return payoutPlan
         .set( 'tier', this.getTier( plan, order ) )
-        .set( 'order', order )
+        .set( 'order', Orders( order ) )
         .value();
     }
 
@@ -86,9 +98,11 @@ define( function( require, exports, module ){
     }
 
   , getGbFee: function( plan, order ){
-      return gbFeePlan
+      console.warn('plan.getGbFee is deprecated. Use plan.getApplicationCut');
+
+      return appFeePlan
         .set( 'tier', this.getTier( plan, order ) )
-        .set( 'order', order )
+        .set( 'order', Orders( order ) )
         .value();
     }
 
@@ -98,7 +112,7 @@ define( function( require, exports, module ){
       // https://stripe.com/docs/connect/payments-fees#collecting-fees
       return appFeePlan
         .set( 'tier', this.getTier( plan, order ) )
-        .set( 'order', order )
+        .set( 'order', Orders( order ) )
         .value();
     }
   });

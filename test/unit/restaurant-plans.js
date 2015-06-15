@@ -2,6 +2,14 @@ var assert    = require('assert');
 var config    = require('../../config');
 var rPlans    = require('../../public/js/lib/restaurant-plans');
 
+var Orders = function( amt ){
+  return {
+    adjustment: amt
+  , region: { sales_tax: 0.0825 }
+  , restaurant: { sales_tax: 0.0825 }
+  };
+};
+
 describe ('Restaurant Plans', function(){
   it ('tiered', function(){
     var plan = rPlans.tiered.getPayoutForOrder.bind( rPlans.tiered, {
@@ -15,9 +23,7 @@ describe ('Restaurant Plans', function(){
       }
     });
 
-    assert.equal( plan({
-      restaurant_total: 100, restaurant_sales_tax: 1
-    }), 89 );
+    assert.equal( plan( Orders( 100 ) ), 80 );
 
     assert.equal( plan({
       restaurant_total: 100
@@ -59,7 +65,7 @@ describe ('Restaurant Plans', function(){
   });
 
   it ('application fee - tiered', function(){
-    var plan = rPlans.tiered.getApplicationFee.bind( rPlans.tiered, {
+    var plan = rPlans.tiered.getApplicationCut.bind( rPlans.tiered, {
       data: {
         tiers: [
           { amount: 1000, fee: 0.1 }
@@ -88,7 +94,7 @@ describe ('Restaurant Plans', function(){
   });
 
   it ('application fee - flat', function(){
-    var plan = rPlans.flat.getApplicationFee.bind( rPlans.flat, {
+    var plan = rPlans.flat.getApplicationCut.bind( rPlans.flat, {
       data: { fee: 0.25 }
     });
 
@@ -106,7 +112,7 @@ describe ('Restaurant Plans', function(){
   });
 
   it ('application fee - tiered & courier', function(){
-    var plan = rPlans.tiered.getApplicationFee.bind( rPlans.tiered, {
+    var plan = rPlans.tiered.getApplicationCut.bind( rPlans.tiered, {
       data: {
         tiers: [
           { amount: 1000, fee: 0.1 }
@@ -141,7 +147,7 @@ describe ('Restaurant Plans', function(){
   });
 
   it ('application fee - flat & courier', function() {
-    var plan = rPlans.flat.getApplicationFee.bind( rPlans.flat, {
+    var plan = rPlans.flat.getApplicationCut.bind( rPlans.flat, {
       data: { fee: 0.25 }
     });
 

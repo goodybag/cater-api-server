@@ -29,7 +29,7 @@ define( function( require, exports, module ){
 
     , getSubTotal: function(){
         return this.items.reduce( function( total, item ){
-          return total + items( item ).getPrice();
+          return total + items( item ).getTotal();
         }, 0 );
       }
 

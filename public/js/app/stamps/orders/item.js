@@ -21,7 +21,7 @@ define( function( require, exports, module ){
 
     })
     .methods({
-      getPrice: function(){
+      getTotal: function(){
         var options = utils.chain( this.options_sets )
           .pluck('options')
           .flatten()

@@ -5,7 +5,7 @@ var config      = require('../../../config');
 var orders      = require('stamps/orders');
 var OrderCharge = require('stamps/orders/charge');
 var fulfillability = require('stamps/orders/fulfillability');
-order.db        = require('../../../lib/stamps/db/orders')
+orders.db        = require('../../../lib/stamps/db/orders')
 
 var restaurants = require('stampit')()
   .state({
@@ -72,7 +72,7 @@ describe('Orders Stamps', function(){
     , items: [{ price: 100, quantity: 1 }]
     });
 
-    assert.equal( order.getTax(), 8.25 );
+    assert.equal( order.getTax(), 9 );
   });
 
 
@@ -82,7 +82,7 @@ describe('Orders Stamps', function(){
         { price: 100, quantity: 1 }
       , { price: 200, quantity: 3 }
       , { price: 100, quantity: 3, options_sets: [
-            options: [{ state: true, price: 50 }, { state: false, price: 10 } ]
+            { options: [{ state: true, price: 50 }, { state: false, price: 10 }] }
           ]
         }
       ]
@@ -104,7 +104,7 @@ describe('Orders Stamps', function(){
     , delivery_fee: 100
     });
 
-    assert.equal( order.getTotal(), 643 );
+    assert.equal( order.getTotal(), 746 );
   });
   
   it('Should filter by month', function() {
@@ -335,15 +335,16 @@ describe('Orders Stamps', function(){
         price: 100
       , quantity: 2
       , options_sets: [
-          { options:  [ { price 50, state: true }
-                      , { price 50, state: false }
+          { options:  [ { price: 50, state: true }
+                      , { price: 50, state: false }
                       ]
           }
-        , { options:  [ { price 50, state: false }
-                      , { price 100, state: true }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: true }
                       ]
-        , { options:  [ { price 50, state: false }
-                      , { price 100, state: false }
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: false }
                       ]
           }
         ]
@@ -374,22 +375,22 @@ describe('Orders Stamps', function(){
 
     it('.getRestaurantCut()', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( order.getRestaurantCut(), 281 );
-    });
-
-    it('.getRestaurantCut({ userAdjustment: false })', function(){
-      var oc = DefaultOrderCharge();
-      assert.equal( order.getRestaurantCut({ userAdjustment: false }), 330 );
+      assert.equal( oc.getRestaurantCut(), 306 );
     });
 
     it('.getRestaurantCut() - courier', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
-      assert.equal( order.getRestaurantCut(), 281 );
+      assert.equal( oc.getRestaurantCut(), 156 );
     });
 
     it('.getApplicationCut()', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( order.getApplicationCut(), 32 );
+      assert.equal( oc.getApplicationCut(), 44 );
+    });
+
+    it('.getApplicationCut()', function(){
+      var oc = DefaultOrderCharge({ type: 'courier' });
+      assert.equal( oc.getApplicationCut(), 194 );
     });
   });
 });

@@ -14,21 +14,13 @@ define( function( require, exports, module ){
 
   return require('stampit')()
     .compose( require('./base') )
-    .state({
-      
-    })
     .methods({
       getRestaurantCut: function( options ){
-        options = utils.defaults( options || {}, {
-          userAdjustment: true
-        });
-
-        var cut = [
+        return [
           this.getSubTotal()
         , this.adjustment
-        , options.userAdjustment ? this.userAdjustment  : 0
-        , this.type === 'deliver' ? this.delivery_fee   : 0
-        , this.type === 'deliver' ? this.tip            : 0
+        , this.delivery_fee
+        , this.tip
         , -this.getApplicationCut()
         ].reduce( utils.add, 0 );
       }
@@ -38,7 +30,9 @@ define( function( require, exports, module ){
 
         return [
           this.getTax()
-        , plan.getApplicationCut()
+        , this.type === 'courier' ? this.delivery_fee   : 0
+        , this.type === 'courier' ? this.tip            : 0
+        , plan.getApplicationCut( this.restaurant.plan, this )
         ].reduce( utils.add, 0 )
       }
     });

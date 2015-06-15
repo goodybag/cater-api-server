@@ -14,26 +14,26 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   var utils = require('utils');
-  var orders = require('stamps/orders/base');
+  var Orders = require('stamps/orders/base');
 
-  var restaurantTotal = function( curr ){
-    return curr + this.order.restaurant_total;
+  var addOrderTotal = function( curr ){
+    return curr + this.order.getTotal();
   };
 
-  var restaurantPlanFlatFee = function( curr ){
+  var subtractUserAdjustments = function( curr ){
+    return curr - (this.order.user_adjustment || 0);
+  };
+
+  var subtractFlatFee = function( curr ){
     return curr - ( curr * this.fee );
   };
 
-  var restaurantSalesTax = function( curr ){
-    return curr - (this.order.restaurant_sales_tax || 0);
+  var subtractSalesTax = function( curr ){
+    return curr - this.order.getSalesTax();
   };
 
   var applyFlatFee = function( curr ){
     return curr * this.fee;
-  };
-
-  var addSalesTax = function( curr ){
-    return curr += this.order.restaurant_sales_tax || 0;
   };
 
   var addCourierFees = function( curr ){
@@ -43,40 +43,38 @@ define( function( require, exports, module ){
     return curr;
   };
 
-  var payoutPlan = new utils.Plan.Reduce(0)
-    .use( subTotal )
-    .use( )
-    .use( restaurantTotal )
-    .use( restaurantPlanFlatFee )
-    .use( restaurantSalesTax )
-    .use( Math.round );
+  var subtractCourierFees = function( curr ){
+    if ( this.order.type !== 'courier' ) return curr;
+    return curr - (this.order.delivery_fee + this.order.tip);
+  }
 
-  var gbFeePlan = new utils.Plan.Reduce(0)
-    .use( restaurantTotal )
-    .use( function( curr ){
-      return curr * this.fee;
-    })
+  var payoutPlan = new utils.Plan.Reduce(0)
+    .use( addOrderTotal )
+    .use( subtractSalesTax )
+    .use( subtractFlatFee )
     .use( Math.round );
 
   var appFeePlan = new utils.Plan.Reduce(0)
-    .use( restaurantTotal )
+    .use( addOrderTotal )
+    .use( subtractUserAdjustments )
     .use( applyFlatFee )
-    .use( addSalesTax )
-    .use( addCourierFees )
     .use( Math.round );
 
   return {
     getPayoutForOrder: function( plan, order ){
+      console.warn('plan.getPayoutForOrder is being deprecated as it goes beyond the scope of plans. Use order model logic instead.');
       return payoutPlan
         .set( 'fee', plan.data.fee )
-        .set( 'order', orders( order ) )
+        .set( 'order', Orders( order ) )
         .value();
     }
 
+    // Just an alias for `getApplicationFee` for legacy reasons
   , getGbFee: function( plan, order ){
-      return gbFeePlan
-        .set( 'fee', plan.data.fee )
-        .set( 'order', orders( order ) )
+      console.warn('plan.getGbFee is being deprecated. Use plan.getApplicationCut');
+      return appFeePlan
+        .set( 'fee', plan ? plan.data.fee : 0 )
+        .set( 'order', Orders( order ) )
         .value();
     }
 
@@ -86,7 +84,7 @@ define( function( require, exports, module ){
       // https://stripe.com/docs/connect/payments-fees#collecting-fees
       return appFeePlan
         .set( 'fee', plan ? plan.data.fee : 0 )
-        .set( 'order', orders( order ) )
+        .set( 'order', Orders( order ) )
         .value();
     }
   };

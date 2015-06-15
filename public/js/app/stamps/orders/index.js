@@ -16,7 +16,6 @@ define( function( require, exports, module ){
 
   var stamps = {
     base: require('./base')
-  , item: require('./item')
   , deliveryFee: require('./delivery-fee')
   };
 
@@ -26,6 +25,8 @@ define( function( require, exports, module ){
   );
 
   utils.extend( module.exports, stamps );
+
+  module.exports.item = require('./item');
 
   return module.exports;
 });

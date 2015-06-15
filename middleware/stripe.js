@@ -129,7 +129,7 @@ var stripe = {
     return function(req, res, next) {
       if (!req.restaurant && !req.restaurant.stripe_id) return res.send(500);
       var dob = moment(req.body.dob, 'MM-DD-YYYY');
-      utils.stripe.accounts.update(req.restaurant.stripe_id, {
+      var data = {
         legal_entity: {
           type: req.body.type
         , first_name: req.body.first_name
@@ -160,10 +160,18 @@ var stripe = {
         , country: 'US'
         , currency: 'USD'
         }
-      }, function(err, account) {
+      };
+
+      delete data.legal_entity[data.legal_entity.type === 'individual' ? 'business_tax_id' : 'personal_id_number'];
+
+      utils.stripe.accounts.update(req.restaurant.stripe_id, data, function(err, account) {
         if (err) {
           logger.error('Unable to update stripe account', err);
-          return res.send(500, err);
+          // Propagate validation error and original req body fields to form
+          res.locals.flash = err.message || 'Unknown error occurred, contact us for more assistance';
+          res.locals.data = data;
+          res.locals.dob = req.body.dob;
+          return res.render('verify/stripe', { layout: 'layout/default' });
         }
         return next();
       });

@@ -7,68 +7,71 @@
     <a href="https://stripe.com">Stripe.com</a>. In order to continue bank
     transfers to your account, we will need some info from you.
   </p>
+  {{#if flash}}
+  <p class="alert alert-danger">{{flash}}</p>
+  {{/if}}
   <form method="post" action="/verify/{{restaurant.uuid}}/verifications" class="form-vertical">
     <section>
       <div class="form-group">
         <label for="business-name">Legal Business Name</label>
-        <input id="business-name" name="business_name" type="text" required>
+        <input id="business-name" name="business_name" type="text" value="{{data.legal_entity.business_name}}" required>
       </div>
       <div class="form-group">
         <label>Type</label>
-        <label><input type="radio" name="type" id="type-individual" value="individual" checked/> Individual</label>
-        <label><input type="radio" name="type" id="type-company" value="company" /> Company</label>
+        <label><input type="radio" name="type" id="type-individual" value="individual" {{#eq data.legal_entity.type "individual"}}checked{{/eq}}/> Individual</label>
+        <label><input type="radio" name="type" id="type-company" value="company" {{#eq data.legal_entity.type "company"}}checked{{/eq}}/> Company</label>
       </div>
-      <div class="form-group tax-id">
+      <div class="form-group tax-id {{#eq data.legal_entity.type 'company'}}hide{{/eq}}">
         <label for="personal-tax-id">Personal ID Number (SSN)</label>
-        <input id="personal-tax-id" name="personal_id_number" type="text">
+        <input id="personal-tax-id" name="personal_id_number" type="text" {{#dneq data.legal_entity.type "company"}}value="{{data.legal_entity.personal_id_number}}"{{/dneq}}>
       </div>
-      <div class="form-group tax-id hide">
+      <div class="form-group tax-id {{#eq data.legal_entity.type 'individual'}}hide{{/eq}}">
         <label for="business-tax-id">Federal Tax ID Number (EIN)</label>
-        <input id="business-tax-id" name="business_tax_id" type="text">
+        <input id="business-tax-id" name="business_tax_id" type="text" {{#dneq data.legal_entity.type 'individual'}}value="{{data.legal_entity.business_tax_id}}"{{/dneq}}>
       </div>
     </section>
     <section>
       <div class="form-group">
         <label for="line1">Address</label>
-        <input id="line" name="line1" type="text" required>
+        <input id="line" name="line1" type="text" value="{{data.legal_entity.address.line1}}" required>
       </div>
       <div class="form-group">
         <label for="line2">Address 2</label>
-        <input id="line2" name="line2" type="text" required>
+        <input id="line2" name="line2" type="text" value="{{data.legal_entity.address.line2}}">
       </div>
       <div class="form-group">
         <label for="city">City</label>
-        <input id="city" name="city" type="text" required>
+        <input id="city" name="city" type="text" value="{{data.legal_entity.address.city}}" required>
       </div>
       <div class="form-group">
         <label for="state">State</label>
-        <input id="state" name="state" type="text" required>
+        <input id="state" name="state" type="text" value="{{data.legal_entity.address.state}}" required>
       </div>
       <div class="form-group">
         <label for="postal-code">Zipcode</label>
-        <input id="postal-code" name="postal_code" type="text" required>
+        <input id="postal-code" name="postal_code" type="text" value="{{data.legal_entity.address.postal_code}}" required>
       </div>
     </section>
     <section>
       <div class="form-group">
         <label for="first-name">Legal First Name (As written on Social Security Card)</label>
-        <input id="first-name" name="first_name" type="text" required>
+        <input id="first-name" name="first_name" type="text" value="{{data.legal_entity.first_name}}" required>
       </div>
       <div class="form-group">
         <label for="last-name">Legal Last Name (As written on Social Security Card)</label>
-        <input id="last-name" name="last_name" type="text" required>
+        <input id="last-name" name="last_name" type="text" value="{{data.legal_entity.last_name}}" required>
       </div>
       <div class="form-group">
         <label for="dob">Date of Birth</label>
-        <input id="dob" name="dob" type="text" required>
+        <input id="dob" name="dob" type="text" value="{{dob}}" required>
       </div>
     </section>
     <section>
       <div class="form-group">
         <label for="bank-account">Bank Account #</label>
-        <input type="text" id="bank-account" name="account_number" required/>
+        <input type="text" id="bank-account" name="account_number" value="{{data.bank_account.account_number}}" required/>
         <label for="bank-account">Bank Routing #</label>
-        <input type="text" id="bank-routing" name="routing_number" required/>
+        <input type="text" id="bank-routing" name="routing_number" value="{{data.bank_account.routing_number}}" required/>
       </div>
     </section>
     <section>

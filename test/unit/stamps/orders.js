@@ -75,6 +75,19 @@ describe('Orders Stamps', function(){
     assert.equal( order.getTax(), 9 );
   });
 
+  it('.getAmenityTotal', function(){
+    var order = orders({
+      guests: 7
+    , amenities: [
+        { price: 100, scale: 'flat', enabled: true }
+      , { price: 100, scale: 'flat', enabled: false }
+      , { price: 300, scale: 'multiply', enabled: true }
+      ]
+    });
+
+    assert.equal( order.getAmenityTotal(), 2200 );
+  });
+
   it('.getSubTotal()', function(){
     var order = orders({
       items: [

@@ -19,6 +19,7 @@ define( function( require, exports, module ){
     , amenities: []
     , adjustment: 0
     , userAdjustment: 0
+    , guests: 0
     })
     .methods({
       getTax: function(){
@@ -28,8 +29,9 @@ define( function( require, exports, module ){
 
     , getAmenityTotal: function() {
         return this.amenities.reduce( function( total, amenity ){
+          amenity.guests = this.guests; // mixin guests to amenity
           return total + amenities( amenity ).getTotal();
-        }, 0 );
+        }.bind(this), 0 );
       }
 
     , getSubTotal: function(){

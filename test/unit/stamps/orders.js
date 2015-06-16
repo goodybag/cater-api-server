@@ -75,19 +75,6 @@ describe('Orders Stamps', function(){
     assert.equal( order.getTax(), 9 );
   });
 
-  it('.getAmenityTotal()', function() {
-    var order = orders({
-      guests: 12
-    , amenities: [
-        { price: 100, scale: 'flat', enabled: false }
-      , { price: 200, scale: 'flat', enabled: true }
-      , { price: 100, scale: 'multiply', enabled: true }
-      ]
-    });
-
-    assert.equal( order.getAmenityTotal(), 1400 );
-  });
-
   it('.getSubTotal()', function(){
     var order = orders({
       items: [
@@ -329,6 +316,40 @@ describe('Orders Stamps', function(){
       }).isFulfillable();
 
       assert( !result );
+    });
+  });
+
+  describe('Amenities', function(){
+    it('.getTotal() disabled', function() {
+      var amenity = orders.amenity({
+        guests: 12, price: 100, scale: 'flat', enabled: false
+      });
+
+      assert.equal( amenity.getTotal(), 0 );
+    });
+
+    it('.getTotal() flat', function() {
+      var amenity = orders.amenity({
+        guests: 12, price: 100, scale: 'flat', enabled: true
+      });
+
+      assert.equal( amenity.getTotal(), 100 );
+    });
+
+    it('.getTotal() multiply', function() {
+      var amenity = orders.amenity({
+        guests: 12, price: 100, scale: 'multiply', enabled: true
+      });
+
+      assert.equal( amenity.getTotal(), 1200 );
+    });
+
+    it('.getTotal() throw error invalid scale', function() {
+      var amenity = orders.amenity({
+        guests: 12, price: 100, scale: 'derp', enabled: false
+      });
+
+      assert.throws( amenity.getTotal() );
     });
   });
 

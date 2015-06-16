@@ -11,10 +11,12 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 define( function( require, exports, module ){
   var utils = require('utils');
   var items = require('./item');
+  var amenities = require('./amenity');
 
   return require('stampit')()
     .state({
       items: []
+    , amenities: []
     , adjustment: 0
     , userAdjustment: 0
     })
@@ -22,6 +24,12 @@ define( function( require, exports, module ){
       getTax: function(){
         var amount = this.getSubTotal() + this.adjustment + this.userAdjustment;
         return Math.ceil( amount * this.region.sales_tax );
+      }
+
+    , getAmenityTotal: function() {
+        return this.amenities.reduce( function( total, amenity ){
+          return total + amenities( amenity ).getTotal();
+        }, 0 );
       }
 
     , getSubTotal: function(){
@@ -33,6 +41,7 @@ define( function( require, exports, module ){
     , getTotal: function(){
         return [
           this.getSubTotal()
+        , this.getAmenityTotal()
         , this.adjustment
         , this.userAdjustment
         , this.getTax()
@@ -44,6 +53,7 @@ define( function( require, exports, module ){
     , getRestaurantTotal: function(){
         return [
           this.getSubTotal()
+        , this.getAmenityTotal()
         , this.adjustment
         , this.getTax()
         , this.delivery_fee

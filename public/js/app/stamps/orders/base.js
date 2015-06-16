@@ -34,7 +34,7 @@ define( function( require, exports, module ){
         }.bind(this), 0 );
       }
 
-    , getSubTotal: function(){
+    , getItemTotal: function(){
         return this.items.reduce( function( total, item ){
           return total + items( item ).getTotal();
         }, 0 );
@@ -43,7 +43,6 @@ define( function( require, exports, module ){
     , getTotal: function(){
         return [
           this.getSubTotal()
-        , this.getAmenityTotal()
         , this.adjustment
         , this.userAdjustment
         , this.getTax()
@@ -52,10 +51,16 @@ define( function( require, exports, module ){
         ].reduce( utils.add, 0 )
       }
 
+    , getSubTotal: function(){
+        return [
+          this.getItemTotal()
+        , this.getAmenityTotal()
+        ].reduce( utils.add, 0 );
+      }
+
     , getRestaurantTotal: function(){
         return [
           this.getSubTotal()
-        , this.getAmenityTotal()
         , this.adjustment
         , this.getTax()
         , this.delivery_fee

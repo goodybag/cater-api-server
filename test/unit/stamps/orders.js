@@ -88,7 +88,7 @@ describe('Orders Stamps', function(){
     assert.equal( order.getAmenityTotal(), 2200 );
   });
 
-  it('.getSubTotal()', function(){
+  it('.getItemTotal', function(){
     var order = orders({
       items: [
         { price: 100, quantity: 1 }
@@ -100,7 +100,28 @@ describe('Orders Stamps', function(){
       ]
     });
 
-    assert.equal( order.getSubTotal(), 1150 );
+    assert.equal( order.getItemTotal(), 1150 );
+  });
+
+  it('.getSubTotal()', function(){
+    var order = orders({
+      items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      , { price: 100, quantity: 3, options_sets: [
+            { options: [{ state: true, price: 50 }, { state: false, price: 10 }] }
+          ]
+        }
+      ]
+    , guests: 7
+    , amenities: [
+        { price: 100, scale: 'flat', enabled: true }
+      , { price: 100, scale: 'flat', enabled: false }
+      , { price: 300, scale: 'multiply', enabled: true }
+      ]
+    });
+
+    assert.equal( order.getSubTotal(), 3350 );
   });
 
   it('.getTotal()', function(){
@@ -110,13 +131,19 @@ describe('Orders Stamps', function(){
         { price: 100, quantity: 1 }
       , { price: 200, quantity: 3 }
       ]
+    , amenities: [
+        { price: 7, scale: 'flat', enabled: true }
+      , { price: 2, scale: 'multiply', enabled: true }
+      , { price: 1, scale: 'multiply', enabled: false }
+      ]
+    , guests: 5
     , adjustment: -100
     , userAdjustment: -50
     , tip: 50
     , delivery_fee: 100
     });
 
-    assert.equal( order.getTotal(), 746 );
+    assert.equal( order.getTotal(), 764 );
   });
 
   it('Should filter by month', function() {

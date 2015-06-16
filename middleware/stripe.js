@@ -128,6 +128,7 @@ var stripe = {
 , verifyRestaurant: function(options) {
     return function(req, res, next) {
       if (!req.restaurant && !req.restaurant.stripe_id) return res.send(500);
+
       var dob = moment(req.body.dob, 'MM-DD-YYYY');
       var data = {
         legal_entity: {
@@ -139,7 +140,7 @@ var stripe = {
         , business_name: req.body.business_name
         , dob: {
             day: dob.date()
-          , month: dob.month()
+          , month: dob.month() + 1
           , year: dob.year()
           }
         , address: {

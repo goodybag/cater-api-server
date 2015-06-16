@@ -138,7 +138,7 @@ describe('Orders Stamps', function(){
       ]
     , guests: 5
     , adjustment: { amount: -100, description: 'foo bar' }
-    , userAdjustment: { amount: -50, description: 'crabby patty' }
+    , user_adjustment: { amount: -50, description: 'crabby patty' }
     , tip: 50
     , delivery_fee: 100
     });
@@ -441,7 +441,7 @@ describe('Orders Stamps', function(){
         , { price: 200, quantity: 1 }
         ]
       , adjustment: { amount: -100, description: 'foo bar' }
-      , userAdjustment: { amount: -50, description: 'goo wop' }
+      , user_adjustment: { amount: -50, description: 'goo wop' }
       , tip: 50
       , delivery_fee: 100
       });

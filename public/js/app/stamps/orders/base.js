@@ -18,12 +18,12 @@ define( function( require, exports, module ){
       items: []
     , amenities: []
     , adjustment: { amount: 0, description: '' }
-    , userAdjustment: { amount: 0, description: '' }
+    , user_adjustment: { amount: 0, description: '' }
     , guests: 0
     })
     .methods({
       getTax: function(){
-        var amount = this.getSubTotal() + this.adjustment.amount + this.userAdjustment.amount;
+        var amount = this.getSubTotal() + this.adjustment.amount + this.user_adjustment.amount;
         return Math.ceil( amount * this.region.sales_tax );
       }
 
@@ -48,7 +48,7 @@ define( function( require, exports, module ){
         return [
           this.getSubTotal()
         , this.adjustment.amount
-        , options.restaurant ? 0 : this.userAdjustment.amount
+        , options.restaurant ? 0 : this.user_adjustment.amount
         , this.getTax()
         , this.delivery_fee
         , this.tip

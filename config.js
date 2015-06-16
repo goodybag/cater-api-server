@@ -517,6 +517,7 @@ config.india = {
 config.india.logging = _.cloneDeep(config.defaults.logging); // logging self manages env
 
 config.india.logging.mongoConnStr = false;
+config.india.logging.transports.mongo = false;
 
 config.test = _.extend( _.clone( config.dev ), {
   env: 'test'

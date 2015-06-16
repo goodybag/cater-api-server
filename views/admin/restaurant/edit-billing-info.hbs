@@ -19,7 +19,10 @@
 
     {{#if restaurant.stripe_id}}
     <h2>Stripe Info</h2>
-    <a href="https://dashboard.stripe.com/applications/users/{{restaurant.stripe_id}}">View account on Stripe</a>
+    <ul>
+      <li><a href="/verify/{{restaurant.uuid}}">Stripe Verification</a></li>
+      <li><a href="https://dashboard.stripe.com/applications/users/{{restaurant.stripe_id}}">View account on Stripe</a></li>
+    </ul>
     <label class="control-label">Customer URI</label>
     <blockquote class="blockquote blockquote-info">{{restaurant.stripe_id}}</blockquote>
     {{/if}}

@@ -30,11 +30,15 @@ define( function( require, exports, module ){
         }, 0 );
       }
 
-    , getTotal: function(){
+    , getTotal: function( options ){
+        options = utils.defaults( options || {}, {
+          restaurant: false
+        });
+
         return [
           this.getSubTotal()
         , this.adjustment
-        , this.userAdjustment
+        , options.restaurant ? 0 : this.userAdjustment
         , this.getTax()
         , this.delivery_fee
         , this.tip

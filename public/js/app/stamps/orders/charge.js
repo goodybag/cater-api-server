@@ -17,10 +17,7 @@ define( function( require, exports, module ){
     .methods({
       getRestaurantCut: function( options ){
         return [
-          this.getSubTotal()
-        , this.adjustment
-        , this.delivery_fee
-        , this.tip
+          this.getTotal({ restaurant: true })
         , -this.getApplicationCut()
         ].reduce( utils.add, 0 );
       }

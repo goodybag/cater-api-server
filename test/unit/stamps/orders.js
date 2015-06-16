@@ -380,7 +380,7 @@ describe('Orders Stamps', function(){
 
     it('.getRestaurantCut() - courier', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
-      assert.equal( oc.getRestaurantCut(), 156 );
+      assert.equal( oc.getRestaurantCut(), 133 );
     });
 
     it('.getApplicationCut()', function(){
@@ -388,9 +388,9 @@ describe('Orders Stamps', function(){
       assert.equal( oc.getApplicationCut(), 44 );
     });
 
-    it('.getApplicationCut()', function(){
+    it.only('.getApplicationCut()', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
-      assert.equal( oc.getApplicationCut(), 194 );
+      assert.equal( oc.getApplicationCut(), 185 );
     });
   });
 });

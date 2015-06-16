@@ -14,7 +14,7 @@
     "postinstall": "./node_modules/.bin/bower install"
   },
   "namedModules": {
-    "underscore": "./node_modules/lodash/lodash.js",
+    "underscore": "./node_modules/lodash/index.js",
     "config": "./config.js",
     "errors": "./errors.js",
     "utils": "./utils.js",

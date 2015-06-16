@@ -17,11 +17,7 @@ define( function( require, exports, module ){
   var Orders = require('stamps/orders/base');
 
   var addOrderTotal = function( curr ){
-    return curr + this.order.getTotal();
-  };
-
-  var subtractUserAdjustments = function( curr ){
-    return curr - (this.order.user_adjustment || 0);
+    return curr + this.order.getTotal({ restaurant: true });
   };
 
   var subtractFlatFee = function( curr ){
@@ -48,39 +44,14 @@ define( function( require, exports, module ){
     return curr - (this.order.delivery_fee + this.order.tip);
   };
 
-  var payoutPlan = new utils.Plan.Reduce(0)
-    .use( addOrderTotal )
-    .use( subtractSalesTax )
-    .use( subtractFlatFee )
-    .use( Math.round );
-
   var appFeePlan = new utils.Plan.Reduce(0)
     .use( addOrderTotal )
-    .use( subtractUserAdjustments )
+    .use( subtractCourierFees )
     .use( applyFlatFee )
-    .use( Math.round );
+    .use( Math.ceil );
 
   return {
-    getPayoutForOrder: function( plan, order ){
-      console.warn('plan.getPayoutForOrder is deprecated as it goes beyond the scope of plans. Use order model logic instead.');
-
-      return payoutPlan
-        .set( 'fee', plan.data.fee )
-        .set( 'order', Orders( order ) )
-        .value();
-    }
-
-    // Just an alias for `getApplicationFee` for legacy reasons
-  , getGbFee: function( plan, order ){
-      console.warn('plan.getGbFee is deprecated. Use plan.getApplicationCut');
-
-      return appFeePlan
-        .set( 'fee', plan ? plan.data.fee : 0 )
-        .set( 'order', Orders( order ) )
-        .value();
-    }
-
-  , getApplicationCut: function( plan, order ){
+    getApplicationCut: function( plan, order ){
       // return the application fee we take out of every charge
       // on behalf of the managed accounts (restaurants).
       // https://stripe.com/docs/connect/payments-fees#collecting-fees

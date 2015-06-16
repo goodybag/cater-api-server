@@ -23,11 +23,12 @@
     , app:    '../app'
     , views:  '../app/views'
     , spec:   '../../test/unit'
+    , stamps: '../app/stamps'
     }
 
   , packages: [
       // utility
-      {name: 'lodash',                  location: '../../components/lodash/dist',               main: 'lodash.underscore.js'}
+      {name: 'lodash',                  location: '../../components/lodash-compat',             main: 'lodash.js'}
     , {name: 'async',                   location: '../../components/async/lib',                 main: 'async.js'}
     , {name: 'amanda',                  location: '../../components/amanda/releases/latest',    main: 'amanda.js'}
     , {name: 'leFunc',                  location: '../../components/lefunc/lib',                main: 'leFunc.js'}

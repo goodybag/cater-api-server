@@ -75,6 +75,18 @@ describe('Orders Stamps', function(){
     assert.equal( order.getTax(), 9 );
   });
 
+  it('.getAmenityTotal()', function() {
+    var order = orders({
+      guests: 12
+    , amenities: [
+        { price: 100, scale: 'flat', enabled: false }
+      , { price: 200, scale: 'flat', enabled: true }
+      , { price: 100, scale: 'multiply', enabled: true }
+      ]
+    });
+
+    assert.equal( order.getAmenityTotal(), 1400 );
+  });
 
   it('.getSubTotal()', function(){
     var order = orders({
@@ -106,7 +118,7 @@ describe('Orders Stamps', function(){
 
     assert.equal( order.getTotal(), 746 );
   });
-  
+
   it('Should filter by month', function() {
     var sql = orders.db({ month: 12 }).get();
     assert(sql.$query);

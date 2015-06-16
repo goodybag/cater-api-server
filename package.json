@@ -73,7 +73,7 @@
     "json2csv": "~2.2.1",
     "knox": "^0.8.10",
     "leFunc": "~1.2.5",
-    "lodash": "^3.9.3",
+    "lodash": "2.2.x",
     "loglog": "^0.3.0",
     "loglog-loggly": "^1.1.1",
     "loglog-mongodb": "^1.1.0",

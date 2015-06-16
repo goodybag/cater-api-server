@@ -25,21 +25,6 @@ define( function( require, exports, module ){
     return curr + this.order.getTotal({ restaurant: true });
   };
 
-  var subtractUserAdjustments = function( curr ){
-    return curr - (this.order.userAdjustment || 0);
-  };
-
-  var subtractSalesTax = function( curr ){
-    return curr - this.order.getTax();
-  };
-
-  var addCourierFees = function( curr ){
-    if ( this.order.type !== 'courier' ) return curr;
-    curr += this.order.delivery_fee || 0;
-    curr += this.order.tip || 0;
-    return curr;
-  };
-
   var subtractCourierFees = function( curr ){
     if ( this.order.type !== 'courier' ) return curr;
     return curr - (this.order.delivery_fee + this.order.tip);

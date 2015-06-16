@@ -2,12 +2,25 @@ var assert    = require('assert');
 var config    = require('../../config');
 var rPlans    = require('../../public/js/lib/restaurant-plans');
 
-var Orders = function( amt ){
-  return {
-    adjustment: amt
+var Orders = function( amt, type ){
+  var order = {
+    type: type || 'delivery'
+  , adjustment: amt
   , region: { sales_tax: 0.0825 }
   , restaurant: { sales_tax: 0.0825 }
+  , delivery_fee: 0
+  , tip: 0
   };
+
+  // If type is courier, we need to make sure we're
+  // testing for dfees and tips
+  if ( type === 'courier' ){
+    order.adjustment -= 20 + 10;
+    order.delivery_fee = 20;
+    order.tip = 10;
+  }
+
+  return order;
 };
 
 var FlatPlans = function( fee ){
@@ -15,7 +28,7 @@ var FlatPlans = function( fee ){
 };
 
 describe ('Restaurant Plans', function(){
-  it.only('application fee - tiered', function(){
+  it('application fee - tiered', function(){
     var plan = rPlans.tiered.getApplicationCut.bind( rPlans.tiered, {
       data: {
         tiers: [
@@ -27,43 +40,21 @@ describe ('Restaurant Plans', function(){
       }
     });
 
-    assert.equal( plan( Orders(100) ), 11);
-    assert.equal( plan( Orders(1000) ), 217);
-    assert.equal( plan( Orders(3000) ), 975);
-    assert.equal( plan( Orders(4000) ), 2165);
-
-    // assert.equal( plan({
-    //   restaurant_total: 1231, restaurant_sales_tax: 123
-    // }), 369);
-
-    // assert.equal( plan({
-    //   restaurant_total: 10, restaurant_sales_tax: 123
-    // }), 124);
-
-    // assert.equal( plan({
-    //   restaurant_total: 10000, restaurant_sales_tax: 123
-    // }), 5123);
+    assert.equal( plan( Orders(100) ), 11 );
+    assert.equal( plan( Orders(1000) ), 217 );
+    assert.equal( plan( Orders(2000) ), 650 );
+    assert.equal( plan( Orders(3000) ), 1624 );
   });
 
-  it ('application fee - flat', function(){
+  it('application fee - flat', function(){
     var plan = rPlans.flat.getApplicationCut.bind( rPlans.flat, {
-      data: { fee: 0.25 }
+      data: { fee: 0.1 }
     });
 
-    assert.equal( plan({
-      restaurant_total: 100, restaurant_sales_tax: 13
-    }), 38);
-
-    assert.equal( plan({
-      restaurant_total: 100
-    }), 25);
-
-    assert.equal( plan({
-      restaurant_total: 8435, restaurant_sales_tax: 4689
-    }), 6798);
+    assert.equal( plan( Orders(100) ), 11 );
   });
 
-  it ('application fee - tiered & courier', function(){
+  it('application fee - tiered & courier', function(){
     var plan = rPlans.tiered.getApplicationCut.bind( rPlans.tiered, {
       data: {
         tiers: [
@@ -75,53 +66,18 @@ describe ('Restaurant Plans', function(){
       }
     });
 
-    assert.equal( plan({
-      type:                   'courier'
-    , restaurant_total:       2343
-    , restaurant_sales_tax:   123
-    }), 826);
-
-    assert.equal( plan({
-      type:                   'courier'
-    , delivery_fee:           546
-    , restaurant_total:       2343
-    , restaurant_sales_tax:   123
-    }), 1372);
-
-
-    assert.equal( plan({
-      type:                   'courier'
-    , delivery_fee:           546
-    , tip:                    99
-    , restaurant_total:       2343
-    , restaurant_sales_tax:   123
-    }), 1471);
+    // ((subtotal+adj+uadj) * (1+tax)) * fee
+    assert.equal( plan( Orders(100, 'courier') ), 8 );
+    assert.equal( plan( Orders(1000, 'courier') ), 211 );
+    assert.equal( plan( Orders(2000, 'courier') ), 640 );
+    assert.equal( plan( Orders(3000, 'courier') ), 1608 );
   });
 
-  it ('application fee - flat & courier', function() {
+  it('application fee - flat & courier', function() {
     var plan = rPlans.flat.getApplicationCut.bind( rPlans.flat, {
-      data: { fee: 0.25 }
+      data: { fee: 0.1 }
     });
 
-    assert.equal( plan({
-      type:                   'courier'
-    , restaurant_total:       100
-    , restaurant_sales_tax:   13
-    }), 38);
-
-    assert.equal( plan({
-      type:                   'courier'
-    , restaurant_total:       100
-    , restaurant_sales_tax:   13
-    , delivery_fee:           984
-    }), 1022);
-
-    assert.equal( plan({
-      type:                   'courier'
-    , restaurant_total:       100
-    , restaurant_sales_tax:   13
-    , delivery_fee:           984
-    , tip:                    311
-    }), 1333);
+    assert.equal( plan( Orders(3000, 'courier') ), 322 );
   });
 });

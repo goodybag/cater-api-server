@@ -5,7 +5,7 @@ var rPlans    = require('../../public/js/lib/restaurant-plans');
 var Orders = function( amt, type ){
   var order = {
     type: type || 'delivery'
-  , adjustment: amt
+  , adjustment: { amount: amt, description: 'coupon code' }
   , region: { sales_tax: 0.0825 }
   , restaurant: { sales_tax: 0.0825 }
   , delivery_fee: 0
@@ -15,7 +15,7 @@ var Orders = function( amt, type ){
   // If type is courier, we need to make sure we're
   // testing for dfees and tips
   if ( type === 'courier' ){
-    order.adjustment -= 20 + 10;
+    order.adjustment.amount -= 20 + 10;
     order.delivery_fee = 20;
     order.tip = 10;
   }

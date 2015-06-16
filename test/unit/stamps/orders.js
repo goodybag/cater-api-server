@@ -375,20 +375,20 @@ describe('Orders Stamps', function(){
 
     it('.getRestaurantCut()', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( oc.getRestaurantCut(), 306 );
+      assert.equal( oc.getRestaurantCut(), 313 );
     });
 
     it('.getRestaurantCut() - courier', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
-      assert.equal( oc.getRestaurantCut(), 133 );
+      assert.equal( oc.getRestaurantCut(), 178 );
     });
 
     it('.getApplicationCut()', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( oc.getApplicationCut(), 44 );
+      assert.equal( oc.getApplicationCut(), 50 );
     });
 
-    it.only('.getApplicationCut()', function(){
+    it('.getApplicationCut()', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
       assert.equal( oc.getApplicationCut(), 185 );
     });

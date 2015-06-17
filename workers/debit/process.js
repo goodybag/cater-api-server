@@ -7,6 +7,7 @@ var config = require('../../config');
 var _ = utils._;
 var scheduler = require('../../lib/scheduler');
 var restaurantPlans = require('../../public/js/lib/restaurant-plans');
+var ordersCharge = require('stamps/orders/charge');
 
 var checkForExistingDebit = function (order, callback) {
   var logger = process.domain.logger.create('checkForExistingDebit', {
@@ -48,9 +49,11 @@ var debitCustomer = function (order, callback) {
       // invoiced orders should use our own debit card
       var customer = paymentMethod ? user.stripe_id : config.stripe.invoicing.customer_id;
       var source = paymentMethod ? paymentMethod.attributes.stripe_id : config.stripe.invoicing.card_id;
+      var charge = ordersCharge(order);
 
+      console.log(order);
       var data = {
-        amount: amount,
+        amount: charge.getTotal(),
         currency: 'usd',
         customer: customer,
         source: source,
@@ -69,7 +72,8 @@ var debitCustomer = function (order, callback) {
       if ( order.restaurant.plan_id ) {
         // route to restaurant if possible
         data.destination = order.restaurant.stripe_id;
-        data.application_fee = restaurantPlans[order.restaurant.plan.type].getApplicationFee(order.restaurant.plan, order);
+
+        data.application_fee = charge.getApplicationCut();
         data.metadata.charge_destination = 'Funds go to restaurant';
       }
 
@@ -119,6 +123,7 @@ var task = function (message, callback) {
     one: [
       { table: 'restaurants', alias: 'restaurant', one: [ { table: 'restaurant_plans', alias: 'plan' } ] }
     , { table: 'users', alias: 'user' }
+    , { table: 'regions', alias: 'region' }
     ]
   };
   db.orders.findOne( body.order.id, $options, d.bind(function(error, order) {
@@ -174,6 +179,7 @@ var worker = function (message, callback) {
   d.uuid = utils.uuid.v4();
   d.logger = logger.create({ data: { uuid: d.uuid } });
   d.on('error', function (error) {
+    console.log(error);
     logger.error('Domain error', { error: error });
     callback(error);
   });

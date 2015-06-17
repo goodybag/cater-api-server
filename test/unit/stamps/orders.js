@@ -465,5 +465,10 @@ describe('Orders Stamps', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
       assert.equal( oc.getApplicationCut(), 185 );
     });
+
+    it('.getTotal()', function(){
+      var oc = DefaultOrderCharge();
+      assert.equal( oc.getTotal(), 313);
+    });
   });
 });

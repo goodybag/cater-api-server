@@ -7,7 +7,7 @@ var config = require('../../config');
 var _ = utils._;
 var scheduler = require('../../lib/scheduler');
 var restaurantPlans = require('../../public/js/lib/restaurant-plans');
-var ordersCharge = require('stamps/orders/charge');
+var OrderCharge = require('stamps/orders/charge');
 
 var checkForExistingDebit = function (order, callback) {
   var logger = process.domain.logger.create('checkForExistingDebit', {
@@ -49,9 +49,11 @@ var debitCustomer = function (order, callback) {
       // invoiced orders should use our own debit card
       var customer = paymentMethod ? user.stripe_id : config.stripe.invoicing.customer_id;
       var source = paymentMethod ? paymentMethod.attributes.stripe_id : config.stripe.invoicing.card_id;
-      var charge = ordersCharge(order);
+      var charge = OrderCharge( order );
 
       console.log(order);
+      console.log('Total amount', charge.getTotal());
+      console.log('Application Cut', charge.getApplicationCut());
       var data = {
         amount: charge.getTotal(),
         currency: 'usd',
@@ -120,11 +122,17 @@ var task = function (message, callback) {
   logger.info("processing order: " + body.order.id);
 
   var $options = {
-    one: [
-      { table: 'restaurants', alias: 'restaurant', one: [ { table: 'restaurant_plans', alias: 'plan' } ] }
-    , { table: 'users', alias: 'user' }
-    , { table: 'regions', alias: 'region' }
-    ]
+    one: [ { table: 'restaurants', alias: 'restaurant'
+           , one: [ { table: 'restaurant_plans', alias: 'plan' } ]
+           }
+         , { table: 'users', alias: 'user' }
+         , { table: 'regions', alias: 'region' }
+         ]
+  , many: [ { table: 'order_items', alias: 'items' }
+          , { table: 'order_amenities', alias: 'amenities'
+            , mixin: [{ table: 'amenities' }]
+            }
+          ]
   };
   db.orders.findOne( body.order.id, $options, d.bind(function(error, order) {
     if ( error ) return logger.create('DB').error({error: error}), callback(error);

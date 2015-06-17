@@ -51,9 +51,6 @@ var debitCustomer = function (order, callback) {
       var source = paymentMethod ? paymentMethod.attributes.stripe_id : config.stripe.invoicing.card_id;
       var charge = OrderCharge( order );
 
-      console.log(order);
-      console.log('Total amount', charge.getTotal());
-      console.log('Application Cut', charge.getApplicationCut());
       var data = {
         amount: charge.getTotal(),
         currency: 'usd',
@@ -188,7 +185,6 @@ var worker = function (message, callback) {
   d.uuid = utils.uuid.v4();
   d.logger = logger.create({ data: { uuid: d.uuid } });
   d.on('error', function (error) {
-    console.log(error);
     logger.error('Domain error', { error: error });
     callback(error);
   });

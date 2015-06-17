@@ -7,6 +7,7 @@ var config = require('../../config');
 var _ = utils._;
 var scheduler = require('../../lib/scheduler');
 var restaurantPlans = require('../../public/js/lib/restaurant-plans');
+var OrderCharge = require('stamps/orders/charge');
 
 var checkForExistingDebit = function (order, callback) {
   var logger = process.domain.logger.create('checkForExistingDebit', {
@@ -48,9 +49,10 @@ var debitCustomer = function (order, callback) {
       // invoiced orders should use our own debit card
       var customer = paymentMethod ? user.stripe_id : config.stripe.invoicing.customer_id;
       var source = paymentMethod ? paymentMethod.attributes.stripe_id : config.stripe.invoicing.card_id;
+      var charge = OrderCharge( order );
 
       var data = {
-        amount: amount,
+        amount: charge.getTotal(),
         currency: 'usd',
         customer: customer,
         source: source,
@@ -69,7 +71,8 @@ var debitCustomer = function (order, callback) {
       if ( order.restaurant.plan_id ) {
         // route to restaurant if possible
         data.destination = order.restaurant.stripe_id;
-        data.application_fee = restaurantPlans[order.restaurant.plan.type].getApplicationFee(order.restaurant.plan, order);
+
+        data.application_fee = charge.getApplicationCut();
         data.metadata.charge_destination = 'Funds go to restaurant';
       }
 
@@ -116,10 +119,18 @@ var task = function (message, callback) {
   logger.info("processing order: " + body.order.id);
 
   var $options = {
-    one: [
-      { table: 'restaurants', alias: 'restaurant', one: [ { table: 'restaurant_plans', alias: 'plan' } ] }
-    , { table: 'users', alias: 'user' }
-    ]
+    one: [ { table: 'restaurants', alias: 'restaurant'
+           , one: [ { table: 'restaurant_plans', alias: 'plan' }
+                  , { table: 'regions', alias: 'region' }
+                  ]
+           }
+         , { table: 'users', alias: 'user' }
+         ]
+  , many: [ { table: 'order_items', alias: 'items' }
+          , { table: 'order_amenities', alias: 'amenities'
+            , mixin: [{ table: 'amenities' }]
+            }
+          ]
   };
   db.orders.findOne( body.order.id, $options, d.bind(function(error, order) {
     if ( error ) return logger.create('DB').error({error: error}), callback(error);

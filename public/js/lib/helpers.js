@@ -12,6 +12,10 @@ define(function(require, exports, module) {
 
   var helpers = {};
 
+  helpers.add = function add(augend, addend) {
+    return (+augend || 0) + (+addend || 0);
+  }
+
   /**
    * Access object properties via string
    * supporting nested access

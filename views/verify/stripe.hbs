@@ -1,0 +1,144 @@
+{{#extend "page"}}page-restaurant-list{{/extend}}
+
+{{#extend "body"}}
+<div class="small-container">
+  <h1>Payment Agreement</h1>
+  <p>We've recently changed our payment vendor to
+    <a href="https://stripe.com">Stripe.com</a>. In order to continue bank
+    transfers to your account, we will need some info from you.
+  </p>
+  {{#if error}}
+  <p class="alert alert-danger">{{or error.message "Unknown error occurred, please contact us for more assistance"}}</p>
+  {{/if}}
+  <form method="post" action="/verify/{{restaurant.uuid}}/verifications" class="form-vertical">
+    <section>
+      <div class="form-group">
+        <label for="business-name">Legal Business Name</label>
+        <input id="business-name" name="business_name" type="text" value="{{data.legal_entity.business_name}}" required>
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <label>
+          <input
+            type="radio" name="type" id="type-individual" value="individual"
+            {{#eq data.legal_entity.type "individual"}}checked{{/eq}}
+            {{#unless data.legal_entity.type}}checked{{/unless}}
+            required/>
+          Individual
+        </label>
+        <label>
+          <input
+            type="radio" name="type" id="type-company" value="company"
+            {{#eq data.legal_entity.type "company"}}checked{{/eq}}/>
+          Company
+        </label>
+      </div>
+      <div class="form-group
+                  form-group-personal-tax-id
+                  {{#eq data.legal_entity.type 'company'}}hide{{/eq}}">
+        <label for="personal-tax-id">Personal ID Number (SSN)</label>
+        <input
+          id="personal-tax-id" name="personal_id_number" type="text"
+          {{#dneq data.legal_entity.type "company"}}value="{{data.legal_entity.personal_id_number}}"{{/dneq}}>
+      </div>
+      <div class="form-group
+                  form-group-business-tax-id
+                  {{#eq data.legal_entity.type 'individual'}}hide{{/eq}}
+                  {{#unless data.legal_entity.type}}hide{{/unless}}">
+        <label for="business-tax-id">Federal Tax ID Number (EIN)</label>
+        <input
+          id="business-tax-id" name="business_tax_id" type="text"
+          {{#dneq data.legal_entity.type 'individual'}}value="{{data.legal_entity.business_tax_id}}"{{/dneq}}>
+      </div>
+    </section>
+    <section>
+      <div class="form-group">
+        <label for="line1">Address</label>
+        <input id="line" name="line1" type="text" value="{{data.legal_entity.address.line1}}" required>
+      </div>
+      <div class="form-group">
+        <label for="line2">Address 2</label>
+        <input id="line2" name="line2" type="text" value="{{data.legal_entity.address.line2}}">
+      </div>
+      <div class="form-group">
+        <label for="city">City</label>
+        <input id="city" name="city" type="text" value="{{data.legal_entity.address.city}}" required>
+      </div>
+      <div class="form-group">
+        <label for="state">State</label>
+        <input id="state" name="state" type="text" value="{{data.legal_entity.address.state}}" required>
+      </div>
+      <div class="form-group">
+        <label for="postal-code">Zipcode</label>
+        <input id="postal-code" name="postal_code" type="text" value="{{data.legal_entity.address.postal_code}}" required>
+      </div>
+    </section>
+    <section>
+      <div class="form-group">
+        <label for="first-name">Legal First Name (As written on Social Security Card)</label>
+        <input id="first-name" name="first_name" type="text" value="{{data.legal_entity.first_name}}" required>
+      </div>
+      <div class="form-group">
+        <label for="last-name">Legal Last Name (As written on Social Security Card)</label>
+        <input id="last-name" name="last_name" type="text" value="{{data.legal_entity.last_name}}" required>
+      </div>
+      <div class="form-group">
+        <label for="dob">Date of Birth</label>
+        <input id="dob" name="dob" type="text" value="{{dob}}" required>
+      </div>
+      <div class="form-group
+                  form-group-business-tax-id
+                  {{#eq data.legal_entity.type 'individual'}}hide{{/eq}}
+                  {{#unless data.legal_entity.type}}hide{{/unless}}">
+        <label for="ssn-last-4">SSN Last 4 Digits</label>
+        <input id="ssn-last-4" name="ssn_last_4" type="text" value="{{data.legal_entity.ssn_last_4}}">
+      </div>
+    </section>
+    <section>
+      <div class="form-group">
+        <label for="bank-account">Bank Account #</label>
+        <input type="text" id="bank-account" name="account_number" value="{{data.bank_account.account_number}}" required/>
+        <label for="bank-account">Bank Routing #</label>
+        <input type="text" id="bank-routing" name="routing_number" value="{{data.bank_account.routing_number}}" required/>
+      </div>
+    </section>
+    <section>
+      <div class="form-group">
+        <button class="btn btn-primary" type="submit">I Accept</button>
+      </div>
+    </section>
+  </form>
+  <p>
+    <small>
+      By submitting, you agree to our <a href="/legal">Terms of Service</a>
+      and the <a href="{{config.stripe.tos_url}}">Stripe Connected Account
+      Agreement</a>.
+    </small>
+  </p>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require( ['jquery-loaded'], function($) {
+  var datepicker = $('#dob').pickadate({
+    format: 'mm/dd/yyyy'
+  , selectYears: 100
+  , selectMonths: true
+  , max: true
+  });
+
+  var $personalTaxId = $('.form-group-personal-tax-id');
+  var $businessTaxId = $('.form-group-business-tax-id');
+  $('[name="type"]').change(function(e) {
+    if (e.target.value === 'individual') {
+      $personalTaxId.removeClass('hide');
+      $businessTaxId.addClass('hide');
+    } else {
+      $personalTaxId.addClass('hide');
+      $businessTaxId.removeClass('hide');
+    }
+  });
+});
+</script>
+{{/extend}}

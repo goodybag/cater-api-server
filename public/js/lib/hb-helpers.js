@@ -445,6 +445,8 @@ define(function(require, exports, module) {
 
     pluck: utils.pluck,
 
+    pick: utils.pick,
+
     percentToFactor: function( percent, precision, options ){
       if ( typeof precision === 'object' || !precision ){
         precision = 2;

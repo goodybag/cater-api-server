@@ -24,7 +24,7 @@ define( function( require, exports, module ){
     .methods({
       getTax: function(){
         var amount = this.getSubTotal() + this.adjustment.amount + this.user_adjustment.amount;
-        return Math.ceil( amount * this.region.sales_tax );
+        return Math.ceil( amount * this.restaurant.region.sales_tax );
       }
 
     , getAmenityTotal: function() {

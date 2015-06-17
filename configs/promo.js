@@ -14,6 +14,10 @@ var promo = {
     email: 'jacobparker@goodybag.com'
   , promo_code: ['goodybag315', 'gb415', 'gbaustin15', 'gbhou15', 'gbstar15', 'gbamaz15']
   }
+, toby: {
+    email: 'tobyshields@goodybag.com'
+  , promo_code: ['seattlegb', 'seagoody']
+  }
 , om: {
     email: 'om@goodybag.com'
   , promo_code: [ 'bv250' ]

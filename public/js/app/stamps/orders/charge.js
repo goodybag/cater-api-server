@@ -17,7 +17,7 @@ define( function( require, exports, module ){
     .methods({
       getRestaurantCut: function( options ){
         return [
-          this.getTotal({ restaurant: true })
+          this.getTotalForRestaurant()
         , -this.getApplicationCut()
         ].reduce( utils.add, 0 );
       }
@@ -29,8 +29,10 @@ define( function( require, exports, module ){
           this.getTax()
         , this.type === 'courier' ? this.delivery_fee   : 0
         , this.type === 'courier' ? this.tip            : 0
-        , plan.getApplicationCut( this.restaurant.plan, this )
-        ].reduce( utils.add, 0 )
+        , plan.getApplicationCut(
+            this.restaurant.plan, this.getTotalForPayoutCalculations()
+          )
+        ].reduce( utils.add, 0 );
       }
     });
 });

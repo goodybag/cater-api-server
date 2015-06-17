@@ -41,18 +41,45 @@ define( function( require, exports, module ){
       }
 
     , getTotal: function( options ){
-        options = utils.defaults( options || {}, {
-          restaurant: false
-        });
-
         return [
           this.getSubTotal()
         , this.adjustment.amount
-        , options.restaurant ? 0 : this.user_adjustment.amount
+        , this.user_adjustment.amount
         , this.getTax()
         , this.delivery_fee
         , this.tip
-        ].reduce( utils.add, 0 )
+        ].reduce( utils.add, 0 );
+      }
+
+      /**
+       * When calculating the total for payout calculations,
+       * we need to ignore user adjustments. In addition, if the
+       * type of order is `courier`, do not factor in delivery/tip
+       * @return {Number} The total
+       */
+    , getTotalForPayoutCalculations: function(){
+        return [
+          this.getSubTotal()
+        , this.adjustment.amount
+        , this.getTax()
+        , this.type === 'courier' ? 0 : this.delivery_fee
+        , this.type === 'courier' ? 0 : this.tip
+        ].reduce( utils.add, 0 );
+      }
+
+      /**
+       * When calculating the total for payout calculations,
+       * we need to ignore user adjustments.
+       * @return {Number} The total
+       */
+    , getTotalForRestaurant: function(){
+        return [
+          this.getSubTotal()
+        , this.adjustment.amount
+        , this.getTax()
+        , this.delivery_fee
+        , this.tip
+        ].reduce( utils.add, 0 );
       }
 
     , getSubTotal: function(){

@@ -19,9 +19,14 @@ module.exports.geocode = function( req, res ){
         return res.error( errors.internal.UNKNOWN, err );
       }
 
+      if ( !geoRes.isValidAddress() ){
+        return res.send({ valid: false });
+      }
+
       res.send({
-        address: geoRes.isValidAddress() ? geoRes.toAddress() : null
-      , valid:   geoRes.isValidAddress()
+        valid:   true
+      , address: geoRes.toAddress()
+      , lat_lon: geoRes.toLatLon()
       });
     });
 };

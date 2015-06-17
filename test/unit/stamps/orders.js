@@ -68,7 +68,9 @@ var restaurants = require('stampit')()
 describe('Orders Stamps', function(){
   it('.getTax()', function(){
     var order = orders({
-      region: { sales_tax: 0.0825 }
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
     , items: [{ price: 100, quantity: 1 }]
     });
 
@@ -126,7 +128,9 @@ describe('Orders Stamps', function(){
 
   it('.getTotal()', function(){
     var order = orders({
-      region: { sales_tax: 0.0825 }
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
     , items: [
         { price: 100, quantity: 1 }
       , { price: 200, quantity: 3 }

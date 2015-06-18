@@ -141,8 +141,8 @@ describe('Orders Stamps', function(){
       , { price: 1, scale: 'multiply', enabled: false }
       ]
     , guests: 5
-    , adjustment: { amount: -100, description: 'foo bar' }
-    , user_adjustment: { amount: -50, description: 'crabby patty' }
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
     , tip: 50
     , delivery_fee: 100
     });
@@ -444,8 +444,8 @@ describe('Orders Stamps', function(){
           { price: 100, quantity: 1 }
         , { price: 200, quantity: 1 }
         ]
-      , adjustment: { amount: -100, description: 'foo bar' }
-      , user_adjustment: { amount: -50, description: 'goo wop' }
+      , adjustment_amount: -100
+      , user_adjustment_amount: -50
       , tip: 50
       , delivery_fee: 100
       });

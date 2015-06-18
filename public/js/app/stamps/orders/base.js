@@ -17,13 +17,13 @@ define( function( require, exports, module ){
     .state({
       items: []
     , amenities: []
-    , adjustment: { amount: 0, description: '' }
-    , user_adjustment: { amount: 0, description: '' }
+    , adjustment_amount: 0
+    , user_adjustment_amount: 0
     , guests: 0
     })
     .methods({
       getTax: function(){
-        var amount = this.getSubTotal() + this.adjustment.amount + this.user_adjustment.amount;
+        var amount = this.getSubTotal() + this.adjustment_amount + this.user_adjustment_amount;
         return Math.ceil( amount * this.restaurant.region.sales_tax );
       }
 
@@ -43,8 +43,8 @@ define( function( require, exports, module ){
     , getTotal: function( options ){
         return [
           this.getSubTotal()
-        , this.adjustment.amount
-        , this.user_adjustment.amount
+        , this.adjustment_amount
+        , this.user_adjustment_amount
         , this.getTax()
         , this.delivery_fee
         , this.tip
@@ -60,7 +60,7 @@ define( function( require, exports, module ){
     , getTotalForPayoutCalculations: function(){
         return [
           this.getSubTotal()
-        , this.adjustment.amount
+        , this.adjustment_amount
         , this.getTax()
         , this.type === 'courier' ? 0 : this.delivery_fee
         , this.type === 'courier' ? 0 : this.tip
@@ -75,7 +75,7 @@ define( function( require, exports, module ){
     , getTotalForRestaurant: function(){
         return [
           this.getSubTotal()
-        , this.adjustment.amount
+        , this.adjustment_amount
         , this.getTax()
         , this.delivery_fee
         , this.tip
@@ -92,11 +92,11 @@ define( function( require, exports, module ){
     , getRestaurantTotal: function(){
         return [
           this.getSubTotal()
-        , this.adjustment.amount
+        , this.adjustment_amount
         , this.getTax()
         , this.delivery_fee
         , this.tip
-        ].reduce( utils.add, 0 )
+        ].reduce( utils.add, 0 );
       }
     });
 });

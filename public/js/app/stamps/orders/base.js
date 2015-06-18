@@ -20,6 +20,7 @@ define( function( require, exports, module ){
     , adjustment_amount: 0
     , user_adjustment_amount: 0
     , guests: 0
+    , payment_method_id: null
     })
     .methods({
       getTax: function(){

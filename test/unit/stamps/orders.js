@@ -439,6 +439,7 @@ describe('Orders Stamps', function(){
       , restaurant: {
           region: { sales_tax: 0.0825 }
         , plan: { type: 'flat', data: { fee: 0.1 } }
+        , is_direct_deposit: true
         }
       , items: [
           { price: 100, quantity: 1 }
@@ -448,6 +449,7 @@ describe('Orders Stamps', function(){
       , user_adjustment_amount: -50
       , tip: 50
       , delivery_fee: 100
+      , payment_method_id: 123
       });
 
     it('.getRestaurantCut()', function(){
@@ -468,6 +470,18 @@ describe('Orders Stamps', function(){
     it('.getApplicationCut()', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
       assert.equal( oc.getApplicationCut(), 185 );
+    });
+
+    it('.getApplicationCut() should be $0 for invoiced order', function(){
+      var oc = DefaultOrderCharge({ type: 'courier' });
+      oc.payment_method_id = null;
+      assert.equal( oc.getApplicationCut(), 0 );
+    });
+
+    it('.getApplicationCut() should be $0 for non direct deposit restaurants', function(){
+      var oc = DefaultOrderCharge({ type: 'courier' });
+      oc.restaurant.is_direct_deposit = false;
+      assert.equal( oc.getApplicationCut(), 0 );
     });
 
     it('.getTotal()', function(){

@@ -472,18 +472,6 @@ describe('Orders Stamps', function(){
       assert.equal( oc.getApplicationCut(), 185 );
     });
 
-    it('.getApplicationCut() should be $0 for invoiced order', function(){
-      var oc = DefaultOrderCharge({ type: 'courier' });
-      oc.payment_method_id = null;
-      assert.equal( oc.getApplicationCut(), 0 );
-    });
-
-    it('.getApplicationCut() should be $0 for non direct deposit restaurants', function(){
-      var oc = DefaultOrderCharge({ type: 'courier' });
-      oc.restaurant.is_direct_deposit = false;
-      assert.equal( oc.getApplicationCut(), 0 );
-    });
-
     it('.getTotal()', function(){
       var oc = DefaultOrderCharge();
       assert.equal( oc.getTotal(), 313);

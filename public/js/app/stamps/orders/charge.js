@@ -23,8 +23,13 @@ define( function( require, exports, module ){
       }
 
     , getApplicationCut: function(){
-        var plan = plans[ this.restaurant.plan.type ];
+        // Invoiced orders are transferred to our platform
+        if (!this.payment_method_id) return 0;
 
+        // Restaurants that receive check
+        if (!this.restaurant.is_direct_deposit) return 0;
+
+        var plan = plans[ this.restaurant.plan.type ];
         return [
           this.getTax()
         , this.type === 'courier' ? this.delivery_fee   : 0

@@ -15,7 +15,6 @@ var dollars = function(pennies) {
   return '$' + helpers.dollars(pennies);
 }
 
-
 var $options = {
   one: [ { table: 'restaurants', alias: 'restaurant'
          , one: [ { table: 'restaurant_plans', alias: 'plan' }
@@ -50,7 +49,6 @@ db.orders.findOne(id, $options, function(err, order) {
   , { 'Application Cut':  dollars(charge.getApplicationCut()) }
   );
 
-  console.log(charge);
   console.log(table.toString());
   process.exit(0);
 });

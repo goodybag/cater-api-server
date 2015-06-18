@@ -71,7 +71,6 @@ var debitCustomer = function (order, callback) {
       if ( order.restaurant.plan_id ) {
         // route to restaurant if possible
         data.destination = order.restaurant.stripe_id;
-
         data.application_fee = charge.getApplicationCut();
         data.metadata.charge_destination = 'Funds go to restaurant';
       }

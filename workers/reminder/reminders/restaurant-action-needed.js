@@ -88,9 +88,12 @@ module.exports.work = function( storage, callback ){
           if ( !result || Object.keys(result).length === 0 ) return;
 
           stats.sent.value++;
-          storage.lastNotified[ result.id ] = new Date().toString();
         });
       }
+
+      orders.forEach(function( order ){
+        storage.lastNotified[ order.id ] = new Date().toString();
+      });
 
       callback( errors, stats );
     });

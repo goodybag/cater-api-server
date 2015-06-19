@@ -30,8 +30,9 @@ require([
 , 'app/views/edit-item-view'
 , 'app/models/hours'
 , 'app/views/edit-hours-view'
+, 'app/views/restaurant/edit-menu-items-view'
 , 'jquery-ui'
-], function(Restaurant, EditRestaurantView, EditCategoryView, EditItemView, Hours, EditHoursView) {
+], function(Restaurant, EditRestaurantView, EditCategoryView, EditItemView, Hours, EditHoursView, EditMenuItemsView, $) {
   var hours = [
     {{#each restaurant.delivery_times}}
       new EditHoursView({
@@ -69,6 +70,16 @@ require([
 
     editRestaurantView.categories.push(category{{id}});
   {{/each}}
+});
+
+
+require( ['jquery-loaded', 'app/views/restaurant/edit-menu-items-view'],
+function($, EditMenuItemsView) {
+  var editMenuItemsViews = $('.category-form').map(function(idx, el) {
+    return new EditMenuItemsView({
+      el: $(el)
+    });
+  });
 });
 </script>
 {{/extend}}

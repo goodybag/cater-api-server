@@ -80,7 +80,7 @@ module.exports.work = function( storage, callback ){
     stats.orders.value = orders.length;
     utils.async.parallelNoBail(orders.map(notifyOrderFn), function done(errors, results) {
       if ( errors ) {
-        stats.errors.val = errors.length;
+        stats.errors.value = errors.length;
       }
 
       if (Array.isArray(results)) {

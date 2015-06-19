@@ -477,6 +477,7 @@ module.exports.menuCsv = function( req, res ){
 };
 
 module.exports.copy = function(req, res) {
+  var logger = req.logger.create('Controller-Restaurants-Copy');
   var id = req.params.restaurant_id;
 
   var tasks = [
@@ -494,12 +495,13 @@ module.exports.copy = function(req, res) {
 
   , function copyRestaurant(restaurant, acct, callback) {
       var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id'), {
-        stripe_id: acct.id
+        balanced_customer_uri: null
+      , stripe_id: acct.id
       , name: restaurant.name + ' Copy'
       , is_hidden: true
       });
       db.restaurants.insert( data, function(err, result) {
-        callback(err, restaurant, result[0].id);
+        callback(err, restaurant, err ? null : result[0].id);
       });
     }
 
@@ -657,6 +659,7 @@ module.exports.copy = function(req, res) {
 
   utils.async.waterfall(tasks, function(err, newId) {
     if ( err ) {
+      logger.error('Error copying restaurant', { error: error });
       return res.send(500, err);
     }
      res.redirect('/admin/restaurants/' + newId);

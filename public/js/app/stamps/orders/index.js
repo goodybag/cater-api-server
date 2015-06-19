@@ -26,5 +26,8 @@ define( function( require, exports, module ){
 
   utils.extend( module.exports, stamps );
 
+  module.exports.item = require('./item');
+  module.exports.amenity = require('./amenity');
+
   return module.exports;
 });

@@ -81,17 +81,18 @@ module.exports.work = function( storage, callback ){
     utils.async.parallelNoBail(orders.map(notifyOrderFn), function done(errors, results) {
       if ( errors ) {
         stats.errors.val = errors.length;
-        return callback( errors, stats );
       }
 
-      results.forEach(function( result, i ){
-        if ( !result || Object.keys(result).length === 0 ) return;
+      if (Array.isArray(results)) {
+        results.forEach(function( result, i ){
+          if ( !result || Object.keys(result).length === 0 ) return;
 
-        stats.sent.value++;
-        storage.lastNotified[ result.id ] = new Date().toString();
-      });
+          stats.sent.value++;
+          storage.lastNotified[ result.id ] = new Date().toString();
+        });
+      }
 
-      callback( null, stats );
+      callback( errors, stats );
     });
   });
 };

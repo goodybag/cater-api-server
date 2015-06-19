@@ -38,32 +38,37 @@ module.exports.update = function (req, res) {
 
     req.body = results.data;
 
-    var tasks = [
-      function calculateRegionID(next) {
-        var nullRegion = 2;
-        if (!req.body.zip) {
-          req.body.region_id = nullRegion;
-          return next(null);
-        }
-        db.region_zips.findOne({ zip: req.body.zip }, function (error, result) {
-          req.body.region_id = result ? result.region_id || nullRegion : nullRegion;
-          return next(null);
-        });
+    function calculateRegionID(next) {
+      var nullRegion = 2;
+      if (!req.body.zip) {
+        req.body.region_id = nullRegion;
+        return next(null);
       }
-    , function createRestaurant (next) {
-        return restaurantsController._create(req, next);
-      }
-    , function createContacts (rows, results, next) {
-        var contacts = req.body.contacts.map(function (contact) {
-          contact.restaurant_id = rows[0].id;
-          return contact;
-        });
 
-        return db.contacts.insert(contacts, next);
-      }
-    ];
+      db.region_zips.findOne({ zip: req.body.zip }, function (error, result) {
+        req.body.region_id = result ? result.region_id || nullRegion : nullRegion;
+        return next(null);
+      });
+    }
 
-    utils.async.waterfall(tasks, function (error) {
+    function createRestaurant (next) {
+      return restaurantsController._create(req, next);
+    }
+
+    function createContacts (rows, results, next) {
+      var contacts = req.body.contacts.map(function (contact) {
+        contact.restaurant_id = rows[0].id;
+        return contact;
+      });
+
+      return db.contacts.insert(contacts, next);
+    }
+
+    utils.async.waterfall([
+        calculateRegionID,
+        createRestaurant,
+        createContacts
+      ], function (error) {
       if (error) {
         console.log(error);
         return res.error(errors.internal.DB_FAILURE, error);

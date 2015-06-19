@@ -68,7 +68,9 @@ var restaurants = require('stampit')()
 describe('Orders Stamps', function(){
   it('.getTax()', function(){
     var order = orders({
-      region: { sales_tax: 0.0825 }
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
     , items: [{ price: 100, quantity: 1 }]
     });
 
@@ -126,7 +128,9 @@ describe('Orders Stamps', function(){
 
   it('.getTotal()', function(){
     var order = orders({
-      region: { sales_tax: 0.0825 }
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
     , items: [
         { price: 100, quantity: 1 }
       , { price: 200, quantity: 3 }
@@ -137,8 +141,8 @@ describe('Orders Stamps', function(){
       , { price: 1, scale: 'multiply', enabled: false }
       ]
     , guests: 5
-    , adjustment: { amount: -100, description: 'foo bar' }
-    , user_adjustment: { amount: -50, description: 'crabby patty' }
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
     , tip: 50
     , delivery_fee: 100
     });
@@ -435,15 +439,17 @@ describe('Orders Stamps', function(){
       , restaurant: {
           region: { sales_tax: 0.0825 }
         , plan: { type: 'flat', data: { fee: 0.1 } }
+        , is_direct_deposit: true
         }
       , items: [
           { price: 100, quantity: 1 }
         , { price: 200, quantity: 1 }
         ]
-      , adjustment: { amount: -100, description: 'foo bar' }
-      , user_adjustment: { amount: -50, description: 'goo wop' }
+      , adjustment_amount: -100
+      , user_adjustment_amount: -50
       , tip: 50
       , delivery_fee: 100
+      , payment_method_id: 123
       });
 
     it('.getRestaurantCut()', function(){
@@ -464,6 +470,11 @@ describe('Orders Stamps', function(){
     it('.getApplicationCut()', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
       assert.equal( oc.getApplicationCut(), 185 );
+    });
+
+    it('.getTotal()', function(){
+      var oc = DefaultOrderCharge();
+      assert.equal( oc.getTotal(), 313);
     });
   });
 });

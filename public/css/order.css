@@ -376,6 +376,13 @@ p.adjustment-description {
   border: none;
   background-color: #5d9cec;
   color: #fff;
+  border-radius: 0px;
+}
+
+.feedback-order .close {
+  color: #fff;
+  text-shadow: none;
+  opacity: 0.5;
 }
 
 .feedback-order .star {

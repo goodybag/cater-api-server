@@ -72,9 +72,10 @@ describe('Orders Stamps', function(){
         region: { sales_tax: 0.0825 }
       }
     , items: [{ price: 100, quantity: 1 }]
+    , delivery_fee: 100
     });
 
-    assert.equal( order.getTax(), 9 );
+    assert.equal( order.getTax(), 17 );
   });
 
   it('.getAmenityTotal', function(){
@@ -147,7 +148,7 @@ describe('Orders Stamps', function(){
     , delivery_fee: 100
     });
 
-    assert.equal( order.getTotal(), 764 );
+    assert.equal( order.getTotal(), 772 );
   });
 
   it('Should filter by month', function() {
@@ -462,19 +463,19 @@ describe('Orders Stamps', function(){
       assert.equal( oc.getRestaurantCut(), 178 );
     });
 
-    it('.getApplicationCut()', function(){
+    it('.getApplicationCut() - delivery', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( oc.getApplicationCut(), 50 );
+      assert.equal( oc.getApplicationCut(), 58 );
     });
 
-    it('.getApplicationCut()', function(){
+    it('.getApplicationCut() - courier', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
-      assert.equal( oc.getApplicationCut(), 185 );
+      assert.equal( oc.getApplicationCut(), 193 );
     });
 
     it('.getTotal()', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( oc.getTotal(), 313);
+      assert.equal( oc.getTotal(), 321);
     });
   });
 });

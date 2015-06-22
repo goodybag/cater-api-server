@@ -72,9 +72,10 @@ describe('Orders Stamps', function(){
         region: { sales_tax: 0.0825 }
       }
     , items: [{ price: 100, quantity: 1 }]
+    , delivery_fee: 100
     });
 
-    assert.equal( order.getTax(), 9 );
+    assert.equal( order.getTax(), 17 );
   });
 
   it('.getAmenityTotal', function(){
@@ -147,7 +148,7 @@ describe('Orders Stamps', function(){
     , delivery_fee: 100
     });
 
-    assert.equal( order.getTotal(), 764 );
+    assert.equal( order.getTotal(), 772 );
   });
 
   it('Should filter by month', function() {
@@ -452,7 +453,7 @@ describe('Orders Stamps', function(){
       , payment_method_id: 123
       });
 
-    it('.getRestaurantCut()', function(){
+    it.only('.getRestaurantCut()', function(){
       var oc = DefaultOrderCharge();
       assert.equal( oc.getRestaurantCut(), 313 );
     });

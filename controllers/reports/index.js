@@ -158,7 +158,13 @@ var reports = {
     options.distinct = [ 'orders.id', range ];
     options.one = [
       { table: 'users', alias: 'user' }
-    , { table: 'restaurants', alias: 'restaurant', one: [ { table: 'restaurant_plans', alias: 'plan' } ] }
+    , { table: 'restaurants'
+      , alias: 'restaurant'
+      , one: [
+          { table: 'restaurant_plans', alias: 'plan' }
+        , { table: 'regions', alias: 'region' }
+        ]
+      }
     , { table: 'restaurant_locations', alias: 'location' }
     ];
 

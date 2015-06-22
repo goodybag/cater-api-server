@@ -128,6 +128,7 @@ var stripe = {
 , verifyRestaurant: function(options) {
     return function(req, res, next) {
       if (!req.restaurant && !req.restaurant.stripe_id) return res.send(500);
+
       var dob = moment(req.body.dob, 'MM-DD-YYYY');
       var data = {
         legal_entity: {
@@ -136,10 +137,11 @@ var stripe = {
         , last_name: req.body.last_name
         , personal_id_number: req.body.personal_id_number // SSN
         , business_tax_id: req.body.business_tax_id // EIN
+        , ssn_last_4: req.body.ssn_last_4
         , business_name: req.body.business_name
         , dob: {
             day: dob.date()
-          , month: dob.month()
+          , month: dob.month() + 1
           , year: dob.year()
           }
         , address: {
@@ -162,7 +164,12 @@ var stripe = {
         }
       };
 
-      delete data.legal_entity[data.legal_entity.type === 'individual' ? 'business_tax_id' : 'personal_id_number'];
+      if ( data.legal_entity.type === 'individual' ) {
+        delete data.legal_entity.business_tax_id;
+        delete data.legal_entity.ssn_last_4;
+      } else {
+        delete data.legal_entity.personal_id_number;
+      }
 
       utils.stripe.accounts.update(req.restaurant.stripe_id, data, function(err, account) {
         if (err) {

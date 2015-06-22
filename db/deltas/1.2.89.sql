@@ -1,7 +1,7 @@
 -- Add Lat and Lon
 
 DO $$
-  declare version       text := '1.2.87';
+  declare version       text := '1.2.89';
 begin
   raise notice '## Running Delta v% ##', version;
 

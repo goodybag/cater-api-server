@@ -453,7 +453,7 @@ describe('Orders Stamps', function(){
       , payment_method_id: 123
       });
 
-    it.only('.getRestaurantCut()', function(){
+    it('.getRestaurantCut()', function(){
       var oc = DefaultOrderCharge();
       assert.equal( oc.getRestaurantCut(), 313 );
     });
@@ -463,19 +463,19 @@ describe('Orders Stamps', function(){
       assert.equal( oc.getRestaurantCut(), 178 );
     });
 
-    it('.getApplicationCut()', function(){
+    it('.getApplicationCut() - delivery', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( oc.getApplicationCut(), 50 );
+      assert.equal( oc.getApplicationCut(), 58 );
     });
 
-    it('.getApplicationCut()', function(){
+    it('.getApplicationCut() - courier', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
-      assert.equal( oc.getApplicationCut(), 185 );
+      assert.equal( oc.getApplicationCut(), 193 );
     });
 
     it('.getTotal()', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( oc.getTotal(), 313);
+      assert.equal( oc.getTotal(), 321);
     });
   });
 });

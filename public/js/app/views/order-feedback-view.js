@@ -31,6 +31,8 @@ define(function(require, exports, module) {
       e.preventDefault();
       $('.star').data('selected', false);
       $(e.target).data('selected', true);
+
+      this.$el.find('.order-feedback-notes-container').removeClass('hide');
     }
 
   , fillStars: function (el) {
@@ -58,7 +60,7 @@ define(function(require, exports, module) {
       , submitting_notes: this.$el.find(this.fieldMap.notes).val() || null
       };
 
-      if (!feedback.ease_of_submitting_rating && !feedback.submitting_notes) {
+      if (!feedback.ease_of_submitting_rating) {
         return;
       }
 

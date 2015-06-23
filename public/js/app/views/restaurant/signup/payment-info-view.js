@@ -20,9 +20,6 @@ define(function (require, exports, module) {
   , fieldGetter: {
 
     }
-  , initialize: function (options) {
-      BaseView.prototype.initialize.apply(this, options);
-    }
   , submit: function (e) {
       if (e) e.preventDefault();
       this.clearErrors();

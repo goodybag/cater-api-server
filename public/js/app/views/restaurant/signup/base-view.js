@@ -6,42 +6,8 @@ define(function (require, exports, module) {
   var cookie = require('../../../../cookie');
 
   return module.exports = FormView.extend({
-    events: {
-      'click .btn-continue': 'submit'
-    }
-  , initialize: function () {
-      console.log('init base');
 
-      //expose stuff for _dev_
-      window.model = this.model;
-      window.cookie = cookie;
-
-      //restaurant signup view state
-      this.cookieName = 'gb_rs'; // restaurant signup id
-      this.store = 'gb_restaurant';
-      this.model.set(this.getLocalStorage());
-    }
-
-  , setLocalStorage: function ( json ) {
-      if (typeof json === 'object') json = JSON.stringify(json);
-      localStorage.setItem(this.store, json);
-    }
-
-  , getLocalStorage: function () {
-      return JSON.parse(localStorage.getItem(this.store));
-    }
-
-  , setCookie: function ( value ) {
-      cookie.setItem(this.cookieName, value);
-    }
-
-  , getCookie: function () {
-      return cookie.getItem(this.cookieName);
-    }
-
-  , submit: function (e) { return false; }
-
-  , displayErrors: function( errors ){
+    displayErrors: function( errors ){
       // Just in case!
       spinner.stop();
 

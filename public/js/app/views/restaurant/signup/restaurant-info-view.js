@@ -84,10 +84,6 @@ define(function (require, exports, module) {
       }
 
     }
-  , initialize: function (options) {
-      BaseView.prototype.initialize.apply(this, options);
-      console.log('init restaurant view')
-    }
 
   , submit: function (e) {
       e.preventDefault();

@@ -2,7 +2,7 @@
 <tr class="table-row" data-order-type="{{type}}">
   <td><a href="/orders/{{id}}">#{{id}}</td>
   <td>{{capitalize type}} {{#eq type 'courier'}}(<a href="/admin/delivery-services/{{deliveryService.id}}">{{deliveryService.name}}</a>){{/eq}}</td>
-  <td><input type="checkbox" {{#if restaurant.has_contract}}checked="checked"{{/if}} disabled></td>
+  <td><input type="checkbox" {{#if restaurant.plan_id}}checked="checked"{{/if}} disabled></td>
   <td>{{datepart datetime}} {{timepart datetime}}</td>
   <td><a href="/admin/users/{{user.id}}">{{user.email}}</a></td>
   <td>{{user.organization}}</td>

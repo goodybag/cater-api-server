@@ -16,7 +16,7 @@
         <div class="subtotal pull-right">{{dollars order.sub_total}}</div>
       </div>
     </div>
-    {{#unless order.restaurant.has_contract}}
+    {{#unless order.restaurant.plan_id}}
     {{#if order.restaurant.no_contract_fee}}
     <div class="row tx-fee-row">
       <div class="col-lg-12">

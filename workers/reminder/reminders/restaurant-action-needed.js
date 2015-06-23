@@ -80,18 +80,22 @@ module.exports.work = function( storage, callback ){
     stats.orders.value = orders.length;
     utils.async.parallelNoBail(orders.map(notifyOrderFn), function done(errors, results) {
       if ( errors ) {
-        stats.errors.val = errors.length;
-        return callback( errors, stats );
+        stats.errors.value = errors.length;
       }
 
-      results.forEach(function( result, i ){
-        if ( !result || Object.keys(result).length === 0 ) return;
+      if (Array.isArray(results)) {
+        results.forEach(function( result, i ){
+          if ( !result || Object.keys(result).length === 0 ) return;
 
-        stats.sent.value++;
-        storage.lastNotified[ result.id ] = new Date().toString();
+          stats.sent.value++;
+        });
+      }
+
+      orders.forEach(function( order ){
+        storage.lastNotified[ order.id ] = new Date().toString();
       });
 
-      callback( null, stats );
+      callback( errors, stats );
     });
   });
 };

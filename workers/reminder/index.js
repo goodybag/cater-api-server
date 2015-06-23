@@ -34,7 +34,7 @@ var logStat = function( group, result ){
 
   for ( var key in result ){
     // Log errors by worker/reminder module
-    if ( key === 'errors' && result.errors.value > 0 ){
+    if ( key === 'errors' && result.errors.value > 0 && result.errors.objects ){
       result.errors.objects.forEach( function( error ){
         logger.error( [ key ], error );
       });

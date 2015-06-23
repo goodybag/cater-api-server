@@ -23,10 +23,10 @@ define(function(require, exports, module) {
           var bOrg = b.get('user').organization;
           return aOrg.localeCompare(bOrg);
         }
-      , 'has_contract': function(a, b) {
-          var aHasContract = a.restaurant.get('has_contract');
-          var bHasContract = b.restaurant.get('has_contract');
-          return aHasContract - bHasContract;
+      , 'plan_id': function(a, b) {
+          var aPlanId = a.restaurant.get('plan_id') !== null;
+          var bPlanId = b.restaurant.get('plan_id') !== null;
+          return aPlanId - bPlanId;
         }
       , 'restaurant': function(a, b) {
           return a.restaurant.get('name').localeCompare(b.restaurant.get('name'));

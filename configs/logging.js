@@ -14,6 +14,7 @@ module.exports = {
     console: true
   , rollbar: true
   , mongo:   true
+  , loggly:  true
   }
 , console: {
     json: true

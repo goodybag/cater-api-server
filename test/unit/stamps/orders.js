@@ -2,8 +2,10 @@ var assert      = require('assert');
 var moment      = require('moment');
 var utils       = require('utils');
 var config      = require('../../../config');
-var orders      = require('../../../lib/stamps/db/orders');
+var orders      = require('stamps/orders');
+var OrderCharge = require('stamps/orders/charge');
 var fulfillability = require('stamps/orders/fulfillability');
+orders.db        = require('../../../lib/stamps/db/orders')
 
 var restaurants = require('stampit')()
   .state({
@@ -64,8 +66,93 @@ var restaurants = require('stampit')()
   });
 
 describe('Orders Stamps', function(){
+  it('.getTax()', function(){
+    var order = orders({
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
+    , items: [{ price: 100, quantity: 1 }]
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getTax(), 17 );
+  });
+
+  it('.getAmenityTotal', function(){
+    var order = orders({
+      guests: 7
+    , amenities: [
+        { price: 100, scale: 'flat', enabled: true }
+      , { price: 100, scale: 'flat', enabled: false }
+      , { price: 300, scale: 'multiply', enabled: true }
+      ]
+    });
+
+    assert.equal( order.getAmenityTotal(), 2200 );
+  });
+
+  it('.getItemTotal', function(){
+    var order = orders({
+      items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      , { price: 100, quantity: 3, options_sets: [
+            { options: [{ state: true, price: 50 }, { state: false, price: 10 }] }
+          ]
+        }
+      ]
+    });
+
+    assert.equal( order.getItemTotal(), 1150 );
+  });
+
+  it('.getSubTotal()', function(){
+    var order = orders({
+      items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      , { price: 100, quantity: 3, options_sets: [
+            { options: [{ state: true, price: 50 }, { state: false, price: 10 }] }
+          ]
+        }
+      ]
+    , guests: 7
+    , amenities: [
+        { price: 100, scale: 'flat', enabled: true }
+      , { price: 100, scale: 'flat', enabled: false }
+      , { price: 300, scale: 'multiply', enabled: true }
+      ]
+    });
+
+    assert.equal( order.getSubTotal(), 3350 );
+  });
+
+  it('.getTotal()', function(){
+    var order = orders({
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
+    , items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      ]
+    , amenities: [
+        { price: 7, scale: 'flat', enabled: true }
+      , { price: 2, scale: 'multiply', enabled: true }
+      , { price: 1, scale: 'multiply', enabled: false }
+      ]
+    , guests: 5
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
+    , tip: 50
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getTotal(), 772 );
+  });
+
   it('Should filter by month', function() {
-    var sql = orders({ month: 12 }).get();
+    var sql = orders.db({ month: 12 }).get();
     assert(sql.$query);
     assert(Array.isArray( sql.$query['submitted_dates.submitted'] ));
     assert(utils.find(sql.$query['submitted_dates.submitted'], function(o){
@@ -74,7 +161,7 @@ describe('Orders Stamps', function(){
   });
 
   it('Should filter by week', function() {
-    var sql = orders({ week: 22 }).get();
+    var sql = orders.db({ week: 22 }).get();
     assert(sql.$query);
     assert(Array.isArray( sql.$query['submitted_dates.submitted'] ));
     assert(utils.find(sql.$query['submitted_dates.submitted'], function(o){
@@ -83,7 +170,7 @@ describe('Orders Stamps', function(){
   });
 
   it('Should filter by year', function() {
-    var sql = orders({ year: 12 }).get();
+    var sql = orders.db({ year: 12 }).get();
     assert(sql.$query);
     assert(Array.isArray( sql.$query['submitted_dates.submitted'] ));
     assert(utils.find(sql.$query['submitted_dates.submitted'], function(o){
@@ -104,13 +191,13 @@ describe('Orders Stamps', function(){
       .filter(function(r) { return r.active; })
       .pluck('name')
       .value();
-    var sql = orders({ filters: filters }).get();
+    var sql = orders.db({ filters: filters }).get();
     assert(sql.$query);
     assert.deepEqual(sql.$query['regions.name']['$in'], activeRegions);
   });
 
   it('Should join user by default', function() {
-    var sql = orders().get();
+    var sql = orders.db().get();
     assert(sql.$options);
     assert(sql.$options.one);
     assert(utils.filter(sql.$options.one, function(clause) {
@@ -119,7 +206,7 @@ describe('Orders Stamps', function(){
   });
 
   it('Should join restaurant by default', function() {
-    var sql = orders().get();
+    var sql = orders.db().get();
     assert(sql.$options);
     assert(sql.$options.one);
     assert(utils.filter(sql.$options.one, function(clause) {
@@ -128,7 +215,7 @@ describe('Orders Stamps', function(){
   });
 
   it('Should opt-out joining user', function() {
-    var sql = orders({ user: false }).get();
+    var sql = orders.db({ user: false }).get();
     assert(sql.$options);
     assert(sql.$options.one);
     assert(!utils.filter(sql.$options.one, function(clause) {
@@ -137,7 +224,7 @@ describe('Orders Stamps', function(){
   });
 
   it('Should opt-out joining restaurant', function() {
-    var sql = orders({ restaurant: false }).get();
+    var sql = orders.db({ restaurant: false }).get();
     assert(sql.$options);
     assert(sql.$options.one);
     assert(!utils.filter(sql.$options.one, function(clause) {
@@ -274,6 +361,121 @@ describe('Orders Stamps', function(){
       }).isFulfillable();
 
       assert( !result );
+    });
+  });
+
+  describe('Amenities', function(){
+    it('.getTotal() disabled', function() {
+      var amenity = orders.amenity({
+        guests: 12, price: 100, scale: 'flat', enabled: false
+      });
+
+      assert.equal( amenity.getTotal(), 0 );
+    });
+
+    it('.getTotal() flat', function() {
+      var amenity = orders.amenity({
+        guests: 12, price: 100, scale: 'flat', enabled: true
+      });
+
+      assert.equal( amenity.getTotal(), 100 );
+    });
+
+    it('.getTotal() multiply', function() {
+      var amenity = orders.amenity({
+        guests: 12, price: 100, scale: 'multiply', enabled: true
+      });
+
+      assert.equal( amenity.getTotal(), 1200 );
+    });
+
+    it('.getTotal() throw error invalid scale', function() {
+      var amenity = orders.amenity({
+        guests: 12, price: 100, scale: 'derp', enabled: false
+      });
+
+      assert.throws( amenity.getTotal() );
+    });
+  });
+
+  describe('Items', function(){
+    it('.getTotal()', function(){
+      var item = orders.item({
+        price: 100
+      , quantity: 5
+      });
+
+      assert.equal( item.getTotal(), 500 );
+    });
+
+    it('.getTotal() with options', function(){
+      var item = orders.item({
+        price: 100
+      , quantity: 2
+      , options_sets: [
+          { options:  [ { price: 50, state: true }
+                      , { price: 50, state: false }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: true }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: false }
+                      ]
+          }
+        ]
+      });
+
+      assert.equal( item.getTotal(), 500 );
+    });
+  });
+
+  describe('Charges', function(){
+    var DefaultOrderCharge = OrderCharge
+      .state({
+        type: 'delivery'
+      , region: { sales_tax: 0.0825 }
+      , restaurant: {
+          region: { sales_tax: 0.0825 }
+        , plan: { type: 'flat', data: { fee: 0.1 } }
+        , is_direct_deposit: true
+        }
+      , items: [
+          { price: 100, quantity: 1 }
+        , { price: 200, quantity: 1 }
+        ]
+      , adjustment_amount: -100
+      , user_adjustment_amount: -50
+      , tip: 50
+      , delivery_fee: 100
+      , payment_method_id: 123
+      });
+
+    it('.getRestaurantCut()', function(){
+      var oc = DefaultOrderCharge();
+      assert.equal( oc.getRestaurantCut(), 313 );
+    });
+
+    it('.getRestaurantCut() - courier', function(){
+      var oc = DefaultOrderCharge({ type: 'courier' });
+      assert.equal( oc.getRestaurantCut(), 178 );
+    });
+
+    it('.getApplicationCut() - delivery', function(){
+      var oc = DefaultOrderCharge();
+      assert.equal( oc.getApplicationCut(), 58 );
+    });
+
+    it('.getApplicationCut() - courier', function(){
+      var oc = DefaultOrderCharge({ type: 'courier' });
+      assert.equal( oc.getApplicationCut(), 193 );
+    });
+
+    it('.getTotal()', function(){
+      var oc = DefaultOrderCharge();
+      assert.equal( oc.getTotal(), 321);
     });
   });
 });

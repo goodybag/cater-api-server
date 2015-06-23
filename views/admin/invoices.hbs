@@ -59,14 +59,14 @@
         </label>
         <div class="component main">
           <a href="{{replace ../config.invoice.pdfRoute ':id' this.id}}" class="item-title">#{{this.id}}
-            {{datepart this.billing_period_start}} -
-            {{datepart this.billing_period_end~}}
+            {{this.user.name}} - {{this.user.organization}}
           </a>
           <span class="label-tag label-status small {{this.status}}">{{capitalize this.status}}</span>
           <dl class="item-details dl-horizontal-auto">
             <div>
-              <dt>Number of Orders:</dt>
-              <dd>{{this.orders.length}}</dd>
+              <dt>Billing Period:</dt>
+              <dd>{{datepart this.billing_period_start}} -
+                  {{datepart this.billing_period_end~}}</dd>
             </div>
             <div>
               <dt>Total:</dt>

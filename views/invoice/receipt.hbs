@@ -69,7 +69,7 @@
       <dd>{{join (timeToRange (timepart order.datetime) "h:mm A") " - "}}</dd>
       <dt>Payment Method:</dt>
       {{#if order.payment_method}}
-      <dd>**** **** **** {{order.payment_method.data.last_four}}</dd>
+      <dd>**** **** **** {{order.payment_method.data.last4}}</dd>
       <dt>Charge Date:</dt>
       <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
       {{else}}
@@ -197,7 +197,7 @@
           <dd>${{dollars order.sales_tax}}</dd>
           <dt>Tip:</dt>
           <dd>${{dollars order.tip}}</dd>
-          {{#unless order.restaurant.has_contract}}
+          {{#unless order.restaurant.plan_id}}
           {{#if order.restaurant.no_contract_fee}}
           <dt>Transaction Fee</dt>
           <dd>{{dollars order.no_contract_amount}}</dd>

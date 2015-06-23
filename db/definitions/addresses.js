@@ -65,6 +65,7 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , lat_lng: { type: types.point }
   };
 
   definition.indices = {};

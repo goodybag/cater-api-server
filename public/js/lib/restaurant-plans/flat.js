@@ -15,7 +15,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 define( function( require, exports, module ){
   return {
     getApplicationCut: function( plan, amount ){
-      return Math.ceil( amount * ( plan ? plan.data.fee : 0 ) );
+      return Math.round( amount * ( plan ? plan.data.fee : 0 ) );
     }
   };
 });

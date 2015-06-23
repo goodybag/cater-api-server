@@ -20,12 +20,13 @@ define( function( require, exports, module ){
     , adjustment_amount: 0
     , user_adjustment_amount: 0
     , guests: 0
+    , delivery_fee: 4
     , payment_method_id: null
     })
     .methods({
       getTax: function(){
-        var amount = this.getSubTotal() + this.adjustment_amount + this.user_adjustment_amount;
-        return Math.ceil( amount * this.restaurant.region.sales_tax );
+        var amount = this.getSubTotal() + this.adjustment_amount + this.user_adjustment_amount + this.delivery_fee;
+        return Math.round( amount * this.restaurant.region.sales_tax );
       }
 
     , getAmenityTotal: function() {

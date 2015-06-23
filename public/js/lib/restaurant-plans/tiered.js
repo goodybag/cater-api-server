@@ -30,7 +30,7 @@ define( function( require, exports, module ){
     }
 
   , getApplicationCut: function( plan, amount ){
-      return Math.ceil( amount * this.getTier( plan, amount ).fee );
+      return Math.round( amount * this.getTier( plan, amount ).fee );
     }
   });
 });

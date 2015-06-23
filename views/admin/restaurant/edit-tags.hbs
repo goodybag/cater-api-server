@@ -51,7 +51,6 @@
 {{#extend "scripts"}}
 <script>
   require( ['app/pages/admin/restaurant/edit-tags', 'app/models/restaurant'], function( page, Restaurant ){
-    window.model = new Restaurant({{{json restaurant}}});
     page.init({
       models: {
         restaurant: new Restaurant({{{json restaurant}}})

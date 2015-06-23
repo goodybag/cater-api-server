@@ -482,8 +482,6 @@ describe('Orders Stamps', function(){
     it('.getContractFee() - non-contracted', function() {
       var oc = DefaultOrderCharge();
       delete oc.restaurant.plan;
-      console.log('no_contract_fee', oc.restaurant.no_contract_fee)
-      console.log('total for contrat fee', oc.getTotalForContractFee());
       assert.equal( oc.getContractFee(), 15 );
     });
 

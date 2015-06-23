@@ -21,7 +21,7 @@ define( function( require, exports, module ){
         }) || null;
       }
 
-    , toLatLon: function(){
+    , toLatLng: function(){
         return {
           x: this.geometry.location.lat
         , y: this.geometry.location.lng
@@ -67,6 +67,8 @@ define( function( require, exports, module ){
         , state:    this.getAddressComponent('administrative_area_level_1').short_name
 
         , zip:      this.getAddressComponent('postal_code').long_name
+
+        , lat_lng:  this.toLatLng()
         });
       }
     });

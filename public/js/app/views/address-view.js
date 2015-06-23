@@ -1,12 +1,19 @@
 define(function(require, exports, module) {
-  var FormView = require('./form-view');
+  var FormView2 = require('./form-view-2');
   var api = require('api');
   var gplaces = require('gplaces');
 
-  return module.exports = FormView.extend({
+  return module.exports = FormView2.extend({
     events: {
-      'submit .address-edit': 'onSave',
+      'submit .address-edit': 'onSubmit',
     },
+
+    twoways: {
+      name: true
+    , street2: true
+    , phone: true
+    , delivery_instructions: true
+    }
 
     initialize: function() {
       var this_ = this;
@@ -26,26 +33,8 @@ define(function(require, exports, module) {
         this_.$submitBtn.button('error');
         setTimeout(function() { this_.$submitBtn.button('reset'); }, 2000);
       });
-    },
 
-    fieldMap: {
-      name:                     '.address-name'
-    , street:                   '.address-street'
-    , street2:                  '.address-street2'
-    , city:                     '.address-city'
-    , state:                    '.address-state'
-    , zip:                      '.address-zip'
-    , phone:                    '.address-phone'
-    , delivery_instructions:    '.address-delivery-instructions'
-    },
-
-    fieldGetters: {
-      phone: function() {
-        return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
-      },
-      street2: function() {
-        return this.$el.find(this.fieldMap.street2).val().trim();
-      }
+      this.initTwoWays();
     },
 
     geocode: function( callback ){
@@ -60,15 +49,18 @@ define(function(require, exports, module) {
       }.bind( this ));
     },
 
-    onSave: function( e ){
+    onSubmit: function( e ){
       e.preventDefault();
+
+      var data = this.getModelData();
+      var errors = this.model.validate( data );
 
       this.geocode( function( error, result ){
         if ( error ){
           return console.error( error );
         }
 
-        return FormView.prototype.onSave.apply( this, arguments );
+        
       }.bind( this ));
     }
   });

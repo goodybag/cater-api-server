@@ -37,6 +37,7 @@ describe('Stamps', function(){
         , city: 'Mountain View'
         , state: 'CA'
         , zip: '94043'
+        , lat_lng: { x: 37.4224879, y: -122.08422 }
         });
       });
 
@@ -74,6 +75,7 @@ describe('Stamps', function(){
                   short_name: '78751',
                   types: [ 'postal_code' ] }
               ]
+            , geometry: { location: { lat: 100, lng: 50 } }
             }]
           }]
         , requestAddress: '5555 N. Lamar Blvd Suite L131'
@@ -85,6 +87,7 @@ describe('Stamps', function(){
         , city: 'Austin'
         , state: 'TX'
         , zip: '78751'
+        , lat_lng: { x: 100, y: 50 }
         });
       });
 
@@ -100,10 +103,10 @@ describe('Stamps', function(){
       });
 
       describe('GeocodeResult', function(){
-        it('.toLatLon()', function(){
+        it('.toLatLng()', function(){
           var result = GeoResult.create( require('./data/geo-res-1').results[0] );
 
-          assert.deepEqual( result.toLatLon(), {
+          assert.deepEqual( result.toLatLng(), {
             x: 37.4224879
           , y: -122.08422
           });

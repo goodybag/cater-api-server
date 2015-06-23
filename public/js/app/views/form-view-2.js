@@ -17,6 +17,7 @@ define(function(require){
     typeGetters: {
       'default':  function( $el ){ return $el.val(); }
     , 'number':   function( $el ){ return +$el.val(); }
+    , 'tel':      function( $el ){ return $el.val().replace(/[^\d]/g, '') || null; }
     , 'checkbox': function( $el ){ return $el[0].checked; }
     , 'array':    function( $el ){ return $el.val().trim().split(/\,\s*/g); }
     , 'list': function( $el ) {

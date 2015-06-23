@@ -49,7 +49,7 @@ db.orders.findOne(id, $options, function(err, order) {
   );
 
   // Only show app cut for contracted restaurants
-  if (charge.plan_id) {
+  if (charge.restaurant.plan_id) {
     table.push({ 'Application Cut':  dollars(charge.getApplicationCut()) });
   }
 

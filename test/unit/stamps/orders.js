@@ -441,6 +441,7 @@ describe('Orders Stamps', function(){
           region: { sales_tax: 0.0825 }
         , plan: { type: 'flat', data: { fee: 0.1 } }
         , is_direct_deposit: true
+        , no_contract_fee: 0.047
         }
       , items: [
           { price: 100, quantity: 1 }
@@ -476,6 +477,17 @@ describe('Orders Stamps', function(){
     it('.getTotal()', function(){
       var oc = DefaultOrderCharge();
       assert.equal( oc.getTotal(), 321);
+    });
+
+    it('.getNoContractFee() - non-contracted', function() {
+      var oc = DefaultOrderCharge();
+      delete oc.restaurant.plan;
+      assert.equal( oc.getNoContractFee(), 15 );
+    });
+
+    it('.getNoContractFee() - has contract', function() {
+      var oc = DefaultOrderCharge();
+      assert.equal( oc.getNoContractFee(), 0);
     });
   });
 });

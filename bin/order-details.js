@@ -45,9 +45,14 @@ db.orders.findOne(id, $options, function(err, order) {
   , { 'Delivery Fee':     dollars(charge.delivery_fee) }
   , { 'Tax':              dollars(charge.getTax()) }
   , { 'Tip':              dollars(charge.tip) }
+  , { 'No Contract Fee':  dollars(charge.getNoContractFee()) }
   , { 'Total':            dollars(charge.getTotal()) }
-  , { 'Application Cut':  dollars(charge.getApplicationCut()) }
   );
+
+  // Only show app cut for contracted restaurants
+  if (charge.restaurant.plan_id) {
+    table.push({ 'Application Cut':  dollars(charge.getApplicationCut()) });
+  }
 
   console.log(table.toString());
   process.exit(0);

@@ -45,6 +45,7 @@ db.orders.findOne(id, $options, function(err, order) {
   , { 'Delivery Fee':     dollars(charge.delivery_fee) }
   , { 'Tax':              dollars(charge.getTax()) }
   , { 'Tip':              dollars(charge.tip) }
+  , { 'No Contract Fee':  dollars(charge.getNoContractFee()) }
   , { 'Total':            dollars(charge.getTotal()) }
   );
 

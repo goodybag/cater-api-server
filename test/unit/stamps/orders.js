@@ -479,15 +479,15 @@ describe('Orders Stamps', function(){
       assert.equal( oc.getTotal(), 321);
     });
 
-    it('.getContractFee() - non-contracted', function() {
+    it('.getNoContractFee() - non-contracted', function() {
       var oc = DefaultOrderCharge();
       delete oc.restaurant.plan;
-      assert.equal( oc.getContractFee(), 15 );
+      assert.equal( oc.getNoContractFee(), 15 );
     });
 
-    it('.getContractFee() - has contract', function() {
+    it('.getNoContractFee() - has contract', function() {
       var oc = DefaultOrderCharge();
-      assert.equal( oc.getContractFee(), 0);
+      assert.equal( oc.getNoContractFee(), 0);
     });
   });
 });

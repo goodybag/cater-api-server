@@ -42,7 +42,7 @@ define( function( require, exports, module ){
         }, 0 );
       }
 
-    , getContractFee: function(){
+    , getNoContractFee: function(){
         if ( this.restaurant.plan ) return 0;
         return Math.round(this.getTotalForContractFee() * this.restaurant.no_contract_fee);
       }
@@ -66,7 +66,7 @@ define( function( require, exports, module ){
         , this.getTax()
         , this.delivery_fee
         , this.tip
-        , this.getContractFee()
+        , this.getNoContractFee()
         ].reduce( utils.add, 0 );
       }
 

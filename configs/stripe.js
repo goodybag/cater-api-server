@@ -32,8 +32,8 @@ var stripe = {
       customer_id:  'cus_6JlC2GULQFI86R'
     , card_id:      'card_1677pbEQiCMC2eZ7c3BDAdUv'
     }
-  }
   , tos_url: 'https://stripe.com/connect/account-terms'
+  }
 }
 
 module.exports = stripe[env];

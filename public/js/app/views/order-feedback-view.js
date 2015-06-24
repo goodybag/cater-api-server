@@ -70,7 +70,8 @@ define(function(require, exports, module) {
       , dataType: 'JSON'
       , data: feedback
       , success: function () {
-          this_.$el.find('.order-feedback-form').text('thank you!');
+          this_.$el.find('.feedback-title').text('Thank you!');
+          this_.$el.find('.order-feedback-form').remove();
         }
       , error: function (error) {
           console.error(error);

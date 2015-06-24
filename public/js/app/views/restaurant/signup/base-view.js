@@ -6,8 +6,15 @@ define(function (require, exports, module) {
   var cookie = require('../../../../cookie');
 
   return module.exports = FormView.extend({
+    events: {
+      'click .btn-continue': 'submit'
+    }
 
-    displayErrors: function( errors ){
+  , initialize: function () {
+      console.log('init base');
+    }
+
+  , displayErrors: function( errors ){
       // Just in case!
       spinner.stop();
 

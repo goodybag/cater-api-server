@@ -8,7 +8,16 @@ var config  = require('../../config');
 
 describe('Restaurant Signup', function () {
 
-  it('POST /restaurants/join', function (done) {
+  it('GET /restaurants/join', function (done) {
+    utils.test.get('/restaurants/join', function (error, res, body) {
+      assert(!error, error);
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.request.uri.pathname, '/restaurants/join');
+      done();
+    });
+  });
+
+  it('POST /api/restaurants/join', function (done) {
 
     var data = {
       user_name: 'foo',
@@ -18,10 +27,10 @@ describe('Restaurant Signup', function () {
       service: 'delivery'
     };
 
-    utils.test.post('/restaurants/join', data, function (error, res, body) {
+    utils.test.post('/api/restaurants/join', data, function (error, res, body) {
       assert(!error, error);
       assert.equal(res.statusCode, 200);
-      assert.equal(res.request.uri.pathname, '/restaurants/join');
+      assert.equal(res.request.uri.pathname, '/api/restaurants/join');
       done();
     });
   });

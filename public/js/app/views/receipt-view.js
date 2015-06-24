@@ -64,6 +64,18 @@ define(function(require, exports, module) {
       this.onPriceChange();
 
       this.initTxFeePopover( this.model.restaurant.toJSON() );
+
+    },
+
+    initDatepicker: function() {
+      this.datepicker = this.$el.find('.form-group-delivery-date > .order-datetime').pickadate({
+        format: 'mm/dd/yyyy'
+      }).pickadate('picker');
+
+      this.timepicker = this.$el.find('.form-group-delivery-time > .order-datetime').pickatime({
+        format: 'hh:i A'
+      , interval: 15
+      }).pickatime('picker');
     },
 
     // set the model and add listeners here
@@ -195,6 +207,7 @@ define(function(require, exports, module) {
 
         console.log('rendering with', context);
         this.$el.find('.delivery-info').html(Handlebars.partials.order_info(context));
+        this.initDatepicker();
       }
     },
 

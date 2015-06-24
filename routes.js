@@ -99,6 +99,48 @@ module.exports.register = function(app) {
 
   app.get('/restaurants/manage', m.restrict(['restaurant', 'admin']), controllers.restaurants.listManageable);
 
+  app.get('/restaurants/join'
+  , m.states()
+  , m.localCookies(['gb_rs'])
+  , function (req, res, next) {
+      res.locals.restaurant = {};
+      res.locals.signup = {};
+      var signupId = req.session.restaurant_signup_id;
+      if (!signupId) return next();
+
+      db.restaurant_signups.findOne({ id: signupId }, function (error, results) {
+        if (error) return next();
+
+        if (results) {
+          res.locals.restaurant = results.data;
+          res.locals.signup = { id: results.id, step: results.step.toString() };
+        }
+
+        next();
+      });
+    }
+  , m.view('restaurant-signup/', {
+      layout: 'layout/default'
+    })
+  );
+
+  app.post('/api/restaurants/join', controllers.restaurants.signups.create);
+
+  app.put('/api/restaurants/join'
+  , function (req, res, next) {
+      var signupId = req.session.restaurant_signup_id;
+      if (!signupId) {
+        return console.log('invalid signup id'), res.status(400).send();
+      }
+
+      req.queryObj = { id: signupId };
+      req.queryOptions.returning = ['id', 'status', 'data'];
+
+      next();
+    }
+  , controllers.restaurants.signups.update
+  );
+
   app.get('/restaurants/:rid'
     // Just do a barebones lookup since the controller
     // has to do a legacy db model lookup
@@ -164,54 +206,6 @@ module.exports.register = function(app) {
     , function(req, res, next) {
         res.send(res.locals.orders);
       }
-    );
-
-    /**
-    * Restaurant Sign Up
-    */
-
-    app.get('/restaurants/join'
-      , m.restrict(['guest', 'client', 'admin'])
-    , m.localCookies(['gb_rs'])
-    , function (req, res, next) {
-        res.locals.restaurant = {};
-        res.locals.signup = {};
-        var signupId = req.session.restaurant_signup_id;
-        if (!signupId) return next();
-
-        db.restaurant_signups.findOne({ id: signupId }, function (error, results) {
-          if (error) return next();
-
-          if (results) {
-            res.locals.restaurant = results.data;
-            res.locals.signup = { id: results.id, step: results.step.toString() };
-          }
-
-          next();
-        });
-      }
-    , m.view('restaurant-signup/', {
-        layout: 'layout/default'
-      })
-    );
-
-    app.post('/api/restaurants/join'
-      , m.restrict(['guest', 'client', 'admin'])
-      , controllers.restaurants.signups.create);
-
-    app.put('/api/restaurants/join'
-    , function (req, res, next) {
-        var signupId = req.session.restaurant_signup_id;
-        if (!signupId) {
-          return console.log('invalid signup id'), res.status(400).send();
-        }
-
-        req.queryObj = { id: signupId };
-        req.queryOptions.returning = ['id', 'status', 'data'];
-
-        next();
-      }
-    , controllers.restaurants.signups.update
     );
 
     /**

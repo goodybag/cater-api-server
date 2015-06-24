@@ -50,9 +50,7 @@ var regionCaches = {
     options.many.push({
       table: 'restaurant_events'
     , alias: 'events'
-    , where: {
-        $custom: ['during @> now()::date']
-      }
+    , where: { during: { $dateContains: 'now()' } }
     });
 
     options.pluck.push({ table: 'restaurant_tags', alias: 'tags', column: 'tag' });

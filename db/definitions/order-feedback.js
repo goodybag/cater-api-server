@@ -35,6 +35,10 @@ define(function(require) {
       type: types.feedback_rating
     , nullable: true
     }
+  , submitting_notes: {
+      type: types.text
+    , nullable: true
+    }
   };
 
   definition.indices = {};

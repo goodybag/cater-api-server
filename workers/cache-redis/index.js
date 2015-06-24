@@ -14,12 +14,13 @@
  * We will assume that results is a JSON string.
  */
 
-var config  = require('../../config');
-var db      = require('../../db');
-var utils   = require('../../utils');
-var logger  = require('../../lib/logger').create('Worker-CacheRedis');
+var pgRangeParser = require('pg-range-parser');
+var config        = require('../../config');
+var db            = require('../../db');
+var utils         = require('../../utils');
+var logger        = require('../../lib/logger').create('Worker-CacheRedis');
 
-var client  = require('redis').createClient( config.redis.port, config.redis.hostname, config.redis );
+var client        = require('redis').createClient( config.redis.port, config.redis.hostname, config.redis );
 
 var regionCaches = {
   restaurants: function( region ){
@@ -46,11 +47,35 @@ var regionCaches = {
     options.many.push({ table: 'restaurant_lead_times', alias: 'lead_times' });
     options.many.push({ table: 'restaurant_pickup_lead_times', alias: 'pickup_lead_times' });
 
+    options.many.push({
+      table: 'restaurant_events'
+    , alias: 'events'
+    , where: {
+        $custom: ['during @> now()::date']
+      }
+    });
+
     options.pluck.push({ table: 'restaurant_tags', alias: 'tags', column: 'tag' });
     options.pluck.push({ table: 'restaurant_meal_styles', alias: 'meal_styles', column: 'meal_style' });
     options.pluck.push({ table: 'restaurant_meal_types', alias: 'meal_types', column: 'meal_type' });
 
-    return db.restaurants.find.bind( db.restaurants, query, options );
+    return function( callback ){
+      db.restaurants.find( query, options, function( error, restaurants ){
+        if ( error ) return callback( error );
+
+        // Sub-documents are not getting their types parsed
+        // We'll eventually need to come up with a more generalized solution
+        for ( var i = restaurants.length - 1, ii, restaurant; i >= 0; i-- ){
+          restaurant = restaurants[ i ];
+
+          for ( ii = restaurant.events.length - 1; ii >= 0; ii-- ){
+            restaurant.events[ ii ].during = pgRangeParser.parse( restaurant.events[ ii ].during );
+          }
+        }
+
+        return callback( null, restaurants );
+      });
+    };
   }
 
 , delivery_services: function( region ){

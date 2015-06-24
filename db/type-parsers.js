@@ -35,7 +35,6 @@ var parsers = module.exports = [
 
 , { oid: 3912
   , fn: function( val ){
-    console.log('test');
       return pgRangeParser.parse( val );
     }
   }

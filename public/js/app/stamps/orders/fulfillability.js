@@ -98,7 +98,6 @@ define( function( require, exports, module ){
               return evt.closed;
             })
             .every( function( evt ){
-              if ( this.restaurant.id === 74 ) console.log(evt);
               var start = moment.tz( evt.during.start.value, this.dateFormat, this.timezone );
               var end   = moment.tz( evt.during.end.value, this.dateFormat, this.timezone );
 

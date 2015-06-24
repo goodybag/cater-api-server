@@ -385,10 +385,16 @@ describe('Orders Stamps', function(){
                       .leadTime( 20, 23 * 60 )
                       .addCalendarEvent({
                         closed: true
-                      , during:   '[' + [
-                                    date.add('days', -3).format('YYYY-MM-DD')
-                                    date.add('days',  3).format('YYYY-MM-DD')
-                                  ].join(',') + ')'
+                      , during: {
+                          start: {
+                            inclusive: true
+                          , value: date.add('days', -3).format('YYYY-MM-DD')
+                          }
+                        , end: {
+                            inclusive: false
+                          , value: date.add('days', 3).format('YYYY-MM-DD')
+                          }
+                        }
                       })
       }).isFulfillable();
 

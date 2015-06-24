@@ -85,7 +85,7 @@ define(function(require, exports, module) {
           minLength: 1
         },
         lat_lng: {
-          type: 'object',
+          type: ['object', 'null'],
           required: false
         }
       }

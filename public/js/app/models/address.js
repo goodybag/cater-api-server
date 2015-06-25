@@ -10,6 +10,10 @@ define(function(require, exports, module) {
   var utils = require('utils');
 
   return module.exports = Backbone.Model.extend({
+    defaults: {
+      street2: ''
+    },
+
     // TODO: extract to superclass
     validator: amanda('json'),
 
@@ -54,7 +58,7 @@ define(function(require, exports, module) {
           minLength: 1
         },
         street2: {
-          type: 'string',
+          type: ['string', 'null'],
           required: false
         },
         city: {
@@ -81,8 +85,7 @@ define(function(require, exports, module) {
         },
         delivery_instructions: {
           type: ['string', 'null'],
-          required: false,
-          minLength: 1
+          required: false
         },
         lat_lng: {
           type: ['object', 'null'],

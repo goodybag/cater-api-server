@@ -77,7 +77,7 @@ define(function(require){
      */
   , displayErrors: function( errors, $errors, Model ){
       var frag = document.createDocumentFragment();
-      var template = Handlebars.partials.alert_error;
+      var template = Hbs.partials.alert_error;
       var selector = '[name="{property}"]';
 
       errors = utils.prepareErrors( errors, config.errorTypeMessages, Model );

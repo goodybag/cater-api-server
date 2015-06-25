@@ -2593,7 +2593,10 @@ module.exports.register = function(app) {
   app.put('/api/order-feedback'
   , function (req, res, next) {
       req.queryObj = { order_id: req.body.order_id }
-      req.order = { id: req.body.order_id };
+      req.order = {
+        id: req.body.order_id
+      , user_id: req.user.attributes.id
+      };
       next();
     }
   , controllers.orders.auth

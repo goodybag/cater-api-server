@@ -26,7 +26,6 @@ module.exports.geocode = function( req, res ){
       res.send({
         valid:   true
       , address: geoRes.toAddress()
-      , lat_lon: geoRes.toLatLon()
       });
     });
 };

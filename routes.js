@@ -2590,15 +2590,8 @@ module.exports.register = function(app) {
   /**
   * Order Feedback
   */
-  app.put('/api/order-feedback'
-  , function (req, res, next) {
-      req.queryObj = { order_id: req.body.order_id }
-      req.order = {
-        id: req.body.order_id
-      , user_id: req.user.attributes.id
-      };
-      next();
-    }
+  app.put('/api/orders/:oid/feedback'
+  , m.getOrder2()
   , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
   , m.queryOptions({ returning: ['id'] })

@@ -1,3 +1,9 @@
 <h2>Goodybag Order #{{order.id}} has been canceled.</h2>
+
+{{#if order.location}}
+<div>Pick up: {{{address order.location}}}</div>
+{{/if}}
+<div>Drop off: {{{address order}}}</div>
+
 <p>Please respond to confirm.</p>
 <p>Contact Goodybag for any issues or questions at: {{phoneNumber config.phone.support}} or {{{mailto config.emails.orders}}}</p>

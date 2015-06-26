@@ -25,6 +25,8 @@ module.exports = function( options ){
     }
 
     res.locals[ options.pageParam ] = page + 1;
+    res.locals.limit = req.queryOptions.limit;
+    res.locals.offset = req.queryOptions.offset;
 
     next();
   };

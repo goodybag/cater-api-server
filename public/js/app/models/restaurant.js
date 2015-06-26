@@ -164,6 +164,9 @@ define(function(require, exports, module) {
         },
         delivery_service_head_count_threshold: {
           type: ['number', 'null']
+        },
+        collect_payments: {
+          type: 'boolean'
         }
       }
     },

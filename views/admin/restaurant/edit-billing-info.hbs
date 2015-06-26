@@ -96,6 +96,13 @@
          Uses Direct Deposit?
       </label>
     </div>
+    <div class="form-group">
+      <label class="control-label" for="input-collect_payments">
+        <input type="checkbox" class="form-control" name="collect_payments" id="input-collect_payments" {{#if restaurant.collect_payments}}checked="checked"{{/if}}>
+        Collect Payments
+      </label>
+      <small>Enabling this option means that all payments will be transferred to our platform account on Stripe. The funds will not go to the restaurant account.</small>
+    </div>
     <div class="form-group actions">
       <button class="btn-update" type="submit">Update</button>
     </div>

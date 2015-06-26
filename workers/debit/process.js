@@ -67,6 +67,7 @@ var debitCustomer = function (order, callback) {
         }
       };
 
+      if ( !order.restaurant.collect_payments )
       if ( order.restaurant.is_direct_deposit )
       if ( order.restaurant.plan_id ) {
         // route to restaurant if possible

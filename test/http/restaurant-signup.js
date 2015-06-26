@@ -20,11 +20,13 @@ describe('Restaurant Signup', function () {
   it('POST /api/restaurants/join', function (done) {
 
     var data = {
-      user_name: 'foo',
-      user_number: '0123456789',
-      name: 'foobar',
-      website: 'foobar.com',
-      service: 'delivery'
+      data: {
+        user_name: 'foo',
+        user_number: '0123456789',
+        name: 'foobar',
+        website: 'foobar.com',
+        service: 'delivery'
+      }
     };
 
     utils.test.post('/api/restaurants/join', data, function (error, res, body) {

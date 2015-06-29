@@ -56,7 +56,7 @@
     "jquery-appear": "~0.2.2",
     "Chart.js": "~1.0.1",
     "resource.js": "~1.0.2",
-    "gplaces": "~1.0.7",
+    "gplaces": "~1.0.9",
     "gb-handlebars-helpers": "~0.0.4"
   }
 }

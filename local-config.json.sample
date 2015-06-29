@@ -6,4 +6,6 @@
 , "testPhoneVoice": "XXXXXXXXXX"
 , "loggingMongoConnStr": "mongodb://localhost:27017/logs"
 , "restaurantStripeId": "acct_16CZlbImWewFwddn"
+, "userStripeId": "cus_6UetXtr3xWGCuq"
+, "paymentMethodStripeId": "card_16HfaiEQiCMC2eZ7pqrrTdPp"
 }

@@ -18,7 +18,7 @@ var $update   = { stripe_id: options.stripe_id };
 var $options  = { returning: ['*'] };
 
 db.payment_methods.update($query, $update, $options, function(err, pms) {
-  if (err) throw Error;
+  if (err) throw err;
   console.log( '✓', pms.length, "payment methods updated!" );
   process.exit(0);
 });

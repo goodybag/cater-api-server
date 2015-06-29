@@ -11,6 +11,7 @@
 
 var pg = require('pg');
 var dirac = require('dirac');
+var pgRangeParser = require('pg-range-parser');
 
 // Ensure all instances of pg have custom type parsers registered
 var typeSets = [ pg.types, dirac.db.pg.types ];
@@ -29,6 +30,12 @@ var parsers = module.exports = [
     oid: 1082
   , fn: function( val ){
       return new Date( val + ' 00:00:00' );
+    }
+  }
+
+, { oid: 3912
+  , fn: function( val ){
+      return pgRangeParser.parse( val );
     }
   }
 ];

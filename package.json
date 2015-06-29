@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.326",
+  "version": "1.1.327",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -96,6 +96,7 @@
     "pg": "^4.4.0",
     "pg-parse-float": "0.0.x",
     "pg-query": "^0.11.0",
+    "pg-range-parser": "^1.0.0",
     "pg-transaction": "^1.0.4",
     "plan.js": "^1.0.2",
     "pluralize": "0.0.9",

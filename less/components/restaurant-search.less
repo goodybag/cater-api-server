@@ -6,19 +6,21 @@
 
   &.with-labels {
     ::-webkit-input-placeholder {
-       opacity: 0;
+      opacity: 0;
     }
     
     :-moz-placeholder {
-       opacity: 0;
+      opacity: 0;
     }
     
     ::-moz-placeholder {
-       opacity: 0;
+      opacity: 0;
     }
     
     :-ms-input-placeholder {
-       opacity: 0;
+      // Setting opacity: 0 makes the borders disappear
+      // Use font-size instead
+      font-size: 0;
     }
 
     label {

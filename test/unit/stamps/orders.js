@@ -16,6 +16,7 @@ var restaurants = require('stampit')()
   , delivery_zips:          []
   , locations:              []
   , supported_order_types:  []
+  , events:                 []
   , region: {
       delivery_services:    []
     }
@@ -61,6 +62,11 @@ var restaurants = require('stampit')()
 
   , deliveryService: function( ds ){
       this.region.delivery_services.push( ds );
+      return this;
+    }
+
+  , addCalendarEvent: function( evt ){
+      this.events.push( evt );
       return this;
     }
   });
@@ -361,6 +367,100 @@ describe('Orders Stamps', function(){
       }).isFulfillable();
 
       assert( !result );
+    });
+
+    it( '.isFulfillable() is false because of calendar event', function(){
+      // Order in -24 hours
+      var date = moment().add('days', 2);
+
+      var result = fulfillability({
+        timezone: 'America/Chicago'
+      , date: date.format('YYYY-MM-DD')
+      , time: date.format('HH:mm a')
+      , guests: 20
+      , restaurant: restaurants()
+                      .openTwentyFourHour()
+                      .supports('delivery', 'courier')
+                      .leadTime( 10, 15 * 60 )
+                      .leadTime( 20, 23 * 60 )
+                      .addCalendarEvent({
+                        closed: true
+                      , during: {
+                          start: {
+                            inclusive: true
+                          , value: date.add('days', -3).format('YYYY-MM-DD')
+                          }
+                        , end: {
+                            inclusive: false
+                          , value: date.add('days', 6).format('YYYY-MM-DD')
+                          }
+                        }
+                      })
+      }).isFulfillable();
+
+      assert( !result );
+    });
+
+    it( '.isFulfillable() should use now if no datetime provided', function(){
+      // Order in -24 hours
+      var date = moment().add('days', 2);
+
+      var result = fulfillability({
+        timezone: 'America/Chicago'
+      , guests: 20
+      , restaurant: restaurants()
+                      .openTwentyFourHour()
+                      .supports('delivery', 'courier')
+                      .leadTime( 10, 15 * 60 )
+                      .leadTime( 20, 23 * 60 )
+                      .addCalendarEvent({
+                        closed: true
+                      , during: {
+                          start: {
+                            inclusive: true
+                          , value: date.add('days', -3).format('YYYY-MM-DD')
+                          }
+                        , end: {
+                            inclusive: false
+                          , value: date.add('days', 6).format('YYYY-MM-DD')
+                          }
+                        }
+                      })
+      }).isFulfillable();
+
+      assert( !result );
+    });
+
+    it( '.isFulfillable() is true even with a calendar event', function(){
+      // Order in -24 hours
+      var date = moment().add('days', 2);
+
+      var result = fulfillability({
+        timezone: 'America/Chicago'
+      , date: date.format('YYYY-MM-DD')
+      , time: date.format('HH:mm a')
+      , guests: 20
+      , restaurant: restaurants()
+                      .openTwentyFourHour()
+                      .supports('delivery', 'courier')
+                      .leadTime( 10, 15 * 60 )
+                      .leadTime( 20, 23 * 60 )
+                      .addCalendarEvent({
+                        closed: true
+                      , during: {
+                          start: {
+                            inclusive: true
+                          , value: date.add('days', -3).format('YYYY-MM-DD')
+                          }
+                        , end: {
+                            inclusive: false
+                          , value: date.add('days', 2).format('YYYY-MM-DD')
+                          }
+                        }
+                      })
+      }).isFulfillable();
+
+      assert( result );
     });
   });
 

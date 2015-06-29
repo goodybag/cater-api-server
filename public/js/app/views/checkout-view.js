@@ -102,6 +102,14 @@ define(function(require, exports, module) {
       this.onPaymentMethodIdChange();
 
       this.$orderOrganization = this.$el.find('#order-organization');
+
+      this.model.on('change:datetime', this.updateDatetime, this);
+    },
+
+    updateDatetime: function(order) {
+      var datetime = order.attributes.datetime.split(' ');
+      this.datepicker.set('select', datetime[0], { format: 'yyyy-mm-dd' });
+      this.timepicker.set('select', datetime[1], { format: 'HH:i' });
     },
 
     convertTimesToRanges: function(){

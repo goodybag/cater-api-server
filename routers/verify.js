@@ -18,4 +18,8 @@ router.post('/:uuid/verifications',
 , m.view( 'verify/complete', { layout: 'layout/default' })
 );
 
+router.get('/:uuid/upload',
+  m.getRestaurant({ param: 'uuid', getByUuid: true })
+, m.view( 'verify/upload', { layout: 'layout/default' })
+);
 module.exports = router;

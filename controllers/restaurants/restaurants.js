@@ -297,19 +297,7 @@ var getFields = function (req) {
 module.exports.create = function(req, res) {
   var logger = req.logger.create('Controller-RestaurantsCreate');
 
-  module.exports._create(function(err, rows, results) {
-    if (err) {
-      logger.info('Unable to create restaurant');
-      return res.error(errors.internal.UNKNOWN, err);
-    }
-    logger.info('Created new restaurant', { restaurant: rows[0] });
-    res.redirect('/admin/restaurants/' + rows[0].id);
-  });
-
-}
-
-module.exports._create = function (req, callback) {
-    var fields = getFields( req );
+  var fields = getFields( req );
 
   // Normalize single quotes to apostrophe
   var name = req.body.name.replace(/[‘’]/g, '\'');
@@ -331,7 +319,7 @@ module.exports._create = function (req, callback) {
 
     var sql = db.builder.sql(restaurantQuery);
     db.query(sql.query, sql.values, function(err, rows, result) {
-      if (err) return callback(errors.internal.DB_FAILURE, err);
+      if (err) return res.error(errors.internal.DB_FAILURE, err);
 
       var insert = function(values, method, callback) {
         if (!values || values.length === 0) return callback();
@@ -353,12 +341,19 @@ module.exports._create = function (req, callback) {
         return utils.partial( insert, args[0](req.body, rows[0].id), args[1]);
       });
 
-      utils.async.parallel(tasks, function (error, results) {
-        return callback(error, rows, results);
-      });
+      var done = function(err, results) {
+        if (err) {
+          logger.info('Unable to create restaurant');
+          return res.error(errors.internal.UNKNOWN, err);
+        }
+        logger.info('Created new restaurant', { restaurant: rows[0] });
+        res.redirect('/admin/restaurants/' + rows[0].id);
+      };
+
+      utils.async.parallel(tasks, done);
     });
   });
-};
+}
 
 module.exports.update = function(req, res) {
   var fields = getFields( req );

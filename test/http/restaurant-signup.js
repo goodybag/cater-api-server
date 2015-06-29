@@ -69,6 +69,10 @@ describe('Signup Flow', function () {
       service: 'delivery'
     }
   };
+  var ENDPOINT = config.baseUrl + '/api/restaurants/join';
+
+  var jar = request.jar();
+  var options = { jar: jar };
 
   after(function (done) {
     if (data.id) {
@@ -77,37 +81,23 @@ describe('Signup Flow', function () {
     }
   });
 
-  it.only('increment step', function (done) {
-
-
-    var jar = request.jar();
-
-    var options = {
-      jar: jar
-    };
-
-    var URI = config.baseUrl + '/api/restaurants/join';
-
-    utils.post(URI, data, options, function (error, res, body) {
-      assert(!error, error);
-
+  before(function (done) {
+    utils.post(ENDPOINT, data, options, function (error, res, body) {
+      if (error || res.statusCode !== 200) return done(error);
       data.id = body.id;
 
-      utils.put(
-        URI
-      , data
-      , options
-      , function (error, res, body) {
-          assert(!error, error);
-          assert.equal(res.statusCode, 200);
-
-          assert.equal(res.request.uri.pathname, '/api/restaurants/join');
-
-          done();
-      });
-
+      done();
     });
+  });
 
+  it.only('increment step', function (done) {
+    utils.put(ENDPOINT, data, options, function (error, res, body) {
+      assert(!error, error);
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.request.uri.pathname, '/api/restaurants/join');
+
+      done();
+    });
 
   });
 

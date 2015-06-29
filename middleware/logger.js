@@ -5,7 +5,7 @@ var logger  = require('../lib/logger').create('Requests');
 module.exports = function( options ){
   return function( req, res, next ){
     var id = config.isProduction || config.isStaging ?
-              req.header('X-Param-Id') : utils.uuid();
+              req.headers['x-request-id'] : utils.uuid();
 
     req.logger = logger.create( 'Request', {
       data: {

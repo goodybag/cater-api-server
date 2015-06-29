@@ -279,9 +279,8 @@ define(function(require, exports, module) {
       if ( closedEvents && closedEvents.length ) {
         // For each range, push each date
         closedEvents.forEach(function(val) {
-          var range = val.replace(/[\[\]\(\)]/g, '').split(',');
-          var start = moment(range[0]);
-          var end = moment(range[1]);
+          var start = moment(val.start.value);
+          var end = moment(val.end.value);
 
           while(!start.isSame(end)) {
             daysClosed.push([start.year(), start.month(), start.date()]);

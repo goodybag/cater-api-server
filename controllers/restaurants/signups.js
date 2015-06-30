@@ -2,7 +2,8 @@ var
   db = require('../../db')
 , utils = utils = require('../../utils')
 , errors = require('../../errors')
-, restaurantsController = require('./restaurants')
+, queries = require('../../db/queries')
+, restaurantSchema = require('../../db/definitions/restaurants').schema;
 ;
 
 var restaurantDefinitionSchema = require('../../db/definitions/restaurants').schema;
@@ -86,6 +87,22 @@ var mealStyles = function(body, id) {
   });
 };
 
+var contacts = function(body, id) {
+  return utils.map(body.contacts, function (contact) {
+    contact.restaurant_id = id;
+    return contact;
+  });
+}
+
+// get keys from restaurant definition shema
+var getFields = function (req) {
+  return Object.keys( restaurantSchema ).filter( function ( key ) {
+    return req.user.attributes.groups.some( function ( group ) {
+      return utils.contains( restaurantSchema[ key ].editable, group);
+    });
+  });
+};
+
 var insert = function(values, method, done) {
   if (!values || values.length === 0) return done();
   var query = queries.restaurant[method](values);
@@ -106,16 +123,19 @@ var createRestaurantFeatures = function (body, restaurant, callback) {
     , [mealStyles,      'createMealStyles']
     , [contacts,        'createContacts']
     ], function(args) {
-      return utils.partial( insert, args[0](body, restaurant.id), args[1]);
+      return utils.partial( insert, args[0](body, restaurant[0].id), args[1]);
     });
 
     utils.async.parallel(tasks, callback);
 };
 
-var createRestaurant = function (body, callback) {
+var createRestaurant = function (req, callback) {
+  var fields = getFields( req );
+  var values = utils.pick(req.body, fields);
+
   utils.async.waterfall([
-    utils.partial(insert, body, 'restaurants')
-  , utils.partial(createRestaurantFeatures, body)
+    utils.partial(insert, values, 'create')
+  , utils.partial(createRestaurantFeatures, req.body)
   ], callback);
 }
 
@@ -131,7 +151,10 @@ module.exports.update = function (req, res) {
 
     if (results.status !== 'completed') return res.status(200).json(results);
 
-    createRestaurant(results.data, function (error, results) {
+    req.body = results.data;
+
+    createRestaurant(req, function (error, results) {
+      if (error) return res.error(errors.internal.DB_FAILURE, error);
       return res.status(200).json(results);
     });
 

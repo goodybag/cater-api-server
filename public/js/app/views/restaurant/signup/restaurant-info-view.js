@@ -74,8 +74,6 @@ define(function (require, exports, module) {
           var phoneNumber = $el.find('.contact-phone').val();
           return {
             name: $el.find('.contact-name').val()
-          , position: $el.find('.contact-position').val()
-          , phone: phoneNumber
           , sms_phones: [phoneNumber]
           , voice_phones: [phoneNumber]
           , emails: [$el.find('.contact-email').val()]
@@ -174,7 +172,7 @@ define(function (require, exports, module) {
           }]);
         }
 
-        if (!fields.contacts[i].phone || fields.contacts[i].phone.length < 10) {
+        if (!fields.contacts[i].sms_phones || fields.contacts[i].sms_phones[0].length < 10) {
           return this.displayErrors([{
             selector: selector + ' .contact-phone'
           , message: 'Please provide a valid phone number.'

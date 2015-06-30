@@ -76,6 +76,9 @@ define(function(require){
      * @param  {Object}   Model   Model to pull the fieldNounMap from
      */
   , displayErrors: function( errors, $errors, Model ){
+      $errors = $errors || this.$errors;
+      Model = Model || this.Model;
+
       var frag = document.createDocumentFragment();
       var template = Hbs.partials.alert_error;
       var selector = '[name="{property}"]';
@@ -94,6 +97,20 @@ define(function(require){
       this.$el.find(
         '[name="' + utils.pluck( errors, 'property' ).join('"], [name="') + '"]'
       ).parent().addClass('has-error');
+    }
+
+    /**
+     * Removes error class and alert
+     */
+  , clearErrors: function( $errors ){
+      $errors = $errors || this.$errors;
+      
+      this.$el.find('.has-error').removeClass('has-error');
+      if ( $errors ){
+        $errors.html('');
+      }
+
+      return this;
     }
 
     /**

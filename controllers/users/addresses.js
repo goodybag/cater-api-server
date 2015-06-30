@@ -4,6 +4,7 @@ var db = require('../../db')
   , utils = require('../../utils')
   , config = require('../../config')
   , states = require('../../public/js/lib/states')
+  , AddressStamp = require('stamps/addresses')
   , models = require('../../models');
 
 /**
@@ -47,7 +48,14 @@ module.exports.list = function(req, res, next) {
 module.exports.get = function(req, res, next) {
   models.Address.findOne(req.params.aid, function(error, address) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.render('address-edit', { address: address.toJSON(), states: states });
+
+    address = address.toJSON();
+    address.address = AddressStamp( address ).toString();
+
+    res.render('address-edit', {
+      address: address
+    , states: states
+    });
   });
 };
 
@@ -58,12 +66,12 @@ module.exports.get = function(req, res, next) {
  * set other addresses to false.
  */
 module.exports.update = function(req, res, next) {
-  var updates = utils.pick(req.body, ['name', 'street', 'street2', 'city', 'state', 'zip', 'is_default', 'phone', 'delivery_instructions']);
+  // var updates = utils.pick(req.body, ['name', 'street', 'street2', 'city', 'state', 'zip', 'is_default', 'phone', 'delivery_instructions']);
 
   // TODO: make this a transaction
   utils.async.series([
     function unmarkPreviousDefaults(callback) {
-      if (updates.is_default) {
+      if (req.body.is_default) {
         models.Address.update({
           updates: { is_default: false },
           where:   { is_default: true, user_id: req.params.uid }
@@ -73,8 +81,9 @@ module.exports.update = function(req, res, next) {
       }
     },
     function updateAddress(callback) {
-      var address = new models.Address(utils.extend(updates, {id: req.params.aid}));
-      address.save(callback);
+      db.addresses.update( req.params.aid, req.body, callback );
+      // var address = new models.Address(utils.extend(updates, {id: req.params.aid}));
+      // address.save(callback);
     }
   ],
   function updateComplete(error, results) {

@@ -54,11 +54,8 @@ describe('Restaurant Signup', function () {
 
 });
 
-/**
-* Signup Flow
-*/
 
-describe('Signup Flow', function () {
+describe('Update Restaurant Signup', function () {
 
   var data = {
     data: {
@@ -90,7 +87,7 @@ describe('Signup Flow', function () {
     });
   });
 
-  it.only('increment step', function (done) {
+  it('PUT /api/restaurants/join', function (done) {
     utils.put(ENDPOINT, data, options, function (error, res, body) {
       assert(!error, error);
       assert.equal(res.statusCode, 200);

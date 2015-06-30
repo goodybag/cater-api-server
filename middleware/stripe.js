@@ -1,5 +1,6 @@
 var utils       = require('utils');
 var db          = require('db');
+var fs          = require('fs');
 var config      = require('config');
 var hipchat     = require('../lib/hipchat');
 var helpers     = require('../public/js/lib/hb-helpers');
@@ -182,11 +183,11 @@ var stripe = {
         }
         return next();
       });
-    }
+    };
   }
 
 , insertRestaurantVerification: function(options) {
-    return function(req,res, next) {
+    return function(req, res, next) {
       db.restaurant_verifications.insert({
         restaurant_id: req.restaurant.id
       , data: JSON.stringify(req.body)
@@ -197,7 +198,32 @@ var stripe = {
         }
         next();
       });
-    }
+    };
+  }
+
+, uploadDocument: function(options) {
+    return function(req, res, next) {
+      utils.async.waterfall([
+        function(callback) {
+          fs.
+          callback(null);
+        }
+
+        // function(callback) {
+        //   utils.stripe.fileUploads.create({
+        //     purpose: 'identity_document'
+        //   , file: {
+        //       data: req.file // idk
+        //     , name: req.restaurant.name.replace(/\s/g, '_') + '_id'
+        //     ,
+        //     }
+        //   }, function(err, fileUpload) {
+        //     console.log(fileUpload);
+        //     next();
+        //   });
+        // }
+      ], next);
+    };
   }
 };
 

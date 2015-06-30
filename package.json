@@ -111,7 +111,7 @@
     "serve-favicon": "^2.2.0",
     "stampit": "^1.1.0",
     "stdm": "0.0.4",
-    "stripe": "^3.3.4",
+    "stripe": "^3.5.2",
     "sugar": "~1.4.1",
     "time": "^0.10.0",
     "twilio": "1.1.x",

@@ -2,8 +2,7 @@
 
 {{#extend "body"}}
 <div class="small-container">
-  <h1>Upload Identifying Document</h1>
-
+  <h2>Upload Identifying Document for {{restaurant.name}}</h2>
   <blockquote class="blockquote">
     We haven’t been able to verify the account with the information provided
     (e.g., because the name doesn’t match the SSN) after transferring another
@@ -18,7 +17,7 @@
     action="" method="post" enctype='multipart/form-data'>
     <div class="form-group">
       <label>Government ID or passport or social security card</label>
-      <input type="file" name="file" value="">
+      <input type="file" name="doc" required>
     </div>
     <div class="form-group">
       <button class="btn btn-primary" type="submit">Submit</button>

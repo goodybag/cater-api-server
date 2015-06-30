@@ -28,7 +28,7 @@ router.post('/:uuid/upload',
   m.getRestaurant({ param: 'uuid', getByUuid: true })
 , multer() // use system tmp dir by default
 , m.stripe.uploadDocument()
-, m.view( 'verify/upload', { layout: 'layout/default'})
+, m.view( 'verify/complete', { layout: 'layout/default'})
 );
 
 module.exports = router;

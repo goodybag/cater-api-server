@@ -203,25 +203,29 @@ var stripe = {
 
 , uploadDocument: function(options) {
     return function(req, res, next) {
-      utils.async.waterfall([
-        function(callback) {
-          fs.
-          callback(null);
-        }
+      if ( !req.files.doc ) return next(new Error('Missing document upload') );
 
-        // function(callback) {
-        //   utils.stripe.fileUploads.create({
-        //     purpose: 'identity_document'
-        //   , file: {
-        //       data: req.file // idk
-        //     , name: req.restaurant.name.replace(/\s/g, '_') + '_id'
-        //     ,
-        //     }
-        //   }, function(err, fileUpload) {
-        //     console.log(fileUpload);
-        //     next();
-        //   });
-        // }
+      utils.async.waterfall([
+        function read(callback) {
+          fs.readFile(req.files.doc.path, callback);
+        }
+      , function upload(data, callback) {
+          utils.stripe.fileUploads.create({
+            purpose: 'identity_document'
+          , file: {
+              data: data
+            , name: req.restaurant.name.replace(/\s/g, '-').toLowerCase()
+            , type: 'application/octet-stream'
+            }
+          }, callback);
+        }
+      , function update(fileUpload, callback) {
+          utils.stripe.accounts.update(req.restaurant.stripe_id, {
+            legal_entity: {
+              verification: { 'document': fileUpload.id }
+            }
+          }, callback);
+        }
       ], next);
     };
   }

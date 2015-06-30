@@ -24,6 +24,101 @@ module.exports.create = function (req, res) {
   });
 };
 
+var zips = function(body, id) {
+  return utils.map(body.delivery_zips, function(zip, index, arr) {
+    return {restaurant_id: id,  zip: zip.zip, fee: zip.fee }
+  });
+}
+
+var deliveryTimes = function(body, id) {
+  return Array.prototype.concat.apply([], utils.map(body.delivery_times, function(times, day, obj) {
+    return utils.map(times, function(period, index, arr) {
+      return {
+        restaurant_id: id,
+        day: day,
+        start_time: period[0],
+        end_time: period[1]
+      };
+    });
+  }));
+}
+
+var leadTimes = function(body, id) {
+  return utils.map(body.lead_times, function(obj, index, arr) {
+    return utils.extend({restaurant_id: id}, obj);
+  });
+}
+
+var hours = function(body, id) {
+  return Array.prototype.concat.apply([], utils.map(body.hours_of_operation, function(times, day, obj) {
+    return utils.map(times, function(period, index, arr) {
+      return {
+        restaurant_id: id,
+        day: day,
+        start_time: period[0],
+        end_time: period[1]
+      };
+    });
+  }));
+}
+
+var pickupLeadTimes = function(body, id) {
+  return utils.map(body.pickup_lead_times, function(obj, index, arr) {
+    return utils.extend({restaurant_id: id}, obj);
+  });
+}
+
+var tags = function(body, id) {
+  return utils.map(body.tags, function(obj, index, arr) {
+    return {restaurant_id: id, tag: obj};
+  });
+};
+
+var mealTypes = function(body, id) {
+  return utils.map(body.meal_types, function(obj, index, arr) {
+    return {restaurant_id: id, meal_type: obj};
+  });
+};
+
+var mealStyles = function(body, id) {
+  return utils.map(body.meal_styles, function(obj, index, arr) {
+    return {restaurant_id: id, meal_style: obj};
+  });
+};
+
+var insert = function(values, method, done) {
+  if (!values || values.length === 0) return done();
+  var query = queries.restaurant[method](values);
+  var sql = db.builder.sql(query);
+  db.query(sql.query, sql.values, done);
+};
+
+var createRestaurantFeatures = function (body, restaurant, callback) {
+
+    var tasks = utils.map([
+      [zips,            'createZips']
+    , [deliveryTimes,   'createDeliveryTimes']
+    , [leadTimes,       'createLeadTimes']
+    , [hours,           'createHours']
+    , [pickupLeadTimes, 'createPickupLeadTimes']
+    , [tags,            'createTags']
+    , [mealTypes,       'createMealTypes']
+    , [mealStyles,      'createMealStyles']
+    , [contacts,        'createContacts']
+    ], function(args) {
+      return utils.partial( insert, args[0](body, restaurant.id), args[1]);
+    });
+
+    utils.async.parallel(tasks, callback);
+};
+
+var createRestaurant = function (body, callback) {
+  utils.async.waterfall([
+    utils.partial(insert, body, 'restaurants')
+  , utils.partial(createRestaurantFeatures, body)
+  ], callback);
+}
+
 module.exports.update = function (req, res) {
   var logger = req.logger.create('Controller-RestaurantsSignup-Update');
 
@@ -36,48 +131,8 @@ module.exports.update = function (req, res) {
 
     if (results.status !== 'completed') return res.status(200).json(results);
 
-    req.body = results.data;
-
-    function calculateRegionID(next) {
-      var nullRegion = 2;
-      if (!req.body.zip) {
-        req.body.region_id = nullRegion;
-        return next(null);
-      }
-
-      db.region_zips.findOne({ zip: req.body.zip }, function (error, result) {
-        req.body.region_id = result ? result.region_id || nullRegion : nullRegion;
-        return next(null);
-      });
-    }
-
-    function createRestaurant (next) {
-      return restaurantsController._create(req, next);
-    }
-
-    function createContacts (rows, results, next) {
-      var contacts = req.body.contacts.map(function (contact) {
-        contact.restaurant_id = rows[0].id;
-        return contact;
-      });
-
-      return db.contacts.insert(contacts, next);
-    }
-
-    utils.async.waterfall([
-        calculateRegionID,
-        createRestaurant,
-        createContacts
-      ], function (error) {
-      if (error) {
-        console.log(error);
-        return res.error(errors.internal.DB_FAILURE, error);
-      }
-
-      // TODO:
-      // 1. notify user
-      // 2. notify goodybag
-      return res.status(200).json( results );
+    createRestaurant(results.data, function (error, results) {
+      return res.status(200).json(results);
     });
 
   });

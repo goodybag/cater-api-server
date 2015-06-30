@@ -94,20 +94,13 @@ var contacts = function(body, id) {
   });
 }
 
-// get keys from restaurant definition shema
-var getFields = function (req) {
-  return Object.keys( restaurantSchema ).filter( function ( key ) {
-    return req.user.attributes.groups.some( function ( group ) {
-      return utils.contains( restaurantSchema[ key ].editable, group);
-    });
-  });
-};
-
 var insert = function(values, method, done) {
   if (!values || values.length === 0) return done();
   var query = queries.restaurant[method](values);
   var sql = db.builder.sql(query);
-  db.query(sql.query, sql.values, done);
+  db.query(sql.query, sql.values, function (error, results) {
+    done(error, results);
+  });
 };
 
 var createRestaurantFeatures = function (body, restaurant, callback) {
@@ -129,13 +122,13 @@ var createRestaurantFeatures = function (body, restaurant, callback) {
     utils.async.parallel(tasks, callback);
 };
 
-var createRestaurant = function (req, callback) {
-  var fields = getFields( req );
-  var values = utils.pick(req.body, fields);
+var createRestaurant = function (body, callback) {
+  var fields = Object.keys( restaurantSchema );
+  var values = utils.pick(body, fields);
 
   utils.async.waterfall([
     utils.partial(insert, values, 'create')
-  , utils.partial(createRestaurantFeatures, req.body)
+  , utils.partial(createRestaurantFeatures, body)
   ], callback);
 }
 
@@ -151,9 +144,7 @@ module.exports.update = function (req, res) {
 
     if (results.status !== 'completed') return res.status(200).json(results);
 
-    req.body = results.data;
-
-    createRestaurant(req, function (error, results) {
+    createRestaurant(results.data, function (error, results) {
       if (error) return res.error(errors.internal.DB_FAILURE, error);
       return res.status(200).json(results);
     });

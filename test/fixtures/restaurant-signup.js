@@ -3,15 +3,15 @@ module.exports = {
     data: {
       billing_city: 'Austin'
     , billing_name: 'Test'
-    , billing_phone: 1234567890
+    , billing_phone: '1234567890'
     , billing_state: 'TX'
     , billing_zip: '78758'
     , city: 'Austin'
     , contacts: [{
         emails: ['foo@test.com']
       , name: 'foobar'
-      , sms_phones: [1234567890]
-      , voice_phones: [1234567890]
+      , sms_phones: ['1234567890']
+      , voice_phones: ['1234567890']
       }]
     , cuisine: ['Thai']
     , delivery_fee: '12'
@@ -26,9 +26,10 @@ module.exports = {
     , meal_types: []
     , menu_url: ''
     , minimum_order: '12'
-    , name: 'TEST'
+    , name: 'signup_test'
     , pickup_lead_times: []
     , price: '2'
+    , region_id: '1'
     , services: 'delivery'
     , state: 'TX'
     , street: '123 four st'

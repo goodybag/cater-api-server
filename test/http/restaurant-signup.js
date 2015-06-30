@@ -57,16 +57,28 @@ describe('Update Restaurant Signup', function () {
   var options = { jar: jar };
 
   after(function (done) {
+    var tasks = [
+      db.restaurants.remove.bind(db.restaurants, { name: 'signup_test' })
+    ];
     if (data.id) {
       console.log('deleting id: ' + data.id);
-      db.restaurant_signups.remove({ id: data.id }, done);
+      tasks.push(
+        db.restaurant_signups.remove.bind(db.restaurant_signups, { id: data.id })
+      );
     }
+
+    utils.async.parallel(tasks, done);
+
   });
 
   before(function (done) {
     utils.post(ENDPOINT, data, options, function (error, res, body) {
       if (error || res.statusCode !== 200) return done(error);
-      data.id = body.id;
+
+      data.id         = body.id;
+      data.created_at = body.created_at
+      data.status     = body.status;
+      data.step       = body.step;
 
       done();
     });
@@ -81,6 +93,18 @@ describe('Update Restaurant Signup', function () {
       done();
     });
 
+  });
+
+  it('Create a restaurant', function (done) {
+    data.status = 'completed';
+
+    utils.put(ENDPOINT, data, options, function (error, res, body) {
+      assert(!error, error);
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.request.uri.pathname, '/api/restaurants/join');
+
+      done();
+    });
   });
 
 });

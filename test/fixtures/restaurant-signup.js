@@ -1,10 +1,6 @@
 module.exports = {
   restaurant: {
-    id: null
-  , created_at: new Date()
-  , status: 'pending'
-  , step: 1
-  , data: {
+    data: {
       billing_city: 'Austin'
     , billing_name: 'Test'
     , billing_phone: 1234567890

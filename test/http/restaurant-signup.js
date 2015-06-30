@@ -6,18 +6,11 @@ var app     = require('../../app');
 var db      = require('../../db');
 var utils   = require('../../utils');
 var config  = require('../../config');
+var fixtures = require('../fixtures/restaurant-signup');
 
 describe('Restaurant Signup', function () {
 
-  var data = {
-    data: {
-      user_name: 'foo',
-      user_number: '0123456789',
-      name: 'foobar',
-      website: 'foobar.com',
-      service: 'delivery'
-    }
-  };
+  var data = utils.clone(fixtures.restaurant);
 
   after(function (done) {
     if (data.id) {
@@ -57,15 +50,7 @@ describe('Restaurant Signup', function () {
 
 describe('Update Restaurant Signup', function () {
 
-  var data = {
-    data: {
-      user_name: 'foo',
-      user_number: '0123456789',
-      name: 'foobar',
-      website: 'foobar.com',
-      service: 'delivery'
-    }
-  };
+  var data = utils.clone(fixtures.restaurant);
   var ENDPOINT = config.baseUrl + '/api/restaurants/join';
 
   var jar = request.jar();

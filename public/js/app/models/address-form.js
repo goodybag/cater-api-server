@@ -1,5 +1,6 @@
 /**
  * AddressForm
+ * Handles application logic around the data in the Address Editor
  */
 
 if ( typeof module === "object" && module && typeof module.exports === "object" ){
@@ -15,7 +16,9 @@ define( function( require, exports, module ){
   var Address = require('app/models/address');
 
   return utils.Model.extend({
-    defaults: {
+    urlRoot: '/users/me/addresses'
+
+  , defaults: {
       name: null
     , address: null
     , delivery_instructions: null
@@ -58,10 +61,10 @@ define( function( require, exports, module ){
       this.validator.validate( data, this.schema, options || {}, utils.identity );
     }
 
-  , displayName: function( field ){
-      return this.displayNames[ field ];
-    }
-
+    /**
+     * Geocodes the model and sends back an instance of Address
+     * @param  {Function} callback callback( error, Address )
+     */
   , geocode: function( callback ){
       api.maps.geocode( this.get('address'), function( error, result ){
         if ( error ){

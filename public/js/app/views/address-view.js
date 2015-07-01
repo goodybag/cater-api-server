@@ -51,7 +51,7 @@ define(function(require, exports, module) {
 
       this.model.geocode( function( error, address ){
         if ( error ){
-          console.log('displaying errors', error);
+          console.error( error );
           return this.displayErrors([ error ]);
         }
 

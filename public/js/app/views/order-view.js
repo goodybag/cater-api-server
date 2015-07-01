@@ -91,7 +91,7 @@ define(function(require, exports, module) {
 
     getDiff: function() {
       var diff = FormView.prototype.getDiff.apply(this, arguments);
-      var addrDiff = this.addressView.getDiff.apply(this.addressView, arguments);
+      var addrDiff = this.addressView.getModelData();
 
       // Do not overwrite order name
       if ( addrDiff && addrDiff.name ){
@@ -125,7 +125,12 @@ define(function(require, exports, module) {
       }.bind(this));
 
       // this.amenitiesView = new AmenitiesView({el: '.amenities', order: this.model, orderView: this});
-      this.addressView = new OrderAddressView({el: '.delivery-info', model: this.model.address, orderView: this, user: this.options.user});
+      this.addressView = new OrderAddressView({
+        el: '.delivery-info',
+        model: new AddressForm( this.model.address.toJSON() ),
+        orderView: this,
+        user: this.options.user
+      });
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});
       this.copyErrorModal = new CopyErrorModalView({el: '#copy-order-error-modal'});
 

@@ -8,32 +8,40 @@ var _ = utils._;
 var scheduler = require('../../lib/scheduler');
 var restaurantPlans = require('../../public/js/lib/restaurant-plans');
 var OrderCharge = require('stamps/orders/charge');
+var moment = require('moment-timezone');
 
 var checkForExistingDebit = function (order, callback) {
-  callback(null);
+  var logger = process.domain.logger.create('checkForExistingDebit', {
+    data: { order: order }
+  });
 
-  // Currently no way to query existing charges on stripe by metadata
+  utils.stripe.charges.list({
+    created: { gte: moment(order.datetime).unix() }
+  }, function(err, charges) {
+    if (err) {
+      logger.error({ error: err });
+      return callback(err);
+    }
 
-  // var logger = process.domain.logger.create('checkForExistingDebit', {
-  //   data: { order: order }
-  // });
-  //
-  // var query = {'meta.order_uuid': order.uuid};
-  // logger.info('Listing debits');
-  //
-  // utils.balanced.Debits.list(query, function (error, debits) {
-  //   if (error){
-  //     logger.error({ error: error });
-  //     return callback(error);
-  //   }
-  //
-  //   if (debits && debits.total > 1){
-  //     logger.error('Multiple debits for a single order');
-  //     return callback(new Error('multiple debits for a single order: ' + order.id));
-  //   }
-  //   if (debits && debits.total == 1) return callback (null, debits.items[0]);
-  //   return callback(null, null);
-  // });
+    logger.info('Listing debits');
+    function uuid(charge) {
+      return charge.metadata.order_uuid === order.uuid;
+    }
+
+    if (charges && charges.data) {
+      var debits = charges.data.filter(uuid);
+
+      if ( debits && debits.length > 1 ) {
+        logger.error('Multiple debits for a single order');
+        return callback(new Error('multiple debits for a single order: ' + order.id));
+      }
+
+      if ( debits && debits.length === 1) return callback(null, debits[0]);
+    }
+
+    logger.info('Clear for charging');
+    return callback(null, null);
+  });
 };
 
 var debitCustomer = function (order, callback) {

@@ -10,25 +10,30 @@ var restaurantPlans = require('../../public/js/lib/restaurant-plans');
 var OrderCharge = require('stamps/orders/charge');
 
 var checkForExistingDebit = function (order, callback) {
-  var logger = process.domain.logger.create('checkForExistingDebit', {
-    data: { order: order }
-  });
+  callback(null);
 
-  var query = {'meta.order_uuid': order.uuid};
-  logger.info('Listing debits');
-  utils.balanced.Debits.list(query, function (error, debits) {
-    if (error){
-      logger.error({ error: error });
-      return callback(error);
-    }
+  // Currently no way to query existing charges on stripe by metadata
 
-    if (debits && debits.total > 1){
-      logger.error('Multiple debits for a single order');
-      return callback(new Error('multiple debits for a single order: ' + order.id));
-    }
-    if (debits && debits.total == 1) return callback (null, debits.items[0]);
-    return callback(null, null);
-  });
+  // var logger = process.domain.logger.create('checkForExistingDebit', {
+  //   data: { order: order }
+  // });
+  //
+  // var query = {'meta.order_uuid': order.uuid};
+  // logger.info('Listing debits');
+  //
+  // utils.balanced.Debits.list(query, function (error, debits) {
+  //   if (error){
+  //     logger.error({ error: error });
+  //     return callback(error);
+  //   }
+  //
+  //   if (debits && debits.total > 1){
+  //     logger.error('Multiple debits for a single order');
+  //     return callback(new Error('multiple debits for a single order: ' + order.id));
+  //   }
+  //   if (debits && debits.total == 1) return callback (null, debits.items[0]);
+  //   return callback(null, null);
+  // });
 };
 
 var debitCustomer = function (order, callback) {
@@ -143,6 +148,7 @@ var task = function (message, callback) {
     checkForExistingDebit(order, function (error, debit) {
       // attempt to process this from the queue again later
       if (error) {
+        console.log(error);
         logger.error('checkForExistingDebit - attempt to process this from the queue again later', { error: error });
         return callback(error);
       }

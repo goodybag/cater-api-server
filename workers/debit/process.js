@@ -23,13 +23,14 @@ var checkForExistingDebit = function (order, callback) {
       return callback(err);
     }
 
-    logger.info('Listing debits');
-    function uuid(charge) {
+    logger.debug('Listing debits');
+
+    function matchesUuid(charge) {
       return charge.metadata.order_uuid === order.uuid;
     }
 
     if (charges && charges.data) {
-      var debits = charges.data.filter(uuid);
+      var debits = charges.data.filter(matchesUuid);
 
       if ( debits && debits.length > 1 ) {
         logger.error('Multiple debits for a single order');
@@ -39,7 +40,7 @@ var checkForExistingDebit = function (order, callback) {
       if ( debits && debits.length === 1) return callback(null, debits[0]);
     }
 
-    logger.info('Clear for charging');
+    logger.debug('Clear for charging');
     return callback(null, null);
   });
 };

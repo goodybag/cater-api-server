@@ -30,13 +30,9 @@ define( function( require ){
     },
 
     affixOrderSummary: function () {
-      var $orderSummary = $('.order-summary');
-      var buf = 70;
-      var offsetTop = $orderSummary.offset().top + buf;
-
-      $orderSummary.affix({
+      $('.order-summary').affix({
         offset: {
-          top: offsetTop
+          top: function () { return $('.list-group').offset().top }
         , bottom: 225
         }
       });

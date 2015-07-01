@@ -148,7 +148,6 @@ var task = function (message, callback) {
     checkForExistingDebit(order, function (error, debit) {
       // attempt to process this from the queue again later
       if (error) {
-        console.log(error);
         logger.error('checkForExistingDebit - attempt to process this from the queue again later', { error: error });
         return callback(error);
       }

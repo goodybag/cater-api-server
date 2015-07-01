@@ -8,16 +8,44 @@ var _ = utils._;
 var scheduler = require('../../lib/scheduler');
 var restaurantPlans = require('../../public/js/lib/restaurant-plans');
 var OrderCharge = require('stamps/orders/charge');
+var moment = require('moment-timezone');
 
 var checkForExistingDebit = function (order, callback) {
-  callback(null);
+  // callback(null);
 
   // Currently no way to query existing charges on stripe by metadata
 
-  // var logger = process.domain.logger.create('checkForExistingDebit', {
-  //   data: { order: order }
-  // });
-  //
+  var logger = process.domain.logger.create('checkForExistingDebit', {
+    data: { order: order }
+  });
+
+  utils.stripe.charges.list({
+    created: { gte: moment(order.datetime).unix() }
+  }, function(err, charges) {
+    if (err) {
+      logger.error({ error: err });
+      return callback(err);
+    }
+
+    logger.info('Listing debits');
+    function uuid(charge) {
+      return charge.metadata.order_uuid === order.uuid;
+    }
+
+    if (charges && charges.data) {
+      var debits = charges.data.filter(uuid);
+
+      if ( debits && debits.length > 1 ) {
+        logger.error('Multiple debits for a single order');
+        return callback(new Error('multiple debits for a single order: ' + order.id));
+      }
+
+      // if ( debits && debits.length === 1) return callback(null, )
+    }
+
+    logger.info('Clear for charging');
+    return callback(null, null);
+  });
   // var query = {'meta.order_uuid': order.uuid};
   // logger.info('Listing debits');
   //
@@ -190,6 +218,7 @@ var worker = function (message, callback) {
   d.uuid = utils.uuid.v4();
   d.logger = logger.create({ data: { uuid: d.uuid } });
   d.on('error', function (error) {
+    console.log(error);
     logger.error('Domain error', { error: error });
     callback(error);
   });

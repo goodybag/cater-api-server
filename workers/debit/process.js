@@ -8,25 +8,39 @@ var _ = utils._;
 var scheduler = require('../../lib/scheduler');
 var restaurantPlans = require('../../public/js/lib/restaurant-plans');
 var OrderCharge = require('stamps/orders/charge');
+var moment = require('moment-timezone');
 
 var checkForExistingDebit = function (order, callback) {
   var logger = process.domain.logger.create('checkForExistingDebit', {
     data: { order: order }
   });
 
-  var query = {'meta.order_uuid': order.uuid};
-  logger.info('Listing debits');
-  utils.balanced.Debits.list(query, function (error, debits) {
-    if (error){
-      logger.error({ error: error });
-      return callback(error);
+  utils.stripe.charges.list({
+    created: { gte: moment(order.datetime).unix() }
+  }, function(err, charges) {
+    if (err) {
+      logger.error({ error: err });
+      return callback(err);
     }
 
-    if (debits && debits.total > 1){
-      logger.error('Multiple debits for a single order');
-      return callback(new Error('multiple debits for a single order: ' + order.id));
+    logger.debug('Listing debits');
+
+    function matchesUuid(charge) {
+      return charge.metadata.order_uuid === order.uuid;
     }
-    if (debits && debits.total == 1) return callback (null, debits.items[0]);
+
+    if (charges && charges.data) {
+      var debits = charges.data.filter(matchesUuid);
+
+      if ( debits && debits.length > 1 ) {
+        logger.error('Multiple debits for a single order');
+        return callback(new Error('multiple debits for a single order: ' + order.id));
+      }
+
+      if ( debits && debits.length === 1) return callback(null, debits[0]);
+    }
+
+    logger.debug('Clear for charging');
     return callback(null, null);
   });
 };

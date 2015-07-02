@@ -1,5 +1,6 @@
 var moment = require('moment-timezone');
 var mosql = require('mongo-sql');
+var pgRangeParser = require('pg-range-parser');
 
 var Model = require('./model');
 var config = require('../config');
@@ -856,6 +857,14 @@ var Restaurant = module.exports = Model.extend({
           this.attributes.delivery_times = utils.object(this.attributes.delivery_times);
           this.attributes.hours_of_operation = utils.object(this.attributes.hours_of_operation);
         });
+
+        if ( utils.findWhere(query.includes, { type: 'closed_restaurant_events' } ) ) {
+          utils.invoke(restaurants, function() {
+            this.attributes.event_date_ranges = this.attributes.event_date_ranges.map( function( range ){
+              return pgRangeParser.parse( range );
+            });
+          });
+        }
       }
       return callback.call(this, err, restaurants);
     });

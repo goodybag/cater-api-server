@@ -242,6 +242,10 @@ define(function(require) {
     , nullable: false
     , default: "uuid_generate_v4()"
     }
+  , collect_payments: {
+      type: types.boolean
+    , default: false
+    }
   };
 
   definition.indices = {};

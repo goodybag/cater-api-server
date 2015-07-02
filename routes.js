@@ -2632,15 +2632,12 @@ module.exports.register = function(app) {
   /**
   * Order Feedback
   */
-  app.put('/api/order-feedback'
-  , function (req, res, next) {
-      req.queryObj = { order_id: req.body.order_id }
-      req.order = { id: req.body.order_id };
-      next();
-    }
+  app.put('/api/orders/:order_id/feedback'
+  , m.getOrder2({ param: 'order_id'})
   , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
   , m.queryOptions({ returning: ['id'] })
+  , m.param('order_id')
   , m.update( db.order_feedback )
   );
 

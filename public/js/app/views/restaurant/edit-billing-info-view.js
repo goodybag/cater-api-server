@@ -23,6 +23,7 @@ define(function(require, exports, module) {
     , gb_fee:                 '[name="gb_fee"]'
     , is_fee_on_total:        '[name="is_fee_on_total"]'
     , is_direct_deposit:      '[name="is_direct_deposit"]'
+    , collect_payments:       '[name="collect_payments"]'
     , billing_street:         '[name="billing_street"]'
     , billing_street2:        '[name="billing_street2"]'
     , billing_city:           '[name="billing_city"]'

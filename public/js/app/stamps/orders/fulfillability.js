@@ -18,6 +18,7 @@ define( function( require, exports, module ){
     , dateFormat: 'YYYY-MM-DD'
     , timeFormat: 'HH:mm a'
     , availabilityTimeFormat: 'HH:mm:ss'
+    , restaurant: {}
     })
     .enclose( function(){
       if ( this.date ){
@@ -82,6 +83,37 @@ define( function( require, exports, module ){
                 startDate <= this.datetime
               , this.datetime < endDate
               ].every( _.identity );
+            }.bind( this ));
+        }
+
+      , function strategyClosedEvents(){
+          var datetime = this.datetime;
+
+          if ( !this.datetime ) datetime = moment.tz( this.timezone );
+
+          if ( !Array.isArray( this.restaurant.events ) ) return true;
+
+          return this.restaurant.events
+            .filter( function( evt ){
+              return evt.closed;
+            })
+            .every( function( evt ){
+              var start = moment.tz( evt.during.start.value, this.dateFormat, this.timezone );
+              var end   = moment.tz( evt.during.end.value, this.dateFormat, this.timezone );
+
+              var compare = function( a, b, isStart, inclusive ){
+                if ( isStart ){
+                  return inclusive ? a >= b : a > b;
+                }
+
+                return inclusive ? a <= b : a < b;
+              }.bind( this );
+
+              // Inner expression tests to see if datetime is between start/end
+              return !(
+                compare( datetime, start, true, evt.during.start.inclusive ) &&
+                compare( datetime, end, false, evt.during.end.inclusive )
+              );
             }.bind( this ));
         }
 

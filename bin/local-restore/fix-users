@@ -9,6 +9,7 @@ var options = {
     'receipts@goodybag.com'
   , 'pms@goodybag.com'
   ]
+, stripe_id: 'cus_6UetXtr3xWGCuq'
 };
 
 var fs = require('fs');
@@ -23,6 +24,7 @@ if ( fs.existsSync( __dirname + '/../../local-config.json') ){
   var testConfig = require('../../local-config.json');
   options.email = testConfig.testEmail || options.email;
   options.emailSalt = testConfig.emailSalt || options.emailSalt;
+  options.stripe_id = testConfig.userStripeId || options.stripe_id;
 }
 
 console.log( "using email:", options.email );
@@ -42,6 +44,7 @@ User.find( { limit: 999999 }, function( error, users ){
         { values: {
             email: options.email.replace( '{id}', user.attributes.id )
           , password: options.password
+          , stripe_id: options.stripe_id
           }
         }
       , done

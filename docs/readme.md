@@ -1,8 +1,8 @@
 DocumentationBag
 ---
 
-* [Order command Center](docs/order-command-center/readme.md)
-* [Order notifications](lib/order-notifications2/README.md)
+* [Order command Center](order-command-center/readme.md)
+* [Order notifications](../lib/order-notifications2/README.md)
 * Reminder System
 * Create a new worker
 * Create a new scheduled task

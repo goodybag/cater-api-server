@@ -215,6 +215,20 @@ define(function(require, exports, module) {
       // Check to see if we need to validate the address
       if ( !this.$el.find('.order-address.edit').hasClass('hide') ){
         series.push( function( next ){
+          this.addressView.model.geocode( function( error, address ){
+            if ( error ){
+              spinner.stop();
+              console.error( error );
+              return self.displayErrors2([ error ]);
+            }
+
+            this.model.set(
+              utils.omit( address.toJSON(), ['name'] )
+            );
+          });
+        }.bind( this ));
+
+        series.push( function( next ){
           api.maps.geocode( self.$el.find('[name="address"]').val(), function( error, result ){
             if ( error ){
               spinner.stop();

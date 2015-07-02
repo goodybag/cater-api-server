@@ -92,8 +92,6 @@ var debitCustomer = function (order, callback) {
 
       utils.stripe.charges.create(data, function (error, charge) {
         if (error) {
-          return (new models.Order(order)).setPaymentError(error, callback);
-
           /* TODO Refactor failed user payment flow */
           // enqueue declined cc notification on scheduler
           return scheduler.enqueue('send-order-notification', new Date(), {

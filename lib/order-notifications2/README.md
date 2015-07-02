@@ -132,7 +132,7 @@ A Definition object has the following signature:
   // required - Performs the actual end-goal of hte notification
   // such as making an api request or sending an email
 , send: function( build, order, options, logger, callback ){
-    
+
   }
   // Set of keys that _must_ be present on options
   // This allows us to inform action UIs to require

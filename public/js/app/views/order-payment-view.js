@@ -11,7 +11,7 @@ define(function (require, exports, module) {
       'submit #payment-form':                         'submit',
       'change input[type="radio"].payment-method':    'changePaymentMethod',
       'change #payment-method-id':                    'onPaymentMethodIdChange',
-      'input input[name="card_number"]':              'onCardNumberChange'
+      'input input[data-stripe="number"]':            'onCardNumberChange'
     },
 
     fieldMap: {
@@ -34,7 +34,7 @@ define(function (require, exports, module) {
       if (this.$el.find('[name="payment-method"]:checked').val() === 'new') {
         this.saveNewCardAndSubmit(e);
       } else {
-        this.updateOrder(); 
+        this.updateOrder();
       }
 
     },
@@ -72,7 +72,7 @@ define(function (require, exports, module) {
         $el: $el
       , userId: this.options.user.get('id')
       , saveCard: this.$el.find('input[name="save_card"]').is(':checked')
-      }, 
+      },
       function(errors, pm) {
         spinner.stop();
         if (errors) return this_.displayErrors(errors, PaymentMethod);

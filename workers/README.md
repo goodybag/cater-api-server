@@ -1,6 +1,8 @@
 Workers
 ---
 
+> "Better three hours too soon than a minute too late"
+
 The workers are processes separate from the main web worker that handles
 http requests for Goodybag.com. Ideally, computationally heavy or I/O intensive
 work should be separated from the web worker.

@@ -1,6 +1,8 @@
 DocumentationBag
 ---
 
+> "And thus I clothe my naked villany"
+
 * [Order command Center](order-command-center/README.md)
 * [Order notifications](../lib/order-notifications2/README.md)
 * [Reminder System](../workers/reminder/README.md)

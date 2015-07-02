@@ -1,6 +1,8 @@
 Stylesheets
 ---
 
+> "Uneasy lies the head that wears a crown"
+
 Goodybag uses LESS and Grunt to build css assets.
 
 Currently, there are a few LESS builds that comprise of several LESS

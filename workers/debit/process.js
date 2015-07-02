@@ -94,7 +94,7 @@ var debitCustomer = function (order, callback) {
         if (error) {
           return (new models.Order(order)).setPaymentError(error, callback);
 
-          /* TODO Refactor failed user payment flow
+          /* TODO Refactor failed user payment flow */
           // enqueue declined cc notification on scheduler
           return scheduler.enqueue('send-order-notification', new Date(), {
             notification_id: 'user-order-payment-failed'
@@ -106,7 +106,6 @@ var debitCustomer = function (order, callback) {
             // construct a model to run the following transactions
             return (new models.Order(order)).setPaymentError(error, callback);
           });
-          */
         }
         return (new models.Order(order)).setPaymentPaid('debit', charge, callback);
       });

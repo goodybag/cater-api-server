@@ -1035,12 +1035,12 @@ module.exports = Model.extend({
       callback = limit;
       limit = 100;
     }
-    // it is ready for charging 3 days after the order has been delivered.
+    // it is ready for charging after the order has been delivered.
     var query = {
       where: {
         payment_status: {$null: true}
       , status: 'accepted'
-      , $custom: ['now() > (("orders"."datetime" AT TIME ZONE "orders"."timezone") + interval \'3 days\')']
+      , $custom: ['now() > ("orders"."datetime" AT TIME ZONE "orders"."timezone")']
       }
     , limit: limit
     };

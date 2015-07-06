@@ -17,9 +17,11 @@ pg_restore --verbose --clean --no-acl --no-owner -h localhost -d cater latest.du
 # Clean up
 rm latest.dump
 
+# Sanitize production data
 ./bin/local-restore/fix-contacts
 ./bin/local-restore/fix-users
 ./bin/local-restore/fix-delivery-services
 ./bin/local-restore/fix-restaurants
+./bin/local-restore/fix-payment-methods
 
 echo "Restore Complete. Enjoy your data!"

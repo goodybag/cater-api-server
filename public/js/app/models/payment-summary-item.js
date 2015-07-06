@@ -90,6 +90,12 @@ define(function(require, exports, module) {
       val += tax;
       val += order.tip;
 
+      if ( order.type === 'courier' ) {
+        // analogous to getTotalForPayoutCalculations
+        val -= order.tip;
+        val -= order.delivery_fee;
+      }
+
       val -= data.gb_fee * val;
       val -= tax;
 

@@ -66,7 +66,7 @@ define(function(require, exports, module) {
 
       $.ajax({
         type: 'PUT'
-      , url: '/api/order-feedback'
+      , url: '/api/orders/:id/feedback'.replace(':id', this.model.get('id'))
       , dataType: 'JSON'
       , data: feedback
       , success: function () {

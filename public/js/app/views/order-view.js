@@ -4,6 +4,7 @@ define(function(require, exports, module) {
   var Handlebars = require('handlebars');
 
   var Order = require('../models/order');
+  var AddressForm = require('../models/address-form');
 
   var FormView = require('./form-view');
   var OrderAddressView = require('./order-address-view');
@@ -130,6 +131,9 @@ define(function(require, exports, module) {
         model: new AddressForm( this.model.address.toJSON() ),
         orderView: this,
         user: this.options.user
+      , onSaveSuccess: function(){
+          this.emit('address:save');
+        }.bind( this )
       });
       
       this.tipView = new TipView({el: '.tip-area', model: this.model, orderView: this});

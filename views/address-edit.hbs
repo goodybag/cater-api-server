@@ -36,10 +36,11 @@
 
       var addressView = new AddressView({
         el: '#main',
-        model: addressModel,
-        onSaveSuccess: function(){
-          window.location.href = '/users/me/addresses';
-        }
+        model: addressModel
+      });
+
+      addressView.on('save:success', function(){
+        window.location.href = '/users/me/addresses';
       });
     }
   );

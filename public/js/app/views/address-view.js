@@ -13,8 +13,6 @@ define(function(require, exports, module) {
     Model: AddressForm,
 
     initialize: function( options ) {
-      this.options = options;
-
       var this_ = this;
 
       this.$errors = this.$el.find('.errors');
@@ -24,9 +22,7 @@ define(function(require, exports, module) {
       gplaces( this.$address[0] );
     },
 
-    onSubmit: function( e ){
-      e.preventDefault();
-
+    saveData: function( callback ){
       var data = this.getModelData();
       var errors = this.model.validate( this.model.toJSON() );
 
@@ -44,12 +40,28 @@ define(function(require, exports, module) {
         }
 
         address.save( null, {
-          success: this.options.onSaveSuccess
-        , error: this.displayErrors.bind( this, [{
-            message: 'Something went wrong saving your address. Please try again'
-          }])
+          success: function(){
+            this.emit( 'save:success', address );
+            if ( callback ) callback( null, address );
+          }
+        , error: function( error ){
+            if ( callback ){
+              return callback( error );
+            }
+
+            this.displayErrors([{
+              message: 'Something went wrong saving your address. Please try again'
+            }]);
+
+            this.emit( 'save:error', error );
+          }.bind( this )
         });
       }.bind( this ));
+    },
+
+    onSubmit: function( e ){
+      e.preventDefault();
+      this.saveData();
     }
   });
 });

@@ -18,6 +18,7 @@ define(function(require, exports, module) {
 
     initialize: function(options) {
       this.order = this.options.orderView.model;
+      AddressView.prototype.initialize.apply( this, arguments );
     },
 
     render: function() {

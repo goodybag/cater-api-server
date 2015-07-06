@@ -16,7 +16,7 @@
       type="text"
       name="address"
       class="form-control address"
-      autocomplete="off"
+      autocomplete="false"
       value="{{#if (isMinimumAddress address)}}{{address2 address}}{{/if}}">
   </div>
 </div>
@@ -41,13 +41,3 @@
     <textarea id="delivery-instructions" name="delivery_instructions" class="form-control address-delivery-instructions" placeholder="Notes such as gate codes or access instructions">{{address.delivery_instructions}}</textarea>
   </div>
 </div>
-
-{{#extend "scripts"}}
-<script>
-  require(['jquery', 'gplaces'], function($, gplaces){
-    $(function(){
-      gplaces( $('[name="address"]')[0] );
-    });
-  });
-</script>
-{{/extend}}

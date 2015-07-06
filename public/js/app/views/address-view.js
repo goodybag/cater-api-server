@@ -3,7 +3,6 @@ define(function(require, exports, module) {
   var api = require('api');
   var gplaces = require('gplaces');
   var utils = require('utils');
-  var Address = require('app/models/address');
   var AddressForm = require('app/models/address-form');
 
   return module.exports = FormView2.extend({
@@ -13,26 +12,16 @@ define(function(require, exports, module) {
 
     Model: AddressForm,
 
-    initialize: function() {
+    initialize: function( options ) {
+      this.options = options;
+
       var this_ = this;
 
       this.$errors = this.$el.find('.errors');
 
-      // Cache elements
       this.$address = this.$el.find('[name="address"]');
-      this.$submitBtn = this.$el.find('.address-submit').button();
 
       gplaces( this.$address[0] );
-
-      this.on('save:success', function() {
-        this_.$submitBtn.button('success');
-        setTimeout(function() { this_.$submitBtn.button('reset'); }, 2000);
-      });
-
-      this.on('save:error', function() {
-        this_.$submitBtn.button('error');
-        setTimeout(function() { this_.$submitBtn.button('reset'); }, 2000);
-      });
     },
 
     onSubmit: function( e ){
@@ -51,18 +40,15 @@ define(function(require, exports, module) {
 
       this.model.geocode( function( error, address ){
         if ( error ){
-          console.error( error );
           return this.displayErrors([ error ]);
         }
 
-      address.save( null, {
-          success: function(){
-            console.log('success');
-          }
-        , error: console.error.bind( console )
+        address.save( null, {
+          success: this.options.onSaveSuccess
+        , error: this.displayErrors.bind( this, [{
+            message: 'Something went wrong saving your address. Please try again'
+          }])
         });
-
-        console.log( address.validationError );
       }.bind( this ));
     }
   });

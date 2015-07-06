@@ -30,8 +30,17 @@
   , function (Address, AddressForm, AddressView) {
       // Bootstrap model and plug into view
       // var addressModel = new Address({{{json address}}}, {urlRoot: '/users/me/addresses'});
-      var addressModel = new AddressForm({{{json address}}}, {urlRoot: '/users/me/addresses'});
-      var addressView = new AddressView({ el: '#main', model: addressModel });
+      var addressModel = new AddressForm({{{json address}}}, {
+        urlRoot: '/users/me/addresses'
+      });
+
+      var addressView = new AddressView({
+        el: '#main',
+        model: addressModel,
+        onSaveSuccess: function(){
+          window.location.href = '/users/me/addresses';
+        }
+      });
     }
   );
 </script>

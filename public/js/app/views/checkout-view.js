@@ -227,30 +227,6 @@ define(function(require, exports, module) {
             );
           });
         }.bind( this ));
-
-        series.push( function( next ){
-          api.maps.geocode( self.$el.find('[name="address"]').val(), function( error, result ){
-            if ( error ){
-              spinner.stop();
-              return self.displayErrors2([{
-                property: 'address'
-              , message: 'Something went wrong setting this address'
-              }]);
-            }
-
-            if ( !result.valid ){
-              spinner.stop();
-              return self.displayErrors2([{
-                property: 'address'
-              , message: 'Invalid address'
-              }]);
-            }
-
-            self.model.set( result.address );
-
-            next();
-          });
-        });
       }
 
       var secondaryContactPhone = this.$el.find('.order-secondary-contact-phone').val().replace(/[^\d]/g, '');

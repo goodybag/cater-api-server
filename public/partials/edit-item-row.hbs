@@ -21,6 +21,20 @@
         <label>Min. Qty<input class="item-min-qty form-control" type="number" step="1.0" min="0" value="{{min_qty}}"></label>
       </div>
     </div>
+
+    <div class="row row-photo">
+      <label>Photo</label>
+      <div class="col-3">
+        <img class="img-item-photo" src="{{or photo_url config.defaultLogo}}">
+      </div>
+      <div class="col-4">
+        <input type="text" class="item-photo" name="photo_url" value="{{photo_url}}" placeholder="photo url">
+      </div>
+      <div class="col-4">
+         <button class="form-control btn btn-default item-add-photo">Pick File</button>
+      </div>
+    </div>
+
     <div class="row row-description">
       <div class="col-description">
         <label>Description</label>

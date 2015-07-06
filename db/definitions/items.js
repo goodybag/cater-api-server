@@ -74,6 +74,11 @@ define(function(require) {
     , nullable: false
     , default: false
     }
+  , photo_url: {
+      type: types.text
+    , nullable: false
+    , default: false
+    }
   };
 
   definition.indices = {};

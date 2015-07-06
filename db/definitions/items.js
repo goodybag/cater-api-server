@@ -76,8 +76,7 @@ define(function(require) {
     }
   , photo_url: {
       type: types.text
-    , nullable: false
-    , default: false
+    , nullable: true
     }
   };
 

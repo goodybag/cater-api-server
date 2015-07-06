@@ -63,6 +63,11 @@ define(function(require) {
     , nullable: false
     , default: false
     }
+  , receives_payment_summaries: {
+      type: types.boolean
+    , nullable: false
+    , default: false
+    }
   };
 
   definition.indices = {};

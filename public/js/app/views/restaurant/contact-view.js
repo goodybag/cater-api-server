@@ -22,6 +22,7 @@ define(function(require, exports, module) {
       var emails = '{' + this.$el.find('input[name="emails"]').val() + '}';
       var notify = this.$el.find('input[name="notify"]').is(':checked');
       var disable_sms = this.$el.find('input[name="disable_sms"]').is(':checked');
+      var receives_payment_summaries = this.$el.find('input[name="receives_payment_summaries"]').is(':checked');
 
       return {
         name: name
@@ -31,6 +32,7 @@ define(function(require, exports, module) {
       , emails: emails
       , notify: notify
       , disable_sms: disable_sms
+      , receives_payment_summaries: receives_payment_summaries
       };
     },
 

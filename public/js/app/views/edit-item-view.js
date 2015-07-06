@@ -141,8 +141,8 @@ define(function(require, exports, module) {
       e.preventDefault();
       if (filepicker) {
         filepicker.pick(function (blob) {
-          console.log(typeof blob.url, blob.url);
           this.$el.find(this.fieldMap.photo_url).val(blob.url);
+          this.$el.find('.img-item-photo').attr('src', blob.url);
           this.$el.find('.item-save').removeClass('hide');
         }.bind(this));
       }

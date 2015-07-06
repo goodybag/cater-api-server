@@ -24,11 +24,9 @@
 
     <div class="row row-photo">
       <label>Photo</label>
-      {{#if photo_url}}
       <div class="col-3">
-        <img class="img-item-photo" src="{{photo_url}}">
+        <img class="img-item-photo" src="{{or photo_url config.defaultLogo}}">
       </div>
-      {{/if}}
       <div class="col-4">
         <input type="text" class="item-photo" name="photo_url" value="{{photo_url}}" placeholder="photo url">
       </div>

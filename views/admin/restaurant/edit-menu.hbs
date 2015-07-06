@@ -11,7 +11,7 @@
     <div class="categories">
       {{#each restaurant.categories}}
         <div id="category-{{this.id}}" class="category">
-          {{> edit_category}}
+          {{> edit_category config=../config}}
         </div>
       {{/each}}
     </div>

@@ -18,6 +18,7 @@ define(function(require, exports, module) {
       'click .item-remove': 'onItemRemove',
       'click .item-save': 'onSave',
       'click .item-edit-options': 'onEditOptionsClick',
+      'click .item-add-photo': 'onAddPhotoClick',
       'keyup .form-control': 'onChange',
       'change .form-control, .edit-item-tags': 'onChange'
     },
@@ -72,7 +73,8 @@ define(function(require, exports, module) {
       description: '.item-description',
       tags: '.edit-item-tags input',
       is_hidden: '.item-hide',
-      hide_pricing: '.item-hide-pricing'
+      hide_pricing: '.item-hide-pricing',
+      photo_url: '.item-photo'
     },
 
     /**
@@ -133,6 +135,17 @@ define(function(require, exports, module) {
     onEditOptionsClick: function(e){
       e.preventDefault();
       this.toggleEditOptions();
+    },
+
+    onAddPhotoClick: function (e) {
+      e.preventDefault();
+      if (filepicker) {
+        filepicker.pick(function (blob) {
+          console.log(typeof blob.url, blob.url);
+          this.$el.find(this.fieldMap.photo_url).val(blob.url);
+          this.$el.find('.item-save').removeClass('hide');
+        }.bind(this));
+      }
     }
   });
 

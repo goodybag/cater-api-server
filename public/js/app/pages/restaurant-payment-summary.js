@@ -39,7 +39,13 @@ define(function(require){
   });
 
   orders
-    .fetch({ data: { limit: 'all', status: 'accepted' } })
+    .fetch({
+      data: {
+        limit: 'all'
+      , status: 'accepted'
+      , start_date: moment().add('months', -2).format('YYYY-MM-DD')
+      }
+    })
     .then( function(){
       items.fetch();
     });

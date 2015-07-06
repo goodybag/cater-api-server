@@ -63,7 +63,7 @@ define(function(require, exports, module) {
 
       if ( this.plan ){
         if ( this.get('plan').type === 'tiered' ){
-          data.gb_fee = this.plan.getTier( this.get('plan'), order.toJSON() ).fee;
+          data.gb_fee = this.plan.getTier( this.get('plan'), order.get('total') ).fee;
         } else if ( this.get('plan').type === 'flat' ){
           data.gb_fee = this.get('plan').data.fee;
         }
@@ -98,11 +98,6 @@ define(function(require, exports, module) {
 
       val -= data.gb_fee * val;
       val -= tax;
-
-      if ( order.type === 'courier' ){
-        val -= order.delivery_fee;
-        val -= order.tip;
-      }
 
       return Math.round( val );
     }

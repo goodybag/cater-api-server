@@ -130,15 +130,36 @@ require( ['jquery-loaded'], function($) {
 
   var $personalTaxId = $('.form-group-personal-tax-id');
   var $businessTaxId = $('.form-group-business-tax-id');
-  $('[name="type"]').change(function(e) {
+
+  function onTypeChange(e) {
     if (e.target.value === 'individual') {
-      $personalTaxId.removeClass('hide');
-      $businessTaxId.addClass('hide');
+      $personalTaxId
+        .removeClass('hide')
+        .find('input')
+          .attr('required', true);
+      $businessTaxId
+        .addClass('hide')
+        .find('input')
+          .attr('required', null);
     } else {
-      $personalTaxId.addClass('hide');
-      $businessTaxId.removeClass('hide');
+      $personalTaxId
+        .addClass('hide')
+        .find('input')
+          .attr('required', null);
+      $businessTaxId
+        .removeClass('hide')
+        .find('input')
+          .attr('required', true);
+    }
+  };
+
+  onTypeChange({
+    target: {
+      value: {{#eq data.legal_entity.type "company"}}'company'{{else}}'individual'{{/eq}}
     }
   });
+
+  $('[name="type"]').change( onTypeChange );
 });
 </script>
 {{/extend}}

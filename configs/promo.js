@@ -31,6 +31,18 @@ var promo = {
     ]
   , promo_code: [ 'starkebab' ]
   }
+, dropoff: {
+    email: [
+        'jacobparker@goodybag.com'
+      , 'patrickmugavin@goodybag.com'
+      , 'christymedlock@goodybag.com'
+    ]
+  , promo_code: [
+      'dropoff1', 'dropoff2', 'dropoff3'
+    , 'dropoff4', 'dropoff5', 'dropoff6'
+    , 'dropoff7', 'dropoff8', 'dropoff9'
+    ]
+  }
 };
 
 module.exports = ({

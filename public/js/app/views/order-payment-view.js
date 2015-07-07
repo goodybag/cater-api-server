@@ -49,7 +49,7 @@ define(function (require, exports, module) {
         this.options.model.save(null, {
           patch: true
         , wait: true
-        , validate: true
+        , validate: false
         , success: function (model, response, options) {
             model.changeStatus('submitted', true, function (error, data) {
               if (error) return notify.error(error);

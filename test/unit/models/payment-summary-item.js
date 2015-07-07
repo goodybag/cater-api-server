@@ -29,7 +29,7 @@ describe('payment summary item model', function() {
     , sales_tax: 0.0825
     });
     psi.updatePropertiesBasedOnOrder(order); // set gb_fee
-    assert.equal( psi.getNetPayout(), 276 );
+    assert.equal( 302, 276 );
   });
 
   it('should charge gb fee on delivery/tip for delivery', function() {

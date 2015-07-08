@@ -47,16 +47,10 @@ define(function (require, exports, module) {
 
         this.options.model.set(diff);
         this.options.model.save(null, {
-          patch: true
-        , wait: true
-        , validate: false
+          validate: false
         , success: function (model, response, options) {
-            model.changeStatus('submitted', true, function (error, data) {
-              if (error) return notify.error(error);
-
-              spinner.stop();
-              this_.$el.find('.alert-success').removeClass('hide');
-            });
+            spinner.stop();
+            this_.$el.find('.alert-success').removeClass('hide');
           }
         , errors: function (model, response, options) {
             spinner.stop();

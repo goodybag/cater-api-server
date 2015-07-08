@@ -12,6 +12,7 @@ var
 , errors = require('../../errors')
 , config = require('../../config')
 , restaurantPlans = require('restaurant-plans')
+, Orders = require('stamps/orders')
 ;
 
 
@@ -37,15 +38,13 @@ var getAddress = function(obj) {
   return [obj.street, obj.street2, obj.city, ', ' + obj.state, obj.zip].join(' ');
 };
 
-var plannerCalc = function(order, fnName) {
+var orderCharge = function(order, fnName) {
   var restaurant = order.restaurant;
   var plan = restaurant.plan;
 
   if (!plan) return 'N/A';
 
-  var rp = restaurantPlans[plan.type];
-  var fn = rp[fnName];
-  return fn.call(rp, plan, order);
+  return require('stamps/orders/charge')( order )[fnName]();
 }
 
 var reports = {
@@ -121,7 +120,6 @@ var reports = {
     , 'Total'
     , 'Plan'
     , 'GB Fee'
-    , 'Restaurant Sales Tax'
     , 'Restaurant Net Payout'
     , 'Caterer Name'
     , 'Region'
@@ -160,7 +158,13 @@ var reports = {
     options.distinct = [ 'orders.id', range ];
     options.one = [
       { table: 'users', alias: 'user' }
-    , { table: 'restaurants', alias: 'restaurant', one: [ { table: 'restaurant_plans', alias: 'plan' } ] }
+    , { table: 'restaurants'
+      , alias: 'restaurant'
+      , one: [
+          { table: 'restaurant_plans', alias: 'plan' }
+        , { table: 'regions', alias: 'region' }
+        ]
+      }
     , { table: 'restaurant_locations', alias: 'location' }
     ];
 
@@ -191,7 +195,11 @@ var reports = {
         return res.end();
       }
       results
+        .map( function(order) {
+          return Orders(order);
+        })
         .forEach( function(order) {
+
           res.csv.writeRow([
             order.id
           , hbHelpers.orderTypeAbbr(order)
@@ -223,16 +231,15 @@ var reports = {
           , order.user.name
           , order.user.email
           , order.user.organization
-          , dollars(order.sub_total)
+          , dollars(order.getSubTotal())
           , dollars(order.delivery_fee)
-          , dollars(order.sales_tax)
+          , dollars(order.getTax())
           , dollars(order.tip)
           , dollars(order.adjustment_amount)
           , dollars(order.total)
           , order.restaurant.plan ? order.restaurant.plan.name : 'N/A'
-          , dollars(plannerCalc(order, 'getGbFee'))
-          , dollars(order.restaurant_sales_tax)
-          , dollars(plannerCalc(order, 'getPayoutForOrder'))
+          , dollars(orderCharge(order, 'getApplicationCut'))
+          , dollars(orderCharge(order, 'getRestaurantCut'))
           , order.restaurant.name
           , order.region.name
           ]);

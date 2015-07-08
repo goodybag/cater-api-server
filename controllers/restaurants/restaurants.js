@@ -34,6 +34,10 @@ module.exports.list = function(req, res) {
     return res.error( results.error );
   }
 
+  if (!_.isEqual(req.session.searchParams, req.query)) {
+    req.session.searchParams = _.cloneDeep(req.query);
+  }
+
   return res.render('restaurant/list', {
     layout:           'layout/default'
   , defaultAddress:   req.user.attributes.defaultAddress
@@ -53,7 +57,7 @@ module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-Get');
   logger.info('getting restaurant %s', req.params.rid);
 
-  var orderParams = req.query || {};
+  var queryOptions = req.query || {};
 
   var userId = req.creatorId || req.user.attributes.id;
   var tasks = [
@@ -121,7 +125,7 @@ module.exports.get = function(req, res) {
         }
       });
 
-      models.Restaurant.findOne(query, orderParams, function(err, restaurant) {
+      models.Restaurant.findOne(query, queryOptions, function(err, restaurant) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');
         restaurant.getItems({ where: { 'is_hidden': false } }, function(err, items) {
@@ -145,7 +149,8 @@ module.exports.get = function(req, res) {
       order:            results[0] ? results[0].toJSON() : null,
       restaurant:       results[1] ? results[1].toJSON() : null,
       defaultAddress:   results[2] ? results[2].toJSON() : null,
-      orderParams:      orderParams
+      orderParams:      orderParams,
+      searchParams:     req.session.searchParams
     }
 
     context.restaurant.delivery_fee = context.order.restaurant.delivery_fee;
@@ -472,6 +477,7 @@ module.exports.menuCsv = function( req, res ){
 };
 
 module.exports.copy = function(req, res) {
+  var logger = req.logger.create('Controller-Restaurants-Copy');
   var id = req.params.restaurant_id;
 
   var tasks = [
@@ -489,12 +495,13 @@ module.exports.copy = function(req, res) {
 
   , function copyRestaurant(restaurant, acct, callback) {
       var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id'), {
-        stripe_id: acct.id
+        balanced_customer_uri: null
+      , stripe_id: acct.id
       , name: restaurant.name + ' Copy'
       , is_hidden: true
       });
       db.restaurants.insert( data, function(err, result) {
-        callback(err, restaurant, result[0].id);
+        callback(err, restaurant, err ? null : result[0].id);
       });
     }
 
@@ -652,6 +659,7 @@ module.exports.copy = function(req, res) {
 
   utils.async.waterfall(tasks, function(err, newId) {
     if ( err ) {
+      logger.error('Error copying restaurant', { error: error });
       return res.send(500, err);
     }
      res.redirect('/admin/restaurants/' + newId);

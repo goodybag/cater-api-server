@@ -26,9 +26,9 @@ define(function(require){
     var original = $.fn[ name ];
 
     $.fn[ name ] = function( evts ){
-      // If they're doing the object syntax, don't even try
-      // I'm lazy and 99% of my use-cases does not use the object
-      if ( typeof evts === 'object' ){
+      // If they're not doing the string syntax, don't even try
+      // I'm lazy and 99% of my use-cases uses string
+      if ( typeof evts !== 'string' ){
         return original.apply( this, arguments );
       }
 

@@ -122,7 +122,7 @@
           <dd>
             <select name="payment_status">
               <option value="" {{#if (not order.payment_status) }}selected="true"{{/if}}>Unprocessed</option>
-              <option value="pending" {{#eq order.payment_status 'pending'}}selected="true"{{/eq}}>Queued for Processing</option>
+              <option value="pending" {{#eq order.payment_status 'pending'}}selected="true"{{/eq}}>In-progress</option>
               <option value="paid" {{#eq order.payment_status 'paid'}}selected="true"{{/eq}}>Paid</option>
               <option value="invoiced" {{#eq order.payment_status 'invoiced'}}selected="true"{{/eq}}>Invoiced</option>
               <option value="ignore" {{#eq order.payment_status 'ignore'}}selected="true"{{/eq}}>Ignore</option>

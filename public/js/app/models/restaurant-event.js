@@ -41,12 +41,11 @@ define(function(require, exports, module) {
      */
     toFullCalendarEvent: function() {
       var during = this.get('during');
-      during = during.replace( /[\[\]\(\)]/g,'').split(',');
 
       return utils.extend({}, this.toJSON(), {
         title:  this.get('name')
-      , start:  during[0]
-      , end:    moment(during[1]).add('days', -1).format('YYYY-MM-DD') // convert to inclusive bound
+      , start:  during.start.value
+      , end:    moment(during.end.value).add('days', -1).format('YYYY-MM-DD') // convert to inclusive bound
       });
     },
 

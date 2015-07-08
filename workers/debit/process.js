@@ -7,25 +7,40 @@ var config = require('../../config');
 var _ = utils._;
 var scheduler = require('../../lib/scheduler');
 var restaurantPlans = require('../../public/js/lib/restaurant-plans');
+var OrderCharge = require('stamps/orders/charge');
+var moment = require('moment-timezone');
 
 var checkForExistingDebit = function (order, callback) {
   var logger = process.domain.logger.create('checkForExistingDebit', {
     data: { order: order }
   });
 
-  var query = {'meta.order_uuid': order.uuid};
-  logger.info('Listing debits');
-  utils.balanced.Debits.list(query, function (error, debits) {
-    if (error){
-      logger.error({ error: error });
-      return callback(error);
+  utils.stripe.charges.list({
+    created: { gte: moment(order.datetime).unix() }
+  }, function(err, charges) {
+    if (err) {
+      logger.error({ error: err });
+      return callback(err);
     }
 
-    if (debits && debits.total > 1){
-      logger.error('Multiple debits for a single order');
-      return callback(new Error('multiple debits for a single order: ' + order.id));
+    logger.debug('Listing debits');
+
+    function matchesUuid(charge) {
+      return charge.metadata.order_uuid === order.uuid;
     }
-    if (debits && debits.total == 1) return callback (null, debits.items[0]);
+
+    if (charges && charges.data) {
+      var debits = charges.data.filter(matchesUuid);
+
+      if ( debits && debits.length > 1 ) {
+        logger.error('Multiple debits for a single order');
+        return callback(new Error('multiple debits for a single order: ' + order.id));
+      }
+
+      if ( debits && debits.length === 1) return callback(null, debits[0]);
+    }
+
+    logger.debug('Clear for charging');
     return callback(null, null);
   });
 };
@@ -48,9 +63,10 @@ var debitCustomer = function (order, callback) {
       // invoiced orders should use our own debit card
       var customer = paymentMethod ? user.stripe_id : config.stripe.invoicing.customer_id;
       var source = paymentMethod ? paymentMethod.attributes.stripe_id : config.stripe.invoicing.card_id;
+      var charge = OrderCharge( order );
 
       var data = {
-        amount: amount,
+        amount: charge.getTotal(),
         currency: 'usd',
         customer: customer,
         source: source,
@@ -65,11 +81,12 @@ var debitCustomer = function (order, callback) {
         }
       };
 
+      if ( !order.restaurant.collect_payments )
       if ( order.restaurant.is_direct_deposit )
       if ( order.restaurant.plan_id ) {
         // route to restaurant if possible
         data.destination = order.restaurant.stripe_id;
-        data.application_fee = restaurantPlans[order.restaurant.plan.type].getApplicationFee(order.restaurant.plan, order);
+        data.application_fee = charge.getApplicationCut();
         data.metadata.charge_destination = 'Funds go to restaurant';
       }
 
@@ -116,10 +133,18 @@ var task = function (message, callback) {
   logger.info("processing order: " + body.order.id);
 
   var $options = {
-    one: [
-      { table: 'restaurants', alias: 'restaurant', one: [ { table: 'restaurant_plans', alias: 'plan' } ] }
-    , { table: 'users', alias: 'user' }
-    ]
+    one: [ { table: 'restaurants', alias: 'restaurant'
+           , one: [ { table: 'restaurant_plans', alias: 'plan' }
+                  , { table: 'regions', alias: 'region' }
+                  ]
+           }
+         , { table: 'users', alias: 'user' }
+         ]
+  , many: [ { table: 'order_items', alias: 'items' }
+          , { table: 'order_amenities', alias: 'amenities'
+            , mixin: [{ table: 'amenities' }]
+            }
+          ]
   };
   db.orders.findOne( body.order.id, $options, d.bind(function(error, order) {
     if ( error ) return logger.create('DB').error({error: error}), callback(error);

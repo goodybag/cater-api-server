@@ -9,13 +9,7 @@ var hbHelpers = require('./public/js/lib/hb-helpers');
 var db = require('./db');
 var errors = require('./errors');
 
-var m = utils.extend(
-  {}
-, require('stdm')
-, require('dirac-middleware')
-, require('./middleware/util')
-, require('./middleware')
-);
+var m = require('./middleware')
 
 module.exports.register = function(app) {
   logger.info('Registering routes');
@@ -60,6 +54,8 @@ module.exports.register = function(app) {
     app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
     app.post('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
   });
+
+  app.use( '/verify', require('./routers/verify') );
 
   // Temporary for job fair
   app.get('/fsjse.md'
@@ -2603,15 +2599,12 @@ module.exports.register = function(app) {
   /**
   * Order Feedback
   */
-  app.put('/api/order-feedback'
-  , function (req, res, next) {
-      req.queryObj = { order_id: req.body.order_id }
-      req.order = { id: req.body.order_id };
-      next();
-    }
+  app.put('/api/orders/:order_id/feedback'
+  , m.getOrder2({ param: 'order_id'})
   , controllers.orders.auth
   , m.restrict(['order-owner', 'admin'])
   , m.queryOptions({ returning: ['id'] })
+  , m.param('order_id')
   , m.update( db.order_feedback )
   );
 

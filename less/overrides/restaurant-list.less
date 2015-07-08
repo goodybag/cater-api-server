@@ -76,6 +76,8 @@
     display: block;
   }
 
+
+
   @media (min-width: @breakpoint-tablet) {
     .search-lead {
       margin-right: 10px;
@@ -146,6 +148,15 @@
   .search-advanced-link.expand .expand-hidden { display: inline; }
   .search-advanced-link.expand .expand-show { display: none; }
 
+
+  .restaurant-params [name="date"],
+   .restaurant-params [name="time"] {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+         -o-user-select: none;
+            user-select: none;
+  }
 
   //  extract restaurant params stylesheet?
   /**

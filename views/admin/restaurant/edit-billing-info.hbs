@@ -19,7 +19,10 @@
 
     {{#if restaurant.stripe_id}}
     <h2>Stripe Info</h2>
-    <a href="https://dashboard.stripe.com/applications/users/{{restaurant.stripe_id}}">View account on Stripe</a>
+    <ul>
+      <li><a href="/verify/{{restaurant.uuid}}">Stripe Verification</a></li>
+      <li><a href="https://dashboard.stripe.com/applications/users/{{restaurant.stripe_id}}">View account on Stripe</a></li>
+    </ul>
     <label class="control-label">Customer URI</label>
     <blockquote class="blockquote blockquote-info">{{restaurant.stripe_id}}</blockquote>
     {{/if}}
@@ -92,6 +95,13 @@
         <input type="checkbox" class="form-control" name="is_direct_deposit" id="input-is_direct_deposit" {{#if restaurant.is_direct_deposit}}checked="checked"{{/if}}>
          Uses Direct Deposit?
       </label>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="input-collect_payments">
+        <input type="checkbox" class="form-control" name="collect_payments" id="input-collect_payments" {{#if restaurant.collect_payments}}checked="checked"{{/if}}>
+        Collect Payments
+      </label>
+      <small>Enabling this option means that all payments will be transferred to our platform account on Stripe. The funds will not go to the restaurant account.</small>
     </div>
     <div class="form-group actions">
       <button class="btn-update" type="submit">Update</button>

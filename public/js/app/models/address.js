@@ -83,6 +83,10 @@ define(function(require, exports, module) {
           type: ['string', 'null'],
           required: false,
           minLength: 1
+        },
+        lat_lng: {
+          type: ['object', 'null'],
+          required: false
         }
       }
     },

@@ -80,6 +80,10 @@ define(function(require, exports, module) {
             required: false,
             "enum": ['pickup', 'delivery', 'courier', null]
           },
+          lat_lng: {
+            type: ['object', 'null'],
+            required: false
+          }
         }
       };
     },

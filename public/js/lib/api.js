@@ -9,6 +9,7 @@ define(function(require){
 
   api.users       = api('users');
   api.restaurants = api('restaurants');
+  api.orders      = api('orders');
 
   api.maps        = api('maps');
 

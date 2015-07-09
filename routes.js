@@ -1789,6 +1789,7 @@ module.exports.register = function(app) {
     , user:                   true
     , userPaymentMethods:     true
     , items:                  true
+    , internalNotes:          true
     })
   , m.view( 'admin/order', {
       layout: 'admin/layout2'
@@ -2336,6 +2337,22 @@ module.exports.register = function(app) {
   app.get('/api/orders/:oid/notifications-history/:id'
   , m.restrict(['admin'])
   , controllers.orders.notifications.JSON.historyItem
+  );
+
+  app.post('/api/orders/:order_id/internal-notes'
+  , m.restrict(['admin'])
+  , function( req, res, next ){
+      req.body.order_id = req.params.order_id;
+      req.body.user_id = req.user.attributes.id;
+      return next();
+    }
+  , m.insert( db.order_internal_notes )
+  );
+
+  app.del('/api/orders/:order_id/internal-notes/:id'
+  , m.restrict(['admin'])
+  , req.param('id')
+  , m.remove( db.order_internal_notes )
   );
 
   /**

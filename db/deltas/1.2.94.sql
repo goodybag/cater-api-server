@@ -12,6 +12,7 @@ begin
   create table if not exists order_internal_notes (
     id          serial primary key
   , order_id    int references orders(id)
+  , user_id     int references users(id)
   , body        text not null default ''
   , created_at  timestamp not null default now()
   );

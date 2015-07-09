@@ -19,6 +19,7 @@ define(function(require) {
   definition.schema = {
     id:         { type: 'serial', pk: true }
   , order_id:   { type: 'int', references: { table: 'orders', column: 'id' } }
+  , user_id:    { type: 'int', references: { table: 'users', column: 'id' } }
   , body:       { type: 'text', nullable: false, default: '' }
   , created_at: { type: 'timestamp', nullable: false, default: 'now()'}
   };

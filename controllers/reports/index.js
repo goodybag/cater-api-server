@@ -173,6 +173,11 @@ var reports = {
     , { type: 'row_to_json', expression: 'regions', as: 'region' }
     ];
 
+    options.many = [
+      { table: 'order_items', alias: 'items' }
+    , { table: 'order_amenities', alias: 'amenities' }
+    ];
+
     options.joins = [
       { type: 'left'
       , target: 'restaurants'

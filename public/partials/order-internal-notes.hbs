@@ -1,0 +1,40 @@
+<div class="audit-view">
+  <form role="create-form" class="form row">
+    <div class="col-10">
+      <textarea name="body" class="form-control"></textarea>
+    </div>
+    <div class="col-2">
+      <button
+        role="create"
+        class="btn btn-default btn-block"
+        type="submit">Add</button>
+    </div>
+  </form>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Notes</th>
+        <th>User</th>
+        <th>Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each items}}
+        <tr>
+          <td>{{this.body}}</td>
+          <td>
+            <a href="/admin/users/{{this.user.id}}">{{this.user.name}}</a>
+          </td>
+          <td>{{formatDateTime this.created_at "MM/DD/YYYY h:mm A"}}</td>
+          <td>
+            <button
+              role="remove"
+              class="btn btn-default"
+              data-id="{{this.id}}">x</button>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

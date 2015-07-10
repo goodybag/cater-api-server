@@ -131,6 +131,15 @@ module.exports = function( options ){
       $options.one.push({ table: 'order_feedback', alias: 'order_feedback' });
     }
 
+    if ( options.internalNotes ){
+      $options.many.push({
+        table:  'order_internal_notes'
+      , alias:  'internal_notes'
+      , order:  'created_at desc'
+      , one:    [{ table: 'users', alias: 'user' }]
+      });
+    }
+
     logger.info('Finding order');
     db.orders.findOne( +req.params[options.param], $options, function( error, order ){
       if ( error ){

@@ -6,7 +6,7 @@ var Addresses       = require('stamps/addresses');
 var logger          = require('../../lib/logger').create('Controller-API-Maps');
 var errors          = require('../../errors');
 
-module.exports.addressValidity = function( req, res ){
+module.exports.geocode = function( req, res ){
   GeoCodeRequests()
     .address( req.params.address )
     .send( function( error, geoRes ){
@@ -19,9 +19,13 @@ module.exports.addressValidity = function( req, res ){
         return res.error( errors.internal.UNKNOWN, err );
       }
 
+      if ( !geoRes.isValidAddress() ){
+        return res.send({ valid: false });
+      }
+
       res.send({
-        address: req.params.address
-      , valid:   geoRes.isValidAddress()
-      })
+        valid:   true
+      , address: geoRes.toAddress()
+      });
     });
 };

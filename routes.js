@@ -2661,11 +2661,11 @@ module.exports.register = function(app) {
   );
 
   /**
-   * Address verification
+   * Maps
    */
 
-  app.get('/api/maps/address-validity/:address'
-  , controllers.api.maps.addressValidity
+  app.get('/api/maps/geocode/:address'
+  , controllers.api.maps.geocode
   );
 
   app.get('/api/stripe-events/:id'

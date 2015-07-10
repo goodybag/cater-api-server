@@ -2346,12 +2346,20 @@ module.exports.register = function(app) {
       req.body.user_id = req.user.attributes.id;
       return next();
     }
-  , m.insert( db.order_internal_notes )
+  , m.queryOptions({ returning: ['*']})
+  , function( req, res, next ){
+      m.db.order_internal_notes.insert( req.body, req.queryOptions )( req, res, next );
+    }
+  , function( req, res, next ){
+      res.locals.order_internal_note.user = req.user.attributes;
+      return next();
+    }
+  , m.jsonLocals('order_internal_note')
   );
 
   app.del('/api/orders/:order_id/internal-notes/:id'
   , m.restrict(['admin'])
-  , req.param('id')
+  , m.param('id')
   , m.remove( db.order_internal_notes )
   );
 

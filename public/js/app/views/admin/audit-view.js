@@ -14,8 +14,8 @@ define( function( require, exports, module ){
 
   return FormView.extend({
     events: {
-      'submit [role="create-form"]': 'onCreateSubmit'
-    , 'click [role="remove"]':      'onRemoveClick'
+      'submit [role="create-form"]':  'onCreateSubmit'
+    , 'click [role="remove"]':        'onRemoveClick'
     }
 
   , initialize: function( options ){

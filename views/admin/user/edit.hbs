@@ -21,7 +21,9 @@
     <dt>Last seen using</dt>
     <dd>{{user.user_agent_display}}</dd>
     <dt>Stripe ID</dt>
-    <dd>{{user.stripe_id}}</dd>
+    <dd>
+      <a href="https://dashboard.stripe.com/customers/{{user.stripe_id}}">{{user.stripe_id}}</a>
+     </dd>
   </ul>
 
   {{> admin_user_edit_form }}

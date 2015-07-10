@@ -1,5 +1,6 @@
 var utils       = require('utils');
 var db          = require('db');
+var fs          = require('fs');
 var config      = require('config');
 var hipchat     = require('../lib/hipchat');
 var helpers     = require('../public/js/lib/hb-helpers');
@@ -182,11 +183,11 @@ var stripe = {
         }
         return next();
       });
-    }
+    };
   }
 
 , insertRestaurantVerification: function(options) {
-    return function(req,res, next) {
+    return function(req, res, next) {
       db.restaurant_verifications.insert({
         restaurant_id: req.restaurant.id
       , data: JSON.stringify(req.body)
@@ -197,7 +198,36 @@ var stripe = {
         }
         next();
       });
-    }
+    };
+  }
+
+, uploadDocument: function(options) {
+    return function(req, res, next) {
+      if ( !req.files.doc ) return next(new Error('Missing document upload') );
+
+      utils.async.waterfall([
+        function read(callback) {
+          fs.readFile(req.files.doc.path, callback);
+        }
+      , function upload(data, callback) {
+          utils.stripe.fileUploads.create({
+            purpose: 'identity_document'
+          , file: {
+              data: data
+            , name: req.restaurant.name.replace(/\s/g, '-').toLowerCase()
+            , type: 'application/octet-stream'
+            }
+          }, callback);
+        }
+      , function update(fileUpload, callback) {
+          utils.stripe.accounts.update(req.restaurant.stripe_id, {
+            legal_entity: {
+              verification: { 'document': fileUpload.id }
+            }
+          }, callback);
+        }
+      ], next);
+    };
   }
 };
 

@@ -70,7 +70,6 @@ define(function(require){
 
         page.internalNotesView.render();
         $('#internal-notes .panel-body').append( page.internalNotesView.$el );
-        console.log(page.internalNotesView);
 
         $('.pdf-preview').each( function(){
           new Views.PdfPreview({ el: this });

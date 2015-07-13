@@ -2,6 +2,7 @@ var assert      = require('assert');
 var config      = require('../../../config');
 var db          = require('../../../db');
 var GeoRes      = require('stamps/responses/geocode');
+var GeoResult   = require('stamps/responses/geocode-result');
 
 describe('Stamps', function(){
   describe('Responses', function(){
@@ -36,6 +37,7 @@ describe('Stamps', function(){
         , city: 'Mountain View'
         , state: 'CA'
         , zip: '94043'
+        , lat_lng: { x: 37.4224879, y: -122.08422 }
         });
       });
 
@@ -43,7 +45,7 @@ describe('Stamps', function(){
         var res = GeoRes.create({
           res: [ null, {
             results: [{
-              types: ['street_address']
+              types: ['subpremise']
             , address_components: [
                 { long_name: 'l131',
                   short_name: 'l131',
@@ -73,9 +75,10 @@ describe('Stamps', function(){
                   short_name: '78751',
                   types: [ 'postal_code' ] }
               ]
+            , geometry: { location: { lat: 100, lng: 50 } }
             }]
           }]
-        , requestAddress: '5555 N. Lamar Blvd Suite L131, Austin, TX, 78751'
+        , requestAddress: '5555 N. Lamar Blvd Suite L131'
         });
 
         assert.deepEqual( res.toAddress(), {
@@ -84,6 +87,7 @@ describe('Stamps', function(){
         , city: 'Austin'
         , state: 'TX'
         , zip: '78751'
+        , lat_lng: { x: 100, y: 50 }
         });
       });
 
@@ -96,6 +100,17 @@ describe('Stamps', function(){
         assert.throws( function(){
           res.toAddress();
         }, Error );
+      });
+
+      describe('GeocodeResult', function(){
+        it('.toLatLng()', function(){
+          var result = GeoResult.create( require('./data/geo-res-1').results[0] );
+
+          assert.deepEqual( result.toLatLng(), {
+            x: 37.4224879
+          , y: -122.08422
+          });
+        });
       });
     });
   });

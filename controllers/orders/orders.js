@@ -17,6 +17,8 @@ var promoConfig = require('../../configs/promo');
 var DMReq = require('stamps/requests/distance-matrix');
 var address = require('stamps/addresses');
 var deliveryFee = require('stamps/orders/delivery-fee');
+var Address = require('stamps/addresses');
+var GeocodeRequest = require('stamps/requests/geocode');
 
 var addressFields = [
   'street'
@@ -231,16 +233,49 @@ module.exports.update = function(req, res) {
 
   utils.extend(order.attributes, utils.pick(req.body, updateableFields));
 
-  order.save(function(err, rows, result) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(order.toJSON({plain:true}));
+  utils.async.series([
+    // Geocode the address on the order if necessary
+    function( next ){
+      // No address info, no need to geocode yet
+      if ( !order.attributes.street ){
+        return next();
+      }
 
-    venter.emit('order:change', order.attributes.id);
+      // Order address has already been geocoded
+      if ( order.attributes.lat_lng ){
+        return next();
+      }
 
-    if (datetimeChanged) {
-      venter.emit('order:datetime:change', order, oldDatetime);
+      GeocodeRequest()
+        .address( Address( order.attributes ).toString() )
+        .send( function( error, result ){
+          if ( error ){
+            return next( error );
+          }
+
+          if ( !result.isValidAddress() ){
+            return res.error( errors.input.INVALID_ADDRESS );
+          }
+
+          req.order.attributes.lat_lng = result.toAddress().lat_lng;
+
+          return next();
+        });
     }
 
+  , order.save.bind( order )
+  ], function( error ){
+    if ( error ){
+      return res.error( errors.internal.UNKNOWN, error );
+    }
+
+    res.send( order.toJSON({ plain:true }) );
+
+    venter.emit( 'order:change', order.attributes.id );
+
+    if ( datetimeChanged ){
+      venter.emit( 'order:datetime:change', order, oldDatetime );
+    }
   });
 };
 
@@ -378,6 +413,7 @@ module.exports.changeStatus = function(req, res) {
 
   req.order.status = req.body.status;
   logger.info('Saving order');
+
   db.orders.update( req.order.id, $update, function(err){
     logger.info('Saving order complete!', err ? { error: err } : null);
     if (err) return res.error(errors.internal.DB_FAILURE, err);

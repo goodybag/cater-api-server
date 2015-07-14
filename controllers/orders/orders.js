@@ -210,6 +210,10 @@ module.exports.update = function(req, res) {
   // get keys from order def schema that allow editable access
   var updateableFields = Object.keys( orderDefinitionSchema ).filter( function( key ){
     return req.user.attributes.groups.some( function( group ){
+      if ( !Array.isArray( orderDefinitionSchema[ key ].editable ) ){
+        return true;
+      }
+
       return utils.contains( orderDefinitionSchema[ key ].editable, group );
     });
   });
@@ -236,6 +240,7 @@ module.exports.update = function(req, res) {
   utils.async.series([
     // Geocode the address on the order if necessary
     function( next ){
+
       // No address info, no need to geocode yet
       if ( !order.attributes.street ){
         return next();
@@ -257,7 +262,7 @@ module.exports.update = function(req, res) {
             return res.error( errors.input.INVALID_ADDRESS );
           }
 
-          req.order.attributes.lat_lng = result.toAddress().lat_lng;
+          order.attributes.lat_lng = result.toAddress().lat_lng;
 
           return next();
         });

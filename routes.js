@@ -1335,7 +1335,7 @@ module.exports.register = function(app) {
     , restaurantDbModelFind:  true
     })
   , controllers.orders.auth
-  , m.restrict(['admin', 'order-owner', 'order-editor'])
+  , m.restrict(['admin', 'order-owner'])
   , m.view( 'order-payment',{
 
    })

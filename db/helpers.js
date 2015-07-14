@@ -13,6 +13,7 @@ var odsChecker  = require('../public/js/lib/order-delivery-service-checker');
 dirac.db.setMosql( mosql );
 
 dirac.use( dirac.relationships() );
+dirac.use( require('../lib/dirac-serialize-point')() );
 
 // Logging for dals
 // Leaving commented for now because it just makes logs too noisy

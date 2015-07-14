@@ -9,6 +9,8 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
+  var utils = require('utils');
+
   return require('stampit')()
     .state({
 
@@ -17,16 +19,29 @@ define( function( require, exports, module ){
 
     })
     .methods({
-      toString: function(){
-        return [
+      toString: function( options ){
+        var components = [
           'street', 'street2', 'city', 'state', 'zip', 'country'
-        ].map( function( key ){
-          return this[ key ];
-        }.bind( this ))
-        .filter( function( val ){
-          return !!val;
-        }.bind( this ))
-        .join(', ');
+        ];
+
+        var defaults = components.reduce( function( obj, k ){
+          obj[ k ] = true;
+          return obj;
+        }, {} );
+
+        options = utils.defaults( options || {}, defaults );
+
+        return components
+          .filter( function( key ){
+            return !!options[ key ];
+          })
+          .map( function( key ){
+            return this[ key ];
+          }.bind( this ))
+          .filter( function( val ){
+            return !!val;
+          }.bind( this ))
+          .join(', ');
       }
     });
 });

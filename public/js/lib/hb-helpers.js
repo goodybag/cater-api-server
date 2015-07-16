@@ -10,6 +10,7 @@ define(function(require, exports, module) {
   var states        = require('./states');
   var config        = require('config');
   var invoices      = require('../app/stamps/user-invoice/base');
+  var Address       = require('../app/stamps/addresses/index');
   var Handlebars    = require('handlebars');
   var GbHelpers     = require('gb-handlebars-helpers')._helpers; // todo extract all helpers to this lib
 
@@ -580,6 +581,20 @@ define(function(require, exports, module) {
       return list.map( function( item ){
         return hhelper( item );
       });
+    },
+
+    directions: function( a, b ){
+      return [
+        '<iframe class="direction-iframe" '
+      , 'width="100%" height="450" frameborder="0" src="'
+      , config.google.mapsEmbedURL
+      , utils.queryParams({
+          origin: Address( a ).toString()
+        , destination: Address( b ).toString()
+        , key: config.google.apiKey
+        })
+      , '"></iframe>'
+      ].join('');
     }
   };
 

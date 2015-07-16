@@ -1783,6 +1783,7 @@ module.exports.register = function(app) {
   , m.aliasLocals({ delivery_services: 'orders' })
   , m.getOrder2({
       param:                  'id'
+    , location:               true
     , restaurant:             true
     , restaurantContacts:     true
     , restaurantDbModelFind:  true

@@ -240,19 +240,25 @@ module.exports.update = function(req, res) {
   utils.async.series([
     // Geocode the address on the order if necessary
     function( next ){
+      var bodyAddress = Address( req.body );
 
-      // No address info, no need to geocode yet
-      if ( !order.attributes.street ){
+      // No address info, no need to geocode
+      if ( bodyAddress.fulfilledComponents().length === 0 ){
         return next();
       }
 
-      // Order address has already been geocoded
-      if ( order.attributes.lat_lng ){
+      if ( !req.body.street ){
+        return next();
+      }
+
+      var orderAddress = Address( order.attributes );
+
+      if ( !orderAddress.hasMinimumComponents() ){
         return next();
       }
 
       GeocodeRequest()
-        .address( Address( order.attributes ).toString() )
+        .address( orderAddress.toString() )
         .send( function( error, result ){
           if ( error ){
             return next( error );

@@ -15,8 +15,9 @@ var MailComposer = require('mailcomposer').MailComposer;
 var orderDefinitionSchema = require('../../db/definitions/orders').schema;
 var promoConfig = require('../../configs/promo');
 var DMReq = require('stamps/requests/distance-matrix');
-var address = require('stamps/addresses');
 var deliveryFee = require('stamps/orders/delivery-fee');
+var Address = require('stamps/addresses');
+var GeocodeRequest = require('stamps/requests/geocode');
 
 var addressFields = [
   'street'
@@ -208,6 +209,10 @@ module.exports.update = function(req, res) {
   // get keys from order def schema that allow editable access
   var updateableFields = Object.keys( orderDefinitionSchema ).filter( function( key ){
     return req.user.attributes.groups.some( function( group ){
+      if ( !Array.isArray( orderDefinitionSchema[ key ].editable ) ){
+        return true;
+      }
+
       return utils.contains( orderDefinitionSchema[ key ].editable, group );
     });
   });
@@ -231,16 +236,56 @@ module.exports.update = function(req, res) {
 
   utils.extend(order.attributes, utils.pick(req.body, updateableFields));
 
-  order.save(function(err, rows, result) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    res.send(order.toJSON({plain:true}));
+  utils.async.series([
+    // Geocode the address on the order if necessary
+    function( next ){
+      var bodyAddress = Address( req.body );
 
-    venter.emit('order:change', order.attributes.id);
+      // No address info, no need to geocode
+      if ( bodyAddress.fulfilledComponents().length === 0 ){
+        return next();
+      }
 
-    if (datetimeChanged) {
-      venter.emit('order:datetime:change', order, oldDatetime);
+      if ( !req.body.street ){
+        return next();
+      }
+
+      var orderAddress = Address( order.attributes );
+
+      if ( !orderAddress.hasMinimumComponents() ){
+        return next();
+      }
+
+      GeocodeRequest()
+        .address( orderAddress.toString() )
+        .send( function( error, result ){
+          if ( error ){
+            return next( error );
+          }
+
+          if ( !result.isValidAddress() ){
+            return res.error( errors.input.INVALID_ADDRESS );
+          }
+
+          order.attributes.lat_lng = result.toAddress().lat_lng;
+
+          return next();
+        });
     }
 
+  , order.save.bind( order )
+  ], function( error ){
+    if ( error ){
+      return res.error( errors.internal.UNKNOWN, error );
+    }
+
+    res.send( order.toJSON({ plain:true }) );
+
+    venter.emit( 'order:change', order.attributes.id );
+
+    if ( datetimeChanged ){
+      venter.emit( 'order:datetime:change', order, oldDatetime );
+    }
   });
 };
 
@@ -378,6 +423,7 @@ module.exports.changeStatus = function(req, res) {
 
   req.order.status = req.body.status;
   logger.info('Saving order');
+
   db.orders.update( req.order.id, $update, function(err){
     logger.info('Saving order complete!', err ? { error: err } : null);
     if (err) return res.error(errors.internal.DB_FAILURE, err);
@@ -455,8 +501,8 @@ module.exports.getDeliveryFee = function( req, res ){
     }
   }
 
-  var origin = address( req.order ).toString();
-  var destination = address( location ).toString();
+  var origin = Address( req.order ).toString();
+  var destination = Address( location ).toString();
 
   DMReq()
     .origin( origin )

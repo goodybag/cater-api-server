@@ -69,8 +69,8 @@ define(function(require, exports, module) {
       }
     }),
 
-    patch: false,
-    setThenSave: true,
+    patch: true,
+    setThenSave: false,
 
     errorTypeMessages: {
       required: 'Please enter a valid {noun}'
@@ -285,10 +285,20 @@ define(function(require, exports, module) {
         return this.onUpdateCardSubmitClick(e);
       }
 
-      utils.async.parallel(tasks, function( err ){
+      utils.async.parallel(tasks, function( err, results ){
         spinner.stop();
 
-        if (err) return notify.error(err); // TODO: error handling
+        if (err) {
+          var error = err.responseJSON && err.responseJSON.error ? err.responseJSON.error : null;
+          if ( error && error.name === 'INVALID_ADDRESS' ){
+            return self.displayErrors2([{
+              property: 'street'
+            , message: 'Please enter a valid address'
+            }]);
+          }
+
+          return notify.error(err);
+        }
 
         self.model.changeStatus('submitted', true, function(err, data) {
           if (err) return notify.error(err); // TODO: error handling

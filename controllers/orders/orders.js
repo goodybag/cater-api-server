@@ -15,7 +15,6 @@ var MailComposer = require('mailcomposer').MailComposer;
 var orderDefinitionSchema = require('../../db/definitions/orders').schema;
 var promoConfig = require('../../configs/promo');
 var DMReq = require('stamps/requests/distance-matrix');
-var address = require('stamps/addresses');
 var deliveryFee = require('stamps/orders/delivery-fee');
 var Address = require('stamps/addresses');
 var GeocodeRequest = require('stamps/requests/geocode');
@@ -502,8 +501,8 @@ module.exports.getDeliveryFee = function( req, res ){
     }
   }
 
-  var origin = address( req.order ).toString();
-  var destination = address( location ).toString();
+  var origin = Address( req.order ).toString();
+  var destination = Address( location ).toString();
 
   DMReq()
     .origin( origin )

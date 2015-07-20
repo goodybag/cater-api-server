@@ -29,8 +29,12 @@ var checkForExistingDebit = function (order, callback) {
       return charge.metadata.order_uuid === order.uuid;
     }
 
+    function failedCharge (charge) {
+      return charge.status !== 'failed';
+    }
+
     if (charges && charges.data) {
-      var debits = charges.data.filter(matchesUuid);
+      var debits = charges.data.filter(matchesUuid).filter(failedCharge);
 
       if ( debits && debits.length > 1 ) {
         logger.error('Multiple debits for a single order');

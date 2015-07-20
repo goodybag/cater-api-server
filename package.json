@@ -120,7 +120,8 @@
     "useragent": "^2.1.3",
     "when": "2.2.x",
     "wrench": "~1.5.8",
-    "yelp": "~0.1.1"
+    "yelp": "~0.1.1",
+    "brawndo": "dropoff-co/com.dropoff.service.brawndo.client"
   },
   "devDependencies": {
     "loglog-server": "^1.0.6",

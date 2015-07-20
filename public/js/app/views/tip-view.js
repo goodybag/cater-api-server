@@ -6,7 +6,8 @@ define(function(require, exports, module) {
     events: {
       'change .tip-percent': 'selectTip',
       'keydown .order-tip': 'cacheTip',
-      'keyup .order-tip': 'customTip'
+      'keyup .order-tip': 'customTip',
+      'change .order-tip': 'customTip'
     },
 
     initialize: function() {
@@ -19,7 +20,8 @@ define(function(require, exports, module) {
       if (!_.isNaN(val)) {
         var tip = this.model.get('sub_total') * (val / 100);
         this.$el.find('.order-tip').val(Handlebars.helpers.dollars(tip));
-        this.model.set('tip', tip)
+        // Let this be handled by a parent FormView
+        // this.model.set('tip', tip)
       }
     },
 

@@ -19,6 +19,7 @@ define(function(require, exports, module) {
         var $field = this.$el.find(this.fieldMap[key]);
         if ($field.length > 0) {
           var val = getter ? getter.apply(this) : ($field.val()||'').trim() || null;
+          console.log( key, val);
           if (!(val == null && this.model.get(key) == null) && !_.isEqual(val, this.model.get(key)))
             diff[key] = val;
         }

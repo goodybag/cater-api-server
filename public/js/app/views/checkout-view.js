@@ -13,20 +13,22 @@ define(function(require, exports, module) {
   var PaymentMethod = require('../models/payment-method');
 
   var CheckoutView = OrderView.extend({
-    events: _.extend({}, OrderView.prototype.events, {
-      'click .item-edit':                             'itemEditClick',
-      'click  #cancel-confirm-modal .btn-cancel':     'cancel',
-      'click  .btn-expired-update':                   'onExpiredUpdateClick',
-      'click  #update-card .btn-cancel':              'onUpdateCardCancelClick',
-      'click  #update-card .btn-submit':              'onUpdateCardSubmitClick',
-      'change input[type="radio"].payment-method':    'changePaymentMethod',
-      'change #payment-method-id':                    'onPaymentMethodIdChange',
-      'submit #order-form':                           'submit',
-      'submit #select-address-form':                  'selectAddress',
-      'keyup #order-guests':                          'updateGuests',
-      'input input[data-stripe="number"]':            'onCardNumberChange',
-      'change input[name="organization_type"]':       'onOrganizationTypeChange'
-    }),
+    events: function(){
+      return _.extend({}, OrderView.prototype.events.call( this ), {
+        'click .item-edit':                             'itemEditClick',
+        'click  #cancel-confirm-modal .btn-cancel':     'cancel',
+        'click  .btn-expired-update':                   'onExpiredUpdateClick',
+        'click  #update-card .btn-cancel':              'onUpdateCardCancelClick',
+        'click  #update-card .btn-submit':              'onUpdateCardSubmitClick',
+        'change input[type="radio"].payment-method':    'changePaymentMethod',
+        'change #payment-method-id':                    'onPaymentMethodIdChange',
+        'submit #order-form':                           'submit',
+        'submit #select-address-form':                  'selectAddress',
+        'keyup #order-guests':                          'updateGuests',
+        'input input[data-stripe="number"]':            'onCardNumberChange',
+        'change input[name="organization_type"]':       'onOrganizationTypeChange'
+      })
+    },
 
     step: 2,
 

@@ -195,6 +195,9 @@ describe('Order Notifications', function(){
       , zip:            '78723'
       , lat:            '100'
       , lng:            '50'
+      , company_name:   'Goodybag'
+      , first_name:     'Goodybag'
+      , last_name:      'Goodybag'
       });
     });
 
@@ -232,12 +235,13 @@ describe('Order Notifications', function(){
     it('.orderDropoffOrigin()', function(){
       var order = {
         restaurant_location_id: 2
+      , notes: 'Food should be hot'
       , restaurant: {
-          locations: [
+          name: 'The Test Restaurant'
+        , locations: [
             { id: 1 }
           , { id:       2
             , street:   '7901 Cameron Rd.'
-            , street2:  'Building 2, #300'
             , city:     'Austin'
             , state:    'TX'
             , zip:      '78723'
@@ -248,26 +252,27 @@ describe('Order Notifications', function(){
         }
       };
 
-      assert.deepEqual( dropoffOrderSubmitted.orderDropoffDestination( order ), {
-        address_line_1: '123 Sesame St.'
+      assert.deepEqual( dropoffOrderSubmitted.orderDropoffOrigin( order ), {
+        address_line_1: '7901 Cameron Rd.'
       , city:           'Austin'
       , state:          'TX'
       , zip:            '78723'
       , lat:            '100'
       , lng:            '50'
-      , phone:          '5122706333' // Orders phone
+      , phone:          config.phone.orders
       , first_name:     'Goodybag'
       , last_name:      'Goodybag'
-      , email:          'orders@goodybag.com'
+      , email:          config.emails.orders
       , company_name:   'The Test Restaurant'
+      , remarks:        'Notes:\nFood should be hot'
       });
     });
 
-    it('.orderDropoffDetails()', function(){
+    it.skip('.orderDropoffDetails()', function(){
 
     });
 
-    it('.htmlPreview()', function(){
+    it.skip('.htmlPreview()', function(){
 
     });
   });

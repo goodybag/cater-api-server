@@ -206,7 +206,7 @@ describe('Order Notifications', function(){
       , state:    'TX'
       , zip:      '78723'
       , phone:    '1234567890'
-      , lat_lng:  { x: '100', y: '50' }
+      , lat_lng:  { x: 100, y: 50 }
       , user:     { email: 'test@test.com', organization: 'The Test Group', name: 'Turd Ferguson' }
       , notes:    'Food should be hot'
       , delivery_instructions: 'Knock once. NO! Knock twice.'
@@ -242,7 +242,7 @@ describe('Order Notifications', function(){
             , state:    'TX'
             , zip:      '78723'
             , phone:    '1234567890'
-            , lat_lng:  { x: '100', y: '50' }
+            , lat_lng:  { x: 100, y: 50 }
             }
           ]
         }
@@ -255,10 +255,10 @@ describe('Order Notifications', function(){
       , zip:            '78723'
       , lat:            '100'
       , lng:            '50'
-      , phone:          '1234567890'
-      , first_name:     'Turd'
-      , last_name:      'Ferguson'
-      , email:          'test@test.com'
+      , phone:          '5122706333' // Orders phone
+      , first_name:     'Goodybag'
+      , last_name:      'Goodybag'
+      , email:          'orders@goodybag.com'
       , company_name:   'The Test Restaurant'
       });
     });

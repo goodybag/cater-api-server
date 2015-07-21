@@ -154,4 +154,23 @@ describe ('Utils', function(){
 
     utils.sendError(res, new Error('poop'));
   });
+
+  it('.dateTimeFormatter2', function () {
+    var time = { h: 0, m: 0, s: 0 };
+    var today = moment(time);
+    var tomorrow = moment(time).add(1, 'day');
+
+    var testCases = [
+      ['2015-07-20 00:00:00', '', '2015-07-20']
+    , ['2015-07-20 00:00:00', 'MM/DD/YYYY', '07/20/2015']
+    , ['2015-07-20 00:00:00', 'R [at] h:mm a', '07/20/2015 at 12:00 am']
+    , [today.format(), 'R [at] h:mm a', 'Today at 12:00 am']
+    , [tomorrow.format(), 'R [at] h:mm a', 'Tomorrow at 12:00 am']
+    ].every(function (test) {
+      return utils.dateTimeFormatter2(test[0], test[1]) === test[2];
+    });
+
+    assert(testCases);
+
+  });
 });

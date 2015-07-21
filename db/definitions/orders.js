@@ -173,6 +173,7 @@ define(function(require) {
   , payment_status: {
       type: types.paymentstatus
     , nullable: true
+    , editable: ['order-owner', 'admin']
     }
   , payment_method_id: {
       type: types.int

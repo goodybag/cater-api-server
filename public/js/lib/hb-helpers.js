@@ -152,16 +152,6 @@ define(function(require, exports, module) {
       return utils.timeFormatter(time, format || "h:mm A");
     },
 
-    humanizeTimepart: function (time) {
-      if (!time) return '';
-      time = moment(time);
-      var now = moment();
-      var timepart = time.format('h:mm A');
-      if (now.isSame(time, 'day')) return 'Today at ' + timepart;
-      if (now.add(1, 'day').isSame(time, 'day')) return 'Tomorrow at ' + timepart;
-      return timepart;
-    },
-
     unixTimestamp: function(datetime) {
       if(!datetime) return '';
       return moment(datetime).unix();

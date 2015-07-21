@@ -8,7 +8,7 @@
     <dd>{{datepart order.pickup_datetime}}</dd>
     <dt>Pickup Time:</dt>
     <dd>
-      {{humanizeTimepart order.pickup_datetime}}
+      {{timepart order.pickup_datetime}}
       {{#contains user.groups 'admin'}}
         {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}
       {{/contains}}
@@ -19,7 +19,7 @@
     <dt>Delivery Time:</dt>
     <dd>
       {{#contains user.groups 'restaurant'}}
-        {{humanizeTimepart order.datetime}}
+        {{timepart order.datetime}}
       {{else}}
         {{join (timeToRange (timepart order.datetime) "h:mm A") " - "}}
       {{/contains}}

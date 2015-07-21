@@ -173,4 +173,102 @@ describe('Order Notifications', function(){
       });
     });
   });
+
+  describe('Dropoff Order Submitted', function(){
+    var dropoffOrderSubmitted = require('../../../lib/order-notifications2/notifications/dropoff-order-submitted');
+
+    it('.locationDropoff()', function(){
+      var loc = {
+        street:   '7901 Cameron Rd.'
+      , street2:  'Building 2, #300'
+      , city:     'Austin'
+      , state:    'TX'
+      , zip:      '78723'
+      , lat_lng:  { x: '100', y: '50' }
+      };
+
+      assert.deepEqual( dropoffOrderSubmitted.locationDropoff( loc ), {
+        address_line_1: '7901 Cameron Rd.'
+      , address_line_2: 'Building 2, #300'
+      , city:           'Austin'
+      , state:          'TX'
+      , zip:            '78723'
+      , lat:            '100'
+      , lng:            '50'
+      });
+    });
+
+    it('.orderDropoffDestination()', function(){
+      var order = {
+        street:   '7901 Cameron Rd.'
+      , street2:  'Building 2, #300'
+      , city:     'Austin'
+      , state:    'TX'
+      , zip:      '78723'
+      , phone:    '1234567890'
+      , lat_lng:  { x: '100', y: '50' }
+      , user:     { email: 'test@test.com', organization: 'The Test Group', name: 'Turd Ferguson' }
+      , notes:    'Food should be hot'
+      , delivery_instructions: 'Knock once. NO! Knock twice.'
+      };
+
+      assert.deepEqual( dropoffOrderSubmitted.orderDropoffDestination( order ), {
+        address_line_1: '7901 Cameron Rd.'
+      , address_line_2: 'Building 2, #300'
+      , city:           'Austin'
+      , state:          'TX'
+      , zip:            '78723'
+      , lat:            '100'
+      , lng:            '50'
+      , phone:          '1234567890'
+      , first_name:     'Turd'
+      , last_name:      'Ferguson'
+      , email:          'test@test.com'
+      , company_name:   'The Test Group'
+      , remarks:        'Notes:\nFood should be hot\n\nDelivery Instructions:\nKnock once. NO! Knock twice.'
+      });
+    });
+
+    it('.orderDropoffOrigin()', function(){
+      var order = {
+        restaurant_location_id: 2
+      , restaurant: {
+          locations: [
+            { id: 1 }
+          , { id:       2
+            , street:   '7901 Cameron Rd.'
+            , street2:  'Building 2, #300'
+            , city:     'Austin'
+            , state:    'TX'
+            , zip:      '78723'
+            , phone:    '1234567890'
+            , lat_lng:  { x: '100', y: '50' }
+            }
+          ]
+        }
+      };
+
+      assert.deepEqual( dropoffOrderSubmitted.orderDropoffDestination( order ), {
+        address_line_1: '123 Sesame St.'
+      , city:           'Austin'
+      , state:          'TX'
+      , zip:            '78723'
+      , lat:            '100'
+      , lng:            '50'
+      , phone:          '1234567890'
+      , first_name:     'Turd'
+      , last_name:      'Ferguson'
+      , email:          'test@test.com'
+      , company_name:   'The Test Restaurant'
+      });
+    });
+
+    it('.orderDropoffDetails()', function(){
+
+    });
+
+    it('.htmlPreview()', function(){
+
+    });
+  });
 });

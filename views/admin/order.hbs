@@ -92,13 +92,13 @@
         </div>
         <div class="row">
           <dt>Delivery Time</dt>
-          <dd>{{formatDateTime2 order.datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
+          <dd>{{formatDateTime2 order.datetime "R h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
         </div>
 
         {{#is order.type 'pickup' 'courier'}}
           <div class="row">
             <dt>Pickup Time</dt>
-            <dd>{{formatDateTime2 order.pickup_datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
+            <dd>{{formatDateTime2 order.pickup_datetime "R h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
           </div>
         {{/is}}
         <div class="row">

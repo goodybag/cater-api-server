@@ -268,8 +268,57 @@ describe('Order Notifications', function(){
       });
     });
 
-    it.skip('.orderDropoffDetails()', function(){
+    it('.orderDropoffDetails()', function(){
+      var order = {
+        
+      };
 
+      var est = {
+        success : true
+      , timestamp: '2015-03-05T14:51:14+00:00'
+      , data : {
+          ETA: '243.1'
+        , Distance: '0.62'
+        , From: '78701'
+        , To: '78701'
+        , asap: {
+            Price: '19.00'
+          , ETA: '243.1'
+          , Distance: '0.62'
+          }
+        , two_hr: {
+            Price: '17.00'
+          , ETA: '243.1'
+          , Distance: '0.62'
+          }
+        , four_hr: {
+            Price: '15.00'
+          , ETA: '243.1'
+          , Distance: '0.62'
+          }
+        , after_hr: {
+            Price: '21.00'
+          , ETA: '243.1'
+          , Distance: '0.62'
+          }
+        , holiday: {
+            Price: '31.00'
+          , ETA: '243.1'
+          , Distance: '0.62'
+          }
+        }
+    };
+
+      assert.deepEqual( dropoffOrderSubmitted.orderDropoffDetails( order, est ), {
+        quantity:       1
+      , weight:         1
+      , eta:            
+      , distance:       
+      , price:          
+      , ready_date:     
+      , type:           
+      , reference_code: 
+      });
     });
 
     it.skip('.htmlPreview()', function(){

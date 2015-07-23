@@ -13,20 +13,22 @@ define(function(require, exports, module) {
   var PaymentMethod = require('../models/payment-method');
 
   var CheckoutView = OrderView.extend({
-    events: _.extend({}, OrderView.prototype.events, {
-      'click .item-edit':                             'itemEditClick',
-      'click  #cancel-confirm-modal .btn-cancel':     'cancel',
-      'click  .btn-expired-update':                   'onExpiredUpdateClick',
-      'click  #update-card .btn-cancel':              'onUpdateCardCancelClick',
-      'click  #update-card .btn-submit':              'onUpdateCardSubmitClick',
-      'change input[type="radio"].payment-method':    'changePaymentMethod',
-      'change #payment-method-id':                    'onPaymentMethodIdChange',
-      'submit #order-form':                           'submit',
-      'submit #select-address-form':                  'selectAddress',
-      'keyup #order-guests':                          'updateGuests',
-      'input input[data-stripe="number"]':            'onCardNumberChange',
-      'change input[name="organization_type"]':       'onOrganizationTypeChange'
-    }),
+    events: function(){
+      return _.extend({}, OrderView.prototype.events.call( this ), {
+        'click .item-edit':                             'itemEditClick',
+        'click  #cancel-confirm-modal .btn-cancel':     'cancel',
+        'click  .btn-expired-update':                   'onExpiredUpdateClick',
+        'click  #update-card .btn-cancel':              'onUpdateCardCancelClick',
+        'click  #update-card .btn-submit':              'onUpdateCardSubmitClick',
+        'change input[type="radio"].payment-method':    'changePaymentMethod',
+        'change #payment-method-id':                    'onPaymentMethodIdChange',
+        'submit #order-form':                           'submit',
+        'submit #select-address-form':                  'selectAddress',
+        'keyup #order-guests':                          'updateGuests',
+        'input input[data-stripe="number"]':            'onCardNumberChange',
+        'change input[name="organization_type"]':       'onOrganizationTypeChange'
+      })
+    },
 
     step: 2,
 
@@ -69,8 +71,8 @@ define(function(require, exports, module) {
       }
     }),
 
-    patch: false,
-    setThenSave: true,
+    patch: true,
+    setThenSave: false,
 
     errorTypeMessages: {
       required: 'Please enter a valid {noun}'
@@ -285,10 +287,20 @@ define(function(require, exports, module) {
         return this.onUpdateCardSubmitClick(e);
       }
 
-      utils.async.parallel(tasks, function( err ){
+      utils.async.parallel(tasks, function( err, results ){
         spinner.stop();
 
-        if (err) return notify.error(err); // TODO: error handling
+        if (err) {
+          var error = err.responseJSON && err.responseJSON.error ? err.responseJSON.error : null;
+          if ( error && error.name === 'INVALID_ADDRESS' ){
+            return self.displayErrors2([{
+              property: 'street'
+            , message: 'Please enter a valid address'
+            }]);
+          }
+
+          return notify.error(err);
+        }
 
         self.model.changeStatus('submitted', true, function(err, data) {
           if (err) return notify.error(err); // TODO: error handling
@@ -616,7 +628,7 @@ define(function(require, exports, module) {
       var this_ = this;
       var error, $el, $parent;
       var template = Handlebars.partials.alert_error;
-      var selector = '[name="{property}"], [data-stripe-alert="{property}"]';
+      var selector = '[name="{property}"], [data-stripe="{property}"]';
 
       if ( _.isObject( errors ) && !_.isArray( errors ) ){
         // Amanda errors object
@@ -662,7 +674,7 @@ define(function(require, exports, module) {
         $el.css( css );
 
         $parent = this.$el.find(
-          selector.replace( /{property}/g, (error.name || error.param || error.property).toLowerCase().replace(/_/g, '-') )
+          selector.replace( /{property}/g, (error.name || error.param || error.property).toLowerCase().replace(/-/g, '_') )
         ).parents('.form-group').eq(0);
 
         $parent.prepend( $el );

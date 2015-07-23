@@ -173,6 +173,7 @@ define(function(require) {
   , payment_status: {
       type: types.paymentstatus
     , nullable: true
+    , editable: ['order-owner', 'admin']
     }
   , payment_method_id: {
       type: types.int
@@ -227,7 +228,7 @@ define(function(require) {
     , checks: ["SIMILAR TO '[[:digit:]]{10}'"]
     , editable: ['client', 'admin']
     }
-  , lat_lng: { type: types.point }
+  , lat_lng: { type: types.point, editable: ['order-owner'] }
   };
 
   definition.indices = {};

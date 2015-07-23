@@ -25,6 +25,10 @@ define( function( require, exports, module ){
     })
     .methods({
       getTax: function(){
+        if ( this.user && this.user.is_tax_exempt ){
+          return 0;
+        }
+
         var amount = this.getSubTotal() + this.adjustment_amount + this.user_adjustment_amount + this.delivery_fee;
         return Math.round( amount * this.restaurant.region.sales_tax );
       }

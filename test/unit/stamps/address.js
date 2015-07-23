@@ -33,6 +33,21 @@ describe('Stamps', function(){
         , '123 Sesame St., Trashcan 456, Austin, TX, 78723'
         );
       });
+
+      it('.toString({ street2: false })', function(){
+        var address = addresses({
+          street: '123 Sesame St.'
+        , street2: 'Trashcan 456'
+        , city: 'Austin'
+        , state: 'TX'
+        , zip: 78723
+        });
+
+        assert.equal(
+          address.toString({ street2: false })
+        , '123 Sesame St., Austin, TX, 78723'
+        );
+      });
     });
   });
 });

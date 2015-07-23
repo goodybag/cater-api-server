@@ -12,7 +12,11 @@ var promo = {
   }
 , jacob: {
     email: 'jacobparker@goodybag.com'
-  , promo_code: ['goodybag315', 'gb415', 'gbaustin15', 'gbhou15', 'gbstar15', 'gbamaz15']
+  , promo_code: ['goodybag315', 'gb415', 'gbaustin15', 'gbhou15', 'gbstar15', 'gbamaz15', 'gbfree0715']
+  }
+, christy: {
+    email: 'christymedlock@goodybag.com'
+  , promo_code: ['gbfree0715']
   }
 , toby: {
     email: 'tobyshields@goodybag.com'
@@ -30,6 +34,18 @@ var promo = {
     , 'christymedlock@goodybag.com'
     ]
   , promo_code: [ 'starkebab' ]
+  }
+, dropoff: {
+    email: [
+        'jacobparker@goodybag.com'
+      , 'patrickmugavin@goodybag.com'
+      , 'christymedlock@goodybag.com'
+    ]
+  , promo_code: [
+      'dropoff1', 'dropoff2', 'dropoff3'
+    , 'dropoff4', 'dropoff5', 'dropoff6'
+    , 'dropoff7', 'dropoff8', 'dropoff9'
+    ]
   }
 };
 

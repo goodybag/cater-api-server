@@ -92,13 +92,13 @@
         </div>
         <div class="row">
           <dt>Delivery Time</dt>
-          <dd>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
+          <dd>{{formatDateTime2 order.datetime "R h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
         </div>
 
         {{#is order.type 'pickup' 'courier'}}
           <div class="row">
             <dt>Pickup Time</dt>
-            <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
+            <dd>{{formatDateTime2 order.pickup_datetime "R h:mm A"}} {{formatDateTimeWithTz order.pickup_datetime order.timezone "z"}}</dd>
           </div>
         {{/is}}
         <div class="row">
@@ -162,9 +162,6 @@
         </ul>
       {{/eq}}
     </section>
-  </div>
-
-  <div>
     <section class="panel-component" id="order-restaurant">
       <h1 class="component-title">Restaurant</h1>
       <dl class="restaurant-info definition-row-list">
@@ -195,8 +192,12 @@
     </section>
   </div>
 
+  <section class="panel-component" id="internal-notes">
+    <h1 class="component-title">Notes</h1>
+    <div class="panel-body"></div>
+  </section>
+
   <section class="panel-component" id="order-pdfs">
-    <h1 class="component-title">Available Pdfs</h1>
     <div class="pdf-previews">
       <div class="pdf-preview" data-order-id="{{order.id}}" data-type="receipt">
         <div class="pdf-preview-header">
@@ -258,6 +259,11 @@
         <table class="table notifications-table" id="notifications-table"></table>
       </div>
     </div>
+  </section>
+
+  <section class="panel-component" id="order-directions">
+    <h1 class="component-title">Directions</h1>
+    {{{directions order.location order}}}
   </section>
 {{/extend}}
 

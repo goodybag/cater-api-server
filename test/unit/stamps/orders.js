@@ -157,6 +157,31 @@ describe('Orders Stamps', function(){
     assert.equal( order.getTotal(), 772 );
   });
 
+  it('.getTotal() with tax exempt user', function(){
+    var order = orders({
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
+    , user: { is_tax_exempt: true }
+    , items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      ]
+    , amenities: [
+        { price: 7, scale: 'flat', enabled: true }
+      , { price: 2, scale: 'multiply', enabled: true }
+      , { price: 1, scale: 'multiply', enabled: false }
+      ]
+    , guests: 5
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
+    , tip: 50
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getTotal(), 717 );
+  });
+
   it('Should filter by month', function() {
     var sql = orders.db({ month: 12 }).get();
     assert(sql.$query);
@@ -547,6 +572,7 @@ describe('Orders Stamps', function(){
           { price: 100, quantity: 1 }
         , { price: 200, quantity: 1 }
         ]
+      , user: { is_tax_exempt: false }
       , adjustment_amount: -100
       , user_adjustment_amount: -50
       , tip: 50
@@ -572,6 +598,11 @@ describe('Orders Stamps', function(){
     it('.getApplicationCut() - courier', function(){
       var oc = DefaultOrderCharge({ type: 'courier' });
       assert.equal( oc.getApplicationCut(), 193 );
+    });
+
+    it('.getApplicationCut() - with tax exempt user', function(){
+      var oc = DefaultOrderCharge({ user: { is_tax_exempt: true } });
+      assert.equal( oc.getApplicationCut(), 35 );
     });
 
     it('.getTotal()', function(){

@@ -223,7 +223,7 @@ config.defaults = {
 
 , phone: {
     main: '5126674224'
-  , support: '5122706555'
+  , support: '5126774224' //'5122706555'
   , orders: '5122706333'
   }
 

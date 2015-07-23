@@ -46,3 +46,35 @@ HTML
 ```
 <input name="price" type="number" step="0.01" data-in="dollars" data-out="pennies" value="{{price}}">
 ```
+
+## audit-view.js
+
+> Used for creating/deleting audit-style views.
+
+When you come across a situation where you want to take some user input from a form, and create a new object with it adding it to a list and rendering, then use this view. Although it could be generalized further, its primary use-case is audits. A user puts in some reason for some event occurring, and it posts to the collection and re-renders.
+
+__Usage__:
+
+The following example is taken from the Order Internal Notes:
+
+```javascript
+var AuditView = require('app/view/audit-view');
+
+var internalNotesView = new AuditView({
+  // Audit view needs a collection
+  collection: new OrderInternalNotes( order.get('internal_notes'), {
+                order_id: order.get('id')
+              })
+
+, template:   Handlebars.order_internal_notes
+});
+```
+
+The template will comprise the bulk of your work. You need to provide the following functionality:
+
+* `form[role="create-form"]` - A form that will serve as the means to collecting data
+* `[role="remove"]` - An element that will remove a specific event onClick
+
+The template will receive an array called `items` that will contain the collections models.
+
+See [../../../../partials/order-internal-notes.hbs](../../../../partials/order-internal-notes.hbs) for a template example.

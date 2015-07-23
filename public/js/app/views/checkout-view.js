@@ -30,6 +30,8 @@ define(function(require, exports, module) {
       })
     },
 
+    spinner: spinner,
+
     step: 2,
 
     fieldMap: _.extend({}, OrderView.prototype.fieldMap, {
@@ -351,6 +353,10 @@ define(function(require, exports, module) {
       return this;
     },
 
+    onSaveError: function( error ){
+
+    },
+
     onCardNumberChange: function(e) {
       this.$newCard = this.$newCard || this.$el.find('#new-card');
       this.$cardNumber = this.$cardNumber || this.$newCard.find('input[data-stripe="number"]');
@@ -599,96 +605,6 @@ define(function(require, exports, module) {
       }
 
       return address.validate(address.toJSON());
-    },
-
-    /**
-     * Displays errors next to the form field pertaining to the error
-     *
-     * displayErrors2([
-     *   { property: 'card_number', message: '`555` is not a valid card number' }
-     * ])
-     *
-     * Or Amanda style errors will be converted:
-     *
-     * displayErrors2({
-     *   '0': {...}
-     *   '1': {...}
-     * })
-     *
-     * Optionally pass in a Model that has the fieldNounMap exposed
-     * to convert property names to nicer names
-     *
-     * @param  {Array}  errors Array of error objects
-     * @param  {Object} Model  Model to reference for field-noun-map
-     */
-    displayErrors2: function( errors, Model ){
-      // Just in case!
-      spinner.stop();
-
-      var this_ = this;
-      var error, $el, $parent;
-      var template = Handlebars.partials.alert_error;
-      var selector = '[name="{property}"], [data-stripe="{property}"]';
-
-      if ( _.isObject( errors ) && !_.isArray( errors ) ){
-        // Amanda errors object
-        if ( '0' in errors ){
-          errors = Array.prototype.slice.call( errors );
-
-          // We're just going to use the `required` error text for everything
-          // so just take the unique on error.property
-          errors = _.chain(errors).map( function( error ){
-            return error.property;
-          }).unique().map( function( property ){
-            var message;
-            var noun = property;
-
-            if ( Model && typeof Model.fieldNounMap === 'object' )
-            if ( property in Model.fieldNounMap ){
-              noun = Model.fieldNounMap[ property ];
-            }
-
-            message = this_.errorTypeMessages.required.replace(
-              '{noun}', noun
-            );
-
-            return {
-              property: property
-            , message: message
-            };
-          }).value();
-        } else {
-          errors = [ errors ];
-        }
-      }
-
-      var css = {
-        position: 'absolute'
-      , top: '11px'
-      };
-
-      for ( var i = 0, l = errors.length; i < l; ++i ){
-        error = errors[i];
-
-        $el = $( template( error ) );
-        $el.css( css );
-
-        $parent = this.$el.find(
-          selector.replace( /{property}/g, (error.name || error.param || error.property).toLowerCase().replace(/-/g, '_') )
-        ).parents('.form-group').eq(0);
-
-        $parent.prepend( $el );
-        $parent.addClass('has-error');
-
-        $el.css( 'right', 0 - $el[0].offsetWidth );
-      }
-
-      // Scroll to the first error
-      $el = this.$el.find('.has-error');
-
-      if ( $el.length ){
-        $('html,body').animate({ scrollTop: $el.eq(0).offset().top - 20 });
-      }
     },
 
     onPaymentMethodIdChange: function(e) {

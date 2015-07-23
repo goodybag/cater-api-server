@@ -214,6 +214,20 @@ define(function(require, exports, module) {
     save: function() {
       var self = this;
       this.onSave(function(err, data) {
+        if (err) {
+          var error = err.responseJSON && err.responseJSON.error ? err.responseJSON.error : null;
+          if ( error && error.name === 'INVALID_ADDRESS' ){
+            return self.displayErrors2([{
+              property: 'street'
+            , message: 'Please enter a valid address.'
+            }]);
+          }
+
+          return self.displayErrors2([{
+            message: 'Something went wrong saving this order'
+          }]);
+        }
+
         self.toggleEdit();
       });
     }

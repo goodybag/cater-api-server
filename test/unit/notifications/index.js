@@ -238,17 +238,15 @@ describe('Order Notifications', function(){
       , notes: 'Food should be hot'
       , restaurant: {
           name: 'The Test Restaurant'
-        , locations: [
-            { id: 1 }
-          , { id:       2
-            , street:   '7901 Cameron Rd.'
-            , city:     'Austin'
-            , state:    'TX'
-            , zip:      '78723'
-            , phone:    '1234567890'
-            , lat_lng:  { x: 100, y: 50 }
-            }
-          ]
+        }
+      , location: {
+          id:       2
+        , street:   '7901 Cameron Rd.'
+        , city:     'Austin'
+        , state:    'TX'
+        , zip:      '78723'
+        , phone:    '1234567890'
+        , lat_lng:  { x: 100, y: 50 }
         }
       };
 
@@ -268,7 +266,7 @@ describe('Order Notifications', function(){
       });
     });
 
-    it.only('.orderDropoffDetails()', function(){
+    it('.orderDropoffDetails()', function(){
       var order = {
         id: 1000
       , datetime: '2015-01-01 12:30:00'

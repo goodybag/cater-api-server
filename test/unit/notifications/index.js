@@ -268,9 +268,12 @@ describe('Order Notifications', function(){
       });
     });
 
-    it('.orderDropoffDetails()', function(){
+    it.only('.orderDropoffDetails()', function(){
       var order = {
-        
+        id: 1000
+      , datetime: '2015-01-01 12:30:00'
+      , timezone: 'America/Chicago'
+      , region: { lead_time_modifier: '00:30:00' }
       };
 
       var est = {
@@ -307,22 +310,18 @@ describe('Order Notifications', function(){
           , Distance: '0.62'
           }
         }
-    };
+      };
 
       assert.deepEqual( dropoffOrderSubmitted.orderDropoffDetails( order, est ), {
         quantity:       1
       , weight:         1
-      , eta:            
-      , distance:       
-      , price:          
-      , ready_date:     
-      , type:           
-      , reference_code: 
+      , eta:            '243.1'
+      , distance:       '0.62'
+      , price:          '19.00'
+      , type:           'asap'
+      , reference_code: '1000'
+      , ready_date:     1420135200000
       });
-    });
-
-    it.skip('.htmlPreview()', function(){
-
     });
   });
 });

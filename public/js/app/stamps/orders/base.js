@@ -12,6 +12,7 @@ define( function( require, exports, module ){
   var utils = require('utils');
   var items = require('./item');
   var amenities = require('./amenity');
+  var moment = require('moment-timezone');
 
   return require('stampit')()
     .state({
@@ -120,6 +121,20 @@ define( function( require, exports, module ){
         , this.delivery_fee
         , this.tip
         ].reduce( utils.add, 0 );
+      }
+
+    , getPickupDateTime: function(){
+        if ( !this.region ){
+          throw new Error('Cannot calculate pickup datetime without `region`');
+        }
+
+        if ( !this.datetime ){
+          throw new Error('Cannot calculate pickup datetime without `datetime`');
+        }
+
+        return moment
+          .tz( this.datetime, this.timezone )
+          .subtract( moment.duration( this.region.lead_time_modifier ) );
       }
     });
 });

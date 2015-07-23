@@ -46,7 +46,7 @@
     "respond": "~1.4.2",
     "es5-shim": "~2.3.0",
     "keymaster": "~1.6.2",
-    "react": "~0.11.1",
+    "react": "~0.13.3",
     "pickadate": "~3.5.4",
     "lefunc": "~1.2.5",
     "plan.js": "~1.0.4",

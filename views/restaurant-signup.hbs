@@ -1,0 +1,17 @@
+{{#extend "page"}}page-restaurant-signup{{/extend}}
+
+{{#extend "body"}}
+  <h1>test</h1>
+  <div id="restaurant-signup"></div>
+
+  {{#extend "scripts"}}
+  <script>
+    require([
+      'app/pages/restaurant-signup'
+      ]
+    , function(page) {
+        page.init();
+      });
+  </script>
+  {{/extend}}
+{{/extend}}

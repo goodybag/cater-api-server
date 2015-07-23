@@ -119,7 +119,7 @@ module.exports.register = function(app) {
         next();
       });
     }
-  , m.view('restaurant-signup/', {
+  , m.view('restaurant-signup', {
       layout: 'layout/default'
     })
   );

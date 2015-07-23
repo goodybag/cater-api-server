@@ -7,6 +7,13 @@ define ( function (require) {
 
   var page = {
     init: function ( options ) {
+      var restaurant = new Restaurant({});
+      restaurant.url = '/restaurants/join';
+
+      React.render(
+        React.createElement(RestaurantSignup, { model: restaurant })
+      , document.getElementById('restaurant-signup')
+      )
     }
   };
 

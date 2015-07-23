@@ -50,7 +50,7 @@ module.exports = function(grunt) {
       }
 
     , babel: {
-        files: [ 'jsx/*.jsx' ]
+        files: [ 'jsx/**/*.jsx' ]
       , tasks: [ 'babel' ]
       , options: { spawn: false }
       }

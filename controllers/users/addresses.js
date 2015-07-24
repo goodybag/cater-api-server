@@ -4,7 +4,31 @@ var db = require('../../db')
   , utils = require('../../utils')
   , config = require('../../config')
   , states = require('../../public/js/lib/states')
-  , models = require('../../models');
+  , models = require('../../models')
+  , Address = require('stamps/addresses')
+  , GeocodeRequest = require('stamps/requests/geocode');
+
+module.exports.validateAndGeocode = function( options ){
+  return function( req, res, next ){
+    var addr = Address( req.body );
+
+    GeocodeRequest()
+      .address( addr.toString({ street2: false }) )
+      .send( function( error, result ){
+        if ( error ){
+          return res.error( errors.internal.UNKNOWN, error );
+        }
+
+        if ( !result.isValidAddress() ){
+          return res.error( errors.input.INVALID_ADDRESS );
+        }
+
+        req.body.lat_lng = result.toAddress().lat_lng;
+
+        return next();
+      });
+  }
+};
 
 /**
  * POST /users/:uid/addresses

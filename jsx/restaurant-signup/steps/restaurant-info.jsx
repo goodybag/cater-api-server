@@ -2,7 +2,7 @@ define(function(require, exports, module) {
   var React = require('react');
   var Input = require('../components/input');
   var CheckBoxList = require('../components/checkbox-list');
-  var Contacts = require('../components/contacts');
+  var ContactList = require('../components/contact-list');
 
   var mealTypeCheckBoxes = [
     { label: 'Breakfast', name: 'breakfast', value: 'breakfast' }
@@ -47,7 +47,7 @@ define(function(require, exports, module) {
           <CheckBoxList label="Dietary Restrictions" ref="diet_type" checkBoxes={dietCheckBoxes} />
           <CheckBoxList label="Meal Types Offered" ref="meal_type" checkBoxes={mealTypeCheckBoxes} />
           <CheckBoxList label="Which can you include?" ref="amenities" checkBoxes={amenityCheckBoxes} />
-          <Contacts />
+          <ContactList />
         </div>
       );
     }

@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     propTypes: {
       type: React.PropTypes.string,
       label: React.PropTypes.string,
+      name: React.PropTypes.string,
       errorMessage: React.PropTypes.string,
       value: React.PropTypes.any
     },
@@ -47,6 +48,7 @@ define(function(require, exports, module) {
             </div>
             <input
               type={this.props.type || "text"}
+              name={this.props.name}
               className="form-control"
               onChange={this.onChange}
               value={this.state.value} />

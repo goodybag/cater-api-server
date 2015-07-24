@@ -1,7 +1,5 @@
 define(function(require, exports, module) {
   var React = require('react');
-
-// var Restaurant = require('../../js/app/models/restaurant');
   var Steps = require('../../../dist/restaurant-signup/steps/index.js');
 
 describe('Steps', function () {

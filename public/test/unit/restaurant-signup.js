@@ -1,6 +1,5 @@
 define(function(require, exports, module) {
-  var React     = require('react');
-  var TestUtils = require('react/react-with-addons').addons.TestUtils;
+  var React = require('react');
 
 // var Restaurant = require('../../js/app/models/restaurant');
   var Steps = require('../../../dist/restaurant-signup/steps/index.js');
@@ -8,12 +7,10 @@ define(function(require, exports, module) {
 describe('Steps', function () {
 
   describe('ref keys should be included in .getFields()', function () {
-
       Steps.forEach(function (step) {
         var Step = React.createElement(step.component, null);
-        var component = TestUtils.renderIntoDocument(Step);
+        var component = React.render(Step, document.createElement('div'));
         var fields = component.getFields();
-        console.log(component);
 
         Object.keys(component.refs).forEach(function (ref) {
           var caseName = 'ref :1 should be in :2 fields'

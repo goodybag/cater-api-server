@@ -57,6 +57,7 @@
     "Chart.js": "~1.0.1",
     "resource.js": "~1.0.2",
     "gplaces": "~1.0.5",
-    "gb-handlebars-helpers": "~0.0.4"
+    "gb-handlebars-helpers": "~0.0.4",
+    "jasmine-core": "~2.3.4"
   }
 }

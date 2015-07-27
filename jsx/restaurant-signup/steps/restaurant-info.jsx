@@ -45,7 +45,7 @@ define(function(require, exports, module) {
           <Input label="Restaurant Address" ref="address" required="true" errorMessage="Please provide an address" />
           <Input label="Restaurant Phone" ref="phone" required="true" errorMessage="Please provide a phone number"/>
           <Input label="Restaurant Email" ref="email" />
-          <FileUploader label="Your Menu" />
+          <FileUploader label="Your Menu" errorMessage="Please provide a menu" />
           <CheckBoxList label="Dietary Restrictions" ref="diet_type" checkBoxes={dietCheckBoxes} />
           <CheckBoxList label="Meal Types Offered" ref="meal_type" checkBoxes={mealTypeCheckBoxes} />
           <CheckBoxList label="Which can you include?" ref="amenities" checkBoxes={amenityCheckBoxes} />

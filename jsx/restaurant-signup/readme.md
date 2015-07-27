@@ -7,7 +7,7 @@ restaurant.url = '/restaurant/join'
 ```
 
 ```
-npm run react-test
+npm run test-react
 ```
 
 open http://localhost:8000/test/unit

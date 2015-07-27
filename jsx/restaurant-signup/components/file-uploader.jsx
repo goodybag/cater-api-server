@@ -4,9 +4,9 @@ define(function(require, exports, module) {
 
   module.exports = React.createClass({
     propTypes: {
-      label: React.PropType.string,
-      errorMessage: React.propTypes.string
-      value: React.PropType.string
+      label: React.PropTypes.string,
+      errorMessage: React.PropTypes.string,
+      value: React.PropTypes.string
     },
 
     mixins: [isValid],

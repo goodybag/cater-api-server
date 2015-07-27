@@ -4,11 +4,16 @@ define(function(require, exports, module) {
   var LeadTimes = require('../components/lead-times')
 
   module.exports = React.createClass({
+    getFields: function () {
+      return []; // TODO: add form fields
+    },
+
     render: function () {
       return (
         <div>
-          <h1>Delivery Info</h1>
+          <h2>Delivery Info</h2>
           <Input label= "Delivery Free" />
+          <h3>Delivery Lead Times</h3>
           <LeadTimes />
         </div>
       );

@@ -132,15 +132,12 @@ module.exports = function( options ){
     }
 
     if ( options.internalNotes ){
-      var createdAtExpression = "created_at::timestamptz at time zone ':tz' as created_at"
-        .replace( ':tz', req.user.attributes.region.timezone );
 
       $options.many.push({
         table:  'order_internal_notes'
-      , columns: [
-          'id', 'order_id', 'user_id', 'body'
-        , { expression: createdAtExpression }
-        ]
+      , columns:  db.user_internal_notes.getColumnListForTimezone(
+                    req.user.attributes.region.timezone
+                  )
       , alias:  'internal_notes'
       , order:  'created_at desc'
       , one:    [{ table: 'users', alias: 'user' }]

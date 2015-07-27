@@ -2348,7 +2348,13 @@ module.exports.register = function(app) {
       req.body.user_id = req.user.attributes.id;
       return next();
     }
-  , m.queryOptions({ returning: ['*']})
+  , function( req, res, next ){
+      req.queryOptions.columns = db.user_internal_notes.getColumnListForTimezone(
+        req.user.attributes.region.timezone
+      );
+
+      return next();
+    }
   , function( req, res, next ){
       m.db.order_internal_notes.insert( req.body, req.queryOptions )( req, res, next );
     }

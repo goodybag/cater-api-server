@@ -5,8 +5,9 @@
   <div class="container">
     <div id="restaurant-signup"></div>
   </div>
-
   {{#extend "scripts"}}
+  <script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
+  <script type="text/javascript">filepicker.setKey('{{config.filepicker.key}}');</script>
   <script>
     require([
       'app/pages/restaurant-signup'

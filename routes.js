@@ -2349,7 +2349,7 @@ module.exports.register = function(app) {
       return next();
     }
   , function( req, res, next ){
-      req.queryOptions.columns = db.user_internal_notes.getColumnListForTimezone(
+      req.queryOptions.returning = db.order_internal_notes.getColumnListForTimezone(
         req.user.attributes.region.timezone
       );
 

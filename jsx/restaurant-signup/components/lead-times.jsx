@@ -11,8 +11,32 @@ define(function(require, exports, module) {
   ];
 
   module.exports = React.createClass({
+    getInitialState: function () {
+      return {
+        lead_times: this.props.leadTimes || defaultLeadTimes
+      }
+    },
+
+    reset: function () {
+      this.setState({
+        lead_times: this.props.leadTimes || defaultLeadTimes
+      })
+    },
+
+    val: function () {
+      return this.state.lead_times;
+    },
+
+    addLeadTime: function (e) {
+      e.preventDefault();
+      var lt = { max_guests: null, lead_times: null, cancel_time: null };
+      this.setState({
+        lead_times: this.state.lead_times.concat([lt])
+      });
+    },
+
     render: function () {
-      var lead_times = (this.props.leadTimes || defaultLeadTimes).map(function (t) {
+      var lead_times = (this.state.lead_times).map(function (t) {
         return (
           <LeadTime
             maxGuests={t.max_guests}
@@ -20,9 +44,11 @@ define(function(require, exports, module) {
             cancelTime={t.cancel_time} />
         );
       });
+
       return (
         <div>
           {lead_times}
+          <button className="btn btn-default" onClick={this.addLeadTime}>+ Add restriction</button>
         </div>
       );
     }

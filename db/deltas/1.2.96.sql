@@ -6,6 +6,12 @@ DO $$
   declare user_rec      users;
   declare org           record;
 
+begin
+  raise notice '## Running Delta v% ##', version;
+  
+  -- Update version
+  execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
+
   drop table if exists "organizations" cascade;
   create table "organizations" (
     id            serial primary key

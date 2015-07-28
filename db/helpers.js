@@ -788,8 +788,24 @@ dirac.use( function( dirac ){
     });
   };
 
+  var transformLocation = function( order ){
+    if ( !order.location ) return;
+    if ( !order.location.lat_lng ) return;
+    order.location.lat_lng = pg.types.getTypeParser(600)( order.location.lat_lng );
+  };
+
   var afterOrderFind = function( results, $query, schema, next ){
     results.forEach( onOrder );
+
+    var fetchedLocation = ( $query.one || [] )
+      .some( function( relation ){
+        return relation.table === 'restaurant_locations'
+      });
+
+    if ( fetchedLocation ){
+      results.forEach( transformLocation );
+    }
+
     next();
   };
 

@@ -128,6 +128,18 @@ module.exports.JSON.sendNotification = function( req, res ){
 
   logger.info( ['Sending notification', req.params.id, ' for order #', req.params.oid ].join('') );
 
+  var onSend = function( error ){
+    if ( error ) return res.error( error );
+    return res.send(204);
+  };
+
+  if ( req.params.id in notifications2Notifications ){
+    return notifications2
+      .get( req.params.id )
+      ( +req.params.oid, req.user.attributes.id, req.query )
+      .send( onSend );
+  }
+
   var notification = notifier.defs[ req.params.id ];
 
   if ( !notification ){
@@ -143,10 +155,7 @@ module.exports.JSON.sendNotification = function( req, res ){
 
   if ( error ) return res.error( error );
 
-  notifier.send( req.params.id, +req.params.oid, options, function( error ){
-    if ( error ) return res.error( error );
-    return res.send(204);
-  });
+  notifier.send( req.params.id, +req.params.oid, options, onSend );
 };
 
 module.exports.JSON.history = function( req, res ){

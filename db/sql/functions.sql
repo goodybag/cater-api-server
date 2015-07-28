@@ -4,6 +4,22 @@
 -- Event Handlers --
 --------------------
 
+create or replace function on_user_organization_update()
+returns trigger as $$
+  declare org_id int;
+begin
+  -- TODO:
+  -- Remove this when we implement more organizations features
+  if ( NEW.organization is not null and NEW.organization != '' )
+  then
+    org_id := create_or_get_organization( NEW.organization );
+    perform organization_user_adoption( org_id, NEW.id );
+  end if;
+  
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function on_restaurant_name_change()
 returns trigger as $$
 begin
@@ -122,6 +138,39 @@ $$ language plpgsql;
 ---------------
 -- Functions --
 ---------------
+create or replace function create_or_get_organization( org_name text )
+returns int as $$
+  declare org_id int;
+begin
+  org_id := (
+    select id from organizations
+    where word_chars_only( organizations.name ) = word_chars_only( org_name )
+    limit 1
+  );
+
+  if ( org_id is null ) THEN
+    insert into organizations ( name ) values ( org_name )
+      returning id into org_id;
+  end if;
+
+  return org_id;
+end;
+$$ language plpgsql;
+
+create or replace function organization_user_adoption( org_id int, u_id int )
+returns void as $$
+begin
+  insert into organizations_users ( organization_id, user_id )
+    select org_id, u_id
+    where not exists (
+      select * from organizations_users ou
+      where ou.organization_id = org_id
+        and ou.user_id = u_id
+    );
+end;
+$$ language plpgsql;
+
+
 -- Need to pick a delivery service based on probabilities
 -- Source: http://stackoverflow.com/questions/13040246/select-random-row-from-a-postgresql-table-with-weighted-row-probabilities
 -- NOTE: Probabilities _NEED_ to add up to 1

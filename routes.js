@@ -1992,6 +1992,7 @@ module.exports.register = function(app) {
 
   app.post('/api/restaurants/:restaurant_id/locations'
   , m.queryToBody('restaurant_id')
+  , m.geocodeBody()
   , m.insert( db.restaurant_locations )
   );
 

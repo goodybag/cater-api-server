@@ -1,7 +1,38 @@
-var utils = require('../utils');
-var Address = require('stamps/addresses');
-var GeocodeRequest = require('stamps/requests/geocode');
-var errors = require('../errors');
+/**
+ * Geocode Body
+ * Checks the body of a request to see if there is a geocodable address.
+ * If so, geocodes. Sends back an error if the address is invalid.
+ * Otherwise, attaches `lat_lng` to req.body.
+ *
+ * Usage:
+ *
+ * app.post('/addresses'
+ * , m.geocodeBody() 
+ * , m.insert( db.addresses )
+ * );
+ *
+ * Options: {
+ *   defaultsWith: String // - Path to obj on req that will serve
+ *                        //   as the default values for req.body
+ *                        //   when performing the geocoding request.
+ *                        //   Useful for patch updates
+ * }
+ *
+ * app.patch('/addresses/:id'
+ * , function( req, res, next ){
+ *     db.db.addresses.findOne( req.params.id )( req, res, next );
+ *   }
+ *   // Use the previously fetched `address` to serve as default
+ *   // Properties for the geocode request
+ * , m.geocodeBody({ defaultsWith: 'address' })
+ * , m.update( db.addresses )
+ * );
+ */
+
+var utils           = require('../utils');
+var Address         = require('stamps/addresses');
+var GeocodeRequest  = require('stamps/requests/geocode');
+var errors          = require('../errors');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {

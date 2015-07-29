@@ -132,8 +132,12 @@ module.exports = function( options ){
     }
 
     if ( options.internalNotes ){
+
       $options.many.push({
         table:  'order_internal_notes'
+      , columns:  db.order_internal_notes.getColumnListForTimezone(
+                    req.user.attributes.region.timezone
+                  )
       , alias:  'internal_notes'
       , order:  'created_at desc'
       , one:    [{ table: 'users', alias: 'user' }]

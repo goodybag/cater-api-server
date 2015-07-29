@@ -144,6 +144,14 @@ define(function(require, exports, module) {
       return utils.dateTimeFormatter(date, format || "MM/DD/YYYY");
     },
 
+    formatDateTime2: function(date, format, options) {
+      if (options === undefined) {
+        options = format;
+        format = undefined;
+      }
+      return utils.dateTimeFormatter2(date, format || "MM/DD/YYYY");
+    },
+
     formatTime: function(time, format, options) {
       if (options === undefined) {
         options = format;

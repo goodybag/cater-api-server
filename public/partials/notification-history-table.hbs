@@ -2,6 +2,7 @@
   <tr>
     <th>Recipients</th>
     <th>Name</th>
+    <th>Data</th>
     <th>Send Date</th>
     <th>Actions</th>
   </tr>
@@ -11,6 +12,7 @@
   <tr>
     <td>{{{list this.data.to}}}</td>
     <td>{{this.name}}</td>
+    <td>{{{this.data_html}}}</td>
     <td>{{formatDateTime this.send_date "MM/DD/YYYY h:mma"}}</td>
     <td class="actions">
       <button

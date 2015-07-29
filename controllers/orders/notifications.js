@@ -56,6 +56,14 @@ var getNotificationError = function( notification, options ){
   });
 };
 
+var getNotificationDef = function( id ){
+  try {
+    return notifications2.get( id );
+  } catch( e ){
+    return notifier.defs[ id ];
+  }
+};
+
 module.exports.JSON = {};
 
 module.exports.JSON.list = function( req, res ){
@@ -191,6 +199,13 @@ module.exports.JSON.history = function( req, res ){
 
           // Embed timezone information so the client can adjust
           note.send_date = new Date( note.send_date );
+
+          var def = getNotificationDef( note.nid );
+          note.data_html = '';
+
+          if ( def.historyDataHTML ){
+            note.data_html = def.historyDataHTML( note );
+          }
 
           return utils.extend( note, utils.omit( notifier.defs[ note.nid ], 'id' ) );
         });

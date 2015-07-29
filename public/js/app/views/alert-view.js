@@ -25,7 +25,6 @@ define(function(require, exports, module) {
         context = { type: context };
       }
       var html = Handlebars.partials.form_alert(context);
-      console.log('showing', context, html, this.$el);
       this.$el.html(html);
       return this;
     }

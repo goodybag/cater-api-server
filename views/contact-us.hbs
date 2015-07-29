@@ -35,6 +35,14 @@
           <hr>
           <ul class="icons-ul contact-ul">
             <li>
+              <i class="icon-li icon-dashboard"></i>
+              <strong>Hours of Operation</strong>
+              <p>{{config.operation.days}}
+                 &nbsp;&nbsp;<i class="icon-caret-right"></i>&nbsp;&nbsp;
+                 {{config.operation.hours}} {{config.operation.timezone}}
+              </p>
+            </li>
+            <li>
               <i class="icon-li icon-envelope"></i>
               <strong>Email</strong>
               <p>{{{mailto config.emails.support}}}</p>

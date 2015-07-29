@@ -5,6 +5,9 @@
       { "q": "What is Goodybag?"
       , "a": "Goodybag is a site for ordering catering for the office. We feature 100+ restaurants and have created a super easy process that lets companies search for and order food delivery for lunch, meetings, and events!"
       }
+    , { "q": "When is Goodybag available to contact?"
+      , "a": "Our hours of operation are Monday through Friday from 6am to 7pm CST. Feel free to check out our <a href=\"/contact-us\">Contact</a> page for more information."
+      }
     , { "q": "How much does it cost to use?"
       , "a": "It's free!"
       }

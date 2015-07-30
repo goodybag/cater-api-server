@@ -2258,18 +2258,23 @@ module.exports.register = function(app) {
 
       next();
     })
-  , m.update( db.orders, {
-      callback: function(err, orders) {
-        var orderTypeChanged = orders &&
-                               orders[0] &&
-                               orders[0].type !== orders[0].old_type;
+  , function( req, res, next ){
+      m.db.orders.update( req.queryObj, req.body, req.queryOptions )( req, res, next )
+    }
+  , function( req, res ){
+      var orders = req.orders;
 
-        if ( orderTypeChanged ){
-          var order = orders[0];
-          venter.emit('order:type:change', order.type, order.old_type, order);
-        }
+      res.json( orders[0] );
+
+      var orderTypeChanged = orders &&
+                              orders[0] &&
+                              orders[0].type !== orders[0].old_type;
+
+      if ( orderTypeChanged ){
+        var order = orders[0];
+        venter.emit( 'order:type:change', order.type, order.old_type, order, req.user );
       }
-    })
+    }
   );
 
   app.delete('/api/orders/:id'

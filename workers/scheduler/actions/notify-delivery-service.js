@@ -28,12 +28,12 @@ module.exports.fn = function(job, done) {
     if ( dsnid in notifier2.get() ){
       return notifier2
         .get( dsnid )
-        ( order.id, job.data.user_id )
+        .create( order.id, job.data.user_id )
         .send( done );
     }
 
     var nid = dsnid in notifier.defs ? dsnid : 'delivery-service-order-submitted';
-    
+
     notifier.send( nid, orderId, done );
   });
 };

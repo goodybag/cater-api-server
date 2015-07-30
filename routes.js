@@ -982,7 +982,11 @@ module.exports.register = function(app) {
   , m.view('orders', db.orders)
   );
 
-  app.post('/orders', m.restrict(['guest', 'client', 'admin']), controllers.orders.create);
+  app.post('/orders'
+  , m.restrict(['guest', 'client', 'admin'])
+  , m.geocodeBody()
+  , controllers.orders.create
+  );
 
   app.all('/orders', function(req, res, next) {
     res.set('Allow', 'GET');

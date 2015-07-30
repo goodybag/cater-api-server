@@ -107,7 +107,7 @@ module.exports.JSON.list = function( req, res ){
       fns.push( function( done ){
         notifications2
           .get( id )
-          ( order, req.user.attributes.id )
+          .create( order, req.user.attributes.id )
           .build( function( error, build ){
             if ( error ) return done( error );
 
@@ -207,7 +207,7 @@ module.exports.JSON.history = function( req, res ){
             note.data_html = def.historyDataHTML( note );
           }
 
-          return utils.extend( note, utils.omit( notifier.defs[ note.nid ], 'id' ) );
+          return utils.extend( note, utils.omit( def, 'id' ) );
         });
 
         return res.json( notes );
@@ -254,7 +254,7 @@ module.exports.getEmail = function( req, res ){
   if ( req.params.nid in notifications2Notifications ){
     return notifications2
       .get( req.params.nid )
-      ( +req.params.oid, req.user.attributes.id, req.query )
+      .create( +req.params.oid, req.user.attributes.id, req.query )
       .build( onBuild );
   }
 

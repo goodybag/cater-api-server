@@ -158,13 +158,13 @@ Create a notification instance from a Notification Factory:
 ```javascript
 // Create a Dropoff delivery notification for order 1000
 // Using actor user 123
-var notification = notifications.DropoffCreateDelivery(1000, 123)
+var notification = notifications.DropoffCreateDelivery.create(1000, 123)
 ```
 
-A NotificationFactory has the following function signature:
+NotificationFactory.create has the following function signature:
 
 ```javascript
-( order_id, user_id ) -> Notification
+NotificationFactory.create( order_id, user_id ) -> Notification
 ```
 
 The notification has the following members:

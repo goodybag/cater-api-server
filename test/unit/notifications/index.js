@@ -56,7 +56,7 @@ describe('Order Notifications', function(){
 
       var order = orders();
 
-      var note = notes( order, 1 );
+      var note = notes.create( order, 1 );
 
       assert( note.isValidOrder() );
     });
@@ -72,7 +72,7 @@ describe('Order Notifications', function(){
       var order = orders()
         .remove('deliveryService');
 
-      var note = notes( order, 1 );
+      var note = notes.create( order, 1 );
 
       assert( !note.isValidOrder() );
     });
@@ -89,7 +89,7 @@ describe('Order Notifications', function(){
       var order = orders();
 
       assert.throws( function(){
-        var note = notes( order, {} );
+        var note = notes.create( order, {} );
       });
     });
   });
@@ -160,7 +160,7 @@ describe('Order Notifications', function(){
       , subject: 'Bill Bob'
       });
 
-      var note = notes( order, 1 );
+      var note = notes.create( order, 1 );
 
       overrideRender('Test preview');
       
@@ -318,7 +318,7 @@ describe('Order Notifications', function(){
       , price:          '19.00'
       , type:           'asap'
       , reference_code: '1000'
-      , ready_date:     1420135200000
+      , ready_date:     1420135200
       });
     });
   });

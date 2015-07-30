@@ -209,7 +209,7 @@ config.defaults = {
   
 , operation: {
     hours: '6AM to 7PM',
-    timezone: 'CST',
+    timezone: 'Central',
     days: 'Monday thru Friday'
   }
 

@@ -10,8 +10,8 @@ define( function( require ){
 
       var ordersListView = new OrdersListView({ el: '.orders-list' });
 
-      React.renderComponent(
-        OrderSearch({ endpoint: '/api/orders/search' })
+      React.render(
+        React.createElement(OrderSearch, { endpoint: '/api/orders/search' })
       , document.getElementById('order-search')
       );
 

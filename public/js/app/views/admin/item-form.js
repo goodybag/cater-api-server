@@ -12,6 +12,7 @@ define(function(require, exports, module) {
   var utils     = require('utils');
   var config    = require('config');
   var FormView2 = require('app/views/form-view-2');
+  var AlertView = require('app/views/alert-view')
   var spinner   = require('spinner');
   var venter    = require('venter');
   var notify    = require('notify');
@@ -20,6 +21,25 @@ define(function(require, exports, module) {
     events: {
       'submit':             'onSubmit'
     , 'click .btn-delete':  'onBtnDeleteClick'
+    }
+
+  , initialize: function( options ){
+      this.options = utils.defaults( options || {}, {
+        alert: true
+      , alertContainerSelector: '> .alert-container'
+      , successTmpl: function( model ){
+          return 'Success!'
+        }
+
+      , errorTmpl: function( error, model ){
+          return error.message || 'Error!';
+        }
+      });
+      this.alertView = new AlertView({
+        el: this.$el.find( this.options.alertContainerSelector )
+      });
+
+      return FormView2.prototype.initialize.apply( this, arguments );
     }
 
   , onSubmit: function( e ){
@@ -35,16 +55,33 @@ define(function(require, exports, module) {
           spinner.stop();
           venter.trigger( 'item:saved', this_.model );
           this_.trigger( 'item:saved', this_.model, this_ );
+
+          if ( this_.options.alert ){
+            this_.alertView.show(({
+              type: 'success'
+            , message: this_.options.successTmpl( this_.model )
+            }));
+          }
+
           if (redirect && this_.redirect) {
             this_.redirect();
           }
         }
 
-      , error: function( error ){
+      , error: function( model, error ){
+          error = error && error.responseJSON ? error.responseJSON.error : error;
+
           spinner.stop();
           venter.trigger( 'item:error', error, this_.model );
           this_.trigger( 'item:error', error, this_.model, this_ );
           notify.error( error );
+
+          if ( this_.options.alert ){
+            this_.alertView.show(({
+              type: 'error'
+            , message: this_.options.errorTmpl( error, this_.model )
+            }));
+          }
         }
       });
     }

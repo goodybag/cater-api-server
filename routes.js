@@ -1992,6 +1992,7 @@ module.exports.register = function(app) {
 
   app.post('/api/restaurants/:restaurant_id/locations'
   , m.queryToBody('restaurant_id')
+  , m.geocodeBody()
   , m.insert( db.restaurant_locations )
   );
 
@@ -2004,6 +2005,10 @@ module.exports.register = function(app) {
   app.put('/api/restaurants/:restaurant_id/locations/:id'
   , m.param('id')
   , m.param('restaurant_id')
+  , function( req, res, next ){
+      m.db.restaurant_locations.findOne( req.params.id )( req, res, next );
+    }
+  , m.geocodeBody({ defaultsWith: 'restuarant_location' })
   , m.update( db.restaurant_locations )
   );
 

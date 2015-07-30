@@ -406,6 +406,7 @@ module.exports.changeStatus = function(req, res) {
           && req.order.isAdmin
           && req.query.notify
           && req.query.notify.toLowerCase() === 'false')
+      , req.user
       );
 
     if (req.order.promo_code)

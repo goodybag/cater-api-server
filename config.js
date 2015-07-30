@@ -207,6 +207,12 @@ config.defaults = {
     username:'goodybaginc'
   , apiKey: 'R_174d19bb5c13f986cfa863e18a186441'
   }
+  
+, operation: {
+    hours: '6AM to 7PM',
+    timezone: 'Central',
+    days: 'Monday thru Friday'
+  }
 
 , emails: {
     support: [ local.testEmail || 'test@goodybag.com' ]

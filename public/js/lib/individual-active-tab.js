@@ -4,8 +4,7 @@
  */
 
 define(function(require, exports, module) {
-  require('jquery-ui');
-  var $ = require('jquery');
+  var $ = require('jquery-loaded');
   var hash = window.location.hash;
 
   if (hash === "#individual") {

@@ -34,12 +34,12 @@ npm install
 __Setup local config__
 
 In the root directory there is a file named `local-config.json.sample`, edit
-this file as needed and save it as `local-config.json`
+this file as needed and save it as `local-config.json
 
 Change the information in `local-config.json`:  
 - change email to your current goodybag email  
 - enter testUserID (this will be provided to you)  
-- you have the option to receive test calls and texts if you change the X's with your phone number 
+- you have the option to receive test calls and texts if you change the X's with your phone number
 
 __Install MongoDB:__
 
@@ -54,8 +54,8 @@ If you run into this error after running the last command:
  Create this directory or give existing directory in --dbpath.
  See http://dochub.mongodb.org/core/startingandstoppingmongo
 ********************************************************
- 
- 
+
+
 ```
 sudo mkdir /data
 sudo mkdir /data/db

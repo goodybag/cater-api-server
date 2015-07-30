@@ -144,7 +144,7 @@ module.exports.JSON.sendNotification = function( req, res ){
   if ( req.params.id in notifications2Notifications ){
     return notifications2
       .get( req.params.id )
-      ( +req.params.oid, req.user.attributes.id, req.query )
+      .create( +req.params.oid, req.user.attributes.id, req.query )
       .send( onSend );
   }
 

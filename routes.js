@@ -1796,6 +1796,7 @@ module.exports.register = function(app) {
     , userPaymentMethods:     true
     , items:                  true
     , internalNotes:          true
+    , alerts:                 true
     })
   , m.view( 'admin/order', {
       layout: 'admin/layout2'

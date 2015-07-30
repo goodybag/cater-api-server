@@ -162,6 +162,24 @@ module.exports = function( options ){
         order.manifest = manifest.create( order.orderItems );
       }
 
+      if ( options.alerts ){
+        order.alerts = [];
+
+        if ( !order.lat_lng ){
+          order.alerts.push({
+            level: 'error'
+          , message: 'This order was not able to be geocoded. This likely means the address is invalid.'
+          });
+        }
+
+        if ( order.location && !order.location.lat_lng ){
+          order.alerts.push({
+            level: 'error'
+          , message: 'This order\'s location has not been geocoded. This likely means the location address is invalid.'
+          });
+        }
+      }
+
       req.order = order;
       res.locals.order = order;
       req.logger.options.data.order = { id: order.id };

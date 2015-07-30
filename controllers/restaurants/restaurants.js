@@ -396,7 +396,7 @@ module.exports.update = function(req, res) {
       var sql = db.builder.sql(query);
       tx.query(sql.query, sql.values, cb);
     });
-    
+
 
     utils.async.series([
       tx.begin.bind( tx )
@@ -506,7 +506,7 @@ module.exports.copy = function(req, res) {
     }
 
   , function copyRestaurant(restaurant, acct, callback) {
-      var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id'), {
+      var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id', 'uuid'), {
         balanced_customer_uri: null
       , stripe_id: acct.id
       , name: restaurant.name + ' Copy'

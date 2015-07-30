@@ -1,4 +1,4 @@
-drop trigger if exists on_user_organization_update on order_amenities;
+drop trigger if exists on_user_organization_update on users;
 create trigger on_user_organization_update
   after insert or update of organization
   on users

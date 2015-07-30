@@ -1,9 +1,6 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="{{cdn "/css/faqs.css"}}">
-<link rel="stylesheet" href="{{cdn "/components/font-awesome/css/font-awesome.css"}}">
-{{/extend}}
-
-{{#extend "banner"}}
+<link rel="stylesheet" href="{{cdn " /css/faqs.css "}}">
+<link rel="stylesheet" href="{{cdn " /components/font-awesome/css/font-awesome.css "}}"> {{/extend}} {{#extend "banner"}}
 <div class="banner faqs-banner"></div>
 {{/extend}}
 
@@ -16,7 +13,7 @@
         <section class="no-border">
           <ol class="faq-index">
             {{#each faqs}}
-            <h2 class="faq-header">{{section}}</h2>
+            <h2 class="faq-header">{{section}}</h2> 
               {{#each items}}
               <li><a href="#{{anchorify q}}">{{q}}</a></li>
               {{/each}}
@@ -27,8 +24,12 @@
         <section class="contact-us">
           <div class="contact-header"><strong>Don't see your question?</strong> Please get in touch with anything else!</div>
           <div class="contact-us-info">
-            <i class="icon-li icon-phone"></i>
-            <strong>Phone</strong> {{ phoneNumber config.phone.support }}
+            <i class="icon-li icon-dashboard"></i>
+            <strong>Hours of Operation</strong>
+            <p>{{config.operation.days}}
+               &nbsp;&nbsp;<i class="icon-caret-right"></i>&nbsp;&nbsp;
+               {{config.operation.hours}} {{config.operation.timezone}}
+            </p>
           </div>
           <div class="contact-us-info">
             <i class="icon-li icon-envelope"></i>
@@ -42,8 +43,7 @@
 
         {{#each faqs}}
         <section class="faq-list">
-          <h2 class="faq-header">{{ section }}</h2>
-          {{#each items}}
+          <h2 class="faq-header">{{ section }}</h2> {{#each items}}
           <strong id="{{anchorify q}}">{{q}}</strong>
           <p>{{{a}}}</p>
           {{/each}}
@@ -58,10 +58,8 @@
 {{#extend "scripts"}}
 <script>
   require([
-      'jquery-loaded'
-    ]
-  , function() {
-    }
-  );
+    'jquery-loaded'
+  ], function() {});
+
 </script>
 {{/extend}}

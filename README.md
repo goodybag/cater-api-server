@@ -109,6 +109,8 @@ __Start server:__
 npm start
 ```
 
+`npm start` can take awhile. Trying running `node server` for a faster start.
+
 ## Testing
 
 To run the functional test suite, you currently need the selinium chrome driver installed:

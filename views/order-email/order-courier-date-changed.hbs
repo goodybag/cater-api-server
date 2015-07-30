@@ -1,5 +1,12 @@
 <h2>Goodybag Order #{{order.id}} delivery date has changed!</h2>
 
+<div>
+  The delivery date has changed to <strong>{{formatDateTime order.datetime "MM/DD/YYYY h:mm A"}}</strong>.<br>
+</div>
+
+<p>
+  <strong>Location:</strong>
+</p>
 {{#if order.location}}
 <div>Pick up: {{{address order.location}}}</div>
 {{/if}}

@@ -1871,6 +1871,9 @@ module.exports.register = function(app) {
                                   , { table: 'restaurants'
                                     , alias: 'restaurant'
                                     }
+                                  , { table: 'users'
+                                    , alias: 'user'
+                                    }
                                   ]
                           }
                         ]

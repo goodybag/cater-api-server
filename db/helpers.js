@@ -384,7 +384,7 @@ dirac.use( function(){
         , restaurant_id:      r.restaurant.id
         , plan:               r.restaurant.plan
         , sales_tax:          r.restaurant.region.sales_tax
-        }).toJSON();
+        }).toJSON({ keepOrder: true });
       }
     });
 

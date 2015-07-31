@@ -26,6 +26,7 @@ define(function(require) {
   , order_phone:        { type: types.varchar( 10 ) }
   , created_at:         { type: types.timestamptz, nullable: false, default: 'NOW()' }
   , region_order_distribution: { type: types.numeric( 5, 4 ), nullable: false, default: 1 }
+  , disable_searching_within_fulfillability: { type: types.boolean, nullable: false, default: 'false' }
   };
 
   definition.indices = {};

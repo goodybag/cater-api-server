@@ -4,12 +4,15 @@
  */
 
 define(function(require, exports, module) {
-  var $ = require('jquery-loaded');
-  var hash = window.location.hash;
 
-  if (hash === "#individual") {
-    var activeTab = $('ul.nav a[href="'+ hash +'"]');
-    activeTab && activeTab.tab('show');
-  }
+  $(document).ready(function(){
+    var $ = require('jquery-loaded');
+    var hash = window.location.hash;
+
+    if (hash === "#individual") {
+      var activeTab = $('ul.nav a[href="'+ hash +'"]');
+      activeTab && activeTab.tab('show').click();
+    }
+  });
 
 });

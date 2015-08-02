@@ -81,6 +81,7 @@ var regionCaches = {
 , delivery_services: function( region ){
     var query = {
       region_id: region.id
+    , disable_searching_within_fulfillability: false
     };
 
     var options = {

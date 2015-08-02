@@ -7,7 +7,7 @@ var config      = require('../config');
 var errors      = require('../errors');
 var utils       = require('../utils');
 var m           = require('../middleware');
-var OrderCharge = require('stamps/order/charge');
+var OrderCharge = require('stamps/orders/charge');
 var router      = module.exports = express.Router();
 
 router.post('/'

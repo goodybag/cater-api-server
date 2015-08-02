@@ -56,7 +56,7 @@ module.exports.register = function(app) {
   });
 
   app.use( '/verify', require('./routers/verify') );
-  app.use( '/payments', require('./routers/payments') );
+  app.use( '/api/payments', require('./routers/payments') );
 
   // Temporary for job fair
   app.get('/fsjse.md'

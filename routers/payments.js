@@ -6,6 +6,7 @@ var express     = require('express');
 var config      = require('../config');
 var errors      = require('../errors');
 var utils       = require('../utils');
+var db          = require('../db');
 var m           = require('../middleware');
 var OrderCharge = require('stamps/orders/charge');
 var router      = module.exports = express.Router();
@@ -48,22 +49,29 @@ router.post('/'
 , function( req, res, next ){
     var charge = OrderCharge({
       adjustment_amount: +req.body.amount
+    , service_fee:       +req.body.service_fee
     , restaurant:         req.restaurant
     });
 
     var data = {
       currency:             'usd'
     , amount:               charge.getTotal()
-    , application_fee:      charge.getApplicationCut()
     , customer:             req.body.customer
     , source:               req.body.source
-    , destination:          req.restaurant.stripe_id
     , statement_descriptor: req.body.statement_descriptor
-    , meta_data:            utils.extend( req.meta_data, {
-                              charge_destination: 'Funds go to Restaurant'
+    , metadata:             utils.extend( req.body.metadata || {}, {
+                              charge_destination: 'Funds go to Goodybag'
                             , restaurant_id: req.restaurant.id
                             })
     };
+
+    // Unless the restaurant has a plan, everything goes in our account
+    if ( req.restaurant.plan ){
+      data.application_fee = charge.getApplicationCut();
+      data.destination = req.restaurant.stripe_id;
+      data.statement_descriptor = 'Funds go to Restaurant';
+    }
+
 
     utils.stripe.charges.create( data, function( error, result ){
       if ( error ){
@@ -71,6 +79,8 @@ router.post('/'
       }
 
       req.charge = result;
+
+      return next();
     });
   }
 

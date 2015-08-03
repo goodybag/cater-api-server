@@ -1423,7 +1423,7 @@ module.exports.register = function(app) {
   , m.view( 'users', db.users, { method: 'find' })
   );
 
-  app.post('/users', m.restrict('admin'), controllers.users.create);
+  app.post('/users', m.restrict('admin'), controllers.admin.users.create, controllers.admin.users.handleError);
 
   app.all('/users', function(req, res, next) {
     res.set('Allow', 'GET, POST');

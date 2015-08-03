@@ -13,4 +13,5 @@ module.exports = {
 , statics: require('./statics')
 , users: require('./users')
 , waitlist: require('./waitlist')
+, admin: require('./admin')
 }

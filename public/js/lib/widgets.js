@@ -3,10 +3,6 @@
 */
 
 (function Widgets (window, document) {
-  var DOMReady = function( callback ) {
-    var evt = 'addEventListener';
-    return document[evt] ? document[evt]('DOMContentLoaded', callback, false) : window.attachEvent('onload', callback);
-  };
 
   var applyStyle = function (el, styles) {
     for (var k in styles) {

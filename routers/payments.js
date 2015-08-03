@@ -40,6 +40,7 @@ router.post('/'
 , function( req, res, next ){
     utils.defaults( req.body, {
       statement_descriptor: 'Goodybag Charge'
+    , service_fee: 0
     });
 
     return next();

@@ -8,6 +8,16 @@
   {{> facebook_pixel config.facebook.pixel.checkout }}
 {{/extend}}
 
+{{#if isAdmin}}
+  {{#extend "navbar-links"}}
+    <li>
+      <a href="/admin/orders/{{../../order.id}}">
+        Order Command Center
+      </a>
+    </li>
+  {{/extend}}
+{{/if}}
+
 {{> stripe }}
 {{> checkout_sticky_header }}
 {{> order_params_modal }}

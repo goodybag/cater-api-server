@@ -1,61 +1,22 @@
 var express = require('express');
-var config = require('./config');
-var controllers = require('./controllers');
-var utils = require('./utils');
-var venter = require('./lib/venter');
-var logger = require('./lib/logger');
-var Models = require('./models');
-var hbHelpers = require('./public/js/lib/hb-helpers');
-var db = require('./db');
-var errors = require('./errors');
+var config = require('../config');
+var controllers = require('../controllers');
+var utils = require('../utils');
+var venter = require('../lib/venter');
+var logger = require('../lib/logger');
+var Models = require('../models');
+var hbHelpers = require('../public/js/lib/hb-helpers');
+var db = require('../db');
+var errors = require('../errors');
 
-var m = require('./middleware')
+var m = require('../middleware')
 
 module.exports.register = function(app) {
   logger.info('Registering routes');
 
-  app.before( m.analytics, m.queryParams(), function( app ){
-    app.get('/', m.getRegions({ where: { is_hidden: false } }), controllers.auth.index);
-    app.get('/login', controllers.auth.login);
-    app.post('/login', controllers.auth.login);
-    app.get('/join', m.getRegions({ where: { is_hidden: false } }), controllers.auth.registerView);
-    app.post('/join', m.getRegions({ where: { is_hidden: false } }), controllers.auth.register);
+  app.use(require('./public'));
 
-    app.get('/rewards', m.view( 'landing/rewards', {
-      layout: 'landing/layout'
-    }));
-
-    app.get('/testimonials'
-    , m.json({ file: '/public/data/testimonials.json', target: 'testimonials' })
-    , m.view( 'landing/testimonials', {
-        layout: 'landing/layout'
-      })
-    );
-
-    app.get('/request-to-be-a-caterer'
-    , m.view( 'landing/restaurant', {
-        layout: 'landing/layout'
-      })
-    );
-
-    app.post('/request-to-be-a-caterer'
-    , m.after( function( req, res, next ){
-        venter.emit( 'restaurant_request:created', req.body );
-        next();
-      })
-    , m.view( 'landing/restaurant', db.restaurant_requests, {
-        layout: 'landing/layout'
-      , method: 'insert'
-      })
-    );
-
-    app.get('/forgot-password', controllers.auth.forgotPassword);
-    app.post('/forgot-password', controllers.auth.forgotPasswordCreate);
-    app.get('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
-    app.post('/forgot-password/:token', controllers.auth.forgotPasswordConsume);
-  });
-
-  app.use( '/verify', require('./routers/verify') );
+  app.use( '/verify', require('./verify') );
 
   // Temporary for job fair
   app.get('/fsjse.md'
@@ -191,7 +152,7 @@ module.exports.register = function(app) {
       , 'restaurant-sort'
       ])
     , function( req, res, next ){
-        require('./lib/parse-palette-from-variables').parse( function( error, palette ){
+        require('../lib/parse-palette-from-variables').parse( function( error, palette ){
           if ( error ) return next( error );
 
           res.locals.palette = palette;

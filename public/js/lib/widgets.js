@@ -37,7 +37,7 @@
     });
 
     var image = document.createElement('img');
-    image.src = 'https://s3.amazonaws.com/uploads.hipchat.com/42627/312607/PRU6e6TyfFibZLi/GBlettermark_white_50x50.png';
+    image.src = 'https://www.filepicker.io/api/file/2teJMBOMRgmdLfGdl8zO';
     applyStyle(image, {
       width: '30px'
     });

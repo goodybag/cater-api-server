@@ -3,6 +3,7 @@
  */
 
 var express     = require('express');
+var validator   = require('amanda')('json');
 var config      = require('../config');
 var errors      = require('../errors');
 var utils       = require('../utils');
@@ -10,6 +11,43 @@ var db          = require('../db');
 var m           = require('../middleware');
 var OrderCharge = require('stamps/orders/charge');
 var router      = module.exports = express.Router();
+
+var schemas = {
+  charge: {
+    type: 'object'
+  , _options: {
+      singleError: true
+    }
+  , properties: {
+      restaurant_id: {
+        type: ['string', 'number']
+      , required: true
+      }
+    , customer: {
+        type: 'string'
+      , required: true
+      }
+    , source: {
+        type: 'string'
+      , required: true
+      }
+    , amount: {
+        type: 'number'
+      , required: true
+      , minimum: 1
+      }
+    , statement_descriptor: {
+        type: 'string'
+      , required: false
+      }
+    , service_fee: {
+        type: 'number'
+      , required: false
+      , minimum: 0
+      }
+    }
+  }
+};
 
 router.post('/'
 , m.restrict(['admin', 'lunchroom'])
@@ -43,7 +81,17 @@ router.post('/'
     , service_fee: 0
     });
 
-    return next();
+    validator.validate( req.body, schemas.charge, schemas.charge._options, function( error ){
+      if ( error ){
+        req.logger.warn('Validation error when creating charge', {
+          error: error
+        });
+
+        return res.error( error );
+      }
+
+      return next();
+    });
   }
 
   // Create Charge

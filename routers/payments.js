@@ -81,13 +81,15 @@ router.post('/'
     , service_fee: 0
     });
 
-    validator.validate( req.body, schemas.charge, schemas.charge._options, function( error ){
-      if ( error ){
+    validator.validate( req.body, schemas.charge, schemas.charge._options, function( errors ){
+      if ( errors && errors.length > 0 ){
         req.logger.warn('Validation error when creating charge', {
-          error: error
+          error: errors[0]
         });
 
-        return res.error( error );
+        return res.status(400).json({
+          error: errors[0]
+        });
       }
 
       return next();

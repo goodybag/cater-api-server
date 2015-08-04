@@ -34,7 +34,11 @@ define(function(require, exports, module) {
 
       if ( obj.order ){
         obj.order_id = obj.order.id;
-        delete obj.order;
+        if ( options && options.keepOrder !== true ){
+          delete obj.order;
+        } else {
+          obj.order = obj.order.toJSON();
+        }
       }
 
       obj.net_payout = this.getNetPayout();

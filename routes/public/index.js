@@ -3,6 +3,7 @@ var compose = require('composable-middleware');
 
 var controllers = require('../../controllers');
 var db = require('../../db');
+var venter = require('../../lib/venter');
 
 var m = require('../../middleware');
 

@@ -424,6 +424,7 @@
   </div>
 </div>
 
+{{#if order.restaurant.accepts_tips}}
 <div id="add-tip-modal" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -455,17 +456,20 @@
           </dl>
         </div>
       </div>
-      <div class="row modal-footer">
+      {{!-- This is commented out for now because tip is being
+            changed to auto save --}}
+      {{!-- <div class="row modal-footer">
         <div class="col-lg-3 col-lg-offset-6">
           <button type="button" class="btn btn-danger btn-cancel">Cancel</button>
         </div>
         <div class="col-lg-3">
           <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
         </div>
-      </div>
+      </div> --}}
     </div>
 </div>
 </div>
+{{/if}}
 
 {{> copy_order_error_modal}}
 

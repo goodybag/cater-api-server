@@ -13,20 +13,22 @@ define(function(require, exports, module) {
   var PaymentMethod = require('../models/payment-method');
 
   var CheckoutView = OrderView.extend({
-    events: _.extend({}, OrderView.prototype.events, {
-      'click .item-edit':                             'itemEditClick',
-      'click  #cancel-confirm-modal .btn-cancel':     'cancel',
-      'click  .btn-expired-update':                   'onExpiredUpdateClick',
-      'click  #update-card .btn-cancel':              'onUpdateCardCancelClick',
-      'click  #update-card .btn-submit':              'onUpdateCardSubmitClick',
-      'change input[type="radio"].payment-method':    'changePaymentMethod',
-      'change #payment-method-id':                    'onPaymentMethodIdChange',
-      'submit #order-form':                           'submit',
-      'submit #select-address-form':                  'selectAddress',
-      'keyup #order-guests':                          'updateGuests',
-      'input input[data-stripe="number"]':            'onCardNumberChange',
-      'change input[name="organization_type"]':       'onOrganizationTypeChange'
-    }),
+    events: function(){
+      return _.extend({}, OrderView.prototype.events.call( this ), {
+        'click .item-edit':                             'itemEditClick',
+        'click  #cancel-confirm-modal .btn-cancel':     'cancel',
+        'click  .btn-expired-update':                   'onExpiredUpdateClick',
+        'click  #update-card .btn-cancel':              'onUpdateCardCancelClick',
+        'click  #update-card .btn-submit':              'onUpdateCardSubmitClick',
+        'change input[type="radio"].payment-method':    'changePaymentMethod',
+        'change #payment-method-id':                    'onPaymentMethodIdChange',
+        'submit #order-form':                           'submit',
+        'submit #select-address-form':                  'selectAddress',
+        'keyup #order-guests':                          'updateGuests',
+        'input input[data-stripe="number"]':            'onCardNumberChange',
+        'change input[name="organization_type"]':       'onOrganizationTypeChange'
+      })
+    },
 
     step: 2,
 
@@ -69,8 +71,8 @@ define(function(require, exports, module) {
       }
     }),
 
-    patch: false,
-    setThenSave: true,
+    patch: true,
+    setThenSave: false,
 
     errorTypeMessages: {
       required: 'Please enter a valid {noun}'
@@ -285,10 +287,20 @@ define(function(require, exports, module) {
         return this.onUpdateCardSubmitClick(e);
       }
 
-      utils.async.parallel(tasks, function( err ){
+      utils.async.parallel(tasks, function( err, results ){
         spinner.stop();
 
-        if (err) return notify.error(err); // TODO: error handling
+        if (err) {
+          var error = err.responseJSON && err.responseJSON.error ? err.responseJSON.error : null;
+          if ( error && error.name === 'INVALID_ADDRESS' ){
+            return self.displayErrors2([{
+              property: 'street'
+            , message: 'Please enter a valid address'
+            }]);
+          }
+
+          return notify.error(err);
+        }
 
         self.model.changeStatus('submitted', true, function(err, data) {
           if (err) return notify.error(err); // TODO: error handling
@@ -665,7 +677,7 @@ define(function(require, exports, module) {
           selector.replace( /{property}/g, (error.name || error.param || error.property).toLowerCase().replace(/-/g, '_') )
         ).parents('.form-group').eq(0);
 
-        $parent.prepend( $el );
+        $parent.append( $el );
         $parent.addClass('has-error');
 
         $el.css( 'right', 0 - $el[0].offsetWidth );
@@ -676,6 +688,8 @@ define(function(require, exports, module) {
 
       if ( $el.length ){
         $('html,body').animate({ scrollTop: $el.eq(0).offset().top - 20 });
+        // focus on first element that has error
+        $el.children().eq(1).focus();
       }
     },
 

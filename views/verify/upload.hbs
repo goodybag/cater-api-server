@@ -1,0 +1,33 @@
+{{#extend "page"}}page-restaurant-list{{/extend}}
+
+{{#extend "body"}}
+<div class="small-container">
+  <h2>Upload Identifying Document for {{restaurant.name}}</h2>
+  <blockquote class="blockquote">
+    We haven’t been able to verify the account with the information provided
+    (e.g., because the name doesn’t match the SSN) after transferring another
+    few thousand dollars, we’ll temporarily pause transfers until we’re able to
+    verify the account.
+  </blockquote>
+  <p>
+    <a href="https://support.stripe.com/questions/What-is-the-process-for-verifying-managed">Read more at Stripe</a>
+  </p>
+  <form
+    class="form-vertical" id="form-upload"
+    action="" method="post" enctype='multipart/form-data'>
+    <div class="form-group">
+      <label>Government ID or passport or social security card</label>
+      <input type="file" name="doc" required>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+  </form>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require( ['jquery-loaded'], function($) {
+});
+</script>
+{{/extend}}

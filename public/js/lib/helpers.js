@@ -286,6 +286,25 @@ define(function(require, exports, module) {
     return moment(date).format(format || 'YYYY-MM-DD');
   }
 
+  helpers.dateTimeFormatter2 = function(date, format) {
+    if (!date) return '';
+    format = format || 'YYYY-MM-DD';
+    var f = format.match(/r/gi);
+    if (!!f) {
+      f = f.join('');
+      var now = moment();
+      if (now.isSame(date, 'day')) {
+        format = format.replace(f, '[Today]');
+      } else if (now.add(1, 'day').isSame(date, 'day')) {
+        format = format.replace(f, '[Tomorrow]');
+      } else {
+        format = format.replace(f, 'L');
+      }
+    }
+
+    return moment(date).format(format);
+  }
+
   helpers.timeFormatter = function(time, format) {
     // accepts both 24 hour time and 12 hour time
     if (!time) return '';

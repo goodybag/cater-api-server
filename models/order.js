@@ -198,6 +198,11 @@ module.exports = Model.extend({
       delete this.attributes.adjustment;
     }
 
+    if ( this.attributes.lat_lng ){
+      var ll = this.attributes.lat_lng;
+      this.attributes.lat_lng = '( ' + [ ll.x, ll.y ].join(', ') + ' )';
+    }
+
     var order = this;
     Model.prototype.save.call(this, {
       returning: [

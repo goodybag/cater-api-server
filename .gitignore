@@ -28,3 +28,5 @@ local-config.json
 tmp/
 !tmp/index
 workers/validate-addresses/log.json
+workers/geocode-addresses/log.json
+dump.rdb

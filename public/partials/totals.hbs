@@ -20,8 +20,10 @@
   <dt>Tax:</dt>
   <dd>{{dollars order.sales_tax}}</dd>
   {{#dneq step 1}}
+  {{#if order.restaurant.accepts_tips}}
   <dt>Tip:</dt>
   <dd>{{dollars order.tip}}</dd>
+  {{/if}}
   {{/dneq}}
   {{#unless order.restaurant.plan_id}}
   {{#if order.restaurant.no_contract_fee}}

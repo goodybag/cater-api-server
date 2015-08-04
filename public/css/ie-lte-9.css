@@ -11,3 +11,8 @@
   width: 50%;
   float: left;
 }
+
+.search-params [name="time-range"],
+.order-params-bar [name="time-range"] {
+  display: none;
+}

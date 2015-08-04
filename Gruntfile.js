@@ -17,7 +17,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-named-modules');
   grunt.loadNpmTasks('grunt-s3');
-  grunt.loadNpmTasks('grunt-react');
+  grunt.loadNpmTasks('grunt-babel');
 
   var gruntConfig = {
     localbranch: grunt.option('branch') || 'master'
@@ -49,9 +49,9 @@ module.exports = function(grunt) {
       , options: { spawn: false }
       }
 
-    , react: {
-        files: [ 'jsx/*.jsx' ]
-      , tasks: [ 'react' ]
+    , babel: {
+        files: [ 'jsx/**/*.jsx' ]
+      , tasks: [ 'babel' ]
       , options: { spawn: false }
       }
 
@@ -62,13 +62,15 @@ module.exports = function(grunt) {
       }
     }
 
-  , react: {
-      files: {
-        expand: true
-      , cwd: 'jsx'
-      , src: [ '**/*.jsx' ]
-      , dest: 'public/dist'
-      , ext: '.js'
+  , babel: {
+      dist: {
+        files: [{
+          expand: true
+        , cwd: 'jsx'
+        , src: [ '**/*.jsx' ]
+        , dest: 'public/dist'
+        , ext: '.js'
+        }]
       }
     }
 
@@ -351,7 +353,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask( 'analyze',      ['complexity'] );
-  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'react', 'uglify', 'requirejs'] );
+  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'babel', 'uglify', 'requirejs'] );
   grunt.registerTask( 'default',      ['less', 'namedModules', 'shell:handlebars', 'shell:cacheRedis', 'copy:legacy', 'loglog', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 

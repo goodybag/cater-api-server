@@ -8,6 +8,16 @@
   {{> facebook_pixel config.facebook.pixel.checkout }}
 {{/extend}}
 
+{{#if isAdmin}}
+  {{#extend "navbar-links"}}
+    <li>
+      <a href="/admin/orders/{{../../order.id}}">
+        Order Command Center
+      </a>
+    </li>
+  {{/extend}}
+{{/if}}
+
 {{> stripe }}
 {{> checkout_sticky_header }}
 {{> order_params_modal }}
@@ -76,7 +86,7 @@
                 <textarea id="order-notes" class="form-control order-notes" rows="3"{{#unless order.editable}} disabled="disabled"{{/unless}}>{{order.notes}}</textarea>
               </div>
             </div>
-
+            {{#if order.restaurant.accepts_tips}}
             <div class="tip-area form-inline clearfix">
               <div class="form-group col-xs-3">
                 <label class="control-label" for="order-tip">Tip Percent</label>
@@ -97,6 +107,7 @@
                 <input type="number" step="0.01" class="form-control order-tip" value="{{dollars order.tip}}">
               </div>
             </div>
+            {{/if}}
           </div>
 
           {{#if order.restaurant.amenities}}

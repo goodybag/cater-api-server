@@ -358,46 +358,58 @@ module.exports.create = function(req, res) {
 module.exports.update = function(req, res) {
   var fields = getFields( req );
 
-  // this should be an array of three functions, each an async eachSeries to destroy and recreate
-  // the subrecords associated with this restaurant.
-  // it's a series, so the delete query should always complete before the assocated insert query on the same table.
-  // but each table is independent.
-  var tasks = utils.map([
-    ['Zips', zips, 'delivery_zips']
-  , ['DeliveryTimes', deliveryTimes, 'delivery_times']
-  , ['LeadTimes', leadTimes, 'lead_times']
-  , ['Hours', hours, 'hours_of_operation']
-  , ['PickupLeadTimes', pickupLeadTimes, 'pickup_lead_times']
-  , ['Tags', tags, 'tags']
-  , ['MealTypes', mealTypes, 'meal_types']
-  , ['MealStyles', mealStyles, 'meal_styles']
-  ],
-  function(args) {
-    if (req.body[args[2]] === undefined) return function(cb) { cb() };
-    var delQuery = queries.restaurant['del' + args[0]](req.params.rid)
-    var values = args[1](req.body, req.params.rid);
-    var createQuery = values.length > 0 ? queries.restaurant['create' + args[0]](values) : null;
+  db.transaction( function( error, tx ){
+    if ( error ) return res.error( errors.internal.DB_FAILURE, error );
 
-    return utils.partial(utils.async.eachSeries, [delQuery, createQuery], function(query, cb) {
-      if (!query) return cb();
-      var sql = db.builder.sql(query);
-      db.query(sql.query, sql.values, cb);
+    // this should be an array of three functions, each an async eachSeries to destroy and recreate
+    // the subrecords associated with this restaurant.
+    // it's a series, so the delete query should always complete before the assocated insert query on the same table.
+    // but each table is independent.
+    var tasks = utils.map([
+      ['Zips', zips, 'delivery_zips']
+    , ['DeliveryTimes', deliveryTimes, 'delivery_times']
+    , ['LeadTimes', leadTimes, 'lead_times']
+    , ['Hours', hours, 'hours_of_operation']
+    , ['PickupLeadTimes', pickupLeadTimes, 'pickup_lead_times']
+    , ['Tags', tags, 'tags']
+    , ['MealTypes', mealTypes, 'meal_types']
+    , ['MealStyles', mealStyles, 'meal_styles']
+    ],
+    function(args) {
+      if (req.body[args[2]] === undefined) return utils.async.noop;
+      var delQuery = queries.restaurant['del' + args[0]](req.params.rid)
+      var values = args[1](req.body, req.params.rid);
+      var createQuery = values.length > 0 ? queries.restaurant['create' + args[0]](values) : null;
+
+      return utils.partial(utils.async.eachSeries, [delQuery, createQuery], function(query, cb) {
+        if (!query) return cb();
+        var sql = db.builder.sql(query);
+        tx.query(sql.query, sql.values, cb);
+      });
     });
-  });
 
-  // add the acutal restaurant table update as the fourth parallel function.
-  tasks.push(function(cb) {
-    var updates = utils.pick(req.body, fields);
-    if (utils.size(updates) === 0) return cb();
-    var query = queries.restaurant.update(updates, req.params.rid);
-    var sql = db.builder.sql(query);
-    db.query(sql.query, sql.values, cb);
-  });
+    // add the acutal restaurant table update as the fourth parallel function.
+    tasks.push(function(cb) {
+      var updates = utils.pick(req.body, fields);
+      if (utils.size(updates) === 0) return cb();
+      var query = queries.restaurant.update(updates, req.params.rid);
+      var sql = db.builder.sql(query);
+      tx.query(sql.query, sql.values, cb);
+    });
 
-  utils.async.parallel(tasks, function(err, results) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
-    var result = results[3];
-    res.send( result ? 200 : 204, result); // TODO: better than results[3]
+
+    utils.async.series([
+      tx.begin.bind( tx )
+    , utils.async.parallel.bind( utils.async, tasks )
+    , tx.commit.bind( tx )
+    ], function( error ){
+      if ( error ){
+        tx.abort();
+        return res.error( errors.internal.DB_FAILURE, error );
+      }
+
+      res.status(204).send();
+    });
   });
 }
 
@@ -494,7 +506,7 @@ module.exports.copy = function(req, res) {
     }
 
   , function copyRestaurant(restaurant, acct, callback) {
-      var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id'), {
+      var data = utils.extend({ }, utils.omit(restaurant, 'id', 'text_id', 'uuid'), {
         balanced_customer_uri: null
       , stripe_id: acct.id
       , name: restaurant.name + ' Copy'

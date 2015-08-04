@@ -13,6 +13,7 @@ var odsChecker  = require('../public/js/lib/order-delivery-service-checker');
 dirac.db.setMosql( mosql );
 
 dirac.use( dirac.relationships() );
+dirac.use( require('../lib/dirac-serialize-point')() );
 
 // Logging for dals
 // Leaving commented for now because it just makes logs too noisy
@@ -383,7 +384,7 @@ dirac.use( function(){
         , restaurant_id:      r.restaurant.id
         , plan:               r.restaurant.plan
         , sales_tax:          r.restaurant.region.sales_tax
-        }).toJSON();
+        }).toJSON({ keepOrder: true });
       }
     });
 

@@ -1348,6 +1348,7 @@ module.exports.register = function(app) {
     , restaurantDbModelFind:  true
     })
   , controllers.orders.auth
+  , m.restrict(['admin', 'order-owner'])
   , m.view( 'order-payment',{
 
    })
@@ -1435,7 +1436,7 @@ module.exports.register = function(app) {
   , m.view( 'users', db.users, { method: 'find' })
   );
 
-  app.post('/users', m.restrict('admin'), controllers.users.create);
+  app.post('/users', m.restrict('admin'), controllers.admin.users.create, controllers.admin.users.handleError);
 
   app.all('/users', function(req, res, next) {
     res.set('Allow', 'GET, POST');
@@ -1796,12 +1797,14 @@ module.exports.register = function(app) {
   , m.aliasLocals({ delivery_services: 'orders' })
   , m.getOrder2({
       param:                  'id'
+    , location:               true
     , restaurant:             true
     , restaurantContacts:     true
     , restaurantDbModelFind:  true
     , user:                   true
     , userPaymentMethods:     true
     , items:                  true
+    , internalNotes:          true
     })
   , m.view( 'admin/order', {
       layout: 'admin/layout2'
@@ -1880,6 +1883,9 @@ module.exports.register = function(app) {
                                     }
                                   , { table: 'restaurants'
                                     , alias: 'restaurant'
+                                    }
+                                  , { table: 'users'
+                                    , alias: 'user'
                                     }
                                   ]
                           }
@@ -2002,6 +2008,7 @@ module.exports.register = function(app) {
 
   app.post('/api/restaurants/:restaurant_id/locations'
   , m.queryToBody('restaurant_id')
+  , m.geocodeBody()
   , m.insert( db.restaurant_locations )
   );
 
@@ -2014,6 +2021,10 @@ module.exports.register = function(app) {
   app.put('/api/restaurants/:restaurant_id/locations/:id'
   , m.param('id')
   , m.param('restaurant_id')
+  , function( req, res, next ){
+      m.db.restaurant_locations.findOne( req.params.id )( req, res, next );
+    }
+  , m.geocodeBody({ defaultsWith: 'restuarant_location' })
   , m.update( db.restaurant_locations )
   );
 
@@ -2351,6 +2362,36 @@ module.exports.register = function(app) {
   , controllers.orders.notifications.JSON.historyItem
   );
 
+  app.post('/api/orders/:order_id/internal-notes'
+  , m.restrict(['admin'])
+  , function( req, res, next ){
+      req.body.order_id = req.params.order_id;
+      req.body.user_id = req.user.attributes.id;
+      return next();
+    }
+  , function( req, res, next ){
+      req.queryOptions.returning = db.order_internal_notes.getColumnListForTimezone(
+        req.user.attributes.region.timezone
+      );
+
+      return next();
+    }
+  , function( req, res, next ){
+      m.db.order_internal_notes.insert( req.body, req.queryOptions )( req, res, next );
+    }
+  , function( req, res, next ){
+      res.locals.order_internal_note.user = req.user.attributes;
+      return next();
+    }
+  , m.jsonLocals('order_internal_note')
+  );
+
+  app.del('/api/orders/:order_id/internal-notes/:id'
+  , m.restrict(['admin'])
+  , m.param('id')
+  , m.remove( db.order_internal_notes )
+  );
+
   /**
    * Users
    */
@@ -2649,11 +2690,11 @@ module.exports.register = function(app) {
   );
 
   /**
-   * Address verification
+   * Maps
    */
 
-  app.get('/api/maps/address-validity/:address'
-  , controllers.api.maps.addressValidity
+  app.get('/api/maps/geocode/:address'
+  , controllers.api.maps.geocode
   );
 
   app.get('/api/stripe-events/:id'

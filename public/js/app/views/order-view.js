@@ -31,7 +31,10 @@ define(function(require, exports, module) {
         'click #change-status-accepted-no-notify': _.bind(this.changeStatus, this, 'accepted', false),
         'click #change-status-canceled-no-notify': _.bind(this.changeStatus, this, 'canceled', false),
 
-        'keyup .adjustment': 'autoSave'
+        'keyup .adjustment': 'autoSave',
+        'keyup .order-tip': 'autoSave',
+        'change .order-tip': 'autoSave',
+        'change .tip-percent': 'autoSave'
       });
     },
 

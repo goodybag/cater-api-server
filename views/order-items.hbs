@@ -9,6 +9,16 @@
 {{> checkout_sticky_header }}
 {{> order_params_modal }}
 
+{{#if isAdmin}}
+  {{#extend "navbar-links"}}
+    <li>
+      <a href="/admin/orders/{{../../order.id}}">
+        Order Command Center
+      </a>
+    </li>
+  {{/extend}}
+{{/if}}
+
 <div class="page page-order container">
   <div class="row">
     {{> wizard }}

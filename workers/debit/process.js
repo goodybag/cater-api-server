@@ -29,8 +29,12 @@ var checkForExistingDebit = function (order, callback) {
       return charge.metadata.order_uuid === order.uuid;
     }
 
+    function failedCharge (charge) {
+      return charge.status !== 'failed';
+    }
+
     if (charges && charges.data) {
-      var debits = charges.data.filter(matchesUuid);
+      var debits = charges.data.filter(matchesUuid).filter(failedCharge);
 
       if ( debits && debits.length > 1 ) {
         logger.error('Multiple debits for a single order');
@@ -92,9 +96,7 @@ var debitCustomer = function (order, callback) {
 
       utils.stripe.charges.create(data, function (error, charge) {
         if (error) {
-          return (new models.Order(order)).setPaymentError(error, callback);
-
-          /* TODO Refactor failed user payment flow
+          /* TODO Refactor failed user payment flow */
           // enqueue declined cc notification on scheduler
           return scheduler.enqueue('send-order-notification', new Date(), {
             notification_id: 'user-order-payment-failed'
@@ -106,7 +108,6 @@ var debitCustomer = function (order, callback) {
             // construct a model to run the following transactions
             return (new models.Order(order)).setPaymentError(error, callback);
           });
-          */
         }
         return (new models.Order(order)).setPaymentPaid('debit', charge, callback);
       });

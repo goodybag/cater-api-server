@@ -206,6 +206,12 @@ config.defaults = {
     username:'goodybaginc'
   , apiKey: 'R_174d19bb5c13f986cfa863e18a186441'
   }
+  
+, operation: {
+    hours: '6AM to 7PM',
+    timezone: 'Central',
+    days: 'Monday thru Friday'
+  }
 
 , emails: {
     support: [ local.testEmail || 'test@goodybag.com' ]
@@ -223,7 +229,7 @@ config.defaults = {
 
 , phone: {
     main: '5126674224'
-  , support: '5122706555'
+  , support: '5126774224' //'5122706555'
   , orders: '5122706333'
   }
 

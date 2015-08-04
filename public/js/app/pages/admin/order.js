@@ -3,11 +3,15 @@ define(function(require){
   var notify  = require('notify');
   var utils   = require('utils');
   var flash   = require('flash');
+  var Hbs     = require('handlebars');
+
+  var InternalNotesCollection = require('app/collections/order-internal-notes');
 
   var Views = {
     NotificationHistoryTable:     require('app/views/notification-history-table')
   , NotificationsTable:           require('app/views/notifications-table')
   , PdfPreview:                   require('app/views/pdf-preview')
+  , AuditView:                    require('app/views/admin/audit-view')
   };
 
   var page = {
@@ -40,6 +44,13 @@ define(function(require){
       page.notificationHistory  = new Views.NotificationHistoryTable({ order: options.order })
       page.notifications        = new Views.NotificationsTable({ order: options.order })
 
+      page.internalNotesView = new Views.AuditView({
+        collection: new InternalNotesCollection( page.order.get('internal_notes'), {
+                      order_id: page.order.id
+                    })
+      , template:   Hbs.partials.order_internal_notes
+      });
+
       page.fetchAndRenderHistory();
       page.fetchAndRenderNotifications();
 
@@ -56,6 +67,9 @@ define(function(require){
         page.notifications.setElement(
           $('#notifications-table')
         ).render();
+
+        page.internalNotesView.render();
+        $('#internal-notes .panel-body').append( page.internalNotesView.$el );
 
         $('.pdf-preview').each( function(){
           new Views.PdfPreview({ el: this });

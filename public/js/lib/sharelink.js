@@ -1,9 +1,11 @@
 /**
-*   Goodybag Widgets
+*  Share Link Widget
+*  - "Order with Goodybag" button
 */
 
-(function Widgets (window, document) {
+(function (window, document) {
 
+  // apply inline styles to element
   var applyStyle = function (el, styles) {
     for (var k in styles) {
       el['style'][k] = styles[k];

@@ -12,7 +12,7 @@
 
     <code class="language-markup">
     {{~#raw~}}
-<a title="order today!" class="goodybag-order-button" 
+<a title="order with goodybag!" class="goodybag-order-button"
 href="https://goodybag.com/restaurants/:id">Order with Goodybag</a>
 
 <script>
@@ -20,7 +20,7 @@ href="https://goodybag.com/restaurants/:id">Order with Goodybag</a>
   if (document.getElementById(id)) return;
   var js = document.createElement(s)
   , gjs = document.getElementsByTagName(s)[0];
-  js.src= 'http://goodybag.com/js/lib/widgets.js';
+  js.src= '{{config.cdn.baseUrl}}/sharelink.js';
   js.id = id;
   gjs.parentNode.insertBefore(js, gjs);
 })(document, 'script', 'gb-wjs');

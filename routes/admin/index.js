@@ -147,7 +147,7 @@ route.get('/restaurant-plans/:id/basic-info',
  * Delivery Services
  */
 
-route.get('/delivery-services'
+route.get('/delivery-services',
   m.sort('+name'),
   m.queryOptions({
     one: [{

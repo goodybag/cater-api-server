@@ -644,3 +644,156 @@ function getPalette(req, res, next) {
     next();
   });
 }
+
+route.get('/restaurants/:restaurant_id/orders'
+, function( req, res, next ){
+    m.db.restaurants.findOne( req.params.restaurant_id )( req, res, next );
+  }
+, m.param('status')
+, m.param('restaurant_id')
+, m.sort('-id')
+, m.queryOptions({ limit: 'all'
+  , one:  [ { table: 'users', alias: 'user' }
+          , { table: 'restaurants', alias: 'restaurant'
+            , one:  [ { table: 'delivery_services'
+                    , alias: 'delivery_service'
+                    , where: { region_id: '$restaurants.region_id$' }
+                    }
+                    ]
+            }
+          ]
+  })
+, function( req, res, next ){
+    res.locals.status = req.params.status;
+    if ( req.params.status == 'accepted' ){
+      req.queryOptions.statusDateSort = { status: req.params.status };
+    }
+    return next();
+  }
+, m.view( 'restaurant-orders', db.orders, {
+    method: 'find'
+  })
+);
+
+
+route.get('/restaurants/:id/payment-summaries'
+, m.restrict(['admin'])
+, m.param('id')
+, m.queryOptions({
+    many: [{ table: 'contacts' }]
+  })
+, m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
+    layout: 'admin/layout'
+  , method: 'findOne'
+  })
+);
+
+route.get('/restaurants/:id/payment-summaries/:payment_summary_id'
+, m.restrict(['admin'])
+, m.param('id')
+, function( req, res, next ){
+    res.locals.payment_summary_id = req.params.payment_summary_id;
+    return next();
+  }
+, m.queryOptions({
+    one:  [{ table: 'restaurant_plans', alias: 'plan' }]
+  })
+, m.view( 'admin/restaurant-payment-summary', db.restaurants, {
+    layout: 'admin/layout'
+  , method: 'findOne'
+  })
+);
+
+route.get('/restaurants/:restaurant_id/contacts'
+, m.restrict(['admin'])
+, m.param('restaurant_id')
+, m.restaurant( {param: 'restaurant_id'} )
+, m.view( 'restaurant/contacts', db.contacts, {
+   layout: 'admin/layout2'
+ , method: 'find'
+ })
+);
+
+route.get('/orders/:id'
+, m.restrict(['admin'])
+, function( req, res, next ){
+    var where = {
+      where: { 'orders.id': req.params.id }
+    };
+
+    var options = {
+      columns: ['delivery_services.*']
+
+    , joins: [
+        { type: 'left', target: 'restaurants',        on: { 'orders.restaurant_id': '$restaurants.id$' } }
+      , { type: 'left', target: 'regions',            on: { 'restaurants.region_id': '$regions.id$' } }
+      , { type: 'left', target: 'delivery_services',  on: { 'regions.id': '$delivery_services.region_id$' } }
+      ]
+    };
+
+    return m.db.orders.find( where, options )( req, res, next );
+  }
+  // previous query aliased result as `orders`
+  // it should be `delivery_services`
+, m.aliasLocals({ delivery_services: 'orders' })
+, m.getOrder2({
+    param:                  'id'
+  , location:               true
+  , restaurant:             true
+  , restaurantContacts:     true
+  , restaurantDbModelFind:  true
+  , user:                   true
+  , userPaymentMethods:     true
+  , items:                  true
+  , internalNotes:          true
+  })
+, m.view( 'admin/order', {
+    layout: 'admin/layout2'
+  })
+);
+
+
+route.get('/analytics'
+, m.restrict(['admin'])
+, m.getOrders({
+    status: 'accepted'
+  , submittedDate: { ignoreColumn: true }
+  , groupByMonth: true
+  , rename: 'stats'
+  , user: false
+  , restaurant: false
+  , reverse: true
+  })
+, m.view( 'admin/analytics/index.hbs', {
+    layout: 'admin/layout2'
+  })
+);
+
+route.get('/analytics/demand'
+, m.restrict(['admin'])
+, m.filters(['regions'])
+, m.defaultPeriod(['month', 'year'])
+, m.getOrders({
+    status: 'accepted'
+  , submittedDate: true
+  , order: 'submitted'
+  , getWeek: true
+  , indexBy: 'week'
+  })
+, m.orderAnalytics.period()
+, m.orderAnalytics.month()
+, m.orderAnalytics.week()
+, m.view( 'admin/analytics/demand', {
+    layout: 'admin/layout2'
+  })
+);
+
+route.get('/analytics/retention'
+, m.restrict(['admin'])
+, m.filters([ 'regions' ])
+, m.organizationSubmissions()
+, m.orderAnalytics.retention()
+, m.view( 'admin/analytics/retention', {
+    layout: 'admin/layout2'
+  })
+);

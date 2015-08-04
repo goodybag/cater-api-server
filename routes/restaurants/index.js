@@ -38,8 +38,14 @@ route.get('/:rid',
     photos: false
   }),
   controllers.restaurants.orders.current,
-  m.exists('order', {then: controllers.orders.auth, else: m.noop()}), // TODO
-  m.exists('order', {then: m.editOrderAuth, else: m.noop()}),
+  m.exists('order', {
+    then: controllers.orders.auth,
+    else: m.noop()
+  }), // TODO
+  m.exists('order', {
+    then: m.editOrderAuth,
+    else: m.noop()
+  }),
   controllers.restaurants.get);
 
 route.put('/:rid', m.restrict('admin'), controllers.restaurants.update);
@@ -52,3 +58,106 @@ route.all('/:rid', m.restrict(['client', 'admin']), function(req, res, next) {
   res.set('Allow', 'GET, PUT, PATCH, DELETE');
   res.send(405);
 });
+
+/**
+ * Restaurant items resource.  The collection of all items belonging to a restaurant.
+ */
+
+route.get('/:rid/items', m.restrict(['client', 'admin']), controllers.restaurants.listItems); // not currently used
+
+route.all('/:rid/items', m.restrict(['client', 'admin']), function(req, res, next) {
+  res.set('Allow', 'GET');
+  res.send(405);
+});
+
+/**
+ * Restaurant events resource.
+ */
+
+route.get('/:rid/events', m.restrict(['admin']), controllers.restaurants.events.list);
+
+route.post('/:rid/events', m.restrict(['admin']), controllers.restaurants.events.create);
+
+route.all('/:rid/events', m.restrict(['admin']), function(req, res, next) {
+  res.set('Allow', 'GET, POST');
+  res.send(405);
+});
+
+/**
+ * Individual restaurant event resource.
+ */
+
+route.put('/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.update);
+
+route.patch('/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.update);
+
+route.delete('/:rid/events/:eid', m.restrict(['admin']), controllers.restaurants.events.remove);
+
+route.all('/:rid/events/:eid', m.restrict(['admin']), function(req, res, next) {
+  res.set('Allow', 'PUT', 'PATCH, DELETE');
+  res.send(405);
+});
+
+/**
+ * Restaurant categories resource.  The collection of all categories belonging to a restaurant.
+ */
+
+route.get('/:rid/categories', m.restrict(['client', 'admin']), controllers.restaurants.categories.list); // not currently used
+
+route.post('/:rid/categories', m.restrict('admin'), controllers.restaurants.categories.create);
+
+route.all('/:rid/categories', m.restrict(['client', 'admin']), function(req, res, next) {
+  res.set('Allow', 'GET, POST');
+  res.send(405);
+});
+
+/**
+ * Individual category resource.  A single restaurant category.
+ */
+
+route.get('/:rid/categories/:cid', m.restrict(['client', 'admin']), controllers.restaurants.categories.get); // not currently used
+
+route.put('/:rid/categories/:cid', m.restrict('admin'), controllers.restaurants.categories.update);
+
+route.patch('/:rid/categories/:cid', m.restrict('admin'), controllers.restaurants.categories.update);
+
+route.delete('/:rid/categories/:cid', m.restrict('admin'), controllers.restaurants.categories.remove);
+
+route.all('/:rid/categories/:cid', m.restrict(['client', 'admin']), function(req, res, next) {
+  res.set('Allow', 'GET, PUT, PATCH, DELETE');
+  res.send(405);
+});
+
+/**
+ *  Category items resource.  The collection of all items belonging to a single category.
+ */
+
+route.get('/:rid/categories/:cid/items', m.restrict(['client', 'admin']), controllers.restaurants.categories.listItems); // not currently used
+
+route.post('/:rid/categories/:cid/items', m.restrict('admin'), controllers.restaurants.categories.addItem);
+
+route.all('/:rid/categories/:cid/items', m.restrict(['client', 'admin']), function(req, res, next) {
+  res.set('Allow', 'GET, POST');
+  res.send(405);
+});
+
+/**
+ *  Restaurant orders resource.  The collection of all orders belonging to a single restaurant.
+ */
+
+route.post('/:rid/orders', m.restrict(['client', 'admin']), function(req, res, next) {
+  req.body.restaurant_id = req.params.rid;
+  req.url = '/orders';
+  next();
+});
+
+route.all('/:rid/orders', m.restrict(['client', 'admin']), function(req, res, next) {
+  res.set('Allow', 'GET, POST');
+  res.send(405);
+});
+
+/**
+ *  Current order resource.  The current pending order for the given restaurant and logged in user.
+ */
+
+route.all('/:rid/orders/current(/*)?', m.restrict(['client', 'admin']), controllers.restaurants.orders.current);

@@ -601,6 +601,8 @@ route.get('/restaurants/:restaurant_id/locations/:id', m.param('restaurant_id'),
   method: 'findOne'
 }));
 
+route.get('/restaurants/:rid/menu.csv', controllers.restaurants.menuCsv);
+
 route.get('/ol-greg', m.viewPlugin('mainNav', {
   active: 'home'
 }), m.db.restaurants.find({}, {

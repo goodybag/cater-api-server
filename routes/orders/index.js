@@ -1,0 +1,144 @@
+var express = require('express');
+
+var m = require('../../middleware');
+var db = require('../../db');
+var controllers = require('../../controllers');
+
+var route = module.exports = express.Router();
+
+/**
+ *  Orders resource.  The collection of all orders.
+ */
+
+route.get('/', m.restrict('admin'), m.pagination({
+    pageParam: 'p'
+  }), m.param('status'), m.param('type'),
+  // Cas IDs to ints so indexOf checks work
+  function(req, res, next) {
+    if (!Array.isArray(req.query['restaurants.region_id'])) return next();
+    req.query['restaurants.region_id'] = req.query['restaurants.region_id'].map(function(id) {
+      return parseInt(id);
+    });
+
+    // Setup the url->sql where clause
+    return m.param('restaurants.region_id')(req, res, next);
+  }, m.sort('-id'), m.queryOptions({
+    submittedDate: true,
+    one: [{
+      table: 'users',
+      alias: 'user'
+    }, {
+      table: 'restaurants',
+      alias: 'restaurant'
+    }, {
+      table: 'delivery_services',
+      alias: 'delivery_service'
+    }],
+    joins: [{
+      type: 'left',
+      target: 'restaurants',
+      on: {
+        id: '$orders.restaurant_id$'
+      }
+    }]
+  }),
+  function(req, res, next) {
+    res.locals.status = req.params.status;
+    if (req.params.status == 'accepted') {
+      req.queryOptions.statusDateSort = {
+        status: req.params.status
+      };
+    }
+    return next();
+  }, m.view('orders', db.orders)
+);
+
+route.post('/', m.restrict(['guest', 'client', 'admin']), controllers.orders.create);
+
+route.all('/', function(req, res, next) {
+  res.set('Allow', 'GET');
+  res.send(405);
+});
+
+/**
+ *  Order voice resource.  TwiML for phone notifications of order submitted.
+ */
+
+route.get('/:oid/voice', controllers.orders.voice);
+
+route.all('/:oid/voice', function(req, res, next) {
+  res.set('Allow', 'GET');
+  res.send(405);
+});
+
+
+/**
+ *  Order resource.  An individual order.
+ */
+
+route.get('/:oid/manifest', m.basicAuth(), m.restrict(['admin', 'receipts']), m.getOrder2({
+  items: true,
+  manifest: true,
+  user: true,
+  restaurant: true,
+  amenities: true
+}), m.view('order-manifest/manifest-1', {
+  layout: 'order-manifest/layout'
+}));
+
+route.get('/:oid', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true,
+    submittedDate: true,
+    amenities: true,
+    orderFeedback: true
+  }), controllers.orders.auth, m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant']),
+  controllers.orders.get);
+
+route.put('/:oid', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true
+  }), controllers.orders.auth, m.restrict(['order-owner', 'order-restaurant', 'admin']), m.audit.orderType(),
+  controllers.orders.update);
+
+route.patch('/:oid', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true
+  }), controllers.orders.auth, m.restrict(['order-owner', 'order-restaurant', 'admin']), controllers.orders
+  .editability, controllers.orders.update);
+
+route.delete('/:oid', m.getOrder2({
+  param: 'oid',
+  items: true,
+  user: true,
+  userAddresses: true,
+  userPaymentMethods: true,
+  restaurant: true,
+  deliveryService: true
+}), controllers.orders.auth, m.restrict(['order-owner', 'order-restaurant', 'admin']), function(req, res,
+  next) {
+  req.body = {
+    status: 'canceled'
+  };
+  next();
+}, controllers.orders.changeStatus);
+
+route.all('/:oid', m.restrict(['client', 'restaurant', 'admin']), function(req, res, next) {
+  res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
+  res.send(405);
+});

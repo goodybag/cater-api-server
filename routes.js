@@ -231,15 +231,6 @@ module.exports.register = function(app) {
 
 
     /**
-    * Widgets
-    */
-    app.get('/admin/widgets'
-    , m.view('admin/widgets/index', {
-        layout: 'admin/layout2'
-      })
-    );
-
-    /**
      * Restaurant Plans
      */
 
@@ -713,6 +704,19 @@ module.exports.register = function(app) {
     , m.view('admin/restaurant/edit-photos', db.restaurant_photos, {
         layout: 'admin/layout-two-column'
       , method: 'find'
+      })
+    );
+
+    app.get('/admin/restaurants/:id/widgets'
+    , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+    , m.viewPlugin( 'sidebarNav', {
+        active:   'widgets'
+      , baseUrl:  '/admin/restaurants/:id'
+      })
+    , m.param('id')
+    , m.view('admin/restaurant/widgets', db.restaurants, {
+        layout: 'admin/layout-two-column'
+      , method: 'findOne'
       })
     );
 

@@ -1,0 +1,46 @@
+{{#extend "html-title"}} Widgets{{/extend}}
+{{#extend "body"}}
+<h1>Widgets</h1>
+
+<section>
+  <div class="container">
+    <h2 class="component-title">Embedded Order Button</h2>
+
+    <a title="order today!" class="goodybag-order-button" href="https://goodybag.com/restaurants/{{restaurant.id}}">
+      Order with Goodybag
+    </a>
+
+    <code class="language-markup">
+    {{~#raw~}}
+<a title="order with goodybag!" class="goodybag-order-button"
+href="https://goodybag.com/restaurants/{{restaurant.id}}">Order with Goodybag</a>
+
+<script>
+(function (d,s,id) {
+  if (document.getElementById(id)) return;
+  var js = document.createElement(s)
+  , gjs = document.getElementsByTagName(s)[0];
+  js.src= '{{config.cdn.baseUrl}}/sharelink.js';
+  js.id = id;
+  gjs.parentNode.insertBefore(js, gjs);
+})(document, 'script', 'gb-wjs');
+</script>
+    {{~/raw~}}
+    </code>
+  </div>
+</section>
+
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+(function (d,s,id) {
+  if (document.getElementById(id)) return;
+  var js = document.createElement(s)
+  , gjs = document.getElementsByTagName(s)[0];
+  js.src= '{{config.baseUrl}}/js/lib/sharelink.js';
+  js.id = id;
+  gjs.parentNode.insertBefore(js, gjs);
+})(document, 'script', 'gb-wjs');
+</script>
+{{/extend}}

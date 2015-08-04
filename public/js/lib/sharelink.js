@@ -32,6 +32,7 @@
     , borderColor: '#dd1515'
     , padding: '5.5px 18px 4.5px 18px'
     , fontSize: '14px'
+    , fontFamily: '"Avenir", Helvetica, sans-serif'
     , lineHeight: '0'
     , textDecoration: 'none'
     , letterSpacing: '0.4px'
@@ -42,6 +43,8 @@
     image.src = 'https://www.filepicker.io/api/file/2teJMBOMRgmdLfGdl8zO';
     applyStyle(image, {
       width: '30px'
+    , height: '30px'
+    , border: 'none'
     });
 
     var span = document.createElement('span');

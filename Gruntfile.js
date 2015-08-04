@@ -72,6 +72,14 @@ module.exports = function(grunt) {
       }
     }
 
+   , uglify: {
+      sharelink: {
+        files: {
+          'public/dist/sharelink.min.js': ['public/js/lib/sharelink.js']
+        }
+      }
+    }
+
   , shell: {
       handlebars: {
         options: { stdout: true, stderr: true }
@@ -343,7 +351,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask( 'analyze',      ['complexity'] );
-  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'react', 'requirejs'] );
+  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'react', 'uglify', 'requirejs'] );
   grunt.registerTask( 'default',      ['less', 'namedModules', 'shell:handlebars', 'shell:cacheRedis', 'copy:legacy', 'loglog', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 

@@ -142,3 +142,158 @@ route.all('/:oid', m.restrict(['client', 'restaurant', 'admin']), function(req, 
   res.set('Allow', 'GET, POST, PUT, PATCH, DELETE');
   res.send(405);
 });
+
+/**
+ *  Order status resource.  The collection of all statuses on a single order.
+ */
+
+route.get('/:oid/status-history', m.restrict(['client', 'admin']), controllers.orders.listStatus);
+
+// people with restaurant review token can access this route.  leave auth to controllers.orders.auth.
+route.post('/:oid/status-history', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true
+  }), controllers.orders.auth, m.restrict(['admin', 'order-owner', 'order-restaurant']), controllers.orders
+  .changeStatus
+);
+
+route.all('/:oid/status-history', m.restrict(['client', 'admin']), function(req, res, next) {
+  res.set('Allow', 'GET, POST');
+  res.send(405);
+});
+
+/**
+ * Delivery service actions
+ */
+route.get('/:oid/delivery-service-accept', m.deliveryServiceAuth(), controllers.orders.deliveryServices.accept);
+
+/**
+ *  Order items resource.  The collection of all order items on a single order.
+ *  This is a collection of OrderItems, not Items.
+ */
+
+route.get('/:oid/items', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    amenities: true,
+    deliveryService: true,
+    restaurantDbModelFind: true
+  }), controllers.orders.auth, m.restrict(['admin', 'order-owner', 'order-editor']), controllers.orders.orderItems
+  .summary
+);
+
+route.post('/:oid/items', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true
+  }), controllers.orders.auth, m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
+  controllers.orders.editability, controllers.orders.orderItems.add
+);
+
+route.all('/:oid/items', function(req, res, next) {
+  res.set('Allow', 'GET, POST');
+  res.send(405);
+});
+
+/**
+ *  Order item resource.  A single order item.
+ */
+
+route.get('/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get); // not currently used
+
+route.put('/:oid/items/:iid', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true
+  }), controllers.orders.auth, m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
+  controllers.orders.editability, controllers.orders.orderItems.update
+);
+
+route.patch('/:oid/items/:iid', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true
+  }), controllers.orders.auth, m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
+  controllers.orders.editability, controllers.orders.orderItems.update
+);
+
+route.delete(
+  '/:oid/items/:iid', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true
+  }), controllers.orders.auth, m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
+  controllers.orders.editability, controllers.orders.orderItems.remove
+);
+
+route.all('/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
+  res.set('Allow', 'GET, PUT, PATCH, DELETE');
+  res.send(405);
+});
+
+/**
+ * Order Duplicates resource.  Duplicates of an order.
+ */
+
+route.post('/:oid/duplicates', m.restrict(['client', 'admin']), controllers.orders.duplicate);
+
+route.all('/:oid/duplicates', m.restrict(['client', 'admin']), function(req, res, next) {
+  res.set('Allow', 'POST');
+  res.send(405);
+});
+
+/**
+ * Order add items resource.  Page to add items to an order.  (basically the menu page)
+ */
+
+route.get('/:oid/add-items', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true,
+    restaurantDbModelFind: true
+  }), controllers.orders.auth, m.restrict(['admin', 'order-owner', 'order-editor']), controllers.restaurants
+  .orders.get
+);
+
+
+route.get('/:oid/notifications/:nid', m.restrict(['admin']), controllers.orders.notifications.getEmail);
+
+route.get('/:oid/payment', m.getOrder2({
+  param: 'oid',
+  items: true,
+  user: true,
+  userAddresses: true,
+  userPaymentMethods: true,
+  restaurant: true,
+  deliveryService: true,
+  restaurantDbModelFind: true
+}), controllers.orders.auth, m.restrict(['admin', 'order-owner']), m.view('order-payment', {}));

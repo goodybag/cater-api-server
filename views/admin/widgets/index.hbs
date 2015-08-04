@@ -38,7 +38,7 @@ href="https://goodybag.com/restaurants/:id">Order with Goodybag</a>
   if (document.getElementById(id)) return;
   var js = document.createElement(s)
   , gjs = document.getElementsByTagName(s)[0];
-  js.src= 'http://localhost:3000/js/lib/widgets.js';
+  js.src= 'http://localhost:3000/js/lib/sharelink.js';
   js.id = id;
   gjs.parentNode.insertBefore(js, gjs);
 })(document, 'script', 'gb-wjs');

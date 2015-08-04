@@ -122,6 +122,12 @@ module.exports.autoFetchFromRedis = function( db ){
           });
         }
       });
+
+      db.cache.delivery_services[ region.id ].on( 'value', function( deliveryServices ){
+        db.cache.restaurants.byRegion( region.id ).forEach( function( r ){
+          r.region.delivery_services = deliveryServices;
+        });
+      });
     });
   });
 };

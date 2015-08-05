@@ -2,7 +2,7 @@ var server = require('loglog-server');
 var config = require('../../config');
 
 if ( !config.logging.transports.mongo ){
-  console.warn('MongoDB disabled as trasnport. Exiting.');
+  console.warn('MongoDB disabled as transport. Exiting.');
   process.exit(0);
 }
 

@@ -1,6 +1,84 @@
 {{#extend "title"}} - Account Settings{{/extend}}
 
+{{#extend "page"}}account-settings-home{{/extend}}
+
 {{#extend "body"}}
+<!--<Navbar>-->
+<header class="navbar navbar-with-dropdowns {{#if session.oldUser}}navbar-impersonate{{/if}} collapsed">
+  <div class="container">
+    <a href="/">
+      <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
+    </a>
+    <div class="navbar-caption">
+      <span class="full"><strong>Let us help you with your order!</strong></span> <span class="full full-number">{{phoneNumber config.phone.support}}</span>
+      <span class="short">{{phoneNumber config.phone.support}}</span>
+    </div>
+
+    <div class="nav">
+      {{#if session.oldUser}}
+      <li>
+        <a href="/users/return">Return to {{session.oldUser.name}}</a>
+      </li>
+      {{/if}}
+      {{#contains user.groups 'admin'}}
+      <span class="gb-dropdown">{{> region_selector}}</span>
+      {{/contains}}
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+        class="btn btn-default btn-dropdown"
+        data-role="popover"
+        data-target="dropdown-popover">
+        My Orders
+        <i class="gb-icon-caret-down"></i>
+      </button>
+
+      <div class="popover-modal dropdown-popover">
+        <ul class="popover-body">
+          <li class="popover-item">
+            <a href="/">Start New Order</a>
+          </li>
+          <li class="popover-item">
+            <a href="/users/me/orders">My Orders</a>
+          </li>
+          <li class="popover-item">
+            <a href="/users/me/orders/receipts">My Receipts</a>
+          </li>
+        </ul>
+      </div>
+      </span>
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+          class="btn btn-default btn-dropdown"
+          data-role="popover"
+          data-target="dropdown-popover">
+          {{#if user.name}}{{user.name}}{{else}}My Account{{/if}}
+          <i class="gb-icon-caret-down"></i>
+        </button>
+
+        <div class="popover-modal dropdown-popover">
+          <ul class="popover-body">
+            <li class="popover-item">
+              <a href="/users/me">Settings</a>
+            </li>
+            <li class="popover-item">
+              <a href="/users/me/rewards">My Rewards</a>
+            </li>
+            <li class="popover-item">
+              <a href="/auth/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </span>
+    </div>
+
+    <a class="gb-points" href="/users/me/rewards">{{commatize user.points}} points</a>
+
+    <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
+
+  </div>
+</header>
+<!--</Navbar>-->
+
 <div class="container account-settings">
 
   {{#if alert}}

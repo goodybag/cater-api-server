@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Goodybag{{{block "title"}}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="{{cdn "favicon.ico"}}">
+
+    <!-- Keep this up here! -->
+    <!--[if lt IE 9]>
+    <script src="{{cdn "/components/html5shiv/dist/html5shiv.js"}}"></script>
+    <script src="{{cdn "/components/es5-shim/es5-shim.js"}}"></script>
+    <script src="{{cdn "/components/es5-shim/es5-sham.js"}}"></script>
+    <![endif]-->
+    <!--[if lte IE 9]>
+    <script src="{{cdn "/components/console-polyfill/index.js"}}"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="{{cdn "/css/gb-icon.css"}}">
+    <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/goodybag.css' pkg)}}">
+
+    {{> analytics }}
+
+    {{{block "css"}}}
+
+    {{{block "head"}}}
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/landing-ielt9.css' pkg)}}">
+    <![endif]-->
+  </head>
+  <body class="page {{{block "page"}}}">
+
+    {{{block "body"}}}
+
+    <footer class="footer">
+      <ul class="nav footer-nav">
+        <li><a href="/contact-us">Contact Us</a></li>
+        <li><a href="/faqs">Frequently Asked Questions</a></li>
+        <li><a href="/testimonials">Testimonials</a></li>
+        <li><a href="/request-to-be-a-caterer">Request to be a caterer</a></li>
+        <li><a href="/legal">Terms of service</a></li>
+        <li><a href="/privacy">Privacy policy</a></li>
+      </ul>
+    </footer>
+
+    {{#unless config.isDev}}
+    <script src="{{cdn (format 'dist/<%= version %>/app.js' pkg)}}"></script>
+    {{else}}
+    <script src="{{cdn "components/requirejs/require.js"}}"></script>
+    <script src="{{cdn "/js/require-config.js"}}"></script>
+    {{/unless}}
+    {{> config}}
+
+    {{> olark }}
+
+    {{#if config.isProduction}}
+      {{> adroll }}
+    {{/if}}
+
+    {{{block "scripts"}}}
+  </body>
+</html>

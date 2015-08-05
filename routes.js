@@ -25,6 +25,10 @@ module.exports.register = function(app) {
       layout: 'landing/layout'
     }));
 
+    app.get('/users/me', m.view('account-settings/account-settings', {
+      layout: 'account-settings/layout'
+    }));
+
     app.get('/testimonials'
     , m.json({ file: '/public/data/testimonials.json', target: 'testimonials' })
     , m.view( 'landing/testimonials', {

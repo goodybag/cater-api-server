@@ -1,0 +1,116 @@
+{{#extend "title"}} - Account Settings{{/extend}}
+
+{{#extend "body"}}
+<div class="container account-settings">
+
+  {{#if alert}}
+    <div class="alert alert-success fade in">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <strong>Settings Saved!</strong>
+    </div>
+  {{/if}}
+
+  <h1 class="text-center page-title">Account Settings</h1>
+  <div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+      <div class="panel">
+        <ul class="list-group">
+          <li class="list-group-item">
+            <form class="user-settings-form" action="/users/me" method="post">
+              <input type="hidden" name="_method" value="put"/>
+              <div class="form-group">
+                <label for="input-name" class="control-label">Name</label>
+                <input type="text" id="input-name" name="name" class="form-control name col-lg-12" value="{{user.name}}">
+              </div>
+              <div class="form-group">
+                <label for="input-email" class="control-label">Email</label>
+                <input type="email" id="input-email" name="email" class="form-control email" value="{{user.email}}">
+              </div>
+              <div class="form-group">
+                <div class="radio">
+                  <label>
+                    <input class="organization-type" name="organization_type" type="radio" value="individual" {{#if (eq user.organization_type 'individual') }} checked="checked" {{/if}}>
+                    Individual
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input class="organization-type" name="organization_type" type="radio" value="business" {{#if (eq user.organization_type 'business') }} checked="checked" {{/if}}>
+                    Business
+                  </label>
+                </div>
+              </div>
+              <div class="form-group" id="order-organization">
+                <label for="input-org" class="control-label">Organization</label>
+                <input type="text" id="input-org" name="organization" class="form-control organization" value="{{user.organization}}">
+              </div>
+              <div class="form-group">
+                <label for="input-pass1" class="control-label">Password</label>
+                <input type="password" name="password" id="input-pass1" class="form-control password">
+              </div>
+              <div class="form-group">
+                <label for="input-pass2" class="control-label">Confirm Password</label>
+                <input type="password" id="input-pass2" class="form-control confirm_password">
+              </div>
+              <div class="clearfix">
+                <button type="submit" class="btn btn-primary pull-right">Save</button>
+              </div>
+          </form>
+          </li>
+          <li class="list-group-item">
+            <div class="user-other-settings">
+              <dl>
+                <dt>Address Book</dt>
+                <dd>
+                  <div><a href="/users/me/addresses">Manage Addresses</a></div>
+                  <div><a href="/users/me/addresses#add-new-address">Add New Address</a></div>
+                </dd>
+              </dl>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="user-other-settings">
+              <dl>
+                <dt>Credit Cards</dt>
+                <dd>
+                  <div><a href="/users/me/cards">Manage Credit Cards</a></div>
+                  <div><a href="/users/me/cards#add-payment-method">Add Credit Card</a></div>
+                </dd>
+              </dl>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require([
+      'jquery-loaded'
+    ]
+  , function($) {
+      $('.user-settings-form').on('submit', function(e) {
+        // Client side validation
+        e.preventDefault();
+        var fields = ['name', 'email', 'organization', 'password'];
+        var data = {};
+        for (var i=0, l=fields.length; i<l; i++)
+          data[fields[i]] = $('.user-settings-form .' + fields[i]).val();
+        if (data.password && data.password !== $('.user-settings-form .confirm_password').val())
+          return alert('passwords must match');
+        if (!data.password) delete data.password;
+
+        if ($("[name='organization_type']:checked").val() === "business"
+          && $(".organization").val() === "") {
+          return alert('please enter an organization name');
+        }
+
+        this.submit();
+      });
+    }
+  );
+</script>
+{{/extend}}

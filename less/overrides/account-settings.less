@@ -1,1 +1,64 @@
+.account-settings-home {
 
+  // Temporary style on main navbar
+  // Should eventually be moved to general styling
+  .navbar .container {
+    width: 100%;
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+
+  // breathing room from nav and footer
+  .account-settings {
+    margin-top: 60px;
+    margin-bottom: 120px;
+
+    @media screen and (max-width: 620px) {
+      margin-top: 20px;
+    }
+
+    // center title
+    .page-title {
+      text-align: center;
+      font-size: 3em;
+    }
+
+    @media screen and (min-width: 787px) {
+      // center form elements
+      .user-settings-form {
+        text-align: center;
+
+        label {
+          text-align: left;
+        }
+      }
+
+      // breathing room between form elements
+      .form-group {
+        width: 45%;
+        margin: 1%;
+      }
+
+      // submit button
+      button {
+        margin: 40px 0 20px;
+        width: 200px;
+      }
+
+      // breathing room under other settings titles
+      .user-other-settings dt {
+        margin-bottom: 5px;
+      }
+    }
+
+  }
+
+  // Temporary style on footer
+  // Should eventually be moved to general styling
+  .footer {
+    position: static;
+    bottom: 0;
+    width: 100%;
+  }
+
+}

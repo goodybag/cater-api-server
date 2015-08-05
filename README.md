@@ -36,10 +36,10 @@ __Setup local config__
 In the root directory there is a file named `local-config.json.sample`, edit
 this file as needed and save it as `local-config.json`
 
-Change the information in `local-config.json`:  
-- change email to your current goodybag email  
-- enter testUserID (this will be provided to you)  
-- you have the option to receive test calls and texts if you change the X's with your phone number 
+Change the information in `local-config.json`:
+- change email to your current goodybag email
+- enter testUserID (this will be provided to you)
+- you have the option to receive test calls and texts if you change the X's with your phone number
 
 __Install MongoDB:__
 
@@ -54,8 +54,8 @@ If you run into this error after running the last command:
  Create this directory or give existing directory in --dbpath.
  See http://dochub.mongodb.org/core/startingandstoppingmongo
 ********************************************************
- 
- 
+
+
 ```
 sudo mkdir /data
 sudo mkdir /data/db
@@ -81,6 +81,7 @@ __Install Heroku Toolbelt__
 
 ```
 heroku login
+heroku git:remote --app goodybag-production-cater # in the git repo
 ```
 
 if you have multiple heroku accounts, checkout https://github.com/ddollar/heroku-accounts
@@ -93,8 +94,20 @@ grunt
 ```
 
 __Create a balanced config__
+
 ```
 ./bin/create-balanced-configs.js
+```
+
+__Signup to Goodybag:__
+
+Visit the [singup page](https://www.goodybag.com/join), create an account and
+ask an existing administrator to make your account an admin too.
+
+__Capture database backup:__
+
+```
+heroku pg:backups capture # maybe add: -a goodybag-production-cater
 ```
 
 __Sync prod data with local:__

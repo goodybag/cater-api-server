@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 
   module.exports = React.createClass({
     getInitialState: function () {
-      return { step: 2 }
+      return { step: 0 }
     },
 
     getStep: function () {

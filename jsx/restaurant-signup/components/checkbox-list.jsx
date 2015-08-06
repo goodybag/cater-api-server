@@ -3,7 +3,26 @@ define(function(require, exports, module) {
 
   module.exports = React.createClass({
     getInitialState: function () {
-      return { values: [] };
+      return { value: [] };
+    },
+
+    val: function () {
+      return this.state.value;
+    },
+
+    addItem: function (e) {
+      var value = e.target.value;
+      var index = this.state.value.indexOf(value);
+      var isChecked = e.target.checked;
+
+      this.setState(function (state) {
+        if (isChecked && index < 0) {
+          state.value.push(value);
+        } else if (!isChecked && index > -1) {
+          state.value.splice(index, 1);
+        }
+      });
+
     },
 
     render: function () {
@@ -15,11 +34,12 @@ define(function(require, exports, module) {
               key={i}
               name={box.name}
               id={box.name}
-              value={box.value} />
+              value={box.value}
+              onClick={this.addItem} />
             <label htmlFor={box.name} >{box.label}</label>
           </div>
         );
-      });
+      }.bind(this));
 
       return (
         <div className="row">

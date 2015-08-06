@@ -37,7 +37,7 @@ define(function(require, exports, module) {
           <Input
             label="Restaurant Website"
             ref="website" />
-          <CheckBoxList label="Which can you provide?" checkBoxes={servicesCheckBoxes} />
+          <CheckBoxList ref="delivery_services" label="Which can you provide?" checkBoxes={servicesCheckBoxes} />
         </div>
       );
     }

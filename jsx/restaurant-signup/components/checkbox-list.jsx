@@ -1,7 +1,10 @@
 define(function(require, exports, module) {
   var React = require('react');
+  var isValid = require('../mixins/is-valid');
 
   module.exports = React.createClass({
+    mixins: [isValid],
+
     getInitialState: function () {
       return { value: [] };
     },

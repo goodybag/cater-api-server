@@ -59,7 +59,6 @@ module.exports = function( options ){
     _req.on('end', function(){
       try {
         var cacheControl = createCacheControl( _req.res.headers['cache-control'] );
-  console.log('max age was ', cacheControl.maxAge());
         end = Date.now() + cacheControl.maxAge();
       } catch( e ){
         // Invalid cache-control header for our purposes

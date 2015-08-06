@@ -9,7 +9,7 @@ if ( process.env.GB_ENV === 'dev' ) {
 
       if ( !config.logging.transports.mongo ){
         grunt.log.warn('MongoDB disabled as trasnport. Exiting.');
-        done();
+        return done();
       }
 
       server.set( 'source', server.sources.mongodb({

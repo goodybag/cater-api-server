@@ -18,9 +18,9 @@ define(function(require) {
 
   definition.schema = {
     id:                 { type: types.serial, pk: true }
-  , type:               { type: types.plan_type, nullable: false, default: 'tiered' }
+  , type:               { type: types.plan_type, nullable: false, default: "'tiered'" }
   , name:               { type: types.text }
-  , data:               { type: types.json, nullable: false, default: '{}' }
+  , data:               { type: types.json, nullable: false, default: "'{}'" }
   , created_at:         { type: types.timestamp, default: 'now()' }
   };
 

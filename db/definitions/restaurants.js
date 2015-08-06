@@ -92,6 +92,11 @@ define(function(require) {
     , default: true
     , editable: ['admin']
     }
+  , accepts_tips: {
+      type: types.boolean
+    , default: true
+    , editable: ['admin']
+    }
   , logo_url: {
       type: types.text
     , editable: ['client', 'admin']

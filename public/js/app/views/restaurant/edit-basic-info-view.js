@@ -24,6 +24,7 @@ define(function(require, exports, module) {
     , is_direct_deposit:                        '[name="is_direct_deposit"]'
     , list_photo_url:                           '[name="list_photo_url"]'
     , supported_order_types:                    '[name="supported_order_types"]'
+    , accepts_tips:                             '[name="accepts_tips"]'
     },
 
     fieldGetters: _.extend({
@@ -41,6 +42,10 @@ define(function(require, exports, module) {
 
       is_featured: function() {
         return this.$el.find(this.fieldMap.is_featured).is(':checked');
+      },
+
+      accepts_tips: function() {
+        return this.$el.find(this.fieldMap.accepts_tips).is(':checked');
       },
 
       yelp_business_id: function() {

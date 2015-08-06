@@ -18,3 +18,15 @@ begin
   return regexp_replace( str, E'[^\\w -]', '', 'g' );
 end;
 $$ language plpgsql;
+
+create or replace function word_chars_only( str text )
+returns text as $$
+begin
+  return lower(
+    array_to_string(
+      array( select array_to_string( regexp_matches( str, E'\\w+', 'g' ), '' ) )
+    , ''
+    )
+  );
+end;
+$$ language plpgsql;

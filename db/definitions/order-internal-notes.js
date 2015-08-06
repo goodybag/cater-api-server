@@ -26,5 +26,21 @@ define(function(require) {
 
   definition.indices = {};
 
+  /**
+   * Gets this DAL's column list but with the created_at
+   * column time zone set to the passed in time zone
+   * @param  {String} timezone A timezone valid to PG
+   * @return {Array}           The column list
+   */
+  definition.getColumnListForTimezone = function( timezone ){
+    return Object
+      .keys( this.schema )
+      .filter( function( k ){ return k !== 'created_at' } )
+      .concat({
+        expression: "created_at at time zone ':tz' as created_at"
+                      .replace( ':tz', timezone )
+      });
+  };
+
   return definition;
 });

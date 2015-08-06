@@ -12,10 +12,12 @@ define(function(require, exports, module) {
   var Handlebars = require('handlebars');
   var utils = require('utils');
   var notify = require('notify');
-
-  var template = Handlebars.partials.menu_order_params;
+  var menuShareTemplate = Handlebars.partials.menu_share_link;
+  var config = require('config');
 
   return module.exports = Backbone.View.extend({
+    template: menuShareTemplate,
+
     events: {
       'click .share-link':          'highlightLink'
     , 'click .btn-generate-token':  'generateToken'
@@ -58,7 +60,7 @@ define(function(require, exports, module) {
         this.model.generateEditToken(function(err) {
           if (err)
             return notify.error(err);
-          this_.showLinkView();
+          this_.render();
         });
       }
     },
@@ -90,6 +92,15 @@ define(function(require, exports, module) {
 
     hide: function() {
       this.$el.addClass('hide');
+    },
+
+    render: function() {
+      this.$el.html(this.template({
+        order: this.model.toJSON(),
+        restaurant: this.options.restaurant.toJSON(),
+        config: config
+      }));
+      return this;
     }
   });
 });

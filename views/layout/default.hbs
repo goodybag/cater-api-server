@@ -29,6 +29,8 @@
   <!--[if lte IE 9]>
   <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/ie-lte9.css' pkg)}}">
   <![endif]-->
+
+  {{> add_user_agent_to_document}}
 </head>
 <body class="page {{{block "page"}}}">
   <div class="main-wrapper">

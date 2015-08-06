@@ -72,12 +72,11 @@
 
 {{#extend "body"}}
 <div class="order-info"></div>
-
 <div class="order">
   <table class="gb-table" style="">
     <thead>
       <tr>
-        <th>Order #</th>
+        <th>Order Info</th>
         <th>Delivery Fee</th>
         <th>Tip</th>
         <th>Order Total</th>
@@ -90,7 +89,11 @@
     <tbody>
       {{#each payment_summary.items}}
       <tr>
-        <td>{{this.order_id}}</td>
+        <td>
+          <div><strong>{{this.order.id}}</strong></div>
+          <div>{{#if this.order.user.organization}}{{this.order.user.organization}}{{else}}{{this.order.user.name}}{{/if}}</div>
+          <div>{{formatDateTime this.order.datetime}}</div>
+        </td>
         <td>${{dollars this.delivery_fee}}</td>
         <td>${{dollars this.tip}}</td>
         <td>${{dollars this.order_total}}</td>

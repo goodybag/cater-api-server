@@ -49,14 +49,20 @@ route.all('/return', function(req, res, next) {
  *  Current user resource.
  */
 
-// TODO: This might be broken as a nested route
-route.all(/^\/me(?:\/.*)?$/, function(req, res, next) {
-  if (!req.user) return m.owner()(req, res, next);
-  req.url = req.url.replace(/^\/users\/me/, '/users/' + req.user.attributes.id);
-  next();
-});
-
 var restrictOwner = m.owner();
+
+route.param('uid', function(req, res, next, id) {
+  if (id === 'me') {
+    if (!req.user) {
+      restrictOwner(req, res, next);
+    } else {
+      req.url = req.url.replace(/^\/users\/me/, '/users/' + req.user.attributes.id);
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 route.get('/:uid', restrictOwner, controllers.users.get);
 

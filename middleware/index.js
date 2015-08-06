@@ -66,6 +66,7 @@ module.exports = utils.extend(
   , json: require('./json')
   , logger: require('./logger')
   , logger: require('./logger')
+  , sendLunchroomHtml: require('./send-lunchroom-html')
   , sessionAndUser: require('../lib/session-and-user')
   , setUserRegion: require('./set-user-region')
   , storeUserAgent: require('./store-user-agent')

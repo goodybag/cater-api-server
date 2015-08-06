@@ -28,6 +28,12 @@ define(function(require, exports, module) {
       }
     },
 
+    setURL: function (e) {
+      this.setState({
+        value: e.target.value
+      });
+    },
+
     val: function () {
       return this.state.value;
     },
@@ -53,7 +59,7 @@ define(function(require, exports, module) {
             <div className="row">
               <label>Enter a link:</label>
               <div>
-                <input type="text" onChange={this.addFile} value={this.state.value} />
+                <input type="text" onChange={this.setURL} value={this.state.value} />
               </div>
             </div>
             <span>OR</span>

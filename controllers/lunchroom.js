@@ -61,7 +61,7 @@ module.exports.sendAppHtml = function( options ){
         var cacheControl = createCacheControl( _req.res.headers['cache-control'] );
         end = Date.now() + cacheControl.maxAge();
       } catch( e ){
-        // Invalid cache-control header for our purposes
+        end = Date.now() + options.defaultAge
       }
     });
   };

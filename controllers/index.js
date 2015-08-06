@@ -5,6 +5,7 @@ module.exports = {
 , contactUs: require('./contact-us')
 , emails: require('./emails')
 , items: require('./items')
+, lunchroom: require('./lunchroom')
 , orders: require('./orders')
 , paymentSummaries: require('./payment-summaries')
 , reports: require('./reports')

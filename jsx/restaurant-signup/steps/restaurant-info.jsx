@@ -4,6 +4,7 @@ define(function(require, exports, module) {
   var CheckBoxList = require('../components/checkbox-list');
   var ContactList = require('../components/contact-list');
   var FileUploader = require('../components/file-uploader');
+  var requestMixin = require('../mixins/requests');
 
   var mealTypeCheckBoxes = [
     { label: 'Breakfast', name: 'breakfast', value: 'breakfast' }
@@ -30,11 +31,21 @@ define(function(require, exports, module) {
   ];
 
   module.exports = React.createClass({
+    mixins: [requestMixin],
+
     getFields: function () {
       return [
-        'yelp_url', 'cuisine', 'address'
-      , 'phone', 'email', 'meal_type'
-      , 'diet_type', 'amenities'];
+        'yelp_url'
+      , 'cuisine'
+      , 'address'
+      , 'phone'
+      , 'email'
+      , 'menu'
+      , 'diet_type'
+      , 'meal_type'
+      , 'amenities'
+      , 'contacts'
+      ];
     },
 
     render: function () {
@@ -45,11 +56,11 @@ define(function(require, exports, module) {
           <Input label="Restaurant Address" ref="address" required="true" errorMessage="Please provide an address" />
           <Input label="Restaurant Phone" ref="phone" required="true" errorMessage="Please provide a phone number"/>
           <Input label="Restaurant Email" ref="email" />
-          <FileUploader label="Your Menu" errorMessage="Please provide a menu" />
+          <FileUploader label="Your Menu" ref="menu" errorMessage="Please provide a menu" />
           <CheckBoxList label="Dietary Restrictions" ref="diet_type" checkBoxes={dietCheckBoxes} />
           <CheckBoxList label="Meal Types Offered" ref="meal_type" checkBoxes={mealTypeCheckBoxes} />
           <CheckBoxList label="Which can you include?" ref="amenities" checkBoxes={amenityCheckBoxes} />
-          <ContactList />
+          <ContactList ref="contacts" />
         </div>
       );
     }

@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
   var React = require('react');
   var Input = require('./input');
+  var _ = require('lodash');
 
   module.exports = React.createClass({
     propTypes: {
@@ -8,8 +9,15 @@ define(function(require, exports, module) {
     },
 
     getInitialState: function () {
+      _.defaults(this.props.contact || {}, {
+        name: ''
+      , position: ''
+      , number: ''
+      , email: ''
+      });
+
       return {
-        contact: this.props.contact || { name: '', position: '', number: '', email: ''}
+        contact: this.props.contact
       };
     },
 

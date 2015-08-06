@@ -23,7 +23,7 @@ define(function(require, exports, module) {
     }
 
     this.props.model.set(data);
-
+    console.log('data ', data);
     return callback(null); // <-- remove later
     return $.ajax({
       type: 'POST'

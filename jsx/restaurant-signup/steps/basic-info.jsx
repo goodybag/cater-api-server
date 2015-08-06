@@ -20,7 +20,7 @@ define(function(require, exports, module) {
     mixins: [requestMixin],
 
     getFields: function () {
-      return ['name', 'website'];
+      return ['name', 'website', 'delivery_services'];
     },
 
     render: function () {

@@ -27,7 +27,7 @@ function createCacheControl( str ){
   });
 }
 
-module.exports = function( options ){
+module.exports.sendAppHtml = function( options ){
   options = utils.defaults( options || {}, {
     defaultAge: 1000 * 60 * 5 
   , tmpFile: __dirname + '/../tmp/lunchroom-cache.html'

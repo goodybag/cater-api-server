@@ -14,7 +14,7 @@ var m = require('./middleware')
 module.exports.register = function(app) {
   logger.info('Registering routes');
 
-  app.get('/bazaarvoice', m.sendLunchroomHtml());
+  app.get('/bazaarvoice', controllers.lunchroom.sendAppHtml());
 
   app.before( m.analytics, m.queryParams(), function( app ){
     app.get('/', m.getRegions({ where: { is_hidden: false } }), controllers.auth.index);

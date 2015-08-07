@@ -19,9 +19,7 @@ define( function( require, exports, module ){
 
     })
     .methods({
-      toStringFormat: ':street, '
-
-    , components: [
+      components: [
         'street', 'street2', 'city', 'state', 'zip', 'country'
       ]
 

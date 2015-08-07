@@ -3,14 +3,15 @@
 var async = require('async');
 var tasks = require(__dirname + '/../db/tasks');
 
-async.waterfall([
-  tasks.createExtensions
-  tasks.loadUtilityFunctions
-  tasks.createTypes
-  tasks.createTables
-  tasks.loadFunctions
+async.series([
+  tasks.createExtensions.run,
+  tasks.loadUtilityFunctions.run,
+  tasks.createTypes.run,
+  tasks.createTables.run,
+  tasks.loadFunctions.run
 ], function(err) {
   if (err) throw err;
 
-  console.log('Successfully bootstrapped the database');
+  console.log('Successfully bootstrapped the database!');
+  process.exit();
 });
